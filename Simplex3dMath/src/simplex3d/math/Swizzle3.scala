@@ -1,3 +1,4 @@
+
 /*
  * Simplex3D, Math package
  * Copyright (C) 2009 Simplex3D team
@@ -38,13 +39,20 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait Swizzle3Read[P, R2, R3, R4]
+protected trait Swizzle3Read[P, R2, R3, R4]
 extends Swizzle[P, R2, R3, R4]
 {
     def x: P
     def y: P
     def z: P
 
+    def r = x
+    def g = y
+    def b = z
+
+    def s = x
+    def t = y
+    def p = z
     def xx: R2 = makeSwizzle2(x, x)
     def xy: R2 = makeSwizzle2(x, y)
     def xz: R2 = makeSwizzle2(x, z)
@@ -406,18 +414,30 @@ extends Swizzle[P, R2, R3, R4]
     def pppp = zzzz
 }
 
-/**
+/*
  * A field must be defined as both read and write in the same trait
  * to be treated as a var and be eligible for assignment expansion.
  * For example both "def xy" and "def xy_=(u: Read[2])" must be defined
  * in the same trait so that "a.yx += b" compiles.
  */
-trait Swizzle3Write[P, R2, R3, R4]
+
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+protected trait Swizzle3Write[P, R2, R3, R4]
 extends Swizzle3Read[P, R2, R3, R4]
 {
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
     def z_=(z: P) :Unit
+
+    def r_=(r: P) { x = r }
+    def g_=(g: P) { y = g }
+    def b_=(b: P) { z = b }
+
+    def s_=(s: P) { x = s }
+    def t_=(t: P) { y = t }
+    def p_=(p: P) { z = p }
 
 
     override def xy: R2 = makeSwizzle2(x, y)

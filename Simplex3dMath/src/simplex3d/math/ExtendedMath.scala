@@ -34,10 +34,151 @@
 
 package simplex3d.math
 
+import simplex3d.math.VecMath._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 object ExtendedMath {
-    // Code dealing with rotation goes here
+
+    private val ColorToFloat = 1/255f;
+
+    // Color conversions
+    def rgb(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.r << 16) | (u.g << 8) | u.b
+    }
+    def rgb(c: AnyVec3) :Int = {
+        rgb(Vec3i(c*255))
+    }
+
+    def argb(c: AnyVec4i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.a << 24) | (u.r << 16) | (u.g << 8) | u.b
+    }
+    def argb(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        0xFF000000 | (u.r << 16) | (u.g << 8) | u.b
+    }
+    def argb(c: AnyVec4) :Int = {
+        argb(Vec4i(c*255))
+    }
+    def argb(c: AnyVec3) :Int = {
+        argb(Vec3i(c*255))
+    }
+    
+    def rgba(c: AnyVec4i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.r << 24) | (u.g << 16) | (u.b << 8) | u.a
+    }
+    def rgba(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.r << 24) | (u.g << 16) | (u.b << 8) | 0x000000FF
+    }
+    def rgba(c: AnyVec4) :Int = {
+        rgba(Vec4i(c*255))
+    }
+    def rgba(c: AnyVec3) :Int = {
+        rgba(Vec3i(c*255))
+    }
+
+    def bgr(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.b << 16) | (u.g << 8) | u.r
+    }
+    def bgr(c: AnyVec3) :Int = {
+        bgr(Vec3i(c*255))
+    }
+
+    def abgr(c: AnyVec4i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.a << 24) | (u.b << 16) | (u.g << 8) | u.r
+    }
+    def abgr(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        0xFF000000 | (u.b << 16) | (u.g << 8) | u.r
+    }
+    def abgr(c: AnyVec4) :Int = {
+        abgr(Vec4i(c*255))
+    }
+    def abgr(c: AnyVec3) :Int = {
+        abgr(Vec3i(c*255))
+    }
+
+    def bgra(c: AnyVec4i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.b << 24) | (u.g << 16) | (u.r << 8) | u.a
+    }
+    def bgra(c: AnyVec3i) :Int = {
+        val u = clamp(c, 0, 255)
+        (u.b << 24) | (u.g << 16) | (u.r << 8) | 0x000000FF
+    }
+    def bgra(c: AnyVec4) :Int = {
+        bgra(Vec4i(c*255))
+    }
+    def bgra(c: AnyVec3) :Int = {
+        bgra(Vec3i(c*255))
+    }
+
+    def rgb(c: Int) :Vec3 = {
+        Vec3(
+            ((c & 0x00FF0000) >> 16)*ColorToFloat,
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            (c & 0x000000FF)*ColorToFloat
+        )
+    }
+
+    def argb(c: Int) :Vec4 = {
+        Vec4(
+            ((c & 0x00FF0000) >> 16)*ColorToFloat,
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            (c & 0x000000FF)*ColorToFloat,
+            ((c & 0xFF000000) >> 24)*ColorToFloat
+        )
+    }
+
+    def rgba(c: Int) :Vec4 = {
+        Vec4(
+            ((c & 0xFF000000) >> 24)*ColorToFloat,
+            ((c & 0x00FF0000) >> 16)*ColorToFloat,
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            (c & 0x000000FF)*ColorToFloat
+        )
+    }
+
+    def bgr(c: Int) :Vec3 = {
+        Vec3(
+            (c & 0x000000FF)*ColorToFloat,
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            ((c & 0x00FF0000) >> 16)*ColorToFloat
+        )
+    }
+
+    def abgr(c: Int) :Vec4 = {
+        Vec4(
+            (c & 0x000000FF)*ColorToFloat,
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            ((c & 0x00FF0000) >> 16)*ColorToFloat,
+            ((c & 0xFF000000) >> 24)*ColorToFloat
+        )
+    }
+
+    def bgra(c: Int) :Vec4 = {
+        Vec4(
+            ((c & 0x0000FF00) >> 8)*ColorToFloat,
+            ((c & 0x00FF0000) >> 16)*ColorToFloat,
+            ((c & 0xFF000000) >> 24)*ColorToFloat,
+            (c & 0x000000FF)*ColorToFloat,
+        )
+    }
+
+    // Rotation
+    def invert(m: Mat2) :Mat2 = {
+        val detInv = 1/(m.m00*m.m11 - m.m01*m.m10)
+        Mat2(
+            m.m11*detInv, -m.m10*detInv,
+            -m.m01*detInv, m.m00*detInv
+          )
+    }
 }

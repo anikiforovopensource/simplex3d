@@ -104,7 +104,7 @@ object Vec2b {
     implicit def vec2bToSwizzled(u: Vec2b) = new Vec2bSwizzled(u)
 }
 
-class ConstVec2bSwizzled(u: AnyVec2b) extends VecbSwizzled
+class ConstVec2bSwizzled(u: AnyVec2b) extends BooleanVecFactory
 with Swizzle2Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
     def x = u.x

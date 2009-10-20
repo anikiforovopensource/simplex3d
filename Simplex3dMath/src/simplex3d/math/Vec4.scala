@@ -268,7 +268,7 @@ object Vec4 {
     implicit def vec4ToSwizzled(u: Vec4) = new Vec4Swizzled(u)
 }
 
-class ConstVec4Swizzled(u: AnyVec4) extends VecSwizzled
+class ConstVec4Swizzled(u: AnyVec4) extends FloatVecFactory
 with Swizzle4Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x = u.x

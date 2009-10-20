@@ -40,7 +40,7 @@ package simplex3d.math
  * @author Aleksey Nikiforov (lex)
  */
 protected trait Swizzle2Read[P, R2, R3, R4]
-extends Swizzle[P, R2, R3, R4]
+extends VecFactory[P, R2, R3, R4]
 {
     def x: P
     def y: P
@@ -50,36 +50,36 @@ extends Swizzle[P, R2, R3, R4]
 
     def s = x
     def t = y
-    def xx: R2 = makeSwizzle2(x, x)
-    def xy: R2 = makeSwizzle2(x, y)
-    def yx: R2 = makeSwizzle2(y, x)
-    def yy: R2 = makeSwizzle2(y, y)
+    def xx: R2 = make2(x, x)
+    def xy: R2 = make2(x, y)
+    def yx: R2 = make2(y, x)
+    def yy: R2 = make2(y, y)
 
-    def xxx: R3 = makeSwizzle3(x, x, x)
-    def xxy: R3 = makeSwizzle3(x, x, y)
-    def xyx: R3 = makeSwizzle3(x, y, x)
-    def xyy: R3 = makeSwizzle3(x, y, y)
-    def yxx: R3 = makeSwizzle3(y, x, x)
-    def yxy: R3 = makeSwizzle3(y, x, y)
-    def yyx: R3 = makeSwizzle3(y, y, x)
-    def yyy: R3 = makeSwizzle3(y, y, y)
+    def xxx: R3 = make3(x, x, x)
+    def xxy: R3 = make3(x, x, y)
+    def xyx: R3 = make3(x, y, x)
+    def xyy: R3 = make3(x, y, y)
+    def yxx: R3 = make3(y, x, x)
+    def yxy: R3 = make3(y, x, y)
+    def yyx: R3 = make3(y, y, x)
+    def yyy: R3 = make3(y, y, y)
 
-    def xxxx: R4 = makeSwizzle4(x, x, x, x)
-    def xxxy: R4 = makeSwizzle4(x, x, x, y)
-    def xxyx: R4 = makeSwizzle4(x, x, y, x)
-    def xxyy: R4 = makeSwizzle4(x, x, y, y)
-    def xyxx: R4 = makeSwizzle4(x, y, x, x)
-    def xyxy: R4 = makeSwizzle4(x, y, x, y)
-    def xyyx: R4 = makeSwizzle4(x, y, y, x)
-    def xyyy: R4 = makeSwizzle4(x, y, y, y)
-    def yxxx: R4 = makeSwizzle4(y, x, x, x)
-    def yxxy: R4 = makeSwizzle4(y, x, x, y)
-    def yxyx: R4 = makeSwizzle4(y, x, y, x)
-    def yxyy: R4 = makeSwizzle4(y, x, y, y)
-    def yyxx: R4 = makeSwizzle4(y, y, x, x)
-    def yyxy: R4 = makeSwizzle4(y, y, x, y)
-    def yyyx: R4 = makeSwizzle4(y, y, y, x)
-    def yyyy: R4 = makeSwizzle4(y, y, y, y)
+    def xxxx: R4 = make4(x, x, x, x)
+    def xxxy: R4 = make4(x, x, x, y)
+    def xxyx: R4 = make4(x, x, y, x)
+    def xxyy: R4 = make4(x, x, y, y)
+    def xyxx: R4 = make4(x, y, x, x)
+    def xyxy: R4 = make4(x, y, x, y)
+    def xyyx: R4 = make4(x, y, y, x)
+    def xyyy: R4 = make4(x, y, y, y)
+    def yxxx: R4 = make4(y, x, x, x)
+    def yxxy: R4 = make4(y, x, x, y)
+    def yxyx: R4 = make4(y, x, y, x)
+    def yxyy: R4 = make4(y, x, y, y)
+    def yyxx: R4 = make4(y, y, x, x)
+    def yyxy: R4 = make4(y, y, x, y)
+    def yyyx: R4 = make4(y, y, y, x)
+    def yyyy: R4 = make4(y, y, y, y)
 
     def rr = xx
     def rg = xy
@@ -176,8 +176,8 @@ extends Swizzle2Read[P, R2, R3, R4]
     def t_=(t: P) { y = t }
 
 
-    override def xy: R2 = makeSwizzle2(x, y)
-    override def yx: R2 = makeSwizzle2(y, x)
+    override def xy: R2 = make2(x, y)
+    override def yx: R2 = make2(y, x)
 
     override def rg = xy
     override def gr = yx

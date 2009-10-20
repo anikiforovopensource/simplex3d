@@ -38,40 +38,40 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle[P, R2, R3, R4] {
-    protected def makeSwizzle2(x: P, y: P) :R2
-    protected def makeSwizzle3(x: P, y: P, z: P) :R3
-    protected def makeSwizzle4(x: P, y: P, z: P, w: P) :R4
+protected trait VecFactory[P, R2, R3, R4] {
+    protected def make2(x: P, y: P) :R2
+    protected def make3(x: P, y: P, z: P) :R3
+    protected def make4(x: P, y: P, z: P, w: P) :R4
 }
 
-protected class VecSwizzled {
-    protected def makeSwizzle2(x: Float, y: Float) = ConstVec2(x, y)
-    protected def makeSwizzle3(x: Float,
+protected class FloatVecFactory {
+    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
+    protected def make3(x: Float,
                                y: Float,
                                z: Float) = ConstVec3(x, y, z)
-    protected def makeSwizzle4(x: Float,
+    protected def make4(x: Float,
                                y: Float,
                                z: Float,
                                w: Float) = ConstVec4(x, y, z, w)
 }
 
-protected class VeciSwizzled {
-    protected def makeSwizzle2(x: Int, y: Int) = ConstVec2i(x, y)
-    protected def makeSwizzle3(x: Int,
+protected class IntVecFactory {
+    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
+    protected def make3(x: Int,
                                y: Int,
                                z: Int) = ConstVec3i(x, y, z)
-    protected def makeSwizzle4(x: Int,
+    protected def make4(x: Int,
                                y: Int,
                                z: Int,
                                w: Int) = ConstVec4i(x, y, z, w)
 }
 
-protected class VecbSwizzled {
-    protected def makeSwizzle2(x: Boolean, y: Boolean) = ConstVec2b(x, y)
-    protected def makeSwizzle3(x: Boolean,
+protected class BooleanVecFactory {
+    protected def make2(x: Boolean, y: Boolean) = ConstVec2b(x, y)
+    protected def make3(x: Boolean,
                                y: Boolean,
                                z: Boolean) = ConstVec3b(x, y, z)
-    protected def makeSwizzle4(x: Boolean,
+    protected def make4(x: Boolean,
                                y: Boolean,
                                z: Boolean,
                                w: Boolean) = ConstVec4b(x, y, z, w)

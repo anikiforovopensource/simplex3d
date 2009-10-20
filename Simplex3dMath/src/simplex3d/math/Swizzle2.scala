@@ -157,6 +157,15 @@ extends Swizzle[P, R2, R3, R4]
 protected trait Swizzle2Write[P, R2, R3, R4]
 extends Swizzle2Read[P, R2, R3, R4]
 {
+    override def x: P
+    override def y: P
+
+    override def r = x
+    override def g = y
+
+    override def s = x
+    override def t = y
+
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
 

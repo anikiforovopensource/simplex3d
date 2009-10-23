@@ -31,6 +31,8 @@
  * applies, in this case delete this exception statement from your version.
  *
  *
- * toxi.math.noise.SimplexNoise is used under GPLv3 (or later version) with
- * CLASSPATH EXCEPTION FOR UNMODIFIED WORK with a special permission
- * from Karsten Schmidt (see the file for additional details).
+ * toxi.math.noise.SimplexNoise: original code by Stefan Gustavson,
+ * modifications released under LGPL by Karsten Schmidt. With a special
+ * permission from Karsten Schmidt his code is used under GPLv3 (or later
+ * version) with CLASSPATH EXCEPTION FOR UNMODIFIED WORK (see the file for
+ * additional details).

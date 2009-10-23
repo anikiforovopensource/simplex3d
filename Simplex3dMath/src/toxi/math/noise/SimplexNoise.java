@@ -1,5 +1,12 @@
 /*
- * Copyright (C) 2005 Stefan Gustavson, 2009 Karsten Schmidt
+ * This code is originally release by Stefan Gustavson in his paper located at
+ * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+ *
+ * Additional modifications and LGPL release by Karsten Schmidt. With a special
+ * permission from Karsten Schmidt, his modifications are relicensed under
+ * the following license.
+ *
+ * Copyright (C) 2009 Karsten Schmidt
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

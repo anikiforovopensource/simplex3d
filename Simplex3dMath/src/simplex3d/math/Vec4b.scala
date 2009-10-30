@@ -34,8 +34,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -46,6 +44,16 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
     def y: Boolean
     def z: Boolean
     def w: Boolean
+
+    def r = x
+    def g = y
+    def b = z
+    def a = w
+
+    def s = x
+    def t = y
+    def p = z
+    def q = w
 
 
     def apply(i: Int) :Boolean = {
@@ -112,6 +120,27 @@ final class Vec4b private (var x: Boolean, var y: Boolean,
                           var z: Boolean, var w: Boolean)
 extends AnyVec4b
 {
+    override def r = x
+    override def g = y
+    override def b = z
+    override def a = w
+
+    override def s = x
+    override def t = y
+    override def p = z
+    override def q = w
+
+    def r_=(r: Boolean) { x = r }
+    def g_=(g: Boolean) { y = g }
+    def b_=(b: Boolean) { z = b }
+    def a_=(a: Boolean) { w = a }
+
+    def s_=(s: Boolean) { x = s }
+    def t_=(t: Boolean) { y = t }
+    def p_=(p: Boolean) { z = p }
+    def q_=(q: Boolean) { w = q }
+
+
     def :=(u: AnyVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
         this.x = x; this.y = y; this.z = z; this.w = w
@@ -160,7 +189,7 @@ object Vec4b {
     implicit def vec4bToSwizzled(u: Vec4b) = new Vec4bSwizzled(u)
 }
 
-class ConstVec4bSwizzled(u: AnyVec4b) extends BooleanVecFactory
+private[math] class ConstVec4bSwizzled(u: AnyVec4b) extends BooleanVecFactory
 with Swizzle4Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
     def x = u.x
@@ -169,7 +198,7 @@ with Swizzle4Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
     def w = u.w
 }
 
-class Vec4bSwizzled(u: Vec4b) extends ConstVec4bSwizzled(u)
+private[math] class Vec4bSwizzled(u: Vec4b) extends ConstVec4bSwizzled(u)
 with Swizzle4Write[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
     def x_=(x: Boolean) { u.x = x }

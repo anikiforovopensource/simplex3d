@@ -44,19 +44,13 @@ import toxi.math.noise.SimplexNoise
 object VecMath {
     // Implicits
     implicit def floatToExtendedFloat(s: Float) = new ExtendedFloat(s)
-    implicit def intToExtendedFloat(s: Int) = new ExtendedFloat(s)
     implicit def intToExtendedInt(s: Int) = new ExtendedInt(s)
     implicit def vec2iToVec2(u: AnyVec2i) :Vec2 = Vec2(u)
     implicit def vec3iToVec3(u: AnyVec3i) :Vec3 = Vec3(u)
     implicit def vec4iToVec4(u: AnyVec4i) :Vec4 = Vec4(u)
 
     // Constants
-    /**
-     * Minimal difference between two values that will make them distinct.
-     * Used in all ~= and !~ methods.
-     */
-    val ApproximationDelta: Float = 0.00001f;
-    val FloatEpsilon: Float = 1.1920928955078125E-7f;
+    val FloatEpsilon: Float = 1.19209E-7f;
     val Pi: Float = float(Math.Pi)
     val E: Float = float(Math.E)
 
@@ -64,13 +58,16 @@ object VecMath {
     private val RadToDeg = 180 / Pi
     private val InvLog2 = 1/SMath.log(2)
 
+    // Have to be careful with large offsets due to the loss in precision.
+    // With noise args as double these values should be ok
+    private val of1: Double = 10000.0
+    private val of2: Double = 20000.0
+    private val of3: Double = 30000.0
+
     // Cast
     def int(x: Long) :Int = x.asInstanceOf[Int]
     def int(x: Float) :Int = x.asInstanceOf[Int]
     def int(x: Double) :Int = x.asInstanceOf[Int]
-
-    def long(x: Float) :Long = x.asInstanceOf[Long]
-    def long(x: Double) :Long = x.asInstanceOf[Long]
 
     def float(x: Double) :Float = x.asInstanceOf[Float]
 
@@ -106,14 +103,16 @@ object VecMath {
     def inversesqrt(s: Float) :Float = float(1/SMath.sqrt(s))
 
     def abs(x: Float) :Float = { if (x < 0) -x else x }
-    def sign(x: Float) :Float = JMath.signum(x)
+    def sign(x: Float) :Float = if (x == 0) 0 else if (x > 0) 1 else -1
     def floor(x: Float) :Float = {
         if (x >= 0) int(x) else int(x) - 1
     }
     def trunc(x: Float) :Float = int(x)
     def round(x: Float) :Float = SMath.round(x)
     def roundEven(x: Float) :Float = float(SMath.rint(x))
-    def ceil(x: Float) :Float = float(SMath.ceil(x))
+    def ceil(x: Float) :Float = {
+        if (x == float(int(x))) x else int(x) + 1
+    }
     def fract(x: Float) :Float = x - floor(x)
     def mod(x: Float, y: Float) :Float = x - y*floor(x/y)
     //def modf(x: Float, i: Float) :Float = 0 //not supported: lack of pointers
@@ -141,7 +140,6 @@ object VecMath {
     def isinf(x: Float) :Boolean = java.lang.Float.isInfinite(x)
 
     def length(x: Float) :Float = abs(x)
-    def lengthSquare(x: Float) :Float = x*x
     def distance(x: Float, y: Float) :Float = abs(x - y)
     def dot(x: Float, y: Float) :Float = x*y
     def normalize(x: Float) :Float = sign(x)
@@ -162,22 +160,22 @@ object VecMath {
     def noise2(x: Float) :Vec2 = {
         Vec2(
             float(SimplexNoise.noise(x, 0)),
-            float(SimplexNoise.noise(x, 10000))
+            float(SimplexNoise.noise(x, of1))
         )
     }
     def noise3(x: Float) :Vec3 = {
         Vec3(
             float(SimplexNoise.noise(x, 0)),
-            float(SimplexNoise.noise(x, 10000)),
-            float(SimplexNoise.noise(x, 20000))
+            float(SimplexNoise.noise(x, of1)),
+            float(SimplexNoise.noise(x, of2))
         )
     }
     def noise4(x: Float) :Vec4 = {
         Vec4(
             float(SimplexNoise.noise(x, 0)),
-            float(SimplexNoise.noise(x, 10000)),
-            float(SimplexNoise.noise(x, 20000)),
-            float(SimplexNoise.noise(x, 30000))
+            float(SimplexNoise.noise(x, of1)),
+            float(SimplexNoise.noise(x, of2)),
+            float(SimplexNoise.noise(x, of3))
         )
     }
 
@@ -245,7 +243,8 @@ object VecMath {
     }
 
     def mix(u: AnyVec2, v: AnyVec2, a: Float) :Vec2 = {
-        Vec2(mix(u.x, v.x, a), mix(u.y, v.y, a))
+        val b = 1 - a
+        Vec2(b*u.x + a*v.x, b*u.y + a*v.y)
     }
     def mix(u: AnyVec2, v: AnyVec2, a: AnyVec2) :Vec2 = {
         Vec2(mix(u.x, v.x, a.x), mix(u.y, v.y, a.y))
@@ -279,8 +278,7 @@ object VecMath {
     def isnan(u: AnyVec2) :Vec2b = Vec2b(isnan(u.x), isnan(u.y))
     def isinf(u: AnyVec2) :Vec2b = Vec2b(isinf(u.x), isinf(u.y))
     
-    def length(u: AnyVec2) :Float = sqrt(lengthSqare(u))
-    def lengthSqare(u: AnyVec2) :Float = u.x*u.x + u.y*u.y
+    def length(u: AnyVec2) :Float = sqrt(u.x*u.x + u.y*u.y)
     def distance(u: AnyVec2, v: AnyVec2) :Float = length(u - v)
     def dot(u: AnyVec2, v: AnyVec2) :Float = u.x * v.x + u.y * v.y
     def normalize(u: AnyVec2) :Vec2 = u/length(u)
@@ -340,23 +338,23 @@ object VecMath {
     }
     def noise2(u: AnyVec2) :Vec2 = {
         Vec2(
-            noise1(u),
-            noise1(u + Vec2(10000))
+            float(SimplexNoise.noise(u.x, u.y)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1))
         )
     }
     def noise3(u: AnyVec2) :Vec3 = {
         Vec3(
-            noise1(u),
-            noise1(u + Vec2(10000)),
-            noise1(u + Vec2(20000))
+            float(SimplexNoise.noise(u.x, u.y)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1)),
+            float(SimplexNoise.noise(u.x + of2, u.y + of2))
         )
     }
     def noise4(u: AnyVec2) :Vec4 = {
         Vec4(
-            noise1(u),
-            noise1(u + Vec2(10000)),
-            noise1(u + Vec2(20000)),
-            noise1(u + Vec2(30000))
+            float(SimplexNoise.noise(u.x, u.y)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1)),
+            float(SimplexNoise.noise(u.x + of2, u.y + of2)),
+            float(SimplexNoise.noise(u.x + of3, u.y + of3))
         )
     }
 
@@ -453,7 +451,8 @@ object VecMath {
     }
 
     def mix(u: AnyVec3, v: AnyVec3, a: Float) :Vec3 = {
-        Vec3(mix(u.x, v.x, a), mix(u.y, v.y, a), mix(u.z, v.z, a))
+        val b = 1 - a
+        Vec3(b*u.x + a*v.x, b*u.y + a*v.y, b*u.z + a*v.z)
     }
     def mix(u: AnyVec3, v: AnyVec3, a: AnyVec3) :Vec3 = {
         Vec3(mix(u.x, v.x, a.x), mix(u.y, v.y, a.y), mix(u.z, v.z, a.z))
@@ -490,8 +489,7 @@ object VecMath {
     def isnan(u: AnyVec3) :Vec3b = Vec3b(isnan(u.x), isnan(u.y), isnan(u.z))
     def isinf(u: AnyVec3) :Vec3b = Vec3b(isinf(u.x), isinf(u.y), isinf(u.z))
 
-    def length(u: AnyVec3) :Float = sqrt(lengthSqare(u))
-    def lengthSqare(u: AnyVec3) :Float = u.x*u.x + u.y*u.y + u.z*u.z
+    def length(u: AnyVec3) :Float = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
     def distance(u: AnyVec3, v: AnyVec3) :Float = length(u - v)
     def dot(u: AnyVec3, v: AnyVec3) :Float = u.x*v.x + u.y*v.y + u.z*v.z
     def cross(u: AnyVec3, v: AnyVec3) :Vec3 = {
@@ -564,23 +562,23 @@ object VecMath {
     }
     def noise2(u: AnyVec3) :Vec2 = {
         Vec2(
-            noise1(u),
-            noise1(u + Vec3(10000))
+            float(SimplexNoise.noise(u.x, u.y, u.z)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1))
         )
     }
     def noise3(u: AnyVec3) :Vec3 = {
         Vec3(
-            noise1(u),
-            noise1(u + Vec3(10000)),
-            noise1(u + Vec3(20000))
+            float(SimplexNoise.noise(u.x, u.y, u.z)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)),
+            float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2))
         )
     }
     def noise4(u: AnyVec3) :Vec4 = {
         Vec4(
-            noise1(u),
-            noise1(u + Vec3(10000)),
-            noise1(u + Vec3(20000)),
-            noise1(u + Vec3(30000))
+            float(SimplexNoise.noise(u.x, u.y, u.z)),
+            float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)),
+            float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2)),
+            float(SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3))
         )
     }
 
@@ -724,12 +722,8 @@ object VecMath {
     }
 
     def mix(u: AnyVec4, v: AnyVec4, a: Float) :Vec4 = {
-        Vec4(
-            mix(u.x, v.x, a),
-            mix(u.y, v.y, a),
-            mix(u.z, v.z, a),
-            mix(u.w, v.w, a)
-        )
+        val b = 1 - a
+        Vec4(b*u.x + a*v.x, b*u.y + a*v.y, b*u.z + a*v.z, b*u.w + a*v.w)
     }
     def mix(u: AnyVec4, v: AnyVec4, a: AnyVec4) :Vec4 = {
         Vec4(
@@ -783,8 +777,7 @@ object VecMath {
         Vec4b(isinf(u.x), isinf(u.y), isinf(u.z), isinf(u.w))
     }
 
-    def length(u: AnyVec4) :Float = sqrt(lengthSqare(u))
-    def lengthSqare(u: AnyVec4) :Float = u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
+    def length(u: AnyVec4) :Float = sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
     def dot(u: AnyVec4, v: AnyVec4) :Float = {
         u.x*v.x + u.y*v.y + u.z*v.z + u.w*v.w
     }
@@ -858,23 +851,23 @@ object VecMath {
     }
     def noise2(u: AnyVec4) :Vec2 = {
         Vec2(
-            noise1(u),
-            noise1(u + Vec4(10000))
+          float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
+          float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1))
         )
     }
     def noise3(u: AnyVec4) :Vec3 = {
         Vec3(
-            noise1(u),
-            noise1(u + Vec4(10000)),
-            noise1(u + Vec4(20000))
+          float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
+          float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)),
+          float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2))
         )
     }
     def noise4(u: AnyVec4) :Vec4 = {
         Vec4(
-            noise1(u),
-            noise1(u + Vec4(10000)),
-            noise1(u + Vec4(20000)),
-            noise1(u + Vec4(30000))
+          float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
+          float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)),
+          float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2)),
+          float(SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3, u.w + of3))
         )
     }
 
@@ -1189,5 +1182,12 @@ object VecMath {
             a.m20, a.m21, a.m22, a.m23,
             a.m30, a.m31, a.m32, a.m33
         )
+    }
+
+    // Ideally this method should not be here, but compiler complains when doing
+    // static imports of overloaded functions from different objects.
+    // Since normalize(u: AnyVecN) are here, this methods has to be here too.
+    def normalize(q: AnyQuat4) :Quat4 = {
+        q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
     }
 }

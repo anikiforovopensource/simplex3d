@@ -36,48 +36,28 @@ package simplex3d.math
 
 
 /**
- * Glue code to make floats interact with vectors and matrices.
- *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedFloat(val value: Float) extends Read1[Float] {
-    def *(u: AnyVec2i) = Vec2(u)*value
-    def *(u: AnyVec3i) = Vec3(u)*value
-    def *(u: AnyVec4i) = Vec4(u)*value
+abstract class ConstRotationSubMat3x3 {
+    // Column major order.
+    def m00: Float; def m10: Float; def m20: Float // column
+    def m01: Float; def m11: Float; def m21: Float // column
+    def m02: Float; def m12: Float; def m22: Float // column
+}
 
-    def *(u: AnyVec2) = u*value
-    def *(u: AnyVec3) = u*value
-    def *(u: AnyVec4) = u*value
+trait RotationSubMat3x3 {
+    // Column major order.
+    var m00: Float; var m10: Float; var m20: Float // column
+    var m01: Float; var m11: Float; var m21: Float // column
+    var m02: Float; var m12: Float; var m22: Float // column
 
-    def *(q: AnyQuat4) = q*value
-
-    def *(m: AnyMat2) = m*value
-    def *(m: AnyMat2x3) = m*value
-    def *(m: AnyMat2x4) = m*value
-    def *(m: AnyMat3x2) = m*value
-    def *(m: AnyMat3) = m*value
-    def *(m: AnyMat3x4) = m*value
-    def *(m: AnyMat4x2) = m*value
-    def *(m: AnyMat4x3) = m*value
-    def *(m: AnyMat4) = m*value
-
-    def /(u: AnyVec2i) = Vec2(u).divideByComponent(value)
-    def /(u: AnyVec3i) = Vec3(u).divideByComponent(value)
-    def /(u: AnyVec4i) = Vec4(u).divideByComponent(value)
-
-    def /(u: AnyVec2) = u.divideByComponent(value)
-    def /(u: AnyVec3) = u.divideByComponent(value)
-    def /(u: AnyVec4) = u.divideByComponent(value)
-
-    def /(q: AnyQuat4) = q.divideByComponent(value)
-
-    def /(m: AnyMat2) = m.divideByComponent(value)
-    def /(m: AnyMat2x3) = m.divideByComponent(value)
-    def /(m: AnyMat2x4) = m.divideByComponent(value)
-    def /(m: AnyMat3x2) = m.divideByComponent(value)
-    def /(m: AnyMat3) = m.divideByComponent(value)
-    def /(m: AnyMat3x4) = m.divideByComponent(value)
-    def /(m: AnyMat4x2) = m.divideByComponent(value)
-    def /(m: AnyMat4x3) = m.divideByComponent(value)
-    def /(m: AnyMat4) = m.divideByComponent(value)
+    def set(
+        m00: Float, m10: Float, m20: Float,
+        m01: Float, m11: Float, m21: Float,
+        m02: Float, m12: Float, m22: Float
+    ) {
+        this.m00 = m00; this.m10 = m10; this.m20 = m20
+        this.m01 = m01; this.m11 = m11; this.m21 = m21
+        this.m02 = m02; this.m12 = m12; this.m22 = m22
+    }
 }

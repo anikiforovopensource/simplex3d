@@ -34,8 +34,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -46,6 +44,16 @@ sealed abstract class AnyVec4 extends Read4[Float] {
     def y: Float
     def z: Float
     def w: Float
+
+    def r = x
+    def g = y
+    def b = z
+    def a = w
+
+    def s = x
+    def t = y
+    def p = z
+    def q = w
 
 
     def apply(i: Int) :Float = {
@@ -62,6 +70,7 @@ sealed abstract class AnyVec4 extends Read4[Float] {
     def unary_-() = Vec4(-x, -y, -z, -w)
     def *(s: Float) = Vec4(x*s, y*s, z*s, w*s)
     def /(s: Float) = { val inv = 1/s; Vec4(x*inv, y*inv, z*inv, w*inv) }
+    private[math] def divideByComponent(s: Float) = Vec4(s/x, s/y, s/z, s/w)
 
     def +(u: AnyVec4) = Vec4(x + u.x, y + u.y, z + u.z, w + u.w)
     def -(u: AnyVec4) = Vec4(x - u.x, y - u.y, z - u.z, w - u.w)
@@ -79,30 +88,9 @@ sealed abstract class AnyVec4 extends Read4[Float] {
 
     def !=(u: AnyVec4) :Boolean = !(this == u)
 
-    /**
-     * Approximate comparision.
-     * Read: "this isApproximately u".
-     */
-    def ~=(u: AnyVec4) :Boolean = {
-        if (u == null)
-            false
-        else
-            abs(x - u.x) < ApproximationDelta &&
-            abs(y - u.y) < ApproximationDelta &&
-            abs(z - u.z) < ApproximationDelta &&
-            abs(w - u.w) < ApproximationDelta
-    }
-
-    /**
-     * Inverse of approximate comparision.
-     * Read: "this isNotApproximately u" or "this isDistinctFrom u".
-     */
-    def !~(u: AnyVec4) :Boolean = !(this ~= u)
-
-    def isValid: Boolean = {
+    private[math] def hasErrors: Boolean = {
         import java.lang.Float._
-
-        !(
+        (
             isNaN(x) || isInfinite(x) ||
             isNaN(y) || isInfinite(y) ||
             isNaN(z) || isInfinite(z) ||
@@ -180,6 +168,26 @@ final class Vec4 private (var x: Float, var y: Float,
                           var z: Float, var w: Float)
 extends AnyVec4
 {
+    override def r = x
+    override def g = y
+    override def b = z
+    override def a = w
+
+    override def s = x
+    override def t = y
+    override def p = z
+    override def q = w
+
+    def r_=(r: Float) { x = r }
+    def g_=(g: Float) { y = g }
+    def b_=(b: Float) { z = b }
+    def a_=(a: Float) { w = a }
+
+    def s_=(s: Float) { x = s }
+    def t_=(t: Float) { y = t }
+    def p_=(p: Float) { z = p }
+    def q_=(q: Float) { w = q }
+
 
     def *=(s: Float) { x *= s; y *= s; z *= s; w *= s }
     def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
@@ -268,7 +276,7 @@ object Vec4 {
     implicit def vec4ToSwizzled(u: Vec4) = new Vec4Swizzled(u)
 }
 
-class ConstVec4Swizzled(u: AnyVec4) extends FloatVecFactory
+private[math] class ConstVec4Swizzled(u: AnyVec4) extends FloatVecFactory
 with Swizzle4Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x = u.x
@@ -277,7 +285,7 @@ with Swizzle4Read[Float, ConstVec2, ConstVec3, ConstVec4]
     def w = u.w
 }
 
-class Vec4Swizzled(u: Vec4) extends ConstVec4Swizzled(u)
+private[math] class Vec4Swizzled(u: Vec4) extends ConstVec4Swizzled(u)
 with Swizzle4Write[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x_=(x: Float) { u.x = x }

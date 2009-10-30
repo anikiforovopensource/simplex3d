@@ -34,8 +34,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -45,7 +43,13 @@ sealed abstract class AnyVec2 extends Read2[Float] {
     def x: Float
     def y: Float
 
+    def r = x
+    def g = y
 
+    def s = x
+    def t = y
+
+    
     def apply(i: Int) :Float = {
         i match {
             case 0 => x
@@ -58,6 +62,7 @@ sealed abstract class AnyVec2 extends Read2[Float] {
     def unary_-() = Vec2(-x, -y)
     def *(s: Float) = Vec2(x*s, y*s)
     def /(s: Float) = { val inv = 1/s; Vec2(x*inv, y*inv) }
+    private[math] def divideByComponent(s: Float) = Vec2(s/x, s/y)
 
     def +(u: AnyVec2) = Vec2(x + u.x, y + u.y)
     def -(u: AnyVec2) = Vec2(x - u.x, y - u.y)
@@ -75,27 +80,9 @@ sealed abstract class AnyVec2 extends Read2[Float] {
 
     def !=(u: AnyVec2) :Boolean = !(this == u)
 
-    /**
-     * Approximate comparision.
-     * Read: "this isApproximately u".
-     */
-    def ~=(u: AnyVec2) :Boolean = {
-        if (u == null)
-            false
-        else
-            abs(x - u.x) < ApproximationDelta &&
-            abs(y - u.y) < ApproximationDelta
-    }
-
-    /**
-     * Inverse of approximate comparision.
-     * Read: "this isNotApproximately u" or "this isDistinctFrom u".
-     */
-    def !~(u: AnyVec2) :Boolean = !(this ~= u)
-
-    def isValid: Boolean = {
+    private[math] def hasErrors: Boolean = {
         import java.lang.Float._
-        !(
+        (
             isNaN(x) || isInfinite(x) ||
             isNaN(y) || isInfinite(y)
         )
@@ -124,6 +111,19 @@ object ConstVec2 {
 
 final class Vec2 private (var x: Float, var y: Float) extends AnyVec2 {
 
+    override def r = x
+    override def g = y
+
+    override def s = x
+    override def t = y
+
+    def r_=(r: Float) { x = r }
+    def g_=(g: Float) { y = g }
+
+    def s_=(s: Float) { x = s }
+    def t_=(t: Float) { y = t }
+
+    
     def *=(s: Float) { x *= s; y *= s }
     def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv }
 
@@ -163,14 +163,14 @@ object Vec2 {
     implicit def vec2ToSwizzled(u: Vec2) = new Vec2Swizzled(u)
 }
 
-class ConstVec2Swizzled(u: AnyVec2) extends FloatVecFactory
+private[math] class ConstVec2Swizzled(u: AnyVec2) extends FloatVecFactory
 with Swizzle2Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x = u.x
     def y = u.y
 }
 
-class Vec2Swizzled(u: Vec2) extends ConstVec2Swizzled(u)
+private[math] class Vec2Swizzled(u: Vec2) extends ConstVec2Swizzled(u)
 with Swizzle2Write[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x_=(x: Float) { u.x = x }

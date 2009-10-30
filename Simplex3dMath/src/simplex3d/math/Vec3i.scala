@@ -34,7 +34,7 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
+import VecMath._
 
 
 /**
@@ -46,7 +46,15 @@ sealed abstract class AnyVec3i extends Read3[Int] {
     def y: Int
     def z: Int
 
-    
+    def r = x
+    def g = y
+    def b = z
+
+    def s = x
+    def t = y
+    def p = z
+
+
     def apply(i: Int) :Int = {
         i match {
             case 0 => x
@@ -61,7 +69,8 @@ sealed abstract class AnyVec3i extends Read3[Int] {
     def unary_~() = Vec3i(~x, ~y, ~z)
 
     def *(s: Int) = Vec3i(x*s, y*s, z*s)
-    def /(s: Int) = { val inv = 1/s; Vec3i(x*inv, y*inv, z*inv) }
+    def /(s: Int) = Vec3i(x/s, y/s, z/s)
+    private[math] def divideByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
     def %(s: Int) = Vec3i(x % s, y % s, z % s)
     def >>(s: Int) = Vec3i( x >> s, y >> s, z >> s)
     def >>>(s: Int) = Vec3i( x >>> s, y >>> s, z >>> s)
@@ -117,6 +126,23 @@ object ConstVec3i {
 final class Vec3i private (var x: Int, var y: Int, var z: Int)
 extends AnyVec3i
 {
+    override def r = x
+    override def g = y
+    override def b = z
+
+    override def s = x
+    override def t = y
+    override def p = z
+
+    def r_=(r: Int) { x = r }
+    def g_=(g: Int) { y = g }
+    def b_=(b: Int) { z = b }
+
+    def s_=(s: Int) { x = s }
+    def t_=(t: Int) { y = t }
+    def p_=(p: Int) { z = p }
+
+
     def *=(s: Int) { x *= s; y *= s; z *= s }
     def /=(s: Int) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
     def %=(s: Int) { x %= s; y %= s; z %= s }
@@ -174,7 +200,7 @@ object Vec3i {
     implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
 }
 
-class ConstVec3iSwizzled(u: AnyVec3i) extends IntVecFactory
+private[math] class ConstVec3iSwizzled(u: AnyVec3i) extends IntVecFactory
 with Swizzle3Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x = u.x
@@ -182,7 +208,7 @@ with Swizzle3Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
     def z = u.z
 }
 
-class Vec3iSwizzled(u: Vec3i) extends ConstVec3iSwizzled(u)
+private[math] class Vec3iSwizzled(u: Vec3i) extends ConstVec3iSwizzled(u)
 with Swizzle3Write[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x_=(x: Int) { u.x = x }

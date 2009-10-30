@@ -39,20 +39,14 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle3Read[P, R2, R3, R4]
+private[math] trait Swizzle3Read[P, R2, R3, R4]
 extends VecFactory[P, R2, R3, R4]
 {
     def x: P
     def y: P
     def z: P
 
-    def r = x
-    def g = y
-    def b = z
 
-    def s = x
-    def t = y
-    def p = z
     def xx: R2 = make2(x, x)
     def xy: R2 = make2(x, y)
     def xz: R2 = make2(x, z)
@@ -424,32 +418,16 @@ extends VecFactory[P, R2, R3, R4]
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle3Write[P, R2, R3, R4]
+private[math] trait Swizzle3Write[P, R2, R3, R4]
 extends Swizzle3Read[P, R2, R3, R4]
 {
     override def x: P
     override def y: P
     override def z: P
 
-    override def r = x
-    override def g = y
-    override def b = z
-
-    override def s = x
-    override def t = y
-    override def p = z
-
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
     def z_=(z: P) :Unit
-
-    def r_=(r: P) { x = r }
-    def g_=(g: P) { y = g }
-    def b_=(b: P) { z = b }
-
-    def s_=(s: P) { x = s }
-    def t_=(t: P) { y = t }
-    def p_=(p: P) { z = p }
 
 
     override def xy: R2 = make2(x, y)

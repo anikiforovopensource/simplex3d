@@ -34,8 +34,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -45,6 +43,14 @@ sealed abstract class AnyVec3 extends Read3[Float] {
     def x: Float
     def y: Float
     def z: Float
+
+    def r = x
+    def g = y
+    def b = z
+
+    def s = x
+    def t = y
+    def p = z
 
     
     def apply(i: Int) :Float = {
@@ -60,6 +66,7 @@ sealed abstract class AnyVec3 extends Read3[Float] {
     def unary_-() = Vec3(-x, -y, -z)
     def *(s: Float) = Vec3(x*s, y*s, z*s)
     def /(s: Float) = { val inv = 1/s; Vec3(x*inv, y*inv, z*inv) }
+    private[math] def divideByComponent(s: Float) = Vec3(s/x, s/y, s/z)
 
     def +(u: AnyVec3) = Vec3(x + u.x, y + u.y, z + u.z)
     def -(u: AnyVec3) = Vec3(x - u.x, y - u.y, z - u.z)
@@ -77,28 +84,9 @@ sealed abstract class AnyVec3 extends Read3[Float] {
 
     def !=(u: AnyVec3) :Boolean = !(this == u)
 
-    /**
-     * Approximate comparision.
-     * Read: "this isApproximately u".
-     */
-    def ~=(u: AnyVec3) :Boolean = {
-        if (u == null)
-            false
-        else
-            abs(x - u.x) < ApproximationDelta &&
-            abs(y - u.y) < ApproximationDelta &&
-            abs(z - u.z) < ApproximationDelta
-    }
-
-    /**
-     * Inverse of approximate comparision.
-     * Read: "this isNotApproximately u" or "this isDistinctFrom u".
-     */
-    def !~(u: AnyVec3) :Boolean = !(this ~= u)
-
-    def isValid: Boolean = {
+    private[math] def hasErrors: Boolean = {
         import java.lang.Float._
-        !(
+        (
             isNaN(x) || isInfinite(x) ||
             isNaN(y) || isInfinite(y) ||
             isNaN(z) || isInfinite(z)
@@ -133,6 +121,22 @@ object ConstVec3 {
 final class Vec3 private (var x: Float, var y: Float, var z: Float)
 extends AnyVec3
 {
+    override def r = x
+    override def g = y
+    override def b = z
+
+    override def s = x
+    override def t = y
+    override def p = z
+
+    def r_=(r: Float) { x = r }
+    def g_=(g: Float) { y = g }
+    def b_=(b: Float) { z = b }
+
+    def s_=(s: Float) { x = s }
+    def t_=(t: Float) { y = t }
+    def p_=(p: Float) { z = p }
+
 
     def *=(s: Float) { x *= s; y *= s; z *= s }
     def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
@@ -177,7 +181,7 @@ object Vec3 {
     implicit def vec3ToSwizzled(u: Vec3) = new Vec3Swizzled(u)
 }
 
-class ConstVec3Swizzled(u: AnyVec3) extends FloatVecFactory
+private[math] class ConstVec3Swizzled(u: AnyVec3) extends FloatVecFactory
 with Swizzle3Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x = u.x
@@ -185,7 +189,7 @@ with Swizzle3Read[Float, ConstVec2, ConstVec3, ConstVec4]
     def z = u.z
 }
 
-class Vec3Swizzled(u: Vec3) extends ConstVec3Swizzled(u)
+private[math] class Vec3Swizzled(u: Vec3) extends ConstVec3Swizzled(u)
 with Swizzle3Write[Float, ConstVec2, ConstVec3, ConstVec4]
 {
     def x_=(x: Float) { u.x = x }

@@ -38,13 +38,15 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait VecFactory[P, R2, R3, R4] {
+private[math] trait VecFactory[P, R2, R3, R4] {
     protected def make2(x: P, y: P) :R2
     protected def make3(x: P, y: P, z: P) :R3
     protected def make4(x: P, y: P, z: P, w: P) :R4
 }
 
-protected class FloatVecFactory {
+private[math] class FloatVecFactory
+extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
+{
     protected def make2(x: Float, y: Float) = ConstVec2(x, y)
     protected def make3(x: Float,
                                y: Float,
@@ -55,7 +57,9 @@ protected class FloatVecFactory {
                                w: Float) = ConstVec4(x, y, z, w)
 }
 
-protected class IntVecFactory {
+private[math] class IntVecFactory
+extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
+{
     protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
     protected def make3(x: Int,
                                y: Int,
@@ -66,7 +70,9 @@ protected class IntVecFactory {
                                w: Int) = ConstVec4i(x, y, z, w)
 }
 
-protected class BooleanVecFactory {
+private[math] class BooleanVecFactory
+extends VecFactory[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
+{
     protected def make2(x: Boolean, y: Boolean) = ConstVec2b(x, y)
     protected def make3(x: Boolean,
                                y: Boolean,

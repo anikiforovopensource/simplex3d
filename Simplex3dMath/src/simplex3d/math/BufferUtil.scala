@@ -34,50 +34,20 @@
 
 package simplex3d.math
 
+import java.nio.FloatBuffer
+
 
 /**
- * Glue code to make floats interact with vectors and matrices.
- *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedFloat(val value: Float) extends Read1[Float] {
-    def *(u: AnyVec2i) = Vec2(u)*value
-    def *(u: AnyVec3i) = Vec3(u)*value
-    def *(u: AnyVec4i) = Vec4(u)*value
+class BufferUtil {
 
-    def *(u: AnyVec2) = u*value
-    def *(u: AnyVec3) = u*value
-    def *(u: AnyVec4) = u*value
+    // Matrix <-> buffer conversions
+    def toArray(m: AnyMat3x4, a: Array[Float]) {
 
-    def *(q: AnyQuat4) = q*value
+    }
 
-    def *(m: AnyMat2) = m*value
-    def *(m: AnyMat2x3) = m*value
-    def *(m: AnyMat2x4) = m*value
-    def *(m: AnyMat3x2) = m*value
-    def *(m: AnyMat3) = m*value
-    def *(m: AnyMat3x4) = m*value
-    def *(m: AnyMat4x2) = m*value
-    def *(m: AnyMat4x3) = m*value
-    def *(m: AnyMat4) = m*value
+    def toBuffer(m: AnyMat3x4, a: FloatBuffer) {
 
-    def /(u: AnyVec2i) = Vec2(u).divideByComponent(value)
-    def /(u: AnyVec3i) = Vec3(u).divideByComponent(value)
-    def /(u: AnyVec4i) = Vec4(u).divideByComponent(value)
-
-    def /(u: AnyVec2) = u.divideByComponent(value)
-    def /(u: AnyVec3) = u.divideByComponent(value)
-    def /(u: AnyVec4) = u.divideByComponent(value)
-
-    def /(q: AnyQuat4) = q.divideByComponent(value)
-
-    def /(m: AnyMat2) = m.divideByComponent(value)
-    def /(m: AnyMat2x3) = m.divideByComponent(value)
-    def /(m: AnyMat2x4) = m.divideByComponent(value)
-    def /(m: AnyMat3x2) = m.divideByComponent(value)
-    def /(m: AnyMat3) = m.divideByComponent(value)
-    def /(m: AnyMat3x4) = m.divideByComponent(value)
-    def /(m: AnyMat4x2) = m.divideByComponent(value)
-    def /(m: AnyMat4x3) = m.divideByComponent(value)
-    def /(m: AnyMat4) = m.divideByComponent(value)
+    }
 }

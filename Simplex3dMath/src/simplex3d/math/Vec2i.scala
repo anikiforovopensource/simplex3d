@@ -34,7 +34,7 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
+import VecMath._
 
 
 /**
@@ -44,6 +44,12 @@ sealed abstract class AnyVec2i extends Read2[Int] {
 
     def x: Int
     def y: Int
+
+    def r = x
+    def g = y
+
+    def s = x
+    def t = y
 
 
     def apply(i: Int) :Int = {
@@ -59,7 +65,8 @@ sealed abstract class AnyVec2i extends Read2[Int] {
     def unary_~() = Vec2i(~x, ~y)
 
     def *(s: Int) = Vec2i(x*s, y*s)
-    def /(s: Int) = { val inv = 1/s; Vec2i(x*inv, y*inv) }
+    def /(s: Int) = Vec2i(x/s, y/s)
+    private[math] def divideByComponent(s: Int) = Vec2i(s/x, s/y)
     def %(s: Int) = Vec2i(x % s, y % s)
     def >>(s: Int) = Vec2i( x >> s, y >> s)
     def >>>(s: Int) = Vec2i( x >>> s, y >>> s)
@@ -109,6 +116,20 @@ object ConstVec2i {
 }
 
 final class Vec2i private (var x: Int, var y: Int) extends AnyVec2i {
+
+    override def r = x
+    override def g = y
+
+    override def s = x
+    override def t = y
+
+    def r_=(r: Int) { x = r }
+    def g_=(g: Int) { y = g }
+
+    def s_=(s: Int) { x = s }
+    def t_=(t: Int) { y = t }
+
+
     def *=(s: Int) { x *= s; y *= s }
     def /=(s: Int) { val inv = 1/s; x *= inv; y *= inv }
     def %=(s: Int) { x %= s; y %= s }
@@ -162,14 +183,14 @@ object Vec2i {
     implicit def vec2iToSwizzled(u: Vec2i) = new Vec2iSwizzled(u)
 }
 
-class ConstVec2iSwizzled(u: AnyVec2i) extends IntVecFactory
+private[math] class ConstVec2iSwizzled(u: AnyVec2i) extends IntVecFactory
 with Swizzle2Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x = u.x
     def y = u.y
 }
 
-class Vec2iSwizzled(u: Vec2i) extends ConstVec2iSwizzled(u)
+private[math] class Vec2iSwizzled(u: Vec2i) extends ConstVec2iSwizzled(u)
 with Swizzle2Write[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x_=(x: Int) { u.x = x }

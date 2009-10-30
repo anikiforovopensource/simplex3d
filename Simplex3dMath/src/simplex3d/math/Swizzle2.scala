@@ -39,17 +39,13 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle2Read[P, R2, R3, R4]
+private[math] trait Swizzle2Read[P, R2, R3, R4]
 extends VecFactory[P, R2, R3, R4]
 {
     def x: P
     def y: P
 
-    def r = x
-    def g = y
 
-    def s = x
-    def t = y
     def xx: R2 = make2(x, x)
     def xy: R2 = make2(x, y)
     def yx: R2 = make2(y, x)
@@ -154,26 +150,14 @@ extends VecFactory[P, R2, R3, R4]
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle2Write[P, R2, R3, R4]
+private[math] trait Swizzle2Write[P, R2, R3, R4]
 extends Swizzle2Read[P, R2, R3, R4]
 {
     override def x: P
     override def y: P
 
-    override def r = x
-    override def g = y
-
-    override def s = x
-    override def t = y
-
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
-
-    def r_=(r: P) { x = r }
-    def g_=(g: P) { y = g }
-
-    def s_=(s: P) { x = s }
-    def t_=(t: P) { y = t }
 
 
     override def xy: R2 = make2(x, y)

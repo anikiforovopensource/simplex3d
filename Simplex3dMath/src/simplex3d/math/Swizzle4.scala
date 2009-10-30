@@ -39,7 +39,7 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle4Read[P, R2, R3, R4]
+private[math] trait Swizzle4Read[P, R2, R3, R4]
 extends VecFactory[P, R2, R3, R4]
 {
     def x: P
@@ -47,15 +47,7 @@ extends VecFactory[P, R2, R3, R4]
     def z: P
     def w: P
 
-    def r = x
-    def g = y
-    def b = z
-    def a = w
 
-    def s = x
-    def t = y
-    def p = z
-    def q = w
     def xx: R2 = make2(x, x)
     def xy: R2 = make2(x, y)
     def xz: R2 = make2(x, z)
@@ -1084,7 +1076,7 @@ extends VecFactory[P, R2, R3, R4]
 /**
  * @author Aleksey Nikiforov (lex)
  */
-protected trait Swizzle4Write[P, R2, R3, R4]
+private[math] trait Swizzle4Write[P, R2, R3, R4]
 extends Swizzle4Read[P, R2, R3, R4]
 {
     override def x: P
@@ -1092,30 +1084,10 @@ extends Swizzle4Read[P, R2, R3, R4]
     override def z: P
     override def w: P
 
-    override def r = x
-    override def g = y
-    override def b = z
-    override def a = w
-
-    override def s = x
-    override def t = y
-    override def p = z
-    override def q = w
-
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
     def z_=(z: P) :Unit
     def w_=(z: P) :Unit
-
-    def r_=(r: P) { x = r }
-    def g_=(g: P) { y = g }
-    def b_=(b: P) { z = b }
-    def a_=(a: P) { w = a }
-
-    def s_=(s: P) { x = s }
-    def t_=(t: P) { y = t }
-    def p_=(p: P) { z = p }
-    def q_=(q: P) { w = q }
 
 
     override def xy: R2 = make2(x, y)

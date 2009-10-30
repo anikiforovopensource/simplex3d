@@ -34,8 +34,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -44,6 +42,12 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
 
     def x: Boolean
     def y: Boolean
+
+    def r = x
+    def g = y
+
+    def s = x
+    def t = y
 
 
     def apply(i: Int) :Boolean = {
@@ -81,6 +85,20 @@ object ConstVec2b {
 }
 
 final class Vec2b private (var x: Boolean, var y: Boolean) extends AnyVec2b {
+
+    override def r = x
+    override def g = y
+
+    override def s = x
+    override def t = y
+
+    def r_=(r: Boolean) { x = r }
+    def g_=(g: Boolean) { y = g }
+
+    def s_=(s: Boolean) { x = s }
+    def t_=(t: Boolean) { y = t }
+
+
     def :=(u: AnyVec2b) { x = u.x; y = u.y }
     def set(x: Boolean, y: Boolean) { this.x = x; this.y = y }
 
@@ -104,14 +122,14 @@ object Vec2b {
     implicit def vec2bToSwizzled(u: Vec2b) = new Vec2bSwizzled(u)
 }
 
-class ConstVec2bSwizzled(u: AnyVec2b) extends BooleanVecFactory
+private[math] class ConstVec2bSwizzled(u: AnyVec2b) extends BooleanVecFactory
 with Swizzle2Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
     def x = u.x
     def y = u.y
 }
 
-class Vec2bSwizzled(u: Vec2b) extends ConstVec2bSwizzled(u)
+private[math] class Vec2bSwizzled(u: Vec2b) extends ConstVec2bSwizzled(u)
 with Swizzle2Write[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
     def x_=(x: Boolean) { u.x = x }

@@ -34,7 +34,7 @@
 
 package simplex3d.math
 
-import simplex3d.math.VecMath._
+import VecMath._
 
 
 /**
@@ -46,6 +46,16 @@ sealed abstract class AnyVec4i extends Read4[Int] {
     def y: Int
     def z: Int
     def w: Int
+
+    def r = x
+    def g = y
+    def b = z
+    def a = w
+
+    def s = x
+    def t = y
+    def p = z
+    def q = w
 
 
     def apply(i: Int) :Int = {
@@ -63,7 +73,8 @@ sealed abstract class AnyVec4i extends Read4[Int] {
     def unary_~() = Vec4i(~x, ~y, ~z, ~w)
 
     def *(s: Int) = Vec4i(x*s, y*s, z*s, w*s)
-    def /(s: Int) = { val inv = 1/s; Vec4i(x*inv, y*inv, z*inv, w*inv) }
+    def /(s: Int) = Vec4i(x/s, y/s, z/s, w/s)
+    private[math] def divideByComponent(s: Int) = Vec4i(s/x, s/y, s/z, s/w)
     def %(s: Int) = Vec4i(x % s, y % s, z % s, w % s)
     def >>(s: Int) = Vec4i( x >> s, y >> s, z >> s, w >> s)
     def >>>(s: Int) = Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
@@ -161,6 +172,27 @@ final class Vec4i private (var x: Int, var y: Int,
                           var z: Int, var w: Int)
 extends AnyVec4i
 {
+    override def r = x
+    override def g = y
+    override def b = z
+    override def a = w
+
+    override def s = x
+    override def t = y
+    override def p = z
+    override def q = w
+
+    def r_=(r: Int) { x = r }
+    def g_=(g: Int) { y = g }
+    def b_=(b: Int) { z = b }
+    def a_=(a: Int) { w = a }
+
+    def s_=(s: Int) { x = s }
+    def t_=(t: Int) { y = t }
+    def p_=(p: Int) { z = p }
+    def q_=(q: Int) { w = q }
+
+
     def *=(s: Int) { x *= s; y *= s; z *= s; w *= s }
     def /=(s: Int) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
     def %=(s: Int) { x %= s; y %= s; z %= s; w %= s }
@@ -262,7 +294,7 @@ object Vec4i {
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)
 }
 
-class ConstVec4iSwizzled(u: AnyVec4i) extends IntVecFactory
+private[math] class ConstVec4iSwizzled(u: AnyVec4i) extends IntVecFactory
 with Swizzle4Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x = u.x
@@ -271,7 +303,7 @@ with Swizzle4Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
     def w = u.w
 }
 
-class Vec4iSwizzled(u: Vec4i) extends ConstVec4iSwizzled(u)
+private[math] class Vec4iSwizzled(u: Vec4i) extends ConstVec4iSwizzled(u)
 with Swizzle4Write[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
     def x_=(x: Int) { u.x = x }

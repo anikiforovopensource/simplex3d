@@ -34,13 +34,15 @@
 
 package simplex3d.math
 
-import VecMath._
+import Read._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x4 {
+sealed abstract class AnyMat3x4
+extends ConstRotationSubMat3x3
+{
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float // column
     def m01: Float; def m11: Float; def m21: Float // column
@@ -129,6 +131,22 @@ sealed abstract class AnyMat3x4 {
         m03 - m.m03, m13 - m.m13, m23 - m.m23
     )
 
+    /**
+     * Component-wise devision.
+     */
+    def /(m: AnyMat3x4) = Mat3x4(
+        m00/m.m00, m10/m.m10, m20/m.m20,
+        m01/m.m01, m11/m.m11, m21/m.m21,
+        m02/m.m02, m12/m.m12, m22/m.m22,
+        m03/m.m03, m13/m.m13, m23/m.m23
+    )
+    private[math] def divideByComponent(s: Float) = Mat3x4(
+        s/m00, s/m10, s/m20,
+        s/m01, s/m11, s/m21,
+        s/m02, s/m12, s/m22,
+        s/m03, s/m13, s/m23
+    )
+
     def *(m: AnyMat4x2) = Mat3x2(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
@@ -182,14 +200,75 @@ sealed abstract class AnyMat3x4 {
     )
 
     /**
-     * Equivalent to regular multiplication with Vec(u, 1)
-     * For example u: Vec2 is treated as Vec3(u, 1).
-     * Useful when using matrices that store translation as the last column.
+     * This method will apply the matrix transformation to a point
+     * (such as vertex or object location).<br/>
+     *
+     * Equivalent to regular multiplication with Vec(u, 1).
      */
-    def transform(u: AnyVec3) = Vec3(
+    def transformPoint(u: AnyVec3) = Vec3(
         m00*u.x + m01*u.y + m02*u.z + m03,
         m10*u.x + m11*u.y + m12*u.z + m13,
         m20*u.x + m21*u.y + m22*u.z + m23
+    )
+    /**
+     * This method will apply the matrix transformation to a vector
+     * (such as object speed).<br/>
+     *
+     * Equivalent to regular multiplication with Vec(u, 0).
+     */
+    def transformVector(u: AnyVec3) = Vec3(
+        m00*u.x + m01*u.y + m02*u.z,
+        m10*u.x + m11*u.y + m12*u.z,
+        m20*u.x + m21*u.y + m22*u.z
+    )
+
+    /**
+     * Combine two transformations. This method works similar to regular
+     * multiplication but with a special handling of the translation column.
+     * <br/>
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
+     */
+    def *(m: AnyMat3x4) = Mat3x4(
+        m00*m.m00 + m01*m.m10 + m02*m.m20,
+        m10*m.m00 + m11*m.m10 + m12*m.m20,
+        m20*m.m00 + m21*m.m10 + m22*m.m20,
+
+        m00*m.m01 + m01*m.m11 + m02*m.m21,
+        m10*m.m01 + m11*m.m11 + m12*m.m21,
+        m20*m.m01 + m21*m.m11 + m22*m.m21,
+
+        m00*m.m02 + m01*m.m12 + m02*m.m22,
+        m10*m.m02 + m11*m.m12 + m12*m.m22,
+        m20*m.m02 + m21*m.m12 + m22*m.m22,
+
+        m00*m.m03 + m01*m.m13 + m02*m.m23 + m03,
+        m10*m.m03 + m11*m.m13 + m12*m.m23 + m13,
+        m20*m.m03 + m21*m.m13 + m22*m.m23 + m23
+    )
+
+    /**
+     * Combine this transformation with rotation. This method works similar
+     * to regular multiplication but with a special handling of
+     * the translation column.<br/>
+     *
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
+     */
+    def *(m: AnyMat3) = Mat3x4(
+        m00*m.m00 + m01*m.m10 + m02*m.m20,
+        m10*m.m00 + m11*m.m10 + m12*m.m20,
+        m20*m.m00 + m21*m.m10 + m22*m.m20,
+
+        m00*m.m01 + m01*m.m11 + m02*m.m21,
+        m10*m.m01 + m11*m.m11 + m12*m.m21,
+        m20*m.m01 + m21*m.m11 + m22*m.m21,
+
+        m00*m.m02 + m01*m.m12 + m02*m.m22,
+        m10*m.m02 + m11*m.m12 + m12*m.m22,
+        m20*m.m02 + m21*m.m12 + m22*m.m22,
+
+        m03,
+        m13,
+        m23
     )
 
     def ==(m: AnyMat3x4) :Boolean = {
@@ -203,42 +282,10 @@ sealed abstract class AnyMat3x4 {
 
     def !=(m: AnyMat3x4) :Boolean = !(this == m)
 
-    /**
-     * Approximate comparision.
-     * Read: "this isApproximately m".
-     */
-    def ~=(m: AnyMat3x4) :Boolean = {
-        if (m == null)
-            false
-        else (
-            abs(m00 - m.m00) < ApproximationDelta &&
-            abs(m10 - m.m10) < ApproximationDelta &&
-            abs(m20 - m.m20) < ApproximationDelta &&
-
-            abs(m01 - m.m01) < ApproximationDelta &&
-            abs(m11 - m.m11) < ApproximationDelta &&
-            abs(m21 - m.m21) < ApproximationDelta &&
-
-            abs(m02 - m.m02) < ApproximationDelta &&
-            abs(m12 - m.m12) < ApproximationDelta &&
-            abs(m22 - m.m22) < ApproximationDelta &&
-
-            abs(m03 - m.m03) < ApproximationDelta &&
-            abs(m13 - m.m13) < ApproximationDelta &&
-            abs(m23 - m.m23) < ApproximationDelta
-        )
-    }
-
-    /**
-     * Inverse of approximate comparision.
-     * Read: "this isNotApproximately m" or "this isDistinctFrom m".
-     */
-    def !~(m: AnyMat3x4) :Boolean = !(this ~= m)
-
-    def isValid: Boolean = {
+    private[math] def hasErrors: Boolean = {
         import java.lang.Float._
 
-        !(
+        (
             isNaN(m00) || isInfinite(m00) ||
             isNaN(m10) || isInfinite(m10) ||
             isNaN(m20) || isInfinite(m20) ||
@@ -296,46 +343,7 @@ object ConstMat3x4 {
             m03, m13, m23
       )
 
-    private def read(arg: ReadAny[Float], mat: Array[Float], index: Int) :Int = {
-        var i = index
-        arg match {
-            case s: ExtendedFloat => {
-                mat(i) = s.value
-                i += 1
-            }
-            case v2: AnyVec2 => {
-                mat(i) = v2.x
-                i += 1
-                mat(i) = v2.y
-                i += 1
-            }
-            case v3: AnyVec3 => {
-                mat(i) = v3.x
-                i += 1
-                mat(i) = v3.y
-                i += 1
-                mat(i) = v3.z
-                i += 1
-            }
-            case v4: AnyVec4 => {
-                mat(i) = v4.x
-                i += 1
-                mat(i) = v4.y
-                i += 1
-                mat(i) = v4.z
-                i += 1
-                mat(i) = v4.w
-                i += 1
-            }
-            case _ => throw new IllegalArgumentException(
-                "Expected a scalar or a vector of type Float, " +
-                "got " + arg.getClass.getName)
-        }
-        i
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float]) =
-    {
+    def apply(args: ReadAny[Float]*) :ConstMat3x4 = {
         val mat = new Array[Float](12)
         mat(0) = 1
         mat(4) = 1
@@ -343,325 +351,12 @@ object ConstMat3x4 {
 
         var index = 0
         try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
+            var i = 0; while (i < args.length) {
+                index = read(args(i), mat, index)
+                i += 1
             }
         }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float], 
-              a9: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-            index = read(a9, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float], 
-              a9: ReadAny[Float], a10: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-            index = read(a9, mat, index)
-            index = read(a10, mat, index)
-        } catch {
+        catch {
             case iae: IllegalArgumentException => {
                 throw new IllegalArgumentException(iae.getMessage)
             }
@@ -754,7 +449,7 @@ final class Mat3x4 private (
     var m01: Float, var m11: Float, var m21: Float,
     var m02: Float, var m12: Float, var m22: Float,
     var m03: Float, var m13: Float, var m23: Float
-) extends AnyMat3x4
+) extends AnyMat3x4 with RotationSubMat3x3
 {
     def *=(s: Float) {
         m00 *= s; m10 *= s; m20 *= s;
@@ -805,11 +500,78 @@ final class Mat3x4 private (
         m03 = a03; m13 = a13; m23 = a23
     }
 
+    /**
+     * Combine this transformation with rotation. This method works similar
+     * to regular multiplication but with a special handling of
+     * the translation column.<br/>
+     *
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
+     */
+    def *=(m: AnyMat3x4) {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+        val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+
+        val a03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03
+        val a13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13
+        val a23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23
+
+        m00 = a00; m10 = a10; m20 = a20
+        m01 = a01; m11 = a11; m21 = a21
+        m02 = a02; m12 = a12; m22 = a22
+        m03 = a03; m13 = a13; m23 = a23
+    }
+
+    /**
+     * Combine this transformation with rotation. This method works similar
+     * to regular multiplication but with a special handling of
+     * the translation column.<br/>
+     *
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
+     */
+    def *=(m: AnyMat3) {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+        val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+
+        m00 = a00; m10 = a10; m20 = a20
+        m01 = a01; m11 = a11; m21 = a21
+        m02 = a02; m12 = a12; m22 = a22
+    }
+
     def :=(m: AnyMat3x4) {
         m00 = m.m00; m10 = m.m10; m20 = m.m20;
         m01 = m.m01; m11 = m.m11; m21 = m.m21;
         m02 = m.m02; m12 = m.m12; m22 = m.m22;
         m03 = m.m03; m13 = m.m13; m23 = m.m23
+    }
+
+    def set(
+        m00: Float, m10: Float, m20: Float,
+        m01: Float, m11: Float, m21: Float,
+        m02: Float, m12: Float, m22: Float,
+        m03: Float, m13: Float, m23: Float
+    ) {
+        this.m00 = m00; this.m10 = m10; this.m20 = m20;
+        this.m01 = m01; this.m11 = m11; this.m21 = m21;
+        this.m02 = m02; this.m12 = m12; this.m22 = m22;
+        this.m03 = m03; this.m13 = m13; this.m23 = m23
     }
 
     def update(c: Int, r: Int, s: Float) {
@@ -885,46 +647,7 @@ object Mat3x4 {
             m03, m13, m23
       )
 
-    private def read(arg: ReadAny[Float], mat: Array[Float], index: Int) :Int = {
-        var i = index
-        arg match {
-            case s: ExtendedFloat => {
-                mat(i) = s.value
-                i += 1
-            }
-            case v2: AnyVec2 => {
-                mat(i) = v2.x
-                i += 1
-                mat(i) = v2.y
-                i += 1
-            }
-            case v3: AnyVec3 => {
-                mat(i) = v3.x
-                i += 1
-                mat(i) = v3.y
-                i += 1
-                mat(i) = v3.z
-                i += 1
-            }
-            case v4: AnyVec4 => {
-                mat(i) = v4.x
-                i += 1
-                mat(i) = v4.y
-                i += 1
-                mat(i) = v4.z
-                i += 1
-                mat(i) = v4.w
-                i += 1
-            }
-            case _ => throw new IllegalArgumentException(
-                "Expected a scalar or a vector of type Float, " +
-                "got " + arg.getClass.getName)
-        }
-        i
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float]) =
-    {
+    def apply(args: ReadAny[Float]*) :Mat3x4 = {
         val mat = new Array[Float](12)
         mat(0) = 1
         mat(4) = 1
@@ -932,325 +655,12 @@ object Mat3x4 {
 
         var index = 0
         try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
+            var i = 0; while (i < args.length) {
+                index = read(args(i), mat, index)
+                i += 1
             }
         }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float], 
-              a9: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-            index = read(a9, mat, index)
-        } catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat3x4(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(a0: ReadAny[Float], a1: ReadAny[Float], a2: ReadAny[Float], 
-              a3: ReadAny[Float], a4: ReadAny[Float], a5: ReadAny[Float], 
-              a6: ReadAny[Float], a7: ReadAny[Float], a8: ReadAny[Float], 
-              a9: ReadAny[Float], a10: ReadAny[Float]) =
-    {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            index = read(a0, mat, index)
-            index = read(a1, mat, index)
-            index = read(a2, mat, index)
-            index = read(a3, mat, index)
-            index = read(a4, mat, index)
-            index = read(a5, mat, index)
-            index = read(a6, mat, index)
-            index = read(a7, mat, index)
-            index = read(a8, mat, index)
-            index = read(a9, mat, index)
-            index = read(a10, mat, index)
-        } catch {
+        catch {
             case iae: IllegalArgumentException => {
                 throw new IllegalArgumentException(iae.getMessage)
             }

@@ -36,10 +36,48 @@ package simplex3d.math
 
 
 /**
+ * Glue code to make ints interact with vectors and matrices.
+ *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) extends ReadAny[Int] {
+final class ExtendedInt(val value: Int) extends Read1[Int] {
     def *(u: AnyVec2i) = u*value
     def *(u: AnyVec3i) = u*value
     def *(u: AnyVec4i) = u*value
+
+    def *(u: AnyVec2) = u*value
+    def *(u: AnyVec3) = u*value
+    def *(u: AnyVec4) = u*value
+
+    def *(q: AnyQuat4) = q*value
+
+    def *(m: AnyMat2) = m*value
+    def *(m: AnyMat2x3) = m*value
+    def *(m: AnyMat2x4) = m*value
+    def *(m: AnyMat3x2) = m*value
+    def *(m: AnyMat3) = m*value
+    def *(m: AnyMat3x4) = m*value
+    def *(m: AnyMat4x2) = m*value
+    def *(m: AnyMat4x3) = m*value
+    def *(m: AnyMat4) = m*value
+
+    def /(u: AnyVec2i) = u.divideByComponent(value)
+    def /(u: AnyVec3i) = u.divideByComponent(value)
+    def /(u: AnyVec4i) = u.divideByComponent(value)
+
+    def /(u: AnyVec2) = u.divideByComponent(value)
+    def /(u: AnyVec3) = u.divideByComponent(value)
+    def /(u: AnyVec4) = u.divideByComponent(value)
+
+    def /(q: AnyQuat4) = q.divideByComponent(value)
+
+    def /(m: AnyMat2) = m.divideByComponent(value)
+    def /(m: AnyMat2x3) = m.divideByComponent(value)
+    def /(m: AnyMat2x4) = m.divideByComponent(value)
+    def /(m: AnyMat3x2) = m.divideByComponent(value)
+    def /(m: AnyMat3) = m.divideByComponent(value)
+    def /(m: AnyMat3x4) = m.divideByComponent(value)
+    def /(m: AnyMat4x2) = m.divideByComponent(value)
+    def /(m: AnyMat4x3) = m.divideByComponent(value)
+    def /(m: AnyMat4) = m.divideByComponent(value)
 }

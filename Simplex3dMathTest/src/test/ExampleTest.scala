@@ -18,16 +18,26 @@
 
 package test
 
+import org.scalatest._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Runner {
-    def main(args: Array[String]) {
-        org.scalatest.tools.Runner.main(Array[String](
-            "-p",
-            "build/classes",
-            "-gNHL"
-        ))
+class ExampleTest extends FunSuite {
+
+    test ("Example") {
+        assert(true)
+        expect (1) { 3 - 2 }
+
+        info("example info")
+
+        intercept[IllegalArgumentException] {
+            throw new IllegalArgumentException()
+        }
+    }
+
+    test("Pending test example") {
+        pending
     }
 }

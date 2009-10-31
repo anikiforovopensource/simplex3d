@@ -38,13 +38,13 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ConstRotationSubMat2x2 {
+trait ConstRotationSubMat2 {
     // Column major order.
     def m00: Float; def m10: Float // column
     def m01: Float; def m11: Float // column
 }
 
-trait RotationSubMat2x2 {
+trait RotationSubMat2 {
     // Column major order.
     var m00: Float; var m10: Float // column
     var m01: Float; var m11: Float // column

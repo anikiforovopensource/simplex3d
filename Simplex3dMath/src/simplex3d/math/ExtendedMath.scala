@@ -661,7 +661,7 @@ object ExtendedMath {
         mat
     }
 
-    def transposeSubMat2x2(m: RotationSubMat2x2) {
+    def transposeRotation2(m: RotationSubMat2) {
         import m._
 
         val t10 = m10
@@ -669,7 +669,7 @@ object ExtendedMath {
         m01 = t10
     }
 
-    def transposeSubMat3x3(m: RotationSubMat3x3) {
+    def transposeRotation3(m: RotationSubMat3) {
         import m._
 
         val t10 = m10
@@ -741,7 +741,7 @@ object ExtendedMath {
      * This method creates a 2d transformation matrix that rotates a vector
      * counterclockwise by the specified angle.
      */
-    def rotationMatFrom(angle: Float, result: RotationSubMat2x2) {
+    def rotationMatFrom(angle: Float, result: RotationSubMat2) {
         val cosA = cos(angle)
         val sinA = sin(angle)
 
@@ -755,7 +755,7 @@ object ExtendedMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def rotationAngleFrom(m: ConstRotationSubMat2x2) :Float = {
+    def rotationAngleFrom(m: ConstRotationSubMat2) :Float = {
         acos((m.m00 + m.m11)*0.5f)
     }
 
@@ -763,7 +763,7 @@ object ExtendedMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quatFrom(m: ConstRotationSubMat3x3) :Quat4 = {
+    def quatFrom(m: ConstRotationSubMat3) :Quat4 = {
         val q = Quat4()
         quatFrom(m, q)
         q
@@ -772,7 +772,7 @@ object ExtendedMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quatFrom(m: ConstRotationSubMat3x3, result: Quat4) {
+    def quatFrom(m: ConstRotationSubMat3, result: Quat4) {
         import m._
 
         val trace = m00 + m11 + m22
@@ -840,7 +840,7 @@ object ExtendedMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotationMatFrom(q: AnyQuat4, result: RotationSubMat3x3) {
+    def rotationMatFrom(q: AnyQuat4, result: RotationSubMat3) {
         import q._
 
         val tb = 2*b*b
@@ -870,7 +870,7 @@ object ExtendedMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def rotationMatFrom(angle: Float, axis: AnyVec3, result: RotationSubMat3x3)
+    def rotationMatFrom(angle: Float, axis: AnyVec3, result: RotationSubMat3)
     {
         import axis._
 
@@ -917,7 +917,7 @@ object ExtendedMath {
      * non-scaling rotation. If matrix represents 0 degree rotation,
      * then rotation axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(m: ConstRotationSubMat3x3, axisResult: Vec3) :Float = {
+    def angleAxisFrom(m: ConstRotationSubMat3, axisResult: Vec3) :Float = {
         import m._
 
         val cosAngle = (m00 + m11 + m22 - 1)*0.5f
@@ -960,6 +960,22 @@ object ExtendedMath {
         axisResult.z = (m10 - m01)*t
 
         acos(cosAngle)
+    }
+
+    def lookAt(direction: AnyVec3, up: AnyVec3) :Mat3 = {
+        val m = Mat3(1)
+        lookAt(direction, up, m)
+        m
+    }
+    def lookAt(direction: AnyVec3, up: AnyVec3, m: RotationSubMat3) {
+        val dir = normalize(direction)
+        val right = normalize(cross(up, dir))
+        val objUp = cross(dir, right)
+        m.set(
+            right.x, right.y, right.z,
+            objUp.x, objUp.y, objUp.z,
+            dir.x, dir.y, dir.z
+        )
     }
 
     // Projection

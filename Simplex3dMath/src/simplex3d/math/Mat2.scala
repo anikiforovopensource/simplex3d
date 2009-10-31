@@ -41,7 +41,7 @@ import Read._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2
-extends ConstRotationSubMat2x2
+extends ConstRotationSubMat2
 {
     // Column major order.
     def m00: Float; def m10: Float // column
@@ -286,7 +286,7 @@ object ConstMat2 {
 final class Mat2 private (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float
-) extends AnyMat2 with RotationSubMat2x2
+) extends AnyMat2 with RotationSubMat2
 {
     def *=(s: Float) {
         m00 *= s; m10 *= s;

@@ -269,7 +269,7 @@ object InverseTransform {
         rotationMatFrom(angle, m)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
@@ -280,7 +280,7 @@ object InverseTransform {
         val m = Mat2x3(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
@@ -290,7 +290,7 @@ object InverseTransform {
         rotationMatFrom(angle, m)
         m(0) /= scale
         m(1) /= scale
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
@@ -301,7 +301,7 @@ object InverseTransform {
         val m = Mat2x3(rotation)
         m(0) /= scale
         m(1) /= scale
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
@@ -309,14 +309,14 @@ object InverseTransform {
     def apply(translation: AnyVec2, angle: Float) :Mat2x3 = {
         val m = Mat2x3(1)
         rotationMatFrom(angle, m)
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
     def apply(translation: AnyVec2, rotation: AnyMat2) :Mat2x3 = {
         val m = Mat2x3(rotation)
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
@@ -333,7 +333,7 @@ object InverseTransform {
         rotationMatFrom(angle, m)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         m
     }
     def apply(angle: Float, scale: Float) :Mat2x3 = {
@@ -342,14 +342,14 @@ object InverseTransform {
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         m
     }
     def apply(rotation: AnyMat2, scale: AnyVec2) :Mat2x3 = {
         val m = Mat2x3(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         m
     }
     def apply(rotation: AnyMat2, scale: Float) :Mat2x3 = {
@@ -357,7 +357,7 @@ object InverseTransform {
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
-        transposeSubMat2x2(m)
+        transposeRotation2(m)
         m
     }
 
@@ -370,7 +370,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -383,7 +383,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -395,7 +395,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -409,7 +409,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -423,7 +423,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -434,7 +434,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -442,7 +442,7 @@ object InverseTransform {
     def apply(translation: AnyVec3, rotation: AnyQuat4) :Mat3x4 = {
         val m = Mat3x4(1)
         rotationMatFrom(rotation, m)
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -450,14 +450,14 @@ object InverseTransform {
     def apply(translation: AnyVec3, angle: Float, axis: AnyVec3) :Mat3x4 = {
         val m = Mat3x4(1)
         rotationMatFrom(angle, axis, m)
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
     def apply(translation: AnyVec3, rotation: AnyMat3) :Mat3x4 = {
         val m = Mat3x4(rotation)
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -466,7 +466,7 @@ object InverseTransform {
         val m = Mat3x4(1/scale.x)
         m.m11 = 1/scale.y
         m.m22 = 1/scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
@@ -484,7 +484,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
     def apply(angle: Float, axis: AnyVec3, scale: AnyVec3) :Mat3x4 = {
@@ -493,7 +493,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
     def apply(rotation: AnyMat3, scale: AnyVec3) :Mat3x4 = {
@@ -501,7 +501,7 @@ object InverseTransform {
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
     def apply(rotation: AnyQuat4, scale: Float) :Mat3x4 = {
@@ -511,7 +511,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
     def apply(angle: Float, axis: AnyVec3, scale: Float) :Mat3x4 = {
@@ -521,7 +521,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
     def apply(rotation: AnyMat3, scale: Float) :Mat3x4 = {
@@ -530,7 +530,7 @@ object InverseTransform {
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3x3(m)
+        transposeRotation3(m)
         m
     }
 }

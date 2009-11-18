@@ -180,8 +180,7 @@ extends AnyVec3i
 }
 
 object Vec3i {
-    val Zero = ConstVec3i(0)
-    val One = ConstVec3i(1)
+    val Origin = ConstVec3i(0)
     val UnitX = ConstVec3i(1, 0, 0)
     val UnitY = ConstVec3i(0, 1, 0)
     val UnitZ = ConstVec3i(0, 0, 1)

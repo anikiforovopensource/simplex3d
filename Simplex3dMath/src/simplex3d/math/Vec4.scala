@@ -215,8 +215,7 @@ extends AnyVec4
 }
 
 object Vec4 {
-    val Zero = ConstVec4(0)
-    val One = ConstVec4(1)
+    val Origin = ConstVec4(0)
     val UnitX = ConstVec4(1, 0, 0, 0)
     val UnitY = ConstVec4(0, 1, 0, 0)
     val UnitZ = ConstVec4(0, 0, 1, 0)

@@ -161,8 +161,7 @@ extends AnyVec3
 }
 
 object Vec3 {
-    val Zero = ConstVec3(0)
-    val One = ConstVec3(1)
+    val Origin = ConstVec3(0)
     val UnitX = ConstVec3(1, 0, 0)
     val UnitY = ConstVec3(0, 1, 0)
     val UnitZ = ConstVec3(0, 0, 1)

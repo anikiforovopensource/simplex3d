@@ -233,8 +233,7 @@ extends AnyVec4i
 }
 
 object Vec4i {
-    val Zero = ConstVec4i(0)
-    val One = ConstVec4i(1)
+    val Origin = ConstVec4i(0)
     val UnitX = ConstVec4i(1, 0, 0, 0)
     val UnitY = ConstVec4i(0, 1, 0, 0)
     val UnitZ = ConstVec4i(0, 0, 1, 0)

@@ -146,8 +146,7 @@ final class Vec2 private (var x: Float, var y: Float) extends AnyVec2 {
 }
 
 object Vec2 {
-    val Zero = ConstVec2(0)
-    val One = ConstVec2(1)
+    val Origin = ConstVec2(0)
     val UnitX = ConstVec2(1, 0)
     val UnitY = ConstVec2(0, 1)
 

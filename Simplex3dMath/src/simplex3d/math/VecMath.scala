@@ -65,10 +65,15 @@ object VecMath {
     private val of3: Double = 30000.0
 
     // Cast
+    def int(x: Byte) :Int = x.asInstanceOf[Int]
+    def int(x: Short) :Int = x.asInstanceOf[Int]
     def int(x: Long) :Int = x.asInstanceOf[Int]
     def int(x: Float) :Int = x.asInstanceOf[Int]
     def int(x: Double) :Int = x.asInstanceOf[Int]
-
+    def float(x: Byte) :Float = x.asInstanceOf[Float]
+    def float(x: Short) :Float = x.asInstanceOf[Float]
+    def float(x: Int) :Float = x.asInstanceOf[Float]
+    def float(x: Long) :Float = x.asInstanceOf[Float]
     def float(x: Double) :Float = x.asInstanceOf[Float]
 
     // Float functions
@@ -108,7 +113,10 @@ object VecMath {
         if (x >= 0) int(x) else int(x) - 1
     }
     def trunc(x: Float) :Float = int(x)
-    def round(x: Float) :Float = SMath.round(x)
+    def round(x: Float) :Float = {
+        if (x >= 0) (int) (x + 0.5f)
+        else (int) (x - 0.5f)
+    }
     def roundEven(x: Float) :Float = float(SMath.rint(x))
     def ceil(x: Float) :Float = {
         if (x == float(int(x))) x else int(x) + 1

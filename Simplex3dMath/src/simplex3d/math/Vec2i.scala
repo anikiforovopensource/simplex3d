@@ -166,8 +166,7 @@ final class Vec2i private (var x: Int, var y: Int) extends AnyVec2i {
 }
 
 object Vec2i {
-    val Zero = ConstVec2i(0)
-    val One = ConstVec2i(1)
+    val Origin = ConstVec2i(0)
     val UnitX = ConstVec2i(1, 0)
     val UnitY = ConstVec2i(0, 1)
 

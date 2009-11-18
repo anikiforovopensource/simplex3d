@@ -38,43 +38,35 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Random(seed: Long) extends scala.util.Random(seed) {
+class Random private (seed: Long) extends scala.util.Random(seed) {
 
-    def this() {
-        this(System.nanoTime)
-    }
-    def this(seed: Int) {
-        this(seed: Long)
-    }
-
-    def boolean() = nextBoolean
-    def int() = nextInt
-    def long() = nextLong
-    def float() = nextFloat
-    def double() = nextDouble
-
-    def vec2() :Vec2 = Vec2(nextFloat(), nextFloat())
-    def vec3() :Vec3 = Vec3(nextFloat(), nextFloat(), nextFloat())
-    def vec4() :Vec4 = {
+    def nextVec2() :Vec2 = Vec2(nextFloat(), nextFloat())
+    def nextVec3() :Vec3 = Vec3(nextFloat(), nextFloat(), nextFloat())
+    def nextVec4() :Vec4 = {
         Vec4(nextFloat(), nextFloat(), nextFloat(), nextFloat())
     }
 
-    def vec2i() :Vec2i = Vec2i(nextInt(), nextInt())
-    def vec3i() :Vec3i = Vec3i(nextInt(), nextInt(), nextInt())
-    def vec4i() :Vec4i = {
+    def nextVec2i() :Vec2i = Vec2i(nextInt(), nextInt())
+    def nextVec3i() :Vec3i = Vec3i(nextInt(), nextInt(), nextInt())
+    def nextVec4i() :Vec4i = {
         Vec4i(nextInt(), nextInt(), nextInt(), nextInt())
     }
 
-    def vec2i(n: Int) :Vec2i = Vec2i(nextInt(n), nextInt(n))
-    def vec3i(n: Int) :Vec3i = Vec3i(nextInt(n), nextInt(n), nextInt(n))
-    def vec4i(n: Int) :Vec4i = {
+    def nextVec2i(n: Int) :Vec2i = Vec2i(nextInt(n), nextInt(n))
+    def nextVec3i(n: Int) :Vec3i = Vec3i(nextInt(n), nextInt(n), nextInt(n))
+    def nextVec4i(n: Int) :Vec4i = {
         Vec4i(nextInt(n), nextInt(n), nextInt(n), nextInt(n))
     }
 
-    def vec2b() :Vec2b = Vec2b(nextBoolean(), nextBoolean())
-    def vec3b() :Vec3b = Vec3b(nextBoolean(), nextBoolean(), nextBoolean())
-    def vec4b() :Vec4b = {
+    def nextVec2b() :Vec2b = Vec2b(nextBoolean(), nextBoolean())
+    def nextVec3b() :Vec3b = Vec3b(nextBoolean(), nextBoolean(), nextBoolean())
+    def nextVec4b() :Vec4b = {
         Vec4b(nextBoolean(), nextBoolean(), nextBoolean(), nextBoolean())
     }
-    
+}
+
+object Random {
+    def apply(seed: Long) = new Random(seed)
+    def apply() = new Random(System.nanoTime)
+    def apply(seed: Int)  = new Random(seed: Long)
 }

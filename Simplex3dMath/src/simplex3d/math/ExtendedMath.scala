@@ -42,11 +42,27 @@ import VecMath._
  */
 object ExtendedMath {
 
-    private val ColorToFloat = 1/255f;
-
     // Cast
+    def byte(x: Short) :Byte = x.asInstanceOf[Byte]
+    def byte(x: Int) :Byte = x.asInstanceOf[Byte]
+    def byte(x: Long) :Byte = x.asInstanceOf[Byte]
+    def byte(x: Float) :Byte = x.asInstanceOf[Byte]
+    def byte(x: Double) :Byte = x.asInstanceOf[Byte]
+    def short(x: Byte) :Short = x.asInstanceOf[Short]
+    def short(x: Int) :Short = x.asInstanceOf[Short]
+    def short(x: Long) :Short = x.asInstanceOf[Short]
+    def short(x: Float) :Short = x.asInstanceOf[Short]
+    def short(x: Double) :Short = x.asInstanceOf[Short]
+    def long(x: Byte) :Long = x.asInstanceOf[Long]
+    def long(x: Short) :Long = x.asInstanceOf[Long]
+    def long(x: Int) :Long = x.asInstanceOf[Long]
     def long(x: Float) :Long = x.asInstanceOf[Long]
     def long(x: Double) :Long = x.asInstanceOf[Long]
+    def double(x: Byte) :Double = x.asInstanceOf[Double]
+    def double(x: Short) :Double = x.asInstanceOf[Double]
+    def double(x: Int) :Double = x.asInstanceOf[Double]
+    def double(x: Long) :Double = x.asInstanceOf[Double]
+    def double(x: Float) :Double = x.asInstanceOf[Double]
 
     // Lerp
     def lerp(x: Float, y: Float, a: Float) = mix(x, y, a)
@@ -318,136 +334,6 @@ object ExtendedMath {
         )
     }
 
-    // Color conversions
-    // Prototype: all color conversion methods need to be optimized.
-    def rgb(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.r << 16) | (u.g << 8) | u.b
-    }
-    def rgb(c: AnyVec3) :Int = {
-        rgb(Vec3i(c*255))
-    }
-
-    def argb(c: AnyVec4i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.a << 24) | (u.r << 16) | (u.g << 8) | u.b
-    }
-    def argb(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        0xFF000000 | (u.r << 16) | (u.g << 8) | u.b
-    }
-    def argb(c: AnyVec4) :Int = {
-        argb(Vec4i(c*255))
-    }
-    def argb(c: AnyVec3) :Int = {
-        argb(Vec3i(c*255))
-    }
-    
-    def rgba(c: AnyVec4i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.r << 24) | (u.g << 16) | (u.b << 8) | u.a
-    }
-    def rgba(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.r << 24) | (u.g << 16) | (u.b << 8) | 0x000000FF
-    }
-    def rgba(c: AnyVec4) :Int = {
-        rgba(Vec4i(c*255))
-    }
-    def rgba(c: AnyVec3) :Int = {
-        rgba(Vec3i(c*255))
-    }
-
-    def bgr(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.b << 16) | (u.g << 8) | u.r
-    }
-    def bgr(c: AnyVec3) :Int = {
-        bgr(Vec3i(c*255))
-    }
-
-    def abgr(c: AnyVec4i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.a << 24) | (u.b << 16) | (u.g << 8) | u.r
-    }
-    def abgr(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        0xFF000000 | (u.b << 16) | (u.g << 8) | u.r
-    }
-    def abgr(c: AnyVec4) :Int = {
-        abgr(Vec4i(c*255))
-    }
-    def abgr(c: AnyVec3) :Int = {
-        abgr(Vec3i(c*255))
-    }
-
-    def bgra(c: AnyVec4i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.b << 24) | (u.g << 16) | (u.r << 8) | u.a
-    }
-    def bgra(c: AnyVec3i) :Int = {
-        val u = clamp(c, 0, 255)
-        (u.b << 24) | (u.g << 16) | (u.r << 8) | 0x000000FF
-    }
-    def bgra(c: AnyVec4) :Int = {
-        bgra(Vec4i(c*255))
-    }
-    def bgra(c: AnyVec3) :Int = {
-        bgra(Vec3i(c*255))
-    }
-
-    def rgb(c: Int) :Vec3 = {
-        Vec3(
-            ((c & 0x00FF0000) >> 16)*ColorToFloat,
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            (c & 0x000000FF)*ColorToFloat
-        )
-    }
-
-    def argb(c: Int) :Vec4 = {
-        Vec4(
-            ((c & 0x00FF0000) >> 16)*ColorToFloat,
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            (c & 0x000000FF)*ColorToFloat,
-            ((c & 0xFF000000) >> 24)*ColorToFloat
-        )
-    }
-
-    def rgba(c: Int) :Vec4 = {
-        Vec4(
-            ((c & 0xFF000000) >> 24)*ColorToFloat,
-            ((c & 0x00FF0000) >> 16)*ColorToFloat,
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            (c & 0x000000FF)*ColorToFloat
-        )
-    }
-
-    def bgr(c: Int) :Vec3 = {
-        Vec3(
-            (c & 0x000000FF)*ColorToFloat,
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            ((c & 0x00FF0000) >> 16)*ColorToFloat
-        )
-    }
-
-    def abgr(c: Int) :Vec4 = {
-        Vec4(
-            (c & 0x000000FF)*ColorToFloat,
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            ((c & 0x00FF0000) >> 16)*ColorToFloat,
-            ((c & 0xFF000000) >> 24)*ColorToFloat
-        )
-    }
-
-    def bgra(c: Int) :Vec4 = {
-        Vec4(
-            ((c & 0x0000FF00) >> 8)*ColorToFloat,
-            ((c & 0x00FF0000) >> 16)*ColorToFloat,
-            ((c & 0xFF000000) >> 24)*ColorToFloat,
-            (c & 0x000000FF)*ColorToFloat
-        )
-    }
-
     // Determinant and inverse
     def det(m: AnyMat2) :Float = m.m00*m.m11 - m.m01*m.m10
 
@@ -496,7 +382,7 @@ object ExtendedMath {
      * and the casting the result back to 2x3.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InvTransform(translation, rotation, scale).
+     * quicker by using InverseTransform(translation, rotation, scale).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -522,7 +408,7 @@ object ExtendedMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InvTransform(translation, rotation, scale).
+     * quicker by using InverseTransform(translation, rotation, scale).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -563,7 +449,7 @@ object ExtendedMath {
      * and the casting the result back to 3x4.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InvTransform(translation, rotation, scale).
+     * quicker by using InverseTransform(translation, rotation, scale).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -608,7 +494,7 @@ object ExtendedMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InvTransform(translation, rotation, scale).
+     * quicker by using InverseTransform(translation, rotation, scale).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -661,7 +547,7 @@ object ExtendedMath {
         mat
     }
 
-    def transposeRotation2(m: RotationSubMat2) {
+    def transposeSubMat2(m: RotationSubMat2) {
         import m._
 
         val t10 = m10
@@ -669,7 +555,7 @@ object ExtendedMath {
         m01 = t10
     }
 
-    def transposeRotation3(m: RotationSubMat3) {
+    def transposeSubMat3(m: RotationSubMat3) {
         import m._
 
         val t10 = m10
@@ -968,13 +854,13 @@ object ExtendedMath {
         m
     }
     def lookAt(direction: AnyVec3, up: AnyVec3, m: RotationSubMat3) {
-        val dir = normalize(direction)
-        val right = normalize(cross(up, dir))
-        val objUp = cross(dir, right)
+        val zaxis = normalize(direction)
+        val xaxis = normalize(cross(up, zaxis))
+        val yaxis = cross(zaxis, xaxis)
         m.set(
-            right.x, right.y, right.z,
-            objUp.x, objUp.y, objUp.z,
-            dir.x, dir.y, dir.z
+            xaxis.x, xaxis.y, xaxis.z,
+            yaxis.x, yaxis.y, yaxis.z,
+            zaxis.x, zaxis.y, zaxis.z
         )
     }
 

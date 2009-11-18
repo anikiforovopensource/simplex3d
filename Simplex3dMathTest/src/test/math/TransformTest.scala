@@ -42,15 +42,26 @@ class TransformTest extends FunSuite {
         var badCount2 = 0
         var badCount3 = 0
 
+        val random = Random(1)
+        def vec2 = random.nextVec2
+        def vec3 = random.nextVec3
+        def vec4 = random.nextVec4
+        def float = random.nextFloat
+        def quat4 = normalize(Quat4(vec4))
+        def axis = normalize(vec3)
+        def setSeed(s: Int) { random.setSeed(s) }
+        // Note: from this point on, all the float, vec2, and vec3
+        // are coming from random.float, random.vec2, and random.vec3
+
         def testTransforms2(m: AnyMat2x3, mcheck: AnyMat2x3, invm: AnyMat2x3) {
             assert(approxEqual(m, mcheck, 1e-6f))
             assert(!approxEqual(m, invm, 1e-2f))
             assert(approxEqual(m*invm, Mat2x3(1), 1e-5f))
             
-            val r = new Random(1)
+            val r = Random(1)
             for (i <- 0 until vectorsPerTransform) {
                 total2 += 1
-                val v0 = r.vec2
+                val v0 = vec2
                 val tv = m.transformPoint(v0)
                 val v1 = invm.transformPoint(tv)
                 if (!approxEqual(v0, v1, vectorTolerance)) badCount2 += 1
@@ -62,10 +73,10 @@ class TransformTest extends FunSuite {
             assert(!approxEqual(m, invm, 1e-2f))
             assert(approxEqual(m*invm, Mat3x4(1), 1e-6f))
 
-            val r = new Random(1)
+            val r = Random(1)
             for (i <- 0 until vectorsPerTransform) {
                 total3 += 1
-                val v0 = r.vec3
+                val v0 = vec3
                 val tv = m.transformPoint(v0)
                 val v1 = invm.transformPoint(tv)
                 if (!approxEqual(v0, v1, vectorTolerance)) badCount3 += 1
@@ -80,13 +91,6 @@ class TransformTest extends FunSuite {
         var mc3 = Mat3x4(1)
         var invm3 = Mat3x4(1)
 
-        val random = new Random(1)
-        import random._
-        // Note: from this point on, all the float, vec2, and vec3
-        // are coming from random.float, random.vec2, and random.vec3
-
-        def quat4 = normalize(Quat4(vec4))
-        def axis = normalize(vec3)
         // 28 Transform.apply total
 
         for (s <- 0 until randomRuns) {

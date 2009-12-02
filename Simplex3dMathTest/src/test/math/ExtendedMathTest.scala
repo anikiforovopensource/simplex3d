@@ -1,5 +1,5 @@
 /*
- * Simplex3D, MathTest package
+ * Simplex3D, Math tests
  * Copyright (C) 2009 Simplex3D team
  *
  * This program is free software: you can redistribute it and/or modify

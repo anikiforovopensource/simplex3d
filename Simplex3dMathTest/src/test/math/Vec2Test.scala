@@ -1,5 +1,5 @@
 /*
- * Simplex3D, MathTest package
+ * Simplex3D, Math tests
  * Copyright (C) 2009 Simplex3D team
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ class Vec2Test extends FunSuite {
         expect(6) { u.x }
         expect(7) { u.y }
 
-        u = ConstVec2(Vec4(1, 2, 9, 0))
+        u = ConstVec2(Vec4(1, 2, 3, 4))
         expect(classOf[ConstVec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
@@ -65,7 +65,7 @@ class Vec2Test extends FunSuite {
         expect(6) { u.x }
         expect(7) { u.y }
 
-        u = ConstVec2(Vec4i(1, 2, 9, 0))
+        u = ConstVec2(Vec4i(1, 2, 3, 4))
         expect(classOf[ConstVec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
@@ -92,7 +92,7 @@ class Vec2Test extends FunSuite {
         expect(6) { u.x }
         expect(7) { u.y }
 
-        u = Vec2(Vec4(1, 2, 9, 0))
+        u = Vec2(Vec4(1, 2, 3, 4))
         expect(classOf[Vec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
@@ -107,7 +107,7 @@ class Vec2Test extends FunSuite {
         expect(6) { u.x }
         expect(7) { u.y }
 
-        u = Vec2(Vec4i(1, 2, 9, 0))
+        u = Vec2(Vec4i(1, 2, 3, 4))
         expect(classOf[Vec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
@@ -117,13 +117,8 @@ class Vec2Test extends FunSuite {
         assert(Vec2(4, 7) == ConstVec2(4, 7))
         assert(ConstVec2(4, 7) == Vec2(4, 7))
 
-        assert(Vec2(1, 2) != Vec2(2, 2))
-        assert(Vec2(1, 2) != Vec2(1, 1))
-        assert(Vec2(1, 2) != Vec2(3, 4))
-
-        assert(Vec2(4, 7) != Vec2(4 + 4*FloatEpsilon, 7))
-        assert(Vec2(4, 7) != Vec2(4, 7 + 4*FloatEpsilon))
-        assert(Vec2(4, 7) != Vec2(4 + 4*FloatEpsilon, 7 + 4*FloatEpsilon))
+        assert(Vec2(1, 2) != Vec2(9, 2))
+        assert(Vec2(1, 2) != Vec2(1, 9))
     }
 
     test("Indexed read") {
@@ -136,7 +131,7 @@ class Vec2Test extends FunSuite {
             u(2)
         }
         intercept[IndexOutOfBoundsException] {
-            u(-2)
+            u(-1)
         }
     }
 
@@ -153,7 +148,7 @@ class Vec2Test extends FunSuite {
             u(2) = 1
         }
         intercept[IndexOutOfBoundsException] {
-            u(-2) = 1
+            u(-1) = 1
         }
     }
 
@@ -305,11 +300,11 @@ class Vec2Test extends FunSuite {
         val m2 = ConstMat2(2, 4, 3, 5)
         assert(Vec2(46, 61) == u*m2)
 
-        val m23 = ConstMat2x3(2, 4, 3, 5, 6, 7)
-        assert(Vec3(46, 61, 98) == u*m23)
+        val m2x3 = ConstMat2x3(2, 4, 3, 5, 6, 7)
+        assert(Vec3(46, 61, 98) == u*m2x3)
 
-        val m24 = ConstMat2x4(2, 4, 3, 5, 6, 7, 8, 9)
-        assert(Vec4(46, 61, 98, 128) == u*m24)
+        val m2x4 = ConstMat2x4(2, 4, 3, 5, 6, 7, 8, 9)
+        assert(Vec4(46, 61, 98, 128) == u*m2x4)
     }
 
     test("Mutable math") {
@@ -319,12 +314,20 @@ class Vec2Test extends FunSuite {
         u = Vec2(2, 3); u /= 2; assert(Vec2(1, 1.5f) == u)
 
         u = Vec2(2, 3); u += Vec2(3, 4); assert(Vec2(5, 7) == u)
+        u = Vec2(2, 3); u += u; assert(Vec2(4, 6) == u)
         u = Vec2(2, 3); u -= Vec2(2, 3); assert(Vec2(0, 0) == u)
+        u = Vec2(2, 3); u -= u; assert(Vec2(0, 0) == u)
 
         u = Vec2(2, 3); u *= Vec2(5, 10); assert(Vec2(10, 30) == u)
+        u = Vec2(2, 3); u *= u; assert(Vec2(4, 9) == u)
         u = Vec2(2, 3); u /= Vec2(2, 6); assert(Vec2(1, 0.5f) == u)
+        u = Vec2(2, 3); u /= u; assert(Vec2(1, 1) == u)
 
         u = Vec2(2, 3); u := Vec2(11, 12); assert(Vec2(11, 12) == u)
         u = Vec2(2, 3); u.set(22, 33); assert(Vec2(22, 33) == u)
+
+        u = Vec2(7, 8)
+        u *= ConstMat2(2, 4, 3, 5)
+        assert(Vec2(46, 61) == u)
     }
 }

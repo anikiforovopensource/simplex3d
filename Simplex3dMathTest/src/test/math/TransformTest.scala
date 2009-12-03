@@ -21,8 +21,10 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.VecMath._
-import simplex3d.math.ExtendedMath._
+import simplex3d.math.BaseMath._
+import simplex3d.math.floatvec._
+import simplex3d.math.floatvec.FloatMath._
+
 
 
 /**
@@ -42,11 +44,10 @@ class TransformTest extends FunSuite {
         var badCount2 = 0
         var badCount3 = 0
 
-        val random = Random(1)
-        def vec2 = random.nextVec2
-        def vec3 = random.nextVec3
-        def vec4 = random.nextVec4
-        def float = random.nextFloat
+        def vec2 = nextVec2
+        def vec3 = nextVec3
+        def vec4 = nextVec4
+        def float = nextFloat
         def quat4 = normalize(Quat4(vec4))
         def axis = normalize(vec3)
         def setSeed(s: Int) { random.setSeed(s) }
@@ -58,7 +59,6 @@ class TransformTest extends FunSuite {
             assert(!approxEqual(m, invm, 1e-2f))
             assert(approxEqual(m*invm, Mat2x3(1), 1e-5f))
             
-            val r = Random(1)
             for (i <- 0 until vectorsPerTransform) {
                 total2 += 1
                 val v0 = vec2
@@ -73,7 +73,6 @@ class TransformTest extends FunSuite {
             assert(!approxEqual(m, invm, 1e-2f))
             assert(approxEqual(m*invm, Mat3x4(1), 1e-6f))
 
-            val r = Random(1)
             for (i <- 0 until vectorsPerTransform) {
                 total3 += 1
                 val v0 = vec3

@@ -1,5 +1,5 @@
 /*
- * Simplex3D, MathTest package
+ * Simplex3D, Math tests
  * Copyright (C) 2009 Simplex3D team
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,9 @@
 
 package bench.math
 
-import simplex3d.math.Vec4
-import simplex3d.math.ConstVec4
-import simplex3d.math.VecMath._
+import simplex3d.math.floatvec.Vec4
+import simplex3d.math.floatvec.ConstVec4
+import simplex3d.math.floatvec.FloatMath._
 
 
 /**
@@ -183,45 +183,6 @@ object ConstModifiedVec4 {
     def apply(u: AnyModifiedVec4) =
         new ConstModifiedVec4(u.x, u.y, u.z, u.w)
 
-    def apply(xy: AnyVec2, z: Float, w: Float) =
-        new ConstModifiedVec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2, w: Float) =
-        new ConstModifiedVec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2) =
-        new ConstModifiedVec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2, zw: AnyVec2) =
-        new ConstModifiedVec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3, w: Float) =
-        new ConstModifiedVec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3) =
-        new ConstModifiedVec4(x, yzw.x, yzw.y, yzw.z)
-
-    def apply(m: AnyMat2) =
-        new ConstModifiedVec4(m.m00, m.m10, m.m01, m.m11)
-
-    def apply(xy: AnyVec2i, z: Float, w: Float) =
-        new ConstModifiedVec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2i, w: Float) =
-        new ConstModifiedVec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2i) =
-        new ConstModifiedVec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2i, zw: AnyVec2i) =
-        new ConstModifiedVec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3i, w: Float) =
-        new ConstModifiedVec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3i) =
-        new ConstModifiedVec4(x, yzw.x, yzw.y, yzw.z)
-
     implicit def mutableToConst(u: ModifiedVec4) = ConstModifiedVec4(u)
 }
 
@@ -306,43 +267,4 @@ object ModifiedVec4 {
 
     def apply(u: AnyModifiedVec4) =
         new ModifiedVec4(u.x, u.y, u.z, u.w)
-
-    def apply(xy: AnyVec2, z: Float, w: Float) =
-        new ModifiedVec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2, w: Float) =
-        new ModifiedVec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2) =
-        new ModifiedVec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2, zw: AnyVec2) =
-        new ModifiedVec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3, w: Float) =
-        new ModifiedVec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3) =
-        new ModifiedVec4(x, yzw.x, yzw.y, yzw.z)
-
-    def apply(m: AnyMat2) =
-        new ModifiedVec4(m.m00, m.m10, m.m01, m.m11)
-
-    def apply(xy: AnyVec2i, z: Float, w: Float) =
-        new ModifiedVec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2i, w: Float) =
-        new ModifiedVec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2i) =
-        new ModifiedVec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2i, zw: AnyVec2i) =
-        new ModifiedVec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3i, w: Float) =
-        new ModifiedVec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3i) =
-        new ModifiedVec4(x, yzw.x, yzw.y, yzw.z)
 }

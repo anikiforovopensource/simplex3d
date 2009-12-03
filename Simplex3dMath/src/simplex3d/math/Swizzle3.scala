@@ -1,3 +1,4 @@
+
 /*
  * Simplex3D, Math module
  * Copyright (C) 2009 Simplex3D team
@@ -12,9 +13,9 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -25,37 +26,23 @@ package simplex3d.math
  * @author Aleksey Nikiforov (lex)
  */
 private[math] trait Swizzle3Read[P, R2, R3, R4]
-extends VecFactory[P, R2, R3, R4]
+extends Swizzle2Read[P, R2, R3, R4]
 {
-    def x: P
-    def y: P
     def z: P
 
 
-    def xx: R2 = make2(x, x)
-    def xy: R2 = make2(x, y)
     def xz: R2 = make2(x, z)
-    def yx: R2 = make2(y, x)
-    def yy: R2 = make2(y, y)
     def yz: R2 = make2(y, z)
     def zx: R2 = make2(z, x)
     def zy: R2 = make2(z, y)
     def zz: R2 = make2(z, z)
 
-    def xxx: R3 = make3(x, x, x)
-    def xxy: R3 = make3(x, x, y)
     def xxz: R3 = make3(x, x, z)
-    def xyx: R3 = make3(x, y, x)
-    def xyy: R3 = make3(x, y, y)
     def xyz: R3 = make3(x, y, z)
     def xzx: R3 = make3(x, z, x)
     def xzy: R3 = make3(x, z, y)
     def xzz: R3 = make3(x, z, z)
-    def yxx: R3 = make3(y, x, x)
-    def yxy: R3 = make3(y, x, y)
     def yxz: R3 = make3(y, x, z)
-    def yyx: R3 = make3(y, y, x)
-    def yyy: R3 = make3(y, y, y)
     def yyz: R3 = make3(y, y, z)
     def yzx: R3 = make3(y, z, x)
     def yzy: R3 = make3(y, z, y)
@@ -70,20 +57,12 @@ extends VecFactory[P, R2, R3, R4]
     def zzy: R3 = make3(z, z, y)
     def zzz: R3 = make3(z, z, z)
 
-    def xxxx: R4 = make4(x, x, x, x)
-    def xxxy: R4 = make4(x, x, x, y)
     def xxxz: R4 = make4(x, x, x, z)
-    def xxyx: R4 = make4(x, x, y, x)
-    def xxyy: R4 = make4(x, x, y, y)
     def xxyz: R4 = make4(x, x, y, z)
     def xxzx: R4 = make4(x, x, z, x)
     def xxzy: R4 = make4(x, x, z, y)
     def xxzz: R4 = make4(x, x, z, z)
-    def xyxx: R4 = make4(x, y, x, x)
-    def xyxy: R4 = make4(x, y, x, y)
     def xyxz: R4 = make4(x, y, x, z)
-    def xyyx: R4 = make4(x, y, y, x)
-    def xyyy: R4 = make4(x, y, y, y)
     def xyyz: R4 = make4(x, y, y, z)
     def xyzx: R4 = make4(x, y, z, x)
     def xyzy: R4 = make4(x, y, z, y)
@@ -97,20 +76,12 @@ extends VecFactory[P, R2, R3, R4]
     def xzzx: R4 = make4(x, z, z, x)
     def xzzy: R4 = make4(x, z, z, y)
     def xzzz: R4 = make4(x, z, z, z)
-    def yxxx: R4 = make4(y, x, x, x)
-    def yxxy: R4 = make4(y, x, x, y)
     def yxxz: R4 = make4(y, x, x, z)
-    def yxyx: R4 = make4(y, x, y, x)
-    def yxyy: R4 = make4(y, x, y, y)
     def yxyz: R4 = make4(y, x, y, z)
     def yxzx: R4 = make4(y, x, z, x)
     def yxzy: R4 = make4(y, x, z, y)
     def yxzz: R4 = make4(y, x, z, z)
-    def yyxx: R4 = make4(y, y, x, x)
-    def yyxy: R4 = make4(y, y, x, y)
     def yyxz: R4 = make4(y, y, x, z)
-    def yyyx: R4 = make4(y, y, y, x)
-    def yyyy: R4 = make4(y, y, y, y)
     def yyyz: R4 = make4(y, y, y, z)
     def yyzx: R4 = make4(y, y, z, x)
     def yyzy: R4 = make4(y, y, z, y)
@@ -152,30 +123,18 @@ extends VecFactory[P, R2, R3, R4]
     def zzzy: R4 = make4(z, z, z, y)
     def zzzz: R4 = make4(z, z, z, z)
 
-    def rr = xx
-    def rg = xy
     def rb = xz
-    def gr = yx
-    def gg = yy
     def gb = yz
     def br = zx
     def bg = zy
     def bb = zz
 
-    def rrr = xxx
-    def rrg = xxy
     def rrb = xxz
-    def rgr = xyx
-    def rgg = xyy
     def rgb = xyz
     def rbr = xzx
     def rbg = xzy
     def rbb = xzz
-    def grr = yxx
-    def grg = yxy
     def grb = yxz
-    def ggr = yyx
-    def ggg = yyy
     def ggb = yyz
     def gbr = yzx
     def gbg = yzy
@@ -190,20 +149,12 @@ extends VecFactory[P, R2, R3, R4]
     def bbg = zzy
     def bbb = zzz
 
-    def rrrr = xxxx
-    def rrrg = xxxy
     def rrrb = xxxz
-    def rrgr = xxyx
-    def rrgg = xxyy
     def rrgb = xxyz
     def rrbr = xxzx
     def rrbg = xxzy
     def rrbb = xxzz
-    def rgrr = xyxx
-    def rgrg = xyxy
     def rgrb = xyxz
-    def rggr = xyyx
-    def rggg = xyyy
     def rggb = xyyz
     def rgbr = xyzx
     def rgbg = xyzy
@@ -217,20 +168,12 @@ extends VecFactory[P, R2, R3, R4]
     def rbbr = xzzx
     def rbbg = xzzy
     def rbbb = xzzz
-    def grrr = yxxx
-    def grrg = yxxy
     def grrb = yxxz
-    def grgr = yxyx
-    def grgg = yxyy
     def grgb = yxyz
     def grbr = yxzx
     def grbg = yxzy
     def grbb = yxzz
-    def ggrr = yyxx
-    def ggrg = yyxy
     def ggrb = yyxz
-    def gggr = yyyx
-    def gggg = yyyy
     def gggb = yyyz
     def ggbr = yyzx
     def ggbg = yyzy
@@ -272,30 +215,18 @@ extends VecFactory[P, R2, R3, R4]
     def bbbg = zzzy
     def bbbb = zzzz
 
-    def ss = xx
-    def st = xy
     def sp = xz
-    def ts = yx
-    def tt = yy
     def tp = yz
     def ps = zx
     def pt = zy
     def pp = zz
 
-    def sss = xxx
-    def sst = xxy
     def ssp = xxz
-    def sts = xyx
-    def stt = xyy
     def stp = xyz
     def sps = xzx
     def spt = xzy
     def spp = xzz
-    def tss = yxx
-    def tst = yxy
     def tsp = yxz
-    def tts = yyx
-    def ttt = yyy
     def ttp = yyz
     def tps = yzx
     def tpt = yzy
@@ -310,20 +241,12 @@ extends VecFactory[P, R2, R3, R4]
     def ppt = zzy
     def ppp = zzz
 
-    def ssss = xxxx
-    def ssst = xxxy
     def sssp = xxxz
-    def ssts = xxyx
-    def sstt = xxyy
     def sstp = xxyz
     def ssps = xxzx
     def sspt = xxzy
     def sspp = xxzz
-    def stss = xyxx
-    def stst = xyxy
     def stsp = xyxz
-    def stts = xyyx
-    def sttt = xyyy
     def sttp = xyyz
     def stps = xyzx
     def stpt = xyzy
@@ -337,20 +260,12 @@ extends VecFactory[P, R2, R3, R4]
     def spps = xzzx
     def sppt = xzzy
     def sppp = xzzz
-    def tsss = yxxx
-    def tsst = yxxy
     def tssp = yxxz
-    def tsts = yxyx
-    def tstt = yxyy
     def tstp = yxyz
     def tsps = yxzx
     def tspt = yxzy
     def tspp = yxzz
-    def ttss = yyxx
-    def ttst = yyxy
     def ttsp = yyxz
-    def ttts = yyyx
-    def tttt = yyyy
     def tttp = yyyz
     def ttps = yyzx
     def ttpt = yyzy
@@ -406,10 +321,6 @@ extends VecFactory[P, R2, R3, R4]
 private[math] trait Swizzle3Write[P, R2, R3, R4]
 extends Swizzle3Read[P, R2, R3, R4]
 {
-    override def x: P
-    override def y: P
-    override def z: P
-
     def x_=(x: P) :Unit
     def y_=(y: P) :Unit
     def z_=(z: P) :Unit

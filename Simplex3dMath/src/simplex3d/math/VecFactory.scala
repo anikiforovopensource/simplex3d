@@ -12,9 +12,9 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -28,32 +28,6 @@ private[math] trait VecFactory[P, R2, R3, R4] {
     protected def make2(x: P, y: P) :R2
     protected def make3(x: P, y: P, z: P) :R3
     protected def make4(x: P, y: P, z: P, w: P) :R4
-}
-
-private[math] class FloatVecFactory
-extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
-{
-    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
-    protected def make3(x: Float,
-                               y: Float,
-                               z: Float) = ConstVec3(x, y, z)
-    protected def make4(x: Float,
-                               y: Float,
-                               z: Float,
-                               w: Float) = ConstVec4(x, y, z, w)
-}
-
-private[math] class IntVecFactory
-extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
-{
-    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
-    protected def make3(x: Int,
-                               y: Int,
-                               z: Int) = ConstVec3i(x, y, z)
-    protected def make4(x: Int,
-                               y: Int,
-                               z: Int,
-                               w: Int) = ConstVec4i(x, y, z, w)
 }
 
 private[math] class BooleanVecFactory

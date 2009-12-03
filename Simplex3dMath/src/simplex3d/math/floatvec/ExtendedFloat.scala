@@ -12,25 +12,21 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.floatvec
 
 
 /**
- * Glue code to make ints interact with vectors and matrices.
+ * Glue code to make floats interact with vectors and matrices.
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) extends Read1[Int] {
-    def *(u: AnyVec2i) = u*value
-    def *(u: AnyVec3i) = u*value
-    def *(u: AnyVec4i) = u*value
-
+final class ExtendedFloat(val value: Float) extends Read1[Float] {
     def *(u: AnyVec2) = u*value
     def *(u: AnyVec3) = u*value
     def *(u: AnyVec4) = u*value
@@ -46,10 +42,6 @@ final class ExtendedInt(val value: Int) extends Read1[Int] {
     def *(m: AnyMat4x2) = m*value
     def *(m: AnyMat4x3) = m*value
     def *(m: AnyMat4) = m*value
-
-    def /(u: AnyVec2i) = u.divideByComponent(value)
-    def /(u: AnyVec3i) = u.divideByComponent(value)
-    def /(u: AnyVec4i) = u.divideByComponent(value)
 
     def /(u: AnyVec2) = u.divideByComponent(value)
     def /(u: AnyVec3) = u.divideByComponent(value)

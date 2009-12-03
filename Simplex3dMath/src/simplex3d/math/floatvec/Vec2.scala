@@ -12,13 +12,15 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.floatvec
+
+import simplex3d.math.intvec._
 
 
 /**
@@ -117,6 +119,8 @@ final class Vec2 private (var x: Float, var y: Float) extends AnyVec2 {
     def -=(u: AnyVec2) { x -= u.x; y -= u.y }
     def *=(u: AnyVec2) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2) { x /= u.x; y /= u.y }
+
+    def *=(m: AnyMat2) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec2) { x = u.x; y = u.y }
     def set(x: Float, y: Float) { this.x = x; this.y = y }

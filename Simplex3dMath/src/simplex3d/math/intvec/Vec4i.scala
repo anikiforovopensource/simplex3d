@@ -12,15 +12,16 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.intvec
 
-import VecMath._
+import simplex3d.math.BaseMath._
+import simplex3d.math.floatvec._
 
 
 /**
@@ -279,12 +280,13 @@ object Vec4i {
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)
 }
 
-private[math] class ConstVec4iSwizzled(u: AnyVec4i) extends IntVecFactory
+private[math] class ConstVec4iSwizzled(u: AnyVec4i)
+extends ConstVec3iSwizzled(null)
 with Swizzle4Read[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
-    def x = u.x
-    def y = u.y
-    def z = u.z
+    override def x = u.x
+    override def y = u.y
+    override def z = u.z
     def w = u.w
 }
 

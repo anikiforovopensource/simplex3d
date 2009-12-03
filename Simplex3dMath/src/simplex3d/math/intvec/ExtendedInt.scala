@@ -12,34 +12,26 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.intvec
 
 
 /**
+ * Glue code to make ints interact with vectors and matrices.
+ *
  * @author Aleksey Nikiforov (lex)
  */
-trait ConstRotationSubMat2 {
-    // Column major order.
-    def m00: Float; def m10: Float // column
-    def m01: Float; def m11: Float // column
-}
+final class ExtendedInt(val value: Int) extends Read1[Int] {
+    def *(u: AnyVec2i) = u*value
+    def *(u: AnyVec3i) = u*value
+    def *(u: AnyVec4i) = u*value
 
-trait RotationSubMat2 {
-    // Column major order.
-    var m00: Float; var m10: Float // column
-    var m01: Float; var m11: Float // column
-
-    def set(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float
-    ) {
-        this.m00 = m00; this.m10 = m10
-        this.m01 = m01; this.m11 = m11
-    }
+    def /(u: AnyVec2i) = u.divideByComponent(value)
+    def /(u: AnyVec3i) = u.divideByComponent(value)
+    def /(u: AnyVec4i) = u.divideByComponent(value)
 }

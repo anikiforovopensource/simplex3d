@@ -12,13 +12,15 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.floatvec
+
+import simplex3d.math.intvec._
 
 
 /**
@@ -128,24 +130,6 @@ object ConstVec4 {
     def apply(u: AnyVec4i) =
         new ConstVec4(u.x, u.y, u.z, u.w)
 
-    def apply(xy: AnyVec2i, z: Float, w: Float) =
-        new ConstVec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2i, w: Float) =
-        new ConstVec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2i) =
-        new ConstVec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2i, zw: AnyVec2i) =
-        new ConstVec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3i, w: Float) =
-        new ConstVec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3i) =
-        new ConstVec4(x, yzw.x, yzw.y, yzw.z)
-
     implicit def mutableToConst(u: Vec4) = ConstVec4(u)
     implicit def constVec4ToSwizzled(u: ConstVec4) = new ConstVec4Swizzled(u)
 }
@@ -182,6 +166,8 @@ extends AnyVec4
     def -=(u: AnyVec4) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
     def *=(u: AnyVec4) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
     def /=(u: AnyVec4) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
+
+    def *=(m: AnyMat4) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec4) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Float, y: Float, z: Float, w: Float) {
@@ -240,33 +226,16 @@ object Vec4 {
     def apply(u: AnyVec4i) =
         new Vec4(u.x, u.y, u.z, u.w)
 
-    def apply(xy: AnyVec2i, z: Float, w: Float) =
-        new Vec4(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2i, w: Float) =
-        new Vec4(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2i) =
-        new Vec4(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2i, zw: AnyVec2i) =
-        new Vec4(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3i, w: Float) =
-        new Vec4(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3i) =
-        new Vec4(x, yzw.x, yzw.y, yzw.z)
-
     implicit def vec4ToSwizzled(u: Vec4) = new Vec4Swizzled(u)
 }
 
-private[math] class ConstVec4Swizzled(u: AnyVec4) extends FloatVecFactory
+private[math] class ConstVec4Swizzled(u: AnyVec4)
+extends ConstVec3Swizzled(null)
 with Swizzle4Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
-    def x = u.x
-    def y = u.y
-    def z = u.z
+    override def x = u.x
+    override def y = u.y
+    override def z = u.z
     def w = u.w
 }
 

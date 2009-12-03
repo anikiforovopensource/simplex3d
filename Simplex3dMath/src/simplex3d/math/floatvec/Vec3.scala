@@ -12,13 +12,15 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.floatvec
+
+import simplex3d.math.intvec._
 
 
 /**
@@ -97,8 +99,6 @@ object ConstVec3 {
     def apply(x: Float, yz: AnyVec2) = new ConstVec3(x, yz.x, yz.y)
     def apply(u: AnyVec3i) = new ConstVec3(u.x, u.y, u.z)
     def apply(u: AnyVec4i) = new ConstVec3(u.x, u.y, u.z)
-    def apply(xy: AnyVec2i, z: Float) = new ConstVec3(xy.x, xy.y, z)
-    def apply(x: Float, yz: AnyVec2i) = new ConstVec3(x, yz.x, yz.y)
 
     implicit def mutableToConst(u: Vec3) = ConstVec3(u)
     implicit def constVec3ToSwizzled(u: ConstVec3) = new ConstVec3Swizzled(u)
@@ -132,6 +132,8 @@ extends AnyVec3
     def *=(u: AnyVec3) { x *= u.x; y *= u.y; z *= u.z }
     def /=(u: AnyVec3) { x /= u.x; y /= u.y; z /= u.z }
 
+    def *=(m: AnyMat3) { this := m.transposeMul(this) }
+
     def :=(u: AnyVec3) { x = u.x; y = u.y; z = u.z }
     def set(x: Float, y: Float, z: Float) { this.x = x; this.y = y; this.z = z }
 
@@ -160,17 +162,16 @@ object Vec3 {
     def apply(x: Float, yz: AnyVec2) = new Vec3(x, yz.x, yz.y)
     def apply(u: AnyVec3i) = new Vec3(u.x, u.y, u.z)
     def apply(u: AnyVec4i) = new Vec3(u.x, u.y, u.z)
-    def apply(xy: AnyVec2i, z: Float) = new Vec3(xy.x, xy.y, z)
-    def apply(x: Float, yz: AnyVec2i) = new Vec3(x, yz.x, yz.y)
 
     implicit def vec3ToSwizzled(u: Vec3) = new Vec3Swizzled(u)
 }
 
-private[math] class ConstVec3Swizzled(u: AnyVec3) extends FloatVecFactory
+private[math] class ConstVec3Swizzled(u: AnyVec3)
+extends ConstVec2Swizzled(null)
 with Swizzle3Read[Float, ConstVec2, ConstVec3, ConstVec4]
 {
-    def x = u.x
-    def y = u.y
+    override def x = u.x
+    override def y = u.y
     def z = u.z
 }
 

@@ -1,5 +1,8 @@
+/*
  * Simplex3D, Math module
  * Copyright (C) 2009 Simplex3D team
+ *
+ * This file is part of Simplex3d.
  *
  * Simplex3d is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,9 +16,23 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * toxi.math.noise.SimplexNoise:
- * Original code was released by Stefan Gustavson in the following paper:
- * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
- * Modifications by Karsten Schmidt. Used under LGPL.
- 
+ */
+
+package simplex3d.math.floatvec
+
+
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+private[math] class FloatVecFactory
+extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
+{
+    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
+    protected def make3(x: Float,
+                               y: Float,
+                               z: Float) = ConstVec3(x, y, z)
+    protected def make4(x: Float,
+                               y: Float,
+                               z: Float,
+                               w: Float) = ConstVec4(x, y, z, w)
+}

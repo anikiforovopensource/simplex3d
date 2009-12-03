@@ -12,9 +12,9 @@
  * Simplex3d is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -125,11 +125,12 @@ object Vec3b {
     implicit def vec3bToSwizzled(u: Vec3b) = new Vec3bSwizzled(u)
 }
 
-private[math] class ConstVec3bSwizzled(u: AnyVec3b) extends BooleanVecFactory
+private[math] class ConstVec3bSwizzled(u: AnyVec3b)
+extends ConstVec2bSwizzled(null)
 with Swizzle3Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
-    def x = u.x
-    def y = u.y
+    override def x = u.x
+    override def y = u.y
     def z = u.z
 }
 

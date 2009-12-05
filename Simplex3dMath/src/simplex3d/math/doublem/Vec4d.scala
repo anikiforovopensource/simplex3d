@@ -26,7 +26,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4d extends Read4[Double] {
+sealed abstract class AnyVec4d extends Read4Double {
 
     def x: Double
     def y: Double
@@ -127,7 +127,7 @@ object ConstVec4d {
     def apply(m: AnyMat2d) =
         new ConstVec4d(m.m00, m.m10, m.m01, m.m11)
 
-    def apply(u: Read4[Int]) =
+    def apply(u: Read4Int) =
         new ConstVec4d(u.x, u.y, u.z, u.w)
 
     implicit def mutableToConst(u: Vec4d) = ConstVec4d(u)
@@ -223,7 +223,7 @@ object Vec4d {
     def apply(m: AnyMat2d) =
         new Vec4d(m.m00, m.m10, m.m01, m.m11)
 
-    def apply(u: Read4[Int]) =
+    def apply(u: Read4Int) =
         new Vec4d(u.x, u.y, u.z, u.w)
 
     implicit def vec4ToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)

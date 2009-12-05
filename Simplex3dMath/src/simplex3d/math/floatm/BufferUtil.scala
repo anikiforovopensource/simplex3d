@@ -31,19 +31,19 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toArray(m: AnyMat2, a: Array[Float]) {
+    def toArray(m: AnyMat2f, a: Array[Float]) {
         toArray(m, a, true, 0)
     }
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat2, buf: FloatBuffer) {
+    def toBuffer(m: AnyMat2f, buf: FloatBuffer) {
         toBuffer(m, buf, true, 0)
     }
     /**
      * Column major order
      */
-    def toArray(m: AnyMat2, a: Array[Float], upcast: Boolean, offset: Int) {
+    def toArray(m: AnyMat2f, a: Array[Float], upcast: Boolean, offset: Int) {
         import m._
 
         if (upcast) {
@@ -73,7 +73,7 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat2, buf: FloatBuffer, upcast: Boolean, offset: Int) {
+    def toBuffer(m: AnyMat2f, buf: FloatBuffer, upcast: Boolean, offset: Int) {
         import m._
 
         buf.position(offset)
@@ -106,19 +106,19 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toArray(m: AnyMat2x3, a: Array[Float]) {
+    def toArray(m: AnyMat2x3f, a: Array[Float]) {
         toArray(m, a, true, 0)
     }
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat2x3, buf: FloatBuffer) {
+    def toBuffer(m: AnyMat2x3f, buf: FloatBuffer) {
         toBuffer(m, buf, true, 0)
     }
     /**
      * Column major order
      */
-    def toArray(m: AnyMat2x3, a: Array[Float], upcast: Boolean, offset: Int) {
+    def toArray(m: AnyMat2x3f, a: Array[Float], upcast: Boolean, offset: Int) {
         import m._
 
         if (upcast) {
@@ -150,7 +150,7 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat2x3, buf: FloatBuffer, upcast: Boolean, offset: Int) {
+    def toBuffer(m: AnyMat2x3f, buf: FloatBuffer, upcast: Boolean, offset: Int) {
         import m._
 
         buf.position(offset)
@@ -185,19 +185,19 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toArray(m: AnyMat3, a: Array[Float]) {
+    def toArray(m: AnyMat3f, a: Array[Float]) {
         toArray(m, a, true, 0)
     }
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat3, buf: FloatBuffer) {
+    def toBuffer(m: AnyMat3f, buf: FloatBuffer) {
         toBuffer(m, buf, true, 0)
     }
     /**
      * Column major order
      */
-    def toArray(m: AnyMat3, a: Array[Float], upcast: Boolean, offset: Int) {
+    def toArray(m: AnyMat3f, a: Array[Float], upcast: Boolean, offset: Int) {
         import m._
 
         if (upcast) {
@@ -232,7 +232,7 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat3, buf: FloatBuffer, upcast: Boolean, offset: Int) {
+    def toBuffer(m: AnyMat3f, buf: FloatBuffer, upcast: Boolean, offset: Int) {
         import m._
 
         buf.position(offset)
@@ -270,19 +270,19 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toArray(m: AnyMat3x4, a: Array[Float]) {
+    def toArray(m: AnyMat3x4f, a: Array[Float]) {
         toArray(m, a, true, 0)
     }
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat3x4, buf: FloatBuffer) {
+    def toBuffer(m: AnyMat3x4f, buf: FloatBuffer) {
         toBuffer(m, buf, true, 0)
     }
     /**
      * Column major order
      */
-    def toArray(m: AnyMat3x4, a: Array[Float], upcast: Boolean, offset: Int) {
+    def toArray(m: AnyMat3x4f, a: Array[Float], upcast: Boolean, offset: Int) {
         import m._
 
         if (upcast) {
@@ -320,7 +320,7 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat3x4, buf: FloatBuffer, upcast: Boolean, offset: Int) {
+    def toBuffer(m: AnyMat3x4f, buf: FloatBuffer, upcast: Boolean, offset: Int) {
         import m._
 
         buf.position(offset)
@@ -361,19 +361,19 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toArray(m: AnyMat4, a: Array[Float]) {
+    def toArray(m: AnyMat4f, a: Array[Float]) {
         toArray(m, a, 0)
     }
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat4, buf: FloatBuffer) {
+    def toBuffer(m: AnyMat4f, buf: FloatBuffer) {
         toBuffer(m, buf, 0)
     }
     /**
      * Column major order
      */
-    def toArray(m: AnyMat4, a: Array[Float], offset: Int) {
+    def toArray(m: AnyMat4f, a: Array[Float], offset: Int) {
         import m._
 
         a(offset) = m00
@@ -396,7 +396,7 @@ class BufferUtil {
     /**
      * Column major order
      */
-    def toBuffer(m: AnyMat4, buf: FloatBuffer, offset: Int) {
+    def toBuffer(m: AnyMat4f, buf: FloatBuffer, offset: Int) {
         import m._
 
         buf.position(offset)

@@ -34,14 +34,20 @@ object DoubleMath {
     implicit def dmDoubleToExtDouble(s: Double) = new ExtendedDouble(s)
     implicit def dmFloatToExtFloat(s: Int) = new ExtendedFloat(s)
     implicit def dmIntToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def Vec2diToVec2d(u: Read2[Int]) :Vec2d = Vec2d(u.x, u.y)
-    implicit def vec3iToVec3d(u: Read3[Int]) :Vec3d = Vec3d(u.x, u.y, u.z)
-    implicit def vec4iToVec4d(u: Read4[Int]) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
+    implicit def Vec2diToVec2d(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
+    implicit def vec3iToVec3d(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)
+    implicit def vec4iToVec4d(u: Read4Int) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
 
     // Random
-    def nextVec2d() :Vec2d = Vec2d(nextDouble, nextDouble)
-    def nextVec3d() :Vec3d = Vec3d(nextDouble, nextDouble, nextDouble)
-    def nextVec4d() :Vec4d = Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
+    def nextVec2() :Vec2d = Vec2d(nextDouble, nextDouble)
+    def nextVec3() :Vec3d = Vec3d(nextDouble, nextDouble, nextDouble)
+    def nextVec4() :Vec4d = {
+        Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
+    }
+
+    def nextVec2d() :Vec2d = nextVec2
+    def nextVec3d() :Vec3d = nextVec3
+    def nextVec4d() :Vec4d = nextVec4
 
     // Constants
     val DoubleEpsilon: Double = 2.22045E-16f;
@@ -105,7 +111,9 @@ object DoubleMath {
     }
     def fract(x: Double) :Double = x - floor(x)
     def mod(x: Double, y: Double) :Double = x - y*floor(x/y)
-    //def modf(x: Double, i: Double) :Double = 0 //not supported: lack of pointers
+
+    //not supported: lack of pointers
+    //def modf(x: Double, i: Double) :Double = 0
 
     def min(x: Double, y: Double) :Double = if (y < x) y else x
     def max(x: Double, y: Double) :Double = if (y > x) y else x
@@ -202,7 +210,9 @@ object DoubleMath {
     def log2(u: AnyVec2d) :Vec2d = Vec2d(log2(u.x), log2(u.y))
 
     def sqrt(u: AnyVec2d) :Vec2d = Vec2d(sqrt(u.x), sqrt(u.y))
-    def inversesqrt(u: AnyVec2d) :Vec2d = Vec2d(inversesqrt(u.x), inversesqrt(u.y))
+    def inversesqrt(u: AnyVec2d) :Vec2d = {
+        Vec2d(inversesqrt(u.x), inversesqrt(u.y))
+    }
 
     def abs(u: AnyVec2d) :Vec2d = Vec2d(abs(u.x), abs(u.y))
     def sign(u: AnyVec2d) :Vec2d = Vec2d(sign(u.x), sign(u.y))
@@ -213,7 +223,9 @@ object DoubleMath {
     def ceil(u: AnyVec2d) :Vec2d = Vec2d(ceil(u.x), ceil(u.y))
     def fract(u: AnyVec2d) :Vec2d = Vec2d(fract(u.x), fract(u.y))
     def mod(u: AnyVec2d, s: Double) :Vec2d = Vec2d(mod(u.x, s), mod(u.y, s))
-    def mod(u: AnyVec2d, v: AnyVec2d) :Vec2d = Vec2d(mod(u.x, v.x), mod(u.y, v.y))
+    def mod(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+        Vec2d(mod(u.x, v.x), mod(u.y, v.y))
+    }
     def modf(u: AnyVec2d, i: Vec2d) :Vec2d = {
         val s = sign(u)
         val a = abs(u)
@@ -222,9 +234,13 @@ object DoubleMath {
     }
 
     def min(u: AnyVec2d, s: Double) :Vec2d = Vec2d(min(u.x, s), min(u.y, s))
-    def min(u: AnyVec2d, v: AnyVec2d) :Vec2d = Vec2d(min(u.x, v.x), min(u.y, v.y))
+    def min(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+        Vec2d(min(u.x, v.x), min(u.y, v.y))
+    }
     def max(u: AnyVec2d, s: Double) :Vec2d = Vec2d(max(u.x, s), max(u.y, s))
-    def max(u: AnyVec2d, v: AnyVec2d) :Vec2d = Vec2d(max(u.x, v.x), max(u.y, v.y))
+    def max(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+        Vec2d(max(u.x, v.x), max(u.y, v.y))
+    }
     def clamp(u: AnyVec2d, minVal: Double, maxVal: Double) :Vec2d = {
         Vec2d(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
     }
@@ -733,7 +749,8 @@ object DoubleMath {
     }
 
     def step(edge: Double, u: AnyVec4d) :Vec4d = {
-        Vec4d(step(edge, u.x), step(edge, u.y), step(edge, u.z), step(edge, u.w))
+        Vec4d(step(edge, u.x), step(edge, u.y),
+              step(edge, u.z), step(edge, u.w))
     }
     def step(edge: AnyVec4d, u: AnyVec4d) :Vec4d = {
         Vec4d(
@@ -767,7 +784,9 @@ object DoubleMath {
         Vec4b(isinf(u.x), isinf(u.y), isinf(u.z), isinf(u.w))
     }
 
-    def length(u: AnyVec4d) :Double = sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
+    def length(u: AnyVec4d) :Double = {
+        sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
+    }
     def dot(u: AnyVec4d, v: AnyVec4d) :Double = {
         u.x*v.x + u.y*v.y + u.z*v.z + u.w*v.w
     }
@@ -1054,13 +1073,6 @@ object DoubleMath {
         )
     }
 
-    // Ideally this method should not be here, but compiler complains when using
-    // static imports for overloaded functions from different objects.
-    // Since normalize(u: AnyVec) are here, this methods has to be here as well.
-    def normalize(q: AnyQuat4d) :Quat4d = {
-        q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
-    }
-
 
     // *** Extra Math functions ************************************************
 
@@ -1155,7 +1167,9 @@ object DoubleMath {
     def lengthSquare(x: Double) :Double = x*x
     def lengthSquare(u: AnyVec2d) :Double = u.x*u.x + u.y*u.y
     def lengthSquare(u: AnyVec3d) :Double = u.x*u.x + u.y*u.y + u.z*u.z
-    def lengthSquare(u: AnyVec4d) :Double = u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
+    def lengthSquare(u: AnyVec4d) :Double = {
+        u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
+    }
 
     def hasErrors(x: Double) :Boolean = isinf(x) || isnan(x)
     def hasErrors(u: AnyVec2d) :Boolean = u.hasErrors
@@ -1575,6 +1589,10 @@ object DoubleMath {
     }
     def conjugate(q: AnyQuat4d) :Quat4d = Quat4d(q.a, -q.b, -q.c, -q.d)
 
+    def normalize(q: AnyQuat4d) :Quat4d = {
+        q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
+    }
+    
     /**
      * This method is here for completness. Normally you should work with
      * unit quaternions (<code>norm(q) == 1</code>), and in this case

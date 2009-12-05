@@ -27,14 +27,14 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[math] class FloatVecFactory
-extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
+extends VecFactory[Float, ConstVec2f, ConstVec3f, ConstVec4f]
 {
-    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
+    protected def make2(x: Float, y: Float) = ConstVec2f(x, y)
     protected def make3(x: Float,
                                y: Float,
-                               z: Float) = ConstVec3(x, y, z)
+                               z: Float) = ConstVec3f(x, y, z)
     protected def make4(x: Float,
                                y: Float,
                                z: Float,
-                               w: Float) = ConstVec4(x, y, z, w)
+                               w: Float) = ConstVec4f(x, y, z, w)
 }

@@ -27,7 +27,7 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3i extends Read3[Int] {
+sealed abstract class AnyVec3i extends Read3Int {
 
     def x: Int
     def y: Int
@@ -101,12 +101,12 @@ object ConstVec3i {
     def apply(u: AnyVec4i) = new ConstVec3i(u.x, u.y, u.z)
     def apply(xy: AnyVec2i, z: Int) = new ConstVec3i(xy.x, xy.y, z)
     def apply(x: Int, yz: AnyVec2i) = new ConstVec3i(x, yz.x, yz.y)
-    def apply(u: Read3[Float]) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read4[Float]) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: Read2[Float], z: Int) = {
+    def apply(u: Read3Float) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4Float) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2Float, z: Int) = {
         new ConstVec3i(int(xy.x), int(xy.y), z)
     }
-    def apply(x: Int, yz: Read2[Float]) = {
+    def apply(x: Int, yz: Read2Float) = {
         new ConstVec3i(x, int(yz.x), int(yz.y))
     }
 
@@ -182,10 +182,10 @@ object Vec3i {
     def apply(u: AnyVec4i) = new Vec3i(u.x, u.y, u.z)
     def apply(xy: AnyVec2i, z: Int) = new Vec3i(xy.x, xy.y, z)
     def apply(x: Int, yz: AnyVec2i) = new Vec3i(x, yz.x, yz.y)
-    def apply(u: Read3[Float]) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read4[Float]) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: Read2[Float], z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
-    def apply(x: Int, yz: Read2[Float]) = new Vec3i(x, int(yz.x), int(yz.y))
+    def apply(u: Read3Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2Float, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
+    def apply(x: Int, yz: Read2Float) = new Vec3i(x, int(yz.x), int(yz.y))
 
     implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
 }

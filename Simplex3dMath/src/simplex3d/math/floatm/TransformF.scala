@@ -28,91 +28,91 @@ import FloatMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-object Transform {
+object TransformF {
     // 2-Dimensional
-    def apply(translation: AnyVec2, angle: Float, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2, scale: AnyVec2)
-    :Mat2x3 =
+    def apply(translation: AnyVec2f, rotation: AnyMat2f, scale: AnyVec2f)
+    :Mat2x3f =
     {
-        val m = Mat2x3(rotation)
+        val m = Mat2x3f(rotation)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, angle: Float, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) *= scale
         m(1) *= scale
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2, scale: Float)
-    :Mat2x3 =
+    def apply(translation: AnyVec2f, rotation: AnyMat2f, scale: Float)
+    :Mat2x3f =
     {
-        val m = Mat2x3(rotation)
+        val m = Mat2x3f(rotation)
         m(0) *= scale
         m(1) *= scale
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, angle: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2) :Mat2x3 = {
-        val m = Mat2x3(rotation)
+    def apply(translation: AnyVec2f, rotation: AnyMat2f) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
         m(2) = translation
         m
     }
-    def apply(translation: AnyVec2, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(scale.x)
+    def apply(translation: AnyVec2f, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(scale.x)
         m.m11 = scale.y
         m(2) = translation
         m
     }
-    def apply(angle: Float, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(angle: Float, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) *= scale.x
         m(1) *= scale.y
         m
     }
-    def apply(angle: Float, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(angle: Float, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) *= scale
         m(1) *= scale
         m
     }
-    def apply(rotation: AnyMat2, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(rotation)
+    def apply(rotation: AnyMat2f, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
         m(0) *= scale.x
         m(1) *= scale.y
         m
     }
-    def apply(rotation: AnyMat2, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(rotation)
+    def apply(rotation: AnyMat2f, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
         m(0) *= scale
         m(1) *= scale
         m
     }
 
     // 3-Dimensional
-    def apply(translation: AnyVec3, rotation: AnyQuat4, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) *= scale.x
         m(1) *= scale.y
@@ -120,10 +120,10 @@ object Transform {
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) *= scale.x
         m(1) *= scale.y
@@ -131,20 +131,20 @@ object Transform {
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyMat3f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(rotation)
+        val m = Mat3x4f(rotation)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) *= scale.z
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyQuat4, scale: Float)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f, scale: Float)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) *= scale
         m(1) *= scale
@@ -152,10 +152,10 @@ object Transform {
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: Float)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f, scale: Float)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) *= scale
         m(1) *= scale
@@ -163,84 +163,84 @@ object Transform {
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(translation: AnyVec3f, rotation: AnyMat3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         m(0) *= scale
         m(1) *= scale
         m(2) *= scale
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyQuat4) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(translation: AnyVec3f, rotation: AnyMat3f) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(scale.x)
+    def apply(translation: AnyVec3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(scale.x)
         m.m11 = scale.y
         m.m22 = scale.z
         m(3) = translation
         m
     }
-    def apply(translation: AnyVec3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(scale)
+    def apply(translation: AnyVec3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(scale)
         m(3) = translation
         m
     }
-    def apply(rotation: AnyQuat4, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(rotation: AnyQuat4f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) *= scale.z
         m
     }
-    def apply(angle: Float, axis: AnyVec3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(angle: Float, axis: AnyVec3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) *= scale.z
         m
     }
-    def apply(rotation: AnyMat3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(rotation: AnyMat3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         m(0) *= scale.x
         m(1) *= scale.y
         m(2) *= scale.z
         m
     }
-    def apply(rotation: AnyQuat4, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(rotation: AnyQuat4f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) *= scale
         m(1) *= scale
         m(2) *= scale
         m
     }
-    def apply(angle: Float, axis: AnyVec3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(angle: Float, axis: AnyVec3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) *= scale
         m(1) *= scale
         m(2) *= scale
         m
     }
-    def apply(rotation: AnyMat3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(rotation: AnyMat3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         m(0) *= scale
         m(1) *= scale
         m(2) *= scale
@@ -248,320 +248,320 @@ object Transform {
     }
 }
 
-object InverseTransform {
+object InverseTransformF {
     // 2-Dimensional
-    def apply(translation: AnyVec2, angle: Float, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2, scale: AnyVec2)
-    :Mat2x3 =
+    def apply(translation: AnyVec2f, rotation: AnyMat2f, scale: AnyVec2f)
+    :Mat2x3f =
     {
-        val m = Mat2x3(rotation)
+        val m = Mat2x3f(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, angle: Float, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) /= scale
         m(1) /= scale
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2, scale: Float)
-    :Mat2x3 =
+    def apply(translation: AnyVec2f, rotation: AnyMat2f, scale: Float)
+    :Mat2x3f =
     {
-        val m = Mat2x3(rotation)
+        val m = Mat2x3f(rotation)
         m(0) /= scale
         m(1) /= scale
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, angle: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(translation: AnyVec2f, angle: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, rotation: AnyMat2) :Mat2x3 = {
-        val m = Mat2x3(rotation)
-        transposeSubMat2(m)
+    def apply(translation: AnyVec2f, rotation: AnyMat2f) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
+        transposeSubMat2f(m)
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(translation: AnyVec2, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1/scale.x)
+    def apply(translation: AnyVec2f, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1/scale.x)
         m.m11 = 1/scale.y
         val t = m.transformPoint(-translation)
         m(2) = t
         m
     }
-    def apply(angle: Float, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(angle: Float, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         m
     }
-    def apply(angle: Float, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+    def apply(angle: Float, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         m
     }
-    def apply(rotation: AnyMat2, scale: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(rotation)
+    def apply(rotation: AnyMat2f, scale: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         m
     }
-    def apply(rotation: AnyMat2, scale: Float) :Mat2x3 = {
-        val m = Mat2x3(rotation)
+    def apply(rotation: AnyMat2f, scale: Float) :Mat2x3f = {
+        val m = Mat2x3f(rotation)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
-        transposeSubMat2(m)
+        transposeSubMat2f(m)
         m
     }
 
     // 3-Dimensional
-    def apply(translation: AnyVec3, rotation: AnyQuat4, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3, scale: AnyVec3)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyMat3f, scale: AnyVec3f)
+    :Mat3x4f =
     {
-        val m = Mat3x4(rotation)
+        val m = Mat3x4f(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyQuat4, scale: Float)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f, scale: Float)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: Float)
-    :Mat3x4 =
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f, scale: Float)
+    :Mat3x4f =
     {
-        val m = Mat3x4(1)
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(translation: AnyVec3f, rotation: AnyMat3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyQuat4) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(translation: AnyVec3f, rotation: AnyQuat4f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, angle: Float, axis: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(translation: AnyVec3f, angle: Float, axis: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, rotation: AnyMat3) :Mat3x4 = {
-        val m = Mat3x4(rotation)
-        transposeSubMat3(m)
+    def apply(translation: AnyVec3f, rotation: AnyMat3f) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1/scale.x)
+    def apply(translation: AnyVec3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1/scale.x)
         m.m11 = 1/scale.y
         m.m22 = 1/scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(translation: AnyVec3, scale: Float) :Mat3x4 = {
+    def apply(translation: AnyVec3f, scale: Float) :Mat3x4f = {
         val invs = 1/scale
-        val m = Mat3x4(invs)
+        val m = Mat3x4f(invs)
         val t = m.transformPoint(-translation)
         m(3) = t
         m
     }
-    def apply(rotation: AnyQuat4, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(rotation: AnyQuat4f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
-    def apply(angle: Float, axis: AnyVec3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(angle: Float, axis: AnyVec3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
-    def apply(rotation: AnyMat3, scale: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(rotation: AnyMat3f, scale: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         m(0) /= scale.x
         m(1) /= scale.y
         m(2) /= scale.z
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
-    def apply(rotation: AnyQuat4, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(rotation: AnyQuat4f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(rotation, m)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
-    def apply(angle: Float, axis: AnyVec3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(angle: Float, axis: AnyVec3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
-    def apply(rotation: AnyMat3, scale: Float) :Mat3x4 = {
-        val m = Mat3x4(rotation)
+    def apply(rotation: AnyMat3f, scale: Float) :Mat3x4f = {
+        val m = Mat3x4f(rotation)
         val invs = 1/scale
         m(0) *= invs
         m(1) *= invs
         m(2) *= invs
-        transposeSubMat3(m)
+        transposeSubMat3f(m)
         m
     }
 }
 
-object Translation {
-    def apply(t: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(1)
+object TranslationF {
+    def apply(t: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
         m(2) = t
         m
     }
 
-    def apply(t: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(t: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         m(3) = t
         m
     }
 }
 
-object Rotation {
-    def apply(angle: Float) :Mat2x3 = {
-        val m = Mat2x3(1)
+object RotationF {
+    def apply(angle: Float) :Mat2x3f = {
+        val m = Mat2x3f(1)
         rotationMatFrom(angle, m)
         m
     }
-    def apply(q: AnyQuat4) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(q: AnyQuat4f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(q, m)
         m
     }
-    def apply(angle: Float, axis: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(1)
+    def apply(angle: Float, axis: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
         rotationMatFrom(angle, axis, m)
         m
     }
 }
 
-object Scale {
-    def apply(s: AnyVec2) :Mat2x3 = {
-        val m = Mat2x3(s.x)
+object ScaleF {
+    def apply(s: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(s.x)
         m.m11 = s.y
         m
     }
 
-    def apply(s: AnyVec3) :Mat3x4 = {
-        val m = Mat3x4(s.x)
+    def apply(s: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(s.x)
         m.m11 = s.y
         m.m22 = s.z
         m

@@ -26,7 +26,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2d extends Read2[Double] {
+sealed abstract class AnyVec2d extends Read2Double {
 
     def x: Double
     def y: Double
@@ -89,9 +89,9 @@ object ConstVec2d {
     def apply(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
     def apply(u: AnyVec3d) = new ConstVec2d(u.x, u.y)
     def apply(u: AnyVec4d) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read2[Int]) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read3[Int]) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read4[Int]) = new ConstVec2d(u.x, u.y)
+    def apply(u: Read2Int) = new ConstVec2d(u.x, u.y)
+    def apply(u: Read3Int) = new ConstVec2d(u.x, u.y)
+    def apply(u: Read4Int) = new ConstVec2d(u.x, u.y)
 
     implicit def mutableToConst(u: Vec2d) = ConstVec2d(u)
     implicit def constVec2dToSwizzled(u: ConstVec2d) = new ConstVec2dSwizzled(u)
@@ -145,9 +145,9 @@ object Vec2d {
     def apply(u: AnyVec2d) = new Vec2d(u.x, u.y)
     def apply(u: AnyVec3d) = new Vec2d(u.x, u.y)
     def apply(u: AnyVec4d) = new Vec2d(u.x, u.y)
-    def apply(u: Read2[Int]) = new Vec2d(u.x, u.y)
-    def apply(u: Read3[Int]) = new Vec2d(u.x, u.y)
-    def apply(u: Read4[Int]) = new Vec2d(u.x, u.y)
+    def apply(u: Read2Int) = new Vec2d(u.x, u.y)
+    def apply(u: Read3Int) = new Vec2d(u.x, u.y)
+    def apply(u: Read4Int) = new Vec2d(u.x, u.y)
 
     implicit def Vec2dToSwizzled(u: Vec2d) = new Vec2dSwizzled(u)
 }

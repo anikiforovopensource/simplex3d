@@ -27,7 +27,7 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4i extends Read4[Int] {
+sealed abstract class AnyVec4i extends Read4Int {
 
     def x: Int
     def y: Int
@@ -127,25 +127,25 @@ object ConstVec4i {
     def apply(x: Int, yzw: AnyVec3i) =
         new ConstVec4i(x, yzw.x, yzw.y, yzw.z)
 
-    def apply(u: Read4[Float]) =
+    def apply(u: Read4Float) =
         new ConstVec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 
-    def apply(xy: Read2[Float], z: Int, w: Int) =
+    def apply(xy: Read2Float, z: Int, w: Int) =
         new ConstVec4i(int(xy.x), int(xy.y), z, w)
 
-    def apply(x: Int, yz: Read2[Float], w: Int) =
+    def apply(x: Int, yz: Read2Float, w: Int) =
         new ConstVec4i(x, int(yz.x), int(yz.y), w)
 
-    def apply(x: Int, y: Int, zw: Read2[Float]) =
+    def apply(x: Int, y: Int, zw: Read2Float) =
         new ConstVec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: Read2[Float], zw: Read2[Float]) =
+    def apply(xy: Read2Float, zw: Read2Float) =
         new ConstVec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
 
-    def apply(xyz: Read3[Float], w: Int) =
+    def apply(xyz: Read3Float, w: Int) =
         new ConstVec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
-    def apply(x: Int, yzw: Read3[Float]) =
+    def apply(x: Int, yzw: Read3Float) =
         new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
         
     implicit def mutableToConst(u: Vec4i) = ConstVec4i(u)
@@ -250,25 +250,25 @@ object Vec4i {
     def apply(x: Int, yzw: AnyVec3i) =
         new Vec4i(x, yzw.x, yzw.y, yzw.z)
 
-    def apply(u: Read4[Float]) =
+    def apply(u: Read4Float) =
         new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 
-    def apply(xy: Read2[Float], z: Int, w: Int) =
+    def apply(xy: Read2Float, z: Int, w: Int) =
         new Vec4i(int(xy.x), int(xy.y), z, w)
 
-    def apply(x: Int, yz: Read2[Float], w: Int) =
+    def apply(x: Int, yz: Read2Float, w: Int) =
         new Vec4i(x, int(yz.x), int(yz.y), w)
 
-    def apply(x: Int, y: Int, zw: Read2[Float]) =
+    def apply(x: Int, y: Int, zw: Read2Float) =
         new Vec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: Read2[Float], zw: Read2[Float]) =
+    def apply(xy: Read2Float, zw: Read2Float) =
         new Vec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
 
-    def apply(xyz: Read3[Float], w: Int) =
+    def apply(xyz: Read3Float, w: Int) =
         new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
-    def apply(x: Int, yzw: Read3[Float]) =
+    def apply(x: Int, yzw: Read3Float) =
         new Vec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
 
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)

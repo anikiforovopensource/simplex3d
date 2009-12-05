@@ -34,13 +34,13 @@ private[math] object Read {
                 mat(i) = s.value
                 i += 1
             }
-            case v2: AnyVec2 => {
+            case v2: AnyVec2f => {
                 mat(i) = v2.x
                 i += 1
                 mat(i) = v2.y
                 i += 1
             }
-            case v3: AnyVec3 => {
+            case v3: AnyVec3f => {
                 mat(i) = v3.x
                 i += 1
                 mat(i) = v3.y
@@ -48,7 +48,7 @@ private[math] object Read {
                 mat(i) = v3.z
                 i += 1
             }
-            case v4: AnyVec4 => {
+            case v4: AnyVec4f => {
                 mat(i) = v4.x
                 i += 1
                 mat(i) = v4.y

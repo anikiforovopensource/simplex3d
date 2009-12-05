@@ -27,17 +27,17 @@ import Read._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x2
-extends ConstRotationSubMat2
+sealed abstract class AnyMat3x2f
+extends ConstRotationSubMat2f
 {
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float // column
     def m01: Float; def m11: Float; def m21: Float // column
 
-    def apply(c: Int) :ConstVec3 = {
+    def apply(c: Int) :ConstVec3f = {
         c match {
-            case 0 => ConstVec3(m00, m10, m20)
-            case 1 => ConstVec3(m01, m11, m21)
+            case 0 => ConstVec3f(m00, m10, m20)
+            case 1 => ConstVec3f(m01, m11, m21)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 1, got " + j)
         }
@@ -68,24 +68,24 @@ extends ConstRotationSubMat2
         }
     }
 
-    def unary_-() = Mat3x2(
+    def unary_-() = Mat3x2f(
         -m00, -m10, -m20,
         -m01, -m11, -m21
     )
-    def *(s: Float) = Mat3x2(
+    def *(s: Float) = Mat3x2f(
         s*m00, s*m10, s*m20,
         s*m01, s*m11, s*m21
     )
-    def /(s: Float) = { val inv = 1/s; Mat3x2(
+    def /(s: Float) = { val inv = 1/s; Mat3x2f(
         inv*m00, inv*m10, inv*m20,
         inv*m01, inv*m11, inv*m21
     )}
 
-    def +(m: AnyMat3x2) = Mat3x2(
+    def +(m: AnyMat3x2f) = Mat3x2f(
         m00 + m.m00, m10 + m.m10, m20 + m.m20,
         m01 + m.m01, m11 + m.m11, m21 + m.m21
     )
-    def -(m: AnyMat3x2) = Mat3x2(
+    def -(m: AnyMat3x2f) = Mat3x2f(
         m00 - m.m00, m10 - m.m10, m20 - m.m20,
         m01 - m.m01, m11 - m.m11, m21 - m.m21
     )
@@ -93,16 +93,16 @@ extends ConstRotationSubMat2
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat3x2) = Mat3x2(
+    def /(m: AnyMat3x2f) = Mat3x2f(
         m00/m.m00, m10/m.m10, m20/m.m20,
         m01/m.m01, m11/m.m11, m21/m.m21
     )
-    private[math] def divideByComponent(s: Float) = Mat3x2(
+    private[math] def divideByComponent(s: Float) = Mat3x2f(
         s/m00, s/m10, s/m20,
         s/m01, s/m11, s/m21
     )
 
-    def *(m: AnyMat2) = Mat3x2(
+    def *(m: AnyMat2f) = Mat3x2f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
         m20*m.m00 + m21*m.m10,
@@ -111,7 +111,7 @@ extends ConstRotationSubMat2
         m10*m.m01 + m11*m.m11,
         m20*m.m01 + m21*m.m11
     )
-    def *(m: AnyMat2x3) = Mat3(
+    def *(m: AnyMat2x3f) = Mat3f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
         m20*m.m00 + m21*m.m10,
@@ -124,7 +124,7 @@ extends ConstRotationSubMat2
         m10*m.m02 + m11*m.m12,
         m20*m.m02 + m21*m.m12
     )
-    def *(m: AnyMat2x4) = Mat3x4(
+    def *(m: AnyMat2x4f) = Mat3x4f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
         m20*m.m00 + m21*m.m10,
@@ -142,24 +142,24 @@ extends ConstRotationSubMat2
         m20*m.m03 + m21*m.m13
     )
 
-    def *(u: AnyVec2) = Vec3(
+    def *(u: AnyVec2f) = Vec3f(
         m00*u.x + m01*u.y,
         m10*u.x + m11*u.y,
         m20*u.x + m21*u.y
     )
-    protected[math] def transposeMul(u: AnyVec3) = Vec2(
+    protected[math] def transposeMul(u: AnyVec3f) = Vec2f(
         m00*u.x + m10*u.y + m20*u.z,
         m01*u.x + m11*u.y + m21*u.z
     )
 
-    def ==(m: AnyMat3x2) :Boolean = {
+    def ==(m: AnyMat3x2f) :Boolean = {
         if (m eq null) false
         else
             m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
             m01 == m.m01 && m11 == m.m11 && m21 == m.m21
     }
 
-    def !=(m: AnyMat3x2) :Boolean = !(this == m)
+    def !=(m: AnyMat3x2f) :Boolean = !(this == m)
 
     private[math] def hasErrors: Boolean = {
         import java.lang.Float._
@@ -184,14 +184,14 @@ extends ConstRotationSubMat2
     }
 }
 
-final class ConstMat3x2 private (
+final class ConstMat3x2f private (
     val m00: Float, val m10: Float, val m20: Float,
     val m01: Float, val m11: Float, val m21: Float
-) extends AnyMat3x2
+) extends AnyMat3x2f
 
-object ConstMat3x2 {
+object ConstMat3x2f {
 
-    def apply(s: Float) = new ConstMat3x2(
+    def apply(s: Float) = new ConstMat3x2f(
         s, 0, 0,
         0, s, 0
     )
@@ -199,12 +199,12 @@ object ConstMat3x2 {
     def apply(
         m00: Float, m10: Float, m20: Float,
         m01: Float, m11: Float, m21: Float
-      ) = new ConstMat3x2(
+      ) = new ConstMat3x2f(
             m00, m10, m20,
             m01, m11, m21
       )
 
-    def apply(args: ReadAny[Float]*) :ConstMat3x2 = {
+    def apply(args: ReadAny[Float]*) :ConstMat3x2f = {
         val mat = new Array[Float](6)
         mat(0) = 1
         mat(4) = 1
@@ -229,65 +229,65 @@ object ConstMat3x2 {
         if (index < 6) throw new IllegalArgumentException(
             "Too few values for this matrix.")
 
-        new ConstMat3x2(
+        new ConstMat3x2f(
             mat(0), mat(1), mat(2),
             mat(3), mat(4), mat(5)
         )
     }
 
-    def apply(m: AnyMat2) = new ConstMat3x2(
+    def apply(m: AnyMat2f) = new ConstMat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat2x3) = new ConstMat3x2(
+    def apply(m: AnyMat2x3f) = new ConstMat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat2x4) = new ConstMat3x2(
+    def apply(m: AnyMat2x4f) = new ConstMat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat3x2) = new ConstMat3x2(
+    def apply(m: AnyMat3x2f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat3) = new ConstMat3x2(
+    def apply(m: AnyMat3f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat3x4) = new ConstMat3x2(
+    def apply(m: AnyMat3x4f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4x2) = new ConstMat3x2(
+    def apply(m: AnyMat4x2f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4x3) = new ConstMat3x2(
+    def apply(m: AnyMat4x3f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4) = new ConstMat3x2(
+    def apply(m: AnyMat4f) = new ConstMat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    implicit def mutableToConst(m: Mat3x2) = ConstMat3x2(m)
+    implicit def mutableToConst(m: Mat3x2f) = ConstMat3x2f(m)
 }
 
 
-final class Mat3x2 private (
+final class Mat3x2f private (
     var m00: Float, var m10: Float, var m20: Float,
     var m01: Float, var m11: Float, var m21: Float
-) extends AnyMat3x2 with RotationSubMat2
+) extends AnyMat3x2f with RotationSubMat2f
 {
     def *=(s: Float) {
         m00 *= s; m10 *= s; m20 *= s;
@@ -298,16 +298,16 @@ final class Mat3x2 private (
         m01 *= inv; m11 *= inv; m21 *= inv
     }
 
-    def +=(m: AnyMat3x2) {
+    def +=(m: AnyMat3x2f) {
         m00 += m.m00; m10 += m.m10; m20 += m.m20;
         m01 += m.m01; m11 += m.m11; m21 += m.m21
     }
-    def -=(m: AnyMat3x2) {
+    def -=(m: AnyMat3x2f) {
         m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
         m01 -= m.m01; m11 -= m.m11; m21 -= m.m21
     }
 
-    def *=(m: AnyMat2) {
+    def *=(m: AnyMat2f) {
         val a00 = m00*m.m00 + m01*m.m10
         val a10 = m10*m.m00 + m11*m.m10
         val a20 = m20*m.m00 + m21*m.m10
@@ -320,7 +320,7 @@ final class Mat3x2 private (
         m01 = a01; m11 = a11; m21 = a21
     }
 
-    def :=(m: AnyMat3x2) {
+    def :=(m: AnyMat3x2f) {
         m00 = m.m00; m10 = m.m10; m20 = m.m20;
         m01 = m.m01; m11 = m.m11; m21 = m.m21
     }
@@ -358,7 +358,7 @@ final class Mat3x2 private (
         }
     }
 
-    def update(c: Int, v: AnyVec3) {
+    def update(c: Int, v: AnyVec3f) {
         c match {
             case 0 => m00 = v.x; m10 = v.y; m20 = v.z
             case 1 => m01 = v.x; m11 = v.y; m21 = v.z
@@ -369,9 +369,9 @@ final class Mat3x2 private (
 
 }
 
-object Mat3x2 {
+object Mat3x2f {
 
-    def apply(s: Float) = new Mat3x2(
+    def apply(s: Float) = new Mat3x2f(
         s, 0, 0,
         0, s, 0
     )
@@ -379,12 +379,12 @@ object Mat3x2 {
     def apply(
         m00: Float, m10: Float, m20: Float,
         m01: Float, m11: Float, m21: Float
-      ) = new Mat3x2(
+      ) = new Mat3x2f(
             m00, m10, m20,
             m01, m11, m21
       )
 
-    def apply(args: ReadAny[Float]*) :Mat3x2 = {
+    def apply(args: ReadAny[Float]*) :Mat3x2f = {
         val mat = new Array[Float](6)
         mat(0) = 1
         mat(4) = 1
@@ -409,53 +409,53 @@ object Mat3x2 {
         if (index < 6) throw new IllegalArgumentException(
             "Too few values for this matrix.")
 
-        new Mat3x2(
+        new Mat3x2f(
             mat(0), mat(1), mat(2),
             mat(3), mat(4), mat(5)
         )
     }
 
-    def apply(m: AnyMat2) = new Mat3x2(
+    def apply(m: AnyMat2f) = new Mat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat2x3) = new Mat3x2(
+    def apply(m: AnyMat2x3f) = new Mat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat2x4) = new Mat3x2(
+    def apply(m: AnyMat2x4f) = new Mat3x2f(
         m.m00, m.m10, 0,
         m.m01, m.m11, 0
     )
 
-    def apply(m: AnyMat3x2) = new Mat3x2(
+    def apply(m: AnyMat3x2f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat3) = new Mat3x2(
+    def apply(m: AnyMat3f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat3x4) = new Mat3x2(
+    def apply(m: AnyMat3x4f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4x2) = new Mat3x2(
+    def apply(m: AnyMat4x2f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4x3) = new Mat3x2(
+    def apply(m: AnyMat4x3f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )
 
-    def apply(m: AnyMat4) = new Mat3x2(
+    def apply(m: AnyMat4f) = new Mat3x2f(
         m.m00, m.m10, m.m20,
         m.m01, m.m11, m.m21
     )

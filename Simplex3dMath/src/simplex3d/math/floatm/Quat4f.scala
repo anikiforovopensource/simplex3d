@@ -24,7 +24,7 @@ package simplex3d.math.floatm
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4 {
+sealed abstract class AnyQuat4f {
     def a: Float
     def b: Float
     def c: Float
@@ -47,21 +47,21 @@ sealed abstract class AnyQuat4 {
      * the same rotation. That is both q and -q represent exactly the
      * same rotation.
      */
-    def unary_-() = Quat4(-a, -b, -c, -d)
-    def *(s: Float) = Quat4(a*s, b*s, c*s, d*s)
-    def /(s: Float) = { val inv = 1/s; Quat4(a*inv, b*inv, c*inv, d*inv) }
-    private[math] def divideByComponent(s: Float) = Quat4(s/a, s/b, s/c, s/d)
+    def unary_-() = Quat4f(-a, -b, -c, -d)
+    def *(s: Float) = Quat4f(a*s, b*s, c*s, d*s)
+    def /(s: Float) = { val inv = 1/s; Quat4f(a*inv, b*inv, c*inv, d*inv) }
+    private[math] def divideByComponent(s: Float) = Quat4f(s/a, s/b, s/c, s/d)
 
-    def +(q: Quat4) = Quat4(a + q.a, b + q.b, c + q.c, d + q.d)
-    def -(q: Quat4) = Quat4(a - q.a, b - q.b, c - q.c, d - q.d)
-    def *(q: Quat4) = Quat4(
+    def +(q: Quat4f) = Quat4f(a + q.a, b + q.b, c + q.c, d + q.d)
+    def -(q: Quat4f) = Quat4f(a - q.a, b - q.b, c - q.c, d - q.d)
+    def *(q: Quat4f) = Quat4f(
         a*q.a - b*q.b - c*q.c - d*q.d,
         a*q.b + b*q.a + c*q.d - d*q.c,
         a*q.c - b*q.d + c*q.a + d*q.b,
         a*q.d + b*q.c - c*q.b + d*q.a
     )
 
-    def *(u: AnyVec3) = {
+    def *(u: AnyVec3f) = {
         val t1 = a*b
         val t2 = a*c
         val t3 = a*d
@@ -72,19 +72,19 @@ sealed abstract class AnyQuat4 {
         val t8 = c*d
         val t9 = -d*d
 
-        Vec3(
+        Vec3f(
             2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
             2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
             2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z
         )
     }
 
-    def ==(q: AnyQuat4) :Boolean = {
+    def ==(q: AnyQuat4f) :Boolean = {
         if (q eq null) false
         else a == q.a && b == q.b && c == q.c && d == q.d
     }
 
-    def !=(q: AnyQuat4) :Boolean = !(this == q)
+    def !=(q: AnyQuat4f) :Boolean = !(this == q)
 
     private[math] def hasErrors: Boolean = {
         import java.lang.Float._
@@ -102,33 +102,33 @@ sealed abstract class AnyQuat4 {
     }
 }
 
-final class ConstQuat4 private (val a: Float, val b: Float,
+final class ConstQuat4f private (val a: Float, val b: Float,
                                 val c: Float, val d: Float)
-extends AnyQuat4
+extends AnyQuat4f
 
-object ConstQuat4 {
-    def apply() = new ConstQuat4(1, 0, 0, 0)
+object ConstQuat4f {
+    def apply() = new ConstQuat4f(1, 0, 0, 0)
 
     def apply(a: Float, b: Float, c: Float, d: Float) =
-        new ConstQuat4(a, b, c, d)
+        new ConstQuat4f(a, b, c, d)
 
-    def apply(q: AnyQuat4) = new ConstQuat4(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4) = new ConstQuat4(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2) = new ConstQuat4(m.m00, m.m10, m.m01, m.m11)
+    def apply(q: AnyQuat4f) = new ConstQuat4f(q.a, q.b, q.c, q.d)
+    def apply(u: AnyVec4f) = new ConstQuat4f(u.w, u.x, u.y, u.z)
+    def apply(m: AnyMat2f) = new ConstQuat4f(m.m00, m.m10, m.m01, m.m11)
 
-    implicit def mutableToConst(q: Quat4) = ConstQuat4(q)
+    implicit def mutableToConst(q: Quat4f) = ConstQuat4f(q)
 }
 
-final class Quat4 private (var a: Float, var b: Float,
+final class Quat4f private (var a: Float, var b: Float,
                            var c: Float, var d: Float)
-extends AnyQuat4
+extends AnyQuat4f
 {
     def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Float) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
 
-    def +=(q: Quat4) { a += q.a; b += q.b; c += q.c; d += q.d }
-    def -=(q: Quat4) { a -= q.a; b -= q.b; c -= q.c; d -= q.d }
-    def *=(q: Quat4) {
+    def +=(q: Quat4f) { a += q.a; b += q.b; c += q.c; d += q.d }
+    def -=(q: Quat4f) { a -= q.a; b -= q.b; c -= q.c; d -= q.d }
+    def *=(q: Quat4f) {
         val na = a*q.a - b*q.b - c*q.c - d*q.d
         val nb = a*q.b + b*q.a + c*q.d - d*q.c
         val nc = a*q.c - b*q.d + c*q.a + d*q.b
@@ -137,7 +137,7 @@ extends AnyQuat4
         a = na; b = nb; c = nc
     }
     
-    def :=(q: AnyQuat4) { a = q.a; b = q.b; c = q.c; d = q.d }
+    def :=(q: AnyQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
     def set(a: Float, b: Float, c: Float, d: Float) {
         this.a = a; this.b = b; this.c = c; this.d = d
     }
@@ -154,10 +154,10 @@ extends AnyQuat4
     }
 }
 
-object Quat4 {
-    def apply() = new Quat4(1, 0, 0, 0)
-    def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4(a, b, c, d)
-    def apply(q: AnyQuat4) = new Quat4(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4) = new Quat4(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2) = new Quat4(m.m00, m.m10, m.m01, m.m11)
+object Quat4f {
+    def apply() = new Quat4f(1, 0, 0, 0)
+    def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
+    def apply(q: AnyQuat4f) = new Quat4f(q.a, q.b, q.c, q.d)
+    def apply(u: AnyVec4f) = new Quat4f(u.w, u.x, u.y, u.z)
+    def apply(m: AnyMat2f) = new Quat4f(m.m00, m.m10, m.m01, m.m11)
 }

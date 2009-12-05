@@ -18,23 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm
-
-import simplex3d.math._
+package simplex3d.math.doublem
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] class IntVecFactory
-extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
-{
-    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
-    protected def make3(x: Int,
-                               y: Int,
-                               z: Int) = ConstVec3i(x, y, z)
-    protected def make4(x: Int,
-                               y: Int,
-                               z: Int,
-                               w: Int) = ConstVec4i(x, y, z, w)
+trait ConstRotationSubMat2d {
+    // Column major order.
+    def m00: Double; def m10: Double // column
+    def m01: Double; def m11: Double // column
+}
+
+trait RotationSubMat2d {
+    // Column major order.
+    var m00: Double; var m10: Double // column
+    var m01: Double; var m11: Double // column
+
+    def set(
+        m00: Double, m10: Double,
+        m01: Double, m11: Double
+    ) {
+        this.m00 = m00; this.m10 = m10
+        this.m01 = m01; this.m11 = m11
+    }
 }

@@ -20,6 +20,8 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math._
+
 
 /**
  * Glue code to make ints interact with vectors and matrices.

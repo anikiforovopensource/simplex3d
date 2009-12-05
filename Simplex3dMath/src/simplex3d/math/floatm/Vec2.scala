@@ -20,6 +20,8 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math._
+
 
 /**
  * @author Aleksey Nikiforov (lex)

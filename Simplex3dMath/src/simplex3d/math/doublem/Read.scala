@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm
+package simplex3d.math.doublem
 
 import simplex3d.math._
 
@@ -27,20 +27,20 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[math] object Read {
-    def read(arg: ReadAny[Float], mat: Array[Float], index: Int) :Int = {
+    def read(arg: ReadAny[Double], mat: Array[Double], index: Int) :Int = {
         var i = index
         arg match {
-            case s: ExtendedFloat => {
+            case s: ExtendedDouble => {
                 mat(i) = s.value
                 i += 1
             }
-            case v2: AnyVec2 => {
+            case v2: AnyVec2d => {
                 mat(i) = v2.x
                 i += 1
                 mat(i) = v2.y
                 i += 1
             }
-            case v3: AnyVec3 => {
+            case v3: AnyVec3d => {
                 mat(i) = v3.x
                 i += 1
                 mat(i) = v3.y
@@ -48,7 +48,7 @@ private[math] object Read {
                 mat(i) = v3.z
                 i += 1
             }
-            case v4: AnyVec4 => {
+            case v4: AnyVec4d => {
                 mat(i) = v4.x
                 i += 1
                 mat(i) = v4.y
@@ -59,7 +59,7 @@ private[math] object Read {
                 i += 1
             }
             case _ => throw new IllegalArgumentException(
-                "Expected a scalar or a vector of type Float, " +
+                "Expected a scalar or a vector of type Double, " +
                 "got " + arg.getClass.getName)
         }
         i

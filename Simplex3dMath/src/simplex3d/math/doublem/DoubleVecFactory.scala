@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm
+package simplex3d.math.doublem
 
 import simplex3d.math._
 
@@ -26,15 +26,15 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] class IntVecFactory
-extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
+private[math] class DoubleVecFactory
+extends VecFactory[Double, ConstVec2d, ConstVec3d, ConstVec4d]
 {
-    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
-    protected def make3(x: Int,
-                               y: Int,
-                               z: Int) = ConstVec3i(x, y, z)
-    protected def make4(x: Int,
-                               y: Int,
-                               z: Int,
-                               w: Int) = ConstVec4i(x, y, z, w)
+    protected def make2(x: Double, y: Double) = ConstVec2d(x, y)
+    protected def make3(x: Double,
+                               y: Double,
+                               z: Double) = ConstVec3d(x, y, z)
+    protected def make4(x: Double,
+                               y: Double,
+                               z: Double,
+                               w: Double) = ConstVec4d(x, y, z, w)
 }

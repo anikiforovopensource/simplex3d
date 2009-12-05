@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm
+package simplex3d.math.doublem
 
 import simplex3d.math._
 import Read._
@@ -27,26 +27,26 @@ import Read._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x3
-extends ConstRotationSubMat2
+sealed abstract class AnyMat2x3d
+extends ConstRotationSubMat2d
 {
     // Column major order.
-    def m00: Float; def m10: Float // column
-    def m01: Float; def m11: Float // column
-    def m02: Float; def m12: Float // column
+    def m00: Double; def m10: Double // column
+    def m01: Double; def m11: Double // column
+    def m02: Double; def m12: Double // column
 
-    def apply(c: Int) :ConstVec2 = {
+    def apply(c: Int) :ConstVec2d = {
         c match {
-            case 0 => ConstVec2(m00, m10)
-            case 1 => ConstVec2(m01, m11)
-            case 2 => ConstVec2(m02, m12)
+            case 0 => ConstVec2d(m00, m10)
+            case 1 => ConstVec2d(m01, m11)
+            case 2 => ConstVec2d(m02, m12)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 2, got " + j)
         }
     }
 
-    def apply(c: Int, r: Int) :Float = {
-        def error() :Float = {
+    def apply(c: Int, r: Int) :Double = {
+        def error() :Double = {
             throw new IndexOutOfBoundsException("Trying to read index (" +
                      c + ", " + r + ") in " + this.getClass.getSimpleName)
         }
@@ -74,28 +74,28 @@ extends ConstRotationSubMat2
         }
     }
 
-    def unary_-() = Mat2x3(
+    def unary_-() = Mat2x3d(
         -m00, -m10,
         -m01, -m11,
         -m02, -m12
     )
-    def *(s: Float) = Mat2x3(
+    def *(s: Double) = Mat2x3d(
         s*m00, s*m10,
         s*m01, s*m11,
         s*m02, s*m12
     )
-    def /(s: Float) = { val inv = 1/s; Mat2x3(
+    def /(s: Double) = { val inv = 1/s; Mat2x3d(
         inv*m00, inv*m10,
         inv*m01, inv*m11,
         inv*m02, inv*m12
     )}
 
-    def +(m: AnyMat2x3) = Mat2x3(
+    def +(m: AnyMat2x3d) = Mat2x3d(
         m00 + m.m00, m10 + m.m10,
         m01 + m.m01, m11 + m.m11,
         m02 + m.m02, m12 + m.m12
     )
-    def -(m: AnyMat2x3) = Mat2x3(
+    def -(m: AnyMat2x3d) = Mat2x3d(
         m00 - m.m00, m10 - m.m10,
         m01 - m.m01, m11 - m.m11,
         m02 - m.m02, m12 - m.m12
@@ -104,25 +104,25 @@ extends ConstRotationSubMat2
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat2x3) = Mat2x3(
+    def /(m: AnyMat2x3d) = Mat2x3d(
         m00/m.m00, m10/m.m10,
         m01/m.m01, m11/m.m11,
         m02/m.m02, m12/m.m12
     )
-    private[math] def divideByComponent(s: Float) = Mat2x3(
+    private[math] def divideByComponent(s: Double) = Mat2x3d(
         s/m00, s/m10,
         s/m01, s/m11,
         s/m02, s/m12
     )
 
-    def *(m: AnyMat3x2) = Mat2(
+    def *(m: AnyMat3x2d) = Mat2d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
         m00*m.m01 + m01*m.m11 + m02*m.m21,
         m10*m.m01 + m11*m.m11 + m12*m.m21
     )
-    def *(m: AnyMat3) = Mat2x3(
+    def *(m: AnyMat3d) = Mat2x3d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -132,7 +132,7 @@ extends ConstRotationSubMat2
         m00*m.m02 + m01*m.m12 + m02*m.m22,
         m10*m.m02 + m11*m.m12 + m12*m.m22
     )
-    def *(m: AnyMat3x4) = Mat2x4(
+    def *(m: AnyMat3x4d) = Mat2x4d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -146,11 +146,11 @@ extends ConstRotationSubMat2
         m10*m.m03 + m11*m.m13 + m12*m.m23
     )
 
-    def *(u: AnyVec3) = Vec2(
+    def *(u: AnyVec3d) = Vec2d(
         m00*u.x + m01*u.y + m02*u.z,
         m10*u.x + m11*u.y + m12*u.z
     )
-    protected[math] def transposeMul(u: AnyVec2) = Vec3(
+    protected[math] def transposeMul(u: AnyVec2d) = Vec3d(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y,
         m02*u.x + m12*u.y
@@ -162,7 +162,7 @@ extends ConstRotationSubMat2
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    def transformPoint(u: AnyVec2) = Vec2(
+    def transformPoint(u: AnyVec2d) = Vec2d(
         m00*u.x + m01*u.y + m02,
         m10*u.x + m11*u.y + m12
     )
@@ -172,7 +172,7 @@ extends ConstRotationSubMat2
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    def transformVector(u: AnyVec2) = Vec2(
+    def transformVector(u: AnyVec2d) = Vec2d(
         m00*u.x + m01*u.y,
         m10*u.x + m11*u.y
     )
@@ -181,9 +181,9 @@ extends ConstRotationSubMat2
      * Combine two transformations. This method works similar to regular
      * multiplication but with a special handling of the translation column.
      * <br/>
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     * Equaivalent to Mat2x3d(Mat3dx3(this)*Mat3dx3(m)).
      */
-    def *(m: AnyMat2x3) = Mat2x3(
+    def *(m: AnyMat2x3d) = Mat2x3d(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
@@ -199,9 +199,9 @@ extends ConstRotationSubMat2
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     * Equaivalent to Mat2x3d(Mat3dx3(this)*Mat3dx3(m)).
      */
-    def *(m: AnyMat2) = Mat2x3(
+    def *(m: AnyMat2d) = Mat2x3d(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
@@ -212,7 +212,7 @@ extends ConstRotationSubMat2
         m12
     )
 
-    def ==(m: AnyMat2x3) :Boolean = {
+    def ==(m: AnyMat2x3d) :Boolean = {
         if (m eq null) false
         else
             m00 == m.m00 && m10 == m.m10 &&
@@ -220,10 +220,10 @@ extends ConstRotationSubMat2
             m02 == m.m02 && m12 == m.m12
     }
 
-    def !=(m: AnyMat2x3) :Boolean = !(this == m)
+    def !=(m: AnyMat2x3d) :Boolean = !(this == m)
 
     private[math] def hasErrors: Boolean = {
-        import java.lang.Float._
+        import java.lang.Double._
 
         (
             isNaN(m00) || isInfinite(m00) ||
@@ -247,32 +247,32 @@ extends ConstRotationSubMat2
     }
 }
 
-final class ConstMat2x3 private (
-    val m00: Float, val m10: Float,
-    val m01: Float, val m11: Float,
-    val m02: Float, val m12: Float
-) extends AnyMat2x3
+final class ConstMat2x3d private (
+    val m00: Double, val m10: Double,
+    val m01: Double, val m11: Double,
+    val m02: Double, val m12: Double
+) extends AnyMat2x3d
 
-object ConstMat2x3 {
+object ConstMat2x3d {
 
-    def apply(s: Float) = new ConstMat2x3(
+    def apply(s: Double) = new ConstMat2x3d(
         s, 0,
         0, s,
         0, 0
     )
 
     def apply(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float,
-        m02: Float, m12: Float
-      ) = new ConstMat2x3(
+        m00: Double, m10: Double,
+        m01: Double, m11: Double,
+        m02: Double, m12: Double
+      ) = new ConstMat2x3d(
             m00, m10,
             m01, m11,
             m02, m12
       )
 
-    def apply(args: ReadAny[Float]*) :ConstMat2x3 = {
-        val mat = new Array[Float](6)
+    def apply(args: ReadAny[Double]*) :ConstMat2x3d = {
+        val mat = new Array[Double](6)
         mat(0) = 1
         mat(3) = 1
 
@@ -296,100 +296,100 @@ object ConstMat2x3 {
         if (index < 6) throw new IllegalArgumentException(
             "Too few values for this matrix.")
 
-        new ConstMat2x3(
+        new ConstMat2x3d(
             mat(0), mat(1),
             mat(2), mat(3),
             mat(4), mat(5)
         )
     }
 
-    def apply(m: AnyMat2) = new ConstMat2x3(
+    def apply(m: AnyMat2d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat2x3) = new ConstMat2x3(
+    def apply(m: AnyMat2x3d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat2x4) = new ConstMat2x3(
+    def apply(m: AnyMat2x4d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat3x2) = new ConstMat2x3(
+    def apply(m: AnyMat3x2d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat3) = new ConstMat2x3(
+    def apply(m: AnyMat3d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat3x4) = new ConstMat2x3(
+    def apply(m: AnyMat3x4d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat4x2) = new ConstMat2x3(
+    def apply(m: AnyMat4x2d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat4x3) = new ConstMat2x3(
+    def apply(m: AnyMat4x3d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat4) = new ConstMat2x3(
+    def apply(m: AnyMat4d) = new ConstMat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    implicit def mutableToConst(m: Mat2x3) = ConstMat2x3(m)
+    implicit def mutableToConst(m: Mat2x3d) = ConstMat2x3d(m)
 }
 
 
-final class Mat2x3 private (
-    var m00: Float, var m10: Float,
-    var m01: Float, var m11: Float,
-    var m02: Float, var m12: Float
-) extends AnyMat2x3 with RotationSubMat2
+final class Mat2x3d private (
+    var m00: Double, var m10: Double,
+    var m01: Double, var m11: Double,
+    var m02: Double, var m12: Double
+) extends AnyMat2x3d with RotationSubMat2d
 {
-    def *=(s: Float) {
+    def *=(s: Double) {
         m00 *= s; m10 *= s;
         m01 *= s; m11 *= s;
         m02 *= s; m12 *= s
     }
-    def /=(s: Float) { val inv = 1/s;
+    def /=(s: Double) { val inv = 1/s;
         m00 *= inv; m10 *= inv;
         m01 *= inv; m11 *= inv;
         m02 *= inv; m12 *= inv
     }
 
-    def +=(m: AnyMat2x3) {
+    def +=(m: AnyMat2x3d) {
         m00 += m.m00; m10 += m.m10;
         m01 += m.m01; m11 += m.m11;
         m02 += m.m02; m12 += m.m12
     }
-    def -=(m: AnyMat2x3) {
+    def -=(m: AnyMat2x3d) {
         m00 -= m.m00; m10 -= m.m10;
         m01 -= m.m01; m11 -= m.m11;
         m02 -= m.m02; m12 -= m.m12
     }
 
-    def *=(m: AnyMat3) {
+    def *=(m: AnyMat3d) {
         val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
         val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
 
@@ -408,9 +408,9 @@ final class Mat2x3 private (
      * Combine two transformations. This method works similar to regular
      * multiplication but with a special handling of the translation column.
      * <br/>
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     * Equaivalent to Mat2x3d(Mat3dx3(this)*Mat3dx3(m)).
      */
-    def *=(m: AnyMat2x3) {
+    def *=(m: AnyMat2x3d) {
         val a00 = m00*m.m00 + m01*m.m10
         val a10 = m10*m.m00 + m11*m.m10
 
@@ -430,9 +430,9 @@ final class Mat2x3 private (
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     * Equaivalent to Mat2x3d(Mat3dx3(this)*Mat3dx3(m)).
      */
-    def *=(m: AnyMat2) {
+    def *=(m: AnyMat2d) {
         val a00 = m00*m.m00 + m01*m.m10
         val a10 = m10*m.m00 + m11*m.m10
 
@@ -443,23 +443,23 @@ final class Mat2x3 private (
         m01 = a01; m11 = a11
     }
 
-    def :=(m: AnyMat2x3) {
+    def :=(m: AnyMat2x3d) {
         m00 = m.m00; m10 = m.m10;
         m01 = m.m01; m11 = m.m11;
         m02 = m.m02; m12 = m.m12
     }
 
     def set(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float,
-        m02: Float, m12: Float
+        m00: Double, m10: Double,
+        m01: Double, m11: Double,
+        m02: Double, m12: Double
     ) {
         this.m00 = m00; this.m10 = m10;
         this.m01 = m01; this.m11 = m11;
         this.m02 = m02; this.m12 = m12
     }
 
-    def update(c: Int, r: Int, s: Float) {
+    def update(c: Int, r: Int, s: Double) {
         def error() {
             throw new IndexOutOfBoundsException("Trying to update index (" +
                      c + ", " + r + ") in " + this.getClass.getSimpleName)
@@ -488,7 +488,7 @@ final class Mat2x3 private (
         }
     }
 
-    def update(c: Int, v: AnyVec2) {
+    def update(c: Int, v: AnyVec2d) {
         c match {
             case 0 => m00 = v.x; m10 = v.y
             case 1 => m01 = v.x; m11 = v.y
@@ -500,26 +500,26 @@ final class Mat2x3 private (
 
 }
 
-object Mat2x3 {
+object Mat2x3d {
 
-    def apply(s: Float) = new Mat2x3(
+    def apply(s: Double) = new Mat2x3d(
         s, 0,
         0, s,
         0, 0
     )
 
     def apply(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float,
-        m02: Float, m12: Float
-      ) = new Mat2x3(
+        m00: Double, m10: Double,
+        m01: Double, m11: Double,
+        m02: Double, m12: Double
+      ) = new Mat2x3d(
             m00, m10,
             m01, m11,
             m02, m12
       )
 
-    def apply(args: ReadAny[Float]*) :Mat2x3 = {
-        val mat = new Array[Float](6)
+    def apply(args: ReadAny[Double]*) :Mat2x3d = {
+        val mat = new Array[Double](6)
         mat(0) = 1
         mat(3) = 1
 
@@ -543,62 +543,62 @@ object Mat2x3 {
         if (index < 6) throw new IllegalArgumentException(
             "Too few values for this matrix.")
 
-        new Mat2x3(
+        new Mat2x3d(
             mat(0), mat(1),
             mat(2), mat(3),
             mat(4), mat(5)
         )
     }
 
-    def apply(m: AnyMat2) = new Mat2x3(
+    def apply(m: AnyMat2d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat2x3) = new Mat2x3(
+    def apply(m: AnyMat2x3d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat2x4) = new Mat2x3(
+    def apply(m: AnyMat2x4d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat3x2) = new Mat2x3(
+    def apply(m: AnyMat3x2d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat3) = new Mat2x3(
+    def apply(m: AnyMat3d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat3x4) = new Mat2x3(
+    def apply(m: AnyMat3x4d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat4x2) = new Mat2x3(
+    def apply(m: AnyMat4x2d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         0, 0
     )
 
-    def apply(m: AnyMat4x3) = new Mat2x3(
+    def apply(m: AnyMat4x3d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12
     )
 
-    def apply(m: AnyMat4) = new Mat2x3(
+    def apply(m: AnyMat4d) = new Mat2x3d(
         m.m00, m.m10,
         m.m01, m.m11,
         m.m02, m.m12

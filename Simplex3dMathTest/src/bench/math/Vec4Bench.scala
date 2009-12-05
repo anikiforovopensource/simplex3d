@@ -18,9 +18,9 @@
 
 package bench.math
 
-import simplex3d.math.floatvec.Vec4
-import simplex3d.math.floatvec.ConstVec4
-import simplex3d.math.floatvec.FloatMath._
+import simplex3d.math.floatm.Vec4
+import simplex3d.math.floatm.ConstVec4
+import simplex3d.math.floatm.FloatMath._
 
 
 /**

@@ -21,8 +21,8 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatvec._
-import simplex3d.math.floatvec.FloatMath._
+import simplex3d.math.floatm._
+import simplex3d.math.floatm.FloatMath._
 
 
 /**

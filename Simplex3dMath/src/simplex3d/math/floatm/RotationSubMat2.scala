@@ -18,20 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intvec
+package simplex3d.math.floatm
 
 
 /**
- * Glue code to make ints interact with vectors and matrices.
- *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) extends Read1[Int] {
-    def *(u: AnyVec2i) = u*value
-    def *(u: AnyVec3i) = u*value
-    def *(u: AnyVec4i) = u*value
+trait ConstRotationSubMat2 {
+    // Column major order.
+    def m00: Float; def m10: Float // column
+    def m01: Float; def m11: Float // column
+}
 
-    def /(u: AnyVec2i) = u.divideByComponent(value)
-    def /(u: AnyVec3i) = u.divideByComponent(value)
-    def /(u: AnyVec4i) = u.divideByComponent(value)
+trait RotationSubMat2 {
+    // Column major order.
+    var m00: Float; var m10: Float // column
+    var m01: Float; var m11: Float // column
+
+    def set(
+        m00: Float, m10: Float,
+        m01: Float, m11: Float
+    ) {
+        this.m00 = m00; this.m10 = m10
+        this.m01 = m01; this.m11 = m11
+    }
 }

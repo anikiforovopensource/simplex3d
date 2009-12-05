@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
-
-import simplex3d.math.intvec._
+package simplex3d.math.floatm
 
 
 /**
@@ -127,7 +125,7 @@ object ConstVec4 {
     def apply(m: AnyMat2) =
         new ConstVec4(m.m00, m.m10, m.m01, m.m11)
 
-    def apply(u: AnyVec4i) =
+    def apply(u: Read4[Int]) =
         new ConstVec4(u.x, u.y, u.z, u.w)
 
     implicit def mutableToConst(u: Vec4) = ConstVec4(u)
@@ -223,7 +221,7 @@ object Vec4 {
     def apply(m: AnyMat2) =
         new Vec4(m.m00, m.m10, m.m01, m.m11)
 
-    def apply(u: AnyVec4i) =
+    def apply(u: Read4[Int]) =
         new Vec4(u.x, u.y, u.z, u.w)
 
     implicit def vec4ToSwizzled(u: Vec4) = new Vec4Swizzled(u)

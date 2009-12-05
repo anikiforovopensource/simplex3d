@@ -18,28 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
+package simplex3d.math.intm
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ConstRotationSubMat2 {
-    // Column major order.
-    def m00: Float; def m10: Float // column
-    def m01: Float; def m11: Float // column
-}
-
-trait RotationSubMat2 {
-    // Column major order.
-    var m00: Float; var m10: Float // column
-    var m01: Float; var m11: Float // column
-
-    def set(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float
-    ) {
-        this.m00 = m00; this.m10 = m10
-        this.m01 = m01; this.m11 = m11
-    }
+private[math] class IntVecFactory
+extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
+{
+    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
+    protected def make3(x: Int,
+                               y: Int,
+                               z: Int) = ConstVec3i(x, y, z)
+    protected def make4(x: Int,
+                               y: Int,
+                               z: Int,
+                               w: Int) = ConstVec4i(x, y, z, w)
 }

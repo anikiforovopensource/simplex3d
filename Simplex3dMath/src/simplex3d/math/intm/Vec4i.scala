@@ -18,10 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intvec
+package simplex3d.math.intm
 
 import simplex3d.math.BaseMath._
-import simplex3d.math.floatvec._
 
 
 /**
@@ -127,29 +126,26 @@ object ConstVec4i {
     def apply(x: Int, yzw: AnyVec3i) =
         new ConstVec4i(x, yzw.x, yzw.y, yzw.z)
 
-    def apply(u: AnyVec4) =
+    def apply(u: Read4[Float]) =
         new ConstVec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 
-    def apply(xy: AnyVec2, z: Int, w: Int) =
+    def apply(xy: Read2[Float], z: Int, w: Int) =
         new ConstVec4i(int(xy.x), int(xy.y), z, w)
 
-    def apply(x: Int, yz: AnyVec2, w: Int) =
+    def apply(x: Int, yz: Read2[Float], w: Int) =
         new ConstVec4i(x, int(yz.x), int(yz.y), w)
 
-    def apply(x: Int, y: Int, zw: AnyVec2) =
+    def apply(x: Int, y: Int, zw: Read2[Float]) =
         new ConstVec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: AnyVec2, zw: AnyVec2) =
+    def apply(xy: Read2[Float], zw: Read2[Float]) =
         new ConstVec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
 
-    def apply(xyz: AnyVec3, w: Int) =
+    def apply(xyz: Read3[Float], w: Int) =
         new ConstVec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
-    def apply(x: Int, yzw: AnyVec3) =
+    def apply(x: Int, yzw: Read3[Float]) =
         new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
-
-    def apply(m: AnyMat2) =
-        new ConstVec4i(int(m.m00), int(m.m10), int(m.m01), int(m.m11))
         
     implicit def mutableToConst(u: Vec4i) = ConstVec4i(u)
     implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
@@ -253,29 +249,26 @@ object Vec4i {
     def apply(x: Int, yzw: AnyVec3i) =
         new Vec4i(x, yzw.x, yzw.y, yzw.z)
 
-    def apply(u: AnyVec4) =
+    def apply(u: Read4[Float]) =
         new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 
-    def apply(xy: AnyVec2, z: Int, w: Int) =
+    def apply(xy: Read2[Float], z: Int, w: Int) =
         new Vec4i(int(xy.x), int(xy.y), z, w)
 
-    def apply(x: Int, yz: AnyVec2, w: Int) =
+    def apply(x: Int, yz: Read2[Float], w: Int) =
         new Vec4i(x, int(yz.x), int(yz.y), w)
 
-    def apply(x: Int, y: Int, zw: AnyVec2) =
+    def apply(x: Int, y: Int, zw: Read2[Float]) =
         new Vec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: AnyVec2, zw: AnyVec2) =
+    def apply(xy: Read2[Float], zw: Read2[Float]) =
         new Vec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
 
-    def apply(xyz: AnyVec3, w: Int) =
+    def apply(xyz: Read3[Float], w: Int) =
         new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
-    def apply(x: Int, yzw: AnyVec3) =
+    def apply(x: Int, yzw: Read3[Float]) =
         new Vec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
-
-    def apply(m: AnyMat2) =
-        new Vec4i(int(m.m00), int(m.m10), int(m.m01), int(m.m11))
 
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)
 }

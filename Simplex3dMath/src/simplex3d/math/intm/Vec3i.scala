@@ -18,10 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intvec
+package simplex3d.math.intm
 
 import simplex3d.math.BaseMath._
-import simplex3d.math.floatvec._
 
 
 /**
@@ -101,10 +100,14 @@ object ConstVec3i {
     def apply(u: AnyVec4i) = new ConstVec3i(u.x, u.y, u.z)
     def apply(xy: AnyVec2i, z: Int) = new ConstVec3i(xy.x, xy.y, z)
     def apply(x: Int, yz: AnyVec2i) = new ConstVec3i(x, yz.x, yz.y)
-    def apply(u: AnyVec3) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: AnyVec4) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: AnyVec2, z: Int) = new ConstVec3i(int(xy.x), int(xy.y), z)
-    def apply(x: Int, yz: AnyVec2) = new ConstVec3i(x, int(yz.x), int(yz.y))
+    def apply(u: Read3[Float]) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4[Float]) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2[Float], z: Int) = {
+        new ConstVec3i(int(xy.x), int(xy.y), z)
+    }
+    def apply(x: Int, yz: Read2[Float]) = {
+        new ConstVec3i(x, int(yz.x), int(yz.y))
+    }
 
     implicit def mutableToConst(u: Vec3i) = ConstVec3i(u)
     implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
@@ -178,10 +181,10 @@ object Vec3i {
     def apply(u: AnyVec4i) = new Vec3i(u.x, u.y, u.z)
     def apply(xy: AnyVec2i, z: Int) = new Vec3i(xy.x, xy.y, z)
     def apply(x: Int, yz: AnyVec2i) = new Vec3i(x, yz.x, yz.y)
-    def apply(u: AnyVec3) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: AnyVec4) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: AnyVec2, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
-    def apply(x: Int, yz: AnyVec2) = new Vec3i(x, int(yz.x), int(yz.y))
+    def apply(u: Read3[Float]) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4[Float]) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2[Float], z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
+    def apply(x: Int, yz: Read2[Float]) = new Vec3i(x, int(yz.x), int(yz.y))
 
     implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
 }

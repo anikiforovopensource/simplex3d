@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
-
-import simplex3d.math.intvec._
+package simplex3d.math.floatm
 
 
 /**
@@ -89,9 +87,9 @@ object ConstVec2 {
     def apply(u: AnyVec2) = new ConstVec2(u.x, u.y)
     def apply(u: AnyVec3) = new ConstVec2(u.x, u.y)
     def apply(u: AnyVec4) = new ConstVec2(u.x, u.y)
-    def apply(u: AnyVec2i) = new ConstVec2(u.x, u.y)
-    def apply(u: AnyVec3i) = new ConstVec2(u.x, u.y)
-    def apply(u: AnyVec4i) = new ConstVec2(u.x, u.y)
+    def apply(u: Read2[Int]) = new ConstVec2(u.x, u.y)
+    def apply(u: Read3[Int]) = new ConstVec2(u.x, u.y)
+    def apply(u: Read4[Int]) = new ConstVec2(u.x, u.y)
 
     implicit def mutableToConst(u: Vec2) = ConstVec2(u)
     implicit def constVec2ToSwizzled(u: ConstVec2) = new ConstVec2Swizzled(u)
@@ -145,9 +143,9 @@ object Vec2 {
     def apply(u: AnyVec2) = new Vec2(u.x, u.y)
     def apply(u: AnyVec3) = new Vec2(u.x, u.y)
     def apply(u: AnyVec4) = new Vec2(u.x, u.y)
-    def apply(u: AnyVec2i) = new Vec2(u.x, u.y)
-    def apply(u: AnyVec3i) = new Vec2(u.x, u.y)
-    def apply(u: AnyVec4i) = new Vec2(u.x, u.y)
+    def apply(u: Read2[Int]) = new Vec2(u.x, u.y)
+    def apply(u: Read3[Int]) = new Vec2(u.x, u.y)
+    def apply(u: Read4[Int]) = new Vec2(u.x, u.y)
 
     implicit def vec2ToSwizzled(u: Vec2) = new Vec2Swizzled(u)
 }

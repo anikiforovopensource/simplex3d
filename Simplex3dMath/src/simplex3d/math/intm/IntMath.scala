@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intvec
+package simplex3d.math.intm
 
 import simplex3d.math.BaseMath._
 

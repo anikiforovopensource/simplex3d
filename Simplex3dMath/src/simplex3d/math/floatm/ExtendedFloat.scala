@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
+package simplex3d.math.floatm
 
 
 /**
- * Glue code to make ints interact with vectors and matrices.
+ * Glue code to make floats interact with vectors and matrices.
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) extends Read1[Int] {
+final class ExtendedFloat(val value: Float) extends Read1[Float] {
     def *(u: AnyVec2) = u*value
     def *(u: AnyVec3) = u*value
     def *(u: AnyVec4) = u*value

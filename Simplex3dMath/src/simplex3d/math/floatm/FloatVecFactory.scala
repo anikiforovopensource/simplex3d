@@ -18,21 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intvec
+package simplex3d.math.floatm
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] class IntVecFactory
-extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
+private[math] class FloatVecFactory
+extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
 {
-    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
-    protected def make3(x: Int,
-                               y: Int,
-                               z: Int) = ConstVec3i(x, y, z)
-    protected def make4(x: Int,
-                               y: Int,
-                               z: Int,
-                               w: Int) = ConstVec4i(x, y, z, w)
+    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
+    protected def make3(x: Float,
+                               y: Float,
+                               z: Float) = ConstVec3(x, y, z)
+    protected def make4(x: Float,
+                               y: Float,
+                               z: Float,
+                               w: Float) = ConstVec4(x, y, z, w)
 }

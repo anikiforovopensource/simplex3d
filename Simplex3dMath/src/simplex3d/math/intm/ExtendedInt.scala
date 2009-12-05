@@ -18,21 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
+package simplex3d.math.intm
 
 
 /**
+ * Glue code to make ints interact with vectors and matrices.
+ *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] class FloatVecFactory
-extends VecFactory[Float, ConstVec2, ConstVec3, ConstVec4]
-{
-    protected def make2(x: Float, y: Float) = ConstVec2(x, y)
-    protected def make3(x: Float,
-                               y: Float,
-                               z: Float) = ConstVec3(x, y, z)
-    protected def make4(x: Float,
-                               y: Float,
-                               z: Float,
-                               w: Float) = ConstVec4(x, y, z, w)
+final class ExtendedInt(val value: Int) extends Read1[Int] {
+    def *(u: AnyVec2i) = u*value
+    def *(u: AnyVec3i) = u*value
+    def *(u: AnyVec4i) = u*value
+
+    def /(u: AnyVec2i) = u.divideByComponent(value)
+    def /(u: AnyVec3i) = u.divideByComponent(value)
+    def /(u: AnyVec4i) = u.divideByComponent(value)
 }

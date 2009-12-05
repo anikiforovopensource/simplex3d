@@ -18,10 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatvec
+package simplex3d.math.floatm
 
 import simplex3d.math.BaseMath._
-import simplex3d.math.intvec._
 import java.lang.{Math => JMath, StrictMath => SMath}
 import toxi.math.noise.SimplexNoise
 
@@ -31,11 +30,11 @@ import toxi.math.noise.SimplexNoise
  */
 object FloatMath {
     // Implicits
-    implicit def fmfloatToExtFloat(s: Float) = new ExtendedFloat(s)
-    implicit def fmintToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def vec2iToVec2(u: AnyVec2i) :Vec2 = Vec2(u)
-    implicit def vec3iToVec3(u: AnyVec3i) :Vec3 = Vec3(u)
-    implicit def vec4iToVec4(u: AnyVec4i) :Vec4 = Vec4(u)
+    implicit def fmFloatToExtFloat(s: Float) = new ExtendedFloat(s)
+    implicit def fmIntToExtInt(s: Int) = new ExtendedInt(s)
+    implicit def vec2iToVec2(u: Read2[Int]) :Vec2 = Vec2(u.x, u.y)
+    implicit def vec3iToVec3(u: Read3[Int]) :Vec3 = Vec3(u.x, u.y, u.z)
+    implicit def vec4iToVec4(u: Read4[Int]) :Vec4 = Vec4(u.x, u.y, u.z, u.w)
 
     // Random
     def nextVec2() :Vec2 = Vec2(nextFloat, nextFloat)
@@ -47,9 +46,9 @@ object FloatMath {
     val Pi: Float = float(Math.Pi)
     val E: Float = float(Math.E)
 
-    private val DegToRad = Pi / 180
-    private val RadToDeg = 180 / Pi
-    private val InvLog2 = 1/SMath.log(2)
+    private val DegToRad: Float = Pi / 180
+    private val RadToDeg: Float = 180 / Pi
+    private val InvLog2: Double = 1/SMath.log(2)
 
     // Have to be careful with large offsets due to the loss in precision.
     // With noise args as double these values should be ok

@@ -20,15 +20,14 @@ package test.math
 
 import org.scalatest._
 
-import simplex3d.math._
-import simplex3d.math.floatm._
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class ExtendedMathTest extends FunSuite {
+class FloatMathTest extends FunSuite {
 
     test("Convert to quat") {
         def testMatrix(a: Float) {

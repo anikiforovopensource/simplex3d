@@ -21,14 +21,14 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math.intm._
-import simplex3d.math.floatm._
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec3Test extends FunSuite {
+class Vec3fTest extends FunSuite {
 
     test("Const factories") {
         var u = ConstVec3(5)

@@ -21,7 +21,7 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math.intm._
-import simplex3d.math.floatm._
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.intm.IntMath._
 
 

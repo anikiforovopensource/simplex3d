@@ -20,14 +20,14 @@ package test.math
 
 import org.scalatest._
 
-import simplex3d.math.floatm._
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec2SwizzleTest extends FunSuite {
+class Vec2fSwizzleTest extends FunSuite {
 
     test("Swizzled read") {
         val x = 5f

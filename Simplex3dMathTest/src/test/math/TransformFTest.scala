@@ -22,7 +22,7 @@ import org.scalatest._
 
 import simplex3d.math._
 import simplex3d.math.BaseMath._
-import simplex3d.math.floatm._
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
 
 
@@ -30,7 +30,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class TransformTest extends FunSuite {
+class TransformFTest extends FunSuite {
 
     test("Transform, InverseTransform, Translation, Rotation, and Scale factories")
     {

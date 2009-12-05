@@ -18,8 +18,7 @@
 
 package bench.math
 
-import simplex3d.math.floatm.Vec4
-import simplex3d.math.floatm.ConstVec4
+import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
 
 

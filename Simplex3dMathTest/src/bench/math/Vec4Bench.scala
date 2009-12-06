@@ -172,19 +172,6 @@ extends AnyModifiedVec4
     vw = cw
 }
 
-object ConstModifiedVec4 {
-    def apply(s: Float) =
-        new ConstModifiedVec4(s, s, s, s)
-
-    def apply(x: Float, y: Float, z: Float, w: Float) =
-        new ConstModifiedVec4(x, y, z, w)
-
-    def apply(u: AnyModifiedVec4) =
-        new ConstModifiedVec4(u.x, u.y, u.z, u.w)
-
-    implicit def mutableToConst(u: ModifiedVec4) = ConstModifiedVec4(u)
-}
-
 final class ModifiedVec4 private (cx: Float, cy: Float,
                           cz: Float, cw: Float)
 extends AnyModifiedVec4
@@ -251,12 +238,6 @@ extends AnyModifiedVec4
 }
 
 object ModifiedVec4 {
-    val Zero = ConstModifiedVec4(0)
-    val One = ConstModifiedVec4(1)
-    val UnitX = ConstModifiedVec4(1, 0, 0, 0)
-    val UnitY = ConstModifiedVec4(0, 1, 0, 0)
-    val UnitZ = ConstModifiedVec4(0, 0, 1, 0)
-    val UnitW = ConstModifiedVec4(0, 0, 0, 1)
 
     def apply(s: Float) =
         new ModifiedVec4(s, s, s, s)

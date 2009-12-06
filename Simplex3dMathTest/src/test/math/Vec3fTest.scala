@@ -30,68 +30,6 @@ import simplex3d.math.floatm.FloatMath._
  */
 class Vec3fTest extends FunSuite {
 
-    test("Const factories") {
-        var u = ConstVec3(5)
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(5) { u.x }
-        expect(5) { u.y }
-        expect(5) { u.z }
-        
-        u = ConstVec3(2, 3, 4)
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(2) { u.x }
-        expect(3) { u.y }
-        expect(4) { u.z }
-
-        u = ConstVec3(6, Vec2(7, 8))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-
-        u = ConstVec3(Vec2(6, 7), 8)
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-
-        u = ConstVec3(Vec3(4, 5, 6))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = ConstVec3(Vec4(1, 2, 3, 4))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(1) { u.x }
-        expect(2) { u.y }
-        expect(3) { u.z }
-
-        u = ConstVec3(Vec2i(4, 5), 6)
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = ConstVec3(4, Vec2i(5, 6))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = ConstVec3(Vec3i(6, 7, 8))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-
-        u = ConstVec3(Vec4i(1, 2, 3, 4))
-        expect(classOf[ConstVec3]) { u.getClass }
-        expect(1) { u.x }
-        expect(2) { u.y }
-        expect(3) { u.z }
-    }
-
     test("Mutable factories") {
         var u = Vec3(5)
         expect(classOf[Vec3]) { u.getClass }
@@ -154,9 +92,20 @@ class Vec3fTest extends FunSuite {
         expect(3) { u.z }
     }
 
+    test("Const conversions") {
+        var c = const(Vec3(5)); var v = Vec3(3)
+        v = c; assert(Vec3(5) == v)
+
+        c = const(Vec3(5)); v = Vec3(3)
+        c = v; assert(Vec3(3) == c)
+
+        val t: ConstVec3 = Vec3(9)
+        assert(Vec3(9) == t)
+    }
+
     test("Equality methods") {
-        assert(Vec3(4, 7, 9) == ConstVec3(4, 7, 9))
-        assert(ConstVec3(4, 7, 9) == Vec3(4, 7, 9))
+        assert(Vec3(4, 7, 9) == const(Vec3(4, 7, 9)))
+        assert(const(Vec3(4, 7, 9)) == Vec3(4, 7, 9))
 
         assert(Vec3(1, 2, 3) != Vec3(9, 2, 3))
         assert(Vec3(1, 2, 3) != Vec3(1, 9, 3))
@@ -164,7 +113,7 @@ class Vec3fTest extends FunSuite {
     }
 
     test("Indexed read") {
-        val u = ConstVec3(3, 4, 5)
+        val u = const(Vec3(3, 4, 5))
 
         expect(3) { u(0) }
         expect(4) { u(1) }
@@ -199,7 +148,7 @@ class Vec3fTest extends FunSuite {
     }
 
     test("Const math") {
-        val u = ConstVec3(7, 8, 9)
+        val u = const(Vec3(7, 8, 9))
 
         assert(Vec3(-7, -8, -9) == -u)
 
@@ -208,34 +157,34 @@ class Vec3fTest extends FunSuite {
         assert(Vec3(3.5f, 4, 4.5f) == u/2)
         assert(Vec3(1, 7/8f, 7/9f) == 7/u)
 
-        val v = ConstVec3(2, 4, 3)
+        val v = const(Vec3(2, 4, 3))
 
         assert(Vec3(9, 12, 12) == u + v)
         assert(Vec3(5, 4, 6) == u - v)
         assert(Vec3(14, 32, 27) == u*v)
         assert(Vec3(3.5f, 2, 3) == u/v)
 
-        val t = ConstVec3(2, 3, 4)
+        val t = const(Vec3(2, 3, 4))
 
-        val m3x2 = ConstMat3x2(
+        val m3x2 = const(Mat3x2(
             2, 5, 4,
             3, 4, 8
-        )
+        ))
         assert(Vec2(35, 50) == t*m3x2)
 
-        val m3 = ConstMat3(
+        val m3 = const(Mat3(
             2, 5, 4,
             3, 4, 8,
             7, 4, 2
-        )
+        ))
         assert(Vec3(35, 50, 34) == t*m3)
 
-        val m3x4 = ConstMat3x4(
+        val m3x4 = const(Mat3x4(
             2, 5, 4,
             3, 4, 8,
             7, 4, 2,
             5, 9, 2
-        )
+        ))
         assert(Vec4(35, 50, 34, 45) == t*m3x4)
     }
 
@@ -259,11 +208,11 @@ class Vec3fTest extends FunSuite {
         u = Vec3(2, 3, 4); u.set(22, 33, 44); assert(Vec3(22, 33, 44) == u)
 
         u = Vec3(2, 3, 4)
-        val m3 = ConstMat3(
+        val m3 = const(Mat3(
             2, 5, 4,
             3, 4, 8,
             7, 4, 2
-        )
+        ))
         u *= m3
         assert(Vec3(35, 50, 34) == u)
     }

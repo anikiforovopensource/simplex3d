@@ -34,7 +34,7 @@ class Vec3fSwizzleTest extends FunSuite {
         val y = 6f
         val z = 7f
 
-        val u = ConstVec3(x, y, z)
+        val u = const(Vec3(x, y, z))
 
         expect(x) { u.x }
         expect(y) { u.y }
@@ -407,7 +407,7 @@ class Vec3fSwizzleTest extends FunSuite {
         val z = 7f
         val t = 10f
 
-        var i = ConstVec3(x, y, z)
+        var i = const(Vec3(x, y, z))
         val u = Vec3(1)
 
         u := i; u.x = t; assert(Vec3(t, y, z) == u)
@@ -422,7 +422,7 @@ class Vec3fSwizzleTest extends FunSuite {
         u := i; u.t = t; assert(Vec3(x, t, z) == u)
         u := i; u.p = t; assert(Vec3(x, y, t) == u)
 
-        i = ConstVec3(t)
+        i = const(Vec3(t))
 
         u := i; u.xy = Vec2(x, y); assert(Vec3(x, y, t) == u)
         u := i; u.xz = Vec2(x, z); assert(Vec3(x, t, z) == u)

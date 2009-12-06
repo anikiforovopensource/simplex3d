@@ -30,48 +30,6 @@ import simplex3d.math.intm.IntMath._
  */
 class Vec2iTest extends FunSuite {
 
-    test("Const factories") {
-        var u = ConstVec2i(5)
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(5) { u.x }
-        expect(5) { u.y }
-        
-        u = ConstVec2i(2, 3)
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(2) { u.x }
-        expect(3) { u.y }
-
-        u = ConstVec2i(Vec2(4, 5))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-
-        u = ConstVec2i(Vec3(6, 7, 8))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-
-        u = ConstVec2i(Vec4(1, 2, 3, 4))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(1) { u.x }
-        expect(2) { u.y }
-
-        u = ConstVec2i(Vec2i(4, 5))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-
-        u = ConstVec2i(Vec3i(6, 7, 8))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-
-        u = ConstVec2i(Vec4i(1, 2, 3, 4))
-        expect(classOf[ConstVec2i]) { u.getClass }
-        expect(1) { u.x }
-        expect(2) { u.y }
-    }
-
     test("Mutable factories") {
         var u = Vec2i(5)
         expect(classOf[Vec2i]) { u.getClass }
@@ -114,16 +72,27 @@ class Vec2iTest extends FunSuite {
         expect(2) { u.y }
     }
 
+    test("Const conversions") {
+        var c = const(Vec2i(5)); var v = Vec2i(3)
+        v = c; assert(Vec2i(5) == v)
+
+        c = const(Vec2i(5)); v = Vec2i(3)
+        c = v; assert(Vec2i(3) == c)
+
+        val t: ConstVec2i = Vec2i(9)
+        assert(Vec2i(9) == t)
+    }
+
     test("Equality methods") {
-        assert(Vec2i(4, 7) == ConstVec2i(4, 7))
-        assert(ConstVec2i(4, 7) == Vec2i(4, 7))
+        assert(Vec2i(4, 7) == const(Vec2i(4, 7)))
+        assert(const(Vec2i(4, 7)) == Vec2i(4, 7))
 
         assert(Vec2i(1, 2) != Vec2i(9, 2))
         assert(Vec2i(1, 2) != Vec2i(1, 9))
     }
 
     test("Indexed read") {
-        val u = ConstVec2i(3, 4)
+        val u = const(Vec2i(3, 4))
 
         expect(3) { u(0) }
         expect(4) { u(1) }

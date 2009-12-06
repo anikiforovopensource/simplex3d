@@ -35,7 +35,7 @@ class Vec4fSwizzleTest extends FunSuite {
         val z = 7f
         val w = 8f
 
-        val u = ConstVec4(x, y, z, w)
+        val u = const(Vec4(x, y, z, w))
 
         expect(x) { u.x }
         expect(y) { u.y }
@@ -1069,7 +1069,7 @@ class Vec4fSwizzleTest extends FunSuite {
         val w = 8f
         val t = 10f
 
-        var i = ConstVec4(x, y, z, w)
+        var i = const(Vec4(x, y, z, w))
         val u = Vec4(1)
 
         u := i; u.x = t; assert(Vec4(t, y, z, w) == u)
@@ -1087,7 +1087,7 @@ class Vec4fSwizzleTest extends FunSuite {
         u := i; u.p = t; assert(Vec4(x, y, t, w) == u)
         u := i; u.q = t; assert(Vec4(x, y, z, t) == u)
 
-        i = ConstVec4(t)
+        i = const(Vec4(t))
 
         u := i; u.xy = Vec2(x, y); assert(Vec4(x, y, t, t) == u)
         u := i; u.xz = Vec2(x, z); assert(Vec4(x, t, z, t) == u)

@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.floatm.FloatMath._
 import Read._
 
 
@@ -38,10 +39,10 @@ extends ConstRotationSubMat3f
 
     def apply(c: Int) :ConstVec3f = {
         c match {
-            case 0 => ConstVec3f(m00, m10, m20)
-            case 1 => ConstVec3f(m01, m11, m21)
-            case 2 => ConstVec3f(m02, m12, m22)
-            case 3 => ConstVec3f(m03, m13, m23)
+            case 0 => new ConstVec3f(m00, m10, m20)
+            case 1 => new ConstVec3f(m01, m11, m21)
+            case 2 => new ConstVec3f(m02, m12, m22)
+            case 3 => new ConstVec3f(m03, m13, m23)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 3, got " + j)
         }
@@ -213,7 +214,7 @@ extends ConstRotationSubMat3f
      * Combine two transformations. This method works similar to regular
      * multiplication but with a special handling of the translation column.
      * <br/>
-     * Equaivalent to Mat3x4f(Mat4fx4(this)*Mat4fx4(m)).
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
     def *(m: AnyMat3x4f) = Mat3x4f(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
@@ -238,7 +239,7 @@ extends ConstRotationSubMat3f
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat3x4f(Mat4fx4(this)*Mat4fx4(m)).
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
     def *(m: AnyMat3f) = Mat3x4f(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
@@ -302,136 +303,14 @@ extends ConstRotationSubMat3f
     }
 }
 
-final class ConstMat3x4f private (
+final class ConstMat3x4f private[math] (
     val m00: Float, val m10: Float, val m20: Float,
     val m01: Float, val m11: Float, val m21: Float,
     val m02: Float, val m12: Float, val m22: Float,
     val m03: Float, val m13: Float, val m23: Float
 ) extends AnyMat3x4f
 
-object ConstMat3x4f {
-
-    def apply(s: Float) = new ConstMat3x4f(
-        s, 0, 0,
-        0, s, 0,
-        0, 0, s,
-        0, 0, 0
-    )
-
-    def apply(
-        m00: Float, m10: Float, m20: Float,
-        m01: Float, m11: Float, m21: Float,
-        m02: Float, m12: Float, m22: Float,
-        m03: Float, m13: Float, m23: Float
-      ) = new ConstMat3x4f(
-            m00, m10, m20,
-            m01, m11, m21,
-            m02, m12, m22,
-            m03, m13, m23
-      )
-
-    def apply(args: ReadAny[Float]*) :ConstMat3x4f = {
-        val mat = new Array[Float](12)
-        mat(0) = 1
-        mat(4) = 1
-        mat(8) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x4f(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5),
-            mat(6), mat(7), mat(8),
-            mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(m: AnyMat2f) = new ConstMat3x4f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0,
-        0, 0, 1,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat2x3f) = new ConstMat3x4f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0,
-        m.m02, m.m12, 1,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat2x4f) = new ConstMat3x4f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0,
-        m.m02, m.m12, 1,
-        m.m03, m.m13, 0
-    )
-
-    def apply(m: AnyMat3x2f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        0, 0, 1,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat3f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat3x4f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        m.m03, m.m13, m.m23
-    )
-
-    def apply(m: AnyMat4x2f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        0, 0, 1,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat4x3f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        0, 0, 0
-    )
-
-    def apply(m: AnyMat4f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        m.m03, m.m13, m.m23
-    )
-
-    implicit def mutableToConst(m: Mat3x4f) = ConstMat3x4f(m)
-}
-
-
-final class Mat3x4f private (
+final class Mat3x4f private[math] (
     var m00: Float, var m10: Float, var m20: Float,
     var m01: Float, var m11: Float, var m21: Float,
     var m02: Float, var m12: Float, var m22: Float,
@@ -492,7 +371,7 @@ final class Mat3x4f private (
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat3x4f(Mat4fx4(this)*Mat4fx4(m)).
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
     def *=(m: AnyMat3x4f) {
         val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
@@ -522,7 +401,7 @@ final class Mat3x4f private (
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat3x4f(Mat4fx4(this)*Mat4fx4(m)).
+     * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
     def *=(m: AnyMat3f) {
         val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
@@ -615,6 +494,9 @@ final class Mat3x4f private (
 
 object Mat3x4f {
 
+    val Zero = const(Mat3x4f(0))
+    val Identity = const(Mat3x4f(1))
+
     def apply(s: Float) = new Mat3x4f(
         s, 0, 0,
         0, s, 0,
@@ -634,7 +516,7 @@ object Mat3x4f {
             m03, m13, m23
       )
 
-    def apply(args: ReadAny[Float]*) :Mat3x4f = {
+    def apply(args: ReadAny[AnyVal]*) :Mat3x4f = {
         val mat = new Array[Float](12)
         mat(0) = 1
         mat(4) = 1

@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 import Read._
 
 
@@ -36,8 +37,8 @@ extends ConstRotationSubMat2d
 
     def apply(c: Int) :ConstVec3d = {
         c match {
-            case 0 => ConstVec3d(m00, m10, m20)
-            case 1 => ConstVec3d(m01, m11, m21)
+            case 0 => new ConstVec3d(m00, m10, m20)
+            case 1 => new ConstVec3d(m01, m11, m21)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 1, got " + j)
         }
@@ -184,107 +185,12 @@ extends ConstRotationSubMat2d
     }
 }
 
-final class ConstMat3x2d private (
+final class ConstMat3x2d private[math] (
     val m00: Double, val m10: Double, val m20: Double,
     val m01: Double, val m11: Double, val m21: Double
 ) extends AnyMat3x2d
 
-object ConstMat3x2d {
-
-    def apply(s: Double) = new ConstMat3x2d(
-        s, 0, 0,
-        0, s, 0
-    )
-
-    def apply(
-        m00: Double, m10: Double, m20: Double,
-        m01: Double, m11: Double, m21: Double
-      ) = new ConstMat3x2d(
-            m00, m10, m20,
-            m01, m11, m21
-      )
-
-    def apply(args: ReadAny[Double]*) :ConstMat3x2d = {
-        val mat = new Array[Double](6)
-        mat(0) = 1
-        mat(4) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 6) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat3x2d(
-            mat(0), mat(1), mat(2),
-            mat(3), mat(4), mat(5)
-        )
-    }
-
-    def apply(m: AnyMat2d) = new ConstMat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
-    )
-
-    def apply(m: AnyMat2x3d) = new ConstMat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
-    )
-
-    def apply(m: AnyMat2x4d) = new ConstMat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
-    )
-
-    def apply(m: AnyMat3x2d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    def apply(m: AnyMat3d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    def apply(m: AnyMat3x4d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    def apply(m: AnyMat4x2d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    def apply(m: AnyMat4x3d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    def apply(m: AnyMat4d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-
-    implicit def mutableToConst(m: Mat3x2d) = ConstMat3x2d(m)
-}
-
-
-final class Mat3x2d private (
+final class Mat3x2d private[math] (
     var m00: Double, var m10: Double, var m20: Double,
     var m01: Double, var m11: Double, var m21: Double
 ) extends AnyMat3x2d with RotationSubMat2d
@@ -371,6 +277,9 @@ final class Mat3x2d private (
 
 object Mat3x2d {
 
+    val Zero = const(Mat3x2d(0))
+    val Identity = const(Mat3x2d(1))
+
     def apply(s: Double) = new Mat3x2d(
         s, 0, 0,
         0, s, 0
@@ -384,7 +293,7 @@ object Mat3x2d {
             m01, m11, m21
       )
 
-    def apply(args: ReadAny[Double]*) :Mat3x2d = {
+    def apply(args: ReadAny[AnyVal]*) :Mat3x2d = {
         val mat = new Array[Double](6)
         mat(0) = 1
         mat(4) = 1

@@ -20,6 +20,8 @@
 
 package simplex3d.math.doublem
 
+import simplex3d.math.doublem.DoubleMath._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -102,26 +104,14 @@ sealed abstract class AnyQuat4d {
     }
 }
 
-final class ConstQuat4d private (val a: Double, val b: Double,
-                                val c: Double, val d: Double)
-extends AnyQuat4d
+final class ConstQuat4d private[math] (
+    val a: Double, val b: Double, val c: Double, val d: Double
+) extends AnyQuat4d
 
-object ConstQuat4d {
-    def apply() = new ConstQuat4d(1, 0, 0, 0)
 
-    def apply(a: Double, b: Double, c: Double, d: Double) =
-        new ConstQuat4d(a, b, c, d)
-
-    def apply(q: AnyQuat4d) = new ConstQuat4d(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4d) = new ConstQuat4d(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2d) = new ConstQuat4d(m.m00, m.m10, m.m01, m.m11)
-
-    implicit def mutableToConst(q: Quat4d) = ConstQuat4d(q)
-}
-
-final class Quat4d private (var a: Double, var b: Double,
-                           var c: Double, var d: Double)
-extends AnyQuat4d
+final class Quat4d private[math] (
+    var a: Double, var b: Double, var c: Double, var d: Double
+) extends AnyQuat4d
 {
     def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
@@ -155,6 +145,8 @@ extends AnyQuat4d
 }
 
 object Quat4d {
+    val Identity = const(Quat4d())
+    
     def apply() = new Quat4d(1, 0, 0, 0)
     def apply(a: Double, b: Double, c: Double, d: Double) = new Quat4d(a, b, c, d)
     def apply(q: AnyQuat4d) = new Quat4d(q.a, q.b, q.c, q.d)

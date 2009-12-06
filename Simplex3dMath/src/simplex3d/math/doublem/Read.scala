@@ -27,10 +27,66 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[math] object Read {
-    def read(arg: ReadAny[Double], mat: Array[Double], index: Int) :Int = {
+    def read(arg: ReadAny[AnyVal], mat: Array[Double], index: Int) :Int = {
         var i = index
         arg match {
-            case s: ExtendedDouble => {
+            case s: Read1Int => {
+                mat(i) = s.value
+                i += 1
+            }
+            case v2: Read2Int => {
+                mat(i) = v2.x
+                i += 1
+                mat(i) = v2.y
+                i += 1
+            }
+            case v3: Read3Int => {
+                mat(i) = v3.x
+                i += 1
+                mat(i) = v3.y
+                i += 1
+                mat(i) = v3.z
+                i += 1
+            }
+            case v4: Read4Int => {
+                mat(i) = v4.x
+                i += 1
+                mat(i) = v4.y
+                i += 1
+                mat(i) = v4.z
+                i += 1
+                mat(i) = v4.w
+                i += 1
+            }
+            case s: Read1Float => {
+                mat(i) = s.value
+                i += 1
+            }
+            case v2: Read2Float => {
+                mat(i) = v2.x
+                i += 1
+                mat(i) = v2.y
+                i += 1
+            }
+            case v3: Read3Float => {
+                mat(i) = v3.x
+                i += 1
+                mat(i) = v3.y
+                i += 1
+                mat(i) = v3.z
+                i += 1
+            }
+            case v4: Read4Float => {
+                mat(i) = v4.x
+                i += 1
+                mat(i) = v4.y
+                i += 1
+                mat(i) = v4.z
+                i += 1
+                mat(i) = v4.w
+                i += 1
+            }
+            case s: Read1Double => {
                 mat(i) = s.value
                 i += 1
             }

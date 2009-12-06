@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -87,25 +88,14 @@ sealed abstract class AnyVec3d extends Read3Double {
 
 }
 
-final class ConstVec3d private (val x: Double, val y: Double, val z: Double)
-extends AnyVec3d
+final class ConstVec3d private[math] (
+    val x: Double, val y: Double, val z: Double
+) extends AnyVec3d
 
-object ConstVec3d {
-    def apply(s: Double) = new ConstVec3d(s, s, s)
-    def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
-    def apply(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
-    def apply(u: AnyVec4d) = new ConstVec3d(u.x, u.y, u.z)
-    def apply(xy: AnyVec2d, z: Double) = new ConstVec3d(xy.x, xy.y, z)
-    def apply(x: Double, yz: AnyVec2d) = new ConstVec3d(x, yz.x, yz.y)
-    def apply(u: Read3Int) = new ConstVec3d(u.x, u.y, u.z)
-    def apply(u: Read4Int) = new ConstVec3d(u.x, u.y, u.z)
 
-    implicit def mutableToConst(u: Vec3d) = ConstVec3d(u)
-    implicit def constVec3dToSwizzled(u: ConstVec3d) = new ConstVec3dSwizzled(u)
-}
-
-final class Vec3d private (var x: Double, var y: Double, var z: Double)
-extends AnyVec3d
+final class Vec3d private[math] (
+    var x: Double, var y: Double, var z: Double
+) extends AnyVec3d
 {
     override def r = x
     override def g = y
@@ -149,10 +139,10 @@ extends AnyVec3d
 }
 
 object Vec3d {
-    val Origin = ConstVec3d(0)
-    val UnitX = ConstVec3d(1, 0, 0)
-    val UnitY = ConstVec3d(0, 1, 0)
-    val UnitZ = ConstVec3d(0, 0, 1)
+    val Origin = const(Vec3d(0))
+    val UnitX = const(Vec3d(1, 0, 0))
+    val UnitY = const(Vec3d(0, 1, 0))
+    val UnitZ = const(Vec3d(0, 0, 1))
 
     def apply(s: Double) = new Vec3d(s, s, s)
     def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)
@@ -162,6 +152,8 @@ object Vec3d {
     def apply(x: Double, yz: AnyVec2d) = new Vec3d(x, yz.x, yz.y)
     def apply(u: Read3Int) = new Vec3d(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3d(u.x, u.y, u.z)
+    def apply(u: Read3Float) = new Vec3d(u.x, u.y, u.z)
+    def apply(u: Read4Float) = new Vec3d(u.x, u.y, u.z)
 
     implicit def constToMutable(u: ConstVec3d) = Vec3d(u)
     implicit def vec3ToSwizzled(u: Vec3d) = new Vec3dSwizzled(u)

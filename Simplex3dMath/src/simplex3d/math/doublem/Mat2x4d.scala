@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 import Read._
 
 
@@ -37,10 +38,10 @@ sealed abstract class AnyMat2x4d
 
     def apply(c: Int) :ConstVec2d = {
         c match {
-            case 0 => ConstVec2d(m00, m10)
-            case 1 => ConstVec2d(m01, m11)
-            case 2 => ConstVec2d(m02, m12)
-            case 3 => ConstVec2d(m03, m13)
+            case 0 => new ConstVec2d(m00, m10)
+            case 1 => new ConstVec2d(m01, m11)
+            case 2 => new ConstVec2d(m02, m12)
+            case 3 => new ConstVec2d(m03, m13)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 3, got " + j)
         }
@@ -211,135 +212,14 @@ sealed abstract class AnyMat2x4d
     }
 }
 
-final class ConstMat2x4d private (
+final class ConstMat2x4d private[math] (
     val m00: Double, val m10: Double,
     val m01: Double, val m11: Double,
     val m02: Double, val m12: Double,
     val m03: Double, val m13: Double
 ) extends AnyMat2x4d
 
-object ConstMat2x4d {
-
-    def apply(s: Double) = new ConstMat2x4d(
-        s, 0,
-        0, s,
-        0, 0,
-        0, 0
-    )
-
-    def apply(
-        m00: Double, m10: Double,
-        m01: Double, m11: Double,
-        m02: Double, m12: Double,
-        m03: Double, m13: Double
-      ) = new ConstMat2x4d(
-            m00, m10,
-            m01, m11,
-            m02, m12,
-            m03, m13
-      )
-
-    def apply(args: ReadAny[Double]*) :ConstMat2x4d = {
-        val mat = new Array[Double](8)
-        mat(0) = 1
-        mat(3) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 8) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat2x4d(
-            mat(0), mat(1),
-            mat(2), mat(3),
-            mat(4), mat(5),
-            mat(6), mat(7)
-        )
-    }
-
-    def apply(m: AnyMat2d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat2x3d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat2x4d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    def apply(m: AnyMat3x2d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat3d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat3x4d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    def apply(m: AnyMat4x2d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat4x3d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat4d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    implicit def mutableToConst(m: Mat2x4d) = ConstMat2x4d(m)
-}
-
-
-final class Mat2x4d private (
+final class Mat2x4d private[math] (
     var m00: Double, var m10: Double,
     var m01: Double, var m11: Double,
     var m02: Double, var m12: Double,
@@ -460,6 +340,9 @@ final class Mat2x4d private (
 
 object Mat2x4d {
 
+    val Zero = const(Mat2x4d(0))
+    val Identity = const(Mat2x4d(1))
+
     def apply(s: Double) = new Mat2x4d(
         s, 0,
         0, s,
@@ -479,7 +362,7 @@ object Mat2x4d {
             m03, m13
       )
 
-    def apply(args: ReadAny[Double]*) :Mat2x4d = {
+    def apply(args: ReadAny[AnyVal]*) :Mat2x4d = {
         val mat = new Array[Double](8)
         mat(0) = 1
         mat(3) = 1

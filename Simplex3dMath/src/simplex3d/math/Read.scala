@@ -24,28 +24,32 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait ReadAny[P]
+sealed trait ReadAny[+P]
 
-private[math] trait Read1[P] extends ReadAny[P] {
+private[math] trait Read1[+P] extends ReadAny[P] {
     def value: P
 }
 
-private[math] trait Read2[P] extends ReadAny[P] {
+private[math] trait Read2[+P] extends ReadAny[P] {
     def x: P
     def y: P
 }
 
-private[math] trait Read3[P] extends ReadAny[P] {
+private[math] trait Read3[+P] extends ReadAny[P] {
     def x: P
     def y: P
     def z: P
 }
 
-private[math] trait Read4[P] extends ReadAny[P] {
+private[math] trait Read4[+P] extends ReadAny[P] {
     def x: P
     def y: P
     def z: P
     def w: P
+}
+
+private[math] trait Read1Int extends Read1[Int] {
+    def value: Int
 }
 
 private[math] trait Read2Int extends Read2[Int] {
@@ -66,6 +70,10 @@ private[math] trait Read4Int extends Read4[Int] {
     override def w: Int
 }
 
+private[math] trait Read1Float extends Read1[Float] {
+    def value: Float
+}
+
 private[math] trait Read2Float extends Read2[Float] {
     override def x: Float
     override def y: Float
@@ -82,6 +90,10 @@ private[math] trait Read4Float extends Read4[Float] {
     override def y: Float
     override def z: Float
     override def w: Float
+}
+
+private[math] trait Read1Double extends Read1[Double] {
+    def value: Double
 }
 
 private[math] trait Read2Double extends Read2[Double] {
@@ -101,3 +113,7 @@ private[math] trait Read4Double extends Read4[Double] {
     override def z: Double
     override def w: Double
 }
+
+private[math] class IntVal(val value: Int) extends Read1Int
+private[math] class FloatVal(val value: Float) extends Read1Float
+private[math] class DoubleVal(val value: Double) extends Read1Double

@@ -21,7 +21,8 @@
 package simplex3d.math.intm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
+import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.intm.IntMath._
 
 
 /**
@@ -86,26 +87,10 @@ sealed abstract class AnyVec2i extends Read2Int {
     }
 }
 
-final class ConstVec2i private (val x: Int, val y: Int) extends AnyVec2i
+final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
 
-object ConstVec2i {
-    def apply(s: Int) = new ConstVec2i(s, s)
-    def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-    def apply(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
-    def apply(u: AnyVec3i) = new ConstVec2i(u.x, u.y)
-    def apply(u: AnyVec4i) = new ConstVec2i(u.x, u.y)
-    def apply(u: Read2Float) = new ConstVec2i(int(u.x), int(u.y))
-    def apply(u: Read3Float) = new ConstVec2i(int(u.x), int(u.y))
-    def apply(u: Read4Float) = new ConstVec2i(int(u.x), int(u.y))
-    def apply(u: Read2Double) = new ConstVec2i(int(u.x), int(u.y))
-    def apply(u: Read3Double) = new ConstVec2i(int(u.x), int(u.y))
-    def apply(u: Read4Double) = new ConstVec2i(int(u.x), int(u.y))
 
-    implicit def mutableToConst(u: Vec2i) = ConstVec2i(u)
-    implicit def constVec2iToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
-}
-
-final class Vec2i private (var x: Int, var y: Int) extends AnyVec2i {
+final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
 
     override def r = x
     override def g = y
@@ -156,9 +141,9 @@ final class Vec2i private (var x: Int, var y: Int) extends AnyVec2i {
 }
 
 object Vec2i {
-    val Origin = ConstVec2i(0)
-    val UnitX = ConstVec2i(1, 0)
-    val UnitY = ConstVec2i(0, 1)
+    val Origin = const(Vec2i(0))
+    val UnitX = const(Vec2i(1, 0))
+    val UnitY = const(Vec2i(0, 1))
 
     def apply(s: Int) = new Vec2i(s, s)
     def apply(x: Int, y: Int) = new Vec2i(x, y)

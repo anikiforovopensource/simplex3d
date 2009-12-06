@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.floatm.FloatMath._
 import Read._
 
 
@@ -36,8 +37,8 @@ extends ConstRotationSubMat2f
 
     def apply(c: Int) :ConstVec2f = {
         c match {
-            case 0 => ConstVec2f(m00, m10)
-            case 1 => ConstVec2f(m01, m11)
+            case 0 => new ConstVec2f(m00, m10)
+            case 1 => new ConstVec2f(m01, m11)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 1, got " + j)
         }
@@ -170,107 +171,12 @@ extends ConstRotationSubMat2f
     }
 }
 
-final class ConstMat2f private (
+final class ConstMat2f private[math] (
     val m00: Float, val m10: Float,
     val m01: Float, val m11: Float
 ) extends AnyMat2f
 
-object ConstMat2f {
-
-    def apply(s: Float) = new ConstMat2f(
-        s, 0,
-        0, s
-    )
-
-    def apply(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float
-      ) = new ConstMat2f(
-            m00, m10,
-            m01, m11
-      )
-
-    def apply(args: ReadAny[Float]*) :ConstMat2f = {
-        val mat = new Array[Float](4)
-        mat(0) = 1
-        mat(3) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 4) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat2f(
-            mat(0), mat(1),
-            mat(2), mat(3)
-        )
-    }
-
-    def apply(m: AnyMat2f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat2x3f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat2x4f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat3x2f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat3f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat3x4f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat4x2f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat4x3f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    def apply(m: AnyMat4f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-
-    implicit def mutableToConst(m: Mat2f) = ConstMat2f(m)
-}
-
-
-final class Mat2f private (
+final class Mat2f private[math] (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float
 ) extends AnyMat2f with RotationSubMat2f
@@ -345,6 +251,9 @@ final class Mat2f private (
 
 object Mat2f {
 
+    val Zero = const(Mat2f(0))
+    val Identity = const(Mat2f(1))
+
     def apply(s: Float) = new Mat2f(
         s, 0,
         0, s
@@ -358,7 +267,7 @@ object Mat2f {
             m01, m11
       )
 
-    def apply(args: ReadAny[Float]*) :Mat2f = {
+    def apply(args: ReadAny[AnyVal]*) :Mat2f = {
         val mat = new Array[Float](4)
         mat(0) = 1
         mat(3) = 1

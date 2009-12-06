@@ -21,16 +21,45 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 private[math] object Read {
-    def read(arg: ReadAny[Float], mat: Array[Float], index: Int) :Int = {
+    def read(arg: ReadAny[AnyVal], mat: Array[Float], index: Int) :Int = {
         var i = index
         arg match {
-            case s: ExtendedFloat => {
+            case s: Read1Int => {
+                mat(i) = s.value
+                i += 1
+            }
+            case v2: Read2Int => {
+                mat(i) = v2.x
+                i += 1
+                mat(i) = v2.y
+                i += 1
+            }
+            case v3: Read3Int => {
+                mat(i) = v3.x
+                i += 1
+                mat(i) = v3.y
+                i += 1
+                mat(i) = v3.z
+                i += 1
+            }
+            case v4: Read4Int => {
+                mat(i) = v4.x
+                i += 1
+                mat(i) = v4.y
+                i += 1
+                mat(i) = v4.z
+                i += 1
+                mat(i) = v4.w
+                i += 1
+            }
+            case s: Read1Float => {
                 mat(i) = s.value
                 i += 1
             }
@@ -56,6 +85,34 @@ private[math] object Read {
                 mat(i) = v4.z
                 i += 1
                 mat(i) = v4.w
+                i += 1
+            }
+            case s: Read1Double => {
+                mat(i) = float(s.value)
+                i += 1
+            }
+            case v2: Read2Double => {
+                mat(i) = float(v2.x)
+                i += 1
+                mat(i) = float(v2.y)
+                i += 1
+            }
+            case v3: Read3Double => {
+                mat(i) = float(v3.x)
+                i += 1
+                mat(i) = float(v3.y)
+                i += 1
+                mat(i) = float(v3.z)
+                i += 1
+            }
+            case v4: Read4Double => {
+                mat(i) = float(v4.x)
+                i += 1
+                mat(i) = float(v4.y)
+                i += 1
+                mat(i) = float(v4.z)
+                i += 1
+                mat(i) = float(v4.w)
                 i += 1
             }
             case _ => throw new IllegalArgumentException(

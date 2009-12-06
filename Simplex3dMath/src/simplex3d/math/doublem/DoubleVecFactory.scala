@@ -29,12 +29,12 @@ import simplex3d.math._
 private[math] class DoubleVecFactory
 extends VecFactory[Double, ConstVec2d, ConstVec3d, ConstVec4d]
 {
-    protected def make2(x: Double, y: Double) = ConstVec2d(x, y)
+    protected def make2(x: Double, y: Double) = new ConstVec2d(x, y)
     protected def make3(x: Double,
                                y: Double,
-                               z: Double) = ConstVec3d(x, y, z)
+                               z: Double) = new ConstVec3d(x, y, z)
     protected def make4(x: Double,
                                y: Double,
                                z: Double,
-                               w: Double) = ConstVec4d(x, y, z, w)
+                               w: Double) = new ConstVec4d(x, y, z, w)
 }

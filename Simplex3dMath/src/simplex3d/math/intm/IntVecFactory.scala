@@ -29,12 +29,12 @@ import simplex3d.math._
 private[math] class IntVecFactory
 extends VecFactory[Int, ConstVec2i, ConstVec3i, ConstVec4i]
 {
-    protected def make2(x: Int, y: Int) = ConstVec2i(x, y)
+    protected def make2(x: Int, y: Int) = new ConstVec2i(x, y)
     protected def make3(x: Int,
                                y: Int,
-                               z: Int) = ConstVec3i(x, y, z)
+                               z: Int) = new ConstVec3i(x, y, z)
     protected def make4(x: Int,
                                y: Int,
                                z: Int,
-                               w: Int) = ConstVec4i(x, y, z, w)
+                               w: Int) = new ConstVec4i(x, y, z, w)
 }

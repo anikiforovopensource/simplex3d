@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.floatm.FloatMath._
 import Read._
 
 
@@ -37,10 +38,10 @@ sealed abstract class AnyMat2x4f
 
     def apply(c: Int) :ConstVec2f = {
         c match {
-            case 0 => ConstVec2f(m00, m10)
-            case 1 => ConstVec2f(m01, m11)
-            case 2 => ConstVec2f(m02, m12)
-            case 3 => ConstVec2f(m03, m13)
+            case 0 => new ConstVec2f(m00, m10)
+            case 1 => new ConstVec2f(m01, m11)
+            case 2 => new ConstVec2f(m02, m12)
+            case 3 => new ConstVec2f(m03, m13)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 3, got " + j)
         }
@@ -211,135 +212,14 @@ sealed abstract class AnyMat2x4f
     }
 }
 
-final class ConstMat2x4f private (
+final class ConstMat2x4f private[math] (
     val m00: Float, val m10: Float,
     val m01: Float, val m11: Float,
     val m02: Float, val m12: Float,
     val m03: Float, val m13: Float
 ) extends AnyMat2x4f
 
-object ConstMat2x4f {
-
-    def apply(s: Float) = new ConstMat2x4f(
-        s, 0,
-        0, s,
-        0, 0,
-        0, 0
-    )
-
-    def apply(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float,
-        m02: Float, m12: Float,
-        m03: Float, m13: Float
-      ) = new ConstMat2x4f(
-            m00, m10,
-            m01, m11,
-            m02, m12,
-            m03, m13
-      )
-
-    def apply(args: ReadAny[Float]*) :ConstMat2x4f = {
-        val mat = new Array[Float](8)
-        mat(0) = 1
-        mat(3) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 8) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat2x4f(
-            mat(0), mat(1),
-            mat(2), mat(3),
-            mat(4), mat(5),
-            mat(6), mat(7)
-        )
-    }
-
-    def apply(m: AnyMat2f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat2x3f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat2x4f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    def apply(m: AnyMat3x2f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat3f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat3x4f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    def apply(m: AnyMat4x2f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0,
-        0, 0
-    )
-
-    def apply(m: AnyMat4x3f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        0, 0
-    )
-
-    def apply(m: AnyMat4f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-
-    implicit def mutableToConst(m: Mat2x4f) = ConstMat2x4f(m)
-}
-
-
-final class Mat2x4f private (
+final class Mat2x4f private[math] (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float,
     var m02: Float, var m12: Float,
@@ -460,6 +340,9 @@ final class Mat2x4f private (
 
 object Mat2x4f {
 
+    val Zero = const(Mat2x4f(0))
+    val Identity = const(Mat2x4f(1))
+
     def apply(s: Float) = new Mat2x4f(
         s, 0,
         0, s,
@@ -479,7 +362,7 @@ object Mat2x4f {
             m03, m13
       )
 
-    def apply(args: ReadAny[Float]*) :Mat2x4f = {
+    def apply(args: ReadAny[AnyVal]*) :Mat2x4f = {
         val mat = new Array[Float](8)
         mat(0) = 1
         mat(3) = 1

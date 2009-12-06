@@ -1,5 +1,5 @@
 /*
- * Simplex3D, FloatMath module
+ * Simplex3D, IntMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -18,23 +18,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm
+package simplex3d.math
 
-import simplex3d.math._
+import simplex3d.math.intm.IntMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] class FloatVecFactory
-extends VecFactory[Float, ConstVec2f, ConstVec3f, ConstVec4f]
-{
-    protected def make2(x: Float, y: Float) = new ConstVec2f(x, y)
-    protected def make3(x: Float,
-                               y: Float,
-                               z: Float) = new ConstVec3f(x, y, z)
-    protected def make4(x: Float,
-                               y: Float,
-                               z: Float,
-                               w: Float) = new ConstVec4f(x, y, z, w)
+package object intm {
+
+    //Implicints
+    implicit def imIntToExtInt(s: Int) = new ExtendedInt(s)
+
+    implicit def mutable2iToConst(u: Vec2i) = const(u)
+    implicit def constVec2iToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
+    implicit def mutable3iToConst(u: Vec3i) = const(u)
+    implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
+    implicit def mutable4iToConst(u: Vec4i) = const(u)
+    implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
 }

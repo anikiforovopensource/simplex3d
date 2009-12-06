@@ -30,12 +30,57 @@ import toxi.math.noise.SimplexNoise
  * @author Aleksey Nikiforov (lex)
  */
 object FloatMath {
-    // Implicits
-    implicit def fmFloatToExtFloat(s: Float) = new ExtendedFloat(s)
-    implicit def fmIntToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def vec2iToVec2f(u: Read2Int) :Vec2f = Vec2f(u.x, u.y)
-    implicit def vec3iToVec3f(u: Read3Int) :Vec3f = Vec3f(u.x, u.y, u.z)
-    implicit def vec4iToVec4f(u: Read4Int) :Vec4f = Vec4f(u.x, u.y, u.z, u.w)
+
+    def const(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
+    def const(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
+    def const(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
+    def const(q: AnyQuat4f) = new ConstQuat4f(q.a, q.b, q.c, q.d)
+
+    def const(m: AnyMat2f) = new ConstMat2f(
+        m.m00, m.m10,
+        m.m01, m.m11
+    )
+    def const(m: AnyMat2x3f) = new ConstMat2x3f(
+        m.m00, m.m10,
+        m.m01, m.m11,
+        m.m02, m.m12
+    )
+    def const(m: AnyMat2x4f) = new ConstMat2x4f(
+        m.m00, m.m10,
+        m.m01, m.m11,
+        m.m02, m.m12,
+        m.m03, m.m13
+    )
+    def const(m: AnyMat3x2f) = new ConstMat3x2f(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21
+    )
+    def const(m: AnyMat3f) = new ConstMat3f(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21,
+        m.m02, m.m12, m.m22
+    )
+    def const(m: AnyMat3x4f) = new ConstMat3x4f(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21,
+        m.m02, m.m12, m.m22,
+        m.m03, m.m13, m.m23
+    )
+    def const(m: AnyMat4x2f) = new ConstMat4x2f(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31
+    )
+    def const(m: AnyMat4x3f) = new ConstMat4x3f(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31,
+        m.m02, m.m12, m.m22, m.m32
+    )
+    def const(m: AnyMat4f) = new ConstMat4f(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31,
+        m.m02, m.m12, m.m22, m.m32,
+        m.m03, m.m13, m.m23, m.m33
+    )
 
     // Random
     def nextVec2() :Vec2f = Vec2f(nextFloat, nextFloat)

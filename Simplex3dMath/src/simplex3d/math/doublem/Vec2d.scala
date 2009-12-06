@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -81,23 +82,13 @@ sealed abstract class AnyVec2d extends Read2Double {
     }
 }
 
-final class ConstVec2d private (val x: Double, val y: Double) extends AnyVec2d
+final class ConstVec2d private[math] (val x: Double, val y: Double)
+extends AnyVec2d
 
-object ConstVec2d {
-    def apply(s: Double) = new ConstVec2d(s, s)
-    def apply(x: Double, y: Double) = new ConstVec2d(x, y)
-    def apply(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
-    def apply(u: AnyVec3d) = new ConstVec2d(u.x, u.y)
-    def apply(u: AnyVec4d) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read2Int) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read3Int) = new ConstVec2d(u.x, u.y)
-    def apply(u: Read4Int) = new ConstVec2d(u.x, u.y)
 
-    implicit def mutableToConst(u: Vec2d) = ConstVec2d(u)
-    implicit def constVec2dToSwizzled(u: ConstVec2d) = new ConstVec2dSwizzled(u)
-}
-
-final class Vec2d private (var x: Double, var y: Double) extends AnyVec2d {
+final class Vec2d private[math] (var x: Double, var y: Double)
+extends AnyVec2d
+{
 
     override def r = x
     override def g = y
@@ -136,9 +127,9 @@ final class Vec2d private (var x: Double, var y: Double) extends AnyVec2d {
 }
 
 object Vec2d {
-    val Origin = ConstVec2d(0)
-    val UnitX = ConstVec2d(1, 0)
-    val UnitY = ConstVec2d(0, 1)
+    val Origin = const(Vec2d(0))
+    val UnitX = const(Vec2d(1, 0))
+    val UnitY = const(Vec2d(0, 1))
 
     def apply(s: Double) = new Vec2d(s, s)
     def apply(x: Double, y: Double) = new Vec2d(x, y)
@@ -148,6 +139,9 @@ object Vec2d {
     def apply(u: Read2Int) = new Vec2d(u.x, u.y)
     def apply(u: Read3Int) = new Vec2d(u.x, u.y)
     def apply(u: Read4Int) = new Vec2d(u.x, u.y)
+    def apply(u: Read2Float) = new Vec2d(u.x, u.y)
+    def apply(u: Read3Float) = new Vec2d(u.x, u.y)
+    def apply(u: Read4Float) = new Vec2d(u.x, u.y)
 
     implicit def constToMutable(u: ConstVec2d) = Vec2d(u)
     implicit def Vec2dToSwizzled(u: Vec2d) = new Vec2dSwizzled(u)

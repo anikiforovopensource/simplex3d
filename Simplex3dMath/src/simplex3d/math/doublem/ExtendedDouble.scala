@@ -28,7 +28,7 @@ import simplex3d.math._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedDouble(val value: Double) extends Read1[Double] {
+final class ExtendedDouble(val value: Double) {
     def *(u: AnyVec2d) = u*value
     def *(u: AnyVec3d) = u*value
     def *(u: AnyVec4d) = u*value

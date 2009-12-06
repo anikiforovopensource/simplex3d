@@ -30,16 +30,57 @@ import toxi.math.noise.SimplexNoise
  * @author Aleksey Nikiforov (lex)
  */
 object DoubleMath {
-    // Implicits
-    implicit def dmDoubleToExtDouble(s: Double) = new ExtendedDouble(s)
-    implicit def dmFloatToExtFloat(s: Int) = new ExtendedFloat(s)
-    implicit def dmIntToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def vec2iToVec2d(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
-    implicit def vec3iToVec3d(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)
-    implicit def vec4iToVec4d(u: Read4Int) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
-    implicit def vec2fToVec2d(u: Read2Float) :Vec2d = Vec2d(u.x, u.y)
-    implicit def vec3fToVec3d(u: Read3Float) :Vec3d = Vec3d(u.x, u.y, u.z)
-    implicit def vec4fToVec4d(u: Read4Float) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
+
+    def const(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
+    def const(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
+    def const(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
+    def const(q: AnyQuat4d) = new ConstQuat4d(q.a, q.b, q.c, q.d)
+    
+    def const(m: AnyMat2d) = new ConstMat2d(
+        m.m00, m.m10,
+        m.m01, m.m11
+    )
+    def const(m: AnyMat2x3d) = new ConstMat2x3d(
+        m.m00, m.m10,
+        m.m01, m.m11,
+        m.m02, m.m12
+    )
+    def const(m: AnyMat2x4d) = new ConstMat2x4d(
+        m.m00, m.m10,
+        m.m01, m.m11,
+        m.m02, m.m12,
+        m.m03, m.m13
+    )
+    def const(m: AnyMat3x2d) = new ConstMat3x2d(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21
+    )
+    def const(m: AnyMat3d) = new ConstMat3d(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21,
+        m.m02, m.m12, m.m22
+    )
+    def const(m: AnyMat3x4d) = new ConstMat3x4d(
+        m.m00, m.m10, m.m20,
+        m.m01, m.m11, m.m21,
+        m.m02, m.m12, m.m22,
+        m.m03, m.m13, m.m23
+    )
+    def const(m: AnyMat4x2d) = new ConstMat4x2d(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31
+    )
+    def const(m: AnyMat4x3d) = new ConstMat4x3d(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31,
+        m.m02, m.m12, m.m22, m.m32
+    )
+    def const(m: AnyMat4d) = new ConstMat4d(
+        m.m00, m.m10, m.m20, m.m30,
+        m.m01, m.m11, m.m21, m.m31,
+        m.m02, m.m12, m.m22, m.m32,
+        m.m03, m.m13, m.m23, m.m33
+    )
 
     // Random
     def nextVec2() :Vec2d = Vec2d(nextDouble, nextDouble)

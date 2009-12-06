@@ -28,7 +28,7 @@ import simplex3d.math._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) extends Read1[Int] {
+final class ExtendedInt(val value: Int) {
     def *(u: AnyVec2i) = u*value
     def *(u: AnyVec3i) = u*value
     def *(u: AnyVec4i) = u*value

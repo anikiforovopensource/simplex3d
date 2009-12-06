@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -92,51 +93,14 @@ sealed abstract class AnyVec4d extends Read4Double {
     }
 }
 
-final class ConstVec4d private (val x: Double, val y: Double,
-                               val z: Double, val w: Double)
-extends AnyVec4d
+final class ConstVec4d private[math] (
+    val x: Double, val y: Double, val z: Double, val w: Double
+) extends AnyVec4d
 
-object ConstVec4d {
-    def apply(s: Double) =
-        new ConstVec4d(s, s, s, s)
 
-    def apply(x: Double, y: Double, z: Double, w: Double) =
-        new ConstVec4d(x, y, z, w)
-
-    def apply(u: AnyVec4d) =
-        new ConstVec4d(u.x, u.y, u.z, u.w)
-
-    def apply(xy: AnyVec2d, z: Double, w: Double) =
-        new ConstVec4d(xy.x, xy.y, z, w)
-
-    def apply(x: Double, yz: AnyVec2d, w: Double) =
-        new ConstVec4d(x, yz.x, yz.y, w)
-
-    def apply(x: Double, y: Double, zw: AnyVec2d) =
-        new ConstVec4d(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2d, zw: AnyVec2d) =
-        new ConstVec4d(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3d, w: Double) =
-        new ConstVec4d(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Double, yzw: AnyVec3d) =
-        new ConstVec4d(x, yzw.x, yzw.y, yzw.z)
-        
-    def apply(m: AnyMat2d) =
-        new ConstVec4d(m.m00, m.m10, m.m01, m.m11)
-
-    def apply(u: Read4Int) =
-        new ConstVec4d(u.x, u.y, u.z, u.w)
-
-    implicit def mutableToConst(u: Vec4d) = ConstVec4d(u)
-    implicit def constVec4dToSwizzled(u: ConstVec4d) = new ConstVec4dSwizzled(u)
-}
-
-final class Vec4d private (var x: Double, var y: Double,
-                          var z: Double, var w: Double)
-extends AnyVec4d
+final class Vec4d private[math] (
+    var x: Double, var y: Double, var z: Double, var w: Double
+) extends AnyVec4d
 {
     override def r = x
     override def g = y
@@ -187,11 +151,11 @@ extends AnyVec4d
 }
 
 object Vec4d {
-    val Origin = ConstVec4d(0)
-    val UnitX = ConstVec4d(1, 0, 0, 0)
-    val UnitY = ConstVec4d(0, 1, 0, 0)
-    val UnitZ = ConstVec4d(0, 0, 1, 0)
-    val UnitW = ConstVec4d(0, 0, 0, 1)
+    val Origin = const(Vec4d(0))
+    val UnitX = const(Vec4d(1, 0, 0, 0))
+    val UnitY = const(Vec4d(0, 1, 0, 0))
+    val UnitZ = const(Vec4d(0, 0, 1, 0))
+    val UnitW = const(Vec4d(0, 0, 0, 1))
 
     def apply(s: Double) =
         new Vec4d(s, s, s, s)
@@ -225,6 +189,26 @@ object Vec4d {
 
     def apply(u: Read4Int) =
         new Vec4d(u.x, u.y, u.z, u.w)
+
+    def apply(u: Read4Float) =
+        new Vec4d(u.x, u.y, u.z, u.w)
+
+    def apply(xy: Read2[AnyVal], zw: Read2[AnyVal]) = {
+        var x = 0d
+        var y = 0d
+        xy match {
+            case r: Read2Int => x = r.x; y = r.y
+            case r: Read2Float => x = r.x; y = r.y
+            case r: Read2Double => x = r.x; y = r.y
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+        zw match {
+            case r: Read2Int => new Vec4d(x, y, r.x, r.y)
+            case r: Read2Float => new Vec4d(x, y, r.x, r.y)
+            case r: Read2Double => new Vec4d(x, y, r.x, r.y)
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+    }
 
     implicit def constToMutable(u: ConstVec4d) = Vec4d(u)
     implicit def vec4ToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)

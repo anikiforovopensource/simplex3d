@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.doublem.DoubleMath._
 import Read._
 
 
@@ -37,9 +38,9 @@ extends ConstRotationSubMat3d
 
     def apply(c: Int) :ConstVec4d = {
         c match {
-            case 0 => ConstVec4d(m00, m10, m20, m30)
-            case 1 => ConstVec4d(m01, m11, m21, m31)
-            case 2 => ConstVec4d(m02, m12, m22, m32)
+            case 0 => new ConstVec4d(m00, m10, m20, m30)
+            case 1 => new ConstVec4d(m01, m11, m21, m31)
+            case 2 => new ConstVec4d(m02, m12, m22, m32)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 2, got " + j)
         }
@@ -223,122 +224,13 @@ extends ConstRotationSubMat3d
     }
 }
 
-final class ConstMat4x3d private (
+final class ConstMat4x3d private[math] (
     val m00: Double, val m10: Double, val m20: Double, val m30: Double,
     val m01: Double, val m11: Double, val m21: Double, val m31: Double,
     val m02: Double, val m12: Double, val m22: Double, val m32: Double
 ) extends AnyMat4x3d
 
-object ConstMat4x3d {
-
-    def apply(s: Double) = new ConstMat4x3d(
-        s, 0, 0, 0,
-        0, s, 0, 0,
-        0, 0, s, 0
-    )
-
-    def apply(
-        m00: Double, m10: Double, m20: Double, m30: Double,
-        m01: Double, m11: Double, m21: Double, m31: Double,
-        m02: Double, m12: Double, m22: Double, m32: Double
-      ) = new ConstMat4x3d(
-            m00, m10, m20, m30,
-            m01, m11, m21, m31,
-            m02, m12, m22, m32
-      )
-
-    def apply(args: ReadAny[Double]*) :ConstMat4x3d = {
-        val mat = new Array[Double](12)
-        mat(0) = 1
-        mat(5) = 1
-        mat(10) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 12) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat4x3d(
-            mat(0), mat(1), mat(2), mat(3),
-            mat(4), mat(5), mat(6), mat(7),
-            mat(8), mat(9), mat(10), mat(11)
-        )
-    }
-
-    def apply(m: AnyMat2d) = new ConstMat4x3d(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        0, 0, 1, 0
-    )
-
-    def apply(m: AnyMat2x3d) = new ConstMat4x3d(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        m.m02, m.m12, 1, 0
-    )
-
-    def apply(m: AnyMat2x4d) = new ConstMat4x3d(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        m.m02, m.m12, 1, 0
-    )
-
-    def apply(m: AnyMat3x2d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        0, 0, 1, 0
-    )
-
-    def apply(m: AnyMat3d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        m.m02, m.m12, m.m22, 0
-    )
-
-    def apply(m: AnyMat3x4d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        m.m02, m.m12, m.m22, 0
-    )
-
-    def apply(m: AnyMat4x2d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        0, 0, 1, 0
-    )
-
-    def apply(m: AnyMat4x3d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32
-    )
-
-    def apply(m: AnyMat4d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32
-    )
-
-    implicit def mutableToConst(m: Mat4x3d) = ConstMat4x3d(m)
-}
-
-
-final class Mat4x3d private (
+final class Mat4x3d private[math] (
     var m00: Double, var m10: Double, var m20: Double, var m30: Double,
     var m01: Double, var m11: Double, var m21: Double, var m31: Double,
     var m02: Double, var m12: Double, var m22: Double, var m32: Double
@@ -452,6 +344,9 @@ final class Mat4x3d private (
 
 object Mat4x3d {
 
+    val Zero = const(Mat4x3d(0))
+    val Identity = const(Mat4x3d(1))
+
     def apply(s: Double) = new Mat4x3d(
         s, 0, 0, 0,
         0, s, 0, 0,
@@ -468,7 +363,7 @@ object Mat4x3d {
             m02, m12, m22, m32
       )
 
-    def apply(args: ReadAny[Double]*) :Mat4x3d = {
+    def apply(args: ReadAny[AnyVal]*) :Mat4x3d = {
         val mat = new Array[Double](12)
         mat(0) = 1
         mat(5) = 1

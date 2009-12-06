@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
+import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -93,71 +94,13 @@ sealed abstract class AnyVec4f extends Read4Float {
     }
 }
 
-final class ConstVec4f private (val x: Float, val y: Float,
-                               val z: Float, val w: Float)
+final class ConstVec4f private[math] (
+    val x: Float, val y: Float, val z: Float, val w: Float)
 extends AnyVec4f
 
-object ConstVec4f {
-    def apply(s: Float) =
-        new ConstVec4f(s, s, s, s)
 
-    def apply(x: Float, y: Float, z: Float, w: Float) =
-        new ConstVec4f(x, y, z, w)
-
-    def apply(u: AnyVec4f) =
-        new ConstVec4f(u.x, u.y, u.z, u.w)
-
-    def apply(xy: AnyVec2f, z: Float, w: Float) =
-        new ConstVec4f(xy.x, xy.y, z, w)
-
-    def apply(x: Float, yz: AnyVec2f, w: Float) =
-        new ConstVec4f(x, yz.x, yz.y, w)
-
-    def apply(x: Float, y: Float, zw: AnyVec2f) =
-        new ConstVec4f(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2f, zw: AnyVec2f) =
-        new ConstVec4f(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3f, w: Float) =
-        new ConstVec4f(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Float, yzw: AnyVec3f) =
-        new ConstVec4f(x, yzw.x, yzw.y, yzw.z)
-        
-    def apply(m: AnyMat2f) =
-        new ConstVec4f(m.m00, m.m10, m.m01, m.m11)
-
-    def apply(u: Read4Int) =
-        new ConstVec4f(u.x, u.y, u.z, u.w)
-
-    def apply(u: Read4Double) =
-        new ConstVec4f(float(u.x), float(u.y), float(u.z), float(u.w))
-
-    def apply(xy: Read2Double, z: Float, w: Float) =
-        new ConstVec4f(float(xy.x), float(xy.y), z, w)
-
-    def apply(x: Float, yz: Read2Double, w: Float) =
-        new ConstVec4f(x, float(yz.x), float(yz.y), w)
-
-    def apply(x: Float, y: Float, zw: Read2Double) =
-        new ConstVec4f(x, y, float(zw.x), float(zw.y))
-
-    def apply(xy: Read2Double, zw: Read2Double) =
-        new ConstVec4f(float(xy.x), float(xy.y), float(zw.x), float(zw.y))
-
-    def apply(xyz: Read3Double, w: Float) =
-        new ConstVec4f(float(xyz.x), float(xyz.y), float(xyz.z), w)
-
-    def apply(x: Float, yzw: Read3Double) =
-        new ConstVec4f(x, float(yzw.x), float(yzw.y), float(yzw.z))
-
-    implicit def mutableToConst(u: Vec4f) = ConstVec4f(u)
-    implicit def constVec4fToSwizzled(u: ConstVec4f) = new ConstVec4fSwizzled(u)
-}
-
-final class Vec4f private (var x: Float, var y: Float,
-                          var z: Float, var w: Float)
+final class Vec4f private[math] (
+    var x: Float, var y: Float, var z: Float, var w: Float)
 extends AnyVec4f
 {
     override def r = x
@@ -209,11 +152,11 @@ extends AnyVec4f
 }
 
 object Vec4f {
-    val Origin = ConstVec4f(0)
-    val UnitX = ConstVec4f(1, 0, 0, 0)
-    val UnitY = ConstVec4f(0, 1, 0, 0)
-    val UnitZ = ConstVec4f(0, 0, 1, 0)
-    val UnitW = ConstVec4f(0, 0, 0, 1)
+    val Origin = const(Vec4f(0))
+    val UnitX = const(Vec4f(1, 0, 0, 0))
+    val UnitY = const(Vec4f(0, 1, 0, 0))
+    val UnitZ = const(Vec4f(0, 0, 1, 0))
+    val UnitW = const(Vec4f(0, 0, 0, 1))
 
     def apply(s: Float) =
         new Vec4f(s, s, s, s)
@@ -260,14 +203,28 @@ object Vec4f {
     def apply(x: Float, y: Float, zw: Read2Double) =
         new Vec4f(x, y, float(zw.x), float(zw.y))
 
-    def apply(xy: Read2Double, zw: Read2Double) =
-        new Vec4f(float(xy.x), float(xy.y), float(zw.x), float(zw.y))
-
     def apply(xyz: Read3Double, w: Float) =
         new Vec4f(float(xyz.x), float(xyz.y), float(xyz.z), w)
 
     def apply(x: Float, yzw: Read3Double) =
         new Vec4f(x, float(yzw.x), float(yzw.y), float(yzw.z))
+
+    def apply(xy: Read2[AnyVal], zw: Read2[AnyVal]) = {
+        var x = 0f
+        var y = 0f
+        xy match {
+            case r: Read2Int => x = r.x; y = r.y
+            case r: Read2Float => x = r.x; y = r.y
+            case r: Read2Double => x = float(r.x); y = float(r.y)
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+        zw match {
+            case r: Read2Int => new Vec4f(x, y, r.x, r.y)
+            case r: Read2Float => new Vec4f(x, y, r.x, r.y)
+            case r: Read2Double => new Vec4f(x, y, float(r.x), float(r.y))
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+    }
 
     implicit def constToMutable(u: ConstVec4f) = Vec4f(u)
     implicit def vec4ToSwizzled(u: Vec4f) = new Vec4fSwizzled(u)

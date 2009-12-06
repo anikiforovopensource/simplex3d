@@ -33,12 +33,12 @@ private[math] trait VecFactory[P, R2, R3, R4] {
 private[math] class BooleanVecFactory
 extends VecFactory[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
 {
-    protected def make2(x: Boolean, y: Boolean) = ConstVec2b(x, y)
+    protected def make2(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
     protected def make3(x: Boolean,
                                y: Boolean,
-                               z: Boolean) = ConstVec3b(x, y, z)
+                               z: Boolean) = new ConstVec3b(x, y, z)
     protected def make4(x: Boolean,
                                y: Boolean,
                                z: Boolean,
-                               w: Boolean) = ConstVec4b(x, y, z, w)
+                               w: Boolean) = new ConstVec4b(x, y, z, w)
 }

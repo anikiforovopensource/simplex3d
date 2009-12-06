@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.floatm.FloatMath._
 import Read._
 
 
@@ -37,9 +38,9 @@ extends ConstRotationSubMat2f
 
     def apply(c: Int) :ConstVec2f = {
         c match {
-            case 0 => ConstVec2f(m00, m10)
-            case 1 => ConstVec2f(m01, m11)
-            case 2 => ConstVec2f(m02, m12)
+            case 0 => new ConstVec2f(m00, m10)
+            case 1 => new ConstVec2f(m01, m11)
+            case 2 => new ConstVec2f(m02, m12)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 2, got " + j)
         }
@@ -181,7 +182,7 @@ extends ConstRotationSubMat2f
      * Combine two transformations. This method works similar to regular
      * multiplication but with a special handling of the translation column.
      * <br/>
-     * Equaivalent to Mat2x3f(Mat3fx3(this)*Mat3fx3(m)).
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
     def *(m: AnyMat2x3f) = Mat2x3f(
         m00*m.m00 + m01*m.m10,
@@ -199,7 +200,7 @@ extends ConstRotationSubMat2f
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat2x3f(Mat3fx3(this)*Mat3fx3(m)).
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
     def *(m: AnyMat2f) = Mat2x3f(
         m00*m.m00 + m01*m.m10,
@@ -247,121 +248,13 @@ extends ConstRotationSubMat2f
     }
 }
 
-final class ConstMat2x3f private (
+final class ConstMat2x3f private[math] (
     val m00: Float, val m10: Float,
     val m01: Float, val m11: Float,
     val m02: Float, val m12: Float
 ) extends AnyMat2x3f
 
-object ConstMat2x3f {
-
-    def apply(s: Float) = new ConstMat2x3f(
-        s, 0,
-        0, s,
-        0, 0
-    )
-
-    def apply(
-        m00: Float, m10: Float,
-        m01: Float, m11: Float,
-        m02: Float, m12: Float
-      ) = new ConstMat2x3f(
-            m00, m10,
-            m01, m11,
-            m02, m12
-      )
-
-    def apply(args: ReadAny[Float]*) :ConstMat2x3f = {
-        val mat = new Array[Float](6)
-        mat(0) = 1
-        mat(3) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 6) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat2x3f(
-            mat(0), mat(1),
-            mat(2), mat(3),
-            mat(4), mat(5)
-        )
-    }
-
-    def apply(m: AnyMat2f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0
-    )
-
-    def apply(m: AnyMat2x3f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    def apply(m: AnyMat2x4f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    def apply(m: AnyMat3x2f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0
-    )
-
-    def apply(m: AnyMat3f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    def apply(m: AnyMat3x4f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    def apply(m: AnyMat4x2f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        0, 0
-    )
-
-    def apply(m: AnyMat4x3f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    def apply(m: AnyMat4f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-
-    implicit def mutableToConst(m: Mat2x3f) = ConstMat2x3f(m)
-}
-
-
-final class Mat2x3f private (
+final class Mat2x3f private[math] (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float,
     var m02: Float, var m12: Float
@@ -408,7 +301,7 @@ final class Mat2x3f private (
      * Combine two transformations. This method works similar to regular
      * multiplication but with a special handling of the translation column.
      * <br/>
-     * Equaivalent to Mat2x3f(Mat3fx3(this)*Mat3fx3(m)).
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
     def *=(m: AnyMat2x3f) {
         val a00 = m00*m.m00 + m01*m.m10
@@ -430,7 +323,7 @@ final class Mat2x3f private (
      * to regular multiplication but with a special handling of
      * the translation column.<br/>
      *
-     * Equaivalent to Mat2x3f(Mat3fx3(this)*Mat3fx3(m)).
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
     def *=(m: AnyMat2f) {
         val a00 = m00*m.m00 + m01*m.m10
@@ -502,6 +395,9 @@ final class Mat2x3f private (
 
 object Mat2x3f {
 
+    val Zero = const(Mat2x3f(0))
+    val Identity = const(Mat2x3f(1))
+
     def apply(s: Float) = new Mat2x3f(
         s, 0,
         0, s,
@@ -518,7 +414,7 @@ object Mat2x3f {
             m02, m12
       )
 
-    def apply(args: ReadAny[Float]*) :Mat2x3f = {
+    def apply(args: ReadAny[AnyVal]*) :Mat2x3f = {
         val mat = new Array[Float](6)
         mat(0) = 1
         mat(3) = 1

@@ -26,6 +26,10 @@ package simplex3d.math
  */
 object BaseMath {
 
+    def const(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
+    def const(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
+    def const(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+
     // Random
     val random = new java.util.Random()
     def nextBoolean() :Boolean = random.nextBoolean

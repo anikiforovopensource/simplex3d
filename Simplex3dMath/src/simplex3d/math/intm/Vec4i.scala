@@ -21,7 +21,8 @@
 package simplex3d.math.intm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
+import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.intm.IntMath._
 
 
 /**
@@ -95,86 +96,13 @@ sealed abstract class AnyVec4i extends Read4Int {
     }
 }
 
-final class ConstVec4i private (val x: Int, val y: Int,
-                               val z: Int, val w: Int)
+final class ConstVec4i private[math] (
+    val x: Int, val y: Int, val z: Int, val w: Int)
 extends AnyVec4i
 
-object ConstVec4i {
-    def apply(s: Int) =
-        new ConstVec4i(s, s, s, s)
 
-    def apply(x: Int, y: Int, z: Int, w: Int) =
-        new ConstVec4i(x, y, z, w)
-
-    def apply(u: AnyVec4i) =
-        new ConstVec4i(u.x, u.y, u.z, u.w)
-
-    def apply(xy: AnyVec2i, z: Int, w: Int) =
-        new ConstVec4i(xy.x, xy.y, z, w)
-
-    def apply(x: Int, yz: AnyVec2i, w: Int) =
-        new ConstVec4i(x, yz.x, yz.y, w)
-
-    def apply(x: Int, y: Int, zw: AnyVec2i) =
-        new ConstVec4i(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2i, zw: AnyVec2i) =
-        new ConstVec4i(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3i, w: Int) =
-        new ConstVec4i(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Int, yzw: AnyVec3i) =
-        new ConstVec4i(x, yzw.x, yzw.y, yzw.z)
-
-    def apply(u: Read4Float) =
-        new ConstVec4i(int(u.x), int(u.y), int(u.z), int(u.w))
-
-    def apply(xy: Read2Float, z: Int, w: Int) =
-        new ConstVec4i(int(xy.x), int(xy.y), z, w)
-
-    def apply(x: Int, yz: Read2Float, w: Int) =
-        new ConstVec4i(x, int(yz.x), int(yz.y), w)
-
-    def apply(x: Int, y: Int, zw: Read2Float) =
-        new ConstVec4i(x, y, int(zw.x), int(zw.y))
-
-    def apply(xy: Read2Float, zw: Read2Float) =
-        new ConstVec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
-
-    def apply(xyz: Read3Float, w: Int) =
-        new ConstVec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
-
-    def apply(x: Int, yzw: Read3Float) =
-        new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
-
-    def apply(u: Read4Double) =
-        new ConstVec4i(int(u.x), int(u.y), int(u.z), int(u.w))
-
-    def apply(xy: Read2Double, z: Int, w: Int) =
-        new ConstVec4i(int(xy.x), int(xy.y), z, w)
-
-    def apply(x: Int, yz: Read2Double, w: Int) =
-        new ConstVec4i(x, int(yz.x), int(yz.y), w)
-
-    def apply(x: Int, y: Int, zw: Read2Double) =
-        new ConstVec4i(x, y, int(zw.x), int(zw.y))
-
-    def apply(xy: Read2Double, zw: Read2Double) =
-        new ConstVec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
-
-    def apply(xyz: Read3Double, w: Int) =
-        new ConstVec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
-
-    def apply(x: Int, yzw: Read3Double) =
-        new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
-        
-    implicit def mutableToConst(u: Vec4i) = ConstVec4i(u)
-    implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
-}
-
-final class Vec4i private (var x: Int, var y: Int,
-                          var z: Int, var w: Int)
+final class Vec4i private[math] (
+    var x: Int, var y: Int, var z: Int, var w: Int)
 extends AnyVec4i
 {
     override def r = x
@@ -238,11 +166,11 @@ extends AnyVec4i
 }
 
 object Vec4i {
-    val Origin = ConstVec4i(0)
-    val UnitX = ConstVec4i(1, 0, 0, 0)
-    val UnitY = ConstVec4i(0, 1, 0, 0)
-    val UnitZ = ConstVec4i(0, 0, 1, 0)
-    val UnitW = ConstVec4i(0, 0, 0, 1)
+    val Origin = const(Vec4i(0))
+    val UnitX = const(Vec4i(1, 0, 0, 0))
+    val UnitY = const(Vec4i(0, 1, 0, 0))
+    val UnitZ = const(Vec4i(0, 0, 1, 0))
+    val UnitW = const(Vec4i(0, 0, 0, 1))
 
     def apply(s: Int) =
         new Vec4i(s, s, s, s)
@@ -283,9 +211,6 @@ object Vec4i {
     def apply(x: Int, y: Int, zw: Read2Float) =
         new Vec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: Read2Float, zw: Read2Float) =
-        new Vec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
-
     def apply(xyz: Read3Float, w: Int) =
         new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
@@ -304,14 +229,28 @@ object Vec4i {
     def apply(x: Int, y: Int, zw: Read2Double) =
         new Vec4i(x, y, int(zw.x), int(zw.y))
 
-    def apply(xy: Read2Double, zw: Read2Double) =
-        new Vec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
-
     def apply(xyz: Read3Double, w: Int) =
         new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
     def apply(x: Int, yzw: Read3Double) =
         new Vec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
+
+    def apply(xy: Read2[AnyVal], zw: Read2[AnyVal]) = {
+        var x = 0
+        var y = 0
+        xy match {
+            case r: Read2Int => x = r.x; y = r.y
+            case r: Read2Float => x = int(r.x); y = int(r.y)
+            case r: Read2Double => x = int(r.x); y = int(r.y)
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+        zw match {
+            case r: Read2Int => new Vec4i(x, y, r.x, r.y)
+            case r: Read2Float => new Vec4i(x, y, int(r.x), int(r.y))
+            case r: Read2Double => new Vec4i(x, y, int(r.x), int(r.y))
+            case _ => throw new IllegalArgumentException("Unexpected type.")
+        }
+    }
 
     implicit def constToMutable(u: ConstVec4i) = Vec4i(u)
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)

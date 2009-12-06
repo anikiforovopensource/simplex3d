@@ -20,6 +20,7 @@
 
 package simplex3d.math.intm
 
+import simplex3d.math._
 import simplex3d.math.BaseMath._
 
 
@@ -27,17 +28,21 @@ import simplex3d.math.BaseMath._
  * @author Aleksey Nikiforov (lex)
  */
 object IntMath {
-    //Implicints
-    implicit def imintToExtInt(s: Int) = new ExtendedInt(s)
 
+    def const(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
+    def const(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
+    def const(u: AnyVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
+    
     // Random
-    def nextVec2() :Vec2i = Vec2i(nextInt, nextInt)
-    def nextVec3() :Vec3i = Vec3i(nextInt, nextInt, nextInt)
-    def nextVec4() :Vec4i = Vec4i(nextInt, nextInt, nextInt, nextInt)
+    def nextVec2i() :Vec2i = Vec2i(nextInt, nextInt)
+    def nextVec3i() :Vec3i = Vec3i(nextInt, nextInt, nextInt)
+    def nextVec4i() :Vec4i = Vec4i(nextInt, nextInt, nextInt, nextInt)
 
-    def nextVec2i(n: Int) :Vec2i = nextVec2
-    def nextVec3i(n: Int) :Vec3i = nextVec3
-    def nextVec4i(n: Int) :Vec4i = nextVec4
+    def nextVec2i(n: Int) :Vec2i = Vec2i(nextInt(n), nextInt(n))
+    def nextVec3i(n: Int) :Vec3i = Vec3i(nextInt(n), nextInt(n), nextInt(n))
+    def nextVec4i(n: Int) :Vec4i = {
+        Vec4i(nextInt(n), nextInt(n), nextInt(n), nextInt(n))
+    }
 
     // Int functions
     def abs(x: Int) :Int = if (x < 0) -x else x
@@ -67,6 +72,43 @@ object IntMath {
     def clamp(u: AnyVec2i, minVal: AnyVec2i, maxVal: AnyVec2i) :Vec2i = {
         Vec2i(clamp(u.x, minVal.x, maxVal.x), clamp(u.y, minVal.y, maxVal.y))
     }
+    
+    def lessThan(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x < v.x,
+            u.y < v.y
+        )
+    }
+    def lessThanEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x <= v.x,
+            u.y <= v.y
+        )
+    }
+    def greaterThan(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x > v.x,
+            u.y > v.y
+        )
+    }
+    def greaterThanEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x >= v.x,
+            u.y >= v.y
+        )
+    }
+    def equal(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x == v.x,
+            u.y == v.y
+        )
+    }
+    def notEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+        Vec2b(
+            u.x != v.x,
+            u.y != v.y
+        )
+    }
 
     // Vec3i functions
     def abs(u: AnyVec3i) :Vec3i = Vec3i(abs(u.x), abs(u.y), abs(u.z))
@@ -95,6 +137,49 @@ object IntMath {
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y),
             clamp(u.z, minVal.z, maxVal.z)
+        )
+    }
+
+    def lessThan(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x < v.x,
+            u.y < v.y,
+            u.z < v.z
+        )
+    }
+    def lessThanEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x <= v.x,
+            u.y <= v.y,
+            u.z <= v.z
+        )
+    }
+    def greaterThan(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x > v.x,
+            u.y > v.y,
+            u.z > v.z
+        )
+    }
+    def greaterThanEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x >= v.x,
+            u.y >= v.y,
+            u.z >= v.z
+        )
+    }
+    def equal(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x == v.x,
+            u.y == v.y,
+            u.z == v.z
+        )
+    }
+    def notEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+        Vec3b(
+            u.x != v.x,
+            u.y != v.y,
+            u.z != v.z
         )
     }
 
@@ -129,6 +214,55 @@ object IntMath {
             clamp(u.y, minVal.y, maxVal.y),
             clamp(u.z, minVal.z, maxVal.z),
             clamp(u.w, minVal.w, maxVal.w)
+        )
+    }
+
+    def lessThan(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x < v.x,
+            u.y < v.y,
+            u.z < v.z,
+            u.w < v.w
+        )
+    }
+    def lessThanEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x <= v.x,
+            u.y <= v.y,
+            u.z <= v.z,
+            u.w <= v.w
+        )
+    }
+    def greaterThan(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x > v.x,
+            u.y > v.y,
+            u.z > v.z,
+            u.w > v.w
+        )
+    }
+    def greaterThanEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x >= v.x,
+            u.y >= v.y,
+            u.z >= v.z,
+            u.w >= v.w
+        )
+    }
+    def equal(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x == v.x,
+            u.y == v.y,
+            u.z == v.z,
+            u.w == v.w
+        )
+    }
+    def notEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+        Vec4b(
+            u.x != v.x,
+            u.y != v.y,
+            u.z != v.z,
+            u.w != v.w
         )
     }
 }

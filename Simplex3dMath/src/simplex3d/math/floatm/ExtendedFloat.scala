@@ -28,7 +28,7 @@ import simplex3d.math._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedFloat(val value: Float) extends Read1[Float] {
+final class ExtendedFloat(val value: Float) {
     def *(u: AnyVec2f) = u*value
     def *(u: AnyVec3f) = u*value
     def *(u: AnyVec4f) = u*value

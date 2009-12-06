@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.BaseMath._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -66,44 +68,13 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
     }
 }
 
-final class ConstVec4b private (val x: Boolean, val y: Boolean,
-                               val z: Boolean, val w: Boolean)
+final class ConstVec4b private[math] (
+    val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean)
 extends AnyVec4b
 
-object ConstVec4b {
-    def apply(s: Boolean) =
-        new ConstVec4b(s, s, s, s)
 
-    def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
-        new ConstVec4b(x, y, z, w)
-
-    def apply(u: AnyVec4b) =
-        new ConstVec4b(u.x, u.y, u.z, u.w)
-
-    def apply(xy: AnyVec2b, z: Boolean, w: Boolean) =
-        new ConstVec4b(xy.x, xy.y, z, w)
-
-    def apply(x: Boolean, yz: AnyVec2b, w: Boolean) =
-        new ConstVec4b(x, yz.x, yz.y, w)
-
-    def apply(x: Boolean, y: Boolean, zw: AnyVec2b) =
-        new ConstVec4b(x, y, zw.x, zw.y)
-
-    def apply(xy: AnyVec2b, zw: AnyVec2b) =
-        new ConstVec4b(xy.x, xy.y, zw.x, zw.y)
-
-    def apply(xyz: AnyVec3b, w: Boolean) =
-        new ConstVec4b(xyz.x, xyz.y, xyz.z, w)
-
-    def apply(x: Boolean, yzw: AnyVec3b) =
-        new ConstVec4b(x, yzw.x, yzw.y, yzw.z)
-        
-    implicit def mutableToConst(u: Vec4b) = ConstVec4b(u)
-    implicit def constVec4bToSwizzled(u: ConstVec4b) = new ConstVec4bSwizzled(u)
-}
-
-final class Vec4b private (var x: Boolean, var y: Boolean,
-                          var z: Boolean, var w: Boolean)
+final class Vec4b private[math] (
+    var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
 extends AnyVec4b
 {
     override def r = x
@@ -145,6 +116,9 @@ extends AnyVec4b
 }
 
 object Vec4b {
+    val True = const(Vec4b(true))
+    val False = const(Vec4b(false))
+
     def apply(s: Boolean) =
         new Vec4b(s, s, s, s)
 

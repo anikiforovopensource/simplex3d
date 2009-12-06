@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
+import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -82,26 +83,11 @@ sealed abstract class AnyVec2f extends Read2Float {
     }
 }
 
-final class ConstVec2f private (val x: Float, val y: Float) extends AnyVec2f
+final class ConstVec2f private[math] (val x: Float, val y: Float)
+extends AnyVec2f
 
-object ConstVec2f {
-    def apply(s: Float) = new ConstVec2f(s, s)
-    def apply(x: Float, y: Float) = new ConstVec2f(x, y)
-    def apply(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
-    def apply(u: AnyVec3f) = new ConstVec2f(u.x, u.y)
-    def apply(u: AnyVec4f) = new ConstVec2f(u.x, u.y)
-    def apply(u: Read2Int) = new ConstVec2f(u.x, u.y)
-    def apply(u: Read3Int) = new ConstVec2f(u.x, u.y)
-    def apply(u: Read4Int) = new ConstVec2f(u.x, u.y)
-    def apply(u: Read2Double) = new ConstVec2f(float(u.x), float(u.y))
-    def apply(u: Read3Double) = new ConstVec2f(float(u.x), float(u.y))
-    def apply(u: Read4Double) = new ConstVec2f(float(u.x), float(u.y))
 
-    implicit def mutableToConst(u: Vec2f) = ConstVec2f(u)
-    implicit def constVec2fToSwizzled(u: ConstVec2f) = new ConstVec2fSwizzled(u)
-}
-
-final class Vec2f private (var x: Float, var y: Float) extends AnyVec2f {
+final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
 
     override def r = x
     override def g = y
@@ -140,9 +126,9 @@ final class Vec2f private (var x: Float, var y: Float) extends AnyVec2f {
 }
 
 object Vec2f {
-    val Origin = ConstVec2f(0)
-    val UnitX = ConstVec2f(1, 0)
-    val UnitY = ConstVec2f(0, 1)
+    val Origin = const(Vec2f(0))
+    val UnitX = const(Vec2f(1, 0))
+    val UnitY = const(Vec2f(0, 1))
 
     def apply(s: Float) = new Vec2f(s, s)
     def apply(x: Float, y: Float) = new Vec2f(x, y)

@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.floatm.FloatMath._
 import Read._
 
 
@@ -38,10 +39,10 @@ extends ConstRotationSubMat3f
 
     def apply(c: Int) :ConstVec4f = {
         c match {
-            case 0 => ConstVec4f(m00, m10, m20, m30)
-            case 1 => ConstVec4f(m01, m11, m21, m31)
-            case 2 => ConstVec4f(m02, m12, m22, m32)
-            case 3 => ConstVec4f(m03, m13, m23, m33)
+            case 0 => new ConstVec4f(m00, m10, m20, m30)
+            case 1 => new ConstVec4f(m01, m11, m21, m31)
+            case 2 => new ConstVec4f(m02, m12, m22, m32)
+            case 3 => new ConstVec4f(m03, m13, m23, m33)
             case j => throw new IndexOutOfBoundsException(
                     "excpected from 0 to 3, got " + j)
         }
@@ -248,137 +249,14 @@ extends ConstRotationSubMat3f
     }
 }
 
-final class ConstMat4f private (
+final class ConstMat4f private[math] (
     val m00: Float, val m10: Float, val m20: Float, val m30: Float,
     val m01: Float, val m11: Float, val m21: Float, val m31: Float,
     val m02: Float, val m12: Float, val m22: Float, val m32: Float,
     val m03: Float, val m13: Float, val m23: Float, val m33: Float
 ) extends AnyMat4f
 
-object ConstMat4f {
-
-    def apply(s: Float) = new ConstMat4f(
-        s, 0, 0, 0,
-        0, s, 0, 0,
-        0, 0, s, 0,
-        0, 0, 0, s
-    )
-
-    def apply(
-        m00: Float, m10: Float, m20: Float, m30: Float,
-        m01: Float, m11: Float, m21: Float, m31: Float,
-        m02: Float, m12: Float, m22: Float, m32: Float,
-        m03: Float, m13: Float, m23: Float, m33: Float
-      ) = new ConstMat4f(
-            m00, m10, m20, m30,
-            m01, m11, m21, m31,
-            m02, m12, m22, m32,
-            m03, m13, m23, m33
-      )
-
-    def apply(args: ReadAny[Float]*) :ConstMat4f = {
-        val mat = new Array[Float](16)
-        mat(0) = 1
-        mat(5) = 1
-        mat(10) = 1
-        mat(15) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 16) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new ConstMat4f(
-            mat(0), mat(1), mat(2), mat(3),
-            mat(4), mat(5), mat(6), mat(7),
-            mat(8), mat(9), mat(10), mat(11),
-            mat(12), mat(13), mat(14), mat(15)
-        )
-    }
-
-    def apply(m: AnyMat2f) = new ConstMat4f(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat2x3f) = new ConstMat4f(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        m.m02, m.m12, 1, 0,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat2x4f) = new ConstMat4f(
-        m.m00, m.m10, 0, 0,
-        m.m01, m.m11, 0, 0,
-        m.m02, m.m12, 1, 0,
-        m.m03, m.m13, 0, 1
-    )
-
-    def apply(m: AnyMat3x2f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat3f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        m.m02, m.m12, m.m22, 0,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat3x4f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, 0,
-        m.m01, m.m11, m.m21, 0,
-        m.m02, m.m12, m.m22, 0,
-        m.m03, m.m13, m.m23, 1
-    )
-
-    def apply(m: AnyMat4x2f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat4x3f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32,
-        0, 0, 0, 1
-    )
-
-    def apply(m: AnyMat4f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32,
-        m.m03, m.m13, m.m23, m.m33
-    )
-
-    implicit def mutableToConst(m: Mat4f) = ConstMat4f(m)
-}
-
-
-final class Mat4f private (
+final class Mat4f private[math] (
     var m00: Float, var m10: Float, var m20: Float, var m30: Float,
     var m01: Float, var m11: Float, var m21: Float, var m31: Float,
     var m02: Float, var m12: Float, var m22: Float, var m32: Float,
@@ -515,6 +393,9 @@ final class Mat4f private (
 
 object Mat4f {
 
+    val Zero = const(Mat4f(0))
+    val Identity = const(Mat4f(1))
+
     def apply(s: Float) = new Mat4f(
         s, 0, 0, 0,
         0, s, 0, 0,
@@ -534,7 +415,7 @@ object Mat4f {
             m03, m13, m23, m33
       )
 
-    def apply(args: ReadAny[Float]*) :Mat4f = {
+    def apply(args: ReadAny[AnyVal]*) :Mat4f = {
         val mat = new Array[Float](16)
         mat(0) = 1
         mat(5) = 1

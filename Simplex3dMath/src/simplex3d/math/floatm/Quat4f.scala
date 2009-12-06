@@ -20,6 +20,8 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math.floatm.FloatMath._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -102,25 +104,13 @@ sealed abstract class AnyQuat4f {
     }
 }
 
-final class ConstQuat4f private (val a: Float, val b: Float,
-                                val c: Float, val d: Float)
+final class ConstQuat4f private[math] (
+    val a: Float, val b: Float, val c: Float, val d: Float)
 extends AnyQuat4f
 
-object ConstQuat4f {
-    def apply() = new ConstQuat4f(1, 0, 0, 0)
 
-    def apply(a: Float, b: Float, c: Float, d: Float) =
-        new ConstQuat4f(a, b, c, d)
-
-    def apply(q: AnyQuat4f) = new ConstQuat4f(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4f) = new ConstQuat4f(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2f) = new ConstQuat4f(m.m00, m.m10, m.m01, m.m11)
-
-    implicit def mutableToConst(q: Quat4f) = ConstQuat4f(q)
-}
-
-final class Quat4f private (var a: Float, var b: Float,
-                           var c: Float, var d: Float)
+final class Quat4f private[math] (
+    var a: Float, var b: Float, var c: Float, var d: Float)
 extends AnyQuat4f
 {
     def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
@@ -155,6 +145,8 @@ extends AnyQuat4f
 }
 
 object Quat4f {
+    val Identity = const(Quat4f())
+
     def apply() = new Quat4f(1, 0, 0, 0)
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
     def apply(q: AnyQuat4f) = new Quat4f(q.a, q.b, q.c, q.d)

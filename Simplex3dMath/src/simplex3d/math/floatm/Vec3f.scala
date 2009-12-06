@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
+import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -88,37 +89,11 @@ sealed abstract class AnyVec3f extends Read3Float {
 
 }
 
-final class ConstVec3f private (val x: Float, val y: Float, val z: Float)
+final class ConstVec3f private[math] (val x: Float, val y: Float, val z: Float)
 extends AnyVec3f
 
-object ConstVec3f {
-    def apply(s: Float) = new ConstVec3f(s, s, s)
-    def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
-    def apply(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
-    def apply(u: AnyVec4f) = new ConstVec3f(u.x, u.y, u.z)
-    def apply(xy: AnyVec2f, z: Float) = new ConstVec3f(xy.x, xy.y, z)
-    def apply(x: Float, yz: AnyVec2f) = new ConstVec3f(x, yz.x, yz.y)
-    def apply(u: Read3Int) = new ConstVec3f(u.x, u.y, u.z)
-    def apply(u: Read4Int) = new ConstVec3f(u.x, u.y, u.z)
 
-    def apply(u: Read3Double) = {
-        new ConstVec3f(float(u.x), float(u.y), float(u.z))
-    }
-    def apply(u: Read4Double) = {
-        new ConstVec3f(float(u.x), float(u.y), float(u.z))
-    }
-    def apply(xy: Read2Double, z: Float) = {
-        new ConstVec3f(float(xy.x), float(xy.y), z)
-    }
-    def apply(x: Float, yz: Read2Double) = {
-        new ConstVec3f(x, float(yz.x), float(yz.y))
-    }
-
-    implicit def mutableToConst(u: Vec3f) = ConstVec3f(u)
-    implicit def constVec3fToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
-}
-
-final class Vec3f private (var x: Float, var y: Float, var z: Float)
+final class Vec3f private[math] (var x: Float, var y: Float, var z: Float)
 extends AnyVec3f
 {
     override def r = x
@@ -163,10 +138,10 @@ extends AnyVec3f
 }
 
 object Vec3f {
-    val Origin = ConstVec3f(0)
-    val UnitX = ConstVec3f(1, 0, 0)
-    val UnitY = ConstVec3f(0, 1, 0)
-    val UnitZ = ConstVec3f(0, 0, 1)
+    val Origin = const(Vec3f(0))
+    val UnitX = const(Vec3f(1, 0, 0))
+    val UnitY = const(Vec3f(0, 1, 0))
+    val UnitZ = const(Vec3f(0, 0, 1))
 
     def apply(s: Float) = new Vec3f(s, s, s)
     def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)

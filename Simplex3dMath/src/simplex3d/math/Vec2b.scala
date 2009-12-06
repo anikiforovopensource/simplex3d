@@ -105,6 +105,7 @@ object Vec2b {
     def apply(u: AnyVec3b) = new Vec2b(u.x, u.y)
     def apply(u: AnyVec4b) = new Vec2b(u.x, u.y)
 
+    implicit def constToMutable(u: ConstVec2b) = Vec2b(u)
     implicit def vec2bToSwizzled(u: Vec2b) = new Vec2bSwizzled(u)
 }
 

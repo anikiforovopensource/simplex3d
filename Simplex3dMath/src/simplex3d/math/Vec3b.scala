@@ -122,6 +122,7 @@ object Vec3b {
     def apply(xy: AnyVec2b, z: Boolean) = new Vec3b(xy.x, xy.y, z)
     def apply(x: Boolean, yz: AnyVec2b) = new Vec3b(x, yz.x, yz.y)
 
+    implicit def constToMutable(u: ConstVec3b) = Vec3b(u)
     implicit def vec3bToSwizzled(u: Vec3b) = new Vec3bSwizzled(u)
 }
 

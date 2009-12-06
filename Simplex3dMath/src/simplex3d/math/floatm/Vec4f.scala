@@ -269,6 +269,7 @@ object Vec4f {
     def apply(x: Float, yzw: Read3Double) =
         new Vec4f(x, float(yzw.x), float(yzw.y), float(yzw.z))
 
+    implicit def constToMutable(u: ConstVec4f) = Vec4f(u)
     implicit def vec4ToSwizzled(u: Vec4f) = new Vec4fSwizzled(u)
 }
 

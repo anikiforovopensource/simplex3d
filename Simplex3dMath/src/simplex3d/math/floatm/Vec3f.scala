@@ -190,6 +190,7 @@ object Vec3f {
         new Vec3f(x, float(yz.x), float(yz.y))
     }
 
+    implicit def constToMutable(u: ConstVec3f) = Vec3f(u)
     implicit def vec3ToSwizzled(u: Vec3f) = new Vec3fSwizzled(u)
 }
 

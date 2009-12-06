@@ -226,6 +226,7 @@ object Vec4d {
     def apply(u: Read4Int) =
         new Vec4d(u.x, u.y, u.z, u.w)
 
+    implicit def constToMutable(u: ConstVec4d) = Vec4d(u)
     implicit def vec4ToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)
 }
 

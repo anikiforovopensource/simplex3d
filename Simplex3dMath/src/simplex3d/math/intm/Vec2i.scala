@@ -172,6 +172,7 @@ object Vec2i {
     def apply(u: Read3Double) = new Vec2i(int(u.x), int(u.y))
     def apply(u: Read4Double) = new Vec2i(int(u.x), int(u.y))
 
+    implicit def constToMutable(u: ConstVec2i) = Vec2i(u)
     implicit def vec2iToSwizzled(u: Vec2i) = new Vec2iSwizzled(u)
 }
 

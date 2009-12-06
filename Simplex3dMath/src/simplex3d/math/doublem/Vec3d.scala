@@ -163,6 +163,7 @@ object Vec3d {
     def apply(u: Read3Int) = new Vec3d(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3d(u.x, u.y, u.z)
 
+    implicit def constToMutable(u: ConstVec3d) = Vec3d(u)
     implicit def vec3ToSwizzled(u: Vec3d) = new Vec3dSwizzled(u)
 }
 

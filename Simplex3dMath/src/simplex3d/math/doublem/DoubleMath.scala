@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, DoubleMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -34,9 +34,12 @@ object DoubleMath {
     implicit def dmDoubleToExtDouble(s: Double) = new ExtendedDouble(s)
     implicit def dmFloatToExtFloat(s: Int) = new ExtendedFloat(s)
     implicit def dmIntToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def Vec2diToVec2d(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
+    implicit def vec2iToVec2d(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
     implicit def vec3iToVec3d(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)
     implicit def vec4iToVec4d(u: Read4Int) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
+    implicit def vec2fToVec2d(u: Read2Float) :Vec2d = Vec2d(u.x, u.y)
+    implicit def vec3fToVec3d(u: Read3Float) :Vec3d = Vec3d(u.x, u.y, u.z)
+    implicit def vec4fToVec4d(u: Read4Float) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
 
     // Random
     def nextVec2() :Vec2d = Vec2d(nextDouble, nextDouble)

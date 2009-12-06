@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, FloatMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 
 
 /**
@@ -100,6 +101,19 @@ object ConstVec3f {
     def apply(u: Read3Int) = new ConstVec3f(u.x, u.y, u.z)
     def apply(u: Read4Int) = new ConstVec3f(u.x, u.y, u.z)
 
+    def apply(u: Read3Double) = {
+        new ConstVec3f(float(u.x), float(u.y), float(u.z))
+    }
+    def apply(u: Read4Double) = {
+        new ConstVec3f(float(u.x), float(u.y), float(u.z))
+    }
+    def apply(xy: Read2Double, z: Float) = {
+        new ConstVec3f(float(xy.x), float(xy.y), z)
+    }
+    def apply(x: Float, yz: Read2Double) = {
+        new ConstVec3f(x, float(yz.x), float(yz.y))
+    }
+
     implicit def mutableToConst(u: Vec3f) = ConstVec3f(u)
     implicit def constVec3fToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
 }
@@ -162,6 +176,19 @@ object Vec3f {
     def apply(x: Float, yz: AnyVec2f) = new Vec3f(x, yz.x, yz.y)
     def apply(u: Read3Int) = new Vec3f(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3f(u.x, u.y, u.z)
+
+    def apply(u: Read3Double) = {
+        new Vec3f(float(u.x), float(u.y), float(u.z))
+    }
+    def apply(u: Read4Double) = {
+        new Vec3f(float(u.x), float(u.y), float(u.z))
+    }
+    def apply(xy: Read2Double, z: Float) = {
+        new Vec3f(float(xy.x), float(xy.y), z)
+    }
+    def apply(x: Float, yz: Read2Double) = {
+        new Vec3f(x, float(yz.x), float(yz.y))
+    }
 
     implicit def vec3ToSwizzled(u: Vec3f) = new Vec3fSwizzled(u)
 }

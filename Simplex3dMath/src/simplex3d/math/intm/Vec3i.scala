@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, IntMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -109,6 +109,14 @@ object ConstVec3i {
     def apply(x: Int, yz: Read2Float) = {
         new ConstVec3i(x, int(yz.x), int(yz.y))
     }
+    def apply(u: Read3Double) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4Double) = new ConstVec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2Double, z: Int) = {
+        new ConstVec3i(int(xy.x), int(xy.y), z)
+    }
+    def apply(x: Int, yz: Read2Double) = {
+        new ConstVec3i(x, int(yz.x), int(yz.y))
+    }
 
     implicit def mutableToConst(u: Vec3i) = ConstVec3i(u)
     implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
@@ -186,6 +194,10 @@ object Vec3i {
     def apply(u: Read4Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(xy: Read2Float, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
     def apply(x: Int, yz: Read2Float) = new Vec3i(x, int(yz.x), int(yz.y))
+    def apply(u: Read3Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read4Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(xy: Read2Double, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
+    def apply(x: Int, yz: Read2Double) = new Vec3i(x, int(yz.x), int(yz.y))
 
     implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
 }

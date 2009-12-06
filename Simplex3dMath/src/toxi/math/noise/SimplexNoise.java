@@ -2,7 +2,7 @@
  * This code is originally release by Stefan Gustavson in his paper located at
  * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
  *
- * Modifications by Karsten Schmidt. Used under LGPL.
+ * Modifications by Karsten Schmidt. Used under LGPL v2.1.
  */
 
 package toxi.math.noise;

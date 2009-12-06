@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, IntMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -147,6 +147,27 @@ object ConstVec4i {
 
     def apply(x: Int, yzw: Read3Float) =
         new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
+
+    def apply(u: Read4Double) =
+        new ConstVec4i(int(u.x), int(u.y), int(u.z), int(u.w))
+
+    def apply(xy: Read2Double, z: Int, w: Int) =
+        new ConstVec4i(int(xy.x), int(xy.y), z, w)
+
+    def apply(x: Int, yz: Read2Double, w: Int) =
+        new ConstVec4i(x, int(yz.x), int(yz.y), w)
+
+    def apply(x: Int, y: Int, zw: Read2Double) =
+        new ConstVec4i(x, y, int(zw.x), int(zw.y))
+
+    def apply(xy: Read2Double, zw: Read2Double) =
+        new ConstVec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
+
+    def apply(xyz: Read3Double, w: Int) =
+        new ConstVec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
+
+    def apply(x: Int, yzw: Read3Double) =
+        new ConstVec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
         
     implicit def mutableToConst(u: Vec4i) = ConstVec4i(u)
     implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
@@ -269,6 +290,27 @@ object Vec4i {
         new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
 
     def apply(x: Int, yzw: Read3Float) =
+        new Vec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
+
+    def apply(u: Read4Double) =
+        new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
+
+    def apply(xy: Read2Double, z: Int, w: Int) =
+        new Vec4i(int(xy.x), int(xy.y), z, w)
+
+    def apply(x: Int, yz: Read2Double, w: Int) =
+        new Vec4i(x, int(yz.x), int(yz.y), w)
+
+    def apply(x: Int, y: Int, zw: Read2Double) =
+        new Vec4i(x, y, int(zw.x), int(zw.y))
+
+    def apply(xy: Read2Double, zw: Read2Double) =
+        new Vec4i(int(xy.x), int(xy.y), int(zw.x), int(zw.y))
+
+    def apply(xyz: Read3Double, w: Int) =
+        new Vec4i(int(xyz.x), int(xyz.y), int(xyz.z), w)
+
+    def apply(x: Int, yzw: Read3Double) =
         new Vec4i(x, int(yzw.x), int(yzw.y), int(yzw.z))
 
     implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)

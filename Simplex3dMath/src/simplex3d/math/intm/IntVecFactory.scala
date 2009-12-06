@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, IntMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.

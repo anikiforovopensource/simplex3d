@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, FloatMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 
 
 /**
@@ -130,6 +131,27 @@ object ConstVec4f {
     def apply(u: Read4Int) =
         new ConstVec4f(u.x, u.y, u.z, u.w)
 
+    def apply(u: Read4Double) =
+        new ConstVec4f(float(u.x), float(u.y), float(u.z), float(u.w))
+
+    def apply(xy: Read2Double, z: Float, w: Float) =
+        new ConstVec4f(float(xy.x), float(xy.y), z, w)
+
+    def apply(x: Float, yz: Read2Double, w: Float) =
+        new ConstVec4f(x, float(yz.x), float(yz.y), w)
+
+    def apply(x: Float, y: Float, zw: Read2Double) =
+        new ConstVec4f(x, y, float(zw.x), float(zw.y))
+
+    def apply(xy: Read2Double, zw: Read2Double) =
+        new ConstVec4f(float(xy.x), float(xy.y), float(zw.x), float(zw.y))
+
+    def apply(xyz: Read3Double, w: Float) =
+        new ConstVec4f(float(xyz.x), float(xyz.y), float(xyz.z), w)
+
+    def apply(x: Float, yzw: Read3Double) =
+        new ConstVec4f(x, float(yzw.x), float(yzw.y), float(yzw.z))
+
     implicit def mutableToConst(u: Vec4f) = ConstVec4f(u)
     implicit def constVec4fToSwizzled(u: ConstVec4f) = new ConstVec4fSwizzled(u)
 }
@@ -225,6 +247,27 @@ object Vec4f {
 
     def apply(u: Read4Int) =
         new Vec4f(u.x, u.y, u.z, u.w)
+
+    def apply(u: Read4Double) =
+        new Vec4f(float(u.x), float(u.y), float(u.z), float(u.w))
+
+    def apply(xy: Read2Double, z: Float, w: Float) =
+        new Vec4f(float(xy.x), float(xy.y), z, w)
+
+    def apply(x: Float, yz: Read2Double, w: Float) =
+        new Vec4f(x, float(yz.x), float(yz.y), w)
+
+    def apply(x: Float, y: Float, zw: Read2Double) =
+        new Vec4f(x, y, float(zw.x), float(zw.y))
+
+    def apply(xy: Read2Double, zw: Read2Double) =
+        new Vec4f(float(xy.x), float(xy.y), float(zw.x), float(zw.y))
+
+    def apply(xyz: Read3Double, w: Float) =
+        new Vec4f(float(xyz.x), float(xyz.y), float(xyz.z), w)
+
+    def apply(x: Float, yzw: Read3Double) =
+        new Vec4f(x, float(yzw.x), float(yzw.y), float(yzw.z))
 
     implicit def vec4ToSwizzled(u: Vec4f) = new Vec4fSwizzled(u)
 }

@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, FloatMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -26,7 +26,7 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class BufferUtil {
+object BufferUtil {
 
     /**
      * Column major order

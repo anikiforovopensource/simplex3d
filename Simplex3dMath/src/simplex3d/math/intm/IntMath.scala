@@ -1,5 +1,5 @@
 /*
- * Simplex3D, Math module
+ * Simplex3D, IntMath module
  * Copyright (C) 2009 Simplex3D team
  *
  * This file is part of Simplex3d.
@@ -31,15 +31,13 @@ object IntMath {
     implicit def imintToExtInt(s: Int) = new ExtendedInt(s)
 
     // Random
-    def nextVec2i() :Vec2i = Vec2i(nextInt, nextInt)
-    def nextVec3i() :Vec3i = Vec3i(nextInt, nextInt, nextInt)
-    def nextVec4i() :Vec4i = Vec4i(nextInt, nextInt, nextInt, nextInt)
+    def nextVec2() :Vec2i = Vec2i(nextInt, nextInt)
+    def nextVec3() :Vec3i = Vec3i(nextInt, nextInt, nextInt)
+    def nextVec4() :Vec4i = Vec4i(nextInt, nextInt, nextInt, nextInt)
 
-    def nextVec2i(n: Int) :Vec2i = Vec2i(nextInt(n), nextInt(n))
-    def nextVec3i(n: Int) :Vec3i = Vec3i(nextInt(n), nextInt(n), nextInt(n))
-    def nextVec4i(n: Int) :Vec4i = {
-        Vec4i(nextInt(n), nextInt(n), nextInt(n), nextInt(n))
-    }
+    def nextVec2i(n: Int) :Vec2i = nextVec2
+    def nextVec3i(n: Int) :Vec3i = nextVec3
+    def nextVec4i(n: Int) :Vec4i = nextVec4
 
     // Int functions
     def abs(x: Int) :Int = if (x < 0) -x else x

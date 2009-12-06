@@ -17,5 +17,5 @@
  * toxi.math.noise.SimplexNoise:
  * Original code was released by Stefan Gustavson in the following paper:
  * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
- * Modifications by Karsten Schmidt. Used under LGPL.
+ * Modifications by Karsten Schmidt. Used under LGPL v2.1.
  

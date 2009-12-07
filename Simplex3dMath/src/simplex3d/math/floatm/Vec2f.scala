@@ -52,16 +52,16 @@ sealed abstract class AnyVec2f extends Read2Float {
     def unary_-() = Vec2f(-x, -y)
     def *(s: Float) = Vec2f(x*s, y*s)
     def /(s: Float) = { val inv = 1/s; Vec2f(x*inv, y*inv) }
-    private[math] def divideByComponent(s: Float) = Vec2f(s/x, s/y)
+    private[math] def divByComponent(s: Float) = Vec2f(s/x, s/y)
 
     def +(u: AnyVec2f) = Vec2f(x + u.x, y + u.y)
     def -(u: AnyVec2f) = Vec2f(x - u.x, y - u.y)
     def *(u: AnyVec2f) = Vec2f(x * u.x, y * u.y)
     def /(u: AnyVec2f) = Vec2f(x / u.x, y / u.y)
 
-    def *(m: AnyMat2f) :Vec2f = m.transposeMul(this)
-    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(this)
-    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(this)
+    def *(m: AnyMat2f) :Vec2f = m.transposeMul(x, y, new Vec2f)
+    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(x, y, new Vec3f)
+    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(x, y, new Vec4f)
 
     def ==(u: AnyVec2f) :Boolean = {
         if (u eq null) false
@@ -88,7 +88,8 @@ extends AnyVec2f
 
 
 final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
-
+    private[math] def this() = this(0, 0)
+    
     override def r = x
     override def g = y
 
@@ -110,7 +111,7 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
     def *=(u: AnyVec2f) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2f) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2f) { this := m.transposeMul(this) }
+    def *=(m: AnyMat2f) { m.transposeMul(x, y, this) }
 
     def :=(u: AnyVec2f) { x = u.x; y = u.y }
     def set(x: Float, y: Float) { this.x = x; this.y = y }

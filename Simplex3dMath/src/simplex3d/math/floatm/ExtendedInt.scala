@@ -45,19 +45,19 @@ final class ExtendedInt(val value: Int) {
     def *(m: AnyMat4x3f) = m*value
     def *(m: AnyMat4f) = m*value
 
-    def /(u: AnyVec2f) = u.divideByComponent(value)
-    def /(u: AnyVec3f) = u.divideByComponent(value)
-    def /(u: AnyVec4f) = u.divideByComponent(value)
+    def /(u: AnyVec2f) = u.divByComponent(value)
+    def /(u: AnyVec3f) = u.divByComponent(value)
+    def /(u: AnyVec4f) = u.divByComponent(value)
 
-    def /(q: AnyQuat4f) = q.divideByComponent(value)
+    def /(q: AnyQuat4f) = q.divByComponent(value)
 
-    def /(m: AnyMat2f) = m.divideByComponent(value)
-    def /(m: AnyMat2x3f) = m.divideByComponent(value)
-    def /(m: AnyMat2x4f) = m.divideByComponent(value)
-    def /(m: AnyMat3x2f) = m.divideByComponent(value)
-    def /(m: AnyMat3f) = m.divideByComponent(value)
-    def /(m: AnyMat3x4f) = m.divideByComponent(value)
-    def /(m: AnyMat4x2f) = m.divideByComponent(value)
-    def /(m: AnyMat4x3f) = m.divideByComponent(value)
-    def /(m: AnyMat4f) = m.divideByComponent(value)
+    def /(m: AnyMat2f) = m.divByComponent(value, new Mat2f)
+    def /(m: AnyMat2x3f) = m.divByComponent(value, new Mat2x3f)
+    def /(m: AnyMat2x4f) = m.divByComponent(value, new Mat2x4f)
+    def /(m: AnyMat3x2f) = m.divByComponent(value, new Mat3x2f)
+    def /(m: AnyMat3f) = m.divByComponent(value, new Mat3f)
+    def /(m: AnyMat3x4f) = m.divByComponent(value, new Mat3x4f)
+    def /(m: AnyMat4x2f) = m.divByComponent(value, new Mat4x2f)
+    def /(m: AnyMat4x3f) = m.divByComponent(value, new Mat4x3f)
+    def /(m: AnyMat4f) = m.divByComponent(value, new Mat4f)
 }

@@ -73,6 +73,8 @@ extends AnyVec3b
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
 extends AnyVec3b
 {
+    private[math] def this() = this(false, false, false)
+
     override def r = x
     override def g = y
     override def b = z

@@ -86,99 +86,191 @@ extends ReadDoubleMat
         }
     }
 
-    def unary_-() = Mat4x2d(
-        -m00, -m10, -m20, -m30,
-        -m01, -m11, -m21, -m31
-    )
-    def *(s: Double) = Mat4x2d(
-        s*m00, s*m10, s*m20, s*m30,
-        s*m01, s*m11, s*m21, s*m31
-    )
-    def /(s: Double) = { val inv = 1/s; Mat4x2d(
-        inv*m00, inv*m10, inv*m20, inv*m30,
-        inv*m01, inv*m11, inv*m21, inv*m31
-    )}
+    private[math] def negate(result: Mat4x2d) = {
+        result.m00 = -m00
+        result.m10 = -m10
+        result.m20 = -m20
+        result.m30 = -m30
 
-    def +(m: AnyMat4x2d) = Mat4x2d(
-        m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
-        m01 + m.m01, m11 + m.m11, m21 + m.m21, m31 + m.m31
-    )
-    def -(m: AnyMat4x2d) = Mat4x2d(
-        m00 - m.m00, m10 - m.m10, m20 - m.m20, m30 - m.m30,
-        m01 - m.m01, m11 - m.m11, m21 - m.m21, m31 - m.m31
-    )
+        result.m01 = -m01
+        result.m11 = -m11
+        result.m21 = -m21
+        result.m31 = -m31
+
+        result
+    }
+    private[math] def mul(s: Double, result: Mat4x2d) = {
+        result.m00 = s*m00
+        result.m10 = s*m10
+        result.m20 = s*m20
+        result.m30 = s*m30
+
+        result.m01 = s*m01
+        result.m11 = s*m11
+        result.m21 = s*m21
+        result.m31 = s*m31
+
+        result
+    }
+    private[math] def div(s: Double, result: Mat4x2d) = {
+        val inv = 1/s
+
+        result.m00 = inv*m00
+        result.m10 = inv*m10
+        result.m20 = inv*m20
+        result.m30 = inv*m30
+
+        result.m01 = inv*m01
+        result.m11 = inv*m11
+        result.m21 = inv*m21
+        result.m31 = inv*m31
+
+        result
+    }
+
+    private[math] def add(m: AnyMat4x2d, result:Mat4x2d) = {
+        result.m00 = m00 + m.m00
+        result.m10 = m10 + m.m10
+        result.m20 = m20 + m.m20
+        result.m30 = m30 + m.m30
+
+        result.m01 = m01 + m.m01
+        result.m11 = m11 + m.m11
+        result.m21 = m21 + m.m21
+        result.m31 = m31 + m.m31
+
+        result
+    }
+    private[math] def sub(m: AnyMat4x2d, result:Mat4x2d) = {
+        result.m00 = m00 - m.m00
+        result.m10 = m10 - m.m10
+        result.m20 = m20 - m.m20
+        result.m30 = m30 - m.m30
+
+        result.m01 = m01 - m.m01
+        result.m11 = m11 - m.m11
+        result.m21 = m21 - m.m21
+        result.m31 = m31 - m.m31
+
+        result
+    }
+
+    private[math] def div(m: AnyMat4x2d, result:Mat4x2d) = {
+        result.m00 = m00 / m.m00
+        result.m10 = m10 / m.m10
+        result.m20 = m20 / m.m20
+        result.m30 = m30 / m.m30
+
+        result.m01 = m01 / m.m01
+        result.m11 = m11 / m.m11
+        result.m21 = m21 / m.m21
+        result.m31 = m31 / m.m31
+
+        result
+    }
+    private[math] def divByComponent(s: Double, result:Mat4x2d) = {
+        result.m00 = s / m00
+        result.m10 = s / m10
+        result.m20 = s / m20
+        result.m30 = s / m30
+
+        result.m01 = s / m01
+        result.m11 = s / m11
+        result.m21 = s / m21
+        result.m31 = s / m31
+
+        result
+    }
+
+    private[math] def mul(m: AnyMat2d, result: Mat4x2d) = {
+        val a00 = m00*m.m00 + m01*m.m10
+        val a10 = m10*m.m00 + m11*m.m10
+        val a20 = m20*m.m00 + m21*m.m10
+        val a30 = m30*m.m00 + m31*m.m10
+
+        val a01 = m00*m.m01 + m01*m.m11
+        val a11 = m10*m.m01 + m11*m.m11
+        val a21 = m20*m.m01 + m21*m.m11
+        val a31 = m30*m.m01 + m31*m.m11
+
+        result.m00 = a00; result.m10 = a10; result.m20 = a20; result.m30 = a30
+        result.m01 = a01; result.m11 = a11; result.m21 = a21; result.m31 = a31
+
+        result
+    }
+    private[math] def mul(m: AnyMat2x3d, result: Mat4x3d) = {
+        result.m00 = m00*m.m00 + m01*m.m10
+        result.m10 = m10*m.m00 + m11*m.m10
+        result.m20 = m20*m.m00 + m21*m.m10
+        result.m30 = m30*m.m00 + m31*m.m10
+
+        result.m01 = m00*m.m01 + m01*m.m11
+        result.m11 = m10*m.m01 + m11*m.m11
+        result.m21 = m20*m.m01 + m21*m.m11
+        result.m31 = m30*m.m01 + m31*m.m11
+
+        result.m02 = m00*m.m02 + m01*m.m12
+        result.m12 = m10*m.m02 + m11*m.m12
+        result.m22 = m20*m.m02 + m21*m.m12
+        result.m32 = m30*m.m02 + m31*m.m12
+
+        result
+    }
+    private[math] def mul(m: AnyMat2x4d, result: Mat4d) = {
+        result.m00 = m00*m.m00 + m01*m.m10
+        result.m10 = m10*m.m00 + m11*m.m10
+        result.m20 = m20*m.m00 + m21*m.m10
+        result.m30 = m30*m.m00 + m31*m.m10
+
+        result.m01 = m00*m.m01 + m01*m.m11
+        result.m11 = m10*m.m01 + m11*m.m11
+        result.m21 = m20*m.m01 + m21*m.m11
+        result.m31 = m30*m.m01 + m31*m.m11
+
+        result.m02 = m00*m.m02 + m01*m.m12
+        result.m12 = m10*m.m02 + m11*m.m12
+        result.m22 = m20*m.m02 + m21*m.m12
+        result.m32 = m30*m.m02 + m31*m.m12
+
+        result.m03 = m00*m.m03 + m01*m.m13
+        result.m13 = m10*m.m03 + m11*m.m13
+        result.m23 = m20*m.m03 + m21*m.m13
+        result.m33 = m30*m.m03 + m31*m.m13
+
+        result
+    }
+
+    private[math] def mul(x: Double, y: Double, result: Vec4d) = {
+        result.x = m00*x + m01*y
+        result.y = m10*x + m11*y
+        result.z = m20*x + m21*y
+        result.w = m30*x + m31*y
+
+        result
+    }
+    private[math] def transposeMul(x: Double, y: Double, z: Double, w: Double, result: Vec2d) = {
+        result.x = m00*x + m10*y + m20*z + m30*w
+        result.y = m01*x + m11*y + m21*z + m31*w
+
+        result
+    }
+
+    def unary_-() = negate(new Mat4x2d)
+    def *(s: Double) = mul(s, new Mat4x2d)
+    def /(s: Double) = div(s, new Mat4x2d)
+    def +(m: AnyMat4x2d) = add(m, new Mat4x2d)
+    def -(m: AnyMat4x2d) = sub(m, new Mat4x2d)
 
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat4x2d) = Mat4x2d(
-        m00/m.m00, m10/m.m10, m20/m.m20, m30/m.m30,
-        m01/m.m01, m11/m.m11, m21/m.m21, m31/m.m31
-    )
-    private[math] def divideByComponent(s: Double) = Mat4x2d(
-        s/m00, s/m10, s/m20, s/m30,
-        s/m01, s/m11, s/m21, s/m31
-    )
+    def /(m: AnyMat4x2d) = div(m, new Mat4x2d)
 
-    def *(m: AnyMat2d) = Mat4x2d(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
-        m30*m.m00 + m31*m.m10,
+    def *(m: AnyMat2d) = mul(m, new Mat4x2d)
+    def *(m: AnyMat2x3d) = mul(m, new Mat4x3d)
+    def *(m: AnyMat2x4d) = mul(m, new Mat4d)
 
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11,
-        m30*m.m01 + m31*m.m11
-    )
-    def *(m: AnyMat2x3d) = Mat4x3d(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
-        m30*m.m00 + m31*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11,
-        m30*m.m01 + m31*m.m11,
-
-        m00*m.m02 + m01*m.m12,
-        m10*m.m02 + m11*m.m12,
-        m20*m.m02 + m21*m.m12,
-        m30*m.m02 + m31*m.m12
-    )
-    def *(m: AnyMat2x4d) = Mat4d(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
-        m30*m.m00 + m31*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11,
-        m30*m.m01 + m31*m.m11,
-
-        m00*m.m02 + m01*m.m12,
-        m10*m.m02 + m11*m.m12,
-        m20*m.m02 + m21*m.m12,
-        m30*m.m02 + m31*m.m12,
-
-        m00*m.m03 + m01*m.m13,
-        m10*m.m03 + m11*m.m13,
-        m20*m.m03 + m21*m.m13,
-        m30*m.m03 + m31*m.m13
-    )
-
-    def *(u: AnyVec2d) = Vec4d(
-        m00*u.x + m01*u.y,
-        m10*u.x + m11*u.y,
-        m20*u.x + m21*u.y,
-        m30*u.x + m31*u.y
-    )
-    protected[math] def transposeMul(u: AnyVec4d) = Vec2d(
-        m00*u.x + m10*u.y + m20*u.z + m30*u.w,
-        m01*u.x + m11*u.y + m21*u.z + m31*u.w
-    )
+    def *(u: AnyVec2d) = mul(u.x, u.y, new Vec4d)
 
     def ==(m: AnyMat4x2d) :Boolean = {
         if (m eq null) false
@@ -224,38 +316,18 @@ final class Mat4x2d private[math] (
     var m01: Double, var m11: Double, var m21: Double, var m31: Double
 ) extends AnyMat4x2d
 {
-    def *=(s: Double) {
-        m00 *= s; m10 *= s; m20 *= s; m30 *= s;
-        m01 *= s; m11 *= s; m21 *= s; m31 *= s
-    }
-    def /=(s: Double) { val inv = 1/s;
-        m00 *= inv; m10 *= inv; m20 *= inv; m30 *= inv;
-        m01 *= inv; m11 *= inv; m21 *= inv; m31 *= inv
-    }
+    private[math] def this() = this(
+        1, 0, 0, 0,
+        0, 1, 0, 0
+    )
 
-    def +=(m: AnyMat4x2d) {
-        m00 += m.m00; m10 += m.m10; m20 += m.m20; m30 += m.m30;
-        m01 += m.m01; m11 += m.m11; m21 += m.m21; m31 += m.m31
-    }
-    def -=(m: AnyMat4x2d) {
-        m00 -= m.m00; m10 -= m.m10; m20 -= m.m20; m30 -= m.m30;
-        m01 -= m.m01; m11 -= m.m11; m21 -= m.m21; m31 -= m.m31
-    }
+    def *=(s: Double) { mul(s, this) }
+    def /=(s: Double) { div(s, this) }
 
-    def *=(m: AnyMat2d) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-        val a20 = m20*m.m00 + m21*m.m10
-        val a30 = m30*m.m00 + m31*m.m10
+    def +=(m: AnyMat4x2d) { add(m, this) }
+    def -=(m: AnyMat4x2d) { sub(m, this) }
 
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-        val a21 = m20*m.m01 + m21*m.m11
-        val a31 = m30*m.m01 + m31*m.m11
-
-        m00 = a00; m10 = a10; m20 = a20; m30 = a30
-        m01 = a01; m11 = a11; m21 = a21; m31 = a31
-    }
+    def *=(m: AnyMat2d) { mul(m, this) }
 
     def :=(m: AnyMat4x2d) {
         m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
@@ -369,7 +441,7 @@ object Mat4x2d {
         val array = new Array[Float](rows*columns)
         m.toArray(array, 0)
 
-        val n = apply(1)
+        val n = new Mat4x2d
         val endr = if (rows < 4) rows else 4
         val endc = if (columns < 2) columns else 2
 

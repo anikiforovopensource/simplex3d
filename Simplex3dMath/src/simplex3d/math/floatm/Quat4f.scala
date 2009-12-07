@@ -52,7 +52,7 @@ sealed abstract class AnyQuat4f {
     def unary_-() = Quat4f(-a, -b, -c, -d)
     def *(s: Float) = Quat4f(a*s, b*s, c*s, d*s)
     def /(s: Float) = { val inv = 1/s; Quat4f(a*inv, b*inv, c*inv, d*inv) }
-    private[math] def divideByComponent(s: Float) = Quat4f(s/a, s/b, s/c, s/d)
+    private[math] def divByComponent(s: Float) = Quat4f(s/a, s/b, s/c, s/d)
 
     def +(q: Quat4f) = Quat4f(a + q.a, b + q.b, c + q.c, d + q.d)
     def -(q: Quat4f) = Quat4f(a - q.a, b - q.b, c - q.c, d - q.d)
@@ -113,6 +113,8 @@ final class Quat4f private[math] (
     var a: Float, var b: Float, var c: Float, var d: Float)
 extends AnyQuat4f
 {
+    private[math] def this() = this(1, 0, 0, 0)
+
     def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Float) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
 
@@ -147,7 +149,7 @@ extends AnyQuat4f
 object Quat4f {
     val Identity = const(Quat4f())
 
-    def apply() = new Quat4f(1, 0, 0, 0)
+    def apply() = new Quat4f
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
     def apply(q: AnyQuat4f) = new Quat4f(q.a, q.b, q.c, q.d)
     def apply(u: AnyVec4f) = new Quat4f(u.w, u.x, u.y, u.z)

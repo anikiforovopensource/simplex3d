@@ -55,16 +55,16 @@ sealed abstract class AnyVec3d extends Read3Double {
     def unary_-() = Vec3d(-x, -y, -z)
     def *(s: Double) = Vec3d(x*s, y*s, z*s)
     def /(s: Double) = { val inv = 1/s; Vec3d(x*inv, y*inv, z*inv) }
-    private[math] def divideByComponent(s: Double) = Vec3d(s/x, s/y, s/z)
+    private[math] def divByComponent(s: Double) = Vec3d(s/x, s/y, s/z)
 
     def +(u: AnyVec3d) = Vec3d(x + u.x, y + u.y, z + u.z)
     def -(u: AnyVec3d) = Vec3d(x - u.x, y - u.y, z - u.z)
     def *(u: AnyVec3d) = Vec3d(x * u.x, y * u.y, z * u.z)
     def /(u: AnyVec3d) = Vec3d(x / u.x, y / u.y, z / u.z)
 
-    def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(this)
-    def *(m: AnyMat3d) :Vec3d = m.transposeMul(this)
-    def *(m: AnyMat3x4d) :Vec4d = m.transposeMul(this)
+    def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(x, y, z, new Vec2d)
+    def *(m: AnyMat3d) :Vec3d = m.transposeMul(x, y, z, new Vec3d)
+    def *(m: AnyMat3x4d) :Vec4d = m.transposeMul(x, y, z, new Vec4d)
 
     def ==(u: AnyVec3d) :Boolean = {
         if (u eq null) false
@@ -97,6 +97,8 @@ final class Vec3d private[math] (
     var x: Double, var y: Double, var z: Double
 ) extends AnyVec3d
 {
+    private[math] def this() = this(0, 0, 0)
+
     override def r = x
     override def g = y
     override def b = z
@@ -122,7 +124,7 @@ final class Vec3d private[math] (
     def *=(u: AnyVec3d) { x *= u.x; y *= u.y; z *= u.z }
     def /=(u: AnyVec3d) { x /= u.x; y /= u.y; z /= u.z }
 
-    def *=(m: AnyMat3d) { this := m.transposeMul(this) }
+    def *=(m: AnyMat3d) { m.transposeMul(x, y, z, this) }
 
     def :=(u: AnyVec3d) { x = u.x; y = u.y; z = u.z }
     def set(x: Double, y: Double, z: Double) { this.x = x; this.y = y; this.z = z }

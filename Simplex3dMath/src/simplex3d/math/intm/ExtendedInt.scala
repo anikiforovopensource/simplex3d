@@ -33,7 +33,7 @@ final class ExtendedInt(val value: Int) {
     def *(u: AnyVec3i) = u*value
     def *(u: AnyVec4i) = u*value
 
-    def /(u: AnyVec2i) = u.divideByComponent(value)
-    def /(u: AnyVec3i) = u.divideByComponent(value)
-    def /(u: AnyVec4i) = u.divideByComponent(value)
+    def /(u: AnyVec2i) = u.divByComponent(value)
+    def /(u: AnyVec3i) = u.divByComponent(value)
+    def /(u: AnyVec4i) = u.divByComponent(value)
 }

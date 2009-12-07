@@ -58,7 +58,7 @@ sealed abstract class AnyVec3i extends Read3Int {
 
     def *(s: Int) = Vec3i(x*s, y*s, z*s)
     def /(s: Int) = Vec3i(x/s, y/s, z/s)
-    private[math] def divideByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
+    private[math] def divByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
     def %(s: Int) = Vec3i(x % s, y % s, z % s)
     def >>(s: Int) = Vec3i( x >> s, y >> s, z >> s)
     def >>>(s: Int) = Vec3i( x >>> s, y >>> s, z >>> s)
@@ -99,6 +99,8 @@ extends AnyVec3i
 final class Vec3i private[math] (var x: Int, var y: Int, var z: Int)
 extends AnyVec3i
 {
+    private[math] def this() = this(0, 0, 0)
+
     override def r = x
     override def g = y
     override def b = z

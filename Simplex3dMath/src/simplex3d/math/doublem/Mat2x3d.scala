@@ -89,87 +89,149 @@ extends ConstRotationSubMat2d with ReadDoubleMat
         }
     }
 
-    def unary_-() = Mat2x3d(
-        -m00, -m10,
-        -m01, -m11,
-        -m02, -m12
-    )
-    def *(s: Double) = Mat2x3d(
-        s*m00, s*m10,
-        s*m01, s*m11,
-        s*m02, s*m12
-    )
-    def /(s: Double) = { val inv = 1/s; Mat2x3d(
-        inv*m00, inv*m10,
-        inv*m01, inv*m11,
-        inv*m02, inv*m12
-    )}
+    private[math] def negate(result: Mat2x3d) = {
+        result.m00 = -m00
+        result.m10 = -m10
 
-    def +(m: AnyMat2x3d) = Mat2x3d(
-        m00 + m.m00, m10 + m.m10,
-        m01 + m.m01, m11 + m.m11,
-        m02 + m.m02, m12 + m.m12
-    )
-    def -(m: AnyMat2x3d) = Mat2x3d(
-        m00 - m.m00, m10 - m.m10,
-        m01 - m.m01, m11 - m.m11,
-        m02 - m.m02, m12 - m.m12
-    )
+        result.m01 = -m01
+        result.m11 = -m11
 
-    /**
-     * Component-wise devision.
-     */
-    def /(m: AnyMat2x3d) = Mat2x3d(
-        m00/m.m00, m10/m.m10,
-        m01/m.m01, m11/m.m11,
-        m02/m.m02, m12/m.m12
-    )
-    private[math] def divideByComponent(s: Double) = Mat2x3d(
-        s/m00, s/m10,
-        s/m01, s/m11,
-        s/m02, s/m12
-    )
+        result.m02 = -m02
+        result.m12 = -m12
 
-    def *(m: AnyMat3x2d) = Mat2d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
+        result
+    }
+    private[math] def mul(s: Double, result: Mat2x3d) = {
+        result.m00 = s*m00
+        result.m10 = s*m10
 
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21
-    )
-    def *(m: AnyMat3d) = Mat2x3d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
+        result.m01 = s*m01
+        result.m11 = s*m11
 
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
+        result.m02 = s*m02
+        result.m12 = s*m12
 
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22
-    )
-    def *(m: AnyMat3x4d) = Mat2x4d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
+        result
+    }
+    private[math] def div(s: Double, result: Mat2x3d) = {
+        val inv = 1/s
 
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
+        result.m00 = inv*m00
+        result.m10 = inv*m10
 
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22,
+        result.m01 = inv*m01
+        result.m11 = inv*m11
 
-        m00*m.m03 + m01*m.m13 + m02*m.m23,
-        m10*m.m03 + m11*m.m13 + m12*m.m23
-    )
+        result.m02 = inv*m02
+        result.m12 = inv*m12
 
-    def *(u: AnyVec3d) = Vec2d(
-        m00*u.x + m01*u.y + m02*u.z,
-        m10*u.x + m11*u.y + m12*u.z
-    )
-    protected[math] def transposeMul(u: AnyVec2d) = Vec3d(
-        m00*u.x + m10*u.y,
-        m01*u.x + m11*u.y,
-        m02*u.x + m12*u.y
-    )
+        result
+    }
+
+    private[math] def add(m: AnyMat2x3d, result:Mat2x3d) = {
+        result.m00 = m00 + m.m00
+        result.m10 = m10 + m.m10
+
+        result.m01 = m01 + m.m01
+        result.m11 = m11 + m.m11
+
+        result.m02 = m02 + m.m02
+        result.m12 = m12 + m.m12
+
+        result
+    }
+    private[math] def sub(m: AnyMat2x3d, result:Mat2x3d) = {
+        result.m00 = m00 - m.m00
+        result.m10 = m10 - m.m10
+
+        result.m01 = m01 - m.m01
+        result.m11 = m11 - m.m11
+
+        result.m02 = m02 - m.m02
+        result.m12 = m12 - m.m12
+
+        result
+    }
+
+    private[math] def div(m: AnyMat2x3d, result:Mat2x3d) = {
+        result.m00 = m00 / m.m00
+        result.m10 = m10 / m.m10
+
+        result.m01 = m01 / m.m01
+        result.m11 = m11 / m.m11
+
+        result.m02 = m02 / m.m02
+        result.m12 = m12 / m.m12
+
+        result
+    }
+    private[math] def divByComponent(s: Double, result:Mat2x3d) = {
+        result.m00 = s / m00
+        result.m10 = s / m10
+
+        result.m01 = s / m01
+        result.m11 = s / m11
+
+        result.m02 = s / m02
+        result.m12 = s / m12
+
+        result
+    }
+
+    private[math] def mul(m: AnyMat3x2d, result: Mat2d) = {
+        result.m00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        result.m10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+
+        result.m01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        result.m11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+
+        result
+    }
+    private[math] def mul(m: AnyMat3d, result: Mat2x3d) = {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+
+        result.m00 = a00; result.m10 = a10
+        result.m01 = a01; result.m11 = a11
+        result.m02 = a02; result.m12 = a12
+
+        result
+    }
+    private[math] def mul(m: AnyMat3x4d, result: Mat2x4d) = {
+        result.m00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        result.m10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+
+        result.m01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        result.m11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+
+        result.m02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        result.m12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+
+        result.m03 = m00*m.m03 + m01*m.m13 + m02*m.m23
+        result.m13 = m10*m.m03 + m11*m.m13 + m12*m.m23
+
+        result
+    }
+
+    private[math] def mul(x: Double, y: Double, z: Double, result: Vec2d) = {
+        result.x = m00*x + m01*y + m02*z
+        result.y = m10*x + m11*y + m12*z
+
+        result
+    }
+    private[math] def transposeMul(x: Double, y: Double, result: Vec3d) = {
+        result.x = m00*x + m10*y
+        result.y = m01*x + m11*y
+        result.z = m02*x + m12*y
+
+        result
+    }
 
     /**
      * This method will apply the matrix transformation to a point
@@ -177,20 +239,24 @@ extends ConstRotationSubMat2d with ReadDoubleMat
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    def transformPoint(u: AnyVec2d) = Vec2d(
-        m00*u.x + m01*u.y + m02,
-        m10*u.x + m11*u.y + m12
-    )
+    private[math] def transformPoint(x: Double, y: Double, result: Vec2d) = {
+        result.x = m00*x + m01*y + m02
+        result.y = m10*x + m11*y + m12
+
+        result
+    }
     /**
      * This method will apply the matrix transformation to a vector
      * (such as object speed).<br/>
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    def transformVector(u: AnyVec2d) = Vec2d(
-        m00*u.x + m01*u.y,
-        m10*u.x + m11*u.y
-    )
+    private[math] def transformVector(x: Double, y: Double, result: Vec2d) = {
+        result.x = m00*x + m01*y
+        result.y = m10*x + m11*y
+
+        result
+    }
 
     /**
      * Combine two transformations. This method works similar to regular
@@ -198,16 +264,22 @@ extends ConstRotationSubMat2d with ReadDoubleMat
      * <br/>
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *(m: AnyMat2x3d) = Mat2x3d(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
+    private[math] def mul(m: AnyMat2x3d, result: Mat2x3d) = {
+        val a00 = m00*m.m00 + m01*m.m10
+        val a10 = m10*m.m00 + m11*m.m10
 
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
+        val a01 = m00*m.m01 + m01*m.m11
+        val a11 = m10*m.m01 + m11*m.m11
 
-        m00*m.m02 + m01*m.m12 + m02,
-        m10*m.m02 + m11*m.m12 + m12
-    )
+        val a02 = m00*m.m02 + m01*m.m12 + m02
+        val a12 = m10*m.m02 + m11*m.m12 + m12
+
+        result.m00 = a00; result.m10 = a10
+        result.m01 = a01; result.m11 = a11
+        result.m02 = a02; result.m12 = a12
+
+        result
+    }
 
     /**
      * Combine this transformation with rotation. This method works similar
@@ -216,16 +288,71 @@ extends ConstRotationSubMat2d with ReadDoubleMat
      *
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *(m: AnyMat2d) = Mat2x3d(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
+    private[math] def mul(m: AnyMat2d, result: Mat2x3d) = {
+        val a00 = m00*m.m00 + m01*m.m10
+        val a10 = m10*m.m00 + m11*m.m10
 
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
+        val a01 = m00*m.m01 + m01*m.m11
+        val a11 = m10*m.m01 + m11*m.m11
 
-        m02,
-        m12
-    )
+        result.m00 = a00; result.m10 = a10
+        result.m01 = a01; result.m11 = a11
+        result.m02 = m02; result.m12 = m12
+
+        result
+    }
+
+    def unary_-() = negate(new Mat2x3d)
+    def *(s: Double) = mul(s, new Mat2x3d)
+    def /(s: Double) = div(s, new Mat2x3d)
+    def +(m: AnyMat2x3d) = add(m, new Mat2x3d)
+    def -(m: AnyMat2x3d) = sub(m, new Mat2x3d)
+
+    /**
+     * Component-wise devision.
+     */
+    def /(m: AnyMat2x3d) = div(m, new Mat2x3d)
+
+    def *(m: AnyMat3x2d) = mul(m, new Mat2d)
+    def *(m: AnyMat3d) = mul(m, new Mat2x3d)
+    def *(m: AnyMat3x4d) = mul(m, new Mat2x4d)
+
+    def *(u: AnyVec3d) = mul(u.x, u.y, u.z, new Vec2d)
+
+    /**
+     * This method will apply the matrix transformation to a point
+     * (such as vertex or object location).<br/>
+     *
+     * Equivalent to regular multiplication with Vec(u, 1).
+     */
+    def transformPoint(u: AnyVec2d) :Vec2d =
+        transformPoint(u.x, u.y, new Vec2d)
+
+    /**
+     * This method will apply the matrix transformation to a vector
+     * (such as object speed).<br/>
+     *
+     * Equivalent to regular multiplication with Vec(u, 0).
+     */
+    def transformVector(u: AnyVec2d) :Vec2d =
+        transformVector(u.x, u.y, new Vec2d)
+
+    /**
+     * Combine two transformations. This method works similar to regular
+     * multiplication but with a special handling of the translation column.
+     * <br/>
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     */
+    def *(m: AnyMat2x3d) = mul(m, new Mat2x3d)
+
+    /**
+     * Combine this transformation with rotation. This method works similar
+     * to regular multiplication but with a special handling of
+     * the translation column.<br/>
+     *
+     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
+     */
+    def *(m: AnyMat2d) = mul(m, new Mat2x3d)
 
     def ==(m: AnyMat2x3d) :Boolean = {
         if (m eq null) false
@@ -274,42 +401,19 @@ final class Mat2x3d private[math] (
     var m02: Double, var m12: Double
 ) extends AnyMat2x3d with RotationSubMat2d
 {
-    def *=(s: Double) {
-        m00 *= s; m10 *= s;
-        m01 *= s; m11 *= s;
-        m02 *= s; m12 *= s
-    }
-    def /=(s: Double) { val inv = 1/s;
-        m00 *= inv; m10 *= inv;
-        m01 *= inv; m11 *= inv;
-        m02 *= inv; m12 *= inv
-    }
+    private[math] def this() = this(
+        1, 0,
+        0, 1,
+        0, 0
+    )
 
-    def +=(m: AnyMat2x3d) {
-        m00 += m.m00; m10 += m.m10;
-        m01 += m.m01; m11 += m.m11;
-        m02 += m.m02; m12 += m.m12
-    }
-    def -=(m: AnyMat2x3d) {
-        m00 -= m.m00; m10 -= m.m10;
-        m01 -= m.m01; m11 -= m.m11;
-        m02 -= m.m02; m12 -= m.m12
-    }
+    def *=(s: Double) { mul(s, this) }
+    def /=(s: Double) { div(s, this) }
 
-    def *=(m: AnyMat3d) {
-        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+    def +=(m: AnyMat2x3d) { add(m, this) }
+    def -=(m: AnyMat2x3d) { sub(m, this) }
 
-        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
-        m02 = a02; m12 = a12
-    }
+    def *=(m: AnyMat3d) { mul(m, this) }
 
     /**
      * Combine two transformations. This method works similar to regular
@@ -317,20 +421,7 @@ final class Mat2x3d private[math] (
      * <br/>
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *=(m: AnyMat2x3d) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02
-        val a12 = m10*m.m02 + m11*m.m12 + m12
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
-        m02 = a02; m12 = a12
-    }
+    def *=(m: AnyMat2x3d) { mul(m, this) }
 
     /**
      * Combine this transformation with rotation. This method works similar
@@ -339,16 +430,7 @@ final class Mat2x3d private[math] (
      *
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *=(m: AnyMat2d) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
-    }
+    def *=(m: AnyMat2d) { mul(m, this) }
 
     def :=(m: AnyMat2x3d) {
         m00 = m.m00; m10 = m.m10;
@@ -473,7 +555,7 @@ object Mat2x3d {
         val array = new Array[Float](rows*columns)
         m.toArray(array, 0)
 
-        val n = apply(1)
+        val n = new Mat2x3d
         val endr = if (rows < 2) rows else 2
         val endc = if (columns < 3) columns else 3
 

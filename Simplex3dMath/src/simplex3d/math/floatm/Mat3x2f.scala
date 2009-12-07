@@ -82,89 +82,167 @@ extends ConstRotationSubMat2f with ReadFloatMat
         }
     }
 
-    def unary_-() = Mat3x2f(
-        -m00, -m10, -m20,
-        -m01, -m11, -m21
-    )
-    def *(s: Float) = Mat3x2f(
-        s*m00, s*m10, s*m20,
-        s*m01, s*m11, s*m21
-    )
-    def /(s: Float) = { val inv = 1/s; Mat3x2f(
-        inv*m00, inv*m10, inv*m20,
-        inv*m01, inv*m11, inv*m21
-    )}
+    private[math] def negate(result: Mat3x2f) = {
+        result.m00 = -m00
+        result.m10 = -m10
+        result.m20 = -m20
 
-    def +(m: AnyMat3x2f) = Mat3x2f(
-        m00 + m.m00, m10 + m.m10, m20 + m.m20,
-        m01 + m.m01, m11 + m.m11, m21 + m.m21
-    )
-    def -(m: AnyMat3x2f) = Mat3x2f(
-        m00 - m.m00, m10 - m.m10, m20 - m.m20,
-        m01 - m.m01, m11 - m.m11, m21 - m.m21
-    )
+        result.m01 = -m01
+        result.m11 = -m11
+        result.m21 = -m21
+
+        result
+    }
+    private[math] def mul(s: Float, result: Mat3x2f) = {
+        result.m00 = s*m00
+        result.m10 = s*m10
+        result.m20 = s*m20
+
+        result.m01 = s*m01
+        result.m11 = s*m11
+        result.m21 = s*m21
+
+        result
+    }
+    private[math] def div(s: Float, result: Mat3x2f) = {
+        val inv = 1/s
+
+        result.m00 = inv*m00
+        result.m10 = inv*m10
+        result.m20 = inv*m20
+
+        result.m01 = inv*m01
+        result.m11 = inv*m11
+        result.m21 = inv*m21
+
+        result
+    }
+
+    private[math] def add(m: AnyMat3x2f, result:Mat3x2f) = {
+        result.m00 = m00 + m.m00
+        result.m10 = m10 + m.m10
+        result.m20 = m20 + m.m20
+
+        result.m01 = m01 + m.m01
+        result.m11 = m11 + m.m11
+        result.m21 = m21 + m.m21
+
+        result
+    }
+    private[math] def sub(m: AnyMat3x2f, result:Mat3x2f) = {
+        result.m00 = m00 - m.m00
+        result.m10 = m10 - m.m10
+        result.m20 = m20 - m.m20
+
+        result.m01 = m01 - m.m01
+        result.m11 = m11 - m.m11
+        result.m21 = m21 - m.m21
+
+        result
+    }
+
+    private[math] def div(m: AnyMat3x2f, result:Mat3x2f) = {
+        result.m00 = m00 / m.m00
+        result.m10 = m10 / m.m10
+        result.m20 = m20 / m.m20
+
+        result.m01 = m01 / m.m01
+        result.m11 = m11 / m.m11
+        result.m21 = m21 / m.m21
+
+        result
+    }
+    private[math] def divByComponent(s: Float, result:Mat3x2f) = {
+        result.m00 = s / m00
+        result.m10 = s / m10
+        result.m20 = s / m20
+
+        result.m01 = s / m01
+        result.m11 = s / m11
+        result.m21 = s / m21
+
+        result
+    }
+
+    private[math] def mul(m: AnyMat2f, result: Mat3x2f) = {
+        val a00 = m00*m.m00 + m01*m.m10
+        val a10 = m10*m.m00 + m11*m.m10
+        val a20 = m20*m.m00 + m21*m.m10
+
+        val a01 = m00*m.m01 + m01*m.m11
+        val a11 = m10*m.m01 + m11*m.m11
+        val a21 = m20*m.m01 + m21*m.m11
+
+        result.m00 = a00; result.m10 = a10; result.m20 = a20
+        result.m01 = a01; result.m11 = a11; result.m21 = a21
+
+        result
+    }
+    private[math] def mul(m: AnyMat2x3f, result: Mat3f) = {
+        result.m00 = m00*m.m00 + m01*m.m10
+        result.m10 = m10*m.m00 + m11*m.m10
+        result.m20 = m20*m.m00 + m21*m.m10
+
+        result.m01 = m00*m.m01 + m01*m.m11
+        result.m11 = m10*m.m01 + m11*m.m11
+        result.m21 = m20*m.m01 + m21*m.m11
+
+        result.m02 = m00*m.m02 + m01*m.m12
+        result.m12 = m10*m.m02 + m11*m.m12
+        result.m22 = m20*m.m02 + m21*m.m12
+
+        result
+    }
+    private[math] def mul(m: AnyMat2x4f, result: Mat3x4f) = {
+        result.m00 = m00*m.m00 + m01*m.m10
+        result.m10 = m10*m.m00 + m11*m.m10
+        result.m20 = m20*m.m00 + m21*m.m10
+
+        result.m01 = m00*m.m01 + m01*m.m11
+        result.m11 = m10*m.m01 + m11*m.m11
+        result.m21 = m20*m.m01 + m21*m.m11
+
+        result.m02 = m00*m.m02 + m01*m.m12
+        result.m12 = m10*m.m02 + m11*m.m12
+        result.m22 = m20*m.m02 + m21*m.m12
+
+        result.m03 = m00*m.m03 + m01*m.m13
+        result.m13 = m10*m.m03 + m11*m.m13
+        result.m23 = m20*m.m03 + m21*m.m13
+
+        result
+    }
+
+    private[math] def mul(x: Float, y: Float, result: Vec3f) = {
+        result.x = m00*x + m01*y
+        result.y = m10*x + m11*y
+        result.z = m20*x + m21*y
+
+        result
+    }
+    private[math] def transposeMul(x: Float, y: Float, z: Float, result: Vec2f) = {
+        result.x = m00*x + m10*y + m20*z
+        result.y = m01*x + m11*y + m21*z
+
+        result
+    }
+
+    def unary_-() = negate(new Mat3x2f)
+    def *(s: Float) = mul(s, new Mat3x2f)
+    def /(s: Float) = div(s, new Mat3x2f)
+    def +(m: AnyMat3x2f) = add(m, new Mat3x2f)
+    def -(m: AnyMat3x2f) = sub(m, new Mat3x2f)
 
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat3x2f) = Mat3x2f(
-        m00/m.m00, m10/m.m10, m20/m.m20,
-        m01/m.m01, m11/m.m11, m21/m.m21
-    )
-    private[math] def divideByComponent(s: Float) = Mat3x2f(
-        s/m00, s/m10, s/m20,
-        s/m01, s/m11, s/m21
-    )
+    def /(m: AnyMat3x2f) = div(m, new Mat3x2f)
 
-    def *(m: AnyMat2f) = Mat3x2f(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
+    def *(m: AnyMat2f) = mul(m, new Mat3x2f)
+    def *(m: AnyMat2x3f) = mul(m, new Mat3f)
+    def *(m: AnyMat2x4f) = mul(m, new Mat3x4f)
 
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11
-    )
-    def *(m: AnyMat2x3f) = Mat3f(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11,
-
-        m00*m.m02 + m01*m.m12,
-        m10*m.m02 + m11*m.m12,
-        m20*m.m02 + m21*m.m12
-    )
-    def *(m: AnyMat2x4f) = Mat3x4f(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-        m20*m.m00 + m21*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-        m20*m.m01 + m21*m.m11,
-
-        m00*m.m02 + m01*m.m12,
-        m10*m.m02 + m11*m.m12,
-        m20*m.m02 + m21*m.m12,
-
-        m00*m.m03 + m01*m.m13,
-        m10*m.m03 + m11*m.m13,
-        m20*m.m03 + m21*m.m13
-    )
-
-    def *(u: AnyVec2f) = Vec3f(
-        m00*u.x + m01*u.y,
-        m10*u.x + m11*u.y,
-        m20*u.x + m21*u.y
-    )
-    protected[math] def transposeMul(u: AnyVec3f) = Vec2f(
-        m00*u.x + m10*u.y + m20*u.z,
-        m01*u.x + m11*u.y + m21*u.z
-    )
+    def *(u: AnyVec2f) = mul(u.x, u.y, new Vec3f)
 
     def ==(m: AnyMat3x2f) :Boolean = {
         if (m eq null) false
@@ -208,36 +286,18 @@ final class Mat3x2f private[math] (
     var m01: Float, var m11: Float, var m21: Float
 ) extends AnyMat3x2f with RotationSubMat2f
 {
-    def *=(s: Float) {
-        m00 *= s; m10 *= s; m20 *= s;
-        m01 *= s; m11 *= s; m21 *= s
-    }
-    def /=(s: Float) { val inv = 1/s;
-        m00 *= inv; m10 *= inv; m20 *= inv;
-        m01 *= inv; m11 *= inv; m21 *= inv
-    }
+    private[math] def this() = this(
+        1, 0, 0,
+        0, 1, 0
+    )
 
-    def +=(m: AnyMat3x2f) {
-        m00 += m.m00; m10 += m.m10; m20 += m.m20;
-        m01 += m.m01; m11 += m.m11; m21 += m.m21
-    }
-    def -=(m: AnyMat3x2f) {
-        m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
-        m01 -= m.m01; m11 -= m.m11; m21 -= m.m21
-    }
+    def *=(s: Float) { mul(s, this) }
+    def /=(s: Float) { div(s, this) }
 
-    def *=(m: AnyMat2f) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-        val a20 = m20*m.m00 + m21*m.m10
+    def +=(m: AnyMat3x2f) { add(m, this) }
+    def -=(m: AnyMat3x2f) { sub(m, this) }
 
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-        val a21 = m20*m.m01 + m21*m.m11
-
-        m00 = a00; m10 = a10; m20 = a20
-        m01 = a01; m11 = a11; m21 = a21
-    }
+    def *=(m: AnyMat2f) { mul(m, this) }
 
     def :=(m: AnyMat3x2f) {
         m00 = m.m00; m10 = m.m10; m20 = m.m20;
@@ -349,7 +409,7 @@ object Mat3x2f {
         val array = new Array[Double](rows*columns)
         m.toArray(array, 0)
 
-        val n = apply(1)
+        val n = new Mat3x2f
         val endr = if (rows < 3) rows else 3
         val endc = if (columns < 2) columns else 2
 

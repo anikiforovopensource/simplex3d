@@ -66,6 +66,7 @@ extends AnyVec2b
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
 extends AnyVec2b
 {
+    private[math] def this() = this(false, false)
 
     override def r = x
     override def g = y

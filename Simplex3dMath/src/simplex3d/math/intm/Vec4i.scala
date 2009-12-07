@@ -62,7 +62,7 @@ sealed abstract class AnyVec4i extends Read4Int {
 
     def *(s: Int) = Vec4i(x*s, y*s, z*s, w*s)
     def /(s: Int) = Vec4i(x/s, y/s, z/s, w/s)
-    private[math] def divideByComponent(s: Int) = Vec4i(s/x, s/y, s/z, s/w)
+    private[math] def divByComponent(s: Int) = Vec4i(s/x, s/y, s/z, s/w)
     def %(s: Int) = Vec4i(x % s, y % s, z % s, w % s)
     def >>(s: Int) = Vec4i( x >> s, y >> s, z >> s, w >> s)
     def >>>(s: Int) = Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
@@ -105,6 +105,8 @@ final class Vec4i private[math] (
     var x: Int, var y: Int, var z: Int, var w: Int)
 extends AnyVec4i
 {
+    private[math] def this() = this(0, 0, 0, 0)
+    
     override def r = x
     override def g = y
     override def b = z

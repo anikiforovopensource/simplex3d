@@ -95,97 +95,205 @@ extends ConstRotationSubMat3d with ConstRotationSubMat2d with ReadDoubleMat
         }
     }
 
-    def unary_-() = Mat3d(
-        -m00, -m10, -m20,
-        -m01, -m11, -m21,
-        -m02, -m12, -m22
-    )
-    def *(s: Double) = Mat3d(
-        s*m00, s*m10, s*m20,
-        s*m01, s*m11, s*m21,
-        s*m02, s*m12, s*m22
-    )
-    def /(s: Double) = { val inv = 1/s; Mat3d(
-        inv*m00, inv*m10, inv*m20,
-        inv*m01, inv*m11, inv*m21,
-        inv*m02, inv*m12, inv*m22
-    )}
+    private[math] def negate(result: Mat3d) = {
+        result.m00 = -m00
+        result.m10 = -m10
+        result.m20 = -m20
 
-    def +(m: AnyMat3d) = Mat3d(
-        m00 + m.m00, m10 + m.m10, m20 + m.m20,
-        m01 + m.m01, m11 + m.m11, m21 + m.m21,
-        m02 + m.m02, m12 + m.m12, m22 + m.m22
-    )
-    def -(m: AnyMat3d) = Mat3d(
-        m00 - m.m00, m10 - m.m10, m20 - m.m20,
-        m01 - m.m01, m11 - m.m11, m21 - m.m21,
-        m02 - m.m02, m12 - m.m12, m22 - m.m22
-    )
+        result.m01 = -m01
+        result.m11 = -m11
+        result.m21 = -m21
+
+        result.m02 = -m02
+        result.m12 = -m12
+        result.m22 = -m22
+
+        result
+    }
+    private[math] def mul(s: Double, result: Mat3d) = {
+        result.m00 = s*m00
+        result.m10 = s*m10
+        result.m20 = s*m20
+
+        result.m01 = s*m01
+        result.m11 = s*m11
+        result.m21 = s*m21
+
+        result.m02 = s*m02
+        result.m12 = s*m12
+        result.m22 = s*m22
+
+        result
+    }
+    private[math] def div(s: Double, result: Mat3d) = {
+        val inv = 1/s
+
+        result.m00 = inv*m00
+        result.m10 = inv*m10
+        result.m20 = inv*m20
+
+        result.m01 = inv*m01
+        result.m11 = inv*m11
+        result.m21 = inv*m21
+
+        result.m02 = inv*m02
+        result.m12 = inv*m12
+        result.m22 = inv*m22
+
+        result
+    }
+
+    private[math] def add(m: AnyMat3d, result:Mat3d) = {
+        result.m00 = m00 + m.m00
+        result.m10 = m10 + m.m10
+        result.m20 = m20 + m.m20
+
+        result.m01 = m01 + m.m01
+        result.m11 = m11 + m.m11
+        result.m21 = m21 + m.m21
+
+        result.m02 = m02 + m.m02
+        result.m12 = m12 + m.m12
+        result.m22 = m22 + m.m22
+
+        result
+    }
+    private[math] def sub(m: AnyMat3d, result:Mat3d) = {
+        result.m00 = m00 - m.m00
+        result.m10 = m10 - m.m10
+        result.m20 = m20 - m.m20
+
+        result.m01 = m01 - m.m01
+        result.m11 = m11 - m.m11
+        result.m21 = m21 - m.m21
+
+        result.m02 = m02 - m.m02
+        result.m12 = m12 - m.m12
+        result.m22 = m22 - m.m22
+
+        result
+    }
+
+    private[math] def div(m: AnyMat3d, result:Mat3d) = {
+        result.m00 = m00 / m.m00
+        result.m10 = m10 / m.m10
+        result.m20 = m20 / m.m20
+
+        result.m01 = m01 / m.m01
+        result.m11 = m11 / m.m11
+        result.m21 = m21 / m.m21
+
+        result.m02 = m02 / m.m02
+        result.m12 = m12 / m.m12
+        result.m22 = m22 / m.m22
+
+        result
+    }
+    private[math] def divByComponent(s: Double, result:Mat3d) = {
+        result.m00 = s / m00
+        result.m10 = s / m10
+        result.m20 = s / m20
+
+        result.m01 = s / m01
+        result.m11 = s / m11
+        result.m21 = s / m21
+
+        result.m02 = s / m02
+        result.m12 = s / m12
+        result.m22 = s / m22
+
+        result
+    }
+
+    private[math] def mul(m: AnyMat3x2d, result: Mat3x2d) = {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+
+        result.m00 = a00; result.m10 = a10; result.m20 = a20
+        result.m01 = a01; result.m11 = a11; result.m21 = a21
+
+        result
+    }
+    private[math] def mul(m: AnyMat3d, result: Mat3d) = {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+        val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+
+        result.m00 = a00; result.m10 = a10; result.m20 = a20
+        result.m01 = a01; result.m11 = a11; result.m21 = a21
+        result.m02 = a02; result.m12 = a12; result.m22 = a22
+
+        result
+    }
+    private[math] def mul(m: AnyMat3x4d, result: Mat3x4d) = {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+        val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+
+        val a03 = m00*m.m03 + m01*m.m13 + m02*m.m23
+        val a13 = m10*m.m03 + m11*m.m13 + m12*m.m23
+        val a23 = m20*m.m03 + m21*m.m13 + m22*m.m23
+
+        result.m00 = a00; result.m10 = a10; result.m20 = a20
+        result.m01 = a01; result.m11 = a11; result.m21 = a21
+        result.m02 = a02; result.m12 = a12; result.m22 = a22
+        result.m03 = a03; result.m13 = a13; result.m23 = a23
+
+        result
+    }
+
+    private[math] def mul(x: Double, y: Double, z: Double, result: Vec3d) = {
+        result.x = m00*x + m01*y + m02*z
+        result.y = m10*x + m11*y + m12*z
+        result.z = m20*x + m21*y + m22*z
+
+        result
+    }
+    private[math] def transposeMul(x: Double, y: Double, z: Double, result: Vec3d) = {
+        result.x = m00*x + m10*y + m20*z
+        result.y = m01*x + m11*y + m21*z
+        result.z = m02*x + m12*y + m22*z
+
+        result
+    }
+
+    def unary_-() = negate(new Mat3d)
+    def *(s: Double) = mul(s, new Mat3d)
+    def /(s: Double) = div(s, new Mat3d)
+    def +(m: AnyMat3d) = add(m, new Mat3d)
+    def -(m: AnyMat3d) = sub(m, new Mat3d)
 
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat3d) = Mat3d(
-        m00/m.m00, m10/m.m10, m20/m.m20,
-        m01/m.m01, m11/m.m11, m21/m.m21,
-        m02/m.m02, m12/m.m12, m22/m.m22
-    )
-    private[math] def divideByComponent(s: Double) = Mat3d(
-        s/m00, s/m10, s/m20,
-        s/m01, s/m11, s/m21,
-        s/m02, s/m12, s/m22
-    )
+    def /(m: AnyMat3d) = div(m, new Mat3d)
 
-    def *(m: AnyMat3x2d) = Mat3x2d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-        m20*m.m00 + m21*m.m10 + m22*m.m20,
+    def *(m: AnyMat3x2d) = mul(m, new Mat3x2d)
+    def *(m: AnyMat3d) = mul(m, new Mat3d)
+    def *(m: AnyMat3x4d) = mul(m, new Mat3x4d)
 
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
-        m20*m.m01 + m21*m.m11 + m22*m.m21
-    )
-    def *(m: AnyMat3d) = Mat3d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-        m20*m.m00 + m21*m.m10 + m22*m.m20,
-
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
-        m20*m.m01 + m21*m.m11 + m22*m.m21,
-
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22,
-        m20*m.m02 + m21*m.m12 + m22*m.m22
-    )
-    def *(m: AnyMat3x4d) = Mat3x4d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-        m20*m.m00 + m21*m.m10 + m22*m.m20,
-
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
-        m20*m.m01 + m21*m.m11 + m22*m.m21,
-
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22,
-        m20*m.m02 + m21*m.m12 + m22*m.m22,
-
-        m00*m.m03 + m01*m.m13 + m02*m.m23,
-        m10*m.m03 + m11*m.m13 + m12*m.m23,
-        m20*m.m03 + m21*m.m13 + m22*m.m23
-    )
-
-    def *(u: AnyVec3d) = Vec3d(
-        m00*u.x + m01*u.y + m02*u.z,
-        m10*u.x + m11*u.y + m12*u.z,
-        m20*u.x + m21*u.y + m22*u.z
-    )
-    protected[math] def transposeMul(u: AnyVec3d) = Vec3d(
-        m00*u.x + m10*u.y + m20*u.z,
-        m01*u.x + m11*u.y + m21*u.z,
-        m02*u.x + m12*u.y + m22*u.z
-    )
+    def *(u: AnyVec3d) = mul(u.x, u.y, u.z, new Vec3d)
 
     def ==(m: AnyMat3d) :Boolean = {
         if (m eq null) false
@@ -237,45 +345,19 @@ final class Mat3d private[math] (
     var m02: Double, var m12: Double, var m22: Double
 ) extends AnyMat3d with RotationSubMat3d with RotationSubMat2d
 {
-    def *=(s: Double) {
-        m00 *= s; m10 *= s; m20 *= s;
-        m01 *= s; m11 *= s; m21 *= s;
-        m02 *= s; m12 *= s; m22 *= s
-    }
-    def /=(s: Double) { val inv = 1/s;
-        m00 *= inv; m10 *= inv; m20 *= inv;
-        m01 *= inv; m11 *= inv; m21 *= inv;
-        m02 *= inv; m12 *= inv; m22 *= inv
-    }
+    private[math] def this() = this(
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    )
 
-    def +=(m: AnyMat3d) {
-        m00 += m.m00; m10 += m.m10; m20 += m.m20;
-        m01 += m.m01; m11 += m.m11; m21 += m.m21;
-        m02 += m.m02; m12 += m.m12; m22 += m.m22
-    }
-    def -=(m: AnyMat3d) {
-        m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
-        m01 -= m.m01; m11 -= m.m11; m21 -= m.m21;
-        m02 -= m.m02; m12 -= m.m12; m22 -= m.m22
-    }
+    def *=(s: Double) { mul(s, this) }
+    def /=(s: Double) { div(s, this) }
 
-    def *=(m: AnyMat3d) {
-        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
-        val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+    def +=(m: AnyMat3d) { add(m, this) }
+    def -=(m: AnyMat3d) { sub(m, this) }
 
-        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-        val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-        val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
-
-        m00 = a00; m10 = a10; m20 = a20
-        m01 = a01; m11 = a11; m21 = a21
-        m02 = a02; m12 = a12; m22 = a22
-    }
+    def *=(m: AnyMat3d) { mul(m, this) }
 
     def :=(m: AnyMat3d) {
         m00 = m.m00; m10 = m.m10; m20 = m.m20;
@@ -394,7 +476,7 @@ object Mat3d {
         val array = new Array[Float](rows*columns)
         m.toArray(array, 0)
 
-        val n = apply(1)
+        val n = new Mat3d
         val endr = if (rows < 3) rows else 3
         val endc = if (columns < 3) columns else 3
 

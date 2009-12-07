@@ -59,16 +59,16 @@ sealed abstract class AnyVec4d extends Read4Double {
     def unary_-() = Vec4d(-x, -y, -z, -w)
     def *(s: Double) = Vec4d(x*s, y*s, z*s, w*s)
     def /(s: Double) = { val inv = 1/s; Vec4d(x*inv, y*inv, z*inv, w*inv) }
-    private[math] def divideByComponent(s: Double) = Vec4d(s/x, s/y, s/z, s/w)
+    private[math] def divByComponent(s: Double) = Vec4d(s/x, s/y, s/z, s/w)
 
     def +(u: AnyVec4d) = Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
     def -(u: AnyVec4d) = Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
     def *(u: AnyVec4d) = Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
     def /(u: AnyVec4d) = Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
 
-    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(this)
-    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(this)
-    def *(m: AnyMat4d) :Vec4d = m.transposeMul(this)
+    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(x, y, z, w, new Vec2d)
+    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(x, y, z, w, new Vec3d)
+    def *(m: AnyMat4d) :Vec4d = m.transposeMul(x, y, z, w, new Vec4d)
 
     def ==(u: AnyVec4d) :Boolean = {
         if (u eq null) false
@@ -102,6 +102,8 @@ final class Vec4d private[math] (
     var x: Double, var y: Double, var z: Double, var w: Double
 ) extends AnyVec4d
 {
+    private[math] def this() = this(0, 0, 0, 0)
+
     override def r = x
     override def g = y
     override def b = z
@@ -131,7 +133,7 @@ final class Vec4d private[math] (
     def *=(u: AnyVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
     def /=(u: AnyVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
 
-    def *=(m: AnyMat4d) { this := m.transposeMul(this) }
+    def *=(m: AnyMat4d) { m.transposeMul(x, y, z, w, this) }
 
     def :=(u: AnyVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Double, y: Double, z: Double, w: Double) {

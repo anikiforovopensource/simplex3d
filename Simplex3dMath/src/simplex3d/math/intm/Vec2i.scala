@@ -54,7 +54,7 @@ sealed abstract class AnyVec2i extends Read2Int {
 
     def *(s: Int) = Vec2i(x*s, y*s)
     def /(s: Int) = Vec2i(x/s, y/s)
-    private[math] def divideByComponent(s: Int) = Vec2i(s/x, s/y)
+    private[math] def divByComponent(s: Int) = Vec2i(s/x, s/y)
     def %(s: Int) = Vec2i(x % s, y % s)
     def >>(s: Int) = Vec2i( x >> s, y >> s)
     def >>>(s: Int) = Vec2i( x >>> s, y >>> s)
@@ -91,6 +91,7 @@ final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
 
 
 final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
+    private[math] def this() = this(0, 0)
 
     override def r = x
     override def g = y

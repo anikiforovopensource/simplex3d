@@ -51,16 +51,16 @@ sealed abstract class AnyVec2d extends Read2Double {
     def unary_-() = Vec2d(-x, -y)
     def *(s: Double) = Vec2d(x*s, y*s)
     def /(s: Double) = { val inv = 1/s; Vec2d(x*inv, y*inv) }
-    private[math] def divideByComponent(s: Double) = Vec2d(s/x, s/y)
+    private[math] def divByComponent(s: Double) = Vec2d(s/x, s/y)
 
     def +(u: AnyVec2d) = Vec2d(x + u.x, y + u.y)
     def -(u: AnyVec2d) = Vec2d(x - u.x, y - u.y)
     def *(u: AnyVec2d) = Vec2d(x * u.x, y * u.y)
     def /(u: AnyVec2d) = Vec2d(x / u.x, y / u.y)
 
-    def *(m: AnyMat2d) :Vec2d = m.transposeMul(this)
-    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(this)
-    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(this)
+    def *(m: AnyMat2d) :Vec2d = m.transposeMul(x, y, new Vec2d)
+    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(x, y, new Vec3d)
+    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(x, y, new Vec4d)
 
     def ==(u: AnyVec2d) :Boolean = {
         if (u eq null) false
@@ -89,6 +89,7 @@ extends AnyVec2d
 final class Vec2d private[math] (var x: Double, var y: Double)
 extends AnyVec2d
 {
+    private[math] def this() = this(0, 0)
 
     override def r = x
     override def g = y
@@ -111,7 +112,7 @@ extends AnyVec2d
     def *=(u: AnyVec2d) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2d) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2d) { this := m.transposeMul(this) }
+    def *=(m: AnyMat2d) { m.transposeMul(x, y, this) }
 
     def :=(u: AnyVec2d) { x = u.x; y = u.y }
     def set(x: Double, y: Double) { this.x = x; this.y = y }

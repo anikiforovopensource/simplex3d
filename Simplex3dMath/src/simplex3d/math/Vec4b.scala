@@ -77,6 +77,8 @@ final class Vec4b private[math] (
     var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
 extends AnyVec4b
 {
+    private[math] def this() = this(false, false, false, false)
+    
     override def r = x
     override def g = y
     override def b = z

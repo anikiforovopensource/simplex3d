@@ -39,12 +39,12 @@ class AccessorBench {
         var start = 0L
 
         start = System.currentTimeMillis
-        testOriginal(length, loops)
-        val originalTime = System.currentTimeMillis - start
-
+        testModified(length, loops)
+        val modifiedTime = System.currentTimeMillis - start
+        
         start = System.currentTimeMillis
         testOriginal(length, loops)
-        val modifiedTime = System.currentTimeMillis - start
+        val originalTime = System.currentTimeMillis - start
 
         println("Original time: " + originalTime +
                 ", modified time: " + modifiedTime + ".")

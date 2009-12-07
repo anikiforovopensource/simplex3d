@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
 import Read._
 
@@ -29,11 +30,23 @@ import Read._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat3x2f
-extends ConstRotationSubMat2f
+extends ConstRotationSubMat2f with ReadFloatMat
 {
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float // column
     def m01: Float; def m11: Float; def m21: Float // column
+
+    def rows = 3
+    def columns = 2
+    def toArray(array: Array[Float], offset: Int) {
+        array(offset + 0) = m00
+        array(offset + 1) = m10
+        array(offset + 2) = m20
+
+        array(offset + 3) = m01
+        array(offset + 4) = m11
+        array(offset + 5) = m21
+    }
 
     def apply(c: Int) :ConstVec3f = {
         c match {
@@ -293,6 +306,12 @@ object Mat3x2f {
             m01, m11, m21
       )
 
+    def apply(c0: AnyVec3f, c1: AnyVec3f) = 
+    new Mat3x2f(
+        c0.x, c0.y, c0.z,
+        c1.x, c1.y, c1.z
+    )
+
     def apply(args: ReadAny[AnyVal]*) :Mat3x2f = {
         val mat = new Array[Float](6)
         mat(0) = 1
@@ -322,6 +341,27 @@ object Mat3x2f {
             mat(0), mat(1), mat(2),
             mat(3), mat(4), mat(5)
         )
+    }
+
+    def apply(m: ReadDoubleMat) :Mat3x2f = {
+        val rows = m.rows
+        val columns = m.columns
+        val array = new Array[Double](rows*columns)
+        m.toArray(array, 0)
+
+        val n = apply(1)
+        val endr = if (rows < 3) rows else 3
+        val endc = if (columns < 2) columns else 2
+
+        var c = 0; while (c < endc) {
+            val offset = c*rows
+            var r = 0; while (r < endr) {
+                n(c, r) = float(array(offset + r))
+                r += 1
+            }
+            c += 1
+        }
+        n
     }
 
     def apply(m: AnyMat2f) = new Mat3x2f(

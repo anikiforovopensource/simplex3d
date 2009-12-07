@@ -117,3 +117,15 @@ private[math] trait Read4Double extends Read4[Double] {
 private[math] class IntVal(val value: Int) extends Read1Int
 private[math] class FloatVal(val value: Float) extends Read1Float
 private[math] class DoubleVal(val value: Double) extends Read1Double
+
+private[math] trait ReadFloatMat {
+    def rows: Int
+    def columns: Int
+    def toArray(array: Array[Float], offset: Int) :Unit
+}
+
+private[math] trait ReadDoubleMat {
+    def rows: Int
+    def columns: Int
+    def toArray(array: Array[Double], offset: Int) :Unit
+}

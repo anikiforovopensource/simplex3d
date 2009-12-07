@@ -94,8 +94,8 @@ extends AnyVec2b
 }
 
 object Vec2b {
-    val True = const(Vec2b(true))
-    val False = const(Vec2b(false))
+    val True = constb(Vec2b(true))
+    val False = constb(Vec2b(false))
 
     def apply(s: Boolean) = new Vec2b(s, s)
     def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)

@@ -21,7 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
 
 

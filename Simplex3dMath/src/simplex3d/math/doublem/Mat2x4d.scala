@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 import Read._
 
@@ -29,12 +30,29 @@ import Read._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2x4d
+extends ReadDoubleMat
 {
     // Column major order.
     def m00: Double; def m10: Double // column
     def m01: Double; def m11: Double // column
     def m02: Double; def m12: Double // column
     def m03: Double; def m13: Double // column
+
+    def rows = 2
+    def columns = 4
+    def toArray(array: Array[Double], offset: Int) {
+        array(offset + 0) = m00
+        array(offset + 1) = m10
+
+        array(offset + 2) = m01
+        array(offset + 3) = m11
+
+        array(offset + 4) = m02
+        array(offset + 5) = m12
+
+        array(offset + 6) = m03
+        array(offset + 7) = m13
+    }
 
     def apply(c: Int) :ConstVec2d = {
         c match {
@@ -362,6 +380,14 @@ object Mat2x4d {
             m03, m13
       )
 
+    def apply(c0: AnyVec2d, c1: AnyVec2d, c2: AnyVec2d, c3: AnyVec2d) = 
+    new Mat2x4d(
+        c0.x, c0.y,
+        c1.x, c1.y,
+        c2.x, c2.y,
+        c3.x, c3.y
+    )
+
     def apply(args: ReadAny[AnyVal]*) :Mat2x4d = {
         val mat = new Array[Double](8)
         mat(0) = 1
@@ -393,6 +419,27 @@ object Mat2x4d {
             mat(4), mat(5),
             mat(6), mat(7)
         )
+    }
+
+    def apply(m: ReadFloatMat) :Mat2x4d = {
+        val rows = m.rows
+        val columns = m.columns
+        val array = new Array[Float](rows*columns)
+        m.toArray(array, 0)
+
+        val n = apply(1)
+        val endr = if (rows < 2) rows else 2
+        val endc = if (columns < 4) columns else 4
+
+        var c = 0; while (c < endc) {
+            val offset = c*rows
+            var r = 0; while (r < endr) {
+                n(c, r) = array(offset + r)
+                r += 1
+            }
+            c += 1
+        }
+        n
     }
 
     def apply(m: AnyMat2d) = new Mat2x4d(

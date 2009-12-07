@@ -107,8 +107,8 @@ extends AnyVec3b
 }
 
 object Vec3b {
-    val True = const(Vec3b(true))
-    val False = const(Vec3b(false))
+    val True = constb(Vec3b(true))
+    val False = constb(Vec3b(false))
 
     def apply(s: Boolean) = new Vec3b(s, s, s)
     def apply(x: Boolean, y: Boolean, z: Boolean) = new Vec3b(x, y, z)

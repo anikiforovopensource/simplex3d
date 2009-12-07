@@ -116,8 +116,8 @@ extends AnyVec4b
 }
 
 object Vec4b {
-    val True = const(Vec4b(true))
-    val False = const(Vec4b(false))
+    val True = constb(Vec4b(true))
+    val False = constb(Vec4b(false))
 
     def apply(s: Boolean) =
         new Vec4b(s, s, s, s)

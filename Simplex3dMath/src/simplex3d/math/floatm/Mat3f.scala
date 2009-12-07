@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
 import Read._
 
@@ -29,12 +30,28 @@ import Read._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat3f
-extends ConstRotationSubMat3f with ConstRotationSubMat2f
+extends ConstRotationSubMat3f with ConstRotationSubMat2f with ReadFloatMat
 {
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float // column
     def m01: Float; def m11: Float; def m21: Float // column
     def m02: Float; def m12: Float; def m22: Float // column
+
+    def rows = 3
+    def columns = 3
+    def toArray(array: Array[Float], offset: Int) {
+        array(offset + 0) = m00
+        array(offset + 1) = m10
+        array(offset + 2) = m20
+
+        array(offset + 3) = m01
+        array(offset + 4) = m11
+        array(offset + 5) = m21
+
+        array(offset + 6) = m02
+        array(offset + 7) = m12
+        array(offset + 8) = m22
+    }
 
     def apply(c: Int) :ConstVec3f = {
         c match {
@@ -331,6 +348,13 @@ object Mat3f {
             m02, m12, m22
       )
 
+    def apply(c0: AnyVec3f, c1: AnyVec3f, c2: AnyVec3f) = 
+    new Mat3f(
+        c0.x, c0.y, c0.z,
+        c1.x, c1.y, c1.z,
+        c2.x, c2.y, c2.z
+    )
+
     def apply(args: ReadAny[AnyVal]*) :Mat3f = {
         val mat = new Array[Float](9)
         mat(0) = 1
@@ -362,6 +386,27 @@ object Mat3f {
             mat(3), mat(4), mat(5),
             mat(6), mat(7), mat(8)
         )
+    }
+
+    def apply(m: ReadDoubleMat) :Mat3f = {
+        val rows = m.rows
+        val columns = m.columns
+        val array = new Array[Double](rows*columns)
+        m.toArray(array, 0)
+
+        val n = apply(1)
+        val endr = if (rows < 3) rows else 3
+        val endc = if (columns < 3) columns else 3
+
+        var c = 0; while (c < endc) {
+            val offset = c*rows
+            var r = 0; while (r < endr) {
+                n(c, r) = float(array(offset + r))
+                r += 1
+            }
+            c += 1
+        }
+        n
     }
 
     def apply(m: AnyMat2f) = new Mat3f(

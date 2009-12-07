@@ -33,10 +33,10 @@ package object math {
     implicit def floatToRead1(x: Float) = new FloatVal(x)
     implicit def doubleToRead1(x: Double) = new DoubleVal(x)
 
-    implicit def mutable2bToConst(u: Vec2b) = const(u)
+    implicit def mutable2bToConst(u: Vec2b) = constb(u)
     implicit def constVec2bToSwizzled(u: ConstVec2b) = new ConstVec2bSwizzled(u)
-    implicit def mutable3bToConst(u: Vec3b) = const(u)
+    implicit def mutable3bToConst(u: Vec3b) = constb(u)
     implicit def constVec3bToSwizzled(u: ConstVec3b) = new ConstVec3bSwizzled(u)
-    implicit def mutable4bToConst(u: Vec4b) = const(u)
+    implicit def mutable4bToConst(u: Vec4b) = constb(u)
     implicit def constVec4bToSwizzled(u: ConstVec4b) = new ConstVec4bSwizzled(u)
 }

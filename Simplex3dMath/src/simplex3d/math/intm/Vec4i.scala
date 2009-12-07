@@ -21,7 +21,7 @@
 package simplex3d.math.intm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath.{const => _, _}
+import simplex3d.math.BaseMath._
 import simplex3d.math.intm.IntMath._
 
 
@@ -166,11 +166,11 @@ extends AnyVec4i
 }
 
 object Vec4i {
-    val Origin = const(Vec4i(0))
-    val UnitX = const(Vec4i(1, 0, 0, 0))
-    val UnitY = const(Vec4i(0, 1, 0, 0))
-    val UnitZ = const(Vec4i(0, 0, 1, 0))
-    val UnitW = const(Vec4i(0, 0, 0, 1))
+    val Origin = consti(Vec4i(0))
+    val UnitX = consti(Vec4i(1, 0, 0, 0))
+    val UnitY = consti(Vec4i(0, 1, 0, 0))
+    val UnitZ = consti(Vec4i(0, 0, 1, 0))
+    val UnitW = consti(Vec4i(0, 0, 0, 1))
 
     def apply(s: Int) =
         new Vec4i(s, s, s, s)

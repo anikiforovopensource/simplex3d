@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
 import Read._
 
@@ -29,12 +30,31 @@ import Read._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat4x3f
-extends ConstRotationSubMat3f
+extends ConstRotationSubMat3f with ReadFloatMat
 {
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float; def m30: Float // column
     def m01: Float; def m11: Float; def m21: Float; def m31: Float // column
     def m02: Float; def m12: Float; def m22: Float; def m32: Float // column
+
+    def rows = 4
+    def columns = 3
+    def toArray(array: Array[Float], offset: Int) {
+        array(offset + 0) = m00
+        array(offset + 1) = m10
+        array(offset + 2) = m20
+        array(offset + 3) = m30
+
+        array(offset + 4) = m01
+        array(offset + 5) = m11
+        array(offset + 6) = m21
+        array(offset + 7) = m31
+
+        array(offset + 8) = m02
+        array(offset + 9) = m12
+        array(offset + 10) = m22
+        array(offset + 11) = m32
+    }
 
     def apply(c: Int) :ConstVec4f = {
         c match {
@@ -363,6 +383,13 @@ object Mat4x3f {
             m02, m12, m22, m32
       )
 
+    def apply(c0: AnyVec4f, c1: AnyVec4f, c2: AnyVec4f) = 
+    new Mat4x3f(
+        c0.x, c0.y, c0.z, c0.w,
+        c1.x, c1.y, c1.z, c1.w,
+        c2.x, c2.y, c2.z, c2.w
+    )
+
     def apply(args: ReadAny[AnyVal]*) :Mat4x3f = {
         val mat = new Array[Float](12)
         mat(0) = 1
@@ -394,6 +421,27 @@ object Mat4x3f {
             mat(4), mat(5), mat(6), mat(7),
             mat(8), mat(9), mat(10), mat(11)
         )
+    }
+
+    def apply(m: ReadDoubleMat) :Mat4x3f = {
+        val rows = m.rows
+        val columns = m.columns
+        val array = new Array[Double](rows*columns)
+        m.toArray(array, 0)
+
+        val n = apply(1)
+        val endr = if (rows < 4) rows else 4
+        val endc = if (columns < 3) columns else 3
+
+        var c = 0; while (c < endc) {
+            val offset = c*rows
+            var r = 0; while (r < endr) {
+                n(c, r) = float(array(offset + r))
+                r += 1
+            }
+            c += 1
+        }
+        n
     }
 
     def apply(m: AnyMat2f) = new Mat4x3f(

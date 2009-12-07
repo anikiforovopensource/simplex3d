@@ -155,7 +155,7 @@ class Vec2iiSwizzleTest extends FunSuite {
         u := i; u.s = t; assert(Vec2i(t, y) == u)
         u := i; u.t = t; assert(Vec2i(x, t) == u)
 
-        i = const(Vec2i(t))
+        i = Vec2i(t)
 
         u := i; u.xy = Vec2i(x, y); assert(Vec2i(x, y) == u)
         u := i; u.yx = Vec2i(x, y); assert(Vec2i(y, x) == u)

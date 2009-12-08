@@ -349,19 +349,23 @@ extends ConstRotationSubMat3f with ReadFloatMat
         result
     }
 
-    private[math] def mul(x: Float, y: Float, z: Float, w: Float, result: Vec4f) = {
-        result.x = m00*x + m01*y + m02*z + m03*w
-        result.y = m10*x + m11*y + m12*z + m13*w
-        result.z = m20*x + m21*y + m22*z + m23*w
-        result.w = m30*x + m31*y + m32*z + m33*w
+    private[math] def mul(u: AnyVec4f, result: Vec4f) = {
+        val x = m00*u.x + m01*u.y + m02*u.z + m03*u.w
+        val y = m10*u.x + m11*u.y + m12*u.z + m13*u.w
+        val z = m20*u.x + m21*u.y + m22*u.z + m23*u.w
+        val w = m30*u.x + m31*u.y + m32*u.z + m33*u.w
+
+        result.x = x; result.y = y; result.z = z; result.w = w
 
         result
     }
-    private[math] def transposeMul(x: Float, y: Float, z: Float, w: Float, result: Vec4f) = {
-        result.x = m00*x + m10*y + m20*z + m30*w
-        result.y = m01*x + m11*y + m21*z + m31*w
-        result.z = m02*x + m12*y + m22*z + m32*w
-        result.w = m03*x + m13*y + m23*z + m33*w
+    private[math] def transposeMul(u: AnyVec4f, result: Vec4f) = {
+        val x = m00*u.x + m10*u.y + m20*u.z + m30*u.w
+        val y = m01*u.x + m11*u.y + m21*u.z + m31*u.w
+        val z = m02*u.x + m12*u.y + m22*u.z + m32*u.w
+        val w = m03*u.x + m13*u.y + m23*u.z + m33*u.w
+
+        result.x = x; result.y = y; result.z = z; result.w = w
 
         result
     }
@@ -381,7 +385,7 @@ extends ConstRotationSubMat3f with ReadFloatMat
     def *(m: AnyMat4x3f) = mul(m, new Mat4x3f)
     def *(m: AnyMat4f) = mul(m, new Mat4f)
 
-    def *(u: AnyVec4f) = mul(u.x, u.y, u.z, u.w, new Vec4f)
+    def *(u: AnyVec4f) = mul(u, new Vec4f)
 
     def ==(m: AnyMat4f) :Boolean = {
         if (m eq null) false

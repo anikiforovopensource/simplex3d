@@ -195,15 +195,19 @@ extends ConstRotationSubMat2f with ReadFloatMat
         result
     }
 
-    private[math] def mul(x: Float, y: Float, result: Vec2f) = {
-        result.x = m00*x + m01*y
-        result.y = m10*x + m11*y
+    private[math] def mul(u: AnyVec2f, result: Vec2f) = {
+        val x = m00*u.x + m01*u.y
+        val y = m10*u.x + m11*u.y
+
+        result.x = x; result.y = y
 
         result
     }
-    private[math] def transposeMul(x: Float, y: Float, result: Vec2f) = {
-        result.x = m00*x + m10*y
-        result.y = m01*x + m11*y
+    private[math] def transposeMul(u: AnyVec2f, result: Vec2f) = {
+        val x = m00*u.x + m10*u.y
+        val y = m01*u.x + m11*u.y
+
+        result.x = x; result.y = y
 
         result
     }
@@ -223,7 +227,7 @@ extends ConstRotationSubMat2f with ReadFloatMat
     def *(m: AnyMat2x3f) = mul(m, new Mat2x3f)
     def *(m: AnyMat2x4f) = mul(m, new Mat2x4f)
 
-    def *(u: AnyVec2f) = mul(u.x, u.y, new Vec2f)
+    def *(u: AnyVec2f) = mul(u, new Vec2f)
 
     def ==(m: AnyMat2f) :Boolean = {
         if (m eq null) false

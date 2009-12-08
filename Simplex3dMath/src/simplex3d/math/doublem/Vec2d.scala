@@ -58,9 +58,9 @@ sealed abstract class AnyVec2d extends Read2Double {
     def *(u: AnyVec2d) = Vec2d(x * u.x, y * u.y)
     def /(u: AnyVec2d) = Vec2d(x / u.x, y / u.y)
 
-    def *(m: AnyMat2d) :Vec2d = m.transposeMul(x, y, new Vec2d)
-    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(x, y, new Vec3d)
-    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(x, y, new Vec4d)
+    def *(m: AnyMat2d) :Vec2d = m.transposeMul(this, new Vec2d)
+    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(this, new Vec3d)
+    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(this, new Vec4d)
 
     def ==(u: AnyVec2d) :Boolean = {
         if (u eq null) false
@@ -112,7 +112,7 @@ extends AnyVec2d
     def *=(u: AnyVec2d) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2d) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2d) { m.transposeMul(x, y, this) }
+    def *=(m: AnyMat2d) { m.transposeMul(this, this) }
 
     def :=(u: AnyVec2d) { x = u.x; y = u.y }
     def set(x: Double, y: Double) { this.x = x; this.y = y }

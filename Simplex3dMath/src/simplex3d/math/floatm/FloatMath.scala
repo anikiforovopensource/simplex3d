@@ -83,9 +83,11 @@ object FloatMath {
     )
 
     // Random
-    def nextVec2() :Vec2f = Vec2f(nextFloat, nextFloat)
-    def nextVec3() :Vec3f = Vec3f(nextFloat, nextFloat, nextFloat)
-    def nextVec4() :Vec4f = Vec4f(nextFloat, nextFloat, nextFloat, nextFloat)
+    def nextVec2() :Vec2f = new Vec2f(nextFloat, nextFloat)
+    def nextVec3() :Vec3f = new Vec3f(nextFloat, nextFloat, nextFloat)
+    def nextVec4() :Vec4f = {
+        new Vec4f(nextFloat, nextFloat, nextFloat, nextFloat)
+    }
 
     def nextVec2f() :Vec2f = nextVec2
     def nextVec3f() :Vec3f = nextVec3

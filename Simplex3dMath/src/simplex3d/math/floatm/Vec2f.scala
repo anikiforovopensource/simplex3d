@@ -59,9 +59,9 @@ sealed abstract class AnyVec2f extends Read2Float {
     def *(u: AnyVec2f) = Vec2f(x * u.x, y * u.y)
     def /(u: AnyVec2f) = Vec2f(x / u.x, y / u.y)
 
-    def *(m: AnyMat2f) :Vec2f = m.transposeMul(x, y, new Vec2f)
-    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(x, y, new Vec3f)
-    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(x, y, new Vec4f)
+    def *(m: AnyMat2f) :Vec2f = m.transposeMul(this, new Vec2f)
+    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(this, new Vec3f)
+    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(this, new Vec4f)
 
     def ==(u: AnyVec2f) :Boolean = {
         if (u eq null) false
@@ -111,7 +111,7 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
     def *=(u: AnyVec2f) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2f) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2f) { m.transposeMul(x, y, this) }
+    def *=(m: AnyMat2f) { m.transposeMul(this, this) }
 
     def :=(u: AnyVec2f) { x = u.x; y = u.y }
     def set(x: Float, y: Float) { this.x = x; this.y = y }

@@ -83,10 +83,10 @@ object DoubleMath {
     )
 
     // Random
-    def nextVec2() :Vec2d = Vec2d(nextDouble, nextDouble)
-    def nextVec3() :Vec3d = Vec3d(nextDouble, nextDouble, nextDouble)
+    def nextVec2() :Vec2d = new Vec2d(nextDouble, nextDouble)
+    def nextVec3() :Vec3d = new Vec3d(nextDouble, nextDouble, nextDouble)
     def nextVec4() :Vec4d = {
-        Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
+        new Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
     }
 
     def nextVec2d() :Vec2d = nextVec2
@@ -102,8 +102,6 @@ object DoubleMath {
     private val RadToDeg: Double = 180 / Pi
     private val InvLog2: Double = 1/SMath.log(2)
 
-    // Have to be careful with large offsets due to the loss in precision.
-    // With noise args as double these values should be ok
     private val of1: Double = 10000.0
     private val of2: Double = 20000.0
     private val of3: Double = 30000.0

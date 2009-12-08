@@ -263,17 +263,21 @@ extends ConstRotationSubMat3f with ConstRotationSubMat2f with ReadFloatMat
         result
     }
 
-    private[math] def mul(x: Float, y: Float, z: Float, result: Vec3f) = {
-        result.x = m00*x + m01*y + m02*z
-        result.y = m10*x + m11*y + m12*z
-        result.z = m20*x + m21*y + m22*z
+    private[math] def mul(u: AnyVec3f, result: Vec3f) = {
+        val x = m00*u.x + m01*u.y + m02*u.z
+        val y = m10*u.x + m11*u.y + m12*u.z
+        val z = m20*u.x + m21*u.y + m22*u.z
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
-    private[math] def transposeMul(x: Float, y: Float, z: Float, result: Vec3f) = {
-        result.x = m00*x + m10*y + m20*z
-        result.y = m01*x + m11*y + m21*z
-        result.z = m02*x + m12*y + m22*z
+    private[math] def transposeMul(u: AnyVec3f, result: Vec3f) = {
+        val x = m00*u.x + m10*u.y + m20*u.z
+        val y = m01*u.x + m11*u.y + m21*u.z
+        val z = m02*u.x + m12*u.y + m22*u.z
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
@@ -293,7 +297,7 @@ extends ConstRotationSubMat3f with ConstRotationSubMat2f with ReadFloatMat
     def *(m: AnyMat3f) = mul(m, new Mat3f)
     def *(m: AnyMat3x4f) = mul(m, new Mat3x4f)
 
-    def *(u: AnyVec3f) = mul(u.x, u.y, u.z, new Vec3f)
+    def *(u: AnyVec3f) = mul(u, new Vec3f)
 
     def ==(m: AnyMat3f) :Boolean = {
         if (m eq null) false

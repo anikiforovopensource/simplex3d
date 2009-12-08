@@ -263,17 +263,21 @@ extends ConstRotationSubMat3d with ConstRotationSubMat2d with ReadDoubleMat
         result
     }
 
-    private[math] def mul(x: Double, y: Double, z: Double, result: Vec3d) = {
-        result.x = m00*x + m01*y + m02*z
-        result.y = m10*x + m11*y + m12*z
-        result.z = m20*x + m21*y + m22*z
+    private[math] def mul(u: AnyVec3d, result: Vec3d) = {
+        val x = m00*u.x + m01*u.y + m02*u.z
+        val y = m10*u.x + m11*u.y + m12*u.z
+        val z = m20*u.x + m21*u.y + m22*u.z
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
-    private[math] def transposeMul(x: Double, y: Double, z: Double, result: Vec3d) = {
-        result.x = m00*x + m10*y + m20*z
-        result.y = m01*x + m11*y + m21*z
-        result.z = m02*x + m12*y + m22*z
+    private[math] def transposeMul(u: AnyVec3d, result: Vec3d) = {
+        val x = m00*u.x + m10*u.y + m20*u.z
+        val y = m01*u.x + m11*u.y + m21*u.z
+        val z = m02*u.x + m12*u.y + m22*u.z
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
@@ -293,7 +297,7 @@ extends ConstRotationSubMat3d with ConstRotationSubMat2d with ReadDoubleMat
     def *(m: AnyMat3d) = mul(m, new Mat3d)
     def *(m: AnyMat3x4d) = mul(m, new Mat3x4d)
 
-    def *(u: AnyVec3d) = mul(u.x, u.y, u.z, new Vec3d)
+    def *(u: AnyVec3d) = mul(u, new Vec3d)
 
     def ==(m: AnyMat3d) :Boolean = {
         if (m eq null) false

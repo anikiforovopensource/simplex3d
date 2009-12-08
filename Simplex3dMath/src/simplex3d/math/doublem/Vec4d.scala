@@ -66,9 +66,9 @@ sealed abstract class AnyVec4d extends Read4Double {
     def *(u: AnyVec4d) = Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
     def /(u: AnyVec4d) = Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
 
-    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(x, y, z, w, new Vec2d)
-    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(x, y, z, w, new Vec3d)
-    def *(m: AnyMat4d) :Vec4d = m.transposeMul(x, y, z, w, new Vec4d)
+    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(this, new Vec2d)
+    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(this, new Vec3d)
+    def *(m: AnyMat4d) :Vec4d = m.transposeMul(this, new Vec4d)
 
     def ==(u: AnyVec4d) :Boolean = {
         if (u eq null) false
@@ -133,7 +133,7 @@ final class Vec4d private[math] (
     def *=(u: AnyVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
     def /=(u: AnyVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
 
-    def *=(m: AnyMat4d) { m.transposeMul(x, y, z, w, this) }
+    def *=(m: AnyMat4d) { m.transposeMul(this, this) }
 
     def :=(u: AnyVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Double, y: Double, z: Double, w: Double) {

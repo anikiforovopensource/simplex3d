@@ -195,15 +195,19 @@ extends ConstRotationSubMat2d with ReadDoubleMat
         result
     }
 
-    private[math] def mul(x: Double, y: Double, result: Vec2d) = {
-        result.x = m00*x + m01*y
-        result.y = m10*x + m11*y
+    private[math] def mul(u: AnyVec2d, result: Vec2d) = {
+        val x = m00*u.x + m01*u.y
+        val y = m10*u.x + m11*u.y
+
+        result.x = x; result.y = y
 
         result
     }
-    private[math] def transposeMul(x: Double, y: Double, result: Vec2d) = {
-        result.x = m00*x + m10*y
-        result.y = m01*x + m11*y
+    private[math] def transposeMul(u: AnyVec2d, result: Vec2d) = {
+        val x = m00*u.x + m10*u.y
+        val y = m01*u.x + m11*u.y
+
+        result.x = x; result.y = y
 
         result
     }
@@ -223,7 +227,7 @@ extends ConstRotationSubMat2d with ReadDoubleMat
     def *(m: AnyMat2x3d) = mul(m, new Mat2x3d)
     def *(m: AnyMat2x4d) = mul(m, new Mat2x4d)
 
-    def *(u: AnyVec2d) = mul(u.x, u.y, new Vec2d)
+    def *(u: AnyVec2d) = mul(u, new Vec2d)
 
     def ==(m: AnyMat2d) :Boolean = {
         if (m eq null) false

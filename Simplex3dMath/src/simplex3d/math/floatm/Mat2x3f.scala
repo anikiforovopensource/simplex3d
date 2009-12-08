@@ -219,16 +219,16 @@ extends ConstRotationSubMat2f with ReadFloatMat
         result
     }
 
-    private[math] def mul(x: Float, y: Float, z: Float, result: Vec2f) = {
-        result.x = m00*x + m01*y + m02*z
-        result.y = m10*x + m11*y + m12*z
+    private[math] def mul(u: AnyVec3f, result: Vec2f) = {
+        result.x = m00*u.x + m01*u.y + m02*u.z
+        result.y = m10*u.x + m11*u.y + m12*u.z
 
         result
     }
-    private[math] def transposeMul(x: Float, y: Float, result: Vec3f) = {
-        result.x = m00*x + m10*y
-        result.y = m01*x + m11*y
-        result.z = m02*x + m12*y
+    private[math] def transposeMul(u: AnyVec2f, result: Vec3f) = {
+        result.x = m00*u.x + m10*u.y
+        result.y = m01*u.x + m11*u.y
+        result.z = m02*u.x + m12*u.y
 
         result
     }
@@ -239,21 +239,26 @@ extends ConstRotationSubMat2f with ReadFloatMat
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    private[math] def transformPoint(x: Float, y: Float, result: Vec2f) = {
-        result.x = m00*x + m01*y + m02
-        result.y = m10*x + m11*y + m12
+    private[math] def transformPoint(u: AnyVec2f, result: Vec2f) = {
+        val x = m00*u.x + m01*u.y + m02
+        val y = m10*u.x + m11*u.y + m12
+
+        result.x = x; result.y = y
 
         result
     }
+
     /**
      * This method will apply the matrix transformation to a vector
      * (such as object speed).<br/>
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    private[math] def transformVector(x: Float, y: Float, result: Vec2f) = {
-        result.x = m00*x + m01*y
-        result.y = m10*x + m11*y
+    private[math] def transformVector(u: AnyVec2f, result: Vec2f) = {
+        val x = m00*u.x + m01*u.y
+        val y = m10*u.x + m11*u.y
+
+        result.x = x; result.y = y
 
         result
     }
@@ -317,7 +322,7 @@ extends ConstRotationSubMat2f with ReadFloatMat
     def *(m: AnyMat3f) = mul(m, new Mat2x3f)
     def *(m: AnyMat3x4f) = mul(m, new Mat2x4f)
 
-    def *(u: AnyVec3f) = mul(u.x, u.y, u.z, new Vec2f)
+    def *(u: AnyVec3f) = mul(u, new Vec2f)
 
     /**
      * This method will apply the matrix transformation to a point
@@ -326,7 +331,7 @@ extends ConstRotationSubMat2f with ReadFloatMat
      * Equivalent to regular multiplication with Vec(u, 1).
      */
     def transformPoint(u: AnyVec2f) :Vec2f =
-        transformPoint(u.x, u.y, new Vec2f)
+        transformPoint(u, new Vec2f)
 
     /**
      * This method will apply the matrix transformation to a vector
@@ -335,7 +340,7 @@ extends ConstRotationSubMat2f with ReadFloatMat
      * Equivalent to regular multiplication with Vec(u, 0).
      */
     def transformVector(u: AnyVec2f) :Vec2f =
-        transformVector(u.x, u.y, new Vec2f)
+        transformVector(u, new Vec2f)
 
     /**
      * Combine two transformations. This method works similar to regular

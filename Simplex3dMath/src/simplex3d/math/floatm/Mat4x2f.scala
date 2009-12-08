@@ -240,17 +240,17 @@ extends ReadFloatMat
         result
     }
 
-    private[math] def mul(x: Float, y: Float, result: Vec4f) = {
-        result.x = m00*x + m01*y
-        result.y = m10*x + m11*y
-        result.z = m20*x + m21*y
-        result.w = m30*x + m31*y
+    private[math] def mul(u: AnyVec2f, result: Vec4f) = {
+        result.x = m00*u.x + m01*u.y
+        result.y = m10*u.x + m11*u.y
+        result.z = m20*u.x + m21*u.y
+        result.w = m30*u.x + m31*u.y
 
         result
     }
-    private[math] def transposeMul(x: Float, y: Float, z: Float, w: Float, result: Vec2f) = {
-        result.x = m00*x + m10*y + m20*z + m30*w
-        result.y = m01*x + m11*y + m21*z + m31*w
+    private[math] def transposeMul(u: AnyVec4f, result: Vec2f) = {
+        result.x = m00*u.x + m10*u.y + m20*u.z + m30*u.w
+        result.y = m01*u.x + m11*u.y + m21*u.z + m31*u.w
 
         result
     }
@@ -270,7 +270,7 @@ extends ReadFloatMat
     def *(m: AnyMat2x3f) = mul(m, new Mat4x3f)
     def *(m: AnyMat2x4f) = mul(m, new Mat4f)
 
-    def *(u: AnyVec2f) = mul(u.x, u.y, new Vec4f)
+    def *(u: AnyVec2f) = mul(u, new Vec4f)
 
     def ==(m: AnyMat4x2f) :Boolean = {
         if (m eq null) false

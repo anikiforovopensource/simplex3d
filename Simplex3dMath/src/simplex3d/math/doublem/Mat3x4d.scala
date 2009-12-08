@@ -297,18 +297,18 @@ extends ConstRotationSubMat3d with ReadDoubleMat
         result
     }
 
-    private[math] def mul(x: Double, y: Double, z: Double, w: Double, result: Vec3d) = {
-        result.x = m00*x + m01*y + m02*z + m03*w
-        result.y = m10*x + m11*y + m12*z + m13*w
-        result.z = m20*x + m21*y + m22*z + m23*w
+    private[math] def mul(u: AnyVec4d, result: Vec3d) = {
+        result.x = m00*u.x + m01*u.y + m02*u.z + m03*u.w
+        result.y = m10*u.x + m11*u.y + m12*u.z + m13*u.w
+        result.z = m20*u.x + m21*u.y + m22*u.z + m23*u.w
 
         result
     }
-    private[math] def transposeMul(x: Double, y: Double, z: Double, result: Vec4d) = {
-        result.x = m00*x + m10*y + m20*z
-        result.y = m01*x + m11*y + m21*z
-        result.z = m02*x + m12*y + m22*z
-        result.w = m03*x + m13*y + m23*z
+    private[math] def transposeMul(u: AnyVec3d, result: Vec4d) = {
+        result.x = m00*u.x + m10*u.y + m20*u.z
+        result.y = m01*u.x + m11*u.y + m21*u.z
+        result.z = m02*u.x + m12*u.y + m22*u.z
+        result.w = m03*u.x + m13*u.y + m23*u.z
 
         result
     }
@@ -319,23 +319,28 @@ extends ConstRotationSubMat3d with ReadDoubleMat
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    private[math] def transformPoint(x: Double, y: Double, z: Double, result: Vec3d) = {
-        result.x = m00*x + m01*y + m02*z + m03
-        result.y = m10*x + m11*y + m12*z + m13
-        result.z = m20*x + m21*y + m22*z + m23
+    private[math] def transformPoint(u: AnyVec3d, result: Vec3d) = {
+        val x = m00*u.x + m01*u.y + m02*u.z + m03
+        val y = m10*u.x + m11*u.y + m12*u.z + m13
+        val z = m20*u.x + m21*u.y + m22*u.z + m23
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
+
     /**
      * This method will apply the matrix transformation to a vector
      * (such as object speed).<br/>
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    private[math] def transformVector(x: Double, y: Double, z: Double, result: Vec3d) = {
-        result.x = m00*x + m01*y + m02*z
-        result.y = m10*x + m11*y + m12*z
-        result.z = m20*x + m21*y + m22*z
+    private[math] def transformVector(u: AnyVec3d, result: Vec3d) = {
+        val x = m00*u.x + m01*u.y + m02*u.z
+        val y = m10*u.x + m11*u.y + m12*u.z
+        val z = m20*u.x + m21*u.y + m22*u.z
+
+        result.x = x; result.y = y; result.z = z
 
         result
     }
@@ -414,7 +419,7 @@ extends ConstRotationSubMat3d with ReadDoubleMat
     def *(m: AnyMat4x3d) = mul(m, new Mat3d)
     def *(m: AnyMat4d) = mul(m, new Mat3x4d)
 
-    def *(u: AnyVec4d) = mul(u.x, u.y, u.z, u.w, new Vec3d)
+    def *(u: AnyVec4d) = mul(u, new Vec3d)
 
     /**
      * This method will apply the matrix transformation to a point
@@ -423,7 +428,7 @@ extends ConstRotationSubMat3d with ReadDoubleMat
      * Equivalent to regular multiplication with Vec(u, 1).
      */
     def transformPoint(u: AnyVec3d) :Vec3d =
-        transformPoint(u.x, u.y, u.z, new Vec3d)
+        transformPoint(u, new Vec3d)
 
     /**
      * This method will apply the matrix transformation to a vector
@@ -432,7 +437,7 @@ extends ConstRotationSubMat3d with ReadDoubleMat
      * Equivalent to regular multiplication with Vec(u, 0).
      */
     def transformVector(u: AnyVec3d) :Vec3d =
-        transformVector(u.x, u.y, u.z, new Vec3d)
+        transformVector(u, new Vec3d)
 
     /**
      * Combine two transformations. This method works similar to regular

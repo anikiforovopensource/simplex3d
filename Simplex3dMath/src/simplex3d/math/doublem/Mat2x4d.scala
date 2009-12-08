@@ -252,17 +252,17 @@ extends ReadDoubleMat
         result
     }
 
-    private[math] def mul(x: Double, y: Double, z: Double, w: Double, result: Vec2d) = {
-        result.x = m00*x + m01*y + m02*z + m03*w
-        result.y = m10*x + m11*y + m12*z + m13*w
+    private[math] def mul(u: AnyVec4d, result: Vec2d) = {
+        result.x = m00*u.x + m01*u.y + m02*u.z + m03*u.w
+        result.y = m10*u.x + m11*u.y + m12*u.z + m13*u.w
 
         result
     }
-    private[math] def transposeMul(x: Double, y: Double, result: Vec4d) = {
-        result.x = m00*x + m10*y
-        result.y = m01*x + m11*y
-        result.z = m02*x + m12*y
-        result.w = m03*x + m13*y
+    private[math] def transposeMul(u: AnyVec2d, result: Vec4d) = {
+        result.x = m00*u.x + m10*u.y
+        result.y = m01*u.x + m11*u.y
+        result.z = m02*u.x + m12*u.y
+        result.w = m03*u.x + m13*u.y
 
         result
     }
@@ -282,7 +282,7 @@ extends ReadDoubleMat
     def *(m: AnyMat4x3d) = mul(m, new Mat2x3d)
     def *(m: AnyMat4d) = mul(m, new Mat2x4d)
 
-    def *(u: AnyVec4d) = mul(u.x, u.y, u.z, u.w, new Vec2d)
+    def *(u: AnyVec4d) = mul(u, new Vec2d)
 
     def ==(m: AnyMat2x4d) :Boolean = {
         if (m eq null) false

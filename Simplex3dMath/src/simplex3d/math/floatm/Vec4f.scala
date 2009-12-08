@@ -67,9 +67,9 @@ sealed abstract class AnyVec4f extends Read4Float {
     def *(u: AnyVec4f) = Vec4f(x * u.x, y * u.y, z * u.z, w * u.w)
     def /(u: AnyVec4f) = Vec4f(x / u.x, y / u.y, z / u.z, w / u.w)
 
-    def *(m: AnyMat4x2f) :Vec2f = m.transposeMul(x, y, z, w, new Vec2f)
-    def *(m: AnyMat4x3f) :Vec3f = m.transposeMul(x, y, z, w, new Vec3f)
-    def *(m: AnyMat4f) :Vec4f = m.transposeMul(x, y, z, w, new Vec4f)
+    def *(m: AnyMat4x2f) :Vec2f = m.transposeMul(this, new Vec2f)
+    def *(m: AnyMat4x3f) :Vec3f = m.transposeMul(this, new Vec3f)
+    def *(m: AnyMat4f) :Vec4f = m.transposeMul(this, new Vec4f)
 
     def ==(u: AnyVec4f) :Boolean = {
         if (u eq null) false
@@ -134,7 +134,7 @@ extends AnyVec4f
     def *=(u: AnyVec4f) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
     def /=(u: AnyVec4f) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
 
-    def *=(m: AnyMat4f) { m.transposeMul(x, y, z, w, this) }
+    def *=(m: AnyMat4f) { m.transposeMul(this, this) }
 
     def :=(u: AnyVec4f) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Float, y: Float, z: Float, w: Float) {

@@ -58,8 +58,9 @@ sealed abstract class AnyVec3i extends Read3Int {
 
     def *(s: Int) = Vec3i(x*s, y*s, z*s)
     def /(s: Int) = Vec3i(x/s, y/s, z/s)
-    private[math] def divByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
+    private[math] def divideByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
     def %(s: Int) = Vec3i(x % s, y % s, z % s)
+    private[math] def modByComponent(s: Int) = Vec3i(s%x, s%y, s%z)
     def >>(s: Int) = Vec3i( x >> s, y >> s, z >> s)
     def >>>(s: Int) = Vec3i( x >>> s, y >>> s, z >>> s)
     def <<(s: Int) = Vec3i( x << s, y << s, z << s)
@@ -95,12 +96,18 @@ sealed abstract class AnyVec3i extends Read3Int {
 final class ConstVec3i private[math] (val x: Int, val y: Int, val z: Int)
 extends AnyVec3i
 
+object ConstVec3i {
+    def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
+    def apply(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
+
+    implicit def mutableToConst(u: Vec3i) = new ConstVec3i(u.x, u.y, u.z)
+    implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
+}
+
 
 final class Vec3i private[math] (var x: Int, var y: Int, var z: Int)
 extends AnyVec3i
 {
-    private[math] def this() = this(0, 0, 0)
-
     override def r = x
     override def g = y
     override def b = z
@@ -155,10 +162,10 @@ extends AnyVec3i
 }
 
 object Vec3i {
-    val Origin = consti(Vec3i(0))
-    val UnitX = consti(Vec3i(1, 0, 0))
-    val UnitY = consti(Vec3i(0, 1, 0))
-    val UnitZ = consti(Vec3i(0, 0, 1))
+    val Origin = new ConstVec3i(0, 0, 0)
+    val UnitX = new ConstVec3i(1, 0, 0)
+    val UnitY = new ConstVec3i(0, 1, 0)
+    val UnitZ = new ConstVec3i(0, 0, 1)
 
     def apply(s: Int) = new Vec3i(s, s, s)
     def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
@@ -168,12 +175,8 @@ object Vec3i {
     def apply(x: Int, yz: AnyVec2i) = new Vec3i(x, yz.x, yz.y)
     def apply(u: Read3Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(u: Read4Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: Read2Float, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
-    def apply(x: Int, yz: Read2Float) = new Vec3i(x, int(yz.x), int(yz.y))
     def apply(u: Read3Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(u: Read4Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(xy: Read2Double, z: Int) = new Vec3i(int(xy.x), int(xy.y), z)
-    def apply(x: Int, yz: Read2Double) = new Vec3i(x, int(yz.x), int(yz.y))
 
     implicit def constToMutable(u: ConstVec3i) = Vec3i(u)
     implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)

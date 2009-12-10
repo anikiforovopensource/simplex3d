@@ -31,70 +31,17 @@ import toxi.math.noise.SimplexNoise
  */
 object FloatMath {
 
-    def const(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
-    def const(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
-    def const(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
-    def const(q: AnyQuat4f) = new ConstQuat4f(q.a, q.b, q.c, q.d)
-
-    def const(m: AnyMat2f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-    def const(m: AnyMat2x3f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-    def const(m: AnyMat2x4f) = new ConstMat2x4f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-    def const(m: AnyMat3x2f) = new ConstMat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-    def const(m: AnyMat3f) = new ConstMat3f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22
-    )
-    def const(m: AnyMat3x4f) = new ConstMat3x4f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        m.m03, m.m13, m.m23
-    )
-    def const(m: AnyMat4x2f) = new ConstMat4x2f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31
-    )
-    def const(m: AnyMat4x3f) = new ConstMat4x3f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32
-    )
-    def const(m: AnyMat4f) = new ConstMat4f(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32,
-        m.m03, m.m13, m.m23, m.m33
-    )
-
     // Random
-    def nextVec2() :Vec2f = new Vec2f(nextFloat, nextFloat)
-    def nextVec3() :Vec3f = new Vec3f(nextFloat, nextFloat, nextFloat)
-    def nextVec4() :Vec4f = {
-        new Vec4f(nextFloat, nextFloat, nextFloat, nextFloat)
-    }
+    def nextVec2() :Vec2f = Vec2f(nextFloat, nextFloat)
+    def nextVec3() :Vec3f = Vec3f(nextFloat, nextFloat, nextFloat)
+    def nextVec4() :Vec4f = Vec4f(nextFloat, nextFloat, nextFloat, nextFloat)
 
     def nextVec2f() :Vec2f = nextVec2
     def nextVec3f() :Vec3f = nextVec3
     def nextVec4f() :Vec4f = nextVec4
 
     // Constants
-    val FloatEpsilon: Float = 1.19209E-7f;
+    val FloatEpsilon: Float = 1.19209e-7f;
     val Pi: Float = float(Math.Pi)
     val E: Float = float(Math.E)
 

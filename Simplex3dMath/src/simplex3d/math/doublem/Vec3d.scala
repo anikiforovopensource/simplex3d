@@ -55,16 +55,16 @@ sealed abstract class AnyVec3d extends Read3Double {
     def unary_-() = Vec3d(-x, -y, -z)
     def *(s: Double) = Vec3d(x*s, y*s, z*s)
     def /(s: Double) = { val inv = 1/s; Vec3d(x*inv, y*inv, z*inv) }
-    private[math] def divByComponent(s: Double) = Vec3d(s/x, s/y, s/z)
+    private[math] def divideByComponent(s: Double) = Vec3d(s/x, s/y, s/z)
 
     def +(u: AnyVec3d) = Vec3d(x + u.x, y + u.y, z + u.z)
     def -(u: AnyVec3d) = Vec3d(x - u.x, y - u.y, z - u.z)
     def *(u: AnyVec3d) = Vec3d(x * u.x, y * u.y, z * u.z)
     def /(u: AnyVec3d) = Vec3d(x / u.x, y / u.y, z / u.z)
 
-    def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(this, new Vec2d)
-    def *(m: AnyMat3d) :Vec3d = m.transposeMul(this, new Vec3d)
-    def *(m: AnyMat3x4d) :Vec4d = m.transposeMul(this, new Vec4d)
+    def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(this)
+    def *(m: AnyMat3d) :Vec3d = m.transposeMul(this)
+    def *(m: AnyMat3x4d) :Vec4d = m.transposeMul(this)
 
     def ==(u: AnyVec3d) :Boolean = {
         if (u eq null) false
@@ -92,13 +92,19 @@ final class ConstVec3d private[math] (
     val x: Double, val y: Double, val z: Double
 ) extends AnyVec3d
 
+object ConstVec3d {
+    def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
+    def apply(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
+
+    implicit def mutableToConst(u: Vec3d) = new ConstVec3d(u.x, u.y, u.z)
+    implicit def constVec3dToSwizzled(u: ConstVec3d) = new ConstVec3dSwizzled(u)
+}
+
 
 final class Vec3d private[math] (
     var x: Double, var y: Double, var z: Double
 ) extends AnyVec3d
 {
-    private[math] def this() = this(0, 0, 0)
-
     override def r = x
     override def g = y
     override def b = z
@@ -124,7 +130,7 @@ final class Vec3d private[math] (
     def *=(u: AnyVec3d) { x *= u.x; y *= u.y; z *= u.z }
     def /=(u: AnyVec3d) { x /= u.x; y /= u.y; z /= u.z }
 
-    def *=(m: AnyMat3d) { m.transposeMul(this, this) }
+    def *=(m: AnyMat3d) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec3d) { x = u.x; y = u.y; z = u.z }
     def set(x: Double, y: Double, z: Double) { this.x = x; this.y = y; this.z = z }
@@ -141,10 +147,10 @@ final class Vec3d private[math] (
 }
 
 object Vec3d {
-    val Origin = const(Vec3d(0))
-    val UnitX = const(Vec3d(1, 0, 0))
-    val UnitY = const(Vec3d(0, 1, 0))
-    val UnitZ = const(Vec3d(0, 0, 1))
+    val Origin = new ConstVec3d(0, 0, 0)
+    val UnitX = new ConstVec3d(1, 0, 0)
+    val UnitY = new ConstVec3d(0, 1, 0)
+    val UnitZ = new ConstVec3d(0, 0, 1)
 
     def apply(s: Double) = new Vec3d(s, s, s)
     def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)

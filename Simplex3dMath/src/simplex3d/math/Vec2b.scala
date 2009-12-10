@@ -62,11 +62,18 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
 final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
 extends AnyVec2b
 
+object ConstVec2b {
+    def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
+    def apply(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
+    
+    implicit def mutableToConst(u: Vec2b) = new ConstVec2b(u.x, u.y)
+    implicit def constVec2bToSwizzled(u: ConstVec2b) = new ConstVec2bSwizzled(u)
+}
+
 
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
 extends AnyVec2b
 {
-    private[math] def this() = this(false, false)
 
     override def r = x
     override def g = y
@@ -95,8 +102,8 @@ extends AnyVec2b
 }
 
 object Vec2b {
-    val True = constb(Vec2b(true))
-    val False = constb(Vec2b(false))
+    val True = new ConstVec2b(true, true)
+    val False = new ConstVec2b(false, false)
 
     def apply(s: Boolean) = new Vec2b(s, s)
     def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)

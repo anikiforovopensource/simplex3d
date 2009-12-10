@@ -31,62 +31,11 @@ import toxi.math.noise.SimplexNoise
  */
 object DoubleMath {
 
-    def const(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
-    def const(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
-    def const(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
-    def const(q: AnyQuat4d) = new ConstQuat4d(q.a, q.b, q.c, q.d)
-    
-    def const(m: AnyMat2d) = new ConstMat2d(
-        m.m00, m.m10,
-        m.m01, m.m11
-    )
-    def const(m: AnyMat2x3d) = new ConstMat2x3d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
-    )
-    def const(m: AnyMat2x4d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
-    )
-    def const(m: AnyMat3x2d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
-    )
-    def const(m: AnyMat3d) = new ConstMat3d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22
-    )
-    def const(m: AnyMat3x4d) = new ConstMat3x4d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21,
-        m.m02, m.m12, m.m22,
-        m.m03, m.m13, m.m23
-    )
-    def const(m: AnyMat4x2d) = new ConstMat4x2d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31
-    )
-    def const(m: AnyMat4x3d) = new ConstMat4x3d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32
-    )
-    def const(m: AnyMat4d) = new ConstMat4d(
-        m.m00, m.m10, m.m20, m.m30,
-        m.m01, m.m11, m.m21, m.m31,
-        m.m02, m.m12, m.m22, m.m32,
-        m.m03, m.m13, m.m23, m.m33
-    )
-
     // Random
-    def nextVec2() :Vec2d = new Vec2d(nextDouble, nextDouble)
-    def nextVec3() :Vec3d = new Vec3d(nextDouble, nextDouble, nextDouble)
+    def nextVec2() :Vec2d = Vec2d(nextDouble, nextDouble)
+    def nextVec3() :Vec3d = Vec3d(nextDouble, nextDouble, nextDouble)
     def nextVec4() :Vec4d = {
-        new Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
+        Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
     }
 
     def nextVec2d() :Vec2d = nextVec2
@@ -94,7 +43,7 @@ object DoubleMath {
     def nextVec4d() :Vec4d = nextVec4
 
     // Constants
-    val DoubleEpsilon: Double = 2.22045E-16f;
+    val DoubleEpsilon: Double = 2.22045e-16f;
     val Pi: Double = Math.Pi
     val E: Double = Math.E
 
@@ -102,6 +51,8 @@ object DoubleMath {
     private val RadToDeg: Double = 180 / Pi
     private val InvLog2: Double = 1/SMath.log(2)
 
+    // Have to be careful with large offsets due to the loss in precision.
+    // With noise args as double these values should be ok
     private val of1: Double = 10000.0
     private val of2: Double = 20000.0
     private val of3: Double = 30000.0
@@ -1643,7 +1594,7 @@ object DoubleMath {
     def inverse(q: AnyQuat4d) :Quat4d = conjugate(q)/normSquare(q)
 
     def slerp(p: AnyQuat4d, q: AnyQuat4d, a: Double) :Quat4d = {
-        if (approxEqual(p, q, 1e-5f)) return Quat4d(q)
+        if (approxEqual(p, q, 1e-14f)) return Quat4d(q)
 
         var cosTheta = p.a*q.a + p.b*q.b + p.c*q.c+ p.d*q.d
         var negate = false
@@ -1845,7 +1796,7 @@ object DoubleMath {
     def angleAxisFrom(q: AnyQuat4d, axisResult: Vec3d) :Double = {
         import q._
 
-        if (approxEqual(abs(a), 1, 1e-6f)) {
+        if (approxEqual(abs(a), 1, 1e-15f)) {
             axisResult.set(1, 0, 0)
             return 0
         }
@@ -1867,11 +1818,11 @@ object DoubleMath {
 
         val cosAngle = (m00 + m11 + m22 - 1)*0.5f
 
-        if (approxEqual(cosAngle, 1, 1e-5f)) {
+        if (approxEqual(cosAngle, 1, 1e-14f)) {
             axisResult.set(1, 0, 0)
             return 0
         }
-        else if (approxEqual(cosAngle, -1, 1e-5f)) {
+        else if (approxEqual(cosAngle, -1, 1e-14f)) {
             if (m00 > m11 && m00 > m22) {
                 val r = sqrt((m00 + 1)*0.5f)
                 val t = 1/(4*r)

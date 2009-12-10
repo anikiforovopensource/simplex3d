@@ -51,16 +51,16 @@ sealed abstract class AnyVec2d extends Read2Double {
     def unary_-() = Vec2d(-x, -y)
     def *(s: Double) = Vec2d(x*s, y*s)
     def /(s: Double) = { val inv = 1/s; Vec2d(x*inv, y*inv) }
-    private[math] def divByComponent(s: Double) = Vec2d(s/x, s/y)
+    private[math] def divideByComponent(s: Double) = Vec2d(s/x, s/y)
 
     def +(u: AnyVec2d) = Vec2d(x + u.x, y + u.y)
     def -(u: AnyVec2d) = Vec2d(x - u.x, y - u.y)
     def *(u: AnyVec2d) = Vec2d(x * u.x, y * u.y)
     def /(u: AnyVec2d) = Vec2d(x / u.x, y / u.y)
 
-    def *(m: AnyMat2d) :Vec2d = m.transposeMul(this, new Vec2d)
-    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(this, new Vec3d)
-    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(this, new Vec4d)
+    def *(m: AnyMat2d) :Vec2d = m.transposeMul(this)
+    def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(this)
+    def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(this)
 
     def ==(u: AnyVec2d) :Boolean = {
         if (u eq null) false
@@ -85,11 +85,18 @@ sealed abstract class AnyVec2d extends Read2Double {
 final class ConstVec2d private[math] (val x: Double, val y: Double)
 extends AnyVec2d
 
+object ConstVec2d {
+    def apply(x: Double, y: Double) = new ConstVec2d(x, y)
+    def apply(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
+
+    implicit def mutableToConst(u: Vec2d) = new ConstVec2d(u.x, u.y)
+    implicit def constVec2dToSwizzled(u: ConstVec2d) = new ConstVec2dSwizzled(u)
+}
+
 
 final class Vec2d private[math] (var x: Double, var y: Double)
 extends AnyVec2d
 {
-    private[math] def this() = this(0, 0)
 
     override def r = x
     override def g = y
@@ -112,7 +119,7 @@ extends AnyVec2d
     def *=(u: AnyVec2d) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2d) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2d) { m.transposeMul(this, this) }
+    def *=(m: AnyMat2d) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec2d) { x = u.x; y = u.y }
     def set(x: Double, y: Double) { this.x = x; this.y = y }
@@ -128,9 +135,9 @@ extends AnyVec2d
 }
 
 object Vec2d {
-    val Origin = const(Vec2d(0))
-    val UnitX = const(Vec2d(1, 0))
-    val UnitY = const(Vec2d(0, 1))
+    val Origin = new ConstVec2d(0, 0)
+    val UnitX = new ConstVec2d(1, 0)
+    val UnitY = new ConstVec2d(0, 1)
 
     def apply(s: Double) = new Vec2d(s, s)
     def apply(x: Double, y: Double) = new Vec2d(x, y)

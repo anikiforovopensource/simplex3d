@@ -28,10 +28,6 @@ import simplex3d.math.BaseMath._
  * @author Aleksey Nikiforov (lex)
  */
 object IntMath {
-
-    def consti(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
-    def consti(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
-    def consti(u: AnyVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
     
     // Random
     def nextVec2i() :Vec2i = Vec2i(nextInt, nextInt)

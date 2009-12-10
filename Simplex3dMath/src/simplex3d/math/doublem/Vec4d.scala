@@ -59,16 +59,16 @@ sealed abstract class AnyVec4d extends Read4Double {
     def unary_-() = Vec4d(-x, -y, -z, -w)
     def *(s: Double) = Vec4d(x*s, y*s, z*s, w*s)
     def /(s: Double) = { val inv = 1/s; Vec4d(x*inv, y*inv, z*inv, w*inv) }
-    private[math] def divByComponent(s: Double) = Vec4d(s/x, s/y, s/z, s/w)
+    private[math] def divideByComponent(s: Double) = Vec4d(s/x, s/y, s/z, s/w)
 
     def +(u: AnyVec4d) = Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
     def -(u: AnyVec4d) = Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
     def *(u: AnyVec4d) = Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
     def /(u: AnyVec4d) = Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
 
-    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(this, new Vec2d)
-    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(this, new Vec3d)
-    def *(m: AnyMat4d) :Vec4d = m.transposeMul(this, new Vec4d)
+    def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(this)
+    def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(this)
+    def *(m: AnyMat4d) :Vec4d = m.transposeMul(this)
 
     def ==(u: AnyVec4d) :Boolean = {
         if (u eq null) false
@@ -97,13 +97,21 @@ final class ConstVec4d private[math] (
     val x: Double, val y: Double, val z: Double, val w: Double
 ) extends AnyVec4d
 
+object ConstVec4d {
+    def apply(x: Double, y: Double, z: Double, w: Double) = {
+        new ConstVec4d(x, y, z, w)
+    }
+    def apply(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
+
+    implicit def mutableToConst(u: Vec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
+    implicit def constVec4dToSwizzled(u: ConstVec4d) = new ConstVec4dSwizzled(u)
+}
+
 
 final class Vec4d private[math] (
     var x: Double, var y: Double, var z: Double, var w: Double
 ) extends AnyVec4d
 {
-    private[math] def this() = this(0, 0, 0, 0)
-
     override def r = x
     override def g = y
     override def b = z
@@ -133,7 +141,7 @@ final class Vec4d private[math] (
     def *=(u: AnyVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
     def /=(u: AnyVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
 
-    def *=(m: AnyMat4d) { m.transposeMul(this, this) }
+    def *=(m: AnyMat4d) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
     def set(x: Double, y: Double, z: Double, w: Double) {
@@ -153,11 +161,11 @@ final class Vec4d private[math] (
 }
 
 object Vec4d {
-    val Origin = const(Vec4d(0))
-    val UnitX = const(Vec4d(1, 0, 0, 0))
-    val UnitY = const(Vec4d(0, 1, 0, 0))
-    val UnitZ = const(Vec4d(0, 0, 1, 0))
-    val UnitW = const(Vec4d(0, 0, 0, 1))
+    val Origin = new ConstVec4d(0, 0, 0, 0)
+    val UnitX = new ConstVec4d(1, 0, 0, 0)
+    val UnitY = new ConstVec4d(0, 1, 0, 0)
+    val UnitZ = new ConstVec4d(0, 0, 1, 0)
+    val UnitW = new ConstVec4d(0, 0, 0, 1)
 
     def apply(s: Double) =
         new Vec4d(s, s, s, s)
@@ -194,23 +202,6 @@ object Vec4d {
 
     def apply(u: Read4Float) =
         new Vec4d(u.x, u.y, u.z, u.w)
-
-    def apply(xy: Read2[AnyVal], zw: Read2[AnyVal]) = {
-        var x = 0d
-        var y = 0d
-        xy match {
-            case r: Read2Int => x = r.x; y = r.y
-            case r: Read2Float => x = r.x; y = r.y
-            case r: Read2Double => x = r.x; y = r.y
-            case _ => throw new IllegalArgumentException("Unexpected type.")
-        }
-        zw match {
-            case r: Read2Int => new Vec4d(x, y, r.x, r.y)
-            case r: Read2Float => new Vec4d(x, y, r.x, r.y)
-            case r: Read2Double => new Vec4d(x, y, r.x, r.y)
-            case _ => throw new IllegalArgumentException("Unexpected type.")
-        }
-    }
 
     implicit def constToMutable(u: ConstVec4d) = Vec4d(u)
     implicit def vec4ToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)

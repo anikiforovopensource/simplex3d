@@ -23,36 +23,18 @@ package simplex3d.math.floatm
 import simplex3d.math._
 import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
-import Read._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2x4f
-extends ReadFloatMat
 {
     // Column major order.
     def m00: Float; def m10: Float // column
     def m01: Float; def m11: Float // column
     def m02: Float; def m12: Float // column
     def m03: Float; def m13: Float // column
-
-    def rows = 2
-    def columns = 4
-    def toArray(array: Array[Float], offset: Int) {
-        array(offset + 0) = m00
-        array(offset + 1) = m10
-
-        array(offset + 2) = m01
-        array(offset + 3) = m11
-
-        array(offset + 4) = m02
-        array(offset + 5) = m12
-
-        array(offset + 6) = m03
-        array(offset + 7) = m13
-    }
 
     def apply(c: Int) :ConstVec2f = {
         c match {
@@ -100,189 +82,95 @@ extends ReadFloatMat
         }
     }
 
-    private[math] def negate(result: Mat2x4f) = {
-        result.m00 = -m00
-        result.m10 = -m10
+    def unary_-() = Mat2x4f(
+        -m00, -m10,
+        -m01, -m11,
+        -m02, -m12,
+        -m03, -m13
+    )
+    def *(s: Float) = Mat2x4f(
+        s*m00, s*m10,
+        s*m01, s*m11,
+        s*m02, s*m12,
+        s*m03, s*m13
+    )
+    def /(s: Float) = { val inv = 1/s; Mat2x4f(
+        inv*m00, inv*m10,
+        inv*m01, inv*m11,
+        inv*m02, inv*m12,
+        inv*m03, inv*m13
+    )}
 
-        result.m01 = -m01
-        result.m11 = -m11
-
-        result.m02 = -m02
-        result.m12 = -m12
-
-        result.m03 = -m03
-        result.m13 = -m13
-
-        result
-    }
-    private[math] def mul(s: Float, result: Mat2x4f) = {
-        result.m00 = s*m00
-        result.m10 = s*m10
-
-        result.m01 = s*m01
-        result.m11 = s*m11
-
-        result.m02 = s*m02
-        result.m12 = s*m12
-
-        result.m03 = s*m03
-        result.m13 = s*m13
-
-        result
-    }
-    private[math] def div(s: Float, result: Mat2x4f) = {
-        val inv = 1/s
-
-        result.m00 = inv*m00
-        result.m10 = inv*m10
-
-        result.m01 = inv*m01
-        result.m11 = inv*m11
-
-        result.m02 = inv*m02
-        result.m12 = inv*m12
-
-        result.m03 = inv*m03
-        result.m13 = inv*m13
-
-        result
-    }
-
-    private[math] def add(m: AnyMat2x4f, result:Mat2x4f) = {
-        result.m00 = m00 + m.m00
-        result.m10 = m10 + m.m10
-
-        result.m01 = m01 + m.m01
-        result.m11 = m11 + m.m11
-
-        result.m02 = m02 + m.m02
-        result.m12 = m12 + m.m12
-
-        result.m03 = m03 + m.m03
-        result.m13 = m13 + m.m13
-
-        result
-    }
-    private[math] def sub(m: AnyMat2x4f, result:Mat2x4f) = {
-        result.m00 = m00 - m.m00
-        result.m10 = m10 - m.m10
-
-        result.m01 = m01 - m.m01
-        result.m11 = m11 - m.m11
-
-        result.m02 = m02 - m.m02
-        result.m12 = m12 - m.m12
-
-        result.m03 = m03 - m.m03
-        result.m13 = m13 - m.m13
-
-        result
-    }
-
-    private[math] def div(m: AnyMat2x4f, result:Mat2x4f) = {
-        result.m00 = m00 / m.m00
-        result.m10 = m10 / m.m10
-
-        result.m01 = m01 / m.m01
-        result.m11 = m11 / m.m11
-
-        result.m02 = m02 / m.m02
-        result.m12 = m12 / m.m12
-
-        result.m03 = m03 / m.m03
-        result.m13 = m13 / m.m13
-
-        result
-    }
-    private[math] def divByComponent(s: Float, result:Mat2x4f) = {
-        result.m00 = s / m00
-        result.m10 = s / m10
-
-        result.m01 = s / m01
-        result.m11 = s / m11
-
-        result.m02 = s / m02
-        result.m12 = s / m12
-
-        result.m03 = s / m03
-        result.m13 = s / m13
-
-        result
-    }
-
-    private[math] def mul(m: AnyMat4x2f, result: Mat2f) = {
-        result.m00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
-        result.m10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
-
-        result.m01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
-        result.m11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
-
-        result
-    }
-    private[math] def mul(m: AnyMat4x3f, result: Mat2x3f) = {
-        result.m00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
-        result.m10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
-
-        result.m01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
-        result.m11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
-
-        result.m02 = m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32
-        result.m12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
-
-        result
-    }
-    private[math] def mul(m: AnyMat4f, result: Mat2x4f) = {
-        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
-        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
-
-        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
-        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32
-        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
-
-        val a03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
-        val a13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
-
-        result.m00 = a00; result.m10 = a10
-        result.m01 = a01; result.m11 = a11
-        result.m02 = a02; result.m12 = a12
-        result.m03 = a03; result.m13 = a13
-
-        result
-    }
-
-    private[math] def mul(u: AnyVec4f, result: Vec2f) = {
-        result.x = m00*u.x + m01*u.y + m02*u.z + m03*u.w
-        result.y = m10*u.x + m11*u.y + m12*u.z + m13*u.w
-
-        result
-    }
-    private[math] def transposeMul(u: AnyVec2f, result: Vec4f) = {
-        result.x = m00*u.x + m10*u.y
-        result.y = m01*u.x + m11*u.y
-        result.z = m02*u.x + m12*u.y
-        result.w = m03*u.x + m13*u.y
-
-        result
-    }
-
-    def unary_-() = negate(new Mat2x4f)
-    def *(s: Float) = mul(s, new Mat2x4f)
-    def /(s: Float) = div(s, new Mat2x4f)
-    def +(m: AnyMat2x4f) = add(m, new Mat2x4f)
-    def -(m: AnyMat2x4f) = sub(m, new Mat2x4f)
+    def +(m: AnyMat2x4f) = Mat2x4f(
+        m00 + m.m00, m10 + m.m10,
+        m01 + m.m01, m11 + m.m11,
+        m02 + m.m02, m12 + m.m12,
+        m03 + m.m03, m13 + m.m13
+    )
+    def -(m: AnyMat2x4f) = Mat2x4f(
+        m00 - m.m00, m10 - m.m10,
+        m01 - m.m01, m11 - m.m11,
+        m02 - m.m02, m12 - m.m12,
+        m03 - m.m03, m13 - m.m13
+    )
 
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat2x4f) = div(m, new Mat2x4f)
+    def /(m: AnyMat2x4f) = Mat2x4f(
+        m00/m.m00, m10/m.m10,
+        m01/m.m01, m11/m.m11,
+        m02/m.m02, m12/m.m12,
+        m03/m.m03, m13/m.m13
+    )
+    private[math] def divideByComponent(s: Float) = Mat2x4f(
+        s/m00, s/m10,
+        s/m01, s/m11,
+        s/m02, s/m12,
+        s/m03, s/m13
+    )
 
-    def *(m: AnyMat4x2f) = mul(m, new Mat2f)
-    def *(m: AnyMat4x3f) = mul(m, new Mat2x3f)
-    def *(m: AnyMat4f) = mul(m, new Mat2x4f)
+    def *(m: AnyMat4x2f) = Mat2f(
+        m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
+        m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
-    def *(u: AnyVec4f) = mul(u, new Vec2f)
+        m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31,
+        m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
+    )
+    def *(m: AnyMat4x3f) = Mat2x3f(
+        m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
+        m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
+
+        m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31,
+        m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31,
+
+        m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32,
+        m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
+    )
+    def *(m: AnyMat4f) = Mat2x4f(
+        m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
+        m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
+
+        m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31,
+        m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31,
+
+        m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32,
+        m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32,
+
+        m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33,
+        m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
+    )
+
+    def *(u: AnyVec4f) = Vec2f(
+        m00*u.x + m01*u.y + m02*u.z + m03*u.w,
+        m10*u.x + m11*u.y + m12*u.z + m13*u.w
+    )
+    protected[math] def transposeMul(u: AnyVec2f) = Vec4f(
+        m00*u.x + m10*u.y,
+        m01*u.x + m11*u.y,
+        m02*u.x + m12*u.y,
+        m03*u.x + m13*u.y
+    )
 
     def ==(m: AnyMat2x4f) :Boolean = {
         if (m eq null) false
@@ -331,6 +219,39 @@ final class ConstMat2x4f private[math] (
     val m03: Float, val m13: Float
 ) extends AnyMat2x4f
 
+object ConstMat2x4f {
+
+    def apply(
+        m00: Float, m10: Float,
+        m01: Float, m11: Float,
+        m02: Float, m12: Float,
+        m03: Float, m13: Float
+      ) = new ConstMat2x4f(
+            m00, m10,
+            m01, m11,
+            m02, m12,
+            m03, m13
+      )
+
+    def apply(c0: AnyVec2f, c1: AnyVec2f, c2: AnyVec2f, c3: AnyVec2f) = 
+    new ConstMat2x4f(
+        c0.x, c0.y,
+        c1.x, c1.y,
+        c2.x, c2.y,
+        c3.x, c3.y
+    )
+
+    def apply(m: AnyMat2x4f) = new ConstMat2x4f(
+        m.m00, m.m10,
+        m.m01, m.m11,
+        m.m02, m.m12,
+        m.m03, m.m13
+    )
+
+    implicit def mutableToConst(m: Mat2x4f) = ConstMat2x4f(m)
+}
+
+
 final class Mat2x4f private[math] (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float,
@@ -338,20 +259,50 @@ final class Mat2x4f private[math] (
     var m03: Float, var m13: Float
 ) extends AnyMat2x4f
 {
-    private[math] def this() = this(
-        1, 0,
-        0, 1,
-        0, 0,
-        0, 0
-    )
+    def *=(s: Float) {
+        m00 *= s; m10 *= s;
+        m01 *= s; m11 *= s;
+        m02 *= s; m12 *= s;
+        m03 *= s; m13 *= s
+    }
+    def /=(s: Float) { val inv = 1/s;
+        m00 *= inv; m10 *= inv;
+        m01 *= inv; m11 *= inv;
+        m02 *= inv; m12 *= inv;
+        m03 *= inv; m13 *= inv
+    }
 
-    def *=(s: Float) { mul(s, this) }
-    def /=(s: Float) { div(s, this) }
+    def +=(m: AnyMat2x4f) {
+        m00 += m.m00; m10 += m.m10;
+        m01 += m.m01; m11 += m.m11;
+        m02 += m.m02; m12 += m.m12;
+        m03 += m.m03; m13 += m.m13
+    }
+    def -=(m: AnyMat2x4f) {
+        m00 -= m.m00; m10 -= m.m10;
+        m01 -= m.m01; m11 -= m.m11;
+        m02 -= m.m02; m12 -= m.m12;
+        m03 -= m.m03; m13 -= m.m13
+    }
 
-    def +=(m: AnyMat2x4f) { add(m, this) }
-    def -=(m: AnyMat2x4f) { sub(m, this) }
+    def *=(m: AnyMat4f) {
+        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
+        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
 
-    def *=(m: AnyMat4f) { mul(m, this) }
+        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
+        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
+
+        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32
+        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
+
+        val a03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
+        val a13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
+
+        m00 = a00; m10 = a10
+        m01 = a01; m11 = a11
+        m02 = a02; m12 = a12
+        m03 = a03; m13 = a13
+    }
 
     def :=(m: AnyMat2x4f) {
         m00 = m.m00; m10 = m.m10;
@@ -422,14 +373,22 @@ final class Mat2x4f private[math] (
 
 object Mat2x4f {
 
-    val Zero = const(Mat2x4f(0))
-    val Identity = const(Mat2x4f(1))
+    val Zero: ConstMat2x4f = Mat2x4f(0)
+    val Identity: ConstMat2x4f = Mat2x4f(1)
 
     def apply(s: Float) = new Mat2x4f(
         s, 0,
         0, s,
         0, 0,
         0, 0
+    )
+
+    def apply(c0: Read2Double, c1: Read2Double, c2: Read2Double, c3: Read2Double) = 
+    new Mat2x4f(
+        float(c0.x), float(c0.y),
+        float(c1.x), float(c1.y),
+        float(c2.x), float(c2.y),
+        float(c3.x), float(c3.y)
     )
 
     def apply(
@@ -451,60 +410,6 @@ object Mat2x4f {
         c2.x, c2.y,
         c3.x, c3.y
     )
-
-    def apply(args: ReadAny[AnyVal]*) :Mat2x4f = {
-        val mat = new Array[Float](8)
-        mat(0) = 1
-        mat(3) = 1
-
-        var index = 0
-        try {
-            var i = 0; while (i < args.length) {
-                index = read(args(i), mat, index)
-                i += 1
-            }
-        }
-        catch {
-            case iae: IllegalArgumentException => {
-                throw new IllegalArgumentException(iae.getMessage)
-            }
-            case aob: ArrayIndexOutOfBoundsException => {
-                throw new IllegalArgumentException(
-                    "Too many values for this matrix.")
-            }
-        }
-
-        if (index < 8) throw new IllegalArgumentException(
-            "Too few values for this matrix.")
-
-        new Mat2x4f(
-            mat(0), mat(1),
-            mat(2), mat(3),
-            mat(4), mat(5),
-            mat(6), mat(7)
-        )
-    }
-
-    def apply(m: ReadDoubleMat) :Mat2x4f = {
-        val rows = m.rows
-        val columns = m.columns
-        val array = new Array[Double](rows*columns)
-        m.toArray(array, 0)
-
-        val n = new Mat2x4f
-        val endr = if (rows < 2) rows else 2
-        val endc = if (columns < 4) columns else 4
-
-        var c = 0; while (c < endc) {
-            val offset = c*rows
-            var r = 0; while (r < endr) {
-                n(c, r) = float(array(offset + r))
-                r += 1
-            }
-            c += 1
-        }
-        n
-    }
 
     def apply(m: AnyMat2f) = new Mat2x4f(
         m.m00, m.m10,
@@ -568,4 +473,6 @@ object Mat2x4f {
         m.m02, m.m12,
         m.m03, m.m13
     )
+
+    implicit def constToMutable(m: ConstMat2x4f) = Mat2x4f(m)
 }

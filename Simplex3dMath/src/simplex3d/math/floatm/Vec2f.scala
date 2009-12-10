@@ -52,16 +52,16 @@ sealed abstract class AnyVec2f extends Read2Float {
     def unary_-() = Vec2f(-x, -y)
     def *(s: Float) = Vec2f(x*s, y*s)
     def /(s: Float) = { val inv = 1/s; Vec2f(x*inv, y*inv) }
-    private[math] def divByComponent(s: Float) = Vec2f(s/x, s/y)
+    private[math] def divideByComponent(s: Float) = Vec2f(s/x, s/y)
 
     def +(u: AnyVec2f) = Vec2f(x + u.x, y + u.y)
     def -(u: AnyVec2f) = Vec2f(x - u.x, y - u.y)
     def *(u: AnyVec2f) = Vec2f(x * u.x, y * u.y)
     def /(u: AnyVec2f) = Vec2f(x / u.x, y / u.y)
 
-    def *(m: AnyMat2f) :Vec2f = m.transposeMul(this, new Vec2f)
-    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(this, new Vec3f)
-    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(this, new Vec4f)
+    def *(m: AnyMat2f) :Vec2f = m.transposeMul(this)
+    def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(this)
+    def *(m: AnyMat2x4f) :Vec4f = m.transposeMul(this)
 
     def ==(u: AnyVec2f) :Boolean = {
         if (u eq null) false
@@ -86,10 +86,16 @@ sealed abstract class AnyVec2f extends Read2Float {
 final class ConstVec2f private[math] (val x: Float, val y: Float)
 extends AnyVec2f
 
+object ConstVec2f {
+    def apply(x: Float, y: Float) = new ConstVec2f(x, y)
+    def apply(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
+
+    implicit def mutableToConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
+    implicit def constVec2fToSwizzled(u: ConstVec2f) = new ConstVec2fSwizzled(u)
+}
 
 final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
-    private[math] def this() = this(0, 0)
-    
+
     override def r = x
     override def g = y
 
@@ -111,7 +117,7 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
     def *=(u: AnyVec2f) { x *= u.x; y *= u.y }
     def /=(u: AnyVec2f) { x /= u.x; y /= u.y }
 
-    def *=(m: AnyMat2f) { m.transposeMul(this, this) }
+    def *=(m: AnyMat2f) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec2f) { x = u.x; y = u.y }
     def set(x: Float, y: Float) { this.x = x; this.y = y }
@@ -127,9 +133,9 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
 }
 
 object Vec2f {
-    val Origin = const(Vec2f(0))
-    val UnitX = const(Vec2f(1, 0))
-    val UnitY = const(Vec2f(0, 1))
+    val Origin = new ConstVec2f(0, 0)
+    val UnitX = new ConstVec2f(1, 0)
+    val UnitY = new ConstVec2f(0, 1)
 
     def apply(s: Float) = new Vec2f(s, s)
     def apply(x: Float, y: Float) = new Vec2f(x, y)

@@ -64,7 +64,10 @@ object BufferUtil {
             a(offset + 14) = 0
             a(offset + 15) = 1
         } else {
-            m.toArray(a, offset)
+            a(offset) = m00
+            a(offset + 1) = m10
+            a(offset + 3) = m01
+            a(offset + 4) = m11
         }
     }
     /**
@@ -136,7 +139,12 @@ object BufferUtil {
             a(offset + 14) = 0
             a(offset + 15) = 1
         } else {
-            m.toArray(a, offset)
+            a(offset) = m00
+            a(offset + 1) = m10
+            a(offset + 3) = m01
+            a(offset + 4) = m11
+            a(offset + 6) = m02
+            a(offset + 7) = m12
         }
     }
     /**
@@ -210,7 +218,15 @@ object BufferUtil {
             a(offset + 14) = 0
             a(offset + 15) = 1
         } else {
-            m.toArray(a, offset)
+            a(offset) = m00
+            a(offset + 1) = m10
+            a(offset + 2) = m20
+            a(offset + 3) = m01
+            a(offset + 4) = m11
+            a(offset + 5) = m21
+            a(offset + 6) = m02
+            a(offset + 7) = m12
+            a(offset + 8) = m22
         }
     }
     /**
@@ -287,7 +303,18 @@ object BufferUtil {
             a(offset + 14) = m23
             a(offset + 15) = 1
         } else {
-            m.toArray(a, offset)
+            a(offset) = m00
+            a(offset + 1) = m10
+            a(offset + 2) = m20
+            a(offset + 3) = m01
+            a(offset + 4) = m11
+            a(offset + 5) = m21
+            a(offset + 6) = m02
+            a(offset + 7) = m12
+            a(offset + 8) = m22
+            a(offset + 9) = m03
+            a(offset + 10) = m13
+            a(offset + 11) = m23
         }
     }
     /**
@@ -347,7 +374,24 @@ object BufferUtil {
      * Column major order
      */
     def toArray(m: AnyMat4d, a: Array[Double], offset: Int) {
-        m.toArray(a, offset)
+        import m._
+
+        a(offset) = m00
+        a(offset + 1) = m10
+        a(offset + 2) = m20
+        a(offset + 3) = m30
+        a(offset + 4) = m01
+        a(offset + 5) = m11
+        a(offset + 6) = m21
+        a(offset + 7) = m31
+        a(offset + 8) = m02
+        a(offset + 9) = m12
+        a(offset + 10) = m22
+        a(offset + 11) = m32
+        a(offset + 12) = m03
+        a(offset + 13) = m13
+        a(offset + 14) = m23
+        a(offset + 15) = m33
     }
     /**
      * Column major order

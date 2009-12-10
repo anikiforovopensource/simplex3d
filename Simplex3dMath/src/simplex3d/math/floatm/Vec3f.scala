@@ -56,16 +56,16 @@ sealed abstract class AnyVec3f extends Read3Float {
     def unary_-() = Vec3f(-x, -y, -z)
     def *(s: Float) = Vec3f(x*s, y*s, z*s)
     def /(s: Float) = { val inv = 1/s; Vec3f(x*inv, y*inv, z*inv) }
-    private[math] def divByComponent(s: Float) = Vec3f(s/x, s/y, s/z)
+    private[math] def divideByComponent(s: Float) = Vec3f(s/x, s/y, s/z)
 
     def +(u: AnyVec3f) = Vec3f(x + u.x, y + u.y, z + u.z)
     def -(u: AnyVec3f) = Vec3f(x - u.x, y - u.y, z - u.z)
     def *(u: AnyVec3f) = Vec3f(x * u.x, y * u.y, z * u.z)
     def /(u: AnyVec3f) = Vec3f(x / u.x, y / u.y, z / u.z)
 
-    def *(m: AnyMat3x2f) :Vec2f = m.transposeMul(this, new Vec2f)
-    def *(m: AnyMat3f) :Vec3f = m.transposeMul(this, new Vec3f)
-    def *(m: AnyMat3x4f) :Vec4f = m.transposeMul(this, new Vec4f)
+    def *(m: AnyMat3x2f) :Vec2f = m.transposeMul(this)
+    def *(m: AnyMat3f) :Vec3f = m.transposeMul(this)
+    def *(m: AnyMat3x4f) :Vec4f = m.transposeMul(this)
 
     def ==(u: AnyVec3f) :Boolean = {
         if (u eq null) false
@@ -92,12 +92,18 @@ sealed abstract class AnyVec3f extends Read3Float {
 final class ConstVec3f private[math] (val x: Float, val y: Float, val z: Float)
 extends AnyVec3f
 
+object ConstVec3f {
+    def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
+    def apply(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
+
+    implicit def mutableToConst(u: Vec3f) = new ConstVec3f(u.x, u.y, u.z)
+    implicit def constVec3fToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
+}
+
 
 final class Vec3f private[math] (var x: Float, var y: Float, var z: Float)
 extends AnyVec3f
 {
-    private[math] def this() = this(0, 0, 0)
-    
     override def r = x
     override def g = y
     override def b = z
@@ -123,7 +129,7 @@ extends AnyVec3f
     def *=(u: AnyVec3f) { x *= u.x; y *= u.y; z *= u.z }
     def /=(u: AnyVec3f) { x /= u.x; y /= u.y; z /= u.z }
 
-    def *=(m: AnyMat3f) { m.transposeMul(this, this) }
+    def *=(m: AnyMat3f) { this := m.transposeMul(this) }
 
     def :=(u: AnyVec3f) { x = u.x; y = u.y; z = u.z }
     def set(x: Float, y: Float, z: Float) { this.x = x; this.y = y; this.z = z }
@@ -140,10 +146,10 @@ extends AnyVec3f
 }
 
 object Vec3f {
-    val Origin = const(Vec3f(0))
-    val UnitX = const(Vec3f(1, 0, 0))
-    val UnitY = const(Vec3f(0, 1, 0))
-    val UnitZ = const(Vec3f(0, 0, 1))
+    val Origin = new ConstVec3f(0, 0, 0)
+    val UnitX = new ConstVec3f(1, 0, 0)
+    val UnitY = new ConstVec3f(0, 1, 0)
+    val UnitZ = new ConstVec3f(0, 0, 1)
 
     def apply(s: Float) = new Vec3f(s, s, s)
     def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
@@ -154,18 +160,11 @@ object Vec3f {
     def apply(u: Read3Int) = new Vec3f(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3f(u.x, u.y, u.z)
 
-    def apply(u: Read3Double) = {
+    def apply(u: Read3Double) =
         new Vec3f(float(u.x), float(u.y), float(u.z))
-    }
-    def apply(u: Read4Double) = {
+
+    def apply(u: Read4Double) =
         new Vec3f(float(u.x), float(u.y), float(u.z))
-    }
-    def apply(xy: Read2Double, z: Float) = {
-        new Vec3f(float(xy.x), float(xy.y), z)
-    }
-    def apply(x: Float, yz: Read2Double) = {
-        new Vec3f(x, float(yz.x), float(yz.y))
-    }
 
     implicit def constToMutable(u: ConstVec3f) = Vec3f(u)
     implicit def vec3ToSwizzled(u: Vec3f) = new Vec3fSwizzled(u)

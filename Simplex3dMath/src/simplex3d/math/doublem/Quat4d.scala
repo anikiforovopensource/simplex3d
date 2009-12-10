@@ -52,7 +52,7 @@ sealed abstract class AnyQuat4d {
     def unary_-() = Quat4d(-a, -b, -c, -d)
     def *(s: Double) = Quat4d(a*s, b*s, c*s, d*s)
     def /(s: Double) = { val inv = 1/s; Quat4d(a*inv, b*inv, c*inv, d*inv) }
-    private[math] def divByComponent(s: Double) = Quat4d(s/a, s/b, s/c, s/d)
+    private[math] def divideByComponent(s: Double) = Quat4d(s/a, s/b, s/c, s/d)
 
     def +(q: Quat4d) = Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
     def -(q: Quat4d) = Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
@@ -108,13 +108,22 @@ final class ConstQuat4d private[math] (
     val a: Double, val b: Double, val c: Double, val d: Double
 ) extends AnyQuat4d
 
+object ConstQuat4d {
+    def apply(a: Double, b: Double, c: Double, d: Double) = {
+        new ConstQuat4d(a, b, c, d)
+    }
+    def apply(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
+    def apply(u: AnyVec4d) = new ConstQuat4d(u.w, u.x, u.y, u.z)
+    def apply(m: AnyMat2d) = new ConstQuat4d(m.m00, m.m10, m.m01, m.m11)
+
+    implicit def mutableToConst(u: Quat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
+}
+
 
 final class Quat4d private[math] (
     var a: Double, var b: Double, var c: Double, var d: Double
 ) extends AnyQuat4d
 {
-    private[math] def this() = this(1, 0, 0, 0)
-
     def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
 
@@ -147,11 +156,15 @@ final class Quat4d private[math] (
 }
 
 object Quat4d {
-    val Identity = const(Quat4d())
+    val Identity: ConstQuat4d = Quat4d()
     
-    def apply() = new Quat4d
-    def apply(a: Double, b: Double, c: Double, d: Double) = new Quat4d(a, b, c, d)
+    def apply() = new Quat4d(1, 0, 0, 0)
+    def apply(a: Double, b: Double, c: Double, d: Double) = {
+        new Quat4d(a, b, c, d)
+    }
     def apply(q: AnyQuat4d) = new Quat4d(q.a, q.b, q.c, q.d)
     def apply(u: AnyVec4d) = new Quat4d(u.w, u.x, u.y, u.z)
     def apply(m: AnyMat2d) = new Quat4d(m.m00, m.m10, m.m01, m.m11)
+
+    implicit def constToMutable(u: ConstQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
 }

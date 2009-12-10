@@ -72,13 +72,21 @@ final class ConstVec4b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean)
 extends AnyVec4b
 
+object ConstVec4b {
+    def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) = {
+        new ConstVec4b(x, y, z, w)
+    }
+    def apply(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+
+    implicit def mutableToConst(u: Vec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+    implicit def constVec4bToSwizzled(u: ConstVec4b) = new ConstVec4bSwizzled(u)
+}
+
 
 final class Vec4b private[math] (
     var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
 extends AnyVec4b
 {
-    private[math] def this() = this(false, false, false, false)
-    
     override def r = x
     override def g = y
     override def b = z
@@ -118,8 +126,8 @@ extends AnyVec4b
 }
 
 object Vec4b {
-    val True = constb(Vec4b(true))
-    val False = constb(Vec4b(false))
+    val True = new ConstVec4b(true, true, true, true)
+    val False = new ConstVec4b(false, false, false, false)
 
     def apply(s: Boolean) =
         new Vec4b(s, s, s, s)

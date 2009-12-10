@@ -35,37 +35,23 @@ package object floatm {
     implicit def vec3iToVec3f(u: Read3Int) :Vec3f = Vec3f(u.x, u.y, u.z)
     implicit def vec4iToVec4f(u: Read4Int) :Vec4f = Vec4f(u.x, u.y, u.z, u.w)
 
-    implicit def mutable2fToConst(u: Vec2f) = const(u)
-    implicit def constVec2fToSwizzled(u: ConstVec2f) = new ConstVec2fSwizzled(u)
-    implicit def mutable3fToConst(u: Vec3f) = const(u)
-    implicit def constVec3fToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
-    implicit def mutable4fToConst(u: Vec4f) = const(u)
-    implicit def constVec4fToSwizzled(u: ConstVec4f) = new ConstVec4fSwizzled(u)
-    implicit def mutableQfToConst(q: Quat4f) = const(q)
-
-    implicit def mutable2fToConst(m: Mat2f) = const(m)
-    implicit def mutable2x3fToConst(m: Mat2x3f) = const(m)
-    implicit def mutable2x4fToConst(m: Mat2x4f) = const(m)
-    implicit def mutable3x2fToConst(m: Mat3x2f) = const(m)
-    implicit def mutable3fToConst(m: Mat3f) = const(m)
-    implicit def mutable3x4fToConst(m: Mat3x4f) = const(m)
-    implicit def mutable4x2fToConst(m: Mat4x2f) = const(m)
-    implicit def mutable4x3fToConst(m: Mat4x3f) = const(m)
-    implicit def mutable4fToConst(m: Mat4f) = const(m)
 
     // Aliases
     type AnyMat2x2f = AnyMat2f
     type ConstMat2x2f = ConstMat2f
+    val ConstMat2x2f = ConstMat2f
     type Mat2x2f = Mat2f
     val Mat2x2f = Mat2f
 
     type AnyMat3x3f = AnyMat3f
     type ConstMat3x3f = ConstMat3f
+    val ConstMat3x3f = ConstMat3f
     type Mat3x3f = Mat3f
     val Mat3x3f = Mat3f
 
     type AnyMat4x4f = AnyMat4f
     type ConstMat4x4f = ConstMat4f
+    val ConstMat4x4f = ConstMat4f
     type Mat4x4f = Mat4f
     val Mat4x4f = Mat4f
 

@@ -69,12 +69,18 @@ final class ConstVec3b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean)
 extends AnyVec3b
 
+object ConstVec3b {
+    def apply(x: Boolean, y: Boolean, z: Boolean) = new ConstVec3b(x, y, z)
+    def apply(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
+
+    implicit def mutableToConst(u: Vec3b) = new ConstVec3b(u.x, u.y, u.z)
+    implicit def constVec3bToSwizzled(u: ConstVec3b) = new ConstVec3bSwizzled(u)
+}
+
 
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
 extends AnyVec3b
 {
-    private[math] def this() = this(false, false, false)
-
     override def r = x
     override def g = y
     override def b = z
@@ -109,8 +115,8 @@ extends AnyVec3b
 }
 
 object Vec3b {
-    val True = constb(Vec3b(true))
-    val False = constb(Vec3b(false))
+    val True = new ConstVec3b(true, true, true)
+    val False = new ConstVec3b(false, false, false)
 
     def apply(s: Boolean) = new Vec3b(s, s, s)
     def apply(x: Boolean, y: Boolean, z: Boolean) = new Vec3b(x, y, z)

@@ -54,8 +54,9 @@ sealed abstract class AnyVec2i extends Read2Int {
 
     def *(s: Int) = Vec2i(x*s, y*s)
     def /(s: Int) = Vec2i(x/s, y/s)
-    private[math] def divByComponent(s: Int) = Vec2i(s/x, s/y)
+    private[math] def divideByComponent(s: Int) = Vec2i(s/x, s/y)
     def %(s: Int) = Vec2i(x % s, y % s)
+    private[math] def modByComponent(s: Int) = Vec2i(s%x, s%y)
     def >>(s: Int) = Vec2i( x >> s, y >> s)
     def >>>(s: Int) = Vec2i( x >>> s, y >>> s)
     def <<(s: Int) = Vec2i( x << s, y << s)
@@ -89,9 +90,16 @@ sealed abstract class AnyVec2i extends Read2Int {
 
 final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
 
+object ConstVec2i {
+    def apply(x: Int, y: Int) = new ConstVec2i(x, y)
+    def apply(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
+
+    implicit def mutableToConst(u: Vec2i) = new ConstVec2i(u.x, u.y)
+    implicit def constVec2iToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
+}
+
 
 final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
-    private[math] def this() = this(0, 0)
 
     override def r = x
     override def g = y
@@ -142,9 +150,9 @@ final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
 }
 
 object Vec2i {
-    val Origin = consti(Vec2i(0))
-    val UnitX = consti(Vec2i(1, 0))
-    val UnitY = consti(Vec2i(0, 1))
+    val Origin = new ConstVec2i(0, 0)
+    val UnitX = new ConstVec2i(1, 0)
+    val UnitY = new ConstVec2i(0, 1)
 
     def apply(s: Int) = new Vec2i(s, s)
     def apply(x: Int, y: Int) = new Vec2i(x, y)

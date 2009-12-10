@@ -30,11 +30,4 @@ package object intm {
 
     //Implicints
     implicit def imIntToExtInt(s: Int) = new ExtendedInt(s)
-
-    implicit def mutable2iToConst(u: Vec2i) = consti(u)
-    implicit def constVec2iToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
-    implicit def mutable3iToConst(u: Vec3i) = consti(u)
-    implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
-    implicit def mutable4iToConst(u: Vec4i) = consti(u)
-    implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
 }

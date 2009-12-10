@@ -40,7 +40,7 @@ class FloatMathTest extends FunSuite {
 
         def testAngleAxisFrom(angle: Float) {
             val angle0 = radians(angle)
-            val axis0 = const(Vec3(0, 1, 0))
+            val axis0 = ConstVec3(0, 1, 0)
 
             val q = quatFrom(angle0, axis0)
 
@@ -113,7 +113,7 @@ class FloatMathTest extends FunSuite {
 
         def testAngleAxisFrom(angle: Float) {
             val angle0 = radians(angle)
-            val axis0 = const(Vec3(0, 0, 1))
+            val axis0 = ConstVec3(0, 0, 1)
 
             val m: ConstMat3 = rotationMatFrom(angle0, axis0)
 

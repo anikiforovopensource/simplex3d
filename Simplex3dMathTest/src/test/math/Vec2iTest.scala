@@ -73,10 +73,10 @@ class Vec2iTest extends FunSuite {
     }
 
     test("Const conversions") {
-        var c = consti(Vec2i(5)); var v = Vec2i(3)
+        var c: ConstVec2i = Vec2i(5); var v = Vec2i(3)
         v = c; assert(Vec2i(5) == v)
 
-        c = consti(Vec2i(5)); v = Vec2i(3)
+        c = Vec2i(5); v = Vec2i(3)
         c = v; assert(Vec2i(3) == c)
 
         val t: ConstVec2i = Vec2i(9)
@@ -84,15 +84,15 @@ class Vec2iTest extends FunSuite {
     }
 
     test("Equality methods") {
-        assert(Vec2i(4, 7) == consti(Vec2i(4, 7)))
-        assert(consti(Vec2i(4, 7)) == Vec2i(4, 7))
+        assert(Vec2i(4, 7) == ConstVec2i(4, 7))
+        assert(ConstVec2i(4, 7) == Vec2i(4, 7))
 
         assert(Vec2i(1, 2) != Vec2i(9, 2))
         assert(Vec2i(1, 2) != Vec2i(1, 9))
     }
 
     test("Indexed read") {
-        val u = consti(Vec2i(3, 4))
+        val u = ConstVec2i(3, 4)
 
         expect(3) { u(0) }
         expect(4) { u(1) }

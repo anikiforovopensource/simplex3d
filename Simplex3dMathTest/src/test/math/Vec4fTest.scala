@@ -131,10 +131,10 @@ class Vec4fTest extends FunSuite {
     }
 
     test("Const conversions") {
-        var c = const(Vec4(5)); var v = Vec4(3)
+        var c: ConstVec4 = Vec4(5); var v = Vec4(3)
         v = c; assert(Vec4(5) == v)
 
-        c = const(Vec4(5)); v = Vec4(3)
+        c = Vec4(5); v = Vec4(3)
         c = v; assert(Vec4(3) == c)
 
         val t: ConstVec4 = Vec4(9)
@@ -142,8 +142,8 @@ class Vec4fTest extends FunSuite {
     }
 
     test("Equality methods") {
-        assert(Vec4(4, 7, 9, 1) == const(Vec4(4, 7, 9, 1)))
-        assert(const(Vec4(4, 7, 9, 1)) == Vec4(4, 7, 9, 1))
+        assert(Vec4(4, 7, 9, 1) == ConstVec4(4, 7, 9, 1))
+        assert(ConstVec4(4, 7, 9, 1) == Vec4(4, 7, 9, 1))
 
         assert(Vec4(1, 2, 3, 4) != Vec4(9, 2, 3, 4))
         assert(Vec4(1, 2, 3, 4) != Vec4(1, 9, 3, 4))
@@ -152,7 +152,7 @@ class Vec4fTest extends FunSuite {
     }
 
     test("Indexed read") {
-        val u = const(Vec4(3, 4, 5, 6))
+        val u = ConstVec4(3, 4, 5, 6)
 
         expect(3) { u(0) }
         expect(4) { u(1) }
@@ -191,7 +191,7 @@ class Vec4fTest extends FunSuite {
     }
 
     test("Const math") {
-        val u = const(Vec4(6, 7, 8, 9))
+        val u = ConstVec4(6, 7, 8, 9)
 
         assert(Vec4(-6, -7, -8, -9) == -u)
 
@@ -200,32 +200,32 @@ class Vec4fTest extends FunSuite {
         assert(Vec4(3, 3.5f, 4, 4.5f) == u/2)
         assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7/u)
 
-        val v = const(Vec4(2, 3, 4, 5))
+        val v = ConstVec4(2, 3, 4, 5)
 
         assert(Vec4(8, 10, 12, 14) == u + v)
         assert(Vec4(4) == u - v)
         assert(Vec4(12, 21, 32, 45) == u*v)
         assert(Vec4(3, 7/3f, 2, 9/5f) == u/v)
 
-        val m4x2 = const(Mat4x2(
+        val m4x2 = ConstMat4x2(
             2, 5, 4, 6,
             3, 4, 8, 2
-        ))
+        )
         assert(Vec2(65, 60) == v*m4x2)
 
-        val m4x3 = const(Mat4x3(
+        val m4x3 = ConstMat4x3(
             2, 5, 4, 6,
             3, 4, 8, 2,
             7, 4, 2, 5
-        ))
+        )
         assert(Vec3(65, 60, 59) == v*m4x3)
 
-        val m4 = const(Mat4(
+        val m4 = ConstMat4(
             2, 5, 4, 6,
             3, 4, 8, 2,
             7, 4, 2, 5,
             5, 9, 2, 3
-        ))
+        )
         assert(Vec4(65, 60, 59, 60) == v*m4)
     }
 
@@ -249,12 +249,12 @@ class Vec4fTest extends FunSuite {
         u = Vec4(2, 3, 4, 5); u.set(22, 33, 44, 55); assert(Vec4(22, 33, 44, 55) == u)
 
         u = Vec4(2, 3, 4, 5)
-        val m4 = const(Mat4(
+        val m4 = ConstMat4(
             2, 5, 4, 6,
             3, 4, 8, 2,
             7, 4, 2, 5,
             5, 9, 2, 3
-        ))
+        )
         u *= m4
         assert(Vec4(65, 60, 59, 60) == u)
     }

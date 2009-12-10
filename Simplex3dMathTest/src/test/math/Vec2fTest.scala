@@ -73,10 +73,10 @@ class Vec2fTest extends FunSuite {
     }
 
     test("Const conversions") {
-        var c = const(Vec2(5)); var v = Vec2(3)
+        var c: ConstVec2 = Vec2(5); var v = Vec2(3)
         v = c; assert(Vec2(5) == v)
 
-        c = const(Vec2(5)); v = Vec2(3)
+        c = Vec2(5); v = Vec2(3)
         c = v; assert(Vec2(3) == c)
 
         val t: ConstVec2 = Vec2(9)
@@ -84,15 +84,15 @@ class Vec2fTest extends FunSuite {
     }
 
     test("Equality methods") {
-        assert(Vec2(4, 7) == const(Vec2(4, 7)))
-        assert(const(Vec2(4, 7)) == Vec2(4, 7))
+        assert(Vec2(4, 7) == ConstVec2(4, 7))
+        assert(ConstVec2(4, 7) == Vec2(4, 7))
 
         assert(Vec2(1, 2) != Vec2(9, 2))
         assert(Vec2(1, 2) != Vec2(1, 9))
     }
 
     test("Indexed read") {
-        val u = const(Vec2(3, 4))
+        val u = ConstVec2(3, 4)
 
         expect(3) { u(0) }
         expect(4) { u(1) }
@@ -123,7 +123,7 @@ class Vec2fTest extends FunSuite {
     }
 
     test("Const math") {
-        val u = const(Vec2(7, 8))
+        val u = ConstVec2(7, 8)
 
         assert(Vec2(-7, -8) == -u)
 
@@ -132,20 +132,20 @@ class Vec2fTest extends FunSuite {
         assert(Vec2(3.5f, 4) == u/2)
         assert(Vec2(1, 7/8f) == 7/u)
 
-        val v = const(Vec2(2, 4))
+        val v = ConstVec2(2, 4)
 
         assert(Vec2(9, 12) == u + v)
         assert(Vec2(5, 4) == u - v)
         assert(Vec2(14, 32) == u*v)
         assert(Vec2(3.5f, 2) == u/v)
 
-        val m2 = const(Mat2(2, 4, 3, 5))
+        val m2 = ConstMat2(2, 4, 3, 5)
         assert(Vec2(46, 61) == u*m2)
 
-        val m2x3 = const(Mat2x3(2, 4, 3, 5, 6, 7))
+        val m2x3 = ConstMat2x3(2, 4, 3, 5, 6, 7)
         assert(Vec3(46, 61, 98) == u*m2x3)
 
-        val m2x4 = const(Mat2x4(2, 4, 3, 5, 6, 7, 8, 9))
+        val m2x4 = ConstMat2x4(2, 4, 3, 5, 6, 7, 8, 9)
         assert(Vec4(46, 61, 98, 128) == u*m2x4)
     }
 
@@ -169,7 +169,7 @@ class Vec2fTest extends FunSuite {
         u = Vec2(2, 3); u.set(22, 33); assert(Vec2(22, 33) == u)
 
         u = Vec2(7, 8)
-        u *= const(Mat2(2, 4, 3, 5))
+        u *= ConstMat2(2, 4, 3, 5)
         assert(Vec2(46, 61) == u)
     }
 }

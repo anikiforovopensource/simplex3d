@@ -33,7 +33,7 @@ class Vec2fSwizzleTest extends FunSuite {
         val x = 5f
         val y = 6f
 
-        val u = const(Vec2(x, y))
+        val u = ConstVec2(x, y)
 
         expect(x) { u.x }
         expect(y) { u.y }
@@ -143,7 +143,7 @@ class Vec2fSwizzleTest extends FunSuite {
         val y = 6f
         val t = 10f
 
-        var i = const(Vec2(x, y))
+        var i = ConstVec2(x, y)
         val u = Vec2(1)
 
         u := i; u.x = t; assert(Vec2(t, y) == u)
@@ -155,7 +155,7 @@ class Vec2fSwizzleTest extends FunSuite {
         u := i; u.s = t; assert(Vec2(t, y) == u)
         u := i; u.t = t; assert(Vec2(x, t) == u)
 
-        i = const(Vec2(t))
+        i = Vec2(t)
 
         u := i; u.xy = Vec2(x, y); assert(Vec2(x, y) == u)
         u := i; u.yx = Vec2(x, y); assert(Vec2(y, x) == u)
@@ -171,7 +171,7 @@ class Vec2fSwizzleTest extends FunSuite {
         val x = 5f
         val y = 6f
 
-        val i = const(Vec2(x, y))
+        val i = ConstVec2(x, y)
         val u = Vec2(1)
 
         u := i; u.xy = u.xx; assert(Vec2(x, x) == u)

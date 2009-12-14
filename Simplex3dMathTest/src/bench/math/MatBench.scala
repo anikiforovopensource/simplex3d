@@ -25,7 +25,7 @@ package bench.math
 object MatBench {
     def main(args: Array[String]) {
         val b = new MatMulBench()
-        b.runWorseCase
+        b.runWorstCase
         b.runBestCase
     }
 }
@@ -41,7 +41,7 @@ class MatMulBench {
     val random = new scala.util.Random(seed)
     def rd = random.nextDouble()
 
-    def runWorseCase() {
+    def runWorstCase() {
         var start = 0L
 
         start = System.currentTimeMillis

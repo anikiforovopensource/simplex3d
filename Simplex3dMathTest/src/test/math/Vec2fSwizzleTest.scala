@@ -41,9 +41,6 @@ class Vec2fSwizzleTest extends FunSuite {
         expect(x) { u.r }
         expect(y) { u.g }
 
-        expect(x) { u.s }
-        expect(y) { u.t }
-
         assert(Vec2(x, x) == u.xx)
         assert(Vec2(x, y) == u.xy)
         assert(Vec2(y, x) == u.yx)
@@ -105,37 +102,6 @@ class Vec2fSwizzleTest extends FunSuite {
         assert(Vec4(y, y, x, y) == u.ggrg)
         assert(Vec4(y, y, y, x) == u.gggr)
         assert(Vec4(y, y, y, y) == u.gggg)
-
-        assert(Vec2(x, x) == u.ss)
-        assert(Vec2(x, y) == u.st)
-        assert(Vec2(y, x) == u.ts)
-        assert(Vec2(y, y) == u.tt)
-
-        assert(Vec3(x, x, x) == u.sss)
-        assert(Vec3(x, x, y) == u.sst)
-        assert(Vec3(x, y, x) == u.sts)
-        assert(Vec3(x, y, y) == u.stt)
-        assert(Vec3(y, x, x) == u.tss)
-        assert(Vec3(y, x, y) == u.tst)
-        assert(Vec3(y, y, x) == u.tts)
-        assert(Vec3(y, y, y) == u.ttt)
-
-        assert(Vec4(x, x, x, x) == u.ssss)
-        assert(Vec4(x, x, x, y) == u.ssst)
-        assert(Vec4(x, x, y, x) == u.ssts)
-        assert(Vec4(x, x, y, y) == u.sstt)
-        assert(Vec4(x, y, x, x) == u.stss)
-        assert(Vec4(x, y, x, y) == u.stst)
-        assert(Vec4(x, y, y, x) == u.stts)
-        assert(Vec4(x, y, y, y) == u.sttt)
-        assert(Vec4(y, x, x, x) == u.tsss)
-        assert(Vec4(y, x, x, y) == u.tsst)
-        assert(Vec4(y, x, y, x) == u.tsts)
-        assert(Vec4(y, x, y, y) == u.tstt)
-        assert(Vec4(y, y, x, x) == u.ttss)
-        assert(Vec4(y, y, x, y) == u.ttst)
-        assert(Vec4(y, y, y, x) == u.ttts)
-        assert(Vec4(y, y, y, y) == u.tttt)
     }
 
     test("Swizzled write") {
@@ -152,9 +118,6 @@ class Vec2fSwizzleTest extends FunSuite {
         u := i; u.r = t; assert(Vec2(t, y) == u)
         u := i; u.g = t; assert(Vec2(x, t) == u)
 
-        u := i; u.s = t; assert(Vec2(t, y) == u)
-        u := i; u.t = t; assert(Vec2(x, t) == u)
-
         i = Vec2(t)
 
         u := i; u.xy = Vec2(x, y); assert(Vec2(x, y) == u)
@@ -162,9 +125,6 @@ class Vec2fSwizzleTest extends FunSuite {
 
         u := i; u.rg = Vec2(x, y); assert(Vec2(x, y) == u)
         u := i; u.gr = Vec2(x, y); assert(Vec2(y, x) == u)
-
-        u := i; u.st = Vec2(x, y); assert(Vec2(x, y) == u)
-        u := i; u.ts = Vec2(x, y); assert(Vec2(y, x) == u)
     }
 
     test("Swizzled self write") {
@@ -175,39 +135,7 @@ class Vec2fSwizzleTest extends FunSuite {
         val u = Vec2(1)
 
         u := i; u.xy = u.xx; assert(Vec2(x, x) == u)
-        u := i; u.xy = u.xy; assert(Vec2(x, y) == u)
-        u := i; u.xy = u.yx; assert(Vec2(y, x) == u)
-        u := i; u.xy = u.yy; assert(Vec2(y, y) == u)
-        u := i; u.xy = u; assert(Vec2(x, y) == u)
 
-        u := i; u.yx = u.xx; assert(Vec2(x, x) == u)
-        u := i; u.yx = u.xy; assert(Vec2(y, x) == u)
-        u := i; u.yx = u.yx; assert(Vec2(x, y) == u)
-        u := i; u.yx = u.yy; assert(Vec2(y, y) == u)
-        u := i; u.yx = u; assert(Vec2(y, x) == u)
-
-        u := i; u.rg = u.rr; assert(Vec2(x, x) == u)
-        u := i; u.rg = u.rg; assert(Vec2(x, y) == u)
-        u := i; u.rg = u.gr; assert(Vec2(y, x) == u)
-        u := i; u.rg = u.gg; assert(Vec2(y, y) == u)
-        u := i; u.rg = u; assert(Vec2(x, y) == u)
-
-        u := i; u.gr = u.rr; assert(Vec2(x, x) == u)
-        u := i; u.gr = u.rg; assert(Vec2(y, x) == u)
-        u := i; u.gr = u.gr; assert(Vec2(x, y) == u)
-        u := i; u.gr = u.gg; assert(Vec2(y, y) == u)
-        u := i; u.gr = u; assert(Vec2(y, x) == u)
-
-        u := i; u.st = u.ss; assert(Vec2(x, x) == u)
-        u := i; u.st = u.st; assert(Vec2(x, y) == u)
-        u := i; u.st = u.ts; assert(Vec2(y, x) == u)
-        u := i; u.st = u.tt; assert(Vec2(y, y) == u)
-        u := i; u.st = u; assert(Vec2(x, y) == u)
-
-        u := i; u.ts = u.ss; assert(Vec2(x, x) == u)
-        u := i; u.ts = u.st; assert(Vec2(y, x) == u)
-        u := i; u.ts = u.ts; assert(Vec2(x, y) == u)
-        u := i; u.ts = u.tt; assert(Vec2(y, y) == u)
-        u := i; u.ts = u; assert(Vec2(y, x) == u)
+        pending
     }
 }

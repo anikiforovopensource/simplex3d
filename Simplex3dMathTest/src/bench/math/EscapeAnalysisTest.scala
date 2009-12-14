@@ -34,9 +34,9 @@ class EscapeBenchTest {
     
     val random = new scala.util.Random(1)
     def rd = random.nextDouble()
-    val data = new Array[Vec4m](length)
+    val data = new Array[Vec4a](length)
     for (i <- 0 until length) {
-        data(i) = new Vec4m(rd, rd, rd, rd)
+        data(i) = new Vec4a(rd, rd, rd, rd)
     }
 
     def run() {
@@ -73,7 +73,7 @@ class EscapeBenchTest {
 
     def testTemp(length: Int, loops: Int) {
         var answer = 0
-        val tmp = new Vec4m(0, 0, 0, 0)
+        val tmp = new Vec4a(0, 0, 0, 0)
 
         var l = 0; while (l < loops) {
             var i = 0; while (i < length - 2) {
@@ -91,9 +91,9 @@ class EscapeBenchTest {
 
 }
 
-class Vec4m(var x: Double, var y: Double, var z: Double, var w: Double) {
-    def +(u: Vec4m) = new Vec4m(x + u.x, y + u.y, z + u.z, w + u.w)
-    def add(u: Vec4m, r: Vec4m) = {
+class Vec4a(var x: Double, var y: Double, var z: Double, var w: Double) {
+    def +(u: Vec4a) = new Vec4a(x + u.x, y + u.y, z + u.z, w + u.w)
+    def add(u: Vec4a, r: Vec4a) = {
         r.x = x + u.x
         r.y = y + u.y
         r.z = z + u.z

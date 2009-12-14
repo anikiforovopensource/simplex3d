@@ -43,7 +43,7 @@ object DoubleMath {
     def nextVec4d() :Vec4d = nextVec4
 
     // Constants
-    val DoubleEpsilon: Double = 2.22045e-16f;
+    val DoubleEpsilon: Double = 2.22045e-16;
     val Pi: Double = Math.Pi
     val E: Double = Math.E
 
@@ -95,8 +95,8 @@ object DoubleMath {
     }
     def trunc(x: Double) :Double = long(x)
     def round(x: Double) :Double = {
-        if (x >= 0) long(x + 0.5f)
-        else long(x - 0.5f)
+        if (x >= 0) long(x + 0.5)
+        else long(x - 0.5)
     }
     def roundEven(x: Double) :Double = SMath.rint(x)
     def ceil(x: Double) :Double = {
@@ -1593,28 +1593,6 @@ object DoubleMath {
         mat
     }
 
-    def transposeSubMat2d(m: RotationSubMat2d) {
-        import m._
-
-        val t10 = m10
-        m10 = m01
-        m01 = t10
-    }
-
-    def transposeSubMat3d(m: RotationSubMat3d) {
-        import m._
-
-        val t10 = m10
-        val t20 = m20
-        val t21 = m21
-        m10 = m01
-        m20 = m02
-        m01 = t10
-        m21 = m12
-        m02 = t20
-        m12 = t21
-    }
-
     // Quaternion
     def normSquare(q: AnyQuat4d) :Double = q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d
     def norm(q: AnyQuat4d) :Double = {
@@ -1634,7 +1612,7 @@ object DoubleMath {
     def inverse(q: AnyQuat4d) :Quat4d = conjugate(q)/normSquare(q)
 
     def slerp(p: AnyQuat4d, q: AnyQuat4d, a: Double) :Quat4d = {
-        if (approxEqual(p, q, 1e-14f)) return Quat4d(q)
+        if (approxEqual(p, q, 1e-14)) return Quat4d(q)
 
         var cosTheta = p.a*q.a + p.b*q.b + p.c*q.c+ p.d*q.d
         var negate = false
@@ -1646,7 +1624,7 @@ object DoubleMath {
         var t = a
         var s = 1 - t
 
-        if (cosTheta < 0.95f) {
+        if (cosTheta < 0.95) {
             val theta = acos(cosTheta)
             val invSinTheta = 1/sin(theta)
 
@@ -1669,19 +1647,10 @@ object DoubleMath {
      * counterclockwise by the specified angle.
      */
     def rotationMatFrom(angle: Double) :Mat2d = {
-        val m = Mat2d(1)
-        rotationMatFrom(angle, m)
-        m
-    }
-    /**
-     * This method creates a 2d transformation matrix that rotates a vector
-     * counterclockwise by the specified angle.
-     */
-    def rotationMatFrom(angle: Double, result: RotationSubMat2d) {
         val cosA = cos(angle)
         val sinA = sin(angle)
 
-        result.set(
+        new Mat2d(
              cosA, sinA,
             -sinA, cosA
         )
@@ -1691,31 +1660,23 @@ object DoubleMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def rotationAngleFrom(m: ConstRotationSubMat2d) :Double = {
-        acos((m.m00 + m.m11)*0.5f)
+    def rotationAngleFrom(m: Mat2d) :Double = {
+        acos((m.m00 + m.m11)*0.5)
     }
 
     /**
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quatFrom(m: ConstRotationSubMat3d) :Quat4d = {
-        val q = Quat4d()
-        quatFrom(m, q)
-        q
-    }
-    /**
-     * The result is undefined if the matrix does not represent
-     * non-scaling rotation.
-     */
-    def quatFrom(m: ConstRotationSubMat3d, result: Quat4d) {
+    def quatFrom(m: Mat3d) :Quat4d = {
         import m._
 
+        val result = new Quat4d(0, 0, 0, 0)
         val trace = m00 + m11 + m22
 
         if (trace > 0) {
             val t = trace + 1
-            val s = inversesqrt(t)*0.5f
+            val s = inversesqrt(t)*0.5
             result.a = s*t
             result.d = (m10 - m01)*s
             result.c = (m02 - m20)*s
@@ -1723,7 +1684,7 @@ object DoubleMath {
         }
         else if (m00 > m11 && m00 > m22) {
             val t = m00 - m11 - m22 + 1
-            val s = inversesqrt(t)*0.5f
+            val s = inversesqrt(t)*0.5
             result.b = s*t
             result.c = (m10 + m01)*s
             result.d = (m02 + m20)*s
@@ -1731,7 +1692,7 @@ object DoubleMath {
         }
         else if (m11 > m22) {
             val t = -m00 + m11 - m22 + 1
-            val s = inversesqrt(t)*0.5f
+            val s = inversesqrt(t)*0.5
             result.c = s*t
             result.b = (m10 + m01)*s
             result.a = (m02 - m20)*s
@@ -1739,14 +1700,15 @@ object DoubleMath {
         }
         else {
             val t = -m00 - m11 + m22 + 1
-            val s = inversesqrt(t)*0.5f
+            val s = inversesqrt(t)*0.5
             result.d = s*t
             result.a = (m10 - m01)*s
             result.b = (m02 + m20)*s
             result.c = (m21 + m12)*s
         }
-    }
 
+        result
+    }
     /**
      * The result is undefined for axis with non-unit length.
      */
@@ -1754,29 +1716,11 @@ object DoubleMath {
         val s = sin(angle/2)
         new Quat4d(cos(angle/2), s*axis.x, s*axis.y, s*axis.z)
     }
-    /**
-     * The result is undefined for axis with non-unit length.
-     */
-    def quatFrom(angle: Double, axis: AnyVec3d, result: Quat4d) {
-        val s = sin(angle/2)
-        result.a = cos(angle/2)
-        result.b = s*axis.x
-        result.c = s*axis.y
-        result.d = s*axis.z
-    }
 
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
     def rotationMatFrom(q: AnyQuat4d) :Mat3d = {
-        val m = Mat3d(1)
-        rotationMatFrom(q, m)
-        m
-    }
-    /**
-     * The result is undefined for quaternions with non-unit norm.
-     */
-    def rotationMatFrom(q: AnyQuat4d, result: RotationSubMat3d) {
         import q._
 
         val tb = 2*b*b
@@ -1789,7 +1733,7 @@ object DoubleMath {
         val cd = 2*c*d
         val ba = 2*b*a
 
-        result.set(
+        new Mat3d(
             tc - td, bc + da, bd - ca,
             bc - da, 1 - tb - td, cd + ba,
             bd + ca, cd - ba, tc - tb
@@ -1799,15 +1743,6 @@ object DoubleMath {
      * The result is undefined for axis with non-unit length.
      */
     def rotationMatFrom(angle: Double, axis: AnyVec3d) :Mat3d = {
-        val m = Mat3d(1)
-        rotationMatFrom(angle, axis, m)
-        m
-    }
-    /**
-     * The result is undefined for axis with non-unit length.
-     */
-    def rotationMatFrom(angle: Double, axis: AnyVec3d, result: RotationSubMat3d)
-    {
         import axis._
 
         val sinA = sin(angle)
@@ -1821,7 +1756,7 @@ object DoubleMath {
         val cxz = temp*z
         val cyz = c*y*z
 
-        result.set(
+        new Mat3d(
             cosA + c*x*x, cxy + sz, cxz - sy,
             cxy - sz, cosA + c*y*y, cyz + sx,
             cxz + sy, cyz - sx, cosA + c*z*z
@@ -1836,7 +1771,7 @@ object DoubleMath {
     def angleAxisFrom(q: AnyQuat4d, axisResult: Vec3d) :Double = {
         import q._
 
-        if (approxEqual(abs(a), 1, 1e-15f)) {
+        if (approxEqual(abs(a), 1, 1e-15)) {
             axisResult.set(1, 0, 0)
             return 0
         }
@@ -1853,32 +1788,32 @@ object DoubleMath {
      * non-scaling rotation. If matrix represents 0 degree rotation,
      * then rotation axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(m: ConstRotationSubMat3d, axisResult: Vec3d) :Double = {
+    def angleAxisFrom(m: Mat3d, axisResult: Vec3d) :Double = {
         import m._
 
-        val cosAngle = (m00 + m11 + m22 - 1)*0.5f
+        val cosAngle = (m00 + m11 + m22 - 1)*0.5
 
-        if (approxEqual(cosAngle, 1, 1e-14f)) {
+        if (approxEqual(cosAngle, 1, 1e-14)) {
             axisResult.set(1, 0, 0)
             return 0
         }
-        else if (approxEqual(cosAngle, -1, 1e-14f)) {
+        else if (approxEqual(cosAngle, -1, 1e-14)) {
             if (m00 > m11 && m00 > m22) {
-                val r = sqrt((m00 + 1)*0.5f)
+                val r = sqrt((m00 + 1)*0.5)
                 val t = 1/(4*r)
                 axisResult.x = r
                 axisResult.y = (m01 + m10)*t
                 axisResult.z = (m02 + m20)*t
             }
             else if (m11 > m22) {
-                val r = sqrt((m11 + 1)*0.5f)
+                val r = sqrt((m11 + 1)*0.5)
                 val t = 1/(4*r)
                 axisResult.y = r
                 axisResult.x = (m01 + m10)*t
                 axisResult.z = (m12 + m21)*t
             }
             else {
-                val r = sqrt((m22 + 1)*0.5f)
+                val r = sqrt((m22 + 1)*0.5)
                 val t = 1/(4*r)
                 axisResult.z = r
                 axisResult.x = (m02 + m20)*t
@@ -1899,15 +1834,10 @@ object DoubleMath {
     }
 
     def lookAt(direction: AnyVec3d, up: AnyVec3d) :Mat3d = {
-        val m = Mat3d(1)
-        lookAt(direction, up, m)
-        m
-    }
-    def lookAt(direction: AnyVec3d, up: AnyVec3d, m: RotationSubMat3d) {
         val zaxis = normalize(direction)
         val xaxis = normalize(cross(up, zaxis))
         val yaxis = cross(zaxis, xaxis)
-        m.set(
+        new Mat3d(
             xaxis.x, xaxis.y, xaxis.z,
             yaxis.x, yaxis.y, yaxis.z,
             zaxis.x, zaxis.y, zaxis.z
@@ -1919,7 +1849,7 @@ object DoubleMath {
                     near: Double, far: Double)
     :Mat4d =
     {
-        val focus = 1/tan(fieldOfView * 0.5f)
+        val focus = 1/tan(fieldOfView * 0.5)
         val n_f = 1/(near - far)
 
         new Mat4d(

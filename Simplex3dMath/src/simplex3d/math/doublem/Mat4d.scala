@@ -29,7 +29,6 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat4d
-extends ConstRotationSubMat3d
 {
     // Column major order.
     def m00: Double; def m10: Double; def m20: Double; def m30: Double // column
@@ -294,7 +293,7 @@ final class Mat4d private[math] (
     var m01: Double, var m11: Double, var m21: Double, var m31: Double,
     var m02: Double, var m12: Double, var m22: Double, var m32: Double,
     var m03: Double, var m13: Double, var m23: Double, var m33: Double
-) extends AnyMat4d with RotationSubMat3d
+) extends AnyMat4d
 {
     def *=(s: Double) {
         m00 *= s; m10 *= s; m20 *= s; m30 *= s;

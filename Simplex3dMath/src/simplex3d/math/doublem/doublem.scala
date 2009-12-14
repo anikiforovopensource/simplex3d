@@ -58,10 +58,4 @@ package object doublem {
     val ConstMat4x4d = ConstMat4d
     type Mat4x4d = Mat4d
     val Mat4x4d = Mat4d
-
-    type ConstRotationSubMat2x2d = ConstRotationSubMat2d
-    type RotationSubMat2x2d = RotationSubMat2d
-
-    type ConstRotationSubMat3x3d = ConstRotationSubMat3d
-    type RotationSubMat3x3d = RotationSubMat3d
 }

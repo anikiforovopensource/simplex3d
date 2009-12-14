@@ -54,10 +54,4 @@ package object floatm {
     val ConstMat4x4f = ConstMat4f
     type Mat4x4f = Mat4f
     val Mat4x4f = Mat4f
-
-    type ConstRotationSubMat2x2f = ConstRotationSubMat2f
-    type RotationSubMat2x2f = RotationSubMat2f
-
-    type ConstRotationSubMat3x3f = ConstRotationSubMat3f
-    type RotationSubMat3x3f = RotationSubMat3f
 }

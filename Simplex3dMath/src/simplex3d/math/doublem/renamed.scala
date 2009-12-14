@@ -113,23 +113,17 @@ package object renamed {
     type Mat4 = Mat4d
     val Mat4 = Mat4d
 
-    type ConstRotationSubMat2 = ConstRotationSubMat2d
-    type RotationSubMat2 = RotationSubMat2d
-
-    type ConstRotationSubMat3 = ConstRotationSubMat3d
-    type RotationSubMat3 = RotationSubMat3d
-
     type AnyQuat4 = AnyQuat4d
     type ConstQuat4 = ConstQuat4d
     val ConstQuat4 = ConstQuat4d
     type Quat4 = Quat4d
     val Quat4 = Quat4d
 
-    val Transform = TransformD
-    val InverseTransform = InverseTransformD
-    val Translation = TranslationD
-    val Rotation = RotationD
-    val Scale = ScaleD
+    val Transform = Transformd
+    val InverseTransform = InverseTransformd
+    val Translation = Translationd
+    val Rotation = Rotationd
+    val Scale = Scaled
 
     // Aliases
     type AnyMat2x2 = AnyMat2d
@@ -149,10 +143,4 @@ package object renamed {
     val ConstMat4x4 = ConstMat4d
     type Mat4x4 = Mat4d
     val Mat4x4 = Mat4d
-
-    type ConstRotationSubMat2x2 = ConstRotationSubMat2d
-    type RotationSubMat2x2 = RotationSubMat2d
-
-    type ConstRotationSubMat3x3 = ConstRotationSubMat3d
-    type RotationSubMat3x3 = RotationSubMat3d
 }

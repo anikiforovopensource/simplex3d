@@ -29,7 +29,6 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2x3f
-extends ConstRotationSubMat2f
 {
     // Column major order.
     def m00: Float; def m10: Float // column
@@ -287,7 +286,7 @@ final class Mat2x3f private[math] (
     var m00: Float, var m10: Float,
     var m01: Float, var m11: Float,
     var m02: Float, var m12: Float
-) extends AnyMat2x3f with RotationSubMat2f
+) extends AnyMat2x3f
 {
     def *=(s: Float) {
         m00 *= s; m10 *= s;

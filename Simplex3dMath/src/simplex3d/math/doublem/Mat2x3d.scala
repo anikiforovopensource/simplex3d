@@ -29,7 +29,6 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2x3d
-extends ConstRotationSubMat2d
 {
     // Column major order.
     def m00: Double; def m10: Double // column
@@ -287,7 +286,7 @@ final class Mat2x3d private[math] (
     var m00: Double, var m10: Double,
     var m01: Double, var m11: Double,
     var m02: Double, var m12: Double
-) extends AnyMat2x3d with RotationSubMat2d
+) extends AnyMat2x3d
 {
     def *=(s: Double) {
         m00 *= s; m10 *= s;

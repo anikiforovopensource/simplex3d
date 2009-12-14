@@ -100,7 +100,7 @@ class InlinedTestCase {
     val end = (am.length / 3) - 8
     var i = 0; while (i < end) {
         val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
-        val modelMatrix = TransformF(loc, lookAt(-loc, Vec3f.UnitY))
+        val modelMatrix = Transformf(loc, lookAt(-loc, Vec3f.UnitY))
         var j = 0; while (j < 8) {
             val id = j*3
             t.x = as(id)

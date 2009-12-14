@@ -49,32 +49,32 @@ sealed abstract class AnyVec2i extends Read2Int {
         }
     }
 
-    def unary_-() = Vec2i(-x, -y)
-    def unary_~() = Vec2i(~x, ~y)
+    def unary_-() = new Vec2i(-x, -y)
+    def unary_~() = new Vec2i(~x, ~y)
 
-    def *(s: Int) = Vec2i(x*s, y*s)
-    def /(s: Int) = Vec2i(x/s, y/s)
-    private[math] def divideByComponent(s: Int) = Vec2i(s/x, s/y)
-    def %(s: Int) = Vec2i(x % s, y % s)
-    private[math] def modByComponent(s: Int) = Vec2i(s%x, s%y)
-    def >>(s: Int) = Vec2i( x >> s, y >> s)
-    def >>>(s: Int) = Vec2i( x >>> s, y >>> s)
-    def <<(s: Int) = Vec2i( x << s, y << s)
-    def &(s: Int) = Vec2i( x & s, y & s)
-    def |(s: Int) = Vec2i( x | s, y | s)
-    def ^(s: Int) = Vec2i( x ^ s, y ^ s)
+    def *(s: Int) = new Vec2i(x * s, y * s)
+    def /(s: Int) = new Vec2i(x / s, y / s)
+    private[math] def divideByComponent(s: Int) = new Vec2i(s / x, s / y)
+    def %(s: Int) = new Vec2i(x % s, y % s)
+    private[math] def modByComponent(s: Int) = new Vec2i(s % x, s % y)
+    def >>(s: Int) = new Vec2i( x >> s, y >> s)
+    def >>>(s: Int) = new Vec2i( x >>> s, y >>> s)
+    def <<(s: Int) = new Vec2i( x << s, y << s)
+    def &(s: Int) = new Vec2i( x & s, y & s)
+    def |(s: Int) = new Vec2i( x | s, y | s)
+    def ^(s: Int) = new Vec2i( x ^ s, y ^ s)
 
-    def +(u: AnyVec2i) = Vec2i(x + u.x, y + u.y)
-    def -(u: AnyVec2i) = Vec2i(x - u.x, y - u.y)
-    def *(u: AnyVec2i) = Vec2i(x * u.x, y * u.y)
-    def /(u: AnyVec2i) = Vec2i(x / u.x, y / u.y)
-    def %(u: AnyVec2i) = Vec2i(x % u.x, y % u.y)
-    def >>(u: AnyVec2i) = Vec2i( x >> u.x, y >> u.y)
-    def >>>(u: AnyVec2i) = Vec2i( x >>> u.x, y >>> u.y)
-    def <<(u: AnyVec2i) = Vec2i( x << u.x, y << u.y)
-    def &(u: AnyVec2i) = Vec2i( x & u.x, y & u.y)
-    def |(u: AnyVec2i) = Vec2i( x | u.x, y | u.y)
-    def ^(u: AnyVec2i) = Vec2i( x ^ u.x, y ^ u.y)
+    def +(u: AnyVec2i) = new Vec2i(x + u.x, y + u.y)
+    def -(u: AnyVec2i) = new Vec2i(x - u.x, y - u.y)
+    def *(u: AnyVec2i) = new Vec2i(x * u.x, y * u.y)
+    def /(u: AnyVec2i) = new Vec2i(x / u.x, y / u.y)
+    def %(u: AnyVec2i) = new Vec2i(x % u.x, y % u.y)
+    def >>(u: AnyVec2i) = new Vec2i( x >> u.x, y >> u.y)
+    def >>>(u: AnyVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
+    def <<(u: AnyVec2i) = new Vec2i( x << u.x, y << u.y)
+    def &(u: AnyVec2i) = new Vec2i( x & u.x, y & u.y)
+    def |(u: AnyVec2i) = new Vec2i( x | u.x, y | u.y)
+    def ^(u: AnyVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
     def ==(u: AnyVec2i) :Boolean = {
         if (u eq null) false
@@ -95,7 +95,7 @@ object ConstVec2i {
     def apply(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
 
     implicit def mutableToConst(u: Vec2i) = new ConstVec2i(u.x, u.y)
-    implicit def constVec2iToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec2i) = new ConstVec2iSwizzled(u)
 }
 
 
@@ -167,7 +167,7 @@ object Vec2i {
     def apply(u: Read4Double) = new Vec2i(int(u.x), int(u.y))
 
     implicit def constToMutable(u: ConstVec2i) = Vec2i(u)
-    implicit def vec2iToSwizzled(u: Vec2i) = new Vec2iSwizzled(u)
+    implicit def vecToSwizzled(u: Vec2i) = new Vec2iSwizzled(u)
 }
 
 private[math] class ConstVec2iSwizzled(u: AnyVec2i) extends IntVecFactory

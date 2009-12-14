@@ -67,7 +67,7 @@ object ConstVec2b {
     def apply(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
     
     implicit def mutableToConst(u: Vec2b) = new ConstVec2b(u.x, u.y)
-    implicit def constVec2bToSwizzled(u: ConstVec2b) = new ConstVec2bSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec2b) = new ConstVec2bSwizzled(u)
 }
 
 
@@ -112,7 +112,7 @@ object Vec2b {
     def apply(u: AnyVec4b) = new Vec2b(u.x, u.y)
 
     implicit def constToMutable(u: ConstVec2b) = Vec2b(u)
-    implicit def vec2bToSwizzled(u: Vec2b) = new Vec2bSwizzled(u)
+    implicit def vecToSwizzled(u: Vec2b) = new Vec2bSwizzled(u)
 }
 
 private[math] class ConstVec2bSwizzled(u: AnyVec2b) extends BooleanVecFactory

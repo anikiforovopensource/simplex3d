@@ -79,7 +79,7 @@ object ConstVec4b {
     def apply(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 
     implicit def mutableToConst(u: Vec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
-    implicit def constVec4bToSwizzled(u: ConstVec4b) = new ConstVec4bSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec4b) = new ConstVec4bSwizzled(u)
 }
 
 
@@ -157,7 +157,7 @@ object Vec4b {
         new Vec4b(x, yzw.x, yzw.y, yzw.z)
 
     implicit def constToMutable(u: ConstVec4b) = Vec4b(u)
-    implicit def vec4bToSwizzled(u: Vec4b) = new Vec4bSwizzled(u)
+    implicit def vecToSwizzled(u: Vec4b) = new Vec4bSwizzled(u)
 }
 
 private[math] class ConstVec4bSwizzled(u: AnyVec4b)

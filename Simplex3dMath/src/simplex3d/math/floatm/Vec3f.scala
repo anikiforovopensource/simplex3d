@@ -53,15 +53,17 @@ sealed abstract class AnyVec3f extends Read3Float {
         }
     }
 
-    def unary_-() = Vec3f(-x, -y, -z)
-    def *(s: Float) = Vec3f(x*s, y*s, z*s)
-    def /(s: Float) = { val inv = 1/s; Vec3f(x*inv, y*inv, z*inv) }
-    private[math] def divideByComponent(s: Float) = Vec3f(s/x, s/y, s/z)
+    def unary_-() = new Vec3f(-x, -y, -z)
+    def *(s: Float) = new Vec3f(x * s, y * s, z * s)
+    def /(s: Float) = { val inv = 1/s; new Vec3f(x * inv, y * inv, z * inv) }
+    private[math] def divideByComponent(s: Float) = {
+        new Vec3f(s / x, s / y, s / z)
+    }
 
-    def +(u: AnyVec3f) = Vec3f(x + u.x, y + u.y, z + u.z)
-    def -(u: AnyVec3f) = Vec3f(x - u.x, y - u.y, z - u.z)
-    def *(u: AnyVec3f) = Vec3f(x * u.x, y * u.y, z * u.z)
-    def /(u: AnyVec3f) = Vec3f(x / u.x, y / u.y, z / u.z)
+    def +(u: AnyVec3f) = new Vec3f(x + u.x, y + u.y, z + u.z)
+    def -(u: AnyVec3f) = new Vec3f(x - u.x, y - u.y, z - u.z)
+    def *(u: AnyVec3f) = new Vec3f(x * u.x, y * u.y, z * u.z)
+    def /(u: AnyVec3f) = new Vec3f(x / u.x, y / u.y, z / u.z)
 
     def *(m: AnyMat3x2f) :Vec2f = m.transposeMul(this)
     def *(m: AnyMat3f) :Vec3f = m.transposeMul(this)
@@ -97,7 +99,7 @@ object ConstVec3f {
     def apply(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
 
     implicit def mutableToConst(u: Vec3f) = new ConstVec3f(u.x, u.y, u.z)
-    implicit def constVec3fToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec3f) = new ConstVec3fSwizzled(u)
 }
 
 
@@ -167,7 +169,7 @@ object Vec3f {
         new Vec3f(float(u.x), float(u.y), float(u.z))
 
     implicit def constToMutable(u: ConstVec3f) = Vec3f(u)
-    implicit def vec3ToSwizzled(u: Vec3f) = new Vec3fSwizzled(u)
+    implicit def vecToSwizzled(u: Vec3f) = new Vec3fSwizzled(u)
 }
 
 private[math] class ConstVec3fSwizzled(u: AnyVec3f)

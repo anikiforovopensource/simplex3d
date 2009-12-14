@@ -57,32 +57,34 @@ sealed abstract class AnyVec4i extends Read4Int {
         }
     }
 
-    def unary_-() = Vec4i(-x, -y, -z, -w)
-    def unary_~() = Vec4i(~x, ~y, ~z, ~w)
+    def unary_-() = new Vec4i(-x, -y, -z, -w)
+    def unary_~() = new Vec4i(~x, ~y, ~z, ~w)
 
-    def *(s: Int) = Vec4i(x*s, y*s, z*s, w*s)
-    def /(s: Int) = Vec4i(x/s, y/s, z/s, w/s)
-    private[math] def divideByComponent(s: Int) = Vec4i(s/x, s/y, s/z, s/w)
-    def %(s: Int) = Vec4i(x % s, y % s, z % s, w % s)
-    private[math] def modByComponent(s: Int) = Vec4i(s%x, s%y, s%z, s%w)
-    def >>(s: Int) = Vec4i( x >> s, y >> s, z >> s, w >> s)
-    def >>>(s: Int) = Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
-    def <<(s: Int) = Vec4i( x << s, y << s, z << s, w << s)
-    def &(s: Int) = Vec4i( x & s, y & s, z & s, w & s)
-    def |(s: Int) = Vec4i( x | s, y | s, z | s, w | s)
-    def ^(s: Int) = Vec4i( x ^ s, y ^ s, z ^ s, w ^ s)
+    def *(s: Int) = new Vec4i(x * s, y * s, z * s, w * s)
+    def /(s: Int) = new Vec4i(x / s, y / s, z / s, w / s)
+    private[math] def divideByComponent(s: Int) = {
+        new Vec4i(s / x, s / y, s / z, s / w)
+    }
+    def %(s: Int) = new Vec4i(x % s, y % s, z % s, w % s)
+    private[math] def modByComponent(s: Int) = new Vec4i(s%x, s%y, s%z, s%w)
+    def >>(s: Int) = new Vec4i( x >> s, y >> s, z >> s, w >> s)
+    def >>>(s: Int) = new Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
+    def <<(s: Int) = new Vec4i( x << s, y << s, z << s, w << s)
+    def &(s: Int) = new Vec4i( x & s, y & s, z & s, w & s)
+    def |(s: Int) = new Vec4i( x | s, y | s, z | s, w | s)
+    def ^(s: Int) = new Vec4i( x ^ s, y ^ s, z ^ s, w ^ s)
 
-    def +(u: AnyVec4i) = Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
-    def -(u: AnyVec4i) = Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
-    def *(u: AnyVec4i) = Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
-    def /(u: AnyVec4i) = Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
-    def %(u: AnyVec4i) = Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
-    def >>(u: AnyVec4i) = Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
-    def >>>(u: AnyVec4i) = Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
-    def <<(u: AnyVec4i) = Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
-    def &(u: AnyVec4i) = Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
-    def |(u: AnyVec4i) = Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
-    def ^(u: AnyVec4i) = Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
+    def +(u: AnyVec4i) = new Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
+    def -(u: AnyVec4i) = new Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
+    def *(u: AnyVec4i) = new Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
+    def /(u: AnyVec4i) = new Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
+    def %(u: AnyVec4i) = new Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
+    def >>(u: AnyVec4i) = new Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
+    def >>>(u: AnyVec4i) = new Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
+    def <<(u: AnyVec4i) = new Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
+    def &(u: AnyVec4i) = new Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
+    def |(u: AnyVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
+    def ^(u: AnyVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
 
     def ==(u: AnyVec4i) :Boolean = {
         if (u eq null) false
@@ -108,7 +110,7 @@ object ConstVec4i {
     def apply(u: AnyVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
 
     implicit def mutableToConst(u: Vec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
-    implicit def constVec4iToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec4i) = new ConstVec4iSwizzled(u)
 }
 
 
@@ -217,7 +219,7 @@ object Vec4i {
         new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 
     implicit def constToMutable(u: ConstVec4i) = Vec4i(u)
-    implicit def vec4iToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)
+    implicit def vecToSwizzled(u: Vec4i) = new Vec4iSwizzled(u)
 }
 
 private[math] class ConstVec4iSwizzled(u: AnyVec4i)

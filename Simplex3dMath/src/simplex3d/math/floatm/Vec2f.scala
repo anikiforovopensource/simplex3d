@@ -49,15 +49,15 @@ sealed abstract class AnyVec2f extends Read2Float {
         }
     }
 
-    def unary_-() = Vec2f(-x, -y)
-    def *(s: Float) = Vec2f(x*s, y*s)
-    def /(s: Float) = { val inv = 1/s; Vec2f(x*inv, y*inv) }
-    private[math] def divideByComponent(s: Float) = Vec2f(s/x, s/y)
+    def unary_-() = new Vec2f(-x, -y)
+    def *(s: Float) = new Vec2f(x * s, y * s)
+    def /(s: Float) = { val inv = 1/s; new Vec2f(x * inv, y * inv) }
+    private[math] def divideByComponent(s: Float) = new Vec2f(s / x, s / y)
 
-    def +(u: AnyVec2f) = Vec2f(x + u.x, y + u.y)
-    def -(u: AnyVec2f) = Vec2f(x - u.x, y - u.y)
-    def *(u: AnyVec2f) = Vec2f(x * u.x, y * u.y)
-    def /(u: AnyVec2f) = Vec2f(x / u.x, y / u.y)
+    def +(u: AnyVec2f) = new Vec2f(x + u.x, y + u.y)
+    def -(u: AnyVec2f) = new Vec2f(x - u.x, y - u.y)
+    def *(u: AnyVec2f) = new Vec2f(x * u.x, y * u.y)
+    def /(u: AnyVec2f) = new Vec2f(x / u.x, y / u.y)
 
     def *(m: AnyMat2f) :Vec2f = m.transposeMul(this)
     def *(m: AnyMat2x3f) :Vec3f = m.transposeMul(this)
@@ -91,7 +91,7 @@ object ConstVec2f {
     def apply(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 
     implicit def mutableToConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
-    implicit def constVec2fToSwizzled(u: ConstVec2f) = new ConstVec2fSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec2f) = new ConstVec2fSwizzled(u)
 }
 
 final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
@@ -150,7 +150,7 @@ object Vec2f {
     def apply(u: Read4Double) = new Vec2f(float(u.x), float(u.y))
 
     implicit def constToMutable(u: ConstVec2f) = Vec2f(u)
-    implicit def vec2ToSwizzled(u: Vec2f) = new Vec2fSwizzled(u)
+    implicit def vecToSwizzled(u: Vec2f) = new Vec2fSwizzled(u)
 }
 
 private[math] class ConstVec2fSwizzled(u: AnyVec2f) extends FloatVecFactory

@@ -56,15 +56,19 @@ sealed abstract class AnyVec4d extends Read4Double {
         }
     }
 
-    def unary_-() = Vec4d(-x, -y, -z, -w)
-    def *(s: Double) = Vec4d(x*s, y*s, z*s, w*s)
-    def /(s: Double) = { val inv = 1/s; Vec4d(x*inv, y*inv, z*inv, w*inv) }
-    private[math] def divideByComponent(s: Double) = Vec4d(s/x, s/y, s/z, s/w)
+    def unary_-() = new Vec4d(-x, -y, -z, -w)
+    def *(s: Double) = new Vec4d(x * s, y * s, z * s, w * s)
+    def /(s: Double) = { val inv = 1/s;
+        new Vec4d(x * inv, y * inv, z * inv, w * inv)
+    }
+    private[math] def divideByComponent(s: Double) = {
+        new Vec4d(s / x, s / y, s / z, s / w)
+    }
 
-    def +(u: AnyVec4d) = Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
-    def -(u: AnyVec4d) = Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
-    def *(u: AnyVec4d) = Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
-    def /(u: AnyVec4d) = Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
+    def +(u: AnyVec4d) = new Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
+    def -(u: AnyVec4d) = new Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
+    def *(u: AnyVec4d) = new Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
+    def /(u: AnyVec4d) = new Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
 
     def *(m: AnyMat4x2d) :Vec2d = m.transposeMul(this)
     def *(m: AnyMat4x3d) :Vec3d = m.transposeMul(this)
@@ -104,7 +108,7 @@ object ConstVec4d {
     def apply(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
 
     implicit def mutableToConst(u: Vec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
-    implicit def constVec4dToSwizzled(u: ConstVec4d) = new ConstVec4dSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec4d) = new ConstVec4dSwizzled(u)
 }
 
 
@@ -204,7 +208,7 @@ object Vec4d {
         new Vec4d(u.x, u.y, u.z, u.w)
 
     implicit def constToMutable(u: ConstVec4d) = Vec4d(u)
-    implicit def vec4ToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)
+    implicit def vecToSwizzled(u: Vec4d) = new Vec4dSwizzled(u)
 }
 
 private[math] class ConstVec4dSwizzled(u: AnyVec4d)

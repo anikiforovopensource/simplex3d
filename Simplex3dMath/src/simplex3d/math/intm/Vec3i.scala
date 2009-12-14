@@ -53,32 +53,32 @@ sealed abstract class AnyVec3i extends Read3Int {
         }
     }
 
-    def unary_-() = Vec3i(-x, -y, -z)
-    def unary_~() = Vec3i(~x, ~y, ~z)
+    def unary_-() = new Vec3i(-x, -y, -z)
+    def unary_~() = new Vec3i(~x, ~y, ~z)
 
-    def *(s: Int) = Vec3i(x*s, y*s, z*s)
-    def /(s: Int) = Vec3i(x/s, y/s, z/s)
-    private[math] def divideByComponent(s: Int) = Vec3i(s/x, s/y, s/z)
-    def %(s: Int) = Vec3i(x % s, y % s, z % s)
-    private[math] def modByComponent(s: Int) = Vec3i(s%x, s%y, s%z)
-    def >>(s: Int) = Vec3i( x >> s, y >> s, z >> s)
-    def >>>(s: Int) = Vec3i( x >>> s, y >>> s, z >>> s)
-    def <<(s: Int) = Vec3i( x << s, y << s, z << s)
-    def &(s: Int) = Vec3i( x & s, y & s, z & s)
-    def |(s: Int) = Vec3i( x | s, y | s, z | s)
-    def ^(s: Int) = Vec3i( x ^ s, y ^ s, z ^ s)
+    def *(s: Int) = new Vec3i(x * s, y * s, z * s)
+    def /(s: Int) = new Vec3i(x / s, y / s, z / s)
+    private[math] def divideByComponent(s: Int) = new Vec3i(s / x, s / y, s / z)
+    def %(s: Int) = new Vec3i(x % s, y % s, z % s)
+    private[math] def modByComponent(s: Int) = new Vec3i(s % x, s % y, s % z)
+    def >>(s: Int) = new Vec3i( x >> s, y >> s, z >> s)
+    def >>>(s: Int) = new Vec3i( x >>> s, y >>> s, z >>> s)
+    def <<(s: Int) = new Vec3i( x << s, y << s, z << s)
+    def &(s: Int) = new Vec3i( x & s, y & s, z & s)
+    def |(s: Int) = new Vec3i( x | s, y | s, z | s)
+    def ^(s: Int) = new Vec3i( x ^ s, y ^ s, z ^ s)
 
-    def +(u: AnyVec3i) = Vec3i(x + u.x, y + u.y, z + u.z)
-    def -(u: AnyVec3i) = Vec3i(x - u.x, y - u.y, z - u.z)
-    def *(u: AnyVec3i) = Vec3i(x * u.x, y * u.y, z * u.z)
-    def /(u: AnyVec3i) = Vec3i(x / u.x, y / u.y, z / u.z)
-    def %(u: AnyVec3i) = Vec3i(x % u.x, y % u.y, z % u.z)
-    def >>(u: AnyVec3i) = Vec3i( x >> u.x, y >> u.y, z >> u.z)
-    def >>>(u: AnyVec3i) = Vec3i( x >>> u.x, y >>> u.y, z >>> u.z)
-    def <<(u: AnyVec3i) = Vec3i( x << u.x, y << u.y, z << u.z)
-    def &(u: AnyVec3i) = Vec3i( x & u.x, y & u.y, z & u.z)
-    def |(u: AnyVec3i) = Vec3i( x | u.x, y | u.y, z | u.z)
-    def ^(u: AnyVec3i) = Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
+    def +(u: AnyVec3i) = new Vec3i(x + u.x, y + u.y, z + u.z)
+    def -(u: AnyVec3i) = new Vec3i(x - u.x, y - u.y, z - u.z)
+    def *(u: AnyVec3i) = new Vec3i(x * u.x, y * u.y, z * u.z)
+    def /(u: AnyVec3i) = new Vec3i(x / u.x, y / u.y, z / u.z)
+    def %(u: AnyVec3i) = new Vec3i(x % u.x, y % u.y, z % u.z)
+    def >>(u: AnyVec3i) = new Vec3i( x >> u.x, y >> u.y, z >> u.z)
+    def >>>(u: AnyVec3i) = new Vec3i( x >>> u.x, y >>> u.y, z >>> u.z)
+    def <<(u: AnyVec3i) = new Vec3i( x << u.x, y << u.y, z << u.z)
+    def &(u: AnyVec3i) = new Vec3i( x & u.x, y & u.y, z & u.z)
+    def |(u: AnyVec3i) = new Vec3i( x | u.x, y | u.y, z | u.z)
+    def ^(u: AnyVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
 
     def ==(u: AnyVec3i) :Boolean = {
         if (u eq null) false
@@ -101,7 +101,7 @@ object ConstVec3i {
     def apply(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
 
     implicit def mutableToConst(u: Vec3i) = new ConstVec3i(u.x, u.y, u.z)
-    implicit def constVec3iToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec3i) = new ConstVec3iSwizzled(u)
 }
 
 
@@ -179,7 +179,7 @@ object Vec3i {
     def apply(u: Read4Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
 
     implicit def constToMutable(u: ConstVec3i) = Vec3i(u)
-    implicit def vec3iToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
+    implicit def vecToSwizzled(u: Vec3i) = new Vec3iSwizzled(u)
 }
 
 private[math] class ConstVec3iSwizzled(u: AnyVec3i)

@@ -91,32 +91,32 @@ extends ConstRotationSubMat3f
         }
     }
 
-    def unary_-() = Mat4f(
+    def unary_-() = new Mat4f(
         -m00, -m10, -m20, -m30,
         -m01, -m11, -m21, -m31,
         -m02, -m12, -m22, -m32,
         -m03, -m13, -m23, -m33
     )
-    def *(s: Float) = Mat4f(
+    def *(s: Float) = new Mat4f(
         s*m00, s*m10, s*m20, s*m30,
         s*m01, s*m11, s*m21, s*m31,
         s*m02, s*m12, s*m22, s*m32,
         s*m03, s*m13, s*m23, s*m33
     )
-    def /(s: Float) = { val inv = 1/s; Mat4f(
+    def /(s: Float) = { val inv = 1/s; new Mat4f(
         inv*m00, inv*m10, inv*m20, inv*m30,
         inv*m01, inv*m11, inv*m21, inv*m31,
         inv*m02, inv*m12, inv*m22, inv*m32,
         inv*m03, inv*m13, inv*m23, inv*m33
     )}
 
-    def +(m: AnyMat4f) = Mat4f(
+    def +(m: AnyMat4f) = new Mat4f(
         m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
         m01 + m.m01, m11 + m.m11, m21 + m.m21, m31 + m.m31,
         m02 + m.m02, m12 + m.m12, m22 + m.m22, m32 + m.m32,
         m03 + m.m03, m13 + m.m13, m23 + m.m23, m33 + m.m33
     )
-    def -(m: AnyMat4f) = Mat4f(
+    def -(m: AnyMat4f) = new Mat4f(
         m00 - m.m00, m10 - m.m10, m20 - m.m20, m30 - m.m30,
         m01 - m.m01, m11 - m.m11, m21 - m.m21, m31 - m.m31,
         m02 - m.m02, m12 - m.m12, m22 - m.m22, m32 - m.m32,
@@ -126,20 +126,20 @@ extends ConstRotationSubMat3f
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat4f) = Mat4f(
+    def /(m: AnyMat4f) = new Mat4f(
         m00/m.m00, m10/m.m10, m20/m.m20, m30/m.m30,
         m01/m.m01, m11/m.m11, m21/m.m21, m31/m.m31,
         m02/m.m02, m12/m.m12, m22/m.m22, m32/m.m32,
         m03/m.m03, m13/m.m13, m23/m.m23, m33/m.m33
     )
-    private[math] def divideByComponent(s: Float) = Mat4f(
+    private[math] def divideByComponent(s: Float) = new Mat4f(
         s/m00, s/m10, s/m20, s/m30,
         s/m01, s/m11, s/m21, s/m31,
         s/m02, s/m12, s/m22, s/m32,
         s/m03, s/m13, s/m23, s/m33
     )
 
-    def *(m: AnyMat4x2f) = Mat4x2f(
+    def *(m: AnyMat4x2f) = new Mat4x2f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -150,7 +150,7 @@ extends ConstRotationSubMat3f
         m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31,
         m30*m.m01 + m31*m.m11 + m32*m.m21 + m33*m.m31
     )
-    def *(m: AnyMat4x3f) = Mat4x3f(
+    def *(m: AnyMat4x3f) = new Mat4x3f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -166,7 +166,7 @@ extends ConstRotationSubMat3f
         m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32,
         m30*m.m02 + m31*m.m12 + m32*m.m22 + m33*m.m32
     )
-    def *(m: AnyMat4f) = Mat4f(
+    def *(m: AnyMat4f) = new Mat4f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -188,13 +188,13 @@ extends ConstRotationSubMat3f
         m30*m.m03 + m31*m.m13 + m32*m.m23 + m33*m.m33
     )
 
-    def *(u: AnyVec4f) = Vec4f(
+    def *(u: AnyVec4f) = new Vec4f(
         m00*u.x + m01*u.y + m02*u.z + m03*u.w,
         m10*u.x + m11*u.y + m12*u.z + m13*u.w,
         m20*u.x + m21*u.y + m22*u.z + m23*u.w,
         m30*u.x + m31*u.y + m32*u.z + m33*u.w
     )
-    protected[math] def transposeMul(u: AnyVec4f) = Vec4f(
+    protected[math] def transposeMul(u: AnyVec4f) = new Vec4f(
         m00*u.x + m10*u.y + m20*u.z + m30*u.w,
         m01*u.x + m11*u.y + m21*u.z + m31*u.w,
         m02*u.x + m12*u.y + m22*u.z + m32*u.w,

@@ -82,32 +82,32 @@ sealed abstract class AnyMat2x4f
         }
     }
 
-    def unary_-() = Mat2x4f(
+    def unary_-() = new Mat2x4f(
         -m00, -m10,
         -m01, -m11,
         -m02, -m12,
         -m03, -m13
     )
-    def *(s: Float) = Mat2x4f(
+    def *(s: Float) = new Mat2x4f(
         s*m00, s*m10,
         s*m01, s*m11,
         s*m02, s*m12,
         s*m03, s*m13
     )
-    def /(s: Float) = { val inv = 1/s; Mat2x4f(
+    def /(s: Float) = { val inv = 1/s; new Mat2x4f(
         inv*m00, inv*m10,
         inv*m01, inv*m11,
         inv*m02, inv*m12,
         inv*m03, inv*m13
     )}
 
-    def +(m: AnyMat2x4f) = Mat2x4f(
+    def +(m: AnyMat2x4f) = new Mat2x4f(
         m00 + m.m00, m10 + m.m10,
         m01 + m.m01, m11 + m.m11,
         m02 + m.m02, m12 + m.m12,
         m03 + m.m03, m13 + m.m13
     )
-    def -(m: AnyMat2x4f) = Mat2x4f(
+    def -(m: AnyMat2x4f) = new Mat2x4f(
         m00 - m.m00, m10 - m.m10,
         m01 - m.m01, m11 - m.m11,
         m02 - m.m02, m12 - m.m12,
@@ -117,27 +117,27 @@ sealed abstract class AnyMat2x4f
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat2x4f) = Mat2x4f(
+    def /(m: AnyMat2x4f) = new Mat2x4f(
         m00/m.m00, m10/m.m10,
         m01/m.m01, m11/m.m11,
         m02/m.m02, m12/m.m12,
         m03/m.m03, m13/m.m13
     )
-    private[math] def divideByComponent(s: Float) = Mat2x4f(
+    private[math] def divideByComponent(s: Float) = new Mat2x4f(
         s/m00, s/m10,
         s/m01, s/m11,
         s/m02, s/m12,
         s/m03, s/m13
     )
 
-    def *(m: AnyMat4x2f) = Mat2f(
+    def *(m: AnyMat4x2f) = new Mat2f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
         m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31,
         m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
     )
-    def *(m: AnyMat4x3f) = Mat2x3f(
+    def *(m: AnyMat4x3f) = new Mat2x3f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
@@ -147,7 +147,7 @@ sealed abstract class AnyMat2x4f
         m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32,
         m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
     )
-    def *(m: AnyMat4f) = Mat2x4f(
+    def *(m: AnyMat4f) = new Mat2x4f(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
@@ -161,11 +161,11 @@ sealed abstract class AnyMat2x4f
         m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
     )
 
-    def *(u: AnyVec4f) = Vec2f(
+    def *(u: AnyVec4f) = new Vec2f(
         m00*u.x + m01*u.y + m02*u.z + m03*u.w,
         m10*u.x + m11*u.y + m12*u.z + m13*u.w
     )
-    protected[math] def transposeMul(u: AnyVec2f) = Vec4f(
+    protected[math] def transposeMul(u: AnyVec2f) = new Vec4f(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y,
         m02*u.x + m12*u.y,

@@ -52,15 +52,17 @@ sealed abstract class AnyVec3d extends Read3Double {
         }
     }
 
-    def unary_-() = Vec3d(-x, -y, -z)
-    def *(s: Double) = Vec3d(x*s, y*s, z*s)
-    def /(s: Double) = { val inv = 1/s; Vec3d(x*inv, y*inv, z*inv) }
-    private[math] def divideByComponent(s: Double) = Vec3d(s/x, s/y, s/z)
+    def unary_-() = new Vec3d(-x, -y, -z)
+    def *(s: Double) = new Vec3d(x * s, y * s, z * s)
+    def /(s: Double) = { val inv = 1/s; new Vec3d(x * inv, y * inv, z * inv) }
+    private[math] def divideByComponent(s: Double) = {
+        new Vec3d(s / x, s / y, s / z)
+    }
 
-    def +(u: AnyVec3d) = Vec3d(x + u.x, y + u.y, z + u.z)
-    def -(u: AnyVec3d) = Vec3d(x - u.x, y - u.y, z - u.z)
-    def *(u: AnyVec3d) = Vec3d(x * u.x, y * u.y, z * u.z)
-    def /(u: AnyVec3d) = Vec3d(x / u.x, y / u.y, z / u.z)
+    def +(u: AnyVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
+    def -(u: AnyVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
+    def *(u: AnyVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
+    def /(u: AnyVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
 
     def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(this)
     def *(m: AnyMat3d) :Vec3d = m.transposeMul(this)
@@ -97,7 +99,7 @@ object ConstVec3d {
     def apply(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
 
     implicit def mutableToConst(u: Vec3d) = new ConstVec3d(u.x, u.y, u.z)
-    implicit def constVec3dToSwizzled(u: ConstVec3d) = new ConstVec3dSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec3d) = new ConstVec3dSwizzled(u)
 }
 
 
@@ -164,7 +166,7 @@ object Vec3d {
     def apply(u: Read4Float) = new Vec3d(u.x, u.y, u.z)
 
     implicit def constToMutable(u: ConstVec3d) = Vec3d(u)
-    implicit def vec3ToSwizzled(u: Vec3d) = new Vec3dSwizzled(u)
+    implicit def vecToSwizzled(u: Vec3d) = new Vec3dSwizzled(u)
 }
 
 private[math] class ConstVec3dSwizzled(u: AnyVec3d)

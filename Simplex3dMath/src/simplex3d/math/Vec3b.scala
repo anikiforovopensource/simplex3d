@@ -74,7 +74,7 @@ object ConstVec3b {
     def apply(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 
     implicit def mutableToConst(u: Vec3b) = new ConstVec3b(u.x, u.y, u.z)
-    implicit def constVec3bToSwizzled(u: ConstVec3b) = new ConstVec3bSwizzled(u)
+    implicit def constVecToSwizzled(u: ConstVec3b) = new ConstVec3bSwizzled(u)
 }
 
 
@@ -126,7 +126,7 @@ object Vec3b {
     def apply(x: Boolean, yz: AnyVec2b) = new Vec3b(x, yz.x, yz.y)
 
     implicit def constToMutable(u: ConstVec3b) = Vec3b(u)
-    implicit def vec3bToSwizzled(u: Vec3b) = new Vec3bSwizzled(u)
+    implicit def vecToSwizzled(u: Vec3b) = new Vec3bSwizzled(u)
 }
 
 private[math] class ConstVec3bSwizzled(u: AnyVec3b)

@@ -49,14 +49,18 @@ sealed abstract class AnyQuat4f {
      * the same rotation. That is both q and -q represent exactly the
      * same rotation.
      */
-    def unary_-() = Quat4f(-a, -b, -c, -d)
-    def *(s: Float) = Quat4f(a*s, b*s, c*s, d*s)
-    def /(s: Float) = { val inv = 1/s; Quat4f(a*inv, b*inv, c*inv, d*inv) }
-    private[math] def divideByComponent(s: Float) = Quat4f(s/a, s/b, s/c, s/d)
+    def unary_-() = new Quat4f(-a, -b, -c, -d)
+    def *(s: Float) = new Quat4f(a * s, b * s, c * s, d * s)
+    def /(s: Float) = { val inv = 1/s;
+        new Quat4f(a * inv, b * inv, c * inv, d * inv)
+    }
+    private[math] def divideByComponent(s: Float) = {
+        new Quat4f(s / a, s / b, s / c, s / d)
+    }
 
-    def +(q: Quat4f) = Quat4f(a + q.a, b + q.b, c + q.c, d + q.d)
-    def -(q: Quat4f) = Quat4f(a - q.a, b - q.b, c - q.c, d - q.d)
-    def *(q: Quat4f) = Quat4f(
+    def +(q: Quat4f) = new Quat4f(a + q.a, b + q.b, c + q.c, d + q.d)
+    def -(q: Quat4f) = new Quat4f(a - q.a, b - q.b, c - q.c, d - q.d)
+    def *(q: Quat4f) = new Quat4f(
         a*q.a - b*q.b - c*q.c - d*q.d,
         a*q.b + b*q.a + c*q.d - d*q.c,
         a*q.c - b*q.d + c*q.a + d*q.b,
@@ -74,7 +78,7 @@ sealed abstract class AnyQuat4f {
         val t8 = c*d
         val t9 = -d*d
 
-        Vec3f(
+        new Vec3f(
             2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
             2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
             2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z

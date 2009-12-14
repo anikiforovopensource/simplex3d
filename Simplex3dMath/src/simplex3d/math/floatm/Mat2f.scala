@@ -67,24 +67,24 @@ extends ConstRotationSubMat2f
         }
     }
 
-    def unary_-() = Mat2f(
+    def unary_-() = new Mat2f(
         -m00, -m10,
         -m01, -m11
     )
-    def *(s: Float) = Mat2f(
+    def *(s: Float) = new Mat2f(
         s*m00, s*m10,
         s*m01, s*m11
     )
-    def /(s: Float) = { val inv = 1/s; Mat2f(
+    def /(s: Float) = { val inv = 1/s; new Mat2f(
         inv*m00, inv*m10,
         inv*m01, inv*m11
     )}
 
-    def +(m: AnyMat2f) = Mat2f(
+    def +(m: AnyMat2f) = new Mat2f(
         m00 + m.m00, m10 + m.m10,
         m01 + m.m01, m11 + m.m11
     )
-    def -(m: AnyMat2f) = Mat2f(
+    def -(m: AnyMat2f) = new Mat2f(
         m00 - m.m00, m10 - m.m10,
         m01 - m.m01, m11 - m.m11
     )
@@ -92,23 +92,23 @@ extends ConstRotationSubMat2f
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat2f) = Mat2f(
+    def /(m: AnyMat2f) = new Mat2f(
         m00/m.m00, m10/m.m10,
         m01/m.m01, m11/m.m11
     )
-    private[math] def divideByComponent(s: Float) = Mat2f(
+    private[math] def divideByComponent(s: Float) = new Mat2f(
         s/m00, s/m10,
         s/m01, s/m11
     )
 
-    def *(m: AnyMat2f) = Mat2f(
+    def *(m: AnyMat2f) = new Mat2f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
         m00*m.m01 + m01*m.m11,
         m10*m.m01 + m11*m.m11
     )
-    def *(m: AnyMat2x3f) = Mat2x3f(
+    def *(m: AnyMat2x3f) = new Mat2x3f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
@@ -118,7 +118,7 @@ extends ConstRotationSubMat2f
         m00*m.m02 + m01*m.m12,
         m10*m.m02 + m11*m.m12
     )
-    def *(m: AnyMat2x4f) = Mat2x4f(
+    def *(m: AnyMat2x4f) = new Mat2x4f(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
@@ -132,11 +132,11 @@ extends ConstRotationSubMat2f
         m10*m.m03 + m11*m.m13
     )
 
-    def *(u: AnyVec2f) = Vec2f(
+    def *(u: AnyVec2f) = new Vec2f(
         m00*u.x + m01*u.y,
         m10*u.x + m11*u.y
     )
-    protected[math] def transposeMul(u: AnyVec2f) = Vec2f(
+    protected[math] def transposeMul(u: AnyVec2f) = new Vec2f(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y
     )

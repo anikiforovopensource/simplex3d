@@ -24,76 +24,56 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] sealed trait ReadAny[+P]
-
-private[math] trait Read2[+P] extends ReadAny[P] {
-    def x: P
-    def y: P
+private[math] abstract class Read2Int {
+    def x: Int
+    def y: Int
 }
 
-private[math] trait Read3[+P] extends ReadAny[P] {
-    def x: P
-    def y: P
-    def z: P
+private[math] abstract class Read3Int {
+    def x: Int
+    def y: Int
+    def z: Int
 }
 
-private[math] trait Read4[+P] extends ReadAny[P] {
-    def x: P
-    def y: P
-    def z: P
-    def w: P
+private[math] abstract class Read4Int {
+    def x: Int
+    def y: Int
+    def z: Int
+    def w: Int
 }
 
-private[math] trait Read2Int extends Read2[Int] {
-    override def x: Int
-    override def y: Int
+private[math] abstract class Read2Float {
+    def x: Float
+    def y: Float
 }
 
-private[math] trait Read3Int extends Read3[Int] {
-    override def x: Int
-    override def y: Int
-    override def z: Int
+private[math] abstract class Read3Float {
+    def x: Float
+    def y: Float
+    def z: Float
 }
 
-private[math] trait Read4Int extends Read4[Int] {
-    override def x: Int
-    override def y: Int
-    override def z: Int
-    override def w: Int
+private[math] abstract class Read4Float {
+    def x: Float
+    def y: Float
+    def z: Float
+    def w: Float
 }
 
-private[math] trait Read2Float extends Read2[Float] {
-    override def x: Float
-    override def y: Float
+private[math] abstract class Read2Double {
+    def x: Double
+    def y: Double
 }
 
-private[math] trait Read3Float extends Read3[Float] {
-    override def x: Float
-    override def y: Float
-    override def z: Float
+private[math] abstract class Read3Double {
+    def x: Double
+    def y: Double
+    def z: Double
 }
 
-private[math] trait Read4Float extends Read4[Float] {
-    override def x: Float
-    override def y: Float
-    override def z: Float
-    override def w: Float
-}
-
-private[math] trait Read2Double extends Read2[Double] {
-    override def x: Double
-    override def y: Double
-}
-
-private[math] trait Read3Double extends Read3[Double] {
-    override def x: Double
-    override def y: Double
-    override def z: Double
-}
-
-private[math] trait Read4Double extends Read4[Double] {
-    override def x: Double
-    override def y: Double
-    override def z: Double
-    override def w: Double
+private[math] abstract class Read4Double {
+    def x: Double
+    def y: Double
+    def z: Double
+    def w: Double
 }

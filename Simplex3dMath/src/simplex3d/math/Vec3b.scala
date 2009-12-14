@@ -26,7 +26,7 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3b extends Read3[Boolean] {
+sealed abstract class AnyVec3b {
 
     def x: Boolean
     def y: Boolean
@@ -35,10 +35,6 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
     def r = x
     def g = y
     def b = z
-
-    def s = x
-    def t = y
-    def p = z
 
 
     def apply(i: Int) :Boolean = {
@@ -74,7 +70,6 @@ object ConstVec3b {
     def apply(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 
     implicit def mutableToConst(u: Vec3b) = new ConstVec3b(u.x, u.y, u.z)
-    implicit def constVecToSwizzled(u: ConstVec3b) = new ConstVec3bSwizzled(u)
 }
 
 
@@ -85,17 +80,9 @@ extends AnyVec3b
     override def g = y
     override def b = z
 
-    override def s = x
-    override def t = y
-    override def p = z
-
     def r_=(r: Boolean) { x = r }
     def g_=(g: Boolean) { y = g }
     def b_=(b: Boolean) { z = b }
-
-    def s_=(s: Boolean) { x = s }
-    def t_=(t: Boolean) { y = t }
-    def p_=(p: Boolean) { z = p }
 
 
     def :=(u: AnyVec3b) { x = u.x; y = u.y; z = u.z }
@@ -126,22 +113,4 @@ object Vec3b {
     def apply(x: Boolean, yz: AnyVec2b) = new Vec3b(x, yz.x, yz.y)
 
     implicit def constToMutable(u: ConstVec3b) = Vec3b(u)
-    implicit def vecToSwizzled(u: Vec3b) = new Vec3bSwizzled(u)
-}
-
-private[math] class ConstVec3bSwizzled(u: AnyVec3b)
-extends ConstVec2bSwizzled(null)
-with Swizzle3Read[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
-{
-    override def x = u.x
-    override def y = u.y
-    def z = u.z
-}
-
-private[math] class Vec3bSwizzled(u: Vec3b) extends ConstVec3bSwizzled(u)
-with Swizzle3Write[Boolean, ConstVec2b, ConstVec3b, ConstVec4b]
-{
-    def x_=(x: Boolean) { u.x = x }
-    def y_=(y: Boolean) { u.y = y }
-    def z_=(z: Boolean) { u.z = z }
 }

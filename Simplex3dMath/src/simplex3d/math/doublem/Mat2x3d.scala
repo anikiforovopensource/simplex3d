@@ -75,28 +75,28 @@ extends ConstRotationSubMat2d
         }
     }
 
-    def unary_-() = Mat2x3d(
+    def unary_-() = new Mat2x3d(
         -m00, -m10,
         -m01, -m11,
         -m02, -m12
     )
-    def *(s: Double) = Mat2x3d(
+    def *(s: Double) = new Mat2x3d(
         s*m00, s*m10,
         s*m01, s*m11,
         s*m02, s*m12
     )
-    def /(s: Double) = { val inv = 1/s; Mat2x3d(
+    def /(s: Double) = { val inv = 1/s; new Mat2x3d(
         inv*m00, inv*m10,
         inv*m01, inv*m11,
         inv*m02, inv*m12
     )}
 
-    def +(m: AnyMat2x3d) = Mat2x3d(
+    def +(m: AnyMat2x3d) = new Mat2x3d(
         m00 + m.m00, m10 + m.m10,
         m01 + m.m01, m11 + m.m11,
         m02 + m.m02, m12 + m.m12
     )
-    def -(m: AnyMat2x3d) = Mat2x3d(
+    def -(m: AnyMat2x3d) = new Mat2x3d(
         m00 - m.m00, m10 - m.m10,
         m01 - m.m01, m11 - m.m11,
         m02 - m.m02, m12 - m.m12
@@ -105,25 +105,25 @@ extends ConstRotationSubMat2d
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat2x3d) = Mat2x3d(
+    def /(m: AnyMat2x3d) = new Mat2x3d(
         m00/m.m00, m10/m.m10,
         m01/m.m01, m11/m.m11,
         m02/m.m02, m12/m.m12
     )
-    private[math] def divideByComponent(s: Double) = Mat2x3d(
+    private[math] def divideByComponent(s: Double) = new Mat2x3d(
         s/m00, s/m10,
         s/m01, s/m11,
         s/m02, s/m12
     )
 
-    def *(m: AnyMat3x2d) = Mat2d(
+    def *(m: AnyMat3x2d) = new Mat2d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
         m00*m.m01 + m01*m.m11 + m02*m.m21,
         m10*m.m01 + m11*m.m11 + m12*m.m21
     )
-    def *(m: AnyMat3d) = Mat2x3d(
+    def *(m: AnyMat3d) = new Mat2x3d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -133,7 +133,7 @@ extends ConstRotationSubMat2d
         m00*m.m02 + m01*m.m12 + m02*m.m22,
         m10*m.m02 + m11*m.m12 + m12*m.m22
     )
-    def *(m: AnyMat3x4d) = Mat2x4d(
+    def *(m: AnyMat3x4d) = new Mat2x4d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -147,11 +147,11 @@ extends ConstRotationSubMat2d
         m10*m.m03 + m11*m.m13 + m12*m.m23
     )
 
-    def *(u: AnyVec3d) = Vec2d(
+    def *(u: AnyVec3d) = new Vec2d(
         m00*u.x + m01*u.y + m02*u.z,
         m10*u.x + m11*u.y + m12*u.z
     )
-    protected[math] def transposeMul(u: AnyVec2d) = Vec3d(
+    protected[math] def transposeMul(u: AnyVec2d) = new Vec3d(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y,
         m02*u.x + m12*u.y
@@ -163,7 +163,7 @@ extends ConstRotationSubMat2d
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    def transformPoint(u: AnyVec2d) = Vec2d(
+    def transformPoint(u: AnyVec2d) = new Vec2d(
         m00*u.x + m01*u.y + m02,
         m10*u.x + m11*u.y + m12
     )
@@ -173,7 +173,7 @@ extends ConstRotationSubMat2d
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    def transformVector(u: AnyVec2d) = Vec2d(
+    def transformVector(u: AnyVec2d) = new Vec2d(
         m00*u.x + m01*u.y,
         m10*u.x + m11*u.y
     )
@@ -184,7 +184,7 @@ extends ConstRotationSubMat2d
      * <br/>
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *(m: AnyMat2x3d) = Mat2x3d(
+    def *(m: AnyMat2x3d) = new Mat2x3d(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 
@@ -202,7 +202,7 @@ extends ConstRotationSubMat2d
      *
      * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
      */
-    def *(m: AnyMat2d) = Mat2x3d(
+    def *(m: AnyMat2d) = new Mat2x3d(
         m00*m.m00 + m01*m.m10,
         m10*m.m00 + m11*m.m10,
 

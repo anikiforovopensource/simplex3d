@@ -87,32 +87,32 @@ extends ConstRotationSubMat3d
         }
     }
 
-    def unary_-() = Mat3x4d(
+    def unary_-() = new Mat3x4d(
         -m00, -m10, -m20,
         -m01, -m11, -m21,
         -m02, -m12, -m22,
         -m03, -m13, -m23
     )
-    def *(s: Double) = Mat3x4d(
+    def *(s: Double) = new Mat3x4d(
         s*m00, s*m10, s*m20,
         s*m01, s*m11, s*m21,
         s*m02, s*m12, s*m22,
         s*m03, s*m13, s*m23
     )
-    def /(s: Double) = { val inv = 1/s; Mat3x4d(
+    def /(s: Double) = { val inv = 1/s; new Mat3x4d(
         inv*m00, inv*m10, inv*m20,
         inv*m01, inv*m11, inv*m21,
         inv*m02, inv*m12, inv*m22,
         inv*m03, inv*m13, inv*m23
     )}
 
-    def +(m: AnyMat3x4d) = Mat3x4d(
+    def +(m: AnyMat3x4d) = new Mat3x4d(
         m00 + m.m00, m10 + m.m10, m20 + m.m20,
         m01 + m.m01, m11 + m.m11, m21 + m.m21,
         m02 + m.m02, m12 + m.m12, m22 + m.m22,
         m03 + m.m03, m13 + m.m13, m23 + m.m23
     )
-    def -(m: AnyMat3x4d) = Mat3x4d(
+    def -(m: AnyMat3x4d) = new Mat3x4d(
         m00 - m.m00, m10 - m.m10, m20 - m.m20,
         m01 - m.m01, m11 - m.m11, m21 - m.m21,
         m02 - m.m02, m12 - m.m12, m22 - m.m22,
@@ -122,20 +122,20 @@ extends ConstRotationSubMat3d
     /**
      * Component-wise devision.
      */
-    def /(m: AnyMat3x4d) = Mat3x4d(
+    def /(m: AnyMat3x4d) = new Mat3x4d(
         m00/m.m00, m10/m.m10, m20/m.m20,
         m01/m.m01, m11/m.m11, m21/m.m21,
         m02/m.m02, m12/m.m12, m22/m.m22,
         m03/m.m03, m13/m.m13, m23/m.m23
     )
-    private[math] def divideByComponent(s: Double) = Mat3x4d(
+    private[math] def divideByComponent(s: Double) = new Mat3x4d(
         s/m00, s/m10, s/m20,
         s/m01, s/m11, s/m21,
         s/m02, s/m12, s/m22,
         s/m03, s/m13, s/m23
     )
 
-    def *(m: AnyMat4x2d) = Mat3x2d(
+    def *(m: AnyMat4x2d) = new Mat3x2d(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -144,7 +144,7 @@ extends ConstRotationSubMat3d
         m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31,
         m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31
     )
-    def *(m: AnyMat4x3d) = Mat3d(
+    def *(m: AnyMat4x3d) = new Mat3d(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -157,7 +157,7 @@ extends ConstRotationSubMat3d
         m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32,
         m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32
     )
-    def *(m: AnyMat4d) = Mat3x4d(
+    def *(m: AnyMat4d) = new Mat3x4d(
         m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
         m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
         m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -175,12 +175,12 @@ extends ConstRotationSubMat3d
         m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
     )
 
-    def *(u: AnyVec4d) = Vec3d(
+    def *(u: AnyVec4d) = new Vec3d(
         m00*u.x + m01*u.y + m02*u.z + m03*u.w,
         m10*u.x + m11*u.y + m12*u.z + m13*u.w,
         m20*u.x + m21*u.y + m22*u.z + m23*u.w
     )
-    protected[math] def transposeMul(u: AnyVec3d) = Vec4d(
+    protected[math] def transposeMul(u: AnyVec3d) = new Vec4d(
         m00*u.x + m10*u.y + m20*u.z,
         m01*u.x + m11*u.y + m21*u.z,
         m02*u.x + m12*u.y + m22*u.z,
@@ -193,7 +193,7 @@ extends ConstRotationSubMat3d
      *
      * Equivalent to regular multiplication with Vec(u, 1).
      */
-    def transformPoint(u: AnyVec3d) = Vec3d(
+    def transformPoint(u: AnyVec3d) = new Vec3d(
         m00*u.x + m01*u.y + m02*u.z + m03,
         m10*u.x + m11*u.y + m12*u.z + m13,
         m20*u.x + m21*u.y + m22*u.z + m23
@@ -204,7 +204,7 @@ extends ConstRotationSubMat3d
      *
      * Equivalent to regular multiplication with Vec(u, 0).
      */
-    def transformVector(u: AnyVec3d) = Vec3d(
+    def transformVector(u: AnyVec3d) = new Vec3d(
         m00*u.x + m01*u.y + m02*u.z,
         m10*u.x + m11*u.y + m12*u.z,
         m20*u.x + m21*u.y + m22*u.z
@@ -216,7 +216,7 @@ extends ConstRotationSubMat3d
      * <br/>
      * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
-    def *(m: AnyMat3x4d) = Mat3x4d(
+    def *(m: AnyMat3x4d) = new Mat3x4d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
         m20*m.m00 + m21*m.m10 + m22*m.m20,
@@ -241,7 +241,7 @@ extends ConstRotationSubMat3d
      *
      * Equaivalent to Mat3x4(Mat4x4(this)*Mat4x4(m)).
      */
-    def *(m: AnyMat3d) = Mat3x4d(
+    def *(m: AnyMat3d) = new Mat3x4d(
         m00*m.m00 + m01*m.m10 + m02*m.m20,
         m10*m.m00 + m11*m.m10 + m12*m.m20,
         m20*m.m00 + m21*m.m10 + m22*m.m20,

@@ -1008,7 +1008,7 @@ extends AnyVec4i
     def xwyz_=(u: AnyVec4i) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
     def xwzy_=(u: AnyVec4i) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
     def yxzw_=(u: AnyVec4i) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
-    def yxwz_=(u: AnyVec4i) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z = t }
+    def yxwz_=(u: AnyVec4i) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z;z=t}
     def yzxw_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
     def yzwx_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
     def ywxz_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
@@ -1017,14 +1017,14 @@ extends AnyVec4i
     def zxwy_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
     def zyxw_=(u: AnyVec4i) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
     def zywx_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
-    def zwxy_=(u: AnyVec4i) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y = t }
+    def zwxy_=(u: AnyVec4i) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y;y=t}
     def zwyx_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
     def wxyz_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
     def wxzy_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
     def wyxz_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
     def wyzx_=(u: AnyVec4i) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
     def wzxy_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
-    def wzyx_=(u: AnyVec4i) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y = t }
+    def wzyx_=(u: AnyVec4i) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y;y=t}
 
     def rg_=(u: AnyVec2i) { xy_=(u) }
     def rb_=(u: AnyVec2i) { xz_=(u) }

@@ -30,7 +30,7 @@ package object doublem {
 
     // Implicits
     implicit def dmDoubleToExtDouble(s: Double) = new ExtendedDouble(s)
-    implicit def dmFloatToExtFloat(s: Int) = new ExtendedFloat(s)
+    implicit def dmFloatToExtFloat(s: Float) = new ExtendedFloat(s)
     implicit def dmIntToExtInt(s: Int) = new ExtendedInt(s)
     implicit def vec2iToVec2d(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
     implicit def vec3iToVec3d(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)

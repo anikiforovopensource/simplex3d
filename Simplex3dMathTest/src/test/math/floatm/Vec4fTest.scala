@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.floatm
 
 import org.scalatest._
 
 import simplex3d.math.intm._
+import simplex3d.math.doublem._
 import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -60,6 +60,13 @@ class Vec4fTest extends FunSuite {
         expect(9) { u.w }
 
         u = Vec4(Vec2(6, 7), 8, 9)
+        expect(classOf[Vec4]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+        expect(8) { u.z }
+        expect(9) { u.w }
+
+        u = Vec4(Vec2(6, 7), Vec2(8, 9))
         expect(classOf[Vec4]) { u.getClass }
         expect(6) { u.x }
         expect(7) { u.y }
@@ -108,6 +115,13 @@ class Vec4fTest extends FunSuite {
         expect(8) { u.z }
         expect(9) { u.w }
 
+        u = Vec4(Vec2i(6, 7), Vec2i(8, 9))
+        expect(classOf[Vec4]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+        expect(8) { u.z }
+        expect(9) { u.w }
+
         u = Vec4(6, Vec3i(7, 8, 9))
         expect(classOf[Vec4]) { u.getClass }
         expect(6) { u.x }
@@ -128,17 +142,41 @@ class Vec4fTest extends FunSuite {
         expect(5) { u.y }
         expect(6) { u.z }
         expect(7) { u.w }
+
+        u = Vec4(Vec4d(4, 5, 6, 7))
+        expect(classOf[Vec4]) { u.getClass }
+        expect(4) { u.x }
+        expect(5) { u.y }
+        expect(6) { u.z }
+        expect(7) { u.w }
     }
 
     test("Const conversions") {
-        var c: ConstVec4 = Vec4(5); var v = Vec4(3)
-        v = c; assert(Vec4(5) == v)
+        val x = 1f
+        val y = 2f
+        val z = 3f
+        val w = 4f
 
-        c = Vec4(5); v = Vec4(3)
-        c = v; assert(Vec4(3) == c)
+        val a = ConstVec4(x, y, z, w)
+        expect(x) { a.x }
+        expect(y) { a.y }
+        expect(z) { a.z }
+        expect(w) { a.w }
 
-        val t: ConstVec4 = Vec4(9)
-        assert(Vec4(9) == t)
+        val b = ConstVec4(Vec4(x, y, z, w))
+        expect(x) { b.x }
+        expect(y) { b.y }
+        expect(z) { b.z }
+        expect(w) { b.w }
+
+        val t: ConstVec4 = Vec4(x, y, z, w)
+        assert(Vec4(x, y, z, w) == t)
+
+        var c: ConstVec4 = Vec4(x, y, z, w); var v = Vec4(3)
+        v = c; assert(Vec4(x, y, z, w) == v)
+
+        c = Vec4(5); v = Vec4(x, y, z, w)
+        c = v; assert(Vec4(x, y, z, w) == c)
     }
 
     test("Equality methods") {
@@ -190,6 +228,22 @@ class Vec4fTest extends FunSuite {
         }
     }
 
+    test("Setters") {
+        val u = Vec4(0)
+
+        u := Vec4(1, 2, 3, 4)
+        expect(1) { u.x }
+        expect(2) { u.y }
+        expect(3) { u.z }
+        expect(4) { u.w }
+
+        u.set(5, 6, 7, 8)
+        expect(5) { u.x }
+        expect(6) { u.y }
+        expect(7) { u.z }
+        expect(8) { u.w }
+    }
+
     test("Const math") {
         val u = ConstVec4(6, 7, 8, 9)
 
@@ -197,8 +251,10 @@ class Vec4fTest extends FunSuite {
 
         assert(Vec4(12, 14, 16, 18) == u*2)
         assert(Vec4(12, 14, 16, 18) == 2*u)
+        assert(Vec4(12, 14, 16, 18) == 2f*u)
         assert(Vec4(3, 3.5f, 4, 4.5f) == u/2)
         assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7/u)
+        assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7f/u)
 
         val v = ConstVec4(2, 3, 4, 5)
 

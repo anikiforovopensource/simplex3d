@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.intm
 
 import org.scalatest._
 
 import simplex3d.math.intm._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.intm.IntMath._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem._
 
 
 /**
@@ -46,21 +46,6 @@ class Vec2iTest extends FunSuite {
         expect(4) { u.x }
         expect(5) { u.y }
 
-        u = Vec2i(Vec3(6, 7, 8))
-        expect(classOf[Vec2i]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-
-        u = Vec2i(Vec4(1, 2, 3, 4))
-        expect(classOf[Vec2i]) { u.getClass }
-        expect(1) { u.x }
-        expect(2) { u.y }
-
-        u = Vec2i(Vec2i(4, 5))
-        expect(classOf[Vec2i]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-
         u = Vec2i(Vec3i(6, 7, 8))
         expect(classOf[Vec2i]) { u.getClass }
         expect(6) { u.x }
@@ -70,17 +55,58 @@ class Vec2iTest extends FunSuite {
         expect(classOf[Vec2i]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
+
+        u = Vec2i(Vec2f(4, 5))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(4) { u.x }
+        expect(5) { u.y }
+
+        u = Vec2i(Vec3f(6, 7, 8))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+
+        u = Vec2i(Vec4f(1, 2, 3, 4))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(1) { u.x }
+        expect(2) { u.y }
+
+        u = Vec2i(Vec2d(4, 5))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(4) { u.x }
+        expect(5) { u.y }
+
+        u = Vec2i(Vec3d(6, 7, 8))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+
+        u = Vec2i(Vec4d(1, 2, 3, 4))
+        expect(classOf[Vec2i]) { u.getClass }
+        expect(1) { u.x }
+        expect(2) { u.y }
     }
 
     test("Const conversions") {
-        var c: ConstVec2i = Vec2i(5); var v = Vec2i(3)
-        v = c; assert(Vec2i(5) == v)
+        val x = 1
+        val y = 2
 
-        c = Vec2i(5); v = Vec2i(3)
-        c = v; assert(Vec2i(3) == c)
+        val a = ConstVec2i(x, y)
+        expect(x) { a.x }
+        expect(y) { a.y }
 
-        val t: ConstVec2i = Vec2i(9)
-        assert(Vec2i(9) == t)
+        val b = ConstVec2i(Vec2i(x, y))
+        expect(x) { b.x }
+        expect(y) { b.y }
+
+        val t: ConstVec2i = Vec2i(x, y)
+        assert(Vec2i(x, y) == t)
+
+        var c: ConstVec2i = Vec2i(x, y); var v = Vec2i(3)
+        v = c; assert(Vec2i(x, y) == v)
+
+        c = Vec2i(5); v = Vec2i(x, y)
+        c = v; assert(Vec2i(x, y) == c)
     }
 
     test("Equality methods") {
@@ -120,6 +146,18 @@ class Vec2iTest extends FunSuite {
         intercept[IndexOutOfBoundsException] {
             u(-1) = 1
         }
+    }
+
+    test("Setters") {
+        val u = Vec2i(0)
+
+        u := Vec2i(1, 2)
+        expect(1) { u.x }
+        expect(2) { u.y }
+
+        u.set(5, 6)
+        expect(5) { u.x }
+        expect(6) { u.y }
     }
 
     test("Const math") {

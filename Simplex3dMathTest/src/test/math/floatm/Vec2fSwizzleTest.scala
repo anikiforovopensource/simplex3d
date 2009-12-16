@@ -16,12 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.floatm
 
 import org.scalatest._
 
 import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -132,10 +131,9 @@ class Vec2fSwizzleTest extends FunSuite {
         val y = 6f
 
         val i = ConstVec2(x, y)
-        val u = Vec2(1)
+        val u = Vec2(0)
 
-        u := i; u.xy = u.xx; assert(Vec2(x, x) == u)
-
-        pending
+        u := i; u.xy = u; assert(Vec2(x, y) == u)
+        u := i; u.yx = u; assert(Vec2(y, x) == u)
     }
 }

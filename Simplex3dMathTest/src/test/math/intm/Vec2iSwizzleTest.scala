@@ -16,18 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.intm
 
 import org.scalatest._
 
 import simplex3d.math.intm._
-import simplex3d.math.intm.IntMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec2iiSwizzleTest extends FunSuite {
+class Vec2iSwizzleTest extends FunSuite {
 
     test("Swizzled read") {
         val x = 5
@@ -134,28 +133,7 @@ class Vec2iiSwizzleTest extends FunSuite {
         val i = ConstVec2i(x, y)
         val u = Vec2i(1)
 
-        u := i; u.xy = u.xx; assert(Vec2i(x, x) == u)
-        u := i; u.xy = u.xy; assert(Vec2i(x, y) == u)
-        u := i; u.xy = u.yx; assert(Vec2i(y, x) == u)
-        u := i; u.xy = u.yy; assert(Vec2i(y, y) == u)
         u := i; u.xy = u; assert(Vec2i(x, y) == u)
-
-        u := i; u.yx = u.xx; assert(Vec2i(x, x) == u)
-        u := i; u.yx = u.xy; assert(Vec2i(y, x) == u)
-        u := i; u.yx = u.yx; assert(Vec2i(x, y) == u)
-        u := i; u.yx = u.yy; assert(Vec2i(y, y) == u)
         u := i; u.yx = u; assert(Vec2i(y, x) == u)
-
-        u := i; u.rg = u.rr; assert(Vec2i(x, x) == u)
-        u := i; u.rg = u.rg; assert(Vec2i(x, y) == u)
-        u := i; u.rg = u.gr; assert(Vec2i(y, x) == u)
-        u := i; u.rg = u.gg; assert(Vec2i(y, y) == u)
-        u := i; u.rg = u; assert(Vec2i(x, y) == u)
-
-        u := i; u.gr = u.rr; assert(Vec2i(x, x) == u)
-        u := i; u.gr = u.rg; assert(Vec2i(y, x) == u)
-        u := i; u.gr = u.gr; assert(Vec2i(x, y) == u)
-        u := i; u.gr = u.gg; assert(Vec2i(y, y) == u)
-        u := i; u.gr = u; assert(Vec2i(y, x) == u)
     }
 }

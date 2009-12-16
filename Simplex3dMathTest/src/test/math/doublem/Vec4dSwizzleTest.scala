@@ -16,24 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.doublem
 
 import org.scalatest._
 
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.doublem.renamed._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec4fSwizzleTest extends FunSuite {
+class Vec4dSwizzleTest extends FunSuite {
 
     test("Swizzled read") {
-        val x = 5f
-        val y = 6f
-        val z = 7f
-        val w = 8f
+        val x = 5d
+        val y = 6d
+        val z = 7d
+        val w = 8d
 
         val u = ConstVec4(x, y, z, w)
 
@@ -722,11 +721,11 @@ class Vec4fSwizzleTest extends FunSuite {
     }
 
     test("Swizzled write") {
-        val x = 5f
-        val y = 6f
-        val z = 7f
-        val w = 8f
-        val t = 10f
+        val x = 5d
+        val y = 6d
+        val z = 7d
+        val w = 8d
+        val t = 10d
 
         var i = ConstVec4(x, y, z, w)
         val u = Vec4(1)
@@ -866,6 +865,37 @@ class Vec4fSwizzleTest extends FunSuite {
     }
     
     test("Swizzled self write") {
-        pending
+        val x = 5d
+        val y = 6d
+        val z = 7d
+        val w = 8d
+
+        val i = ConstVec4(x, y, z, w)
+        val u = Vec4(0)
+
+        u := i; u.xyzw = u; assert(Vec4(x, y, z, w) == u)
+        u := i; u.xywz = u; assert(Vec4(x, y, w, z) == u)
+        u := i; u.xzyw = u; assert(Vec4(x, z, y, w) == u)
+        u := i; u.xzwy = u; assert(Vec4(x, w, y, z) == u)
+        u := i; u.xwyz = u; assert(Vec4(x, z, w, y) == u)
+        u := i; u.xwzy = u; assert(Vec4(x, w, z, y) == u)
+        u := i; u.yxzw = u; assert(Vec4(y, x, z, w) == u)
+        u := i; u.yxwz = u; assert(Vec4(y, x, w, z) == u)
+        u := i; u.yzxw = u; assert(Vec4(z, x, y, w) == u)
+        u := i; u.yzwx = u; assert(Vec4(w, x, y, z) == u)
+        u := i; u.ywxz = u; assert(Vec4(z, x, w, y) == u)
+        u := i; u.ywzx = u; assert(Vec4(w, x, z, y) == u)
+        u := i; u.zxyw = u; assert(Vec4(y, z, x, w) == u)
+        u := i; u.zxwy = u; assert(Vec4(y, w, x, z) == u)
+        u := i; u.zyxw = u; assert(Vec4(z, y, x, w) == u)
+        u := i; u.zywx = u; assert(Vec4(w, y, x, z) == u)
+        u := i; u.zwxy = u; assert(Vec4(z, w, x, y) == u)
+        u := i; u.zwyx = u; assert(Vec4(w, z, x, y) == u)
+        u := i; u.wxyz = u; assert(Vec4(y, z, w, x) == u)
+        u := i; u.wxzy = u; assert(Vec4(y, w, z, x) == u)
+        u := i; u.wyxz = u; assert(Vec4(z, y, w, x) == u)
+        u := i; u.wyzx = u; assert(Vec4(w, y, z, x) == u)
+        u := i; u.wzxy = u; assert(Vec4(z, w, y, x) == u)
+        u := i; u.wzyx = u; assert(Vec4(w, z, y, x) == u)
     }
 }

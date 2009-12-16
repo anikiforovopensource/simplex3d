@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.floatm
 
 import org.scalatest._
 
@@ -30,7 +30,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class TransformFTest extends FunSuite {
+class TransformfTest extends FunSuite {
 
     test("Transform, InverseTransform, Translation, Rotation, and Scale factories")
     {

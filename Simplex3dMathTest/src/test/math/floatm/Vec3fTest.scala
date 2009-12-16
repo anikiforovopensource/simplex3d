@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.floatm
 
 import org.scalatest._
 
 import simplex3d.math.intm._
+import simplex3d.math.doublem._
 import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
 
 
 /**
@@ -90,17 +90,43 @@ class Vec3fTest extends FunSuite {
         expect(1) { u.x }
         expect(2) { u.y }
         expect(3) { u.z }
+
+        u = Vec3(Vec3d(6, 7, 8))
+        expect(classOf[Vec3]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+        expect(8) { u.z }
+
+        u = Vec3(Vec4d(1, 2, 3, 4))
+        expect(classOf[Vec3]) { u.getClass }
+        expect(1) { u.x }
+        expect(2) { u.y }
+        expect(3) { u.z }
     }
 
     test("Const conversions") {
-        var c: ConstVec3 = Vec3(5); var v = Vec3(3)
-        v = c; assert(Vec3(5) == v)
+        val x = 1f
+        val y = 2f
+        val z = 3f
 
-        c = Vec3(5); v = Vec3(3)
-        c = v; assert(Vec3(3) == c)
+        val a = ConstVec3(x, y, z)
+        expect(x) { a.x }
+        expect(y) { a.y }
+        expect(z) { a.z }
 
-        val t: ConstVec3 = Vec3(9)
-        assert(Vec3(9) == t)
+        val b = ConstVec3(Vec3(x, y, z))
+        expect(x) { b.x }
+        expect(y) { b.y }
+        expect(z) { b.z }
+
+        val t: ConstVec3 = Vec3(x, y, z)
+        assert(Vec3(x, y, z) == t)
+
+        var c: ConstVec3 = Vec3(x, y, z); var v = Vec3(3)
+        v = c; assert(Vec3(x, y, z) == v)
+
+        c = Vec3(5); v = Vec3(x, y, z)
+        c = v; assert(Vec3(x, y, z) == c)
     }
 
     test("Equality methods") {
@@ -147,6 +173,20 @@ class Vec3fTest extends FunSuite {
         }
     }
 
+    test("Setters") {
+        val u = Vec3(0)
+
+        u := Vec3(1, 2, 3)
+        expect(1) { u.x }
+        expect(2) { u.y }
+        expect(3) { u.z }
+
+        u.set(5, 6, 7)
+        expect(5) { u.x }
+        expect(6) { u.y }
+        expect(7) { u.z }
+    }
+
     test("Const math") {
         val u = ConstVec3(7, 8, 9)
 
@@ -154,8 +194,10 @@ class Vec3fTest extends FunSuite {
 
         assert(Vec3(14, 16, 18) == u*2)
         assert(Vec3(14, 16, 18) == 2*u)
+        assert(Vec3(14, 16, 18) == 2f*u)
         assert(Vec3(3.5f, 4, 4.5f) == u/2)
         assert(Vec3(1, 7/8f, 7/9f) == 7/u)
+        assert(Vec3(1, 7/8f, 7/9f) == 7f/u)
 
         val v = ConstVec3(2, 4, 3)
 

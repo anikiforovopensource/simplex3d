@@ -16,19 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math
+package test.math.doublem
 
 import org.scalatest._
 
 import simplex3d.math.intm._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem.renamed._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec2fTest extends FunSuite {
+class Vec2dTest extends FunSuite {
 
     test("Mutable factories") {
         var u = Vec2(5)
@@ -70,17 +70,43 @@ class Vec2fTest extends FunSuite {
         expect(classOf[Vec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
+
+        u = Vec2(Vec2f(4, 5))
+        expect(classOf[Vec2]) { u.getClass }
+        expect(4) { u.x }
+        expect(5) { u.y }
+
+        u = Vec2(Vec3f(6, 7, 8))
+        expect(classOf[Vec2]) { u.getClass }
+        expect(6) { u.x }
+        expect(7) { u.y }
+
+        u = Vec2(Vec4f(1, 2, 3, 4))
+        expect(classOf[Vec2]) { u.getClass }
+        expect(1) { u.x }
+        expect(2) { u.y }
     }
 
     test("Const conversions") {
-        var c: ConstVec2 = Vec2(5); var v = Vec2(3)
-        v = c; assert(Vec2(5) == v)
+        val x = 1d
+        val y = 2d
 
-        c = Vec2(5); v = Vec2(3)
-        c = v; assert(Vec2(3) == c)
+        val a = ConstVec2(x, y)
+        expect(x) { a.x }
+        expect(y) { a.y }
 
-        val t: ConstVec2 = Vec2(9)
-        assert(Vec2(9) == t)
+        val b = ConstVec2(Vec2(x, y))
+        expect(x) { b.x }
+        expect(y) { b.y }
+
+        val t: ConstVec2 = Vec2(x, y)
+        assert(Vec2(x, y) == t)
+
+        var c: ConstVec2 = Vec2(x, y); var v = Vec2(3)
+        v = c; assert(Vec2(x, y) == v)
+
+        c = Vec2(5); v = Vec2(x, y)
+        c = v; assert(Vec2(x, y) == c)
     }
 
     test("Equality methods") {
@@ -122,6 +148,18 @@ class Vec2fTest extends FunSuite {
         }
     }
 
+    test("Setters") {
+        val u = Vec2(0)
+
+        u := Vec2(1, 2)
+        expect(1) { u.x }
+        expect(2) { u.y }
+
+        u.set(5, 6)
+        expect(5) { u.x }
+        expect(6) { u.y }
+    }
+
     test("Const math") {
         val u = ConstVec2(7, 8)
 
@@ -129,15 +167,19 @@ class Vec2fTest extends FunSuite {
 
         assert(Vec2(14, 16) == u*2)
         assert(Vec2(14, 16) == 2*u)
-        assert(Vec2(3.5f, 4) == u/2)
-        assert(Vec2(1, 7/8f) == 7/u)
+        assert(Vec2(14, 16) == 2f*u)
+        assert(Vec2(14, 16) == 2d*u)
+        assert(Vec2(3.5, 4) == u/2)
+        assert(Vec2(1, 7/8d) == 7/u)
+        assert(Vec2(1, 7/8d) == 7f/u)
+        assert(Vec2(1, 7/8d) == 7d/u)
 
         val v = ConstVec2(2, 4)
 
         assert(Vec2(9, 12) == u + v)
         assert(Vec2(5, 4) == u - v)
         assert(Vec2(14, 32) == u*v)
-        assert(Vec2(3.5f, 2) == u/v)
+        assert(Vec2(3.5, 2) == u/v)
 
         val m2 = ConstMat2(2, 4, 3, 5)
         assert(Vec2(46, 61) == u*m2)
@@ -153,7 +195,7 @@ class Vec2fTest extends FunSuite {
         var u = Vec2(2, 3)
 
         u = Vec2(2, 3); u *= 2; assert(Vec2(4, 6) == u)
-        u = Vec2(2, 3); u /= 2; assert(Vec2(1, 1.5f) == u)
+        u = Vec2(2, 3); u /= 2; assert(Vec2(1, 1.5) == u)
 
         u = Vec2(2, 3); u += Vec2(3, 4); assert(Vec2(5, 7) == u)
         u = Vec2(2, 3); u += u; assert(Vec2(4, 6) == u)
@@ -162,7 +204,7 @@ class Vec2fTest extends FunSuite {
 
         u = Vec2(2, 3); u *= Vec2(5, 10); assert(Vec2(10, 30) == u)
         u = Vec2(2, 3); u *= u; assert(Vec2(4, 9) == u)
-        u = Vec2(2, 3); u /= Vec2(2, 6); assert(Vec2(1, 0.5f) == u)
+        u = Vec2(2, 3); u /= Vec2(2, 6); assert(Vec2(1, 0.5) == u)
         u = Vec2(2, 3); u /= u; assert(Vec2(1, 1) == u)
 
         u = Vec2(2, 3); u := Vec2(11, 12); assert(Vec2(11, 12) == u)

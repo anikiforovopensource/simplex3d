@@ -5,7 +5,7 @@
  * Modifications by Karsten Schmidt. Used under LGPL v2.1.
  */
 
-package toxi.math.noise;
+package ext.toxi.math.noise;
 
 /**
  * Simplex Noise in 2D, 3D and 4D. Based on the example code of this paper:

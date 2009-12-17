@@ -349,7 +349,7 @@ extends AnyVec3i
 
 
     def *=(s: Int) { x *= s; y *= s; z *= s }
-    def /=(s: Int) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
+    def /=(s: Int) { x /= s; y /= s; z /= s }
     def %=(s: Int) { x %= s; y %= s; z %= s }
     def >>=(s: Int) = { x >>= s; y >>= s; z >>= s }
     def >>>=(s: Int) = { x >>>= s; y >>>= s; z >>>= s }

@@ -165,7 +165,7 @@ final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
 
 
     def *=(s: Int) { x *= s; y *= s }
-    def /=(s: Int) { val inv = 1/s; x *= inv; y *= inv }
+    def /=(s: Int) { x /= s; y /= s }
     def %=(s: Int) { x %= s; y %= s }
     def >>=(s: Int) = { x >>= s; y >>= s }
     def >>>=(s: Int) = { x >>>= s; y >>>= s }

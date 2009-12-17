@@ -40,4 +40,16 @@ final class ExtendedInt(val value: Int) {
     def %(u: AnyVec2i) = u.modByComponent(value)
     def %(u: AnyVec3i) = u.modByComponent(value)
     def %(u: AnyVec4i) = u.modByComponent(value)
+
+    def &(u: AnyVec2i) = u & value
+    def &(u: AnyVec3i) = u & value
+    def &(u: AnyVec4i) = u & value
+
+    def |(u: AnyVec2i) = u | value
+    def |(u: AnyVec3i) = u | value
+    def |(u: AnyVec4i) = u | value
+
+    def ^(u: AnyVec2i) = u ^ value
+    def ^(u: AnyVec3i) = u ^ value
+    def ^(u: AnyVec4i) = u ^ value
 }

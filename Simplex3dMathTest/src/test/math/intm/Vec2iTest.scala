@@ -161,10 +161,79 @@ class Vec2iTest extends FunSuite {
     }
 
     test("Const math") {
-        pending
+        val u = ConstVec2i(10, 20)
+        
+        assert(Vec2i(-10, -20) == -u)
+        assert(Vec2i(~10, ~20) == ~u)
+        
+        assert(Vec2i(20, 40) == u*2)
+        assert(Vec2i(20, 40) == 2*u)
+        assert(Vec2i(5, 10) == u / 2)
+        assert(Vec2i(2, 1) == 20 / u)
+        assert(Vec2i(1, 2) == u % 3)
+        assert(Vec2i(2, 12) == 32 % u)
+
+        val v = ConstVec2i(2, 3)
+
+        assert(Vec2i(12, 23) == u + v)
+        assert(Vec2i(8, 17) == u - v)
+        assert(Vec2i(20, 60) == u * v)
+        assert(Vec2i(5, 6) == u / v)
+        assert(Vec2i(0, 2) == u % v)
+
+        val b = ConstVec2i(0xF, 0xFF)
+
+        assert(Vec2i(0, 0xF) == b >> 4)
+        assert(Vec2i(-0xF >>> 4, -0xFF >>> 4) == -b >>> 4)
+        assert(Vec2i(0xF0, 0xFF0) == b << 4)
+
+        assert(Vec2i(0xF, 0xF) == (b & 0xF))
+        assert(Vec2i(0xF, 0xF) == (0xF & b))
+        assert(Vec2i(0xFF, 0xFF) == (b | 0xFF))
+        assert(Vec2i(0xFF, 0xFF) == (0xFF | b))
+        assert(Vec2i(0xF0, 0) == (b ^ 0xFF))
+        assert(Vec2i(0xF0, 0) == (0xFF ^ b))
+
+        assert(Vec2i(0x3, 0xF) == (b >> Vec2i(2, 4)))
+        assert(Vec2i(-0xF >>> 2, -0xFF >>> 4) == (-b >>> Vec2i(2, 4)))
+        assert(Vec2i(0xF0, 0xFF00) == (b << Vec2i(4, 8)))
+
+        assert(Vec2i(0xF, 0xF) == (b & Vec2i(0xFF, 0xF)))
+        assert(Vec2i(0xFF, 0xFF) == (b | Vec2i(0xFF, 0xF)))
+        assert(Vec2i(0xF0, 0xF0) == (b ^ Vec2i(0xFF, 0xF)))
     }
 
     test("Mutable math") {
-        pending
+        val i = ConstVec2i(10, 20)
+        val u = Vec2i(0)
+
+        u := i; u *= 2; assert(Vec2i(20, 40) == u)
+        u := i; u /= 2; assert(Vec2i(5, 10) == u)
+        u := i; u %= 3; assert(Vec2i(1, 2) == u)
+
+        val v = ConstVec2i(2, 3)
+
+        u := i; u += v; assert(Vec2i(12, 23) == u)
+        u := i; u -= v; assert(Vec2i(8, 17) == u)
+        u := i; u *= v; assert(Vec2i(20, 60) == u)
+        u := i; u /= v; assert(Vec2i(5, 6) == u)
+        u := i; u %= v; assert(Vec2i(0, 2) == u)
+
+        val b = ConstVec2i(0xF, 0xFF)
+
+        u := b; u >>= 4; assert(Vec2i(0, 0xF) == u)
+        u := -b; u >>>= 4; assert(Vec2i(-0xF >>> 4, -0xFF >>> 4) == u)
+        u := b; u <<= 4; assert(Vec2i(0xF0, 0xFF0) == u)
+        u := b; u &= 0xF; assert(Vec2i(0xF, 0xF) == u)
+        u := b; u |= 0xFF; assert(Vec2i(0xFF, 0xFF) == u)
+        u := b; u ^= 0xFF; assert(Vec2i(0xF0, 0) == u)
+
+        u := b; u >>= Vec2i(2, 4); assert(Vec2i(0x3, 0xF) == u)
+        u := -b; u >>>= Vec2i(2, 4); assert(Vec2i(-0xF >>> 2, -0xFF >>> 4) == u)
+        u := b; u <<= Vec2i(4, 8); assert(Vec2i(0xF0, 0xFF00) == u)
+
+        u := b; u &= Vec2i(0xFF, 0xF); assert(Vec2i(0xF, 0xF) == u)
+        u := b; u |= Vec2i(0xFF, 0xF); assert(Vec2i(0xFF, 0xFF) == u)
+        u := b; u ^= Vec2i(0xFF, 0xF); assert(Vec2i(0xF0, 0xF0) == u)
     }
 }

@@ -511,6 +511,17 @@ final class Mat3x4d private[math] (
         }
     }
 
+    def update(c: Int, v: AnyVec2d) {
+        c match {
+            case 0 => m00 = v.x; m10 = v.y
+            case 1 => m01 = v.x; m11 = v.y
+            case 2 => m02 = v.x; m12 = v.y
+            case 3 => m03 = v.x; m13 = v.y
+            case j => throw new IndexOutOfBoundsException(
+                    "excpected from 0 to 3, got " + j)
+        }
+    }
+
     def update(c: Int, v: AnyVec3d) {
         c match {
             case 0 => m00 = v.x; m10 = v.y; m20 = v.z
@@ -521,7 +532,6 @@ final class Mat3x4d private[math] (
                     "excpected from 0 to 3, got " + j)
         }
     }
-
 }
 
 object Mat3x4d {

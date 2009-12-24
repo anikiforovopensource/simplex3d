@@ -410,6 +410,28 @@ final class Mat4f private[math] (
         }
     }
 
+    def update(c: Int, v: AnyVec2f) {
+        c match {
+            case 0 => m00 = v.x; m10 = v.y
+            case 1 => m01 = v.x; m11 = v.y
+            case 2 => m02 = v.x; m12 = v.y
+            case 3 => m03 = v.x; m13 = v.y
+            case j => throw new IndexOutOfBoundsException(
+                    "excpected from 0 to 3, got " + j)
+        }
+    }
+
+    def update(c: Int, v: AnyVec3f) {
+        c match {
+            case 0 => m00 = v.x; m10 = v.y; m20 = v.z
+            case 1 => m01 = v.x; m11 = v.y; m21 = v.z
+            case 2 => m02 = v.x; m12 = v.y; m22 = v.z
+            case 3 => m03 = v.x; m13 = v.y; m23 = v.z
+            case j => throw new IndexOutOfBoundsException(
+                    "excpected from 0 to 3, got " + j)
+        }
+    }
+
     def update(c: Int, v: AnyVec4f) {
         c match {
             case 0 => m00 = v.x; m10 = v.y; m20 = v.z; m30 = v.w
@@ -420,7 +442,6 @@ final class Mat4f private[math] (
                     "excpected from 0 to 3, got " + j)
         }
     }
-
 }
 
 object Mat4f {

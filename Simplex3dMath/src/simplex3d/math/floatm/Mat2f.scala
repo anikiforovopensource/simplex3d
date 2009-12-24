@@ -270,7 +270,6 @@ final class Mat2f private[math] (
                     "excpected from 0 to 1, got " + j)
         }
     }
-
 }
 
 object Mat2f {

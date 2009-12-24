@@ -368,7 +368,6 @@ final class Mat2x4d private[math] (
                     "excpected from 0 to 3, got " + j)
         }
     }
-
 }
 
 object Mat2x4d {

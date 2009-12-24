@@ -67,24 +67,6 @@ sealed abstract class AnyQuat4d {
         a*q.d + b*q.c - c*q.b + d*q.a
     )
 
-    def *(u: AnyVec3d) = {
-        val t1 = a*b
-        val t2 = a*c
-        val t3 = a*d
-        val t4 = -b*b
-        val t5 = b*c
-        val t6 = b*d
-        val t7 = -c*c
-        val t8 = c*d
-        val t9 = -d*d
-
-        new Vec3d(
-            2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
-            2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
-            2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z
-        )
-    }
-
     def ==(q: AnyQuat4d) :Boolean = {
         if (q eq null) false
         else a == q.a && b == q.b && c == q.c && d == q.d

@@ -1635,6 +1635,29 @@ object FloatMath {
         )
     }
 
+    /**
+     * The result is undefined for quaternions with non-unit norm.
+     */
+    def rotate(q: Quat4f, u: AnyVec3f) = {
+        import q._
+
+        val t1 = a*b
+        val t2 = a*c
+        val t3 = a*d
+        val t4 = -b*b
+        val t5 = b*c
+        val t6 = b*d
+        val t7 = -c*c
+        val t8 = c*d
+        val t9 = -d*d
+
+        new Vec3f(
+            2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
+            2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
+            2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z
+        )
+    }
+
     // Rotation
     /**
      * This method creates a 2d transformation matrix that rotates a vector

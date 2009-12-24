@@ -299,6 +299,43 @@ class FloatMathExtraTest extends FunSuite {
     }
 
     test("Projection") {
+        //gl.glMatrixMode(GL.GL_PROJECTION);
+        //gl.glPushMatrix();
+        //GLU g = new GLU();
+        //float[] mat = new float[16];
+        //
+        //gl.glLoadIdentity();
+        //g.gluPerspective(90, 640/480f, 10, 1000);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj1: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glLoadIdentity();
+        //g.gluPerspective(120, 800/600f, 10, 10000);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj2: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glLoadIdentity();
+        //g.gluPerspective(100, 1680/1050f, 1, 800);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj3: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glLoadIdentity();
+        //gl.glOrtho(-100, 100, -100, 100, -100, 100);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj4: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glLoadIdentity();
+        //gl.glOrtho(0, 300, -200, 400, -20, 500);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj5: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glLoadIdentity();
+        //gl.glOrtho(-500, 22, -800, -222, 100, 1000);
+        //gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, mat, 0);
+        //System.out.println("Proj6: " + java.util.Arrays.toString(mat));
+        //
+        //gl.glPopMatrix();
+
         // gluPerspective(90, 640/480f, 10, 1000)
         val p1 = Mat4(
                 0.75f, 0, 0, 0,

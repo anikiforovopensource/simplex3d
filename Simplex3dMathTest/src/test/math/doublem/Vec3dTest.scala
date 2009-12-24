@@ -247,25 +247,23 @@ class Vec3dTest extends FunSuite {
     }
 
     test("Mutable math") {
-        var u = Vec3(2, 3, 4)
+        val u = Vec3(0)
+        val i = ConstVec3(2, 3, 4)
 
-        u = Vec3(2, 3, 4); u *= 2; assert(Vec3(4, 6, 8) == u)
-        u = Vec3(2, 3, 4); u /= 2; assert(Vec3(1, 1.5, 2) == u)
+        u := i; u *= 2; assert(Vec3(4, 6, 8) == u)
+        u := i; u /= 2; assert(Vec3(1, 1.5, 2) == u)
 
-        u = Vec3(2, 3, 4); u += Vec3(3, 4, 5); assert(Vec3(5, 7, 9) == u)
-        u = Vec3(2, 3, 4); u += u; assert(Vec3(4, 6, 8) == u)
-        u = Vec3(2, 3, 4); u -= Vec3(2, 3, 4); assert(Vec3(0, 0, 0) == u)
-        u = Vec3(2, 3, 4); u -= u; assert(Vec3(0, 0, 0) == u)
+        u := i; u += Vec3(3, 4, 5); assert(Vec3(5, 7, 9) == u)
+        u := i; u += u; assert(Vec3(4, 6, 8) == u)
+        u := i; u -= Vec3(2, 3, 4); assert(Vec3(0, 0, 0) == u)
+        u := i; u -= u; assert(Vec3(0, 0, 0) == u)
 
-        u = Vec3(2, 3, 4); u *= Vec3(5, 10, 15); assert(Vec3(10, 30, 60) == u)
-        u = Vec3(2, 3, 4); u *= u; assert(Vec3(4, 9, 16) == u)
-        u = Vec3(2, 3, 4); u /= Vec3(2, 6, 2); assert(Vec3(1, 0.5, 2) == u)
-        u = Vec3(2, 3, 4); u /= u; assert(Vec3(1, 1, 1) == u)
+        u := i; u *= Vec3(5, 10, 15); assert(Vec3(10, 30, 60) == u)
+        u := i; u *= u; assert(Vec3(4, 9, 16) == u)
+        u := i; u /= Vec3(2, 6, 2); assert(Vec3(1, 0.5, 2) == u)
+        u := i; u /= u; assert(Vec3(1, 1, 1) == u)
 
-        u = Vec3(2, 3, 4); u := Vec3(11, 12, 13); assert(Vec3(11, 12, 13) == u)
-        u = Vec3(2, 3, 4); u.set(22, 33, 44); assert(Vec3(22, 33, 44) == u)
-
-        u = Vec3(2, 3, 4)
+        u := i
         val m3 = ConstMat3(
             2, 5, 4,
             3, 4, 8,

@@ -226,6 +226,7 @@ class Vec2iTest extends FunSuite {
         u := b; u >>= 4; assert(Vec2i(0, 0xF) == u)
         u := -b; u >>>= 4; assert(Vec2i(-0xF >>> 4, -0xFF >>> 4) == u)
         u := b; u <<= 4; assert(Vec2i(0xF0, 0xFF0) == u)
+        
         u := b; u &= 0xF; assert(Vec2i(0xF, 0xF) == u)
         u := b; u |= 0xFF; assert(Vec2i(0xFF, 0xFF) == u)
         u := b; u ^= 0xFF; assert(Vec2i(0xF0, 0) == u)

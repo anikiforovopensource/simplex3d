@@ -192,25 +192,23 @@ class Vec2fTest extends FunSuite {
     }
 
     test("Mutable math") {
-        var u = Vec2(2, 3)
+        val u = Vec2(0)
+        val i = ConstVec2(2, 3)
 
-        u = Vec2(2, 3); u *= 2; assert(Vec2(4, 6) == u)
-        u = Vec2(2, 3); u /= 2; assert(Vec2(1, 1.5f) == u)
+        u := i; u *= 2; assert(Vec2(4, 6) == u)
+        u := i; u /= 2; assert(Vec2(1, 1.5f) == u)
 
-        u = Vec2(2, 3); u += Vec2(3, 4); assert(Vec2(5, 7) == u)
-        u = Vec2(2, 3); u += u; assert(Vec2(4, 6) == u)
-        u = Vec2(2, 3); u -= Vec2(2, 3); assert(Vec2(0, 0) == u)
-        u = Vec2(2, 3); u -= u; assert(Vec2(0, 0) == u)
+        u := i; u += Vec2(3, 4); assert(Vec2(5, 7) == u)
+        u := i; u += u; assert(Vec2(4, 6) == u)
+        u := i; u -= Vec2(2, 3); assert(Vec2(0, 0) == u)
+        u := i; u -= u; assert(Vec2(0, 0) == u)
 
-        u = Vec2(2, 3); u *= Vec2(5, 10); assert(Vec2(10, 30) == u)
-        u = Vec2(2, 3); u *= u; assert(Vec2(4, 9) == u)
-        u = Vec2(2, 3); u /= Vec2(2, 6); assert(Vec2(1, 0.5f) == u)
-        u = Vec2(2, 3); u /= u; assert(Vec2(1, 1) == u)
+        u := i; u *= Vec2(5, 10); assert(Vec2(10, 30) == u)
+        u := i; u *= u; assert(Vec2(4, 9) == u)
+        u := i; u /= Vec2(2, 6); assert(Vec2(1, 0.5f) == u)
+        u := i; u /= u; assert(Vec2(1, 1) == u)
 
-        u = Vec2(2, 3); u := Vec2(11, 12); assert(Vec2(11, 12) == u)
-        u = Vec2(2, 3); u.set(22, 33); assert(Vec2(22, 33) == u)
-
-        u = Vec2(7, 8)
+        u := Vec2(7, 8)
         u *= ConstMat2(2, 4, 3, 5)
         assert(Vec2(46, 61) == u)
     }

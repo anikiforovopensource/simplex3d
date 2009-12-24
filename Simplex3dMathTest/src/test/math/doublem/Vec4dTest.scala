@@ -332,25 +332,23 @@ class Vec4dTest extends FunSuite {
     }
 
     test("Mutable math") {
-        var u = Vec4(2, 3, 4, 5)
+        val u = Vec4(0)
+        val i = ConstVec4(2, 3, 4, 5)
 
-        u = Vec4(2, 3, 4, 5); u *= 2; assert(Vec4(4, 6, 8, 10) == u)
-        u = Vec4(2, 3, 4, 5); u /= 2; assert(Vec4(1, 1.5, 2, 2.5) == u)
+        u := i; u *= 2; assert(Vec4(4, 6, 8, 10) == u)
+        u := i; u /= 2; assert(Vec4(1, 1.5, 2, 2.5) == u)
 
-        u = Vec4(2, 3, 4, 5); u += Vec4(3, 4, 5, 6); assert(Vec4(5, 7, 9, 11) == u)
-        u = Vec4(2, 3, 4, 5); u += u; assert(Vec4(4, 6, 8, 10) == u)
-        u = Vec4(2, 3, 4, 5); u -= Vec4(2, 3, 4, 5); assert(Vec4(0) == u)
-        u = Vec4(2, 3, 4, 5); u -= u; assert(Vec4(0) == u)
+        u := i; u += Vec4(3, 4, 5, 6); assert(Vec4(5, 7, 9, 11) == u)
+        u := i; u += u; assert(Vec4(4, 6, 8, 10) == u)
+        u := i; u -= Vec4(2, 3, 4, 5); assert(Vec4(0) == u)
+        u := i; u -= u; assert(Vec4(0) == u)
 
-        u = Vec4(2, 3, 4, 5); u *= Vec4(5, 10, 15, 2); assert(Vec4(10, 30, 60, 10) == u)
-        u = Vec4(2, 3, 4, 5); u *= u; assert(Vec4(4, 9, 16, 25) == u)
-        u = Vec4(2, 3, 4, 5); u /= Vec4(2, 6, 2, 2); assert(Vec4(1, 0.5, 2, 2.5) == u)
-        u = Vec4(2, 3, 4, 5); u /= u; assert(Vec4(1) == u)
+        u := i; u *= Vec4(5, 10, 15, 2); assert(Vec4(10, 30, 60, 10) == u)
+        u := i; u *= u; assert(Vec4(4, 9, 16, 25) == u)
+        u := i; u /= Vec4(2, 6, 2, 2); assert(Vec4(1, 0.5, 2, 2.5) == u)
+        u := i; u /= u; assert(Vec4(1) == u)
 
-        u = Vec4(2, 3, 4, 5); u := Vec4(11, 12, 13, 14); assert(Vec4(11, 12, 13, 14) == u)
-        u = Vec4(2, 3, 4, 5); u.set(22, 33, 44, 55); assert(Vec4(22, 33, 44, 55) == u)
-
-        u = Vec4(2, 3, 4, 5)
+        u := i
         val m4 = ConstMat4(
             2, 5, 4, 6,
             3, 4, 8, 2,

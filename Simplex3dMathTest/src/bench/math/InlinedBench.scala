@@ -28,13 +28,13 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object InlinedTest {
+object InlinedBench {
     def main(args: Array[String]) {
-        new InlinedTestCase().run()
+        new InlinedBenchCase().run()
     }
 }
 
-class InlinedTestCase {
+class InlinedBenchCase {
     val length = 100
     val loops = 20
 

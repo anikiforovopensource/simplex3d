@@ -26,11 +26,11 @@ package bench.math
  */
 object EscapeBench {
     def main(args: Array[String]) {
-        new EscapeBenchTest().run()
+        new EscapeBenchCase().run()
     }
 }
 
-class EscapeBenchTest {
+class EscapeBenchCase {
     val length = 10000
     val loops = 100000
     

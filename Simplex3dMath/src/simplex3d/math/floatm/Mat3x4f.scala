@@ -291,6 +291,39 @@ sealed abstract class AnyMat3x4f
         )
     }
 
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case m: AnyMat3x4f => this == m
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+          41 * (
+            41 * (
+              41 * (
+                41 * (
+                  41 * (
+                    41 * (
+                      41 * (
+                        41 * (
+                          41 * (
+                            41 * (
+                              41 + m00.hashCode
+                            ) + m10.hashCode
+                          ) + m20.hashCode
+                        ) + m01.hashCode
+                      ) + m11.hashCode
+                    ) + m21.hashCode
+                  ) + m02.hashCode
+                ) + m12.hashCode
+              ) + m22.hashCode
+            ) + m03.hashCode
+          ) + m13.hashCode
+        ) + m23.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName +
         "(" +

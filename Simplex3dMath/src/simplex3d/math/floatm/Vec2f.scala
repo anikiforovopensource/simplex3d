@@ -72,6 +72,19 @@ sealed abstract class AnyVec2f extends Read2Float {
         )
     }
 
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: AnyVec2f => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+            41 + x.hashCode
+        ) + y.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ")"
     }

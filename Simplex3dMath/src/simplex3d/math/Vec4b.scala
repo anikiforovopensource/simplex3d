@@ -56,6 +56,23 @@ sealed abstract class AnyVec4b {
     }
 
     def !=(u: AnyVec4b) :Boolean = !(this == u)
+
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: AnyVec4b => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+            41 * (
+                41 * (
+                    41 + x.hashCode
+                ) + y.hashCode
+            ) + z.hashCode
+        ) + w.hashCode
+    }
     
     override def toString = {
         this.getClass.getSimpleName +

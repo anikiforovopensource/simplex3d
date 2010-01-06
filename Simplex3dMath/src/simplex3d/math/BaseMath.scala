@@ -29,6 +29,10 @@ object BaseMath {
     // Random
     val random = new java.util.Random()
     def nextBoolean() :Boolean = random.nextBoolean
+    def nextByte() :Byte = byte(random.nextInt)
+    def nextByte(n: Int) :Byte = byte(random.nextInt(n))
+    def nextShort() :Short = short(random.nextInt)
+    def nextShort(n: Int) :Short = short(random.nextInt(n))
     def nextInt() :Int = random.nextInt
     def nextInt(n: Int) = random.nextInt(n)
     def nextFloat() :Float = random.nextFloat

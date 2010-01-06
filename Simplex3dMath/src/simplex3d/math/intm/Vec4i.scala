@@ -82,7 +82,24 @@ sealed abstract class AnyVec4i extends Read4Int {
     }
 
     def !=(u: AnyVec4i) :Boolean = !(this == u)
-    
+
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: AnyVec4i => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+            41 * (
+                41 * (
+                    41 + x.hashCode
+                ) + y.hashCode
+            ) + z.hashCode
+        ) + w.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName +
         "(" + x + ", " + y + ", " + z + ", " + w + ")"

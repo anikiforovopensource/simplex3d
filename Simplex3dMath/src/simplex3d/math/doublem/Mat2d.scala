@@ -161,6 +161,23 @@ sealed abstract class AnyMat2d
         )
     }
 
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case m: AnyMat2d => this == m
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+          41 * (
+            41 * (
+              41 + m00.hashCode
+            ) + m10.hashCode
+          ) + m01.hashCode
+        ) + m11.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName +
         "(" +

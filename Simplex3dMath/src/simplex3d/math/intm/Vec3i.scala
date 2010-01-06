@@ -79,6 +79,21 @@ sealed abstract class AnyVec3i extends Read3Int {
 
     def !=(u: AnyVec3i) :Boolean = !(this == u)
 
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: AnyVec3i => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+            41 * (
+                41 + x.hashCode
+            ) + y.hashCode
+        ) + z.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
     }

@@ -84,6 +84,23 @@ sealed abstract class AnyQuat4f {
         )
     }
 
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case q: AnyQuat4f => this == q
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        41 * (
+            41 * (
+                41 * (
+                    41 + a.hashCode
+                ) + b.hashCode
+            ) + c.hashCode
+        ) + d.hashCode
+    }
+
     override def toString = {
         this.getClass.getSimpleName +
         "(" + a + ", " + b + ", " + c + ", " + d + ")"

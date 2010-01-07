@@ -135,7 +135,7 @@ sealed abstract class AnyMat2f
         m00*u.x + m01*u.y,
         m10*u.x + m11*u.y
     )
-    protected[math] def transposeMul(u: AnyVec2f) = new Vec2f(
+    private[math] def transposeMul(u: AnyVec2f) = new Vec2f(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y
     )
@@ -254,6 +254,14 @@ final class Mat2f private[math] (
     def :=(m: AnyMat2f) {
         m00 = m.m00; m10 = m.m10;
         m01 = m.m01; m11 = m.m11
+    }
+
+    def set(
+        m00: Float, m10: Float,
+        m01: Float, m11: Float
+    ) {
+        this.m00 = m00; this.m10 = m10;
+        this.m01 = m01; this.m11 = m11
     }
 
     def update(c: Int, r: Int, s: Float) {

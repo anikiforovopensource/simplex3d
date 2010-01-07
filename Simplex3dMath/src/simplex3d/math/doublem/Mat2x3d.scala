@@ -150,7 +150,7 @@ sealed abstract class AnyMat2x3d
         m00*u.x + m01*u.y + m02*u.z,
         m10*u.x + m11*u.y + m12*u.z
     )
-    protected[math] def transposeMul(u: AnyVec2d) = new Vec3d(
+    private[math] def transposeMul(u: AnyVec2d) = new Vec3d(
         m00*u.x + m10*u.y,
         m01*u.x + m11*u.y,
         m02*u.x + m12*u.y

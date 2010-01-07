@@ -159,7 +159,7 @@ sealed abstract class AnyMat4x2f
         m20*u.x + m21*u.y,
         m30*u.x + m31*u.y
     )
-    protected[math] def transposeMul(u: AnyVec4f) = new Vec2f(
+    private[math] def transposeMul(u: AnyVec4f) = new Vec2f(
         m00*u.x + m10*u.y + m20*u.z + m30*u.w,
         m01*u.x + m11*u.y + m21*u.z + m31*u.w
     )

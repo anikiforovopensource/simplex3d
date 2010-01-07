@@ -163,7 +163,7 @@ sealed abstract class AnyMat3f
         m10*u.x + m11*u.y + m12*u.z,
         m20*u.x + m21*u.y + m22*u.z
     )
-    protected[math] def transposeMul(u: AnyVec3f) = new Vec3f(
+    private[math] def transposeMul(u: AnyVec3f) = new Vec3f(
         m00*u.x + m10*u.y + m20*u.z,
         m01*u.x + m11*u.y + m21*u.z,
         m02*u.x + m12*u.y + m22*u.z
@@ -319,6 +319,16 @@ final class Mat3f private[math] (
         m00 = m.m00; m10 = m.m10; m20 = m.m20;
         m01 = m.m01; m11 = m.m11; m21 = m.m21;
         m02 = m.m02; m12 = m.m12; m22 = m.m22
+    }
+
+    def set(
+        m00: Float, m10: Float, m20: Float,
+        m01: Float, m11: Float, m21: Float,
+        m02: Float, m12: Float, m22: Float
+    ) {
+        this.m00 = m00; this.m10 = m10; this.m20 = m20;
+        this.m01 = m01; this.m11 = m11; this.m21 = m21;
+        this.m02 = m02; this.m12 = m12; this.m22 = m22
     }
 
     def update(c: Int, r: Int, s: Float) {

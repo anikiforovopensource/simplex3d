@@ -94,26 +94,41 @@ class Vec2iTest extends FunSuite {
         val y = 2
 
         val a = ConstVec2i(x, y)
+        expect(classOf[ConstVec2i]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
 
         val b = ConstVec2i(Vec2i(x, y))
+        expect(classOf[ConstVec2i]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
 
         val t: ConstVec2i = Vec2i(x, y)
+        expect(classOf[ConstVec2i]) { t.getClass }
         assert(Vec2i(x, y) == t)
 
         var c: ConstVec2i = Vec2i(x, y); var v = Vec2i(3)
+        expect(classOf[ConstVec2i]) { c.getClass }
         v = c; assert(Vec2i(x, y) == v)
+        expect(classOf[Vec2i]) { v.getClass }
 
         c = Vec2i(5); v = Vec2i(x, y)
+        expect(classOf[Vec2i]) { v.getClass }
         c = v; assert(Vec2i(x, y) == c)
+        expect(classOf[ConstVec2i]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec2i(4, 7) == ConstVec2i(4, 7))
-        assert(ConstVec2i(4, 7) == Vec2i(4, 7))
+        val m = Vec2i(4, 7)
+        val c = ConstVec2i(4, 7)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec2i(1, 2) != Vec2i(9, 2))
         assert(Vec2i(1, 2) != Vec2i(1, 9))

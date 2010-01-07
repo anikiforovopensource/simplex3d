@@ -103,8 +103,16 @@ class Quat4dTest extends FunSuite {
     }
 
     test("Equality methods") {
-        assert(Quat4(4, 7, 9, 1) == ConstQuat4(4, 7, 9, 1))
-        assert(ConstQuat4(4, 7, 9, 1) == Quat4(4, 7, 9, 1))
+        val m = Quat4(4, 7, 9, 1)
+        val c = ConstQuat4(4, 7, 9, 1)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Quat4(1, 2, 3, 4) != Quat4(9, 2, 3, 4))
         assert(Quat4(1, 2, 3, 4) != Quat4(1, 9, 3, 4))

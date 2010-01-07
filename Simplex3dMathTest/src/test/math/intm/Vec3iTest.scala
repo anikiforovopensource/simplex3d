@@ -101,28 +101,43 @@ class Vec3iTest extends FunSuite {
         val z = 3
 
         val a = ConstVec3i(x, y, z)
+        expect(classOf[ConstVec3i]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
         expect(z) { a.z }
 
         val b = ConstVec3i(Vec3i(x, y, z))
+        expect(classOf[ConstVec3i]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
         expect(z) { b.z }
 
         val t: ConstVec3i = Vec3i(x, y, z)
+        expect(classOf[ConstVec3i]) { t.getClass }
         assert(Vec3i(x, y, z) == t)
 
         var c: ConstVec3i = Vec3i(x, y, z); var v = Vec3i(3)
+        expect(classOf[ConstVec3i]) { c.getClass }
         v = c; assert(Vec3i(x, y, z) == v)
+        expect(classOf[Vec3i]) { v.getClass }
 
         c = Vec3i(5); v = Vec3i(x, y, z)
+        expect(classOf[Vec3i]) { v.getClass }
         c = v; assert(Vec3i(x, y, z) == c)
+        expect(classOf[ConstVec3i]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec3i(4, 7, 9) == ConstVec3i(4, 7, 9))
-        assert(ConstVec3i(4, 7, 9) == Vec3i(4, 7, 9))
+        val m = Vec3i(4, 7, 9)
+        val c = ConstVec3i(4, 7, 9)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec3i(1, 2, 3) != Vec3i(9, 2, 3))
         assert(Vec3i(1, 2, 3) != Vec3i(1, 9, 3))

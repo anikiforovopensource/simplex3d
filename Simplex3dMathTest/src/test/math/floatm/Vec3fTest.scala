@@ -112,28 +112,43 @@ class Vec3fTest extends FunSuite {
         val z = 3f
 
         val a = ConstVec3(x, y, z)
+        expect(classOf[ConstVec3]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
         expect(z) { a.z }
 
         val b = ConstVec3(Vec3(x, y, z))
+        expect(classOf[ConstVec3]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
         expect(z) { b.z }
 
         val t: ConstVec3 = Vec3(x, y, z)
+        expect(classOf[ConstVec3]) { t.getClass }
         assert(Vec3(x, y, z) == t)
 
         var c: ConstVec3 = Vec3(x, y, z); var v = Vec3(3)
+        expect(classOf[ConstVec3]) { c.getClass }
         v = c; assert(Vec3(x, y, z) == v)
+        expect(classOf[Vec3]) { v.getClass }
 
         c = Vec3(5); v = Vec3(x, y, z)
+        expect(classOf[Vec3]) { v.getClass }
         c = v; assert(Vec3(x, y, z) == c)
+        expect(classOf[ConstVec3]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec3(4, 7, 9) == ConstVec3(4, 7, 9))
-        assert(ConstVec3(4, 7, 9) == Vec3(4, 7, 9))
+        val m = Vec3(4, 7, 9)
+        val c = ConstVec3(4, 7, 9)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec3(1, 2, 3) != Vec3(9, 2, 3))
         assert(Vec3(1, 2, 3) != Vec3(1, 9, 3))

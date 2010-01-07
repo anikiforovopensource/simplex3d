@@ -115,25 +115,32 @@ class Vec4bTest extends FunSuite {
     test("Const conversions") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
             val a = ConstVec4b(x, y, z, w)
+            expect(classOf[ConstVec4b]) { a.getClass }
             expect(x) { a.x }
             expect(y) { a.y }
             expect(z) { a.z }
             expect(w) { a.w }
 
             val b = ConstVec4b(Vec4b(x, y, z, w))
+            expect(classOf[ConstVec4b]) { b.getClass }
             expect(x) { b.x }
             expect(y) { b.y }
             expect(z) { b.z }
             expect(w) { b.w }
 
             val t: ConstVec4b = Vec4b(x, y, z, w)
+            expect(classOf[ConstVec4b]) { t.getClass }
             assert(Vec4b(x, y, z, w) == t)
 
             var c: ConstVec4b = Vec4b(x, y, z, w); var v = Vec4b(false)
+            expect(classOf[ConstVec4b]) { c.getClass }
             v = c; assert(Vec4b(x, y, z, w) == v)
+            expect(classOf[Vec4b]) { v.getClass }
 
             c = Vec4b(true); v = Vec4b(x, y, z, w)
+            expect(classOf[Vec4b]) { v.getClass }
             c = v; assert(Vec4b(x, y, z, w) == c)
+            expect(classOf[ConstVec4b]) { c.getClass }
         }
 
         for ((x, y, z, w) <- combinations) {
@@ -143,8 +150,16 @@ class Vec4bTest extends FunSuite {
 
     test("Equality methods") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
-            assert(Vec4b(x, y, z, w) == ConstVec4b(x, y, z, w))
-            assert(ConstVec4b(x, y, z, w) == Vec4b(x, y, z, w))
+            val m = Vec4b(x, y, z, w)
+            val c = ConstVec4b(x, y, z, w)
+
+            assert(m == m)
+            assert(m == c)
+            assert(c == m)
+            assert(c == c)
+
+            assert(m.equals(c))
+            assert(!m.equals(Nil))
 
             assert(Vec4b(x, y, z, w) != Vec4b(!x, y, z, w))
             assert(Vec4b(x, y, z, w) != Vec4b(x, !y, z, w))

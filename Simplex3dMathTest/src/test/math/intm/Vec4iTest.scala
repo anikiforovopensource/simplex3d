@@ -118,30 +118,45 @@ class Vec4iTest extends FunSuite {
         val w = 4
 
         val a = ConstVec4i(x, y, z, w)
+        expect(classOf[ConstVec4i]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
         expect(z) { a.z }
         expect(w) { a.w }
 
         val b = ConstVec4i(Vec4i(x, y, z, w))
+        expect(classOf[ConstVec4i]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
         expect(z) { b.z }
         expect(w) { b.w }
 
         val t: ConstVec4i = Vec4i(x, y, z, w)
+        expect(classOf[ConstVec4i]) { t.getClass }
         assert(Vec4i(x, y, z, w) == t)
 
         var c: ConstVec4i = Vec4i(x, y, z, w); var v = Vec4i(3)
+        expect(classOf[ConstVec4i]) { c.getClass }
         v = c; assert(Vec4i(x, y, z, w) == v)
+        expect(classOf[Vec4i]) { v.getClass }
 
         c = Vec4i(5); v = Vec4i(x, y, z, w)
+        expect(classOf[Vec4i]) { v.getClass }
         c = v; assert(Vec4i(x, y, z, w) == c)
+        expect(classOf[ConstVec4i]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec4i(4, 7, 9, 1) == ConstVec4i(4, 7, 9, 1))
-        assert(ConstVec4i(4, 7, 9, 1) == Vec4i(4, 7, 9, 1))
+        val m = Vec4i(4, 7, 9, 1)
+        val c = ConstVec4i(4, 7, 9, 1)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec4i(1, 2, 3, 4) != Vec4i(9, 2, 3, 4))
         assert(Vec4i(1, 2, 3, 4) != Vec4i(1, 9, 3, 4))

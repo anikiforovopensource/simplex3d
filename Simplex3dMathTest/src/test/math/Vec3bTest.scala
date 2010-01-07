@@ -96,23 +96,30 @@ class Vec3bTest extends FunSuite {
     test("Const conversions") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
             val a = ConstVec3b(x, y, z)
+            expect(classOf[ConstVec3b]) { a.getClass }
             expect(x) { a.x }
             expect(y) { a.y }
             expect(z) { a.z }
 
             val b = ConstVec3b(Vec3b(x, y, z))
+            expect(classOf[ConstVec3b]) { b.getClass }
             expect(x) { b.x }
             expect(y) { b.y }
             expect(z) { b.z }
 
             val t: ConstVec3b = Vec3b(x, y, z)
+            expect(classOf[ConstVec3b]) { t.getClass }
             assert(Vec3b(x, y, z) == t)
 
             var c: ConstVec3b = Vec3b(x, y, z); var v = Vec3b(false)
+            expect(classOf[ConstVec3b]) { c.getClass }
             v = c; assert(Vec3b(x, y, z) == v)
+            expect(classOf[Vec3b]) { v.getClass }
 
             c = Vec3b(true); v = Vec3b(x, y, z)
+            expect(classOf[Vec3b]) { v.getClass }
             c = v; assert(Vec3b(x, y, z) == c)
+            expect(classOf[ConstVec3b]) { c.getClass }
         }
 
         for ((x, y, z, w) <- combinations) {
@@ -122,8 +129,16 @@ class Vec3bTest extends FunSuite {
 
     test("Equality methods") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
-            assert(Vec3b(x, y, z) == ConstVec3b(x, y, z))
-            assert(ConstVec3b(x, y, z) == Vec3b(x, y, z))
+            val m = Vec3b(x, y, z)
+            val c = ConstVec3b(x, y, z)
+
+            assert(m == m)
+            assert(m == c)
+            assert(c == m)
+            assert(c == c)
+
+            assert(m.equals(c))
+            assert(!m.equals(Nil))
 
             assert(Vec3b(x, y, z) != Vec3b(!x, y, z))
             assert(Vec3b(x, y, z) != Vec3b(x, !y, z))

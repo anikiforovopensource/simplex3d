@@ -94,26 +94,41 @@ class Vec2fTest extends FunSuite {
         val y = 2f
 
         val a = ConstVec2(x, y)
+        expect(classOf[ConstVec2]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
 
         val b = ConstVec2(Vec2(x, y))
+        expect(classOf[ConstVec2]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
 
         val t: ConstVec2 = Vec2(x, y)
+        expect(classOf[ConstVec2]) { t.getClass }
         assert(Vec2(x, y) == t)
 
         var c: ConstVec2 = Vec2(x, y); var v = Vec2(3)
+        expect(classOf[ConstVec2]) { c.getClass }
         v = c; assert(Vec2(x, y) == v)
+        expect(classOf[Vec2]) { v.getClass }
 
         c = Vec2(5); v = Vec2(x, y)
+        expect(classOf[Vec2]) { v.getClass }
         c = v; assert(Vec2(x, y) == c)
+        expect(classOf[ConstVec2]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec2(4, 7) == ConstVec2(4, 7))
-        assert(ConstVec2(4, 7) == Vec2(4, 7))
+        val m = Vec2(4, 7)
+        val c = ConstVec2(4, 7)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec2(1, 2) != Vec2(9, 2))
         assert(Vec2(1, 2) != Vec2(1, 9))

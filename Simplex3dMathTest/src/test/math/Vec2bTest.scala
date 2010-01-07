@@ -85,21 +85,28 @@ class Vec2bTest extends FunSuite {
     test("Const conversions") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
             val a = ConstVec2b(x, y)
+            expect(classOf[ConstVec2b]) { a.getClass }
             expect(x) { a.x }
             expect(y) { a.y }
 
             val b = ConstVec2b(Vec2b(x, y))
+            expect(classOf[ConstVec2b]) { b.getClass }
             expect(x) { b.x }
             expect(y) { b.y }
 
             val t: ConstVec2b = Vec2b(x, y)
+            expect(classOf[ConstVec2b]) { t.getClass }
             assert(Vec2b(x, y) == t)
 
             var c: ConstVec2b = Vec2b(x, y); var v = Vec2b(false)
+            expect(classOf[ConstVec2b]) { c.getClass }
             v = c; assert(Vec2b(x, y) == v)
+            expect(classOf[Vec2b]) { v.getClass }
 
             c = Vec2b(true); v = Vec2b(x, y)
+            expect(classOf[Vec2b]) { v.getClass }
             c = v; assert(Vec2b(x, y) == c)
+            expect(classOf[ConstVec2b]) { c.getClass }
         }
 
         for ((x, y, z, w) <- combinations) {
@@ -109,8 +116,16 @@ class Vec2bTest extends FunSuite {
 
     test("Equality methods") {
         def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
-            assert(Vec2b(x, y) == ConstVec2b(x, y))
-            assert(ConstVec2b(x, y) == Vec2b(x, y))
+            val m = Vec2b(x, y)
+            val c = ConstVec2b(x, y)
+
+            assert(m == m)
+            assert(m == c)
+            assert(c == m)
+            assert(c == c)
+
+            assert(m.equals(c))
+            assert(!m.equals(Nil))
 
             assert(Vec2b(x, y) != Vec2b(!x, y))
             assert(Vec2b(x, y) != Vec2b(x, !y))

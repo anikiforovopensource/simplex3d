@@ -160,30 +160,45 @@ class Vec4fTest extends FunSuite {
         val w = 4f
 
         val a = ConstVec4(x, y, z, w)
+        expect(classOf[ConstVec4]) { a.getClass }
         expect(x) { a.x }
         expect(y) { a.y }
         expect(z) { a.z }
         expect(w) { a.w }
 
         val b = ConstVec4(Vec4(x, y, z, w))
+        expect(classOf[ConstVec4]) { b.getClass }
         expect(x) { b.x }
         expect(y) { b.y }
         expect(z) { b.z }
         expect(w) { b.w }
 
         val t: ConstVec4 = Vec4(x, y, z, w)
+        expect(classOf[ConstVec4]) { t.getClass }
         assert(Vec4(x, y, z, w) == t)
 
         var c: ConstVec4 = Vec4(x, y, z, w); var v = Vec4(3)
+        expect(classOf[ConstVec4]) { c.getClass }
         v = c; assert(Vec4(x, y, z, w) == v)
+        expect(classOf[Vec4]) { v.getClass }
 
         c = Vec4(5); v = Vec4(x, y, z, w)
+        expect(classOf[Vec4]) { v.getClass }
         c = v; assert(Vec4(x, y, z, w) == c)
+        expect(classOf[ConstVec4]) { c.getClass }
     }
 
     test("Equality methods") {
-        assert(Vec4(4, 7, 9, 1) == ConstVec4(4, 7, 9, 1))
-        assert(ConstVec4(4, 7, 9, 1) == Vec4(4, 7, 9, 1))
+        val m = Vec4(4, 7, 9, 1)
+        val c = ConstVec4(4, 7, 9, 1)
+
+        assert(m == m)
+        assert(m == c)
+        assert(c == m)
+        assert(c == c)
+
+        assert(m.equals(c))
+        assert(!m.equals(Nil))
 
         assert(Vec4(1, 2, 3, 4) != Vec4(9, 2, 3, 4))
         assert(Vec4(1, 2, 3, 4) != Vec4(1, 9, 3, 4))

@@ -1,5 +1,5 @@
  * Simplex3dMath
- * Copyright (C) 2009 Simplex3d Team
+ * Copyright (C) 2009-2010 Simplex3d Team
  *
  * Simplex3dMath is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

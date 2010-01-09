@@ -45,36 +45,42 @@ object BaseMath {
     }
 
     // Cast
+    def byte(x: Byte) :Byte = x
     def byte(x: Short) :Byte = x.asInstanceOf[Byte]
     def byte(x: Int) :Byte = x.asInstanceOf[Byte]
     def byte(x: Long) :Byte = x.asInstanceOf[Byte]
     def byte(x: Float) :Byte = x.asInstanceOf[Byte]
     def byte(x: Double) :Byte = x.asInstanceOf[Byte]
     def short(x: Byte) :Short = x.asInstanceOf[Short]
+    def short(x: Short) :Short = x
     def short(x: Int) :Short = x.asInstanceOf[Short]
     def short(x: Long) :Short = x.asInstanceOf[Short]
     def short(x: Float) :Short = x.asInstanceOf[Short]
     def short(x: Double) :Short = x.asInstanceOf[Short]
     def int(x: Byte) :Int = x.asInstanceOf[Int]
     def int(x: Short) :Int = x.asInstanceOf[Int]
+    def int(x: Int) :Int = x
     def int(x: Long) :Int = x.asInstanceOf[Int]
     def int(x: Float) :Int = x.asInstanceOf[Int]
     def int(x: Double) :Int = x.asInstanceOf[Int]
     def long(x: Byte) :Long = x.asInstanceOf[Long]
     def long(x: Short) :Long = x.asInstanceOf[Long]
     def long(x: Int) :Long = x.asInstanceOf[Long]
+    def long(x: Long) :Long = x
     def long(x: Float) :Long = x.asInstanceOf[Long]
     def long(x: Double) :Long = x.asInstanceOf[Long]
     def float(x: Byte) :Float = x.asInstanceOf[Float]
     def float(x: Short) :Float = x.asInstanceOf[Float]
     def float(x: Int) :Float = x.asInstanceOf[Float]
     def float(x: Long) :Float = x.asInstanceOf[Float]
+    def float(x: Float) :Float = x
     def float(x: Double) :Float = x.asInstanceOf[Float]
     def double(x: Byte) :Double = x.asInstanceOf[Double]
     def double(x: Short) :Double = x.asInstanceOf[Double]
     def double(x: Int) :Double = x.asInstanceOf[Double]
     def double(x: Long) :Double = x.asInstanceOf[Double]
     def double(x: Float) :Double = x.asInstanceOf[Double]
+    def double(x: Double) :Double = x
 
     // Vec2b functions
     def any(u: AnyVec2b) :Boolean = {

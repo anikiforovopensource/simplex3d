@@ -526,18 +526,9 @@ object Translationf {
 }
 
 object Rotationf {
-    def apply(angle: Float) :Mat2x3f = {
-        val m = Mat2x3f(rotationMatFrom(angle))
-        m
-    }
-    def apply(q: AnyQuat4f) :Mat3x4f = {
-        val m = Mat3x4f(rotationMatFrom(q))
-        m
-    }
-    def apply(angle: Float, axis: AnyVec3f) :Mat3x4f = {
-        val m = Mat3x4f(rotationMatFrom(angle, axis))
-        m
-    }
+    def apply(angle: Float) :Mat2f = rotationMatFrom(angle)
+    def apply(q: AnyQuat4f) :Mat3f = rotationMatFrom(q)
+    def apply(angle: Float, axis: AnyVec3f) = rotationMatFrom(angle, axis)
 }
 
 object Scalef {

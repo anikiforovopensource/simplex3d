@@ -34,39 +34,41 @@ class BaseMathTest extends FunSuite {
     test("Random") {
         for (i <- 0 until 1000) {
             random.setSeed(i)
-            val t = (random.nextBoolean,
-                     random.nextInt.asInstanceOf[Byte],
-                     random.nextInt(10).asInstanceOf[Byte],
-                     random.nextInt.asInstanceOf[Short],
-                     random.nextInt(10).asInstanceOf[Short],
-                     random.nextInt,
-                     random.nextInt(10),
-                     random.nextFloat,
-                     random.nextDouble,
-                     Vec2b(random.nextBoolean,
-                           random.nextBoolean),
-                     Vec3b(random.nextBoolean,
-                           random.nextBoolean,
-                           random.nextBoolean),
-                     Vec4b(random.nextBoolean,
-                           random.nextBoolean,
-                           random.nextBoolean,
-                           random.nextBoolean)
+            val t = (
+                      random.nextBoolean,
+                      random.nextInt.asInstanceOf[Byte],
+                      random.nextInt(10).asInstanceOf[Byte],
+                      random.nextInt.asInstanceOf[Short],
+                      random.nextInt(10).asInstanceOf[Short],
+                      random.nextInt,
+                      random.nextInt(10),
+                      random.nextFloat,
+                      random.nextDouble,
+                      Vec2b(random.nextBoolean,
+                            random.nextBoolean),
+                      Vec3b(random.nextBoolean,
+                            random.nextBoolean,
+                            random.nextBoolean),
+                      Vec4b(random.nextBoolean,
+                            random.nextBoolean,
+                            random.nextBoolean,
+                            random.nextBoolean)
                     )
 
             random.setSeed(i)
-            val m = (nextBoolean,
-                     nextByte,
-                     nextByte(10),
-                     nextShort,
-                     nextShort(10),
-                     nextInt,
-                     nextInt(10),
-                     nextFloat,
-                     nextDouble,
-                     nextVec2b,
-                     nextVec3b,
-                     nextVec4b
+            val m = (
+                      nextBoolean,
+                      nextByte,
+                      nextByte(10),
+                      nextShort,
+                      nextShort(10),
+                      nextInt,
+                      nextInt(10),
+                      nextFloat,
+                      nextDouble,
+                      nextVec2b,
+                      nextVec3b,
+                      nextVec4b
                     )
 
             assert(t == m)

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.floatm
+package test.math.intm
 
 import org.scalatest._
 

@@ -33,8 +33,6 @@ object ThreadingTest {
         val pool = java.util.concurrent.Executors.newCachedThreadPool()
 
         class TestJob extends Job(pool) {
-            val freeProcessors = 0
-            
             val f = Integer.MAX_VALUE - 3
             var t = 1
             def hasMoreChunks() :Boolean = t < f
@@ -63,13 +61,6 @@ object ThreadingTest {
 
         val t = new TestJob
         t.execAndWait
-
-//        println(t.isExecuting)
-//        t.cancelAndWait
-//        println(t.isExecuting)
-
-//        t.singleThreaded
-
         println("end method")
         pool.shutdown()
     }
@@ -79,23 +70,30 @@ abstract class Chunk {
     def run() :Unit
 }
 abstract class Job(private val threadPool: ExecutorService = null) {
-    private var error: Throwable = null
+    private var error: Exception = null
     private var stop = false
     private val queue = new Queue[Chunk]
-    private val batchSize = 200
     private var liveThreads = 1
     private var executing = false
 
-    def freeProcessors :Int
+    val unusedProcessors :Int = 0
+    val preferredBatchSize :Int = 200
 
-    private def execute() {
+    private def batchSize = {
+        if (preferredBatchSize <= 100) 100
+        else if (preferredBatchSize >= 10000) 10000
+        else preferredBatchSize
+    }
+
+    final def exec() {
         synchronized {
             if (executing) throw new IllegalStateException("Already executing.")
             executing = true
             stop = false
         }
 
-        liveThreads = Runtime.getRuntime.availableProcessors - freeProcessors
+        val bias = if (unusedProcessors > 0) unusedProcessors else 0
+        liveThreads = Runtime.getRuntime.availableProcessors - bias
         
         if (liveThreads < 2) {
             liveThreads = 1
@@ -104,7 +102,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
                         runSingleThreaded()
                     }
                     catch {
-                        case t: Throwable => handleError(t)
+                        case e: Exception => handleError(e)
                     }
                     exitingThread()
                 }
@@ -116,8 +114,8 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         else {
             while(queue.poll != null) {}
 
-            var i = 0
-            while (hasMoreChunks() && i < batchSize) {
+            val batch = batchSize
+            var i = 0; while (hasMoreChunks() && i < batch) {
                 queue.offer(nextChunk())
                 i += 1
             }
@@ -135,7 +133,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
                         while (chunk != null)
                     }
                     catch {
-                        case t: Throwable => handleError(t)
+                        case e: Exception => handleError(e)
                     }
                     exitingThread()
                 }}
@@ -152,8 +150,8 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         synchronized {
             if (stop) return null
 
-            var i = 0
-            while (hasMoreChunks() && i < batchSize) {
+            val batch = batchSize
+            var i = 0; while (hasMoreChunks() && i < batch) {
                 queue.offer(nextChunk())
                 i += 1
             }
@@ -162,11 +160,11 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         }
     }
 
-    private def handleError(t: Throwable) {
+    private def handleError(e: Exception) {
         synchronized {
-            if (error != null) {
-                error = t
-                t.printStackTrace() //or an error handler
+            if (error == null) {
+                error = e
+                e.printStackTrace() //or an error handler
             }
             stop = true
         }
@@ -188,15 +186,9 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         }
     }
 
-    final def exec() {
-        execute()
-    }
-
     final def execAndWait() {
-        execute()
-        synchronized {
-            while (executing) wait()
-        }
+        exec()
+        waitForCompletion()
         if (error != null) throw error
     }
 
@@ -207,10 +199,8 @@ abstract class Job(private val threadPool: ExecutorService = null) {
     }
 
     final def cancelAndWait() {
-        synchronized {
-            stop = true
-            while(executing) wait()
-        }
+        cancel()
+        waitForCompletion()
     }
 
     final def waitForCompletion() {

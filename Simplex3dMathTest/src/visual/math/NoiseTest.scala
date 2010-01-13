@@ -44,8 +44,6 @@ object NoiseTest {
         val pool = java.util.concurrent.Executors.newCachedThreadPool()
 
         val job = new Job(pool) {
-            val freeProcessors = 0
-
             var buffer: Array[Int] = null
             var width = 0
             var height = 0
@@ -96,8 +94,9 @@ object NoiseTest {
 
         NoiseFrame.run(new Painter() {
             private val frames = new Array[(Array[Int], Int, Int)](2)
-            frames(0) = (new Array[Int](0), 0, 0)
-            frames(1) = (new Array[Int](0), 0, 0)
+            for (i <- 0 until frames.length) {
+                frames(i) = (new Array[Int](0), 0, 0)
+            }
             private var curFrame = 0
 
             def paint(width: Int, height: Int) :Array[Int] = {

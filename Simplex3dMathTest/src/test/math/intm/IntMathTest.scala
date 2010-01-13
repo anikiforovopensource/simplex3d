@@ -157,6 +157,7 @@ class IntMathTest extends FunSuite {
                  s, t)
         }
 
+        random.setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt,
                  nextInt, nextInt,
@@ -222,6 +223,7 @@ class IntMathTest extends FunSuite {
                  s, t, p)
         }
 
+        random.setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt, nextInt,
                  nextInt, nextInt, nextInt,
@@ -291,6 +293,7 @@ class IntMathTest extends FunSuite {
                  s, t, p, q)
         }
 
+        random.setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt, nextInt, nextInt,
                  nextInt, nextInt, nextInt, nextInt,

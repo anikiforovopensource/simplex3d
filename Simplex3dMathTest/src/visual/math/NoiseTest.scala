@@ -20,7 +20,7 @@
 
 package visual.math
 
-import manual.math.NoiseFrame.Painter
+import visual.math.NoiseFrame.Painter
 
 import simplex3d.math.BaseMath._
 import simplex3d.math.intm.IntMath
@@ -93,15 +93,6 @@ object NoiseTest {
                 }
             }
         }
-
-//        val width = 640
-//        val height = 480
-//        val buffer = new Array[Int](width*height)
-//        for (i <- 0 until 1000) {
-//            job.setImageBuffer(buffer, width, height)
-//            job.execAndWait()
-//        }
-//        pool.shutdown()
 
         NoiseFrame.run(new Painter() {
             private val frames = new Array[(Array[Int], Int, Int)](2)

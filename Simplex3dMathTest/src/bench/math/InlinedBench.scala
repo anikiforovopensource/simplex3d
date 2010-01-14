@@ -94,7 +94,7 @@ class InlinedBenchCase {
         var l = 0; while (l < loops) {
             var cc = 0; while (cc < length) {
 
-    random.setSeed(1)
+    setSeed(1)
     val spread = 80
     val am = arrows
     val as = arrowOriginal
@@ -134,7 +134,7 @@ class InlinedBenchCase {
         var l = 0; while (l < loops) {
             var cc = 0; while (cc < length) {
 
-    random.setSeed(1)
+    setSeed(1)
     val spread = 80
     val spread2 = spread*spread
 

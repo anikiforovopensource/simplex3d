@@ -33,8 +33,8 @@ class BaseMathTest extends FunSuite {
 
     test("Random") {
         for (i <- 0 until 1000) {
-            random.setSeed(i)
-            val t = (
+           val random = new java.util.Random(i)
+           val t = (
                       random.nextBoolean,
                       random.nextInt.asInstanceOf[Byte],
                       random.nextInt(10).asInstanceOf[Byte],
@@ -55,7 +55,7 @@ class BaseMathTest extends FunSuite {
                             random.nextBoolean)
                     )
 
-            random.setSeed(i)
+            setSeed(i)
             val m = (
                       nextBoolean,
                       nextByte,

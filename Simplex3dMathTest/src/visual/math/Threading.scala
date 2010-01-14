@@ -30,9 +30,15 @@ import scala.concurrent.ops.spawn
  */
 object ThreadingTest {
     def main(args: Array[String]) {
-        val pool = java.util.concurrent.Executors.newCachedThreadPool()
+        testJobChunk()
+    }
+
+    def testJobChunk() {
+        var pool = java.util.concurrent.Executors.newCachedThreadPool()
 
         class TestJob extends Job(pool) {
+            override val maxThreads = 4
+
             val f = Integer.MAX_VALUE - 3
             var t = 1
             def hasMoreChunks() :Boolean = t < f
@@ -43,18 +49,20 @@ object ThreadingTest {
                 val end = t
                 new Chunk {
                     def run() {
-                        for (i <- s until end) {
+                        var i = s; while (i < end) {
                             val r = f % i
                             if (r == 0) println(i)
+                            i += 1
                         }
                     }
                 }
             }
 
             def runSingleThreaded() {
-                for (i <- 1 until f) {
+                var i = 1; while (i < f) {
                     val r = f % i
                     if (r == 0) println(i)
+                    i += 1
                 }
             }
         }
@@ -62,7 +70,37 @@ object ThreadingTest {
         val t = new TestJob
         t.execAndWait
         println("end method")
-        pool.shutdown()
+
+        if (pool != null) pool.shutdown()
+    }
+
+    def testIndependedntThreads() {
+        var pool = java.util.concurrent.Executors.newCachedThreadPool()
+
+        val f = Integer.MAX_VALUE - 3
+        class TestIndependent(val f: Int, val start: Int, val end: Int)
+        extends Runnable
+        {
+            def run() {
+                var i = start; while(i < end) {
+                    val r = f % i
+                    if (r == 0) println(i)
+                    i += 1
+                }
+            }
+        }
+
+        val threads = 4
+        val step = f/threads
+        val runners = for (i <- 0 until threads) yield {
+            new TestIndependent(f, i*step + 1, (i + 1)*step)
+        }
+        for (runner <- runners) {
+            if (pool != null) pool.execute(runner)
+            else spawn { runner.run() }
+        }
+
+        if (pool != null) pool.shutdown()
     }
 }
 
@@ -76,6 +114,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
     private var liveThreads = 1
     private var executing = false
 
+    val maxThreads :Int = 0
     val unusedProcessors :Int = 0
     val preferredBatchSize :Int = 200
 
@@ -92,8 +131,9 @@ abstract class Job(private val threadPool: ExecutorService = null) {
             stop = false
         }
 
-        val bias = if (unusedProcessors > 0) unusedProcessors else 0
-        liveThreads = Runtime.getRuntime.availableProcessors - bias
+        val unused = if (unusedProcessors > 0) unusedProcessors else 0
+        liveThreads = Runtime.getRuntime.availableProcessors - unused
+        if (maxThreads > 0 && maxThreads < liveThreads) liveThreads = maxThreads
         
         if (liveThreads < 2) {
             liveThreads = 1
@@ -129,6 +169,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
                             chunk = queue.poll
                             if (chunk == null) chunk = moreJobs()
                             if (chunk != null) chunk.run()
+                            Thread.`yield`()
                         }
                         while (chunk != null)
                     }

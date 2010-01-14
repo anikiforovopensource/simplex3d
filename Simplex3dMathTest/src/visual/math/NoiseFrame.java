@@ -47,6 +47,8 @@ public class NoiseFrame extends JFrame {
     private BufferedImage img;
     private int width;
     private int height;
+    private String fps = "";
+    private int count = 0;
 
     private class DrawingPanel extends JPanel implements ActionListener {
         @Override public void paint(Graphics g) {
@@ -66,7 +68,15 @@ public class NoiseFrame extends JFrame {
             img.setRGB(0, 0, width, height, buffer, 0, width);
             g.drawImage(img, 0, 0, null);
 
-            String fps = String.valueOf(fpsTimer.fps());
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(9, 6, 94, 16);
+            g.setColor(Color.BLACK);
+            
+            count ++;
+            if (count % ((int) (fpsTimer.fps()/5)) == 0) {
+                count = 0;
+                fps = String.valueOf(fpsTimer.fps());
+            }
             Font bold = new Font("Monospaced", Font.BOLD, 16);
             g.setFont(bold);
             g.setColor(Color.BLACK);
@@ -81,7 +91,7 @@ public class NoiseFrame extends JFrame {
     /** Creates new form NoiseFrame */
     public NoiseFrame() {
         initComponents();
-        timer = new Timer(1000/60, (ActionListener) drawingPanel);
+        timer = new Timer(1, (ActionListener) drawingPanel);
         fpsTimer = new FpsTimer();
     }
 

@@ -46,13 +46,12 @@ class TransformfTest extends FunSuite {
         var badCount2 = 0
         var badCount3 = 0
 
-        def vec2 = nextVec2
-        def vec3 = nextVec3
-        def vec4 = nextVec4
+        def vec2 = nextVec2f
+        def vec3 = nextVec3f
+        def vec4 = nextVec4f
         def float = nextFloat
         def quat4 = normalize(Quat4(vec4))
         def axis = normalize(vec3)
-        def setSeed(s: Int) { random.setSeed(s) }
         // Note: from this point on, all the float, vec2, and vec3
         // are coming from random.float, random.vec2, and random.vec3
 

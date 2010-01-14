@@ -35,7 +35,7 @@ class IntMathTest extends FunSuite {
 
     test("Random") {
         for (i <- 0 until 1000) {
-            random.setSeed(i)
+            val random = new java.util.Random(i)
             val t = (
                       Vec2i(random.nextInt, random.nextInt),
                       Vec3i(random.nextInt, random.nextInt, random.nextInt),
@@ -48,7 +48,7 @@ class IntMathTest extends FunSuite {
                             random.nextInt(10), random.nextInt(10))
                     )
 
-            random.setSeed(i)
+            setSeed(i)
             val m = (
                       nextVec2i,
                       nextVec3i,
@@ -157,7 +157,7 @@ class IntMathTest extends FunSuite {
                  s, t)
         }
 
-        random.setSeed(1)
+        setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt,
                  nextInt, nextInt,
@@ -223,7 +223,7 @@ class IntMathTest extends FunSuite {
                  s, t, p)
         }
 
-        random.setSeed(1)
+        setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt, nextInt,
                  nextInt, nextInt, nextInt,
@@ -293,7 +293,7 @@ class IntMathTest extends FunSuite {
                  s, t, p, q)
         }
 
-        random.setSeed(1)
+        setSeed(1)
         for (i <- 0 until 1000) {
             test(nextInt, nextInt, nextInt, nextInt,
                  nextInt, nextInt, nextInt, nextInt,

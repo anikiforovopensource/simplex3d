@@ -35,7 +35,7 @@ class FloatMathTest extends FunSuite {
 
     test("Random") {
         for (i <- 0 until 1000) {
-            random.setSeed(i)
+            val random = new java.util.Random(i)
             val t = (
                       Vec2(random.nextFloat, random.nextFloat),
                       Vec3(random.nextFloat, random.nextFloat, random.nextFloat),
@@ -43,11 +43,11 @@ class FloatMathTest extends FunSuite {
                             random.nextFloat, random.nextFloat)
                     )
 
-            random.setSeed(i)
+            setSeed(i)
             val m = (
-                      nextVec2,
-                      nextVec3,
-                      nextVec4
+                      nextVec2f,
+                      nextVec3f,
+                      nextVec4f
                     )
 
             assert(t == m)

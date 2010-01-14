@@ -32,15 +32,11 @@ import ext.toxi.math.noise.SimplexNoise
 object DoubleMath {
 
     // Random
-    def nextVec2() :Vec2d = new Vec2d(nextDouble, nextDouble)
-    def nextVec3() :Vec3d = new Vec3d(nextDouble, nextDouble, nextDouble)
-    def nextVec4() :Vec4d = {
+    def nextVec2d() :Vec2d = new Vec2d(nextDouble, nextDouble)
+    def nextVec3d() :Vec3d = new Vec3d(nextDouble, nextDouble, nextDouble)
+    def nextVec4d() :Vec4d = {
         new Vec4d(nextDouble, nextDouble, nextDouble, nextDouble)
     }
-
-    def nextVec2d() :Vec2d = nextVec2
-    def nextVec3d() :Vec3d = nextVec3
-    def nextVec4d() :Vec4d = nextVec4
 
     // Constants
     val DoubleEpsilon: Double = 2.22045e-16;

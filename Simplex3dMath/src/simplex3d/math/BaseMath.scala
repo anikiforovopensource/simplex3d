@@ -27,7 +27,12 @@ package simplex3d.math
 object BaseMath {
 
     // Random
-    val random = new java.util.Random()
+    private val randomLoc = new ThreadLocal[java.util.Random] {
+        override def initialValue = new java.util.Random
+    }
+    private[math] def random = randomLoc.get
+
+    def setSeed(seed: Long) { random.setSeed(seed) }
     def nextBoolean() :Boolean = random.nextBoolean
     def nextByte() :Byte = byte(random.nextInt)
     def nextByte(n: Int) :Byte = byte(random.nextInt(n))

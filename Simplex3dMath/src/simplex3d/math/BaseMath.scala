@@ -26,29 +26,6 @@ package simplex3d.math
  */
 object BaseMath {
 
-    // Random
-    private val randomLoc = new ThreadLocal[java.util.Random] {
-        override def initialValue = new java.util.Random
-    }
-    private[math] def random = randomLoc.get
-
-    def setSeed(seed: Long) { random.setSeed(seed) }
-    def nextBoolean() :Boolean = random.nextBoolean
-    def nextByte() :Byte = byte(random.nextInt)
-    def nextByte(n: Int) :Byte = byte(random.nextInt(n))
-    def nextShort() :Short = short(random.nextInt)
-    def nextShort(n: Int) :Short = short(random.nextInt(n))
-    def nextInt() :Int = random.nextInt
-    def nextInt(n: Int) = random.nextInt(n)
-    def nextFloat() :Float = random.nextFloat
-    def nextDouble() :Double = random.nextDouble
-
-    def nextVec2b() :Vec2b = Vec2b(nextBoolean, nextBoolean)
-    def nextVec3b() :Vec3b = Vec3b(nextBoolean, nextBoolean, nextBoolean)
-    def nextVec4b() :Vec4b = {
-        Vec4b(nextBoolean, nextBoolean, nextBoolean, nextBoolean)
-    }
-
     // Cast
     def byte(x: Byte) :Byte = x
     def byte(x: Short) :Byte = x.asInstanceOf[Byte]

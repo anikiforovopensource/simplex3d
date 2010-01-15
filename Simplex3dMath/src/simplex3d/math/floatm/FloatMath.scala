@@ -31,13 +31,6 @@ import ext.toxi.math.noise.SimplexNoise
  */
 object FloatMath {
 
-    // Random
-    def nextVec2f() :Vec2f = new Vec2f(nextFloat, nextFloat)
-    def nextVec3f() :Vec3f = new Vec3f(nextFloat, nextFloat, nextFloat)
-    def nextVec4f() :Vec4f = {
-        new Vec4f(nextFloat, nextFloat, nextFloat, nextFloat)
-    }
-
     // Constants
     val FloatEpsilon: Float = 1.19209e-7f;
     val Pi: Float = float(Math.Pi)

@@ -28,17 +28,6 @@ import simplex3d.math.BaseMath._
  * @author Aleksey Nikiforov (lex)
  */
 object IntMath {
-    
-    // Random
-    def nextVec2i() :Vec2i = new Vec2i(nextInt, nextInt)
-    def nextVec3i() :Vec3i = new Vec3i(nextInt, nextInt, nextInt)
-    def nextVec4i() :Vec4i = new Vec4i(nextInt, nextInt, nextInt, nextInt)
-
-    def nextVec2i(n: Int) :Vec2i = new Vec2i(nextInt(n), nextInt(n))
-    def nextVec3i(n: Int) :Vec3i = new Vec3i(nextInt(n), nextInt(n), nextInt(n))
-    def nextVec4i(n: Int) :Vec4i = {
-        new Vec4i(nextInt(n), nextInt(n), nextInt(n), nextInt(n))
-    }
 
     // Int functions
     def abs(x: Int) :Int = if (x < 0) -x else x

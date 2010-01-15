@@ -20,7 +20,6 @@
 
 package bench.math
 
-import simplex3d.math.BaseMath._
 import simplex3d.math.floatm._
 import simplex3d.math.floatm.FloatMath._
 
@@ -41,6 +40,10 @@ class InlinedBenchCase {
     val arrowCount = 5000
     val arrowOriginal = genArrow()
     val arrows = new Array[Float](2*4*arrowCount*3)
+
+    val random = new java.util.Random
+    import random._
+    def nextVec3f = Vec3f(nextFloat, nextFloat, nextFloat)
 
     def genArrow() :Array[Float] = {
         val arrow = new Array[Float](2*4*3)
@@ -93,6 +96,7 @@ class InlinedBenchCase {
 
         var l = 0; while (l < loops) {
             var cc = 0; while (cc < length) {
+
 
     setSeed(1)
     val spread = 80

@@ -73,7 +73,9 @@ public class NoiseFrame extends JFrame {
             g.setColor(Color.BLACK);
             
             count ++;
-            if (count % ((int) (fpsTimer.fps()/5)) == 0) {
+            int f = (int) (fpsTimer.fps()/5);
+            if (f < 1) f = 1;
+            if (count % f == 0) {
                 count = 0;
                 fps = String.valueOf(fpsTimer.fps());
             }

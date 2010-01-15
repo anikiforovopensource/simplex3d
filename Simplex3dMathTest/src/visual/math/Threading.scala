@@ -120,7 +120,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
 
     private def batchSize = {
         if (preferredBatchSize <= 100) 100
-        else if (preferredBatchSize >= 10000) 10000
+        else if (preferredBatchSize >= 1000) 1000
         else preferredBatchSize
     }
 

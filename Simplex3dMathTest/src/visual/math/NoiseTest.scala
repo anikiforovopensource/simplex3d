@@ -44,8 +44,6 @@ object NoiseTest {
         val pool = java.util.concurrent.Executors.newCachedThreadPool()
 
         class NoiseJob extends Job(pool) {
-            override val maxThreads = 4
-            
             var buffer: Array[Int] = null
             var width = 0
             var height = 0

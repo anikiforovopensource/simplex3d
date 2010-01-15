@@ -27,19 +27,19 @@ package visual.math
 class FpsTimer {
     private val start = System.currentTimeMillis
     private var last = System.currentTimeMillis
-    private var fpsValue: Float = 0
+    private var fpsVal: Float = 0
     private val fpsCounter = new Loop(5)
-    private var uptimec: Float = 0
+    private var uptimeVal: Float = 0
 
-    def fps = fpsValue
-    def uptime = uptimec
+    def fps = fpsVal
+    def uptime = uptimeVal
 
     def update() {
         val cur = System.currentTimeMillis
         fpsCounter.put(1000f/(cur - last))
         last = cur
-        uptimec = (cur - start)/1000f
-        fpsValue = fpsCounter.average
+        uptimeVal = (cur - start)/1000f
+        fpsVal = fpsCounter.average
     }
 
     private class Loop(val size: Int) {

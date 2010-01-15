@@ -22,11 +22,8 @@ package test.math.floatm
 
 import org.scalatest._
 
-import simplex3d.math._
-import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
-
 
 
 /**
@@ -46,10 +43,12 @@ class TransformfTest extends FunSuite {
         var badCount2 = 0
         var badCount3 = 0
 
-        def vec2 = nextVec2f
-        def vec3 = nextVec3f
-        def vec4 = nextVec4f
+        val random = new java.util.Random
+        import random._
         def float = nextFloat
+        def vec2 = Vec2(float, float)
+        def vec3 = Vec3(float, float, float)
+        def vec4 = Vec4(float, float, float, float)
         def quat4 = normalize(Quat4(vec4))
         def axis = normalize(vec3)
         // Note: from this point on, all the float, vec2, and vec3

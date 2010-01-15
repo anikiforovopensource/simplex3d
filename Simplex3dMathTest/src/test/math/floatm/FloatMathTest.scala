@@ -22,37 +22,15 @@ package test.math.floatm
 
 import org.scalatest._
 
+import simplex3d.math._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
-import simplex3d.math._
-import simplex3d.math.BaseMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 class FloatMathTest extends FunSuite {
-
-    test("Random") {
-        for (i <- 0 until 1000) {
-            val random = new java.util.Random(i)
-            val t = (
-                      Vec2(random.nextFloat, random.nextFloat),
-                      Vec3(random.nextFloat, random.nextFloat, random.nextFloat),
-                      Vec4(random.nextFloat, random.nextFloat,
-                            random.nextFloat, random.nextFloat)
-                    )
-
-            setSeed(i)
-            val m = (
-                      nextVec2f,
-                      nextVec3f,
-                      nextVec4f
-                    )
-
-            assert(t == m)
-        }
-    }
 
     test("Float functions") {
         expect(0) { radians(0) }

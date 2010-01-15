@@ -22,10 +22,9 @@ package test.math.intm
 
 import org.scalatest._
 
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.intm.IntMath._
-import simplex3d.math._
-import simplex3d.math.BaseMath._
 
 
 /**
@@ -33,34 +32,8 @@ import simplex3d.math.BaseMath._
  */
 class IntMathTest extends FunSuite {
 
-    test("Random") {
-        for (i <- 0 until 1000) {
-            val random = new java.util.Random(i)
-            val t = (
-                      Vec2i(random.nextInt, random.nextInt),
-                      Vec3i(random.nextInt, random.nextInt, random.nextInt),
-                      Vec4i(random.nextInt, random.nextInt,
-                            random.nextInt, random.nextInt),
-                      Vec2i(random.nextInt(10), random.nextInt(10)),
-                      Vec3i(random.nextInt(10), random.nextInt(10),
-                            random.nextInt(10)),
-                      Vec4i(random.nextInt(10), random.nextInt(10),
-                            random.nextInt(10), random.nextInt(10))
-                    )
-
-            setSeed(i)
-            val m = (
-                      nextVec2i,
-                      nextVec3i,
-                      nextVec4i,
-                      nextVec2i(10),
-                      nextVec3i(10),
-                      nextVec4i(10)
-                    )
-
-            assert(t == m)
-        }
-    }
+    val random = new java.util.Random
+    import random._
 
     test("Int functions") {
         expect(0) { abs(0) }

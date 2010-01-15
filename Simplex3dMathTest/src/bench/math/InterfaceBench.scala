@@ -20,7 +20,6 @@
 
 package bench.math
 
-import simplex3d.math._
 import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
@@ -39,7 +38,7 @@ class InterfaceBenchCase {
     val length = 10000
     val loops = 20000
     
-    val random = new scala.util.Random(1)
+    val random = new java.util.Random(1)
     def rd = random.nextFloat()
     val data = new Array[Vec3](length)
     for (i <- 0 until length) {

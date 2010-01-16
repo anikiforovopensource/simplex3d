@@ -80,7 +80,8 @@ object DoubleMath {
     def abs(x: Double) :Double = { if (x < 0) -x else x }
     def sign(x: Double) :Double = if (x == 0) 0d else if (x > 0) 1d else -1d
     def floor(x: Double) :Double = {
-        if (x >= 0) long(x) else long(x) - 1
+        val i = long(x)
+        if (x == i || x > 0) i else i - 1
     }
     def trunc(x: Double) :Double = long(x)
     def round(x: Double) :Double = {
@@ -89,7 +90,8 @@ object DoubleMath {
     }
     def roundEven(x: Double) :Double = SMath.rint(x)
     def ceil(x: Double) :Double = {
-        if (x == double(long(x))) x else long(x) + 1
+        val i = long(x)
+        if (x == i || x < 0) i else i + 1
     }
     def fract(x: Double) :Double = x - floor(x)
     def mod(x: Double, y: Double) :Double = x - y*floor(x/y)

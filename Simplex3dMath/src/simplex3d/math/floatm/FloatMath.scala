@@ -80,7 +80,8 @@ object FloatMath {
     def abs(x: Float) :Float = { if (x < 0) -x else x }
     def sign(x: Float) :Float = if (x == 0) 0f else if (x > 0) 1f else -1f
     def floor(x: Float) :Float = {
-        if (x >= 0) int(x) else int(x) - 1
+        val i = int(x)
+        if (x == i || x > 0) i else i - 1
     }
     def trunc(x: Float) :Float = int(x)
     def round(x: Float) :Float = {
@@ -89,7 +90,8 @@ object FloatMath {
     }
     def roundEven(x: Float) :Float = float(SMath.rint(x))
     def ceil(x: Float) :Float = {
-        if (x == float(int(x))) x else int(x) + 1
+        val i = int(x)
+        if (x == i || x < 0) i else i + 1
     }
     def fract(x: Float) :Float = x - floor(x)
     def mod(x: Float, y: Float) :Float = x - y*floor(x/y)

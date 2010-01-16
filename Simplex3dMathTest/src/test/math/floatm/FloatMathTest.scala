@@ -142,26 +142,52 @@ class FloatMathTest extends FunSuite {
         assert(approxEqual(1/1.4142135623730950488f, inversesqrt(2), 1e-6f))
         assert(approxEqual(0.5f, inversesqrt(4), 1e-6f))
 
-        assert(1f == abs(-1f))
-        assert(0f == abs(0f))
-        assert(1f == abs(1f))
+        assert(1 == abs(-1))
+        assert(0 == abs(0))
+        assert(1 == abs(1))
 
-        assert(-1f == sign(-1f))
-        assert(0f == sign(0f))
-        assert(1f == sign(1f))
+        assert(-1 == sign(-1))
+        assert(0 == sign(0))
+        assert(1 == sign(1))
 
-//    def floor(x: Float) :Float = {
-//        if (x >= 0) int(x) else int(x) - 1
-//    }
-//    def trunc(x: Float) :Float = int(x)
-//    def round(x: Float) :Float = {
-//        if (x >= 0) int(x + 0.5f)
-//        else int(x - 0.5f)
-//    }
-//    def roundEven(x: Float) :Float = float(SMath.rint(x))
-//    def ceil(x: Float) :Float = {
-//        if (x == float(int(x))) x else int(x) + 1
-//    }
+        assert(-1 == floor(-1))
+        assert(-1 == floor(-0.5f))
+        assert(0 == floor(0))
+        assert(1 == floor(1.5f))
+        assert(1 == floor(1))
+
+        assert(-1 == trunc(-1))
+        assert(-1 == trunc(-1.5f))
+        assert(0 == trunc(0))
+        assert(1 == trunc(1.5f))
+        assert(1 == trunc(1))
+
+        assert(-1 == round(-1))
+        assert(-1 == round(-1.4f))
+        assert(-2 == round(-1.6f))
+        assert(0 == round(0))
+        assert(1 == round(1.4f))
+        assert(1 == round(1))
+        assert(2 == round(1.6f))
+
+        assert(-1 == roundEven(-1))
+        assert(-1 == roundEven(-1.4f))
+        assert(-2 == roundEven(-1.5f))
+        assert(-2 == roundEven(-1.6f))
+        assert(-2 == roundEven(-2.5f))
+        assert(0 == roundEven(0))
+        assert(1 == roundEven(1))
+        assert(1 == roundEven(1.4f))
+        assert(2 == roundEven(1.5f))
+        assert(2 == roundEven(1.6f))
+        assert(2 == roundEven(2.5f))
+
+        assert(-1 == ceil(-1))
+        assert(-1 == ceil(-1.1f))
+        assert(0 == ceil(0))
+        assert(1 == ceil(1))
+        assert(1 == ceil(0.1f))
+
 //    def fract(x: Float) :Float = x - floor(x)
 //    def mod(x: Float, y: Float) :Float = x - y*floor(x/y)
 //    //def modf(x: Float, i: Float) :Float = 0 //not supported: lack of pointers

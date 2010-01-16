@@ -20,22 +20,12 @@
 
 package visual.math
 
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise3Test {
-
-    def main(args: Array[String]) {
-        val scale = 1/50f
-        val speed = 1/3f
-
-        FunFrame.launch(new Fun {
-        final def apply(pixel: AnyVec2, t: Float, dim: AnyVec2) = {
-            (noise3(Vec3(pixel*scale, t*speed)) + Vec3(1))/2
-        }})
+class FunPanel extends DrawPanel {
+    def setFunction(fun: Fun) {
+        setPainter(FunPainter(fun))
     }
 }

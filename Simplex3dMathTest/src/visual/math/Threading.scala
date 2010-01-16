@@ -118,7 +118,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
     val unusedProcessors :Int = 0
     val preferredBatchSize :Int = 200
 
-    private def batchSize = {
+    private[this] final def batchSize = {
         if (preferredBatchSize <= 100) 100
         else if (preferredBatchSize >= 1000) 1000
         else preferredBatchSize
@@ -187,7 +187,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         }
     }
 
-    private def moreJobs() :Chunk = {
+    private[this] final def moreJobs() :Chunk = {
         synchronized {
             if (stop) return null
 
@@ -201,7 +201,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         }
     }
 
-    private def handleError(e: Exception) {
+    private[this] final def handleError(e: Exception) {
         synchronized {
             if (error == null) {
                 error = e
@@ -211,7 +211,7 @@ abstract class Job(private val threadPool: ExecutorService = null) {
         }
     }
 
-    private def exitingThread() {
+    private[this] final def exitingThread() {
         synchronized {
             liveThreads -= 1
             if (liveThreads == 0) {

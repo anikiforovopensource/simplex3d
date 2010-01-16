@@ -27,13 +27,13 @@ import simplex3d.math.doublem.renamed._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object FuncBench {
+object ExpandArgsBench {
     def main(args: Array[String]) {
-        new ExpanFunc().run()
+        new ExpanArgs().run()
     }
 }
 
-class ExpanFunc {
+class ExpanArgs {
     val length = 10000
     val loops = 200000
     

@@ -469,6 +469,8 @@ object Vec3i {
     def apply(u: AnyVec4i) = new Vec3i(u.x, u.y, u.z)
     def apply(xy: AnyVec2i, z: Int) = new Vec3i(xy.x, xy.y, z)
     def apply(x: Int, yz: AnyVec2i) = new Vec3i(x, yz.x, yz.y)
+    def apply(u: AnyVec3b) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: AnyVec4b) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(u: Read3Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(u: Read4Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
     def apply(u: Read3Double) = new Vec3i(int(u.x), int(u.y), int(u.z))

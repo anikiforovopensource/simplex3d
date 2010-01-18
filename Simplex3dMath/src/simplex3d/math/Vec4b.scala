@@ -157,5 +157,14 @@ object Vec4b {
     def apply(x: Boolean, yzw: AnyVec3b) =
         new Vec4b(x, yzw.x, yzw.y, yzw.z)
 
+    def apply(u: Read4Int) =
+        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
+
+    def apply(u: Read4Float) =
+        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
+
+    def apply(u: Read4Double) =
+        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
+
     implicit def constToMutable(u: ConstVec4b) = Vec4b(u)
 }

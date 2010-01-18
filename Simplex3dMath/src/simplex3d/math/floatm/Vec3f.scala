@@ -455,6 +455,8 @@ object Vec3f {
     def apply(u: AnyVec4f) = new Vec3f(u.x, u.y, u.z)
     def apply(xy: AnyVec2f, z: Float) = new Vec3f(xy.x, xy.y, z)
     def apply(x: Float, yz: AnyVec2f) = new Vec3f(x, yz.x, yz.y)
+    def apply(u: AnyVec3b) = new Vec3f(float(u.x), float(u.y), float(u.z))
+    def apply(u: AnyVec4b) = new Vec3f(float(u.x), float(u.y), float(u.z))
     def apply(u: Read3Int) = new Vec3f(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3f(u.x, u.y, u.z)
 

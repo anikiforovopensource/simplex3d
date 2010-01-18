@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 
 
@@ -456,6 +457,8 @@ object Vec3d {
     def apply(u: AnyVec4d) = new Vec3d(u.x, u.y, u.z)
     def apply(xy: AnyVec2d, z: Double) = new Vec3d(xy.x, xy.y, z)
     def apply(x: Double, yz: AnyVec2d) = new Vec3d(x, yz.x, yz.y)
+    def apply(u: AnyVec3b) = new Vec3d(double(u.x), double(u.y), double(u.z))
+    def apply(u: AnyVec4b) = new Vec3d(double(u.x), double(u.y), double(u.z))
     def apply(u: Read3Int) = new Vec3d(u.x, u.y, u.z)
     def apply(u: Read4Int) = new Vec3d(u.x, u.y, u.z)
     def apply(u: Read3Float) = new Vec3d(u.x, u.y, u.z)

@@ -1141,6 +1141,9 @@ object Vec4i {
     def apply(x: Int, yzw: AnyVec3i) =
         new Vec4i(x, yzw.x, yzw.y, yzw.z)
 
+    def apply(u: AnyVec4b) =
+        new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
+
     def apply(u: Read4Float) =
         new Vec4i(int(u.x), int(u.y), int(u.z), int(u.w))
 

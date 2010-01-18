@@ -1131,6 +1131,9 @@ object Vec4f {
     def apply(m: AnyMat2f) =
         new Vec4f(m.m00, m.m10, m.m01, m.m11)
 
+    def apply(u: AnyVec4b) =
+        new Vec4f(float(u.x), float(u.y), float(u.z), float(u.w))
+
     def apply(u: Read4Int) =
         new Vec4f(u.x, u.y, u.z, u.w)
 

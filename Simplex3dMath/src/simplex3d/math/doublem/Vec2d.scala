@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 
 
@@ -220,6 +221,9 @@ object Vec2d {
     def apply(u: AnyVec2d) = new Vec2d(u.x, u.y)
     def apply(u: AnyVec3d) = new Vec2d(u.x, u.y)
     def apply(u: AnyVec4d) = new Vec2d(u.x, u.y)
+    def apply(u: AnyVec2b) = new Vec2d(double(u.x), double(u.y))
+    def apply(u: AnyVec3b) = new Vec2d(double(u.x), double(u.y))
+    def apply(u: AnyVec4b) = new Vec2d(double(u.x), double(u.y))
     def apply(u: Read2Int) = new Vec2d(u.x, u.y)
     def apply(u: Read3Int) = new Vec2d(u.x, u.y)
     def apply(u: Read4Int) = new Vec2d(u.x, u.y)

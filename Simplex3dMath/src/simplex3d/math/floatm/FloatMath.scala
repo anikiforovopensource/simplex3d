@@ -80,22 +80,32 @@ object FloatMath {
     def abs(x: Float) :Float = { if (x < 0) -x else x }
     def sign(x: Float) :Float = if (x == 0) 0f else if (x > 0) 1f else -1f
     def floor(x: Float) :Float = {
-        val i = int(x)
-        if (x == i || x > 0) i else i - 1
+        val i = long(x)
+        if (x > 0 || x == i) i else i - 1
     }
-    def trunc(x: Float) :Float = int(x)
+    def trunc(x: Float) :Float = long(x)
     def round(x: Float) :Float = {
-        if (x >= 0) int(x + 0.5f)
-        else int(x - 0.5f)
+        if (x >= 0) long(x + 0.5f)
+        else long(x - 0.5f)
     }
     def roundEven(x: Float) :Float = float(SMath.rint(x))
     def ceil(x: Float) :Float = {
-        val i = int(x)
-        if (x == i || x < 0) i else i + 1
+        val i = long(x)
+        if (x < 0 || x == i) i else i + 1
     }
+    /**
+     * Equivalent to <code>x - floor(x)</code>
+     */
     def fract(x: Float) :Float = x - floor(x)
-    def mod(x: Float, y: Float) :Float = x - y*floor(x/y)
-    //def modf(x: Float, i: Float) :Float = 0 //not supported: lack of pointers
+    /**
+     * Equivalent to <code>x - y*floor(x/y)</code>
+     */
+    def mod(x: Float, y: Float) :Float = {
+        x - y*floor(x/y)
+    }
+    
+    //not supported: lack of pointers
+    //def modf(x: Float, i: Float) :Float = 0
 
     def min(x: Float, y: Float) :Float = if (y < x) y else x
     def max(x: Float, y: Float) :Float = if (y > x) y else x
@@ -1093,6 +1103,140 @@ object FloatMath {
         )
     }
 
+    def determinant(m: AnyMat2f) :Float = m.m00*m.m11 - m.m01*m.m10
+
+    def determinant(m: AnyMat3f) :Float = {
+        import m._
+
+        val c0 = m11*m22 - m12*m21
+        val c1 = m12*m20 - m10*m22
+        val c2 = m10*m21 - m11*m20
+
+        m00*c0 + m01*c1 + m02*c2
+    }
+
+    def determinant(m: AnyMat4f) :Float = {
+        import m._
+
+        val fA0 = m00*m11 - m01*m10
+        val fA1 = m00*m12 - m02*m10
+        val fA2 = m00*m13 - m03*m10
+        val fA3 = m01*m12 - m02*m11
+        val fA4 = m01*m13 - m03*m11
+        val fA5 = m02*m13 - m03*m12
+        val fB0 = m20*m31 - m21*m30
+        val fB1 = m20*m32 - m22*m30
+        val fB2 = m20*m33 - m23*m30
+        val fB3 = m21*m32 - m22*m31
+        val fB4 = m21*m33 - m23*m31
+        val fB5 = m22*m33 - m23*m32
+
+        fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
+    }
+
+    /**
+     * If matrix determinant is zero the result is undefined.
+     */
+    def inverse(m: AnyMat2f) :Mat2f = {
+        val detInv = 1/determinant(m)
+        new Mat2f(
+            m.m11*detInv, -m.m10*detInv,
+            -m.m01*detInv, m.m00*detInv
+        )
+    }
+
+    /**
+     * This is a general matrix inverse. You can invert transofrmations
+     * quicker by using InverseTransform(translation, rotation, scale).
+     * A rotation matrix that does not scale can be inverted even faster by
+     * using transpose. In the latter case you can avoid inverse alltogether
+     * by using transpose multiplication:
+     * instead of multiplying a matrix by a vectors (M*v),
+     * you can multiply the vector by the matrix (v*M).
+     *
+     * <br/>If matrix determinant is zero the result is undefined.
+     */
+    def inverse(m: AnyMat3f) :Mat3f = {
+        import m._
+
+        val c0 = m11*m22 - m12*m21
+        val c1 = m12*m20 - m10*m22
+        val c2 = m10*m21 - m11*m20
+
+        val det = m00*c0 + m01*c1 + m02*c2
+
+        val mat = new Mat3f(
+            c0,
+            c1,
+            c2,
+
+            m02*m21 - m01*m22,
+            m00*m22 - m02*m20,
+            m01*m20 - m00*m21,
+
+            m01*m12 - m02*m11,
+            m02*m10 - m00*m12,
+            m00*m11 - m01*m10
+        )
+
+        mat /= det
+        mat
+    }
+
+    /**
+     * This is a general matrix inverse. You can invert transofrmations
+     * quicker by using InverseTransform(translation, rotation, scale).
+     * A rotation matrix that does not scale can be inverted even faster by
+     * using transpose. In the latter case you can avoid inverse alltogether
+     * by using transpose multiplication:
+     * instead of multiplying a matrix by a vectors (M*v),
+     * you can multiply the vector by the matrix (v*M).
+     *
+     * <br/>If matrix determinant is zero the result is undefined.
+     */
+    def inverse(m: AnyMat4f) :Mat4f = {
+        import m._
+
+        val fA0 = m00*m11 - m01*m10
+        val fA1 = m00*m12 - m02*m10
+        val fA2 = m00*m13 - m03*m10
+        val fA3 = m01*m12 - m02*m11
+        val fA4 = m01*m13 - m03*m11
+        val fA5 = m02*m13 - m03*m12
+        val fB0 = m20*m31 - m21*m30
+        val fB1 = m20*m32 - m22*m30
+        val fB2 = m20*m33 - m23*m30
+        val fB3 = m21*m32 - m22*m31
+        val fB4 = m21*m33 - m23*m31
+        val fB5 = m22*m33 - m23*m32
+
+        val det = fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
+
+        val mat = new Mat4f(
+             m11*fB5 - m12*fB4 + m13*fB3,
+            -m10*fB5 + m12*fB2 - m13*fB1,
+             m10*fB4 - m11*fB2 + m13*fB0,
+            -m10*fB3 + m11*fB1 - m12*fB0,
+
+            -m01*fB5 + m02*fB4 - m03*fB3,
+             m00*fB5 - m02*fB2 + m03*fB1,
+            -m00*fB4 + m01*fB2 - m03*fB0,
+             m00*fB3 - m01*fB1 + m02*fB0,
+
+             m31*fA5 - m32*fA4 + m33*fA3,
+            -m30*fA5 + m32*fA2 - m33*fA1,
+             m30*fA4 - m31*fA2 + m33*fA0,
+            -m30*fA3 + m31*fA1 - m32*fA0,
+
+            -m21*fA5 + m22*fA4 - m23*fA3,
+             m20*fA5 - m22*fA2 + m23*fA1,
+            -m20*fA4 + m21*fA2 - m23*fA0,
+             m20*fA3 - m21*fA1 + m22*fA0
+        )
+
+        mat /= det
+        mat
+    }
 
     // *** Extra Math functions ************************************************
 
@@ -1365,52 +1509,9 @@ object FloatMath {
         )
     }
 
-    // Determinant and inverse
-    def det(m: AnyMat2f) :Float = m.m00*m.m11 - m.m01*m.m10
-
-    def det(m: AnyMat3f) :Float = {
-        import m._
-
-        val c0 = m11*m22 - m12*m21
-        val c1 = m12*m20 - m10*m22
-        val c2 = m10*m21 - m11*m20
-
-        m00*c0 + m01*c1 + m02*c2
-    }
-
-    def det(m: AnyMat4f) :Float = {
-        import m._
-
-        val fA0 = m00*m11 - m01*m10
-        val fA1 = m00*m12 - m02*m10
-        val fA2 = m00*m13 - m03*m10
-        val fA3 = m01*m12 - m02*m11
-        val fA4 = m01*m13 - m03*m11
-        val fA5 = m02*m13 - m03*m12
-        val fB0 = m20*m31 - m21*m30
-        val fB1 = m20*m32 - m22*m30
-        val fB2 = m20*m33 - m23*m30
-        val fB3 = m21*m32 - m22*m31
-        val fB4 = m21*m33 - m23*m31
-        val fB5 = m22*m33 - m23*m32
-
-        fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
-    }
-
     /**
-     * If matrix determinant is zero the result is undefined.
-     */
-    def inverse(m: AnyMat2f) :Mat2f = {
-        val detInv = 1/det(m)
-        new Mat2f(
-            m.m11*detInv, -m.m10*detInv,
-            -m.m01*detInv, m.m00*detInv
-        )
-    }
-
-    /**
-     * This method is equivalent to casting the matrix as 3x3 then inverting it
-     * and the casting the result back to 2x3.<br/>
+     * This method is equivalent to casting the matrix as 3x3, inverting it
+     * and then casting the result back to 2x3.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
      * quicker by using InverseTransform(translation, rotation, scale).
@@ -1438,46 +1539,8 @@ object FloatMath {
     }
 
     /**
-     * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
-     * A rotation matrix that does not scale can be inverted even faster by
-     * using transpose. In the latter case you can avoid inverse alltogether
-     * by using transpose multiplication:
-     * instead of multiplying a matrix by a vectors (M*v),
-     * you can multiply the vector by the matrix (v*M).
-     *
-     * <br/>If matrix determinant is zero the result is undefined.
-     */
-    def inverse(m: AnyMat3f) :Mat3f = {
-        import m._
-
-        val c0 = m11*m22 - m12*m21
-        val c1 = m12*m20 - m10*m22
-        val c2 = m10*m21 - m11*m20
-
-        val det = m00*c0 + m01*c1 + m02*c2
-
-        val mat = new Mat3f(
-            c0,
-            c1,
-            c2,
-
-            m02*m21 - m01*m22,
-            m00*m22 - m02*m20,
-            m01*m20 - m00*m21,
-
-            m01*m12 - m02*m11,
-            m02*m10 - m00*m12,
-            m00*m11 - m01*m10
-        )
-
-        mat /= det
-        mat
-    }
-
-    /**
-     * This method is equivalent to casting the matrix as 4x4 then inverting it
-     * and the casting the result back to 3x4.<br/>
+     * This method is equivalent to casting the matrix as 4x4, inverting it
+     * and then casting the result back to 3x4.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
      * quicker by using InverseTransform(translation, rotation, scale).
@@ -1517,61 +1580,6 @@ object FloatMath {
             -m21*fA5 + m22*fA4 - m23*fA3,
              m20*fA5 - m22*fA2 + m23*fA1,
             -m20*fA4 + m21*fA2 - m23*fA0
-        )
-
-        mat /= det
-        mat
-    }
-
-    /**
-     * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
-     * A rotation matrix that does not scale can be inverted even faster by
-     * using transpose. In the latter case you can avoid inverse alltogether
-     * by using transpose multiplication:
-     * instead of multiplying a matrix by a vectors (M*v),
-     * you can multiply the vector by the matrix (v*M).
-     *
-     * <br/>If matrix determinant is zero the result is undefined.
-     */
-    def inverse(m: AnyMat4f) :Mat4f = {
-        import m._
-
-        val fA0 = m00*m11 - m01*m10
-        val fA1 = m00*m12 - m02*m10
-        val fA2 = m00*m13 - m03*m10
-        val fA3 = m01*m12 - m02*m11
-        val fA4 = m01*m13 - m03*m11
-        val fA5 = m02*m13 - m03*m12
-        val fB0 = m20*m31 - m21*m30
-        val fB1 = m20*m32 - m22*m30
-        val fB2 = m20*m33 - m23*m30
-        val fB3 = m21*m32 - m22*m31
-        val fB4 = m21*m33 - m23*m31
-        val fB5 = m22*m33 - m23*m32
-
-        val det = fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
-
-        val mat = new Mat4f(
-             m11*fB5 - m12*fB4 + m13*fB3,
-            -m10*fB5 + m12*fB2 - m13*fB1,
-             m10*fB4 - m11*fB2 + m13*fB0,
-            -m10*fB3 + m11*fB1 - m12*fB0,
-
-            -m01*fB5 + m02*fB4 - m03*fB3,
-             m00*fB5 - m02*fB2 + m03*fB1,
-            -m00*fB4 + m01*fB2 - m03*fB0,
-             m00*fB3 - m01*fB1 + m02*fB0,
-
-             m31*fA5 - m32*fA4 + m33*fA3,
-            -m30*fA5 + m32*fA2 - m33*fA1,
-             m30*fA4 - m31*fA2 + m33*fA0,
-            -m30*fA3 + m31*fA1 - m32*fA0,
-
-            -m21*fA5 + m22*fA4 - m23*fA3,
-             m20*fA5 - m22*fA2 + m23*fA1,
-            -m20*fA4 + m21*fA2 - m23*fA0,
-             m20*fA3 - m21*fA1 + m22*fA0
         )
 
         mat /= det

@@ -114,5 +114,17 @@ object Vec2b {
     def apply(u: AnyVec3b) = new Vec2b(u.x, u.y)
     def apply(u: AnyVec4b) = new Vec2b(u.x, u.y)
 
+    def apply(u: Read2Int) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read3Int) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read4Int) = new Vec2b(bool(u.x), bool(u.y))
+
+    def apply(u: Read2Float) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read3Float) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read4Float) = new Vec2b(bool(u.x), bool(u.y))
+
+    def apply(u: Read2Double) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read3Double) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read4Double) = new Vec2b(bool(u.x), bool(u.y))
+
     implicit def constToMutable(u: ConstVec2b) = Vec2b(u)
 }

@@ -21,7 +21,10 @@
 package test.math.floatm
 
 import org.scalatest._
+import test.math.BooleanCombinations
 
+import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.doublem._
 import simplex3d.math.floatm.renamed._
@@ -87,6 +90,25 @@ class Vec2fTest extends FunSuite {
         expect(classOf[Vec2]) { u.getClass }
         expect(1) { u.x }
         expect(2) { u.y }
+    }
+
+    test("Boolean factories") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            var u = Vec2(Vec2b(x, y))
+            expect(classOf[Vec2]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+
+            u = Vec2(Vec3b(x, y, z))
+            expect(classOf[Vec2]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+
+            u = Vec2(Vec4b(x, y, z, w))
+            expect(classOf[Vec2]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+        }
     }
 
     test("Const conversions") {

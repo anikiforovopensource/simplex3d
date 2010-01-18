@@ -188,17 +188,39 @@ class FloatMathTest extends FunSuite {
         assert(1 == ceil(1))
         assert(1 == ceil(0.1f))
 
-//    def fract(x: Float) :Float = x - floor(x)
-//    def mod(x: Float, y: Float) :Float = x - y*floor(x/y)
-//    //def modf(x: Float, i: Float) :Float = 0 //not supported: lack of pointers
-//
-//    def min(x: Float, y: Float) :Float = if (y < x) y else x
-//    def max(x: Float, y: Float) :Float = if (y > x) y else x
-//    def clamp(x: Float, minVal: Float, maxVal: Float) :Float = {
-//        if (x <= minVal) minVal
-//        else if (x >= maxVal) maxVal
-//        else x
-//    }
+        assert(0.9f == fract(-1.1f))
+        assert(0 == fract(-1))
+        assert(0 == fract(0))
+        assert(0 == fract(1))
+        assert(0.25f == fract(1.25f))
+
+        assert(0.25f == mod(10.25f, 2.5f))
+        assert(-0.25f == mod(-10.25f, -2.5f))
+        assert(2.25f == mod(-10.25f, 2.5f))
+        assert(-2.25f == mod(10.25f, -2.5f))
+        assert(0 == mod(0, 2.5f))
+
+        assert(1 == min(1, 2))
+        assert(1 == min(2, 1))
+        assert(1 == min(1, 1))
+
+        assert(2 == max(1, 2))
+        assert(2 == max(2, 1))
+        assert(2 == max(2, 2))
+
+        assert(1 == clamp(0, 1, 3))
+        assert(1 == clamp(1, 1, 3))
+        assert(2 == clamp(2, 1, 3))
+        assert(3 == clamp(3, 1, 3))
+        assert(3 == clamp(4, 1, 3))
+
+        assert(0 == mix(0, 4, 0))
+        assert(1 == mix(0, 4, 0.25f))
+        assert(2 == mix(0, 4, 0.5f))
+        assert(3 == mix(0, 4, 0.75f))
+        assert(4 == mix(0, 4, 1))
+        
+
 //
 //    def mix(x: Float, y: Float, a: Float) :Float = x*(1 - a) + y*a
 //    def step(edge: Float, x: Float) :Float = if (x < edge) 0 else 1

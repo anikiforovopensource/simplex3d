@@ -21,7 +21,10 @@
 package test.math.floatm
 
 import org.scalatest._
+import test.math.BooleanCombinations
 
+import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.doublem._
 import simplex3d.math.floatm.renamed._
@@ -69,18 +72,6 @@ class Vec3fTest extends FunSuite {
         expect(2) { u.y }
         expect(3) { u.z }
 
-        u = Vec3(Vec2i(4, 5), 6)
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = Vec3(4, Vec2i(5, 6))
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
         u = Vec3(Vec3i(6, 7, 8))
         expect(classOf[Vec3]) { u.getClass }
         expect(6) { u.x }
@@ -104,6 +95,22 @@ class Vec3fTest extends FunSuite {
         expect(1) { u.x }
         expect(2) { u.y }
         expect(3) { u.z }
+    }
+
+    test("Boolean factories") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            var u = Vec3(Vec3b(x, y, z))
+            expect(classOf[Vec3]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+            expect(float(z)) { u.z }
+
+            u = Vec3(Vec4b(x, y, z, w))
+            expect(classOf[Vec3]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+            expect(float(z)) { u.z }
+        }
     }
 
     test("Const conversions") {

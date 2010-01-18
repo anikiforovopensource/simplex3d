@@ -21,7 +21,10 @@
 package test.math.intm
 
 import org.scalatest._
+import test.math.BooleanCombinations
 
+import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
@@ -109,6 +112,17 @@ class Vec4iTest extends FunSuite {
         expect(5) { u.y }
         expect(6) { u.z }
         expect(7) { u.w }
+    }
+
+    test("Boolean factories") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            var u = Vec4i(Vec4b(x, y, z, w))
+            expect(classOf[Vec4i]) { u.getClass }
+            expect(int(x)) { u.x }
+            expect(int(y)) { u.y }
+            expect(int(z)) { u.z }
+            expect(int(w)) { u.w }
+        }
     }
 
     test("Const conversions") {

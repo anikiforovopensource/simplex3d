@@ -21,7 +21,10 @@
 package test.math.doublem
 
 import org.scalatest._
+import test.math.BooleanCombinations
 
+import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
@@ -69,18 +72,6 @@ class Vec3dTest extends FunSuite {
         expect(2) { u.y }
         expect(3) { u.z }
 
-        u = Vec3(Vec2i(4, 5), 6)
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = Vec3(4, Vec2i(5, 6))
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
         u = Vec3(Vec3i(6, 7, 8))
         expect(classOf[Vec3]) { u.getClass }
         expect(6) { u.x }
@@ -93,18 +84,6 @@ class Vec3dTest extends FunSuite {
         expect(2) { u.y }
         expect(3) { u.z }
 
-        u = Vec3(Vec2f(4, 5), 6)
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
-        u = Vec3(4, Vec2f(5, 6))
-        expect(classOf[Vec3]) { u.getClass }
-        expect(4) { u.x }
-        expect(5) { u.y }
-        expect(6) { u.z }
-
         u = Vec3(Vec3f(6, 7, 8))
         expect(classOf[Vec3]) { u.getClass }
         expect(6) { u.x }
@@ -116,6 +95,22 @@ class Vec3dTest extends FunSuite {
         expect(1) { u.x }
         expect(2) { u.y }
         expect(3) { u.z }
+    }
+
+    test("Boolean factories") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            var u = Vec3(Vec3b(x, y, z))
+            expect(classOf[Vec3]) { u.getClass }
+            expect(double(x)) { u.x }
+            expect(double(y)) { u.y }
+            expect(double(z)) { u.z }
+
+            u = Vec3(Vec4b(x, y, z, w))
+            expect(classOf[Vec3]) { u.getClass }
+            expect(double(x)) { u.x }
+            expect(double(y)) { u.y }
+            expect(double(z)) { u.z }
+        }
     }
 
     test("Const conversions") {

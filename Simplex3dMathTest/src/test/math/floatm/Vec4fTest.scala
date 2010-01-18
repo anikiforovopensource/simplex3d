@@ -21,7 +21,10 @@
 package test.math.floatm
 
 import org.scalatest._
+import test.math.BooleanCombinations
 
+import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.doublem._
 import simplex3d.math.floatm.renamed._
@@ -96,48 +99,6 @@ class Vec4fTest extends FunSuite {
         expect(6) { u.z }
         expect(7) { u.w }
 
-        u = Vec4(6, 7, Vec2i(8, 9))
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
-        u = Vec4(6, Vec2i(7, 8), 9)
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
-        u = Vec4(Vec2i(6, 7), 8, 9)
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
-        u = Vec4(Vec2i(6, 7), Vec2i(8, 9))
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
-        u = Vec4(6, Vec3i(7, 8, 9))
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
-        u = Vec4(Vec3i(6, 7, 8), 9)
-        expect(classOf[Vec4]) { u.getClass }
-        expect(6) { u.x }
-        expect(7) { u.y }
-        expect(8) { u.z }
-        expect(9) { u.w }
-
         u = Vec4(Vec4i(4, 5, 6, 7))
         expect(classOf[Vec4]) { u.getClass }
         expect(4) { u.x }
@@ -151,6 +112,17 @@ class Vec4fTest extends FunSuite {
         expect(5) { u.y }
         expect(6) { u.z }
         expect(7) { u.w }
+    }
+
+    test("Boolean factories") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            var u = Vec4(Vec4b(x, y, z, w))
+            expect(classOf[Vec4]) { u.getClass }
+            expect(float(x)) { u.x }
+            expect(float(y)) { u.y }
+            expect(float(z)) { u.z }
+            expect(float(w)) { u.w }
+        }
     }
 
     test("Const conversions") {

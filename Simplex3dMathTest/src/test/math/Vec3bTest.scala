@@ -23,32 +23,16 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
+import simplex3d.math.intm._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 class Vec3bTest extends FunSuite {
-
-    val combinations = {
-        (false, false, false, false) ::
-        (false, false, false, true ) ::
-        (false, false, true,  false) ::
-        (false, false, true,  true ) ::
-        (false, true,  false, false) ::
-        (false, true,  false, true ) ::
-        (false, true,  true,  false) ::
-        (false, true,  true,  true ) ::
-        (true,  false, false, false) ::
-        (true,  false, false, true ) ::
-        (true,  false, true,  false) ::
-        (true,  false, true,  true ) ::
-        (true,  true,  false, false) ::
-        (true,  true,  false, true ) ::
-        (true,  true,  true,  false) ::
-        (true,  true,  true,  true ) ::
-        Nil
-    }
 
     test("Mutable factories") {
         var u = Vec3b(true)
@@ -61,7 +45,7 @@ class Vec3bTest extends FunSuite {
         expect(false) { u.y }
         expect(false) { u.z }
 
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             var u = Vec3b(x, y, z)
             expect(x) { u.x }
             expect(y) { u.y }
@@ -86,15 +70,41 @@ class Vec3bTest extends FunSuite {
             expect(x) { u.x }
             expect(y) { u.y }
             expect(z) { u.z }
-        }
 
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
+            u = Vec3b(Vec3i(int(x), int(y), int(z)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+
+            u = Vec3b(Vec4i(int(x), int(y), int(z), int(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+
+            u = Vec3b(Vec3f(float(x), float(y), float(z)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+
+            u = Vec3b(Vec4f(float(x), float(y), float(z), float(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+
+            u = Vec3b(Vec3d(double(x), double(y), double(z)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+
+            u = Vec3b(Vec4d(double(x), double(y), double(z), double(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
         }
     }
 
     test("Const conversions") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val a = ConstVec3b(x, y, z)
             expect(classOf[ConstVec3b]) { a.getClass }
             expect(x) { a.x }
@@ -121,14 +131,10 @@ class Vec3bTest extends FunSuite {
             c = v; assert(Vec3b(x, y, z) == c)
             expect(classOf[ConstVec3b]) { c.getClass }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Equality methods") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val m = Vec3b(x, y, z)
             val c = ConstVec3b(x, y, z)
 
@@ -144,14 +150,10 @@ class Vec3bTest extends FunSuite {
             assert(Vec3b(x, y, z) != Vec3b(x, !y, z))
             assert(Vec3b(x, y, z) != Vec3b(x, y, !z))
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Indexed read") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = ConstVec3b(x, y, z)
 
             expect(x) { u(0) }
@@ -165,14 +167,10 @@ class Vec3bTest extends FunSuite {
                 u(-1)
             }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Indexed write") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec3b(x, y, z)
 
             u(0) = !x
@@ -191,14 +189,10 @@ class Vec3bTest extends FunSuite {
                 u(-1) = true
             }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Setters") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec3b(!x)
 
             u := Vec3b(x, y, z)
@@ -211,22 +205,14 @@ class Vec3bTest extends FunSuite {
             expect(!y) { u.y }
             expect(!z) { u.z }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Getters") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec3b(x, y, z)
             expect(x) { u.r }
             expect(y) { u.g }
             expect(z) { u.b }
-        }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
         }
     }
 }

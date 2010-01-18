@@ -23,32 +23,16 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
+import simplex3d.math.intm._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 class Vec4bTest extends FunSuite {
-
-    val combinations = {
-        (false, false, false, false) ::
-        (false, false, false, true ) ::
-        (false, false, true,  false) ::
-        (false, false, true,  true ) ::
-        (false, true,  false, false) ::
-        (false, true,  false, true ) ::
-        (false, true,  true,  false) ::
-        (false, true,  true,  true ) ::
-        (true,  false, false, false) ::
-        (true,  false, false, true ) ::
-        (true,  false, true,  false) ::
-        (true,  false, true,  true ) ::
-        (true,  true,  false, false) ::
-        (true,  true,  false, true ) ::
-        (true,  true,  true,  false) ::
-        (true,  true,  true,  true ) ::
-        Nil
-    }
 
     test("Mutable factories") {
         var u = Vec4b(true)
@@ -63,7 +47,7 @@ class Vec4bTest extends FunSuite {
         expect(false) { u.z }
         expect(false) { u.w }
 
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             var u = Vec4b(x, y, z, w)
             expect(x) { u.x }
             expect(y) { u.y }
@@ -105,15 +89,29 @@ class Vec4bTest extends FunSuite {
             expect(y) { u.y }
             expect(z) { u.z }
             expect(w) { u.w }
-        }
 
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
+            u = Vec4b(Vec4i(int(x), int(y), int(z), int(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+            expect(w) { u.w }
+
+            u = Vec4b(Vec4f(float(x), float(y), float(z), float(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+            expect(w) { u.w }
+
+            u = Vec4b(Vec4d(double(x), double(y), double(z), double(w)))
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+            expect(w) { u.w }
         }
     }
 
     test("Const conversions") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val a = ConstVec4b(x, y, z, w)
             expect(classOf[ConstVec4b]) { a.getClass }
             expect(x) { a.x }
@@ -142,14 +140,10 @@ class Vec4bTest extends FunSuite {
             c = v; assert(Vec4b(x, y, z, w) == c)
             expect(classOf[ConstVec4b]) { c.getClass }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Equality methods") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val m = Vec4b(x, y, z, w)
             val c = ConstVec4b(x, y, z, w)
 
@@ -166,14 +160,10 @@ class Vec4bTest extends FunSuite {
             assert(Vec4b(x, y, z, w) != Vec4b(x, y, !z, w))
             assert(Vec4b(x, y, z, w) != Vec4b(x, y, z, !w))
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Indexed read") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = ConstVec4b(x, y, z, w)
 
             expect(x) { u(0) }
@@ -188,14 +178,10 @@ class Vec4bTest extends FunSuite {
                 u(-1)
             }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Indexed write") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec4b(x, y, z, w)
 
             u(0) = !x
@@ -217,14 +203,10 @@ class Vec4bTest extends FunSuite {
                 u(-1) = true
             }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Setters") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec4b(!x)
 
             u := Vec4b(x, y, z, w)
@@ -239,23 +221,15 @@ class Vec4bTest extends FunSuite {
             expect(!z) { u.z }
             expect(!w) { u.w }
         }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
-        }
     }
 
     test("Getters") {
-        def testCombination(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
+        BooleanCombinations.test { (x, y, z, w) =>
             val u = Vec4b(x, y, z, w)
             expect(x) { u.r }
             expect(y) { u.g }
             expect(z) { u.b }
             expect(w) { u.a }
-        }
-
-        for ((x, y, z, w) <- combinations) {
-            testCombination(x, y, z, w)
         }
     }
 }

@@ -20,22 +20,26 @@
 
 package visual.math
 
-import simplex3d.math.floatm.renamed._
+import simplex3d.math.doublem.renamed._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 abstract class Fun {
+
+    /**
+     * Width and height of the rendering surface
+     */
+    final val dimensions: AnyVec2 = Vec2(0)
+
     /**
      * @param pixel
      *          pixel coordinates
      * @param time
      *          time, in seconds
-     * @param dimensions
-     *          width and height of the rendering surface
      * @return
      *          rgb color with floating point components from 0 to 1
      */
-    def apply(pixel: AnyVec2, time: Float, dimensions: AnyVec2) :AnyVec3
+    def apply(pixel: AnyVec2, time: Double) :AnyVec3
 }

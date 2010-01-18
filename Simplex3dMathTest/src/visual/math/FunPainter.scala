@@ -25,8 +25,8 @@ import java.util.concurrent.Executors._
 
 import simplex3d.math.BaseMath._
 import simplex3d.math.intm.IntMath
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.doublem.renamed._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -45,14 +45,13 @@ object FunPainter {
         var buffer: Array[Int] = null
         var width = 0
         var height = 0
-        var time: Float = 0
-        var dim: ConstVec2 = null
+        var time: Double = 0
 
         private var yoffset = 0
 
         def setData(buffer: Array[Int],
                     width: Int, height: Int,
-                    time: Float)
+                    time: Double)
         {
             if (isExecuting) throw new IllegalStateException(
                 "Cannot change while executing.")
@@ -62,7 +61,8 @@ object FunPainter {
             this.height = height
             yoffset = 0
             this.time = time
-            dim = ConstVec2(width, height)
+
+            fun.dimensions.asInstanceOf[Vec2].set(width, height)
         }
         def runSingleThreaded() {
             val h1 = height - 1
@@ -70,7 +70,7 @@ object FunPainter {
                 val h = h1 - y
                 var x = 0; while(x < width) {
 
-                    buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time, dim))
+                    buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
 
                     x += 1
                 }
@@ -93,7 +93,7 @@ object FunPainter {
                 }
                 final def loop(y :Int, h: Int) {
                     var x = 0; while(x < width) {
-                      buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time, dim))
+                      buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
 
                       x += 1
                     }
@@ -113,7 +113,7 @@ object FunPainter {
         frames(1) = (new Array[Int](0), 0, 0)
 
         def paint(width: Int, height: Int) :Array[Int] = {
-            def time = (System.currentTimeMillis - start)/1000f
+            def time = (System.currentTimeMillis - start)/1000.0
 
             val retBuffer: Array[Int] =
                 if (job.width != width || job.height != height) {
@@ -147,7 +147,7 @@ object FunPainter {
     def testLoad(fun: Fun, iterations: Int) {
         val timer = new FpsTimer()
 
-        def time = (System.currentTimeMillis % 100000000)/1000f
+        def time = (System.currentTimeMillis % 100000000)/1000.0
         val width = 640
         val height = 480
         val buffer = new Array[Int](width*height)

@@ -20,8 +20,8 @@
 
 package visual.math
 
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.doublem.renamed._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -30,11 +30,11 @@ import simplex3d.math.floatm.FloatMath._
 object Noise1Test {
 
     def main(args: Array[String]) {
-        val scale = 1/50f
-        val speed = 1/3f
+        val scale = 1.0/50
+        val speed = 1.0/3
 
         FunFrame.launch(new Fun { 
-        final def apply(pixel: AnyVec2, t: Float, dim: AnyVec2) = {
+        final def apply(pixel: AnyVec2, t: Double) = {
             Vec3((noise1(Vec3(pixel*scale, t*speed)) + 1)/2)
         }})
     }

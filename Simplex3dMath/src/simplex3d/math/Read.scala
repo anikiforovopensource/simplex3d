@@ -24,54 +24,54 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2Int {
+private[math] abstract class Read2Int extends Swizzle2Read[Int] {
     def x: Int
     def y: Int
 }
 
-private[math] abstract class Read3Int {
+private[math] abstract class Read3Int extends Swizzle3Read[Int] {
     def x: Int
     def y: Int
     def z: Int
 }
 
-private[math] abstract class Read4Int {
+private[math] abstract class Read4Int extends Swizzle4Read[Int] {
     def x: Int
     def y: Int
     def z: Int
     def w: Int
 }
 
-private[math] abstract class Read2Float {
+private[math] abstract class Read2Float extends Swizzle2Read[Float] {
     def x: Float
     def y: Float
 }
 
-private[math] abstract class Read3Float {
+private[math] abstract class Read3Float extends Swizzle3Read[Float] {
     def x: Float
     def y: Float
     def z: Float
 }
 
-private[math] abstract class Read4Float {
+private[math] abstract class Read4Float extends Swizzle4Read[Float] {
     def x: Float
     def y: Float
     def z: Float
     def w: Float
 }
 
-private[math] abstract class Read2Double {
+private[math] abstract class Read2Double extends Swizzle2Read[Double] {
     def x: Double
     def y: Double
 }
 
-private[math] abstract class Read3Double {
+private[math] abstract class Read3Double extends Swizzle3Read[Double] {
     def x: Double
     def y: Double
     def z: Double
 }
 
-private[math] abstract class Read4Double {
+private[math] abstract class Read4Double extends Swizzle4Read[Double] {
     def x: Double
     def y: Double
     def z: Double

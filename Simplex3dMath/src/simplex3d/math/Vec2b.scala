@@ -26,13 +26,25 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b {
+sealed abstract class AnyVec2b extends Swizzle2Read[Boolean] {
+
+    type R2 = ConstVec2b; type R3 = ConstVec3b; type R4 = ConstVec4b
+    protected def make2(x: Boolean, y: Boolean) =
+        new ConstVec2b(x, y)
+    protected def make3(x: Boolean, y: Boolean, z: Boolean) =
+        new ConstVec3b(x, y, z)
+    protected def make4(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
+        new ConstVec4b(x, y, z, w)
+
 
     def x: Boolean
     def y: Boolean
 
     def r = x
     def g = y
+
+    def s = x
+    def t = y
 
 
     def apply(i: Int) :Boolean = {
@@ -87,8 +99,14 @@ extends AnyVec2b
     override def r = x
     override def g = y
 
+    override def s = x
+    override def t = y
+
     def r_=(r: Boolean) { x = r }
     def g_=(g: Boolean) { y = g }
+
+    def s_=(s: Boolean) { x = s }
+    def t_=(t: Boolean) { y = t }
 
 
     def :=(u: AnyVec2b) { x = u.x; y = u.y }
@@ -102,6 +120,26 @@ extends AnyVec2b
                     "excpected from 0 to 1, got " + j)
         }
     }
+
+    // Swizzling
+    override def xy: ConstVec2b = new ConstVec2b(x, y)
+    override def yx: ConstVec2b = new ConstVec2b(y, x)
+
+    override def rg = xy
+    override def gr = yx
+
+    override def st = xy
+    override def ts = yx
+
+
+    def xy_=(u: AnyVec2b) { x = u.x; y = u.y }
+    def yx_=(u: AnyVec2b) { var t = u.y; y = u.x; x = t }
+
+    def rg_=(u: AnyVec2b) { xy_=(u) }
+    def gr_=(u: AnyVec2b) { yx_=(u) }
+
+    def st_=(u: AnyVec2b) { xy_=(u) }
+    def ts_=(u: AnyVec2b) { yx_=(u) }
 }
 
 object Vec2b {

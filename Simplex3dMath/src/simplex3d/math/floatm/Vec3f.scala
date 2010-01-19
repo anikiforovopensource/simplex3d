@@ -30,9 +30,22 @@ import simplex3d.math.floatm.FloatMath._
  */
 sealed abstract class AnyVec3f extends Read3Float {
 
+    type R2 = ConstVec2f; type R3 = ConstVec3f; type R4 = ConstVec4f
+    protected def make2(x: Float, y: Float) =
+        new ConstVec2f(x, y)
+    protected def make3(x: Float, y: Float, z: Float) =
+        new ConstVec3f(x, y, z)
+    protected def make4(x: Float, y: Float, z: Float, w: Float) =
+        new ConstVec4f(x, y, z, w)
+
+
     def r = x
     def g = y
     def b = z
+
+    def s = x
+    def t = y
+    def p = z
 
     
     def apply(i: Int) :Float = {
@@ -95,247 +108,6 @@ sealed abstract class AnyVec3f extends Read3Float {
     override def toString = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
     }
-
-    // Swizzling
-    def xx: ConstVec2f = new ConstVec2f(x, x)
-    def xy: ConstVec2f = new ConstVec2f(x, y)
-    def xz: ConstVec2f = new ConstVec2f(x, z)
-    def yx: ConstVec2f = new ConstVec2f(y, x)
-    def yy: ConstVec2f = new ConstVec2f(y, y)
-    def yz: ConstVec2f = new ConstVec2f(y, z)
-    def zx: ConstVec2f = new ConstVec2f(z, x)
-    def zy: ConstVec2f = new ConstVec2f(z, y)
-    def zz: ConstVec2f = new ConstVec2f(z, z)
-
-    def xxx: ConstVec3f = new ConstVec3f(x, x, x)
-    def xxy: ConstVec3f = new ConstVec3f(x, x, y)
-    def xxz: ConstVec3f = new ConstVec3f(x, x, z)
-    def xyx: ConstVec3f = new ConstVec3f(x, y, x)
-    def xyy: ConstVec3f = new ConstVec3f(x, y, y)
-    def xyz: ConstVec3f = new ConstVec3f(x, y, z)
-    def xzx: ConstVec3f = new ConstVec3f(x, z, x)
-    def xzy: ConstVec3f = new ConstVec3f(x, z, y)
-    def xzz: ConstVec3f = new ConstVec3f(x, z, z)
-    def yxx: ConstVec3f = new ConstVec3f(y, x, x)
-    def yxy: ConstVec3f = new ConstVec3f(y, x, y)
-    def yxz: ConstVec3f = new ConstVec3f(y, x, z)
-    def yyx: ConstVec3f = new ConstVec3f(y, y, x)
-    def yyy: ConstVec3f = new ConstVec3f(y, y, y)
-    def yyz: ConstVec3f = new ConstVec3f(y, y, z)
-    def yzx: ConstVec3f = new ConstVec3f(y, z, x)
-    def yzy: ConstVec3f = new ConstVec3f(y, z, y)
-    def yzz: ConstVec3f = new ConstVec3f(y, z, z)
-    def zxx: ConstVec3f = new ConstVec3f(z, x, x)
-    def zxy: ConstVec3f = new ConstVec3f(z, x, y)
-    def zxz: ConstVec3f = new ConstVec3f(z, x, z)
-    def zyx: ConstVec3f = new ConstVec3f(z, y, x)
-    def zyy: ConstVec3f = new ConstVec3f(z, y, y)
-    def zyz: ConstVec3f = new ConstVec3f(z, y, z)
-    def zzx: ConstVec3f = new ConstVec3f(z, z, x)
-    def zzy: ConstVec3f = new ConstVec3f(z, z, y)
-    def zzz: ConstVec3f = new ConstVec3f(z, z, z)
-
-    def xxxx: ConstVec4f = new ConstVec4f(x, x, x, x)
-    def xxxy: ConstVec4f = new ConstVec4f(x, x, x, y)
-    def xxxz: ConstVec4f = new ConstVec4f(x, x, x, z)
-    def xxyx: ConstVec4f = new ConstVec4f(x, x, y, x)
-    def xxyy: ConstVec4f = new ConstVec4f(x, x, y, y)
-    def xxyz: ConstVec4f = new ConstVec4f(x, x, y, z)
-    def xxzx: ConstVec4f = new ConstVec4f(x, x, z, x)
-    def xxzy: ConstVec4f = new ConstVec4f(x, x, z, y)
-    def xxzz: ConstVec4f = new ConstVec4f(x, x, z, z)
-    def xyxx: ConstVec4f = new ConstVec4f(x, y, x, x)
-    def xyxy: ConstVec4f = new ConstVec4f(x, y, x, y)
-    def xyxz: ConstVec4f = new ConstVec4f(x, y, x, z)
-    def xyyx: ConstVec4f = new ConstVec4f(x, y, y, x)
-    def xyyy: ConstVec4f = new ConstVec4f(x, y, y, y)
-    def xyyz: ConstVec4f = new ConstVec4f(x, y, y, z)
-    def xyzx: ConstVec4f = new ConstVec4f(x, y, z, x)
-    def xyzy: ConstVec4f = new ConstVec4f(x, y, z, y)
-    def xyzz: ConstVec4f = new ConstVec4f(x, y, z, z)
-    def xzxx: ConstVec4f = new ConstVec4f(x, z, x, x)
-    def xzxy: ConstVec4f = new ConstVec4f(x, z, x, y)
-    def xzxz: ConstVec4f = new ConstVec4f(x, z, x, z)
-    def xzyx: ConstVec4f = new ConstVec4f(x, z, y, x)
-    def xzyy: ConstVec4f = new ConstVec4f(x, z, y, y)
-    def xzyz: ConstVec4f = new ConstVec4f(x, z, y, z)
-    def xzzx: ConstVec4f = new ConstVec4f(x, z, z, x)
-    def xzzy: ConstVec4f = new ConstVec4f(x, z, z, y)
-    def xzzz: ConstVec4f = new ConstVec4f(x, z, z, z)
-    def yxxx: ConstVec4f = new ConstVec4f(y, x, x, x)
-    def yxxy: ConstVec4f = new ConstVec4f(y, x, x, y)
-    def yxxz: ConstVec4f = new ConstVec4f(y, x, x, z)
-    def yxyx: ConstVec4f = new ConstVec4f(y, x, y, x)
-    def yxyy: ConstVec4f = new ConstVec4f(y, x, y, y)
-    def yxyz: ConstVec4f = new ConstVec4f(y, x, y, z)
-    def yxzx: ConstVec4f = new ConstVec4f(y, x, z, x)
-    def yxzy: ConstVec4f = new ConstVec4f(y, x, z, y)
-    def yxzz: ConstVec4f = new ConstVec4f(y, x, z, z)
-    def yyxx: ConstVec4f = new ConstVec4f(y, y, x, x)
-    def yyxy: ConstVec4f = new ConstVec4f(y, y, x, y)
-    def yyxz: ConstVec4f = new ConstVec4f(y, y, x, z)
-    def yyyx: ConstVec4f = new ConstVec4f(y, y, y, x)
-    def yyyy: ConstVec4f = new ConstVec4f(y, y, y, y)
-    def yyyz: ConstVec4f = new ConstVec4f(y, y, y, z)
-    def yyzx: ConstVec4f = new ConstVec4f(y, y, z, x)
-    def yyzy: ConstVec4f = new ConstVec4f(y, y, z, y)
-    def yyzz: ConstVec4f = new ConstVec4f(y, y, z, z)
-    def yzxx: ConstVec4f = new ConstVec4f(y, z, x, x)
-    def yzxy: ConstVec4f = new ConstVec4f(y, z, x, y)
-    def yzxz: ConstVec4f = new ConstVec4f(y, z, x, z)
-    def yzyx: ConstVec4f = new ConstVec4f(y, z, y, x)
-    def yzyy: ConstVec4f = new ConstVec4f(y, z, y, y)
-    def yzyz: ConstVec4f = new ConstVec4f(y, z, y, z)
-    def yzzx: ConstVec4f = new ConstVec4f(y, z, z, x)
-    def yzzy: ConstVec4f = new ConstVec4f(y, z, z, y)
-    def yzzz: ConstVec4f = new ConstVec4f(y, z, z, z)
-    def zxxx: ConstVec4f = new ConstVec4f(z, x, x, x)
-    def zxxy: ConstVec4f = new ConstVec4f(z, x, x, y)
-    def zxxz: ConstVec4f = new ConstVec4f(z, x, x, z)
-    def zxyx: ConstVec4f = new ConstVec4f(z, x, y, x)
-    def zxyy: ConstVec4f = new ConstVec4f(z, x, y, y)
-    def zxyz: ConstVec4f = new ConstVec4f(z, x, y, z)
-    def zxzx: ConstVec4f = new ConstVec4f(z, x, z, x)
-    def zxzy: ConstVec4f = new ConstVec4f(z, x, z, y)
-    def zxzz: ConstVec4f = new ConstVec4f(z, x, z, z)
-    def zyxx: ConstVec4f = new ConstVec4f(z, y, x, x)
-    def zyxy: ConstVec4f = new ConstVec4f(z, y, x, y)
-    def zyxz: ConstVec4f = new ConstVec4f(z, y, x, z)
-    def zyyx: ConstVec4f = new ConstVec4f(z, y, y, x)
-    def zyyy: ConstVec4f = new ConstVec4f(z, y, y, y)
-    def zyyz: ConstVec4f = new ConstVec4f(z, y, y, z)
-    def zyzx: ConstVec4f = new ConstVec4f(z, y, z, x)
-    def zyzy: ConstVec4f = new ConstVec4f(z, y, z, y)
-    def zyzz: ConstVec4f = new ConstVec4f(z, y, z, z)
-    def zzxx: ConstVec4f = new ConstVec4f(z, z, x, x)
-    def zzxy: ConstVec4f = new ConstVec4f(z, z, x, y)
-    def zzxz: ConstVec4f = new ConstVec4f(z, z, x, z)
-    def zzyx: ConstVec4f = new ConstVec4f(z, z, y, x)
-    def zzyy: ConstVec4f = new ConstVec4f(z, z, y, y)
-    def zzyz: ConstVec4f = new ConstVec4f(z, z, y, z)
-    def zzzx: ConstVec4f = new ConstVec4f(z, z, z, x)
-    def zzzy: ConstVec4f = new ConstVec4f(z, z, z, y)
-    def zzzz: ConstVec4f = new ConstVec4f(z, z, z, z)
-
-    def rr = xx
-    def rg = xy
-    def rb = xz
-    def gr = yx
-    def gg = yy
-    def gb = yz
-    def br = zx
-    def bg = zy
-    def bb = zz
-
-    def rrr = xxx
-    def rrg = xxy
-    def rrb = xxz
-    def rgr = xyx
-    def rgg = xyy
-    def rgb = xyz
-    def rbr = xzx
-    def rbg = xzy
-    def rbb = xzz
-    def grr = yxx
-    def grg = yxy
-    def grb = yxz
-    def ggr = yyx
-    def ggg = yyy
-    def ggb = yyz
-    def gbr = yzx
-    def gbg = yzy
-    def gbb = yzz
-    def brr = zxx
-    def brg = zxy
-    def brb = zxz
-    def bgr = zyx
-    def bgg = zyy
-    def bgb = zyz
-    def bbr = zzx
-    def bbg = zzy
-    def bbb = zzz
-
-    def rrrr = xxxx
-    def rrrg = xxxy
-    def rrrb = xxxz
-    def rrgr = xxyx
-    def rrgg = xxyy
-    def rrgb = xxyz
-    def rrbr = xxzx
-    def rrbg = xxzy
-    def rrbb = xxzz
-    def rgrr = xyxx
-    def rgrg = xyxy
-    def rgrb = xyxz
-    def rggr = xyyx
-    def rggg = xyyy
-    def rggb = xyyz
-    def rgbr = xyzx
-    def rgbg = xyzy
-    def rgbb = xyzz
-    def rbrr = xzxx
-    def rbrg = xzxy
-    def rbrb = xzxz
-    def rbgr = xzyx
-    def rbgg = xzyy
-    def rbgb = xzyz
-    def rbbr = xzzx
-    def rbbg = xzzy
-    def rbbb = xzzz
-    def grrr = yxxx
-    def grrg = yxxy
-    def grrb = yxxz
-    def grgr = yxyx
-    def grgg = yxyy
-    def grgb = yxyz
-    def grbr = yxzx
-    def grbg = yxzy
-    def grbb = yxzz
-    def ggrr = yyxx
-    def ggrg = yyxy
-    def ggrb = yyxz
-    def gggr = yyyx
-    def gggg = yyyy
-    def gggb = yyyz
-    def ggbr = yyzx
-    def ggbg = yyzy
-    def ggbb = yyzz
-    def gbrr = yzxx
-    def gbrg = yzxy
-    def gbrb = yzxz
-    def gbgr = yzyx
-    def gbgg = yzyy
-    def gbgb = yzyz
-    def gbbr = yzzx
-    def gbbg = yzzy
-    def gbbb = yzzz
-    def brrr = zxxx
-    def brrg = zxxy
-    def brrb = zxxz
-    def brgr = zxyx
-    def brgg = zxyy
-    def brgb = zxyz
-    def brbr = zxzx
-    def brbg = zxzy
-    def brbb = zxzz
-    def bgrr = zyxx
-    def bgrg = zyxy
-    def bgrb = zyxz
-    def bggr = zyyx
-    def bggg = zyyy
-    def bggb = zyyz
-    def bgbr = zyzx
-    def bgbg = zyzy
-    def bgbb = zyzz
-    def bbrr = zzxx
-    def bbrg = zzxy
-    def bbrb = zzxz
-    def bbgr = zzyx
-    def bbgg = zzyy
-    def bbgb = zzyz
-    def bbbr = zzzx
-    def bbbg = zzzy
-    def bbbb = zzzz
 }
 
 final class ConstVec3f private[math] (val x: Float, val y: Float, val z: Float)
@@ -356,9 +128,17 @@ extends AnyVec3f
     override def g = y
     override def b = z
 
+    override def s = x
+    override def t = y
+    override def p = z
+
     def r_=(r: Float) { x = r }
     def g_=(g: Float) { y = g }
     def b_=(b: Float) { z = b }
+
+    def s_=(s: Float) { x = s }
+    def t_=(t: Float) { y = t }
+    def p_=(p: Float) { z = p }
 
 
     def *=(s: Float) { x *= s; y *= s; z *= s }
@@ -413,6 +193,20 @@ extends AnyVec3f
     override def brg = zxy
     override def bgr = zyx
 
+    override def st = xy
+    override def sp = xz
+    override def ts = yx
+    override def tp = yz
+    override def ps = zx
+    override def pt = zy
+
+    override def stp = xyz
+    override def spt = xzy
+    override def tsp = yxz
+    override def tps = yzx
+    override def pst = zxy
+    override def pts = zyx
+
 
     def xy_=(u: AnyVec2f) { x = u.x; y = u.y }
     def xz_=(u: AnyVec2f) { x = u.x; z = u.y }
@@ -441,6 +235,20 @@ extends AnyVec3f
     def gbr_=(u: AnyVec3f) { yzx_=(u) }
     def brg_=(u: AnyVec3f) { zxy_=(u) }
     def bgr_=(u: AnyVec3f) { zyx_=(u) }
+
+    def st_=(u: AnyVec2f) { xy_=(u) }
+    def sp_=(u: AnyVec2f) { xz_=(u) }
+    def ts_=(u: AnyVec2f) { yx_=(u) }
+    def tp_=(u: AnyVec2f) { yz_=(u) }
+    def ps_=(u: AnyVec2f) { zx_=(u) }
+    def pt_=(u: AnyVec2f) { zy_=(u) }
+
+    def stp_=(u: AnyVec3f) { xyz_=(u) }
+    def spt_=(u: AnyVec3f) { xzy_=(u) }
+    def tsp_=(u: AnyVec3f) { yxz_=(u) }
+    def tps_=(u: AnyVec3f) { yzx_=(u) }
+    def pst_=(u: AnyVec3f) { zxy_=(u) }
+    def pts_=(u: AnyVec3f) { zyx_=(u) } 
 }
 
 object Vec3f {

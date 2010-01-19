@@ -30,8 +30,20 @@ import simplex3d.math.floatm.FloatMath._
  */
 sealed abstract class AnyVec2f extends Read2Float {
 
+    type R2 = ConstVec2f; type R3 = ConstVec3f; type R4 = ConstVec4f
+    protected def make2(x: Float, y: Float) =
+        new ConstVec2f(x, y)
+    protected def make3(x: Float, y: Float, z: Float) =
+        new ConstVec3f(x, y, z)
+    protected def make4(x: Float, y: Float, z: Float, w: Float) =
+        new ConstVec4f(x, y, z, w)
+
+
     def r = x
     def g = y
+
+    def s = x
+    def t = y
 
     
     def apply(i: Int) :Float = {
@@ -88,69 +100,6 @@ sealed abstract class AnyVec2f extends Read2Float {
     override def toString = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ")"
     }
-
-    // Swizzling
-    def xx: ConstVec2f = new ConstVec2f(x, x)
-    def xy: ConstVec2f = new ConstVec2f(x, y)
-    def yx: ConstVec2f = new ConstVec2f(y, x)
-    def yy: ConstVec2f = new ConstVec2f(y, y)
-
-    def xxx: ConstVec3f = new ConstVec3f(x, x, x)
-    def xxy: ConstVec3f = new ConstVec3f(x, x, y)
-    def xyx: ConstVec3f = new ConstVec3f(x, y, x)
-    def xyy: ConstVec3f = new ConstVec3f(x, y, y)
-    def yxx: ConstVec3f = new ConstVec3f(y, x, x)
-    def yxy: ConstVec3f = new ConstVec3f(y, x, y)
-    def yyx: ConstVec3f = new ConstVec3f(y, y, x)
-    def yyy: ConstVec3f = new ConstVec3f(y, y, y)
-
-    def xxxx: ConstVec4f = new ConstVec4f(x, x, x, x)
-    def xxxy: ConstVec4f = new ConstVec4f(x, x, x, y)
-    def xxyx: ConstVec4f = new ConstVec4f(x, x, y, x)
-    def xxyy: ConstVec4f = new ConstVec4f(x, x, y, y)
-    def xyxx: ConstVec4f = new ConstVec4f(x, y, x, x)
-    def xyxy: ConstVec4f = new ConstVec4f(x, y, x, y)
-    def xyyx: ConstVec4f = new ConstVec4f(x, y, y, x)
-    def xyyy: ConstVec4f = new ConstVec4f(x, y, y, y)
-    def yxxx: ConstVec4f = new ConstVec4f(y, x, x, x)
-    def yxxy: ConstVec4f = new ConstVec4f(y, x, x, y)
-    def yxyx: ConstVec4f = new ConstVec4f(y, x, y, x)
-    def yxyy: ConstVec4f = new ConstVec4f(y, x, y, y)
-    def yyxx: ConstVec4f = new ConstVec4f(y, y, x, x)
-    def yyxy: ConstVec4f = new ConstVec4f(y, y, x, y)
-    def yyyx: ConstVec4f = new ConstVec4f(y, y, y, x)
-    def yyyy: ConstVec4f = new ConstVec4f(y, y, y, y)
-
-    def rr = xx
-    def rg = xy
-    def gr = yx
-    def gg = yy
-
-    def rrr = xxx
-    def rrg = xxy
-    def rgr = xyx
-    def rgg = xyy
-    def grr = yxx
-    def grg = yxy
-    def ggr = yyx
-    def ggg = yyy
-
-    def rrrr = xxxx
-    def rrrg = xxxy
-    def rrgr = xxyx
-    def rrgg = xxyy
-    def rgrr = xyxx
-    def rgrg = xyxy
-    def rggr = xyyx
-    def rggg = xyyy
-    def grrr = yxxx
-    def grrg = yxxy
-    def grgr = yxyx
-    def grgg = yxyy
-    def ggrr = yyxx
-    def ggrg = yyxy
-    def gggr = yyyx
-    def gggg = yyyy
 }
 
 final class ConstVec2f private[math] (val x: Float, val y: Float)
@@ -168,8 +117,14 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
     override def r = x
     override def g = y
 
+    override def s = x
+    override def t = y
+
     def r_=(r: Float) { x = r }
     def g_=(g: Float) { y = g }
+
+    def s_=(s: Float) { x = s }
+    def t_=(t: Float) { y = t }
 
     
     def *=(s: Float) { x *= s; y *= s }
@@ -201,11 +156,18 @@ final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
     override def rg = xy
     override def gr = yx
 
+    override def st = xy
+    override def ts = yx
+
+
     def xy_=(u: AnyVec2f) { x = u.x; y = u.y }
     def yx_=(u: AnyVec2f) { var t = u.y; y = u.x; x = t }
 
     def rg_=(u: AnyVec2f) { xy_=(u) }
     def gr_=(u: AnyVec2f) { yx_=(u) }
+
+    def st_=(u: AnyVec2f) { xy_=(u) }
+    def ts_=(u: AnyVec2f) { yx_=(u) }
 }
 
 object Vec2f {

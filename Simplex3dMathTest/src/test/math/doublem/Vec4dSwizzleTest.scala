@@ -48,6 +48,11 @@ class Vec4dSwizzleTest extends FunSuite {
         expect(z) { u.b }
         expect(w) { u.a }
 
+        expect(x) { u.s }
+        expect(y) { u.t }
+        expect(z) { u.p }
+        expect(w) { u.q }
+
         assert(Vec2(x, x) == u.xx)
         assert(Vec2(x, y) == u.xy)
         assert(Vec2(x, z) == u.xz)
@@ -384,6 +389,7 @@ class Vec4dSwizzleTest extends FunSuite {
         assert(Vec4(w, w, w, y) == u.wwwy)
         assert(Vec4(w, w, w, z) == u.wwwz)
         assert(Vec4(w, w, w, w) == u.wwww)
+
         assert(Vec2(x, x) == u.rr)
         assert(Vec2(x, y) == u.rg)
         assert(Vec2(x, z) == u.rb)
@@ -720,6 +726,343 @@ class Vec4dSwizzleTest extends FunSuite {
         assert(Vec4(w, w, w, y) == u.aaag)
         assert(Vec4(w, w, w, z) == u.aaab)
         assert(Vec4(w, w, w, w) == u.aaaa)
+
+        assert(Vec2(x, x) == u.ss)
+        assert(Vec2(x, y) == u.st)
+        assert(Vec2(x, z) == u.sp)
+        assert(Vec2(x, w) == u.sq)
+        assert(Vec2(y, x) == u.ts)
+        assert(Vec2(y, y) == u.tt)
+        assert(Vec2(y, z) == u.tp)
+        assert(Vec2(y, w) == u.tq)
+        assert(Vec2(z, x) == u.ps)
+        assert(Vec2(z, y) == u.pt)
+        assert(Vec2(z, z) == u.pp)
+        assert(Vec2(z, w) == u.pq)
+        assert(Vec2(w, x) == u.qs)
+        assert(Vec2(w, y) == u.qt)
+        assert(Vec2(w, z) == u.qp)
+        assert(Vec2(w, w) == u.qq)
+        assert(Vec3(x, x, x) == u.sss)
+        assert(Vec3(x, x, y) == u.sst)
+        assert(Vec3(x, x, z) == u.ssp)
+        assert(Vec3(x, x, w) == u.ssq)
+        assert(Vec3(x, y, x) == u.sts)
+        assert(Vec3(x, y, y) == u.stt)
+        assert(Vec3(x, y, z) == u.stp)
+        assert(Vec3(x, y, w) == u.stq)
+        assert(Vec3(x, z, x) == u.sps)
+        assert(Vec3(x, z, y) == u.spt)
+        assert(Vec3(x, z, z) == u.spp)
+        assert(Vec3(x, z, w) == u.spq)
+        assert(Vec3(x, w, x) == u.sqs)
+        assert(Vec3(x, w, y) == u.sqt)
+        assert(Vec3(x, w, z) == u.sqp)
+        assert(Vec3(x, w, w) == u.sqq)
+        assert(Vec3(y, x, x) == u.tss)
+        assert(Vec3(y, x, y) == u.tst)
+        assert(Vec3(y, x, z) == u.tsp)
+        assert(Vec3(y, x, w) == u.tsq)
+        assert(Vec3(y, y, x) == u.tts)
+        assert(Vec3(y, y, y) == u.ttt)
+        assert(Vec3(y, y, z) == u.ttp)
+        assert(Vec3(y, y, w) == u.ttq)
+        assert(Vec3(y, z, x) == u.tps)
+        assert(Vec3(y, z, y) == u.tpt)
+        assert(Vec3(y, z, z) == u.tpp)
+        assert(Vec3(y, z, w) == u.tpq)
+        assert(Vec3(y, w, x) == u.tqs)
+        assert(Vec3(y, w, y) == u.tqt)
+        assert(Vec3(y, w, z) == u.tqp)
+        assert(Vec3(y, w, w) == u.tqq)
+        assert(Vec3(z, x, x) == u.pss)
+        assert(Vec3(z, x, y) == u.pst)
+        assert(Vec3(z, x, z) == u.psp)
+        assert(Vec3(z, x, w) == u.psq)
+        assert(Vec3(z, y, x) == u.pts)
+        assert(Vec3(z, y, y) == u.ptt)
+        assert(Vec3(z, y, z) == u.ptp)
+        assert(Vec3(z, y, w) == u.ptq)
+        assert(Vec3(z, z, x) == u.pps)
+        assert(Vec3(z, z, y) == u.ppt)
+        assert(Vec3(z, z, z) == u.ppp)
+        assert(Vec3(z, z, w) == u.ppq)
+        assert(Vec3(z, w, x) == u.pqs)
+        assert(Vec3(z, w, y) == u.pqt)
+        assert(Vec3(z, w, z) == u.pqp)
+        assert(Vec3(z, w, w) == u.pqq)
+        assert(Vec3(w, x, x) == u.qss)
+        assert(Vec3(w, x, y) == u.qst)
+        assert(Vec3(w, x, z) == u.qsp)
+        assert(Vec3(w, x, w) == u.qsq)
+        assert(Vec3(w, y, x) == u.qts)
+        assert(Vec3(w, y, y) == u.qtt)
+        assert(Vec3(w, y, z) == u.qtp)
+        assert(Vec3(w, y, w) == u.qtq)
+        assert(Vec3(w, z, x) == u.qps)
+        assert(Vec3(w, z, y) == u.qpt)
+        assert(Vec3(w, z, z) == u.qpp)
+        assert(Vec3(w, z, w) == u.qpq)
+        assert(Vec3(w, w, x) == u.qqs)
+        assert(Vec3(w, w, y) == u.qqt)
+        assert(Vec3(w, w, z) == u.qqp)
+        assert(Vec3(w, w, w) == u.qqq)
+        assert(Vec4(x, x, x, x) == u.ssss)
+        assert(Vec4(x, x, x, y) == u.ssst)
+        assert(Vec4(x, x, x, z) == u.sssp)
+        assert(Vec4(x, x, x, w) == u.sssq)
+        assert(Vec4(x, x, y, x) == u.ssts)
+        assert(Vec4(x, x, y, y) == u.sstt)
+        assert(Vec4(x, x, y, z) == u.sstp)
+        assert(Vec4(x, x, y, w) == u.sstq)
+        assert(Vec4(x, x, z, x) == u.ssps)
+        assert(Vec4(x, x, z, y) == u.sspt)
+        assert(Vec4(x, x, z, z) == u.sspp)
+        assert(Vec4(x, x, z, w) == u.sspq)
+        assert(Vec4(x, x, w, x) == u.ssqs)
+        assert(Vec4(x, x, w, y) == u.ssqt)
+        assert(Vec4(x, x, w, z) == u.ssqp)
+        assert(Vec4(x, x, w, w) == u.ssqq)
+        assert(Vec4(x, y, x, x) == u.stss)
+        assert(Vec4(x, y, x, y) == u.stst)
+        assert(Vec4(x, y, x, z) == u.stsp)
+        assert(Vec4(x, y, x, w) == u.stsq)
+        assert(Vec4(x, y, y, x) == u.stts)
+        assert(Vec4(x, y, y, y) == u.sttt)
+        assert(Vec4(x, y, y, z) == u.sttp)
+        assert(Vec4(x, y, y, w) == u.sttq)
+        assert(Vec4(x, y, z, x) == u.stps)
+        assert(Vec4(x, y, z, y) == u.stpt)
+        assert(Vec4(x, y, z, z) == u.stpp)
+        assert(Vec4(x, y, z, w) == u.stpq)
+        assert(Vec4(x, y, w, x) == u.stqs)
+        assert(Vec4(x, y, w, y) == u.stqt)
+        assert(Vec4(x, y, w, z) == u.stqp)
+        assert(Vec4(x, y, w, w) == u.stqq)
+        assert(Vec4(x, z, x, x) == u.spss)
+        assert(Vec4(x, z, x, y) == u.spst)
+        assert(Vec4(x, z, x, z) == u.spsp)
+        assert(Vec4(x, z, x, w) == u.spsq)
+        assert(Vec4(x, z, y, x) == u.spts)
+        assert(Vec4(x, z, y, y) == u.sptt)
+        assert(Vec4(x, z, y, z) == u.sptp)
+        assert(Vec4(x, z, y, w) == u.sptq)
+        assert(Vec4(x, z, z, x) == u.spps)
+        assert(Vec4(x, z, z, y) == u.sppt)
+        assert(Vec4(x, z, z, z) == u.sppp)
+        assert(Vec4(x, z, z, w) == u.sppq)
+        assert(Vec4(x, z, w, x) == u.spqs)
+        assert(Vec4(x, z, w, y) == u.spqt)
+        assert(Vec4(x, z, w, z) == u.spqp)
+        assert(Vec4(x, z, w, w) == u.spqq)
+        assert(Vec4(x, w, x, x) == u.sqss)
+        assert(Vec4(x, w, x, y) == u.sqst)
+        assert(Vec4(x, w, x, z) == u.sqsp)
+        assert(Vec4(x, w, x, w) == u.sqsq)
+        assert(Vec4(x, w, y, x) == u.sqts)
+        assert(Vec4(x, w, y, y) == u.sqtt)
+        assert(Vec4(x, w, y, z) == u.sqtp)
+        assert(Vec4(x, w, y, w) == u.sqtq)
+        assert(Vec4(x, w, z, x) == u.sqps)
+        assert(Vec4(x, w, z, y) == u.sqpt)
+        assert(Vec4(x, w, z, z) == u.sqpp)
+        assert(Vec4(x, w, z, w) == u.sqpq)
+        assert(Vec4(x, w, w, x) == u.sqqs)
+        assert(Vec4(x, w, w, y) == u.sqqt)
+        assert(Vec4(x, w, w, z) == u.sqqp)
+        assert(Vec4(x, w, w, w) == u.sqqq)
+        assert(Vec4(y, x, x, x) == u.tsss)
+        assert(Vec4(y, x, x, y) == u.tsst)
+        assert(Vec4(y, x, x, z) == u.tssp)
+        assert(Vec4(y, x, x, w) == u.tssq)
+        assert(Vec4(y, x, y, x) == u.tsts)
+        assert(Vec4(y, x, y, y) == u.tstt)
+        assert(Vec4(y, x, y, z) == u.tstp)
+        assert(Vec4(y, x, y, w) == u.tstq)
+        assert(Vec4(y, x, z, x) == u.tsps)
+        assert(Vec4(y, x, z, y) == u.tspt)
+        assert(Vec4(y, x, z, z) == u.tspp)
+        assert(Vec4(y, x, z, w) == u.tspq)
+        assert(Vec4(y, x, w, x) == u.tsqs)
+        assert(Vec4(y, x, w, y) == u.tsqt)
+        assert(Vec4(y, x, w, z) == u.tsqp)
+        assert(Vec4(y, x, w, w) == u.tsqq)
+        assert(Vec4(y, y, x, x) == u.ttss)
+        assert(Vec4(y, y, x, y) == u.ttst)
+        assert(Vec4(y, y, x, z) == u.ttsp)
+        assert(Vec4(y, y, x, w) == u.ttsq)
+        assert(Vec4(y, y, y, x) == u.ttts)
+        assert(Vec4(y, y, y, y) == u.tttt)
+        assert(Vec4(y, y, y, z) == u.tttp)
+        assert(Vec4(y, y, y, w) == u.tttq)
+        assert(Vec4(y, y, z, x) == u.ttps)
+        assert(Vec4(y, y, z, y) == u.ttpt)
+        assert(Vec4(y, y, z, z) == u.ttpp)
+        assert(Vec4(y, y, z, w) == u.ttpq)
+        assert(Vec4(y, y, w, x) == u.ttqs)
+        assert(Vec4(y, y, w, y) == u.ttqt)
+        assert(Vec4(y, y, w, z) == u.ttqp)
+        assert(Vec4(y, y, w, w) == u.ttqq)
+        assert(Vec4(y, z, x, x) == u.tpss)
+        assert(Vec4(y, z, x, y) == u.tpst)
+        assert(Vec4(y, z, x, z) == u.tpsp)
+        assert(Vec4(y, z, x, w) == u.tpsq)
+        assert(Vec4(y, z, y, x) == u.tpts)
+        assert(Vec4(y, z, y, y) == u.tptt)
+        assert(Vec4(y, z, y, z) == u.tptp)
+        assert(Vec4(y, z, y, w) == u.tptq)
+        assert(Vec4(y, z, z, x) == u.tpps)
+        assert(Vec4(y, z, z, y) == u.tppt)
+        assert(Vec4(y, z, z, z) == u.tppp)
+        assert(Vec4(y, z, z, w) == u.tppq)
+        assert(Vec4(y, z, w, x) == u.tpqs)
+        assert(Vec4(y, z, w, y) == u.tpqt)
+        assert(Vec4(y, z, w, z) == u.tpqp)
+        assert(Vec4(y, z, w, w) == u.tpqq)
+        assert(Vec4(y, w, x, x) == u.tqss)
+        assert(Vec4(y, w, x, y) == u.tqst)
+        assert(Vec4(y, w, x, z) == u.tqsp)
+        assert(Vec4(y, w, x, w) == u.tqsq)
+        assert(Vec4(y, w, y, x) == u.tqts)
+        assert(Vec4(y, w, y, y) == u.tqtt)
+        assert(Vec4(y, w, y, z) == u.tqtp)
+        assert(Vec4(y, w, y, w) == u.tqtq)
+        assert(Vec4(y, w, z, x) == u.tqps)
+        assert(Vec4(y, w, z, y) == u.tqpt)
+        assert(Vec4(y, w, z, z) == u.tqpp)
+        assert(Vec4(y, w, z, w) == u.tqpq)
+        assert(Vec4(y, w, w, x) == u.tqqs)
+        assert(Vec4(y, w, w, y) == u.tqqt)
+        assert(Vec4(y, w, w, z) == u.tqqp)
+        assert(Vec4(y, w, w, w) == u.tqqq)
+        assert(Vec4(z, x, x, x) == u.psss)
+        assert(Vec4(z, x, x, y) == u.psst)
+        assert(Vec4(z, x, x, z) == u.pssp)
+        assert(Vec4(z, x, x, w) == u.pssq)
+        assert(Vec4(z, x, y, x) == u.psts)
+        assert(Vec4(z, x, y, y) == u.pstt)
+        assert(Vec4(z, x, y, z) == u.pstp)
+        assert(Vec4(z, x, y, w) == u.pstq)
+        assert(Vec4(z, x, z, x) == u.psps)
+        assert(Vec4(z, x, z, y) == u.pspt)
+        assert(Vec4(z, x, z, z) == u.pspp)
+        assert(Vec4(z, x, z, w) == u.pspq)
+        assert(Vec4(z, x, w, x) == u.psqs)
+        assert(Vec4(z, x, w, y) == u.psqt)
+        assert(Vec4(z, x, w, z) == u.psqp)
+        assert(Vec4(z, x, w, w) == u.psqq)
+        assert(Vec4(z, y, x, x) == u.ptss)
+        assert(Vec4(z, y, x, y) == u.ptst)
+        assert(Vec4(z, y, x, z) == u.ptsp)
+        assert(Vec4(z, y, x, w) == u.ptsq)
+        assert(Vec4(z, y, y, x) == u.ptts)
+        assert(Vec4(z, y, y, y) == u.pttt)
+        assert(Vec4(z, y, y, z) == u.pttp)
+        assert(Vec4(z, y, y, w) == u.pttq)
+        assert(Vec4(z, y, z, x) == u.ptps)
+        assert(Vec4(z, y, z, y) == u.ptpt)
+        assert(Vec4(z, y, z, z) == u.ptpp)
+        assert(Vec4(z, y, z, w) == u.ptpq)
+        assert(Vec4(z, y, w, x) == u.ptqs)
+        assert(Vec4(z, y, w, y) == u.ptqt)
+        assert(Vec4(z, y, w, z) == u.ptqp)
+        assert(Vec4(z, y, w, w) == u.ptqq)
+        assert(Vec4(z, z, x, x) == u.ppss)
+        assert(Vec4(z, z, x, y) == u.ppst)
+        assert(Vec4(z, z, x, z) == u.ppsp)
+        assert(Vec4(z, z, x, w) == u.ppsq)
+        assert(Vec4(z, z, y, x) == u.ppts)
+        assert(Vec4(z, z, y, y) == u.pptt)
+        assert(Vec4(z, z, y, z) == u.pptp)
+        assert(Vec4(z, z, y, w) == u.pptq)
+        assert(Vec4(z, z, z, x) == u.ppps)
+        assert(Vec4(z, z, z, y) == u.pppt)
+        assert(Vec4(z, z, z, z) == u.pppp)
+        assert(Vec4(z, z, z, w) == u.pppq)
+        assert(Vec4(z, z, w, x) == u.ppqs)
+        assert(Vec4(z, z, w, y) == u.ppqt)
+        assert(Vec4(z, z, w, z) == u.ppqp)
+        assert(Vec4(z, z, w, w) == u.ppqq)
+        assert(Vec4(z, w, x, x) == u.pqss)
+        assert(Vec4(z, w, x, y) == u.pqst)
+        assert(Vec4(z, w, x, z) == u.pqsp)
+        assert(Vec4(z, w, x, w) == u.pqsq)
+        assert(Vec4(z, w, y, x) == u.pqts)
+        assert(Vec4(z, w, y, y) == u.pqtt)
+        assert(Vec4(z, w, y, z) == u.pqtp)
+        assert(Vec4(z, w, y, w) == u.pqtq)
+        assert(Vec4(z, w, z, x) == u.pqps)
+        assert(Vec4(z, w, z, y) == u.pqpt)
+        assert(Vec4(z, w, z, z) == u.pqpp)
+        assert(Vec4(z, w, z, w) == u.pqpq)
+        assert(Vec4(z, w, w, x) == u.pqqs)
+        assert(Vec4(z, w, w, y) == u.pqqt)
+        assert(Vec4(z, w, w, z) == u.pqqp)
+        assert(Vec4(z, w, w, w) == u.pqqq)
+        assert(Vec4(w, x, x, x) == u.qsss)
+        assert(Vec4(w, x, x, y) == u.qsst)
+        assert(Vec4(w, x, x, z) == u.qssp)
+        assert(Vec4(w, x, x, w) == u.qssq)
+        assert(Vec4(w, x, y, x) == u.qsts)
+        assert(Vec4(w, x, y, y) == u.qstt)
+        assert(Vec4(w, x, y, z) == u.qstp)
+        assert(Vec4(w, x, y, w) == u.qstq)
+        assert(Vec4(w, x, z, x) == u.qsps)
+        assert(Vec4(w, x, z, y) == u.qspt)
+        assert(Vec4(w, x, z, z) == u.qspp)
+        assert(Vec4(w, x, z, w) == u.qspq)
+        assert(Vec4(w, x, w, x) == u.qsqs)
+        assert(Vec4(w, x, w, y) == u.qsqt)
+        assert(Vec4(w, x, w, z) == u.qsqp)
+        assert(Vec4(w, x, w, w) == u.qsqq)
+        assert(Vec4(w, y, x, x) == u.qtss)
+        assert(Vec4(w, y, x, y) == u.qtst)
+        assert(Vec4(w, y, x, z) == u.qtsp)
+        assert(Vec4(w, y, x, w) == u.qtsq)
+        assert(Vec4(w, y, y, x) == u.qtts)
+        assert(Vec4(w, y, y, y) == u.qttt)
+        assert(Vec4(w, y, y, z) == u.qttp)
+        assert(Vec4(w, y, y, w) == u.qttq)
+        assert(Vec4(w, y, z, x) == u.qtps)
+        assert(Vec4(w, y, z, y) == u.qtpt)
+        assert(Vec4(w, y, z, z) == u.qtpp)
+        assert(Vec4(w, y, z, w) == u.qtpq)
+        assert(Vec4(w, y, w, x) == u.qtqs)
+        assert(Vec4(w, y, w, y) == u.qtqt)
+        assert(Vec4(w, y, w, z) == u.qtqp)
+        assert(Vec4(w, y, w, w) == u.qtqq)
+        assert(Vec4(w, z, x, x) == u.qpss)
+        assert(Vec4(w, z, x, y) == u.qpst)
+        assert(Vec4(w, z, x, z) == u.qpsp)
+        assert(Vec4(w, z, x, w) == u.qpsq)
+        assert(Vec4(w, z, y, x) == u.qpts)
+        assert(Vec4(w, z, y, y) == u.qptt)
+        assert(Vec4(w, z, y, z) == u.qptp)
+        assert(Vec4(w, z, y, w) == u.qptq)
+        assert(Vec4(w, z, z, x) == u.qpps)
+        assert(Vec4(w, z, z, y) == u.qppt)
+        assert(Vec4(w, z, z, z) == u.qppp)
+        assert(Vec4(w, z, z, w) == u.qppq)
+        assert(Vec4(w, z, w, x) == u.qpqs)
+        assert(Vec4(w, z, w, y) == u.qpqt)
+        assert(Vec4(w, z, w, z) == u.qpqp)
+        assert(Vec4(w, z, w, w) == u.qpqq)
+        assert(Vec4(w, w, x, x) == u.qqss)
+        assert(Vec4(w, w, x, y) == u.qqst)
+        assert(Vec4(w, w, x, z) == u.qqsp)
+        assert(Vec4(w, w, x, w) == u.qqsq)
+        assert(Vec4(w, w, y, x) == u.qqts)
+        assert(Vec4(w, w, y, y) == u.qqtt)
+        assert(Vec4(w, w, y, z) == u.qqtp)
+        assert(Vec4(w, w, y, w) == u.qqtq)
+        assert(Vec4(w, w, z, x) == u.qqps)
+        assert(Vec4(w, w, z, y) == u.qqpt)
+        assert(Vec4(w, w, z, z) == u.qqpp)
+        assert(Vec4(w, w, z, w) == u.qqpq)
+        assert(Vec4(w, w, w, x) == u.qqqs)
+        assert(Vec4(w, w, w, y) == u.qqqt)
+        assert(Vec4(w, w, w, z) == u.qqqp)
+        assert(Vec4(w, w, w, w) == u.qqqq)
     }
 
     test("Swizzled write") {
@@ -741,6 +1084,11 @@ class Vec4dSwizzleTest extends FunSuite {
         u := i; u.g = t; assert(Vec4(x, t, z, w) == u)
         u := i; u.b = t; assert(Vec4(x, y, t, w) == u)
         u := i; u.a = t; assert(Vec4(x, y, z, t) == u)
+
+        u := i; u.s = t; assert(Vec4(t, y, z, w) == u)
+        u := i; u.t = t; assert(Vec4(x, t, z, w) == u)
+        u := i; u.p = t; assert(Vec4(x, y, t, w) == u)
+        u := i; u.q = t; assert(Vec4(x, y, z, t) == u)
 
         i = Vec4(t)
 
@@ -804,6 +1152,7 @@ class Vec4dSwizzleTest extends FunSuite {
         u := i; u.wyzx = Vec4(w, y, z, x); assert(Vec4(x, y, z, w) == u)
         u := i; u.wzxy = Vec4(w, z, x, y); assert(Vec4(x, y, z, w) == u)
         u := i; u.wzyx = Vec4(w, z, y, x); assert(Vec4(x, y, z, w) == u)
+
         u := i; u.rg = Vec2(x, y); assert(Vec4(x, y, t, t) == u)
         u := i; u.rb = Vec2(x, z); assert(Vec4(x, t, z, t) == u)
         u := i; u.ra = Vec2(x, w); assert(Vec4(x, t, t, w) == u)
@@ -864,6 +1213,67 @@ class Vec4dSwizzleTest extends FunSuite {
         u := i; u.agbr = Vec4(w, y, z, x); assert(Vec4(x, y, z, w) == u)
         u := i; u.abrg = Vec4(w, z, x, y); assert(Vec4(x, y, z, w) == u)
         u := i; u.abgr = Vec4(w, z, y, x); assert(Vec4(x, y, z, w) == u)
+
+        u := i; u.st = Vec2(x, y); assert(Vec4(x, y, t, t) == u)
+        u := i; u.sp = Vec2(x, z); assert(Vec4(x, t, z, t) == u)
+        u := i; u.sq = Vec2(x, w); assert(Vec4(x, t, t, w) == u)
+        u := i; u.ts = Vec2(y, x); assert(Vec4(x, y, t, t) == u)
+        u := i; u.tp = Vec2(y, z); assert(Vec4(t, y, z, t) == u)
+        u := i; u.tq = Vec2(y, w); assert(Vec4(t, y, t, w) == u)
+        u := i; u.ps = Vec2(z, x); assert(Vec4(x, t, z, t) == u)
+        u := i; u.pt = Vec2(z, y); assert(Vec4(t, y, z, t) == u)
+        u := i; u.pq = Vec2(z, w); assert(Vec4(t, t, z, w) == u)
+        u := i; u.qs = Vec2(w, x); assert(Vec4(x, t, t, w) == u)
+        u := i; u.qt = Vec2(w, y); assert(Vec4(t, y, t, w) == u)
+        u := i; u.qp = Vec2(w, z); assert(Vec4(t, t, z, w) == u)
+        u := i; u.stp = Vec3(x, y, z); assert(Vec4(x, y, z, t) == u)
+        u := i; u.stq = Vec3(x, y, w); assert(Vec4(x, y, t, w) == u)
+        u := i; u.spt = Vec3(x, z, y); assert(Vec4(x, y, z, t) == u)
+        u := i; u.spq = Vec3(x, z, w); assert(Vec4(x, t, z, w) == u)
+        u := i; u.sqt = Vec3(x, w, y); assert(Vec4(x, y, t, w) == u)
+        u := i; u.sqp = Vec3(x, w, z); assert(Vec4(x, t, z, w) == u)
+        u := i; u.tsp = Vec3(y, x, z); assert(Vec4(x, y, z, t) == u)
+        u := i; u.tsq = Vec3(y, x, w); assert(Vec4(x, y, t, w) == u)
+        u := i; u.tps = Vec3(y, z, x); assert(Vec4(x, y, z, t) == u)
+        u := i; u.tpq = Vec3(y, z, w); assert(Vec4(t, y, z, w) == u)
+        u := i; u.tqs = Vec3(y, w, x); assert(Vec4(x, y, t, w) == u)
+        u := i; u.tqp = Vec3(y, w, z); assert(Vec4(t, y, z, w) == u)
+        u := i; u.pst = Vec3(z, x, y); assert(Vec4(x, y, z, t) == u)
+        u := i; u.psq = Vec3(z, x, w); assert(Vec4(x, t, z, w) == u)
+        u := i; u.pts = Vec3(z, y, x); assert(Vec4(x, y, z, t) == u)
+        u := i; u.ptq = Vec3(z, y, w); assert(Vec4(t, y, z, w) == u)
+        u := i; u.pqs = Vec3(z, w, x); assert(Vec4(x, t, z, w) == u)
+        u := i; u.pqt = Vec3(z, w, y); assert(Vec4(t, y, z, w) == u)
+        u := i; u.qst = Vec3(w, x, y); assert(Vec4(x, y, t, w) == u)
+        u := i; u.qsp = Vec3(w, x, z); assert(Vec4(x, t, z, w) == u)
+        u := i; u.qts = Vec3(w, y, x); assert(Vec4(x, y, t, w) == u)
+        u := i; u.qtp = Vec3(w, y, z); assert(Vec4(t, y, z, w) == u)
+        u := i; u.qps = Vec3(w, z, x); assert(Vec4(x, t, z, w) == u)
+        u := i; u.qpt = Vec3(w, z, y); assert(Vec4(t, y, z, w) == u)
+        u := i; u.stpq = Vec4(x, y, z, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.stqp = Vec4(x, y, w, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.sptq = Vec4(x, z, y, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.spqt = Vec4(x, z, w, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.sqtp = Vec4(x, w, y, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.sqpt = Vec4(x, w, z, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tspq = Vec4(y, x, z, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tsqp = Vec4(y, x, w, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tpsq = Vec4(y, z, x, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tpqs = Vec4(y, z, w, x); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tqsp = Vec4(y, w, x, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.tqps = Vec4(y, w, z, x); assert(Vec4(x, y, z, w) == u)
+        u := i; u.pstq = Vec4(z, x, y, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.psqt = Vec4(z, x, w, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.ptsq = Vec4(z, y, x, w); assert(Vec4(x, y, z, w) == u)
+        u := i; u.ptqs = Vec4(z, y, w, x); assert(Vec4(x, y, z, w) == u)
+        u := i; u.pqst = Vec4(z, w, x, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.pqts = Vec4(z, w, y, x); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qstp = Vec4(w, x, y, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qspt = Vec4(w, x, z, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qtsp = Vec4(w, y, x, z); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qtps = Vec4(w, y, z, x); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qpst = Vec4(w, z, x, y); assert(Vec4(x, y, z, w) == u)
+        u := i; u.qpts = Vec4(w, z, y, x); assert(Vec4(x, y, z, w) == u)
     }
     
     test("Swizzled self write") {
@@ -899,5 +1309,261 @@ class Vec4dSwizzleTest extends FunSuite {
         u := i; u.wyzx = u; assert(Vec4(w, y, z, x) == u)
         u := i; u.wzxy = u; assert(Vec4(z, w, y, x) == u)
         u := i; u.wzyx = u; assert(Vec4(w, z, y, x) == u)
+
+        u := i; u.rgba = u; assert(Vec4(x, y, z, w) == u)
+        u := i; u.rgab = u; assert(Vec4(x, y, w, z) == u)
+        u := i; u.rbga = u; assert(Vec4(x, z, y, w) == u)
+        u := i; u.rbag = u; assert(Vec4(x, w, y, z) == u)
+        u := i; u.ragb = u; assert(Vec4(x, z, w, y) == u)
+        u := i; u.rabg = u; assert(Vec4(x, w, z, y) == u)
+        u := i; u.grba = u; assert(Vec4(y, x, z, w) == u)
+        u := i; u.grab = u; assert(Vec4(y, x, w, z) == u)
+        u := i; u.gbra = u; assert(Vec4(z, x, y, w) == u)
+        u := i; u.gbar = u; assert(Vec4(w, x, y, z) == u)
+        u := i; u.garb = u; assert(Vec4(z, x, w, y) == u)
+        u := i; u.gabr = u; assert(Vec4(w, x, z, y) == u)
+        u := i; u.brga = u; assert(Vec4(y, z, x, w) == u)
+        u := i; u.brag = u; assert(Vec4(y, w, x, z) == u)
+        u := i; u.bgra = u; assert(Vec4(z, y, x, w) == u)
+        u := i; u.bgar = u; assert(Vec4(w, y, x, z) == u)
+        u := i; u.barg = u; assert(Vec4(z, w, x, y) == u)
+        u := i; u.bagr = u; assert(Vec4(w, z, x, y) == u)
+        u := i; u.argb = u; assert(Vec4(y, z, w, x) == u)
+        u := i; u.arbg = u; assert(Vec4(y, w, z, x) == u)
+        u := i; u.agrb = u; assert(Vec4(z, y, w, x) == u)
+        u := i; u.agbr = u; assert(Vec4(w, y, z, x) == u)
+        u := i; u.abrg = u; assert(Vec4(z, w, y, x) == u)
+        u := i; u.abgr = u; assert(Vec4(w, z, y, x) == u)
+
+        u := i; u.stpq = u; assert(Vec4(x, y, z, w) == u)
+        u := i; u.stqp = u; assert(Vec4(x, y, w, z) == u)
+        u := i; u.sptq = u; assert(Vec4(x, z, y, w) == u)
+        u := i; u.spqt = u; assert(Vec4(x, w, y, z) == u)
+        u := i; u.sqtp = u; assert(Vec4(x, z, w, y) == u)
+        u := i; u.sqpt = u; assert(Vec4(x, w, z, y) == u)
+        u := i; u.tspq = u; assert(Vec4(y, x, z, w) == u)
+        u := i; u.tsqp = u; assert(Vec4(y, x, w, z) == u)
+        u := i; u.tpsq = u; assert(Vec4(z, x, y, w) == u)
+        u := i; u.tpqs = u; assert(Vec4(w, x, y, z) == u)
+        u := i; u.tqsp = u; assert(Vec4(z, x, w, y) == u)
+        u := i; u.tqps = u; assert(Vec4(w, x, z, y) == u)
+        u := i; u.pstq = u; assert(Vec4(y, z, x, w) == u)
+        u := i; u.psqt = u; assert(Vec4(y, w, x, z) == u)
+        u := i; u.ptsq = u; assert(Vec4(z, y, x, w) == u)
+        u := i; u.ptqs = u; assert(Vec4(w, y, x, z) == u)
+        u := i; u.pqst = u; assert(Vec4(z, w, x, y) == u)
+        u := i; u.pqts = u; assert(Vec4(w, z, x, y) == u)
+        u := i; u.qstp = u; assert(Vec4(y, z, w, x) == u)
+        u := i; u.qspt = u; assert(Vec4(y, w, z, x) == u)
+        u := i; u.qtsp = u; assert(Vec4(z, y, w, x) == u)
+        u := i; u.qtps = u; assert(Vec4(w, y, z, x) == u)
+        u := i; u.qpst = u; assert(Vec4(z, w, y, x) == u)
+        u := i; u.qpts = u; assert(Vec4(w, z, y, x) == u)
+    }
+
+    // This test passes if it compiles
+    test("Swizzle as property") {
+        val u = Vec4(0)
+        val i = Vec2(1)
+        val j = Vec3(1)
+        val k = Vec4(1)
+
+        u.x += 1
+        u.y += 1
+        u.z += 1
+        u.w += 1
+
+        u.r += 1
+        u.g += 1
+        u.b += 1
+        u.a += 1
+
+        u.s += 1
+        u.t += 1
+        u.p += 1
+        u.q += 1
+        
+        u.xy += i
+        u.xz += i
+        u.xw += i
+        u.yx += i
+        u.yz += i
+        u.yw += i
+        u.zx += i
+        u.zy += i
+        u.zw += i
+        u.wx += i
+        u.wy += i
+        u.wz += i
+        u.xyz += j
+        u.xyw += j
+        u.xzy += j
+        u.xzw += j
+        u.xwy += j
+        u.xwz += j
+        u.yxz += j
+        u.yxw += j
+        u.yzx += j
+        u.yzw += j
+        u.ywx += j
+        u.ywz += j
+        u.zxy += j
+        u.zxw += j
+        u.zyx += j
+        u.zyw += j
+        u.zwx += j
+        u.zwy += j
+        u.wxy += j
+        u.wxz += j
+        u.wyx += j
+        u.wyz += j
+        u.wzx += j
+        u.wzy += j
+        u.xyzw += k
+        u.xywz += k
+        u.xzyw += k
+        u.xzwy += k
+        u.xwyz += k
+        u.xwzy += k
+        u.yxzw += k
+        u.yxwz += k
+        u.yzxw += k
+        u.yzwx += k
+        u.ywxz += k
+        u.ywzx += k
+        u.zxyw += k
+        u.zxwy += k
+        u.zyxw += k
+        u.zywx += k
+        u.zwxy += k
+        u.zwyx += k
+        u.wxyz += k
+        u.wxzy += k
+        u.wyxz += k
+        u.wyzx += k
+        u.wzxy += k
+        u.wzyx += k
+
+        u.rg += i
+        u.rb += i
+        u.ra += i
+        u.gr += i
+        u.gb += i
+        u.ga += i
+        u.br += i
+        u.bg += i
+        u.ba += i
+        u.ar += i
+        u.ag += i
+        u.ab += i
+        u.rgb += j
+        u.rga += j
+        u.rbg += j
+        u.rba += j
+        u.rag += j
+        u.rab += j
+        u.grb += j
+        u.gra += j
+        u.gbr += j
+        u.gba += j
+        u.gar += j
+        u.gab += j
+        u.brg += j
+        u.bra += j
+        u.bgr += j
+        u.bga += j
+        u.bar += j
+        u.bag += j
+        u.arg += j
+        u.arb += j
+        u.agr += j
+        u.agb += j
+        u.abr += j
+        u.abg += j
+        u.rgba += k
+        u.rgab += k
+        u.rbga += k
+        u.rbag += k
+        u.ragb += k
+        u.rabg += k
+        u.grba += k
+        u.grab += k
+        u.gbra += k
+        u.gbar += k
+        u.garb += k
+        u.gabr += k
+        u.brga += k
+        u.brag += k
+        u.bgra += k
+        u.bgar += k
+        u.barg += k
+        u.bagr += k
+        u.argb += k
+        u.arbg += k
+        u.agrb += k
+        u.agbr += k
+        u.abrg += k
+        u.abgr += k
+
+        u.st += i
+        u.sp += i
+        u.sq += i
+        u.ts += i
+        u.tp += i
+        u.tq += i
+        u.ps += i
+        u.pt += i
+        u.pq += i
+        u.qs += i
+        u.qt += i
+        u.qp += i
+        u.stp += j
+        u.stq += j
+        u.spt += j
+        u.spq += j
+        u.sqt += j
+        u.sqp += j
+        u.tsp += j
+        u.tsq += j
+        u.tps += j
+        u.tpq += j
+        u.tqs += j
+        u.tqp += j
+        u.pst += j
+        u.psq += j
+        u.pts += j
+        u.ptq += j
+        u.pqs += j
+        u.pqt += j
+        u.qst += j
+        u.qsp += j
+        u.qts += j
+        u.qtp += j
+        u.qps += j
+        u.qpt += j
+        u.stpq += k
+        u.stqp += k
+        u.sptq += k
+        u.spqt += k
+        u.sqtp += k
+        u.sqpt += k
+        u.tspq += k
+        u.tsqp += k
+        u.tpsq += k
+        u.tpqs += k
+        u.tqsp += k
+        u.tqps += k
+        u.pstq += k
+        u.psqt += k
+        u.ptsq += k
+        u.ptqs += k
+        u.pqst += k
+        u.pqts += k
+        u.qstp += k
+        u.qspt += k
+        u.qtsp += k
+        u.qtps += k
+        u.qpst += k
+        u.qpts += k
     }
 }

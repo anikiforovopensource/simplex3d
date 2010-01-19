@@ -20,6 +20,8 @@
 
 package bench.math
 
+import simplex3d.math.doublem.renamed._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -33,25 +35,35 @@ object SwizzleBench {
 class SwizzleBenchCase {
     def run() {
         val length = 10000
-        val loops = 50000
+        val loops = 100000
 
         var start = 0L
-
-        start = System.currentTimeMillis
-        testInlined(length, loops)
-        val inlinedTime = System.currentTimeMillis - start
         
         start = System.currentTimeMillis
         testTrait(length, loops)
         val traitTime = System.currentTimeMillis - start
 
         start = System.currentTimeMillis
+        testAbstract(length, loops)
+        val abstractTime = System.currentTimeMillis - start
+
+        start = System.currentTimeMillis
+        testInlined(length, loops)
+        val inlinedTime = System.currentTimeMillis - start
+
+        start = System.currentTimeMillis
+        testImplemented(length, loops)
+        val implementedTime = System.currentTimeMillis - start
+
+        start = System.currentTimeMillis
         testNoSwizzle(length, loops)
         val noSwizzleTime = System.currentTimeMillis - start
 
         println("Trait time: " + traitTime +
+                ", abstract time: " + abstractTime +
                 ", inlined time: " + inlinedTime +
-                ", no swizzle time: " + noSwizzleTime + ".")
+                ", no swizzle time: " + noSwizzleTime +
+                ", implemented time: " + implementedTime + ".")
     }
 
     def testTrait(length: Int, loops: Int) {
@@ -60,7 +72,28 @@ class SwizzleBenchCase {
 
         var l = 0; while (l < loops) {
             var i = 0; while (i < length) {
-                
+
+                // Bench code
+                val v = Vec4m(i, i + 1, i + 2, i + 3)
+                val u = v.yzwx
+                val r = v + u
+                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+                answer += l2.asInstanceOf[Int]
+
+                i += 1
+            }
+            l += 1
+        }
+
+        println(answer)
+    }
+
+    def testAbstract(length: Int, loops: Int) {
+        var answer = 0
+
+        var l = 0; while (l < loops) {
+            var i = 0; while (i < length) {
+
                 // Bench code
                 val v = Vec4m(i, i + 1, i + 2, i + 3)
                 val u = v.xyzw
@@ -84,7 +117,7 @@ class SwizzleBenchCase {
 
                 // Bench code
                 val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = v.wyzx
+                val u = v.zwxy
                 val r = v + u
                 val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
                 answer += l2.asInstanceOf[Int]
@@ -97,6 +130,27 @@ class SwizzleBenchCase {
         println(answer)
     }
 
+    def testImplemented(length: Int, loops: Int) {
+        var answer = 0
+
+        var l = 0; while (l < loops) {
+            var i = 0; while (i < length) {
+
+                // Bench code
+                val v = ConstVec4(i, i + 1, i + 2, i + 3)
+                val u = v.yzwx
+                val r = v + u
+                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+                answer += l2.asInstanceOf[Int]
+
+                i += 1
+            }
+            l += 1
+        }
+
+        println(answer)
+    }
+    
     def testNoSwizzle(length: Int, loops: Int) {
         var answer = 0
 
@@ -105,7 +159,7 @@ class SwizzleBenchCase {
 
                 // Bench code
                 val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = Vec4m(v.w, v.y, v.z, v.x)
+                val u = Vec4m(v.x, v.y, v.z, v.w)
                 val r = v + u
                 val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
                 answer += l2.asInstanceOf[Int]
@@ -119,9 +173,19 @@ class SwizzleBenchCase {
     }
 }
 
+abstract class AbsSwizzle[P, R] {
+    def x: P
+    def y: P
+    def z: P
+    def w: P
+    def absMake(x: P, y: P, z: P, w: P) :R
+
+    def xyzw = absMake(x, y, z, w)
+}
+
 // Modified Vec4
-class Vec4m(var x: Double, var y: Double, var z: Double, var w: Double)
-extends ReadDouble
+final class Vec4m(var x: Double, var y: Double, var z: Double, var w: Double)
+extends AbsSwizzle[Double, Vec4m] with ReadDouble
 {
     def +(u: Vec4m) = new Vec4m(x + u.x, y + u.y, z + u.z, w + u.w)
     def add(u: Vec4m, r: Vec4m) = {
@@ -132,7 +196,10 @@ extends ReadDouble
         r
     }
 
-    def wyzx = new Vec4m(w, y, z, x)
+    def zwxy = new Vec4m(z, w, x, y)
+
+    def absMake(x: Double, y: Double, z: Double, w: Double) :Vec4m =
+        new Vec4m(x, y, z, w)
 }
 
 object Vec4m {
@@ -163,7 +230,7 @@ trait Swizzle4[P, R] extends VecFactory[P, R] {
     def z: P
     def w: P
 
-    def xyzw: R = make(x, y, z, w)
+    def yzwx: R = make(y, z, w, x)
 }
 
 trait VecFactory[P, R] {

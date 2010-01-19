@@ -42,6 +42,9 @@ class Vec2iSwizzleTest extends FunSuite {
         expect(x) { u.r }
         expect(y) { u.g }
 
+        expect(x) { u.s }
+        expect(y) { u.t }
+
         assert(Vec2i(x, x) == u.xx)
         assert(Vec2i(x, y) == u.xy)
         assert(Vec2i(y, x) == u.yx)
@@ -103,6 +106,37 @@ class Vec2iSwizzleTest extends FunSuite {
         assert(Vec4i(y, y, x, y) == u.ggrg)
         assert(Vec4i(y, y, y, x) == u.gggr)
         assert(Vec4i(y, y, y, y) == u.gggg)
+
+        assert(Vec2i(x, x) == u.ss)
+        assert(Vec2i(x, y) == u.st)
+        assert(Vec2i(y, x) == u.ts)
+        assert(Vec2i(y, y) == u.tt)
+
+        assert(Vec3i(x, x, x) == u.sss)
+        assert(Vec3i(x, x, y) == u.sst)
+        assert(Vec3i(x, y, x) == u.sts)
+        assert(Vec3i(x, y, y) == u.stt)
+        assert(Vec3i(y, x, x) == u.tss)
+        assert(Vec3i(y, x, y) == u.tst)
+        assert(Vec3i(y, y, x) == u.tts)
+        assert(Vec3i(y, y, y) == u.ttt)
+
+        assert(Vec4i(x, x, x, x) == u.ssss)
+        assert(Vec4i(x, x, x, y) == u.ssst)
+        assert(Vec4i(x, x, y, x) == u.ssts)
+        assert(Vec4i(x, x, y, y) == u.sstt)
+        assert(Vec4i(x, y, x, x) == u.stss)
+        assert(Vec4i(x, y, x, y) == u.stst)
+        assert(Vec4i(x, y, y, x) == u.stts)
+        assert(Vec4i(x, y, y, y) == u.sttt)
+        assert(Vec4i(y, x, x, x) == u.tsss)
+        assert(Vec4i(y, x, x, y) == u.tsst)
+        assert(Vec4i(y, x, y, x) == u.tsts)
+        assert(Vec4i(y, x, y, y) == u.tstt)
+        assert(Vec4i(y, y, x, x) == u.ttss)
+        assert(Vec4i(y, y, x, y) == u.ttst)
+        assert(Vec4i(y, y, y, x) == u.ttts)
+        assert(Vec4i(y, y, y, y) == u.tttt)
     }
 
     test("Swizzled write") {
@@ -119,6 +153,9 @@ class Vec2iSwizzleTest extends FunSuite {
         u := i; u.r = t; assert(Vec2i(t, y) == u)
         u := i; u.g = t; assert(Vec2i(x, t) == u)
 
+        u := i; u.s = t; assert(Vec2i(t, y) == u)
+        u := i; u.t = t; assert(Vec2i(x, t) == u)
+
         i = Vec2i(t)
 
         u := i; u.xy = Vec2i(x, y); assert(Vec2i(x, y) == u)
@@ -126,6 +163,9 @@ class Vec2iSwizzleTest extends FunSuite {
 
         u := i; u.rg = Vec2i(x, y); assert(Vec2i(x, y) == u)
         u := i; u.gr = Vec2i(x, y); assert(Vec2i(y, x) == u)
+
+        u := i; u.st = Vec2i(x, y); assert(Vec2i(x, y) == u)
+        u := i; u.ts = Vec2i(x, y); assert(Vec2i(y, x) == u)
     }
 
     test("Swizzled self write") {
@@ -137,5 +177,35 @@ class Vec2iSwizzleTest extends FunSuite {
 
         u := i; u.xy = u; assert(Vec2i(x, y) == u)
         u := i; u.yx = u; assert(Vec2i(y, x) == u)
+
+        u := i; u.rg = u; assert(Vec2i(x, y) == u)
+        u := i; u.gr = u; assert(Vec2i(y, x) == u)
+
+        u := i; u.st = u; assert(Vec2i(x, y) == u)
+        u := i; u.ts = u; assert(Vec2i(y, x) == u)
+    }
+
+    // This test passes if it compiles
+    test("Swizzle as property") {
+        val u = Vec2i(0)
+        val i = Vec2i(1)
+
+        u.x += 1
+        u.y += 1
+
+        u.r += 1
+        u.g += 1
+
+        u.s += 1
+        u.t += 1
+
+        u.xy += i
+        u.yx += i
+
+        u.rg += i
+        u.gr += i
+
+        u.st += i
+        u.ts += i
     }
 }

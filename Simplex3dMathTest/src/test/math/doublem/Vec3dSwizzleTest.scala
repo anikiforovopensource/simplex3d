@@ -45,6 +45,10 @@ class Vec3dSwizzleTest extends FunSuite {
         expect(y) { u.g }
         expect(z) { u.b }
 
+        expect(x) { u.s }
+        expect(y) { u.t }
+        expect(z) { u.p }
+
         assert(Vec2(x, x) == u.xx)
         assert(Vec2(x, y) == u.xy)
         assert(Vec2(x, z) == u.xz)
@@ -162,6 +166,7 @@ class Vec3dSwizzleTest extends FunSuite {
         assert(Vec4(z, z, z, x) == u.zzzx)
         assert(Vec4(z, z, z, y) == u.zzzy)
         assert(Vec4(z, z, z, z) == u.zzzz)
+
         assert(Vec2(x, x) == u.rr)
         assert(Vec2(x, y) == u.rg)
         assert(Vec2(x, z) == u.rb)
@@ -279,6 +284,124 @@ class Vec3dSwizzleTest extends FunSuite {
         assert(Vec4(z, z, z, x) == u.bbbr)
         assert(Vec4(z, z, z, y) == u.bbbg)
         assert(Vec4(z, z, z, z) == u.bbbb)
+
+        assert(Vec2(x, x) == u.ss)
+        assert(Vec2(x, y) == u.st)
+        assert(Vec2(x, z) == u.sp)
+        assert(Vec2(y, x) == u.ts)
+        assert(Vec2(y, y) == u.tt)
+        assert(Vec2(y, z) == u.tp)
+        assert(Vec2(z, x) == u.ps)
+        assert(Vec2(z, y) == u.pt)
+        assert(Vec2(z, z) == u.pp)
+        assert(Vec3(x, x, x) == u.sss)
+        assert(Vec3(x, x, y) == u.sst)
+        assert(Vec3(x, x, z) == u.ssp)
+        assert(Vec3(x, y, x) == u.sts)
+        assert(Vec3(x, y, y) == u.stt)
+        assert(Vec3(x, y, z) == u.stp)
+        assert(Vec3(x, z, x) == u.sps)
+        assert(Vec3(x, z, y) == u.spt)
+        assert(Vec3(x, z, z) == u.spp)
+        assert(Vec3(y, x, x) == u.tss)
+        assert(Vec3(y, x, y) == u.tst)
+        assert(Vec3(y, x, z) == u.tsp)
+        assert(Vec3(y, y, x) == u.tts)
+        assert(Vec3(y, y, y) == u.ttt)
+        assert(Vec3(y, y, z) == u.ttp)
+        assert(Vec3(y, z, x) == u.tps)
+        assert(Vec3(y, z, y) == u.tpt)
+        assert(Vec3(y, z, z) == u.tpp)
+        assert(Vec3(z, x, x) == u.pss)
+        assert(Vec3(z, x, y) == u.pst)
+        assert(Vec3(z, x, z) == u.psp)
+        assert(Vec3(z, y, x) == u.pts)
+        assert(Vec3(z, y, y) == u.ptt)
+        assert(Vec3(z, y, z) == u.ptp)
+        assert(Vec3(z, z, x) == u.pps)
+        assert(Vec3(z, z, y) == u.ppt)
+        assert(Vec3(z, z, z) == u.ppp)
+        assert(Vec4(x, x, x, x) == u.ssss)
+        assert(Vec4(x, x, x, y) == u.ssst)
+        assert(Vec4(x, x, x, z) == u.sssp)
+        assert(Vec4(x, x, y, x) == u.ssts)
+        assert(Vec4(x, x, y, y) == u.sstt)
+        assert(Vec4(x, x, y, z) == u.sstp)
+        assert(Vec4(x, x, z, x) == u.ssps)
+        assert(Vec4(x, x, z, y) == u.sspt)
+        assert(Vec4(x, x, z, z) == u.sspp)
+        assert(Vec4(x, y, x, x) == u.stss)
+        assert(Vec4(x, y, x, y) == u.stst)
+        assert(Vec4(x, y, x, z) == u.stsp)
+        assert(Vec4(x, y, y, x) == u.stts)
+        assert(Vec4(x, y, y, y) == u.sttt)
+        assert(Vec4(x, y, y, z) == u.sttp)
+        assert(Vec4(x, y, z, x) == u.stps)
+        assert(Vec4(x, y, z, y) == u.stpt)
+        assert(Vec4(x, y, z, z) == u.stpp)
+        assert(Vec4(x, z, x, x) == u.spss)
+        assert(Vec4(x, z, x, y) == u.spst)
+        assert(Vec4(x, z, x, z) == u.spsp)
+        assert(Vec4(x, z, y, x) == u.spts)
+        assert(Vec4(x, z, y, y) == u.sptt)
+        assert(Vec4(x, z, y, z) == u.sptp)
+        assert(Vec4(x, z, z, x) == u.spps)
+        assert(Vec4(x, z, z, y) == u.sppt)
+        assert(Vec4(x, z, z, z) == u.sppp)
+        assert(Vec4(y, x, x, x) == u.tsss)
+        assert(Vec4(y, x, x, y) == u.tsst)
+        assert(Vec4(y, x, x, z) == u.tssp)
+        assert(Vec4(y, x, y, x) == u.tsts)
+        assert(Vec4(y, x, y, y) == u.tstt)
+        assert(Vec4(y, x, y, z) == u.tstp)
+        assert(Vec4(y, x, z, x) == u.tsps)
+        assert(Vec4(y, x, z, y) == u.tspt)
+        assert(Vec4(y, x, z, z) == u.tspp)
+        assert(Vec4(y, y, x, x) == u.ttss)
+        assert(Vec4(y, y, x, y) == u.ttst)
+        assert(Vec4(y, y, x, z) == u.ttsp)
+        assert(Vec4(y, y, y, x) == u.ttts)
+        assert(Vec4(y, y, y, y) == u.tttt)
+        assert(Vec4(y, y, y, z) == u.tttp)
+        assert(Vec4(y, y, z, x) == u.ttps)
+        assert(Vec4(y, y, z, y) == u.ttpt)
+        assert(Vec4(y, y, z, z) == u.ttpp)
+        assert(Vec4(y, z, x, x) == u.tpss)
+        assert(Vec4(y, z, x, y) == u.tpst)
+        assert(Vec4(y, z, x, z) == u.tpsp)
+        assert(Vec4(y, z, y, x) == u.tpts)
+        assert(Vec4(y, z, y, y) == u.tptt)
+        assert(Vec4(y, z, y, z) == u.tptp)
+        assert(Vec4(y, z, z, x) == u.tpps)
+        assert(Vec4(y, z, z, y) == u.tppt)
+        assert(Vec4(y, z, z, z) == u.tppp)
+        assert(Vec4(z, x, x, x) == u.psss)
+        assert(Vec4(z, x, x, y) == u.psst)
+        assert(Vec4(z, x, x, z) == u.pssp)
+        assert(Vec4(z, x, y, x) == u.psts)
+        assert(Vec4(z, x, y, y) == u.pstt)
+        assert(Vec4(z, x, y, z) == u.pstp)
+        assert(Vec4(z, x, z, x) == u.psps)
+        assert(Vec4(z, x, z, y) == u.pspt)
+        assert(Vec4(z, x, z, z) == u.pspp)
+        assert(Vec4(z, y, x, x) == u.ptss)
+        assert(Vec4(z, y, x, y) == u.ptst)
+        assert(Vec4(z, y, x, z) == u.ptsp)
+        assert(Vec4(z, y, y, x) == u.ptts)
+        assert(Vec4(z, y, y, y) == u.pttt)
+        assert(Vec4(z, y, y, z) == u.pttp)
+        assert(Vec4(z, y, z, x) == u.ptps)
+        assert(Vec4(z, y, z, y) == u.ptpt)
+        assert(Vec4(z, y, z, z) == u.ptpp)
+        assert(Vec4(z, z, x, x) == u.ppss)
+        assert(Vec4(z, z, x, y) == u.ppst)
+        assert(Vec4(z, z, x, z) == u.ppsp)
+        assert(Vec4(z, z, y, x) == u.ppts)
+        assert(Vec4(z, z, y, y) == u.pptt)
+        assert(Vec4(z, z, y, z) == u.pptp)
+        assert(Vec4(z, z, z, x) == u.ppps)
+        assert(Vec4(z, z, z, y) == u.pppt)
+        assert(Vec4(z, z, z, z) == u.pppp)
     }
 
     test("Swizzled write") {
@@ -298,6 +421,10 @@ class Vec3dSwizzleTest extends FunSuite {
         u := i; u.g = t; assert(Vec3(x, t, z) == u)
         u := i; u.b = t; assert(Vec3(x, y, t) == u)
 
+        u := i; u.s = t; assert(Vec3(t, y, z) == u)
+        u := i; u.t = t; assert(Vec3(x, t, z) == u)
+        u := i; u.p = t; assert(Vec3(x, y, t) == u)
+
         i = Vec3(t)
 
         u := i; u.xy = Vec2(x, y); assert(Vec3(x, y, t) == u)
@@ -312,6 +439,7 @@ class Vec3dSwizzleTest extends FunSuite {
         u := i; u.yzx = Vec3(y, z, x); assert(Vec3(x, y, z) == u)
         u := i; u.zxy = Vec3(z, x, y); assert(Vec3(x, y, z) == u)
         u := i; u.zyx = Vec3(z, y, x); assert(Vec3(x, y, z) == u)
+
         u := i; u.rg = Vec2(x, y); assert(Vec3(x, y, t) == u)
         u := i; u.rb = Vec2(x, z); assert(Vec3(x, t, z) == u)
         u := i; u.gr = Vec2(y, x); assert(Vec3(x, y, t) == u)
@@ -324,6 +452,19 @@ class Vec3dSwizzleTest extends FunSuite {
         u := i; u.gbr = Vec3(y, z, x); assert(Vec3(x, y, z) == u)
         u := i; u.brg = Vec3(z, x, y); assert(Vec3(x, y, z) == u)
         u := i; u.bgr = Vec3(z, y, x); assert(Vec3(x, y, z) == u)
+
+        u := i; u.st = Vec2(x, y); assert(Vec3(x, y, t) == u)
+        u := i; u.sp = Vec2(x, z); assert(Vec3(x, t, z) == u)
+        u := i; u.ts = Vec2(y, x); assert(Vec3(x, y, t) == u)
+        u := i; u.tp = Vec2(y, z); assert(Vec3(t, y, z) == u)
+        u := i; u.ps = Vec2(z, x); assert(Vec3(x, t, z) == u)
+        u := i; u.pt = Vec2(z, y); assert(Vec3(t, y, z) == u)
+        u := i; u.stp = Vec3(x, y, z); assert(Vec3(x, y, z) == u)
+        u := i; u.spt = Vec3(x, z, y); assert(Vec3(x, y, z) == u)
+        u := i; u.tsp = Vec3(y, x, z); assert(Vec3(x, y, z) == u)
+        u := i; u.tps = Vec3(y, z, x); assert(Vec3(x, y, z) == u)
+        u := i; u.pst = Vec3(z, x, y); assert(Vec3(x, y, z) == u)
+        u := i; u.pts = Vec3(z, y, x); assert(Vec3(x, y, z) == u)
     }
 
     test("Swizzled self write") {
@@ -340,5 +481,77 @@ class Vec3dSwizzleTest extends FunSuite {
         u := i; u.yzx = u; assert(Vec3(z, x, y) == u)
         u := i; u.zxy = u; assert(Vec3(y, z, x) == u)
         u := i; u.zyx = u; assert(Vec3(z, y, x) == u)
+
+        u := i; u.rgb = u; assert(Vec3(x, y, z) == u)
+        u := i; u.rbg = u; assert(Vec3(x, z, y) == u)
+        u := i; u.grb = u; assert(Vec3(y, x, z) == u)
+        u := i; u.gbr = u; assert(Vec3(z, x, y) == u)
+        u := i; u.brg = u; assert(Vec3(y, z, x) == u)
+        u := i; u.bgr = u; assert(Vec3(z, y, x) == u)
+
+        u := i; u.stp = u; assert(Vec3(x, y, z) == u)
+        u := i; u.spt = u; assert(Vec3(x, z, y) == u)
+        u := i; u.tsp = u; assert(Vec3(y, x, z) == u)
+        u := i; u.tps = u; assert(Vec3(z, x, y) == u)
+        u := i; u.pst = u; assert(Vec3(y, z, x) == u)
+        u := i; u.pts = u; assert(Vec3(z, y, x) == u)
+    }
+
+    // This test passes if it compiles
+    test("Swizzle as property") {
+        val u = Vec3(0)
+        val i = Vec2(1)
+        val j = Vec3(1)
+
+        u.x += 1
+        u.y += 1
+        u.z += 1
+
+        u.r += 1
+        u.g += 1
+        u.b += 1
+
+        u.s += 1
+        u.t += 1
+        u.p += 1
+
+        u.xy += i
+        u.xz += i
+        u.yx += i
+        u.yz += i
+        u.zx += i
+        u.zy += i
+        u.xyz += j
+        u.xzy += j
+        u.yxz += j
+        u.yzx += j
+        u.zxy += j
+        u.zyx += j
+
+        u.rg += i
+        u.rb += i
+        u.gr += i
+        u.gb += i
+        u.br += i
+        u.bg += i
+        u.rgb += j
+        u.rbg += j
+        u.grb += j
+        u.gbr += j
+        u.brg += j
+        u.bgr += j
+
+        u.st += i
+        u.sp += i
+        u.ts += i
+        u.tp += i
+        u.ps += i
+        u.pt += i
+        u.stp += j
+        u.spt += j
+        u.tsp += j
+        u.tps += j
+        u.pst += j
+        u.pts += j
     }
 }

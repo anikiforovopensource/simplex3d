@@ -63,7 +63,10 @@ object FloatMath {
     def cosh(x: Float) :Float = float(SMath.cosh(x))
     def tanh(x: Float) :Float = float(SMath.tanh(x))
 
-    def asinh(x: Float) :Float = float(SMath.log(x + SMath.sqrt(x*x + 1)))
+    def asinh(x: Float) :Float = {
+        if (isneginf(x)) x
+        else float(SMath.log(x + SMath.sqrt(x*x + 1)))
+    }
     def acosh(x: Float) :Float = float(SMath.log(x + SMath.sqrt(x*x - 1)))
     def atanh(x: Float) :Float = float(0.5*SMath.log((1 + x)/(1 - x)))
 
@@ -77,38 +80,59 @@ object FloatMath {
     def sqrt(s: Float) :Float = float(SMath.sqrt(s))
     def inversesqrt(s: Float) :Float = float(1/SMath.sqrt(s))
 
-    def abs(x: Float) :Float = { if (x < 0) -x else x }
-    def sign(x: Float) :Float = if (x == 0) 0f else if (x > 0) 1f else -1f
-    def floor(x: Float) :Float = {
-        val i = long(x)
-        if (x > 0 || x == i) i else i - 1
+    def abs(x: Float) :Float = { if (x > 0) x else -x }
+    def sign(x: Float) :Float = {
+        if (x > 0) 1f
+        else if (x < 0) -1f
+        else if (x == 0) 0f
+        else x
     }
-    def trunc(x: Float) :Float = long(x)
+    def floor(x: Float) :Float = {
+        if (x > Int.MaxValue || x < Int.MinValue) x
+        else {
+            val i = int(x)
+            if (x > 0 || x == i) i else if(isnan(x)) x else i - 1
+        }
+    }
+    def trunc(x: Float) :Float = {
+        if (x > Int.MaxValue || x < Int.MinValue || isnan(x)) x
+        else int(x)
+    }
     def round(x: Float) :Float = {
-        if (x >= 0) long(x + 0.5f)
-        else long(x - 0.5f)
+        if (x > Int.MaxValue || x < Int.MinValue) x
+        else if (x >= 0) int(x + 0.5f)
+        else if (isnan(x)) x
+        else int(x - 0.5f)
     }
     def roundEven(x: Float) :Float = float(SMath.rint(x))
     def ceil(x: Float) :Float = {
-        val i = long(x)
-        if (x < 0 || x == i) i else i + 1
+        if (x > Int.MaxValue) x
+        else if (x < Int.MinValue) x
+        else {
+            val i = int(x)
+            if (x < 0 || x == i) i else if (isnan(x)) x else i + 1
+        }
     }
     /**
      * Equivalent to <code>x - floor(x)</code>
      */
-    def fract(x: Float) :Float = x - floor(x)
+    def fract(x: Float) :Float = {
+        if (isinf(x)) 0
+        else x - floor(x)
+    }
     /**
      * Equivalent to <code>x - y*floor(x/y)</code>
      */
     def mod(x: Float, y: Float) :Float = {
-        x - y*floor(x/y)
+        if (isinf(x)) Float.NaN
+        else x - y*floor(x/y)
     }
     
     //not supported: lack of pointers
     //def modf(x: Float, i: Float) :Float = 0
 
-    def min(x: Float, y: Float) :Float = if (y < x) y else x
-    def max(x: Float, y: Float) :Float = if (y > x) y else x
+    def min(x: Float, y: Float) :Float = if (y < x || isnan(y)) y else x
+    def max(x: Float, y: Float) :Float = if (y > x || isnan(y)) y else x
     def clamp(x: Float, minVal: Float, maxVal: Float) :Float = {
         if (x <= minVal) minVal
         else if (x >= maxVal) maxVal
@@ -116,7 +140,7 @@ object FloatMath {
     }
 
     def mix(x: Float, y: Float, a: Float) :Float = x*(1 - a) + y*a
-    def step(edge: Float, x: Float) :Float = if (x < edge) 0 else 1
+    def step(edge: Float, x: Float) :Float = if (x < edge) 0 else if (isnan(x)) x else 1
     def smoothstep(edge0: Float, edge1: Float, x: Float) :Float = {
         if (x <= edge0) 0
         else if (x >= edge1) 1
@@ -1239,6 +1263,9 @@ object FloatMath {
     }
 
     // *** Extra Math functions ************************************************
+
+    def isposinf(x: Float) :Boolean = isinf(x) && x > 0
+    def isneginf(x: Float) :Boolean = isinf(x) && x < 0
 
     // Lerp
     def lerp(x: Float, y: Float, a: Float) = mix(x, y, a)

@@ -77,38 +77,59 @@ object DoubleMath {
     def sqrt(s: Double) :Double = SMath.sqrt(s)
     def inversesqrt(s: Double) :Double = 1/SMath.sqrt(s)
 
-    def abs(x: Double) :Double = { if (x < 0) -x else x }
-    def sign(x: Double) :Double = if (x == 0) 0d else if (x > 0) 1d else -1d
-    def floor(x: Double) :Double = {
-        val i = long(x)
-        if (x > 0 || x == i) i else i - 1
+    def abs(x: Double) :Double = { if (x > 0) x else -x }
+    def sign(x: Double) :Double = {
+        if (x > 0) 1d
+        else if (x < 0) -1d
+        else if (x == 0) 0d
+        else x
     }
-    def trunc(x: Double) :Double = long(x)
+    def floor(x: Double) :Double = {
+        if (x > Long.MaxValue || x < Long.MinValue) x
+        else {
+            val i = long(x)
+            if (x > 0 || x == i) i else if(isnan(x)) x else i - 1
+        }
+    }
+    def trunc(x: Double) :Double = {
+        if (x > Long.MaxValue || x < Long.MinValue || isnan(x)) x
+        else long(x)
+    }
     def round(x: Double) :Double = {
-        if (x >= 0) long(x + 0.5)
+        if (x > Long.MaxValue || x < Long.MinValue) x
+        else if (x >= 0) long(x + 0.5)
+        else if (isnan(x)) x
         else long(x - 0.5)
     }
     def roundEven(x: Double) :Double = SMath.rint(x)
     def ceil(x: Double) :Double = {
-        val i = long(x)
-        if (x < 0 || x == i) i else i + 1
+        if (x > Long.MaxValue) x
+        else if (x < Long.MinValue) x
+        else {
+            val i = long(x)
+            if (x < 0 || x == i) i else if (isnan(x)) x else i + 1
+        }
     }
     /**
      * Equivalent to <code>x - floor(x)</code>
      */
-    def fract(x: Double) :Double = x - floor(x)
+    def fract(x: Double) :Double = {
+        if (isinf(x)) 0
+        else x - floor(x)
+    }
     /**
      * Equivalent to <code>x - y*floor(x/y)</code>
      */
     def mod(x: Double, y: Double) :Double = {
-        x - y*floor(x/y)
+        if (isinf(x)) Double.NaN
+        else x - y*floor(x/y)
     }
 
     //not supported: lack of pointers
     //def modf(x: Double, i: Double) :Double = 0
 
-    def min(x: Double, y: Double) :Double = if (y < x) y else x
-    def max(x: Double, y: Double) :Double = if (y > x) y else x
+    def min(x: Double, y: Double) :Double = if (y < x || isnan(y)) y else x
+    def max(x: Double, y: Double) :Double = if (y > x || isnan(y)) y else x
     def clamp(x: Double, minVal: Double, maxVal: Double) :Double = {
         if (x <= minVal) minVal
         else if (x >= maxVal) maxVal
@@ -116,7 +137,7 @@ object DoubleMath {
     }
 
     def mix(x: Double, y: Double, a: Double) :Double = x*(1 - a) + y*a
-    def step(edge: Double, x: Double) :Double = if (x < edge) 0 else 1
+    def step(edge: Double, x: Double) :Double = if (x < edge) 0 else if (isnan(x)) x else 1
     def smoothstep(edge0: Double, edge1: Double, x: Double) :Double = {
         if (x <= edge0) 0
         else if (x >= edge1) 1
@@ -1241,6 +1262,9 @@ object DoubleMath {
     }
 
     // *** Extra Math functions ************************************************
+
+    def isposinf(x: Double) :Boolean = isinf(x) && x > 0
+    def isneginf(x: Double) :Boolean = isinf(x) && x < 0
 
     // Lerp
     def lerp(x: Double, y: Double, a: Double) = mix(x, y, a)

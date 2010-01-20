@@ -171,7 +171,8 @@ public class SimplexNoise {
      * @return
      */
     private static final int fastfloor(double x) {
-        return x > 0 ? (int) x : (int) x - 1;
+        int i = (int) x;
+        return (x > 0 || x == i) ? i : i - 1;
     }
 
     /**

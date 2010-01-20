@@ -33,7 +33,7 @@ object Noise1Test {
         val scale = 1.0/50
         val speed = 1.0/3
 
-        FunFrame.launch(new Fun { 
+        FunFrame.launch(new Fun {
         final def apply(pixel: AnyVec2, t: Double) = {
             Vec3((noise1(Vec3(pixel*scale, t*speed)) + 1)/2)
         }})

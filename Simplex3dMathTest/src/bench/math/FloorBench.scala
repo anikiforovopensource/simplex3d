@@ -28,7 +28,7 @@ import java.lang.StrictMath
  */
 object FloorBench {
     def main(args: Array[String]) {
-        new FloorFloat().run()
+        new FloorDouble().run()
     }
 }
 
@@ -51,9 +51,12 @@ class FloorFloat {
                 ", regular time: " + regularTime + ".")
     }
 
-    def floorOpt(x: Float) = {
-        val i = long(x)
-        if (x > 0 || x == i) i else i - 1
+    def floorOpt(x: Float) :Float = {
+        if (x > Int.MaxValue || x < Int.MinValue) x
+        else {
+            val i = int(x)
+            if (x > 0 || x == i) i else if(java.lang.Float.isNaN(x)) x else i - 1
+        }
     }
 
     def testRegular(length: Int, loops: Int) {
@@ -63,7 +66,7 @@ class FloorFloat {
             var i = 0; while (i < length - 1) {
 
                 // Bench code
-                answer += int(StrictMath.floor((i + 0.12345f)*100)/23.4567f)
+                answer += int(StrictMath.floor((-i + 0.12345f)*100)/23.4567f)
 
                 i += 1
             }
@@ -80,7 +83,7 @@ class FloorFloat {
             var i = 0; while (i < length - 1) {
 
                 // Bench code
-                answer += int(floorOpt((i + 0.12345f)*100)/23.4567f)
+                answer += int(floorOpt((-i + 0.12345f)*100)/23.4567f)
 
                 i += 1
             }
@@ -110,9 +113,12 @@ class FloorDouble {
                 ", regular time: " + regularTime + ".")
     }
 
-    def floorOpt(x: Double) = {
-        val i = long(x)
-        if (x > 0 || x == i) i else i - 1
+    def floorOpt(x: Double) :Double = {
+        if (x > Long.MaxValue || x < Long.MinValue) x
+        else {
+            val i = long(x)
+            if (x > 0 || x == i) i else if(java.lang.Double.isNaN(x)) x else i - 1
+        }
     }
 
     def testRegular(length: Int, loops: Int) {
@@ -122,7 +128,7 @@ class FloorDouble {
             var i = 0; while (i < length - 1) {
 
                 // Bench code
-                answer += int(StrictMath.floor((i + 0.12345)*100)/23.4567)
+                answer += int(StrictMath.floor((-i + 0.12345)*100)/23.4567)
 
                 i += 1
             }
@@ -139,7 +145,7 @@ class FloorDouble {
             var i = 0; while (i < length - 1) {
 
                 // Bench code
-                answer += int(floorOpt((i + 0.12345)*100)/23.4567)
+                answer += int(floorOpt((-i + 0.12345)*100)/23.4567)
 
                 i += 1
             }

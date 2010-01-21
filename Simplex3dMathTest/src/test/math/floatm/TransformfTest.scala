@@ -31,54 +31,32 @@ import simplex3d.math.floatm.FloatMath._
  */
 class TransformfTest extends FunSuite {
 
-    test("Transform, InverseTransform, Translation, Rotation, and Scale factories")
+    test("2D: Transform, InverseTransform, Translation, Rotation, and Scale factories")
     {
         val vectorsPerTransform = 100
         val randomRuns = 1000
         val vectorTolerance = 1e-5f;
 
-        var total2 = 0
-        var total3 = 0
-
-        var badCount2 = 0
-        var badCount3 = 0
+        var total = 0
+        var badCount = 0
 
         val random = new java.util.Random
         import random._
         def float = nextFloat
         def vec2 = Vec2(float, float)
-        def vec3 = Vec3(float, float, float)
-        def vec4 = Vec4(float, float, float, float)
-        def quat4 = normalize(Quat4(vec4))
-        def axis = normalize(vec3)
-        // Note: from this point on, all the float, vec2, and vec3
-        // are coming from random.float, random.vec2, and random.vec3
+        // Note: from this point on, all the float and vec2 are random.
 
         def testTransforms2(m: AnyMat2x3, mcheck: AnyMat2x3, invm: AnyMat2x3) {
             assert(approxEqual(m, mcheck, 1e-6f))
             assert(!approxEqual(m, invm, 1e-2f))
             assert(approxEqual(m*invm, Mat2x3(1), 1e-5f))
-            
+
             for (i <- 0 until vectorsPerTransform) {
-                total2 += 1
+                total += 1
                 val v0 = vec2
                 val tv = m.transformPoint(v0)
                 val v1 = invm.transformPoint(tv)
-                if (!approxEqual(v0, v1, vectorTolerance)) badCount2 += 1
-            }
-        }
-        
-        def testTransforms3(m: AnyMat3x4, mcheck: AnyMat3x4, invm: AnyMat3x4) {
-            assert(approxEqual(m, mcheck, 1e-6f))
-            assert(!approxEqual(m, invm, 1e-2f))
-            assert(approxEqual(m*invm, Mat3x4(1), 1e-6f))
-
-            for (i <- 0 until vectorsPerTransform) {
-                total3 += 1
-                val v0 = vec3
-                val tv = m.transformPoint(v0)
-                val v1 = invm.transformPoint(tv)
-                if (!approxEqual(v0, v1, vectorTolerance)) badCount3 += 1
+                if (!approxEqual(v0, v1, vectorTolerance)) badCount += 1
             }
         }
 
@@ -86,191 +64,229 @@ class TransformfTest extends FunSuite {
         var mc2 = Mat2x3(1)
         var invm2 = Mat2x3(1)
 
-        var m3 = Mat3x4(1)
-        var mc3 = Mat3x4(1)
-        var invm3 = Mat3x4(1)
-
-        // 28 Transform.apply total
-
         for (s <- 0 until randomRuns) {
 
 // 2D
-// Transform(translation: AnyVec2, angle: Float, scale: AnyVec2)
-setSeed(s); m2 = Transform(vec2, float, vec2)
-setSeed(s); mc2 = Translation(vec2)*Rotation(float)*Scale(vec2)
-setSeed(s); invm2 = InverseTransform(vec2, float, vec2)
+// Transform2(translation: AnyVec2, angle: Float, scale: AnyVec2)
+setSeed(s); m2 = Transform2(vec2, float, vec2)
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)*Scale2(vec2)
+setSeed(s); invm2 = InverseTransform2(vec2, float, vec2)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, rotation: AnyMat2, scale: AnyVec2)
-setSeed(s); m2 = Transform(vec2, rotationMatFrom(float), vec2)
-setSeed(s); mc2 = Translation(vec2)*rotationMatFrom(float)*Scale(vec2)
-setSeed(s); invm2 = InverseTransform(vec2, rotationMatFrom(float), vec2)
+// Transform2(translation: AnyVec2, rotation: AnyMat2, scale: AnyVec2)
+setSeed(s); m2 = Transform2(vec2, rotationMatFrom(float), vec2)
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)*Scale2(vec2)
+setSeed(s); invm2 = InverseTransform2(vec2, rotationMatFrom(float), vec2)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, angle: Float, scale: Float)
-setSeed(s); m2 = Transform(vec2, float, float)
-setSeed(s); mc2 = Translation(vec2)*Rotation(float)*Scale(Vec2(float))
-setSeed(s); invm2 = InverseTransform(vec2, float, float)
+// Transform2(translation: AnyVec2, angle: Float, scale: Float)
+setSeed(s); m2 = Transform2(vec2, float, float)
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)*Scale2(float)
+setSeed(s); invm2 = InverseTransform2(vec2, float, float)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, rotation: AnyMat2, scale: Float)
-setSeed(s); m2 = Transform(vec2, rotationMatFrom(float), float)
-setSeed(s); mc2 = Translation(vec2)*rotationMatFrom(float)*Scale(Vec2(float))
-setSeed(s); invm2 = InverseTransform(vec2, rotationMatFrom(float), float)
+// Transform2(translation: AnyVec2, rotation: AnyMat2, scale: Float)
+setSeed(s); m2 = Transform2(vec2, rotationMatFrom(float), float)
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)*Scale2(float)
+setSeed(s); invm2 = InverseTransform2(vec2, rotationMatFrom(float), float)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, angle: Float)
-setSeed(s); m2 = Transform(vec2, float)
-setSeed(s); mc2 = Translation(vec2)*Rotation(float)
-setSeed(s); invm2 = InverseTransform(vec2, float)
+// Transform2(translation: AnyVec2, angle: Float)
+setSeed(s); m2 = Transform2(vec2, float)
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)
+setSeed(s); invm2 = InverseTransform2(vec2, float)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, rotation: AnyMat2)
-setSeed(s); m2 = Transform(vec2, rotationMatFrom(float))
-setSeed(s); mc2 = Translation(vec2)*rotationMatFrom(float)
-setSeed(s); invm2 = InverseTransform(vec2, rotationMatFrom(float))
+// Transform2(translation: AnyVec2, rotation: AnyMat2)
+setSeed(s); m2 = Transform2(vec2, rotationMatFrom(float))
+setSeed(s); mc2 = Translation2(vec2)*Rotation2(float)
+setSeed(s); invm2 = InverseTransform2(vec2, rotationMatFrom(float))
 testTransforms2(m2, mc2, invm2)
 
-// Transform(translation: AnyVec2, scale: AnyVec2)
-setSeed(s); m2 = Transform(vec2, vec2)
-setSeed(s); mc2 = Translation(vec2)*Scale(vec2)
-setSeed(s); invm2 = InverseTransform(vec2, vec2)
+// Transform2(translation: AnyVec2, scale: AnyVec2)
+setSeed(s); m2 = Transform2(vec2, vec2)
+setSeed(s); mc2 = Translation2(vec2)*Scale2(vec2)
+setSeed(s); invm2 = InverseTransform2(vec2, vec2)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(angle: Float, scale: AnyVec2)
-setSeed(s); m2 = Transform(float, vec2)
-setSeed(s); mc2 = Rotation(float)*Scale(vec2)
-setSeed(s); invm2 = InverseTransform(float, vec2)
+// Transform2(angle: Float, scale: AnyVec2)
+setSeed(s); m2 = Transform2(float, vec2)
+setSeed(s); mc2 = Rotation2(float)*Scale2(vec2)
+setSeed(s); invm2 = InverseTransform2(float, vec2)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(angle: Float, scale: Float)
-setSeed(s); m2 = Transform(float, float)
-setSeed(s); mc2 = Rotation(float)*Scale(Vec2(float))
-setSeed(s); invm2 = InverseTransform(float, float)
+// Transform2(angle: Float, scale: Float)
+setSeed(s); m2 = Transform2(float, float)
+setSeed(s); mc2 = Rotation2(float)*Scale2(float)
+setSeed(s); invm2 = InverseTransform2(float, float)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(rotation: AnyMat2, scale: AnyVec2)
-setSeed(s); m2 = Transform(rotationMatFrom(float), vec2)
-setSeed(s); mc2 = rotationMatFrom(float)*Scale(vec2)
-setSeed(s); invm2 = InverseTransform(rotationMatFrom(float), vec2)
+// Transform2(rotation: AnyMat2, scale: AnyVec2)
+setSeed(s); m2 = Transform2(rotationMatFrom(float), vec2)
+setSeed(s); mc2 = Rotation2(float)*Scale2(vec2)
+setSeed(s); invm2 = InverseTransform2(rotationMatFrom(float), vec2)
 testTransforms2(m2, mc2, invm2)
 
-// Transform(rotation: AnyMat2, scale: Float)
-setSeed(s); m2 = Transform(rotationMatFrom(float), float)
-setSeed(s); mc2 = rotationMatFrom(float)*Scale(Vec2(float))
-setSeed(s); invm2 = InverseTransform(rotationMatFrom(float), float)
+// Transform2(rotation: AnyMat2, scale: Float)
+setSeed(s); m2 = Transform2(rotationMatFrom(float), float)
+setSeed(s); mc2 = Rotation2(float)*Scale2(float)
+setSeed(s); invm2 = InverseTransform2(rotationMatFrom(float), float)
 testTransforms2(m2, mc2, invm2)
-
-
-// 3D
-// Transform(translation: AnyVec3, rotation: AnyQuat4, scale: AnyVec3)
-setSeed(s); m3 = Transform(vec3, quat4, vec3)
-setSeed(s); mc3 = Translation(vec3)*Rotation(quat4)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(vec3, quat4, vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: AnyVec3)
-setSeed(s); m3 = Transform(vec3, float, axis, vec3)
-setSeed(s); mc3 = Translation(vec3)*Rotation(float, axis)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(vec3, float, axis, vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, rotation: AnyMat3, scale: AnyVec3)
-setSeed(s); m3 = Transform(vec3, rotationMatFrom(quat4), vec3)
-setSeed(s); mc3 = Translation(vec3)*rotationMatFrom(quat4)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(vec3, rotationMatFrom(quat4), vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, rotation: AnyQuat4, scale: Float)
-setSeed(s); m3 = Transform(vec3, quat4, float)
-setSeed(s); mc3 = Translation(vec3)*Rotation(quat4)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(vec3, quat4, float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: Float)
-setSeed(s); m3 = Transform(vec3, float, axis, float)
-setSeed(s); mc3 = Translation(vec3)*Rotation(float, axis)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(vec3, float, axis, float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, rotation: AnyMat3, scale: Float)
-setSeed(s); m3 = Transform(vec3, rotationMatFrom(quat4), float)
-setSeed(s); mc3 = Translation(vec3)*rotationMatFrom(quat4)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(vec3, rotationMatFrom(quat4), float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, rotation: AnyQuat4)
-setSeed(s); m3 = Transform(vec3, quat4)
-setSeed(s); mc3 = Translation(vec3)*Rotation(quat4)
-setSeed(s); invm3 = InverseTransform(vec3, quat4)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, angle: Float, axis: AnyVec3)
-setSeed(s); m3 = Transform(vec3, float, axis)
-setSeed(s); mc3 = Translation(vec3)*Rotation(float, axis)
-setSeed(s); invm3 = InverseTransform(vec3, float, axis)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, rotation: AnyMat3)
-setSeed(s); m3 = Transform(vec3, rotationMatFrom(quat4))
-setSeed(s); mc3 = Translation(vec3)*rotationMatFrom(quat4)
-setSeed(s); invm3 = InverseTransform(vec3, rotationMatFrom(quat4))
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, scale: AnyVec3)
-setSeed(s); m3 = Transform(vec3, vec3)
-setSeed(s); mc3 = Translation(vec3)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(vec3, vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(translation: AnyVec3, scale: Float)
-setSeed(s); m3 = Transform(vec3, float)
-setSeed(s); mc3 = Translation(vec3)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(vec3, float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(rotation: AnyQuat4, scale: AnyVec3)
-setSeed(s); m3 = Transform(quat4, vec3)
-setSeed(s); mc3 = Rotation(quat4)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(quat4, vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(angle: Float, axis: AnyVec3, scale: AnyVec3)
-setSeed(s); m3 = Transform(float, axis, vec3)
-setSeed(s); mc3 = Rotation(float, axis)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(float, axis, vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(rotation: AnyMat3, scale: AnyVec3)
-setSeed(s); m3 = Transform(rotationMatFrom(quat4), vec3)
-setSeed(s); mc3 = rotationMatFrom(quat4)*Scale(vec3)
-setSeed(s); invm3 = InverseTransform(rotationMatFrom(quat4), vec3)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(rotation: AnyQuat4, scale: Float)
-setSeed(s); m3 = Transform(quat4, float)
-setSeed(s); mc3 = Rotation(quat4)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(quat4, float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(angle: Float, axis: AnyVec3, scale: Float)
-setSeed(s); m3 = Transform(float, axis, float)
-setSeed(s); mc3 = Rotation(float, axis)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(float, axis, float)
-testTransforms3(m3, mc3, invm3)
-
-// Transform(rotation: AnyMat3, scale: Float)
-setSeed(s); m3 = Transform(rotationMatFrom(quat4), float)
-setSeed(s); mc3 = rotationMatFrom(quat4)*Scale(Vec3(float))
-setSeed(s); invm3 = InverseTransform(rotationMatFrom(quat4), float)
-testTransforms3(m3, mc3, invm3)
 
         }
 
         info(
            "Large error after 2xTransform: 2d = " +
-           badCount2 + " / " + total2 + ", 3d = " + badCount3 + " / " + total3
+           badCount + " / " + total + "."
         )
     }
+    
+    test("3D: Transform, InverseTransform, Translation, Rotation, and Scale factories")
+    {
+        val vectorsPerTransform = 100
+        val randomRuns = 1000
+        val vectorTolerance = 1e-5f;
 
+        var total = 0
+        var badCount = 0
+
+        val random = new java.util.Random
+        import random._
+        def float = nextFloat
+        def vec3 = Vec3(float, float, float)
+        def quat4 = normalize(Quat4(float, float, float, float))
+        def axis = normalize(vec3)
+        // Note: from this point on, all the float, vec3, quat4, and axis
+        // are random.
+        
+        def testTransforms3(m: AnyMat3x4, mcheck: AnyMat3x4, invm: AnyMat3x4) {
+            assert(approxEqual(m, mcheck, 1e-6f))
+            assert(!approxEqual(m, invm, 1e-2f))
+            assert(approxEqual(m*invm, Mat3x4(1), 1e-6f))
+
+            for (i <- 0 until vectorsPerTransform) {
+                total += 1
+                val v0 = vec3
+                val tv = m.transformPoint(v0)
+                val v1 = invm.transformPoint(tv)
+                if (!approxEqual(v0, v1, vectorTolerance)) badCount += 1
+            }
+        }
+
+        var m3 = Mat3x4(1)
+        var mc3 = Mat3x4(1)
+        var invm3 = Mat3x4(1)
+
+        for (s <- 0 until randomRuns) {
+
+// 3D
+// Transform3(translation: AnyVec3, rotation: AnyQuat4, scale: AnyVec3)
+setSeed(s); m3 = Transform3(vec3, quat4, vec3)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(vec3, quat4, vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: AnyVec3)
+setSeed(s); m3 = Transform3(vec3, float, axis, vec3)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(float, axis)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(vec3, float, axis, vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, rotation: AnyMat3, scale: AnyVec3)
+setSeed(s); m3 = Transform3(vec3, rotationMatFrom(quat4), vec3)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(vec3, rotationMatFrom(quat4), vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, rotation: AnyQuat4, scale: Float)
+setSeed(s); m3 = Transform3(vec3, quat4, float)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(vec3, quat4, float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, angle: Float, axis: AnyVec3, scale: Float)
+setSeed(s); m3 = Transform3(vec3, float, axis, float)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(float, axis)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(vec3, float, axis, float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, rotation: AnyMat3, scale: Float)
+setSeed(s); m3 = Transform3(vec3, rotationMatFrom(quat4), float)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(vec3, rotationMatFrom(quat4), float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, rotation: AnyQuat4)
+setSeed(s); m3 = Transform3(vec3, quat4)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)
+setSeed(s); invm3 = InverseTransform3(vec3, quat4)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, angle: Float, axis: AnyVec3)
+setSeed(s); m3 = Transform3(vec3, float, axis)
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(float, axis)
+setSeed(s); invm3 = InverseTransform3(vec3, float, axis)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, rotation: AnyMat3)
+setSeed(s); m3 = Transform3(vec3, rotationMatFrom(quat4))
+setSeed(s); mc3 = Translation3(vec3)*Rotation3(quat4)
+setSeed(s); invm3 = InverseTransform3(vec3, rotationMatFrom(quat4))
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, scale: AnyVec3)
+setSeed(s); m3 = Transform3(vec3, vec3)
+setSeed(s); mc3 = Translation3(vec3)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(vec3, vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(translation: AnyVec3, scale: Float)
+setSeed(s); m3 = Transform3(vec3, float)
+setSeed(s); mc3 = Translation3(vec3)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(vec3, float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(rotation: AnyQuat4, scale: AnyVec3)
+setSeed(s); m3 = Transform3(quat4, vec3)
+setSeed(s); mc3 = Rotation3(quat4)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(quat4, vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(angle: Float, axis: AnyVec3, scale: AnyVec3)
+setSeed(s); m3 = Transform3(float, axis, vec3)
+setSeed(s); mc3 = Rotation3(float, axis)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(float, axis, vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(rotation: AnyMat3, scale: AnyVec3)
+setSeed(s); m3 = Transform3(rotationMatFrom(quat4), vec3)
+setSeed(s); mc3 = Rotation3(quat4)*Scale3(vec3)
+setSeed(s); invm3 = InverseTransform3(rotationMatFrom(quat4), vec3)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(rotation: AnyQuat4, scale: Float)
+setSeed(s); m3 = Transform3(quat4, float)
+setSeed(s); mc3 = Rotation3(quat4)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(quat4, float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(angle: Float, axis: AnyVec3, scale: Float)
+setSeed(s); m3 = Transform3(float, axis, float)
+setSeed(s); mc3 = Rotation3(float, axis)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(float, axis, float)
+testTransforms3(m3, mc3, invm3)
+
+// Transform3(rotation: AnyMat3, scale: Float)
+setSeed(s); m3 = Transform3(rotationMatFrom(quat4), float)
+setSeed(s); mc3 = Rotation3(quat4)*Scale3(float)
+setSeed(s); invm3 = InverseTransform3(rotationMatFrom(quat4), float)
+testTransforms3(m3, mc3, invm3)
+
+        }
+
+        info(
+           "Large error after 2xTransform: 3d = " +
+           badCount + " / " + total + "."
+        )
+    }
 }

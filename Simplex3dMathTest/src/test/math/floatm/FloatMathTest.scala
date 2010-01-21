@@ -396,27 +396,77 @@ class FloatMathTest extends FunSuite {
         assert(1 == (smoothstep(1, 2, Float.PositiveInfinity)))
         assert(0 == (smoothstep(1, 2, Float.NegativeInfinity)))
         assert(0 == smoothstep(1, 2, 1))
+        assert(approxEqual(0.104f, smoothstep(1, 2, 1.2f), 1e-6f))
         assert(0.5f == smoothstep(1, 2, 1.5f))
+        assert(approxEqual(0.784f, smoothstep(1, 2, 1.7f), 1e-6f))
         assert(1 == smoothstep(1, 2, 2))
         assert(1 == smoothstep(1, 2, 3))
 
+        assert(0 == length(0))
+        assert(1 == length(1))
+        assert(1 == length(-1))
+        assert(2.5f == length(2.5f))
+        assert(2.5f == length(-2.5f))
 
-//    def length(x: Float) :Float = abs(x)
-//    def distance(x: Float, y: Float) :Float = abs(x - y)
-//    def dot(x: Float, y: Float) :Float = x*y
-//    def normalize(x: Float) :Float = sign(x)
-//    def faceforward(n: Float, i: Float, nref: Float) :Float = {
-//        if (i*nref < 0) n else -n
-//    }
-//
-//    def reflect(i: Float, n: Float) :Float = {
-//        i - 2*(n*i)*n
-//    }
-//    def refract(i: Float, n: Float, eta: Float) :Float = {
-//        val ni = n*i
-//        val k = 1 - eta*eta*(1 - ni*ni)
-//        if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
-//    }
+        assert(2 == distance(-1, 1))
+        assert(2.5f == distance(2, 4.5f))
+        assert(2 == distance(0, -2))
+
+        assert(2 == dot(-1, -2))
+        assert(0 == dot(0, 2))
+        assert(-5.2f == dot(-2, 2.6f))
+        assert(12 == dot(4, 3))
+
+        assert(-1 == normalize(-2.5f))
+        assert(-1 == normalize(-1))
+        assert(-1 == normalize(-0.3f))
+        assert(0 == normalize(0))
+        assert(1 == normalize(0.5f))
+        assert(1 == normalize(1))
+        assert(1 == normalize(3.5f))
+
+        assert(-2.2f == faceforward(2.2f, 3, 2))
+        assert(-2.2f == faceforward(2.2f, 0, 2))
+        assert(2.2f == faceforward(2.2f, 3, -2))
+        
+        assert(-1 == reflect(1, 1))
+        assert(-2.5f == reflect(2.5f, 1))
+        assert(1 == reflect(-1, 1))
+        assert(2.5f == reflect(-2.5f, 1))
+        assert(-1 == reflect(1, -1))
+        assert(-2.5f == reflect(2.5f, -1))
+        assert(1 == reflect(-1, -1))
+        assert(2.5f == reflect(-2.5f, -1))
+
+        assert(approxEqual(-1, refract(1, 1, 0.3f), 1e-6f))
+        assert(approxEqual(1, refract(1, -1, 0.3f), 1e-6f))
+        assert(approxEqual(-1, refract(-1, 1, 0.3f), 1e-6f))
+        assert(approxEqual(1, refract(-1, -1, 0.3f), 1e-6f))
     }
 
+    test("Numeric vec functions") {
+//    def modf(u: AnyVec2f, i: Vec2f) :Vec2f = {
+//        val s = sign(u)
+//        val a = abs(u)
+//        i := s*floor(a)
+//        s*fract(a)
+//    }
+//    def length(u: AnyVec2f) :Float = sqrt(u.x*u.x + u.y*u.y)
+//    def distance(u: AnyVec2f, v: AnyVec2f) :Float = length(u - v)
+//    def dot(u: AnyVec2f, v: AnyVec2f) :Float = u.x * v.x + u.y * v.y
+//    def normalize(u: AnyVec2f) :Vec2f = u*inversesqrt(u.x*u.x + u.y*u.y)
+//
+//    def faceforward(n: AnyVec2f, i: AnyVec2f, nref: AnyVec2f) :Vec2f = {
+//        if (dot(nref, i) < 0) Vec2f(n) else -n
+//    }
+//
+//    def reflect(i: AnyVec2f, n: AnyVec2f) :Vec2f = {
+//        i - n*2*dot(n, i)
+//    }
+//    def refract(i: AnyVec2f, n: AnyVec2f, eta: Float) :Vec2f = {
+//        val dotni = dot(n, i)
+//        val k = 1 - eta*eta*(1 - dotni*dotni)
+//        if (k < 0) Vec2f(0) else i*eta - n*(eta*dotni + sqrt(k))
+//    }
+    }
 }

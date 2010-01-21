@@ -271,33 +271,6 @@ class FloatMathExtraTest extends FunSuite {
         testMatrix(Vec3(-0.19381118f, 0.30482996f, -0.4189638f))
     }
 
-    test("Invert") {
-        val m2 = Mat2(2, 4, 5, 3)
-        val m2i = inverse(inverse(m2))
-        assert(!hasErrors(m2i))
-        assert(approxEqual(m2, m2i, 1e-6f))
-
-        val m23 = Mat2x3(2, 4, 5, 3, 5, 3)
-        val m23i = inverse(inverse(m23))
-        assert(!hasErrors(m23i))
-        assert(approxEqual(m23, m23i, 1e-6f))
-
-        val m3 = Mat3(2, 4, 5, 3, 3, 6, 4, 3, 2)
-        val m3i = inverse(inverse(m3))
-        assert(!hasErrors(m3i))
-        assert(approxEqual(m3, m3i, 1e-6f))
-
-        val m34 = Mat3x4(2, 4, 5, 3, 3, 6, 4, 3, 2, 6, 2, 4)
-        val m34i = inverse(inverse(m34))
-        assert(!hasErrors(m34i))
-        assert(approxEqual(m34, m34i, 1e-6f))
-
-        val m4 = Mat4(2, 4, 5, 3, 3, 6, 4, 3, 2, 3, 6, 4, 8, 4, 3, 6)
-        val m4i = inverse(inverse(m4))
-        assert(!hasErrors(m4i))
-        assert(approxEqual(m4, m4i, 1e-5f))
-    }
-
     test("Projection") {
         //gl.glMatrixMode(GL.GL_PROJECTION);
         //gl.glPushMatrix();

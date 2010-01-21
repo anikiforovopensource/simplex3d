@@ -1665,7 +1665,7 @@ object DoubleMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotate(q: Quat4d, u: AnyVec3d) = {
+    def rotate(u: AnyVec3d, q: Quat4d) = {
         import q._
 
         val t1 = a*b

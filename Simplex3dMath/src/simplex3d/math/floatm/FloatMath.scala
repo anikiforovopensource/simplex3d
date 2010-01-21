@@ -157,13 +157,42 @@ object FloatMath {
     def distance(x: Float, y: Float) :Float = abs(x - y)
     def dot(x: Float, y: Float) :Float = x*y
     def normalize(x: Float) :Float = sign(x)
+
+    /**
+     * This function flips the normal vector n to face the direction opposite
+     * to incident vector i.
+     * 
+     * @param n normal
+     * @param i incident vector
+     * @param nref reference normal
+     * @return n if (i*nref) < 0, -n otherwise
+     */
     def faceforward(n: Float, i: Float, nref: Float) :Float = {
         if (i*nref < 0) n else -n
     }
 
+    /**
+     * This function reflects the incident vector i with respect to normal
+     * vector n.
+     *
+     * @param n normal, must be normalized to achieve the desired result
+     * @param i incident vector
+     * @return reflection vector
+     */
     def reflect(i: Float, n: Float) :Float = {
         i - 2*(n*i)*n
     }
+
+    /**
+     * This function refracts the incident vector i with respect to normal
+     * vector n using the ratio of indices of refraction eta.
+     *
+     * @param n normal, must be normalized to achieve the desired result
+     * @param i incident vector, must be normalized to achieve
+     *          the desired result
+     * @param eta the ratio of indices of refration
+     * @return refraction vector
+     */
     def refract(i: Float, n: Float, eta: Float) :Float = {
         val ni = n*i
         val k = 1 - eta*eta*(1 - ni*ni)
@@ -1664,7 +1693,7 @@ object FloatMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotate(q: Quat4f, u: AnyVec3f) = {
+    def rotate(u: AnyVec3f, q: Quat4f) = {
         import q._
 
         val t1 = a*b

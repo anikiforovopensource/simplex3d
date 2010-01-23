@@ -30,7 +30,10 @@ import simplex3d.math.intm.IntMath._
  */
 sealed abstract class AnyVec3i extends Read3Int {
 
-    type R2 = ConstVec2i; type R3 = ConstVec3i; type R4 = ConstVec4i
+    private[math] type R2 = ConstVec2i
+    private[math] type R3 = ConstVec3i
+    private[math] type R4 = ConstVec4i
+
     protected def make2(x: Int, y: Int) =
         new ConstVec2i(x, y)
     protected def make3(x: Int, y: Int, z: Int) =
@@ -266,10 +269,11 @@ extends AnyVec3i
 }
 
 object Vec3i {
-    val Origin = new ConstVec3i(0, 0, 0)
+    val Zero = new ConstVec3i(0, 0, 0)
     val UnitX = new ConstVec3i(1, 0, 0)
     val UnitY = new ConstVec3i(0, 1, 0)
     val UnitZ = new ConstVec3i(0, 0, 1)
+    val One = new ConstVec3i(1, 1, 1)
 
     def apply(s: Int) = new Vec3i(s, s, s)
     def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)

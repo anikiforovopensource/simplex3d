@@ -30,7 +30,10 @@ import simplex3d.math.doublem.DoubleMath._
  */
 sealed abstract class AnyVec4d extends Read4Double {
 
-    type R2 = ConstVec2d; type R3 = ConstVec3d; type R4 = ConstVec4d
+    private[math] type R2 = ConstVec2d
+    private[math] type R3 = ConstVec3d
+    private[math] type R4 = ConstVec4d
+
     protected def make2(x: Double, y: Double) =
         new ConstVec2d(x, y)
     protected def make3(x: Double, y: Double, z: Double) =
@@ -566,11 +569,12 @@ final class Vec4d private[math] (
 }
 
 object Vec4d {
-    val Origin = new ConstVec4d(0, 0, 0, 0)
+    val Zero = new ConstVec4d(0, 0, 0, 0)
     val UnitX = new ConstVec4d(1, 0, 0, 0)
     val UnitY = new ConstVec4d(0, 1, 0, 0)
     val UnitZ = new ConstVec4d(0, 0, 1, 0)
     val UnitW = new ConstVec4d(0, 0, 0, 1)
+    val One = new ConstVec4d(1, 1, 1, 1)
 
     def apply(s: Double) =
         new Vec4d(s, s, s, s)

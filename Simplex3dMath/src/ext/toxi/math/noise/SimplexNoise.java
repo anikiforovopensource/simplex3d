@@ -18,7 +18,6 @@ package ext.toxi.math.noise;
  * @author Karsten Schmidt (info at toxi dot co dot uk)
  * 
  */
-
 public class SimplexNoise {
 
     private static final double SQRT3 = Math.sqrt(3.0);

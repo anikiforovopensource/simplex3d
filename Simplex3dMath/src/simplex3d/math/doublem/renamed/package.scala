@@ -119,11 +119,17 @@ package object renamed {
     type Quat4 = Quat4d
     val Quat4 = Quat4d
 
-    val Transform = Transformd
-    val InverseTransform = InverseTransformd
-    val Translation = Translationd
-    val Rotation = Rotationd
-    val Scale = Scaled
+    val Transform2 = Transform2d
+    val InverseTransform2 = InverseTransform2d
+    val Translation2 = Translation2d
+    val Rotation2 = Rotation2d
+    val Scale2 = Scale2d
+
+    val Transform3 = Transform3d
+    val InverseTransform3 = InverseTransform3d
+    val Translation3 = Translation3d
+    val Rotation3 = Rotation3d
+    val Scale3 = Scale3d
 
     // Aliases
     type AnyMat2x2 = AnyMat2d

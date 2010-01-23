@@ -26,7 +26,10 @@ package simplex3d.math
  */
 private[math] abstract class Swizzle2Read[T] {
     
-    type R2; type R3; type R4
+    private[math] type R2
+    private[math] type R3
+    private[math] type R4
+    
     protected def make2(x: T, y: T) :R2
     protected def make3(x: T, y: T, z: T) :R3
     protected def make4(x: T, y: T, z: T, w: T) :R4

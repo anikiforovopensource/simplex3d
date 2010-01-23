@@ -28,7 +28,10 @@ import simplex3d.math.BaseMath._
  */
 sealed abstract class AnyVec2b extends Swizzle2Read[Boolean] {
 
-    type R2 = ConstVec2b; type R3 = ConstVec3b; type R4 = ConstVec4b
+    private[math] type R2 = ConstVec2b
+    private[math] type R3 = ConstVec3b
+    private[math] type R4 = ConstVec4b
+
     protected def make2(x: Boolean, y: Boolean) =
         new ConstVec2b(x, y)
     protected def make3(x: Boolean, y: Boolean, z: Boolean) =

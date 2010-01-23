@@ -30,7 +30,10 @@ import simplex3d.math.floatm.FloatMath._
  */
 sealed abstract class AnyVec4f extends Read4Float {
 
-    type R2 = ConstVec2f; type R3 = ConstVec3f; type R4 = ConstVec4f
+    private[math] type R2 = ConstVec2f
+    private[math] type R3 = ConstVec3f
+    private[math] type R4 = ConstVec4f
+
     protected def make2(x: Float, y: Float) =
         new ConstVec2f(x, y)
     protected def make3(x: Float, y: Float, z: Float) =
@@ -566,11 +569,12 @@ extends AnyVec4f
 }
 
 object Vec4f {
-    val Origin = new ConstVec4f(0, 0, 0, 0)
+    val Zero = new ConstVec4f(0, 0, 0, 0)
     val UnitX = new ConstVec4f(1, 0, 0, 0)
     val UnitY = new ConstVec4f(0, 1, 0, 0)
     val UnitZ = new ConstVec4f(0, 0, 1, 0)
     val UnitW = new ConstVec4f(0, 0, 0, 1)
+    val One = new ConstVec4f(1, 1, 1, 1)
 
     def apply(s: Float) =
         new Vec4f(s, s, s, s)

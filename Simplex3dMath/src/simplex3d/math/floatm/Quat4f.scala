@@ -119,7 +119,7 @@ object ConstQuat4f {
     def apply(u: AnyVec4f) = new ConstQuat4f(u.w, u.x, u.y, u.z)
     def apply(m: AnyMat2f) = new ConstQuat4f(m.m00, m.m10, m.m01, m.m11)
 
-    implicit def mutableToConst(u: Quat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
+    implicit def toConst(u: Quat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
 
 
@@ -167,5 +167,5 @@ object Quat4f {
     def apply(u: AnyVec4f) = new Quat4f(u.w, u.x, u.y, u.z)
     def apply(m: AnyMat2f) = new Quat4f(m.m00, m.m10, m.m01, m.m11)
 
-    implicit def constToMutable(u: ConstQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
+    implicit def toMutable(u: ConstQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
 }

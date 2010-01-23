@@ -107,7 +107,7 @@ object ConstVec4b {
     }
     def apply(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 
-    implicit def mutableToConst(u: Vec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+    implicit def toConst(u: Vec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
 
 
@@ -573,5 +573,5 @@ object Vec4b {
     def apply(u: Read4Double) =
         new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
 
-    implicit def constToMutable(u: ConstVec4b) = Vec4b(u)
+    implicit def toMutable(u: ConstVec4b) = Vec4b(u)
 }

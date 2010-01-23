@@ -199,6 +199,9 @@ object FloatMath {
         if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
     }
 
+    /**
+     * meaningful return values for x withing [-1E9, +1E9]
+     */
     def noise1(x: Float) :Float = float(SimplexNoise.noise(x, 0))
     def noise2(x: Float) :Vec2f = {
         new Vec2f(

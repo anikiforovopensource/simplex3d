@@ -249,7 +249,7 @@ object ConstMat4x2d {
         m.m01, m.m11, m.m21, m.m31
     )
 
-    implicit def mutableToConst(m: Mat4x2d) = ConstMat4x2d(m)
+    implicit def toConst(m: Mat4x2d) = ConstMat4x2d(m)
 }
 
 
@@ -434,5 +434,5 @@ object Mat4x2d {
         m.m01, m.m11, m.m21, m.m31
     )
 
-    implicit def constToMutable(m: ConstMat4x2d) = Mat4x2d(m)
+    implicit def toMutable(m: ConstMat4x2d) = Mat4x2d(m)
 }

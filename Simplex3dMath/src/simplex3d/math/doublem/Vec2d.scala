@@ -112,7 +112,7 @@ object ConstVec2d {
     def apply(x: Double, y: Double) = new ConstVec2d(x, y)
     def apply(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
 
-    implicit def mutableToConst(u: Vec2d) = new ConstVec2d(u.x, u.y)
+    implicit def toConst(u: Vec2d) = new ConstVec2d(u.x, u.y)
 }
 
 
@@ -196,5 +196,5 @@ object Vec2d {
     def apply(u: Read3Float) = new Vec2d(u.x, u.y)
     def apply(u: Read4Float) = new Vec2d(u.x, u.y)
 
-    implicit def constToMutable(u: ConstVec2d) = Vec2d(u)
+    implicit def toMutable(u: ConstVec2d) = Vec2d(u)
 }

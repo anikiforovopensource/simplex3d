@@ -30,11 +30,11 @@ import simplex3d.math.floatm.FloatMath._
 package object renamed {
     
     // Implicits
-    implicit def fmFloatToExtFloat(s: Float) = new ExtendedFloat(s)
-    implicit def fmIntToExtInt(s: Int) = new ExtendedInt(s)
-    implicit def vec2iToVec2f(u: Read2Int) :Vec2f = Vec2f(u.x, u.y)
-    implicit def vec3iToVec3f(u: Read3Int) :Vec3f = Vec3f(u.x, u.y, u.z)
-    implicit def vec4iToVec4f(u: Read4Int) :Vec4f = Vec4f(u.x, u.y, u.z, u.w)
+    implicit def toExtended(s: Float) = new ExtendedFloat(s)
+    implicit def toExtended(s: Int) = new ExtendedInt(s)
+    implicit def toFloatVec(u: Read2Int) :Vec2f = Vec2f(u.x, u.y)
+    implicit def toFloatVec(u: Read3Int) :Vec3f = Vec3f(u.x, u.y, u.z)
+    implicit def toFloatVec(u: Read4Int) :Vec4f = Vec4f(u.x, u.y, u.z, u.w)
 
 
     type AnyVec2 = AnyVec2f

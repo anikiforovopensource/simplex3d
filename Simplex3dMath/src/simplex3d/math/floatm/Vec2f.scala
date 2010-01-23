@@ -112,7 +112,7 @@ object ConstVec2f {
     def apply(x: Float, y: Float) = new ConstVec2f(x, y)
     def apply(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 
-    implicit def mutableToConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
+    implicit def toConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
 }
 
 final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
@@ -194,5 +194,5 @@ object Vec2f {
     def apply(u: Read3Double) = new Vec2f(float(u.x), float(u.y))
     def apply(u: Read4Double) = new Vec2f(float(u.x), float(u.y))
 
-    implicit def constToMutable(u: ConstVec2f) = Vec2f(u)
+    implicit def toMutable(u: ConstVec2f) = Vec2f(u)
 }

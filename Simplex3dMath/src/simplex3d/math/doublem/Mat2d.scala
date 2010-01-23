@@ -213,7 +213,7 @@ object ConstMat2d {
         m.m01, m.m11
     )
 
-    implicit def mutableToConst(m: Mat2d) = ConstMat2d(m)
+    implicit def toConst(m: Mat2d) = ConstMat2d(m)
 }
 
 
@@ -372,5 +372,5 @@ object Mat2d {
         m.m01, m.m11
     )
 
-    implicit def constToMutable(m: ConstMat2d) = Mat2d(m)
+    implicit def toMutable(m: ConstMat2d) = Mat2d(m)
 }

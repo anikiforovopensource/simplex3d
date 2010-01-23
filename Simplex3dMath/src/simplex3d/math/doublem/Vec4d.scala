@@ -132,7 +132,7 @@ object ConstVec4d {
     }
     def apply(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
 
-    implicit def mutableToConst(u: Vec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
+    implicit def toConst(u: Vec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
 }
 
 
@@ -615,5 +615,5 @@ object Vec4d {
     def apply(u: Read4Float) =
         new Vec4d(u.x, u.y, u.z, u.w)
 
-    implicit def constToMutable(u: ConstVec4d) = Vec4d(u)
+    implicit def toMutable(u: ConstVec4d) = Vec4d(u)
 }

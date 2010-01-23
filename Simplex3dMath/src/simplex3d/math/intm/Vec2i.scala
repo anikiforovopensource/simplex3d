@@ -116,7 +116,7 @@ object ConstVec2i {
     def apply(x: Int, y: Int) = new ConstVec2i(x, y)
     def apply(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
 
-    implicit def mutableToConst(u: Vec2i) = new ConstVec2i(u.x, u.y)
+    implicit def toConst(u: Vec2i) = new ConstVec2i(u.x, u.y)
 }
 
 
@@ -211,5 +211,5 @@ object Vec2i {
     def apply(u: Read3Double) = new Vec2i(int(u.x), int(u.y))
     def apply(u: Read4Double) = new Vec2i(int(u.x), int(u.y))
 
-    implicit def constToMutable(u: ConstVec2i) = Vec2i(u)
+    implicit def toMutable(u: ConstVec2i) = Vec2i(u)
 }

@@ -29,5 +29,5 @@ import simplex3d.math.intm.IntMath._
 package object intm {
 
     //Implicints
-    implicit def imIntToExtInt(s: Int) = new ExtendedInt(s)
+    implicit def toExtended(s: Int) = new ExtendedInt(s)
 }

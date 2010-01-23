@@ -265,7 +265,7 @@ object ConstMat3f {
         m.m02, m.m12, m.m22
     )
 
-    implicit def mutableToConst(m: Mat3f) = ConstMat3f(m)
+    implicit def toConst(m: Mat3f) = ConstMat3f(m)
 }
 
 
@@ -473,5 +473,5 @@ object Mat3f {
         m.m02, m.m12, m.m22
     )
 
-    implicit def constToMutable(m: ConstMat3f) = Mat3f(m)
+    implicit def toMutable(m: ConstMat3f) = Mat3f(m)
 }

@@ -120,7 +120,7 @@ object ConstVec3f {
     def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
     def apply(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
 
-    implicit def mutableToConst(u: Vec3f) = new ConstVec3f(u.x, u.y, u.z)
+    implicit def toConst(u: Vec3f) = new ConstVec3f(u.x, u.y, u.z)
 }
 
 
@@ -278,5 +278,5 @@ object Vec3f {
     def apply(u: Read4Double) =
         new Vec3f(float(u.x), float(u.y), float(u.z))
 
-    implicit def constToMutable(u: ConstVec3f) = Vec3f(u)
+    implicit def toMutable(u: ConstVec3f) = Vec3f(u)
 }

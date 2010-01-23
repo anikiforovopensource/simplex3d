@@ -29,15 +29,15 @@ import simplex3d.math.doublem.DoubleMath._
 package object doublem {
 
     // Implicits
-    implicit def toExtended(s: Double) = new ExtendedDouble(s)
-    implicit def toExtended(s: Float) = new ExtendedFloat(s)
-    implicit def toExtended(s: Int) = new ExtendedInt(s)
-    implicit def toDoubleVec(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
-    implicit def toDoubleVec(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)
-    implicit def toDoubleVec(u: Read4Int) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
-    implicit def toDoubleVec(u: Read2Float) :Vec2d = Vec2d(u.x, u.y)
-    implicit def toDoubleVec(u: Read3Float) :Vec3d = Vec3d(u.x, u.y, u.z)
-    implicit def toDoubleVec(u: Read4Float) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
+    implicit def dextendDouble(s: Double) = new ExtendedDouble(s)
+    implicit def dextendFloat(s: Float) = new ExtendedFloat(s)
+    implicit def dextendInt(s: Int) = new ExtendedInt(s)
+    implicit def dpromoteVec2i(u: Read2Int) :Vec2d = Vec2d(u.x, u.y)
+    implicit def dpromoteVec3i(u: Read3Int) :Vec3d = Vec3d(u.x, u.y, u.z)
+    implicit def dpromoteVec4i(u: Read4Int) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
+    implicit def dpromoteVec2f(u: Read2Float) :Vec2d = Vec2d(u.x, u.y)
+    implicit def dpromoteVec3f(u: Read3Float) :Vec3d = Vec3d(u.x, u.y, u.z)
+    implicit def dpromoteVec4f(u: Read4Float) :Vec4d = Vec4d(u.x, u.y, u.z, u.w)
 
 
     // Aliases

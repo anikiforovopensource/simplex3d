@@ -45,6 +45,15 @@ class Vec2fSwizzleTest extends FunSuite {
         expect(x) { u.s }
         expect(y) { u.t }
 
+        assert(u.x.isInstanceOf[Float])
+        assert(u.y.isInstanceOf[Float])
+
+        assert(u.r.isInstanceOf[Float])
+        assert(u.g.isInstanceOf[Float])
+
+        assert(u.s.isInstanceOf[Float])
+        assert(u.t.isInstanceOf[Float])
+
         assert(Vec2(x, x) == u.xx)
         assert(Vec2(x, y) == u.xy)
         assert(Vec2(y, x) == u.yx)

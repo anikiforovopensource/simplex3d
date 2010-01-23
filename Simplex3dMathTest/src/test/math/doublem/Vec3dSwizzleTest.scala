@@ -49,6 +49,18 @@ class Vec3dSwizzleTest extends FunSuite {
         expect(y) { u.t }
         expect(z) { u.p }
 
+        assert(u.x.isInstanceOf[Double])
+        assert(u.y.isInstanceOf[Double])
+        assert(u.z.isInstanceOf[Double])
+
+        assert(u.r.isInstanceOf[Double])
+        assert(u.g.isInstanceOf[Double])
+        assert(u.b.isInstanceOf[Double])
+
+        assert(u.s.isInstanceOf[Double])
+        assert(u.t.isInstanceOf[Double])
+        assert(u.p.isInstanceOf[Double])
+
         assert(Vec2(x, x) == u.xx)
         assert(Vec2(x, y) == u.xy)
         assert(Vec2(x, z) == u.xz)

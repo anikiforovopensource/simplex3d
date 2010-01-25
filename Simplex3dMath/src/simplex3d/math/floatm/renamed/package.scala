@@ -32,9 +32,15 @@ package object renamed {
     // Implicits
     implicit def fextendFloat(s: Float) = new ExtendedFloat(s)
     implicit def fextendInt(s: Int) = new ExtendedInt(s)
-    implicit def fpromoteVec2i(u: Read2Int) :Vec2f = Vec2f(u.x, u.y)
-    implicit def fpromoteVec3i(u: Read3Int) :Vec3f = Vec3f(u.x, u.y, u.z)
-    implicit def fpromoteVec4i(u: Read4Int) :Vec4f = Vec4f(u.x, u.y, u.z, u.w)
+
+    implicit def dpromoteVec2i(u: Read2{ type T = Int }) :Vec2f =
+        Vec2f(u.fx, u.fy)
+
+    implicit def dpromoteVec3i(u: Read3{ type T = Int }) :Vec3f =
+        Vec3f(u.fx, u.fy, u.fz)
+
+    implicit def dpromoteVec4i(u: Read4{ type T = Int }) :Vec4f =
+        Vec4f(u.fx, u.fy, u.fz, u.fw)
 
 
     type AnyVec2 = AnyVec2f

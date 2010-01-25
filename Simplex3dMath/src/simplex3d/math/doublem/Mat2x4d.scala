@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -28,13 +28,39 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x4d
+sealed abstract class AnyMat2x4d extends Read2x4
 {
     // Column major order.
     def m00: Double; def m10: Double // column
     def m01: Double; def m11: Double // column
     def m02: Double; def m12: Double // column
     def m03: Double; def m13: Double // column
+
+    private[math] def f00 = float(m00)
+    private[math] def f10 = float(m10)
+
+    private[math] def f01 = float(m01)
+    private[math] def f11 = float(m11)
+
+    private[math] def f02 = float(m02)
+    private[math] def f12 = float(m12)
+
+    private[math] def f03 = float(m03)
+    private[math] def f13 = float(m13)
+
+
+    private[math] def d00 = m00
+    private[math] def d10 = m10
+
+    private[math] def d01 = m01
+    private[math] def d11 = m11
+
+    private[math] def d02 = m02
+    private[math] def d12 = m12
+
+    private[math] def d03 = m03
+    private[math] def d13 = m13
+
 
     def apply(c: Int) :ConstVec2d = {
         c match {
@@ -258,19 +284,19 @@ object ConstMat2x4d {
             m03, m13
       )
 
-    def apply(c0: AnyVec2d, c1: AnyVec2d, c2: AnyVec2d, c3: AnyVec2d) = 
+    def apply(c0: Read2, c1: Read2, c2: Read2, c3: Read2) = 
     new ConstMat2x4d(
-        c0.x, c0.y,
-        c1.x, c1.y,
-        c2.x, c2.y,
-        c3.x, c3.y
+        c0.dx, c0.dy,
+        c1.dx, c1.dy,
+        c2.dx, c2.dy,
+        c3.dx, c3.dy
     )
 
-    def apply(m: AnyMat2x4d) = new ConstMat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
+    def apply(m: Read2x4) = new ConstMat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
+        m.d03, m.d13
     )
 
     implicit def toConst(m: Mat2x4d) = ConstMat2x4d(m)
@@ -407,14 +433,6 @@ object Mat2x4d {
         0, 0
     )
 
-    def apply(c0: Read2Float, c1: Read2Float, c2: Read2Float, c3: Read2Float) = 
-    new Mat2x4d(
-        c0.x, c0.y,
-        c1.x, c1.y,
-        c2.x, c2.y,
-        c3.x, c3.y
-    )
-
     def apply(
         m00: Double, m10: Double,
         m01: Double, m11: Double,
@@ -427,75 +445,75 @@ object Mat2x4d {
             m03, m13
       )
 
-    def apply(c0: AnyVec2d, c1: AnyVec2d, c2: AnyVec2d, c3: AnyVec2d) = 
+    def apply(c0: Read2, c1: Read2, c2: Read2, c3: Read2) = 
     new Mat2x4d(
-        c0.x, c0.y,
-        c1.x, c1.y,
-        c2.x, c2.y,
-        c3.x, c3.y
+        c0.dx, c0.dy,
+        c1.dx, c1.dy,
+        c2.dx, c2.dy,
+        c3.dx, c3.dy
     )
 
-    def apply(m: AnyMat2d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read2x2) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
         0, 0,
         0, 0
     )
 
-    def apply(m: AnyMat2x3d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
+    def apply(m: Read2x3) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
         0, 0
     )
 
-    def apply(m: AnyMat2x4d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
+    def apply(m: Read2x4) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
+        m.d03, m.d13
     )
 
-    def apply(m: AnyMat3x2d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read3x2) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
         0, 0,
         0, 0
     )
 
-    def apply(m: AnyMat3d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
+    def apply(m: Read3x3) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
         0, 0
     )
 
-    def apply(m: AnyMat3x4d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
+    def apply(m: Read3x4) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
+        m.d03, m.d13
     )
 
-    def apply(m: AnyMat4x2d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read4x2) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
         0, 0,
         0, 0
     )
 
-    def apply(m: AnyMat4x3d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
+    def apply(m: Read4x3) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
         0, 0
     )
 
-    def apply(m: AnyMat4d) = new Mat2x4d(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12,
-        m.m03, m.m13
+    def apply(m: Read4x4) = new Mat2x4d(
+        m.d00, m.d10,
+        m.d01, m.d11,
+        m.d02, m.d12,
+        m.d03, m.d13
     )
 
     implicit def toMutable(m: ConstMat2x4d) = Mat2x4d(m)

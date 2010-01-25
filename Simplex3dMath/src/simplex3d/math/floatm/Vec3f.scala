@@ -28,8 +28,9 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3f extends Read3Float {
+sealed abstract class AnyVec3f extends Read3 {
 
+    private[math] type T = Float
     private[math] type R2 = ConstVec2f
     private[math] type R3 = ConstVec3f
     private[math] type R4 = ConstVec4f
@@ -41,6 +42,26 @@ sealed abstract class AnyVec3f extends Read3Float {
     protected def make4(x: Float, y: Float, z: Float, w: Float) =
         new ConstVec4f(x, y, z, w)
 
+    private[math] def bx: Boolean = bool(x)
+    private[math] def by: Boolean = bool(y)
+    private[math] def bz: Boolean = bool(z)
+
+    private[math] def ix: Int = int(x)
+    private[math] def iy: Int = int(y)
+    private[math] def iz: Int = int(z)
+
+    private[math] def fx: Float = x
+    private[math] def fy: Float = y
+    private[math] def fz: Float = z
+
+    private[math] def dx: Double = x
+    private[math] def dy: Double = y
+    private[math] def dz: Double = z
+
+
+    def x: Float
+    def y: Float
+    def z: Float
 
     def r = x
     def g = y
@@ -118,7 +139,7 @@ extends AnyVec3f
 
 object ConstVec3f {
     def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
-    def apply(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
+    def apply(u: Read3) = new ConstVec3f(u.fx, u.fy, u.fz)
 
     implicit def toConst(u: Vec3f) = new ConstVec3f(u.x, u.y, u.z)
 }
@@ -263,20 +284,10 @@ object Vec3f {
 
     def apply(s: Float) = new Vec3f(s, s, s)
     def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
-    def apply(u: AnyVec3f) = new Vec3f(u.x, u.y, u.z)
-    def apply(u: AnyVec4f) = new Vec3f(u.x, u.y, u.z)
-    def apply(xy: AnyVec2f, z: Float) = new Vec3f(xy.x, xy.y, z)
-    def apply(x: Float, yz: AnyVec2f) = new Vec3f(x, yz.x, yz.y)
-    def apply(u: AnyVec3b) = new Vec3f(float(u.x), float(u.y), float(u.z))
-    def apply(u: AnyVec4b) = new Vec3f(float(u.x), float(u.y), float(u.z))
-    def apply(u: Read3Int) = new Vec3f(u.x, u.y, u.z)
-    def apply(u: Read4Int) = new Vec3f(u.x, u.y, u.z)
-
-    def apply(u: Read3Double) =
-        new Vec3f(float(u.x), float(u.y), float(u.z))
-
-    def apply(u: Read4Double) =
-        new Vec3f(float(u.x), float(u.y), float(u.z))
+    def apply(u: Read3) = new Vec3f(u.fx, u.fy, u.fz)
+    def apply(u: Read4) = new Vec3f(u.fx, u.fy, u.fz)
+    def apply(xy: Read2, z: Float) = new Vec3f(xy.fx, xy.fy, z)
+    def apply(x: Float, yz: Read2) = new Vec3f(x, yz.fx, yz.fy)
 
     implicit def toMutable(u: ConstVec3f) = Vec3f(u)
 }

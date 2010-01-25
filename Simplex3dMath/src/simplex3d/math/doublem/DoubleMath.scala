@@ -1701,7 +1701,7 @@ object DoubleMath {
      * This method creates a 2d transformation matrix that rotates a vector
      * counterclockwise by the specified angle.
      */
-    def rotationMatFrom(angle: Double) :Mat2d = {
+    def rotationMat(angle: Double) :Mat2d = {
         val cosA = cos(angle)
         val sinA = sin(angle)
 
@@ -1715,7 +1715,7 @@ object DoubleMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def rotationAngleFrom(m: Mat2d) :Double = {
+    def rotationAngle(m: Mat2d) :Double = {
         acos((m.m00 + m.m11)*0.5)
     }
 
@@ -1723,7 +1723,7 @@ object DoubleMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quatFrom(m: Mat3d) :Quat4d = {
+    def quaternion(m: Mat3d) :Quat4d = {
         import m._
 
         val result = new Quat4d(0, 0, 0, 0)
@@ -1767,7 +1767,7 @@ object DoubleMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def quatFrom(angle: Double, axis: AnyVec3d) :Quat4d = {
+    def quaternion(angle: Double, axis: AnyVec3d) :Quat4d = {
         val s = sin(angle/2)
         new Quat4d(cos(angle/2), s*axis.x, s*axis.y, s*axis.z)
     }
@@ -1775,7 +1775,7 @@ object DoubleMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotationMatFrom(q: AnyQuat4d) :Mat3d = {
+    def rotationMat(q: AnyQuat4d) :Mat3d = {
         import q._
 
         val tb = 2*b*b
@@ -1797,7 +1797,7 @@ object DoubleMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def rotationMatFrom(angle: Double, axis: AnyVec3d) :Mat3d = {
+    def rotationMat(angle: Double, axis: AnyVec3d) :Mat3d = {
         import axis._
 
         val sinA = sin(angle)
@@ -1823,7 +1823,7 @@ object DoubleMath {
      * If quaternion represents 0 degree rotation, then rotation
      * axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(q: AnyQuat4d, axisResult: Vec3d) :Double = {
+    def angleAxis(q: AnyQuat4d, axisResult: Vec3d) :Double = {
         import q._
 
         if (approxEqual(abs(a), 1, 1e-15)) {
@@ -1843,7 +1843,7 @@ object DoubleMath {
      * non-scaling rotation. If matrix represents 0 degree rotation,
      * then rotation axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(m: Mat3d, axisResult: Vec3d) :Double = {
+    def angleAxis(m: Mat3d, axisResult: Vec3d) :Double = {
         import m._
 
         val cosAngle = (m00 + m11 + m22 - 1)*0.5

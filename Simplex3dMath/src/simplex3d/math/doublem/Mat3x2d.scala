@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -28,11 +28,29 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x2d
+sealed abstract class AnyMat3x2d extends Read3x2
 {
     // Column major order.
     def m00: Double; def m10: Double; def m20: Double // column
     def m01: Double; def m11: Double; def m21: Double // column
+
+    private[math] def f00 = float(m00)
+    private[math] def f10 = float(m10)
+    private[math] def f20 = float(m20)
+
+    private[math] def f01 = float(m01)
+    private[math] def f11 = float(m11)
+    private[math] def f21 = float(m21)
+
+
+    private[math] def d00 = m00
+    private[math] def d10 = m10
+    private[math] def d20 = m20
+
+    private[math] def d01 = m01
+    private[math] def d11 = m11
+    private[math] def d21 = m21
+
 
     def apply(c: Int) :ConstVec3d = {
         c match {
@@ -220,15 +238,15 @@ object ConstMat3x2d {
             m01, m11, m21
       )
 
-    def apply(c0: AnyVec3d, c1: AnyVec3d) = 
+    def apply(c0: Read3, c1: Read3) = 
     new ConstMat3x2d(
-        c0.x, c0.y, c0.z,
-        c1.x, c1.y, c1.z
+        c0.dx, c0.dy, c0.dz,
+        c1.dx, c1.dy, c1.dz
     )
 
-    def apply(m: AnyMat3x2d) = new ConstMat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x2) = new ConstMat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
     implicit def toConst(m: Mat3x2d) = ConstMat3x2d(m)
@@ -338,12 +356,6 @@ object Mat3x2d {
         0, s, 0
     )
 
-    def apply(c0: Read3Float, c1: Read3Float) = 
-    new Mat3x2d(
-        c0.x, c0.y, c0.z,
-        c1.x, c1.y, c1.z
-    )
-
     def apply(
         m00: Double, m10: Double, m20: Double,
         m01: Double, m11: Double, m21: Double
@@ -352,55 +364,55 @@ object Mat3x2d {
             m01, m11, m21
       )
 
-    def apply(c0: AnyVec3d, c1: AnyVec3d) = 
+    def apply(c0: Read3, c1: Read3) = 
     new Mat3x2d(
-        c0.x, c0.y, c0.z,
-        c1.x, c1.y, c1.z
+        c0.dx, c0.dy, c0.dz,
+        c1.dx, c1.dy, c1.dz
     )
 
-    def apply(m: AnyMat2d) = new Mat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x2) = new Mat3x2d(
+        m.d00, m.d10, 0,
+        m.d01, m.d11, 0
     )
 
-    def apply(m: AnyMat2x3d) = new Mat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x3) = new Mat3x2d(
+        m.d00, m.d10, 0,
+        m.d01, m.d11, 0
     )
 
-    def apply(m: AnyMat2x4d) = new Mat3x2d(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x4) = new Mat3x2d(
+        m.d00, m.d10, 0,
+        m.d01, m.d11, 0
     )
 
-    def apply(m: AnyMat3x2d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x2) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
-    def apply(m: AnyMat3d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x3) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
-    def apply(m: AnyMat3x4d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x4) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
-    def apply(m: AnyMat4x2d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x2) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
-    def apply(m: AnyMat4x3d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x3) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
-    def apply(m: AnyMat4d) = new Mat3x2d(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x4) = new Mat3x2d(
+        m.d00, m.d10, m.d20,
+        m.d01, m.d11, m.d21
     )
 
     implicit def toMutable(m: ConstMat3x2d) = Mat3x2d(m)

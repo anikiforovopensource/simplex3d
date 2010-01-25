@@ -59,15 +59,15 @@ object Transform2f {
     def apply(translation: AnyVec2f,
               angle: Float,
               scale: AnyVec2f)
-    :Mat2x3f = apply(translation, rotationMatFrom(angle), scale)
+    :Mat2x3f = apply(translation, rotationMat(angle), scale)
 
     def apply(angle: Float,
               scale: AnyVec2f)
-    :Mat2x3f = apply(Vec2f.Zero, rotationMatFrom(angle), scale)
+    :Mat2x3f = apply(Vec2f.Zero, rotationMat(angle), scale)
 
     def apply(translation: AnyVec2f,
               angle: Float)
-    :Mat2x3f = apply(translation, rotationMatFrom(angle), Vec2f.One)
+    :Mat2x3f = apply(translation, rotationMat(angle), Vec2f.One)
 }
 
 object InverseTransform2f {
@@ -118,15 +118,15 @@ object InverseTransform2f {
     def apply(translation: AnyVec2f,
               angle: Float,
               scale: AnyVec2f)
-    :Mat2x3f = apply(translation, rotationMatFrom(angle), scale)
+    :Mat2x3f = apply(translation, rotationMat(angle), scale)
 
     def apply(angle: Float,
               scale: AnyVec2f)
-    :Mat2x3f = apply(Vec2f.Zero, rotationMatFrom(angle), scale)
+    :Mat2x3f = apply(Vec2f.Zero, rotationMat(angle), scale)
 
     def apply(translation: AnyVec2f,
               angle: Float)
-    :Mat2x3f = apply(translation, rotationMatFrom(angle), Vec2f.One)
+    :Mat2x3f = apply(translation, rotationMat(angle), Vec2f.One)
 }
 
 object Translation2f {
@@ -138,7 +138,7 @@ object Translation2f {
 }
 
 object Rotation2f {
-    def apply(angle: Float) :Mat2x3f = Mat2x3f(rotationMatFrom(angle))
+    def apply(angle: Float) :Mat2x3f = Mat2x3f(rotationMat(angle))
 }
 
 object Scale2f {

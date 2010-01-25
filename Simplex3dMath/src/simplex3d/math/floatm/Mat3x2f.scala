@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -28,11 +28,29 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x2f
+sealed abstract class AnyMat3x2f extends Read3x2
 {
     // Column major order.
     def m00: Float; def m10: Float; def m20: Float // column
     def m01: Float; def m11: Float; def m21: Float // column
+
+    private[math] def f00 = m00
+    private[math] def f10 = m10
+    private[math] def f20 = m20
+
+    private[math] def f01 = m01
+    private[math] def f11 = m11
+    private[math] def f21 = m21
+
+
+    private[math] def d00 = m00
+    private[math] def d10 = m10
+    private[math] def d20 = m20
+
+    private[math] def d01 = m01
+    private[math] def d11 = m11
+    private[math] def d21 = m21
+
 
     def apply(c: Int) :ConstVec3f = {
         c match {
@@ -220,15 +238,15 @@ object ConstMat3x2f {
             m01, m11, m21
       )
 
-    def apply(c0: AnyVec3f, c1: AnyVec3f) = 
+    def apply(c0: Read3, c1: Read3) = 
     new ConstMat3x2f(
-        c0.x, c0.y, c0.z,
-        c1.x, c1.y, c1.z
+        c0.fx, c0.fy, c0.fz,
+        c1.fx, c1.fy, c1.fz
     )
 
-    def apply(m: AnyMat3x2f) = new ConstMat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x2) = new ConstMat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
     implicit def toConst(m: Mat3x2f) = ConstMat3x2f(m)
@@ -338,12 +356,6 @@ object Mat3x2f {
         0, s, 0
     )
 
-    def apply(c0: Read3Double, c1: Read3Double) = 
-    new Mat3x2f(
-        float(c0.x), float(c0.y), float(c0.z),
-        float(c1.x), float(c1.y), float(c1.z)
-    )
-
     def apply(
         m00: Float, m10: Float, m20: Float,
         m01: Float, m11: Float, m21: Float
@@ -352,55 +364,55 @@ object Mat3x2f {
             m01, m11, m21
       )
 
-    def apply(c0: AnyVec3f, c1: AnyVec3f) = 
+    def apply(c0: Read3, c1: Read3) = 
     new Mat3x2f(
-        c0.x, c0.y, c0.z,
-        c1.x, c1.y, c1.z
+        c0.fx, c0.fy, c0.fz,
+        c1.fx, c1.fy, c1.fz
     )
 
-    def apply(m: AnyMat2f) = new Mat3x2f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x2) = new Mat3x2f(
+        m.f00, m.f10, 0,
+        m.f01, m.f11, 0
     )
 
-    def apply(m: AnyMat2x3f) = new Mat3x2f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x3) = new Mat3x2f(
+        m.f00, m.f10, 0,
+        m.f01, m.f11, 0
     )
 
-    def apply(m: AnyMat2x4f) = new Mat3x2f(
-        m.m00, m.m10, 0,
-        m.m01, m.m11, 0
+    def apply(m: Read2x4) = new Mat3x2f(
+        m.f00, m.f10, 0,
+        m.f01, m.f11, 0
     )
 
-    def apply(m: AnyMat3x2f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x2) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
-    def apply(m: AnyMat3f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x3) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
-    def apply(m: AnyMat3x4f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read3x4) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
-    def apply(m: AnyMat4x2f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x2) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
-    def apply(m: AnyMat4x3f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x3) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
-    def apply(m: AnyMat4f) = new Mat3x2f(
-        m.m00, m.m10, m.m20,
-        m.m01, m.m11, m.m21
+    def apply(m: Read4x4) = new Mat3x2f(
+        m.f00, m.f10, m.f20,
+        m.f01, m.f11, m.f21
     )
 
     implicit def toMutable(m: ConstMat3x2f) = Mat3x2f(m)

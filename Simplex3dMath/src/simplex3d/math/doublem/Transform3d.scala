@@ -60,28 +60,28 @@ object Transform3d {
     def apply(translation: AnyVec3d,
               rotation: AnyQuat4d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(rotation), scale)
+    :Mat3x4d = apply(translation, rotationMat(rotation), scale)
 
     def apply(rotation: AnyQuat4d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(Vec3d.Zero, rotationMatFrom(rotation), scale)
+    :Mat3x4d = apply(Vec3d.Zero, rotationMat(rotation), scale)
 
     def apply(translation: AnyVec3d,
               rotation: AnyQuat4d)
-    :Mat3x4d = apply(translation, rotationMatFrom(rotation), Vec3d.One)
+    :Mat3x4d = apply(translation, rotationMat(rotation), Vec3d.One)
 
     def apply(translation: AnyVec3d,
               angle: Double, axis: AnyVec3d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(angle, axis), scale)
+    :Mat3x4d = apply(translation, rotationMat(angle, axis), scale)
 
     def apply(angle: Double, axis: AnyVec3d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(Vec3d.Zero, rotationMatFrom(angle, axis), scale)
+    :Mat3x4d = apply(Vec3d.Zero, rotationMat(angle, axis), scale)
 
     def apply(translation: AnyVec3d,
               angle: Double, axis: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(angle, axis), Vec3d.One)
+    :Mat3x4d = apply(translation, rotationMat(angle, axis), Vec3d.One)
 }
 
 object InverseTransform3d {
@@ -140,28 +140,28 @@ object InverseTransform3d {
     def apply(translation: AnyVec3d,
               rotation: AnyQuat4d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(rotation), scale)
+    :Mat3x4d = apply(translation, rotationMat(rotation), scale)
 
     def apply(rotation: AnyQuat4d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(Vec3d.Zero, rotationMatFrom(rotation), scale)
+    :Mat3x4d = apply(Vec3d.Zero, rotationMat(rotation), scale)
 
     def apply(translation: AnyVec3d,
               rotation: AnyQuat4d)
-    :Mat3x4d = apply(translation, rotationMatFrom(rotation), Vec3d.One)
+    :Mat3x4d = apply(translation, rotationMat(rotation), Vec3d.One)
 
     def apply(translation: AnyVec3d,
               angle: Double, axis: AnyVec3d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(angle, axis), scale)
+    :Mat3x4d = apply(translation, rotationMat(angle, axis), scale)
 
     def apply(angle: Double, axis: AnyVec3d,
               scale: AnyVec3d)
-    :Mat3x4d = apply(Vec3d.Zero, rotationMatFrom(angle, axis), scale)
+    :Mat3x4d = apply(Vec3d.Zero, rotationMat(angle, axis), scale)
 
     def apply(translation: AnyVec3d,
               angle: Double, axis: AnyVec3d)
-    :Mat3x4d = apply(translation, rotationMatFrom(angle, axis), Vec3d.One)
+    :Mat3x4d = apply(translation, rotationMat(angle, axis), Vec3d.One)
 }
 
 object Translation3d {
@@ -173,9 +173,9 @@ object Translation3d {
 }
 
 object Rotation3d {
-    def apply(q: AnyQuat4d) :Mat3x4d = Mat3x4d(rotationMatFrom(q))
+    def apply(q: AnyQuat4d) :Mat3x4d = Mat3x4d(rotationMat(q))
     def apply(angle: Double, axis: AnyVec3d) :Mat3x4d = {
-        Mat3x4d(rotationMatFrom(angle, axis))
+        Mat3x4d(rotationMat(angle, axis))
     }
 }
 

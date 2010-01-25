@@ -28,8 +28,9 @@ import simplex3d.math.intm.IntMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2i extends Read2Int {
+sealed abstract class AnyVec2i extends Read2 {
 
+    private[math] type T = Int
     private[math] type R2 = ConstVec2i
     private[math] type R3 = ConstVec3i
     private[math] type R4 = ConstVec4i
@@ -41,6 +42,21 @@ sealed abstract class AnyVec2i extends Read2Int {
     protected def make4(x: Int, y: Int, z: Int, w: Int) =
         new ConstVec4i(x, y, z, w)
 
+    private[math] def bx: Boolean = bool(x)
+    private[math] def by: Boolean = bool(y)
+
+    private[math] def ix: Int = x
+    private[math] def iy: Int = y
+
+    private[math] def fx: Float = x
+    private[math] def fy: Float = y
+
+    private[math] def dx: Double = x
+    private[math] def dy: Double = y
+
+
+    def x: Int
+    def y: Int
 
     def r = x
     def g = y
@@ -114,7 +130,7 @@ final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
 
 object ConstVec2i {
     def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-    def apply(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
+    def apply(u: Read2) = new ConstVec2i(u.ix, u.iy)
 
     implicit def toConst(u: Vec2i) = new ConstVec2i(u.x, u.y)
 }
@@ -198,18 +214,9 @@ object Vec2i {
 
     def apply(s: Int) = new Vec2i(s, s)
     def apply(x: Int, y: Int) = new Vec2i(x, y)
-    def apply(u: AnyVec2i) = new Vec2i(u.x, u.y)
-    def apply(u: AnyVec3i) = new Vec2i(u.x, u.y)
-    def apply(u: AnyVec4i) = new Vec2i(u.x, u.y)
-    def apply(u: AnyVec2b) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: AnyVec3b) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: AnyVec4b) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read2Float) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read3Float) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read4Float) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read2Double) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read3Double) = new Vec2i(int(u.x), int(u.y))
-    def apply(u: Read4Double) = new Vec2i(int(u.x), int(u.y))
+    def apply(u: Read2) = new Vec2i(u.ix, u.iy)
+    def apply(u: Read3) = new Vec2i(u.ix, u.iy)
+    def apply(u: Read4) = new Vec2i(u.ix, u.iy)
 
     implicit def toMutable(u: ConstVec2i) = Vec2i(u)
 }

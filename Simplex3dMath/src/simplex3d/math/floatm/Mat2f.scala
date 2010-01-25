@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -28,11 +28,25 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2f
+sealed abstract class AnyMat2f extends Read2x2
 {
     // Column major order.
     def m00: Float; def m10: Float // column
     def m01: Float; def m11: Float // column
+
+    private[math] def f00 = m00
+    private[math] def f10 = m10
+
+    private[math] def f01 = m01
+    private[math] def f11 = m11
+
+
+    private[math] def d00 = m00
+    private[math] def d10 = m10
+
+    private[math] def d01 = m01
+    private[math] def d11 = m11
+
 
     def apply(c: Int) :ConstVec2f = {
         c match {
@@ -202,15 +216,15 @@ object ConstMat2f {
             m01, m11
       )
 
-    def apply(c0: AnyVec2f, c1: AnyVec2f) = 
+    def apply(c0: Read2, c1: Read2) = 
     new ConstMat2f(
-        c0.x, c0.y,
-        c1.x, c1.y
+        c0.fx, c0.fy,
+        c1.fx, c1.fy
     )
 
-    def apply(m: AnyMat2f) = new ConstMat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read2x2) = new ConstMat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
     implicit def toConst(m: Mat2f) = ConstMat2f(m)
@@ -307,12 +321,6 @@ object Mat2f {
         0, s
     )
 
-    def apply(c0: Read2Double, c1: Read2Double) = 
-    new Mat2f(
-        float(c0.x), float(c0.y),
-        float(c1.x), float(c1.y)
-    )
-
     def apply(
         m00: Float, m10: Float,
         m01: Float, m11: Float
@@ -321,55 +329,55 @@ object Mat2f {
             m01, m11
       )
 
-    def apply(c0: AnyVec2f, c1: AnyVec2f) = 
+    def apply(c0: Read2, c1: Read2) = 
     new Mat2f(
-        c0.x, c0.y,
-        c1.x, c1.y
+        c0.fx, c0.fy,
+        c1.fx, c1.fy
     )
 
-    def apply(m: AnyMat2f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read2x2) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat2x3f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read2x3) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat2x4f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read2x4) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat3x2f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read3x2) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat3f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read3x3) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat3x4f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read3x4) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat4x2f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read4x2) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat4x3f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read4x3) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
-    def apply(m: AnyMat4f) = new Mat2f(
-        m.m00, m.m10,
-        m.m01, m.m11
+    def apply(m: Read4x4) = new Mat2f(
+        m.f00, m.f10,
+        m.f01, m.f11
     )
 
     implicit def toMutable(m: ConstMat2f) = Mat2f(m)

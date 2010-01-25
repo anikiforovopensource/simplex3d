@@ -24,9 +24,8 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle4Read[T]
-extends Swizzle3Read[T]
-{
+private[math] abstract class Swizzle4Read extends Swizzle3Read {
+
     def w: T
 
 

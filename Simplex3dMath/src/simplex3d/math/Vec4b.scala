@@ -26,8 +26,9 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4b extends Swizzle4Read[Boolean] {
+sealed abstract class AnyVec4b extends Read4 {
 
+    private[math] type T = Boolean
     private[math] type R2 = ConstVec2b
     private[math] type R3 = ConstVec3b
     private[math] type R4 = ConstVec4b
@@ -38,6 +39,26 @@ sealed abstract class AnyVec4b extends Swizzle4Read[Boolean] {
         new ConstVec3b(x, y, z)
     protected def make4(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
         new ConstVec4b(x, y, z, w)
+
+    private[math] def bx: Boolean = x
+    private[math] def by: Boolean = y
+    private[math] def bz: Boolean = z
+    private[math] def bw: Boolean = w
+
+    private[math] def ix: Int = int(x)
+    private[math] def iy: Int = int(y)
+    private[math] def iz: Int = int(z)
+    private[math] def iw: Int = int(w)
+
+    private[math] def fx: Float = float(x)
+    private[math] def fy: Float = float(y)
+    private[math] def fz: Float = float(z)
+    private[math] def fw: Float = float(w)
+
+    private[math] def dx: Double = double(x)
+    private[math] def dy: Double = double(y)
+    private[math] def dz: Double = double(z)
+    private[math] def dw: Double = double(w)
 
 
     def x: Boolean
@@ -105,7 +126,7 @@ object ConstVec4b {
     def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) = {
         new ConstVec4b(x, y, z, w)
     }
-    def apply(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+    def apply(u: Read4) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
 
     implicit def toConst(u: Vec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
@@ -543,35 +564,29 @@ object Vec4b {
     def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
         new Vec4b(x, y, z, w)
 
-    def apply(u: AnyVec4b) =
-        new Vec4b(u.x, u.y, u.z, u.w)
+    def apply(u: Read4) =
+        new Vec4b(u.bx, u.by, u.bz, u.bw)
 
-    def apply(xy: AnyVec2b, z: Boolean, w: Boolean) =
-        new Vec4b(xy.x, xy.y, z, w)
+    def apply(xy: Read2, z: Boolean, w: Boolean) =
+        new Vec4b(xy.bx, xy.by, z, w)
 
-    def apply(x: Boolean, yz: AnyVec2b, w: Boolean) =
-        new Vec4b(x, yz.x, yz.y, w)
+    def apply(x: Boolean, yz: Read2, w: Boolean) =
+        new Vec4b(x, yz.bx, yz.by, w)
 
-    def apply(x: Boolean, y: Boolean, zw: AnyVec2b) =
-        new Vec4b(x, y, zw.x, zw.y)
+    def apply(x: Boolean, y: Boolean, zw: Read2) =
+        new Vec4b(x, y, zw.bx, zw.by)
 
-    def apply(xy: AnyVec2b, zw: AnyVec2b) =
-        new Vec4b(xy.x, xy.y, zw.x, zw.y)
+    def apply(xy: Read2, zw: Read2) =
+        new Vec4b(xy.bx, xy.by, zw.bx, zw.by)
 
-    def apply(xyz: AnyVec3b, w: Boolean) =
-        new Vec4b(xyz.x, xyz.y, xyz.z, w)
+    def apply(xyz: Read3, w: Boolean) =
+        new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
 
-    def apply(x: Boolean, yzw: AnyVec3b) =
-        new Vec4b(x, yzw.x, yzw.y, yzw.z)
+    def apply(x: Boolean, yzw: Read3) =
+        new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
-    def apply(u: Read4Int) =
-        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
-
-    def apply(u: Read4Float) =
-        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
-
-    def apply(u: Read4Double) =
-        new Vec4b(bool(u.x), bool(u.y), bool(u.z), bool(u.w))
+    def apply(m: Read2x2) =
+        new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 
     implicit def toMutable(u: ConstVec4b) = Vec4b(u)
 }

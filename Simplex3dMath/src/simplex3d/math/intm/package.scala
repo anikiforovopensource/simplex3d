@@ -28,6 +28,6 @@ import simplex3d.math.intm.IntMath._
  */
 package object intm {
 
-    //Implicints
+    //Implicits
     implicit def iextendInt(s: Int) = new ExtendedInt(s)
 }

@@ -28,8 +28,9 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2f extends Read2Float {
+sealed abstract class AnyVec2f extends Read2 {
 
+    private[math] type T = Float
     private[math] type R2 = ConstVec2f
     private[math] type R3 = ConstVec3f
     private[math] type R4 = ConstVec4f
@@ -41,6 +42,21 @@ sealed abstract class AnyVec2f extends Read2Float {
     protected def make4(x: Float, y: Float, z: Float, w: Float) =
         new ConstVec4f(x, y, z, w)
 
+    private[math] def bx: Boolean = bool(x)
+    private[math] def by: Boolean = bool(y)
+
+    private[math] def ix: Int = int(x)
+    private[math] def iy: Int = int(y)
+
+    private[math] def fx: Float = x
+    private[math] def fy: Float = y
+
+    private[math] def dx: Double = x
+    private[math] def dy: Double = y
+
+
+    def x: Float
+    def y: Float
 
     def r = x
     def g = y
@@ -110,7 +126,7 @@ extends AnyVec2f
 
 object ConstVec2f {
     def apply(x: Float, y: Float) = new ConstVec2f(x, y)
-    def apply(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
+    def apply(u: Read2) = new ConstVec2f(u.fx, u.fy)
 
     implicit def toConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
 }
@@ -181,18 +197,9 @@ object Vec2f {
 
     def apply(s: Float) = new Vec2f(s, s)
     def apply(x: Float, y: Float) = new Vec2f(x, y)
-    def apply(u: AnyVec2f) = new Vec2f(u.x, u.y)
-    def apply(u: AnyVec3f) = new Vec2f(u.x, u.y)
-    def apply(u: AnyVec4f) = new Vec2f(u.x, u.y)
-    def apply(u: AnyVec2b) = new Vec2f(float(u.x), float(u.y))
-    def apply(u: AnyVec3b) = new Vec2f(float(u.x), float(u.y))
-    def apply(u: AnyVec4b) = new Vec2f(float(u.x), float(u.y))
-    def apply(u: Read2Int) = new Vec2f(u.x, u.y)
-    def apply(u: Read3Int) = new Vec2f(u.x, u.y)
-    def apply(u: Read4Int) = new Vec2f(u.x, u.y)
-    def apply(u: Read2Double) = new Vec2f(float(u.x), float(u.y))
-    def apply(u: Read3Double) = new Vec2f(float(u.x), float(u.y))
-    def apply(u: Read4Double) = new Vec2f(float(u.x), float(u.y))
+    def apply(u: Read2) = new Vec2f(u.fx, u.fy)
+    def apply(u: Read3) = new Vec2f(u.fx, u.fy)
+    def apply(u: Read4) = new Vec2f(u.fx, u.fy)
 
     implicit def toMutable(u: ConstVec2f) = Vec2f(u)
 }

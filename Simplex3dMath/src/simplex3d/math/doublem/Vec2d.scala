@@ -28,8 +28,9 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2d extends Read2Double {
+sealed abstract class AnyVec2d extends Read2 {
 
+    private[math] type T = Double
     private[math] type R2 = ConstVec2d
     private[math] type R3 = ConstVec3d
     private[math] type R4 = ConstVec4d
@@ -41,6 +42,21 @@ sealed abstract class AnyVec2d extends Read2Double {
     protected def make4(x: Double, y: Double, z: Double, w: Double) =
         new ConstVec4d(x, y, z, w)
 
+    private[math] def bx: Boolean = bool(x)
+    private[math] def by: Boolean = bool(y)
+
+    private[math] def ix: Int = int(x)
+    private[math] def iy: Int = int(y)
+
+    private[math] def fx: Float = float(x)
+    private[math] def fy: Float = float(y)
+
+    private[math] def dx: Double = x
+    private[math] def dy: Double = y
+
+
+    def x: Double
+    def y: Double
 
     def r = x
     def g = y
@@ -110,7 +126,7 @@ extends AnyVec2d
 
 object ConstVec2d {
     def apply(x: Double, y: Double) = new ConstVec2d(x, y)
-    def apply(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
+    def apply(u: Read2) = new ConstVec2d(u.dx, u.dy)
 
     implicit def toConst(u: Vec2d) = new ConstVec2d(u.x, u.y)
 }
@@ -183,18 +199,9 @@ object Vec2d {
 
     def apply(s: Double) = new Vec2d(s, s)
     def apply(x: Double, y: Double) = new Vec2d(x, y)
-    def apply(u: AnyVec2d) = new Vec2d(u.x, u.y)
-    def apply(u: AnyVec3d) = new Vec2d(u.x, u.y)
-    def apply(u: AnyVec4d) = new Vec2d(u.x, u.y)
-    def apply(u: AnyVec2b) = new Vec2d(double(u.x), double(u.y))
-    def apply(u: AnyVec3b) = new Vec2d(double(u.x), double(u.y))
-    def apply(u: AnyVec4b) = new Vec2d(double(u.x), double(u.y))
-    def apply(u: Read2Int) = new Vec2d(u.x, u.y)
-    def apply(u: Read3Int) = new Vec2d(u.x, u.y)
-    def apply(u: Read4Int) = new Vec2d(u.x, u.y)
-    def apply(u: Read2Float) = new Vec2d(u.x, u.y)
-    def apply(u: Read3Float) = new Vec2d(u.x, u.y)
-    def apply(u: Read4Float) = new Vec2d(u.x, u.y)
+    def apply(u: Read2) = new Vec2d(u.dx, u.dy)
+    def apply(u: Read3) = new Vec2d(u.dx, u.dy)
+    def apply(u: Read4) = new Vec2d(u.dx, u.dy)
 
     implicit def toMutable(u: ConstVec2d) = Vec2d(u)
 }

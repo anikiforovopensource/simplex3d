@@ -24,8 +24,9 @@ package simplex3d.math
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle2Read[T] {
-    
+private[math] abstract class Swizzle2Read {
+
+    private[math] type T
     private[math] type R2
     private[math] type R3
     private[math] type R4

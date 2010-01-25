@@ -28,8 +28,9 @@ import simplex3d.math.intm.IntMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3i extends Read3Int {
+sealed abstract class AnyVec3i extends Read3 {
 
+    private[math] type T = Int
     private[math] type R2 = ConstVec2i
     private[math] type R3 = ConstVec3i
     private[math] type R4 = ConstVec4i
@@ -41,6 +42,26 @@ sealed abstract class AnyVec3i extends Read3Int {
     protected def make4(x: Int, y: Int, z: Int, w: Int) =
         new ConstVec4i(x, y, z, w)
 
+    private[math] def bx: Boolean = bool(x)
+    private[math] def by: Boolean = bool(y)
+    private[math] def bz: Boolean = bool(z)
+
+    private[math] def ix: Int = x
+    private[math] def iy: Int = y
+    private[math] def iz: Int = z
+
+    private[math] def fx: Float = x
+    private[math] def fy: Float = y
+    private[math] def fz: Float = z
+
+    private[math] def dx: Double = x
+    private[math] def dy: Double = y
+    private[math] def dz: Double = z
+
+
+    def x: Int
+    def y: Int
+    def z: Int
 
     def r = x
     def g = y
@@ -120,7 +141,7 @@ extends AnyVec3i
 
 object ConstVec3i {
     def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
-    def apply(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
+    def apply(u: Read3) = new ConstVec3i(u.ix, u.iy, u.iz)
 
     implicit def toConst(u: Vec3i) = new ConstVec3i(u.x, u.y, u.z)
 }
@@ -277,16 +298,10 @@ object Vec3i {
 
     def apply(s: Int) = new Vec3i(s, s, s)
     def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
-    def apply(u: AnyVec3i) = new Vec3i(u.x, u.y, u.z)
-    def apply(u: AnyVec4i) = new Vec3i(u.x, u.y, u.z)
-    def apply(xy: AnyVec2i, z: Int) = new Vec3i(xy.x, xy.y, z)
-    def apply(x: Int, yz: AnyVec2i) = new Vec3i(x, yz.x, yz.y)
-    def apply(u: AnyVec3b) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: AnyVec4b) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read3Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read4Float) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read3Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
-    def apply(u: Read4Double) = new Vec3i(int(u.x), int(u.y), int(u.z))
+    def apply(u: Read3) = new Vec3i(u.ix, u.iy, u.iz)
+    def apply(u: Read4) = new Vec3i(u.ix, u.iy, u.iz)
+    def apply(xy: Read2, z: Int) = new Vec3i(xy.ix, xy.iy, z)
+    def apply(x: Int, yz: Read2) = new Vec3i(x, yz.ix, yz.iy)
 
     implicit def toMutable(u: ConstVec3i) = Vec3i(u)
 }

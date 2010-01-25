@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -28,12 +28,32 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x3f
+sealed abstract class AnyMat2x3f extends Read2x3
 {
     // Column major order.
     def m00: Float; def m10: Float // column
     def m01: Float; def m11: Float // column
     def m02: Float; def m12: Float // column
+
+    private[math] def f00 = m00
+    private[math] def f10 = m10
+
+    private[math] def f01 = m01
+    private[math] def f11 = m11
+
+    private[math] def f02 = m02
+    private[math] def f12 = m12
+
+
+    private[math] def d00 = m00
+    private[math] def d10 = m10
+
+    private[math] def d01 = m01
+    private[math] def d11 = m11
+
+    private[math] def d02 = m02
+    private[math] def d12 = m12
+
 
     def apply(c: Int) :ConstVec2f = {
         c match {
@@ -156,62 +176,6 @@ sealed abstract class AnyMat2x3f
         m02*u.x + m12*u.y
     )
 
-    /**
-     * This method will apply the matrix transformation to a point
-     * (such as vertex or object location).<br/>
-     *
-     * Equivalent to regular multiplication with Vec(u, 1).
-     */
-    def transformPoint(u: AnyVec2f) = new Vec2f(
-        m00*u.x + m01*u.y + m02,
-        m10*u.x + m11*u.y + m12
-    )
-    /**
-     * This method will apply the matrix transformation to a vector
-     * (such as object speed).<br/>
-     *
-     * Equivalent to regular multiplication with Vec(u, 0).
-     */
-    def transformVector(u: AnyVec2f) = new Vec2f(
-        m00*u.x + m01*u.y,
-        m10*u.x + m11*u.y
-    )
-
-    /**
-     * Combine two transformations. This method works similar to regular
-     * multiplication but with a special handling of the translation column.
-     * <br/>
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
-     */
-    def *(m: AnyMat2x3f) = new Mat2x3f(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-
-        m00*m.m02 + m01*m.m12 + m02,
-        m10*m.m02 + m11*m.m12 + m12
-    )
-
-    /**
-     * Combine this transformation with rotation. This method works similar
-     * to regular multiplication but with a special handling of
-     * the translation column.<br/>
-     *
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
-     */
-    def *(m: AnyMat2f) = new Mat2x3f(
-        m00*m.m00 + m01*m.m10,
-        m10*m.m00 + m11*m.m10,
-
-        m00*m.m01 + m01*m.m11,
-        m10*m.m01 + m11*m.m11,
-
-        m02,
-        m12
-    )
-
     def ==(m: AnyMat2x3f) :Boolean = {
         if (m eq null) false
         else
@@ -286,17 +250,17 @@ object ConstMat2x3f {
             m02, m12
       )
 
-    def apply(c0: AnyVec2f, c1: AnyVec2f, c2: AnyVec2f) = 
+    def apply(c0: Read2, c1: Read2, c2: Read2) = 
     new ConstMat2x3f(
-        c0.x, c0.y,
-        c1.x, c1.y,
-        c2.x, c2.y
+        c0.fx, c0.fy,
+        c1.fx, c1.fy,
+        c2.fx, c2.fy
     )
 
-    def apply(m: AnyMat2x3f) = new ConstMat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read2x3) = new ConstMat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
     implicit def toConst(m: Mat2x3f) = ConstMat2x3f(m)
@@ -344,45 +308,6 @@ final class Mat2x3f private[math] (
         m00 = a00; m10 = a10
         m01 = a01; m11 = a11
         m02 = a02; m12 = a12
-    }
-
-    /**
-     * Combine two transformations. This method works similar to regular
-     * multiplication but with a special handling of the translation column.
-     * <br/>
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
-     */
-    def *=(m: AnyMat2x3f) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02
-        val a12 = m10*m.m02 + m11*m.m12 + m12
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
-        m02 = a02; m12 = a12
-    }
-
-    /**
-     * Combine this transformation with rotation. This method works similar
-     * to regular multiplication but with a special handling of
-     * the translation column.<br/>
-     *
-     * Equaivalent to Mat2x3(Mat3x3(this)*Mat3x3(m)).
-     */
-    def *=(m: AnyMat2f) {
-        val a00 = m00*m.m00 + m01*m.m10
-        val a10 = m10*m.m00 + m11*m.m10
-
-        val a01 = m00*m.m01 + m01*m.m11
-        val a11 = m10*m.m01 + m11*m.m11
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
     }
 
     def :=(m: AnyMat2x3f) {
@@ -452,13 +377,6 @@ object Mat2x3f {
         0, 0
     )
 
-    def apply(c0: Read2Double, c1: Read2Double, c2: Read2Double) = 
-    new Mat2x3f(
-        float(c0.x), float(c0.y),
-        float(c1.x), float(c1.y),
-        float(c2.x), float(c2.y)
-    )
-
     def apply(
         m00: Float, m10: Float,
         m01: Float, m11: Float,
@@ -469,65 +387,65 @@ object Mat2x3f {
             m02, m12
       )
 
-    def apply(c0: AnyVec2f, c1: AnyVec2f, c2: AnyVec2f) = 
+    def apply(c0: Read2, c1: Read2, c2: Read2) = 
     new Mat2x3f(
-        c0.x, c0.y,
-        c1.x, c1.y,
-        c2.x, c2.y
+        c0.fx, c0.fy,
+        c1.fx, c1.fy,
+        c2.fx, c2.fy
     )
 
-    def apply(m: AnyMat2f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read2x2) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
         0, 0
     )
 
-    def apply(m: AnyMat2x3f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read2x3) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
-    def apply(m: AnyMat2x4f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read2x4) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
-    def apply(m: AnyMat3x2f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read3x2) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
         0, 0
     )
 
-    def apply(m: AnyMat3f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read3x3) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
-    def apply(m: AnyMat3x4f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read3x4) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
-    def apply(m: AnyMat4x2f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
+    def apply(m: Read4x2) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
         0, 0
     )
 
-    def apply(m: AnyMat4x3f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read4x3) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
-    def apply(m: AnyMat4f) = new Mat2x3f(
-        m.m00, m.m10,
-        m.m01, m.m11,
-        m.m02, m.m12
+    def apply(m: Read4x4) = new Mat2x3f(
+        m.f00, m.f10,
+        m.f01, m.f11,
+        m.f02, m.f12
     )
 
     implicit def toMutable(m: ConstMat2x3f) = Mat2x3f(m)

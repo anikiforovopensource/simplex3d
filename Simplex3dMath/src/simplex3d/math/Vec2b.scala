@@ -26,8 +26,9 @@ import simplex3d.math.BaseMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b extends Swizzle2Read[Boolean] {
+sealed abstract class AnyVec2b extends Read2 {
 
+    private[math] type T = Boolean
     private[math] type R2 = ConstVec2b
     private[math] type R3 = ConstVec3b
     private[math] type R4 = ConstVec4b
@@ -39,7 +40,19 @@ sealed abstract class AnyVec2b extends Swizzle2Read[Boolean] {
     protected def make4(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
         new ConstVec4b(x, y, z, w)
 
+    private[math] def bx: Boolean = x
+    private[math] def by: Boolean = y
 
+    private[math] def ix: Int = int(x)
+    private[math] def iy: Int = int(y)
+
+    private[math] def fx: Float = float(x)
+    private[math] def fy: Float = float(y)
+
+    private[math] def dx: Double = double(x)
+    private[math] def dy: Double = double(y)
+
+    
     def x: Boolean
     def y: Boolean
 
@@ -89,7 +102,7 @@ extends AnyVec2b
 
 object ConstVec2b {
     def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
-    def apply(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
+    def apply(u: Read2) = new ConstVec2b(u.bx, u.by)
     
     implicit def toConst(u: Vec2b) = new ConstVec2b(u.x, u.y)
 }
@@ -151,21 +164,9 @@ object Vec2b {
 
     def apply(s: Boolean) = new Vec2b(s, s)
     def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
-    def apply(u: AnyVec2b) = new Vec2b(u.x, u.y)
-    def apply(u: AnyVec3b) = new Vec2b(u.x, u.y)
-    def apply(u: AnyVec4b) = new Vec2b(u.x, u.y)
-
-    def apply(u: Read2Int) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read3Int) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read4Int) = new Vec2b(bool(u.x), bool(u.y))
-
-    def apply(u: Read2Float) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read3Float) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read4Float) = new Vec2b(bool(u.x), bool(u.y))
-
-    def apply(u: Read2Double) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read3Double) = new Vec2b(bool(u.x), bool(u.y))
-    def apply(u: Read4Double) = new Vec2b(bool(u.x), bool(u.y))
+    def apply(u: Read2) = new Vec2b(u.bx, u.by)
+    def apply(u: Read3) = new Vec2b(u.bx, u.by)
+    def apply(u: Read4) = new Vec2b(u.bx, u.by)
 
     implicit def toMutable(u: ConstVec2b) = Vec2b(u)
 }

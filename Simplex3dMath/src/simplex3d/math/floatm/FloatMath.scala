@@ -1732,7 +1732,7 @@ object FloatMath {
      * This method creates a 2d transformation matrix that rotates a vector
      * counterclockwise by the specified angle.
      */
-    def rotationMatFrom(angle: Float) :Mat2f = {
+    def rotationMat(angle: Float) :Mat2f = {
         val cosA = cos(angle)
         val sinA = sin(angle)
 
@@ -1746,7 +1746,7 @@ object FloatMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def rotationAngleFrom(m: Mat2f) :Float = {
+    def rotationAngle(m: Mat2f) :Float = {
         acos((m.m00 + m.m11)*0.5f)
     }
 
@@ -1754,7 +1754,7 @@ object FloatMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quatFrom(m: Mat3f) :Quat4f = {
+    def quaternion(m: Mat3f) :Quat4f = {
         import m._
 
         val result = new Quat4f(0, 0, 0, 0)
@@ -1798,7 +1798,7 @@ object FloatMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def quatFrom(angle: Float, axis: AnyVec3f) :Quat4f = {
+    def quaternion(angle: Float, axis: AnyVec3f) :Quat4f = {
         val s = sin(angle/2)
         new Quat4f(cos(angle/2), s*axis.x, s*axis.y, s*axis.z)
     }
@@ -1806,7 +1806,7 @@ object FloatMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotationMatFrom(q: AnyQuat4f) :Mat3f = {
+    def rotationMat(q: AnyQuat4f) :Mat3f = {
         import q._
 
         val tb = 2*b*b
@@ -1828,7 +1828,7 @@ object FloatMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def rotationMatFrom(angle: Float, axis: AnyVec3f) :Mat3f = {
+    def rotationMat(angle: Float, axis: AnyVec3f) :Mat3f = {
         import axis._
 
         val sinA = sin(angle)
@@ -1854,7 +1854,7 @@ object FloatMath {
      * If quaternion represents 0 degree rotation, then rotation
      * axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(q: AnyQuat4f, axisResult: Vec3f) :Float = {
+    def angleAxis(q: AnyQuat4f, axisResult: Vec3f) :Float = {
         import q._
 
         if (approxEqual(abs(a), 1, 1e-6f)) {
@@ -1874,7 +1874,7 @@ object FloatMath {
      * non-scaling rotation. If matrix represents 0 degree rotation,
      * then rotation axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxisFrom(m: Mat3f, axisResult: Vec3f) :Float = {
+    def angleAxis(m: Mat3f, axisResult: Vec3f) :Float = {
         import m._
 
         val cosAngle = (m00 + m11 + m22 - 1)*0.5f

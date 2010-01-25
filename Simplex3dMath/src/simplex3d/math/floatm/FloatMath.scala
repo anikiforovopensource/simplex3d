@@ -277,10 +277,8 @@ object FloatMath {
         new Vec2f(mod(u.x, v.x), mod(u.y, v.y))
     }
     def modf(u: AnyVec2f, i: Vec2f) :Vec2f = {
-        val s = sign(u)
-        val a = abs(u)
-        i := s*floor(a)
-        s*fract(a)
+        i := trunc(u)
+        u - i
     }
 
     def min(u: AnyVec2f, s: Float) :Vec2f = new Vec2f(min(u.x, s), min(u.y, s))
@@ -490,10 +488,8 @@ object FloatMath {
         new Vec3f(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z))
     }
     def modf(u: AnyVec3f, i: Vec3f) :Vec3f = {
-        val s = sign(u)
-        val a = abs(u)
-        i := s*floor(a)
-        s*fract(a)
+        i := trunc(u)
+        u - i
     }
 
     def min(u: AnyVec3f, s: Float) :Vec3f = {
@@ -778,10 +774,8 @@ object FloatMath {
         new Vec4f(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z), mod(u.w, v.w))
     }
     def modf(u: AnyVec4f, i: Vec4f) :Vec4f = {
-        val s = sign(u)
-        val a = abs(u)
-        i := s*floor(a)
-        s*fract(a)
+        i := trunc(u)
+        u - i
     }
 
     def min(u: AnyVec4f, s: Float) :Vec4f = {
@@ -1298,6 +1292,23 @@ object FloatMath {
 
     def isposinf(x: Float) :Boolean = isinf(x) && x > 0
     def isneginf(x: Float) :Boolean = isinf(x) && x < 0
+
+    def isposinf(u: AnyVec2f) :Vec2b = new Vec2b(isposinf(u.x), isposinf(u.y))
+    def isneginf(u: AnyVec2f) :Vec2b = new Vec2b(isneginf(u.x), isneginf(u.y))
+
+    def isposinf(u: AnyVec3f) :Vec3b = {
+        new Vec3b(isposinf(u.x), isposinf(u.y), isposinf(u.z))
+    }
+    def isneginf(u: AnyVec3f) :Vec3b = {
+        new Vec3b(isneginf(u.x), isneginf(u.y), isneginf(u.z))
+    }
+
+    def isposinf(u: AnyVec4f) :Vec4b = {
+        new Vec4b(isposinf(u.x), isposinf(u.y), isposinf(u.z), isposinf(u.w))
+    }
+    def isneginf(u: AnyVec4f) :Vec4b = {
+        new Vec4b(isneginf(u.x), isneginf(u.y), isneginf(u.z), isneginf(u.w))
+    }
 
     // Lerp
     def lerp(x: Float, y: Float, a: Float) = mix(x, y, a)

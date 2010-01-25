@@ -23,8 +23,10 @@ package test.math.floatm
 import org.scalatest._
 
 import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
+import Float.{NaN => nan, PositiveInfinity => posinf, NegativeInfinity => neginf}
 
 
 /**
@@ -33,43 +35,43 @@ import simplex3d.math.floatm.FloatMath._
 class FloatMathTest extends FunSuite {
 
     test("Float functions") {
-        assert(isnan(Float.NaN))
-        assert(!isnan(Float.PositiveInfinity))
-        assert(!isnan(Float.NegativeInfinity))
+        assert(isnan(nan))
+        assert(!isnan(posinf))
+        assert(!isnan(neginf))
         assert(!isnan(0))
 
-        assert(!isinf(Float.NaN))
-        assert(isinf(Float.PositiveInfinity))
-        assert(isinf(Float.NegativeInfinity))
+        assert(!isinf(nan))
+        assert(isinf(posinf))
+        assert(isinf(neginf))
         assert(!isinf(0))
 
-        assert(!isposinf(Float.NaN))
-        assert(isposinf(Float.PositiveInfinity))
-        assert(!isposinf(Float.NegativeInfinity))
+        assert(!isposinf(nan))
+        assert(isposinf(posinf))
+        assert(!isposinf(neginf))
         assert(!isposinf(0))
 
-        assert(!isneginf(Float.NaN))
-        assert(!isneginf(Float.PositiveInfinity))
-        assert(isneginf(Float.NegativeInfinity))
+        assert(!isneginf(nan))
+        assert(!isneginf(posinf))
+        assert(isneginf(neginf))
         assert(!isneginf(0))
 
-        assert(isnan(radians(Float.NaN)))
-        assert(isposinf(radians(Float.PositiveInfinity)))
-        assert(isneginf(radians(Float.NegativeInfinity)))
+        assert(isnan(radians(nan)))
+        assert(isposinf(radians(posinf)))
+        assert(isneginf(radians(neginf)))
         expect(0) { radians(0) }
         expect(Pi) { radians(180) }
         expect(-2*Pi) { radians(-360) }
 
-        assert(isnan(degrees(Float.NaN)))
-        assert(isposinf(degrees(Float.PositiveInfinity)))
-        assert(isneginf(degrees(Float.NegativeInfinity)))
+        assert(isnan(degrees(nan)))
+        assert(isposinf(degrees(posinf)))
+        assert(isneginf(degrees(neginf)))
         expect(0) { degrees(0) }
         expect(180) { degrees(Pi) }
         expect(-360) { degrees(-2*Pi) }
 
-        assert(isnan(sin(Float.NaN)))
-        assert(isnan(sin(Float.PositiveInfinity)))
-        assert(isnan(sin(Float.NegativeInfinity)))
+        assert(isnan(sin(nan)))
+        assert(isnan(sin(posinf)))
+        assert(isnan(sin(neginf)))
         assert(approxEqual(0, sin(0), 1e-6f))
         assert(approxEqual(0.5f, sin(Pi/6), 1e-6f))
         assert(approxEqual(inversesqrt(2), sin(Pi/4), 1e-6f))
@@ -79,9 +81,9 @@ class FloatMathTest extends FunSuite {
         assert(approxEqual(-1, sin(3*Pi/2), 1e-6f))
         assert(approxEqual(0, sin(2*Pi), 1e-6f))
 
-        assert(isnan(cos(Float.NaN)))
-        assert(isnan(cos(Float.PositiveInfinity)))
-        assert(isnan(cos(Float.NegativeInfinity)))
+        assert(isnan(cos(nan)))
+        assert(isnan(cos(posinf)))
+        assert(isnan(cos(neginf)))
         assert(approxEqual(1, cos(0), 1e-6f))
         assert(approxEqual(sqrt(3)/2, cos(Pi/6), 1e-6f))
         assert(approxEqual(inversesqrt(2), cos(Pi/4), 1e-6f))
@@ -91,203 +93,205 @@ class FloatMathTest extends FunSuite {
         assert(approxEqual(0, cos(3*Pi/2), 1e-6f))
         assert(approxEqual(1, cos(2*Pi), 1e-6f))
 
-        assert(isnan(tan(Float.NaN)))
-        assert(isnan(tan(Float.PositiveInfinity)))
-        assert(isnan(tan(Float.NegativeInfinity)))
+        assert(isnan(tan(nan)))
+        assert(isnan(tan(posinf)))
+        assert(isnan(tan(neginf)))
         assert(approxEqual(0, tan(0), 1e-6f))
         assert(approxEqual(inversesqrt(3), tan(Pi/6), 1e-6f))
         assert(approxEqual(1, tan(Pi/4), 1e-6f))
         assert(approxEqual(sqrt(3), tan(Pi/3), 1e-6f))
 
-        assert(isnan(asin(Float.NaN)))
-        assert(isnan(asin(Float.PositiveInfinity)))
-        assert(isnan(asin(Float.NegativeInfinity)))
+        assert(isnan(asin(nan)))
+        assert(isnan(asin(posinf)))
+        assert(isnan(asin(neginf)))
         assert(approxEqual(0, asin(0), 1e-6f))
         assert(approxEqual(Pi/6, asin(0.5f), 1e-6f))
         assert(approxEqual(Pi/4, asin(inversesqrt(2)), 1e-6f))
         assert(approxEqual(Pi/3, asin(sqrt(3)/2), 1e-6f))
         assert(approxEqual(Pi/2, asin(1), 1e-6f))
 
-        assert(isnan(acos(Float.NaN)))
-        assert(isnan(acos(Float.PositiveInfinity)))
-        assert(isnan(acos(Float.NegativeInfinity)))
+        assert(isnan(acos(nan)))
+        assert(isnan(acos(posinf)))
+        assert(isnan(acos(neginf)))
         assert(approxEqual(0, acos(1), 1e-6f))
         assert(approxEqual(Pi/6, acos(sqrt(3)/2), 1e-6f))
         assert(approxEqual(Pi/4, acos(inversesqrt(2)), 1e-6f))
         assert(approxEqual(Pi/3, acos(0.5f), 1e-6f))
         assert(approxEqual(Pi/2, acos(0), 1e-6f))
 
-        assert(isnan(atan(Float.NaN)))
-        assert(approxEqual(Pi/2, atan(Float.PositiveInfinity), 1e-6f))
-        assert(approxEqual(-Pi/2, atan(Float.NegativeInfinity), 1e-6f))
+        assert(isnan(atan(nan)))
+        assert(approxEqual(Pi/2, atan(posinf), 1e-6f))
+        assert(approxEqual(-Pi/2, atan(neginf), 1e-6f))
         assert(approxEqual(0, atan(0), 1e-6f))
         assert(approxEqual(Pi/6, atan(inversesqrt(3)), 1e-6f))
         assert(approxEqual(Pi/4, atan(1), 1e-6f))
         assert(approxEqual(Pi/3, atan(sqrt(3)), 1e-6f))
 
-        assert(isnan(atan(Float.NaN, 1)))
-        assert(approxEqual(Pi/2, atan(Float.PositiveInfinity, 1), 1e-6f))
-        assert(approxEqual(-Pi/2, atan(Float.NegativeInfinity, 1), 1e-6f))
-        assert(isnan(atan(1, Float.NaN)))
-        assert(approxEqual(0, atan(1, Float.PositiveInfinity), 1e-6f))
-        assert(approxEqual(Pi, atan(1, Float.NegativeInfinity), 1e-6f))
-        assert(isnan(atan(Float.NaN, Float.NaN)))
-        assert(isnan(atan(Float.NaN, Float.PositiveInfinity)))
-        assert(isnan(atan(Float.NaN, Float.NegativeInfinity)))
-        assert(isnan(atan(Float.PositiveInfinity, Float.NaN)))
-        assert(isnan(atan(Float.NegativeInfinity, Float.NaN)))
-        assert(approxEqual(Pi/4, atan(Float.PositiveInfinity, Float.PositiveInfinity), 1e-6f))
-        assert(approxEqual(3*Pi/4, atan(Float.PositiveInfinity, Float.NegativeInfinity), 1e-6f))
-        assert(approxEqual(-Pi/4, atan(Float.NegativeInfinity, Float.PositiveInfinity), 1e-6f))
-        assert(approxEqual(-3*Pi/4, atan(Float.NegativeInfinity, Float.NegativeInfinity), 1e-6f))
+        assert(isnan(atan(nan, 1)))
+        assert(approxEqual(Pi/2, atan(posinf, 1), 1e-6f))
+        assert(approxEqual(-Pi/2, atan(neginf, 1), 1e-6f))
+        assert(isnan(atan(1, nan)))
+        assert(approxEqual(0, atan(1, posinf), 1e-6f))
+        assert(approxEqual(Pi, atan(1, neginf), 1e-6f))
+        assert(isnan(atan(nan, nan)))
+        assert(isnan(atan(nan, posinf)))
+        assert(isnan(atan(nan, neginf)))
+        assert(isnan(atan(posinf, nan)))
+        assert(isnan(atan(neginf, nan)))
+        assert(approxEqual(Pi/4, atan(posinf, posinf), 1e-6f))
+        assert(approxEqual(3*Pi/4, atan(posinf, neginf), 1e-6f))
+        assert(approxEqual(-Pi/4, atan(neginf, posinf), 1e-6f))
+        assert(approxEqual(-3*Pi/4, atan(neginf, neginf), 1e-6f))
         assert(approxEqual(0, atan(0, 1), 1e-6f))
         assert(approxEqual(Pi/6, atan(tan(Pi/6), 1), 1e-6f))
         assert(approxEqual(Pi/4, atan(1, 1), 1e-6f))
         assert(approxEqual(Pi/3, atan(tan(Pi/3), 1), 1e-6f))
         assert(approxEqual(Pi/2, atan(1, 0), 1e-6f))
 
-        assert(isnan(sinh(Float.NaN)))
-        assert(isposinf(sinh(Float.PositiveInfinity)))
-        assert(isneginf(sinh(Float.NegativeInfinity)))
+        assert(isnan(sinh(nan)))
+        assert(isposinf(sinh(posinf)))
+        assert(isneginf(sinh(neginf)))
         assert(approxEqual(-3.62686040784701876767f, sinh(-2), 1e-6f))
         assert(approxEqual(-1.17520119364380145688f, sinh(-1), 1e-6f))
         assert(approxEqual(0, sinh(0), 1e-6f))
         assert(approxEqual(1.17520119364380145688f, sinh(1), 1e-6f))
         assert(approxEqual(3.62686040784701876767f, sinh(2), 1e-6f))
 
-        assert(isnan(cosh(Float.NaN)))
-        assert(isposinf(cosh(Float.PositiveInfinity)))
-        assert(isposinf(cosh(Float.NegativeInfinity)))
+        assert(isnan(cosh(nan)))
+        assert(isposinf(cosh(posinf)))
+        assert(isposinf(cosh(neginf)))
         assert(approxEqual(3.76219569108363145956f, cosh(-2), 1e-6f))
         assert(approxEqual(1.54308063481524377848f, cosh(-1), 1e-6f))
         assert(approxEqual(1, cosh(0), 1e-6f))
         assert(approxEqual(1.54308063481524377848f, cosh(1), 1e-6f))
         assert(approxEqual(3.76219569108363145956f, cosh(2), 1e-6f))
 
-        assert(isnan(tanh(Float.NaN)))
-        assert(1 == (tanh(Float.PositiveInfinity)))
-        assert(-1 == (tanh(Float.NegativeInfinity)))
+        assert(isnan(tanh(nan)))
+        assert(1 == (tanh(posinf)))
+        assert(-1 == (tanh(neginf)))
         assert(approxEqual(-0.96402758007581688395f, tanh(-2), 1e-6f))
         assert(approxEqual(-0.76159415595576488812f, tanh(-1), 1e-6f))
         assert(approxEqual(0, tanh(0), 1e-6f))
         assert(approxEqual(0.76159415595576488812f, tanh(1), 1e-6f))
         assert(approxEqual(0.96402758007581688395f, tanh(2), 1e-6f))
 
-        assert(isnan(asinh(Float.NaN)))
-        assert(isposinf(asinh(Float.PositiveInfinity)))
-        assert(isneginf(asinh(Float.NegativeInfinity)))
+        assert(isnan(asinh(nan)))
+        assert(isposinf(asinh(posinf)))
+        assert(isneginf(asinh(neginf)))
         assert(approxEqual(-2, asinh(-3.62686040784701876767f), 1e-6f))
         assert(approxEqual(-1, asinh(-1.17520119364380145688f), 1e-6f))
         assert(approxEqual(0, asinh(0), 1e-6f))
         assert(approxEqual(1, asinh(1.17520119364380145688f), 1e-6f))
         assert(approxEqual(2, asinh(3.62686040784701876767f), 1e-6f))
 
-        assert(isnan(acosh(Float.NaN)))
-        assert(isposinf(acosh(Float.PositiveInfinity)))
-        assert(isnan(acosh(Float.NegativeInfinity)))
+        assert(isnan(acosh(nan)))
+        assert(isposinf(acosh(posinf)))
+        assert(isnan(acosh(neginf)))
         assert(approxEqual(0, acosh(1), 1e-6f))
         assert(approxEqual(1, acosh(1.54308063481524377848f), 1e-6f))
         assert(approxEqual(2, acosh(3.76219569108363145956f), 1e-6f))
 
-        assert(isnan(atanh(Float.NaN)))
-        assert(isnan(atanh(Float.PositiveInfinity)))
-        assert(isnan(atanh(Float.NegativeInfinity)))
+        assert(isnan(atanh(nan)))
+        assert(isnan(atanh(posinf)))
+        assert(isnan(atanh(neginf)))
         assert(approxEqual(-2, atanh(-0.96402758007581688395f), 1e-6f))
         assert(approxEqual(-1, atanh(-0.76159415595576488812f), 1e-6f))
         assert(approxEqual(0, atanh(0), 1e-6f))
         assert(approxEqual(1, atanh(0.76159415595576488812f), 1e-6f))
         assert(approxEqual(2, atanh(0.96402758007581688395f), 1e-6f))
 
-        assert(isnan(pow(Float.NaN, 2)))
-        assert(isposinf(pow(Float.PositiveInfinity, 2)))
-        assert(isposinf(pow(Float.NegativeInfinity, 2)))
-        assert(isneginf(pow(Float.NegativeInfinity, 3)))
-        assert(isnan(pow(2, Float.NaN)))
-        assert(isposinf(pow(2, Float.PositiveInfinity)))
-        assert(0 == (pow(2, Float.NegativeInfinity)))
-        assert(isnan(pow(Float.NaN, Float.NaN)))
-        assert(isnan(pow(Float.NaN, Float.PositiveInfinity)))
-        assert(isnan(pow(Float.NaN, Float.NegativeInfinity)))
-        assert(isnan(pow(Float.PositiveInfinity, Float.NaN)))
-        assert(isnan(pow(Float.NegativeInfinity, Float.NaN)))
-        assert(isposinf(pow(Float.PositiveInfinity, Float.PositiveInfinity)))
-        assert(0 == (pow(Float.PositiveInfinity, Float.NegativeInfinity)))
-        assert(isposinf(pow(Float.NegativeInfinity, Float.PositiveInfinity)))
-        assert(0 == (pow(Float.NegativeInfinity, Float.NegativeInfinity)))
+        assert(isnan(pow(nan, 2)))
+        assert(isposinf(pow(posinf, 2)))
+        assert(isposinf(pow(neginf, 2)))
+        assert(isneginf(pow(neginf, 3)))
+        assert(isnan(pow(2, nan)))
+        assert(isposinf(pow(2, posinf)))
+        assert(0 == (pow(2, neginf)))
+        assert(isnan(pow(nan, nan)))
+        assert(isnan(pow(nan, posinf)))
+        assert(isnan(pow(nan, neginf)))
+        assert(isnan(pow(posinf, nan)))
+        assert(isnan(pow(neginf, nan)))
+        assert(isposinf(pow(posinf, posinf)))
+        assert(0 == (pow(posinf, neginf)))
+        assert(isposinf(pow(neginf, posinf)))
+        assert(0 == (pow(neginf, neginf)))
+        assert(isnan(pow(-2.4f, 1.3f)))
+        assert(4 == (pow(-2, 2)))
         assert(approxEqual(2, pow(4, 0.5f), 1e-6f))
         assert(approxEqual(4, pow(2, 2), 1e-6f))
 
-        assert(isnan(exp(Float.NaN)))
-        assert(isposinf(exp(Float.PositiveInfinity)))
-        assert(0 == (exp(Float.NegativeInfinity)))
+        assert(isnan(exp(nan)))
+        assert(isposinf(exp(posinf)))
+        assert(0 == (exp(neginf)))
         assert(approxEqual(E, exp(1), 1e-6f))
         assert(approxEqual(E*E, exp(2), 1e-6f))
 
-        assert(isnan(log(Float.NaN)))
-        assert(isposinf(log(Float.PositiveInfinity)))
-        assert(isnan(log(Float.NegativeInfinity)))
+        assert(isnan(log(nan)))
+        assert(isposinf(log(posinf)))
+        assert(isnan(log(neginf)))
         assert(approxEqual(0, log(1), 1e-6f))
         assert(approxEqual(2, log(E*E), 1e-6f))
 
-        assert(isnan(exp2(Float.NaN)))
-        assert(isposinf(exp2(Float.PositiveInfinity)))
-        assert(0 == (exp2(Float.NegativeInfinity)))
+        assert(isnan(exp2(nan)))
+        assert(isposinf(exp2(posinf)))
+        assert(0 == (exp2(neginf)))
         assert(approxEqual(2, exp2(1), 1e-6f))
         assert(approxEqual(4, exp2(2), 1e-6f))
 
-        assert(isnan(log2(Float.NaN)))
-        assert(isposinf(log2(Float.PositiveInfinity)))
-        assert(isnan(log2(Float.NegativeInfinity)))
+        assert(isnan(log2(nan)))
+        assert(isposinf(log2(posinf)))
+        assert(isnan(log2(neginf)))
         assert(approxEqual(0, log2(1), 1e-6f))
         assert(approxEqual(2, log2(4), 1e-6f))
 
-        assert(isnan(sqrt(Float.NaN)))
-        assert(isposinf(sqrt(Float.PositiveInfinity)))
-        assert(isnan(sqrt(Float.NegativeInfinity)))
+        assert(isnan(sqrt(nan)))
+        assert(isposinf(sqrt(posinf)))
+        assert(isnan(sqrt(neginf)))
         assert(approxEqual(1.4142135623730950488f, sqrt(2), 1e-6f))
         assert(approxEqual(2, sqrt(4), 1e-6f))
 
-        assert(isnan(inversesqrt(Float.NaN)))
-        assert(0 == (inversesqrt(Float.PositiveInfinity)))
-        assert(isnan(inversesqrt(Float.NegativeInfinity)))
+        assert(isnan(inversesqrt(nan)))
+        assert(0 == (inversesqrt(posinf)))
+        assert(isnan(inversesqrt(neginf)))
         assert(approxEqual(1/1.4142135623730950488f, inversesqrt(2), 1e-6f))
         assert(approxEqual(0.5f, inversesqrt(4), 1e-6f))
 
-        assert(isnan(abs(Float.NaN)))
-        assert(isposinf(abs(Float.PositiveInfinity)))
-        assert(isposinf(abs(Float.NegativeInfinity)))
+        assert(isnan(abs(nan)))
+        assert(isposinf(abs(posinf)))
+        assert(isposinf(abs(neginf)))
         assert(1 == abs(-1))
         assert(0 == abs(0))
         assert(1 == abs(1))
 
-        assert(isnan(sign(Float.NaN)))
-        assert(1 == (sign(Float.PositiveInfinity)))
-        assert(-1 == (sign(Float.NegativeInfinity)))
+        assert(isnan(sign(nan)))
+        assert(1 == (sign(posinf)))
+        assert(-1 == (sign(neginf)))
         assert(-1 == sign(-1))
         assert(0 == sign(0))
         assert(1 == sign(1))
 
-        assert(isnan(floor(Float.NaN)))
-        assert(isposinf(floor(Float.PositiveInfinity)))
-        assert(isneginf(floor(Float.NegativeInfinity)))
+        assert(isnan(floor(nan)))
+        assert(isposinf(floor(posinf)))
+        assert(isneginf(floor(neginf)))
         assert(-1 == floor(-1))
         assert(-1 == floor(-0.5f))
         assert(0 == floor(0))
         assert(1 == floor(1.5f))
         assert(1 == floor(1))
 
-        assert(isnan(trunc(Float.NaN)))
-        assert(isposinf(trunc(Float.PositiveInfinity)))
-        assert(isneginf(trunc(Float.NegativeInfinity)))
+        assert(isnan(trunc(nan)))
+        assert(isposinf(trunc(posinf)))
+        assert(isneginf(trunc(neginf)))
         assert(-1 == trunc(-1))
         assert(-1 == trunc(-1.5f))
         assert(0 == trunc(0))
         assert(1 == trunc(1.5f))
         assert(1 == trunc(1))
 
-        assert(isnan(round(Float.NaN)))
-        assert(isposinf(round(Float.PositiveInfinity)))
-        assert(isneginf(round(Float.NegativeInfinity)))
+        assert(isnan(round(nan)))
+        assert(isposinf(round(posinf)))
+        assert(isneginf(round(neginf)))
         assert(-1 == round(-1))
         assert(-1 == round(-1.4f))
         assert(-2 == round(-1.6f))
@@ -296,9 +300,9 @@ class FloatMathTest extends FunSuite {
         assert(1 == round(1))
         assert(2 == round(1.6f))
 
-        assert(isnan(roundEven(Float.NaN)))
-        assert(isposinf(roundEven(Float.PositiveInfinity)))
-        assert(isneginf(roundEven(Float.NegativeInfinity)))
+        assert(isnan(roundEven(nan)))
+        assert(isposinf(roundEven(posinf)))
+        assert(isneginf(roundEven(neginf)))
         assert(-1 == roundEven(-1))
         assert(-1 == roundEven(-1.4f))
         assert(-2 == roundEven(-1.5f))
@@ -311,90 +315,90 @@ class FloatMathTest extends FunSuite {
         assert(2 == roundEven(1.6f))
         assert(2 == roundEven(2.5f))
 
-        assert(isnan(ceil(Float.NaN)))
-        assert(isposinf(ceil(Float.PositiveInfinity)))
-        assert(isneginf(ceil(Float.NegativeInfinity)))
+        assert(isnan(ceil(nan)))
+        assert(isposinf(ceil(posinf)))
+        assert(isneginf(ceil(neginf)))
         assert(-1 == ceil(-1))
         assert(-1 == ceil(-1.1f))
         assert(0 == ceil(0))
         assert(1 == ceil(1))
         assert(1 == ceil(0.1f))
 
-        assert(isnan(fract(Float.NaN)))
-        assert(0 == (fract(Float.PositiveInfinity)))
-        assert(0 == (fract(Float.NegativeInfinity)))
+        assert(isnan(fract(nan)))
+        assert(0 == (fract(posinf)))
+        assert(0 == (fract(neginf)))
         assert(0.9f == fract(-1.1f))
         assert(0 == fract(-1))
         assert(0 == fract(0))
         assert(0 == fract(1))
         assert(0.25f == fract(1.25f))
 
-        assert(isnan(mod(2, Float.NaN)))
-        assert(isnan(mod(2, Float.PositiveInfinity)))
-        assert(isnan(mod(2, Float.NegativeInfinity)))
-        assert(isnan(mod(Float.NaN, 2)))
-        assert(isnan(mod(Float.PositiveInfinity, 2)))
-        assert(isnan(mod(Float.NegativeInfinity, 2)))
+        assert(isnan(mod(2, nan)))
+        assert(isnan(mod(2, posinf)))
+        assert(isnan(mod(2, neginf)))
+        assert(isnan(mod(nan, 2)))
+        assert(isnan(mod(posinf, 2)))
+        assert(isnan(mod(neginf, 2)))
         assert(0.25f == mod(10.25f, 2.5f))
         assert(-0.25f == mod(-10.25f, -2.5f))
         assert(2.25f == mod(-10.25f, 2.5f))
         assert(-2.25f == mod(10.25f, -2.5f))
         assert(0 == mod(0, 2.5f))
 
-        assert(isnan(min(Float.NaN, 2)))
-        assert(2 == (min(Float.PositiveInfinity, 2)))
-        assert(isneginf(min(Float.NegativeInfinity, 2)))
-        assert(isnan(min(2, Float.NaN)))
-        assert(2 == (min(2, Float.PositiveInfinity)))
-        assert(isneginf(min(2, Float.NegativeInfinity)))
+        assert(isnan(min(nan, 2)))
+        assert(2 == (min(posinf, 2)))
+        assert(isneginf(min(neginf, 2)))
+        assert(isnan(min(2, nan)))
+        assert(2 == (min(2, posinf)))
+        assert(isneginf(min(2, neginf)))
         assert(1 == min(1, 2))
         assert(1 == min(2, 1))
         assert(1 == min(1, 1))
 
-        assert(isnan(max(Float.NaN, 2)))
-        assert(isposinf(max(Float.PositiveInfinity, 2)))
-        assert(2 == (max(Float.NegativeInfinity, 2)))
-        assert(isnan(max(2, Float.NaN)))
-        assert(isposinf(max(2, Float.PositiveInfinity)))
-        assert(2 == (max(2, Float.NegativeInfinity)))
+        assert(isnan(max(nan, 2)))
+        assert(isposinf(max(posinf, 2)))
+        assert(2 == (max(neginf, 2)))
+        assert(isnan(max(2, nan)))
+        assert(isposinf(max(2, posinf)))
+        assert(2 == (max(2, neginf)))
         assert(2 == max(1, 2))
         assert(2 == max(2, 1))
         assert(2 == max(2, 2))
 
-        assert(isnan(clamp(Float.NaN, 1, 3)))
-        assert(3 == (clamp(Float.PositiveInfinity, 1, 3)))
-        assert(1 == (clamp(Float.NegativeInfinity, 1, 3)))
+        assert(isnan(clamp(nan, 1, 3)))
+        assert(3 == (clamp(posinf, 1, 3)))
+        assert(1 == (clamp(neginf, 1, 3)))
         assert(1 == clamp(0, 1, 3))
         assert(1 == clamp(1, 1, 3))
         assert(2 == clamp(2, 1, 3))
         assert(3 == clamp(3, 1, 3))
         assert(3 == clamp(4, 1, 3))
 
-        assert(isnan(mix(Float.NaN, 4, 0.25f)))
-        assert(isposinf(mix(Float.PositiveInfinity, 4, 0.25f)))
-        assert(isneginf(mix(Float.NegativeInfinity, 4, 0.25f)))
-        assert(isnan(mix(0, Float.NaN, 0.25f)))
-        assert(isposinf(mix(0, Float.PositiveInfinity, 0.25f)))
-        assert(isneginf(mix(0, Float.NegativeInfinity, 0.25f)))
-        assert(isnan(mix(0, 4, Float.NaN)))
-        assert(isnan(mix(0, 4, Float.PositiveInfinity)))
-        assert(isnan(mix(0, 4, Float.NegativeInfinity)))
+        assert(isnan(mix(nan, 4, 0.25f)))
+        assert(isposinf(mix(posinf, 4, 0.25f)))
+        assert(isneginf(mix(neginf, 4, 0.25f)))
+        assert(isnan(mix(0, nan, 0.25f)))
+        assert(isposinf(mix(0, posinf, 0.25f)))
+        assert(isneginf(mix(0, neginf, 0.25f)))
+        assert(isnan(mix(0, 4, nan)))
+        assert(isnan(mix(0, 4, posinf)))
+        assert(isnan(mix(0, 4, neginf)))
         assert(0 == mix(0, 4, 0))
         assert(1 == mix(0, 4, 0.25f))
         assert(2 == mix(0, 4, 0.5f))
         assert(3 == mix(0, 4, 0.75f))
         assert(4 == mix(0, 4, 1))
         
-        assert(isnan(step(2, Float.NaN)))
-        assert(1 == (step(2, Float.PositiveInfinity)))
-        assert(0 == (step(2, Float.NegativeInfinity)))
+        assert(isnan(step(2, nan)))
+        assert(1 == (step(2, posinf)))
+        assert(0 == (step(2, neginf)))
         assert(0 == step(2, 1))
         assert(1 == step(2, 2))
         assert(1 == step(2, 3))
 
-        assert(isnan(smoothstep(1, 2, Float.NaN)))
-        assert(1 == (smoothstep(1, 2, Float.PositiveInfinity)))
-        assert(0 == (smoothstep(1, 2, Float.NegativeInfinity)))
+        assert(isnan(smoothstep(1, 2, nan)))
+        assert(1 == (smoothstep(1, 2, posinf)))
+        assert(0 == (smoothstep(1, 2, neginf)))
         assert(0 == smoothstep(1, 2, 1))
         assert(approxEqual(0.104f, smoothstep(1, 2, 1.2f), 1e-6f))
         assert(0.5f == smoothstep(1, 2, 1.5f))
@@ -444,29 +448,251 @@ class FloatMathTest extends FunSuite {
         assert(approxEqual(1, refract(-1, -1, 0.3f), 1e-6f))
     }
 
-    test("Numeric vec functions") {
-//    def modf(u: AnyVec2f, i: Vec2f) :Vec2f = {
-//        val s = sign(u)
-//        val a = abs(u)
-//        i := s*floor(a)
-//        s*fract(a)
-//    }
-//    def length(u: AnyVec2f) :Float = sqrt(u.x*u.x + u.y*u.y)
-//    def distance(u: AnyVec2f, v: AnyVec2f) :Float = length(u - v)
-//    def dot(u: AnyVec2f, v: AnyVec2f) :Float = u.x * v.x + u.y * v.y
-//    def normalize(u: AnyVec2f) :Vec2f = u*inversesqrt(u.x*u.x + u.y*u.y)
-//
-//    def faceforward(n: AnyVec2f, i: AnyVec2f, nref: AnyVec2f) :Vec2f = {
-//        if (dot(nref, i) < 0) Vec2f(n) else -n
-//    }
-//
-//    def reflect(i: AnyVec2f, n: AnyVec2f) :Vec2f = {
-//        i - n*2*dot(n, i)
-//    }
-//    def refract(i: AnyVec2f, n: AnyVec2f, eta: Float) :Vec2f = {
-//        val dotni = dot(n, i)
-//        val k = 1 - eta*eta*(1 - dotni*dotni)
-//        if (k < 0) Vec2f(0) else i*eta - n*(eta*dotni + sqrt(k))
-//    }
+    test("Vec2f numeric functions") {
+        assert(all(isnan(Vec2(nan))))
+        assert(!any(isnan(Vec2(neginf))))
+        assert(!any(isnan(Vec2(posinf))))
+        assert(!any(isnan(Vec2(0))))
+
+        assert(!any(isinf(Vec2(nan))))
+        assert(all(isinf(Vec2(neginf))))
+        assert(all(isinf(Vec2(posinf))))
+        assert(!any(isinf(Vec2(0))))
+
+        assert(!any(isposinf(Vec2(nan))))
+        assert(!any(isposinf(Vec2(neginf))))
+        assert(all(isposinf(Vec2(posinf))))
+        assert(!any(isposinf(Vec2(0))))
+
+        assert(!any(isneginf(Vec2(nan))))
+        assert(all(isneginf(Vec2(neginf))))
+        assert(!any(isneginf(Vec2(posinf))))
+        assert(!any(isneginf(Vec2(0))))
+
+        {
+            val u = Vec2(0)
+            val i = Vec2(0)
+
+            u := modf(Vec2(1.25f, 2.125f), i)
+            assert(Vec2(0.25f, 0.125f) == u)
+            assert(Vec2(1, 2) == i)
+
+            u := modf(Vec2(-1.25f, -2.125f), i)
+            assert(Vec2(-0.25f, -0.125f) == u)
+            assert(Vec2(-1, -2) == i)
+
+            u := modf(Vec2(nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec2(posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec2(neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+        
+        assert(sqrt(2) == length(Vec2(1, 1)))
+        assert(5 == length(Vec2(-3, -4)))
+
+        assert(2 == distance(Vec2(1, 1), Vec2(3, 1)))
+
+        assert(11 == dot(Vec2(1, 2), Vec2(3, 4)))
+
+        assert(Vec2(1/sqrt(2), 1/sqrt(2)) == normalize(Vec2(1, 1)))
+        assert(Vec2(-1/sqrt(2), -1/sqrt(2)) == normalize(Vec2(-1, -1)))
+        assert(Vec2(-1/sqrt(2), 1/sqrt(2)) == normalize(Vec2(-1, 1)))
+        assert(Vec2(1/sqrt(2), -1/sqrt(2)) == normalize(Vec2(1, -1)))
+
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(0, 1), Vec2(1, 0)))
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(1, 0), Vec2(1, 0)))
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(1, 1), Vec2(1, 0)))
+        assert(Vec2(2, 2) == faceforward(Vec2(2, 2), Vec2(-1, -1), Vec2(1, 0)))
+
+        assert(Vec2(2, -2) == reflect(Vec2(2, 2), Vec2(0, 1)))
+        assert(Vec2(-2, 2) == reflect(Vec2(-2, -2), Vec2(0, 1)))
+
+        assert(approxEqual(
+                Vec2(0.3f, -0.9539392f),
+                refract(
+                    Vec2(1, 0),
+                    Vec2(0, 1),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec2(0.21213204f, -0.977241f),
+                refract(
+                    normalize(Vec2(1, 1)),
+                    Vec2(0, 1),
+                    0.3f),
+               1e-6f))
+    }
+
+    test("Vec3f numeric functions") {
+        assert(all(isnan(Vec3(nan))))
+        assert(!any(isnan(Vec3(neginf))))
+        assert(!any(isnan(Vec3(posinf))))
+        assert(!any(isnan(Vec3(0))))
+
+        assert(!any(isinf(Vec3(nan))))
+        assert(all(isinf(Vec3(neginf))))
+        assert(all(isinf(Vec3(posinf))))
+        assert(!any(isinf(Vec3(0))))
+
+        assert(!any(isposinf(Vec3(nan))))
+        assert(!any(isposinf(Vec3(neginf))))
+        assert(all(isposinf(Vec3(posinf))))
+        assert(!any(isposinf(Vec3(0))))
+
+        assert(!any(isneginf(Vec3(nan))))
+        assert(all(isneginf(Vec3(neginf))))
+        assert(!any(isneginf(Vec3(posinf))))
+        assert(!any(isneginf(Vec3(0))))
+
+        {
+            val u = Vec3(0)
+            val i = Vec3(0)
+
+            u := modf(Vec3(1.25f, 2.125f, 3.5f), i)
+            assert(Vec3(0.25f, 0.125f, 0.5f) == u)
+            assert(Vec3(1, 2, 3) == i)
+
+            u := modf(Vec3(-1.25f, -2.125f, -3.5f), i)
+            assert(Vec3(-0.25f, -0.125f, -0.5f) == u)
+            assert(Vec3(-1, -2, -3) == i)
+
+            u := modf(Vec3(nan, nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec3(posinf, posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec3(neginf, neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+
+        assert(sqrt(3) == length(Vec3(1, 1, 1)))
+        assert(approxEqual(5*sqrt(2), length(Vec3(-3, -4, -5)), 1e-6f))
+
+        assert(2 == distance(Vec3(1, 1, 1), Vec3(3, 1, 1)))
+
+        assert(26 == dot(Vec3(1, 2, 3), Vec3(3, 4, 5)))
+        
+        assert(Vec3.UnitZ == cross(Vec3.UnitX, Vec3.UnitY))
+        assert(Vec3(-3, 6, -3) == cross(Vec3(1, 2, 3), Vec3(4, 5, 6)))
+
+        assert(Vec3(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)) == normalize(Vec3(1, 1, 1)))
+        assert(Vec3(-1/sqrt(3), -1/sqrt(3), -1/sqrt(3)) == normalize(Vec3(-1, -1, -1)))
+
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(0, 1, 0), Vec3.UnitX))
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(1, 0, 0), Vec3.UnitX))
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(1, 1, 1), Vec3.UnitX))
+        assert(Vec3(2) == faceforward(Vec3(2), Vec3(-1, -1, -1), Vec3.UnitX))
+
+        assert(Vec3(2, -2, 2) == reflect(Vec3(2, 2, 2), Vec3(0, 1, 0)))
+        assert(Vec3(-2, 2, -2) == reflect(Vec3(-2, -2, -2), Vec3(0, 1, 0)))
+
+        assert(approxEqual(
+                Vec3(0.3f, -0.9539392f, 0),
+                refract(
+                    Vec3(1, 0, 0),
+                    Vec3(0, 1, 0),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec3(0.17320508f, -0.9695359f, 0.17320508f),
+                refract(
+                    normalize(Vec3(1, 1, 1)),
+                    Vec3(0, 1, 0),
+                    0.3f),
+               1e-6f))
+    }
+
+    test("Vec4f numeric functions") {
+        assert(all(isnan(Vec4(nan))))
+        assert(!any(isnan(Vec4(neginf))))
+        assert(!any(isnan(Vec4(posinf))))
+        assert(!any(isnan(Vec4(0))))
+
+        assert(!any(isinf(Vec4(nan))))
+        assert(all(isinf(Vec4(neginf))))
+        assert(all(isinf(Vec4(posinf))))
+        assert(!any(isinf(Vec4(0))))
+
+        assert(!any(isposinf(Vec4(nan))))
+        assert(!any(isposinf(Vec4(neginf))))
+        assert(all(isposinf(Vec4(posinf))))
+        assert(!any(isposinf(Vec4(0))))
+
+        assert(!any(isneginf(Vec4(nan))))
+        assert(all(isneginf(Vec4(neginf))))
+        assert(!any(isneginf(Vec4(posinf))))
+        assert(!any(isneginf(Vec4(0))))
+
+        {
+            val u = Vec4(0)
+            val i = Vec4(0)
+
+            u := modf(Vec4(1.25f, 2.125f, 3.5f, 4.75f), i)
+            assert(Vec4(0.25f, 0.125f, 0.5f, 0.75f) == u)
+            assert(Vec4(1, 2, 3, 4) == i)
+
+            u := modf(Vec4(-1.25f, -2.125f, -3.5f, -4.75f), i)
+            assert(Vec4(-0.25f, -0.125f, -0.5f, -0.75f) == u)
+            assert(Vec4(-1, -2, -3, -4) == i)
+
+            u := modf(Vec4(nan, nan, nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec4(posinf, posinf, posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec4(neginf, neginf, neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+
+        assert(2 == length(Vec4(1, 1, 1, 1)))
+        assert(approxEqual(sqrt(54), length(Vec4(-2, -3, -4, -5)), 1e-6f))
+
+        assert(2 == distance(Vec4(1, 1, 1, 1), Vec4(3, 1, 1, 1)))
+
+        assert(50 == dot(Vec4(1, 2, 3, 4), Vec4(3, 4, 5, 6)))
+
+        assert(Vec4(0.5f, 0.5f, 0.5f, 0.5f) == normalize(Vec4(1, 1, 1, 1)))
+        assert(Vec4(-0.5f, -0.5f, -0.5f, -0.5f) == normalize(Vec4(-1, -1, -1, -1)))
+
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(0, 1, 0, 0), Vec4.UnitX))
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(1, 0, 0, 0), Vec4.UnitX))
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(1), Vec4.UnitX))
+        assert(Vec4(2) == faceforward(Vec4(2), Vec4(-1), Vec4.UnitX))
+
+        assert(Vec4(2, -2, 2, 2) == reflect(Vec4(2), Vec4(0, 1, 0, 0)))
+        assert(Vec4(-2, 2, -2, -2) == reflect(Vec4(-2), Vec4(0, 1, 0, 0)))
+
+        assert(approxEqual(
+                Vec4(0.3f, -0.9539392f, 0, 0),
+                refract(
+                    Vec4(1, 0, 0, 0),
+                    Vec4(0, 1, 0, 0),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec4(0.15f, -0.96566045f, 0.15f, 0.15f),
+                refract(
+                    normalize(Vec4(1, 1, 1, 1)),
+                    Vec4(0, 1, 0, 0),
+                    0.3f),
+               1e-6f))
     }
 }

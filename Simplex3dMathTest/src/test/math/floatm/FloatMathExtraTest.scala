@@ -33,21 +33,21 @@ class FloatMathExtraTest extends FunSuite {
 
     test("Convert to quat") {
         def testMatrix(a: Float) {
-            val m0: ConstMat3 = rotationMatFrom(radians(a), normalize(Vec3(1, 2, 3)))
-            val q: ConstQuat4 = quatFrom(m0)
-            val m1: ConstMat3 = rotationMatFrom(q)
+            val m0: ConstMat3 = rotationMat(radians(a), normalize(Vec3(1, 2, 3)))
+            val q: ConstQuat4 = quaternion(m0)
+            val m1: ConstMat3 = rotationMat(q)
 
             assert(approxEqual(m0, m1, 1e-6f))
         }
 
-        def testAngleAxisFrom(angle: Float) {
+        def testAngleAxis(angle: Float) {
             val angle0 = radians(angle)
             val axis0 = ConstVec3(0, 1, 0)
 
-            val q = quatFrom(angle0, axis0)
+            val q = quaternion(angle0, axis0)
 
             val axis1 = Vec3(0)
-            val angle1 = angleAxisFrom(q, axis1)
+            val angle1 = angleAxis(q, axis1)
 
             if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
                 assert(approxEqual(0, angle1, 1e-6f))
@@ -91,36 +91,36 @@ class FloatMathExtraTest extends FunSuite {
         testMatrix(270)
         testMatrix(360)
 
-        testAngleAxisFrom(-360)
-        testAngleAxisFrom(-270)
-        testAngleAxisFrom(-180)
-        testAngleAxisFrom(-90)
-        testAngleAxisFrom(-44)
-        testAngleAxisFrom(0)
-        testAngleAxisFrom(36)
-        testAngleAxisFrom(90)
-        testAngleAxisFrom(180)
-        testAngleAxisFrom(270)
-        testAngleAxisFrom(360)
+        testAngleAxis(-360)
+        testAngleAxis(-270)
+        testAngleAxis(-180)
+        testAngleAxis(-90)
+        testAngleAxis(-44)
+        testAngleAxis(0)
+        testAngleAxis(36)
+        testAngleAxis(90)
+        testAngleAxis(180)
+        testAngleAxis(270)
+        testAngleAxis(360)
     }
 
     test("Convert to matrix") {
-        def testQuatFrom(a: Float) {
-            val q0: ConstQuat4 = quatFrom(radians(a), normalize(Vec3(4, 5, 6)))
-            val m: ConstMat3 = rotationMatFrom(q0)
-            val q1: ConstQuat4 = quatFrom(m)
+        def testQuaternion(a: Float) {
+            val q0: ConstQuat4 = quaternion(radians(a), normalize(Vec3(4, 5, 6)))
+            val m: ConstMat3 = rotationMat(q0)
+            val q1: ConstQuat4 = quaternion(m)
 
             assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
         }
 
-        def testAngleAxisFrom(angle: Float) {
+        def testAngleAxis(angle: Float) {
             val angle0 = radians(angle)
             val axis0 = ConstVec3(0, 0, 1)
 
-            val m: ConstMat3 = rotationMatFrom(angle0, axis0)
+            val m: ConstMat3 = rotationMat(angle0, axis0)
 
             val axis1 = Vec3(0)
-            val angle1 = angleAxisFrom(m, axis1)
+            val angle1 = angleAxis(m, axis1)
 
             if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
                 assert(approxEqual(0, angle1, 1e-6f))
@@ -152,65 +152,65 @@ class FloatMathExtraTest extends FunSuite {
             }
         }
 
-        testQuatFrom(-360)
-        testQuatFrom(-270)
-        testQuatFrom(-180)
-        testQuatFrom(-90)
-        testQuatFrom(-44)
-        testQuatFrom(0)
-        testQuatFrom(36)
-        testQuatFrom(90)
-        testQuatFrom(180)
-        testQuatFrom(270)
-        testQuatFrom(360)
+        testQuaternion(-360)
+        testQuaternion(-270)
+        testQuaternion(-180)
+        testQuaternion(-90)
+        testQuaternion(-44)
+        testQuaternion(0)
+        testQuaternion(36)
+        testQuaternion(90)
+        testQuaternion(180)
+        testQuaternion(270)
+        testQuaternion(360)
 
-        testAngleAxisFrom(-360)
-        testAngleAxisFrom(-270)
-        testAngleAxisFrom(-180)
-        testAngleAxisFrom(-90)
-        testAngleAxisFrom(-44)
-        testAngleAxisFrom(0)
-        testAngleAxisFrom(36)
-        testAngleAxisFrom(90)
-        testAngleAxisFrom(180)
-        testAngleAxisFrom(270)
-        testAngleAxisFrom(360)
+        testAngleAxis(-360)
+        testAngleAxis(-270)
+        testAngleAxis(-180)
+        testAngleAxis(-90)
+        testAngleAxis(-44)
+        testAngleAxis(0)
+        testAngleAxis(36)
+        testAngleAxis(90)
+        testAngleAxis(180)
+        testAngleAxis(270)
+        testAngleAxis(360)
     }
 
     test("Convert to angleAxis") {
-        def testQuatFrom(a: Float) {
-            val q0: ConstQuat4 = quatFrom(radians(a), normalize(Vec3(4, 5, 6)))
+        def testQuaternion(a: Float) {
+            val q0: ConstQuat4 = quaternion(radians(a), normalize(Vec3(4, 5, 6)))
 
             val axis = Vec3(0)
-            val angle = angleAxisFrom(q0, axis)
+            val angle = angleAxis(q0, axis)
 
-            val q1: ConstQuat4 = quatFrom(angle, axis)
+            val q1: ConstQuat4 = quaternion(angle, axis)
 
             assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
         }
 
         def testMatrix(a: Float) {
-            val m0: ConstMat3 = rotationMatFrom(radians(a), normalize(Vec3(1, 2, 3)))
+            val m0: ConstMat3 = rotationMat(radians(a), normalize(Vec3(1, 2, 3)))
 
             val axis = Vec3(0)
-            val angle = angleAxisFrom(m0, axis)
+            val angle = angleAxis(m0, axis)
 
-            val m1: ConstMat3 = rotationMatFrom(angle, axis)
+            val m1: ConstMat3 = rotationMat(angle, axis)
 
             assert(approxEqual(m0, m1, 1e-6f))
         }
 
-        testQuatFrom(-360)
-        testQuatFrom(-270)
-        testQuatFrom(-180)
-        testQuatFrom(-90)
-        testQuatFrom(-44)
-        testQuatFrom(0)
-        testQuatFrom(36)
-        testQuatFrom(90)
-        testQuatFrom(180)
-        testQuatFrom(270)
-        testQuatFrom(360)
+        testQuaternion(-360)
+        testQuaternion(-270)
+        testQuaternion(-180)
+        testQuaternion(-90)
+        testQuaternion(-44)
+        testQuaternion(0)
+        testQuaternion(36)
+        testQuaternion(90)
+        testQuaternion(180)
+        testQuaternion(270)
+        testQuaternion(360)
 
         testMatrix(-360)
         testMatrix(-270)
@@ -227,11 +227,11 @@ class FloatMathExtraTest extends FunSuite {
 
     test("All if branches, quat from mat") {
         def testMatrix(angle: Float, axis: AnyVec3) {
-            val m0: ConstMat3 = rotationMatFrom(
+            val m0: ConstMat3 = rotationMat(
                 radians(angle), normalize(axis)
             )
-            val q: ConstQuat4 = quatFrom(m0)
-            val m1: ConstMat3 = rotationMatFrom(q)
+            val q: ConstQuat4 = quaternion(m0)
+            val m1: ConstMat3 = rotationMat(q)
 
             assert(approxEqual(m0, m1, 1e-6f))
         }
@@ -251,12 +251,12 @@ class FloatMathExtraTest extends FunSuite {
 
     test("All if branches, angle axis from mat") {
         def testMatrix(ax: AnyVec3) {
-            val m0: ConstMat3 = rotationMatFrom(radians(180), normalize(ax))
+            val m0: ConstMat3 = rotationMat(radians(180), normalize(ax))
 
             val axis = Vec3(0)
-            val angle = angleAxisFrom(m0, axis)
+            val angle = angleAxis(m0, axis)
 
-            val m1: ConstMat3 = rotationMatFrom(angle, axis)
+            val m1: ConstMat3 = rotationMat(angle, axis)
 
             assert(approxEqual(m0, m1, 1e-6f))
         }

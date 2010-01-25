@@ -34,82 +34,112 @@ import simplex3d.math.doublem._
  */
 class Vec2bTest extends FunSuite {
 
-    test("Mutable factories") {
+    test("Factories") {
         var u = Vec2b(true)
+        expect(classOf[Vec2b]) { u.getClass }
         expect(true) { u.x }
         expect(true) { u.y }
 
         u = Vec2b(false)
+        expect(classOf[Vec2b]) { u.getClass }
         expect(false) { u.x }
         expect(false) { u.y }
 
         BooleanCombinations.test { (x, y, z, w) =>
             var u = Vec2b(x, y)
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec2b(x, y))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec3b(x, y, z))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec4b(x, y, z, w))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec2i(int(x), int(y)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec3i(int(x), int(y), int(z)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec4i(int(x), int(y), int(z), int(w)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec2f(float(x), float(y)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec3f(float(x), float(y), float(z)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec4f(float(x), float(y), float(z), float(w)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec2d(double(x), double(y)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec3d(double(x), double(y), double(z)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
 
             u = Vec2b(Vec4d(double(x), double(y), double(z), double(w)))
+            expect(classOf[Vec2b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
+
+            var c = ConstVec2b(x, y)
+            expect(classOf[ConstVec2b]) { c.getClass }
+            expect(x) { c.x }
+            expect(y) { c.y }
+
+            c = ConstVec2b(Vec2b(x, y))
+            expect(classOf[ConstVec2b]) { c.getClass }
+            expect(x) { c.x }
+            expect(y) { c.y }
+
+            c = ConstVec2b(Vec2i(int(x), int(y)))
+            expect(classOf[ConstVec2b]) { c.getClass }
+            expect(x) { c.x }
+            expect(y) { c.y }
+
+            c = ConstVec2b(Vec2f(float(x), float(y)))
+            expect(classOf[ConstVec2b]) { c.getClass }
+            expect(x) { c.x }
+            expect(y) { c.y }
+
+            c = ConstVec2b(Vec2d(double(x), double(y)))
+            expect(classOf[ConstVec2b]) { c.getClass }
+            expect(x) { c.x }
+            expect(y) { c.y }
         }
     }
 
     test("Const conversions") {
         BooleanCombinations.test { (x, y, z, w) =>
-            val a = ConstVec2b(x, y)
-            expect(classOf[ConstVec2b]) { a.getClass }
-            expect(x) { a.x }
-            expect(y) { a.y }
-
-            val b = ConstVec2b(Vec2b(x, y))
-            expect(classOf[ConstVec2b]) { b.getClass }
-            expect(x) { b.x }
-            expect(y) { b.y }
-
             val t: ConstVec2b = Vec2b(x, y)
             expect(classOf[ConstVec2b]) { t.getClass }
             assert(Vec2b(x, y) == t)

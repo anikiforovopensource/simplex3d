@@ -374,21 +374,6 @@ class Mat2x3fTest extends FunSuite {
         assert(m*Mat3x4(M) == mul34)
 
         assert(m*Vec3(1, 2, 3) == Vec2(38, 44))
-
-
-        // Transformation methods
-        assert(m.transformPoint(Vec2(1, 2)) == Vec2(20, 24))
-        assert(m.transformVector(Vec2(1, 2)) == Vec2(11, 14))
-
-        val mulSelf = Mat2x3(11, 14,
-                             35, 46,
-                             68, 88)
-        assert(m*m == mulSelf)
-
-        val mulRot = Mat2x3(11, 14,
-                            35, 46,
-                            9, 10)
-        assert(m*Mat2x2(M) == mulRot)
     }
 
     test("Mutable math") {
@@ -423,17 +408,5 @@ class Mat2x3fTest extends FunSuite {
                    98, 116,
                    158, 188)
         m := i; m *= Mat3x3(M); assert(m == t)
-
-
-        // Transformation methods
-        val mulSelf = Mat2x3(11, 14,
-                             35, 46,
-                             68, 88)
-        m := i; m *= m; assert(m == mulSelf)
-
-        val mulRot = Mat2x3(11, 14,
-                            35, 46,
-                            9, 10)
-        m := i; m *= Mat2x2(M); assert(m == mulRot)
     }
 }

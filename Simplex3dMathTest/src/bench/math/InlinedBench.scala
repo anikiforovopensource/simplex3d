@@ -112,7 +112,7 @@ class InlinedBenchCase {
             t.x = as(id)
             t.y = as(id + 1)
             t.z = as(id + 2)
-            val p = modelMatrix*Vec4f(t, 1)
+            val p = modelMatrix.transformPoint(t)
 
             val dd = (i + j)*3
             am(dd) = p.x

@@ -56,10 +56,10 @@ class Quat4fTest extends FunSuite {
         expect(3) { q.d }
 
         q = Quat4(Mat2(1, 2, 3, 4))
-        expect(1) { q.a }
-        expect(2) { q.b }
-        expect(3) { q.c }
-        expect(4) { q.d }
+        expect(4) { q.a }
+        expect(1) { q.b }
+        expect(2) { q.c }
+        expect(3) { q.d }
     }
 
     test("Const conversions") {
@@ -75,18 +75,6 @@ class Quat4fTest extends FunSuite {
         expect(d) { q.d }
 
         q = ConstQuat4(Quat4(a, b, c, d))
-        expect(a) { q.a }
-        expect(b) { q.b }
-        expect(c) { q.c }
-        expect(d) { q.d }
-
-        q = ConstQuat4(Vec4(b, c, d, a))
-        expect(a) { q.a }
-        expect(b) { q.b }
-        expect(c) { q.c }
-        expect(d) { q.d }
-
-        q = ConstQuat4(Mat2(a, b, c, d))
         expect(a) { q.a }
         expect(b) { q.b }
         expect(c) { q.c }

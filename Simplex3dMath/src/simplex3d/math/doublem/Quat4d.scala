@@ -20,13 +20,26 @@
 
 package simplex3d.math.doublem
 
+import simplex3d.math._
+import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d {
+sealed abstract class AnyQuat4d extends ReadQ {
+
+    private[math] def fa: Float = float(a)
+    private[math] def fb: Float = float(b)
+    private[math] def fc: Float = float(c)
+    private[math] def fd: Float = float(d)
+
+    private[math] def da: Double = a
+    private[math] def db: Double = b
+    private[math] def dc: Double = c
+    private[math] def dd: Double = d
+
     def a: Double
     def b: Double
     def c: Double
@@ -115,7 +128,7 @@ object ConstQuat4d {
     def apply(a: Double, b: Double, c: Double, d: Double) = {
         new ConstQuat4d(a, b, c, d)
     }
-    def apply(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
+    def apply(u: ReadQ) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
 
     implicit def toConst(u: Quat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }
@@ -163,9 +176,11 @@ object Quat4d {
     def apply(a: Double, b: Double, c: Double, d: Double) = {
         new Quat4d(a, b, c, d)
     }
-    def apply(q: AnyQuat4d) = new Quat4d(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4d) = new Quat4d(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2d) = new Quat4d(m.m11, m.m00, m.m10, m.m01)
+    def apply(q: ReadQ) = new Quat4d(q.da, q.db, q.dc, q.dd)
+    def apply(u: Read4) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
+    def apply(m: Read2x2) = new Quat4d(m.d11, m.d00, m.d10, m.d01)
+
+    def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
 
     implicit def toMutable(u: ConstQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
 }

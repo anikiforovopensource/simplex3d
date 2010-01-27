@@ -516,5 +516,7 @@ object Mat2x4d {
         m.d03, m.d13
     )
 
+    def unapply(m: AnyMat2x4d) = Some((m(0), m(1), m(2), m(3)))
+
     implicit def toMutable(m: ConstMat2x4d) = Mat2x4d(m)
 }

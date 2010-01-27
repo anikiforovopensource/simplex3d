@@ -380,5 +380,7 @@ object Mat2f {
         m.f01, m.f11
     )
 
+    def unapply(m: AnyMat2f) = Some((m(0), m(1)))
+
     implicit def toMutable(m: ConstMat2f) = Mat2f(m)
 }

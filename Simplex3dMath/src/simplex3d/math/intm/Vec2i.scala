@@ -218,5 +218,7 @@ object Vec2i {
     def apply(u: Read3) = new Vec2i(u.ix, u.iy)
     def apply(u: Read4) = new Vec2i(u.ix, u.iy)
 
+    def unapply(u: AnyVec2i) = Some((u.x, u.y))
+
     implicit def toMutable(u: ConstVec2i) = Vec2i(u)
 }

@@ -492,5 +492,7 @@ object Mat3d {
         m.d02, m.d12, m.d22
     )
 
+    def unapply(m: AnyMat3d) = Some((m(0), m(1), m(2)))
+
     implicit def toMutable(m: ConstMat3d) = Mat3d(m)
 }

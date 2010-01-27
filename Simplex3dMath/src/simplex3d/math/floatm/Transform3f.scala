@@ -26,77 +26,71 @@ import FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Transform3f private[math] (val matrix: Mat3x4f) {
+sealed abstract class AnyTransform3f(val matrix: AnyMat3x4f) {
     import matrix._
 
     def scale(s: Float) :Transform3f = {
-        matrix *= s
-        this
+        new Transform3f(matrix*s)
     }
     def scale(s: AnyVec3f) :Transform3f = {
-        m00 *= s.x; m10 *= s.y; m20 *= s.z
-        m01 *= s.x; m11 *= s.y; m21 *= s.z
-        m02 *= s.x; m12 *= s.y; m22 *= s.z
-        m03 *= s.x; m13 *= s.y; m23 *= s.z
-
-        this
+        new Transform3f(new Mat3x4f(
+            m00*s.x, m10*s.y, m20*s.z,
+            m01*s.x, m11*s.y, m21*s.z,
+            m02*s.x, m12*s.y, m22*s.z,
+            m03*s.x, m13*s.y, m23*s.z
+        ))
     }
 
     def rotate(q: AnyQuat4f) :Transform3f = {
-        transform(rotationMat(q))
+        concatenate(rotationMat(q))
     }
     def rotate(angle: Float, axis: AnyVec3f) :Transform3f = {
-        transform(rotationMat(angle, axis))
+        concatenate(rotationMat(angle, axis))
     }
 
     def rotateX(angle: Float) :Transform3f = {
-        transform(rotationMat(angle, Vec3f.UnitX))
+        concatenate(rotationMat(angle, Vec3f.UnitX))
     }
     def rotateY(angle: Float) :Transform3f = {
-        transform(rotationMat(angle, Vec3f.UnitY))
+        concatenate(rotationMat(angle, Vec3f.UnitY))
     }
     def rotateZ(angle: Float) :Transform3f = {
-        transform(rotationMat(angle, Vec3f.UnitZ))
+        concatenate(rotationMat(angle, Vec3f.UnitZ))
     }
 
     def translate(u: AnyVec3f) :Transform3f = {
-        m03 += u.x
-        m13 += u.y
-        m23 += u.z
-
-        this
+        new Transform3f(new Mat3x4f(
+            m00, m10, m20,
+            m01, m11, m21,
+            m02, m12, m22,
+            m03 + u.x, m13 + u.y, m23 + u.z
+        ))
     }
 
-    def transform(t: Transform3f) :Transform3f = {
-        transform(t.matrix)
+    def concatenate(t: AnyTransform3f) :Transform3f = {
+        concatenate(t.matrix)
     }
-    def transform(m: AnyMat3x4f) :Transform3f = {
-        val a00 = m.m00*m00 + m.m01*m10 + m.m02*m20
-        val a10 = m.m10*m00 + m.m11*m10 + m.m12*m20
-        val a20 = m.m20*m00 + m.m21*m10 + m.m22*m20
+    def concatenate(m: AnyMat3x4f) :Transform3f = {
+        new Transform3f(new Mat3x4f(
+            m.m00*m00 + m.m01*m10 + m.m02*m20,
+            m.m10*m00 + m.m11*m10 + m.m12*m20,
+            m.m20*m00 + m.m21*m10 + m.m22*m20,
 
-        val a01 = m.m00*m01 + m.m01*m11 + m.m02*m21
-        val a11 = m.m10*m01 + m.m11*m11 + m.m12*m21
-        val a21 = m.m20*m01 + m.m21*m11 + m.m22*m21
+            m.m00*m01 + m.m01*m11 + m.m02*m21,
+            m.m10*m01 + m.m11*m11 + m.m12*m21,
+            m.m20*m01 + m.m21*m11 + m.m22*m21,
 
-        val a02 = m.m00*m02 + m.m01*m12 + m.m02*m22
-        val a12 = m.m10*m02 + m.m11*m12 + m.m12*m22
-        val a22 = m.m20*m02 + m.m21*m12 + m.m22*m22
+            m.m00*m02 + m.m01*m12 + m.m02*m22,
+            m.m10*m02 + m.m11*m12 + m.m12*m22,
+            m.m20*m02 + m.m21*m12 + m.m22*m22,
 
-        val a03 = m.m00*m03 + m.m01*m13 + m.m02*m23 + m.m03
-        val a13 = m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13
-        val a23 = m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
-
-        m00 = a00; m10 = a10; m20 = a20
-        m01 = a01; m11 = a11; m21 = a21
-        m02 = a02; m12 = a12; m22 = a22
-        m03 = a03; m13 = a13; m23 = a23
-
-        this
+            m.m00*m03 + m.m01*m13 + m.m02*m23 + m.m03,
+            m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13,
+            m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
+        ))
     }
-    def transform(m: AnyMat3f) :Transform3f = {
-        matrix := m*matrix
-        this
+    def concatenate(m: AnyMat3f) :Transform3f = {
+        new Transform3f(m*matrix)
     }
 
     def transformPoint(p: AnyVec3f) = new Vec3f(
@@ -111,27 +105,60 @@ class Transform3f private[math] (val matrix: Mat3x4f) {
         m20*v.x + m21*v.y + m22*v.z
     )
 
-    def inverse() :Transform3f = {
-        new Transform3f(FloatMath.inverse(matrix))
+    def invert() :Transform3f = {
+        new Transform3f(inverse(matrix))
     }
 
-    def ==(t: Transform3f) :Boolean = {
+    def ==(t: AnyTransform3f) :Boolean = {
         if (t eq null) false
         else matrix == t.matrix
     }
 
-    def !=(t: Transform3f) :Boolean = !(this == t)
+    def !=(t: AnyTransform3f) :Boolean = !(this == t)
+
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: Transform3f => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        matrix.hashCode
+    }
 
     override def toString = {
         this.getClass.getSimpleName + "(" + matrix.toString + ")"
     }
 }
 
+
+final class ConstTransform3f private[math] (override val matrix: ConstMat3x4f)
+extends AnyTransform3f(matrix)
+
+object ConstTransform3f {
+    def apply(m: AnyMat3x4f) :ConstTransform3f =
+        new ConstTransform3f(ConstMat3x4f(m))
+
+    def apply(t: AnyTransform3f) :ConstTransform3f =
+        new ConstTransform3f(ConstMat3x4f(t.matrix))
+
+    implicit def toConst(t: Transform3f) = ConstTransform3f(t)
+}
+
+
+final class Transform3f private[math] (override val matrix: Mat3x4f)
+extends AnyTransform3f(matrix)
+
 object Transform3f {
+    
+    val Identity: ConstTransform3f = Transform3f()
 
     def apply() :Transform3f = new Transform3f(Mat3x4f(1))
     def apply(m: AnyMat3x4f) :Transform3f = new Transform3f(Mat3x4f(m))
-    def apply(t: Transform3f) :Transform3f = new Transform3f(Mat3x4f(t.matrix))
+    
+    def apply(t: AnyTransform3f) :Transform3f =
+        new Transform3f(Mat3x4f(t.matrix))
 
     def apply(scale: AnyVec3f = Vec3f.One,
               rotation: AnyMat3f = Mat3f.Identity,
@@ -184,4 +211,6 @@ object Transform3f {
             -m20*tx - m21*ty - m22*tz
         ))
     }
+
+    implicit def toMutable(t: ConstTransform3f) = Transform3f(t)
 }

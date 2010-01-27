@@ -588,5 +588,7 @@ object Vec4b {
     def apply(m: Read2x2) =
         new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 
+    def unapply(u: AnyVec4b) = Some((u.x, u.y, u.z, u.w))
+
     implicit def toMutable(u: ConstVec4b) = Vec4b(u)
 }

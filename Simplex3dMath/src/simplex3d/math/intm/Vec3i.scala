@@ -303,5 +303,7 @@ object Vec3i {
     def apply(xy: Read2, z: Int) = new Vec3i(xy.ix, xy.iy, z)
     def apply(x: Int, yz: Read2) = new Vec3i(x, yz.ix, yz.iy)
 
+    def unapply(u: AnyVec3i) = Some((u.x, u.y, u.z))
+
     implicit def toMutable(u: ConstVec3i) = Vec3i(u)
 }

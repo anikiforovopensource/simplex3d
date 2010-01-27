@@ -20,13 +20,25 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f {
+sealed abstract class AnyQuat4f extends ReadQ {
+
+    private[math] def fa: Float = a
+    private[math] def fb: Float = b
+    private[math] def fc: Float = c
+    private[math] def fd: Float = d
+
+    private[math] def da: Double = a
+    private[math] def db: Double = b
+    private[math] def dc: Double = c
+    private[math] def dd: Double = d
+
     def a: Float
     def b: Float
     def c: Float
@@ -115,7 +127,7 @@ object ConstQuat4f {
     def apply(a: Float, b: Float, c: Float, d: Float) = {
         new ConstQuat4f(a, b, c, d)
     }
-    def apply(u: AnyQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
+    def apply(u: ReadQ) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
 
     implicit def toConst(u: Quat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
@@ -161,9 +173,11 @@ object Quat4f {
 
     def apply() = new Quat4f(1, 0, 0, 0)
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
-    def apply(q: AnyQuat4f) = new Quat4f(q.a, q.b, q.c, q.d)
-    def apply(u: AnyVec4f) = new Quat4f(u.w, u.x, u.y, u.z)
-    def apply(m: AnyMat2f) = new Quat4f(m.m11, m.m00, m.m10, m.m01)
+    def apply(q: ReadQ) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
+    def apply(u: Read4) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
+    def apply(m: Read2x2) = new Quat4f(m.f11, m.f00, m.f10, m.f01)
+
+    def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
 
     implicit def toMutable(u: ConstQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
 }

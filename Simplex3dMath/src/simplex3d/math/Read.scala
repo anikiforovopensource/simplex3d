@@ -80,6 +80,18 @@ private[math] abstract class Read4 extends Swizzle4Read {
     private[math] def dw: Double
 }
 
+private[math] abstract class ReadQ {
+    private[math] def fa: Float
+    private[math] def fb: Float
+    private[math] def fc: Float
+    private[math] def fd: Float
+
+    private[math] def da: Double
+    private[math] def db: Double
+    private[math] def dc: Double
+    private[math] def dd: Double
+}
+
 private[math] abstract class Read2x2 {
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float

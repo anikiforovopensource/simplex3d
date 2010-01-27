@@ -622,5 +622,7 @@ object Mat4d {
         m.d03, m.d13, m.d23, m.d33
     )
 
+    def unapply(m: AnyMat4d) = Some((m(0), m(1), m(2), m(3)))
+
     implicit def toMutable(m: ConstMat4d) = Mat4d(m)
 }

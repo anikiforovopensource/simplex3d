@@ -291,5 +291,7 @@ object Vec3d {
     def apply(xy: Read2, z: Double) = new Vec3d(xy.dx, xy.dy, z)
     def apply(x: Double, yz: Read2) = new Vec3d(x, yz.dx, yz.dy)
 
+    def unapply(u: AnyVec3d) = Some((u.x, u.y, u.z))
+
     implicit def toMutable(u: ConstVec3d) = Vec3d(u)
 }

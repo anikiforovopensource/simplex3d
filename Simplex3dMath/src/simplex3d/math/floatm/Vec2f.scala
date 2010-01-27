@@ -201,5 +201,7 @@ object Vec2f {
     def apply(u: Read3) = new Vec2f(u.fx, u.fy)
     def apply(u: Read4) = new Vec2f(u.fx, u.fy)
 
+    def unapply(u: AnyVec2f) = Some((u.x, u.y))
+
     implicit def toMutable(u: ConstVec2f) = Vec2f(u)
 }

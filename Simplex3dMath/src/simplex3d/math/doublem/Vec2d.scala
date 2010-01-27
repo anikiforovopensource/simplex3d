@@ -203,5 +203,7 @@ object Vec2d {
     def apply(u: Read3) = new Vec2d(u.dx, u.dy)
     def apply(u: Read4) = new Vec2d(u.dx, u.dy)
 
+    def unapply(u: AnyVec2d) = Some((u.x, u.y))
+
     implicit def toMutable(u: ConstVec2d) = Vec2d(u)
 }

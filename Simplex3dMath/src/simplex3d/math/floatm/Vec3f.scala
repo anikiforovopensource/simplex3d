@@ -289,5 +289,7 @@ object Vec3f {
     def apply(xy: Read2, z: Float) = new Vec3f(xy.fx, xy.fy, z)
     def apply(x: Float, yz: Read2) = new Vec3f(x, yz.fx, yz.fy)
 
+    def unapply(u: AnyVec3f) = Some((u.x, u.y, u.z))
+
     implicit def toMutable(u: ConstVec3f) = Vec3f(u)
 }

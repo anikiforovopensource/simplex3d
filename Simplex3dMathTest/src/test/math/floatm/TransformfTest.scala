@@ -45,7 +45,7 @@ class TransformfTest extends FunSuite {
         t = Transform2() rotate(radians(90))
         assert(approxEqual(t.transformPoint(u), Vec2(-y, x), 1e-6f))
 
-        t = Transform2() transform(rotationMat(radians(90)))
+        t = Transform2() concatenate(rotationMat(radians(90)))
         assert(approxEqual(t.transformPoint(u), Vec2(-y, x), 1e-6f))
 
         t = Transform2() translate(Vec2(1, 2))
@@ -101,7 +101,7 @@ class TransformfTest extends FunSuite {
 
         // Transform2(scale: Vec2, rotation: Mat2, translation: Vec2)
         setSeed(s); t = Transform2(vec2, rotationMat(float), vec2)
-        setSeed(s); tc = Transform2() scale(vec2) transform(rotationMat(float)) translate(vec2)
+        setSeed(s); tc = Transform2() scale(vec2) concatenate(rotationMat(float)) translate(vec2)
         setSeed(s); invt = Transform2.inverse(vec2, rotationMat(float), vec2)
         testTransforms2(t, tc, invt)
 
@@ -153,7 +153,7 @@ class TransformfTest extends FunSuite {
 
         // Transform3(scale: Vec3, rotation: Mat3, translation: Vec3)
         setSeed(s); t = Transform3(vec3, rotationMat(float, axis), vec3)
-        setSeed(s); tc = Transform3() scale(vec3) transform(rotationMat(float, axis)) translate(vec3)
+        setSeed(s); tc = Transform3() scale(vec3) concatenate(rotationMat(float, axis)) translate(vec3)
         setSeed(s); invt = Transform3.inverse(vec3, rotationMat(float, axis), vec3)
         testTransforms3(t, tc, invt)
 

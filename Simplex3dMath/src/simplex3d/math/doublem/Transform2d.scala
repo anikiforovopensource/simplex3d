@@ -29,7 +29,7 @@ import DoubleMath._
 sealed abstract class AnyTransform2d (val matrix: AnyMat2x3d) {
     import matrix._
 
-    def scale(s: Float) :Transform2d = {
+    def scale(s: Double) :Transform2d = {
         new Transform2d(matrix*s)
     }
     def scale(s: AnyVec2d) :Transform2d = {
@@ -40,7 +40,7 @@ sealed abstract class AnyTransform2d (val matrix: AnyMat2x3d) {
         ))
     }
 
-    def rotate(angle: Float) :Transform2d = {
+    def rotate(angle: Double) :Transform2d = {
         concatenate(rotationMat(angle))
     }
 
@@ -129,14 +129,15 @@ object Transform2d {
     val Identity: ConstTransform2d = Transform2d()
 
     def apply() :Transform2d = new Transform2d(Mat2x3d(1))
+    def apply(m: AnyMat2d) :Transform2d = new Transform2d(Mat2x3d(m))
     def apply(m: AnyMat2x3d) :Transform2d = new Transform2d(Mat2x3d(m))
 
     def apply(t: AnyTransform2d) :Transform2d =
         new Transform2d(Mat2x3d(t.matrix))
 
-    def apply(scale: AnyVec2d = Vec2d.One,
-              rotation: AnyMat2d = Mat2d.Identity,
-              translation: AnyVec2d = Vec2d.Zero)
+    def apply(scale: AnyVec2d,
+              rotation: AnyMat2d,
+              translation: AnyVec2d)
     :Transform2d =
     {
         import rotation._
@@ -150,13 +151,32 @@ object Transform2d {
         ))
     }
 
+    def scale(s: Double) :Transform2d = {
+        new Transform2d(Mat2x3d(s))
+    }
+    def scale(s: AnyVec2d) :Transform2d = {
+        new Transform2d(new Mat2x3d(
+            s.x, 0,
+            0, s.y,
+            0, 0
+        ))
+    }
+
+    def translate(u: AnyVec2d) :Transform2d = {
+        new Transform2d(new Mat2x3d(
+            1, 0,
+            0, 1,
+            u.x, u.y
+        ))
+    }
+
     /**
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverse(scale: AnyVec2d = Vec2d.One,
-                rotation: AnyMat2d = Mat2d.Identity,
-                translation: AnyVec2d = Vec2d.Zero)
+    def inverse(scale: AnyVec2d,
+                rotation: AnyMat2d,
+                translation: AnyVec2d)
     :Transform2d =
     {
         import translation.{x => tx, y => ty}

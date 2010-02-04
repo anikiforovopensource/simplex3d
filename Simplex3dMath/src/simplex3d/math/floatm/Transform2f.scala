@@ -129,14 +129,15 @@ object Transform2f {
     val Identity: ConstTransform2f = Transform2f()
 
     def apply() :Transform2f = new Transform2f(Mat2x3f(1))
+    def apply(m: AnyMat2f) :Transform2f = new Transform2f(Mat2x3f(m))
     def apply(m: AnyMat2x3f) :Transform2f = new Transform2f(Mat2x3f(m))
 
     def apply(t: AnyTransform2f) :Transform2f =
         new Transform2f(Mat2x3f(t.matrix))
 
-    def apply(scale: AnyVec2f = Vec2f.One,
-              rotation: AnyMat2f = Mat2f.Identity,
-              translation: AnyVec2f = Vec2f.Zero)
+    def apply(scale: AnyVec2f,
+              rotation: AnyMat2f,
+              translation: AnyVec2f)
     :Transform2f =
     {
         import rotation._
@@ -150,13 +151,32 @@ object Transform2f {
         ))
     }
 
+    def scale(s: Float) :Transform2f = {
+        new Transform2f(Mat2x3f(s))
+    }
+    def scale(s: AnyVec2f) :Transform2f = {
+        new Transform2f(new Mat2x3f(
+            s.x, 0,
+            0, s.y,
+            0, 0
+        ))
+    }
+
+    def translate(u: AnyVec2f) :Transform2f = {
+        new Transform2f(new Mat2x3f(
+            1, 0,
+            0, 1,
+            u.x, u.y
+        ))
+    }
+
     /**
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverse(scale: AnyVec2f = Vec2f.One,
-                rotation: AnyMat2f = Mat2f.Identity,
-                translation: AnyVec2f = Vec2f.Zero)
+    def inverse(scale: AnyVec2f,
+                rotation: AnyMat2f,
+                translation: AnyVec2f)
     :Transform2f =
     {
         import translation.{x => tx, y => ty}

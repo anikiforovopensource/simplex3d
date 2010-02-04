@@ -634,5 +634,5 @@ object Vec4f {
 
     def unapply(u: AnyVec4f) = Some((u.x, u.y, u.z, u.w))
 
-    implicit def toMutable(u: ConstVec4f) = Vec4f(u)
+    implicit def toMutable(u: ConstVec4f) = new Vec4f(u.x, u.y, u.z, u.w)
 }

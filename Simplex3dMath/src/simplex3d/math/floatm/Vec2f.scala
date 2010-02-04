@@ -203,5 +203,5 @@ object Vec2f {
 
     def unapply(u: AnyVec2f) = Some((u.x, u.y))
 
-    implicit def toMutable(u: ConstVec2f) = Vec2f(u)
+    implicit def toMutable(u: ConstVec2f) = new Vec2f(u.x, u.y)
 }

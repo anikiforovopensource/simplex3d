@@ -127,9 +127,6 @@ package object renamed {
     type Transform2 = Transform2f
     val Transform2 = Transform2f
 
-    type AnyTransform3 = AnyTransform3f
-    type ConstTransform3 = ConstTransform3f
-    val ConstTransform3 = ConstTransform3f
     type Transform3 = Transform3f
     val Transform3 = Transform3f
 

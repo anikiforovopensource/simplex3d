@@ -291,5 +291,5 @@ object Vec3f {
 
     def unapply(u: AnyVec3f) = Some((u.x, u.y, u.z))
 
-    implicit def toMutable(u: ConstVec3f) = Vec3f(u)
+    implicit def toMutable(u: ConstVec3f) = new Vec3f(u.x, u.y, u.z)
 }

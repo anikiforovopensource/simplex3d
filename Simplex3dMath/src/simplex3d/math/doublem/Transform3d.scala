@@ -29,7 +29,7 @@ import DoubleMath._
 sealed abstract class AnyTransform3d(val matrix: AnyMat3x4d) {
     import matrix._
 
-    def scale(s: Float) :Transform3d = {
+    def scale(s: Double) :Transform3d = {
         new Transform3d(matrix*s)
     }
     def scale(s: AnyVec3d) :Transform3d = {
@@ -44,17 +44,17 @@ sealed abstract class AnyTransform3d(val matrix: AnyMat3x4d) {
     def rotate(q: AnyQuat4d) :Transform3d = {
         concatenate(rotationMat(q))
     }
-    def rotate(angle: Float, axis: AnyVec3d) :Transform3d = {
+    def rotate(angle: Double, axis: AnyVec3d) :Transform3d = {
         concatenate(rotationMat(angle, axis))
     }
 
-    def rotateX(angle: Float) :Transform3d = {
+    def rotateX(angle: Double) :Transform3d = {
         concatenate(rotationMat(angle, Vec3d.UnitX))
     }
-    def rotateY(angle: Float) :Transform3d = {
+    def rotateY(angle: Double) :Transform3d = {
         concatenate(rotationMat(angle, Vec3d.UnitY))
     }
-    def rotateZ(angle: Float) :Transform3d = {
+    def rotateZ(angle: Double) :Transform3d = {
         concatenate(rotationMat(angle, Vec3d.UnitZ))
     }
 
@@ -153,14 +153,15 @@ object Transform3d {
     val Identity: ConstTransform3d = Transform3d()
 
     def apply() :Transform3d = new Transform3d(Mat3x4d(1))
+    def apply(m: AnyMat3d) :Transform3d = new Transform3d(Mat3x4d(m))
     def apply(m: AnyMat3x4d) :Transform3d = new Transform3d(Mat3x4d(m))
 
     def apply(t: AnyTransform3d) :Transform3d =
         new Transform3d(Mat3x4d(t.matrix))
 
-    def apply(scale: AnyVec3d = Vec3d.One,
-              rotation: AnyMat3d = Mat3d.Identity,
-              translation: AnyVec3d = Vec3d.Zero)
+    def apply(scale: AnyVec3d,
+              rotation: AnyMat3d,
+              translation: AnyVec3d)
     :Transform3d =
     {
         import scale.{x => sx, y => sy, z => sz}
@@ -175,13 +176,51 @@ object Transform3d {
         ))
     }
 
+    def scale(s: Double) :Transform3d = {
+        new Transform3d(Mat3x4d(s))
+    }
+    def scale(s: AnyVec3d) :Transform3d = {
+        new Transform3d(new Mat3x4d(
+            s.x, 0, 0,
+            0, s.y, 0,
+            0, 0, s.z,
+            0, 0, 0
+        ))
+    }
+
+    def rotate(q: AnyQuat4d) :Transform3d = {
+        apply(rotationMat(q))
+    }
+    def rotate(angle: Double, axis: AnyVec3d) :Transform3d = {
+        apply(rotationMat(angle, axis))
+    }
+
+    def rotateX(angle: Double) :Transform3d = {
+        apply(rotationMat(angle, Vec3d.UnitX))
+    }
+    def rotateY(angle: Double) :Transform3d = {
+        apply(rotationMat(angle, Vec3d.UnitY))
+    }
+    def rotateZ(angle: Double) :Transform3d = {
+        apply(rotationMat(angle, Vec3d.UnitZ))
+    }
+
+    def translate(u: AnyVec3d) :Transform3d = {
+        new Transform3d(new Mat3x4d(
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+            u.x, u.y, u.z
+        ))
+    }
+
     /**
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverse(scale: AnyVec3d = Vec3d.One,
-                rotation: AnyMat3d = Mat3d.Identity,
-                translation: AnyVec3d = Vec3d.Zero)
+    def inverse(scale: AnyVec3d,
+                rotation: AnyMat3d,
+                translation: AnyVec3d)
     :Transform3d =
     {
         import translation.{x => tx, y => ty, z => tz}

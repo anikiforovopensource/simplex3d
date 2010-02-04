@@ -37,7 +37,7 @@ class Vec2dTest extends FunSuite {
 
     test("Factories") {
         def test(x: Double, y: Double, z: Double, w: Double) {
-            var u = Vec2(x)
+            var u: AnyVec2 = Vec2(x)
             expect(classOf[Vec2]) { u.getClass }
             expect(x) { u.x }
             expect(x) { u.y }
@@ -92,7 +92,7 @@ class Vec2dTest extends FunSuite {
             expect(x) { u.x }
             expect(y) { u.y }
 
-            var c = ConstVec2(x, y)
+            var c: AnyVec2 = ConstVec2(x, y)
             expect(classOf[ConstVec2]) { c.getClass }
             expect(x) { c.x }
             expect(y) { c.y }
@@ -120,7 +120,7 @@ class Vec2dTest extends FunSuite {
 
     test("Boolean factories") {
         BooleanCombinations.test { (x, y, z, w) =>
-            var u = Vec2(Vec2b(x, y))
+            var u: AnyVec2 = Vec2(Vec2b(x, y))
             expect(classOf[Vec2]) { u.getClass }
             expect(double(x)) { u.x }
             expect(double(y)) { u.y }
@@ -135,7 +135,7 @@ class Vec2dTest extends FunSuite {
             expect(double(x)) { u.x }
             expect(double(y)) { u.y }
 
-            var c = ConstVec2(Vec2b(x, y))
+            var c: AnyVec2 = ConstVec2(Vec2b(x, y))
             expect(classOf[ConstVec2]) { c.getClass }
             expect(double(x)) { c.x }
             expect(double(y)) { c.y }
@@ -143,8 +143,8 @@ class Vec2dTest extends FunSuite {
     }
 
     test("Const conversions") {
-        val x = 1d
-        val y = 2d
+        val x = 1d + 1e-15
+        val y = 2d + 1e-15
 
         val t: ConstVec2 = Vec2(x, y)
         expect(classOf[ConstVec2]) { t.getClass }

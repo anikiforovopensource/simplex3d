@@ -22,7 +22,9 @@ package test.math.floatm
 
 import org.scalatest._
 
+import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
+import simplex3d.math.doublem._
 
 
 /**
@@ -30,64 +32,114 @@ import simplex3d.math.floatm.renamed._
  */
 class Quat4fTest extends FunSuite {
 
-    test("Mutable factories") {
-        var q = Quat4()
+    test("Factories") {
+        val af = 1f + 1e-5f
+        val bf = 2f + 1e-5f
+        val cf = 3f + 1e-5f
+        val df = 4f + 1e-5f
+
+        val ad = 1 + 1e-5
+        val bd = 2 + 1e-5
+        val cd = 3 + 1e-5
+        val dd = 4 + 1e-5
+
+        var q: AnyQuat4 = Quat4()
+        expect(classOf[Quat4]) { q.getClass }
         expect(1) { q.a }
         expect(0) { q.b }
         expect(0) { q.c }
         expect(0) { q.d }
 
-        q = Quat4(1, 2, 3, 4)
-        expect(1) { q.a }
-        expect(2) { q.b }
-        expect(3) { q.c }
-        expect(4) { q.d }
+        q = Quat4(af, bf, cf, df)
+        expect(classOf[Quat4]) { q.getClass }
+        expect(af) { q.a }
+        expect(bf) { q.b }
+        expect(cf) { q.c }
+        expect(df) { q.d }
 
-        q = Quat4(Quat4(1, 2, 3, 4))
-        expect(1) { q.a }
-        expect(2) { q.b }
-        expect(3) { q.c }
-        expect(4) { q.d }
+        q = Quat4(Quat4(af, bf, cf, df))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(af) { q.a }
+        expect(bf) { q.b }
+        expect(cf) { q.c }
+        expect(df) { q.d }
 
-        q = Quat4(Vec4(1, 2, 3, 4))
-        expect(4) { q.a }
-        expect(1) { q.b }
-        expect(2) { q.c }
-        expect(3) { q.d }
+        q = Quat4(Vec4(bf, cf, df, af))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(af) { q.a }
+        expect(bf) { q.b }
+        expect(cf) { q.c }
+        expect(df) { q.d }
 
-        q = Quat4(Mat2(1, 2, 3, 4))
-        expect(4) { q.a }
-        expect(1) { q.b }
-        expect(2) { q.c }
-        expect(3) { q.d }
+        q = Quat4(Mat2(bf, cf, df, af))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(af) { q.a }
+        expect(bf) { q.b }
+        expect(cf) { q.c }
+        expect(df) { q.d }
+
+        q = Quat4(Quat4d(ad, bd, cd, dd))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(float(ad)) { q.a }
+        expect(float(bd)) { q.b }
+        expect(float(cd)) { q.c }
+        expect(float(dd)) { q.d }
+
+        q = Quat4(Vec4d(bd, cd, dd, ad))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(float(ad)) { q.a }
+        expect(float(bd)) { q.b }
+        expect(float(cd)) { q.c }
+        expect(float(dd)) { q.d }
+
+        q = Quat4(Mat2d(bd, cd, dd, ad))
+        expect(classOf[Quat4]) { q.getClass }
+        expect(float(ad)) { q.a }
+        expect(float(bd)) { q.b }
+        expect(float(cd)) { q.c }
+        expect(float(dd)) { q.d }
+
+        var p: AnyQuat4 = ConstQuat4(af, bf, cf, df)
+        expect(classOf[ConstQuat4]) { p.getClass }
+        expect(af) { p.a }
+        expect(bf) { p.b }
+        expect(cf) { p.c }
+        expect(df) { p.d }
+
+        p = ConstQuat4(Quat4(af, bf, cf, df))
+        expect(classOf[ConstQuat4]) { p.getClass }
+        expect(af) { p.a }
+        expect(bf) { p.b }
+        expect(cf) { p.c }
+        expect(df) { p.d }
+
+        p = ConstQuat4(Quat4d(ad, bd, cd, dd))
+        expect(classOf[ConstQuat4]) { p.getClass }
+        expect(float(ad)) { p.a }
+        expect(float(bd)) { p.b }
+        expect(float(cd)) { p.c }
+        expect(float(dd)) { p.d }
     }
 
     test("Const conversions") {
-        val a = 1f
-        val b = 2f
-        val c = 3f
-        val d = 4f
-
-        var q = ConstQuat4(a, b, c, d)
-        expect(a) { q.a }
-        expect(b) { q.b }
-        expect(c) { q.c }
-        expect(d) { q.d }
-
-        q = ConstQuat4(Quat4(a, b, c, d))
-        expect(a) { q.a }
-        expect(b) { q.b }
-        expect(c) { q.c }
-        expect(d) { q.d }
-
+        val a = 1f + 1e-5f
+        val b = 2f + 1e-5f
+        val c = 3f + 1e-5f
+        val d = 4f + 1e-5f
+        
         val t: ConstQuat4 = Quat4(a, b, c, d)
+        expect(classOf[ConstQuat4]) { t.getClass }
         assert(Quat4(a, b, c, d) == t)
 
         var con: ConstQuat4 = Quat4(a, b, c, d); var mut = Quat4()
+        expect(classOf[ConstQuat4]) { con.getClass }
         mut = con; assert(Quat4(a, b, c, d) == mut)
+        expect(classOf[Quat4]) { mut.getClass }
 
         con = Quat4(); mut = Quat4(a, b, c, d)
+        expect(classOf[Quat4]) { mut.getClass }
         con = mut; assert(Quat4(a, b, c, d) == con)
+        expect(classOf[ConstQuat4]) { con.getClass }
     }
 
     test("Equality methods") {

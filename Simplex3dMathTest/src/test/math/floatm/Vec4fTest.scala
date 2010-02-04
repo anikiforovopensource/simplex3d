@@ -37,7 +37,7 @@ class Vec4fTest extends FunSuite {
 
     test("Factories") {
         def test(x: Float, y: Float, z: Float, w: Float) {
-            var u = Vec4(x)
+            var u: AnyVec4 = Vec4(x)
             expect(classOf[Vec4]) { u.getClass }
             expect(x) { u.x }
             expect(x) { u.y }
@@ -177,7 +177,7 @@ class Vec4fTest extends FunSuite {
             expect(z) { u.z }
             expect(w) { u.w }
 
-            var c = ConstVec4(x, y, z, w)
+            var c: AnyVec4 = ConstVec4(x, y, z, w)
             expect(classOf[ConstVec4]) { c.getClass }
             expect(x) { c.x }
             expect(y) { c.y }
@@ -213,7 +213,7 @@ class Vec4fTest extends FunSuite {
 
     test("Boolean factories") {
         BooleanCombinations.test { (x, y, z, w) =>
-            var u = Vec4(Vec4b(x, y, z, w))
+            var u: AnyVec4 = Vec4(Vec4b(x, y, z, w))
             expect(classOf[Vec4]) { u.getClass }
             expect(float(x)) { u.x }
             expect(float(y)) { u.y }
@@ -255,7 +255,7 @@ class Vec4fTest extends FunSuite {
             expect(float(z)) { u.z }
             expect(float(w)) { u.w }
 
-            var c = ConstVec4(Vec4b(x, y, z, w))
+            var c: AnyVec4 = ConstVec4(Vec4b(x, y, z, w))
             expect(classOf[ConstVec4]) { c.getClass }
             expect(float(x)) { c.x }
             expect(float(y)) { c.y }
@@ -265,10 +265,10 @@ class Vec4fTest extends FunSuite {
     }
 
     test("Const conversions") {
-        val x = 1f
-        val y = 2f
-        val z = 3f
-        val w = 4f
+        val x = 1f + 1e-5f
+        val y = 2f + 1e-5f
+        val z = 3f + 1e-5f
+        val w = 4f + 1e-5f
 
         val t: ConstVec4 = Vec4(x, y, z, w)
         expect(classOf[ConstVec4]) { t.getClass }

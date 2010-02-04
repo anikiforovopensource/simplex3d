@@ -18,14 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package visual.math
+package visual.math.draw
+
+import simplex3d.math.doublem.renamed._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class FunPanel extends DrawPanel {
-    def setFunction(fun: Fun) {
-        setPainter(FunPainter(fun))
-    }
+abstract class Fun {
+
+    /**
+     * Width and height of the rendering surface
+     */
+    final val dimensions: AnyVec2 = Vec2(0)
+
+    /**
+     * @param pixel
+     *          pixel coordinates
+     * @param time
+     *          time, in seconds
+     * @return
+     *          rgb color with floating point components from 0 to 1
+     */
+    def apply(pixel: AnyVec2, time: Double) :AnyVec3
 }

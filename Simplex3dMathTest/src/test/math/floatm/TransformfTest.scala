@@ -132,9 +132,9 @@ class TransformfTest extends FunSuite {
         // are random.
 
         def testTransforms3(m: Transform3, mcheck: Transform3, invm: Transform3) {
-            assert(approxEqual(m.matrix, mcheck.matrix, 1e-6f))
-            assert(!approxEqual(m.matrix, invm.matrix, 1e-2f))
-            assert(approxEqual(Mat3(m.matrix)*Mat3(invm.matrix), Mat3.Identity, 1e-5f))
+            assert(approxEqual(m.toMatrix, mcheck.toMatrix, 1e-6f))
+            assert(!approxEqual(m.toMatrix, invm.toMatrix, 1e-2f))
+            assert(approxEqual(Mat4(m.toMatrix)*Mat4(invm.toMatrix), Mat4.Identity, 1e-5f))
 
             for (i <- 0 until vectorsPerTransform) {
                 total += 1
@@ -152,8 +152,8 @@ class TransformfTest extends FunSuite {
         for (s <- 0 until randomRuns) {
 
         // Transform3(scale: Vec3, rotation: Mat3, translation: Vec3)
-        setSeed(s); t = Transform3(vec3, rotationMat(float, axis), vec3)
-        setSeed(s); tc = Transform3() scale(vec3) concatenate(rotationMat(float, axis)) translate(vec3)
+        setSeed(s); t =  Transform3 scale(vec3) rotate(float, axis) translate(vec3)
+        setSeed(s); tc = Transform3 scale(vec3) concatenate(rotationMat(float, axis)) translate(vec3)
         setSeed(s); invt = Transform3.inverse(vec3, rotationMat(float, axis), vec3)
         testTransforms3(t, tc, invt)
 

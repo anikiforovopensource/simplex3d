@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package visual.math
+package visual.math.draw
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors._

@@ -35,7 +35,7 @@ import simplex3d.math.doublem._
 class Vec3bTest extends FunSuite {
 
     test("Factories") {
-        var u = Vec3b(true)
+        var u: AnyVec3b = Vec3b(true)
         expect(classOf[Vec3b]) { u.getClass }
         expect(true) { u.x }
         expect(true) { u.y }
@@ -48,7 +48,7 @@ class Vec3bTest extends FunSuite {
         expect(false) { u.z }
 
         BooleanCombinations.test { (x, y, z, w) =>
-            var u = Vec3b(x, y, z)
+            var u: AnyVec3b = Vec3b(x, y, z)
             expect(classOf[Vec3b]) { u.getClass }
             expect(x) { u.x }
             expect(y) { u.y }
@@ -150,7 +150,7 @@ class Vec3bTest extends FunSuite {
             expect(y) { u.y }
             expect(z) { u.z }
 
-            var c = ConstVec3b(x, y, z)
+            var c: AnyVec3b = ConstVec3b(x, y, z)
             expect(classOf[ConstVec3b]) { c.getClass }
             expect(x) { c.x }
             expect(y) { c.y }

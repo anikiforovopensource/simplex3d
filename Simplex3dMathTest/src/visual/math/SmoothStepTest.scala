@@ -20,6 +20,8 @@
 
 package visual.math
 
+import visual.math.draw._
+
 import simplex3d.math.doublem.renamed._
 import simplex3d.math.doublem.DoubleMath._
 

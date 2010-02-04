@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package visual.math;
+package visual.math.draw;
 
 import javax.swing.JFrame;
 
@@ -45,7 +45,7 @@ public class FunFrame extends JFrame {
         funPanel = new FunPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Noise Test");
+        setTitle("Multithreaded Function");
 
         funPanel.setPreferredSize(new java.awt.Dimension(640, 480));
 

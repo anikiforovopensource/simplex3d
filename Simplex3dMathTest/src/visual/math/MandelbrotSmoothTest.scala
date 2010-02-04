@@ -30,7 +30,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object MandelbrotTest {
+object MandelbrotSmoothTest {
 
     def main(args: Array[String]) {
       FunFrame.launch(new Fun {
@@ -40,7 +40,11 @@ object MandelbrotTest {
         val startScale: Double = 200
         val zoomSpeed: Double = 1.1
 
-        val zoomPoint = Vec2(0.29505737159927603, -0.018132000868057857)
+//        val zoomPoint = Vec2(
+//            -0.743643887037158704752191506114774,
+//            0.131825904205311970493132056385139
+//        )
+        val zoomPoint = Vec2(0.001643721971153, -0.822467633298876)
 
         val staticMap = {
             val bands = new ColorBands()
@@ -53,7 +57,7 @@ object MandelbrotTest {
             bands put new Gradient(Vec3(0, 0, 1), 10)
             bands put new Shade(Vec3(0.1), 0.7, 20)
             bands put new Gradient(Vec3(0.58, 0, 0.827), 50)
-            bands put new Gradient(Vec3(0.2, 0, 0), 800)
+            bands put new Gradient(Vec3(0.2, 0, 0), 100)
             bands.generate()
         }
         val dynamicMap = {
@@ -65,11 +69,12 @@ object MandelbrotTest {
             bands put new Gradient(Vec3(0, 0, 1), 10)
             bands put new Shade(Vec3(0.1), 0.4, 20)
             bands put new Gradient(Vec3(0.58, 0, 0.827), 40)
-            bands put new Gradient(Vec3(0.2, 0, 0), 800)
+            bands put new Gradient(Vec3(0.2, 0, 0), 100)
             bands.generate()
         }
         val colors = if (dynamicColor) dynamicMap else staticMap
         val iterations = colors.length
+        val extraIterations = 3
         val escapeColor = colors(iterations - 1)
 
          final def apply(pixel: AnyVec2, time: Double)
@@ -79,14 +84,8 @@ object MandelbrotTest {
             val zoom = startScale + pow(zoomSpeed, 30 + time)
             val c = (pixel - mid)/zoom + zoomPoint
             
-            // quick elimination
-            val x4 = (c.x - 0.25)
-            val p = sqrt(x4*x4 + c.y*c.y)
-            if (c.x < p - 2*p*p + 0.25) return escapeColor
-            if ((c.x + 1)*(c.x + 1) + c.y*c.y < 0.0625) return escapeColor
-
-            var x = 0d
-            var y = 0d
+            val z = Vec2(0)
+            import z.{x, y}
 
             var i = 0; while (x*x + y*y <= 4 && i < iterations) {
                 val xt = x*x - y*y + c.x
@@ -97,19 +96,24 @@ object MandelbrotTest {
                 i += 1
             }
 
-            if (i == iterations) return escapeColor
+            val extra = i + extraIterations
+            while (i < extra) {
+                val xt = x*x - y*y + c.x
 
-            if (dynamicColor) {
-                var j = i - int(pow(log(zoom), 1.35))
-                if (j < 0) j = 0
-                colors(j)
+                y = 2*x*y + c.y
+                x = xt
+
+                i += 1
             }
-            else {
-                colors(i)
-            }
+
+            var g = i - log2(abs(log2(length(z))))
+            if (dynamicColor) { g = g - pow(log(zoom), 1.35) }
+            g = clamp(g, 0, colors.length - 2)
+            val j = int(g)
+            mix(colors(j), colors(j + 1), fract(g))
         }})
     }
-    
+
 class ColorBands {
     import scala.collection.mutable.ListBuffer
 

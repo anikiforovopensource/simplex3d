@@ -35,7 +35,7 @@ object InlinedBench {
 
 class InlinedBenchCase {
     val length = 100
-    val loops = 20
+    val loops = 200
 
     val arrowCount = 5000
     val arrowOriginal = genArrow()
@@ -87,8 +87,30 @@ class InlinedBenchCase {
         testReg(length, loops)
         val regularTime = System.currentTimeMillis - start
 
+        start = System.currentTimeMillis
+        testMake(length, loops)
+        val makeTime = System.currentTimeMillis - start
+
         println("reg time: " + regularTime +
+                ", make time: " + makeTime +
                 ", inlined time: " + inlinedTime + ".")
+    }
+
+    final def make(scale: AnyVec3f,
+                   rotation: AnyMat3f,
+                   translation: AnyVec3f)
+    :Transform3f =
+    {
+        import scale.{x => sx, y => sy, z => sz}
+        import rotation._
+        import translation.{x => tx, y => ty, z => tz}
+
+        Transform3f(ConstMat3x4f(
+            m00*sx, m10*sx, m20*sx,
+            m01*sy, m11*sy, m21*sy,
+            m02*sz, m12*sz, m22*sz,
+            tx, ty, tz
+        ))
     }
 
     def testReg(length: Int, loops: Int) {
@@ -106,19 +128,60 @@ class InlinedBenchCase {
     val end = (am.length / 3) - 8
     var i = 0; while (i < end) {
         val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
-        val modelMatrix = Transform3f(loc, lookAt(-loc, Vec3f.UnitY))
+        val model = Transform3f(lookAt(-loc, Vec3f.UnitY)) translate(loc)
         var j = 0; while (j < 8) {
             val id = j*3
             t.x = as(id)
             t.y = as(id + 1)
             t.z = as(id + 2)
-            val p = modelMatrix.transformPoint(t)
+            val p = model.transformPoint(t)
 
             val dd = (i + j)*3
             am(dd) = p.x
             am(dd + 1) = p.y
             am(dd + 2) = p.z
             
+            j += 1
+        }
+        i += 8
+    }
+
+                cc += 1
+            }
+            l += 1
+        }
+
+        println(answer)
+    }
+
+    def testMake(length: Int, loops: Int) {
+        var answer = 0
+
+        var l = 0; while (l < loops) {
+            var cc = 0; while (cc < length) {
+
+
+    setSeed(1)
+    val spread = 80
+    val am = arrows
+    val as = arrowOriginal
+    val t = Vec3f(0)
+    val end = (am.length / 3) - 8
+    var i = 0; while (i < end) {
+        val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
+        val model = make(Vec3f.One, lookAt(-loc, Vec3f.UnitY), loc)
+        var j = 0; while (j < 8) {
+            val id = j*3
+            t.x = as(id)
+            t.y = as(id + 1)
+            t.z = as(id + 2)
+            val p = model.transformPoint(t)
+
+            val dd = (i + j)*3
+            am(dd) = p.x
+            am(dd + 1) = p.y
+            am(dd + 2) = p.z
+
             j += 1
         }
         i += 8

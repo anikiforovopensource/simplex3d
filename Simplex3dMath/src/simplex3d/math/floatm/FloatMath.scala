@@ -964,64 +964,64 @@ object FloatMath {
     def matrixCompMult(a: Mat2f, b: Mat2f) :Mat2f = {
         new Mat2f(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11
+            a.m01*b.m01, a.m11*b.m11
         )
     }
     def matrixCompMult(a: Mat2x3f, b: Mat2x3f) :Mat2x3f = {
         new Mat2x3f(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11,
-            a.m02*b.m02, b.m12*b.m12
+            a.m01*b.m01, a.m11*b.m11,
+            a.m02*b.m02, a.m12*b.m12
         )
     }
     def matrixCompMult(a: Mat2x4f, b: Mat2x4f) :Mat2x4f = {
         new Mat2x4f(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11,
-            a.m02*b.m02, b.m12*b.m12,
-            a.m03*b.m03, b.m13*b.m13
+            a.m01*b.m01, a.m11*b.m11,
+            a.m02*b.m02, a.m12*b.m12,
+            a.m03*b.m03, a.m13*b.m13
         )
     }
     def matrixCompMult(a: Mat3x2f, b: Mat3x2f) :Mat3x2f = {
         new Mat3x2f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21
         )
     }
     def matrixCompMult(a: Mat3f, b: Mat3f) :Mat3f = {
         new Mat3f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22
         )
     }
     def matrixCompMult(a: Mat3x4f, b: Mat3x4f) :Mat3x4f = {
         new Mat3x4f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22,
-            a.m03*b.m03, b.m13*b.m13, a.m23*b.m23
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22,
+            a.m03*b.m03, a.m13*b.m13, a.m23*b.m23
         )
     }
     def matrixCompMult(a: Mat4x2f, b: Mat4x2f) :Mat4x2f = {
         new Mat4x2f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31
         )
     }
     def matrixCompMult(a: Mat4x3f, b: Mat4x3f) :Mat4x3f = {
         new Mat4x3f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22, a.m32*b.m32
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32
         )
     }
     def matrixCompMult(a: Mat4f, b: Mat4f) :Mat4f = {
         new Mat4f(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22, a.m32*b.m32,
-            a.m03*b.m03, b.m13*b.m13, a.m23*b.m23, a.m33*b.m33
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32,
+            a.m03*b.m03, a.m13*b.m13, a.m23*b.m23, a.m33*b.m33
         )
     }
 
@@ -1197,7 +1197,7 @@ object FloatMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3f.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1235,7 +1235,7 @@ object FloatMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3f.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1584,7 +1584,7 @@ object FloatMath {
      * and then casting the result back to 2x3.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform2f.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1613,7 +1613,7 @@ object FloatMath {
      * and then casting the result back to 3x4.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3f.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:

@@ -931,22 +931,22 @@ object DoubleMath {
     def matrixCompMult(a: Mat2d, b: Mat2d) :Mat2d = {
         new Mat2d(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11
+            a.m01*b.m01, a.m11*b.m11
         )
     }
     def matrixCompMult(a: Mat2x3d, b: Mat2x3d) :Mat2x3d = {
         new Mat2x3d(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11,
-            a.m02*b.m02, b.m12*b.m12
+            a.m01*b.m01, a.m11*b.m11,
+            a.m02*b.m02, a.m12*b.m12
         )
     }
     def matrixCompMult(a: Mat2x4d, b: Mat2x4d) :Mat2x4d = {
         new Mat2x4d(
             a.m00*b.m00, a.m10*b.m10,
-            a.m01*b.m01, b.m11*b.m11,
-            a.m02*b.m02, b.m12*b.m12,
-            a.m03*b.m03, b.m13*b.m13
+            a.m01*b.m01, a.m11*b.m11,
+            a.m02*b.m02, a.m12*b.m12,
+            a.m03*b.m03, a.m13*b.m13
         )
     }
     def matrixCompMult(a: Mat3x2d, b: Mat3x2d) :Mat3x2d = {
@@ -958,37 +958,37 @@ object DoubleMath {
     def matrixCompMult(a: Mat3d, b: Mat3d) :Mat3d = {
         new Mat3d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22
         )
     }
     def matrixCompMult(a: Mat3x4d, b: Mat3x4d) :Mat3x4d = {
         new Mat3x4d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22,
-            a.m03*b.m03, b.m13*b.m13, a.m23*b.m23
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22,
+            a.m03*b.m03, a.m13*b.m13, a.m23*b.m23
         )
     }
     def matrixCompMult(a: Mat4x2d, b: Mat4x2d) :Mat4x2d = {
         new Mat4x2d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31
         )
     }
     def matrixCompMult(a: Mat4x3d, b: Mat4x3d) :Mat4x3d = {
         new Mat4x3d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22, a.m32*b.m32
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32
         )
     }
     def matrixCompMult(a: Mat4d, b: Mat4d) :Mat4d = {
         new Mat4d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-            a.m02*b.m02, b.m12*b.m12, a.m22*b.m22, a.m32*b.m32,
-            a.m03*b.m03, b.m13*b.m13, a.m23*b.m23, a.m33*b.m33
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
+            a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32,
+            a.m03*b.m03, a.m13*b.m13, a.m23*b.m23, a.m33*b.m33
         )
     }
 
@@ -1164,7 +1164,7 @@ object DoubleMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3d.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1202,7 +1202,7 @@ object DoubleMath {
 
     /**
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3d.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1553,7 +1553,7 @@ object DoubleMath {
      * and then casting the result back to 2x3.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform2d.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:
@@ -1582,7 +1582,7 @@ object DoubleMath {
      * and then casting the result back to 3x4.<br/>
      *
      * This is a general matrix inverse. You can invert transofrmations
-     * quicker by using InverseTransform(translation, rotation, scale).
+     * quicker by using Transform3d.inverse(scale, rotation, translation).
      * A rotation matrix that does not scale can be inverted even faster by
      * using transpose. In the latter case you can avoid inverse alltogether
      * by using transpose multiplication:

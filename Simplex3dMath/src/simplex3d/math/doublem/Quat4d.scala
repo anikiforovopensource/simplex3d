@@ -71,14 +71,31 @@ sealed abstract class AnyQuat4d extends ReadQ {
         new Quat4d(s / a, s / b, s / c, s / d)
     }
 
-    def +(q: Quat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
-    def -(q: Quat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
-    def *(q: Quat4d) = new Quat4d(
+    def +(q: AnyQuat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
+    def -(q: AnyQuat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
+    def *(q: AnyQuat4d) = new Quat4d(
         a*q.a - b*q.b - c*q.c - d*q.d,
         a*q.b + b*q.a + c*q.d - d*q.c,
         a*q.c - b*q.d + c*q.a + d*q.b,
         a*q.d + b*q.c - c*q.b + d*q.a
     )
+
+    def rotate(q: AnyQuat4d) :Quat4d = q*this
+    def rotate(angle: Double, axis: AnyVec3d) :Quat4d = {
+        quaternion(angle, axis)*this
+    }
+    def rotateX(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitX)*this
+    }
+    def rotateY(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitY)*this
+    }
+    def rotateZ(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitZ)*this
+    }
+    def invert() :Quat4d = {
+        inverse(this)
+    }
 
     def ==(q: AnyQuat4d) :Boolean = {
         if (q eq null) false
@@ -120,7 +137,7 @@ sealed abstract class AnyQuat4d extends ReadQ {
     }
 }
 
-final class ConstQuat4d private[math] (
+sealed class ConstQuat4d private[math] (
     val a: Double, val b: Double, val c: Double, val d: Double
 ) extends AnyQuat4d
 
@@ -169,10 +186,25 @@ final class Quat4d private[math] (
     }
 }
 
+private[math] object Quat4dIdentity extends ConstQuat4d(1, 0, 0, 0) {
+    override def rotate(q: AnyQuat4d) :Quat4d = Quat4d(q)
+    override def rotate(angle: Double, axis: AnyVec3d) :Quat4d = {
+        quaternion(angle, axis)
+    }
+    override def rotateX(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitX)
+    }
+    override def rotateY(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitY)
+    }
+    override def rotateZ(angle: Double) :Quat4d = {
+        quaternion(angle, Vec3d.UnitZ)
+    }
+}
+
 object Quat4d {
-    val Identity: ConstQuat4d = Quat4d()
+    val Identity: ConstQuat4d = Quat4dIdentity
     
-    def apply() = new Quat4d(1, 0, 0, 0)
     def apply(a: Double, b: Double, c: Double, d: Double) = {
         new Quat4d(a, b, c, d)
     }
@@ -181,6 +213,19 @@ object Quat4d {
     def apply(m: Read2x2) = new Quat4d(m.d11, m.d00, m.d10, m.d01)
 
     def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
+
+    def rotate(angle: Double, axis: AnyVec3d) :Quat4d = {
+        Identity.rotate(angle, axis)
+    }
+    def rotateX(angle: Double) :Quat4d = {
+        Identity.rotateX(angle)
+    }
+    def rotateY(angle: Double) :Quat4d = {
+        Identity.rotateY(angle)
+    }
+    def rotateZ(angle: Double) :Quat4d = {
+        Identity.rotateZ(angle)
+    }
 
     implicit def toMutable(u: ConstQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
 }

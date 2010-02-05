@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math._
 import FloatMath._
 
 
@@ -362,10 +363,10 @@ object Transform3f {
     
     val Identity: Transform3f = Transform3fIdentity
 
-    def apply(m: AnyMat3f) :Transform3f =
+    def apply(m: Read3x3) :Transform3f =
         new TransformMat3f(Mat3f(m))
 
-    def apply(m: AnyMat3x4f) :Transform3f =
+    def apply(m: Read3x4) :Transform3f =
         new TransformMat3x4f(Mat3x4f(m))
 
     def scale(s: Float) :Transform3f = Identity.scale(s)
@@ -382,19 +383,19 @@ object Transform3f {
 
     def translate(u: AnyVec3f) :Transform3f = Identity.translate(u)
 
-    def apply(scale: AnyVec3f,
-              rotation: AnyMat3f,
-              translation: AnyVec3f)
+    def apply(scale: Read3,
+              rotation: Read3x3,
+              translation: Read3)
     :Transform3f =
     {
-        import scale.{x => sx, y => sy, z => sz}
+        import scale.{fx => sx, fy => sy, fz => sz}
         import rotation._
-        import translation.{x => tx, y => ty, z => tz}
+        import translation.{fx => tx, fy => ty, fz => tz}
 
         new TransformMat3x4f(new Mat3x4f(
-            m00*sx, m10*sx, m20*sx,
-            m01*sy, m11*sy, m21*sy,
-            m02*sz, m12*sz, m22*sz,
+            f00*sx, f10*sx, f20*sx,
+            f01*sy, f11*sy, f21*sy,
+            f02*sz, f12*sz, f22*sz,
             tx, ty, tz
         ))
     }

@@ -138,6 +138,19 @@ class Vec2bTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            Vec2b(x, y) match {
+                case Vec2b(ux, uy) =>
+                    if (ux != x || uy != y) throw new AssertionError()
+            }
+            ConstVec2b(x, y) match {
+                case Vec2b(ux, uy) =>
+                    if (ux != x || uy != y) throw new AssertionError()
+            }
+        }
+    }
+
     test("Const conversions") {
         BooleanCombinations.test { (x, y, z, w) =>
             val t: ConstVec2b = Vec2b(x, y)

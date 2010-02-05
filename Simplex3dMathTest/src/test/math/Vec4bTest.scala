@@ -286,6 +286,21 @@ class Vec4bTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            Vec4b(x, y, z, w) match {
+                case Vec4b(ux, uy, uz, uw) =>
+                    if (ux != x || uy != y || uz != z || uw != w)
+                        throw new AssertionError()
+            }
+            ConstVec4b(x, y, z, w) match {
+                case Vec4b(ux, uy, uz, uw) =>
+                    if (ux != x || uy != y || uz != z || uw != w)
+                        throw new AssertionError()
+            }
+        }
+    }
+
     test("Const conversions") {
         BooleanCombinations.test { (x, y, z, w) =>
             val t: ConstVec4b = Vec4b(x, y, z, w)

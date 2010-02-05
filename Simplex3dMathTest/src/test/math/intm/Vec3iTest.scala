@@ -184,6 +184,20 @@ class Vec3iTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1; val y = 2; val z = 3
+        Vec3i(x, y, z) match {
+            case Vec3i(ux, uy, uz) =>
+                if (ux != x || uy != y || uz != z)
+                    throw new AssertionError()
+        }
+        ConstVec3i(x, y, z) match {
+            case Vec3i(ux, uy, uz) =>
+                if (ux != x || uy != y || uz != z)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1
         val y = 2

@@ -278,6 +278,20 @@ class Vec4dTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1+1e-15; val y = 2+1e-15; val z = 3+1e-15; val w = 4+1e-15
+        Vec4(x, y, z, w) match {
+            case Vec4(ux, uy, uz, uw) =>
+                if (ux != x || uy != y || uz != z || uw != w)
+                    throw new AssertionError()
+        }
+        ConstVec4(x, y, z, w) match {
+            case Vec4(ux, uy, uz, uw) =>
+                if (ux != x || uy != y || uz != z || uw != w)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1d + 1e-15
         val y = 2d + 1e-15

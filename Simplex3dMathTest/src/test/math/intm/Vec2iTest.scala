@@ -141,6 +141,20 @@ class Vec2iTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1; val y = 2
+        Vec2i(x, y) match {
+            case Vec2i(ux, uy) =>
+                if (ux != x || uy != y)
+                    throw new AssertionError()
+        }
+        ConstVec2i(x, y) match {
+            case Vec2i(ux, uy) =>
+                if (ux != x || uy != y)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1
         val y = 2

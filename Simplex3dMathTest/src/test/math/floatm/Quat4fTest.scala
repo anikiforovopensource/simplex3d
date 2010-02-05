@@ -121,6 +121,20 @@ class Quat4fTest extends FunSuite {
         expect(float(dd)) { p.d }
     }
 
+    test("Unapply") {
+        val a = 1+1e-5f; val b = 2+1e-5f; val c = 3+1e-5f; val d = 4+1e-5f
+        Quat4(a, b, c, d) match {
+            case Quat4(qa, qb, qc, qd) =>
+                if (qa != a || qb != b || qc != c || qd != d)
+                    throw new AssertionError()
+        }
+        ConstQuat4(a, b, c, d) match {
+            case Quat4(qa, qb, qc, qd) =>
+                if (qa != a || qb != b || qc != c || qd != d)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val a = 1f + 1e-5f
         val b = 2f + 1e-5f

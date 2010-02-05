@@ -322,6 +322,31 @@ class Mat4x3fTest extends FunSuite {
         expect((float(d02), float(d12), float(d22), float(d32))) { (m.m02, m.m12, m.m22, m.m32) }
     }
 
+    test("Unapply") {
+        Mat4x3(
+            f00, f10, f20, f30,
+            f01, f11, f21, f31,
+            f02, f12, f22, f32
+        ) match {
+            case Mat4x3(c1, c2, c3) =>
+                if (c1 != Vec4(f00, f10, f20, f30) ||
+                    c2 != Vec4(f01, f11, f21, f31) ||
+                    c3 != Vec4(f02, f12, f22, f32))
+                        throw new AssertionError()
+        }
+        ConstMat4x3(
+            f00, f10, f20, f30,
+            f01, f11, f21, f31,
+            f02, f12, f22, f32
+        ) match {
+            case Mat4x3(c1, c2, c3) =>
+                if (c1 != Vec4(f00, f10, f20, f30) ||
+                    c2 != Vec4(f01, f11, f21, f31) ||
+                    c3 != Vec4(f02, f12, f22, f32))
+                        throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val i = Mat4x3(m00, m10, m20, m30,
                        m01, m11, m21, m31,

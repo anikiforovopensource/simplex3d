@@ -357,6 +357,35 @@ class Mat2x4dTest extends FunSuite {
         expect((double(f03), double(f13))) { (m.m03, m.m13) }
     }
 
+    test("Unapply") {
+        Mat2x4(
+            d00, d10,
+            d01, d11,
+            d02, d12,
+            d03, d13
+        ) match {
+            case Mat2x4(c1, c2, c3, c4) =>
+                if (c1 != Vec2(d00, d10) ||
+                    c2 != Vec2(d01, d11) ||
+                    c3 != Vec2(d02, d12) ||
+                    c4 != Vec2(d03, d13))
+                        throw new AssertionError()
+        }
+        ConstMat2x4(
+            d00, d10,
+            d01, d11,
+            d02, d12,
+            d03, d13
+        ) match {
+            case Mat2x4(c1, c2, c3, c4) =>
+                if (c1 != Vec2(d00, d10) ||
+                    c2 != Vec2(d01, d11) ||
+                    c3 != Vec2(d02, d12) ||
+                    c4 != Vec2(d03, d13))
+                        throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val i = Mat2x4(m00, m10,
                        m01, m11,

@@ -287,6 +287,27 @@ class Mat3x2dTest extends FunSuite {
         expect((double(f01), double(f11), double(f21))) { (m.m01, m.m11, m.m21) }
     }
 
+    test("Unapply") {
+        Mat3x2(
+            d00, d10, d20,
+            d01, d11, d21
+        ) match {
+            case Mat3x2(c1, c2) =>
+                if (c1 != Vec3(d00, d10, d20) ||
+                    c2 != Vec3(d01, d11, d21))
+                        throw new AssertionError()
+        }
+        ConstMat3x2(
+            d00, d10, d20,
+            d01, d11, d21
+        ) match {
+            case Mat3x2(c1, c2) =>
+                if (c1 != Vec3(d00, d10, d20) ||
+                    c2 != Vec3(d01, d11, d21))
+                        throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val i = Mat3x2(m00, m10, m20,
                        m01, m11, m21)

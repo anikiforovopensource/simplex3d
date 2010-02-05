@@ -277,6 +277,20 @@ class Vec4iTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1; val y = 2; val z = 3; val w = 4
+        Vec4i(x, y, z, w) match {
+            case Vec4i(ux, uy, uz, uw) =>
+                if (ux != x || uy != y || uz != z || uw != w)
+                    throw new AssertionError()
+        }
+        ConstVec4i(x, y, z, w) match {
+            case Vec4i(ux, uy, uz, uw) =>
+                if (ux != x || uy != y || uz != z || uw != w)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1
         val y = 2

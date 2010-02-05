@@ -142,6 +142,20 @@ class Vec2fTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1+1e-5f; val y = 2+1e-5f
+        Vec2(x, y) match {
+            case Vec2(ux, uy) =>
+                if (ux != x || uy != y)
+                    throw new AssertionError()
+        }
+        ConstVec2(x, y) match {
+            case Vec2(ux, uy) =>
+                if (ux != x || uy != y)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1f + 1e-5f
         val y = 2f + 1e-5f

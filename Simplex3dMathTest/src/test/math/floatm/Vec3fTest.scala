@@ -185,6 +185,20 @@ class Vec3fTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        val x = 1+1e-5f; val y = 2+1e-5f; val z = 3+1e-5f
+        Vec3(x, y, z) match {
+            case Vec3(ux, uy, uz) =>
+                if (ux != x || uy != y || uz != z)
+                    throw new AssertionError()
+        }
+        ConstVec3(x, y, z) match {
+            case Vec3(ux, uy, uz) =>
+                if (ux != x || uy != y || uz != z)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val x = 1f + 1e-5f
         val y = 2f + 1e-5f

@@ -121,6 +121,20 @@ class Quat4dTest extends FunSuite {
         expect(double(df)) { p.d }
     }
 
+    test("Unapply") {
+        val a = 1+1e-15; val b = 2+1e-15; val c = 3+1e-15; val d = 4+1e-15
+        Quat4(a, b, c, d) match {
+            case Quat4(qa, qb, qc, qd) =>
+                if (qa != a || qb != b || qc != c || qd != d)
+                    throw new AssertionError()
+        }
+        ConstQuat4(a, b, c, d) match {
+            case Quat4(qa, qb, qc, qd) =>
+                if (qa != a || qb != b || qc != c || qd != d)
+                    throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val a = 1d + 1e-15
         val b = 2d + 1e-15

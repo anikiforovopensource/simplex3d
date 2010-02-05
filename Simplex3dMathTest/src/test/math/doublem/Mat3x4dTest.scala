@@ -357,6 +357,35 @@ class Mat3x4dTest extends FunSuite {
         expect((double(f03), double(f13), double(f23))) { (m.m03, m.m13, m.m23) }
     }
 
+    test("Unapply") {
+        Mat3x4(
+            d00, d10, d20,
+            d01, d11, d21,
+            d02, d12, d22,
+            d03, d13, d23
+        ) match {
+            case Mat3x4(c1, c2, c3, c4) =>
+                if (c1 != Vec3(d00, d10, d20) ||
+                    c2 != Vec3(d01, d11, d21) ||
+                    c3 != Vec3(d02, d12, d22) ||
+                    c4 != Vec3(d03, d13, d23))
+                        throw new AssertionError()
+        }
+        ConstMat3x4(
+            d00, d10, d20,
+            d01, d11, d21,
+            d02, d12, d22,
+            d03, d13, d23
+        ) match {
+            case Mat3x4(c1, c2, c3, c4) =>
+                if (c1 != Vec3(d00, d10, d20) ||
+                    c2 != Vec3(d01, d11, d21) ||
+                    c3 != Vec3(d02, d12, d22) ||
+                    c4 != Vec3(d03, d13, d23))
+                        throw new AssertionError()
+        }
+    }
+
     test("Const conversions") {
         val i = Mat3x4(m00, m10, m20,
                        m01, m11, m21,

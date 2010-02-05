@@ -176,6 +176,21 @@ class Vec3bTest extends FunSuite {
         }
     }
 
+    test("Unapply") {
+        BooleanCombinations.test { (x, y, z, w) =>
+            Vec3b(x, y, z) match {
+                case Vec3b(ux, uy, uz) =>
+                    if (ux != x || uy != y || uz != z)
+                        throw new AssertionError()
+            }
+            ConstVec3b(x, y, z) match {
+                case Vec3b(ux, uy, uz) =>
+                    if (ux != x || uy != y || uz != z)
+                        throw new AssertionError()
+            }
+        }
+    }
+
     test("Const conversions") {
         BooleanCombinations.test { (x, y, z, w) =>
             val t: ConstVec3b = Vec3b(x, y, z)

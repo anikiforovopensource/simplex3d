@@ -31,6 +31,18 @@ import simplex3d.math.floatm.FloatMath._
  */
 class FloatMathExtraTest extends FunSuite {
 
+    test("Extra Inverse") {
+        val m23 = Mat2x3(2, 4, 5, 3, 5, 3)
+        val m23i = inverse(inverse(m23))
+        assert(!hasErrors(m23i))
+        assert(approxEqual(m23, m23i, 1e-6f))
+
+        val m34 = Mat3x4(2, 4, 5, 3, 3, 6, 4, 3, 2, 6, 2, 4)
+        val m34i = inverse(inverse(m34))
+        assert(!hasErrors(m34i))
+        assert(approxEqual(m34, m34i, 1e-6f))
+    }
+
     test("Convert to quat") {
         def testMatrix(a: Float) {
             val m0: ConstMat3 = rotationMat(radians(a), normalize(Vec3(1, 2, 3)))

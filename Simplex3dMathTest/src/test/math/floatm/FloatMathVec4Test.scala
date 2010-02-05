@@ -26,6 +26,7 @@ import simplex3d.math._
 import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
+import Float.{NaN => nan, PositiveInfinity => posinf, NegativeInfinity => neginf}
 
 
 /**
@@ -36,6 +37,87 @@ class FloatMathVec4Test extends FunSuite {
     val random = new java.util.Random
     import random._
     def randomFloat = random.nextFloat
+
+    test("Vec4f numeric functions") {
+        assert(all(isnan(Vec4(nan))))
+        assert(!any(isnan(Vec4(neginf))))
+        assert(!any(isnan(Vec4(posinf))))
+        assert(!any(isnan(Vec4(0))))
+
+        assert(!any(isinf(Vec4(nan))))
+        assert(all(isinf(Vec4(neginf))))
+        assert(all(isinf(Vec4(posinf))))
+        assert(!any(isinf(Vec4(0))))
+
+        assert(!any(isposinf(Vec4(nan))))
+        assert(!any(isposinf(Vec4(neginf))))
+        assert(all(isposinf(Vec4(posinf))))
+        assert(!any(isposinf(Vec4(0))))
+
+        assert(!any(isneginf(Vec4(nan))))
+        assert(all(isneginf(Vec4(neginf))))
+        assert(!any(isneginf(Vec4(posinf))))
+        assert(!any(isneginf(Vec4(0))))
+
+        {
+            val u = Vec4(0)
+            val i = Vec4(0)
+
+            u := modf(Vec4(1.25f, 2.125f, 3.5f, 4.75f), i)
+            assert(Vec4(0.25f, 0.125f, 0.5f, 0.75f) == u)
+            assert(Vec4(1, 2, 3, 4) == i)
+
+            u := modf(Vec4(-1.25f, -2.125f, -3.5f, -4.75f), i)
+            assert(Vec4(-0.25f, -0.125f, -0.5f, -0.75f) == u)
+            assert(Vec4(-1, -2, -3, -4) == i)
+
+            u := modf(Vec4(nan, nan, nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec4(posinf, posinf, posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec4(neginf, neginf, neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+
+        assert(2 == length(Vec4(1, 1, 1, 1)))
+        assert(approxEqual(sqrt(54), length(Vec4(-2, -3, -4, -5)), 1e-6f))
+
+        assert(2 == distance(Vec4(1, 1, 1, 1), Vec4(3, 1, 1, 1)))
+
+        assert(50 == dot(Vec4(1, 2, 3, 4), Vec4(3, 4, 5, 6)))
+
+        assert(Vec4(0.5f, 0.5f, 0.5f, 0.5f) == normalize(Vec4(1, 1, 1, 1)))
+        assert(Vec4(-0.5f, -0.5f, -0.5f, -0.5f) == normalize(Vec4(-1, -1, -1, -1)))
+
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(0, 1, 0, 0), Vec4.UnitX))
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(1, 0, 0, 0), Vec4.UnitX))
+        assert(Vec4(-2) == faceforward(Vec4(2), Vec4(1), Vec4.UnitX))
+        assert(Vec4(2) == faceforward(Vec4(2), Vec4(-1), Vec4.UnitX))
+
+        assert(Vec4(2, -2, 2, 2) == reflect(Vec4(2), Vec4(0, 1, 0, 0)))
+        assert(Vec4(-2, 2, -2, -2) == reflect(Vec4(-2), Vec4(0, 1, 0, 0)))
+
+        assert(approxEqual(
+                Vec4(0.3f, -0.9539392f, 0, 0),
+                refract(
+                    Vec4(1, 0, 0, 0),
+                    Vec4(0, 1, 0, 0),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec4(0.15f, -0.96566045f, 0.15f, 0.15f),
+                refract(
+                    normalize(Vec4(1, 1, 1, 1)),
+                    Vec4(0, 1, 0, 0),
+                    0.3f),
+               1e-6f))
+    }
 
     test("Vec4f forward functions") {
         // test functions agnostic to range

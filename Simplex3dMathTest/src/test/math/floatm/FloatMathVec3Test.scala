@@ -26,6 +26,7 @@ import simplex3d.math._
 import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
+import Float.{NaN => nan, PositiveInfinity => posinf, NegativeInfinity => neginf}
 
 
 /**
@@ -37,6 +38,90 @@ class FloatMathVec3Test extends FunSuite {
     import random._
     def randomFloat = random.nextFloat
 
+    test("Vec3f numeric functions") {
+        assert(all(isnan(Vec3(nan))))
+        assert(!any(isnan(Vec3(neginf))))
+        assert(!any(isnan(Vec3(posinf))))
+        assert(!any(isnan(Vec3(0))))
+
+        assert(!any(isinf(Vec3(nan))))
+        assert(all(isinf(Vec3(neginf))))
+        assert(all(isinf(Vec3(posinf))))
+        assert(!any(isinf(Vec3(0))))
+
+        assert(!any(isposinf(Vec3(nan))))
+        assert(!any(isposinf(Vec3(neginf))))
+        assert(all(isposinf(Vec3(posinf))))
+        assert(!any(isposinf(Vec3(0))))
+
+        assert(!any(isneginf(Vec3(nan))))
+        assert(all(isneginf(Vec3(neginf))))
+        assert(!any(isneginf(Vec3(posinf))))
+        assert(!any(isneginf(Vec3(0))))
+
+        {
+            val u = Vec3(0)
+            val i = Vec3(0)
+
+            u := modf(Vec3(1.25f, 2.125f, 3.5f), i)
+            assert(Vec3(0.25f, 0.125f, 0.5f) == u)
+            assert(Vec3(1, 2, 3) == i)
+
+            u := modf(Vec3(-1.25f, -2.125f, -3.5f), i)
+            assert(Vec3(-0.25f, -0.125f, -0.5f) == u)
+            assert(Vec3(-1, -2, -3) == i)
+
+            u := modf(Vec3(nan, nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec3(posinf, posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec3(neginf, neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+
+        assert(sqrt(3) == length(Vec3(1, 1, 1)))
+        assert(approxEqual(5*sqrt(2), length(Vec3(-3, -4, -5)), 1e-6f))
+
+        assert(2 == distance(Vec3(1, 1, 1), Vec3(3, 1, 1)))
+
+        assert(26 == dot(Vec3(1, 2, 3), Vec3(3, 4, 5)))
+
+        assert(Vec3.UnitZ == cross(Vec3.UnitX, Vec3.UnitY))
+        assert(Vec3(-3, 6, -3) == cross(Vec3(1, 2, 3), Vec3(4, 5, 6)))
+
+        assert(Vec3(1/sqrt(3), 1/sqrt(3), 1/sqrt(3)) == normalize(Vec3(1, 1, 1)))
+        assert(Vec3(-1/sqrt(3), -1/sqrt(3), -1/sqrt(3)) == normalize(Vec3(-1, -1, -1)))
+
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(0, 1, 0), Vec3.UnitX))
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(1, 0, 0), Vec3.UnitX))
+        assert(Vec3(-2) == faceforward(Vec3(2), Vec3(1, 1, 1), Vec3.UnitX))
+        assert(Vec3(2) == faceforward(Vec3(2), Vec3(-1, -1, -1), Vec3.UnitX))
+
+        assert(Vec3(2, -2, 2) == reflect(Vec3(2, 2, 2), Vec3(0, 1, 0)))
+        assert(Vec3(-2, 2, -2) == reflect(Vec3(-2, -2, -2), Vec3(0, 1, 0)))
+
+        assert(approxEqual(
+                Vec3(0.3f, -0.9539392f, 0),
+                refract(
+                    Vec3(1, 0, 0),
+                    Vec3(0, 1, 0),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec3(0.17320508f, -0.9695359f, 0.17320508f),
+                refract(
+                    normalize(Vec3(1, 1, 1)),
+                    Vec3(0, 1, 0),
+                    0.3f),
+               1e-6f))
+    }
+    
     test("Vec3f forward functions") {
         // test functions agnostic to range
         def testRange(x: Float, y: Float, z: Float,

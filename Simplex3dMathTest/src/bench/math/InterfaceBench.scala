@@ -87,7 +87,7 @@ class InterfaceBenchCase {
 
                 // Bench code
                 val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
-                val q = Quat4()
+                val q = Quat4(1, 0, 0, 0)
                 IBMath.quatFrom(m, q)
                 answer += int((q.a + q.b + q.c + q.d))
 
@@ -194,7 +194,7 @@ object IBMath {
     def quatFrom(m: Mat3) = {
         import m._
 
-        val result = Quat4()
+        val result = Quat4(1, 0, 0, 0)
         val trace = m00 + m11 + m22
 
         if (trace > 0) {

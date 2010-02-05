@@ -43,14 +43,7 @@ class Quat4dTest extends FunSuite {
         val cd = 3 + 1e-15
         val dd = 4 + 1e-15
 
-        var q: AnyQuat4 = Quat4()
-        expect(classOf[Quat4]) { q.getClass }
-        expect(1) { q.a }
-        expect(0) { q.b }
-        expect(0) { q.c }
-        expect(0) { q.d }
-
-        q = Quat4(ad, bd, cd, dd)
+        var q: AnyQuat4 = Quat4(ad, bd, cd, dd)
         expect(classOf[Quat4]) { q.getClass }
         expect(ad) { q.a }
         expect(bd) { q.b }
@@ -145,12 +138,12 @@ class Quat4dTest extends FunSuite {
         expect(classOf[ConstQuat4]) { t.getClass }
         assert(Quat4(a, b, c, d) == t)
 
-        var con: ConstQuat4 = Quat4(a, b, c, d); var mut = Quat4()
+        var con: ConstQuat4 = Quat4(a, b, c, d); var mut = Quat4(1, 0, 0, 0)
         expect(classOf[ConstQuat4]) { con.getClass }
         mut = con; assert(Quat4(a, b, c, d) == mut)
         expect(classOf[Quat4]) { mut.getClass }
 
-        con = Quat4(); mut = Quat4(a, b, c, d)
+        con = Quat4(1, 0, 0, 0); mut = Quat4(a, b, c, d)
         expect(classOf[Quat4]) { mut.getClass }
         con = mut; assert(Quat4(a, b, c, d) == con)
         expect(classOf[ConstQuat4]) { con.getClass }
@@ -214,7 +207,7 @@ class Quat4dTest extends FunSuite {
     }
 
     test("Setters") {
-        val u = Quat4()
+        val u = Quat4(0, 0, 0, 0)
 
         u := Quat4(1, 2, 3, 4)
         expect(1) { u.a }
@@ -252,7 +245,7 @@ class Quat4dTest extends FunSuite {
     }
 
     test("Mutable math") {
-        val q = Quat4()
+        val q = Quat4(1, 0, 0, 0)
         val i = ConstQuat4(2, 3, 4, 5)
 
         q := i; q *= 2; assert(Quat4(4, 6, 8, 10) == q)

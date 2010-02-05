@@ -26,6 +26,7 @@ import simplex3d.math._
 import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
+import Float.{NaN => nan, PositiveInfinity => posinf, NegativeInfinity => neginf}
 
 
 /**
@@ -36,6 +37,89 @@ class FloatMathVec2Test extends FunSuite {
     val random = new java.util.Random
     import random._
     def randomFloat = random.nextFloat
+
+    test("Vec2f numeric functions") {
+        assert(all(isnan(Vec2(nan))))
+        assert(!any(isnan(Vec2(neginf))))
+        assert(!any(isnan(Vec2(posinf))))
+        assert(!any(isnan(Vec2(0))))
+
+        assert(!any(isinf(Vec2(nan))))
+        assert(all(isinf(Vec2(neginf))))
+        assert(all(isinf(Vec2(posinf))))
+        assert(!any(isinf(Vec2(0))))
+
+        assert(!any(isposinf(Vec2(nan))))
+        assert(!any(isposinf(Vec2(neginf))))
+        assert(all(isposinf(Vec2(posinf))))
+        assert(!any(isposinf(Vec2(0))))
+
+        assert(!any(isneginf(Vec2(nan))))
+        assert(all(isneginf(Vec2(neginf))))
+        assert(!any(isneginf(Vec2(posinf))))
+        assert(!any(isneginf(Vec2(0))))
+
+        {
+            val u = Vec2(0)
+            val i = Vec2(0)
+
+            u := modf(Vec2(1.25f, 2.125f), i)
+            assert(Vec2(0.25f, 0.125f) == u)
+            assert(Vec2(1, 2) == i)
+
+            u := modf(Vec2(-1.25f, -2.125f), i)
+            assert(Vec2(-0.25f, -0.125f) == u)
+            assert(Vec2(-1, -2) == i)
+
+            u := modf(Vec2(nan, nan), i)
+            assert(all(isnan(u)))
+            assert(all(isnan(i)))
+
+            u := modf(Vec2(posinf, posinf), i)
+            assert(all(isnan(u)))
+            assert(all(isposinf(i)))
+
+            u := modf(Vec2(neginf, neginf), i)
+            assert(all(isnan(u)))
+            assert(all(isneginf(i)))
+        }
+
+        assert(sqrt(2) == length(Vec2(1, 1)))
+        assert(5 == length(Vec2(-3, -4)))
+
+        assert(2 == distance(Vec2(1, 1), Vec2(3, 1)))
+
+        assert(11 == dot(Vec2(1, 2), Vec2(3, 4)))
+
+        assert(Vec2(1/sqrt(2), 1/sqrt(2)) == normalize(Vec2(1, 1)))
+        assert(Vec2(-1/sqrt(2), -1/sqrt(2)) == normalize(Vec2(-1, -1)))
+        assert(Vec2(-1/sqrt(2), 1/sqrt(2)) == normalize(Vec2(-1, 1)))
+        assert(Vec2(1/sqrt(2), -1/sqrt(2)) == normalize(Vec2(1, -1)))
+
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(0, 1), Vec2(1, 0)))
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(1, 0), Vec2(1, 0)))
+        assert(Vec2(-2, -2) == faceforward(Vec2(2, 2), Vec2(1, 1), Vec2(1, 0)))
+        assert(Vec2(2, 2) == faceforward(Vec2(2, 2), Vec2(-1, -1), Vec2(1, 0)))
+
+        assert(Vec2(2, -2) == reflect(Vec2(2, 2), Vec2(0, 1)))
+        assert(Vec2(-2, 2) == reflect(Vec2(-2, -2), Vec2(0, 1)))
+
+        assert(approxEqual(
+                Vec2(0.3f, -0.9539392f),
+                refract(
+                    Vec2(1, 0),
+                    Vec2(0, 1),
+                    0.3f),
+               1e-6f))
+
+        assert(approxEqual(
+                Vec2(0.21213204f, -0.977241f),
+                refract(
+                    normalize(Vec2(1, 1)),
+                    Vec2(0, 1),
+                    0.3f),
+               1e-6f))
+    }
 
     test("Vec2f forward functions") {
         // test functions agnostic to range

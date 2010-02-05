@@ -49,6 +49,30 @@ class Vec4bTest extends FunSuite {
         expect(false) { u.z }
         expect(false) { u.w }
 
+        u = Vec4b(Mat2f(1, 1, 1, 1))
+        expect(true) { u.x }
+        expect(true) { u.y }
+        expect(true) { u.z }
+        expect(true) { u.w }
+
+        u = Vec4b(Mat2f(0, 0, 0, 0))
+        expect(false) { u.x }
+        expect(false) { u.y }
+        expect(false) { u.z }
+        expect(false) { u.w }
+
+        u = Vec4b(Mat2d(1, 1, 1, 1))
+        expect(true) { u.x }
+        expect(true) { u.y }
+        expect(true) { u.z }
+        expect(true) { u.w }
+
+        u = Vec4b(Mat2d(0, 0, 0, 0))
+        expect(false) { u.x }
+        expect(false) { u.y }
+        expect(false) { u.z }
+        expect(false) { u.w }
+
         BooleanCombinations.test { (x, y, z, w) =>
             var u: AnyVec4b = Vec4b(x, y, z, w)
             expect(classOf[Vec4b]) { u.getClass }

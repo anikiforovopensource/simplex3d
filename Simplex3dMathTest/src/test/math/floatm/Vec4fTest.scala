@@ -44,6 +44,20 @@ class Vec4fTest extends FunSuite {
             expect(x) { u.z }
             expect(x) { u.w }
 
+            u = Vec4(Mat2(x, y, z, w))
+            expect(classOf[Vec4]) { u.getClass }
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+            expect(w) { u.w }
+
+            u = Vec4(Mat2d(x, y, z, w))
+            expect(classOf[Vec4]) { u.getClass }
+            expect(x) { u.x }
+            expect(y) { u.y }
+            expect(z) { u.z }
+            expect(w) { u.w }
+
             u = Vec4(x, y, z, w)
             expect(classOf[Vec4]) { u.getClass }
             expect(x) { u.x }

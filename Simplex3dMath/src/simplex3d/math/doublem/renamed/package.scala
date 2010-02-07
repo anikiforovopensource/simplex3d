@@ -30,6 +30,9 @@ import simplex3d.math.doublem.DoubleMath._
 package object renamed {
 
     // Implicits
+    implicit def dintPromotion(s: Double) = new IntPromotion(s)
+    implicit def dfloatPromotion(s: Double) = new FloatPromotion(s)
+
     implicit def dextendDouble(s: Double) = new ExtendedDouble(s)
     implicit def dextendFloat(s: Float) = new ExtendedFloat(s)
     implicit def dextendInt(s: Int) = new ExtendedInt(s)

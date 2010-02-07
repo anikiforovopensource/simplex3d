@@ -1962,4 +1962,57 @@ object FloatMath {
             -(right + left)*r_l, -(top + bottom)*t_b, -(far + near)*f_n, 1
         )
     }
+
+    // Transform
+    def transform(scale: AnyVec3f,
+                  rotation: AnyMat3f,
+                  translation: AnyVec3f)
+    :Transform3f =
+    {
+        import scale.{x => sx, y => sy, z => sz}
+        import rotation._
+        import translation.{x => tx, y => ty, z => tz}
+
+        new TransformMat3x4f(new Mat3x4f(
+            m00*sx, m10*sx, m20*sx,
+            m01*sy, m11*sy, m21*sy,
+            m02*sz, m12*sz, m22*sz,
+            tx, ty, tz
+        ))
+    }
+
+    /**
+     * @param rotation Must be an orthogonal matrix (matrix that represents
+     * an unscaled rotation) to achieve the desired result.
+     */
+    def inverseTransform(scale: AnyVec3f,
+                         rotation: AnyMat3f,
+                         translation: AnyVec3f)
+    :Transform3f =
+    {
+        import translation.{x => tx, y => ty, z => tz}
+
+        val sx = 1/scale.x
+        val sy = 1/scale.y
+        val sz = 1/scale.z
+
+        val m00 = rotation.m00*sx
+        val m10 = rotation.m01*sy
+        val m20 = rotation.m02*sz
+        val m01 = rotation.m10*sx
+        val m11 = rotation.m11*sy
+        val m21 = rotation.m12*sz
+        val m02 = rotation.m20*sx
+        val m12 = rotation.m21*sy
+        val m22 = rotation.m22*sz
+
+        new TransformMat3x4f(new Mat3x4f(
+            m00, m10, m20,
+            m01, m11, m21,
+            m02, m12, m22,
+            -m00*tx - m01*ty - m02*tz,
+            -m10*tx - m11*ty - m12*tz,
+            -m20*tx - m21*ty - m22*tz
+        ))
+    }
 }

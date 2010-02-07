@@ -29,16 +29,18 @@ import simplex3d.math.floatm.FloatMath._
 package object floatm {
 
     // Implicits
+    implicit def fintPromotion(s: Float) = new IntPromotion(s)
+
     implicit def fextendFloat(s: Float) = new ExtendedFloat(s)
     implicit def fextendInt(s: Int) = new ExtendedInt(s)
 
-    implicit def dpromoteVec2i(u: Read2{ type T = Int }) :Vec2f =
+    implicit def fpromoteVec2i(u: Read2{ type T = Int }) :Vec2f =
         Vec2f(u.fx, u.fy)
 
-    implicit def dpromoteVec3i(u: Read3{ type T = Int }) :Vec3f =
+    implicit def fpromoteVec3i(u: Read3{ type T = Int }) :Vec3f =
         Vec3f(u.fx, u.fy, u.fz)
 
-    implicit def dpromoteVec4i(u: Read4{ type T = Int }) :Vec4f =
+    implicit def fpromoteVec4i(u: Read4{ type T = Int }) :Vec4f =
         Vec4f(u.fx, u.fy, u.fz, u.fw)
 
 

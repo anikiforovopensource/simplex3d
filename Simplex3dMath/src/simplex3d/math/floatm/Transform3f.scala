@@ -28,7 +28,7 @@ import FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class Transform3f {
-    def toMatrix: Mat3x4f
+    def toMatrix(): Mat3x4f
     
     def scale(s: Float) :Transform3f
     def scale(s: AnyVec3f) :Transform3f
@@ -89,7 +89,7 @@ sealed abstract class Transform3f {
 private[math] final class TransformMat3x4f(val mat4: Mat3x4f)
 extends Transform3f
 {
-    def toMatrix = Mat3x4f(mat4)
+    def toMatrix() = Mat3x4f(mat4)
 
     import mat4._
 
@@ -158,7 +158,7 @@ extends Transform3f
 {
     import mat3._
 
-    def toMatrix = new Mat3x4f(
+    def toMatrix() = new Mat3x4f(
         m00, m10, m20,
         m01, m11, m21,
         m02, m12, m22,
@@ -227,7 +227,7 @@ extends Transform3f
 private[math] final class Scale3f(val scale: Vec3f)
 extends Transform3f
 {
-    def toMatrix = new Mat3x4f(
+    def toMatrix() = new Mat3x4f(
         scale.x, 0, 0,
         0, scale.y, 0,
         0, 0, scale.z,
@@ -275,7 +275,7 @@ extends Transform3f
 private[math] final class Translation3f(val translation: Vec3f)
 extends Transform3f
 {
-    def toMatrix = new Mat3x4f(
+    def toMatrix() = new Mat3x4f(
         1, 0, 0,
         0, 1, 0,
         0, 0, 1,
@@ -339,7 +339,7 @@ extends Transform3f
 }
 
 private[math] object Transform3fIdentity extends Transform3f {
-    def toMatrix = Mat3x4f(1)
+    def toMatrix() = Mat3x4f(1)
 
     def scale(s: Float) :Transform3f = new Scale3f(Vec3f(s))
     def scale(s: AnyVec3f) :Transform3f = new Scale3f(Vec3f(s))
@@ -360,7 +360,6 @@ private[math] object Transform3fIdentity extends Transform3f {
 }
 
 object Transform3f {
-    
     val Identity: Transform3f = Transform3fIdentity
 
     def apply(m: Read3x3) :Transform3f =
@@ -382,56 +381,4 @@ object Transform3f {
     def rotateZ(angle: Float) :Transform3f = Identity.rotateX(angle)
 
     def translate(u: AnyVec3f) :Transform3f = Identity.translate(u)
-
-    def apply(scale: Read3,
-              rotation: Read3x3,
-              translation: Read3)
-    :Transform3f =
-    {
-        import scale.{fx => sx, fy => sy, fz => sz}
-        import rotation._
-        import translation.{fx => tx, fy => ty, fz => tz}
-
-        new TransformMat3x4f(new Mat3x4f(
-            f00*sx, f10*sx, f20*sx,
-            f01*sy, f11*sy, f21*sy,
-            f02*sz, f12*sz, f22*sz,
-            tx, ty, tz
-        ))
-    }
-
-    /**
-     * @param rotation Must be an orthogonal matrix (matrix that represents
-     * an unscaled rotation) to achieve the desired result.
-     */
-    def inverse(scale: AnyVec3f,
-                rotation: AnyMat3f,
-                translation: AnyVec3f)
-    :Transform3f =
-    {
-        import translation.{x => tx, y => ty, z => tz}
-
-        val sx = 1/scale.x
-        val sy = 1/scale.y
-        val sz = 1/scale.z
-
-        val m00 = rotation.m00*sx
-        val m10 = rotation.m01*sy
-        val m20 = rotation.m02*sz
-        val m01 = rotation.m10*sx
-        val m11 = rotation.m11*sy
-        val m21 = rotation.m12*sz
-        val m02 = rotation.m20*sx
-        val m12 = rotation.m21*sy
-        val m22 = rotation.m22*sz
-
-        new TransformMat3x4f(new Mat3x4f(
-            m00, m10, m20,
-            m01, m11, m21,
-            m02, m12, m22,
-            -m00*tx - m01*ty - m02*tz,
-            -m10*tx - m11*ty - m12*tz,
-            -m20*tx - m21*ty - m22*tz
-        ))
-    }
 }

@@ -31,7 +31,7 @@ import simplex3d.math.floatm.FloatMath._
  */
 class FloatMathMatTest extends FunSuite {
 
-    test("") {
+    test("Matrix Math") {
         assert(matrixCompMult(
                 Mat2x2(1, 2,
                        3, 4),

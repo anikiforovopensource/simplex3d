@@ -240,13 +240,7 @@ class Vec2dTest extends FunSuite {
         assert(Vec2(-7, -8) == -u)
 
         assert(Vec2(14, 16) == u*2)
-        assert(Vec2(14, 16) == 2*u)
-        assert(Vec2(14, 16) == 2f*u)
-        assert(Vec2(14, 16) == 2d*u)
         assert(Vec2(3.5, 4) == u/2)
-        assert(Vec2(1, 7/8d) == 7/u)
-        assert(Vec2(1, 7/8d) == 7f/u)
-        assert(Vec2(1, 7/8d) == 7d/u)
 
         val v = ConstVec2(2, 4)
 

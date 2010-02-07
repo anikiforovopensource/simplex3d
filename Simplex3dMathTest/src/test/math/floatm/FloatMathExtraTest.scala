@@ -24,12 +24,396 @@ import org.scalatest._
 
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
+import java.util.Random
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 class FloatMathExtraTest extends FunSuite {
+
+    test("Vec lerp") {
+        for (i <- 0 until 1000) {
+            val random1 = new Random(i)
+            def a = random1.nextFloat
+
+            val random2 = new Random(i)
+            def b = random2.nextFloat
+
+            assert(lerp(a, a, a) == mix(b, b, b))
+
+            assert(lerp(Vec2(a, a), Vec2(a, a), a) ==
+                   mix(Vec2(b, b), Vec2(b, b), b))
+
+            assert(lerp(Vec3(a, a, a), Vec3(a, a, a), a) ==
+                   mix(Vec3(b, b, b), Vec3(b, b, b), b))
+
+            assert(lerp(Vec4(a, a, a, a), Vec4(a, a, a, a), a) ==
+                   mix(Vec4(b, b, b, b), Vec4(b, b, b, b), b))
+        }
+    }
+
+    test("Mat lerp") {
+        for (i <- 0 until 1000) {
+            val random = new Random(i)
+            def r = random.nextFloat
+
+            val amount = r
+
+            val a2x2 = Mat2x2(r, r, r, r)
+            val b2x2 = Mat2x2(r, r, r, r)
+            assert(lerp(a2x2, b2x2, amount) ==
+                   Mat2x2(mix(a2x2(0), b2x2(0), amount),
+                          mix(a2x2(1), b2x2(1), amount)))
+
+            val a2x3 = Mat2x3(r, r, r, r, r, r)
+            val b2x3 = Mat2x3(r, r, r, r, r, r)
+            assert(lerp(a2x3, b2x3, amount) ==
+                   Mat2x3(mix(a2x3(0), b2x3(0), amount),
+                          mix(a2x3(1), b2x3(1), amount),
+                          mix(a2x3(2), b2x3(2), amount)))
+
+            val a2x4 = Mat2x4(r, r, r, r, r, r, r, r)
+            val b2x4 = Mat2x4(r, r, r, r, r, r, r, r)
+            assert(lerp(a2x4, b2x4, amount) ==
+                   Mat2x4(mix(a2x4(0), b2x4(0), amount),
+                          mix(a2x4(1), b2x4(1), amount),
+                          mix(a2x4(2), b2x4(2), amount),
+                          mix(a2x4(3), b2x4(3), amount)))
+
+            val a3x2 = Mat3x2(r, r, r, r, r, r)
+            val b3x2 = Mat3x2(r, r, r, r, r, r)
+            assert(lerp(a3x2, b3x2, amount) ==
+                   Mat3x2(mix(a3x2(0), b3x2(0), amount),
+                          mix(a3x2(1), b3x2(1), amount)))
+
+            val a3x3 = Mat3x3(r, r, r, r, r, r, r, r, r)
+            val b3x3 = Mat3x3(r, r, r, r, r, r, r, r, r)
+            assert(lerp(a3x3, b3x3, amount) ==
+                   Mat3x3(mix(a3x3(0), b3x3(0), amount),
+                          mix(a3x3(1), b3x3(1), amount),
+                          mix(a3x3(2), b3x3(2), amount)))
+
+            val a3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+            val b3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+            assert(lerp(a3x4, b3x4, amount) ==
+                   Mat3x4(mix(a3x4(0), b3x4(0), amount),
+                          mix(a3x4(1), b3x4(1), amount),
+                          mix(a3x4(2), b3x4(2), amount),
+                          mix(a3x4(3), b3x4(3), amount)))
+
+            val a4x2 = Mat4x2(r, r, r, r, r, r, r, r)
+            val b4x2 = Mat4x2(r, r, r, r, r, r, r, r)
+            assert(lerp(a4x2, b4x2, amount) ==
+                   Mat4x2(mix(a4x2(0), b4x2(0), amount),
+                          mix(a4x2(1), b4x2(1), amount)))
+
+            val a4x3 = Mat4x3(r, r, r, r, r, r, r, r, r, r, r, r)
+            val b4x3 = Mat4x3(r, r, r, r, r, r, r, r, r, r, r, r)
+            assert(lerp(a4x3, b4x3, amount) ==
+                   Mat4x3(mix(a4x3(0), b4x3(0), amount),
+                          mix(a4x3(1), b4x3(1), amount),
+                          mix(a4x3(2), b4x3(2), amount)))
+
+            val a4x4 = Mat4x4(r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r)
+            val b4x4 = Mat4x4(r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r)
+            assert(lerp(a4x4, b4x4, amount) ==
+                   Mat4x4(mix(a4x4(0), b4x4(0), amount),
+                          mix(a4x4(1), b4x4(1), amount),
+                          mix(a4x4(2), b4x4(2), amount),
+                          mix(a4x4(3), b4x4(3), amount)))
+        }
+    }
+
+    test("Extra Math") {
+        
+
+//    def lengthSquare(x: Float) :Float = x*x
+//    def lengthSquare(u: AnyVec2f) :Float = u.x*u.x + u.y*u.y
+//    def lengthSquare(u: AnyVec3f) :Float = u.x*u.x + u.y*u.y + u.z*u.z
+//    def lengthSquare(u: AnyVec4f) :Float = u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
+//
+//    def hasErrors(x: Float) :Boolean = isinf(x) || isnan(x)
+//    def hasErrors(u: AnyVec2f) :Boolean = u.hasErrors
+//    def hasErrors(u: AnyVec3f) :Boolean = u.hasErrors
+//    def hasErrors(u: AnyVec4f) :Boolean = u.hasErrors
+//    def hasErrors(q: AnyQuat4f) :Boolean = q.hasErrors
+//    def hasErrors(m: AnyMat2f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat2x3f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat2x4f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat3x2f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat3f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat3x4f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat4x2f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat4x3f) :Boolean = m.hasErrors
+//    def hasErrors(m: AnyMat4f) :Boolean = m.hasErrors
+//
+//    def approxEqual(x: Float, y: Float, absDelta: Float) :Boolean = {
+//        abs(x - y) < absDelta
+//    }
+//    def approxEqual(u: AnyVec2f, v: AnyVec2f, absDelta: Float) :Boolean = {
+//        abs(v.x - u.x) < absDelta &&
+//        abs(v.y - u.y) < absDelta
+//    }
+//    def approxEqual(u: AnyVec3f, v: AnyVec3f, absDelta: Float) :Boolean = {
+//        abs(v.x - u.x) < absDelta &&
+//        abs(v.y - u.y) < absDelta &&
+//        abs(v.z - u.z) < absDelta
+//    }
+//    def approxEqual(u: AnyVec4f, v: AnyVec4f, absDelta: Float) :Boolean = {
+//        abs(v.x - u.x) < absDelta &&
+//        abs(v.y - u.y) < absDelta &&
+//        abs(v.z - u.z) < absDelta &&
+//        abs(v.w - u.w) < absDelta
+//    }
+//    def approxEqual(p: AnyQuat4f, q: AnyQuat4f, absDelta: Float) :Boolean = {
+//        abs(p.a - q.a) < absDelta &&
+//        abs(p.b - q.b) < absDelta &&
+//        abs(p.c - q.c) < absDelta &&
+//        abs(p.d - q.d) < absDelta
+//    }
+//    def approxEqual(m: AnyMat2f, n: AnyMat2f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat2x3f, n: AnyMat2x3f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat2x4f, n: AnyMat2x4f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta &&
+//
+//            abs(n.m03 - m.m03) < absDelta &&
+//            abs(n.m13 - m.m13) < absDelta
+//        )
+//    }
+//
+//    def approxEqual(m: AnyMat3x2f, n: AnyMat3x2f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat3f, n: AnyMat3f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta &&
+//            abs(n.m22 - m.m22) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat3x4f, n: AnyMat3x4f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta &&
+//            abs(n.m22 - m.m22) < absDelta &&
+//
+//            abs(n.m03 - m.m03) < absDelta &&
+//            abs(n.m13 - m.m13) < absDelta &&
+//            abs(n.m23 - m.m23) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat4x2f, n: AnyMat4x2f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//            abs(n.m30 - m.m30) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta &&
+//            abs(n.m31 - m.m31) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat4x3f, n: AnyMat4x3f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//            abs(n.m30 - m.m30) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta &&
+//            abs(n.m31 - m.m31) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta &&
+//            abs(n.m22 - m.m22) < absDelta &&
+//            abs(n.m32 - m.m32) < absDelta
+//        )
+//    }
+//    def approxEqual(m: AnyMat4f, n: AnyMat4f, absDelta: Float) :Boolean = {
+//        (
+//            abs(n.m00 - m.m00) < absDelta &&
+//            abs(n.m10 - m.m10) < absDelta &&
+//            abs(n.m20 - m.m20) < absDelta &&
+//            abs(n.m30 - m.m30) < absDelta &&
+//
+//            abs(n.m01 - m.m01) < absDelta &&
+//            abs(n.m11 - m.m11) < absDelta &&
+//            abs(n.m21 - m.m21) < absDelta &&
+//            abs(n.m31 - m.m31) < absDelta &&
+//
+//            abs(n.m02 - m.m02) < absDelta &&
+//            abs(n.m12 - m.m12) < absDelta &&
+//            abs(n.m22 - m.m22) < absDelta &&
+//            abs(n.m32 - m.m32) < absDelta &&
+//
+//            abs(n.m03 - m.m03) < absDelta &&
+//            abs(n.m13 - m.m13) < absDelta &&
+//            abs(n.m23 - m.m23) < absDelta &&
+//            abs(n.m33 - m.m33) < absDelta
+//        )
+//    }
+//
+//    // Quaternion
+//    def normSquare(q: AnyQuat4f) :Float = q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d
+//    def norm(q: AnyQuat4f) :Float = {
+//        sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
+//    }
+//    def conjugate(q: AnyQuat4f) :Quat4f = new Quat4f(q.a, -q.b, -q.c, -q.d)
+//
+//    def normalize(q: AnyQuat4f) :Quat4f = {
+//        q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
+//    }
+//
+//    /**
+//     * This method is here for completness. Normally you should work with
+//     * unit quaternions (<code>norm(q) == 1</code>), and in this case
+//     * <code>inverse(q) == conjugate(q)</code>.
+//     */
+//    def inverse(q: AnyQuat4f) :Quat4f = conjugate(q)/normSquare(q)
+//
+//    def slerp(p: AnyQuat4f, q: AnyQuat4f, a: Float) :Quat4f = {
+//        if (approxEqual(p, q, 1e-5f)) return Quat4f(q)
+//
+//        var cosTheta = p.a*q.a + p.b*q.b + p.c*q.c+ p.d*q.d
+//        var negate = false
+//        if (cosTheta < 0) {
+//            cosTheta = -cosTheta
+//            negate = true
+//        }
+//
+//        var t = a
+//        var s = 1 - t
+//
+//        if (cosTheta < 0.95f) {
+//            val theta = acos(cosTheta)
+//            val invSinTheta = 1/sin(theta)
+//
+//            t = sin(t*theta)*invSinTheta
+//            s = sin(s*theta)*invSinTheta
+//            if (negate) t = -t
+//        }
+//
+//        new Quat4f(
+//            s*p.a + t*q.a,
+//            s*p.b + t*q.b,
+//            s*p.c + t*q.c,
+//            s*p.d + t*q.d
+//        )
+//    }
+//
+//    /**
+//     * The result is undefined for quaternions with non-unit norm.
+//     */
+//    def rotate(u: AnyVec3f, q: Quat4f) = {
+//        import q._
+//
+//        val t1 = a*b
+//        val t2 = a*c
+//        val t3 = a*d
+//        val t4 = -b*b
+//        val t5 = b*c
+//        val t6 = b*d
+//        val t7 = -c*c
+//        val t8 = c*d
+//        val t9 = -d*d
+//
+//        new Vec3f(
+//            2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
+//            2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
+//            2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z
+//        )
+//    }
+//
+//    // Rotation
+//    /**
+//     * This method creates a 2d transformation matrix that rotates a vector
+//     * counterclockwise by the specified angle.
+//     */
+//    def rotationMat(angle: Float) :Mat2f = {
+//        val cosA = cos(angle)
+//        val sinA = sin(angle)
+//
+//        new Mat2f(
+//             cosA, sinA,
+//            -sinA, cosA
+//        )
+//    }
+//
+//    /**
+//     * The result is undefined if the matrix does not represent
+//     * non-scaling rotation.
+//     */
+//    def rotationAngle(m: Mat2f) :Float = {
+//        acos((m.m00 + m.m11)*0.5f)
+//    }
+//
+//    def lookAt(direction: AnyVec3f, up: AnyVec3f) :Mat3f = {
+//        val zaxis = normalize(direction)
+//        val xaxis = normalize(cross(up, zaxis))
+//        val yaxis = cross(zaxis, xaxis)
+//        new Mat3f(
+//            xaxis.x, xaxis.y, xaxis.z,
+//            yaxis.x, yaxis.y, yaxis.z,
+//            zaxis.x, zaxis.y, zaxis.z
+//        )
+//    }
+    }
 
     test("Extra Inverse") {
         val m23 = Mat2x3(2, 4, 5, 3, 5, 3)

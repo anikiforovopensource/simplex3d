@@ -392,11 +392,8 @@ class Vec4iTest extends FunSuite {
         assert(Vec4i(~10, ~20, ~30, ~40) == ~u)
         
         assert(Vec4i(20, 40, 60, 80) == u*2)
-        assert(Vec4i(20, 40, 60, 80) == 2*u)
         assert(Vec4i(5, 10, 15, 20) == u / 2)
-        assert(Vec4i(4, 2, 1, 1) == 40 / u)
         assert(Vec4i(1, 2, 0, 1) == u % 3)
-        assert(Vec4i(3, 3, 13, 3) == 43 % u)
 
         val v = ConstVec4i(2, 3, 4, 5)
 
@@ -413,11 +410,8 @@ class Vec4iTest extends FunSuite {
         assert(Vec4i(0xF0, 0xFF0, 0xFFF0, 0xFFFF0) == b << 4)
 
         assert(Vec4i(0xF, 0xF, 0xF, 0xF) == (b & 0xF))
-        assert(Vec4i(0xF, 0xF, 0xF, 0xF) == (0xF & b))
         assert(Vec4i(0xFF, 0xFF, 0xFFF, 0xFFFF) == (b | 0xFF))
-        assert(Vec4i(0xFF, 0xFF, 0xFFF, 0xFFFF) == (0xFF | b))
         assert(Vec4i(0xF0, 0, 0xF00, 0xFF00) == (b ^ 0xFF))
-        assert(Vec4i(0xF0, 0, 0xF00, 0xFF00) == (0xFF ^ b))
 
         assert(Vec4i(0x3, 0xF, 0x3F, 0xFF) == (b >> Vec4i(2, 4, 6, 8)))
         assert(Vec4i(-0xF >>> 2, -0xFF >>> 4, -0xFFF >>> 6, -0xFFFF >>> 8) == (-b >>> Vec4i(2, 4, 6, 8)))

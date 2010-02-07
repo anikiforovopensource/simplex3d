@@ -240,11 +240,8 @@ class Vec2iTest extends FunSuite {
         assert(Vec2i(~10, ~20) == ~u)
         
         assert(Vec2i(20, 40) == u*2)
-        assert(Vec2i(20, 40) == 2*u)
         assert(Vec2i(5, 10) == u / 2)
-        assert(Vec2i(2, 1) == 20 / u)
         assert(Vec2i(1, 2) == u % 3)
-        assert(Vec2i(2, 12) == 32 % u)
 
         val v = ConstVec2i(2, 3)
 
@@ -261,11 +258,8 @@ class Vec2iTest extends FunSuite {
         assert(Vec2i(0xF0, 0xFF0) == b << 4)
 
         assert(Vec2i(0xF, 0xF) == (b & 0xF))
-        assert(Vec2i(0xF, 0xF) == (0xF & b))
         assert(Vec2i(0xFF, 0xFF) == (b | 0xFF))
-        assert(Vec2i(0xFF, 0xFF) == (0xFF | b))
         assert(Vec2i(0xF0, 0) == (b ^ 0xFF))
-        assert(Vec2i(0xF0, 0) == (0xFF ^ b))
 
         assert(Vec2i(0x3, 0xF) == (b >> Vec2i(2, 4)))
         assert(Vec2i(-0xF >>> 2, -0xFF >>> 4) == (-b >>> Vec2i(2, 4)))

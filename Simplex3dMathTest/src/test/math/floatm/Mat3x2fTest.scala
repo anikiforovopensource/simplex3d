@@ -469,17 +469,10 @@ class Mat3x2fTest extends FunSuite {
         t = Mat3x2(2*m00, 2*m10, 2*m20,
                    2*m01, 2*m11, 2*m21)
         assert(m*2 == t)
-        assert(2*m == t)
-        assert(2f*m == t)
 
         t = Mat3x2(m00/2, m10/2, m20/2,
                    m01/2, m11/2, m21/2)
         assert(m/2 == t)
-        
-        t = Mat3x2(2/m00, 2/m10, 2/m20,
-                   2/m01, 2/m11, 2/m21)
-        assert(2/m == t)
-        assert(2f/m == t)
 
         val n: ConstMat3x2 = m*3
         t = Mat3x2(4*m00, 4*m10, 4*m20,

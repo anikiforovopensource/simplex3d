@@ -228,11 +228,7 @@ class Quat4fTest extends FunSuite {
         assert(Quat4(-6, -7, -8, -9) == -q)
 
         assert(Quat4(12, 14, 16, 18) == q*2)
-        assert(Quat4(12, 14, 16, 18) == 2*q)
-        assert(Quat4(12, 14, 16, 18) == 2f*q)
         assert(Quat4(3, 3.5f, 4, 4.5f) == q/2)
-        assert(Quat4(7/6f, 1, 7/8f, 7/9f) == 7/q)
-        assert(Quat4(7/6f, 1, 7/8f, 7/9f) == 7f/q)
 
         val p = ConstQuat4(2, 3, 4, 5)
 

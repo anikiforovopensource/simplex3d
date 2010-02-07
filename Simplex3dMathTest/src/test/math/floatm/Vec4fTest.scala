@@ -392,11 +392,7 @@ class Vec4fTest extends FunSuite {
         assert(Vec4(-6, -7, -8, -9) == -u)
 
         assert(Vec4(12, 14, 16, 18) == u*2)
-        assert(Vec4(12, 14, 16, 18) == 2*u)
-        assert(Vec4(12, 14, 16, 18) == 2f*u)
         assert(Vec4(3, 3.5f, 4, 4.5f) == u/2)
-        assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7/u)
-        assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7f/u)
 
         val v = ConstVec4(2, 3, 4, 5)
 

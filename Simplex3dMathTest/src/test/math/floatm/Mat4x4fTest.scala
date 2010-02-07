@@ -592,21 +592,12 @@ class Mat4x4fTest extends FunSuite {
                    2*m02, 2*m12, 2*m22, 2*m32,
                    2*m03, 2*m13, 2*m23, 2*m33)
         assert(m*2 == t)
-        assert(2*m == t)
-        assert(2f*m == t)
 
         t = Mat4x4(m00/2, m10/2, m20/2, m30/2,
                    m01/2, m11/2, m21/2, m31/2,
                    m02/2, m12/2, m22/2, m32/2,
                    m03/2, m13/2, m23/2, m33/2)
         assert(m/2 == t)
-        
-        t = Mat4x4(2/m00, 2/m10, 2/m20, 2/m30,
-                   2/m01, 2/m11, 2/m21, 2/m31,
-                   2/m02, 2/m12, 2/m22, 2/m32,
-                   2/m03, 2/m13, 2/m23, 2/m33)
-        assert(2/m == t)
-        assert(2f/m == t)
 
         val n: ConstMat4x4 = m*3
         t = Mat4x4(4*m00, 4*m10, 4*m20, 4*m30,

@@ -291,11 +291,8 @@ class Vec3iTest extends FunSuite {
         assert(Vec3i(~10, ~20, ~30) == ~u)
         
         assert(Vec3i(20, 40, 60) == u*2)
-        assert(Vec3i(20, 40, 60) == 2*u)
         assert(Vec3i(5, 10, 15) == u / 2)
-        assert(Vec3i(3, 1, 1) == 30 / u)
         assert(Vec3i(1, 2, 0) == u % 3)
-        assert(Vec3i(2, 12, 2) == 32 % u)
 
         val v = ConstVec3i(2, 3, 4)
 
@@ -312,11 +309,8 @@ class Vec3iTest extends FunSuite {
         assert(Vec3i(0xF0, 0xFF0, 0xFFF0) == b << 4)
 
         assert(Vec3i(0xF, 0xF, 0xF) == (b & 0xF))
-        assert(Vec3i(0xF, 0xF, 0xF) == (0xF & b))
         assert(Vec3i(0xFF, 0xFF, 0xFFF) == (b | 0xFF))
-        assert(Vec3i(0xFF, 0xFF, 0xFFF) == (0xFF | b))
         assert(Vec3i(0xF0, 0, 0xF00) == (b ^ 0xFF))
-        assert(Vec3i(0xF0, 0, 0xF00) == (0xFF ^ b))
 
         assert(Vec3i(0x3, 0xF, 0x3F) == (b >> Vec3i(2, 4, 6)))
         assert(Vec3i(-0xF >>> 2, -0xFF >>> 4, -0xFFF >>> 6) == (-b >>> Vec3i(2, 4, 6)))

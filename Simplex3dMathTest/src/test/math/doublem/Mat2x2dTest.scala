@@ -459,19 +459,10 @@ class Mat2x2dTest extends FunSuite {
         t = Mat2x2(2*m00, 2*m10,
                    2*m01, 2*m11)
         assert(m*2 == t)
-        assert(2*m == t)
-        assert(2f*m == t)
-        assert(2d*m == t)
 
         t = Mat2x2(m00/2, m10/2,
                    m01/2, m11/2)
         assert(m/2 == t)
-        
-        t = Mat2x2(2/m00, 2/m10,
-                   2/m01, 2/m11)
-        assert(2/m == t)
-        assert(2f/m == t)
-        assert(2d/m == t)
 
         val n: ConstMat2x2 = m*3
         t = Mat2x2(4*m00, 4*m10,

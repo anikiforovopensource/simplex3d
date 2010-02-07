@@ -154,7 +154,7 @@ class TransformfTest extends FunSuite {
         // Transform3(scale: Vec3, rotation: Mat3, translation: Vec3)
         setSeed(s); t =  Transform3 scale(vec3) rotate(float, axis) translate(vec3)
         setSeed(s); tc = Transform3 scale(vec3) concatenate(rotationMat(float, axis)) translate(vec3)
-        setSeed(s); invt = Transform3.inverse(vec3, rotationMat(float, axis), vec3)
+        setSeed(s); invt = inverseTransform(vec3, rotationMat(float, axis), vec3)
         testTransforms3(t, tc, invt)
 
         }

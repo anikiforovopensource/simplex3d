@@ -212,7 +212,8 @@ class ConstansTest extends FunSuite {
             expect(Vec4(0, 0, 0, 0)) { zero(3) }
         }
         {
-            val ident: ConstQuat4 = Quat4.Identity
+            val ident = Quat4.Identity
+            assert(ident.isInstanceOf[ConstQuat4])
             expect((1, 0, 0, 0)) { (ident.a, ident.b, ident.c, ident.d) }
         }
     }

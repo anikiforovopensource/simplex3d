@@ -18,29 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.floatm
+package test.math.doublem
 
 import org.scalatest._
 import java.util.Random
 
 import simplex3d.math.BaseMath._
 import simplex3d.math.intm._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.doublem.renamed._
+import simplex3d.math.doublem.DoubleMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class FloatMathExtraTest extends FunSuite {
+class DoubleMathExtraTest extends FunSuite {
 
     test("Vec lerp") {
         for (i <- 0 until 1000) {
             val random1 = new Random(i)
-            def a = random1.nextFloat
+            def a = random1.nextDouble
 
             val random2 = new Random(i)
-            def b = random2.nextFloat
+            def b = random2.nextDouble
 
             assert(lerp(a, a, a) == mix(b, b, b))
 
@@ -58,7 +58,7 @@ class FloatMathExtraTest extends FunSuite {
     test("Mat lerp") {
         for (i <- 0 until 1000) {
             val random = new Random(i)
-            def r = random.nextFloat
+            def r = random.nextDouble
 
             val amount = r
 
@@ -129,17 +129,17 @@ class FloatMathExtraTest extends FunSuite {
 
     test("hasErrors") {
         val random = new Random(1)
-        def makeErrors(id: Int) :(Float, Float, Float, Float) = {
+        def makeErrors(id: Int) :(Double, Double, Double, Double) = {
             val v = id%4 match {
-                case 0 => random.nextFloat
-                case 1 => Float.NaN
-                case 2 => Float.PositiveInfinity
-                case 3 => Float.NegativeInfinity
+                case 0 => random.nextDouble
+                case 1 => Double.NaN
+                case 2 => Double.PositiveInfinity
+                case 3 => Double.NegativeInfinity
             }
             val j = (id >> 2)%4
             val seq = for (i <- 0 until 4) yield {
                 if (i == j) v
-                else random.nextFloat
+                else random.nextDouble
             }
             (seq(0), seq(1), seq(2), seq(3))
         }
@@ -223,13 +223,13 @@ class FloatMathExtraTest extends FunSuite {
         assert(!hasErrors(0))
         assert(!hasErrors(1))
         assert(!hasErrors(-1))
-        assert(hasErrors(Float.NaN))
-        assert(hasErrors(Float.PositiveInfinity))
-        assert(hasErrors(Float.NegativeInfinity))
+        assert(hasErrors(Double.NaN))
+        assert(hasErrors(Double.PositiveInfinity))
+        assert(hasErrors(Double.NegativeInfinity))
     }
 
     test("approxEqual") {
-        val d = 1e-7f*16
+        val d = 1d/(1024L*1024*1024*1024*1024)*16
         val e = d*2
 
         assert(approxEqual(1, 1+d, e))
@@ -373,7 +373,7 @@ class FloatMathExtraTest extends FunSuite {
 
     test("Quaternion math") {
         assert(normSquare(Quat4(2, 3, 4, 5)) == 54)
-        assert(approxEqual(norm(Quat4(2, 3, 4, 5)), sqrt(54), 1e-6f))
+        assert(approxEqual(norm(Quat4(2, 3, 4, 5)), sqrt(54), 1e-15))
         assert(conjugate(Quat4(2, 3, 4, 5)) == Quat4(2, -3, -4, -5))
         assert(normalize(Quat4(2, 3, 4, 5)) == Quat4(2, 3, 4, 5)/sqrt(54))
         assert(inverse(Quat4(2, 3, 4, 5)) == Quat4(2, -3, -4, -5)/54)
@@ -384,72 +384,72 @@ class FloatMathExtraTest extends FunSuite {
         assert(approxEqual(
                 slerp(Quat4.Identity, q, 0),
                 Quat4 rotateX(radians(0)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
-                slerp(Quat4.Identity, q, 1/3f),
+                slerp(Quat4.Identity, q, 1/3d),
                 Quat4 rotateX(radians(30)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
-                slerp(Quat4.Identity, q, 0.5f),
+                slerp(Quat4.Identity, q, 0.5),
                 Quat4 rotateX(radians(45)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
-                slerp(Quat4.Identity, q, 2/3f),
+                slerp(Quat4.Identity, q, 2/3d),
                 Quat4 rotateX(radians(60)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 slerp(Quat4.Identity, q, 1),
                 Quat4 rotateX(radians(90)),
-                1e-6f)
+                1e-15)
         )
         // slerp branches: lerp branch
         assert(approxEqual(
-                slerp(Quat4.Identity, Quat4 rotateX(radians(0.1f)), 0.5f),
-                Quat4 rotateX(radians(0.05f)),
-                1e-6f)
+                slerp(Quat4.Identity, Quat4 rotateX(radians(0.1)), 0.5),
+                Quat4 rotateX(radians(0.05)),
+                1e-7)
         )
         // slerp branches: no negation
         assert(approxEqual(
-                slerp(Quat4.Identity, Quat4 rotateX(radians(179)), 0.5f),
-                Quat4 rotateX(radians(179/2f)),
-                1e-6f)
+                slerp(Quat4.Identity, Quat4 rotateX(radians(179)), 0.5),
+                Quat4 rotateX(radians(179/2d)),
+                1e-15)
         )
         // slerp branches: negation
         assert(approxEqual(
-                slerp(Quat4.Identity, Quat4 rotateX(radians(181)), 0.5f),
-                Quat4 rotateX(radians(-179/2f)),
-                1e-6f)
+                slerp(Quat4.Identity, Quat4 rotateX(radians(181)), 0.5),
+                Quat4 rotateX(radians(-179/2d)),
+                1e-15)
         )
 
         // rotate
         assert(approxEqual(
                 rotate(Vec3.UnitY, Quat4 rotateX(radians(0))),
                 Vec3(0, 1, 0),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotate(Vec3.UnitY, Quat4 rotateX(radians(30))),
-                Vec3(0, sqrt(3)/2, 0.5f),
-                1e-6f)
+                Vec3(0, sqrt(3)/2, 0.5),
+                1e-15)
         )
         assert(approxEqual(
                 rotate(Vec3.UnitY, Quat4 rotateX(radians(45))),
                 normalize(Vec3(0, 1, 1)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotate(Vec3.UnitY, Quat4 rotateX(radians(60))),
-                Vec3(0, 0.5f, sqrt(3)/2),
-                1e-6f)
+                Vec3(0, 0.5, sqrt(3)/2),
+                1e-15)
         )
         assert(approxEqual(
                 rotate(Vec3.UnitY, Quat4 rotateX(radians(90))),
                 Vec3(0, 0, 1),
-                1e-6f)
+                1e-15)
         )
     }
 
@@ -457,78 +457,78 @@ class FloatMathExtraTest extends FunSuite {
         val m23 = Mat2x3(2, 4, 5, 3, 5, 3)
         val m23i = inverse(inverse(m23))
         assert(!hasErrors(m23i))
-        assert(approxEqual(m23, m23i, 1e-6f))
+        assert(approxEqual(m23, m23i, 1e-15))
 
         val m34 = Mat3x4(2, 4, 5, 3, 3, 6, 4, 3, 2, 6, 2, 4)
         val m34i = inverse(inverse(m34))
         assert(!hasErrors(m34i))
-        assert(approxEqual(m34, m34i, 1e-6f))
+        assert(approxEqual(m34, m34i, 1e-15))
     }
 
     test("2D rotation") {
         assert(approxEqual(
                 rotationMat(radians(0))*Vec2(1, 0),
                 Vec2(1, 0),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationMat(radians(30))*Vec2(1, 0),
-                Vec2(sqrt(3)/2, 0.5f),
-                1e-6f)
+                Vec2(sqrt(3)/2, 0.5),
+                1e-15)
         )
         assert(approxEqual(
                 rotationMat(radians(45))*Vec2(1, 0),
                 normalize(Vec2(1, 1)),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationMat(radians(60))*Vec2(1, 0),
-                Vec2(0.5f, sqrt(3)/2),
-                1e-6f)
+                Vec2(0.5, sqrt(3)/2),
+                1e-15)
         )
         assert(approxEqual(
                 rotationMat(radians(90))*Vec2(1, 0),
                 Vec2(0, 1),
-                1e-6f)
+                1e-15)
         )
 
         assert(approxEqual(
                 rotationAngle(rotationMat(radians(0))),
                 radians(0),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationAngle(rotationMat(radians(30))),
                 radians(30),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationAngle(rotationMat(radians(45))),
                 radians(45),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationAngle(rotationMat(radians(60))),
                 radians(60),
-                1e-6f)
+                1e-15)
         )
         assert(approxEqual(
                 rotationAngle(rotationMat(radians(90))),
                 radians(90),
-                1e-6f)
+                1e-15)
         )
     }
 
     test("Convert to quat") {
-        def testMatrix(a: Float) {
+        def testMatrix(a: Double) {
             val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
             val q: ConstQuat4 = quaternion(m0)
             val m1: ConstMat3 = rotationMat(q)
 
-            assert(approxEqual(m0, m1, 1e-6f))
+            assert(approxEqual(m0, m1, 1e-15))
         }
 
-        def testAngleAxis(angle: Float) {
+        def testAngleAxis(angle: Double) {
             val angle0 = radians(angle)
             val axis0 = ConstVec3(0, 1, 0)
 
@@ -537,31 +537,31 @@ class FloatMathExtraTest extends FunSuite {
             val axis1 = Vec3(0)
             val angle1 = angleAxis(q, axis1)
 
-            if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
-                assert(approxEqual(0, angle1, 1e-6f))
-                assert(approxEqual(Vec3.UnitX, axis1, 1e-6f))
+            if (approxEqual(abs(angle0), 2*Pi, 1e-15)) {
+                assert(approxEqual(0, angle1, 1e-15))
+                assert(approxEqual(Vec3.UnitX, axis1, 1e-15))
             }
-            else if (approxEqual(angle0, 0, 1e-6f)) {
-                assert(approxEqual(angle0, angle1, 1e-6f))
-                assert(approxEqual(Vec3.UnitX, axis1, 1e-6f))
+            else if (approxEqual(angle0, 0, 1e-15)) {
+                assert(approxEqual(angle0, angle1, 1e-15))
+                assert(approxEqual(Vec3.UnitX, axis1, 1e-15))
             }
             else {
                 assert(
                     (
-                        approxEqual(angle0, angle1, 1e-6f) &&
-                        approxEqual(axis0, axis1, 1e-6f)
+                        approxEqual(angle0, angle1, 1e-15) &&
+                        approxEqual(axis0, axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, -angle1, 1e-6f) &&
-                        approxEqual(axis0, -axis1, 1e-6f)
+                        approxEqual(angle0, -angle1, 1e-15) &&
+                        approxEqual(axis0, -axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, -(radians(360) - angle1), 1e-6f) &&
-                        approxEqual(axis0, axis1, 1e-6f)
+                        approxEqual(angle0, -(radians(360) - angle1), 1e-15) &&
+                        approxEqual(axis0, axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, (radians(360) - angle1), 1e-6f) &&
-                        approxEqual(axis0, -axis1, 1e-6f)
+                        approxEqual(angle0, (radians(360) - angle1), 1e-15) &&
+                        approxEqual(axis0, -axis1, 1e-15)
                     )
                 )
             }
@@ -593,15 +593,15 @@ class FloatMathExtraTest extends FunSuite {
     }
 
     test("Convert to matrix") {
-        def testQuaternion(a: Float) {
+        def testQuaternion(a: Double) {
             val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
             val m: ConstMat3 = rotationMat(q0)
             val q1: ConstQuat4 = quaternion(m)
 
-            assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
+            assert(approxEqual(q0, q1, 1e-15) || approxEqual(q0, -q1, 1e-15))
         }
 
-        def testAngleAxis(angle: Float) {
+        def testAngleAxis(angle: Double) {
             val angle0 = radians(angle)
             val axis0 = ConstVec3(0, 0, 1)
 
@@ -610,31 +610,31 @@ class FloatMathExtraTest extends FunSuite {
             val axis1 = Vec3(0)
             val angle1 = angleAxis(m, axis1)
 
-            if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
-                assert(approxEqual(0, angle1, 1e-6f))
-                assert(approxEqual(Vec3.UnitX, axis1, 1e-6f))
+            if (approxEqual(abs(angle0), 2*Pi, 1e-15)) {
+                assert(approxEqual(0, angle1, 1e-15))
+                assert(approxEqual(Vec3.UnitX, axis1, 1e-15))
             }
-            else if (approxEqual(angle0, 0, 1e-6f)) {
-                assert(approxEqual(angle0, angle1, 1e-6f))
-                assert(approxEqual(Vec3.UnitX, axis1, 1e-6f))
+            else if (approxEqual(angle0, 0, 1e-15)) {
+                assert(approxEqual(angle0, angle1, 1e-15))
+                assert(approxEqual(Vec3.UnitX, axis1, 1e-15))
             }
             else {
                 assert(
                     (
-                        approxEqual(angle0, angle1, 1e-6f) &&
-                        approxEqual(axis0, axis1, 1e-6f)
+                        approxEqual(angle0, angle1, 1e-15) &&
+                        approxEqual(axis0, axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, -angle1, 1e-6f) &&
-                        approxEqual(axis0, -axis1, 1e-6f)
+                        approxEqual(angle0, -angle1, 1e-15) &&
+                        approxEqual(axis0, -axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, -(radians(360) - angle1), 1e-6f) &&
-                        approxEqual(axis0, axis1, 1e-6f)
+                        approxEqual(angle0, -(radians(360) - angle1), 1e-15) &&
+                        approxEqual(axis0, axis1, 1e-15)
                     )||
                     (
-                        approxEqual(angle0, (radians(360) - angle1), 1e-6f) &&
-                        approxEqual(axis0, -axis1, 1e-6f)
+                        approxEqual(angle0, (radians(360) - angle1), 1e-15) &&
+                        approxEqual(axis0, -axis1, 1e-15)
                     )
                 )
             }
@@ -666,7 +666,7 @@ class FloatMathExtraTest extends FunSuite {
     }
 
     test("Convert to angleAxis") {
-        def testQuaternion(a: Float) {
+        def testQuaternion(a: Double) {
             val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
 
             val axis = Vec3(0)
@@ -674,10 +674,10 @@ class FloatMathExtraTest extends FunSuite {
 
             val q1: ConstQuat4 = quaternion(angle, axis)
 
-            assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
+            assert(approxEqual(q0, q1, 1e-15) || approxEqual(q0, -q1, 1e-15))
         }
 
-        def testMatrix(a: Float) {
+        def testMatrix(a: Double) {
             val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
 
             val axis = Vec3(0)
@@ -685,7 +685,7 @@ class FloatMathExtraTest extends FunSuite {
 
             val m1: ConstMat3 = rotationMat(angle, axis)
 
-            assert(approxEqual(m0, m1, 1e-6f))
+            assert(approxEqual(m0, m1, 1e-15))
         }
 
         testQuaternion(-360)
@@ -714,27 +714,27 @@ class FloatMathExtraTest extends FunSuite {
     }
 
     test("All if branches, quat from mat") {
-        def testMatrix(angle: Float, axis: AnyVec3) {
+        def testMatrix(angle: Double, axis: AnyVec3) {
             val m0: ConstMat3 = rotationMat(
                 radians(angle), normalize(axis)
             )
             val q: ConstQuat4 = quaternion(m0)
             val m1: ConstMat3 = rotationMat(q)
 
-            assert(approxEqual(m0, m1, 1e-6f))
+            assert(approxEqual(m0, m1, 1e-15))
         }
 
         // branch 1
-        testMatrix(336.7842f, Vec3(0.42147923f, -0.98776567f, -0.6945276f))
+        testMatrix(336.7842, Vec3(0.42147923, -0.98776567, -0.6945276))
 
         // branch 2
-        testMatrix(-210.44534f, Vec3(-0.92752934f, -0.334566f, 0.31773436f))
+        testMatrix(-210.44534, Vec3(-0.92752934, -0.334566, 0.31773436))
 
         // branch 3
-        testMatrix(175.66881f, Vec3(0.41001987f, -0.71595466f, -0.4499402f))
+        testMatrix(175.66881, Vec3(0.41001987, -0.71595466, -0.4499402))
         
         // branch 4
-        testMatrix(-231.80054f, Vec3(-0.024970055f, 0.080794096f, -0.74685013f))
+        testMatrix(-231.80054, Vec3(-0.024970055, 0.080794096, -0.74685013))
     }
 
     test("All if branches, angle axis from mat") {
@@ -746,26 +746,26 @@ class FloatMathExtraTest extends FunSuite {
 
             val m1: ConstMat3 = rotationMat(angle, axis)
 
-            assert(approxEqual(m0, m1, 1e-6f))
+            assert(approxEqual(m0, m1, 1e-15))
         }
 
         // sub-branch 1
-        testMatrix(Vec3(0.39596772f, -0.080019474f, 0.35837686f))
+        testMatrix(Vec3(0.39596772, -0.080019474, 0.35837686))
 
         // sub-branch 2
-        testMatrix(Vec3(-0.11932039f, 0.7943535f, -0.09355426f))
+        testMatrix(Vec3(-0.11932039, 0.7943535, -0.09355426))
 
         // sub-branch 3
-        testMatrix(Vec3(-0.19381118f, 0.30482996f, -0.4189638f))
+        testMatrix(Vec3(-0.19381118, 0.30482996, -0.4189638))
     }
 
     test("lookAt") {
-        def test(x: Float, y: Float) {
+        def test(x: Double, y: Double) {
             val m = rotationMat(radians(y), Vec3.UnitY)*
                     rotationMat(radians(x), Vec3.UnitX)
 
             val dir = Vec3(0, 0, 100)
-            assert(approxEqual(m, lookAt(m*dir, Vec3.UnitY), 1e-6f))
+            assert(approxEqual(m, lookAt(m*dir, Vec3.UnitY), 1e-15))
         }
 
         test(0, 0)
@@ -817,62 +817,62 @@ class FloatMathExtraTest extends FunSuite {
 
         // gluPerspective(90, 640/480f, 10, 1000)
         val p1 = Mat4(
-                0.75f, 0, 0, 0,
-                0, 1.0f, 0, 0,
-                0, 0, -1.020202f, -1.0f,
-                0, 0, -20.20202f, 0.0f
+                0.75, 0, 0, 0,
+                0, 1.0, 0, 0,
+                0, 0, -1.020202, -1.0,
+                0, 0, -20.20202, 0.0
         )
-        val m1 = perspective(radians(90), 640/480f, 10, 1000)
-        assert(approxEqual(m1, p1, 1e-7f))
+        val m1 = perspective(radians(90), 640/480d, 10, 1000)
+        assert(approxEqual(m1, p1, 1e-6))
         
         // gluPerspective(120, 800/600f, 10, 10000)
         val p2 = Mat4(
-                0.4330127f, 0, 0, 0,
-                0, 0.57735026f, 0, 0,
-                0, 0, -1.002002f, -1.0f,
-                0, 0, -20.02002f, 0
+                0.4330127, 0, 0, 0,
+                0, 0.57735026, 0, 0,
+                0, 0, -1.002002, -1.0,
+                0, 0, -20.02002, 0
         )
-        val m2 = perspective(radians(120), 800/600f, 10, 10000)
-        assert(approxEqual(m2, p2, 1e-7f))
+        val m2 = perspective(radians(120), 800/600d, 10, 10000)
+        assert(approxEqual(m2, p2, 1e-7))
 
         // gluPerspective(100, 1680/1050f, 1, 800)
         val p3 = Mat4(
-                0.52443725f, 0, 0,
-                0, 0, 0.83909965f, 0,
-                0, 0, 0, -1.0025032f, -1.0f,
-                0, 0, -2.0025032f, 0
+                0.52443725, 0, 0,
+                0, 0, 0.83909965, 0,
+                0, 0, 0, -1.0025032, -1.0,
+                0, 0, -2.0025032, 0
         )
-        val m3 = perspective(radians(100), 1680/1050f, 1, 800)
-        assert(approxEqual(m3, p3, 1e-7f))
+        val m3 = perspective(radians(100), 1680/1050d, 1, 800)
+        assert(approxEqual(m3, p3, 1e-7))
 
         // glOrtho(-100, 100, -100, 100, -100, 100)
         val o1 = Mat4(
-                0.01f, 0, 0, 0,
-                0, 0.01f, 0, 0,
-                0, 0, -0.01f, 0,
-                0, 0, 0, 1.0f
+                0.01, 0, 0, 0,
+                0, 0.01, 0, 0,
+                0, 0, -0.01, 0,
+                0, 0, 0, 1.0
         )
         val n1 = ortho(-100, 100, -100, 100, -100, 100)
-        assert(approxEqual(n1, o1, 1e-7f))
+        assert(approxEqual(n1, o1, 1e-7))
 
         // gl.glOrtho(0, 300, -200, 400, -20, 500)
         val o2 = Mat4(
-                0.006666667f, 0, 0, 0,
-                0, 0.0033333334f, 0, 0,
-                0, 0, -0.0038461538f, 0,
-                -1.0f, -0.33333334f, -0.9230769f, 1.0f
+                0.006666667, 0, 0, 0,
+                0, 0.0033333334, 0, 0,
+                0, 0, -0.0038461538, 0,
+                -1.0, -0.33333334, -0.9230769, 1.0
         )
         val n2 = ortho(0, 300, -200, 400, -20, 500)
-        assert(approxEqual(n2, o2, 1e-7f))
+        assert(approxEqual(n2, o2, 1e-7))
 
         // gl.glOrtho(-500, 22, -800, -222, 100, 1000)
         val o3 = Mat4(
-                0.0038314175f, 0, 0, 0,
-                0, 0.0034602077f, 0, 0,
-                0, 0, -0.0022222223f, 0,
-                0.91570884f, 1.7681661f, -1.2222222f, 1.0f
+                0.0038314175, 0, 0, 0,
+                0, 0.0034602077, 0, 0,
+                0, 0, -0.0022222223, 0,
+                0.91570884, 1.7681661, -1.2222222, 1.0
         )
         val n3 = ortho(-500, 22, -800, -222, 100, 1000)
-        assert(approxEqual(n3, o3, 1e-6f))
+        assert(approxEqual(n3, o3, 1e-6))
     }
 }

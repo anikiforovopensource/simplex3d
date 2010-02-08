@@ -21,10 +21,12 @@
 package test.math.floatm
 
 import org.scalatest._
+import java.util.Random
 
+import simplex3d.math.BaseMath._
+import simplex3d.math.intm._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._
-import java.util.Random
 
 
 /**
@@ -125,294 +127,330 @@ class FloatMathExtraTest extends FunSuite {
         }
     }
 
-    test("Extra Math") {
-        
+    test("hasErrors") {
+        val random = new Random(1)
+        def makeErrors(id: Int) :(Float, Float, Float, Float) = {
+            val v = id%4 match {
+                case 0 => random.nextFloat
+                case 1 => Float.NaN
+                case 2 => Float.PositiveInfinity
+                case 3 => Float.NegativeInfinity
+            }
+            val j = (id >> 2)%4
+            val seq = for (i <- 0 until 4) yield {
+                if (i == j) v
+                else random.nextFloat
+            }
+            (seq(0), seq(1), seq(2), seq(3))
+        }
 
-//    def lengthSquare(x: Float) :Float = x*x
-//    def lengthSquare(u: AnyVec2f) :Float = u.x*u.x + u.y*u.y
-//    def lengthSquare(u: AnyVec3f) :Float = u.x*u.x + u.y*u.y + u.z*u.z
-//    def lengthSquare(u: AnyVec4f) :Float = u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
-//
-//    def hasErrors(x: Float) :Boolean = isinf(x) || isnan(x)
-//    def hasErrors(u: AnyVec2f) :Boolean = u.hasErrors
-//    def hasErrors(u: AnyVec3f) :Boolean = u.hasErrors
-//    def hasErrors(u: AnyVec4f) :Boolean = u.hasErrors
-//    def hasErrors(q: AnyQuat4f) :Boolean = q.hasErrors
-//    def hasErrors(m: AnyMat2f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat2x3f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat2x4f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat3x2f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat3f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat3x4f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat4x2f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat4x3f) :Boolean = m.hasErrors
-//    def hasErrors(m: AnyMat4f) :Boolean = m.hasErrors
-//
-//    def approxEqual(x: Float, y: Float, absDelta: Float) :Boolean = {
-//        abs(x - y) < absDelta
-//    }
-//    def approxEqual(u: AnyVec2f, v: AnyVec2f, absDelta: Float) :Boolean = {
-//        abs(v.x - u.x) < absDelta &&
-//        abs(v.y - u.y) < absDelta
-//    }
-//    def approxEqual(u: AnyVec3f, v: AnyVec3f, absDelta: Float) :Boolean = {
-//        abs(v.x - u.x) < absDelta &&
-//        abs(v.y - u.y) < absDelta &&
-//        abs(v.z - u.z) < absDelta
-//    }
-//    def approxEqual(u: AnyVec4f, v: AnyVec4f, absDelta: Float) :Boolean = {
-//        abs(v.x - u.x) < absDelta &&
-//        abs(v.y - u.y) < absDelta &&
-//        abs(v.z - u.z) < absDelta &&
-//        abs(v.w - u.w) < absDelta
-//    }
-//    def approxEqual(p: AnyQuat4f, q: AnyQuat4f, absDelta: Float) :Boolean = {
-//        abs(p.a - q.a) < absDelta &&
-//        abs(p.b - q.b) < absDelta &&
-//        abs(p.c - q.c) < absDelta &&
-//        abs(p.d - q.d) < absDelta
-//    }
-//    def approxEqual(m: AnyMat2f, n: AnyMat2f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat2x3f, n: AnyMat2x3f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat2x4f, n: AnyMat2x4f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta &&
-//
-//            abs(n.m03 - m.m03) < absDelta &&
-//            abs(n.m13 - m.m13) < absDelta
-//        )
-//    }
-//
-//    def approxEqual(m: AnyMat3x2f, n: AnyMat3x2f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat3f, n: AnyMat3f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta &&
-//            abs(n.m22 - m.m22) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat3x4f, n: AnyMat3x4f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta &&
-//            abs(n.m22 - m.m22) < absDelta &&
-//
-//            abs(n.m03 - m.m03) < absDelta &&
-//            abs(n.m13 - m.m13) < absDelta &&
-//            abs(n.m23 - m.m23) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat4x2f, n: AnyMat4x2f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//            abs(n.m30 - m.m30) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta &&
-//            abs(n.m31 - m.m31) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat4x3f, n: AnyMat4x3f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//            abs(n.m30 - m.m30) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta &&
-//            abs(n.m31 - m.m31) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta &&
-//            abs(n.m22 - m.m22) < absDelta &&
-//            abs(n.m32 - m.m32) < absDelta
-//        )
-//    }
-//    def approxEqual(m: AnyMat4f, n: AnyMat4f, absDelta: Float) :Boolean = {
-//        (
-//            abs(n.m00 - m.m00) < absDelta &&
-//            abs(n.m10 - m.m10) < absDelta &&
-//            abs(n.m20 - m.m20) < absDelta &&
-//            abs(n.m30 - m.m30) < absDelta &&
-//
-//            abs(n.m01 - m.m01) < absDelta &&
-//            abs(n.m11 - m.m11) < absDelta &&
-//            abs(n.m21 - m.m21) < absDelta &&
-//            abs(n.m31 - m.m31) < absDelta &&
-//
-//            abs(n.m02 - m.m02) < absDelta &&
-//            abs(n.m12 - m.m12) < absDelta &&
-//            abs(n.m22 - m.m22) < absDelta &&
-//            abs(n.m32 - m.m32) < absDelta &&
-//
-//            abs(n.m03 - m.m03) < absDelta &&
-//            abs(n.m13 - m.m13) < absDelta &&
-//            abs(n.m23 - m.m23) < absDelta &&
-//            abs(n.m33 - m.m33) < absDelta
-//        )
-//    }
-//
-//    // Quaternion
-//    def normSquare(q: AnyQuat4f) :Float = q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d
-//    def norm(q: AnyQuat4f) :Float = {
-//        sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
-//    }
-//    def conjugate(q: AnyQuat4f) :Quat4f = new Quat4f(q.a, -q.b, -q.c, -q.d)
-//
-//    def normalize(q: AnyQuat4f) :Quat4f = {
-//        q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
-//    }
-//
-//    /**
-//     * This method is here for completness. Normally you should work with
-//     * unit quaternions (<code>norm(q) == 1</code>), and in this case
-//     * <code>inverse(q) == conjugate(q)</code>.
-//     */
-//    def inverse(q: AnyQuat4f) :Quat4f = conjugate(q)/normSquare(q)
-//
-//    def slerp(p: AnyQuat4f, q: AnyQuat4f, a: Float) :Quat4f = {
-//        if (approxEqual(p, q, 1e-5f)) return Quat4f(q)
-//
-//        var cosTheta = p.a*q.a + p.b*q.b + p.c*q.c+ p.d*q.d
-//        var negate = false
-//        if (cosTheta < 0) {
-//            cosTheta = -cosTheta
-//            negate = true
-//        }
-//
-//        var t = a
-//        var s = 1 - t
-//
-//        if (cosTheta < 0.95f) {
-//            val theta = acos(cosTheta)
-//            val invSinTheta = 1/sin(theta)
-//
-//            t = sin(t*theta)*invSinTheta
-//            s = sin(s*theta)*invSinTheta
-//            if (negate) t = -t
-//        }
-//
-//        new Quat4f(
-//            s*p.a + t*q.a,
-//            s*p.b + t*q.b,
-//            s*p.c + t*q.c,
-//            s*p.d + t*q.d
-//        )
-//    }
-//
-//    /**
-//     * The result is undefined for quaternions with non-unit norm.
-//     */
-//    def rotate(u: AnyVec3f, q: Quat4f) = {
-//        import q._
-//
-//        val t1 = a*b
-//        val t2 = a*c
-//        val t3 = a*d
-//        val t4 = -b*b
-//        val t5 = b*c
-//        val t6 = b*d
-//        val t7 = -c*c
-//        val t8 = c*d
-//        val t9 = -d*d
-//
-//        new Vec3f(
-//            2*((t7 + t9)*u.x + (t5 - t3)*u.y + (t2 + t6)*u.z) + u.x,
-//            2*((t3 + t5)*u.x + (t4 + t9)*u.y + (t8 - t1)*u.z) + u.y,
-//            2*((t6 - t2)*u.x + (t1 + t8)*u.y + (t4 + t7)*u.z) + u.z
-//        )
-//    }
-//
-//    // Rotation
-//    /**
-//     * This method creates a 2d transformation matrix that rotates a vector
-//     * counterclockwise by the specified angle.
-//     */
-//    def rotationMat(angle: Float) :Mat2f = {
-//        val cosA = cos(angle)
-//        val sinA = sin(angle)
-//
-//        new Mat2f(
-//             cosA, sinA,
-//            -sinA, cosA
-//        )
-//    }
-//
-//    /**
-//     * The result is undefined if the matrix does not represent
-//     * non-scaling rotation.
-//     */
-//    def rotationAngle(m: Mat2f) :Float = {
-//        acos((m.m00 + m.m11)*0.5f)
-//    }
-//
-//    def lookAt(direction: AnyVec3f, up: AnyVec3f) :Mat3f = {
-//        val zaxis = normalize(direction)
-//        val xaxis = normalize(cross(up, zaxis))
-//        val yaxis = cross(zaxis, xaxis)
-//        new Mat3f(
-//            xaxis.x, xaxis.y, xaxis.z,
-//            yaxis.x, yaxis.y, yaxis.z,
-//            zaxis.x, zaxis.y, zaxis.z
-//        )
-//    }
+        var i = 0L; while(i < 16*16*16*16) {
+            val (a1, a2, a3, a4) = makeErrors(int(i))
+            val (b1, b2, b3, b4) = makeErrors(int(i >> 4))
+            val (c1, c2, c3, c4) = makeErrors(int(i >> 8))
+            val (d1, d2, d3, d4) = makeErrors(int(i >> 12))
+
+            assert(hasErrors(Vec2(a1, a2)) ==
+                   (hasErrors(a1) || hasErrors(a2)))
+
+            assert(hasErrors(Vec3(a1, a2, a3)) ==
+                   (hasErrors(a1) || hasErrors(a2) || hasErrors(a3)))
+
+            assert(hasErrors(Vec4(a1, a2, a3, a4)) ==
+                   (hasErrors(a1) || hasErrors(a2) ||
+                    hasErrors(a3) || hasErrors(a4)))
+
+            assert(hasErrors(Quat4(a1, a2, a3, a4)) ==
+                   (hasErrors(a1) || hasErrors(a2) ||
+                    hasErrors(a3) || hasErrors(a4)))
+
+            val m2x2 = Mat2x2(a1, a2, b1, b2)
+            assert(hasErrors(m2x2) ==
+                   (hasErrors(m2x2(0)) || hasErrors(m2x2(1))))
+
+            val m2x3 = Mat2x3(a1, a2, b1, b2, c1, c2)
+            assert(hasErrors(m2x3) ==
+                   (hasErrors(m2x3(0)) ||
+                    hasErrors(m2x3(1)) ||
+                    hasErrors(m2x3(2))))
+
+            val m2x4 = Mat2x4(a1, a2, b1, b2, c1, c2, d1, d2)
+            assert(hasErrors(m2x4) ==
+                   (hasErrors(m2x4(0)) || hasErrors(m2x4(1)) ||
+                    hasErrors(m2x4(2)) || hasErrors(m2x4(3))))
+
+            val m3x2 = Mat3x2(a1, a2, a3, b1, b2, b3)
+            assert(hasErrors(m3x2) ==
+                   (hasErrors(m3x2(0)) || hasErrors(m3x2(1))))
+
+            val m3x3 = Mat3x3(a1, a2, a3, b1, b2, b3, c1, c2, c3)
+            assert(hasErrors(m3x3) ==
+                   (hasErrors(m3x3(0)) ||
+                    hasErrors(m3x3(1)) ||
+                    hasErrors(m3x3(2))))
+
+            val m3x4 = Mat3x4(a1, a2, a3, b1, b2, b3, c1, c2, c3, d1, d2, d3)
+            assert(hasErrors(m3x4) ==
+                   (hasErrors(m3x4(0)) || hasErrors(m3x4(1)) ||
+                    hasErrors(m3x4(2)) || hasErrors(m3x4(3))))
+
+            val m4x2 = Mat4x2(a1, a2, a3, a4, b1, b2, b3, b4)
+            assert(hasErrors(m4x2) ==
+                   (hasErrors(m4x2(0)) || hasErrors(m4x2(1))))
+
+            val m4x3 = Mat4x3(a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4)
+            assert(hasErrors(m4x3) ==
+                   (hasErrors(m4x3(0)) ||
+                    hasErrors(m4x3(1)) ||
+                    hasErrors(m4x3(2))))
+
+            val m4x4 = Mat4x4(a1, a2, a3, a4, b1, b2, b3, b4,
+                              c1, c2, c3, c4, d1, d2, d3, d4)
+            assert(hasErrors(m4x4) ==
+                   (hasErrors(m4x4(0)) || hasErrors(m4x4(1)) ||
+                    hasErrors(m4x4(2)) || hasErrors(m4x4(3))))
+
+            i += 1
+        }
+    }
+
+    test("lengthSquare") {
+        assert(lengthSquare(2) == 4)
+        assert(lengthSquare(Vec2(2, 3)) == 13)
+        assert(lengthSquare(Vec3(2, 3, 4)) == 29)
+        assert(lengthSquare(Vec4(2, 3, 4, 5)) == 54)
+
+        assert(!hasErrors(0))
+        assert(!hasErrors(1))
+        assert(!hasErrors(-1))
+        assert(hasErrors(Float.NaN))
+        assert(hasErrors(Float.PositiveInfinity))
+        assert(hasErrors(Float.NegativeInfinity))
+    }
+
+    test("approxEqual") {
+        val e = 1e-5f
+        val d = 1e-6f
+
+        assert(approxEqual(1, 1+d, e))
+        assert(!approxEqual(1, 1+e, e))
+        assert(approxEqual(1, 1-d, e))
+        assert(!approxEqual(1, 1-e, e))
+
+        assert(approxEqual(Vec2(1, 2), Vec2(1+d, 2+d), e))
+        assert(!approxEqual(Vec2(1, 2), Vec2(1+e, 2+e), e))
+        assert(approxEqual(Vec2(1, 2), Vec2(1-d, 2-d), e))
+        assert(!approxEqual(Vec2(1, 2), Vec2(1-e, 2-e), e))
+
+        assert(approxEqual(Vec3(1, 2, 3), Vec3(1+d, 2+d, 3+d), e))
+        assert(!approxEqual(Vec3(1, 2, 3), Vec3(1+e, 2+e, 3+e), e))
+         assert(approxEqual(Vec3(1, 2, 3), Vec3(1-d, 2-d, 3-d), e))
+        assert(!approxEqual(Vec3(1, 2, 3), Vec3(1-e, 2-e, 3-e), e))
+
+        assert(approxEqual(Vec4(1, 2, 3, 4), Vec4(1+d, 2+d, 3+d, 4+d), e))
+        assert(!approxEqual(Vec4(1, 2, 3, 4), Vec4(1+e, 2+e, 3+e, 4+e), e))
+        assert(approxEqual(Vec4(1, 2, 3, 4), Vec4(1-d, 2-d, 3-d, 4-d), e))
+        assert(!approxEqual(Vec4(1, 2, 3, 4), Vec4(1-e, 2-e, 3-e, 4-e), e))
+
+        assert(approxEqual(Quat4(1, 2, 3, 4), Quat4(1+d, 2+d, 3+d, 4+d), e))
+        assert(!approxEqual(Quat4(1, 2, 3, 4), Quat4(1+e, 2+e, 3+e, 4+e), e))
+        assert(approxEqual(Quat4(1, 2, 3, 4), Quat4(1-d, 2-d, 3-d, 4-d), e))
+        assert(!approxEqual(Quat4(1, 2, 3, 4), Quat4(1-e, 2-e, 3-e, 4-e), e))
+
+        assert(approxEqual(Mat2x2(1, 2, 3, 4),
+                           Mat2x2(1+d, 2+d, 3+d, 4+d), e))
+        assert(!approxEqual(Mat2x2(1, 2, 3, 4),
+                            Mat2x2(1+e, 2+e, 3+e, 4+e), e))
+        assert(approxEqual(Mat2x2(1, 2, 3, 4),
+                           Mat2x2(1-d, 2-d, 3-d, 4-d), e))
+        assert(!approxEqual(Mat2x2(1, 2, 3, 4),
+                            Mat2x2(1-e, 2-e, 3-e, 4-e), e))
+
+        assert(approxEqual(Mat2x3(1, 2, 3, 4, 5, 6),
+                           Mat2x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d), e))
+        assert(!approxEqual(Mat2x3(1, 2, 3, 4, 5, 6),
+                            Mat2x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e), e))
+        assert(approxEqual(Mat2x3(1, 2, 3, 4, 5, 6),
+                           Mat2x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d), e))
+        assert(!approxEqual(Mat2x3(1, 2, 3, 4, 5, 6),
+                            Mat2x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e), e))
+
+        assert(approxEqual(Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+                           Mat2x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d), e))
+        assert(!approxEqual(Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+                            Mat2x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e), e))
+        assert(approxEqual(Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+                           Mat2x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d), e))
+        assert(!approxEqual(Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+                            Mat2x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e), e))
+
+        assert(approxEqual(Mat3x2(1, 2, 3, 4, 5, 6),
+                           Mat3x2(1+d, 2+d, 3+d, 4+d, 5+d, 6+d), e))
+        assert(!approxEqual(Mat3x2(1, 2, 3, 4, 5, 6),
+                            Mat3x2(1+e, 2+e, 3+e, 4+e, 5+e, 6+e), e))
+        assert(approxEqual(Mat3x2(1, 2, 3, 4, 5, 6),
+                           Mat3x2(1-d, 2-d, 3-d, 4-d, 5-d, 6-d), e))
+        assert(!approxEqual(Mat3x2(1, 2, 3, 4, 5, 6),
+                            Mat3x2(1-e, 2-e, 3-e, 4-e, 5-e, 6-e), e))
+
+        assert(approxEqual(Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                           Mat3x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d),
+                           e))
+        assert(!approxEqual(Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                            Mat3x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e, 9+e),
+                            e))
+        assert(approxEqual(Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                           Mat3x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d, 9-d),
+                           e))
+        assert(!approxEqual(Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                            Mat3x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e),
+                            e))
+
+        assert(approxEqual(Mat3x4(1, 2, 3, 4, 5, 6,
+                                  7, 8, 9, 10, 11, 12),
+                           Mat3x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d,
+                                  7+d, 8+d, 9+d, 10+d, 11+d, 12+d), e))
+        assert(!approxEqual(Mat3x4(1, 2, 3, 4, 5, 6,
+                                   7, 8, 9, 10, 11, 12),
+                            Mat3x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e,
+                                   7+e, 8+e, 9+e, 10+e, 11+e, 12+e), e))
+        assert(approxEqual(Mat3x4(1, 2, 3, 4, 5, 6,
+                                  7, 8, 9, 10, 11, 12),
+                           Mat3x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d,
+                                  7-d, 8-d, 9-d, 10-d, 11-d, 12-d), e))
+        assert(!approxEqual(Mat3x4(1, 2, 3, 4, 5, 6,
+                                   7, 8, 9, 10, 11, 12),
+                            Mat3x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e,
+                                   7-e, 8-e, 9-e, 10-e, 11-e, 12-e), e))
+
+        assert(approxEqual(Mat4x2(1, 2, 3, 4, 5, 6, 7, 8),
+                           Mat4x2(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d), e))
+        assert(!approxEqual(Mat4x2(1, 2, 3, 4, 5, 6, 7, 8),
+                            Mat4x2(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e), e))
+        assert(approxEqual(Mat4x2(1, 2, 3, 4, 5, 6, 7, 8),
+                           Mat4x2(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d), e))
+        assert(!approxEqual(Mat4x2(1, 2, 3, 4, 5, 6, 7, 8),
+                            Mat4x2(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e), e))
+
+        assert(approxEqual(Mat4x3(1, 2, 3, 4, 5, 6,
+                                  7, 8, 9, 10, 11, 12),
+                           Mat4x3(1+d, 2+d, 3+d, 4+d, 5+d,
+                                  6+d, 7+d, 8+d, 9+d, 10+d, 11+d, 12+d), e))
+        assert(!approxEqual(Mat4x3(1, 2, 3, 4, 5, 6,
+                                   7, 8, 9, 10, 11, 12),
+                            Mat4x3(1+e, 2+e, 3+e, 4+e, 5+e,
+                                   6+e, 7+e, 8+e, 9+e, 10+e, 11+e, 12+e), e))
+        assert(approxEqual(Mat4x3(1, 2, 3, 4, 5, 6,
+                                  7, 8, 9, 10, 11, 12),
+                           Mat4x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d,
+                                  7-d, 8-d, 9-d, 10-d, 11-d, 12-d), e))
+        assert(!approxEqual(Mat4x3(1, 2, 3, 4, 5, 6,
+                                   7, 8, 9, 10, 11, 12),
+                            Mat4x3(1-e, 2-e, 3-e, 4-e, 5-e,
+                                   6-e, 7-e, 8-e, 9-e, 10-e, 11-e, 12-e), e))
+
+        assert(approxEqual(Mat4(1, 2, 3, 4, 5, 6, 7, 8,
+                                9, 10, 11, 12, 13, 14, 15, 16),
+                           Mat4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d,
+                                9+d, 10+d, 11+d, 12+d, 13+d, 14+d, 15+d, 16+d),
+                           e))
+        assert(!approxEqual(Mat4(1, 2, 3, 4, 5, 6, 7, 8,
+                                 9, 10, 11, 12, 13, 14, 15, 16),
+                            Mat4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e,
+                                 9+e, 10+e, 11+e, 12+e, 13+e, 14+e, 15+e, 16+e),
+                            e))
+        assert(approxEqual(Mat4(1, 2, 3, 4, 5, 6, 7, 8,
+                                9, 10, 11, 12, 13, 14, 15, 16),
+                           Mat4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d,
+                                9-d, 10-d, 11-d, 12-d, 13-d, 14-d, 15-d, 16-d),
+                           e))
+        assert(!approxEqual(Mat4(1, 2, 3, 4, 5, 6, 7, 8,
+                                 9, 10, 11, 12, 13, 14, 15, 16),
+                            Mat4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e,
+                                 9-e, 10-e, 11-e, 12-e, 13-e, 14-e, 15-e, 16-e),
+                            e))
+    }
+
+    test("Quaternion math") {
+        assert(normSquare(Quat4(2, 3, 4, 5)) == 54)
+        assert(approxEqual(norm(Quat4(2, 3, 4, 5)), sqrt(54), 1e-6f))
+        assert(conjugate(Quat4(2, 3, 4, 5)) == Quat4(2, -3, -4, -5))
+        assert(normalize(Quat4(2, 3, 4, 5)) == Quat4(2, 3, 4, 5)/sqrt(54))
+        assert(inverse(Quat4(2, 3, 4, 5)) == Quat4(2, -3, -4, -5)/54)
+
+        // slerp
+        val q = Quat4 rotateX(radians(90))
+
+        assert(approxEqual(
+                slerp(Quat4.Identity, q, 0),
+                Quat4 rotateX(radians(0)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                slerp(Quat4.Identity, q, 1/3f),
+                Quat4 rotateX(radians(30)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                slerp(Quat4.Identity, q, 0.5f),
+                Quat4 rotateX(radians(45)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                slerp(Quat4.Identity, q, 2/3f),
+                Quat4 rotateX(radians(60)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                slerp(Quat4.Identity, q, 1),
+                Quat4 rotateX(radians(90)),
+                1e-6f)
+        )
+        // slerp branches: lerp branch
+        assert(approxEqual(
+                slerp(Quat4.Identity, Quat4 rotateX(radians(0.1f)), 0.5f),
+                Quat4 rotateX(radians(0.05f)),
+                1e-6f)
+        )
+        // slerp branches: no negation
+        assert(approxEqual(
+                slerp(Quat4.Identity, Quat4 rotateX(radians(179)), 0.5f),
+                Quat4 rotateX(radians(179/2f)),
+                1e-6f)
+        )
+        // slerp branches: negation
+        assert(approxEqual(
+                slerp(Quat4.Identity, Quat4 rotateX(radians(181)), 0.5f),
+                Quat4 rotateX(radians(-179/2f)),
+                1e-6f)
+        )
+
+        // rotate
+        assert(approxEqual(
+                rotate(Vec3.UnitY, Quat4 rotateX(radians(0))),
+                Vec3(0, 1, 0),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotate(Vec3.UnitY, Quat4 rotateX(radians(30))),
+                Vec3(0, sqrt(3)/2, 0.5f),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotate(Vec3.UnitY, Quat4 rotateX(radians(45))),
+                normalize(Vec3(0, 1, 1)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotate(Vec3.UnitY, Quat4 rotateX(radians(60))),
+                Vec3(0, 0.5f, sqrt(3)/2),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotate(Vec3.UnitY, Quat4 rotateX(radians(90))),
+                Vec3(0, 0, 1),
+                1e-6f)
+        )
     }
 
     test("Extra Inverse") {
@@ -427,9 +465,63 @@ class FloatMathExtraTest extends FunSuite {
         assert(approxEqual(m34, m34i, 1e-6f))
     }
 
+    test("2D rotation") {
+        assert(approxEqual(
+                rotationMat(radians(0))*Vec2(1, 0),
+                Vec2(1, 0),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationMat(radians(30))*Vec2(1, 0),
+                Vec2(sqrt(3)/2, 0.5f),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationMat(radians(45))*Vec2(1, 0),
+                normalize(Vec2(1, 1)),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationMat(radians(60))*Vec2(1, 0),
+                Vec2(0.5f, sqrt(3)/2),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationMat(radians(90))*Vec2(1, 0),
+                Vec2(0, 1),
+                1e-6f)
+        )
+
+        assert(approxEqual(
+                rotationAngle(rotationMat(radians(0))),
+                radians(0),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationAngle(rotationMat(radians(30))),
+                radians(30),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationAngle(rotationMat(radians(45))),
+                radians(45),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationAngle(rotationMat(radians(60))),
+                radians(60),
+                1e-6f)
+        )
+        assert(approxEqual(
+                rotationAngle(rotationMat(radians(90))),
+                radians(90),
+                1e-6f)
+        )
+    }
+
     test("Convert to quat") {
         def testMatrix(a: Float) {
-            val m0: ConstMat3 = rotationMat(radians(a), normalize(Vec3(1, 2, 3)))
+            val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
             val q: ConstQuat4 = quaternion(m0)
             val m1: ConstMat3 = rotationMat(q)
 
@@ -502,7 +594,7 @@ class FloatMathExtraTest extends FunSuite {
 
     test("Convert to matrix") {
         def testQuaternion(a: Float) {
-            val q0: ConstQuat4 = quaternion(radians(a), normalize(Vec3(4, 5, 6)))
+            val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
             val m: ConstMat3 = rotationMat(q0)
             val q1: ConstQuat4 = quaternion(m)
 
@@ -575,7 +667,7 @@ class FloatMathExtraTest extends FunSuite {
 
     test("Convert to angleAxis") {
         def testQuaternion(a: Float) {
-            val q0: ConstQuat4 = quaternion(radians(a), normalize(Vec3(4, 5, 6)))
+            val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
 
             val axis = Vec3(0)
             val angle = angleAxis(q0, axis)
@@ -586,7 +678,7 @@ class FloatMathExtraTest extends FunSuite {
         }
 
         def testMatrix(a: Float) {
-            val m0: ConstMat3 = rotationMat(radians(a), normalize(Vec3(1, 2, 3)))
+            val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
 
             val axis = Vec3(0)
             val angle = angleAxis(m0, axis)
@@ -665,6 +757,24 @@ class FloatMathExtraTest extends FunSuite {
 
         // sub-branch 3
         testMatrix(Vec3(-0.19381118f, 0.30482996f, -0.4189638f))
+    }
+
+    test("lookAt") {
+        def test(x: Float, y: Float) {
+            val m = rotationMat(radians(y), Vec3.UnitY)*
+                    rotationMat(radians(x), Vec3.UnitX)
+
+            val dir = Vec3(0, 0, 100)
+            assert(approxEqual(m, lookAt(m*dir, Vec3.UnitY), 1e-6f))
+        }
+
+        test(0, 0)
+        test(30, 0)
+        test(30, 60)
+        test(30, 90)
+        test(30, 180)
+        test(30, 270)
+        test(30, 360)
     }
 
     test("Projection") {

@@ -63,7 +63,10 @@ object DoubleMath {
     def cosh(x: Double) :Double = SMath.cosh(x)
     def tanh(x: Double) :Double = SMath.tanh(x)
 
-    def asinh(x: Double) :Double = SMath.log(x + SMath.sqrt(x*x + 1))
+    def asinh(x: Double) :Double = {
+        if (isneginf(x)) x
+        else SMath.log(x + SMath.sqrt(x*x + 1))
+    }
     def acosh(x: Double) :Double = SMath.log(x + SMath.sqrt(x*x - 1))
     def atanh(x: Double) :Double = 0.5*SMath.log((1 + x)/(1 - x))
 
@@ -952,7 +955,7 @@ object DoubleMath {
     def matrixCompMult(a: Mat3x2d, b: Mat3x2d) :Mat3x2d = {
         new Mat3x2d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-            a.m01*b.m01, b.m11*b.m11, a.m21*b.m21
+            a.m01*b.m01, a.m11*b.m11, a.m21*b.m21
         )
     }
     def matrixCompMult(a: Mat3d, b: Mat3d) :Mat3d = {

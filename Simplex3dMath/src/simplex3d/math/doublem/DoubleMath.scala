@@ -1656,7 +1656,7 @@ object DoubleMath {
         var t = a
         var s = 1 - t
 
-        if (cosTheta < 0.95) {
+        if (cosTheta < 0.99) {
             val theta = acos(cosTheta)
             val invSinTheta = 1/sin(theta)
 

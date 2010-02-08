@@ -45,6 +45,8 @@ package object renamed {
         Vec4f(u.fx, u.fy, u.fz, u.fw)
 
 
+    val FloatMath = floatm.FloatMath
+
     type AnyVec2 = AnyVec2f
     type ConstVec2 = ConstVec2f
     val ConstVec2 = ConstVec2f

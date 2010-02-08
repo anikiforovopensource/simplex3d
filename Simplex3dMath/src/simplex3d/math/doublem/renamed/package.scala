@@ -56,6 +56,8 @@ package object renamed {
         Vec4d(u.dx, u.dy, u.dz, u.dw)
     
 
+    val DoubleMath = doublem.DoubleMath
+
     type AnyVec2 = AnyVec2d
     type ConstVec2 = ConstVec2d
     val ConstVec2 = ConstVec2d

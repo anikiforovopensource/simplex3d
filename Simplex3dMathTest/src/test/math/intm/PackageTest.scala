@@ -22,6 +22,7 @@ package test.math.intm
 
 import org.scalatest._
 
+
 /**
  * @author Aleksey Nikiforov (lex)
  */

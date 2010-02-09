@@ -24,6 +24,7 @@ import org.scalatest._
 
 import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.renamed._
+import simplex3d.math.doublem.DoubleMath._
 import simplex3d.math.floatm._
 
 
@@ -252,5 +253,42 @@ class Quat4dTest extends FunSuite {
 
         q := i; q *= Quat4(6, 7, 8, 9); assert(Quat4(-86, 28, 48, 44) == q)
         q := i; q *= q; assert(Quat4(-46, 12, 16, 20) == q)
+    }
+
+    test("Rotation") {
+        def testInstance(q: AnyQuat4, angle: Float, axis: Vec3) {
+            assert(q.rotate(quaternion(angle, axis)) ==
+                   quaternion(angle, axis)*q)
+
+            assert(q.rotate(angle, axis) ==
+                   quaternion(angle, axis)*q)
+
+            assert(q.rotateX(angle) ==
+                   quaternion(angle, Vec3.UnitX)*q)
+
+            assert(q.rotateY(angle) ==
+                   quaternion(angle, Vec3.UnitY)*q)
+
+            assert(q.rotateZ(angle) ==
+                   quaternion(angle, Vec3.UnitZ)*q)
+
+            assert(q.invert() == inverse(q))
+        }
+        def testObject(angle: Float, axis: Vec3) {
+            assert(Quat4.rotate(angle, axis) == quaternion(angle, axis))
+            assert(Quat4.rotateX(angle) == quaternion(angle, Vec3.UnitX))
+            assert(Quat4.rotateY(angle) == quaternion(angle, Vec3.UnitY))
+            assert(Quat4.rotateZ(angle) == quaternion(angle, Vec3.UnitZ))
+        }
+
+        val random = new java.util.Random(1)
+        def float = random.nextFloat
+        def axis = normalize(Vec3(float, float, float))
+
+        for (i <- 0 until 1000) {
+            testInstance(quaternion(float, axis), float, axis)
+            testInstance(Quat4.Identity, float, axis)
+            testObject(float, axis)
+        }
     }
 }

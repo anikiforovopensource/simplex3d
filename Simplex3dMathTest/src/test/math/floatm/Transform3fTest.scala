@@ -1,0 +1,159 @@
+/*
+ * Simplex3d, MathTest package
+ * Copyright (C) 2009-2010 Simplex3d Team
+ *
+ * This file is part of Simplex3dMathTest.
+ *
+ * Simplex3dMathTest is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simplex3dMathTest is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package test.math.floatm
+
+import org.scalatest._
+
+import simplex3d.math.floatm.renamed._
+import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.doublem._
+
+
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+class Transform3fTest extends FunSuite {
+
+    def scaleMat(v: Vec3) = {
+        val m = Mat3x4(1)
+        m(0, 0) = v.x
+        m(1, 1) = v.y
+        m(2, 2) = v.z
+        m
+    }
+    def translationMat(v: Vec3) = {
+        val m = Mat3x4(1)
+        m(3) = v
+        m
+    }
+
+    test("3D Transform") {
+        val random = new java.util.Random(1)
+        def r = random.nextFloat
+
+        // test object
+        for (i <- 0 until 100) {
+            val m3 = Mat3(r, r, r, r, r, r, r, r, r)
+            assert(Transform3(m3).toMatrix() == Mat3x4(m3))
+            assert(Transform3(Mat3d(m3)).toMatrix() == Mat3x4(m3))
+
+            val m3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+            assert(Transform3(m3x4).toMatrix() == m3x4)
+            assert(Transform3(Mat3x4d(m3x4)).toMatrix() == m3x4)
+            assert(Transform3(m3x4).toMatrix().ne(m3x4))
+
+            val s = r
+            assert(Transform3.scale(s) == Transform3.Identity.scale(s))
+
+            val sv = Vec3(r, r, r)
+            assert(Transform3.scale(sv) == Transform3.Identity.scale(sv))
+
+            val rq = normalize(Quat4(r, r, r, r))
+            assert(Transform3.rotate(rq) == Transform3.Identity.rotate(rq))
+
+            val (angle, axis) = (r, normalize(Vec3(r, r, r)))
+            assert(Transform3.rotate(angle, axis) ==
+                   Transform3.Identity.rotate(angle, axis))
+
+            val rx = r
+            assert(Transform3.rotateX(rx) == Transform3.Identity.rotateX(rx))
+
+            val ry = r
+            assert(Transform3.rotateY(ry) == Transform3.Identity.rotateY(ry))
+
+            val rz = r
+            assert(Transform3.rotateZ(rz) == Transform3.Identity.rotateZ(rz))
+
+            val p = Vec3(r, r, r)
+            assert(Transform3.translate(p) == Transform3.Identity.translate(p))
+        }
+
+        def assertTransform(a: Transform3, m: Mat3x4, b: Transform3) {
+            assert(a.ne(b))
+            assert(m*Mat4(a.toMatrix) == b.toMatrix)
+
+            for (i <- 0 until 100) {
+                val v = Vec3(r, r, r)
+
+                {
+                    val t = a.transformPoint(v)
+                    val u = m*Vec4(t, 1)
+                    assert(approxEqual(u, b.transformPoint(v), 1e-5f))
+                }
+
+                {
+                    val t = a.transformVector(v)
+                    val u = m*Vec4(t, 0)
+                    assert(approxEqual(u, b.transformVector(v), 1e-5f))
+                }
+            }
+        }
+        def test(t: Transform3) {
+            val s = r
+            assertTransform(t, Mat3x4(s), t scale(s))
+
+            val sv = Vec3(r, r, r)
+            assertTransform(t, scaleMat(sv), t scale(sv))
+
+            val rq = normalize(Quat4(r, r, r, r))
+            assertTransform(t, Mat3x4(rotationMat(rq)), t rotate(rq))
+
+            val (angle, axis) = (r, normalize(Vec3(r, r, r)))
+            assertTransform(t, Mat3x4(rotationMat(angle, axis)), t rotate(angle, axis))
+
+            val rx = r
+            assertTransform(t, Mat3x4(rotationMat(rx, Vec3.UnitX)), t rotateX(rx))
+
+            val ry = r
+            assertTransform(t, Mat3x4(rotationMat(ry, Vec3.UnitY)), t rotateY(ry))
+
+            val rz = r
+            assertTransform(t, Mat3x4(rotationMat(rz, Vec3.UnitZ)), t rotateZ(rz))
+
+            val p = Vec3(r, r, r)
+            assertTransform(t, translationMat(p), t translate(p))
+
+            val m3 = ConstMat3(r, r, r, r, r, r, r, r, r)
+            val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+            val t3 = Transform3(m3x4)
+            assertTransform(t, m3x4, t concatenate(t3))
+            assertTransform(t, m3x4, t concatenate(m3x4))
+            assertTransform(t, Mat3x4(m3), t concatenate(m3))
+
+            assert(approxEqual(t.invert().toMatrix, inverse(t.toMatrix), 1e-3f))
+
+            assert(t == Transform3(t.toMatrix))
+            assert(t != Transform3(t.toMatrix + Mat3x4.Identity))
+
+            assert(t.equals(Transform3(t.toMatrix)))
+            assert(!t.equals(Nil))
+        }
+
+        // test transform classes
+        for (i <- 0 until 100) {
+            test(Transform3(Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)))
+            test(Transform3(rotationMat(normalize(Quat4(r, r, r, r)))))
+            test(Transform3 scale(Vec3(r, r, r)))
+            test(Transform3 translate(Vec3(r, r, r)))
+            test(Transform3.Identity)
+        }
+    }
+}

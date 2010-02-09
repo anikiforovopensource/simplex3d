@@ -875,4 +875,49 @@ class DoubleMathExtraTest extends FunSuite {
         val n3 = ortho(-500, 22, -800, -222, 100, 1000)
         assert(approxEqual(n3, o3, 1e-6))
     }
+
+    test("Transform") {
+        val random = new Random(1)
+        def r = random.nextDouble
+
+        for (i <- 0 until 100) {
+            {
+                val s = Vec2(r, r)
+                val angle = r
+                val m = rotationMat(angle)
+                val t = Vec2(r, r)
+
+                assert(approxEqual(
+                        transform(s, m, t).toMatrix,
+                        Transform2 scale(s) rotate(angle) translate(t) toMatrix,
+                        1e-13f)
+                )
+
+                assert(approxEqual(
+                        inverseTransform(s, m, t).toMatrix,
+                        Transform2 translate(-t) rotate(-angle) scale(1/s) toMatrix,
+                        1e-13f)
+                )
+            }
+
+            {
+                val s = Vec3(r, r, r)
+                val q = normalize(Quat4(r, r, r, r))
+                val m = rotationMat(q)
+                val t = Vec3(r, r, r)
+
+                assert(approxEqual(
+                        transform(s, m, t).toMatrix,
+                        Transform3 scale(s) rotate(q) translate(t) toMatrix,
+                        1e-13f)
+                )
+
+                assert(approxEqual(
+                        inverseTransform(s, m, t).toMatrix,
+                        Transform3 translate(-t) rotate(conjugate(q)) scale(1/s) toMatrix,
+                        1e-13f)
+                )
+            }
+        }
+    }
 }

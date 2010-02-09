@@ -133,8 +133,11 @@ class PackageTest extends FunSuite {
         type q4 = Quat4f
         val q4 = Quat4f
 
-        // TODO: Transforms
+        type t2 = Transform2f
+        val t2 = Transform2f
 
+        type t3 = Transform3f
+        val t3 = Transform3f
 
         // Aliases
         type am2x2 = AnyMat2x2f
@@ -259,8 +262,11 @@ class PackageTest extends FunSuite {
         type q4 = Quat4
         val q4 = Quat4
 
-        // TODO: Transforms
+        type t2 = Transform2
+        val t2 = Transform2
 
+        type t3 = Transform3
+        val t3 = Transform3
 
         // Aliases
         type am2x2 = AnyMat2x2

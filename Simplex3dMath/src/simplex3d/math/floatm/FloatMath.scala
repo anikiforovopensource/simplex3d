@@ -1964,6 +1964,49 @@ object FloatMath {
     }
 
     // Transform
+    def transform(scale: AnyVec2f,
+                  rotation: AnyMat2f,
+                  translation: AnyVec2f)
+    :Transform2f =
+    {
+        import rotation._
+        import translation.{x => tx, y => ty}
+        import scale.{x => sx, y => sy}
+
+        new TransformMat2x3f(new Mat2x3f(
+            m00*sx, m10*sx,
+            m01*sy, m11*sy,
+            tx, ty
+        ))
+    }
+
+    /**
+     * @param rotation Must be an orthogonal matrix (matrix that represents
+     * an unscaled rotation) to achieve the desired result.
+     */
+    def inverseTransform(scale: AnyVec2f,
+                         rotation: AnyMat2f,
+                         translation: AnyVec2f)
+    :Transform2f =
+    {
+        import translation.{x => tx, y => ty}
+
+        val sx = 1/scale.x
+        val sy = 1/scale.y
+
+        val m00 = rotation.m00*sx
+        val m10 = rotation.m01*sy
+        val m01 = rotation.m10*sx
+        val m11 = rotation.m11*sy
+
+        new TransformMat2x3f(new Mat2x3f(
+            m00, m10,
+            m01, m11,
+            -m00*tx - m01*ty,
+            -m10*tx - m11*ty
+        ))
+    }
+    
     def transform(scale: AnyVec3f,
                   rotation: AnyMat3f,
                   translation: AnyVec3f)

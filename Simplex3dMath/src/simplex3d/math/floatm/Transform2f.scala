@@ -20,43 +20,87 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math._
 import FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyTransform2f (val matrix: AnyMat2x3f) {
-    import matrix._
+sealed abstract class Transform2f {
+    def toMatrix(): Mat2x3f
 
-    def scale(s: Float) :Transform2f = {
-        new Transform2f(matrix*s)
+    def scale(s: Float) :Transform2f
+    def scale(s: AnyVec2f) :Transform2f
+
+    def rotate(angle: Float) :Transform2f = {
+        concatenate(rotationMat(angle))
     }
-    def scale(s: AnyVec2f) :Transform2f = {
-        new Transform2f(new Mat2x3f(
+
+    def translate(u: AnyVec2f) :Transform2f
+
+    def concatenate(t: Transform2f) :Transform2f = {
+        concatenate(t.toMatrix)
+    }
+    def concatenate(m: AnyMat2x3f) :Transform2f
+    def concatenate(m: AnyMat2f) :Transform2f
+
+    def transformPoint(p: AnyVec2f) :Vec2f
+    def transformVector(v: AnyVec2f) :Vec2f
+
+    def invert() :Transform2f
+
+    def ==(t: Transform2f) :Boolean = {
+        if (t eq null) false
+        else toMatrix == t.toMatrix
+    }
+
+    def !=(t: Transform2f) :Boolean = !(this == t)
+
+    override def equals(other: Any) :Boolean = {
+        other match {
+            case u: Transform2f => this == u
+            case _ => false
+        }
+    }
+
+    override def hashCode :Int = {
+        toMatrix.hashCode
+    }
+
+    override def toString = {
+        "Transform2f(" + toMatrix.toString + ")"
+    }
+}
+
+private[math] final class TransformMat2x3f(val mat3: Mat2x3f)
+extends Transform2f
+{
+    def toMatrix() = Mat2x3f(mat3)
+
+    import mat3._
+
+    def scale(s: Float) :TransformMat2x3f = {
+        new TransformMat2x3f(mat3*s)
+    }
+    def scale(s: AnyVec2f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
             m00*s.x, m10*s.y,
             m01*s.x, m11*s.y,
             m02*s.x, m12*s.y
         ))
     }
 
-    def rotate(angle: Float) :Transform2f = {
-        concatenate(rotationMat(angle))
-    }
-
-    def translate(u: AnyVec2f) :Transform2f = {
-        new Transform2f(new Mat2x3f(
+    def translate(u: AnyVec2f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
             m00, m10,
             m01, m11,
             m02 + u.x, m12 + u.y
         ))
     }
 
-    def concatenate(t: AnyTransform2f) :Transform2f = {
-        concatenate(t.matrix)
-    }
-    def concatenate(m: AnyMat2x3f) :Transform2f = {
-        new Transform2f(new Mat2x3f(
+    def concatenate(m: AnyMat2x3f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
             m.m00*m00 + m.m01*m10,
             m.m10*m00 + m.m11*m10,
 
@@ -67,135 +111,217 @@ sealed abstract class AnyTransform2f (val matrix: AnyMat2x3f) {
             m.m10*m02 + m.m11*m12 + m.m12
         ))
     }
-    def concatenate(m: AnyMat2f) :Transform2f = {
-        new Transform2f(m*matrix)
+    def concatenate(m: AnyMat2f) :TransformMat2x3f = {
+        new TransformMat2x3f(m*mat3)
     }
 
     def transformPoint(p: AnyVec2f) = new Vec2f(
         m00*p.x + m01*p.y + m02,
         m10*p.x + m11*p.y + m12
     )
-
     def transformVector(v: AnyVec2f) = new Vec2f(
         m00*v.x + m01*v.y,
         m10*v.x + m11*v.y
     )
 
-    def invert() :Transform2f = {
-        new Transform2f(inverse(matrix))
-    }
-
-    def ==(t: AnyTransform2f) :Boolean = {
-        if (t eq null) false
-        else matrix == t.matrix
-    }
-
-    def !=(t: AnyTransform2f) :Boolean = !(this == t)
-
-    override def equals(other: Any) :Boolean = {
-        other match {
-            case u: Transform2f => this == u
-            case _ => false
-        }
-    }
-
-    override def hashCode :Int = {
-        matrix.hashCode
-    }
-
-    override def toString = {
-        this.getClass.getSimpleName + "(" + matrix.toString + ")"
+    def invert() :TransformMat2x3f = {
+        new TransformMat2x3f(inverse(mat3))
     }
 }
 
-final class ConstTransform2f private[math] (override val matrix: ConstMat2x3f)
-extends AnyTransform2f(matrix)
+private[math] final class TransformMat2f(val mat2: Mat2f)
+extends Transform2f
+{
+    import mat2._
 
-object ConstTransform2f {
-    def apply(m: AnyMat2x3f) :ConstTransform2f =
-        new ConstTransform2f(ConstMat2x3f(m))
+    def toMatrix() = new Mat2x3f(
+        m00, m10,
+        m01, m11,
+        0, 0
+    )
 
-    def apply(t: AnyTransform2f) :ConstTransform2f =
-        new ConstTransform2f(ConstMat2x3f(t.matrix))
-
-    implicit def toConst(t: Transform2f) = ConstTransform2f(t)
-}
-
-final class Transform2f private[math] (override val matrix: Mat2x3f)
-extends AnyTransform2f(matrix)
-
-object Transform2f {
-
-    val Identity: ConstTransform2f = Transform2f()
-
-    def apply() :Transform2f = new Transform2f(Mat2x3f(1))
-    def apply(m: AnyMat2f) :Transform2f = new Transform2f(Mat2x3f(m))
-    def apply(m: AnyMat2x3f) :Transform2f = new Transform2f(Mat2x3f(m))
-
-    def apply(t: AnyTransform2f) :Transform2f =
-        new Transform2f(Mat2x3f(t.matrix))
-
-    def apply(scale: AnyVec2f,
-              rotation: AnyMat2f,
-              translation: AnyVec2f)
-    :Transform2f =
-    {
-        import rotation._
-        import translation.{x => tx, y => ty}
-        import scale.{x => sx, y => sy}
-
-        new Transform2f(new Mat2x3f(
-            m00*sx, m10*sx,
-            m01*sy, m11*sy,
-            tx, ty
+    def scale(s: Float) :TransformMat2f = {
+        new TransformMat2f(mat2*s)
+    }
+    def scale(s: AnyVec2f) :TransformMat2f = {
+        new TransformMat2f(new Mat2f(
+            m00*s.x, m10*s.y,
+            m01*s.x, m11*s.y
         ))
     }
 
-    def scale(s: Float) :Transform2f = {
-        new Transform2f(Mat2x3f(s))
-    }
-    def scale(s: AnyVec2f) :Transform2f = {
-        new Transform2f(new Mat2x3f(
-            s.x, 0,
-            0, s.y,
-            0, 0
-        ))
-    }
-
-    def translate(u: AnyVec2f) :Transform2f = {
-        new Transform2f(new Mat2x3f(
-            1, 0,
-            0, 1,
+    def translate(u: AnyVec2f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            m00, m10,
+            m01, m11,
             u.x, u.y
         ))
     }
 
-    /**
-     * @param rotation Must be an orthogonal matrix (matrix that represents
-     * an unscaled rotation) to achieve the desired result.
-     */
-    def inverse(scale: AnyVec2f,
-                rotation: AnyMat2f,
-                translation: AnyVec2f)
-    :Transform2f =
-    {
-        import translation.{x => tx, y => ty}
+    def concatenate(m: AnyMat2x3f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            m.m00*m00 + m.m01*m10,
+            m.m10*m00 + m.m11*m10,
 
-        val sx = 1/scale.x
-        val sy = 1/scale.y
+            m.m00*m01 + m.m01*m11,
+            m.m10*m01 + m.m11*m11,
 
-        val m00 = rotation.m00*sx
-        val m10 = rotation.m01*sy
-        val m01 = rotation.m10*sx
-        val m11 = rotation.m11*sy
+            m.m02,
+            m.m12
+        ))
+    }
+    def concatenate(m: AnyMat2f) :TransformMat2f = {
+        new TransformMat2f(m*mat2)
+    }
 
-        new Transform2f(new Mat2x3f(
-            m00, m10,
-            m01, m11,
-            -m00*tx - m01*ty,
-            -m10*tx - m11*ty
+    def transformPoint(p: AnyVec2f) = transformVector(p)
+    def transformVector(v: AnyVec2f) = new Vec2f(
+        m00*v.x + m01*v.y,
+        m10*v.x + m11*v.y
+    )
+
+    def invert() :TransformMat2f = {
+        new TransformMat2f(inverse(mat2))
+    }
+}
+
+private[math] final class Scale2f(val scale: Vec2f)
+extends Transform2f
+{
+    def toMatrix() = new Mat2x3f(
+        scale.x, 0,
+        0, scale.y,
+        0, 0
+    )
+
+    def scale(s: Float) :Scale2f = {
+        new Scale2f(scale*s)
+    }
+    def scale(s: AnyVec2f) :Scale2f = {
+        new Scale2f(scale*s)
+    }
+
+    def translate(u: AnyVec2f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            scale.x, 0,
+            0, scale.y,
+            u.x, u.y
         ))
     }
 
-    implicit def toMutable(t: ConstTransform2f) = Transform2f(t)
+    def concatenate(m: AnyMat2x3f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            m.m00*scale.x, m.m10*scale.x,
+            m.m01*scale.y, m.m11*scale.y,
+            m.m02, m.m12
+        ))
+    }
+    def concatenate(m: AnyMat2f) :TransformMat2f = {
+        new TransformMat2f(new Mat2f(
+            m.m00*scale.x, m.m10*scale.x,
+            m.m01*scale.y, m.m11*scale.y
+        ))
+    }
+
+    def transformPoint(p: AnyVec2f) = p*scale
+    def transformVector(v: AnyVec2f) = v*scale
+
+    def invert() :Scale2f = new Scale2f(1/scale)
+}
+
+private[math] final class Translation2f(val translation: Vec2f)
+extends Transform2f
+{
+    def toMatrix() = new Mat2x3f(
+        1, 0,
+        0, 1,
+        translation.x, translation.y
+    )
+
+    def scale(s: Float) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            s, 0,
+            0, s,
+            translation.x*s, translation.y*s
+        ))
+    }
+    def scale(s: AnyVec2f) :TransformMat2x3f = {
+        new TransformMat2x3f(new Mat2x3f(
+            s.x, 0,
+            0, s.y,
+            translation.x*s.x, translation.y*s.y
+        ))
+    }
+
+    def translate(u: AnyVec2f) :Translation2f = {
+        new Translation2f(translation + u)
+    }
+
+    def concatenate(m: AnyMat2x3f) :TransformMat2x3f = {
+        import translation._
+
+        new TransformMat2x3f(new Mat2x3f(
+            m.m00, m.m10,
+            m.m01, m.m11,
+
+            m.m00*x + m.m01*y + m.m02,
+            m.m10*x + m.m11*y + m.m12
+        ))
+    }
+    def concatenate(m: AnyMat2f) :TransformMat2x3f = {
+        import translation._
+
+        new TransformMat2x3f(new Mat2x3f(
+            m.m00, m.m10,
+            m.m01, m.m11,
+
+            m.m00*x + m.m01*y,
+            m.m10*x + m.m11*y
+        ))
+    }
+
+    def transformPoint(p: AnyVec2f) = translation + p
+    def transformVector(v: AnyVec2f) = Vec2f(v)
+
+    def invert() :Translation2f = {
+        new Translation2f(-translation)
+    }
+}
+
+private[math] object Transform2fIdentity extends Transform2f {
+    def toMatrix() = Mat2x3f(1)
+
+    def scale(s: Float) :Transform2f = new Scale2f(Vec2f(s))
+    def scale(s: AnyVec2f) :Transform2f = new Scale2f(Vec2f(s))
+
+    def translate(u: AnyVec2f) :Transform2f = new Translation2f(Vec2f(u))
+
+    def concatenate(m: AnyMat2x3f) :Transform2f = {
+        new TransformMat2x3f(Mat2x3f(m))
+    }
+    def concatenate(m: AnyMat2f) :Transform2f = {
+        new TransformMat2f(Mat2f(m))
+    }
+
+    def transformPoint(p: AnyVec2f) :Vec2f = Vec2f(p)
+    def transformVector(v: AnyVec2f) :Vec2f = Vec2f(v)
+
+    def invert() :Transform2f = this
+}
+
+object Transform2f {
+    val Identity: Transform2f = Transform2fIdentity
+
+    def apply(m: Read2x2) :Transform2f =
+        new TransformMat2f(Mat2f(m))
+
+    def apply(m: Read2x3) :Transform2f =
+        new TransformMat2x3f(Mat2x3f(m))
+
+    def scale(s: Float) :Transform2f = Identity.scale(s)
+    def scale(s: AnyVec2f) :Transform2f = Identity.scale(s)
+
+    def rotate(angle: Float) :Transform2f = Identity.rotate(angle)
+
+    def translate(u: AnyVec2f) :Transform2f = Identity.translate(u)
 }

@@ -208,11 +208,7 @@ extends Transform3f
         new TransformMat3f(m*mat3)
     }
 
-    def transformPoint(p: AnyVec3f) = new Vec3f(
-        m00*p.x + m01*p.y + m02*p.z,
-        m10*p.x + m11*p.y + m12*p.z,
-        m20*p.x + m21*p.y + m22*p.z
-    )
+    def transformPoint(p: AnyVec3f) = transformVector(p)
     def transformVector(v: AnyVec3f) = new Vec3f(
         m00*v.x + m01*v.y + m02*v.z,
         m10*v.x + m11*v.y + m12*v.z,
@@ -377,8 +373,8 @@ object Transform3f {
     }
 
     def rotateX(angle: Float) :Transform3f = Identity.rotateX(angle)
-    def rotateY(angle: Float) :Transform3f = Identity.rotateX(angle)
-    def rotateZ(angle: Float) :Transform3f = Identity.rotateX(angle)
+    def rotateY(angle: Float) :Transform3f = Identity.rotateY(angle)
+    def rotateZ(angle: Float) :Transform3f = Identity.rotateZ(angle)
 
     def translate(u: AnyVec3f) :Transform3f = Identity.translate(u)
 }

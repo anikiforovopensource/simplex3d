@@ -125,9 +125,6 @@ package object renamed {
     type Quat4 = Quat4f
     val Quat4 = Quat4f
 
-    type AnyTransform2 = AnyTransform2f
-    type ConstTransform2 = ConstTransform2f
-    val ConstTransform2 = ConstTransform2f
     type Transform2 = Transform2f
     val Transform2 = Transform2f
 

@@ -136,15 +136,9 @@ package object renamed {
     type Quat4 = Quat4d
     val Quat4 = Quat4d
 
-    type AnyTransform2 = AnyTransform2d
-    type ConstTransform2 = ConstTransform2d
-    val ConstTransform2 = ConstTransform2d
     type Transform2 = Transform2d
     val Transform2 = Transform2d
 
-    type AnyTransform3 = AnyTransform3d
-    type ConstTransform3 = ConstTransform3d
-    val ConstTransform3 = ConstTransform3d
     type Transform3 = Transform3d
     val Transform3 = Transform3d
 

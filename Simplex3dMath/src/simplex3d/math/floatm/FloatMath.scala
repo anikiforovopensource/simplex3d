@@ -1964,9 +1964,9 @@ object FloatMath {
     }
 
     // Transform
-    def transform(scale: AnyVec2f,
-                  rotation: AnyMat2f,
-                  translation: AnyVec2f)
+    def transformation(scale: AnyVec2f,
+                       rotation: AnyMat2f,
+                       translation: AnyVec2f)
     :Mat2x3f =
     {
         import rotation._
@@ -1984,9 +1984,9 @@ object FloatMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransform(scale: AnyVec2f,
-                         rotation: AnyMat2f,
-                         translation: AnyVec2f)
+    def inverseTransformation(scale: AnyVec2f,
+                              rotation: AnyMat2f,
+                              translation: AnyVec2f)
     :Mat2x3f =
     {
         import translation.{x => tx, y => ty}
@@ -2007,9 +2007,9 @@ object FloatMath {
         )
     }
     
-    def transform(scale: AnyVec3f,
-                  rotation: AnyMat3f,
-                  translation: AnyVec3f)
+    def transformation(scale: AnyVec3f,
+                       rotation: AnyMat3f,
+                       translation: AnyVec3f)
     :Mat3x4f =
     {
         import scale.{x => sx, y => sy, z => sz}
@@ -2028,9 +2028,9 @@ object FloatMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransform(scale: AnyVec3f,
-                         rotation: AnyMat3f,
-                         translation: AnyVec3f)
+    def inverseTransformation(scale: AnyVec3f,
+                              rotation: AnyMat3f,
+                              translation: AnyVec3f)
     :Mat3x4f =
     {
         import translation.{x => tx, y => ty, z => tz}

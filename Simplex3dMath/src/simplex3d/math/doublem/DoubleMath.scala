@@ -1936,9 +1936,9 @@ object DoubleMath {
     }
 
     // Transform
-    def transform(scale: AnyVec2d,
-                  rotation: AnyMat2d,
-                  translation: AnyVec2d)
+    def transformation(scale: AnyVec2d,
+                       rotation: AnyMat2d,
+                       translation: AnyVec2d)
     :Mat2x3d =
     {
         import rotation._
@@ -1956,9 +1956,9 @@ object DoubleMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransform(scale: AnyVec2d,
-                         rotation: AnyMat2d,
-                         translation: AnyVec2d)
+    def inverseTransformation(scale: AnyVec2d,
+                              rotation: AnyMat2d,
+                              translation: AnyVec2d)
     :Mat2x3d =
     {
         import translation.{x => tx, y => ty}
@@ -1979,9 +1979,9 @@ object DoubleMath {
         )
     }
 
-    def transform(scale: AnyVec3d,
-                  rotation: AnyMat3d,
-                  translation: AnyVec3d)
+    def transformation(scale: AnyVec3d,
+                       rotation: AnyMat3d,
+                       translation: AnyVec3d)
     :Mat3x4d =
     {
         import scale.{x => sx, y => sy, z => sz}
@@ -2000,9 +2000,9 @@ object DoubleMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransform(scale: AnyVec3d,
-                         rotation: AnyMat3d,
-                         translation: AnyVec3d)
+    def inverseTransformation(scale: AnyVec3d,
+                              rotation: AnyMat3d,
+                              translation: AnyVec3d)
     :Mat3x4d =
     {
         import translation.{x => tx, y => ty, z => tz}

@@ -107,7 +107,7 @@ class ConstansTest extends FunSuite {
         }
         {
             val identity = Mat2x3.Identity
-            expect(classOf[ConstMat2x3]) { identity.getClass }
+            assert(identity.isInstanceOf[ConstMat2x3])
             expect(Vec2(1, 0)) { identity(0) }
             expect(Vec2(0, 1)) { identity(1) }
             expect(Vec2(0, 0)) { identity(2) }
@@ -159,7 +159,7 @@ class ConstansTest extends FunSuite {
         }
         {
             val identity = Mat3x4.Identity
-            expect(classOf[ConstMat3x4]) { identity.getClass }
+            assert(identity.isInstanceOf[ConstMat3x4])
             expect(Vec3(1, 0, 0)) { identity(0) }
             expect(Vec3(0, 1, 0)) { identity(1) }
             expect(Vec3(0, 0, 1)) { identity(2) }

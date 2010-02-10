@@ -96,23 +96,6 @@ class InlinedBenchCase {
                 ", inlined time: " + inlinedTime + ".")
     }
 
-    final def make(scale: AnyVec3f,
-                   rotation: AnyMat3f,
-                   translation: AnyVec3f)
-    :Transform3f =
-    {
-        import scale.{x => sx, y => sy, z => sz}
-        import rotation._
-        import translation.{x => tx, y => ty, z => tz}
-
-        Transform3f(ConstMat3x4f(
-            m00*sx, m10*sx, m20*sx,
-            m01*sy, m11*sy, m21*sy,
-            m02*sz, m12*sz, m22*sz,
-            tx, ty, tz
-        ))
-    }
-
     def testReg(length: Int, loops: Int) {
         var answer = 0
 
@@ -128,7 +111,7 @@ class InlinedBenchCase {
     val end = (am.length / 3) - 8
     var i = 0; while (i < end) {
         val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
-        val model = Transform3f(lookAt(-loc, Vec3f.UnitY)) translate(loc)
+        val model = Mat3x4f(lookAt(-loc, Vec3f.UnitY)) translate(loc)
         var j = 0; while (j < 8) {
             val id = j*3
             t.x = as(id)
@@ -169,7 +152,7 @@ class InlinedBenchCase {
     val end = (am.length / 3) - 8
     var i = 0; while (i < end) {
         val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
-        val model = make(Vec3f.One, lookAt(-loc, Vec3f.UnitY), loc)
+        val model = transform(Vec3f.One, lookAt(-loc, Vec3f.UnitY), loc)
         var j = 0; while (j < 8) {
             val id = j*3
             t.x = as(id)

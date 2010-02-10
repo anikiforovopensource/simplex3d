@@ -50,31 +50,22 @@ class Transform2fTest extends FunSuite {
 
         // test object
         for (i <- 0 until 100) {
-            val m2 = Mat2(r, r, r, r)
-            assert(Transform2(m2).toMatrix() == Mat2x3(m2))
-            assert(Transform2(Mat2d(m2)).toMatrix() == Mat2x3(m2))
-
-            val m2x3 = Mat2x3(r, r, r, r, r, r)
-            assert(Transform2(m2x3).toMatrix() == m2x3)
-            assert(Transform2(Mat2x3d(m2x3)).toMatrix() == m2x3)
-            assert(Transform2(m2x3).toMatrix().ne(m2x3))
-
             val s = r
-            assert(Transform2.scale(s) == Transform2.Identity.scale(s))
+            assert(Mat2x3.scale(s) == Mat2x3.Identity.scale(s))
 
             val sv = Vec2(r, r)
-            assert(Transform2.scale(sv) == Transform2.Identity.scale(sv))
+            assert(Mat2x3.scale(sv) == Mat2x3.Identity.scale(sv))
 
             val a = r
-            assert(Transform2.rotate(a) == Transform2.Identity.rotate(a))
+            assert(Mat2x3.rotate(a) == Mat2x3.Identity.rotate(a))
 
             val p = Vec2(r, r)
-            assert(Transform2.translate(p) == Transform2.Identity.translate(p))
+            assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
         }
 
-        def assertTransform(a: Transform2, m: Mat2x3, b: Transform2) {
+        def assertTransform(a: AnyMat2x3, m: AnyMat2x3, b: AnyMat2x3) {
             assert(a.ne(b))
-            assert(m*Mat3(a.toMatrix) == b.toMatrix)
+            assert(m*Mat3(a) == b)
 
             for (i <- 0 until 100) {
                 val v = Vec2(r, r)
@@ -92,7 +83,7 @@ class Transform2fTest extends FunSuite {
                 }
             }
         }
-        def test(t: Transform2) {
+        def test(t: AnyMat2x3) {
             val s = r
             assertTransform(t, Mat2x3(s), t scale(s))
 
@@ -106,28 +97,21 @@ class Transform2fTest extends FunSuite {
             assertTransform(t, translationMat(p), t translate(p))
 
             val m2 = ConstMat2(r, r, r, r)
-            val m2x3 = ConstMat2x3(r, r, r, r, r, r)
-            val t2 = Transform2(m2x3)
-            assertTransform(t, m2x3, t concatenate(t2))
-            assertTransform(t, m2x3, t concatenate(m2x3))
             assertTransform(t, Mat2x3(m2), t concatenate(m2))
 
-            assert(approxEqual(t.invert().toMatrix, inverse(t.toMatrix), 1e-2f))
+            val m2x3 = ConstMat2x3(r, r, r, r, r, r)
+            assertTransform(t, m2x3, t concatenate(m2x3))
 
-            assert(t == Transform2(t.toMatrix))
-            assert(t != Transform2(t.toMatrix + Mat2x3.Identity))
-
-            assert(t.equals(Transform2(t.toMatrix)))
-            assert(!t.equals(Nil))
+            assert(t.invert() == inverse(t))
         }
 
         // test transform classes
         for (i <- 0 until 100) {
-            test(Transform2(Mat2x3(r, r, r, r, r, r)))
-            test(Transform2(rotationMat(r)))
-            test(Transform2 scale(Vec2(r, r)))
-            test(Transform2 translate(Vec2(r, r)))
-            test(Transform2.Identity)
+            test(Mat2x3(r, r, r, r, r, r))
+            test(Mat2x3(Mat2x2(r, r, r, r)))
+            test(Mat2x3 scale(Vec2(r, r)))
+            test(Mat2x3 translate(Vec2(r, r)))
+            test(Mat2x3.Identity)
         }
     }
 }

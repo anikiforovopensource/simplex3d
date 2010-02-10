@@ -888,14 +888,14 @@ class FloatMathExtraTest extends FunSuite {
                 val t = Vec2(r, r)
 
                 assert(approxEqual(
-                        transform(s, m, t).toMatrix,
-                        Transform2 scale(s) rotate(angle) translate(t) toMatrix,
+                        transform(s, m, t),
+                        Mat2x3 scale(s) rotate(angle) translate(t),
                         1e-5f)
                 )
 
                 assert(approxEqual(
-                        inverseTransform(s, m, t).toMatrix,
-                        Transform2 translate(-t) rotate(-angle) scale(1/s) toMatrix,
+                        inverseTransform(s, m, t),
+                        Mat2x3 translate(-t) rotate(-angle) scale(1/s),
                         1e-5f)
                 )
             }
@@ -907,14 +907,14 @@ class FloatMathExtraTest extends FunSuite {
                 val t = Vec3(r, r, r)
 
                 assert(approxEqual(
-                        transform(s, m, t).toMatrix,
-                        Transform3 scale(s) rotate(q) translate(t) toMatrix,
+                        transform(s, m, t),
+                        Mat3x4 scale(s) rotate(q) translate(t),
                         1e-5f)
                 )
 
                 assert(approxEqual(
-                        inverseTransform(s, m, t).toMatrix,
-                        Transform3 translate(-t) rotate(conjugate(q)) scale(1/s) toMatrix,
+                        inverseTransform(s, m, t),
+                        Mat3x4 translate(-t) rotate(conjugate(q)) scale(1/s),
                         1e-5f)
                 )
             }

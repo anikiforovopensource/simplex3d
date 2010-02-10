@@ -51,44 +51,35 @@ class Transform3fTest extends FunSuite {
 
         // test object
         for (i <- 0 until 100) {
-            val m3 = Mat3(r, r, r, r, r, r, r, r, r)
-            assert(Transform3(m3).toMatrix() == Mat3x4(m3))
-            assert(Transform3(Mat3d(m3)).toMatrix() == Mat3x4(m3))
-
-            val m3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-            assert(Transform3(m3x4).toMatrix() == m3x4)
-            assert(Transform3(Mat3x4d(m3x4)).toMatrix() == m3x4)
-            assert(Transform3(m3x4).toMatrix().ne(m3x4))
-
             val s = r
-            assert(Transform3.scale(s) == Transform3.Identity.scale(s))
+            assert(Mat3x4.scale(s) == Mat3x4.Identity.scale(s))
 
             val sv = Vec3(r, r, r)
-            assert(Transform3.scale(sv) == Transform3.Identity.scale(sv))
+            assert(Mat3x4.scale(sv) == Mat3x4.Identity.scale(sv))
 
             val rq = normalize(Quat4(r, r, r, r))
-            assert(Transform3.rotate(rq) == Transform3.Identity.rotate(rq))
+            assert(Mat3x4.rotate(rq) == Mat3x4.Identity.rotate(rq))
 
             val (angle, axis) = (r, normalize(Vec3(r, r, r)))
-            assert(Transform3.rotate(angle, axis) ==
-                   Transform3.Identity.rotate(angle, axis))
+            assert(Mat3x4.rotate(angle, axis) ==
+                   Mat3x4.Identity.rotate(angle, axis))
 
             val rx = r
-            assert(Transform3.rotateX(rx) == Transform3.Identity.rotateX(rx))
+            assert(Mat3x4.rotateX(rx) == Mat3x4.Identity.rotateX(rx))
 
             val ry = r
-            assert(Transform3.rotateY(ry) == Transform3.Identity.rotateY(ry))
+            assert(Mat3x4.rotateY(ry) == Mat3x4.Identity.rotateY(ry))
 
             val rz = r
-            assert(Transform3.rotateZ(rz) == Transform3.Identity.rotateZ(rz))
+            assert(Mat3x4.rotateZ(rz) == Mat3x4.Identity.rotateZ(rz))
 
             val p = Vec3(r, r, r)
-            assert(Transform3.translate(p) == Transform3.Identity.translate(p))
+            assert(Mat3x4.translate(p) == Mat3x4.Identity.translate(p))
         }
 
-        def assertTransform(a: Transform3, m: Mat3x4, b: Transform3) {
+        def assertTransform(a: AnyMat3x4, m: AnyMat3x4, b: AnyMat3x4) {
             assert(a.ne(b))
-            assert(m*Mat4(a.toMatrix) == b.toMatrix)
+            assert(m*Mat4(a) == b)
 
             for (i <- 0 until 100) {
                 val v = Vec3(r, r, r)
@@ -106,7 +97,7 @@ class Transform3fTest extends FunSuite {
                 }
             }
         }
-        def test(t: Transform3) {
+        def test(t: AnyMat3x4) {
             val s = r
             assertTransform(t, Mat3x4(s), t scale(s))
 
@@ -132,28 +123,21 @@ class Transform3fTest extends FunSuite {
             assertTransform(t, translationMat(p), t translate(p))
 
             val m3 = ConstMat3(r, r, r, r, r, r, r, r, r)
-            val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-            val t3 = Transform3(m3x4)
-            assertTransform(t, m3x4, t concatenate(t3))
-            assertTransform(t, m3x4, t concatenate(m3x4))
             assertTransform(t, Mat3x4(m3), t concatenate(m3))
 
-            assert(approxEqual(t.invert().toMatrix, inverse(t.toMatrix), 1e-3f))
+            val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+            assertTransform(t, m3x4, t concatenate(m3x4))
 
-            assert(t == Transform3(t.toMatrix))
-            assert(t != Transform3(t.toMatrix + Mat3x4.Identity))
-
-            assert(t.equals(Transform3(t.toMatrix)))
-            assert(!t.equals(Nil))
+            assert(t.invert() == inverse(t))
         }
 
         // test transform classes
         for (i <- 0 until 100) {
-            test(Transform3(Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)))
-            test(Transform3(rotationMat(normalize(Quat4(r, r, r, r)))))
-            test(Transform3 scale(Vec3(r, r, r)))
-            test(Transform3 translate(Vec3(r, r, r)))
-            test(Transform3.Identity)
+            test(Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r))
+            test(Mat3x4(Mat3x3(r, r, r, r, r, r, r, r, r)))
+            test(Mat3x4 scale(Vec3(r, r, r)))
+            test(Mat3x4 translate(Vec3(r, r, r)))
+            test(Mat3x4.Identity)
         }
     }
 }

@@ -176,6 +176,46 @@ sealed abstract class AnyMat2x3f extends Read2x3
         m02*u.x + m12*u.y
     )
 
+    def scale(s: Float) :Mat2x3f = this*s
+    def scale(s: AnyVec2f) :Mat2x3f = new Mat2x3f(
+        m00*s.x, m10*s.y,
+        m01*s.x, m11*s.y,
+        m02*s.x, m12*s.y
+    )
+
+    def rotate(angle: Float) :Mat2x3f = {
+        concatenate(rotationMat(angle))
+    }
+
+    def translate(u: AnyVec2f) :Mat2x3f = new Mat2x3f(
+        m00, m10,
+        m01, m11,
+        m02 + u.x, m12 + u.y
+    )
+
+    def concatenate(m: AnyMat2x3f) :Mat2x3f = new Mat2x3f(
+        m.m00*m00 + m.m01*m10,
+        m.m10*m00 + m.m11*m10,
+
+        m.m00*m01 + m.m01*m11,
+        m.m10*m01 + m.m11*m11,
+
+        m.m00*m02 + m.m01*m12 + m.m02,
+        m.m10*m02 + m.m11*m12 + m.m12
+    )
+    def concatenate(m: AnyMat2f) :Mat2x3f = m*this
+
+    def transformPoint(p: AnyVec2f) :Vec2f = new Vec2f(
+        m00*p.x + m01*p.y + m02,
+        m10*p.x + m11*p.y + m12
+    )
+    def transformVector(v: AnyVec2f) :Vec2f = new Vec2f(
+        m00*v.x + m01*v.y,
+        m10*v.x + m11*v.y
+    )
+
+    def invert() :Mat2x3f = inverse(this)
+
     def ==(m: AnyMat2x3f) :Boolean = {
         if (m eq null) false
         else
@@ -232,7 +272,7 @@ sealed abstract class AnyMat2x3f extends Read2x3
     }
 }
 
-final class ConstMat2x3f private[math] (
+sealed class ConstMat2x3f private[math] (
     val m00: Float, val m10: Float,
     val m01: Float, val m11: Float,
     val m02: Float, val m12: Float
@@ -366,10 +406,34 @@ final class Mat2x3f private[math] (
     }
 }
 
+private[math] object Mat2x3fIdentity extends ConstMat2x3f(
+    1, 0,
+    0, 1,
+    0, 0
+) {
+    override def scale(s: Float) :Mat2x3f = Mat2x3f(s)
+    override def scale(s: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(s.x)
+        m.m11 = s.y
+        m
+    }
+
+    override def translate(u: AnyVec2f) :Mat2x3f = {
+        val m = Mat2x3f(1)
+        m(2) = u
+        m
+    }
+
+    override def concatenate(m: AnyMat2x3f) :Mat2x3f = Mat2x3f(m)
+    override def concatenate(m: AnyMat2f) :Mat2x3f = Mat2x3f(m)
+
+    override def invert() :Mat2x3f = Mat2x3f(1)
+}
+
 object Mat2x3f {
 
     val Zero: ConstMat2x3f = Mat2x3f(0)
-    val Identity: ConstMat2x3f = Mat2x3f(1)
+    val Identity: ConstMat2x3f = Mat2x3fIdentity
 
     def apply(s: Float) = new Mat2x3f(
         s, 0,
@@ -449,6 +513,13 @@ object Mat2x3f {
     )
 
     def unapply(m: AnyMat2x3f) = Some((m(0), m(1), m(2)))
+
+    def scale(s: Float) :Mat2x3f = Identity.scale(s)
+    def scale(s: AnyVec2f) :Mat2x3f = Identity.scale(s)
+
+    def rotate(angle: Float) :Mat2x3f = Identity.rotate(angle)
+
+    def translate(u: AnyVec2f) :Mat2x3f = Identity.translate(u)
 
     implicit def toMutable(m: ConstMat2x3f) = Mat2x3f(m)
 }

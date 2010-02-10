@@ -1967,17 +1967,17 @@ object FloatMath {
     def transform(scale: AnyVec2f,
                   rotation: AnyMat2f,
                   translation: AnyVec2f)
-    :Transform2f =
+    :Mat2x3f =
     {
         import rotation._
         import translation.{x => tx, y => ty}
         import scale.{x => sx, y => sy}
 
-        new TransformMat2x3f(new Mat2x3f(
+        new Mat2x3f(
             m00*sx, m10*sx,
             m01*sy, m11*sy,
             tx, ty
-        ))
+        )
     }
 
     /**
@@ -1987,7 +1987,7 @@ object FloatMath {
     def inverseTransform(scale: AnyVec2f,
                          rotation: AnyMat2f,
                          translation: AnyVec2f)
-    :Transform2f =
+    :Mat2x3f =
     {
         import translation.{x => tx, y => ty}
 
@@ -1999,29 +1999,29 @@ object FloatMath {
         val m01 = rotation.m10*sx
         val m11 = rotation.m11*sy
 
-        new TransformMat2x3f(new Mat2x3f(
+        new Mat2x3f(
             m00, m10,
             m01, m11,
             -m00*tx - m01*ty,
             -m10*tx - m11*ty
-        ))
+        )
     }
     
     def transform(scale: AnyVec3f,
                   rotation: AnyMat3f,
                   translation: AnyVec3f)
-    :Transform3f =
+    :Mat3x4f =
     {
         import scale.{x => sx, y => sy, z => sz}
         import rotation._
         import translation.{x => tx, y => ty, z => tz}
 
-        new TransformMat3x4f(new Mat3x4f(
+        new Mat3x4f(
             m00*sx, m10*sx, m20*sx,
             m01*sy, m11*sy, m21*sy,
             m02*sz, m12*sz, m22*sz,
             tx, ty, tz
-        ))
+        )
     }
 
     /**
@@ -2031,7 +2031,7 @@ object FloatMath {
     def inverseTransform(scale: AnyVec3f,
                          rotation: AnyMat3f,
                          translation: AnyVec3f)
-    :Transform3f =
+    :Mat3x4f =
     {
         import translation.{x => tx, y => ty, z => tz}
 
@@ -2049,13 +2049,13 @@ object FloatMath {
         val m12 = rotation.m21*sy
         val m22 = rotation.m22*sz
 
-        new TransformMat3x4f(new Mat3x4f(
+        new Mat3x4f(
             m00, m10, m20,
             m01, m11, m21,
             m02, m12, m22,
             -m00*tx - m01*ty - m02*tz,
             -m10*tx - m11*ty - m12*tz,
             -m20*tx - m21*ty - m22*tz
-        ))
+        )
     }
 }

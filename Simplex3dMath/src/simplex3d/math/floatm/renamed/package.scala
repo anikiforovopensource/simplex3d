@@ -125,12 +125,6 @@ package object renamed {
     type Quat4 = Quat4f
     val Quat4 = Quat4f
 
-    type Transform2 = Transform2f
-    val Transform2 = Transform2f
-
-    type Transform3 = Transform3f
-    val Transform3 = Transform3f
-
     // Aliases
     type AnyMat2x2 = AnyMat2f
     type ConstMat2x2 = ConstMat2f

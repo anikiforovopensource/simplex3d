@@ -220,6 +220,70 @@ sealed abstract class AnyMat3x4d extends Read3x4
         m03*u.x + m13*u.y + m23*u.z
     )
 
+    def scale(s: Double) :Mat3x4d = this*s
+    def scale(s: AnyVec3d) :Mat3x4d = new Mat3x4d(
+        m00*s.x, m10*s.y, m20*s.z,
+        m01*s.x, m11*s.y, m21*s.z,
+        m02*s.x, m12*s.y, m22*s.z,
+        m03*s.x, m13*s.y, m23*s.z
+    )
+
+    def rotate(q: AnyQuat4d) :Mat3x4d = {
+        concatenate(rotationMat(q))
+    }
+    def rotate(angle: Double, axis: AnyVec3d) :Mat3x4d = {
+        concatenate(rotationMat(angle, axis))
+    }
+
+    def rotateX(angle: Double) :Mat3x4d = {
+        concatenate(rotationMat(angle, Vec3d.UnitX))
+    }
+    def rotateY(angle: Double) :Mat3x4d = {
+        concatenate(rotationMat(angle, Vec3d.UnitY))
+    }
+    def rotateZ(angle: Double) :Mat3x4d = {
+        concatenate(rotationMat(angle, Vec3d.UnitZ))
+    }
+
+    def translate(u: AnyVec3d) :Mat3x4d = new Mat3x4d(
+        m00, m10, m20,
+        m01, m11, m21,
+        m02, m12, m22,
+        m03 + u.x, m13 + u.y, m23 + u.z
+    )
+
+    def concatenate(m: AnyMat3x4d) :Mat3x4d = new Mat3x4d(
+        m.m00*m00 + m.m01*m10 + m.m02*m20,
+        m.m10*m00 + m.m11*m10 + m.m12*m20,
+        m.m20*m00 + m.m21*m10 + m.m22*m20,
+
+        m.m00*m01 + m.m01*m11 + m.m02*m21,
+        m.m10*m01 + m.m11*m11 + m.m12*m21,
+        m.m20*m01 + m.m21*m11 + m.m22*m21,
+
+        m.m00*m02 + m.m01*m12 + m.m02*m22,
+        m.m10*m02 + m.m11*m12 + m.m12*m22,
+        m.m20*m02 + m.m21*m12 + m.m22*m22,
+
+        m.m00*m03 + m.m01*m13 + m.m02*m23 + m.m03,
+        m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13,
+        m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
+    )
+    def concatenate(m: AnyMat3d) :Mat3x4d = m*this
+
+    def transformPoint(p: AnyVec3d) :Vec3d = new Vec3d(
+        m00*p.x + m01*p.y + m02*p.z + m03,
+        m10*p.x + m11*p.y + m12*p.z + m13,
+        m20*p.x + m21*p.y + m22*p.z + m23
+    )
+    def transformVector(v: AnyVec3d) :Vec3d = new Vec3d(
+        m00*v.x + m01*v.y + m02*v.z,
+        m10*v.x + m11*v.y + m12*v.z,
+        m20*v.x + m21*v.y + m22*v.z
+    )
+
+    def invert() :Mat3x4d = inverse(this)
+
     def ==(m: AnyMat3x4d) :Boolean = {
         if (m eq null) false
         else
@@ -297,7 +361,7 @@ sealed abstract class AnyMat3x4d extends Read3x4
     }
 }
 
-final class ConstMat3x4d private[math] (
+sealed class ConstMat3x4d private[math] (
     val m00: Double, val m10: Double, val m20: Double,
     val m01: Double, val m11: Double, val m21: Double,
     val m02: Double, val m12: Double, val m22: Double,
@@ -474,10 +538,36 @@ final class Mat3x4d private[math] (
     }
 }
 
+private[math] object Mat3x4dIdentity extends ConstMat3x4d(
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1,
+    0, 0, 0
+) {
+    override def scale(s: Double) :Mat3x4d = Mat3x4d(s)
+    override def scale(s: AnyVec3d) :Mat3x4d = {
+        val m = Mat3x4d(s.x)
+        m.m11 = s.y
+        m.m22 = s.z
+        m
+    }
+
+    override def translate(u: AnyVec3d) :Mat3x4d = {
+        val m = Mat3x4d(1)
+        m(3) = u
+        m
+    }
+
+    override def concatenate(m: AnyMat3x4d) :Mat3x4d = Mat3x4d(m)
+    override def concatenate(m: AnyMat3d) :Mat3x4d = Mat3x4d(m)
+
+    override def invert() :Mat3x4d = Mat3x4d(1)
+}
+
 object Mat3x4d {
 
     val Zero: ConstMat3x4d = Mat3x4d(0)
-    val Identity: ConstMat3x4d = Mat3x4d(1)
+    val Identity: ConstMat3x4d = Mat3x4dIdentity
 
     def apply(s: Double) = new Mat3x4d(
         s, 0, 0,
@@ -570,6 +660,20 @@ object Mat3x4d {
     )
 
     def unapply(m: AnyMat3x4d) = Some((m(0), m(1), m(2), m(3)))
+
+    def scale(s: Double) :Mat3x4d = Identity.scale(s)
+    def scale(s: AnyVec3d) :Mat3x4d = Identity.scale(s)
+
+    def rotate(q: AnyQuat4d) :Mat3x4d = Identity.rotate(q)
+    def rotate(angle: Double, axis: AnyVec3d) :Mat3x4d = {
+        Identity.rotate(angle, axis)
+    }
+
+    def rotateX(angle: Double) :Mat3x4d = Identity.rotateX(angle)
+    def rotateY(angle: Double) :Mat3x4d = Identity.rotateY(angle)
+    def rotateZ(angle: Double) :Mat3x4d = Identity.rotateZ(angle)
+
+    def translate(u: AnyVec3d) :Mat3x4d = Identity.translate(u)
 
     implicit def toMutable(m: ConstMat3x4d) = Mat3x4d(m)
 }

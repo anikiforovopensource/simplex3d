@@ -226,10 +226,15 @@ class Quat4dTest extends FunSuite {
     test("Const math") {
         val q = ConstQuat4(6, 7, 8, 9)
 
+        assert(+q eq q)
+
         assert(Quat4(-6, -7, -8, -9) == -q)
 
         assert(Quat4(12, 14, 16, 18) == q*2)
         assert(Quat4(3, 3.5, 4, 4.5) == q/2)
+
+        assert(Quat4(8, 9, 10, 11) == q + 2)
+        assert(Quat4(4, 5, 6, 7) == q - 2)
 
         val p = ConstQuat4(2, 3, 4, 5)
 
@@ -245,6 +250,9 @@ class Quat4dTest extends FunSuite {
 
         q := i; q *= 2; assert(Quat4(4, 6, 8, 10) == q)
         q := i; q /= 2; assert(Quat4(1, 1.5, 2, 2.5) == q)
+
+        q := i; q += 2; assert(Quat4(4, 5, 6, 7) == q)
+        q := i; q -= 2; assert(Quat4(0, 1, 2, 3) == q)
 
         q := i; q += Quat4(3, 4, 5, 6); assert(Quat4(5, 7, 9, 11) == q)
         q := i; q += q; assert(Quat4(4, 6, 8, 10) == q)

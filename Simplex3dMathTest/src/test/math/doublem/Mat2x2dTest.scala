@@ -451,6 +451,7 @@ class Mat2x2dTest extends FunSuite {
     test("Const math") {
         val m = ConstMat2x2(m00, m10,
                             m01, m11)
+        assert(+m eq m)
 
         var t = Mat2x2(-m00, -m10,
                        -m01, -m11)
@@ -464,7 +465,16 @@ class Mat2x2dTest extends FunSuite {
                    m01/2, m11/2)
         assert(m/2 == t)
 
+        t = Mat2x2(m00+2, m10+2,
+                   m01+2, m11+2)
+        assert(m + 2 == t)
+
+        t = Mat2x2(m00-2, m10-2,
+                   m01-2, m11-2)
+        assert(m - 2 == t)
+
         val n: ConstMat2x2 = m*3
+
         t = Mat2x2(4*m00, 4*m10,
                    4*m01, 4*m11)
         assert(n + m == t)
@@ -509,6 +519,14 @@ class Mat2x2dTest extends FunSuite {
                    m01/2, m11/2)
         m := i; m /= 2; assert(m == t)
 
+        t = Mat2x2(m00+2, m10+2,
+                   m01+2, m11+2)
+        m := i; m += 2; assert(m == t)
+
+        t = Mat2x2(m00-2, m10-2,
+                   m01-2, m11-2)
+        m := i; m -= 2; assert(m == t)
+
         val n: ConstMat2x2 = i*3
 
         t = Mat2x2(4*m00, 4*m10,
@@ -522,5 +540,9 @@ class Mat2x2dTest extends FunSuite {
         t = Mat2x2(11, 14,
                    35, 46)
         m := i; m *= m; assert(m == t)
+
+        t = Mat2x2(1, 1,
+                   1, 1)
+        m := i; m/= m; assert(m == t)
     }
 }

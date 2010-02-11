@@ -466,6 +466,7 @@ class Mat4x2fTest extends FunSuite {
     test("Const math") {
         val m = ConstMat4x2(m00, m10, m20, m30,
                             m01, m11, m21, m31)
+        assert(+m eq m)
 
         var t = Mat4x2(-m00, -m10, -m20, -m30,
                        -m01, -m11, -m21, -m31)
@@ -479,7 +480,16 @@ class Mat4x2fTest extends FunSuite {
                    m01/2, m11/2, m21/2, m31/2)
         assert(m/2 == t)
 
+        t = Mat4x2(m00+2, m10+2, m20+2, m30+2,
+                   m01+2, m11+2, m21+2, m31+2)
+        assert(m + 2 == t)
+
+        t = Mat4x2(m00-2, m10-2, m20-2, m30-2,
+                   m01-2, m11-2, m21-2, m31-2)
+        assert(m - 2 == t)
+
         val n: ConstMat4x2 = m*3
+
         t = Mat4x2(4*m00, 4*m10, 4*m20, 4*m30,
                    4*m01, 4*m11, 4*m21, 4*m31)
         assert(n + m == t)
@@ -524,6 +534,14 @@ class Mat4x2fTest extends FunSuite {
                    m01/2, m11/2, m21/2, m31/2)
         m := i; m /= 2; assert(m == t)
 
+        t = Mat4x2(m00+2, m10+2, m20+2, m30+2,
+                   m01+2, m11+2, m21+2, m31+2)
+        m := i; m += 2; assert(m == t)
+
+        t = Mat4x2(m00-2, m10-2, m20-2, m30-2,
+                   m01-2, m11-2, m21-2, m31-2)
+        m := i; m -= 2; assert(m == t)
+
         val n: ConstMat4x2 = i*3
 
         t = Mat4x2(4*m00, 4*m10, 4*m20, 4*m30,
@@ -537,5 +555,9 @@ class Mat4x2fTest extends FunSuite {
         t = Mat4x2(11, 14, 17, 20,
                    35, 46, 57, 68)
         m := i; m *= Mat2(M); assert(m == t)
+
+        t = Mat4x2(1, 1, 1, 1,
+                   1, 1, 1, 1)
+        m := i; m/= m; assert(m == t)
     }
 }

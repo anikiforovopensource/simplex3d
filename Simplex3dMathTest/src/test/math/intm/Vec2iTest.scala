@@ -235,12 +235,18 @@ class Vec2iTest extends FunSuite {
 
     test("Const math") {
         val u = ConstVec2i(10, 20)
+
+        assert(+u eq u)
         
         assert(Vec2i(-10, -20) == -u)
         assert(Vec2i(~10, ~20) == ~u)
         
         assert(Vec2i(20, 40) == u*2)
         assert(Vec2i(5, 10) == u / 2)
+
+        assert(Vec2i(12, 22) == u + 2)
+        assert(Vec2i(8, 18) == u - 2)
+
         assert(Vec2i(1, 2) == u % 3)
 
         val v = ConstVec2i(2, 3)
@@ -276,6 +282,10 @@ class Vec2iTest extends FunSuite {
 
         u := i; u *= 2; assert(Vec2i(20, 40) == u)
         u := i; u /= 2; assert(Vec2i(5, 10) == u)
+
+        u := i; u += 2; assert(Vec2i(12, 22) == u)
+        u := i; u -= 2; assert(Vec2i(8, 18) == u)
+
         u := i; u %= 3; assert(Vec2i(1, 2) == u)
 
         val v = ConstVec2i(2, 3)

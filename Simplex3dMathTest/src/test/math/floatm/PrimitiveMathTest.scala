@@ -39,6 +39,11 @@ class PrimitiveMathTest extends FunSuite {
             assert(Vec2(14, 16) == 2f*u)
             assert(Vec2(1, 7/8f) == 7/u)
             assert(Vec2(1, 7/8f) == 7f/u)
+
+            assert(Vec2(9, 10) == 2 + u)
+            assert(Vec2(9, 10) == 2f + u)
+            assert(Vec2(-5, -6) == 2 - u)
+            assert(Vec2(-5, -6) == 2f - u)
         }
 
         {
@@ -48,6 +53,11 @@ class PrimitiveMathTest extends FunSuite {
             assert(Vec3(14, 16, 18) == 2f*u)
             assert(Vec3(1, 7/8f, 7/9f) == 7/u)
             assert(Vec3(1, 7/8f, 7/9f) == 7f/u)
+
+            assert(Vec3(9, 10, 11) == 2 + u)
+            assert(Vec3(9, 10, 11) == 2f + u)
+            assert(Vec3(-5, -6, -7) == 2 - u)
+            assert(Vec3(-5, -6, -7) == 2f - u)
         }
 
         {
@@ -57,6 +67,11 @@ class PrimitiveMathTest extends FunSuite {
             assert(Vec4(12, 14, 16, 18) == 2f*u)
             assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7/u)
             assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7f/u)
+
+            assert(Vec4(8, 9, 10, 11) == 2 + u)
+            assert(Vec4(8, 9, 10, 11) == 2f + u)
+            assert(Vec4(-4, -5, -6, -7) == 2 - u)
+            assert(Vec4(-4, -5, -6, -7) == 2f - u)
         }
 
         {
@@ -66,6 +81,11 @@ class PrimitiveMathTest extends FunSuite {
             assert(Quat4(12, 14, 16, 18) == 2f*q)
             assert(Quat4(7/6f, 1, 7/8f, 7/9f) == 7/q)
             assert(Quat4(7/6f, 1, 7/8f, 7/9f) == 7f/q)
+
+            assert(Quat4(8, 9, 10, 11) == 2 + q)
+            assert(Quat4(8, 9, 10, 11) == 2f + q)
+            assert(Quat4(-4, -5, -6, -7) == 2 - q)
+            assert(Quat4(-4, -5, -6, -7) == 2f - q)
         }
 
 
@@ -87,6 +107,16 @@ class PrimitiveMathTest extends FunSuite {
                        2/m01, 2/m11)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat2x2(2+m00, 2+m10,
+                       2+m01, 2+m11)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat2x2(2-m00, 2-m10,
+                       2-m01, 2-m11)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -105,6 +135,18 @@ class PrimitiveMathTest extends FunSuite {
                        2/m02, 2/m12)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat2x3(2+m00, 2+m10,
+                       2+m01, 2+m11,
+                       2+m02, 2+m12)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat2x3(2-m00, 2-m10,
+                       2-m01, 2-m11,
+                       2-m02, 2-m12)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -126,6 +168,20 @@ class PrimitiveMathTest extends FunSuite {
                        2/m03, 2/m13)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat2x4(2+m00, 2+m10,
+                       2+m01, 2+m11,
+                       2+m02, 2+m12,
+                       2+m03, 2+m13)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat2x4(2-m00, 2-m10,
+                       2-m01, 2-m11,
+                       2-m02, 2-m12,
+                       2-m03, 2-m13)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -141,6 +197,16 @@ class PrimitiveMathTest extends FunSuite {
                        2/m01, 2/m11, 2/m21)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat3x2(2+m00, 2+m10, 2+m20,
+                       2+m01, 2+m11, 2+m21)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat3x2(2-m00, 2-m10, 2-m20,
+                       2-m01, 2-m11, 2-m21)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -159,6 +225,18 @@ class PrimitiveMathTest extends FunSuite {
                        2/m02, 2/m12, 2/m22)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat3x3(2+m00, 2+m10, 2+m20,
+                       2+m01, 2+m11, 2+m21,
+                       2+m02, 2+m12, 2+m22)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat3x3(2-m00, 2-m10, 2-m20,
+                       2-m01, 2-m11, 2-m21,
+                       2-m02, 2-m12, 2-m22)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -180,6 +258,20 @@ class PrimitiveMathTest extends FunSuite {
                        2/m03, 2/m13, 2/m23)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat3x4(2+m00, 2+m10, 2+m20,
+                       2+m01, 2+m11, 2+m21,
+                       2+m02, 2+m12, 2+m22,
+                       2+m03, 2+m13, 2+m23)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat3x4(2-m00, 2-m10, 2-m20,
+                       2-m01, 2-m11, 2-m21,
+                       2-m02, 2-m12, 2-m22,
+                       2-m03, 2-m13, 2-m23)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -195,6 +287,16 @@ class PrimitiveMathTest extends FunSuite {
                        2/m01, 2/m11, 2/m21, 2/m31)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat4x2(2+m00, 2+m10, 2+m20, 2+m30,
+                       2+m01, 2+m11, 2+m21, 2+m31)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat4x2(2-m00, 2-m10, 2-m20, 2-m30,
+                       2-m01, 2-m11, 2-m21, 2-m31)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -213,6 +315,18 @@ class PrimitiveMathTest extends FunSuite {
                        2/m02, 2/m12, 2/m22, 2/m32)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat4x3(2+m00, 2+m10, 2+m20, 2+m30,
+                       2+m01, 2+m11, 2+m21, 2+m31,
+                       2+m02, 2+m12, 2+m22, 2+m32)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat4x3(2-m00, 2-m10, 2-m20, 2-m30,
+                       2-m01, 2-m11, 2-m21, 2-m31,
+                       2-m02, 2-m12, 2-m22, 2-m32)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
         {
@@ -234,13 +348,31 @@ class PrimitiveMathTest extends FunSuite {
                        2/m03, 2/m13, 2/m23, 2/m33)
             assert(2/m == t)
             assert(2f/m == t)
+
+            t = Mat4x4(2+m00, 2+m10, 2+m20, 2+m30,
+                       2+m01, 2+m11, 2+m21, 2+m31,
+                       2+m02, 2+m12, 2+m22, 2+m32,
+                       2+m03, 2+m13, 2+m23, 2+m33)
+            assert(2 + m == t)
+            assert(2f + m == t)
+
+            t = Mat4x4(2-m00, 2-m10, 2-m20, 2-m30,
+                       2-m01, 2-m11, 2-m21, 2-m31,
+                       2-m02, 2-m12, 2-m22, 2-m32,
+                       2-m03, 2-m13, 2-m23, 2-m33)
+            assert(2 - m == t)
+            assert(2f - m == t)
         }
 
+        // Promotions
         {
             val u = ConstVec2i(7, 8)
 
             assert(Vec2(14, 16) == 2f*u)
             assert(Vec2(1, 7/8f) == 7f/u)
+
+            assert(Vec2(9, 10) == 2f + u)
+            assert(Vec2(-5, -6) == 2f - u)
         }
 
         {
@@ -248,6 +380,9 @@ class PrimitiveMathTest extends FunSuite {
 
             assert(Vec3(14, 16, 18) == 2f*u)
             assert(Vec3(1, 7/8f, 7/9f) == 7f/u)
+
+            assert(Vec3(9, 10, 11) == 2f + u)
+            assert(Vec3(-5, -6, -7) == 2f - u)
         }
 
         {
@@ -255,6 +390,9 @@ class PrimitiveMathTest extends FunSuite {
 
             assert(Vec4(12, 14, 16, 18) == 2f*u)
             assert(Vec4(7/6f, 1, 7/8f, 7/9f) == 7f/u)
+
+            assert(Vec4(8, 9, 10, 11) == 2f + u)
+            assert(Vec4(-4, -5, -6, -7) == 2f - u)
         }
     }
 }

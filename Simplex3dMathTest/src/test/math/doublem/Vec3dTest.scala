@@ -239,6 +239,8 @@ class Vec3dTest extends FunSuite {
     test("Indexed read") {
         val u = ConstVec3(3, 4, 5)
 
+        assert(+u eq u)
+
         expect(3) { u(0) }
         expect(4) { u(1) }
         expect(5) { u(2) }
@@ -293,6 +295,9 @@ class Vec3dTest extends FunSuite {
         assert(Vec3(14, 16, 18) == u*2)
         assert(Vec3(3.5, 4, 4.5) == u/2)
 
+        assert(Vec3(9, 10, 11) == u + 2)
+        assert(Vec3(5, 6, 7) == u - 2)
+
         val v = ConstVec3(2, 4, 3)
 
         assert(Vec3(9, 12, 12) == u + v)
@@ -330,6 +335,9 @@ class Vec3dTest extends FunSuite {
 
         u := i; u *= 2; assert(Vec3(4, 6, 8) == u)
         u := i; u /= 2; assert(Vec3(1, 1.5, 2) == u)
+
+        u := i; u += 2; assert(Vec3(4, 5, 6) == u)
+        u := i; u -= 2; assert(Vec3(0, 1, 2) == u)
 
         u := i; u += Vec3(3, 4, 5); assert(Vec3(5, 7, 9) == u)
         u := i; u += u; assert(Vec3(4, 6, 8) == u)

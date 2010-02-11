@@ -288,10 +288,15 @@ class Vec3fTest extends FunSuite {
     test("Const math") {
         val u = ConstVec3(7, 8, 9)
 
+        assert(+u eq u)
+
         assert(Vec3(-7, -8, -9) == -u)
 
         assert(Vec3(14, 16, 18) == u*2)
         assert(Vec3(3.5f, 4, 4.5f) == u/2)
+
+        assert(Vec3(9, 10, 11) == u + 2)
+        assert(Vec3(5, 6, 7) == u - 2)
 
         val v = ConstVec3(2, 4, 3)
 
@@ -330,6 +335,9 @@ class Vec3fTest extends FunSuite {
 
         u := i; u *= 2; assert(Vec3(4, 6, 8) == u)
         u := i; u /= 2; assert(Vec3(1, 1.5f, 2) == u)
+
+        u := i; u += 2; assert(Vec3(4, 5, 6) == u)
+        u := i; u -= 2; assert(Vec3(0, 1, 2) == u)
 
         u := i; u += Vec3(3, 4, 5); assert(Vec3(5, 7, 9) == u)
         u := i; u += u; assert(Vec3(4, 6, 8) == u)

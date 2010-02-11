@@ -37,6 +37,10 @@ class PrimitiveMathTest extends FunSuite {
 
             assert(Vec2i(20, 40) == 2*u)
             assert(Vec2i(2, 1) == 20 / u)
+
+            assert(Vec2i(12, 22) == 2 + u)
+            assert(Vec2i(-8, -18) == 2 - u)
+
             assert(Vec2i(2, 12) == 32 % u)
 
             assert(Vec2i(0xF, 0xF) == (0xF & b))
@@ -50,6 +54,10 @@ class PrimitiveMathTest extends FunSuite {
 
             assert(Vec3i(20, 40, 60) == 2*u)
             assert(Vec3i(3, 1, 1) == 30 / u)
+
+            assert(Vec3i(12, 22, 32) == 2 + u)
+            assert(Vec3i(-8, -18, -28) == 2 - u)
+
             assert(Vec3i(2, 12, 2) == 32 % u)
 
             assert(Vec3i(0xF, 0xF, 0xF) == (0xF & b))
@@ -63,6 +71,10 @@ class PrimitiveMathTest extends FunSuite {
 
             assert(Vec4i(20, 40, 60, 80) == 2*u)
             assert(Vec4i(4, 2, 1, 1) == 40 / u)
+
+            assert(Vec4i(12, 22, 32, 42) == 2 + u)
+            assert(Vec4i(-8, -18, -28, -38) == 2 - u)
+
             assert(Vec4i(3, 3, 13, 3) == 43 % u)
 
             assert(Vec4i(0xF, 0xF, 0xF, 0xF) == (0xF & b))

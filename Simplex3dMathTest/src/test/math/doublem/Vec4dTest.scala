@@ -389,10 +389,15 @@ class Vec4dTest extends FunSuite {
     test("Const math") {
         val u = ConstVec4(6, 7, 8, 9)
 
+        assert(+u eq u)
+
         assert(Vec4(-6, -7, -8, -9) == -u)
 
         assert(Vec4(12, 14, 16, 18) == u*2)
         assert(Vec4(3, 3.5, 4, 4.5) == u/2)
+
+        assert(Vec4(8, 9, 10, 11) == u + 2)
+        assert(Vec4(4, 5, 6, 7) == u - 2)
 
         val v = ConstVec4(2, 3, 4, 5)
 
@@ -429,6 +434,9 @@ class Vec4dTest extends FunSuite {
 
         u := i; u *= 2; assert(Vec4(4, 6, 8, 10) == u)
         u := i; u /= 2; assert(Vec4(1, 1.5, 2, 2.5) == u)
+
+        u := i; u += 2; assert(Vec4(4, 5, 6, 7) == u)
+        u := i; u -= 2; assert(Vec4(0, 1, 2, 3) == u)
 
         u := i; u += Vec4(3, 4, 5, 6); assert(Vec4(5, 7, 9, 11) == u)
         u := i; u += u; assert(Vec4(4, 6, 8, 10) == u)

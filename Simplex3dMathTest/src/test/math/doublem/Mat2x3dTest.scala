@@ -505,6 +505,7 @@ class Mat2x3dTest extends FunSuite {
         val m = ConstMat2x3(m00, m10,
                             m01, m11,
                             m02, m12)
+        assert(+m eq m)
 
         var t = Mat2x3(-m00, -m10,
                        -m01, -m11,
@@ -521,7 +522,18 @@ class Mat2x3dTest extends FunSuite {
                    m02/2, m12/2)
         assert(m/2 == t)
 
+        t = Mat2x3(m00+2, m10+2,
+                   m01+2, m11+2,
+                   m02+2, m12+2)
+        assert(m + 2 == t)
+
+        t = Mat2x3(m00-2, m10-2,
+                   m01-2, m11-2,
+                   m02-2, m12-2)
+        assert(m - 2 == t)
+
         val n: ConstMat2x3 = m*3
+
         t = Mat2x3(4*m00, 4*m10,
                    4*m01, 4*m11,
                    4*m02, 4*m12)
@@ -572,6 +584,16 @@ class Mat2x3dTest extends FunSuite {
                    m02/2, m12/2)
         m := i; m /= 2; assert(m == t)
 
+        t = Mat2x3(m00+2, m10+2,
+                   m01+2, m11+2,
+                   m02+2, m12+2)
+        m := i; m += 2; assert(m == t)
+
+        t = Mat2x3(m00-2, m10-2,
+                   m01-2, m11-2,
+                   m02-2, m12-2)
+        m := i; m -= 2; assert(m == t)
+
         val n: ConstMat2x3 = i*3
 
         t = Mat2x3(4*m00, 4*m10,
@@ -588,5 +610,10 @@ class Mat2x3dTest extends FunSuite {
                    98, 116,
                    158, 188)
         m := i; m *= Mat3x3(M); assert(m == t)
+
+        t = Mat2x3(1, 1,
+                   1, 1,
+                   1, 1)
+        m := i; m/= m; assert(m == t)
     }
 }

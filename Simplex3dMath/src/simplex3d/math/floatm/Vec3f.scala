@@ -82,9 +82,14 @@ sealed abstract class AnyVec3f extends Read3 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec3f(-x, -y, -z)
     def *(s: Float) = new Vec3f(x * s, y * s, z * s)
     def /(s: Float) = { val inv = 1/s; new Vec3f(x * inv, y * inv, z * inv) }
+
+    def +(s: Float) = new Vec3f(x + s, y + s, z + s)
+    def -(s: Float) = new Vec3f(x - s, y - s, z - s)
+
     private[math] def divideByComponent(s: Float) = {
         new Vec3f(s / x, s / y, s / z)
     }
@@ -167,6 +172,9 @@ extends AnyVec3f
 
     def *=(s: Float) { x *= s; y *= s; z *= s }
     def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
+
+    def +=(s: Float) { x += s; y += s; z += s }
+    def -=(s: Float) { x -= s; y -= s; z -= s }
 
     def +=(u: AnyVec3f) { x += u.x; y += u.y; z += u.z }
     def -=(u: AnyVec3f) { x -= u.x; y -= u.y; z -= u.z }

@@ -74,9 +74,14 @@ sealed abstract class AnyVec2d extends Read2 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec2d(-x, -y)
     def *(s: Double) = new Vec2d(x * s, y * s)
     def /(s: Double) = { val inv = 1/s; new Vec2d(x * inv, y * inv) }
+
+    def +(s: Double) = new Vec2d(x + s, y + s)
+    def -(s: Double) = new Vec2d(x - s, y - s)
+
     private[math] def divideByComponent(s: Double) = new Vec2d(s / x, s / y)
 
     def +(u: AnyVec2d) = new Vec2d(x + u.x, y + u.y)
@@ -150,6 +155,9 @@ extends AnyVec2d
     
     def *=(s: Double) { x *= s; y *= s }
     def /=(s: Double) { val inv = 1/s; x *= inv; y *= inv }
+
+    def +=(s: Double) { x += s; y += s }
+    def -=(s: Double) { x -= s; y -= s }
 
     def +=(u: AnyVec2d) { x += u.x; y += u.y }
     def -=(u: AnyVec2d) { x -= u.x; y -= u.y }

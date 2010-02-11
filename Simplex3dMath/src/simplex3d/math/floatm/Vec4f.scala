@@ -90,11 +90,16 @@ sealed abstract class AnyVec4f extends Read4 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec4f(-x, -y, -z, -w)
     def *(s: Float) = new Vec4f(x * s, y * s, z * s, w * s)
     def /(s: Float) = { val inv = 1/s;
        new Vec4f(x * inv, y * inv, z * inv, w * inv)
     }
+
+    def +(s: Float) = new Vec4f(x + s, y + s, z + s, w + s)
+    def -(s: Float) = new Vec4f(x - s, y - s, z - s, w - s)
+
     private[math] def divideByComponent(s: Float) = {
         new Vec4f(s / x, s / y, s / z, s / w)
     }
@@ -189,6 +194,9 @@ extends AnyVec4f
 
     def *=(s: Float) { x *= s; y *= s; z *= s; w *= s }
     def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
+
+    def +=(s: Float) { x += s; y += s; z += s; w += s }
+    def -=(s: Float) { x -= s; y -= s; z -= s; w -= s }
 
     def +=(u: AnyVec4f) { x += u.x; y += u.y; z += u.z; w += u.w }
     def -=(u: AnyVec4f) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }

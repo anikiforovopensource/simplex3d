@@ -82,9 +82,14 @@ sealed abstract class AnyVec3d extends Read3 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec3d(-x, -y, -z)
     def *(s: Double) = new Vec3d(x * s, y * s, z * s)
     def /(s: Double) = { val inv = 1/s; new Vec3d(x * inv, y * inv, z * inv) }
+
+    def +(s: Double) = new Vec3d(x + s, y + s, z + s)
+    def -(s: Double) = new Vec3d(x - s, y - s, z - s)
+
     private[math] def divideByComponent(s: Double) = {
         new Vec3d(s / x, s / y, s / z)
     }
@@ -169,6 +174,9 @@ final class Vec3d private[math] (
 
     def *=(s: Double) { x *= s; y *= s; z *= s }
     def /=(s: Double) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
+
+    def +=(s: Double) { x += s; y += s; z += s }
+    def -=(s: Double) { x -= s; y -= s; z -= s }
 
     def +=(u: AnyVec3d) { x += u.x; y += u.y; z += u.z }
     def -=(u: AnyVec3d) { x -= u.x; y -= u.y; z -= u.z }

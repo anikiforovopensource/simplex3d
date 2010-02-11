@@ -37,6 +37,14 @@ final class ExtendedInt(val value: Int) {
     def /(u: AnyVec3i) = u.divideByComponent(value)
     def /(u: AnyVec4i) = u.divideByComponent(value)
 
+    def +(u: AnyVec2i) = u + value
+    def +(u: AnyVec3i) = u + value
+    def +(u: AnyVec4i) = u + value
+
+    def -(u: AnyVec2i) = { val t = -u; t += value; t }
+    def -(u: AnyVec3i) = { val t = -u; t += value; t }
+    def -(u: AnyVec4i) = { val t = -u; t += value; t }
+
     def %(u: AnyVec2i) = u.modByComponent(value)
     def %(u: AnyVec3i) = u.modByComponent(value)
     def %(u: AnyVec4i) = u.modByComponent(value)

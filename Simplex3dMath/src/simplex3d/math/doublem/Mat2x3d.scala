@@ -94,6 +94,7 @@ sealed abstract class AnyMat2x3d extends Read2x3
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Mat2x3d(
         -m00, -m10,
         -m01, -m11,
@@ -109,6 +110,17 @@ sealed abstract class AnyMat2x3d extends Read2x3
         inv*m01, inv*m11,
         inv*m02, inv*m12
     )}
+
+    def +(s: Double) = new Mat2x3d(
+        m00 + s, m10 + s,
+        m01 + s, m11 + s,
+        m02 + s, m12 + s
+    )
+    def -(s: Double) = new Mat2x3d(
+        m00 - s, m10 - s,
+        m01 - s, m11 - s,
+        m02 - s, m12 - s
+    )
 
     def +(m: AnyMat2x3d) = new Mat2x3d(
         m00 + m.m00, m10 + m.m10,
@@ -324,6 +336,17 @@ final class Mat2x3d private[math] (
         m02 *= inv; m12 *= inv
     }
 
+    def +=(s: Double) {
+        m00 += s; m10 += s
+        m01 += s; m11 += s
+        m02 += s; m12 += s
+    }
+    def -=(s: Double) {
+        m00 -= s; m10 -= s
+        m01 -= s; m11 -= s
+        m02 -= s; m12 -= s
+    }
+
     def +=(m: AnyMat2x3d) {
         m00 += m.m00; m10 += m.m10;
         m01 += m.m01; m11 += m.m11;
@@ -348,6 +371,14 @@ final class Mat2x3d private[math] (
         m00 = a00; m10 = a10
         m01 = a01; m11 = a11
         m02 = a02; m12 = a12
+    }
+    /**
+     * Component-wise devision.
+     */
+    def /=(m: AnyMat2x3d) {
+        m00 /= m.m00; m10 /= m.m10
+        m01 /= m.m01; m11 /= m.m11
+        m02 /= m.m02; m12 /= m.m12
     }
 
     def :=(m: AnyMat2x3d) {

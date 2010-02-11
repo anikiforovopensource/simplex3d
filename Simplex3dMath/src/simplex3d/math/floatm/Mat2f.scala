@@ -80,6 +80,7 @@ sealed abstract class AnyMat2f extends Read2x2
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Mat2f(
         -m00, -m10,
         -m01, -m11
@@ -92,6 +93,15 @@ sealed abstract class AnyMat2f extends Read2x2
         inv*m00, inv*m10,
         inv*m01, inv*m11
     )}
+
+    def +(s: Float) = new Mat2f(
+        m00 + s, m10 + s,
+        m01 + s, m11 + s
+    )
+    def -(s: Float) = new Mat2f(
+        m00 - s, m10 - s,
+        m01 - s, m11 - s
+    )
 
     def +(m: AnyMat2f) = new Mat2f(
         m00 + m.m00, m10 + m.m10,
@@ -245,6 +255,15 @@ final class Mat2f private[math] (
         m01 *= inv; m11 *= inv
     }
 
+    def +=(s: Float) {
+        m00 += s; m10 += s
+        m01 += s; m11 += s
+    }
+    def -=(s: Float) {
+        m00 -= s; m10 -= s
+        m01 -= s; m11 -= s
+    }
+
     def +=(m: AnyMat2f) {
         m00 += m.m00; m10 += m.m10;
         m01 += m.m01; m11 += m.m11
@@ -263,6 +282,13 @@ final class Mat2f private[math] (
 
         m00 = a00; m10 = a10
         m01 = a01; m11 = a11
+    }
+    /**
+     * Component-wise devision.
+     */
+    def /=(m: AnyMat2f) {
+        m00 /= m.m00; m10 /= m.m10
+        m01 /= m.m01; m11 /= m.m11
     }
 
     def :=(m: AnyMat2f) {

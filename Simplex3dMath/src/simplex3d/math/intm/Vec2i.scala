@@ -74,11 +74,16 @@ sealed abstract class AnyVec2i extends Read2 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec2i(-x, -y)
     def unary_~() = new Vec2i(~x, ~y)
 
     def *(s: Int) = new Vec2i(x * s, y * s)
     def /(s: Int) = new Vec2i(x / s, y / s)
+
+    def +(s: Int) = new Vec2i(x + s, y + s)
+    def -(s: Int) = new Vec2i(x - s, y - s)
+
     private[math] def divideByComponent(s: Int) = new Vec2i(s / x, s / y)
     def %(s: Int) = new Vec2i(x % s, y % s)
     private[math] def modByComponent(s: Int) = new Vec2i(s % x, s % y)
@@ -153,6 +158,10 @@ final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
 
     def *=(s: Int) { x *= s; y *= s }
     def /=(s: Int) { x /= s; y /= s }
+
+    def +=(s: Int) { x += s; y += s }
+    def -=(s: Int) { x -= s; y -= s }
+    
     def %=(s: Int) { x %= s; y %= s }
     def >>=(s: Int) = { x >>= s; y >>= s }
     def >>>=(s: Int) = { x >>>= s; y >>>= s }

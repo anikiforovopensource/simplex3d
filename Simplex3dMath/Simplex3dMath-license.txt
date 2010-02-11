@@ -1,8 +1,5 @@
-/*
- * Simplex3d, DoubleMath module
+ * Simplex3dMath
  * Copyright (C) 2009-2010 Simplex3d Team
- *
- * This file is part of Simplex3dMath.
  *
  * Simplex3dMath is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,25 +13,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package simplex3d.math.doublem
-
-import simplex3d.math._
-
-
-/**
- * Glue code to promote integer types to double types.
  *
- * @author Aleksey Nikiforov (lex)
- */
-final class IntPromotion(val value: Double) {
-    // Veci to Vecd promotion
-    def *(u: Read2{ type T = Int }) = Vec2d(u)*value
-    def *(u: Read3{ type T = Int }) = Vec3d(u)*value
-    def *(u: Read4{ type T = Int }) = Vec4d(u)*value
-
-    def /(u: Read2{ type T = Int }) = Vec2d(u).divideByComponent(value)
-    def /(u: Read3{ type T = Int }) = Vec3d(u).divideByComponent(value)
-    def /(u: Read4{ type T = Int }) = Vec4d(u).divideByComponent(value)
-}
+ * ext.toxi.math.noise.SimplexNoise:
+ * Original code was released by Stefan Gustavson in the following paper:
+ * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+ * Modifications by Karsten Schmidt. Used under LGPL v2.1.
+ 

@@ -132,6 +132,7 @@ sealed abstract class AnyMat4f extends Read4x4
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Mat4f(
         -m00, -m10, -m20, -m30,
         -m01, -m11, -m21, -m31,
@@ -150,6 +151,19 @@ sealed abstract class AnyMat4f extends Read4x4
         inv*m02, inv*m12, inv*m22, inv*m32,
         inv*m03, inv*m13, inv*m23, inv*m33
     )}
+
+    def +(s: Float) = new Mat4f(
+        m00 + s, m10 + s, m20 + s, m30 + s,
+        m01 + s, m11 + s, m21 + s, m31 + s,
+        m02 + s, m12 + s, m22 + s, m32 + s,
+        m03 + s, m13 + s, m23 + s, m33 + s
+    )
+    def -(s: Float) = new Mat4f(
+        m00 - s, m10 - s, m20 - s, m30 - s,
+        m01 - s, m11 - s, m21 - s, m31 - s,
+        m02 - s, m12 - s, m22 - s, m32 - s,
+        m03 - s, m13 - s, m23 - s, m33 - s
+    )
 
     def +(m: AnyMat4f) = new Mat4f(
         m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
@@ -391,6 +405,19 @@ final class Mat4f private[math] (
         m03 *= inv; m13 *= inv; m23 *= inv; m33 *= inv
     }
 
+    def +=(s: Float) {
+        m00 += s; m10 += s; m20 += s; m30 += s
+        m01 += s; m11 += s; m21 += s; m31 += s
+        m02 += s; m12 += s; m22 += s; m32 += s
+        m03 += s; m13 += s; m23 += s; m33 += s
+    }
+    def -=(s: Float) {
+        m00 -= s; m10 -= s; m20 -= s; m30 -= s
+        m01 -= s; m11 -= s; m21 -= s; m31 -= s
+        m02 -= s; m12 -= s; m22 -= s; m32 -= s
+        m03 -= s; m13 -= s; m23 -= s; m33 -= s
+    }
+
     def +=(m: AnyMat4f) {
         m00 += m.m00; m10 += m.m10; m20 += m.m20; m30 += m.m30;
         m01 += m.m01; m11 += m.m11; m21 += m.m21; m31 += m.m31;
@@ -429,6 +456,15 @@ final class Mat4f private[math] (
         m01 = a01; m11 = a11; m21 = a21; m31 = a31
         m02 = a02; m12 = a12; m22 = a22; m32 = a32
         m03 = a03; m13 = a13; m23 = a23; m33 = a33
+    }
+    /**
+     * Component-wise devision.
+     */
+    def /=(m: AnyMat4f) {
+        m00 /= m.m00; m10 /= m.m10; m20 /= m.m20; m30 /= m.m30
+        m01 /= m.m01; m11 /= m.m11; m21 /= m.m21; m31 /= m.m31
+        m02 /= m.m02; m12 /= m.m12; m22 /= m.m22; m32 /= m.m32
+        m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
     }
 
     def :=(m: AnyMat4f) {

@@ -56,6 +56,7 @@ sealed abstract class AnyQuat4d extends ReadQ {
         }
     }
 
+    def unary_+() :this.type = this
     /**
      * This methods negates every term of this quaternion.
      * Negating the quaternion produces another quaternion which represent
@@ -67,6 +68,9 @@ sealed abstract class AnyQuat4d extends ReadQ {
     def /(s: Double) = { val inv = 1/s;
         new Quat4d(a * inv, b * inv, c * inv, d * inv)
     }
+    def +(s: Double) = new Quat4d(a + s, b + s, c + s, d + s)
+    def -(s: Double) = new Quat4d(a - s, b - s, c - s, d - s)
+    
     private[math] def divideByComponent(s: Double) = {
         new Quat4d(s / a, s / b, s / c, s / d)
     }
@@ -157,6 +161,9 @@ final class Quat4d private[math] (
 {
     def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
+
+    def +=(s: Double) { a += s; b += s; c += s; d += s }
+    def -=(s: Double) { a -= s; b -= s; c -= s; d -= s }
 
     def +=(q: Quat4d) { a += q.a; b += q.b; c += q.c; d += q.d }
     def -=(q: Quat4d) { a -= q.a; b -= q.b; c -= q.c; d -= q.d }

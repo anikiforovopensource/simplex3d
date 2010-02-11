@@ -90,11 +90,16 @@ sealed abstract class AnyVec4i extends Read4 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec4i(-x, -y, -z, -w)
     def unary_~() = new Vec4i(~x, ~y, ~z, ~w)
 
     def *(s: Int) = new Vec4i(x * s, y * s, z * s, w * s)
     def /(s: Int) = new Vec4i(x / s, y / s, z / s, w / s)
+
+    def +(s: Int) = new Vec4i(x + s, y + s, z + s, w + s)
+    def -(s: Int) = new Vec4i(x - s, y - s, z - s, w - s)
+
     private[math] def divideByComponent(s: Int) = {
         new Vec4i(s / x, s / y, s / z, s / w)
     }
@@ -190,6 +195,10 @@ extends AnyVec4i
 
     def *=(s: Int) { x *= s; y *= s; z *= s; w *= s }
     def /=(s: Int) { x /= s; y /= s; z /= s; w /= s }
+
+    def +=(s: Int) { x += s; y += s; z += s; w += s }
+    def -=(s: Int) { x -= s; y -= s; z -= s; w -= s }
+    
     def %=(s: Int) { x %= s; y %= s; z %= s; w %= s }
     def >>=(s: Int) = { x >>= s; y >>= s; z >>= s; w >>= s }
     def >>>=(s: Int) = { x >>>= s; y >>>= s; z >>>= s; w >>>= s }

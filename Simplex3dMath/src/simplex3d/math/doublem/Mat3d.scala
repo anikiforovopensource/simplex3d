@@ -103,6 +103,7 @@ sealed abstract class AnyMat3d extends Read3x3
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Mat3d(
         -m00, -m10, -m20,
         -m01, -m11, -m21,
@@ -118,6 +119,17 @@ sealed abstract class AnyMat3d extends Read3x3
         inv*m01, inv*m11, inv*m21,
         inv*m02, inv*m12, inv*m22
     )}
+
+    def +(s: Double) = new Mat3d(
+        m00 + s, m10 + s, m20 + s,
+        m01 + s, m11 + s, m21 + s,
+        m02 + s, m12 + s, m22 + s
+    )
+    def -(s: Double) = new Mat3d(
+        m00 - s, m10 - s, m20 - s,
+        m01 - s, m11 - s, m21 - s,
+        m02 - s, m12 - s, m22 - s
+    )
 
     def +(m: AnyMat3d) = new Mat3d(
         m00 + m.m00, m10 + m.m10, m20 + m.m20,
@@ -312,6 +324,17 @@ final class Mat3d private[math] (
         m02 *= inv; m12 *= inv; m22 *= inv
     }
 
+    def +=(s: Double) {
+        m00 += s; m10 += s; m20 += s
+        m01 += s; m11 += s; m21 += s
+        m02 += s; m12 += s; m22 += s
+    }
+    def -=(s: Double) {
+        m00 -= s; m10 -= s; m20 -= s
+        m01 -= s; m11 -= s; m21 -= s
+        m02 -= s; m12 -= s; m22 -= s
+    }
+
     def +=(m: AnyMat3d) {
         m00 += m.m00; m10 += m.m10; m20 += m.m20;
         m01 += m.m01; m11 += m.m11; m21 += m.m21;
@@ -339,6 +362,14 @@ final class Mat3d private[math] (
         m00 = a00; m10 = a10; m20 = a20
         m01 = a01; m11 = a11; m21 = a21
         m02 = a02; m12 = a12; m22 = a22
+    }
+    /**
+     * Component-wise devision.
+     */
+    def /=(m: AnyMat3d) {
+        m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
+        m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
+        m02 /= m.m02; m12 /= m.m12; m22 /= m.m22
     }
 
     def :=(m: AnyMat3d) {

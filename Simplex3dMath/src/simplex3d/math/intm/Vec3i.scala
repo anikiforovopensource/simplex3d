@@ -82,11 +82,16 @@ sealed abstract class AnyVec3i extends Read3 {
         }
     }
 
+    def unary_+() :this.type = this
     def unary_-() = new Vec3i(-x, -y, -z)
     def unary_~() = new Vec3i(~x, ~y, ~z)
 
     def *(s: Int) = new Vec3i(x * s, y * s, z * s)
     def /(s: Int) = new Vec3i(x / s, y / s, z / s)
+
+    def +(s: Int) = new Vec3i(x + s, y + s, z + s)
+    def -(s: Int) = new Vec3i(x - s, y - s, z - s)
+
     private[math] def divideByComponent(s: Int) = new Vec3i(s / x, s / y, s / z)
     def %(s: Int) = new Vec3i(x % s, y % s, z % s)
     private[math] def modByComponent(s: Int) = new Vec3i(s % x, s % y, s % z)
@@ -169,6 +174,10 @@ extends AnyVec3i
 
     def *=(s: Int) { x *= s; y *= s; z *= s }
     def /=(s: Int) { x /= s; y /= s; z /= s }
+
+    def +=(s: Int) { x += s; y += s; z += s }
+    def -=(s: Int) { x -= s; y -= s; z -= s }
+    
     def %=(s: Int) { x %= s; y %= s; z %= s }
     def >>=(s: Int) = { x >>= s; y >>= s; z >>= s }
     def >>>=(s: Int) = { x >>>= s; y >>>= s; z >>>= s }

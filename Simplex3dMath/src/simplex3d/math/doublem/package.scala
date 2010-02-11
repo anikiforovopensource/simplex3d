@@ -29,30 +29,30 @@ import simplex3d.math.doublem.DoubleMath._
 package object doublem {
 
     // Implicits
-    implicit def dintPromotion(s: Double) = new IntPromotion(s)
-    implicit def dfloatPromotion(s: Double) = new FloatPromotion(s)
+    implicit def dmIntPromoter(s: Double) = new IntPromoter(s)
+    implicit def dmFloatPromoter(s: Double) = new FloatPromoter(s)
 
-    implicit def dextendDouble(s: Double) = new ExtendedDouble(s)
-    implicit def dextendFloat(s: Float) = new ExtendedFloat(s)
-    implicit def dextendInt(s: Int) = new ExtendedInt(s)
+    implicit def dmDouble(s: Double) = new ExtendedDouble(s)
+    implicit def dmFloat(s: Float) = new ExtendedFloat(s)
+    implicit def dmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def dpromoteVec2i(u: Read2{ type T = Int }) :Vec2d =
-        Vec2d(u.dx, u.dy)
+    implicit def dmVec2i(u: Read2{ type T = Int }) :Vec2d =
+        new Vec2d(u.dx, u.dy)
 
-    implicit def dpromoteVec3i(u: Read3{ type T = Int }) :Vec3d =
-        Vec3d(u.dx, u.dy, u.dz)
+    implicit def dmVec3i(u: Read3{ type T = Int }) :Vec3d =
+        new Vec3d(u.dx, u.dy, u.dz)
 
-    implicit def dpromoteVec4i(u: Read4{ type T = Int }) :Vec4d =
-        Vec4d(u.dx, u.dy, u.dz, u.dw)
+    implicit def dmVec4i(u: Read4{ type T = Int }) :Vec4d =
+        new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
-    implicit def dpromoteVec2f(u: Read2{ type T = Float }) :Vec2d =
-        Vec2d(u.dx, u.dy)
+    implicit def dmVec2f(u: Read2{ type T = Float }) :Vec2d =
+        new Vec2d(u.dx, u.dy)
 
-    implicit def dpromoteVec3f(u: Read3{ type T = Float }) :Vec3d =
-        Vec3d(u.dx, u.dy, u.dz)
+    implicit def dmVec3f(u: Read3{ type T = Float }) :Vec3d =
+        new Vec3d(u.dx, u.dy, u.dz)
 
-    implicit def dpromoteVec4f(u: Read4{ type T = Float }) :Vec4d =
-        Vec4d(u.dx, u.dy, u.dz, u.dw)
+    implicit def dmVec4f(u: Read4{ type T = Float }) :Vec4d =
+        new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
 
     // Aliases

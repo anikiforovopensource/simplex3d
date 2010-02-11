@@ -29,19 +29,19 @@ import simplex3d.math.floatm.FloatMath._
 package object floatm {
 
     // Implicits
-    implicit def fintPromotion(s: Float) = new IntPromotion(s)
+    implicit def fmIntPromoter(s: Float) = new IntPromoter(s)
 
-    implicit def fextendFloat(s: Float) = new ExtendedFloat(s)
-    implicit def fextendInt(s: Int) = new ExtendedInt(s)
+    implicit def fmFloat(s: Float) = new ExtendedFloat(s)
+    implicit def fmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def fpromoteVec2i(u: Read2{ type T = Int }) :Vec2f =
-        Vec2f(u.fx, u.fy)
+    implicit def fmVec2i(u: Read2{ type T = Int }) :Vec2f =
+        new Vec2f(u.fx, u.fy)
 
-    implicit def fpromoteVec3i(u: Read3{ type T = Int }) :Vec3f =
-        Vec3f(u.fx, u.fy, u.fz)
+    implicit def fmVec3i(u: Read3{ type T = Int }) :Vec3f =
+        new Vec3f(u.fx, u.fy, u.fz)
 
-    implicit def fpromoteVec4i(u: Read4{ type T = Int }) :Vec4f =
-        Vec4f(u.fx, u.fy, u.fz, u.fw)
+    implicit def fmVec4i(u: Read4{ type T = Int }) :Vec4f =
+        new Vec4f(u.fx, u.fy, u.fz, u.fw)
 
 
     // Aliases

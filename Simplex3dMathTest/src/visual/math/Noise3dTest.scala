@@ -29,15 +29,17 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise3Test {
+object Noise3dTest {
 
     def main(args: Array[String]) {
         val scale = 1.0/50
-        val speed = 1.0/3
+        val noiseSpeed = 1.0/3
+        val scrollSpeed = 10
 
         FunFrame.launch(new Fun {
         final def apply(pixel: AnyVec2, t: Double) = {
-            (noise3(Vec3(pixel*scale, t*speed)) + Vec3(1))/2
+            val p = pixel + t*scrollSpeed
+            Vec3((noise1(Vec3(p*scale, t*noiseSpeed)) + 1)/2)
         }})
     }
 }

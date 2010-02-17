@@ -29,9 +29,8 @@
  */
 package noise
 
-import simplex3d.math.intm._
+import simplex3d.math.BaseMath._
 import simplex3d.math.doublem._
-import simplex3d.math.doublem.DoubleMath._
 
 
 /**
@@ -53,8 +52,7 @@ object SimplexNoise {
         noise1(Vec4d(x, y, z, w))
     }
 
-
-    val perm: Array[Int] = Array(
+    private val halfPerm: Array[Int] = Array(
         151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
         140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190,  6, 148,
         247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32,
@@ -73,365 +71,399 @@ object SimplexNoise {
         115, 121, 50, 45, 127,  4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
         29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180)
 
-    val grad3: Array[Array[Int]] = Array(
-        Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
-        Array(1,0,1), Array(1,0,-1), Array(-1,0,1), Array(-1,0,-1),
-        Array(1,1,0), Array(1,-1,0), Array(-1,1,0), Array(-1,-1,0),
-        Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1))
+    private val perm: Array[Int] = new Array[Int](halfPerm.length*2)
+    for (i <- 0 until perm.length) { perm(i) = halfPerm(i & 0xFF) }
 
-    val grad4: Array[Array[Int]] = Array(
-        Array(0,1,1,1), Array(0,1,1,-1), Array(0,1,-1,1), Array(0,1,-1,-1),
-        Array(0,-1,1,1), Array(0,-1,1,-1), Array(0,-1,-1,1), Array(0,-1,-1,-1),
-        Array(1,0,1,1), Array(1,0,1,-1), Array(1,0,-1,1), Array(1,0,-1,-1),
-        Array(-1,0,1,1), Array(-1,0,1,-1), Array(-1,0,-1,1), Array(-1,0,-1,-1),
-        Array(1,1,0,1), Array(1,1,0,-1), Array(1,-1,0,1), Array(1,-1,0,-1),
-        Array(-1,1,0,1), Array(-1,1,0,-1), Array(-1,-1,0,1), Array(-1,-1,0,-1),
-        Array(1,1,1,0), Array(1,1,-1,0), Array(1,-1,1,0), Array(1,-1,-1,0),
-        Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0))
+    private val grad2: Array[ConstVec2d] = Array(
+        ConstVec2d(0,1), ConstVec2d(0,1), ConstVec2d(0,-1), ConstVec2d(0,-1),
+        ConstVec2d(1,0), ConstVec2d(1,0), ConstVec2d(-1,0), ConstVec2d(-1,0),
+        ConstVec2d(1,1), ConstVec2d(1,-1), ConstVec2d(-1,1), ConstVec2d(-1,-1),
+        ConstVec2d(1,0), ConstVec2d(-1,0), ConstVec2d(0,-1), ConstVec2d(0,1))
 
-    // STUB START
-    val tperm = new Array[Vec4d](256*256)
-    initTperm()
-    val tgrad = new Array[Vec4d](256*256)
-    initTgrad()
+    private val grad3: Array[ConstVec3d] = Array(
+        ConstVec3d(0,1,1), ConstVec3d(0,1,-1), ConstVec3d(0,-1,1), ConstVec3d(0,-1,-1),
+        ConstVec3d(1,0,1), ConstVec3d(1,0,-1), ConstVec3d(-1,0,1), ConstVec3d(-1,0,-1),
+        ConstVec3d(1,1,0), ConstVec3d(1,-1,0), ConstVec3d(-1,1,0), ConstVec3d(-1,-1,0),
+        ConstVec3d(1,0,-1), ConstVec3d(-1,0,-1), ConstVec3d(0,-1,1), ConstVec3d(0,1,1))
 
-    def convert(u: Vec4i) :Vec4d = {
-        Vec4d(
-            u.x / 256d,
-            u.y / 256d,
-            u.z / 256d,
-            u.w / 256d
-        )
+    private val grad4: Array[ConstVec4d] = Array(
+        ConstVec4d(0,1,1,1), ConstVec4d(0,1,1,-1), ConstVec4d(0,1,-1,1), ConstVec4d(0,1,-1,-1),
+        ConstVec4d(0,-1,1,1), ConstVec4d(0,-1,1,-1), ConstVec4d(0,-1,-1,1), ConstVec4d(0,-1,-1,-1),
+        ConstVec4d(1,0,1,1), ConstVec4d(1,0,1,-1), ConstVec4d(1,0,-1,1), ConstVec4d(1,0,-1,-1),
+        ConstVec4d(-1,0,1,1), ConstVec4d(-1,0,1,-1), ConstVec4d(-1,0,-1,1), ConstVec4d(-1,0,-1,-1),
+        ConstVec4d(1,1,0,1), ConstVec4d(1,1,0,-1), ConstVec4d(1,-1,0,1), ConstVec4d(1,-1,0,-1),
+        ConstVec4d(-1,1,0,1), ConstVec4d(-1,1,0,-1), ConstVec4d(-1,-1,0,1), ConstVec4d(-1,-1,0,-1),
+        ConstVec4d(1,1,1,0), ConstVec4d(1,1,-1,0), ConstVec4d(1,-1,1,0), ConstVec4d(1,-1,-1,0),
+        ConstVec4d(-1,1,1,0), ConstVec4d(-1,1,-1,0), ConstVec4d(-1,-1,1,0), ConstVec4d(-1,-1,-1,0))
+
+    private def ifloor(x: Double) :Int = {
+        val i = int(x)
+        if (x > 0 || x == i) i else i - 1
     }
 
-    def initTperm() {
-        for(i <- 0 until 256)
-            for(j <- 0 until 256) {
-                val v = perm((j + perm(i)) & 0xFF)
-                tperm(i*256 + j) = convert(Vec4i(
-                    grad3(v & 0x0F)(0)*64 + 64,
-                    grad3(v & 0x0F)(1)*64 + 64,
-                    grad3(v & 0x0F)(2)*64 + 64,
-                    v
-                ))
-        }
-    }
-
-    def initTgrad() {
-        for(i <- 0 until 256)
-            for(j <- 0 until 256) {
-                val v = perm((j + perm(i)) & 0xFF)
-                tgrad(i*256 + j) = convert(Vec4i(
-                        grad4(v & 0x1F)(0)*64 + 64,
-                        grad4(v & 0x1F)(1)*64 + 64,
-                        grad4(v & 0x1F)(2)*64 + 64,
-                        grad4(v & 0x1F)(3)*64 + 64
-                ))
-        }
-    }
-
-    val permTexture = 1
-    val gradTexture = 2
-    def texture2D(texture: Int, u: Vec2d): Vec4d = {
-        val c = Vec2i(u*256)%256
-        if (c.x < 0) c.x = 255 + c.x
-        if (c.y < 0) c.y = 255 + c.y
-
-        texture match {
-            case `permTexture` => tperm(c.y*256 + c.x)
-            case `gradTexture` => tgrad(c.y*256 + c.x)
-        }
-    }
-    // STUB END
-
-
-    /*
-     * Efficient simplex indexing functions by Bill Licea-Kane, ATI. Thanks!
-     * (This was originally implemented as a texture lookup. Nice to avoid that.)
-     */
-    def simplex(P: AnyVec3d, offset1: Vec3d, offset2: Vec3d) {
-        val offset0 = Vec3d(0)
-
-        val isX = step ( P.yz, P.xx )         // P.x >= P.y ? 1.0 : 0.0;  P.x >= P.z ? 1.0 : 0.0;
-        offset0.x  = dot( isX, Vec2d( 1.0 ) )  // Accumulate all P.x >= other channels in offset.x
-        offset0.yz = 1.0 - isX                // Accumulate all P.x <  other channels in offset.yz
-
-        val isY = step( P.z, P.y )          // P.y >= P.z ? 1.0 : 0.0;
-        offset0.y += isY                      // Accumulate P.y >= P.z in offset.y
-        offset0.z += 1.0 - isY                // Accumulate P.y <  P.z in offset.z
-
-        // offset0 now contains the unique values 0,1,2 in each channel
-        // 2 for the channel greater than other channels
-        // 1 for the channel that is less than one but greater than another
-        // 0 for the channel less than other channels
-        // Equality ties are broken in favor of first x, then y
-        // (z always loses ties)
-
-        offset2 := clamp(   offset0, 0.0, 1.0 )
-        // offset2 contains 1 in each channel that was 1 or 2
-        offset0 -= 1
-        offset1 := clamp( offset0, 0.0, 1.0 )
-        // offset1 contains 1 in the single channel that was 1
-    }
-
-    def simplex( P: AnyVec4d, offset1: Vec4d, offset2: Vec4d, offset3: Vec4d ) =
-    {
-        val offset0 = Vec4d(0)
-
-        val isX = step( P.yzw, P.xxx )        // See comments in 3D simplex function
-        offset0.x = dot( isX, Vec3d( 1.0 ) )
-        offset0.yzw = 1.0 - isX
-
-        val isY = step( P.zw, P.yy )
-        offset0.y += dot( isY, Vec2d( 1.0 ) )
-        offset0.zw += 1.0 - isY
-
-        val isZ = step( P.w, P.z )
-        offset0.z += isZ
-        offset0.w += 1.0 - isZ
-
-        // offset0 now contains the unique values 0,1,2,3 in each channel
-
-        offset3 := clamp(   offset0, 0.0, 1.0 )
-        offset0 -= 1
-        offset2 := clamp( offset0, 0.0, 1.0 )
-        offset0 -= 1
-        offset1 := clamp( offset0, 0.0, 1.0 )
-    }
-
-
-    val ONE = 1/256d
-    val ONEHALF = 0.5/256
-    // The numbers above are 1/256 and 0.5/256, change accordingly
-
+    
     // Skew and unskew factors are a bit hairy for 2D, so define them as constants
-    val F2 = (sqrt(3.0)-1.0)/2.0
-    val G2 = (3.0-sqrt(3.0))/6.0
+    private val F2 = (DoubleMath.sqrt(3.0) - 1.0) / 2.0
+    private val G2 = (3.0 - DoubleMath.sqrt(3.0)) / 6.0
+    private val G22 = 1 - 2*(3.0 - DoubleMath.sqrt(3.0)) / 6.0
 
     /*
      * 2D simplex noise. Somewhat slower but much better looking than classic noise.
      */
-    def noise1(P: AnyVec2d) :Double = {
+    def noise1(p: AnyVec2d) :Double = {
         // Skew the (x,y) space to determine which cell of 2 simplices we're in
-        val s = (P.x + P.y) * F2 // Hairy factor for 2D skewing
-        var Pi = floor(P + s)
-        val t = (Pi.x + Pi.y) * G2 // Hairy factor for unskewing
-        val P0 = Pi - t // Unskew the cell origin back to (x,y) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        val s = (p.x + p.y) * F2 // Hairy factor for 2D skewing
+        val pix = ifloor(p.x + s)
+        val piy = ifloor(p.y + s)
+        val t = (pix + piy) * G2 // Hairy factor for unskewing
 
-        val Pf0 = P - P0  // The x,y distances from the cell origin
+        // The x,y,z distances from the cell origin
+        val p0x = p.x - pix + t
+        val p0y = p.y - piy + t
+
+        val ix = pix & 0xFF
+        val iy = piy & 0xFF
 
         // For the 2D case, the simplex shape is an equilateral triangle.
         // Find out whether we are above or below the x=y diagonal to
         // determine which of the two triangles we're in.
-        var o1: Vec2d = null
-        if(Pf0.x > Pf0.y) o1 = Vec2d(1.0, 0.0) // +x, +y traversal order
-        else o1 = Vec2d(0.0, 1.0)              // +y, +x traversal order
+        val o1x = if(p0x >= p0y) 1 else 0
+        val o1y = 1 - o1x
 
         // Noise contribution from simplex origin
-        val grad0 = texture2D(permTexture, Pi).rg * 4.0 - 1.0
-        var t0 = 0.5 - dot(Pf0, Pf0)
-        var n0: Double = 0
-        if (t0 < 0.0) n0 = 0.0
-        else {
-            t0 *= t0
-            n0 = t0 * t0 * dot(grad0, Pf0)
-        }
+        val t0 = 0.5 - (p0x*p0x + p0y*p0y)
+        val n0 =
+            if (t0 < 0.0) 0.0
+            else {
+                val py = perm(iy)
+                val px = perm(ix + py)
+                val grad = grad2(px & 0x0F)
+                val t = t0 * t0
+                t * t * (grad.x*p0x + grad.y*p0y)
+            }
 
         // Noise contribution from middle corner
-        val Pf1 = Pf0 - o1 + G2
-        val grad1 = texture2D(permTexture, Pi + o1*ONE).rg * 4.0 - 1.0
-        var t1 = 0.5 - dot(Pf1, Pf1);
-        var n1: Double = 0
-        if (t1 < 0.0) n1 = 0.0
-        else {
-            t1 *= t1
-            n1 = t1 * t1 * dot(grad1, Pf1)
-        }
+        val p1x = p0x - o1x + G2
+        val p1y = p0y - o1y + G2
+        val t1 = 0.5 - (p1x*p1x + p1y*p1y)
+        val n1 =
+            if (t1 < 0.0) 0.0
+            else {
+                val py = perm(iy + o1y)
+                val px = perm(ix + o1x + py)
+                val grad = grad2(px & 0x0F)
+                val t = t1 * t1
+                t * t * (grad.x*p1x + grad.y*p1y)
+            }
 
         // Noise contribution from last corner
-        val Pf2 = Pf0 - Vec2d(1.0-2.0*G2)
-        val grad2 = texture2D(permTexture, Pi + Vec2d(ONE, ONE)).rg * 4.0 - 1.0
-        var t2 = 0.5 - dot(Pf2, Pf2)
-        var n2: Double = 0
-        if(t2 < 0.0) n2 = 0.0
-        else {
-            t2 *= t2
-            n2 = t2 * t2 * dot(grad2, Pf2)
-        }
+        val p2x = p0x - G22
+        val p2y = p0y - G22
+        val t2 = 0.5 - (p2x*p2x + p2y*p2y)
+        val n2 =
+            if(t2 < 0.0) 0.0
+            else {
+                val py = perm(iy + 1)
+                val px = perm(ix + 1 + py)
+                val grad = grad2(px & 0x0F)
+                val t = t2 * t2
+                t * t * (grad.x*p2x + grad.y*p2y)
+            }
 
         // Sum up and scale the result to cover the range [-1,1]
         70.0 * (n0 + n1 + n2)
     }
 
     // The skewing and unskewing factors are much simpler for the 3D case
-    val F3 = 1/3d
-    val G3 = 1/6d
+    private val F3 = 1 / 3d
+    private val G3 = 1 / 6d
+    private val G32 = 2 / 6d
+    private val G33 = 1 - 3 / 6d
 
     /*
      * 3D simplex noise. Comparable in speed to classic noise, better looking.
      */
-    def noise1(P: AnyVec3d) :Double = {
+    def noise1(p: AnyVec3d) :Double = {
         // Skew the (x,y,z) space to determine which cell of 6 simplices we're in
-        val s = (P.x + P.y + P.z) * F3 // Factor for 3D skewing
-        var Pi = floor(P + s)
-        val t = (Pi.x + Pi.y + Pi.z) * G3
-        val P0 = Pi - t // Unskew the cell origin back to (x,y,z) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        val s = (p.x + p.y + p.z) * F3 // Factor for 3D skewing
+        val pix = ifloor(p.x + s)
+        val piy = ifloor(p.y + s)
+        val piz = ifloor(p.z + s)
+        val t = (pix + piy + piz) * G3
 
-        val Pf0 = P - P0 // The x,y distances from the cell origin
+        // The x,y,z distances from the cell origin
+        val p0x = p.x - pix + t
+        val p0y = p.y - piy + t
+        val p0z = p.z - piz + t
+
+        val ix = pix & 0xFF
+        val iy = piy & 0xFF
+        val iz = piz & 0xFF
 
         // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
         // To find out which of the six possible tetrahedra we're in, we need to
         // determine the magnitude ordering of x, y and z components of Pf0.
-        var o1: Vec3d = Vec3d(0)
-        var o2: Vec3d = Vec3d(0)
-        simplex(Pf0, o1, o2)
+        var o1x = 0; var o1y = 0; var o1z = 0
+        var o2x = 0; var o2y = 0; var o2z = 0
+
+        if (p0x >= p0y) {
+            if (p0y >= p0z) {
+                o1x = 1
+                o1y = 0
+                o1z = 0
+                o2x = 1
+                o2y = 1
+                o2z = 0
+            }
+            else if (p0x >= p0z) {
+                o1x = 1
+                o1y = 0
+                o1z = 0
+                o2x = 1
+                o2y = 0
+                o2z = 1
+            }
+            else {
+                o1x = 0
+                o1y = 0
+                o1z = 1
+                o2x = 1
+                o2y = 0
+                o2z = 1
+            }
+        } else {
+            if (p0y < p0z) {
+                o1x = 0
+                o1y = 0
+                o1z = 1
+                o2x = 0
+                o2y = 1
+                o2z = 1
+            }
+            else if (p0x < p0z) {
+                o1x = 0
+                o1y = 1
+                o1z = 0
+                o2x = 0
+                o2y = 1
+                o2z = 1
+            }
+            else {
+                o1x = 0
+                o1y = 1
+                o1z = 0
+                o2x = 1
+                o2y = 1
+                o2z = 0
+            }
+        }
 
         // Noise contribution from simplex origin
-        val perm0 = texture2D(permTexture, Pi.xy).a
-        val  grad0 = texture2D(permTexture, Vec2d(perm0, Pi.z)).rgb * 4.0 - 1.0
-        var t0 = 0.6 - dot(Pf0, Pf0)
-        var n0 = 0d
-        if (t0 < 0.0) n0 = 0.0
-        else {
-            t0 *= t0
-            n0 = t0 * t0 * dot(grad0, Pf0)
-        }
+        val t0 = 0.6 - (p0x*p0x + p0y*p0y + p0z*p0z)
+        val n0 =
+            if (t0 < 0.0) 0.0
+            else {
+                val pz = perm(iz)
+                val py = perm(iy + pz)
+                val px = perm(ix + py)
+                val grad = grad3(px & 0x0F)
+                val t = t0 * t0
+                t * t * (grad.x*p0x + grad.y*p0y + grad.z*p0z)
+            }
 
         // Noise contribution from second corner
-        val Pf1 = Pf0 - o1 + G3
-        val perm1 = texture2D(permTexture, Pi.xy + o1.xy*ONE).a
-        val  grad1 = texture2D(permTexture, Vec2d(perm1, Pi.z + o1.z*ONE)).rgb * 4.0 - 1.0
-        var t1 = 0.6 - dot(Pf1, Pf1)
-        var n1 = 0d
-        if (t1 < 0.0) n1 = 0.0
-        else {
-            t1 *= t1
-            n1 = t1 * t1 * dot(grad1, Pf1)
-        }
+        val p1x = p0x - o1x + G3
+        val p1y = p0y - o1y + G3
+        val p1z = p0z - o1z + G3
+        val t1 = 0.6 - (p1x*p1x + p1y*p1y + p1z*p1z)
+        val n1 =
+            if (t1 < 0.0) 0.0
+            else {
+                val pz = perm(iz + o1z)
+                val py = perm(iy + o1y + pz)
+                val px = perm(ix + o1x + py)
+                val grad = grad3(px & 0x0F)
+                val t = t1 * t1
+                t * t * (grad.x*p1x + grad.y*p1y + grad.z*p1z)
+            }
 
         // Noise contribution from third corner
-        val Pf2 = Pf0 - o2 + 2.0 * G3
-        val perm2 = texture2D(permTexture, Pi.xy + o2.xy*ONE).a
-        val  grad2 = texture2D(permTexture, Vec2d(perm2, Pi.z + o2.z*ONE)).rgb * 4.0 - 1.0
-        var t2 = 0.6 - dot(Pf2, Pf2)
-        var n2 = 0d
-        if (t2 < 0.0) n2 = 0.0
-        else {
-            t2 *= t2
-            n2 = t2 * t2 * dot(grad2, Pf2)
-        }
+        val p2x = p0x - o2x + G32
+        val p2y = p0y - o2y + G32
+        val p2z = p0z - o2z + G32
+        val t2 = 0.6 - (p2x*p2x + p2y*p2y + p2z*p2z)
+        val n2 =
+            if (t2 < 0.0) 0.0
+            else {
+                val pz = perm(iz + o2z)
+                val py = perm(iy + o2y + pz)
+                val px = perm(ix + o2x + py)
+                val grad = grad3(px & 0x0F)
+                val t = t2 * t2
+                t * t * (grad.x*p2x + grad.y*p2y + grad.z*p2z)
+            }
 
         // Noise contribution from last corner
-        val Pf3 = Pf0 - Vec3d(1.0-3.0*G3)
-        val perm3 = texture2D(permTexture, Pi.xy + Vec2d(ONE, ONE)).a
-        val  grad3 = texture2D(permTexture, Vec2d(perm3, Pi.z + ONE)).rgb * 4.0 - 1.0
-        var t3 = 0.6 - dot(Pf3, Pf3)
-        var n3 = 0d
-        if(t3 < 0.0) n3 = 0.0
-        else {
-            t3 *= t3
-            n3 = t3 * t3 * dot(grad3, Pf3)
-        }
+        val p3x = p0x - G33
+        val p3y = p0y - G33
+        val p3z = p0z - G33
+        val t3 = 0.6 - (p3x*p3x + p3y*p3y + p3z*p3z)
+        val n3 =
+            if(t3 < 0.0) 0.0
+            else {
+                val pz = perm(iz + 1)
+                val py = perm(iy + 1 + pz)
+                val px = perm(ix + 1 + py)
+                val grad = grad3(px & 0x0F)
+                val t = t3 * t3
+                t * t * (grad.x*p3x + grad.y*p3y + grad.z*p3z)
+            }
 
         // Sum up and scale the result to cover the range [-1,1]
         32.0 * (n0 + n1 + n2 + n3)
     }
 
     // The skewing and unskewing factors are hairy again for the 4D case
-    // This is (sqrt(5.0)-1.0)/4.0
-    val F4 = (sqrt(5.0)-1.0)/4.0
-    // This is (5.0-sqrt(5.0))/20.0
-    val G4 = (5.0-sqrt(5.0))/20.0
+    private val F4 = (DoubleMath.sqrt(5.0) - 1.0) / 4.0
+    private val G4 = (5.0 - DoubleMath.sqrt(5.0)) / 20.0
+    private val G42 = 2*((5.0 - DoubleMath.sqrt(5.0)) / 20.0)
+    private val G43 = 3*((5.0 - DoubleMath.sqrt(5.0)) / 20.0)
+    private val G44 = 1 - 4*((5.0 - DoubleMath.sqrt(5.0)) / 20.0)
 
     /*
      * 4D simplex noise. A lot faster than classic 4D noise, and better looking.
      */
-    def noise1(P: AnyVec4d) :Double = {
+    def noise1(p: AnyVec4d) :Double = {
         // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
-        val s = (P.x + P.y + P.z + P.w) * F4 // Factor for 4D skewing
-        var Pi = floor(P + s)
-        val t = (Pi.x + Pi.y + Pi.z + Pi.w) * G4
-        val P0 = Pi - t // Unskew the cell origin back to (x,y,z,w) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        val s = (p.x + p.y + p.z + p.w) * F4 // Factor for 4D skewing
+        val pix = ifloor(p.x + s)
+        val piy = ifloor(p.y + s)
+        val piz = ifloor(p.z + s)
+        val piw = ifloor(p.w + s)
+        val t = (pix + piy + piz + piw) * G4
 
-        val Pf0 = P - P0  // The x,y distances from the cell origin
+        // The x,y,z,w distances from the cell origin
+        val p0x = p.x - pix + t
+        val p0y = p.y - piy + t
+        val p0z = p.z - piz + t
+        val p0w = p.w - piw + t
+
+        val ix = pix & 0xFF
+        val iy = piy & 0xFF
+        val iz = piz & 0xFF
+        val iw = piw & 0xFF
 
         // For the 4D case, the simplex is a 4D shape I won't even try to describe.
         // To find out which of the 24 possible simplices we're in, we need to
         // determine the magnitude ordering of x, y, z and w components of Pf0.
-        var o1 = Vec4d(0)
-        var o2 = Vec4d(0)
-        var o3 = Vec4d(0)
-        simplex(Pf0, o1, o2, o3)
+        var bx = 0; var by = 0; var bz = 0; var bw = 0
+        if (p0x >= p0y) bx += 1 else by += 1
+        if (p0x >= p0z) bx += 1 else bz += 1
+        if (p0x >= p0w) bx += 1 else bw += 1
+        if (p0y >= p0z) by += 1 else bz += 1
+        if (p0y >= p0w) by += 1 else bw += 1
+        if (p0z >= p0w) bz += 1 else bw += 1
+
+        val o3x = if (bx > 0) 1 else 0
+        val o3y = if (by > 0) 1 else 0
+        val o3z = if (bz > 0) 1 else 0
+        val o3w = if (bw > 0) 1 else 0
+
+        val o2x = if (bx > 1) 1 else 0
+        val o2y = if (by > 1) 1 else 0
+        val o2z = if (bz > 1) 1 else 0
+        val o2w = if (bw > 1) 1 else 0
+
+        val o1x = if (bx > 2) 1 else 0
+        val o1y = if (by > 2) 1 else 0
+        val o1z = if (bz > 2) 1 else 0
+        val o1w = if (bw > 2) 1 else 0
 
         // Noise contribution from simplex origin
-        val perm0xy = texture2D(permTexture, Pi.xy).a
-        val perm0zw = texture2D(permTexture, Pi.zw).a
-        val  grad0 = texture2D(gradTexture, Vec2d(perm0xy, perm0zw)).rgba * 4.0 - 1.0
-        var t0 = 0.6 - dot(Pf0, Pf0)
-        var n0 = 0d
-        if (t0 < 0.0) n0 = 0.0
-        else {
-            t0 *= t0
-            n0 = t0 * t0 * dot(grad0, Pf0)
-        }
+        val t0 = 0.6 - (p0x*p0x + p0y*p0y + p0z*p0z + p0w*p0w)
+        val n0 =
+            if (t0 < 0.0) 0.0
+            else {
+                val pw = perm(iw)
+                val pz = perm(iz + pw)
+                val py = perm(iy + pz)
+                val px = perm(ix + py)
+                val grad = grad4(px & 0x1F)
+                val t = t0 * t0
+                t * t * (grad.x*p0x + grad.y*p0y + grad.z*p0z + grad.w*p0w)
+            }
 
         // Noise contribution from second corner
-        val Pf1 = Pf0 - o1 + G4
-        o1 = o1 * ONE
-        val perm1xy = texture2D(permTexture, Pi.xy + o1.xy).a
-        val perm1zw = texture2D(permTexture, Pi.zw + o1.zw).a
-        val  grad1 = texture2D(gradTexture, Vec2d(perm1xy, perm1zw)).rgba * 4.0 - 1.0
-        var t1 = 0.6 - dot(Pf1, Pf1)
-        var n1 = 0d
-        if (t1 < 0.0) n1 = 0.0
-        else {
-            t1 *= t1
-            n1 = t1 * t1 * dot(grad1, Pf1)
-        }
+        val p1x = p0x - o1x + G4
+        val p1y = p0y - o1y + G4
+        val p1z = p0z - o1z + G4
+        val p1w = p0w - o1w + G4
+        val t1 = 0.6 - (p1x*p1x + p1y*p1y + p1z*p1z + p1w*p1w)
+        val n1 =
+            if (t1 < 0.0) 0.0
+            else {
+                val pw = perm(iw + o1w)
+                val pz = perm(iz + o1z + pw)
+                val py = perm(iy + o1y + pz)
+                val px = perm(ix + o1x + py)
+                val grad = grad4(px & 0x1F)
+                val t = t1 * t1
+                t * t * (grad.x*p1x + grad.y*p1y + grad.z*p1z + grad.w*p1w)
+            }
 
         // Noise contribution from third corner
-        val Pf2 = Pf0 - o2 + 2.0 * G4
-        o2 = o2 * ONE
-        val perm2xy = texture2D(permTexture, Pi.xy + o2.xy).a
-        val perm2zw = texture2D(permTexture, Pi.zw + o2.zw).a
-        val  grad2 = texture2D(gradTexture, Vec2d(perm2xy, perm2zw)).rgba * 4.0 - 1.0
-        var t2 = 0.6 - dot(Pf2, Pf2)
-        var n2 = 0d
-        if (t2 < 0.0) n2 = 0.0
-        else {
-            t2 *= t2
-            n2 = t2 * t2 * dot(grad2, Pf2)
-        }
+        val p2x = p0x - o2x + G42
+        val p2y = p0y - o2y + G42
+        val p2z = p0z - o2z + G42
+        val p2w = p0w - o2w + G42
+        val t2 = 0.6 - (p2x*p2x + p2y*p2y + p2z*p2z + p2w*p2w)
+        val n2 =
+            if (t2 < 0.0) 0.0
+            else {
+                val pw = perm(iw + o2w)
+                val pz = perm(iz + o2z + pw)
+                val py = perm(iy + o2y + pz)
+                val px = perm(ix + o2x + py)
+                val grad = grad4(px & 0x1F)
+                val t = t2 * t2
+                t * t * (grad.x*p2x + grad.y*p2y + grad.z*p2z + grad.w*p2w)
+            }
 
         // Noise contribution from fourth corner
-        val Pf3 = Pf0 - o3 + 3.0 * G4
-        o3 = o3 * ONE
-        val perm3xy = texture2D(permTexture, Pi.xy + o3.xy).a
-        val perm3zw = texture2D(permTexture, Pi.zw + o3.zw).a
-        val  grad3 = texture2D(gradTexture, Vec2d(perm3xy, perm3zw)).rgba * 4.0 - 1.0
-        var t3 = 0.6 - dot(Pf3, Pf3)
-        var n3 = 0d
-        if (t3 < 0.0) n3 = 0.0
-        else {
-            t3 *= t3
-            n3 = t3 * t3 * dot(grad3, Pf3)
-        }
+        val p3x = p0x - o3x + G43
+        val p3y = p0y - o3y + G43
+        val p3z = p0z - o3z + G43
+        val p3w = p0w - o3w + G43
+        val t3 = 0.6 - (p3x*p3x + p3y*p3y + p3z*p3z + p3w*p3w)
+        val n3 =
+            if (t3 < 0.0) 0.0
+            else {
+                val pw = perm(iw + o3w)
+                val pz = perm(iz + o3z + pw)
+                val py = perm(iy + o3y + pz)
+                val px = perm(ix + o3x + py)
+                val grad = grad4(px & 0x1F)
+                val t = t3 * t3
+                t * t * (grad.x*p3x + grad.y*p3y + grad.z*p3z + grad.w*p3w)
+            }
 
         // Noise contribution from last corner
-        val Pf4 = Pf0 - Vec4d(1.0-4.0*G4)
-        val perm4xy = texture2D(permTexture, Pi.xy + Vec2d(ONE, ONE)).a
-        val perm4zw = texture2D(permTexture, Pi.zw + Vec2d(ONE, ONE)).a
-        val  grad4 = texture2D(gradTexture, Vec2d(perm4xy, perm4zw)).rgba * 4.0 - 1.0
-        var t4 = 0.6 - dot(Pf4, Pf4)
-        var n4 = 0d
-        if(t4 < 0.0) n4 = 0.0
-        else {
-            t4 *= t4
-            n4 = t4 * t4 * dot(grad4, Pf4)
-        }
+        val p4x = p0x - G44
+        val p4y = p0y - G44
+        val p4z = p0z - G44
+        val p4w = p0w - G44
+        val t4 = 0.6 - (p4x*p4x + p4y*p4y + p4z*p4z + p4w*p4w)
+        val n4 =
+            if(t4 < 0.0) 0.0
+            else {
+                val pw = perm(iw + 1)
+                val pz = perm(iz + 1 + pw)
+                val py = perm(iy + 1 + pz)
+                val px = perm(ix + 1 + py)
+                val grad = grad4(px & 0x1F)
+                val t = t4 * t4
+                t * t * (grad.x*p4x + grad.y*p4y + grad.z*p4z + grad.w*p4w)
+            }
 
         // Sum up and scale the result to cover the range [-1,1]
         27.0 * (n0 + n1 + n2 + n3 + n4)

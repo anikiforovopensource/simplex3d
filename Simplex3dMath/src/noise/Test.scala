@@ -23,10 +23,10 @@ package noise
 import simplex3d.math.BaseMath
 import simplex3d.math.doublem.renamed._
 
-
 object Test {
     def main(args: Array[String]) {
-        test()
+        //test()
+        new NoiseBench().run
     }
 
     def test() {
@@ -38,42 +38,71 @@ object Test {
             val v3 = Vec3(r, r, r)
             val v4 = Vec4(r, r, r, r)
 
-            assert(ReferenceImpl.noise1(v2) ==
-                   SimplexNoise.noise1(v2))
-
-            assert(ReferenceImpl.noise1(v3) ==
-                   SimplexNoise.noise1(v3))
-
-            assert(ReferenceImpl.noise1(v4) ==
-                   SimplexNoise.noise1(v4))
+//            assert(SimplexNoise1.noise1(v2) ==
+//                   SimplexNoise.noise1(v2))
+//
+//            assert(SimplexNoise1.noise1(v3) ==
+//                   SimplexNoise.noise1(v3))
+//
+//            assert(SimplexNoise1.noise1(v4) ==
+//                   SimplexNoise.noise1(v4))
         }
+
+        println("Test to reference: OK")
     }
 }
 
 class NoiseBench {
     val length = 100000
-    val loops = 500
+    val loops = 400
 
     def run() {
         var start = 0L
 
         start = System.currentTimeMillis
-        testNoise(length, loops)
-        val noiseTime = System.currentTimeMillis - start
+        testJavaPort(length, loops)
+        val javaPortTime = System.currentTimeMillis - start
 
-        println("Noise time: " + noiseTime + ".")
+        start = System.currentTimeMillis
+        testGlslPort(length, loops)
+        val glslPortTime = System.currentTimeMillis - start
+
+        println("Java port time: " + javaPortTime + ".")
+        println("Glsl port time: " + glslPortTime + ".")
     }
 
-    def testNoise(length: Int, loops: Int) {
+    def testJavaPort(length: Int, loops: Int) {
         var answer = 0
 
         var l = 0; while (l < loops) {
             var i = 0; while (i < length) {
 
                 // Bench code
-                val n = ext.toxi.math.noise.SimplexNoise.noise(i, i+1) +
-                    ext.toxi.math.noise.SimplexNoise.noise(i+2, i+3, i+4) +
-                    ext.toxi.math.noise.SimplexNoise.noise(i+5, i+6, i+7, i+8)
+                var n = 0d
+//                n += ext.toxi.math.noise.SimplexNoise.noise(i, i+1)
+//                n += ext.toxi.math.noise.SimplexNoise.noise(i+2, i+3, i+4)
+                n += ext.toxi.math.noise.SimplexNoise.noise(i+5, i+6, i+7, i+8)
+                answer += BaseMath.int(n)
+
+                i += 1
+            }
+            l += 1
+        }
+
+        println(answer)
+    }
+
+    def testGlslPort(length: Int, loops: Int) {
+        var answer = 0
+
+        var l = 0; while (l < loops) {
+            var i = 0; while (i < length) {
+
+                // Bench code
+                var n = 0d
+//                n += noise.SimplexNoise.noise(i, i+1)
+//                n += noise.SimplexNoise.noise(i+2, i+3, i+4)
+                n += noise.SimplexNoise.noise(i+5, i+6, i+7, i+8)
                 answer += BaseMath.int(n)
 
                 i += 1

@@ -134,9 +134,9 @@ object ReferenceImpl {
     val gradTexture = 2
     def texture2D(texture: Int, u: Vec2d): Vec4d = {
         val c = Vec2i(u*256)%256
-        if (c.x < 0) c.x = 255 + c.x
-        if (c.y < 0) c.y = 255 + c.y
-
+        if (c.x < 0) c.x = 256 + c.x
+        if (c.y < 0) c.y = 256 + c.y
+        
         texture match {
             case `permTexture` => tperm(c.y*256 + c.x)
             case `gradTexture` => tgrad(c.y*256 + c.x)
@@ -167,7 +167,7 @@ object ReferenceImpl {
         // Equality ties are broken in favor of first x, then y
         // (z always loses ties)
 
-        offset2 := clamp(   offset0, 0.0, 1.0 )
+        offset2 := clamp( offset0, 0.0, 1.0 )
         // offset2 contains 1 in each channel that was 1 or 2
         offset0 -= 1
         offset1 := clamp( offset0, 0.0, 1.0 )
@@ -192,7 +192,7 @@ object ReferenceImpl {
 
         // offset0 now contains the unique values 0,1,2,3 in each channel
 
-        offset3 := clamp(   offset0, 0.0, 1.0 )
+        offset3 := clamp( offset0, 0.0, 1.0 )
         offset0 -= 1
         offset2 := clamp( offset0, 0.0, 1.0 )
         offset0 -= 1
@@ -201,8 +201,6 @@ object ReferenceImpl {
 
 
     val ONE = 1/256d
-    val ONEHALF = 0.5/256
-    // The numbers above are 1/256 and 0.5/256, change accordingly
 
     // Skew and unskew factors are a bit hairy for 2D, so define them as constants
     val F2 = (sqrt(3.0)-1.0)/2.0
@@ -217,7 +215,7 @@ object ReferenceImpl {
         var Pi = floor(P + s)
         val t = (Pi.x + Pi.y) * G2 // Hairy factor for unskewing
         val P0 = Pi - t // Unskew the cell origin back to (x,y) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        Pi = Pi * ONE // Integer part, scaled and offset for texture lookup
 
         val Pf0 = P - P0  // The x,y distances from the cell origin
 
@@ -225,8 +223,8 @@ object ReferenceImpl {
         // Find out whether we are above or below the x=y diagonal to
         // determine which of the two triangles we're in.
         var o1: Vec2d = null
-        if(Pf0.x > Pf0.y) o1 = Vec2d(1.0, 0.0) // +x, +y traversal order
-        else o1 = Vec2d(0.0, 1.0)              // +y, +x traversal order
+        if(Pf0.x >= Pf0.y) o1 = Vec2d(1.0, 0.0) // +x, +y traversal order
+        else o1 = Vec2d(0.0, 1.0)               // +y, +x traversal order
 
         // Noise contribution from simplex origin
         val grad0 = texture2D(permTexture, Pi).rg * 4.0 - 1.0
@@ -277,7 +275,7 @@ object ReferenceImpl {
         var Pi = floor(P + s)
         val t = (Pi.x + Pi.y + Pi.z) * G3
         val P0 = Pi - t // Unskew the cell origin back to (x,y,z) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        Pi = Pi * ONE // Integer part, scaled and offset for texture lookup
 
         val Pf0 = P - P0 // The x,y distances from the cell origin
 
@@ -290,7 +288,7 @@ object ReferenceImpl {
 
         // Noise contribution from simplex origin
         val perm0 = texture2D(permTexture, Pi.xy).a
-        val  grad0 = texture2D(permTexture, Vec2d(perm0, Pi.z)).rgb * 4.0 - 1.0
+        val grad0 = texture2D(permTexture, Vec2d(perm0, Pi.z)).rgb * 4.0 - 1.0
         var t0 = 0.6 - dot(Pf0, Pf0)
         var n0 = 0d
         if (t0 < 0.0) n0 = 0.0
@@ -302,7 +300,7 @@ object ReferenceImpl {
         // Noise contribution from second corner
         val Pf1 = Pf0 - o1 + G3
         val perm1 = texture2D(permTexture, Pi.xy + o1.xy*ONE).a
-        val  grad1 = texture2D(permTexture, Vec2d(perm1, Pi.z + o1.z*ONE)).rgb * 4.0 - 1.0
+        val grad1 = texture2D(permTexture, Vec2d(perm1, Pi.z + o1.z*ONE)).rgb * 4.0 - 1.0
         var t1 = 0.6 - dot(Pf1, Pf1)
         var n1 = 0d
         if (t1 < 0.0) n1 = 0.0
@@ -314,7 +312,7 @@ object ReferenceImpl {
         // Noise contribution from third corner
         val Pf2 = Pf0 - o2 + 2.0 * G3
         val perm2 = texture2D(permTexture, Pi.xy + o2.xy*ONE).a
-        val  grad2 = texture2D(permTexture, Vec2d(perm2, Pi.z + o2.z*ONE)).rgb * 4.0 - 1.0
+        val grad2 = texture2D(permTexture, Vec2d(perm2, Pi.z + o2.z*ONE)).rgb * 4.0 - 1.0
         var t2 = 0.6 - dot(Pf2, Pf2)
         var n2 = 0d
         if (t2 < 0.0) n2 = 0.0
@@ -326,7 +324,7 @@ object ReferenceImpl {
         // Noise contribution from last corner
         val Pf3 = Pf0 - Vec3d(1.0-3.0*G3)
         val perm3 = texture2D(permTexture, Pi.xy + Vec2d(ONE, ONE)).a
-        val  grad3 = texture2D(permTexture, Vec2d(perm3, Pi.z + ONE)).rgb * 4.0 - 1.0
+        val grad3 = texture2D(permTexture, Vec2d(perm3, Pi.z + ONE)).rgb * 4.0 - 1.0
         var t3 = 0.6 - dot(Pf3, Pf3)
         var n3 = 0d
         if(t3 < 0.0) n3 = 0.0
@@ -340,9 +338,7 @@ object ReferenceImpl {
     }
 
     // The skewing and unskewing factors are hairy again for the 4D case
-    // This is (sqrt(5.0)-1.0)/4.0
     val F4 = (sqrt(5.0)-1.0)/4.0
-    // This is (5.0-sqrt(5.0))/20.0
     val G4 = (5.0-sqrt(5.0))/20.0
 
     /*
@@ -354,7 +350,7 @@ object ReferenceImpl {
         var Pi = floor(P + s)
         val t = (Pi.x + Pi.y + Pi.z + Pi.w) * G4
         val P0 = Pi - t // Unskew the cell origin back to (x,y,z,w) space
-        Pi = Pi * ONE + ONEHALF // Integer part, scaled and offset for texture lookup
+        Pi = Pi * ONE // Integer part, scaled and offset for texture lookup
 
         val Pf0 = P - P0  // The x,y distances from the cell origin
 
@@ -369,7 +365,7 @@ object ReferenceImpl {
         // Noise contribution from simplex origin
         val perm0xy = texture2D(permTexture, Pi.xy).a
         val perm0zw = texture2D(permTexture, Pi.zw).a
-        val  grad0 = texture2D(gradTexture, Vec2d(perm0xy, perm0zw)).rgba * 4.0 - 1.0
+        val grad0 = texture2D(gradTexture, Vec2d(perm0xy, perm0zw)).rgba * 4.0 - 1.0
         var t0 = 0.6 - dot(Pf0, Pf0)
         var n0 = 0d
         if (t0 < 0.0) n0 = 0.0
@@ -383,7 +379,7 @@ object ReferenceImpl {
         o1 = o1 * ONE
         val perm1xy = texture2D(permTexture, Pi.xy + o1.xy).a
         val perm1zw = texture2D(permTexture, Pi.zw + o1.zw).a
-        val  grad1 = texture2D(gradTexture, Vec2d(perm1xy, perm1zw)).rgba * 4.0 - 1.0
+        val grad1 = texture2D(gradTexture, Vec2d(perm1xy, perm1zw)).rgba * 4.0 - 1.0
         var t1 = 0.6 - dot(Pf1, Pf1)
         var n1 = 0d
         if (t1 < 0.0) n1 = 0.0
@@ -397,7 +393,7 @@ object ReferenceImpl {
         o2 = o2 * ONE
         val perm2xy = texture2D(permTexture, Pi.xy + o2.xy).a
         val perm2zw = texture2D(permTexture, Pi.zw + o2.zw).a
-        val  grad2 = texture2D(gradTexture, Vec2d(perm2xy, perm2zw)).rgba * 4.0 - 1.0
+        val grad2 = texture2D(gradTexture, Vec2d(perm2xy, perm2zw)).rgba * 4.0 - 1.0
         var t2 = 0.6 - dot(Pf2, Pf2)
         var n2 = 0d
         if (t2 < 0.0) n2 = 0.0
@@ -411,7 +407,7 @@ object ReferenceImpl {
         o3 = o3 * ONE
         val perm3xy = texture2D(permTexture, Pi.xy + o3.xy).a
         val perm3zw = texture2D(permTexture, Pi.zw + o3.zw).a
-        val  grad3 = texture2D(gradTexture, Vec2d(perm3xy, perm3zw)).rgba * 4.0 - 1.0
+        val grad3 = texture2D(gradTexture, Vec2d(perm3xy, perm3zw)).rgba * 4.0 - 1.0
         var t3 = 0.6 - dot(Pf3, Pf3)
         var n3 = 0d
         if (t3 < 0.0) n3 = 0.0
@@ -424,7 +420,7 @@ object ReferenceImpl {
         val Pf4 = Pf0 - Vec4d(1.0-4.0*G4)
         val perm4xy = texture2D(permTexture, Pi.xy + Vec2d(ONE, ONE)).a
         val perm4zw = texture2D(permTexture, Pi.zw + Vec2d(ONE, ONE)).a
-        val  grad4 = texture2D(gradTexture, Vec2d(perm4xy, perm4zw)).rgba * 4.0 - 1.0
+        val grad4 = texture2D(gradTexture, Vec2d(perm4xy, perm4zw)).rgba * 4.0 - 1.0
         var t4 = 0.6 - dot(Pf4, Pf4)
         var n4 = 0d
         if(t4 < 0.0) n4 = 0.0

@@ -42,9 +42,9 @@ object FloatMath {
 
     // Have to be careful with large offsets due to the loss in precision.
     // With noise args as double these values should be ok
-    private val of1: Double = 10000.0
-    private val of2: Double = 20000.0
-    private val of3: Double = 30000.0
+    private val of1: Double = 100.0
+    private val of2: Double = 200.0
+    private val of3: Double = 300.0
 
     // Float functions
     def radians(x: Float) :Float = x*DegToRad

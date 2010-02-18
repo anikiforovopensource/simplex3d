@@ -23,8 +23,10 @@ package simplex3d.math
 import simplex3d.math.BaseMath._
 
 
-/**
- * @author Aleksey Nikiforov (lex)
+/** Read2 is a superclass of all the 2 dimensional vectors.
+ *  This includes double, float, int, and boolean vectors.
+ *
+ *  @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Read2 extends Swizzle2Read {
     private[math] def bx: Boolean
@@ -40,6 +42,11 @@ private[math] abstract class Read2 extends Swizzle2Read {
     private[math] def dy: Double
 }
 
+/** Read3 is a superclass of all the 3 dimensional vectors.
+ *  This includes double, float, int, and boolean vectors.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read3 extends Swizzle3Read {
     private[math] def bx: Boolean
     private[math] def by: Boolean
@@ -58,6 +65,11 @@ private[math] abstract class Read3 extends Swizzle3Read {
     private[math] def dz: Double
 }
 
+/** Read4 is a superclass of all the 4 dimensional vectors.
+ *  This includes double, float, int, and boolean vectors.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read4 extends Swizzle4Read {
     private[math] def bx: Boolean
     private[math] def by: Boolean
@@ -80,6 +92,11 @@ private[math] abstract class Read4 extends Swizzle4Read {
     private[math] def dw: Double
 }
 
+/** ReadQ is a superclass of all the quaternions.
+ *  This includes double and float quaternions.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class ReadQ {
     private[math] def fa: Float
     private[math] def fb: Float
@@ -92,6 +109,11 @@ private[math] abstract class ReadQ {
     private[math] def dd: Double
 }
 
+/** Read2x2 is a superclass of all the 2x2 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read2x2 {
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
@@ -100,6 +122,11 @@ private[math] abstract class Read2x2 {
     private[math] def d01: Double; private[math] def d11: Double
 }
 
+/** Read2x3 is a superclass of all the 2x3 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read2x3 {
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
@@ -110,6 +137,11 @@ private[math] abstract class Read2x3 {
     private[math] def d02: Double; private[math] def d12: Double
 }
 
+/** Read2x4 is a superclass of all the 2x4 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read2x4 {
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
@@ -122,6 +154,11 @@ private[math] abstract class Read2x4 {
     private[math] def d03: Double; private[math] def d13: Double
 }
 
+/** Read3x2 is a superclass of all the 3x2 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read3x2 {
     private[math] def f00: Float
     private[math] def f10: Float
@@ -141,6 +178,11 @@ private[math] abstract class Read3x2 {
     private[math] def d21: Double
 }
 
+/** Read3x3 is a superclass of all the 3x3 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read3x3 {
     private[math] def f00: Float
     private[math] def f10: Float
@@ -168,6 +210,11 @@ private[math] abstract class Read3x3 {
     private[math] def d22: Double
 }
 
+/** Read3x4 is a superclass of all the 3x4 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read3x4 {
     private[math] def f00: Float
     private[math] def f10: Float
@@ -203,6 +250,11 @@ private[math] abstract class Read3x4 {
     private[math] def d23: Double
 }
 
+/** Read4x2 is a superclass of all the 4x2 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read4x2 {
     private[math] def f00: Float
     private[math] def f10: Float
@@ -226,6 +278,11 @@ private[math] abstract class Read4x2 {
     private[math] def d31: Double
 }
 
+/** Read4x3 is a superclass of all the 4x3 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read4x3 {
     private[math] def f00: Float
     private[math] def f10: Float
@@ -259,6 +316,11 @@ private[math] abstract class Read4x3 {
     private[math] def d32: Double
 }
 
+/** Read4x4 is a superclass of all the 4x4 matrices.
+ *  This includes double and float matrices.
+ *
+ *  @author Aleksey Nikiforov (lex)
+ */
 private[math] abstract class Read4x4 {
     private[math] def f00: Float
     private[math] def f10: Float

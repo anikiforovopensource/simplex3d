@@ -115,13 +115,13 @@ sealed abstract class AnyVec2f extends Read2 {
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
             41 + x.hashCode
         ) + y.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ")"
     }
 }
@@ -133,7 +133,7 @@ object ConstVec2f {
     def apply(x: Float, y: Float) = new ConstVec2f(x, y)
     def apply(u: Read2) = new ConstVec2f(u.fx, u.fy)
 
-    implicit def toConst(u: Vec2f) = new ConstVec2f(u.x, u.y)
+    implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 }
 
 final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
@@ -211,5 +211,5 @@ object Vec2f {
 
     def unapply(u: AnyVec2f) = Some((u.x, u.y))
 
-    implicit def toMutable(u: ConstVec2f) = new Vec2f(u.x, u.y)
+    implicit def toMutable(u: AnyVec2f) = new Vec2f(u.x, u.y)
 }

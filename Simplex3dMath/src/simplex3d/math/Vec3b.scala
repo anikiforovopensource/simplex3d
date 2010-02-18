@@ -23,7 +23,30 @@ package simplex3d.math
 import simplex3d.math.BaseMath._
 
 
-/**
+/** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,
+ * either constant or mutable.
+ * <p>
+ *   It is recommended to use this common supertype for function arguments
+ *   unless you explicitly want to modify the argument vector.
+ * </p>
+ * <p>
+ *   Boolean vectors do not contan many useful methods. You can operate on them
+ *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
+ *   and <code>BaseMath.not(bvec)</code>.
+ * </p>
+ * <p>
+ *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   and DoubleMath:
+ *   <ul>
+ *     <li><code>lessThan(vec1, vec2)</code></li>
+ *     <li><code>lessThanEqual(vec1, vec2)</code></li>
+ *     <li><code>greaterThan(vec1, vec2)</code></li>
+ *     <li><code>greaterThanEqual(vec1, vec2)</code></li>
+ *     <li><code>equal(vec1, vec2)</code></li>
+ *     <li><code>notEqual(vec1, vec2)</code></li>
+ *   </ul>
+ * </p>
+ *
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyVec3b extends Read3 {
@@ -61,15 +84,37 @@ sealed abstract class AnyVec3b extends Read3 {
     def y: Boolean
     def z: Boolean
 
+    /** Alias for x.
+     * @return component x.
+     */
     def r = x
+    /** Alias for y.
+     * @return component y.
+     */
     def g = y
+    /** Alias for z.
+     * @return component z.
+     */
     def b = z
 
+    /** Alias for x.
+     * @return component x.
+     */
     def s = x
+    /** Alias for y.
+     * @return component y.
+     */
     def t = y
+    /** Alias for z.
+     * @return component z.
+     */
     def p = z
 
-
+    /** Read a component using sequence notation.
+     * @param i index of the component (0 -> x, 1 -> y, 2 -> z).
+     * @return component with index i.
+     * @exception IndexOutOfBoundsException if i is outside the range of [0, 2].
+     */
     def apply(i: Int) :Boolean = {
         i match {
             case 0 => x
@@ -80,11 +125,25 @@ sealed abstract class AnyVec3b extends Read3 {
         }
     }
 
+    /** Component-based equality.
+     * <p>
+     *   Two vectors are equal if all of their components are equal.
+     * </p>
+     * @param u a vector for comparision.
+     * @return true if all the components are equal, false otherwise.
+     */
     def ==(u: AnyVec3b) :Boolean = {
         if (u eq null) false
         else x == u.x && y == u.y && z == u.z
     }
 
+    /** Component-based equality inverse.
+     * <p>
+     *   Two vectors are non-equal if any of their components are non-equal.
+     * </p>
+     * @param u a vector for comparision.
+     * @return true if any of the components are not equal, false otherwise.
+     */
     def !=(u: AnyVec3b) :Boolean = !(this == u)
 
     override def equals(other: Any) :Boolean = {
@@ -94,7 +153,7 @@ sealed abstract class AnyVec3b extends Read3 {
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
             41 * (
                 41 + x.hashCode
@@ -102,21 +161,65 @@ sealed abstract class AnyVec3b extends Read3 {
         ) + z.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
     }
 
 }
 
+/** Constant Boolean 3-dimensional vector.
+ * <p>
+ *   Constant objects cannot be modified after creation. This makes them a good
+ *   choise for sharing data in multithreaded context. While the constant
+ *   objects cannot be modified themselves, a mutable reference to a constant
+ *   object can be rassigned. To ensure that your value never changes you should
+ *   use a constant assigned to val: <code> val c = constObject</code>
+ * </p>
+ * <p>
+ *   All the mathematical and logical operations return mutable objects. To
+ *   obtain an immutable object you can use an explicit cast
+ *   <code>val c = ConstVec3(mutable)</code> or implicit cast
+ *   <code>val c: ConstVec3 = mutable</code>.
+ * </p>
+ * <p>
+ *   Methods that return a part of a bigger structure as vector should return
+ *   constant objects to prevent errors when a vector is modified but the
+ *   changes are not propagated to the original structure. For example, this
+ *   approach is used for matrix column accessors.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 final class ConstVec3b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean)
 extends AnyVec3b
 
+/** Factory for creating Boolean 3-dimensional vectors.
+ * <p>
+ *   To keep the code consistent all the constructors are hidden. Use the
+ *   corresponding companion objects as factories to create new instances.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 object ConstVec3b {
+    /** Makes a new instance of ConstVec3b from components.
+     * @param x component x.
+     * @param y component y.
+     * @param z component z.
+     * @return a new instance of ConstVec3b with components
+     *         initialized to parameters.
+     */
     def apply(x: Boolean, y: Boolean, z: Boolean) = new ConstVec3b(x, y, z)
+
+    /** Makes a ConstVec3b instance from a 3-dimensional vector.
+     * @param u any 3-dimensional vector.
+     * @return a new instance of ConstVec3b with components
+     *         initialized to components of u casted as Boolean.
+     */
     def apply(u: Read3) = new ConstVec3b(u.bx, u.by, u.bz)
 
-    implicit def toConst(u: Vec3b) = new ConstVec3b(u.x, u.y, u.z)
+    implicit def toConst(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 }
 
 
@@ -255,5 +358,5 @@ object Vec3b {
 
     def unapply(u: AnyVec3b) = Some((u.x, u.y, u.z))
 
-    implicit def toMutable(u: ConstVec3b) = new Vec3b(u.x, u.y, u.z)
+    implicit def toMutable(u: AnyVec3b) = new Vec3b(u.x, u.y, u.z)
 }

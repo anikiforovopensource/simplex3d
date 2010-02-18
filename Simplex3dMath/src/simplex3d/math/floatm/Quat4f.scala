@@ -125,7 +125,7 @@ sealed abstract class AnyQuat4f extends ReadQ {
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
             41 * (
                 41 * (
@@ -135,7 +135,7 @@ sealed abstract class AnyQuat4f extends ReadQ {
         ) + d.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName +
         "(" + a + ", " + b + ", " + c + ", " + d + ")"
     }
@@ -151,7 +151,7 @@ object ConstQuat4f {
     }
     def apply(u: ReadQ) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
 
-    implicit def toConst(u: Quat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
+    implicit def toConst(u: AnyQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
 
 
@@ -232,5 +232,5 @@ object Quat4f {
         Identity.rotateZ(angle)
     }
 
-    implicit def toMutable(u: ConstQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
+    implicit def toMutable(u: AnyQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
 }

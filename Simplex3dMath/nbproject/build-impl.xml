@@ -550,7 +550,7 @@ is divided into following sections:
             -->
     <target depends="init" name="-javadoc-build">
         <mkdir dir="${dist.javadoc.dir}"/>
-        <scaladoc addparams="${javadoc.additionalparam}" deprecation="yes" destdir="${dist.javadoc.dir}" doctitle="${javadoc.windowtitle}" encoding="${javadoc.encoding.used}" srcdir="${src.dir}" unchecked="yes" windowtitle="${javadoc.windowtitle}">
+        <scaladoc addparams="${javadoc.additionalparam}" deprecation="yes" destdir="${dist.javadoc.dir}" doctitle="${javadoc.windowtitle}" encoding="${javadoc.encoding.used}" srcdir="${src.dir}" unchecked="yes">
             <classpath>
                 <path path="${javac.classpath}"/>
                 <fileset dir="${scala.lib}">

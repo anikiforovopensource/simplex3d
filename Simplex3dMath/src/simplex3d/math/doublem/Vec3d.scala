@@ -126,7 +126,7 @@ sealed abstract class AnyVec3d extends Read3 {
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
             41 * (
                 41 + x.hashCode
@@ -134,7 +134,7 @@ sealed abstract class AnyVec3d extends Read3 {
         ) + z.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
     }
 }
@@ -147,7 +147,7 @@ object ConstVec3d {
     def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
     def apply(u: Read3) = new ConstVec3d(u.dx, u.dy, u.dz)
 
-    implicit def toConst(u: Vec3d) = new ConstVec3d(u.x, u.y, u.z)
+    implicit def toConst(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
 }
 
 
@@ -301,5 +301,5 @@ object Vec3d {
 
     def unapply(u: AnyVec3d) = Some((u.x, u.y, u.z))
 
-    implicit def toMutable(u: ConstVec3d) = new Vec3d(u.x, u.y, u.z)
+    implicit def toMutable(u: AnyVec3d) = new Vec3d(u.x, u.y, u.z)
 }

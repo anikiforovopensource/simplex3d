@@ -34,11 +34,11 @@ import simplex3d.math.BaseMath._
 
 /** SimplexNoise contains the implementation of simplex noise algorithm.
  *
- *  @author Stefan Gustavson, ITN-LiTH
- *  @author Bill Licea-Kane, ATI
+ * @author Stefan Gustavson, ITN-LiTH
+ * @author Bill Licea-Kane, ATI
  *
- *          Ported to Scala
- *  @author Aleksey Nikiforov (lex)
+ *         Ported to Scala
+ * @author Aleksey Nikiforov (lex)
  */
 private[math] object SimplexNoise {
 

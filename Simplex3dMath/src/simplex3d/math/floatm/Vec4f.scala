@@ -137,7 +137,7 @@ sealed abstract class AnyVec4f extends Read4 {
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
             41 * (
                 41 * (
@@ -147,7 +147,7 @@ sealed abstract class AnyVec4f extends Read4 {
         ) + w.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName +
         "(" + x + ", " + y + ", " + z + ", " + w + ")"
     }
@@ -163,7 +163,7 @@ object ConstVec4f {
     }
     def apply(u: Read4) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
-    implicit def toConst(u: Vec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
+    implicit def toConst(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
 }
 
 
@@ -642,5 +642,5 @@ object Vec4f {
 
     def unapply(u: AnyVec4f) = Some((u.x, u.y, u.z, u.w))
 
-    implicit def toMutable(u: ConstVec4f) = new Vec4f(u.x, u.y, u.z, u.w)
+    implicit def toMutable(u: AnyVec4f) = new Vec4f(u.x, u.y, u.z, u.w)
 }

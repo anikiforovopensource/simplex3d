@@ -192,7 +192,7 @@ sealed abstract class AnyMat2d extends Read2x2
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
           41 * (
             41 * (
@@ -202,7 +202,7 @@ sealed abstract class AnyMat2d extends Read2x2
         ) + m11.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName +
         "(" +
             m00 + ", " + m10 + "; " + 
@@ -237,7 +237,7 @@ object ConstMat2d {
         m.d01, m.d11
     )
 
-    implicit def toConst(m: Mat2d) = ConstMat2d(m)
+    implicit def toConst(m: AnyMat2d) = ConstMat2d(m)
 }
 
 
@@ -408,5 +408,5 @@ object Mat2d {
 
     def unapply(m: AnyMat2d) = Some((m(0), m(1)))
 
-    implicit def toMutable(m: ConstMat2d) = Mat2d(m)
+    implicit def toMutable(m: AnyMat2d) = Mat2d(m)
 }

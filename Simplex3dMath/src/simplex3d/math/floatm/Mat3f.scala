@@ -242,7 +242,7 @@ sealed abstract class AnyMat3f extends Read3x3
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
           41 * (
             41 * (
@@ -262,7 +262,7 @@ sealed abstract class AnyMat3f extends Read3x3
         ) + m22.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName +
         "(" +
             m00 + ", " + m10 + ", " + m20 + "; " + 
@@ -303,7 +303,7 @@ object ConstMat3f {
         m.f02, m.f12, m.f22
     )
 
-    implicit def toConst(m: Mat3f) = ConstMat3f(m)
+    implicit def toConst(m: AnyMat3f) = ConstMat3f(m)
 }
 
 
@@ -525,5 +525,5 @@ object Mat3f {
 
     def unapply(m: AnyMat3f) = Some((m(0), m(1), m(2)))
 
-    implicit def toMutable(m: ConstMat3f) = Mat3f(m)
+    implicit def toMutable(m: AnyMat3f) = Mat3f(m)
 }

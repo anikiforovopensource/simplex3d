@@ -300,7 +300,7 @@ sealed abstract class AnyMat4d extends Read4x4
         }
     }
 
-    override def hashCode :Int = {
+    override def hashCode() :Int = {
         41 * (
           41 * (
             41 * (
@@ -334,7 +334,7 @@ sealed abstract class AnyMat4d extends Read4x4
         ) + m33.hashCode
     }
 
-    override def toString = {
+    override def toString() :String = {
         this.getClass.getSimpleName +
         "(" +
             m00 + ", " + m10 + ", " + m20 + ", " + m30 + "; " + 
@@ -381,7 +381,7 @@ object ConstMat4d {
         m.d03, m.d13, m.d23, m.d33
     )
 
-    implicit def toConst(m: Mat4d) = ConstMat4d(m)
+    implicit def toConst(m: AnyMat4d) = ConstMat4d(m)
 }
 
 
@@ -660,5 +660,5 @@ object Mat4d {
 
     def unapply(m: AnyMat4d) = Some((m(0), m(1), m(2), m(3)))
 
-    implicit def toMutable(m: ConstMat4d) = Mat4d(m)
+    implicit def toMutable(m: AnyMat4d) = Mat4d(m)
 }

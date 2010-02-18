@@ -22,9 +22,9 @@ package simplex3d.math
 
 
 /** BaseMath contains casting functions and functions to operate on boolean
- *  vectors.
+ * vectors.
  *
- *  @author Aleksey Nikiforov (lex)
+ * @author Aleksey Nikiforov (lex)
  */
 object BaseMath {
 
@@ -32,321 +32,321 @@ object BaseMath {
     // bool() instead of boolean(), since Boolean can not be cast to other types
     // in Scala nor Java.
 
-    /** Cast Boolean to Boolean. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Boolean to a Boolean. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def bool(x: Boolean) :Boolean = x
 
-    /** Cast Byte to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0, true otherwise.
+    /** Cast a Byte to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0, true otherwise.
      */
     def bool(x: Byte) :Boolean = (x != 0)
 
-    /** Cast Short to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0, true otherwise.
+    /** Cast a Short to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0, true otherwise.
      */
     def bool(x: Short) :Boolean = (x != 0)
 
-    /** Cast Int to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0, true otherwise.
+    /** Cast an Int to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0, true otherwise.
      */
     def bool(x: Int) :Boolean = (x != 0)
 
-    /** Cast Long to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0, true otherwise.
+    /** Cast a Long to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0, true otherwise.
      */
     def bool(x: Long) :Boolean = (x != 0)
 
-    /** Cast Float to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0.0, true otherwise.
+    /** Cast a Float to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0.0, true otherwise.
      */
     def bool(x: Float) :Boolean = (x != 0)
 
-    /** Cast Double to Boolean.
-     *  @param x a value to cast.
-     *  @return false if x == 0.0, true otherwise.
+    /** Cast a Double to a Boolean.
+     * @param x a value to cast.
+     * @return false if x == 0.0, true otherwise.
      */
     def bool(x: Double) :Boolean = (x != 0)
 
-    /** Cast Boolean to Byte.
-     *  @param x a value to cast.
-     *  @return 1 if x is true, 0 otherwise.
+    /** Cast a Boolean to a Byte.
+     * @param x a value to cast.
+     * @return 1 if x is true, 0 otherwise.
      */
     def byte(x: Boolean) :Byte = if (x) 1 else 0
 
-    /** Cast Byte to Byte. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Byte to a Byte. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def byte(x: Byte) :Byte = x
 
-    /** Cast Short to Byte.
-     *  @param x a value to cast.
-     *  @return 8 lower bits of x.
+    /** Cast a Short to a Byte.
+     * @param x a value to cast.
+     * @return 8 lower bits of x.
      */
     def byte(x: Short) :Byte = x.asInstanceOf[Byte]
 
-    /** Cast Int to Byte.
-     *  @param x a value to cast.
-     *  @return 8 lower bits of x.
+    /** Cast an Int to a Byte.
+     * @param x a value to cast.
+     * @return 8 lower bits of x.
      */
     def byte(x: Int) :Byte = x.asInstanceOf[Byte]
 
-    /** Cast Long to Byte.
-     *  @param x a value to cast.
-     *  @return 8 lower bits of x.
+    /** Cast a Long to a Byte.
+     * @param x a value to cast.
+     * @return 8 lower bits of x.
      */
     def byte(x: Long) :Byte = x.asInstanceOf[Byte]
 
-    /** Cast Float to Byte.
-     *  @param x a value to cast.
-     *  @return 8 lower bits of integer part of x,
+    /** Cast a Float to a Byte.
+     * @param x a value to cast.
+     * @return 8 lower bits of integer part of x,
      *           0 if x <= Int.MinValue,
      *          -1 if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def byte(x: Float) :Byte = x.asInstanceOf[Byte]
 
-    /** Cast Double to Byte.
-     *  @param x a value to cast.
-     *  @return 8 lower bits of integer part of x,
+    /** Cast a Double to a Byte.
+     * @param x a value to cast.
+     * @return 8 lower bits of integer part of x,
      *           0 if x <= Int.MinValue,
      *          -1 if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def byte(x: Double) :Byte = x.asInstanceOf[Byte]
 
-    /** Cast Boolean to Short.
-     *  @param x a value to cast.
-     *  @return 1 if x is true, 0 otherwise.
+    /** Cast a Boolean to a Short.
+     * @param x a value to cast.
+     * @return 1 if x is true, 0 otherwise.
      */
     def short(x: Boolean) :Short = if (x) 1 else 0
 
-    /** Cast Byte to Short.
-     *  @param x a value to cast.
-     *  @return x as Short keeping the sign.
+    /** Cast a Byte to a Short.
+     * @param x a value to cast.
+     * @return x as Short keeping the sign.
      */
     def short(x: Byte) :Short = x.asInstanceOf[Short]
 
-    /** Cast Short to Short. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Short to a Short. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def short(x: Short) :Short = x
 
-    /** Cast Int to Short.
-     *  @param x a value to cast.
-     *  @return 16 lower bits of x.
+    /** Cast an Int to a Short.
+     * @param x a value to cast.
+     * @return 16 lower bits of x.
      */
     def short(x: Int) :Short = x.asInstanceOf[Short]
 
-    /** Cast Long to Short.
-     *  @param x a value to cast.
-     *  @return 16 lower bits of x.
+    /** Cast a Long to a Short.
+     * @param x a value to cast.
+     * @return 16 lower bits of x.
      */
     def short(x: Long) :Short = x.asInstanceOf[Short]
 
-    /** Cast Float to Short.
-     *  @param x a value to cast.
-     *  @return 16 lower bits of integer part of x,
+    /** Cast a Float to a Short.
+     * @param x a value to cast.
+     * @return 16 lower bits of integer part of x,
      *           0 if x <= Int.MinValue,
      *          -1 if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def short(x: Float) :Short = x.asInstanceOf[Short]
 
-    /** Cast Double to Short.
-     *  @param x a value to cast.
-     *  @return 16 lower bits of integer part of x,
+    /** Cast a Double to a Short.
+     * @param x a value to cast.
+     * @return 16 lower bits of integer part of x,
      *           0 if x <= Int.MinValue,
      *          -1 if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def short(x: Double) :Short = x.asInstanceOf[Short]
 
-    /** Cast Boolean to Int.
-     *  @param x a value to cast.
-     *  @return 1 if x is true, 0 otherwise.
+    /** Cast a Boolean to an Int.
+     * @param x a value to cast.
+     * @return 1 if x is true, 0 otherwise.
      */
     def int(x: Boolean) :Int = if (x) 1 else 0
 
-    /** Cast Byte to Int.
-     *  @param x a value to cast.
-     *  @return x as Int keeping the sign.
+    /** Cast a Byte to an Int.
+     * @param x a value to cast.
+     * @return x as Int keeping the sign.
      */
     def int(x: Byte) :Int = x.asInstanceOf[Int]
 
-    /** Cast Short to Int.
-     *  @param x a value to cast.
-     *  @return x as Int keeping the sign.
+    /** Cast a Short to an Int.
+     * @param x a value to cast.
+     * @return x as Int keeping the sign.
      */
     def int(x: Short) :Int = x.asInstanceOf[Int]
 
-    /** Cast Int to Int. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast an Int to an Int. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def int(x: Int) :Int = x
 
-    /** Cast Long to Int.
-     *  @param x a value to cast.
-     *  @return 32 lower bits of x.
+    /** Cast a Long to an Int.
+     * @param x a value to cast.
+     * @return 32 lower bits of x.
      */
     def int(x: Long) :Int = x.asInstanceOf[Int]
 
-    /** Cast Float to Int.
-     *  @param x a value to cast.
-     *  @return integer part of x,
+    /** Cast a Float to an Int.
+     * @param x a value to cast.
+     * @return integer part of x,
      *           Int.MinValue if x <= Int.MinValue,
      *           Int.MaxValue if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def int(x: Float) :Int = x.asInstanceOf[Int]
 
-    /** Cast Double to Int.
-     *  @param x a value to cast.
-     *  @return integer part of x,
+    /** Cast a Double to an Int.
+     * @param x a value to cast.
+     * @return integer part of x,
      *           Int.MinValue if x <= Int.MinValue,
      *           Int.MaxValue if x >= Int.MaxValue,
      *           possible loss of precision.
      */
     def int(x: Double) :Int = x.asInstanceOf[Int]
 
-    /** Cast Boolean to Long.
-     *  @param x a value to cast.
-     *  @return 1 if x is true, 0 otherwise.
+    /** Cast a Boolean to a Long.
+     * @param x a value to cast.
+     * @return 1 if x is true, 0 otherwise.
      */
     def long(x: Boolean) :Long = if (x) 1 else 0
 
-    /** Cast Byte to Long.
-     *  @param x a value to cast.
-     *  @return x as Long keeping the sign.
+    /** Cast a Byte to a Long.
+     * @param x a value to cast.
+     * @return x as Long keeping the sign.
      */
     def long(x: Byte) :Long = x.asInstanceOf[Long]
 
-    /** Cast Short to Long.
-     *  @param x a value to cast.
-     *  @return x as Long keeping the sign.
+    /** Cast a Short to a Long.
+     * @param x a value to cast.
+     * @return x as Long keeping the sign.
      */
     def long(x: Short) :Long = x.asInstanceOf[Long]
 
-    /** Cast Int to Long.
-     *  @param x a value to cast.
-     *  @return x as Long keeping the sign.
+    /** Cast an Int to a Long.
+     * @param x a value to cast.
+     * @return x as Long keeping the sign.
      */
     def long(x: Int) :Long = x.asInstanceOf[Long]
 
-    /** Cast Long to Long. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Long to a Long. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def long(x: Long) :Long = x
 
-    /** Cast Float to Long.
-     *  @param x a value to cast.
-     *  @return integer part of x,
+    /** Cast a Float to a Long.
+     * @param x a value to cast.
+     * @return integer part of x,
      *           Long.MinValue if x <= Long.MinValue,
      *           Long.MaxValue if x >= Long.MaxValue,
      *           possible loss of precision.
      */
     def long(x: Float) :Long = x.asInstanceOf[Long]
 
-    /** Cast Double to Long.
-     *  @param x a value to cast.
-     *  @return integer part of x,
+    /** Cast a Double to a Long.
+     * @param x a value to cast.
+     * @return integer part of x,
      *           Long.MinValue if x <= Long.MinValue,
      *           Long.MaxValue if x >= Long.MaxValue,
      *           possible loss of precision.
      */
     def long(x: Double) :Long = x.asInstanceOf[Long]
 
-    /** Cast Boolean to Float.
-     *  @param x a value to cast.
-     *  @return 1.0 if x is true, 0.0 otherwise.
+    /** Cast a Boolean to a Float.
+     * @param x a value to cast.
+     * @return 1.0 if x is true, 0.0 otherwise.
      */
     def float(x: Boolean) :Float = if (x) 1 else 0
 
-    /** Cast Byte to Float.
-     *  @param x a value to cast.
-     *  @return x as Float.
+    /** Cast a Byte to a Float.
+     * @param x a value to cast.
+     * @return x as Float.
      */
     def float(x: Byte) :Float = x.asInstanceOf[Float]
 
-    /** Cast Short to Float.
-     *  @param x a value to cast.
-     *  @return x as Float.
+    /** Cast a Short to a Float.
+     * @param x a value to cast.
+     * @return x as Float.
      */
     def float(x: Short) :Float = x.asInstanceOf[Float]
 
-    /** Cast Int to Float.
-     *  @param x a value to cast.
-     *  @return x as Float, possible loss of precision.
+    /** Cast an Int to a Float.
+     * @param x a value to cast.
+     * @return x as Float, possible loss of precision.
      */
     def float(x: Int) :Float = x.asInstanceOf[Float]
 
-    /** Cast Long to Float.
-     *  @param x a value to cast.
-     *  @return x as Float, possible loss of precision.
+    /** Cast a Long to a Float.
+     * @param x a value to cast.
+     * @return x as Float, possible loss of precision.
      */
     def float(x: Long) :Float = x.asInstanceOf[Float]
 
-    /** Cast Float to Float. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Float to a Float. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def float(x: Float) :Float = x
 
-    /** Cast Double to Float.
-     *  @param x a value to cast.
-     *  @return x as Float, possible loss of precision.
+    /** Cast a Double to a Float.
+     * @param x a value to cast.
+     * @return x as Float, possible loss of precision.
      */
     def float(x: Double) :Float = x.asInstanceOf[Float]
 
-    /** Cast Boolean to Double.
-     *  @param x a value to cast.
-     *  @return 1.0 if x is true, 0.0 otherwise.
+    /** Cast a Boolean to a Douoble.
+     * @param x a value to cast.
+     * @return 1.0 if x is true, 0.0 otherwise.
      */
     def double(x: Boolean) :Double = if (x) 1 else 0
 
-    /** Cast Byte to Double.
-     *  @param x a value to cast.
-     *  @return x as Double.
+    /** Cast a Byte to a Douoble.
+     * @param x a value to cast.
+     * @return x as Double.
      */
     def double(x: Byte) :Double = x.asInstanceOf[Double]
 
-    /** Cast Short to Double.
-     *  @param x a value to cast.
-     *  @return x as Double.
+    /** Cast a Short to a Douoble.
+     * @param x a value to cast.
+     * @return x as Double.
      */
     def double(x: Short) :Double = x.asInstanceOf[Double]
 
-    /** Cast Int to Double.
-     *  @param x a value to cast.
-     *  @return x as Double.
+    /** Cast an Int to a Douoble.
+     * @param x a value to cast.
+     * @return x as Double.
      */
     def double(x: Int) :Double = x.asInstanceOf[Double]
 
-    /** Cast Long to Double.
-     *  @param x a value to cast.
-     *  @return x as Double, possible loss of precision.
+    /** Cast a Long to a Douoble.
+     * @param x a value to cast.
+     * @return x as Double, possible loss of precision.
      */
     def double(x: Long) :Double = x.asInstanceOf[Double]
 
-    /** Cast Float to Double.
-     *  @param x a value to cast.
-     *  @return x as Double.
+    /** Cast a Float to a Douoble.
+     * @param x a value to cast.
+     * @return x as Double.
      */
     def double(x: Float) :Double = x.asInstanceOf[Double]
 
-    /** Cast Double to Double. This method is here for completeness.
-     *  @param x a value to cast.
-     *  @return x.
+    /** Cast a Double to a Douoble. This method is here for completeness.
+     * @param x a value to cast.
+     * @return x.
      */
     def double(x: Double) :Double = x
 
@@ -354,24 +354,24 @@ object BaseMath {
     // Vec2b functions.
 
     /** Equivalent to logical OR on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if any of the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if any of the components are true, false otherwise.
      */
     def any(u: AnyVec2b) :Boolean = {
         u.x || u.y
     }
 
     /** Equivalent to logical AND on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if all the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if all the components are true, false otherwise.
      */
     def all(u: AnyVec2b) :Boolean = {
         u.x && u.y
     }
 
     /** Equivalent to logical NOT on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return a boolean vector with negated components u.
+     * @param u a boolean vector.
+     * @return a boolean vector with negated components u.
      */
     def not(u: AnyVec2b) :Vec2b = Vec2b(!u.x, !u.y)
 
@@ -379,24 +379,24 @@ object BaseMath {
     // Vec3b functions.
 
     /** Equivalent to logical OR on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if any of the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if any of the components are true, false otherwise.
      */
     def any(u: AnyVec3b) :Boolean = {
         u.x || u.y || u.z
     }
 
     /** Equivalent to logical AND on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if all the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if all the components are true, false otherwise.
      */
     def all(u: AnyVec3b) :Boolean = {
         u.x && u.y && u.z
     }
 
     /** Equivalent to logical NOT on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return a boolean vector with negated components u.
+     * @param u a boolean vector.
+     * @return a boolean vector with negated components u.
      */
     def not(u: AnyVec3b) :Vec3b = Vec3b(!u.x, !u.y, !u.z)
 
@@ -404,24 +404,24 @@ object BaseMath {
     // Vec4b functions.
 
     /** Equivalent to logical OR on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if any of the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if any of the components are true, false otherwise.
      */
     def any(u: AnyVec4b) :Boolean = {
         u.x || u.y || u.z || u.w
     }
 
     /** Equivalent to logical AND on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return true if all the components are true, false otherwise.
+     * @param u a boolean vector.
+     * @return true if all the components are true, false otherwise.
      */
     def all(u: AnyVec4b) :Boolean = {
         u.x && u.y && u.z && u.w
     }
 
     /** Equivalent to logical NOT on the components of the argument vector.
-     *  @param u a boolean vector.
-     *  @return a boolean vector with negated components u.
+     * @param u a boolean vector.
+     * @return a boolean vector with negated components u.
      */
     def not(u: AnyVec4b) :Vec4b = Vec4b(!u.x, !u.y, !u.z, !u.w)
 }

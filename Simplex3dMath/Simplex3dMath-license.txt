@@ -1,3 +1,6 @@
+Unless stated otherwise, all the files in Simplex3dMath library have
+the following license:
+
  * Simplex3dMath
  * Copyright (C) 2009-2010 Simplex3d Team
  *
@@ -18,4 +21,34 @@
  * Original code was released by Stefan Gustavson in the following paper:
  * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
  * Modifications by Karsten Schmidt. Used under LGPL v2.1.
- 
+
+
+simplex3d.math.SimplexNoise has the following license:
+
+ * Simplex3d, SimplexNoise
+ * Copyright (C) 2010 Simplex3d Team
+ *
+ * This file is part of Simplex3dMath.
+ *
+ * Simplex3dMath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simplex3dMath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * ADDITIONAL TERMS:
+ * This file is a Scala port of GLSL shader by Stefan Gustavson.
+ * The shader license states:
+ *
+ * Author: Stefan Gustavson ITN-LiTH (stegu@itn.liu.se) 2004-12-05
+ * Simplex indexing functions by Bill Licea-Kane, ATI (bill@ati.com)
+ *
+ * You may use, modify and redistribute this code free of charge,
+ * provided that the author's names and this notice appear intact.

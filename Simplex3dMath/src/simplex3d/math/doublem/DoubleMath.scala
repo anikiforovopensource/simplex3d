@@ -23,7 +23,6 @@ package simplex3d.math.doublem
 import simplex3d.math._
 import simplex3d.math.BaseMath._
 import java.lang.{StrictMath => SMath}
-import ext.toxi.math.noise.SimplexNoise
 
 
 /**

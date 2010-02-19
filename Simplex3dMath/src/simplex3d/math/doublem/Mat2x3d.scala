@@ -284,7 +284,7 @@ sealed abstract class AnyMat2x3d extends Read2x3
     }
 }
 
-sealed class ConstMat2x3d private[math] (
+final class ConstMat2x3d private[math] (
     val m00: Double, val m10: Double,
     val m01: Double, val m11: Double,
     val m02: Double, val m12: Double
@@ -437,34 +437,10 @@ final class Mat2x3d private[math] (
     }
 }
 
-private[math] object Mat2x3dIdentity extends ConstMat2x3d(
-    1, 0,
-    0, 1,
-    0, 0
-) {
-    override def scale(s: Double) :Mat2x3d = Mat2x3d(s)
-    override def scale(s: AnyVec2d) :Mat2x3d = {
-        val m = Mat2x3d(s.x)
-        m.m11 = s.y
-        m
-    }
-
-    override def translate(u: AnyVec2d) :Mat2x3d = {
-        val m = Mat2x3d(1)
-        m(2) = u
-        m
-    }
-
-    override def concatenate(m: AnyMat2x3d) :Mat2x3d = Mat2x3d(m)
-    override def concatenate(m: AnyMat2d) :Mat2x3d = Mat2x3d(m)
-
-    override def invert() :Mat2x3d = Mat2x3d(1)
-}
-
 object Mat2x3d {
 
     val Zero: ConstMat2x3d = Mat2x3d(0)
-    val Identity: ConstMat2x3d = Mat2x3dIdentity
+    val Identity: ConstMat2x3d = Mat2x3d(1)
 
     def apply(s: Double) = new Mat2x3d(
         s, 0,
@@ -545,12 +521,22 @@ object Mat2x3d {
 
     def unapply(m: AnyMat2x3d) = Some((m(0), m(1), m(2)))
 
-    def scale(s: Double) :Mat2x3d = Identity.scale(s)
-    def scale(s: AnyVec2d) :Mat2x3d = Identity.scale(s)
+    def scale(s: Double) :Mat2x3d = Mat2x3d(s)
+    def scale(s: AnyVec2d) :Mat2x3d = {
+        val m = Mat2x3d(s.x)
+        m.m11 = s.y
+        m
+    }
 
-    def rotate(angle: Double) :Mat2x3d = Identity.rotate(angle)
+    def rotate(angle: Double) :Mat2x3d = {
+        Mat2x3d(rotationMat(angle))
+    }
 
-    def translate(u: AnyVec2d) :Mat2x3d = Identity.translate(u)
+    def translate(u: AnyVec2d) :Mat2x3d = {
+        val m = Mat2x3d(1)
+        m(2) = u
+        m
+    }
 
     implicit def toMutable(m: AnyMat2x3d) = Mat2x3d(m)
 }

@@ -375,7 +375,7 @@ sealed abstract class AnyMat3x4f extends Read3x4
     }
 }
 
-sealed class ConstMat3x4f private[math] (
+final class ConstMat3x4f private[math] (
     val m00: Float, val m10: Float, val m20: Float,
     val m01: Float, val m11: Float, val m21: Float,
     val m02: Float, val m12: Float, val m22: Float,
@@ -574,36 +574,10 @@ final class Mat3x4f private[math] (
     }
 }
 
-private[math] object Mat3x4fIdentity extends ConstMat3x4f(
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1,
-    0, 0, 0
-) {
-    override def scale(s: Float) :Mat3x4f = Mat3x4f(s)
-    override def scale(s: AnyVec3f) :Mat3x4f = {
-        val m = Mat3x4f(s.x)
-        m.m11 = s.y
-        m.m22 = s.z
-        m
-    }
-
-    override def translate(u: AnyVec3f) :Mat3x4f = {
-        val m = Mat3x4f(1)
-        m(3) = u
-        m
-    }
-
-    override def concatenate(m: AnyMat3x4f) :Mat3x4f = Mat3x4f(m)
-    override def concatenate(m: AnyMat3f) :Mat3x4f = Mat3x4f(m)
-
-    override def invert() :Mat3x4f = Mat3x4f(1)
-}
-
 object Mat3x4f {
 
     val Zero: ConstMat3x4f = Mat3x4f(0)
-    val Identity: ConstMat3x4f = Mat3x4fIdentity
+    val Identity: ConstMat3x4f = Mat3x4f(1)
 
     def apply(s: Float) = new Mat3x4f(
         s, 0, 0,
@@ -697,19 +671,36 @@ object Mat3x4f {
 
     def unapply(m: AnyMat3x4f) = Some((m(0), m(1), m(2), m(3)))
 
-    def scale(s: Float) :Mat3x4f = Identity.scale(s)
-    def scale(s: AnyVec3f) :Mat3x4f = Identity.scale(s)
-
-    def rotate(q: AnyQuat4f) :Mat3x4f = Identity.rotate(q)
-    def rotate(angle: Float, axis: AnyVec3f) :Mat3x4f = {
-        Identity.rotate(angle, axis)
+    def scale(s: Float) :Mat3x4f = Mat3x4f(s)
+    def scale(s: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(s.x)
+        m.m11 = s.y
+        m.m22 = s.z
+        m
     }
 
-    def rotateX(angle: Float) :Mat3x4f = Identity.rotateX(angle)
-    def rotateY(angle: Float) :Mat3x4f = Identity.rotateY(angle)
-    def rotateZ(angle: Float) :Mat3x4f = Identity.rotateZ(angle)
+    def rotate(q: AnyQuat4f) :Mat3x4f = {
+        Mat3x4f(rotationMat(q))
+    }
+    def rotate(angle: Float, axis: AnyVec3f) :Mat3x4f = {
+        Mat3x4f(rotationMat(angle, axis))
+    }
 
-    def translate(u: AnyVec3f) :Mat3x4f = Identity.translate(u)
+    def rotateX(angle: Float) :Mat3x4f = {
+        Mat3x4f(rotationMat(angle, Vec3f.UnitX))
+    }
+    def rotateY(angle: Float) :Mat3x4f = {
+        Mat3x4f(rotationMat(angle, Vec3f.UnitY))
+    }
+    def rotateZ(angle: Float) :Mat3x4f = {
+        Mat3x4f(rotationMat(angle, Vec3f.UnitZ))
+    }
+
+    def translate(u: AnyVec3f) :Mat3x4f = {
+        val m = Mat3x4f(1)
+        m(3) = u
+        m
+    }
 
     implicit def toMutable(m: AnyMat3x4f) = Mat3x4f(m)
 }

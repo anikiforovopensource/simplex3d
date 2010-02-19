@@ -141,7 +141,8 @@ sealed abstract class AnyQuat4f extends ReadQ {
     }
 }
 
-sealed class ConstQuat4f private[math] (
+
+final class ConstQuat4f private[math] (
     val a: Float, val b: Float, val c: Float, val d: Float)
 extends AnyQuat4f
 
@@ -193,24 +194,8 @@ extends AnyQuat4f
     }
 }
 
-private[math] object Quat4fIdentity extends ConstQuat4f(1, 0, 0, 0) {
-    override def rotate(q: AnyQuat4f) :Quat4f = Quat4f(q)
-    override def rotate(angle: Float, axis: AnyVec3f) :Quat4f = {
-        quaternion(angle, axis)
-    }
-    override def rotateX(angle: Float) :Quat4f = {
-        quaternion(angle, Vec3f.UnitX)
-    }
-    override def rotateY(angle: Float) :Quat4f = {
-        quaternion(angle, Vec3f.UnitY)
-    }
-    override def rotateZ(angle: Float) :Quat4f = {
-        quaternion(angle, Vec3f.UnitZ)
-    }
-}
-
 object Quat4f {
-    val Identity: ConstQuat4f = Quat4fIdentity
+    val Identity = new ConstQuat4f(1, 0, 0, 0)
 
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
     def apply(q: ReadQ) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
@@ -220,16 +205,16 @@ object Quat4f {
     def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
 
     def rotate(angle: Float, axis: AnyVec3f) :Quat4f = {
-        Identity.rotate(angle, axis)
+        quaternion(angle, axis)
     }
     def rotateX(angle: Float) :Quat4f = {
-        Identity.rotateX(angle)
+        quaternion(angle, Vec3f.UnitX)
     }
     def rotateY(angle: Float) :Quat4f = {
-        Identity.rotateY(angle)
+        quaternion(angle, Vec3f.UnitY)
     }
     def rotateZ(angle: Float) :Quat4f = {
-        Identity.rotateZ(angle)
+        quaternion(angle, Vec3f.UnitZ)
     }
 
     implicit def toMutable(u: AnyQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)

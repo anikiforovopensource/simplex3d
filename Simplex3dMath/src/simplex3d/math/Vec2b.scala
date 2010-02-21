@@ -83,20 +83,24 @@ sealed abstract class AnyVec2b extends Read2 {
      * @return component x.
      */
     def r = x
+
     /** Alias for y.
      * @return component y.
      */
     def g = y
 
+
     /** Alias for x.
      * @return component x.
      */
     def s = x
+
     /** Alias for y.
      * @return component y.
      */
     def t = y
 
+    
     /** Read a component using sequence notation.
      * @param i index of the component (0 -> x, 1 -> y).
      * @return component with index i.
@@ -150,6 +154,7 @@ sealed abstract class AnyVec2b extends Read2 {
     }
 }
 
+
 /** Constant Boolean 2-dimensional vector.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
@@ -176,6 +181,7 @@ sealed abstract class AnyVec2b extends Read2 {
 final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
 extends AnyVec2b
 
+
 /** Factory for creating Boolean 2-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
@@ -185,18 +191,19 @@ extends AnyVec2b
  * @author Aleksey Nikiforov (lex)
  */
 object ConstVec2b {
-    /** Makes a new instance of ConstVec2b from components.
+
+    /** Makes a new instance of ConstVec2b from the specified values.
      * @param x component x.
      * @param y component y.
-     * @return a new instance of ConstVec2b with components
-     *         initialized to parameters.
+     * @return a new instance of ConstVec2b with components initialized
+     *         to the arguments.
      */
     def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
 
-    /** Makes a ConstVec2b instance from a 2-dimensional vector.
+    /** Makes a new instance of ConstVec2b from a 2-dimensional vector.
      * @param u any 2-dimensional vector.
-     * @return a new instance of ConstVec2b with components
-     *         initialized to components of u casted as Boolean.
+     * @return a new instance of ConstVec2b with components initialized
+     *         to the components of u casted as Boolean.
      */
     def apply(u: Read2) = new ConstVec2b(u.bx, u.by)
     
@@ -208,22 +215,66 @@ final class Vec2b private[math] (var x: Boolean, var y: Boolean)
 extends AnyVec2b
 {
 
+    /** Alias for x.
+     * @return component x.
+     */
     override def r = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def g = y
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     override def s = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def t = y
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def r_=(r: Boolean) { x = r }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def g_=(g: Boolean) { y = g }
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def s_=(s: Boolean) { x = s }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def t_=(t: Boolean) { y = t }
 
 
+    /** Set vector components to values from another vector.
+     * @param u 2-dimensional Boolean vector.
+     */
     def :=(u: AnyVec2b) { x = u.x; y = u.y }
+
+    /** Set vector components to the specified values.
+     * @param x component x.
+     * @param y component y.
+     */
     def set(x: Boolean, y: Boolean) { this.x = x; this.y = y }
 
+    /** Set a component using sequence notation.
+     * @param i index of the component (0 -> x, 1 -> y).
+     * @param s new component value.
+     * @exception IndexOutOfBoundsException if i is outside the range of [0, 1].
+     */
     def update(i: Int, s: Boolean) {
         i match {
             case 0 => x = s
@@ -254,14 +305,51 @@ extends AnyVec2b
     def ts_=(u: AnyVec2b) { yx_=(u) }
 }
 
+
 object Vec2b {
     val True = new ConstVec2b(true, true)
     val False = new ConstVec2b(false, false)
 
+    /** Makes a new instance of Vec2b with all the components initialized
+     * to the specified value.
+     *
+     * @param s value for all components.
+     * @return a new instance of Vec2b with all the components initialized
+     *         to the specified value.
+     */
     def apply(s: Boolean) = new Vec2b(s, s)
+
+    /** Makes a new instance of Vec2b from the specified values.
+     * @param x component x.
+     * @param y component y.
+     * @return a new instance of Vec2b with components initialized
+     *         to the arguments.
+     */
     def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
+
+    /** Makes a new instance of Vec2b from a 2-dimensional vector.
+     * @param u any 2-dimensional vector.
+     * @return a new instance of Vec2b with components initialized
+     *         to the components of u casted as Boolean.
+     */
     def apply(u: Read2) = new Vec2b(u.bx, u.by)
+
+    /** Makes a new instance of Vec2b from the first two components
+     * of a 3-dimensional vector.
+     *
+     * @param u any 3-dimensional vector.
+     * @return a new instance of Vec2b with components initialized
+     *         to the first two components of u casted as Boolean.
+     */
     def apply(u: Read3) = new Vec2b(u.bx, u.by)
+    
+    /** Makes a new instance of Vec2b from the first two components
+     * of a 4-dimensional vector.
+     *
+     * @param u any 4-dimensional vector.
+     * @return a new instance of Vec2b with components initialized
+     *         to the first two components of u casted as Boolean.
+     */
     def apply(u: Read4) = new Vec2b(u.bx, u.by)
 
     def unapply(u: AnyVec2b) = Some((u.x, u.y))

@@ -93,35 +93,43 @@ sealed abstract class AnyVec4b extends Read4 {
      * @return component x.
      */
     def r = x
+
     /** Alias for y.
      * @return component y.
      */
     def g = y
+
     /** Alias for z.
      * @return component z.
      */
     def b = z
+
     /** Alias for w.
      * @return component w.
      */
     def a = w
 
+
     /** Alias for x.
      * @return component x.
      */
     def s = x
+
     /** Alias for y.
      * @return component y.
      */
     def t = y
+
     /** Alias for z.
      * @return component z.
      */
     def p = z
+
     /** Alias for w.
      * @return component w.
      */
     def q = w
+
 
     /** Read a component using sequence notation.
      * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).
@@ -183,6 +191,7 @@ sealed abstract class AnyVec4b extends Read4 {
     }
 }
 
+
 /** Constant Boolean 4-dimensional vector.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
@@ -210,6 +219,7 @@ final class ConstVec4b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean)
 extends AnyVec4b
 
+
 /** Factory for creating Boolean 4-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
@@ -219,22 +229,23 @@ extends AnyVec4b
  * @author Aleksey Nikiforov (lex)
  */
 object ConstVec4b {
-    /** Makes a new instance of ConstVec4b from components.
+
+    /** Makes a new instance of ConstVec4b from the specified values.
      * @param x component x.
      * @param y component y.
      * @param z component z.
      * @param w component w.
-     * @return a new instance of ConstVec4b with components
-     *         initialized to parameters.
+     * @return a new instance of ConstVec4b with components initialized
+     *         to the arguments.
      */
     def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) = {
         new ConstVec4b(x, y, z, w)
     }
 
-    /** Makes a ConstVec4b instance from a 4-dimensional vector.
+    /** Makes a new instance of ConstVec4b from a 4-dimensional vector.
      * @param u any 4-dimensional vector.
-     * @return a new instance of ConstVec4b with components
-     *         initialized to components of u casted as Boolean.
+     * @return a new instance of ConstVec4b with components initialized
+     *         to the components of u casted as Boolean.
      */
     def apply(u: Read4) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
 
@@ -246,32 +257,110 @@ final class Vec4b private[math] (
     var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
 extends AnyVec4b
 {
+    /** Alias for x.
+     * @return component x.
+     */
     override def r = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def g = y
+
+    /** Alias for z.
+     * @return component z.
+     */
     override def b = z
+
+    /** Alias for w.
+     * @return component w.
+     */
     override def a = w
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     override def s = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def t = y
+
+    /** Alias for z.
+     * @return component z.
+     */
     override def p = z
+
+    /** Alias for w.
+     * @return component w.
+     */
     override def q = w
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def r_=(r: Boolean) { x = r }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def g_=(g: Boolean) { y = g }
+
+    /** Alias for z.
+     * @return component z.
+     */
     def b_=(b: Boolean) { z = b }
+
+    /** Alias for w.
+     * @return component w.
+     */
     def a_=(a: Boolean) { w = a }
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def s_=(s: Boolean) { x = s }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def t_=(t: Boolean) { y = t }
+
+    /** Alias for z.
+     * @return component z.
+     */
     def p_=(p: Boolean) { z = p }
+
+    /** Alias for w.
+     * @return component w.
+     */
     def q_=(q: Boolean) { w = q }
 
 
+    /** Set vector components to values from another vector.
+     * @param u 4-dimensional Boolean vector.
+     */
     def :=(u: AnyVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
+
+    /** Set vector components to the specified values.
+     * @param x component x.
+     * @param y component y.
+     * @param z component z.
+     * @param w component w.
+     */
     def set(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
         this.x = x; this.y = y; this.z = z; this.w = w
     }
 
+    /** Set a component using sequence notation.
+     * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).
+     * @param s new component value.
+     * @exception IndexOutOfBoundsException if i is outside the range of [0, 3].
+     */
     def update(i: Int, s: Boolean) {
         i match {
             case 0 => x = s
@@ -664,37 +753,123 @@ extends AnyVec4b
     def qpts_=(u: AnyVec4b) { wzyx_=(u) }
 }
 
+
 object Vec4b {
     val True = new ConstVec4b(true, true, true, true)
     val False = new ConstVec4b(false, false, false, false)
 
+    /** Makes a new instance of Vec4b with all the components initialized
+     * to the specified value.
+     *
+     * @param s value for all components.
+     * @return a new instance of Vec4b with all the components initialized
+     *         to the specified value.
+     */
     def apply(s: Boolean) =
         new Vec4b(s, s, s, s)
 
+    /** Makes a new instance of Vec4b from the specified values.
+     * @param x component x.
+     * @param y component y.
+     * @param z component z.
+     * @param w component w.
+     * @return a new instance of Vec4b with components initialized
+     *         to the arguments.
+     */
     def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
         new Vec4b(x, y, z, w)
 
+    /** Makes a new instance of Vec4b from a 4-dimensional vector.
+     * @param u any 4-dimensional vector.
+     * @return a new instance of Vec4b with components initialized
+     *         to the components of u casted as Boolean.
+     */
     def apply(u: Read4) =
         new Vec4b(u.bx, u.by, u.bz, u.bw)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param xy components x and y as any 2-dimentional vector.
+     * @param z component z.
+     * @param w component w.
+     * @return a new instance of Vec4b with components initialized
+     *         to x and y components of xy casted as Boolean
+     *         and the specified values z and w.
+     */
     def apply(xy: Read2, z: Boolean, w: Boolean) =
         new Vec4b(xy.bx, xy.by, z, w)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param x component x.
+     * @param yz components y and z as any 2-dimentional vector.
+     * @param w component w.
+     * @return a new instance of Vec4b with components initialized
+     *         to the specified value x,
+     *         x and y components of yz casted as Boolean,
+     *         and the specified value w.
+     */
     def apply(x: Boolean, yz: Read2, w: Boolean) =
         new Vec4b(x, yz.bx, yz.by, w)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param x component x.
+     * @param y component y.
+     * @param zw components z and w as any 2-dimentional vector.
+     * @return a new instance of Vec4b with components initialized
+     *         to the specified values x and y
+     *         and x and y components of zw casted as Boolean.
+     */
     def apply(x: Boolean, y: Boolean, zw: Read2) =
         new Vec4b(x, y, zw.bx, zw.by)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param xy components x and y as any 2-dimentional vector.
+     * @param zw components z and w as any 2-dimentional vector.
+     * @return a new instance of Vec4b with components initialized
+     *         to x and y components of xy casted as Boolean
+     *         and x and y components of zw casted as Boolean.
+     */
     def apply(xy: Read2, zw: Read2) =
         new Vec4b(xy.bx, xy.by, zw.bx, zw.by)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param xyz components x, y, and z as any 3-dimentional vector.
+     * @param w component w.
+     * @return a new instance of Vec4b with components initialized
+     *         to x, y, and z components of xyz casted as Boolean
+     *         and the specified value w.
+     */
     def apply(xyz: Read3, w: Boolean) =
         new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
 
+    /** Makes a new instance of Vec4b from values extracted from the specified
+     * arguments.
+     *
+     * @param x component x.
+     * @param yzw components y, z, and w as any 3-dimentional vector.
+     * @return a new instance of Vec4b with components initialized
+     *         to the specified value x
+     *         and x, y, and z components of yzw casted as Boolean.
+     */
     def apply(x: Boolean, yzw: Read3) =
         new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
+    /** Makes a new instance of Vec4b from values extracted from the argument
+     * matrix.
+     *
+     * @param m any 2x2 matrix.
+     * @return a new instance of Vec4b with components initialized
+     *         to m00, m10, m01, and m11 components of m casted as Boolean.
+     */
     def apply(m: Read2x2) =
         new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 

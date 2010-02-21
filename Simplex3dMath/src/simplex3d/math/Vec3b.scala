@@ -88,27 +88,33 @@ sealed abstract class AnyVec3b extends Read3 {
      * @return component x.
      */
     def r = x
+
     /** Alias for y.
      * @return component y.
      */
     def g = y
+
     /** Alias for z.
      * @return component z.
      */
     def b = z
 
+
     /** Alias for x.
      * @return component x.
      */
     def s = x
+
     /** Alias for y.
      * @return component y.
      */
     def t = y
+
     /** Alias for z.
      * @return component z.
      */
     def p = z
+
 
     /** Read a component using sequence notation.
      * @param i index of the component (0 -> x, 1 -> y, 2 -> z).
@@ -167,6 +173,7 @@ sealed abstract class AnyVec3b extends Read3 {
 
 }
 
+
 /** Constant Boolean 3-dimensional vector.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
@@ -194,6 +201,7 @@ final class ConstVec3b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean)
 extends AnyVec3b
 
+
 /** Factory for creating Boolean 3-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
@@ -203,19 +211,20 @@ extends AnyVec3b
  * @author Aleksey Nikiforov (lex)
  */
 object ConstVec3b {
-    /** Makes a new instance of ConstVec3b from components.
+
+    /** Makes a new instance of ConstVec3b from the specified values.
      * @param x component x.
      * @param y component y.
      * @param z component z.
-     * @return a new instance of ConstVec3b with components
-     *         initialized to parameters.
+     * @return a new instance of ConstVec3b with components initialized
+     *         to the arguments.
      */
     def apply(x: Boolean, y: Boolean, z: Boolean) = new ConstVec3b(x, y, z)
 
-    /** Makes a ConstVec3b instance from a 3-dimensional vector.
+    /** Makes a new instance of ConstVec3b from a 3-dimensional vector.
      * @param u any 3-dimensional vector.
-     * @return a new instance of ConstVec3b with components
-     *         initialized to components of u casted as Boolean.
+     * @return a new instance of ConstVec3b with components initialized
+     *         to the components of u casted as Boolean.
      */
     def apply(u: Read3) = new ConstVec3b(u.bx, u.by, u.bz)
 
@@ -226,28 +235,89 @@ object ConstVec3b {
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
 extends AnyVec3b
 {
+    /** Alias for x.
+     * @return component x.
+     */
     override def r = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def g = y
+
+    /** Alias for z.
+     * @return component z.
+     */
     override def b = z
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     override def s = x
+
+    /** Alias for y.
+     * @return component y.
+     */
     override def t = y
+
+    /** Alias for z.
+     * @return component z.
+     */
     override def p = z
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def r_=(r: Boolean) { x = r }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def g_=(g: Boolean) { y = g }
+
+    /** Alias for z.
+     * @return component z.
+     */
     def b_=(b: Boolean) { z = b }
 
+
+    /** Alias for x.
+     * @return component x.
+     */
     def s_=(s: Boolean) { x = s }
+
+    /** Alias for y.
+     * @return component y.
+     */
     def t_=(t: Boolean) { y = t }
+
+    /** Alias for z.
+     * @return component z.
+     */
     def p_=(p: Boolean) { z = p }
 
 
+    /** Set vector components to values from another vector.
+     * @param u 3-dimensional Boolean vector.
+     */
     def :=(u: AnyVec3b) { x = u.x; y = u.y; z = u.z }
+
+    /** Set vector components to the specified values.
+     * @param x component x.
+     * @param y component y.
+     * @param z component z.
+     */
     def set(x: Boolean, y: Boolean, z: Boolean) {
         this.x = x; this.y = y; this.z = z
     }
 
+    /** Set a component using sequence notation.
+     * @param i index of the component (0 -> x, 1 -> y, 2 -> z).
+     * @param s new component value.
+     * @exception IndexOutOfBoundsException if i is outside the range of [0, 2].
+     */
     def update(i: Int, s: Boolean) {
         i match {
             case 0 => x = s
@@ -345,15 +415,65 @@ extends AnyVec3b
     def pts_=(u: AnyVec3b) { zyx_=(u) }
 }
 
+
 object Vec3b {
     val True = new ConstVec3b(true, true, true)
     val False = new ConstVec3b(false, false, false)
 
+    /** Makes a new instance of Vec3b with all the components initialized
+     * to the specified value.
+     *
+     * @param s value for all components.
+     * @return a new instance of Vec3b with all the components initialized
+     *         to the specified value.
+     */
     def apply(s: Boolean) = new Vec3b(s, s, s)
+
+    /** Makes a new instance of Vec3b from the specified values.
+     * @param x component x.
+     * @param y component y.
+     * @param z component z.
+     * @return a new instance of Vec3b with components initialized
+     *         to the arguments.
+     */
     def apply(x: Boolean, y: Boolean, z: Boolean) = new Vec3b(x, y, z)
+
+    /** Makes a new instance of Vec3b from a 3-dimensional vector.
+     * @param u any 3-dimensional vector.
+     * @return a new instance of Vec3b with components initialized
+     *         to the components of u casted as Boolean.
+     */
     def apply(u: Read3) = new Vec3b(u.bx, u.by, u.bz)
+
+    /** Makes a new instance of Vec3b from the first three components
+     * of a 4-dimensional vector.
+     *
+     * @param u any 4-dimensional vector.
+     * @return a new instance of Vec3b with components initialized
+     *         to the first three components of u casted as Boolean.
+     */
     def apply(u: Read4) = new Vec3b(u.bx, u.by, u.bz)
+
+    /** Makes a new instance of Vec3b from values extracted from the specified
+     * arguments.
+     *
+     * @param xy components x and y as any 2-dimentional vector.
+     * @param z component z.
+     * @return a new instance of Vec3b with components initialized
+     *         to x and y components of xy casted as Boolean
+     *         and the specified value z.
+     */
     def apply(xy: Read2, z: Boolean) = new Vec3b(xy.bx, xy.by, z)
+    
+    /** Makes a new instance of Vec3b from values extracted from the specified
+     * arguments.
+     *
+     * @param x component x.
+     * @param yz components y and z as any 2-dimentional vector.
+     * @return a new instance of Vec3b with components initialized
+     *         to the specified value x
+     *         and x and y components of yz casted as Boolean.
+     */
     def apply(x: Boolean, yz: Read2) = new Vec3b(x, yz.bx, yz.by)
 
     def unapply(u: AnyVec3b) = Some((u.x, u.y, u.z))

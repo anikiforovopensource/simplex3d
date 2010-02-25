@@ -24,21 +24,64 @@ import simplex3d.math._
 
 
 /**
- * Glue code to make ints interact with vectors and matrices.
+ * Glue code to make Ints interact with vectors and matrices.
  *
  * @author Aleksey Nikiforov (lex)
  */
 final class ExtendedInt(val value: Int) {
+
+    /** Multiplies this scalar by a vector.
+     * @param u a vector to multiply by.
+     * @return u*scalar.
+     */
     def *(u: AnyVec2i) = u*value
+
+    /** Multiplies this scalar by a vector.
+     * @param u a vector to multiply by.
+     * @return u*scalar.
+     */
     def *(u: AnyVec3i) = u*value
+
+    /** Multiplies this scalar by a vector.
+     * @param u a vector to multiply by.
+     * @return u*scalar.
+     */
     def *(u: AnyVec4i) = u*value
 
+    /** Divides this scalar by a vector.
+     * @param u a vector to divide by.
+     * @return a vector with components s/u.x and s/u.y.
+     */
     def /(u: AnyVec2i) = u.divideByComponent(value)
+
+    /** Divides this scalar by a vector.
+     * @param u a vector to divide by.
+     * @return a vector with components s/u.x, s/u.y, and s/u.z.
+     */
     def /(u: AnyVec3i) = u.divideByComponent(value)
+
+    /** Divides this scalar by a vector.
+     * @param u a vector to divide by.
+     * @return a vector with components s/u.x, s/u.y, s/u.z, and s/u.w.
+     */
     def /(u: AnyVec4i) = u.divideByComponent(value)
 
+    /** Add this scalar to each component of a vector.
+     * @param u a vector to add to.
+     * @return a vector with components s + u.x and s + u.y.
+     */
     def +(u: AnyVec2i) = u + value
+
+    /** Add this scalar to each component of a vector.
+     * @param u a vector to add to.
+     * @return a vector with components s + u.x, s + u.y, and s + u.z.
+     */
     def +(u: AnyVec3i) = u + value
+
+    /** Add this scalar to each component of a vector.
+     * @param u a vector to add to.
+     * @return a vector with components s + u.x, s + u.y, s + u.z, and s + u.w.
+     */
     def +(u: AnyVec4i) = u + value
 
     def -(u: AnyVec2i) = { val t = -u; t += value; t }

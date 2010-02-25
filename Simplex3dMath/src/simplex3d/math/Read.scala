@@ -30,7 +30,9 @@ import simplex3d.math.BaseMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2 extends Swizzle2Read {
+private[math] abstract class Read2[T] extends Swizzle2Read[T] {
+    final def components = 2
+
     private[math] def bx: Boolean
     private[math] def by: Boolean
 
@@ -51,7 +53,9 @@ private[math] abstract class Read2 extends Swizzle2Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3 extends Swizzle3Read {
+private[math] abstract class Read3[T] extends Swizzle3Read[T] {
+    final def components = 3
+
     private[math] def bx: Boolean
     private[math] def by: Boolean
     private[math] def bz: Boolean
@@ -76,7 +80,9 @@ private[math] abstract class Read3 extends Swizzle3Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4 extends Swizzle4Read {
+private[math] abstract class Read4[T] extends Swizzle4Read[T] {
+    final def components = 4
+
     private[math] def bx: Boolean
     private[math] def by: Boolean
     private[math] def bz: Boolean
@@ -105,7 +111,7 @@ private[math] abstract class Read4 extends Swizzle4Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class ReadQ {
+private[math] abstract class ReadQ[T] extends Quat[T] {
     private[math] def fa: Float
     private[math] def fb: Float
     private[math] def fc: Float

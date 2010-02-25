@@ -28,9 +28,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2d extends Read2 {
+sealed abstract class AnyVec2d extends Read2[Double] {
 
-    private[math] type T = Double
     private[math] type R2 = ConstVec2d
     private[math] type R3 = ConstVec3d
     private[math] type R4 = ConstVec4d
@@ -131,7 +130,7 @@ extends AnyVec2d
 
 object ConstVec2d {
     def apply(x: Double, y: Double) = new ConstVec2d(x, y)
-    def apply(u: Read2) = new ConstVec2d(u.dx, u.dy)
+    def apply(u: Read2[_]) = new ConstVec2d(u.dx, u.dy)
 
     implicit def toConst(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
 }
@@ -207,9 +206,9 @@ object Vec2d {
 
     def apply(s: Double) = new Vec2d(s, s)
     def apply(x: Double, y: Double) = new Vec2d(x, y)
-    def apply(u: Read2) = new Vec2d(u.dx, u.dy)
-    def apply(u: Read3) = new Vec2d(u.dx, u.dy)
-    def apply(u: Read4) = new Vec2d(u.dx, u.dy)
+    def apply(u: Read2[_]) = new Vec2d(u.dx, u.dy)
+    def apply(u: Read3[_]) = new Vec2d(u.dx, u.dy)
+    def apply(u: Read4[_]) = new Vec2d(u.dx, u.dy)
 
     def unapply(u: AnyVec2d) = Some((u.x, u.y))
 

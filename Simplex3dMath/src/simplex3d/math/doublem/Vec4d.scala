@@ -28,9 +28,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4d extends Read4 {
+sealed abstract class AnyVec4d extends Read4[Double] {
 
-    private[math] type T = Double
     private[math] type R2 = ConstVec2d
     private[math] type R3 = ConstVec3d
     private[math] type R4 = ConstVec4d
@@ -161,7 +160,7 @@ object ConstVec4d {
     def apply(x: Double, y: Double, z: Double, w: Double) = {
         new ConstVec4d(x, y, z, w)
     }
-    def apply(u: Read4) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
+    def apply(u: Read4[_]) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
     implicit def toConst(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
 }
@@ -616,25 +615,25 @@ object Vec4d {
     def apply(x: Double, y: Double, z: Double, w: Double) =
         new Vec4d(x, y, z, w)
 
-    def apply(u: Read4) =
+    def apply(u: Read4[_]) =
         new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
-    def apply(xy: Read2, z: Double, w: Double) =
+    def apply(xy: Read2[_], z: Double, w: Double) =
         new Vec4d(xy.dx, xy.dy, z, w)
 
-    def apply(x: Double, yz: Read2, w: Double) =
+    def apply(x: Double, yz: Read2[_], w: Double) =
         new Vec4d(x, yz.dx, yz.dy, w)
 
-    def apply(x: Double, y: Double, zw: Read2) =
+    def apply(x: Double, y: Double, zw: Read2[_]) =
         new Vec4d(x, y, zw.dx, zw.dy)
 
-    def apply(xy: Read2, zw: Read2) =
+    def apply(xy: Read2[_], zw: Read2[_]) =
         new Vec4d(xy.dx, xy.dy, zw.dx, zw.dy)
 
-    def apply(xyz: Read3, w: Double) =
+    def apply(xyz: Read3[_], w: Double) =
         new Vec4d(xyz.dx, xyz.dy, xyz.dz, w)
 
-    def apply(x: Double, yzw: Read3) =
+    def apply(x: Double, yzw: Read3[_]) =
         new Vec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
     def apply(m: Read2x2) =

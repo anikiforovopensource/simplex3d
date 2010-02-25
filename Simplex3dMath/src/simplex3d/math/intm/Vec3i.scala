@@ -28,9 +28,8 @@ import simplex3d.math.intm.IntMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3i extends Read3 {
+sealed abstract class AnyVec3i extends Read3[Int] {
 
-    private[math] type T = Int
     private[math] type R2 = ConstVec2i
     private[math] type R3 = ConstVec3i
     private[math] type R4 = ConstVec4i
@@ -146,7 +145,7 @@ extends AnyVec3i
 
 object ConstVec3i {
     def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
-    def apply(u: Read3) = new ConstVec3i(u.ix, u.iy, u.iz)
+    def apply(u: Read3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
 
     implicit def toConst(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
 }
@@ -307,10 +306,10 @@ object Vec3i {
 
     def apply(s: Int) = new Vec3i(s, s, s)
     def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
-    def apply(u: Read3) = new Vec3i(u.ix, u.iy, u.iz)
-    def apply(u: Read4) = new Vec3i(u.ix, u.iy, u.iz)
-    def apply(xy: Read2, z: Int) = new Vec3i(xy.ix, xy.iy, z)
-    def apply(x: Int, yz: Read2) = new Vec3i(x, yz.ix, yz.iy)
+    def apply(u: Read3[_]) = new Vec3i(u.ix, u.iy, u.iz)
+    def apply(u: Read4[_]) = new Vec3i(u.ix, u.iy, u.iz)
+    def apply(xy: Read2[_], z: Int) = new Vec3i(xy.ix, xy.iy, z)
+    def apply(x: Int, yz: Read2[_]) = new Vec3i(x, yz.ix, yz.iy)
 
     def unapply(u: AnyVec3i) = Some((u.x, u.y, u.z))
 

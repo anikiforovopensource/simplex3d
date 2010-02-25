@@ -27,7 +27,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f extends ReadQ {
+sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
     private[math] def fa: Float = a
     private[math] def fb: Float = b
@@ -150,7 +150,7 @@ object ConstQuat4f {
     def apply(a: Float, b: Float, c: Float, d: Float) = {
         new ConstQuat4f(a, b, c, d)
     }
-    def apply(u: ReadQ) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
+    def apply(u: ReadQ[_]) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
 
     implicit def toConst(u: AnyQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
@@ -198,8 +198,8 @@ object Quat4f {
     val Identity = new ConstQuat4f(1, 0, 0, 0)
 
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
-    def apply(q: ReadQ) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
-    def apply(u: Read4) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
+    def apply(q: ReadQ[_]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
+    def apply(u: Read4[_]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
     def apply(m: Read2x2) = new Quat4f(m.f11, m.f00, m.f10, m.f01)
 
     def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))

@@ -28,7 +28,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d extends ReadQ {
+sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
     private[math] def fa: Float = float(a)
     private[math] def fb: Float = float(b)
@@ -150,7 +150,7 @@ object ConstQuat4d {
     def apply(a: Double, b: Double, c: Double, d: Double) = {
         new ConstQuat4d(a, b, c, d)
     }
-    def apply(u: ReadQ) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
+    def apply(u: ReadQ[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
 
     implicit def toConst(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }
@@ -200,8 +200,8 @@ object Quat4d {
     def apply(a: Double, b: Double, c: Double, d: Double) = {
         new Quat4d(a, b, c, d)
     }
-    def apply(q: ReadQ) = new Quat4d(q.da, q.db, q.dc, q.dd)
-    def apply(u: Read4) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
+    def apply(q: ReadQ[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+    def apply(u: Read4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
     def apply(m: Read2x2) = new Quat4d(m.d11, m.d00, m.d10, m.d01)
 
     def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))

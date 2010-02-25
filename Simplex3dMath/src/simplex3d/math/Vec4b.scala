@@ -30,7 +30,7 @@ import simplex3d.math.BaseMath._
  *   unless you explicitly want to modify the argument vector.
  * </p>
  * <p>
- *   Boolean vectors do not contan many useful methods. You can operate on them
+ *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
  *   and <code>BaseMath.not(bvec)</code>.
  * </p>
@@ -49,9 +49,8 @@ import simplex3d.math.BaseMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4b extends Read4 {
+sealed abstract class AnyVec4b extends Read4[Boolean] {
 
-    private[math] type T = Boolean
     private[math] type R2 = ConstVec2b
     private[math] type R3 = ConstVec3b
     private[math] type R4 = ConstVec4b
@@ -220,7 +219,7 @@ final class ConstVec4b private[math] (
 extends AnyVec4b
 
 
-/** Factory for creating Boolean 4-dimensional vectors.
+/** Factory for creating constant Boolean 4-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.
@@ -247,12 +246,33 @@ object ConstVec4b {
      * @return a new instance of ConstVec4b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read4) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
+    def apply(u: Read4[_]) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
 
     implicit def toConst(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
 
 
+/** Mutable Boolean 4-dimensional vector.
+ * <p>
+ *   Boolean vectors do not contain many useful methods. You can operate on them
+ *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
+ *   and <code>BaseMath.not(bvec)</code>.
+ * </p>
+ * <p>
+ *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   and DoubleMath:
+ *   <ul>
+ *     <li><code>lessThan(vec1, vec2)</code></li>
+ *     <li><code>lessThanEqual(vec1, vec2)</code></li>
+ *     <li><code>greaterThan(vec1, vec2)</code></li>
+ *     <li><code>greaterThanEqual(vec1, vec2)</code></li>
+ *     <li><code>equal(vec1, vec2)</code></li>
+ *     <li><code>notEqual(vec1, vec2)</code></li>
+ *   </ul>
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 final class Vec4b private[math] (
     var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
 extends AnyVec4b
@@ -754,6 +774,14 @@ extends AnyVec4b
 }
 
 
+/** Factory for creating mutable Boolean 4-dimensional vectors.
+ * <p>
+ *   To keep the code consistent all the constructors are hidden. Use the
+ *   corresponding companion objects as factories to create new instances.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 object Vec4b {
     val True = new ConstVec4b(true, true, true, true)
     val False = new ConstVec4b(false, false, false, false)
@@ -784,7 +812,7 @@ object Vec4b {
      * @return a new instance of Vec4b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read4) =
+    def apply(u: Read4[_]) =
         new Vec4b(u.bx, u.by, u.bz, u.bw)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -797,7 +825,7 @@ object Vec4b {
      *         to x and y components of xy casted as Boolean
      *         and the specified values z and w.
      */
-    def apply(xy: Read2, z: Boolean, w: Boolean) =
+    def apply(xy: Read2[_], z: Boolean, w: Boolean) =
         new Vec4b(xy.bx, xy.by, z, w)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -811,7 +839,7 @@ object Vec4b {
      *         x and y components of yz casted as Boolean,
      *         and the specified value w.
      */
-    def apply(x: Boolean, yz: Read2, w: Boolean) =
+    def apply(x: Boolean, yz: Read2[_], w: Boolean) =
         new Vec4b(x, yz.bx, yz.by, w)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -824,7 +852,7 @@ object Vec4b {
      *         to the specified values x and y
      *         and x and y components of zw casted as Boolean.
      */
-    def apply(x: Boolean, y: Boolean, zw: Read2) =
+    def apply(x: Boolean, y: Boolean, zw: Read2[_]) =
         new Vec4b(x, y, zw.bx, zw.by)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -836,7 +864,7 @@ object Vec4b {
      *         to x and y components of xy casted as Boolean
      *         and x and y components of zw casted as Boolean.
      */
-    def apply(xy: Read2, zw: Read2) =
+    def apply(xy: Read2[_], zw: Read2[_]) =
         new Vec4b(xy.bx, xy.by, zw.bx, zw.by)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -848,7 +876,7 @@ object Vec4b {
      *         to x, y, and z components of xyz casted as Boolean
      *         and the specified value w.
      */
-    def apply(xyz: Read3, w: Boolean) =
+    def apply(xyz: Read3[_], w: Boolean) =
         new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
 
     /** Makes a new instance of Vec4b from values extracted from the specified
@@ -860,7 +888,7 @@ object Vec4b {
      *         to the specified value x
      *         and x, y, and z components of yzw casted as Boolean.
      */
-    def apply(x: Boolean, yzw: Read3) =
+    def apply(x: Boolean, yzw: Read3[_]) =
         new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
     /** Makes a new instance of Vec4b from values extracted from the argument

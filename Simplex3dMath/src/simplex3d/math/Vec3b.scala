@@ -30,7 +30,7 @@ import simplex3d.math.BaseMath._
  *   unless you explicitly want to modify the argument vector.
  * </p>
  * <p>
- *   Boolean vectors do not contan many useful methods. You can operate on them
+ *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
  *   and <code>BaseMath.not(bvec)</code>.
  * </p>
@@ -49,9 +49,8 @@ import simplex3d.math.BaseMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3b extends Read3 {
+sealed abstract class AnyVec3b extends Read3[Boolean] {
 
-    private[math] type T = Boolean
     private[math] type R2 = ConstVec2b
     private[math] type R3 = ConstVec3b
     private[math] type R4 = ConstVec4b
@@ -202,7 +201,7 @@ final class ConstVec3b private[math] (
 extends AnyVec3b
 
 
-/** Factory for creating Boolean 3-dimensional vectors.
+/** Factory for creating constant Boolean 3-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.
@@ -226,12 +225,33 @@ object ConstVec3b {
      * @return a new instance of ConstVec3b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read3) = new ConstVec3b(u.bx, u.by, u.bz)
+    def apply(u: Read3[_]) = new ConstVec3b(u.bx, u.by, u.bz)
 
     implicit def toConst(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 }
 
 
+/** Mutable Boolean 3-dimensional vector.
+ * <p>
+ *   Boolean vectors do not contain many useful methods. You can operate on them
+ *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
+ *   and <code>BaseMath.not(bvec)</code>.
+ * </p>
+ * <p>
+ *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   and DoubleMath:
+ *   <ul>
+ *     <li><code>lessThan(vec1, vec2)</code></li>
+ *     <li><code>lessThanEqual(vec1, vec2)</code></li>
+ *     <li><code>greaterThan(vec1, vec2)</code></li>
+ *     <li><code>greaterThanEqual(vec1, vec2)</code></li>
+ *     <li><code>equal(vec1, vec2)</code></li>
+ *     <li><code>notEqual(vec1, vec2)</code></li>
+ *   </ul>
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
 extends AnyVec3b
 {
@@ -416,6 +436,14 @@ extends AnyVec3b
 }
 
 
+/** Factory for creating mutable Boolean 3-dimensional vectors.
+ * <p>
+ *   To keep the code consistent all the constructors are hidden. Use the
+ *   corresponding companion objects as factories to create new instances.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 object Vec3b {
     val True = new ConstVec3b(true, true, true)
     val False = new ConstVec3b(false, false, false)
@@ -443,7 +471,7 @@ object Vec3b {
      * @return a new instance of Vec3b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read3) = new Vec3b(u.bx, u.by, u.bz)
+    def apply(u: Read3[_]) = new Vec3b(u.bx, u.by, u.bz)
 
     /** Makes a new instance of Vec3b from the first three components
      * of a 4-dimensional vector.
@@ -452,7 +480,7 @@ object Vec3b {
      * @return a new instance of Vec3b with components initialized
      *         to the first three components of u casted as Boolean.
      */
-    def apply(u: Read4) = new Vec3b(u.bx, u.by, u.bz)
+    def apply(u: Read4[_]) = new Vec3b(u.bx, u.by, u.bz)
 
     /** Makes a new instance of Vec3b from values extracted from the specified
      * arguments.
@@ -463,7 +491,7 @@ object Vec3b {
      *         to x and y components of xy casted as Boolean
      *         and the specified value z.
      */
-    def apply(xy: Read2, z: Boolean) = new Vec3b(xy.bx, xy.by, z)
+    def apply(xy: Read2[_], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
     
     /** Makes a new instance of Vec3b from values extracted from the specified
      * arguments.
@@ -474,7 +502,7 @@ object Vec3b {
      *         to the specified value x
      *         and x and y components of yz casted as Boolean.
      */
-    def apply(x: Boolean, yz: Read2) = new Vec3b(x, yz.bx, yz.by)
+    def apply(x: Boolean, yz: Read2[_]) = new Vec3b(x, yz.bx, yz.by)
 
     def unapply(u: AnyVec3b) = Some((u.x, u.y, u.z))
 

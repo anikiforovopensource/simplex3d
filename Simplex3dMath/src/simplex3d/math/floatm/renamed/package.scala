@@ -35,13 +35,13 @@ package object renamed {
     implicit def fmFloat(s: Float) = new ExtendedFloat(s)
     implicit def fmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def fmVec2i(u: Read2{ type T = Int }) :Vec2f =
+    implicit def fmVec2i(u: Read2[Int]) :Vec2f =
         new Vec2f(u.fx, u.fy)
 
-    implicit def fmVec3i(u: Read3{ type T = Int }) :Vec3f =
+    implicit def fmVec3i(u: Read3[Int]) :Vec3f =
         new Vec3f(u.fx, u.fy, u.fz)
 
-    implicit def fmVec4i(u: Read4{ type T = Int }) :Vec4f =
+    implicit def fmVec4i(u: Read4[Int]) :Vec4f =
         new Vec4f(u.fx, u.fy, u.fz, u.fw)
 
 

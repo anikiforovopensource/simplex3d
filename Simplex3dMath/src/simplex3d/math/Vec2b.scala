@@ -30,7 +30,7 @@ import simplex3d.math.BaseMath._
  *   unless you explicitly want to modify the argument vector.
  * </p>
  * <p>
- *   Boolean vectors do not contan many useful methods. You can operate on them
+ *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
  *   and <code>BaseMath.not(bvec)</code>.
  * </p>
@@ -49,9 +49,8 @@ import simplex3d.math.BaseMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b extends Read2 {
+sealed abstract class AnyVec2b extends Read2[Boolean] {
 
-    private[math] type T = Boolean
     private[math] type R2 = ConstVec2b
     private[math] type R3 = ConstVec3b
     private[math] type R4 = ConstVec4b
@@ -182,7 +181,7 @@ final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
 extends AnyVec2b
 
 
-/** Factory for creating Boolean 2-dimensional vectors.
+/** Factory for creating constant Boolean 2-dimensional vectors.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.
@@ -205,12 +204,33 @@ object ConstVec2b {
      * @return a new instance of ConstVec2b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read2) = new ConstVec2b(u.bx, u.by)
+    def apply(u: Read2[_]) = new ConstVec2b(u.bx, u.by)
     
     implicit def toConst(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
 }
 
 
+/** Mutable Boolean 2-dimensional vector.
+ * <p>
+ *   Boolean vectors do not contain many useful methods. You can operate on them
+ *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
+ *   and <code>BaseMath.not(bvec)</code>.
+ * </p>
+ * <p>
+ *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   and DoubleMath:
+ *   <ul>
+ *     <li><code>lessThan(vec1, vec2)</code></li>
+ *     <li><code>lessThanEqual(vec1, vec2)</code></li>
+ *     <li><code>greaterThan(vec1, vec2)</code></li>
+ *     <li><code>greaterThanEqual(vec1, vec2)</code></li>
+ *     <li><code>equal(vec1, vec2)</code></li>
+ *     <li><code>notEqual(vec1, vec2)</code></li>
+ *   </ul>
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
 extends AnyVec2b
 {
@@ -306,6 +326,14 @@ extends AnyVec2b
 }
 
 
+/** Factory for creating mutable Boolean 2-dimensional vectors.
+ * <p>
+ *   To keep the code consistent all the constructors are hidden. Use the
+ *   corresponding companion objects as factories to create new instances.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 object Vec2b {
     val True = new ConstVec2b(true, true)
     val False = new ConstVec2b(false, false)
@@ -332,7 +360,7 @@ object Vec2b {
      * @return a new instance of Vec2b with components initialized
      *         to the components of u casted as Boolean.
      */
-    def apply(u: Read2) = new Vec2b(u.bx, u.by)
+    def apply(u: Read2[_]) = new Vec2b(u.bx, u.by)
 
     /** Makes a new instance of Vec2b from the first two components
      * of a 3-dimensional vector.
@@ -341,7 +369,7 @@ object Vec2b {
      * @return a new instance of Vec2b with components initialized
      *         to the first two components of u casted as Boolean.
      */
-    def apply(u: Read3) = new Vec2b(u.bx, u.by)
+    def apply(u: Read3[_]) = new Vec2b(u.bx, u.by)
     
     /** Makes a new instance of Vec2b from the first two components
      * of a 4-dimensional vector.
@@ -350,7 +378,7 @@ object Vec2b {
      * @return a new instance of Vec2b with components initialized
      *         to the first two components of u casted as Boolean.
      */
-    def apply(u: Read4) = new Vec2b(u.bx, u.by)
+    def apply(u: Read4[_]) = new Vec2b(u.bx, u.by)
 
     def unapply(u: AnyVec2b) = Some((u.x, u.y))
 

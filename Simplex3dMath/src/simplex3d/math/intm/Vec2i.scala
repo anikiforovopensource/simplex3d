@@ -28,9 +28,8 @@ import simplex3d.math.intm.IntMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2i extends Read2 {
+sealed abstract class AnyVec2i extends Read2[Int] {
 
-    private[math] type T = Int
     private[math] type R2 = ConstVec2i
     private[math] type R3 = ConstVec3i
     private[math] type R4 = ConstVec4i
@@ -135,7 +134,7 @@ final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
 
 object ConstVec2i {
     def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-    def apply(u: Read2) = new ConstVec2i(u.ix, u.iy)
+    def apply(u: Read2[_]) = new ConstVec2i(u.ix, u.iy)
 
     implicit def toConst(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
 }
@@ -223,9 +222,9 @@ object Vec2i {
 
     def apply(s: Int) = new Vec2i(s, s)
     def apply(x: Int, y: Int) = new Vec2i(x, y)
-    def apply(u: Read2) = new Vec2i(u.ix, u.iy)
-    def apply(u: Read3) = new Vec2i(u.ix, u.iy)
-    def apply(u: Read4) = new Vec2i(u.ix, u.iy)
+    def apply(u: Read2[_]) = new Vec2i(u.ix, u.iy)
+    def apply(u: Read3[_]) = new Vec2i(u.ix, u.iy)
+    def apply(u: Read4[_]) = new Vec2i(u.ix, u.iy)
 
     def unapply(u: AnyVec2i) = Some((u.x, u.y))
 

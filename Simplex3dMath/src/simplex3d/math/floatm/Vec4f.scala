@@ -28,9 +28,8 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4f extends Read4 {
+sealed abstract class AnyVec4f extends Read4[Float] {
 
-    private[math] type T = Float
     private[math] type R2 = ConstVec2f
     private[math] type R3 = ConstVec3f
     private[math] type R4 = ConstVec4f
@@ -161,7 +160,7 @@ object ConstVec4f {
     def apply(x: Float, y: Float, z: Float, w: Float) = {
         new ConstVec4f(x, y, z, w)
     }
-    def apply(u: Read4) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
+    def apply(u: Read4[_]) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
     implicit def toConst(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
 }
@@ -616,25 +615,25 @@ object Vec4f {
     def apply(x: Float, y: Float, z: Float, w: Float) =
         new Vec4f(x, y, z, w)
 
-    def apply(u: Read4) =
+    def apply(u: Read4[_]) =
         new Vec4f(u.fx, u.fy, u.fz, u.fw)
 
-    def apply(xy: Read2, z: Float, w: Float) =
+    def apply(xy: Read2[_], z: Float, w: Float) =
         new Vec4f(xy.fx, xy.fy, z, w)
 
-    def apply(x: Float, yz: Read2, w: Float) =
+    def apply(x: Float, yz: Read2[_], w: Float) =
         new Vec4f(x, yz.fx, yz.fy, w)
 
-    def apply(x: Float, y: Float, zw: Read2) =
+    def apply(x: Float, y: Float, zw: Read2[_]) =
         new Vec4f(x, y, zw.fx, zw.fy)
 
-    def apply(xy: Read2, zw: Read2) =
+    def apply(xy: Read2[_], zw: Read2[_]) =
         new Vec4f(xy.fx, xy.fy, zw.fx, zw.fy)
 
-    def apply(xyz: Read3, w: Float) =
+    def apply(xyz: Read3[_], w: Float) =
         new Vec4f(xyz.fx, xyz.fy, xyz.fz, w)
 
-    def apply(x: Float, yzw: Read3) =
+    def apply(x: Float, yzw: Read3[_]) =
         new Vec4f(x, yzw.fx, yzw.fy, yzw.fz)
 
     def apply(m: Read2x2) =

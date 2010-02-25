@@ -36,22 +36,22 @@ package object doublem {
     implicit def dmFloat(s: Float) = new ExtendedFloat(s)
     implicit def dmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def dmVec2i(u: Read2{ type T = Int }) :Vec2d =
+    implicit def dmVec2i(u: Read2[Int]) :Vec2d =
         new Vec2d(u.dx, u.dy)
 
-    implicit def dmVec3i(u: Read3{ type T = Int }) :Vec3d =
+    implicit def dmVec3i(u: Read3[Int]) :Vec3d =
         new Vec3d(u.dx, u.dy, u.dz)
 
-    implicit def dmVec4i(u: Read4{ type T = Int }) :Vec4d =
+    implicit def dmVec4i(u: Read4[Int]) :Vec4d =
         new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
-    implicit def dmVec2f(u: Read2{ type T = Float }) :Vec2d =
+    implicit def dmVec2f(u: Read2[Float]) :Vec2d =
         new Vec2d(u.dx, u.dy)
 
-    implicit def dmVec3f(u: Read3{ type T = Float }) :Vec3d =
+    implicit def dmVec3f(u: Read3[Float]) :Vec3d =
         new Vec3d(u.dx, u.dy, u.dz)
 
-    implicit def dmVec4f(u: Read4{ type T = Float }) :Vec4d =
+    implicit def dmVec4f(u: Read4[Float]) :Vec4d =
         new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
 

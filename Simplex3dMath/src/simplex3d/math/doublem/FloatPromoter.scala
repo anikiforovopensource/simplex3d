@@ -30,40 +30,40 @@ import simplex3d.math._
  */
 final class FloatPromoter(val value: Double) {
     // Vecf to Vecd promotion
-    def *(u: Read2{ type T = Float }) =
+    def *(u: Read2[Float]) =
         new Vec2d(u.dx*value, u.dy*value)
 
-    def *(u: Read3{ type T = Float }) =
+    def *(u: Read3[Float]) =
         new Vec3d(u.dx*value, u.dy*value, u.dz*value)
 
-    def *(u: Read4{ type T = Float }) =
+    def *(u: Read4[Float]) =
         new Vec4d(u.dx*value, u.dy*value, u.dz*value, u.dw*value)
 
-    def /(u: Read2{ type T = Float }) =
+    def /(u: Read2[Float]) =
         new Vec2d(value/u.dx, value/u.dy)
 
-    def /(u: Read3{ type T = Float }) =
+    def /(u: Read3[Float]) =
         new Vec3d(value/u.dx, value/u.dy, value/u.dz)
 
-    def /(u: Read4{ type T = Float }) =
+    def /(u: Read4[Float]) =
         new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
 
 
-    def +(u: Read2{ type T = Float }) =
+    def +(u: Read2[Float]) =
         new Vec2d(value + u.dx, value + u.dy)
 
-    def +(u: Read3{ type T = Float }) =
+    def +(u: Read3[Float]) =
         new Vec3d(value + u.dx, value + u.dy, value + u.dz)
 
-    def +(u: Read4{ type T = Float }) =
+    def +(u: Read4[Float]) =
         new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
 
-    def -(u: Read2{ type T = Float }) =
+    def -(u: Read2[Float]) =
         new Vec2d(value - u.dx, value - u.dy)
 
-    def -(u: Read3{ type T = Float }) =
+    def -(u: Read3[Float]) =
         new Vec3d(value - u.dx, value - u.dy, value - u.dz)
 
-    def -(u: Read4{ type T = Float }) =
+    def -(u: Read4[Float]) =
         new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
 }

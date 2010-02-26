@@ -198,7 +198,7 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
  */
 final class ConstVec3b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean)
-extends AnyVec3b
+extends AnyVec3b with ConstVec[Boolean]
 
 
 /** Factory for creating constant Boolean 3-dimensional vectors.
@@ -253,7 +253,7 @@ object ConstVec3b {
  * @author Aleksey Nikiforov (lex)
  */
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
-extends AnyVec3b
+extends AnyVec3b with Vec[Boolean]
 {
     /** Alias for x.
      * @return component x.

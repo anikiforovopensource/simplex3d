@@ -144,7 +144,7 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
 final class ConstQuat4f private[math] (
     val a: Float, val b: Float, val c: Float, val d: Float)
-extends AnyQuat4f
+extends AnyQuat4f with ConstQuat[Float]
 
 object ConstQuat4f {
     def apply(a: Float, b: Float, c: Float, d: Float) = {
@@ -158,7 +158,7 @@ object ConstQuat4f {
 
 final class Quat4f private[math] (
     var a: Float, var b: Float, var c: Float, var d: Float)
-extends AnyQuat4f
+extends AnyQuat4f with Quat[Float]
 {
     def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
     def /=(s: Float) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
@@ -200,7 +200,7 @@ object Quat4f {
     def apply(a: Float, b: Float, c: Float, d: Float) = new Quat4f(a, b, c, d)
     def apply(q: ReadQ[_]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
     def apply(u: Read4[_]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
-    def apply(m: Read2x2) = new Quat4f(m.f11, m.f00, m.f10, m.f01)
+    def apply(m: Read2x2[_]) = new Quat4f(m.f11, m.f00, m.f10, m.f01)
 
     def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
 

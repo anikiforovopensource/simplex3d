@@ -126,7 +126,7 @@ sealed abstract class AnyVec2f extends Read2[Float] {
 }
 
 final class ConstVec2f private[math] (val x: Float, val y: Float)
-extends AnyVec2f
+extends AnyVec2f with ConstVec[Float]
 
 object ConstVec2f {
     def apply(x: Float, y: Float) = new ConstVec2f(x, y)
@@ -135,7 +135,9 @@ object ConstVec2f {
     implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 }
 
-final class Vec2f private[math] (var x: Float, var y: Float) extends AnyVec2f {
+final class Vec2f private[math] (var x: Float, var y: Float)
+extends AnyVec2f with Vec[Float]
+{
 
     override def r = x
     override def g = y

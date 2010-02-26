@@ -130,7 +130,8 @@ sealed abstract class AnyVec2i extends Read2[Int] {
     }
 }
 
-final class ConstVec2i private[math] (val x: Int, val y: Int) extends AnyVec2i
+final class ConstVec2i private[math] (val x: Int, val y: Int)
+extends AnyVec2i with ConstVec[Int]
 
 object ConstVec2i {
     def apply(x: Int, y: Int) = new ConstVec2i(x, y)
@@ -140,7 +141,9 @@ object ConstVec2i {
 }
 
 
-final class Vec2i private[math] (var x: Int, var y: Int) extends AnyVec2i {
+final class Vec2i private[math] (var x: Int, var y: Int)
+extends AnyVec2i with Vec[Int]
+{
 
     override def r = x
     override def g = y

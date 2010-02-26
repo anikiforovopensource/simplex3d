@@ -25,7 +25,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle2Read[T] extends Vec[T] {
+private[math] abstract class Swizzle2Read[T] extends AnyVec[T] {
 
     private[math] type R2
     private[math] type R3

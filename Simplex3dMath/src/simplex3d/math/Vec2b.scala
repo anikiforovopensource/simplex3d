@@ -178,7 +178,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
  * @author Aleksey Nikiforov (lex)
  */
 final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
-extends AnyVec2b
+extends AnyVec2b with ConstVec[Boolean]
 
 
 /** Factory for creating constant Boolean 2-dimensional vectors.
@@ -232,7 +232,7 @@ object ConstVec2b {
  * @author Aleksey Nikiforov (lex)
  */
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
-extends AnyVec2b
+extends AnyVec2b with Vec[Boolean]
 {
 
     /** Alias for x.

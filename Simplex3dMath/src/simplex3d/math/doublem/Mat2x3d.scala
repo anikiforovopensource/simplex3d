@@ -28,7 +28,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x3d extends Read2x3
+sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
 {
     // Column major order.
     def m00: Double; def m10: Double // column
@@ -288,7 +288,7 @@ final class ConstMat2x3d private[math] (
     val m00: Double, val m10: Double,
     val m01: Double, val m11: Double,
     val m02: Double, val m12: Double
-) extends AnyMat2x3d
+) extends AnyMat2x3d with ConstMat[ConstVec2d]
 
 object ConstMat2x3d {
 
@@ -302,14 +302,14 @@ object ConstMat2x3d {
             m02, m12
       )
 
-    def apply(c0: Read2, c1: Read2, c2: Read2) = 
+    def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
     new ConstMat2x3d(
         c0.dx, c0.dy,
         c1.dx, c1.dy,
         c2.dx, c2.dy
     )
 
-    def apply(m: Read2x3) = new ConstMat2x3d(
+    def apply(m: Read2x3[_]) = new ConstMat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
@@ -323,7 +323,7 @@ final class Mat2x3d private[math] (
     var m00: Double, var m10: Double,
     var m01: Double, var m11: Double,
     var m02: Double, var m12: Double
-) extends AnyMat2x3d
+) extends AnyMat2x3d with Mat[ConstVec2d]
 {
     def *=(s: Double) {
         m00 *= s; m10 *= s;
@@ -458,62 +458,62 @@ object Mat2x3d {
             m02, m12
       )
 
-    def apply(c0: Read2, c1: Read2, c2: Read2) = 
+    def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
     new Mat2x3d(
         c0.dx, c0.dy,
         c1.dx, c1.dy,
         c2.dx, c2.dy
     )
 
-    def apply(m: Read2x2) = new Mat2x3d(
+    def apply(m: Read2x2[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         0, 0
     )
 
-    def apply(m: Read2x3) = new Mat2x3d(
+    def apply(m: Read2x3[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
     )
 
-    def apply(m: Read2x4) = new Mat2x3d(
+    def apply(m: Read2x4[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
     )
 
-    def apply(m: Read3x2) = new Mat2x3d(
+    def apply(m: Read3x2[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         0, 0
     )
 
-    def apply(m: Read3x3) = new Mat2x3d(
+    def apply(m: Read3x3[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
     )
 
-    def apply(m: Read3x4) = new Mat2x3d(
+    def apply(m: Read3x4[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
     )
 
-    def apply(m: Read4x2) = new Mat2x3d(
+    def apply(m: Read4x2[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         0, 0
     )
 
-    def apply(m: Read4x3) = new Mat2x3d(
+    def apply(m: Read4x3[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12
     )
 
-    def apply(m: Read4x4) = new Mat2x3d(
+    def apply(m: Read4x4[_]) = new Mat2x3d(
         m.d00, m.d10,
         m.d01, m.d11,
         m.d02, m.d12

@@ -31,7 +31,7 @@ import simplex3d.math.BaseMath._
  * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Read2[T] extends Swizzle2Read[T] {
-    final def components = 2
+    final override def size = 2
 
     private[math] def bx: Boolean
     private[math] def by: Boolean
@@ -54,7 +54,7 @@ private[math] abstract class Read2[T] extends Swizzle2Read[T] {
  * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Read3[T] extends Swizzle3Read[T] {
-    final def components = 3
+    final override def size = 3
 
     private[math] def bx: Boolean
     private[math] def by: Boolean
@@ -81,7 +81,7 @@ private[math] abstract class Read3[T] extends Swizzle3Read[T] {
  * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Read4[T] extends Swizzle4Read[T] {
-    final def components = 4
+    final override def size = 4
 
     private[math] def bx: Boolean
     private[math] def by: Boolean
@@ -111,7 +111,7 @@ private[math] abstract class Read4[T] extends Swizzle4Read[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class ReadQ[T] extends Quat[T] {
+private[math] abstract class ReadQ[T] extends AnyQuat[T] {
     private[math] def fa: Float
     private[math] def fb: Float
     private[math] def fc: Float
@@ -130,7 +130,9 @@ private[math] abstract class ReadQ[T] extends Quat[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x2 {
+private[math] abstract class Read2x2[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 2
+
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
 
@@ -145,7 +147,9 @@ private[math] abstract class Read2x2 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x3 {
+private[math] abstract class Read2x3[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 3
+
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
     private[math] def f02: Float; private[math] def f12: Float
@@ -162,7 +166,9 @@ private[math] abstract class Read2x3 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x4 {
+private[math] abstract class Read2x4[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 4
+
     private[math] def f00: Float; private[math] def f10: Float
     private[math] def f01: Float; private[math] def f11: Float
     private[math] def f02: Float; private[math] def f12: Float
@@ -181,7 +187,9 @@ private[math] abstract class Read2x4 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x2 {
+private[math] abstract class Read3x2[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 2
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float
@@ -207,7 +215,9 @@ private[math] abstract class Read3x2 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x3 {
+private[math] abstract class Read3x3[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 3
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float
@@ -241,7 +251,9 @@ private[math] abstract class Read3x3 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x4 {
+private[math] abstract class Read3x4[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 4
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float
@@ -283,7 +295,9 @@ private[math] abstract class Read3x4 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x2 {
+private[math] abstract class Read4x2[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 2
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float
@@ -313,7 +327,9 @@ private[math] abstract class Read4x2 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x3 {
+private[math] abstract class Read4x3[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 3
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float
@@ -353,7 +369,9 @@ private[math] abstract class Read4x3 {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x4 {
+private[math] abstract class Read4x4[V <: ConstVec[_]] extends AnyMat[V] {
+    final override def size :Int = 4
+
     private[math] def f00: Float
     private[math] def f10: Float
     private[math] def f20: Float

@@ -28,7 +28,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x2d extends Read4x2
+sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
 {
     // Column major order.
     def m00: Double; def m10: Double; def m20: Double; def m30: Double // column
@@ -258,7 +258,7 @@ sealed abstract class AnyMat4x2d extends Read4x2
 final class ConstMat4x2d private[math] (
     val m00: Double, val m10: Double, val m20: Double, val m30: Double,
     val m01: Double, val m11: Double, val m21: Double, val m31: Double
-) extends AnyMat4x2d
+) extends AnyMat4x2d with ConstMat[ConstVec4d]
 
 object ConstMat4x2d {
 
@@ -270,13 +270,13 @@ object ConstMat4x2d {
             m01, m11, m21, m31
       )
 
-    def apply(c0: Read4, c1: Read4) = 
+    def apply(c0: Read4[_], c1: Read4[_]) = 
     new ConstMat4x2d(
         c0.dx, c0.dy, c0.dz, c0.dw,
         c1.dx, c1.dy, c1.dz, c1.dw
     )
 
-    def apply(m: Read4x2) = new ConstMat4x2d(
+    def apply(m: Read4x2[_]) = new ConstMat4x2d(
         m.d00, m.d10, m.d20, m.d30,
         m.d01, m.d11, m.d21, m.d31
     )
@@ -288,7 +288,7 @@ object ConstMat4x2d {
 final class Mat4x2d private[math] (
     var m00: Double, var m10: Double, var m20: Double, var m30: Double,
     var m01: Double, var m11: Double, var m21: Double, var m31: Double
-) extends AnyMat4x2d
+) extends AnyMat4x2d with Mat[ConstVec4d]
 {
     def *=(s: Double) {
         m00 *= s; m10 *= s; m20 *= s; m30 *= s;
@@ -425,53 +425,53 @@ object Mat4x2d {
             m01, m11, m21, m31
       )
 
-    def apply(c0: Read4, c1: Read4) = 
+    def apply(c0: Read4[_], c1: Read4[_]) = 
     new Mat4x2d(
         c0.dx, c0.dy, c0.dz, c0.dw,
         c1.dx, c1.dy, c1.dz, c1.dw
     )
 
-    def apply(m: Read2x2) = new Mat4x2d(
+    def apply(m: Read2x2[_]) = new Mat4x2d(
         m.d00, m.d10, 0, 0,
         m.d01, m.d11, 0, 0
     )
 
-    def apply(m: Read2x3) = new Mat4x2d(
+    def apply(m: Read2x3[_]) = new Mat4x2d(
         m.d00, m.d10, 0, 0,
         m.d01, m.d11, 0, 0
     )
 
-    def apply(m: Read2x4) = new Mat4x2d(
+    def apply(m: Read2x4[_]) = new Mat4x2d(
         m.d00, m.d10, 0, 0,
         m.d01, m.d11, 0, 0
     )
 
-    def apply(m: Read3x2) = new Mat4x2d(
+    def apply(m: Read3x2[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, 0,
         m.d01, m.d11, m.d21, 0
     )
 
-    def apply(m: Read3x3) = new Mat4x2d(
+    def apply(m: Read3x3[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, 0,
         m.d01, m.d11, m.d21, 0
     )
 
-    def apply(m: Read3x4) = new Mat4x2d(
+    def apply(m: Read3x4[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, 0,
         m.d01, m.d11, m.d21, 0
     )
 
-    def apply(m: Read4x2) = new Mat4x2d(
+    def apply(m: Read4x2[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, m.d30,
         m.d01, m.d11, m.d21, m.d31
     )
 
-    def apply(m: Read4x3) = new Mat4x2d(
+    def apply(m: Read4x3[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, m.d30,
         m.d01, m.d11, m.d21, m.d31
     )
 
-    def apply(m: Read4x4) = new Mat4x2d(
+    def apply(m: Read4x4[_]) = new Mat4x2d(
         m.d00, m.d10, m.d20, m.d30,
         m.d01, m.d11, m.d21, m.d31
     )

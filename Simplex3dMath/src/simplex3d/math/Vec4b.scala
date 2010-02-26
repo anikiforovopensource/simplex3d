@@ -216,7 +216,7 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
  */
 final class ConstVec4b private[math] (
     val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean)
-extends AnyVec4b
+extends AnyVec4b with ConstVec[Boolean]
 
 
 /** Factory for creating constant Boolean 4-dimensional vectors.
@@ -275,7 +275,7 @@ object ConstVec4b {
  */
 final class Vec4b private[math] (
     var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean)
-extends AnyVec4b
+extends AnyVec4b with Vec[Boolean]
 {
     /** Alias for x.
      * @return component x.
@@ -898,7 +898,7 @@ object Vec4b {
      * @return a new instance of Vec4b with components initialized
      *         to m00, m10, m01, and m11 components of m casted as Boolean.
      */
-    def apply(m: Read2x2) =
+    def apply(m: Read2x2[_]) =
         new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 
     def unapply(u: AnyVec4b) = Some((u.x, u.y, u.z, u.w))

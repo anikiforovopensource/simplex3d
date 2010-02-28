@@ -37,23 +37,23 @@ package object renamed {
     implicit def dmFloat(s: Float) = new ExtendedFloat(s)
     implicit def dmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def dmVec2i(u: Read2[Int]) :Vec2d =
-        new Vec2d(u.dx, u.dy)
+     implicit def dmcastVec2i(u: Read2[Int]) :ConstVec2d =
+        new ConstVec2d(u.dx, u.dy)
 
-    implicit def dmVec3i(u: Read3[Int]) :Vec3d =
-        new Vec3d(u.dx, u.dy, u.dz)
+    implicit def dmcastVec3i(u: Read3[Int]) :ConstVec3d =
+        new ConstVec3d(u.dx, u.dy, u.dz)
 
-    implicit def dmVec4i(u: Read4[Int]) :Vec4d =
-        new Vec4d(u.dx, u.dy, u.dz, u.dw)
+    implicit def dmcastVec4i(u: Read4[Int]) :ConstVec4d =
+        new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-    implicit def dmVec2f(u: Read2[Float]) :Vec2d =
-        new Vec2d(u.dx, u.dy)
+    implicit def dmcastVec2f(u: Read2[Float]) :ConstVec2d =
+        new ConstVec2d(u.dx, u.dy)
 
-    implicit def dmVec3f(u: Read3[Float]) :Vec3d =
-        new Vec3d(u.dx, u.dy, u.dz)
+    implicit def dmcastVec3f(u: Read3[Float]) :ConstVec3d =
+        new ConstVec3d(u.dx, u.dy, u.dz)
 
-    implicit def dmVec4f(u: Read4[Float]) :Vec4d =
-        new Vec4d(u.dx, u.dy, u.dz, u.dw)
+    implicit def dmcastVec4f(u: Read4[Float]) :ConstVec4d =
+        new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
     
 
     val DoubleMath = doublem.DoubleMath

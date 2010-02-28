@@ -213,4 +213,6 @@ object Vec2d {
     def unapply(u: AnyVec2d) = Some((u.x, u.y))
 
     implicit def toMutable(u: AnyVec2d) = new Vec2d(u.x, u.y)
+    implicit def castInt(u: Read2[Int]) = new Vec2d(u.dx, u.dy)
+    implicit def castFloat(u: Read2[Float]) = new Vec2d(u.dx, u.dy)
 }

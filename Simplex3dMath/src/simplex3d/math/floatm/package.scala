@@ -34,14 +34,14 @@ package object floatm {
     implicit def fmFloat(s: Float) = new ExtendedFloat(s)
     implicit def fmInt(s: Int) = new ExtendedInt(s)
 
-    implicit def fmVec2i(u: Read2[Int]) :Vec2f =
-        new Vec2f(u.fx, u.fy)
+    implicit def fmcastVec2i(u: Read2[Int]) :ConstVec2f =
+        new ConstVec2f(u.fx, u.fy)
 
-    implicit def fmVec3i(u: Read3[Int]) :Vec3f =
-        new Vec3f(u.fx, u.fy, u.fz)
+    implicit def fmcastVec3i(u: Read3[Int]) :ConstVec3f =
+        new ConstVec3f(u.fx, u.fy, u.fz)
 
-    implicit def fmVec4i(u: Read4[Int]) :Vec4f =
-        new Vec4f(u.fx, u.fy, u.fz, u.fw)
+    implicit def fmcastVec4i(u: Read4[Int]) :ConstVec4f =
+        new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
 
     // Aliases

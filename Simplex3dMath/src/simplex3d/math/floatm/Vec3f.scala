@@ -299,4 +299,5 @@ object Vec3f {
     def unapply(u: AnyVec3f) = Some((u.x, u.y, u.z))
 
     implicit def toMutable(u: AnyVec3f) = new Vec3f(u.x, u.y, u.z)
+    implicit def castInt(u: Read3[Int]) = new Vec3f(u.fx, u.fy, u.fz)
 }

@@ -213,4 +213,5 @@ object Vec2f {
     def unapply(u: AnyVec2f) = Some((u.x, u.y))
 
     implicit def toMutable(u: AnyVec2f) = new Vec2f(u.x, u.y)
+    implicit def castInt(u: Read2[Int]) = new Vec2f(u.fx, u.fy)
 }

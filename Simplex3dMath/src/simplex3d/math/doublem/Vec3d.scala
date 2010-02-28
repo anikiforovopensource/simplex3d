@@ -301,4 +301,6 @@ object Vec3d {
     def unapply(u: AnyVec3d) = Some((u.x, u.y, u.z))
 
     implicit def toMutable(u: AnyVec3d) = new Vec3d(u.x, u.y, u.z)
+    implicit def castInt(u: Read3[Int]) = new Vec3d(u.dx, u.dy, u.dz)
+    implicit def castFloat(u: Read3[Float]) = new Vec3d(u.dx, u.dy, u.dz)
 }

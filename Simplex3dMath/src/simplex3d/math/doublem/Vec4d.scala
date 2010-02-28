@@ -642,4 +642,6 @@ object Vec4d {
     def unapply(u: AnyVec4d) = Some((u.x, u.y, u.z, u.w))
 
     implicit def toMutable(u: AnyVec4d) = new Vec4d(u.x, u.y, u.z, u.w)
+    implicit def castInt(u: Read4[Int]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
+    implicit def castFloat(u: Read4[Float]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
 }

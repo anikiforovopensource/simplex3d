@@ -22,7 +22,6 @@ package simplex3d.math.intm
 
 import simplex3d.math._
 import simplex3d.math.BaseMath._
-import simplex3d.math.intm.IntMath._
 
 
 /**

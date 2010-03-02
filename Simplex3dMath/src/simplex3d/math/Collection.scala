@@ -27,12 +27,12 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyVec[T] extends Iterable[T] {
+abstract class MathObject[+T] extends Iterable[T] {
     def apply(i: Int) :T
     override def size :Int
-    def iterator :Iterator[T] = new VecIterator
+    def iterator :Iterator[T] = new MathIterator
 
-    private final class VecIterator extends Iterator[T] {
+    private final class MathIterator extends Iterator[T] {
         private var i = 0
         def hasNext: Boolean = (i < size)
         def next() :T = {
@@ -43,52 +43,28 @@ abstract class AnyVec[T] extends Iterable[T] {
             } else Iterator.empty.next
         }
     }
-}
 
-trait ConstVec[T] extends AnyVec[T] with immutable.Iterable[T]
-trait Vec[T] extends AnyVec[T] with mutable.Iterable[T]
+    override def head = apply(0)
+    override def last = apply(size - 1)
 
-abstract class AnyQuat[T] extends Iterable[T] {
-    def apply(i: Int) :T
-    final override def size :Int = 4
-    def iterator :Iterator[T] = new QuatIterator
+    override def foreach[U](f: T => U): Unit = {
+        var i = 0; while (i < size) {
 
-    private final class QuatIterator extends Iterator[T] {
-        private var i = 0
-        def hasNext: Boolean = (i < size)
-        def next() :T = {
-            if (i < size) {
-                val n = apply(i)
-                i += 1
-                n
-            } else Iterator.empty.next
+            f(apply(i))
+
+            i += 1
         }
     }
 }
 
-trait ConstQuat[T] extends AnyQuat[T] with immutable.Iterable[T]
-trait Quat[T] extends AnyQuat[T] with mutable.Iterable[T]
+abstract class AnyVec[T] extends MathObject[T]
+trait ConstVec[T] extends AnyVec[T] with Immutable
+trait Vec[T] extends AnyVec[T] with Mutable
 
-abstract class AnyMat[+V <: ConstVec[_]] extends Iterable[V] {
-    def apply(i: Int) :V
-    override def size :Int
-    def iterator :Iterator[V] = new MatIterator
+abstract class AnyQuat[T] extends MathObject[T]
+trait ConstQuat[T] extends AnyQuat[T] with Immutable
+trait Quat[T] extends AnyQuat[T] with Mutable
 
-    private final class MatIterator extends Iterator[V] {
-        private var i = 0
-        def hasNext: Boolean = (i < size)
-        def next() :V = {
-            if (i < size) {
-                val n = apply(i)
-                i += 1
-                n
-            } else Iterator.empty.next
-        }
-    }
-}
-
-trait ConstMat[+V <: ConstVec[_]]
-extends AnyMat[V] with immutable.Iterable[V]
-
-trait Mat[+V <: ConstVec[_]]
-extends AnyMat[V] with mutable.Iterable[V @uncheckedVariance]
+abstract class AnyMat[+V <: ConstVec[_]] extends MathObject[V]
+trait ConstMat[+V <: ConstVec[_]] extends AnyMat[V] with Immutable
+trait Mat[+V <: ConstVec[_]] extends AnyMat[V] with Mutable

@@ -112,6 +112,8 @@ private[math] abstract class Read4[T] extends Swizzle4Read[T] {
  * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class ReadQ[T] extends AnyQuat[T] {
+    final override def size = 4
+
     private[math] def fa: Float
     private[math] def fb: Float
     private[math] def fc: Float

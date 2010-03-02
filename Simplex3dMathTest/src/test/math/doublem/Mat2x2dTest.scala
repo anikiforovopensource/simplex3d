@@ -39,12 +39,12 @@ class Mat2x2dTest extends FunSuite {
     val (f00, f10, f20, f30) = (1f+1e-5f, 2f+1e-5f, 3f+1e-5f, 4f+1e-5f)
     val (f01, f11, f21, f31) = (5f+1e-5f, 6f+1e-5f, 7f+1e-5f, 8f+1e-5f)
     val (f02, f12, f22, f32) = (9f+1e-5f, 10f+1e-5f, 11f+1e-5f, 12f+1e-5f)
-    val (f03, f13, f23, f33) = (13f, 14f, 15f, 16f)
+    val (f03, f13, f23, f33) = (13f+1e-5f, 14f+1e-5f, 15f+1e-5f, 16f+1e-5f)
 
-    val (d00, d10, d20, d30) = (1+1e-15, 2+1e-15, 3+1e-15, 4+1e-15)
-    val (d01, d11, d21, d31) = (5+1e-15, 6+1e-15, 7+1e-15, 8+1e-15)
-    val (d02, d12, d22, d32) = (9+1e-15, 10+1e-15, 11+1e-15, 12+1e-15)
-    val (d03, d13, d23, d33) = (13+1e-15, 14+1e-15, 15+1e-15, 16+1e-15)
+    val (d00, d10, d20, d30) = (1+1e-14, 2+1e-14, 3+1e-14, 4+1e-14)
+    val (d01, d11, d21, d31) = (5+1e-14, 6+1e-14, 7+1e-14, 8+1e-14)
+    val (d02, d12, d22, d32) = (9+1e-14, 10+1e-14, 11+1e-14, 12+1e-14)
+    val (d03, d13, d23, d33) = (13+1e-14, 14+1e-14, 15+1e-14, 16+1e-14)
 
     val M = Mat4(m00, m10, m20, m30,
                  m01, m11, m21, m31,
@@ -544,5 +544,38 @@ class Mat2x2dTest extends FunSuite {
         t = Mat2x2(1, 1,
                    1, 1)
         m := i; m/= m; assert(m == t)
+    }
+
+    test("Collection") {
+        def test(u: AnyMat2x2) = {
+            assert(u.head == u(0))
+            assert(u.last == u(1))
+            assert(u.size == 2)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u(0))
+            assert(iterator.hasNext)
+            assert(iterator.next == u(1))
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        test(Mat2x2(
+            d00, d10,
+            d01, d11
+        ))
+        test(ConstMat2x2(
+            d00, d10,
+            d01, d11
+        ))
     }
 }

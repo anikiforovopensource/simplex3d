@@ -57,6 +57,30 @@ class PromotionsTest extends FunSuite {
         val f4: Vec4d = Vec4f(1, 2, 3, 4)
         expect(classOf[Vec4d]) { f4.getClass }
         expect((1, 2, 3, 4)) { (f4.x, f4.y, f4.z, f4.w) }
+
+        val ci2: ConstVec2d = Vec2i(1, 2)
+        expect(classOf[Vec2d]) { i2.getClass }
+        expect((1, 2)) { (i2.x, i2.y) }
+
+        val ci3: ConstVec3d = Vec3i(1, 2, 3)
+        expect(classOf[Vec3d]) { i3.getClass }
+        expect((1, 2, 3)) { (i3.x, i3.y, i3.z) }
+
+        val ci4: ConstVec4d = Vec4i(1, 2, 3, 4)
+        expect(classOf[Vec4d]) { i4.getClass }
+        expect((1, 2, 3, 4)) { (i4.x, i4.y, i4.z, i4.w) }
+
+        val cf2: ConstVec2d = Vec2f(1, 2)
+        expect(classOf[Vec2d]) { f2.getClass }
+        expect((1, 2)) { (f2.x, f2.y) }
+
+        val cf3: ConstVec3d = Vec3f(1, 2, 3)
+        expect(classOf[Vec3d]) { f3.getClass }
+        expect((1, 2, 3)) { (f3.x, f3.y, f3.z) }
+
+        val cf4: ConstVec4d = Vec4f(1, 2, 3, 4)
+        expect(classOf[Vec4d]) { f4.getClass }
+        expect((1, 2, 3, 4)) { (f4.x, f4.y, f4.z, f4.w) }
     }
 
     test("Renamed promotions") {
@@ -83,6 +107,30 @@ class PromotionsTest extends FunSuite {
         expect((1, 2, 3)) { (f3.x, f3.y, f3.z) }
 
         val f4: Vec4 = Vec4f(1, 2, 3, 4)
+        expect(classOf[Vec4]) { f4.getClass }
+        expect((1, 2, 3, 4)) { (f4.x, f4.y, f4.z, f4.w) }
+
+        val ci2: ConstVec2 = Vec2i(1, 2)
+        expect(classOf[Vec2]) { i2.getClass }
+        expect((1, 2)) { (i2.x, i2.y) }
+
+        val ci3: ConstVec3 = Vec3i(1, 2, 3)
+        expect(classOf[Vec3]) { i3.getClass }
+        expect((1, 2, 3)) { (i3.x, i3.y, i3.z) }
+
+        val ci4: ConstVec4 = Vec4i(1, 2, 3, 4)
+        expect(classOf[Vec4]) { i4.getClass }
+        expect((1, 2, 3, 4)) { (i4.x, i4.y, i4.z, i4.w) }
+
+        val cf2: ConstVec2 = Vec2f(1, 2)
+        expect(classOf[Vec2]) { f2.getClass }
+        expect((1, 2)) { (f2.x, f2.y) }
+
+        val cf3: ConstVec3 = Vec3f(1, 2, 3)
+        expect(classOf[Vec3]) { f3.getClass }
+        expect((1, 2, 3)) { (f3.x, f3.y, f3.z) }
+
+        val cf4: ConstVec4 = Vec4f(1, 2, 3, 4)
         expect(classOf[Vec4]) { f4.getClass }
         expect((1, 2, 3, 4)) { (f4.x, f4.y, f4.z, f4.w) }
     }

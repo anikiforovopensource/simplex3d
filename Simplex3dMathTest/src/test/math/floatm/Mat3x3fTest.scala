@@ -39,7 +39,7 @@ class Mat3x3fTest extends FunSuite {
     val (f00, f10, f20, f30) = (1f+1e-5f, 2f+1e-5f, 3f+1e-5f, 4f+1e-5f)
     val (f01, f11, f21, f31) = (5f+1e-5f, 6f+1e-5f, 7f+1e-5f, 8f+1e-5f)
     val (f02, f12, f22, f32) = (9f+1e-5f, 10f+1e-5f, 11f+1e-5f, 12f+1e-5f)
-    val (f03, f13, f23, f33) = (13f, 14f, 15f, 16f)
+    val (f03, f13, f23, f33) = (13f+1e-5f, 14f+1e-5f, 15f+1e-5f, 16f+1e-5f)
 
     val (d00, d10, d20, d30) = (1+1e-5, 2+1e-5, 3+1e-5, 4+1e-5)
     val (d01, d11, d21, d31) = (5+1e-5, 6+1e-5, 7+1e-5, 8+1e-5)
@@ -627,5 +627,42 @@ class Mat3x3fTest extends FunSuite {
                    1, 1, 1,
                    1, 1, 1)
         m := i; m/= m; assert(m == t)
+    }
+
+    test("Collection") {
+        def test(u: AnyMat3x3) = {
+            assert(u.head == u(0))
+            assert(u.last == u(2))
+            assert(u.size == 3)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u(0))
+            assert(iterator.hasNext)
+            assert(iterator.next == u(1))
+            assert(iterator.hasNext)
+            assert(iterator.next == u(2))
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        test(Mat3x3(
+            f00, f10, f20,
+            f01, f11, f21,
+            f02, f12, f22
+        ))
+        test(ConstMat3x3(
+            f00, f10, f20,
+            f01, f11, f21,
+            f02, f12, f22
+        ))
     }
 }

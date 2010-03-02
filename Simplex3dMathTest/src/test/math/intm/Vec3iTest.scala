@@ -365,4 +365,37 @@ class Vec3iTest extends FunSuite {
         u := b; u |= Vec3i(0xFFF, 0xFF, 0xF); assert(Vec3i(0xFFF, 0xFF, 0xFFF) == u)
         u := b; u ^= Vec3i(0xFFF, 0xFF, 0xF); assert(Vec3i(0xFF0, 0x00, 0xFF0) == u)
     }
+
+    test("Collection") {
+        def test(u: AnyVec3i) = {
+            assert(u.head == u.x)
+            assert(u.last == u.z)
+            assert(u.size == 3)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u.x)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.y)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.z)
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        val x = 1
+        val y = 2
+        val z = 3
+
+        test(Vec3i(x, y, z))
+        test(ConstVec3i(x, y, z))
+    }
 }

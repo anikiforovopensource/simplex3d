@@ -409,4 +409,37 @@ class Vec4bTest extends FunSuite {
             expect(w) { u.a }
         }
     }
+
+    test("Collection") {
+        def test(u: AnyVec4b) = {
+            assert(u.head == u.x)
+            assert(u.last == u.w)
+            assert(u.size == 4)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u.x)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.y)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.z)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.w)
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        BooleanCombinations.test { (x, y, z, w) =>
+            test(Vec4b(x, y, z, w))
+            test(ConstVec4b(x, y, z, w))
+        }
+    }
 }

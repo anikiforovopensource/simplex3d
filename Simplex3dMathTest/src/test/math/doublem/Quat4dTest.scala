@@ -299,4 +299,40 @@ class Quat4dTest extends FunSuite {
             testObject(float, axis)
         }
     }
+
+    test("Collection") {
+        def test(u: AnyQuat4) = {
+            assert(u.head == u.a)
+            assert(u.last == u.d)
+            assert(u.size == 4)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u.a)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.b)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.c)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.d)
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        val a = 1 + 1e-15
+        val b = 2 + 1e-15
+        val c = 3 + 1e-15
+        val d = 4 + 1e-15
+
+        test(Quat4(a, b, c, d))
+        test(ConstQuat4(a, b, c, d))
+    }
 }

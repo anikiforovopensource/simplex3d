@@ -466,4 +466,40 @@ class Vec4iTest extends FunSuite {
         u := b; u |= Vec4i(0xFFFF, 0xFFF, 0xFF, 0xF); assert(Vec4i(0xFFFF, 0xFFF, 0xFFF, 0xFFFF) == u)
         u := b; u ^= Vec4i(0xFFFF, 0xFFF, 0xFF, 0xF); assert(Vec4i(0xFFF0, 0xF00, 0xF00, 0xFFF0) == u)
     }
+
+    test("Collection") {
+        def test(u: AnyVec4i) = {
+            assert(u.head == u.x)
+            assert(u.last == u.w)
+            assert(u.size == 4)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u.x)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.y)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.z)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.w)
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        val x = 1
+        val y = 2
+        val z = 3
+        val w = 4
+
+        test(Vec4i(x, y, z, w))
+        test(ConstVec4i(x, y, z, w))
+    }
 }

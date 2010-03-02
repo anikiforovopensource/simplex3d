@@ -455,4 +455,40 @@ class Vec4fTest extends FunSuite {
         u *= m4
         assert(Vec4(65, 60, 59, 60) == u)
     }
+
+    test("Collection") {
+        def test(u: AnyVec4) = {
+            assert(u.head == u.x)
+            assert(u.last == u.w)
+            assert(u.size == 4)
+
+            val iterator = u.iterator
+            assert(iterator.hasNext)
+            assert(iterator.next == u.x)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.y)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.z)
+            assert(iterator.hasNext)
+            assert(iterator.next == u.w)
+            assert(!iterator.hasNext)
+            intercept[NoSuchElementException] {
+                iterator.next
+            }
+
+            var i = 0
+            u.foreach { element =>
+                assert(element == u(i))
+                i += 1
+            }
+        }
+
+        val x = 1 + 1e-5f
+        val y = 2 + 1e-5f
+        val z = 3 + 1e-5f
+        val w = 4 + 1e-5f
+
+        test(Vec4(x, y, z, w))
+        test(ConstVec4(x, y, z, w))
+    }
 }

@@ -32,7 +32,8 @@ package simplex3d.math
 import simplex3d.math.BaseMath._
 
 
-/** SimplexNoise contains the implementation of simplex noise algorithm.
+/** <code>SimplexNoise</code> contains the implementation
+ * of simplex noise algorithm.
  *
  * @author Stefan Gustavson, ITN-LiTH
  * @author Bill Licea-Kane, ATI

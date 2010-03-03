@@ -23,8 +23,12 @@ package simplex3d.math.intm
 import simplex3d.math._
 
 
-/**
- * Glue code to make Ints interact with vectors and matrices.
+/** The <code>ExtendedInt</code> class encapsulates glue code to make Ints
+ * interact with Int vectors.
+ * <p>
+ *   Instances of this class are produces when required via implicit conversions
+ *   from Int.
+ * </p>
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -66,41 +70,120 @@ final class ExtendedInt(val value: Int) {
      */
     def /(u: AnyVec4i) = u.divideByComponent(value)
 
-    /** Add this scalar to each component of a vector.
+    /** Adds this scalar to each component of a vector.
      * @param u a vector to add to.
      * @return a vector with components s + u.x and s + u.y.
      */
     def +(u: AnyVec2i) = u + value
 
-    /** Add this scalar to each component of a vector.
+    /** Adds this scalar to each component of a vector.
      * @param u a vector to add to.
      * @return a vector with components s + u.x, s + u.y, and s + u.z.
      */
     def +(u: AnyVec3i) = u + value
 
-    /** Add this scalar to each component of a vector.
+    /** Adds this scalar to each component of a vector.
      * @param u a vector to add to.
      * @return a vector with components s + u.x, s + u.y, s + u.z, and s + u.w.
      */
     def +(u: AnyVec4i) = u + value
 
-    def -(u: AnyVec2i) = { val t = -u; t += value; t }
-    def -(u: AnyVec3i) = { val t = -u; t += value; t }
-    def -(u: AnyVec4i) = { val t = -u; t += value; t }
+    /** Subtracts each component of a vector from this scalar.
+     * @param u a vector to subtract.
+     * @return a vector with components s - u.x and s - u.y.
+     */
+    def -(u: AnyVec2i) =
+        new Vec2i(value - u.x, value - u.y)
 
+    /** Subtracts each component of a vector from this scalar.
+     * @param u a vector to subtract.
+     * @return a vector with components s - u.x, s - u.y, and s - u.z.
+     */
+    def -(u: AnyVec3i) =
+        new Vec3i(value - u.x, value - u.y, value - u.z)
+
+    /** Subtracts each component of a vector from this scalar.
+     * @param u a vector to subtract.
+     * @return a vector with components s - u.x, s - u.y, s - u.z, and s - u.w.
+     */
+    def -(u: AnyVec4i) =
+        new Vec4i(value - u.x, value - u.y, value - u.z, value - u.w)
+
+    /** Computes remainders of divisions of this scalar
+     * by each component of a vector.
+     *
+     * @param u a vector to divide by.
+     * @return a vector with components s % u.x and s % u.y.
+     */
     def %(u: AnyVec2i) = u.modByComponent(value)
+
+    /** Computes remainders of divisions of this scalar
+     * by each component of a vector.
+     *
+     * @param u a vector to divide by.
+     * @return a vector with components s % u.x, s % u.y, and s % u.z.
+     */
     def %(u: AnyVec3i) = u.modByComponent(value)
+
+    /** Computes remainders of divisions of this scalar
+     * by each component of a vector.
+     *
+     * @param u a vector to divide by.
+     * @return a vector with components s % u.x, s % u.y, s % u.z, and s % u.w.
+     */
     def %(u: AnyVec4i) = u.modByComponent(value)
 
+    /** Computes bitwise AND of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s & u.x and s & u.y.
+     */
     def &(u: AnyVec2i) = u & value
+
+    /** Computes bitwise AND of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s & u.x, s & u.y, and s & u.z.
+     */
     def &(u: AnyVec3i) = u & value
+
+    /** Computes bitwise AND of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s & u.x, s & u.y, s & u.z, and s & u.w.
+     */
     def &(u: AnyVec4i) = u & value
 
+    /** Computes bitwise OR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s | u.x and s | u.y.
+     */
     def |(u: AnyVec2i) = u | value
+
+    /** Computes bitwise OR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s | u.x, s | u.y, and s | u.z.
+     */
     def |(u: AnyVec3i) = u | value
+
+    /** Computes bitwise OR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s | u.x, s | u.y, s | u.z, and s | u.w.
+     */
     def |(u: AnyVec4i) = u | value
 
+    /** Computes bitwise XOR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s ^ u.x and s ^ u.y.
+     */
     def ^(u: AnyVec2i) = u ^ value
+
+    /** Computes bitwise XOR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s ^ u.x, s ^ u.y, and s ^ u.z.
+     */
     def ^(u: AnyVec3i) = u ^ value
+
+    /** Computes bitwise XOR of this scalar with each component of a vector.
+     * @param u a vector.
+     * @return a vector with components s ^ u.x, s ^ u.y, s ^ u.z, and s ^ u.w.
+     */
     def ^(u: AnyVec4i) = u ^ value
 }

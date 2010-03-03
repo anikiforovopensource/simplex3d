@@ -21,7 +21,8 @@
 package simplex3d.math
 
 
-/** Sizzle2Read contains abstract read-only swizzling for 2-dimensional vectors.
+/** <code>Sizzle2Read</code> contains abstract read-only swizzling
+ * for 2-dimensional vectors.
  *
  * @author Aleksey Nikiforov (lex)
  */

@@ -154,7 +154,8 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
 }
 
 
-/** Constant Boolean 2-dimensional vector.
+/** The <code>ConstVec2b</code> class represents constant Boolean 2-dimensional
+ * vectors.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
  *   choise for sharing data in multithreaded context. While the constant
@@ -210,7 +211,8 @@ object ConstVec2b {
 }
 
 
-/** Mutable Boolean 2-dimensional vector.
+/** The <code>Vec2b</code> class represents mutable Boolean 2-dimensional
+ * vectors.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,

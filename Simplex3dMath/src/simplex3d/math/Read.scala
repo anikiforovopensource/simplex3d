@@ -23,7 +23,7 @@ package simplex3d.math
 import simplex3d.math.BaseMath._
 
 
-/** Read2 is a superclass of all the 2-dimensional vectors.
+/** <code>Read2</code> is a superclass of all the 2-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>
@@ -46,7 +46,7 @@ private[math] abstract class Read2[T] extends Swizzle2Read[T] {
     private[math] def dy: Double
 }
 
-/** Read3 is a superclass of all the 3-dimensional vectors.
+/** <code>Read3</code> is a superclass of all the 3-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>
@@ -73,7 +73,7 @@ private[math] abstract class Read3[T] extends Swizzle3Read[T] {
     private[math] def dz: Double
 }
 
-/** Read4 is a superclass of all the 4-dimensional vectors.
+/** <code>Read4</code> is a superclass of all the 4-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>
@@ -104,7 +104,7 @@ private[math] abstract class Read4[T] extends Swizzle4Read[T] {
     private[math] def dw: Double
 }
 
-/** ReadQ is a superclass of all the quaternions.
+/** <code>ReadQ</code> is a superclass of all the quaternions.
  * <p>
  *   There are double and float quaternions.
  * </p>
@@ -125,7 +125,7 @@ private[math] abstract class ReadQ[T] extends AnyQuat[T] {
     private[math] def dd: Double
 }
 
-/** Read2x2 is a superclass of all the 2x2 matrices.
+/** <code>Read2x2</code> is a superclass of all the 2x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -142,7 +142,7 @@ private[math] abstract class Read2x2[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d01: Double; private[math] def d11: Double
 }
 
-/** Read2x3 is a superclass of all the 2x3 matrices.
+/** <code>Read2x3</code> is a superclass of all the 2x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -161,7 +161,7 @@ private[math] abstract class Read2x3[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d02: Double; private[math] def d12: Double
 }
 
-/** Read2x4 is a superclass of all the 2x4 matrices.
+/** <code>Read2x4</code> is a superclass of all the 2x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -182,7 +182,7 @@ private[math] abstract class Read2x4[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d03: Double; private[math] def d13: Double
 }
 
-/** Read3x2 is a superclass of all the 3x2 matrices.
+/** <code>Read3x2</code> is a superclass of all the 3x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -210,7 +210,7 @@ private[math] abstract class Read3x2[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d21: Double
 }
 
-/** Read3x3 is a superclass of all the 3x3 matrices.
+/** <code>Read3x3</code> is a superclass of all the 3x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -246,7 +246,7 @@ private[math] abstract class Read3x3[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d22: Double
 }
 
-/** Read3x4 is a superclass of all the 3x4 matrices.
+/** <code>Read3x4</code> is a superclass of all the 3x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -290,7 +290,7 @@ private[math] abstract class Read3x4[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d23: Double
 }
 
-/** Read4x2 is a superclass of all the 4x2 matrices.
+/** <code>Read4x2</code> is a superclass of all the 4x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -322,7 +322,7 @@ private[math] abstract class Read4x2[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d31: Double
 }
 
-/** Read4x3 is a superclass of all the 4x3 matrices.
+/** <code>Read4x3</code> is a superclass of all the 4x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -364,7 +364,7 @@ private[math] abstract class Read4x3[V <: ConstVec[_]] extends AnyMat[V] {
     private[math] def d32: Double
 }
 
-/** Read4x4 is a superclass of all the 4x4 matrices.
+/** <code>Read4x4</code> is a superclass of all the 4x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>

@@ -24,7 +24,9 @@ import scala.collection._
 import scala.annotation.unchecked._
 
 
-/**
+/** <code>MathObject</code> is a common collection supertype for
+ * all the vectors, quaternions, and matrices.
+ *
  * @author Aleksey Nikiforov (lex)
  */
 abstract class MathObject[+T] extends Iterable[T] {
@@ -57,14 +59,64 @@ abstract class MathObject[+T] extends Iterable[T] {
     }
 }
 
+/** <code>AnyVec[_]</code> is a common collection supertype for all vectors.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 abstract class AnyVec[T] extends MathObject[T]
+
+/** <code>ConstVec[_]</code> is a common collection supertype
+ * for all constant vectors.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait ConstVec[T] extends AnyVec[T] with Immutable
+
+/** <code>Vec[_]</code> is a common collection supertype
+ * for all mutable vectors.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait Vec[T] extends AnyVec[T] with Mutable
 
+/** <code>AnyQuat[_]</code> is a common collection supertype
+ * for all quaternions.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 abstract class AnyQuat[T] extends MathObject[T]
+
+/** <code>ConstQuat[_]</code> is a common collection supertype
+ * for all constant quaternions.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait ConstQuat[T] extends AnyQuat[T] with Immutable
+
+/** <code>Quat[_]</code> is a common collection supertype
+ * for all mutable quaternions.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait Quat[T] extends AnyQuat[T] with Mutable
 
+/** <code>AnyMat[_]</code> is a common collection supertype
+ * for all matrices.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 abstract class AnyMat[+V <: ConstVec[_]] extends MathObject[V]
+
+/** <code>ConstMat[_]</code> is a common collection supertype
+ * for all constant matrices.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait ConstMat[+V <: ConstVec[_]] extends AnyMat[V] with Immutable
+
+/** <code>Mat[_]</code> is a common collection supertype
+ * for all mutable matrices.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait Mat[+V <: ConstVec[_]] extends AnyMat[V] with Mutable

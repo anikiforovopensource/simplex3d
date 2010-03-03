@@ -24,16 +24,48 @@ import simplex3d.math._
 import simplex3d.math.BaseMath._
 
 
-/**
+/** <code>IntMath</code> contains functions to operate on Ints and Int vectors.
+ *
  * @author Aleksey Nikiforov (lex)
  */
 object IntMath {
 
     // Int functions
+
+    /** Computes an absolute value of the argument.
+     * @param x, function argument.
+     * @return an absolute value of x.
+     */
     def abs(x: Int) :Int = if (x < 0) -x else x
+
+    /** Computes sign of the argument.
+     * @param x, function argument.
+     * @return 1 if x > 0, -1 if x < 0, 0 otherwise.
+     */
     def sign(x: Int) :Int = if (x > 0) 1 else if (x < 0) -1 else 0
+
+    /** Finds the smallest value among the arguments.
+     * @param x, function argument.
+     * @param y, function argument.
+     * @return smallest value from the set (x, y).
+     */
     def min(x: Int, y: Int) :Int = if (x < y) x else y
+
+    /** Finds the largest value among the arguments.
+     * @param x, function argument.
+     * @param y, function argument.
+     * @return largest value from the set (x, y).
+     */
     def max(x: Int, y: Int) :Int = if (x > y) x else y
+
+    /** Clamps a value to a given range.
+     * The result is undefined if minVal > maxVal.
+     * 
+     * @param x, value to clamp.
+     * @param minVal, range lower bound, inclusive.
+     * @param maxVal, range upper bound, inclusive.
+     * @return minVal if x < minVal, maxVal if x > maxVal, x otherwise.
+     */
     def clamp(x: Int, minVal: Int, maxVal: Int) :Int = {
         if (x <= minVal) minVal
         else if (x >= maxVal) maxVal

@@ -173,7 +173,8 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
 }
 
 
-/** Constant Boolean 3-dimensional vector.
+/** The <code>ConstVec3b</code> class represents constant Boolean 3-dimensional
+ * vectors.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
  *   choise for sharing data in multithreaded context. While the constant
@@ -231,7 +232,8 @@ object ConstVec3b {
 }
 
 
-/** Mutable Boolean 3-dimensional vector.
+/** The <code>Vec3b</code> class represents mutable Boolean 3-dimensional
+ * vectors.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,

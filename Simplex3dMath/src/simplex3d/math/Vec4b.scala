@@ -191,7 +191,8 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
 }
 
 
-/** Constant Boolean 4-dimensional vector.
+/** The <code>ConstVec4b</code> class represents constant Boolean 4-dimensional
+ * vectors.
  * <p>
  *   Constant objects cannot be modified after creation. This makes them a good
  *   choise for sharing data in multithreaded context. While the constant
@@ -252,7 +253,8 @@ object ConstVec4b {
 }
 
 
-/** Mutable Boolean 4-dimensional vector.
+/** The <code>Vec4b</code> class represents mutable Boolean 4-dimensional
+ * vectors.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,

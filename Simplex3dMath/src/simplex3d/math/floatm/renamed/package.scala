@@ -125,7 +125,7 @@ package object renamed {
     type Quat4 = Quat4f
     val Quat4 = Quat4f
 
-    // Aliases
+    // Matrix aliases
     type AnyMat2x2 = AnyMat2f
     type ConstMat2x2 = ConstMat2f
     val ConstMat2x2 = ConstMat2f
@@ -143,4 +143,67 @@ package object renamed {
     val ConstMat4x4 = ConstMat4f
     type Mat4x4 = Mat4f
     val Mat4x4 = Mat4f
+
+    // In and Out aliases
+    type inVec2 = AnyVec2
+    type outVec2 = Vec2 with Implicits[Off]
+    implicit def fmOut2(u: Vec2) = u.asInstanceOf[outVec2]
+
+    type inVec3 = AnyVec3
+    type outVec3 = Vec3 with Implicits[Off]
+    implicit def fmOut3(u: Vec3) = u.asInstanceOf[outVec3]
+
+    type inVec4 = AnyVec4
+    type outVec4 = Vec4 with Implicits[Off]
+    implicit def fmOut4(u: Vec4) = u.asInstanceOf[outVec4]
+
+    type inQuat4 = AnyQuat4
+    type outQuat4 = Quat4 with Implicits[Off]
+    implicit def fmOutQuat(u: Quat4) = u.asInstanceOf[outQuat4]
+
+    type inMat2 = AnyMat2
+    type outMat2 = Mat2 with Implicits[Off]
+    implicit def fmOut2x2(u: Mat2) = u.asInstanceOf[outMat2]
+
+    type inMat2x3 = AnyMat2x3
+    type outMat2x3 = Mat2x3 with Implicits[Off]
+    implicit def fmOut2x3(u: Mat2x3) = u.asInstanceOf[outMat2x3]
+
+    type inMat2x4 = AnyMat2x4
+    type outMat2x4 = Mat2x4 with Implicits[Off]
+    implicit def fmOut2x4(u: Mat2x4) = u.asInstanceOf[outMat2x4]
+
+    type inMat3x2 = AnyMat3x2
+    type outMat3x2 = Mat3x2 with Implicits[Off]
+    implicit def fmOut3x2(u: Mat3x2) = u.asInstanceOf[outMat3x2]
+
+    type inMat3 = AnyMat3
+    type outMat3 = Mat3 with Implicits[Off]
+    implicit def fmOut3x3(u: Mat3) = u.asInstanceOf[outMat3]
+
+    type inMat3x4 = AnyMat3x4
+    type outMat3x4 = Mat3x4 with Implicits[Off]
+    implicit def fmOut3x4(u: Mat3x4) = u.asInstanceOf[outMat3x4]
+
+    type inMat4x2 = AnyMat4x2
+    type outMat4x2 = Mat4x2 with Implicits[Off]
+    implicit def fmOut4x2(u: Mat4x2) = u.asInstanceOf[outMat4x2]
+
+    type inMat4x3 = AnyMat4x3
+    type outMat4x3 = Mat4x3 with Implicits[Off]
+    implicit def fmOut4x3(u: Mat4x3) = u.asInstanceOf[outMat4x3]
+
+    type inMat4 = AnyMat4
+    type outMat4 = Mat4 with Implicits[Off]
+    implicit def fmOut4x4(u: Mat4) = u.asInstanceOf[outMat4]
+
+    // In and Out matrix aliases
+    type inMat2x2 = inMat2
+    type outMat2x2 = outMat2
+
+    type inMat3x3 = inMat3
+    type outMat3x3 = outMat3
+
+    type inMat4x4 = inMat4
+    type outMat4x4 = outMat4
 }

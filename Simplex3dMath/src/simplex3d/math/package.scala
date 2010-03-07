@@ -1,6 +1,6 @@
 /*
- * Simplex3d, IntMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Simplex3d, BaseMath module
+ * Copyright (C) 2010 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -18,29 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
-
-import simplex3d.math.intm.IntMath._
+package simplex3d
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object intm {
-
-    //Implicits
-    implicit def imInt(s: Int) = new ExtendedInt(s)
+package object math {
 
     // In and Out aliases
-    type inVec2i = AnyVec2i
-    type outVec2i = Vec2i with Implicits[Off]
-    implicit def imOut2(u: Vec2i) = u.asInstanceOf[outVec2i]
+    type inVec2b = AnyVec2b
+    type outVec2b = Vec2b with Implicits[Off]
+    implicit def bmOut2(u: Vec2b) = u.asInstanceOf[outVec2b]
 
-    type inVec3i = AnyVec3i
-    type outVec3i = Vec3i with Implicits[Off]
-    implicit def imOut3(u: Vec3i) = u.asInstanceOf[outVec3i]
+    type inVec3b = AnyVec3b
+    type outVec3b = Vec3b with Implicits[Off]
+    implicit def bmOut3(u: Vec3b) = u.asInstanceOf[outVec3b]
 
-    type inVec4i = AnyVec4i
-    type outVec4i = Vec4i with Implicits[Off]
-    implicit def imOut4(u: Vec4i) = u.asInstanceOf[outVec4i]
+    type inVec4b = AnyVec4b
+    type outVec4b = Vec4b with Implicits[Off]
+    implicit def bmOut4(u: Vec4b) = u.asInstanceOf[outVec4b]
 }

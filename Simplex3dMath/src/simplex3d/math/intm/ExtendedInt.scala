@@ -26,8 +26,8 @@ import simplex3d.math._
 /** The <code>ExtendedInt</code> class encapsulates glue code to make Ints
  * interact with Int vectors.
  * <p>
- *   Instances of this class are produces when required via implicit conversions
- *   from Int.
+ *   Instances of this class are produces via implicit conversions from Int
+ *   when required.
  * </p>
  *
  * @author Aleksey Nikiforov (lex)

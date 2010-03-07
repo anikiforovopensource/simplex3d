@@ -1,6 +1,6 @@
 /*
- * Simplex3d, IntMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Simplex3d, BaseMath module
+ * Copyright (C) 2010 Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,27 +20,29 @@
 
 package simplex3d.math
 
-import simplex3d.math.intm.IntMath._
-
-
-/**
+/** <code>StateSelector</code> is an indicator to enable or disable implicits.
+ *
  * @author Aleksey Nikiforov (lex)
  */
-package object intm {
+sealed trait StateSelector
 
-    //Implicits
-    implicit def imInt(s: Int) = new ExtendedInt(s)
+/** <code>On</code> is a subtrait of <code>StateSelector</code>,
+ * it is used to enable implicits.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+sealed trait On extends StateSelector
 
-    // In and Out aliases
-    type inVec2i = AnyVec2i
-    type outVec2i = Vec2i with Implicits[Off]
-    implicit def imOut2(u: Vec2i) = u.asInstanceOf[outVec2i]
+/** <code>Off</code> is a subtrait of <code>StateSelector</code>,
+ * it is used to disable implicits.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+sealed trait Off extends On
 
-    type inVec3i = AnyVec3i
-    type outVec3i = Vec3i with Implicits[Off]
-    implicit def imOut3(u: Vec3i) = u.asInstanceOf[outVec3i]
-
-    type inVec4i = AnyVec4i
-    type outVec4i = Vec4i with Implicits[Off]
-    implicit def imOut4(u: Vec4i) = u.asInstanceOf[outVec4i]
-}
+/** <code>Implicits</code> is a mix-in trait to enable or disable implicits
+ * by setting the type perameter to On or Off.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+trait Implicits[+Enabled <: StateSelector]

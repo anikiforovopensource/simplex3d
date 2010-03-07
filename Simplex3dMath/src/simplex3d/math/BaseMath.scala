@@ -359,7 +359,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if any of the components are true, false otherwise.
      */
-    def any(u: AnyVec2b) :Boolean = {
+    def any(u: inVec2b) :Boolean = {
         u.x || u.y
     }
 
@@ -369,7 +369,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if all the components are true, false otherwise.
      */
-    def all(u: AnyVec2b) :Boolean = {
+    def all(u: inVec2b) :Boolean = {
         u.x && u.y
     }
 
@@ -379,7 +379,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return a boolean vector with negated components of u.
      */
-    def not(u: AnyVec2b) :Vec2b = Vec2b(!u.x, !u.y)
+    def not(u: inVec2b) :Vec2b = Vec2b(!u.x, !u.y)
 
 
     // Vec3b functions.
@@ -390,7 +390,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if any of the components are true, false otherwise.
      */
-    def any(u: AnyVec3b) :Boolean = {
+    def any(u: inVec3b) :Boolean = {
         u.x || u.y || u.z
     }
 
@@ -400,7 +400,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if all the components are true, false otherwise.
      */
-    def all(u: AnyVec3b) :Boolean = {
+    def all(u: inVec3b) :Boolean = {
         u.x && u.y && u.z
     }
 
@@ -410,7 +410,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return a boolean vector with negated components of u.
      */
-    def not(u: AnyVec3b) :Vec3b = Vec3b(!u.x, !u.y, !u.z)
+    def not(u: inVec3b) :Vec3b = Vec3b(!u.x, !u.y, !u.z)
 
 
     // Vec4b functions.
@@ -421,7 +421,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if any of the components are true, false otherwise.
      */
-    def any(u: AnyVec4b) :Boolean = {
+    def any(u: inVec4b) :Boolean = {
         u.x || u.y || u.z || u.w
     }
 
@@ -431,7 +431,7 @@ object BaseMath {
      * @param u a boolean vector.
      * @return true if all the components are true, false otherwise.
      */
-    def all(u: AnyVec4b) :Boolean = {
+    def all(u: inVec4b) :Boolean = {
         u.x && u.y && u.z && u.w
     }
 
@@ -441,5 +441,5 @@ object BaseMath {
      * @param u a boolean vector.
      * @return a boolean vector with negated components of u.
      */
-    def not(u: AnyVec4b) :Vec4b = Vec4b(!u.x, !u.y, !u.z, !u.w)
+    def not(u: inVec4b) :Vec4b = Vec4b(!u.x, !u.y, !u.z, !u.w)
 }

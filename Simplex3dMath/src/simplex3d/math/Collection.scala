@@ -77,7 +77,7 @@ trait ConstVec[T] extends AnyVec[T] with Immutable
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Vec[T] extends AnyVec[T] with Mutable
+trait Vec[T] extends AnyVec[T] with Mutable with Implicits[On]
 
 /** <code>AnyQuat[_]</code> is a common collection supertype
  * for all quaternions.
@@ -98,7 +98,7 @@ trait ConstQuat[T] extends AnyQuat[T] with Immutable
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Quat[T] extends AnyQuat[T] with Mutable
+trait Quat[T] extends AnyQuat[T] with Mutable with Implicits[On]
 
 /** <code>AnyMat[_]</code> is a common collection supertype
  * for all matrices.
@@ -119,4 +119,4 @@ trait ConstMat[+V <: ConstVec[_]] extends AnyMat[V] with Immutable
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Mat[+V <: ConstVec[_]] extends AnyMat[V] with Mutable
+trait Mat[+V <: ConstVec[_]] extends AnyMat[V] with Mutable with Implicits[On]

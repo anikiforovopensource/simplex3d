@@ -73,57 +73,57 @@ object IntMath {
     }
 
     // Vec2i functions
-    def abs(u: AnyVec2i) :Vec2i = new Vec2i(abs(u.x), abs(u.y))
-    def sign(u: AnyVec2i) :Vec2i = new Vec2i(sign(u.x), sign(u.y))
-    def min(u: AnyVec2i, s: Int) :Vec2i = new Vec2i(min(u.x, s), min(u.y, s))
-    def min(u: AnyVec2i, v: AnyVec2i) :Vec2i = {
+    def abs(u: inVec2i) :Vec2i = new Vec2i(abs(u.x), abs(u.y))
+    def sign(u: inVec2i) :Vec2i = new Vec2i(sign(u.x), sign(u.y))
+    def min(u: inVec2i, s: Int) :Vec2i = new Vec2i(min(u.x, s), min(u.y, s))
+    def min(u: inVec2i, v: inVec2i) :Vec2i = {
         new Vec2i(min(u.x, v.x), min(u.y, v.y))
     }
-    def max(u: AnyVec2i, s: Int) :Vec2i = new Vec2i(max(u.x, s), max(u.y, s))
-    def max(u: AnyVec2i, v: AnyVec2i) :Vec2i = {
+    def max(u: inVec2i, s: Int) :Vec2i = new Vec2i(max(u.x, s), max(u.y, s))
+    def max(u: inVec2i, v: inVec2i) :Vec2i = {
         new Vec2i(max(u.x, v.x), max(u.y, v.y))
     }
-    def clamp(u: AnyVec2i, minVal: Int, maxVal: Int) :Vec2i = {
+    def clamp(u: inVec2i, minVal: Int, maxVal: Int) :Vec2i = {
         new Vec2i(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
     }
-    def clamp(u: AnyVec2i, minVal: AnyVec2i, maxVal: AnyVec2i) :Vec2i = {
+    def clamp(u: inVec2i, minVal: inVec2i, maxVal: inVec2i) :Vec2i = {
         new Vec2i(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y)
         )
     }
     
-    def lessThan(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def lessThan(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x < v.x,
             u.y < v.y
         )
     }
-    def lessThanEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def lessThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x <= v.x,
             u.y <= v.y
         )
     }
-    def greaterThan(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def greaterThan(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x > v.x,
             u.y > v.y
         )
     }
-    def greaterThanEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def greaterThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x >= v.x,
             u.y >= v.y
         )
     }
-    def equal(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def equal(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x == v.x,
             u.y == v.y
         )
     }
-    def notEqual(u: AnyVec2i, v: AnyVec2i) :Vec2b = {
+    def notEqual(u: inVec2i, v: inVec2i) :Vec2b = {
         new Vec2b(
             u.x != v.x,
             u.y != v.y
@@ -131,28 +131,28 @@ object IntMath {
     }
 
     // Vec3i functions
-    def abs(u: AnyVec3i) :Vec3i = new Vec3i(abs(u.x), abs(u.y), abs(u.z))
-    def sign(u: AnyVec3i) :Vec3i = new Vec3i(sign(u.x), sign(u.y), sign(u.z))
-    def min(u: AnyVec3i, s: Int) :Vec3i = {
+    def abs(u: inVec3i) :Vec3i = new Vec3i(abs(u.x), abs(u.y), abs(u.z))
+    def sign(u: inVec3i) :Vec3i = new Vec3i(sign(u.x), sign(u.y), sign(u.z))
+    def min(u: inVec3i, s: Int) :Vec3i = {
         new Vec3i(min(u.x, s), min(u.y, s), min(u.z, s))
     }
-    def min(u: AnyVec3i, v: AnyVec3i) :Vec3i = {
+    def min(u: inVec3i, v: inVec3i) :Vec3i = {
         new Vec3i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z))
     }
-    def max(u: AnyVec3i, s: Int) :Vec3i = {
+    def max(u: inVec3i, s: Int) :Vec3i = {
         new Vec3i(max(u.x, s), max(u.y, s), max(u.z, s))
     }
-    def max(u: AnyVec3i, v: AnyVec3i) :Vec3i = {
+    def max(u: inVec3i, v: inVec3i) :Vec3i = {
         new Vec3i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z))
     }
-    def clamp(u: AnyVec3i, minVal: Int, maxVal: Int) :Vec3i = {
+    def clamp(u: inVec3i, minVal: Int, maxVal: Int) :Vec3i = {
         new Vec3i(
             clamp(u.x, minVal, maxVal),
             clamp(u.y, minVal, maxVal),
             clamp(u.z, minVal, maxVal)
         )
     }
-    def clamp(u: AnyVec3i, minVal: AnyVec3i, maxVal: AnyVec3i) :Vec3i = {
+    def clamp(u: inVec3i, minVal: inVec3i, maxVal: inVec3i) :Vec3i = {
         new Vec3i(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y),
@@ -160,42 +160,42 @@ object IntMath {
         )
     }
 
-    def lessThan(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def lessThan(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x < v.x,
             u.y < v.y,
             u.z < v.z
         )
     }
-    def lessThanEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def lessThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x <= v.x,
             u.y <= v.y,
             u.z <= v.z
         )
     }
-    def greaterThan(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def greaterThan(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x > v.x,
             u.y > v.y,
             u.z > v.z
         )
     }
-    def greaterThanEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def greaterThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x >= v.x,
             u.y >= v.y,
             u.z >= v.z
         )
     }
-    def equal(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def equal(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x == v.x,
             u.y == v.y,
             u.z == v.z
         )
     }
-    def notEqual(u: AnyVec3i, v: AnyVec3i) :Vec3b = {
+    def notEqual(u: inVec3i, v: inVec3i) :Vec3b = {
         new Vec3b(
             u.x != v.x,
             u.y != v.y,
@@ -204,25 +204,25 @@ object IntMath {
     }
 
     // Vec4i functions
-    def abs(u: AnyVec4i) :Vec4i = {
+    def abs(u: inVec4i) :Vec4i = {
         new Vec4i(abs(u.x), abs(u.y), abs(u.z), abs(u.w))
     }
-    def sign(u: AnyVec4i) :Vec4i = {
+    def sign(u: inVec4i) :Vec4i = {
         new Vec4i(sign(u.x), sign(u.y), sign(u.z), sign(u.w))
     }
-    def min(u: AnyVec4i, s: Int) :Vec4i = {
+    def min(u: inVec4i, s: Int) :Vec4i = {
         new Vec4i(min(u.x, s), min(u.y, s), min(u.z, s), min(u.w, s))
     }
-    def min(u: AnyVec4i, v: AnyVec4i) :Vec4i = {
+    def min(u: inVec4i, v: inVec4i) :Vec4i = {
         new Vec4i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z), min(u.w, v.w))
     }
-    def max(u: AnyVec4i, s: Int) :Vec4i = {
+    def max(u: inVec4i, s: Int) :Vec4i = {
         new Vec4i(max(u.x, s), max(u.y, s), max(u.z, s), max(u.w, s))
     }
-    def max(u: AnyVec4i, v: AnyVec4i) :Vec4i = {
+    def max(u: inVec4i, v: inVec4i) :Vec4i = {
         new Vec4i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z), max(u.w, v.w))
     }
-    def clamp(u: AnyVec4i, minVal: Int, maxVal: Int) :Vec4i = {
+    def clamp(u: inVec4i, minVal: Int, maxVal: Int) :Vec4i = {
         new Vec4i(
             clamp(u.x, minVal, maxVal),
             clamp(u.y, minVal, maxVal),
@@ -230,7 +230,7 @@ object IntMath {
             clamp(u.w, minVal, maxVal)
         )
     }
-    def clamp(u: AnyVec4i, minVal: AnyVec4i, maxVal: AnyVec4i) :Vec4i = {
+    def clamp(u: inVec4i, minVal: inVec4i, maxVal: inVec4i) :Vec4i = {
         new Vec4i(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y),
@@ -239,7 +239,7 @@ object IntMath {
         )
     }
 
-    def lessThan(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def lessThan(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x < v.x,
             u.y < v.y,
@@ -247,7 +247,7 @@ object IntMath {
             u.w < v.w
         )
     }
-    def lessThanEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def lessThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x <= v.x,
             u.y <= v.y,
@@ -255,7 +255,7 @@ object IntMath {
             u.w <= v.w
         )
     }
-    def greaterThan(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def greaterThan(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x > v.x,
             u.y > v.y,
@@ -263,7 +263,7 @@ object IntMath {
             u.w > v.w
         )
     }
-    def greaterThanEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def greaterThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x >= v.x,
             u.y >= v.y,
@@ -271,7 +271,7 @@ object IntMath {
             u.w >= v.w
         )
     }
-    def equal(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def equal(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x == v.x,
             u.y == v.y,
@@ -279,7 +279,7 @@ object IntMath {
             u.w == v.w
         )
     }
-    def notEqual(u: AnyVec4i, v: AnyVec4i) :Vec4b = {
+    def notEqual(u: inVec4i, v: inVec4i) :Vec4b = {
         new Vec4b(
             u.x != v.x,
             u.y != v.y,

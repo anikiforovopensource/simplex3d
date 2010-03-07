@@ -182,7 +182,7 @@ final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
 extends AnyVec2b with ConstVec[Boolean]
 
 
-/** Factory for creating constant Boolean 2-dimensional vectors.
+/** The companion object <code>ConstVec2b</code> that contains factory methods.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.
@@ -328,7 +328,8 @@ extends AnyVec2b with Vec[Boolean]
 }
 
 
-/** Factory for creating mutable Boolean 2-dimensional vectors.
+/** The companion object <code>Vec2b</code> that contains factory methods
+ * and common constant.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.

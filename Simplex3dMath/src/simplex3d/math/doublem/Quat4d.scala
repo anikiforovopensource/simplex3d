@@ -202,7 +202,6 @@ object Quat4d {
     }
     def apply(q: ReadQ[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
     def apply(u: Read4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
-    def apply(m: Read2x2[_]) = new Quat4d(m.d11, m.d00, m.d10, m.d01)
 
     def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
 

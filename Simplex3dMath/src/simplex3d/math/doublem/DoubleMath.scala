@@ -193,187 +193,187 @@ object DoubleMath {
     }
 
     // Vec2d functions
-    def radians(u: AnyVec2d) :Vec2d = new Vec2d(radians(u.x), radians(u.y))
-    def degrees(u: AnyVec2d) :Vec2d = new Vec2d(degrees(u.x), degrees(u.y))
+    def radians(u: inVec2d) :Vec2d = new Vec2d(radians(u.x), radians(u.y))
+    def degrees(u: inVec2d) :Vec2d = new Vec2d(degrees(u.x), degrees(u.y))
 
-    def sin(u: AnyVec2d) :Vec2d = new Vec2d(sin(u.x), sin(u.y))
-    def cos(u: AnyVec2d) :Vec2d = new Vec2d(cos(u.x), cos(u.y))
-    def tan(u: AnyVec2d) :Vec2d = new Vec2d(tan(u.x), tan(u.y))
+    def sin(u: inVec2d) :Vec2d = new Vec2d(sin(u.x), sin(u.y))
+    def cos(u: inVec2d) :Vec2d = new Vec2d(cos(u.x), cos(u.y))
+    def tan(u: inVec2d) :Vec2d = new Vec2d(tan(u.x), tan(u.y))
 
-    def asin(u: AnyVec2d) :Vec2d = new Vec2d(asin(u.x), asin(u.y))
-    def acos(u: AnyVec2d) :Vec2d = new Vec2d(acos(u.x), acos(u.y))
-    def atan(uy: AnyVec2d, ux: AnyVec2d) :Vec2d = {
+    def asin(u: inVec2d) :Vec2d = new Vec2d(asin(u.x), asin(u.y))
+    def acos(u: inVec2d) :Vec2d = new Vec2d(acos(u.x), acos(u.y))
+    def atan(uy: inVec2d, ux: inVec2d) :Vec2d = {
         new Vec2d(atan(uy.x, ux.x), atan(uy.y, ux.y))
     }
-    def atan(u: AnyVec2d) :Vec2d = new Vec2d(atan(u.x), atan(u.y))
+    def atan(u: inVec2d) :Vec2d = new Vec2d(atan(u.x), atan(u.y))
 
-    def sinh(u: AnyVec2d) :Vec2d = new Vec2d(sinh(u.x), sinh(u.y))
-    def cosh(u: AnyVec2d) :Vec2d = new Vec2d(cosh(u.x), cosh(u.y))
-    def tanh(u: AnyVec2d) :Vec2d = new Vec2d(tanh(u.x), tanh(u.y))
+    def sinh(u: inVec2d) :Vec2d = new Vec2d(sinh(u.x), sinh(u.y))
+    def cosh(u: inVec2d) :Vec2d = new Vec2d(cosh(u.x), cosh(u.y))
+    def tanh(u: inVec2d) :Vec2d = new Vec2d(tanh(u.x), tanh(u.y))
 
-    def asinh(u: AnyVec2d) :Vec2d = new Vec2d(asinh(u.x), asinh(u.y))
-    def acosh(u: AnyVec2d) :Vec2d = new Vec2d(acosh(u.x), acosh(u.y))
-    def atanh(u: AnyVec2d) :Vec2d = new Vec2d(atanh(u.x), atanh(u.y))
+    def asinh(u: inVec2d) :Vec2d = new Vec2d(asinh(u.x), asinh(u.y))
+    def acosh(u: inVec2d) :Vec2d = new Vec2d(acosh(u.x), acosh(u.y))
+    def atanh(u: inVec2d) :Vec2d = new Vec2d(atanh(u.x), atanh(u.y))
 
-    def pow(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+    def pow(u: inVec2d, v: inVec2d) :Vec2d = {
         new Vec2d(pow(u.x, v.x), pow(u.y, v.y))
     }
-    def exp(u: AnyVec2d) :Vec2d = new Vec2d(exp(u.x), exp(u.y))
-    def log(u: AnyVec2d) :Vec2d = new Vec2d(log(u.x), log(u.y))
+    def exp(u: inVec2d) :Vec2d = new Vec2d(exp(u.x), exp(u.y))
+    def log(u: inVec2d) :Vec2d = new Vec2d(log(u.x), log(u.y))
 
-    def exp2(u: AnyVec2d) :Vec2d = new Vec2d(exp2(u.x), exp2(u.y))
-    def log2(u: AnyVec2d) :Vec2d = new Vec2d(log2(u.x), log2(u.y))
+    def exp2(u: inVec2d) :Vec2d = new Vec2d(exp2(u.x), exp2(u.y))
+    def log2(u: inVec2d) :Vec2d = new Vec2d(log2(u.x), log2(u.y))
 
-    def sqrt(u: AnyVec2d) :Vec2d = new Vec2d(sqrt(u.x), sqrt(u.y))
-    def inversesqrt(u: AnyVec2d) :Vec2d = {
+    def sqrt(u: inVec2d) :Vec2d = new Vec2d(sqrt(u.x), sqrt(u.y))
+    def inversesqrt(u: inVec2d) :Vec2d = {
         new Vec2d(inversesqrt(u.x), inversesqrt(u.y))
     }
 
-    def abs(u: AnyVec2d) :Vec2d = new Vec2d(abs(u.x), abs(u.y))
-    def sign(u: AnyVec2d) :Vec2d = new Vec2d(sign(u.x), sign(u.y))
-    def floor(u: AnyVec2d) :Vec2d = new Vec2d(floor(u.x), floor(u.y))
-    def trunc(u: AnyVec2d) :Vec2d = new Vec2d(trunc(u.x), trunc(u.y))
-    def round(u: AnyVec2d) :Vec2d = new Vec2d(round(u.x), round(u.y))
-    def roundEven(u: AnyVec2d) :Vec2d = {
+    def abs(u: inVec2d) :Vec2d = new Vec2d(abs(u.x), abs(u.y))
+    def sign(u: inVec2d) :Vec2d = new Vec2d(sign(u.x), sign(u.y))
+    def floor(u: inVec2d) :Vec2d = new Vec2d(floor(u.x), floor(u.y))
+    def trunc(u: inVec2d) :Vec2d = new Vec2d(trunc(u.x), trunc(u.y))
+    def round(u: inVec2d) :Vec2d = new Vec2d(round(u.x), round(u.y))
+    def roundEven(u: inVec2d) :Vec2d = {
         new Vec2d(roundEven(u.x), roundEven(u.y))
     }
-    def ceil(u: AnyVec2d) :Vec2d = new Vec2d(ceil(u.x), ceil(u.y))
-    def fract(u: AnyVec2d) :Vec2d = new Vec2d(fract(u.x), fract(u.y))
-    def mod(u: AnyVec2d, s: Double) :Vec2d = new Vec2d(mod(u.x, s), mod(u.y, s))
-    def mod(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+    def ceil(u: inVec2d) :Vec2d = new Vec2d(ceil(u.x), ceil(u.y))
+    def fract(u: inVec2d) :Vec2d = new Vec2d(fract(u.x), fract(u.y))
+    def mod(u: inVec2d, s: Double) :Vec2d = new Vec2d(mod(u.x, s), mod(u.y, s))
+    def mod(u: inVec2d, v: inVec2d) :Vec2d = {
         new Vec2d(mod(u.x, v.x), mod(u.y, v.y))
     }
-    def modf(u: AnyVec2d, i: Vec2d) :Vec2d = {
+    def modf(u: inVec2d, i: outVec2d) :Vec2d = {
         i := trunc(u)
         u - i
     }
 
-    def min(u: AnyVec2d, s: Double) :Vec2d = new Vec2d(min(u.x, s), min(u.y, s))
-    def min(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+    def min(u: inVec2d, s: Double) :Vec2d = new Vec2d(min(u.x, s), min(u.y, s))
+    def min(u: inVec2d, v: inVec2d) :Vec2d = {
         new Vec2d(min(u.x, v.x), min(u.y, v.y))
     }
-    def max(u: AnyVec2d, s: Double) :Vec2d = new Vec2d(max(u.x, s), max(u.y, s))
-    def max(u: AnyVec2d, v: AnyVec2d) :Vec2d = {
+    def max(u: inVec2d, s: Double) :Vec2d = new Vec2d(max(u.x, s), max(u.y, s))
+    def max(u: inVec2d, v: inVec2d) :Vec2d = {
         new Vec2d(max(u.x, v.x), max(u.y, v.y))
     }
-    def clamp(u: AnyVec2d, minVal: Double, maxVal: Double) :Vec2d = {
+    def clamp(u: inVec2d, minVal: Double, maxVal: Double) :Vec2d = {
         new Vec2d(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
     }
-    def clamp(u: AnyVec2d, minVal: AnyVec2d, maxVal: AnyVec2d) :Vec2d = {
+    def clamp(u: inVec2d, minVal: inVec2d, maxVal: inVec2d) :Vec2d = {
         new Vec2d(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y)
         )
     }
 
-    def mix(u: AnyVec2d, v: AnyVec2d, a: Double) :Vec2d = {
+    def mix(u: inVec2d, v: inVec2d, a: Double) :Vec2d = {
         val b = 1 - a
         new Vec2d(b*u.x + a*v.x, b*u.y + a*v.y)
     }
-    def mix(u: AnyVec2d, v: AnyVec2d, a: AnyVec2d) :Vec2d = {
+    def mix(u: inVec2d, v: inVec2d, a: inVec2d) :Vec2d = {
         new Vec2d(mix(u.x, v.x, a.x), mix(u.y, v.y, a.y))
     }
-    def mix(u: AnyVec2d, v: AnyVec2d, a: AnyVec2b) :Vec2d = {
+    def mix(u: inVec2d, v: inVec2d, a: inVec2b) :Vec2d = {
         new Vec2d(
             if (a.x) v.x else u.x,
             if (a.y) v.y else u.y
         )
     }
 
-    def step(edge: Double, u: AnyVec2d) :Vec2d = {
+    def step(edge: Double, u: inVec2d) :Vec2d = {
         new Vec2d(step(edge, u.x), step(edge, u.y))
     }
-    def step(edge: AnyVec2d, u: AnyVec2d) :Vec2d = {
+    def step(edge: inVec2d, u: inVec2d) :Vec2d = {
         new Vec2d(step(edge.x, u.x), step(edge.y, u.y))
     }
-    def smoothstep(edge0: Double, edge1: Double, u: AnyVec2d) :Vec2d = {
+    def smoothstep(edge0: Double, edge1: Double, u: inVec2d) :Vec2d = {
         new Vec2d(
             smoothstep(edge0, edge1, u.x),
             smoothstep(edge0, edge1, u.y)
         )
     }
-    def smoothstep(edge0: AnyVec2d, edge1: AnyVec2d, u: AnyVec2d) :Vec2d = {
+    def smoothstep(edge0: inVec2d, edge1: inVec2d, u: inVec2d) :Vec2d = {
         new Vec2d(
             smoothstep(edge0.x, edge1.x, u.x),
             smoothstep(edge0.y, edge1.y, u.y)
         )
     }
 
-    def isnan(u: AnyVec2d) :Vec2b = new Vec2b(isnan(u.x), isnan(u.y))
-    def isinf(u: AnyVec2d) :Vec2b = new Vec2b(isinf(u.x), isinf(u.y))
+    def isnan(u: inVec2d) :Vec2b = new Vec2b(isnan(u.x), isnan(u.y))
+    def isinf(u: inVec2d) :Vec2b = new Vec2b(isinf(u.x), isinf(u.y))
     
-    def length(u: AnyVec2d) :Double = sqrt(u.x*u.x + u.y*u.y)
-    def distance(u: AnyVec2d, v: AnyVec2d) :Double = length(u - v)
-    def dot(u: AnyVec2d, v: AnyVec2d) :Double = u.x * v.x + u.y * v.y
-    def normalize(u: AnyVec2d) :Vec2d = u*inversesqrt(u.x*u.x + u.y*u.y)
+    def length(u: inVec2d) :Double = sqrt(u.x*u.x + u.y*u.y)
+    def distance(u: inVec2d, v: inVec2d) :Double = length(u - v)
+    def dot(u: inVec2d, v: inVec2d) :Double = u.x * v.x + u.y * v.y
+    def normalize(u: inVec2d) :Vec2d = u*inversesqrt(u.x*u.x + u.y*u.y)
 
-    def faceforward(n: AnyVec2d, i: AnyVec2d, nref: AnyVec2d) :Vec2d = {
+    def faceforward(n: inVec2d, i: inVec2d, nref: inVec2d) :Vec2d = {
         if (dot(nref, i) < 0) Vec2d(n) else -n
     }
 
-    def reflect(i: AnyVec2d, n: AnyVec2d) :Vec2d = {
+    def reflect(i: inVec2d, n: inVec2d) :Vec2d = {
         i - n*2*dot(n, i)
     }
-    def refract(i: AnyVec2d, n: AnyVec2d, eta: Double) :Vec2d = {
+    def refract(i: inVec2d, n: inVec2d, eta: Double) :Vec2d = {
         val dotni = dot(n, i)
         val k = 1 - eta*eta*(1 - dotni*dotni)
         if (k < 0) Vec2d(0) else i*eta - n*(eta*dotni + sqrt(k))
     }
 
-    def lessThan(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def lessThan(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x < v.x,
             u.y < v.y
         )
     }
-    def lessThanEqual(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def lessThanEqual(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x <= v.x,
             u.y <= v.y
         )
     }
-    def greaterThan(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def greaterThan(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x > v.x,
             u.y > v.y
         )
     }
-    def greaterThanEqual(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def greaterThanEqual(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x >= v.x,
             u.y >= v.y
         )
     }
-    def equal(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def equal(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x == v.x,
             u.y == v.y
         )
     }
-    def notEqual(u: AnyVec2d, v: AnyVec2d) :Vec2b = {
+    def notEqual(u: inVec2d, v: inVec2d) :Vec2b = {
         new Vec2b(
             u.x != v.x,
             u.y != v.y
         )
     }
 
-    def noise1(u: AnyVec2d) :Double = {
+    def noise1(u: inVec2d) :Double = {
         SimplexNoise.noise(u.x, u.y)
     }
-    def noise2(u: AnyVec2d) :Vec2d = {
+    def noise2(u: inVec2d) :Vec2d = {
         new Vec2d(
             SimplexNoise.noise(u.x, u.y),
             SimplexNoise.noise(u.x + of1, u.y + of1)
         )
     }
-    def noise3(u: AnyVec2d) :Vec3d = {
+    def noise3(u: inVec2d) :Vec3d = {
         new Vec3d(
             SimplexNoise.noise(u.x, u.y),
             SimplexNoise.noise(u.x + of1, u.y + of1),
             SimplexNoise.noise(u.x + of2, u.y + of2)
         )
     }
-    def noise4(u: AnyVec2d) :Vec4d = {
+    def noise4(u: inVec2d) :Vec4d = {
         new Vec4d(
             SimplexNoise.noise(u.x, u.y),
             SimplexNoise.noise(u.x + of1, u.y + of1),
@@ -384,101 +384,101 @@ object DoubleMath {
 
 
     // Vec3d functions
-    def radians(u: AnyVec3d) :Vec3d = {
+    def radians(u: inVec3d) :Vec3d = {
         new Vec3d(radians(u.x), radians(u.y), radians(u.z))
     }
-    def degrees(u: AnyVec3d) :Vec3d = {
+    def degrees(u: inVec3d) :Vec3d = {
         new Vec3d(degrees(u.x), degrees(u.y), degrees(u.z))
     }
 
-    def sin(u: AnyVec3d) :Vec3d = new Vec3d(sin(u.x), sin(u.y), sin(u.z))
-    def cos(u: AnyVec3d) :Vec3d = new Vec3d(cos(u.x), cos(u.y), cos(u.z))
-    def tan(u: AnyVec3d) :Vec3d = new Vec3d(tan(u.x), tan(u.y), tan(u.z))
+    def sin(u: inVec3d) :Vec3d = new Vec3d(sin(u.x), sin(u.y), sin(u.z))
+    def cos(u: inVec3d) :Vec3d = new Vec3d(cos(u.x), cos(u.y), cos(u.z))
+    def tan(u: inVec3d) :Vec3d = new Vec3d(tan(u.x), tan(u.y), tan(u.z))
 
-    def asin(u: AnyVec3d) :Vec3d = new Vec3d(asin(u.x), asin(u.y), asin(u.z))
-    def acos(u: AnyVec3d) :Vec3d = new Vec3d(acos(u.x), acos(u.y), acos(u.z))
-    def atan(uy: AnyVec3d, ux: AnyVec3d) :Vec3d = {
+    def asin(u: inVec3d) :Vec3d = new Vec3d(asin(u.x), asin(u.y), asin(u.z))
+    def acos(u: inVec3d) :Vec3d = new Vec3d(acos(u.x), acos(u.y), acos(u.z))
+    def atan(uy: inVec3d, ux: inVec3d) :Vec3d = {
         new Vec3d(atan(uy.x, ux.x), atan(uy.y, ux.y), atan(uy.z, ux.z))
     }
-    def atan(u: AnyVec3d) :Vec3d = new Vec3d(atan(u.x), atan(u.y), atan(u.z))
+    def atan(u: inVec3d) :Vec3d = new Vec3d(atan(u.x), atan(u.y), atan(u.z))
 
-    def sinh(u: AnyVec3d) :Vec3d = new Vec3d(sinh(u.x), sinh(u.y), sinh(u.z))
-    def cosh(u: AnyVec3d) :Vec3d = new Vec3d(cosh(u.x), cosh(u.y), cosh(u.z))
-    def tanh(u: AnyVec3d) :Vec3d = new Vec3d(tanh(u.x), tanh(u.y), tanh(u.z))
+    def sinh(u: inVec3d) :Vec3d = new Vec3d(sinh(u.x), sinh(u.y), sinh(u.z))
+    def cosh(u: inVec3d) :Vec3d = new Vec3d(cosh(u.x), cosh(u.y), cosh(u.z))
+    def tanh(u: inVec3d) :Vec3d = new Vec3d(tanh(u.x), tanh(u.y), tanh(u.z))
 
-    def asinh(u: AnyVec3d) :Vec3d = {
+    def asinh(u: inVec3d) :Vec3d = {
         new Vec3d(asinh(u.x), asinh(u.y), asinh(u.z))
     }
-    def acosh(u: AnyVec3d) :Vec3d = {
+    def acosh(u: inVec3d) :Vec3d = {
         new Vec3d(acosh(u.x), acosh(u.y), acosh(u.z))
     }
-    def atanh(u: AnyVec3d) :Vec3d = {
+    def atanh(u: inVec3d) :Vec3d = {
         new Vec3d(atanh(u.x), atanh(u.y), atanh(u.z))
     }
 
-    def pow(u: AnyVec3d, v: AnyVec3d) :Vec3d = {
+    def pow(u: inVec3d, v: inVec3d) :Vec3d = {
         new Vec3d(pow(u.x, v.x), pow(u.y, v.y), pow(u.z, v.z))
     }
-    def exp(u: AnyVec3d) :Vec3d = new Vec3d(exp(u.x), exp(u.y), exp(u.z))
-    def log(u: AnyVec3d) :Vec3d = new Vec3d(log(u.x), log(u.y), log(u.z))
+    def exp(u: inVec3d) :Vec3d = new Vec3d(exp(u.x), exp(u.y), exp(u.z))
+    def log(u: inVec3d) :Vec3d = new Vec3d(log(u.x), log(u.y), log(u.z))
 
-    def exp2(u: AnyVec3d) :Vec3d = new Vec3d(exp2(u.x), exp2(u.y), exp2(u.z))
-    def log2(u: AnyVec3d) :Vec3d = new Vec3d(log2(u.x), log2(u.y), log2(u.z))
+    def exp2(u: inVec3d) :Vec3d = new Vec3d(exp2(u.x), exp2(u.y), exp2(u.z))
+    def log2(u: inVec3d) :Vec3d = new Vec3d(log2(u.x), log2(u.y), log2(u.z))
 
-    def sqrt(u: AnyVec3d) :Vec3d = new Vec3d(sqrt(u.x), sqrt(u.y), sqrt(u.z))
-    def inversesqrt(u: AnyVec3d) :Vec3d = {
+    def sqrt(u: inVec3d) :Vec3d = new Vec3d(sqrt(u.x), sqrt(u.y), sqrt(u.z))
+    def inversesqrt(u: inVec3d) :Vec3d = {
         new Vec3d(inversesqrt(u.x), inversesqrt(u.y), inversesqrt(u.z))
     }
 
-    def abs(u: AnyVec3d) :Vec3d = new Vec3d(abs(u.x), abs(u.y), abs(u.z))
-    def sign(u: AnyVec3d) :Vec3d = new Vec3d(sign(u.x), sign(u.y), sign(u.z))
-    def floor(u: AnyVec3d) :Vec3d = {
+    def abs(u: inVec3d) :Vec3d = new Vec3d(abs(u.x), abs(u.y), abs(u.z))
+    def sign(u: inVec3d) :Vec3d = new Vec3d(sign(u.x), sign(u.y), sign(u.z))
+    def floor(u: inVec3d) :Vec3d = {
         new Vec3d(floor(u.x), floor(u.y), floor(u.z))
     }
-    def trunc(u: AnyVec3d) :Vec3d = {
+    def trunc(u: inVec3d) :Vec3d = {
         new Vec3d(trunc(u.x), trunc(u.y), trunc(u.z))
     }
-    def round(u: AnyVec3d) :Vec3d = {
+    def round(u: inVec3d) :Vec3d = {
         new Vec3d(round(u.x), round(u.y), round(u.z))
     }
-    def roundEven(u: AnyVec3d) :Vec3d = {
+    def roundEven(u: inVec3d) :Vec3d = {
         new Vec3d(roundEven(u.x), roundEven(u.y), roundEven(u.z))
     }
-    def ceil(u: AnyVec3d) :Vec3d = new Vec3d(ceil(u.x), ceil(u.y), ceil(u.z))
-    def fract(u: AnyVec3d) :Vec3d = {
+    def ceil(u: inVec3d) :Vec3d = new Vec3d(ceil(u.x), ceil(u.y), ceil(u.z))
+    def fract(u: inVec3d) :Vec3d = {
         new Vec3d(fract(u.x), fract(u.y), fract(u.z))
     }
-    def mod(u: AnyVec3d, s: Double) :Vec3d = {
+    def mod(u: inVec3d, s: Double) :Vec3d = {
         new Vec3d(mod(u.x, s), mod(u.y, s), mod(u.z, s))
     }
-    def mod(u: AnyVec3d, v: AnyVec3d) :Vec3d = {
+    def mod(u: inVec3d, v: inVec3d) :Vec3d = {
         new Vec3d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z))
     }
-    def modf(u: AnyVec3d, i: Vec3d) :Vec3d = {
+    def modf(u: inVec3d, i: outVec3d) :Vec3d = {
         i := trunc(u)
         u - i
     }
 
-    def min(u: AnyVec3d, s: Double) :Vec3d = {
+    def min(u: inVec3d, s: Double) :Vec3d = {
         new Vec3d(min(u.x, s), min(u.y, s), min(u.z, s))
     }
-    def min(u: AnyVec3d, v: AnyVec3d) :Vec3d = {
+    def min(u: inVec3d, v: inVec3d) :Vec3d = {
         new Vec3d(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z))
     }
-    def max(u: AnyVec3d, s: Double) :Vec3d = {
+    def max(u: inVec3d, s: Double) :Vec3d = {
         new Vec3d(max(u.x, s), max(u.y, s), max(u.z, s))
     }
-    def max(u: AnyVec3d, v: AnyVec3d) :Vec3d = {
+    def max(u: inVec3d, v: inVec3d) :Vec3d = {
         new Vec3d(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z))
     }
-    def clamp(u: AnyVec3d, minVal: Double, maxVal: Double) :Vec3d = {
+    def clamp(u: inVec3d, minVal: Double, maxVal: Double) :Vec3d = {
         new Vec3d(
             clamp(u.x, minVal, maxVal),
             clamp(u.y, minVal, maxVal),
             clamp(u.z, minVal, maxVal)
         )
     }
-    def clamp(u: AnyVec3d, minVal: AnyVec3d, maxVal: AnyVec3d) :Vec3d = {
+    def clamp(u: inVec3d, minVal: inVec3d, maxVal: inVec3d) :Vec3d = {
         new Vec3d(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y),
@@ -486,14 +486,14 @@ object DoubleMath {
         )
     }
 
-    def mix(u: AnyVec3d, v: AnyVec3d, a: Double) :Vec3d = {
+    def mix(u: inVec3d, v: inVec3d, a: Double) :Vec3d = {
         val b = 1 - a
         new Vec3d(b*u.x + a*v.x, b*u.y + a*v.y, b*u.z + a*v.z)
     }
-    def mix(u: AnyVec3d, v: AnyVec3d, a: AnyVec3d) :Vec3d = {
+    def mix(u: inVec3d, v: inVec3d, a: inVec3d) :Vec3d = {
         new Vec3d(mix(u.x, v.x, a.x), mix(u.y, v.y, a.y), mix(u.z, v.z, a.z))
     }
-    def mix(u: AnyVec3d, v: AnyVec3d, a: AnyVec3b) :Vec3d = {
+    def mix(u: inVec3d, v: inVec3d, a: inVec3b) :Vec3d = {
         new Vec3d(
             if (a.x) v.x else u.x,
             if (a.y) v.y else u.y,
@@ -501,20 +501,20 @@ object DoubleMath {
         )
     }
 
-    def step(edge: Double, u: AnyVec3d) :Vec3d = {
+    def step(edge: Double, u: inVec3d) :Vec3d = {
         new Vec3d(step(edge, u.x), step(edge, u.y), step(edge, u.z))
     }
-    def step(edge: AnyVec3d, u: AnyVec3d) :Vec3d = {
+    def step(edge: inVec3d, u: inVec3d) :Vec3d = {
         new Vec3d(step(edge.x, u.x), step(edge.y, u.y), step(edge.z, u.z))
     }
-    def smoothstep(edge0: Double, edge1: Double, u: AnyVec3d) :Vec3d = {
+    def smoothstep(edge0: Double, edge1: Double, u: inVec3d) :Vec3d = {
         new Vec3d(
             smoothstep(edge0, edge1, u.x),
             smoothstep(edge0, edge1, u.y),
             smoothstep(edge0, edge1, u.z)
         )
     }
-    def smoothstep(edge0: AnyVec3d, edge1: AnyVec3d, u: AnyVec3d) :Vec3d = {
+    def smoothstep(edge0: inVec3d, edge1: inVec3d, u: inVec3d) :Vec3d = {
         new Vec3d(
             smoothstep(edge0.x, edge1.x, u.x),
             smoothstep(edge0.y, edge1.y, u.y),
@@ -522,76 +522,76 @@ object DoubleMath {
         )
     }
 
-    def isnan(u: AnyVec3d) :Vec3b = {
+    def isnan(u: inVec3d) :Vec3b = {
         new Vec3b(isnan(u.x), isnan(u.y), isnan(u.z))
     }
-    def isinf(u: AnyVec3d) :Vec3b = {
+    def isinf(u: inVec3d) :Vec3b = {
         new Vec3b(isinf(u.x), isinf(u.y), isinf(u.z))
     }
 
-    def length(u: AnyVec3d) :Double = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
-    def distance(u: AnyVec3d, v: AnyVec3d) :Double = length(u - v)
-    def dot(u: AnyVec3d, v: AnyVec3d) :Double = u.x*v.x + u.y*v.y + u.z*v.z
-    def cross(u: AnyVec3d, v: AnyVec3d) :Vec3d = {
+    def length(u: inVec3d) :Double = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
+    def distance(u: inVec3d, v: inVec3d) :Double = length(u - v)
+    def dot(u: inVec3d, v: inVec3d) :Double = u.x*v.x + u.y*v.y + u.z*v.z
+    def cross(u: inVec3d, v: inVec3d) :Vec3d = {
         new Vec3d(
             u.y*v.z-v.y*u.z,
             u.z*v.x-v.z*u.x,
             u.x*v.y-v.x*u.y
         )
     }
-    def normalize(u: AnyVec3d) :Vec3d = {
+    def normalize(u: inVec3d) :Vec3d = {
         u*inversesqrt(u.x*u.x + u.y*u.y + u.z*u.z)
     }
 
-    def faceforward(n: AnyVec3d, i: AnyVec3d, nref: AnyVec3d) :Vec3d = {
+    def faceforward(n: inVec3d, i: inVec3d, nref: inVec3d) :Vec3d = {
         if (dot(nref, i) < 0) Vec3d(n) else -n
     }
 
-    def reflect(i: AnyVec3d, n: AnyVec3d) :Vec3d = {
+    def reflect(i: inVec3d, n: inVec3d) :Vec3d = {
         i - n*2*dot(n, i)
     }
-    def refract(i: AnyVec3d, n: AnyVec3d, eta: Double) :Vec3d = {
+    def refract(i: inVec3d, n: inVec3d, eta: Double) :Vec3d = {
         val dotni = dot(n, i)
         val k = 1 - eta*eta*(1 - dotni*dotni)
         if (k < 0) Vec3d(0) else i*eta - n*(eta*dotni + sqrt(k))
     }
 
-    def lessThan(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def lessThan(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x < v.x,
             u.y < v.y,
             u.z < v.z
         )
     }
-    def lessThanEqual(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def lessThanEqual(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x <= v.x,
             u.y <= v.y,
             u.z <= v.z
         )
     }
-    def greaterThan(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def greaterThan(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x > v.x,
             u.y > v.y,
             u.z > v.z
         )
     }
-    def greaterThanEqual(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def greaterThanEqual(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x >= v.x,
             u.y >= v.y,
             u.z >= v.z
         )
     }
-    def equal(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def equal(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x == v.x,
             u.y == v.y,
             u.z == v.z
         )
     }
-    def notEqual(u: AnyVec3d, v: AnyVec3d) :Vec3b = {
+    def notEqual(u: inVec3d, v: inVec3d) :Vec3b = {
         new Vec3b(
             u.x != v.x,
             u.y != v.y,
@@ -599,23 +599,23 @@ object DoubleMath {
         )
     }
 
-    def noise1(u: AnyVec3d) :Double = {
+    def noise1(u: inVec3d) :Double = {
         SimplexNoise.noise(u.x, u.y, u.z)
     }
-    def noise2(u: AnyVec3d) :Vec2d = {
+    def noise2(u: inVec3d) :Vec2d = {
         new Vec2d(
             SimplexNoise.noise(u.x, u.y, u.z),
             SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)
         )
     }
-    def noise3(u: AnyVec3d) :Vec3d = {
+    def noise3(u: inVec3d) :Vec3d = {
         new Vec3d(
             SimplexNoise.noise(u.x, u.y, u.z),
             SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1),
             SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2)
         )
     }
-    def noise4(u: AnyVec3d) :Vec4d = {
+    def noise4(u: inVec3d) :Vec4d = {
         new Vec4d(
             SimplexNoise.noise(u.x, u.y, u.z),
             SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1),
@@ -625,30 +625,30 @@ object DoubleMath {
     }
 
     // Vec4d functions
-    def radians(u: AnyVec4d) :Vec4d = {
+    def radians(u: inVec4d) :Vec4d = {
         new Vec4d(radians(u.x), radians(u.y), radians(u.z), radians(u.w))
     }
-    def degrees(u: AnyVec4d) :Vec4d = {
+    def degrees(u: inVec4d) :Vec4d = {
         new Vec4d(degrees(u.x), degrees(u.y), degrees(u.z), degrees(u.w))
     }
 
-    def sin(u: AnyVec4d) :Vec4d = {
+    def sin(u: inVec4d) :Vec4d = {
         new Vec4d(sin(u.x), sin(u.y), sin(u.z), sin(u.w))
     }
-    def cos(u: AnyVec4d) :Vec4d = {
+    def cos(u: inVec4d) :Vec4d = {
         new Vec4d(cos(u.x), cos(u.y), cos(u.z), cos(u.w))
     }
-    def tan(u: AnyVec4d) :Vec4d = {
+    def tan(u: inVec4d) :Vec4d = {
         new Vec4d(tan(u.x), tan(u.y), tan(u.z), tan(u.w))
     }
 
-    def asin(u: AnyVec4d) :Vec4d = {
+    def asin(u: inVec4d) :Vec4d = {
         new Vec4d(asin(u.x), asin(u.y), asin(u.z), asin(u.w))
     }
-    def acos(u: AnyVec4d) :Vec4d = {
+    def acos(u: inVec4d) :Vec4d = {
         new Vec4d(acos(u.x), acos(u.y), acos(u.z), acos(u.w))
     }
-    def atan(uy: AnyVec4d, ux: AnyVec4d) :Vec4d = {
+    def atan(uy: inVec4d, ux: inVec4d) :Vec4d = {
         new Vec4d(
             atan(uy.x, ux.x),
             atan(uy.y, ux.y),
@@ -656,51 +656,51 @@ object DoubleMath {
             atan(uy.w, ux.w)
         )
     }
-    def atan(u: AnyVec4d) :Vec4d = {
+    def atan(u: inVec4d) :Vec4d = {
         new Vec4d(atan(u.x), atan(u.y), atan(u.z), atan(u.w))
     }
 
-    def sinh(u: AnyVec4d) :Vec4d = {
+    def sinh(u: inVec4d) :Vec4d = {
         new Vec4d(sinh(u.x), sinh(u.y), sinh(u.z), sinh(u.w))
     }
-    def cosh(u: AnyVec4d) :Vec4d = {
+    def cosh(u: inVec4d) :Vec4d = {
         new Vec4d(cosh(u.x), cosh(u.y), cosh(u.z), cosh(u.w))
     }
-    def tanh(u: AnyVec4d) :Vec4d = {
+    def tanh(u: inVec4d) :Vec4d = {
         new Vec4d(tanh(u.x), tanh(u.y), tanh(u.z), tanh(u.w))
     }
 
-    def asinh(u: AnyVec4d) :Vec4d = {
+    def asinh(u: inVec4d) :Vec4d = {
         new Vec4d(asinh(u.x), asinh(u.y), asinh(u.z), asinh(u.w))
     }
-    def acosh(u: AnyVec4d) :Vec4d = {
+    def acosh(u: inVec4d) :Vec4d = {
         new Vec4d(acosh(u.x), acosh(u.y), acosh(u.z), acosh(u.w))
     }
-    def atanh(u: AnyVec4d) :Vec4d = {
+    def atanh(u: inVec4d) :Vec4d = {
         new Vec4d(atanh(u.x), atanh(u.y), atanh(u.z), atanh(u.w))
     }
 
-    def pow(u: AnyVec4d, v: AnyVec4d) :Vec4d = {
+    def pow(u: inVec4d, v: inVec4d) :Vec4d = {
         new Vec4d(pow(u.x, v.x), pow(u.y, v.y), pow(u.z, v.z), pow(u.w, v.w))
     }
-    def exp(u: AnyVec4d) :Vec4d = {
+    def exp(u: inVec4d) :Vec4d = {
         new Vec4d(exp(u.x), exp(u.y), exp(u.z), exp(u.w))
     }
-    def log(u: AnyVec4d) :Vec4d = {
+    def log(u: inVec4d) :Vec4d = {
         new Vec4d(log(u.x), log(u.y), log(u.z), log(u.w))
     }
 
-    def exp2(u: AnyVec4d) :Vec4d = {
+    def exp2(u: inVec4d) :Vec4d = {
         new Vec4d(exp2(u.x), exp2(u.y), exp2(u.z), exp2(u.w))
     }
-    def log2(u: AnyVec4d) :Vec4d = {
+    def log2(u: inVec4d) :Vec4d = {
         new Vec4d(log2(u.x), log2(u.y), log2(u.z), log2(u.w))
     }
 
-    def sqrt(u: AnyVec4d) :Vec4d = {
+    def sqrt(u: inVec4d) :Vec4d = {
         new Vec4d(sqrt(u.x), sqrt(u.y), sqrt(u.z), sqrt(u.w))
     }
-    def inversesqrt(u: AnyVec4d) :Vec4d = {
+    def inversesqrt(u: inVec4d) :Vec4d = {
         new Vec4d(
             inversesqrt(u.x),
             inversesqrt(u.y),
@@ -709,55 +709,55 @@ object DoubleMath {
         )
     }
 
-    def abs(u: AnyVec4d) :Vec4d = {
+    def abs(u: inVec4d) :Vec4d = {
         new Vec4d(abs(u.x), abs(u.y), abs(u.z), abs(u.w))
     }
-    def sign(u: AnyVec4d) :Vec4d = {
+    def sign(u: inVec4d) :Vec4d = {
         new Vec4d(sign(u.x), sign(u.y), sign(u.z), sign(u.w))
     }
-    def floor(u: AnyVec4d) :Vec4d = {
+    def floor(u: inVec4d) :Vec4d = {
         new Vec4d(floor(u.x), floor(u.y), floor(u.z), floor(u.w))
     }
-    def trunc(u: AnyVec4d) :Vec4d = {
+    def trunc(u: inVec4d) :Vec4d = {
         new Vec4d(trunc(u.x), trunc(u.y), trunc(u.z), trunc(u.w))
     }
-    def round(u: AnyVec4d) :Vec4d = {
+    def round(u: inVec4d) :Vec4d = {
         new Vec4d(round(u.x), round(u.y), round(u.z), round(u.w))
     }
-    def roundEven(u: AnyVec4d) :Vec4d = {
+    def roundEven(u: inVec4d) :Vec4d = {
         new Vec4d(roundEven(u.x), roundEven(u.y),
                   roundEven(u.z), roundEven(u.w))
     }
-    def ceil(u: AnyVec4d) :Vec4d = {
+    def ceil(u: inVec4d) :Vec4d = {
         new Vec4d(ceil(u.x), ceil(u.y), ceil(u.z), ceil(u.w))
     }
-    def fract(u: AnyVec4d) :Vec4d = {
+    def fract(u: inVec4d) :Vec4d = {
         new Vec4d(fract(u.x), fract(u.y), fract(u.z), fract(u.w))
     }
-    def mod(u: AnyVec4d, s: Double) :Vec4d = {
+    def mod(u: inVec4d, s: Double) :Vec4d = {
         new Vec4d(mod(u.x, s), mod(u.y, s), mod(u.z, s), mod(u.w, s))
     }
-    def mod(u: AnyVec4d, v: AnyVec4d) :Vec4d = {
+    def mod(u: inVec4d, v: inVec4d) :Vec4d = {
         new Vec4d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z), mod(u.w, v.w))
     }
-    def modf(u: AnyVec4d, i: Vec4d) :Vec4d = {
+    def modf(u: inVec4d, i: outVec4d) :Vec4d = {
         i := trunc(u)
         u - i
     }
 
-    def min(u: AnyVec4d, s: Double) :Vec4d = {
+    def min(u: inVec4d, s: Double) :Vec4d = {
         new Vec4d(min(u.x, s), min(u.y, s), min(u.z, s), min(u.w, s))
     }
-    def min(u: AnyVec4d, v: AnyVec4d) :Vec4d = {
+    def min(u: inVec4d, v: inVec4d) :Vec4d = {
         new Vec4d(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z), min(u.w, v.w))
     }
-    def max(u: AnyVec4d, s: Double) :Vec4d = {
+    def max(u: inVec4d, s: Double) :Vec4d = {
         new Vec4d(max(u.x, s), max(u.y, s), max(u.z, s), max(u.w, s))
     }
-    def max(u: AnyVec4d, v: AnyVec4d) :Vec4d = {
+    def max(u: inVec4d, v: inVec4d) :Vec4d = {
         new Vec4d(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z), max(u.w, v.w))
     }
-    def clamp(u: AnyVec4d, minVal: Double, maxVal: Double) :Vec4d = {
+    def clamp(u: inVec4d, minVal: Double, maxVal: Double) :Vec4d = {
         new Vec4d(
             clamp(u.x, minVal, maxVal),
             clamp(u.y, minVal, maxVal),
@@ -765,7 +765,7 @@ object DoubleMath {
             clamp(u.w, minVal, maxVal)
         )
     }
-    def clamp(u: AnyVec4d, minVal: AnyVec4d, maxVal: AnyVec4d) :Vec4d = {
+    def clamp(u: inVec4d, minVal: inVec4d, maxVal: inVec4d) :Vec4d = {
         new Vec4d(
             clamp(u.x, minVal.x, maxVal.x),
             clamp(u.y, minVal.y, maxVal.y),
@@ -774,11 +774,11 @@ object DoubleMath {
         )
     }
 
-    def mix(u: AnyVec4d, v: AnyVec4d, a: Double) :Vec4d = {
+    def mix(u: inVec4d, v: inVec4d, a: Double) :Vec4d = {
         val b = 1 - a
         new Vec4d(b*u.x + a*v.x, b*u.y + a*v.y, b*u.z + a*v.z, b*u.w + a*v.w)
     }
-    def mix(u: AnyVec4d, v: AnyVec4d, a: AnyVec4d) :Vec4d = {
+    def mix(u: inVec4d, v: inVec4d, a: inVec4d) :Vec4d = {
         new Vec4d(
             mix(u.x, v.x, a.x),
             mix(u.y, v.y, a.y),
@@ -786,7 +786,7 @@ object DoubleMath {
             mix(u.w, v.w, a.w)
         )
     }
-    def mix(u: AnyVec4d, v: AnyVec4d, a: AnyVec4b) :Vec4d = {
+    def mix(u: inVec4d, v: inVec4d, a: inVec4b) :Vec4d = {
         new Vec4d(
             if (a.x) v.x else u.x,
             if (a.y) v.y else u.y,
@@ -795,11 +795,11 @@ object DoubleMath {
         )
     }
 
-    def step(edge: Double, u: AnyVec4d) :Vec4d = {
+    def step(edge: Double, u: inVec4d) :Vec4d = {
         new Vec4d(step(edge, u.x), step(edge, u.y),
               step(edge, u.z), step(edge, u.w))
     }
-    def step(edge: AnyVec4d, u: AnyVec4d) :Vec4d = {
+    def step(edge: inVec4d, u: inVec4d) :Vec4d = {
         new Vec4d(
             step(edge.x, u.x),
             step(edge.y, u.y),
@@ -807,7 +807,7 @@ object DoubleMath {
             step(edge.w, u.w)
         )
     }
-    def smoothstep(edge0: Double, edge1: Double, u: AnyVec4d) :Vec4d = {
+    def smoothstep(edge0: Double, edge1: Double, u: inVec4d) :Vec4d = {
         new Vec4d(
             smoothstep(edge0, edge1, u.x),
             smoothstep(edge0, edge1, u.y),
@@ -815,7 +815,7 @@ object DoubleMath {
             smoothstep(edge0, edge1, u.w)
         )
     }
-    def smoothstep(edge0: AnyVec4d, edge1: AnyVec4d, u: AnyVec4d) :Vec4d = {
+    def smoothstep(edge0: inVec4d, edge1: inVec4d, u: inVec4d) :Vec4d = {
         new Vec4d(
             smoothstep(edge0.x, edge1.x, u.x),
             smoothstep(edge0.y, edge1.y, u.y),
@@ -824,38 +824,38 @@ object DoubleMath {
         )
     }
 
-    def isnan(u: AnyVec4d) :Vec4b = {
+    def isnan(u: inVec4d) :Vec4b = {
         new Vec4b(isnan(u.x), isnan(u.y), isnan(u.z), isnan(u.w))
     }
-    def isinf(u: AnyVec4d) :Vec4b = {
+    def isinf(u: inVec4d) :Vec4b = {
         new Vec4b(isinf(u.x), isinf(u.y), isinf(u.z), isinf(u.w))
     }
 
-    def length(u: AnyVec4d) :Double = {
+    def length(u: inVec4d) :Double = {
         sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
     }
-    def dot(u: AnyVec4d, v: AnyVec4d) :Double = {
+    def dot(u: inVec4d, v: inVec4d) :Double = {
         u.x*v.x + u.y*v.y + u.z*v.z + u.w*v.w
     }
-    def distance(u: AnyVec4d, v: AnyVec4d) :Double = length(u - v)
-    def normalize(u: AnyVec4d) :Vec4d = {
+    def distance(u: inVec4d, v: inVec4d) :Double = length(u - v)
+    def normalize(u: inVec4d) :Vec4d = {
         u*inversesqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
     }
 
-    def faceforward(n: AnyVec4d, i: AnyVec4d, nref: AnyVec4d) :Vec4d = {
+    def faceforward(n: inVec4d, i: inVec4d, nref: inVec4d) :Vec4d = {
         if (dot(nref, i) < 0) Vec4d(n) else -n
     }
 
-    def reflect(i: AnyVec4d, n: AnyVec4d) :Vec4d = {
+    def reflect(i: inVec4d, n: inVec4d) :Vec4d = {
         i - n*2*dot(n, i)
     }
-    def refract(i: AnyVec4d, n: AnyVec4d, eta: Double) :Vec4d = {
+    def refract(i: inVec4d, n: inVec4d, eta: Double) :Vec4d = {
         val dotni = dot(n, i)
         val k = 1 - eta*eta*(1 - dotni*dotni)
         if (k < 0) Vec4d(0) else i*eta - n*(eta*dotni + sqrt(k))
     }
 
-    def lessThan(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def lessThan(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x < v.x,
             u.y < v.y,
@@ -863,7 +863,7 @@ object DoubleMath {
             u.w < v.w
         )
     }
-    def lessThanEqual(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def lessThanEqual(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x <= v.x,
             u.y <= v.y,
@@ -871,7 +871,7 @@ object DoubleMath {
             u.w <= v.w
         )
     }
-    def greaterThan(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def greaterThan(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x > v.x,
             u.y > v.y,
@@ -879,7 +879,7 @@ object DoubleMath {
             u.w > v.w
         )
     }
-    def greaterThanEqual(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def greaterThanEqual(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x >= v.x,
             u.y >= v.y,
@@ -887,7 +887,7 @@ object DoubleMath {
             u.w >= v.w
         )
     }
-    def equal(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def equal(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x == v.x,
             u.y == v.y,
@@ -895,7 +895,7 @@ object DoubleMath {
             u.w == v.w
         )
     }
-    def notEqual(u: AnyVec4d, v: AnyVec4d) :Vec4b = {
+    def notEqual(u: inVec4d, v: inVec4d) :Vec4b = {
         new Vec4b(
             u.x != v.x,
             u.y != v.y,
@@ -904,23 +904,23 @@ object DoubleMath {
         )
     }
 
-    def noise1(u: AnyVec4d) :Double = {
+    def noise1(u: inVec4d) :Double = {
         SimplexNoise.noise(u.x, u.y, u.z, u.w)
     }
-    def noise2(u: AnyVec4d) :Vec2d = {
+    def noise2(u: inVec4d) :Vec2d = {
         new Vec2d(
           SimplexNoise.noise(u.x, u.y, u.z, u.w),
           SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)
         )
     }
-    def noise3(u: AnyVec4d) :Vec3d = {
+    def noise3(u: inVec4d) :Vec3d = {
         new Vec3d(
           SimplexNoise.noise(u.x, u.y, u.z, u.w),
           SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1),
           SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2)
         )
     }
-    def noise4(u: AnyVec4d) :Vec4d = {
+    def noise4(u: inVec4d) :Vec4d = {
         new Vec4d(
           SimplexNoise.noise(u.x, u.y, u.z, u.w),
           SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1),
@@ -930,20 +930,20 @@ object DoubleMath {
     }
 
     // Mat functions
-    def matrixCompMult(a: Mat2d, b: Mat2d) :Mat2d = {
+    def matrixCompMult(a: inMat2d, b: inMat2d) :Mat2d = {
         new Mat2d(
             a.m00*b.m00, a.m10*b.m10,
             a.m01*b.m01, a.m11*b.m11
         )
     }
-    def matrixCompMult(a: Mat2x3d, b: Mat2x3d) :Mat2x3d = {
+    def matrixCompMult(a: inMat2x3d, b: inMat2x3d) :Mat2x3d = {
         new Mat2x3d(
             a.m00*b.m00, a.m10*b.m10,
             a.m01*b.m01, a.m11*b.m11,
             a.m02*b.m02, a.m12*b.m12
         )
     }
-    def matrixCompMult(a: Mat2x4d, b: Mat2x4d) :Mat2x4d = {
+    def matrixCompMult(a: inMat2x4d, b: inMat2x4d) :Mat2x4d = {
         new Mat2x4d(
             a.m00*b.m00, a.m10*b.m10,
             a.m01*b.m01, a.m11*b.m11,
@@ -951,20 +951,20 @@ object DoubleMath {
             a.m03*b.m03, a.m13*b.m13
         )
     }
-    def matrixCompMult(a: Mat3x2d, b: Mat3x2d) :Mat3x2d = {
+    def matrixCompMult(a: inMat3x2d, b: inMat3x2d) :Mat3x2d = {
         new Mat3x2d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21
         )
     }
-    def matrixCompMult(a: Mat3d, b: Mat3d) :Mat3d = {
+    def matrixCompMult(a: inMat3d, b: inMat3d) :Mat3d = {
         new Mat3d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
             a.m02*b.m02, a.m12*b.m12, a.m22*b.m22
         )
     }
-    def matrixCompMult(a: Mat3x4d, b: Mat3x4d) :Mat3x4d = {
+    def matrixCompMult(a: inMat3x4d, b: inMat3x4d) :Mat3x4d = {
         new Mat3x4d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
@@ -972,20 +972,20 @@ object DoubleMath {
             a.m03*b.m03, a.m13*b.m13, a.m23*b.m23
         )
     }
-    def matrixCompMult(a: Mat4x2d, b: Mat4x2d) :Mat4x2d = {
+    def matrixCompMult(a: inMat4x2d, b: inMat4x2d) :Mat4x2d = {
         new Mat4x2d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31
         )
     }
-    def matrixCompMult(a: Mat4x3d, b: Mat4x3d) :Mat4x3d = {
+    def matrixCompMult(a: inMat4x3d, b: inMat4x3d) :Mat4x3d = {
         new Mat4x3d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
             a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32
         )
     }
-    def matrixCompMult(a: Mat4d, b: Mat4d) :Mat4d = {
+    def matrixCompMult(a: inMat4d, b: inMat4d) :Mat4d = {
         new Mat4d(
             a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
             a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
@@ -994,20 +994,20 @@ object DoubleMath {
         )
     }
 
-    def outerProduct(c: AnyVec2d, r: AnyVec2d) :Mat2d = {
+    def outerProduct(c: inVec2d, r: inVec2d) :Mat2d = {
         new Mat2d(
             c.x*r.x, c.y*r.x,
             c.x*r.y, c.y*r.y
         )
     }
-    def outerProduct(c: AnyVec2d, r: AnyVec3d) :Mat2x3d = {
+    def outerProduct(c: inVec2d, r: inVec3d) :Mat2x3d = {
         new Mat2x3d(
             c.x*r.x, c.y*r.x,
             c.x*r.y, c.y*r.y,
             c.x*r.z, c.y*r.z
         )
     }
-    def outerProduct(c: AnyVec2d, r: AnyVec4d) :Mat2x4d = {
+    def outerProduct(c: inVec2d, r: inVec4d) :Mat2x4d = {
         new Mat2x4d(
             c.x*r.x, c.y*r.x,
             c.x*r.y, c.y*r.y,
@@ -1015,20 +1015,20 @@ object DoubleMath {
             c.x*r.w, c.y*r.w
         )
     }
-    def outerProduct(c: AnyVec3d, r: AnyVec2d) :Mat3x2d = {
+    def outerProduct(c: inVec3d, r: inVec2d) :Mat3x2d = {
         new Mat3x2d(
             c.x*r.x, c.y*r.x, c.z*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y
         )
     }
-    def outerProduct(c: AnyVec3d, r: AnyVec3d) :Mat3d = {
+    def outerProduct(c: inVec3d, r: inVec3d) :Mat3d = {
         new Mat3d(
             c.x*r.x, c.y*r.x, c.z*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y,
             c.x*r.z, c.y*r.z, c.z*r.z
         )
     }
-    def outerProduct(c: AnyVec3d, r: AnyVec4d) :Mat3x4d = {
+    def outerProduct(c: inVec3d, r: inVec4d) :Mat3x4d = {
         new Mat3x4d(
             c.x*r.x, c.y*r.x, c.z*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y,
@@ -1036,20 +1036,20 @@ object DoubleMath {
             c.x*r.w, c.y*r.w, c.z*r.w
         )
     }
-    def outerProduct(c: AnyVec4d, r: AnyVec2d) :Mat4x2d = {
+    def outerProduct(c: inVec4d, r: inVec2d) :Mat4x2d = {
         new Mat4x2d(
             c.x*r.x, c.y*r.x, c.z*r.x, c.w*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y, c.w*r.y
         )
     }
-    def outerProduct(c: AnyVec4d, r: AnyVec3d) :Mat4x3d = {
+    def outerProduct(c: inVec4d, r: inVec3d) :Mat4x3d = {
         new Mat4x3d(
             c.x*r.x, c.y*r.x, c.z*r.x, c.w*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y, c.w*r.y,
             c.x*r.z, c.y*r.z, c.z*r.z, c.w*r.z
         )
     }
-    def outerProduct(c: AnyVec4d, r: AnyVec4d) :Mat4d = {
+    def outerProduct(c: inVec4d, r: inVec4d) :Mat4d = {
         new Mat4d(
             c.x*r.x, c.y*r.x, c.z*r.x, c.w*r.x,
             c.x*r.y, c.y*r.y, c.z*r.y, c.w*r.y,
@@ -1058,20 +1058,20 @@ object DoubleMath {
         )
     }
 
-    def transpose(a: AnyMat2d) :Mat2d = {
+    def transpose(a: inMat2d) :Mat2d = {
         new Mat2d(
             a.m00, a.m01,
             a.m10, a.m11
         )
     }
-    def transpose(a: AnyMat3x2d) :Mat2x3d = {
+    def transpose(a: inMat3x2d) :Mat2x3d = {
         new Mat2x3d(
             a.m00, a.m01,
             a.m10, a.m11,
             a.m20, a.m21
         )
     }
-    def transpose(a: AnyMat4x2d) :Mat2x4d = {
+    def transpose(a: inMat4x2d) :Mat2x4d = {
         new Mat2x4d(
             a.m00, a.m01,
             a.m10, a.m11,
@@ -1079,20 +1079,20 @@ object DoubleMath {
             a.m30, a.m31
         )
     }
-    def transpose(a: AnyMat2x3d) :Mat3x2d = {
+    def transpose(a: inMat2x3d) :Mat3x2d = {
         new Mat3x2d(
             a.m00, a.m01, a.m02,
             a.m10, a.m11, a.m12
         )
     }
-    def transpose(a: AnyMat3d) :Mat3d = {
+    def transpose(a: inMat3d) :Mat3d = {
         new Mat3d(
             a.m00, a.m01, a.m02,
             a.m10, a.m11, a.m12,
             a.m20, a.m21, a.m22
         )
     }
-    def transpose(a: AnyMat4x3d) :Mat3x4d = {
+    def transpose(a: inMat4x3d) :Mat3x4d = {
         new Mat3x4d(
             a.m00, a.m01, a.m02,
             a.m10, a.m11, a.m12,
@@ -1100,20 +1100,20 @@ object DoubleMath {
             a.m30, a.m31, a.m32
         )
     }
-    def transpose(a: AnyMat2x4d) :Mat4x2d = {
+    def transpose(a: inMat2x4d) :Mat4x2d = {
         new Mat4x2d(
             a.m00, a.m01, a.m02, a.m03,
             a.m10, a.m11, a.m12, a.m13
         )
     }
-    def transpose(a: AnyMat3x4d) :Mat4x3d = {
+    def transpose(a: inMat3x4d) :Mat4x3d = {
         new Mat4x3d(
             a.m00, a.m01, a.m02, a.m03,
             a.m10, a.m11, a.m12, a.m13,
             a.m20, a.m21, a.m22, a.m23
         )
     }
-    def transpose(a: AnyMat4d) :Mat4d = {
+    def transpose(a: inMat4d) :Mat4d = {
         new Mat4d(
             a.m00, a.m01, a.m02, a.m03,
             a.m10, a.m11, a.m12, a.m13,
@@ -1122,9 +1122,9 @@ object DoubleMath {
         )
     }
 
-    def determinant(m: AnyMat2d) :Double = m.m00*m.m11 - m.m01*m.m10
+    def determinant(m: inMat2d) :Double = m.m00*m.m11 - m.m01*m.m10
 
-    def determinant(m: AnyMat3d) :Double = {
+    def determinant(m: inMat3d) :Double = {
         import m._
 
         val c0 = m11*m22 - m12*m21
@@ -1134,7 +1134,7 @@ object DoubleMath {
         m00*c0 + m01*c1 + m02*c2
     }
 
-    def determinant(m: AnyMat4d) :Double = {
+    def determinant(m: inMat4d) :Double = {
         import m._
 
         val fA0 = m00*m11 - m01*m10
@@ -1156,7 +1156,7 @@ object DoubleMath {
     /**
      * If matrix determinant is zero the result is undefined.
      */
-    def inverse(m: AnyMat2d) :Mat2d = {
+    def inverse(m: inMat2d) :Mat2d = {
         val detInv = 1/determinant(m)
         new Mat2d(
             m.m11*detInv, -m.m10*detInv,
@@ -1175,7 +1175,7 @@ object DoubleMath {
      *
      * <br/>If matrix determinant is zero the result is undefined.
      */
-    def inverse(m: AnyMat3d) :Mat3d = {
+    def inverse(m: inMat3d) :Mat3d = {
         import m._
 
         val c0 = m11*m22 - m12*m21
@@ -1213,7 +1213,7 @@ object DoubleMath {
      *
      * <br/>If matrix determinant is zero the result is undefined.
      */
-    def inverse(m: AnyMat4d) :Mat4d = {
+    def inverse(m: inMat4d) :Mat4d = {
         import m._
 
         val fA0 = m00*m11 - m01*m10
@@ -1262,30 +1262,30 @@ object DoubleMath {
     def isposinf(x: Double) :Boolean = isinf(x) && x > 0
     def isneginf(x: Double) :Boolean = isinf(x) && x < 0
 
-    def isposinf(u: AnyVec2d) :Vec2b = new Vec2b(isposinf(u.x), isposinf(u.y))
-    def isneginf(u: AnyVec2d) :Vec2b = new Vec2b(isneginf(u.x), isneginf(u.y))
+    def isposinf(u: inVec2d) :Vec2b = new Vec2b(isposinf(u.x), isposinf(u.y))
+    def isneginf(u: inVec2d) :Vec2b = new Vec2b(isneginf(u.x), isneginf(u.y))
 
-    def isposinf(u: AnyVec3d) :Vec3b = {
+    def isposinf(u: inVec3d) :Vec3b = {
         new Vec3b(isposinf(u.x), isposinf(u.y), isposinf(u.z))
     }
-    def isneginf(u: AnyVec3d) :Vec3b = {
+    def isneginf(u: inVec3d) :Vec3b = {
         new Vec3b(isneginf(u.x), isneginf(u.y), isneginf(u.z))
     }
 
-    def isposinf(u: AnyVec4d) :Vec4b = {
+    def isposinf(u: inVec4d) :Vec4b = {
         new Vec4b(isposinf(u.x), isposinf(u.y), isposinf(u.z), isposinf(u.w))
     }
-    def isneginf(u: AnyVec4d) :Vec4b = {
+    def isneginf(u: inVec4d) :Vec4b = {
         new Vec4b(isneginf(u.x), isneginf(u.y), isneginf(u.z), isneginf(u.w))
     }
     
     // Lerp
     def lerp(x: Double, y: Double, a: Double) = mix(x, y, a)
-    def lerp(u: AnyVec2d, v: AnyVec2d, a: Double) = mix(u, v, a)
-    def lerp(u: AnyVec3d, v: AnyVec3d, a: Double) = mix(u, v, a)
-    def lerp(u: AnyVec4d, v: AnyVec4d, a: Double) = mix(u, v, a)
+    def lerp(u: inVec2d, v: inVec2d, a: Double) = mix(u, v, a)
+    def lerp(u: inVec3d, v: inVec3d, a: Double) = mix(u, v, a)
+    def lerp(u: inVec4d, v: inVec4d, a: Double) = mix(u, v, a)
 
-    def lerp(m: Mat2d, n: Mat2d, a: Double) :Mat2d = {
+    def lerp(m: inMat2d, n: inMat2d, a: Double) :Mat2d = {
         val b = 1 - a
 
         new Mat2d(
@@ -1293,7 +1293,7 @@ object DoubleMath {
             b*m.m01 + a*n.m01, b*m.m11 + a*n.m11
         )
     }
-    def lerp(m: Mat2x3d, n: Mat2x3d, a: Double) :Mat2x3d = {
+    def lerp(m: inMat2x3d, n: inMat2x3d, a: Double) :Mat2x3d = {
         val b = 1 - a
 
         new Mat2x3d(
@@ -1302,7 +1302,7 @@ object DoubleMath {
             b*m.m02 + a*n.m02, b*m.m12 + a*n.m12
         )
     }
-    def lerp(m: Mat2x4d, n: Mat2x4d, a: Double) :Mat2x4d = {
+    def lerp(m: inMat2x4d, n: inMat2x4d, a: Double) :Mat2x4d = {
         val b = 1 - a
 
         new Mat2x4d(
@@ -1312,7 +1312,7 @@ object DoubleMath {
             b*m.m03 + a*n.m03, b*m.m13 + a*n.m13
         )
     }
-    def lerp(m: Mat3x2d, n: Mat3x2d, a: Double) :Mat3x2d = {
+    def lerp(m: inMat3x2d, n: inMat3x2d, a: Double) :Mat3x2d = {
         val b = 1 - a
 
         new Mat3x2d(
@@ -1320,7 +1320,7 @@ object DoubleMath {
             b*m.m01 + a*n.m01, b*m.m11 + a*n.m11, b*m.m21 + a*n.m21
         )
     }
-    def lerp(m: Mat3d, n: Mat3d, a: Double) :Mat3d = {
+    def lerp(m: inMat3d, n: inMat3d, a: Double) :Mat3d = {
         val b = 1 - a
 
         new Mat3d(
@@ -1329,7 +1329,7 @@ object DoubleMath {
             b*m.m02 + a*n.m02, b*m.m12 + a*n.m12, b*m.m22 + a*n.m22
         )
     }
-    def lerp(m: Mat3x4d, n: Mat3x4d, a: Double) :Mat3x4d = {
+    def lerp(m: inMat3x4d, n: inMat3x4d, a: Double) :Mat3x4d = {
         val b = 1 - a
 
         new Mat3x4d(
@@ -1339,7 +1339,7 @@ object DoubleMath {
             b*m.m03 + a*n.m03, b*m.m13 + a*n.m13, b*m.m23 + a*n.m23
         )
     }
-    def lerp(m: Mat4x2d, n: Mat4x2d, a: Double) :Mat4x2d = {
+    def lerp(m: inMat4x2d, n: inMat4x2d, a: Double) :Mat4x2d = {
       val b = 1 - a
 
       new Mat4x2d(
@@ -1347,7 +1347,7 @@ object DoubleMath {
         b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31
       )
     }
-    def lerp(m: Mat4x3d, n: Mat4x3d, a: Double) :Mat4x3d = {
+    def lerp(m: inMat4x3d, n: inMat4x3d, a: Double) :Mat4x3d = {
       val b = 1 - a
 
       new Mat4x3d(
@@ -1356,7 +1356,7 @@ object DoubleMath {
         b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32
       )
     }
-    def lerp(m: Mat4d, n: Mat4d, a: Double) :Mat4d = {
+    def lerp(m: inMat4d, n: inMat4d, a: Double) :Mat4d = {
       val b = 1 - a
 
       new Mat4d(
@@ -1368,52 +1368,52 @@ object DoubleMath {
     }
 
     def lengthSquare(x: Double) :Double = x*x
-    def lengthSquare(u: AnyVec2d) :Double = u.x*u.x + u.y*u.y
-    def lengthSquare(u: AnyVec3d) :Double = u.x*u.x + u.y*u.y + u.z*u.z
-    def lengthSquare(u: AnyVec4d) :Double = {
+    def lengthSquare(u: inVec2d) :Double = u.x*u.x + u.y*u.y
+    def lengthSquare(u: inVec3d) :Double = u.x*u.x + u.y*u.y + u.z*u.z
+    def lengthSquare(u: inVec4d) :Double = {
         u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
     }
 
     def hasErrors(x: Double) :Boolean = isinf(x) || isnan(x)
-    def hasErrors(u: AnyVec2d) :Boolean = u.hasErrors
-    def hasErrors(u: AnyVec3d) :Boolean = u.hasErrors
-    def hasErrors(u: AnyVec4d) :Boolean = u.hasErrors
-    def hasErrors(q: AnyQuat4d) :Boolean = q.hasErrors
-    def hasErrors(m: AnyMat2d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat2x3d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat2x4d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat3x2d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat3d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat3x4d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat4x2d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat4x3d) :Boolean = m.hasErrors
-    def hasErrors(m: AnyMat4d) :Boolean = m.hasErrors
+    def hasErrors(u: inVec2d) :Boolean = u.hasErrors
+    def hasErrors(u: inVec3d) :Boolean = u.hasErrors
+    def hasErrors(u: inVec4d) :Boolean = u.hasErrors
+    def hasErrors(q: inQuat4d) :Boolean = q.hasErrors
+    def hasErrors(m: inMat2d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat2x3d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat2x4d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat3x2d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat3d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat3x4d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat4x2d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat4x3d) :Boolean = m.hasErrors
+    def hasErrors(m: inMat4d) :Boolean = m.hasErrors
 
     def approxEqual(x: Double, y: Double, absDelta: Double) :Boolean = {
         abs(x - y) < absDelta
     }
-    def approxEqual(u: AnyVec2d, v: AnyVec2d, absDelta: Double) :Boolean = {
+    def approxEqual(u: inVec2d, v: inVec2d, absDelta: Double) :Boolean = {
         abs(v.x - u.x) < absDelta &&
         abs(v.y - u.y) < absDelta
     }
-    def approxEqual(u: AnyVec3d, v: AnyVec3d, absDelta: Double) :Boolean = {
+    def approxEqual(u: inVec3d, v: inVec3d, absDelta: Double) :Boolean = {
         abs(v.x - u.x) < absDelta &&
         abs(v.y - u.y) < absDelta &&
         abs(v.z - u.z) < absDelta
     }
-    def approxEqual(u: AnyVec4d, v: AnyVec4d, absDelta: Double) :Boolean = {
+    def approxEqual(u: inVec4d, v: inVec4d, absDelta: Double) :Boolean = {
         abs(v.x - u.x) < absDelta &&
         abs(v.y - u.y) < absDelta &&
         abs(v.z - u.z) < absDelta &&
         abs(v.w - u.w) < absDelta
     }
-    def approxEqual(p: AnyQuat4d, q: AnyQuat4d, absDelta: Double) :Boolean = {
+    def approxEqual(p: inQuat4d, q: inQuat4d, absDelta: Double) :Boolean = {
         abs(p.a - q.a) < absDelta &&
         abs(p.b - q.b) < absDelta &&
         abs(p.c - q.c) < absDelta &&
         abs(p.d - q.d) < absDelta
     }
-    def approxEqual(m: AnyMat2d, n: AnyMat2d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat2d, n: inMat2d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1422,7 +1422,7 @@ object DoubleMath {
             abs(n.m11 - m.m11) < absDelta
         )
     }
-    def approxEqual(m: AnyMat2x3d, n: AnyMat2x3d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat2x3d, n: inMat2x3d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1434,7 +1434,7 @@ object DoubleMath {
             abs(n.m12 - m.m12) < absDelta
         )
     }
-    def approxEqual(m: AnyMat2x4d, n: AnyMat2x4d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat2x4d, n: inMat2x4d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1450,7 +1450,7 @@ object DoubleMath {
         )
     }
 
-    def approxEqual(m: AnyMat3x2d, n: AnyMat3x2d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat3x2d, n: inMat3x2d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1461,7 +1461,7 @@ object DoubleMath {
             abs(n.m21 - m.m21) < absDelta
         )
     }
-    def approxEqual(m: AnyMat3d, n: AnyMat3d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat3d, n: inMat3d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1476,7 +1476,7 @@ object DoubleMath {
             abs(n.m22 - m.m22) < absDelta
         )
     }
-    def approxEqual(m: AnyMat3x4d, n: AnyMat3x4d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat3x4d, n: inMat3x4d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1495,7 +1495,7 @@ object DoubleMath {
             abs(n.m23 - m.m23) < absDelta
         )
     }
-    def approxEqual(m: AnyMat4x2d, n: AnyMat4x2d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat4x2d, n: inMat4x2d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1508,7 +1508,7 @@ object DoubleMath {
             abs(n.m31 - m.m31) < absDelta
         )
     }
-    def approxEqual(m: AnyMat4x3d, n: AnyMat4x3d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat4x3d, n: inMat4x3d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1526,7 +1526,7 @@ object DoubleMath {
             abs(n.m32 - m.m32) < absDelta
         )
     }
-    def approxEqual(m: AnyMat4d, n: AnyMat4d, absDelta: Double) :Boolean = {
+    def approxEqual(m: inMat4d, n: inMat4d, absDelta: Double) :Boolean = {
         (
             abs(n.m00 - m.m00) < absDelta &&
             abs(n.m10 - m.m10) < absDelta &&
@@ -1564,7 +1564,7 @@ object DoubleMath {
      *
      * <br/>If matrix determinant is zero the result is undefined.
      */
-    def inverse(m: AnyMat2x3d) :Mat2x3d = {
+    def inverse(m: inMat2x3d) :Mat2x3d = {
         import m._
 
         val det = m00*m11 - m01*m10
@@ -1593,7 +1593,7 @@ object DoubleMath {
      *
      * <br/>If matrix determinant is zero the result is undefined.
      */
-    def inverse(m: AnyMat3x4d) :Mat3x4d = {
+    def inverse(m: inMat3x4d) :Mat3x4d = {
         import m._
 
         val fA0 = m00*m11 - m01*m10
@@ -1628,13 +1628,13 @@ object DoubleMath {
     }
 
     // Quaternion
-    def normSquare(q: AnyQuat4d) :Double = q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d
-    def norm(q: AnyQuat4d) :Double = {
+    def normSquare(q: inQuat4d) :Double = q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d
+    def norm(q: inQuat4d) :Double = {
         sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
     }
-    def conjugate(q: AnyQuat4d) :Quat4d = new Quat4d(q.a, -q.b, -q.c, -q.d)
+    def conjugate(q: inQuat4d) :Quat4d = new Quat4d(q.a, -q.b, -q.c, -q.d)
 
-    def normalize(q: AnyQuat4d) :Quat4d = {
+    def normalize(q: inQuat4d) :Quat4d = {
         q*inversesqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d)
     }
     
@@ -1643,9 +1643,9 @@ object DoubleMath {
      * unit quaternions (<code>norm(q) == 1</code>), and in this case
      * <code>inverse(q) == conjugate(q)</code>.
      */
-    def inverse(q: AnyQuat4d) :Quat4d = conjugate(q)/normSquare(q)
+    def inverse(q: inQuat4d) :Quat4d = conjugate(q)/normSquare(q)
 
-    def slerp(p: AnyQuat4d, q: AnyQuat4d, a: Double) :Quat4d = {
+    def slerp(p: inQuat4d, q: inQuat4d, a: Double) :Quat4d = {
         if (approxEqual(p, q, 1e-14)) return Quat4d(q)
 
         var cosTheta = p.a*q.a + p.b*q.b + p.c*q.c+ p.d*q.d
@@ -1678,7 +1678,7 @@ object DoubleMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotate(u: AnyVec3d, q: Quat4d) = {
+    def rotate(u: inVec3d, q: inQuat4d) = {
         import q._
 
         val t1 = a*b
@@ -1717,7 +1717,7 @@ object DoubleMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def rotationAngle(m: Mat2d) :Double = {
+    def rotationAngle(m: inMat2d) :Double = {
         acos((m.m00 + m.m11)*0.5)
     }
 
@@ -1725,7 +1725,7 @@ object DoubleMath {
      * The result is undefined if the matrix does not represent
      * non-scaling rotation.
      */
-    def quaternion(m: Mat3d) :Quat4d = {
+    def quaternion(m: inMat3d) :Quat4d = {
         import m._
 
         val result = new Quat4d(0, 0, 0, 0)
@@ -1769,7 +1769,7 @@ object DoubleMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def quaternion(angle: Double, axis: AnyVec3d) :Quat4d = {
+    def quaternion(angle: Double, axis: inVec3d) :Quat4d = {
         val s = sin(angle/2)
         new Quat4d(cos(angle/2), s*axis.x, s*axis.y, s*axis.z)
     }
@@ -1777,7 +1777,7 @@ object DoubleMath {
     /**
      * The result is undefined for quaternions with non-unit norm.
      */
-    def rotationMat(q: AnyQuat4d) :Mat3d = {
+    def rotationMat(q: inQuat4d) :Mat3d = {
         import q._
 
         val tb = 2*b*b
@@ -1799,7 +1799,7 @@ object DoubleMath {
     /**
      * The result is undefined for axis with non-unit length.
      */
-    def rotationMat(angle: Double, axis: AnyVec3d) :Mat3d = {
+    def rotationMat(angle: Double, axis: inVec3d) :Mat3d = {
         import axis._
 
         val sinA = sin(angle)
@@ -1825,7 +1825,7 @@ object DoubleMath {
      * If quaternion represents 0 degree rotation, then rotation
      * axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxis(q: AnyQuat4d, axisResult: Vec3d) :Double = {
+    def angleAxis(q: inQuat4d, axisResult: outVec3d) :Double = {
         import q._
 
         if (approxEqual(abs(a), 1, 1e-15)) {
@@ -1845,7 +1845,7 @@ object DoubleMath {
      * non-scaling rotation. If matrix represents 0 degree rotation,
      * then rotation axis is not defined, in this case the UnitX axis is chosen.
      */
-    def angleAxis(m: Mat3d, axisResult: Vec3d) :Double = {
+    def angleAxis(m: inMat3d, axisResult: outVec3d) :Double = {
         import m._
 
         val cosAngle = (m00 + m11 + m22 - 1)*0.5
@@ -1890,7 +1890,7 @@ object DoubleMath {
         acos(cosAngle)
     }
 
-    def lookAt(direction: AnyVec3d, up: AnyVec3d) :Mat3d = {
+    def lookAt(direction: inVec3d, up: inVec3d) :Mat3d = {
         val zaxis = normalize(direction)
         val xaxis = normalize(cross(up, zaxis))
         val yaxis = cross(zaxis, xaxis)
@@ -1935,9 +1935,9 @@ object DoubleMath {
     }
 
     // Transform
-    def transformation(scale: AnyVec2d,
-                       rotation: AnyMat2d,
-                       translation: AnyVec2d)
+    def transformation(scale: inVec2d,
+                       rotation: inMat2d,
+                       translation: inVec2d)
     :Mat2x3d =
     {
         import rotation._
@@ -1955,9 +1955,9 @@ object DoubleMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransformation(scale: AnyVec2d,
-                              rotation: AnyMat2d,
-                              translation: AnyVec2d)
+    def inverseTransformation(scale: inVec2d,
+                              rotation: inMat2d,
+                              translation: inVec2d)
     :Mat2x3d =
     {
         import translation.{x => tx, y => ty}
@@ -1978,9 +1978,9 @@ object DoubleMath {
         )
     }
 
-    def transformation(scale: AnyVec3d,
-                       rotation: AnyMat3d,
-                       translation: AnyVec3d)
+    def transformation(scale: inVec3d,
+                       rotation: inMat3d,
+                       translation: inVec3d)
     :Mat3x4d =
     {
         import scale.{x => sx, y => sy, z => sz}
@@ -1999,9 +1999,9 @@ object DoubleMath {
      * @param rotation Must be an orthogonal matrix (matrix that represents
      * an unscaled rotation) to achieve the desired result.
      */
-    def inverseTransformation(scale: AnyVec3d,
-                              rotation: AnyMat3d,
-                              translation: AnyVec3d)
+    def inverseTransformation(scale: inVec3d,
+                              rotation: inMat3d,
+                              translation: inVec3d)
     :Mat3x4d =
     {
         import translation.{x => tx, y => ty, z => tz}

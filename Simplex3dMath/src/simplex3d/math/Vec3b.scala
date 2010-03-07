@@ -202,7 +202,7 @@ final class ConstVec3b private[math] (
 extends AnyVec3b with ConstVec[Boolean]
 
 
-/** Factory for creating constant Boolean 3-dimensional vectors.
+/** The companion object <code>ConstVec3b</code> that contains factory methods.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.
@@ -438,7 +438,8 @@ extends AnyVec3b with Vec[Boolean]
 }
 
 
-/** Factory for creating mutable Boolean 3-dimensional vectors.
+/** The companion object <code>Vec3b</code> that contains factory methods
+ * and common constant.
  * <p>
  *   To keep the code consistent all the constructors are hidden. Use the
  *   corresponding companion objects as factories to create new instances.

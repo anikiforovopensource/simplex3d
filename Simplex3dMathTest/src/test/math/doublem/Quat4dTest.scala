@@ -65,13 +65,6 @@ class Quat4dTest extends FunSuite {
         expect(cd) { q.c }
         expect(dd) { q.d }
 
-        q = Quat4(Mat2(bd, cd, dd, ad))
-        expect(classOf[Quat4]) { q.getClass }
-        expect(ad) { q.a }
-        expect(bd) { q.b }
-        expect(cd) { q.c }
-        expect(dd) { q.d }
-
         q = Quat4(Quat4f(af, bf, cf, df))
         expect(classOf[Quat4]) { q.getClass }
         expect(double(af)) { q.a }
@@ -80,13 +73,6 @@ class Quat4dTest extends FunSuite {
         expect(double(df)) { q.d }
 
         q = Quat4(Vec4f(bf, cf, df, af))
-        expect(classOf[Quat4]) { q.getClass }
-        expect(double(af)) { q.a }
-        expect(double(bf)) { q.b }
-        expect(double(cf)) { q.c }
-        expect(double(df)) { q.d }
-
-        q = Quat4(Mat2f(bf, cf, df, af))
         expect(classOf[Quat4]) { q.getClass }
         expect(double(af)) { q.a }
         expect(double(bf)) { q.b }

@@ -30,513 +30,513 @@ import simplex3d.math.doublem.DoubleMath._
  */
 sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
 {
-    // Column major order.
-    def m00: Double; def m10: Double // column
-    def m01: Double; def m11: Double // column
-    def m02: Double; def m12: Double // column
+  // Column major order.
+  def m00: Double; def m10: Double // column
+  def m01: Double; def m11: Double // column
+  def m02: Double; def m12: Double // column
 
-    private[math] def f00 = float(m00)
-    private[math] def f10 = float(m10)
+  private[math] def f00 = float(m00)
+  private[math] def f10 = float(m10)
 
-    private[math] def f01 = float(m01)
-    private[math] def f11 = float(m11)
+  private[math] def f01 = float(m01)
+  private[math] def f11 = float(m11)
 
-    private[math] def f02 = float(m02)
-    private[math] def f12 = float(m12)
-
-
-    private[math] def d00 = m00
-    private[math] def d10 = m10
-
-    private[math] def d01 = m01
-    private[math] def d11 = m11
-
-    private[math] def d02 = m02
-    private[math] def d12 = m12
+  private[math] def f02 = float(m02)
+  private[math] def f12 = float(m12)
 
 
-    def apply(c: Int) :ConstVec2d = {
-        c match {
-            case 0 => new ConstVec2d(m00, m10)
-            case 1 => new ConstVec2d(m01, m11)
-            case 2 => new ConstVec2d(m02, m12)
-            case j => throw new IndexOutOfBoundsException(
-                    "excpected from 0 to 2, got " + j)
+  private[math] def d00 = m00
+  private[math] def d10 = m10
+
+  private[math] def d01 = m01
+  private[math] def d11 = m11
+
+  private[math] def d02 = m02
+  private[math] def d12 = m12
+
+
+  def apply(c: Int) :ConstVec2d = {
+    c match {
+      case 0 => new ConstVec2d(m00, m10)
+      case 1 => new ConstVec2d(m01, m11)
+      case 2 => new ConstVec2d(m02, m12)
+      case j => throw new IndexOutOfBoundsException(
+                          "excpected from 0 to 2, got " + j)
+    }
+  }
+
+  def apply(c: Int, r: Int) :Double = {
+    def error() :Double = {
+      throw new IndexOutOfBoundsException("Trying to read index (" +
+                c + ", " + r + ") in " + this.getClass.getSimpleName)
+    }
+
+    c match {
+      case 0 =>
+        r match {
+          case 0 => m00
+          case 1 => m10
+          case _ => error
         }
-    }
-
-    def apply(c: Int, r: Int) :Double = {
-        def error() :Double = {
-            throw new IndexOutOfBoundsException("Trying to read index (" +
-                     c + ", " + r + ") in " + this.getClass.getSimpleName)
+      case 1 =>
+        r match {
+          case 0 => m01
+          case 1 => m11
+          case _ => error
         }
-
-        c match {
-            case 0 =>
-                r match {
-                    case 0 => m00
-                    case 1 => m10
-                    case _ => error
-                }
-            case 1 =>
-                r match {
-                    case 0 => m01
-                    case 1 => m11
-                    case _ => error
-                }
-            case 2 =>
-                r match {
-                    case 0 => m02
-                    case 1 => m12
-                    case _ => error
-                }
-            case _ => error
+      case 2 =>
+        r match {
+          case 0 => m02
+          case 1 => m12
+          case _ => error
         }
+      case _ => error
     }
+  }
 
-    def unary_+() :this.type = this
-    def unary_-() = new Mat2x3d(
-        -m00, -m10,
-        -m01, -m11,
-        -m02, -m12
-    )
-    def *(s: Double) = new Mat2x3d(
-        s*m00, s*m10,
-        s*m01, s*m11,
-        s*m02, s*m12
-    )
-    def /(s: Double) = { val inv = 1/s; new Mat2x3d(
-        inv*m00, inv*m10,
-        inv*m01, inv*m11,
-        inv*m02, inv*m12
-    )}
+  def unary_+() :this.type = this
+  def unary_-() = new Mat2x3d(
+    -m00, -m10,
+    -m01, -m11,
+    -m02, -m12
+  )
+  def *(s: Double) = new Mat2x3d(
+    s*m00, s*m10,
+    s*m01, s*m11,
+    s*m02, s*m12
+  )
+  def /(s: Double) = { val inv = 1/s; new Mat2x3d(
+    inv*m00, inv*m10,
+    inv*m01, inv*m11,
+    inv*m02, inv*m12
+  )}
 
-    def +(s: Double) = new Mat2x3d(
-        m00 + s, m10 + s,
-        m01 + s, m11 + s,
-        m02 + s, m12 + s
-    )
-    def -(s: Double) = new Mat2x3d(
-        m00 - s, m10 - s,
-        m01 - s, m11 - s,
-        m02 - s, m12 - s
-    )
+  def +(s: Double) = new Mat2x3d(
+    m00 + s, m10 + s,
+    m01 + s, m11 + s,
+    m02 + s, m12 + s
+  )
+  def -(s: Double) = new Mat2x3d(
+    m00 - s, m10 - s,
+    m01 - s, m11 - s,
+    m02 - s, m12 - s
+  )
 
-    def +(m: AnyMat2x3d) = new Mat2x3d(
-        m00 + m.m00, m10 + m.m10,
-        m01 + m.m01, m11 + m.m11,
-        m02 + m.m02, m12 + m.m12
+  def +(m: AnyMat2x3d) = new Mat2x3d(
+    m00 + m.m00, m10 + m.m10,
+    m01 + m.m01, m11 + m.m11,
+    m02 + m.m02, m12 + m.m12
+  )
+  def -(m: AnyMat2x3d) = new Mat2x3d(
+    m00 - m.m00, m10 - m.m10,
+    m01 - m.m01, m11 - m.m11,
+    m02 - m.m02, m12 - m.m12
+  )
+
+  /**
+   * Component-wise devision.
+   */
+  def /(m: AnyMat2x3d) = new Mat2x3d(
+    m00/m.m00, m10/m.m10,
+    m01/m.m01, m11/m.m11,
+    m02/m.m02, m12/m.m12
+  )
+  private[math] def divideByComponent(s: Double) = new Mat2x3d(
+    s/m00, s/m10,
+    s/m01, s/m11,
+    s/m02, s/m12
+  )
+
+  def *(m: AnyMat3x2d) = new Mat2d(
+    m00*m.m00 + m01*m.m10 + m02*m.m20,
+    m10*m.m00 + m11*m.m10 + m12*m.m20,
+
+    m00*m.m01 + m01*m.m11 + m02*m.m21,
+    m10*m.m01 + m11*m.m11 + m12*m.m21
+  )
+  def *(m: AnyMat3d) = new Mat2x3d(
+    m00*m.m00 + m01*m.m10 + m02*m.m20,
+    m10*m.m00 + m11*m.m10 + m12*m.m20,
+
+    m00*m.m01 + m01*m.m11 + m02*m.m21,
+    m10*m.m01 + m11*m.m11 + m12*m.m21,
+
+    m00*m.m02 + m01*m.m12 + m02*m.m22,
+    m10*m.m02 + m11*m.m12 + m12*m.m22
+  )
+  def *(m: AnyMat3x4d) = new Mat2x4d(
+    m00*m.m00 + m01*m.m10 + m02*m.m20,
+    m10*m.m00 + m11*m.m10 + m12*m.m20,
+
+    m00*m.m01 + m01*m.m11 + m02*m.m21,
+    m10*m.m01 + m11*m.m11 + m12*m.m21,
+
+    m00*m.m02 + m01*m.m12 + m02*m.m22,
+    m10*m.m02 + m11*m.m12 + m12*m.m22,
+
+    m00*m.m03 + m01*m.m13 + m02*m.m23,
+    m10*m.m03 + m11*m.m13 + m12*m.m23
+  )
+
+  def *(u: AnyVec3d) = new Vec2d(
+    m00*u.x + m01*u.y + m02*u.z,
+    m10*u.x + m11*u.y + m12*u.z
+  )
+  private[math] def transposeMul(u: AnyVec2d) = new Vec3d(
+    m00*u.x + m10*u.y,
+    m01*u.x + m11*u.y,
+    m02*u.x + m12*u.y
+  )
+
+  def scale(s: Double) :Mat2x3d = this*s
+  def scale(s: AnyVec2d) :Mat2x3d = new Mat2x3d(
+    m00*s.x, m10*s.y,
+    m01*s.x, m11*s.y,
+    m02*s.x, m12*s.y
+  )
+
+  def rotate(angle: Double) :Mat2x3d = {
+    concatenate(rotationMat(angle))
+  }
+
+  def translate(u: AnyVec2d) :Mat2x3d = new Mat2x3d(
+    m00, m10,
+    m01, m11,
+    m02 + u.x, m12 + u.y
+  )
+
+  def concatenate(m: AnyMat2x3d) :Mat2x3d = new Mat2x3d(
+    m.m00*m00 + m.m01*m10,
+    m.m10*m00 + m.m11*m10,
+
+    m.m00*m01 + m.m01*m11,
+    m.m10*m01 + m.m11*m11,
+
+    m.m00*m02 + m.m01*m12 + m.m02,
+    m.m10*m02 + m.m11*m12 + m.m12
+  )
+  def concatenate(m: AnyMat2d) :Mat2x3d = m*this
+
+  def transformPoint(p: AnyVec2d) :Vec2d = new Vec2d(
+    m00*p.x + m01*p.y + m02,
+    m10*p.x + m11*p.y + m12
+  )
+  def transformVector(v: AnyVec2d) :Vec2d = new Vec2d(
+    m00*v.x + m01*v.y,
+    m10*v.x + m11*v.y
+  )
+
+  def invert() :Mat2x3d = inverse(this)
+
+  def ==(m: AnyMat2x3d) :Boolean = {
+    if (m eq null) false
+    else
+      m00 == m.m00 && m10 == m.m10 &&
+      m01 == m.m01 && m11 == m.m11 &&
+      m02 == m.m02 && m12 == m.m12
+  }
+
+  def !=(m: AnyMat2x3d) :Boolean = !(this == m)
+
+  private[math] def hasErrors: Boolean = {
+    import java.lang.Double._
+
+    (
+      isNaN(m00) || isInfinite(m00) ||
+      isNaN(m10) || isInfinite(m10) ||
+
+      isNaN(m01) || isInfinite(m01) ||
+      isNaN(m11) || isInfinite(m11) ||
+
+      isNaN(m02) || isInfinite(m02) ||
+      isNaN(m12) || isInfinite(m12)
     )
-    def -(m: AnyMat2x3d) = new Mat2x3d(
-        m00 - m.m00, m10 - m.m10,
-        m01 - m.m01, m11 - m.m11,
-        m02 - m.m02, m12 - m.m12
-    )
+  }
 
-    /**
-     * Component-wise devision.
-     */
-    def /(m: AnyMat2x3d) = new Mat2x3d(
-        m00/m.m00, m10/m.m10,
-        m01/m.m01, m11/m.m11,
-        m02/m.m02, m12/m.m12
-    )
-    private[math] def divideByComponent(s: Double) = new Mat2x3d(
-        s/m00, s/m10,
-        s/m01, s/m11,
-        s/m02, s/m12
-    )
-
-    def *(m: AnyMat3x2d) = new Mat2d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21
-    )
-    def *(m: AnyMat3d) = new Mat2x3d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
-
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22
-    )
-    def *(m: AnyMat3x4d) = new Mat2x4d(
-        m00*m.m00 + m01*m.m10 + m02*m.m20,
-        m10*m.m00 + m11*m.m10 + m12*m.m20,
-
-        m00*m.m01 + m01*m.m11 + m02*m.m21,
-        m10*m.m01 + m11*m.m11 + m12*m.m21,
-
-        m00*m.m02 + m01*m.m12 + m02*m.m22,
-        m10*m.m02 + m11*m.m12 + m12*m.m22,
-
-        m00*m.m03 + m01*m.m13 + m02*m.m23,
-        m10*m.m03 + m11*m.m13 + m12*m.m23
-    )
-
-    def *(u: AnyVec3d) = new Vec2d(
-        m00*u.x + m01*u.y + m02*u.z,
-        m10*u.x + m11*u.y + m12*u.z
-    )
-    private[math] def transposeMul(u: AnyVec2d) = new Vec3d(
-        m00*u.x + m10*u.y,
-        m01*u.x + m11*u.y,
-        m02*u.x + m12*u.y
-    )
-
-    def scale(s: Double) :Mat2x3d = this*s
-    def scale(s: AnyVec2d) :Mat2x3d = new Mat2x3d(
-        m00*s.x, m10*s.y,
-        m01*s.x, m11*s.y,
-        m02*s.x, m12*s.y
-    )
-
-    def rotate(angle: Double) :Mat2x3d = {
-        concatenate(rotationMat(angle))
+  override def equals(other: Any) :Boolean = {
+    other match {
+      case m: AnyMat2x3d => this == m
+      case _ => false
     }
+  }
 
-    def translate(u: AnyVec2d) :Mat2x3d = new Mat2x3d(
-        m00, m10,
-        m01, m11,
-        m02 + u.x, m12 + u.y
-    )
-
-    def concatenate(m: AnyMat2x3d) :Mat2x3d = new Mat2x3d(
-        m.m00*m00 + m.m01*m10,
-        m.m10*m00 + m.m11*m10,
-
-        m.m00*m01 + m.m01*m11,
-        m.m10*m01 + m.m11*m11,
-
-        m.m00*m02 + m.m01*m12 + m.m02,
-        m.m10*m02 + m.m11*m12 + m.m12
-    )
-    def concatenate(m: AnyMat2d) :Mat2x3d = m*this
-
-    def transformPoint(p: AnyVec2d) :Vec2d = new Vec2d(
-        m00*p.x + m01*p.y + m02,
-        m10*p.x + m11*p.y + m12
-    )
-    def transformVector(v: AnyVec2d) :Vec2d = new Vec2d(
-        m00*v.x + m01*v.y,
-        m10*v.x + m11*v.y
-    )
-
-    def invert() :Mat2x3d = inverse(this)
-
-    def ==(m: AnyMat2x3d) :Boolean = {
-        if (m eq null) false
-        else
-            m00 == m.m00 && m10 == m.m10 &&
-            m01 == m.m01 && m11 == m.m11 &&
-            m02 == m.m02 && m12 == m.m12
-    }
-
-    def !=(m: AnyMat2x3d) :Boolean = !(this == m)
-
-    private[math] def hasErrors: Boolean = {
-        import java.lang.Double._
-
-        (
-            isNaN(m00) || isInfinite(m00) ||
-            isNaN(m10) || isInfinite(m10) ||
-
-            isNaN(m01) || isInfinite(m01) ||
-            isNaN(m11) || isInfinite(m11) ||
-
-            isNaN(m02) || isInfinite(m02) ||
-            isNaN(m12) || isInfinite(m12)
-        )
-    }
-
-    override def equals(other: Any) :Boolean = {
-        other match {
-            case m: AnyMat2x3d => this == m
-            case _ => false
-        }
-    }
-
-    override def hashCode() :Int = {
+  override def hashCode() :Int = {
+    41 * (
+      41 * (
         41 * (
           41 * (
             41 * (
-              41 * (
-                41 * (
-                  41 + m00.hashCode
-                ) + m10.hashCode
-              ) + m01.hashCode
-            ) + m11.hashCode
-          ) + m02.hashCode
-        ) + m12.hashCode
-    }
+              41 + m00.hashCode
+            ) + m10.hashCode
+          ) + m01.hashCode
+        ) + m11.hashCode
+      ) + m02.hashCode
+    ) + m12.hashCode
+  }
 
-    override def toString() :String = {
-        this.getClass.getSimpleName +
-        "(" +
-            m00 + ", " + m10 + "; " + 
-            m01 + ", " + m11 + "; " + 
-            m02 + ", " + m12 +
-        ")"
-    }
+  override def toString() :String = {
+    this.getClass.getSimpleName +
+    "(" +
+      m00 + ", " + m10 + "; " + 
+      m01 + ", " + m11 + "; " + 
+      m02 + ", " + m12 +
+    ")"
+  }
 }
 
 final class ConstMat2x3d private[math] (
-    val m00: Double, val m10: Double,
-    val m01: Double, val m11: Double,
-    val m02: Double, val m12: Double
+  val m00: Double, val m10: Double,
+  val m01: Double, val m11: Double,
+  val m02: Double, val m12: Double
 ) extends AnyMat2x3d with ConstMat[ConstVec2d]
 
 object ConstMat2x3d {
 
-    def apply(
-        m00: Double, m10: Double,
-        m01: Double, m11: Double,
-        m02: Double, m12: Double
-      ) = new ConstMat2x3d(
-            m00, m10,
-            m01, m11,
-            m02, m12
-      )
-
-    def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
-    new ConstMat2x3d(
-        c0.dx, c0.dy,
-        c1.dx, c1.dy,
-        c2.dx, c2.dy
+  def apply(
+    m00: Double, m10: Double,
+    m01: Double, m11: Double,
+    m02: Double, m12: Double
+    ) = new ConstMat2x3d(
+      m00, m10,
+      m01, m11,
+      m02, m12
     )
 
-    def apply(m: Read2x3[_]) = new ConstMat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
+  new ConstMat2x3d(
+    c0.dx, c0.dy,
+    c1.dx, c1.dy,
+    c2.dx, c2.dy
+  )
 
-    implicit def toConst(m: AnyMat2x3d) = ConstMat2x3d(m)
+  def apply(m: Read2x3[_]) = new ConstMat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
+
+  implicit def toConst(m: AnyMat2x3d) = ConstMat2x3d(m)
 }
 
 
 final class Mat2x3d private[math] (
-    var m00: Double, var m10: Double,
-    var m01: Double, var m11: Double,
-    var m02: Double, var m12: Double
+  var m00: Double, var m10: Double,
+  var m01: Double, var m11: Double,
+  var m02: Double, var m12: Double
 ) extends AnyMat2x3d with Mat[ConstVec2d]
 {
-    def *=(s: Double) {
-        m00 *= s; m10 *= s;
-        m01 *= s; m11 *= s;
-        m02 *= s; m12 *= s
-    }
-    def /=(s: Double) { val inv = 1/s;
-        m00 *= inv; m10 *= inv;
-        m01 *= inv; m11 *= inv;
-        m02 *= inv; m12 *= inv
+  def *=(s: Double) {
+    m00 *= s; m10 *= s;
+    m01 *= s; m11 *= s;
+    m02 *= s; m12 *= s
+  }
+  def /=(s: Double) { val inv = 1/s;
+    m00 *= inv; m10 *= inv;
+    m01 *= inv; m11 *= inv;
+    m02 *= inv; m12 *= inv
+  }
+
+  def +=(s: Double) {
+    m00 += s; m10 += s
+    m01 += s; m11 += s
+    m02 += s; m12 += s
+  }
+  def -=(s: Double) {
+    m00 -= s; m10 -= s
+    m01 -= s; m11 -= s
+    m02 -= s; m12 -= s
+  }
+
+  def +=(m: AnyMat2x3d) {
+    m00 += m.m00; m10 += m.m10;
+    m01 += m.m01; m11 += m.m11;
+    m02 += m.m02; m12 += m.m12
+  }
+  def -=(m: AnyMat2x3d) {
+    m00 -= m.m00; m10 -= m.m10;
+    m01 -= m.m01; m11 -= m.m11;
+    m02 -= m.m02; m12 -= m.m12
+  }
+
+  def *=(m: AnyMat3d) {
+    val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
+    val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
+
+    val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
+    val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
+
+    val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
+    val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+
+    m00 = a00; m10 = a10
+    m01 = a01; m11 = a11
+    m02 = a02; m12 = a12
+  }
+  /**
+   * Component-wise devision.
+   */
+  def /=(m: AnyMat2x3d) {
+    m00 /= m.m00; m10 /= m.m10
+    m01 /= m.m01; m11 /= m.m11
+    m02 /= m.m02; m12 /= m.m12
+  }
+
+  def :=(m: AnyMat2x3d) {
+    m00 = m.m00; m10 = m.m10;
+    m01 = m.m01; m11 = m.m11;
+    m02 = m.m02; m12 = m.m12
+  }
+
+  def set(
+    m00: Double, m10: Double,
+    m01: Double, m11: Double,
+    m02: Double, m12: Double
+  ) {
+    this.m00 = m00; this.m10 = m10;
+    this.m01 = m01; this.m11 = m11;
+    this.m02 = m02; this.m12 = m12
+  }
+
+  def update(c: Int, r: Int, s: Double) {
+    def error() {
+      throw new IndexOutOfBoundsException("Trying to update index (" +
+                c + ", " + r + ") in " + this.getClass.getSimpleName)
     }
 
-    def +=(s: Double) {
-        m00 += s; m10 += s
-        m01 += s; m11 += s
-        m02 += s; m12 += s
-    }
-    def -=(s: Double) {
-        m00 -= s; m10 -= s
-        m01 -= s; m11 -= s
-        m02 -= s; m12 -= s
-    }
-
-    def +=(m: AnyMat2x3d) {
-        m00 += m.m00; m10 += m.m10;
-        m01 += m.m01; m11 += m.m11;
-        m02 += m.m02; m12 += m.m12
-    }
-    def -=(m: AnyMat2x3d) {
-        m00 -= m.m00; m10 -= m.m10;
-        m01 -= m.m01; m11 -= m.m11;
-        m02 -= m.m02; m12 -= m.m12
-    }
-
-    def *=(m: AnyMat3d) {
-        val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-        val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
-
-        val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-        val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-
-        val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-        val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-
-        m00 = a00; m10 = a10
-        m01 = a01; m11 = a11
-        m02 = a02; m12 = a12
-    }
-    /**
-     * Component-wise devision.
-     */
-    def /=(m: AnyMat2x3d) {
-        m00 /= m.m00; m10 /= m.m10
-        m01 /= m.m01; m11 /= m.m11
-        m02 /= m.m02; m12 /= m.m12
-    }
-
-    def :=(m: AnyMat2x3d) {
-        m00 = m.m00; m10 = m.m10;
-        m01 = m.m01; m11 = m.m11;
-        m02 = m.m02; m12 = m.m12
-    }
-
-    def set(
-        m00: Double, m10: Double,
-        m01: Double, m11: Double,
-        m02: Double, m12: Double
-    ) {
-        this.m00 = m00; this.m10 = m10;
-        this.m01 = m01; this.m11 = m11;
-        this.m02 = m02; this.m12 = m12
-    }
-
-    def update(c: Int, r: Int, s: Double) {
-        def error() {
-            throw new IndexOutOfBoundsException("Trying to update index (" +
-                     c + ", " + r + ") in " + this.getClass.getSimpleName)
+    c match {
+      case 0 =>
+        r match {
+          case 0 => m00 = s
+          case 1 => m10 = s
+          case _ => error
         }
-
-        c match {
-            case 0 =>
-                r match {
-                    case 0 => m00 = s
-                    case 1 => m10 = s
-                    case _ => error
-                }
-            case 1 =>
-                r match {
-                    case 0 => m01 = s
-                    case 1 => m11 = s
-                    case _ => error
-                }
-            case 2 =>
-                r match {
-                    case 0 => m02 = s
-                    case 1 => m12 = s
-                    case _ => error
-                }
-            case _ => error
+      case 1 =>
+        r match {
+          case 0 => m01 = s
+          case 1 => m11 = s
+          case _ => error
         }
-    }
-
-    def update(c: Int, v: AnyVec2d) {
-        c match {
-            case 0 => m00 = v.x; m10 = v.y
-            case 1 => m01 = v.x; m11 = v.y
-            case 2 => m02 = v.x; m12 = v.y
-            case j => throw new IndexOutOfBoundsException(
-                    "excpected from 0 to 2, got " + j)
+      case 2 =>
+        r match {
+          case 0 => m02 = s
+          case 1 => m12 = s
+          case _ => error
         }
+      case _ => error
     }
+  }
+
+  def update(c: Int, v: AnyVec2d) {
+    c match {
+      case 0 => m00 = v.x; m10 = v.y
+      case 1 => m01 = v.x; m11 = v.y
+      case 2 => m02 = v.x; m12 = v.y
+      case j => throw new IndexOutOfBoundsException(
+                          "excpected from 0 to 2, got " + j)
+    }
+  }
 }
 
 object Mat2x3d {
 
-    val Zero: ConstMat2x3d = Mat2x3d(0)
-    val Identity: ConstMat2x3d = Mat2x3d(1)
+  val Zero: ConstMat2x3d = Mat2x3d(0)
+  val Identity: ConstMat2x3d = Mat2x3d(1)
 
-    def apply(s: Double) = new Mat2x3d(
-        s, 0,
-        0, s,
-        0, 0
+  def apply(s: Double) = new Mat2x3d(
+    s, 0,
+    0, s,
+    0, 0
+  )
+
+  def apply(
+    m00: Double, m10: Double,
+    m01: Double, m11: Double,
+    m02: Double, m12: Double
+    ) = new Mat2x3d(
+      m00, m10,
+      m01, m11,
+      m02, m12
     )
 
-    def apply(
-        m00: Double, m10: Double,
-        m01: Double, m11: Double,
-        m02: Double, m12: Double
-      ) = new Mat2x3d(
-            m00, m10,
-            m01, m11,
-            m02, m12
-      )
+  def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
+  new Mat2x3d(
+    c0.dx, c0.dy,
+    c1.dx, c1.dy,
+    c2.dx, c2.dy
+  )
 
-    def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
-    new Mat2x3d(
-        c0.dx, c0.dy,
-        c1.dx, c1.dy,
-        c2.dx, c2.dy
-    )
+  def apply(m: Read2x2[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    0, 0
+  )
 
-    def apply(m: Read2x2[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        0, 0
-    )
+  def apply(m: Read2x3[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read2x3[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(m: Read2x4[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read2x4[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(m: Read3x2[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    0, 0
+  )
 
-    def apply(m: Read3x2[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        0, 0
-    )
+  def apply(m: Read3x3[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read3x3[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(m: Read3x4[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read3x4[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(m: Read4x2[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    0, 0
+  )
 
-    def apply(m: Read4x2[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        0, 0
-    )
+  def apply(m: Read4x3[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read4x3[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def apply(m: Read4x4[_]) = new Mat2x3d(
+    m.d00, m.d10,
+    m.d01, m.d11,
+    m.d02, m.d12
+  )
 
-    def apply(m: Read4x4[_]) = new Mat2x3d(
-        m.d00, m.d10,
-        m.d01, m.d11,
-        m.d02, m.d12
-    )
+  def unapply(m: AnyMat2x3d) = Some((m(0), m(1), m(2)))
 
-    def unapply(m: AnyMat2x3d) = Some((m(0), m(1), m(2)))
+  def scale(s: Double) :Mat2x3d = Mat2x3d(s)
+  def scale(s: AnyVec2d) :Mat2x3d = {
+    val m = Mat2x3d(s.x)
+    m.m11 = s.y
+    m
+  }
 
-    def scale(s: Double) :Mat2x3d = Mat2x3d(s)
-    def scale(s: AnyVec2d) :Mat2x3d = {
-        val m = Mat2x3d(s.x)
-        m.m11 = s.y
-        m
-    }
+  def rotate(angle: Double) :Mat2x3d = {
+    Mat2x3d(rotationMat(angle))
+  }
 
-    def rotate(angle: Double) :Mat2x3d = {
-        Mat2x3d(rotationMat(angle))
-    }
+  def translate(u: AnyVec2d) :Mat2x3d = {
+    val m = Mat2x3d(1)
+    m(2) = u
+    m
+  }
 
-    def translate(u: AnyVec2d) :Mat2x3d = {
-        val m = Mat2x3d(1)
-        m(2) = u
-        m
-    }
-
-    implicit def toMutable(m: AnyMat2x3d) = Mat2x3d(m)
+  implicit def toMutable(m: AnyMat2x3d) = Mat2x3d(m)
 }

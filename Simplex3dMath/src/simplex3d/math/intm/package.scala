@@ -28,19 +28,19 @@ import simplex3d.math.intm.IntMath._
  */
 package object intm {
 
-    //Implicits
-    implicit def imInt(s: Int) = new ExtendedInt(s)
+  //Implicits
+  implicit def imInt(s: Int) = new ExtendedInt(s)
 
-    // In and Out aliases
-    type inVec2i = AnyVec2i
-    type outVec2i = Vec2i with Implicits[Off]
-    implicit def imOut2(u: Vec2i) = u.asInstanceOf[outVec2i]
+  // In and Out aliases
+  type inVec2i = AnyVec2i
+  type outVec2i = Vec2i with Implicits[Off]
+  implicit def imOut2(u: Vec2i) = u.asInstanceOf[outVec2i]
 
-    type inVec3i = AnyVec3i
-    type outVec3i = Vec3i with Implicits[Off]
-    implicit def imOut3(u: Vec3i) = u.asInstanceOf[outVec3i]
+  type inVec3i = AnyVec3i
+  type outVec3i = Vec3i with Implicits[Off]
+  implicit def imOut3(u: Vec3i) = u.asInstanceOf[outVec3i]
 
-    type inVec4i = AnyVec4i
-    type outVec4i = Vec4i with Implicits[Off]
-    implicit def imOut4(u: Vec4i) = u.asInstanceOf[outVec4i]
+  type inVec4i = AnyVec4i
+  type outVec4i = Vec4i with Implicits[Off]
+  implicit def imOut4(u: Vec4i) = u.asInstanceOf[outVec4i]
 }

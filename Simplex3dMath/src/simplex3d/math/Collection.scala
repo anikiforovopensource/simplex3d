@@ -30,33 +30,33 @@ import scala.annotation.unchecked._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class MathObject[+T] extends Iterable[T] {
-    def apply(i: Int) :T
-    override def size :Int
-    def iterator :Iterator[T] = new MathIterator
+  def apply(i: Int) :T
+  override def size :Int
+  def iterator :Iterator[T] = new MathIterator
 
-    private final class MathIterator extends Iterator[T] {
-        private var i = 0
-        def hasNext: Boolean = (i < size)
-        def next() :T = {
-            if (i < size) {
-                val n = apply(i)
-                i += 1
-                n
-            } else Iterator.empty.next
-        }
+  private final class MathIterator extends Iterator[T] {
+    private var i = 0
+    def hasNext: Boolean = (i < size)
+    def next() :T = {
+      if (i < size) {
+        val n = apply(i)
+        i += 1
+        n
+      } else Iterator.empty.next
     }
+  }
 
-    override def head = apply(0)
-    override def last = apply(size - 1)
+  override def head = apply(0)
+  override def last = apply(size - 1)
 
-    override def foreach[U](f: T => U): Unit = {
-        var i = 0; while (i < size) {
+  override def foreach[U](f: T => U): Unit = {
+    var i = 0; while (i < size) {
 
-            f(apply(i))
+      f(apply(i))
 
-            i += 1
-        }
+      i += 1
     }
+  }
 }
 
 /** <code>AnyVec[_]</code> is a common collection supertype for all vectors.

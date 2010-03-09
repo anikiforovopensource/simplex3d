@@ -29,73 +29,73 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 final class ExtendedFloat(val value: Float) {
-    def *(u: AnyVec2d) = u*value
-    def *(u: AnyVec3d) = u*value
-    def *(u: AnyVec4d) = u*value
+  def *(u: AnyVec2d) = u*value
+  def *(u: AnyVec3d) = u*value
+  def *(u: AnyVec4d) = u*value
 
-    def *(q: AnyQuat4d) = q*value
+  def *(q: AnyQuat4d) = q*value
 
-    def *(m: AnyMat2d) = m*value
-    def *(m: AnyMat2x3d) = m*value
-    def *(m: AnyMat2x4d) = m*value
-    def *(m: AnyMat3x2d) = m*value
-    def *(m: AnyMat3d) = m*value
-    def *(m: AnyMat3x4d) = m*value
-    def *(m: AnyMat4x2d) = m*value
-    def *(m: AnyMat4x3d) = m*value
-    def *(m: AnyMat4d) = m*value
+  def *(m: AnyMat2d) = m*value
+  def *(m: AnyMat2x3d) = m*value
+  def *(m: AnyMat2x4d) = m*value
+  def *(m: AnyMat3x2d) = m*value
+  def *(m: AnyMat3d) = m*value
+  def *(m: AnyMat3x4d) = m*value
+  def *(m: AnyMat4x2d) = m*value
+  def *(m: AnyMat4x3d) = m*value
+  def *(m: AnyMat4d) = m*value
 
-    def /(u: AnyVec2d) = u.divideByComponent(value)
-    def /(u: AnyVec3d) = u.divideByComponent(value)
-    def /(u: AnyVec4d) = u.divideByComponent(value)
+  def /(u: AnyVec2d) = u.divideByComponent(value)
+  def /(u: AnyVec3d) = u.divideByComponent(value)
+  def /(u: AnyVec4d) = u.divideByComponent(value)
 
-    def /(q: AnyQuat4d) = q.divideByComponent(value)
+  def /(q: AnyQuat4d) = q.divideByComponent(value)
 
-    def /(m: AnyMat2d) = m.divideByComponent(value)
-    def /(m: AnyMat2x3d) = m.divideByComponent(value)
-    def /(m: AnyMat2x4d) = m.divideByComponent(value)
-    def /(m: AnyMat3x2d) = m.divideByComponent(value)
-    def /(m: AnyMat3d) = m.divideByComponent(value)
-    def /(m: AnyMat3x4d) = m.divideByComponent(value)
-    def /(m: AnyMat4x2d) = m.divideByComponent(value)
-    def /(m: AnyMat4x3d) = m.divideByComponent(value)
-    def /(m: AnyMat4d) = m.divideByComponent(value)
+  def /(m: AnyMat2d) = m.divideByComponent(value)
+  def /(m: AnyMat2x3d) = m.divideByComponent(value)
+  def /(m: AnyMat2x4d) = m.divideByComponent(value)
+  def /(m: AnyMat3x2d) = m.divideByComponent(value)
+  def /(m: AnyMat3d) = m.divideByComponent(value)
+  def /(m: AnyMat3x4d) = m.divideByComponent(value)
+  def /(m: AnyMat4x2d) = m.divideByComponent(value)
+  def /(m: AnyMat4x3d) = m.divideByComponent(value)
+  def /(m: AnyMat4d) = m.divideByComponent(value)
 
-    def +(u: AnyVec2d) = u + value
-    def +(u: AnyVec3d) = u + value
-    def +(u: AnyVec4d) = u + value
+  def +(u: AnyVec2d) = u + value
+  def +(u: AnyVec3d) = u + value
+  def +(u: AnyVec4d) = u + value
 
-    def +(q: AnyQuat4d) = q + value
+  def +(q: AnyQuat4d) = q + value
 
-    def +(m: AnyMat2d) = m + value
-    def +(m: AnyMat2x3d) = m + value
-    def +(m: AnyMat2x4d) = m + value
-    def +(m: AnyMat3x2d) = m + value
-    def +(m: AnyMat3d) = m + value
-    def +(m: AnyMat3x4d) = m + value
-    def +(m: AnyMat4x2d) = m + value
-    def +(m: AnyMat4x3d) = m + value
-    def +(m: AnyMat4d) = m + value
+  def +(m: AnyMat2d) = m + value
+  def +(m: AnyMat2x3d) = m + value
+  def +(m: AnyMat2x4d) = m + value
+  def +(m: AnyMat3x2d) = m + value
+  def +(m: AnyMat3d) = m + value
+  def +(m: AnyMat3x4d) = m + value
+  def +(m: AnyMat4x2d) = m + value
+  def +(m: AnyMat4x3d) = m + value
+  def +(m: AnyMat4d) = m + value
 
-    def -(u: AnyVec2d) =
-        new Vec2d(value - u.x, value - u.y)
+  def -(u: AnyVec2d) =
+    new Vec2d(value - u.x, value - u.y)
 
-    def -(u: AnyVec3d) =
-        new Vec3d(value - u.x, value - u.y, value - u.z)
+  def -(u: AnyVec3d) =
+    new Vec3d(value - u.x, value - u.y, value - u.z)
 
-    def -(u: AnyVec4d) =
-        new Vec4d(value - u.x, value - u.y, value - u.z, value - u.w)
+  def -(u: AnyVec4d) =
+    new Vec4d(value - u.x, value - u.y, value - u.z, value - u.w)
 
 
-    def -(q: AnyQuat4d) = { val t = -q; t += value; t }
+  def -(q: AnyQuat4d) = { val t = -q; t += value; t }
 
-    def -(m: AnyMat2d) = { val t = -m; t += value; t }
-    def -(m: AnyMat2x3d) = { val t = -m; t += value; t }
-    def -(m: AnyMat2x4d) = { val t = -m; t += value; t }
-    def -(m: AnyMat3x2d) = { val t = -m; t += value; t }
-    def -(m: AnyMat3d) = { val t = -m; t += value; t }
-    def -(m: AnyMat3x4d) = { val t = -m; t += value; t }
-    def -(m: AnyMat4x2d) = { val t = -m; t += value; t }
-    def -(m: AnyMat4x3d) = { val t = -m; t += value; t }
-    def -(m: AnyMat4d) = { val t = -m; t += value; t }
+  def -(m: AnyMat2d) = { val t = -m; t += value; t }
+  def -(m: AnyMat2x3d) = { val t = -m; t += value; t }
+  def -(m: AnyMat2x4d) = { val t = -m; t += value; t }
+  def -(m: AnyMat3x2d) = { val t = -m; t += value; t }
+  def -(m: AnyMat3d) = { val t = -m; t += value; t }
+  def -(m: AnyMat3x4d) = { val t = -m; t += value; t }
+  def -(m: AnyMat4x2d) = { val t = -m; t += value; t }
+  def -(m: AnyMat4x3d) = { val t = -m; t += value; t }
+  def -(m: AnyMat4d) = { val t = -m; t += value; t }
 }

@@ -199,7 +199,7 @@ object FloatMath {
     }
 
     /**
-     * meaningful return values for x withing [-1E9, +1E9]
+     * meaningful return values for x withing [-2E8, +2E8]
      */
     def noise1(x: Float) :Float = float(SimplexNoise.noise(x, 0))
     def noise2(x: Float) :Vec2f = {

@@ -102,7 +102,7 @@ private[math] object SimplexNoise {
         val piy = ifloor(y + s)
         val t = (pix + piy) * G2 // Hairy factor for unskewing
 
-        // The x,y,z distances from the cell origin
+        // The x,y distances from the cell origin
         val p0x = x - pix + t
         val p0y = y - piy + t
 

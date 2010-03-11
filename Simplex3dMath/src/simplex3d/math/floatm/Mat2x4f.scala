@@ -69,15 +69,16 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
       case 2 => new ConstVec2f(m02, m12)
       case 3 => new ConstVec2f(m03, m13)
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
   def apply(c: Int, r: Int) :Float = {
-    def error() :Float = {
-      throw new IndexOutOfBoundsException("Trying to read index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() :Float = throw new IndexOutOfBoundsException(
+      "Trying to read index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -291,12 +292,12 @@ object ConstMat2x4f {
     m01: Float, m11: Float,
     m02: Float, m12: Float,
     m03: Float, m13: Float
-    ) = new ConstMat2x4f(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
-    )
+  ) = new ConstMat2x4f(
+    m00, m10,
+    m01, m11,
+    m02, m12,
+    m03, m13
+  )
 
   def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_], c3: Read2[_]) = 
   new ConstMat2x4f(
@@ -411,10 +412,10 @@ final class Mat2x4f private[math] (
   }
 
   def update(c: Int, r: Int, s: Float) {
-    def error() {
-      throw new IndexOutOfBoundsException("Trying to update index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() = throw new IndexOutOfBoundsException(
+      "Trying to update index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -452,7 +453,8 @@ final class Mat2x4f private[math] (
       case 2 => m02 = v.x; m12 = v.y
       case 3 => m03 = v.x; m13 = v.y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 }
@@ -474,12 +476,12 @@ object Mat2x4f {
     m01: Float, m11: Float,
     m02: Float, m12: Float,
     m03: Float, m13: Float
-    ) = new Mat2x4f(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
-    )
+  ) = new Mat2x4f(
+    m00, m10,
+    m01, m11,
+    m02, m12,
+    m03, m13
+  )
 
   def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_], c3: Read2[_]) = 
   new Mat2x4f(

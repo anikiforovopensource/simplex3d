@@ -84,7 +84,8 @@ sealed abstract class AnyVec4d extends Read4[Double] {
       case 2 => z
       case 3 => w
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -214,7 +215,8 @@ final class Vec4d private[math] (
       case 2 => z = s
       case 3 => w = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 

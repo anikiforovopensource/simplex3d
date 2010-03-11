@@ -757,8 +757,10 @@ object FloatMath {
     new Vec4f(round(u.x), round(u.y), round(u.z), round(u.w))
   }
   def roundEven(u: inVec4f) :Vec4f = {
-    new Vec4f(roundEven(u.x), roundEven(u.y),
-          roundEven(u.z), roundEven(u.w))
+    new Vec4f(
+      roundEven(u.x), roundEven(u.y),
+      roundEven(u.z), roundEven(u.w)
+    )
   }
   def ceil(u: inVec4f) :Vec4f = {
     new Vec4f(ceil(u.x), ceil(u.y), ceil(u.z), ceil(u.w))
@@ -1189,7 +1191,7 @@ object FloatMath {
   def inverse(m: inMat2f) :Mat2f = {
     val detInv = 1/determinant(m)
     new Mat2f(
-      m.m11*detInv, -m.m10*detInv,
+       m.m11*detInv, -m.m10*detInv,
       -m.m01*detInv, m.m00*detInv
     )
   }
@@ -1373,27 +1375,27 @@ object FloatMath {
     val b = 1 - a
 
     new Mat4x2f(
-    b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-    b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31
+      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
+      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31
     )
   }
   def lerp(m: inMat4x3f, n: inMat4x3f, a: Float) :Mat4x3f = {
     val b = 1 - a
 
     new Mat4x3f(
-    b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-    b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
-    b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32
+      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
+      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
+      b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32
     )
   }
   def lerp(m: inMat4f, n: inMat4f, a: Float) :Mat4f = {
     val b = 1 - a
 
     new Mat4f(
-    b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-    b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
-    b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32,
-    b*m.m03 +a*n.m03, b*m.m13 +a*n.m13, b*m.m23 +a*n.m23, b*m.m33 +a*n.m33
+      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
+      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
+      b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32,
+      b*m.m03 +a*n.m03, b*m.m13 +a*n.m13, b*m.m23 +a*n.m23, b*m.m33 +a*n.m33
     )
   }
 
@@ -1930,10 +1932,10 @@ object FloatMath {
   }
 
   // Projection
-  def perspective(fieldOfView: Float, aspectRatio: Float,
-          near: Float, far: Float)
-  :Mat4f =
-  {
+  def perspective(
+    fieldOfView: Float, aspectRatio: Float,
+    near: Float, far: Float
+  ) :Mat4f = {
     val focus = 1/tan(fieldOfView * 0.5f)
     val n_f = 1/(near - far)
 
@@ -1945,11 +1947,11 @@ object FloatMath {
     )
   }
 
-  def ortho(left: Float, right: Float,
-        bottom: Float, top: Float,
-        near: Float, far: Float)
-  :Mat4f =
-  {
+  def ortho(
+    left: Float, right: Float,
+    bottom: Float, top: Float,
+    near: Float, far: Float
+  ) :Mat4f = {
     val r_l = 1/(right - left);
     val t_b = 1/(top - bottom);
     val f_n = 1/(far - near);
@@ -1963,11 +1965,11 @@ object FloatMath {
   }
 
   // Transform
-  def transformation(scale: inVec2f,
-             rotation: inMat2f,
-             translation: inVec2f)
-  :Mat2x3f =
-  {
+  def transformation(
+    scale: inVec2f,
+    rotation: inMat2f,
+    translation: inVec2f
+  ) :Mat2x3f = {
     import rotation._
     import translation.{x => tx, y => ty}
     import scale.{x => sx, y => sy}
@@ -1983,11 +1985,11 @@ object FloatMath {
    * @param rotation Must be an orthogonal matrix (matrix that represents
    * an unscaled rotation) to achieve the desired result.
    */
-  def inverseTransformation(scale: inVec2f,
-                rotation: inMat2f,
-                translation: inVec2f)
-  :Mat2x3f =
-  {
+  def inverseTransformation(
+    scale: inVec2f,
+    rotation: inMat2f,
+    translation: inVec2f
+  ) :Mat2x3f = {
     import translation.{x => tx, y => ty}
 
     val sx = 1/scale.x
@@ -2006,11 +2008,11 @@ object FloatMath {
     )
   }
   
-  def transformation(scale: inVec3f,
-             rotation: inMat3f,
-             translation: inVec3f)
-  :Mat3x4f =
-  {
+  def transformation(
+    scale: inVec3f,
+    rotation: inMat3f,
+    translation: inVec3f
+  ) :Mat3x4f = {
     import scale.{x => sx, y => sy, z => sz}
     import rotation._
     import translation.{x => tx, y => ty, z => tz}
@@ -2027,11 +2029,11 @@ object FloatMath {
    * @param rotation Must be an orthogonal matrix (matrix that represents
    * an unscaled rotation) to achieve the desired result.
    */
-  def inverseTransformation(scale: inVec3f,
-                rotation: inMat3f,
-                translation: inVec3f)
-  :Mat3x4f =
-  {
+  def inverseTransformation(
+    scale: inVec3f,
+    rotation: inMat3f,
+    translation: inVec3f
+  ) :Mat3x4f = {
     import translation.{x => tx, y => ty, z => tz}
 
     val sx = 1/scale.x

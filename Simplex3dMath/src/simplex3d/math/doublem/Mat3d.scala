@@ -67,15 +67,16 @@ sealed abstract class AnyMat3d extends Read3x3[ConstVec3d]
       case 1 => new ConstVec3d(m01, m11, m21)
       case 2 => new ConstVec3d(m02, m12, m22)
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 
   def apply(c: Int, r: Int) :Double = {
-    def error() :Double = {
-      throw new IndexOutOfBoundsException("Trying to read index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() :Double = throw new IndexOutOfBoundsException(
+      "Trying to read index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -284,11 +285,11 @@ object ConstMat3d {
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
     m02: Double, m12: Double, m22: Double
-    ) = new ConstMat3d(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
-    )
+  ) = new ConstMat3d(
+    m00, m10, m20,
+    m01, m11, m21,
+    m02, m12, m22
+  )
 
   def apply(c0: Read3[_], c1: Read3[_], c2: Read3[_]) = 
   new ConstMat3d(
@@ -389,10 +390,10 @@ final class Mat3d private[math] (
   }
 
   def update(c: Int, r: Int, s: Double) {
-    def error() {
-      throw new IndexOutOfBoundsException("Trying to update index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() = throw new IndexOutOfBoundsException(
+      "Trying to update index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -426,7 +427,8 @@ final class Mat3d private[math] (
       case 1 => m01 = v.x; m11 = v.y
       case 2 => m02 = v.x; m12 = v.y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 
@@ -436,7 +438,8 @@ final class Mat3d private[math] (
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z
       case 2 => m02 = v.x; m12 = v.y; m22 = v.z
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 }
@@ -456,11 +459,11 @@ object Mat3d {
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
     m02: Double, m12: Double, m22: Double
-    ) = new Mat3d(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
-    )
+  ) = new Mat3d(
+    m00, m10, m20,
+    m01, m11, m21,
+    m02, m12, m22
+  )
 
   def apply(c0: Read3[_], c1: Read3[_], c2: Read3[_]) = 
   new Mat3d(

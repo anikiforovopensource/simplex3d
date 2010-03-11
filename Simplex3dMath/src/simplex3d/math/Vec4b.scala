@@ -142,7 +142,8 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
       case 2 => z
       case 3 => w
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -389,7 +390,8 @@ final class Vec4b private[math] (
       case 2 => z = s
       case 3 => w = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 

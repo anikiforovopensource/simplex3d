@@ -85,15 +85,16 @@ sealed abstract class AnyMat4d extends Read4x4[ConstVec4d]
       case 2 => new ConstVec4d(m02, m12, m22, m32)
       case 3 => new ConstVec4d(m03, m13, m23, m33)
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
   def apply(c: Int, r: Int) :Double = {
-    def error() :Double = {
-      throw new IndexOutOfBoundsException("Trying to read index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() :Double = throw new IndexOutOfBoundsException(
+      "Trying to read index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -359,12 +360,12 @@ object ConstMat4d {
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double,
     m03: Double, m13: Double, m23: Double, m33: Double
-    ) = new ConstMat4d(
-      m00, m10, m20, m30,
-      m01, m11, m21, m31,
-      m02, m12, m22, m32,
-      m03, m13, m23, m33
-    )
+  ) = new ConstMat4d(
+    m00, m10, m20, m30,
+    m01, m11, m21, m31,
+    m02, m12, m22, m32,
+    m03, m13, m23, m33
+  )
 
   def apply(c0: Read4[_], c1: Read4[_], c2: Read4[_], c3: Read4[_]) = 
   new ConstMat4d(
@@ -487,10 +488,10 @@ final class Mat4d private[math] (
   }
 
   def update(c: Int, r: Int, s: Double) {
-    def error() {
-      throw new IndexOutOfBoundsException("Trying to update index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() = throw new IndexOutOfBoundsException(
+      "Trying to update index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -536,7 +537,8 @@ final class Mat4d private[math] (
       case 2 => m02 = v.x; m12 = v.y
       case 3 => m03 = v.x; m13 = v.y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -547,7 +549,8 @@ final class Mat4d private[math] (
       case 2 => m02 = v.x; m12 = v.y; m22 = v.z
       case 3 => m03 = v.x; m13 = v.y; m23 = v.z
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -558,7 +561,8 @@ final class Mat4d private[math] (
       case 2 => m02 = v.x; m12 = v.y; m22 = v.z; m32 = v.w
       case 3 => m03 = v.x; m13 = v.y; m23 = v.z; m33 = v.w
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 }
@@ -580,12 +584,12 @@ object Mat4d {
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double,
     m03: Double, m13: Double, m23: Double, m33: Double
-    ) = new Mat4d(
-      m00, m10, m20, m30,
-      m01, m11, m21, m31,
-      m02, m12, m22, m32,
-      m03, m13, m23, m33
-    )
+  ) = new Mat4d(
+    m00, m10, m20, m30,
+    m01, m11, m21, m31,
+    m02, m12, m22, m32,
+    m03, m13, m23, m33
+  )
 
   def apply(c0: Read4[_], c1: Read4[_], c2: Read4[_], c3: Read4[_]) = 
   new Mat4d(

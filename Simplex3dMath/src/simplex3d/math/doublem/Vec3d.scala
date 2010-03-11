@@ -76,7 +76,8 @@ sealed abstract class AnyVec3d extends Read3[Double] {
       case 1 => y
       case 2 => z
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 
@@ -192,7 +193,8 @@ final class Vec3d private[math] (
       case 1 => y = s
       case 2 => z = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 

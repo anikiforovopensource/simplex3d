@@ -61,15 +61,16 @@ sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
       case 1 => new ConstVec2d(m01, m11)
       case 2 => new ConstVec2d(m02, m12)
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 
   def apply(c: Int, r: Int) :Double = {
-    def error() :Double = {
-      throw new IndexOutOfBoundsException("Trying to read index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() :Double = throw new IndexOutOfBoundsException(
+      "Trying to read index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -296,11 +297,11 @@ object ConstMat2x3d {
     m00: Double, m10: Double,
     m01: Double, m11: Double,
     m02: Double, m12: Double
-    ) = new ConstMat2x3d(
-      m00, m10,
-      m01, m11,
-      m02, m12
-    )
+  ) = new ConstMat2x3d(
+    m00, m10,
+    m01, m11,
+    m02, m12
+  )
 
   def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
   new ConstMat2x3d(
@@ -398,10 +399,10 @@ final class Mat2x3d private[math] (
   }
 
   def update(c: Int, r: Int, s: Double) {
-    def error() {
-      throw new IndexOutOfBoundsException("Trying to update index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() = throw new IndexOutOfBoundsException(
+      "Trying to update index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -432,7 +433,8 @@ final class Mat2x3d private[math] (
       case 1 => m01 = v.x; m11 = v.y
       case 2 => m02 = v.x; m12 = v.y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 }
@@ -452,11 +454,11 @@ object Mat2x3d {
     m00: Double, m10: Double,
     m01: Double, m11: Double,
     m02: Double, m12: Double
-    ) = new Mat2x3d(
-      m00, m10,
-      m01, m11,
-      m02, m12
-    )
+  ) = new Mat2x3d(
+    m00, m10,
+    m01, m11,
+    m02, m12
+  )
 
   def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_]) = 
   new Mat2x3d(

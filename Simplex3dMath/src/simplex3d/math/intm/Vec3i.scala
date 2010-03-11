@@ -76,7 +76,8 @@ sealed abstract class AnyVec3i extends Read3[Int] {
       case 1 => y
       case 2 => z
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 
@@ -205,7 +206,8 @@ extends AnyVec3i with Vec[Int]
       case 1 => y = s
       case 2 => z = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 2, got " + j)
+          "excpected from 0 to 2, got " + j
+        )
     }
   }
 

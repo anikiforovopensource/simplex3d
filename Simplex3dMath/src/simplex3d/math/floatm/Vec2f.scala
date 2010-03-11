@@ -68,7 +68,8 @@ sealed abstract class AnyVec2f extends Read2[Float] {
       case 0 => x
       case 1 => y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 
@@ -172,7 +173,8 @@ extends AnyVec2f with Vec[Float]
       case 0 => x = s
       case 1 => y = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 

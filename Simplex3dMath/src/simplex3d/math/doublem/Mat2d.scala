@@ -53,15 +53,16 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
       case 0 => new ConstVec2d(m00, m10)
       case 1 => new ConstVec2d(m01, m11)
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 
   def apply(c: Int, r: Int) :Double = {
-    def error() :Double = {
-      throw new IndexOutOfBoundsException("Trying to read index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() :Double = throw new IndexOutOfBoundsException(
+      "Trying to read index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -221,10 +222,10 @@ object ConstMat2d {
   def apply(
     m00: Double, m10: Double,
     m01: Double, m11: Double
-    ) = new ConstMat2d(
-      m00, m10,
-      m01, m11
-    )
+  ) = new ConstMat2d(
+    m00, m10,
+    m01, m11
+  )
 
   def apply(c0: Read2[_], c1: Read2[_]) = 
   new ConstMat2d(
@@ -305,10 +306,10 @@ final class Mat2d private[math] (
   }
 
   def update(c: Int, r: Int, s: Double) {
-    def error() {
-      throw new IndexOutOfBoundsException("Trying to update index (" +
-                c + ", " + r + ") in " + this.getClass.getSimpleName)
-    }
+    def error() = throw new IndexOutOfBoundsException(
+      "Trying to update index (" + c + ", " + r + ") in " +
+      this.getClass.getSimpleName
+    )
 
     c match {
       case 0 =>
@@ -332,7 +333,8 @@ final class Mat2d private[math] (
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 }
@@ -350,10 +352,10 @@ object Mat2d {
   def apply(
     m00: Double, m10: Double,
     m01: Double, m11: Double
-    ) = new Mat2d(
-      m00, m10,
-      m01, m11
-    )
+  ) = new Mat2d(
+    m00, m10,
+    m01, m11
+  )
 
   def apply(c0: Read2[_], c1: Read2[_]) = 
   new Mat2d(

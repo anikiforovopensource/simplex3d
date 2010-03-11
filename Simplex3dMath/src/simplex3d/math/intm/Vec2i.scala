@@ -68,7 +68,8 @@ sealed abstract class AnyVec2i extends Read2[Int] {
       case 0 => x
       case 1 => y
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 
@@ -191,7 +192,8 @@ extends AnyVec2i with Vec[Int]
       case 0 => x = s
       case 1 => y = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 1, got " + j)
+          "excpected from 0 to 1, got " + j
+        )
     }
   }
 

@@ -52,7 +52,8 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
       case 2 => c
       case 3 => d
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -188,7 +189,8 @@ final class Quat4d private[math] (
       case 2 => c = s
       case 3 => d = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 }

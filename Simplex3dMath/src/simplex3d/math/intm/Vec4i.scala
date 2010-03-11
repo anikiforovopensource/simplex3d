@@ -84,7 +84,8 @@ sealed abstract class AnyVec4i extends Read4[Int] {
       case 2 => z
       case 3 => w
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 
@@ -229,7 +230,8 @@ extends AnyVec4i with Vec[Int]
       case 2 => z = s
       case 3 => w = s
       case j => throw new IndexOutOfBoundsException(
-                          "excpected from 0 to 3, got " + j)
+          "excpected from 0 to 3, got " + j
+        )
     }
   }
 

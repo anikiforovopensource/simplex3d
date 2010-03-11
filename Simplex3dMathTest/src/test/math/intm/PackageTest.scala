@@ -28,32 +28,32 @@ import org.scalatest._
  */
 class PackageTest extends FunSuite {
 
-    test("Package") {
-        import simplex3d.math.intm._
+  test("Package") {
+    import simplex3d.math.intm._
 
-        // implicits
-        val i2 = 2*Vec2i(1)
-        assert(i2.isInstanceOf[Vec2i])
+    // implicits
+    val i2 = 2*Vec2i(1)
+    assert(i2.isInstanceOf[Vec2i])
 
-        // the following passes if it compiles
-        def abs(x: Int) = IntMath.abs(x)
+    // the following passes if it compiles
+    def abs(x: Int) = IntMath.abs(x)
 
-        type av2 = AnyVec2i
-        type cv2 = ConstVec2i
-        val cv2 = ConstVec2i
-        type v2 = Vec2i
-        val v2 = Vec2i
+    type av2 = AnyVec2i
+    type cv2 = ConstVec2i
+    val cv2 = ConstVec2i
+    type v2 = Vec2i
+    val v2 = Vec2i
 
-        type av3 = AnyVec3i
-        type cv3 = ConstVec3i
-        val cv3 = ConstVec3i
-        type v3 = Vec3i
-        val v3 = Vec3i
+    type av3 = AnyVec3i
+    type cv3 = ConstVec3i
+    val cv3 = ConstVec3i
+    type v3 = Vec3i
+    val v3 = Vec3i
 
-        type av4 = AnyVec4i
-        type cv4 = ConstVec4i
-        val cv4 = ConstVec4i
-        type v4 = Vec4i
-        val v4 = Vec4i
-    }
+    type av4 = AnyVec4i
+    type cv4 = ConstVec4i
+    val cv4 = ConstVec4i
+    type v4 = Vec4i
+    val v4 = Vec4i
+  }
 }

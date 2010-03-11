@@ -25,81 +25,81 @@ package bench.math
  * @author Aleksey Nikiforov (lex)
  */
 object EscapeBench {
-    def main(args: Array[String]) {
-        new EscapeBenchCase().run()
-    }
+  def main(args: Array[String]) {
+    new EscapeBenchCase().run()
+  }
 }
 
 class EscapeBenchCase {
-    val length = 10000
-    val loops = 100000
-    
-    val random = new scala.util.Random(1)
-    def rd = random.nextDouble()
-    val data = new Array[Vec4a](length)
-    for (i <- 0 until length) {
-        data(i) = new Vec4a(rd, rd, rd, rd)
+  val length = 10000
+  val loops = 100000
+  
+  val random = new scala.util.Random(1)
+  def rd = random.nextDouble()
+  val data = new Array[Vec4a](length)
+  for (i <- 0 until length) {
+    data(i) = new Vec4a(rd, rd, rd, rd)
+  }
+
+  def run() {
+    var start = 0L
+
+    start = System.currentTimeMillis
+    testNew(length, loops)
+    val makeNewTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testTemp(length, loops)
+    val tempTime = System.currentTimeMillis - start
+
+    println("new time: " + makeNewTime +
+            ", temp time: " + tempTime + ".")
+  }
+
+  def testNew(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 2) {
+
+        val t = data(i) + data(i + 1) + data(i + 2)
+        answer += (t.x + t.y + t.z + t.w).asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
     }
 
-    def run() {
-        var start = 0L
+    println(answer)
+  }
 
-        start = System.currentTimeMillis
-        testNew(length, loops)
-        val makeNewTime = System.currentTimeMillis - start
+  def testTemp(length: Int, loops: Int) {
+    var answer = 0
+    val tmp = new Vec4a(0, 0, 0, 0)
 
-        start = System.currentTimeMillis
-        testTemp(length, loops)
-        val tempTime = System.currentTimeMillis - start
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 2) {
 
-        println("new time: " + makeNewTime +
-                ", temp time: " + tempTime + ".")
+        val t = data(i).add(data(i + 1), tmp).add(data(i + 2), tmp)
+        answer += (t.x + t.y + t.z + t.w).asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
     }
 
-    def testNew(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 2) {
-
-                val t = data(i) + data(i + 1) + data(i + 2)
-                answer += (t.x + t.y + t.z + t.w).asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testTemp(length: Int, loops: Int) {
-        var answer = 0
-        val tmp = new Vec4a(0, 0, 0, 0)
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 2) {
-
-                val t = data(i).add(data(i + 1), tmp).add(data(i + 2), tmp)
-                answer += (t.x + t.y + t.z + t.w).asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    println(answer)
+  }
 
 }
 
 class Vec4a(var x: Double, var y: Double, var z: Double, var w: Double) {
-    def +(u: Vec4a) = new Vec4a(x + u.x, y + u.y, z + u.z, w + u.w)
-    def add(u: Vec4a, r: Vec4a) = {
-        r.x = x + u.x
-        r.y = y + u.y
-        r.z = z + u.z
-        r.w = w + u.w
-        r
-    }
+  def +(u: Vec4a) = new Vec4a(x + u.x, y + u.y, z + u.z, w + u.w)
+  def add(u: Vec4a, r: Vec4a) = {
+    r.x = x + u.x
+    r.y = y + u.y
+    r.z = z + u.z
+    r.w = w + u.w
+    r
+  }
 }

@@ -28,73 +28,73 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 object ModBench {
-    def main(args: Array[String]) {
-        new ModFloat().run()
-    }
+  def main(args: Array[String]) {
+    new ModFloat().run()
+  }
 }
 
 class ModFloat {
-    val length = 10000
-    val loops = 20000
+  val length = 10000
+  val loops = 20000
 
-    def run() {
-        var start = 0L
+  def run() {
+    var start = 0L
 
-        start = System.currentTimeMillis
-        testRegular(length, loops)
-        val regularTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testRegular(length, loops)
+    val regularTime = System.currentTimeMillis - start
 
-        start = System.currentTimeMillis
-        testAnother(length, loops)
-        val anotherTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testAnother(length, loops)
+    val anotherTime = System.currentTimeMillis - start
 
-        println("Float. another time: " + anotherTime +
-                ", regular time: " + regularTime + ".")
+    println("Float. another time: " + anotherTime +
+            ", regular time: " + regularTime + ".")
+  }
+
+  def modReg(x: Float, y: Float) :Float = {
+    x - y*floor(x/y)
+  }
+
+  def modAnother(x: Float, y: Float) :Float = {
+    if (x*y < 0) {
+      y + x % y
+    } else {
+      x % y
+    }
+  }
+
+  def testRegular(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        answer += int(modReg(-i*123 + 0.1234f, -i + 0.2345f))
+
+        i += 1
+      }
+      l += 1
     }
 
-    def modReg(x: Float, y: Float) :Float = {
-        x - y*floor(x/y)
+    println(answer)
+  }
+
+  def testAnother(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        answer += int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
+
+        i += 1
+      }
+      l += 1
     }
 
-    def modAnother(x: Float, y: Float) :Float = {
-        if (x*y < 0) {
-            y + x % y
-        } else {
-            x % y
-        }
-    }
-
-    def testRegular(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                answer += int(modReg(-i*123 + 0.1234f, -i + 0.2345f))
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testAnother(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                answer += int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    println(answer)
+  }
 }

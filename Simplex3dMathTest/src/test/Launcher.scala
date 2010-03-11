@@ -25,11 +25,11 @@ package test
  * @author Aleksey Nikiforov (lex)
  */
 object Launcher {
-    def main(args: Array[String]) {
-        org.scalatest.tools.Runner.main(Array[String](
-            "-p",
-            "build/classes",
-            "-gNHL"
-        ))
-    }
+  def main(args: Array[String]) {
+    org.scalatest.tools.Runner.main(Array[String](
+      "-p",
+      "build/classes",
+      "-gNHL"
+    ))
+  }
 }

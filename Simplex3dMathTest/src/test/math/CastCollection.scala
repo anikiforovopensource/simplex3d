@@ -30,34 +30,34 @@ import simplex3d.math._
  */
 class CastCollection extends FunSuite {
 
-    // These tests pass if they compile.
-    test("Cast Collection") {
-        {
-            val m = Vec2b(true)
-            val c: ConstVec2b = m
+  // These tests pass if they compile.
+  test("Cast Collection") {
+    {
+      val m = Vec2b(true)
+      val c: ConstVec2b = m
 
-            val tam: AnyVec[Boolean] = m
-            val tac: AnyVec[Boolean] = c
-            val tn: Vec[Boolean] = m
-            val tc: ConstVec[Boolean] = c
-        }
-        {
-            val m = Vec3b(true)
-            val c: ConstVec3b = m
-
-            val tam: AnyVec[Boolean] = m
-            val tac: AnyVec[Boolean] = c
-            val tn: Vec[Boolean] = m
-            val tc: ConstVec[Boolean] = c
-        }
-        {
-            val m = Vec4b(true)
-            val c: ConstVec4b = m
-
-            val tam: AnyVec[Boolean] = m
-            val tac: AnyVec[Boolean] = c
-            val tn: Vec[Boolean] = m
-            val tc: ConstVec[Boolean] = c
-        }
+      val tam: AnyVec[Boolean] = m
+      val tac: AnyVec[Boolean] = c
+      val tn: Vec[Boolean] = m
+      val tc: ConstVec[Boolean] = c
     }
+    {
+      val m = Vec3b(true)
+      val c: ConstVec3b = m
+
+      val tam: AnyVec[Boolean] = m
+      val tac: AnyVec[Boolean] = c
+      val tn: Vec[Boolean] = m
+      val tc: ConstVec[Boolean] = c
+    }
+    {
+      val m = Vec4b(true)
+      val c: ConstVec4b = m
+
+      val tam: AnyVec[Boolean] = m
+      val tac: AnyVec[Boolean] = c
+      val tn: Vec[Boolean] = m
+      val tc: ConstVec[Boolean] = c
+    }
+  }
 }

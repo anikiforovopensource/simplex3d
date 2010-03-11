@@ -28,77 +28,77 @@ import simplex3d.math.floatm.renamed._
  * @author Aleksey Nikiforov (lex)
  */
 object AbstractVsFinalBench {
-    def main(args: Array[String]) {
-        new AbstractVsFinal().run()
-    }
+  def main(args: Array[String]) {
+    new AbstractVsFinal().run()
+  }
 }
 
 class AbstractVsFinal {
-    val length = 100000
-    val loops = 5000
+  val length = 100000
+  val loops = 5000
 
-    def run() {
-        var start = 0L
+  def run() {
+    var start = 0L
 
-        start = System.currentTimeMillis
-        testAbstract(length, loops)
-        val abstractTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testAbstract(length, loops)
+    val abstractTime = System.currentTimeMillis - start
 
-        start = System.currentTimeMillis
-        testFinal(length, loops)
-        val finalTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testFinal(length, loops)
+    val finalTime = System.currentTimeMillis - start
 
-        println("Abstract time: " + abstractTime + ".")
-        println("Final time: " + finalTime + ".")
+    println("Abstract time: " + abstractTime + ".")
+    println("Final time: " + finalTime + ".")
+  }
+
+  final def abstractArgs(v1: AnyVec4, v2: AnyVec4, v3: AnyVec4) = {
+    val a = (v1 + v2) * v3
+    int(a.x + a.y + a.z + a.w)
+  }
+
+  final def finalArgs(v1: Vec4, v2: Vec4, v3: Vec4) = {
+    val a = (v1 + v2) * v3
+    int(a.x + a.y + a.z + a.w)
+  }
+
+  def testAbstract(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v1 = Vec4(i, i + 1, i + 2, i + 3)
+        val v2 = Vec4(i + 4, i + 5, i + 6, i + 7)
+        val v3 = Vec4(i + 8, i + 9, i, i + 1)
+        answer += abstractArgs(v1, v2, v3)
+
+        i += 1
+      }
+      l += 1
     }
 
-    final def abstractArgs(v1: AnyVec4, v2: AnyVec4, v3: AnyVec4) = {
-        val a = (v1 + v2) * v3
-        int(a.x + a.y + a.z + a.w)
+    println(answer)
+  }
+
+  def testFinal(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v1 = Vec4(i, i + 1, i + 2, i + 3)
+        val v2 = Vec4(i + 4, i + 5, i + 6, i + 7)
+        val v3 = Vec4(i + 8, i + 9, i, i + 1)
+        answer += finalArgs(v1, v2, v3)
+
+        i += 1
+      }
+      l += 1
     }
 
-    final def finalArgs(v1: Vec4, v2: Vec4, v3: Vec4) = {
-        val a = (v1 + v2) * v3
-        int(a.x + a.y + a.z + a.w)
-    }
-
-    def testAbstract(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v1 = Vec4(i, i + 1, i + 2, i + 3)
-                val v2 = Vec4(i + 4, i + 5, i + 6, i + 7)
-                val v3 = Vec4(i + 8, i + 9, i, i + 1)
-                answer += abstractArgs(v1, v2, v3)
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testFinal(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v1 = Vec4(i, i + 1, i + 2, i + 3)
-                val v2 = Vec4(i + 4, i + 5, i + 6, i + 7)
-                val v3 = Vec4(i + 8, i + 9, i, i + 1)
-                answer += finalArgs(v1, v2, v3)
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    println(answer)
+  }
 }

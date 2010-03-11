@@ -30,33 +30,33 @@ import simplex3d.math._
  */
 class ConstansTest extends FunSuite {
 
-    test("Constants") {
-        {
-            val f = Vec2b.False
-            expect(classOf[ConstVec2b]) { f.getClass }
-            expect((false, false)) { (f.x, f.y) }
+  test("Constants") {
+    {
+      val f = Vec2b.False
+      expect(classOf[ConstVec2b]) { f.getClass }
+      expect((false, false)) { (f.x, f.y) }
 
-            val t = Vec2b.True
-            expect(classOf[ConstVec2b]) { t.getClass }
-            expect((true, true)) { (t.x, t.y) }
-        }
-        {
-            val f = Vec3b.False
-            expect(classOf[ConstVec3b]) { f.getClass }
-            expect((false, false, false)) { (f.x, f.y, f.z) }
-
-            val t = Vec3b.True
-            expect(classOf[ConstVec3b]) { t.getClass }
-            expect((true, true, true)) { (t.x, t.y, t.z) }
-        }
-        {
-            val f = Vec4b.False
-            expect(classOf[ConstVec4b]) { f.getClass }
-            expect((false, false, false, false)) { (f.x, f.y, f.z, f.w) }
-
-            val t = Vec4b.True
-            expect(classOf[ConstVec4b]) { t.getClass }
-            expect((true, true, true, true)) { (t.x, t.y, t.z, t.w) }
-        }
+      val t = Vec2b.True
+      expect(classOf[ConstVec2b]) { t.getClass }
+      expect((true, true)) { (t.x, t.y) }
     }
+    {
+      val f = Vec3b.False
+      expect(classOf[ConstVec3b]) { f.getClass }
+      expect((false, false, false)) { (f.x, f.y, f.z) }
+
+      val t = Vec3b.True
+      expect(classOf[ConstVec3b]) { t.getClass }
+      expect((true, true, true)) { (t.x, t.y, t.z) }
+    }
+    {
+      val f = Vec4b.False
+      expect(classOf[ConstVec4b]) { f.getClass }
+      expect((false, false, false, false)) { (f.x, f.y, f.z, f.w) }
+
+      val t = Vec4b.True
+      expect(classOf[ConstVec4b]) { t.getClass }
+      expect((true, true, true, true)) { (t.x, t.y, t.z, t.w) }
+    }
+  }
 }

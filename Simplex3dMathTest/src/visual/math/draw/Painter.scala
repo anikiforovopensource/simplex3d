@@ -25,5 +25,5 @@ package visual.math.draw
  * @author Aleksey Nikiforov (lex)
  */
 trait Painter {
-    def paint(width :Int, height: Int) :Array[Int]
+  def paint(width :Int, height: Int) :Array[Int]
 }

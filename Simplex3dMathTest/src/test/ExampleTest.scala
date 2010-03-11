@@ -28,18 +28,18 @@ import org.scalatest._
  */
 class ExampleTest extends FunSuite {
 
-    test ("Example") {
-        assert(true)
-        expect (1) { 3 - 2 }
+  test ("Example") {
+    assert(true)
+    expect (1) { 3 - 2 }
 
-        info("example info")
+    info("example info")
 
-        intercept[IllegalArgumentException] {
-            throw new IllegalArgumentException()
-        }
+    intercept[IllegalArgumentException] {
+      throw new IllegalArgumentException()
     }
+  }
 
-    test("Pending test example") {
-        pending
-    }
+  test("Pending test example") {
+    pending
+  }
 }

@@ -28,68 +28,68 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 object NaNBench {
-    def main(args: Array[String]) {
-        new NanFloat().run()
-    }
+  def main(args: Array[String]) {
+    new NanFloat().run()
+  }
 }
 
 class NanFloat {
-    val length = 100000
-    val loops = 40000
+  val length = 100000
+  val loops = 40000
 
-    def run() {
-        var start = 0L
+  def run() {
+    var start = 0L
 
-        start = System.currentTimeMillis
-        testComp(length, loops)
-        val compTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testComp(length, loops)
+    val compTime = System.currentTimeMillis - start
 
-        start = System.currentTimeMillis
-        testIsnan(length, loops)
-        val isnanTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testIsnan(length, loops)
+    val isnanTime = System.currentTimeMillis - start
 
-        println("Float. comp time: " + compTime +
-                ", isnan time: " + isnanTime + ".")
+    println("Float. comp time: " + compTime +
+            ", isnan time: " + isnanTime + ".")
+  }
+
+  def getNan(i: Int) :Float = {
+    if (i % 2 == 0) Float.NaN
+    else 1
+  }
+
+  def testComp(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        if (getNan(i) > 0) answer += 1
+        else answer += 3
+
+        i += 1
+      }
+      l += 1
     }
 
-    def getNan(i: Int) :Float = {
-        if (i % 2 == 0) Float.NaN
-        else 1
+    println(answer)
+  }
+
+  def testIsnan(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        if (isnan(getNan(i))) answer += 3
+        else answer += 1
+
+        i += 1
+      }
+      l += 1
     }
 
-    def testComp(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                if (getNan(i) > 0) answer += 1
-                else answer += 3
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testIsnan(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                if (isnan(getNan(i))) answer += 3
-                else answer += 1
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    println(answer)
+  }
 }

@@ -32,93 +32,93 @@ import simplex3d.math.floatm._
  */
 class Transform2dTest extends FunSuite {
 
-    def scaleMat(v: Vec2) = {
-        val m = Mat2x3(1)
-        m(0, 0) = v.x
-        m(1, 1) = v.y
-        m
+  def scaleMat(v: Vec2) = {
+    val m = Mat2x3(1)
+    m(0, 0) = v.x
+    m(1, 1) = v.y
+    m
+  }
+  def translationMat(v: Vec2) = {
+    val m = Mat2x3(1)
+    m(2) = v
+    m
+  }
+
+  test("2D Transform") {
+    val random = new java.util.Random(1)
+    def r = random.nextDouble
+
+    // test object
+    for (i <- 0 until 100) {
+      val s = r
+      assert(Mat2x3.scale(s) == Mat2x3.Identity.scale(s))
+
+      val sv = Vec2(r, r)
+      assert(Mat2x3.scale(sv) == Mat2x3.Identity.scale(sv))
+
+      val a = r
+      assert(Mat2x3.rotate(a) == Mat2x3.Identity.rotate(a))
+
+      val p = Vec2(r, r)
+      assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
     }
-    def translationMat(v: Vec2) = {
-        val m = Mat2x3(1)
-        m(2) = v
-        m
+
+    def assertTransform(a: AnyMat2x3, m: AnyMat2x3, b: AnyMat2x3) {
+      assert(a.ne(b))
+      assert(m*Mat3(a) == b)
+
+      for (i <- 0 until 100) {
+        val v = Vec2(r, r)
+
+        {
+          val t = a.transformPoint(v)
+          val u = m*Vec3(t, 1)
+          assert(approxEqual(u, b.transformPoint(v), 1e-14))
+        }
+
+        {
+          val t = a.transformVector(v)
+          val u = m*Vec3(t, 0)
+          assert(approxEqual(u, b.transformVector(v), 1e-14))
+        }
+      }
+    }
+    def test(t: AnyMat2x3) {
+      val s = r
+      assertTransform(t, Mat2x3(s), t scale(s))
+
+      val sv = Vec2(r, r)
+      assertTransform(t, scaleMat(sv), t scale(sv))
+
+      val a = r
+      assertTransform(t, Mat2x3(rotationMat(a)), t rotate(a))
+
+      val p = Vec2(r, r)
+      assertTransform(t, translationMat(p), t translate(p))
+
+      val m2 = ConstMat2(r, r, r, r)
+      assertTransform(t, Mat2x3(m2), t concatenate(m2))
+
+      val m2x3 = ConstMat2x3(r, r, r, r, r, r)
+      assertTransform(t, m2x3, t concatenate(m2x3))
+
+      if (t.invert() != inverse(t)) {
+        try {
+          throw new Exception
+        } catch {
+          case e: Exception => e.printStackTrace
+        }
+      }
+      assert(t.invert() == inverse(t))
     }
 
-    test("2D Transform") {
-        val random = new java.util.Random(1)
-        def r = random.nextDouble
-
-        // test object
-        for (i <- 0 until 100) {
-            val s = r
-            assert(Mat2x3.scale(s) == Mat2x3.Identity.scale(s))
-
-            val sv = Vec2(r, r)
-            assert(Mat2x3.scale(sv) == Mat2x3.Identity.scale(sv))
-
-            val a = r
-            assert(Mat2x3.rotate(a) == Mat2x3.Identity.rotate(a))
-
-            val p = Vec2(r, r)
-            assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
-        }
-
-        def assertTransform(a: AnyMat2x3, m: AnyMat2x3, b: AnyMat2x3) {
-            assert(a.ne(b))
-            assert(m*Mat3(a) == b)
-
-            for (i <- 0 until 100) {
-                val v = Vec2(r, r)
-
-                {
-                    val t = a.transformPoint(v)
-                    val u = m*Vec3(t, 1)
-                    assert(approxEqual(u, b.transformPoint(v), 1e-14))
-                }
-
-                {
-                    val t = a.transformVector(v)
-                    val u = m*Vec3(t, 0)
-                    assert(approxEqual(u, b.transformVector(v), 1e-14))
-                }
-            }
-        }
-        def test(t: AnyMat2x3) {
-            val s = r
-            assertTransform(t, Mat2x3(s), t scale(s))
-
-            val sv = Vec2(r, r)
-            assertTransform(t, scaleMat(sv), t scale(sv))
-
-            val a = r
-            assertTransform(t, Mat2x3(rotationMat(a)), t rotate(a))
-
-            val p = Vec2(r, r)
-            assertTransform(t, translationMat(p), t translate(p))
-
-            val m2 = ConstMat2(r, r, r, r)
-            assertTransform(t, Mat2x3(m2), t concatenate(m2))
-
-            val m2x3 = ConstMat2x3(r, r, r, r, r, r)
-            assertTransform(t, m2x3, t concatenate(m2x3))
-
-            if (t.invert() != inverse(t)) {
-                try {
-                    throw new Exception
-                } catch {
-                    case e: Exception => e.printStackTrace
-                }
-            }
-            assert(t.invert() == inverse(t))
-        }
-
-        // test transform classes
-        for (i <- 0 until 100) {
-            test(Mat2x3(r, r, r, r, r, r))
-            test(Mat2x3(Mat2x2(r, r, r, r)))
-            test(Mat2x3 scale(Vec2(r, r)))
-            test(Mat2x3 translate(Vec2(r, r)))
-            test(Mat2x3.Identity)
-        }
+    // test transform classes
+    for (i <- 0 until 100) {
+      test(Mat2x3(r, r, r, r, r, r))
+      test(Mat2x3(Mat2x2(r, r, r, r)))
+      test(Mat2x3 scale(Vec2(r, r)))
+      test(Mat2x3 translate(Vec2(r, r)))
+      test(Mat2x3.Identity)
     }
+  }
 }

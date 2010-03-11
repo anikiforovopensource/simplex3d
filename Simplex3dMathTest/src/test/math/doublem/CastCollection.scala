@@ -31,128 +31,128 @@ import simplex3d.math.doublem.renamed._
  */
 class CastCollection extends FunSuite {
 
-    // These tests pass if they compile.
-    test("Cast Collection") {
-        {
-            val m = Vec2(1)
-            val c: ConstVec2 = m
+  // These tests pass if they compile.
+  test("Cast Collection") {
+    {
+      val m = Vec2(1)
+      val c: ConstVec2 = m
 
-            val tam: AnyVec[Double] = m
-            val tac: AnyVec[Double] = c
-            val tn: Vec[Double] = m
-            val tc: ConstVec[Double] = c
-        }
-        {
-            val m = Vec3(1)
-            val c: ConstVec3 = m
-
-            val tam: AnyVec[Double] = m
-            val tac: AnyVec[Double] = c
-            val tn: Vec[Double] = m
-            val tc: ConstVec[Double] = c
-        }
-        {
-            val m = Vec4(1)
-            val c: ConstVec4 = m
-
-            val tam: AnyVec[Double] = m
-            val tac: AnyVec[Double] = c
-            val tn: Vec[Double] = m
-            val tc: ConstVec[Double] = c
-        }
-
-        {
-            val m = Quat4(1, 0, 0, 0)
-            val c: ConstQuat4 = m
-
-            val tam: AnyQuat[Double] = m
-            val tac: AnyQuat[Double] = c
-            val tn: Quat[Double] = m
-            val tc: ConstQuat[Double] = c
-        }
-
-        {
-            val m = Mat2x2(1)
-            val c: ConstMat2x2 = m
-
-            val tam: AnyMat[ConstVec2] = m
-            val tac: AnyMat[ConstVec2] = c
-            val tn: Mat[ConstVec2] = m
-            val tc: ConstMat[ConstVec2] = c
-        }
-        {
-            val m = Mat2x3(1)
-            val c: ConstMat2x3 = m
-
-            val tam: AnyMat[ConstVec2] = m
-            val tac: AnyMat[ConstVec2] = c
-            val tn: Mat[ConstVec2] = m
-            val tc: ConstMat[ConstVec2] = c
-        }
-        {
-            val m = Mat2x4(1)
-            val c: ConstMat2x4 = m
-
-            val tam: AnyMat[ConstVec2] = m
-            val tac: AnyMat[ConstVec2] = c
-            val tn: Mat[ConstVec2] = m
-            val tc: ConstMat[ConstVec2] = c
-        }
-
-        {
-            val m = Mat3x2(1)
-            val c: ConstMat3x2 = m
-
-            val tam: AnyMat[ConstVec3] = m
-            val tac: AnyMat[ConstVec3] = c
-            val tn: Mat[ConstVec3] = m
-            val tc: ConstMat[ConstVec3] = c
-        }
-        {
-            val m = Mat3x3(1)
-            val c: ConstMat3x3 = m
-
-            val tam: AnyMat[ConstVec3] = m
-            val tac: AnyMat[ConstVec3] = c
-            val tn: Mat[ConstVec3] = m
-            val tc: ConstMat[ConstVec3] = c
-        }
-        {
-            val m = Mat3x4(1)
-            val c: ConstMat3x4 = m
-
-            val tam: AnyMat[ConstVec3] = m
-            val tac: AnyMat[ConstVec3] = c
-            val tn: Mat[ConstVec3] = m
-            val tc: ConstMat[ConstVec3] = c
-        }
-
-        {
-            val m = Mat4x2(1)
-            val c: ConstMat4x2 = m
-
-            val tam: AnyMat[ConstVec4] = m
-            val tac: AnyMat[ConstVec4] = c
-            val tn: Mat[ConstVec4] = m
-            val tc: ConstMat[ConstVec4] = c
-        }
-        {
-            val m = Mat4x3(1)
-            val c: ConstMat4x3 = m
-
-            val tam: AnyMat[ConstVec4] = m
-            val tac: AnyMat[ConstVec4] = c
-            val tn: Mat[ConstVec4] = m
-            val tc: ConstMat[ConstVec4] = c
-        }
-        {
-            val m = Mat4x4(1)
-            val c: ConstMat4x4 = m
-
-            val tam: AnyMat[ConstVec4] = m
-            val tac: AnyMat[ConstVec4] = c
-            val tn: Mat[ConstVec4] = m
-            val tc: ConstMat[ConstVec4] = c
-        }
+      val tam: AnyVec[Double] = m
+      val tac: AnyVec[Double] = c
+      val tn: Vec[Double] = m
+      val tc: ConstVec[Double] = c
     }
+    {
+      val m = Vec3(1)
+      val c: ConstVec3 = m
+
+      val tam: AnyVec[Double] = m
+      val tac: AnyVec[Double] = c
+      val tn: Vec[Double] = m
+      val tc: ConstVec[Double] = c
+    }
+    {
+      val m = Vec4(1)
+      val c: ConstVec4 = m
+
+      val tam: AnyVec[Double] = m
+      val tac: AnyVec[Double] = c
+      val tn: Vec[Double] = m
+      val tc: ConstVec[Double] = c
+    }
+
+    {
+      val m = Quat4(1, 0, 0, 0)
+      val c: ConstQuat4 = m
+
+      val tam: AnyQuat[Double] = m
+      val tac: AnyQuat[Double] = c
+      val tn: Quat[Double] = m
+      val tc: ConstQuat[Double] = c
+    }
+
+    {
+      val m = Mat2x2(1)
+      val c: ConstMat2x2 = m
+
+      val tam: AnyMat[ConstVec2] = m
+      val tac: AnyMat[ConstVec2] = c
+      val tn: Mat[ConstVec2] = m
+      val tc: ConstMat[ConstVec2] = c
+    }
+    {
+      val m = Mat2x3(1)
+      val c: ConstMat2x3 = m
+
+      val tam: AnyMat[ConstVec2] = m
+      val tac: AnyMat[ConstVec2] = c
+      val tn: Mat[ConstVec2] = m
+      val tc: ConstMat[ConstVec2] = c
+    }
+    {
+      val m = Mat2x4(1)
+      val c: ConstMat2x4 = m
+
+      val tam: AnyMat[ConstVec2] = m
+      val tac: AnyMat[ConstVec2] = c
+      val tn: Mat[ConstVec2] = m
+      val tc: ConstMat[ConstVec2] = c
+    }
+
+    {
+      val m = Mat3x2(1)
+      val c: ConstMat3x2 = m
+
+      val tam: AnyMat[ConstVec3] = m
+      val tac: AnyMat[ConstVec3] = c
+      val tn: Mat[ConstVec3] = m
+      val tc: ConstMat[ConstVec3] = c
+    }
+    {
+      val m = Mat3x3(1)
+      val c: ConstMat3x3 = m
+
+      val tam: AnyMat[ConstVec3] = m
+      val tac: AnyMat[ConstVec3] = c
+      val tn: Mat[ConstVec3] = m
+      val tc: ConstMat[ConstVec3] = c
+    }
+    {
+      val m = Mat3x4(1)
+      val c: ConstMat3x4 = m
+
+      val tam: AnyMat[ConstVec3] = m
+      val tac: AnyMat[ConstVec3] = c
+      val tn: Mat[ConstVec3] = m
+      val tc: ConstMat[ConstVec3] = c
+    }
+
+    {
+      val m = Mat4x2(1)
+      val c: ConstMat4x2 = m
+
+      val tam: AnyMat[ConstVec4] = m
+      val tac: AnyMat[ConstVec4] = c
+      val tn: Mat[ConstVec4] = m
+      val tc: ConstMat[ConstVec4] = c
+    }
+    {
+      val m = Mat4x3(1)
+      val c: ConstMat4x3 = m
+
+      val tam: AnyMat[ConstVec4] = m
+      val tac: AnyMat[ConstVec4] = c
+      val tn: Mat[ConstVec4] = m
+      val tc: ConstMat[ConstVec4] = c
+    }
+    {
+      val m = Mat4x4(1)
+      val c: ConstMat4x4 = m
+
+      val tam: AnyMat[ConstVec4] = m
+      val tac: AnyMat[ConstVec4] = c
+      val tn: Mat[ConstVec4] = m
+      val tc: ConstMat[ConstVec4] = c
+    }
+  }
 }

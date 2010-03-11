@@ -25,7 +25,7 @@ package visual.math.draw
  * @author Aleksey Nikiforov (lex)
  */
 class FunPanel extends DrawPanel {
-    def setFunction(fun: Fun) {
-        setPainter(FunPainter(fun))
-    }
+  def setFunction(fun: Fun) {
+    setPainter(FunPainter(fun))
+  }
 }

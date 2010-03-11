@@ -27,227 +27,227 @@ import simplex3d.math.doublem.renamed._
  * @author Aleksey Nikiforov (lex)
  */
 object SwizzleBench {
-    def main(args: Array[String]) {
-        new SwizzleBenchCase().run()
-    }
+  def main(args: Array[String]) {
+    new SwizzleBenchCase().run()
+  }
 }
 
 class SwizzleBenchCase {
-    def run() {
-        val length = 10000
-        val loops = 100000
+  def run() {
+    val length = 10000
+    val loops = 10000
 
-        var start = 0L
-        
-        start = System.currentTimeMillis
-        testTrait(length, loops)
-        val traitTime = System.currentTimeMillis - start
-
-        start = System.currentTimeMillis
-        testAbstract(length, loops)
-        val abstractTime = System.currentTimeMillis - start
-
-        start = System.currentTimeMillis
-        testInlined(length, loops)
-        val inlinedTime = System.currentTimeMillis - start
-
-        start = System.currentTimeMillis
-        testImplemented(length, loops)
-        val implementedTime = System.currentTimeMillis - start
-
-        start = System.currentTimeMillis
-        testNoSwizzle(length, loops)
-        val noSwizzleTime = System.currentTimeMillis - start
-
-        println("Trait time: " + traitTime +
-                ", abstract time: " + abstractTime +
-                ", inlined time: " + inlinedTime +
-                ", no swizzle time: " + noSwizzleTime +
-                ", implemented time: " + implementedTime + ".")
-    }
-
-    def testTrait(length: Int, loops: Int) {
-        implicit def vecToSwizzled(u: Vec4m) = new Vec4Swizzled(u)
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = v.yzwx
-                val r = v + u
-                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-                answer += l2.asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testAbstract(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = v.xyzw
-                val r = v + u
-                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-                answer += l2.asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testInlined(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = v.zwxy
-                val r = v + u
-                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-                answer += l2.asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testImplemented(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
-
-                // Bench code
-                val v = ConstVec4(i, i + 1, i + 2, i + 3)
-                val u = v.yzwx
-                val r = v + u
-                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-                answer += l2.asInstanceOf[Int]
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    var start = 0L
     
-    def testNoSwizzle(length: Int, loops: Int) {
-        var answer = 0
+    start = System.currentTimeMillis
+    //testTrait(length, loops)
+    val traitTime = System.currentTimeMillis - start
 
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length) {
+    start = System.currentTimeMillis
+    //testAbstract(length, loops)
+    val abstractTime = System.currentTimeMillis - start
 
-                // Bench code
-                val v = Vec4m(i, i + 1, i + 2, i + 3)
-                val u = Vec4m(v.x, v.y, v.z, v.w)
-                val r = v + u
-                val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-                answer += l2.asInstanceOf[Int]
+    start = System.currentTimeMillis
+    testImplemented(length, loops)
+    val implementedTime = System.currentTimeMillis - start
 
-                i += 1
-            }
-            l += 1
-        }
+    start = System.currentTimeMillis
+    //testInlined(length, loops)
+    val inlinedTime = System.currentTimeMillis - start
 
-        println(answer)
+    start = System.currentTimeMillis
+    //testNoSwizzle(length, loops)
+    val noSwizzleTime = System.currentTimeMillis - start
+
+    println("Trait time: " + traitTime +
+            ", abstract time: " + abstractTime +
+            ", inlined time: " + inlinedTime +
+            ", no swizzle time: " + noSwizzleTime +
+            ", implemented time: " + implementedTime + ".")
+  }
+
+  def testTrait(length: Int, loops: Int) {
+    implicit def vecToSwizzled(u: Vec4m) = new Vec4Swizzled(u)
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = Vec4m(i, i + 1, i + 2, i + 3)
+        val u = v.yzwx
+        val r = v + u
+        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+        answer += l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
     }
+
+    println(answer)
+  }
+
+  def testAbstract(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = Vec4m(i, i + 1, i + 2, i + 3)
+        val u = v.xyzw
+        val r = v + u
+        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+        answer += l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testInlined(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = Vec4m(i, i + 1, i + 2, i + 3)
+        val u = v.zwxy
+        val r = v + u
+        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+        answer += l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplemented(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4(i, i + 1, i + 2, i + 3)
+        val u = v.yzwx
+        val r = v + u
+        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+        answer += l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+  
+  def testNoSwizzle(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4(i, i + 1, i + 2, i + 3)
+        val u = ConstVec4(v.x, v.y, v.z, v.w)
+        val r = v + u
+        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
+        answer += l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
 }
 
 abstract class AbsSwizzle[P, R] {
-    def x: P
-    def y: P
-    def z: P
-    def w: P
-    def absMake(x: P, y: P, z: P, w: P) :R
+  def x: P
+  def y: P
+  def z: P
+  def w: P
+  def absMake(x: P, y: P, z: P, w: P) :R
 
-    def xyzw = absMake(x, y, z, w)
+  def xyzw = absMake(x, y, z, w)
 }
 
 // Modified Vec4
 final class Vec4m(var x: Double, var y: Double, var z: Double, var w: Double)
 extends AbsSwizzle[Double, Vec4m] with ReadDouble
 {
-    def +(u: Vec4m) = new Vec4m(x + u.x, y + u.y, z + u.z, w + u.w)
-    def add(u: Vec4m, r: Vec4m) = {
-        r.x = x + u.x
-        r.y = y + u.y
-        r.z = z + u.z
-        r.w = w + u.w
-        r
-    }
+  def +(u: Vec4m) = new Vec4m(x + u.x, y + u.y, z + u.z, w + u.w)
+  def add(u: Vec4m, r: Vec4m) = {
+    r.x = x + u.x
+    r.y = y + u.y
+    r.z = z + u.z
+    r.w = w + u.w
+    r
+  }
 
-    def zwxy = new Vec4m(z, w, x, y)
+  def zwxy = new Vec4m(z, w, x, y)
 
-    def absMake(x: Double, y: Double, z: Double, w: Double) :Vec4m =
-        new Vec4m(x, y, z, w)
+  def absMake(x: Double, y: Double, z: Double, w: Double) :Vec4m =
+    new Vec4m(x, y, z, w)
 }
 
 object Vec4m {
-    def apply(x: Double, y: Double, z: Double, w: Double) =
-        new Vec4m(x, y, z, w)
+  def apply(x: Double, y: Double, z: Double, w: Double) =
+    new Vec4m(x, y, z, w)
 
-    def apply(u: Vec4m) =
-        new Vec4m(u.x, u.y, u.z, u.w)
+  def apply(u: Vec4m) =
+    new Vec4m(u.x, u.y, u.z, u.w)
 }
 
 trait Read[P] {
-    def x: P
-    def y: P
-    def z: P
-    def w: P
+  def x: P
+  def y: P
+  def z: P
+  def w: P
 }
 
 trait ReadDouble extends Read[Double] {
-    def x: Double
-    def y: Double
-    def z: Double
-    def w: Double
+  def x: Double
+  def y: Double
+  def z: Double
+  def w: Double
 }
 
 trait Swizzle4[P, R] extends VecFactory[P, R] {
-    def x: P
-    def y: P
-    def z: P
-    def w: P
+  def x: P
+  def y: P
+  def z: P
+  def w: P
 
-    def yzwx: R = make(y, z, w, x)
+  def yzwx: R = make(y, z, w, x)
 }
 
 trait VecFactory[P, R] {
-    protected def make(x: P, y: P, z: P, w: P) :R
+  protected def make(x: P, y: P, z: P, w: P) :R
 }
 
 class Vec4mFactory extends VecFactory[Double, Vec4m] {
-    protected def make(x: Double, y: Double, z: Double, w: Double) :Vec4m = {
-        new Vec4m(x, y, z, w)
-    }
+  protected def make(x: Double, y: Double, z: Double, w: Double) :Vec4m = {
+    new Vec4m(x, y, z, w)
+  }
 }
 
 class Vec4Swizzled(u: Vec4m) extends Vec4mFactory
 with Swizzle4[Double, Vec4m]
 {
-    def x = u.x
-    def y = u.y
-    def z = u.z
-    def w = u.w
+  def x = u.x
+  def y = u.y
+  def z = u.z
+  def w = u.w
 }

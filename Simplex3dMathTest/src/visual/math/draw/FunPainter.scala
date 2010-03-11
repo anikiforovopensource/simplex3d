@@ -34,134 +34,143 @@ import simplex3d.math.doublem.DoubleMath._
  */
 object FunPainter {
 
-    private final def rgb(c: AnyVec3) :Int = {
-        (IntMath.clamp(int(c.r*255), 0, 255) << 16) |
-        (IntMath.clamp(int(c.g*255), 0, 255) << 8) |
-        IntMath.clamp(int(c.b*255), 0, 255) |
-        0xFF000000
+  private final def rgb(c: AnyVec3) :Int = {
+    (IntMath.clamp(int(c.r*255), 0, 255) << 16) |
+    (IntMath.clamp(int(c.g*255), 0, 255) << 8) |
+    IntMath.clamp(int(c.b*255), 0, 255) |
+    0xFF000000
+  }
+
+  private class FunJob(fun: Fun, es: ExecutorService) extends Job(es) {
+    var buffer: Array[Int] = null
+    var width = 0
+    var height = 0
+    var time: Double = 0
+
+    private var yoffset = 0
+
+    def setData(buffer: Array[Int],
+                width: Int, height: Int,
+                time: Double)
+    {
+      if (isExecuting) throw new IllegalStateException(
+        "Cannot change while executing.")
+
+      this.buffer = buffer
+      this.width = width
+      this.height = height
+      yoffset = 0
+      this.time = time
+
+      fun.dimensions.asInstanceOf[Vec2].set(width, height)
     }
 
-    private class FunJob(fun: Fun, es: ExecutorService) extends Job(es) {
-        var buffer: Array[Int] = null
-        var width = 0
-        var height = 0
-        var time: Double = 0
+    def runSingleThreaded() {
+      val h1 = height - 1
 
-        private var yoffset = 0
+      var y = 0; while(y < height) {
+        val h = h1 - y
 
-        def setData(buffer: Array[Int],
-                    width: Int, height: Int,
-                    time: Double)
-        {
-            if (isExecuting) throw new IllegalStateException(
-                "Cannot change while executing.")
+        var x = 0; while(x < width) {
 
-            this.buffer = buffer
-            this.width = width
-            this.height = height
-            yoffset = 0
-            this.time = time
+          buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
 
-            fun.dimensions.asInstanceOf[Vec2].set(width, height)
+          x += 1
         }
-        def runSingleThreaded() {
-            val h1 = height - 1
-            var y = 0; while(y < height) {
-                val h = h1 - y
-                var x = 0; while(x < width) {
 
-                    buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
-
-                    x += 1
-                }
-                y += 1
-            }
-        }
-        final def hasMoreChunks() = yoffset < height
-        final def nextChunk() = {
-            val ystart = yoffset
-            yoffset += 5
-            if (yoffset > height) yoffset = height
-            val yend = yoffset
-            new Chunk() {
-                final def run() {
-                    val h1 = height - 1
-                    var y = ystart; while (y < yend) {
-                        loop(y, h1 - y)
-                        y += 1
-                    }
-                }
-                final def loop(y :Int, h: Int) {
-                    var x = 0; while(x < width) {
-                      buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
-
-                      x += 1
-                    }
-                }
-            }
-        }
+        y += 1
+      }
     }
 
-    def apply(fun: Fun) :Painter = new Painter() {
-        private val start = System.currentTimeMillis
-        private val job = new FunJob(fun, newCachedThreadPool())
+    final def hasMoreChunks() = yoffset < height
 
-        private var curFrame = 0
-        // the rendering algorithm only uses 2 frames
-        private val frames = new Array[(Array[Int], Int, Int)](2)
-        frames(0) = (new Array[Int](0), 0, 0)
-        frames(1) = (new Array[Int](0), 0, 0)
+    final def nextChunk() = {
+      val ystart = yoffset
+      yoffset += 5
+      if (yoffset > height) yoffset = height
+      val yend = yoffset
 
-        def paint(width: Int, height: Int) :Array[Int] = {
-            def time = (System.currentTimeMillis - start)/1000.0
-
-            val retBuffer: Array[Int] =
-                if (job.width != width || job.height != height) {
-                    job.cancelAndWait()
-                    val buffer = new Array[Int](width*height)
-                    frames(curFrame) = (buffer, width, height)
-                    job.setData(buffer, width, height, time)
-                    job.execAndWait()
-                    job.buffer
-                }
-                else {
-                    job.waitForCompletion()
-                    job.buffer
-                }
-
-            curFrame += 1
-            if (curFrame >= frames.length) curFrame = 0
-            var (buffer, w, h) = frames(curFrame)
-
-            if (w != width || h != height) {
-                buffer = new Array[Int](width*height)
-                frames(curFrame) = (buffer, width, height)
-            }
-
-            job.setData(buffer, width, height, time)
-            job.exec
-            retBuffer
+      new Chunk() {
+        final def run() {
+          val h1 = height - 1
+          var y = ystart; while (y < yend) {
+            loop(y, h1 - y)
+            y += 1
+          }
         }
-    }
 
-    def testLoad(fun: Fun, iterations: Int) {
-        val timer = new FpsTimer()
+        final def loop(y :Int, h: Int) {
+          var x = 0; while(x < width) {
+            buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
 
-        def time = (System.currentTimeMillis % 100000000)/1000.0
-        val width = 640
-        val height = 480
-        val buffer = new Array[Int](width*height)
-
-        val job = new FunJob(fun, newCachedThreadPool())
-
-        var i = 0; while (i < iterations) {
-            timer.update()
-
-            job.setData(buffer, width, height, time)
-            job.execAndWait()
-
-            if (i % 10 == 0) println("fps: " + timer.fps)
-            i += 1
+            x += 1
+          }
         }
+      }
+
     }
+  }
+
+  def apply(fun: Fun) :Painter = new Painter() {
+    private val start = System.currentTimeMillis
+    private val job = new FunJob(fun, newCachedThreadPool())
+
+    private var curFrame = 0
+    // the rendering algorithm only uses 2 frames
+    private val frames = new Array[(Array[Int], Int, Int)](2)
+    frames(0) = (new Array[Int](0), 0, 0)
+    frames(1) = (new Array[Int](0), 0, 0)
+
+    def paint(width: Int, height: Int) :Array[Int] = {
+      def time = (System.currentTimeMillis - start)/1000.0
+
+      val retBuffer: Array[Int] =
+        if (job.width != width || job.height != height) {
+          job.cancelAndWait()
+          val buffer = new Array[Int](width*height)
+          frames(curFrame) = (buffer, width, height)
+          job.setData(buffer, width, height, time)
+          job.execAndWait()
+          job.buffer
+        }
+        else {
+          job.waitForCompletion()
+          job.buffer
+        }
+
+      curFrame += 1
+      if (curFrame >= frames.length) curFrame = 0
+      var (buffer, w, h) = frames(curFrame)
+
+      if (w != width || h != height) {
+        buffer = new Array[Int](width*height)
+        frames(curFrame) = (buffer, width, height)
+      }
+
+      job.setData(buffer, width, height, time)
+      job.exec
+      retBuffer
+    }
+  }
+
+  def testLoad(fun: Fun, iterations: Int) {
+    val timer = new FpsTimer()
+
+    def time = (System.currentTimeMillis % 100000000)/1000.0
+    val width = 640
+    val height = 480
+    val buffer = new Array[Int](width*height)
+
+    val job = new FunJob(fun, newCachedThreadPool())
+
+    var i = 0; while (i < iterations) {
+      timer.update()
+
+      job.setData(buffer, width, height, time)
+      job.execAndWait()
+
+      if (i % 10 == 0) println("fps: " + timer.fps)
+      i += 1
+    }
+  }
 }

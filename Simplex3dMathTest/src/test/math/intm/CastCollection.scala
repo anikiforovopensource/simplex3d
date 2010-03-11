@@ -31,34 +31,34 @@ import simplex3d.math.intm._
  */
 class CastCollection extends FunSuite {
 
-    // These tests pass if they compile.
-    test("Cast Collection") {
-        {
-            val m = Vec2i(1)
-            val c: ConstVec2i = m
+  // These tests pass if they compile.
+  test("Cast Collection") {
+    {
+      val m = Vec2i(1)
+      val c: ConstVec2i = m
 
-            val tam: AnyVec[Int] = m
-            val tac: AnyVec[Int] = c
-            val tn: Vec[Int] = m
-            val tc: ConstVec[Int] = c
-        }
-        {
-            val m = Vec3i(1)
-            val c: ConstVec3i = m
-
-            val tam: AnyVec[Int] = m
-            val tac: AnyVec[Int] = c
-            val tn: Vec[Int] = m
-            val tc: ConstVec[Int] = c
-        }
-        {
-            val m = Vec4i(1)
-            val c: ConstVec4i = m
-
-            val tam: AnyVec[Int] = m
-            val tac: AnyVec[Int] = c
-            val tn: Vec[Int] = m
-            val tc: ConstVec[Int] = c
-        }
+      val tam: AnyVec[Int] = m
+      val tac: AnyVec[Int] = c
+      val tn: Vec[Int] = m
+      val tc: ConstVec[Int] = c
     }
+    {
+      val m = Vec3i(1)
+      val c: ConstVec3i = m
+
+      val tam: AnyVec[Int] = m
+      val tac: AnyVec[Int] = c
+      val tn: Vec[Int] = m
+      val tc: ConstVec[Int] = c
+    }
+    {
+      val m = Vec4i(1)
+      val c: ConstVec4i = m
+
+      val tam: AnyVec[Int] = m
+      val tac: AnyVec[Int] = c
+      val tn: Vec[Int] = m
+      val tc: ConstVec[Int] = c
+    }
+  }
 }

@@ -31,43 +31,43 @@ import simplex3d.math.doublem.DoubleMath._
  */
 object SmoothStepTest {
 
-    def main(args: Array[String]) {
-      FunFrame.launch(new Fun {
-        final def apply(pixel: AnyVec2, time: Double)
-        :AnyVec3 =
-        {
-            val lineWidth = 2.5
-            val axisWidth = 1.5
-            val white = Vec3(1)
-            val background = Vec3(1)
-            val axisColor = Vec3(0)
+  def main(args: Array[String]) {
+    FunFrame.launch(new Fun {
+    final def apply(pixel: AnyVec2, time: Double)
+    :AnyVec3 =
+    {
+      val lineWidth = 2.5
+      val axisWidth = 1.5
+      val white = Vec3(1)
+      val background = Vec3(1)
+      val axisColor = Vec3(0)
 
-            val mid = dimensions/2
-            val u = pixel - mid
+      val mid = dimensions/2
+      val u = pixel - mid
 
-            val color = background
+      val color = background
 
-            color *= {
-                val shade = clamp(abs(u.x)/axisWidth, 0, 1)
-                mix(axisColor, white, shade)
-            }
-            color *= {
-                val shade = clamp(abs(u.y)/axisWidth, 0, 1)
-                mix(axisColor, white, shade)
-            }
+      color *= {
+        val shade = clamp(abs(u.x)/axisWidth, 0, 1)
+        mix(axisColor, white, shade)
+      }
+      color *= {
+        val shade = clamp(abs(u.y)/axisWidth, 0, 1)
+        mix(axisColor, white, shade)
+      }
 
-            color *= {
-                val scale = 2/mid.x
+      color *= {
+        val scale = 2/mid.x
 
-                val x = u.x*scale
-                val y = u.y*scale
+        val x = u.x*scale
+        val y = u.y*scale
 
-                val f = smoothstep(-1, 1, x)
-                val shade = clamp(abs(f - y)/(scale*lineWidth), 0, 1)
-                mix(Vec3(1, 0, 0), Vec3(1), shade)
-            }
-            
-            color
-        }})
-    }
+        val f = smoothstep(-1, 1, x)
+        val shade = clamp(abs(f - y)/(scale*lineWidth), 0, 1)
+        mix(Vec3(1, 0, 0), Vec3(1), shade)
+      }
+      
+      color
+    }})
+  }
 }

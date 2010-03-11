@@ -25,73 +25,73 @@ package bench.scala
  * @author Aleksey Nikiforov (lex)
  */
 object FunBench {
-    def main(args: Array[String]) {
-        new FunCase().run()
-    }
+  def main(args: Array[String]) {
+    new FunCase().run()
+  }
 }
 
 class FunCase {
-    val length = 10000
-    val loops = 100000
-    
-    def run() {
-        var start = 0L
+  val length = 10000
+  val loops = 100000
+  
+  def run() {
+    var start = 0L
 
-        start = System.currentTimeMillis
-        testAbstract(length, loops)
-        val abstractTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testAbstract(length, loops)
+    val abstractTime = System.currentTimeMillis - start
 
-        start = System.currentTimeMillis
-        testGeneric(length, loops)
-        val genericTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testGeneric(length, loops)
+    val genericTime = System.currentTimeMillis - start
 
-        println("Generic time: " + genericTime +
-                ", abstract time: " + abstractTime + ".")
+    println("Generic time: " + genericTime +
+            ", abstract time: " + abstractTime + ".")
+  }
+
+  val genericFun = (a: Int, b: Int, c: Int) => {
+    (a + b)*c
+  }
+
+  private abstract class Fun {
+    def apply(a: Int, b: Int, c: Int) :Int
+  }
+  private val abstractFun = new Fun { def apply(a: Int, b: Int, c: Int) = {
+      (a + b)*c
+  }}
+
+  def testGeneric(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        answer += genericFun(i, i + 1, i + 2)
+
+        i += 1
+      }
+      l += 1
     }
 
-    val genericFun = (a: Int, b: Int, c: Int) => {
-        (a + b)*c
+    println(answer)
+  }
+
+  def testAbstract(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        answer += abstractFun(i, i + 1, i + 2)
+
+        i += 1
+      }
+      l += 1
     }
 
-    private abstract class Fun {
-        def apply(a: Int, b: Int, c: Int) :Int
-    }
-    private val abstractFun = new Fun { def apply(a: Int, b: Int, c: Int) = {
-            (a + b)*c
-    }}
-
-    def testGeneric(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                answer += genericFun(i, i + 1, i + 2)
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
-
-    def testAbstract(length: Int, loops: Int) {
-        var answer = 0
-
-        var l = 0; while (l < loops) {
-            var i = 0; while (i < length - 1) {
-
-                // Bench code
-                answer += abstractFun(i, i + 1, i + 2)
-
-                i += 1
-            }
-            l += 1
-        }
-
-        println(answer)
-    }
+    println(answer)
+  }
 
 }

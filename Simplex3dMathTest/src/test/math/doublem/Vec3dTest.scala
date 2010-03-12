@@ -359,36 +359,4 @@ class Vec3dTest extends FunSuite {
     assert(Vec3(35, 50, 34) == u)
   }
 
-  test("Collection") {
-    def test(u: AnyVec3) = {
-      assert(u.head == u.x)
-      assert(u.last == u.z)
-      assert(u.size == 3)
-
-      val iterator = u.iterator
-      assert(iterator.hasNext)
-      assert(iterator.next == u.x)
-      assert(iterator.hasNext)
-      assert(iterator.next == u.y)
-      assert(iterator.hasNext)
-      assert(iterator.next == u.z)
-      assert(!iterator.hasNext)
-      intercept[NoSuchElementException] {
-        iterator.next
-      }
-
-      var i = 0
-      u.foreach { element =>
-        assert(element == u(i))
-        i += 1
-      }
-    }
-
-    val x = 1 + 1e-15
-    val y = 2 + 1e-15
-    val z = 3 + 1e-15
-
-    test(Vec3(x, y, z))
-    test(ConstVec3(x, y, z))
-  }
 }

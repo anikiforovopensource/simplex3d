@@ -679,40 +679,4 @@ class Mat2x3fTest extends FunSuite {
     m := i; m/= m; assert(m == t)
   }
 
-  test("Collection") {
-    def test(u: AnyMat2x3) = {
-      assert(u.head == u(0))
-      assert(u.last == u(2))
-      assert(u.size == 3)
-
-      val iterator = u.iterator
-      assert(iterator.hasNext)
-      assert(iterator.next == u(0))
-      assert(iterator.hasNext)
-      assert(iterator.next == u(1))
-      assert(iterator.hasNext)
-      assert(iterator.next == u(2))
-      assert(!iterator.hasNext)
-      intercept[NoSuchElementException] {
-        iterator.next
-      }
-
-      var i = 0
-      u.foreach { element =>
-        assert(element == u(i))
-        i += 1
-      }
-    }
-
-    test(Mat2x3(
-      f00, f10,
-      f01, f11,
-      f02, f12
-    ))
-    test(ConstMat2x3(
-      f00, f10,
-      f01, f11,
-      f02, f12
-    ))
-  }
 }

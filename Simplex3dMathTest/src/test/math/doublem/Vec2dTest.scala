@@ -289,33 +289,4 @@ class Vec2dTest extends FunSuite {
     assert(Vec2(46, 61) == u)
   }
 
-  test("Collection") {
-    def test(u: AnyVec2) = {
-      assert(u.head == u.x)
-      assert(u.last == u.y)
-      assert(u.size == 2)
-
-      val iterator = u.iterator
-      assert(iterator.hasNext)
-      assert(iterator.next == u.x)
-      assert(iterator.hasNext)
-      assert(iterator.next == u.y)
-      assert(!iterator.hasNext)
-      intercept[NoSuchElementException] {
-        iterator.next
-      }
-
-      var i = 0
-      u.foreach { element =>
-        assert(element == u(i))
-        i += 1
-      }
-    }
-
-    val x = 1 + 1e-15
-    val y = 2 + 1e-15
-
-    test(Vec2(x, y))
-    test(ConstVec2(x, y))
-  }
 }

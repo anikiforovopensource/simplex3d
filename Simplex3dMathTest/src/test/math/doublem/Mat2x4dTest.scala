@@ -750,44 +750,4 @@ class Mat2x4dTest extends FunSuite {
     m := i; m/= m; assert(m == t)
   }
 
-  test("Collection") {
-    def test(u: AnyMat2x4) = {
-      assert(u.head == u(0))
-      assert(u.last == u(3))
-      assert(u.size == 4)
-
-      val iterator = u.iterator
-      assert(iterator.hasNext)
-      assert(iterator.next == u(0))
-      assert(iterator.hasNext)
-      assert(iterator.next == u(1))
-      assert(iterator.hasNext)
-      assert(iterator.next == u(2))
-      assert(iterator.hasNext)
-      assert(iterator.next == u(3))
-      assert(!iterator.hasNext)
-      intercept[NoSuchElementException] {
-        iterator.next
-      }
-
-      var i = 0
-      u.foreach { element =>
-        assert(element == u(i))
-        i += 1
-      }
-    }
-
-    test(Mat2x4(
-      d00, d10,
-      d01, d11,
-      d02, d12,
-      d03, d13
-    ))
-    test(ConstMat2x4(
-      d00, d10,
-      d01, d11,
-      d02, d12,
-      d03, d13
-    ))
-  }
 }

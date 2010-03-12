@@ -34,17 +34,17 @@ object SwizzleBench {
 
 class SwizzleBenchCase {
   def run() {
-    val length = 10000
-    val loops = 10000
+    val length = 100000
+    val loops = 1000
 
     var start = 0L
     
     start = System.currentTimeMillis
-    //testTrait(length, loops)
+    testTrait(length, loops)
     val traitTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    //testAbstract(length, loops)
+    testAbstract(length, loops)
     val abstractTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
@@ -52,11 +52,11 @@ class SwizzleBenchCase {
     val implementedTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    //testInlined(length, loops)
+    testInlined(length, loops)
     val inlinedTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    //testNoSwizzle(length, loops)
+    testNoSwizzle(length, loops)
     val noSwizzleTime = System.currentTimeMillis - start
 
     println("Trait time: " + traitTime +

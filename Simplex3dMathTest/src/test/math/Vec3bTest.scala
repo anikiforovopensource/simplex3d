@@ -292,34 +292,4 @@ class Vec3bTest extends FunSuite {
     }
   }
 
-  test("Collection") {
-    def test(u: AnyVec3b) = {
-      assert(u.head == u.x)
-      assert(u.last == u.z)
-      assert(u.size == 3)
-
-      val iterator = u.iterator
-      assert(iterator.hasNext)
-      assert(iterator.next == u.x)
-      assert(iterator.hasNext)
-      assert(iterator.next == u.y)
-      assert(iterator.hasNext)
-      assert(iterator.next == u.z)
-      assert(!iterator.hasNext)
-      intercept[NoSuchElementException] {
-        iterator.next
-      }
-
-      var i = 0
-      u.foreach { element =>
-        assert(element == u(i))
-        i += 1
-      }
-    }
-
-    BooleanCombinations.test { (x, y, z, w) =>
-      test(Vec3b(x, y, z))
-      test(ConstVec3b(x, y, z))
-    }
-  }
 }

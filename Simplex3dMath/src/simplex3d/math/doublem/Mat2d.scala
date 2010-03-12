@@ -215,7 +215,7 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
 final class ConstMat2d private[math] (
   val m00: Double, val m10: Double,
   val m01: Double, val m11: Double
-) extends AnyMat2d with ConstMat[ConstVec2d]
+) extends AnyMat2d with Immutable
 
 object ConstMat2d {
 
@@ -245,7 +245,7 @@ object ConstMat2d {
 final class Mat2d private[math] (
   var m00: Double, var m10: Double,
   var m01: Double, var m11: Double
-) extends AnyMat2d with Mat[ConstVec2d]
+) extends AnyMat2d with Mutable with Implicits[On]
 {
   def *=(s: Double) {
     m00 *= s; m10 *= s;

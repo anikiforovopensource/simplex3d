@@ -141,7 +141,7 @@ sealed abstract class AnyVec3i extends Read3[Int] {
 }
 
 final class ConstVec3i private[math] (val x: Int, val y: Int, val z: Int)
-extends AnyVec3i with ConstVec[Int]
+extends AnyVec3i with Immutable
 
 object ConstVec3i {
   def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
@@ -152,7 +152,7 @@ object ConstVec3i {
 
 
 final class Vec3i private[math] (var x: Int, var y: Int, var z: Int)
-extends AnyVec3i with Vec[Int]
+extends AnyVec3i with Mutable with Implicits[On]
 {
   override def r = x
   override def g = y

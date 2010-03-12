@@ -237,7 +237,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
 final class ConstMat3x2f private[math] (
   val m00: Float, val m10: Float, val m20: Float,
   val m01: Float, val m11: Float, val m21: Float
-) extends AnyMat3x2f with ConstMat[ConstVec3f]
+) extends AnyMat3x2f with Immutable
 
 object ConstMat3x2f {
 
@@ -267,7 +267,7 @@ object ConstMat3x2f {
 final class Mat3x2f private[math] (
   var m00: Float, var m10: Float, var m20: Float,
   var m01: Float, var m11: Float, var m21: Float
-) extends AnyMat3x2f with Mat[ConstVec3f]
+) extends AnyMat3x2f with Mutable with Implicits[On]
 {
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s;

@@ -289,7 +289,7 @@ final class ConstMat2x3d private[math] (
   val m00: Double, val m10: Double,
   val m01: Double, val m11: Double,
   val m02: Double, val m12: Double
-) extends AnyMat2x3d with ConstMat[ConstVec2d]
+) extends AnyMat2x3d with Immutable
 
 object ConstMat2x3d {
 
@@ -324,7 +324,7 @@ final class Mat2x3d private[math] (
   var m00: Double, var m10: Double,
   var m01: Double, var m11: Double,
   var m02: Double, var m12: Double
-) extends AnyMat2x3d with Mat[ConstVec2d]
+) extends AnyMat2x3d with Mutable with Implicits[On]
 {
   def *=(s: Double) {
     m00 *= s; m10 *= s;

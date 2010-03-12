@@ -215,7 +215,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
 final class ConstMat2f private[math] (
   val m00: Float, val m10: Float,
   val m01: Float, val m11: Float
-) extends AnyMat2f with ConstMat[ConstVec2f]
+) extends AnyMat2f with Immutable
 
 object ConstMat2f {
 
@@ -245,7 +245,7 @@ object ConstMat2f {
 final class Mat2f private[math] (
   var m00: Float, var m10: Float,
   var m01: Float, var m11: Float
-) extends AnyMat2f with Mat[ConstVec2f]
+) extends AnyMat2f with Mutable with Implicits[On]
 {
   def *=(s: Float) {
     m00 *= s; m10 *= s;

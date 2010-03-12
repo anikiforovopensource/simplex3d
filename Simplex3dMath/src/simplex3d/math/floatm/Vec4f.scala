@@ -153,7 +153,7 @@ sealed abstract class AnyVec4f extends Read4[Float] {
 
 final class ConstVec4f private[math] (
   val x: Float, val y: Float, val z: Float, val w: Float
-) extends AnyVec4f with ConstVec[Float]
+) extends AnyVec4f with Immutable
 
 object ConstVec4f {
   def apply(x: Float, y: Float, z: Float, w: Float) = {
@@ -167,7 +167,7 @@ object ConstVec4f {
 
 final class Vec4f private[math] (
   var x: Float, var y: Float, var z: Float, var w: Float
-) extends AnyVec4f with Vec[Float]
+) extends AnyVec4f with Mutable with Implicits[On]
 {
   override def r = x
   override def g = y

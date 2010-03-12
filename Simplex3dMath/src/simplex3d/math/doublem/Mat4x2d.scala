@@ -259,7 +259,7 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
 final class ConstMat4x2d private[math] (
   val m00: Double, val m10: Double, val m20: Double, val m30: Double,
   val m01: Double, val m11: Double, val m21: Double, val m31: Double
-) extends AnyMat4x2d with ConstMat[ConstVec4d]
+) extends AnyMat4x2d with Immutable
 
 object ConstMat4x2d {
 
@@ -289,7 +289,7 @@ object ConstMat4x2d {
 final class Mat4x2d private[math] (
   var m00: Double, var m10: Double, var m20: Double, var m30: Double,
   var m01: Double, var m11: Double, var m21: Double, var m31: Double
-) extends AnyMat4x2d with Mat[ConstVec4d]
+) extends AnyMat4x2d with Mutable with Implicits[On]
 {
   def *=(s: Double) {
     m00 *= s; m10 *= s; m20 *= s; m30 *= s;

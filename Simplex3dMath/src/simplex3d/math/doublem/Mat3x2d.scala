@@ -237,7 +237,7 @@ sealed abstract class AnyMat3x2d extends Read3x2[ConstVec3d]
 final class ConstMat3x2d private[math] (
   val m00: Double, val m10: Double, val m20: Double,
   val m01: Double, val m11: Double, val m21: Double
-) extends AnyMat3x2d with ConstMat[ConstVec3d]
+) extends AnyMat3x2d with Immutable
 
 object ConstMat3x2d {
 
@@ -267,7 +267,7 @@ object ConstMat3x2d {
 final class Mat3x2d private[math] (
   var m00: Double, var m10: Double, var m20: Double,
   var m01: Double, var m11: Double, var m21: Double
-) extends AnyMat3x2d with Mat[ConstVec3d]
+) extends AnyMat3x2d with Mutable with Implicits[On]
 {
   def *=(s: Double) {
     m00 *= s; m10 *= s; m20 *= s;

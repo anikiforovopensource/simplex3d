@@ -277,7 +277,7 @@ final class ConstMat3f private[math] (
   val m00: Float, val m10: Float, val m20: Float,
   val m01: Float, val m11: Float, val m21: Float,
   val m02: Float, val m12: Float, val m22: Float
-) extends AnyMat3f with ConstMat[ConstVec3f]
+) extends AnyMat3f with Immutable
 
 object ConstMat3f {
 
@@ -312,7 +312,7 @@ final class Mat3f private[math] (
   var m00: Float, var m10: Float, var m20: Float,
   var m01: Float, var m11: Float, var m21: Float,
   var m02: Float, var m12: Float, var m22: Float
-) extends AnyMat3f with Mat[ConstVec3f]
+) extends AnyMat3f with Mutable with Implicits[On]
 {
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s;

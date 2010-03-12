@@ -351,7 +351,7 @@ final class ConstMat4f private[math] (
   val m01: Float, val m11: Float, val m21: Float, val m31: Float,
   val m02: Float, val m12: Float, val m22: Float, val m32: Float,
   val m03: Float, val m13: Float, val m23: Float, val m33: Float
-) extends AnyMat4f with ConstMat[ConstVec4f]
+) extends AnyMat4f with Immutable
 
 object ConstMat4f {
 
@@ -391,7 +391,7 @@ final class Mat4f private[math] (
   var m01: Float, var m11: Float, var m21: Float, var m31: Float,
   var m02: Float, var m12: Float, var m22: Float, var m32: Float,
   var m03: Float, var m13: Float, var m23: Float, var m33: Float
-) extends AnyMat4f with Mat[ConstVec4f]
+) extends AnyMat4f with Mutable with Implicits[On]
 {
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s; m30 *= s;

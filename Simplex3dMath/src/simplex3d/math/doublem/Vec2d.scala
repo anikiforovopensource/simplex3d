@@ -126,7 +126,7 @@ sealed abstract class AnyVec2d extends Read2[Double] {
 }
 
 final class ConstVec2d private[math] (val x: Double, val y: Double)
-extends AnyVec2d with ConstVec[Double]
+extends AnyVec2d with Immutable
 
 object ConstVec2d {
   def apply(x: Double, y: Double) = new ConstVec2d(x, y)
@@ -137,7 +137,7 @@ object ConstVec2d {
 
 
 final class Vec2d private[math] (var x: Double, var y: Double)
-extends AnyVec2d with Vec[Double]
+extends AnyVec2d with Mutable with Implicits[On]
 {
   override def r = x
   override def g = y

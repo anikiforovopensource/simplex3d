@@ -180,7 +180,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
  * @author Aleksey Nikiforov (lex)
  */
 final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
-extends AnyVec2b with ConstVec[Boolean]
+extends AnyVec2b with Immutable
 
 
 /** The companion object <code>ConstVec2b</code> that contains factory methods.
@@ -235,7 +235,7 @@ object ConstVec2b {
  * @author Aleksey Nikiforov (lex)
  */
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
-extends AnyVec2b with Vec[Boolean]
+extends AnyVec2b with Mutable with Implicits[On]
 {
 
   /** Alias for x.

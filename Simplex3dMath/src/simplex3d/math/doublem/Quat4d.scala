@@ -144,7 +144,7 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
 final class ConstQuat4d private[math] (
   val a: Double, val b: Double, val c: Double, val d: Double
-) extends AnyQuat4d with ConstQuat[Double]
+) extends AnyQuat4d with Immutable
 
 object ConstQuat4d {
   def apply(a: Double, b: Double, c: Double, d: Double) = {
@@ -158,7 +158,7 @@ object ConstQuat4d {
 
 final class Quat4d private[math] (
   var a: Double, var b: Double, var c: Double, var d: Double
-) extends AnyQuat4d with Quat[Double]
+) extends AnyQuat4d with Mutable with Implicits[On]
 {
   def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
   def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }

@@ -155,7 +155,7 @@ sealed abstract class AnyVec4i extends Read4[Int] {
 
 final class ConstVec4i private[math] (
   val x: Int, val y: Int, val z: Int, val w: Int
-) extends AnyVec4i with ConstVec[Int]
+) extends AnyVec4i with Immutable
 
 object ConstVec4i {
   def apply(x: Int, y: Int, z: Int, w: Int) = {
@@ -169,7 +169,7 @@ object ConstVec4i {
 
 final class Vec4i private[math] (
   var x: Int, var y: Int, var z: Int, var w: Int)
-extends AnyVec4i with Vec[Int]
+extends AnyVec4i with Mutable with Implicits[On]
 {
   override def r = x
   override def g = y

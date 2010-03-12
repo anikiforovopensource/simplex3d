@@ -217,7 +217,7 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
  */
 final class ConstVec4b private[math] (
   val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean
-) extends AnyVec4b with ConstVec[Boolean]
+) extends AnyVec4b with Immutable
 
 
 /** The companion object <code>ConstVec4b</code> that contains factory methods.
@@ -277,7 +277,7 @@ object ConstVec4b {
  */
 final class Vec4b private[math] (
   var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean
-) extends AnyVec4b with Vec[Boolean]
+) extends AnyVec4b with Mutable with Implicits[On]
 {
   /** Alias for x.
    * @return component x.

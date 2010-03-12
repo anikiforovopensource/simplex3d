@@ -36,38 +36,38 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
   def m02: Double; def m12: Double; def m22: Double // column
   def m03: Double; def m13: Double; def m23: Double // column
 
-  private[math] def f00 = float(m00)
-  private[math] def f10 = float(m10)
-  private[math] def f20 = float(m20)
+  private[math] override def f00 = float(m00)
+  private[math] override def f10 = float(m10)
+  private[math] override def f20 = float(m20)
 
-  private[math] def f01 = float(m01)
-  private[math] def f11 = float(m11)
-  private[math] def f21 = float(m21)
+  private[math] override def f01 = float(m01)
+  private[math] override def f11 = float(m11)
+  private[math] override def f21 = float(m21)
 
-  private[math] def f02 = float(m02)
-  private[math] def f12 = float(m12)
-  private[math] def f22 = float(m22)
+  private[math] override def f02 = float(m02)
+  private[math] override def f12 = float(m12)
+  private[math] override def f22 = float(m22)
 
-  private[math] def f03 = float(m03)
-  private[math] def f13 = float(m13)
-  private[math] def f23 = float(m23)
+  private[math] override def f03 = float(m03)
+  private[math] override def f13 = float(m13)
+  private[math] override def f23 = float(m23)
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
-  private[math] def d20 = m20
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
+  private[math] override def d20 = m20
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
-  private[math] def d21 = m21
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
+  private[math] override def d21 = m21
 
-  private[math] def d02 = m02
-  private[math] def d12 = m12
-  private[math] def d22 = m22
+  private[math] override def d02 = m02
+  private[math] override def d12 = m12
+  private[math] override def d22 = m22
 
-  private[math] def d03 = m03
-  private[math] def d13 = m13
-  private[math] def d23 = m23
+  private[math] override def d03 = m03
+  private[math] override def d13 = m13
+  private[math] override def d23 = m23
 
 
   def apply(c: Int) :ConstVec3d = {
@@ -385,6 +385,13 @@ final class ConstMat3x4d private[math] (
 
 object ConstMat3x4d {
 
+  def apply(s: Double) = new ConstMat3x4d(
+    s, 0, 0,
+    0, s, 0,
+    0, 0, s,
+    0, 0, 0
+  )
+
   def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
@@ -405,7 +412,7 @@ object ConstMat3x4d {
     c3.dx, c3.dy, c3.dz
   )
 
-  def apply(m: Read3x4[_]) = new ConstMat3x4d(
+  def apply(m: ReadMat[_]) = new ConstMat3x4d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21,
     m.d02, m.d12, m.d22,
@@ -579,8 +586,8 @@ final class Mat3x4d private[math] (
 
 object Mat3x4d {
 
-  val Zero: ConstMat3x4d = Mat3x4d(0)
-  val Identity: ConstMat3x4d = Mat3x4d(1)
+  val Zero = ConstMat3x4d(0)
+  val Identity = ConstMat3x4d(1)
 
   def apply(s: Double) = new Mat3x4d(
     s, 0, 0,
@@ -609,63 +616,7 @@ object Mat3x4d {
     c3.dx, c3.dy, c3.dz
   )
 
-  def apply(m: Read2x2[_]) = new Mat3x4d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    0, 0, 1,
-    0, 0, 0
-  )
-
-  def apply(m: Read2x3[_]) = new Mat3x4d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    m.d02, m.d12, 1,
-    0, 0, 0
-  )
-
-  def apply(m: Read2x4[_]) = new Mat3x4d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    m.d02, m.d12, 1,
-    m.d03, m.d13, 0
-  )
-
-  def apply(m: Read3x2[_]) = new Mat3x4d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    0, 0, 1,
-    0, 0, 0
-  )
-
-  def apply(m: Read3x3[_]) = new Mat3x4d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22,
-    0, 0, 0
-  )
-
-  def apply(m: Read3x4[_]) = new Mat3x4d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22,
-    m.d03, m.d13, m.d23
-  )
-
-  def apply(m: Read4x2[_]) = new Mat3x4d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    0, 0, 1,
-    0, 0, 0
-  )
-
-  def apply(m: Read4x3[_]) = new Mat3x4d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22,
-    0, 0, 0
-  )
-
-  def apply(m: Read4x4[_]) = new Mat3x4d(
+  def apply(m: ReadMat[_]) = new Mat3x4d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21,
     m.d02, m.d12, m.d22,

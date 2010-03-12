@@ -34,18 +34,18 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
   def m00: Double; def m10: Double // column
   def m01: Double; def m11: Double // column
 
-  private[math] def f00 = float(m00)
-  private[math] def f10 = float(m10)
+  private[math] override def f00 = float(m00)
+  private[math] override def f10 = float(m10)
 
-  private[math] def f01 = float(m01)
-  private[math] def f11 = float(m11)
+  private[math] override def f01 = float(m01)
+  private[math] override def f11 = float(m11)
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
 
 
   def apply(c: Int) :ConstVec2d = {
@@ -219,6 +219,11 @@ final class ConstMat2d private[math] (
 
 object ConstMat2d {
 
+  def apply(s: Double) = new ConstMat2d(
+    s, 0,
+    0, s
+  )
+
   def apply(
     m00: Double, m10: Double,
     m01: Double, m11: Double
@@ -233,7 +238,7 @@ object ConstMat2d {
     c1.dx, c1.dy
   )
 
-  def apply(m: Read2x2[_]) = new ConstMat2d(
+  def apply(m: ReadMat[_]) = new ConstMat2d(
     m.d00, m.d10,
     m.d01, m.d11
   )
@@ -341,8 +346,8 @@ final class Mat2d private[math] (
 
 object Mat2d {
 
-  val Zero: ConstMat2d = Mat2d(0)
-  val Identity: ConstMat2d = Mat2d(1)
+  val Zero = ConstMat2d(0)
+  val Identity = ConstMat2d(1)
 
   def apply(s: Double) = new Mat2d(
     s, 0,
@@ -363,47 +368,7 @@ object Mat2d {
     c1.dx, c1.dy
   )
 
-  def apply(m: Read2x2[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read2x3[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read2x4[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read3x2[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read3x3[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read3x4[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read4x2[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read4x3[_]) = new Mat2d(
-    m.d00, m.d10,
-    m.d01, m.d11
-  )
-
-  def apply(m: Read4x4[_]) = new Mat2d(
+  def apply(m: ReadMat[_]) = new Mat2d(
     m.d00, m.d10,
     m.d01, m.d11
   )

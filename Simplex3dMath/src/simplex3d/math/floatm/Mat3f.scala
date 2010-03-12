@@ -35,30 +35,30 @@ sealed abstract class AnyMat3f extends Read3x3[ConstVec3f]
   def m01: Float; def m11: Float; def m21: Float // column
   def m02: Float; def m12: Float; def m22: Float // column
 
-  private[math] def f00 = m00
-  private[math] def f10 = m10
-  private[math] def f20 = m20
+  private[math] override def f00 = m00
+  private[math] override def f10 = m10
+  private[math] override def f20 = m20
 
-  private[math] def f01 = m01
-  private[math] def f11 = m11
-  private[math] def f21 = m21
+  private[math] override def f01 = m01
+  private[math] override def f11 = m11
+  private[math] override def f21 = m21
 
-  private[math] def f02 = m02
-  private[math] def f12 = m12
-  private[math] def f22 = m22
+  private[math] override def f02 = m02
+  private[math] override def f12 = m12
+  private[math] override def f22 = m22
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
-  private[math] def d20 = m20
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
+  private[math] override def d20 = m20
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
-  private[math] def d21 = m21
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
+  private[math] override def d21 = m21
 
-  private[math] def d02 = m02
-  private[math] def d12 = m12
-  private[math] def d22 = m22
+  private[math] override def d02 = m02
+  private[math] override def d12 = m12
+  private[math] override def d22 = m22
 
 
   def apply(c: Int) :ConstVec3f = {
@@ -281,6 +281,12 @@ final class ConstMat3f private[math] (
 
 object ConstMat3f {
 
+  def apply(s: Float) = new ConstMat3f(
+    s, 0, 0,
+    0, s, 0,
+    0, 0, s
+  )
+
   def apply(
     m00: Float, m10: Float, m20: Float,
     m01: Float, m11: Float, m21: Float,
@@ -298,7 +304,7 @@ object ConstMat3f {
     c2.fx, c2.fy, c2.fz
   )
 
-  def apply(m: Read3x3[_]) = new ConstMat3f(
+  def apply(m: ReadMat[_]) = new ConstMat3f(
     m.f00, m.f10, m.f20,
     m.f01, m.f11, m.f21,
     m.f02, m.f12, m.f22
@@ -446,8 +452,8 @@ final class Mat3f private[math] (
 
 object Mat3f {
 
-  val Zero: ConstMat3f = Mat3f(0)
-  val Identity: ConstMat3f = Mat3f(1)
+  val Zero = ConstMat3f(0)
+  val Identity = ConstMat3f(1)
 
   def apply(s: Float) = new Mat3f(
     s, 0, 0,
@@ -472,55 +478,7 @@ object Mat3f {
     c2.fx, c2.fy, c2.fz
   )
 
-  def apply(m: Read2x2[_]) = new Mat3f(
-    m.f00, m.f10, 0,
-    m.f01, m.f11, 0,
-    0, 0, 1
-  )
-
-  def apply(m: Read2x3[_]) = new Mat3f(
-    m.f00, m.f10, 0,
-    m.f01, m.f11, 0,
-    m.f02, m.f12, 1
-  )
-
-  def apply(m: Read2x4[_]) = new Mat3f(
-    m.f00, m.f10, 0,
-    m.f01, m.f11, 0,
-    m.f02, m.f12, 1
-  )
-
-  def apply(m: Read3x2[_]) = new Mat3f(
-    m.f00, m.f10, m.f20,
-    m.f01, m.f11, m.f21,
-    0, 0, 1
-  )
-
-  def apply(m: Read3x3[_]) = new Mat3f(
-    m.f00, m.f10, m.f20,
-    m.f01, m.f11, m.f21,
-    m.f02, m.f12, m.f22
-  )
-
-  def apply(m: Read3x4[_]) = new Mat3f(
-    m.f00, m.f10, m.f20,
-    m.f01, m.f11, m.f21,
-    m.f02, m.f12, m.f22
-  )
-
-  def apply(m: Read4x2[_]) = new Mat3f(
-    m.f00, m.f10, m.f20,
-    m.f01, m.f11, m.f21,
-    0, 0, 1
-  )
-
-  def apply(m: Read4x3[_]) = new Mat3f(
-    m.f00, m.f10, m.f20,
-    m.f01, m.f11, m.f21,
-    m.f02, m.f12, m.f22
-  )
-
-  def apply(m: Read4x4[_]) = new Mat3f(
+  def apply(m: ReadMat[_]) = new Mat3f(
     m.f00, m.f10, m.f20,
     m.f01, m.f11, m.f21,
     m.f02, m.f12, m.f22

@@ -35,24 +35,24 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
   def m01: Float; def m11: Float // column
   def m02: Float; def m12: Float // column
 
-  private[math] def f00 = m00
-  private[math] def f10 = m10
+  private[math] override def f00 = m00
+  private[math] override def f10 = m10
 
-  private[math] def f01 = m01
-  private[math] def f11 = m11
+  private[math] override def f01 = m01
+  private[math] override def f11 = m11
 
-  private[math] def f02 = m02
-  private[math] def f12 = m12
+  private[math] override def f02 = m02
+  private[math] override def f12 = m12
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
 
-  private[math] def d02 = m02
-  private[math] def d12 = m12
+  private[math] override def d02 = m02
+  private[math] override def d12 = m12
 
 
   def apply(c: Int) :ConstVec2f = {
@@ -293,6 +293,12 @@ final class ConstMat2x3f private[math] (
 
 object ConstMat2x3f {
 
+  def apply(s: Float) = new ConstMat2x3f(
+    s, 0,
+    0, s,
+    0, 0
+  )
+
   def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float,
@@ -310,7 +316,7 @@ object ConstMat2x3f {
     c2.fx, c2.fy
   )
 
-  def apply(m: Read2x3[_]) = new ConstMat2x3f(
+  def apply(m: ReadMat[_]) = new ConstMat2x3f(
     m.f00, m.f10,
     m.f01, m.f11,
     m.f02, m.f12
@@ -441,8 +447,8 @@ final class Mat2x3f private[math] (
 
 object Mat2x3f {
 
-  val Zero: ConstMat2x3f = Mat2x3f(0)
-  val Identity: ConstMat2x3f = Mat2x3f(1)
+  val Zero = ConstMat2x3f(0)
+  val Identity = ConstMat2x3f(1)
 
   def apply(s: Float) = new Mat2x3f(
     s, 0,
@@ -467,55 +473,7 @@ object Mat2x3f {
     c2.fx, c2.fy
   )
 
-  def apply(m: Read2x2[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    0, 0
-  )
-
-  def apply(m: Read2x3[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    m.f02, m.f12
-  )
-
-  def apply(m: Read2x4[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    m.f02, m.f12
-  )
-
-  def apply(m: Read3x2[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    0, 0
-  )
-
-  def apply(m: Read3x3[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    m.f02, m.f12
-  )
-
-  def apply(m: Read3x4[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    m.f02, m.f12
-  )
-
-  def apply(m: Read4x2[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    0, 0
-  )
-
-  def apply(m: Read4x3[_]) = new Mat2x3f(
-    m.f00, m.f10,
-    m.f01, m.f11,
-    m.f02, m.f12
-  )
-
-  def apply(m: Read4x4[_]) = new Mat2x3f(
+  def apply(m: ReadMat[_]) = new Mat2x3f(
     m.f00, m.f10,
     m.f01, m.f11,
     m.f02, m.f12

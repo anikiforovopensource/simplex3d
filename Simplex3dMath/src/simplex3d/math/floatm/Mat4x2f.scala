@@ -34,26 +34,26 @@ sealed abstract class AnyMat4x2f extends Read4x2[ConstVec4f]
   def m00: Float; def m10: Float; def m20: Float; def m30: Float // column
   def m01: Float; def m11: Float; def m21: Float; def m31: Float // column
 
-  private[math] def f00 = m00
-  private[math] def f10 = m10
-  private[math] def f20 = m20
-  private[math] def f30 = m30
+  private[math] override def f00 = m00
+  private[math] override def f10 = m10
+  private[math] override def f20 = m20
+  private[math] override def f30 = m30
 
-  private[math] def f01 = m01
-  private[math] def f11 = m11
-  private[math] def f21 = m21
-  private[math] def f31 = m31
+  private[math] override def f01 = m01
+  private[math] override def f11 = m11
+  private[math] override def f21 = m21
+  private[math] override def f31 = m31
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
-  private[math] def d20 = m20
-  private[math] def d30 = m30
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
+  private[math] override def d20 = m20
+  private[math] override def d30 = m30
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
-  private[math] def d21 = m21
-  private[math] def d31 = m31
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
+  private[math] override def d21 = m21
+  private[math] override def d31 = m31
 
 
   def apply(c: Int) :ConstVec4f = {
@@ -263,6 +263,11 @@ final class ConstMat4x2f private[math] (
 
 object ConstMat4x2f {
 
+  def apply(s: Float) = new ConstMat4x2f(
+    s, 0, 0, 0,
+    0, s, 0, 0
+  )
+
   def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float
@@ -277,7 +282,7 @@ object ConstMat4x2f {
     c1.fx, c1.fy, c1.fz, c1.fw
   )
 
-  def apply(m: Read4x2[_]) = new ConstMat4x2f(
+  def apply(m: ReadMat[_]) = new ConstMat4x2f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31
   )
@@ -413,8 +418,8 @@ final class Mat4x2f private[math] (
 
 object Mat4x2f {
 
-  val Zero: ConstMat4x2f = Mat4x2f(0)
-  val Identity: ConstMat4x2f = Mat4x2f(1)
+  val Zero = ConstMat4x2f(0)
+  val Identity = ConstMat4x2f(1)
 
   def apply(s: Float) = new Mat4x2f(
     s, 0, 0, 0,
@@ -435,47 +440,7 @@ object Mat4x2f {
     c1.fx, c1.fy, c1.fz, c1.fw
   )
 
-  def apply(m: Read2x2[_]) = new Mat4x2f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0
-  )
-
-  def apply(m: Read2x3[_]) = new Mat4x2f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0
-  )
-
-  def apply(m: Read2x4[_]) = new Mat4x2f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0
-  )
-
-  def apply(m: Read3x2[_]) = new Mat4x2f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0
-  )
-
-  def apply(m: Read3x3[_]) = new Mat4x2f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0
-  )
-
-  def apply(m: Read3x4[_]) = new Mat4x2f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0
-  )
-
-  def apply(m: Read4x2[_]) = new Mat4x2f(
-    m.f00, m.f10, m.f20, m.f30,
-    m.f01, m.f11, m.f21, m.f31
-  )
-
-  def apply(m: Read4x3[_]) = new Mat4x2f(
-    m.f00, m.f10, m.f20, m.f30,
-    m.f01, m.f11, m.f21, m.f31
-  )
-
-  def apply(m: Read4x4[_]) = new Mat4x2f(
+  def apply(m: ReadMat[_]) = new Mat4x2f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31
   )

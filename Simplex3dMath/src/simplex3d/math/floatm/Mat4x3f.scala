@@ -35,36 +35,36 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
   def m01: Float; def m11: Float; def m21: Float; def m31: Float // column
   def m02: Float; def m12: Float; def m22: Float; def m32: Float // column
 
-  private[math] def f00 = m00
-  private[math] def f10 = m10
-  private[math] def f20 = m20
-  private[math] def f30 = m30
+  private[math] override def f00 = m00
+  private[math] override def f10 = m10
+  private[math] override def f20 = m20
+  private[math] override def f30 = m30
 
-  private[math] def f01 = m01
-  private[math] def f11 = m11
-  private[math] def f21 = m21
-  private[math] def f31 = m31
+  private[math] override def f01 = m01
+  private[math] override def f11 = m11
+  private[math] override def f21 = m21
+  private[math] override def f31 = m31
 
-  private[math] def f02 = m02
-  private[math] def f12 = m12
-  private[math] def f22 = m22
-  private[math] def f32 = m32
+  private[math] override def f02 = m02
+  private[math] override def f12 = m12
+  private[math] override def f22 = m22
+  private[math] override def f32 = m32
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
-  private[math] def d20 = m20
-  private[math] def d30 = m30
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
+  private[math] override def d20 = m20
+  private[math] override def d30 = m30
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
-  private[math] def d21 = m21
-  private[math] def d31 = m31
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
+  private[math] override def d21 = m21
+  private[math] override def d31 = m31
 
-  private[math] def d02 = m02
-  private[math] def d12 = m12
-  private[math] def d22 = m22
-  private[math] def d32 = m32
+  private[math] override def d02 = m02
+  private[math] override def d12 = m12
+  private[math] override def d22 = m22
+  private[math] override def d32 = m32
 
 
   def apply(c: Int) :ConstVec4f = {
@@ -309,6 +309,12 @@ final class ConstMat4x3f private[math] (
 
 object ConstMat4x3f {
 
+  def apply(s: Float) = new ConstMat4x3f(
+    s, 0, 0, 0,
+    0, s, 0, 0,
+    0, 0, s, 0
+  )
+
   def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float,
@@ -326,7 +332,7 @@ object ConstMat4x3f {
     c2.fx, c2.fy, c2.fz, c2.fw
   )
 
-  def apply(m: Read4x3[_]) = new ConstMat4x3f(
+  def apply(m: ReadMat[_]) = new ConstMat4x3f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32
@@ -491,8 +497,8 @@ final class Mat4x3f private[math] (
 
 object Mat4x3f {
 
-  val Zero: ConstMat4x3f = Mat4x3f(0)
-  val Identity: ConstMat4x3f = Mat4x3f(1)
+  val Zero = ConstMat4x3f(0)
+  val Identity = ConstMat4x3f(1)
 
   def apply(s: Float) = new Mat4x3f(
     s, 0, 0, 0,
@@ -517,55 +523,7 @@ object Mat4x3f {
     c2.fx, c2.fy, c2.fz, c2.fw
   )
 
-  def apply(m: Read2x2[_]) = new Mat4x3f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0,
-    0, 0, 1, 0
-  )
-
-  def apply(m: Read2x3[_]) = new Mat4x3f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0,
-    m.f02, m.f12, 1, 0
-  )
-
-  def apply(m: Read2x4[_]) = new Mat4x3f(
-    m.f00, m.f10, 0, 0,
-    m.f01, m.f11, 0, 0,
-    m.f02, m.f12, 1, 0
-  )
-
-  def apply(m: Read3x2[_]) = new Mat4x3f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0,
-    0, 0, 1, 0
-  )
-
-  def apply(m: Read3x3[_]) = new Mat4x3f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0,
-    m.f02, m.f12, m.f22, 0
-  )
-
-  def apply(m: Read3x4[_]) = new Mat4x3f(
-    m.f00, m.f10, m.f20, 0,
-    m.f01, m.f11, m.f21, 0,
-    m.f02, m.f12, m.f22, 0
-  )
-
-  def apply(m: Read4x2[_]) = new Mat4x3f(
-    m.f00, m.f10, m.f20, m.f30,
-    m.f01, m.f11, m.f21, m.f31,
-    0, 0, 1, 0
-  )
-
-  def apply(m: Read4x3[_]) = new Mat4x3f(
-    m.f00, m.f10, m.f20, m.f30,
-    m.f01, m.f11, m.f21, m.f31,
-    m.f02, m.f12, m.f22, m.f32
-  )
-
-  def apply(m: Read4x4[_]) = new Mat4x3f(
+  def apply(m: ReadMat[_]) = new Mat4x3f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32

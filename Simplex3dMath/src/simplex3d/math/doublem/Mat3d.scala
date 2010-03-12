@@ -35,30 +35,30 @@ sealed abstract class AnyMat3d extends Read3x3[ConstVec3d]
   def m01: Double; def m11: Double; def m21: Double // column
   def m02: Double; def m12: Double; def m22: Double // column
 
-  private[math] def f00 = float(m00)
-  private[math] def f10 = float(m10)
-  private[math] def f20 = float(m20)
+  private[math] override def f00 = float(m00)
+  private[math] override def f10 = float(m10)
+  private[math] override def f20 = float(m20)
 
-  private[math] def f01 = float(m01)
-  private[math] def f11 = float(m11)
-  private[math] def f21 = float(m21)
+  private[math] override def f01 = float(m01)
+  private[math] override def f11 = float(m11)
+  private[math] override def f21 = float(m21)
 
-  private[math] def f02 = float(m02)
-  private[math] def f12 = float(m12)
-  private[math] def f22 = float(m22)
+  private[math] override def f02 = float(m02)
+  private[math] override def f12 = float(m12)
+  private[math] override def f22 = float(m22)
 
 
-  private[math] def d00 = m00
-  private[math] def d10 = m10
-  private[math] def d20 = m20
+  private[math] override def d00 = m00
+  private[math] override def d10 = m10
+  private[math] override def d20 = m20
 
-  private[math] def d01 = m01
-  private[math] def d11 = m11
-  private[math] def d21 = m21
+  private[math] override def d01 = m01
+  private[math] override def d11 = m11
+  private[math] override def d21 = m21
 
-  private[math] def d02 = m02
-  private[math] def d12 = m12
-  private[math] def d22 = m22
+  private[math] override def d02 = m02
+  private[math] override def d12 = m12
+  private[math] override def d22 = m22
 
 
   def apply(c: Int) :ConstVec3d = {
@@ -281,6 +281,12 @@ final class ConstMat3d private[math] (
 
 object ConstMat3d {
 
+  def apply(s: Double) = new ConstMat3d(
+    s, 0, 0,
+    0, s, 0,
+    0, 0, s
+  )
+
   def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
@@ -298,7 +304,7 @@ object ConstMat3d {
     c2.dx, c2.dy, c2.dz
   )
 
-  def apply(m: Read3x3[_]) = new ConstMat3d(
+  def apply(m: ReadMat[_]) = new ConstMat3d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21,
     m.d02, m.d12, m.d22
@@ -446,8 +452,8 @@ final class Mat3d private[math] (
 
 object Mat3d {
 
-  val Zero: ConstMat3d = Mat3d(0)
-  val Identity: ConstMat3d = Mat3d(1)
+  val Zero = ConstMat3d(0)
+  val Identity = ConstMat3d(1)
 
   def apply(s: Double) = new Mat3d(
     s, 0, 0,
@@ -472,55 +478,7 @@ object Mat3d {
     c2.dx, c2.dy, c2.dz
   )
 
-  def apply(m: Read2x2[_]) = new Mat3d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    0, 0, 1
-  )
-
-  def apply(m: Read2x3[_]) = new Mat3d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    m.d02, m.d12, 1
-  )
-
-  def apply(m: Read2x4[_]) = new Mat3d(
-    m.d00, m.d10, 0,
-    m.d01, m.d11, 0,
-    m.d02, m.d12, 1
-  )
-
-  def apply(m: Read3x2[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    0, 0, 1
-  )
-
-  def apply(m: Read3x3[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22
-  )
-
-  def apply(m: Read3x4[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22
-  )
-
-  def apply(m: Read4x2[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    0, 0, 1
-  )
-
-  def apply(m: Read4x3[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22
-  )
-
-  def apply(m: Read4x4[_]) = new Mat3d(
+  def apply(m: ReadMat[_]) = new Mat3d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21,
     m.d02, m.d12, m.d22

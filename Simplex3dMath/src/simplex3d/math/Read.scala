@@ -117,6 +117,56 @@ private[math] abstract class ReadQ[T] {
   private[math] def dd: Double
 }
 
+/** <code>ReadMat</code> is a superclass of all the matrices.
+ * <p>
+ *   There are double and float matrices.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+private[math] abstract class ReadMat[T] {
+  private[math] def f00: Float
+  private[math] def f10: Float
+  private[math] def f20: Float = 0
+  private[math] def f30: Float = 0
+
+  private[math] def f01: Float
+  private[math] def f11: Float
+  private[math] def f21: Float = 0
+  private[math] def f31: Float = 0
+
+  private[math] def f02: Float = 0
+  private[math] def f12: Float = 0
+  private[math] def f22: Float = 1
+  private[math] def f32: Float = 0
+
+  private[math] def f03: Float = 0
+  private[math] def f13: Float = 0
+  private[math] def f23: Float = 0
+  private[math] def f33: Float = 1
+
+
+  private[math] def d00: Double
+  private[math] def d10: Double
+  private[math] def d20: Double = 0
+  private[math] def d30: Double = 0
+
+  private[math] def d01: Double
+  private[math] def d11: Double
+  private[math] def d21: Double = 0
+  private[math] def d31: Double = 0
+
+  private[math] def d02: Double = 0
+  private[math] def d12: Double = 0
+  private[math] def d22: Double = 1
+  private[math] def d32: Double = 0
+
+  private[math] def d03: Double = 0
+  private[math] def d13: Double = 0
+  private[math] def d23: Double = 0
+  private[math] def d33: Double = 1
+}
+
 /** <code>Read2x2</code> is a superclass of all the 2x2 matrices.
  * <p>
  *   There are double and float matrices.
@@ -124,13 +174,7 @@ private[math] abstract class ReadQ[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x2[V] {
-  private[math] def f00: Float; private[math] def f10: Float
-  private[math] def f01: Float; private[math] def f11: Float
-
-  private[math] def d00: Double; private[math] def d10: Double
-  private[math] def d01: Double; private[math] def d11: Double
-}
+private[math] abstract class Read2x2[T] extends ReadMat[T]
 
 /** <code>Read2x3</code> is a superclass of all the 2x3 matrices.
  * <p>
@@ -139,15 +183,7 @@ private[math] abstract class Read2x2[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x3[V] {
-  private[math] def f00: Float; private[math] def f10: Float
-  private[math] def f01: Float; private[math] def f11: Float
-  private[math] def f02: Float; private[math] def f12: Float
-
-  private[math] def d00: Double; private[math] def d10: Double
-  private[math] def d01: Double; private[math] def d11: Double
-  private[math] def d02: Double; private[math] def d12: Double
-}
+private[math] abstract class Read2x3[T] extends ReadMat[T]
 
 /** <code>Read2x4</code> is a superclass of all the 2x4 matrices.
  * <p>
@@ -156,17 +192,7 @@ private[math] abstract class Read2x3[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x4[V] {
-  private[math] def f00: Float; private[math] def f10: Float
-  private[math] def f01: Float; private[math] def f11: Float
-  private[math] def f02: Float; private[math] def f12: Float
-  private[math] def f03: Float; private[math] def f13: Float
-
-  private[math] def d00: Double; private[math] def d10: Double
-  private[math] def d01: Double; private[math] def d11: Double
-  private[math] def d02: Double; private[math] def d12: Double
-  private[math] def d03: Double; private[math] def d13: Double
-}
+private[math] abstract class Read2x4[T] extends ReadMat[T]
 
 /** <code>Read3x2</code> is a superclass of all the 3x2 matrices.
  * <p>
@@ -175,24 +201,7 @@ private[math] abstract class Read2x4[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x2[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-}
+private[math] abstract class Read3x2[T] extends ReadMat[T]
 
 /** <code>Read3x3</code> is a superclass of all the 3x3 matrices.
  * <p>
@@ -201,32 +210,7 @@ private[math] abstract class Read3x2[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x3[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-
-  private[math] def f02: Float
-  private[math] def f12: Float
-  private[math] def f22: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-
-  private[math] def d02: Double
-  private[math] def d12: Double
-  private[math] def d22: Double
-}
+private[math] abstract class Read3x3[T] extends ReadMat[T]
 
 /** <code>Read3x4</code> is a superclass of all the 3x4 matrices.
  * <p>
@@ -235,40 +219,7 @@ private[math] abstract class Read3x3[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x4[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-
-  private[math] def f02: Float
-  private[math] def f12: Float
-  private[math] def f22: Float
-
-  private[math] def f03: Float
-  private[math] def f13: Float
-  private[math] def f23: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-
-  private[math] def d02: Double
-  private[math] def d12: Double
-  private[math] def d22: Double
-
-  private[math] def d03: Double
-  private[math] def d13: Double
-  private[math] def d23: Double
-}
+private[math] abstract class Read3x4[T] extends ReadMat[T]
 
 /** <code>Read4x2</code> is a superclass of all the 4x2 matrices.
  * <p>
@@ -277,28 +228,7 @@ private[math] abstract class Read3x4[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x2[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-  private[math] def f30: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-  private[math] def f31: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-  private[math] def d30: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-  private[math] def d31: Double
-}
+private[math] abstract class Read4x2[T] extends ReadMat[T]
 
 /** <code>Read4x3</code> is a superclass of all the 4x3 matrices.
  * <p>
@@ -307,38 +237,7 @@ private[math] abstract class Read4x2[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x3[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-  private[math] def f30: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-  private[math] def f31: Float
-
-  private[math] def f02: Float
-  private[math] def f12: Float
-  private[math] def f22: Float
-  private[math] def f32: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-  private[math] def d30: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-  private[math] def d31: Double
-
-  private[math] def d02: Double
-  private[math] def d12: Double
-  private[math] def d22: Double
-  private[math] def d32: Double
-}
+private[math] abstract class Read4x3[T] extends ReadMat[T]
 
 /** <code>Read4x4</code> is a superclass of all the 4x4 matrices.
  * <p>
@@ -347,45 +246,4 @@ private[math] abstract class Read4x3[V] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x4[V] {
-  private[math] def f00: Float
-  private[math] def f10: Float
-  private[math] def f20: Float
-  private[math] def f30: Float
-
-  private[math] def f01: Float
-  private[math] def f11: Float
-  private[math] def f21: Float
-  private[math] def f31: Float
-
-  private[math] def f02: Float
-  private[math] def f12: Float
-  private[math] def f22: Float
-  private[math] def f32: Float
-
-  private[math] def f03: Float
-  private[math] def f13: Float
-  private[math] def f23: Float
-  private[math] def f33: Float
-
-
-  private[math] def d00: Double
-  private[math] def d10: Double
-  private[math] def d20: Double
-  private[math] def d30: Double
-
-  private[math] def d01: Double
-  private[math] def d11: Double
-  private[math] def d21: Double
-  private[math] def d31: Double
-
-  private[math] def d02: Double
-  private[math] def d12: Double
-  private[math] def d22: Double
-  private[math] def d32: Double
-
-  private[math] def d03: Double
-  private[math] def d13: Double
-  private[math] def d23: Double
-  private[math] def d33: Double
-}
+private[math] abstract class Read4x4[T] extends ReadMat[T]

@@ -1059,13 +1059,13 @@ class DoubleMathExtraTest extends FunSuite {
         assert(approxEqual(
             transformation(s, m, t),
             Mat3x4 scale(s) rotate(q) translate(t),
-            1e-13f)
+            1e-12f)
         )
 
         assert(approxEqual(
             inverseTransformation(s, m, t),
             Mat3x4 translate(-t) rotate(conjugate(q)) scale(1/s),
-            1e-13f)
+            1e-12f)
         )
       }
     }

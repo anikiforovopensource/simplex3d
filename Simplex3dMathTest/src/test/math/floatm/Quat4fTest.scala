@@ -250,34 +250,59 @@ class Quat4fTest extends FunSuite {
   }
 
   test("Rotation") {
-    def testInstance(q: AnyQuat4, angle: Float, axis: Vec3) {
-      assert(q.rotate(quaternion(angle, axis)) ==
-           quaternion(angle, axis)*q)
+    val random = new java.util.Random(1)
+    def float = random.nextFloat
+    def axis = normalize(Vec3(float, float, float))
 
-      assert(q.rotate(angle, axis) ==
-           quaternion(angle, axis)*q)
+    def testInstance(q: inQuat4, angle: Float, axis: inVec3) {
+      assert(q.rotate(quaternion(angle, axis)) == quaternion(angle, axis)*q)
 
-      assert(q.rotateX(angle) ==
-           quaternion(angle, Vec3.UnitX)*q)
+      assert(approxEqual(
+          q.rotate(angle, axis),
+          quaternion(angle, axis)*q,
+          1e-6f
+      ))
+      assert(approxEqual(
+          q.rotate(angle, axis*float),
+          quaternion(angle, axis)*q,
+          1e-6f
+      ))
 
-      assert(q.rotateY(angle) ==
-           quaternion(angle, Vec3.UnitY)*q)
-
-      assert(q.rotateZ(angle) ==
-           quaternion(angle, Vec3.UnitZ)*q)
+      assert(q.rotateX(angle) == quaternion(angle, Vec3.UnitX)*q)
+      assert(q.rotateY(angle) == quaternion(angle, Vec3.UnitY)*q)
+      assert(q.rotateZ(angle) == quaternion(angle, Vec3.UnitZ)*q)
 
       assert(q.invert() == inverse(q))
+
+      for (i <- 0 until 100) {
+        val v = Vec3(float, float, float)
+        assert(approxEqual(
+            q.rotateVector(v),
+            rotationMat(q)*v,
+            1e-6f
+        ))
+        assert(approxEqual(
+            (q*float).rotateVector(v),
+            rotationMat(q)*v,
+            1e-6f
+        ))
+      }
     }
-    def testObject(angle: Float, axis: Vec3) {
-      assert(Quat4.rotate(angle, axis) == quaternion(angle, axis))
+    def testObject(angle: Float, axis: inVec3) {
+      assert(approxEqual(
+          Quat4.rotate(angle, axis),
+          quaternion(angle, axis),
+          1e-6f
+      ))
+      assert(approxEqual(
+          Quat4.rotate(angle, axis*float),
+          quaternion(angle, axis),
+          1e-6f
+      ))
       assert(Quat4.rotateX(angle) == quaternion(angle, Vec3.UnitX))
       assert(Quat4.rotateY(angle) == quaternion(angle, Vec3.UnitY))
       assert(Quat4.rotateZ(angle) == quaternion(angle, Vec3.UnitZ))
     }
-
-    val random = new java.util.Random(1)
-    def float = random.nextFloat
-    def axis = normalize(Vec3(float, float, float))
 
     for (i <- 0 until 1000) {
       testInstance(quaternion(float, axis), float, axis)

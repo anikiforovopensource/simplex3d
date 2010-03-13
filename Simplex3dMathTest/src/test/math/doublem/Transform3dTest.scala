@@ -77,7 +77,7 @@ class Transform3dTest extends FunSuite {
       assert(Mat3x4.translate(p) == Mat3x4.Identity.translate(p))
     }
 
-    def assertTransform(a: AnyMat3x4, m: AnyMat3x4, b: AnyMat3x4) {
+    def assertTransform(a: inMat3x4, m: inMat3x4, b: inMat3x4) {
       assert(a.ne(b))
       assert(m*Mat4(a) == b)
 
@@ -97,18 +97,22 @@ class Transform3dTest extends FunSuite {
         }
       }
     }
-    def test(t: AnyMat3x4) {
+    def test(t: inMat3x4) {
       val s = r
       assertTransform(t, Mat3x4(s), t scale(s))
 
       val sv = Vec3(r, r, r)
       assertTransform(t, scaleMat(sv), t scale(sv))
 
-      val rq = normalize(Quat4(r, r, r, r))
-      assertTransform(t, Mat3x4(rotationMat(rq)), t rotate(rq))
+      val rq = Quat4(r, r, r, r)
+      assertTransform(t, Mat3x4(rotationMat(normalize(rq))), t rotate(rq))
 
-      val (angle, axis) = (r, normalize(Vec3(r, r, r)))
-      assertTransform(t, Mat3x4(rotationMat(angle, axis)), t rotate(angle, axis))
+      val (angle, axis) = (r, Vec3(r, r, r))
+      assertTransform(
+        t,
+        Mat3x4(rotationMat(angle, normalize(axis))),
+        t rotate(angle, axis)
+      )
 
       val rx = r
       assertTransform(t, Mat3x4(rotationMat(rx, Vec3.UnitX)), t rotateX(rx))

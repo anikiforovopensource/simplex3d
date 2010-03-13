@@ -87,7 +87,7 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
   def rotate(q: AnyQuat4f) :Quat4f = q*this
   def rotate(angle: Float, axis: AnyVec3f) :Quat4f = {
-    quaternion(angle, axis)*this
+    quaternion(angle, normalize(axis))*this
   }
   def rotateX(angle: Float) :Quat4f = {
     quaternion(angle, Vec3f.UnitX)*this
@@ -98,9 +98,10 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
   def rotateZ(angle: Float) :Quat4f = {
     quaternion(angle, Vec3f.UnitZ)*this
   }
-  def invert() :Quat4f = {
-    inverse(this)
-  }
+  def invert() :Quat4f = inverse(this)
+
+  def rotateVector(u: AnyVec3f) :Vec3f = FloatMath.rotate(u, normalize(this))
+
 
   def ==(q: AnyQuat4f) :Boolean = {
     if (q eq null) false
@@ -205,7 +206,7 @@ object Quat4f {
   def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
 
   def rotate(angle: Float, axis: AnyVec3f) :Quat4f = {
-    quaternion(angle, axis)
+    quaternion(angle, normalize(axis))
   }
   def rotateX(angle: Float) :Quat4f = {
     quaternion(angle, Vec3f.UnitX)

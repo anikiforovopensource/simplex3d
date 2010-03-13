@@ -243,11 +243,19 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     m03*s.x, m13*s.y, m23*s.z
   )
 
+  /** Appends rotation to the current transformation. The rotation quaternion
+   * is normalized first and then transformed into a rotation matrix which
+   * is concatenated with the current transformation. If you want to avoid
+   * normalization, use <code>concatenate(rotationMat(q))</code> instead.
+   * @param q rotation quaternion.
+   * @return a new transformation wtih the specified rotation as
+   *         the last operation.
+   */
   def rotate(q: AnyQuat4f) :Mat3x4f = {
-    concatenate(rotationMat(q))
+    concatenate(rotationMat(normalize(q)))
   }
   def rotate(angle: Float, axis: AnyVec3f) :Mat3x4f = {
-    concatenate(rotationMat(angle, axis))
+    concatenate(rotationMat(angle, normalize(axis)))
   }
 
   def rotateX(angle: Float) :Mat3x4f = {
@@ -634,10 +642,10 @@ object Mat3x4f {
   }
 
   def rotate(q: AnyQuat4f) :Mat3x4f = {
-    Mat3x4f(rotationMat(q))
+    Mat3x4f(rotationMat(normalize(q)))
   }
   def rotate(angle: Float, axis: AnyVec3f) :Mat3x4f = {
-    Mat3x4f(rotationMat(angle, axis))
+    Mat3x4f(rotationMat(angle, normalize(axis)))
   }
 
   def rotateX(angle: Float) :Mat3x4f = {

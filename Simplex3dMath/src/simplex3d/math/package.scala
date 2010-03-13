@@ -27,15 +27,39 @@ package simplex3d
 package object math {
 
   // In and Out aliases
+
+  /** <code>in</code> prefix for Vec2b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type inVec2b = AnyVec2b
+
+  /** <code>out</code> prefix for Vec2b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type outVec2b = Vec2b with Implicits[Off]
   implicit def bmOut2(u: Vec2b) = u.asInstanceOf[outVec2b]
 
+
+  /** <code>in</code> prefix for Vec3b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type inVec3b = AnyVec3b
+
+  /** <code>out</code> prefix for Vec3b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type outVec3b = Vec3b with Implicits[Off]
   implicit def bmOut3(u: Vec3b) = u.asInstanceOf[outVec3b]
 
+
+  /** <code>in</code> prefix for Vec4b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type inVec4b = AnyVec4b
+
+  /** <code>out</code> prefix for Vec4b.
+   * It is recommended to always use the prefixes when declaring functions.
+   */
   type outVec4b = Vec4b with Implicits[Off]
   implicit def bmOut4(u: Vec4b) = u.asInstanceOf[outVec4b]
 }

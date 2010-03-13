@@ -26,10 +26,6 @@ import simplex3d.math.BaseMath._
 /** The <code>AnyVec2b</code> class represents Boolean 2-dimensional vectors,
  * either constant or mutable.
  * <p>
- *   It is recommended to use this common supertype for function arguments
- *   unless you explicitly want to modify the argument vector.
- * </p>
- * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
  *   using <code>BaseMath.any(bvec)</code>, <code>BaseMath.all(bvec)</code>,
  *   and <code>BaseMath.not(bvec)</code>.

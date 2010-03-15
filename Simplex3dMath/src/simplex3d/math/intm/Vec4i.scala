@@ -111,28 +111,28 @@ sealed abstract class AnyVec4i extends Read4[Int] {
   def |(s: Int) = new Vec4i( x | s, y | s, z | s, w | s)
   def ^(s: Int) = new Vec4i( x ^ s, y ^ s, z ^ s, w ^ s)
 
-  def +(u: AnyVec4i) = new Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
-  def -(u: AnyVec4i) = new Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
-  def *(u: AnyVec4i) = new Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
-  def /(u: AnyVec4i) = new Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
-  def %(u: AnyVec4i) = new Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
-  def >>(u: AnyVec4i) = new Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
-  def >>>(u: AnyVec4i) = new Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
-  def <<(u: AnyVec4i) = new Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
-  def &(u: AnyVec4i) = new Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
-  def |(u: AnyVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
-  def ^(u: AnyVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
+  def +(u: inVec4i) = new Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
+  def -(u: inVec4i) = new Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
+  def *(u: inVec4i) = new Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
+  def /(u: inVec4i) = new Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
+  def %(u: inVec4i) = new Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
+  def >>(u: inVec4i) = new Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
+  def >>>(u: inVec4i) = new Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
+  def <<(u: inVec4i) = new Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
+  def &(u: inVec4i) = new Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
+  def |(u: inVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
+  def ^(u: inVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
 
-  def ==(u: AnyVec4i) :Boolean = {
+  def ==(u: inVec4i) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z && w == u.w
   }
 
-  def !=(u: AnyVec4i) :Boolean = !(this == u)
+  def !=(u: inVec4i) :Boolean = !(this == u)
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec4i => this == u
+      case u: inVec4i => this == u
       case _ => false
     }
   }
@@ -206,19 +206,19 @@ extends AnyVec4i with Mutable with Implicits[On]
   def |=(s: Int) = { x |= s; y |= s; z |= s; w |= s }
   def ^=(s: Int) = { x ^= s; y ^= s; z ^= s; w ^= s }
 
-  def +=(u: AnyVec4i) { x += u.x; y += u.y; z += u.z; w += u.w }
-  def -=(u: AnyVec4i) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
-  def *=(u: AnyVec4i) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
-  def /=(u: AnyVec4i) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
-  def %=(u: AnyVec4i) { x %= u.x; y %= u.y; z %= u.z; w %= u.w }
-  def >>=(u: AnyVec4i) = { x >>= u.x; y >>= u.y; z >>= u.z; w >>= u.w }
-  def >>>=(u: AnyVec4i) = { x >>>= u.x; y >>>= u.y; z >>>= u.z; w >>>= u.w }
-  def <<=(u: AnyVec4i) = { x <<= u.x; y <<= u.y; z <<= u.z; w <<= u.w }
-  def &=(u: AnyVec4i) = { x &= u.x; y &= u.y; z &= u.z; w &= u.w }
-  def |=(u: AnyVec4i) = { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
-  def ^=(u: AnyVec4i) = { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
+  def +=(u: inVec4i) { x += u.x; y += u.y; z += u.z; w += u.w }
+  def -=(u: inVec4i) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
+  def *=(u: inVec4i) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
+  def /=(u: inVec4i) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
+  def %=(u: inVec4i) { x %= u.x; y %= u.y; z %= u.z; w %= u.w }
+  def >>=(u: inVec4i) = { x >>= u.x; y >>= u.y; z >>= u.z; w >>= u.w }
+  def >>>=(u: inVec4i) = { x >>>= u.x; y >>>= u.y; z >>>= u.z; w >>>= u.w }
+  def <<=(u: inVec4i) = { x <<= u.x; y <<= u.y; z <<= u.z; w <<= u.w }
+  def &=(u: inVec4i) = { x &= u.x; y &= u.y; z &= u.z; w &= u.w }
+  def |=(u: inVec4i) = { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
+  def ^=(u: inVec4i) = { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
 
-  def :=(u: AnyVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
   def set(x: Int, y: Int, z: Int, w: Int) {
     this.x = x; this.y = y; this.z = z; this.w = w
   }
@@ -426,194 +426,194 @@ extends AnyVec4i with Mutable with Implicits[On]
   override def qpts = wzyx
 
 
-  def xy_=(u: AnyVec2i) { x = u.x; y = u.y }
-  def xz_=(u: AnyVec2i) { x = u.x; z = u.y }
-  def xw_=(u: AnyVec2i) { x = u.x; w = u.y }
-  def yx_=(u: AnyVec2i) { y = u.x; x = u.y }
-  def yz_=(u: AnyVec2i) { y = u.x; z = u.y }
-  def yw_=(u: AnyVec2i) { y = u.x; w = u.y }
-  def zx_=(u: AnyVec2i) { z = u.x; x = u.y }
-  def zy_=(u: AnyVec2i) { z = u.x; y = u.y }
-  def zw_=(u: AnyVec2i) { z = u.x; w = u.y }
-  def wx_=(u: AnyVec2i) { w = u.x; x = u.y }
-  def wy_=(u: AnyVec2i) { w = u.x; y = u.y }
-  def wz_=(u: AnyVec2i) { w = u.x; z = u.y }
+  def xy_=(u: inVec2i) { x = u.x; y = u.y }
+  def xz_=(u: inVec2i) { x = u.x; z = u.y }
+  def xw_=(u: inVec2i) { x = u.x; w = u.y }
+  def yx_=(u: inVec2i) { y = u.x; x = u.y }
+  def yz_=(u: inVec2i) { y = u.x; z = u.y }
+  def yw_=(u: inVec2i) { y = u.x; w = u.y }
+  def zx_=(u: inVec2i) { z = u.x; x = u.y }
+  def zy_=(u: inVec2i) { z = u.x; y = u.y }
+  def zw_=(u: inVec2i) { z = u.x; w = u.y }
+  def wx_=(u: inVec2i) { w = u.x; x = u.y }
+  def wy_=(u: inVec2i) { w = u.x; y = u.y }
+  def wz_=(u: inVec2i) { w = u.x; z = u.y }
 
-  def xyz_=(u: AnyVec3i) { x = u.x; y = u.y; z = u.z }
-  def xyw_=(u: AnyVec3i) { x = u.x; y = u.y; w = u.z }
-  def xzy_=(u: AnyVec3i) { x = u.x; z = u.y; y = u.z }
-  def xzw_=(u: AnyVec3i) { x = u.x; z = u.y; w = u.z }
-  def xwy_=(u: AnyVec3i) { x = u.x; w = u.y; y = u.z }
-  def xwz_=(u: AnyVec3i) { x = u.x; w = u.y; z = u.z }
-  def yxz_=(u: AnyVec3i) { y = u.x; x = u.y; z = u.z }
-  def yxw_=(u: AnyVec3i) { y = u.x; x = u.y; w = u.z }
-  def yzx_=(u: AnyVec3i) { y = u.x; z = u.y; x = u.z }
-  def yzw_=(u: AnyVec3i) { y = u.x; z = u.y; w = u.z }
-  def ywx_=(u: AnyVec3i) { y = u.x; w = u.y; x = u.z }
-  def ywz_=(u: AnyVec3i) { y = u.x; w = u.y; z = u.z }
-  def zxy_=(u: AnyVec3i) { z = u.x; x = u.y; y = u.z }
-  def zxw_=(u: AnyVec3i) { z = u.x; x = u.y; w = u.z }
-  def zyx_=(u: AnyVec3i) { z = u.x; y = u.y; x = u.z }
-  def zyw_=(u: AnyVec3i) { z = u.x; y = u.y; w = u.z }
-  def zwx_=(u: AnyVec3i) { z = u.x; w = u.y; x = u.z }
-  def zwy_=(u: AnyVec3i) { z = u.x; w = u.y; y = u.z }
-  def wxy_=(u: AnyVec3i) { w = u.x; x = u.y; y = u.z }
-  def wxz_=(u: AnyVec3i) { w = u.x; x = u.y; z = u.z }
-  def wyx_=(u: AnyVec3i) { w = u.x; y = u.y; x = u.z }
-  def wyz_=(u: AnyVec3i) { w = u.x; y = u.y; z = u.z }
-  def wzx_=(u: AnyVec3i) { w = u.x; z = u.y; x = u.z }
-  def wzy_=(u: AnyVec3i) { w = u.x; z = u.y; y = u.z }
+  def xyz_=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
+  def xyw_=(u: inVec3i) { x = u.x; y = u.y; w = u.z }
+  def xzy_=(u: inVec3i) { x = u.x; z = u.y; y = u.z }
+  def xzw_=(u: inVec3i) { x = u.x; z = u.y; w = u.z }
+  def xwy_=(u: inVec3i) { x = u.x; w = u.y; y = u.z }
+  def xwz_=(u: inVec3i) { x = u.x; w = u.y; z = u.z }
+  def yxz_=(u: inVec3i) { y = u.x; x = u.y; z = u.z }
+  def yxw_=(u: inVec3i) { y = u.x; x = u.y; w = u.z }
+  def yzx_=(u: inVec3i) { y = u.x; z = u.y; x = u.z }
+  def yzw_=(u: inVec3i) { y = u.x; z = u.y; w = u.z }
+  def ywx_=(u: inVec3i) { y = u.x; w = u.y; x = u.z }
+  def ywz_=(u: inVec3i) { y = u.x; w = u.y; z = u.z }
+  def zxy_=(u: inVec3i) { z = u.x; x = u.y; y = u.z }
+  def zxw_=(u: inVec3i) { z = u.x; x = u.y; w = u.z }
+  def zyx_=(u: inVec3i) { z = u.x; y = u.y; x = u.z }
+  def zyw_=(u: inVec3i) { z = u.x; y = u.y; w = u.z }
+  def zwx_=(u: inVec3i) { z = u.x; w = u.y; x = u.z }
+  def zwy_=(u: inVec3i) { z = u.x; w = u.y; y = u.z }
+  def wxy_=(u: inVec3i) { w = u.x; x = u.y; y = u.z }
+  def wxz_=(u: inVec3i) { w = u.x; x = u.y; z = u.z }
+  def wyx_=(u: inVec3i) { w = u.x; y = u.y; x = u.z }
+  def wyz_=(u: inVec3i) { w = u.x; y = u.y; z = u.z }
+  def wzx_=(u: inVec3i) { w = u.x; z = u.y; x = u.z }
+  def wzy_=(u: inVec3i) { w = u.x; z = u.y; y = u.z }
 
-  def xyzw_=(u: AnyVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
-  def xywz_=(u: AnyVec4i) { x = u.x; y = u.y; var t = u.w; w = u.z; z = t }
-  def xzyw_=(u: AnyVec4i) { x = u.x; var t = u.z; z = u.y; y = t; w = u.w }
-  def xzwy_=(u: AnyVec4i) { x = u.x; var t = u.z; z = u.y; y = u.w; w = t }
-  def xwyz_=(u: AnyVec4i) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
-  def xwzy_=(u: AnyVec4i) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
-  def yxzw_=(u: AnyVec4i) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
-  def yxwz_=(u: AnyVec4i) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z=t }
-  def yzxw_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
-  def yzwx_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
-  def ywxz_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
-  def ywzx_=(u: AnyVec4i) { var t = u.y; y = u.x; x = u.w; w = t; z = u.z }
-  def zxyw_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.y; y = t; w = u.w }
-  def zxwy_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
-  def zyxw_=(u: AnyVec4i) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
-  def zywx_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
-  def zwxy_=(u: AnyVec4i) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y=t }
-  def zwyx_=(u: AnyVec4i) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
-  def wxyz_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
-  def wxzy_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
-  def wyxz_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
-  def wyzx_=(u: AnyVec4i) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
-  def wzxy_=(u: AnyVec4i) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
-  def wzyx_=(u: AnyVec4i) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y=t }
+  def xyzw_=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def xywz_=(u: inVec4i) { x = u.x; y = u.y; var t = u.w; w = u.z; z = t }
+  def xzyw_=(u: inVec4i) { x = u.x; var t = u.z; z = u.y; y = t; w = u.w }
+  def xzwy_=(u: inVec4i) { x = u.x; var t = u.z; z = u.y; y = u.w; w = t }
+  def xwyz_=(u: inVec4i) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
+  def xwzy_=(u: inVec4i) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
+  def yxzw_=(u: inVec4i) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
+  def yxwz_=(u: inVec4i) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z=t }
+  def yzxw_=(u: inVec4i) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
+  def yzwx_=(u: inVec4i) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
+  def ywxz_=(u: inVec4i) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
+  def ywzx_=(u: inVec4i) { var t = u.y; y = u.x; x = u.w; w = t; z = u.z }
+  def zxyw_=(u: inVec4i) { var t = u.z; z = u.x; x = u.y; y = t; w = u.w }
+  def zxwy_=(u: inVec4i) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
+  def zyxw_=(u: inVec4i) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
+  def zywx_=(u: inVec4i) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
+  def zwxy_=(u: inVec4i) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y=t }
+  def zwyx_=(u: inVec4i) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
+  def wxyz_=(u: inVec4i) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
+  def wxzy_=(u: inVec4i) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
+  def wyxz_=(u: inVec4i) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
+  def wyzx_=(u: inVec4i) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
+  def wzxy_=(u: inVec4i) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
+  def wzyx_=(u: inVec4i) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y=t }
 
-  def rg_=(u: AnyVec2i) { xy_=(u) }
-  def rb_=(u: AnyVec2i) { xz_=(u) }
-  def ra_=(u: AnyVec2i) { xw_=(u) }
-  def gr_=(u: AnyVec2i) { yx_=(u) }
-  def gb_=(u: AnyVec2i) { yz_=(u) }
-  def ga_=(u: AnyVec2i) { yw_=(u) }
-  def br_=(u: AnyVec2i) { zx_=(u) }
-  def bg_=(u: AnyVec2i) { zy_=(u) }
-  def ba_=(u: AnyVec2i) { zw_=(u) }
-  def ar_=(u: AnyVec2i) { wx_=(u) }
-  def ag_=(u: AnyVec2i) { wy_=(u) }
-  def ab_=(u: AnyVec2i) { wz_=(u) }
+  def rg_=(u: inVec2i) { xy_=(u) }
+  def rb_=(u: inVec2i) { xz_=(u) }
+  def ra_=(u: inVec2i) { xw_=(u) }
+  def gr_=(u: inVec2i) { yx_=(u) }
+  def gb_=(u: inVec2i) { yz_=(u) }
+  def ga_=(u: inVec2i) { yw_=(u) }
+  def br_=(u: inVec2i) { zx_=(u) }
+  def bg_=(u: inVec2i) { zy_=(u) }
+  def ba_=(u: inVec2i) { zw_=(u) }
+  def ar_=(u: inVec2i) { wx_=(u) }
+  def ag_=(u: inVec2i) { wy_=(u) }
+  def ab_=(u: inVec2i) { wz_=(u) }
 
-  def rgb_=(u: AnyVec3i) { xyz_=(u) }
-  def rga_=(u: AnyVec3i) { xyw_=(u) }
-  def rbg_=(u: AnyVec3i) { xzy_=(u) }
-  def rba_=(u: AnyVec3i) { xzw_=(u) }
-  def rag_=(u: AnyVec3i) { xwy_=(u) }
-  def rab_=(u: AnyVec3i) { xwz_=(u) }
-  def grb_=(u: AnyVec3i) { yxz_=(u) }
-  def gra_=(u: AnyVec3i) { yxw_=(u) }
-  def gbr_=(u: AnyVec3i) { yzx_=(u) }
-  def gba_=(u: AnyVec3i) { yzw_=(u) }
-  def gar_=(u: AnyVec3i) { ywx_=(u) }
-  def gab_=(u: AnyVec3i) { ywz_=(u) }
-  def brg_=(u: AnyVec3i) { zxy_=(u) }
-  def bra_=(u: AnyVec3i) { zxw_=(u) }
-  def bgr_=(u: AnyVec3i) { zyx_=(u) }
-  def bga_=(u: AnyVec3i) { zyw_=(u) }
-  def bar_=(u: AnyVec3i) { zwx_=(u) }
-  def bag_=(u: AnyVec3i) { zwy_=(u) }
-  def arg_=(u: AnyVec3i) { wxy_=(u) }
-  def arb_=(u: AnyVec3i) { wxz_=(u) }
-  def agr_=(u: AnyVec3i) { wyx_=(u) }
-  def agb_=(u: AnyVec3i) { wyz_=(u) }
-  def abr_=(u: AnyVec3i) { wzx_=(u) }
-  def abg_=(u: AnyVec3i) { wzy_=(u) }
+  def rgb_=(u: inVec3i) { xyz_=(u) }
+  def rga_=(u: inVec3i) { xyw_=(u) }
+  def rbg_=(u: inVec3i) { xzy_=(u) }
+  def rba_=(u: inVec3i) { xzw_=(u) }
+  def rag_=(u: inVec3i) { xwy_=(u) }
+  def rab_=(u: inVec3i) { xwz_=(u) }
+  def grb_=(u: inVec3i) { yxz_=(u) }
+  def gra_=(u: inVec3i) { yxw_=(u) }
+  def gbr_=(u: inVec3i) { yzx_=(u) }
+  def gba_=(u: inVec3i) { yzw_=(u) }
+  def gar_=(u: inVec3i) { ywx_=(u) }
+  def gab_=(u: inVec3i) { ywz_=(u) }
+  def brg_=(u: inVec3i) { zxy_=(u) }
+  def bra_=(u: inVec3i) { zxw_=(u) }
+  def bgr_=(u: inVec3i) { zyx_=(u) }
+  def bga_=(u: inVec3i) { zyw_=(u) }
+  def bar_=(u: inVec3i) { zwx_=(u) }
+  def bag_=(u: inVec3i) { zwy_=(u) }
+  def arg_=(u: inVec3i) { wxy_=(u) }
+  def arb_=(u: inVec3i) { wxz_=(u) }
+  def agr_=(u: inVec3i) { wyx_=(u) }
+  def agb_=(u: inVec3i) { wyz_=(u) }
+  def abr_=(u: inVec3i) { wzx_=(u) }
+  def abg_=(u: inVec3i) { wzy_=(u) }
 
-  def rgba_=(u: AnyVec4i) { xyzw_=(u) }
-  def rgab_=(u: AnyVec4i) { xywz_=(u) }
-  def rbga_=(u: AnyVec4i) { xzyw_=(u) }
-  def rbag_=(u: AnyVec4i) { xzwy_=(u) }
-  def ragb_=(u: AnyVec4i) { xwyz_=(u) }
-  def rabg_=(u: AnyVec4i) { xwzy_=(u) }
-  def grba_=(u: AnyVec4i) { yxzw_=(u) }
-  def grab_=(u: AnyVec4i) { yxwz_=(u) }
-  def gbra_=(u: AnyVec4i) { yzxw_=(u) }
-  def gbar_=(u: AnyVec4i) { yzwx_=(u) }
-  def garb_=(u: AnyVec4i) { ywxz_=(u) }
-  def gabr_=(u: AnyVec4i) { ywzx_=(u) }
-  def brga_=(u: AnyVec4i) { zxyw_=(u) }
-  def brag_=(u: AnyVec4i) { zxwy_=(u) }
-  def bgra_=(u: AnyVec4i) { zyxw_=(u) }
-  def bgar_=(u: AnyVec4i) { zywx_=(u) }
-  def barg_=(u: AnyVec4i) { zwxy_=(u) }
-  def bagr_=(u: AnyVec4i) { zwyx_=(u) }
-  def argb_=(u: AnyVec4i) { wxyz_=(u) }
-  def arbg_=(u: AnyVec4i) { wxzy_=(u) }
-  def agrb_=(u: AnyVec4i) { wyxz_=(u) }
-  def agbr_=(u: AnyVec4i) { wyzx_=(u) }
-  def abrg_=(u: AnyVec4i) { wzxy_=(u) }
-  def abgr_=(u: AnyVec4i) { wzyx_=(u) }
+  def rgba_=(u: inVec4i) { xyzw_=(u) }
+  def rgab_=(u: inVec4i) { xywz_=(u) }
+  def rbga_=(u: inVec4i) { xzyw_=(u) }
+  def rbag_=(u: inVec4i) { xzwy_=(u) }
+  def ragb_=(u: inVec4i) { xwyz_=(u) }
+  def rabg_=(u: inVec4i) { xwzy_=(u) }
+  def grba_=(u: inVec4i) { yxzw_=(u) }
+  def grab_=(u: inVec4i) { yxwz_=(u) }
+  def gbra_=(u: inVec4i) { yzxw_=(u) }
+  def gbar_=(u: inVec4i) { yzwx_=(u) }
+  def garb_=(u: inVec4i) { ywxz_=(u) }
+  def gabr_=(u: inVec4i) { ywzx_=(u) }
+  def brga_=(u: inVec4i) { zxyw_=(u) }
+  def brag_=(u: inVec4i) { zxwy_=(u) }
+  def bgra_=(u: inVec4i) { zyxw_=(u) }
+  def bgar_=(u: inVec4i) { zywx_=(u) }
+  def barg_=(u: inVec4i) { zwxy_=(u) }
+  def bagr_=(u: inVec4i) { zwyx_=(u) }
+  def argb_=(u: inVec4i) { wxyz_=(u) }
+  def arbg_=(u: inVec4i) { wxzy_=(u) }
+  def agrb_=(u: inVec4i) { wyxz_=(u) }
+  def agbr_=(u: inVec4i) { wyzx_=(u) }
+  def abrg_=(u: inVec4i) { wzxy_=(u) }
+  def abgr_=(u: inVec4i) { wzyx_=(u) }
 
-  def st_=(u: AnyVec2i) { xy_=(u) }
-  def sp_=(u: AnyVec2i) { xz_=(u) }
-  def sq_=(u: AnyVec2i) { xw_=(u) }
-  def ts_=(u: AnyVec2i) { yx_=(u) }
-  def tp_=(u: AnyVec2i) { yz_=(u) }
-  def tq_=(u: AnyVec2i) { yw_=(u) }
-  def ps_=(u: AnyVec2i) { zx_=(u) }
-  def pt_=(u: AnyVec2i) { zy_=(u) }
-  def pq_=(u: AnyVec2i) { zw_=(u) }
-  def qs_=(u: AnyVec2i) { wx_=(u) }
-  def qt_=(u: AnyVec2i) { wy_=(u) }
-  def qp_=(u: AnyVec2i) { wz_=(u) }
+  def st_=(u: inVec2i) { xy_=(u) }
+  def sp_=(u: inVec2i) { xz_=(u) }
+  def sq_=(u: inVec2i) { xw_=(u) }
+  def ts_=(u: inVec2i) { yx_=(u) }
+  def tp_=(u: inVec2i) { yz_=(u) }
+  def tq_=(u: inVec2i) { yw_=(u) }
+  def ps_=(u: inVec2i) { zx_=(u) }
+  def pt_=(u: inVec2i) { zy_=(u) }
+  def pq_=(u: inVec2i) { zw_=(u) }
+  def qs_=(u: inVec2i) { wx_=(u) }
+  def qt_=(u: inVec2i) { wy_=(u) }
+  def qp_=(u: inVec2i) { wz_=(u) }
 
-  def stp_=(u: AnyVec3i) { xyz_=(u) }
-  def stq_=(u: AnyVec3i) { xyw_=(u) }
-  def spt_=(u: AnyVec3i) { xzy_=(u) }
-  def spq_=(u: AnyVec3i) { xzw_=(u) }
-  def sqt_=(u: AnyVec3i) { xwy_=(u) }
-  def sqp_=(u: AnyVec3i) { xwz_=(u) }
-  def tsp_=(u: AnyVec3i) { yxz_=(u) }
-  def tsq_=(u: AnyVec3i) { yxw_=(u) }
-  def tps_=(u: AnyVec3i) { yzx_=(u) }
-  def tpq_=(u: AnyVec3i) { yzw_=(u) }
-  def tqs_=(u: AnyVec3i) { ywx_=(u) }
-  def tqp_=(u: AnyVec3i) { ywz_=(u) }
-  def pst_=(u: AnyVec3i) { zxy_=(u) }
-  def psq_=(u: AnyVec3i) { zxw_=(u) }
-  def pts_=(u: AnyVec3i) { zyx_=(u) }
-  def ptq_=(u: AnyVec3i) { zyw_=(u) }
-  def pqs_=(u: AnyVec3i) { zwx_=(u) }
-  def pqt_=(u: AnyVec3i) { zwy_=(u) }
-  def qst_=(u: AnyVec3i) { wxy_=(u) }
-  def qsp_=(u: AnyVec3i) { wxz_=(u) }
-  def qts_=(u: AnyVec3i) { wyx_=(u) }
-  def qtp_=(u: AnyVec3i) { wyz_=(u) }
-  def qps_=(u: AnyVec3i) { wzx_=(u) }
-  def qpt_=(u: AnyVec3i) { wzy_=(u) }
+  def stp_=(u: inVec3i) { xyz_=(u) }
+  def stq_=(u: inVec3i) { xyw_=(u) }
+  def spt_=(u: inVec3i) { xzy_=(u) }
+  def spq_=(u: inVec3i) { xzw_=(u) }
+  def sqt_=(u: inVec3i) { xwy_=(u) }
+  def sqp_=(u: inVec3i) { xwz_=(u) }
+  def tsp_=(u: inVec3i) { yxz_=(u) }
+  def tsq_=(u: inVec3i) { yxw_=(u) }
+  def tps_=(u: inVec3i) { yzx_=(u) }
+  def tpq_=(u: inVec3i) { yzw_=(u) }
+  def tqs_=(u: inVec3i) { ywx_=(u) }
+  def tqp_=(u: inVec3i) { ywz_=(u) }
+  def pst_=(u: inVec3i) { zxy_=(u) }
+  def psq_=(u: inVec3i) { zxw_=(u) }
+  def pts_=(u: inVec3i) { zyx_=(u) }
+  def ptq_=(u: inVec3i) { zyw_=(u) }
+  def pqs_=(u: inVec3i) { zwx_=(u) }
+  def pqt_=(u: inVec3i) { zwy_=(u) }
+  def qst_=(u: inVec3i) { wxy_=(u) }
+  def qsp_=(u: inVec3i) { wxz_=(u) }
+  def qts_=(u: inVec3i) { wyx_=(u) }
+  def qtp_=(u: inVec3i) { wyz_=(u) }
+  def qps_=(u: inVec3i) { wzx_=(u) }
+  def qpt_=(u: inVec3i) { wzy_=(u) }
 
-  def stpq_=(u: AnyVec4i) { xyzw_=(u) }
-  def stqp_=(u: AnyVec4i) { xywz_=(u) }
-  def sptq_=(u: AnyVec4i) { xzyw_=(u) }
-  def spqt_=(u: AnyVec4i) { xzwy_=(u) }
-  def sqtp_=(u: AnyVec4i) { xwyz_=(u) }
-  def sqpt_=(u: AnyVec4i) { xwzy_=(u) }
-  def tspq_=(u: AnyVec4i) { yxzw_=(u) }
-  def tsqp_=(u: AnyVec4i) { yxwz_=(u) }
-  def tpsq_=(u: AnyVec4i) { yzxw_=(u) }
-  def tpqs_=(u: AnyVec4i) { yzwx_=(u) }
-  def tqsp_=(u: AnyVec4i) { ywxz_=(u) }
-  def tqps_=(u: AnyVec4i) { ywzx_=(u) }
-  def pstq_=(u: AnyVec4i) { zxyw_=(u) }
-  def psqt_=(u: AnyVec4i) { zxwy_=(u) }
-  def ptsq_=(u: AnyVec4i) { zyxw_=(u) }
-  def ptqs_=(u: AnyVec4i) { zywx_=(u) }
-  def pqst_=(u: AnyVec4i) { zwxy_=(u) }
-  def pqts_=(u: AnyVec4i) { zwyx_=(u) }
-  def qstp_=(u: AnyVec4i) { wxyz_=(u) }
-  def qspt_=(u: AnyVec4i) { wxzy_=(u) }
-  def qtsp_=(u: AnyVec4i) { wyxz_=(u) }
-  def qtps_=(u: AnyVec4i) { wyzx_=(u) }
-  def qpst_=(u: AnyVec4i) { wzxy_=(u) }
-  def qpts_=(u: AnyVec4i) { wzyx_=(u) }
+  def stpq_=(u: inVec4i) { xyzw_=(u) }
+  def stqp_=(u: inVec4i) { xywz_=(u) }
+  def sptq_=(u: inVec4i) { xzyw_=(u) }
+  def spqt_=(u: inVec4i) { xzwy_=(u) }
+  def sqtp_=(u: inVec4i) { xwyz_=(u) }
+  def sqpt_=(u: inVec4i) { xwzy_=(u) }
+  def tspq_=(u: inVec4i) { yxzw_=(u) }
+  def tsqp_=(u: inVec4i) { yxwz_=(u) }
+  def tpsq_=(u: inVec4i) { yzxw_=(u) }
+  def tpqs_=(u: inVec4i) { yzwx_=(u) }
+  def tqsp_=(u: inVec4i) { ywxz_=(u) }
+  def tqps_=(u: inVec4i) { ywzx_=(u) }
+  def pstq_=(u: inVec4i) { zxyw_=(u) }
+  def psqt_=(u: inVec4i) { zxwy_=(u) }
+  def ptsq_=(u: inVec4i) { zyxw_=(u) }
+  def ptqs_=(u: inVec4i) { zywx_=(u) }
+  def pqst_=(u: inVec4i) { zwxy_=(u) }
+  def pqts_=(u: inVec4i) { zwyx_=(u) }
+  def qstp_=(u: inVec4i) { wxyz_=(u) }
+  def qspt_=(u: inVec4i) { wxzy_=(u) }
+  def qtsp_=(u: inVec4i) { wyxz_=(u) }
+  def qtps_=(u: inVec4i) { wyzx_=(u) }
+  def qpst_=(u: inVec4i) { wzxy_=(u) }
+  def qpts_=(u: inVec4i) { wzyx_=(u) }
 }
 
 object Vec4i {

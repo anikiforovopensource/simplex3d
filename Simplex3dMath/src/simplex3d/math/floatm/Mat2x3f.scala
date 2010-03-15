@@ -123,12 +123,12 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     m02 - s, m12 - s
   )
 
-  def +(m: AnyMat2x3f) = new Mat2x3f(
+  def +(m: inMat2x3f) = new Mat2x3f(
     m00 + m.m00, m10 + m.m10,
     m01 + m.m01, m11 + m.m11,
     m02 + m.m02, m12 + m.m12
   )
-  def -(m: AnyMat2x3f) = new Mat2x3f(
+  def -(m: inMat2x3f) = new Mat2x3f(
     m00 - m.m00, m10 - m.m10,
     m01 - m.m01, m11 - m.m11,
     m02 - m.m02, m12 - m.m12
@@ -137,7 +137,7 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat2x3f) = new Mat2x3f(
+  def /(m: inMat2x3f) = new Mat2x3f(
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11,
     m02/m.m02, m12/m.m12
@@ -148,14 +148,14 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     s/m02, s/m12
   )
 
-  def *(m: AnyMat3x2f) = new Mat2f(
+  def *(m: inMat3x2f) = new Mat2f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
 
     m00*m.m01 + m01*m.m11 + m02*m.m21,
     m10*m.m01 + m11*m.m11 + m12*m.m21
   )
-  def *(m: AnyMat3f) = new Mat2x3f(
+  def *(m: inMat3f) = new Mat2x3f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -165,7 +165,7 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     m00*m.m02 + m01*m.m12 + m02*m.m22,
     m10*m.m02 + m11*m.m12 + m12*m.m22
   )
-  def *(m: AnyMat3x4f) = new Mat2x4f(
+  def *(m: inMat3x4f) = new Mat2x4f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
 
@@ -179,18 +179,18 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     m10*m.m03 + m11*m.m13 + m12*m.m23
   )
 
-  def *(u: AnyVec3f) = new Vec2f(
+  def *(u: inVec3f) = new Vec2f(
     m00*u.x + m01*u.y + m02*u.z,
     m10*u.x + m11*u.y + m12*u.z
   )
-  private[math] def transposeMul(u: AnyVec2f) = new Vec3f(
+  private[math] def transposeMul(u: inVec2f) = new Vec3f(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y,
     m02*u.x + m12*u.y
   )
 
   def scale(s: Float) :Mat2x3f = this*s
-  def scale(s: AnyVec2f) :Mat2x3f = new Mat2x3f(
+  def scale(s: inVec2f) :Mat2x3f = new Mat2x3f(
     m00*s.x, m10*s.y,
     m01*s.x, m11*s.y,
     m02*s.x, m12*s.y
@@ -200,13 +200,13 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     concatenate(rotationMat(angle))
   }
 
-  def translate(u: AnyVec2f) :Mat2x3f = new Mat2x3f(
+  def translate(u: inVec2f) :Mat2x3f = new Mat2x3f(
     m00, m10,
     m01, m11,
     m02 + u.x, m12 + u.y
   )
 
-  def concatenate(m: AnyMat2x3f) :Mat2x3f = new Mat2x3f(
+  def concatenate(m: inMat2x3f) :Mat2x3f = new Mat2x3f(
     m.m00*m00 + m.m01*m10,
     m.m10*m00 + m.m11*m10,
 
@@ -216,20 +216,20 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
     m.m00*m02 + m.m01*m12 + m.m02,
     m.m10*m02 + m.m11*m12 + m.m12
   )
-  def concatenate(m: AnyMat2f) :Mat2x3f = m*this
+  def concatenate(m: inMat2f) :Mat2x3f = m*this
 
-  def transformPoint(p: AnyVec2f) :Vec2f = new Vec2f(
+  def transformPoint(p: inVec2f) :Vec2f = new Vec2f(
     m00*p.x + m01*p.y + m02,
     m10*p.x + m11*p.y + m12
   )
-  def transformVector(v: AnyVec2f) :Vec2f = new Vec2f(
+  def transformVector(v: inVec2f) :Vec2f = new Vec2f(
     m00*v.x + m01*v.y,
     m10*v.x + m11*v.y
   )
 
   def invert() :Mat2x3f = inverse(this)
 
-  def ==(m: AnyMat2x3f) :Boolean = {
+  def ==(m: inMat2x3f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 &&
@@ -237,7 +237,7 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
       m02 == m.m02 && m12 == m.m12
   }
 
-  def !=(m: AnyMat2x3f) :Boolean = !(this == m)
+  def !=(m: inMat2x3f) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -256,7 +256,7 @@ sealed abstract class AnyMat2x3f extends Read2x3[ConstVec2f]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2x3f => this == m
+      case m: inMat2x3f => this == m
       case _ => false
     }
   }
@@ -354,18 +354,18 @@ final class Mat2x3f private[math] (
     m02 -= s; m12 -= s
   }
 
-  def +=(m: AnyMat2x3f) {
+  def +=(m: inMat2x3f) {
     m00 += m.m00; m10 += m.m10;
     m01 += m.m01; m11 += m.m11;
     m02 += m.m02; m12 += m.m12
   }
-  def -=(m: AnyMat2x3f) {
+  def -=(m: inMat2x3f) {
     m00 -= m.m00; m10 -= m.m10;
     m01 -= m.m01; m11 -= m.m11;
     m02 -= m.m02; m12 -= m.m12
   }
 
-  def *=(m: AnyMat3f) {
+  def *=(m: inMat3f) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
 
@@ -382,13 +382,13 @@ final class Mat2x3f private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat2x3f) {
+  def /=(m: inMat2x3f) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
     m02 /= m.m02; m12 /= m.m12
   }
 
-  def :=(m: AnyMat2x3f) {
+  def :=(m: inMat2x3f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11;
     m02 = m.m02; m12 = m.m12
@@ -433,7 +433,7 @@ final class Mat2x3f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2f) {
+  def update(c: Int, v: inVec2f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
@@ -482,7 +482,7 @@ object Mat2x3f {
   def unapply(m: AnyMat2x3f) = Some((m(0), m(1), m(2)))
 
   def scale(s: Float) :Mat2x3f = Mat2x3f(s)
-  def scale(s: AnyVec2f) :Mat2x3f = {
+  def scale(s: inVec2f) :Mat2x3f = {
     val m = Mat2x3f(s.x)
     m.m11 = s.y
     m
@@ -492,7 +492,7 @@ object Mat2x3f {
     Mat2x3f(rotationMat(angle))
   }
 
-  def translate(u: AnyVec2f) :Mat2x3f = {
+  def translate(u: inVec2f) :Mat2x3f = {
     val m = Mat2x3f(1)
     m(2) = u
     m

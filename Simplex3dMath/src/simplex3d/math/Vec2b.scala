@@ -118,7 +118,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
    * @param u a vector for comparision.
    * @return true if all the components are equal, false otherwise.
    */
-  def ==(u: AnyVec2b) :Boolean = {
+  def ==(u: inVec2b) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
@@ -130,11 +130,11 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
    * @param u a vector for comparision.
    * @return true if any of the components are not equal, false otherwise.
    */
-  def !=(u: AnyVec2b) :Boolean = !(this == u)
+  def !=(u: inVec2b) :Boolean = !(this == u)
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec2b => this == u
+      case u: inVec2b => this == u
       case _ => false
     }
   }
@@ -281,7 +281,7 @@ extends AnyVec2b with Mutable with Implicits[On]
   /** Set vector components to values from another vector.
    * @param u 2-dimensional Boolean vector.
    */
-  def :=(u: AnyVec2b) { x = u.x; y = u.y }
+  def :=(u: inVec2b) { x = u.x; y = u.y }
 
   /** Set vector components to the specified values.
    * @param x component x.
@@ -315,14 +315,14 @@ extends AnyVec2b with Mutable with Implicits[On]
   override def ts = yx
 
 
-  def xy_=(u: AnyVec2b) { x = u.x; y = u.y }
-  def yx_=(u: AnyVec2b) { var t = u.y; y = u.x; x = t }
+  def xy_=(u: inVec2b) { x = u.x; y = u.y }
+  def yx_=(u: inVec2b) { var t = u.y; y = u.x; x = t }
 
-  def rg_=(u: AnyVec2b) { xy_=(u) }
-  def gr_=(u: AnyVec2b) { yx_=(u) }
+  def rg_=(u: inVec2b) { xy_=(u) }
+  def gr_=(u: inVec2b) { yx_=(u) }
 
-  def st_=(u: AnyVec2b) { xy_=(u) }
-  def ts_=(u: AnyVec2b) { yx_=(u) }
+  def st_=(u: inVec2b) { xy_=(u) }
+  def ts_=(u: inVec2b) { yx_=(u) }
 }
 
 

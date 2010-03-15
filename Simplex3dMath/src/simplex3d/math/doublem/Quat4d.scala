@@ -76,17 +76,17 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
     new Quat4d(s / a, s / b, s / c, s / d)
   }
 
-  def +(q: AnyQuat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
-  def -(q: AnyQuat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
-  def *(q: AnyQuat4d) = new Quat4d(
+  def +(q: inQuat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
+  def -(q: inQuat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
+  def *(q: inQuat4d) = new Quat4d(
     a*q.a - b*q.b - c*q.c - d*q.d,
     a*q.b + b*q.a + c*q.d - d*q.c,
     a*q.c - b*q.d + c*q.a + d*q.b,
     a*q.d + b*q.c - c*q.b + d*q.a
   )
 
-  def rotate(q: AnyQuat4d) :Quat4d = q*this
-  def rotate(angle: Double, axis: AnyVec3d) :Quat4d = {
+  def rotate(q: inQuat4d) :Quat4d = q*this
+  def rotate(angle: Double, axis: inVec3d) :Quat4d = {
     quaternion(angle, normalize(axis))*this
   }
   def rotateX(angle: Double) :Quat4d = {
@@ -100,15 +100,15 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
   }
   def invert() :Quat4d = inverse(this)
 
-  def rotateVector(u: AnyVec3d) :Vec3d = DoubleMath.rotate(u, normalize(this))
+  def rotateVector(u: inVec3d) :Vec3d = DoubleMath.rotate(u, normalize(this))
 
 
-  def ==(q: AnyQuat4d) :Boolean = {
+  def ==(q: inQuat4d) :Boolean = {
     if (q eq null) false
     else a == q.a && b == q.b && c == q.c && d == q.d
   }
 
-  def !=(q: AnyQuat4d) :Boolean = !(this == q)
+  def !=(q: inQuat4d) :Boolean = !(this == q)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Double._
@@ -122,7 +122,7 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case q: AnyQuat4d => this == q
+      case q: inQuat4d => this == q
       case _ => false
     }
   }
@@ -167,9 +167,9 @@ final class Quat4d private[math] (
   def +=(s: Double) { a += s; b += s; c += s; d += s }
   def -=(s: Double) { a -= s; b -= s; c -= s; d -= s }
 
-  def +=(q: Quat4d) { a += q.a; b += q.b; c += q.c; d += q.d }
-  def -=(q: Quat4d) { a -= q.a; b -= q.b; c -= q.c; d -= q.d }
-  def *=(q: Quat4d) {
+  def +=(q: inQuat4d) { a += q.a; b += q.b; c += q.c; d += q.d }
+  def -=(q: inQuat4d) { a -= q.a; b -= q.b; c -= q.c; d -= q.d }
+  def *=(q: inQuat4d) {
     val na = a*q.a - b*q.b - c*q.c - d*q.d
     val nb = a*q.b + b*q.a + c*q.d - d*q.c
     val nc = a*q.c - b*q.d + c*q.a + d*q.b
@@ -178,7 +178,7 @@ final class Quat4d private[math] (
     a = na; b = nb; c = nc
   }
   
-  def :=(q: AnyQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
+  def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
   def set(a: Double, b: Double, c: Double, d: Double) {
     this.a = a; this.b = b; this.c = c; this.d = d
   }
@@ -207,7 +207,7 @@ object Quat4d {
 
   def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
 
-  def rotate(angle: Double, axis: AnyVec3d) :Quat4d = {
+  def rotate(angle: Double, axis: inVec3d) :Quat4d = {
     quaternion(angle, normalize(axis))
   }
   def rotateX(angle: Double) :Quat4d = {

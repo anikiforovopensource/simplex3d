@@ -83,21 +83,21 @@ sealed abstract class AnyVec2d extends Read2[Double] {
 
   private[math] def divideByComponent(s: Double) = new Vec2d(s / x, s / y)
 
-  def +(u: AnyVec2d) = new Vec2d(x + u.x, y + u.y)
-  def -(u: AnyVec2d) = new Vec2d(x - u.x, y - u.y)
-  def *(u: AnyVec2d) = new Vec2d(x * u.x, y * u.y)
-  def /(u: AnyVec2d) = new Vec2d(x / u.x, y / u.y)
+  def +(u: inVec2d) = new Vec2d(x + u.x, y + u.y)
+  def -(u: inVec2d) = new Vec2d(x - u.x, y - u.y)
+  def *(u: inVec2d) = new Vec2d(x * u.x, y * u.y)
+  def /(u: inVec2d) = new Vec2d(x / u.x, y / u.y)
 
-  def *(m: AnyMat2d) :Vec2d = m.transposeMul(this)
-  def *(m: AnyMat2x3d) :Vec3d = m.transposeMul(this)
-  def *(m: AnyMat2x4d) :Vec4d = m.transposeMul(this)
+  def *(m: inMat2d) :Vec2d = m.transposeMul(this)
+  def *(m: inMat2x3d) :Vec3d = m.transposeMul(this)
+  def *(m: inMat2x4d) :Vec4d = m.transposeMul(this)
 
-  def ==(u: AnyVec2d) :Boolean = {
+  def ==(u: inVec2d) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
 
-  def !=(u: AnyVec2d) :Boolean = !(this == u)
+  def !=(u: inVec2d) :Boolean = !(this == u)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Double._
@@ -109,7 +109,7 @@ sealed abstract class AnyVec2d extends Read2[Double] {
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec2d => this == u
+      case u: inVec2d => this == u
       case _ => false
     }
   }
@@ -158,14 +158,14 @@ extends AnyVec2d with Mutable with Implicits[On]
   def +=(s: Double) { x += s; y += s }
   def -=(s: Double) { x -= s; y -= s }
 
-  def +=(u: AnyVec2d) { x += u.x; y += u.y }
-  def -=(u: AnyVec2d) { x -= u.x; y -= u.y }
-  def *=(u: AnyVec2d) { x *= u.x; y *= u.y }
-  def /=(u: AnyVec2d) { x /= u.x; y /= u.y }
+  def +=(u: inVec2d) { x += u.x; y += u.y }
+  def -=(u: inVec2d) { x -= u.x; y -= u.y }
+  def *=(u: inVec2d) { x *= u.x; y *= u.y }
+  def /=(u: inVec2d) { x /= u.x; y /= u.y }
 
-  def *=(m: AnyMat2d) { this := m.transposeMul(this) }
+  def *=(m: inMat2d) { this := m.transposeMul(this) }
 
-  def :=(u: AnyVec2d) { x = u.x; y = u.y }
+  def :=(u: inVec2d) { x = u.x; y = u.y }
   def set(x: Double, y: Double) { this.x = x; this.y = y }
 
   def update(i: Int, s: Double) {
@@ -189,14 +189,14 @@ extends AnyVec2d with Mutable with Implicits[On]
   override def ts = yx
 
 
-  def xy_=(u: AnyVec2d) { x = u.x; y = u.y }
-  def yx_=(u: AnyVec2d) { var t = u.y; y = u.x; x = t }
+  def xy_=(u: inVec2d) { x = u.x; y = u.y }
+  def yx_=(u: inVec2d) { var t = u.y; y = u.x; x = t }
 
-  def rg_=(u: AnyVec2d) { xy_=(u) }
-  def gr_=(u: AnyVec2d) { yx_=(u) }
+  def rg_=(u: inVec2d) { xy_=(u) }
+  def gr_=(u: inVec2d) { yx_=(u) }
 
-  def st_=(u: AnyVec2d) { xy_=(u) }
-  def ts_=(u: AnyVec2d) { yx_=(u) }
+  def st_=(u: inVec2d) { xy_=(u) }
+  def ts_=(u: inVec2d) { yx_=(u) }
 }
 
 object Vec2d {

@@ -104,11 +104,11 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
     m01 - s, m11 - s
   )
 
-  def +(m: AnyMat2d) = new Mat2d(
+  def +(m: inMat2d) = new Mat2d(
     m00 + m.m00, m10 + m.m10,
     m01 + m.m01, m11 + m.m11
   )
-  def -(m: AnyMat2d) = new Mat2d(
+  def -(m: inMat2d) = new Mat2d(
     m00 - m.m00, m10 - m.m10,
     m01 - m.m01, m11 - m.m11
   )
@@ -116,7 +116,7 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat2d) = new Mat2d(
+  def /(m: inMat2d) = new Mat2d(
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11
   )
@@ -125,14 +125,14 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
     s/m01, s/m11
   )
 
-  def *(m: AnyMat2d) = new Mat2d(
+  def *(m: inMat2d) = new Mat2d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
     m00*m.m01 + m01*m.m11,
     m10*m.m01 + m11*m.m11
   )
-  def *(m: AnyMat2x3d) = new Mat2x3d(
+  def *(m: inMat2x3d) = new Mat2x3d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -142,7 +142,7 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
     m00*m.m02 + m01*m.m12,
     m10*m.m02 + m11*m.m12
   )
-  def *(m: AnyMat2x4d) = new Mat2x4d(
+  def *(m: inMat2x4d) = new Mat2x4d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -156,23 +156,23 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
     m10*m.m03 + m11*m.m13
   )
 
-  def *(u: AnyVec2d) = new Vec2d(
+  def *(u: inVec2d) = new Vec2d(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y
   )
-  private[math] def transposeMul(u: AnyVec2d) = new Vec2d(
+  private[math] def transposeMul(u: inVec2d) = new Vec2d(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y
   )
 
-  def ==(m: AnyMat2d) :Boolean = {
+  def ==(m: inMat2d) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 &&
       m01 == m.m01 && m11 == m.m11
   }
 
-  def !=(m: AnyMat2d) :Boolean = !(this == m)
+  def !=(m: inMat2d) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Double._
@@ -188,7 +188,7 @@ sealed abstract class AnyMat2d extends Read2x2[ConstVec2d]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2d => this == m
+      case m: inMat2d => this == m
       case _ => false
     }
   }
@@ -270,16 +270,16 @@ final class Mat2d private[math] (
     m01 -= s; m11 -= s
   }
 
-  def +=(m: AnyMat2d) {
+  def +=(m: inMat2d) {
     m00 += m.m00; m10 += m.m10;
     m01 += m.m01; m11 += m.m11
   }
-  def -=(m: AnyMat2d) {
+  def -=(m: inMat2d) {
     m00 -= m.m00; m10 -= m.m10;
     m01 -= m.m01; m11 -= m.m11
   }
 
-  def *=(m: AnyMat2d) {
+  def *=(m: inMat2d) {
     val a00 = m00*m.m00 + m01*m.m10
     val a10 = m10*m.m00 + m11*m.m10
 
@@ -292,12 +292,12 @@ final class Mat2d private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat2d) {
+  def /=(m: inMat2d) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def :=(m: AnyMat2d) {
+  def :=(m: inMat2d) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }
@@ -333,7 +333,7 @@ final class Mat2d private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2d) {
+  def update(c: Int, v: inVec2d) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y

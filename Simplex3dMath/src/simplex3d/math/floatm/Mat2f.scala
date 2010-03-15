@@ -104,11 +104,11 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     m01 - s, m11 - s
   )
 
-  def +(m: AnyMat2f) = new Mat2f(
+  def +(m: inMat2f) = new Mat2f(
     m00 + m.m00, m10 + m.m10,
     m01 + m.m01, m11 + m.m11
   )
-  def -(m: AnyMat2f) = new Mat2f(
+  def -(m: inMat2f) = new Mat2f(
     m00 - m.m00, m10 - m.m10,
     m01 - m.m01, m11 - m.m11
   )
@@ -116,7 +116,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat2f) = new Mat2f(
+  def /(m: inMat2f) = new Mat2f(
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11
   )
@@ -125,14 +125,14 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     s/m01, s/m11
   )
 
-  def *(m: AnyMat2f) = new Mat2f(
+  def *(m: inMat2f) = new Mat2f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
     m00*m.m01 + m01*m.m11,
     m10*m.m01 + m11*m.m11
   )
-  def *(m: AnyMat2x3f) = new Mat2x3f(
+  def *(m: inMat2x3f) = new Mat2x3f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -142,7 +142,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     m00*m.m02 + m01*m.m12,
     m10*m.m02 + m11*m.m12
   )
-  def *(m: AnyMat2x4f) = new Mat2x4f(
+  def *(m: inMat2x4f) = new Mat2x4f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -156,23 +156,23 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     m10*m.m03 + m11*m.m13
   )
 
-  def *(u: AnyVec2f) = new Vec2f(
+  def *(u: inVec2f) = new Vec2f(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y
   )
-  private[math] def transposeMul(u: AnyVec2f) = new Vec2f(
+  private[math] def transposeMul(u: inVec2f) = new Vec2f(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y
   )
 
-  def ==(m: AnyMat2f) :Boolean = {
+  def ==(m: inMat2f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 &&
       m01 == m.m01 && m11 == m.m11
   }
 
-  def !=(m: AnyMat2f) :Boolean = !(this == m)
+  def !=(m: inMat2f) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -188,7 +188,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2f => this == m
+      case m: inMat2f => this == m
       case _ => false
     }
   }
@@ -270,16 +270,16 @@ final class Mat2f private[math] (
     m01 -= s; m11 -= s
   }
 
-  def +=(m: AnyMat2f) {
+  def +=(m: inMat2f) {
     m00 += m.m00; m10 += m.m10;
     m01 += m.m01; m11 += m.m11
   }
-  def -=(m: AnyMat2f) {
+  def -=(m: inMat2f) {
     m00 -= m.m00; m10 -= m.m10;
     m01 -= m.m01; m11 -= m.m11
   }
 
-  def *=(m: AnyMat2f) {
+  def *=(m: inMat2f) {
     val a00 = m00*m.m00 + m01*m.m10
     val a10 = m10*m.m00 + m11*m.m10
 
@@ -292,12 +292,12 @@ final class Mat2f private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat2f) {
+  def /=(m: inMat2f) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def :=(m: AnyMat2f) {
+  def :=(m: inMat2f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }
@@ -333,7 +333,7 @@ final class Mat2f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2f) {
+  def update(c: Int, v: inVec2f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y

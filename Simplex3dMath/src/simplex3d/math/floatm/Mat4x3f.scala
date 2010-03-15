@@ -141,12 +141,12 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     m02 - s, m12 - s, m22 - s, m32 - s
   )
 
-  def +(m: AnyMat4x3f) = new Mat4x3f(
+  def +(m: inMat4x3f) = new Mat4x3f(
     m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
     m01 + m.m01, m11 + m.m11, m21 + m.m21, m31 + m.m31,
     m02 + m.m02, m12 + m.m12, m22 + m.m22, m32 + m.m32
   )
-  def -(m: AnyMat4x3f) = new Mat4x3f(
+  def -(m: inMat4x3f) = new Mat4x3f(
     m00 - m.m00, m10 - m.m10, m20 - m.m20, m30 - m.m30,
     m01 - m.m01, m11 - m.m11, m21 - m.m21, m31 - m.m31,
     m02 - m.m02, m12 - m.m12, m22 - m.m22, m32 - m.m32
@@ -155,7 +155,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat4x3f) = new Mat4x3f(
+  def /(m: inMat4x3f) = new Mat4x3f(
     m00/m.m00, m10/m.m10, m20/m.m20, m30/m.m30,
     m01/m.m01, m11/m.m11, m21/m.m21, m31/m.m31,
     m02/m.m02, m12/m.m12, m22/m.m22, m32/m.m32
@@ -166,7 +166,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     s/m02, s/m12, s/m22, s/m32
   )
 
-  def *(m: AnyMat3x2f) = new Mat4x2f(
+  def *(m: inMat3x2f) = new Mat4x2f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
     m20*m.m00 + m21*m.m10 + m22*m.m20,
@@ -177,7 +177,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     m20*m.m01 + m21*m.m11 + m22*m.m21,
     m30*m.m01 + m31*m.m11 + m32*m.m21
   )
-  def *(m: AnyMat3f) = new Mat4x3f(
+  def *(m: inMat3f) = new Mat4x3f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
     m20*m.m00 + m21*m.m10 + m22*m.m20,
@@ -193,7 +193,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     m20*m.m02 + m21*m.m12 + m22*m.m22,
     m30*m.m02 + m31*m.m12 + m32*m.m22
   )
-  def *(m: AnyMat3x4f) = new Mat4f(
+  def *(m: inMat3x4f) = new Mat4f(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
     m20*m.m00 + m21*m.m10 + m22*m.m20,
@@ -215,19 +215,19 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     m30*m.m03 + m31*m.m13 + m32*m.m23
   )
 
-  def *(u: AnyVec3f) = new Vec4f(
+  def *(u: inVec3f) = new Vec4f(
     m00*u.x + m01*u.y + m02*u.z,
     m10*u.x + m11*u.y + m12*u.z,
     m20*u.x + m21*u.y + m22*u.z,
     m30*u.x + m31*u.y + m32*u.z
   )
-  private[math] def transposeMul(u: AnyVec4f) = new Vec3f(
+  private[math] def transposeMul(u: inVec4f) = new Vec3f(
     m00*u.x + m10*u.y + m20*u.z + m30*u.w,
     m01*u.x + m11*u.y + m21*u.z + m31*u.w,
     m02*u.x + m12*u.y + m22*u.z + m32*u.w
   )
 
-  def ==(m: AnyMat4x3f) :Boolean = {
+  def ==(m: inMat4x3f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 && m30 == m.m30 &&
@@ -235,7 +235,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
       m02 == m.m02 && m12 == m.m12 && m22 == m.m22 && m32 == m.m32
   }
 
-  def !=(m: AnyMat4x3f) :Boolean = !(this == m)
+  def !=(m: inMat4x3f) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -260,7 +260,7 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat4x3f => this == m
+      case m: inMat4x3f => this == m
       case _ => false
     }
   }
@@ -370,18 +370,18 @@ final class Mat4x3f private[math] (
     m02 -= s; m12 -= s; m22 -= s; m32 -= s
   }
 
-  def +=(m: AnyMat4x3f) {
+  def +=(m: inMat4x3f) {
     m00 += m.m00; m10 += m.m10; m20 += m.m20; m30 += m.m30;
     m01 += m.m01; m11 += m.m11; m21 += m.m21; m31 += m.m31;
     m02 += m.m02; m12 += m.m12; m22 += m.m22; m32 += m.m32
   }
-  def -=(m: AnyMat4x3f) {
+  def -=(m: inMat4x3f) {
     m00 -= m.m00; m10 -= m.m10; m20 -= m.m20; m30 -= m.m30;
     m01 -= m.m01; m11 -= m.m11; m21 -= m.m21; m31 -= m.m31;
     m02 -= m.m02; m12 -= m.m12; m22 -= m.m22; m32 -= m.m32
   }
 
-  def *=(m: AnyMat3f) {
+  def *=(m: inMat3f) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
     val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
@@ -404,13 +404,13 @@ final class Mat4x3f private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat4x3f) {
+  def /=(m: inMat4x3f) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20; m30 /= m.m30
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21; m31 /= m.m31
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22; m32 /= m.m32
   }
 
-  def :=(m: AnyMat4x3f) {
+  def :=(m: inMat4x3f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
     m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32
@@ -461,7 +461,7 @@ final class Mat4x3f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2f) {
+  def update(c: Int, v: inVec2f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
@@ -472,7 +472,7 @@ final class Mat4x3f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec3f) {
+  def update(c: Int, v: inVec3f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z
@@ -483,7 +483,7 @@ final class Mat4x3f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec4f) {
+  def update(c: Int, v: inVec4f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z; m30 = v.w
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z; m31 = v.w

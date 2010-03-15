@@ -110,11 +110,11 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m01 - s, m11 - s, m21 - s
   )
 
-  def +(m: AnyMat3x2f) = new Mat3x2f(
+  def +(m: inMat3x2f) = new Mat3x2f(
     m00 + m.m00, m10 + m.m10, m20 + m.m20,
     m01 + m.m01, m11 + m.m11, m21 + m.m21
   )
-  def -(m: AnyMat3x2f) = new Mat3x2f(
+  def -(m: inMat3x2f) = new Mat3x2f(
     m00 - m.m00, m10 - m.m10, m20 - m.m20,
     m01 - m.m01, m11 - m.m11, m21 - m.m21
   )
@@ -122,7 +122,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat3x2f) = new Mat3x2f(
+  def /(m: inMat3x2f) = new Mat3x2f(
     m00/m.m00, m10/m.m10, m20/m.m20,
     m01/m.m01, m11/m.m11, m21/m.m21
   )
@@ -131,7 +131,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     s/m01, s/m11, s/m21
   )
 
-  def *(m: AnyMat2f) = new Mat3x2f(
+  def *(m: inMat2f) = new Mat3x2f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -140,7 +140,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m10*m.m01 + m11*m.m11,
     m20*m.m01 + m21*m.m11
   )
-  def *(m: AnyMat2x3f) = new Mat3f(
+  def *(m: inMat2x3f) = new Mat3f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -153,7 +153,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m10*m.m02 + m11*m.m12,
     m20*m.m02 + m21*m.m12
   )
-  def *(m: AnyMat2x4f) = new Mat3x4f(
+  def *(m: inMat2x4f) = new Mat3x4f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -171,24 +171,24 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m20*m.m03 + m21*m.m13
   )
 
-  def *(u: AnyVec2f) = new Vec3f(
+  def *(u: inVec2f) = new Vec3f(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y,
     m20*u.x + m21*u.y
   )
-  private[math] def transposeMul(u: AnyVec3f) = new Vec2f(
+  private[math] def transposeMul(u: inVec3f) = new Vec2f(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z
   )
 
-  def ==(m: AnyMat3x2f) :Boolean = {
+  def ==(m: inMat3x2f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
       m01 == m.m01 && m11 == m.m11 && m21 == m.m21
   }
 
-  def !=(m: AnyMat3x2f) :Boolean = !(this == m)
+  def !=(m: inMat3x2f) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -206,7 +206,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat3x2f => this == m
+      case m: inMat3x2f => this == m
       case _ => false
     }
   }
@@ -292,16 +292,16 @@ final class Mat3x2f private[math] (
     m01 -= s; m11 -= s; m21 -= s
   }
 
-  def +=(m: AnyMat3x2f) {
+  def +=(m: inMat3x2f) {
     m00 += m.m00; m10 += m.m10; m20 += m.m20;
     m01 += m.m01; m11 += m.m11; m21 += m.m21
   }
-  def -=(m: AnyMat3x2f) {
+  def -=(m: inMat3x2f) {
     m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
     m01 -= m.m01; m11 -= m.m11; m21 -= m.m21
   }
 
-  def *=(m: AnyMat2f) {
+  def *=(m: inMat2f) {
     val a00 = m00*m.m00 + m01*m.m10
     val a10 = m10*m.m00 + m11*m.m10
     val a20 = m20*m.m00 + m21*m.m10
@@ -316,12 +316,12 @@ final class Mat3x2f private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat3x2f) {
+  def /=(m: inMat3x2f) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
   }
 
-  def :=(m: AnyMat3x2f) {
+  def :=(m: inMat3x2f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20;
     m01 = m.m01; m11 = m.m11; m21 = m.m21
   }
@@ -359,7 +359,7 @@ final class Mat3x2f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2f) {
+  def update(c: Int, v: inVec2f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
@@ -369,7 +369,7 @@ final class Mat3x2f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec3f) {
+  def update(c: Int, v: inVec3f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z

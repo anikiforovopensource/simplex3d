@@ -154,13 +154,13 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     m03 - s, m13 - s, m23 - s
   )
 
-  def +(m: AnyMat3x4d) = new Mat3x4d(
+  def +(m: inMat3x4d) = new Mat3x4d(
     m00 + m.m00, m10 + m.m10, m20 + m.m20,
     m01 + m.m01, m11 + m.m11, m21 + m.m21,
     m02 + m.m02, m12 + m.m12, m22 + m.m22,
     m03 + m.m03, m13 + m.m13, m23 + m.m23
   )
-  def -(m: AnyMat3x4d) = new Mat3x4d(
+  def -(m: inMat3x4d) = new Mat3x4d(
     m00 - m.m00, m10 - m.m10, m20 - m.m20,
     m01 - m.m01, m11 - m.m11, m21 - m.m21,
     m02 - m.m02, m12 - m.m12, m22 - m.m22,
@@ -170,7 +170,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat3x4d) = new Mat3x4d(
+  def /(m: inMat3x4d) = new Mat3x4d(
     m00/m.m00, m10/m.m10, m20/m.m20,
     m01/m.m01, m11/m.m11, m21/m.m21,
     m02/m.m02, m12/m.m12, m22/m.m22,
@@ -183,7 +183,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     s/m03, s/m13, s/m23
   )
 
-  def *(m: AnyMat4x2d) = new Mat3x2d(
+  def *(m: inMat4x2d) = new Mat3x2d(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -192,7 +192,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31,
     m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31
   )
-  def *(m: AnyMat4x3d) = new Mat3d(
+  def *(m: inMat4x3d) = new Mat3d(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -205,7 +205,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32,
     m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32
   )
-  def *(m: AnyMat4d) = new Mat3x4d(
+  def *(m: inMat4d) = new Mat3x4d(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -223,12 +223,12 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
   )
 
-  def *(u: AnyVec4d) = new Vec3d(
+  def *(u: inVec4d) = new Vec3d(
     m00*u.x + m01*u.y + m02*u.z + m03*u.w,
     m10*u.x + m11*u.y + m12*u.z + m13*u.w,
     m20*u.x + m21*u.y + m22*u.z + m23*u.w
   )
-  private[math] def transposeMul(u: AnyVec3d) = new Vec4d(
+  private[math] def transposeMul(u: inVec3d) = new Vec4d(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z,
     m02*u.x + m12*u.y + m22*u.z,
@@ -236,7 +236,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
   )
 
   def scale(s: Double) :Mat3x4d = this*s
-  def scale(s: AnyVec3d) :Mat3x4d = new Mat3x4d(
+  def scale(s: inVec3d) :Mat3x4d = new Mat3x4d(
     m00*s.x, m10*s.y, m20*s.z,
     m01*s.x, m11*s.y, m21*s.z,
     m02*s.x, m12*s.y, m22*s.z,
@@ -251,10 +251,10 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
    * @return a new transformation wtih the specified rotation as
    *         the last operation.
    */
-  def rotate(q: AnyQuat4d) :Mat3x4d = {
+  def rotate(q: inQuat4d) :Mat3x4d = {
     concatenate(rotationMat(normalize(q)))
   }
-  def rotate(angle: Double, axis: AnyVec3d) :Mat3x4d = {
+  def rotate(angle: Double, axis: inVec3d) :Mat3x4d = {
     concatenate(rotationMat(angle, normalize(axis)))
   }
 
@@ -268,14 +268,14 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     concatenate(rotationMat(angle, Vec3d.UnitZ))
   }
 
-  def translate(u: AnyVec3d) :Mat3x4d = new Mat3x4d(
+  def translate(u: inVec3d) :Mat3x4d = new Mat3x4d(
     m00, m10, m20,
     m01, m11, m21,
     m02, m12, m22,
     m03 + u.x, m13 + u.y, m23 + u.z
   )
 
-  def concatenate(m: AnyMat3x4d) :Mat3x4d = new Mat3x4d(
+  def concatenate(m: inMat3x4d) :Mat3x4d = new Mat3x4d(
     m.m00*m00 + m.m01*m10 + m.m02*m20,
     m.m10*m00 + m.m11*m10 + m.m12*m20,
     m.m20*m00 + m.m21*m10 + m.m22*m20,
@@ -292,14 +292,14 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
     m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13,
     m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
   )
-  def concatenate(m: AnyMat3d) :Mat3x4d = m*this
+  def concatenate(m: inMat3d) :Mat3x4d = m*this
 
-  def transformPoint(p: AnyVec3d) :Vec3d = new Vec3d(
+  def transformPoint(p: inVec3d) :Vec3d = new Vec3d(
     m00*p.x + m01*p.y + m02*p.z + m03,
     m10*p.x + m11*p.y + m12*p.z + m13,
     m20*p.x + m21*p.y + m22*p.z + m23
   )
-  def transformVector(v: AnyVec3d) :Vec3d = new Vec3d(
+  def transformVector(v: inVec3d) :Vec3d = new Vec3d(
     m00*v.x + m01*v.y + m02*v.z,
     m10*v.x + m11*v.y + m12*v.z,
     m20*v.x + m21*v.y + m22*v.z
@@ -307,7 +307,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
 
   def invert() :Mat3x4d = inverse(this)
 
-  def ==(m: AnyMat3x4d) :Boolean = {
+  def ==(m: inMat3x4d) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
@@ -316,7 +316,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
       m03 == m.m03 && m13 == m.m13 && m23 == m.m23
   }
 
-  def !=(m: AnyMat3x4d) :Boolean = !(this == m)
+  def !=(m: inMat3x4d) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Double._
@@ -342,7 +342,7 @@ sealed abstract class AnyMat3x4d extends Read3x4[ConstVec3d]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat3x4d => this == m
+      case m: inMat3x4d => this == m
       case _ => false
     }
   }
@@ -464,20 +464,20 @@ final class Mat3x4d private[math] (
     m03 -= s; m13 -= s; m23 -= s
   }
 
-  def +=(m: AnyMat3x4d) {
+  def +=(m: inMat3x4d) {
     m00 += m.m00; m10 += m.m10; m20 += m.m20;
     m01 += m.m01; m11 += m.m11; m21 += m.m21;
     m02 += m.m02; m12 += m.m12; m22 += m.m22;
     m03 += m.m03; m13 += m.m13; m23 += m.m23
   }
-  def -=(m: AnyMat3x4d) {
+  def -=(m: inMat3x4d) {
     m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
     m01 -= m.m01; m11 -= m.m11; m21 -= m.m21;
     m02 -= m.m02; m12 -= m.m12; m22 -= m.m22;
     m03 -= m.m03; m13 -= m.m13; m23 -= m.m23
   }
 
-  def *=(m: AnyMat4d) {
+  def *=(m: inMat4d) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
     val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30
@@ -502,14 +502,14 @@ final class Mat3x4d private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat3x4d) {
+  def /=(m: inMat3x4d) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23
   }
 
-  def :=(m: AnyMat3x4d) {
+  def :=(m: inMat3x4d) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20;
     m01 = m.m01; m11 = m.m11; m21 = m.m21;
     m02 = m.m02; m12 = m.m12; m22 = m.m22;
@@ -567,7 +567,7 @@ final class Mat3x4d private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2d) {
+  def update(c: Int, v: inVec2d) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
@@ -579,7 +579,7 @@ final class Mat3x4d private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec3d) {
+  def update(c: Int, v: inVec3d) {
     c match {
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z
@@ -634,17 +634,17 @@ object Mat3x4d {
   def unapply(m: AnyMat3x4d) = Some((m(0), m(1), m(2), m(3)))
 
   def scale(s: Double) :Mat3x4d = Mat3x4d(s)
-  def scale(s: AnyVec3d) :Mat3x4d = {
+  def scale(s: inVec3d) :Mat3x4d = {
     val m = Mat3x4d(s.x)
     m.m11 = s.y
     m.m22 = s.z
     m
   }
 
-  def rotate(q: AnyQuat4d) :Mat3x4d = {
+  def rotate(q: inQuat4d) :Mat3x4d = {
     Mat3x4d(rotationMat(normalize(q)))
   }
-  def rotate(angle: Double, axis: AnyVec3d) :Mat3x4d = {
+  def rotate(angle: Double, axis: inVec3d) :Mat3x4d = {
     Mat3x4d(rotationMat(angle, normalize(axis)))
   }
 
@@ -658,7 +658,7 @@ object Mat3x4d {
     Mat3x4d(rotationMat(angle, Vec3d.UnitZ))
   }
 
-  def translate(u: AnyVec3d) :Mat3x4d = {
+  def translate(u: inVec3d) :Mat3x4d = {
     val m = Mat3x4d(1)
     m(3) = u
     m

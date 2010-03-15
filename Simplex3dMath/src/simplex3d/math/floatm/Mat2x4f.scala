@@ -142,13 +142,13 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
     m03 - s, m13 - s
   )
 
-  def +(m: AnyMat2x4f) = new Mat2x4f(
+  def +(m: inMat2x4f) = new Mat2x4f(
     m00 + m.m00, m10 + m.m10,
     m01 + m.m01, m11 + m.m11,
     m02 + m.m02, m12 + m.m12,
     m03 + m.m03, m13 + m.m13
   )
-  def -(m: AnyMat2x4f) = new Mat2x4f(
+  def -(m: inMat2x4f) = new Mat2x4f(
     m00 - m.m00, m10 - m.m10,
     m01 - m.m01, m11 - m.m11,
     m02 - m.m02, m12 - m.m12,
@@ -158,7 +158,7 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
   /**
    * Component-wise devision.
    */
-  def /(m: AnyMat2x4f) = new Mat2x4f(
+  def /(m: inMat2x4f) = new Mat2x4f(
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11,
     m02/m.m02, m12/m.m12,
@@ -171,14 +171,14 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
     s/m03, s/m13
   )
 
-  def *(m: AnyMat4x2f) = new Mat2f(
+  def *(m: inMat4x2f) = new Mat2f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
     m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31,
     m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
   )
-  def *(m: AnyMat4x3f) = new Mat2x3f(
+  def *(m: inMat4x3f) = new Mat2x3f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
@@ -188,7 +188,7 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
     m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32,
     m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
   )
-  def *(m: AnyMat4f) = new Mat2x4f(
+  def *(m: inMat4f) = new Mat2x4f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
 
@@ -202,18 +202,18 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
     m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
   )
 
-  def *(u: AnyVec4f) = new Vec2f(
+  def *(u: inVec4f) = new Vec2f(
     m00*u.x + m01*u.y + m02*u.z + m03*u.w,
     m10*u.x + m11*u.y + m12*u.z + m13*u.w
   )
-  private[math] def transposeMul(u: AnyVec2f) = new Vec4f(
+  private[math] def transposeMul(u: inVec2f) = new Vec4f(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y,
     m02*u.x + m12*u.y,
     m03*u.x + m13*u.y
   )
 
-  def ==(m: AnyMat2x4f) :Boolean = {
+  def ==(m: inMat2x4f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 &&
@@ -222,7 +222,7 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
       m03 == m.m03 && m13 == m.m13
   }
 
-  def !=(m: AnyMat2x4f) :Boolean = !(this == m)
+  def !=(m: inMat2x4f) :Boolean = !(this == m)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -244,7 +244,7 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2x4f => this == m
+      case m: inMat2x4f => this == m
       case _ => false
     }
   }
@@ -358,20 +358,20 @@ final class Mat2x4f private[math] (
     m03 -= s; m13 -= s
   }
 
-  def +=(m: AnyMat2x4f) {
+  def +=(m: inMat2x4f) {
     m00 += m.m00; m10 += m.m10;
     m01 += m.m01; m11 += m.m11;
     m02 += m.m02; m12 += m.m12;
     m03 += m.m03; m13 += m.m13
   }
-  def -=(m: AnyMat2x4f) {
+  def -=(m: inMat2x4f) {
     m00 -= m.m00; m10 -= m.m10;
     m01 -= m.m01; m11 -= m.m11;
     m02 -= m.m02; m12 -= m.m12;
     m03 -= m.m03; m13 -= m.m13
   }
 
-  def *=(m: AnyMat4f) {
+  def *=(m: inMat4f) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
 
@@ -392,14 +392,14 @@ final class Mat2x4f private[math] (
   /**
    * Component-wise devision.
    */
-  def /=(m: AnyMat2x4f) {
+  def /=(m: inMat2x4f) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
     m02 /= m.m02; m12 /= m.m12
     m03 /= m.m03; m13 /= m.m13
   }
 
-  def :=(m: AnyMat2x4f) {
+  def :=(m: inMat2x4f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11;
     m02 = m.m02; m12 = m.m12;
@@ -453,7 +453,7 @@ final class Mat2x4f private[math] (
     }
   }
 
-  def update(c: Int, v: AnyVec2f) {
+  def update(c: Int, v: inVec2f) {
     c match {
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y

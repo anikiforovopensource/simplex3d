@@ -93,21 +93,21 @@ sealed abstract class AnyVec3f extends Read3[Float] {
     new Vec3f(s / x, s / y, s / z)
   }
 
-  def +(u: AnyVec3f) = new Vec3f(x + u.x, y + u.y, z + u.z)
-  def -(u: AnyVec3f) = new Vec3f(x - u.x, y - u.y, z - u.z)
-  def *(u: AnyVec3f) = new Vec3f(x * u.x, y * u.y, z * u.z)
-  def /(u: AnyVec3f) = new Vec3f(x / u.x, y / u.y, z / u.z)
+  def +(u: inVec3f) = new Vec3f(x + u.x, y + u.y, z + u.z)
+  def -(u: inVec3f) = new Vec3f(x - u.x, y - u.y, z - u.z)
+  def *(u: inVec3f) = new Vec3f(x * u.x, y * u.y, z * u.z)
+  def /(u: inVec3f) = new Vec3f(x / u.x, y / u.y, z / u.z)
 
-  def *(m: AnyMat3x2f) :Vec2f = m.transposeMul(this)
-  def *(m: AnyMat3f) :Vec3f = m.transposeMul(this)
-  def *(m: AnyMat3x4f) :Vec4f = m.transposeMul(this)
+  def *(m: inMat3x2f) :Vec2f = m.transposeMul(this)
+  def *(m: inMat3f) :Vec3f = m.transposeMul(this)
+  def *(m: inMat3x4f) :Vec4f = m.transposeMul(this)
 
-  def ==(u: AnyVec3f) :Boolean = {
+  def ==(u: inVec3f) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z
   }
 
-  def !=(u: AnyVec3f) :Boolean = !(this == u)
+  def !=(u: inVec3f) :Boolean = !(this == u)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Float._
@@ -120,7 +120,7 @@ sealed abstract class AnyVec3f extends Read3[Float] {
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec3f => this == u
+      case u: inVec3f => this == u
       case _ => false
     }
   }
@@ -175,14 +175,14 @@ extends AnyVec3f with Mutable with Implicits[On]
   def +=(s: Float) { x += s; y += s; z += s }
   def -=(s: Float) { x -= s; y -= s; z -= s }
 
-  def +=(u: AnyVec3f) { x += u.x; y += u.y; z += u.z }
-  def -=(u: AnyVec3f) { x -= u.x; y -= u.y; z -= u.z }
-  def *=(u: AnyVec3f) { x *= u.x; y *= u.y; z *= u.z }
-  def /=(u: AnyVec3f) { x /= u.x; y /= u.y; z /= u.z }
+  def +=(u: inVec3f) { x += u.x; y += u.y; z += u.z }
+  def -=(u: inVec3f) { x -= u.x; y -= u.y; z -= u.z }
+  def *=(u: inVec3f) { x *= u.x; y *= u.y; z *= u.z }
+  def /=(u: inVec3f) { x /= u.x; y /= u.y; z /= u.z }
 
-  def *=(m: AnyMat3f) { this := m.transposeMul(this) }
+  def *=(m: inMat3f) { this := m.transposeMul(this) }
 
-  def :=(u: AnyVec3f) { x = u.x; y = u.y; z = u.z }
+  def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
   def set(x: Float, y: Float, z: Float) { this.x = x; this.y = y; this.z = z }
 
   def update(i: Int, s: Float) {
@@ -240,47 +240,47 @@ extends AnyVec3f with Mutable with Implicits[On]
   override def pts = zyx
 
 
-  def xy_=(u: AnyVec2f) { x = u.x; y = u.y }
-  def xz_=(u: AnyVec2f) { x = u.x; z = u.y }
-  def yx_=(u: AnyVec2f) { y = u.x; x = u.y }
-  def yz_=(u: AnyVec2f) { y = u.x; z = u.y }
-  def zx_=(u: AnyVec2f) { z = u.x; x = u.y }
-  def zy_=(u: AnyVec2f) { z = u.x; y = u.y }
+  def xy_=(u: inVec2f) { x = u.x; y = u.y }
+  def xz_=(u: inVec2f) { x = u.x; z = u.y }
+  def yx_=(u: inVec2f) { y = u.x; x = u.y }
+  def yz_=(u: inVec2f) { y = u.x; z = u.y }
+  def zx_=(u: inVec2f) { z = u.x; x = u.y }
+  def zy_=(u: inVec2f) { z = u.x; y = u.y }
 
-  def xyz_=(u: AnyVec3f) { x = u.x; y = u.y; z = u.z }
-  def xzy_=(u: AnyVec3f) { x = u.x; var t = u.z; z = u.y; y = t }
-  def yxz_=(u: AnyVec3f) { var t = u.y; y = u.x; x = t; z = u.z }
-  def yzx_=(u: AnyVec3f) { var t = u.y; y = u.x; x = u.z; z = t }
-  def zxy_=(u: AnyVec3f) { var t = u.z; z = u.x; x = u.y; y = t }
-  def zyx_=(u: AnyVec3f) { var t = u.z; z = u.x; x = t; y = u.y }
+  def xyz_=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
+  def xzy_=(u: inVec3f) { x = u.x; var t = u.z; z = u.y; y = t }
+  def yxz_=(u: inVec3f) { var t = u.y; y = u.x; x = t; z = u.z }
+  def yzx_=(u: inVec3f) { var t = u.y; y = u.x; x = u.z; z = t }
+  def zxy_=(u: inVec3f) { var t = u.z; z = u.x; x = u.y; y = t }
+  def zyx_=(u: inVec3f) { var t = u.z; z = u.x; x = t; y = u.y }
 
-  def rg_=(u: AnyVec2f) { xy_=(u) }
-  def rb_=(u: AnyVec2f) { xz_=(u) }
-  def gr_=(u: AnyVec2f) { yx_=(u) }
-  def gb_=(u: AnyVec2f) { yz_=(u) }
-  def br_=(u: AnyVec2f) { zx_=(u) }
-  def bg_=(u: AnyVec2f) { zy_=(u) }
+  def rg_=(u: inVec2f) { xy_=(u) }
+  def rb_=(u: inVec2f) { xz_=(u) }
+  def gr_=(u: inVec2f) { yx_=(u) }
+  def gb_=(u: inVec2f) { yz_=(u) }
+  def br_=(u: inVec2f) { zx_=(u) }
+  def bg_=(u: inVec2f) { zy_=(u) }
 
-  def rgb_=(u: AnyVec3f) { xyz_=(u) }
-  def rbg_=(u: AnyVec3f) { xzy_=(u) }
-  def grb_=(u: AnyVec3f) { yxz_=(u) }
-  def gbr_=(u: AnyVec3f) { yzx_=(u) }
-  def brg_=(u: AnyVec3f) { zxy_=(u) }
-  def bgr_=(u: AnyVec3f) { zyx_=(u) }
+  def rgb_=(u: inVec3f) { xyz_=(u) }
+  def rbg_=(u: inVec3f) { xzy_=(u) }
+  def grb_=(u: inVec3f) { yxz_=(u) }
+  def gbr_=(u: inVec3f) { yzx_=(u) }
+  def brg_=(u: inVec3f) { zxy_=(u) }
+  def bgr_=(u: inVec3f) { zyx_=(u) }
 
-  def st_=(u: AnyVec2f) { xy_=(u) }
-  def sp_=(u: AnyVec2f) { xz_=(u) }
-  def ts_=(u: AnyVec2f) { yx_=(u) }
-  def tp_=(u: AnyVec2f) { yz_=(u) }
-  def ps_=(u: AnyVec2f) { zx_=(u) }
-  def pt_=(u: AnyVec2f) { zy_=(u) }
+  def st_=(u: inVec2f) { xy_=(u) }
+  def sp_=(u: inVec2f) { xz_=(u) }
+  def ts_=(u: inVec2f) { yx_=(u) }
+  def tp_=(u: inVec2f) { yz_=(u) }
+  def ps_=(u: inVec2f) { zx_=(u) }
+  def pt_=(u: inVec2f) { zy_=(u) }
 
-  def stp_=(u: AnyVec3f) { xyz_=(u) }
-  def spt_=(u: AnyVec3f) { xzy_=(u) }
-  def tsp_=(u: AnyVec3f) { yxz_=(u) }
-  def tps_=(u: AnyVec3f) { yzx_=(u) }
-  def pst_=(u: AnyVec3f) { zxy_=(u) }
-  def pts_=(u: AnyVec3f) { zyx_=(u) } 
+  def stp_=(u: inVec3f) { xyz_=(u) }
+  def spt_=(u: inVec3f) { xzy_=(u) }
+  def tsp_=(u: inVec3f) { yxz_=(u) }
+  def tps_=(u: inVec3f) { yzx_=(u) }
+  def pst_=(u: inVec3f) { zxy_=(u) }
+  def pts_=(u: inVec3f) { zyx_=(u) } 
 }
 
 object Vec3f {

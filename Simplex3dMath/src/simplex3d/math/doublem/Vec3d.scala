@@ -93,21 +93,21 @@ sealed abstract class AnyVec3d extends Read3[Double] {
     new Vec3d(s / x, s / y, s / z)
   }
 
-  def +(u: AnyVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
-  def -(u: AnyVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
-  def *(u: AnyVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
-  def /(u: AnyVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
+  def +(u: inVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
+  def -(u: inVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
+  def *(u: inVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
+  def /(u: inVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
 
-  def *(m: AnyMat3x2d) :Vec2d = m.transposeMul(this)
-  def *(m: AnyMat3d) :Vec3d = m.transposeMul(this)
-  def *(m: AnyMat3x4d) :Vec4d = m.transposeMul(this)
+  def *(m: inMat3x2d) :Vec2d = m.transposeMul(this)
+  def *(m: inMat3d) :Vec3d = m.transposeMul(this)
+  def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
 
-  def ==(u: AnyVec3d) :Boolean = {
+  def ==(u: inVec3d) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z
   }
 
-  def !=(u: AnyVec3d) :Boolean = !(this == u)
+  def !=(u: inVec3d) :Boolean = !(this == u)
 
   private[math] def hasErrors: Boolean = {
     import java.lang.Double._
@@ -120,7 +120,7 @@ sealed abstract class AnyVec3d extends Read3[Double] {
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec3d => this == u
+      case u: inVec3d => this == u
       case _ => false
     }
   }
@@ -177,14 +177,14 @@ final class Vec3d private[math] (
   def +=(s: Double) { x += s; y += s; z += s }
   def -=(s: Double) { x -= s; y -= s; z -= s }
 
-  def +=(u: AnyVec3d) { x += u.x; y += u.y; z += u.z }
-  def -=(u: AnyVec3d) { x -= u.x; y -= u.y; z -= u.z }
-  def *=(u: AnyVec3d) { x *= u.x; y *= u.y; z *= u.z }
-  def /=(u: AnyVec3d) { x /= u.x; y /= u.y; z /= u.z }
+  def +=(u: inVec3d) { x += u.x; y += u.y; z += u.z }
+  def -=(u: inVec3d) { x -= u.x; y -= u.y; z -= u.z }
+  def *=(u: inVec3d) { x *= u.x; y *= u.y; z *= u.z }
+  def /=(u: inVec3d) { x /= u.x; y /= u.y; z /= u.z }
 
-  def *=(m: AnyMat3d) { this := m.transposeMul(this) }
+  def *=(m: inMat3d) { this := m.transposeMul(this) }
 
-  def :=(u: AnyVec3d) { x = u.x; y = u.y; z = u.z }
+  def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
   def set(x: Double, y: Double, z: Double) { this.x = x; this.y = y; this.z = z }
 
   def update(i: Int, s: Double) {
@@ -242,47 +242,47 @@ final class Vec3d private[math] (
   override def pts = zyx
 
 
-  def xy_=(u: AnyVec2d) { x = u.x; y = u.y }
-  def xz_=(u: AnyVec2d) { x = u.x; z = u.y }
-  def yx_=(u: AnyVec2d) { y = u.x; x = u.y }
-  def yz_=(u: AnyVec2d) { y = u.x; z = u.y }
-  def zx_=(u: AnyVec2d) { z = u.x; x = u.y }
-  def zy_=(u: AnyVec2d) { z = u.x; y = u.y }
+  def xy_=(u: inVec2d) { x = u.x; y = u.y }
+  def xz_=(u: inVec2d) { x = u.x; z = u.y }
+  def yx_=(u: inVec2d) { y = u.x; x = u.y }
+  def yz_=(u: inVec2d) { y = u.x; z = u.y }
+  def zx_=(u: inVec2d) { z = u.x; x = u.y }
+  def zy_=(u: inVec2d) { z = u.x; y = u.y }
 
-  def xyz_=(u: AnyVec3d) { x = u.x; y = u.y; z = u.z }
-  def xzy_=(u: AnyVec3d) { x = u.x; var t = u.z; z = u.y; y = t }
-  def yxz_=(u: AnyVec3d) { var t = u.y; y = u.x; x = t; z = u.z }
-  def yzx_=(u: AnyVec3d) { var t = u.y; y = u.x; x = u.z; z = t }
-  def zxy_=(u: AnyVec3d) { var t = u.z; z = u.x; x = u.y; y = t }
-  def zyx_=(u: AnyVec3d) { var t = u.z; z = u.x; x = t; y = u.y }
+  def xyz_=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+  def xzy_=(u: inVec3d) { x = u.x; var t = u.z; z = u.y; y = t }
+  def yxz_=(u: inVec3d) { var t = u.y; y = u.x; x = t; z = u.z }
+  def yzx_=(u: inVec3d) { var t = u.y; y = u.x; x = u.z; z = t }
+  def zxy_=(u: inVec3d) { var t = u.z; z = u.x; x = u.y; y = t }
+  def zyx_=(u: inVec3d) { var t = u.z; z = u.x; x = t; y = u.y }
 
-  def rg_=(u: AnyVec2d) { xy_=(u) }
-  def rb_=(u: AnyVec2d) { xz_=(u) }
-  def gr_=(u: AnyVec2d) { yx_=(u) }
-  def gb_=(u: AnyVec2d) { yz_=(u) }
-  def br_=(u: AnyVec2d) { zx_=(u) }
-  def bg_=(u: AnyVec2d) { zy_=(u) }
+  def rg_=(u: inVec2d) { xy_=(u) }
+  def rb_=(u: inVec2d) { xz_=(u) }
+  def gr_=(u: inVec2d) { yx_=(u) }
+  def gb_=(u: inVec2d) { yz_=(u) }
+  def br_=(u: inVec2d) { zx_=(u) }
+  def bg_=(u: inVec2d) { zy_=(u) }
 
-  def rgb_=(u: AnyVec3d) { xyz_=(u) }
-  def rbg_=(u: AnyVec3d) { xzy_=(u) }
-  def grb_=(u: AnyVec3d) { yxz_=(u) }
-  def gbr_=(u: AnyVec3d) { yzx_=(u) }
-  def brg_=(u: AnyVec3d) { zxy_=(u) }
-  def bgr_=(u: AnyVec3d) { zyx_=(u) }
+  def rgb_=(u: inVec3d) { xyz_=(u) }
+  def rbg_=(u: inVec3d) { xzy_=(u) }
+  def grb_=(u: inVec3d) { yxz_=(u) }
+  def gbr_=(u: inVec3d) { yzx_=(u) }
+  def brg_=(u: inVec3d) { zxy_=(u) }
+  def bgr_=(u: inVec3d) { zyx_=(u) }
 
-  def st_=(u: AnyVec2d) { xy_=(u) }
-  def sp_=(u: AnyVec2d) { xz_=(u) }
-  def ts_=(u: AnyVec2d) { yx_=(u) }
-  def tp_=(u: AnyVec2d) { yz_=(u) }
-  def ps_=(u: AnyVec2d) { zx_=(u) }
-  def pt_=(u: AnyVec2d) { zy_=(u) }
+  def st_=(u: inVec2d) { xy_=(u) }
+  def sp_=(u: inVec2d) { xz_=(u) }
+  def ts_=(u: inVec2d) { yx_=(u) }
+  def tp_=(u: inVec2d) { yz_=(u) }
+  def ps_=(u: inVec2d) { zx_=(u) }
+  def pt_=(u: inVec2d) { zy_=(u) }
 
-  def stp_=(u: AnyVec3d) { xyz_=(u) }
-  def spt_=(u: AnyVec3d) { xzy_=(u) }
-  def tsp_=(u: AnyVec3d) { yxz_=(u) }
-  def tps_=(u: AnyVec3d) { yzx_=(u) }
-  def pst_=(u: AnyVec3d) { zxy_=(u) }
-  def pts_=(u: AnyVec3d) { zyx_=(u) }
+  def stp_=(u: inVec3d) { xyz_=(u) }
+  def spt_=(u: inVec3d) { xzy_=(u) }
+  def tsp_=(u: inVec3d) { yxz_=(u) }
+  def tps_=(u: inVec3d) { yzx_=(u) }
+  def pst_=(u: inVec3d) { zxy_=(u) }
+  def pts_=(u: inVec3d) { zyx_=(u) }
 }
 
 object Vec3d {

@@ -134,7 +134,7 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
    * @param u a vector for comparision.
    * @return true if all the components are equal, false otherwise.
    */
-  def ==(u: AnyVec3b) :Boolean = {
+  def ==(u: inVec3b) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z
   }
@@ -146,11 +146,11 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
    * @param u a vector for comparision.
    * @return true if any of the components are not equal, false otherwise.
    */
-  def !=(u: AnyVec3b) :Boolean = !(this == u)
+  def !=(u: inVec3b) :Boolean = !(this == u)
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec3b => this == u
+      case u: inVec3b => this == u
       case _ => false
     }
   }
@@ -321,7 +321,7 @@ extends AnyVec3b with Mutable with Implicits[On]
   /** Set vector components to values from another vector.
    * @param u 3-dimensional Boolean vector.
    */
-  def :=(u: AnyVec3b) { x = u.x; y = u.y; z = u.z }
+  def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
 
   /** Set vector components to the specified values.
    * @param x component x.
@@ -392,47 +392,47 @@ extends AnyVec3b with Mutable with Implicits[On]
   override def pts = zyx
 
 
-  def xy_=(u: AnyVec2b) { x = u.x; y = u.y }
-  def xz_=(u: AnyVec2b) { x = u.x; z = u.y }
-  def yx_=(u: AnyVec2b) { y = u.x; x = u.y }
-  def yz_=(u: AnyVec2b) { y = u.x; z = u.y }
-  def zx_=(u: AnyVec2b) { z = u.x; x = u.y }
-  def zy_=(u: AnyVec2b) { z = u.x; y = u.y }
+  def xy_=(u: inVec2b) { x = u.x; y = u.y }
+  def xz_=(u: inVec2b) { x = u.x; z = u.y }
+  def yx_=(u: inVec2b) { y = u.x; x = u.y }
+  def yz_=(u: inVec2b) { y = u.x; z = u.y }
+  def zx_=(u: inVec2b) { z = u.x; x = u.y }
+  def zy_=(u: inVec2b) { z = u.x; y = u.y }
 
-  def xyz_=(u: AnyVec3b) { x = u.x; y = u.y; z = u.z }
-  def xzy_=(u: AnyVec3b) { x = u.x; var t = u.z; z = u.y; y = t }
-  def yxz_=(u: AnyVec3b) { var t = u.y; y = u.x; x = t; z = u.z }
-  def yzx_=(u: AnyVec3b) { var t = u.y; y = u.x; x = u.z; z = t }
-  def zxy_=(u: AnyVec3b) { var t = u.z; z = u.x; x = u.y; y = t }
-  def zyx_=(u: AnyVec3b) { var t = u.z; z = u.x; x = t; y = u.y }
+  def xyz_=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
+  def xzy_=(u: inVec3b) { x = u.x; var t = u.z; z = u.y; y = t }
+  def yxz_=(u: inVec3b) { var t = u.y; y = u.x; x = t; z = u.z }
+  def yzx_=(u: inVec3b) { var t = u.y; y = u.x; x = u.z; z = t }
+  def zxy_=(u: inVec3b) { var t = u.z; z = u.x; x = u.y; y = t }
+  def zyx_=(u: inVec3b) { var t = u.z; z = u.x; x = t; y = u.y }
 
-  def rg_=(u: AnyVec2b) { xy_=(u) }
-  def rb_=(u: AnyVec2b) { xz_=(u) }
-  def gr_=(u: AnyVec2b) { yx_=(u) }
-  def gb_=(u: AnyVec2b) { yz_=(u) }
-  def br_=(u: AnyVec2b) { zx_=(u) }
-  def bg_=(u: AnyVec2b) { zy_=(u) }
+  def rg_=(u: inVec2b) { xy_=(u) }
+  def rb_=(u: inVec2b) { xz_=(u) }
+  def gr_=(u: inVec2b) { yx_=(u) }
+  def gb_=(u: inVec2b) { yz_=(u) }
+  def br_=(u: inVec2b) { zx_=(u) }
+  def bg_=(u: inVec2b) { zy_=(u) }
 
-  def rgb_=(u: AnyVec3b) { xyz_=(u) }
-  def rbg_=(u: AnyVec3b) { xzy_=(u) }
-  def grb_=(u: AnyVec3b) { yxz_=(u) }
-  def gbr_=(u: AnyVec3b) { yzx_=(u) }
-  def brg_=(u: AnyVec3b) { zxy_=(u) }
-  def bgr_=(u: AnyVec3b) { zyx_=(u) }
+  def rgb_=(u: inVec3b) { xyz_=(u) }
+  def rbg_=(u: inVec3b) { xzy_=(u) }
+  def grb_=(u: inVec3b) { yxz_=(u) }
+  def gbr_=(u: inVec3b) { yzx_=(u) }
+  def brg_=(u: inVec3b) { zxy_=(u) }
+  def bgr_=(u: inVec3b) { zyx_=(u) }
 
-  def st_=(u: AnyVec2b) { xy_=(u) }
-  def sp_=(u: AnyVec2b) { xz_=(u) }
-  def ts_=(u: AnyVec2b) { yx_=(u) }
-  def tp_=(u: AnyVec2b) { yz_=(u) }
-  def ps_=(u: AnyVec2b) { zx_=(u) }
-  def pt_=(u: AnyVec2b) { zy_=(u) }
+  def st_=(u: inVec2b) { xy_=(u) }
+  def sp_=(u: inVec2b) { xz_=(u) }
+  def ts_=(u: inVec2b) { yx_=(u) }
+  def tp_=(u: inVec2b) { yz_=(u) }
+  def ps_=(u: inVec2b) { zx_=(u) }
+  def pt_=(u: inVec2b) { zy_=(u) }
 
-  def stp_=(u: AnyVec3b) { xyz_=(u) }
-  def spt_=(u: AnyVec3b) { xzy_=(u) }
-  def tsp_=(u: AnyVec3b) { yxz_=(u) }
-  def tps_=(u: AnyVec3b) { yzx_=(u) }
-  def pst_=(u: AnyVec3b) { zxy_=(u) }
-  def pts_=(u: AnyVec3b) { zyx_=(u) }
+  def stp_=(u: inVec3b) { xyz_=(u) }
+  def spt_=(u: inVec3b) { xzy_=(u) }
+  def tsp_=(u: inVec3b) { yxz_=(u) }
+  def tps_=(u: inVec3b) { yzx_=(u) }
+  def pst_=(u: inVec3b) { zxy_=(u) }
+  def pts_=(u: inVec3b) { zyx_=(u) }
 }
 
 

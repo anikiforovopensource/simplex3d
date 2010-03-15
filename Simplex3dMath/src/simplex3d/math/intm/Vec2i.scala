@@ -93,28 +93,28 @@ sealed abstract class AnyVec2i extends Read2[Int] {
   def |(s: Int) = new Vec2i( x | s, y | s)
   def ^(s: Int) = new Vec2i( x ^ s, y ^ s)
 
-  def +(u: AnyVec2i) = new Vec2i(x + u.x, y + u.y)
-  def -(u: AnyVec2i) = new Vec2i(x - u.x, y - u.y)
-  def *(u: AnyVec2i) = new Vec2i(x * u.x, y * u.y)
-  def /(u: AnyVec2i) = new Vec2i(x / u.x, y / u.y)
-  def %(u: AnyVec2i) = new Vec2i(x % u.x, y % u.y)
-  def >>(u: AnyVec2i) = new Vec2i( x >> u.x, y >> u.y)
-  def >>>(u: AnyVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
-  def <<(u: AnyVec2i) = new Vec2i( x << u.x, y << u.y)
-  def &(u: AnyVec2i) = new Vec2i( x & u.x, y & u.y)
-  def |(u: AnyVec2i) = new Vec2i( x | u.x, y | u.y)
-  def ^(u: AnyVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
+  def +(u: inVec2i) = new Vec2i(x + u.x, y + u.y)
+  def -(u: inVec2i) = new Vec2i(x - u.x, y - u.y)
+  def *(u: inVec2i) = new Vec2i(x * u.x, y * u.y)
+  def /(u: inVec2i) = new Vec2i(x / u.x, y / u.y)
+  def %(u: inVec2i) = new Vec2i(x % u.x, y % u.y)
+  def >>(u: inVec2i) = new Vec2i( x >> u.x, y >> u.y)
+  def >>>(u: inVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
+  def <<(u: inVec2i) = new Vec2i( x << u.x, y << u.y)
+  def &(u: inVec2i) = new Vec2i( x & u.x, y & u.y)
+  def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
+  def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
-  def ==(u: AnyVec2i) :Boolean = {
+  def ==(u: inVec2i) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
 
-  def !=(u: AnyVec2i) :Boolean = !(this == u)
+  def !=(u: inVec2i) :Boolean = !(this == u)
 
   override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec2i => this == u
+      case u: inVec2i => this == u
       case _ => false
     }
   }
@@ -172,19 +172,19 @@ extends AnyVec2i with Mutable with Implicits[On]
   def |=(s: Int) = { x |= s; y |= s }
   def ^=(s: Int) = { x ^= s; y ^= s }
 
-  def +=(u: AnyVec2i) { x += u.x; y += u.y }
-  def -=(u: AnyVec2i) { x -= u.x; y -= u.y }
-  def *=(u: AnyVec2i) { x *= u.x; y *= u.y }
-  def /=(u: AnyVec2i) { x /= u.x; y /= u.y }
-  def %=(u: AnyVec2i) { x %= u.x; y %= u.y }
-  def >>=(u: AnyVec2i) = { x >>= u.x; y >>= u.y }
-  def >>>=(u: AnyVec2i) = { x >>>= u.x; y >>>= u.y }
-  def <<=(u: AnyVec2i) = { x <<= u.x; y <<= u.y }
-  def &=(u: AnyVec2i) = { x &= u.x; y &= u.y }
-  def |=(u: AnyVec2i) = { x |= u.x; y |= u.y }
-  def ^=(u: AnyVec2i) = { x ^= u.x; y ^= u.y }
+  def +=(u: inVec2i) { x += u.x; y += u.y }
+  def -=(u: inVec2i) { x -= u.x; y -= u.y }
+  def *=(u: inVec2i) { x *= u.x; y *= u.y }
+  def /=(u: inVec2i) { x /= u.x; y /= u.y }
+  def %=(u: inVec2i) { x %= u.x; y %= u.y }
+  def >>=(u: inVec2i) = { x >>= u.x; y >>= u.y }
+  def >>>=(u: inVec2i) = { x >>>= u.x; y >>>= u.y }
+  def <<=(u: inVec2i) = { x <<= u.x; y <<= u.y }
+  def &=(u: inVec2i) = { x &= u.x; y &= u.y }
+  def |=(u: inVec2i) = { x |= u.x; y |= u.y }
+  def ^=(u: inVec2i) = { x ^= u.x; y ^= u.y }
 
-  def :=(u: AnyVec2i) { x = u.x; y = u.y }
+  def :=(u: inVec2i) { x = u.x; y = u.y }
   def set(x: Int, y: Int) { this.x = x; this.y = y }
 
   def update(i: Int, s: Int) {
@@ -208,14 +208,14 @@ extends AnyVec2i with Mutable with Implicits[On]
   override def ts = yx
 
 
-  def xy_=(u: AnyVec2i) { x = u.x; y = u.y }
-  def yx_=(u: AnyVec2i) { var t = u.y; y = u.x; x = t }
+  def xy_=(u: inVec2i) { x = u.x; y = u.y }
+  def yx_=(u: inVec2i) { var t = u.y; y = u.x; x = t }
 
-  def rg_=(u: AnyVec2i) { xy_=(u) }
-  def gr_=(u: AnyVec2i) { yx_=(u) }
+  def rg_=(u: inVec2i) { xy_=(u) }
+  def gr_=(u: inVec2i) { yx_=(u) }
 
-  def st_=(u: AnyVec2i) { xy_=(u) }
-  def ts_=(u: AnyVec2i) { yx_=(u) }
+  def st_=(u: inVec2i) { xy_=(u) }
+  def ts_=(u: inVec2i) { yx_=(u) }
 }
 
 object Vec2i {

@@ -24,6 +24,10 @@ import simplex3d.math._
 import simplex3d.math.BaseMath._
 
 
+// An empty class to make -Xno-forwarders work
+private[math] class IntMath
+
+
 /** <code>IntMath</code> contains functions to operate on Ints and Int vectors.
  *
  * @author Aleksey Nikiforov (lex)

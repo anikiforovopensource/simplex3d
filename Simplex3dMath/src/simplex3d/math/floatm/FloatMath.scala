@@ -25,6 +25,10 @@ import simplex3d.math.BaseMath._
 import java.lang.{StrictMath => SMath}
 
 
+// An empty class to make -Xno-forwarders work
+private[math] class FloatMath
+
+
 /**
  * @author Aleksey Nikiforov (lex)
  */

@@ -21,6 +21,10 @@
 package simplex3d.math
 
 
+// An empty class to make -Xno-forwarders work
+private[math] class BaseMath
+
+
 /** <code>BaseMath</code> contains casting functions and functions to operate
  * on Boolean vectors.
  *

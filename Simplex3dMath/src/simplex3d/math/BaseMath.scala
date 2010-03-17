@@ -40,73 +40,73 @@ object BaseMath {
    * @param x a value to cast.
    * @return x.
    */
-  def bool(x: Boolean) :Boolean = x
+  @inline def bool(x: Boolean) :Boolean = x
 
   /** Casts a Byte to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  def bool(x: Byte) :Boolean = (x != 0)
+  @inline def bool(x: Byte) :Boolean = (x != 0)
 
   /** Casts a Short to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  def bool(x: Short) :Boolean = (x != 0)
+  @inline def bool(x: Short) :Boolean = (x != 0)
 
   /** Casts an Int to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  def bool(x: Int) :Boolean = (x != 0)
+  @inline def bool(x: Int) :Boolean = (x != 0)
 
   /** Casts a Long to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  def bool(x: Long) :Boolean = (x != 0)
+  @inline def bool(x: Long) :Boolean = (x != 0)
 
   /** Casts a Float to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  def bool(x: Float) :Boolean = (x != 0)
+  @inline def bool(x: Float) :Boolean = (x != 0)
 
   /** Casts a Double to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  def bool(x: Double) :Boolean = (x != 0)
+  @inline def bool(x: Double) :Boolean = (x != 0)
 
   /** Casts a Boolean to a Byte.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  def byte(x: Boolean) :Byte = if (x) 1 else 0
+  @inline def byte(x: Boolean) :Byte = if (x) 1 else 0
 
   /** Casts a Byte to a Byte. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def byte(x: Byte) :Byte = x
+  @inline def byte(x: Byte) :Byte = x
 
   /** Casts a Short to a Byte.
    * @param x a value to cast.
    * @return 8 lower bits of x.
    */
-  def byte(x: Short) :Byte = x.asInstanceOf[Byte]
+  @inline def byte(x: Short) :Byte = x.asInstanceOf[Byte]
 
   /** Casts an Int to a Byte.
    * @param x a value to cast.
    * @return 8 lower bits of x.
    */
-  def byte(x: Int) :Byte = x.asInstanceOf[Byte]
+  @inline def byte(x: Int) :Byte = x.asInstanceOf[Byte]
 
   /** Casts a Long to a Byte.
    * @param x a value to cast.
    * @return 8 lower bits of x.
    */
-  def byte(x: Long) :Byte = x.asInstanceOf[Byte]
+  @inline def byte(x: Long) :Byte = x.asInstanceOf[Byte]
 
   /** Casts a Float to a Byte.
    * @param x a value to cast.
@@ -115,7 +115,7 @@ object BaseMath {
    *          -1 if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def byte(x: Float) :Byte = x.asInstanceOf[Byte]
+  @inline def byte(x: Float) :Byte = x.asInstanceOf[Byte]
 
   /** Casts a Double to a Byte.
    * @param x a value to cast.
@@ -124,37 +124,37 @@ object BaseMath {
    *          -1 if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def byte(x: Double) :Byte = x.asInstanceOf[Byte]
+  @inline def byte(x: Double) :Byte = x.asInstanceOf[Byte]
 
   /** Casts a Boolean to a Short.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  def short(x: Boolean) :Short = if (x) 1 else 0
+  @inline def short(x: Boolean) :Short = if (x) 1 else 0
 
   /** Casts a Byte to a Short.
    * @param x a value to cast.
    * @return x as Short keeping the sign.
    */
-  def short(x: Byte) :Short = x.asInstanceOf[Short]
+  @inline def short(x: Byte) :Short = x.asInstanceOf[Short]
 
   /** Casts a Short to a Short. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def short(x: Short) :Short = x
+  @inline def short(x: Short) :Short = x
 
   /** Casts an Int to a Short.
    * @param x a value to cast.
    * @return 16 lower bits of x.
    */
-  def short(x: Int) :Short = x.asInstanceOf[Short]
+  @inline def short(x: Int) :Short = x.asInstanceOf[Short]
 
   /** Casts a Long to a Short.
    * @param x a value to cast.
    * @return 16 lower bits of x.
    */
-  def short(x: Long) :Short = x.asInstanceOf[Short]
+  @inline def short(x: Long) :Short = x.asInstanceOf[Short]
 
   /** Casts a Float to a Short.
    * @param x a value to cast.
@@ -163,7 +163,7 @@ object BaseMath {
    *          -1 if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def short(x: Float) :Short = x.asInstanceOf[Short]
+  @inline def short(x: Float) :Short = x.asInstanceOf[Short]
 
   /** Casts a Double to a Short.
    * @param x a value to cast.
@@ -172,37 +172,37 @@ object BaseMath {
    *          -1 if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def short(x: Double) :Short = x.asInstanceOf[Short]
+  @inline def short(x: Double) :Short = x.asInstanceOf[Short]
 
   /** Casts a Boolean to an Int.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  def int(x: Boolean) :Int = if (x) 1 else 0
+  @inline def int(x: Boolean) :Int = if (x) 1 else 0
 
   /** Casts a Byte to an Int.
    * @param x a value to cast.
    * @return x as Int keeping the sign.
    */
-  def int(x: Byte) :Int = x.asInstanceOf[Int]
+  @inline def int(x: Byte) :Int = x.asInstanceOf[Int]
 
   /** Casts a Short to an Int.
    * @param x a value to cast.
    * @return x as Int keeping the sign.
    */
-  def int(x: Short) :Int = x.asInstanceOf[Int]
+  @inline def int(x: Short) :Int = x.asInstanceOf[Int]
 
   /** Casts an Int to an Int. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def int(x: Int) :Int = x
+  @inline def int(x: Int) :Int = x
 
   /** Casts a Long to an Int.
    * @param x a value to cast.
    * @return 32 lower bits of x.
    */
-  def int(x: Long) :Int = x.asInstanceOf[Int]
+  @inline def int(x: Long) :Int = x.asInstanceOf[Int]
 
   /** Casts a Float to an Int.
    * @param x a value to cast.
@@ -211,7 +211,7 @@ object BaseMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def int(x: Float) :Int = x.asInstanceOf[Int]
+  @inline def int(x: Float) :Int = x.asInstanceOf[Int]
 
   /** Casts a Double to an Int.
    * @param x a value to cast.
@@ -220,37 +220,37 @@ object BaseMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  def int(x: Double) :Int = x.asInstanceOf[Int]
+  @inline def int(x: Double) :Int = x.asInstanceOf[Int]
 
   /** Casts a Boolean to a Long.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  def long(x: Boolean) :Long = if (x) 1 else 0
+  @inline def long(x: Boolean) :Long = if (x) 1 else 0
 
   /** Casts a Byte to a Long.
    * @param x a value to cast.
    * @return x as Long keeping the sign.
    */
-  def long(x: Byte) :Long = x.asInstanceOf[Long]
+  @inline def long(x: Byte) :Long = x.asInstanceOf[Long]
 
   /** Casts a Short to a Long.
    * @param x a value to cast.
    * @return x as Long keeping the sign.
    */
-  def long(x: Short) :Long = x.asInstanceOf[Long]
+  @inline def long(x: Short) :Long = x.asInstanceOf[Long]
 
   /** Casts an Int to a Long.
    * @param x a value to cast.
    * @return x as Long keeping the sign.
    */
-  def long(x: Int) :Long = x.asInstanceOf[Long]
+  @inline def long(x: Int) :Long = x.asInstanceOf[Long]
 
   /** Casts a Long to a Long. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def long(x: Long) :Long = x
+  @inline def long(x: Long) :Long = x
 
   /** Casts a Float to a Long.
    * @param x a value to cast.
@@ -259,7 +259,7 @@ object BaseMath {
    *           Long.MaxValue if x >= Long.MaxValue,
    *           possible loss of precision.
    */
-  def long(x: Float) :Long = x.asInstanceOf[Long]
+  @inline def long(x: Float) :Long = x.asInstanceOf[Long]
 
   /** Casts a Double to a Long.
    * @param x a value to cast.
@@ -268,91 +268,91 @@ object BaseMath {
    *           Long.MaxValue if x >= Long.MaxValue,
    *           possible loss of precision.
    */
-  def long(x: Double) :Long = x.asInstanceOf[Long]
+  @inline def long(x: Double) :Long = x.asInstanceOf[Long]
 
   /** Casts a Boolean to a Float.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  def float(x: Boolean) :Float = if (x) 1 else 0
+  @inline def float(x: Boolean) :Float = if (x) 1 else 0
 
   /** Casts a Byte to a Float.
    * @param x a value to cast.
    * @return x as Float.
    */
-  def float(x: Byte) :Float = x.asInstanceOf[Float]
+  @inline def float(x: Byte) :Float = x.asInstanceOf[Float]
 
   /** Casts a Short to a Float.
    * @param x a value to cast.
    * @return x as Float.
    */
-  def float(x: Short) :Float = x.asInstanceOf[Float]
+  @inline def float(x: Short) :Float = x.asInstanceOf[Float]
 
   /** Casts an Int to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  def float(x: Int) :Float = x.asInstanceOf[Float]
+  @inline def float(x: Int) :Float = x.asInstanceOf[Float]
 
   /** Casts a Long to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  def float(x: Long) :Float = x.asInstanceOf[Float]
+  @inline def float(x: Long) :Float = x.asInstanceOf[Float]
 
   /** Casts a Float to a Float. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def float(x: Float) :Float = x
+  @inline def float(x: Float) :Float = x
 
   /** Casts a Double to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  def float(x: Double) :Float = x.asInstanceOf[Float]
+  @inline def float(x: Double) :Float = x.asInstanceOf[Float]
 
   /** Casts a Boolean to a Douoble.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  def double(x: Boolean) :Double = if (x) 1 else 0
+  @inline def double(x: Boolean) :Double = if (x) 1 else 0
 
   /** Casts a Byte to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  def double(x: Byte) :Double = x.asInstanceOf[Double]
+  @inline def double(x: Byte) :Double = x.asInstanceOf[Double]
 
   /** Casts a Short to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  def double(x: Short) :Double = x.asInstanceOf[Double]
+  @inline def double(x: Short) :Double = x.asInstanceOf[Double]
 
   /** Casts an Int to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  def double(x: Int) :Double = x.asInstanceOf[Double]
+  @inline def double(x: Int) :Double = x.asInstanceOf[Double]
 
   /** Casts a Long to a Douoble.
    * @param x a value to cast.
    * @return x as Double, possible loss of precision.
    */
-  def double(x: Long) :Double = x.asInstanceOf[Double]
+  @inline def double(x: Long) :Double = x.asInstanceOf[Double]
 
   /** Casts a Float to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  def double(x: Float) :Double = x.asInstanceOf[Double]
+  @inline def double(x: Float) :Double = x.asInstanceOf[Double]
 
   /** Casts a Double to a Douoble. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  def double(x: Double) :Double = x
+  @inline def double(x: Double) :Double = x
 
 
   // Vec2b functions.

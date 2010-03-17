@@ -37,7 +37,7 @@ package object math {
    * It is recommended to always use the prefixes when declaring functions.
    */
   type outVec2b = Vec2b with Implicits[Off]
-  implicit def bmOut2(u: Vec2b) = u.asInstanceOf[outVec2b]
+  @inline implicit def bmOut2(u: Vec2b) = u.asInstanceOf[outVec2b]
 
 
   /** <code>in</code> prefix for Vec3b.
@@ -49,7 +49,7 @@ package object math {
    * It is recommended to always use the prefixes when declaring functions.
    */
   type outVec3b = Vec3b with Implicits[Off]
-  implicit def bmOut3(u: Vec3b) = u.asInstanceOf[outVec3b]
+  @inline implicit def bmOut3(u: Vec3b) = u.asInstanceOf[outVec3b]
 
 
   /** <code>in</code> prefix for Vec4b.
@@ -61,5 +61,5 @@ package object math {
    * It is recommended to always use the prefixes when declaring functions.
    */
   type outVec4b = Vec4b with Implicits[Off]
-  implicit def bmOut4(u: Vec4b) = u.asInstanceOf[outVec4b]
+  @inline implicit def bmOut4(u: Vec4b) = u.asInstanceOf[outVec4b]
 }

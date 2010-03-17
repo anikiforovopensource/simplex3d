@@ -362,7 +362,7 @@ object ConstMat4f {
     0, 0, 0, s
   )
 
-  def apply(
+  @inline def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float,
     m02: Float, m12: Float, m22: Float, m32: Float,
@@ -586,7 +586,7 @@ object Mat4f {
     0, 0, 0, s
   )
 
-  def apply(
+  @inline def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float,
     m02: Float, m12: Float, m22: Float, m32: Float,

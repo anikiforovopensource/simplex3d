@@ -224,7 +224,7 @@ object ConstMat2f {
     0, s
   )
 
-  def apply(
+  @inline def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float
   ) = new ConstMat2f(
@@ -354,7 +354,7 @@ object Mat2f {
     0, s
   )
 
-  def apply(
+  @inline def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float
   ) = new Mat2f(

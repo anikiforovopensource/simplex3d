@@ -234,9 +234,8 @@ object ConstVec4b {
    * @return a new instance of ConstVec4b with components initialized
    *         to the arguments.
    */
-  def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) = {
+  @inline def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
     new ConstVec4b(x, y, z, w)
-  }
 
   /** Makes a new instance of ConstVec4b from a 4-dimensional vector.
    * @param u any 4-dimensional vector.
@@ -804,7 +803,7 @@ object Vec4b {
    * @return a new instance of Vec4b with components initialized
    *         to the arguments.
    */
-  def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
+  @inline def apply(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
     new Vec4b(x, y, z, w)
 
   /** Makes a new instance of Vec4b from a 4-dimensional vector.

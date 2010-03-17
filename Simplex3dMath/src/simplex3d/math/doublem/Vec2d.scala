@@ -129,7 +129,7 @@ final class ConstVec2d private[math] (val x: Double, val y: Double)
 extends AnyVec2d with Immutable
 
 object ConstVec2d {
-  def apply(x: Double, y: Double) = new ConstVec2d(x, y)
+  @inline def apply(x: Double, y: Double) = new ConstVec2d(x, y)
   def apply(u: Read2[_]) = new ConstVec2d(u.dx, u.dy)
 
   implicit def toConst(u: AnyVec2d) = new ConstVec2d(u.x, u.y)
@@ -206,7 +206,7 @@ object Vec2d {
   val One = new ConstVec2d(1, 1)
 
   def apply(s: Double) = new Vec2d(s, s)
-  def apply(x: Double, y: Double) = new Vec2d(x, y)
+  @inline def apply(x: Double, y: Double) = new Vec2d(x, y)
   def apply(u: Read2[_]) = new Vec2d(u.dx, u.dy)
   def apply(u: Read3[_]) = new Vec2d(u.dx, u.dy)
   def apply(u: Read4[_]) = new Vec2d(u.dx, u.dy)

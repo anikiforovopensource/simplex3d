@@ -268,7 +268,7 @@ object ConstMat4x2d {
     0, s, 0, 0
   )
 
-  def apply(
+  @inline def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double
   ) = new ConstMat4x2d(
@@ -426,7 +426,7 @@ object Mat4x2d {
     0, s, 0, 0
   )
 
-  def apply(
+  @inline def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double
   ) = new Mat4x2d(

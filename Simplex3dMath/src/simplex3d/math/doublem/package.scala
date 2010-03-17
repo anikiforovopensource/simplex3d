@@ -77,55 +77,55 @@ package object doublem {
   // In and Out aliases
   type inVec2d = AnyVec2d
   type outVec2d = Vec2d with Implicits[Off]
-  implicit def dmOut2(u: Vec2d) = u.asInstanceOf[outVec2d]
+  @inline implicit def dmOut2(u: Vec2d) = u.asInstanceOf[outVec2d]
 
   type inVec3d = AnyVec3d
   type outVec3d = Vec3d with Implicits[Off]
-  implicit def dmOut3(u: Vec3d) = u.asInstanceOf[outVec3d]
+  @inline implicit def dmOut3(u: Vec3d) = u.asInstanceOf[outVec3d]
 
   type inVec4d = AnyVec4d
   type outVec4d = Vec4d with Implicits[Off]
-  implicit def dmOut4(u: Vec4d) = u.asInstanceOf[outVec4d]
+  @inline implicit def dmOut4(u: Vec4d) = u.asInstanceOf[outVec4d]
 
   type inQuat4d = AnyQuat4d
   type outQuat4d = Quat4d with Implicits[Off]
-  implicit def dmOutQuat(u: Quat4d) = u.asInstanceOf[outQuat4d]
+  @inline implicit def dmOutQuat(u: Quat4d) = u.asInstanceOf[outQuat4d]
 
   type inMat2d = AnyMat2d
   type outMat2d = Mat2d with Implicits[Off]
-  implicit def dmOut2x2(u: Mat2d) = u.asInstanceOf[outMat2d]
+  @inline implicit def dmOut2x2(u: Mat2d) = u.asInstanceOf[outMat2d]
 
   type inMat2x3d = AnyMat2x3d
   type outMat2x3d = Mat2x3d with Implicits[Off]
-  implicit def dmOut2x3(u: Mat2x3d) = u.asInstanceOf[outMat2x3d]
+  @inline implicit def dmOut2x3(u: Mat2x3d) = u.asInstanceOf[outMat2x3d]
 
   type inMat2x4d = AnyMat2x4d
   type outMat2x4d = Mat2x4d with Implicits[Off]
-  implicit def dmOut2x4(u: Mat2x4d) = u.asInstanceOf[outMat2x4d]
+  @inline implicit def dmOut2x4(u: Mat2x4d) = u.asInstanceOf[outMat2x4d]
 
   type inMat3x2d = AnyMat3x2d
   type outMat3x2d = Mat3x2d with Implicits[Off]
-  implicit def dmOut3x2(u: Mat3x2d) = u.asInstanceOf[outMat3x2d]
+  @inline implicit def dmOut3x2(u: Mat3x2d) = u.asInstanceOf[outMat3x2d]
 
   type inMat3d = AnyMat3d
   type outMat3d = Mat3d with Implicits[Off]
-  implicit def dmOut3x3(u: Mat3d) = u.asInstanceOf[outMat3d]
+  @inline implicit def dmOut3x3(u: Mat3d) = u.asInstanceOf[outMat3d]
 
   type inMat3x4d = AnyMat3x4d
   type outMat3x4d = Mat3x4d with Implicits[Off]
-  implicit def dmOut3x4(u: Mat3x4d) = u.asInstanceOf[outMat3x4d]
+  @inline implicit def dmOut3x4(u: Mat3x4d) = u.asInstanceOf[outMat3x4d]
 
   type inMat4x2d = AnyMat4x2d
   type outMat4x2d = Mat4x2d with Implicits[Off]
-  implicit def dmOut4x2(u: Mat4x2d) = u.asInstanceOf[outMat4x2d]
+  @inline implicit def dmOut4x2(u: Mat4x2d) = u.asInstanceOf[outMat4x2d]
 
   type inMat4x3d = AnyMat4x3d
   type outMat4x3d = Mat4x3d with Implicits[Off]
-  implicit def dmOut4x3(u: Mat4x3d) = u.asInstanceOf[outMat4x3d]
+  @inline implicit def dmOut4x3(u: Mat4x3d) = u.asInstanceOf[outMat4x3d]
 
   type inMat4d = AnyMat4d
   type outMat4d = Mat4d with Implicits[Off]
-  implicit def dmOut4x4(u: Mat4d) = u.asInstanceOf[outMat4d]
+  @inline implicit def dmOut4x4(u: Mat4d) = u.asInstanceOf[outMat4d]
 
   // In and Out matrix aliases
   type inMat2x2d = inMat2d

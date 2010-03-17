@@ -195,7 +195,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the arguments.
    */
-  def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
+  @inline def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
 
   /** Makes a new instance of ConstVec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.
@@ -354,7 +354,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the arguments.
    */
-  def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
+  @inline def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
 
   /** Makes a new instance of Vec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.

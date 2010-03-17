@@ -143,7 +143,7 @@ final class ConstVec3d private[math] (
 ) extends AnyVec3d with Immutable
 
 object ConstVec3d {
-  def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
+  @inline def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
 
   implicit def toConst(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
@@ -293,7 +293,7 @@ object Vec3d {
   val One = new ConstVec3d(1, 1, 1)
 
   def apply(s: Double) = new Vec3d(s, s, s)
-  def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)
+  @inline def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)
   def apply(u: Read3[_]) = new Vec3d(u.dx, u.dy, u.dz)
   def apply(u: Read4[_]) = new Vec3d(u.dx, u.dy, u.dz)
   def apply(xy: Read2[_], z: Double) = new Vec3d(xy.dx, xy.dy, z)

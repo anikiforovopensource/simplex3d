@@ -148,9 +148,9 @@ final class ConstQuat4d private[math] (
 ) extends AnyQuat4d with Immutable
 
 object ConstQuat4d {
-  def apply(a: Double, b: Double, c: Double, d: Double) = {
+  @inline def apply(a: Double, b: Double, c: Double, d: Double) =
     new ConstQuat4d(a, b, c, d)
-  }
+
   def apply(u: ReadQ[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
 
   implicit def toConst(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
@@ -199,9 +199,9 @@ final class Quat4d private[math] (
 object Quat4d {
   val Identity = new ConstQuat4d(1, 0, 0, 0)
   
-  def apply(a: Double, b: Double, c: Double, d: Double) = {
+  @inline def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
-  }
+
   def apply(q: ReadQ[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
   def apply(u: Read4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
 

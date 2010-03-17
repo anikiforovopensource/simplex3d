@@ -156,9 +156,9 @@ final class ConstVec4f private[math] (
 ) extends AnyVec4f with Immutable
 
 object ConstVec4f {
-  def apply(x: Float, y: Float, z: Float, w: Float) = {
+  @inline def apply(x: Float, y: Float, z: Float, w: Float) =
     new ConstVec4f(x, y, z, w)
-  }
+
   def apply(u: Read4[_]) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
   implicit def toConst(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
@@ -612,7 +612,7 @@ object Vec4f {
   def apply(s: Float) =
     new Vec4f(s, s, s, s)
 
-  def apply(x: Float, y: Float, z: Float, w: Float) =
+  @inline def apply(x: Float, y: Float, z: Float, w: Float) =
     new Vec4f(x, y, z, w)
 
   def apply(u: Read4[_]) =

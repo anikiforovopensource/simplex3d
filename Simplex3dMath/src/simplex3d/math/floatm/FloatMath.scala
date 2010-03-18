@@ -205,26 +205,26 @@ object FloatMath {
   /**
    * meaningful return values for x withing [-2E8, +2E8]
    */
-  def noise1(x: Float) :Float = float(SimplexNoise.noise(x, 0))
+  def noise1(x: Float) :Float = float(SimplexNoise.noise(x))
   def noise2(x: Float) :Vec2f = {
     new Vec2f(
-      float(SimplexNoise.noise(x, 0)),
-      float(SimplexNoise.noise(x, of1))
+      float(SimplexNoise.noise(x)),
+      float(SimplexNoise.noise(x + of1))
     )
   }
   def noise3(x: Float) :Vec3f = {
     new Vec3f(
-      float(SimplexNoise.noise(x, 0)),
-      float(SimplexNoise.noise(x, of1)),
-      float(SimplexNoise.noise(x, of2))
+      float(SimplexNoise.noise(x)),
+      float(SimplexNoise.noise(x + of1)),
+      float(SimplexNoise.noise(x + of2))
     )
   }
   def noise4(x: Float) :Vec4f = {
     new Vec4f(
-      float(SimplexNoise.noise(x, 0)),
-      float(SimplexNoise.noise(x, of1)),
-      float(SimplexNoise.noise(x, of2)),
-      float(SimplexNoise.noise(x, of3))
+      float(SimplexNoise.noise(x)),
+      float(SimplexNoise.noise(x + of1)),
+      float(SimplexNoise.noise(x + of2)),
+      float(SimplexNoise.noise(x + of3))
     )
   }
 

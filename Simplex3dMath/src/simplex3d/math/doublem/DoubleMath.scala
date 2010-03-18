@@ -173,26 +173,26 @@ object DoubleMath {
     if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
   }
 
-  def noise1(x: Double) :Double = SimplexNoise.noise(x, 0)
+  def noise1(x: Double) :Double = SimplexNoise.noise(x)
   def noise2(x: Double) :Vec2d = {
     new Vec2d(
-      SimplexNoise.noise(x, 0),
-      SimplexNoise.noise(x, of1)
+      SimplexNoise.noise(x),
+      SimplexNoise.noise(x + of1)
     )
   }
   def noise3(x: Double) :Vec3d = {
     new Vec3d(
-      SimplexNoise.noise(x, 0),
-      SimplexNoise.noise(x, of1),
-      SimplexNoise.noise(x, of2)
+      SimplexNoise.noise(x),
+      SimplexNoise.noise(x + of1),
+      SimplexNoise.noise(x + of2)
     )
   }
   def noise4(x: Double) :Vec4d = {
     new Vec4d(
-      SimplexNoise.noise(x, 0),
-      SimplexNoise.noise(x, of1),
-      SimplexNoise.noise(x, of2),
-      SimplexNoise.noise(x, of3)
+      SimplexNoise.noise(x),
+      SimplexNoise.noise(x + of1),
+      SimplexNoise.noise(x + of2),
+      SimplexNoise.noise(x + of3)
     )
   }
 

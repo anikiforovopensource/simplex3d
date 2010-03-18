@@ -39,7 +39,7 @@ import java.lang.Math
  * @author Stefan Gustavson, ITN-LiTH
  * @author Bill Licea-Kane, ATI
  *
- *         Ported to Scala
+ * Ported to Scala, implemented 1D noise.
  * @author Aleksey Nikiforov (lex)
  */
 private[math] object SimplexNoise {
@@ -87,14 +87,62 @@ private[math] object SimplexNoise {
     if (x > 0 || x == i) i else i - 1
   }
 
+  /** Computes 1D simplex noise.
+   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
+   * @return simplex noise value for the specified coordinate.
+   */
+  def noise(x: Double) :Double = {
+    val pix = ifloor(x)
+
+    // The x distance from the cell origin
+    val p0x = x - pix
+
+    val ix = pix & 0xFF
+
+    // For the 1D case, the simplex shape is an interval of length 1.
+
+    // Noise contribution from left point
+    val t0 = 1 - (p0x*p0x)
+    val n0 =
+      if (t0 < 0.0) 0.0
+      else {
+        val px = perm(ix)
+        // Gradient function, produces ints in [-8, 8] excluding 0 from perm
+        val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
+        val t = t0 * t0
+        t * t * grad*p0x
+      }
+
+    // Noise contribution from right point
+    val p1x = p0x - 1
+    val t1 = 1 - (p1x*p1x)
+    val n1 =
+      if (t1 < 0.0) 0.0
+      else {
+        val px = perm(ix + 1)
+        // Gradient function, produces ints in [-8, 8] excluding 0 from perm
+        val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
+        val t = t1 * t1
+        t * t * grad*p1x
+      }
+
+    // Sum up and scale the result to cover the range [-1,1]
+    0.395061728395 * (n0 + n1)
+    // 0.395061728395 is derived from:
+    // pow(a - pow(p, 2), 4)*p*8 + pow(a - pow(p - 1, 2), 4)*(p - 1)*(-8)
+    // with a = 1 and p = 0.5
+  }
   
   // Skew and unskew factors are a bit hairy for 2D, so define them as constants
   private val F2 = (Math.sqrt(3.0) - 1.0) / 2.0
   private val G2 = (3.0 - Math.sqrt(3.0)) / 6.0
   private val G22 = 1 - 2.0 * (3.0 - Math.sqrt(3.0)) / 6.0
 
-  /*
-   * 2D simplex noise. Somewhat slower but much better looking than classic noise.
+  /** Computes 2D simplex noise. Somewhat slower but much better looking
+   * than classic (Perlin) noise.
+   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
+   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
+   * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double) :Double = {
     // Skew the (x,y) space to determine which cell of 2 simplices we're in
@@ -166,8 +214,12 @@ private[math] object SimplexNoise {
   private val G32 = 2 / 6.0
   private val G33 = 1 - 3 / 6.0
 
-  /*
-   * 3D simplex noise. Comparable in speed to classic noise, better looking.
+  /** Computes 3D simplex noise. Comparable in speed to classic (Perlin) noise,
+   * better looking.
+   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
+   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
+   * @param z z coordinate, must be in range of [-2E-8, +2E-8].
+   * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double, z:Double) :Double = {
     // Skew the (x,y,z) space to determine which cell of 6 simplices we're in
@@ -316,8 +368,13 @@ private[math] object SimplexNoise {
   private val G43 = 3.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
   private val G44 = 1 - 4.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
 
-  /*
-   * 4D simplex noise. A lot faster than classic 4D noise, and better looking.
+  /** Computes 4D simplex noise. A lot faster than classic (Perlin) 4D noise,
+   * and better looking.
+   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
+   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
+   * @param z z coordinate, must be in range of [-2E-8, +2E-8].
+   * @param w w coordinate, must be in range of [-2E-8, +2E-8].
+   * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in

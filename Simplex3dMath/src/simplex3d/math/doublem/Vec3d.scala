@@ -138,6 +138,8 @@ sealed abstract class AnyVec3d extends Read3[Double] {
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3d private[math] (
   val x: Double, val y: Double, val z: Double
 ) extends AnyVec3d with Immutable
@@ -150,6 +152,7 @@ object ConstVec3d {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3d private[math] (
   var x: Double, var y: Double, var z: Double
 ) extends AnyVec3d with Mutable with Implicits[On]

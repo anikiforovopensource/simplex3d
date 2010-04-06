@@ -138,6 +138,8 @@ sealed abstract class AnyVec3f extends Read3[Float] {
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3f private[math] (val x: Float, val y: Float, val z: Float)
 extends AnyVec3f with Immutable
 
@@ -149,6 +151,7 @@ object ConstVec3f {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3f private[math] (var x: Float, var y: Float, var z: Float)
 extends AnyVec3f with Mutable with Implicits[On]
 {

@@ -143,6 +143,7 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4d private[math] (
   val a: Double, val b: Double, val c: Double, val d: Double
 ) extends AnyQuat4d with Immutable
@@ -157,6 +158,7 @@ object ConstQuat4d {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
   var a: Double, var b: Double, var c: Double, var d: Double
 ) extends AnyQuat4d with Mutable with Implicits[On]

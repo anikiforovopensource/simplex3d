@@ -143,6 +143,7 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4f private[math] (
   val a: Float, val b: Float, val c: Float, val d: Float
 ) extends AnyQuat4f with Immutable
@@ -157,6 +158,7 @@ object ConstQuat4f {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
   var a: Float, var b: Float, var c: Float, var d: Float
 ) extends AnyQuat4f with Mutable with Implicits[On]

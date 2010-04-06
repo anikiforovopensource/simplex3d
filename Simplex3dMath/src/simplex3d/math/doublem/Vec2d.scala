@@ -125,6 +125,8 @@ sealed abstract class AnyVec2d extends Read2[Double] {
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2d private[math] (val x: Double, val y: Double)
 extends AnyVec2d with Immutable
 
@@ -136,6 +138,7 @@ object ConstVec2d {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2d private[math] (var x: Double, var y: Double)
 extends AnyVec2d with Mutable with Implicits[On]
 {

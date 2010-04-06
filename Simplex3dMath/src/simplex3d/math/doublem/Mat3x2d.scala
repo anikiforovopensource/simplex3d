@@ -234,6 +234,8 @@ sealed abstract class AnyMat3x2d extends Read3x2[ConstVec3d]
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat3x2d private[math] (
   val m00: Double, val m10: Double, val m20: Double,
   val m01: Double, val m11: Double, val m21: Double
@@ -269,6 +271,7 @@ object ConstMat3x2d {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Mat3x2d private[math] (
   var m00: Double, var m10: Double, var m20: Double,
   var m01: Double, var m11: Double, var m21: Double

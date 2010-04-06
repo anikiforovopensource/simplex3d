@@ -151,6 +151,8 @@ sealed abstract class AnyVec4f extends Read4[Float] {
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec4f private[math] (
   val x: Float, val y: Float, val z: Float, val w: Float
 ) extends AnyVec4f with Immutable
@@ -165,6 +167,7 @@ object ConstVec4f {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4f private[math] (
   var x: Float, var y: Float, var z: Float, var w: Float
 ) extends AnyVec4f with Mutable with Implicits[On]

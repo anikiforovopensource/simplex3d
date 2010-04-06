@@ -130,6 +130,7 @@ sealed abstract class AnyVec2i extends Read2[Int] {
   }
 }
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2i private[math] (val x: Int, val y: Int)
 extends AnyVec2i with Immutable
 
@@ -141,6 +142,7 @@ object ConstVec2i {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2i private[math] (var x: Int, var y: Int)
 extends AnyVec2i with Mutable with Implicits[On]
 {

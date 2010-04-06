@@ -125,6 +125,8 @@ sealed abstract class AnyVec2f extends Read2[Float] {
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2f private[math] (val x: Float, val y: Float)
 extends AnyVec2f with Immutable
 
@@ -135,6 +137,8 @@ object ConstVec2f {
   implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2f private[math] (var x: Float, var y: Float)
 extends AnyVec2f with Mutable with Implicits[On]
 {

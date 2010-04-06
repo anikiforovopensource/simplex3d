@@ -211,6 +211,7 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec4b private[math] (
   val x: Boolean, val y: Boolean, val z: Boolean, val w: Boolean
 ) extends AnyVec4b with Immutable
@@ -270,6 +271,7 @@ object ConstVec4b {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4b private[math] (
   var x: Boolean, var y: Boolean, var z: Boolean, var w: Boolean
 ) extends AnyVec4b with Mutable with Implicits[On]

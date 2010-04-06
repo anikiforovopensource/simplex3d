@@ -256,6 +256,8 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat4x2d private[math] (
   val m00: Double, val m10: Double, val m20: Double, val m30: Double,
   val m01: Double, val m11: Double, val m21: Double, val m31: Double
@@ -291,6 +293,7 @@ object ConstMat4x2d {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Mat4x2d private[math] (
   var m00: Double, var m10: Double, var m20: Double, var m30: Double,
   var m01: Double, var m11: Double, var m21: Double, var m31: Double

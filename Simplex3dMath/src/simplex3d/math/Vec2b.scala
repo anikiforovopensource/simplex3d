@@ -175,6 +175,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
 extends AnyVec2b with Immutable
 
@@ -230,6 +231,7 @@ object ConstVec2b {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2b private[math] (var x: Boolean, var y: Boolean)
 extends AnyVec2b with Mutable with Implicits[On]
 {

@@ -194,6 +194,7 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3b private[math] (
   val x: Boolean, val y: Boolean, val z: Boolean
 ) extends AnyVec3b with Immutable
@@ -252,6 +253,7 @@ object ConstVec3b {
  *
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3b private[math] (var x: Boolean, var y: Boolean, var z: Boolean)
 extends AnyVec3b with Mutable with Implicits[On]
 {

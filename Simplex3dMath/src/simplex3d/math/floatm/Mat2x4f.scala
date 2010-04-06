@@ -278,6 +278,8 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
   }
 }
 
+
+@serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat2x4f private[math] (
   val m00: Float, val m10: Float,
   val m01: Float, val m11: Float,
@@ -325,6 +327,7 @@ object ConstMat2x4f {
 }
 
 
+@serializable @SerialVersionUID(5359695191257934190L)
 final class Mat2x4f private[math] (
   var m00: Float, var m10: Float,
   var m01: Float, var m11: Float,

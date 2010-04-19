@@ -270,7 +270,7 @@ object ConstMat4x2f {
     0, s, 0, 0
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float
   ) = new ConstMat4x2f(
@@ -429,7 +429,7 @@ object Mat4x2f {
     0, s, 0, 0
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float
   ) = new Mat4x2f(

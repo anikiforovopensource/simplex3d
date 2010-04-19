@@ -131,7 +131,7 @@ final class ConstVec2f private[math] (val x: Float, val y: Float)
 extends AnyVec2f with Immutable
 
 object ConstVec2f {
-  @inline def apply(x: Float, y: Float) = new ConstVec2f(x, y)
+  /* @inline */ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
   def apply(u: Read2[_]) = new ConstVec2f(u.fx, u.fy)
 
   implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
@@ -210,7 +210,7 @@ object Vec2f {
   val One = new ConstVec2f(1, 1)
 
   def apply(s: Float) = new Vec2f(s, s)
-  @inline def apply(x: Float, y: Float) = new Vec2f(x, y)
+  /* @inline */ def apply(x: Float, y: Float) = new Vec2f(x, y)
   def apply(u: Read2[_]) = new Vec2f(u.fx, u.fy)
   def apply(u: Read3[_]) = new Vec2f(u.fx, u.fy)
   def apply(u: Read4[_]) = new Vec2f(u.fx, u.fy)

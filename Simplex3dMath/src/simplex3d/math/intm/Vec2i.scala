@@ -135,7 +135,7 @@ final class ConstVec2i private[math] (val x: Int, val y: Int)
 extends AnyVec2i with Immutable
 
 object ConstVec2i {
-  @inline def apply(x: Int, y: Int) = new ConstVec2i(x, y)
+  /* @inline */ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
   def apply(u: Read2[_]) = new ConstVec2i(u.ix, u.iy)
 
   implicit def toConst(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
@@ -227,7 +227,7 @@ object Vec2i {
   val One = new ConstVec2i(1, 1)
 
   def apply(s: Int) = new Vec2i(s, s)
-  @inline def apply(x: Int, y: Int) = new Vec2i(x, y)
+  /* @inline */ def apply(x: Int, y: Int) = new Vec2i(x, y)
   def apply(u: Read2[_]) = new Vec2i(u.ix, u.iy)
   def apply(u: Read3[_]) = new Vec2i(u.ix, u.iy)
   def apply(u: Read4[_]) = new Vec2i(u.ix, u.iy)

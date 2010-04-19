@@ -146,7 +146,7 @@ final class ConstVec3i private[math] (val x: Int, val y: Int, val z: Int)
 extends AnyVec3i with Immutable
 
 object ConstVec3i {
-  @inline def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
+  /* @inline */ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
 
   implicit def toConst(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
@@ -309,7 +309,7 @@ object Vec3i {
   val One = new ConstVec3i(1, 1, 1)
 
   def apply(s: Int) = new Vec3i(s, s, s)
-  @inline def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
+  /* @inline */ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
   def apply(u: Read3[_]) = new Vec3i(u.ix, u.iy, u.iz)
   def apply(u: Read4[_]) = new Vec3i(u.ix, u.iy, u.iz)
   def apply(xy: Read2[_], z: Int) = new Vec3i(xy.ix, xy.iy, z)

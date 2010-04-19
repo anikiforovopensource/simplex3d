@@ -364,7 +364,7 @@ object ConstMat4d {
     0, 0, 0, s
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double,
@@ -589,7 +589,7 @@ object Mat4d {
     0, 0, 0, s
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double,

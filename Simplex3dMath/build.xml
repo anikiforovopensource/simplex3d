@@ -65,5 +65,46 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
+depends="clean, jar"
     -->
+
+    <property name="release.dir" value="release"/>
+    <property name="release.bin" value="${release.dir}/Simplex3dMath_bin.zip"/>
+    <property name="release.src" value="${release.dir}/Simplex3dMath_src.zip"/>
+
+    <target name="release-all" depends="release-clean, release-src, release-jar" />
+
+    <target name="release-clean" >
+        <delete dir="${release.dir}" />
+    </target>
+
+    <target name="release-jar" depends="init" >
+        <mkdir dir="${release.dir}" />
+        <delete file="${release.bin}" />
+
+        <zip destfile="${release.bin}">
+            <fileset dir="${dist.dir}" includes="*.jar"/>
+            <fileset dir="${basedir}" includes="
+                COPYING.LESSER
+                COPYING
+                Simplex3dMath-license.txt" />
+        </zip>
+    </target>
+
+    <target name="release-src" depends="init" >
+        <mkdir dir="${release.dir}" />
+        <delete file="${release.src}" />
+
+        <zip destfile="${release.src}">
+            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
+            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
+            <fileset dir="${basedir}" includes="
+                Readme.txt
+                build.xml
+                COPYING.LESSER
+                COPYING
+                Simplex3dMath-license.txt" />
+        </zip>
+    </target>
+
 </project>

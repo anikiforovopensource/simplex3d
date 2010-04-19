@@ -248,7 +248,7 @@ object ConstMat3x2d {
     0, s, 0
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double
   ) = new ConstMat3x2d(
@@ -393,7 +393,7 @@ object Mat3x2d {
     0, s, 0
   )
 
-  @inline def apply(
+  /* @inline */ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double
   ) = new Mat3x2d(

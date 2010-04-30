@@ -33,28 +33,28 @@ sealed abstract class AnyVec3d extends Read3[Double] {
   private[math] type R3 = ConstVec3d
   private[math] type R4 = ConstVec4d
 
-  protected def make2(x: Double, y: Double) =
+  protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
-  protected def make3(x: Double, y: Double, z: Double) =
+  protected final def make3(x: Double, y: Double, z: Double) =
     new ConstVec3d(x, y, z)
-  protected def make4(x: Double, y: Double, z: Double, w: Double) =
+  protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] def bx: Boolean = bool(x)
-  private[math] def by: Boolean = bool(y)
-  private[math] def bz: Boolean = bool(z)
+  private[math] final def bx: Boolean = bool(x)
+  private[math] final def by: Boolean = bool(y)
+  private[math] final def bz: Boolean = bool(z)
 
-  private[math] def ix: Int = int(x)
-  private[math] def iy: Int = int(y)
-  private[math] def iz: Int = int(z)
+  private[math] final def ix: Int = int(x)
+  private[math] final def iy: Int = int(y)
+  private[math] final def iz: Int = int(z)
 
-  private[math] def fx: Float = float(x)
-  private[math] def fy: Float = float(y)
-  private[math] def fz: Float = float(z)
+  private[math] final def fx: Float = float(x)
+  private[math] final def fy: Float = float(y)
+  private[math] final def fz: Float = float(z)
 
-  private[math] def dx: Double = x
-  private[math] def dy: Double = y
-  private[math] def dz: Double = z
+  private[math] final def dx: Double = x
+  private[math] final def dy: Double = y
+  private[math] final def dz: Double = z
 
 
   def x: Double
@@ -70,7 +70,7 @@ sealed abstract class AnyVec3d extends Read3[Double] {
   def p = z
 
   
-  def apply(i: Int) :Double = {
+  final def apply(i: Int) :Double = {
     i match {
       case 0 => x
       case 1 => y
@@ -81,35 +81,35 @@ sealed abstract class AnyVec3d extends Read3[Double] {
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Vec3d(-x, -y, -z)
-  def *(s: Double) = new Vec3d(x * s, y * s, z * s)
-  def /(s: Double) = { val inv = 1/s; new Vec3d(x * inv, y * inv, z * inv) }
+  final def unary_+() :AnyVec3d = this
+  final def unary_-() = new Vec3d(-x, -y, -z)
+  final def *(s: Double) = new Vec3d(x * s, y * s, z * s)
+  final def /(s: Double) = { val inv = 1/s; new Vec3d(x * inv, y * inv, z * inv) }
 
-  def +(s: Double) = new Vec3d(x + s, y + s, z + s)
-  def -(s: Double) = new Vec3d(x - s, y - s, z - s)
+  final def +(s: Double) = new Vec3d(x + s, y + s, z + s)
+  final def -(s: Double) = new Vec3d(x - s, y - s, z - s)
 
-  private[math] def divideByComponent(s: Double) = {
+  private[math] final def divideByComponent(s: Double) = {
     new Vec3d(s / x, s / y, s / z)
   }
 
-  def +(u: inVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
-  def -(u: inVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
-  def *(u: inVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
-  def /(u: inVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
+  final def +(u: inVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
+  final def -(u: inVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
+  final def *(u: inVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
+  final def /(u: inVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
 
-  def *(m: inMat3x2d) :Vec2d = m.transposeMul(this)
-  def *(m: inMat3d) :Vec3d = m.transposeMul(this)
-  def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
+  final def *(m: inMat3x2d) :Vec2d = m.transposeMul(this)
+  final def *(m: inMat3d) :Vec3d = m.transposeMul(this)
+  final def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
 
-  def ==(u: inVec3d) :Boolean = {
+  final def ==(u: inVec3d) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z
   }
 
-  def !=(u: inVec3d) :Boolean = !(this == u)
+  final def !=(u: inVec3d) :Boolean = !(this == u)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
       isNaN(x) || isInfinite(x) ||
@@ -118,14 +118,14 @@ sealed abstract class AnyVec3d extends Read3[Double] {
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case u: inVec3d => this == u
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 + x.hashCode
@@ -133,7 +133,7 @@ sealed abstract class AnyVec3d extends Read3[Double] {
     ) + z.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
   }
 }

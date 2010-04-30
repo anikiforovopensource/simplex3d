@@ -51,24 +51,24 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
   private[math] type R3 = ConstVec3b
   private[math] type R4 = ConstVec4b
 
-  protected def make2(x: Boolean, y: Boolean) =
+  protected final def make2(x: Boolean, y: Boolean) =
     new ConstVec2b(x, y)
-  protected def make3(x: Boolean, y: Boolean, z: Boolean) =
+  protected final def make3(x: Boolean, y: Boolean, z: Boolean) =
     new ConstVec3b(x, y, z)
-  protected def make4(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
+  protected final def make4(x: Boolean, y: Boolean, z: Boolean, w: Boolean) =
     new ConstVec4b(x, y, z, w)
 
-  private[math] def bx: Boolean = x
-  private[math] def by: Boolean = y
+  private[math] final def bx: Boolean = x
+  private[math] final def by: Boolean = y
 
-  private[math] def ix: Int = int(x)
-  private[math] def iy: Int = int(y)
+  private[math] final def ix: Int = int(x)
+  private[math] final def iy: Int = int(y)
 
-  private[math] def fx: Float = float(x)
-  private[math] def fy: Float = float(y)
+  private[math] final def fx: Float = float(x)
+  private[math] final def fy: Float = float(y)
 
-  private[math] def dx: Double = double(x)
-  private[math] def dy: Double = double(y)
+  private[math] final def dx: Double = double(x)
+  private[math] final def dy: Double = double(y)
 
   
   def x: Boolean
@@ -101,7 +101,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
    * @return component with index i.
    * @exception IndexOutOfBoundsException if i is outside the range of [0, 1].
    */
-  def apply(i: Int) :Boolean = {
+  final def apply(i: Int) :Boolean = {
     i match {
       case 0 => x
       case 1 => y
@@ -118,7 +118,7 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
    * @param u a vector for comparision.
    * @return true if all the components are equal, false otherwise.
    */
-  def ==(u: inVec2b) :Boolean = {
+  final def ==(u: inVec2b) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
@@ -130,22 +130,22 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
    * @param u a vector for comparision.
    * @return true if any of the components are not equal, false otherwise.
    */
-  def !=(u: inVec2b) :Boolean = !(this == u)
+  final def !=(u: inVec2b) :Boolean = !(this == u)
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case u: inVec2b => this == u
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 + x.hashCode
     ) + y.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName + "(" + x + ", " + y + ")"
   }
 }

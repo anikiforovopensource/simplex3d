@@ -34,29 +34,29 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
   def m00: Double; def m10: Double; def m20: Double; def m30: Double // column
   def m01: Double; def m11: Double; def m21: Double; def m31: Double // column
 
-  private[math] override def f00 = float(m00)
-  private[math] override def f10 = float(m10)
-  private[math] override def f20 = float(m20)
-  private[math] override def f30 = float(m30)
+  private[math] final override def f00 = float(m00)
+  private[math] final override def f10 = float(m10)
+  private[math] final override def f20 = float(m20)
+  private[math] final override def f30 = float(m30)
 
-  private[math] override def f01 = float(m01)
-  private[math] override def f11 = float(m11)
-  private[math] override def f21 = float(m21)
-  private[math] override def f31 = float(m31)
-
-
-  private[math] override def d00 = m00
-  private[math] override def d10 = m10
-  private[math] override def d20 = m20
-  private[math] override def d30 = m30
-
-  private[math] override def d01 = m01
-  private[math] override def d11 = m11
-  private[math] override def d21 = m21
-  private[math] override def d31 = m31
+  private[math] final override def f01 = float(m01)
+  private[math] final override def f11 = float(m11)
+  private[math] final override def f21 = float(m21)
+  private[math] final override def f31 = float(m31)
 
 
-  def apply(c: Int) :ConstVec4d = {
+  private[math] final override def d00 = m00
+  private[math] final override def d10 = m10
+  private[math] final override def d20 = m20
+  private[math] final override def d30 = m30
+
+  private[math] final override def d01 = m01
+  private[math] final override def d11 = m11
+  private[math] final override def d21 = m21
+  private[math] final override def d31 = m31
+
+
+  final def apply(c: Int) :ConstVec4d = {
     c match {
       case 0 => new ConstVec4d(m00, m10, m20, m30)
       case 1 => new ConstVec4d(m01, m11, m21, m31)
@@ -66,7 +66,7 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     }
   }
 
-  def apply(c: Int, r: Int) :Double = {
+  final def apply(c: Int, r: Int) :Double = {
     def error() :Double = throw new IndexOutOfBoundsException(
       "Trying to read index (" + c + ", " + r + ") in " +
       this.getClass.getSimpleName
@@ -93,34 +93,34 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Mat4x2d(
+  final def unary_+() :AnyMat4x2d = this
+  final def unary_-() = new Mat4x2d(
     -m00, -m10, -m20, -m30,
     -m01, -m11, -m21, -m31
   )
-  def *(s: Double) = new Mat4x2d(
+  final def *(s: Double) = new Mat4x2d(
     s*m00, s*m10, s*m20, s*m30,
     s*m01, s*m11, s*m21, s*m31
   )
-  def /(s: Double) = { val inv = 1/s; new Mat4x2d(
+  final def /(s: Double) = { val inv = 1/s; new Mat4x2d(
     inv*m00, inv*m10, inv*m20, inv*m30,
     inv*m01, inv*m11, inv*m21, inv*m31
   )}
 
-  def +(s: Double) = new Mat4x2d(
+  final def +(s: Double) = new Mat4x2d(
     m00 + s, m10 + s, m20 + s, m30 + s,
     m01 + s, m11 + s, m21 + s, m31 + s
   )
-  def -(s: Double) = new Mat4x2d(
+  final def -(s: Double) = new Mat4x2d(
     m00 - s, m10 - s, m20 - s, m30 - s,
     m01 - s, m11 - s, m21 - s, m31 - s
   )
 
-  def +(m: inMat4x2d) = new Mat4x2d(
+  final def +(m: inMat4x2d) = new Mat4x2d(
     m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
     m01 + m.m01, m11 + m.m11, m21 + m.m21, m31 + m.m31
   )
-  def -(m: inMat4x2d) = new Mat4x2d(
+  final def -(m: inMat4x2d) = new Mat4x2d(
     m00 - m.m00, m10 - m.m10, m20 - m.m20, m30 - m.m30,
     m01 - m.m01, m11 - m.m11, m21 - m.m21, m31 - m.m31
   )
@@ -128,16 +128,16 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
   /**
    * Component-wise devision.
    */
-  def /(m: inMat4x2d) = new Mat4x2d(
+  final def /(m: inMat4x2d) = new Mat4x2d(
     m00/m.m00, m10/m.m10, m20/m.m20, m30/m.m30,
     m01/m.m01, m11/m.m11, m21/m.m21, m31/m.m31
   )
-  private[math] def divideByComponent(s: Double) = new Mat4x2d(
+  private[math] final def divideByComponent(s: Double) = new Mat4x2d(
     s/m00, s/m10, s/m20, s/m30,
     s/m01, s/m11, s/m21, s/m31
   )
 
-  def *(m: inMat2d) = new Mat4x2d(
+  final def *(m: inMat2d) = new Mat4x2d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -148,7 +148,7 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     m20*m.m01 + m21*m.m11,
     m30*m.m01 + m31*m.m11
   )
-  def *(m: inMat2x3d) = new Mat4x3d(
+  final def *(m: inMat2x3d) = new Mat4x3d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -164,7 +164,7 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     m20*m.m02 + m21*m.m12,
     m30*m.m02 + m31*m.m12
   )
-  def *(m: inMat2x4d) = new Mat4d(
+  final def *(m: inMat2x4d) = new Mat4d(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -186,27 +186,27 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     m30*m.m03 + m31*m.m13
   )
 
-  def *(u: inVec2d) = new Vec4d(
+  final def *(u: inVec2d) = new Vec4d(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y,
     m20*u.x + m21*u.y,
     m30*u.x + m31*u.y
   )
-  private[math] def transposeMul(u: inVec4d) = new Vec2d(
+  private[math] final def transposeMul(u: inVec4d) = new Vec2d(
     m00*u.x + m10*u.y + m20*u.z + m30*u.w,
     m01*u.x + m11*u.y + m21*u.z + m31*u.w
   )
 
-  def ==(m: inMat4x2d) :Boolean = {
+  final def ==(m: inMat4x2d) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 && m30 == m.m30 &&
       m01 == m.m01 && m11 == m.m11 && m21 == m.m21 && m31 == m.m31
   }
 
-  def !=(m: inMat4x2d) :Boolean = !(this == m)
+  final def !=(m: inMat4x2d) :Boolean = !(this == m)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
 
     (
@@ -222,14 +222,14 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case m: inMat4x2d => this == m
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -247,7 +247,7 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     ) + m31.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m10 + ", " + m20 + ", " + m30 + "; " + 

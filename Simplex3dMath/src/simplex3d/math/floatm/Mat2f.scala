@@ -34,21 +34,21 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
   def m00: Float; def m10: Float // column
   def m01: Float; def m11: Float // column
 
-  private[math] override def f00 = m00
-  private[math] override def f10 = m10
+  private[math] final override def f00 = m00
+  private[math] final override def f10 = m10
 
-  private[math] override def f01 = m01
-  private[math] override def f11 = m11
-
-
-  private[math] override def d00 = m00
-  private[math] override def d10 = m10
-
-  private[math] override def d01 = m01
-  private[math] override def d11 = m11
+  private[math] final override def f01 = m01
+  private[math] final override def f11 = m11
 
 
-  def apply(c: Int) :ConstVec2f = {
+  private[math] final override def d00 = m00
+  private[math] final override def d10 = m10
+
+  private[math] final override def d01 = m01
+  private[math] final override def d11 = m11
+
+
+  final def apply(c: Int) :ConstVec2f = {
     c match {
       case 0 => new ConstVec2f(m00, m10)
       case 1 => new ConstVec2f(m01, m11)
@@ -58,7 +58,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     }
   }
 
-  def apply(c: Int, r: Int) :Float = {
+  final def apply(c: Int, r: Int) :Float = {
     def error() :Float = throw new IndexOutOfBoundsException(
       "Trying to read index (" + c + ", " + r + ") in " +
       this.getClass.getSimpleName
@@ -81,34 +81,34 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Mat2f(
+  final def unary_+() :AnyMat2f = this
+  final def unary_-() = new Mat2f(
     -m00, -m10,
     -m01, -m11
   )
-  def *(s: Float) = new Mat2f(
+  final def *(s: Float) = new Mat2f(
     s*m00, s*m10,
     s*m01, s*m11
   )
-  def /(s: Float) = { val inv = 1/s; new Mat2f(
+  final def /(s: Float) = { val inv = 1/s; new Mat2f(
     inv*m00, inv*m10,
     inv*m01, inv*m11
   )}
 
-  def +(s: Float) = new Mat2f(
+  final def +(s: Float) = new Mat2f(
     m00 + s, m10 + s,
     m01 + s, m11 + s
   )
-  def -(s: Float) = new Mat2f(
+  final def -(s: Float) = new Mat2f(
     m00 - s, m10 - s,
     m01 - s, m11 - s
   )
 
-  def +(m: inMat2f) = new Mat2f(
+  final def +(m: inMat2f) = new Mat2f(
     m00 + m.m00, m10 + m.m10,
     m01 + m.m01, m11 + m.m11
   )
-  def -(m: inMat2f) = new Mat2f(
+  final def -(m: inMat2f) = new Mat2f(
     m00 - m.m00, m10 - m.m10,
     m01 - m.m01, m11 - m.m11
   )
@@ -116,23 +116,23 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
   /**
    * Component-wise devision.
    */
-  def /(m: inMat2f) = new Mat2f(
+  final def /(m: inMat2f) = new Mat2f(
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11
   )
-  private[math] def divideByComponent(s: Float) = new Mat2f(
+  private[math] final def divideByComponent(s: Float) = new Mat2f(
     s/m00, s/m10,
     s/m01, s/m11
   )
 
-  def *(m: inMat2f) = new Mat2f(
+  final def *(m: inMat2f) = new Mat2f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
     m00*m.m01 + m01*m.m11,
     m10*m.m01 + m11*m.m11
   )
-  def *(m: inMat2x3f) = new Mat2x3f(
+  final def *(m: inMat2x3f) = new Mat2x3f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -142,7 +142,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     m00*m.m02 + m01*m.m12,
     m10*m.m02 + m11*m.m12
   )
-  def *(m: inMat2x4f) = new Mat2x4f(
+  final def *(m: inMat2x4f) = new Mat2x4f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
 
@@ -156,25 +156,25 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     m10*m.m03 + m11*m.m13
   )
 
-  def *(u: inVec2f) = new Vec2f(
+  final def *(u: inVec2f) = new Vec2f(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y
   )
-  private[math] def transposeMul(u: inVec2f) = new Vec2f(
+  private[math] final def transposeMul(u: inVec2f) = new Vec2f(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y
   )
 
-  def ==(m: inMat2f) :Boolean = {
+  final def ==(m: inMat2f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 &&
       m01 == m.m01 && m11 == m.m11
   }
 
-  def !=(m: inMat2f) :Boolean = !(this == m)
+  final def !=(m: inMat2f) :Boolean = !(this == m)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
     (
@@ -186,14 +186,14 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case m: inMat2f => this == m
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -203,7 +203,7 @@ sealed abstract class AnyMat2f extends Read2x2[ConstVec2f]
     ) + m11.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m10 + "; " + 

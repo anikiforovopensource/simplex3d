@@ -36,41 +36,41 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
   def m02: Float; def m12: Float; def m22: Float // column
   def m03: Float; def m13: Float; def m23: Float // column
 
-  private[math] override def f00 = m00
-  private[math] override def f10 = m10
-  private[math] override def f20 = m20
+  private[math] final override def f00 = m00
+  private[math] final override def f10 = m10
+  private[math] final override def f20 = m20
 
-  private[math] override def f01 = m01
-  private[math] override def f11 = m11
-  private[math] override def f21 = m21
+  private[math] final override def f01 = m01
+  private[math] final override def f11 = m11
+  private[math] final override def f21 = m21
 
-  private[math] override def f02 = m02
-  private[math] override def f12 = m12
-  private[math] override def f22 = m22
+  private[math] final override def f02 = m02
+  private[math] final override def f12 = m12
+  private[math] final override def f22 = m22
 
-  private[math] override def f03 = m03
-  private[math] override def f13 = m13
-  private[math] override def f23 = m23
-
-
-  private[math] override def d00 = m00
-  private[math] override def d10 = m10
-  private[math] override def d20 = m20
-
-  private[math] override def d01 = m01
-  private[math] override def d11 = m11
-  private[math] override def d21 = m21
-
-  private[math] override def d02 = m02
-  private[math] override def d12 = m12
-  private[math] override def d22 = m22
-
-  private[math] override def d03 = m03
-  private[math] override def d13 = m13
-  private[math] override def d23 = m23
+  private[math] final override def f03 = m03
+  private[math] final override def f13 = m13
+  private[math] final override def f23 = m23
 
 
-  def apply(c: Int) :ConstVec3f = {
+  private[math] final override def d00 = m00
+  private[math] final override def d10 = m10
+  private[math] final override def d20 = m20
+
+  private[math] final override def d01 = m01
+  private[math] final override def d11 = m11
+  private[math] final override def d21 = m21
+
+  private[math] final override def d02 = m02
+  private[math] final override def d12 = m12
+  private[math] final override def d22 = m22
+
+  private[math] final override def d03 = m03
+  private[math] final override def d13 = m13
+  private[math] final override def d23 = m23
+
+
+  final def apply(c: Int) :ConstVec3f = {
     c match {
       case 0 => new ConstVec3f(m00, m10, m20)
       case 1 => new ConstVec3f(m01, m11, m21)
@@ -82,7 +82,7 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     }
   }
 
-  def apply(c: Int, r: Int) :Float = {
+  final def apply(c: Int, r: Int) :Float = {
     def error() :Float = throw new IndexOutOfBoundsException(
       "Trying to read index (" + c + ", " + r + ") in " +
       this.getClass.getSimpleName
@@ -121,46 +121,46 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Mat3x4f(
+  final def unary_+() :AnyMat3x4f = this
+  final def unary_-() = new Mat3x4f(
     -m00, -m10, -m20,
     -m01, -m11, -m21,
     -m02, -m12, -m22,
     -m03, -m13, -m23
   )
-  def *(s: Float) = new Mat3x4f(
+  final def *(s: Float) = new Mat3x4f(
     s*m00, s*m10, s*m20,
     s*m01, s*m11, s*m21,
     s*m02, s*m12, s*m22,
     s*m03, s*m13, s*m23
   )
-  def /(s: Float) = { val inv = 1/s; new Mat3x4f(
+  final def /(s: Float) = { val inv = 1/s; new Mat3x4f(
     inv*m00, inv*m10, inv*m20,
     inv*m01, inv*m11, inv*m21,
     inv*m02, inv*m12, inv*m22,
     inv*m03, inv*m13, inv*m23
   )}
 
-  def +(s: Float) = new Mat3x4f(
+  final def +(s: Float) = new Mat3x4f(
     m00 + s, m10 + s, m20 + s,
     m01 + s, m11 + s, m21 + s,
     m02 + s, m12 + s, m22 + s,
     m03 + s, m13 + s, m23 + s
   )
-  def -(s: Float) = new Mat3x4f(
+  final def -(s: Float) = new Mat3x4f(
     m00 - s, m10 - s, m20 - s,
     m01 - s, m11 - s, m21 - s,
     m02 - s, m12 - s, m22 - s,
     m03 - s, m13 - s, m23 - s
   )
 
-  def +(m: inMat3x4f) = new Mat3x4f(
+  final def +(m: inMat3x4f) = new Mat3x4f(
     m00 + m.m00, m10 + m.m10, m20 + m.m20,
     m01 + m.m01, m11 + m.m11, m21 + m.m21,
     m02 + m.m02, m12 + m.m12, m22 + m.m22,
     m03 + m.m03, m13 + m.m13, m23 + m.m23
   )
-  def -(m: inMat3x4f) = new Mat3x4f(
+  final def -(m: inMat3x4f) = new Mat3x4f(
     m00 - m.m00, m10 - m.m10, m20 - m.m20,
     m01 - m.m01, m11 - m.m11, m21 - m.m21,
     m02 - m.m02, m12 - m.m12, m22 - m.m22,
@@ -170,20 +170,20 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
   /**
    * Component-wise devision.
    */
-  def /(m: inMat3x4f) = new Mat3x4f(
+  final def /(m: inMat3x4f) = new Mat3x4f(
     m00/m.m00, m10/m.m10, m20/m.m20,
     m01/m.m01, m11/m.m11, m21/m.m21,
     m02/m.m02, m12/m.m12, m22/m.m22,
     m03/m.m03, m13/m.m13, m23/m.m23
   )
-  private[math] def divideByComponent(s: Float) = new Mat3x4f(
+  private[math] final def divideByComponent(s: Float) = new Mat3x4f(
     s/m00, s/m10, s/m20,
     s/m01, s/m11, s/m21,
     s/m02, s/m12, s/m22,
     s/m03, s/m13, s/m23
   )
 
-  def *(m: inMat4x2f) = new Mat3x2f(
+  final def *(m: inMat4x2f) = new Mat3x2f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -192,7 +192,7 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31,
     m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31
   )
-  def *(m: inMat4x3f) = new Mat3f(
+  final def *(m: inMat4x3f) = new Mat3f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -205,7 +205,7 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32,
     m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32
   )
-  def *(m: inMat4f) = new Mat3x4f(
+  final def *(m: inMat4f) = new Mat3x4f(
     m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30,
     m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30,
     m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30,
@@ -223,20 +223,20 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
   )
 
-  def *(u: inVec4f) = new Vec3f(
+  final def *(u: inVec4f) = new Vec3f(
     m00*u.x + m01*u.y + m02*u.z + m03*u.w,
     m10*u.x + m11*u.y + m12*u.z + m13*u.w,
     m20*u.x + m21*u.y + m22*u.z + m23*u.w
   )
-  private[math] def transposeMul(u: inVec3f) = new Vec4f(
+  private[math] final def transposeMul(u: inVec3f) = new Vec4f(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z,
     m02*u.x + m12*u.y + m22*u.z,
     m03*u.x + m13*u.y + m23*u.z
   )
 
-  def scale(s: Float) :Mat3x4f = this*s
-  def scale(s: inVec3f) :Mat3x4f = new Mat3x4f(
+  final def scale(s: Float) :Mat3x4f = this*s
+  final def scale(s: inVec3f) :Mat3x4f = new Mat3x4f(
     m00*s.x, m10*s.y, m20*s.z,
     m01*s.x, m11*s.y, m21*s.z,
     m02*s.x, m12*s.y, m22*s.z,
@@ -251,31 +251,31 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
    * @return a new transformation wtih the specified rotation as
    *         the last operation.
    */
-  def rotate(q: inQuat4f) :Mat3x4f = {
+  final def rotate(q: inQuat4f) :Mat3x4f = {
     concatenate(rotationMat(normalize(q)))
   }
-  def rotate(angle: Float, axis: inVec3f) :Mat3x4f = {
+  final def rotate(angle: Float, axis: inVec3f) :Mat3x4f = {
     concatenate(rotationMat(angle, normalize(axis)))
   }
 
-  def rotateX(angle: Float) :Mat3x4f = {
+  final def rotateX(angle: Float) :Mat3x4f = {
     concatenate(rotationMat(angle, Vec3f.UnitX))
   }
-  def rotateY(angle: Float) :Mat3x4f = {
+  final def rotateY(angle: Float) :Mat3x4f = {
     concatenate(rotationMat(angle, Vec3f.UnitY))
   }
-  def rotateZ(angle: Float) :Mat3x4f = {
+  final def rotateZ(angle: Float) :Mat3x4f = {
     concatenate(rotationMat(angle, Vec3f.UnitZ))
   }
 
-  def translate(u: inVec3f) :Mat3x4f = new Mat3x4f(
+  final def translate(u: inVec3f) :Mat3x4f = new Mat3x4f(
     m00, m10, m20,
     m01, m11, m21,
     m02, m12, m22,
     m03 + u.x, m13 + u.y, m23 + u.z
   )
 
-  def concatenate(m: inMat3x4f) :Mat3x4f = new Mat3x4f(
+  final def concatenate(m: inMat3x4f) :Mat3x4f = new Mat3x4f(
     m.m00*m00 + m.m01*m10 + m.m02*m20,
     m.m10*m00 + m.m11*m10 + m.m12*m20,
     m.m20*m00 + m.m21*m10 + m.m22*m20,
@@ -292,22 +292,22 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13,
     m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
   )
-  def concatenate(m: inMat3f) :Mat3x4f = m*this
+  final def concatenate(m: inMat3f) :Mat3x4f = m*this
 
-  def transformPoint(p: inVec3f) :Vec3f = new Vec3f(
+  final def transformPoint(p: inVec3f) :Vec3f = new Vec3f(
     m00*p.x + m01*p.y + m02*p.z + m03,
     m10*p.x + m11*p.y + m12*p.z + m13,
     m20*p.x + m21*p.y + m22*p.z + m23
   )
-  def transformVector(v: inVec3f) :Vec3f = new Vec3f(
+  final def transformVector(v: inVec3f) :Vec3f = new Vec3f(
     m00*v.x + m01*v.y + m02*v.z,
     m10*v.x + m11*v.y + m12*v.z,
     m20*v.x + m21*v.y + m22*v.z
   )
 
-  def invert() :Mat3x4f = inverse(this)
+  final def invert() :Mat3x4f = inverse(this)
 
-  def ==(m: inMat3x4f) :Boolean = {
+  final def ==(m: inMat3x4f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
@@ -316,9 +316,9 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
       m03 == m.m03 && m13 == m.m13 && m23 == m.m23
   }
 
-  def !=(m: inMat3x4f) :Boolean = !(this == m)
+  final def !=(m: inMat3x4f) :Boolean = !(this == m)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
     (
@@ -340,14 +340,14 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case m: inMat3x4f => this == m
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -373,7 +373,7 @@ sealed abstract class AnyMat3x4f extends Read3x4[ConstVec3f]
     ) + m23.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m10 + ", " + m20 + "; " + 

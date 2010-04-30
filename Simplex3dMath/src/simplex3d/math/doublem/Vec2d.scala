@@ -33,24 +33,24 @@ sealed abstract class AnyVec2d extends Read2[Double] {
   private[math] type R3 = ConstVec3d
   private[math] type R4 = ConstVec4d
   
-  protected def make2(x: Double, y: Double) =
+  protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
-  protected def make3(x: Double, y: Double, z: Double) =
+  protected final def make3(x: Double, y: Double, z: Double) =
     new ConstVec3d(x, y, z)
-  protected def make4(x: Double, y: Double, z: Double, w: Double) =
+  protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] def bx: Boolean = bool(x)
-  private[math] def by: Boolean = bool(y)
+  private[math] final def bx: Boolean = bool(x)
+  private[math] final def by: Boolean = bool(y)
 
-  private[math] def ix: Int = int(x)
-  private[math] def iy: Int = int(y)
+  private[math] final def ix: Int = int(x)
+  private[math] final def iy: Int = int(y)
 
-  private[math] def fx: Float = float(x)
-  private[math] def fy: Float = float(y)
+  private[math] final def fx: Float = float(x)
+  private[math] final def fy: Float = float(y)
 
-  private[math] def dx: Double = x
-  private[math] def dy: Double = y
+  private[math] final def dx: Double = x
+  private[math] final def dy: Double = y
 
 
   def x: Double
@@ -63,7 +63,7 @@ sealed abstract class AnyVec2d extends Read2[Double] {
   def t = y
 
   
-  def apply(i: Int) :Double = {
+  final def apply(i: Int) :Double = {
     i match {
       case 0 => x
       case 1 => y
@@ -73,33 +73,33 @@ sealed abstract class AnyVec2d extends Read2[Double] {
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Vec2d(-x, -y)
-  def *(s: Double) = new Vec2d(x * s, y * s)
-  def /(s: Double) = { val inv = 1/s; new Vec2d(x * inv, y * inv) }
+  final def unary_+() :AnyVec2d = this
+  final def unary_-() = new Vec2d(-x, -y)
+  final def *(s: Double) = new Vec2d(x * s, y * s)
+  final def /(s: Double) = { val inv = 1/s; new Vec2d(x * inv, y * inv) }
 
-  def +(s: Double) = new Vec2d(x + s, y + s)
-  def -(s: Double) = new Vec2d(x - s, y - s)
+  final def +(s: Double) = new Vec2d(x + s, y + s)
+  final def -(s: Double) = new Vec2d(x - s, y - s)
 
-  private[math] def divideByComponent(s: Double) = new Vec2d(s / x, s / y)
+  private[math] final def divideByComponent(s: Double) = new Vec2d(s / x, s / y)
 
-  def +(u: inVec2d) = new Vec2d(x + u.x, y + u.y)
-  def -(u: inVec2d) = new Vec2d(x - u.x, y - u.y)
-  def *(u: inVec2d) = new Vec2d(x * u.x, y * u.y)
-  def /(u: inVec2d) = new Vec2d(x / u.x, y / u.y)
+  final def +(u: inVec2d) = new Vec2d(x + u.x, y + u.y)
+  final def -(u: inVec2d) = new Vec2d(x - u.x, y - u.y)
+  final def *(u: inVec2d) = new Vec2d(x * u.x, y * u.y)
+  final def /(u: inVec2d) = new Vec2d(x / u.x, y / u.y)
 
-  def *(m: inMat2d) :Vec2d = m.transposeMul(this)
-  def *(m: inMat2x3d) :Vec3d = m.transposeMul(this)
-  def *(m: inMat2x4d) :Vec4d = m.transposeMul(this)
+  final def *(m: inMat2d) :Vec2d = m.transposeMul(this)
+  final def *(m: inMat2x3d) :Vec3d = m.transposeMul(this)
+  final def *(m: inMat2x4d) :Vec4d = m.transposeMul(this)
 
-  def ==(u: inVec2d) :Boolean = {
+  final def ==(u: inVec2d) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
 
-  def !=(u: inVec2d) :Boolean = !(this == u)
+  final def !=(u: inVec2d) :Boolean = !(this == u)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
       isNaN(x) || isInfinite(x) ||
@@ -107,20 +107,20 @@ sealed abstract class AnyVec2d extends Read2[Double] {
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case u: inVec2d => this == u
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 + x.hashCode
     ) + y.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName + "(" + x + ", " + y + ")"
   }
 }

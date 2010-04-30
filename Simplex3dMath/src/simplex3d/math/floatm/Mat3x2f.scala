@@ -34,25 +34,25 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
   def m00: Float; def m10: Float; def m20: Float // column
   def m01: Float; def m11: Float; def m21: Float // column
 
-  private[math] override def f00 = m00
-  private[math] override def f10 = m10
-  private[math] override def f20 = m20
+  private[math] final override def f00 = m00
+  private[math] final override def f10 = m10
+  private[math] final override def f20 = m20
 
-  private[math] override def f01 = m01
-  private[math] override def f11 = m11
-  private[math] override def f21 = m21
-
-
-  private[math] override def d00 = m00
-  private[math] override def d10 = m10
-  private[math] override def d20 = m20
-
-  private[math] override def d01 = m01
-  private[math] override def d11 = m11
-  private[math] override def d21 = m21
+  private[math] final override def f01 = m01
+  private[math] final override def f11 = m11
+  private[math] final override def f21 = m21
 
 
-  def apply(c: Int) :ConstVec3f = {
+  private[math] final override def d00 = m00
+  private[math] final override def d10 = m10
+  private[math] final override def d20 = m20
+
+  private[math] final override def d01 = m01
+  private[math] final override def d11 = m11
+  private[math] final override def d21 = m21
+
+
+  final def apply(c: Int) :ConstVec3f = {
     c match {
       case 0 => new ConstVec3f(m00, m10, m20)
       case 1 => new ConstVec3f(m01, m11, m21)
@@ -62,7 +62,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     }
   }
 
-  def apply(c: Int, r: Int) :Float = {
+  final def apply(c: Int, r: Int) :Float = {
     def error() :Float = throw new IndexOutOfBoundsException(
       "Trying to read index (" + c + ", " + r + ") in " +
       this.getClass.getSimpleName
@@ -87,34 +87,34 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Mat3x2f(
+  final def unary_+() :AnyMat3x2f = this
+  final def unary_-() = new Mat3x2f(
     -m00, -m10, -m20,
     -m01, -m11, -m21
   )
-  def *(s: Float) = new Mat3x2f(
+  final def *(s: Float) = new Mat3x2f(
     s*m00, s*m10, s*m20,
     s*m01, s*m11, s*m21
   )
-  def /(s: Float) = { val inv = 1/s; new Mat3x2f(
+  final def /(s: Float) = { val inv = 1/s; new Mat3x2f(
     inv*m00, inv*m10, inv*m20,
     inv*m01, inv*m11, inv*m21
   )}
 
-  def +(s: Float) = new Mat3x2f(
+  final def +(s: Float) = new Mat3x2f(
     m00 + s, m10 + s, m20 + s,
     m01 + s, m11 + s, m21 + s
   )
-  def -(s: Float) = new Mat3x2f(
+  final def -(s: Float) = new Mat3x2f(
     m00 - s, m10 - s, m20 - s,
     m01 - s, m11 - s, m21 - s
   )
 
-  def +(m: inMat3x2f) = new Mat3x2f(
+  final def +(m: inMat3x2f) = new Mat3x2f(
     m00 + m.m00, m10 + m.m10, m20 + m.m20,
     m01 + m.m01, m11 + m.m11, m21 + m.m21
   )
-  def -(m: inMat3x2f) = new Mat3x2f(
+  final def -(m: inMat3x2f) = new Mat3x2f(
     m00 - m.m00, m10 - m.m10, m20 - m.m20,
     m01 - m.m01, m11 - m.m11, m21 - m.m21
   )
@@ -122,16 +122,16 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
   /**
    * Component-wise devision.
    */
-  def /(m: inMat3x2f) = new Mat3x2f(
+  final def /(m: inMat3x2f) = new Mat3x2f(
     m00/m.m00, m10/m.m10, m20/m.m20,
     m01/m.m01, m11/m.m11, m21/m.m21
   )
-  private[math] def divideByComponent(s: Float) = new Mat3x2f(
+  private[math] final def divideByComponent(s: Float) = new Mat3x2f(
     s/m00, s/m10, s/m20,
     s/m01, s/m11, s/m21
   )
 
-  def *(m: inMat2f) = new Mat3x2f(
+  final def *(m: inMat2f) = new Mat3x2f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -140,7 +140,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m10*m.m01 + m11*m.m11,
     m20*m.m01 + m21*m.m11
   )
-  def *(m: inMat2x3f) = new Mat3f(
+  final def *(m: inMat2x3f) = new Mat3f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -153,7 +153,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m10*m.m02 + m11*m.m12,
     m20*m.m02 + m21*m.m12
   )
-  def *(m: inMat2x4f) = new Mat3x4f(
+  final def *(m: inMat2x4f) = new Mat3x4f(
     m00*m.m00 + m01*m.m10,
     m10*m.m00 + m11*m.m10,
     m20*m.m00 + m21*m.m10,
@@ -171,26 +171,26 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m20*m.m03 + m21*m.m13
   )
 
-  def *(u: inVec2f) = new Vec3f(
+  final def *(u: inVec2f) = new Vec3f(
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y,
     m20*u.x + m21*u.y
   )
-  private[math] def transposeMul(u: inVec3f) = new Vec2f(
+  private[math] final def transposeMul(u: inVec3f) = new Vec2f(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z
   )
 
-  def ==(m: inMat3x2f) :Boolean = {
+  final def ==(m: inMat3x2f) :Boolean = {
     if (m eq null) false
     else
       m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
       m01 == m.m01 && m11 == m.m11 && m21 == m.m21
   }
 
-  def !=(m: inMat3x2f) :Boolean = !(this == m)
+  final def !=(m: inMat3x2f) :Boolean = !(this == m)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
     (
@@ -204,14 +204,14 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case m: inMat3x2f => this == m
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -225,7 +225,7 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     ) + m21.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m10 + ", " + m20 + "; " + 

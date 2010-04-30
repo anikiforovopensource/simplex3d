@@ -33,24 +33,24 @@ sealed abstract class AnyVec2i extends Read2[Int] {
   private[math] type R3 = ConstVec3i
   private[math] type R4 = ConstVec4i
 
-  protected def make2(x: Int, y: Int) =
+  protected final def make2(x: Int, y: Int) =
     new ConstVec2i(x, y)
-  protected def make3(x: Int, y: Int, z: Int) =
+  protected final def make3(x: Int, y: Int, z: Int) =
     new ConstVec3i(x, y, z)
-  protected def make4(x: Int, y: Int, z: Int, w: Int) =
+  protected final def make4(x: Int, y: Int, z: Int, w: Int) =
     new ConstVec4i(x, y, z, w)
 
-  private[math] def bx: Boolean = bool(x)
-  private[math] def by: Boolean = bool(y)
+  private[math] final def bx: Boolean = bool(x)
+  private[math] final def by: Boolean = bool(y)
 
-  private[math] def ix: Int = x
-  private[math] def iy: Int = y
+  private[math] final def ix: Int = x
+  private[math] final def iy: Int = y
 
-  private[math] def fx: Float = x
-  private[math] def fy: Float = y
+  private[math] final def fx: Float = x
+  private[math] final def fy: Float = y
 
-  private[math] def dx: Double = x
-  private[math] def dy: Double = y
+  private[math] final def dx: Double = x
+  private[math] final def dy: Double = y
 
 
   def x: Int
@@ -63,7 +63,7 @@ sealed abstract class AnyVec2i extends Read2[Int] {
   def t = y
 
 
-  def apply(i: Int) :Int = {
+  final def apply(i: Int) :Int = {
     i match {
       case 0 => x
       case 1 => y
@@ -73,59 +73,59 @@ sealed abstract class AnyVec2i extends Read2[Int] {
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Vec2i(-x, -y)
-  def unary_~() = new Vec2i(~x, ~y)
+  final def unary_+() :AnyVec2i = this
+  final def unary_-() = new Vec2i(-x, -y)
+  final def unary_~() = new Vec2i(~x, ~y)
 
-  def *(s: Int) = new Vec2i(x * s, y * s)
-  def /(s: Int) = new Vec2i(x / s, y / s)
+  final def *(s: Int) = new Vec2i(x * s, y * s)
+  final def /(s: Int) = new Vec2i(x / s, y / s)
 
-  def +(s: Int) = new Vec2i(x + s, y + s)
-  def -(s: Int) = new Vec2i(x - s, y - s)
+  final def +(s: Int) = new Vec2i(x + s, y + s)
+  final def -(s: Int) = new Vec2i(x - s, y - s)
 
-  private[math] def divideByComponent(s: Int) = new Vec2i(s / x, s / y)
-  def %(s: Int) = new Vec2i(x % s, y % s)
-  private[math] def modByComponent(s: Int) = new Vec2i(s % x, s % y)
-  def >>(s: Int) = new Vec2i( x >> s, y >> s)
-  def >>>(s: Int) = new Vec2i( x >>> s, y >>> s)
-  def <<(s: Int) = new Vec2i( x << s, y << s)
-  def &(s: Int) = new Vec2i( x & s, y & s)
-  def |(s: Int) = new Vec2i( x | s, y | s)
-  def ^(s: Int) = new Vec2i( x ^ s, y ^ s)
+  private[math] final def divideByComponent(s: Int) = new Vec2i(s / x, s / y)
+  final def %(s: Int) = new Vec2i(x % s, y % s)
+  private[math] final def modByComponent(s: Int) = new Vec2i(s % x, s % y)
+  final def >>(s: Int) = new Vec2i( x >> s, y >> s)
+  final def >>>(s: Int) = new Vec2i( x >>> s, y >>> s)
+  final def <<(s: Int) = new Vec2i( x << s, y << s)
+  final def &(s: Int) = new Vec2i( x & s, y & s)
+  final def |(s: Int) = new Vec2i( x | s, y | s)
+  final def ^(s: Int) = new Vec2i( x ^ s, y ^ s)
 
-  def +(u: inVec2i) = new Vec2i(x + u.x, y + u.y)
-  def -(u: inVec2i) = new Vec2i(x - u.x, y - u.y)
-  def *(u: inVec2i) = new Vec2i(x * u.x, y * u.y)
-  def /(u: inVec2i) = new Vec2i(x / u.x, y / u.y)
-  def %(u: inVec2i) = new Vec2i(x % u.x, y % u.y)
-  def >>(u: inVec2i) = new Vec2i( x >> u.x, y >> u.y)
-  def >>>(u: inVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
-  def <<(u: inVec2i) = new Vec2i( x << u.x, y << u.y)
-  def &(u: inVec2i) = new Vec2i( x & u.x, y & u.y)
-  def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
-  def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
+  final def +(u: inVec2i) = new Vec2i(x + u.x, y + u.y)
+  final def -(u: inVec2i) = new Vec2i(x - u.x, y - u.y)
+  final def *(u: inVec2i) = new Vec2i(x * u.x, y * u.y)
+  final def /(u: inVec2i) = new Vec2i(x / u.x, y / u.y)
+  final def %(u: inVec2i) = new Vec2i(x % u.x, y % u.y)
+  final def >>(u: inVec2i) = new Vec2i( x >> u.x, y >> u.y)
+  final def >>>(u: inVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
+  final def <<(u: inVec2i) = new Vec2i( x << u.x, y << u.y)
+  final def &(u: inVec2i) = new Vec2i( x & u.x, y & u.y)
+  final def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
+  final def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
-  def ==(u: inVec2i) :Boolean = {
+  final def ==(u: inVec2i) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y
   }
 
-  def !=(u: inVec2i) :Boolean = !(this == u)
+  final def !=(u: inVec2i) :Boolean = !(this == u)
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case u: inVec2i => this == u
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 + x.hashCode
     ) + y.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName + "(" + x + ", " + y + ")"
   }
 }

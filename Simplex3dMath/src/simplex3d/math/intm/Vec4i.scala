@@ -33,32 +33,32 @@ sealed abstract class AnyVec4i extends Read4[Int] {
   private[math] type R3 = ConstVec3i
   private[math] type R4 = ConstVec4i
   
-  protected def make2(x: Int, y: Int) =
+  protected final def make2(x: Int, y: Int) =
     new ConstVec2i(x, y)
-  protected def make3(x: Int, y: Int, z: Int) =
+  protected final def make3(x: Int, y: Int, z: Int) =
     new ConstVec3i(x, y, z)
-  protected def make4(x: Int, y: Int, z: Int, w: Int) =
+  protected final def make4(x: Int, y: Int, z: Int, w: Int) =
     new ConstVec4i(x, y, z, w)
 
-  private[math] def bx: Boolean = bool(x)
-  private[math] def by: Boolean = bool(y)
-  private[math] def bz: Boolean = bool(z)
-  private[math] def bw: Boolean = bool(w)
+  private[math] final def bx: Boolean = bool(x)
+  private[math] final def by: Boolean = bool(y)
+  private[math] final def bz: Boolean = bool(z)
+  private[math] final def bw: Boolean = bool(w)
 
-  private[math] def ix: Int = x
-  private[math] def iy: Int = y
-  private[math] def iz: Int = z
-  private[math] def iw: Int = w
+  private[math] final def ix: Int = x
+  private[math] final def iy: Int = y
+  private[math] final def iz: Int = z
+  private[math] final def iw: Int = w
 
-  private[math] def fx: Float = x
-  private[math] def fy: Float = y
-  private[math] def fz: Float = z
-  private[math] def fw: Float = w
+  private[math] final def fx: Float = x
+  private[math] final def fy: Float = y
+  private[math] final def fz: Float = z
+  private[math] final def fw: Float = w
 
-  private[math] def dx: Double = x
-  private[math] def dy: Double = y
-  private[math] def dz: Double = z
-  private[math] def dw: Double = w
+  private[math] final def dx: Double = x
+  private[math] final def dy: Double = y
+  private[math] final def dz: Double = z
+  private[math] final def dw: Double = w
 
 
   def x: Int
@@ -77,7 +77,7 @@ sealed abstract class AnyVec4i extends Read4[Int] {
   def q = w
 
 
-  def apply(i: Int) :Int = {
+  final def apply(i: Int) :Int = {
     i match {
       case 0 => x
       case 1 => y
@@ -89,55 +89,55 @@ sealed abstract class AnyVec4i extends Read4[Int] {
     }
   }
 
-  def unary_+() :this.type = this
-  def unary_-() = new Vec4i(-x, -y, -z, -w)
-  def unary_~() = new Vec4i(~x, ~y, ~z, ~w)
+  final def unary_+() :AnyVec4i = this
+  final def unary_-() = new Vec4i(-x, -y, -z, -w)
+  final def unary_~() = new Vec4i(~x, ~y, ~z, ~w)
 
-  def *(s: Int) = new Vec4i(x * s, y * s, z * s, w * s)
-  def /(s: Int) = new Vec4i(x / s, y / s, z / s, w / s)
+  final def *(s: Int) = new Vec4i(x * s, y * s, z * s, w * s)
+  final def /(s: Int) = new Vec4i(x / s, y / s, z / s, w / s)
 
-  def +(s: Int) = new Vec4i(x + s, y + s, z + s, w + s)
-  def -(s: Int) = new Vec4i(x - s, y - s, z - s, w - s)
+  final def +(s: Int) = new Vec4i(x + s, y + s, z + s, w + s)
+  final def -(s: Int) = new Vec4i(x - s, y - s, z - s, w - s)
 
-  private[math] def divideByComponent(s: Int) = {
+  private[math] final def divideByComponent(s: Int) = {
     new Vec4i(s / x, s / y, s / z, s / w)
   }
-  def %(s: Int) = new Vec4i(x % s, y % s, z % s, w % s)
-  private[math] def modByComponent(s: Int) = new Vec4i(s%x, s%y, s%z, s%w)
-  def >>(s: Int) = new Vec4i( x >> s, y >> s, z >> s, w >> s)
-  def >>>(s: Int) = new Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
-  def <<(s: Int) = new Vec4i( x << s, y << s, z << s, w << s)
-  def &(s: Int) = new Vec4i( x & s, y & s, z & s, w & s)
-  def |(s: Int) = new Vec4i( x | s, y | s, z | s, w | s)
-  def ^(s: Int) = new Vec4i( x ^ s, y ^ s, z ^ s, w ^ s)
+  final def %(s: Int) = new Vec4i(x % s, y % s, z % s, w % s)
+  private[math] final def modByComponent(s: Int) = new Vec4i(s%x, s%y, s%z, s%w)
+  final def >>(s: Int) = new Vec4i( x >> s, y >> s, z >> s, w >> s)
+  final def >>>(s: Int) = new Vec4i( x >>> s, y >>> s, z >>> s, w >>> s)
+  final def <<(s: Int) = new Vec4i( x << s, y << s, z << s, w << s)
+  final def &(s: Int) = new Vec4i( x & s, y & s, z & s, w & s)
+  final def |(s: Int) = new Vec4i( x | s, y | s, z | s, w | s)
+  final def ^(s: Int) = new Vec4i( x ^ s, y ^ s, z ^ s, w ^ s)
 
-  def +(u: inVec4i) = new Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
-  def -(u: inVec4i) = new Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
-  def *(u: inVec4i) = new Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
-  def /(u: inVec4i) = new Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
-  def %(u: inVec4i) = new Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
-  def >>(u: inVec4i) = new Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
-  def >>>(u: inVec4i) = new Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
-  def <<(u: inVec4i) = new Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
-  def &(u: inVec4i) = new Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
-  def |(u: inVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
-  def ^(u: inVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
+  final def +(u: inVec4i) = new Vec4i(x + u.x, y + u.y, z + u.z, w + u.w)
+  final def -(u: inVec4i) = new Vec4i(x - u.x, y - u.y, z - u.z, w - u.w)
+  final def *(u: inVec4i) = new Vec4i(x * u.x, y * u.y, z * u.z, w * u.w)
+  final def /(u: inVec4i) = new Vec4i(x / u.x, y / u.y, z / u.z, w / u.w)
+  final def %(u: inVec4i) = new Vec4i(x % u.x, y % u.y, z % u.z, w % u.w)
+  final def >>(u: inVec4i) = new Vec4i( x >> u.x, y >> u.y, z >> u.z, w >> u.w)
+  final def >>>(u: inVec4i) = new Vec4i( x >>> u.x, y >>> u.y, z >>> u.z, w >>> u.w)
+  final def <<(u: inVec4i) = new Vec4i( x << u.x, y << u.y, z << u.z, w << u.w)
+  final def &(u: inVec4i) = new Vec4i( x & u.x, y & u.y, z & u.z, w & u.w)
+  final def |(u: inVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
+  final def ^(u: inVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
 
-  def ==(u: inVec4i) :Boolean = {
+  final def ==(u: inVec4i) :Boolean = {
     if (u eq null) false
     else x == u.x && y == u.y && z == u.z && w == u.w
   }
 
-  def !=(u: inVec4i) :Boolean = !(this == u)
+  final def !=(u: inVec4i) :Boolean = !(this == u)
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case u: inVec4i => this == u
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -147,7 +147,7 @@ sealed abstract class AnyVec4i extends Read4[Int] {
     ) + w.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" + x + ", " + y + ", " + z + ", " + w + ")"
   }

@@ -65,12 +65,12 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
-depends="clean, jar"
     -->
 
     <property name="release.dir" value="release"/>
     <property name="release.bin" value="${release.dir}/Simplex3dMath_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dMath_src.zip"/>
+    <property name="root.pkg" value="simplex3d/math"/>
 
     <target name="release-all" depends="release-clean, release-src, release-jar" />
 
@@ -78,9 +78,9 @@ depends="clean, jar"
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-jar" depends="init" >
-        <mkdir dir="${release.dir}" />
+    <target name="release-jar" depends="init, clean, jar" >
         <delete file="${release.bin}" />
+        <mkdir dir="${release.dir}" />
 
         <zip destfile="${release.bin}">
             <fileset dir="${dist.dir}" includes="*.jar"/>
@@ -106,5 +106,73 @@ depends="clean, jar"
                 Simplex3dMath-license.txt" />
         </zip>
     </target>
+
+    <target name="custom-jar" depends="init">
+        <input
+            message="Include IntegerMath Module?"
+            validargs="y,n"
+            defaultvalue="y"
+            addproperty="include.intm"
+        />
+        <input
+            message="Include FloatMath Module?"
+            validargs="y,n"
+            defaultvalue="y"
+            addproperty="include.floatm"
+        />
+        <input
+            message="Include DoubleMath Module?"
+            validargs="y,n"
+            defaultvalue="y"
+            addproperty="include.doublem"
+        />
+        <condition property="include.cancel">
+            <and>
+                <equals arg1="n" arg2="${include.intm}"/>
+                <equals arg1="n" arg2="${include.floatm}"/>
+                <equals arg1="n" arg2="${include.doublem}"/>
+            </and>
+        </condition>
+        <fail if="include.cancel">At least one module must be included.</fail>
+
+        <condition property="include.name1" value="Int" else="">
+            <equals arg1="y" arg2="${include.intm}"/>
+        </condition>
+        <condition property="include.name2" value="Float" else="">
+            <equals arg1="y" arg2="${include.floatm}"/>
+        </condition>
+        <condition property="include.name3" value="Double" else="">
+            <equals arg1="y" arg2="${include.doublem}"/>
+        </condition>
+
+        <condition property="include.name" value="" else="${include.name1}${include.name2}${include.name3}">
+            <and>
+                <equals arg1="y" arg2="${include.intm}"/>
+                <equals arg1="y" arg2="${include.floatm}"/>
+                <equals arg1="y" arg2="${include.doublem}"/>
+            </and>
+        </condition>
+
+        <property name="custom.jar" value="${dist.dir}/Simplex3d${include.name}Math.jar"/>
+
+        <antcall target="clean-compile" />
+        <mkdir dir="${dist.dir}" />
+
+        <condition property="exclude.intm" value="${root.pkg}/intm/**" else="">
+            <equals arg1="n" arg2="${include.intm}"/>
+        </condition>
+        <condition property="exclude.floatm" value="${root.pkg}/floatm/**" else="">
+            <equals arg1="n" arg2="${include.floatm}"/>
+        </condition>
+        <condition property="exclude.doublem" value="${root.pkg}/doublem/**" else="">
+            <equals arg1="n" arg2="${include.doublem}"/>
+        </condition>
+
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf" jarfile="${custom.jar}">
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**" excludes="${exclude.intm} ${exclude.floatm} ${exclude.doublem}"/>
+        </jar>
+    </target>
+
+    <target name="clean-compile" depends="init, clean, compile"/>
 
 </project>

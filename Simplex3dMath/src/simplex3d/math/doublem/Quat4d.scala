@@ -30,22 +30,22 @@ import simplex3d.math.doublem.DoubleMath._
  */
 sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
-  private[math] def fa: Float = float(a)
-  private[math] def fb: Float = float(b)
-  private[math] def fc: Float = float(c)
-  private[math] def fd: Float = float(d)
+  private[math] final def fa: Float = float(a)
+  private[math] final def fb: Float = float(b)
+  private[math] final def fc: Float = float(c)
+  private[math] final def fd: Float = float(d)
 
-  private[math] def da: Double = a
-  private[math] def db: Double = b
-  private[math] def dc: Double = c
-  private[math] def dd: Double = d
+  private[math] final def da: Double = a
+  private[math] final def db: Double = b
+  private[math] final def dc: Double = c
+  private[math] final def dd: Double = d
 
   def a: Double
   def b: Double
   def c: Double
   def d: Double
 
-  def apply(i: Int) :Double = {
+  final def apply(i: Int) :Double = {
     i match {
       case 0 => a
       case 1 => b
@@ -57,60 +57,60 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
     }
   }
 
-  def unary_+() :this.type = this
+  final def unary_+() :AnyQuat4d = this
   /**
    * This methods negates every term of this quaternion.
    * Negating the quaternion produces another quaternion which represent
    * the same rotation. That is both q and -q represent exactly the
    * same rotation.
    */
-  def unary_-() = new Quat4d(-a, -b, -c, -d)
-  def *(s: Double) = new Quat4d(a * s, b * s, c * s, d * s)
-  def /(s: Double) = { val inv = 1/s;
+  final def unary_-() = new Quat4d(-a, -b, -c, -d)
+  final def *(s: Double) = new Quat4d(a * s, b * s, c * s, d * s)
+  final def /(s: Double) = { val inv = 1/s;
     new Quat4d(a * inv, b * inv, c * inv, d * inv)
   }
-  def +(s: Double) = new Quat4d(a + s, b + s, c + s, d + s)
-  def -(s: Double) = new Quat4d(a - s, b - s, c - s, d - s)
+  final def +(s: Double) = new Quat4d(a + s, b + s, c + s, d + s)
+  final def -(s: Double) = new Quat4d(a - s, b - s, c - s, d - s)
   
-  private[math] def divideByComponent(s: Double) = {
+  private[math] final def divideByComponent(s: Double) = {
     new Quat4d(s / a, s / b, s / c, s / d)
   }
 
-  def +(q: inQuat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
-  def -(q: inQuat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
-  def *(q: inQuat4d) = new Quat4d(
+  final def +(q: inQuat4d) = new Quat4d(a + q.a, b + q.b, c + q.c, d + q.d)
+  final def -(q: inQuat4d) = new Quat4d(a - q.a, b - q.b, c - q.c, d - q.d)
+  final def *(q: inQuat4d) = new Quat4d(
     a*q.a - b*q.b - c*q.c - d*q.d,
     a*q.b + b*q.a + c*q.d - d*q.c,
     a*q.c - b*q.d + c*q.a + d*q.b,
     a*q.d + b*q.c - c*q.b + d*q.a
   )
 
-  def rotate(q: inQuat4d) :Quat4d = q*this
-  def rotate(angle: Double, axis: inVec3d) :Quat4d = {
+  final def rotate(q: inQuat4d) :Quat4d = q*this
+  final def rotate(angle: Double, axis: inVec3d) :Quat4d = {
     quaternion(angle, normalize(axis))*this
   }
-  def rotateX(angle: Double) :Quat4d = {
+  final def rotateX(angle: Double) :Quat4d = {
     quaternion(angle, Vec3d.UnitX)*this
   }
-  def rotateY(angle: Double) :Quat4d = {
+  final def rotateY(angle: Double) :Quat4d = {
     quaternion(angle, Vec3d.UnitY)*this
   }
-  def rotateZ(angle: Double) :Quat4d = {
+  final def rotateZ(angle: Double) :Quat4d = {
     quaternion(angle, Vec3d.UnitZ)*this
   }
-  def invert() :Quat4d = inverse(this)
+  final def invert() :Quat4d = inverse(this)
 
-  def rotateVector(u: inVec3d) :Vec3d = DoubleMath.rotate(u, normalize(this))
+  final def rotateVector(u: inVec3d) :Vec3d = DoubleMath.rotate(u, normalize(this))
 
 
-  def ==(q: inQuat4d) :Boolean = {
+  final def ==(q: inQuat4d) :Boolean = {
     if (q eq null) false
     else a == q.a && b == q.b && c == q.c && d == q.d
   }
 
-  def !=(q: inQuat4d) :Boolean = !(this == q)
+  final def !=(q: inQuat4d) :Boolean = !(this == q)
 
-  private[math] def hasErrors: Boolean = {
+  private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
       isNaN(a) || isInfinite(a) ||
@@ -120,14 +120,14 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
     )
   }
 
-  override def equals(other: Any) :Boolean = {
+  final override def equals(other: Any) :Boolean = {
     other match {
       case q: inQuat4d => this == q
       case _ => false
     }
   }
 
-  override def hashCode() :Int = {
+  final override def hashCode() :Int = {
     41 * (
       41 * (
         41 * (
@@ -137,7 +137,7 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
     ) + d.hashCode
   }
 
-  override def toString() :String = {
+  final override def toString() :String = {
     this.getClass.getSimpleName + "(" + a + ", " + b + ", " + c + ", " + d + ")"
   }
 }

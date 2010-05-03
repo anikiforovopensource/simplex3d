@@ -75,6 +75,12 @@ class Transform3fTest extends FunSuite {
 
       val p = Vec3(r, r, r)
       assert(Mat3x4.translate(p) == Mat3x4.Identity.translate(p))
+
+      val m34 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+      assert(Mat3x4.concatenate(m34) == m34)
+
+      val m33 = Mat3x3(r, r, r, r, r, r, r, r, r)
+      assert(Mat3x4.concatenate(m33) == Mat3x4(m33))
     }
 
     def assertTransform(a: inMat3x4, m: inMat3x4, b: inMat3x4) {

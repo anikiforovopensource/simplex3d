@@ -61,6 +61,12 @@ class Transform2dTest extends FunSuite {
 
       val p = Vec2(r, r)
       assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
+
+      val m23 = Mat2x3(r, r, r, r, r, r)
+      assert(Mat2x3.concatenate(m23) == m23)
+
+      val m22 = Mat2x2(r, r, r, r)
+      assert(Mat2x3.concatenate(m22) == Mat2x3(m22))
     }
 
     def assertTransform(a: AnyMat2x3, m: AnyMat2x3, b: AnyMat2x3) {

@@ -289,6 +289,8 @@ class Quat4dTest extends FunSuite {
       }
     }
     def testObject(angle: Float, axis: inVec3) {
+      assert(Quat4.rotate(quaternion(angle, axis)) == quaternion(angle, axis))
+
       assert(approxEqual(
           Quat4.rotate(angle, axis),
           quaternion(angle, axis),

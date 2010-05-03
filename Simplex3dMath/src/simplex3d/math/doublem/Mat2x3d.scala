@@ -501,5 +501,8 @@ object Mat2x3d {
     m
   }
 
+  def concatenate(m: inMat2x3d) :Mat2x3d = Mat2x3d(m)
+  def concatenate(m: inMat2d) :Mat2x3d = Mat2x3d(m)
+
   implicit def toMutable(m: AnyMat2x3d) = Mat2x3d(m)
 }

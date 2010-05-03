@@ -209,6 +209,7 @@ object Quat4d {
 
   def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
 
+  def rotate(q: inQuat4d) :Quat4d = Quat4d(q)
   def rotate(angle: Double, axis: inVec3d) :Quat4d = {
     quaternion(angle, normalize(axis))
   }

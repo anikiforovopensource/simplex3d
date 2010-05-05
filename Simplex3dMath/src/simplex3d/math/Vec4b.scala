@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.BaseMath._
-
 
 /** The <code>AnyVec4b</code> class represents Boolean 4-dimensional vectors,
  * either constant or mutable.
@@ -63,20 +61,20 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
   private[math] final def bz: Boolean = z
   private[math] final def bw: Boolean = w
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
-  private[math] final def iz: Int = int(z)
-  private[math] final def iw: Int = int(w)
+  private[math] final def ix: Int = simplex3d.math.int(x)
+  private[math] final def iy: Int = simplex3d.math.int(y)
+  private[math] final def iz: Int = simplex3d.math.int(z)
+  private[math] final def iw: Int = simplex3d.math.int(w)
 
-  private[math] final def fx: Float = float(x)
-  private[math] final def fy: Float = float(y)
-  private[math] final def fz: Float = float(z)
-  private[math] final def fw: Float = float(w)
+  private[math] final def fx: Float = simplex3d.math.float(x)
+  private[math] final def fy: Float = simplex3d.math.float(y)
+  private[math] final def fz: Float = simplex3d.math.float(z)
+  private[math] final def fw: Float = simplex3d.math.float(w)
 
-  private[math] final def dx: Double = double(x)
-  private[math] final def dy: Double = double(y)
-  private[math] final def dz: Double = double(z)
-  private[math] final def dw: Double = double(w)
+  private[math] final def dx: Double = simplex3d.math.double(x)
+  private[math] final def dy: Double = simplex3d.math.double(y)
+  private[math] final def dz: Double = simplex3d.math.double(z)
+  private[math] final def dw: Double = simplex3d.math.double(w)
 
 
   def x: Boolean

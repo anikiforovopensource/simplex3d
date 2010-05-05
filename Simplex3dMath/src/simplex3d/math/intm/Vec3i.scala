@@ -21,7 +21,6 @@
 package simplex3d.math.intm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 
 
 /**
@@ -155,8 +154,11 @@ object ConstVec3i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3i private[math] (var x: Int, var y: Int, var z: Int)
-extends AnyVec3i with Mutable with Implicits[On]
+extends AnyVec3i with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyVec3i
+  type Component = Int1
+
   override def r = x
   override def g = y
   override def b = z

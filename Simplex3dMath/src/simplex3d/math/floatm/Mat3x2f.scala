@@ -21,7 +21,6 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 import simplex3d.math.floatm.FloatMath._
 
 
@@ -275,8 +274,11 @@ object ConstMat3x2f {
 final class Mat3x2f private[math] (
   var m00: Float, var m10: Float, var m20: Float,
   var m01: Float, var m11: Float, var m21: Float
-) extends AnyMat3x2f with Mutable with Implicits[On]
+) extends AnyMat3x2f with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyMat3x2f
+  type Component = Float1
+
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s;
     m01 *= s; m11 *= s; m21 *= s

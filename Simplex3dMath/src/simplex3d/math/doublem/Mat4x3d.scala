@@ -21,7 +21,6 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 
 
@@ -349,8 +348,11 @@ final class Mat4x3d private[math] (
   var m00: Double, var m10: Double, var m20: Double, var m30: Double,
   var m01: Double, var m11: Double, var m21: Double, var m31: Double,
   var m02: Double, var m12: Double, var m22: Double, var m32: Double
-) extends AnyMat4x3d with Mutable with Implicits[On]
+) extends AnyMat4x3d with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyMat4x3d
+  type Component = Double1
+
   def *=(s: Double) {
     m00 *= s; m10 *= s; m20 *= s; m30 *= s;
     m01 *= s; m11 *= s; m21 *= s; m31 *= s;

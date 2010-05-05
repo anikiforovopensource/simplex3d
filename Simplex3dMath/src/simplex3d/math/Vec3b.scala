@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.BaseMath._
-
 
 /** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,
  * either constant or mutable.
@@ -62,17 +60,17 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
   private[math] final def by: Boolean = y
   private[math] final def bz: Boolean = z
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
-  private[math] final def iz: Int = int(z)
+  private[math] final def ix: Int = simplex3d.math.int(x)
+  private[math] final def iy: Int = simplex3d.math.int(y)
+  private[math] final def iz: Int = simplex3d.math.int(z)
 
-  private[math] final def fx: Float = float(x)
-  private[math] final def fy: Float = float(y)
-  private[math] final def fz: Float = float(z)
+  private[math] final def fx: Float = simplex3d.math.float(x)
+  private[math] final def fy: Float = simplex3d.math.float(y)
+  private[math] final def fz: Float = simplex3d.math.float(z)
 
-  private[math] final def dx: Double = double(x)
-  private[math] final def dy: Double = double(y)
-  private[math] final def dz: Double = double(z)
+  private[math] final def dx: Double = simplex3d.math.double(x)
+  private[math] final def dy: Double = simplex3d.math.double(y)
+  private[math] final def dz: Double = simplex3d.math.double(z)
 
 
   def x: Boolean

@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.BaseMath._
-
 
 /** <code>Read2</code> is a superclass of all the 2-dimensional vectors.
  * <p>

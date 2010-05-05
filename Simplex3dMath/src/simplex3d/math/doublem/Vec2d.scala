@@ -21,7 +21,6 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 
 
 /**
@@ -140,8 +139,11 @@ object ConstVec2d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2d private[math] (var x: Double, var y: Double)
-extends AnyVec2d with Mutable with Implicits[On]
+extends AnyVec2d with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyVec2d
+  type Component = Double1
+
   override def r = x
   override def g = y
 

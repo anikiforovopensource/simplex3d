@@ -21,7 +21,6 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 import simplex3d.math.doublem.DoubleMath._
 
 
@@ -161,8 +160,11 @@ object ConstQuat4d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
   var a: Double, var b: Double, var c: Double, var d: Double
-) extends AnyQuat4d with Mutable with Implicits[On]
+) extends AnyQuat4d with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyQuat4d
+  type Component = Double1
+
   def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
   def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
 

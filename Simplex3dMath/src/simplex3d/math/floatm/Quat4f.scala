@@ -161,8 +161,11 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
   var a: Float, var b: Float, var c: Float, var d: Float
-) extends AnyQuat4f with Mutable with Implicits[On]
+) extends AnyQuat4f with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyQuat4f
+  type Component = Float1
+
   def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
   def /=(s: Float) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }
 

@@ -29,7 +29,6 @@
  */
 package simplex3d.math
 
-import simplex3d.math.BaseMath._
 import java.lang.Math
 
 

@@ -21,7 +21,6 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
-import simplex3d.math.BaseMath._
 
 
 /**
@@ -140,8 +139,10 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2f private[math] (var x: Float, var y: Float)
-extends AnyVec2f with Mutable with Implicits[On]
+extends AnyVec2f with Mutable with Implicits[On] with Composite
 {
+  type Element = AnyVec2f
+  type Component = Float1
 
   override def r = x
   override def g = y

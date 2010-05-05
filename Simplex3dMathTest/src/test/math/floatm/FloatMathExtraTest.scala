@@ -23,7 +23,7 @@ package test.math.floatm
 import org.scalatest._
 import java.util.Random
 
-import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.floatm.FloatMath._

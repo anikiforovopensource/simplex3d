@@ -22,7 +22,7 @@ package visual.math
 
 import visual.math.draw._
 
-import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.doublem.renamed._
 import simplex3d.math.doublem.DoubleMath._
 

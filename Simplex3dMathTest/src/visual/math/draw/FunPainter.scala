@@ -23,7 +23,7 @@ package visual.math.draw
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors._
 
-import simplex3d.math.BaseMath._
+import simplex3d.math._
 import simplex3d.math.intm.IntMath
 import simplex3d.math.doublem.renamed._
 import simplex3d.math.doublem.DoubleMath._

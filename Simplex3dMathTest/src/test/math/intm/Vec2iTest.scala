@@ -23,7 +23,6 @@ package test.math.intm
 import org.scalatest._
 import test.math.BooleanCombinations
 
-import simplex3d.math.BaseMath._
 import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.floatm._

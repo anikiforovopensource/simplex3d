@@ -34,19 +34,19 @@ private[math] class FloatMath
 object FloatMath {
 
   // Constants
-  val FloatEpsilon: Float = 1.19209e-7f;
-  val Pi: Float = float(SMath.PI)
-  val E: Float = float(SMath.E)
+  final val FloatEpsilon: Float = 1.19209e-7f;
+  final val Pi: Float = float(SMath.PI)
+  final val E: Float = float(SMath.E)
 
-  private val DegToRad: Float = Pi / 180
-  private val RadToDeg: Float = 180 / Pi
-  private val InvLog2: Double = 1/SMath.log(2)
+  private final val DegToRad: Float = Pi / 180
+  private final val RadToDeg: Float = 180 / Pi
+  private final val InvLog2: Double = 1/SMath.log(2)
 
   // Have to be careful with large offsets due to the loss in precision.
   // With noise args as double these values should be ok
-  private val of1: Double = 100.0
-  private val of2: Double = 200.0
-  private val of3: Double = 300.0
+  private final val of1: Double = 100.0
+  private final val of2: Double = 200.0
+  private final val of3: Double = 300.0
 
   // Float functions
   def radians(x: Float) :Float = x*DegToRad

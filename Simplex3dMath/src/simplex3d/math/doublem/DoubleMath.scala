@@ -34,19 +34,19 @@ private[math] class DoubleMath
 object DoubleMath {
 
   // Constants
-  val DoubleEpsilon: Double = 2.22045e-16;
-  val Pi: Double = SMath.PI
-  val E: Double = SMath.E
+  final val DoubleEpsilon: Double = 2.22045e-16;
+  final val Pi: Double = SMath.PI
+  final val E: Double = SMath.E
 
-  private val DegToRad: Double = Pi / 180
-  private val RadToDeg: Double = 180 / Pi
-  private val InvLog2: Double = 1/SMath.log(2)
+  private final val DegToRad: Double = Pi / 180
+  private final val RadToDeg: Double = 180 / Pi
+  private final val InvLog2: Double = 1/SMath.log(2)
 
   // Have to be careful with large offsets due to the loss in precision.
   // With noise args as double these values should be ok
-  private val of1: Double = 100.0
-  private val of2: Double = 200.0
-  private val of3: Double = 300.0
+  private final val of1: Double = 100.0
+  private final val of2: Double = 200.0
+  private final val of3: Double = 300.0
 
   // Double functions
   def radians(x: Double) :Double = x*DegToRad

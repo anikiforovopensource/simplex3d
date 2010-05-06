@@ -43,7 +43,7 @@ import java.lang.Math
  */
 private[math] object SimplexNoise {
 
-  private val halfPerm: Array[Int] = Array(
+  private final val halfPerm: Array[Int] = Array(
     151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
     140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190,  6, 148,
     247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32,
@@ -62,16 +62,22 @@ private[math] object SimplexNoise {
     115, 121, 50, 45, 127,  4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
     29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180)
 
-  private val perm: Array[Int] = new Array[Int](halfPerm.length*2)
-  for (i <- 0 until perm.length) { perm(i) = halfPerm(i & 0xFF) }
+  private final val perm: Array[Int] = new Array[Int](halfPerm.length*2)
+  
+  {
+    var i = 0; while(i < perm.length) {
+      perm(i) = halfPerm(i & 0xFF)
+      i += 1
+    }
+  }
 
-  private val grad3: Array[Array[Int]] = Array(
+  private final val grad3: Array[Array[Int]] = Array(
     Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
     Array(1,0,1), Array(1,0,-1), Array(-1,0,1), Array(-1,0,-1),
     Array(1,1,0), Array(1,-1,0), Array(-1,1,0), Array(-1,-1,0),
     Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1))
 
-  private val grad4: Array[Array[Int]] = Array(
+  private final val grad4: Array[Array[Int]] = Array(
     Array(0,1,1,1), Array(0,1,1,-1), Array(0,1,-1,1), Array(0,1,-1,-1),
     Array(0,-1,1,1), Array(0,-1,1,-1), Array(0,-1,-1,1), Array(0,-1,-1,-1),
     Array(1,0,1,1), Array(1,0,1,-1), Array(1,0,-1,1), Array(1,0,-1,-1),
@@ -133,9 +139,9 @@ private[math] object SimplexNoise {
   }
   
   // Skew and unskew factors are a bit hairy for 2D, so define them as constants
-  private val F2 = (Math.sqrt(3.0) - 1.0) / 2.0
-  private val G2 = (3.0 - Math.sqrt(3.0)) / 6.0
-  private val G22 = 1 - 2.0 * (3.0 - Math.sqrt(3.0)) / 6.0
+  private final val F2 = 0.36602540378443864676 //(Math.sqrt(3.0) - 1.0) / 2.0
+  private final val G2 = 0.21132486540518711775 //(3.0 - Math.sqrt(3.0)) / 6.0
+  private final val G22 = 0.57735026918962576451 //1 - 2.0 * (3.0 - Math.sqrt(3.0)) / 6.0
 
   /** Computes 2D simplex noise. Somewhat slower but much better looking
    * than classic (Perlin) noise.
@@ -208,10 +214,10 @@ private[math] object SimplexNoise {
   }
 
   // The skewing and unskewing factors are much simpler for the 3D case
-  private val F3 = 1 / 3.0
-  private val G3 = 1 / 6.0
-  private val G32 = 2 / 6.0
-  private val G33 = 1 - 3 / 6.0
+  private final val F3 = 1 / 3.0
+  private final val G3 = 1 / 6.0
+  private final val G32 = 2 / 6.0
+  private final val G33 = 1 - 3 / 6.0
 
   /** Computes 3D simplex noise. Comparable in speed to classic (Perlin) noise,
    * better looking.
@@ -361,11 +367,11 @@ private[math] object SimplexNoise {
   }
 
   // The skewing and unskewing factors are hairy again for the 4D case
-  private val F4 = (Math.sqrt(5.0) - 1.0) / 4.0
-  private val G4 = (5.0 - Math.sqrt(5.0)) / 20.0
-  private val G42 = 2.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
-  private val G43 = 3.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
-  private val G44 = 1 - 4.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
+  private final val F4 = 0.3090169943749474241 //(Math.sqrt(5.0) - 1.0) / 4.0
+  private final val G4 = 0.13819660112501051518 //(5.0 - Math.sqrt(5.0)) / 20.0
+  private final val G42 = 0.27639320225002103036 //2.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
+  private final val G43 = 0.41458980337503154554 //3.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
+  private final val G44 = 0.44721359549995793928 //1 - 4.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
 
   /** Computes 4D simplex noise. A lot faster than classic (Perlin) 4D noise,
    * and better looking.

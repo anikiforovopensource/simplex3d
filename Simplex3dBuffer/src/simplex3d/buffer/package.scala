@@ -24,6 +24,9 @@ import java.nio._
 import simplex3d.buffer._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 package object buffer {
   implicit val arrayInt1UByte = (
     (array: Array[Byte]) => new ArrayInt1UByte(array), 1, classOf[UByte]

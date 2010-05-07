@@ -26,6 +26,9 @@ import simplex3d.math.floatm._
 import simplex3d.buffer._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] sealed abstract class BaseVec3f[+D <: ReadFloat](
   seq: ContiguousSeq[Float1, D]
 ) extends GenericSeq[Vec3f, D](seq) {

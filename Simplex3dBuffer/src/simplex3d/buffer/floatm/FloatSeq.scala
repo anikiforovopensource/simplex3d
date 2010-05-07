@@ -26,6 +26,9 @@ import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
   buff: D#BufferType
 ) extends BaseSeq[Float1, Float, D](buff) {

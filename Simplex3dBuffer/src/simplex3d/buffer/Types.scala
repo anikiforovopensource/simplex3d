@@ -24,6 +24,9 @@ import java.nio._
 import scala.annotation._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 object Binding {
   final val SByte = 5120
   final val UByte = 5121

@@ -24,6 +24,9 @@ import java.nio._
 import simplex3d.math._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] sealed abstract class BaseInt1[+D <: ReadInt](
   buff: D#BufferType
 ) extends BaseSeq[Int1, Int, D](buff) {

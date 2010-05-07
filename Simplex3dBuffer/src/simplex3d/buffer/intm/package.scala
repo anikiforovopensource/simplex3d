@@ -24,6 +24,9 @@ import java.nio._
 import simplex3d.buffer.intm._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 package object intm {
   
   // Int

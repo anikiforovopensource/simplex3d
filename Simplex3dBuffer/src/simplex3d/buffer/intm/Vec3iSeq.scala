@@ -26,6 +26,9 @@ import simplex3d.math.intm._
 import simplex3d.buffer._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] sealed abstract class BaseVec3i[+D <: ReadInt](
   seq: ContiguousSeq[Int1, D]
 ) extends GenericSeq[Vec3i, D](seq) {

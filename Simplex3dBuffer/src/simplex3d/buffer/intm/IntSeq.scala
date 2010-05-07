@@ -25,7 +25,9 @@ import simplex3d.math._
 import simplex3d.buffer._
 
 
-// Unsigned Views
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] final class ViewInt1UByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,

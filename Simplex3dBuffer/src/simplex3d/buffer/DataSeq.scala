@@ -26,25 +26,35 @@ import scala.annotation.unchecked._
 import simplex3d.math._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[buffer] abstract class BaseSeq[
   T <: MetaType, @specialized(Int, Float, Double) E, +D <: RawType
 ] (val buffer: D#BufferType) {
+
   final def componentBytes: Int = Binding.byteLength(componentBinding)
   final val byteSize = buffer.limit*componentBytes
   final val byteOffset = offset*componentBytes
   final val byteStride = stride*componentBytes
+  def bindingBuffer: Buffer
+
   final val size: Int = (buffer.limit - offset)/(components + stride)
   protected[buffer] final val step = components + stride
 
   def apply(i: Int) :E
   def update(i: Int, v: E)
 
+  def makeArray(size: Int) :DataArray[T, D] = null
+  def makeBuffer(size: Int) :DataBuffer[T, D] = null
+  def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D] = null
+
   def components: Int
+  def componentBinding: Int
+  def normalized: Boolean
+
   def offset: Int
   def stride: Int
-
-  def normalized: Boolean
-  def componentBinding: Int
 
   def backingSeq: ContiguousSeq[T#Component, D]
 
@@ -191,7 +201,7 @@ private[buffer] abstract class BaseSeq[
   ) {
     put(
       index,
-      src.backingSeq.asInstanceOf[ContiguousSeq[T#Component, _]],
+      src.backingSeq,
       src.offset + first*src.step,
       src.stride,
       count
@@ -204,7 +214,7 @@ private[buffer] abstract class BaseSeq[
   ) {
     put(
       index,
-      src.backingSeq.asInstanceOf[ContiguousSeq[T#Component, _]],
+      src.backingSeq,
       src.offset,
       src.stride,
       src.size
@@ -216,11 +226,45 @@ private[buffer] abstract class BaseSeq[
   ) {
     put(
       0,
-      src.backingSeq.asInstanceOf[ContiguousSeq[T#Component, _]],
+      src.backingSeq,
       src.offset,
       src.stride,
       src.size
     )
+  }
+
+  def asArray() :DataArray[T, D] = {
+    val copy = makeArray(size)
+    copy.put(
+      0,
+      backingSeq,
+      offset,
+      stride,
+      size
+    )
+    copy
+  }
+  def asBuffer() :DataBuffer[T, D] = {
+    val copy = makeBuffer(size)
+    copy.put(
+      0,
+      backingSeq,
+      offset,
+      stride,
+      size
+    )
+    copy
+  }
+  def asView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]={
+    val copy = makeView(byteBuffer, offset, stride)
+    copy.put(
+      0,
+      backingSeq,
+      offset,
+      stride,
+      size
+    )
+    copy
   }
 }
 
@@ -232,15 +276,15 @@ trait ContiguousSeq[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
 }
 
 trait DataArray[T <: MetaType, +D <: RawType] extends DataSeq[T, D] with ContiguousSeq[T, D] {
+  def bindingBuffer = buffer
   def array: Array[D#ArrayType @uncheckedVariance] = backingSeq.array
   def backingSeq: DataArray[T#Component, D]
 }
 
-trait DataBuffer[T <: MetaType, +D <: RawType] extends DataView[T, D] with ContiguousSeq[T, D] {
-  def backingSeq: DataBuffer[T#Component, D]
-}
+trait DataBuffer[T <: MetaType, +D <: RawType] extends DataView[T, D] with ContiguousSeq[T, D]
 
 trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
+  def bindingBuffer = byteBuffer
   def byteBuffer: ByteBuffer = backingSeq.byteBuffer
   def backingSeq: DataBuffer[T#Component, D]
 

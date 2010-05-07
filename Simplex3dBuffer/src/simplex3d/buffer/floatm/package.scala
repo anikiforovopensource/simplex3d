@@ -24,6 +24,9 @@ import java.nio._
 import simplex3d.buffer.floatm._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 package object floatm {
   
   // Float

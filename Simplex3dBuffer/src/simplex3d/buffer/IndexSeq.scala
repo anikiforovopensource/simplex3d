@@ -24,6 +24,9 @@ import java.nio._
 import simplex3d.math._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 trait IndexSeq[+D <: Unsigned with NonNormalized] extends ContiguousSeq[Int1, D]
 trait IndexArray[+D <: Unsigned with NonNormalized] extends IndexSeq[D]
 trait IndexBuffer[+D <: Unsigned with NonNormalized] extends IndexSeq[D]

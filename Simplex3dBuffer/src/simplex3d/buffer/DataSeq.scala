@@ -271,17 +271,19 @@ private[buffer] abstract class BaseSeq[
 trait DataSeq[T <: MetaType, +D <: RawType] extends BaseSeq[T, T#Element, D]
 
 trait ContiguousSeq[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
-  final def offset = 0
-  final def stride = 0
+  final val offset = 0
+  final val stride = 0
 }
 
-trait DataArray[T <: MetaType, +D <: RawType] extends DataSeq[T, D] with ContiguousSeq[T, D] {
+trait DataArray[T <: MetaType, +D <: RawType]
+extends DataSeq[T, D] with ContiguousSeq[T, D] {
   def bindingBuffer = buffer
-  def array: Array[D#ArrayType @uncheckedVariance] = backingSeq.array
+  def array: D#ArrayType = backingSeq.array
   def backingSeq: DataArray[T#Component, D]
 }
 
-trait DataBuffer[T <: MetaType, +D <: RawType] extends DataView[T, D] with ContiguousSeq[T, D]
+trait DataBuffer[T <: MetaType, +D <: RawType]
+extends DataView[T, D] with ContiguousSeq[T, D]
 
 trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
   def bindingBuffer = byteBuffer
@@ -300,16 +302,16 @@ trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
 
 
 object DataArray {
-  def apply[T <: MetaType, D <: ReadType](array: Array[D#ArrayType])(
-    implicit t: ((Array[D#ArrayType]) => DataArray[T, D], Int, Class[D])
+  def apply[T <: MetaType, D <: ReadType](array: D#ArrayType)(
+    implicit t: ((D#ArrayType) => DataArray[T, D], Int, Class[D])
   ) :DataArray[T, D] = {
     t._1(array)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
-    implicit t: ((Array[D#ArrayType]) => DataArray[T, D], Int, Class[D])
+    implicit t: ((D#ArrayType) => DataArray[T, D], Int, Class[D])
   ) :DataArray[T, D] = {
-    def cast(a: Array[_]) = a.asInstanceOf[Array[D#ArrayType]]
+    def cast(a: Array[_]) = a.asInstanceOf[D#ArrayType]
     val components = t._2
 
     t._3 match {

@@ -53,7 +53,7 @@ object Binding {
 }
 
 sealed trait RawType {
-  type ArrayType <: AnyVal
+  type ArrayType <: Array[_]
   type BufferType <: Buffer
 }
 
@@ -71,7 +71,7 @@ sealed trait NonNormalized extends IntegerType
 
 
 sealed trait RawByte extends IntegerType {
-  type ArrayType = Byte
+  type ArrayType = Array[Byte]
   type BufferType = ByteBuffer
 }
 
@@ -92,31 +92,31 @@ sealed trait RawShort extends IntegerType
 
 sealed trait SShort extends RawShort with Signed with NonNormalized
 with ReadInt with ReadFloat with ReadDouble {
-  type ArrayType = Short
+  type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait UShort extends RawShort with Unsigned with NonNormalized
 with ReadInt with ReadFloat with ReadDouble {
-  type ArrayType = Char
+  type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
 
 sealed trait NSShort extends RawShort with Signed with Normalized
 with ReadFloat with ReadDouble {
-  type ArrayType = Short
+  type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait NUShort extends RawShort with Unsigned with Normalized
 with ReadFloat with ReadDouble {
-  type ArrayType = Char
+  type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
 
 
 sealed trait RawInt extends IntegerType {
-  type ArrayType = Int
+  type ArrayType = Array[Int]
   type BufferType = IntBuffer
 }
 
@@ -137,13 +137,13 @@ sealed trait FloatingPointType extends RawType
 
 sealed trait RawFloat extends FloatingPointType
 with ReadFloat with ReadDouble {
-  type ArrayType = Float
+  type ArrayType = Array[Float]
   type BufferType = FloatBuffer
 }
 
 sealed trait RawDouble extends FloatingPointType
 with ReadDouble {
-  type ArrayType = Double
+  type ArrayType = Array[Double]
   type BufferType = DoubleBuffer
 }
 

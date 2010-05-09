@@ -27,24 +27,28 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object buffer {
-  implicit val arrayInt1UByte = (
-    (array: Array[Byte]) => new ArrayInt1UByte(array), 1, classOf[UByte]
-  )
-  implicit val arrayInt1UShort = (
-    (array: Array[Char]) => new ArrayInt1UShort(array), 1, classOf[UShort]
-  )
-  implicit val arrayInt1UInt = (
-    (array: Array[Int]) => new ArrayInt1UInt(array), 1, classOf[UInt]
-  )
+package buffer {
+  private[buffer] class UnsignedImplicits {
+    implicit val arrayInt1UByte = (
+      (array: Array[Byte]) => new ArrayInt1UByte(array), 1, classOf[UByte]
+    )
+    implicit val arrayInt1UShort = (
+      (array: Array[Char]) => new ArrayInt1UShort(array), 1, classOf[UShort]
+    )
+    implicit val arrayInt1UInt = (
+      (array: Array[Int]) => new ArrayInt1UInt(array), 1, classOf[UInt]
+    )
 
-  implicit val bufferInt1UByte = (
-    (buffer: ByteBuffer) => new BufferInt1UByte(buffer), 1, classOf[UByte]
-  )
-  implicit val bufferInt1UShort = (
-    (buffer: ByteBuffer) => new BufferInt1UShort(buffer), 1, classOf[UShort]
-  )
-  implicit val bufferInt1UInt = (
-    (buffer: ByteBuffer) => new BufferInt1UInt(buffer), 1, classOf[UInt]
-  )
+    implicit val bufferInt1UByte = (
+      (buffer: ByteBuffer) => new BufferInt1UByte(buffer), 1, classOf[UByte]
+    )
+    implicit val bufferInt1UShort = (
+      (buffer: ByteBuffer) => new BufferInt1UShort(buffer), 1, classOf[UShort]
+    )
+    implicit val bufferInt1UInt = (
+      (buffer: ByteBuffer) => new BufferInt1UInt(buffer), 1, classOf[UInt]
+    )
+  }
 }
+
+package object buffer extends UnsignedImplicits

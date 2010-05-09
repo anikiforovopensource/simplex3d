@@ -66,6 +66,13 @@ private[buffer] sealed abstract class BaseVec2f[+D <: ReadFloat](
     seq(j) = v.x
     seq(j + 1) = v.y
   }
+
+  override def makeArray(size: Int) =
+    new ArrayVec2f[D](backingSeq.makeArray(size*2))
+  override def makeBuffer(size: Int) =
+    new BufferVec2f[D](backingSeq.makeBuffer(size*2))
+//  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+//    new ViewVec2f[D](backingSeq.makeBuffer(byteBuffer), offset, stride))
 }
 
 private[buffer] final class ArrayVec2f[+D <: ReadFloat](

@@ -27,8 +27,8 @@ import simplex3d.buffer.intm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object intm {
-  
+package object intm extends UnsignedImplicits {
+
   // Int
   // Array Int
   implicit val arrayInt1SByte = (

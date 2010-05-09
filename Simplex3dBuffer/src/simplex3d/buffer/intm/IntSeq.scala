@@ -28,54 +28,25 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] final class ViewInt1UByte(
-  override val byteBuffer: ByteBuffer,
-  val offset: Int,
-  val stride: Int
-) extends ViewInt1[UByte](byteBuffer) {
-  val backingSeq: BufferInt1[UByte] = new BufferInt1UByte(byteBuffer)
-
-  def componentBinding = Binding.UByte
-  def normalized: Boolean = false
-
-  def apply(i: Int) :Int = buffer.get(offset + i*step) & 0xFF
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, byte(v))
-}
-
-private[buffer] final class ViewInt1UShort(
-  override val byteBuffer: ByteBuffer,
-  val offset: Int,
-  val stride: Int
-) extends ViewInt1[UShort](byteBuffer.asCharBuffer()) {
-  val backingSeq: BufferInt1[UShort] = new BufferInt1UShort(byteBuffer)
-
-  def componentBinding = Binding.UShort
-  def normalized: Boolean = false
-
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, v.asInstanceOf[Char])
-}
-
-private[buffer] final class ViewInt1UInt(
-  override val byteBuffer: ByteBuffer,
-  val offset: Int,
-  val stride: Int
-) extends ViewInt1[UInt](byteBuffer.asIntBuffer()) {
-  val backingSeq: BufferInt1[UInt] = new BufferInt1UInt(byteBuffer)
-
-  def componentBinding = Binding.UInt
-  def normalized: Boolean = false
-
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, v)
-}
-
 
 // Signed
 // Type: SByte
+private[buffer] sealed abstract class SeqInt1SByte(
+  buff: ByteBuffer
+) extends BaseInt1[SByte](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1SByte(new Array[Byte](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1SByte(BufferUtil.allocateByteBuffer(size))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1SByte(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1SByte(
   override val array: Array[Byte]
-) extends ArrayInt1[SByte](ByteBuffer.wrap(array)) {
+) extends SeqInt1SByte(ByteBuffer.wrap(array)) with DataArray[Int1, SByte] {
+  def backingSeq = this
+
   def componentBinding = Binding.SByte
   def normalized: Boolean = false
 
@@ -85,7 +56,9 @@ private[buffer] final class ArrayInt1SByte(
 
 private[buffer] final class BufferInt1SByte(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[SByte](byteBuffer) {
+) extends SeqInt1SByte(byteBuffer) with DataBuffer[Int1, SByte] {
+  def backingSeq = this
+
   def componentBinding = Binding.SByte
   def normalized: Boolean = false
 
@@ -97,8 +70,8 @@ private[buffer] final class ViewInt1SByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
   val stride: Int
-) extends ViewInt1[SByte](byteBuffer) {
-  val backingSeq: BufferInt1[SByte] = new BufferInt1SByte(byteBuffer)
+) extends SeqInt1SByte(byteBuffer) with DataView[Int1, SByte] {
+  val backingSeq = new BufferInt1SByte(byteBuffer)
 
   def componentBinding = Binding.SByte
   def normalized: Boolean = false
@@ -109,9 +82,24 @@ private[buffer] final class ViewInt1SByte(
 
 
 // Type: SShort
+private[buffer] sealed abstract class SeqInt1SShort(
+  buff: ShortBuffer
+) extends BaseInt1[SShort](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1SShort(new Array[Short](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1SShort(BufferUtil.allocateByteBuffer(size*2))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1SShort(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1SShort(
   override val array: Array[Short]
-) extends ArrayInt1[SShort](ShortBuffer.wrap(array)) {
+) extends SeqInt1SShort(
+  ShortBuffer.wrap(array)
+) with DataArray[Int1, SShort] {
+  def backingSeq = this
+
   def componentBinding = Binding.SShort
   def normalized: Boolean = false
 
@@ -121,7 +109,11 @@ private[buffer] final class ArrayInt1SShort(
 
 private[buffer] final class BufferInt1SShort(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[SShort](byteBuffer.asShortBuffer()) {
+) extends SeqInt1SShort(
+  byteBuffer.asShortBuffer()
+) with DataBuffer[Int1, SShort] {
+  def backingSeq = this
+
   def componentBinding = Binding.SShort
   def normalized: Boolean = false
 
@@ -133,8 +125,10 @@ private[buffer] final class ViewInt1SShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
   val stride: Int
-) extends ViewInt1[SShort](byteBuffer.asShortBuffer()) {
-  val backingSeq: BufferInt1[SShort] = new BufferInt1SShort(byteBuffer)
+) extends SeqInt1SShort(
+  byteBuffer.asShortBuffer()
+) with DataView[Int1, SShort] {
+  val backingSeq = new BufferInt1SShort(byteBuffer)
 
   def componentBinding = Binding.SShort
   def normalized: Boolean = false
@@ -145,9 +139,22 @@ private[buffer] final class ViewInt1SShort(
 
 
 // Type: SInt
+private[buffer] sealed abstract class SeqInt1SInt(
+  buff: IntBuffer
+) extends BaseInt1[SInt](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1SInt(new Array[Int](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1SInt(BufferUtil.allocateByteBuffer(size*4))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1SInt(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1SInt(
   override val array: Array[Int]
-) extends ArrayInt1[SInt](IntBuffer.wrap(array)) {
+) extends SeqInt1SInt(IntBuffer.wrap(array)) with DataArray[Int1, SInt] {
+  def backingSeq = this
+
   def componentBinding = Binding.SInt
   def normalized: Boolean = false
 
@@ -157,7 +164,9 @@ private[buffer] final class ArrayInt1SInt(
 
 private[buffer] final class BufferInt1SInt(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[SInt](byteBuffer.asIntBuffer()) {
+) extends SeqInt1SInt(byteBuffer.asIntBuffer()) with DataBuffer[Int1, SInt]{
+  def backingSeq = this
+
   def componentBinding = Binding.SInt
   def normalized: Boolean = false
 
@@ -169,8 +178,8 @@ private[buffer] final class ViewInt1SInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
   val stride: Int
-) extends ViewInt1[SInt](byteBuffer.asIntBuffer()) {
-  val backingSeq: BufferInt1[SInt] = new BufferInt1SInt(byteBuffer)
+) extends SeqInt1SInt(byteBuffer.asIntBuffer()) with DataView[Int1, SInt] {
+  val backingSeq = new BufferInt1SInt(byteBuffer)
 
   def componentBinding = Binding.SInt
   def normalized: Boolean = false

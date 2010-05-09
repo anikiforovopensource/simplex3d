@@ -27,7 +27,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] sealed abstract class BaseInt1[+D <: ReadInt](
+private[buffer] abstract class BaseInt1[+D <: ReadInt](
   buff: D#BufferType
 ) extends BaseSeq[Int1, Int, D](buff) {
   final def components: Int = 1
@@ -52,27 +52,24 @@ private[buffer] sealed abstract class BaseInt1[+D <: ReadInt](
   }
 }
 
-private[buffer] abstract class ArrayInt1[+D <: ReadInt](
-  buff: D#BufferType
-) extends BaseInt1[D](buff) with DataArray[Int1, D] {
-  final def backingSeq = this
-}
-
-private[buffer] abstract class BufferInt1[+D <: ReadInt](
-  buff: D#BufferType
-)extends BaseInt1[D](buff) with DataBuffer[Int1, D] {
-  final def backingSeq = this
-}
-
-private[buffer] abstract class ViewInt1[+D <: ReadInt](
-  buff: D#BufferType
-) extends BaseInt1[D](buff) with DataView[Int1, D]
-
 
 // Type: UByte
+private[buffer] abstract class SeqInt1UByte(
+  buff: ByteBuffer
+) extends BaseInt1[UByte](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1UByte(new Array[Byte](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1UByte(BufferUtil.allocateByteBuffer(size))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1UByte(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1UByte(
   override val array: Array[Byte]
-) extends ArrayInt1[UByte](ByteBuffer.wrap(array)) with IndexArray[UByte] {
+) extends SeqInt1UByte(ByteBuffer.wrap(array)) with IndexArray[UByte] {
+  def backingSeq = this
+
   def componentBinding = Binding.UByte
   def normalized: Boolean = false
 
@@ -82,7 +79,9 @@ private[buffer] final class ArrayInt1UByte(
 
 private[buffer] final class BufferInt1UByte(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[UByte](byteBuffer) with IndexBuffer[UByte] {
+) extends SeqInt1UByte(byteBuffer) with IndexBuffer[UByte] {
+  def backingSeq = this
+
   def componentBinding = Binding.UByte
   def normalized: Boolean = false
 
@@ -90,11 +89,40 @@ private[buffer] final class BufferInt1UByte(
   def update(i: Int, v: Int) = buffer.put(i, byte(v))
 }
 
+private[buffer] final class ViewInt1UByte(
+  override val byteBuffer: ByteBuffer,
+  val offset: Int,
+  val stride: Int
+) extends SeqInt1UByte(byteBuffer) with DataView[Int1, UByte] {
+  val backingSeq = new BufferInt1UByte(byteBuffer)
+
+  def componentBinding = Binding.UByte
+  def normalized: Boolean = false
+
+  def apply(i: Int) :Int = buffer.get(offset + i*step) & 0xFF
+  def update(i: Int, v: Int) = buffer.put(offset + i*step, byte(v))
+}
+
 
 // Type: UShort
+private[buffer] abstract class SeqInt1UShort(
+  buff: CharBuffer
+) extends BaseInt1[UShort](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1UShort(new Array[Char](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1UShort(BufferUtil.allocateByteBuffer(size*2))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1UShort(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1UShort(
   override val array: Array[Char]
-) extends ArrayInt1[UShort](CharBuffer.wrap(array)) with IndexArray[UShort] {
+) extends SeqInt1UShort(
+  CharBuffer.wrap(array)
+) with IndexArray[UShort] {
+  def backingSeq = this
+
   def componentBinding = Binding.UShort
   def normalized: Boolean = false
 
@@ -104,7 +132,11 @@ private[buffer] final class ArrayInt1UShort(
 
 private[buffer] final class BufferInt1UShort(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[UShort](byteBuffer.asCharBuffer()) with IndexBuffer[UShort] {
+) extends SeqInt1UShort(
+  byteBuffer.asCharBuffer()
+) with IndexBuffer[UShort] {
+  def backingSeq = this
+
   def componentBinding = Binding.UShort
   def normalized: Boolean = false
 
@@ -112,11 +144,42 @@ private[buffer] final class BufferInt1UShort(
   def update(i: Int, v: Int) = buffer.put(i, v.asInstanceOf[Char])
 }
 
+private[buffer] final class ViewInt1UShort(
+  override val byteBuffer: ByteBuffer,
+  val offset: Int,
+  val stride: Int
+) extends SeqInt1UShort(
+  byteBuffer.asCharBuffer()
+) with DataView[Int1, UShort] {
+  val backingSeq = new BufferInt1UShort(byteBuffer)
+
+  def componentBinding = Binding.UShort
+  def normalized: Boolean = false
+
+  def apply(i: Int) :Int = buffer.get(offset + i*step)
+  def update(i: Int, v: Int) = {
+    buffer.put(offset + i*step, v.asInstanceOf[Char])
+  }
+}
+
 
 // Type: UInt
+private[buffer] abstract class SeqInt1UInt(
+  buff: IntBuffer
+) extends BaseInt1[UInt](buff) {
+  override def makeArray(size: Int) =
+    new ArrayInt1UInt(new Array[Int](size))
+  override def makeBuffer(size: Int) =
+    new BufferInt1UInt(BufferUtil.allocateByteBuffer(size*4))
+  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewInt1UInt(byteBuffer, offset, stride)
+}
+
 private[buffer] final class ArrayInt1UInt(
   override val array: Array[Int]
-) extends ArrayInt1[UInt](IntBuffer.wrap(array)) with IndexArray[UInt] {
+) extends SeqInt1UInt(IntBuffer.wrap(array)) with IndexArray[UInt] {
+  def backingSeq = this
+
   def componentBinding = Binding.UInt
   def normalized: Boolean = false
 
@@ -126,10 +189,26 @@ private[buffer] final class ArrayInt1UInt(
 
 private[buffer] final class BufferInt1UInt(
   override val byteBuffer: ByteBuffer
-) extends BufferInt1[UInt](byteBuffer.asIntBuffer()) with IndexBuffer[UInt] {
+) extends SeqInt1UInt(byteBuffer.asIntBuffer()) with IndexBuffer[UInt]{
+  def backingSeq = this
+
   def componentBinding = Binding.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buffer.get(i)
   def update(i: Int, v: Int) = buffer.put(i, v)
+}
+
+private[buffer] final class ViewInt1UInt(
+  override val byteBuffer: ByteBuffer,
+  val offset: Int,
+  val stride: Int
+) extends SeqInt1UInt(byteBuffer.asIntBuffer()) with DataView[Int1, UInt] {
+  val backingSeq = new BufferInt1UInt(byteBuffer)
+
+  def componentBinding = Binding.UInt
+  def normalized: Boolean = false
+
+  def apply(i: Int) :Int = buffer.get(offset + i*step)
+  def update(i: Int, v: Int) = buffer.put(offset + i*step, v)
 }

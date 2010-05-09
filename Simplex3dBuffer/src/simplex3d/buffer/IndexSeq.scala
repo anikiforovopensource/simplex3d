@@ -27,22 +27,27 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait IndexSeq[+D <: Unsigned with NonNormalized] extends ContiguousSeq[Int1, D]
-trait IndexArray[+D <: Unsigned with NonNormalized] extends IndexSeq[D]
-trait IndexBuffer[+D <: Unsigned with NonNormalized] extends IndexSeq[D]
+trait IndexSeq[+D <: ReadInt with Unsigned]
+extends ContiguousSeq[Int1, D]
+
+trait IndexArray[+D <: ReadInt with Unsigned]
+extends IndexSeq[D] with DataArray[Int1, D]
+
+trait IndexBuffer[+D <: ReadInt with Unsigned]
+extends IndexSeq[D] with DataBuffer[Int1, D]
 
 
 object IndexArray {
-  def apply[D <: Unsigned with NonNormalized](array: Array[D#ArrayType])(
-    implicit t: ((Array[D#ArrayType]) => IndexArray[D], Int, Class[D])
+  def apply[D <: ReadInt with Unsigned](array: D#ArrayType)(
+    implicit t: ((D#ArrayType) => IndexArray[D], Int, Class[D])
   ) :IndexArray[D] = {
     t._1(array)
   }
 
-  def apply[D <: Unsigned with NonNormalized](size: Int)(
-    implicit t: ((Array[D#ArrayType]) => IndexArray[D], Int, Class[D])
+  def apply[D <: ReadInt with Unsigned](size: Int)(
+    implicit t: ((D#ArrayType) => IndexArray[D], Int, Class[D])
   ) :IndexArray[D] = {
-    def cast(a: Array[_]) = a.asInstanceOf[Array[D#ArrayType]]
+    def cast(a: Array[_]) = a.asInstanceOf[D#ArrayType]
 
     t._3 match {
       case ReadAs.UByte => t._1(cast(new Array[Byte](size)))
@@ -55,13 +60,13 @@ object IndexArray {
 }
 
 object IndexBuffer {
-  def apply[D <: Unsigned with NonNormalized](buffer: ByteBuffer)(
+  def apply[D <: ReadInt with Unsigned](buffer: ByteBuffer)(
     implicit t: ((ByteBuffer) => IndexBuffer[D], Int, Class[D])
   ) :IndexBuffer[D] = {
     t._1(buffer)
   }
 
-  def apply[D <: Unsigned with NonNormalized](size: Int)(
+  def apply[D <: ReadInt with Unsigned](size: Int)(
     implicit t: ((ByteBuffer) => IndexBuffer[D], Int, Class[D])
   ) :IndexBuffer[D] = {
     def alloc(size: Int) = BufferUtil.allocateByteBuffer(size)

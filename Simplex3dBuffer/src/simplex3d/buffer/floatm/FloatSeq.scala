@@ -29,6 +29,25 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+private[floatm] object Const {
+  // Use double multiplication for float sequences to prevent errors
+  // Use division for double sequences to prevent errors
+  final val fromNSByte = 0.00787401574803149606
+  final val fromNUByte = 0.00392156862745098039
+  final val fromNSShort = 3.05185094759971922971e-5
+  final val fromNUShort = 1.52590218966964217594e-5
+  final val fromNSInt = 4.65661287524579692411e-10
+  final val fromNUInt = 2.32830643708079737543e-10
+
+  final val toNSByte = 127f
+  final val toNUByte = 255f
+  final val toNSShort = 32767f
+  final val toNUShort = 65535f
+  final val toNSInt = 2147483647f
+  final val toNUInt = 4294967295f
+}
+import Const._
+
 private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
   buff: D#BufferType
 ) extends BaseSeq[Float1, Float, D](buff) {
@@ -59,11 +78,13 @@ private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
 private[buffer] sealed abstract class SeqFloat1SByte(
   buff: ByteBuffer
 ) extends BaseFloat1[SByte](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1SByte(new Array[Byte](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1SByte(BufferUtil.allocateByteBuffer(size))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1SByte(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SByte(byteBuffer, offset, stride)
 }
 
@@ -110,11 +131,13 @@ private[buffer] final class ViewFloat1SByte(
 private[buffer] sealed abstract class SeqFloat1UByte(
   buff: ByteBuffer
 ) extends BaseFloat1[UByte](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1UByte(new Array[Byte](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1UByte(BufferUtil.allocateByteBuffer(size))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1UByte(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UByte(byteBuffer, offset, stride)
 }
 
@@ -161,11 +184,13 @@ private[buffer] final class ViewFloat1UByte(
 private[buffer] sealed abstract class SeqFloat1NSByte(
   buff: ByteBuffer
 ) extends BaseFloat1[NSByte](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NSByte(new Array[Byte](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NSByte(BufferUtil.allocateByteBuffer(size))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NSByte(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSByte(byteBuffer, offset, stride)
 }
 
@@ -181,9 +206,9 @@ private[buffer] final class ArrayFloat1NSByte(
 
   def apply(i: Int) :Float = {
     val v = array(i)
-    if (v < -127) -1 else v*0.007874016f
+    if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) = array(i) = byte(clamp(v, -1, 1)*127)
+  def update(i: Int, v: Float) = array(i) = byte(clamp(v, -1, 1)*toNSByte)
 }
 
 private[buffer] final class BufferFloat1NSByte(
@@ -198,11 +223,11 @@ private[buffer] final class BufferFloat1NSByte(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(i)
-    if (v < -127) -1 else v*0.007874016f
+    if (v < -127) -1 else float(v*fromNSByte)
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    byte(clamp(v, -1, 1)*127)
+    byte(clamp(v, -1, 1)*toNSByte)
   )
 }
 
@@ -220,11 +245,11 @@ private[buffer] final class ViewFloat1NSByte(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(offset + i*step)
-    if (v < -127) -1 else v*0.007874016f
+    if (v < -127) -1 else float(v*fromNSByte)
   }
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    byte(clamp(v, -1, 1)*127)
+    byte(clamp(v, -1, 1)*toNSByte)
   )
 }
 
@@ -233,11 +258,13 @@ private[buffer] final class ViewFloat1NSByte(
 private[buffer] sealed abstract class SeqFloat1NUByte(
   buff: ByteBuffer
 ) extends BaseFloat1[NUByte](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NUByte(new Array[Byte](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NUByte(BufferUtil.allocateByteBuffer(size))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NUByte(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUByte(byteBuffer, offset, stride)
 }
 
@@ -251,8 +278,8 @@ private[buffer] final class ArrayFloat1NUByte(
   def componentBinding = Binding.UByte
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = (array(i) & 0xFF)*0.003921569f
-  def update(i: Int, v: Float) = array(i) = byte(clamp(v, 0, 1)*255)
+  def apply(i: Int) :Float = float((array(i) & 0xFF)*fromNUByte)
+  def update(i: Int, v: Float) = array(i) = byte(clamp(v, 0, 1)*toNUByte)
 }
 
 private[buffer] final class BufferFloat1NUByte(
@@ -265,10 +292,10 @@ private[buffer] final class BufferFloat1NUByte(
   def componentBinding = Binding.UByte
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = (buffer.get(i) & 0xFF)*0.003921569f
+  def apply(i: Int) :Float = float((buffer.get(i) & 0xFF)*fromNUByte)
   def update(i: Int, v: Float) = buffer.put(
     i,
-    byte(clamp(v, 0, 1)*255)
+    byte(clamp(v, 0, 1)*toNUByte)
   )
 }
 
@@ -284,10 +311,12 @@ private[buffer] final class ViewFloat1NUByte(
   def componentBinding = Binding.UByte
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = (buffer.get(offset + i*step) & 0xFF)*0.003921569f
+  def apply(i: Int) :Float = float(
+    (buffer.get(offset + i*step) & 0xFF)*fromNUByte
+  )
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    byte(clamp(v, 0, 1)*255)
+    byte(clamp(v, 0, 1)*toNUByte)
   )
 }
 
@@ -296,11 +325,13 @@ private[buffer] final class ViewFloat1NUByte(
 private[buffer] sealed abstract class SeqFloat1SShort(
   buff: ShortBuffer
 ) extends BaseFloat1[SShort](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1SShort(new Array[Short](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1SShort(BufferUtil.allocateByteBuffer(size*2))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1SShort(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SShort(byteBuffer, offset, stride)
 }
 
@@ -353,11 +384,13 @@ private[buffer] final class ViewFloat1SShort(
 private[buffer] sealed abstract class SeqFloat1UShort(
   buff: CharBuffer
 ) extends BaseFloat1[UShort](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1UShort(new Array[Char](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1UShort(BufferUtil.allocateByteBuffer(size*2))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1UShort(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UShort(byteBuffer, offset, stride)
 }
 
@@ -412,11 +445,13 @@ private[buffer] final class ViewFloat1UShort(
 private[buffer] sealed abstract class SeqFloat1NSShort(
   buff: ShortBuffer
 ) extends BaseFloat1[NSShort](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NSShort(new Array[Short](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NSShort(BufferUtil.allocateByteBuffer(size*2))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NSShort(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSShort(byteBuffer, offset, stride)
 }
 
@@ -432,9 +467,9 @@ private[buffer] final class ArrayFloat1NSShort(
 
   def apply(i: Int) :Float = {
     val v = array(i)
-    if (v < -32767) -1 else v*3.051851E-5f
+    if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) = array(i) = short(clamp(v, -1, 1)*32767)
+  def update(i: Int, v: Float) = array(i) = short(clamp(v, -1, 1)*toNSShort)
 }
 
 private[buffer] final class BufferFloat1NSShort(
@@ -449,11 +484,11 @@ private[buffer] final class BufferFloat1NSShort(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(i)
-    if (v < -32767) -1 else v*3.051851E-5f
+    if (v < -32767) -1 else float(v*fromNSShort)
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    short(clamp(v, -1, 1)*32767)
+    short(clamp(v, -1, 1)*toNSShort)
   )
 }
 
@@ -471,11 +506,11 @@ private[buffer] final class ViewFloat1NSShort(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(offset + i*step)
-    if (v < -32767) -1 else v*3.051851E-5f
+    if (v < -32767) -1 else float(v*fromNSShort)
   }
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    short(clamp(v, -1, 1)*32767)
+    short(clamp(v, -1, 1)*toNSShort)
   )
 }
 
@@ -484,11 +519,13 @@ private[buffer] final class ViewFloat1NSShort(
 private[buffer] sealed abstract class SeqFloat1NUShort(
   buff: CharBuffer
 ) extends BaseFloat1[NUShort](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NUShort(new Array[Char](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NUShort(BufferUtil.allocateByteBuffer(size*2))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NUShort(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUShort(byteBuffer, offset, stride)
 }
 
@@ -502,9 +539,9 @@ private[buffer] final class ArrayFloat1NUShort(
   def componentBinding = Binding.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = array(i)*1.5259022E-5f
+  def apply(i: Int) :Float = float(array(i)*fromNUShort)
   def update(i: Int, v: Float) {
-    array(i) = (clamp(v, 0, 1)*65535).asInstanceOf[Char]
+    array(i) = (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   }
 }
 
@@ -518,10 +555,10 @@ private[buffer] final class BufferFloat1NUShort(
   def componentBinding = Binding.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = buffer.get(i)*1.5259022E-5f
+  def apply(i: Int) :Float = float(buffer.get(i)*fromNUShort)
   def update(i: Int, v: Float) = buffer.put(
     i,
-    (clamp(v, 0, 1)*65535).asInstanceOf[Char]
+    (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
 }
 
@@ -537,10 +574,10 @@ private[buffer] final class ViewFloat1NUShort(
   def componentBinding = Binding.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)*1.5259022E-5f
+  def apply(i: Int) :Float = float(buffer.get(offset + i*step)*fromNUShort)
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    (clamp(v, 0, 1)*65535).asInstanceOf[Char]
+    (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
 }
 
@@ -549,11 +586,13 @@ private[buffer] final class ViewFloat1NUShort(
 private[buffer] sealed abstract class SeqFloat1SInt(
   buff: IntBuffer
 ) extends BaseFloat1[SInt](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1SInt(new Array[Int](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1SInt(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1SInt(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SInt(byteBuffer, offset, stride)
 }
 
@@ -600,11 +639,13 @@ private[buffer] final class ViewFloat1SInt(
 private[buffer] sealed abstract class SeqFloat1UInt(
   buff: IntBuffer
 ) extends BaseFloat1[UInt](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1UInt(new Array[Int](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1UInt(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1UInt(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UInt(byteBuffer, offset, stride)
 }
 
@@ -657,11 +698,13 @@ private[buffer] final class ViewFloat1UInt(
 private[buffer] sealed abstract class SeqFloat1NSInt(
   buff: IntBuffer
 ) extends BaseFloat1[NSInt](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NSInt(new Array[Int](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NSInt(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NSInt(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSInt(byteBuffer, offset, stride)
 }
 
@@ -677,9 +720,9 @@ private[buffer] final class ArrayFloat1NSInt(
 
   def apply(i: Int) :Float = {
     val v = array(i)
-    if (v < -2147483647) -1 else v*4.656613E-10f
+    if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) = array(i) = int(clamp(v, -1, 1)*2147483647)
+  def update(i: Int, v: Float) = array(i) = int(clamp(v, -1, 1)*toNSInt)
 }
 
 private[buffer] final class BufferFloat1NSInt(
@@ -694,11 +737,11 @@ private[buffer] final class BufferFloat1NSInt(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(i)
-    if (v < -2147483647) -1 else v*4.656613E-10f
+    if (v < -2147483647) -1 else float(v*fromNSInt)
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    int(clamp(v, -1, 1)*2147483647)
+    int(clamp(v, -1, 1)*toNSInt)
   )
 }
 
@@ -716,11 +759,11 @@ private[buffer] final class ViewFloat1NSInt(
 
   def apply(i: Int) :Float = {
     val v = buffer.get(offset + i*step)
-    if (v < -2147483647) -1 else v*4.656613E-10f
+    if (v < -2147483647) -1 else float(v*fromNSInt)
   }
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    int(clamp(v, -1, 1)*2147483647)
+    int(clamp(v, -1, 1)*toNSInt)
   )
 }
 
@@ -729,11 +772,13 @@ private[buffer] final class ViewFloat1NSInt(
 private[buffer] sealed abstract class SeqFloat1NUInt(
   buff: IntBuffer
 ) extends BaseFloat1[NUInt](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1NUInt(new Array[Int](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1NUInt(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1NUInt(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUInt(byteBuffer, offset, stride)
 }
 
@@ -747,8 +792,8 @@ private[buffer] final class ArrayFloat1NUInt(
   def componentBinding = Binding.UInt
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = (long(array(i)) & 0xFFFFFFFFL)*2.3283064E-10f
-  def update(i: Int, v: Float) = array(i) = int(clamp(v, 0, 1)*4294967295f)
+  def apply(i: Int) :Float = float((long(array(i)) & 0xFFFFFFFFL)*fromNUInt)
+  def update(i: Int, v: Float) = array(i) = int(clamp(v, 0, 1)*toNUInt)
 }
 
 private[buffer] final class BufferFloat1NUInt(
@@ -761,12 +806,12 @@ private[buffer] final class BufferFloat1NUInt(
   def componentBinding = Binding.UInt
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = {
-    (long(buffer.get(i)) & 0xFFFFFFFFL)*2.3283064E-10f
-  }
+  def apply(i: Int) :Float = float(
+    (long(buffer.get(i)) & 0xFFFFFFFFL)*fromNUInt
+  )
   def update(i: Int, v: Float) = buffer.put(
     i,
-    int(clamp(v, 0, 1)*4294967295f)
+    int(clamp(v, 0, 1)*toNUInt)
   )
 }
 
@@ -782,12 +827,12 @@ private[buffer] final class ViewFloat1NUInt(
   def componentBinding = Binding.UInt
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = {
-    (long(buffer.get(offset + i*step)) & 0xFFFFFFFFL)*2.3283064E-10f
-  }
+  def apply(i: Int) :Float = float(
+    (long(buffer.get(offset + i*step)) & 0xFFFFFFFFL)*fromNUInt
+  )
   def update(i: Int, v: Float) = buffer.put(
     offset + i*step,
-    int(clamp(v, 0, 1)*4294967295f)
+    int(clamp(v, 0, 1)*toNUInt)
   )
 }
 
@@ -796,11 +841,13 @@ private[buffer] final class ViewFloat1NUInt(
 private[buffer] sealed abstract class SeqFloat1RawFloat(
   buff: FloatBuffer
 ) extends BaseFloat1[RawFloat](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayFloat1RawFloat(new Array[Float](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferFloat1RawFloat(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1RawFloat(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1RawFloat(byteBuffer, offset, stride)
 }
 

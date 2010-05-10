@@ -57,11 +57,13 @@ private[buffer] abstract class BaseInt1[+D <: ReadInt](
 private[buffer] abstract class SeqInt1UByte(
   buff: ByteBuffer
 ) extends BaseInt1[UByte](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayInt1UByte(new Array[Byte](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferInt1UByte(BufferUtil.allocateByteBuffer(size))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferInt1UByte(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1UByte(byteBuffer, offset, stride)
 }
 
@@ -108,11 +110,13 @@ private[buffer] final class ViewInt1UByte(
 private[buffer] abstract class SeqInt1UShort(
   buff: CharBuffer
 ) extends BaseInt1[UShort](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayInt1UShort(new Array[Char](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferInt1UShort(BufferUtil.allocateByteBuffer(size*2))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferInt1UShort(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1UShort(byteBuffer, offset, stride)
 }
 
@@ -167,11 +171,13 @@ private[buffer] final class ViewInt1UShort(
 private[buffer] abstract class SeqInt1UInt(
   buff: IntBuffer
 ) extends BaseInt1[UInt](buff) {
-  override def makeArray(size: Int) =
+  final def makeArray(size: Int) =
     new ArrayInt1UInt(new Array[Int](size))
-  override def makeBuffer(size: Int) =
+  final def makeBuffer(size: Int) =
     new BufferInt1UInt(BufferUtil.allocateByteBuffer(size*4))
-  override def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferInt1UInt(byteBuffer)
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1UInt(byteBuffer, offset, stride)
 }
 

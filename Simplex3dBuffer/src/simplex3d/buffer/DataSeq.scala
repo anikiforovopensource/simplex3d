@@ -34,20 +34,21 @@ private[buffer] abstract class BaseSeq[
 ] (val buffer: D#BufferType) {
 
   final def componentBytes: Int = Binding.byteLength(componentBinding)
-  final val byteSize = buffer.limit*componentBytes
+  final val byteSize = buffer.capacity*componentBytes
   final val byteOffset = offset*componentBytes
   final val byteStride = stride*componentBytes
   def bindingBuffer: Buffer
 
-  final val size: Int = (buffer.limit - offset)/(components + stride)
+  final val size: Int = (buffer.capacity - offset + stride)/(components +stride)
   protected[buffer] final val step = components + stride
 
   def apply(i: Int) :E
   def update(i: Int, v: E)
 
-  def makeArray(size: Int) :DataArray[T, D] = null
-  def makeBuffer(size: Int) :DataBuffer[T, D] = null
-  def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D] = null
+  def makeArray(size: Int) :DataArray[T, D]
+  def makeBuffer(size: Int) :DataBuffer[T, D]
+  def makeBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
+  def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]
 
   def components: Int
   def componentBinding: Int
@@ -96,12 +97,10 @@ private[buffer] abstract class BaseSeq[
       )
     ) {
       val srcLim = srcOffset + count*components
-      if (srcLim < src.buffer.limit) throw new BufferUnderflowException()
+      if (srcLim < src.buffer.capacity) throw new BufferUnderflowException()
 
       buffer.position(index*step + offset)
       src.buffer.position(srcOffset)
-
-      val srcOldLim = src.buffer.limit
       src.buffer.limit(srcLim)
 
       try {
@@ -134,7 +133,7 @@ private[buffer] abstract class BaseSeq[
       }
       finally {
         // Always restore the limit, since Buffer.get(index) depends on it.
-        src.buffer.limit(srcOldLim)
+        src.buffer.limit(src.buffer.capacity)
       }
     }
     else {
@@ -143,7 +142,7 @@ private[buffer] abstract class BaseSeq[
       val srcLim = srcOffset + count*srcStep
 
       if (index + count > size) throw new BufferOverflowException()
-      if (srcLim > src.buffer.limit) throw new BufferUnderflowException()
+      if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
 
       translatePut(
         destOffset,
@@ -238,8 +237,8 @@ private[buffer] abstract class BaseSeq[
     copy.put(
       0,
       backingSeq,
-      offset,
-      stride,
+      this.offset,
+      this.stride,
       size
     )
     copy
@@ -249,8 +248,8 @@ private[buffer] abstract class BaseSeq[
     copy.put(
       0,
       backingSeq,
-      offset,
-      stride,
+      this.offset,
+      this.stride,
       size
     )
     copy
@@ -260,8 +259,8 @@ private[buffer] abstract class BaseSeq[
     copy.put(
       0,
       backingSeq,
-      offset,
-      stride,
+      this.offset,
+      this.stride,
       size
     )
     copy
@@ -277,7 +276,8 @@ trait ContiguousSeq[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
 
 trait DataArray[T <: MetaType, +D <: RawType]
 extends DataSeq[T, D] with ContiguousSeq[T, D] {
-  def bindingBuffer = buffer
+  final def bindingBuffer = buffer
+
   def array: D#ArrayType = backingSeq.array
   def backingSeq: DataArray[T#Component, D]
 }
@@ -286,7 +286,8 @@ trait DataBuffer[T <: MetaType, +D <: RawType]
 extends DataView[T, D] with ContiguousSeq[T, D]
 
 trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
-  def bindingBuffer = byteBuffer
+  final def bindingBuffer = byteBuffer
+  
   def byteBuffer: ByteBuffer = backingSeq.byteBuffer
   def backingSeq: DataBuffer[T#Component, D]
 

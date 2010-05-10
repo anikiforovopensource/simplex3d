@@ -72,6 +72,15 @@ private[buffer] sealed abstract class BaseVec4i[+D <: ReadInt](
     seq(j + 2) = v.z
     seq(j + 3) = v.w
   }
+
+  final def makeArray(size: Int) =
+    new ArrayVec4i[D](backingSeq.makeArray(size*4))
+  final def makeBuffer(size: Int) =
+    new BufferVec4i[D](backingSeq.makeBuffer(size*4))
+  final def makeBuffer(byteBuffer: ByteBuffer) =
+    new BufferVec4i[D](backingSeq.makeBuffer(byteBuffer))
+  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec4i[D](backingSeq.makeBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ArrayVec4i[+D <: ReadInt](

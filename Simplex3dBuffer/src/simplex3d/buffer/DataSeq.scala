@@ -46,6 +46,7 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: E)
 
   def makeArray(size: Int) :DataArray[T, D]
+  def makeArray(array: D#ArrayType @uncheckedVariance) :DataArray[T, D]
   def makeBuffer(size: Int) :DataBuffer[T, D]
   def makeBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
   def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]
@@ -304,89 +305,43 @@ trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
 
 object DataArray {
   def apply[T <: MetaType, D <: ReadType](array: D#ArrayType)(
-    implicit t: ((D#ArrayType) => DataArray[T, D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[T, D]
   ) :DataArray[T, D] = {
-    t._1(array)
+    ref.factory.makeArray(array)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
-    implicit t: ((D#ArrayType) => DataArray[T, D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[T, D]
   ) :DataArray[T, D] = {
-    def cast(a: Array[_]) = a.asInstanceOf[D#ArrayType]
-    val components = t._2
-
-    t._3 match {
-      case ReadAs.SByte => t._1(cast(new Array[Byte](size*components)))
-      case ReadAs.UByte => t._1(cast(new Array[Byte](size*components)))
-      case ReadAs.NSByte => t._1(cast(new Array[Byte](size*components)))
-      case ReadAs.NUByte => t._1(cast(new Array[Byte](size*components)))
-
-      case ReadAs.SShort => t._1(cast(new Array[Short](size*components)))
-      case ReadAs.NSShort => t._1(cast(new Array[Short](size*components)))
-
-      case ReadAs.UShort => t._1(cast(new Array[Char](size*components)))
-      case ReadAs.NUShort => t._1(cast(new Array[Char](size*components)))
-
-      case ReadAs.SInt => t._1(cast(new Array[Int](size*components)))
-      case ReadAs.NSInt => t._1(cast(new Array[Int](size*components)))
-      case ReadAs.UInt => t._1(cast(new Array[Int](size*components)))
-      case ReadAs.NUInt => t._1(cast(new Array[Int](size*components)))
-
-      case ReadAs.RawFloat => t._1(cast(new Array[Float](size*components)))
-      case ReadAs.RawDouble => t._1(cast(new Array[Double](size*components)))
-
-      case _ => throw new AssertionError("Type not found.")
-    }
+    ref.factory.makeArray(size)
   }
 }
 
 object DataBuffer {
   def apply[T <: MetaType, D <: ReadType](buffer: ByteBuffer)(
-    implicit t: ((ByteBuffer) => DataBuffer[T, D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[T, D]
   ) :DataBuffer[T, D] = {
-    t._1(buffer)
+    ref.factory.makeBuffer(buffer)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
-    implicit t: ((ByteBuffer) => DataBuffer[T, D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[T, D]
   ) :DataBuffer[T, D] = {
-    def alloc(size: Int) = BufferUtil.allocateByteBuffer(size)
-    val components = t._2
-
-    t._3 match {
-      case ReadAs.SByte => t._1(alloc(size*components))
-      case ReadAs.UByte => t._1(alloc(size*components))
-      case ReadAs.NSByte => t._1(alloc(size*components))
-      case ReadAs.NUByte => t._1(alloc(size*components))
-
-      case ReadAs.SShort => t._1(alloc(size*components*2))
-      case ReadAs.NSShort => t._1(alloc(size*components*2))
-
-      case ReadAs.UShort => t._1(alloc(size*components*2))
-      case ReadAs.NUShort => t._1(alloc(size*components*2))
-
-      case ReadAs.SInt => t._1(alloc(size*components*4))
-      case ReadAs.NSInt => t._1(alloc(size*components*4))
-      case ReadAs.UInt => t._1(alloc(size*components*4))
-      case ReadAs.NUInt => t._1(alloc(size*components*4))
-
-      case ReadAs.RawFloat => t._1(alloc(size*components*4))
-      case ReadAs.RawDouble => t._1(alloc(size*components*8))
-
-      case _ => throw new AssertionError("Type not found.")
-    }
+    ref.factory.makeBuffer(size)
   }
 }
 
 object DataView {
   def apply[T <: MetaType, D <: ReadType](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(
-    implicit t: ((ByteBuffer, Int, Int) => DataView[T, D], Class[D])
-  ) :DataView[T, D] = {
-    t._1(buffer, offset, stride)
+  )(implicit ref: DataSeqFactoryRef[T, D]) :DataView[T, D] = {
+    ref.factory.makeView(buffer, offset, stride)
   }
 }
+
+final class DataSeqFactoryRef[T <: MetaType, D <: RawType](
+  val factory: DataSeq[T, D]
+)
 
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class GenericSeq[T <: Composite, +D <: RawType](

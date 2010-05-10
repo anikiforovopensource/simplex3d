@@ -21,6 +21,7 @@
 package simplex3d.buffer.intm
 
 import java.nio._
+import scala.annotation.unchecked._
 import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.buffer._
@@ -75,6 +76,8 @@ private[buffer] sealed abstract class BaseVec4i[+D <: ReadInt](
 
   final def makeArray(size: Int) =
     new ArrayVec4i[D](backingSeq.makeArray(size*4))
+  final def makeArray(array: D#ArrayType @uncheckedVariance) =
+    new ArrayVec4i[D](backingSeq.makeArray(array))
   final def makeBuffer(size: Int) =
     new BufferVec4i[D](backingSeq.makeBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =

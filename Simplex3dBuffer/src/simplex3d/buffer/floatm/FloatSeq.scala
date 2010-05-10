@@ -80,6 +80,8 @@ private[buffer] sealed abstract class SeqFloat1SByte(
 ) extends BaseFloat1[SByte](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1SByte(new Array[Byte](size))
+  final def makeArray(array: Array[Byte]) =
+    new ArrayFloat1SByte(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1SByte(BufferUtil.allocateByteBuffer(size))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -133,6 +135,8 @@ private[buffer] sealed abstract class SeqFloat1UByte(
 ) extends BaseFloat1[UByte](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1UByte(new Array[Byte](size))
+  final def makeArray(array: Array[Byte]) =
+    new ArrayFloat1UByte(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1UByte(BufferUtil.allocateByteBuffer(size))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -186,6 +190,8 @@ private[buffer] sealed abstract class SeqFloat1NSByte(
 ) extends BaseFloat1[NSByte](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NSByte(new Array[Byte](size))
+  final def makeArray(array: Array[Byte]) =
+    new ArrayFloat1NSByte(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NSByte(BufferUtil.allocateByteBuffer(size))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -260,6 +266,8 @@ private[buffer] sealed abstract class SeqFloat1NUByte(
 ) extends BaseFloat1[NUByte](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NUByte(new Array[Byte](size))
+  final def makeArray(array: Array[Byte]) =
+    new ArrayFloat1NUByte(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NUByte(BufferUtil.allocateByteBuffer(size))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -327,6 +335,8 @@ private[buffer] sealed abstract class SeqFloat1SShort(
 ) extends BaseFloat1[SShort](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1SShort(new Array[Short](size))
+  final def makeArray(array: Array[Short]) =
+    new ArrayFloat1SShort(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1SShort(BufferUtil.allocateByteBuffer(size*2))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -386,6 +396,8 @@ private[buffer] sealed abstract class SeqFloat1UShort(
 ) extends BaseFloat1[UShort](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1UShort(new Array[Char](size))
+  final def makeArray(array: Array[Char]) =
+    new ArrayFloat1UShort(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1UShort(BufferUtil.allocateByteBuffer(size*2))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -447,6 +459,8 @@ private[buffer] sealed abstract class SeqFloat1NSShort(
 ) extends BaseFloat1[NSShort](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NSShort(new Array[Short](size))
+  final def makeArray(array: Array[Short]) =
+    new ArrayFloat1NSShort(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NSShort(BufferUtil.allocateByteBuffer(size*2))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -521,6 +535,8 @@ private[buffer] sealed abstract class SeqFloat1NUShort(
 ) extends BaseFloat1[NUShort](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NUShort(new Array[Char](size))
+  final def makeArray(array: Array[Char]) =
+    new ArrayFloat1NUShort(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NUShort(BufferUtil.allocateByteBuffer(size*2))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -588,6 +604,8 @@ private[buffer] sealed abstract class SeqFloat1SInt(
 ) extends BaseFloat1[SInt](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1SInt(new Array[Int](size))
+  final def makeArray(array: Array[Int]) =
+    new ArrayFloat1SInt(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1SInt(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -641,6 +659,8 @@ private[buffer] sealed abstract class SeqFloat1UInt(
 ) extends BaseFloat1[UInt](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1UInt(new Array[Int](size))
+  final def makeArray(array: Array[Int]) =
+    new ArrayFloat1UInt(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1UInt(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -700,6 +720,8 @@ private[buffer] sealed abstract class SeqFloat1NSInt(
 ) extends BaseFloat1[NSInt](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NSInt(new Array[Int](size))
+  final def makeArray(array: Array[Int]) =
+    new ArrayFloat1NSInt(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NSInt(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -774,6 +796,8 @@ private[buffer] sealed abstract class SeqFloat1NUInt(
 ) extends BaseFloat1[NUInt](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1NUInt(new Array[Int](size))
+  final def makeArray(array: Array[Int]) =
+    new ArrayFloat1NUInt(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1NUInt(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -843,6 +867,8 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
 ) extends BaseFloat1[RawFloat](buff) {
   final def makeArray(size: Int) =
     new ArrayFloat1RawFloat(new Array[Float](size))
+  final def makeArray(array: Array[Float]) =
+    new ArrayFloat1RawFloat(array)
   final def makeBuffer(size: Int) =
     new BufferFloat1RawFloat(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =

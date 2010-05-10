@@ -21,6 +21,7 @@
 package simplex3d.buffer.floatm
 
 import java.nio._
+import scala.annotation.unchecked._
 import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.buffer._
@@ -72,6 +73,8 @@ private[buffer] sealed abstract class BaseVec3f[+D <: ReadFloat](
 
   final def makeArray(size: Int) =
     new ArrayVec3f[D](backingSeq.makeArray(size*3))
+  final def makeArray(array: D#ArrayType @uncheckedVariance) =
+    new ArrayVec3f[D](backingSeq.makeArray(array))
   final def makeBuffer(size: Int) =
     new BufferVec3f[D](backingSeq.makeBuffer(size*3))
   final def makeBuffer(byteBuffer: ByteBuffer) =

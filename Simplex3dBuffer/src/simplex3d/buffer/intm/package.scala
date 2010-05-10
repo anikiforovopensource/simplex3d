@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import simplex3d.math._
 import simplex3d.buffer.intm._
 
 
@@ -29,320 +30,46 @@ import simplex3d.buffer.intm._
  */
 package object intm extends UnsignedImplicits {
 
-  // Int
-  // Array Int
-  implicit val arrayInt1SByte = (
-    (array: Array[Byte]) => new ArrayInt1SByte(array), 1, classOf[SByte]
-  )
-  implicit val arrayInt1SShort = (
-    (array: Array[Short]) => new ArrayInt1SShort(array), 1, classOf[SShort]
-  )
-  implicit val arrayInt1SInt = (
-    (array: Array[Int]) => new ArrayInt1SInt(array), 1, classOf[SInt]
-  )
+  private final type F[T <: MetaType, D <: RawType] = DataSeqFactoryRef[T, D]
+  private final def ar[T <: MetaType, D <: RawType](f: DataSeqFactoryRef[T, D])=
+    f.factory.asInstanceOf[DataArray[T, D]]
 
 
-  // Buffer Int
-  implicit val bufferInt1SByte = (
-    (buffer: ByteBuffer) => new BufferInt1SByte(buffer), 1, classOf[SByte]
-  )
-  implicit val bufferInt1SShort = (
-    (buffer: ByteBuffer) => new BufferInt1SShort(buffer), 1, classOf[SShort]
-  )
-  implicit val bufferInt1SInt = (
-    (buffer: ByteBuffer) => new BufferInt1SInt(buffer), 1, classOf[SInt]
-  )
-
-
-  // View Int
-  implicit val viewInt1SByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1SByte(buffer, offset, stride), classOf[SByte]
-  )
-  implicit val viewInt1UByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1UByte(buffer, offset, stride), classOf[UByte]
-  )
-
-  implicit val viewInt1SShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1SShort(buffer, offset, stride), classOf[SShort]
-  )
-  implicit val viewInt1UShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1UShort(buffer, offset, stride), classOf[UShort]
-  )
-
-  implicit val viewInt1SInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1SInt(buffer, offset, stride), classOf[SInt]
-  )
-  implicit val viewInt1UInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewInt1UInt(buffer, offset, stride), classOf[UInt]
-  )
+  // Int1
+  implicit final val fInt1SByte = new F(new ArrayInt1SByte(Array[Byte]()))
+  implicit final val fInt1SShort = new F(new ArrayInt1SShort(Array[Short]()))
+  implicit final val fInt1SInt = new F(new ArrayInt1SInt(Array[Int]()))
 
 
   // Vec2i
-  // Array Vec2i
-  implicit val arrayVec2iSByte = (
-    (array: Array[Byte]) => new ArrayVec2i(new ArrayInt1SByte(array)),
-    2, classOf[SByte]
-  )
-  implicit val arrayVec2iUByte = (
-    (array: Array[Byte]) => new ArrayVec2i(new ArrayInt1UByte(array)),
-    2, classOf[UByte]
-  )
+  implicit final val fVec2iSByte = new F(new ArrayVec2i[SByte](ar(fInt1SByte)))
+  implicit final val fVec2iUByte = new F(new ArrayVec2i[UByte](ar(fInt1UByte)))
 
-  implicit val arrayVec2iSShort = (
-    (array: Array[Short]) => new ArrayVec2i(new ArrayInt1SShort(array)),
-    2, classOf[SShort]
-  )
-  implicit val arrayVec2iUShort = (
-    (array: Array[Char]) => new ArrayVec2i(new ArrayInt1UShort(array)),
-    2, classOf[UShort]
-  )
+  implicit final val fVec2iSShort = new F(new ArrayVec2i[SShort](ar(fInt1SShort)))
+  implicit final val fVec2iUShort = new F(new ArrayVec2i[UShort](ar(fInt1UShort)))
 
-  implicit val arrayVec2iSInt = (
-    (array: Array[Int]) => new ArrayVec2i(new ArrayInt1SInt(array)),
-    2, classOf[SInt]
-  )
-  implicit val arrayVec2iUInt = (
-    (array: Array[Int]) => new ArrayVec2i(new ArrayInt1UInt(array)),
-    2, classOf[UInt]
-  )
-  
+  implicit final val fVec2iSInt = new F(new ArrayVec2i[SInt](ar(fInt1SInt)))
+  implicit final val fVec2iUInt = new F(new ArrayVec2i[UInt](ar(fInt1UInt)))
 
-  // Buffer Vec2i
-  implicit val bufferVec2iSByte = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1SByte(buffer)),
-    2, classOf[SByte]
-  )
-  implicit val bufferVec2iUByte = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1UByte(buffer)),
-    2, classOf[UByte]
-  )
-  
-  implicit val bufferVec2iSShort = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1SShort(buffer)),
-    2, classOf[SShort]
-  )
-    implicit val bufferVec2iUShort = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1UShort(buffer)),
-    2, classOf[UShort]
-  )
-  
-  implicit val bufferVec2iSInt = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1SInt(buffer)),
-    2, classOf[SInt]
-  )
-  implicit val bufferVec2iUInt = (
-    (buffer: ByteBuffer) => new BufferVec2i(new BufferInt1UInt(buffer)),
-    2, classOf[UInt]
-  )
-  
-
-  // View Vec2i
-  implicit val viewVec2iSByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1SByte(buffer), offset, stride), classOf[SByte]
-  )
-  implicit val viewVec2iUByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1UByte(buffer), offset, stride), classOf[UByte]
-  )
-  
-  implicit val viewVec2iSShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1SShort(buffer), offset, stride), classOf[SShort]
-  )
-  implicit val viewVec2iUShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1UShort(buffer), offset, stride), classOf[UShort]
-  )
-  
-  implicit val viewVec2iSInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1SInt(buffer), offset, stride), classOf[SInt]
-  )
-  implicit val viewVec2iUInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec2i(new BufferInt1UInt(buffer), offset, stride), classOf[UInt]
-  )
-  
 
   // Vec3i
-  // Array Vec3i
-  implicit val arrayVec3iSByte = (
-    (array: Array[Byte]) => new ArrayVec3i(new ArrayInt1SByte(array)),
-    3, classOf[SByte]
-  )
-  implicit val arrayVec3iUByte = (
-    (array: Array[Byte]) => new ArrayVec3i(new ArrayInt1UByte(array)),
-    3, classOf[UByte]
-  )
+  implicit final val fVec3iSByte = new F(new ArrayVec3i[SByte](ar(fInt1SByte)))
+  implicit final val fVec3iUByte = new F(new ArrayVec3i[UByte](ar(fInt1UByte)))
 
-  implicit val arrayVec3iSShort = (
-    (array: Array[Short]) => new ArrayVec3i(new ArrayInt1SShort(array)),
-    3, classOf[SShort]
-  )
-  implicit val arrayVec3iUShort = (
-    (array: Array[Char]) => new ArrayVec3i(new ArrayInt1UShort(array)),
-    3, classOf[UShort]
-  )
+  implicit final val fVec3iSShort = new F(new ArrayVec3i[SShort](ar(fInt1SShort)))
+  implicit final val fVec3iUShort = new F(new ArrayVec3i[UShort](ar(fInt1UShort)))
 
-  implicit val arrayVec3iSInt = (
-    (array: Array[Int]) => new ArrayVec3i(new ArrayInt1SInt(array)),
-    3, classOf[SInt]
-  )
-  implicit val arrayVec3iUInt = (
-    (array: Array[Int]) => new ArrayVec3i(new ArrayInt1UInt(array)),
-    3, classOf[UInt]
-  )
-
-
-  // Buffer Vec3i
-  implicit val bufferVec3iSByte = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1SByte(buffer)),
-    3, classOf[SByte]
-  )
-  implicit val bufferVec3iUByte = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1UByte(buffer)),
-    3, classOf[UByte]
-  )
-
-  implicit val bufferVec3iSShort = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1SShort(buffer)),
-    3, classOf[SShort]
-  )
-    implicit val bufferVec3iUShort = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1UShort(buffer)),
-    3, classOf[UShort]
-  )
-
-  implicit val bufferVec3iSInt = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1SInt(buffer)),
-    3, classOf[SInt]
-  )
-  implicit val bufferVec3iUInt = (
-    (buffer: ByteBuffer) => new BufferVec3i(new BufferInt1UInt(buffer)),
-    3, classOf[UInt]
-  )
-
-
-  // View Vec3i
-  implicit val viewVec3iSByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1SByte(buffer), offset, stride), classOf[SByte]
-  )
-  implicit val viewVec3iUByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1UByte(buffer), offset, stride), classOf[UByte]
-  )
-
-  implicit val viewVec3iSShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1SShort(buffer), offset, stride), classOf[SShort]
-  )
-  implicit val viewVec3iUShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1UShort(buffer), offset, stride), classOf[UShort]
-  )
-
-  implicit val viewVec3iSInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1SInt(buffer), offset, stride), classOf[SInt]
-  )
-  implicit val viewVec3iUInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec3i(new BufferInt1UInt(buffer), offset, stride), classOf[UInt]
-  )
+  implicit final val fVec3iSInt = new F(new ArrayVec3i[SInt](ar(fInt1SInt)))
+  implicit final val fVec3iUInt = new F(new ArrayVec3i[UInt](ar(fInt1UInt)))
 
 
   // Vec4i
-  // Array Vec4i
-  implicit val arrayVec4iSByte = (
-    (array: Array[Byte]) => new ArrayVec4i(new ArrayInt1SByte(array)),
-    4, classOf[SByte]
-  )
-  implicit val arrayVec4iUByte = (
-    (array: Array[Byte]) => new ArrayVec4i(new ArrayInt1UByte(array)),
-    4, classOf[UByte]
-  )
+  implicit final val fVec4iSByte = new F(new ArrayVec4i[SByte](ar(fInt1SByte)))
+  implicit final val fVec4iUByte = new F(new ArrayVec4i[UByte](ar(fInt1UByte)))
 
-  implicit val arrayVec4iSShort = (
-    (array: Array[Short]) => new ArrayVec4i(new ArrayInt1SShort(array)),
-    4, classOf[SShort]
-  )
-  implicit val arrayVec4iUShort = (
-    (array: Array[Char]) => new ArrayVec4i(new ArrayInt1UShort(array)),
-    4, classOf[UShort]
-  )
+  implicit final val fVec4iSShort = new F(new ArrayVec4i[SShort](ar(fInt1SShort)))
+  implicit final val fVec4iUShort = new F(new ArrayVec4i[UShort](ar(fInt1UShort)))
 
-  implicit val arrayVec4iSInt = (
-    (array: Array[Int]) => new ArrayVec4i(new ArrayInt1SInt(array)),
-    4, classOf[SInt]
-  )
-  implicit val arrayVec4iUInt = (
-    (array: Array[Int]) => new ArrayVec4i(new ArrayInt1UInt(array)),
-    4, classOf[UInt]
-  )
-
-
-  // Buffer Vec4i
-  implicit val bufferVec4iSByte = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1SByte(buffer)),
-    4, classOf[SByte]
-  )
-  implicit val bufferVec4iUByte = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1UByte(buffer)),
-    4, classOf[UByte]
-  )
-
-  implicit val bufferVec4iSShort = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1SShort(buffer)),
-    4, classOf[SShort]
-  )
-    implicit val bufferVec4iUShort = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1UShort(buffer)),
-    4, classOf[UShort]
-  )
-
-  implicit val bufferVec4iSInt = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1SInt(buffer)),
-    4, classOf[SInt]
-  )
-  implicit val bufferVec4iUInt = (
-    (buffer: ByteBuffer) => new BufferVec4i(new BufferInt1UInt(buffer)),
-    4, classOf[UInt]
-  )
-
-
-  // View Vec4i
-  implicit val viewVec4iSByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1SByte(buffer), offset, stride), classOf[SByte]
-  )
-  implicit val viewVec4iUByte = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1UByte(buffer), offset, stride), classOf[UByte]
-  )
-
-  implicit val viewVec4iSShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1SShort(buffer), offset, stride), classOf[SShort]
-  )
-  implicit val viewVec4iUShort = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1UShort(buffer), offset, stride), classOf[UShort]
-  )
-
-  implicit val viewVec4iSInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1SInt(buffer), offset, stride), classOf[SInt]
-  )
-  implicit val viewVec4iUInt = (
-    (buffer: ByteBuffer, offset: Int, stride: Int) =>
-    new ViewVec4i(new BufferInt1UInt(buffer), offset, stride), classOf[UInt]
-  )
+  implicit final val fVec4iSInt = new F(new ArrayVec4i[SInt](ar(fInt1SInt)))
+  implicit final val fVec4iUInt = new F(new ArrayVec4i[UInt](ar(fInt1UInt)))
 }

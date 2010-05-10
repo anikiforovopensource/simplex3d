@@ -59,6 +59,8 @@ private[buffer] abstract class SeqInt1UByte(
 ) extends BaseInt1[UByte](buff) {
   final def makeArray(size: Int) =
     new ArrayInt1UByte(new Array[Byte](size))
+  final def makeArray(array: Array[Byte]) =
+    new ArrayInt1UByte(array)
   final def makeBuffer(size: Int) =
     new BufferInt1UByte(BufferUtil.allocateByteBuffer(size))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -112,6 +114,8 @@ private[buffer] abstract class SeqInt1UShort(
 ) extends BaseInt1[UShort](buff) {
   final def makeArray(size: Int) =
     new ArrayInt1UShort(new Array[Char](size))
+  final def makeArray(array: Array[Char]) =
+    new ArrayInt1UShort(array)
   final def makeBuffer(size: Int) =
     new BufferInt1UShort(BufferUtil.allocateByteBuffer(size*2))
   final def makeBuffer(byteBuffer: ByteBuffer) =
@@ -173,6 +177,8 @@ private[buffer] abstract class SeqInt1UInt(
 ) extends BaseInt1[UInt](buff) {
   final def makeArray(size: Int) =
     new ArrayInt1UInt(new Array[Int](size))
+  final def makeArray(array: Array[Int]) =
+    new ArrayInt1UInt(array)
   final def makeBuffer(size: Int) =
     new BufferInt1UInt(BufferUtil.allocateByteBuffer(size*4))
   final def makeBuffer(byteBuffer: ByteBuffer) =

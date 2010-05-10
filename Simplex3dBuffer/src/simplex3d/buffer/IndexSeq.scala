@@ -39,44 +39,28 @@ extends IndexSeq[D] with DataBuffer[Int1, D]
 
 object IndexArray {
   def apply[D <: ReadInt with Unsigned](array: D#ArrayType)(
-    implicit t: ((D#ArrayType) => IndexArray[D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexArray[D] = {
-    t._1(array)
+    ref.factory.makeArray(array).asInstanceOf[IndexArray[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
-    implicit t: ((D#ArrayType) => IndexArray[D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexArray[D] = {
-    def cast(a: Array[_]) = a.asInstanceOf[D#ArrayType]
-
-    t._3 match {
-      case ReadAs.UByte => t._1(cast(new Array[Byte](size)))
-      case ReadAs.UShort => t._1(cast(new Array[Char](size)))
-      case ReadAs.UInt => t._1(cast(new Array[Int](size)))
-
-      case _ => throw new AssertionError("Type not found.")
-    }
+    ref.factory.makeArray(size).asInstanceOf[IndexArray[D]]
   }
 }
 
 object IndexBuffer {
   def apply[D <: ReadInt with Unsigned](buffer: ByteBuffer)(
-    implicit t: ((ByteBuffer) => IndexBuffer[D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
-    t._1(buffer)
+    ref.factory.makeBuffer(buffer).asInstanceOf[IndexBuffer[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
-    implicit t: ((ByteBuffer) => IndexBuffer[D], Int, Class[D])
+    implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
-    def alloc(size: Int) = BufferUtil.allocateByteBuffer(size)
-
-    t._3 match {
-      case ReadAs.UByte => t._1(alloc(size))
-      case ReadAs.UShort => t._1(alloc(size*2))
-      case ReadAs.UInt => t._1(alloc(size*4))
-
-      case _ => throw new AssertionError("Type not found.")
-    }
+    ref.factory.makeBuffer(size).asInstanceOf[IndexBuffer[D]]
   }
 }

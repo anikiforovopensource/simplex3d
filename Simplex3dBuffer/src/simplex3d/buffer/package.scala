@@ -44,10 +44,11 @@ package object buffer extends UnsignedImplicits {
     T1 <: MetaType, D1 <: RawType,
     T2 <: MetaType, D2 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2]
   ) = {
-    val views = interleaveAny(seq1, seq2)
+    val views = interleaveAny(size, seq1, seq2)
     (
       views(0).asInstanceOf[DataView[T1, D1]],
       views(1).asInstanceOf[DataView[T2, D2]]
@@ -59,11 +60,12 @@ package object buffer extends UnsignedImplicits {
     T2 <: MetaType, D2 <: RawType,
     T3 <: MetaType, D3 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3]
   ) = {
-    val views = interleaveAny(seq1, seq2, seq3)
+    val views = interleaveAny(size, seq1, seq2, seq3)
     (
       views(0).asInstanceOf[DataView[T1, D1]],
       views(1).asInstanceOf[DataView[T2, D2]],
@@ -77,12 +79,14 @@ package object buffer extends UnsignedImplicits {
     T3 <: MetaType, D3 <: RawType,
     T4 <: MetaType, D4 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
     seq4: DataSeq[T4, D4]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4
     )
     (
@@ -100,6 +104,7 @@ package object buffer extends UnsignedImplicits {
     T4 <: MetaType, D4 <: RawType,
     T5 <: MetaType, D5 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -107,6 +112,7 @@ package object buffer extends UnsignedImplicits {
     seq5: DataSeq[T5, D5]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5
     )
     (
@@ -126,6 +132,7 @@ package object buffer extends UnsignedImplicits {
     T5 <: MetaType, D5 <: RawType,
     T6 <: MetaType, D6 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -134,6 +141,7 @@ package object buffer extends UnsignedImplicits {
     seq6: DataSeq[T6, D6]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6
     )
     (
@@ -155,6 +163,7 @@ package object buffer extends UnsignedImplicits {
     T6 <: MetaType, D6 <: RawType,
     T7 <: MetaType, D7 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -164,6 +173,7 @@ package object buffer extends UnsignedImplicits {
     seq7: DataSeq[T7, D7]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7
     )
     (
@@ -187,6 +197,7 @@ package object buffer extends UnsignedImplicits {
     T7 <: MetaType, D7 <: RawType,
     T8 <: MetaType, D8 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -197,6 +208,7 @@ package object buffer extends UnsignedImplicits {
     seq8: DataSeq[T8, D8]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8
     )
     (
@@ -222,6 +234,7 @@ package object buffer extends UnsignedImplicits {
     T8 <: MetaType, D8 <: RawType,
     T9 <: MetaType, D9 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -233,6 +246,7 @@ package object buffer extends UnsignedImplicits {
     seq9: DataSeq[T9, D9]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9
     )
     (
@@ -260,6 +274,7 @@ package object buffer extends UnsignedImplicits {
     T9 <: MetaType, D9 <: RawType,
     T10 <: MetaType, D10 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -272,6 +287,7 @@ package object buffer extends UnsignedImplicits {
     seq10: DataSeq[T10, D10]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10
     )
     (
@@ -301,6 +317,7 @@ package object buffer extends UnsignedImplicits {
     T10 <: MetaType, D10 <: RawType,
     T11 <: MetaType, D11 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -314,6 +331,7 @@ package object buffer extends UnsignedImplicits {
     seq11: DataSeq[T11, D11]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11
     )
     (
@@ -345,6 +363,7 @@ package object buffer extends UnsignedImplicits {
     T11 <: MetaType, D11 <: RawType,
     T12 <: MetaType, D12 <: RawType
   ](
+    size: Int,
     seq1: DataSeq[T1, D1],
     seq2: DataSeq[T2, D2],
     seq3: DataSeq[T3, D3],
@@ -359,6 +378,7 @@ package object buffer extends UnsignedImplicits {
     seq12: DataSeq[T12, D12]
   ) = {
     val views = interleaveAny(
+      size,
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11, seq12
     )
     (
@@ -377,15 +397,20 @@ package object buffer extends UnsignedImplicits {
     )
   }
 
-  def interleaveAny(dataSeqs: DataSeq[_ <: MetaType, _ <: RawType]*)
+
+  def interleaveAny(
+    size: Int,
+    dataSeqs: DataSeq[_ <: MetaType, _ <: RawType]*
+  )
   :Array[DataView[_, _]] =
   {
     // check arguments
     if (dataSeqs.length == 0) return new Array[DataView[_, _]](0)
 
-    val size = dataSeqs(0).size
-    var i = 1; while(i < dataSeqs.length) {
-      if (dataSeqs(i).size != size) throw new IllegalArgumentException(
+    // verify size
+    var i = 0; while(i < dataSeqs.length) {
+      val s = dataSeqs(i).size
+      if (s != 0 && s != size) throw new IllegalArgumentException(
         "All sequences must have the same size."
       )
       i += 1

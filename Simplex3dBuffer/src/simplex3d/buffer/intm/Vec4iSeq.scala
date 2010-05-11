@@ -74,16 +74,16 @@ private[buffer] sealed abstract class BaseVec4i[+D <: ReadInt](
     seq(j + 3) = v.w
   }
 
-  final def makeArray(size: Int) =
-    new ArrayVec4i[D](backingSeq.makeArray(size*4))
-  final def makeArray(array: D#ArrayType @uncheckedVariance) =
-    new ArrayVec4i[D](backingSeq.makeArray(array))
-  final def makeBuffer(size: Int) =
-    new BufferVec4i[D](backingSeq.makeBuffer(size*4))
-  final def makeBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec4i[D](backingSeq.makeBuffer(byteBuffer))
-  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec4i[D](backingSeq.makeBuffer(byteBuffer), offset, stride)
+  final def mkArray(size: Int) =
+    new ArrayVec4i[D](backingSeq.mkArray(size*4))
+  final def mkArray(array: D#ArrayType @uncheckedVariance) =
+    new ArrayVec4i[D](backingSeq.mkArray(array))
+  final def mkBuffer(size: Int) =
+    new BufferVec4i[D](backingSeq.mkBuffer(size*4))
+  final def mkBuffer(byteBuffer: ByteBuffer) =
+    new BufferVec4i[D](backingSeq.mkBuffer(byteBuffer))
+  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec4i[D](backingSeq.mkBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ArrayVec4i[+D <: ReadInt](

@@ -34,15 +34,15 @@ import simplex3d.buffer._
 private[buffer] sealed abstract class SeqInt1SByte(
   buff: ByteBuffer
 ) extends BaseInt1[SByte](buff) {
-  final def makeArray(size: Int) =
+  final def mkArray(size: Int) =
     new ArrayInt1SByte(new Array[Byte](size))
-  final def makeArray(array: Array[Byte]) =
+  final def mkArray(array: Array[Byte]) =
     new ArrayInt1SByte(array)
-  final def makeBuffer(size: Int) =
+  final def mkBuffer(size: Int) =
     new BufferInt1SByte(BufferUtil.allocateByteBuffer(size))
-  final def makeBuffer(byteBuffer: ByteBuffer) =
+  final def mkBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SByte(byteBuffer)
-  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1SByte(byteBuffer, offset, stride)
 }
 
@@ -89,15 +89,15 @@ private[buffer] final class ViewInt1SByte(
 private[buffer] sealed abstract class SeqInt1SShort(
   buff: ShortBuffer
 ) extends BaseInt1[SShort](buff) {
-  final def makeArray(size: Int) =
+  final def mkArray(size: Int) =
     new ArrayInt1SShort(new Array[Short](size))
-  final def makeArray(array: Array[Short]) =
+  final def mkArray(array: Array[Short]) =
     new ArrayInt1SShort(array)
-  final def makeBuffer(size: Int) =
+  final def mkBuffer(size: Int) =
     new BufferInt1SShort(BufferUtil.allocateByteBuffer(size*2))
-  final def makeBuffer(byteBuffer: ByteBuffer) =
+  final def mkBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SShort(byteBuffer)
-  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1SShort(byteBuffer, offset, stride)
 }
 
@@ -150,15 +150,15 @@ private[buffer] final class ViewInt1SShort(
 private[buffer] sealed abstract class SeqInt1SInt(
   buff: IntBuffer
 ) extends BaseInt1[SInt](buff) {
-  final def makeArray(size: Int) =
+  final def mkArray(size: Int) =
     new ArrayInt1SInt(new Array[Int](size))
-  final def makeArray(array: Array[Int]) =
+  final def mkArray(array: Array[Int]) =
     new ArrayInt1SInt(array)
-  final def makeBuffer(size: Int) =
+  final def mkBuffer(size: Int) =
     new BufferInt1SInt(BufferUtil.allocateByteBuffer(size*4))
-  final def makeBuffer(byteBuffer: ByteBuffer) =
+  final def mkBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SInt(byteBuffer)
-  final def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewInt1SInt(byteBuffer, offset, stride)
 }
 

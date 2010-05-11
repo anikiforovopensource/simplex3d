@@ -45,11 +45,11 @@ private[buffer] abstract class BaseSeq[
   def apply(i: Int) :E
   def update(i: Int, v: E)
 
-  def makeArray(size: Int) :DataArray[T, D]
-  def makeArray(array: D#ArrayType @uncheckedVariance) :DataArray[T, D]
-  def makeBuffer(size: Int) :DataBuffer[T, D]
-  def makeBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
-  def makeView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]
+  def mkArray(size: Int) :DataArray[T, D]
+  def mkArray(array: D#ArrayType @uncheckedVariance) :DataArray[T, D]
+  def mkBuffer(size: Int) :DataBuffer[T, D]
+  def mkBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
+  def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]
 
   def components: Int
   def componentBinding: Int
@@ -67,6 +67,101 @@ private[buffer] abstract class BaseSeq[
     srcStep: Int,
     srcLim: Int
   )
+
+  private def putArray(index: Int, array: Array[Int], first: Int, count: Int) {
+    if (stride == 0 && buffer.isInstanceOf[IntBuffer]) {
+      val b = buffer.asInstanceOf[IntBuffer]
+      b.position(index + offset)
+      b.put(array, first, count)
+    }
+    else {
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Int, _ <: RawType]]
+      var i = 0; while (i < count) {
+        t(i + index) = array(i + first)
+        i += 1
+      }
+    }
+  }
+  private def putArray(index: Int, array: Array[Float], first: Int, count: Int) {
+    if (stride == 0 && buffer.isInstanceOf[FloatBuffer]) {
+      val b = buffer.asInstanceOf[FloatBuffer]
+      b.position(index + offset)
+      b.put(array, first, count)
+    }
+    else {
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Float, _ <: RawType]]
+      var i = 0; while (i < count) {
+        t(i + index) = array(i + first)
+        i += 1
+      }
+    }
+  }
+  private def putArray(index: Int, array: Array[Double], first: Int, count: Int) {
+    if (stride == 0 && buffer.isInstanceOf[DoubleBuffer]) {
+      val b = buffer.asInstanceOf[DoubleBuffer]
+      b.position(index + offset)
+      b.put(array, first, count)
+    }
+    else {
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Double, _ <: RawType]]
+      var i = 0; while (i < count) {
+        t(i + index) = array(i + first)
+        i += 1
+      }
+    }
+  }
+
+  def put(index: Int, seq: Seq[E], first: Int, count: Int) {
+    if (index + count > size) throw new BufferOverflowException()
+
+    import scala.collection.mutable._
+    import scala.reflect._
+
+    seq match {
+
+      case wrapped: WrappedArray[_] =>
+        
+        if (first + count > wrapped.array.length)
+          throw new IndexOutOfBoundsException(
+            "Source sequence is not large enough."
+          )
+
+        wrapped.elemManifest match {
+
+          case ClassManifest.Int =>
+            putArray(index, wrapped.array.asInstanceOf[Array[Int]], first, count)
+
+          case ClassManifest.Float =>
+            putArray(index, wrapped.array.asInstanceOf[Array[Float]], first, count)
+
+          case ClassManifest.Double =>
+            putArray(index, wrapped.array.asInstanceOf[Array[Double]], first, count)
+          
+          case _ =>
+            var i = 0; while (i < count) {
+              this(index + i) = seq(first + i)
+              i += 1
+            }
+        }
+
+      case _ =>
+        var i = index
+        val iter = seq.iterator
+        iter.drop(first - 1)
+        while (iter.hasNext) {
+          this(i) = iter.next
+          i += 1
+        }
+    }
+  }
+
+  def put(index: Int, seq: Seq[E]) {
+    put(index, seq, 0, seq.size)
+  }
+
+  def put(seq: Seq[E]) {
+    put(0, seq, 0, seq.size)
+  }
 
   
   def put(
@@ -88,15 +183,12 @@ private[buffer] abstract class BaseSeq[
       }
     }
     val group = grp(componentBinding)
+    val noConversion = (
+      componentBinding == src.componentBinding ||
+      (!normalized && !src.normalized && group == grp(src.componentBinding))
+    )
 
-    if (
-      stride == 0 &&
-      srcStride == 0 &&
-      (
-        componentBinding == src.componentBinding ||
-        (!normalized && !src.normalized && group == grp(src.componentBinding))
-      )
-    ) {
+    if (stride == 0 && srcStride == 0 && noConversion) {
       val srcLim = srcOffset + count*components
       if (srcLim < src.buffer.capacity) throw new BufferUnderflowException()
 
@@ -137,6 +229,9 @@ private[buffer] abstract class BaseSeq[
         src.buffer.limit(src.buffer.capacity)
       }
     }
+//    else if (noConversion) {
+//      // XXX
+//    }
     else {
       val destOffset = index*step + offset
       val srcStep = srcStride + components
@@ -234,7 +329,7 @@ private[buffer] abstract class BaseSeq[
   }
 
   def asArray() :DataArray[T, D] = {
-    val copy = makeArray(size)
+    val copy = mkArray(size)
     copy.put(
       0,
       backingSeq,
@@ -245,7 +340,7 @@ private[buffer] abstract class BaseSeq[
     copy
   }
   def asBuffer() :DataBuffer[T, D] = {
-    val copy = makeBuffer(size)
+    val copy = mkBuffer(size)
     copy.put(
       0,
       backingSeq,
@@ -256,7 +351,7 @@ private[buffer] abstract class BaseSeq[
     copy
   }
   def asView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[T, D]={
-    val copy = makeView(byteBuffer, offset, stride)
+    val copy = mkView(byteBuffer, offset, stride)
     copy.put(
       0,
       backingSeq,
@@ -307,13 +402,21 @@ object DataArray {
   def apply[T <: MetaType, D <: ReadType](array: D#ArrayType)(
     implicit ref: DataSeqFactoryRef[T, D]
   ) :DataArray[T, D] = {
-    ref.factory.makeArray(array)
+    ref.factory.mkArray(array)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
     implicit ref: DataSeqFactoryRef[T, D]
   ) :DataArray[T, D] = {
-    ref.factory.makeArray(size)
+    ref.factory.mkArray(size)
+  }
+
+  def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
+    implicit ref: DataSeqFactoryRef[T, D]
+  ) :DataArray[T, D] = {
+    val data = ref.factory.mkArray(vals.size)
+    data.put(vals)
+    data
   }
 }
 
@@ -321,13 +424,21 @@ object DataBuffer {
   def apply[T <: MetaType, D <: ReadType](buffer: ByteBuffer)(
     implicit ref: DataSeqFactoryRef[T, D]
   ) :DataBuffer[T, D] = {
-    ref.factory.makeBuffer(buffer)
+    ref.factory.mkBuffer(buffer)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
     implicit ref: DataSeqFactoryRef[T, D]
   ) :DataBuffer[T, D] = {
-    ref.factory.makeBuffer(size)
+    ref.factory.mkBuffer(size)
+  }
+
+  def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
+    implicit ref: DataSeqFactoryRef[T, D]
+  ) :DataBuffer[T, D] = {
+    val data = ref.factory.mkBuffer(vals.size)
+    data.put(vals)
+    data
   }
 }
 
@@ -335,7 +446,15 @@ object DataView {
   def apply[T <: MetaType, D <: ReadType](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: DataSeqFactoryRef[T, D]) :DataView[T, D] = {
-    ref.factory.makeView(buffer, offset, stride)
+    ref.factory.mkView(buffer, offset, stride)
+  }
+}
+
+object DataSeq {
+  def apply[T <: MetaType, D <: ReadType](
+    implicit ref: DataSeqFactoryRef[T, D]
+  ) :DataSeq[T, D] = {
+    ref.factory
   }
 }
 

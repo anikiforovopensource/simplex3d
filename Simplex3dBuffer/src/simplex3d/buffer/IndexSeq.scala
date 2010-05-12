@@ -41,19 +41,19 @@ object IndexArray {
   def apply[D <: ReadInt with Unsigned](array: D#ArrayType)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexArray[D] = {
-    ref.factory.mkArray(array).asInstanceOf[IndexArray[D]]
+    ref.factory.mkDataArray(array).asInstanceOf[IndexArray[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexArray[D] = {
-    ref.factory.mkArray(size).asInstanceOf[IndexArray[D]]
+    ref.factory.mkDataArray(size).asInstanceOf[IndexArray[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](vals: Int*)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexArray[D] = {
-    val data = ref.factory.mkArray(vals.size).asInstanceOf[IndexArray[D]]
+    val data = ref.factory.mkDataArray(vals.size).asInstanceOf[IndexArray[D]]
     data.put(vals)
     data
   }
@@ -63,19 +63,19 @@ object IndexBuffer {
   def apply[D <: ReadInt with Unsigned](buffer: ByteBuffer)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
-    ref.factory.mkBuffer(buffer).asInstanceOf[IndexBuffer[D]]
+    ref.factory.mkDataBuffer(buffer).asInstanceOf[IndexBuffer[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
-    ref.factory.mkBuffer(size).asInstanceOf[IndexBuffer[D]]
+    ref.factory.mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](vals: Int*)(
     implicit ref: DataSeqFactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
-    val data = ref.factory.mkBuffer(vals.size).asInstanceOf[IndexBuffer[D]]
+    val data = ref.factory.mkDataBuffer(vals.size).asInstanceOf[IndexBuffer[D]]
     data.put(vals)
     data
   }

@@ -78,15 +78,15 @@ private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
 private[buffer] sealed abstract class SeqFloat1SByte(
   buff: ByteBuffer
 ) extends BaseFloat1[SByte](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1SByte(new Array[Byte](size))
-  final def mkArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1SByte(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1SByte(BufferUtil.allocateByteBuffer(size))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1SByte(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SByte(byteBuffer, offset, stride)
 }
 
@@ -133,15 +133,15 @@ private[buffer] final class ViewFloat1SByte(
 private[buffer] sealed abstract class SeqFloat1UByte(
   buff: ByteBuffer
 ) extends BaseFloat1[UByte](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1UByte(new Array[Byte](size))
-  final def mkArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1UByte(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1UByte(BufferUtil.allocateByteBuffer(size))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1UByte(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UByte(byteBuffer, offset, stride)
 }
 
@@ -188,15 +188,15 @@ private[buffer] final class ViewFloat1UByte(
 private[buffer] sealed abstract class SeqFloat1NSByte(
   buff: ByteBuffer
 ) extends BaseFloat1[NSByte](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NSByte(new Array[Byte](size))
-  final def mkArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1NSByte(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NSByte(BufferUtil.allocateByteBuffer(size))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NSByte(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSByte(byteBuffer, offset, stride)
 }
 
@@ -264,15 +264,15 @@ private[buffer] final class ViewFloat1NSByte(
 private[buffer] sealed abstract class SeqFloat1NUByte(
   buff: ByteBuffer
 ) extends BaseFloat1[NUByte](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NUByte(new Array[Byte](size))
-  final def mkArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1NUByte(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NUByte(BufferUtil.allocateByteBuffer(size))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NUByte(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUByte(byteBuffer, offset, stride)
 }
 
@@ -333,15 +333,15 @@ private[buffer] final class ViewFloat1NUByte(
 private[buffer] sealed abstract class SeqFloat1SShort(
   buff: ShortBuffer
 ) extends BaseFloat1[SShort](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1SShort(new Array[Short](size))
-  final def mkArray(array: Array[Short]) =
+  final def mkDataArray(array: Array[Short]) =
     new ArrayFloat1SShort(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1SShort(BufferUtil.allocateByteBuffer(size*2))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1SShort(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SShort(byteBuffer, offset, stride)
 }
 
@@ -394,15 +394,15 @@ private[buffer] final class ViewFloat1SShort(
 private[buffer] sealed abstract class SeqFloat1UShort(
   buff: CharBuffer
 ) extends BaseFloat1[UShort](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1UShort(new Array[Char](size))
-  final def mkArray(array: Array[Char]) =
+  final def mkDataArray(array: Array[Char]) =
     new ArrayFloat1UShort(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1UShort(BufferUtil.allocateByteBuffer(size*2))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1UShort(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UShort(byteBuffer, offset, stride)
 }
 
@@ -457,15 +457,15 @@ private[buffer] final class ViewFloat1UShort(
 private[buffer] sealed abstract class SeqFloat1NSShort(
   buff: ShortBuffer
 ) extends BaseFloat1[NSShort](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NSShort(new Array[Short](size))
-  final def mkArray(array: Array[Short]) =
+  final def mkDataArray(array: Array[Short]) =
     new ArrayFloat1NSShort(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NSShort(BufferUtil.allocateByteBuffer(size*2))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NSShort(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSShort(byteBuffer, offset, stride)
 }
 
@@ -533,15 +533,15 @@ private[buffer] final class ViewFloat1NSShort(
 private[buffer] sealed abstract class SeqFloat1NUShort(
   buff: CharBuffer
 ) extends BaseFloat1[NUShort](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NUShort(new Array[Char](size))
-  final def mkArray(array: Array[Char]) =
+  final def mkDataArray(array: Array[Char]) =
     new ArrayFloat1NUShort(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NUShort(BufferUtil.allocateByteBuffer(size*2))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NUShort(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUShort(byteBuffer, offset, stride)
 }
 
@@ -602,15 +602,15 @@ private[buffer] final class ViewFloat1NUShort(
 private[buffer] sealed abstract class SeqFloat1SInt(
   buff: IntBuffer
 ) extends BaseFloat1[SInt](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1SInt(new Array[Int](size))
-  final def mkArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1SInt(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1SInt(BufferUtil.allocateByteBuffer(size*4))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1SInt(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1SInt(byteBuffer, offset, stride)
 }
 
@@ -657,15 +657,15 @@ private[buffer] final class ViewFloat1SInt(
 private[buffer] sealed abstract class SeqFloat1UInt(
   buff: IntBuffer
 ) extends BaseFloat1[UInt](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1UInt(new Array[Int](size))
-  final def mkArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1UInt(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1UInt(BufferUtil.allocateByteBuffer(size*4))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1UInt(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1UInt(byteBuffer, offset, stride)
 }
 
@@ -718,15 +718,15 @@ private[buffer] final class ViewFloat1UInt(
 private[buffer] sealed abstract class SeqFloat1NSInt(
   buff: IntBuffer
 ) extends BaseFloat1[NSInt](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NSInt(new Array[Int](size))
-  final def mkArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1NSInt(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NSInt(BufferUtil.allocateByteBuffer(size*4))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NSInt(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NSInt(byteBuffer, offset, stride)
 }
 
@@ -794,15 +794,15 @@ private[buffer] final class ViewFloat1NSInt(
 private[buffer] sealed abstract class SeqFloat1NUInt(
   buff: IntBuffer
 ) extends BaseFloat1[NUInt](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1NUInt(new Array[Int](size))
-  final def mkArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1NUInt(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1NUInt(BufferUtil.allocateByteBuffer(size*4))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1NUInt(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1NUInt(byteBuffer, offset, stride)
 }
 
@@ -865,15 +865,15 @@ private[buffer] final class ViewFloat1NUInt(
 private[buffer] sealed abstract class SeqFloat1RawFloat(
   buff: FloatBuffer
 ) extends BaseFloat1[RawFloat](buff) {
-  final def mkArray(size: Int) =
+  final def mkDataArray(size: Int) =
     new ArrayFloat1RawFloat(new Array[Float](size))
-  final def mkArray(array: Array[Float]) =
+  final def mkDataArray(array: Array[Float]) =
     new ArrayFloat1RawFloat(array)
-  final def mkBuffer(size: Int) =
+  final def mkDataBuffer(size: Int) =
     new BufferFloat1RawFloat(BufferUtil.allocateByteBuffer(size*4))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferFloat1RawFloat(byteBuffer)
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
     new ViewFloat1RawFloat(byteBuffer, offset, stride)
 }
 

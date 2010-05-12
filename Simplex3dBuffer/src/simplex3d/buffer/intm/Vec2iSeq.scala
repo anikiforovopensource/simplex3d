@@ -68,16 +68,16 @@ private[buffer] sealed abstract class BaseVec2i[+D <: ReadInt](
     seq(j + 1) = v.y
   }
 
-  final def mkArray(size: Int) =
-    new ArrayVec2i[D](backingSeq.mkArray(size*2))
-  final def mkArray(array: D#ArrayType @uncheckedVariance) =
-    new ArrayVec2i[D](backingSeq.mkArray(array))
-  final def mkBuffer(size: Int) =
-    new BufferVec2i[D](backingSeq.mkBuffer(size*2))
-  final def mkBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec2i[D](backingSeq.mkBuffer(byteBuffer))
-  final def mkView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec2i[D](backingSeq.mkBuffer(byteBuffer), offset, stride)
+  final def mkDataArray(size: Int) =
+    new ArrayVec2i[D](backingSeq.mkDataArray(size*2))
+  final def mkDataArray(array: D#ArrayType @uncheckedVariance) =
+    new ArrayVec2i[D](backingSeq.mkDataArray(array))
+  final def mkDataBuffer(size: Int) =
+    new BufferVec2i[D](backingSeq.mkDataBuffer(size*2))
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
+    new BufferVec2i[D](backingSeq.mkDataBuffer(byteBuffer))
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec2i[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ArrayVec2i[+D <: ReadInt](

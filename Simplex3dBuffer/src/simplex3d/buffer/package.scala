@@ -461,7 +461,7 @@ package object buffer extends UnsignedImplicits {
     var byteOffset = 0
     i = 0; while (i < dataSeqs.length) {
       val seq = dataSeqs(order(i))
-      result(order(i)) = seq.asView(
+      result(order(i)) = seq.copyAsDataView(
         byteBuffer,
         byteOffset/seq.componentBytes,
         byteStride/seq.componentBytes - seq.components

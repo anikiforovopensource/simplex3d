@@ -56,7 +56,7 @@ private[buffer] sealed abstract class BaseVec3f[+D <: ReadFloat](
     }
   }
 
-  final def apply(i: Int) :AnyVec3f = {
+  def apply(i: Int) :AnyVec3f = {
     val j = offset + i*step
     ConstVec3f(
       seq(j),
@@ -64,23 +64,83 @@ private[buffer] sealed abstract class BaseVec3f[+D <: ReadFloat](
       seq(j + 2)
     )
   }
-  final def update(i: Int, v: AnyVec3f) {
+  def update(i: Int, v: AnyVec3f) {
     val j = offset + i*step
     seq(j) = v.x
     seq(j + 1) = v.y
     seq(j + 2) = v.z
   }
 
-  final def mkDataArray(size: Int) =
-    new ArrayVec3f[D](backingSeq.mkDataArray(size*3))
-  final def mkDataArray(array: D#ArrayType @uncheckedVariance) =
-    new ArrayVec3f[D](backingSeq.mkDataArray(array))
-  final def mkDataBuffer(size: Int) =
-    new BufferVec3f[D](backingSeq.mkDataBuffer(size*3))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3f[D](backingSeq.mkDataBuffer(byteBuffer))
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3f[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+  final def mkDataArray(size: Int) = {
+    backingSeq match {
+      case b: ArrayFloat1NUByte =>
+        new ArrayVec3fNUByte(
+          b.mkDataArray(size*3)
+        ).asInstanceOf[DataArray[Vec3f, D]]
+      case b: ArrayFloat1RawFloat =>
+        new ArrayVec3fRawFloat(
+          b.mkDataArray(size*3)
+        ).asInstanceOf[DataArray[Vec3f, D]]
+      case _ =>
+        new ArrayVec3f[D](backingSeq.mkDataArray(size*3))
+    }
+  }
+  final def mkDataArray(array: D#ArrayType @uncheckedVariance) = {
+    backingSeq match {
+      case b: ArrayFloat1NUByte =>
+        new ArrayVec3fNUByte(
+          b.mkDataArray(array.asInstanceOf[Array[Byte]])
+        ).asInstanceOf[DataArray[Vec3f, D]]
+      case b: ArrayFloat1RawFloat =>
+        new ArrayVec3fRawFloat(
+          b.mkDataArray(array.asInstanceOf[Array[Float]])
+        ).asInstanceOf[DataArray[Vec3f, D]]
+      case _ =>
+        new ArrayVec3f[D](backingSeq.mkDataArray(array))
+    }
+  }
+  final def mkDataBuffer(size: Int) = {
+    backingSeq match {
+      case b: BufferFloat1NUByte =>
+        new BufferVec3fNUByte(
+          b.mkDataBuffer(size*3)
+        ).asInstanceOf[DataBuffer[Vec3f, D]]
+      case b: BufferFloat1RawFloat =>
+        new BufferVec3fRawFloat(
+          b.mkDataBuffer(size*3)
+        ).asInstanceOf[DataBuffer[Vec3f, D]]
+      case _ =>
+        new BufferVec3f[D](backingSeq.mkDataBuffer(size*3))
+    }
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    backingSeq match {
+      case b: BufferFloat1NUByte =>
+        new BufferVec3fNUByte(
+          b.mkDataBuffer(byteBuffer)
+        ).asInstanceOf[DataBuffer[Vec3f, D]]
+      case b: BufferFloat1RawFloat =>
+        new BufferVec3fRawFloat(
+          b.mkDataBuffer(byteBuffer)
+        ).asInstanceOf[DataBuffer[Vec3f, D]]
+      case _ =>
+        new BufferVec3f[D](backingSeq.mkDataBuffer(byteBuffer))
+    }
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    backingSeq match {
+      case b: BufferFloat1NUByte =>
+        new ViewVec3fNUByte(
+          b.mkDataBuffer(byteBuffer), offset, stride
+        ).asInstanceOf[DataView[Vec3f, D]]
+      case b: BufferFloat1RawFloat =>
+        new ViewVec3fRawFloat(
+          b.mkDataBuffer(byteBuffer), offset, stride
+        ).asInstanceOf[DataView[Vec3f, D]]
+      case _ =>
+        new ViewVec3f[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+    }
+  }
 }
 
 private[buffer] final class ArrayVec3f[+D <: ReadFloat](
@@ -96,3 +156,125 @@ private[buffer] final class ViewVec3f[+D <: ReadFloat](
   val offset: Int,
   val stride: Int
 ) extends BaseVec3f[D](backingSeq) with DataView[Vec3f, D]
+
+
+// Optimised NUByte
+private[buffer] final class ArrayVec3fNUByte(
+  override val backingSeq: ArrayFloat1NUByte
+) extends BaseVec3f[NUByte](backingSeq) with DataArray[Vec3f, NUByte] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}
+
+private[buffer] final class BufferVec3fNUByte(
+  override val backingSeq: BufferFloat1NUByte
+) extends BaseVec3f[NUByte](backingSeq) with DataBuffer[Vec3f, NUByte] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}
+
+private[buffer] final class ViewVec3fNUByte(
+  override val backingSeq: BufferFloat1NUByte,
+  val offset: Int,
+  val stride: Int
+) extends BaseVec3f[NUByte](backingSeq) with DataView[Vec3f, NUByte] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}
+
+
+// Optimised RawFloat
+private[buffer] final class ArrayVec3fRawFloat(
+  override val backingSeq: ArrayFloat1RawFloat
+) extends BaseVec3f[RawFloat](backingSeq) with DataArray[Vec3f, RawFloat] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}
+
+private[buffer] final class BufferVec3fRawFloat(
+  override val backingSeq: BufferFloat1RawFloat
+) extends BaseVec3f[RawFloat](backingSeq) with DataBuffer[Vec3f, RawFloat] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}
+
+private[buffer] final class ViewVec3fRawFloat(
+  override val backingSeq: BufferFloat1RawFloat,
+  val offset: Int,
+  val stride: Int
+) extends BaseVec3f[RawFloat](backingSeq) with DataView[Vec3f, RawFloat] {
+  override def apply(i: Int) :AnyVec3f = {
+    val j = offset + i*step
+    ConstVec3f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  override def update(i: Int, v: AnyVec3f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
+}

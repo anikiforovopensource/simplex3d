@@ -55,29 +55,69 @@ private[buffer] sealed abstract class BaseVec2f[+D <: ReadFloat](
     }
   }
 
-  final def apply(i: Int) :AnyVec2f = {
+  def apply(i: Int) :AnyVec2f = {
     val j = offset + i*step
     ConstVec2f(
       seq(j),
       seq(j + 1)
     )
   }
-  final def update(i: Int, v: AnyVec2f) {
+  def update(i: Int, v: AnyVec2f) {
     val j = offset + i*step
     seq(j) = v.x
     seq(j + 1) = v.y
   }
 
-  final def mkDataArray(size: Int) =
-    new ArrayVec2f[D](backingSeq.mkDataArray(size*2))
-  final def mkDataArray(array: D#ArrayType @uncheckedVariance) =
-    new ArrayVec2f[D](backingSeq.mkDataArray(array))
-  final def mkDataBuffer(size: Int) =
-    new BufferVec2f[D](backingSeq.mkDataBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec2f[D](backingSeq.mkDataBuffer(byteBuffer))
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec2f[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+  final def mkDataArray(size: Int) = {
+    backingSeq match {
+      case b: ArrayFloat1RawFloat =>
+        new ArrayVec2fRawFloat(
+          b.mkDataArray(size*2)
+        ).asInstanceOf[DataArray[Vec2f, D]]
+      case _ =>
+        new ArrayVec2f[D](backingSeq.mkDataArray(size*2))
+    }
+  }
+  final def mkDataArray(array: D#ArrayType @uncheckedVariance) = {
+    backingSeq match {
+      case b: ArrayFloat1RawFloat =>
+        new ArrayVec2fRawFloat(
+          b.mkDataArray(array.asInstanceOf[Array[Float]])
+        ).asInstanceOf[DataArray[Vec2f, D]]
+      case _ =>
+        new ArrayVec2f[D](backingSeq.mkDataArray(array))
+    }
+  }
+  final def mkDataBuffer(size: Int) = {
+    backingSeq match {
+      case b: BufferFloat1RawFloat =>
+        new BufferVec2fRawFloat(
+          b.mkDataBuffer(size*2)
+        ).asInstanceOf[DataBuffer[Vec2f, D]]
+      case _ =>
+        new BufferVec2f[D](backingSeq.mkDataBuffer(size*2))
+    }
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    backingSeq match {
+      case b: BufferFloat1RawFloat =>
+        new BufferVec2fRawFloat(
+          b.mkDataBuffer(byteBuffer)
+        ).asInstanceOf[DataBuffer[Vec2f, D]]
+      case _ =>
+        new BufferVec2f[D](backingSeq.mkDataBuffer(byteBuffer))
+    }
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    backingSeq match {
+      case b: BufferFloat1RawFloat =>
+        new ViewVec2fRawFloat(
+          b.mkDataBuffer(byteBuffer), offset, stride
+        ).asInstanceOf[DataView[Vec2f, D]]
+      case _ =>
+        new ViewVec2f[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+    }
+  }
 }
 
 private[buffer] final class ArrayVec2f[+D <: ReadFloat](
@@ -93,3 +133,58 @@ private[buffer] final class ViewVec2f[+D <: ReadFloat](
   val offset: Int,
   val stride: Int
 ) extends BaseVec2f[D](backingSeq) with DataView[Vec2f, D]
+
+
+// Optimised RawFloat
+private[buffer] final class ArrayVec2fRawFloat(
+  override val backingSeq: ArrayFloat1RawFloat
+) extends BaseVec2f[RawFloat](backingSeq) with DataArray[Vec2f, RawFloat] {
+  override def apply(i: Int) :AnyVec2f = {
+    val j = offset + i*step
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  override def update(i: Int, v: AnyVec2f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
+}
+
+private[buffer] final class BufferVec2fRawFloat(
+  override val backingSeq: BufferFloat1RawFloat
+) extends BaseVec2f[RawFloat](backingSeq) with DataBuffer[Vec2f, RawFloat] {
+  override def apply(i: Int) :AnyVec2f = {
+    val j = offset + i*step
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  override def update(i: Int, v: AnyVec2f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
+}
+
+private[buffer] final class ViewVec2fRawFloat(
+  override val backingSeq: BufferFloat1RawFloat,
+  val offset: Int,
+  val stride: Int
+) extends BaseVec2f[RawFloat](backingSeq) with DataView[Vec2f, RawFloat] {
+  override def apply(i: Int) :AnyVec2f = {
+    val j = offset + i*step
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  override def update(i: Int, v: AnyVec2f) {
+    val j = offset + i*step
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
+}

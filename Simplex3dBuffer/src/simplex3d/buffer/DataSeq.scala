@@ -375,13 +375,13 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, col: Traversable[E], first: Int, count: Int) {
+  final def put(index: Int, seq: Seq[E], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
 
     import scala.collection.mutable._
     import scala.reflect._
 
-    col match {
+    seq match {
 
       case wrapped: WrappedArray[_] =>
         
@@ -413,7 +413,7 @@ private[buffer] abstract class BaseSeq[
 
       case _ =>
         var i = index
-        val iter = col.toIterator
+        val iter = seq.iterator
         iter.drop(first)
         while (iter.hasNext) {
           this(i) = iter.next
@@ -422,12 +422,12 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, col: Traversable[E]) {
-    put(index, col, 0, col.size)
+  final def put(index: Int, seq: Seq[E]) {
+    put(index, seq, 0, seq.size)
   }
 
-  final def put(col: Traversable[E]) {
-    put(0, col, 0, col.size)
+  final def put(seq: Seq[E]) {
+    put(0, seq, 0, seq.size)
   }
 
   
@@ -703,19 +703,19 @@ trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
 
 object DataArray {
   def apply[T <: MetaType, D <: ReadType](array: D#ArrayType)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     ref.factory.mkDataArray(array)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     ref.factory.mkDataArray(size)
   }
 
   def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     val data = ref.factory.mkDataArray(vals.size)
     data.put(vals)
@@ -725,19 +725,19 @@ object DataArray {
 
 object DataBuffer {
   def apply[T <: MetaType, D <: ReadType](buffer: ByteBuffer)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     ref.factory.mkDataBuffer(buffer)
   }
 
   def apply[T <: MetaType, D <: ReadType](size: Int)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     ref.factory.mkDataBuffer(size)
   }
 
   def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     val data = ref.factory.mkDataBuffer(vals.size)
     data.put(vals)
@@ -748,22 +748,26 @@ object DataBuffer {
 object DataView {
   def apply[T <: MetaType, D <: ReadType](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit ref: DataSeqFactoryRef[T, D]) :DataView[T, D] = {
+  )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
     ref.factory.mkDataView(buffer, offset, stride)
   }
 }
 
 object DataSeq {
   def apply[T <: MetaType, D <: ReadType](
-    implicit ref: DataSeqFactoryRef[T, D]
+    implicit ref: FactoryRef[T, D]
   ) :DataSeq[T, D] = {
     ref.factory
   }
 }
 
-final class DataSeqFactoryRef[T <: MetaType, D <: RawType](
+abstract class FactoryRef[T <: MetaType, D <: RawType] {
+  def factory: DataSeq[T, D]
+}
+
+class SimpleFactoryRef[T <: MetaType, D <: RawType](
   val factory: DataSeq[T, D]
-)
+) extends FactoryRef[T, D]
 
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class GenericSeq[T <: Composite, +D <: RawType](

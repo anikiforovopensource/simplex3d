@@ -30,7 +30,7 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] sealed abstract class BaseVec2i[+D <: ReadInt](
+private[buffer] abstract class BaseVec2i[+D <: ReadInt](
   seq: ContiguousSeq[Int1, D]
 ) extends GenericSeq[Vec2i, D](seq) {
   final def components: Int = 2
@@ -55,28 +55,34 @@ private[buffer] sealed abstract class BaseVec2i[+D <: ReadInt](
     }
   }
 
-  final def apply(i: Int) :AnyVec2i = {
+  def apply(i: Int) :AnyVec2i = {
     val j = offset + i*step
     ConstVec2i(
       seq(j),
       seq(j + 1)
     )
   }
-  final def update(i: Int, v: AnyVec2i) {
+  def update(i: Int, v: AnyVec2i) {
     val j = offset + i*step
     seq(j) = v.x
     seq(j + 1) = v.y
   }
 
-  final def mkDataArray(size: Int) =
+  def mkDataArray(size: Int) :DataArray[Vec2i, D] =
     new ArrayVec2i[D](backingSeq.mkDataArray(size*2))
-  final def mkDataArray(array: D#ArrayType @uncheckedVariance) =
+
+  def mkDataArray(array: D#ArrayType @uncheckedVariance) :DataArray[Vec2i, D] =
     new ArrayVec2i[D](backingSeq.mkDataArray(array))
-  final def mkDataBuffer(size: Int) =
+
+  def mkDataBuffer(size: Int) :DataBuffer[Vec2i, D] =
     new BufferVec2i[D](backingSeq.mkDataBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
+
+  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[Vec2i, D] =
     new BufferVec2i[D](backingSeq.mkDataBuffer(byteBuffer))
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+
+  def mkDataView(
+    byteBuffer: ByteBuffer, offset: Int, stride: Int
+  ) :DataView[Vec2i, D] =
     new ViewVec2i[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 

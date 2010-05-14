@@ -93,6 +93,7 @@ private[buffer] sealed abstract class SeqFloat1SByte(
 private[buffer] final class ArrayFloat1SByte(
   override val array: Array[Byte]
 ) extends SeqFloat1SByte(ByteBuffer.wrap(array)) with DataArray[Float1, SByte] {
+  def this() = this(new Array[Byte](0))
   def backingSeq = this
 
   def componentBinding = Binding.SByte
@@ -105,6 +106,7 @@ private[buffer] final class ArrayFloat1SByte(
 private[buffer] final class BufferFloat1SByte(
   override val byteBuffer: ByteBuffer
 ) extends SeqFloat1SByte(byteBuffer) with DataBuffer[Float1, SByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SByte
@@ -119,6 +121,7 @@ private[buffer] final class ViewFloat1SByte(
   val offset: Int,
   val stride: Int
 ) extends SeqFloat1SByte(byteBuffer) with DataView[Float1, SByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1SByte(byteBuffer)
 
   def componentBinding = Binding.SByte
@@ -148,6 +151,7 @@ private[buffer] sealed abstract class SeqFloat1UByte(
 private[buffer] final class ArrayFloat1UByte(
   override val array: Array[Byte]
 ) extends SeqFloat1UByte(ByteBuffer.wrap(array)) with DataArray[Float1, UByte] {
+  def this() = this(new Array[Byte](0))
   def backingSeq = this
 
   def componentBinding = Binding.UByte
@@ -160,6 +164,7 @@ private[buffer] final class ArrayFloat1UByte(
 private[buffer] final class BufferFloat1UByte(
   override val byteBuffer: ByteBuffer
 ) extends SeqFloat1UByte(byteBuffer) with DataBuffer[Float1, UByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UByte
@@ -174,6 +179,7 @@ private[buffer] final class ViewFloat1UByte(
   val offset: Int,
   val stride: Int
 ) extends SeqFloat1UByte(byteBuffer) with DataView[Float1, UByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1UByte(byteBuffer)
 
   def componentBinding = Binding.UByte
@@ -205,6 +211,7 @@ private[buffer] final class ArrayFloat1NSByte(
 ) extends SeqFloat1NSByte(
   ByteBuffer.wrap(array)
 ) with DataArray[Float1, NSByte] {
+  def this() = this(new Array[Byte](0))
   def backingSeq = this
 
   def componentBinding = Binding.SByte
@@ -222,6 +229,7 @@ private[buffer] final class BufferFloat1NSByte(
 ) extends SeqFloat1NSByte(
   byteBuffer
 ) with DataBuffer[Float1, NSByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SByte
@@ -244,6 +252,7 @@ private[buffer] final class ViewFloat1NSByte(
 ) extends SeqFloat1NSByte(
   byteBuffer
 ) with DataView[Float1, NSByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NSByte(byteBuffer)
 
   def componentBinding = Binding.SByte
@@ -281,6 +290,7 @@ private[buffer] final class ArrayFloat1NUByte(
 ) extends SeqFloat1NUByte(
   ByteBuffer.wrap(array)
 ) with DataArray[Float1, NUByte] {
+  def this() = this(new Array[Byte](0))
   def backingSeq = this
 
   def componentBinding = Binding.UByte
@@ -295,6 +305,7 @@ private[buffer] final class BufferFloat1NUByte(
 ) extends SeqFloat1NUByte(
   byteBuffer
 ) with DataBuffer[Float1, NUByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UByte
@@ -314,6 +325,7 @@ private[buffer] final class ViewFloat1NUByte(
 ) extends SeqFloat1NUByte(
   byteBuffer
 ) with DataView[Float1, NUByte] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NUByte(byteBuffer)
 
   def componentBinding = Binding.UByte
@@ -350,6 +362,7 @@ private[buffer] final class ArrayFloat1SShort(
 ) extends SeqFloat1SShort(
   ShortBuffer.wrap(array)
 ) with DataArray[Float1, SShort] {
+  def this() = this(new Array[Short](0))
   def backingSeq = this
 
   def componentBinding = Binding.SShort
@@ -364,6 +377,7 @@ private[buffer] final class BufferFloat1SShort(
 ) extends SeqFloat1SShort(
   byteBuffer.asShortBuffer()
 ) with DataBuffer[Float1, SShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SShort
@@ -380,6 +394,7 @@ private[buffer] final class ViewFloat1SShort(
 ) extends SeqFloat1SShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Float1, SShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1SShort(byteBuffer)
 
   def componentBinding = Binding.SShort
@@ -411,6 +426,7 @@ private[buffer] final class ArrayFloat1UShort(
 ) extends SeqFloat1UShort(
   CharBuffer.wrap(array)
 ) with DataArray[Float1, UShort] {
+  def this() = this(new Array[Char](0))
   def backingSeq = this
 
   def componentBinding = Binding.UShort
@@ -425,6 +441,7 @@ private[buffer] final class BufferFloat1UShort(
 ) extends SeqFloat1UShort(
   byteBuffer.asCharBuffer()
 ) with DataBuffer[Float1, UShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UShort
@@ -441,6 +458,7 @@ private[buffer] final class ViewFloat1UShort(
 ) extends SeqFloat1UShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Float1, UShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1UShort(byteBuffer)
 
   def componentBinding = Binding.UShort
@@ -474,6 +492,7 @@ private[buffer] final class ArrayFloat1NSShort(
 ) extends SeqFloat1NSShort(
   ShortBuffer.wrap(array)
 ) with DataArray[Float1, NSShort] {
+  def this() = this(new Array[Short](0))
   def backingSeq = this
 
   def componentBinding = Binding.SShort
@@ -491,6 +510,7 @@ private[buffer] final class BufferFloat1NSShort(
 ) extends SeqFloat1NSShort(
   byteBuffer.asShortBuffer()
 ) with DataBuffer[Float1, NSShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SShort
@@ -513,6 +533,7 @@ private[buffer] final class ViewFloat1NSShort(
 ) extends SeqFloat1NSShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Float1, NSShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NSShort(byteBuffer)
 
   def componentBinding = Binding.SShort
@@ -550,6 +571,7 @@ private[buffer] final class ArrayFloat1NUShort(
 ) extends SeqFloat1NUShort(
   CharBuffer.wrap(array)
 ) with DataArray[Float1, NUShort] {
+  def this() = this(new Array[Char](0))
   def backingSeq = this
 
   def componentBinding = Binding.UShort
@@ -566,6 +588,7 @@ private[buffer] final class BufferFloat1NUShort(
 ) extends SeqFloat1NUShort(
   byteBuffer.asCharBuffer()
 ) with DataBuffer[Float1, NUShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UShort
@@ -585,6 +608,7 @@ private[buffer] final class ViewFloat1NUShort(
 ) extends SeqFloat1NUShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Float1, NUShort] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NUShort(byteBuffer)
 
   def componentBinding = Binding.UShort
@@ -617,6 +641,7 @@ private[buffer] sealed abstract class SeqFloat1SInt(
 private[buffer] final class ArrayFloat1SInt(
   override val array: Array[Int]
 ) extends SeqFloat1SInt(IntBuffer.wrap(array)) with DataArray[Float1, SInt] {
+  def this() = this(new Array[Int](0))
   def backingSeq = this
 
   def componentBinding = Binding.SInt
@@ -629,6 +654,7 @@ private[buffer] final class ArrayFloat1SInt(
 private[buffer] final class BufferFloat1SInt(
   override val byteBuffer: ByteBuffer
 ) extends SeqFloat1SInt(byteBuffer.asIntBuffer()) with DataBuffer[Float1, SInt]{
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SInt
@@ -643,6 +669,7 @@ private[buffer] final class ViewFloat1SInt(
   val offset: Int,
   val stride: Int
 ) extends SeqFloat1SInt(byteBuffer.asIntBuffer()) with DataView[Float1, SInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1SInt(byteBuffer)
 
   def componentBinding = Binding.SInt
@@ -672,6 +699,7 @@ private[buffer] sealed abstract class SeqFloat1UInt(
 private[buffer] final class ArrayFloat1UInt(
   override val array: Array[Int]
 ) extends SeqFloat1UInt(IntBuffer.wrap(array)) with DataArray[Float1, UInt] {
+  def this() = this(new Array[Int](0))
   def backingSeq = this
 
   def componentBinding = Binding.UInt
@@ -684,6 +712,7 @@ private[buffer] final class ArrayFloat1UInt(
 private[buffer] final class BufferFloat1UInt(
   override val byteBuffer: ByteBuffer
 ) extends SeqFloat1UInt(byteBuffer.asIntBuffer()) with DataBuffer[Float1, UInt]{
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UInt
@@ -701,6 +730,7 @@ private[buffer] final class ViewFloat1UInt(
   val offset: Int,
   val stride: Int
 ) extends SeqFloat1UInt(byteBuffer.asIntBuffer()) with DataView[Float1, UInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1UInt(byteBuffer)
 
   def componentBinding = Binding.UInt
@@ -735,6 +765,7 @@ private[buffer] final class ArrayFloat1NSInt(
 ) extends SeqFloat1NSInt(
   IntBuffer.wrap(array)
 ) with DataArray[Float1, NSInt] {
+  def this() = this(new Array[Int](0))
   def backingSeq = this
 
   def componentBinding = Binding.SInt
@@ -752,6 +783,7 @@ private[buffer] final class BufferFloat1NSInt(
 ) extends SeqFloat1NSInt(
   byteBuffer.asIntBuffer()
 ) with DataBuffer[Float1, NSInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SInt
@@ -774,6 +806,7 @@ private[buffer] final class ViewFloat1NSInt(
 ) extends SeqFloat1NSInt(
   byteBuffer.asIntBuffer()
 ) with DataView[Float1, NSInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NSInt(byteBuffer)
 
   def componentBinding = Binding.SInt
@@ -811,6 +844,7 @@ private[buffer] final class ArrayFloat1NUInt(
 ) extends SeqFloat1NUInt(
   IntBuffer.wrap(array)
 ) with DataArray[Float1, NUInt] {
+  def this() = this(new Array[Int](0))
   def backingSeq = this
 
   def componentBinding = Binding.UInt
@@ -825,6 +859,7 @@ private[buffer] final class BufferFloat1NUInt(
 ) extends SeqFloat1NUInt(
   byteBuffer.asIntBuffer()
 ) with DataBuffer[Float1, NUInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UInt
@@ -846,6 +881,7 @@ private[buffer] final class ViewFloat1NUInt(
 ) extends SeqFloat1NUInt(
   byteBuffer.asIntBuffer()
 ) with DataView[Float1, NUInt] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1NUInt(byteBuffer)
 
   def componentBinding = Binding.UInt
@@ -882,6 +918,7 @@ private[buffer] final class ArrayFloat1RawFloat(
 ) extends SeqFloat1RawFloat(
   FloatBuffer.wrap(array)
 ) with DataArray[Float1, RawFloat] {
+  def this() = this(new Array[Float](0))
   def backingSeq = this
 
   def normalized: Boolean = false
@@ -896,6 +933,7 @@ private[buffer] final class BufferFloat1RawFloat(
 ) extends SeqFloat1RawFloat(
   byteBuffer.asFloatBuffer()
 ) with DataBuffer[Float1, RawFloat] {
+  def this() = this(BufferUtil.allocateByteBuffer(0))
   def backingSeq = this
 
   def normalized: Boolean = false
@@ -912,6 +950,7 @@ private[buffer] final class ViewFloat1RawFloat(
 ) extends SeqFloat1RawFloat(
   byteBuffer.asFloatBuffer()
 ) with DataView[Float1, RawFloat] {
+  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferFloat1RawFloat(byteBuffer)
 
   def normalized: Boolean = false

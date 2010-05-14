@@ -30,11 +30,16 @@ import simplex3d.buffer._
  */
 package buffer {
   private[buffer] class UnsignedImplicits {
-    private final type F[T <: MetaType, D <: RawType] = DataSeqFactoryRef[T, D]
-    
-    implicit final val fInt1UByte = new F(new ArrayInt1UByte(Array[Byte]()))
-    implicit final val fInt1UShort = new F(new ArrayInt1UShort(Array[Char]()))
-    implicit final val fInt1UInt = new F(new ArrayInt1UInt(Array[Int]()))
+    private final type F[T <: MetaType, D <: RawType] = SimpleFactoryRef[T, D]
+
+    implicit final val fInt1SByte = new F(new ArrayInt1SByte)
+    implicit final val fInt1UByte = new F(new ArrayInt1UByte)
+
+    implicit final val fInt1SShort = new F(new ArrayInt1SShort)
+    implicit final val fInt1UShort = new F(new ArrayInt1UShort)
+
+    implicit final val fInt1SInt = new F(new ArrayInt1SInt)
+    implicit final val fInt1UInt = new F(new ArrayInt1UInt)
   }
 }
 

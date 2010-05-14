@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import scala.annotation.unchecked._
 import simplex3d.math._
 
 
@@ -28,7 +29,21 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 trait IndexSeq[+D <: ReadInt with Unsigned]
-extends ContiguousSeq[Int1, D]
+extends ContiguousSeq[Int1, D] {
+  def mkIndexArray(size: Int) :IndexArray[D] =
+    mkDataArray(size).asInstanceOf[IndexArray[D]]
+  def mkIndexArray(array: D#ArrayType @uncheckedVariance) :IndexArray[D] =
+    mkDataArray(array).asInstanceOf[IndexArray[D]]
+  def mkIndexBuffer(size: Int) :IndexBuffer[D] =
+    mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
+  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[D] =
+    mkDataBuffer(byteBuffer).asInstanceOf[IndexBuffer[D]]
+
+  def copyAsIndexArray() :IndexArray[D] =
+    super.copyAsDataArray().asInstanceOf[IndexArray[D]]
+  def copyAsIndexBuffer() :IndexBuffer[D] =
+    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[D]]
+}
 
 trait IndexArray[+D <: ReadInt with Unsigned]
 extends IndexSeq[D] with DataArray[Int1, D]
@@ -39,19 +54,19 @@ extends IndexSeq[D] with DataBuffer[Int1, D]
 
 object IndexArray {
   def apply[D <: ReadInt with Unsigned](array: D#ArrayType)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     ref.factory.mkDataArray(array).asInstanceOf[IndexArray[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     ref.factory.mkDataArray(size).asInstanceOf[IndexArray[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](vals: Int*)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     val data = ref.factory.mkDataArray(vals.size).asInstanceOf[IndexArray[D]]
     data.put(vals)
@@ -61,19 +76,19 @@ object IndexArray {
 
 object IndexBuffer {
   def apply[D <: ReadInt with Unsigned](buffer: ByteBuffer)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     ref.factory.mkDataBuffer(buffer).asInstanceOf[IndexBuffer[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](size: Int)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     ref.factory.mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
   }
 
   def apply[D <: ReadInt with Unsigned](vals: Int*)(
-    implicit ref: DataSeqFactoryRef[Int1, D]
+    implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     val data = ref.factory.mkDataBuffer(vals.size).asInstanceOf[IndexBuffer[D]]
     data.put(vals)

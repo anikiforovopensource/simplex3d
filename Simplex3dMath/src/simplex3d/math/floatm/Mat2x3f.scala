@@ -300,7 +300,7 @@ object ConstMat2x3f {
     0, 0
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float,
     m02: Float, m12: Float
@@ -461,7 +461,7 @@ object Mat2x3f {
     0, 0
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float,
     m02: Float, m12: Float

@@ -225,7 +225,7 @@ object ConstMat2d {
     0, s
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Double, m10: Double,
     m01: Double, m11: Double
   ) = new ConstMat2d(
@@ -359,7 +359,7 @@ object Mat2d {
     0, s
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Double, m10: Double,
     m01: Double, m11: Double
   ) = new Mat2d(

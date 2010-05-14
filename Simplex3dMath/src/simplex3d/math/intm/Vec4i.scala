@@ -159,7 +159,7 @@ final class ConstVec4i private[math] (
 ) extends AnyVec4i with Immutable
 
 object ConstVec4i {
-  /* @inline */ def apply(x: Int, y: Int, z: Int, w: Int) =
+  /* main factory */ def apply(x: Int, y: Int, z: Int, w: Int) =
     new ConstVec4i(x, y, z, w)
 
   def apply(u: Read4[_]) = new ConstVec4i(u.ix, u.iy, u.iz, u.iw)
@@ -632,7 +632,7 @@ object Vec4i {
   def apply(s: Int) =
     new Vec4i(s, s, s, s)
 
-  /* @inline */ def apply(x: Int, y: Int, z: Int, w: Int) =
+  /* main factory */ def apply(x: Int, y: Int, z: Int, w: Int) =
     new Vec4i(x, y, z, w)
 
   def apply(u: Read4[_]) =

@@ -148,7 +148,7 @@ final class ConstQuat4d private[math] (
 ) extends AnyQuat4d with Immutable
 
 object ConstQuat4d {
-  /* @inline */ def apply(a: Double, b: Double, c: Double, d: Double) =
+  /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new ConstQuat4d(a, b, c, d)
 
   def apply(u: ReadQ[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
@@ -203,7 +203,7 @@ final class Quat4d private[math] (
 object Quat4d {
   val Identity = new ConstQuat4d(1, 0, 0, 0)
   
-  /* @inline */ def apply(a: Double, b: Double, c: Double, d: Double) =
+  /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
 
   def apply(q: ReadQ[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)

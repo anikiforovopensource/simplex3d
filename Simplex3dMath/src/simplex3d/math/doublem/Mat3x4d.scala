@@ -401,7 +401,7 @@ object ConstMat3x4d {
     0, 0, 0
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
     m02: Double, m12: Double, m22: Double,
@@ -609,7 +609,7 @@ object Mat3x4d {
     0, 0, 0
   )
 
-  /* @inline */ def apply(
+  /* main factory */ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double,
     m02: Double, m12: Double, m22: Double,

@@ -215,7 +215,7 @@ object ConstVec3b {
    * @return a new instance of ConstVec3b with components initialized
    *         to the arguments.
    */
-  /* @inline */ def apply(x: Boolean, y: Boolean, z: Boolean) =
+  /* main factory */ def apply(x: Boolean, y: Boolean, z: Boolean) =
     new ConstVec3b(x, y, z)
 
   /** Makes a new instance of ConstVec3b from a 3-dimensional vector.
@@ -466,7 +466,7 @@ object Vec3b {
    * @return a new instance of Vec3b with components initialized
    *         to the arguments.
    */
-  /* @inline */ def apply(x: Boolean, y: Boolean, z: Boolean) = new Vec3b(x, y, z)
+  /* main factory */ def apply(x: Boolean, y: Boolean, z: Boolean) = new Vec3b(x, y, z)
 
   /** Makes a new instance of Vec3b from a 3-dimensional vector.
    * @param u any 3-dimensional vector.

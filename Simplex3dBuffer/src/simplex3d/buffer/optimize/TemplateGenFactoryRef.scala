@@ -36,10 +36,6 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 ) extends FactoryRef[T, D] {
   
   private final val sysprop = "simplex3d.buffer.optimize"
-  private def disableWarningMsg =
-    "Disable this warning by setting system property '" +
-    sysprop + "' to false."
-
   private val replaceString =
     (if (fallbackFactory.normalized) "N" else "") +
     (fallbackFactory.componentBinding match {
@@ -53,44 +49,70 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       case Binding.RawDouble => "RawDouble"
     })
 
-  private lazy val ref: DataSeq[T, D] = {
-    val enableGen = ((
-      try {
-        System.getProperty(sysprop)
-      } catch {
-        case se: SecurityException => "true"
-      }
-    ).toLowerCase != "false")
+  private def disableWarningMsg =
+    "Disable buffer optimization by setting system property '" +
+    sysprop + "' to false."
 
+  private def enableGen :Boolean = {
+    val default = "true"
+    (try {
+      System.getProperty(sysprop, default)
+    } catch {
+      case se: SecurityException => default
+    }).toLowerCase != "false"
+  }
+
+  private def reportMissingLib :Boolean = {
+    (try {
+      System.getProperty(sysprop)
+    } catch {
+      case se: SecurityException => "set"
+    }) != null
+  }
+
+  def factory = ref
+  private lazy val ref: DataSeq[T, D] = {
     if (!enableGen) fallbackFactory
     else {
       try {
         genAndLoad(templateArray.replace("Array", "Buffer"))
         genAndLoad(templateArray.replace("Array", "View"))
-        genAndLoad(templateArray)
+        val factory = genAndLoad(templateArray)
+        testFactory(factory)
+        factory
       }
       catch {
-        case nl: NoLibException =>
+        case nolib: NoLibException =>
+          if (reportMissingLib) {
+            Logger.getLogger(getClass.getName).log(
+              Level.WARNING,
+              "Unable to load optimized classes due to missing asm library. " +
+              disableWarningMsg,
+              nolib.getCause
+            )
+          }
+          fallbackFactory
+        case badcode: BytecodeCheckException =>
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
-            "Unable to load optimized classes due to missing asm library. " +
+            "Wrong bytecode for '" + replaceString +
+            "' from template '" + templateArray + "'. Ensure that the " +
+            "template is compiled without -optimize coplier flag. " +
             disableWarningMsg,
-            nl.getCause
+            badcode.getCause
           )
           fallbackFactory
-        case e =>
+        case any =>
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
             "Failed to load optimized classes for '" + replaceString +
             "' from template '" + templateArray + "'." + disableWarningMsg,
-            e
+            any
           )
           fallbackFactory
       }
     }
   }
-
-  def factory = ref
 
   private def genAndLoad(templateClassName: String) :DataSeq[T, D] = {
     val genClassName = templateClassName.replace(templateString, replaceString)
@@ -100,7 +122,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       DefineClassLoader.get.loadClass(genClassName)
     }
     catch {
-      case ex: ClassNotFoundException =>
+      case noclass: ClassNotFoundException =>
 
         val templateGen =
         try {
@@ -128,12 +150,141 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
         )
     }
     val factory = clazz.newInstance.asInstanceOf[DataSeq[T, D]]
-    testFactory(factory)
     factory
   }
 
   private def testFactory(factory: DataSeq[T, D]) {
+    try {
+      val template = fallbackFactory.mkDataBuffer(TestData.data)
 
+      testDataArray(factory.mkDataArray(1))
+      testDataArray(
+        factory.mkDataArray(fallbackFactory.mkDataArray(1).array)
+      )
+
+      testDataBuffer(factory.mkDataBuffer(1))
+      testDataBuffer(
+        factory.mkDataBuffer(fallbackFactory.mkDataBuffer(1).byteBuffer)
+      )
+
+      testDataView(
+        factory.mkDataView(fallbackFactory.mkDataBuffer(1).byteBuffer, 0, 0)
+      )
+
+
+      testDataSeq(template, factory.mkDataArray(template.size))
+      testDataSeq(template, factory.mkDataArray(
+          fallbackFactory.mkDataArray(template.size).array
+      ))
+
+      testDataSeq(template, factory.mkDataBuffer(template.size))
+      testDataSeq(template, factory.mkDataBuffer(
+          BufferUtil.allocateByteBuffer(
+            template.size*template.components*template.componentBytes
+          )
+      ))
+
+      val offset = 3
+      val stride = 5
+      testDataSeq(template, factory.mkDataView(
+        BufferUtil.allocateByteBuffer(
+            offset +
+            template.size*(template.components + stride)*template.componentBytes
+        ),
+          offset,
+          stride
+      ))
+    }
+    catch {
+      case any => throw new BytecodeCheckException(any)
+    }
+  }
+
+  private def testDataArray(testing: DataArray[T, D]) {
+    val fb = fallbackFactory.mkDataArray(1)
+    assert(testing.isInstanceOf[DataArray[T, D]])
+    assert(fb.array.getClass == testing.array.getClass)
+    assert(fb.buffer.getClass == testing.buffer.getClass)
+  }
+
+  private def testDataBuffer(testing: DataBuffer[T, D]) {
+    val fb = fallbackFactory.mkDataBuffer(1)
+    assert(testing.isInstanceOf[DataBuffer[T, D]])
+    assert(fb.buffer.getClass == testing.buffer.getClass)
+  }
+
+  private def testDataView(testing: DataView[T, D]) {
+    val fb = fallbackFactory.mkDataView(BufferUtil.allocateByteBuffer(8), 0, 0)
+    assert(testing.isInstanceOf[DataView[T, D]])
+    assert(fb.buffer.getClass == testing.buffer.getClass)
+  }
+
+  private def testDataSeq(template: DataSeq[T, D], testing: DataSeq[T, D]) {
+    assert(
+      template(0).asInstanceOf[Object].getClass ==
+      testing(0).asInstanceOf[Object].getClass
+    )
+    assert(template.componentBinding == testing.componentBinding)
+    assert(template.normalized == testing.normalized)
+
+    testApplyUpdate(template, testing)
+  }
+
+  private def testApplyUpdate(template: DataSeq[T, D], testing: DataSeq[T, D]) {
+    assert(template.size == testing.size)
+
+    var i = 0; while (i < template.size) {
+      testing(i) = template(i)
+      i += 1
+    }
+
+    // check content
+    i = 0; while (i < template.size) {
+      assert(testing(i) == template(i))
+      i += 1
+    }
+
+    // check backing content
+    val btest = testing.backingSeq
+    val btemp = template.backingSeq
+    var c = 0
+    i = testing.offset; while (i < btest.size) {
+      var j = 0; while (j < testing.components) {
+        assert(btest(i + j) == btemp(c))
+        j += 1
+        c += 1
+      }
+      i += testing.step
+    }
+  }
+}
+
+private[optimize] object TestData {
+  val data = BufferUtil.allocateByteBuffer(20*4)
+
+  {
+    // A small number as positive and negative Int, Float and Double.
+    val db = data.asDoubleBuffer()
+    db.put(0, -55)
+    db.put(1, 55)
+    db.put(2, -0.55)
+    db.put(3, 0.55)
+    val fb = data.asFloatBuffer()
+    fb.put(8, -55)
+    fb.put(9, 55)
+    fb.put(10, -0.55f)
+    fb.put(11, 0.55f)
+    val ib = data.asIntBuffer()
+    ib.put(12, -55)
+    ib.put(13, 55)
+
+    // pad 3 components of max width
+    ib.put(14, 0)
+    ib.put(15, 0)
+    ib.put(16, 0)
+    ib.put(17, 0)
+    ib.put(18, 0)
+    ib.put(19, 0)
   }
 }
 
@@ -148,3 +299,4 @@ extends ClassLoader(parent) {
 }
 
 private[optimize] class NoLibException(e: Throwable) extends Exception(e)
+private[optimize] class BytecodeCheckException(e: Throwable) extends Exception(e)

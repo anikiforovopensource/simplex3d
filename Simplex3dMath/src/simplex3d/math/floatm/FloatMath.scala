@@ -1935,7 +1935,7 @@ object FloatMath {
   }
 
   // Projection
-  def perspective(
+  def perspectiveProj(
     fieldOfView: Float, aspectRatio: Float,
     near: Float, far: Float
   ) :Mat4f = {
@@ -1950,7 +1950,7 @@ object FloatMath {
     )
   }
 
-  def ortho(
+  def orthoProj(
     left: Float, right: Float,
     bottom: Float, top: Float,
     near: Float, far: Float

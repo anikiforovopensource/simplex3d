@@ -1907,7 +1907,7 @@ object DoubleMath {
   }
 
   // Projection
-  def perspective(
+  def perspectiveProj(
     fieldOfView: Double, aspectRatio: Double,
     near: Double, far: Double
   ) :Mat4d = {
@@ -1922,7 +1922,7 @@ object DoubleMath {
     )
   }
 
-  def ortho(
+  def orthoProj(
     left: Double, right: Double,
     bottom: Double, top: Double,
     near: Double, far: Double

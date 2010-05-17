@@ -21,6 +21,7 @@
 package bench.math
 
 import simplex3d.math._
+import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -36,10 +37,14 @@ object MatConversionBench {
 
 class MatConversionCase {
   val length = 10000
-  val loops = 50000
+  val loops = 10000
 
   def run() {
     var start = 0L
+
+    start = System.currentTimeMillis
+    preTest(length, loops)
+    val preTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     implementedTest(length, loops)
@@ -49,8 +54,9 @@ class MatConversionCase {
     factoryTest(length, loops)
     val factoryTime = System.currentTimeMillis - start
 
-    println("Factory time: " + factoryTime)
+    println("Pretest time: " + preTime)
     println("Implemented time: " + implemented)
+    println("Factory time: " + factoryTime)
   }
 
   final def makeMat4(m: Mat2) = Mat4(
@@ -66,6 +72,48 @@ class MatConversionCase {
     m.m02, m.m12, m.m22
   )
 
+  def preTest(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops/10) {
+      var i = 0; while (i < length/10) {
+
+        // Bench code
+        val m = Mat4(
+          i, i + 1, i + 2, i + 3,
+          i + 4, i + 5, i + 6, i + 7,
+          i + 8, i + 9, i + 10, i + 11,
+          i + 12, i + 13, i + 14, i + 15
+        )
+        val b = Mat3(1)
+        b += Mat3(Mat2x2(m))
+        b += Mat3(Mat2x3(m))
+        b += Mat3(Mat2x4(m))
+        b += Mat3(Mat3x2(m))
+        b += Mat3(Mat3x3(m))
+        b += Mat3(Mat3x4(m))
+        b += Mat3(Mat4x2(m))
+        b += Mat3(Mat4x3(m))
+        b += Mat3(Mat4x4(m))
+        b += Mat3(Mat2x2f(m))
+        b += Mat3(Mat2x3f(m))
+        b += Mat3(Mat2x4f(m))
+        b += Mat3(Mat3x2f(m))
+        b += Mat3(Mat3x3f(m))
+        b += Mat3(Mat3x4f(m))
+        b += Mat3(Mat4x2f(m))
+        b += Mat3(Mat4x3f(m))
+        b += Mat3(Mat4x4f(m))
+        answer += int(determinant(b))
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
   def implementedTest(length: Int, loops: Int) {
     var answer = 0
 
@@ -73,12 +121,15 @@ class MatConversionCase {
       var i = 0; while (i < length) {
 
         // Bench code
-        val m2 = Mat2(i, i + 1, i + 2, i + 3)
-        m2 += 1
-        val m4 = Mat4(m2)
-        m4 += 2
-        val m3 = Mat3(m4)
-        answer += int(determinant(m3))
+        val a = Mat4(
+          i, i + 1, i + 2, i + 3,
+          i + 4, i + 5, i + 6, i + 7,
+          i + 8, i + 9, i + 10, i + 11,
+          i + 12, i + 13, i + 14, i + 15
+        )
+        a += 1
+        val b = Mat3(a)
+        answer += int(determinant(b))
 
         i += 1
       }
@@ -95,12 +146,15 @@ class MatConversionCase {
       var i = 0; while (i < length) {
 
         // Bench code
-        val m2 = Mat2(i, i + 1, i + 2, i + 3)
-        m2 += 1
-        val m4 = makeMat4(m2)
-        m4 += 2
-        val m3 = makeMat3(m4)
-        answer += int(determinant(m3))
+        val a = Mat4(
+          i, i + 1, i + 2, i + 3,
+          i + 4, i + 5, i + 6, i + 7,
+          i + 8, i + 9, i + 10, i + 11,
+          i + 12, i + 13, i + 14, i + 15
+        )
+        a += 1
+        val b = makeMat3(a)
+        answer += int(determinant(b))
 
         i += 1
       }

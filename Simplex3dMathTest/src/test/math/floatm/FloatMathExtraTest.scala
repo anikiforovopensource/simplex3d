@@ -972,7 +972,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, -1.020202f, -1.0f,
         0, 0, -20.20202f, 0.0f
     )
-    val m1 = perspective(radians(90), 640/480f, 10, 1000)
+    val m1 = perspectiveProj(radians(90), 640/480f, 10, 1000)
     assert(approxEqual(m1, p1, 1e-7f))
     
     // gluPerspective(120, 800/600f, 10, 10000)
@@ -982,7 +982,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, -1.002002f, -1.0f,
         0, 0, -20.02002f, 0
     )
-    val m2 = perspective(radians(120), 800/600f, 10, 10000)
+    val m2 = perspectiveProj(radians(120), 800/600f, 10, 10000)
     assert(approxEqual(m2, p2, 1e-7f))
 
     // gluPerspective(100, 1680/1050f, 1, 800)
@@ -992,7 +992,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, 0, -1.0025032f, -1.0f,
         0, 0, -2.0025032f, 0
     )
-    val m3 = perspective(radians(100), 1680/1050f, 1, 800)
+    val m3 = perspectiveProj(radians(100), 1680/1050f, 1, 800)
     assert(approxEqual(m3, p3, 1e-7f))
 
     // glOrtho(-100, 100, -100, 100, -100, 100)
@@ -1002,7 +1002,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, -0.01f, 0,
         0, 0, 0, 1.0f
     )
-    val n1 = ortho(-100, 100, -100, 100, -100, 100)
+    val n1 = orthoProj(-100, 100, -100, 100, -100, 100)
     assert(approxEqual(n1, o1, 1e-7f))
 
     // gl.glOrtho(0, 300, -200, 400, -20, 500)
@@ -1012,7 +1012,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, -0.0038461538f, 0,
         -1.0f, -0.33333334f, -0.9230769f, 1.0f
     )
-    val n2 = ortho(0, 300, -200, 400, -20, 500)
+    val n2 = orthoProj(0, 300, -200, 400, -20, 500)
     assert(approxEqual(n2, o2, 1e-7f))
 
     // gl.glOrtho(-500, 22, -800, -222, 100, 1000)
@@ -1022,7 +1022,7 @@ class FloatMathExtraTest extends FunSuite {
         0, 0, -0.0022222223f, 0,
         0.91570884f, 1.7681661f, -1.2222222f, 1.0f
     )
-    val n3 = ortho(-500, 22, -800, -222, 100, 1000)
+    val n3 = orthoProj(-500, 22, -800, -222, 100, 1000)
     assert(approxEqual(n3, o3, 1e-6f))
   }
 

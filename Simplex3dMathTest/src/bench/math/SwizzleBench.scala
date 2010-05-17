@@ -20,6 +20,9 @@
 
 package bench.math
 
+import simplex3d.math._
+import simplex3d.math.intm._
+import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
 
 
@@ -35,7 +38,7 @@ object SwizzleBench {
 class SwizzleBenchCase {
   def run() {
     val length = 100000
-    val loops = 1000
+    val loops = 1001
 
     var start = 0L
     
@@ -50,6 +53,18 @@ class SwizzleBenchCase {
     start = System.currentTimeMillis
     testImplemented(length, loops)
     val implementedTime = System.currentTimeMillis - start
+    
+    start = System.currentTimeMillis
+    testImplementedFloat(length, loops)
+    val implementedFloatTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testImplementedBoolean(length, loops)
+    val implementedBooleanTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testImplementedInt(length, loops)
+    val implementedIntTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testInlined(length, loops)
@@ -59,11 +74,14 @@ class SwizzleBenchCase {
     testNoSwizzle(length, loops)
     val noSwizzleTime = System.currentTimeMillis - start
 
-    println("Trait time: " + traitTime +
-            ", abstract time: " + abstractTime +
-            ", inlined time: " + inlinedTime +
-            ", no swizzle time: " + noSwizzleTime +
-            ", implemented time: " + implementedTime + ".")
+    println("Trait time: " + traitTime + ".")
+    println("Abstract time: " + abstractTime + ".")
+    println("Inlined time: " + inlinedTime + ".")
+    println("No swizzle time: " + noSwizzleTime + ".")
+    println("Implemented time: " + implementedTime + ".")
+    println("Implemented Int time: " + implementedIntTime + ".")
+    println("Implemented Float time: " + implementedFloatTime + ".")
+    println("Implemented Boolean time: " + implementedBooleanTime + ".")
   }
 
   def testTrait(length: Int, loops: Int) {
@@ -77,8 +95,8 @@ class SwizzleBenchCase {
         val v = Vec4m(i, i + 1, i + 2, i + 3)
         val u = v.yzwx
         val r = v + u
-        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-        answer += l2.asInstanceOf[Int]
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
 
         i += 1
       }
@@ -98,8 +116,8 @@ class SwizzleBenchCase {
         val v = Vec4m(i, i + 1, i + 2, i + 3)
         val u = v.xyzw
         val r = v + u
-        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-        answer += l2.asInstanceOf[Int]
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
 
         i += 1
       }
@@ -119,8 +137,8 @@ class SwizzleBenchCase {
         val v = Vec4m(i, i + 1, i + 2, i + 3)
         val u = v.zwxy
         val r = v + u
-        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-        answer += l2.asInstanceOf[Int]
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
 
         i += 1
       }
@@ -140,8 +158,71 @@ class SwizzleBenchCase {
         val v = ConstVec4(i, i + 1, i + 2, i + 3)
         val u = v.yzwx
         val r = v + u
-        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-        answer += l2.asInstanceOf[Int]
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedInt(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4i(i, i + 1, i + 2, i + 3)
+        val u = v + v.yzwx
+        val r = v + u
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedFloat(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4f(i, i + 1, i + 2, i + 3)
+        val u = v.yzwx
+        val r = v + u
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedBoolean(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4b((i & 1) == 0, (i & 2) == 0, (i & 3) == 0, (i & 4) == 0)
+        val u = v.yzwx
+        val r = Vec4i(u) + Vec4i(v)
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
 
         i += 1
       }
@@ -161,8 +242,8 @@ class SwizzleBenchCase {
         val v = ConstVec4(i, i + 1, i + 2, i + 3)
         val u = ConstVec4(v.x, v.y, v.z, v.w)
         val r = v + u
-        val l2 = (r.x*r.x + r.y*r.y + r.z*r.z + r.w*r.w)
-        answer += l2.asInstanceOf[Int]
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
 
         i += 1
       }

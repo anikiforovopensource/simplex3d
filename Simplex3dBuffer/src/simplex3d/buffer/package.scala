@@ -44,6 +44,11 @@ package buffer {
 }
 
 package object buffer extends UnsignedImplicits {
+
+  def allocateByteBuffer(size: Int) = {
+    val direct = ByteBuffer.allocateDirect(size)
+    direct.order(ByteOrder.nativeOrder())
+  }
   
   def interleave[
     T1 <: MetaType, D1 <: RawType,
@@ -461,7 +466,7 @@ package object buffer extends UnsignedImplicits {
     val byteStride = totalWidth + pad
 
     // generate
-    val byteBuffer = BufferUtil.allocateByteBuffer(byteStride*size)
+    val byteBuffer = allocateByteBuffer(byteStride*size)
     val result = new Array[DataView[_, _]](dataSeqs.length)
     var byteOffset = 0
     i = 0; while (i < dataSeqs.length) {

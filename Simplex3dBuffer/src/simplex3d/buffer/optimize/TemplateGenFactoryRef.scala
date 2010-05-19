@@ -179,7 +179,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 
       testDataSeq(template, factory.mkDataBuffer(template.size))
       testDataSeq(template, factory.mkDataBuffer(
-          BufferUtil.allocateByteBuffer(
+          allocateByteBuffer(
             template.size*template.components*template.componentBytes
           )
       ))
@@ -187,7 +187,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       val offset = 3
       val stride = 5
       testDataSeq(template, factory.mkDataView(
-        BufferUtil.allocateByteBuffer(
+        allocateByteBuffer(
             offset +
             template.size*(template.components + stride)*template.componentBytes
         ),
@@ -214,7 +214,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
   }
 
   private def testDataView(testing: DataView[T, D]) {
-    val fb = fallbackFactory.mkDataView(BufferUtil.allocateByteBuffer(8), 0, 0)
+    val fb = fallbackFactory.mkDataView(allocateByteBuffer(8), 0, 0)
     assert(testing.isInstanceOf[DataView[T, D]])
     assert(fb.buffer.getClass == testing.buffer.getClass)
   }
@@ -260,7 +260,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 }
 
 private[optimize] object TestData {
-  val data = BufferUtil.allocateByteBuffer(20*4)
+  val data = allocateByteBuffer(20*4)
 
   {
     // A small number as positive and negative Int, Float and Double.

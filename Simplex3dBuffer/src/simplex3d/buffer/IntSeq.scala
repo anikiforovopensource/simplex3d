@@ -62,7 +62,7 @@ private[buffer] sealed abstract class SeqInt1UByte(
   final def mkDataArray(array: Array[Byte]) =
     new ArrayInt1UByte(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1UByte(BufferUtil.allocateByteBuffer(size))
+    new BufferInt1UByte(allocateByteBuffer(size))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1UByte(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -85,7 +85,7 @@ private[buffer] final class ArrayInt1UByte(
 private[buffer] final class BufferInt1UByte(
   override val byteBuffer: ByteBuffer
 ) extends SeqInt1UByte(byteBuffer) with IndexBuffer[UByte] {
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UByte
@@ -100,7 +100,7 @@ private[buffer] final class ViewInt1UByte(
   val offset: Int,
   val stride: Int
 ) extends SeqInt1UByte(byteBuffer) with DataView[Int1, UByte] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1UByte(byteBuffer)
 
   def componentBinding = Binding.UByte
@@ -120,7 +120,7 @@ private[buffer] sealed abstract class SeqInt1UShort(
   final def mkDataArray(array: Array[Char]) =
     new ArrayInt1UShort(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1UShort(BufferUtil.allocateByteBuffer(size*2))
+    new BufferInt1UShort(allocateByteBuffer(size*2))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1UShort(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -147,7 +147,7 @@ private[buffer] final class BufferInt1UShort(
 ) extends SeqInt1UShort(
   byteBuffer.asCharBuffer()
 ) with IndexBuffer[UShort] {
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UShort
@@ -164,7 +164,7 @@ private[buffer] final class ViewInt1UShort(
 ) extends SeqInt1UShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Int1, UShort] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1UShort(byteBuffer)
 
   def componentBinding = Binding.UShort
@@ -186,7 +186,7 @@ private[buffer] sealed abstract class SeqInt1UInt(
   final def mkDataArray(array: Array[Int]) =
     new ArrayInt1UInt(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1UInt(BufferUtil.allocateByteBuffer(size*4))
+    new BufferInt1UInt(allocateByteBuffer(size*4))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1UInt(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -209,7 +209,7 @@ private[buffer] final class ArrayInt1UInt(
 private[buffer] final class BufferInt1UInt(
   override val byteBuffer: ByteBuffer
 ) extends SeqInt1UInt(byteBuffer.asIntBuffer()) with IndexBuffer[UInt]{
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.UInt
@@ -224,7 +224,7 @@ private[buffer] final class ViewInt1UInt(
   val offset: Int,
   val stride: Int
 ) extends SeqInt1UInt(byteBuffer.asIntBuffer()) with DataView[Int1, UInt] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1UInt(byteBuffer)
 
   def componentBinding = Binding.UInt
@@ -244,7 +244,7 @@ private[buffer] sealed abstract class SeqInt1SByte(
   final def mkDataArray(array: Array[Byte]) =
     new ArrayInt1SByte(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1SByte(BufferUtil.allocateByteBuffer(size))
+    new BufferInt1SByte(allocateByteBuffer(size))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SByte(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -267,7 +267,7 @@ private[buffer] final class ArrayInt1SByte(
 private[buffer] final class BufferInt1SByte(
   override val byteBuffer: ByteBuffer
 ) extends SeqInt1SByte(byteBuffer) with DataBuffer[Int1, SByte] {
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SByte
@@ -282,7 +282,7 @@ private[buffer] final class ViewInt1SByte(
   val offset: Int,
   val stride: Int
 ) extends SeqInt1SByte(byteBuffer) with DataView[Int1, SByte] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1SByte(byteBuffer)
 
   def componentBinding = Binding.SByte
@@ -302,7 +302,7 @@ private[buffer] sealed abstract class SeqInt1SShort(
   final def mkDataArray(array: Array[Short]) =
     new ArrayInt1SShort(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1SShort(BufferUtil.allocateByteBuffer(size*2))
+    new BufferInt1SShort(allocateByteBuffer(size*2))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SShort(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -329,7 +329,7 @@ private[buffer] final class BufferInt1SShort(
 ) extends SeqInt1SShort(
   byteBuffer.asShortBuffer()
 ) with DataBuffer[Int1, SShort] {
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SShort
@@ -346,7 +346,7 @@ private[buffer] final class ViewInt1SShort(
 ) extends SeqInt1SShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Int1, SShort] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1SShort(byteBuffer)
 
   def componentBinding = Binding.SShort
@@ -366,7 +366,7 @@ private[buffer] sealed abstract class SeqInt1SInt(
   final def mkDataArray(array: Array[Int]) =
     new ArrayInt1SInt(array)
   final def mkDataBuffer(size: Int) =
-    new BufferInt1SInt(BufferUtil.allocateByteBuffer(size*4))
+    new BufferInt1SInt(allocateByteBuffer(size*4))
   final def mkDataBuffer(byteBuffer: ByteBuffer) =
     new BufferInt1SInt(byteBuffer)
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
@@ -389,7 +389,7 @@ private[buffer] final class ArrayInt1SInt(
 private[buffer] final class BufferInt1SInt(
   override val byteBuffer: ByteBuffer
 ) extends SeqInt1SInt(byteBuffer.asIntBuffer()) with DataBuffer[Int1, SInt]{
-  def this() = this(BufferUtil.allocateByteBuffer(0))
+  def this() = this(allocateByteBuffer(0))
   def backingSeq = this
 
   def componentBinding = Binding.SInt
@@ -404,7 +404,7 @@ private[buffer] final class ViewInt1SInt(
   val offset: Int,
   val stride: Int
 ) extends SeqInt1SInt(byteBuffer.asIntBuffer()) with DataView[Int1, SInt] {
-  def this() = this(BufferUtil.allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 0)
   val backingSeq = new BufferInt1SInt(byteBuffer)
 
   def componentBinding = Binding.SInt

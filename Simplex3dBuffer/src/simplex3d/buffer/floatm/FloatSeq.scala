@@ -22,6 +22,9 @@ package simplex3d.buffer.floatm
 
 import java.nio._
 import simplex3d.buffer._
+import simplex3d.buffer.FloatUtil.{
+  floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat
+}
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -894,6 +897,70 @@ private[buffer] final class ViewFloat1NUInt(
     offset + i*step,
     int(clamp(v, 0, 1)*toNUInt)
   )
+}
+
+
+// Type: HalfFloat
+private[buffer] sealed abstract class SeqFloat1HalfFloat(
+  buff: ShortBuffer
+) extends BaseFloat1[HalfFloat](buff) {
+  final def mkDataArray(size: Int) =
+    new ArrayFloat1HalfFloat(new Array[Short](size))
+  final def mkDataArray(array: Array[Short]) =
+    new ArrayFloat1HalfFloat(array)
+  final def mkDataBuffer(size: Int) =
+    new BufferFloat1HalfFloat(allocateByteBuffer(size*2))
+  final def mkDataBuffer(byteBuffer: ByteBuffer) =
+    new BufferFloat1HalfFloat(byteBuffer)
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewFloat1HalfFloat(byteBuffer, offset, stride)
+}
+
+private[buffer] final class ArrayFloat1HalfFloat(
+  override val array: Array[Short]
+) extends SeqFloat1HalfFloat(
+  ShortBuffer.wrap(array)
+) with DataArray[Float1, HalfFloat] {
+  def this() = this(new Array[Short](0))
+  def backingSeq = this
+
+  def normalized: Boolean = false
+  def componentBinding: Int = Binding.HalfFloat
+
+  def apply(i: Int) :Float = fromHalfFloat(array(i))
+  def update(i: Int, v: Float) = array(i) = toHalfFloat(v)
+}
+
+private[buffer] final class BufferFloat1HalfFloat(
+  override val byteBuffer: ByteBuffer
+) extends SeqFloat1HalfFloat(
+  byteBuffer.asShortBuffer()
+) with DataBuffer[Float1, HalfFloat] {
+  def this() = this(allocateByteBuffer(0))
+  def backingSeq = this
+
+  def normalized: Boolean = false
+  def componentBinding: Int = Binding.HalfFloat
+
+  def apply(i: Int) :Float = fromHalfFloat(buffer.get(i))
+  def update(i: Int, v: Float) = buffer.put(i, toHalfFloat(v))
+}
+
+private[buffer] final class ViewFloat1HalfFloat(
+  override val byteBuffer: ByteBuffer,
+  val offset: Int,
+  val stride: Int
+) extends SeqFloat1HalfFloat(
+  byteBuffer.asShortBuffer()
+) with DataView[Float1, HalfFloat] {
+  def this() = this(allocateByteBuffer(0), 0, 0)
+  val backingSeq = new BufferFloat1HalfFloat(byteBuffer)
+
+  def normalized: Boolean = false
+  def componentBinding: Int = Binding.HalfFloat
+
+  def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*step))
+  def update(i: Int, v: Float) = buffer.put(offset + i*step, toHalfFloat(v))
 }
 
 

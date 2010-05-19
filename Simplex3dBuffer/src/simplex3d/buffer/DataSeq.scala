@@ -444,8 +444,9 @@ private[buffer] abstract class BaseSeq[
         case Binding.UShort => 2
         case Binding.SInt => 3
         case Binding.UInt => 3
-        case Binding.RawFloat => 4
-        case Binding.RawDouble => 5
+        case Binding.HalfFloat => 4
+        case Binding.RawFloat => 5
+        case Binding.RawDouble => 6
         case _ => throw new AssertionError("Binding not found.")
       }
     }
@@ -482,10 +483,14 @@ private[buffer] abstract class BaseSeq[
               src.buffer.asInstanceOf[IntBuffer]
             )
           case 4 =>
+            buffer.asInstanceOf[ShortBuffer].put(
+              src.buffer.asInstanceOf[ShortBuffer]
+          )
+          case 5 =>
             buffer.asInstanceOf[FloatBuffer].put(
               src.buffer.asInstanceOf[FloatBuffer]
             )
-          case 5 =>
+          case 6 =>
             buffer.asInstanceOf[DoubleBuffer].put(
               src.buffer.asInstanceOf[DoubleBuffer]
             )

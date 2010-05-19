@@ -34,7 +34,7 @@ object Binding {
   final val UShort = 5123
   final val SInt = 5124
   final val UInt = 5125
-  //final val HalfFloat = 36193
+  final val HalfFloat = 36193
   final val RawFloat = 5126
   final val RawDouble = 5130
 
@@ -46,6 +46,7 @@ object Binding {
       case UShort => 2
       case SInt => 4
       case UInt => 4
+      case HalfFloat => 2
       case RawFloat => 4
       case RawDouble => 8
       case _ => throw new AssertionError("Binding not found.")
@@ -136,6 +137,12 @@ with ReadFloat with ReadDouble
 
 sealed trait FloatingPointType extends RawType
 
+sealed trait HalfFloat extends FloatingPointType
+with ReadFloat with ReadDouble {
+  type ArrayType = Array[Short]
+  type BufferType = ShortBuffer
+}
+
 sealed trait RawFloat extends FloatingPointType
 with ReadFloat with ReadDouble {
   type ArrayType = Array[Float]
@@ -146,24 +153,4 @@ sealed trait RawDouble extends FloatingPointType
 with ReadDouble {
   type ArrayType = Array[Double]
   type BufferType = DoubleBuffer
-}
-
-private[buffer] object ReadAs {
-  val SByte = classOf[SByte]
-  val UByte = classOf[UByte]
-  val NSByte = classOf[NSByte]
-  val NUByte = classOf[NUByte]
-
-  val SShort = classOf[SShort]
-  val UShort = classOf[UShort]
-  val NSShort = classOf[NSShort]
-  val NUShort = classOf[NUShort]
-
-  val SInt = classOf[SInt]
-  val UInt = classOf[UInt]
-  val NSInt = classOf[NSInt]
-  val NUInt = classOf[NUInt]
-
-  val RawFloat = classOf[RawFloat]
-  val RawDouble = classOf[RawDouble]
 }

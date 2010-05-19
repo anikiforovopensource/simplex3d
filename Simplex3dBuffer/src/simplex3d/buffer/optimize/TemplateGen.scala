@@ -68,10 +68,13 @@ import org.objectweb.asm._
     else if (template.endsWith("Int")) {
       "[I"
     }
-    else if (template.endsWith("Float")) {
+    else if (template.endsWith("HalfFloat")) {
+      "[S"
+    }
+    else if (template.endsWith("RawFloat")) {
       "[F"
     }
-    else if (template.endsWith("Double")) {
+    else if (template.endsWith("RawDouble")) {
       "[D"
     }
     else {

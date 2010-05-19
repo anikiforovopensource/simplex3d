@@ -54,6 +54,7 @@ package object floatm {
   implicit final val fFloat1NSInt = new F(new ArrayFloat1NSInt)
   implicit final val fFloat1NUInt = new F(new ArrayFloat1NUInt)
 
+  implicit final val fFloat1HalfFloat = new F(new ArrayFloat1HalfFloat)
   implicit final val fFloat1RawFloat = new F(new ArrayFloat1RawFloat)
 
 
@@ -124,7 +125,12 @@ package object floatm {
     vec2fTemplate,
     new ArrayVec2f[NUInt](da(fFloat1NUInt))
   )
-  
+
+  implicit final val fVec2fHalfFloat = new G(
+    vec2fTemplateClass,
+    vec2fTemplate,
+    new ArrayVec2f[HalfFloat](da(fFloat1HalfFloat))
+  )
   implicit final val fVec2fRawFloat = new F(new ArrayVec2fRawFloat)
 
 
@@ -196,6 +202,11 @@ package object floatm {
     new ArrayVec3f[NUInt](da(fFloat1NUInt))
   )
 
+  implicit final val fVec3fHalfFloat = new G(
+    vec3fTemplateClass,
+    vec3fTemplate,
+    new ArrayVec3f[HalfFloat](da(fFloat1HalfFloat))
+  )
   implicit final val fVec3fRawFloat = new F(new ArrayVec3fRawFloat)
 
 
@@ -263,6 +274,11 @@ package object floatm {
     new ArrayVec4f[NUInt](da(fFloat1NUInt))
   )
 
+  implicit final val fVec4fHalfFloat = new G(
+    vec4fTemplateClass,
+    vec4fTemplate,
+    new ArrayVec4f[HalfFloat](da(fFloat1HalfFloat))
+  )
   implicit final val fVec4fRawFloat = new G(
     vec4fTemplateClass,
     vec4fTemplate,

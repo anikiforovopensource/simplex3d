@@ -45,6 +45,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       case Binding.UShort => "UShort"
       case Binding.SInt => "SInt"
       case Binding.UInt => "UInt"
+      case Binding.HalfFloat => "HalfFloat"
       case Binding.RawFloat => "RawFloat"
       case Binding.RawDouble => "RawDouble"
     })
@@ -263,7 +264,9 @@ private[optimize] object TestData {
   val data = allocateByteBuffer(20*4)
 
   {
-    // A small number as positive and negative Int, Float and Double.
+    /* Positive and negative Int, Short, Byte, Float and Double.
+     * Float and Double with absolute value less than 1.
+     */
     val db = data.asDoubleBuffer()
     db.put(0, -55)
     db.put(1, 55)
@@ -275,7 +278,11 @@ private[optimize] object TestData {
     fb.put(10, -0.55f)
     fb.put(11, 0.55f)
     val ib = data.asIntBuffer()
-    ib.put(12, -55)
+
+    /* A pattern that simulates negative Int, Short, and Byte
+     * while avoiding HalfFloat.NaN.
+     */
+    ib.put(12, 0xAAAAAAAA)
     ib.put(13, 55)
 
     // pad 3 components of max width

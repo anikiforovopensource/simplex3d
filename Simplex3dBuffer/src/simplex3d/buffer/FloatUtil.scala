@@ -26,31 +26,38 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object HalfFloat {
-  def toHalfFloat(f: Float) :Short = {
+object FloatUtil {
+  @inline final def floatToHalfFloat(f: Float) :Short = {
     val bits = java.lang.Float.floatToRawIntBits(f)
     val exponent = bits & 0x7F800000
 
     // subnormal
     if (exponent < (113 << 23)) {
-      return short(bits & 0x80000000)
+      short((bits & 0x80000000) >> 16)
     }
 
-    val rounded = if ((bits & 0x00001000) != 0) bits + 0x00001000 else bits
-
-    // infinite or nan
-    if (exponent > (142 << 23)) {
-      short((rounded & 0x80000000) | 0x7C00)
+    // overflow, inf, or nan
+    else if (exponent > (142 << 23)) {
+      // inf or nan
+      if (exponent == 0x7F800000) {
+        val high = (bits & 0xC0000000) | ((bits << 3) & 0x3FFFFFFF)
+        short(high >> 16)
+      }
+      // overflow
+      else {
+        short(((bits & 0x80000000) | 0x7C000000) >> 16)
+      }
     }
 
     // normalized value
     else {
+      val rounded = if ((bits & 0x00001000) != 0) bits + 0x00001000 else bits
       val high = (rounded & 0xC0000000) | ((rounded << 3) & 0x3FFFFFFF)
       short(high >> 16)
     }
   }
 
-  def fromHalfFloat(s: Short) :Float = {
+  @inline final def floatFromHalfFloat(s: Short) :Float = {
     val bits = s << 16
 
     // subnormal
@@ -70,5 +77,12 @@ object HalfFloat {
         }
       java.lang.Float.intBitsToFloat(f)
     }
+  }
+
+  @inline final def doubleToHalfFloat(d: Double) :Short = {
+    floatToHalfFloat(float(d))
+  }
+  @inline final def doubleFromHalfFloat(s: Short) :Double = {
+    double(floatFromHalfFloat(s))
   }
 }

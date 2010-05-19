@@ -23,7 +23,7 @@ package test.math
 import java.nio._
 import org.scalatest._
 
-import simplex3d.math.BufferSupport._
+import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
 
@@ -31,7 +31,7 @@ import simplex3d.math.doublem._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class BufferSupportTest extends FunSuite {
+class BufferConversionTest extends FunSuite {
 
   val floatArray = Array(
     1f+1e-5f, 2f+1e-5f, 3f+1e-5f, 4f+1e-5f,
@@ -133,115 +133,115 @@ class BufferSupportTest extends FunSuite {
     }
   }
 
-  test("BufferSupport, Float Mat") {
+  test("Float mat conversion") {
     val offset = 7
 
     // Array
     {
       val array = new Array[Float](16)
-      toArray(array, Mat2x2f(F))
+      matToArray(Mat2x2f(F), array)
       verify(array, 0, 2, 2)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat2x2f(F))
+      matToArray(Mat2x2f(F), array, offset)
       verify(array, offset, 2, 2)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat2x3f(F))
+      matToArray(Mat2x3f(F), array)
       verify(array, 0, 2, 3)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat2x3f(F))
+      matToArray(Mat2x3f(F), array, offset)
       verify(array, offset, 2, 3)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat2x4f(F))
+      matToArray(Mat2x4f(F), array)
       verify(array, 0, 2, 4)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat2x4f(F))
+      matToArray(Mat2x4f(F), array, offset)
       verify(array, offset, 2, 4)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat3x2f(F))
+      matToArray(Mat3x2f(F), array)
       verify(array, 0, 3, 2)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat3x2f(F))
+      matToArray(Mat3x2f(F), array, offset)
       verify(array, offset, 3, 2)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat3x3f(F))
+      matToArray(Mat3x3f(F), array)
       verify(array, 0, 3, 3)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat3x3f(F))
+      matToArray(Mat3x3f(F), array, offset)
       verify(array, offset, 3, 3)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat3x4f(F))
+      matToArray(Mat3x4f(F), array)
       verify(array, 0, 3, 4)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat3x4f(F))
+      matToArray(Mat3x4f(F), array, offset)
       verify(array, offset, 3, 4)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat4x2f(F))
+      matToArray(Mat4x2f(F), array)
       verify(array, 0, 4, 2)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat4x2f(F))
+      matToArray(Mat4x2f(F), array, offset)
       verify(array, offset, 4, 2)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat4x3f(F))
+      matToArray(Mat4x3f(F), array)
       verify(array, 0, 4, 3)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat4x3f(F))
+      matToArray(Mat4x3f(F), array, offset)
       verify(array, offset, 4, 3)
     }
 
     {
       val array = new Array[Float](16)
-      toArray(array, Mat4x4f(F))
+      matToArray(Mat4x4f(F), array)
       verify(array, 0, 4, 4)
     }
 
     {
       val array = new Array[Float](16 + offset)
-      toArray(array, offset, Mat4x4f(F))
+      matToArray(Mat4x4f(F), array, offset)
       verify(array, offset, 4, 4)
     }
 
@@ -249,222 +249,223 @@ class BufferSupportTest extends FunSuite {
     // Buffer
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat2x2f(F))
+      matToBuffer(Mat2x2f(F), buffer)
       buffer.position(0); verify(buffer, 2, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x2f(F))
+      buffer.position(offset); matToBuffer(Mat2x2f(F), buffer)
       buffer.position(offset); verify(buffer, 2, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat2x3f(F))
+      matToBuffer(Mat2x3f(F), buffer)
       buffer.position(0); verify(buffer, 2, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x3f(F))
+      buffer.position(offset); matToBuffer(Mat2x3f(F), buffer)
       buffer.position(offset); verify(buffer, 2, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat2x4f(F))
+      matToBuffer(Mat2x4f(F), buffer)
       buffer.position(0); verify(buffer, 2, 4)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x4f(F))
+      buffer.position(offset); matToBuffer(Mat2x4f(F), buffer)
       buffer.position(offset); verify(buffer, 2, 4)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat3x2f(F))
+      matToBuffer(Mat3x2f(F), buffer)
       buffer.position(0); verify(buffer, 3, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x2f(F))
+      buffer.position(offset); matToBuffer(Mat3x2f(F), buffer)
       buffer.position(offset); verify(buffer, 3, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat3x3f(F))
+      matToBuffer(Mat3x3f(F), buffer)
       buffer.position(0); verify(buffer, 3, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x3f(F))
+      buffer.position(offset); matToBuffer(Mat3x3f(F), buffer)
       buffer.position(offset); verify(buffer, 3, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat3x4f(F))
+      matToBuffer(Mat3x4f(F), buffer)
       buffer.position(0); verify(buffer, 3, 4)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x4f(F))
+      buffer.position(offset); matToBuffer(Mat3x4f(F), buffer)
       buffer.position(offset); verify(buffer, 3, 4)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat4x2f(F))
+      matToBuffer(Mat4x2f(F), buffer)
       buffer.position(0); verify(buffer, 4, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x2f(F))
+      buffer.position(offset); matToBuffer(Mat4x2f(F), buffer)
       buffer.position(offset); verify(buffer, 4, 2)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat4x3f(F))
+      matToBuffer(Mat4x3f(F), buffer)
       buffer.position(0); verify(buffer, 4, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x3f(F))
+      buffer.position(offset); matToBuffer(Mat4x3f(F), buffer)
       buffer.position(offset); verify(buffer, 4, 3)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16))
-      toBuffer(buffer, Mat4x4f(F))
+      matToBuffer(Mat4x4f(F), buffer)
       buffer.position(0); verify(buffer, 4, 4)
     }
 
     {
       val buffer = FloatBuffer.wrap(new Array[Float](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x4f(F))
+      buffer.position(offset); matToBuffer(Mat4x4f(F), buffer)
       buffer.position(offset); verify(buffer, 4, 4)
     }
   }
 
-  test("BufferSupport, Double Mat") {
+
+  test("Double mat conversion") {
     val offset = 7
 
     // Array
     {
       val array = new Array[Double](16)
-      toArray(array, Mat2x2d(D))
+      matToArray(Mat2x2d(D), array)
       verify(array, 0, 2, 2)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat2x2d(D))
+      matToArray(Mat2x2d(D), array, offset)
       verify(array, offset, 2, 2)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat2x3d(D))
+      matToArray(Mat2x3d(D), array)
       verify(array, 0, 2, 3)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat2x3d(D))
+      matToArray(Mat2x3d(D), array, offset)
       verify(array, offset, 2, 3)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat2x4d(D))
+      matToArray(Mat2x4d(D), array)
       verify(array, 0, 2, 4)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat2x4d(D))
+      matToArray(Mat2x4d(D), array, offset)
       verify(array, offset, 2, 4)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat3x2d(D))
+      matToArray(Mat3x2d(D), array)
       verify(array, 0, 3, 2)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat3x2d(D))
+      matToArray(Mat3x2d(D), array, offset)
       verify(array, offset, 3, 2)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat3x3d(D))
+      matToArray(Mat3x3d(D), array)
       verify(array, 0, 3, 3)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat3x3d(D))
+      matToArray(Mat3x3d(D), array, offset)
       verify(array, offset, 3, 3)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat3x4d(D))
+      matToArray(Mat3x4d(D), array)
       verify(array, 0, 3, 4)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat3x4d(D))
+      matToArray(Mat3x4d(D), array, offset)
       verify(array, offset, 3, 4)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat4x2d(D))
+      matToArray(Mat4x2d(D), array)
       verify(array, 0, 4, 2)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat4x2d(D))
+      matToArray(Mat4x2d(D), array, offset)
       verify(array, offset, 4, 2)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat4x3d(D))
+      matToArray(Mat4x3d(D), array)
       verify(array, 0, 4, 3)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat4x3d(D))
+      matToArray(Mat4x3d(D), array, offset)
       verify(array, offset, 4, 3)
     }
 
     {
       val array = new Array[Double](16)
-      toArray(array, Mat4x4d(D))
+      matToArray(Mat4x4d(D), array)
       verify(array, 0, 4, 4)
     }
 
     {
       val array = new Array[Double](16 + offset)
-      toArray(array, offset, Mat4x4d(D))
+      matToArray(Mat4x4d(D), array, offset)
       verify(array, offset, 4, 4)
     }
 
@@ -472,109 +473,109 @@ class BufferSupportTest extends FunSuite {
     // Buffer
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat2x2d(D))
+      matToBuffer(Mat2x2d(D), buffer)
       buffer.position(0); verify(buffer, 2, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x2d(D))
+      buffer.position(offset); matToBuffer(Mat2x2d(D), buffer)
       buffer.position(offset); verify(buffer, 2, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat2x3d(D))
+      matToBuffer(Mat2x3d(D), buffer)
       buffer.position(0); verify(buffer, 2, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x3d(D))
+      buffer.position(offset); matToBuffer(Mat2x3d(D), buffer)
       buffer.position(offset); verify(buffer, 2, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat2x4d(D))
+      matToBuffer(Mat2x4d(D), buffer)
       buffer.position(0); verify(buffer, 2, 4)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat2x4d(D))
+      buffer.position(offset); matToBuffer(Mat2x4d(D), buffer)
       buffer.position(offset); verify(buffer, 2, 4)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat3x2d(D))
+      matToBuffer(Mat3x2d(D), buffer)
       buffer.position(0); verify(buffer, 3, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x2d(D))
+      buffer.position(offset); matToBuffer(Mat3x2d(D), buffer)
       buffer.position(offset); verify(buffer, 3, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat3x3d(D))
+      matToBuffer(Mat3x3d(D), buffer)
       buffer.position(0); verify(buffer, 3, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x3d(D))
+      buffer.position(offset); matToBuffer(Mat3x3d(D), buffer)
       buffer.position(offset); verify(buffer, 3, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat3x4d(D))
+      matToBuffer(Mat3x4d(D), buffer)
       buffer.position(0); verify(buffer, 3, 4)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat3x4d(D))
+      buffer.position(offset); matToBuffer(Mat3x4d(D), buffer)
       buffer.position(offset); verify(buffer, 3, 4)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat4x2d(D))
+      matToBuffer(Mat4x2d(D), buffer)
       buffer.position(0); verify(buffer, 4, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x2d(D))
+      buffer.position(offset); matToBuffer(Mat4x2d(D), buffer)
       buffer.position(offset); verify(buffer, 4, 2)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat4x3d(D))
+      matToBuffer(Mat4x3d(D), buffer)
       buffer.position(0); verify(buffer, 4, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x3d(D))
+      buffer.position(offset); matToBuffer(Mat4x3d(D), buffer)
       buffer.position(offset); verify(buffer, 4, 3)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16))
-      toBuffer(buffer, Mat4x4d(D))
+      matToBuffer(Mat4x4d(D), buffer)
       buffer.position(0); verify(buffer, 4, 4)
     }
 
     {
       val buffer = DoubleBuffer.wrap(new Array[Double](16 + offset))
-      buffer.position(offset); toBuffer(buffer, Mat4x4d(D))
+      buffer.position(offset); matToBuffer(Mat4x4d(D), buffer)
       buffer.position(offset); verify(buffer, 4, 4)
     }
   }

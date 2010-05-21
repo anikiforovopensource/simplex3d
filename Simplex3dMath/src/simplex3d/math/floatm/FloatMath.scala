@@ -44,9 +44,9 @@ object FloatMath {
 
   // Have to be careful with large offsets due to the loss in precision.
   // With noise args as double these values should be ok
-  private final val of1 = 100.0
-  private final val of2 = 200.0
-  private final val of3 = 300.0
+  private final val of1 = 10000.0
+  private final val of2 = 20000.0
+  private final val of3 = 30000.0
 
   // Float functions
   def radians(x: Float) :Float = x*DegToRad

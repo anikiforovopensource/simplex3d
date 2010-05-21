@@ -30,18 +30,18 @@ import simplex3d.math.floatm.FloatMath._
 package object renamed {
   
   // Implicits
-  implicit def fmIntPromoter(s: Float) = new IntPromoter(s)
+  implicit def intToFloatPromoter(s: Float) = new IntPromoter(s)
 
-  implicit def fmFloat(s: Float) = new ExtendedFloat(s)
-  implicit def fmInt(s: Int) = new ExtendedInt(s)
+  implicit def extendedFloatForFloat(s: Float) = new ExtendedFloat(s)
+  implicit def extendedIntForFloat(s: Int) = new ExtendedInt(s)
 
-  implicit def fmcastVec2i(u: Read2[Int]) :ConstVec2f =
+  implicit def vec2IntToFloat(u: Read2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)
 
-  implicit def fmcastVec3i(u: Read3[Int]) :ConstVec3f =
+  implicit def vec3IntToFloat(u: Read3[Int]) :ConstVec3f =
     new ConstVec3f(u.fx, u.fy, u.fz)
 
-  implicit def fmcastVec4i(u: Read4[Int]) :ConstVec4f =
+  implicit def vec4IntToFloat(u: Read4[Int]) :ConstVec4f =
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
 
@@ -147,55 +147,55 @@ package object renamed {
   // In and Out aliases
   type inVec2 = AnyVec2
   type outVec2 = Vec2 with Implicits[Off]
-  @inline implicit def fmOut2(u: Vec2) = u.asInstanceOf[outVec2]
+  @inline implicit def outVec2f(u: Vec2) = u.asInstanceOf[outVec2]
 
   type inVec3 = AnyVec3
   type outVec3 = Vec3 with Implicits[Off]
-  @inline implicit def fmOut3(u: Vec3) = u.asInstanceOf[outVec3]
+  @inline implicit def outVec3f(u: Vec3) = u.asInstanceOf[outVec3]
 
   type inVec4 = AnyVec4
   type outVec4 = Vec4 with Implicits[Off]
-  @inline implicit def fmOut4(u: Vec4) = u.asInstanceOf[outVec4]
+  @inline implicit def outVec4f(u: Vec4) = u.asInstanceOf[outVec4]
 
   type inQuat4 = AnyQuat4
   type outQuat4 = Quat4 with Implicits[Off]
-  @inline implicit def fmOutQuat(u: Quat4) = u.asInstanceOf[outQuat4]
+  @inline implicit def outQuat4f(u: Quat4) = u.asInstanceOf[outQuat4]
 
   type inMat2 = AnyMat2
   type outMat2 = Mat2 with Implicits[Off]
-  @inline implicit def fmOut2x2(u: Mat2) = u.asInstanceOf[outMat2]
+  @inline implicit def outMat2x2f(u: Mat2) = u.asInstanceOf[outMat2]
 
   type inMat2x3 = AnyMat2x3
   type outMat2x3 = Mat2x3 with Implicits[Off]
-  @inline implicit def fmOut2x3(u: Mat2x3) = u.asInstanceOf[outMat2x3]
+  @inline implicit def outMat2x3f(u: Mat2x3) = u.asInstanceOf[outMat2x3]
 
   type inMat2x4 = AnyMat2x4
   type outMat2x4 = Mat2x4 with Implicits[Off]
-  @inline implicit def fmOut2x4(u: Mat2x4) = u.asInstanceOf[outMat2x4]
+  @inline implicit def outMat2x4f(u: Mat2x4) = u.asInstanceOf[outMat2x4]
 
   type inMat3x2 = AnyMat3x2
   type outMat3x2 = Mat3x2 with Implicits[Off]
-  @inline implicit def fmOut3x2(u: Mat3x2) = u.asInstanceOf[outMat3x2]
+  @inline implicit def outMat3x2f(u: Mat3x2) = u.asInstanceOf[outMat3x2]
 
   type inMat3 = AnyMat3
   type outMat3 = Mat3 with Implicits[Off]
-  @inline implicit def fmOut3x3(u: Mat3) = u.asInstanceOf[outMat3]
+  @inline implicit def outMat3x3f(u: Mat3) = u.asInstanceOf[outMat3]
 
   type inMat3x4 = AnyMat3x4
   type outMat3x4 = Mat3x4 with Implicits[Off]
-  @inline implicit def fmOut3x4(u: Mat3x4) = u.asInstanceOf[outMat3x4]
+  @inline implicit def outMat3x4f(u: Mat3x4) = u.asInstanceOf[outMat3x4]
 
   type inMat4x2 = AnyMat4x2
   type outMat4x2 = Mat4x2 with Implicits[Off]
-  @inline implicit def fmOut4x2(u: Mat4x2) = u.asInstanceOf[outMat4x2]
+  @inline implicit def outMat4x2f(u: Mat4x2) = u.asInstanceOf[outMat4x2]
 
   type inMat4x3 = AnyMat4x3
   type outMat4x3 = Mat4x3 with Implicits[Off]
-  @inline implicit def fmOut4x3(u: Mat4x3) = u.asInstanceOf[outMat4x3]
+  @inline implicit def outMat4x3f(u: Mat4x3) = u.asInstanceOf[outMat4x3]
 
   type inMat4 = AnyMat4
   type outMat4 = Mat4 with Implicits[Off]
-  @inline implicit def fmOut4x4(u: Mat4) = u.asInstanceOf[outMat4]
+  @inline implicit def outMat4x4f(u: Mat4) = u.asInstanceOf[outMat4]
 
   // In and Out matrix aliases
   type inMat2x2 = inMat2

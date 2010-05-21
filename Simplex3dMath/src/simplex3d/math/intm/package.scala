@@ -34,13 +34,13 @@ package object intm {
   // In and Out aliases
   type inVec2i = AnyVec2i
   type outVec2i = Vec2i with Implicits[Off]
-  @inline implicit def imOut2(u: Vec2i) = u.asInstanceOf[outVec2i]
+  @inline implicit def outVec2i(u: Vec2i) = u.asInstanceOf[outVec2i]
 
   type inVec3i = AnyVec3i
   type outVec3i = Vec3i with Implicits[Off]
-  @inline implicit def imOut3(u: Vec3i) = u.asInstanceOf[outVec3i]
+  @inline implicit def outVec3i(u: Vec3i) = u.asInstanceOf[outVec3i]
 
   type inVec4i = AnyVec4i
   type outVec4i = Vec4i with Implicits[Off]
-  @inline implicit def imOut4(u: Vec4i) = u.asInstanceOf[outVec4i]
+  @inline implicit def outVec4i(u: Vec4i) = u.asInstanceOf[outVec4i]
 }

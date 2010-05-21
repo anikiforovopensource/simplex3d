@@ -29,29 +29,29 @@ import simplex3d.math.doublem.DoubleMath._
 package object doublem {
 
   // Implicits
-  implicit def dmIntPromoter(s: Double) = new IntPromoter(s)
-  implicit def dmFloatPromoter(s: Double) = new FloatPromoter(s)
+  implicit def intToDoublePromoter(s: Double) = new IntPromoter(s)
+  implicit def floatToDoublePromoter(s: Double) = new FloatPromoter(s)
 
-  implicit def dmDouble(s: Double) = new ExtendedDouble(s)
-  implicit def dmFloat(s: Float) = new ExtendedFloat(s)
-  implicit def dmInt(s: Int) = new ExtendedInt(s)
+  implicit def extendedDoubleForDouble(s: Double) = new ExtendedDouble(s)
+  implicit def extendedFloatForDouble(s: Float) = new ExtendedFloat(s)
+  implicit def extendedIntForDouble(s: Int) = new ExtendedInt(s)
 
-  implicit def dmcastVec2i(u: Read2[Int]) :ConstVec2d =
+  implicit def vec2IntToDouble(u: Read2[Int]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def dmcastVec3i(u: Read3[Int]) :ConstVec3d =
+  implicit def vec3IntToDouble(u: Read3[Int]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def dmcastVec4i(u: Read4[Int]) :ConstVec4d =
+  implicit def vec4IntToDouble(u: Read4[Int]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-  implicit def dmcastVec2f(u: Read2[Float]) :ConstVec2d =
+  implicit def vec2FloatToDouble(u: Read2[Float]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def dmcastVec3f(u: Read3[Float]) :ConstVec3d =
+  implicit def vec3FloatToDouble(u: Read3[Float]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def dmcastVec4f(u: Read4[Float]) :ConstVec4d =
+  implicit def vec4FloatToDouble(u: Read4[Float]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
 
@@ -77,55 +77,55 @@ package object doublem {
   // In and Out aliases
   type inVec2d = AnyVec2d
   type outVec2d = Vec2d with Implicits[Off]
-  @inline implicit def dmOut2(u: Vec2d) = u.asInstanceOf[outVec2d]
+  @inline implicit def outVec2d(u: Vec2d) = u.asInstanceOf[outVec2d]
 
   type inVec3d = AnyVec3d
   type outVec3d = Vec3d with Implicits[Off]
-  @inline implicit def dmOut3(u: Vec3d) = u.asInstanceOf[outVec3d]
+  @inline implicit def outVec3d(u: Vec3d) = u.asInstanceOf[outVec3d]
 
   type inVec4d = AnyVec4d
   type outVec4d = Vec4d with Implicits[Off]
-  @inline implicit def dmOut4(u: Vec4d) = u.asInstanceOf[outVec4d]
+  @inline implicit def outVec4d(u: Vec4d) = u.asInstanceOf[outVec4d]
 
   type inQuat4d = AnyQuat4d
   type outQuat4d = Quat4d with Implicits[Off]
-  @inline implicit def dmOutQuat(u: Quat4d) = u.asInstanceOf[outQuat4d]
+  @inline implicit def outQuat4d(u: Quat4d) = u.asInstanceOf[outQuat4d]
 
   type inMat2d = AnyMat2d
   type outMat2d = Mat2d with Implicits[Off]
-  @inline implicit def dmOut2x2(u: Mat2d) = u.asInstanceOf[outMat2d]
+  @inline implicit def outMat2x2d(u: Mat2d) = u.asInstanceOf[outMat2d]
 
   type inMat2x3d = AnyMat2x3d
   type outMat2x3d = Mat2x3d with Implicits[Off]
-  @inline implicit def dmOut2x3(u: Mat2x3d) = u.asInstanceOf[outMat2x3d]
+  @inline implicit def outMat2x3d(u: Mat2x3d) = u.asInstanceOf[outMat2x3d]
 
   type inMat2x4d = AnyMat2x4d
   type outMat2x4d = Mat2x4d with Implicits[Off]
-  @inline implicit def dmOut2x4(u: Mat2x4d) = u.asInstanceOf[outMat2x4d]
+  @inline implicit def outMat2x4d(u: Mat2x4d) = u.asInstanceOf[outMat2x4d]
 
   type inMat3x2d = AnyMat3x2d
   type outMat3x2d = Mat3x2d with Implicits[Off]
-  @inline implicit def dmOut3x2(u: Mat3x2d) = u.asInstanceOf[outMat3x2d]
+  @inline implicit def outMat3x2d(u: Mat3x2d) = u.asInstanceOf[outMat3x2d]
 
   type inMat3d = AnyMat3d
   type outMat3d = Mat3d with Implicits[Off]
-  @inline implicit def dmOut3x3(u: Mat3d) = u.asInstanceOf[outMat3d]
+  @inline implicit def outMat3x3d(u: Mat3d) = u.asInstanceOf[outMat3d]
 
   type inMat3x4d = AnyMat3x4d
   type outMat3x4d = Mat3x4d with Implicits[Off]
-  @inline implicit def dmOut3x4(u: Mat3x4d) = u.asInstanceOf[outMat3x4d]
+  @inline implicit def outMat3x4d(u: Mat3x4d) = u.asInstanceOf[outMat3x4d]
 
   type inMat4x2d = AnyMat4x2d
   type outMat4x2d = Mat4x2d with Implicits[Off]
-  @inline implicit def dmOut4x2(u: Mat4x2d) = u.asInstanceOf[outMat4x2d]
+  @inline implicit def outMat4x2d(u: Mat4x2d) = u.asInstanceOf[outMat4x2d]
 
   type inMat4x3d = AnyMat4x3d
   type outMat4x3d = Mat4x3d with Implicits[Off]
-  @inline implicit def dmOut4x3(u: Mat4x3d) = u.asInstanceOf[outMat4x3d]
+  @inline implicit def outMat4x3d(u: Mat4x3d) = u.asInstanceOf[outMat4x3d]
 
   type inMat4d = AnyMat4d
   type outMat4d = Mat4d with Implicits[Off]
-  @inline implicit def dmOut4x4(u: Mat4d) = u.asInstanceOf[outMat4d]
+  @inline implicit def outMat4x4d(u: Mat4d) = u.asInstanceOf[outMat4d]
 
   // In and Out matrix aliases
   type inMat2x2d = inMat2d

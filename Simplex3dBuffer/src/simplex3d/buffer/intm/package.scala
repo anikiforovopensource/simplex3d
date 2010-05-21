@@ -43,33 +43,35 @@ package object intm extends UnsignedImplicits {
     "simplex3d.buffer.intm.optimized.ArrayVec2iSInt"
   private val vec2iTemplate = "SInt"
 
-  implicit final val fVec2iSByte = new G(
+  implicit final val FactoryVec2iSByte = new G(
     vec2iTemplateClass,
     vec2iTemplate,
-    new ArrayVec2i[SByte](da(fInt1SByte))
+    new ArrayVec2i[SByte](da(FactoryInt1SByte))
   )
-  implicit final val fVec2iUByte = new G(
+  implicit final val FactoryVec2iUByte = new G(
     vec2iTemplateClass,
     vec2iTemplate,
-    new ArrayVec2i[UByte](da(fInt1UByte))
-  )
-
-  implicit final val fVec2iSShort = new G(
-    vec2iTemplateClass,
-    vec2iTemplate,
-    new ArrayVec2i[SShort](da(fInt1SShort))
-  )
-  implicit final val fVec2iUShort = new G(
-    vec2iTemplateClass,
-    vec2iTemplate,
-    new ArrayVec2i[UShort](da(fInt1UShort))
+    new ArrayVec2i[UByte](da(FactoryInt1UByte))
   )
 
-  implicit final val fVec2iSInt = new F(new ArrayVec2i[SInt](da(fInt1SInt)))
-  implicit final val fVec2iUInt = new G(
+  implicit final val FactoryVec2iSShort = new G(
     vec2iTemplateClass,
     vec2iTemplate,
-    new ArrayVec2i[UInt](da(fInt1UInt))
+    new ArrayVec2i[SShort](da(FactoryInt1SShort))
+  )
+  implicit final val FactoryVec2iUShort = new G(
+    vec2iTemplateClass,
+    vec2iTemplate,
+    new ArrayVec2i[UShort](da(FactoryInt1UShort))
+  )
+
+  implicit final val FactoryVec2iSInt = new F(
+    new ArrayVec2i[SInt](da(FactoryInt1SInt))
+  )
+  implicit final val FactoryVec2iUInt = new G(
+    vec2iTemplateClass,
+    vec2iTemplate,
+    new ArrayVec2i[UInt](da(FactoryInt1UInt))
   )
 
 
@@ -78,33 +80,35 @@ package object intm extends UnsignedImplicits {
     "simplex3d.buffer.intm.optimized.ArrayVec3iSInt"
   private val vec3iTemplate = "SInt"
 
-  implicit final val fVec3iSByte = new G(
+  implicit final val FactoryVec3iSByte = new G(
     vec3iTemplateClass,
     vec3iTemplate,
-    new ArrayVec3i[SByte](da(fInt1SByte))
+    new ArrayVec3i[SByte](da(FactoryInt1SByte))
   )
-  implicit final val fVec3iUByte = new G(
+  implicit final val FactoryVec3iUByte = new G(
     vec3iTemplateClass,
     vec3iTemplate,
-    new ArrayVec3i[UByte](da(fInt1UByte))
-  )
-
-  implicit final val fVec3iSShort = new G(
-    vec3iTemplateClass,
-    vec3iTemplate,
-    new ArrayVec3i[SShort](da(fInt1SShort))
-  )
-  implicit final val fVec3iUShort = new G(
-    vec3iTemplateClass,
-    vec3iTemplate,
-    new ArrayVec3i[UShort](da(fInt1UShort))
+    new ArrayVec3i[UByte](da(FactoryInt1UByte))
   )
 
-  implicit final val fVec3iSInt = new F(new ArrayVec3i[SInt](da(fInt1SInt)))
-  implicit final val fVec3iUInt = new G(
+  implicit final val FactoryVec3iSShort = new G(
     vec3iTemplateClass,
     vec3iTemplate,
-    new ArrayVec3i[UInt](da(fInt1UInt))
+    new ArrayVec3i[SShort](da(FactoryInt1SShort))
+  )
+  implicit final val FactoryVec3iUShort = new G(
+    vec3iTemplateClass,
+    vec3iTemplate,
+    new ArrayVec3i[UShort](da(FactoryInt1UShort))
+  )
+
+  implicit final val FactoryVec3iSInt = new F(
+    new ArrayVec3i[SInt](da(FactoryInt1SInt))
+  )
+  implicit final val FactoryVec3iUInt = new G(
+    vec3iTemplateClass,
+    vec3iTemplate,
+    new ArrayVec3i[UInt](da(FactoryInt1UInt))
   )
 
 
@@ -113,32 +117,34 @@ package object intm extends UnsignedImplicits {
     "simplex3d.buffer.intm.optimized.ArrayVec4iSInt"
   private val vec4iTemplate = "SInt"
 
-  implicit final val fVec4iSByte = new G(
+  implicit final val FactoryVec4iSByte = new G(
     vec4iTemplateClass,
     vec4iTemplate,
-    new ArrayVec4i[SByte](da(fInt1SByte))
+    new ArrayVec4i[SByte](da(FactoryInt1SByte))
   )
-  implicit final val fVec4iUByte = new G(
+  implicit final val FactoryVec4iUByte = new G(
     vec4iTemplateClass,
     vec4iTemplate,
-    new ArrayVec4i[UByte](da(fInt1UByte))
-  )
-
-  implicit final val fVec4iSShort = new G(
-    vec4iTemplateClass,
-    vec4iTemplate,
-    new ArrayVec4i[SShort](da(fInt1SShort))
-  )
-  implicit final val fVec4iUShort = new G(
-    vec4iTemplateClass,
-    vec4iTemplate,
-    new ArrayVec4i[UShort](da(fInt1UShort))
+    new ArrayVec4i[UByte](da(FactoryInt1UByte))
   )
 
-  implicit final val fVec4iSInt = new F(new ArrayVec4i[SInt](da(fInt1SInt)))
-  implicit final val fVec4iUInt = new G(
+  implicit final val FactoryVec4iSShort = new G(
     vec4iTemplateClass,
     vec4iTemplate,
-    new ArrayVec4i[UInt](da(fInt1UInt))
+    new ArrayVec4i[SShort](da(FactoryInt1SShort))
+  )
+  implicit final val FactoryVec4iUShort = new G(
+    vec4iTemplateClass,
+    vec4iTemplate,
+    new ArrayVec4i[UShort](da(FactoryInt1UShort))
+  )
+
+  implicit final val FactoryVec4iSInt = new F(
+    new ArrayVec4i[SInt](da(FactoryInt1SInt))
+  )
+  implicit final val FactoryVec4iUInt = new G(
+    vec4iTemplateClass,
+    vec4iTemplate,
+    new ArrayVec4i[UInt](da(FactoryInt1UInt))
   )
 }

@@ -35,26 +35,6 @@ private[buffer] abstract class BaseVec2f[+D <: ReadFloat](
 ) extends GenericSeq[Vec2f, D](seq) {
   final def components: Int = 2
 
-  protected final def translatePut(
-    destOffset: Int,
-    src: ContiguousSeq[Float1, _],
-    srcOffset: Int,
-    srcStep: Int,
-    srcLim: Int
-  ) {
-    val dest = backingSeq
-
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim)  {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      desti += step
-      srci += srcStep
-    }
-  }
-
   def apply(i: Int) :AnyVec2f = {
     val j = offset + i*step
     ConstVec2f(

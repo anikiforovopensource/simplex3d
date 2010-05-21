@@ -30,26 +30,8 @@ import simplex3d.math._
 private[buffer] sealed abstract class BaseInt1[+D <: ReadInt](
   buff: D#BufferType
 ) extends BaseSeq[Int1, Int, D](buff) {
+  final def componentManifest = scala.reflect.ClassManifest.Int
   final def components: Int = 1
-
-  protected final def translatePut(
-    destOffset: Int,
-    src: ContiguousSeq[Int1, _],
-    srcOffset: Int,
-    srcStep: Int,
-    srcLim: Int
-  ) {
-    val dest = backingSeq
-
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim)  {
-      dest(desti) = src(srci)
-      desti += step
-      srci += srcStep
-    }
-  }
 }
 
 

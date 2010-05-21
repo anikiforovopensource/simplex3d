@@ -39,23 +39,23 @@ package object floatm {
 
 
   // Float1
-  implicit final val fFloat1SByte = new F(new ArrayFloat1SByte)
-  implicit final val fFloat1UByte = new F(new ArrayFloat1UByte)
-  implicit final val fFloat1NSByte = new F(new ArrayFloat1NSByte)
-  implicit final val fFloat1NUByte = new F(new ArrayFloat1NUByte)
+  implicit final val FactoryFloat1SByte = new F(new ArrayFloat1SByte)
+  implicit final val FactoryFloat1UByte = new F(new ArrayFloat1UByte)
+  implicit final val FactoryFloat1NSByte = new F(new ArrayFloat1NSByte)
+  implicit final val FactoryFloat1NUByte = new F(new ArrayFloat1NUByte)
   
-  implicit final val fFloat1SShort = new F(new ArrayFloat1SShort)
-  implicit final val fFloat1UShort = new F(new ArrayFloat1UShort)
-  implicit final val fFloat1NSShort = new F(new ArrayFloat1NSShort)
-  implicit final val fFloat1NUShort = new F(new ArrayFloat1NUShort)
+  implicit final val FactoryFloat1SShort = new F(new ArrayFloat1SShort)
+  implicit final val FactoryFloat1UShort = new F(new ArrayFloat1UShort)
+  implicit final val FactoryFloat1NSShort = new F(new ArrayFloat1NSShort)
+  implicit final val FactoryFloat1NUShort = new F(new ArrayFloat1NUShort)
 
-  implicit final val fFloat1SInt = new F(new ArrayFloat1SInt)
-  implicit final val fFloat1UInt = new F(new ArrayFloat1UInt)
-  implicit final val fFloat1NSInt = new F(new ArrayFloat1NSInt)
-  implicit final val fFloat1NUInt = new F(new ArrayFloat1NUInt)
+  implicit final val FactoryFloat1SInt = new F(new ArrayFloat1SInt)
+  implicit final val FactoryFloat1UInt = new F(new ArrayFloat1UInt)
+  implicit final val FactoryFloat1NSInt = new F(new ArrayFloat1NSInt)
+  implicit final val FactoryFloat1NUInt = new F(new ArrayFloat1NUInt)
 
-  implicit final val fFloat1HalfFloat = new F(new ArrayFloat1HalfFloat)
-  implicit final val fFloat1RawFloat = new F(new ArrayFloat1RawFloat)
+  implicit final val FactoryFloat1HalfFloat = new F(new ArrayFloat1HalfFloat)
+  implicit final val FactoryFloat1RawFloat = new F(new ArrayFloat1RawFloat)
 
 
   // Vec2f
@@ -63,75 +63,75 @@ package object floatm {
     "simplex3d.buffer.floatm.optimized.ArrayVec2fRawFloat"
   private val vec2fTemplate = "RawFloat"
 
-  implicit final val fVec2fSByte = new G(
+  implicit final val FactoryVec2fSByte = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[SByte](da(fFloat1SByte))
+    new ArrayVec2f[SByte](da(FactoryFloat1SByte))
   )
-  implicit final val fVec2fUByte = new G(
+  implicit final val FactoryVec2fUByte = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[UByte](da(fFloat1UByte))
+    new ArrayVec2f[UByte](da(FactoryFloat1UByte))
   )
-  implicit final val fVec2fNSByte = new G(
+  implicit final val FactoryVec2fNSByte = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[NSByte](da(fFloat1NSByte))
+    new ArrayVec2f[NSByte](da(FactoryFloat1NSByte))
   )
-  implicit final val fVec2fNUByte = new G(
+  implicit final val FactoryVec2fNUByte = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[NUByte](da(fFloat1NUByte))
-  )
-
-  implicit final val fVec2fSShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[SShort](da(fFloat1SShort))
-  )
-  implicit final val fVec2fUShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[UShort](da(fFloat1UShort))
-  )
-  implicit final val fVec2fNSShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NSShort](da(fFloat1NSShort))
-  )
-  implicit final val fVec2fNUShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NUShort](da(fFloat1NUShort))
+    new ArrayVec2f[NUByte](da(FactoryFloat1NUByte))
   )
 
-  implicit final val fVec2fSInt = new G(
+  implicit final val FactoryVec2fSShort = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[SInt](da(fFloat1SInt))
+    new ArrayVec2f[SShort](da(FactoryFloat1SShort))
   )
-  implicit final val fVec2fUInt = new G(
+  implicit final val FactoryVec2fUShort = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[UInt](da(fFloat1UInt))
+    new ArrayVec2f[UShort](da(FactoryFloat1UShort))
   )
-  implicit final val fVec2fNSInt = new G(
+  implicit final val FactoryVec2fNSShort = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[NSInt](da(fFloat1NSInt))
+    new ArrayVec2f[NSShort](da(FactoryFloat1NSShort))
   )
-  implicit final val fVec2fNUInt = new G(
+  implicit final val FactoryVec2fNUShort = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[NUInt](da(fFloat1NUInt))
+    new ArrayVec2f[NUShort](da(FactoryFloat1NUShort))
   )
 
-  implicit final val fVec2fHalfFloat = new G(
+  implicit final val FactoryVec2fSInt = new G(
     vec2fTemplateClass,
     vec2fTemplate,
-    new ArrayVec2f[HalfFloat](da(fFloat1HalfFloat))
+    new ArrayVec2f[SInt](da(FactoryFloat1SInt))
   )
-  implicit final val fVec2fRawFloat = new F(new ArrayVec2fRawFloat)
+  implicit final val FactoryVec2fUInt = new G(
+    vec2fTemplateClass,
+    vec2fTemplate,
+    new ArrayVec2f[UInt](da(FactoryFloat1UInt))
+  )
+  implicit final val FactoryVec2fNSInt = new G(
+    vec2fTemplateClass,
+    vec2fTemplate,
+    new ArrayVec2f[NSInt](da(FactoryFloat1NSInt))
+  )
+  implicit final val FactoryVec2fNUInt = new G(
+    vec2fTemplateClass,
+    vec2fTemplate,
+    new ArrayVec2f[NUInt](da(FactoryFloat1NUInt))
+  )
+
+  implicit final val FactoryVec2fHalfFloat = new G(
+    vec2fTemplateClass,
+    vec2fTemplate,
+    new ArrayVec2f[HalfFloat](da(FactoryFloat1HalfFloat))
+  )
+  implicit final val FactoryVec2fRawFloat = new F(new ArrayVec2fRawFloat)
 
 
   // Vec3f
@@ -139,75 +139,75 @@ package object floatm {
     "simplex3d.buffer.floatm.optimized.ArrayVec3fRawFloat"
   private val vec3fTemplate = "RawFloat"
 
-  implicit final val fVec3fSByte = new G(
+  implicit final val FactoryVec3fSByte = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[SByte](da(fFloat1SByte))
+    new ArrayVec3f[SByte](da(FactoryFloat1SByte))
   )
-  implicit final val fVec3fUByte = new G(
+  implicit final val FactoryVec3fUByte = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[UByte](da(fFloat1UByte))
+    new ArrayVec3f[UByte](da(FactoryFloat1UByte))
   )
-  implicit final val fVec3fNSByte = new G(
+  implicit final val FactoryVec3fNSByte = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[NSByte](da(fFloat1NSByte))
+    new ArrayVec3f[NSByte](da(FactoryFloat1NSByte))
   )
-  implicit final val fVec3fNUByte = new G(
+  implicit final val FactoryVec3fNUByte = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[NUByte](da(fFloat1NUByte))
-  )
-
-  implicit final val fVec3fSShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[SShort](da(fFloat1SShort))
-  )
-  implicit final val fVec3fUShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[UShort](da(fFloat1UShort))
-  )
-  implicit final val fVec3fNSShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NSShort](da(fFloat1NSShort))
-  )
-  implicit final val fVec3fNUShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NUShort](da(fFloat1NUShort))
+    new ArrayVec3f[NUByte](da(FactoryFloat1NUByte))
   )
 
-  implicit final val fVec3fSInt = new G(
+  implicit final val FactoryVec3fSShort = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[SInt](da(fFloat1SInt))
+    new ArrayVec3f[SShort](da(FactoryFloat1SShort))
   )
-  implicit final val fVec3fUInt = new G(
+  implicit final val FactoryVec3fUShort = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[UInt](da(fFloat1UInt))
+    new ArrayVec3f[UShort](da(FactoryFloat1UShort))
   )
-  implicit final val fVec3fNSInt = new G(
+  implicit final val FactoryVec3fNSShort = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[NSInt](da(fFloat1NSInt))
+    new ArrayVec3f[NSShort](da(FactoryFloat1NSShort))
   )
-  implicit final val fVec3fNUInt = new G(
+  implicit final val FactoryVec3fNUShort = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[NUInt](da(fFloat1NUInt))
+    new ArrayVec3f[NUShort](da(FactoryFloat1NUShort))
   )
 
-  implicit final val fVec3fHalfFloat = new G(
+  implicit final val FactoryVec3fSInt = new G(
     vec3fTemplateClass,
     vec3fTemplate,
-    new ArrayVec3f[HalfFloat](da(fFloat1HalfFloat))
+    new ArrayVec3f[SInt](da(FactoryFloat1SInt))
   )
-  implicit final val fVec3fRawFloat = new F(new ArrayVec3fRawFloat)
+  implicit final val FactoryVec3fUInt = new G(
+    vec3fTemplateClass,
+    vec3fTemplate,
+    new ArrayVec3f[UInt](da(FactoryFloat1UInt))
+  )
+  implicit final val FactoryVec3fNSInt = new G(
+    vec3fTemplateClass,
+    vec3fTemplate,
+    new ArrayVec3f[NSInt](da(FactoryFloat1NSInt))
+  )
+  implicit final val FactoryVec3fNUInt = new G(
+    vec3fTemplateClass,
+    vec3fTemplate,
+    new ArrayVec3f[NUInt](da(FactoryFloat1NUInt))
+  )
+
+  implicit final val FactoryVec3fHalfFloat = new G(
+    vec3fTemplateClass,
+    vec3fTemplate,
+    new ArrayVec3f[HalfFloat](da(FactoryFloat1HalfFloat))
+  )
+  implicit final val FactoryVec3fRawFloat = new F(new ArrayVec3fRawFloat)
 
 
   // Vec4f
@@ -215,73 +215,73 @@ package object floatm {
     "simplex3d.buffer.floatm.optimized.ArrayVec4fNUByte"
   private val vec4fTemplate = "NUByte"
 
-  implicit final val fVec4fSByte = new G(
+  implicit final val FactoryVec4fSByte = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[SByte](da(fFloat1SByte))
+    new ArrayVec4f[SByte](da(FactoryFloat1SByte))
   )
-  implicit final val fVec4fUByte = new G(
+  implicit final val FactoryVec4fUByte = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[UByte](da(fFloat1UByte))
+    new ArrayVec4f[UByte](da(FactoryFloat1UByte))
   )
-  implicit final val fVec4fNSByte = new G(
+  implicit final val FactoryVec4fNSByte = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[NSByte](da(fFloat1NSByte))
+    new ArrayVec4f[NSByte](da(FactoryFloat1NSByte))
   )
-  implicit final val fVec4fNUByte = new F(new ArrayVec4fNUByte)
+  implicit final val FactoryVec4fNUByte = new F(new ArrayVec4fNUByte)
 
-  implicit final val fVec4fSShort = new G(
+  implicit final val FactoryVec4fSShort = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[SShort](da(fFloat1SShort))
+    new ArrayVec4f[SShort](da(FactoryFloat1SShort))
   )
-  implicit final val fVec4fUShort = new G(
+  implicit final val FactoryVec4fUShort = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[UShort](da(fFloat1UShort))
+    new ArrayVec4f[UShort](da(FactoryFloat1UShort))
   )
-  implicit final val fVec4fNSShort = new G(
+  implicit final val FactoryVec4fNSShort = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[NSShort](da(fFloat1NSShort))
+    new ArrayVec4f[NSShort](da(FactoryFloat1NSShort))
   )
-  implicit final val fVec4fNUShort = new G(
+  implicit final val FactoryVec4fNUShort = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[NUShort](da(fFloat1NUShort))
-  )
-
-  implicit final val fVec4fSInt = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[SInt](da(fFloat1SInt))
-  )
-  implicit final val fVec4fUInt = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[UInt](da(fFloat1UInt))
-  )
-  implicit final val fVec4fNSInt = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NSInt](da(fFloat1NSInt))
-  )
-  implicit final val fVec4fNUInt = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NUInt](da(fFloat1NUInt))
+    new ArrayVec4f[NUShort](da(FactoryFloat1NUShort))
   )
 
-  implicit final val fVec4fHalfFloat = new G(
+  implicit final val FactoryVec4fSInt = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[HalfFloat](da(fFloat1HalfFloat))
+    new ArrayVec4f[SInt](da(FactoryFloat1SInt))
   )
-  implicit final val fVec4fRawFloat = new G(
+  implicit final val FactoryVec4fUInt = new G(
     vec4fTemplateClass,
     vec4fTemplate,
-    new ArrayVec4f[RawFloat](da(fFloat1RawFloat))
+    new ArrayVec4f[UInt](da(FactoryFloat1UInt))
+  )
+  implicit final val FactoryVec4fNSInt = new G(
+    vec4fTemplateClass,
+    vec4fTemplate,
+    new ArrayVec4f[NSInt](da(FactoryFloat1NSInt))
+  )
+  implicit final val FactoryVec4fNUInt = new G(
+    vec4fTemplateClass,
+    vec4fTemplate,
+    new ArrayVec4f[NUInt](da(FactoryFloat1NUInt))
+  )
+
+  implicit final val FactoryVec4fHalfFloat = new G(
+    vec4fTemplateClass,
+    vec4fTemplate,
+    new ArrayVec4f[HalfFloat](da(FactoryFloat1HalfFloat))
+  )
+  implicit final val FactoryVec4fRawFloat = new G(
+    vec4fTemplateClass,
+    vec4fTemplate,
+    new ArrayVec4f[RawFloat](da(FactoryFloat1RawFloat))
   )
 }

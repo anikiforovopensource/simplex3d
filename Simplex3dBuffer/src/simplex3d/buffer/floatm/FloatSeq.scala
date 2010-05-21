@@ -54,26 +54,8 @@ import Const._
 private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
   buff: D#BufferType
 ) extends BaseSeq[Float1, Float, D](buff) {
+  final def componentManifest = scala.reflect.ClassManifest.Float
   final def components: Int = 1
-
-  protected final def translatePut(
-    destOffset: Int,
-    src: ContiguousSeq[Float1, _],
-    srcOffset: Int,
-    srcStep: Int,
-    srcLim: Int
-  ) {
-    val dest = backingSeq
-
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim)  {
-      dest(desti) = src(srci)
-      desti += step
-      srci += srcStep
-    }
-  }
 }
 
 

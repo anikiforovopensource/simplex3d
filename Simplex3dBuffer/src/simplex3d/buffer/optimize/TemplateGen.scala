@@ -26,7 +26,7 @@ import org.objectweb.asm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-/* private[optimize] */ class TemplateGen {
+private[optimize] class TemplateGen {
   def genByteCode(
     templateClassName: String, templateString: String, replaceString: String
   ) :Array[Byte] = {
@@ -45,9 +45,9 @@ import org.objectweb.asm._
   }
 }
 
-/* private[optimize] */ class TemplateGenException(msg: String) extends Exception(msg)
+private[optimize] class TemplateGenException(msg: String) extends Exception(msg)
 
-/* private[optimize] */ trait TemplateWorker {
+private[optimize] trait TemplateWorker {
   def template: String
   def replaceValue: String
 
@@ -95,7 +95,7 @@ import org.objectweb.asm._
   }
 }
 
-/* private[optimize] */ class TemplateClassVisitor(
+private[optimize] class TemplateClassVisitor(
   val template: String, val replaceValue: String, val cv: ClassVisitor
 ) extends ClassVisitor with TemplateWorker {
 
@@ -177,7 +177,7 @@ import org.objectweb.asm._
   def visitEnd() { cv.visitEnd() }
 }
 
-/* private[optimize] */ class TemplateMethodVisitor(
+private[optimize] class TemplateMethodVisitor(
   val template: String, val replaceValue: String, mv: MethodVisitor
 ) extends MethodAdapter(mv) with TemplateWorker {
 

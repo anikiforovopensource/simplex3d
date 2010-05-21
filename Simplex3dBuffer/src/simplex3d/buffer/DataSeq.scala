@@ -36,10 +36,12 @@ private[buffer] abstract class BaseSeq[
   val buffer: D#BufferType
 ) extends IndexedSeq[E] with ArrayLike[E, IndexedSeq[E]] {
 
-  final def componentBytes: Int = Binding.byteLength(componentBinding)
-  final val byteSize = buffer.capacity*componentBytes
-  final val byteOffset = offset*componentBytes
-  final val byteStride = stride*componentBytes
+  def componentManifest: ClassManifest[T#Component#Element]
+  
+  final val componentBytes: Int = Binding.byteLength(componentBinding)
+  final def byteSize = buffer.capacity*componentBytes
+  final def byteOffset = offset*componentBytes
+  final def byteStride = stride*componentBytes
   def bindingBuffer: Buffer
 
   final override val size: Int =
@@ -65,14 +67,6 @@ private[buffer] abstract class BaseSeq[
   def stride: Int
 
   def backingSeq: ContiguousSeq[T#Component, D]
-
-  protected def translatePut(
-    destOffset: Int,
-    src: ContiguousSeq[T#Component, _],
-    srcOffset: Int,
-    srcStep: Int,
-    srcLim: Int
-  )
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
@@ -122,256 +116,22 @@ private[buffer] abstract class BaseSeq[
       }
     }
   }
-  private final def putBuffer(
-    destOffset: Int, src: ByteBuffer, srcOffset: Int, srcStep: Int, srcLim: Int
+  private final def putArray(
+    index: Int, carray: Array[_], first: Int, count: Int
   ) {
-    val dest = buffer.asInstanceOf[ByteBuffer]
-
-    (components: @switch) match {
-      case 1 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          desti += step
-          srci += srcStep
-        }
-      case 2 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          desti += step
-          srci += srcStep
-        }
-      case 3 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          desti += step
-          srci += srcStep
-        }
-      case 4 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          dest.put(desti + 3, src.get(srci + 3))
-          desti += step
-          srci += srcStep
-        }
-      case _ =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-
-          var j = 0; while (j < components) {
-            dest.put(desti + j, src.get(srci + j))
-          }
-
-          desti += step
-          srci += srcStep
-        }
+    val array = carray.asInstanceOf[Array[E]]
+    var i = 0; while (i < count) {
+      this(index + i) = array(first + i)
+      i += 1
     }
   }
-  private final def putBuffer(
-    destOffset: Int, src: ShortBuffer, srcOffset: Int, srcStep: Int, srcLim: Int
-  ) {
-    val dest = buffer.asInstanceOf[ShortBuffer]
-
-    (components: @switch) match {
-      case 1 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          desti += step
-          srci += srcStep
-        }
-      case 2 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          desti += step
-          srci += srcStep
-        }
-      case 3 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          desti += step
-          srci += srcStep
-        }
-      case 4 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          dest.put(desti + 3, src.get(srci + 3))
-          desti += step
-          srci += srcStep
-        }
-      case _ =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-
-          var j = 0; while (j < components) {
-            dest.put(desti + j, src.get(srci + j))
-          }
-
-          desti += step
-          srci += srcStep
-        }
-    }
-  }
-  private final def putBuffer(
-    destOffset: Int, src: CharBuffer, srcOffset: Int, srcStep: Int, srcLim: Int
-  ) {
-    val dest = buffer.asInstanceOf[CharBuffer]
-
-    (components: @switch) match {
-      case 1 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          desti += step
-          srci += srcStep
-        }
-      case 2 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          desti += step
-          srci += srcStep
-        }
-      case 3 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          desti += step
-          srci += srcStep
-        }
-      case 4 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          dest.put(desti + 3, src.get(srci + 3))
-          desti += step
-          srci += srcStep
-        }
-      case _ =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-
-          var j = 0; while (j < components) {
-            dest.put(desti + j, src.get(srci + j))
-          }
-
-          desti += step
-          srci += srcStep
-        }
-    }
-  }
-  private final def putBuffer(
-    destOffset: Int, src: IntBuffer, srcOffset: Int, srcStep: Int, srcLim: Int
-  ) {
-    val dest = buffer.asInstanceOf[IntBuffer]
-
-    (components: @switch) match {
-      case 1 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          desti += step
-          srci += srcStep
-        }
-      case 2 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          desti += step
-          srci += srcStep
-        }
-      case 3 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          desti += step
-          srci += srcStep
-        }
-      case 4 =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-          dest.put(desti, src.get(srci))
-          dest.put(desti + 1, src.get(srci + 1))
-          dest.put(desti + 2, src.get(srci + 2))
-          dest.put(desti + 3, src.get(srci + 3))
-          desti += step
-          srci += srcStep
-        }
-      case _ =>
-        var desti = destOffset
-        var srci = srcOffset
-
-        while (srci < srcLim) {
-
-          var j = 0; while (j < components) {
-            dest.put(desti + j, src.get(srci + j))
-          }
-
-          desti += step
-          srci += srcStep
-        }
+  private final def putSeq(index: Int, seq: Seq[E], first: Int, count: Int) {
+    var i = index
+    val iter = seq.iterator
+    iter.drop(first)
+    while (iter.hasNext) {
+      this(i) = iter.next
+      i += 1
     }
   }
 
@@ -391,34 +151,21 @@ private[buffer] abstract class BaseSeq[
           )
 
         wrapped.elemManifest match {
-
           case ClassManifest.Int => putArray(
               index, wrapped.array.asInstanceOf[Array[Int]], first, count
             )
-
           case ClassManifest.Float => putArray(
               index, wrapped.array.asInstanceOf[Array[Float]], first, count
             )
-
           case ClassManifest.Double => putArray(
               index, wrapped.array.asInstanceOf[Array[Double]], first, count
             )
-          
-          case _ =>
-            var i = 0; while (i < count) {
-              this(index + i) = wrapped(first + i)
-              i += 1
-            }
+          case _ => putArray(
+              index, wrapped.array, first, count
+            )
         }
 
-      case _ =>
-        var i = index
-        val iter = seq.iterator
-        iter.drop(first)
-        while (iter.hasNext) {
-          this(i) = iter.next
-          i += 1
-        }
+      case _ => putSeq(index, seq, first, count)
     }
   }
 
@@ -450,17 +197,23 @@ private[buffer] abstract class BaseSeq[
         case _ => throw new AssertionError("Binding not found.")
       }
     }
+
+    val destOffset = index*step + offset
+    val srcStep = srcStride + components
+    val srcLim = srcOffset + count*srcStep
+
+    if (index + count > size) throw new BufferOverflowException()
+    if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
+
     val group = grp(componentBinding)
     val noConversion = (
       componentBinding == src.componentBinding ||
       (!normalized && !src.normalized && group == grp(src.componentBinding))
     )
 
-    if (stride == 0 && srcStride == 0 && noConversion) {
-      val srcLim = srcOffset + count*components
-      if (srcLim < src.buffer.capacity) throw new BufferUnderflowException()
 
-      buffer.position(index*step + offset)
+    if (stride == 0 && srcStride == 0 && noConversion) {
+      buffer.position(destOffset)
       src.buffer.position(srcOffset)
       src.buffer.limit(srcLim)
 
@@ -501,58 +254,93 @@ private[buffer] abstract class BaseSeq[
         src.buffer.limit(src.buffer.capacity)
       }
     }
-    else {
-      val destOffset = index*step + offset
-      val srcStep = srcStride + components
-      val srcLim = srcOffset + count*srcStep
-
-      if (index + count > size) throw new BufferOverflowException()
-      if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
-
-      if (noConversion && group < 4) {
-        (group: @switch) match {
-          case 0 =>
-            putBuffer(
-              destOffset,
-              src.buffer.asInstanceOf[ByteBuffer],
-              srcOffset,
-              srcStep,
-              srcLim
-            )
-          case 1 =>
-            putBuffer(
-              destOffset,
-              src.buffer.asInstanceOf[ShortBuffer],
-              srcOffset,
-              srcStep,
-              srcLim
-            )
-          case 2 =>
-            putBuffer(
-              destOffset,
-              src.buffer.asInstanceOf[CharBuffer],
-              srcOffset,
-              srcStep,
-              srcLim
-            )
-          case 3 =>
-            putBuffer(
-              destOffset,
-              src.buffer.asInstanceOf[IntBuffer],
-              srcOffset,
-              srcStep,
-              srcLim
-            )
-        }
+    else if (noConversion && group < 5) {
+      (group: @switch) match {
+        case 0 => Copying.copyBuffer(
+            components,
+            buffer.asInstanceOf[ByteBuffer],
+            destOffset,
+            step,
+            src.buffer.asInstanceOf[ByteBuffer],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case 1 => Copying.copyBuffer(
+            components,
+            buffer.asInstanceOf[ShortBuffer],
+            destOffset,
+            step,
+            src.buffer.asInstanceOf[ShortBuffer],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case 2 => Copying.copyBuffer(
+            components,
+            buffer.asInstanceOf[CharBuffer],
+            destOffset,
+            step,
+            src.buffer.asInstanceOf[CharBuffer],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case 3 => Copying.copyBuffer(
+            components,
+            buffer.asInstanceOf[IntBuffer],
+            destOffset,
+            step,
+            src.buffer.asInstanceOf[IntBuffer],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case 4 => Copying.copyBuffer(
+            components,
+            buffer.asInstanceOf[ShortBuffer],
+            destOffset,
+            step,
+            src.buffer.asInstanceOf[ShortBuffer],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
       }
-      else {
-        translatePut(
-          destOffset,
-          src,
-          srcOffset,
-          srcStep,
-          srcLim
-        )
+    }
+    else {
+      componentManifest match {
+        case scala.reflect.ClassManifest.Int => Copying.copySeqInt(
+            components,
+            backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
+            destOffset,
+            step,
+            src.asInstanceOf[ContiguousSeq[Int1, _]],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case scala.reflect.ClassManifest.Float => Copying.copySeqFloat(
+            components,
+            backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
+            destOffset,
+            step,
+            src.asInstanceOf[ContiguousSeq[Float1, _]],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case scala.reflect.ClassManifest.Double => Copying.copySeqDouble(
+            components,
+            backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
+            destOffset,
+            step,
+            src.asInstanceOf[ContiguousSeq[Double1, _]],
+            srcOffset,
+            srcStep,
+            srcLim
+          )
+        case _ => throw new AssertionError("Unsupported component type.")
       }
     }
   }
@@ -778,6 +566,9 @@ class SimpleFactoryRef[T <: MetaType, D <: RawType](
 abstract class GenericSeq[T <: Composite, +D <: RawType](
   val backingSeq: ContiguousSeq[T#Component, D]
 ) extends BaseSeq[T, T#Element, D](backingSeq.buffer) {
+  final def componentManifest = backingSeq.componentManifest.asInstanceOf[
+    ClassManifest[T#Component#Element]
+  ]
   
   final def componentBinding = backingSeq.componentBinding
   final def normalized: Boolean = backingSeq.normalized

@@ -34,7 +34,7 @@ object Binding {
   final val UShort = 5123
   final val SInt = 5124
   final val UInt = 5125
-  final val HalfFloat = 36193
+  final val HalfFloat = 5131
   final val RawFloat = 5126
   final val RawDouble = 5130
 

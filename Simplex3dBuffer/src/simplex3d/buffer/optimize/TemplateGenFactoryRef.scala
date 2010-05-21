@@ -56,11 +56,21 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 
   private def enableGen :Boolean = {
     val default = "true"
-    (try {
-      System.getProperty(sysprop, default)
-    } catch {
-      case se: SecurityException => default
-    }).toLowerCase != "false"
+
+    {
+      try {
+        System.getProperty(sysprop, default)
+      }
+      catch {
+        case se: SecurityException =>
+          Logger.getLogger(getClass.getName).log(
+            Level.WARNING,
+            "Unable to read system property '" + sysprop + "'.",
+            se
+          )
+          default
+      }
+    }.toLowerCase != "false"
   }
 
   private def reportMissingLib :Boolean = {

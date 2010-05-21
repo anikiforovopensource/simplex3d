@@ -39,7 +39,7 @@ object WrapperBench {
 }
 
 class WrapperBenchTC {
-  val length = 10000
+  val length = 20000
   val loops = 50000
 
   val random = new java.util.Random()
@@ -57,8 +57,22 @@ class WrapperBenchTC {
     dataBuffer.put(i, random.nextFloat)
   }
 
+  val convertedBytes = {
+    val t = DataArray[Float1, NUByte](length)
+    t.put(dataArray)
+    DataArray[Vec4f, NUByte](t.array)
+  }
+
   def run() {
     var start = 0L
+
+    start = System.currentTimeMillis
+    testBuffer(dataBuffer, loops)
+    val bufferTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testArray(dataArray, loops)
+    val arrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedArray(dataArray, loops)
@@ -69,13 +83,16 @@ class WrapperBenchTC {
     val implementedBufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testBuffer(dataBuffer, loops)
-    val bufferTime = System.currentTimeMillis - start
+    testImplementedArray(dataArray, loops)
+    val implementedArrayTime2 = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testArray(dataArray, loops)
-    val arrayTime = System.currentTimeMillis - start
+    testImplementedBuffer(byteBuffer, loops)
+    val implementedBufferTime2 = System.currentTimeMillis - start
 
+    start = System.currentTimeMillis
+    testImplementedConversion(convertedBytes, loops)
+    val implementedConversionTime = System.currentTimeMillis - start
 
 //    start = System.currentTimeMillis
 //    testAbstractClassArray(dataArray, loops)
@@ -104,6 +121,7 @@ class WrapperBenchTC {
 
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
+
 //    println("Abstract class with Array time: " + absClassArrTime + ".")
 //    println("Generic class with Array time: " + genClassArrTime + ".")
 //    println("Generic Wrapper with Array time: " + genWrapperArrTime + ".")
@@ -111,8 +129,11 @@ class WrapperBenchTC {
 //    println("Abstract Interleaved with Buffer time: " + absInterleavedTime + ".")
 //    println("Generic class with Buffer time: " + genClassBufTime + ".")
 
+    println("Implemented Conversion time: " + implementedConversionTime + ".")
     println("Implemented Array time: " + implementedArrayTime + ".")
     println("Implemented Buffer time: " + implementedBufferTime + ".")
+    println("Implemented Array time: " + implementedArrayTime2 + ".")
+    println("Implemented Buffer time: " + implementedBufferTime2 + ".")
   }
 
   def testArray(data: Array[Float], loops: Int) {
@@ -314,6 +335,27 @@ class WrapperBenchTC {
   def testImplementedBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
     val seq = DataBuffer[Vec4f, RawFloat](data)
+    val end = seq.size
+    val step = 1
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < end) {
+
+        val v = seq(i)
+        val u = v * 7.9f
+        answer += int(u.x + u.y + u.z + u.w)
+
+        i += step
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedConversion(s: DataArray[Vec4f, NUByte], loops: Int) {
+    var answer = 0
+    val seq = s
     val end = seq.size
     val step = 1
 

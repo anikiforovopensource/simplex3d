@@ -107,7 +107,7 @@ private[math] object SimplexNoise {
     // For the 1D case, the simplex shape is an interval of length 1.
 
     // Noise contribution from left point
-    val t0 = 1 - (p0x*p0x)
+    val t0 = 1 - p0x*p0x
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -120,7 +120,7 @@ private[math] object SimplexNoise {
 
     // Noise contribution from right point
     val p1x = p0x - 1
-    val t1 = 1 - (p1x*p1x)
+    val t1 = 1 - p1x*p1x
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -170,7 +170,7 @@ private[math] object SimplexNoise {
     val o1y = 1 - o1x
 
     // Noise contribution from simplex origin
-    val t0 = 0.5 - (p0x*p0x + p0y*p0y)
+    val t0 = 0.5 - p0x*p0x - p0y*p0y
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -184,7 +184,7 @@ private[math] object SimplexNoise {
     // Noise contribution from middle corner
     val p1x = p0x - o1x + G2
     val p1y = p0y - o1y + G2
-    val t1 = 0.5 - (p1x*p1x + p1y*p1y)
+    val t1 = 0.5 - p1x*p1x - p1y*p1y
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -198,7 +198,7 @@ private[math] object SimplexNoise {
     // Noise contribution from last corner
     val p2x = p0x - G22
     val p2y = p0y - G22
-    val t2 = 0.5 - (p2x*p2x + p2y*p2y)
+    val t2 = 0.5 - p2x*p2x - p2y*p2y
     val n2 =
       if(t2 < 0.0) 0.0
       else {
@@ -302,7 +302,7 @@ private[math] object SimplexNoise {
     }
 
     // Noise contribution from simplex origin
-    val t0 = 0.6 - (p0x*p0x + p0y*p0y + p0z*p0z)
+    val t0 = 0.6 - p0x*p0x - p0y*p0y - p0z*p0z
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -318,7 +318,7 @@ private[math] object SimplexNoise {
     val p1x = p0x - o1x + G3
     val p1y = p0y - o1y + G3
     val p1z = p0z - o1z + G3
-    val t1 = 0.6 - (p1x*p1x + p1y*p1y + p1z*p1z)
+    val t1 = 0.6 - p1x*p1x - p1y*p1y - p1z*p1z
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -334,7 +334,7 @@ private[math] object SimplexNoise {
     val p2x = p0x - o2x + G32
     val p2y = p0y - o2y + G32
     val p2z = p0z - o2z + G32
-    val t2 = 0.6 - (p2x*p2x + p2y*p2y + p2z*p2z)
+    val t2 = 0.6 - p2x*p2x - p2y*p2y - p2z*p2z
     val n2 =
       if (t2 < 0.0) 0.0
       else {
@@ -350,7 +350,7 @@ private[math] object SimplexNoise {
     val p3x = p0x - G33
     val p3y = p0y - G33
     val p3z = p0z - G33
-    val t3 = 0.6 - (p3x*p3x + p3y*p3y + p3z*p3z)
+    val t3 = 0.6 - p3x*p3x - p3y*p3y - p3z*p3z
     val n3 =
       if(t3 < 0.0) 0.0
       else {
@@ -428,7 +428,7 @@ private[math] object SimplexNoise {
     val o1w = if (bw > 2) 1 else 0
 
     // Noise contribution from simplex origin
-    val t0 = 0.6 - (p0x*p0x + p0y*p0y + p0z*p0z + p0w*p0w)
+    val t0 = 0.6 - p0x*p0x - p0y*p0y - p0z*p0z - p0w*p0w
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -446,7 +446,7 @@ private[math] object SimplexNoise {
     val p1y = p0y - o1y + G4
     val p1z = p0z - o1z + G4
     val p1w = p0w - o1w + G4
-    val t1 = 0.6 - (p1x*p1x + p1y*p1y + p1z*p1z + p1w*p1w)
+    val t1 = 0.6 - p1x*p1x - p1y*p1y - p1z*p1z - p1w*p1w
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -464,7 +464,7 @@ private[math] object SimplexNoise {
     val p2y = p0y - o2y + G42
     val p2z = p0z - o2z + G42
     val p2w = p0w - o2w + G42
-    val t2 = 0.6 - (p2x*p2x + p2y*p2y + p2z*p2z + p2w*p2w)
+    val t2 = 0.6 - p2x*p2x - p2y*p2y - p2z*p2z - p2w*p2w
     val n2 =
       if (t2 < 0.0) 0.0
       else {
@@ -482,7 +482,7 @@ private[math] object SimplexNoise {
     val p3y = p0y - o3y + G43
     val p3z = p0z - o3z + G43
     val p3w = p0w - o3w + G43
-    val t3 = 0.6 - (p3x*p3x + p3y*p3y + p3z*p3z + p3w*p3w)
+    val t3 = 0.6 - p3x*p3x - p3y*p3y - p3z*p3z - p3w*p3w
     val n3 =
       if (t3 < 0.0) 0.0
       else {
@@ -500,7 +500,7 @@ private[math] object SimplexNoise {
     val p4y = p0y - G44
     val p4z = p0z - G44
     val p4w = p0w - G44
-    val t4 = 0.6 - (p4x*p4x + p4y*p4y + p4z*p4z + p4w*p4w)
+    val t4 = 0.6 - p4x*p4x - p4y*p4y - p4z*p4z - p4w*p4w
     val n4 =
       if(t4 < 0.0) 0.0
       else {

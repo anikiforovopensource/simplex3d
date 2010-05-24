@@ -61,6 +61,7 @@ sealed trait RawType {
 
 sealed trait ReadType extends RawType
 sealed trait ReadInt extends ReadType
+sealed trait ReadIndex extends ReadInt with Unsigned
 sealed trait ReadFloat extends ReadType
 sealed trait ReadDouble extends ReadType
 
@@ -81,7 +82,7 @@ sealed trait SByte extends RawByte with Signed with NonNormalized
 with ReadInt with ReadFloat with ReadDouble
 
 sealed trait UByte extends RawByte with Unsigned with NonNormalized
-with ReadInt with ReadFloat with ReadDouble
+with ReadIndex with ReadFloat with ReadDouble
 
 sealed trait NSByte extends RawByte with Signed with Normalized
 with ReadFloat with ReadDouble
@@ -99,7 +100,7 @@ with ReadInt with ReadFloat with ReadDouble {
 }
 
 sealed trait UShort extends RawShort with Unsigned with NonNormalized
-with ReadInt with ReadFloat with ReadDouble {
+with ReadIndex with ReadFloat with ReadDouble {
   type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
@@ -126,7 +127,7 @@ sealed trait SInt extends RawInt with Signed with NonNormalized
 with ReadInt with ReadFloat with ReadDouble
 
 sealed trait UInt extends RawInt with Unsigned with NonNormalized
-with ReadInt with ReadFloat with ReadDouble
+with ReadIndex with ReadFloat with ReadDouble
 
 sealed trait NSInt extends RawInt with Signed with Normalized
 with ReadFloat with ReadDouble

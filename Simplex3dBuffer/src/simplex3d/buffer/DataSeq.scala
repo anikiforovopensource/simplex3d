@@ -117,15 +117,15 @@ private[buffer] abstract class BaseSeq[
     }
   }
   private final def putArray(
-    index: Int, carray: Array[_], first: Int, count: Int
+    index: Int, array: Array[_], first: Int, count: Int
   ) {
-    val array = carray.asInstanceOf[Array[E]]
+    val arr = array.asInstanceOf[Array[E]]
     var i = 0; while (i < count) {
-      this(index + i) = array(first + i)
+      this(index + i) = arr(first + i)
       i += 1
     }
   }
-  private final def putSeq(index: Int, seq: Seq[E], first: Int, count: Int) {
+  private def putSeq(index: Int, seq: Seq[E], first: Int, count: Int) {
     var i = index
     val iter = seq.iterator
     iter.drop(first)
@@ -135,7 +135,7 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, seq: Seq[E], first: Int, count: Int) {
+  final def put(index: Int, seq: Seq[T#Element], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
 
     import scala.collection.mutable._
@@ -165,15 +165,15 @@ private[buffer] abstract class BaseSeq[
             )
         }
 
-      case _ => putSeq(index, seq, first, count)
+      case _ => putSeq(index, seq.asInstanceOf[Seq[E]], first, count)
     }
   }
 
-  final def put(index: Int, seq: Seq[E]) {
+  final def put(index: Int, seq: Seq[T#Element]) {
     put(index, seq, 0, seq.size)
   }
 
-  final def put(seq: Seq[E]) {
+  final def put(seq: Seq[T#Element]) {
     put(0, seq, 0, seq.size)
   }
 

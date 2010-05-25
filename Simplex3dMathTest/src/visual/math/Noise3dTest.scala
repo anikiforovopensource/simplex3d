@@ -40,6 +40,7 @@ object Noise3dTest {
     final def apply(pixel: AnyVec2, t: Double) = {
       val p = pixel + t*scrollSpeed
       Vec3((noise1(Vec3(p*scale, t*noiseSpeed)) + 1)/2)
+      //(noise3(Vec3(p*scale, t*noiseSpeed)) + 1)/2
     }})
   }
 }

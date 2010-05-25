@@ -29,8 +29,6 @@
  */
 package simplex3d.math
 
-import java.lang.Math
-
 
 /** <code>SimplexNoise</code> contains the implementation
  * of simplex noise algorithm.
@@ -42,6 +40,25 @@ import java.lang.Math
  * @author Aleksey Nikiforov (lex)
  */
 private[math] object SimplexNoise {
+
+  // Random offset values to prevent accidental aligning and grid artifacts
+  final val offset00 = 4491.073226372865897
+  final val offset01 = 7380.316654263014150
+  final val offset02 = 2552.639314613530870
+  final val offset03 = 6915.921394510744191
+  final val offset10 = 5500.907939704654918
+  final val offset11 = 5920.756836241091634
+  final val offset12 = 2943.023400629879511
+  final val offset13 = 4089.360492013645179
+  final val offset20 = 1344.189793725531315
+  final val offset21 = 2207.870305513515650
+  final val offset22 = 3460.732581098390910
+  final val offset23 = 8204.440182644025431
+  final val offset30 = 7883.998379525183195
+  final val offset31 = 4367.278070772598331
+  final val offset32 = 8458.071950524306615
+  final val offset33 = 3954.148706115616316
+
 
   private final val halfPerm: Array[Int] = Array(
     151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
@@ -92,22 +109,26 @@ private[math] object SimplexNoise {
     if (x > 0 || x == i) i else i - 1
   }
 
+  // Skew and unskew factors making the noise frequency consistent with 2D/3D/4D
+  final val F1 = 1.4142135623730950488 //Math.sqrt(2.0)
+  final val G1 = 0.7071067811865475244 //1 / Math.sqrt(2.0)
+
   /** Computes 1D simplex noise.
    * @param x x coordinate, must be in range of [-2E-8, +2E-8].
    * @return simplex noise value for the specified coordinate.
    */
   def noise(x: Double) :Double = {
-    val pix = ifloor(x)
+    val pix = ifloor(x*F1)
 
     // The x distance from the cell origin
-    val p0x = x - pix
+    val p0x = x - pix*G1
 
     val ix = pix & 0xFF
 
     // For the 1D case, the simplex shape is an interval of length 1.
 
     // Noise contribution from left point
-    val t0 = 1 - p0x*p0x
+    val t0 = 0.5 - p0x*p0x
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -119,8 +140,8 @@ private[math] object SimplexNoise {
       }
 
     // Noise contribution from right point
-    val p1x = p0x - 1
-    val t1 = 1 - p1x*p1x
+    val p1x = p0x - G1
+    val t1 = 0.5 - p1x*p1x
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -132,10 +153,7 @@ private[math] object SimplexNoise {
       }
 
     // Sum up and scale the result to cover the range [-1,1]
-    0.395061728395 * (n0 + n1)
-    // 0.395061728395 is derived from:
-    // pow(a - pow(p, 2), 4)*p*8 + pow(a - pow(p - 1, 2), 4)*(p - 1)*(-8)
-    // with a = 1 and p = 0.5
+    8.85 * (n0 + n1)
   }
   
   // Skew and unskew factors are a bit hairy for 2D, so define them as constants
@@ -251,58 +269,34 @@ private[math] object SimplexNoise {
 
     if (p0x >= p0y) {
       if (p0y >= p0z) {
-        o1x = 1
-        o1y = 0
-        o1z = 0
-        o2x = 1
-        o2y = 1
-        o2z = 0
+        o1x = 1; o1y = 0; o1z = 0
+        o2x = 1; o2y = 1; o2z = 0
       }
       else if (p0x >= p0z) {
-        o1x = 1
-        o1y = 0
-        o1z = 0
-        o2x = 1
-        o2y = 0
-        o2z = 1
+        o1x = 1; o1y = 0; o1z = 0
+        o2x = 1; o2y = 0; o2z = 1
       }
       else {
-        o1x = 0
-        o1y = 0
-        o1z = 1
-        o2x = 1
-        o2y = 0
-        o2z = 1
+        o1x = 0; o1y = 0; o1z = 1
+        o2x = 1; o2y = 0; o2z = 1
       }
     } else {
       if (p0y < p0z) {
-        o1x = 0
-        o1y = 0
-        o1z = 1
-        o2x = 0
-        o2y = 1
-        o2z = 1
+        o1x = 0; o1y = 0; o1z = 1
+        o2x = 0; o2y = 1; o2z = 1
       }
       else if (p0x < p0z) {
-        o1x = 0
-        o1y = 1
-        o1z = 0
-        o2x = 0
-        o2y = 1
-        o2z = 1
+        o1x = 0; o1y = 1; o1z = 0
+        o2x = 0; o2y = 1; o2z = 1
       }
       else {
-        o1x = 0
-        o1y = 1
-        o1z = 0
-        o2x = 1
-        o2y = 1
-        o2z = 0
+        o1x = 0; o1y = 1; o1z = 0
+        o2x = 1; o2y = 1; o2z = 0
       }
     }
 
     // Noise contribution from simplex origin
-    val t0 = 0.6 - p0x*p0x - p0y*p0y - p0z*p0z
+    val t0 = 0.5 - p0x*p0x - p0y*p0y - p0z*p0z
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -318,7 +312,7 @@ private[math] object SimplexNoise {
     val p1x = p0x - o1x + G3
     val p1y = p0y - o1y + G3
     val p1z = p0z - o1z + G3
-    val t1 = 0.6 - p1x*p1x - p1y*p1y - p1z*p1z
+    val t1 = 0.5 - p1x*p1x - p1y*p1y - p1z*p1z
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -334,7 +328,7 @@ private[math] object SimplexNoise {
     val p2x = p0x - o2x + G32
     val p2y = p0y - o2y + G32
     val p2z = p0z - o2z + G32
-    val t2 = 0.6 - p2x*p2x - p2y*p2y - p2z*p2z
+    val t2 = 0.5 - p2x*p2x - p2y*p2y - p2z*p2z
     val n2 =
       if (t2 < 0.0) 0.0
       else {
@@ -350,7 +344,7 @@ private[math] object SimplexNoise {
     val p3x = p0x - G33
     val p3y = p0y - G33
     val p3z = p0z - G33
-    val t3 = 0.6 - p3x*p3x - p3y*p3y - p3z*p3z
+    val t3 = 0.5 - p3x*p3x - p3y*p3y - p3z*p3z
     val n3 =
       if(t3 < 0.0) 0.0
       else {
@@ -363,7 +357,7 @@ private[math] object SimplexNoise {
       }
 
     // Sum up and scale the result to cover the range [-1,1]
-    32.0 * (n0 + n1 + n2 + n3)
+    76.0 * (n0 + n1 + n2 + n3)
   }
 
   // The skewing and unskewing factors are hairy again for the 4D case
@@ -428,7 +422,7 @@ private[math] object SimplexNoise {
     val o1w = if (bw > 2) 1 else 0
 
     // Noise contribution from simplex origin
-    val t0 = 0.6 - p0x*p0x - p0y*p0y - p0z*p0z - p0w*p0w
+    val t0 = 0.5 - p0x*p0x - p0y*p0y - p0z*p0z - p0w*p0w
     val n0 =
       if (t0 < 0.0) 0.0
       else {
@@ -446,7 +440,7 @@ private[math] object SimplexNoise {
     val p1y = p0y - o1y + G4
     val p1z = p0z - o1z + G4
     val p1w = p0w - o1w + G4
-    val t1 = 0.6 - p1x*p1x - p1y*p1y - p1z*p1z - p1w*p1w
+    val t1 = 0.5 - p1x*p1x - p1y*p1y - p1z*p1z - p1w*p1w
     val n1 =
       if (t1 < 0.0) 0.0
       else {
@@ -464,7 +458,7 @@ private[math] object SimplexNoise {
     val p2y = p0y - o2y + G42
     val p2z = p0z - o2z + G42
     val p2w = p0w - o2w + G42
-    val t2 = 0.6 - p2x*p2x - p2y*p2y - p2z*p2z - p2w*p2w
+    val t2 = 0.5 - p2x*p2x - p2y*p2y - p2z*p2z - p2w*p2w
     val n2 =
       if (t2 < 0.0) 0.0
       else {
@@ -482,7 +476,7 @@ private[math] object SimplexNoise {
     val p3y = p0y - o3y + G43
     val p3z = p0z - o3z + G43
     val p3w = p0w - o3w + G43
-    val t3 = 0.6 - p3x*p3x - p3y*p3y - p3z*p3z - p3w*p3w
+    val t3 = 0.5 - p3x*p3x - p3y*p3y - p3z*p3z - p3w*p3w
     val n3 =
       if (t3 < 0.0) 0.0
       else {
@@ -500,7 +494,7 @@ private[math] object SimplexNoise {
     val p4y = p0y - G44
     val p4z = p0z - G44
     val p4w = p0w - G44
-    val t4 = 0.6 - p4x*p4x - p4y*p4y - p4z*p4z - p4w*p4w
+    val t4 = 0.5 - p4x*p4x - p4y*p4y - p4z*p4z - p4w*p4w
     val n4 =
       if(t4 < 0.0) 0.0
       else {
@@ -514,6 +508,6 @@ private[math] object SimplexNoise {
       }
 
     // Sum up and scale the result to cover the range [-1,1]
-    27.0 * (n0 + n1 + n2 + n3 + n4)
+    62.0 * (n0 + n1 + n2 + n3 + n4)
   }
 }

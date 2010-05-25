@@ -21,6 +21,7 @@
 package simplex3d.math.doublem
 
 import simplex3d.math._
+import simplex3d.math.SimplexNoise._
 import java.lang.{StrictMath => SMath}
 
 
@@ -42,11 +43,6 @@ object DoubleMath {
   private final val RadToDeg = 180 / Pi
   private final val InvLog2 = 1/0.69314718055994530942
 
-  // Have to be careful with large offsets due to the loss in precision.
-  // With noise args as double these values should be ok
-  private final val of1 = 10000.0
-  private final val of2 = 20000.0
-  private final val of3 = 30000.0
 
   // Double functions
   def radians(x: Double) :Double = x*DegToRad
@@ -172,26 +168,26 @@ object DoubleMath {
     if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
   }
 
-  def noise1(x: Double) :Double = SimplexNoise.noise(x)
+  def noise1(x: Double) :Double = noise(x + offset00)
   def noise2(x: Double) :Vec2d = {
     new Vec2d(
-      SimplexNoise.noise(x),
-      SimplexNoise.noise(x + of1)
+      noise(x + offset00),
+      noise(x + offset10)
     )
   }
   def noise3(x: Double) :Vec3d = {
     new Vec3d(
-      SimplexNoise.noise(x),
-      SimplexNoise.noise(x + of1),
-      SimplexNoise.noise(x + of2)
+      noise(x + offset00),
+      noise(x + offset10),
+      noise(x + offset20)
     )
   }
   def noise4(x: Double) :Vec4d = {
     new Vec4d(
-      SimplexNoise.noise(x),
-      SimplexNoise.noise(x + of1),
-      SimplexNoise.noise(x + of2),
-      SimplexNoise.noise(x + of3)
+      noise(x + offset00),
+      noise(x + offset10),
+      noise(x + offset20),
+      noise(x + offset30)
     )
   }
 
@@ -361,27 +357,27 @@ object DoubleMath {
   }
 
   def noise1(u: inVec2d) :Double = {
-    SimplexNoise.noise(u.x, u.y)
+    noise(u.x + offset00, u.y + offset01)
   }
   def noise2(u: inVec2d) :Vec2d = {
     new Vec2d(
-      SimplexNoise.noise(u.x, u.y),
-      SimplexNoise.noise(u.x + of1, u.y + of1)
+      noise(u.x + offset00, u.y + offset01),
+      noise(u.x + offset10, u.y + offset11)
     )
   }
   def noise3(u: inVec2d) :Vec3d = {
     new Vec3d(
-      SimplexNoise.noise(u.x, u.y),
-      SimplexNoise.noise(u.x + of1, u.y + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2)
+      noise(u.x + offset00, u.y + offset01),
+      noise(u.x + offset10, u.y + offset11),
+      noise(u.x + offset20, u.y + offset21)
     )
   }
   def noise4(u: inVec2d) :Vec4d = {
     new Vec4d(
-      SimplexNoise.noise(u.x, u.y),
-      SimplexNoise.noise(u.x + of1, u.y + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2),
-      SimplexNoise.noise(u.x + of3, u.y + of3)
+      noise(u.x + offset00, u.y + offset01),
+      noise(u.x + offset10, u.y + offset11),
+      noise(u.x + offset20, u.y + offset21),
+      noise(u.x + offset30, u.y + offset31)
     )
   }
 
@@ -603,27 +599,27 @@ object DoubleMath {
   }
 
   def noise1(u: inVec3d) :Double = {
-    SimplexNoise.noise(u.x, u.y, u.z)
+    noise(u.x + offset00, u.y + offset01, u.z + offset02)
   }
   def noise2(u: inVec3d) :Vec2d = {
     new Vec2d(
-      SimplexNoise.noise(u.x, u.y, u.z),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12)
     )
   }
   def noise3(u: inVec3d) :Vec3d = {
     new Vec3d(
-      SimplexNoise.noise(u.x, u.y, u.z),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12),
+      noise(u.x + offset20, u.y + offset21, u.z + offset22)
     )
   }
   def noise4(u: inVec3d) :Vec4d = {
     new Vec4d(
-      SimplexNoise.noise(u.x, u.y, u.z),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2),
-      SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12),
+      noise(u.x + offset20, u.y + offset21, u.z + offset22),
+      noise(u.x + offset30, u.y + offset31, u.z + offset32)
     )
   }
 
@@ -910,27 +906,27 @@ object DoubleMath {
   }
 
   def noise1(u: inVec4d) :Double = {
-    SimplexNoise.noise(u.x, u.y, u.z, u.w)
+    noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)
   }
   def noise2(u: inVec4d) :Vec2d = {
     new Vec2d(
-      SimplexNoise.noise(u.x, u.y, u.z, u.w),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13)
     )
   }
   def noise3(u: inVec4d) :Vec3d = {
     new Vec3d(
-      SimplexNoise.noise(u.x, u.y, u.z, u.w),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13),
+      noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23)
     )
   }
   def noise4(u: inVec4d) :Vec4d = {
     new Vec4d(
-      SimplexNoise.noise(u.x, u.y, u.z, u.w),
-      SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1),
-      SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2),
-      SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3, u.w + of3)
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03),
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13),
+      noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23),
+      noise(u.x + offset30, u.y + offset31, u.z + offset32, u.w + offset33)
     )
   }
 

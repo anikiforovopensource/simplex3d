@@ -21,6 +21,7 @@
 package simplex3d.math.floatm
 
 import simplex3d.math._
+import simplex3d.math.SimplexNoise._
 import java.lang.{StrictMath => SMath}
 
 
@@ -42,11 +43,6 @@ object FloatMath {
   private final val RadToDeg = 180 / Pi
   private final val InvLog2 = 1/0.69314718055994530942f
 
-  // Have to be careful with large offsets due to the loss in precision.
-  // With noise args as double these values should be ok
-  private final val of1 = 10000.0
-  private final val of2 = 20000.0
-  private final val of3 = 30000.0
 
   // Float functions
   def radians(x: Float) :Float = x*DegToRad
@@ -204,26 +200,26 @@ object FloatMath {
   /**
    * meaningful return values for x withing [-2E8, +2E8]
    */
-  def noise1(x: Float) :Float = float(SimplexNoise.noise(x))
+  def noise1(x: Float) :Float = float(noise(x + offset00))
   def noise2(x: Float) :Vec2f = {
     new Vec2f(
-      float(SimplexNoise.noise(x)),
-      float(SimplexNoise.noise(x + of1))
+      float(noise(x + offset00)),
+      float(noise(x + offset10))
     )
   }
   def noise3(x: Float) :Vec3f = {
     new Vec3f(
-      float(SimplexNoise.noise(x)),
-      float(SimplexNoise.noise(x + of1)),
-      float(SimplexNoise.noise(x + of2))
+      float(noise(x + offset00)),
+      float(noise(x + offset10)),
+      float(noise(x + offset20))
     )
   }
   def noise4(x: Float) :Vec4f = {
     new Vec4f(
-      float(SimplexNoise.noise(x)),
-      float(SimplexNoise.noise(x + of1)),
-      float(SimplexNoise.noise(x + of2)),
-      float(SimplexNoise.noise(x + of3))
+      float(noise(x + offset00)),
+      float(noise(x + offset10)),
+      float(noise(x + offset20)),
+      float(noise(x + offset30))
     )
   }
 
@@ -393,27 +389,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec2f) :Float = {
-    float(SimplexNoise.noise(u.x, u.y))
+    float(noise(u.x + offset00, u.y + offset01))
   }
   def noise2(u: inVec2f) :Vec2f = {
     new Vec2f(
-      float(SimplexNoise.noise(u.x, u.y)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1))
+      float(noise(u.x + offset00, u.y + offset01)),
+      float(noise(u.x + offset10, u.y + offset11))
     )
   }
   def noise3(u: inVec2f) :Vec3f = {
     new Vec3f(
-      float(SimplexNoise.noise(u.x, u.y)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2))
+      float(noise(u.x + offset00, u.y + offset01)),
+      float(noise(u.x + offset10, u.y + offset11)),
+      float(noise(u.x + offset20, u.y + offset21))
     )
   }
   def noise4(u: inVec2f) :Vec4f = {
     new Vec4f(
-      float(SimplexNoise.noise(u.x, u.y)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2)),
-      float(SimplexNoise.noise(u.x + of3, u.y + of3))
+      float(noise(u.x + offset00, u.y + offset01)),
+      float(noise(u.x + offset10, u.y + offset11)),
+      float(noise(u.x + offset20, u.y + offset21)),
+      float(noise(u.x + offset30, u.y + offset31))
     )
   }
 
@@ -635,27 +631,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec3f) :Float = {
-    float(SimplexNoise.noise(u.x, u.y, u.z))
+    float(noise(u.x + offset00, u.y + offset01, u.z + offset02))
   }
   def noise2(u: inVec3f) :Vec2f = {
     new Vec2f(
-      float(SimplexNoise.noise(u.x, u.y, u.z)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12))
     )
   }
   def noise3(u: inVec3f) :Vec3f = {
     new Vec3f(
-      float(SimplexNoise.noise(u.x, u.y, u.z)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12)),
+      float(noise(u.x + offset20, u.y + offset21, u.z + offset22))
     )
   }
   def noise4(u: inVec3f) :Vec4f = {
     new Vec4f(
-      float(SimplexNoise.noise(u.x, u.y, u.z)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2)),
-      float(SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12)),
+      float(noise(u.x + offset20, u.y + offset21, u.z + offset22)),
+      float(noise(u.x + offset30, u.y + offset31, u.z + offset32))
     )
   }
 
@@ -940,27 +936,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec4f) :Float = {
-    float(SimplexNoise.noise(u.x, u.y, u.z, u.w))
+    float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03))
   }
   def noise2(u: inVec4f) :Vec2f = {
     new Vec2f(
-      float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13))
     )
   }
   def noise3(u: inVec4f) :Vec3f = {
     new Vec3f(
-      float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13)),
+      float(noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23))
     )
   }
   def noise4(u: inVec4f) :Vec4f = {
     new Vec4f(
-      float(SimplexNoise.noise(u.x, u.y, u.z, u.w)),
-      float(SimplexNoise.noise(u.x + of1, u.y + of1, u.z + of1, u.w + of1)),
-      float(SimplexNoise.noise(u.x + of2, u.y + of2, u.z + of2, u.w + of2)),
-      float(SimplexNoise.noise(u.x + of3, u.y + of3, u.z + of3, u.w + of3))
+      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
+      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13)),
+      float(noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23)),
+      float(noise(u.x + offset30, u.y + offset31, u.z + offset32, u.w + offset33))
     )
   }
 

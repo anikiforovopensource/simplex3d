@@ -1,4 +1,7 @@
- * Simplex3dMathTest
+Unless stated otherwise, all the files in Simplex3dMathTest package have
+the following license:
+
+* Simplex3dMathTest
  * Copyright (C) 2009-2010 Simplex3d Team
  *
  * Simplex3dMathTest is free software: you can redistribute it and/or modify
@@ -13,3 +16,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+visual.math.NoiseContribution has the following license:
+
+ * Simplex3d, NoiseContributionTest
+ * Copyright (C) 2010 Simplex3d Team
+ *
+ * This file is part of Simplex3dMathTest.
+ *
+ * Simplex3dMathTest is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simplex3dMathTest is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * ADDITIONAL TERMS:
+ * This file contains parts of GLSL shader by Stefan Gustavson.
+ * The shader license states:
+ *
+ * Author: Stefan Gustavson ITN-LiTH (stegu@itn.liu.se) 2004-12-05
+ * Simplex indexing functions by Bill Licea-Kane, ATI (bill@ati.com)
+ *
+ * You may use, modify and redistribute this code free of charge,
+ * provided that the author's names and this notice appear intact.
+ 

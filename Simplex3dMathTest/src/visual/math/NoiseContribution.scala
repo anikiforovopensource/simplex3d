@@ -1,5 +1,5 @@
 /*
- * Simplex3d, MathTest package
+ * Simplex3d, NoiseContributionTest
  * Copyright (C) 2010 Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
@@ -16,6 +16,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * ADDITIONAL TERMS:
+ * This file contains parts of GLSL shader by Stefan Gustavson.
+ * The shader license states:
+ *
+ * Author: Stefan Gustavson ITN-LiTH (stegu@itn.liu.se) 2004-12-05
+ * Simplex indexing functions by Bill Licea-Kane, ATI (bill@ati.com)
+ *
+ * You may use, modify and redistribute this code free of charge,
+ * provided that the author's names and this notice appear intact.
  */
 
 package visual.math
@@ -108,8 +118,8 @@ object NoiseContribution {
     if (x > 0 || x == i) i else i - 1
   }
 
-  final val F1 = 1.4142135623730950488 //Math.sqrt(2.0)
-  final val G1 = 0.7071067811865475244 //(1/Math.sqrt(2.0))
+  final val F1 = 1.4142135623730950488
+  final val G1 = 0.7071067811865475244
 
   final def nc1(x: Double) :Double = {
     val pix = ifloor(x*F1)
@@ -119,18 +129,16 @@ object NoiseContribution {
     length(p0x)
   }
 
-  final val F2 = 0.36602540378443864676 //(Math.sqrt(3.0) - 1.0) / 2.0
-  final val G2 = 0.21132486540518711775 //(3.0 - Math.sqrt(3.0)) / 6.0
-  final val G22 = 0.57735026918962576451 //1 - 2.0 * (3.0 - Math.sqrt(3.0)) / 6.0
+  final val F2 = 0.36602540378443864676
+  final val G2 = 0.21132486540518711775
+  final val G22 = 0.57735026918962576451
 
   final def nc2(x: Double, y: Double) :Double = {
-    // Skew the (x,y) space to determine which cell of 2 simplices we're in
-    val s = (x + y) * F2 // Hairy factor for 2D skewing
+    val s = (x + y) * F2
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
-    val t = (pix + piy) * G2 // Hairy factor for unskewing
+    val t = (pix + piy) * G2
 
-    // The x,y distances from the cell origin
     val p0x = x - pix + t
     val p0y = y - piy + t
 
@@ -144,14 +152,12 @@ object NoiseContribution {
   final val G33 = 1 - 3 / 6.0
 
   final def nc3(x: Double, y: Double, z:Double) = {
-    // Skew the (x,y,z) space to determine which cell of 6 simplices we're in
-    val s = (x + y + z) * F3 // Factor for 3D skewing
+    val s = (x + y + z) * F3
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
     val t = (pix + piy + piz) * G3
 
-    // The x,y,z distances from the cell origin
     val p0x = x - pix + t
     val p0y = y - piy + t
     val p0z = z - piz + t
@@ -160,22 +166,20 @@ object NoiseContribution {
     length(v)
   }
 
-  final val F4 = 0.3090169943749474241 //(Math.sqrt(5.0) - 1.0) / 4.0
-  final val G4 = 0.13819660112501051518 //(5.0 - Math.sqrt(5.0)) / 20.0
-  final val G42 = 0.27639320225002103036 //2.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
-  final val G43 = 0.41458980337503154554 //3.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
-  final val G44 = 0.44721359549995793928 //1 - 4.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
+  final val F4 = 0.3090169943749474241
+  final val G4 = 0.13819660112501051518
+  final val G42 = 0.27639320225002103036
+  final val G43 = 0.41458980337503154554
+  final val G44 = 0.44721359549995793928
 
   final def nc4(x: Double, y: Double, z:Double, w:Double) :Double = {
-    // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
-    val s = (x + y + z + w) * F4 // Factor for 4D skewing
+    val s = (x + y + z + w) * F4
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
     val piw = ifloor(w + s)
     val t = (pix + piy + piz + piw) * G4
 
-    // The x,y,z,w distances from the cell origin
     val p0x = x - pix + t
     val p0y = y - piy + t
     val p0z = z - piz + t

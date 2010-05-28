@@ -45,6 +45,25 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
+  @inline implicit final def arrayUByteDataToIndex(d: DataArray[Int1, UByte]) =
+    d.asInstanceOf[IndexArray[UByte]]
+
+  @inline implicit final def bufferUByteDataToIndex(d: DataBuffer[Int1, UByte])=
+    d.asInstanceOf[IndexBuffer[UByte]]
+
+  @inline implicit final def arrayUShortDataToIndex(d: DataArray[Int1, UShort])=
+    d.asInstanceOf[IndexArray[UShort]]
+
+  @inline implicit final def bufferUShortDataToIndex(d:DataBuffer[Int1,UShort])=
+    d.asInstanceOf[IndexBuffer[UShort]]
+
+  @inline implicit final def arrayUIntDataToIndex(d: DataArray[Int1, UInt]) =
+    d.asInstanceOf[IndexArray[UInt]]
+
+  @inline implicit final def bufferUIntDataToIndex(d: DataBuffer[Int1, UInt]) =
+    d.asInstanceOf[IndexBuffer[UInt]]
+
+
   def allocateByteBuffer(size: Int) = {
     val direct = ByteBuffer.allocateDirect(size)
     direct.order(ByteOrder.nativeOrder())
@@ -474,7 +493,7 @@ package object buffer extends UnsignedImplicits {
       result(order(i)) = seq.copyAsDataView(
         byteBuffer,
         byteOffset/seq.componentBytes,
-        byteStride/seq.componentBytes - seq.components
+        byteStride/seq.componentBytes
       )
       byteOffset += seq.componentBytes*seq.components
       

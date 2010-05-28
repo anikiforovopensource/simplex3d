@@ -50,7 +50,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       case Binding.RawDouble => "RawDouble"
     })
 
-  private def disableWarningMsg =
+  private def helpMsg =
     "Disable buffer optimization by setting system property '" +
     sysprop + "' to false."
 
@@ -81,8 +81,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
     }) != null
   }
 
-  def factory = ref
-  private lazy val ref: DataSeq[T, D] = {
+  lazy val factory: DataSeq[T, D] = {
     if (!enableGen) fallbackFactory
     else {
       try {
@@ -98,7 +97,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
             Logger.getLogger(getClass.getName).log(
               Level.WARNING,
               "Unable to load optimized classes due to missing asm library. " +
-              disableWarningMsg,
+              helpMsg,
               nolib.getCause
             )
           }
@@ -109,7 +108,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
             "Wrong bytecode for '" + replaceString +
             "' from template '" + templateArray + "'. Ensure that the " +
             "template is compiled without -optimize coplier flag. " +
-            disableWarningMsg,
+            helpMsg,
             badcode.getCause
           )
           fallbackFactory
@@ -117,7 +116,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
             "Failed to load optimized classes for '" + replaceString +
-            "' from template '" + templateArray + "'." + disableWarningMsg,
+            "' from template '" + templateArray + "'." + helpMsg,
             any
           )
           fallbackFactory
@@ -160,8 +159,8 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
           genClassName, byteCode, 0, byteCode.length
         )
     }
-    val factory = clazz.newInstance.asInstanceOf[DataSeq[T, D]]
-    factory
+
+    clazz.newInstance.asInstanceOf[DataSeq[T, D]]
   }
 
   private def testFactory(factory: DataSeq[T, D]) {
@@ -179,7 +178,10 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       )
 
       testDataView(
-        factory.mkDataView(fallbackFactory.mkDataBuffer(1).byteBuffer, 0, 0)
+        factory.mkDataView(
+          fallbackFactory.mkDataBuffer(1).byteBuffer,
+          0, fallbackFactory.components
+        )
       )
 
 
@@ -198,10 +200,9 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       val offset = 3
       val stride = 5
       testDataSeq(template, factory.mkDataView(
-        allocateByteBuffer(
-            offset +
-            template.size*(template.components + stride)*template.componentBytes
-        ),
+          allocateByteBuffer(
+            (offset + template.size*stride)*template.componentBytes
+          ),
           offset,
           stride
       ))
@@ -212,21 +213,26 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
   }
 
   private def testDataArray(testing: DataArray[T, D]) {
+    assert(testing.isInstanceOf[DataArray[_, _]])
+
     val fb = fallbackFactory.mkDataArray(1)
-    assert(testing.isInstanceOf[DataArray[T, D]])
     assert(fb.array.getClass == testing.array.getClass)
     assert(fb.buffer.getClass == testing.buffer.getClass)
   }
 
   private def testDataBuffer(testing: DataBuffer[T, D]) {
+    assert(testing.isInstanceOf[DataBuffer[_, _]])
+
     val fb = fallbackFactory.mkDataBuffer(1)
-    assert(testing.isInstanceOf[DataBuffer[T, D]])
     assert(fb.buffer.getClass == testing.buffer.getClass)
   }
 
   private def testDataView(testing: DataView[T, D]) {
-    val fb = fallbackFactory.mkDataView(allocateByteBuffer(8), 0, 0)
-    assert(testing.isInstanceOf[DataView[T, D]])
+    assert(testing.isInstanceOf[DataView[_, _]])
+    
+    val fb = fallbackFactory.mkDataView(
+      allocateByteBuffer(0), 0, fallbackFactory.stride
+    )
     assert(fb.buffer.getClass == testing.buffer.getClass)
   }
 
@@ -265,7 +271,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
         j += 1
         c += 1
       }
-      i += testing.step
+      i += testing.stride
     }
   }
 }
@@ -274,7 +280,7 @@ private[optimize] object TestData {
   val data = allocateByteBuffer(20*4)
 
   {
-    /* Positive and negative Int, Short, Byte, Float and Double.
+    /* Positive and negative Int, Short, Byte, Float and Double;
      * Float and Double with absolute value less than 1.
      */
     val db = data.asDoubleBuffer()

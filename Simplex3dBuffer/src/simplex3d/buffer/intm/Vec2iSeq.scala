@@ -36,14 +36,14 @@ private[buffer] abstract class BaseVec2i[+D <: ReadInt](
   final def components: Int = 2
 
   def apply(i: Int) :AnyVec2i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec2i(
       seq(j),
       seq(j + 1)
     )
   }
   def update(i: Int, v: AnyVec2i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     seq(j) = v.x
     seq(j + 1) = v.y
   }
@@ -77,5 +77,5 @@ private[buffer] final class BufferVec2i[+D <: ReadInt](
 private[buffer] final class ViewVec2i[+D <: ReadInt](
   override val backingSeq: DataBuffer[Int1, D],
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec2i[D](backingSeq) with DataView[Vec2i, D]

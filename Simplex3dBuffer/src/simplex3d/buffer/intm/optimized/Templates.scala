@@ -37,14 +37,14 @@ private[buffer] final class ArrayVec2iSInt(
   def this() = this(new ArrayInt1SInt)
 
   override def apply(i: Int) :AnyVec2i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec2i(
       backingSeq(j),
       backingSeq(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
   }
@@ -67,14 +67,14 @@ private[buffer] final class BufferVec2iSInt(
   def this() = this(new BufferInt1SInt)
 
   override def apply(i: Int) :AnyVec2i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec2i(
       backingSeq(j),
       backingSeq(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
   }
@@ -94,19 +94,19 @@ private[buffer] final class BufferVec2iSInt(
 private[buffer] final class ViewVec2iSInt(
   override val backingSeq: BufferInt1SInt,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec2i[SInt](backingSeq) with DataView[Vec2i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 0)
+  def this() = this(new BufferInt1SInt, 0, 2)
 
   override def apply(i: Int) :AnyVec2i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec2i(
       backingSeq(j),
       backingSeq(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
   }
@@ -131,7 +131,7 @@ private[buffer] final class ArrayVec3iSInt(
   def this() = this(new ArrayInt1SInt)
 
   override def apply(i: Int) :AnyVec3i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec3i(
       backingSeq(j),
       backingSeq(j + 1),
@@ -139,7 +139,7 @@ private[buffer] final class ArrayVec3iSInt(
     )
   }
   override def update(i: Int, v: AnyVec3i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
     backingSeq(j + 2) = v.z
@@ -163,7 +163,7 @@ private[buffer] final class BufferVec3iSInt(
   def this() = this(new BufferInt1SInt)
 
   override def apply(i: Int) :AnyVec3i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec3i(
       backingSeq(j),
       backingSeq(j + 1),
@@ -171,7 +171,7 @@ private[buffer] final class BufferVec3iSInt(
     )
   }
   override def update(i: Int, v: AnyVec3i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
     backingSeq(j + 2) = v.z
@@ -192,12 +192,12 @@ private[buffer] final class BufferVec3iSInt(
 private[buffer] final class ViewVec3iSInt(
   override val backingSeq: BufferInt1SInt,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec3i[SInt](backingSeq) with DataView[Vec3i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 0)
+  def this() = this(new BufferInt1SInt, 0, 3)
   
   override def apply(i: Int) :AnyVec3i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec3i(
       backingSeq(j),
       backingSeq(j + 1),
@@ -205,7 +205,7 @@ private[buffer] final class ViewVec3iSInt(
     )
   }
   override def update(i: Int, v: AnyVec3i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
     backingSeq(j + 2) = v.z
@@ -296,12 +296,12 @@ private[buffer] final class BufferVec4iSInt(
 private[buffer] final class ViewVec4iSInt(
   override val backingSeq: BufferInt1SInt,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec4i[SInt](backingSeq) with DataView[Vec4i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 0)
+  def this() = this(new BufferInt1SInt, 0, 4)
 
   override def apply(i: Int) :AnyVec4i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec4i(
       backingSeq(j),
       backingSeq(j + 1),
@@ -310,7 +310,7 @@ private[buffer] final class ViewVec4iSInt(
     )
   }
   override def update(i: Int, v: AnyVec4i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
     backingSeq(j + 2) = v.z

@@ -36,7 +36,7 @@ private[buffer] abstract class BaseVec3i[+D <: ReadInt](
   final def components: Int = 3
 
   def apply(i: Int) :AnyVec3i = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec3i(
       seq(j),
       seq(j + 1),
@@ -44,7 +44,7 @@ private[buffer] abstract class BaseVec3i[+D <: ReadInt](
     )
   }
   def update(i: Int, v: AnyVec3i) {
-    val j = offset + i*step
+    val j = offset + i*stride
     seq(j) = v.x
     seq(j + 1) = v.y
     seq(j + 2) = v.z
@@ -79,5 +79,5 @@ private[buffer] final class BufferVec3i[+D <: ReadInt](
 private[buffer] final class ViewVec3i[+D <: ReadInt](
   override val backingSeq: DataBuffer[Int1, D],
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec3i[D](backingSeq) with DataView[Vec3i, D]

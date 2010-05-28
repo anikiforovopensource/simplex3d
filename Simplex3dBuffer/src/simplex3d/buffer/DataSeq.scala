@@ -36,6 +36,15 @@ private[buffer] abstract class BaseSeq[
   val buffer: D#BufferType
 ) extends IndexedSeq[E] with ArrayLike[E, IndexedSeq[E]] {
 
+  if (stride <= 0)
+    throw new IllegalArgumentException(
+      "Stride must be greater than zero."
+    )
+  if (offset < 0)
+    throw new IllegalArgumentException(
+      "Offset must be greater than or equal to zero."
+    )
+
   def componentManifest: ClassManifest[T#Component#Element]
   
   final val componentBytes: Int = Binding.byteLength(componentBinding)
@@ -45,10 +54,8 @@ private[buffer] abstract class BaseSeq[
   def bindingBuffer: Buffer
 
   final override val size: Int =
-    (buffer.capacity - offset + stride)/(components +stride)
+    (buffer.capacity - offset + stride - components)/stride
   final def length = size
-
-  protected[buffer] final val step = components + stride
 
   def apply(i: Int) :E
   def update(i: Int, v: E)
@@ -64,14 +71,14 @@ private[buffer] abstract class BaseSeq[
   def normalized: Boolean
 
   def offset: Int
-  def stride: Int
+  def stride: Int = components
 
   def backingSeq: ContiguousSeq[T#Component, D]
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
-    if (stride == 0 && buffer.isInstanceOf[IntBuffer]) {
+    if (stride == components && buffer.isInstanceOf[IntBuffer]) {
       val b = buffer.asInstanceOf[IntBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -87,7 +94,7 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[Float], first: Int, count: Int
   ) {
-    if (stride == 0 && buffer.isInstanceOf[FloatBuffer]) {
+    if (stride == components && buffer.isInstanceOf[FloatBuffer]) {
       val b = buffer.asInstanceOf[FloatBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -103,7 +110,7 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[Double], first: Int, count: Int
   ) {
-    if (stride == 0 && buffer.isInstanceOf[DoubleBuffer]) {
+    if (stride == components && buffer.isInstanceOf[DoubleBuffer]) {
       val b = buffer.asInstanceOf[DoubleBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -198,9 +205,8 @@ private[buffer] abstract class BaseSeq[
       }
     }
 
-    val destOffset = index*step + offset
-    val srcStep = srcStride + components
-    val srcLim = srcOffset + count*srcStep
+    val destOffset = index*stride + offset
+    val srcLim = srcOffset + count*srcStride
 
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
@@ -212,7 +218,7 @@ private[buffer] abstract class BaseSeq[
     )
 
 
-    if (stride == 0 && srcStride == 0 && noConversion) {
+    if (stride == components && srcStride == components && noConversion) {
       buffer.position(destOffset)
       src.buffer.position(srcOffset)
       src.buffer.limit(srcLim)
@@ -260,50 +266,50 @@ private[buffer] abstract class BaseSeq[
             components,
             buffer.asInstanceOf[ByteBuffer],
             destOffset,
-            step,
+            stride,
             src.buffer.asInstanceOf[ByteBuffer],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case 1 => Copying.copyBuffer(
             components,
             buffer.asInstanceOf[ShortBuffer],
             destOffset,
-            step,
+            stride,
             src.buffer.asInstanceOf[ShortBuffer],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case 2 => Copying.copyBuffer(
             components,
             buffer.asInstanceOf[CharBuffer],
             destOffset,
-            step,
+            stride,
             src.buffer.asInstanceOf[CharBuffer],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case 3 => Copying.copyBuffer(
             components,
             buffer.asInstanceOf[IntBuffer],
             destOffset,
-            step,
+            stride,
             src.buffer.asInstanceOf[IntBuffer],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case 4 => Copying.copyBuffer(
             components,
             buffer.asInstanceOf[ShortBuffer],
             destOffset,
-            step,
+            stride,
             src.buffer.asInstanceOf[ShortBuffer],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
       }
@@ -314,30 +320,30 @@ private[buffer] abstract class BaseSeq[
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
-            step,
+            stride,
             src.asInstanceOf[ContiguousSeq[Int1, _]],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case scala.reflect.ClassManifest.Float => Copying.copySeqFloat(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
-            step,
+            stride,
             src.asInstanceOf[ContiguousSeq[Float1, _]],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case scala.reflect.ClassManifest.Double => Copying.copySeqDouble(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,
-            step,
+            stride,
             src.asInstanceOf[ContiguousSeq[Double1, _]],
             srcOffset,
-            srcStep,
+            srcStride,
             srcLim
           )
         case _ => throw new AssertionError("Unsupported component type.")
@@ -354,7 +360,7 @@ private[buffer] abstract class BaseSeq[
       index,
       src,
       srcOffset,
-      0,
+      components,
       count
     )
   }
@@ -367,7 +373,7 @@ private[buffer] abstract class BaseSeq[
       index,
       src,
       0,
-      0,
+      components,
       src.size/components
     )
   }
@@ -379,7 +385,7 @@ private[buffer] abstract class BaseSeq[
       0,
       src,
       0,
-      0,
+      components,
       src.size/components
     )
   }
@@ -392,7 +398,7 @@ private[buffer] abstract class BaseSeq[
     put(
       index,
       src.backingSeq,
-      src.offset + first*src.step,
+      src.offset + first*src.stride,
       src.stride,
       count
     )
@@ -463,7 +469,7 @@ trait DataSeq[T <: MetaType, +D <: RawType] extends BaseSeq[T, T#Element, D]
 
 trait ContiguousSeq[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
   final val offset = 0
-  final val stride = 0
+  assert(stride == components)
 }
 
 trait DataArray[T <: MetaType, +D <: RawType]
@@ -490,6 +496,10 @@ trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
   if (byteBuffer.order != ByteOrder.nativeOrder)
     throw new IllegalArgumentException(
       "The buffer must have native byte order."
+    )
+  if (byteBuffer.isReadOnly)
+    throw new IllegalArgumentException(
+      "The buffer must not be read-only."
     )
 }
 

@@ -36,7 +36,7 @@ private[buffer] abstract class BaseVec4f[+D <: ReadFloat](
   final def components: Int = 4
 
   def apply(i: Int) :AnyVec4f = {
-    val j = offset + i*step
+    val j = offset + i*stride
     ConstVec4f(
       seq(j),
       seq(j + 1),
@@ -45,7 +45,7 @@ private[buffer] abstract class BaseVec4f[+D <: ReadFloat](
     )
   }
   def update(i: Int, v: AnyVec4f) {
-    val j = offset + i*step
+    val j = offset + i*stride
     seq(j) = v.x
     seq(j + 1) = v.y
     seq(j + 2) = v.z
@@ -83,5 +83,5 @@ private[buffer] final class BufferVec4f[+D <: ReadFloat](
 private[buffer] final class ViewVec4f[+D <: ReadFloat](
   override val backingSeq: DataBuffer[Float1, D],
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends BaseVec4f[D](backingSeq) with DataView[Vec4f, D]

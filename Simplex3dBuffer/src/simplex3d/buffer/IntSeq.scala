@@ -80,16 +80,16 @@ private[buffer] final class BufferInt1UByte(
 private[buffer] final class ViewInt1UByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1UByte(byteBuffer) with DataView[Int1, UByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1UByte(byteBuffer)
 
   def componentBinding = Binding.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step) & 0xFF
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, byte(v))
+  def apply(i: Int) :Int = buffer.get(offset + i*stride) & 0xFF
+  def update(i: Int, v: Int) = buffer.put(offset + i*stride, byte(v))
 }
 
 
@@ -142,19 +142,19 @@ private[buffer] final class BufferInt1UShort(
 private[buffer] final class ViewInt1UShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1UShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Int1, UShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1UShort(byteBuffer)
 
   def componentBinding = Binding.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
+  def apply(i: Int) :Int = buffer.get(offset + i*stride)
   def update(i: Int, v: Int) = {
-    buffer.put(offset + i*step, v.asInstanceOf[Char])
+    buffer.put(offset + i*stride, v.asInstanceOf[Char])
   }
 }
 
@@ -204,16 +204,16 @@ private[buffer] final class BufferInt1UInt(
 private[buffer] final class ViewInt1UInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1UInt(byteBuffer.asIntBuffer()) with DataView[Int1, UInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1UInt(byteBuffer)
 
   def componentBinding = Binding.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, v)
+  def apply(i: Int) :Int = buffer.get(offset + i*stride)
+  def update(i: Int, v: Int) = buffer.put(offset + i*stride, v)
 }
 
 
@@ -262,16 +262,16 @@ private[buffer] final class BufferInt1SByte(
 private[buffer] final class ViewInt1SByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1SByte(byteBuffer) with DataView[Int1, SByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1SByte(byteBuffer)
 
   def componentBinding = Binding.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, byte(v))
+  def apply(i: Int) :Int = buffer.get(offset + i*stride)
+  def update(i: Int, v: Int) = buffer.put(offset + i*stride, byte(v))
 }
 
 
@@ -324,18 +324,18 @@ private[buffer] final class BufferInt1SShort(
 private[buffer] final class ViewInt1SShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1SShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Int1, SShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1SShort(byteBuffer)
 
   def componentBinding = Binding.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, short(v))
+  def apply(i: Int) :Int = buffer.get(offset + i*stride)
+  def update(i: Int, v: Int) = buffer.put(offset + i*stride, short(v))
 }
 
 
@@ -384,14 +384,14 @@ private[buffer] final class BufferInt1SInt(
 private[buffer] final class ViewInt1SInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqInt1SInt(byteBuffer.asIntBuffer()) with DataView[Int1, SInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferInt1SInt(byteBuffer)
 
   def componentBinding = Binding.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*step)
-  def update(i: Int, v: Int) = buffer.put(offset + i*step, v)
+  def apply(i: Int) :Int = buffer.get(offset + i*stride)
+  def update(i: Int, v: Int) = buffer.put(offset + i*stride, v)
 }

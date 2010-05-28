@@ -32,7 +32,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[floatm] object Const {
+private[floatm] object Shared {
   // Use double multiplication for float sequences to prevent errors
   // Use division for double sequences to prevent errors
   final val fromNSByte = 0.00787401574803149606
@@ -48,8 +48,13 @@ private[floatm] object Const {
   final val toNUShort = 65535f
   final val toNSInt = 2147483647f
   final val toNUInt = 4294967295f
+
+  final def iround(x: Float) :Int = {
+    if (x >= 0) int(x + 0.5f)
+    else int(x - 0.5f)
+  }
 }
-import Const._
+import Shared._
 
 private[buffer] sealed abstract class BaseFloat1[+D <: ReadFloat](
   buff: D#BufferType
@@ -85,7 +90,7 @@ private[buffer] final class ArrayFloat1SByte(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = byte(v)
+  def update(i: Int, v: Float) = array(i) = byte(iround(v))
 }
 
 private[buffer] final class BufferFloat1SByte(
@@ -98,22 +103,22 @@ private[buffer] final class BufferFloat1SByte(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, byte(v))
+  def update(i: Int, v: Float) = buffer.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1SByte(byteBuffer) with DataView[Float1, SByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1SByte(byteBuffer)
 
   def componentBinding = Binding.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, byte(v))
+  def apply(i: Int) :Float = buffer.get(offset + i*stride)
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, byte(iround(v)))
 }
 
 
@@ -143,7 +148,7 @@ private[buffer] final class ArrayFloat1UByte(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = array(i) & 0xFF
-  def update(i: Int, v: Float) = array(i) = byte(v)
+  def update(i: Int, v: Float) = array(i) = byte(iround(v))
 }
 
 private[buffer] final class BufferFloat1UByte(
@@ -156,22 +161,22 @@ private[buffer] final class BufferFloat1UByte(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i) & 0xFF
-  def update(i: Int, v: Float) = buffer.put(i, byte(v))
+  def update(i: Int, v: Float) = buffer.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1UByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1UByte(byteBuffer) with DataView[Float1, UByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1UByte(byteBuffer)
 
   def componentBinding = Binding.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step) & 0xFF
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, byte(v))
+  def apply(i: Int) :Float = buffer.get(offset + i*stride) & 0xFF
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, byte(iround(v)))
 }
 
 
@@ -206,7 +211,8 @@ private[buffer] final class ArrayFloat1NSByte(
     val v = array(i)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) = array(i) = byte(clamp(v, -1, 1)*toNSByte)
+  def update(i: Int, v: Float) =
+    array(i) = byte(iround(clamp(v, -1, 1)*toNSByte))
 }
 
 private[buffer] final class BufferFloat1NSByte(
@@ -226,30 +232,30 @@ private[buffer] final class BufferFloat1NSByte(
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    byte(clamp(v, -1, 1)*toNSByte)
+    byte(iround(clamp(v, -1, 1)*toNSByte))
   )
 }
 
 private[buffer] final class ViewFloat1NSByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NSByte(
   byteBuffer
 ) with DataView[Float1, NSByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NSByte(byteBuffer)
 
   def componentBinding = Binding.SByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*step)
+    val v = buffer.get(offset + i*stride)
     if (v < -127) -1 else float(v*fromNSByte)
   }
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    byte(clamp(v, -1, 1)*toNSByte)
+    offset + i*stride,
+    byte(iround(clamp(v, -1, 1)*toNSByte))
   )
 }
 
@@ -282,7 +288,7 @@ private[buffer] final class ArrayFloat1NUByte(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((array(i) & 0xFF)*fromNUByte)
-  def update(i: Int, v: Float) = array(i) = byte(clamp(v, 0, 1)*toNUByte)
+  def update(i: Int, v: Float) = array(i) = byte(iround(clamp(v, 0, 1)*toNUByte))
 }
 
 private[buffer] final class BufferFloat1NUByte(
@@ -299,29 +305,29 @@ private[buffer] final class BufferFloat1NUByte(
   def apply(i: Int) :Float = float((buffer.get(i) & 0xFF)*fromNUByte)
   def update(i: Int, v: Float) = buffer.put(
     i,
-    byte(clamp(v, 0, 1)*toNUByte)
+    byte(iround(clamp(v, 0, 1)*toNUByte))
   )
 }
 
 private[buffer] final class ViewFloat1NUByte(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NUByte(
   byteBuffer
 ) with DataView[Float1, NUByte] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NUByte(byteBuffer)
 
   def componentBinding = Binding.UByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
-    (buffer.get(offset + i*step) & 0xFF)*fromNUByte
+    (buffer.get(offset + i*stride) & 0xFF)*fromNUByte
   )
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    byte(clamp(v, 0, 1)*toNUByte)
+    offset + i*stride,
+    byte(iround(clamp(v, 0, 1)*toNUByte))
   )
 }
 
@@ -354,7 +360,7 @@ private[buffer] final class ArrayFloat1SShort(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = short(v)
+  def update(i: Int, v: Float) = array(i) = short(iround(v))
 }
 
 private[buffer] final class BufferFloat1SShort(
@@ -369,24 +375,24 @@ private[buffer] final class BufferFloat1SShort(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, short(v))
+  def update(i: Int, v: Float) = buffer.put(i, short(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1SShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Float1, SShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1SShort(byteBuffer)
 
   def componentBinding = Binding.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, short(v))
+  def apply(i: Int) :Float = buffer.get(offset + i*stride)
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, short(iround(v)))
 }
 
 
@@ -418,7 +424,7 @@ private[buffer] final class ArrayFloat1UShort(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = v.asInstanceOf[Char]
+  def update(i: Int, v: Float) = array(i) = iround(v).asInstanceOf[Char]
 }
 
 private[buffer] final class BufferFloat1UShort(
@@ -433,25 +439,25 @@ private[buffer] final class BufferFloat1UShort(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, v.asInstanceOf[Char])
+  def update(i: Int, v: Float) = buffer.put(i, iround(v).asInstanceOf[Char])
 }
 
 private[buffer] final class ViewFloat1UShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1UShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Float1, UShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1UShort(byteBuffer)
 
   def componentBinding = Binding.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)
+  def apply(i: Int) :Float = buffer.get(offset + i*stride)
   def update(i: Int, v: Float) = {
-    buffer.put(offset + i*step, v.asInstanceOf[Char])
+    buffer.put(offset + i*stride, iround(v).asInstanceOf[Char])
   }
 }
 
@@ -487,7 +493,8 @@ private[buffer] final class ArrayFloat1NSShort(
     val v = array(i)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) = array(i) = short(clamp(v, -1, 1)*toNSShort)
+  def update(i: Int, v: Float) =
+    array(i) = short(iround(clamp(v, -1, 1)*toNSShort))
 }
 
 private[buffer] final class BufferFloat1NSShort(
@@ -507,30 +514,30 @@ private[buffer] final class BufferFloat1NSShort(
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    short(clamp(v, -1, 1)*toNSShort)
+    short(iround(clamp(v, -1, 1)*toNSShort))
   )
 }
 
 private[buffer] final class ViewFloat1NSShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NSShort(
   byteBuffer.asShortBuffer()
 ) with DataView[Float1, NSShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NSShort(byteBuffer)
 
   def componentBinding = Binding.SShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*step)
+    val v = buffer.get(offset + i*stride)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    short(clamp(v, -1, 1)*toNSShort)
+    offset + i*stride,
+    short(iround(clamp(v, -1, 1)*toNSShort))
   )
 }
 
@@ -564,7 +571,7 @@ private[buffer] final class ArrayFloat1NUShort(
 
   def apply(i: Int) :Float = float(array(i)*fromNUShort)
   def update(i: Int, v: Float) {
-    array(i) = (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
+    array(i) = iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   }
 }
 
@@ -582,27 +589,27 @@ private[buffer] final class BufferFloat1NUShort(
   def apply(i: Int) :Float = float(buffer.get(i)*fromNUShort)
   def update(i: Int, v: Float) = buffer.put(
     i,
-    (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
+    iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
 }
 
 private[buffer] final class ViewFloat1NUShort(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NUShort(
   byteBuffer.asCharBuffer()
 ) with DataView[Float1, NUShort] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NUShort(byteBuffer)
 
   def componentBinding = Binding.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float(buffer.get(offset + i*step)*fromNUShort)
+  def apply(i: Int) :Float = float(buffer.get(offset + i*stride)*fromNUShort)
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    (clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
+    offset + i*stride,
+    iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
 }
 
@@ -633,7 +640,7 @@ private[buffer] final class ArrayFloat1SInt(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = int(v)
+  def update(i: Int, v: Float) = array(i) = int(iround(v))
 }
 
 private[buffer] final class BufferFloat1SInt(
@@ -646,22 +653,22 @@ private[buffer] final class BufferFloat1SInt(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, int(v))
+  def update(i: Int, v: Float) = buffer.put(i, int(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1SInt(byteBuffer.asIntBuffer()) with DataView[Float1, SInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1SInt(byteBuffer)
 
   def componentBinding = Binding.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, int(v))
+  def apply(i: Int) :Float = buffer.get(offset + i*stride)
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, int(iround(v)))
 }
 
 
@@ -691,7 +698,7 @@ private[buffer] final class ArrayFloat1UInt(
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = long(array(i)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) = array(i) = int(long(v) & 0xFFFFFFFFL)
+  def update(i: Int, v: Float) = array(i) = int(long(iround(v)) & 0xFFFFFFFFL)
 }
 
 private[buffer] final class BufferFloat1UInt(
@@ -706,25 +713,25 @@ private[buffer] final class BufferFloat1UInt(
   def apply(i: Int) :Float = long(buffer.get(i)) & 0xFFFFFFFFL
   def update(i: Int, v: Float) = buffer.put(
     i,
-    int(long(v) & 0xFFFFFFFFL)
+    int(long(iround(v)) & 0xFFFFFFFFL)
   )
 }
 
 private[buffer] final class ViewFloat1UInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1UInt(byteBuffer.asIntBuffer()) with DataView[Float1, UInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1UInt(byteBuffer)
 
   def componentBinding = Binding.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = long(buffer.get(offset + i*step)) & 0xFFFFFFFFL
+  def apply(i: Int) :Float = long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    int(long(v) & 0xFFFFFFFFL)
+    offset + i*stride,
+    int(long(iround(v)) & 0xFFFFFFFFL)
   )
 }
 
@@ -760,7 +767,7 @@ private[buffer] final class ArrayFloat1NSInt(
     val v = array(i)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) = array(i) = int(clamp(v, -1, 1)*toNSInt)
+  def update(i: Int, v: Float) = array(i) = int(iround(clamp(v, -1, 1)*toNSInt))
 }
 
 private[buffer] final class BufferFloat1NSInt(
@@ -780,30 +787,30 @@ private[buffer] final class BufferFloat1NSInt(
   }
   def update(i: Int, v: Float) = buffer.put(
     i,
-    int(clamp(v, -1, 1)*toNSInt)
+    int(iround(clamp(v, -1, 1)*toNSInt))
   )
 }
 
 private[buffer] final class ViewFloat1NSInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NSInt(
   byteBuffer.asIntBuffer()
 ) with DataView[Float1, NSInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NSInt(byteBuffer)
 
   def componentBinding = Binding.SInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*step)
+    val v = buffer.get(offset + i*stride)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    int(clamp(v, -1, 1)*toNSInt)
+    offset + i*stride,
+    int(iround(clamp(v, -1, 1)*toNSInt))
   )
 }
 
@@ -836,7 +843,7 @@ private[buffer] final class ArrayFloat1NUInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((long(array(i)) & 0xFFFFFFFFL)*fromNUInt)
-  def update(i: Int, v: Float) = array(i) = int(clamp(v, 0, 1)*toNUInt)
+  def update(i: Int, v: Float) = array(i) = int(iround(clamp(v, 0, 1)*toNUInt))
 }
 
 private[buffer] final class BufferFloat1NUInt(
@@ -855,29 +862,29 @@ private[buffer] final class BufferFloat1NUInt(
   )
   def update(i: Int, v: Float) = buffer.put(
     i,
-    int(clamp(v, 0, 1)*toNUInt)
+    int(iround(clamp(v, 0, 1)*toNUInt))
   )
 }
 
 private[buffer] final class ViewFloat1NUInt(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1NUInt(
   byteBuffer.asIntBuffer()
 ) with DataView[Float1, NUInt] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1NUInt(byteBuffer)
 
   def componentBinding = Binding.UInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
-    (long(buffer.get(offset + i*step)) & 0xFFFFFFFFL)*fromNUInt
+    (long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL)*fromNUInt
   )
   def update(i: Int, v: Float) = buffer.put(
-    offset + i*step,
-    int(clamp(v, 0, 1)*toNUInt)
+    offset + i*stride,
+    int(iround(clamp(v, 0, 1)*toNUInt))
   )
 }
 
@@ -931,18 +938,18 @@ private[buffer] final class BufferFloat1HalfFloat(
 private[buffer] final class ViewFloat1HalfFloat(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1HalfFloat(
   byteBuffer.asShortBuffer()
 ) with DataView[Float1, HalfFloat] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1HalfFloat(byteBuffer)
 
   def normalized: Boolean = false
   def componentBinding: Int = Binding.HalfFloat
 
-  def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*step))
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, toHalfFloat(v))
+  def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*stride))
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, toHalfFloat(v))
 }
 
 
@@ -995,16 +1002,16 @@ private[buffer] final class BufferFloat1RawFloat(
 private[buffer] final class ViewFloat1RawFloat(
   override val byteBuffer: ByteBuffer,
   val offset: Int,
-  val stride: Int
+  override val stride: Int
 ) extends SeqFloat1RawFloat(
   byteBuffer.asFloatBuffer()
 ) with DataView[Float1, RawFloat] {
-  def this() = this(allocateByteBuffer(0), 0, 0)
+  def this() = this(allocateByteBuffer(0), 0, 1)
   val backingSeq = new BufferFloat1RawFloat(byteBuffer)
 
   def normalized: Boolean = false
   def componentBinding: Int = Binding.RawFloat
 
-  def apply(i: Int) :Float = buffer.get(offset + i*step)
-  def update(i: Int, v: Float) = buffer.put(offset + i*step, v)
+  def apply(i: Int) :Float = buffer.get(offset + i*stride)
+  def update(i: Int, v: Float) = buffer.put(offset + i*stride, v)
 }

@@ -21,12 +21,12 @@
 package simplex3d.math
 
 
-trait MetaType {
+trait ElemType {
   type Element
   type Component <: Primitive
 }
 
-sealed trait Primitive extends MetaType {
+sealed trait Primitive extends ElemType {
   type Element <: AnyVal
 }
 
@@ -45,6 +45,6 @@ sealed trait Double1 extends Primitive {
   type Component = Double1
 }
 
-trait Composite extends MetaType {
+trait Composite extends ElemType {
   type Element <: AnyRef
 }

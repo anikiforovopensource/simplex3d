@@ -27,7 +27,7 @@ import scala.annotation._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Binding {
+object RawType {
   final val SByte = 5120
   final val UByte = 5121
   final val SShort = 5122
@@ -59,11 +59,11 @@ sealed trait RawType {
   type BufferType <: Buffer
 }
 
-sealed trait ReadType extends RawType
-sealed trait ReadInt extends ReadType
-sealed trait ReadIndex extends ReadInt with Unsigned
-sealed trait ReadFloat extends ReadType
-sealed trait ReadDouble extends ReadType
+sealed trait ReadableType extends RawType
+sealed trait ReadableInt extends ReadableType
+sealed trait ReadableIndex extends ReadableInt with Unsigned
+sealed trait ReadableFloat extends ReadableType
+sealed trait ReadableDouble extends ReadableType
 
 sealed trait IntegerType extends RawType
 
@@ -79,40 +79,40 @@ sealed trait RawByte extends IntegerType {
 }
 
 sealed trait SByte extends RawByte with Signed with NonNormalized
-with ReadInt with ReadFloat with ReadDouble
+with ReadableInt with ReadableFloat with ReadableDouble
 
 sealed trait UByte extends RawByte with Unsigned with NonNormalized
-with ReadIndex with ReadFloat with ReadDouble
+with ReadableIndex with ReadableFloat with ReadableDouble
 
 sealed trait NSByte extends RawByte with Signed with Normalized
-with ReadFloat with ReadDouble
+with ReadableFloat with ReadableDouble
 
 sealed trait NUByte extends RawByte with Unsigned with Normalized
-with ReadFloat with ReadDouble
+with ReadableFloat with ReadableDouble
 
 
 sealed trait RawShort extends IntegerType
 
 sealed trait SShort extends RawShort with Signed with NonNormalized
-with ReadInt with ReadFloat with ReadDouble {
+with ReadableInt with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait UShort extends RawShort with Unsigned with NonNormalized
-with ReadIndex with ReadFloat with ReadDouble {
+with ReadableIndex with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
 
 sealed trait NSShort extends RawShort with Signed with Normalized
-with ReadFloat with ReadDouble {
+with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait NUShort extends RawShort with Unsigned with Normalized
-with ReadFloat with ReadDouble {
+with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
@@ -124,34 +124,34 @@ sealed trait RawInt extends IntegerType {
 }
 
 sealed trait SInt extends RawInt with Signed with NonNormalized
-with ReadInt with ReadFloat with ReadDouble
+with ReadableInt with ReadableFloat with ReadableDouble
 
 sealed trait UInt extends RawInt with Unsigned with NonNormalized
-with ReadIndex with ReadFloat with ReadDouble
+with ReadableIndex with ReadableFloat with ReadableDouble
 
 sealed trait NSInt extends RawInt with Signed with Normalized
-with ReadFloat with ReadDouble
+with ReadableFloat with ReadableDouble
 
 sealed trait NUInt extends RawInt with Unsigned with Normalized
-with ReadFloat with ReadDouble
+with ReadableFloat with ReadableDouble
 
 
 sealed trait FloatingPointType extends RawType
 
 sealed trait HalfFloat extends FloatingPointType
-with ReadFloat with ReadDouble {
+with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait RawFloat extends FloatingPointType
-with ReadFloat with ReadDouble {
+with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Float]
   type BufferType = FloatBuffer
 }
 
 sealed trait RawDouble extends FloatingPointType
-with ReadDouble {
+with ReadableDouble {
   type ArrayType = Array[Double]
   type BufferType = DoubleBuffer
 }

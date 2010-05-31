@@ -30,9 +30,10 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec3f[+D <: ReadFloat](
+private[buffer] abstract class BaseVec3f[+D <: ReadableFloat](
   seq: ContiguousSeq[Float1, D]
 ) extends GenericSeq[Vec3f, D](seq) {
+  final def elementManifest = Manifest.Vec3fClassManifest
   final def components: Int = 3
 
   def apply(i: Int) :AnyVec3f = {
@@ -70,15 +71,15 @@ private[buffer] abstract class BaseVec3f[+D <: ReadFloat](
     new ViewVec3f[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class ArrayVec3f[+D <: ReadFloat](
+private[buffer] final class ArrayVec3f[+D <: ReadableFloat](
   override val backingSeq: DataArray[Float1, D]
 ) extends BaseVec3f[D](backingSeq) with DataArray[Vec3f, D]
 
-private[buffer] final class BufferVec3f[+D <: ReadFloat](
+private[buffer] final class BufferVec3f[+D <: ReadableFloat](
   override val backingSeq: DataBuffer[Float1, D]
 ) extends BaseVec3f[D](backingSeq) with DataBuffer[Vec3f, D]
 
-private[buffer] final class ViewVec3f[+D <: ReadFloat](
+private[buffer] final class ViewVec3f[+D <: ReadableFloat](
   override val backingSeq: DataBuffer[Float1, D],
   val offset: Int,
   override val stride: Int

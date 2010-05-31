@@ -29,7 +29,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
+private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
   val templateArray: String,
   val templateString: String,
   val fallbackFactory: DataSeq[T, D]
@@ -38,16 +38,16 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
   private final val sysprop = "simplex3d.buffer.optimize"
   private val replaceString =
     (if (fallbackFactory.normalized) "N" else "") +
-    (fallbackFactory.componentBinding match {
-      case Binding.SByte => "SByte"
-      case Binding.UByte => "UByte"
-      case Binding.SShort => "SShort"
-      case Binding.UShort => "UShort"
-      case Binding.SInt => "SInt"
-      case Binding.UInt => "UInt"
-      case Binding.HalfFloat => "HalfFloat"
-      case Binding.RawFloat => "RawFloat"
-      case Binding.RawDouble => "RawDouble"
+    (fallbackFactory.bindingType match {
+      case RawType.SByte => "SByte"
+      case RawType.UByte => "UByte"
+      case RawType.SShort => "SShort"
+      case RawType.UShort => "UShort"
+      case RawType.SInt => "SInt"
+      case RawType.UInt => "UInt"
+      case RawType.HalfFloat => "HalfFloat"
+      case RawType.RawFloat => "RawFloat"
+      case RawType.RawDouble => "RawDouble"
     })
 
   private def helpMsg =
@@ -174,12 +174,12 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 
       testDataBuffer(factory.mkDataBuffer(1))
       testDataBuffer(
-        factory.mkDataBuffer(fallbackFactory.mkDataBuffer(1).byteBuffer)
+        factory.mkDataBuffer(allocateByteBuffer(fallbackFactory.bytesPerRawComponent))
       )
 
       testDataView(
         factory.mkDataView(
-          fallbackFactory.mkDataBuffer(1).byteBuffer,
+          allocateByteBuffer(fallbackFactory.bytesPerRawComponent),
           0, fallbackFactory.components
         )
       )
@@ -193,7 +193,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       testDataSeq(template, factory.mkDataBuffer(template.size))
       testDataSeq(template, factory.mkDataBuffer(
           allocateByteBuffer(
-            template.size*template.components*template.componentBytes
+            template.size*template.components*template.bytesPerRawComponent
           )
       ))
 
@@ -201,7 +201,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       val stride = 5
       testDataSeq(template, factory.mkDataView(
           allocateByteBuffer(
-            (offset + template.size*stride)*template.componentBytes
+            (offset + template.size*stride)*template.bytesPerRawComponent
           ),
           offset,
           stride
@@ -217,14 +217,14 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
 
     val fb = fallbackFactory.mkDataArray(1)
     assert(fb.array.getClass == testing.array.getClass)
-    assert(fb.buffer.getClass == testing.buffer.getClass)
+    assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }
 
   private def testDataBuffer(testing: DataBuffer[T, D]) {
     assert(testing.isInstanceOf[DataBuffer[_, _]])
 
     val fb = fallbackFactory.mkDataBuffer(1)
-    assert(fb.buffer.getClass == testing.buffer.getClass)
+    assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }
 
   private def testDataView(testing: DataView[T, D]) {
@@ -233,7 +233,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
     val fb = fallbackFactory.mkDataView(
       allocateByteBuffer(0), 0, fallbackFactory.stride
     )
-    assert(fb.buffer.getClass == testing.buffer.getClass)
+    assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }
 
   private def testDataSeq(template: DataSeq[T, D], testing: DataSeq[T, D]) {
@@ -241,7 +241,7 @@ private[buffer] class TemplateGenFactoryRef[T <: MetaType, D <: RawType](
       template(0).asInstanceOf[Object].getClass ==
       testing(0).asInstanceOf[Object].getClass
     )
-    assert(template.componentBinding == testing.componentBinding)
+    assert(template.bindingType == testing.bindingType)
     assert(template.normalized == testing.normalized)
 
     testApplyUpdate(template, testing)

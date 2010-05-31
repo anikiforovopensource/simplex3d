@@ -30,7 +30,7 @@ import simplex3d.buffer._
  */
 package buffer {
   private[buffer] class UnsignedImplicits {
-    private final type F[T <: MetaType, D <: RawType] = SimpleFactoryRef[T, D]
+    private final type F[T <: ElemType, D <: RawType] = SimpleFactoryRef[T, D]
 
     implicit final val FactoryInt1SByte = new F(new ArrayInt1SByte)
     implicit final val FactoryInt1UByte = new F(new ArrayInt1UByte)
@@ -70,8 +70,8 @@ package object buffer extends UnsignedImplicits {
   }
   
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -85,9 +85,9 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -103,10 +103,10 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -127,11 +127,11 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -154,12 +154,12 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -184,13 +184,13 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -217,14 +217,14 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType,
-    T8 <: MetaType, D8 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType,
+    T8 <: ElemType, D8 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -253,15 +253,15 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType,
-    T8 <: MetaType, D8 <: RawType,
-    T9 <: MetaType, D9 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType,
+    T8 <: ElemType, D8 <: RawType,
+    T9 <: ElemType, D9 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -292,16 +292,16 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType,
-    T8 <: MetaType, D8 <: RawType,
-    T9 <: MetaType, D9 <: RawType,
-    T10 <: MetaType, D10 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType,
+    T8 <: ElemType, D8 <: RawType,
+    T9 <: ElemType, D9 <: RawType,
+    T10 <: ElemType, D10 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -334,17 +334,17 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType,
-    T8 <: MetaType, D8 <: RawType,
-    T9 <: MetaType, D9 <: RawType,
-    T10 <: MetaType, D10 <: RawType,
-    T11 <: MetaType, D11 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType,
+    T8 <: ElemType, D8 <: RawType,
+    T9 <: ElemType, D9 <: RawType,
+    T10 <: ElemType, D10 <: RawType,
+    T11 <: ElemType, D11 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -379,18 +379,18 @@ package object buffer extends UnsignedImplicits {
   }
 
   def interleave[
-    T1 <: MetaType, D1 <: RawType,
-    T2 <: MetaType, D2 <: RawType,
-    T3 <: MetaType, D3 <: RawType,
-    T4 <: MetaType, D4 <: RawType,
-    T5 <: MetaType, D5 <: RawType,
-    T6 <: MetaType, D6 <: RawType,
-    T7 <: MetaType, D7 <: RawType,
-    T8 <: MetaType, D8 <: RawType,
-    T9 <: MetaType, D9 <: RawType,
-    T10 <: MetaType, D10 <: RawType,
-    T11 <: MetaType, D11 <: RawType,
-    T12 <: MetaType, D12 <: RawType
+    T1 <: ElemType, D1 <: RawType,
+    T2 <: ElemType, D2 <: RawType,
+    T3 <: ElemType, D3 <: RawType,
+    T4 <: ElemType, D4 <: RawType,
+    T5 <: ElemType, D5 <: RawType,
+    T6 <: ElemType, D6 <: RawType,
+    T7 <: ElemType, D7 <: RawType,
+    T8 <: ElemType, D8 <: RawType,
+    T9 <: ElemType, D9 <: RawType,
+    T10 <: ElemType, D10 <: RawType,
+    T11 <: ElemType, D11 <: RawType,
+    T12 <: ElemType, D12 <: RawType
   ](
     size: Int,
     seq1: DataSeq[T1, D1],
@@ -429,7 +429,7 @@ package object buffer extends UnsignedImplicits {
 
   def interleaveAny(
     size: Int,
-    dataSeqs: DataSeq[_ <: MetaType, _ <: RawType]*
+    dataSeqs: DataSeq[_ <: ElemType, _ <: RawType]*
   )
   :Array[DataView[_, _]] =
   {
@@ -452,9 +452,9 @@ package object buffer extends UnsignedImplicits {
     i = 0; while (i < dataSeqs.length) {
       val seq = dataSeqs(i)
 
-      totalWidth += seq.componentBytes*seq.components
-      if (seq.componentBytes > maxComponentWidth) {
-        maxComponentWidth = seq.componentBytes
+      totalWidth += seq.bytesPerRawComponent*seq.components
+      if (seq.bytesPerRawComponent > maxComponentWidth) {
+        maxComponentWidth = seq.bytesPerRawComponent
       }
 
       i += 1
@@ -468,7 +468,7 @@ package object buffer extends UnsignedImplicits {
     var width = maxComponentWidth; while (width > 0) {
 
       i = 0; while (i < dataSeqs.length) {
-        if (dataSeqs(i).componentBytes == width) {
+        if (dataSeqs(i).bytesPerRawComponent == width) {
           order(count) = i
           count += 1
         }
@@ -492,10 +492,10 @@ package object buffer extends UnsignedImplicits {
       val seq = dataSeqs(order(i))
       result(order(i)) = seq.copyAsDataView(
         byteBuffer,
-        byteOffset/seq.componentBytes,
-        byteStride/seq.componentBytes
+        byteOffset/seq.bytesPerRawComponent,
+        byteStride/seq.bytesPerRawComponent
       )
-      byteOffset += seq.componentBytes*seq.components
+      byteOffset += seq.bytesPerRawComponent*seq.components
       
       i += 1
     }

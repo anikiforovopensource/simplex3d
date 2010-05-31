@@ -31,9 +31,9 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseSeq[
-  T <: MetaType, @specialized(Int, Float, Double) E, +D <: RawType
+  T <: ElemType, @specialized(Int, Float, Double) E, +D <: RawType
 ] (
-  val buffer: D#BufferType
+  protected[buffer] final val buffer: D#BufferType
 ) extends IndexedSeq[E] with ArrayLike[E, IndexedSeq[E]] {
 
   if (stride <= 0)
@@ -45,13 +45,23 @@ private[buffer] abstract class BaseSeq[
       "Offset must be greater than or equal to zero."
     )
 
+  def elementManifest: ClassManifest[T#Element]
   def componentManifest: ClassManifest[T#Component#Element]
-  
-  final val componentBytes: Int = Binding.byteLength(componentBinding)
-  final def byteSize = buffer.capacity*componentBytes
-  final def byteOffset = offset*componentBytes
-  final def byteStride = stride*componentBytes
-  def bindingBuffer: Buffer
+
+  final val bytesPerRawComponent: Int = RawType.byteLength(bindingType)
+  final def byteSize = buffer.capacity*bytesPerRawComponent
+  final def byteOffset = offset*bytesPerRawComponent
+  final val byteStride = stride*bytesPerRawComponent
+
+  def asReadOnlyBuffer() :D#BufferType
+  def asBuffer() :D#BufferType
+
+  def sharesContent(seq: DataSeq[_ <: ElemType, _ <: RawType])
+  final def bindingBuffer(offset: Int) = {
+    val buff = asBuffer()
+    buff.position(offset/bindingType)
+    buff
+  }
 
   final override val size: Int =
     (buffer.capacity - offset + stride - components)/stride
@@ -67,7 +77,7 @@ private[buffer] abstract class BaseSeq[
   def mkDataView(byteBuffer: ByteBuffer, offset: Int,stride: Int):DataView[T, D]
 
   def components: Int
-  def componentBinding: Int
+  def bindingType: Int
   def normalized: Boolean
 
   def offset: Int
@@ -79,12 +89,12 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
     if (stride == components && buffer.isInstanceOf[IntBuffer]) {
-      val b = buffer.asInstanceOf[IntBuffer]
+      val b = asBuffer().asInstanceOf[IntBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Int, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Int, _ <: RawType]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -95,12 +105,12 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Float], first: Int, count: Int
   ) {
     if (stride == components && buffer.isInstanceOf[FloatBuffer]) {
-      val b = buffer.asInstanceOf[FloatBuffer]
+      val b = asBuffer().asInstanceOf[FloatBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Float, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Float, _ <: RawType]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -111,12 +121,12 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Double], first: Int, count: Int
   ) {
     if (stride == components && buffer.isInstanceOf[DoubleBuffer]) {
-      val b = buffer.asInstanceOf[DoubleBuffer]
+      val b = asBuffer().asInstanceOf[DoubleBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaType, Double, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Double, _ <: RawType]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -151,7 +161,7 @@ private[buffer] abstract class BaseSeq[
     seq match {
 
       case wrapped: WrappedArray[_] =>
-        
+
         if (first + count > wrapped.array.length)
           throw new IndexOutOfBoundsException(
             "Source sequence is not large enough."
@@ -184,7 +194,7 @@ private[buffer] abstract class BaseSeq[
     put(0, seq, 0, seq.size)
   }
 
-  
+
   final def put(
     index: Int,
     src: ContiguousSeq[T#Component, _],
@@ -192,15 +202,15 @@ private[buffer] abstract class BaseSeq[
   ) {
     def grp(binding: Int) = {
       (binding: @switch) match {
-        case Binding.SByte => 0
-        case Binding.UByte => 0
-        case Binding.SShort => 1
-        case Binding.UShort => 2
-        case Binding.SInt => 3
-        case Binding.UInt => 3
-        case Binding.HalfFloat => 4
-        case Binding.RawFloat => 5
-        case Binding.RawDouble => 6
+        case RawType.SByte => 0
+        case RawType.UByte => 0
+        case RawType.SShort => 1
+        case RawType.UShort => 2
+        case RawType.SInt => 3
+        case RawType.UInt => 3
+        case RawType.HalfFloat => 4
+        case RawType.RawFloat => 5
+        case RawType.RawDouble => 6
         case _ => throw new AssertionError("Binding not found.")
       }
     }
@@ -211,103 +221,99 @@ private[buffer] abstract class BaseSeq[
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
 
-    val group = grp(componentBinding)
+    val group = grp(bindingType)
     val noConversion = (
-      componentBinding == src.componentBinding ||
-      (!normalized && !src.normalized && group == grp(src.componentBinding))
+      bindingType == src.bindingType ||
+      (!normalized && !src.normalized && group == grp(src.bindingType))
     )
 
-
     if (stride == components && srcStride == components && noConversion) {
-      buffer.position(destOffset)
-      src.buffer.position(srcOffset)
-      src.buffer.limit(srcLim)
+      val destBuff = asBuffer()
+      val srcBuff = src.asBuffer()
 
-      try {
-        (group: @switch) match {
-          case 0 =>
-            buffer.asInstanceOf[ByteBuffer].put(
-              src.buffer.asInstanceOf[ByteBuffer]
-            )
-          case 1 =>
-            buffer.asInstanceOf[ShortBuffer].put(
-              src.buffer.asInstanceOf[ShortBuffer]
-            )
-          case 2 =>
-            buffer.asInstanceOf[CharBuffer].put(
-              src.buffer.asInstanceOf[CharBuffer]
-            )
-          case 3 =>
-            buffer.asInstanceOf[IntBuffer].put(
-              src.buffer.asInstanceOf[IntBuffer]
-            )
-          case 4 =>
-            buffer.asInstanceOf[ShortBuffer].put(
-              src.buffer.asInstanceOf[ShortBuffer]
+      destBuff.position(destOffset)
+      srcBuff.position(srcOffset)
+      srcBuff.limit(srcLim)
+
+      (group: @switch) match {
+        case 0 =>
+          destBuff.asInstanceOf[ByteBuffer].put(
+            srcBuff.asInstanceOf[ByteBuffer]
           )
-          case 5 =>
-            buffer.asInstanceOf[FloatBuffer].put(
-              src.buffer.asInstanceOf[FloatBuffer]
-            )
-          case 6 =>
-            buffer.asInstanceOf[DoubleBuffer].put(
-              src.buffer.asInstanceOf[DoubleBuffer]
-            )
-        }
-      }
-      finally {
-        // Always restore the limit, since Buffer.get(index) depends on it.
-        src.buffer.limit(src.buffer.capacity)
+        case 1 =>
+          destBuff.asInstanceOf[ShortBuffer].put(
+            srcBuff.asInstanceOf[ShortBuffer]
+          )
+        case 2 =>
+          destBuff.asInstanceOf[CharBuffer].put(
+            srcBuff.asInstanceOf[CharBuffer]
+          )
+        case 3 =>
+          destBuff.asInstanceOf[IntBuffer].put(
+            srcBuff.asInstanceOf[IntBuffer]
+          )
+        case 4 =>
+          destBuff.asInstanceOf[ShortBuffer].put(
+            srcBuff.asInstanceOf[ShortBuffer]
+        )
+        case 5 =>
+          destBuff.asInstanceOf[FloatBuffer].put(
+            srcBuff.asInstanceOf[FloatBuffer]
+          )
+        case 6 =>
+          destBuff.asInstanceOf[DoubleBuffer].put(
+            srcBuff.asInstanceOf[DoubleBuffer]
+          )
       }
     }
     else if (noConversion && group < 5) {
       (group: @switch) match {
         case 0 => Copying.copyBuffer(
             components,
-            buffer.asInstanceOf[ByteBuffer],
+            asBuffer().asInstanceOf[ByteBuffer],
             destOffset,
             stride,
-            src.buffer.asInstanceOf[ByteBuffer],
+            src.asBuffer().asInstanceOf[ByteBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case 1 => Copying.copyBuffer(
             components,
-            buffer.asInstanceOf[ShortBuffer],
+            asBuffer().asInstanceOf[ShortBuffer],
             destOffset,
             stride,
-            src.buffer.asInstanceOf[ShortBuffer],
+            src.asBuffer().asInstanceOf[ShortBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case 2 => Copying.copyBuffer(
             components,
-            buffer.asInstanceOf[CharBuffer],
+            asBuffer().asInstanceOf[CharBuffer],
             destOffset,
             stride,
-            src.buffer.asInstanceOf[CharBuffer],
+            src.asBuffer().asInstanceOf[CharBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case 3 => Copying.copyBuffer(
             components,
-            buffer.asInstanceOf[IntBuffer],
+            asBuffer().asInstanceOf[IntBuffer],
             destOffset,
             stride,
-            src.buffer.asInstanceOf[IntBuffer],
+            src.asBuffer().asInstanceOf[IntBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case 4 => Copying.copyBuffer(
             components,
-            buffer.asInstanceOf[ShortBuffer],
+            asBuffer().asInstanceOf[ShortBuffer],
             destOffset,
             stride,
-            src.buffer.asInstanceOf[ShortBuffer],
+            src.asBuffer().asInstanceOf[ShortBuffer],
             srcOffset,
             srcStride,
             srcLim
@@ -465,59 +471,69 @@ private[buffer] abstract class BaseSeq[
   }
 }
 
-trait DataSeq[T <: MetaType, +D <: RawType] extends BaseSeq[T, T#Element, D]
+trait DataSeq[T <: ElemType, +D <: RawType] extends BaseSeq[T, T#Element, D]
 
-trait ContiguousSeq[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
+trait ContiguousSeq[T <: ElemType, +D <: RawType] extends DataSeq[T, D] {
   final val offset = 0
   assert(stride == components)
 }
 
-trait DataArray[T <: MetaType, +D <: RawType]
+trait DataArray[T <: ElemType, +D <: RawType]
 extends DataSeq[T, D] with ContiguousSeq[T, D] {
-  final def bindingBuffer = buffer
-
   def array: D#ArrayType = backingSeq.array
   def backingSeq: DataArray[T#Component, D]
+
+  final def sharesContent(seq: DataSeq[_ <: ElemType, _ <: RawType]) {
+    seq match {
+      case a: DataArray[_, _] => array eq a.array
+      case _ => false
+    }
+  }
 }
 
-trait DataBuffer[T <: MetaType, +D <: RawType]
+trait DataBuffer[T <: ElemType, +D <: RawType]
 extends DataView[T, D] with ContiguousSeq[T, D]
 
-trait DataView[T <: MetaType, +D <: RawType] extends DataSeq[T, D] {
-  final def bindingBuffer = byteBuffer
-  
-  def byteBuffer: ByteBuffer = backingSeq.byteBuffer
+trait DataView[T <: ElemType, +D <: RawType] extends DataSeq[T, D] {
+  private[buffer] def sharedBuffer: ByteBuffer = backingSeq.sharedBuffer
   def backingSeq: DataBuffer[T#Component, D]
 
-  if (!buffer.isDirect)
-    throw new IllegalArgumentException(
-      "The buffer must be direct."
-    )
-  if (byteBuffer.order != ByteOrder.nativeOrder)
+  final def sharesContent(seq: DataSeq[_ <: ElemType, _ <: RawType]) {
+    seq match {
+      case v: DataView[_, _] => sharedBuffer eq v.sharedBuffer
+      case _ => false
+    }
+  }
+
+  // Shared buffer must be cleared before calling DataView constructor
+  assert(sharedBuffer.position == 0)
+  assert(sharedBuffer.limit == sharedBuffer.capacity)
+
+  if (sharedBuffer.order != ByteOrder.nativeOrder)
     throw new IllegalArgumentException(
       "The buffer must have native byte order."
     )
-  if (byteBuffer.isReadOnly)
+  if (!buffer.isDirect)
     throw new IllegalArgumentException(
-      "The buffer must not be read-only."
+      "The buffer must be direct."
     )
 }
 
 
 object DataArray {
-  def apply[T <: MetaType, D <: ReadType](array: D#ArrayType)(
+  def apply[T <: ElemType, D <: ReadableType](array: D#ArrayType)(
     implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     ref.factory.mkDataArray(array)
   }
 
-  def apply[T <: MetaType, D <: ReadType](size: Int)(
+  def apply[T <: ElemType, D <: ReadableType](size: Int)(
     implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     ref.factory.mkDataArray(size)
   }
 
-  def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
+  def apply[T <: ElemType, D <: ReadableType](vals: T#Element*)(
     implicit ref: FactoryRef[T, D]
   ) :DataArray[T, D] = {
     val data = ref.factory.mkDataArray(vals.size)
@@ -527,19 +543,25 @@ object DataArray {
 }
 
 object DataBuffer {
-  def apply[T <: MetaType, D <: ReadType](buffer: ByteBuffer)(
+  def apply[T <: ElemType, D <: ReadableType](buffer: ByteBuffer)(
     implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
+    if (buffer.isReadOnly)
+    throw new IllegalArgumentException(
+      "The buffer must not be read-only."
+    )
+
+    buffer.clear()
     ref.factory.mkDataBuffer(buffer)
   }
 
-  def apply[T <: MetaType, D <: ReadType](size: Int)(
+  def apply[T <: ElemType, D <: ReadableType](size: Int)(
     implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     ref.factory.mkDataBuffer(size)
   }
 
-  def apply[T <: MetaType, D <: ReadType](vals: T#Element*)(
+  def apply[T <: ElemType, D <: ReadableType](vals: T#Element*)(
     implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     val data = ref.factory.mkDataBuffer(vals.size)
@@ -549,26 +571,32 @@ object DataBuffer {
 }
 
 object DataView {
-  def apply[T <: MetaType, D <: ReadType](
+  def apply[T <: ElemType, D <: ReadableType](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
+    if (buffer.isReadOnly)
+    throw new IllegalArgumentException(
+      "The buffer must not be read-only."
+    )
+  
+    buffer.clear()
     ref.factory.mkDataView(buffer, offset, stride)
   }
 }
 
 object DataSeq {
-  def apply[T <: MetaType, D <: ReadType](
+  def apply[T <: ElemType, D <: ReadableType](
     implicit ref: FactoryRef[T, D]
   ) :DataSeq[T, D] = {
     ref.factory
   }
 }
 
-abstract class FactoryRef[T <: MetaType, D <: RawType] {
+abstract class FactoryRef[T <: ElemType, D <: RawType] {
   def factory: DataSeq[T, D]
 }
 
-class SimpleFactoryRef[T <: MetaType, D <: RawType](
+class SimpleFactoryRef[T <: ElemType, D <: RawType](
   val factory: DataSeq[T, D]
 ) extends FactoryRef[T, D]
 
@@ -579,7 +607,10 @@ abstract class GenericSeq[T <: Composite, +D <: RawType](
   final def componentManifest = backingSeq.componentManifest.asInstanceOf[
     ClassManifest[T#Component#Element]
   ]
+
+  final def asReadOnlyBuffer() :D#BufferType = backingSeq.asReadOnlyBuffer()
+  final def asBuffer() :D#BufferType = backingSeq.asBuffer()
   
-  final def componentBinding = backingSeq.componentBinding
+  final def bindingType = backingSeq.bindingType
   final def normalized: Boolean = backingSeq.normalized
 }

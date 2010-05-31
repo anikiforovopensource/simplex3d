@@ -32,9 +32,9 @@ import simplex3d.buffer.intm.optimized._
  */
 package object intm extends UnsignedImplicits {
 
-  private final type F[T <: MetaType, D <: RawType] = SimpleFactoryRef[T, D]
-  private final type G[T <: MetaType, D <: RawType] =TemplateGenFactoryRef[T, D]
-  private final def da[T <: MetaType, D <: RawType](f: FactoryRef[T, D]) =
+  private final type F[T <: ElemType, D <: RawType] = SimpleFactoryRef[T, D]
+  private final type G[T <: ElemType, D <: RawType] =TemplateGenFactoryRef[T, D]
+  private final def da[T <: ElemType, D <: RawType](f: FactoryRef[T, D]) =
     f.factory.asInstanceOf[DataArray[T, D]]
 
 

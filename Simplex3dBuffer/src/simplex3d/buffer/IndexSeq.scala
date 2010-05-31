@@ -28,7 +28,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait IndexSeq[+D <: ReadIndex]
+trait IndexSeq[+D <: ReadableIndex]
 extends ContiguousSeq[Int1, D] {
   def mkIndexArray(size: Int) :IndexArray[D] =
     mkDataArray(size).asInstanceOf[IndexArray[D]]
@@ -45,27 +45,27 @@ extends ContiguousSeq[Int1, D] {
     super.copyAsDataBuffer().asInstanceOf[IndexBuffer[D]]
 }
 
-trait IndexArray[+D <: ReadIndex]
+trait IndexArray[+D <: ReadableIndex]
 extends IndexSeq[D] with DataArray[Int1, D]
 
-trait IndexBuffer[+D <: ReadIndex]
+trait IndexBuffer[+D <: ReadableIndex]
 extends IndexSeq[D] with DataBuffer[Int1, D]
 
 
 object IndexArray {
-  def apply[D <: ReadIndex](array: D#ArrayType)(
+  def apply[D <: ReadableIndex](array: D#ArrayType)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     ref.factory.mkDataArray(array).asInstanceOf[IndexArray[D]]
   }
 
-  def apply[D <: ReadIndex](size: Int)(
+  def apply[D <: ReadableIndex](size: Int)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     ref.factory.mkDataArray(size).asInstanceOf[IndexArray[D]]
   }
 
-  def apply[D <: ReadIndex](vals: Int*)(
+  def apply[D <: ReadableIndex](vals: Int*)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexArray[D] = {
     val data = ref.factory.mkDataArray(vals.size).asInstanceOf[IndexArray[D]]
@@ -75,19 +75,19 @@ object IndexArray {
 }
 
 object IndexBuffer {
-  def apply[D <: ReadIndex](buffer: ByteBuffer)(
+  def apply[D <: ReadableIndex](buffer: ByteBuffer)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     ref.factory.mkDataBuffer(buffer).asInstanceOf[IndexBuffer[D]]
   }
 
-  def apply[D <: ReadIndex](size: Int)(
+  def apply[D <: ReadableIndex](size: Int)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     ref.factory.mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
   }
 
-  def apply[D <: ReadIndex](vals: Int*)(
+  def apply[D <: ReadableIndex](vals: Int*)(
     implicit ref: FactoryRef[Int1, D]
   ) :IndexBuffer[D] = {
     val data = ref.factory.mkDataBuffer(vals.size).asInstanceOf[IndexBuffer[D]]

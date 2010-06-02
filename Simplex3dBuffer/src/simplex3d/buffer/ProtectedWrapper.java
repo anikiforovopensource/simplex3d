@@ -25,7 +25,7 @@ package simplex3d.buffer;
  * 
  * @author Aleksey Nikiforov (lex)
  */
-public final class ProtectedWrapper<T> {
+final class ProtectedWrapper<T> {
     private final T value;
 
     public ProtectedWrapper(T value) {

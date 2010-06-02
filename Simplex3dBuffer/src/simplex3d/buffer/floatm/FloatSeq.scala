@@ -72,30 +72,31 @@ private[buffer] sealed abstract class SeqFloat1SByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1SByte(new Array[Byte](size))
-  final def mkDataArray(arry: Array[Byte]) =
-    new ArrayFloat1SByte(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Byte](size)
+    new ArrayFloat1SByte(array, ByteBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Byte]) =
+    new ArrayFloat1SByte(array, ByteBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1SByte(buff, buff.duplicate())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1SByte(byteBuffer, byteBuffer.duplicate())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1SByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1SByte(
-  arry: Array[Byte]
-) extends SeqFloat1SByte(ByteBuffer.wrap(arry)) with DataArray[Float1, SByte] {
-  def this() = this(new Array[Byte](0))
+  arry: Array[Byte], buff: ByteBuffer
+) extends SeqFloat1SByte(buff) with DataArray[Float1, SByte] {
+  def this() = this(new Array[Byte](0), ByteBuffer.wrap(new Array[Byte](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1SByte(arry)
 
@@ -107,10 +108,9 @@ private[buffer] class ArrayFloat1SByte(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1SByte(arry: Array[Byte])
-extends ArrayFloat1SByte(arry) {
-  override def array = null
+extends ArrayFloat1SByte(arry, ByteBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1SByte(
@@ -161,30 +161,31 @@ private[buffer] sealed abstract class SeqFloat1UByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1UByte(new Array[Byte](size))
-  final def mkDataArray(arry: Array[Byte]) =
-    new ArrayFloat1UByte(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Byte](size)
+    new ArrayFloat1UByte(array, ByteBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Byte]) =
+    new ArrayFloat1UByte(array, ByteBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1UByte(buff, buff.duplicate())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1UByte(byteBuffer, byteBuffer.duplicate())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1UByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1UByte(
-  arry: Array[Byte]
-) extends SeqFloat1UByte(ByteBuffer.wrap(arry)) with DataArray[Float1, UByte] {
-  def this() = this(new Array[Byte](0))
+  arry: Array[Byte], buff: ByteBuffer
+) extends SeqFloat1UByte(buff) with DataArray[Float1, UByte] {
+  def this() = this(new Array[Byte](0), ByteBuffer.wrap(new Array[Byte](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1UByte(arry)
 
@@ -196,10 +197,9 @@ private[buffer] class ArrayFloat1UByte(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1UByte(arry: Array[Byte])
-extends ArrayFloat1UByte(arry) {
-  override def array = null
+extends ArrayFloat1UByte(arry, ByteBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1UByte(
@@ -250,32 +250,31 @@ private[buffer] sealed abstract class SeqFloat1NSByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NSByte(new Array[Byte](size))
-  final def mkDataArray(arry: Array[Byte]) =
-    new ArrayFloat1NSByte(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Byte](size)
+    new ArrayFloat1NSByte(array, ByteBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Byte]) =
+    new ArrayFloat1NSByte(array, ByteBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1NSByte(buff, buff.duplicate())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NSByte(byteBuffer, byteBuffer.duplicate())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NSByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1NSByte(
-  arry: Array[Byte]
-) extends SeqFloat1NSByte(
-  ByteBuffer.wrap(arry)
-) with DataArray[Float1, NSByte] {
-  def this() = this(new Array[Byte](0))
+  arry: Array[Byte], buff: ByteBuffer
+) extends SeqFloat1NSByte(buff) with DataArray[Float1, NSByte] {
+  def this() = this(new Array[Byte](0), ByteBuffer.wrap(new Array[Byte](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NSByte(arry)
 
@@ -291,10 +290,9 @@ private[buffer] class ArrayFloat1NSByte(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NSByte(arry: Array[Byte])
-extends ArrayFloat1NSByte(arry) {
-  override def array = null
+extends ArrayFloat1NSByte(arry, ByteBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NSByte(
@@ -354,32 +352,31 @@ private[buffer] sealed abstract class SeqFloat1NUByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NUByte(new Array[Byte](size))
-  final def mkDataArray(arry: Array[Byte]) =
-    new ArrayFloat1NUByte(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Byte](size)
+    new ArrayFloat1NUByte(array, ByteBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Byte]) =
+    new ArrayFloat1NUByte(array, ByteBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1NUByte(buff, buff.duplicate())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NUByte(byteBuffer, byteBuffer.duplicate())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NUByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1NUByte(
-  arry: Array[Byte]
-) extends SeqFloat1NUByte(
-  ByteBuffer.wrap(arry)
-) with DataArray[Float1, NUByte] {
-  def this() = this(new Array[Byte](0))
+  arry: Array[Byte], buff: ByteBuffer
+) extends SeqFloat1NUByte(buff) with DataArray[Float1, NUByte] {
+  def this() = this(new Array[Byte](0), ByteBuffer.wrap(new Array[Byte](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NUByte(arry)
 
@@ -392,10 +389,9 @@ private[buffer] class ArrayFloat1NUByte(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NUByte(arry: Array[Byte])
-extends ArrayFloat1NUByte(arry) {
-  override def array = null
+extends ArrayFloat1NUByte(arry, ByteBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NUByte(
@@ -451,32 +447,31 @@ private[buffer] sealed abstract class SeqFloat1SShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1SShort(new Array[Short](size))
-  final def mkDataArray(arry: Array[Short]) =
-    new ArrayFloat1SShort(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Short](size)
+    new ArrayFloat1SShort(array, ShortBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Short]) =
+    new ArrayFloat1SShort(array, ShortBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1SShort(buff, buff.asShortBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1SShort(byteBuffer, byteBuffer.asShortBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1SShort(byteBuffer, byteBuffer.asShortBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1SShort(
-  arry: Array[Short]
-) extends SeqFloat1SShort(
-  ShortBuffer.wrap(arry)
-) with DataArray[Float1, SShort] {
-  def this() = this(new Array[Short](0))
+  arry: Array[Short], buff: ShortBuffer
+) extends SeqFloat1SShort(buff) with DataArray[Float1, SShort] {
+  def this() = this(new Array[Short](0), ShortBuffer.wrap(new Array[Short](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1SShort(arry)
 
@@ -488,10 +483,9 @@ private[buffer] class ArrayFloat1SShort(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1SShort(arry: Array[Short])
-extends ArrayFloat1SShort(arry) {
-  override def array = null
+extends ArrayFloat1SShort(arry, ShortBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1SShort(
@@ -542,32 +536,31 @@ private[buffer] sealed abstract class SeqFloat1UShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1UShort(new Array[Char](size))
-  final def mkDataArray(arry: Array[Char]) =
-    new ArrayFloat1UShort(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Char](size)
+    new ArrayFloat1UShort(array, CharBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Char]) =
+    new ArrayFloat1UShort(array, CharBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1UShort(buff, buff.asCharBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1UShort(byteBuffer, byteBuffer.asCharBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1UShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1UShort(
-  arry: Array[Char]
-) extends SeqFloat1UShort(
-  CharBuffer.wrap(arry)
-) with DataArray[Float1, UShort] {
-  def this() = this(new Array[Char](0))
+  arry: Array[Char], buff: CharBuffer
+) extends SeqFloat1UShort(buff) with DataArray[Float1, UShort] {
+  def this() = this(new Array[Char](0), CharBuffer.wrap(new Array[Char](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1UShort(arry)
 
@@ -579,10 +572,9 @@ private[buffer] class ArrayFloat1UShort(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1UShort(arry: Array[Char])
-extends ArrayFloat1UShort(arry) {
-  override def array = null
+extends ArrayFloat1UShort(arry, CharBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1UShort(
@@ -636,20 +628,22 @@ private[buffer] sealed abstract class SeqFloat1NSShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NSShort(new Array[Short](size))
-  final def mkDataArray(arry: Array[Short]) =
-    new ArrayFloat1NSShort(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Short](size)
+    new ArrayFloat1NSShort(array, ShortBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Short]) =
+    new ArrayFloat1NSShort(array, ShortBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1NSShort(buff, buff.asShortBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NSShort(byteBuffer, byteBuffer.asShortBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NSShort(
       byteBuffer, byteBuffer.asShortBuffer(), offset, stride
     )
@@ -657,13 +651,10 @@ private[buffer] sealed abstract class SeqFloat1NSShort(
 }
 
 private[buffer] class ArrayFloat1NSShort(
-  arry: Array[Short]
-) extends SeqFloat1NSShort(
-  ShortBuffer.wrap(arry)
-) with DataArray[Float1, NSShort] {
-  def this() = this(new Array[Short](0))
+  arry: Array[Short], buff: ShortBuffer
+) extends SeqFloat1NSShort(buff) with DataArray[Float1, NSShort] {
+  def this() = this(new Array[Short](0), ShortBuffer.wrap(new Array[Short](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NSShort(arry)
 
@@ -679,10 +670,9 @@ private[buffer] class ArrayFloat1NSShort(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NSShort(arry: Array[Short])
-extends ArrayFloat1NSShort(arry) {
-  override def array = null
+extends ArrayFloat1NSShort(arry, ShortBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NSShort(
@@ -742,32 +732,31 @@ private[buffer] sealed abstract class SeqFloat1NUShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NUShort(new Array[Char](size))
-  final def mkDataArray(arry: Array[Char]) =
-    new ArrayFloat1NUShort(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Char](size)
+    new ArrayFloat1NUShort(array, CharBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Char]) =
+    new ArrayFloat1NUShort(array, CharBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1NUShort(buff, buff.asCharBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NUShort(byteBuffer, byteBuffer.asCharBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NUShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1NUShort(
-  arry: Array[Char]
-) extends SeqFloat1NUShort(
-  CharBuffer.wrap(arry)
-) with DataArray[Float1, NUShort] {
-  def this() = this(new Array[Char](0))
+  arry: Array[Char], buff: CharBuffer
+) extends SeqFloat1NUShort(buff) with DataArray[Float1, NUShort] {
+  def this() = this(new Array[Char](0), CharBuffer.wrap(new Array[Char](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NUShort(arry)
 
@@ -780,10 +769,9 @@ private[buffer] class ArrayFloat1NUShort(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NUShort(arry: Array[Char])
-extends ArrayFloat1NUShort(arry) {
-  override def array = null
+extends ArrayFloat1NUShort(arry, CharBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NUShort(
@@ -837,30 +825,31 @@ private[buffer] sealed abstract class SeqFloat1SInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1SInt(new Array[Int](size))
-  final def mkDataArray(arry: Array[Int]) =
-    new ArrayFloat1SInt(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Int](size)
+    new ArrayFloat1SInt(array, IntBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Int]) =
+    new ArrayFloat1SInt(array, IntBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1SInt(buff, buff.asIntBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1SInt(byteBuffer, byteBuffer.asIntBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1SInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1SInt(
-  arry: Array[Int]
-) extends SeqFloat1SInt(IntBuffer.wrap(arry)) with DataArray[Float1, SInt] {
-  def this() = this(new Array[Int](0))
+  arry: Array[Int], buff: IntBuffer
+) extends SeqFloat1SInt(buff) with DataArray[Float1, SInt] {
+  def this() = this(new Array[Int](0), IntBuffer.wrap(new Array[Int](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1SInt(arry)
 
@@ -872,10 +861,9 @@ private[buffer] class ArrayFloat1SInt(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1SInt(arry: Array[Int])
-extends ArrayFloat1SInt(arry) {
-  override def array = null
+extends ArrayFloat1SInt(arry, IntBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1SInt(
@@ -923,30 +911,31 @@ private[buffer] sealed abstract class SeqFloat1UInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1UInt(new Array[Int](size))
-  final def mkDataArray(arry: Array[Int]) =
-    new ArrayFloat1UInt(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Int](size)
+    new ArrayFloat1UInt(array, IntBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Int]) =
+    new ArrayFloat1UInt(array, IntBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1UInt(buff, buff.asIntBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1UInt(byteBuffer, byteBuffer.asIntBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1UInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1UInt(
-  arry: Array[Int]
-) extends SeqFloat1UInt(IntBuffer.wrap(arry)) with DataArray[Float1, UInt] {
-  def this() = this(new Array[Int](0))
+  arry: Array[Int], buff: IntBuffer
+) extends SeqFloat1UInt(buff) with DataArray[Float1, UInt] {
+  def this() = this(new Array[Int](0), IntBuffer.wrap(new Array[Int](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1UInt(arry)
 
@@ -959,10 +948,9 @@ private[buffer] class ArrayFloat1UInt(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1UInt(arry: Array[Int])
-extends ArrayFloat1UInt(arry) {
-  override def array = null
+extends ArrayFloat1UInt(arry, IntBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1UInt(
@@ -1016,32 +1004,31 @@ private[buffer] sealed abstract class SeqFloat1NSInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NSInt(new Array[Int](size))
-  final def mkDataArray(arry: Array[Int]) =
-    new ArrayFloat1NSInt(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Int](size)
+    new ArrayFloat1NSInt(array, IntBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Int]) =
+    new ArrayFloat1NSInt(array, IntBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1NSInt(buff, buff.asIntBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NSInt(byteBuffer, byteBuffer.asIntBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NSInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1NSInt(
-  arry: Array[Int]
-) extends SeqFloat1NSInt(
-  IntBuffer.wrap(arry)
-) with DataArray[Float1, NSInt] {
-  def this() = this(new Array[Int](0))
+  arry: Array[Int], buff: IntBuffer
+) extends SeqFloat1NSInt(buff) with DataArray[Float1, NSInt] {
+  def this() = this(new Array[Int](0), IntBuffer.wrap(new Array[Int](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NSInt(arry)
 
@@ -1057,10 +1044,9 @@ private[buffer] class ArrayFloat1NSInt(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NSInt(arry: Array[Int])
-extends ArrayFloat1NSInt(arry) {
-  override def array = null
+extends ArrayFloat1NSInt(arry, IntBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NSInt(
@@ -1120,32 +1106,31 @@ private[buffer] sealed abstract class SeqFloat1NUInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1NUInt(new Array[Int](size))
-  final def mkDataArray(arry: Array[Int]) =
-    new ArrayFloat1NUInt(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Int](size)
+    new ArrayFloat1NUInt(array, IntBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Int]) =
+    new ArrayFloat1NUInt(array, IntBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1NUInt(buff, buff.asIntBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1NUInt(byteBuffer, byteBuffer.asIntBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1NUInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }
 }
 
 private[buffer] class ArrayFloat1NUInt(
-  arry: Array[Int]
-) extends SeqFloat1NUInt(
-  IntBuffer.wrap(arry)
-) with DataArray[Float1, NUInt] {
-  def this() = this(new Array[Int](0))
+  arry: Array[Int], buff: IntBuffer
+) extends SeqFloat1NUInt(buff) with DataArray[Float1, NUInt] {
+  def this() = this(new Array[Int](0), IntBuffer.wrap(new Array[Int](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1NUInt(arry)
 
@@ -1157,10 +1142,9 @@ private[buffer] class ArrayFloat1NUInt(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1NUInt(arry: Array[Int])
-extends ArrayFloat1NUInt(arry) {
-  override def array = null
+extends ArrayFloat1NUInt(arry, IntBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1NUInt(
@@ -1218,20 +1202,22 @@ private[buffer] sealed abstract class SeqFloat1HalfFloat(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1HalfFloat(new Array[Short](size))
-  final def mkDataArray(arry: Array[Short]) =
-    new ArrayFloat1HalfFloat(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Short](size)
+    new ArrayFloat1HalfFloat(array, ShortBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Short]) =
+    new ArrayFloat1HalfFloat(array, ShortBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1HalfFloat(buff, buff.asShortBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1HalfFloat(byteBuffer, byteBuffer.asShortBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1HalfFloat(
       byteBuffer, byteBuffer.asShortBuffer(), offset, stride
     )
@@ -1239,13 +1225,10 @@ private[buffer] sealed abstract class SeqFloat1HalfFloat(
 }
 
 private[buffer] class ArrayFloat1HalfFloat(
-  arry: Array[Short]
-) extends SeqFloat1HalfFloat(
-  ShortBuffer.wrap(arry)
-) with DataArray[Float1, HalfFloat] {
-  def this() = this(new Array[Short](0))
+  arry: Array[Short], buff: ShortBuffer
+) extends SeqFloat1HalfFloat(buff) with DataArray[Float1, HalfFloat] {
+  def this() = this(new Array[Short](0), ShortBuffer.wrap(new Array[Short](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1HalfFloat(arry)
 
@@ -1257,10 +1240,9 @@ private[buffer] class ArrayFloat1HalfFloat(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1HalfFloat(arry: Array[Short])
-extends ArrayFloat1HalfFloat(arry) {
-  override def array = null
+extends ArrayFloat1HalfFloat(arry, ShortBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1HalfFloat(
@@ -1311,20 +1293,22 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
   
-  final def mkDataArray(size: Int) =
-    new ArrayFloat1RawFloat(new Array[Float](size))
-  final def mkDataArray(arry: Array[Float]) =
-    new ArrayFloat1RawFloat(arry)
+  final def mkDataArray(size: Int) = {
+    val array = new Array[Float](size)
+    new ArrayFloat1RawFloat(array, FloatBuffer.wrap(array))
+  }
+  final def mkDataArray(array: Array[Float]) =
+    new ArrayFloat1RawFloat(array, FloatBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1RawFloat(buff, buff.asFloatBuffer())
   }
   final def mkDataBuffer(byteBuffer: ByteBuffer) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferFloat1RawFloat(byteBuffer, byteBuffer.asFloatBuffer())
   }
   final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
-    byteBuffer.clear()
+    byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewFloat1RawFloat(
       byteBuffer, byteBuffer.asFloatBuffer(), offset, stride
     )
@@ -1332,13 +1316,10 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
 }
 
 private[buffer] class ArrayFloat1RawFloat(
-  arry: Array[Float]
-) extends SeqFloat1RawFloat(
-  FloatBuffer.wrap(arry)
-) with DataArray[Float1, RawFloat] {
-  def this() = this(new Array[Float](0))
+  arry: Array[Float], buff: FloatBuffer
+) extends SeqFloat1RawFloat(buff) with DataArray[Float1, RawFloat] {
+  def this() = this(new Array[Float](0), FloatBuffer.wrap(new Array[Float](0)))
   private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
-  override def array = arry
   def backingSeq = this
   def asReadOnly() = new ReadOnlyArrayFloat1RawFloat(arry)
 
@@ -1350,10 +1331,9 @@ private[buffer] class ArrayFloat1RawFloat(
 }
 
 private[buffer] final class ReadOnlyArrayFloat1RawFloat(arry: Array[Float])
-extends ArrayFloat1RawFloat(arry) {
-  override def array = null
+extends ArrayFloat1RawFloat(arry, FloatBuffer.wrap(arry).asReadOnlyBuffer()) {
   override def update(i: Int, v: Float) :Unit =
-    throw new UnsupportedOperationException()
+    throw new ReadOnlyBufferException()
 }
 
 private[buffer] final class BufferFloat1RawFloat(

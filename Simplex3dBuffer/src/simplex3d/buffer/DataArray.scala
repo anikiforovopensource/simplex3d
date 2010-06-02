@@ -36,7 +36,7 @@ extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
   def backingSeq: ReadOnlyDataArray[T#Component, D]
   def asReadOnly() :ReadOnlyDataArray[T, D]
 
-  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) {
+  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
       case a: ReadOnlyDataArray[_, _] => 
         arrayWrapper.unwrap eq a.arrayWrapper.unwrap
@@ -48,7 +48,7 @@ extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
 
 trait DataArray[T <: ElemType, +D <: RawType]
 extends DataSeq[T, D] with ContiguousSeq[T, D] with ReadOnlyDataArray[T, D] {
-  def array: D#ArrayType = backingSeq.array
+  def array: D#ArrayType = buffer.array.asInstanceOf[D#ArrayType]
   def backingSeq: DataArray[T#Component, D]
 }
 
@@ -71,5 +71,21 @@ object DataArray {
     val data = ref.factory.mkDataArray(vals.size)
     data.put(vals)
     data
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](da: DataArray[_, D])(
+    implicit ref: FactoryRef[T, D]
+  ) :DataArray[T, D] = {
+    if (da.isReadOnly) throw new IllegalArgumentException(
+      "The argument must not be read only."
+    )
+
+    ref.factory.mkDataArray(da.array)
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](da: ReadOnlyDataArray[_, D])(
+    implicit ref: FactoryRef[T, D]
+  ) :ReadOnlyDataArray[T, D] = {
+    ref.factory.mkDataArray(da.arrayWrapper.unwrap).asReadOnly()
   }
 }

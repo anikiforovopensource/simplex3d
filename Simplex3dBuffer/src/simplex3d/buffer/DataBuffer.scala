@@ -43,10 +43,6 @@ object DataBuffer {
     throw new IllegalArgumentException(
       "The buffer must not be read-only."
     )
-    if (buffer.order != ByteOrder.nativeOrder)
-    throw new IllegalArgumentException(
-      "The buffer must have native byte order."
-    )
 
     ref.factory.mkDataBuffer(buffer)
   }
@@ -63,5 +59,21 @@ object DataBuffer {
     val data = ref.factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](db: DataBuffer[_, D])(
+    implicit ref: FactoryRef[T, D]
+  ) :DataBuffer[T, D] = {
+    if (db.isReadOnly) throw new IllegalArgumentException(
+      "The argument must not be read only."
+    )
+
+    ref.factory.mkDataBuffer(db.sharedWrapper.unwrap)
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](db: ReadOnlyDataBuffer[_, D])(
+    implicit ref: FactoryRef[T, D]
+  ) :ReadOnlyDataBuffer[T, D] = {
+    ref.factory.mkDataBuffer(db.sharedWrapper.unwrap).asReadOnly()
   }
 }

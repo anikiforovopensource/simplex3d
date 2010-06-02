@@ -54,7 +54,7 @@ private[buffer] abstract class ReadOnlyBaseSeq[
   final val byteStride = stride*bytesPerRawComponent
 
   def asReadOnlyBuffer() :D#BufferType
-  def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType])
+  def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
 
   final def bindingBuffer(offset: Int) = {
     val buff = asReadOnlyBuffer()
@@ -133,6 +133,7 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: E)
 
   def backingSeq: ContiguousSeq[T#Component, D]
+  def isReadOnly(): Boolean = buffer.isReadOnly
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int

@@ -35,7 +35,7 @@ extends ReadOnlyDataSeq[T, D] {
   def backingSeq: ReadOnlyDataBuffer[T#Component, D]
   def asReadOnly() :ReadOnlyDataView[T, D]
 
-  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) {
+  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
       case v: ReadOnlyDataView[_, _] =>
         sharedWrapper.unwrap eq v.sharedWrapper.unwrap
@@ -66,11 +66,23 @@ object DataView {
     throw new IllegalArgumentException(
       "The buffer must not be read-only."
     )
-    if (buffer.order != ByteOrder.nativeOrder)
-    throw new IllegalArgumentException(
-      "The buffer must have native byte order."
-    )
 
     ref.factory.mkDataView(buffer, offset, stride)
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](
+    db: DataBuffer[_, D], offset: Int, stride: Int
+  )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
+    if (db.isReadOnly) throw new IllegalArgumentException(
+      "The argument must not be read only."
+    )
+
+    ref.factory.mkDataView(db.sharedWrapper.unwrap, offset, stride)
+  }
+
+  def apply[T <: ElemType, D <: ReadableType](
+    db: ReadOnlyDataBuffer[_, D], offset: Int, stride: Int
+  )(implicit ref: FactoryRef[T, D]) :ReadOnlyDataView[T, D] = {
+    ref.factory.mkDataView(db.sharedWrapper.unwrap, offset, stride).asReadOnly()
   }
 }

@@ -23,7 +23,7 @@ package simplex3d.buffer
 import java.nio._
 import scala.annotation._
 import simplex3d.math._
-import simplex3d.buffer.{ReadOnlyContiguousSeq => roContiguousSeq}
+
 
 // An empty class to make -Xno-forwarders work
 private[buffer] class Copying

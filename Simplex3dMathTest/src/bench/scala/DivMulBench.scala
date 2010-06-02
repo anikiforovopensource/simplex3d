@@ -24,13 +24,13 @@ package bench.scala
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object FloatDivDoubleMul {
+object DivMulBench {
   def main(args: Array[String]) {
-    new FloatDivDoubleMulCase().run()
+    new DivMulCase().run()
   }
 }
 
-class FloatDivDoubleMulCase {
+class DivMulCase {
   val length = 100000
   val loops = 10000
   
@@ -40,6 +40,10 @@ class FloatDivDoubleMulCase {
     start = System.currentTimeMillis
     testFloatDiv(length, loops)
     val timeFloatDiv = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testIntDiv(length, loops)
+    val timeIntDiv = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testFloatMul(length, loops)
@@ -54,9 +58,27 @@ class FloatDivDoubleMulCase {
     val timeDoubleMul = System.currentTimeMillis - start
 
     println("FloatDiv: " + timeFloatDiv + ".")
+    println("IntDiv: " + timeIntDiv + ".")
     println("FloatMul: " + timeFloatMul + ".")
     println("DoubleDiv: " + timeDoubleDiv + ".")
     println("DoubleMul: " + timeDoubleMul + ".")
+  }
+
+  def testIntDiv(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length - 1) {
+
+        // Bench code
+        answer += i/9
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
   }
 
   def testFloatDiv(length: Int, loops: Int) {

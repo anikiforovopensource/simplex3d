@@ -2,7 +2,8 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="Simplex3dMath" default="default" basedir=".">
+<project xmlns:scalaProject1="http://www.netbeans.org/ns/scala-project/1"
+name="Simplex3dMath" default="default" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dMath.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -67,112 +68,76 @@
 
     -->
 
+    <target depends="init, compile" name="qrun">
+        <fail unless="main">Must set main. Example: ant qrun -Dmain=pkg.Main</fail>
+        <scalaProject1:java classname="${main}"/>
+    </target>
+
+
     <property name="release.dir" value="release"/>
+    <property name="release.name" value="simplex3d-math"/>
     <property name="release.bin" value="${release.dir}/Simplex3dMath_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dMath_src.zip"/>
     <property name="root.pkg" value="simplex3d/math"/>
 
-    <target name="release-all" depends="release-clean, release-src, release-jar" />
+    <property name="intm.pkg" value="${root.pkg}/intm/**"/>
+    <property name="floatm.pkg" value="${root.pkg}/floatm/**"/>
+    <property name="doublem.pkg" value="${root.pkg}/doublem/**"/>
+
+
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
 
     <target name="release-clean" >
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-jar" depends="init, clean, jar" >
+    <target name="release-bin" depends="init, clean, compile" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
+        <mkdir dir="${dist.dir}" />
+
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        jarfile="${dist.dir}/${release.name}-core.jar">
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
+            excludes="${intm.pkg} ${floatm.pkg} ${doublem.pkg}"/>
+        </jar>
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        jarfile="${dist.dir}/${release.name}-int.jar">
+            <fileset dir="${build.classes.dir}" includes="${intm.pkg}"/>
+        </jar>
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        jarfile="${dist.dir}/${release.name}-float.jar">
+            <fileset dir="${build.classes.dir}" includes="${floatm.pkg}"/>
+        </jar>
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        jarfile="${dist.dir}/${release.name}-double.jar">
+            <fileset dir="${build.classes.dir}" includes="${doublem.pkg}"/>
+        </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${dist.dir}" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
+                Readme.txt
                 COPYING.LESSER
                 COPYING
-                Simplex3dMath-license.txt" />
+                simplex3d-math-license.txt" />
         </zip>
     </target>
 
     <target name="release-src" depends="init" >
-        <mkdir dir="${release.dir}" />
         <delete file="${release.src}" />
+        <mkdir dir="${release.dir}" />
 
         <zip destfile="${release.src}">
             <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
-                build.xml
                 COPYING.LESSER
                 COPYING
-                Simplex3dMath-license.txt" />
+                simplex3d-math-license.txt
+                build.xml" />
         </zip>
     </target>
-
-    <target name="custom-jar" depends="init">
-        <input
-            message="Include IntegerMath Module?"
-            validargs="y,n"
-            defaultvalue="y"
-            addproperty="include.intm"
-        />
-        <input
-            message="Include FloatMath Module?"
-            validargs="y,n"
-            defaultvalue="y"
-            addproperty="include.floatm"
-        />
-        <input
-            message="Include DoubleMath Module?"
-            validargs="y,n"
-            defaultvalue="y"
-            addproperty="include.doublem"
-        />
-        <condition property="include.cancel">
-            <and>
-                <equals arg1="n" arg2="${include.intm}"/>
-                <equals arg1="n" arg2="${include.floatm}"/>
-                <equals arg1="n" arg2="${include.doublem}"/>
-            </and>
-        </condition>
-        <fail if="include.cancel">At least one module must be included.</fail>
-
-        <condition property="include.name1" value="Int" else="">
-            <equals arg1="y" arg2="${include.intm}"/>
-        </condition>
-        <condition property="include.name2" value="Float" else="">
-            <equals arg1="y" arg2="${include.floatm}"/>
-        </condition>
-        <condition property="include.name3" value="Double" else="">
-            <equals arg1="y" arg2="${include.doublem}"/>
-        </condition>
-
-        <condition property="include.name" value="" else="${include.name1}${include.name2}${include.name3}">
-            <and>
-                <equals arg1="y" arg2="${include.intm}"/>
-                <equals arg1="y" arg2="${include.floatm}"/>
-                <equals arg1="y" arg2="${include.doublem}"/>
-            </and>
-        </condition>
-
-        <property name="custom.jar" value="${dist.dir}/Simplex3d${include.name}Math.jar"/>
-
-        <antcall target="clean-compile" />
-        <mkdir dir="${dist.dir}" />
-
-        <condition property="exclude.intm" value="${root.pkg}/intm/**" else="">
-            <equals arg1="n" arg2="${include.intm}"/>
-        </condition>
-        <condition property="exclude.floatm" value="${root.pkg}/floatm/**" else="">
-            <equals arg1="n" arg2="${include.floatm}"/>
-        </condition>
-        <condition property="exclude.doublem" value="${root.pkg}/doublem/**" else="">
-            <equals arg1="n" arg2="${include.doublem}"/>
-        </condition>
-
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf" jarfile="${custom.jar}">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**" excludes="${exclude.intm} ${exclude.floatm} ${exclude.doublem}"/>
-        </jar>
-    </target>
-
-    <target name="clean-compile" depends="init, clean, compile"/>
 
 </project>

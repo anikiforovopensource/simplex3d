@@ -18,33 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer
-
-import simplex3d.math._
+package simplex3d.buffer;
 
 
-/**
+/** Prevents gaining access to read-only content.
+ * 
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyBaseSeq[T, T#Element, D]
+public final class ProtectedWrapper<T> {
+    private final T value;
 
-trait DataSeq[T <: ElemType, +D <: RawType]
-extends BaseSeq[T, T#Element, D] with ReadOnlyDataSeq[T, D]
+    public ProtectedWrapper(T value) {
+        this.value = value;
+    }
 
-object DataSeq {
-  def apply[T <: ElemType, D <: ReadableType](
-    implicit ref: FactoryRef[T, D]
-  ) :DataSeq[T, D] = {
-    ref.factory
-  }
+    T unwrap() {
+        return value;
+    }
 }
-
-trait ReadOnlyContiguousSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataSeq[T, D] {
-  final val offset = 0
-  assert(stride == components)
-}
-
-trait ContiguousSeq[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ReadOnlyContiguousSeq[T, D]

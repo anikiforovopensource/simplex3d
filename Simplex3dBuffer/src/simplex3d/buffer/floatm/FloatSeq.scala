@@ -21,12 +21,12 @@
 package simplex3d.buffer.floatm
 
 import java.nio._
-import simplex3d.buffer._
-import simplex3d.buffer.FloatUtil.{
-  floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat
-}
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
+import simplex3d.buffer.{allocateByteBuffer => alloc, _}
+import simplex3d.buffer.HalfFloatUtil.{
+  floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat
+}
 
 
 /**
@@ -74,59 +74,83 @@ private[buffer] sealed abstract class SeqFloat1SByte(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1SByte(new Array[Byte](size))
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1SByte(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1SByte(allocateByteBuffer(size))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1SByte(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1SByte(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Byte]) =
+    new ArrayFloat1SByte(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size)
+    new BufferFloat1SByte(buff, buff.duplicate())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1SByte(byteBuffer, byteBuffer.duplicate())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1SByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1SByte(
-  override val array: Array[Byte]
-) extends SeqFloat1SByte(ByteBuffer.wrap(array)) with DataArray[Float1, SByte] {
+private[buffer] class ArrayFloat1SByte(
+  arry: Array[Byte]
+) extends SeqFloat1SByte(ByteBuffer.wrap(arry)) with DataArray[Float1, SByte] {
   def this() = this(new Array[Byte](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1SByte(arry)
 
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = byte(iround(v))
+  def apply(i: Int) :Float = arry(i)
+  def update(i: Int, v: Float) :Unit = arry(i) = byte(iround(v))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1SByte(arry: Array[Byte])
+extends ArrayFloat1SByte(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1SByte(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1SByte(
-  sharedBuffer.duplicate()
-) with DataBuffer[Float1, SByte] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer
+) extends SeqFloat1SByte(buff) with DataBuffer[Float1, SByte] {
+  def this() = this(alloc(0), alloc(0).duplicate())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1SByte(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, byte(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SByte(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1SByte(
-  sharedBuffer.duplicate()
-) with DataView[Float1, SByte] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1SByte(sharedBuffer)
+) extends SeqFloat1SByte(buff) with DataView[Float1, SByte] {
+  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
+  val backingSeq = new BufferFloat1SByte(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1SByte(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, byte(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    offset + i*stride,
+    byte(iround(v))
+  )
 }
 
 
@@ -139,59 +163,83 @@ private[buffer] sealed abstract class SeqFloat1UByte(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1UByte(new Array[Byte](size))
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1UByte(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1UByte(allocateByteBuffer(size))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1UByte(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1UByte(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Byte]) =
+    new ArrayFloat1UByte(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size)
+    new BufferFloat1UByte(buff, buff.duplicate())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1UByte(byteBuffer, byteBuffer.duplicate())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1UByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1UByte(
-  override val array: Array[Byte]
-) extends SeqFloat1UByte(ByteBuffer.wrap(array)) with DataArray[Float1, UByte] {
+private[buffer] class ArrayFloat1UByte(
+  arry: Array[Byte]
+) extends SeqFloat1UByte(ByteBuffer.wrap(arry)) with DataArray[Float1, UByte] {
   def this() = this(new Array[Byte](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1UByte(arry)
 
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = array(i) & 0xFF
-  def update(i: Int, v: Float) = array(i) = byte(iround(v))
+  def apply(i: Int) :Float = arry(i) & 0xFF
+  def update(i: Int, v: Float) :Unit = arry(i) = byte(iround(v))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1UByte(arry: Array[Byte])
+extends ArrayFloat1UByte(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1UByte(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1UByte(
-  sharedBuffer.duplicate()
-) with DataBuffer[Float1, UByte] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer
+) extends SeqFloat1UByte(buff) with DataBuffer[Float1, UByte] {
+  def this() = this(alloc(0), alloc(0).duplicate())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1UByte(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i) & 0xFF
-  def update(i: Int, v: Float) = buffer.put(i, byte(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1UByte(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1UByte(
-  sharedBuffer.duplicate()
-) with DataView[Float1, UByte] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1UByte(sharedBuffer)
+) extends SeqFloat1UByte(buff) with DataView[Float1, UByte] {
+  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
+  val backingSeq = new BufferFloat1UByte(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1UByte(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, byte(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    offset + i*stride,
+    byte(iround(v))
+  )
 }
 
 
@@ -204,42 +252,61 @@ private[buffer] sealed abstract class SeqFloat1NSByte(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NSByte(new Array[Byte](size))
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1NSByte(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NSByte(allocateByteBuffer(size))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NSByte(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NSByte(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Byte]) =
+    new ArrayFloat1NSByte(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size)
+    new BufferFloat1NSByte(buff, buff.duplicate())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NSByte(byteBuffer, byteBuffer.duplicate())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NSByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1NSByte(
-  override val array: Array[Byte]
+private[buffer] class ArrayFloat1NSByte(
+  arry: Array[Byte]
 ) extends SeqFloat1NSByte(
-  ByteBuffer.wrap(array)
+  ByteBuffer.wrap(arry)
 ) with DataArray[Float1, NSByte] {
   def this() = this(new Array[Byte](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NSByte(arry)
 
   def bindingType = RawType.SByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = array(i)
+    val v = arry(i)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) =
-    array(i) = byte(iround(clamp(v, -1, 1)*toNSByte))
+  def update(i: Int, v: Float) :Unit =
+    arry(i) = byte(iround(clamp(v, -1, 1)*toNSByte))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NSByte(arry: Array[Byte])
+extends ArrayFloat1NSByte(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NSByte(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NSByte(
-  sharedBuffer.duplicate()
-) with DataBuffer[Float1, NSByte] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer
+) extends SeqFloat1NSByte(buff) with DataBuffer[Float1, NSByte] {
+  def this() = this(alloc(0), alloc(0).duplicate())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NSByte(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SByte
   def normalized: Boolean = true
@@ -248,21 +315,23 @@ private[buffer] final class BufferFloat1NSByte(
     val v = buffer.get(i)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
     byte(iround(clamp(v, -1, 1)*toNSByte))
   )
 }
 
 private[buffer] final class ViewFloat1NSByte(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NSByte(
-  sharedBuffer.duplicate()
-) with DataView[Float1, NSByte] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NSByte(sharedBuffer)
+) extends SeqFloat1NSByte(buff) with DataView[Float1, NSByte] {
+  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
+  val backingSeq = new BufferFloat1NSByte(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NSByte(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SByte
   def normalized: Boolean = true
@@ -271,7 +340,7 @@ private[buffer] final class ViewFloat1NSByte(
     val v = buffer.get(offset + i*stride)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
     byte(iround(clamp(v, -1, 1)*toNSByte))
   )
@@ -287,58 +356,80 @@ private[buffer] sealed abstract class SeqFloat1NUByte(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NUByte(new Array[Byte](size))
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1NUByte(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NUByte(allocateByteBuffer(size))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NUByte(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NUByte(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Byte]) =
+    new ArrayFloat1NUByte(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size)
+    new BufferFloat1NUByte(buff, buff.duplicate())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NUByte(byteBuffer, byteBuffer.duplicate())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NUByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1NUByte(
-  override val array: Array[Byte]
+private[buffer] class ArrayFloat1NUByte(
+  arry: Array[Byte]
 ) extends SeqFloat1NUByte(
-  ByteBuffer.wrap(array)
+  ByteBuffer.wrap(arry)
 ) with DataArray[Float1, NUByte] {
   def this() = this(new Array[Byte](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NUByte(arry)
 
   def bindingType = RawType.UByte
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float((array(i) & 0xFF)*fromNUByte)
-  def update(i: Int, v: Float) = array(i) = byte(iround(clamp(v, 0, 1)*toNUByte))
+  def apply(i: Int) :Float = float((arry(i) & 0xFF)*fromNUByte)
+  def update(i: Int, v: Float) :Unit =
+    arry(i) = byte(iround(clamp(v, 0, 1)*toNUByte))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NUByte(arry: Array[Byte])
+extends ArrayFloat1NUByte(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NUByte(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NUByte(
-  sharedBuffer.duplicate()
-) with DataBuffer[Float1, NUByte] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer
+) extends SeqFloat1NUByte(buff) with DataBuffer[Float1, NUByte] {
+  def this() = this(alloc(0), alloc(0).duplicate())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NUByte(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((buffer.get(i) & 0xFF)*fromNUByte)
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
     byte(iround(clamp(v, 0, 1)*toNUByte))
   )
 }
 
 private[buffer] final class ViewFloat1NUByte(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ByteBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NUByte(
-  sharedBuffer.duplicate()
-) with DataView[Float1, NUByte] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NUByte(sharedBuffer)
+) extends SeqFloat1NUByte(buff) with DataView[Float1, NUByte] {
+  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
+  val backingSeq = new BufferFloat1NUByte(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NUByte(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UByte
   def normalized: Boolean = true
@@ -346,7 +437,7 @@ private[buffer] final class ViewFloat1NUByte(
   def apply(i: Int) :Float = float(
     (buffer.get(offset + i*stride) & 0xFF)*fromNUByte
   )
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
     byte(iround(clamp(v, 0, 1)*toNUByte))
   )
@@ -362,61 +453,85 @@ private[buffer] sealed abstract class SeqFloat1SShort(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1SShort(new Array[Short](size))
-  final def mkDataArray(array: Array[Short]) =
-    new ArrayFloat1SShort(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1SShort(allocateByteBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1SShort(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1SShort(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Short]) =
+    new ArrayFloat1SShort(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*2)
+    new BufferFloat1SShort(buff, buff.asShortBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1SShort(byteBuffer, byteBuffer.asShortBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1SShort(byteBuffer, byteBuffer.asShortBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1SShort(
-  override val array: Array[Short]
+private[buffer] class ArrayFloat1SShort(
+  arry: Array[Short]
 ) extends SeqFloat1SShort(
-  ShortBuffer.wrap(array)
+  ShortBuffer.wrap(arry)
 ) with DataArray[Float1, SShort] {
   def this() = this(new Array[Short](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1SShort(arry)
 
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = short(iround(v))
+  def apply(i: Int) :Float = arry(i)
+  def update(i: Int, v: Float) :Unit = arry(i) = short(iround(v))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1SShort(arry: Array[Short])
+extends ArrayFloat1SShort(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1SShort(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1SShort(
-  sharedBuffer.asShortBuffer()
-) with DataBuffer[Float1, SShort] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer
+) extends SeqFloat1SShort(buff) with DataBuffer[Float1, SShort] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1SShort(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, short(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(i, short(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SShort(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1SShort(
-  sharedBuffer.asShortBuffer()
-) with DataView[Float1, SShort] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1SShort(sharedBuffer)
+) extends SeqFloat1SShort(buff) with DataView[Float1, SShort] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1SShort(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1SShort(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, short(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    offset + i*stride,
+    short(iround(v))
+  )
 }
 
 
@@ -429,63 +544,88 @@ private[buffer] sealed abstract class SeqFloat1UShort(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1UShort(new Array[Char](size))
-  final def mkDataArray(array: Array[Char]) =
-    new ArrayFloat1UShort(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1UShort(allocateByteBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1UShort(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1UShort(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Char]) =
+    new ArrayFloat1UShort(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*2)
+    new BufferFloat1UShort(buff, buff.asCharBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1UShort(byteBuffer, byteBuffer.asCharBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1UShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1UShort(
-  override val array: Array[Char]
+private[buffer] class ArrayFloat1UShort(
+  arry: Array[Char]
 ) extends SeqFloat1UShort(
-  CharBuffer.wrap(array)
+  CharBuffer.wrap(arry)
 ) with DataArray[Float1, UShort] {
   def this() = this(new Array[Char](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1UShort(arry)
 
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = iround(v).asInstanceOf[Char]
+  def apply(i: Int) :Float = arry(i)
+  def update(i: Int, v: Float) :Unit = arry(i) = iround(v).asInstanceOf[Char]
+}
+
+private[buffer] final class ReadOnlyArrayFloat1UShort(arry: Array[Char])
+extends ArrayFloat1UShort(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1UShort(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1UShort(
-  sharedBuffer.asCharBuffer()
-) with DataBuffer[Float1, UShort] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: CharBuffer
+) extends SeqFloat1UShort(buff) with DataBuffer[Float1, UShort] {
+  def this() = this(alloc(0), alloc(0).asCharBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1UShort(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, iround(v).asInstanceOf[Char])
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    i,
+    iround(v).asInstanceOf[Char]
+  )
 }
 
 private[buffer] final class ViewFloat1UShort(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: CharBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1UShort(
-  sharedBuffer.asCharBuffer()
-) with DataView[Float1, UShort] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1UShort(sharedBuffer)
+) extends SeqFloat1UShort(buff) with DataView[Float1, UShort] {
+  def this() = this(alloc(0), alloc(0).asCharBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1UShort(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1UShort(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) = {
-    buffer.put(offset + i*stride, iround(v).asInstanceOf[Char])
-  }
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    offset + i*stride,
+    iround(v).asInstanceOf[Char]
+  )
 }
 
 
@@ -498,42 +638,63 @@ private[buffer] sealed abstract class SeqFloat1NSShort(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NSShort(new Array[Short](size))
-  final def mkDataArray(array: Array[Short]) =
-    new ArrayFloat1NSShort(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NSShort(allocateByteBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NSShort(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NSShort(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Short]) =
+    new ArrayFloat1NSShort(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*2)
+    new BufferFloat1NSShort(buff, buff.asShortBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NSShort(byteBuffer, byteBuffer.asShortBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NSShort(
+      byteBuffer, byteBuffer.asShortBuffer(), offset, stride
+    )
+  }
 }
 
-private[buffer] final class ArrayFloat1NSShort(
-  override val array: Array[Short]
+private[buffer] class ArrayFloat1NSShort(
+  arry: Array[Short]
 ) extends SeqFloat1NSShort(
-  ShortBuffer.wrap(array)
+  ShortBuffer.wrap(arry)
 ) with DataArray[Float1, NSShort] {
   def this() = this(new Array[Short](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NSShort(arry)
 
   def bindingType = RawType.SShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = array(i)
+    val v = arry(i)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) =
-    array(i) = short(iround(clamp(v, -1, 1)*toNSShort))
+  def update(i: Int, v: Float) :Unit =
+    arry(i) = short(iround(clamp(v, -1, 1)*toNSShort))
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NSShort(arry: Array[Short])
+extends ArrayFloat1NSShort(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NSShort(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NSShort(
-  sharedBuffer.asShortBuffer()
-) with DataBuffer[Float1, NSShort] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer
+) extends SeqFloat1NSShort(buff) with DataBuffer[Float1, NSShort] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NSShort(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SShort
   def normalized: Boolean = true
@@ -542,21 +703,23 @@ private[buffer] final class BufferFloat1NSShort(
     val v = buffer.get(i)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
     short(iround(clamp(v, -1, 1)*toNSShort))
   )
 }
 
 private[buffer] final class ViewFloat1NSShort(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NSShort(
-  sharedBuffer.asShortBuffer()
-) with DataView[Float1, NSShort] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NSShort(sharedBuffer)
+) extends SeqFloat1NSShort(buff) with DataView[Float1, NSShort] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1NSShort(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NSShort(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SShort
   def normalized: Boolean = true
@@ -565,7 +728,7 @@ private[buffer] final class ViewFloat1NSShort(
     val v = buffer.get(offset + i*stride)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
     short(iround(clamp(v, -1, 1)*toNSShort))
   )
@@ -581,66 +744,86 @@ private[buffer] sealed abstract class SeqFloat1NUShort(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NUShort(new Array[Char](size))
-  final def mkDataArray(array: Array[Char]) =
-    new ArrayFloat1NUShort(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NUShort(allocateByteBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NUShort(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NUShort(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Char]) =
+    new ArrayFloat1NUShort(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*2)
+    new BufferFloat1NUShort(buff, buff.asCharBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NUShort(byteBuffer, byteBuffer.asCharBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NUShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1NUShort(
-  override val array: Array[Char]
+private[buffer] class ArrayFloat1NUShort(
+  arry: Array[Char]
 ) extends SeqFloat1NUShort(
-  CharBuffer.wrap(array)
+  CharBuffer.wrap(arry)
 ) with DataArray[Float1, NUShort] {
   def this() = this(new Array[Char](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NUShort(arry)
 
   def bindingType = RawType.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float(array(i)*fromNUShort)
-  def update(i: Int, v: Float) {
-    array(i) = iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
-  }
+  def apply(i: Int) :Float = float(arry(i)*fromNUShort)
+  def update(i: Int, v: Float) =
+    arry(i) = iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NUShort(arry: Array[Char])
+extends ArrayFloat1NUShort(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NUShort(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NUShort(
-  sharedBuffer.asCharBuffer()
-) with DataBuffer[Float1, NUShort] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: CharBuffer
+) extends SeqFloat1NUShort(buff) with DataBuffer[Float1, NUShort] {
+  def this() = this(alloc(0), alloc(0).asCharBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NUShort(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(buffer.get(i)*fromNUShort)
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
     iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
 }
 
 private[buffer] final class ViewFloat1NUShort(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: CharBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NUShort(
-  sharedBuffer.asCharBuffer()
-) with DataView[Float1, NUShort] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NUShort(sharedBuffer)
+) extends SeqFloat1NUShort(buff) with DataView[Float1, NUShort] {
+  def this() = this(alloc(0), alloc(0).asCharBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1NUShort(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NUShort(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(buffer.get(offset + i*stride)*fromNUShort)
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
     iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
@@ -656,55 +839,80 @@ private[buffer] sealed abstract class SeqFloat1SInt(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1SInt(new Array[Int](size))
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1SInt(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1SInt(allocateByteBuffer(size*4))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1SInt(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1SInt(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Int]) =
+    new ArrayFloat1SInt(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*4)
+    new BufferFloat1SInt(buff, buff.asIntBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1SInt(byteBuffer, byteBuffer.asIntBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1SInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1SInt(
-  override val array: Array[Int]
-) extends SeqFloat1SInt(IntBuffer.wrap(array)) with DataArray[Float1, SInt] {
+private[buffer] class ArrayFloat1SInt(
+  arry: Array[Int]
+) extends SeqFloat1SInt(IntBuffer.wrap(arry)) with DataArray[Float1, SInt] {
   def this() = this(new Array[Int](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1SInt(arry)
 
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = int(iround(v))
+  def apply(i: Int) :Float = arry(i)
+  def update(i: Int, v: Float) :Unit = arry(i) = iround(v)
+}
+
+private[buffer] final class ReadOnlyArrayFloat1SInt(arry: Array[Int])
+extends ArrayFloat1SInt(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1SInt(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1SInt(sharedBuffer.asIntBuffer()) with DataBuffer[Float1, SInt]{
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer
+) extends SeqFloat1SInt(buff) with DataBuffer[Float1, SInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1SInt(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, int(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(i, iround(v))
 }
 
 private[buffer] final class ViewFloat1SInt(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1SInt(sharedBuffer.asIntBuffer()) with DataView[Float1, SInt] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1SInt(sharedBuffer)
+) extends SeqFloat1SInt(buff) with DataView[Float1, SInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1SInt(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1SInt(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, int(iround(v)))
+  def update(i: Int, v: Float) :Unit = buffer.put(offset + i*stride, iround(v))
 }
 
 
@@ -717,58 +925,84 @@ private[buffer] sealed abstract class SeqFloat1UInt(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1UInt(new Array[Int](size))
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1UInt(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1UInt(allocateByteBuffer(size*4))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1UInt(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1UInt(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Int]) =
+    new ArrayFloat1UInt(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*4)
+    new BufferFloat1UInt(buff, buff.asIntBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1UInt(byteBuffer, byteBuffer.asIntBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1UInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1UInt(
-  override val array: Array[Int]
-) extends SeqFloat1UInt(IntBuffer.wrap(array)) with DataArray[Float1, UInt] {
+private[buffer] class ArrayFloat1UInt(
+  arry: Array[Int]
+) extends SeqFloat1UInt(IntBuffer.wrap(arry)) with DataArray[Float1, UInt] {
   def this() = this(new Array[Int](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1UInt(arry)
 
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = long(array(i)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) = array(i) = int(long(iround(v)) & 0xFFFFFFFFL)
+  def apply(i: Int) :Float = long(arry(i)) & 0xFFFFFFFFL
+  def update(i: Int, v: Float) :Unit =
+    arry(i) = int(long(iround(v)) & 0xFFFFFFFFL)
+}
+
+private[buffer] final class ReadOnlyArrayFloat1UInt(arry: Array[Int])
+extends ArrayFloat1UInt(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1UInt(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1UInt(sharedBuffer.asIntBuffer()) with DataBuffer[Float1, UInt]{
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer
+) extends SeqFloat1UInt(buff) with DataBuffer[Float1, UInt]{
+  def this() = this(alloc(0), alloc(0).asIntBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1UInt(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = long(buffer.get(i)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
     int(long(iround(v)) & 0xFFFFFFFFL)
   )
 }
 
 private[buffer] final class ViewFloat1UInt(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1UInt(sharedBuffer.asIntBuffer()) with DataView[Float1, UInt] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1UInt(sharedBuffer)
+) extends SeqFloat1UInt(buff) with DataView[Float1, UInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1UInt(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1UInt(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Float = long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
     int(long(iround(v)) & 0xFFFFFFFFL)
   )
@@ -784,41 +1018,61 @@ private[buffer] sealed abstract class SeqFloat1NSInt(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NSInt(new Array[Int](size))
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1NSInt(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NSInt(allocateByteBuffer(size*4))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NSInt(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NSInt(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Int]) =
+    new ArrayFloat1NSInt(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*4)
+    new BufferFloat1NSInt(buff, buff.asIntBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NSInt(byteBuffer, byteBuffer.asIntBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NSInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1NSInt(
-  override val array: Array[Int]
+private[buffer] class ArrayFloat1NSInt(
+  arry: Array[Int]
 ) extends SeqFloat1NSInt(
-  IntBuffer.wrap(array)
+  IntBuffer.wrap(arry)
 ) with DataArray[Float1, NSInt] {
   def this() = this(new Array[Int](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NSInt(arry)
 
   def bindingType = RawType.SInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = array(i)
+    val v = arry(i)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) = array(i) = int(iround(clamp(v, -1, 1)*toNSInt))
+  def update(i: Int, v: Float) :Unit =
+    arry(i) = iround(clamp(v, -1, 1)*toNSInt)
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NSInt(arry: Array[Int])
+extends ArrayFloat1NSInt(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NSInt(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NSInt(
-  sharedBuffer.asIntBuffer()
-) with DataBuffer[Float1, NSInt] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer
+) extends SeqFloat1NSInt(buff) with DataBuffer[Float1, NSInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NSInt(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.SInt
   def normalized: Boolean = true
@@ -827,21 +1081,23 @@ private[buffer] final class BufferFloat1NSInt(
     val v = buffer.get(i)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
-    int(iround(clamp(v, -1, 1)*toNSInt))
+    iround(clamp(v, -1, 1)*toNSInt)
   )
 }
 
 private[buffer] final class ViewFloat1NSInt(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NSInt(
-  sharedBuffer.asIntBuffer()
-) with DataView[Float1, NSInt] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NSInt(sharedBuffer)
+) extends SeqFloat1NSInt(buff) with DataView[Float1, NSInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1NSInt(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NSInt(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.SInt
   def normalized: Boolean = true
@@ -850,9 +1106,9 @@ private[buffer] final class ViewFloat1NSInt(
     val v = buffer.get(offset + i*stride)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
-    int(iround(clamp(v, -1, 1)*toNSInt))
+    iround(clamp(v, -1, 1)*toNSInt)
   )
 }
 
@@ -866,38 +1122,57 @@ private[buffer] sealed abstract class SeqFloat1NUInt(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1NUInt(new Array[Int](size))
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1NUInt(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1NUInt(allocateByteBuffer(size*4))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1NUInt(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1NUInt(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Int]) =
+    new ArrayFloat1NUInt(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*4)
+    new BufferFloat1NUInt(buff, buff.asIntBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1NUInt(byteBuffer, byteBuffer.asIntBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1NUInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+  }
 }
 
-private[buffer] final class ArrayFloat1NUInt(
-  override val array: Array[Int]
+private[buffer] class ArrayFloat1NUInt(
+  arry: Array[Int]
 ) extends SeqFloat1NUInt(
-  IntBuffer.wrap(array)
+  IntBuffer.wrap(arry)
 ) with DataArray[Float1, NUInt] {
   def this() = this(new Array[Int](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1NUInt(arry)
 
   def bindingType = RawType.UInt
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float((long(array(i)) & 0xFFFFFFFFL)*fromNUInt)
-  def update(i: Int, v: Float) = array(i) = int(iround(clamp(v, 0, 1)*toNUInt))
+  def apply(i: Int) :Float = float((long(arry(i)) & 0xFFFFFFFFL)*fromNUInt)
+  def update(i: Int, v: Float) :Unit = arry(i) = iround(clamp(v, 0, 1)*toNUInt)
+}
+
+private[buffer] final class ReadOnlyArrayFloat1NUInt(arry: Array[Int])
+extends ArrayFloat1NUInt(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1NUInt(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1NUInt(
-  sharedBuffer.asIntBuffer()
-) with DataBuffer[Float1, NUInt] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer
+) extends SeqFloat1NUInt(buff) with DataBuffer[Float1, NUInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1NUInt(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def bindingType = RawType.UInt
   def normalized: Boolean = true
@@ -905,21 +1180,23 @@ private[buffer] final class BufferFloat1NUInt(
   def apply(i: Int) :Float = float(
     (long(buffer.get(i)) & 0xFFFFFFFFL)*fromNUInt
   )
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     i,
-    int(iround(clamp(v, 0, 1)*toNUInt))
+    iround(clamp(v, 0, 1)*toNUInt)
   )
 }
 
 private[buffer] final class ViewFloat1NUInt(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: IntBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1NUInt(
-  sharedBuffer.asIntBuffer()
-) with DataView[Float1, NUInt] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1NUInt(sharedBuffer)
+) extends SeqFloat1NUInt(buff) with DataView[Float1, NUInt] {
+  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1NUInt(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1NUInt(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def bindingType = RawType.UInt
   def normalized: Boolean = true
@@ -927,9 +1204,9 @@ private[buffer] final class ViewFloat1NUInt(
   def apply(i: Int) :Float = float(
     (long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL)*fromNUInt
   )
-  def update(i: Int, v: Float) = buffer.put(
+  def update(i: Int, v: Float) :Unit = buffer.put(
     offset + i*stride,
-    int(iround(clamp(v, 0, 1)*toNUInt))
+    iround(clamp(v, 0, 1)*toNUInt)
   )
 }
 
@@ -943,61 +1220,87 @@ private[buffer] sealed abstract class SeqFloat1HalfFloat(
 
   final def mkDataArray(size: Int) =
     new ArrayFloat1HalfFloat(new Array[Short](size))
-  final def mkDataArray(array: Array[Short]) =
-    new ArrayFloat1HalfFloat(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1HalfFloat(allocateByteBuffer(size*2))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1HalfFloat(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1HalfFloat(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Short]) =
+    new ArrayFloat1HalfFloat(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*2)
+    new BufferFloat1HalfFloat(buff, buff.asShortBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1HalfFloat(byteBuffer, byteBuffer.asShortBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1HalfFloat(
+      byteBuffer, byteBuffer.asShortBuffer(), offset, stride
+    )
+  }
 }
 
-private[buffer] final class ArrayFloat1HalfFloat(
-  override val array: Array[Short]
+private[buffer] class ArrayFloat1HalfFloat(
+  arry: Array[Short]
 ) extends SeqFloat1HalfFloat(
-  ShortBuffer.wrap(array)
+  ShortBuffer.wrap(arry)
 ) with DataArray[Float1, HalfFloat] {
   def this() = this(new Array[Short](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1HalfFloat(arry)
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.HalfFloat
 
-  def apply(i: Int) :Float = fromHalfFloat(array(i))
-  def update(i: Int, v: Float) = array(i) = toHalfFloat(v)
+  def apply(i: Int) :Float = fromHalfFloat(arry(i))
+  def update(i: Int, v: Float) :Unit = arry(i) = toHalfFloat(v)
+}
+
+private[buffer] final class ReadOnlyArrayFloat1HalfFloat(arry: Array[Short])
+extends ArrayFloat1HalfFloat(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1HalfFloat(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1HalfFloat(
-  sharedBuffer.asShortBuffer()
-) with DataBuffer[Float1, HalfFloat] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer
+) extends SeqFloat1HalfFloat(buff) with DataBuffer[Float1, HalfFloat] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1HalfFloat(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(buffer.get(i))
-  def update(i: Int, v: Float) = buffer.put(i, toHalfFloat(v))
+  def update(i: Int, v: Float) :Unit = buffer.put(i, toHalfFloat(v))
 }
 
 private[buffer] final class ViewFloat1HalfFloat(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: ShortBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1HalfFloat(
-  sharedBuffer.asShortBuffer()
-) with DataView[Float1, HalfFloat] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1HalfFloat(sharedBuffer)
+) extends SeqFloat1HalfFloat(buff) with DataView[Float1, HalfFloat] {
+  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1HalfFloat(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1HalfFloat(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, toHalfFloat(v))
+  def update(i: Int, v: Float) :Unit = buffer.put(
+    offset + i*stride,
+    toHalfFloat(v)
+  )
 }
 
 
@@ -1010,59 +1313,82 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
   
   final def mkDataArray(size: Int) =
     new ArrayFloat1RawFloat(new Array[Float](size))
-  final def mkDataArray(array: Array[Float]) =
-    new ArrayFloat1RawFloat(array)
-  final def mkDataBuffer(size: Int) =
-    new BufferFloat1RawFloat(allocateByteBuffer(size*4))
-  final def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferFloat1RawFloat(byteBuffer)
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewFloat1RawFloat(byteBuffer, offset, stride)
+  final def mkDataArray(arry: Array[Float]) =
+    new ArrayFloat1RawFloat(arry)
+  final def mkDataBuffer(size: Int) = {
+    val buff = alloc(size*4)
+    new BufferFloat1RawFloat(buff, buff.asFloatBuffer())
+  }
+  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+    byteBuffer.clear()
+    new BufferFloat1RawFloat(byteBuffer, byteBuffer.asFloatBuffer())
+  }
+  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+    byteBuffer.clear()
+    new ViewFloat1RawFloat(
+      byteBuffer, byteBuffer.asFloatBuffer(), offset, stride
+    )
+  }
 }
 
-private[buffer] final class ArrayFloat1RawFloat(
-  override val array: Array[Float]
+private[buffer] class ArrayFloat1RawFloat(
+  arry: Array[Float]
 ) extends SeqFloat1RawFloat(
-  FloatBuffer.wrap(array)
+  FloatBuffer.wrap(arry)
 ) with DataArray[Float1, RawFloat] {
   def this() = this(new Array[Float](0))
+  private[buffer] override def arrayWrapper = new ProtectedWrapper(arry)
+  override def array = arry
   def backingSeq = this
+  def asReadOnly() = new ReadOnlyArrayFloat1RawFloat(arry)
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.RawFloat
 
-  def apply(i: Int) :Float = array(i)
-  def update(i: Int, v: Float) = array(i) = v
+  def apply(i: Int) :Float = arry(i)
+  def update(i: Int, v: Float) :Unit = arry(i) = v
+}
+
+private[buffer] final class ReadOnlyArrayFloat1RawFloat(arry: Array[Float])
+extends ArrayFloat1RawFloat(arry) {
+  override def array = null
+  override def update(i: Int, v: Float) :Unit =
+    throw new UnsupportedOperationException()
 }
 
 private[buffer] final class BufferFloat1RawFloat(
-  private[buffer] override val sharedBuffer: ByteBuffer
-) extends SeqFloat1RawFloat(
-  sharedBuffer.asFloatBuffer()
-) with DataBuffer[Float1, RawFloat] {
-  def this() = this(allocateByteBuffer(0))
+  sharedBuff: ByteBuffer,
+  buff: FloatBuffer
+) extends SeqFloat1RawFloat(buff) with DataBuffer[Float1, RawFloat] {
+  def this() = this(alloc(0), alloc(0).asFloatBuffer())
+  private[buffer] override def sharedWrapper = new ProtectedWrapper(sharedBuff)
   def backingSeq = this
+  def asReadOnly() = new BufferFloat1RawFloat(
+    sharedBuff, buffer.asReadOnlyBuffer()
+  )
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.RawFloat
 
   def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) = buffer.put(i, v)
+  def update(i: Int, v: Float) :Unit = buffer.put(i, v)
 }
 
 private[buffer] final class ViewFloat1RawFloat(
-  private[buffer] override val sharedBuffer: ByteBuffer,
+  sharedBuff: ByteBuffer,
+  buff: FloatBuffer,
   val offset: Int,
   override val stride: Int
-) extends SeqFloat1RawFloat(
-  sharedBuffer.asFloatBuffer()
-) with DataView[Float1, RawFloat] {
-  def this() = this(allocateByteBuffer(0), 0, 1)
-  val backingSeq = new BufferFloat1RawFloat(sharedBuffer)
+) extends SeqFloat1RawFloat(buff) with DataView[Float1, RawFloat] {
+  def this() = this(alloc(0), alloc(0).asFloatBuffer(), 0, 1)
+  val backingSeq = new BufferFloat1RawFloat(sharedBuff, buff)
+  def asReadOnly() = new ViewFloat1RawFloat(
+    sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
+  )
 
   def normalized: Boolean = false
   def bindingType: Int = RawType.RawFloat
 
   def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) = buffer.put(offset + i*stride, v)
+  def update(i: Int, v: Float) :Unit = buffer.put(offset + i*stride, v)
 }

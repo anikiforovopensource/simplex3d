@@ -71,14 +71,26 @@ private[buffer] abstract class BaseVec3i[+D <: ReadableInt](
 
 private[buffer] final class ArrayVec3i[+D <: ReadableInt](
   override val backingSeq: DataArray[Int1, D]
-) extends BaseVec3i[D](backingSeq) with DataArray[Vec3i, D]
+) extends BaseVec3i[D](backingSeq) with DataArray[Vec3i, D] {
+  def asReadOnly() = new ArrayVec3i(
+    backingSeq.asReadOnly().asInstanceOf[DataArray[Int1, D]]
+  )
+}
 
 private[buffer] final class BufferVec3i[+D <: ReadableInt](
   override val backingSeq: DataBuffer[Int1, D]
-) extends BaseVec3i[D](backingSeq) with DataBuffer[Vec3i, D]
+) extends BaseVec3i[D](backingSeq) with DataBuffer[Vec3i, D] {
+  def asReadOnly() = new BufferVec3i(
+    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, D]]
+  )
+}
 
 private[buffer] final class ViewVec3i[+D <: ReadableInt](
   override val backingSeq: DataBuffer[Int1, D],
   val offset: Int,
   override val stride: Int
-) extends BaseVec3i[D](backingSeq) with DataView[Vec3i, D]
+) extends BaseVec3i[D](backingSeq) with DataView[Vec3i, D] {
+  def asReadOnly() = new ViewVec3i(
+    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, D]], offset, stride
+  )
+}

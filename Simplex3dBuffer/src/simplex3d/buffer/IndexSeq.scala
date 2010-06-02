@@ -28,8 +28,10 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait IndexSeq[+D <: ReadableIndex]
-extends ContiguousSeq[Int1, D] {
+trait ReadOnlyIndexSeq[+D <: ReadableIndex]
+extends ReadOnlyContiguousSeq[Int1, D] {
+  def asReadOnly() :ReadOnlyIndexSeq[D]
+
   def mkIndexArray(size: Int) :IndexArray[D] =
     mkDataArray(size).asInstanceOf[IndexArray[D]]
   def mkIndexArray(array: D#ArrayType @uncheckedVariance) :IndexArray[D] =
@@ -45,11 +47,26 @@ extends ContiguousSeq[Int1, D] {
     super.copyAsDataBuffer().asInstanceOf[IndexBuffer[D]]
 }
 
+trait IndexSeq[+D <: ReadableIndex]
+extends ContiguousSeq[Int1, D] with ReadOnlyIndexSeq[D]
+
+
+trait ReadOnlyIndexArray[+D <: ReadableIndex]
+extends ReadOnlyIndexSeq[D] with ReadOnlyDataArray[Int1, D] {
+  def asReadOnly() :ReadOnlyIndexArray[D]
+}
+
 trait IndexArray[+D <: ReadableIndex]
-extends IndexSeq[D] with DataArray[Int1, D]
+extends IndexSeq[D] with DataArray[Int1, D] with ReadOnlyIndexArray[D]
+
+
+trait ReadOnlyIndexBuffer[+D <: ReadableIndex]
+extends ReadOnlyIndexSeq[D] with ReadOnlyDataBuffer[Int1, D] {
+  def asReadOnly() :ReadOnlyIndexBuffer[D]
+}
 
 trait IndexBuffer[+D <: ReadableIndex]
-extends IndexSeq[D] with DataBuffer[Int1, D]
+extends IndexSeq[D] with DataBuffer[Int1, D] with ReadOnlyIndexBuffer[D]
 
 
 object IndexArray {

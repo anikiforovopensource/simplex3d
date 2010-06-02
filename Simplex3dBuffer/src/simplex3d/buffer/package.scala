@@ -45,25 +45,24 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  @inline implicit final def arrayUByteDataToIndex(d: DataArray[Int1, UByte]) =
-    d.asInstanceOf[IndexArray[UByte]]
+  @inline implicit final def roArrayDataToIndex[D  <: ReadableIndex] (
+    d: ReadOnlyDataArray[Int1, D]
+  ) = d.asInstanceOf[ReadOnlyIndexArray[D]]
 
-  @inline implicit final def bufferUByteDataToIndex(d: DataBuffer[Int1, UByte])=
-    d.asInstanceOf[IndexBuffer[UByte]]
+  @inline implicit final def roBufferDataToIndex[D  <: ReadableIndex](
+    d: ReadOnlyDataBuffer[Int1, D]
+  ) = d.asInstanceOf[ReadOnlyIndexBuffer[D]]
 
-  @inline implicit final def arrayUShortDataToIndex(d: DataArray[Int1, UShort])=
-    d.asInstanceOf[IndexArray[UShort]]
+  
+  @inline implicit final def arrayDataToIndex[D  <: ReadableIndex](
+    d: DataArray[Int1, D]
+  ) = d.asInstanceOf[IndexArray[D]]
 
-  @inline implicit final def bufferUShortDataToIndex(d:DataBuffer[Int1,UShort])=
-    d.asInstanceOf[IndexBuffer[UShort]]
+  @inline implicit final def bufferDataToIndex[D  <: ReadableIndex](
+    d: DataBuffer[Int1, D]
+  ) = d.asInstanceOf[IndexBuffer[D]]
 
-  @inline implicit final def arrayUIntDataToIndex(d: DataArray[Int1, UInt]) =
-    d.asInstanceOf[IndexArray[UInt]]
-
-  @inline implicit final def bufferUIntDataToIndex(d: DataBuffer[Int1, UInt]) =
-    d.asInstanceOf[IndexBuffer[UInt]]
-
-
+  
   def allocateByteBuffer(size: Int) = {
     val direct = ByteBuffer.allocateDirect(size)
     direct.order(ByteOrder.nativeOrder())

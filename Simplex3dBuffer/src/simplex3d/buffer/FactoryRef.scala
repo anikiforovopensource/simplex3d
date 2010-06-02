@@ -26,25 +26,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyBaseSeq[T, T#Element, D]
-
-trait DataSeq[T <: ElemType, +D <: RawType]
-extends BaseSeq[T, T#Element, D] with ReadOnlyDataSeq[T, D]
-
-object DataSeq {
-  def apply[T <: ElemType, D <: ReadableType](
-    implicit ref: FactoryRef[T, D]
-  ) :DataSeq[T, D] = {
-    ref.factory
-  }
+abstract class FactoryRef[T <: ElemType, D <: RawType] {
+  def factory: DataSeq[T, D]
 }
 
-trait ReadOnlyContiguousSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataSeq[T, D] {
-  final val offset = 0
-  assert(stride == components)
-}
+class SimpleFactoryRef[T <: ElemType, D <: RawType](
+  val factory: DataSeq[T, D]
+) extends FactoryRef[T, D]
 
-trait ContiguousSeq[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ReadOnlyContiguousSeq[T, D]

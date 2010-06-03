@@ -42,7 +42,7 @@ object DataSeq {
 
 trait ReadOnlyContiguousSeq[T <: ElemType, +D <: RawType]
 extends ReadOnlyDataSeq[T, D] {
-  final val offset = 0
+  assert(offset == 0)
   assert(stride == components)
 }
 

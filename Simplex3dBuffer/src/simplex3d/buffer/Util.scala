@@ -26,13 +26,28 @@ import simplex3d.math._
 
 
 // An empty class to make -Xno-forwarders work
-private[buffer] class Copying
+private[buffer] class Util
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] object Copying {
+private[buffer] object Util {
+
+  final val eaByte = new Array[Byte](0)
+  final val eaChar = new Array[Char](0)
+  final val eaShort = new Array[Short](0)
+  final val eaInt = new Array[Int](0)
+  final val eaFloat = new Array[Float](0)
+  final val eaDouble = new Array[Double](0)
+
+  final val ebByte = ByteBuffer.wrap(eaByte)
+  final val ebChar = CharBuffer.wrap(eaChar)
+  final val ebShort = ShortBuffer.wrap(eaShort)
+  final val ebInt = IntBuffer.wrap(eaInt)
+  final val ebFloat = FloatBuffer.wrap(eaFloat)
+  final val ebDouble = DoubleBuffer.wrap(eaDouble)
+
   
   // ByteBuffer
   final def copyBuffer(

@@ -95,7 +95,7 @@ private[buffer] final class BufferVec2iSInt(
 
 private[buffer] final class ViewVec2iSInt(
   override val backingSeq: BufferInt1SInt,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec2i[SInt](backingSeq) with DataView[Vec2i, SInt] {
   def this() = this(new BufferInt1SInt, 0, 2)
@@ -196,7 +196,7 @@ private[buffer] final class BufferVec3iSInt(
 
 private[buffer] final class ViewVec3iSInt(
   override val backingSeq: BufferInt1SInt,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec3i[SInt](backingSeq) with DataView[Vec3i, SInt] {
   def this() = this(new BufferInt1SInt, 0, 3)
@@ -303,7 +303,7 @@ private[buffer] final class BufferVec4iSInt(
 
 private[buffer] final class ViewVec4iSInt(
   override val backingSeq: BufferInt1SInt,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec4i[SInt](backingSeq) with DataView[Vec4i, SInt] {
   def this() = this(new BufferInt1SInt, 0, 4)

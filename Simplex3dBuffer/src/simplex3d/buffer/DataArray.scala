@@ -20,6 +20,7 @@
 
 package simplex3d.buffer
 
+import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math._
 
@@ -29,17 +30,13 @@ import simplex3d.math._
  */
 trait ReadOnlyDataArray[T <: ElemType, +D <: RawType]
 extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
-  private[buffer] def arrayWrapper: ProtectedWrapper[
-    D#ArrayType @uncheckedVariance
-  ] = backingSeq.arrayWrapper
-  
   def backingSeq: ReadOnlyDataArray[T#Component, D]
   def asReadOnly() :ReadOnlyDataArray[T, D]
 
   final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
       case a: ReadOnlyDataArray[_, _] => 
-        arrayWrapper.unwrap eq a.arrayWrapper.unwrap
+        backingSeq.readArray eq a.backingSeq.readArray
       case _ =>
         false
     }
@@ -86,6 +83,6 @@ object DataArray {
   def apply[T <: ElemType, D <: ReadableType](da: ReadOnlyDataArray[_, D])(
     implicit ref: FactoryRef[T, D]
   ) :ReadOnlyDataArray[T, D] = {
-    ref.factory.mkDataArray(da.arrayWrapper.unwrap).asReadOnly()
+    ref.factory.mkDataArray(da.backingSeq.readArray).asReadOnly()
   }
 }

@@ -33,8 +33,9 @@ import simplex3d.math._
 private[buffer] abstract class ReadOnlyBaseSeq[
   T <: ElemType, @specialized(Int, Float, Double) E, +D <: RawType
 ] (
-  protected[buffer] final val buffer: D#BufferType
-) extends IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
+  private[buffer] final val buffer: D#BufferType
+) extends Protected[D#ArrayType @uncheckedVariance]
+with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
 
   if (stride <= 0)
     throw new IllegalArgumentException(
@@ -56,10 +57,20 @@ private[buffer] abstract class ReadOnlyBaseSeq[
   def asReadOnlyBuffer() :D#BufferType
   def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
 
-  final def bindingBuffer(offset: Int) = {
-    val buff = asReadOnlyBuffer()
-    buff.position(offset)
-    buff
+  private[buffer] val bindingBuffer: Buffer = {
+    buffer match {
+      case b: ByteBuffer => b.duplicate()
+      case b: CharBuffer => b.duplicate()
+      case b: ShortBuffer => b.duplicate()
+      case b: IntBuffer => b.duplicate()
+      case b: FloatBuffer => b.duplicate()
+      case b: DoubleBuffer => b.duplicate()
+    }
+  }
+  final def bindingBuffer(offset: Int) :Buffer = {
+    bindingBuffer.limit(bindingBuffer.capacity)
+    bindingBuffer.position(offset)
+    bindingBuffer
   }
 
   final override val size: Int =
@@ -68,17 +79,26 @@ private[buffer] abstract class ReadOnlyBaseSeq[
 
   def apply(i: Int) :E
 
+
+  private[buffer] def setReadArray(a: D#ArrayType @uncheckedVariance) {
+    readArray = a
+  }
+  private[buffer] def setSharedByteBuffer(b: ByteBuffer) {
+    sharedByteBuffer = b
+  }
+
   def mkDataArray(size: Int) :DataArray[T, D]
   def mkDataArray(array: D#ArrayType @uncheckedVariance) :DataArray[T, D]
   def mkDataBuffer(size: Int) :DataBuffer[T, D]
   def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
   def mkDataView(byteBuffer: ByteBuffer, offset: Int,stride: Int):DataView[T, D]
 
+  
   def components: Int
   def bindingType: Int
   def normalized: Boolean
 
-  def offset: Int
+  def offset: Int = 0
   def stride: Int = components
 
   def backingSeq: ReadOnlyContiguousSeq[T#Component, D]
@@ -318,7 +338,7 @@ private[buffer] abstract class BaseSeq[
     }
     else if (noConversion && group < 5) {
       (group: @switch) match {
-        case 0 => Copying.copyBuffer(
+        case 0 => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[ByteBuffer],
             destOffset,
@@ -328,7 +348,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 1 => Copying.copyBuffer(
+        case 1 => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[ShortBuffer],
             destOffset,
@@ -338,7 +358,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 2 => Copying.copyBuffer(
+        case 2 => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[CharBuffer],
             destOffset,
@@ -348,7 +368,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 3 => Copying.copyBuffer(
+        case 3 => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[IntBuffer],
             destOffset,
@@ -358,7 +378,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 4 => Copying.copyBuffer(
+        case 4 => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[ShortBuffer],
             destOffset,
@@ -372,7 +392,7 @@ private[buffer] abstract class BaseSeq[
     }
     else {
       componentManifest match {
-        case scala.reflect.ClassManifest.Int => Copying.copySeqInt(
+        case scala.reflect.ClassManifest.Int => Util.copySeqInt(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
@@ -382,7 +402,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case scala.reflect.ClassManifest.Float => Copying.copySeqFloat(
+        case scala.reflect.ClassManifest.Float => Util.copySeqFloat(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
@@ -392,7 +412,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case scala.reflect.ClassManifest.Double => Copying.copySeqDouble(
+        case scala.reflect.ClassManifest.Double => Util.copySeqDouble(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,
@@ -499,4 +519,6 @@ abstract class GenericSeq[T <: Composite, +D <: RawType](
   
   final def bindingType = backingSeq.bindingType
   final def normalized: Boolean = backingSeq.normalized
+
+  private[buffer] final override val bindingBuffer = backingSeq.bindingBuffer
 }

@@ -95,7 +95,7 @@ private[buffer] final class BufferVec2fRawFloat(
 
 private[buffer] final class ViewVec2fRawFloat(
   override val backingSeq: BufferFloat1RawFloat,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec2f[RawFloat](backingSeq) with DataView[Vec2f, RawFloat] {
   def this() = this(new BufferFloat1RawFloat, 0, 2)
@@ -198,7 +198,7 @@ private[buffer] final class BufferVec3fRawFloat(
 
 private[buffer] final class ViewVec3fRawFloat(
   override val backingSeq: BufferFloat1RawFloat,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec3f[RawFloat](backingSeq) with DataView[Vec3f, RawFloat] {
   def this() = this(new BufferFloat1RawFloat, 0, 3)
@@ -307,7 +307,7 @@ private[buffer] final class BufferVec4fNUByte(
 
 private[buffer] final class ViewVec4fNUByte(
   override val backingSeq: BufferFloat1NUByte,
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec4f[NUByte](backingSeq) with DataView[Vec4f, NUByte] {
   def this() = this(new BufferFloat1NUByte, 0, 4)

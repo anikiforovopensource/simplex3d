@@ -61,19 +61,19 @@ object DataBuffer {
     data
   }
 
-  def apply[T <: ElemType, D <: ReadableType](db: DataBuffer[_, D])(
+  def apply[T <: ElemType, D <: ReadableType](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[T, D]
   ) :DataBuffer[T, D] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The argument must not be read only."
     )
 
-    ref.factory.mkDataBuffer(db.sharedWrapper.unwrap)
+    ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](db: ReadOnlyDataBuffer[_, D])(
+  def apply[T <: ElemType, D <: ReadableType](db: ReadOnlyDataBuffer[_, _])(
     implicit ref: FactoryRef[T, D]
   ) :ReadOnlyDataBuffer[T, D] = {
-    ref.factory.mkDataBuffer(db.sharedWrapper.unwrap).asReadOnly()
+    ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer).asReadOnly()
   }
 }

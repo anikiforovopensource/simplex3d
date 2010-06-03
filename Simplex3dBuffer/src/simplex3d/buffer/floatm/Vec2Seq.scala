@@ -87,7 +87,7 @@ private[buffer] final class BufferVec2f[+D <: ReadableFloat](
 
 private[buffer] final class ViewVec2f[+D <: ReadableFloat](
   override val backingSeq: DataBuffer[Float1, D],
-  val offset: Int,
+  override val offset: Int,
   override val stride: Int
 ) extends BaseVec2f[D](backingSeq) with DataView[Vec2f, D] {
   def asReadOnly() = new ViewVec2f(

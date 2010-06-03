@@ -20,19 +20,14 @@
 
 package simplex3d.buffer;
 
+import java.nio.*;
+
 
 /** Prevents gaining access to read-only content.
- * 
+ *
  * @author Aleksey Nikiforov (lex)
  */
-final class ProtectedWrapper<T> {
-    private final T value;
-
-    public ProtectedWrapper(T value) {
-        this.value = value;
-    }
-
-    T unwrap() {
-        return value;
-    }
+class Protected<A> {
+    A readArray;
+    ByteBuffer sharedByteBuffer;
 }

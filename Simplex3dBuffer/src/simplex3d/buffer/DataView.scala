@@ -29,20 +29,6 @@ import simplex3d.math._
  */
 trait ReadOnlyDataView[T <: ElemType, +D <: RawType]
 extends ReadOnlyDataSeq[T, D] {
-  private[buffer] def sharedWrapper: ProtectedWrapper[ByteBuffer] =
-    backingSeq.sharedWrapper
-  
-  def backingSeq: ReadOnlyDataBuffer[T#Component, D]
-  def asReadOnly() :ReadOnlyDataView[T, D]
-
-  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
-    seq match {
-      case v: ReadOnlyDataView[_, _] =>
-        sharedWrapper.unwrap eq v.sharedWrapper.unwrap
-      case _ =>
-        false
-    }
-  }
 
   assert(buffer.position == 0)
   assert(buffer.limit == buffer.capacity)
@@ -51,6 +37,19 @@ extends ReadOnlyDataSeq[T, D] {
     throw new IllegalArgumentException(
       "The buffer must be direct."
     )
+
+  
+  def backingSeq: ReadOnlyDataBuffer[T#Component, D]
+  def asReadOnly() :ReadOnlyDataView[T, D]
+
+  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
+    seq match {
+      case v: ReadOnlyDataView[_, _] =>
+        backingSeq.sharedByteBuffer eq v.backingSeq.sharedByteBuffer
+      case _ =>
+        false
+    }
+  }
 }
 
 trait DataView[T <: ElemType, +D <: RawType]
@@ -71,18 +70,20 @@ object DataView {
   }
 
   def apply[T <: ElemType, D <: ReadableType](
-    db: DataBuffer[_, D], offset: Int, stride: Int
+    db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The argument must not be read only."
     )
 
-    ref.factory.mkDataView(db.sharedWrapper.unwrap, offset, stride)
+    ref.factory.mkDataView(db.backingSeq.sharedByteBuffer, offset, stride)
   }
 
   def apply[T <: ElemType, D <: ReadableType](
-    db: ReadOnlyDataBuffer[_, D], offset: Int, stride: Int
+    db: ReadOnlyDataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[T, D]) :ReadOnlyDataView[T, D] = {
-    ref.factory.mkDataView(db.sharedWrapper.unwrap, offset, stride).asReadOnly()
+    ref.factory.mkDataView(
+      db.backingSeq.sharedByteBuffer, offset, stride
+    ).asReadOnly()
   }
 }

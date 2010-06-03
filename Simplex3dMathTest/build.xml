@@ -115,7 +115,7 @@
     <property name="release.name" value="simplex3d-math-test"/>
     <property name="release.bin" value="${release.dir}/Simplex3dMathTest_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dMathTest_src.zip"/>
-    <property name="root.pkg" value="simplex3d/math"/>
+    <property name="root.pkg" value=""/>
 
     <target name="release-all" depends="release-clean, release-src, release-bin" />
 
@@ -123,19 +123,19 @@
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-bin" depends="init, clean, compile" >
+    <target name="release-bin" depends="init, clean, compile, jar" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
-        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.dir}/jars" />
 
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"/>
+        jarfile="${dist.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
         </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**"/>
-            <fileset dir="${dist.dir}" includes="*.jar"/>
+            <fileset dir="${dist.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING

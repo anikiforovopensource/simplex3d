@@ -212,6 +212,14 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
+  private def putIndexedSeq(
+    index: Int, seq: IndexedSeq[E], first: Int, count: Int
+  ) {
+    var i = 0; while (i < count) {
+      this(index + i) = seq(first + i)
+      i += 1
+    }
+  }
   private def putSeq(index: Int, seq: Seq[E], first: Int, count: Int) {
     var i = index
     val iter = seq.iterator
@@ -225,7 +233,7 @@ private[buffer] abstract class BaseSeq[
   final def put(index: Int, seq: Seq[T#Element], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
 
-    import scala.collection.mutable._
+    import scala.collection.mutable.{WrappedArray}
     import scala.reflect._
 
     seq match {
@@ -252,7 +260,14 @@ private[buffer] abstract class BaseSeq[
             )
         }
 
-      case _ => putSeq(index, seq.asInstanceOf[Seq[E]], first, count)
+      case is: IndexedSeq[_] =>
+        if (first + count > is.length)
+          throw new IndexOutOfBoundsException(
+            "Source sequence is not large enough."
+          )
+        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[E]], first, count)
+      case _ =>
+        putSeq(index, seq.asInstanceOf[Seq[E]], first, count)
     }
   }
 

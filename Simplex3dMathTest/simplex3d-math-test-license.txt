@@ -2,7 +2,7 @@ Unless stated otherwise, all the files in Simplex3dMathTest package have
 the following license:
 
 * Simplex3dMathTest
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * Simplex3dMathTest is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ the following license:
 visual.math.NoiseContribution has the following license:
 
  * Simplex3d, NoiseContributionTest
- * Copyright (C) 2010 Simplex3d Team
+ * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *

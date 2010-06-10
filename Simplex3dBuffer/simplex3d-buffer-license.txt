@@ -2,7 +2,7 @@ Unless stated otherwise, all the files in Simplex3dBuffer library have
 the following license:
 
  * Simplex3dBuffer
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * Simplex3dBuffer is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

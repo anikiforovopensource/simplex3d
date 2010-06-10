@@ -1,6 +1,6 @@
 /*
  * Simplex3d, IntBuffer module
- * Copyright (C) 2010 Simplex3d Team
+ * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBuffer.
  *

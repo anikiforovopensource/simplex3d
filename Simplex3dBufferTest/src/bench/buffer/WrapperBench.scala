@@ -1,6 +1,6 @@
 /*
  * Simplex3d, BufferTest package
- * Copyright (C) 2010 Simplex3d Team
+ * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBufferTest.
  *
@@ -74,9 +74,24 @@ class WrapperBenchTC {
     testArray(dataArray, loops)
     val arrayTime = System.currentTimeMillis - start
 
+
+//    start = System.currentTimeMillis
+//    testImplementedArray1(dataArray, loops)
+//    val implementedArray1Time = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testImplementedBuffer1(byteBuffer, loops)
+//    val implementedBuffer1Time = System.currentTimeMillis - start
+
+
+    // Array, RoArray and Buffer
     start = System.currentTimeMillis
     testImplementedArray(dataArray, loops)
     val implementedArrayTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testImplementedRoArray(dataArray, loops)
+    val implementedRoArrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedBuffer(byteBuffer, loops)
@@ -87,6 +102,10 @@ class WrapperBenchTC {
     val implementedArrayTime2 = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
+    testImplementedRoArray(dataArray, loops)
+    val implementedRoArrayTime2 = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
     testImplementedBuffer(byteBuffer, loops)
     val implementedBufferTime2 = System.currentTimeMillis - start
 
@@ -94,6 +113,8 @@ class WrapperBenchTC {
     testImplementedConversion(convertedBytes, loops)
     val implementedConversionTime = System.currentTimeMillis - start
 
+
+    // Choices
 //    start = System.currentTimeMillis
 //    testAbstractClassArray(dataArray, loops)
 //    val absClassArrTime = System.currentTimeMillis - start
@@ -122,18 +143,23 @@ class WrapperBenchTC {
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
 
+//    println("Implemented Array1 time: " + implementedArray1Time + ".")
+//    println("Implemented Buffer1 time: " + implementedBuffer1Time + ".")
+
+    println("Implemented Array time: " + implementedArrayTime + ".")
+    println("Implemented RoArray time: " + implementedRoArrayTime + ".")
+    println("Implemented Buffer time: " + implementedBufferTime + ".")
+    println("Implemented Array time: " + implementedArrayTime2 + ".")
+    println("Implemented RoArray time: " + implementedRoArrayTime2 + ".")
+    println("Implemented Buffer time: " + implementedBufferTime2 + ".")
+    println("Implemented Conversion time: " + implementedConversionTime + ".")
+
 //    println("Abstract class with Array time: " + absClassArrTime + ".")
 //    println("Generic class with Array time: " + genClassArrTime + ".")
 //    println("Generic Wrapper with Array time: " + genWrapperArrTime + ".")
 //    println("Abstract class with Buffer time: " + absClassBuffTime + ".")
 //    println("Abstract Interleaved with Buffer time: " + absInterleavedTime + ".")
 //    println("Generic class with Buffer time: " + genClassBufTime + ".")
-
-    println("Implemented Conversion time: " + implementedConversionTime + ".")
-    println("Implemented Array time: " + implementedArrayTime + ".")
-    println("Implemented Buffer time: " + implementedBufferTime + ".")
-    println("Implemented Array time: " + implementedArrayTime2 + ".")
-    println("Implemented Buffer time: " + implementedBufferTime2 + ".")
   }
 
   def testArray(data: Array[Float], loops: Int) {
@@ -311,9 +337,70 @@ class WrapperBenchTC {
   import simplex3d.buffer._
   import simplex3d.buffer.floatm._
 
+  def testImplementedArray1(data: Array[Float], loops: Int) {
+    var answer = 0
+    val seq = DataArray[Float1, RawFloat](data)
+    val end = seq.size
+    val step = 1
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < end) {
+
+        val v = seq(i)
+        answer += int(v + 7.9f)
+
+        i += step
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedBuffer1(data: ByteBuffer, loops: Int) {
+    var answer = 0
+    val seq = DataBuffer[Float1, RawFloat](data)
+    val end = seq.size
+    val step = 1
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < end) {
+
+        val v = seq(i)
+        answer += int(v + 7.9f)
+
+        i += step
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
   def testImplementedArray(data: Array[Float], loops: Int) {
     var answer = 0
     val seq = DataArray[Vec4f, RawFloat](data)
+    val end = seq.size
+    val step = 1
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < end) {
+
+        val v = seq(i)
+        val u = v * 7.9f
+        answer += int(u.x + u.y + u.z + u.w)
+
+        i += step
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testImplementedRoArray(data: Array[Float], loops: Int) {
+    var answer = 0
+    val seq = DataArray[Vec4f, RawFloat](data).asReadOnly
     val end = seq.size
     val step = 1
 
@@ -353,7 +440,7 @@ class WrapperBenchTC {
     println(answer)
   }
 
-  def testImplementedConversion(s: DataArray[Vec4f, NUByte], loops: Int) {
+  def testImplementedConversion(s: DataSeq[Vec4f, NUByte], loops: Int) {
     var answer = 0
     val seq = s
     val end = seq.size

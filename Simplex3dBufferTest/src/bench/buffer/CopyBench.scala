@@ -1,6 +1,6 @@
 /*
  * Simplex3d, BufferTest package
- * Copyright (C) 2010 Simplex3d Team
+ * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBufferTest.
  *
@@ -166,7 +166,7 @@ class CopyBenchTC {
     var answer = 0
     val size = data.capacity/4
     val offset = 2
-    val stride = 1
+    val stride = 2
     val dest = DataView[Float1, RawFloat](
       allocateByteBuffer(
         size*4*(stride + 1) + offset*4
@@ -189,7 +189,7 @@ class CopyBenchTC {
     var answer = 0
     val size = data.capacity/4
     val offset = 2
-    val stride = 1
+    val stride = 2
     val dest = DataView[Float1, UInt](
       allocateByteBuffer(
         size*4*(stride + 1) + offset*4
@@ -212,7 +212,7 @@ class CopyBenchTC {
     var answer = 0
     val size = data.capacity/4
     val offset = 2
-    val stride = 1
+    val stride = 2
     val dest = DataView[Float1, NUInt](
       allocateByteBuffer(
         size*4*(stride + 1) + offset*4
@@ -235,7 +235,7 @@ class CopyBenchTC {
     var answer = 0
     val size = data.capacity/4
     val offset = 2
-    val stride = 1
+    val stride = 2
     val dest = DataView[Float1, HalfFloat](
       allocateByteBuffer(
         size*4*(stride + 1) + offset*4

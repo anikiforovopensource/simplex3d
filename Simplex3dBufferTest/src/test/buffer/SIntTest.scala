@@ -24,6 +24,6 @@ package test.buffer
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class IndexTest {
+class SIntTest {
 
 }

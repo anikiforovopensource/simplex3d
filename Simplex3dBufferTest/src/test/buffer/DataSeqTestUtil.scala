@@ -1,5 +1,8 @@
- * Simplex3dBufferTest
- * Copyright (C) 2009-2010 Simplex3d Team
+/*
+ * Simplex3d, BufferTest package
+ * Copyright (C) 2010, Simplex3d Team
+ *
+ * This file is part of Simplex3dBufferTest.
  *
  * Simplex3dBufferTest is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,3 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package test.buffer
+
+
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+class DataSeqTestUtil {
+
+}

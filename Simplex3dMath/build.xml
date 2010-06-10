@@ -3,7 +3,7 @@
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
 <project xmlns:scalaProject1="http://www.netbeans.org/ns/scala-project/1"
-name="Simplex3dMath" default="default" basedir=".">
+name="Simplex3dMath" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dMath.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--

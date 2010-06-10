@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -1931,6 +1931,12 @@ object FloatMath {
   }
 
   // Projection
+  /**
+   * @param fieldOfView field of view angle in y direction, in radians.
+   * @param aspectRatio width/height aspect ratio.
+   * @param near the distance to the near clipping plane, must be positive.
+   * @param far the distance to the far clipping plane, must be positive.
+   */
   def perspectiveProj(
     fieldOfView: Float, aspectRatio: Float,
     near: Float, far: Float
@@ -1946,6 +1952,14 @@ object FloatMath {
     )
   }
 
+  /**
+   * @param left the coordinates of the left clipping plane.
+   * @param right the coordinates of the right clipping plane.
+   * @param bottom the coordinates of the bottom clipping plane.
+   * @param top the coordinates of the top clipping plane.
+   * @param near the distance to the near clipping plane, negative if the plane is behind the viewer.
+   * @param far the distance to the far clipping plane, negative if the plane is behind the viewer.
+   */
   def orthoProj(
     left: Float, right: Float,
     bottom: Float, top: Float,

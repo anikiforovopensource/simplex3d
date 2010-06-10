@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *

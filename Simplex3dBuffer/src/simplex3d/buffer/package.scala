@@ -45,15 +45,15 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  type roDataSeq[T <: ElemType, D <: RawType] = ReadOnlyDataSeq[T, D]
-  type roContiguousSeq[T <: ElemType, D <: RawType] =ReadOnlyContiguousSeq[T, D]
-  type roDataArray[T <: ElemType, D <: RawType] = ReadOnlyDataArray[T, D]
-  type roDataBuffer[T <: ElemType, D <: RawType] = ReadOnlyDataBuffer[T, D]
-  type roDataView[T <: ElemType, D <: RawType] = ReadOnlyDataView[T, D]
+  type roDataSeq[T <: ElemType, +D <: RawType] = ReadOnlyDataSeq[T, D]
+  type roContiguousSeq[T <: ElemType, +D <: RawType] =ReadOnlyContiguousSeq[T, D]
+  type roDataArray[T <: ElemType, +D <: RawType] = ReadOnlyDataArray[T, D]
+  type roDataBuffer[T <: ElemType, +D <: RawType] = ReadOnlyDataBuffer[T, D]
+  type roDataView[T <: ElemType, +D <: RawType] = ReadOnlyDataView[T, D]
 
-  type roIndexSeq[D <: ReadableIndex] = ReadOnlyIndexSeq[D]
-  type roIndexArray[D <: ReadableIndex] = ReadOnlyIndexArray[D]
-  type roIndexBuffer[D <: ReadableIndex] = ReadOnlyIndexBuffer[D]
+  type roIndexSeq[+D <: ReadableIndex] = ReadOnlyIndexSeq[D]
+  type roIndexArray[+D <: ReadableIndex] = ReadOnlyIndexArray[D]
+  type roIndexBuffer[+D <: ReadableIndex] = ReadOnlyIndexBuffer[D]
 
   @inline implicit final def roArrayDataToIndex[D  <: ReadableIndex] (
     d: ReadOnlyDataArray[Int1, D]

@@ -39,12 +39,12 @@ extends ReadOnlyDataSeq[T, D] {
     )
 
   
-  def backingSeq: ReadOnlyDataBuffer[T#Component, D]
-  def asReadOnly() :ReadOnlyDataView[T, D]
+  def backingSeq: roDataBuffer[T#Component, D]
+  def asReadOnly() :roDataView[T, D]
 
-  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case v: ReadOnlyDataView[_, _] =>
+      case v: roDataView[_, _] =>
         backingSeq.sharedByteBuffer eq v.backingSeq.sharedByteBuffer
       case _ =>
         false
@@ -80,8 +80,8 @@ object DataView {
   }
 
   def apply[T <: ElemType, D <: ReadableType](
-    db: ReadOnlyDataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[T, D]) :ReadOnlyDataView[T, D] = {
+    db: roDataBuffer[_, _], offset: Int, stride: Int
+  )(implicit ref: FactoryRef[T, D]) :roDataView[T, D] = {
     ref.factory.mkDataView(
       db.backingSeq.sharedByteBuffer, offset, stride
     ).asReadOnly()

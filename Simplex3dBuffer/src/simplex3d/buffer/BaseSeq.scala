@@ -55,7 +55,7 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
   final val byteStride = stride*bytesPerRawComponent
 
   def asReadOnlyBuffer() :D#BufferType
-  def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
+  def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
 
   private[buffer] val bindingBuffer: Buffer = {
     buffer match {
@@ -101,8 +101,8 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
   def offset: Int = 0
   def stride: Int = components
 
-  def backingSeq: ReadOnlyContiguousSeq[T#Component, D]
-  def asReadOnly() :ReadOnlyDataSeq[T, D]
+  def backingSeq: roContiguousSeq[T#Component, D]
+  def asReadOnly() :roDataSeq[T, D]
 
   final def copyAsDataArray() :DataArray[T, D] = {
     val copy = mkDataArray(size)
@@ -153,7 +153,7 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: E)
 
   def backingSeq: ContiguousSeq[T#Component, D]
-  def isReadOnly(): Boolean = buffer.isReadOnly
+  def isReadOnly(): Boolean = buffer.isReadOnly()
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
@@ -282,7 +282,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: ReadOnlyContiguousSeq[T#Component, _],
+    src: roContiguousSeq[T#Component, _],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
     def grp(binding: Int) = {
@@ -412,7 +412,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[ReadOnlyContiguousSeq[Int1, _]],
+            src.asInstanceOf[roContiguousSeq[Int1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -422,7 +422,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[ReadOnlyContiguousSeq[Float1, _]],
+            src.asInstanceOf[roContiguousSeq[Float1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -432,7 +432,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[ReadOnlyContiguousSeq[Double1, _]],
+            src.asInstanceOf[roContiguousSeq[Double1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -444,7 +444,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: ReadOnlyContiguousSeq[T#Component, _],
+    src: roContiguousSeq[T#Component, _],
     srcOffset: Int, count: Int
   ) {
     put(
@@ -458,7 +458,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: ReadOnlyContiguousSeq[T#Component, _]
+    src: roContiguousSeq[T#Component, _]
   ) {
     put(
       index,
@@ -470,7 +470,7 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(
-    src: ReadOnlyContiguousSeq[T#Component, _]
+    src: roContiguousSeq[T#Component, _]
   ) {
     put(
       0,
@@ -483,7 +483,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: ReadOnlyDataSeq[T, _],
+    src: roDataSeq[T, _],
     first: Int, count: Int
   ) {
     put(
@@ -497,7 +497,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: ReadOnlyDataSeq[T, _]
+    src: roDataSeq[T, _]
   ) {
     put(
       index,
@@ -509,7 +509,7 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(
-    src: ReadOnlyDataSeq[T, _]
+    src: roDataSeq[T, _]
   ) {
     put(
       0,

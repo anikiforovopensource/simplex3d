@@ -30,12 +30,12 @@ import simplex3d.math._
  */
 trait ReadOnlyDataArray[T <: ElemType, +D <: RawType]
 extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
-  def backingSeq: ReadOnlyDataArray[T#Component, D]
-  def asReadOnly() :ReadOnlyDataArray[T, D]
+  def backingSeq: roDataArray[T#Component, D]
+  def asReadOnly() :roDataArray[T, D]
 
-  final def sharesContent(seq: ReadOnlyDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case a: ReadOnlyDataArray[_, _] => 
+      case a: roDataArray[_, _] =>
         backingSeq.readArray eq a.backingSeq.readArray
       case _ =>
         false
@@ -80,7 +80,7 @@ object DataArray {
     ref.factory.mkDataArray(da.array)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](da: ReadOnlyDataArray[_, D])(
+  def apply[T <: ElemType, D <: ReadableType](da: roDataArray[_, D])(
     implicit ref: FactoryRef[T, D]
   ) :ReadOnlyDataArray[T, D] = {
     ref.factory.mkDataArray(da.backingSeq.readArray).asReadOnly()

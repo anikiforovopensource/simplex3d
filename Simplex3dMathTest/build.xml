@@ -79,7 +79,7 @@
             <attribute default="" name="sourcepath"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <scalac addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" jvmargs="-Xmx1024m" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
+                <scalac addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" jvmargs="-Xmx1200m" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
                     <classpath>
                         <path>
                             <pathelement path="@{classpath}"/>
@@ -126,20 +126,20 @@
     <target name="release-bin" depends="init, clean, compile, jar" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
-        <mkdir dir="${dist.dir}/jars" />
+        <mkdir dir="${release.dir}/jars" />
 
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/jars/${release.name}.jar">
+        jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
         </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**"/>
-            <fileset dir="${dist.dir}/jars" includes="*.jar"/>
+            <fileset dir="${release.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING
-                simplex3d-math-test-license.txt" />
+                simplex3d-math-test.license" />
         </zip>
     </target>
 
@@ -154,7 +154,7 @@
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING
-                simplex3d-math-test-license.txt
+                simplex3d-math-test.license
                 build.xml" />
         </zip>
     </target>

@@ -46,6 +46,18 @@ class Vec3bTest extends FunSuite {
     expect(false) { u.y }
     expect(false) { u.z }
 
+    u = ConstVec3b(true)
+    expect(classOf[ConstVec3b]) { u.getClass }
+    expect(true) { u.x }
+    expect(true) { u.y }
+    expect(true) { u.z }
+
+    u = ConstVec3b(false)
+    expect(classOf[ConstVec3b]) { u.getClass }
+    expect(false) { u.x }
+    expect(false) { u.y }
+    expect(false) { u.z }
+
     BooleanCombinations.test { (x, y, z, w) =>
       var u: AnyVec3b = Vec3b(x, y, z)
       expect(classOf[Vec3b]) { u.getClass }

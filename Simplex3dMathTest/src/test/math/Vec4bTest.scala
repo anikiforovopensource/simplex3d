@@ -48,6 +48,20 @@ class Vec4bTest extends FunSuite {
     expect(false) { u.z }
     expect(false) { u.w }
 
+    u = ConstVec4b(true)
+    expect(classOf[ConstVec4b]) { u.getClass }
+    expect(true) { u.x }
+    expect(true) { u.y }
+    expect(true) { u.z }
+    expect(true) { u.w }
+
+    u = ConstVec4b(false)
+    expect(classOf[ConstVec4b]) { u.getClass }
+    expect(false) { u.x }
+    expect(false) { u.y }
+    expect(false) { u.z }
+    expect(false) { u.w }
+
     u = Vec4b(Mat2f(1, 1, 1, 1))
     expect(true) { u.x }
     expect(true) { u.y }

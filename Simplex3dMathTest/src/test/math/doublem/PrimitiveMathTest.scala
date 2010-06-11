@@ -32,6 +32,12 @@ import simplex3d.math.doublem.renamed._
  */
 class PrimitiveMathTest extends FunSuite {
 
+  val M = Mat4x4f(
+    1, 2, 3, 4, 5, 6, 7, 8,
+    9, 10, 11, 12, 13, 14, 15, 16
+  )
+  val C = 7 + 1e-9
+
   test("doublem Primitive Math") {
     {
       val u = ConstVec2(7, 8)
@@ -566,6 +572,106 @@ class PrimitiveMathTest extends FunSuite {
 
       assert(Vec4(8, 9, 10, 11) == 2d + u)
       assert(Vec4(-4, -5, -6, -7) == 2d - u)
+    }
+
+    {
+      val q = ConstQuat4f(6, 7, 8, 9)
+
+      assert(C*Quat4(6, 7, 8, 9) == C*q)
+      assert(C/Quat4(6, 7, 8, 9) == C/q)
+
+      assert(C + Quat4(6, 7, 8, 9) == C + q)
+      assert(C - Quat4(6, 7, 8, 9) == C - q)
+    }
+
+    {
+      val m = ConstMat2x2f(M)
+
+      assert(C*Mat2x2(M) == C*m)
+      assert(C/Mat2x2(M) == C/m)
+
+      assert(C + Mat2x2(M) == C + m)
+      assert(C - Mat2x2(M) == C - m)
+    }
+
+    {
+      val m = ConstMat2x3f(M)
+
+      assert(C*Mat2x3(M) == C*m)
+      assert(C/Mat2x3(M) == C/m)
+
+      assert(C + Mat2x3(M) == C + m)
+      assert(C - Mat2x3(M) == C - m)
+    }
+
+    {
+      val m = ConstMat2x4f(M)
+
+      assert(C*Mat2x4(M) == C*m)
+      assert(C/Mat2x4(M) == C/m)
+
+      assert(C + Mat2x4(M) == C + m)
+      assert(C - Mat2x4(M) == C - m)
+    }
+
+    {
+      val m = ConstMat3x2f(M)
+
+      assert(C*Mat3x2(M) == C*m)
+      assert(C/Mat3x2(M) == C/m)
+
+      assert(C + Mat3x2(M) == C + m)
+      assert(C - Mat3x2(M) == C - m)
+    }
+
+    {
+      val m = ConstMat3x3f(M)
+
+      assert(C*Mat3x3(M) == C*m)
+      assert(C/Mat3x3(M) == C/m)
+
+      assert(C + Mat3x3(M) == C + m)
+      assert(C - Mat3x3(M) == C - m)
+    }
+
+    {
+      val m = ConstMat3x4f(M)
+
+      assert(C*Mat3x4(M) == C*m)
+      assert(C/Mat3x4(M) == C/m)
+
+      assert(C + Mat3x4(M) == C + m)
+      assert(C - Mat3x4(M) == C - m)
+    }
+
+    {
+      val m = ConstMat4x2f(M)
+
+      assert(C*Mat4x2(M) == C*m)
+      assert(C/Mat4x2(M) == C/m)
+
+      assert(C + Mat4x2(M) == C + m)
+      assert(C - Mat4x2(M) == C - m)
+    }
+
+    {
+      val m = ConstMat4x3f(M)
+
+      assert(C*Mat4x3(M) == C*m)
+      assert(C/Mat4x3(M) == C/m)
+
+      assert(C + Mat4x3(M) == C + m)
+      assert(C - Mat4x3(M) == C - m)
+    }
+
+    {
+      val m = ConstMat4x4f(M)
+
+      assert(C*Mat4x4(M) == C*m)
+      assert(C/Mat4x4(M) == C/m)
+
+      assert(C + Mat4x4(M) == C + m)
+      assert(C - Mat4x4(M) == C - m)
     }
   }
 }

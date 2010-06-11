@@ -45,6 +45,11 @@ class Vec2iTest extends FunSuite {
     expect(x) { u.x }
     expect(x) { u.y }
 
+    u = ConstVec2i(x)
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(x) { u.y }
+
     u = Vec2i(x, y)
     expect(classOf[Vec2i]) { u.getClass }
     expect(x) { u.x }

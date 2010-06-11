@@ -46,6 +46,12 @@ class Vec3iTest extends FunSuite {
     expect(x) { u.y }
     expect(x) { u.z }
 
+    u = ConstVec3i(x)
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(x) { u.y }
+    expect(x) { u.z }
+
     u = Vec3i(x, y, z)
     expect(classOf[Vec3i]) { u.getClass }
     expect(x) { u.x }

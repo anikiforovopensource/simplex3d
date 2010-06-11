@@ -125,30 +125,9 @@ sealed abstract class AnyVec3b extends Read3[Boolean] {
     }
   }
 
-  /** Component-based equality.
-   * <p>
-   *   Two vectors are equal if all of their components are equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if all the components are equal, false otherwise.
-   */
-  final def ==(u: inVec3b) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z
-  }
-
-  /** Component-based equality inverse.
-   * <p>
-   *   Two vectors are non-equal if any of their components are non-equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if any of the components are not equal, false otherwise.
-   */
-  final def !=(u: inVec3b) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec3b => this == u
+      case u: AnyVec3b => x == u.x && y == u.y && z == u.z
       case _ => false
     }
   }
@@ -208,6 +187,15 @@ final class ConstVec3b private[math] (
  */
 object ConstVec3b {
 
+  /** Makes a new instance of ConstVec3b with all the components initialized
+   * to the specified value.
+   *
+   * @param s value for all components.
+   * @return a new instance of ConstVec3b with all the components initialized
+   *         to the specified value.
+   */
+  def apply(s: Boolean) = new ConstVec3b(s, s, s)
+  
   /** Makes a new instance of ConstVec3b from the specified values.
    * @param x component x.
    * @param y component y.

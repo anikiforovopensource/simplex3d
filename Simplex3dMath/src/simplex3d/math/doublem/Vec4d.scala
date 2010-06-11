@@ -111,13 +111,6 @@ sealed abstract class AnyVec4d extends Read4[Double] {
   final def *(m: inMat4x3d) :Vec3d = m.transposeMul(this)
   final def *(m: inMat4d) :Vec4d = m.transposeMul(this)
 
-  final def ==(u: inVec4d) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z && w == u.w
-  }
-
-  final def !=(u: inVec4d) :Boolean = !(this == u)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
@@ -130,7 +123,8 @@ sealed abstract class AnyVec4d extends Read4[Double] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec4d => this == u
+      case u: AnyVec4b => false
+      case u: Read4[_] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
       case _ => false
     }
   }
@@ -157,6 +151,8 @@ final class ConstVec4d private[math] (
 ) extends AnyVec4d with Immutable
 
 object ConstVec4d {
+  def apply(s: Double) = new ConstVec4d(s, s, s, s)
+
   /* main factory */ def apply(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 

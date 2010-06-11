@@ -27,7 +27,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
+sealed abstract class AnyMat4x3f extends Read4x3[Float]
 {
   // Column major order.
   def m00: Float; def m10: Float; def m20: Float; def m30: Float // column
@@ -226,16 +226,6 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
     m02*u.x + m12*u.y + m22*u.z + m32*u.w
   )
 
-  final def ==(m: inMat4x3f) :Boolean = {
-    if (m eq null) false
-    else
-      m00 == m.m00 && m10 == m.m10 && m20 == m.m20 && m30 == m.m30 &&
-      m01 == m.m01 && m11 == m.m11 && m21 == m.m21 && m31 == m.m31 &&
-      m02 == m.m02 && m12 == m.m12 && m22 == m.m22 && m32 == m.m32
-  }
-
-  final def !=(m: inMat4x3f) :Boolean = !(this == m)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
@@ -259,8 +249,12 @@ sealed abstract class AnyMat4x3f extends Read4x3[ConstVec4f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: inMat4x3f => this == m
-      case _ => false
+      case m: Read4x3[_] =>
+        d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
+        d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
+        d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32
+      case _ =>
+        false
     }
   }
 

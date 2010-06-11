@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -27,7 +27,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
+sealed abstract class AnyMat4x2d extends Read4x2[Double]
 {
   // Column major order.
   def m00: Double; def m10: Double; def m20: Double; def m30: Double // column
@@ -196,15 +196,6 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
     m01*u.x + m11*u.y + m21*u.z + m31*u.w
   )
 
-  final def ==(m: inMat4x2d) :Boolean = {
-    if (m eq null) false
-    else
-      m00 == m.m00 && m10 == m.m10 && m20 == m.m20 && m30 == m.m30 &&
-      m01 == m.m01 && m11 == m.m11 && m21 == m.m21 && m31 == m.m31
-  }
-
-  final def !=(m: inMat4x2d) :Boolean = !(this == m)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
 
@@ -223,8 +214,11 @@ sealed abstract class AnyMat4x2d extends Read4x2[ConstVec4d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: inMat4x2d => this == m
-      case _ => false
+      case m: Read4x2[_] =>
+        d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
+        d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31
+      case _ =>
+        false
     }
   }
 
@@ -453,4 +447,5 @@ object Mat4x2d {
   def unapply(m: AnyMat4x2d) = Some((m(0), m(1)))
 
   implicit def toMutable(m: AnyMat4x2d) = Mat4x2d(m)
+  implicit def castFloat(m: Read4x2[Float]) = apply(m)
 }

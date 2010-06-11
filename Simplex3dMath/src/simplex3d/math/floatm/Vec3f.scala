@@ -101,13 +101,6 @@ sealed abstract class AnyVec3f extends Read3[Float] {
   final def *(m: inMat3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat3x4f) :Vec4f = m.transposeMul(this)
 
-  final def ==(u: inVec3f) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z
-  }
-
-  final def !=(u: inVec3f) :Boolean = !(this == u)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
     (
@@ -119,7 +112,8 @@ sealed abstract class AnyVec3f extends Read3[Float] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec3f => this == u
+      case u: AnyVec3b => false
+      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -143,6 +137,7 @@ final class ConstVec3f private[math] (val x: Float, val y: Float, val z: Float)
 extends AnyVec3f with Immutable
 
 object ConstVec3f {
+  def apply(s: Float) = new ConstVec3f(s, s, s)
   /* main factory */ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
 

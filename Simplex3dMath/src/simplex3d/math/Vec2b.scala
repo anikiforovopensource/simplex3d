@@ -109,30 +109,9 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
     }
   }
 
-  /** Component-based equality.
-   * <p>
-   *   Two vectors are equal if all of their components are equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if all the components are equal, false otherwise.
-   */
-  final def ==(u: inVec2b) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y
-  }
-
-  /** Component-based equality inverse.
-   * <p>
-   *   Two vectors are non-equal if any of their components are non-equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if any of the components are not equal, false otherwise.
-   */
-  final def !=(u: inVec2b) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec2b => this == u
+      case u: AnyVec2b => x == u.x && y == u.y
       case _ => false
     }
   }
@@ -188,6 +167,15 @@ extends AnyVec2b with Immutable
  */
 object ConstVec2b {
 
+  /** Makes a new instance of ConstVec2b with all the components initialized
+   * to the specified value.
+   *
+   * @param s value for all components.
+   * @return a new instance of ConstVec2b with all the components initialized
+   *         to the specified value.
+   */
+  def apply(s: Boolean) = new ConstVec2b(s, s)
+  
   /** Makes a new instance of ConstVec2b from the specified values.
    * @param x component x.
    * @param y component y.

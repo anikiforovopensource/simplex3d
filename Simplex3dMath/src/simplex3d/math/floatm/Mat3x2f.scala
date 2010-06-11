@@ -27,7 +27,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
+sealed abstract class AnyMat3x2f extends Read3x2[Float]
 {
   // Column major order.
   def m00: Float; def m10: Float; def m20: Float // column
@@ -180,15 +180,6 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
     m01*u.x + m11*u.y + m21*u.z
   )
 
-  final def ==(m: inMat3x2f) :Boolean = {
-    if (m eq null) false
-    else
-      m00 == m.m00 && m10 == m.m10 && m20 == m.m20 &&
-      m01 == m.m01 && m11 == m.m11 && m21 == m.m21
-  }
-
-  final def !=(m: inMat3x2f) :Boolean = !(this == m)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
@@ -205,8 +196,11 @@ sealed abstract class AnyMat3x2f extends Read3x2[ConstVec3f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: inMat3x2f => this == m
-      case _ => false
+      case m: Read3x2[_] =>
+        d00 == m.d00 && d10 == m.d10 && d20 == m.d20 &&
+        d01 == m.d01 && d11 == m.d11 && d21 == m.d21
+      case _ =>
+        false
     }
   }
 

@@ -94,33 +94,33 @@ name="Simplex3dMath" default="release-all" basedir=".">
     <target name="release-bin" depends="init, clean, compile, jar" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
-        <mkdir dir="${dist.dir}/jars" />
+        <mkdir dir="${release.dir}/jars" />
 
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/jars/${release.name}-core.jar">
+        jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
             excludes="${intm.pkg} ${floatm.pkg} ${doublem.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/jars/${release.name}-int.jar">
+        jarfile="${release.dir}/jars/${release.name}-int.jar">
             <fileset dir="${build.classes.dir}" includes="${intm.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/jars/${release.name}-float.jar">
+        jarfile="${release.dir}/jars/${release.name}-float.jar">
             <fileset dir="${build.classes.dir}" includes="${floatm.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${dist.dir}/jars/${release.name}-double.jar">
+        jarfile="${release.dir}/jars/${release.name}-double.jar">
             <fileset dir="${build.classes.dir}" includes="${doublem.pkg}"/>
         </jar>
 
         <zip destfile="${release.bin}">
-            <fileset dir="${dist.dir}/jars" includes="*.jar"/>
+            <fileset dir="${release.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING.LESSER
                 COPYING
-                simplex3d-math-license.txt" />
+                simplex3d-math.license" />
         </zip>
     </target>
 
@@ -135,7 +135,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
                 Readme.txt
                 COPYING.LESSER
                 COPYING
-                simplex3d-math-license.txt
+                simplex3d-math.license
                 build.xml" />
         </zip>
     </target>

@@ -101,14 +101,6 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
   final def rotateVector(u: inVec3d) :Vec3d = DoubleMath.rotate(u, normalize(this))
 
-
-  final def ==(q: inQuat4d) :Boolean = {
-    if (q eq null) false
-    else a == q.a && b == q.b && c == q.c && d == q.d
-  }
-
-  final def !=(q: inQuat4d) :Boolean = !(this == q)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
@@ -121,7 +113,7 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: inQuat4d => this == q
+      case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -226,4 +218,5 @@ object Quat4d {
   }
 
   implicit def toMutable(u: AnyQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
+  implicit def castFloat(q: ReadQ[Float]) = new Quat4d(q.da, q.db, q.dc, q.dd)
 }

@@ -101,13 +101,6 @@ sealed abstract class AnyVec3d extends Read3[Double] {
   final def *(m: inMat3d) :Vec3d = m.transposeMul(this)
   final def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
 
-  final def ==(u: inVec3d) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z
-  }
-
-  final def !=(u: inVec3d) :Boolean = !(this == u)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
     (
@@ -119,7 +112,8 @@ sealed abstract class AnyVec3d extends Read3[Double] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec3d => this == u
+      case u: AnyVec3b => false
+      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -144,6 +138,7 @@ final class ConstVec3d private[math] (
 ) extends AnyVec3d with Immutable
 
 object ConstVec3d {
+  def apply(s: Double) = new ConstVec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
 

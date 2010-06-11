@@ -122,16 +122,11 @@ sealed abstract class AnyVec4i extends Read4[Int] {
   final def |(u: inVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
   final def ^(u: inVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
 
-  final def ==(u: inVec4i) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z && w == u.w
-  }
-
-  final def !=(u: inVec4i) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec4i => this == u
+      case u: AnyVec4i => x == u.x && y == u.y && z == u.z && w == u.w
+      case u: AnyVec4b => false
+      case u: Read4[_] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
       case _ => false
     }
   }
@@ -159,6 +154,8 @@ final class ConstVec4i private[math] (
 ) extends AnyVec4i with Immutable
 
 object ConstVec4i {
+  def apply(s: Int) = new ConstVec4i(s, s, s, s)
+
   /* main factory */ def apply(x: Int, y: Int, z: Int, w: Int) =
     new ConstVec4i(x, y, z, w)
 

@@ -91,13 +91,6 @@ sealed abstract class AnyVec2f extends Read2[Float] {
   final def *(m: inMat2x3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat2x4f) :Vec4f = m.transposeMul(this)
 
-  final def ==(u: inVec2f) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y
-  }
-
-  final def !=(u: inVec2f) :Boolean = !(this == u)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
     (
@@ -108,7 +101,8 @@ sealed abstract class AnyVec2f extends Read2[Float] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec2f => this == u
+      case u: AnyVec2b => false
+      case u: Read2[_] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -130,6 +124,7 @@ final class ConstVec2f private[math] (val x: Float, val y: Float)
 extends AnyVec2f with Immutable
 
 object ConstVec2f {
+  def apply(s: Float) = new ConstVec2f(s, s)
   /* main factory */ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
   def apply(u: Read2[_]) = new ConstVec2f(u.fx, u.fy)
 

@@ -102,14 +102,6 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
   final def rotateVector(u: inVec3f) :Vec3f = FloatMath.rotate(u, normalize(this))
 
-
-  final def ==(q: inQuat4f) :Boolean = {
-    if (q eq null) false
-    else a == q.a && b == q.b && c == q.c && d == q.d
-  }
-
-  final def !=(q: inQuat4f) :Boolean = !(this == q)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
     (
@@ -122,7 +114,7 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: inQuat4f => this == q
+      case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }

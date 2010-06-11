@@ -27,7 +27,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
+sealed abstract class AnyMat2x4f extends Read2x4[Float]
 {
   // Column major order.
   def m00: Float; def m10: Float // column
@@ -212,17 +212,6 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
     m03*u.x + m13*u.y
   )
 
-  final def ==(m: inMat2x4f) :Boolean = {
-    if (m eq null) false
-    else
-      m00 == m.m00 && m10 == m.m10 &&
-      m01 == m.m01 && m11 == m.m11 &&
-      m02 == m.m02 && m12 == m.m12 &&
-      m03 == m.m03 && m13 == m.m13
-  }
-
-  final def !=(m: inMat2x4f) :Boolean = !(this == m)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 
@@ -243,8 +232,13 @@ sealed abstract class AnyMat2x4f extends Read2x4[ConstVec2f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: inMat2x4f => this == m
-      case _ => false
+      case m: Read2x4[_] =>
+        d00 == m.d00 && d10 == m.d10 &&
+        d01 == m.d01 && d11 == m.d11 &&
+        d02 == m.d02 && d12 == m.d12 &&
+        d03 == m.d03 && d13 == m.d13
+      case _ =>
+        false
     }
   }
 

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009 Simplex3d Team
+ * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -27,7 +27,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
+sealed abstract class AnyMat2x3d extends Read2x3[Double]
 {
   // Column major order.
   def m00: Double; def m10: Double // column
@@ -228,16 +228,6 @@ sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
 
   final def invert() :Mat2x3d = inverse(this)
 
-  final def ==(m: inMat2x3d) :Boolean = {
-    if (m eq null) false
-    else
-      m00 == m.m00 && m10 == m.m10 &&
-      m01 == m.m01 && m11 == m.m11 &&
-      m02 == m.m02 && m12 == m.m12
-  }
-
-  final def !=(m: inMat2x3d) :Boolean = !(this == m)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
 
@@ -255,8 +245,12 @@ sealed abstract class AnyMat2x3d extends Read2x3[ConstVec2d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: inMat2x3d => this == m
-      case _ => false
+      case m: Read2x3[_] =>
+        d00 == m.d00 && d10 == m.d10 &&
+        d01 == m.d01 && d11 == m.d11 &&
+        d02 == m.d02 && d12 == m.d12
+      case _ =>
+        false
     }
   }
 
@@ -507,4 +501,5 @@ object Mat2x3d {
   def concatenate(m: inMat2d) :Mat2x3d = Mat2x3d(m)
 
   implicit def toMutable(m: AnyMat2x3d) = Mat2x3d(m)
+  implicit def castFloat(m: Read2x3[Float]) = apply(m)
 }

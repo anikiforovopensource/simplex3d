@@ -141,30 +141,9 @@ sealed abstract class AnyVec4b extends Read4[Boolean] {
     }
   }
 
-  /** Component-based equality.
-   * <p>
-   *   Two vectors are equal if all of their components are equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if all the components are equal, false otherwise.
-   */
-  final def ==(u: inVec4b) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z && w == u.w
-  }
-
-  /** Component-based equality inverse.
-   * <p>
-   *   Two vectors are non-equal if any of their components are non-equal.
-   * </p>
-   * @param u a vector for comparision.
-   * @return true if any of the components are not equal, false otherwise.
-   */
-  final def !=(u: inVec4b) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec4b => this == u
+      case u: AnyVec4b => x == u.x && y == u.y && z == u.z && w == u.w
       case _ => false
     }
   }
@@ -225,6 +204,15 @@ final class ConstVec4b private[math] (
  */
 object ConstVec4b {
 
+  /** Makes a new instance of ConstVec4b with all the components initialized
+   * to the specified value.
+   *
+   * @param s value for all components.
+   * @return a new instance of ConstVec4b with all the components initialized
+   *         to the specified value.
+   */
+  def apply(s: Boolean) = new ConstVec4b(s, s, s, s)
+  
   /** Makes a new instance of ConstVec4b from the specified values.
    * @param x component x.
    * @param y component y.
@@ -792,8 +780,7 @@ object Vec4b {
    * @return a new instance of Vec4b with all the components initialized
    *         to the specified value.
    */
-  def apply(s: Boolean) =
-    new Vec4b(s, s, s, s)
+  def apply(s: Boolean) = new Vec4b(s, s, s, s)
 
   /** Makes a new instance of Vec4b from the specified values.
    * @param x component x.

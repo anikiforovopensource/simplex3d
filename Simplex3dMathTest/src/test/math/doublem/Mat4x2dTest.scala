@@ -355,6 +355,13 @@ class Mat4x2dTest extends FunSuite {
       t(c, r) = -1
       assert(t != n)
     }
+
+    assert(m == Mat4x2f(M))
+    for (r <- 0 until 4; c <- 0 until 2) {
+      val t = Mat4x2f(M)
+      t(c, r) = -1
+      assert(m != t)
+    }
   }
 
   test("Indexed read") {

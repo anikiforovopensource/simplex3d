@@ -125,7 +125,17 @@ class Vec2bTest extends FunSuite {
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec2b(x, y))
+      c = ConstVec2b(ConstVec2b(x, y))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec3b(x, y, z))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec4b(x, y, z, w))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -135,12 +145,42 @@ class Vec2bTest extends FunSuite {
       expect(x) { c.x }
       expect(y) { c.y }
 
+      c = ConstVec2b(Vec3i(int(x), int(y), int(z)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec4i(int(x), int(y), int(z), int(w)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
       c = ConstVec2b(Vec2f(float(x), float(y)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
+      c = ConstVec2b(Vec3f(float(x), float(y), float(z)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec4f(float(x), float(y), float(z), float(w)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
       c = ConstVec2b(Vec2d(double(x), double(y)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec3d(double(x), double(y), double(z)))
+      expect(classOf[ConstVec2b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+
+      c = ConstVec2b(Vec4d(double(x), double(y), double(z), double(w)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -193,6 +233,10 @@ class Vec2bTest extends FunSuite {
 
       assert(Vec2b(x, y) != Vec2b(!x, y))
       assert(Vec2b(x, y) != Vec2b(x, !y))
+
+      assert(Vec2b(x, y) != Vec2i(int(x), int(y)))
+      assert(Vec2b(x, y) != Vec2f(float(x), float(y)))
+      assert(Vec2b(x, y) != Vec2d(double(x), double(y)))
     }
   }
 

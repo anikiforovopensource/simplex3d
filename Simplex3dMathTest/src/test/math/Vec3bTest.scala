@@ -167,7 +167,49 @@ class Vec3bTest extends FunSuite {
       expect(y) { c.y }
       expect(z) { c.z }
 
+      c = ConstVec3b(ConstVec3b(x, y, z))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(x, Vec2b(y, z))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec2b(x, y), z)
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec4b(x, y, z, w))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
       c = ConstVec3b(Vec3i(int(x), int(y), int(z)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(x, Vec2i(int(y), int(z)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec2i(int(x), int(y)), z)
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec4i(int(x), int(y), int(z), int(w)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -179,7 +221,43 @@ class Vec3bTest extends FunSuite {
       expect(y) { c.y }
       expect(z) { c.z }
 
+      c = ConstVec3b(x, Vec2f(float(y), float(z)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec2f(float(x), float(y)), z)
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec4f(float(x), float(y), float(z), float(w)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
       c = ConstVec3b(Vec3d(double(x), double(y), double(z)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(x, Vec2d(double(y), double(z)))
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec2d(double(x), double(y)), z)
+      expect(classOf[ConstVec3b]) { c.getClass }
+      expect(x) { c.x }
+      expect(y) { c.y }
+      expect(z) { c.z }
+
+      c = ConstVec3b(Vec4d(double(x), double(y), double(z), double(w)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -236,6 +314,10 @@ class Vec3bTest extends FunSuite {
       assert(Vec3b(x, y, z) != Vec3b(!x, y, z))
       assert(Vec3b(x, y, z) != Vec3b(x, !y, z))
       assert(Vec3b(x, y, z) != Vec3b(x, y, !z))
+
+      assert(Vec3b(x, y, z) != Vec3i(int(x), int(y), int(z)))
+      assert(Vec3b(x, y, z) != Vec3f(float(x), float(y), float(z)))
+      assert(Vec3b(x, y, z) != Vec3d(double(x), double(y), double(z)))
     }
   }
 

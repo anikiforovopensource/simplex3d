@@ -61,7 +61,7 @@ class NanFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         if (getNan(i) > 0) answer += 1
@@ -79,7 +79,7 @@ class NanFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         if (isnan(getNan(i))) answer += 3

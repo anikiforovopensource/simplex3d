@@ -63,7 +63,7 @@ class FloorFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(StrictMath.floor((-i + 0.12345f)*100)/23.4567f)
@@ -80,7 +80,7 @@ class FloorFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(floorOpt((-i + 0.12345f)*100)/23.4567f)
@@ -125,7 +125,7 @@ class FloorDouble {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(StrictMath.floor((-i + 0.12345)*100)/23.4567)
@@ -142,7 +142,7 @@ class FloorDouble {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(floorOpt((-i + 0.12345)*100)/23.4567)

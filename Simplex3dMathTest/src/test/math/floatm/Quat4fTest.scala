@@ -93,7 +93,21 @@ class Quat4fTest extends FunSuite {
     expect(cf) { p.c }
     expect(df) { p.d }
 
+    p = ConstQuat4(Vec4(bf, cf, df, af))
+    expect(classOf[ConstQuat4]) { p.getClass }
+    expect(af) { p.a }
+    expect(bf) { p.b }
+    expect(cf) { p.c }
+    expect(df) { p.d }
+
     p = ConstQuat4(Quat4d(ad, bd, cd, dd))
+    expect(classOf[ConstQuat4]) { p.getClass }
+    expect(float(ad)) { p.a }
+    expect(float(bd)) { p.b }
+    expect(float(cd)) { p.c }
+    expect(float(dd)) { p.d }
+
+    p = ConstQuat4(Vec4d(bd, cd, dd, ad))
     expect(classOf[ConstQuat4]) { p.getClass }
     expect(float(ad)) { p.a }
     expect(float(bd)) { p.b }
@@ -152,6 +166,12 @@ class Quat4fTest extends FunSuite {
     assert(Quat4(1, 2, 3, 4) != Quat4(1, 9, 3, 4))
     assert(Quat4(1, 2, 3, 4) != Quat4(1, 2, 9, 4))
     assert(Quat4(1, 2, 3, 4) != Quat4(1, 2, 3, 9))
+
+    assert(Quat4(1, 2, 3, 4) == Quat4d(1, 2, 3, 4))
+    assert(Quat4(1, 2, 3, 4) != Quat4d(9, 2, 3, 4))
+    assert(Quat4(1, 2, 3, 4) != Quat4d(1, 9, 3, 4))
+    assert(Quat4(1, 2, 3, 4) != Quat4d(1, 2, 9, 4))
+    assert(Quat4(1, 2, 3, 4) != Quat4d(1, 2, 3, 9))
   }
 
   test("Indexed read") {

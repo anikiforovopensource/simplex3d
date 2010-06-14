@@ -61,6 +61,16 @@ class Mat2x2dTest extends FunSuite {
     expect((d00, 0)) { (m.m00, m.m10) }
     expect((0, d00)) { (m.m01, m.m11) }
 
+    m = Mat2x2(Vec4(d00, d10, d01, d11))
+    expect(classOf[Mat2x2]) { m.getClass }
+    expect((d00, d10)) { (m.m00, m.m10) }
+    expect((d01, d11)) { (m.m01, m.m11) }
+
+    m = Mat2x2(Vec4f(f00, f10, f01, f11))
+    expect(classOf[Mat2x2]) { m.getClass }
+    expect((f00, f10)) { (m.m00, m.m10) }
+    expect((f01, f11)) { (m.m01, m.m11) }
+
     m = Mat2x2(
       d00, d10,
       d01, d11
@@ -354,6 +364,13 @@ class Mat2x2dTest extends FunSuite {
       val t = Mat2x2(n)
       t(c, r) = -1
       assert(t != n)
+    }
+
+    assert(m == Mat2x2f(M))
+    for (r <- 0 until 2; c <- 0 until 2) {
+      val t = Mat2x2f(M)
+      t(c, r) = -1
+      assert(m != t)
     }
   }
 

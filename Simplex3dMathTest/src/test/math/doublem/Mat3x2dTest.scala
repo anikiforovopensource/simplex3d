@@ -355,6 +355,13 @@ class Mat3x2dTest extends FunSuite {
       t(c, r) = -1
       assert(t != n)
     }
+
+    assert(m == Mat3x2f(M))
+    for (r <- 0 until 3; c <- 0 until 2) {
+      val t = Mat3x2f(M)
+      t(c, r) = -1
+      assert(m != t)
+    }
   }
 
   test("Indexed read") {

@@ -68,7 +68,7 @@ class ModFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(modReg(-i*123 + 0.1234f, -i + 0.2345f))
@@ -85,7 +85,7 @@ class ModFloat {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      var i = 0; while (i < length - 1) {
+      var i = 0; while (i < length) {
 
         // Bench code
         answer += int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))

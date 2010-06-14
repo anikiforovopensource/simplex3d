@@ -100,25 +100,55 @@ class Vec2iTest extends FunSuite {
     expect(x) { u.x }
     expect(y) { u.y }
 
-    var c: AnyVec2i = ConstVec2i(x, y)
-    expect(classOf[ConstVec2i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
+    u = ConstVec2i(x, y)
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
 
-    c = ConstVec2i(Vec2i(int(x), int(y)))
-    expect(classOf[ConstVec2i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
+    u = ConstVec2i(ConstVec2i(int(x), int(y)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
 
-    c = ConstVec2i(Vec2f(float(x), float(y)))
-    expect(classOf[ConstVec2i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
+    u = ConstVec2i(Vec3i(int(x), int(y), int(z)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
 
-    c = ConstVec2i(Vec2d(double(x), double(y)))
-    expect(classOf[ConstVec2i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
+    u = ConstVec2i(Vec4i(int(x), int(y), int(z), int(w)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec2f(float(x), float(y)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec3f(float(x), float(y), float(z)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec4f(float(x), float(y), float(z), float(w)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec2d(double(x), double(y)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec3d(double(x), double(y), double(z)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+
+    u = ConstVec2i(Vec4d(double(x), double(y), double(z), double(w)))
+    expect(classOf[ConstVec2i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
   }
 
   test("Boolean factories") {
@@ -192,6 +222,16 @@ class Vec2iTest extends FunSuite {
 
     assert(Vec2i(1, 2) != Vec2i(9, 2))
     assert(Vec2i(1, 2) != Vec2i(1, 9))
+
+    assert(Vec2i(0) != Vec2b(false))
+
+    assert(Vec2i(1, 2) == Vec2f(1, 2))
+    assert(Vec2i(1, 2) != Vec2f(9, 2))
+    assert(Vec2i(1, 2) != Vec2f(1, 9))
+
+    assert(Vec2i(1, 2) == Vec2d(1, 2))
+    assert(Vec2i(1, 2) != Vec2d(9, 2))
+    assert(Vec2i(1, 2) != Vec2d(1, 9))
   }
 
   test("Indexed read") {

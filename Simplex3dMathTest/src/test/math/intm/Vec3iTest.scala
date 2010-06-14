@@ -130,29 +130,83 @@ class Vec3iTest extends FunSuite {
     expect(y) { u.y }
     expect(z) { u.z }
 
-    var c: AnyVec3i = ConstVec3i(x, y, z)
-    expect(classOf[ConstVec3i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
-    expect(z) { c.z }
+    u = ConstVec3i(x, y, z)
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
 
-    c = ConstVec3i(Vec3i(int(x), int(y), int(z)))
-    expect(classOf[ConstVec3i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
-    expect(z) { c.z }
+    u = ConstVec3i(ConstVec3i(int(x), int(y), int(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
 
-    c = ConstVec3i(Vec3f(float(x), float(y), float(z)))
-    expect(classOf[ConstVec3i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
-    expect(z) { c.z }
+    u = ConstVec3i(x, Vec2i(int(y), int(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
 
-    c = ConstVec3i(Vec3d(double(x), double(y), double(z)))
-    expect(classOf[ConstVec3i]) { c.getClass }
-    expect(x) { c.x }
-    expect(y) { c.y }
-    expect(z) { c.z }
+    u = ConstVec3i(Vec2i(int(x), int(y)), z)
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec4i(int(x), int(y), int(z), int(w)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec3f(float(x), float(y), float(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(x, Vec2f(float(y), float(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec2f(float(x), float(y)), z)
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec4f(float(x), float(y), float(z), float(w)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec3d(double(x), double(y), double(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(x, Vec2d(double(y), double(z)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec2d(double(x), double(y)), z)
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
+
+    u = ConstVec3i(Vec4d(double(x), double(y), double(z), double(w)))
+    expect(classOf[ConstVec3i]) { u.getClass }
+    expect(x) { u.x }
+    expect(y) { u.y }
+    expect(z) { u.z }
   }
 
   test("Boolean factories") {
@@ -238,6 +292,18 @@ class Vec3iTest extends FunSuite {
     assert(Vec3i(1, 2, 3) != Vec3i(9, 2, 3))
     assert(Vec3i(1, 2, 3) != Vec3i(1, 9, 3))
     assert(Vec3i(1, 2, 3) != Vec3i(1, 2, 9))
+
+    assert(Vec3i(0) != Vec3b(false))
+
+    assert(Vec3i(1, 2, 3) == Vec3f(1, 2, 3))
+    assert(Vec3i(1, 2, 3) != Vec3f(9, 2, 3))
+    assert(Vec3i(1, 2, 3) != Vec3f(1, 9, 3))
+    assert(Vec3i(1, 2, 3) != Vec3f(1, 2, 9))
+
+    assert(Vec3i(1, 2, 3) == Vec3d(1, 2, 3))
+    assert(Vec3i(1, 2, 3) != Vec3d(9, 2, 3))
+    assert(Vec3i(1, 2, 3) != Vec3d(1, 9, 3))
+    assert(Vec3i(1, 2, 3) != Vec3d(1, 2, 9))
   }
 
   test("Indexed read") {

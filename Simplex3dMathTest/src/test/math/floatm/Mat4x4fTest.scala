@@ -439,6 +439,13 @@ class Mat4x4fTest extends FunSuite {
       t(c, r) = -1
       assert(t != n)
     }
+
+    assert(m == Mat4x4d(M))
+    for (r <- 0 until 4; c <- 0 until 4) {
+      val t = Mat4x4d(M)
+      t(c, r) = -1
+      assert(m != t)
+    }
   }
 
   test("Indexed read") {

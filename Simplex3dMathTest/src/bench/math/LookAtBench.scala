@@ -42,8 +42,8 @@ class LookAtTC {
     var start = 0L
 
     start = System.currentTimeMillis
-    testRegular(len, loops)
-    val regularTime = System.currentTimeMillis - start
+    testBasic(len, loops)
+    val basicTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testInlined(len, loops)
@@ -53,12 +53,12 @@ class LookAtTC {
     testImplemented(len, loops)
     val implementedTime = System.currentTimeMillis - start
 
-    println("Regular time: " + regularTime + ".")
+    println("Basic time: " + basicTime + ".")
     println("Inlined time: " + inlinedTime + ".")
     println("Implemented time: " + implementedTime + ".")
   }
 
-  final def lookAtRegular(direction: inVec3, up: inVec3) :Mat3 = {
+  final def lookAtBasic(direction: inVec3, up: inVec3) :Mat3 = {
     val zaxis = normalize(direction)
     val xaxis = normalize(cross(up, zaxis))
     val yaxis = cross(zaxis, xaxis)
@@ -119,7 +119,7 @@ class LookAtTC {
     println(answer)
   }
 
-  final def testRegular(length: Int, loops: Int) {
+  final def testBasic(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
@@ -127,7 +127,7 @@ class LookAtTC {
 
         // Bench code
         val dir = Vec3(i, i + 1, i + 2)
-        val m = lookAtRegular(dir, Vec3.UnitY)
+        val m = lookAtBasic(dir, Vec3.UnitY)
         answer += int(
           m.m00 + m.m01 + m.m02 +
           m.m10 + m.m11 + m.m12 +

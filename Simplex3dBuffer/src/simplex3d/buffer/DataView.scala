@@ -53,7 +53,7 @@ extends ReadOnlyDataSeq[T, D] {
 }
 
 trait DataView[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ReadOnlyDataView[T, D]{
+extends DataSeq[T, D] with ReadOnlyDataView[T, D] {
   def backingSeq: DataBuffer[T#Component, D]
 }
 

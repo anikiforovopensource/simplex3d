@@ -65,15 +65,15 @@ sealed trait ReadableIndex extends ReadableInt with Unsigned
 sealed trait ReadableFloat extends ReadableType
 sealed trait ReadableDouble extends ReadableType
 
-sealed trait IntegerType extends RawType
+sealed trait Integral extends RawType
 
-sealed trait Signed extends IntegerType
-sealed trait Unsigned extends IntegerType
-sealed trait Normalized extends IntegerType
-sealed trait NonNormalized extends IntegerType
+sealed trait Signed extends Integral
+sealed trait Unsigned extends Integral
+sealed trait Normalized extends Integral
+sealed trait NonNormalized extends Integral
 
 
-sealed trait RawByte extends IntegerType {
+sealed trait RawByte extends Integral {
   type ArrayType = Array[Byte]
   type BufferType = ByteBuffer
 }
@@ -91,7 +91,7 @@ sealed trait NUByte extends RawByte with Unsigned with Normalized
 with ReadableFloat with ReadableDouble
 
 
-sealed trait RawShort extends IntegerType
+sealed trait RawShort extends Integral
 
 sealed trait SShort extends RawShort with Signed with NonNormalized
 with ReadableInt with ReadableFloat with ReadableDouble {
@@ -118,7 +118,7 @@ with ReadableFloat with ReadableDouble {
 }
 
 
-sealed trait RawInt extends IntegerType {
+sealed trait RawInt extends Integral {
   type ArrayType = Array[Int]
   type BufferType = IntBuffer
 }
@@ -136,21 +136,21 @@ sealed trait NUInt extends RawInt with Unsigned with Normalized
 with ReadableFloat with ReadableDouble
 
 
-sealed trait FloatingPointType extends RawType
+sealed trait Fractional extends RawType
 
-sealed trait HalfFloat extends FloatingPointType
+sealed trait HalfFloat extends Fractional
 with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
-sealed trait RawFloat extends FloatingPointType
+sealed trait RawFloat extends Fractional
 with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Float]
   type BufferType = FloatBuffer
 }
 
-sealed trait RawDouble extends FloatingPointType
+sealed trait RawDouble extends Fractional
 with ReadableDouble {
   type ArrayType = Array[Double]
   type BufferType = DoubleBuffer

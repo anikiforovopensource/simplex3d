@@ -158,6 +158,30 @@ object ConstVec4f {
 
   def apply(u: Read4[_]) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
+  def apply(xy: Read2[_], z: Float, w: Float) =
+    new ConstVec4f(xy.fx, xy.fy, z, w)
+
+  def apply(x: Float, yz: Read2[_], w: Float) =
+    new ConstVec4f(x, yz.fx, yz.fy, w)
+
+  def apply(x: Float, y: Float, zw: Read2[_]) =
+    new ConstVec4f(x, y, zw.fx, zw.fy)
+
+  def apply(xy: Read2[_], zw: Read2[_]) =
+    new ConstVec4f(xy.fx, xy.fy, zw.fx, zw.fy)
+
+  def apply(xyz: Read3[_], w: Float) =
+    new ConstVec4f(xyz.fx, xyz.fy, xyz.fz, w)
+
+  def apply(x: Float, yzw: Read3[_]) =
+    new ConstVec4f(x, yzw.fx, yzw.fy, yzw.fz)
+
+  def apply(m: Read2x2[_]) =
+    new ConstVec4f(m.f00, m.f10, m.f01, m.f11)
+
+  def apply(q: ReadQ[_]) =
+    new ConstVec4f(q.fb, q.fc, q.fd, q.fa)
+
   implicit def toConst(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
 }
 
@@ -639,6 +663,9 @@ object Vec4f {
 
   def apply(m: Read2x2[_]) =
     new Vec4f(m.f00, m.f10, m.f01, m.f11)
+
+  def apply(q: ReadQ[_]) =
+    new Vec4f(q.fb, q.fc, q.fd, q.fa)
 
   def unapply(u: AnyVec4f) = Some((u.x, u.y, u.z, u.w))
 

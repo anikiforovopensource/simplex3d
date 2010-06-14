@@ -275,7 +275,6 @@ final class ConstMat3d private[math] (
 ) extends AnyMat3d with Immutable
 
 object ConstMat3d {
-
   def apply(s: Double) = new ConstMat3d(
     s, 0, 0,
     0, s, 0,
@@ -450,7 +449,6 @@ final class Mat3d private[math] (
 }
 
 object Mat3d {
-
   val Zero = ConstMat3d(0)
   val Identity = ConstMat3d(1)
 

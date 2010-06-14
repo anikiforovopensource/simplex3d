@@ -235,7 +235,6 @@ final class ConstMat3x2f private[math] (
 ) extends AnyMat3x2f with Immutable
 
 object ConstMat3x2f {
-
   def apply(s: Float) = new ConstMat3x2f(
     s, 0, 0,
     0, s, 0
@@ -380,7 +379,6 @@ final class Mat3x2f private[math] (
 }
 
 object Mat3x2f {
-
   val Zero = ConstMat3x2f(0)
   val Identity = ConstMat3x2f(1)
 

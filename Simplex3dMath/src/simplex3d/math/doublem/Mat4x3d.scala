@@ -303,7 +303,6 @@ final class ConstMat4x3d private[math] (
 ) extends AnyMat4x3d with Immutable
 
 object ConstMat4x3d {
-
   def apply(s: Double) = new ConstMat4x3d(
     s, 0, 0, 0,
     0, s, 0, 0,
@@ -495,7 +494,6 @@ final class Mat4x3d private[math] (
 }
 
 object Mat4x3d {
-
   val Zero = ConstMat4x3d(0)
   val Identity = ConstMat4x3d(1)
 

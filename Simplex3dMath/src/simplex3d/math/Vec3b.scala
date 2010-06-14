@@ -209,9 +209,40 @@ object ConstVec3b {
   /** Makes a new instance of ConstVec3b from a 3-dimensional vector.
    * @param u any 3-dimensional vector.
    * @return a new instance of ConstVec3b with components initialized
-   *         to the components of u casted as Boolean.
+   *         to the components of u converted to Boolean.
    */
   def apply(u: Read3[_]) = new ConstVec3b(u.bx, u.by, u.bz)
+
+  /** Makes a new instance of ConstVec3b from the first three components
+   * of a 4-dimensional vector.
+   *
+   * @param u any 4-dimensional vector.
+   * @return a new instance of ConstVec3b with components initialized
+   *         to the first three components of u converted to Boolean.
+   */
+  def apply(u: Read4[_]) = new ConstVec3b(u.bx, u.by, u.bz)
+
+  /** Makes a new instance of ConstVec3b from values extracted from the specified
+   * arguments.
+   *
+   * @param xy components x and y as any 2-dimentional vector.
+   * @param z component z.
+   * @return a new instance of ConstVec3b with components initialized
+   *         to x and y components of xy converted to Boolean
+   *         and the specified value z.
+   */
+  def apply(xy: Read2[_], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
+
+  /** Makes a new instance of ConstVec3b from values extracted from the specified
+   * arguments.
+   *
+   * @param x component x.
+   * @param yz components y and z as any 2-dimentional vector.
+   * @return a new instance of ConstVec3b with components initialized
+   *         to the specified value x
+   *         and x and y components of yz converted to Boolean.
+   */
+  def apply(x: Boolean, yz: Read2[_]) = new ConstVec3b(x, yz.bx, yz.by)
 
   implicit def toConst(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 }
@@ -459,7 +490,7 @@ object Vec3b {
   /** Makes a new instance of Vec3b from a 3-dimensional vector.
    * @param u any 3-dimensional vector.
    * @return a new instance of Vec3b with components initialized
-   *         to the components of u casted as Boolean.
+   *         to the components of u converted to Boolean.
    */
   def apply(u: Read3[_]) = new Vec3b(u.bx, u.by, u.bz)
 
@@ -468,7 +499,7 @@ object Vec3b {
    *
    * @param u any 4-dimensional vector.
    * @return a new instance of Vec3b with components initialized
-   *         to the first three components of u casted as Boolean.
+   *         to the first three components of u converted to Boolean.
    */
   def apply(u: Read4[_]) = new Vec3b(u.bx, u.by, u.bz)
 
@@ -478,7 +509,7 @@ object Vec3b {
    * @param xy components x and y as any 2-dimentional vector.
    * @param z component z.
    * @return a new instance of Vec3b with components initialized
-   *         to x and y components of xy casted as Boolean
+   *         to x and y components of xy converted to Boolean
    *         and the specified value z.
    */
   def apply(xy: Read2[_], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
@@ -490,7 +521,7 @@ object Vec3b {
    * @param yz components y and z as any 2-dimentional vector.
    * @return a new instance of Vec3b with components initialized
    *         to the specified value x
-   *         and x and y components of yz casted as Boolean.
+   *         and x and y components of yz converted to Boolean.
    */
   def apply(x: Boolean, yz: Read2[_]) = new Vec3b(x, yz.bx, yz.by)
 

@@ -141,6 +141,9 @@ object ConstVec3d {
   def apply(s: Double) = new ConstVec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(u: Read4[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(xy: Read2[_], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
+  def apply(x: Double, yz: Read2[_]) = new ConstVec3d(x, yz.dx, yz.dy)
 
   implicit def toConst(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
 }

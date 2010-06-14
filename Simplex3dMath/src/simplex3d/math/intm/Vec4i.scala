@@ -161,6 +161,30 @@ object ConstVec4i {
 
   def apply(u: Read4[_]) = new ConstVec4i(u.ix, u.iy, u.iz, u.iw)
 
+  def apply(xy: Read2[_], z: Int, w: Int) =
+    new ConstVec4i(xy.ix, xy.iy, z, w)
+
+  def apply(x: Int, yz: Read2[_], w: Int) =
+    new ConstVec4i(x, yz.ix, yz.iy, w)
+
+  def apply(x: Int, y: Int, zw: Read2[_]) =
+    new ConstVec4i(x, y, zw.ix, zw.iy)
+
+  def apply(xy: Read2[_], zw: Read2[_]) =
+    new ConstVec4i(xy.ix, xy.iy, zw.ix, zw.iy)
+
+  def apply(xyz: Read3[_], w: Int) =
+    new ConstVec4i(xyz.ix, xyz.iy, xyz.iz, w)
+
+  def apply(x: Int, yzw: Read3[_]) =
+    new ConstVec4i(x, yzw.ix, yzw.iy, yzw.iz)
+
+  def apply(m: Read2x2[_]) =
+    new ConstVec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
+
+  def apply(q: ReadQ[_]) =
+    new ConstVec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
+
   implicit def toConst(u: AnyVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
 }
 
@@ -655,6 +679,9 @@ object Vec4i {
 
   def apply(m: Read2x2[_]) =
     new Vec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
+
+  def apply(q: ReadQ[_]) =
+    new Vec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
 
   def unapply(u: AnyVec4i) = Some((u.x, u.y, u.z, u.w))
 

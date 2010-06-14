@@ -104,16 +104,11 @@ sealed abstract class AnyVec2i extends Read2[Int] {
   final def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
   final def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
-  final def ==(u: inVec2i) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y
-  }
-
-  final def !=(u: inVec2i) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec2i => this == u
+      case u: AnyVec2i => x == u.x && y == u.y
+      case u: AnyVec2b => false
+      case u: Read2[_] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -134,8 +129,11 @@ final class ConstVec2i private[math] (val x: Int, val y: Int)
 extends AnyVec2i with Immutable
 
 object ConstVec2i {
+  def apply(s: Int) = new ConstVec2i(s, s)
   /* main factory */ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
   def apply(u: Read2[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: Read3[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: Read4[_]) = new ConstVec2i(u.ix, u.iy)
 
   implicit def toConst(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
 }

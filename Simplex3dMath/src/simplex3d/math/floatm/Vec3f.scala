@@ -140,6 +140,9 @@ object ConstVec3f {
   def apply(s: Float) = new ConstVec3f(s, s, s)
   /* main factory */ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(u: Read4[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(xy: Read2[_], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
+  def apply(x: Float, yz: Read2[_]) = new ConstVec3f(x, yz.fx, yz.fy)
 
   implicit def toConst(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
 }

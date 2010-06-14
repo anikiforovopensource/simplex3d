@@ -349,7 +349,6 @@ final class ConstMat4d private[math] (
 ) extends AnyMat4d with Immutable
 
 object ConstMat4d {
-
   def apply(s: Double) = new ConstMat4d(
     s, 0, 0, 0,
     0, s, 0, 0,
@@ -574,7 +573,6 @@ final class Mat4d private[math] (
 }
 
 object Mat4d {
-
   val Zero = ConstMat4d(0)
   val Identity = ConstMat4d(1)
 

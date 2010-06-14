@@ -1892,13 +1892,33 @@ object DoubleMath {
   }
 
   def lookAt(direction: inVec3d, up: inVec3d) :Mat3d = {
-    val zaxis = normalize(direction)
-    val xaxis = normalize(cross(up, zaxis))
-    val yaxis = cross(zaxis, xaxis)
+    // zaxis = normalize(direction)
+    val dirinvlen = inversesqrt(lengthSquare(direction))
+    val zax = direction.x*dirinvlen
+    val zay = direction.y*dirinvlen
+    val zaz = direction.z*dirinvlen
+
+    // xaxis = cross(up, zaxis)
+    var xax = up.y*zaz - zay*up.z
+    var xay = up.z*zax - zaz*up.x
+    var xaz = up.x*zay - zax*up.y
+
+    // xaxis = normalize(xaxis)
+    val invlen = inversesqrt(xax*xax + xay*xay + xaz*xaz)
+    xax *= invlen
+    xay *= invlen
+    xaz *= invlen
+
+    // yaxis = cross(zaxis, xaxis)
+    val yax = zay*xaz - xay*zaz
+    val yay = zaz*xax - xaz*zax
+    val yaz = zax*xay - xax*zay
+
+    // Mat3x3(xaxis, yaxis, zaxis)
     new Mat3d(
-      xaxis.x, xaxis.y, xaxis.z,
-      yaxis.x, yaxis.y, yaxis.z,
-      zaxis.x, zaxis.y, zaxis.z
+      xax, xay, xaz,
+      yax, yay, yaz,
+      zax, zay, zaz
     )
   }
 

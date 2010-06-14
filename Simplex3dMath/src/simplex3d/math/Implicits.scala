@@ -24,25 +24,25 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait StateSelector
+private[math] sealed trait StateSelector
 
 /** <code>On</code> is a subtrait of <code>StateSelector</code>,
  * it is used to enable implicits.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait On extends StateSelector
+private[math] sealed trait On extends StateSelector
 
 /** <code>Off</code> is a subtrait of <code>StateSelector</code>,
  * it is used to disable implicits.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Off extends On
+private[math] sealed trait Off extends On
 
 /** <code>Implicits</code> is a mix-in trait to enable or disable implicits
  * by setting the type perameter to On or Off.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Implicits[+Enabled <: StateSelector]
+private[math] trait Implicits[+Enabled <: StateSelector]

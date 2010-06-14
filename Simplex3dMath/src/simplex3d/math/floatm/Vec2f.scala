@@ -127,6 +127,8 @@ object ConstVec2f {
   def apply(s: Float) = new ConstVec2f(s, s)
   /* main factory */ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
   def apply(u: Read2[_]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: Read3[_]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: Read4[_]) = new ConstVec2f(u.fx, u.fy)
 
   implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 }

@@ -112,16 +112,11 @@ sealed abstract class AnyVec3i extends Read3[Int] {
   final def |(u: inVec3i) = new Vec3i( x | u.x, y | u.y, z | u.z)
   final def ^(u: inVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
 
-  final def ==(u: inVec3i) :Boolean = {
-    if (u eq null) false
-    else x == u.x && y == u.y && z == u.z
-  }
-
-  final def !=(u: inVec3i) :Boolean = !(this == u)
-
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: inVec3i => this == u
+      case u: AnyVec3i => x == u.x && y == u.y && z == u.z
+      case u: AnyVec3b => false
+      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -145,8 +140,12 @@ final class ConstVec3i private[math] (val x: Int, val y: Int, val z: Int)
 extends AnyVec3i with Immutable
 
 object ConstVec3i {
+  def apply(s: Int) = new ConstVec3i(s, s, s)
   /* main factory */ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
   def apply(u: Read3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(u: Read4[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(xy: Read2[_], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
+  def apply(x: Int, yz: Read2[_]) = new ConstVec3i(x, yz.ix, yz.iy)
 
   implicit def toConst(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
 }

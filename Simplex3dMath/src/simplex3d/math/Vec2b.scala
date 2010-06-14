@@ -187,9 +187,27 @@ object ConstVec2b {
   /** Makes a new instance of ConstVec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.
    * @return a new instance of ConstVec2b with components initialized
-   *         to the components of u casted as Boolean.
+   *         to the components of u converted to Boolean.
    */
   def apply(u: Read2[_]) = new ConstVec2b(u.bx, u.by)
+
+  /** Makes a new instance of ConstVec2b from the first two components
+   * of a 3-dimensional vector.
+   *
+   * @param u any 3-dimensional vector.
+   * @return a new instance of ConstVec2b with components initialized
+   *         to the first two components of u converted to Boolean.
+   */
+  def apply(u: Read3[_]) = new ConstVec2b(u.bx, u.by)
+
+  /** Makes a new instance of ConstVec2b from the first two components
+   * of a 4-dimensional vector.
+   *
+   * @param u any 4-dimensional vector.
+   * @return a new instance of ConstVec2b with components initialized
+   *         to the first two components of u converted to Boolean.
+   */
+  def apply(u: Read4[_]) = new ConstVec2b(u.bx, u.by)
   
   implicit def toConst(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
 }
@@ -347,7 +365,7 @@ object Vec2b {
   /** Makes a new instance of Vec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.
    * @return a new instance of Vec2b with components initialized
-   *         to the components of u casted as Boolean.
+   *         to the components of u converted to Boolean.
    */
   def apply(u: Read2[_]) = new Vec2b(u.bx, u.by)
 
@@ -356,7 +374,7 @@ object Vec2b {
    *
    * @param u any 3-dimensional vector.
    * @return a new instance of Vec2b with components initialized
-   *         to the first two components of u casted as Boolean.
+   *         to the first two components of u converted to Boolean.
    */
   def apply(u: Read3[_]) = new Vec2b(u.bx, u.by)
   
@@ -365,7 +383,7 @@ object Vec2b {
    *
    * @param u any 4-dimensional vector.
    * @return a new instance of Vec2b with components initialized
-   *         to the first two components of u casted as Boolean.
+   *         to the first two components of u converted to Boolean.
    */
   def apply(u: Read4[_]) = new Vec2b(u.bx, u.by)
 

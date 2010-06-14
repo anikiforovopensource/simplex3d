@@ -213,7 +213,6 @@ final class ConstMat2d private[math] (
 ) extends AnyMat2d with Immutable
 
 object ConstMat2d {
-
   def apply(s: Double) = new ConstMat2d(
     s, 0,
     0, s
@@ -231,6 +230,11 @@ object ConstMat2d {
   new ConstMat2d(
     c0.dx, c0.dy,
     c1.dx, c1.dy
+  )
+
+  def apply(u: Read4[_]) = new ConstMat2d(
+    u.dx, u.dy,
+    u.dz, u.dw
   )
 
   def apply(m: ReadMat[_]) = new ConstMat2d(
@@ -344,7 +348,6 @@ final class Mat2d private[math] (
 }
 
 object Mat2d {
-
   val Zero = ConstMat2d(0)
   val Identity = ConstMat2d(1)
 
@@ -365,6 +368,11 @@ object Mat2d {
   new Mat2d(
     c0.dx, c0.dy,
     c1.dx, c1.dy
+  )
+
+  def apply(u: Read4[_]) = new Mat2d(
+    u.dx, u.dy,
+    u.dz, u.dw
   )
 
   def apply(m: ReadMat[_]) = new Mat2d(

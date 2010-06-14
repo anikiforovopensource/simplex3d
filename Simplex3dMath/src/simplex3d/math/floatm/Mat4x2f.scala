@@ -257,7 +257,6 @@ final class ConstMat4x2f private[math] (
 ) extends AnyMat4x2f with Immutable
 
 object ConstMat4x2f {
-
   def apply(s: Float) = new ConstMat4x2f(
     s, 0, 0, 0,
     0, s, 0, 0
@@ -416,7 +415,6 @@ final class Mat4x2f private[math] (
 }
 
 object Mat4x2f {
-
   val Zero = ConstMat4x2f(0)
   val Identity = ConstMat4x2f(1)
 

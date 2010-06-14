@@ -144,6 +144,7 @@ object ConstQuat4d {
     new ConstQuat4d(a, b, c, d)
 
   def apply(u: ReadQ[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
+  def apply(u: Read4[_]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
 
   implicit def toConst(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }

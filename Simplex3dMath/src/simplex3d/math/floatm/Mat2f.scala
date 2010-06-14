@@ -213,7 +213,6 @@ final class ConstMat2f private[math] (
 ) extends AnyMat2f with Immutable
 
 object ConstMat2f {
-
   def apply(s: Float) = new ConstMat2f(
     s, 0,
     0, s
@@ -231,6 +230,11 @@ object ConstMat2f {
   new ConstMat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
+  )
+
+  def apply(u: Read4[_]) = new ConstMat2f(
+    u.fx, u.fy,
+    u.fz, u.fw
   )
 
   def apply(m: ReadMat[_]) = new ConstMat2f(
@@ -344,7 +348,6 @@ final class Mat2f private[math] (
 }
 
 object Mat2f {
-
   val Zero = ConstMat2f(0)
   val Identity = ConstMat2f(1)
 
@@ -365,6 +368,11 @@ object Mat2f {
   new Mat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
+  )
+
+  def apply(u: Read4[_]) = new Mat2f(
+    u.fx, u.fy,
+    u.fz, u.fw
   )
 
   def apply(m: ReadMat[_]) = new Mat2f(

@@ -26,50 +26,50 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle2Read[T] {
+private[math] abstract class Swizzle2Read {
 
   private[math] type R2
   private[math] type R3
   private[math] type R4
   
-  protected def make2(x: T, y: T) :R2
-  protected def make3(x: T, y: T, z: T) :R3
-  protected def make4(x: T, y: T, z: T, w: T) :R4
+  protected def make2(x: Double, y: Double) :R2
+  protected def make3(x: Double, y: Double, z: Double) :R3
+  protected def make4(x: Double, y: Double, z: Double, w: Double) :R4
 
-  def x: T
-  def y: T
+  private[math] def dx: Double
+  private[math] def dy: Double
 
 
-  def xx: R2 = make2(x, x)
-  def xy: R2 = make2(x, y)
-  def yx: R2 = make2(y, x)
-  def yy: R2 = make2(y, y)
+  def xx: R2 = make2(dx, dx)
+  def xy: R2 = make2(dx, dy)
+  def yx: R2 = make2(dy, dx)
+  def yy: R2 = make2(dy, dy)
 
-  def xxx: R3 = make3(x, x, x)
-  def xxy: R3 = make3(x, x, y)
-  def xyx: R3 = make3(x, y, x)
-  def xyy: R3 = make3(x, y, y)
-  def yxx: R3 = make3(y, x, x)
-  def yxy: R3 = make3(y, x, y)
-  def yyx: R3 = make3(y, y, x)
-  def yyy: R3 = make3(y, y, y)
+  def xxx: R3 = make3(dx, dx, dx)
+  def xxy: R3 = make3(dx, dx, dy)
+  def xyx: R3 = make3(dx, dy, dx)
+  def xyy: R3 = make3(dx, dy, dy)
+  def yxx: R3 = make3(dy, dx, dx)
+  def yxy: R3 = make3(dy, dx, dy)
+  def yyx: R3 = make3(dy, dy, dx)
+  def yyy: R3 = make3(dy, dy, dy)
 
-  def xxxx: R4 = make4(x, x, x, x)
-  def xxxy: R4 = make4(x, x, x, y)
-  def xxyx: R4 = make4(x, x, y, x)
-  def xxyy: R4 = make4(x, x, y, y)
-  def xyxx: R4 = make4(x, y, x, x)
-  def xyxy: R4 = make4(x, y, x, y)
-  def xyyx: R4 = make4(x, y, y, x)
-  def xyyy: R4 = make4(x, y, y, y)
-  def yxxx: R4 = make4(y, x, x, x)
-  def yxxy: R4 = make4(y, x, x, y)
-  def yxyx: R4 = make4(y, x, y, x)
-  def yxyy: R4 = make4(y, x, y, y)
-  def yyxx: R4 = make4(y, y, x, x)
-  def yyxy: R4 = make4(y, y, x, y)
-  def yyyx: R4 = make4(y, y, y, x)
-  def yyyy: R4 = make4(y, y, y, y)
+  def xxxx: R4 = make4(dx, dx, dx, dx)
+  def xxxy: R4 = make4(dx, dx, dx, dy)
+  def xxyx: R4 = make4(dx, dx, dy, dx)
+  def xxyy: R4 = make4(dx, dx, dy, dy)
+  def xyxx: R4 = make4(dx, dy, dx, dx)
+  def xyxy: R4 = make4(dx, dy, dx, dy)
+  def xyyx: R4 = make4(dx, dy, dy, dx)
+  def xyyy: R4 = make4(dx, dy, dy, dy)
+  def yxxx: R4 = make4(dy, dx, dx, dx)
+  def yxxy: R4 = make4(dy, dx, dx, dy)
+  def yxyx: R4 = make4(dy, dx, dy, dx)
+  def yxyy: R4 = make4(dy, dx, dy, dy)
+  def yyxx: R4 = make4(dy, dy, dx, dx)
+  def yyxy: R4 = make4(dy, dy, dx, dy)
+  def yyyx: R4 = make4(dy, dy, dy, dx)
+  def yyyy: R4 = make4(dy, dy, dy, dy)
 
   def rr = xx
   def rg = xy

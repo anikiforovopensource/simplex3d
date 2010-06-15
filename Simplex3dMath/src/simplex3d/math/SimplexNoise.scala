@@ -30,6 +30,10 @@
 package simplex3d.math
 
 
+// An empty class to make -Xno-forwarders work
+private[math] class SimplexNoise
+
+
 /** <code>SimplexNoise</code> contains the implementation
  * of simplex noise algorithm.
  *

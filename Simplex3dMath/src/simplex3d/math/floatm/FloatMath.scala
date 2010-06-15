@@ -62,11 +62,18 @@ object FloatMath {
   def tanh(x: Float) :Float = float(SMath.tanh(x))
 
   def asinh(x: Float) :Float = {
-    if (isneginf(x)) x
+    if (x < 0) float(-SMath.log(-x + SMath.sqrt(x*x + 1)))
     else float(SMath.log(x + SMath.sqrt(x*x + 1)))
   }
-  def acosh(x: Float) :Float = float(SMath.log(x + SMath.sqrt(x*x - 1)))
-  def atanh(x: Float) :Float = float(0.5*SMath.log((1 + x)/(1 - x)))
+  def acosh(x: Float) :Float = {
+    if (x < 0) Float.NaN
+    else float(SMath.log(x + SMath.sqrt(x*x - 1)))
+  }
+  def atanh(x: Float) :Float = {
+    if (x < 0) -atanh(-x)
+    else if (x < 0.2) float(0.5*SMath.log1p(2*x/(1 - x)))
+    else float(0.5*SMath.log((1 + x)/(1 - x)))
+  }
 
   def pow(x: Float, y: Float) :Float = float(SMath.pow(x, y))
   def exp(x: Float) :Float = float(SMath.exp(x))

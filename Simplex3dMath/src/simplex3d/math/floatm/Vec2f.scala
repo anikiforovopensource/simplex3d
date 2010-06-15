@@ -32,12 +32,12 @@ sealed abstract class AnyVec2f extends Read2[Float] {
   private[math] type R3 = ConstVec3f
   private[math] type R4 = ConstVec4f
   
-  protected final def make2(x: Float, y: Float) =
-    new ConstVec2f(x, y)
-  protected final def make3(x: Float, y: Float, z: Float) =
-    new ConstVec3f(x, y, z)
-  protected final def make4(x: Float, y: Float, z: Float, w: Float) =
-    new ConstVec4f(x, y, z, w)
+  protected final def make2(x: Double, y: Double) =
+    new ConstVec2f(float(x), float(y))
+  protected final def make3(x: Double, y: Double, z: Double) =
+    new ConstVec3f(float(x), float(y), float(z))
+  protected final def make4(x: Double, y: Double, z: Double, w: Double) =
+    new ConstVec4f(float(x), float(y), float(z), float(w))
 
   private[math] final def bx: Boolean = bool(x)
   private[math] final def by: Boolean = bool(y)

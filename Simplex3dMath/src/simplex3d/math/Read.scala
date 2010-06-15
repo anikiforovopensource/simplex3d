@@ -28,7 +28,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2[T] extends Swizzle2Read[T] {
+private[math] abstract class Read2[T] extends Swizzle2Read {
   private[math] def bx: Boolean
   private[math] def by: Boolean
 
@@ -49,7 +49,7 @@ private[math] abstract class Read2[T] extends Swizzle2Read[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3[T] extends Swizzle3Read[T] {
+private[math] abstract class Read3[T] extends Swizzle3Read {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean
@@ -74,7 +74,7 @@ private[math] abstract class Read3[T] extends Swizzle3Read[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4[T] extends Swizzle4Read[T] {
+private[math] abstract class Read4[T] extends Swizzle4Read {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean

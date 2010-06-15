@@ -62,11 +62,18 @@ object DoubleMath {
   def tanh(x: Double) :Double = SMath.tanh(x)
 
   def asinh(x: Double) :Double = {
-    if (isneginf(x)) x
+    if (x < 0) -SMath.log(-x + SMath.sqrt(x*x + 1))
     else SMath.log(x + SMath.sqrt(x*x + 1))
   }
-  def acosh(x: Double) :Double = SMath.log(x + SMath.sqrt(x*x - 1))
-  def atanh(x: Double) :Double = 0.5*SMath.log((1 + x)/(1 - x))
+  def acosh(x: Double) :Double = {
+    if (x < 0) Double.NaN
+    else SMath.log(x + SMath.sqrt(x*x - 1))
+  }
+  def atanh(x: Double) :Double = {
+    if (x < 0) -atanh(-x)
+    else if (x < 0.2) 0.5*SMath.log1p(2*x/(1 - x))
+    else 0.5*SMath.log((1 + x)/(1 - x))
+  }
 
   def pow(x: Double, y: Double) :Double = SMath.pow(x, y)
   def exp(x: Double) :Double = SMath.exp(x)

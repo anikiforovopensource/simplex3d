@@ -42,17 +42,30 @@ class SwizzleBenchCase {
 
     var start = 0L
     
-    start = System.currentTimeMillis
-    testTrait(length, loops)
-    val traitTime = System.currentTimeMillis - start
+//    start = System.currentTimeMillis
+//    testTrait(length, loops)
+//    val traitTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testAbstract(length, loops)
+//    val abstractTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testInlined(length, loops)
+//    val inlinedTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testNoSwizzle(length, loops)
+//    val noSwizzleTime = System.currentTimeMillis - start
+
 
     start = System.currentTimeMillis
-    testAbstract(length, loops)
-    val abstractTime = System.currentTimeMillis - start
+    testImplementedDouble(length, loops)
+    val implementedDoubleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testImplemented(length, loops)
-    val implementedTime = System.currentTimeMillis - start
+    testOverriddenDouble(length, loops)
+    val overriddenDoubleTime = System.currentTimeMillis - start
     
     start = System.currentTimeMillis
     testImplementedFloat(length, loops)
@@ -67,22 +80,43 @@ class SwizzleBenchCase {
     val implementedIntTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testInlined(length, loops)
-    val inlinedTime = System.currentTimeMillis - start
+    testImplementedDouble(length, loops)
+    val implementedDoubleTime2 = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testNoSwizzle(length, loops)
-    val noSwizzleTime = System.currentTimeMillis - start
+    testOverriddenDouble(length, loops)
+    val overriddenDoubleTime2 = System.currentTimeMillis - start
 
-    println("Trait time: " + traitTime + ".")
-    println("Abstract time: " + abstractTime + ".")
-    println("Inlined time: " + inlinedTime + ".")
-    println("No swizzle time: " + noSwizzleTime + ".")
-    println("Implemented time: " + implementedTime + ".")
+    start = System.currentTimeMillis
+    testImplementedFloat(length, loops)
+    val implementedFloatTime2 = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testImplementedBoolean(length, loops)
+    val implementedBooleanTime2 = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testImplementedInt(length, loops)
+    val implementedIntTime2 = System.currentTimeMillis - start
+
+
+//    println("Trait time: " + traitTime + ".")
+//    println("Abstract time: " + abstractTime + ".")
+//    println("Inlined time: " + inlinedTime + ".")
+//    println("No swizzle time: " + noSwizzleTime + ".")
+
+    println("Implemented Double time: " + implementedDoubleTime + ".")
+    println("Overridden Double time: " + overriddenDoubleTime + ".")
     println("Implemented Int time: " + implementedIntTime + ".")
     println("Implemented Float time: " + implementedFloatTime + ".")
     println("Implemented Boolean time: " + implementedBooleanTime + ".")
+    println("Implemented Double time: " + implementedDoubleTime2 + ".")
+    println("Overridden Double time: " + overriddenDoubleTime2 + ".")
+    println("Implemented Int time: " + implementedIntTime2 + ".")
+    println("Implemented Float time: " + implementedFloatTime2 + ".")
+    println("Implemented Boolean time: " + implementedBooleanTime2 + ".")
   }
+
 
   def testTrait(length: Int, loops: Int) {
     implicit def vecToSwizzled(u: Vec4m) = new Vec4Swizzled(u)
@@ -148,7 +182,7 @@ class SwizzleBenchCase {
     println(answer)
   }
 
-  def testImplemented(length: Int, loops: Int) {
+  def testNoSwizzle(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
@@ -156,6 +190,49 @@ class SwizzleBenchCase {
 
         // Bench code
         val v = ConstVec4(i, i + 1, i + 2, i + 3)
+        val u = ConstVec4(v.x, v.y, v.z, v.w)
+        val r = v + u
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  
+  def testImplementedDouble(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = ConstVec4(i, i + 1, i + 2, i + 3)
+        val u = v.yzwx
+        val r = v + u
+        val l2 = (r.x + r.y + r.z + r.w)
+        answer ^= l2.asInstanceOf[Int]
+
+        i += 1
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testOverriddenDouble(length: Int, loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val v = Vec4(i, i + 1, i + 2, i + 3)
         val u = v.yzwx
         val r = v + u
         val l2 = (r.x + r.y + r.z + r.w)
@@ -221,27 +298,6 @@ class SwizzleBenchCase {
         val v = ConstVec4b((i & 1) == 0, (i & 2) == 0, (i & 3) == 0, (i & 4) == 0)
         val u = v.yzwx
         val r = Vec4i(u) + Vec4i(v)
-        val l2 = (r.x + r.y + r.z + r.w)
-        answer ^= l2.asInstanceOf[Int]
-
-        i += 1
-      }
-      l += 1
-    }
-
-    println(answer)
-  }
-  
-  def testNoSwizzle(length: Int, loops: Int) {
-    var answer = 0
-
-    var l = 0; while (l < loops) {
-      var i = 0; while (i < length) {
-
-        // Bench code
-        val v = ConstVec4(i, i + 1, i + 2, i + 3)
-        val u = ConstVec4(v.x, v.y, v.z, v.w)
-        val r = v + u
         val l2 = (r.x + r.y + r.z + r.w)
         answer ^= l2.asInstanceOf[Int]
 

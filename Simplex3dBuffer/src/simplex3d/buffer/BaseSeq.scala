@@ -102,6 +102,7 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
   def stride: Int = components
 
   def backingSeq: roContiguousSeq[T#Component, D]
+  private[buffer] def isReadOnly(): Boolean = buffer.isReadOnly()
   def asReadOnly() :roDataSeq[T, D]
 
   final def copyAsDataArray() :DataArray[T, D] = {
@@ -153,7 +154,7 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: E)
 
   def backingSeq: ContiguousSeq[T#Component, D]
-  def isReadOnly(): Boolean = buffer.isReadOnly()
+  override def isReadOnly(): Boolean = buffer.isReadOnly()
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int

@@ -95,8 +95,8 @@ private[buffer] final class BufferInt1UByte(
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = buffer.put(i, byte(v))
+  def apply(i: Int) :Int = buff.get(i) & 0xFF
+  def update(i: Int, v: Int) :Unit = buff.put(i, byte(v))
 }
 
 private[buffer] final class ViewInt1UByte(
@@ -114,8 +114,8 @@ private[buffer] final class ViewInt1UByte(
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, byte(v))
+  def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, byte(v))
 }
 
 
@@ -178,8 +178,8 @@ private[buffer] final class BufferInt1UShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v.asInstanceOf[Char])
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.asInstanceOf[Char])
 }
 
 private[buffer] final class ViewInt1UShort(
@@ -197,8 +197,8 @@ private[buffer] final class ViewInt1UShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(
     offset + i*stride,
     v.asInstanceOf[Char]
   )
@@ -260,8 +260,8 @@ private[buffer] final class BufferInt1UInt(
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }
 
 private[buffer] final class ViewInt1UInt(
@@ -279,8 +279,8 @@ private[buffer] final class ViewInt1UInt(
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
 }
 
 
@@ -341,8 +341,8 @@ private[buffer] final class BufferInt1SByte(
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, byte(v))
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, byte(v))
 }
 
 private[buffer] final class ViewInt1SByte(
@@ -360,8 +360,8 @@ private[buffer] final class ViewInt1SByte(
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, byte(v))
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, byte(v))
 }
 
 
@@ -424,8 +424,8 @@ private[buffer] final class BufferInt1SShort(
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, short(v))
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, short(v))
 }
 
 private[buffer] final class ViewInt1SShort(
@@ -443,8 +443,8 @@ private[buffer] final class ViewInt1SShort(
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, short(v))
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, short(v))
 }
 
 
@@ -503,8 +503,8 @@ private[buffer] final class BufferInt1SInt(
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }
 
 private[buffer] final class ViewInt1SInt(
@@ -522,6 +522,6 @@ private[buffer] final class ViewInt1SInt(
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
 }

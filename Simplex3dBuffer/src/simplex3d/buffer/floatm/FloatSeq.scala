@@ -123,8 +123,8 @@ private[buffer] final class BufferFloat1SByte(
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) :Unit = buffer.put(i, byte(iround(v)))
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) :Unit = buff.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SByte(
@@ -142,8 +142,8 @@ private[buffer] final class ViewFloat1SByte(
   def bindingType = RawType.SByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     byte(iround(v))
   )
@@ -207,8 +207,8 @@ private[buffer] final class BufferFloat1UByte(
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(i) & 0xFF
-  def update(i: Int, v: Float) :Unit = buffer.put(i, byte(iround(v)))
+  def apply(i: Int) :Float = buff.get(i) & 0xFF
+  def update(i: Int, v: Float) :Unit = buff.put(i, byte(iround(v)))
 }
 
 private[buffer] final class ViewFloat1UByte(
@@ -226,8 +226,8 @@ private[buffer] final class ViewFloat1UByte(
   def bindingType = RawType.UByte
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = buff.get(offset + i*stride) & 0xFF
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     byte(iround(v))
   )
@@ -296,10 +296,10 @@ private[buffer] final class BufferFloat1NSByte(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(i)
+    val v = buff.get(i)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     byte(iround(clamp(v, -1, 1)*toNSByte))
   )
@@ -321,10 +321,10 @@ private[buffer] final class ViewFloat1NSByte(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*stride)
+    val v = buff.get(offset + i*stride)
     if (v < -127) -1 else float(v*fromNSByte)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     byte(iround(clamp(v, -1, 1)*toNSByte))
   )
@@ -389,8 +389,8 @@ private[buffer] final class BufferFloat1NUByte(
   def bindingType = RawType.UByte
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float((buffer.get(i) & 0xFF)*fromNUByte)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = float((buff.get(i) & 0xFF)*fromNUByte)
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     byte(iround(clamp(v, 0, 1)*toNUByte))
   )
@@ -412,9 +412,9 @@ private[buffer] final class ViewFloat1NUByte(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
-    (buffer.get(offset + i*stride) & 0xFF)*fromNUByte
+    (buff.get(offset + i*stride) & 0xFF)*fromNUByte
   )
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     byte(iround(clamp(v, 0, 1)*toNUByte))
   )
@@ -478,8 +478,8 @@ private[buffer] final class BufferFloat1SShort(
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) :Unit = buffer.put(i, short(iround(v)))
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) :Unit = buff.put(i, short(iround(v)))
 }
 
 private[buffer] final class ViewFloat1SShort(
@@ -497,8 +497,8 @@ private[buffer] final class ViewFloat1SShort(
   def bindingType = RawType.SShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     short(iround(v))
   )
@@ -562,8 +562,8 @@ private[buffer] final class BufferFloat1UShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     iround(v).asInstanceOf[Char]
   )
@@ -584,8 +584,8 @@ private[buffer] final class ViewFloat1UShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     iround(v).asInstanceOf[Char]
   )
@@ -656,10 +656,10 @@ private[buffer] final class BufferFloat1NSShort(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(i)
+    val v = buff.get(i)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     short(iround(clamp(v, -1, 1)*toNSShort))
   )
@@ -681,10 +681,10 @@ private[buffer] final class ViewFloat1NSShort(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*stride)
+    val v = buff.get(offset + i*stride)
     if (v < -32767) -1 else float(v*fromNSShort)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     short(iround(clamp(v, -1, 1)*toNSShort))
   )
@@ -749,8 +749,8 @@ private[buffer] final class BufferFloat1NUShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float(buffer.get(i)*fromNUShort)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = float(buff.get(i)*fromNUShort)
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
@@ -771,8 +771,8 @@ private[buffer] final class ViewFloat1NUShort(
   def bindingType = RawType.UShort
   def normalized: Boolean = true
 
-  def apply(i: Int) :Float = float(buffer.get(offset + i*stride)*fromNUShort)
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = float(buff.get(offset + i*stride)*fromNUShort)
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     iround(clamp(v, 0, 1)*toNUShort).asInstanceOf[Char]
   )
@@ -836,8 +836,8 @@ private[buffer] final class BufferFloat1SInt(
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) :Unit = buffer.put(i, iround(v))
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) :Unit = buff.put(i, iround(v))
 }
 
 private[buffer] final class ViewFloat1SInt(
@@ -855,8 +855,8 @@ private[buffer] final class ViewFloat1SInt(
   def bindingType = RawType.SInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = buffer.put(offset + i*stride, iround(v))
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = buff.put(offset + i*stride, iround(v))
 }
 
 
@@ -918,8 +918,8 @@ private[buffer] final class BufferFloat1UInt(
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = long(buffer.get(i)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = long(buff.get(i)) & 0xFFFFFFFFL
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     int(long(iround(v)) & 0xFFFFFFFFL)
   )
@@ -940,8 +940,8 @@ private[buffer] final class ViewFloat1UInt(
   def bindingType = RawType.UInt
   def normalized: Boolean = false
 
-  def apply(i: Int) :Float = long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = long(buff.get(offset + i*stride)) & 0xFFFFFFFFL
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     int(long(iround(v)) & 0xFFFFFFFFL)
   )
@@ -1010,10 +1010,10 @@ private[buffer] final class BufferFloat1NSInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(i)
+    val v = buff.get(i)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     iround(clamp(v, -1, 1)*toNSInt)
   )
@@ -1035,10 +1035,10 @@ private[buffer] final class ViewFloat1NSInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
-    val v = buffer.get(offset + i*stride)
+    val v = buff.get(offset + i*stride)
     if (v < -2147483647) -1 else float(v*fromNSInt)
   }
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     iround(clamp(v, -1, 1)*toNSInt)
   )
@@ -1103,9 +1103,9 @@ private[buffer] final class BufferFloat1NUInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
-    (long(buffer.get(i)) & 0xFFFFFFFFL)*fromNUInt
+    (long(buff.get(i)) & 0xFFFFFFFFL)*fromNUInt
   )
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     i,
     iround(clamp(v, 0, 1)*toNUInt)
   )
@@ -1127,9 +1127,9 @@ private[buffer] final class ViewFloat1NUInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
-    (long(buffer.get(offset + i*stride)) & 0xFFFFFFFFL)*fromNUInt
+    (long(buff.get(offset + i*stride)) & 0xFFFFFFFFL)*fromNUInt
   )
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     iround(clamp(v, 0, 1)*toNUInt)
   )
@@ -1195,8 +1195,8 @@ private[buffer] final class BufferFloat1HalfFloat(
   def normalized: Boolean = false
   def bindingType: Int = RawType.HalfFloat
 
-  def apply(i: Int) :Float = fromHalfFloat(buffer.get(i))
-  def update(i: Int, v: Float) :Unit = buffer.put(i, toHalfFloat(v))
+  def apply(i: Int) :Float = fromHalfFloat(buff.get(i))
+  def update(i: Int, v: Float) :Unit = buff.put(i, toHalfFloat(v))
 }
 
 private[buffer] final class ViewFloat1HalfFloat(
@@ -1214,8 +1214,8 @@ private[buffer] final class ViewFloat1HalfFloat(
   def normalized: Boolean = false
   def bindingType: Int = RawType.HalfFloat
 
-  def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) :Unit = buffer.put(
+  def apply(i: Int) :Float = fromHalfFloat(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     toHalfFloat(v)
   )
@@ -1224,7 +1224,7 @@ private[buffer] final class ViewFloat1HalfFloat(
 
 // Type: RawFloat
 private[buffer] sealed abstract class SeqFloat1RawFloat(
-  var buff: FloatBuffer
+  buff: FloatBuffer
 ) extends BaseFloat1[RawFloat](buff) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
@@ -1281,8 +1281,8 @@ private[buffer] final class BufferFloat1RawFloat(
   def normalized: Boolean = false
   def bindingType: Int = RawType.RawFloat
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) :Unit = buffer.put(i, v)
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) :Unit = buff.put(i, v)
 }
 
 private[buffer] final class ViewFloat1RawFloat(
@@ -1300,6 +1300,6 @@ private[buffer] final class ViewFloat1RawFloat(
   def normalized: Boolean = false
   def bindingType: Int = RawType.RawFloat
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = buffer.put(offset + i*stride, v)
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = buff.put(offset + i*stride, v)
 }

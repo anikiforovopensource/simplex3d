@@ -82,8 +82,10 @@ object DataView {
   def apply[T <: ElemType, D <: ReadableType](
     db: roDataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[T, D]) :roDataView[T, D] = {
-    ref.factory.mkDataView(
+    val res = ref.factory.mkDataView(
       db.backingSeq.sharedByteBuffer, offset, stride
-    ).asReadOnly()
+    )
+
+    if (db.isReadOnly) res.asReadOnly() else res
   }
 }

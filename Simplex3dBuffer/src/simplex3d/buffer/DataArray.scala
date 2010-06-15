@@ -83,6 +83,7 @@ object DataArray {
   def apply[T <: ElemType, D <: ReadableType](da: roDataArray[_, D])(
     implicit ref: FactoryRef[T, D]
   ) :ReadOnlyDataArray[T, D] = {
-    ref.factory.mkDataArray(da.backingSeq.readArray).asReadOnly()
+    val res = ref.factory.mkDataArray(da.backingSeq.readArray)
+    if (da.isReadOnly) res.asReadOnly() else res
   }
 }

@@ -74,6 +74,7 @@ object DataBuffer {
   def apply[T <: ElemType, D <: ReadableType](db: roDataBuffer[_, _])(
     implicit ref: FactoryRef[T, D]
   ) :roDataBuffer[T, D] = {
-    ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer).asReadOnly()
+    val res = ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
+    if (db.isReadOnly) res.asReadOnly() else res
   }
 }

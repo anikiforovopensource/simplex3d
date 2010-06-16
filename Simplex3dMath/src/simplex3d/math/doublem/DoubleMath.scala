@@ -1288,11 +1288,6 @@ object DoubleMath {
   }
   
   // Lerp
-  def lerp(x: Double, y: Double, a: Double) = mix(x, y, a)
-  def lerp(u: inVec2d, v: inVec2d, a: Double) = mix(u, v, a)
-  def lerp(u: inVec3d, v: inVec3d, a: Double) = mix(u, v, a)
-  def lerp(u: inVec4d, v: inVec4d, a: Double) = mix(u, v, a)
-
   def lerp(m: inMat2d, n: inMat2d, a: Double) :Mat2d = {
     val b = 1 - a
 
@@ -1373,13 +1368,6 @@ object DoubleMath {
       b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32,
       b*m.m03 +a*n.m03, b*m.m13 +a*n.m13, b*m.m23 +a*n.m23, b*m.m33 +a*n.m33
     )
-  }
-
-  def lengthSquare(x: Double) :Double = x*x
-  def lengthSquare(u: inVec2d) :Double = u.x*u.x + u.y*u.y
-  def lengthSquare(u: inVec3d) :Double = u.x*u.x + u.y*u.y + u.z*u.z
-  def lengthSquare(u: inVec4d) :Double = {
-    u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w
   }
 
   def hasErrors(x: Double) :Boolean = isinf(x) || isnan(x)
@@ -1684,9 +1672,9 @@ object DoubleMath {
   }
 
   /**
-   * The result is undefined for quaternions with non-unit norm.
+   * The quaternion must have unit norm to achieve the desired result.
    */
-  def rotate(u: inVec3d, q: inQuat4d) = {
+  def rotateVector(u: inVec3d, q: inQuat4d) = {
     import q._
 
     val t1 = a*b
@@ -1722,68 +1710,74 @@ object DoubleMath {
   }
 
   /**
-   * The result is undefined if the matrix does not represent
-   * non-scaling rotation.
+   * The matrix must represent non-scaling rotation to achieve
+   * the desired result.
    */
   def rotationAngle(m: inMat2d) :Double = {
     acos((m.m00 + m.m11)*0.5)
   }
 
   /**
-   * The result is undefined if the matrix does not represent
-   * non-scaling rotation.
+   * The matrix must represent non-scaling rotation to achieve
+   * the desired result.
    */
-  def quaternion(m: inMat3d) :Quat4d = {
+  def rotationQuat(m: inMat3d) :Quat4d = {
     import m._
 
-    val result = new Quat4d(0, 0, 0, 0)
     val trace = m00 + m11 + m22
 
     if (trace > 0) {
       val t = trace + 1
       val s = inversesqrt(t)*0.5
-      result.a = s*t
-      result.d = (m10 - m01)*s
-      result.c = (m02 - m20)*s
-      result.b = (m21 - m12)*s
+      new Quat4d(
+        s*t,
+        (m21 - m12)*s,
+        (m02 - m20)*s,
+        (m10 - m01)*s
+      )
     }
     else if (m00 > m11 && m00 > m22) {
       val t = m00 - m11 - m22 + 1
       val s = inversesqrt(t)*0.5
-      result.b = s*t
-      result.c = (m10 + m01)*s
-      result.d = (m02 + m20)*s
-      result.a = (m21 - m12)*s
+      new Quat4d(
+        (m21 - m12)*s,
+        s*t,
+        (m10 + m01)*s,
+        (m02 + m20)*s
+      )
     }
     else if (m11 > m22) {
       val t = -m00 + m11 - m22 + 1
       val s = inversesqrt(t)*0.5
-      result.c = s*t
-      result.b = (m10 + m01)*s
-      result.a = (m02 - m20)*s
-      result.d = (m21 + m12)*s
+      new Quat4d(
+        (m02 - m20)*s,
+        (m10 + m01)*s,
+        s*t,
+        (m21 + m12)*s
+      )
     }
     else {
       val t = -m00 - m11 + m22 + 1
       val s = inversesqrt(t)*0.5
-      result.d = s*t
-      result.a = (m10 - m01)*s
-      result.b = (m02 + m20)*s
-      result.c = (m21 + m12)*s
+      new Quat4d(
+        (m10 - m01)*s,
+        (m02 + m20)*s,
+        (m21 + m12)*s,
+        s*t
+      )
     }
-
-    result
   }
   /**
-   * The result is undefined for axis with non-unit length.
+   * The axis must have unit length to achieve the desired result.
    */
-  def quaternion(angle: Double, axis: inVec3d) :Quat4d = {
-    val s = sin(angle/2)
-    new Quat4d(cos(angle/2), s*axis.x, s*axis.y, s*axis.z)
+  def rotationQuat(angle: Double, axis: inVec3d) :Quat4d = {
+    val halfAngle = angle*0.5
+    val s = sin(halfAngle)
+    new Quat4d(cos(halfAngle), s*axis.x, s*axis.y, s*axis.z)
   }
 
   /**
-   * The result is undefined for quaternions with non-unit norm.
+   * The quaternion must have unit norm to achieve the desired result.
    */
   def rotationMat(q: inQuat4d) :Mat3d = {
     import q._
@@ -1805,7 +1799,7 @@ object DoubleMath {
     )
   }
   /**
-   * The result is undefined for axis with non-unit length.
+   * The axis must have unit length to achieve the desired result.
    */
   def rotationMat(angle: Double, axis: inVec3d) :Mat3d = {
     import axis._
@@ -1829,60 +1823,60 @@ object DoubleMath {
   }
 
   /**
-   * The result is undefined for quaternions with non-unit norm.
+   * The quaternion must have unit norm to achieve the desired result.
    * If quaternion represents 0 degree rotation, then rotation
    * axis is not defined, in this case the UnitX axis is chosen.
    */
-  def angleAxis(q: inQuat4d, axisResult: outVec3d) :Double = {
+  def rotationAngle(q: inQuat4d, axis: outVec3d) :Double = {
     import q._
 
     if (approxEqual(abs(a), 1, 1e-15)) {
-      axisResult.set(1, 0, 0)
+      axis.set(1, 0, 0)
       return 0
     }
 
     val t = inversesqrt(1 - a*a)
-    axisResult.x = b*t
-    axisResult.y = c*t
-    axisResult.z = d*t
+    axis.x = b*t
+    axis.y = c*t
+    axis.z = d*t
 
     2*acos(a)
   }
   /**
-   * The result is undefined if the matrix does not represent
-   * non-scaling rotation. If matrix represents 0 degree rotation,
-   * then rotation axis is not defined, in this case the UnitX axis is chosen.
+   * The matrix must represent non-scaling rotation to achieve
+   * the desired result. If the matrix represents 0 degree rotation,
+   * then rotation axis is undefined, in this case the UnitX axis is chosen.
    */
-  def angleAxis(m: inMat3d, axisResult: outVec3d) :Double = {
+  def rotationAngle(m: inMat3d, axis: outVec3d) :Double = {
     import m._
 
     val cosAngle = (m00 + m11 + m22 - 1)*0.5
 
     if (approxEqual(cosAngle, 1, 1e-14)) {
-      axisResult.set(1, 0, 0)
+      axis.set(1, 0, 0)
       return 0
     }
     else if (approxEqual(cosAngle, -1, 1e-14)) {
       if (m00 > m11 && m00 > m22) {
         val r = sqrt((m00 + 1)*0.5)
         val t = 1/(4*r)
-        axisResult.x = r
-        axisResult.y = (m01 + m10)*t
-        axisResult.z = (m02 + m20)*t
+        axis.x = r
+        axis.y = (m01 + m10)*t
+        axis.z = (m02 + m20)*t
       }
       else if (m11 > m22) {
         val r = sqrt((m11 + 1)*0.5)
         val t = 1/(4*r)
-        axisResult.y = r
-        axisResult.x = (m01 + m10)*t
-        axisResult.z = (m12 + m21)*t
+        axis.y = r
+        axis.x = (m01 + m10)*t
+        axis.z = (m12 + m21)*t
       }
       else {
         val r = sqrt((m22 + 1)*0.5)
         val t = 1/(4*r)
-        axisResult.z = r
-        axisResult.x = (m02 + m20)*t
-        axisResult.y = (m12 + m21)*t
+        axis.z = r
+        axis.x = (m02 + m20)*t
+        axis.y = (m12 + m21)*t
       }
       return Pi
     }
@@ -1891,16 +1885,16 @@ object DoubleMath {
     val t1 = (m02 - m20)
     val t2 = (m10 - m01)
     val t = inversesqrt(t0*t0 + t1*t1 + t2*t2)
-    axisResult.x = (m21 - m12)*t
-    axisResult.y = (m02 - m20)*t
-    axisResult.z = (m10 - m01)*t
+    axis.x = (m21 - m12)*t
+    axis.y = (m02 - m20)*t
+    axis.z = (m10 - m01)*t
 
     acos(cosAngle)
   }
 
   def lookAt(direction: inVec3d, up: inVec3d) :Mat3d = {
     // zaxis = normalize(direction)
-    val dirinvlen = inversesqrt(lengthSquare(direction))
+    val dirinvlen = inversesqrt(dot(direction, direction))
     val zax = direction.x*dirinvlen
     val zay = direction.y*dirinvlen
     val zaz = direction.z*dirinvlen
@@ -1976,7 +1970,7 @@ object DoubleMath {
     )
   }
 
-  // Transform
+  // Transformation
   def transformation(
     scale: inVec2d,
     rotation: inMat2d,

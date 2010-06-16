@@ -481,10 +481,16 @@ package object math {
    */
   def not(u: inVec4b) :Vec4b = Vec4b(!u.x, !u.y, !u.z, !u.w)
 
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   */
   def matToArray(m: ReadMat[_], array: Array[Float]) { matToArray(m, array, 0) }
 
-  /** Column major order.
-   *
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   * @param offset an offset into the array.
    */
   def matToArray(m: ReadMat[_], array: Array[Float], offset: Int) {
     array(offset + 0) = m.f00
@@ -508,8 +514,11 @@ package object math {
     array(offset + 15)= m.f33
   }
 
-  /** Use buffer.position to change offset.
+  /** Writes a matrix into a given buffer in column major order.
+   * Use buffer.position() to change buffer offset.
    *
+   * @param m the source matrix.
+   * @param buffer the destanation buffer.
    */
   def matToBuffer(m: ReadMat[_], buffer: FloatBuffer) {
     buffer.put(m.f00)
@@ -533,10 +542,16 @@ package object math {
     buffer.put(m.f33)
   }
 
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   */
   def matToArray(m: ReadMat[_], array: Array[Double]) { matToArray(m, array, 0)}
 
-  /** Column major order.
-   *
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   * @param offset an offset into the array.
    */
   def matToArray(m: ReadMat[_], array: Array[Double], offset: Int) {
     array(offset + 0) = m.d00
@@ -560,6 +575,12 @@ package object math {
     array(offset + 15)= m.d33
   }
 
+  /** Writes a matrix into a given buffer in column major order.
+   * Use buffer.position() to change buffer offset.
+   *
+   * @param m the source matrix.
+   * @param buffer the destanation buffer.
+   */
   def matToBuffer(m: ReadMat[_], buffer: DoubleBuffer) {
     buffer.put(m.d00)
     buffer.put(m.d10)

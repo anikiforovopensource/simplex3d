@@ -21,30 +21,54 @@
 package simplex3d.math
 
 
+/** <code>ElemType</code> is used to integrate vectors with sequences.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait ElemType {
   type Element
   type Component <: Primitive
 }
 
+/** <code>Primitive</code> is a marker for sequences with primitive elements.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 sealed trait Primitive extends ElemType {
   type Element <: AnyVal
 }
 
+/** <code>Int1</code> is a marker for sequences of Int elements.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 sealed trait Int1 extends Primitive {
   type Element = Int
   type Component = Int1
 }
 
+/** <code>Float1</code> is a marker for sequences of Float elements.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 sealed trait Float1 extends Primitive {
   type Element = Float
   type Component = Float1
 }
 
+/** <code>Double1</code> is a marker for sequences of Double elements.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 sealed trait Double1 extends Primitive {
   type Element = Double
   type Component = Double1
 }
 
+/** <code>Composite</code> is a marker for sequences with composite elemets.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
 trait Composite extends ElemType {
   type Element <: AnyRef
 }

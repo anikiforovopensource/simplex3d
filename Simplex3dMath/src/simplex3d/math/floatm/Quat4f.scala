@@ -58,8 +58,8 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
   final def unary_+() :AnyQuat4f = this
   /**
-   * This methods negates every term of this quaternion.
-   * Negating the quaternion produces another quaternion which represent
+   * This methods negates every term of this rotationQuat.
+   * Negating the rotationQuat produces another rotationQuat which represent
    * the same rotation. That is both q and -q represent exactly the
    * same rotation.
    */
@@ -87,20 +87,20 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
   final def rotate(q: inQuat4f) :Quat4f = q*this
   final def rotate(angle: Float, axis: inVec3f) :Quat4f = {
-    quaternion(angle, normalize(axis))*this
+    rotationQuat(angle, normalize(axis))*this
   }
   final def rotateX(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitX)*this
+    rotationQuat(angle, Vec3f.UnitX)*this
   }
   final def rotateY(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitY)*this
+    rotationQuat(angle, Vec3f.UnitY)*this
   }
   final def rotateZ(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitZ)*this
+    rotationQuat(angle, Vec3f.UnitZ)*this
   }
-  final def invert() :Quat4f = inverse(this)
 
-  final def rotateVector(u: inVec3f) :Vec3f = FloatMath.rotate(u, normalize(this))
+  final def rotateVector(u: inVec3f) :Vec3f =
+    FloatMath.rotateVector(u, normalize(this))
 
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
@@ -207,16 +207,16 @@ object Quat4f {
 
   def rotate(q: inQuat4f) :Quat4f = Quat4f(q)
   def rotate(angle: Float, axis: inVec3f) :Quat4f = {
-    quaternion(angle, normalize(axis))
+    rotationQuat(angle, normalize(axis))
   }
   def rotateX(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitX)
+    rotationQuat(angle, Vec3f.UnitX)
   }
   def rotateY(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitY)
+    rotationQuat(angle, Vec3f.UnitY)
   }
   def rotateZ(angle: Float) :Quat4f = {
-    quaternion(angle, Vec3f.UnitZ)
+    rotationQuat(angle, Vec3f.UnitZ)
   }
 
   implicit def toMutable(u: AnyQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)

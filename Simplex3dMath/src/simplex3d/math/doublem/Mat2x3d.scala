@@ -226,8 +226,6 @@ sealed abstract class AnyMat2x3d extends Read2x3[Double]
     m10*v.x + m11*v.y
   )
 
-  final def invert() :Mat2x3d = inverse(this)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Double._
 

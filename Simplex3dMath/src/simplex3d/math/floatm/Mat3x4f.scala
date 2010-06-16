@@ -304,8 +304,6 @@ sealed abstract class AnyMat3x4f extends Read3x4[Float]
     m20*v.x + m21*v.y + m22*v.z
   )
 
-  final def invert() :Mat3x4f = inverse(this)
-
   private[math] final def hasErrors: Boolean = {
     import java.lang.Float._
 

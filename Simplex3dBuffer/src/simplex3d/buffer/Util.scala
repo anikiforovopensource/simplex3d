@@ -509,7 +509,7 @@ private[buffer] object Util {
   final def copySeqInt(
     components: Int,
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
       case 1 => copySeqInt1(
@@ -538,7 +538,7 @@ private[buffer] object Util {
 
   final def copySeqInt1(
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -552,7 +552,7 @@ private[buffer] object Util {
 
   final def copySeqInt2(
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -567,7 +567,7 @@ private[buffer] object Util {
 
   final def copySeqInt3(
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -583,7 +583,7 @@ private[buffer] object Util {
 
   final def copySeqInt4(
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -601,7 +601,7 @@ private[buffer] object Util {
   final def copySeqIntAny(
     components: Int,
     dest: ContiguousSeq[Int1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Int1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -622,7 +622,7 @@ private[buffer] object Util {
   final def copySeqFloat(
     components: Int,
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
       case 1 => copySeqFloat1(
@@ -651,7 +651,7 @@ private[buffer] object Util {
 
   final def copySeqFloat1(
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -665,7 +665,7 @@ private[buffer] object Util {
 
   final def copySeqFloat2(
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -680,7 +680,7 @@ private[buffer] object Util {
 
   final def copySeqFloat3(
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -696,7 +696,7 @@ private[buffer] object Util {
 
   final def copySeqFloat4(
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -714,7 +714,7 @@ private[buffer] object Util {
   final def copySeqFloatAny(
     components: Int,
     dest: ContiguousSeq[Float1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Float1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -736,7 +736,7 @@ private[buffer] object Util {
   final def copySeqDouble(
     components: Int,
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
       case 1 => copySeqDouble1(
@@ -765,7 +765,7 @@ private[buffer] object Util {
 
   final def copySeqDouble1(
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -779,7 +779,7 @@ private[buffer] object Util {
 
   final def copySeqDouble2(
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -794,7 +794,7 @@ private[buffer] object Util {
 
   final def copySeqDouble3(
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -810,7 +810,7 @@ private[buffer] object Util {
 
   final def copySeqDouble4(
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset
@@ -828,7 +828,7 @@ private[buffer] object Util {
   final def copySeqDoubleAny(
     components: Int,
     dest: ContiguousSeq[Double1, _], destOffset: Int, destStride: Int,
-    src: roContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    src: inContiguousSeq[Double1, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     var desti = destOffset
     var srci = srcOffset

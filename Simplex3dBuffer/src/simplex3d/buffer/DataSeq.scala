@@ -26,25 +26,25 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyBaseSeq[T, T#Element, D]
+trait ReadOnlyDataSeq[E <: ElemType, +R <: RawType]
+extends ReadOnlyBaseSeq[E, E#Element, R]
 
-trait DataSeq[T <: ElemType, +D <: RawType]
-extends BaseSeq[T, T#Element, D] with ReadOnlyDataSeq[T, D]
+trait DataSeq[E <: ElemType, +R <: RawType]
+extends BaseSeq[E, E#Element, R] with ReadOnlyDataSeq[E, R]
 
 object DataSeq {
-  def apply[T <: ElemType, D <: ReadableType](
-    implicit ref: FactoryRef[T, D]
-  ) :DataSeq[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](
+    implicit ref: FactoryRef[E, R]
+  ) :DataSeq[E, R] = {
     ref.factory
   }
 }
 
-trait ReadOnlyContiguousSeq[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataSeq[T, D] {
+trait ReadOnlyContiguousSeq[E <: ElemType, +R <: RawType]
+extends ReadOnlyDataSeq[E, R] {
   assert(offset == 0)
   assert(stride == components)
 }
 
-trait ContiguousSeq[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ReadOnlyContiguousSeq[T, D]
+trait ContiguousSeq[E <: ElemType, +R <: RawType]
+extends DataSeq[E, R] with ReadOnlyContiguousSeq[E, R]

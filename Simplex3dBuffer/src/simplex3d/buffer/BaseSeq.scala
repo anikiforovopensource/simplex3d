@@ -31,11 +31,11 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class ReadOnlyBaseSeq[
-  T <: ElemType, @specialized(Int, Float, Double) E, +D <: RawType
+  E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
 ] (
-  private[buffer] final val buffer: D#BufferType
-) extends Protected[D#ArrayType @uncheckedVariance]
-with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
+  private[buffer] final val buffer: R#BufferType
+) extends Protected[R#ArrayType @uncheckedVariance]
+with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   if (stride <= 0)
     throw new IllegalArgumentException(
@@ -46,16 +46,16 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
       "Offset must be greater than or equal to zero."
     )
 
-  def elementManifest: ClassManifest[T#Element]
-  def componentManifest: ClassManifest[T#Component#Element]
+  def elementManifest: ClassManifest[E#Element]
+  def componentManifest: ClassManifest[E#Component#Element]
 
   final val bytesPerRawComponent: Int = RawType.byteLength(bindingType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
   final def byteOffset = offset*bytesPerRawComponent
   final val byteStride = stride*bytesPerRawComponent
 
-  def asReadOnlyBuffer() :D#BufferType
-  def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
+  def asReadOnlyBuffer() :R#BufferType
+  def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
 
   private[buffer] val bindingBuffer: Buffer = {
     buffer match {
@@ -77,21 +77,21 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
     (buffer.capacity - offset + stride - components)/stride
   final def length = size
 
-  def apply(i: Int) :E
+  def apply(i: Int) :S
 
 
-  private[buffer] def setReadArray(a: D#ArrayType @uncheckedVariance) {
+  private[buffer] def setReadArray(a: R#ArrayType @uncheckedVariance) {
     readArray = a
   }
   private[buffer] def setSharedByteBuffer(b: ByteBuffer) {
     sharedByteBuffer = b
   }
 
-  def mkDataArray(size: Int) :DataArray[T, D]
-  def mkDataArray(array: D#ArrayType @uncheckedVariance) :DataArray[T, D]
-  def mkDataBuffer(size: Int) :DataBuffer[T, D]
-  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[T, D]
-  def mkDataView(byteBuffer: ByteBuffer, offset: Int,stride: Int):DataView[T, D]
+  def mkDataArray(size: Int) :DataArray[E, R]
+  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
+  def mkDataBuffer(size: Int) :DataBuffer[E, R]
+  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[E, R]
+  def mkDataView(byteBuffer: ByteBuffer, offset: Int,stride: Int):DataView[E, R]
 
   
   def components: Int
@@ -101,11 +101,11 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
   def offset: Int = 0
   def stride: Int = components
 
-  def backingSeq: roContiguousSeq[T#Component, D]
+  def backingSeq: ReadOnlyContiguousSeq[E#Component, R]
   private[buffer] def isReadOnly(): Boolean = buffer.isReadOnly()
-  def asReadOnly() :roDataSeq[T, D]
+  def asReadOnly() :ReadOnlyDataSeq[E, R]
 
-  final def copyAsDataArray() :DataArray[T, D] = {
+  final def copyAsDataArray() :DataArray[E, R] = {
     val copy = mkDataArray(size)
     copy.put(
       0,
@@ -116,7 +116,7 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
     )
     copy
   }
-  final def copyAsDataBuffer() :DataBuffer[T, D] = {
+  final def copyAsDataBuffer() :DataBuffer[E, R] = {
     val copy = mkDataBuffer(size)
     copy.put(
       0,
@@ -128,7 +128,7 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
     copy
   }
   final def copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
-  :DataView[T, D] = {
+  :DataView[E, R] = {
     val copy = mkDataView(byteBuffer, offset, stride)
     copy.put(
       0,
@@ -143,17 +143,17 @@ with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
 
 
 private[buffer] abstract class BaseSeq[
-  T <: ElemType, @specialized(Int, Float, Double) E, +D <: RawType
+  E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
 ] (
-  buff: D#BufferType
-) extends ReadOnlyBaseSeq[T, E, D](buff) {
+  buff: R#BufferType
+) extends ReadOnlyBaseSeq[E, S, R](buff) {
 
-  def asBuffer() :D#BufferType
+  def asBuffer() :R#BufferType
 
-  override def apply(i: Int) :E
-  def update(i: Int, v: E)
+  override def apply(i: Int) :S
+  def update(i: Int, v: S)
 
-  def backingSeq: ContiguousSeq[T#Component, D]
+  def backingSeq: ContiguousSeq[E#Component, R]
   override def isReadOnly(): Boolean = buffer.isReadOnly()
 
   private final def putArray(
@@ -207,21 +207,21 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[_], first: Int, count: Int
   ) {
-    val arr = array.asInstanceOf[Array[E]]
+    val arr = array.asInstanceOf[Array[S]]
     var i = 0; while (i < count) {
       this(index + i) = arr(first + i)
       i += 1
     }
   }
   private def putIndexedSeq(
-    index: Int, seq: IndexedSeq[E], first: Int, count: Int
+    index: Int, seq: IndexedSeq[S], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
       this(index + i) = seq(first + i)
       i += 1
     }
   }
-  private def putSeq(index: Int, seq: Seq[E], first: Int, count: Int) {
+  private def putSeq(index: Int, seq: Seq[S], first: Int, count: Int) {
     var i = index
     val iter = seq.iterator
     iter.drop(first)
@@ -231,7 +231,7 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, seq: Seq[T#Element], first: Int, count: Int) {
+  final def put(index: Int, seq: Seq[E#Element], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
 
     import scala.collection.mutable.{WrappedArray}
@@ -266,24 +266,24 @@ private[buffer] abstract class BaseSeq[
           throw new IndexOutOfBoundsException(
             "Source sequence is not large enough."
           )
-        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[E]], first, count)
+        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[S]], first, count)
       case _ =>
-        putSeq(index, seq.asInstanceOf[Seq[E]], first, count)
+        putSeq(index, seq.asInstanceOf[Seq[S]], first, count)
     }
   }
 
-  final def put(index: Int, seq: Seq[T#Element]) {
+  final def put(index: Int, seq: Seq[E#Element]) {
     put(index, seq, 0, seq.size)
   }
 
-  final def put(seq: Seq[T#Element]) {
+  final def put(seq: Seq[E#Element]) {
     put(0, seq, 0, seq.size)
   }
 
 
   final def put(
     index: Int,
-    src: roContiguousSeq[T#Component, _],
+    src: inContiguousSeq[E#Component, _],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
     def grp(binding: Int) = {
@@ -413,7 +413,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[roContiguousSeq[Int1, _]],
+            src.asInstanceOf[inContiguousSeq[Int1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -423,7 +423,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[roContiguousSeq[Float1, _]],
+            src.asInstanceOf[inContiguousSeq[Float1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -433,7 +433,7 @@ private[buffer] abstract class BaseSeq[
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,
             stride,
-            src.asInstanceOf[roContiguousSeq[Double1, _]],
+            src.asInstanceOf[inContiguousSeq[Double1, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -445,7 +445,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: roContiguousSeq[T#Component, _],
+    src: inContiguousSeq[E#Component, _],
     srcOffset: Int, count: Int
   ) {
     put(
@@ -459,7 +459,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: roContiguousSeq[T#Component, _]
+    src: inContiguousSeq[E#Component, _]
   ) {
     put(
       index,
@@ -471,7 +471,7 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(
-    src: roContiguousSeq[T#Component, _]
+    src: inContiguousSeq[E#Component, _]
   ) {
     put(
       0,
@@ -484,7 +484,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: roDataSeq[T, _],
+    src: inDataSeq[E, _],
     first: Int, count: Int
   ) {
     put(
@@ -498,7 +498,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: roDataSeq[T, _]
+    src: inDataSeq[E, _]
   ) {
     put(
       index,
@@ -510,7 +510,7 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(
-    src: roDataSeq[T, _]
+    src: inDataSeq[E, _]
   ) {
     put(
       0,
@@ -523,15 +523,15 @@ private[buffer] abstract class BaseSeq[
 }
 
 // Extend this, add implicit tuples to your package object to enable constructor
-abstract class GenericSeq[T <: Composite, +D <: RawType](
-  val backingSeq: ContiguousSeq[T#Component, D]
-) extends BaseSeq[T, T#Element, D](backingSeq.buffer) {
+abstract class GenericSeq[E <: Composite, +R <: RawType](
+  val backingSeq: ContiguousSeq[E#Component, R]
+) extends BaseSeq[E, E#Element, R](backingSeq.buffer) {
   final def componentManifest = backingSeq.componentManifest.asInstanceOf[
-    ClassManifest[T#Component#Element]
+    ClassManifest[E#Component#Element]
   ]
 
-  final def asReadOnlyBuffer() :D#BufferType = backingSeq.asReadOnlyBuffer()
-  final def asBuffer() :D#BufferType = backingSeq.asBuffer()
+  final def asReadOnlyBuffer() :R#BufferType = backingSeq.asReadOnlyBuffer()
+  final def asBuffer() :R#BufferType = backingSeq.asBuffer()
   
   final def bindingType = backingSeq.bindingType
   final def normalized: Boolean = backingSeq.normalized

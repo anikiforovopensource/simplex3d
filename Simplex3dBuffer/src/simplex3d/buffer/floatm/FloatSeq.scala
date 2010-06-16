@@ -57,9 +57,9 @@ private[floatm] object Shared {
 }
 import Shared._
 
-private[buffer] sealed abstract class BaseFloat1[+D <: ReadableFloat](
-  buff: D#BufferType
-) extends BaseSeq[Float1, Float, D](buff) {
+private[buffer] sealed abstract class BaseFloat1[+R <: ReadableFloat](
+  buff: R#BufferType
+) extends BaseSeq[Float1, Float, R](buff) {
   final def elementManifest = componentManifest
   final def componentManifest = scala.reflect.ClassManifest.Float
   final def components: Int = 1

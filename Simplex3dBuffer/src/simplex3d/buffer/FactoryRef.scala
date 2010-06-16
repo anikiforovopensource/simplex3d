@@ -26,11 +26,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class FactoryRef[T <: ElemType, D <: RawType] {
-  def factory: DataSeq[T, D]
+abstract class FactoryRef[E <: ElemType, R <: RawType] {
+  def factory: DataSeq[E, R]
 }
 
-class SimpleFactoryRef[T <: ElemType, D <: RawType](
-  val factory: DataSeq[T, D]
-) extends FactoryRef[T, D]
+class SimpleFactoryRef[E <: ElemType, R <: RawType](
+  val factory: DataSeq[E, R]
+) extends FactoryRef[E, R]
 

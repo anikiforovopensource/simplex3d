@@ -28,14 +28,14 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataArray[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
-  def backingSeq: roDataArray[T#Component, D]
-  def asReadOnly() :roDataArray[T, D]
+trait ReadOnlyDataArray[E <: ElemType, +R <: RawType]
+extends ReadOnlyDataSeq[E, R] with ReadOnlyContiguousSeq[E, R] {
+  def backingSeq: ReadOnlyDataArray[E#Component, R]
+  def asReadOnly() :ReadOnlyDataArray[E, R]
 
-  final def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case a: roDataArray[_, _] =>
+      case a: ReadOnlyDataArray[_, _] =>
         backingSeq.readArray eq a.backingSeq.readArray
       case _ =>
         false
@@ -43,36 +43,36 @@ extends ReadOnlyDataSeq[T, D] with ReadOnlyContiguousSeq[T, D] {
   }
 }
 
-trait DataArray[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ContiguousSeq[T, D] with ReadOnlyDataArray[T, D] {
-  def array: D#ArrayType = buffer.array.asInstanceOf[D#ArrayType]
-  def backingSeq: DataArray[T#Component, D]
+trait DataArray[E <: ElemType, +R <: RawType]
+extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadOnlyDataArray[E, R] {
+  def array: R#ArrayType = buffer.array.asInstanceOf[R#ArrayType]
+  def backingSeq: DataArray[E#Component, R]
 }
 
 object DataArray {
-  def apply[T <: ElemType, D <: ReadableType](array: D#ArrayType)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataArray[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](array: R#ArrayType)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataArray[E, R] = {
     ref.factory.mkDataArray(array)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](size: Int)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataArray[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](size: Int)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataArray[E, R] = {
     ref.factory.mkDataArray(size)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](vals: T#Element*)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataArray[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](vals: E#Element*)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataArray[E, R] = {
     val data = ref.factory.mkDataArray(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[T <: ElemType, D <: ReadableType](da: DataArray[_, D])(
-    implicit ref: FactoryRef[T, D]
-  ) :DataArray[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](da: DataArray[_, R])(
+    implicit ref: FactoryRef[E, R]
+  ) :DataArray[E, R] = {
     if (da.isReadOnly) throw new IllegalArgumentException(
       "The argument must not be read only."
     )
@@ -80,9 +80,9 @@ object DataArray {
     ref.factory.mkDataArray(da.array)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](da: roDataArray[_, D])(
-    implicit ref: FactoryRef[T, D]
-  ) :ReadOnlyDataArray[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](da: inDataArray[_, R])(
+    implicit ref: FactoryRef[E, R]
+  ) :ReadOnlyDataArray[E, R] = {
     val res = ref.factory.mkDataArray(da.backingSeq.readArray)
     if (da.isReadOnly) res.asReadOnly() else res
   }

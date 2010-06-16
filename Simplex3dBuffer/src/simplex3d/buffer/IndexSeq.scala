@@ -28,86 +28,86 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyIndexSeq[+D <: ReadableIndex]
-extends ReadOnlyContiguousSeq[Int1, D] {
-  def asReadOnly() :ReadOnlyIndexSeq[D]
+trait ReadOnlyIndexSeq[+R <: ReadableIndex]
+extends ReadOnlyContiguousSeq[Int1, R] {
+  def asReadOnly() :ReadOnlyIndexSeq[R]
 
-  def mkIndexArray(size: Int) :IndexArray[D] =
-    mkDataArray(size).asInstanceOf[IndexArray[D]]
-  def mkIndexArray(array: D#ArrayType @uncheckedVariance) :IndexArray[D] =
-    mkDataArray(array).asInstanceOf[IndexArray[D]]
-  def mkIndexBuffer(size: Int) :IndexBuffer[D] =
-    mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
-  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[D] =
-    mkDataBuffer(byteBuffer).asInstanceOf[IndexBuffer[D]]
+  def mkIndexArray(size: Int) :IndexArray[R] =
+    mkDataArray(size).asInstanceOf[IndexArray[R]]
+  def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] =
+    mkDataArray(array).asInstanceOf[IndexArray[R]]
+  def mkIndexBuffer(size: Int) :IndexBuffer[R] =
+    mkDataBuffer(size).asInstanceOf[IndexBuffer[R]]
+  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] =
+    mkDataBuffer(byteBuffer).asInstanceOf[IndexBuffer[R]]
 
-  def copyAsIndexArray() :IndexArray[D] =
-    super.copyAsDataArray().asInstanceOf[IndexArray[D]]
-  def copyAsIndexBuffer() :IndexBuffer[D] =
-    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[D]]
+  def copyAsIndexArray() :IndexArray[R] =
+    super.copyAsDataArray().asInstanceOf[IndexArray[R]]
+  def copyAsIndexBuffer() :IndexBuffer[R] =
+    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[R]]
 }
 
-trait IndexSeq[+D <: ReadableIndex]
-extends ContiguousSeq[Int1, D] with ReadOnlyIndexSeq[D]
+trait IndexSeq[+R <: ReadableIndex]
+extends ContiguousSeq[Int1, R] with ReadOnlyIndexSeq[R]
 
 
-trait ReadOnlyIndexArray[+D <: ReadableIndex]
-extends ReadOnlyIndexSeq[D] with ReadOnlyDataArray[Int1, D] {
-  def asReadOnly() :ReadOnlyIndexArray[D]
+trait ReadOnlyIndexArray[+R <: ReadableIndex]
+extends ReadOnlyIndexSeq[R] with ReadOnlyDataArray[Int1, R] {
+  def asReadOnly() :ReadOnlyIndexArray[R]
 }
 
-trait IndexArray[+D <: ReadableIndex]
-extends IndexSeq[D] with DataArray[Int1, D] with ReadOnlyIndexArray[D]
+trait IndexArray[+R <: ReadableIndex]
+extends IndexSeq[R] with DataArray[Int1, R] with ReadOnlyIndexArray[R]
 
 
-trait ReadOnlyIndexBuffer[+D <: ReadableIndex]
-extends ReadOnlyIndexSeq[D] with ReadOnlyDataBuffer[Int1, D] {
-  def asReadOnly() :ReadOnlyIndexBuffer[D]
+trait ReadOnlyIndexBuffer[+R <: ReadableIndex]
+extends ReadOnlyIndexSeq[R] with ReadOnlyDataBuffer[Int1, R] {
+  def asReadOnly() :ReadOnlyIndexBuffer[R]
 }
 
-trait IndexBuffer[+D <: ReadableIndex]
-extends IndexSeq[D] with DataBuffer[Int1, D] with ReadOnlyIndexBuffer[D]
+trait IndexBuffer[+R <: ReadableIndex]
+extends IndexSeq[R] with DataBuffer[Int1, R] with ReadOnlyIndexBuffer[R]
 
 
 object IndexArray {
-  def apply[D <: ReadableIndex](array: D#ArrayType)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexArray[D] = {
-    ref.factory.mkDataArray(array).asInstanceOf[IndexArray[D]]
+  def apply[R <: ReadableIndex](array: R#ArrayType)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexArray[R] = {
+    ref.factory.mkDataArray(array).asInstanceOf[IndexArray[R]]
   }
 
-  def apply[D <: ReadableIndex](size: Int)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexArray[D] = {
-    ref.factory.mkDataArray(size).asInstanceOf[IndexArray[D]]
+  def apply[R <: ReadableIndex](size: Int)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexArray[R] = {
+    ref.factory.mkDataArray(size).asInstanceOf[IndexArray[R]]
   }
 
-  def apply[D <: ReadableIndex](vals: Int*)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexArray[D] = {
-    val data = ref.factory.mkDataArray(vals.size).asInstanceOf[IndexArray[D]]
+  def apply[R <: ReadableIndex](vals: Int*)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexArray[R] = {
+    val data = ref.factory.mkDataArray(vals.size).asInstanceOf[IndexArray[R]]
     data.put(vals)
     data
   }
 }
 
 object IndexBuffer {
-  def apply[D <: ReadableIndex](buffer: ByteBuffer)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexBuffer[D] = {
-    ref.factory.mkDataBuffer(buffer).asInstanceOf[IndexBuffer[D]]
+  def apply[R <: ReadableIndex](buffer: ByteBuffer)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexBuffer[R] = {
+    ref.factory.mkDataBuffer(buffer).asInstanceOf[IndexBuffer[R]]
   }
 
-  def apply[D <: ReadableIndex](size: Int)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexBuffer[D] = {
-    ref.factory.mkDataBuffer(size).asInstanceOf[IndexBuffer[D]]
+  def apply[R <: ReadableIndex](size: Int)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexBuffer[R] = {
+    ref.factory.mkDataBuffer(size).asInstanceOf[IndexBuffer[R]]
   }
 
-  def apply[D <: ReadableIndex](vals: Int*)(
-    implicit ref: FactoryRef[Int1, D]
-  ) :IndexBuffer[D] = {
-    val data = ref.factory.mkDataBuffer(vals.size).asInstanceOf[IndexBuffer[D]]
+  def apply[R <: ReadableIndex](vals: Int*)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexBuffer[R] = {
+    val data = ref.factory.mkDataBuffer(vals.size).asInstanceOf[IndexBuffer[R]]
     data.put(vals)
     data
   }

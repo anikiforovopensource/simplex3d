@@ -30,9 +30,9 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec4i[+D <: ReadableInt](
-  seq: ContiguousSeq[Int1, D]
-) extends GenericSeq[Vec4i, D](seq) {
+private[buffer] abstract class BaseVec4i[+R <: ReadableInt](
+  seq: ContiguousSeq[Int1, R]
+) extends GenericSeq[Vec4i, R](seq) {
   final def elementManifest = Manifest.Vec4iClassManifest
   final def components: Int = 4
 
@@ -53,46 +53,46 @@ private[buffer] abstract class BaseVec4i[+D <: ReadableInt](
     seq(j + 3) = v.w
   }
 
-  def mkDataArray(size: Int) :DataArray[Vec4i, D] =
-    new ArrayVec4i[D](backingSeq.mkDataArray(size*4))
+  def mkDataArray(size: Int) :DataArray[Vec4i, R] =
+    new ArrayVec4i[R](backingSeq.mkDataArray(size*4))
 
-  def mkDataArray(array: D#ArrayType @uncheckedVariance) :DataArray[Vec4i, D] =
-    new ArrayVec4i[D](backingSeq.mkDataArray(array))
+  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[Vec4i, R] =
+    new ArrayVec4i[R](backingSeq.mkDataArray(array))
 
-  def mkDataBuffer(size: Int) :DataBuffer[Vec4i, D] =
-    new BufferVec4i[D](backingSeq.mkDataBuffer(size*4))
+  def mkDataBuffer(size: Int) :DataBuffer[Vec4i, R] =
+    new BufferVec4i[R](backingSeq.mkDataBuffer(size*4))
 
-  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[Vec4i, D] =
-    new BufferVec4i[D](backingSeq.mkDataBuffer(byteBuffer))
+  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[Vec4i, R] =
+    new BufferVec4i[R](backingSeq.mkDataBuffer(byteBuffer))
 
   def mkDataView(
     byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :DataView[Vec4i, D] =
-    new ViewVec4i[D](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+  ) :DataView[Vec4i, R] =
+    new ViewVec4i[R](backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class ArrayVec4i[+D <: ReadableInt](
-  override val backingSeq: DataArray[Int1, D]
-) extends BaseVec4i[D](backingSeq) with DataArray[Vec4i, D] {
+private[buffer] final class ArrayVec4i[+R <: ReadableInt](
+  override val backingSeq: DataArray[Int1, R]
+) extends BaseVec4i[R](backingSeq) with DataArray[Vec4i, R] {
   def asReadOnly() = new ArrayVec4i(
-    backingSeq.asReadOnly().asInstanceOf[DataArray[Int1, D]]
+    backingSeq.asReadOnly().asInstanceOf[DataArray[Int1, R]]
   )
 }
 
-private[buffer] final class BufferVec4i[+D <: ReadableInt](
-  override val backingSeq: DataBuffer[Int1, D]
-) extends BaseVec4i[D](backingSeq) with DataBuffer[Vec4i, D] {
+private[buffer] final class BufferVec4i[+R <: ReadableInt](
+  override val backingSeq: DataBuffer[Int1, R]
+) extends BaseVec4i[R](backingSeq) with DataBuffer[Vec4i, R] {
   def asReadOnly() = new BufferVec4i(
-    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, D]]
+    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, R]]
   )
 }
 
-private[buffer] final class ViewVec4i[+D <: ReadableInt](
-  override val backingSeq: DataBuffer[Int1, D],
+private[buffer] final class ViewVec4i[+R <: ReadableInt](
+  override val backingSeq: DataBuffer[Int1, R],
   override val offset: Int,
   override val stride: Int
-) extends BaseVec4i[D](backingSeq) with DataView[Vec4i, D] {
+) extends BaseVec4i[R](backingSeq) with DataView[Vec4i, R] {
   def asReadOnly() = new ViewVec4i(
-    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, D]], offset, stride
+    backingSeq.asReadOnly().asInstanceOf[DataBuffer[Int1, R]], offset, stride
   )
 }

@@ -45,15 +45,25 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  type roDataSeq[T <: ElemType, +D <: RawType] = ReadOnlyDataSeq[T, D]
-  type roContiguousSeq[T <: ElemType, +D <: RawType] =ReadOnlyContiguousSeq[T, D]
-  type roDataArray[T <: ElemType, +D <: RawType] = ReadOnlyDataArray[T, D]
-  type roDataBuffer[T <: ElemType, +D <: RawType] = ReadOnlyDataBuffer[T, D]
-  type roDataView[T <: ElemType, +D <: RawType] = ReadOnlyDataView[T, D]
+  type inDataSeq[T <: ElemType, +D <: RawType] = ReadOnlyDataSeq[T, D]
+  type inContiguousSeq[T <: ElemType, +D <: RawType] =ReadOnlyContiguousSeq[T, D]
+  type inDataArray[T <: ElemType, +D <: RawType] = ReadOnlyDataArray[T, D]
+  type inDataBuffer[T <: ElemType, +D <: RawType] = ReadOnlyDataBuffer[T, D]
+  type inDataView[T <: ElemType, +D <: RawType] = ReadOnlyDataView[T, D]
 
-  type roIndexSeq[+D <: ReadableIndex] = ReadOnlyIndexSeq[D]
-  type roIndexArray[+D <: ReadableIndex] = ReadOnlyIndexArray[D]
-  type roIndexBuffer[+D <: ReadableIndex] = ReadOnlyIndexBuffer[D]
+  type inIndexSeq[+D <: ReadableIndex] = ReadOnlyIndexSeq[D]
+  type inIndexArray[+D <: ReadableIndex] = ReadOnlyIndexArray[D]
+  type inIndexBuffer[+D <: ReadableIndex] = ReadOnlyIndexBuffer[D]
+
+  type outDataSeq[T <: ElemType, +D <: RawType] = DataSeq[T, D]
+  type outContiguousSeq[T <: ElemType, +D <: RawType] =ContiguousSeq[T, D]
+  type outDataArray[T <: ElemType, +D <: RawType] = DataArray[T, D]
+  type outDataBuffer[T <: ElemType, +D <: RawType] = DataBuffer[T, D]
+  type outDataView[T <: ElemType, +D <: RawType] = DataView[T, D]
+
+  type outIndexSeq[+D <: ReadableIndex] = IndexSeq[D]
+  type outIndexArray[+D <: ReadableIndex] = IndexArray[D]
+  type outIndexBuffer[+D <: ReadableIndex] = IndexBuffer[D]
 
   @inline implicit final def roArrayDataToIndex[D  <: ReadableIndex] (
     d: ReadOnlyDataArray[Int1, D]

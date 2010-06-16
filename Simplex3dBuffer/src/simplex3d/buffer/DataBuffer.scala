@@ -27,18 +27,18 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataBuffer[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataView[T, D] with ReadOnlyContiguousSeq[T, D] {
-  def asReadOnly() :ReadOnlyDataBuffer[T, D]
+trait ReadOnlyDataBuffer[E <: ElemType, +R <: RawType]
+extends ReadOnlyDataView[E, R] with ReadOnlyContiguousSeq[E, R] {
+  def asReadOnly() :ReadOnlyDataBuffer[E, R]
 }
 
-trait DataBuffer[T <: ElemType, +D <: RawType]
-extends DataView[T, D] with ContiguousSeq[T, D] with ReadOnlyDataBuffer[T, D]
+trait DataBuffer[E <: ElemType, +R <: RawType]
+extends DataView[E, R] with ContiguousSeq[E, R] with ReadOnlyDataBuffer[E, R]
 
 object DataBuffer {
-  def apply[T <: ElemType, D <: ReadableType](buffer: ByteBuffer)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataBuffer[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](buffer: ByteBuffer)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataBuffer[E, R] = {
     if (buffer.isReadOnly)
     throw new IllegalArgumentException(
       "The buffer must not be read-only."
@@ -47,23 +47,23 @@ object DataBuffer {
     ref.factory.mkDataBuffer(buffer)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](size: Int)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataBuffer[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](size: Int)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataBuffer[E, R] = {
     ref.factory.mkDataBuffer(size)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](vals: T#Element*)(
-    implicit ref: FactoryRef[T, D]
-  ) :DataBuffer[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](vals: E#Element*)(
+    implicit ref: FactoryRef[E, R]
+  ) :DataBuffer[E, R] = {
     val data = ref.factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[T <: ElemType, D <: ReadableType](db: DataBuffer[_, _])(
-    implicit ref: FactoryRef[T, D]
-  ) :DataBuffer[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](db: DataBuffer[_, _])(
+    implicit ref: FactoryRef[E, R]
+  ) :DataBuffer[E, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The argument must not be read only."
     )
@@ -71,9 +71,9 @@ object DataBuffer {
     ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](db: roDataBuffer[_, _])(
-    implicit ref: FactoryRef[T, D]
-  ) :roDataBuffer[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](db: inDataBuffer[_, _])(
+    implicit ref: FactoryRef[E, R]
+  ) :ReadOnlyDataBuffer[E, R] = {
     val res = ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
     if (db.isReadOnly) res.asReadOnly() else res
   }

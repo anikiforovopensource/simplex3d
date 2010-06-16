@@ -27,8 +27,8 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataView[T <: ElemType, +D <: RawType]
-extends ReadOnlyDataSeq[T, D] {
+trait ReadOnlyDataView[E <: ElemType, +R <: RawType]
+extends ReadOnlyDataSeq[E, R] {
 
   assert(buffer.position == 0)
   assert(buffer.limit == buffer.capacity)
@@ -39,12 +39,12 @@ extends ReadOnlyDataSeq[T, D] {
     )
 
   
-  def backingSeq: roDataBuffer[T#Component, D]
-  def asReadOnly() :roDataView[T, D]
+  def backingSeq: ReadOnlyDataBuffer[E#Component, R]
+  def asReadOnly() :ReadOnlyDataView[E, R]
 
-  final def sharesMemory(seq: roDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case v: roDataView[_, _] =>
+      case v: ReadOnlyDataView[_, _] =>
         backingSeq.sharedByteBuffer eq v.backingSeq.sharedByteBuffer
       case _ =>
         false
@@ -52,15 +52,15 @@ extends ReadOnlyDataSeq[T, D] {
   }
 }
 
-trait DataView[T <: ElemType, +D <: RawType]
-extends DataSeq[T, D] with ReadOnlyDataView[T, D] {
-  def backingSeq: DataBuffer[T#Component, D]
+trait DataView[E <: ElemType, +R <: RawType]
+extends DataSeq[E, R] with ReadOnlyDataView[E, R] {
+  def backingSeq: DataBuffer[E#Component, R]
 }
 
 object DataView {
-  def apply[T <: ElemType, D <: ReadableType](
+  def apply[E <: ElemType, R <: ReadableType](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
+  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     if (buffer.isReadOnly)
     throw new IllegalArgumentException(
       "The buffer must not be read-only."
@@ -69,9 +69,9 @@ object DataView {
     ref.factory.mkDataView(buffer, offset, stride)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](
+  def apply[E <: ElemType, R <: ReadableType](
     db: DataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[T, D]) :DataView[T, D] = {
+  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The argument must not be read only."
     )
@@ -79,9 +79,9 @@ object DataView {
     ref.factory.mkDataView(db.backingSeq.sharedByteBuffer, offset, stride)
   }
 
-  def apply[T <: ElemType, D <: ReadableType](
-    db: roDataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[T, D]) :roDataView[T, D] = {
+  def apply[E <: ElemType, R <: ReadableType](
+    db: inDataBuffer[_, _], offset: Int, stride: Int
+  )(implicit ref: FactoryRef[E, R]) :ReadOnlyDataView[E, R] = {
     val res = ref.factory.mkDataView(
       db.backingSeq.sharedByteBuffer, offset, stride
     )

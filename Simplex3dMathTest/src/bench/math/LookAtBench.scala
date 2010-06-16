@@ -70,7 +70,7 @@ class LookAtTC {
   }
 
   final def lookAtInlined(direction: inVec3, up: inVec3) :Mat3 = {
-    val dirinvlen = inversesqrt(lengthSquare(direction))
+    val dirinvlen = inversesqrt(dot(direction, direction))
 
     val zax = direction.x*dirinvlen
     val zay = direction.y*dirinvlen

@@ -137,8 +137,6 @@ class Transform3dTest extends FunSuite {
 
       val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
       assertTransform(t, m3x4, t concatenate(m3x4))
-
-      assert(t.invert() == inverse(t))
     }
 
     // test transform classes

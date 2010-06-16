@@ -107,8 +107,6 @@ class Transform2fTest extends FunSuite {
 
       val m2x3 = ConstMat2x3(r, r, r, r, r, r)
       assertTransform(t, m2x3, t concatenate(m2x3))
-
-      assert(t.invert() == inverse(t))
     }
 
     // test transform classes

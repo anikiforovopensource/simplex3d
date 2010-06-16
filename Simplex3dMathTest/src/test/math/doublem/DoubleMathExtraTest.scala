@@ -34,33 +34,6 @@ import simplex3d.math.doublem.DoubleMath._
  */
 class DoubleMathExtraTest extends FunSuite {
 
-  test("Vec lerp") {
-    for (i <- 0 until 1000) {
-      val random1 = new Random(i)
-      def a = random1.nextDouble
-
-      val random2 = new Random(i)
-      def b = random2.nextDouble
-
-      assert(lerp(a, a, a) == mix(b, b, b))
-
-      assert(
-        lerp(Vec2(a, a), Vec2(a, a), a) ==
-        mix(Vec2(b, b), Vec2(b, b), b)
-      )
-
-      assert(
-        lerp(Vec3(a, a, a), Vec3(a, a, a), a) ==
-        mix(Vec3(b, b, b), Vec3(b, b, b), b)
-      )
-
-      assert(
-        lerp(Vec4(a, a, a, a), Vec4(a, a, a, a), a) ==
-        mix(Vec4(b, b, b, b), Vec4(b, b, b, b), b)
-      )
-    }
-  }
-
   test("Mat lerp") {
     for (i <- 0 until 1000) {
       val random = new Random(i)
@@ -152,6 +125,14 @@ class DoubleMathExtraTest extends FunSuite {
   }
 
   test("hasErrors") {
+    assert(!hasErrors(0))
+    assert(!hasErrors(1))
+    assert(!hasErrors(-1))
+    assert(hasErrors(Double.NaN))
+    assert(hasErrors(Double.PositiveInfinity))
+    assert(hasErrors(Double.NegativeInfinity))
+
+    
     val random = new Random(1)
     def makeErrors(id: Int) :(Double, Double, Double, Double) = {
       val v = id%4 match {
@@ -262,20 +243,6 @@ class DoubleMathExtraTest extends FunSuite {
 
       i += 1
     }
-  }
-
-  test("lengthSquare") {
-    assert(lengthSquare(2) == 4)
-    assert(lengthSquare(Vec2(2, 3)) == 13)
-    assert(lengthSquare(Vec3(2, 3, 4)) == 29)
-    assert(lengthSquare(Vec4(2, 3, 4, 5)) == 54)
-
-    assert(!hasErrors(0))
-    assert(!hasErrors(1))
-    assert(!hasErrors(-1))
-    assert(hasErrors(Double.NaN))
-    assert(hasErrors(Double.PositiveInfinity))
-    assert(hasErrors(Double.NegativeInfinity))
   }
 
   test("approxEqual") {
@@ -577,27 +544,27 @@ class DoubleMathExtraTest extends FunSuite {
 
     // rotate
     assert(approxEqual(
-        rotate(Vec3.UnitY, Quat4 rotateX(radians(0))),
+        rotateVector(Vec3.UnitY, Quat4 rotateX(radians(0))),
         Vec3(0, 1, 0),
         1e-15)
     )
     assert(approxEqual(
-        rotate(Vec3.UnitY, Quat4 rotateX(radians(30))),
+        rotateVector(Vec3.UnitY, Quat4 rotateX(radians(30))),
         Vec3(0, sqrt(3)/2, 0.5),
         1e-15)
     )
     assert(approxEqual(
-        rotate(Vec3.UnitY, Quat4 rotateX(radians(45))),
+        rotateVector(Vec3.UnitY, Quat4 rotateX(radians(45))),
         normalize(Vec3(0, 1, 1)),
         1e-15)
     )
     assert(approxEqual(
-        rotate(Vec3.UnitY, Quat4 rotateX(radians(60))),
+        rotateVector(Vec3.UnitY, Quat4 rotateX(radians(60))),
         Vec3(0, 0.5, sqrt(3)/2),
         1e-15)
     )
     assert(approxEqual(
-        rotate(Vec3.UnitY, Quat4 rotateX(radians(90))),
+        rotateVector(Vec3.UnitY, Quat4 rotateX(radians(90))),
         Vec3(0, 0, 1),
         1e-15)
     )
@@ -672,7 +639,7 @@ class DoubleMathExtraTest extends FunSuite {
   test("Convert to quat") {
     def testMatrix(a: Double) {
       val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
-      val q: ConstQuat4 = quaternion(m0)
+      val q: ConstQuat4 = rotationQuat(m0)
       val m1: ConstMat3 = rotationMat(q)
 
       assert(approxEqual(m0, m1, 1e-15))
@@ -682,10 +649,10 @@ class DoubleMathExtraTest extends FunSuite {
       val angle0 = radians(angle)
       val axis0 = ConstVec3(0, 1, 0)
 
-      val q = quaternion(angle0, axis0)
+      val q = rotationQuat(angle0, axis0)
 
       val axis1 = Vec3(0)
-      val angle1 = angleAxis(q, axis1)
+      val angle1 = rotationAngle(q, axis1)
 
       if (approxEqual(abs(angle0), 2*Pi, 1e-15)) {
         assert(approxEqual(0, angle1, 1e-15))
@@ -744,9 +711,9 @@ class DoubleMathExtraTest extends FunSuite {
 
   test("Convert to matrix") {
     def testQuaternion(a: Double) {
-      val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
+      val q0: ConstQuat4 = rotationQuat(radians(a),normalize(Vec3(4, 5, 6)))
       val m: ConstMat3 = rotationMat(q0)
-      val q1: ConstQuat4 = quaternion(m)
+      val q1: ConstQuat4 = rotationQuat(m)
 
       assert(approxEqual(q0, q1, 1e-15) || approxEqual(q0, -q1, 1e-15))
     }
@@ -758,7 +725,7 @@ class DoubleMathExtraTest extends FunSuite {
       val m: ConstMat3 = rotationMat(angle0, axis0)
 
       val axis1 = Vec3(0)
-      val angle1 = angleAxis(m, axis1)
+      val angle1 = rotationAngle(m, axis1)
 
       if (approxEqual(abs(angle0), 2*Pi, 1e-15)) {
         assert(approxEqual(0, angle1, 1e-15))
@@ -817,12 +784,12 @@ class DoubleMathExtraTest extends FunSuite {
 
   test("Convert to angleAxis") {
     def testQuaternion(a: Double) {
-      val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
+      val q0: ConstQuat4 = rotationQuat(radians(a),normalize(Vec3(4, 5, 6)))
 
       val axis = Vec3(0)
-      val angle = angleAxis(q0, axis)
+      val angle = rotationAngle(q0, axis)
 
-      val q1: ConstQuat4 = quaternion(angle, axis)
+      val q1: ConstQuat4 = rotationQuat(angle, axis)
 
       assert(approxEqual(q0, q1, 1e-15) || approxEqual(q0, -q1, 1e-15))
     }
@@ -831,7 +798,7 @@ class DoubleMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
 
       val axis = Vec3(0)
-      val angle = angleAxis(m0, axis)
+      val angle = rotationAngle(m0, axis)
 
       val m1: ConstMat3 = rotationMat(angle, axis)
 
@@ -868,7 +835,7 @@ class DoubleMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(
         radians(angle), normalize(axis)
       )
-      val q: ConstQuat4 = quaternion(m0)
+      val q: ConstQuat4 = rotationQuat(m0)
       val m1: ConstMat3 = rotationMat(q)
 
       assert(approxEqual(m0, m1, 1e-15))
@@ -892,7 +859,7 @@ class DoubleMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(radians(180), normalize(ax))
 
       val axis = Vec3(0)
-      val angle = angleAxis(m0, axis)
+      val angle = rotationAngle(m0, axis)
 
       val m1: ConstMat3 = rotationMat(angle, axis)
 

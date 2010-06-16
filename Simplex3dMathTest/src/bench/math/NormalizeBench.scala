@@ -54,7 +54,7 @@ class NormalizeTC {
   }
 
   final def normalizeTo(u: Vec3, absDelta: Double) = {
-    val len2 = lengthSquare(u)
+    val len2 = dot(u, u)
     if (approxEqual(len2, 1, absDelta)) u
     else u/(sqrt(len2))
   }

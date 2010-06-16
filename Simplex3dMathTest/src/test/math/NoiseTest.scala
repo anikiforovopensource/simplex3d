@@ -70,7 +70,7 @@ class NoiseTest extends FunSuite {
 
 
         assert(1 - abs(n) >= 0)
-        assert(lengthSquare(d) < maxDerivLenSquare)
+        assert(dot(d, d) < maxDerivLenSquare)
 
         y += delta
       }
@@ -102,7 +102,7 @@ class NoiseTest extends FunSuite {
 
 
           assert(1 - abs(n) >= 0)
-          assert(lengthSquare(d) < maxDerivLenSquare)
+          assert(dot(d, d) < maxDerivLenSquare)
 
           z += delta
         }
@@ -136,7 +136,7 @@ class NoiseTest extends FunSuite {
             )
 
             assert(1 - abs(n) >= 0)
-            assert(lengthSquare(d) < maxDerivLenSquare)
+            assert(dot(d, d) < maxDerivLenSquare)
 
             w += delta
           }

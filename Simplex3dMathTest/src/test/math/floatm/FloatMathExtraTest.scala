@@ -639,7 +639,7 @@ class FloatMathExtraTest extends FunSuite {
   test("Convert to quat") {
     def testMatrix(a: Float) {
       val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
-      val q: ConstQuat4 = rotationQuat(m0)
+      val q: ConstQuat4 = quaternion(m0)
       val m1: ConstMat3 = rotationMat(q)
 
       assert(approxEqual(m0, m1, 1e-6f))
@@ -649,10 +649,10 @@ class FloatMathExtraTest extends FunSuite {
       val angle0 = radians(angle)
       val axis0 = ConstVec3(0, 1, 0)
 
-      val q = rotationQuat(angle0, axis0)
+      val q = quaternion(angle0, axis0)
 
       val axis1 = Vec3(0)
-      val angle1 = rotationAngle(q, axis1)
+      val angle1 = angleAxis(q, axis1)
 
       if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
         assert(approxEqual(0, angle1, 1e-6f))
@@ -711,9 +711,9 @@ class FloatMathExtraTest extends FunSuite {
 
   test("Convert to matrix") {
     def testQuaternion(a: Float) {
-      val q0: ConstQuat4 = rotationQuat(radians(a),normalize(Vec3(4, 5, 6)))
+      val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
       val m: ConstMat3 = rotationMat(q0)
-      val q1: ConstQuat4 = rotationQuat(m)
+      val q1: ConstQuat4 = quaternion(m)
 
       assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
     }
@@ -725,7 +725,7 @@ class FloatMathExtraTest extends FunSuite {
       val m: ConstMat3 = rotationMat(angle0, axis0)
 
       val axis1 = Vec3(0)
-      val angle1 = rotationAngle(m, axis1)
+      val angle1 = angleAxis(m, axis1)
 
       if (approxEqual(abs(angle0), 2*Pi, 1e-6f)) {
         assert(approxEqual(0, angle1, 1e-6f))
@@ -784,12 +784,12 @@ class FloatMathExtraTest extends FunSuite {
 
   test("Convert to angleAxis") {
     def testQuaternion(a: Float) {
-      val q0: ConstQuat4 = rotationQuat(radians(a),normalize(Vec3(4, 5, 6)))
+      val q0: ConstQuat4 = quaternion(radians(a),normalize(Vec3(4, 5, 6)))
 
       val axis = Vec3(0)
-      val angle = rotationAngle(q0, axis)
+      val angle = angleAxis(q0, axis)
 
-      val q1: ConstQuat4 = rotationQuat(angle, axis)
+      val q1: ConstQuat4 = quaternion(angle, axis)
 
       assert(approxEqual(q0, q1, 1e-6f) || approxEqual(q0, -q1, 1e-6f))
     }
@@ -798,7 +798,7 @@ class FloatMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(radians(a),normalize(Vec3(1, 2, 3)))
 
       val axis = Vec3(0)
-      val angle = rotationAngle(m0, axis)
+      val angle = angleAxis(m0, axis)
 
       val m1: ConstMat3 = rotationMat(angle, axis)
 
@@ -835,7 +835,7 @@ class FloatMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(
         radians(angle), normalize(axis)
       )
-      val q: ConstQuat4 = rotationQuat(m0)
+      val q: ConstQuat4 = quaternion(m0)
       val m1: ConstMat3 = rotationMat(q)
 
       assert(approxEqual(m0, m1, 1e-6f))
@@ -859,7 +859,7 @@ class FloatMathExtraTest extends FunSuite {
       val m0: ConstMat3 = rotationMat(radians(180), normalize(ax))
 
       val axis = Vec3(0)
-      val angle = rotationAngle(m0, axis)
+      val angle = angleAxis(m0, axis)
 
       val m1: ConstMat3 = rotationMat(angle, axis)
 

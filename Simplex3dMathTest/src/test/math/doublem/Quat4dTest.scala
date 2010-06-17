@@ -275,22 +275,22 @@ class Quat4dTest extends FunSuite {
     def axis = normalize(Vec3(float, float, float))
 
     def testInstance(q: inQuat4, angle: Float, axis: inVec3) {
-      assert(q.rotate(rotationQuat(angle, axis)) == rotationQuat(angle, axis)*q)
+      assert(q.rotate(quaternion(angle, axis)) == quaternion(angle, axis)*q)
 
       assert(approxEqual(
           q.rotate(angle, axis),
-          rotationQuat(angle, axis)*q,
+          quaternion(angle, axis)*q,
           1e-15
       ))
       assert(approxEqual(
           q.rotate(angle, axis*float),
-          rotationQuat(angle, axis)*q,
+          quaternion(angle, axis)*q,
           1e-15
       ))
 
-      assert(q.rotateX(angle) == rotationQuat(angle, Vec3.UnitX)*q)
-      assert(q.rotateY(angle) == rotationQuat(angle, Vec3.UnitY)*q)
-      assert(q.rotateZ(angle) == rotationQuat(angle, Vec3.UnitZ)*q)
+      assert(q.rotateX(angle) == quaternion(angle, Vec3.UnitX)*q)
+      assert(q.rotateY(angle) == quaternion(angle, Vec3.UnitY)*q)
+      assert(q.rotateZ(angle) == quaternion(angle, Vec3.UnitZ)*q)
 
       for (i <- 0 until 100) {
         val v = Vec3(float, float, float)
@@ -307,25 +307,25 @@ class Quat4dTest extends FunSuite {
       }
     }
     def testObject(angle: Float, axis: inVec3) {
-      assert(Quat4.rotate(rotationQuat(angle, axis)) == rotationQuat(angle, axis))
+      assert(Quat4.rotate(quaternion(angle, axis)) == quaternion(angle, axis))
 
       assert(approxEqual(
           Quat4.rotate(angle, axis),
-          rotationQuat(angle, axis),
+          quaternion(angle, axis),
           1e-15
       ))
       assert(approxEqual(
           Quat4.rotate(angle, axis*float),
-          rotationQuat(angle, axis),
+          quaternion(angle, axis),
           1e-15
       ))
-      assert(Quat4.rotateX(angle) == rotationQuat(angle, Vec3.UnitX))
-      assert(Quat4.rotateY(angle) == rotationQuat(angle, Vec3.UnitY))
-      assert(Quat4.rotateZ(angle) == rotationQuat(angle, Vec3.UnitZ))
+      assert(Quat4.rotateX(angle) == quaternion(angle, Vec3.UnitX))
+      assert(Quat4.rotateY(angle) == quaternion(angle, Vec3.UnitY))
+      assert(Quat4.rotateZ(angle) == quaternion(angle, Vec3.UnitZ))
     }
 
     for (i <- 0 until 1000) {
-      testInstance(rotationQuat(float, axis), float, axis)
+      testInstance(quaternion(float, axis), float, axis)
       testInstance(Quat4.Identity, float, axis)
       testObject(float, axis)
     }

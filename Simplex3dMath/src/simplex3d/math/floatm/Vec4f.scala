@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import simplex3d.math.types._
 import simplex3d.math._
 
 

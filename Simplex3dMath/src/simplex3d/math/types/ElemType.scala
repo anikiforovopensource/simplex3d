@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.types
 
 
 /** <code>ElemType</code> is used to integrate vectors with sequences.

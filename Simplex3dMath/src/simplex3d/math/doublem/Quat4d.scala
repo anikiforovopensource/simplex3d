@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -86,16 +87,16 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
   final def rotate(q: inQuat4d) :Quat4d = q*this
   final def rotate(angle: Double, axis: inVec3d) :Quat4d = {
-    rotationQuat(angle, normalize(axis))*this
+    quaternion(angle, normalize(axis))*this
   }
   final def rotateX(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitX)*this
+    quaternion(angle, Vec3d.UnitX)*this
   }
   final def rotateY(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitY)*this
+    quaternion(angle, Vec3d.UnitY)*this
   }
   final def rotateZ(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitZ)*this
+    quaternion(angle, Vec3d.UnitZ)*this
   }
 
   final def rotateVector(u: inVec3d) :Vec3d =
@@ -206,16 +207,16 @@ object Quat4d {
 
   def rotate(q: inQuat4d) :Quat4d = Quat4d(q)
   def rotate(angle: Double, axis: inVec3d) :Quat4d = {
-    rotationQuat(angle, normalize(axis))
+    quaternion(angle, normalize(axis))
   }
   def rotateX(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitX)
+    quaternion(angle, Vec3d.UnitX)
   }
   def rotateY(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitY)
+    quaternion(angle, Vec3d.UnitY)
   }
   def rotateZ(angle: Double) :Quat4d = {
-    rotationQuat(angle, Vec3d.UnitZ)
+    quaternion(angle, Vec3d.UnitZ)
   }
 
   implicit def toMutable(u: AnyQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)

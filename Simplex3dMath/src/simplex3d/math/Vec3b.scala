@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
 
 /** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,
  * either constant or mutable.

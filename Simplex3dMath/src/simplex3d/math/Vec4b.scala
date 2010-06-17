@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
 
 /** The <code>AnyVec4b</code> class represents Boolean 4-dimensional vectors,
  * either constant or mutable.

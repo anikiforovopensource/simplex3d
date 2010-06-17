@@ -1796,7 +1796,7 @@ object FloatMath {
    * The matrix must represent non-scaling rotation to achieve
    * the desired result.
    */
-  def rotationQuat(m: inMat3f) :Quat4f = {
+  def quaternion(m: inMat3f) :Quat4f = {
     import m._
 
     val trace = m00 + m11 + m22
@@ -1845,7 +1845,7 @@ object FloatMath {
   /**
    * The axis must have unit length to achieve the desired result.
    */
-  def rotationQuat(angle: Float, axis: inVec3f) :Quat4f = {
+  def quaternion(angle: Float, axis: inVec3f) :Quat4f = {
     val halfAngle = angle*0.5f
     val s = sin(halfAngle)
     new Quat4f(cos(halfAngle), s*axis.x, s*axis.y, s*axis.z)
@@ -1902,7 +1902,7 @@ object FloatMath {
    * If quaternion represents 0 degree rotation, then rotation
    * axis is not defined, in this case the UnitX axis is chosen.
    */
-  def rotationAngle(q: inQuat4f, axis: outVec3f) :Float = {
+  def angleAxis(q: inQuat4f, axis: outVec3f) :Float = {
     import q._
 
     if (approxEqual(abs(a), 1, 1e-6f)) {
@@ -1922,7 +1922,7 @@ object FloatMath {
    * the desired result. If the matrix represents 0 degree rotation,
    * then rotation axis is undefined, in this case the UnitX axis is chosen.
    */
-  def rotationAngle(m: inMat3f, axis: outVec3f) :Float = {
+  def angleAxis(m: inMat3f, axis: outVec3f) :Float = {
     import m._
 
     val cosAngle = (m00 + m11 + m22 - 1)*0.5f

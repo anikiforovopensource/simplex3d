@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import simplex3d.math.types._
 import simplex3d.math._
 
 

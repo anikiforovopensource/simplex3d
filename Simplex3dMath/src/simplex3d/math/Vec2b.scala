@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
 
 /** The <code>AnyVec2b</code> class represents Boolean 2-dimensional vectors,
  * either constant or mutable.

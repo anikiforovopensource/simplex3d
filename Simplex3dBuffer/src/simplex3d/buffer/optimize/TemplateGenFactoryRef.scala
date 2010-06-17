@@ -23,7 +23,6 @@ package optimize
 
 import java.util.logging._
 import org.objectweb.asm._
-import simplex3d.math._
 
 
 /**
@@ -36,6 +35,10 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
 ) extends FactoryRef[T, D] {
   
   private final val sysprop = "simplex3d.buffer.optimize"
+  private def helpMsg =
+    "Disable buffer optimization by setting the system property '" +
+    sysprop + "' to false."
+
   private val replaceString =
     (if (fallbackFactory.normalized) "N" else "") +
     (fallbackFactory.bindingType match {
@@ -50,10 +53,6 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
       case RawType.RawDouble => "RawDouble"
     })
 
-  private def helpMsg =
-    "Disable buffer optimization by setting system property '" +
-    sysprop + "' to false."
-
   private def enableGen :Boolean = {
     val default = "true"
 
@@ -65,7 +64,7 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
         case se: SecurityException =>
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
-            "Unable to read system property '" + sysprop + "'.",
+            "Unable to read the system property '" + sysprop + "'.",
             se
           )
           default
@@ -87,7 +86,8 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
       try {
         genAndLoad(templateArray.replace("Array", "Buffer"))
         genAndLoad(templateArray.replace("Array", "View"))
-        val factory = genAndLoad(templateArray)
+        val arrayClass = genAndLoad(templateArray)
+        val factory = arrayClass.newInstance().asInstanceOf[DataArray[T, D]]
         testFactory(factory)
         factory
       }
@@ -96,7 +96,7 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
           if (reportMissingLib) {
             Logger.getLogger(getClass.getName).log(
               Level.WARNING,
-              "Unable to load optimized classes due to missing asm library. " +
+              "Unable to load optimized classes due to a missing asm library. "+
               helpMsg,
               nolib.getCause
             )
@@ -124,43 +124,23 @@ private[buffer] class TemplateGenFactoryRef[T <: ElemType, D <: RawType](
     }
   }
 
-  private def genAndLoad(templateClassName: String) :DataSeq[T, D] = {
+  private def genAndLoad(templateClassName: String) :Class[_] = {
     val genClassName = templateClassName.replace(templateString, replaceString)
 
-    val clazz =
     try {
-      DefineClassLoader.get.loadClass(genClassName)
+      Util.DefineClassLoader.loadClass(genClassName)
     }
     catch {
       case noclass: ClassNotFoundException =>
 
-        val templateGen =
-        try {
-          Class.forName(
-            "simplex3d.buffer.optimize.TemplateGen"
-          ).newInstance.asInstanceOf[
-            {
-              def genByteCode(
-                templateClassName: String,
-                templateString: String,
-                replaceString: String
-              ) :Array[Byte]
-            }
-          ]
-        } catch {
-          case ce: NoClassDefFoundError => throw new NoLibException(ce)
-        }
-
-        val byteCode = templateGen.genByteCode(
+        val byteCode = Util.TemplateGen.genByteCode(
           templateClassName, templateString, replaceString
         )
 
-        DefineClassLoader.get.define(
+        Util.DefineClassLoader.define(
           genClassName, byteCode, 0, byteCode.length
         )
     }
-
-    clazz.newInstance.asInstanceOf[DataSeq[T, D]]
   }
 
   private def testFactory(factory: DataSeq[T, D]) {
@@ -311,8 +291,33 @@ private[optimize] object TestData {
   }
 }
 
-private[optimize] object DefineClassLoader {
-  val get = new DefineClassLoader(this.getClass.getClassLoader)
+private[optimize] trait TemplateGen {
+  def genByteCode(
+    templateClassName: String,
+    templateString: String,
+    replaceString: String
+  ) :Array[Byte]
+}
+
+private[optimize] object Util {
+  private lazy val templateGenRes: AnyRef = {
+    try {
+      Class.forName(
+        "simplex3d.buffer.optimize.TemplateGenImpl"
+      ).newInstance().asInstanceOf[TemplateGen]
+    } catch {
+      case ce: NoClassDefFoundError => ce
+    }
+  }
+
+  def TemplateGen = {
+    templateGenRes match {
+      case ce: NoClassDefFoundError => throw new NoLibException(ce)
+      case t: TemplateGen => t
+    }
+  }
+  
+  val DefineClassLoader = new DefineClassLoader(this.getClass.getClassLoader)
 }
 
 private[optimize] class DefineClassLoader(parent: ClassLoader)

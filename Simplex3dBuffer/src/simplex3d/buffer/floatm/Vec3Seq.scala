@@ -22,7 +22,6 @@ package simplex3d.buffer.floatm
 
 import java.nio._
 import scala.annotation.unchecked._
-import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.buffer._
 

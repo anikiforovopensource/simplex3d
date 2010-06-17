@@ -22,7 +22,6 @@ package simplex3d.buffer
 
 import java.nio._
 import scala.annotation.unchecked._
-import simplex3d.math._
 
 
 /**

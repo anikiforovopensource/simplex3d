@@ -24,7 +24,6 @@ import java.nio._
 import scala.annotation._
 import scala.annotation.unchecked._
 import scala.collection._
-import simplex3d.math._
 
 
 /**

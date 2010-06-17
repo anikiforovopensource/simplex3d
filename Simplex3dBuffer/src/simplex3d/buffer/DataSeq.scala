@@ -20,8 +20,6 @@
 
 package simplex3d.buffer
 
-import simplex3d.math._
-
 
 /**
  * @author Aleksey Nikiforov (lex)

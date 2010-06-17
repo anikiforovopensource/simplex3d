@@ -22,7 +22,6 @@ package simplex3d.buffer.intm
 package optimized
 
 import java.nio._
-import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.buffer._
 
@@ -65,7 +64,6 @@ private[buffer] final class ArrayVec2iSInt(
 private[buffer] final class BufferVec2iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec2i[SInt](backingSeq) with DataBuffer[Vec2i, SInt] {
-  def this() = this(new BufferInt1SInt)
   def asReadOnly() = new BufferVec2iSInt(backingSeq.asReadOnly())
 
   override def apply(i: Int) :AnyVec2i = {
@@ -98,7 +96,6 @@ private[buffer] final class ViewVec2iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec2i[SInt](backingSeq) with DataView[Vec2i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 2)
   def asReadOnly() = new ViewVec2iSInt(backingSeq.asReadOnly(), offset, stride)
 
   override def apply(i: Int) :AnyVec2i = {
@@ -164,7 +161,6 @@ private[buffer] final class ArrayVec3iSInt(
 private[buffer] final class BufferVec3iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec3i[SInt](backingSeq) with DataBuffer[Vec3i, SInt] {
-  def this() = this(new BufferInt1SInt)
   def asReadOnly() = new BufferVec3iSInt(backingSeq.asReadOnly())
 
   override def apply(i: Int) :AnyVec3i = {
@@ -199,7 +195,6 @@ private[buffer] final class ViewVec3iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec3i[SInt](backingSeq) with DataView[Vec3i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 3)
   def asReadOnly() = new ViewVec3iSInt(backingSeq.asReadOnly(), offset, stride)
   
   override def apply(i: Int) :AnyVec3i = {
@@ -269,7 +264,6 @@ private[buffer] final class ArrayVec4iSInt(
 private[buffer] final class BufferVec4iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec4i[SInt](backingSeq) with DataBuffer[Vec4i, SInt] {
-  def this() = this(new BufferInt1SInt)
   def asReadOnly() = new BufferVec4iSInt(backingSeq.asReadOnly())
 
   override def apply(i: Int) :AnyVec4i = {
@@ -306,7 +300,6 @@ private[buffer] final class ViewVec4iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec4i[SInt](backingSeq) with DataView[Vec4i, SInt] {
-  def this() = this(new BufferInt1SInt, 0, 4)
   def asReadOnly() = new ViewVec4iSInt(backingSeq.asReadOnly(), offset, stride)
 
   override def apply(i: Int) :AnyVec4i = {

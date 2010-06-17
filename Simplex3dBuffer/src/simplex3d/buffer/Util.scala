@@ -22,7 +22,6 @@ package simplex3d.buffer
 
 import java.nio._
 import scala.annotation._
-import simplex3d.math._
 
 
 // An empty class to make -Xno-forwarders work

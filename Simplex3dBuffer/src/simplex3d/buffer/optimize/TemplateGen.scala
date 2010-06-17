@@ -26,7 +26,7 @@ import org.objectweb.asm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[optimize] class TemplateGen {
+private[optimize] class TemplateGenImpl extends TemplateGen {
   def genByteCode(
     templateClassName: String, templateString: String, replaceString: String
   ) :Array[Byte] = {

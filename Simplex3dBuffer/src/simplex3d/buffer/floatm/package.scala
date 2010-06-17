@@ -21,7 +21,6 @@
 package simplex3d.buffer
 
 import java.nio._
-import simplex3d.math._
 import simplex3d.buffer.optimize._
 import simplex3d.buffer.floatm._
 import simplex3d.buffer.floatm.optimized._

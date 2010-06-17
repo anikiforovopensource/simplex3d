@@ -54,6 +54,11 @@ private[floatm] object Shared {
     if (x >= 0) int(x + 0.5f)
     else int(x - 0.5f)
   }
+
+  final def uround(x: Float) :Int = {
+    if (x >= 0) int(long(x + 0.5f))
+    else int(long(x - 0.5f))
+  }
 }
 import Shared._
 
@@ -113,7 +118,6 @@ private[buffer] final class BufferFloat1SByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqFloat1SByte(buff) with DataBuffer[Float1, SByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1SByte(
@@ -133,7 +137,6 @@ private[buffer] final class ViewFloat1SByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1SByte(buff) with DataView[Float1, SByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferFloat1SByte(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1SByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -197,7 +200,6 @@ private[buffer] final class BufferFloat1UByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqFloat1UByte(buff) with DataBuffer[Float1, UByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1UByte(
@@ -217,7 +219,6 @@ private[buffer] final class ViewFloat1UByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1UByte(buff) with DataView[Float1, UByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferFloat1UByte(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1UByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -285,7 +286,6 @@ private[buffer] final class BufferFloat1NSByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqFloat1NSByte(buff) with DataBuffer[Float1, NSByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NSByte(
@@ -311,7 +311,6 @@ private[buffer] final class ViewFloat1NSByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NSByte(buff) with DataView[Float1, NSByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferFloat1NSByte(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NSByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -379,7 +378,6 @@ private[buffer] final class BufferFloat1NUByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqFloat1NUByte(buff) with DataBuffer[Float1, NUByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NUByte(
@@ -402,7 +400,6 @@ private[buffer] final class ViewFloat1NUByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NUByte(buff) with DataView[Float1, NUByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferFloat1NUByte(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NUByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -468,7 +465,6 @@ private[buffer] final class BufferFloat1SShort(
   sharedBuff: ByteBuffer,
   buff: ShortBuffer
 ) extends SeqFloat1SShort(buff) with DataBuffer[Float1, SShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1SShort(
@@ -488,7 +484,6 @@ private[buffer] final class ViewFloat1SShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1SShort(buff) with DataView[Float1, SShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
   val backingSeq = new BufferFloat1SShort(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1SShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -552,7 +547,6 @@ private[buffer] final class BufferFloat1UShort(
   sharedBuff: ByteBuffer,
   buff: CharBuffer
 ) extends SeqFloat1UShort(buff) with DataBuffer[Float1, UShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1UShort(
@@ -575,7 +569,6 @@ private[buffer] final class ViewFloat1UShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1UShort(buff) with DataView[Float1, UShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer(), 0, 1)
   val backingSeq = new BufferFloat1UShort(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1UShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -645,7 +638,6 @@ private[buffer] final class BufferFloat1NSShort(
   sharedBuff: ByteBuffer,
   buff: ShortBuffer
 ) extends SeqFloat1NSShort(buff) with DataBuffer[Float1, NSShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NSShort(
@@ -671,7 +663,6 @@ private[buffer] final class ViewFloat1NSShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NSShort(buff) with DataView[Float1, NSShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
   val backingSeq = new BufferFloat1NSShort(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NSShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -739,7 +730,6 @@ private[buffer] final class BufferFloat1NUShort(
   sharedBuff: ByteBuffer,
   buff: CharBuffer
 ) extends SeqFloat1NUShort(buff) with DataBuffer[Float1, NUShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NUShort(
@@ -762,7 +752,6 @@ private[buffer] final class ViewFloat1NUShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NUShort(buff) with DataView[Float1, NUShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer(), 0, 1)
   val backingSeq = new BufferFloat1NUShort(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NUShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -826,7 +815,6 @@ private[buffer] final class BufferFloat1SInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqFloat1SInt(buff) with DataBuffer[Float1, SInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1SInt(
@@ -846,7 +834,6 @@ private[buffer] final class ViewFloat1SInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1SInt(buff) with DataView[Float1, SInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferFloat1SInt(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1SInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -901,14 +888,13 @@ private[buffer] final class ArrayFloat1UInt(
 
   def apply(i: Int) :Float = long(rarray(i)) & 0xFFFFFFFFL
   def update(i: Int, v: Float) :Unit =
-    warray(i) = int(long(iround(v)) & 0xFFFFFFFFL)
+    warray(i) = uround(v)
 }
 
 private[buffer] final class BufferFloat1UInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqFloat1UInt(buff) with DataBuffer[Float1, UInt]{
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1UInt(
@@ -921,7 +907,7 @@ private[buffer] final class BufferFloat1UInt(
   def apply(i: Int) :Float = long(buff.get(i)) & 0xFFFFFFFFL
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    int(long(iround(v)) & 0xFFFFFFFFL)
+    uround(v)
   )
 }
 
@@ -931,7 +917,6 @@ private[buffer] final class ViewFloat1UInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1UInt(buff) with DataView[Float1, UInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferFloat1UInt(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1UInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -943,7 +928,7 @@ private[buffer] final class ViewFloat1UInt(
   def apply(i: Int) :Float = long(buff.get(offset + i*stride)) & 0xFFFFFFFFL
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    int(long(iround(v)) & 0xFFFFFFFFL)
+    uround(v)
   )
 }
 
@@ -999,7 +984,6 @@ private[buffer] final class BufferFloat1NSInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqFloat1NSInt(buff) with DataBuffer[Float1, NSInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NSInt(
@@ -1025,7 +1009,6 @@ private[buffer] final class ViewFloat1NSInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NSInt(buff) with DataView[Float1, NSInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferFloat1NSInt(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NSInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -1085,14 +1068,13 @@ private[buffer] final class ArrayFloat1NUInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((long(rarray(i)) & 0xFFFFFFFFL)*fromNUInt)
-  def update(i: Int, v: Float) :Unit = warray(i) = iround(clamp(v, 0, 1)*toNUInt)
+  def update(i: Int, v: Float) :Unit = warray(i) = uround(clamp(v, 0, 1)*toNUInt)
 }
 
 private[buffer] final class BufferFloat1NUInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqFloat1NUInt(buff) with DataBuffer[Float1, NUInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1NUInt(
@@ -1107,7 +1089,7 @@ private[buffer] final class BufferFloat1NUInt(
   )
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    iround(clamp(v, 0, 1)*toNUInt)
+    uround(clamp(v, 0, 1)*toNUInt)
   )
 }
 
@@ -1117,7 +1099,6 @@ private[buffer] final class ViewFloat1NUInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1NUInt(buff) with DataView[Float1, NUInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferFloat1NUInt(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1NUInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -1131,7 +1112,7 @@ private[buffer] final class ViewFloat1NUInt(
   )
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    iround(clamp(v, 0, 1)*toNUInt)
+    uround(clamp(v, 0, 1)*toNUInt)
   )
 }
 
@@ -1185,7 +1166,6 @@ private[buffer] final class BufferFloat1HalfFloat(
   sharedBuff: ByteBuffer,
   buff: ShortBuffer
 ) extends SeqFloat1HalfFloat(buff) with DataBuffer[Float1, HalfFloat] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1HalfFloat(
@@ -1205,7 +1185,6 @@ private[buffer] final class ViewFloat1HalfFloat(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1HalfFloat(buff) with DataView[Float1, HalfFloat] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
   val backingSeq = new BufferFloat1HalfFloat(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1HalfFloat(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -1271,7 +1250,6 @@ private[buffer] final class BufferFloat1RawFloat(
   sharedBuff: ByteBuffer,
   buff: FloatBuffer
 ) extends SeqFloat1RawFloat(buff) with DataBuffer[Float1, RawFloat] {
-  def this() = this(alloc(0), alloc(0).asFloatBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferFloat1RawFloat(
@@ -1291,7 +1269,6 @@ private[buffer] final class ViewFloat1RawFloat(
   override val offset: Int,
   override val stride: Int
 ) extends SeqFloat1RawFloat(buff) with DataView[Float1, RawFloat] {
-  def this() = this(alloc(0), alloc(0).asFloatBuffer(), 0, 1)
   val backingSeq = new BufferFloat1RawFloat(sharedBuff, buff)
   def asReadOnly() = new ViewFloat1RawFloat(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride

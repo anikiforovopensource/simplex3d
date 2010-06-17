@@ -85,7 +85,6 @@ private[buffer] final class BufferInt1UByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqInt1UByte(buff) with IndexBuffer[UByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1UByte(
@@ -105,7 +104,6 @@ private[buffer] final class ViewInt1UByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1UByte(buff) with DataView[Int1, UByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferInt1UByte(sharedBuff, buff)
   def asReadOnly() = new ViewInt1UByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -168,7 +166,6 @@ private[buffer] final class BufferInt1UShort(
   sharedBuff: ByteBuffer,
   buff: CharBuffer
 ) extends SeqInt1UShort(buff) with IndexBuffer[UShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1UShort(
@@ -188,7 +185,6 @@ private[buffer] final class ViewInt1UShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1UShort(buff) with DataView[Int1, UShort] {
-  def this() = this(alloc(0), alloc(0).asCharBuffer(), 0, 1)
   val backingSeq = new BufferInt1UShort(sharedBuff, buff)
   def asReadOnly() = new ViewInt1UShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -252,7 +248,6 @@ private[buffer] final class BufferInt1UInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqInt1UInt(buff) with IndexBuffer[UInt]{
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1UInt(sharedBuff, buffer.asReadOnlyBuffer())
@@ -270,7 +265,6 @@ private[buffer] final class ViewInt1UInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1UInt(buff) with DataView[Int1, UInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferInt1UInt(sharedBuff, buff)
   def asReadOnly() = new ViewInt1UInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -331,7 +325,6 @@ private[buffer] final class BufferInt1SByte(
   sharedBuff: ByteBuffer,
   buff: ByteBuffer
 ) extends SeqInt1SByte(buff) with DataBuffer[Int1, SByte] {
-  def this() = this(alloc(0), alloc(0).duplicate())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1SByte(
@@ -351,7 +344,6 @@ private[buffer] final class ViewInt1SByte(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1SByte(buff) with DataView[Int1, SByte] {
-  def this() = this(alloc(0), alloc(0).duplicate(), 0, 1)
   val backingSeq = new BufferInt1SByte(sharedBuff, buff)
   def asReadOnly() = new ViewInt1SByte(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -414,7 +406,6 @@ private[buffer] final class BufferInt1SShort(
   sharedBuff: ByteBuffer,
   buff: ShortBuffer
 ) extends SeqInt1SShort(buff) with DataBuffer[Int1, SShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1SShort(
@@ -434,7 +425,6 @@ private[buffer] final class ViewInt1SShort(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1SShort(buff) with DataView[Int1, SShort] {
-  def this() = this(alloc(0), alloc(0).asShortBuffer(), 0, 1)
   val backingSeq = new BufferInt1SShort(sharedBuff, buff)
   def asReadOnly() = new ViewInt1SShort(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride
@@ -495,7 +485,6 @@ private[buffer] final class BufferInt1SInt(
   sharedBuff: ByteBuffer,
   buff: IntBuffer
 ) extends SeqInt1SInt(buff) with DataBuffer[Int1, SInt]{
-  def this() = this(alloc(0), alloc(0).asIntBuffer())
   setSharedByteBuffer(sharedBuff)
   def backingSeq = this
   def asReadOnly() = new BufferInt1SInt(sharedBuff, buffer.asReadOnlyBuffer())
@@ -513,7 +502,6 @@ private[buffer] final class ViewInt1SInt(
   override val offset: Int,
   override val stride: Int
 ) extends SeqInt1SInt(buff) with DataView[Int1, SInt] {
-  def this() = this(alloc(0), alloc(0).asIntBuffer(), 0, 1)
   val backingSeq = new BufferInt1SInt(sharedBuff, buff)
   def asReadOnly() = new ViewInt1SInt(
     sharedBuff, buffer.asReadOnlyBuffer(), offset, stride

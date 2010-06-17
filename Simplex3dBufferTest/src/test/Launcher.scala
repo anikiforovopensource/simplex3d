@@ -18,12 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.buffer
+package test
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class SIntTest {
-
+object Launcher {
+  def main(args: Array[String]) {
+    org.scalatest.tools.Runner.main(Array[String](
+      "-p",
+      "build/classes",
+      "-gNHL"
+    ))
+  }
 }

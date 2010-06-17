@@ -350,12 +350,25 @@ object FloatMath {
   }
 
   def reflect(i: inVec2f, n: inVec2f) :Vec2f = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec2f(
+      i.x + n.x*t,
+      i.y + n.y*t
+    )
   }
   def refract(i: inVec2f, n: inVec2f, eta: Float) :Vec2f = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec2f(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec2f(0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec2f(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t
+      )
+    }
   }
 
   def lessThan(u: inVec2f, v: inVec2f) :Vec2b = {
@@ -586,12 +599,27 @@ object FloatMath {
   }
 
   def reflect(i: inVec3f, n: inVec3f) :Vec3f = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec3f(
+      i.x + n.x*t,
+      i.y + n.y*t,
+      i.z + n.z*t
+    )
   }
   def refract(i: inVec3f, n: inVec3f, eta: Float) :Vec3f = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec3f(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec3f(0, 0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec3f(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t,
+        i.z*eta - n.z*t
+      )
+    }
   }
 
   def lessThan(u: inVec3f, v: inVec3f) :Vec3b = {
@@ -885,12 +913,29 @@ object FloatMath {
   }
 
   def reflect(i: inVec4f, n: inVec4f) :Vec4f = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec4f(
+      i.x + n.x*t,
+      i.y + n.y*t,
+      i.z + n.z*t,
+      i.w + n.w*t
+    )
   }
   def refract(i: inVec4f, n: inVec4f, eta: Float) :Vec4f = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec4f(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec4f(0, 0, 0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec4f(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t,
+        i.z*eta - n.z*t,
+        i.w*eta - n.w*t
+      )
+    }
   }
 
   def lessThan(u: inVec4f, v: inVec4f) :Vec4b = {

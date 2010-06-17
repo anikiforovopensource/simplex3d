@@ -318,12 +318,25 @@ object DoubleMath {
   }
 
   def reflect(i: inVec2d, n: inVec2d) :Vec2d = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec2d(
+      i.x + n.x*t,
+      i.y + n.y*t
+    )
   }
   def refract(i: inVec2d, n: inVec2d, eta: Double) :Vec2d = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec2d(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec2d(0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec2d(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t
+      )
+    }
   }
 
   def lessThan(u: inVec2d, v: inVec2d) :Vec2b = {
@@ -554,12 +567,27 @@ object DoubleMath {
   }
 
   def reflect(i: inVec3d, n: inVec3d) :Vec3d = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec3d(
+      i.x + n.x*t,
+      i.y + n.y*t,
+      i.z + n.z*t
+    )
   }
   def refract(i: inVec3d, n: inVec3d, eta: Double) :Vec3d = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec3d(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec3d(0, 0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec3d(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t,
+        i.z*eta - n.z*t
+      )
+    }
   }
 
   def lessThan(u: inVec3d, v: inVec3d) :Vec3b = {
@@ -855,12 +883,29 @@ object DoubleMath {
   }
 
   def reflect(i: inVec4d, n: inVec4d) :Vec4d = {
-    i - n*2*dot(n, i)
+    val t = -2*dot(n, i)
+    new Vec4d(
+      i.x + n.x*t,
+      i.y + n.y*t,
+      i.z + n.z*t,
+      i.w + n.w*t
+    )
   }
   def refract(i: inVec4d, n: inVec4d, eta: Double) :Vec4d = {
     val dotni = dot(n, i)
     val k = 1 - eta*eta*(1 - dotni*dotni)
-    if (k < 0) Vec4d(0) else i*eta - n*(eta*dotni + sqrt(k))
+    if (k < 0) {
+      new Vec4d(0, 0, 0, 0)
+    }
+    else {
+      val t = eta*dotni + sqrt(k)
+      new Vec4d(
+        i.x*eta - n.x*t,
+        i.y*eta - n.y*t,
+        i.z*eta - n.z*t,
+        i.w*eta - n.w*t
+      )
+    }
   }
 
   def lessThan(u: inVec4d, v: inVec4d) :Vec4b = {

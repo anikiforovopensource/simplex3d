@@ -46,22 +46,22 @@ private[math] class SimplexNoise
 private[math] object SimplexNoise {
 
   // Random offset values to prevent accidental aligning and grid artifacts
-  final val offset00 = 449.1073226372865897
-  final val offset01 = 738.0316654263014150
-  final val offset02 = 255.2639314613530870
-  final val offset03 = 691.5921394510744191
-  final val offset10 = 550.0907939704654918
-  final val offset11 = 592.0756836241091634
-  final val offset12 = 294.3023400629879511
-  final val offset13 = 408.9360492013645179
-  final val offset20 = 134.4189793725531315
-  final val offset21 = 220.7870305513515650
-  final val offset22 = 346.0732581098390910
-  final val offset23 = 820.4440182644025431
-  final val offset30 = 788.3998379525183195
-  final val offset31 = 436.7278070772598331
-  final val offset32 = 845.8071950524306615
-  final val offset33 = 395.4148706115616316
+  final val offset00 = 44.91073226372865897
+  final val offset01 = 73.80316654263014150
+  final val offset02 = 25.52639314613530870
+  final val offset03 = 69.15921394510744191
+  final val offset10 = 55.00907939704654918
+  final val offset11 = 59.20756836241091634
+  final val offset12 = 29.43023400629879511
+  final val offset13 = 40.89360492013645179
+  final val offset20 = 13.44189793725531315
+  final val offset21 = 22.07870305513515650
+  final val offset22 = 34.60732581098390910
+  final val offset23 = 7.044401826440254312
+  final val offset30 = 78.83998379525183195
+  final val offset31 = 93.67278070772598331
+  final val offset32 = 84.58071950524306615
+  final val offset33 = 39.54148706115616316
 
 
   private final val halfPerm: Array[Int] = Array(

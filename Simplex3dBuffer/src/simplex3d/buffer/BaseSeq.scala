@@ -29,7 +29,7 @@ import scala.collection._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class ReadOnlyBaseSeq[
+private[buffer] abstract class ReadBaseSeq[
   E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
 ](
   shared: AnyRef,
@@ -95,7 +95,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def stride: Int = components
 
   def backingSeq: ReadContiguousSeq[E#Component, R]
-  private[buffer] def isReadOnly(): Boolean = buffer.isReadOnly()
+  final def isReadOnly(): Boolean = buffer.isReadOnly()
   def asReadOnlySeq() :ReadDataSeq[E, R]
 
   final def copyAsDataArray() :DataArray[E, R] = {
@@ -139,7 +139,7 @@ private[buffer] abstract class BaseSeq[
   E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
 ](
   shared: AnyRef, buff: R#BufferType
-) extends ReadOnlyBaseSeq[E, S, R](shared, buff) {
+) extends ReadBaseSeq[E, S, R](shared, buff) {
 
   def asBuffer() :R#BufferType
 
@@ -147,8 +147,8 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: S)
 
   def backingSeq: ContiguousSeq[E#Component, R]
-  final override def isReadOnly(): Boolean = buffer.isReadOnly()
 
+  
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
   ) {

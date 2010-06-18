@@ -25,7 +25,7 @@ package simplex3d.buffer
  * @author Aleksey Nikiforov (lex)
  */
 trait ReadDataSeq[E <: ElemType, +R <: RawType]
-extends ReadOnlyBaseSeq[E, E#Element, R]
+extends ReadBaseSeq[E, E#Element, R]
 
 trait DataSeq[E <: ElemType, +R <: RawType]
 extends BaseSeq[E, E#Element, R] with ReadDataSeq[E, R]

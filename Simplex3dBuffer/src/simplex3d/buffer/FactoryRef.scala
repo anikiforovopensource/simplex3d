@@ -28,7 +28,28 @@ abstract class FactoryRef[E <: ElemType, R <: RawType] {
   def factory: DataSeq[E, R]
 }
 
-class SimpleFactoryRef[E <: ElemType, R <: RawType](
-  val factory: DataSeq[E, R]
-) extends FactoryRef[E, R]
+class PrimitiveFactoryRef[E <: Primitive, R <: RawType](
+  primitiveClass: String
+) extends FactoryRef[E, R] {
+  lazy val factory: DataSeq[E, R] = {
+    Class.forName(primitiveClass).newInstance().asInstanceOf[DataSeq[E, R]]
+  }
+}
 
+class CompositeFactoryRef[E <: Composite, R <: RawType](
+  compositeClass: String,
+  primitiveFactoryRef: PrimitiveFactoryRef[E#Component, R]
+) extends FactoryRef[E, R] {
+
+  lazy val factory: DataSeq[E, R] = {
+    val constructor = {
+      val cons = Class.forName(compositeClass).getConstructors()
+      if (cons(0).getParameterTypes().length == 1) cons(0)
+      else cons(1)
+    }
+
+    constructor.newInstance(
+      primitiveFactoryRef.factory
+    ).asInstanceOf[DataSeq[E, R]]
+  }
+}

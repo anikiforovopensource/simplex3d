@@ -71,20 +71,14 @@ object DataView {
   def apply[E <: ElemType, R <: ReadableType](
     db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    if (db.isReadOnly) throw new IllegalArgumentException(
-      "The argument must not be read only."
-    )
-
-    ref.factory.mkDataView(db.sharedBuffer, offset, stride)
+    val res = ref.factory.mkDataView(db.sharedBuffer, offset, stride)
+    if (db.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataView[E, R]] else res
   }
 
   def apply[E <: ElemType, R <: ReadableType](
     db: inDataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
-    val res = ref.factory.mkDataView(
-      db.sharedBuffer, offset, stride
-    )
-
+    val res = ref.factory.mkDataView(db.sharedBuffer, offset, stride)
     if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }

@@ -69,7 +69,7 @@ object HalfFloatUtil {
     else {
       val res = (bits & 0xC0000000) | ((bits >>> 3) & 0x07FFFFFF)
       val f =
-        if ((res & 0x70000000) != 0 && (s & 0x7C00) != 0x7C00) {
+        if ((res & 0x70000000) != 0 && (bits & 0x7C000000) != 0x7C000000) {
           res
         }
         else {

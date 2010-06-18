@@ -72,11 +72,8 @@ object DataArray {
   def apply[E <: ElemType, R <: ReadableType](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
-    if (da.isReadOnly) throw new IllegalArgumentException(
-      "The argument must not be read only."
-    )
-
-    ref.factory.mkDataArray(da.array)
+    val res = ref.factory.mkDataArray(da.sharedArray)
+    if (da.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataArray[E, R]] else res
   }
 
   def apply[E <: ElemType, R <: ReadableType](da: inDataArray[_, R])(

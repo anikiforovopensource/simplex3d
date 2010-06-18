@@ -28,16 +28,31 @@ import java.nio._
  */
 package buffer {
   private[buffer] class UnsignedImplicits {
-    private final type F[T <: ElemType, D <: RawType] = SimpleFactoryRef[T, D]
 
-    implicit final val FactoryInt1SByte = new F(new ArrayInt1SByte)
-    implicit final val FactoryInt1UByte = new F(new ArrayInt1UByte)
+    private final type PrimitiveFactory[R <: ReadableInt] =
+      PrimitiveFactoryRef[Int1, R]
 
-    implicit final val FactoryInt1SShort = new F(new ArrayInt1SShort)
-    implicit final val FactoryInt1UShort = new F(new ArrayInt1UShort)
+    
+    implicit final val FactoryInt1SByte = new PrimitiveFactory[SByte](
+      "simplex3d.buffer.ArrayInt1SByte"
+    )
+    implicit final val FactoryInt1UByte = new PrimitiveFactory[UByte](
+      "simplex3d.buffer.ArrayInt1UByte"
+    )
 
-    implicit final val FactoryInt1SInt = new F(new ArrayInt1SInt)
-    implicit final val FactoryInt1UInt = new F(new ArrayInt1UInt)
+    implicit final val FactoryInt1SShort = new PrimitiveFactory[SShort](
+      "simplex3d.buffer.ArrayInt1SShort"
+    )
+    implicit final val FactoryInt1UShort = new PrimitiveFactory[UShort](
+      "simplex3d.buffer.ArrayInt1UShort"
+    )
+
+    implicit final val FactoryInt1SInt = new PrimitiveFactory[SInt](
+      "simplex3d.buffer.ArrayInt1SInt"
+    )
+    implicit final val FactoryInt1UInt = new PrimitiveFactory[UInt](
+      "simplex3d.buffer.ArrayInt1UInt"
+    )
   }
 }
 

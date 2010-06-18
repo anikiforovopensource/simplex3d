@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import simplex3d.math.floatm._
 import simplex3d.buffer.optimize._
 import simplex3d.buffer.floatm._
 import simplex3d.buffer.floatm.optimized._
@@ -31,256 +32,417 @@ import simplex3d.buffer.floatm.optimized._
  */
 package object floatm {
 
-  private final type F[T <: ElemType, D <: RawType] = SimpleFactoryRef[T, D]
-  private final type G[T <: ElemType, D <: RawType] =TemplateGenFactoryRef[T, D]
-  private final def da[T <: ElemType, D <: RawType](f: FactoryRef[T, D]) =
-    f.factory.asInstanceOf[DataArray[T, D]]
+  private final type PrimitiveFactory[R <: ReadableFloat] =
+    PrimitiveFactoryRef[Float1, R]
+  private final type GenFactory[E <: Composite, R <: ReadableFloat] =
+    TemplateGenFactoryRef[E, R]
+  private final type CompositeFactory[E <: Composite, R <: ReadableFloat] =
+    CompositeFactoryRef[E, R]
 
 
   // Float1
-  implicit final val FactoryFloat1SByte = new F(new ArrayFloat1SByte)
-  implicit final val FactoryFloat1UByte = new F(new ArrayFloat1UByte)
-  implicit final val FactoryFloat1NSByte = new F(new ArrayFloat1NSByte)
-  implicit final val FactoryFloat1NUByte = new F(new ArrayFloat1NUByte)
+  implicit final val FactoryFloat1SByte = new PrimitiveFactory[SByte](
+    "simplex3d.buffer.floatm.ArrayFloat1SByte"
+  )
+  implicit final val FactoryFloat1UByte = new PrimitiveFactory[UByte](
+    "simplex3d.buffer.floatm.ArrayFloat1UByte"
+  )
+  implicit final val FactoryFloat1NSByte = new PrimitiveFactory[NSByte](
+    "simplex3d.buffer.floatm.ArrayFloat1NSByte"
+  )
+  implicit final val FactoryFloat1NUByte = new PrimitiveFactory[NUByte](
+    "simplex3d.buffer.floatm.ArrayFloat1NUByte"
+  )
   
-  implicit final val FactoryFloat1SShort = new F(new ArrayFloat1SShort)
-  implicit final val FactoryFloat1UShort = new F(new ArrayFloat1UShort)
-  implicit final val FactoryFloat1NSShort = new F(new ArrayFloat1NSShort)
-  implicit final val FactoryFloat1NUShort = new F(new ArrayFloat1NUShort)
+  implicit final val FactoryFloat1SShort = new PrimitiveFactory[SShort](
+    "simplex3d.buffer.floatm.ArrayFloat1SShort"
+  )
+  implicit final val FactoryFloat1UShort = new PrimitiveFactory[UShort](
+    "simplex3d.buffer.floatm.ArrayFloat1UShort"
+  )
+  implicit final val FactoryFloat1NSShort = new PrimitiveFactory[NSShort](
+    "simplex3d.buffer.floatm.ArrayFloat1NSShort"
+  )
+  implicit final val FactoryFloat1NUShort = new PrimitiveFactory[NUShort](
+    "simplex3d.buffer.floatm.ArrayFloat1NUShort"
+  )
 
-  implicit final val FactoryFloat1SInt = new F(new ArrayFloat1SInt)
-  implicit final val FactoryFloat1UInt = new F(new ArrayFloat1UInt)
-  implicit final val FactoryFloat1NSInt = new F(new ArrayFloat1NSInt)
-  implicit final val FactoryFloat1NUInt = new F(new ArrayFloat1NUInt)
+  implicit final val FactoryFloat1SInt = new PrimitiveFactory[SInt](
+    "simplex3d.buffer.floatm.ArrayFloat1SInt"
+  )
+  implicit final val FactoryFloat1UInt = new PrimitiveFactory[UInt](
+    "simplex3d.buffer.floatm.ArrayFloat1UInt"
+  )
+  implicit final val FactoryFloat1NSInt = new PrimitiveFactory[NSInt](
+    "simplex3d.buffer.floatm.ArrayFloat1NSInt"
+  )
+  implicit final val FactoryFloat1NUInt = new PrimitiveFactory[NUInt](
+    "simplex3d.buffer.floatm.ArrayFloat1NUInt"
+  )
 
-  implicit final val FactoryFloat1HalfFloat = new F(new ArrayFloat1HalfFloat)
-  implicit final val FactoryFloat1RawFloat = new F(new ArrayFloat1RawFloat)
+  implicit final val FactoryFloat1HalfFloat = new PrimitiveFactory[HalfFloat](
+    "simplex3d.buffer.floatm.ArrayFloat1HalfFloat"
+  )
+  implicit final val FactoryFloat1RawFloat = new PrimitiveFactory[RawFloat](
+    "simplex3d.buffer.floatm.ArrayFloat1RawFloat"
+  )
 
 
   // Vec2f
   private val vec2fTemplateClass =
     "simplex3d.buffer.floatm.optimized.ArrayVec2fRawFloat"
-  private val vec2fTemplate = "RawFloat"
+  private val vec2fTemplateString = "RawFloat"
+  private val vec2fFallbackClass = "simplex3d.buffer.floatm.ArrayVec2f"
 
-  implicit final val FactoryVec2fSByte = new G(
+  implicit final val FactoryVec2fSByte = new GenFactory[Vec2f, SByte](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[SByte](da(FactoryFloat1SByte))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, SByte](
+      vec2fFallbackClass,
+      FactoryFloat1SByte
+    )
   )
-  implicit final val FactoryVec2fUByte = new G(
+  implicit final val FactoryVec2fUByte = new GenFactory[Vec2f, UByte](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[UByte](da(FactoryFloat1UByte))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, UByte](
+      vec2fFallbackClass,
+      FactoryFloat1UByte
+    )
   )
-  implicit final val FactoryVec2fNSByte = new G(
+  implicit final val FactoryVec2fNSByte = new GenFactory[Vec2f, NSByte](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NSByte](da(FactoryFloat1NSByte))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NSByte](
+      vec2fFallbackClass,
+      FactoryFloat1NSByte
+    )
   )
-  implicit final val FactoryVec2fNUByte = new G(
+  implicit final val FactoryVec2fNUByte = new GenFactory[Vec2f, NUByte](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NUByte](da(FactoryFloat1NUByte))
-  )
-
-  implicit final val FactoryVec2fSShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[SShort](da(FactoryFloat1SShort))
-  )
-  implicit final val FactoryVec2fUShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[UShort](da(FactoryFloat1UShort))
-  )
-  implicit final val FactoryVec2fNSShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NSShort](da(FactoryFloat1NSShort))
-  )
-  implicit final val FactoryVec2fNUShort = new G(
-    vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NUShort](da(FactoryFloat1NUShort))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NUByte](
+      vec2fFallbackClass,
+      FactoryFloat1NUByte
+    )
   )
 
-  implicit final val FactoryVec2fSInt = new G(
+  implicit final val FactoryVec2fSShort = new GenFactory[Vec2f, SShort](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[SInt](da(FactoryFloat1SInt))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, SShort](
+      vec2fFallbackClass,
+      FactoryFloat1SShort
+    )
   )
-  implicit final val FactoryVec2fUInt = new G(
+  implicit final val FactoryVec2fUShort = new GenFactory[Vec2f, UShort](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[UInt](da(FactoryFloat1UInt))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, UShort](
+      vec2fFallbackClass,
+      FactoryFloat1UShort
+    )
   )
-  implicit final val FactoryVec2fNSInt = new G(
+  implicit final val FactoryVec2fNSShort = new GenFactory[Vec2f, NSShort](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NSInt](da(FactoryFloat1NSInt))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NSShort](
+      vec2fFallbackClass,
+      FactoryFloat1NSShort
+    )
   )
-  implicit final val FactoryVec2fNUInt = new G(
+  implicit final val FactoryVec2fNUShort = new GenFactory[Vec2f, NUShort](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[NUInt](da(FactoryFloat1NUInt))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NUShort](
+      vec2fFallbackClass,
+      FactoryFloat1NUShort
+    )
   )
 
-  implicit final val FactoryVec2fHalfFloat = new G(
+  implicit final val FactoryVec2fSInt = new GenFactory[Vec2f, SInt](
     vec2fTemplateClass,
-    vec2fTemplate,
-    new ArrayVec2f[HalfFloat](da(FactoryFloat1HalfFloat))
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, SInt](
+      vec2fFallbackClass,
+      FactoryFloat1SInt
+    )
   )
-  implicit final val FactoryVec2fRawFloat = new F(new ArrayVec2fRawFloat)
+  implicit final val FactoryVec2fUInt = new GenFactory[Vec2f, UInt](
+    vec2fTemplateClass,
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, UInt](
+      vec2fFallbackClass,
+      FactoryFloat1UInt
+    )
+  )
+  implicit final val FactoryVec2fNSInt = new GenFactory[Vec2f, NSInt](
+    vec2fTemplateClass,
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NSInt](
+      vec2fFallbackClass,
+      FactoryFloat1NSInt
+    )
+  )
+  implicit final val FactoryVec2fNUInt = new GenFactory[Vec2f, NUInt](
+    vec2fTemplateClass,
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, NUInt](
+      vec2fFallbackClass,
+      FactoryFloat1NUInt
+    )
+  )
+
+  implicit final val FactoryVec2fHalfFloat = new GenFactory[Vec2f, HalfFloat](
+    vec2fTemplateClass,
+    vec2fTemplateString,
+    new CompositeFactory[Vec2f, HalfFloat](
+      vec2fFallbackClass,
+      FactoryFloat1HalfFloat
+    )
+  )
+  implicit final val FactoryVec2fRawFloat =
+  new CompositeFactory[Vec2f, RawFloat](
+    vec2fTemplateClass,
+    FactoryFloat1RawFloat
+  )
 
 
   // Vec3f
   private val vec3fTemplateClass =
     "simplex3d.buffer.floatm.optimized.ArrayVec3fRawFloat"
-  private val vec3fTemplate = "RawFloat"
+  private val vec3fTemplateString = "RawFloat"
+  private val vec3fFallbackClass = "simplex3d.buffer.floatm.ArrayVec3f"
 
-  implicit final val FactoryVec3fSByte = new G(
+  implicit final val FactoryVec3fSByte = new GenFactory[Vec3f, SByte](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[SByte](da(FactoryFloat1SByte))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, SByte](
+      vec3fFallbackClass,
+      FactoryFloat1SByte
+    )
   )
-  implicit final val FactoryVec3fUByte = new G(
+  implicit final val FactoryVec3fUByte = new GenFactory[Vec3f, UByte](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[UByte](da(FactoryFloat1UByte))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, UByte](
+      vec3fFallbackClass,
+      FactoryFloat1UByte
+    )
   )
-  implicit final val FactoryVec3fNSByte = new G(
+  implicit final val FactoryVec3fNSByte = new GenFactory[Vec3f, NSByte](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NSByte](da(FactoryFloat1NSByte))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NSByte](
+      vec3fFallbackClass,
+      FactoryFloat1NSByte
+    )
   )
-  implicit final val FactoryVec3fNUByte = new G(
+  implicit final val FactoryVec3fNUByte = new GenFactory[Vec3f, NUByte](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NUByte](da(FactoryFloat1NUByte))
-  )
-
-  implicit final val FactoryVec3fSShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[SShort](da(FactoryFloat1SShort))
-  )
-  implicit final val FactoryVec3fUShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[UShort](da(FactoryFloat1UShort))
-  )
-  implicit final val FactoryVec3fNSShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NSShort](da(FactoryFloat1NSShort))
-  )
-  implicit final val FactoryVec3fNUShort = new G(
-    vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NUShort](da(FactoryFloat1NUShort))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NUByte](
+      vec3fFallbackClass,
+      FactoryFloat1NUByte
+    )
   )
 
-  implicit final val FactoryVec3fSInt = new G(
+  implicit final val FactoryVec3fSShort = new GenFactory[Vec3f, SShort](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[SInt](da(FactoryFloat1SInt))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, SShort](
+      vec3fFallbackClass,
+      FactoryFloat1SShort
+    )
   )
-  implicit final val FactoryVec3fUInt = new G(
+  implicit final val FactoryVec3fUShort = new GenFactory[Vec3f, UShort](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[UInt](da(FactoryFloat1UInt))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, UShort](
+      vec3fFallbackClass,
+      FactoryFloat1UShort
+    )
   )
-  implicit final val FactoryVec3fNSInt = new G(
+  implicit final val FactoryVec3fNSShort = new GenFactory[Vec3f, NSShort](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NSInt](da(FactoryFloat1NSInt))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NSShort](
+      vec3fFallbackClass,
+      FactoryFloat1NSShort
+    )
   )
-  implicit final val FactoryVec3fNUInt = new G(
+  implicit final val FactoryVec3fNUShort = new GenFactory[Vec3f, NUShort](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[NUInt](da(FactoryFloat1NUInt))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NUShort](
+      vec3fFallbackClass,
+      FactoryFloat1NUShort
+    )
   )
 
-  implicit final val FactoryVec3fHalfFloat = new G(
+  implicit final val FactoryVec3fSInt = new GenFactory[Vec3f, SInt](
     vec3fTemplateClass,
-    vec3fTemplate,
-    new ArrayVec3f[HalfFloat](da(FactoryFloat1HalfFloat))
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, SInt](
+      vec3fFallbackClass,
+      FactoryFloat1SInt
+    )
   )
-  implicit final val FactoryVec3fRawFloat = new F(new ArrayVec3fRawFloat)
+  implicit final val FactoryVec3fUInt = new GenFactory[Vec3f, UInt](
+    vec3fTemplateClass,
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, UInt](
+      vec3fFallbackClass,
+      FactoryFloat1UInt
+    )
+  )
+  implicit final val FactoryVec3fNSInt = new GenFactory[Vec3f, NSInt](
+    vec3fTemplateClass,
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NSInt](
+      vec3fFallbackClass,
+      FactoryFloat1NSInt
+    )
+  )
+  implicit final val FactoryVec3fNUInt = new GenFactory[Vec3f, NUInt](
+    vec3fTemplateClass,
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, NUInt](
+      vec3fFallbackClass,
+      FactoryFloat1NUInt
+    )
+  )
+
+  implicit final val FactoryVec3fHalfFloat = new GenFactory[Vec3f, HalfFloat](
+    vec3fTemplateClass,
+    vec3fTemplateString,
+    new CompositeFactory[Vec3f, HalfFloat](
+      vec3fFallbackClass,
+      FactoryFloat1HalfFloat
+    )
+  )
+  implicit final val FactoryVec3fRawFloat =
+  new CompositeFactory[Vec3f, RawFloat](
+    vec3fTemplateClass,
+    FactoryFloat1RawFloat
+  )
 
 
   // Vec4f
   private val vec4fTemplateClass =
     "simplex3d.buffer.floatm.optimized.ArrayVec4fNUByte"
-  private val vec4fTemplate = "NUByte"
+  private val vec4fTemplateString = "NUByte"
+  private val vec4fFallbackClass = "simplex3d.buffer.floatm.ArrayVec4f"
 
-  implicit final val FactoryVec4fSByte = new G(
+  implicit final val FactoryVec4fSByte = new GenFactory[Vec4f, SByte](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[SByte](da(FactoryFloat1SByte))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, SByte](
+      vec4fFallbackClass,
+      FactoryFloat1SByte
+    )
   )
-  implicit final val FactoryVec4fUByte = new G(
+  implicit final val FactoryVec4fUByte = new GenFactory[Vec4f, UByte](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[UByte](da(FactoryFloat1UByte))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, UByte](
+      vec4fFallbackClass,
+      FactoryFloat1UByte
+    )
   )
-  implicit final val FactoryVec4fNSByte = new G(
+  implicit final val FactoryVec4fNSByte = new GenFactory[Vec4f, NSByte](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NSByte](da(FactoryFloat1NSByte))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, NSByte](
+      vec4fFallbackClass,
+      FactoryFloat1NSByte
+    )
   )
-  implicit final val FactoryVec4fNUByte = new F(new ArrayVec4fNUByte)
-
-  implicit final val FactoryVec4fSShort = new G(
+  implicit final val FactoryVec4fNUByte = new CompositeFactory[Vec4f, NUByte](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[SShort](da(FactoryFloat1SShort))
-  )
-  implicit final val FactoryVec4fUShort = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[UShort](da(FactoryFloat1UShort))
-  )
-  implicit final val FactoryVec4fNSShort = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NSShort](da(FactoryFloat1NSShort))
-  )
-  implicit final val FactoryVec4fNUShort = new G(
-    vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NUShort](da(FactoryFloat1NUShort))
+    FactoryFloat1NUByte
   )
 
-  implicit final val FactoryVec4fSInt = new G(
+  implicit final val FactoryVec4fSShort = new GenFactory[Vec4f, SShort](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[SInt](da(FactoryFloat1SInt))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, SShort](
+      vec4fFallbackClass,
+      FactoryFloat1SShort
+    )
   )
-  implicit final val FactoryVec4fUInt = new G(
+  implicit final val FactoryVec4fUShort = new GenFactory[Vec4f, UShort](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[UInt](da(FactoryFloat1UInt))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, UShort](
+      vec4fFallbackClass,
+      FactoryFloat1UShort
+    )
   )
-  implicit final val FactoryVec4fNSInt = new G(
+  implicit final val FactoryVec4fNSShort = new GenFactory[Vec4f, NSShort](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NSInt](da(FactoryFloat1NSInt))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, NSShort](
+      vec4fFallbackClass,
+      FactoryFloat1NSShort
+    )
   )
-  implicit final val FactoryVec4fNUInt = new G(
+  implicit final val FactoryVec4fNUShort = new GenFactory[Vec4f, NUShort](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[NUInt](da(FactoryFloat1NUInt))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, NUShort](
+      vec4fFallbackClass,
+      FactoryFloat1NUShort
+    )
   )
 
-  implicit final val FactoryVec4fHalfFloat = new G(
+  implicit final val FactoryVec4fSInt = new GenFactory[Vec4f, SInt](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[HalfFloat](da(FactoryFloat1HalfFloat))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, SInt](
+      vec4fFallbackClass,
+      FactoryFloat1SInt
+    )
   )
-  implicit final val FactoryVec4fRawFloat = new G(
+  implicit final val FactoryVec4fUInt = new GenFactory[Vec4f, UInt](
     vec4fTemplateClass,
-    vec4fTemplate,
-    new ArrayVec4f[RawFloat](da(FactoryFloat1RawFloat))
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, UInt](
+      vec4fFallbackClass,
+      FactoryFloat1UInt
+    )
+  )
+  implicit final val FactoryVec4fNSInt = new GenFactory[Vec4f, NSInt](
+    vec4fTemplateClass,
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, NSInt](
+      vec4fFallbackClass,
+      FactoryFloat1NSInt
+    )
+  )
+  implicit final val FactoryVec4fNUInt = new GenFactory[Vec4f, NUInt](
+    vec4fTemplateClass,
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, NUInt](
+      vec4fFallbackClass,
+      FactoryFloat1NUInt
+    )
+  )
+
+  implicit final val FactoryVec4fHalfFloat = new GenFactory[Vec4f, HalfFloat](
+    vec4fTemplateClass,
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, HalfFloat](
+      vec4fFallbackClass,
+      FactoryFloat1HalfFloat
+    )
+  )
+  implicit final val FactoryVec4fRawFloat = new GenFactory[Vec4f, RawFloat](
+    vec4fTemplateClass,
+    vec4fTemplateString,
+    new CompositeFactory[Vec4f, RawFloat](
+      vec4fFallbackClass,
+      FactoryFloat1RawFloat
+    )
   )
 }

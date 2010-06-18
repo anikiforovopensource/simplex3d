@@ -34,6 +34,7 @@ class Protected<A> {
         this.shared = shared;
     }
 
+    @SuppressWarnings("unchecked")
     final A sharedArray() {
         return (A) shared;
     }

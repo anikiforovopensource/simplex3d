@@ -26,8 +26,8 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataView[E <: ElemType, +R <: RawType]
-extends ReadOnlyDataSeq[E, R] {
+trait ReadDataView[E <: ElemType, +R <: RawType]
+extends ReadDataSeq[E, R] {
 
   assert(buffer.position == 0)
   assert(buffer.limit == buffer.capacity)
@@ -37,14 +37,19 @@ extends ReadOnlyDataSeq[E, R] {
       "The buffer must be direct."
     )
 
+  if (sharedBuffer.order != ByteOrder.nativeOrder)
+    throw new IllegalArgumentException(
+      "The buffer must have native order."
+    )
+
   
-  def backingSeq: ReadOnlyDataBuffer[E#Component, R]
-  def asReadOnly() :ReadOnlyDataView[E, R]
+  def backingSeq: ReadDataBuffer[E#Component, R]
+  def asReadOnlySeq() :ReadDataView[E, R]
 
   final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case v: ReadOnlyDataView[_, _] =>
-        backingSeq.sharedByteBuffer eq v.backingSeq.sharedByteBuffer
+      case v: ReadDataView[_, _] =>
+        sharedBuffer eq v.sharedBuffer
       case _ =>
         false
     }
@@ -52,7 +57,7 @@ extends ReadOnlyDataSeq[E, R] {
 }
 
 trait DataView[E <: ElemType, +R <: RawType]
-extends DataSeq[E, R] with ReadOnlyDataView[E, R] {
+extends DataSeq[E, R] with ReadDataView[E, R] {
   def backingSeq: DataBuffer[E#Component, R]
 }
 
@@ -60,11 +65,6 @@ object DataView {
   def apply[E <: ElemType, R <: ReadableType](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    if (buffer.isReadOnly)
-    throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-
     ref.factory.mkDataView(buffer, offset, stride)
   }
 
@@ -75,16 +75,16 @@ object DataView {
       "The argument must not be read only."
     )
 
-    ref.factory.mkDataView(db.backingSeq.sharedByteBuffer, offset, stride)
+    ref.factory.mkDataView(db.sharedBuffer, offset, stride)
   }
 
   def apply[E <: ElemType, R <: ReadableType](
     db: inDataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[E, R]) :ReadOnlyDataView[E, R] = {
+  )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
     val res = ref.factory.mkDataView(
-      db.backingSeq.sharedByteBuffer, offset, stride
+      db.sharedBuffer, offset, stride
     )
 
-    if (db.isReadOnly) res.asReadOnly() else res
+    if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }

@@ -50,15 +50,15 @@ package object buffer extends UnsignedImplicits {
   type Float1 = simplex3d.math.types.Float1
   type Double1 = simplex3d.math.types.Double1
 
-  type inDataSeq[T <: ElemType, +D <: RawType] = ReadOnlyDataSeq[T, D]
-  type inContiguousSeq[T <: ElemType, +D <: RawType] =ReadOnlyContiguousSeq[T, D]
-  type inDataArray[T <: ElemType, +D <: RawType] = ReadOnlyDataArray[T, D]
-  type inDataBuffer[T <: ElemType, +D <: RawType] = ReadOnlyDataBuffer[T, D]
-  type inDataView[T <: ElemType, +D <: RawType] = ReadOnlyDataView[T, D]
+  type inDataSeq[T <: ElemType, +D <: RawType] = ReadDataSeq[T, D]
+  type inContiguousSeq[T <: ElemType, +D <: RawType] =ReadContiguousSeq[T, D]
+  type inDataArray[T <: ElemType, +D <: RawType] = ReadDataArray[T, D]
+  type inDataBuffer[T <: ElemType, +D <: RawType] = ReadDataBuffer[T, D]
+  type inDataView[T <: ElemType, +D <: RawType] = ReadDataView[T, D]
 
-  type inIndexSeq[+D <: ReadableIndex] = ReadOnlyIndexSeq[D]
-  type inIndexArray[+D <: ReadableIndex] = ReadOnlyIndexArray[D]
-  type inIndexBuffer[+D <: ReadableIndex] = ReadOnlyIndexBuffer[D]
+  type inIndexSeq[+D <: ReadableIndex] = ReadIndexSeq[D]
+  type inIndexArray[+D <: ReadableIndex] = ReadIndexArray[D]
+  type inIndexBuffer[+D <: ReadableIndex] = ReadIndexBuffer[D]
 
   type outDataSeq[T <: ElemType, +D <: RawType] = DataSeq[T, D]
   type outContiguousSeq[T <: ElemType, +D <: RawType] =ContiguousSeq[T, D]
@@ -71,12 +71,12 @@ package object buffer extends UnsignedImplicits {
   type outIndexBuffer[+D <: ReadableIndex] = IndexBuffer[D]
 
   @inline implicit final def roArrayDataToIndex[D  <: ReadableIndex] (
-    d: ReadOnlyDataArray[Int1, D]
-  ) = d.asInstanceOf[ReadOnlyIndexArray[D]]
+    d: ReadDataArray[Int1, D]
+  ) = d.asInstanceOf[ReadIndexArray[D]]
 
   @inline implicit final def roBufferDataToIndex[D  <: ReadableIndex](
-    d: ReadOnlyDataBuffer[Int1, D]
-  ) = d.asInstanceOf[ReadOnlyIndexBuffer[D]]
+    d: ReadDataBuffer[Int1, D]
+  ) = d.asInstanceOf[ReadIndexBuffer[D]]
 
   
   @inline implicit final def arrayDataToIndex[D  <: ReadableIndex](

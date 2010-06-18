@@ -27,9 +27,9 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyIndexSeq[+R <: ReadableIndex]
-extends ReadOnlyContiguousSeq[Int1, R] {
-  def asReadOnly() :ReadOnlyIndexSeq[R]
+trait ReadIndexSeq[+R <: ReadableIndex]
+extends ReadContiguousSeq[Int1, R] {
+  def asReadOnlySeq() :ReadIndexSeq[R]
 
   def mkIndexArray(size: Int) :IndexArray[R] =
     mkDataArray(size)
@@ -40,32 +40,30 @@ extends ReadOnlyContiguousSeq[Int1, R] {
   def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] =
     mkDataBuffer(byteBuffer)
 
-  def copyAsIndexArray() :IndexArray[R] =
-    super.copyAsDataArray().asInstanceOf[IndexArray[R]]
-  def copyAsIndexBuffer() :IndexBuffer[R] =
-    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[R]]
+  def copyAsIndexArray() :IndexArray[R] = super.copyAsDataArray()
+  def copyAsIndexBuffer() :IndexBuffer[R] = super.copyAsDataBuffer()
 }
 
 trait IndexSeq[+R <: ReadableIndex]
-extends ContiguousSeq[Int1, R] with ReadOnlyIndexSeq[R]
+extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 
-trait ReadOnlyIndexArray[+R <: ReadableIndex]
-extends ReadOnlyIndexSeq[R] with ReadOnlyDataArray[Int1, R] {
-  def asReadOnly() :ReadOnlyIndexArray[R]
+trait ReadIndexArray[+R <: ReadableIndex]
+extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
+  def asReadOnlySeq() :ReadIndexArray[R]
 }
 
 trait IndexArray[+R <: ReadableIndex]
-extends IndexSeq[R] with DataArray[Int1, R] with ReadOnlyIndexArray[R]
+extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 
-trait ReadOnlyIndexBuffer[+R <: ReadableIndex]
-extends ReadOnlyIndexSeq[R] with ReadOnlyDataBuffer[Int1, R] {
-  def asReadOnly() :ReadOnlyIndexBuffer[R]
+trait ReadIndexBuffer[+R <: ReadableIndex]
+extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
+  def asReadOnlySeq() :ReadIndexBuffer[R]
 }
 
 trait IndexBuffer[+R <: ReadableIndex]
-extends IndexSeq[R] with DataBuffer[Int1, R] with ReadOnlyIndexBuffer[R]
+extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
 
 
 object IndexArray {
@@ -101,10 +99,10 @@ object IndexArray {
 
   def apply[R <: ReadableIndex](da: inDataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
-  ) :ReadOnlyIndexArray[R] = {
-    val res = ref.factory.mkDataArray(da.backingSeq.readArray)
+  ) :ReadIndexArray[R] = {
+    val res = ref.factory.mkDataArray(da.sharedArray)
     
-    if (da.isReadOnly) res.asReadOnly() else res
+    if (da.isReadOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -136,13 +134,13 @@ object IndexBuffer {
       "The argument must not be read only."
     )
 
-    ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
+    ref.factory.mkDataBuffer(db.sharedBuffer)
   }
 
   def apply[R <: ReadableIndex](db: inDataBuffer[_, _])(
     implicit ref: FactoryRef[Int1, R]
-  ) :ReadOnlyIndexBuffer[R] = {
-    val res = ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
-    if (db.isReadOnly) res.asReadOnly() else res
+  ) :ReadIndexBuffer[R] = {
+    val res = ref.factory.mkDataBuffer(db.sharedBuffer)
+    if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }

@@ -27,15 +27,15 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataArray[E <: ElemType, +R <: RawType]
-extends ReadOnlyDataSeq[E, R] with ReadOnlyContiguousSeq[E, R] {
-  def backingSeq: ReadOnlyDataArray[E#Component, R]
-  def asReadOnly() :ReadOnlyDataArray[E, R]
+trait ReadDataArray[E <: ElemType, +R <: RawType]
+extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
+  def backingSeq: ReadDataArray[E#Component, R]
+  def asReadOnlySeq() :ReadDataArray[E, R]
 
   final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
     seq match {
-      case a: ReadOnlyDataArray[_, _] =>
-        backingSeq.readArray eq a.backingSeq.readArray
+      case a: ReadDataArray[_, _] =>
+        sharedArray eq a.sharedArray
       case _ =>
         false
     }
@@ -43,7 +43,7 @@ extends ReadOnlyDataSeq[E, R] with ReadOnlyContiguousSeq[E, R] {
 }
 
 trait DataArray[E <: ElemType, +R <: RawType]
-extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadOnlyDataArray[E, R] {
+extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
   def array: R#ArrayType = buffer.array.asInstanceOf[R#ArrayType]
   def backingSeq: DataArray[E#Component, R]
 }
@@ -81,8 +81,8 @@ object DataArray {
 
   def apply[E <: ElemType, R <: ReadableType](da: inDataArray[_, R])(
     implicit ref: FactoryRef[E, R]
-  ) :ReadOnlyDataArray[E, R] = {
-    val res = ref.factory.mkDataArray(da.backingSeq.readArray)
-    if (da.isReadOnly) res.asReadOnly() else res
+  ) :ReadDataArray[E, R] = {
+    val res = ref.factory.mkDataArray(da.sharedArray)
+    if (da.isReadOnly) res.asReadOnlySeq() else res
   }
 }

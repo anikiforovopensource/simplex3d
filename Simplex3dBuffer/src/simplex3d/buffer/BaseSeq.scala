@@ -31,9 +31,10 @@ import scala.collection._
  */
 private[buffer] abstract class ReadOnlyBaseSeq[
   E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
-] (
+](
+  shared: AnyRef,
   private[buffer] final val buffer: R#BufferType
-) extends Protected[R#ArrayType @uncheckedVariance]
+) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   if (stride <= 0)
@@ -79,13 +80,6 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def apply(i: Int) :S
 
 
-  private[buffer] def setReadArray(a: R#ArrayType @uncheckedVariance) {
-    readArray = a
-  }
-  private[buffer] def setSharedByteBuffer(b: ByteBuffer) {
-    sharedByteBuffer = b
-  }
-
   def mkDataArray(size: Int) :DataArray[E, R]
   def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
   def mkDataBuffer(size: Int) :DataBuffer[E, R]
@@ -100,9 +94,9 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def offset: Int = 0
   def stride: Int = components
 
-  def backingSeq: ReadOnlyContiguousSeq[E#Component, R]
+  def backingSeq: ReadContiguousSeq[E#Component, R]
   private[buffer] def isReadOnly(): Boolean = buffer.isReadOnly()
-  def asReadOnly() :ReadOnlyDataSeq[E, R]
+  def asReadOnlySeq() :ReadDataSeq[E, R]
 
   final def copyAsDataArray() :DataArray[E, R] = {
     val copy = mkDataArray(size)
@@ -143,9 +137,9 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
 private[buffer] abstract class BaseSeq[
   E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
-] (
-  buff: R#BufferType
-) extends ReadOnlyBaseSeq[E, S, R](buff) {
+](
+  shared: AnyRef, buff: R#BufferType
+) extends ReadOnlyBaseSeq[E, S, R](shared, buff) {
 
   def asBuffer() :R#BufferType
 
@@ -153,7 +147,7 @@ private[buffer] abstract class BaseSeq[
   def update(i: Int, v: S)
 
   def backingSeq: ContiguousSeq[E#Component, R]
-  override def isReadOnly(): Boolean = buffer.isReadOnly()
+  final override def isReadOnly(): Boolean = buffer.isReadOnly()
 
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
@@ -524,7 +518,7 @@ private[buffer] abstract class BaseSeq[
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class GenericSeq[E <: Composite, +R <: RawType](
   val backingSeq: ContiguousSeq[E#Component, R]
-) extends BaseSeq[E, E#Element, R](backingSeq.buffer) {
+) extends BaseSeq[E, E#Element, R](backingSeq.shared, backingSeq.buffer) {
   final def componentManifest = backingSeq.componentManifest.asInstanceOf[
     ClassManifest[E#Component#Element]
   ]

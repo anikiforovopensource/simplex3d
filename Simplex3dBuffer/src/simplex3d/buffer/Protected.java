@@ -28,6 +28,17 @@ import java.nio.*;
  * @author Aleksey Nikiforov (lex)
  */
 class Protected<A> {
-    A readArray;
-    ByteBuffer sharedByteBuffer;
+    final Object shared;
+
+    Protected(Object shared) {
+        this.shared = shared;
+    }
+
+    final A sharedArray() {
+        return (A) shared;
+    }
+
+    final ByteBuffer sharedBuffer() {
+        return (ByteBuffer) shared;
+    }
 }

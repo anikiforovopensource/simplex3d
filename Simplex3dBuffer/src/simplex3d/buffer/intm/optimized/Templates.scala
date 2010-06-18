@@ -34,7 +34,7 @@ private[buffer] final class ArrayVec2iSInt(
   override val backingSeq: ArrayInt1SInt
 ) extends BaseVec2i[SInt](backingSeq) with DataArray[Vec2i, SInt] {
   def this() = this(new ArrayInt1SInt)
-  def asReadOnly() = new ArrayVec2iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new ArrayVec2iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
@@ -64,7 +64,7 @@ private[buffer] final class ArrayVec2iSInt(
 private[buffer] final class BufferVec2iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec2i[SInt](backingSeq) with DataBuffer[Vec2i, SInt] {
-  def asReadOnly() = new BufferVec2iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new BufferVec2iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
@@ -96,7 +96,7 @@ private[buffer] final class ViewVec2iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec2i[SInt](backingSeq) with DataView[Vec2i, SInt] {
-  def asReadOnly() = new ViewVec2iSInt(backingSeq.asReadOnly(), offset, stride)
+  def asReadOnlySeq() = new ViewVec2iSInt(backingSeq.asReadOnlySeq(), offset, stride)
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
@@ -129,7 +129,7 @@ private[buffer] final class ArrayVec3iSInt(
   override val backingSeq: ArrayInt1SInt
 ) extends BaseVec3i[SInt](backingSeq) with DataArray[Vec3i, SInt] {
   def this() = this(new ArrayInt1SInt)
-  def asReadOnly() = new ArrayVec3iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new ArrayVec3iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
@@ -161,7 +161,7 @@ private[buffer] final class ArrayVec3iSInt(
 private[buffer] final class BufferVec3iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec3i[SInt](backingSeq) with DataBuffer[Vec3i, SInt] {
-  def asReadOnly() = new BufferVec3iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new BufferVec3iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
@@ -195,7 +195,7 @@ private[buffer] final class ViewVec3iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec3i[SInt](backingSeq) with DataView[Vec3i, SInt] {
-  def asReadOnly() = new ViewVec3iSInt(backingSeq.asReadOnly(), offset, stride)
+  def asReadOnlySeq() = new ViewVec3iSInt(backingSeq.asReadOnlySeq(), offset, stride)
   
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
@@ -230,7 +230,7 @@ private[buffer] final class ArrayVec4iSInt(
   override val backingSeq: ArrayInt1SInt
 ) extends BaseVec4i[SInt](backingSeq) with DataArray[Vec4i, SInt] {
   def this() = this(new ArrayInt1SInt)
-  def asReadOnly() = new ArrayVec4iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new ArrayVec4iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4i = {
     val j = i*4
@@ -264,7 +264,7 @@ private[buffer] final class ArrayVec4iSInt(
 private[buffer] final class BufferVec4iSInt(
   override val backingSeq: BufferInt1SInt
 ) extends BaseVec4i[SInt](backingSeq) with DataBuffer[Vec4i, SInt] {
-  def asReadOnly() = new BufferVec4iSInt(backingSeq.asReadOnly())
+  def asReadOnlySeq() = new BufferVec4iSInt(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4i = {
     val j = i*4
@@ -300,7 +300,7 @@ private[buffer] final class ViewVec4iSInt(
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec4i[SInt](backingSeq) with DataView[Vec4i, SInt] {
-  def asReadOnly() = new ViewVec4iSInt(backingSeq.asReadOnly(), offset, stride)
+  def asReadOnlySeq() = new ViewVec4iSInt(backingSeq.asReadOnlySeq(), offset, stride)
 
   override def apply(i: Int) :AnyVec4i = {
     val j = offset + i*stride

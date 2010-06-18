@@ -24,11 +24,11 @@ package simplex3d.buffer
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataSeq[E <: ElemType, +R <: RawType]
+trait ReadDataSeq[E <: ElemType, +R <: RawType]
 extends ReadOnlyBaseSeq[E, E#Element, R]
 
 trait DataSeq[E <: ElemType, +R <: RawType]
-extends BaseSeq[E, E#Element, R] with ReadOnlyDataSeq[E, R]
+extends BaseSeq[E, E#Element, R] with ReadDataSeq[E, R]
 
 object DataSeq {
   def apply[E <: ElemType, R <: ReadableType](
@@ -38,11 +38,11 @@ object DataSeq {
   }
 }
 
-trait ReadOnlyContiguousSeq[E <: ElemType, +R <: RawType]
-extends ReadOnlyDataSeq[E, R] {
+trait ReadContiguousSeq[E <: ElemType, +R <: RawType]
+extends ReadDataSeq[E, R] {
   assert(offset == 0)
   assert(stride == components)
 }
 
 trait ContiguousSeq[E <: ElemType, +R <: RawType]
-extends DataSeq[E, R] with ReadOnlyContiguousSeq[E, R]
+extends DataSeq[E, R] with ReadContiguousSeq[E, R]

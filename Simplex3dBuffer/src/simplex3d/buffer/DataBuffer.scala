@@ -26,13 +26,13 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadOnlyDataBuffer[E <: ElemType, +R <: RawType]
-extends ReadOnlyDataView[E, R] with ReadOnlyContiguousSeq[E, R] {
-  def asReadOnly() :ReadOnlyDataBuffer[E, R]
+trait ReadDataBuffer[E <: ElemType, +R <: RawType]
+extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
+  def asReadOnlySeq() :ReadDataBuffer[E, R]
 }
 
 trait DataBuffer[E <: ElemType, +R <: RawType]
-extends DataView[E, R] with ContiguousSeq[E, R] with ReadOnlyDataBuffer[E, R]
+extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
 
 object DataBuffer {
   def apply[E <: ElemType, R <: ReadableType](buffer: ByteBuffer)(
@@ -67,13 +67,13 @@ object DataBuffer {
       "The argument must not be read only."
     )
 
-    ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
+    ref.factory.mkDataBuffer(db.sharedBuffer)
   }
 
   def apply[E <: ElemType, R <: ReadableType](db: inDataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
-  ) :ReadOnlyDataBuffer[E, R] = {
-    val res = ref.factory.mkDataBuffer(db.backingSeq.sharedByteBuffer)
-    if (db.isReadOnly) res.asReadOnly() else res
+  ) :ReadDataBuffer[E, R] = {
+    val res = ref.factory.mkDataBuffer(db.sharedBuffer)
+    if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }

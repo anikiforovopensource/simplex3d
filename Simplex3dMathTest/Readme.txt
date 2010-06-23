@@ -19,4 +19,5 @@ To build the project:
 To run all test:
 Put simplex3d-math-core.jar, simplex3d-math-intm.jar, simplex3d-math-floatm.jar,
 simplex3d-math-doublem.jar, scalatest.jar, and simplex3d-math-test.jar
-on the classpath. Execute the main class "test.Launcher".
+on the classpath.
+Execute the main class "test.JarLauncher".

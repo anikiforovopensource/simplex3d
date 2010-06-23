@@ -23,6 +23,10 @@ package simplex3d.buffer
 import simplex3d.math._
 
 
+// An empty class to make -Xno-forwarders work
+private[buffer] class HalfFloatUtil
+
+
 /**
  * @author Aleksey Nikiforov (lex)
  */

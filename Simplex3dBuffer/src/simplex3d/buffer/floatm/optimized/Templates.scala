@@ -229,12 +229,12 @@ private[buffer] final class ViewVec3fRawFloat(
 }
 
 
-// Vec4f NUByte
-private[buffer] final class ArrayVec4fNUByte(
-  override val backingSeq: ArrayFloat1NUByte
-) extends BaseVec4f[NUByte](backingSeq) with DataArray[Vec4f, NUByte] {
-  def this() = this(new ArrayFloat1NUByte)
-  def asReadOnlySeq() = new ArrayVec4fNUByte(backingSeq.asReadOnlySeq())
+// Vec4f UByte
+private[buffer] final class ArrayVec4fUByte(
+  override val backingSeq: ArrayFloat1UByte
+) extends BaseVec4f[UByte](backingSeq) with DataArray[Vec4f, UByte] {
+  def this() = this(new ArrayFloat1UByte)
+  def asReadOnlySeq() = new ArrayVec4fUByte(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4f = {
     val j = i*4
@@ -254,21 +254,21 @@ private[buffer] final class ArrayVec4fNUByte(
   }
 
   override def mkDataArray(size: Int) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(size*4))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(size*4))
   override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(array))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(array))
   override def mkDataBuffer(size: Int) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(size*4))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(size*4))
   override def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(byteBuffer))
   override def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+    new ViewVec4fUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class BufferVec4fNUByte(
-  override val backingSeq: BufferFloat1NUByte
-) extends BaseVec4f[NUByte](backingSeq) with DataBuffer[Vec4f, NUByte] {
-  def asReadOnlySeq() = new BufferVec4fNUByte(backingSeq.asReadOnlySeq())
+private[buffer] final class BufferVec4fUByte(
+  override val backingSeq: BufferFloat1UByte
+) extends BaseVec4f[UByte](backingSeq) with DataBuffer[Vec4f, UByte] {
+  def asReadOnlySeq() = new BufferVec4fUByte(backingSeq.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4f = {
     val j = i*4
@@ -288,23 +288,23 @@ private[buffer] final class BufferVec4fNUByte(
   }
 
   override def mkDataArray(size: Int) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(size*4))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(size*4))
   override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(array))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(array))
   override def mkDataBuffer(size: Int) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(size*4))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(size*4))
   override def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(byteBuffer))
   override def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+    new ViewVec4fUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class ViewVec4fNUByte(
-  override val backingSeq: BufferFloat1NUByte,
+private[buffer] final class ViewVec4fUByte(
+  override val backingSeq: BufferFloat1UByte,
   override val offset: Int,
   override val stride: Int
-) extends BaseVec4f[NUByte](backingSeq) with DataView[Vec4f, NUByte] {
-  def asReadOnlySeq() = new ViewVec4fNUByte(
+) extends BaseVec4f[UByte](backingSeq) with DataView[Vec4f, UByte] {
+  def asReadOnlySeq() = new ViewVec4fUByte(
     backingSeq.asReadOnlySeq(), offset, stride
   )
 
@@ -326,13 +326,13 @@ private[buffer] final class ViewVec4fNUByte(
   }
 
   override def mkDataArray(size: Int) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(size*4))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(size*4))
   override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec4fNUByte(backingSeq.mkDataArray(array))
+    new ArrayVec4fUByte(backingSeq.mkDataArray(array))
   override def mkDataBuffer(size: Int) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(size*4))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(size*4))
   override def mkDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer))
+    new BufferVec4fUByte(backingSeq.mkDataBuffer(byteBuffer))
   override def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec4fNUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
+    new ViewVec4fUByte(backingSeq.mkDataBuffer(byteBuffer), offset, stride)
 }

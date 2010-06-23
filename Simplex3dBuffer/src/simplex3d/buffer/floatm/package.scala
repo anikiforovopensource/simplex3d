@@ -47,24 +47,12 @@ package object floatm {
   implicit final val FactoryFloat1UByte = new PrimitiveFactory[UByte](
     "simplex3d.buffer.floatm.ArrayFloat1UByte"
   )
-  implicit final val FactoryFloat1NSByte = new PrimitiveFactory[NSByte](
-    "simplex3d.buffer.floatm.ArrayFloat1NSByte"
-  )
-  implicit final val FactoryFloat1NUByte = new PrimitiveFactory[NUByte](
-    "simplex3d.buffer.floatm.ArrayFloat1NUByte"
-  )
-  
+
   implicit final val FactoryFloat1SShort = new PrimitiveFactory[SShort](
     "simplex3d.buffer.floatm.ArrayFloat1SShort"
   )
   implicit final val FactoryFloat1UShort = new PrimitiveFactory[UShort](
     "simplex3d.buffer.floatm.ArrayFloat1UShort"
-  )
-  implicit final val FactoryFloat1NSShort = new PrimitiveFactory[NSShort](
-    "simplex3d.buffer.floatm.ArrayFloat1NSShort"
-  )
-  implicit final val FactoryFloat1NUShort = new PrimitiveFactory[NUShort](
-    "simplex3d.buffer.floatm.ArrayFloat1NUShort"
   )
 
   implicit final val FactoryFloat1SInt = new PrimitiveFactory[SInt](
@@ -72,12 +60,6 @@ package object floatm {
   )
   implicit final val FactoryFloat1UInt = new PrimitiveFactory[UInt](
     "simplex3d.buffer.floatm.ArrayFloat1UInt"
-  )
-  implicit final val FactoryFloat1NSInt = new PrimitiveFactory[NSInt](
-    "simplex3d.buffer.floatm.ArrayFloat1NSInt"
-  )
-  implicit final val FactoryFloat1NUInt = new PrimitiveFactory[NUInt](
-    "simplex3d.buffer.floatm.ArrayFloat1NUInt"
   )
 
   implicit final val FactoryFloat1HalfFloat = new PrimitiveFactory[HalfFloat](
@@ -110,22 +92,6 @@ package object floatm {
       FactoryFloat1UByte
     )
   )
-  implicit final val FactoryVec2fNSByte = new GenFactory[Vec2f, NSByte](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NSByte](
-      vec2fFallbackClass,
-      FactoryFloat1NSByte
-    )
-  )
-  implicit final val FactoryVec2fNUByte = new GenFactory[Vec2f, NUByte](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NUByte](
-      vec2fFallbackClass,
-      FactoryFloat1NUByte
-    )
-  )
 
   implicit final val FactoryVec2fSShort = new GenFactory[Vec2f, SShort](
     vec2fTemplateClass,
@@ -141,22 +107,6 @@ package object floatm {
     new CompositeFactory[Vec2f, UShort](
       vec2fFallbackClass,
       FactoryFloat1UShort
-    )
-  )
-  implicit final val FactoryVec2fNSShort = new GenFactory[Vec2f, NSShort](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NSShort](
-      vec2fFallbackClass,
-      FactoryFloat1NSShort
-    )
-  )
-  implicit final val FactoryVec2fNUShort = new GenFactory[Vec2f, NUShort](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NUShort](
-      vec2fFallbackClass,
-      FactoryFloat1NUShort
     )
   )
 
@@ -176,22 +126,6 @@ package object floatm {
       FactoryFloat1UInt
     )
   )
-  implicit final val FactoryVec2fNSInt = new GenFactory[Vec2f, NSInt](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NSInt](
-      vec2fFallbackClass,
-      FactoryFloat1NSInt
-    )
-  )
-  implicit final val FactoryVec2fNUInt = new GenFactory[Vec2f, NUInt](
-    vec2fTemplateClass,
-    vec2fTemplateString,
-    new CompositeFactory[Vec2f, NUInt](
-      vec2fFallbackClass,
-      FactoryFloat1NUInt
-    )
-  )
 
   implicit final val FactoryVec2fHalfFloat = new GenFactory[Vec2f, HalfFloat](
     vec2fTemplateClass,
@@ -201,6 +135,7 @@ package object floatm {
       FactoryFloat1HalfFloat
     )
   )
+
   implicit final val FactoryVec2fRawFloat =
   new CompositeFactory[Vec2f, RawFloat](
     vec2fTemplateClass,
@@ -230,22 +165,6 @@ package object floatm {
       FactoryFloat1UByte
     )
   )
-  implicit final val FactoryVec3fNSByte = new GenFactory[Vec3f, NSByte](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NSByte](
-      vec3fFallbackClass,
-      FactoryFloat1NSByte
-    )
-  )
-  implicit final val FactoryVec3fNUByte = new GenFactory[Vec3f, NUByte](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NUByte](
-      vec3fFallbackClass,
-      FactoryFloat1NUByte
-    )
-  )
 
   implicit final val FactoryVec3fSShort = new GenFactory[Vec3f, SShort](
     vec3fTemplateClass,
@@ -261,22 +180,6 @@ package object floatm {
     new CompositeFactory[Vec3f, UShort](
       vec3fFallbackClass,
       FactoryFloat1UShort
-    )
-  )
-  implicit final val FactoryVec3fNSShort = new GenFactory[Vec3f, NSShort](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NSShort](
-      vec3fFallbackClass,
-      FactoryFloat1NSShort
-    )
-  )
-  implicit final val FactoryVec3fNUShort = new GenFactory[Vec3f, NUShort](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NUShort](
-      vec3fFallbackClass,
-      FactoryFloat1NUShort
     )
   )
 
@@ -296,22 +199,6 @@ package object floatm {
       FactoryFloat1UInt
     )
   )
-  implicit final val FactoryVec3fNSInt = new GenFactory[Vec3f, NSInt](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NSInt](
-      vec3fFallbackClass,
-      FactoryFloat1NSInt
-    )
-  )
-  implicit final val FactoryVec3fNUInt = new GenFactory[Vec3f, NUInt](
-    vec3fTemplateClass,
-    vec3fTemplateString,
-    new CompositeFactory[Vec3f, NUInt](
-      vec3fFallbackClass,
-      FactoryFloat1NUInt
-    )
-  )
 
   implicit final val FactoryVec3fHalfFloat = new GenFactory[Vec3f, HalfFloat](
     vec3fTemplateClass,
@@ -321,6 +208,7 @@ package object floatm {
       FactoryFloat1HalfFloat
     )
   )
+
   implicit final val FactoryVec3fRawFloat =
   new CompositeFactory[Vec3f, RawFloat](
     vec3fTemplateClass,
@@ -330,8 +218,8 @@ package object floatm {
 
   // Vec4f
   private val vec4fTemplateClass =
-    "simplex3d.buffer.floatm.optimized.ArrayVec4fNUByte"
-  private val vec4fTemplateString = "NUByte"
+    "simplex3d.buffer.floatm.optimized.ArrayVec4fUByte"
+  private val vec4fTemplateString = "UByte"
   private val vec4fFallbackClass = "simplex3d.buffer.floatm.ArrayVec4f"
 
   implicit final val FactoryVec4fSByte = new GenFactory[Vec4f, SByte](
@@ -342,25 +230,9 @@ package object floatm {
       FactoryFloat1SByte
     )
   )
-  implicit final val FactoryVec4fUByte = new GenFactory[Vec4f, UByte](
+  implicit final val FactoryVec4fUByte = new CompositeFactory[Vec4f, UByte](
     vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, UByte](
-      vec4fFallbackClass,
-      FactoryFloat1UByte
-    )
-  )
-  implicit final val FactoryVec4fNSByte = new GenFactory[Vec4f, NSByte](
-    vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, NSByte](
-      vec4fFallbackClass,
-      FactoryFloat1NSByte
-    )
-  )
-  implicit final val FactoryVec4fNUByte = new CompositeFactory[Vec4f, NUByte](
-    vec4fTemplateClass,
-    FactoryFloat1NUByte
+    FactoryFloat1UByte
   )
 
   implicit final val FactoryVec4fSShort = new GenFactory[Vec4f, SShort](
@@ -377,22 +249,6 @@ package object floatm {
     new CompositeFactory[Vec4f, UShort](
       vec4fFallbackClass,
       FactoryFloat1UShort
-    )
-  )
-  implicit final val FactoryVec4fNSShort = new GenFactory[Vec4f, NSShort](
-    vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, NSShort](
-      vec4fFallbackClass,
-      FactoryFloat1NSShort
-    )
-  )
-  implicit final val FactoryVec4fNUShort = new GenFactory[Vec4f, NUShort](
-    vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, NUShort](
-      vec4fFallbackClass,
-      FactoryFloat1NUShort
     )
   )
 
@@ -412,22 +268,6 @@ package object floatm {
       FactoryFloat1UInt
     )
   )
-  implicit final val FactoryVec4fNSInt = new GenFactory[Vec4f, NSInt](
-    vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, NSInt](
-      vec4fFallbackClass,
-      FactoryFloat1NSInt
-    )
-  )
-  implicit final val FactoryVec4fNUInt = new GenFactory[Vec4f, NUInt](
-    vec4fTemplateClass,
-    vec4fTemplateString,
-    new CompositeFactory[Vec4f, NUInt](
-      vec4fFallbackClass,
-      FactoryFloat1NUInt
-    )
-  )
 
   implicit final val FactoryVec4fHalfFloat = new GenFactory[Vec4f, HalfFloat](
     vec4fTemplateClass,
@@ -437,6 +277,7 @@ package object floatm {
       FactoryFloat1HalfFloat
     )
   )
+
   implicit final val FactoryVec4fRawFloat = new GenFactory[Vec4f, RawFloat](
     vec4fTemplateClass,
     vec4fTemplateString,

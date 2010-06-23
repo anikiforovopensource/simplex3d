@@ -26,6 +26,15 @@ import org.objectweb.asm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+private[optimize] trait TemplateGen {
+  def genByteCode(
+    templateClassName: String,
+    templateString: String,
+    replaceString: String
+  ) :Array[Byte]
+}
+
+
 private[optimize] class TemplateGenImpl extends TemplateGen {
   def genByteCode(
     templateClassName: String, templateString: String, replaceString: String
@@ -49,13 +58,21 @@ private[optimize] class TemplateGenException(msg: String) extends Exception(msg)
 
 private[optimize] trait TemplateWorker {
   def template: String
-  def replaceValue: String
+  def replacement: String
 
   protected def replace(s: String) = {
-    if (s != null) s.replace(template, replaceValue)
+    if (s != null) s.replace(template, replacement)
     else null
   }
-  protected def arraySig(template: String) = {
+
+  protected val templateArraySig = arraySig(template)
+  protected val replacementArraySig = arraySig(replacement)
+
+  protected val isReplacingArraySig = {
+    templateArraySig != null && replacementArraySig != null
+  }
+
+  private def arraySig(template: String) = {
     if (template.endsWith("Byte")) {
       "[B"
     }
@@ -78,25 +95,26 @@ private[optimize] trait TemplateWorker {
       "[D"
     }
     else {
-      throw new TemplateGenException("Unable to parse template string.")
+      null
     }
   }
+
   protected def brackets(s: String) = "(" + s + ")"
+  
   protected def fixMkArrayDesc(name: String, desc: String) = {
-    if (name == "mkDataArray") {
-      val templateSig = brackets(arraySig(template))
-      if (desc.take(4) == templateSig) {
-        val replaceSig = brackets(arraySig(replaceValue))
-        replaceSig + desc.drop(4)
-      }
-      else desc
+    if (
+      isReplacingArraySig &&
+      name == "mkDataArray" &&
+      desc.take(4) == brackets(templateArraySig)
+    ) {
+      brackets(replacementArraySig) + desc.drop(4)
     }
     else desc
   }
 }
 
 private[optimize] class TemplateClassVisitor(
-  val template: String, val replaceValue: String, val cv: ClassVisitor
+  val template: String, val replacement: String, val cv: ClassVisitor
 ) extends ClassVisitor with TemplateWorker {
 
   def visit(
@@ -166,7 +184,7 @@ private[optimize] class TemplateClassVisitor(
     exceptions: Array[String]
   ) :MethodVisitor = {
     new TemplateMethodVisitor(
-      template, replaceValue,
+      template, replacement,
       cv.visitMethod(
         access, replace(name), replace(fixMkArrayDesc(name, desc)),
         replace(signature), exceptions
@@ -178,12 +196,12 @@ private[optimize] class TemplateClassVisitor(
 }
 
 private[optimize] class TemplateMethodVisitor(
-  val template: String, val replaceValue: String, mv: MethodVisitor
+  val template: String, val replacement: String, mv: MethodVisitor
 ) extends MethodAdapter(mv) with TemplateWorker {
 
   override def visitTypeInsn(opcode: Int, ttype: String) {
     val rtype =
-      if (ttype == arraySig(template)) arraySig(replaceValue)
+      if (isReplacingArraySig && ttype == templateArraySig) replacementArraySig
       else replace(ttype)
     mv.visitTypeInsn(opcode, rtype)
   }

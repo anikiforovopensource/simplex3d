@@ -69,8 +69,6 @@ sealed trait Integral extends RawType
 
 sealed trait Signed extends Integral
 sealed trait Unsigned extends Integral
-sealed trait Normalized extends Integral
-sealed trait NonNormalized extends Integral
 
 
 sealed trait RawByte extends Integral {
@@ -78,41 +76,23 @@ sealed trait RawByte extends Integral {
   type BufferType = ByteBuffer
 }
 
-sealed trait SByte extends RawByte with Signed with NonNormalized
+sealed trait SByte extends RawByte with Signed
 with ReadableInt with ReadableFloat with ReadableDouble
 
-sealed trait UByte extends RawByte with Unsigned with NonNormalized
+sealed trait UByte extends RawByte with Unsigned
 with ReadableIndex with ReadableFloat with ReadableDouble
-
-sealed trait NSByte extends RawByte with Signed with Normalized
-with ReadableFloat with ReadableDouble
-
-sealed trait NUByte extends RawByte with Unsigned with Normalized
-with ReadableFloat with ReadableDouble
 
 
 sealed trait RawShort extends Integral
 
-sealed trait SShort extends RawShort with Signed with NonNormalized
+sealed trait SShort extends RawShort with Signed
 with ReadableInt with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
-sealed trait UShort extends RawShort with Unsigned with NonNormalized
+sealed trait UShort extends RawShort with Unsigned
 with ReadableIndex with ReadableFloat with ReadableDouble {
-  type ArrayType = Array[Char]
-  type BufferType = CharBuffer
-}
-
-sealed trait NSShort extends RawShort with Signed with Normalized
-with ReadableFloat with ReadableDouble {
-  type ArrayType = Array[Short]
-  type BufferType = ShortBuffer
-}
-
-sealed trait NUShort extends RawShort with Unsigned with Normalized
-with ReadableFloat with ReadableDouble {
   type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
@@ -123,17 +103,11 @@ sealed trait RawInt extends Integral {
   type BufferType = IntBuffer
 }
 
-sealed trait SInt extends RawInt with Signed with NonNormalized
+sealed trait SInt extends RawInt with Signed
 with ReadableInt with ReadableFloat with ReadableDouble
 
-sealed trait UInt extends RawInt with Unsigned with NonNormalized
+sealed trait UInt extends RawInt with Unsigned
 with ReadableIndex with ReadableFloat with ReadableDouble
-
-sealed trait NSInt extends RawInt with Signed with Normalized
-with ReadableFloat with ReadableDouble
-
-sealed trait NUInt extends RawInt with Unsigned with Normalized
-with ReadableFloat with ReadableDouble
 
 
 sealed trait Fractional extends RawType

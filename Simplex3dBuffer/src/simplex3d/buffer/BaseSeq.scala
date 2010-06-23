@@ -302,8 +302,8 @@ private[buffer] abstract class BaseSeq[
 
     val group = grp(bindingType)
     val noConversion = (
-      bindingType == src.bindingType ||
-      (!normalized && !src.normalized && group == grp(src.bindingType))
+      (bindingType == src.bindingType) ||
+      (!normalized && group == grp(src.bindingType))
     )
 
     if (stride == components && srcStride == components && noConversion) {
@@ -345,7 +345,7 @@ private[buffer] abstract class BaseSeq[
           )
       }
     }
-    else if (noConversion && group < 5) {
+    else if (noConversion) {
       (group: @switch) match {
         case 0 => Util.copyBuffer(
             components,
@@ -393,6 +393,26 @@ private[buffer] abstract class BaseSeq[
             destOffset,
             stride,
             src.asReadOnlyBuffer().asInstanceOf[ShortBuffer],
+            srcOffset,
+            srcStride,
+            srcLim
+          )
+        case 5 => Util.copyBuffer(
+            components,
+            asBuffer().asInstanceOf[FloatBuffer],
+            destOffset,
+            stride,
+            src.asReadOnlyBuffer().asInstanceOf[FloatBuffer],
+            srcOffset,
+            srcStride,
+            srcLim
+          )
+        case 6 => Util.copyBuffer(
+            components,
+            asBuffer().asInstanceOf[DoubleBuffer],
+            destOffset,
+            stride,
+            src.asReadOnlyBuffer().asInstanceOf[DoubleBuffer],
             srcOffset,
             srcStride,
             srcLim

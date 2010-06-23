@@ -504,6 +504,234 @@ private[buffer] object Util {
   }
 
 
+  // FloatBuffer
+  final def copyBuffer(
+    components: Int,
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    (components: @switch) match {
+      case 1 => copyBuffer1(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 2 => copyBuffer2(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 3 => copyBuffer3(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 4 => copyBuffer4(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case _ => copyBufferAny(
+          components,
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+    }
+  }
+
+  final def copyBuffer1(
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer2(
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer3(
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      dest.put(desti + 2, src.get(srci + 2))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer4(
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      dest.put(desti + 2, src.get(srci + 2))
+      dest.put(desti + 3, src.get(srci + 3))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBufferAny(
+    components: Int,
+    dest: FloatBuffer, destOffset: Int, destStride: Int,
+    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+
+      var j = 0; while (j < components) {
+        dest.put(desti + j, src.get(srci + j))
+        j += 1
+      }
+
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+
+  // DoubleBuffer
+  final def copyBuffer(
+    components: Int,
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    (components: @switch) match {
+      case 1 => copyBuffer1(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 2 => copyBuffer2(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 3 => copyBuffer3(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case 4 => copyBuffer4(
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+      case _ => copyBufferAny(
+          components,
+          dest, destOffset, destStride,
+          src, srcOffset, srcStride, srcLim
+        )
+    }
+  }
+
+  final def copyBuffer1(
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer2(
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer3(
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      dest.put(desti + 2, src.get(srci + 2))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBuffer4(
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+      dest.put(desti, src.get(srci))
+      dest.put(desti + 1, src.get(srci + 1))
+      dest.put(desti + 2, src.get(srci + 2))
+      dest.put(desti + 3, src.get(srci + 3))
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+  final def copyBufferAny(
+    components: Int,
+    dest: DoubleBuffer, destOffset: Int, destStride: Int,
+    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
+  ) {
+    var desti = destOffset
+    var srci = srcOffset
+
+    while (srci < srcLim) {
+
+      var j = 0; while (j < components) {
+        dest.put(desti + j, src.get(srci + j))
+        j += 1
+      }
+
+      desti += destStride
+      srci += srcStride
+    }
+  }
+
+
   // SeqInt
   final def copySeqInt(
     components: Int,

@@ -27,42 +27,44 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadIndexSeq[+R <: ReadableIndex]
+trait ReadIndexSeq[+R <: RawType]
 extends ReadContiguousSeq[Int1, R] {
   def asReadOnlySeq() :ReadIndexSeq[R]
 
   def mkIndexArray(size: Int) :IndexArray[R] =
-    mkDataArray(size)
+    mkDataArray(size).asInstanceOf[IndexArray[R]]
   def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] =
-    mkDataArray(array)
+    mkDataArray(array).asInstanceOf[IndexArray[R]]
   def mkIndexBuffer(size: Int) :IndexBuffer[R] =
-    mkDataBuffer(size)
+    mkDataBuffer(size).asInstanceOf[IndexBuffer[R]]
   def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] =
-    mkDataBuffer(byteBuffer)
+    mkDataBuffer(byteBuffer).asInstanceOf[IndexBuffer[R]]
 
-  def copyAsIndexArray() :IndexArray[R] = super.copyAsDataArray()
-  def copyAsIndexBuffer() :IndexBuffer[R] = super.copyAsDataBuffer()
+  def copyAsIndexArray() :IndexArray[R] =
+    super.copyAsDataArray().asInstanceOf[IndexArray[R]]
+  def copyAsIndexBuffer() :IndexBuffer[R] =
+    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[R]]
 }
 
-trait IndexSeq[+R <: ReadableIndex]
+trait IndexSeq[+R <: RawType]
 extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 
-trait ReadIndexArray[+R <: ReadableIndex]
+trait ReadIndexArray[+R <: RawType]
 extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
   def asReadOnlySeq() :ReadIndexArray[R]
 }
 
-trait IndexArray[+R <: ReadableIndex]
+trait IndexArray[+R <: RawType]
 extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 
-trait ReadIndexBuffer[+R <: ReadableIndex]
+trait ReadIndexBuffer[+R <: RawType]
 extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
   def asReadOnlySeq() :ReadIndexBuffer[R]
 }
 
-trait IndexBuffer[+R <: ReadableIndex]
+trait IndexBuffer[+R <: RawType]
 extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
 
 

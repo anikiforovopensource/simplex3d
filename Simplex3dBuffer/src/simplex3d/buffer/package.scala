@@ -71,9 +71,9 @@ package object buffer extends UnsignedImplicits {
   type inDataBuffer[T <: ElemType, +D <: RawType] = ReadDataBuffer[T, D]
   type inDataView[T <: ElemType, +D <: RawType] = ReadDataView[T, D]
 
-  type inIndexSeq[+D <: ReadableIndex] = ReadIndexSeq[D]
-  type inIndexArray[+D <: ReadableIndex] = ReadIndexArray[D]
-  type inIndexBuffer[+D <: ReadableIndex] = ReadIndexBuffer[D]
+  type inIndexSeq[+D <: RawType] = ReadIndexSeq[D]
+  type inIndexArray[+D <: RawType] = ReadIndexArray[D]
+  type inIndexBuffer[+D <: RawType] = ReadIndexBuffer[D]
 
   type outDataSeq[T <: ElemType, +D <: RawType] = DataSeq[T, D]
   type outContiguousSeq[T <: ElemType, +D <: RawType] =ContiguousSeq[T, D]
@@ -81,15 +81,15 @@ package object buffer extends UnsignedImplicits {
   type outDataBuffer[T <: ElemType, +D <: RawType] = DataBuffer[T, D]
   type outDataView[T <: ElemType, +D <: RawType] = DataView[T, D]
 
-  type outIndexSeq[+D <: ReadableIndex] = IndexSeq[D]
-  type outIndexArray[+D <: ReadableIndex] = IndexArray[D]
-  type outIndexBuffer[+D <: ReadableIndex] = IndexBuffer[D]
+  type outIndexSeq[+D <: RawType] = IndexSeq[D]
+  type outIndexArray[+D <: RawType] = IndexArray[D]
+  type outIndexBuffer[+D <: RawType] = IndexBuffer[D]
 
-  @inline implicit final def roArrayDataToIndex[D  <: ReadableIndex] (
+  @inline implicit final def readArrayDataToIndex[D  <: ReadableIndex] (
     d: ReadDataArray[Int1, D]
   ) = d.asInstanceOf[ReadIndexArray[D]]
 
-  @inline implicit final def roBufferDataToIndex[D  <: ReadableIndex](
+  @inline implicit final def readBufferDataToIndex[D  <: ReadableIndex](
     d: ReadDataBuffer[Int1, D]
   ) = d.asInstanceOf[ReadIndexBuffer[D]]
 

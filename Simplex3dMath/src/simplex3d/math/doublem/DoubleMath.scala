@@ -1681,7 +1681,7 @@ object DoubleMath {
   
   /**
    * This method is here for completness. Normally you should work with
-   * unit quaternions (<code>norm(q) == 1</code>), and in this case
+   * unit quaternions (<code>norm(q) == 1</code>), and in this case 
    * <code>inverse(q) == conjugate(q)</code>.
    */
   def inverse(q: inQuat4d) :Quat4d = conjugate(q)/normSquare(q)

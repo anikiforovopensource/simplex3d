@@ -1710,7 +1710,7 @@ object FloatMath {
   }
 
   /**
-   * This method is here for completness. Normally you should work with
+   * This method is here for completness. Normally you should work with 
    * unit quaternions (<code>norm(q) == 1</code>), and in this case
    * <code>inverse(q) == conjugate(q)</code>.
    */

@@ -60,46 +60,47 @@ class CopyBenchTC {
   def run() {
     var start = 0L
 
-    start = System.currentTimeMillis
-    testCopyBuffer(dataBuffer, loops)
-    val bufferTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testCopyArray(dataArray, loops)
-    val arrayTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testPutArray(dataArray, loops)
-    val putArrayTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testPutDataBuffer(byteBuffer, loops)
-    val putDataBufferTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testInterleavedPutDataBuffer(byteBuffer, loops)
-    val interleavedPutDataBufferTime = System.currentTimeMillis - start
+//    start = System.currentTimeMillis
+//    testCopyBuffer(dataBuffer, loops)
+//    val bufferTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testCopyArray(dataArray, loops)
+//    val arrayTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testPutArray(dataArray, loops)
+//    val putArrayTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testPutDataBuffer(byteBuffer, loops)
+//    val putDataBufferTime = System.currentTimeMillis - start
+//
+//    start = System.currentTimeMillis
+//    testInterleavedPutDataBuffer(byteBuffer, loops)
+//    val interleavedPutDataBufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testNoConvertPutDataBuffer(byteBuffer, loops)
     val noConvertPutDataBufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testConvertPutDataBuffer(byteBuffer, loops)
-    val convertPutDataBufferTime = System.currentTimeMillis - start
+    testNoConvertPutDataArray(dataArray, loops)
+    val noConvertPutDataArrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testConvertPutHalfFloat(byteBuffer, loops)
-    val convertPutHalfFloatTime = System.currentTimeMillis - start
+    testNoConvertPutDataArray(dataArray, loops)
+    val noConvertPutDataArrayTime2 = System.currentTimeMillis - start
 
-    println("Array time: " + arrayTime + ".")
-    println("Buffer time: " + bufferTime + ".")
-    println("PutArray time: " + putArrayTime + ".")
-    println("PutDataBuffer time: " + putDataBufferTime + ".")
-    println("InterleavedPutDataBuffer time: " + interleavedPutDataBufferTime + ".")
+
+//    println("Array time: " + arrayTime + ".")
+//    println("Buffer time: " + bufferTime + ".")
+//    println("PutArray time: " + putArrayTime + ".")
+//    println("PutDataBuffer time: " + putDataBufferTime + ".")
+//    println("InterleavedPutDataBuffer time: " + interleavedPutDataBufferTime + ".")
     println("NoConvertPutDataBuffer time: " + noConvertPutDataBufferTime + ".")
-    println("ConvertPutDataBuffer time: " + convertPutDataBufferTime + ".")
-    println("ConvertPutHalfFloat time: " + convertPutHalfFloatTime + ".")
+    println("NoConvertPutDataArray time: " + noConvertPutDataArrayTime + ".")
+    println("NoConvertPutDataArray time: " + noConvertPutDataArrayTime2 + ".")
   }
 
   def testCopyArray(data: Array[Float], loops: Int) {
@@ -190,59 +191,36 @@ class CopyBenchTC {
     val size = data.capacity/4
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, UInt](
-      allocateByteBuffer(
-        size*4*(stride + 1) + offset*4
-      ),
-      offset, stride
-    )
-    val src = DataBuffer[Float1, SInt](data)
-
-    var l = 0; while (l < loops) {
-      dest.put(src)
-      answer += int(dest(l % size)*1000)
-
-      l += 1
-    }
-
-    println(answer)
-  }
-
-  def testConvertPutDataBuffer(data: ByteBuffer, loops: Int) {
-    var answer = 0
-    val size = data.capacity/4
-    val offset = 2
-    val stride = 2
-    val dest = DataView[Float1, NUInt](
-      allocateByteBuffer(
-        size*4*(stride + 1) + offset*4
-      ),
-      offset, stride
-    )
-    val src = DataBuffer[Float1, SInt](data)
-
-    var l = 0; while (l < loops) {
-      dest.put(src)
-      answer += int(dest(l % size)*1000)
-
-      l += 1
-    }
-
-    println(answer)
-  }
-
-  def testConvertPutHalfFloat(data: ByteBuffer, loops: Int) {
-    var answer = 0
-    val size = data.capacity/4
-    val offset = 2
-    val stride = 2
-    val dest = DataView[Float1, HalfFloat](
+    val dest = DataView[Float1, RawFloat](
       allocateByteBuffer(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
     )
     val src = DataBuffer[Float1, RawFloat](data)
+
+    var l = 0; while (l < loops) {
+      dest.put(src)
+      answer += int(dest(l % size)*1000)
+
+      l += 1
+    }
+
+    println(answer)
+  }
+
+  def testNoConvertPutDataArray(data: Array[Float], loops: Int) {
+    var answer = 0
+    val size = data.length
+    val offset = 2
+    val stride = 2
+    val dest = DataView[Float1, RawFloat](
+      allocateByteBuffer(
+        size*4*(stride + 1) + offset*4
+      ),
+      offset, stride
+    )
+    val src = DataArray[Float1, RawFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)

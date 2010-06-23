@@ -2,7 +2,7 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="Simplex3dBufferTest" default="default" basedir=".">
+<project name="Simplex3dBufferTest" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dBufferTest.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -66,4 +66,53 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <property name="release.dir" value="release"/>
+    <property name="release.name" value="simplex3d-buffer-test"/>
+    <property name="release.bin" value="${release.dir}/Simplex3dBufferTest_bin.zip"/>
+    <property name="release.src" value="${release.dir}/Simplex3dBufferTest_src.zip"/>
+    <property name="root.pkg" value=""/>
+
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
+
+    <target name="release-clean" >
+        <delete dir="${release.dir}" />
+    </target>
+
+    <target name="release-bin" depends="init, clean, compile, jar" >
+        <delete file="${release.bin}" />
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${release.dir}/jars" />
+
+        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
+        </jar>
+
+        <zip destfile="${release.bin}">
+            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${release.dir}/jars" includes="*.jar"/>
+            <fileset dir="${basedir}" includes="
+                Readme.txt
+                COPYING
+                simplex3d-buffer-test.license" />
+        </zip>
+    </target>
+
+    <target name="release-src" depends="init" >
+        <delete file="${release.src}" />
+        <mkdir dir="${release.dir}" />
+
+        <zip destfile="${release.src}">
+            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
+            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
+            <fileset dir="${basedir}" includes="
+                Readme.txt
+                COPYING
+                simplex3d-buffer-test.license
+                build.xml" />
+        </zip>
+    </target>
+
 </project>

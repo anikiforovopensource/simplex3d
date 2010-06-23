@@ -20,6 +20,8 @@
 
 package bench.scala
 
+import java.nio._
+
 import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.buffer._
@@ -48,25 +50,31 @@ class ArrayVsDirect {
     dataArray(i) = random.nextFloat
   }
 
-  val dataBuffer = java.nio.ByteBuffer.allocateDirect(4*length).order(java.nio.ByteOrder.nativeOrder).asFloatBuffer
+  val dataBuffer = ByteBuffer.allocateDirect(4*length).order(java.nio.ByteOrder.nativeOrder).asFloatBuffer
   random.setSeed(1)
   for (i <- 0 until length) {
     dataBuffer.put(i, random.nextFloat)
   }
+  val wrappedBuffer = FloatBuffer.wrap(dataArray)
 
   def run() {
     var start = 0L
+
+    start = System.currentTimeMillis
+    testArray(dataArray, loops)
+    val arrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testBuffer(dataBuffer, loops)
     val bufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testArray(dataArray, loops)
-    val arrayTime = System.currentTimeMillis - start
+    testBuffer(wrappedBuffer, loops)
+    val wrappedTime = System.currentTimeMillis - start
 
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
+    println("Wrapped time: " + wrappedTime + ".")
   }
 
   def testArray(data: Array[Float], loops: Int) {

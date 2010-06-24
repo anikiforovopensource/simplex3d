@@ -29,14 +29,17 @@ import simplex3d.math.floatm.FloatMath._
  */
 object Vec4Bench {
   def main(args: Array[String]) {
-    new AccessorBench().run()
+    val tc = new AccessorBench()
+    tc.run()
+    tc.run()
+    tc.run()
   }
 }
 
 class AccessorBench {
   def run() {
     val length = 20000
-    val loops = 20000
+    val loops = 10000
 
     var start = 0L
 
@@ -61,9 +64,6 @@ class AccessorBench {
         // Bench code
         answer += Vec4(i, i + 1, i + 2, i + 3)
         answer -= Vec4(l)
-        answer *= 1 + 1f/(i + 1)
-        val prod = answer * answer
-        answer /= sqrt(prod.x + prod.y + prod.z + prod.w)
 
         i += 1
       }
@@ -82,9 +82,6 @@ class AccessorBench {
         // Bench code
         answer += ModifiedVec4(i, i + 1, i + 2, i + 3)
         answer -= ModifiedVec4(l)
-        answer *= 1 + 1f/(i + 1)
-        val prod = answer * answer
-        answer /= sqrt(prod.x + prod.y + prod.z + prod.w)
 
         i += 1
       }
@@ -100,10 +97,10 @@ import simplex3d.math._
 
 sealed abstract class AnyModifiedVec4 {
 
-  protected var vx: Float = _
-  protected var vy: Float = _
-  protected var vz: Float = _
-  protected var vw: Float = _
+  private[math] var vx: Float = _
+  private[math] var vy: Float = _
+  private[math] var vz: Float = _
+  private[math] var vw: Float = _
 
   def x: Float = vx
   def y: Float = vy
@@ -214,15 +211,15 @@ extends AnyModifiedVec4
   def q_=(q: Float) { vw = q }
 
 
-  def *=(s: Float) { x *= s; y *= s; z *= s; w *= s }
-  def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
+  def *=(s: Float) { vx *= s; vy *= s; vz *= s; vw *= s }
+  def /=(s: Float) { val inv = 1/s; vx *= inv; vy *= inv; vz *= inv; vw *= inv }
 
-  def +=(u: AnyModifiedVec4) { x += u.x; y += u.y; z += u.z; w += u.w }
-  def -=(u: AnyModifiedVec4) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
-  def *=(u: AnyModifiedVec4) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
-  def /=(u: AnyModifiedVec4) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
+  def +=(u: AnyModifiedVec4) { vx += u.vx; vy += u.vy; vz += u.vz; vw += u.vw }
+  def -=(u: AnyModifiedVec4) { vx -= u.vx; vy -= u.vy; vz -= u.vz; vw -= u.vw }
+  def *=(u: AnyModifiedVec4) { vx *= u.vx; vy *= u.vy; vz *= u.vz; vw *= u.vw }
+  def /=(u: AnyModifiedVec4) { vx /= u.vx; vy /= u.vy; vz /= u.vz; vw /= u.vw }
 
-  def :=(u: AnyModifiedVec4) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(u: AnyModifiedVec4) { vx = u.vx; vy = u.vy; vz = u.vz; vw = u.vw }
   def set(x: Float, y: Float, z: Float, w: Float) {
     this.x = x; this.y = y; this.z = z; this.w = w
   }

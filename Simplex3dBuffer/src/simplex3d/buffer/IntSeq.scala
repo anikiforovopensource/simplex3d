@@ -74,7 +74,7 @@ private[buffer] final class ArrayInt1UByte(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.UByte
+  def bindingType = RawData.UByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i) & 0xFF
@@ -90,7 +90,7 @@ private[buffer] final class BufferInt1UByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawType.UByte
+  def bindingType = RawData.UByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i) & 0xFF
@@ -108,7 +108,7 @@ private[buffer] final class ViewInt1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.UByte
+  def bindingType = RawData.UByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
@@ -154,7 +154,7 @@ private[buffer] final class ArrayInt1UShort(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.UShort
+  def bindingType = RawData.UShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i)
@@ -170,7 +170,7 @@ private[buffer] final class BufferInt1UShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawType.UShort
+  def bindingType = RawData.UShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
@@ -188,7 +188,7 @@ private[buffer] final class ViewInt1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.UShort
+  def bindingType = RawData.UShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -235,7 +235,7 @@ private[buffer] final class ArrayInt1UInt(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.UInt
+  def bindingType = RawData.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i)
@@ -249,7 +249,7 @@ private[buffer] final class BufferInt1UInt(
   def backingSeq = this
   def asReadOnlySeq() = new BufferInt1UInt(shared, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.UInt
+  def bindingType = RawData.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
@@ -267,7 +267,7 @@ private[buffer] final class ViewInt1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.UInt
+  def bindingType = RawData.UInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -311,7 +311,7 @@ private[buffer] final class ArrayInt1SByte(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.SByte
+  def bindingType = RawData.SByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i)
@@ -327,7 +327,7 @@ private[buffer] final class BufferInt1SByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawType.SByte
+  def bindingType = RawData.SByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
@@ -345,7 +345,7 @@ private[buffer] final class ViewInt1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.SByte
+  def bindingType = RawData.SByte
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -391,7 +391,7 @@ private[buffer] final class ArrayInt1SShort(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.SShort
+  def bindingType = RawData.SShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i)
@@ -407,7 +407,7 @@ private[buffer] final class BufferInt1SShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawType.SShort
+  def bindingType = RawData.SShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
@@ -425,7 +425,7 @@ private[buffer] final class ViewInt1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.SShort
+  def bindingType = RawData.SShort
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -469,7 +469,7 @@ private[buffer] final class ArrayInt1SInt(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.SInt
+  def bindingType = RawData.SInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = rarray(i)
@@ -483,7 +483,7 @@ private[buffer] final class BufferInt1SInt(
   def backingSeq = this
   def asReadOnlySeq() = new BufferInt1SInt(shared, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawType.SInt
+  def bindingType = RawData.SInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
@@ -501,7 +501,7 @@ private[buffer] final class ViewInt1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawType.SInt
+  def bindingType = RawData.SInt
   def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)

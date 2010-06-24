@@ -58,49 +58,49 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  type ElemType = simplex3d.math.types.ElemType
+  type MetaElement = simplex3d.math.types.MetaElement
   type Primitive = simplex3d.math.types.Primitive
   type Composite = simplex3d.math.types.Composite
   type Int1 = simplex3d.math.types.Int1
   type Float1 = simplex3d.math.types.Float1
   type Double1 = simplex3d.math.types.Double1
 
-  type inDataSeq[T <: ElemType, +D <: RawType] = ReadDataSeq[T, D]
-  type inContiguousSeq[T <: ElemType, +D <: RawType] =ReadContiguousSeq[T, D]
-  type inDataArray[T <: ElemType, +D <: RawType] = ReadDataArray[T, D]
-  type inDataBuffer[T <: ElemType, +D <: RawType] = ReadDataBuffer[T, D]
-  type inDataView[T <: ElemType, +D <: RawType] = ReadDataView[T, D]
+  type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
+  type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]
+  type inDataArray[E <: MetaElement, +R <: RawData] = ReadDataArray[E, R]
+  type inDataBuffer[E <: MetaElement, +R <: RawData] = ReadDataBuffer[E, R]
+  type inDataView[E <: MetaElement, +R <: RawData] = ReadDataView[E, R]
 
-  type inIndexSeq[+D <: RawType] = ReadIndexSeq[D]
-  type inIndexArray[+D <: RawType] = ReadIndexArray[D]
-  type inIndexBuffer[+D <: RawType] = ReadIndexBuffer[D]
+  type inIndexSeq[+R <: RawData] = ReadIndexSeq[R]
+  type inIndexArray[+R <: RawData] = ReadIndexArray[R]
+  type inIndexBuffer[+R <: RawData] = ReadIndexBuffer[R]
 
-  type outDataSeq[T <: ElemType, +D <: RawType] = DataSeq[T, D]
-  type outContiguousSeq[T <: ElemType, +D <: RawType] =ContiguousSeq[T, D]
-  type outDataArray[T <: ElemType, +D <: RawType] = DataArray[T, D]
-  type outDataBuffer[T <: ElemType, +D <: RawType] = DataBuffer[T, D]
-  type outDataView[T <: ElemType, +D <: RawType] = DataView[T, D]
+  type outDataSeq[E <: MetaElement, +R <: RawData] = DataSeq[E, R]
+  type outContiguousSeq[E <: MetaElement, +R <: RawData] =ContiguousSeq[E, R]
+  type outDataArray[E <: MetaElement, +R <: RawData] = DataArray[E, R]
+  type outDataBuffer[E <: MetaElement, +R <: RawData] = DataBuffer[E, R]
+  type outDataView[E <: MetaElement, +R <: RawData] = DataView[E, R]
 
-  type outIndexSeq[+D <: RawType] = IndexSeq[D]
-  type outIndexArray[+D <: RawType] = IndexArray[D]
-  type outIndexBuffer[+D <: RawType] = IndexBuffer[D]
+  type outIndexSeq[+R <: RawData] = IndexSeq[R]
+  type outIndexArray[+R <: RawData] = IndexArray[R]
+  type outIndexBuffer[+R <: RawData] = IndexBuffer[R]
 
-  @inline implicit final def readArrayDataToIndex[D  <: ReadableIndex] (
-    d: ReadDataArray[Int1, D]
-  ) = d.asInstanceOf[ReadIndexArray[D]]
+  @inline implicit final def readArrayDataToIndex[R  <: ReadableIndex] (
+    d: ReadDataArray[Int1, R]
+  ) = d.asInstanceOf[ReadIndexArray[R]]
 
-  @inline implicit final def readBufferDataToIndex[D  <: ReadableIndex](
-    d: ReadDataBuffer[Int1, D]
-  ) = d.asInstanceOf[ReadIndexBuffer[D]]
+  @inline implicit final def readBufferDataToIndex[R  <: ReadableIndex](
+    d: ReadDataBuffer[Int1, R]
+  ) = d.asInstanceOf[ReadIndexBuffer[R]]
 
   
-  @inline implicit final def arrayDataToIndex[D  <: ReadableIndex](
-    d: DataArray[Int1, D]
-  ) = d.asInstanceOf[IndexArray[D]]
+  @inline implicit final def arrayDataToIndex[R  <: ReadableIndex](
+    d: DataArray[Int1, R]
+  ) = d.asInstanceOf[IndexArray[R]]
 
-  @inline implicit final def bufferDataToIndex[D  <: ReadableIndex](
-    d: DataBuffer[Int1, D]
-  ) = d.asInstanceOf[IndexBuffer[D]]
+  @inline implicit final def bufferDataToIndex[R  <: ReadableIndex](
+    d: DataBuffer[Int1, R]
+  ) = d.asInstanceOf[IndexBuffer[R]]
 
   
   def allocateByteBuffer(size: Int) = {
@@ -109,345 +109,345 @@ package object buffer extends UnsignedImplicits {
   }
   
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2]
   )(size: Int) = {
     val views = interleaveAny(seq1, seq2)(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3]
   )(size: Int) = {
     val views = interleaveAny(seq1, seq2, seq3)(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType,
-    T8 <: ElemType, D8 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData,
+    E8 <: MetaElement, R8 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7],
-    seq8: DataSeq[T8, D8]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7],
+    seq8: DataSeq[E8, R8]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]],
-      views(7).asInstanceOf[DataView[T8, D8]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]],
+      views(7).asInstanceOf[DataView[E8, R8]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType,
-    T8 <: ElemType, D8 <: RawType,
-    T9 <: ElemType, D9 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData,
+    E8 <: MetaElement, R8 <: RawData,
+    E9 <: MetaElement, R9 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7],
-    seq8: DataSeq[T8, D8],
-    seq9: DataSeq[T9, D9]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7],
+    seq8: DataSeq[E8, R8],
+    seq9: DataSeq[E9, R9]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]],
-      views(7).asInstanceOf[DataView[T8, D8]],
-      views(8).asInstanceOf[DataView[T9, D9]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]],
+      views(7).asInstanceOf[DataView[E8, R8]],
+      views(8).asInstanceOf[DataView[E9, R9]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType,
-    T8 <: ElemType, D8 <: RawType,
-    T9 <: ElemType, D9 <: RawType,
-    T10 <: ElemType, D10 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData,
+    E8 <: MetaElement, R8 <: RawData,
+    E9 <: MetaElement, R9 <: RawData,
+    E10 <: MetaElement, R10 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7],
-    seq8: DataSeq[T8, D8],
-    seq9: DataSeq[T9, D9],
-    seq10: DataSeq[T10, D10]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7],
+    seq8: DataSeq[E8, R8],
+    seq9: DataSeq[E9, R9],
+    seq10: DataSeq[E10, R10]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]],
-      views(7).asInstanceOf[DataView[T8, D8]],
-      views(8).asInstanceOf[DataView[T9, D9]],
-      views(9).asInstanceOf[DataView[T10, D10]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]],
+      views(7).asInstanceOf[DataView[E8, R8]],
+      views(8).asInstanceOf[DataView[E9, R9]],
+      views(9).asInstanceOf[DataView[E10, R10]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType,
-    T8 <: ElemType, D8 <: RawType,
-    T9 <: ElemType, D9 <: RawType,
-    T10 <: ElemType, D10 <: RawType,
-    T11 <: ElemType, D11 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData,
+    E8 <: MetaElement, R8 <: RawData,
+    E9 <: MetaElement, R9 <: RawData,
+    E10 <: MetaElement, R10 <: RawData,
+    E11 <: MetaElement, R11 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7],
-    seq8: DataSeq[T8, D8],
-    seq9: DataSeq[T9, D9],
-    seq10: DataSeq[T10, D10],
-    seq11: DataSeq[T11, D11]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7],
+    seq8: DataSeq[E8, R8],
+    seq9: DataSeq[E9, R9],
+    seq10: DataSeq[E10, R10],
+    seq11: DataSeq[E11, R11]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]],
-      views(7).asInstanceOf[DataView[T8, D8]],
-      views(8).asInstanceOf[DataView[T9, D9]],
-      views(9).asInstanceOf[DataView[T10, D10]],
-      views(10).asInstanceOf[DataView[T11, D11]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]],
+      views(7).asInstanceOf[DataView[E8, R8]],
+      views(8).asInstanceOf[DataView[E9, R9]],
+      views(9).asInstanceOf[DataView[E10, R10]],
+      views(10).asInstanceOf[DataView[E11, R11]]
     )
   }
 
   def interleave[
-    T1 <: ElemType, D1 <: RawType,
-    T2 <: ElemType, D2 <: RawType,
-    T3 <: ElemType, D3 <: RawType,
-    T4 <: ElemType, D4 <: RawType,
-    T5 <: ElemType, D5 <: RawType,
-    T6 <: ElemType, D6 <: RawType,
-    T7 <: ElemType, D7 <: RawType,
-    T8 <: ElemType, D8 <: RawType,
-    T9 <: ElemType, D9 <: RawType,
-    T10 <: ElemType, D10 <: RawType,
-    T11 <: ElemType, D11 <: RawType,
-    T12 <: ElemType, D12 <: RawType
+    E1 <: MetaElement, R1 <: RawData,
+    E2 <: MetaElement, R2 <: RawData,
+    E3 <: MetaElement, R3 <: RawData,
+    E4 <: MetaElement, R4 <: RawData,
+    E5 <: MetaElement, R5 <: RawData,
+    E6 <: MetaElement, R6 <: RawData,
+    E7 <: MetaElement, R7 <: RawData,
+    E8 <: MetaElement, R8 <: RawData,
+    E9 <: MetaElement, R9 <: RawData,
+    E10 <: MetaElement, R10 <: RawData,
+    E11 <: MetaElement, R11 <: RawData,
+    E12 <: MetaElement, R12 <: RawData
   ](
-    seq1: DataSeq[T1, D1],
-    seq2: DataSeq[T2, D2],
-    seq3: DataSeq[T3, D3],
-    seq4: DataSeq[T4, D4],
-    seq5: DataSeq[T5, D5],
-    seq6: DataSeq[T6, D6],
-    seq7: DataSeq[T7, D7],
-    seq8: DataSeq[T8, D8],
-    seq9: DataSeq[T9, D9],
-    seq10: DataSeq[T10, D10],
-    seq11: DataSeq[T11, D11],
-    seq12: DataSeq[T12, D12]
+    seq1: DataSeq[E1, R1],
+    seq2: DataSeq[E2, R2],
+    seq3: DataSeq[E3, R3],
+    seq4: DataSeq[E4, R4],
+    seq5: DataSeq[E5, R5],
+    seq6: DataSeq[E6, R6],
+    seq7: DataSeq[E7, R7],
+    seq8: DataSeq[E8, R8],
+    seq9: DataSeq[E9, R9],
+    seq10: DataSeq[E10, R10],
+    seq11: DataSeq[E11, R11],
+    seq12: DataSeq[E12, R12]
   )(size: Int) = {
     val views = interleaveAny(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11, seq12
     )(size)
     (
-      views(0).asInstanceOf[DataView[T1, D1]],
-      views(1).asInstanceOf[DataView[T2, D2]],
-      views(2).asInstanceOf[DataView[T3, D3]],
-      views(3).asInstanceOf[DataView[T4, D4]],
-      views(4).asInstanceOf[DataView[T5, D5]],
-      views(5).asInstanceOf[DataView[T6, D6]],
-      views(6).asInstanceOf[DataView[T7, D7]],
-      views(7).asInstanceOf[DataView[T8, D8]],
-      views(8).asInstanceOf[DataView[T9, D9]],
-      views(9).asInstanceOf[DataView[T10, D10]],
-      views(10).asInstanceOf[DataView[T11, D11]],
-      views(11).asInstanceOf[DataView[T12, D12]]
+      views(0).asInstanceOf[DataView[E1, R1]],
+      views(1).asInstanceOf[DataView[E2, R2]],
+      views(2).asInstanceOf[DataView[E3, R3]],
+      views(3).asInstanceOf[DataView[E4, R4]],
+      views(4).asInstanceOf[DataView[E5, R5]],
+      views(5).asInstanceOf[DataView[E6, R6]],
+      views(6).asInstanceOf[DataView[E7, R7]],
+      views(7).asInstanceOf[DataView[E8, R8]],
+      views(8).asInstanceOf[DataView[E9, R9]],
+      views(9).asInstanceOf[DataView[E10, R10]],
+      views(10).asInstanceOf[DataView[E11, R11]],
+      views(11).asInstanceOf[DataView[E12, R12]]
     )
   }
 
 
   def interleaveAny(
-    dataSeqs: DataSeq[_ <: ElemType, _ <: RawType]*
+    dataSeqs: DataSeq[_ <: MetaElement, _ <: RawData]*
   )(size: Int) :Array[DataView[_, _]] = {
     // check arguments
     if (dataSeqs.length == 0) return new Array[DataView[_, _]](0)

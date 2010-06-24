@@ -27,7 +27,7 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadIndexSeq[+R <: RawType]
+trait ReadIndexSeq[+R <: RawData]
 extends ReadContiguousSeq[Int1, R] {
   def asReadOnlySeq() :ReadIndexSeq[R]
 
@@ -46,25 +46,25 @@ extends ReadContiguousSeq[Int1, R] {
     super.copyAsDataBuffer().asInstanceOf[IndexBuffer[R]]
 }
 
-trait IndexSeq[+R <: RawType]
+trait IndexSeq[+R <: RawData]
 extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 
-trait ReadIndexArray[+R <: RawType]
+trait ReadIndexArray[+R <: RawData]
 extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
   def asReadOnlySeq() :ReadIndexArray[R]
 }
 
-trait IndexArray[+R <: RawType]
+trait IndexArray[+R <: RawData]
 extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 
-trait ReadIndexBuffer[+R <: RawType]
+trait ReadIndexBuffer[+R <: RawData]
 extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
   def asReadOnlySeq() :ReadIndexBuffer[R]
 }
 
-trait IndexBuffer[+R <: RawType]
+trait IndexBuffer[+R <: RawData]
 extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
 
 

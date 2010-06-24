@@ -27,7 +27,7 @@ import scala.annotation._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RawType {
+object RawData {
   final val SByte = 5120
   final val UByte = 5121
   final val SShort = 5122
@@ -54,18 +54,18 @@ object RawType {
   }
 }
 
-sealed trait RawType {
+sealed trait RawData {
   type ArrayType <: Array[_]
   type BufferType <: Buffer
 }
 
-sealed trait ReadableType extends RawType
-sealed trait ReadableInt extends ReadableType
+sealed trait ReadableData extends RawData
+sealed trait ReadableInt extends ReadableData
 sealed trait ReadableIndex extends ReadableInt with Unsigned
-sealed trait ReadableFloat extends ReadableType
-sealed trait ReadableDouble extends ReadableType
+sealed trait ReadableFloat extends ReadableData
+sealed trait ReadableDouble extends ReadableData
 
-sealed trait Integral extends RawType
+sealed trait Integral extends RawData
 
 sealed trait Signed extends Integral
 sealed trait Unsigned extends Integral
@@ -110,7 +110,7 @@ sealed trait UInt extends RawInt with Unsigned
 with ReadableIndex with ReadableFloat with ReadableDouble
 
 
-sealed trait Fractional extends RawType
+sealed trait Fractional extends RawData
 
 sealed trait HalfFloat extends Fractional
 with ReadableFloat with ReadableDouble {

@@ -24,11 +24,11 @@ package simplex3d.buffer
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class FactoryRef[E <: ElemType, R <: RawType] {
+abstract class FactoryRef[E <: MetaElement, R <: RawData] {
   def factory: DataSeq[E, R]
 }
 
-class PrimitiveFactoryRef[E <: Primitive, R <: RawType](
+class PrimitiveFactoryRef[E <: Primitive, R <: RawData](
   primitiveClass: String
 ) extends FactoryRef[E, R] {
   lazy val factory: DataSeq[E, R] = {
@@ -36,7 +36,7 @@ class PrimitiveFactoryRef[E <: Primitive, R <: RawType](
   }
 }
 
-class CompositeFactoryRef[E <: Composite, R <: RawType](
+class CompositeFactoryRef[E <: Composite, R <: RawData](
   compositeClass: String,
   primitiveFactoryRef: PrimitiveFactoryRef[E#Component, R]
 ) extends FactoryRef[E, R] {

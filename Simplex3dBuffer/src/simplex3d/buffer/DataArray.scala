@@ -27,12 +27,12 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataArray[E <: ElemType, +R <: RawType]
+trait ReadDataArray[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
   def backingSeq: ReadDataArray[E#Component, R]
   def asReadOnlySeq() :ReadDataArray[E, R]
 
-  final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
     seq match {
       case a: ReadDataArray[_, _] =>
         sharedArray eq a.sharedArray
@@ -42,26 +42,26 @@ extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
   }
 }
 
-trait DataArray[E <: ElemType, +R <: RawType]
+trait DataArray[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
   def array: R#ArrayType = buffer.array.asInstanceOf[R#ArrayType]
   def backingSeq: DataArray[E#Component, R]
 }
 
 object DataArray {
-  def apply[E <: ElemType, R <: ReadableType](array: R#ArrayType)(
+  def apply[E <: MetaElement, R <: ReadableData](array: R#ArrayType)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     ref.factory.mkDataArray(array)
   }
 
-  def apply[E <: ElemType, R <: ReadableType](size: Int)(
+  def apply[E <: MetaElement, R <: ReadableData](size: Int)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     ref.factory.mkDataArray(size)
   }
 
-  def apply[E <: ElemType, R <: ReadableType](vals: E#Element*)(
+  def apply[E <: MetaElement, R <: ReadableData](vals: E#Element*)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     val data = ref.factory.mkDataArray(vals.size)
@@ -69,14 +69,14 @@ object DataArray {
     data
   }
 
-  def apply[E <: ElemType, R <: ReadableType](da: DataArray[_, R])(
+  def apply[E <: MetaElement, R <: ReadableData](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     val res = ref.factory.mkDataArray(da.sharedArray)
     if (da.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataArray[E, R]] else res
   }
 
-  def apply[E <: ElemType, R <: ReadableType](da: inDataArray[_, R])(
+  def apply[E <: MetaElement, R <: ReadableData](da: inDataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataArray[E, R] = {
     val res = ref.factory.mkDataArray(da.sharedArray)

@@ -26,7 +26,7 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataView[E <: ElemType, +R <: RawType]
+trait ReadDataView[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
 
   assert(buffer.position == 0)
@@ -46,7 +46,7 @@ extends ReadDataSeq[E, R] {
   def backingSeq: ReadDataBuffer[E#Component, R]
   def asReadOnlySeq() :ReadDataView[E, R]
 
-  final def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) = {
+  final def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
     seq match {
       case v: ReadDataView[_, _] =>
         sharedBuffer eq v.sharedBuffer
@@ -56,26 +56,26 @@ extends ReadDataSeq[E, R] {
   }
 }
 
-trait DataView[E <: ElemType, +R <: RawType]
+trait DataView[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ReadDataView[E, R] {
   def backingSeq: DataBuffer[E#Component, R]
 }
 
 object DataView {
-  def apply[E <: ElemType, R <: ReadableType](
+  def apply[E <: MetaElement, R <: ReadableData](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     ref.factory.mkDataView(buffer, offset, stride)
   }
 
-  def apply[E <: ElemType, R <: ReadableType](
+  def apply[E <: MetaElement, R <: ReadableData](
     db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     val res = ref.factory.mkDataView(db.sharedBuffer, offset, stride)
     if (db.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataView[E, R]] else res
   }
 
-  def apply[E <: ElemType, R <: ReadableType](
+  def apply[E <: MetaElement, R <: ReadableData](
     db: inDataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
     val res = ref.factory.mkDataView(db.sharedBuffer, offset, stride)

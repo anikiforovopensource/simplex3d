@@ -30,7 +30,7 @@ import scala.collection._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class ReadBaseSeq[
-  E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
+  E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
   shared: AnyRef,
   private[buffer] final val buffer: R#BufferType
@@ -49,13 +49,13 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def elementManifest: ClassManifest[E#Element]
   def componentManifest: ClassManifest[E#Component#Element]
 
-  final val bytesPerRawComponent: Int = RawType.byteLength(bindingType)
+  final val bytesPerRawComponent: Int = RawData.byteLength(bindingType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
   final def byteOffset = offset*bytesPerRawComponent
   final val byteStride = stride*bytesPerRawComponent
 
   def asReadOnlyBuffer() :R#BufferType
-  def sharesMemory(seq: inDataSeq[_ <: ElemType, _ <: RawType]) :Boolean
+  def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
 
   private[buffer] val bindingBuffer: Buffer = {
     buffer match {
@@ -136,7 +136,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
 
 private[buffer] abstract class BaseSeq[
-  E <: ElemType, @specialized(Int, Float, Double) S, +R <: RawType
+  E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
   shared: AnyRef, buff: R#BufferType
 ) extends ReadBaseSeq[E, S, R](shared, buff) {
@@ -158,7 +158,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Int, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Int, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -174,7 +174,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Float, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Float, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -190,7 +190,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: ElemType, Double, _ <: RawType]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Double, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -281,15 +281,15 @@ private[buffer] abstract class BaseSeq[
   ) {
     def grp(binding: Int) = {
       (binding: @switch) match {
-        case RawType.SByte => 0
-        case RawType.UByte => 0
-        case RawType.SShort => 1
-        case RawType.UShort => 2
-        case RawType.SInt => 3
-        case RawType.UInt => 3
-        case RawType.HalfFloat => 4
-        case RawType.RawFloat => 5
-        case RawType.RawDouble => 6
+        case RawData.SByte => 0
+        case RawData.UByte => 0
+        case RawData.SShort => 1
+        case RawData.UShort => 2
+        case RawData.SInt => 3
+        case RawData.UInt => 3
+        case RawData.HalfFloat => 4
+        case RawData.RawFloat => 5
+        case RawData.RawDouble => 6
         case _ => throw new AssertionError("Binding not found.")
       }
     }
@@ -536,7 +536,7 @@ private[buffer] abstract class BaseSeq[
 }
 
 // Extend this, add implicit tuples to your package object to enable constructor
-abstract class GenericSeq[E <: Composite, +R <: RawType](
+abstract class GenericSeq[E <: Composite, +R <: RawData](
   val backingSeq: ContiguousSeq[E#Component, R]
 ) extends BaseSeq[E, E#Element, R](backingSeq.shared, backingSeq.buffer) {
   final def componentManifest = backingSeq.componentManifest.asInstanceOf[

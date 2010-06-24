@@ -26,28 +26,28 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataBuffer[E <: ElemType, +R <: RawType]
+trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
 extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
   def asReadOnlySeq() :ReadDataBuffer[E, R]
 }
 
-trait DataBuffer[E <: ElemType, +R <: RawType]
+trait DataBuffer[E <: MetaElement, +R <: RawData]
 extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
 
 object DataBuffer {
-  def apply[E <: ElemType, R <: ReadableType](buffer: ByteBuffer)(
+  def apply[E <: MetaElement, R <: ReadableData](buffer: ByteBuffer)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     ref.factory.mkDataBuffer(buffer)
   }
 
-  def apply[E <: ElemType, R <: ReadableType](size: Int)(
+  def apply[E <: MetaElement, R <: ReadableData](size: Int)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     ref.factory.mkDataBuffer(size)
   }
 
-  def apply[E <: ElemType, R <: ReadableType](vals: E#Element*)(
+  def apply[E <: MetaElement, R <: ReadableData](vals: E#Element*)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     val data = ref.factory.mkDataBuffer(vals.size)
@@ -55,14 +55,14 @@ object DataBuffer {
     data
   }
 
-  def apply[E <: ElemType, R <: ReadableType](db: DataBuffer[_, _])(
+  def apply[E <: MetaElement, R <: ReadableData](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     val res = ref.factory.mkDataBuffer(db.sharedBuffer)
     if (db.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataBuffer[E, R]] else res
   }
 
-  def apply[E <: ElemType, R <: ReadableType](db: inDataBuffer[_, _])(
+  def apply[E <: MetaElement, R <: ReadableData](db: inDataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataBuffer[E, R] = {
     val res = ref.factory.mkDataBuffer(db.sharedBuffer)

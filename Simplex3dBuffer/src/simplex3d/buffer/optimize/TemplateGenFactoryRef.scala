@@ -28,7 +28,7 @@ import org.objectweb.asm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawType](
+private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
   val templateArrayClass: String,
   val templateString: String,
   private val fallbackFactoryRef: CompositeFactoryRef[E, R]
@@ -37,15 +37,15 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawType](
   
   private val replaceString =
     fallbackFactory.bindingType match {
-      case RawType.SByte => "SByte"
-      case RawType.UByte => "UByte"
-      case RawType.SShort => "SShort"
-      case RawType.UShort => "UShort"
-      case RawType.SInt => "SInt"
-      case RawType.UInt => "UInt"
-      case RawType.HalfFloat => "HalfFloat"
-      case RawType.RawFloat => "RawFloat"
-      case RawType.RawDouble => "RawDouble"
+      case RawData.SByte => "SByte"
+      case RawData.UByte => "UByte"
+      case RawData.SShort => "SShort"
+      case RawData.UShort => "UShort"
+      case RawData.SInt => "SInt"
+      case RawData.UInt => "UInt"
+      case RawData.HalfFloat => "HalfFloat"
+      case RawData.RawFloat => "RawFloat"
+      case RawData.RawDouble => "RawDouble"
     }
 
   lazy val factory: DataSeq[E, R] = {

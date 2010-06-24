@@ -21,24 +21,24 @@
 package simplex3d.math.types
 
 
-/** <code>ElemType</code> is used to integrate vectors with sequences.
+/** <code>MetaElement</code> is used to integrate vectors with sequences.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait ElemType {
+trait MetaElement {
   type Element
   type Component <: Primitive
 }
 
-/** <code>Primitive</code> is a marker for sequences with primitive elements.
+/** <code>Primitive</code> marker indicates primitive elements/components.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Primitive extends ElemType {
+sealed trait Primitive extends MetaElement {
   type Element <: AnyVal
 }
 
-/** <code>Int1</code> is a marker for sequences of Int elements.
+/** <code>Int1</code> marker indicates Int elements/components.
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -47,7 +47,7 @@ sealed trait Int1 extends Primitive {
   type Component = Int1
 }
 
-/** <code>Float1</code> is a marker for sequences of Float elements.
+/** <code>Float1</code> marker indicates Float elements/components.
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -56,7 +56,7 @@ sealed trait Float1 extends Primitive {
   type Component = Float1
 }
 
-/** <code>Double1</code> is a marker for sequences of Double elements.
+/** <code>Double1</code> marker indicates Double elements/components.
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -65,10 +65,11 @@ sealed trait Double1 extends Primitive {
   type Component = Double1
 }
 
-/** <code>Composite</code> is a marker for sequences with composite elemets.
+/** <code>Composite</code> marker indicates elements composed of
+ * primitive components.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Composite extends ElemType {
+trait Composite extends MetaElement {
   type Element <: AnyRef
 }

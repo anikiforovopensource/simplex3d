@@ -31,7 +31,7 @@ import simplex3d.buffer._
  */
 private[buffer] abstract class BaseVec3f[+R <: ReadableFloat](
   seq: ContiguousSeq[Float1, R]
-) extends GenericSeq[Vec3f, R](seq) {
+) extends CompositeSeq[Vec3f, R](seq) {
   final def elementManifest = Manifest.Vec3fClassManifest
   final def components: Int = 3
 

@@ -107,7 +107,7 @@ private[buffer] final class ArrayFloat1SByte(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.SByte
+  def rawType = RawData.SByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -127,7 +127,7 @@ private[buffer] final class BufferFloat1SByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.SByte
+  def rawType = RawData.SByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -151,7 +151,7 @@ private[buffer] final class ViewFloat1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.SByte
+  def rawType = RawData.SByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -201,7 +201,7 @@ private[buffer] final class ArrayFloat1UByte(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.UByte
+  def rawType = RawData.UByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((rarray(i) & 0xFF)*fromUByte)
@@ -218,7 +218,7 @@ private[buffer] final class BufferFloat1UByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.UByte
+  def rawType = RawData.UByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((buff.get(i) & 0xFF)*fromUByte)
@@ -239,7 +239,7 @@ private[buffer] final class ViewFloat1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.UByte
+  def rawType = RawData.UByte
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
@@ -290,7 +290,7 @@ private[buffer] final class ArrayFloat1SShort(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.SShort
+  def rawType = RawData.SShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -310,7 +310,7 @@ private[buffer] final class BufferFloat1SShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.SShort
+  def rawType = RawData.SShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -334,7 +334,7 @@ private[buffer] final class ViewFloat1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.SShort
+  def rawType = RawData.SShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -384,7 +384,7 @@ private[buffer] final class ArrayFloat1UShort(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.UShort
+  def rawType = RawData.UShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(rarray(i)*fromUShort)
@@ -401,7 +401,7 @@ private[buffer] final class BufferFloat1UShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.UShort
+  def rawType = RawData.UShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(buff.get(i)*fromUShort)
@@ -422,7 +422,7 @@ private[buffer] final class ViewFloat1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.UShort
+  def rawType = RawData.UShort
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(buff.get(offset + i*stride)*fromUShort)
@@ -469,7 +469,7 @@ private[buffer] final class ArrayFloat1SInt(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1SInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.SInt
+  def rawType = RawData.SInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -489,7 +489,7 @@ private[buffer] final class BufferFloat1SInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.SInt
+  def rawType = RawData.SInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -513,7 +513,7 @@ private[buffer] final class ViewFloat1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.SInt
+  def rawType = RawData.SInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = {
@@ -563,7 +563,7 @@ private[buffer] final class ArrayFloat1UInt(
   def backingSeq = this
   def asReadOnlySeq() = new ArrayFloat1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def bindingType = RawData.UInt
+  def rawType = RawData.UInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((long(rarray(i)) & 0xFFFFFFFFL)*fromUInt)
@@ -579,7 +579,7 @@ private[buffer] final class BufferFloat1UInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def bindingType = RawData.UInt
+  def rawType = RawData.UInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
@@ -602,7 +602,7 @@ private[buffer] final class ViewFloat1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def bindingType = RawData.UInt
+  def rawType = RawData.UInt
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float(
@@ -654,7 +654,7 @@ private[buffer] final class ArrayFloat1HalfFloat(
   def asReadOnlySeq() = new ArrayFloat1HalfFloat(rarray, null, buffer.asReadOnlyBuffer())
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.HalfFloat
+  def rawType: Int = RawData.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(rarray(i))
   def update(i: Int, v: Float) :Unit = warray(i) = toHalfFloat(v)
@@ -670,7 +670,7 @@ private[buffer] final class BufferFloat1HalfFloat(
   )
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.HalfFloat
+  def rawType: Int = RawData.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(buff.get(i))
   def update(i: Int, v: Float) :Unit = buff.put(i, toHalfFloat(v))
@@ -688,7 +688,7 @@ private[buffer] final class ViewFloat1HalfFloat(
   )
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.HalfFloat
+  def rawType: Int = RawData.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(buff.get(offset + i*stride))
   def update(i: Int, v: Float) :Unit = buff.put(
@@ -737,7 +737,7 @@ private[buffer] final class ArrayFloat1RawFloat(
   def asReadOnlySeq() = new ArrayFloat1RawFloat(rarray, null, buffer.asReadOnlyBuffer())
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.RawFloat
+  def rawType: Int = RawData.RawFloat
 
   def apply(i: Int) :Float = rarray(i)
   def update(i: Int, v: Float) :Unit = warray(i) = v
@@ -753,7 +753,7 @@ private[buffer] final class BufferFloat1RawFloat(
   )
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.RawFloat
+  def rawType: Int = RawData.RawFloat
 
   def apply(i: Int) :Float = buff.get(i)
   def update(i: Int, v: Float) :Unit = buff.put(i, v)
@@ -771,7 +771,7 @@ private[buffer] final class ViewFloat1RawFloat(
   )
 
   def normalized: Boolean = false
-  def bindingType: Int = RawData.RawFloat
+  def rawType: Int = RawData.RawFloat
 
   def apply(i: Int) :Float = buff.get(offset + i*stride)
   def update(i: Int, v: Float) :Unit = buff.put(offset + i*stride, v)

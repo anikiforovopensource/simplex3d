@@ -36,7 +36,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
   def fallbackFactory: DataSeq[E, R] = fallbackFactoryRef.factory
   
   private val replaceString =
-    fallbackFactory.bindingType match {
+    fallbackFactory.rawType match {
       case RawData.SByte => "SByte"
       case RawData.UByte => "UByte"
       case RawData.SShort => "SShort"
@@ -181,7 +181,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
       template(0).asInstanceOf[Object].getClass ==
       testing(0).asInstanceOf[Object].getClass
     )
-    assert(template.bindingType == testing.bindingType)
+    assert(template.rawType == testing.rawType)
     assert(template.normalized == testing.normalized)
 
     testApplyUpdate(template, testing)

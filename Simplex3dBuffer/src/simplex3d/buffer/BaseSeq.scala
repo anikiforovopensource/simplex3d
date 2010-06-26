@@ -49,7 +49,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def elementManifest: ClassManifest[E#Element]
   def componentManifest: ClassManifest[E#Component#Element]
 
-  final val bytesPerRawComponent: Int = RawData.byteLength(bindingType)
+  final val bytesPerRawComponent: Int = RawData.byteLength(rawType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
   final def byteOffset = offset*bytesPerRawComponent
   final val byteStride = stride*bytesPerRawComponent
@@ -57,20 +57,12 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def asReadOnlyBuffer() :R#BufferType
   def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
 
-  private[buffer] val bindingBuffer: Buffer = {
-    buffer match {
-      case b: ByteBuffer => b.duplicate()
-      case b: CharBuffer => b.duplicate()
-      case b: ShortBuffer => b.duplicate()
-      case b: IntBuffer => b.duplicate()
-      case b: FloatBuffer => b.duplicate()
-      case b: DoubleBuffer => b.duplicate()
-    }
-  }
+  private[buffer] val bindingBuffer: Buffer = asReadOnlyBuffer()
   final def bindingBuffer(offset: Int) :Buffer = {
-    bindingBuffer.limit(bindingBuffer.capacity)
-    bindingBuffer.position(offset)
-    bindingBuffer
+    val buff = bindingBuffer
+    buff.limit(bindingBuffer.capacity)
+    buff.position(offset)
+    buff
   }
 
   final override val size: Int =
@@ -88,7 +80,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   
   def components: Int
-  def bindingType: Int
+  def rawType: Int
   def normalized: Boolean
 
   def offset: Int = 0
@@ -300,10 +292,10 @@ private[buffer] abstract class BaseSeq[
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
 
-    val group = grp(bindingType)
+    val group = grp(rawType)
     val noConversion = (
-      (bindingType == src.bindingType) ||
-      (!normalized && group == grp(src.bindingType))
+      (rawType == src.rawType) ||
+      (!normalized && group == grp(src.rawType))
     )
 
     if (stride == components && srcStride == components && noConversion) {
@@ -536,17 +528,15 @@ private[buffer] abstract class BaseSeq[
 }
 
 // Extend this, add implicit tuples to your package object to enable constructor
-abstract class GenericSeq[E <: Composite, +R <: RawData](
+abstract class CompositeSeq[E <: Composite, +R <: RawData](
   val backingSeq: ContiguousSeq[E#Component, R]
 ) extends BaseSeq[E, E#Element, R](backingSeq.shared, backingSeq.buffer) {
-  final def componentManifest = backingSeq.componentManifest.asInstanceOf[
-    ClassManifest[E#Component#Element]
-  ]
+  final def componentManifest = backingSeq.elementManifest
 
   final def asReadOnlyBuffer() :R#BufferType = backingSeq.asReadOnlyBuffer()
   final def asBuffer() :R#BufferType = backingSeq.asBuffer()
   
-  final def bindingType = backingSeq.bindingType
+  final def rawType = backingSeq.rawType
   final def normalized: Boolean = backingSeq.normalized
 
   private[buffer] final override val bindingBuffer = backingSeq.bindingBuffer

@@ -35,7 +35,8 @@ import simplex3d.buffer.floatm._
 object PrimitiveWrapperBench {
   def main(args: Array[String]) {
     //System.setProperty("simplex3d.buffer.optimize", "false")
-    new PrimitiveWrapperBenchTC().run()
+    val tc = new PrimitiveWrapperBenchTC()
+    tc.run()
   }
 }
 
@@ -65,19 +66,11 @@ class PrimitiveWrapperBenchTC {
     start = System.currentTimeMillis
     testBuffer(dataBuffer, loops)
     val bufferTime = System.currentTimeMillis - start
-    
+
     start = System.currentTimeMillis
     testArray(dataArray, loops)
     val arrayTime = System.currentTimeMillis - start
 
-    start = System.currentTimeMillis
-    testImplementedFloat1(DataArray[Float1, RawFloat](dataArray), loops)
-    val implementedArray1 = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testImplementedFloat1(DataBuffer[Float1, RawFloat](byteBuffer), loops)
-    val implementedBuffer1 = System.currentTimeMillis - start
-    
     start = System.currentTimeMillis
     testRawWrapper(new ArrayWrapper1(dataArray), loops)
     val wrapperArray1 = System.currentTimeMillis - start
@@ -85,7 +78,14 @@ class PrimitiveWrapperBenchTC {
     start = System.currentTimeMillis
     testRawWrapper(new BufferWrapper1(dataBuffer), loops)
     val wrapperBuffer1 = System.currentTimeMillis - start
+    
+    start = System.currentTimeMillis
+    testImplementedFloat1(DataArray[Float1, RawFloat](dataArray), loops)
+    val implementedArray1 = System.currentTimeMillis - start
 
+    start = System.currentTimeMillis
+    testImplementedFloat1(DataBuffer[Float1, RawFloat](byteBuffer), loops)
+    val implementedBuffer1 = System.currentTimeMillis - start
 
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
@@ -174,15 +174,15 @@ class PrimitiveWrapperBenchTC {
   }
 }
 
-abstract class RawWrapper1 {
+sealed abstract class RawWrapper1 {
   def size: Int
   def apply(i: Int) :Float
 }
-class ArrayWrapper1(data: Array[Float]) extends RawWrapper1 {
+final class ArrayWrapper1(data: Array[Float]) extends RawWrapper1 {
   val size = data.length
   def apply(i: Int) = data(i)
 }
-class BufferWrapper1(data: FloatBuffer) extends RawWrapper1 {
+final class BufferWrapper1(data: FloatBuffer) extends RawWrapper1 {
   val size = data.limit
   def apply(i: Int) = data.get(i)
 }

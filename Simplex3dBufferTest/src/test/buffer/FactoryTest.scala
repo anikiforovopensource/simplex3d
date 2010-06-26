@@ -22,9 +22,9 @@ package test.buffer
 
 import org.scalatest._
 
+import simplex3d.math._
 import simplex3d.math.intm._
 import simplex3d.math.floatm._
-
 import simplex3d.buffer.{allocateByteBuffer => alloc, _}
 import simplex3d.buffer.intm._
 import simplex3d.buffer.floatm._
@@ -34,9 +34,44 @@ import simplex3d.buffer.floatm._
  * @author Aleksey Nikiforov (lex)
  */
 class FactoryTest extends FunSuite {
+
+  def testSizeArrayFactory[E <: MetaElement, R <: RawData](
+    bySize: Int => DataArray[E, R]
+  ) {
+
+  }
+
+  def testDataArrayFactory[E <: MetaElement, R <: RawData](
+    fromArray: R#ArrayType => DataArray[E, R]
+  ) {
+
+  }
+
+  def checkDataArray(
+    size: Int, raw: Int, seq: DataArray[_ <: MetaElement, RawData]
+  ) {
+    assert(size == seq.size)
+    assert(seq.components == seq.stride)
+    assert(raw == seq.rawType)
+
+    {
+      val buff = seq.asReadOnlyBuffer()
+      assert(buff.limit == buff.capacity)
+      assert(size == (buff.capacity - seq.offset)/seq.stride)
+    }
+
+    {
+      val buff = seq.asBuffer()
+      assert(buff.limit == buff.capacity)
+      assert(size == (buff.capacity - seq.offset)/seq.stride)
+    }
+
+    seq.array match { case a: Array[_] => assert(size == a.length/seq.stride) }
+  }
+
   test("Factory, from size") {
     def checkContiguous(
-      size: Int, seq: ContiguousSeq[_ <: ElemType, _ <: RawType]
+      size: Int, seq: ContiguousSeq[_ <: MetaElement, _ <: RawData]
     ) {
       assert(size == seq.size)
 
@@ -56,9 +91,9 @@ class FactoryTest extends FunSuite {
 
     def checkView(
       offset: Int, stride: Int, size: Int,
-      seq: DataView[_ <: ElemType, _ <: RawType]
+      seq: DataView[_ <: MetaElement, _ <: RawData]
     ) {
-      def capacityLowBound(seq: DataView[_ <: ElemType, _ <: RawType]) = {
+      def capacityLowBound(seq: DataView[_ <: MetaElement, _ <: RawData]) = {
         seq.offset + (seq.size - 1)*seq.stride + seq.components
       }
 

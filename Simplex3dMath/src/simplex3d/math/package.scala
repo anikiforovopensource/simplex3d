@@ -485,14 +485,16 @@ package object math {
    * @param m the source matrix.
    * @param array the destanation array.
    */
-  def matToArray(m: ReadMat[_], array: Array[Float]) { matToArray(m, array, 0) }
+  def matrixToArray(m: ReadMat[_], array: Array[Float]) {
+    matrixToArray(m, array, 0)
+  }
 
   /** Writes a matrix into a given array in column major order.
    * @param m the source matrix.
    * @param array the destanation array.
    * @param offset an offset into the array.
    */
-  def matToArray(m: ReadMat[_], array: Array[Float], offset: Int) {
+  def matrixToArray(m: ReadMat[_], array: Array[Float], offset: Int) {
     array(offset + 0) = m.f00
     array(offset + 1) = m.f10
     array(offset + 2) = m.f20
@@ -520,7 +522,7 @@ package object math {
    * @param m the source matrix.
    * @param buffer the destanation buffer.
    */
-  def matToBuffer(m: ReadMat[_], buffer: FloatBuffer) {
+  def matrixToBuffer(m: ReadMat[_], buffer: FloatBuffer) {
     buffer.put(m.f00)
     buffer.put(m.f10)
     buffer.put(m.f20)
@@ -546,14 +548,14 @@ package object math {
    * @param m the source matrix.
    * @param array the destanation array.
    */
-  def matToArray(m: ReadMat[_], array: Array[Double]) { matToArray(m, array, 0)}
+  def matrixToArray(m: ReadMat[_], array: Array[Double]) { matrixToArray(m, array, 0)}
 
   /** Writes a matrix into a given array in column major order.
    * @param m the source matrix.
    * @param array the destanation array.
    * @param offset an offset into the array.
    */
-  def matToArray(m: ReadMat[_], array: Array[Double], offset: Int) {
+  def matrixToArray(m: ReadMat[_], array: Array[Double], offset: Int) {
     array(offset + 0) = m.d00
     array(offset + 1) = m.d10
     array(offset + 2) = m.d20
@@ -581,7 +583,7 @@ package object math {
    * @param m the source matrix.
    * @param buffer the destanation buffer.
    */
-  def matToBuffer(m: ReadMat[_], buffer: DoubleBuffer) {
+  def matrixToBuffer(m: ReadMat[_], buffer: DoubleBuffer) {
     buffer.put(m.d00)
     buffer.put(m.d10)
     buffer.put(m.d20)

@@ -20,6 +20,7 @@
 
 package simplex3d.math.intm
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -644,12 +645,13 @@ extends AnyVec4i with Mutable with Implicits[On] with Composite
 }
 
 object Vec4i {
-  val Zero = new ConstVec4i(0, 0, 0, 0)
-  val UnitX = new ConstVec4i(1, 0, 0, 0)
-  val UnitY = new ConstVec4i(0, 1, 0, 0)
-  val UnitZ = new ConstVec4i(0, 0, 1, 0)
-  val UnitW = new ConstVec4i(0, 0, 0, 1)
-  val One = new ConstVec4i(1, 1, 1, 1)
+  final val Zero = new ConstVec4i(0, 0, 0, 0)
+  final val UnitX = new ConstVec4i(1, 0, 0, 0)
+  final val UnitY = new ConstVec4i(0, 1, 0, 0)
+  final val UnitZ = new ConstVec4i(0, 0, 1, 0)
+  final val UnitW = new ConstVec4i(0, 0, 0, 1)
+  final val One = new ConstVec4i(1, 1, 1, 1)
+  final val Manifest = classType[AnyVec4i](classOf[AnyVec4i])
 
   def apply(s: Int) =
     new Vec4i(s, s, s, s)

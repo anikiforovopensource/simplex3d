@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
@@ -195,7 +196,8 @@ final class Quat4d private[math] (
 }
 
 object Quat4d {
-  val Identity = new ConstQuat4d(1, 0, 0, 0)
+  final val Identity = new ConstQuat4d(1, 0, 0, 0)
+  final val Manifest = classType[AnyQuat4d](classOf[AnyQuat4d])
   
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)

@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -628,12 +629,13 @@ final class Vec4d private[math] (
 }
 
 object Vec4d {
-  val Zero = new ConstVec4d(0, 0, 0, 0)
-  val UnitX = new ConstVec4d(1, 0, 0, 0)
-  val UnitY = new ConstVec4d(0, 1, 0, 0)
-  val UnitZ = new ConstVec4d(0, 0, 1, 0)
-  val UnitW = new ConstVec4d(0, 0, 0, 1)
-  val One = new ConstVec4d(1, 1, 1, 1)
+  final val Zero = new ConstVec4d(0, 0, 0, 0)
+  final val UnitX = new ConstVec4d(1, 0, 0, 0)
+  final val UnitY = new ConstVec4d(0, 1, 0, 0)
+  final val UnitZ = new ConstVec4d(0, 0, 1, 0)
+  final val UnitW = new ConstVec4d(0, 0, 0, 1)
+  final val One = new ConstVec4d(1, 1, 1, 1)
+  final val Manifest = classType[AnyVec4d](classOf[AnyVec4d])
 
   def apply(s: Double) =
     new Vec4d(s, s, s, s)

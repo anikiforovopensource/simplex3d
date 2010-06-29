@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
@@ -146,12 +147,7 @@ sealed abstract class AnyMat4d extends Read4x4[Double]
     s*m02, s*m12, s*m22, s*m32,
     s*m03, s*m13, s*m23, s*m33
   )
-  final def /(s: Double) = { val inv = 1/s; new Mat4d(
-    inv*m00, inv*m10, inv*m20, inv*m30,
-    inv*m01, inv*m11, inv*m21, inv*m31,
-    inv*m02, inv*m12, inv*m22, inv*m32,
-    inv*m03, inv*m13, inv*m23, inv*m33
-  )}
+  final def /(s: Double) = this * (1/s)
 
   final def +(s: Double) = new Mat4d(
     m00 + s, m10 + s, m20 + s, m30 + s,
@@ -159,12 +155,7 @@ sealed abstract class AnyMat4d extends Read4x4[Double]
     m02 + s, m12 + s, m22 + s, m32 + s,
     m03 + s, m13 + s, m23 + s, m33 + s
   )
-  final def -(s: Double) = new Mat4d(
-    m00 - s, m10 - s, m20 - s, m30 - s,
-    m01 - s, m11 - s, m21 - s, m31 - s,
-    m02 - s, m12 - s, m22 - s, m32 - s,
-    m03 - s, m13 - s, m23 - s, m33 - s
-  )
+  final def -(s: Double) = this + (-s)
 
   final def +(m: inMat4d) = new Mat4d(
     m00 + m.m00, m10 + m.m10, m20 + m.m20, m30 + m.m30,
@@ -405,12 +396,7 @@ final class Mat4d private[math] (
     m02 *= s; m12 *= s; m22 *= s; m32 *= s;
     m03 *= s; m13 *= s; m23 *= s; m33 *= s
   }
-  def /=(s: Double) { val inv = 1/s;
-    m00 *= inv; m10 *= inv; m20 *= inv; m30 *= inv;
-    m01 *= inv; m11 *= inv; m21 *= inv; m31 *= inv;
-    m02 *= inv; m12 *= inv; m22 *= inv; m32 *= inv;
-    m03 *= inv; m13 *= inv; m23 *= inv; m33 *= inv
-  }
+  def /=(s: Double) { this *= (1/s) }
 
   def +=(s: Double) {
     m00 += s; m10 += s; m20 += s; m30 += s
@@ -418,12 +404,7 @@ final class Mat4d private[math] (
     m02 += s; m12 += s; m22 += s; m32 += s
     m03 += s; m13 += s; m23 += s; m33 += s
   }
-  def -=(s: Double) {
-    m00 -= s; m10 -= s; m20 -= s; m30 -= s
-    m01 -= s; m11 -= s; m21 -= s; m31 -= s
-    m02 -= s; m12 -= s; m22 -= s; m32 -= s
-    m03 -= s; m13 -= s; m23 -= s; m33 -= s
-  }
+  def -=(s: Double) { this += (-s) }
 
   def +=(m: inMat4d) {
     m00 += m.m00; m10 += m.m10; m20 += m.m20; m30 += m.m30;
@@ -574,8 +555,9 @@ final class Mat4d private[math] (
 }
 
 object Mat4d {
-  val Zero = ConstMat4d(0)
-  val Identity = ConstMat4d(1)
+  final val Zero = ConstMat4d(0)
+  final val Identity = ConstMat4d(1)
+  final val Manifest = classType[AnyMat4d](classOf[AnyMat4d])
 
   def apply(s: Double) = new Mat4d(
     s, 0, 0, 0,

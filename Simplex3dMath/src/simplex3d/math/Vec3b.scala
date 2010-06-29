@@ -20,6 +20,7 @@
 
 package simplex3d.math
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 
 
@@ -468,8 +469,9 @@ extends AnyVec3b with Mutable with Implicits[On]
  * @author Aleksey Nikiforov (lex)
  */
 object Vec3b {
-  val True = new ConstVec3b(true, true, true)
-  val False = new ConstVec3b(false, false, false)
+  final val True = new ConstVec3b(true, true, true)
+  final val False = new ConstVec3b(false, false, false)
+  final val Manifest = classType[AnyVec3b](classOf[AnyVec3b])
 
   /** Makes a new instance of Vec3b with all the components initialized
    * to the specified value.

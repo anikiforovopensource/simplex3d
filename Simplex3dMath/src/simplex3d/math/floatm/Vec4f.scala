@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -628,12 +629,13 @@ final class Vec4f private[math] (
 }
 
 object Vec4f {
-  val Zero = new ConstVec4f(0, 0, 0, 0)
-  val UnitX = new ConstVec4f(1, 0, 0, 0)
-  val UnitY = new ConstVec4f(0, 1, 0, 0)
-  val UnitZ = new ConstVec4f(0, 0, 1, 0)
-  val UnitW = new ConstVec4f(0, 0, 0, 1)
-  val One = new ConstVec4f(1, 1, 1, 1)
+  final val Zero = new ConstVec4f(0, 0, 0, 0)
+  final val UnitX = new ConstVec4f(1, 0, 0, 0)
+  final val UnitY = new ConstVec4f(0, 1, 0, 0)
+  final val UnitZ = new ConstVec4f(0, 0, 1, 0)
+  final val UnitW = new ConstVec4f(0, 0, 0, 1)
+  final val One = new ConstVec4f(1, 1, 1, 1)
+  final val Manifest = classType[AnyVec4f](classOf[AnyVec4f])
 
   def apply(s: Float) =
     new Vec4f(s, s, s, s)

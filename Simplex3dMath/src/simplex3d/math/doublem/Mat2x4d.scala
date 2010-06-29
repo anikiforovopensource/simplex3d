@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
@@ -122,12 +123,7 @@ sealed abstract class AnyMat2x4d extends Read2x4[Double]
     s*m02, s*m12,
     s*m03, s*m13
   )
-  final def /(s: Double) = { val inv = 1/s; new Mat2x4d(
-    inv*m00, inv*m10,
-    inv*m01, inv*m11,
-    inv*m02, inv*m12,
-    inv*m03, inv*m13
-  )}
+  final def /(s: Double) = this * (1/s)
 
   final def +(s: Double) = new Mat2x4d(
     m00 + s, m10 + s,
@@ -135,12 +131,7 @@ sealed abstract class AnyMat2x4d extends Read2x4[Double]
     m02 + s, m12 + s,
     m03 + s, m13 + s
   )
-  final def -(s: Double) = new Mat2x4d(
-    m00 - s, m10 - s,
-    m01 - s, m11 - s,
-    m02 - s, m12 - s,
-    m03 - s, m13 - s
-  )
+  final def -(s: Double) = this + (-s)
 
   final def +(m: inMat2x4d) = new Mat2x4d(
     m00 + m.m00, m10 + m.m10,
@@ -337,12 +328,7 @@ final class Mat2x4d private[math] (
     m02 *= s; m12 *= s;
     m03 *= s; m13 *= s
   }
-  def /=(s: Double) { val inv = 1/s;
-    m00 *= inv; m10 *= inv;
-    m01 *= inv; m11 *= inv;
-    m02 *= inv; m12 *= inv;
-    m03 *= inv; m13 *= inv
-  }
+  def /=(s: Double) { this *= (1/s) }
 
   def +=(s: Double) {
     m00 += s; m10 += s
@@ -350,12 +336,7 @@ final class Mat2x4d private[math] (
     m02 += s; m12 += s
     m03 += s; m13 += s
   }
-  def -=(s: Double) {
-    m00 -= s; m10 -= s
-    m01 -= s; m11 -= s
-    m02 -= s; m12 -= s
-    m03 -= s; m13 -= s
-  }
+  def -=(s: Double) { this += (-s) }
 
   def +=(m: inMat2x4d) {
     m00 += m.m00; m10 += m.m10;
@@ -466,8 +447,9 @@ final class Mat2x4d private[math] (
 }
 
 object Mat2x4d {
-  val Zero = ConstMat2x4d(0)
-  val Identity = ConstMat2x4d(1)
+  final val Zero = ConstMat2x4d(0)
+  final val Identity = ConstMat2x4d(1)
+  final val Manifest = classType[AnyMat2x4d](classOf[AnyMat2x4d])
 
   def apply(s: Double) = new Mat2x4d(
     s, 0,

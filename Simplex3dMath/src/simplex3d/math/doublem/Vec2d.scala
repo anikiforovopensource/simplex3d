@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublem
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -203,10 +204,11 @@ extends AnyVec2d with Mutable with Implicits[On] with Composite
 }
 
 object Vec2d {
-  val Zero = new ConstVec2d(0, 0)
-  val UnitX = new ConstVec2d(1, 0)
-  val UnitY = new ConstVec2d(0, 1)
-  val One = new ConstVec2d(1, 1)
+  final val Zero = new ConstVec2d(0, 0)
+  final val UnitX = new ConstVec2d(1, 0)
+  final val UnitY = new ConstVec2d(0, 1)
+  final val One = new ConstVec2d(1, 1)
+  final val Manifest = classType[AnyVec2d](classOf[AnyVec2d])
 
   def apply(s: Double) = new Vec2d(s, s)
   /* main factory */ def apply(x: Double, y: Double) = new Vec2d(x, y)

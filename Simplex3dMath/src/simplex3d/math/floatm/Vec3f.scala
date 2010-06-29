@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -288,11 +289,12 @@ extends AnyVec3f with Mutable with Implicits[On] with Composite
 }
 
 object Vec3f {
-  val Zero = new ConstVec3f(0, 0, 0)
-  val UnitX = new ConstVec3f(1, 0, 0)
-  val UnitY = new ConstVec3f(0, 1, 0)
-  val UnitZ = new ConstVec3f(0, 0, 1)
-  val One = new ConstVec3f(1, 1, 1)
+  final val Zero = new ConstVec3f(0, 0, 0)
+  final val UnitX = new ConstVec3f(1, 0, 0)
+  final val UnitY = new ConstVec3f(0, 1, 0)
+  final val UnitZ = new ConstVec3f(0, 0, 1)
+  final val One = new ConstVec3f(1, 1, 1)
+  final val Manifest = classType[AnyVec3f](classOf[AnyVec3f])
 
   def apply(s: Float) = new Vec3f(s, s, s)
   /* main factory */ def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)

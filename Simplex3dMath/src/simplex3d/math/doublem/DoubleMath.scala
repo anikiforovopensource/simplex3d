@@ -133,9 +133,6 @@ object DoubleMath {
     else x - y*floor(x/y)
   }
 
-  //not supported: lack of pointers
-  //def modf(x: Double, i: Double) :Double = 0
-
   def min(x: Double, y: Double) :Double = if (y < x || isnan(y)) y else x
   def max(x: Double, y: Double) :Double = if (y > x || isnan(y)) y else x
   def clamp(x: Double, minVal: Double, maxVal: Double) :Double = {
@@ -249,8 +246,17 @@ object DoubleMath {
   def mod(u: inVec2d, v: inVec2d) :Vec2d = {
     new Vec2d(mod(u.x, v.x), mod(u.y, v.y))
   }
+
+  /** Separates each component of a given vector into fractional and integer
+   * parts, both parts will have the same sign as the component.
+   *
+   * @param u the vector to be separated into fractional and integer parts.
+   * @param i a result vector to store the integer parts of components of u.
+   * @return a vector with fractional parts of components of u.
+   */
   def modf(u: inVec2d, i: outVec2d) :Vec2d = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
     u - i
   }
 
@@ -309,8 +315,12 @@ object DoubleMath {
   def isinf(u: inVec2d) :Vec2b = new Vec2b(isinf(u.x), isinf(u.y))
   
   def length(u: inVec2d) :Double = sqrt(u.x*u.x + u.y*u.y)
-  def distance(u: inVec2d, v: inVec2d) :Double = length(u - v)
-  def dot(u: inVec2d, v: inVec2d) :Double = u.x * v.x + u.y * v.y
+  def distance(u: inVec2d, v: inVec2d) :Double = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    sqrt(x*x + y*y)
+  }
+  def dot(u: inVec2d, v: inVec2d) :Double = u.x*v.x + u.y*v.y
   def normalize(u: inVec2d) :Vec2d = u*inversesqrt(u.x*u.x + u.y*u.y)
 
   def faceforward(n: inVec2d, i: inVec2d, nref: inVec2d) :Vec2d = {
@@ -474,7 +484,9 @@ object DoubleMath {
     new Vec3d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z))
   }
   def modf(u: inVec3d, i: outVec3d) :Vec3d = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
+    i.z = trunc(u.z)
     u - i
   }
 
@@ -549,7 +561,12 @@ object DoubleMath {
   }
 
   def length(u: inVec3d) :Double = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
-  def distance(u: inVec3d, v: inVec3d) :Double = length(u - v)
+  def distance(u: inVec3d, v: inVec3d) :Double = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    val z = u.z - v.z
+    sqrt(x*x + y*y + z*z)
+  }
   def dot(u: inVec3d, v: inVec3d) :Double = u.x*v.x + u.y*v.y + u.z*v.z
   def cross(u: inVec3d, v: inVec3d) :Vec3d = {
     new Vec3d(
@@ -777,7 +794,10 @@ object DoubleMath {
     new Vec4d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z), mod(u.w, v.w))
   }
   def modf(u: inVec4d, i: outVec4d) :Vec4d = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
+    i.z = trunc(u.z)
+    i.w = trunc(u.w)
     u - i
   }
 
@@ -870,10 +890,16 @@ object DoubleMath {
   def length(u: inVec4d) :Double = {
     sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
   }
+  def distance(u: inVec4d, v: inVec4d) :Double = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    val z = u.z - v.z
+    val w = u.w - v.w
+    sqrt(x*x + y*y + z*z + w*w)
+  }
   def dot(u: inVec4d, v: inVec4d) :Double = {
     u.x*v.x + u.y*v.y + u.z*v.z + u.w*v.w
   }
-  def distance(u: inVec4d, v: inVec4d) :Double = length(u - v)
   def normalize(u: inVec4d) :Vec4d = {
     u*inversesqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
   }

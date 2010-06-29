@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
@@ -196,7 +197,8 @@ final class Quat4f private[math] (
 }
 
 object Quat4f {
-  val Identity = new ConstQuat4f(1, 0, 0, 0)
+  final val Identity = new ConstQuat4f(1, 0, 0, 0)
+  final val Manifest = classType[AnyQuat4f](classOf[AnyQuat4f])
 
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
     new Quat4f(a, b, c, d)

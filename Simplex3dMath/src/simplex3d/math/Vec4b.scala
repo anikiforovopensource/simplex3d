@@ -20,6 +20,7 @@
 
 package simplex3d.math
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 
 
@@ -866,8 +867,9 @@ final class Vec4b private[math] (
  * @author Aleksey Nikiforov (lex)
  */
 object Vec4b {
-  val True = new ConstVec4b(true, true, true, true)
-  val False = new ConstVec4b(false, false, false, false)
+  final val True = new ConstVec4b(true, true, true, true)
+  final val False = new ConstVec4b(false, false, false, false)
+  final val Manifest = classType[AnyVec4b](classOf[AnyVec4b])
 
   /** Makes a new instance of Vec4b with all the components initialized
    * to the specified value.

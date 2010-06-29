@@ -132,9 +132,6 @@ object FloatMath {
     if (isinf(x)) Float.NaN
     else x - y*floor(x/y)
   }
-  
-  //not supported: lack of pointers
-  //def modf(x: Float, i: Float) :Float = 0
 
   def min(x: Float, y: Float) :Float = if (y < x || isnan(y)) y else x
   def max(x: Float, y: Float) :Float = if (y > x || isnan(y)) y else x
@@ -281,8 +278,17 @@ object FloatMath {
   def mod(u: inVec2f, v: inVec2f) :Vec2f = {
     new Vec2f(mod(u.x, v.x), mod(u.y, v.y))
   }
+  
+  /** Separates each component of a given vector into fractional and integer
+   * parts, both parts will have the same sign as the component.
+   *
+   * @param u the vector to be separated into fractional and integer parts.
+   * @param i a result vector to store the integer parts of components of u.
+   * @return a vector with fractional parts of components of u.
+   */
   def modf(u: inVec2f, i: outVec2f) :Vec2f = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
     u - i
   }
 
@@ -341,8 +347,12 @@ object FloatMath {
   def isinf(u: inVec2f) :Vec2b = new Vec2b(isinf(u.x), isinf(u.y))
 
   def length(u: inVec2f) :Float = sqrt(u.x*u.x + u.y*u.y)
-  def distance(u: inVec2f, v: inVec2f) :Float = length(u - v)
-  def dot(u: inVec2f, v: inVec2f) :Float = u.x * v.x + u.y * v.y
+  def distance(u: inVec2f, v: inVec2f) :Float = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    sqrt(x*x + y*y)
+  }
+  def dot(u: inVec2f, v: inVec2f) :Float = u.x*v.x + u.y*v.y
   def normalize(u: inVec2f) :Vec2f = u*inversesqrt(u.x*u.x + u.y*u.y)
 
   def faceforward(n: inVec2f, i: inVec2f, nref: inVec2f) :Vec2f = {
@@ -506,7 +516,9 @@ object FloatMath {
     new Vec3f(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z))
   }
   def modf(u: inVec3f, i: outVec3f) :Vec3f = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
+    i.z = trunc(u.z)
     u - i
   }
 
@@ -581,7 +593,12 @@ object FloatMath {
   }
 
   def length(u: inVec3f) :Float = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
-  def distance(u: inVec3f, v: inVec3f) :Float = length(u - v)
+  def distance(u: inVec3f, v: inVec3f) :Float = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    val z = u.z - v.z
+    sqrt(x*x + y*y + z*z)
+  }
   def dot(u: inVec3f, v: inVec3f) :Float = u.x*v.x + u.y*v.y + u.z*v.z
   def cross(u: inVec3f, v: inVec3f) :Vec3f = {
     new Vec3f(
@@ -809,7 +826,10 @@ object FloatMath {
     new Vec4f(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z), mod(u.w, v.w))
   }
   def modf(u: inVec4f, i: outVec4f) :Vec4f = {
-    i := trunc(u)
+    i.x = trunc(u.x)
+    i.y = trunc(u.y)
+    i.z = trunc(u.z)
+    i.w = trunc(u.w)
     u - i
   }
 
@@ -900,10 +920,16 @@ object FloatMath {
   }
 
   def length(u: inVec4f) :Float = sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
+  def distance(u: inVec4f, v: inVec4f) :Float = {
+    val x = u.x - v.x
+    val y = u.y - v.y
+    val z = u.z - v.z
+    val w = u.w - v.w
+    sqrt(x*x + y*y + z*z + w*w)
+  }
   def dot(u: inVec4f, v: inVec4f) :Float = {
     u.x*v.x + u.y*v.y + u.z*v.z + u.w*v.w
   }
-  def distance(u: inVec4f, v: inVec4f) :Float = length(u - v)
   def normalize(u: inVec4f) :Vec4f = {
     u*inversesqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
   }

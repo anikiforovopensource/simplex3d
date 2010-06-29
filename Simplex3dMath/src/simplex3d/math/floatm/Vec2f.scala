@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatm
 
+import scala.reflect.Manifest._
 import simplex3d.math.types._
 import simplex3d.math._
 
@@ -203,10 +204,11 @@ extends AnyVec2f with Mutable with Implicits[On] with Composite
 }
 
 object Vec2f {
-  val Zero = new ConstVec2f(0, 0)
-  val UnitX = new ConstVec2f(1, 0)
-  val UnitY = new ConstVec2f(0, 1)
-  val One = new ConstVec2f(1, 1)
+  final val Zero = new ConstVec2f(0, 0)
+  final val UnitX = new ConstVec2f(1, 0)
+  final val UnitY = new ConstVec2f(0, 1)
+  final val One = new ConstVec2f(1, 1)
+  final val Manifest = classType[AnyVec2f](classOf[AnyVec2f])
 
   def apply(s: Float) = new Vec2f(s, s)
   /* main factory */ def apply(x: Float, y: Float) = new Vec2f(x, y)

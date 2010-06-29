@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import scala.reflect.Manifest
 import simplex3d.math._
 import simplex3d.buffer.{allocateByteBuffer => alloc}
 import simplex3d.buffer.Util._
@@ -33,7 +34,7 @@ private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
   shared: AnyRef, buff: R#BufferType
 ) extends BaseSeq[Int1, Int, R](shared, buff) {
   final def elementManifest = componentManifest
-  final def componentManifest = scala.reflect.ClassManifest.Int
+  final def componentManifest = Manifest.Int
   final def components: Int = 1
 }
 

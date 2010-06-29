@@ -32,7 +32,7 @@ import simplex3d.buffer._
 private[buffer] abstract class BaseVec3i[+R <: ReadableInt](
   seq: ContiguousSeq[Int1, R]
 ) extends CompositeSeq[Vec3i, R](seq) {
-  final def elementManifest = Manifest.Vec3iClassManifest
+  final def elementManifest = Vec3i.Manifest
   final def components: Int = 3
 
   def apply(i: Int) :AnyVec3i = {

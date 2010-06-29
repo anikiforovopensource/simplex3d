@@ -21,6 +21,7 @@
 package simplex3d.buffer.floatm
 
 import java.nio._
+import scala.reflect.Manifest
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 import simplex3d.buffer.{allocateByteBuffer => alloc, _}
@@ -66,7 +67,7 @@ private[buffer] sealed abstract class BaseFloat1[+R <: ReadableFloat](
   shared: AnyRef, buff: R#BufferType
 ) extends BaseSeq[Float1, Float, R](shared, buff) {
   final def elementManifest = componentManifest
-  final def componentManifest = scala.reflect.ClassManifest.Float
+  final def componentManifest = Manifest.Float
   final def components: Int = 1
 }
 

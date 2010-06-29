@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import scala.reflect.Manifest
 import scala.annotation._
 import scala.annotation.unchecked._
 import scala.collection._
@@ -46,8 +47,8 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       "Offset must be greater than or equal to zero."
     )
 
-  def elementManifest: ClassManifest[E#Element]
-  def componentManifest: ClassManifest[E#Component#Element]
+  def elementManifest: Manifest[E#Element]
+  def componentManifest: Manifest[E#Component#Element]
 
   final val bytesPerRawComponent: Int = RawData.byteLength(rawType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
@@ -220,8 +221,6 @@ private[buffer] abstract class BaseSeq[
     if (index + count > size) throw new BufferOverflowException()
 
     import scala.collection.mutable.{WrappedArray}
-    import scala.reflect._
-
     seq match {
 
       case wrapped: WrappedArray[_] =>
@@ -232,13 +231,13 @@ private[buffer] abstract class BaseSeq[
           )
 
         wrapped.elemManifest match {
-          case ClassManifest.Int => putArray(
+          case Manifest.Int => putArray(
               index, wrapped.array.asInstanceOf[Array[Int]], first, count
             )
-          case ClassManifest.Float => putArray(
+          case Manifest.Float => putArray(
               index, wrapped.array.asInstanceOf[Array[Float]], first, count
             )
-          case ClassManifest.Double => putArray(
+          case Manifest.Double => putArray(
               index, wrapped.array.asInstanceOf[Array[Double]], first, count
             )
           case _ => putArray(
@@ -413,7 +412,7 @@ private[buffer] abstract class BaseSeq[
     }
     else {
       componentManifest match {
-        case scala.reflect.ClassManifest.Int => Util.copySeqInt(
+        case Manifest.Int => Util.copySeqInt(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
@@ -423,7 +422,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case scala.reflect.ClassManifest.Float => Util.copySeqFloat(
+        case Manifest.Float => Util.copySeqFloat(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
@@ -433,7 +432,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case scala.reflect.ClassManifest.Double => Util.copySeqDouble(
+        case Manifest.Double => Util.copySeqDouble(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,

@@ -30,56 +30,25 @@ import simplex3d.math._
  */
 final class FloatPromoter(val value: Double) {
   // Vecf to Vecd promotion
-  def *(u: Read2[Float]) =
-    new Vec2d(u.dx*value, u.dy*value)
+  def *(u: Read2[Float]) = new Vec2d(value*u.dx, value*u.dy)
+  def /(u: Read2[Float]) = new Vec2d(value/u.dx, value/u.dy)
+  def +(u: Read2[Float]) = new Vec2d(value + u.dx, value + u.dy)
+  def -(u: Read2[Float]) = new Vec2d(value - u.dx, value - u.dy)
 
-  def *(u: Read3[Float]) =
-    new Vec3d(u.dx*value, u.dy*value, u.dz*value)
+  def *(u: Read3[Float]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
+  def /(u: Read3[Float]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
+  def +(u: Read3[Float]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
+  def -(u: Read3[Float]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
 
-  def *(u: Read4[Float]) =
-    new Vec4d(u.dx*value, u.dy*value, u.dz*value, u.dw*value)
+  def *(u: Read4[Float]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
+  def /(u: Read4[Float]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
+  def +(u: Read4[Float]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
+  def -(u: Read4[Float]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
 
-  def /(u: Read2[Float]) =
-    new Vec2d(value/u.dx, value/u.dy)
-
-  def /(u: Read3[Float]) =
-    new Vec3d(value/u.dx, value/u.dy, value/u.dz)
-
-  def /(u: Read4[Float]) =
-    new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
-
-
-  def +(u: Read2[Float]) =
-    new Vec2d(value + u.dx, value + u.dy)
-
-  def +(u: Read3[Float]) =
-    new Vec3d(value + u.dx, value + u.dy, value + u.dz)
-
-  def +(u: Read4[Float]) =
-    new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
-
-  def -(u: Read2[Float]) =
-    new Vec2d(value - u.dx, value - u.dy)
-
-  def -(u: Read3[Float]) =
-    new Vec3d(value - u.dx, value - u.dy, value - u.dz)
-
-  def -(u: Read4[Float]) =
-    new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
-
-
-  def *(q: ReadQ[Float]) =
-    new Quat4d(q.da*value, q.db*value, q.dc*value, q.dd*value)
-
-  def /(q: ReadQ[Float]) =
-    new Quat4d(value/q.da, value/q.db, value/q.dc, value/q.dd)
-
-  def +(q: ReadQ[Float]) =
-    new Quat4d(value + q.da, value + q.db, value + q.dc, value + q.dd)
-
-  def -(q: ReadQ[Float]) =
-    new Quat4d(value - q.da, value - q.db, value - q.dc, value - q.dd)
-
+  def *(q: ReadQ[Float]) = new Quat4d(value*q.da, value*q.db, value*q.dc, value*q.dd)
+  def /(q: ReadQ[Float]) = new Quat4d(value/q.da, value/q.db, value/q.dc, value/q.dd)
+  def +(q: ReadQ[Float]) = new Quat4d(value + q.da, value + q.db, value + q.dc, value + q.dd)
+  def -(q: ReadQ[Float]) = new Quat4d(value - q.da, value - q.db, value - q.dc, value - q.dd)
 
   def *(m: Read2x2[Float]) = Mat2d(m)*value
   def /(m: Read2x2[Float]) = Mat2d(m).divideByComponent(value)

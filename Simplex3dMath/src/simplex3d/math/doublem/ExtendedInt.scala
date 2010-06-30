@@ -30,72 +30,67 @@ import simplex3d.math._
  */
 final class ExtendedInt(val value: Int) {
   def *(u: inVec2d) = u*value
+  def /(u: inVec2d) = new Vec2d(value/u.x, value/u.y)
+  def +(u: inVec2d) = u + value
+  def -(u: inVec2d) = new Vec2d(value - u.x, value - u.y)
+
   def *(u: inVec3d) = u*value
+  def /(u: inVec3d) = new Vec3d(value/u.x, value/u.y, value/u.z)
+  def +(u: inVec3d) = u + value
+  def -(u: inVec3d) = new Vec3d(value - u.x, value - u.y, value - u.z)
+
   def *(u: inVec4d) = u*value
+  def /(u: inVec4d) = new Vec4d(value/u.x, value/u.y, value/u.z, value/u.w)
+  def +(u: inVec4d) = u + value
+  def -(u: inVec4d) = new Vec4d(value - u.x, value - u.y, value - u.z, value - u.w)
 
   def *(q: inQuat4d) = q*value
+  def /(q: inQuat4d) = new Quat4d(value/q.a, value/q.b, value/q.c, value/q.d)
+  def +(q: inQuat4d) = q + value
+  def -(q: inQuat4d) = new Quat4d(value - q.a, value - q.b, value - q.c, value - q.d)
 
   def *(m: inMat2d) = m*value
-  def *(m: inMat2x3d) = m*value
-  def *(m: inMat2x4d) = m*value
-  def *(m: inMat3x2d) = m*value
-  def *(m: inMat3d) = m*value
-  def *(m: inMat3x4d) = m*value
-  def *(m: inMat4x2d) = m*value
-  def *(m: inMat4x3d) = m*value
-  def *(m: inMat4d) = m*value
-
-  def /(u: inVec2d) = u.divideByComponent(value)
-  def /(u: inVec3d) = u.divideByComponent(value)
-  def /(u: inVec4d) = u.divideByComponent(value)
-
-  def /(q: inQuat4d) = q.divideByComponent(value)
-
   def /(m: inMat2d) = m.divideByComponent(value)
-  def /(m: inMat2x3d) = m.divideByComponent(value)
-  def /(m: inMat2x4d) = m.divideByComponent(value)
-  def /(m: inMat3x2d) = m.divideByComponent(value)
-  def /(m: inMat3d) = m.divideByComponent(value)
-  def /(m: inMat3x4d) = m.divideByComponent(value)
-  def /(m: inMat4x2d) = m.divideByComponent(value)
-  def /(m: inMat4x3d) = m.divideByComponent(value)
-  def /(m: inMat4d) = m.divideByComponent(value)
-
-  def +(u: inVec2d) = u + value
-  def +(u: inVec3d) = u + value
-  def +(u: inVec4d) = u + value
-
-  def +(q: inQuat4d) = q + value
-
   def +(m: inMat2d) = m + value
-  def +(m: inMat2x3d) = m + value
-  def +(m: inMat2x4d) = m + value
-  def +(m: inMat3x2d) = m + value
-  def +(m: inMat3d) = m + value
-  def +(m: inMat3x4d) = m + value
-  def +(m: inMat4x2d) = m + value
-  def +(m: inMat4x3d) = m + value
-  def +(m: inMat4d) = m + value
-
-  def -(u: inVec2d) =
-    new Vec2d(value - u.x, value - u.y)
-
-  def -(u: inVec3d) =
-    new Vec3d(value - u.x, value - u.y, value - u.z)
-
-  def -(u: inVec4d) =
-    new Vec4d(value - u.x, value - u.y, value - u.z, value - u.w)
-
-
-  def -(q: inQuat4d) = { val t = -q; t += value; t }
-
   def -(m: inMat2d) = { val t = -m; t += value; t }
+
+  def *(m: inMat2x3d) = m*value
+  def /(m: inMat2x3d) = m.divideByComponent(value)
+  def +(m: inMat2x3d) = m + value
   def -(m: inMat2x3d) = { val t = -m; t += value; t }
+
+  def *(m: inMat2x4d) = m*value
+  def /(m: inMat2x4d) = m.divideByComponent(value)
+  def +(m: inMat2x4d) = m + value
   def -(m: inMat2x4d) = { val t = -m; t += value; t }
+
+  def *(m: inMat3x2d) = m*value
+  def /(m: inMat3x2d) = m.divideByComponent(value)
+  def +(m: inMat3x2d) = m + value
   def -(m: inMat3x2d) = { val t = -m; t += value; t }
+
+  def *(m: inMat3d) = m*value
+  def /(m: inMat3d) = m.divideByComponent(value)
+  def +(m: inMat3d) = m + value
   def -(m: inMat3d) = { val t = -m; t += value; t }
+
+  def *(m: inMat3x4d) = m*value
+  def /(m: inMat3x4d) = m.divideByComponent(value)
+  def +(m: inMat3x4d) = m + value
   def -(m: inMat3x4d) = { val t = -m; t += value; t }
+
+  def *(m: inMat4x2d) = m*value
+  def /(m: inMat4x2d) = m.divideByComponent(value)
+  def +(m: inMat4x2d) = m + value
   def -(m: inMat4x2d) = { val t = -m; t += value; t }
+
+  def *(m: inMat4x3d) = m*value
+  def /(m: inMat4x3d) = m.divideByComponent(value)
+  def +(m: inMat4x3d) = m + value
   def -(m: inMat4x3d) = { val t = -m; t += value; t }
+
+  def *(m: inMat4d) = m*value
+  def /(m: inMat4d) = m.divideByComponent(value)
+  def +(m: inMat4d) = m + value
   def -(m: inMat4d) = { val t = -m; t += value; t }
 }

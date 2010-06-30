@@ -220,21 +220,6 @@ sealed abstract class AnyMat2x3f extends Read2x3[Float]
     m10*v.x + m11*v.y
   )
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Float._
-
-    (
-      isNaN(m00) || isInfinite(m00) ||
-      isNaN(m10) || isInfinite(m10) ||
-
-      isNaN(m01) || isInfinite(m01) ||
-      isNaN(m11) || isInfinite(m11) ||
-
-      isNaN(m02) || isInfinite(m02) ||
-      isNaN(m12) || isInfinite(m12)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read2x3[_] =>

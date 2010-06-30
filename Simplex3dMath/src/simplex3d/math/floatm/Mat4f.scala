@@ -248,32 +248,6 @@ sealed abstract class AnyMat4f extends Read4x4[Float]
     m03*u.x + m13*u.y + m23*u.z + m33*u.w
   )
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Float._
-
-    (
-      isNaN(m00) || isInfinite(m00) ||
-      isNaN(m10) || isInfinite(m10) ||
-      isNaN(m20) || isInfinite(m20) ||
-      isNaN(m30) || isInfinite(m30) ||
-
-      isNaN(m01) || isInfinite(m01) ||
-      isNaN(m11) || isInfinite(m11) ||
-      isNaN(m21) || isInfinite(m21) ||
-      isNaN(m31) || isInfinite(m31) ||
-
-      isNaN(m02) || isInfinite(m02) ||
-      isNaN(m12) || isInfinite(m12) ||
-      isNaN(m22) || isInfinite(m22) ||
-      isNaN(m32) || isInfinite(m32) ||
-
-      isNaN(m03) || isInfinite(m03) ||
-      isNaN(m13) || isInfinite(m13) ||
-      isNaN(m23) || isInfinite(m23) ||
-      isNaN(m33) || isInfinite(m33)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read4x4[_] =>

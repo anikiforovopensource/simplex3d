@@ -103,16 +103,6 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
   final def rotateVector(u: inVec3d) :Vec3d =
     DoubleMath.rotateVector(u, normalize(this))
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Double._
-    (
-      isNaN(a) || isInfinite(a) ||
-      isNaN(b) || isInfinite(b) ||
-      isNaN(c) || isInfinite(c) ||
-      isNaN(d) || isInfinite(d)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd

@@ -201,24 +201,6 @@ sealed abstract class AnyMat3d extends Read3x3[Double]
     m02*u.x + m12*u.y + m22*u.z
   )
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Double._
-
-    (
-      isNaN(m00) || isInfinite(m00) ||
-      isNaN(m10) || isInfinite(m10) ||
-      isNaN(m20) || isInfinite(m20) ||
-
-      isNaN(m01) || isInfinite(m01) ||
-      isNaN(m11) || isInfinite(m11) ||
-      isNaN(m21) || isInfinite(m21) ||
-
-      isNaN(m02) || isInfinite(m02) ||
-      isNaN(m12) || isInfinite(m12) ||
-      isNaN(m22) || isInfinite(m22)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read3x3[_] =>

@@ -160,18 +160,6 @@ sealed abstract class AnyMat2d extends Read2x2[Double]
     m01*u.x + m11*u.y
   )
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Double._
-
-    (
-      isNaN(m00) || isInfinite(m00) ||
-      isNaN(m10) || isInfinite(m10) ||
-
-      isNaN(m01) || isInfinite(m01) ||
-      isNaN(m11) || isInfinite(m11)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read2x2[_] =>

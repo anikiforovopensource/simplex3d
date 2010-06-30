@@ -113,16 +113,6 @@ sealed abstract class AnyVec4d extends Read4[Double] {
   final def *(m: inMat4x3d) :Vec3d = m.transposeMul(this)
   final def *(m: inMat4d) :Vec4d = m.transposeMul(this)
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Double._
-    (
-      isNaN(x) || isInfinite(x) ||
-      isNaN(y) || isInfinite(y) ||
-      isNaN(z) || isInfinite(z) ||
-      isNaN(w) || isInfinite(w)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec4b => false

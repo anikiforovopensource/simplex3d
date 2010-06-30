@@ -113,16 +113,6 @@ sealed abstract class AnyVec4f extends Read4[Float] {
   final def *(m: inMat4x3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat4f) :Vec4f = m.transposeMul(this)
 
-  private[math] final def hasErrors: Boolean = {
-    import java.lang.Float._
-    (
-      isNaN(x) || isInfinite(x) ||
-      isNaN(y) || isInfinite(y) ||
-      isNaN(z) || isInfinite(z) ||
-      isNaN(w) || isInfinite(w)
-    )
-  }
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec4b => false

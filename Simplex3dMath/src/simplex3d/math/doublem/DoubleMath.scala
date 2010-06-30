@@ -1216,20 +1216,20 @@ object DoubleMath {
   def determinant(m: inMat4d) :Double = {
     import m._
 
-    val fA0 = m00*m11 - m01*m10
-    val fA1 = m00*m12 - m02*m10
-    val fA2 = m00*m13 - m03*m10
-    val fA3 = m01*m12 - m02*m11
-    val fA4 = m01*m13 - m03*m11
-    val fA5 = m02*m13 - m03*m12
-    val fB0 = m20*m31 - m21*m30
-    val fB1 = m20*m32 - m22*m30
-    val fB2 = m20*m33 - m23*m30
-    val fB3 = m21*m32 - m22*m31
-    val fB4 = m21*m33 - m23*m31
-    val fB5 = m22*m33 - m23*m32
+    val a0 = m00*m11 - m01*m10
+    val a1 = m00*m12 - m02*m10
+    val a2 = m00*m13 - m03*m10
+    val a3 = m01*m12 - m02*m11
+    val a4 = m01*m13 - m03*m11
+    val a5 = m02*m13 - m03*m12
+    val b0 = m20*m31 - m21*m30
+    val b1 = m20*m32 - m22*m30
+    val b2 = m20*m33 - m23*m30
+    val b3 = m21*m32 - m22*m31
+    val b4 = m21*m33 - m23*m31
+    val b5 = m22*m33 - m23*m32
 
-    fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
+    a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0
   }
 
   /**
@@ -1295,41 +1295,41 @@ object DoubleMath {
   def inverse(m: inMat4d) :Mat4d = {
     import m._
 
-    val fA0 = m00*m11 - m01*m10
-    val fA1 = m00*m12 - m02*m10
-    val fA2 = m00*m13 - m03*m10
-    val fA3 = m01*m12 - m02*m11
-    val fA4 = m01*m13 - m03*m11
-    val fA5 = m02*m13 - m03*m12
-    val fB0 = m20*m31 - m21*m30
-    val fB1 = m20*m32 - m22*m30
-    val fB2 = m20*m33 - m23*m30
-    val fB3 = m21*m32 - m22*m31
-    val fB4 = m21*m33 - m23*m31
-    val fB5 = m22*m33 - m23*m32
+    val a0 = m00*m11 - m01*m10
+    val a1 = m00*m12 - m02*m10
+    val a2 = m00*m13 - m03*m10
+    val a3 = m01*m12 - m02*m11
+    val a4 = m01*m13 - m03*m11
+    val a5 = m02*m13 - m03*m12
+    val b0 = m20*m31 - m21*m30
+    val b1 = m20*m32 - m22*m30
+    val b2 = m20*m33 - m23*m30
+    val b3 = m21*m32 - m22*m31
+    val b4 = m21*m33 - m23*m31
+    val b5 = m22*m33 - m23*m32
 
-    val det = fA0*fB5 - fA1*fB4 + fA2*fB3 + fA3*fB2 - fA4*fB1 + fA5*fB0
+    val det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0
 
     val mat = new Mat4d(
-       m11*fB5 - m12*fB4 + m13*fB3,
-      -m10*fB5 + m12*fB2 - m13*fB1,
-       m10*fB4 - m11*fB2 + m13*fB0,
-      -m10*fB3 + m11*fB1 - m12*fB0,
+       m11*b5 - m12*b4 + m13*b3,
+      -m10*b5 + m12*b2 - m13*b1,
+       m10*b4 - m11*b2 + m13*b0,
+      -m10*b3 + m11*b1 - m12*b0,
 
-      -m01*fB5 + m02*fB4 - m03*fB3,
-       m00*fB5 - m02*fB2 + m03*fB1,
-      -m00*fB4 + m01*fB2 - m03*fB0,
-       m00*fB3 - m01*fB1 + m02*fB0,
+      -m01*b5 + m02*b4 - m03*b3,
+       m00*b5 - m02*b2 + m03*b1,
+      -m00*b4 + m01*b2 - m03*b0,
+       m00*b3 - m01*b1 + m02*b0,
 
-       m31*fA5 - m32*fA4 + m33*fA3,
-      -m30*fA5 + m32*fA2 - m33*fA1,
-       m30*fA4 - m31*fA2 + m33*fA0,
-      -m30*fA3 + m31*fA1 - m32*fA0,
+       m31*a5 - m32*a4 + m33*a3,
+      -m30*a5 + m32*a2 - m33*a1,
+       m30*a4 - m31*a2 + m33*a0,
+      -m30*a3 + m31*a1 - m32*a0,
 
-      -m21*fA5 + m22*fA4 - m23*fA3,
-       m20*fA5 - m22*fA2 + m23*fA1,
-      -m20*fA4 + m21*fA2 - m23*fA0,
-       m20*fA3 - m21*fA1 + m22*fA0
+      -m21*a5 + m22*a4 - m23*a3,
+       m20*a5 - m22*a2 + m23*a1,
+      -m20*a4 + m21*a2 - m23*a0,
+       m20*a3 - m21*a1 + m22*a0
     )
 
     mat /= det
@@ -1442,19 +1442,63 @@ object DoubleMath {
   }
 
   def hasErrors(x: Double) :Boolean = isinf(x) || isnan(x)
-  def hasErrors(u: inVec2d) :Boolean = u.hasErrors
-  def hasErrors(u: inVec3d) :Boolean = u.hasErrors
-  def hasErrors(u: inVec4d) :Boolean = u.hasErrors
-  def hasErrors(q: inQuat4d) :Boolean = q.hasErrors
-  def hasErrors(m: inMat2d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat2x3d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat2x4d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat3x2d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat3d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat3x4d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat4x2d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat4x3d) :Boolean = m.hasErrors
-  def hasErrors(m: inMat4d) :Boolean = m.hasErrors
+  def hasErrors(u: inVec2d) :Boolean = (
+    hasErrors(u.x) || hasErrors(u.y)
+  )
+  def hasErrors(u: inVec3d) :Boolean = (
+    hasErrors(u.x) || hasErrors(u.y) || hasErrors(u.z)
+  )
+  def hasErrors(u: inVec4d) :Boolean = (
+    hasErrors(u.x) || hasErrors(u.y) || hasErrors(u.z) || hasErrors(u.w)
+  )
+  def hasErrors(q: inQuat4d) :Boolean = (
+    hasErrors(q.a) || hasErrors(q.b) || hasErrors(q.c) || hasErrors(q.d)
+  )
+  def hasErrors(m: inMat2d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)||
+    hasErrors(m.m01)|| hasErrors(m.m11)
+  )
+  def hasErrors(m: inMat2x3d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)||
+    hasErrors(m.m01)|| hasErrors(m.m11)||
+    hasErrors(m.m02)|| hasErrors(m.m12)
+  )
+  def hasErrors(m: inMat2x4d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)||
+    hasErrors(m.m01)|| hasErrors(m.m11)||
+    hasErrors(m.m02)|| hasErrors(m.m12)||
+    hasErrors(m.m03)|| hasErrors(m.m13)
+  )
+  def hasErrors(m: inMat3x2d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)
+  )
+  def hasErrors(m: inMat3d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)||
+    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)
+  )
+  def hasErrors(m: inMat3x4d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)||
+    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)||
+    hasErrors(m.m03)|| hasErrors(m.m13)|| hasErrors(m.m23)
+  )
+  def hasErrors(m: inMat4x2d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)
+  )
+  def hasErrors(m: inMat4x3d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)||
+    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)|| hasErrors(m.m32)
+  )
+  def hasErrors(m: inMat4d) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
+    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)||
+    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)|| hasErrors(m.m32)||
+    hasErrors(m.m03)|| hasErrors(m.m13)|| hasErrors(m.m23)|| hasErrors(m.m33)
+  )
 
   def approxEqual(x: Double, y: Double, absDelta: Double) :Boolean = {
     abs(x - y) < absDelta
@@ -1663,14 +1707,14 @@ object DoubleMath {
   def inverse(m: inMat3x4d) :Mat3x4d = {
     import m._
 
-    val fA0 = m00*m11 - m01*m10
-    val fA1 = m00*m12 - m02*m10
-    val fA2 = m00*m13 - m03*m10
-    val fA3 = m01*m12 - m02*m11
-    val fA4 = m01*m13 - m03*m11
-    val fA5 = m02*m13 - m03*m12
+    val a0 = m00*m11 - m01*m10
+    val a1 = m00*m12 - m02*m10
+    val a2 = m00*m13 - m03*m10
+    val a3 = m01*m12 - m02*m11
+    val a4 = m01*m13 - m03*m11
+    val a5 = m02*m13 - m03*m12
 
-    val det = fA0*m22 - fA1*m21 + fA3*m20
+    val det = a0*m22 - a1*m21 + a3*m20
 
     val mat = new Mat3x4d(
        m11*m22 - m12*m21,
@@ -1681,13 +1725,13 @@ object DoubleMath {
        m00*m22 - m02*m20,
       -m00*m21 + m01*m20,
 
-       fA3,
-      -fA1,
-       fA0,
+       a3,
+      -a1,
+       a0,
 
-      -m21*fA5 + m22*fA4 - m23*fA3,
-       m20*fA5 - m22*fA2 + m23*fA1,
-      -m20*fA4 + m21*fA2 - m23*fA0
+      -m21*a5 + m22*a4 - m23*a3,
+       m20*a5 - m22*a2 + m23*a1,
+      -m20*a4 + m21*a2 - m23*a0
     )
 
     mat /= det

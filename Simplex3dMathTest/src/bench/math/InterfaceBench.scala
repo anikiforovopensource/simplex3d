@@ -68,7 +68,7 @@ class InterfaceBenchCase {
 
         // Bench code
         val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
-        val q = IBMath.quatFrom(Mat3m(m))
+        val q = IBMath.quatFrom(Mat3x3m(m))
         answer += int((q.a + q.b + q.c + q.d))
 
         i += 1
@@ -143,7 +143,7 @@ object Mat3x4m {
   )
 }
 
-object Mat3m {
+object Mat3x3m {
   def apply(m: Mat3x4m) = Mat3(
     m.m00, m.m10, m.m20,
     m.m01, m.m11, m.m21,

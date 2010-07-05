@@ -348,11 +348,6 @@ class Vec3iTest extends FunSuite {
     expect(1) { u.x }
     expect(2) { u.y }
     expect(3) { u.z }
-
-    u.set(5, 6, 7)
-    expect(5) { u.x }
-    expect(6) { u.y }
-    expect(7) { u.z }
   }
 
   test("Const math") {

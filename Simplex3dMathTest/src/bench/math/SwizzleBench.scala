@@ -254,7 +254,7 @@ class SwizzleBenchCase {
 
         // Bench code
         val v = ConstVec4i(i, i + 1, i + 2, i + 3)
-        val u = v + v.yzwx
+        val u = v.yzwx
         val r = v + u
         val l2 = (r.x + r.y + r.z + r.w)
         answer ^= l2.asInstanceOf[Int]

@@ -478,14 +478,6 @@ class Mat4x2fTest extends FunSuite {
     m := i
     expect((m00, m10, m20, m30)) { (m.m00, m.m10, m.m20, m.m30) }
     expect((m01, m11, m21, m31)) { (m.m01, m.m11, m.m21, m.m31) }
-
-    m = Mat4x2(0)
-    m.set(
-      m00, m10, m20, m30,
-      m01, m11, m21, m31
-    )
-    expect((m00, m10, m20, m30)) { (m.m00, m.m10, m.m20, m.m30) }
-    expect((m01, m11, m21, m31)) { (m.m01, m.m11, m.m21, m.m31) }
   }
 
   test("Const math") {

@@ -282,10 +282,6 @@ class Vec2bTest extends FunSuite {
       u := Vec2b(x, y)
       expect(x) { u.x }
       expect(y) { u.y }
-
-      u.set(!x, !y)
-      expect(!x) { u.x }
-      expect(!y) { u.y }
     }
   }
 

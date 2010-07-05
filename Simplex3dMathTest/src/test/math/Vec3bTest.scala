@@ -368,11 +368,6 @@ class Vec3bTest extends FunSuite {
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
-
-      u.set(!x, !y, !z)
-      expect(!x) { u.x }
-      expect(!y) { u.y }
-      expect(!z) { u.z }
     }
   }
 

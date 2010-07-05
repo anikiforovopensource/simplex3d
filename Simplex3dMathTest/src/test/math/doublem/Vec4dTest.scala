@@ -545,12 +545,6 @@ class Vec4dTest extends FunSuite {
     expect(2) { u.y }
     expect(3) { u.z }
     expect(4) { u.w }
-
-    u.set(5, 6, 7, 8)
-    expect(5) { u.x }
-    expect(6) { u.y }
-    expect(7) { u.z }
-    expect(8) { u.w }
   }
 
   test("Const math") {

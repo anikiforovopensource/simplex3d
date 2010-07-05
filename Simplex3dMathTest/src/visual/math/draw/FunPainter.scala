@@ -62,7 +62,7 @@ object FunPainter {
       yoffset = 0
       this.time = time
 
-      fun.dimensions.asInstanceOf[Vec2].set(width, height)
+      fun.dimensions.asInstanceOf[Vec2] := Vec2(width, height)
     }
 
     def runSingleThreaded() {

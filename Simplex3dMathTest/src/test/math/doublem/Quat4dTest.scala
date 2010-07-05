@@ -221,12 +221,6 @@ class Quat4dTest extends FunSuite {
     expect(2) { u.b }
     expect(3) { u.c }
     expect(4) { u.d }
-
-    u.set(5, 6, 7, 8)
-    expect(5) { u.a }
-    expect(6) { u.b }
-    expect(7) { u.c }
-    expect(8) { u.d }
   }
 
   test("Const math") {

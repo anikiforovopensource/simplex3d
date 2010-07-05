@@ -34,10 +34,14 @@ object MatSharedCodeBench {
 //    tc.testMul()
 //    tc.testMul()
 //    tc.testMul()
-    tc.testScalarDiv()
-    tc.testScalarDiv()
-    tc.testScalarDiv()
-    tc.testScalarDiv()
+//    tc.testScalarDiv()
+//    tc.testScalarDiv()
+//    tc.testScalarDiv()
+//    tc.testScalarDiv()
+    tc.testSubComponents()
+    tc.testSubComponents()
+    tc.testSubComponents()
+    tc.testSubComponents()
   }
 }
 
@@ -93,6 +97,24 @@ class MatSharedCodeBench {
     println("Shared scalar div time: " + testSharedSDivTime + ".")
     println("Implemented scalar div time: " + testImplementedSDivTime + ".")
   }
+
+  def testSubComponents() {
+    var start = 0L
+
+    start = System.currentTimeMillis
+    testImplementedSub(length, loops)
+    System.gc
+    val implementedTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testDedicatedSub(length, loops)
+    System.gc
+    val dedicatedTime = System.currentTimeMillis - start
+
+    println("Implemented sub: " + implementedTime + ".")
+    println("Dedicated sub: " + dedicatedTime + ".")
+  }
+
 
   def testInlinedMul(length: Int, loops: Int) {
     val res = new Mat3m(1, 0, 0, 0, 1, 0, 0, 0, 1)
@@ -210,6 +232,46 @@ class MatSharedCodeBench {
 
     println(res)
   }
+
+  def testImplementedSub(length: Int, loops: Int) {
+    val res = Mat3d(1, 0, 0, 0, 1, 0, 0, 0, 1)
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val a = Mat3d(i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8)
+        res += 2 - a
+
+        i += 1
+      }
+
+      l += 1
+    }
+
+    println(res)
+  }
+  
+  class EextInt(val i: Int) { def -(m: Mat3m) = m.subComponents(i) }
+  implicit def int2EI(x: Int) = new EextInt(x)
+  def testDedicatedSub(length: Int, loops: Int) {
+    val res = new Mat3m(1, 0, 0, 0, 1, 0, 0, 0, 1)
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < length) {
+
+        // Bench code
+        val a = new Mat3m(i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8)
+        res += 2 - a
+
+        i += 1
+      }
+
+      l += 1
+    }
+
+    println(res)
+  }
 }
 
 sealed abstract class AnyMat3m {
@@ -218,6 +280,12 @@ sealed abstract class AnyMat3m {
   def m01: Double; def m11: Double; def m21: Double // column
   def m02: Double; def m12: Double; def m22: Double // column
 
+  final def subComponents(s: Double) = new Mat3m(
+    s - m00, s - m10, s - m20,
+    s - m01, s - m11, s - m21,
+    s - m02, s - m12, s - m22
+  )
+  
   final def /(s: Double) = { val inv = 1/s; new Mat3m(
     inv*m00, inv*m10, inv*m20,
     inv*m01, inv*m11, inv*m21,

@@ -581,18 +581,6 @@ class Mat3x4fTest extends FunSuite {
     expect((m01, m11, m21)) { (m.m01, m.m11, m.m21) }
     expect((m02, m12, m22)) { (m.m02, m.m12, m.m22) }
     expect((m03, m13, m23)) { (m.m03, m.m13, m.m23) }
-
-    m = Mat3x4(0)
-    m.set(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22,
-      m03, m13, m23
-    )
-    expect((m00, m10, m20)) { (m.m00, m.m10, m.m20) }
-    expect((m01, m11, m21)) { (m.m01, m.m11, m.m21) }
-    expect((m02, m12, m22)) { (m.m02, m.m12, m.m22) }
-    expect((m03, m13, m23)) { (m.m03, m.m13, m.m23) }
   }
 
   test("Const math") {

@@ -272,10 +272,6 @@ class Vec2dTest extends FunSuite {
     u := Vec2(1, 2)
     expect(1) { u.x }
     expect(2) { u.y }
-
-    u.set(5, 6)
-    expect(5) { u.x }
-    expect(6) { u.y }
   }
 
   test("Const math") {

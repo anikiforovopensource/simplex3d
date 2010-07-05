@@ -620,12 +620,6 @@ class Vec4bTest extends FunSuite {
       expect(y) { u.y }
       expect(z) { u.z }
       expect(w) { u.w }
-
-      u.set(!x, !y, !z, !w)
-      expect(!x) { u.x }
-      expect(!y) { u.y }
-      expect(!z) { u.z }
-      expect(!w) { u.w }
     }
   }
 

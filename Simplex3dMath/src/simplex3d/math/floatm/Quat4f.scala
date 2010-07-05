@@ -156,7 +156,8 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends AnyQuat4f with Mutable with Implicits[On] with Composite
+) extends AnyQuat4f
+  with AssignValue[AnyQuat4f] with Implicits[On] with Composite
 {
   type Element = AnyQuat4f
   type Component = Float1
@@ -185,11 +186,8 @@ final class Quat4f private[math] (
 
     a = na; b = nb; c = nc
   }
-  
+
   def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
-  def set(a: Float, b: Float, c: Float, d: Float) {
-    this.a = a; this.b = b; this.c = c; this.d = d
-  }
 
   def update(i: Int, s: Float) {
     i match {

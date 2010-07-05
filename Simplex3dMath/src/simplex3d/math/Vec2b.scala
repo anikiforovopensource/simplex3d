@@ -252,7 +252,7 @@ object ConstVec2b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends AnyVec2b with Mutable with Implicits[On]
+extends AnyVec2b with AssignValue[AnyVec2b] with Implicits[On]
 {
   px = cx; py = cy
 
@@ -281,12 +281,6 @@ extends AnyVec2b with Mutable with Implicits[On]
    * @param u 2-dimensional Boolean vector.
    */
   def :=(u: inVec2b) { x = u.x; y = u.y }
-
-  /** Set vector components to the specified values.
-   * @param x component x.
-   * @param y component y.
-   */
-  def set(x: Boolean, y: Boolean) { this.x = x; this.y = y }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y).

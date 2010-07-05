@@ -285,11 +285,11 @@ object ConstMat4x2d {
 final class Mat4x2d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double
-) extends AnyMat4x2d with Mutable with Implicits[On] with Composite
+) extends AnyMat4x2d
+  with AssignValue[AnyMat4x2d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
-
 
   override def m00_=(s: Double) { p00 = s }
   override def m10_=(s: Double) { p10 = s }
@@ -300,7 +300,6 @@ final class Mat4x2d private[math] (
   override def m11_=(s: Double) { p11 = s }
   override def m21_=(s: Double) { p21 = s }
   override def m31_=(s: Double) { p31 = s }
-
 
   type Element = AnyMat4x2d
   type Component = Double1
@@ -351,14 +350,6 @@ final class Mat4x2d private[math] (
   def :=(m: inMat4x2d) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31
-  }
-
-  def set(
-    m00: Double, m10: Double, m20: Double, m30: Double,
-    m01: Double, m11: Double, m21: Double, m31: Double
-  ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20; this.m30 = m30;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21; this.m31 = m31
   }
 
   def update(c: Int, r: Int, s: Double) {

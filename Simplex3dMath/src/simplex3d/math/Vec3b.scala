@@ -290,7 +290,7 @@ object ConstVec3b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends AnyVec3b with Mutable with Implicits[On]
+extends AnyVec3b with AssignValue[AnyVec3b] with Implicits[On]
 {
   px = cx; py = cy; pz = cz
 
@@ -328,15 +328,6 @@ extends AnyVec3b with Mutable with Implicits[On]
    * @param u 3-dimensional Boolean vector.
    */
   def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
-
-  /** Set vector components to the specified values.
-   * @param x component x.
-   * @param y component y.
-   * @param z component z.
-   */
-  def set(x: Boolean, y: Boolean, z: Boolean) {
-    this.x = x; this.y = y; this.z = z
-  }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z).

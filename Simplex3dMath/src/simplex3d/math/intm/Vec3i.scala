@@ -193,7 +193,7 @@ object ConstVec3i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
-extends AnyVec3i with Mutable with Implicits[On] with Composite
+extends AnyVec3i with AssignValue[AnyVec3i] with Implicits[On] with Composite
 {
   type Element = AnyVec3i
   type Component = Int1
@@ -257,7 +257,6 @@ extends AnyVec3i with Mutable with Implicits[On] with Composite
   def ^=(u: inVec3i) = { x ^= u.x; y ^= u.y; z ^= u.z }
 
   def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
-  def set(x: Int, y: Int, z: Int) { this.x = x; this.y = y; this.z = z }
 
   def update(i: Int, s: Int) {
     i match {

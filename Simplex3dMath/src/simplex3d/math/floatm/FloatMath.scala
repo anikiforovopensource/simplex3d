@@ -1976,7 +1976,7 @@ object FloatMath {
     import q._
 
     if (approxEqual(abs(a), 1, 1e-6f)) {
-      axis.set(1, 0, 0)
+      axis := Vec3f.UnitX
       return 0
     }
 
@@ -1998,7 +1998,7 @@ object FloatMath {
     val cosAngle = (m00 + m11 + m22 - 1)*0.5f
 
     if (approxEqual(cosAngle, 1, 1e-5f)) {
-      axis.set(1, 0, 0)
+      axis := Vec3f.UnitX
       return 0
     }
     else if (approxEqual(cosAngle, -1, 1e-5f)) {

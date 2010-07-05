@@ -246,18 +246,17 @@ object ConstMat2f {
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends AnyMat2f with Mutable with Implicits[On] with Composite
+) extends AnyMat2f
+  with AssignValue[AnyMat2f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
-
 
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
 
   override def m01_=(s: Float) { p01 = s }
   override def m11_=(s: Float) { p11 = s }
-
 
   type Element = AnyMat2f
   type Component = Float1
@@ -304,14 +303,6 @@ final class Mat2f private[math] (
   def :=(m: inMat2f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
-  }
-
-  def set(
-    m00: Float, m10: Float,
-    m01: Float, m11: Float
-  ) {
-    this.m00 = m00; this.m10 = m10;
-    this.m01 = m01; this.m11 = m11
   }
 
   def update(c: Int, r: Int, s: Float) {

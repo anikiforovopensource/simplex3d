@@ -242,8 +242,8 @@ object ConstVec4i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4i private[math] (
-  cx: Int, cy: Int, cz: Int, cw: Int)
-extends AnyVec4i with Mutable with Implicits[On] with Composite
+  cx: Int, cy: Int, cz: Int, cw: Int
+) extends AnyVec4i with AssignValue[AnyVec4i] with Implicits[On] with Composite
 {
   type Element = AnyVec4i
   type Component = Int1
@@ -316,9 +316,6 @@ extends AnyVec4i with Mutable with Implicits[On] with Composite
   def ^=(u: inVec4i) = { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
 
   def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
-  def set(x: Int, y: Int, z: Int, w: Int) {
-    this.x = x; this.y = y; this.z = z; this.w = w
-  }
 
   def update(i: Int, s: Int) {
     i match {

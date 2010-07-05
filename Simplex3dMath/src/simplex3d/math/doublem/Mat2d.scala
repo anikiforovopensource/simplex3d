@@ -246,18 +246,17 @@ object ConstMat2d {
 final class Mat2d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double
-) extends AnyMat2d with Mutable with Implicits[On] with Composite
+) extends AnyMat2d
+  with AssignValue[AnyMat2d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
-
 
   override def m00_=(s: Double) { p00 = s }
   override def m10_=(s: Double) { p10 = s }
 
   override def m01_=(s: Double) { p01 = s }
   override def m11_=(s: Double) { p11 = s }
-
 
   type Element = AnyMat2d
   type Component = Double1
@@ -304,14 +303,6 @@ final class Mat2d private[math] (
   def :=(m: inMat2d) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
-  }
-
-  def set(
-    m00: Double, m10: Double,
-    m01: Double, m11: Double
-  ) {
-    this.m00 = m00; this.m10 = m10;
-    this.m01 = m01; this.m11 = m11
   }
 
   def update(c: Int, r: Int, s: Double) {

@@ -1946,7 +1946,7 @@ object DoubleMath {
     import q._
 
     if (approxEqual(abs(a), 1, 1e-15)) {
-      axis.set(1, 0, 0)
+      axis := Vec3d.UnitX
       return 0
     }
 
@@ -1968,7 +1968,7 @@ object DoubleMath {
     val cosAngle = (m00 + m11 + m22 - 1)*0.5
 
     if (approxEqual(cosAngle, 1, 1e-14)) {
-      axis.set(1, 0, 0)
+      axis := Vec3d.UnitX
       return 0
     }
     else if (approxEqual(cosAngle, -1, 1e-14)) {

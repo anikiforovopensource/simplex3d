@@ -155,7 +155,8 @@ object ConstQuat4d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends AnyQuat4d with Mutable with Implicits[On] with Composite
+) extends AnyQuat4d
+  with AssignValue[AnyQuat4d] with Implicits[On] with Composite
 {
   type Element = AnyQuat4d
   type Component = Double1
@@ -183,11 +184,8 @@ final class Quat4d private[math] (
 
     a = na; b = nb; c = nc
   }
-  
+
   def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
-  def set(a: Double, b: Double, c: Double, d: Double) {
-    this.a = a; this.b = b; this.c = c; this.d = d
-  }
 
   def update(i: Int, s: Double) {
     i match {

@@ -318,12 +318,12 @@ final class Mat2x3d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double,
   c02: Double, c12: Double
-) extends AnyMat2x3d with Mutable with Implicits[On] with Composite
+) extends AnyMat2x3d
+  with AssignValue[AnyMat2x3d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
-
 
   override def m00_=(s: Double) { p00 = s }
   override def m10_=(s: Double) { p10 = s }
@@ -333,7 +333,6 @@ final class Mat2x3d private[math] (
 
   override def m02_=(s: Double) { p02 = s }
   override def m12_=(s: Double) { p12 = s }
-
 
   type Element = AnyMat2x3d
   type Component = Double1
@@ -390,16 +389,6 @@ final class Mat2x3d private[math] (
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11;
     m02 = m.m02; m12 = m.m12
-  }
-
-  def set(
-    m00: Double, m10: Double,
-    m01: Double, m11: Double,
-    m02: Double, m12: Double
-  ) {
-    this.m00 = m00; this.m10 = m10;
-    this.m01 = m01; this.m11 = m11;
-    this.m02 = m02; this.m12 = m12
   }
 
   def update(c: Int, r: Int, s: Double) {

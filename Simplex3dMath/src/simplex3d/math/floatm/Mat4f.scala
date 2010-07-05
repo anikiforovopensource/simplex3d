@@ -387,13 +387,13 @@ final class Mat4f private[math] (
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends AnyMat4f with Mutable with Implicits[On] with Composite
+) extends AnyMat4f
+  with AssignValue[AnyMat4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
-
 
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
@@ -414,7 +414,6 @@ final class Mat4f private[math] (
   override def m13_=(s: Float) { p13 = s }
   override def m23_=(s: Float) { p23 = s }
   override def m33_=(s: Float) { p33 = s }
-
 
   type Element = AnyMat4f
   type Component = Float1
@@ -489,18 +488,6 @@ final class Mat4f private[math] (
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
     m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32;
     m03 = m.m03; m13 = m.m13; m23 = m.m23; m33 = m.m33
-  }
-
-  def set(
-    m00: Float, m10: Float, m20: Float, m30: Float,
-    m01: Float, m11: Float, m21: Float, m31: Float,
-    m02: Float, m12: Float, m22: Float, m32: Float,
-    m03: Float, m13: Float, m23: Float, m33: Float
-  ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20; this.m30 = m30;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21; this.m31 = m31;
-    this.m02 = m02; this.m12 = m12; this.m22 = m22; this.m32 = m32;
-    this.m03 = m03; this.m13 = m13; this.m23 = m23; this.m33 = m33
   }
 
   def update(c: Int, r: Int, s: Float) {

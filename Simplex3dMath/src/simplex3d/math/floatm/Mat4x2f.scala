@@ -285,11 +285,11 @@ object ConstMat4x2f {
 final class Mat4x2f private[math] (
   c00: Float, c10: Float, c20: Float, c30: Float,
   c01: Float, c11: Float, c21: Float, c31: Float
-) extends AnyMat4x2f with Mutable with Implicits[On] with Composite
+) extends AnyMat4x2f
+  with AssignValue[AnyMat4x2f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
-
 
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
@@ -300,7 +300,6 @@ final class Mat4x2f private[math] (
   override def m11_=(s: Float) { p11 = s }
   override def m21_=(s: Float) { p21 = s }
   override def m31_=(s: Float) { p31 = s }
-
 
   type Element = AnyMat4x2f
   type Component = Float1
@@ -351,14 +350,6 @@ final class Mat4x2f private[math] (
   def :=(m: inMat4x2f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31
-  }
-
-  def set(
-    m00: Float, m10: Float, m20: Float, m30: Float,
-    m01: Float, m11: Float, m21: Float, m31: Float
-  ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20; this.m30 = m30;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21; this.m31 = m31
   }
 
   def update(c: Int, r: Int, s: Float) {

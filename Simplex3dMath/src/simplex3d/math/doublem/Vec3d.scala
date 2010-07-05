@@ -183,7 +183,7 @@ object ConstVec3d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3d private[math] (
   cx: Double, cy: Double, cz: Double
-) extends AnyVec3d with Mutable with Implicits[On] with Composite
+) extends AnyVec3d with AssignValue[AnyVec3d] with Implicits[On] with Composite
 {
   type Element = AnyVec3d
   type Component = Double1
@@ -234,7 +234,6 @@ final class Vec3d private[math] (
   def *=(m: inMat3d) { this := m.transposeMul(this) }
 
   def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
-  def set(x: Double, y: Double, z: Double) { this.x = x; this.y = y; this.z = z }
 
   def update(i: Int, s: Double) {
     i match {

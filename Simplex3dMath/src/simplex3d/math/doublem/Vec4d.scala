@@ -230,7 +230,7 @@ object ConstVec4d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4d private[math] (
   cx: Double, cy: Double, cz: Double, cw: Double
-) extends AnyVec4d with Mutable with Implicits[On] with Composite
+) extends AnyVec4d with AssignValue[AnyVec4d] with Implicits[On] with Composite
 {
   type Element = AnyVec4d
   type Component = Double1
@@ -290,9 +290,6 @@ final class Vec4d private[math] (
   def *=(m: inMat4d) { this := m.transposeMul(this) }
 
   def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
-  def set(x: Double, y: Double, z: Double, w: Double) {
-    this.x = x; this.y = y; this.z = z; this.w = w
-  }
 
   def update(i: Int, s: Double) {
     i match {

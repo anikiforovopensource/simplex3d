@@ -157,7 +157,7 @@ object ConstVec2d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2d private[math] (cx: Double, cy: Double)
-extends AnyVec2d with Mutable with Implicits[On] with Composite
+extends AnyVec2d with AssignValue[AnyVec2d] with Implicits[On] with Composite
 {
   type Element = AnyVec2d
   type Component = Double1
@@ -199,7 +199,6 @@ extends AnyVec2d with Mutable with Implicits[On] with Composite
   def *=(m: inMat2d) { this := m.transposeMul(this) }
 
   def :=(u: inVec2d) { x = u.x; y = u.y }
-  def set(x: Double, y: Double) { this.x = x; this.y = y }
 
   def update(i: Int, s: Double) {
     i match {

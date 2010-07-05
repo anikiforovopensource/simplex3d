@@ -375,7 +375,7 @@ object ConstVec4b {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
-) extends AnyVec4b with Mutable with Implicits[On]
+) extends AnyVec4b with AssignValue[AnyVec4b] with Implicits[On]
 {
   px = cx; py = cy; pz = cz; pw = cw
 
@@ -422,16 +422,6 @@ final class Vec4b private[math] (
    * @param u 4-dimensional Boolean vector.
    */
   def :=(u: inVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
-
-  /** Set vector components to the specified values.
-   * @param x component x.
-   * @param y component y.
-   * @param z component z.
-   * @param w component w.
-   */
-  def set(x: Boolean, y: Boolean, z: Boolean, w: Boolean) {
-    this.x = x; this.y = y; this.z = z; this.w = w
-  }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).

@@ -157,7 +157,7 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends AnyVec2f with Mutable with Implicits[On] with Composite
+extends AnyVec2f with AssignValue[AnyVec2f] with Implicits[On] with Composite
 {
   type Element = AnyVec2f
   type Component = Float1
@@ -199,7 +199,6 @@ extends AnyVec2f with Mutable with Implicits[On] with Composite
   def *=(m: inMat2f) { this := m.transposeMul(this) }
 
   def :=(u: inVec2f) { x = u.x; y = u.y }
-  def set(x: Float, y: Float) { this.x = x; this.y = y }
 
   def update(i: Int, s: Float) {
     i match {

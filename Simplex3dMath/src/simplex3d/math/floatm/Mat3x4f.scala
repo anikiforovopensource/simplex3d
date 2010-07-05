@@ -423,13 +423,13 @@ final class Mat3x4f private[math] (
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float,
   c03: Float, c13: Float, c23: Float
-) extends AnyMat3x4f with Mutable with Implicits[On] with Composite
+) extends AnyMat3x4f
+  with AssignValue[AnyMat3x4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
   p02 = c02; p12 = c12; p22 = c22
   p03 = c03; p13 = c13; p23 = c23
-
 
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
@@ -446,7 +446,6 @@ final class Mat3x4f private[math] (
   override def m03_=(s: Float) { p03 = s }
   override def m13_=(s: Float) { p13 = s }
   override def m23_=(s: Float) { p23 = s }
-
 
   type Element = AnyMat3x4f
   type Component = Float1
@@ -517,18 +516,6 @@ final class Mat3x4f private[math] (
     m01 = m.m01; m11 = m.m11; m21 = m.m21;
     m02 = m.m02; m12 = m.m12; m22 = m.m22;
     m03 = m.m03; m13 = m.m13; m23 = m.m23
-  }
-
-  def set(
-    m00: Float, m10: Float, m20: Float,
-    m01: Float, m11: Float, m21: Float,
-    m02: Float, m12: Float, m22: Float,
-    m03: Float, m13: Float, m23: Float
-  ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21;
-    this.m02 = m02; this.m12 = m12; this.m22 = m22;
-    this.m03 = m03; this.m13 = m13; this.m23 = m23
   }
 
   def update(c: Int, r: Int, s: Float) {

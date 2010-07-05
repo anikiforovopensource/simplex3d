@@ -230,7 +230,7 @@ object ConstVec4f {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4f private[math] (
   cx: Float, cy: Float, cz: Float, cw: Float
-) extends AnyVec4f with Mutable with Implicits[On] with Composite
+) extends AnyVec4f with AssignValue[AnyVec4f] with Implicits[On] with Composite
 {
   type Element = AnyVec4f
   type Component = Float1
@@ -290,9 +290,6 @@ final class Vec4f private[math] (
   def *=(m: inMat4f) { this := m.transposeMul(this) }
 
   def :=(u: inVec4f) { x = u.x; y = u.y; z = u.z; w = u.w }
-  def set(x: Float, y: Float, z: Float, w: Float) {
-    this.x = x; this.y = y; this.z = z; this.w = w
-  }
 
   def update(i: Int, s: Float) {
     i match {

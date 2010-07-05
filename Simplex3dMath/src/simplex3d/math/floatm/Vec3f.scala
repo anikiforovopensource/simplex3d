@@ -181,7 +181,7 @@ object ConstVec3f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
-extends AnyVec3f with Mutable with Implicits[On] with Composite
+extends AnyVec3f with AssignValue[AnyVec3f] with Implicits[On] with Composite
 {
   type Element = AnyVec3f
   type Component = Float1
@@ -232,7 +232,6 @@ extends AnyVec3f with Mutable with Implicits[On] with Composite
   def *=(m: inMat3f) { this := m.transposeMul(this) }
 
   def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
-  def set(x: Float, y: Float, z: Float) { this.x = x; this.y = y; this.z = z }
 
   def update(i: Int, s: Float) {
     i match {

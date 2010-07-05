@@ -319,13 +319,13 @@ final class Mat2x4f private[math] (
   c01: Float, c11: Float,
   c02: Float, c12: Float,
   c03: Float, c13: Float
-) extends AnyMat2x4f with Mutable with Implicits[On] with Composite
+) extends AnyMat2x4f
+  with AssignValue[AnyMat2x4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
   p03 = c03; p13 = c13
-
 
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
@@ -338,7 +338,6 @@ final class Mat2x4f private[math] (
 
   override def m03_=(s: Float) { p03 = s }
   override def m13_=(s: Float) { p13 = s }
-
 
   type Element = AnyMat2x4f
   type Component = Float1
@@ -405,18 +404,6 @@ final class Mat2x4f private[math] (
     m01 = m.m01; m11 = m.m11;
     m02 = m.m02; m12 = m.m12;
     m03 = m.m03; m13 = m.m13
-  }
-
-  def set(
-    m00: Float, m10: Float,
-    m01: Float, m11: Float,
-    m02: Float, m12: Float,
-    m03: Float, m13: Float
-  ) {
-    this.m00 = m00; this.m10 = m10;
-    this.m01 = m01; this.m11 = m11;
-    this.m02 = m02; this.m12 = m12;
-    this.m03 = m03; this.m13 = m13
   }
 
   def update(c: Int, r: Int, s: Float) {

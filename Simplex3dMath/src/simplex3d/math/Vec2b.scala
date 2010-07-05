@@ -46,11 +46,11 @@ import simplex3d.math.types._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b extends Read2[Boolean] {
+sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean] {
 
-  private[math] type R2 = ConstVec2b
-  private[math] type R3 = ConstVec3b
-  private[math] type R4 = ConstVec4b
+  private[math] type R2 = AnyVec2b
+  private[math] type R3 = AnyVec3b
+  private[math] type R4 = AnyVec4b
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2b(bool(x), bool(y))
@@ -71,32 +71,42 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
   private[math] final def dx: Double = simplex3d.math.double(x)
   private[math] final def dy: Double = simplex3d.math.double(y)
 
-  
-  def x: Boolean
-  def y: Boolean
+
+  @noinline final def x = px
+  @noinline final def y = py
 
   /** Alias for x.
    * @return component x.
    */
-  def r = x
+  final def r = x
 
   /** Alias for y.
    * @return component y.
    */
-  def g = y
+  final def g = y
 
 
   /** Alias for x.
    * @return component x.
    */
-  def s = x
+  final def s = x
 
   /** Alias for y.
    * @return component y.
    */
-  def t = y
+  final def t = y
 
-  
+
+  protected def x_=(s: Boolean) { throw new UnsupportedOperationException }
+  protected def y_=(s: Boolean) { throw new UnsupportedOperationException }
+
+  protected def r_=(s: Boolean) { throw new UnsupportedOperationException }
+  protected def g_=(s: Boolean) { throw new UnsupportedOperationException }
+
+  protected def s_=(s: Boolean) { throw new UnsupportedOperationException }
+  protected def t_=(s: Boolean) { throw new UnsupportedOperationException }
+
+
   /** Read a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y).
    * @return component with index i.
@@ -156,8 +166,10 @@ sealed abstract class AnyVec2b extends Read2[Boolean] {
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(5359695191257934190L)
-final class ConstVec2b private[math] (val x: Boolean, val y: Boolean)
-extends AnyVec2b with Immutable
+final class ConstVec2b private[math] (cx: Boolean, cy: Boolean)
+extends AnyVec2b with Immutable {
+  px = cx; py = cy
+}
 
 
 /** The companion object <code>ConstVec2b</code> that contains factory methods.
@@ -239,52 +251,30 @@ object ConstVec2b {
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(5359695191257934190L)
-final class Vec2b private[math] (var x: Boolean, var y: Boolean)
+final class Vec2b private[math] (cx: Boolean, cy: Boolean)
 extends AnyVec2b with Mutable with Implicits[On]
 {
+  px = cx; py = cy
+
+  @noinline override def x_=(s: Boolean) { px = s }
+  @noinline override def y_=(s: Boolean) { py = s }
 
   /** Alias for x.
-   * @return component x.
    */
-  override def r = x
+  override def r_=(s: Boolean) { x = s }
 
   /** Alias for y.
-   * @return component y.
    */
-  override def g = y
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  override def s = x
-
-  /** Alias for y.
-   * @return component y.
-   */
-  override def t = y
+  override def g_=(s: Boolean) { y = s }
 
 
   /** Alias for x.
-   * @return component x.
    */
-  def r_=(r: Boolean) { x = r }
+  override def s_=(s: Boolean) { x = s }
 
   /** Alias for y.
-   * @return component y.
    */
-  def g_=(g: Boolean) { y = g }
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  def s_=(s: Boolean) { x = s }
-
-  /** Alias for y.
-   * @return component y.
-   */
-  def t_=(t: Boolean) { y = t }
+  override def t_=(s: Boolean) { y = s }
 
 
   /** Set vector components to values from another vector.
@@ -314,24 +304,14 @@ extends AnyVec2b with Mutable with Implicits[On]
   }
 
   // Swizzling
-  override def xy: ConstVec2b = new ConstVec2b(x, y)
-  override def yx: ConstVec2b = new ConstVec2b(y, x)
+  override def xy_=(u: inVec2b) { x = u.x; y = u.y }
+  override def yx_=(u: inVec2b) { var t = u.y; y = u.x; x = t }
 
-  override def rg = xy
-  override def gr = yx
+  override def rg_=(u: inVec2b) { xy_=(u) }
+  override def gr_=(u: inVec2b) { yx_=(u) }
 
-  override def st = xy
-  override def ts = yx
-
-
-  def xy_=(u: inVec2b) { x = u.x; y = u.y }
-  def yx_=(u: inVec2b) { var t = u.y; y = u.x; x = t }
-
-  def rg_=(u: inVec2b) { xy_=(u) }
-  def gr_=(u: inVec2b) { yx_=(u) }
-
-  def st_=(u: inVec2b) { xy_=(u) }
-  def ts_=(u: inVec2b) { yx_=(u) }
+  override def st_=(u: inVec2b) { xy_=(u) }
+  override def ts_=(u: inVec2b) { yx_=(u) }
 }
 
 

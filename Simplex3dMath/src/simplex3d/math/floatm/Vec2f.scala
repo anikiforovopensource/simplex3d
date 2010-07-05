@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2f extends Read2[Float] {
+sealed abstract class AnyVec2f extends ProtectedVec2f[Float] {
 
-  private[math] type R2 = ConstVec2f
-  private[math] type R3 = ConstVec3f
-  private[math] type R4 = ConstVec4f
+  private[math] type R2 = AnyVec2f
+  private[math] type R3 = AnyVec3f
+  private[math] type R4 = AnyVec4f
   
   protected final def make2(x: Double, y: Double) =
     new ConstVec2f(float(x), float(y))
@@ -54,14 +54,39 @@ sealed abstract class AnyVec2f extends Read2[Float] {
   private[math] final def dy: Double = y
 
 
-  def x: Float
-  def y: Float
+  final def x = px
+  final def y = py
 
-  def r = x
-  def g = y
+  /** Alias for x.
+   * @return component x.
+   */
+  final def r = x
 
-  def s = x
-  def t = y
+  /** Alias for y.
+   * @return component y.
+   */
+  final def g = y
+
+
+  /** Alias for x.
+   * @return component x.
+   */
+  final def s = x
+
+  /** Alias for y.
+   * @return component y.
+   */
+  final def t = y
+
+
+  protected def x_=(s: Float) { throw new UnsupportedOperationException }
+  protected def y_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def r_=(s: Float) { throw new UnsupportedOperationException }
+  protected def g_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def s_=(s: Float) { throw new UnsupportedOperationException }
+  protected def t_=(s: Float) { throw new UnsupportedOperationException }
 
   
   final def apply(i: Int) :Float = {
@@ -114,8 +139,10 @@ sealed abstract class AnyVec2f extends Read2[Float] {
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
-final class ConstVec2f private[math] (val x: Float, val y: Float)
-extends AnyVec2f with Immutable
+final class ConstVec2f private[math] (cx: Float, cy: Float)
+extends AnyVec2f with Immutable {
+  px = cx; py = cy
+}
 
 object ConstVec2f {
   def apply(s: Float) = new ConstVec2f(s, s)
@@ -129,25 +156,35 @@ object ConstVec2f {
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
-final class Vec2f private[math] (var x: Float, var y: Float)
+final class Vec2f private[math] (cx: Float, cy: Float)
 extends AnyVec2f with Mutable with Implicits[On] with Composite
 {
   type Element = AnyVec2f
   type Component = Float1
 
-  override def r = x
-  override def g = y
+  px = cx; py = cy
 
-  override def s = x
-  override def t = y
+  override def x_=(s: Float) { px = s }
+  override def y_=(s: Float) { py = s }
 
-  def r_=(r: Float) { x = r }
-  def g_=(g: Float) { y = g }
+  /** Alias for x.
+   */
+  override def r_=(s: Float) { x = s }
 
-  def s_=(s: Float) { x = s }
-  def t_=(t: Float) { y = t }
+  /** Alias for y.
+   */
+  override def g_=(s: Float) { y = s }
 
-  
+
+  /** Alias for x.
+   */
+  override def s_=(s: Float) { x = s }
+
+  /** Alias for y.
+   */
+  override def t_=(s: Float) { y = s }
+
+
   def *=(s: Float) { x *= s; y *= s }
   def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv }
 
@@ -175,24 +212,14 @@ extends AnyVec2f with Mutable with Implicits[On] with Composite
   }
 
   // Swizzling
-  override def xy: ConstVec2f = new ConstVec2f(x, y)
-  override def yx: ConstVec2f = new ConstVec2f(y, x)
+  override def xy_=(u: inVec2f) { x = u.x; y = u.y }
+  override def yx_=(u: inVec2f) { var t = u.y; y = u.x; x = t }
 
-  override def rg = xy
-  override def gr = yx
+  override def rg_=(u: inVec2f) { xy_=(u) }
+  override def gr_=(u: inVec2f) { yx_=(u) }
 
-  override def st = xy
-  override def ts = yx
-
-
-  def xy_=(u: inVec2f) { x = u.x; y = u.y }
-  def yx_=(u: inVec2f) { var t = u.y; y = u.x; x = t }
-
-  def rg_=(u: inVec2f) { xy_=(u) }
-  def gr_=(u: inVec2f) { yx_=(u) }
-
-  def st_=(u: inVec2f) { xy_=(u) }
-  def ts_=(u: inVec2f) { yx_=(u) }
+  override def st_=(u: inVec2f) { xy_=(u) }
+  override def ts_=(u: inVec2f) { yx_=(u) }
 }
 
 object Vec2f {

@@ -29,7 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d extends ReadQ[Double] {
+sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double] {
 
   private[math] final def fa: Float = float(a)
   private[math] final def fb: Float = float(b)
@@ -41,10 +41,18 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
   private[math] final def dc: Double = c
   private[math] final def dd: Double = d
 
-  def a: Double
-  def b: Double
-  def c: Double
-  def d: Double
+
+  final def a = pa
+  final def b = pb
+  final def c = pc
+  final def d = pd
+
+
+  protected def a_=(s: Double) { throw new UnsupportedOperationException }
+  protected def b_=(s: Double) { throw new UnsupportedOperationException }
+  protected def c_=(s: Double) { throw new UnsupportedOperationException }
+  protected def d_=(s: Double) { throw new UnsupportedOperationException }
+
 
   final def apply(i: Int) :Double = {
     i match {
@@ -128,8 +136,10 @@ sealed abstract class AnyQuat4d extends ReadQ[Double] {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4d private[math] (
-  val a: Double, val b: Double, val c: Double, val d: Double
-) extends AnyQuat4d with Immutable
+  ca: Double, cb: Double, cc: Double, cd: Double
+) extends AnyQuat4d with Immutable {
+  pa = ca; pb = cb; pc = cc; pd = cd
+}
 
 object ConstQuat4d {
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
@@ -144,11 +154,18 @@ object ConstQuat4d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
-  var a: Double, var b: Double, var c: Double, var d: Double
+  ca: Double, cb: Double, cc: Double, cd: Double
 ) extends AnyQuat4d with Mutable with Implicits[On] with Composite
 {
   type Element = AnyQuat4d
   type Component = Double1
+
+  pa = ca; pb = cb; pc = cc; pd = cd
+
+  override def a_=(s: Double) { pa = s }
+  override def b_=(s: Double) { pb = s }
+  override def c_=(s: Double) { pc = s }
+  override def d_=(s: Double) { pd = s }
 
   def *=(s: Double) { a *= s; b *= s; c *= s; d *= s }
   def /=(s: Double) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }

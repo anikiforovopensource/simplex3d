@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3d extends Read3[Double] {
+sealed abstract class AnyVec3d extends ProtectedVec3d[Double] {
 
-  private[math] type R2 = ConstVec2d
-  private[math] type R3 = ConstVec3d
-  private[math] type R4 = ConstVec4d
+  private[math] type R2 = AnyVec2d
+  private[math] type R3 = AnyVec3d
+  private[math] type R4 = AnyVec4d
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
@@ -58,17 +58,53 @@ sealed abstract class AnyVec3d extends Read3[Double] {
   private[math] final def dz: Double = z
 
 
-  def x: Double
-  def y: Double
-  def z: Double
+  final def x = px
+  final def y = py
+  final def z = pz
 
-  def r = x
-  def g = y
-  def b = z
+  /** Alias for x.
+   * @return component x.
+   */
+  final def r = x
 
-  def s = x
-  def t = y
-  def p = z
+  /** Alias for y.
+   * @return component y.
+   */
+  final def g = y
+
+  /** Alias for z.
+   * @return component z.
+   */
+  final def b = z
+
+
+  /** Alias for x.
+   * @return component x.
+   */
+  final def s = x
+
+  /** Alias for y.
+   * @return component y.
+   */
+  final def t = y
+
+  /** Alias for z.
+   * @return component z.
+   */
+  final def p = z
+
+
+  protected def x_=(s: Double) { throw new UnsupportedOperationException }
+  protected def y_=(s: Double) { throw new UnsupportedOperationException }
+  protected def z_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def r_=(s: Double) { throw new UnsupportedOperationException }
+  protected def g_=(s: Double) { throw new UnsupportedOperationException }
+  protected def b_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def s_=(s: Double) { throw new UnsupportedOperationException }
+  protected def t_=(s: Double) { throw new UnsupportedOperationException }
+  protected def p_=(s: Double) { throw new UnsupportedOperationException }
 
   
   final def apply(i: Int) :Double = {
@@ -127,8 +163,10 @@ sealed abstract class AnyVec3d extends Read3[Double] {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3d private[math] (
-  val x: Double, val y: Double, val z: Double
-) extends AnyVec3d with Immutable
+  cx: Double, cy: Double, cz: Double
+) extends AnyVec3d with Immutable {
+  px = cx; py = cy; pz = cz
+}
 
 object ConstVec3d {
   def apply(s: Double) = new ConstVec3d(s, s, s)
@@ -144,27 +182,42 @@ object ConstVec3d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3d private[math] (
-  var x: Double, var y: Double, var z: Double
+  cx: Double, cy: Double, cz: Double
 ) extends AnyVec3d with Mutable with Implicits[On] with Composite
 {
   type Element = AnyVec3d
   type Component = Double1
 
-  override def r = x
-  override def g = y
-  override def b = z
+  px = cx; py = cy; pz = cz
 
-  override def s = x
-  override def t = y
-  override def p = z
+  override def x_=(s: Double) { px = s }
+  override def y_=(s: Double) { py = s }
+  override def z_=(s: Double) { pz = s }
 
-  def r_=(r: Double) { x = r }
-  def g_=(g: Double) { y = g }
-  def b_=(b: Double) { z = b }
+  /** Alias for x.
+   */
+  override def r_=(s: Double) { x = s }
 
-  def s_=(s: Double) { x = s }
-  def t_=(t: Double) { y = t }
-  def p_=(p: Double) { z = p }
+  /** Alias for y.
+   */
+  override def g_=(s: Double) { y = s }
+
+  /** Alias for z.
+   */
+  override def b_=(s: Double) { z = s }
+
+
+  /** Alias for x.
+   */
+  override def s_=(s: Double) { x = s }
+
+  /** Alias for y.
+   */
+  override def t_=(s: Double) { y = s }
+
+  /** Alias for z.
+   */
+  override def p_=(s: Double) { z = s }
 
 
   def *=(s: Double) { x *= s; y *= s; z *= s }
@@ -195,90 +248,47 @@ final class Vec3d private[math] (
   }
 
   // Swizzling
-  override def xy: ConstVec2d = new ConstVec2d(x, y)
-  override def xz: ConstVec2d = new ConstVec2d(x, z)
-  override def yx: ConstVec2d = new ConstVec2d(y, x)
-  override def yz: ConstVec2d = new ConstVec2d(y, z)
-  override def zx: ConstVec2d = new ConstVec2d(z, x)
-  override def zy: ConstVec2d = new ConstVec2d(z, y)
+  override def xy_=(u: inVec2d) { x = u.x; y = u.y }
+  override def xz_=(u: inVec2d) { x = u.x; z = u.y }
+  override def yx_=(u: inVec2d) { y = u.x; x = u.y }
+  override def yz_=(u: inVec2d) { y = u.x; z = u.y }
+  override def zx_=(u: inVec2d) { z = u.x; x = u.y }
+  override def zy_=(u: inVec2d) { z = u.x; y = u.y }
 
-  override def xyz: ConstVec3d = new ConstVec3d(x, y, z)
-  override def xzy: ConstVec3d = new ConstVec3d(x, z, y)
-  override def yxz: ConstVec3d = new ConstVec3d(y, x, z)
-  override def yzx: ConstVec3d = new ConstVec3d(y, z, x)
-  override def zxy: ConstVec3d = new ConstVec3d(z, x, y)
-  override def zyx: ConstVec3d = new ConstVec3d(z, y, x)
+  override def xyz_=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+  override def xzy_=(u: inVec3d) { x = u.x; var t = u.z; z = u.y; y = t }
+  override def yxz_=(u: inVec3d) { var t = u.y; y = u.x; x = t; z = u.z }
+  override def yzx_=(u: inVec3d) { var t = u.y; y = u.x; x = u.z; z = t }
+  override def zxy_=(u: inVec3d) { var t = u.z; z = u.x; x = u.y; y = t }
+  override def zyx_=(u: inVec3d) { var t = u.z; z = u.x; x = t; y = u.y }
 
-  override def rg = xy
-  override def rb = xz
-  override def gr = yx
-  override def gb = yz
-  override def br = zx
-  override def bg = zy
+  override def rg_=(u: inVec2d) { xy_=(u) }
+  override def rb_=(u: inVec2d) { xz_=(u) }
+  override def gr_=(u: inVec2d) { yx_=(u) }
+  override def gb_=(u: inVec2d) { yz_=(u) }
+  override def br_=(u: inVec2d) { zx_=(u) }
+  override def bg_=(u: inVec2d) { zy_=(u) }
 
-  override def rgb = xyz
-  override def rbg = xzy
-  override def grb = yxz
-  override def gbr = yzx
-  override def brg = zxy
-  override def bgr = zyx
+  override def rgb_=(u: inVec3d) { xyz_=(u) }
+  override def rbg_=(u: inVec3d) { xzy_=(u) }
+  override def grb_=(u: inVec3d) { yxz_=(u) }
+  override def gbr_=(u: inVec3d) { yzx_=(u) }
+  override def brg_=(u: inVec3d) { zxy_=(u) }
+  override def bgr_=(u: inVec3d) { zyx_=(u) }
 
-  override def st = xy
-  override def sp = xz
-  override def ts = yx
-  override def tp = yz
-  override def ps = zx
-  override def pt = zy
+  override def st_=(u: inVec2d) { xy_=(u) }
+  override def sp_=(u: inVec2d) { xz_=(u) }
+  override def ts_=(u: inVec2d) { yx_=(u) }
+  override def tp_=(u: inVec2d) { yz_=(u) }
+  override def ps_=(u: inVec2d) { zx_=(u) }
+  override def pt_=(u: inVec2d) { zy_=(u) }
 
-  override def stp = xyz
-  override def spt = xzy
-  override def tsp = yxz
-  override def tps = yzx
-  override def pst = zxy
-  override def pts = zyx
-
-
-  def xy_=(u: inVec2d) { x = u.x; y = u.y }
-  def xz_=(u: inVec2d) { x = u.x; z = u.y }
-  def yx_=(u: inVec2d) { y = u.x; x = u.y }
-  def yz_=(u: inVec2d) { y = u.x; z = u.y }
-  def zx_=(u: inVec2d) { z = u.x; x = u.y }
-  def zy_=(u: inVec2d) { z = u.x; y = u.y }
-
-  def xyz_=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
-  def xzy_=(u: inVec3d) { x = u.x; var t = u.z; z = u.y; y = t }
-  def yxz_=(u: inVec3d) { var t = u.y; y = u.x; x = t; z = u.z }
-  def yzx_=(u: inVec3d) { var t = u.y; y = u.x; x = u.z; z = t }
-  def zxy_=(u: inVec3d) { var t = u.z; z = u.x; x = u.y; y = t }
-  def zyx_=(u: inVec3d) { var t = u.z; z = u.x; x = t; y = u.y }
-
-  def rg_=(u: inVec2d) { xy_=(u) }
-  def rb_=(u: inVec2d) { xz_=(u) }
-  def gr_=(u: inVec2d) { yx_=(u) }
-  def gb_=(u: inVec2d) { yz_=(u) }
-  def br_=(u: inVec2d) { zx_=(u) }
-  def bg_=(u: inVec2d) { zy_=(u) }
-
-  def rgb_=(u: inVec3d) { xyz_=(u) }
-  def rbg_=(u: inVec3d) { xzy_=(u) }
-  def grb_=(u: inVec3d) { yxz_=(u) }
-  def gbr_=(u: inVec3d) { yzx_=(u) }
-  def brg_=(u: inVec3d) { zxy_=(u) }
-  def bgr_=(u: inVec3d) { zyx_=(u) }
-
-  def st_=(u: inVec2d) { xy_=(u) }
-  def sp_=(u: inVec2d) { xz_=(u) }
-  def ts_=(u: inVec2d) { yx_=(u) }
-  def tp_=(u: inVec2d) { yz_=(u) }
-  def ps_=(u: inVec2d) { zx_=(u) }
-  def pt_=(u: inVec2d) { zy_=(u) }
-
-  def stp_=(u: inVec3d) { xyz_=(u) }
-  def spt_=(u: inVec3d) { xzy_=(u) }
-  def tsp_=(u: inVec3d) { yxz_=(u) }
-  def tps_=(u: inVec3d) { yzx_=(u) }
-  def pst_=(u: inVec3d) { zxy_=(u) }
-  def pts_=(u: inVec3d) { zyx_=(u) }
+  override def stp_=(u: inVec3d) { xyz_=(u) }
+  override def spt_=(u: inVec3d) { xzy_=(u) }
+  override def tsp_=(u: inVec3d) { yxz_=(u) }
+  override def tps_=(u: inVec3d) { yzx_=(u) }
+  override def pst_=(u: inVec3d) { zxy_=(u) }
+  override def pts_=(u: inVec3d) { zyx_=(u) }
 }
 
 object Vec3d {

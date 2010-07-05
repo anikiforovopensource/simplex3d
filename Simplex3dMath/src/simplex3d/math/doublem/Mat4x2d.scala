@@ -29,11 +29,23 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x2d extends Read4x2[Double]
+sealed abstract class AnyMat4x2d extends ProtectedMat4x2d[Double]
 {
   // Column major order.
-  def m00: Double; def m10: Double; def m20: Double; def m30: Double // column
-  def m01: Double; def m11: Double; def m21: Double; def m31: Double // column
+  final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
+  final def m01= p01; final def m11= p11; final def m21= p21; final def m31= p31
+
+
+  protected def m00_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m10_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m20_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m30_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def m01_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m21_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m31_=(s: Double) { throw new UnsupportedOperationException }
+
 
   private[math] final override def f00 = float(m00)
   private[math] final override def f10 = float(m10)
@@ -232,9 +244,13 @@ sealed abstract class AnyMat4x2d extends Read4x2[Double]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat4x2d private[math] (
-  val m00: Double, val m10: Double, val m20: Double, val m30: Double,
-  val m01: Double, val m11: Double, val m21: Double, val m31: Double
+  c00: Double, c10: Double, c20: Double, c30: Double,
+  c01: Double, c11: Double, c21: Double, c31: Double
 ) extends AnyMat4x2d with Immutable
+{
+  p00 = c00; p10 = c10; p20 = c20; p30 = c30
+  p01 = c01; p11 = c11; p21 = c21; p31 = c31
+}
 
 object ConstMat4x2d {
   def apply(s: Double) = new ConstMat4x2d(
@@ -267,10 +283,25 @@ object ConstMat4x2d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Mat4x2d private[math] (
-  var m00: Double, var m10: Double, var m20: Double, var m30: Double,
-  var m01: Double, var m11: Double, var m21: Double, var m31: Double
+  c00: Double, c10: Double, c20: Double, c30: Double,
+  c01: Double, c11: Double, c21: Double, c31: Double
 ) extends AnyMat4x2d with Mutable with Implicits[On] with Composite
 {
+  p00 = c00; p10 = c10; p20 = c20; p30 = c30
+  p01 = c01; p11 = c11; p21 = c21; p31 = c31
+
+
+  override def m00_=(s: Double) { p00 = s }
+  override def m10_=(s: Double) { p10 = s }
+  override def m20_=(s: Double) { p20 = s }
+  override def m30_=(s: Double) { p30 = s }
+
+  override def m01_=(s: Double) { p01 = s }
+  override def m11_=(s: Double) { p11 = s }
+  override def m21_=(s: Double) { p21 = s }
+  override def m31_=(s: Double) { p31 = s }
+
+
   type Element = AnyMat4x2d
   type Component = Double1
 

@@ -29,12 +29,23 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x3f extends Read2x3[Float]
+sealed abstract class AnyMat2x3f extends ProtectedMat2x3f[Float]
 {
   // Column major order.
-  def m00: Float; def m10: Float // column
-  def m01: Float; def m11: Float // column
-  def m02: Float; def m12: Float // column
+  final def m00= p00; final def m10= p10
+  final def m01= p01; final def m11= p11
+  final def m02= p02; final def m12= p12
+
+
+  protected def m00_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m10_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m01_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m02_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m12_=(s: Float) { throw new UnsupportedOperationException }
+
 
   private[math] final override def f00 = m00
   private[math] final override def f10 = m10
@@ -258,10 +269,15 @@ sealed abstract class AnyMat2x3f extends Read2x3[Float]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat2x3f private[math] (
-  val m00: Float, val m10: Float,
-  val m01: Float, val m11: Float,
-  val m02: Float, val m12: Float
+  c00: Float, c10: Float,
+  c01: Float, c11: Float,
+  c02: Float, c12: Float
 ) extends AnyMat2x3f with Immutable
+{
+  p00 = c00; p10 = c10
+  p01 = c01; p11 = c11
+  p02 = c02; p12 = c12
+}
 
 object ConstMat2x3f {
   def apply(s: Float) = new ConstMat2x3f(
@@ -299,11 +315,26 @@ object ConstMat2x3f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Mat2x3f private[math] (
-  var m00: Float, var m10: Float,
-  var m01: Float, var m11: Float,
-  var m02: Float, var m12: Float
+  c00: Float, c10: Float,
+  c01: Float, c11: Float,
+  c02: Float, c12: Float
 ) extends AnyMat2x3f with Mutable with Implicits[On] with Composite
 {
+  p00 = c00; p10 = c10
+  p01 = c01; p11 = c11
+  p02 = c02; p12 = c12
+
+
+  override def m00_=(s: Float) { p00 = s }
+  override def m10_=(s: Float) { p10 = s }
+
+  override def m01_=(s: Float) { p01 = s }
+  override def m11_=(s: Float) { p11 = s }
+
+  override def m02_=(s: Float) { p02 = s }
+  override def m12_=(s: Float) { p12 = s }
+
+
   type Element = AnyMat2x3f
   type Component = Float1
 

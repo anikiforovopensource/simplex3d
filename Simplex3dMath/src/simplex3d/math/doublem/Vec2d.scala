@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2d extends Read2[Double] {
+sealed abstract class AnyVec2d extends ProtectedVec2d[Double] {
 
-  private[math] type R2 = ConstVec2d
-  private[math] type R3 = ConstVec3d
-  private[math] type R4 = ConstVec4d
+  private[math] type R2 = AnyVec2d
+  private[math] type R3 = AnyVec3d
+  private[math] type R4 = AnyVec4d
   
   protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
@@ -54,14 +54,39 @@ sealed abstract class AnyVec2d extends Read2[Double] {
   private[math] final def dy: Double = y
 
 
-  def x: Double
-  def y: Double
+  final def x = px
+  final def y = py
 
-  def r = x
-  def g = y
+  /** Alias for x.
+   * @return component x.
+   */
+  final def r = x
 
-  def s = x
-  def t = y
+  /** Alias for y.
+   * @return component y.
+   */
+  final def g = y
+
+
+  /** Alias for x.
+   * @return component x.
+   */
+  final def s = x
+
+  /** Alias for y.
+   * @return component y.
+   */
+  final def t = y
+
+
+  protected def x_=(s: Double) { throw new UnsupportedOperationException }
+  protected def y_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def r_=(s: Double) { throw new UnsupportedOperationException }
+  protected def g_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def s_=(s: Double) { throw new UnsupportedOperationException }
+  protected def t_=(s: Double) { throw new UnsupportedOperationException }
 
   
   final def apply(i: Int) :Double = {
@@ -114,8 +139,10 @@ sealed abstract class AnyVec2d extends Read2[Double] {
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
-final class ConstVec2d private[math] (val x: Double, val y: Double)
-extends AnyVec2d with Immutable
+final class ConstVec2d private[math] (cx: Double, cy: Double)
+extends AnyVec2d with Immutable {
+  px = cx; py = cy
+}
 
 object ConstVec2d {
   def apply(s: Double) = new ConstVec2d(s, s)
@@ -129,23 +156,33 @@ object ConstVec2d {
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
-final class Vec2d private[math] (var x: Double, var y: Double)
+final class Vec2d private[math] (cx: Double, cy: Double)
 extends AnyVec2d with Mutable with Implicits[On] with Composite
 {
   type Element = AnyVec2d
   type Component = Double1
 
-  override def r = x
-  override def g = y
+  px = cx; py = cy
 
-  override def s = x
-  override def t = y
+  override def x_=(s: Double) { px = s }
+  override def y_=(s: Double) { py = s }
 
-  def r_=(r: Double) { x = r }
-  def g_=(g: Double) { y = g }
+  /** Alias for x.
+   */
+  override def r_=(s: Double) { x = s }
 
-  def s_=(s: Double) { x = s }
-  def t_=(t: Double) { y = t }
+  /** Alias for y.
+   */
+  override def g_=(s: Double) { y = s }
+
+
+  /** Alias for x.
+   */
+  override def s_=(s: Double) { x = s }
+
+  /** Alias for y.
+   */
+  override def t_=(s: Double) { y = s }
 
   
   def *=(s: Double) { x *= s; y *= s }
@@ -175,24 +212,14 @@ extends AnyVec2d with Mutable with Implicits[On] with Composite
   }
 
   // Swizzling
-  override def xy: ConstVec2d = new ConstVec2d(x, y)
-  override def yx: ConstVec2d = new ConstVec2d(y, x)
+  override def xy_=(u: inVec2d) { x = u.x; y = u.y }
+  override def yx_=(u: inVec2d) { var t = u.y; y = u.x; x = t }
 
-  override def rg = xy
-  override def gr = yx
+  override def rg_=(u: inVec2d) { xy_=(u) }
+  override def gr_=(u: inVec2d) { yx_=(u) }
 
-  override def st = xy
-  override def ts = yx
-
-
-  def xy_=(u: inVec2d) { x = u.x; y = u.y }
-  def yx_=(u: inVec2d) { var t = u.y; y = u.x; x = t }
-
-  def rg_=(u: inVec2d) { xy_=(u) }
-  def gr_=(u: inVec2d) { yx_=(u) }
-
-  def st_=(u: inVec2d) { xy_=(u) }
-  def ts_=(u: inVec2d) { yx_=(u) }
+  override def st_=(u: inVec2d) { xy_=(u) }
+  override def ts_=(u: inVec2d) { yx_=(u) }
 }
 
 object Vec2d {

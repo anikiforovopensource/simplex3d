@@ -29,13 +29,31 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x4f extends Read3x4[Float]
+sealed abstract class AnyMat3x4f extends ProtectedMat3x4f[Float]
 {
   // Column major order.
-  def m00: Float; def m10: Float; def m20: Float // column
-  def m01: Float; def m11: Float; def m21: Float // column
-  def m02: Float; def m12: Float; def m22: Float // column
-  def m03: Float; def m13: Float; def m23: Float // column
+  final def m00= p00; final def m10= p10; final def m20= p20
+  final def m01= p01; final def m11= p11; final def m21= p21
+  final def m02= p02; final def m12= p12; final def m22= p22
+  final def m03= p03; final def m13= p13; final def m23= p23
+
+
+  protected def m00_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m10_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m20_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m01_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m21_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m02_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m12_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m22_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m03_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m13_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m23_=(s: Float) { throw new UnsupportedOperationException }
+
 
   private[math] final override def f00 = m00
   private[math] final override def f10 = m10
@@ -348,11 +366,17 @@ sealed abstract class AnyMat3x4f extends Read3x4[Float]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat3x4f private[math] (
-  val m00: Float, val m10: Float, val m20: Float,
-  val m01: Float, val m11: Float, val m21: Float,
-  val m02: Float, val m12: Float, val m22: Float,
-  val m03: Float, val m13: Float, val m23: Float
+  c00: Float, c10: Float, c20: Float,
+  c01: Float, c11: Float, c21: Float,
+  c02: Float, c12: Float, c22: Float,
+  c03: Float, c13: Float, c23: Float
 ) extends AnyMat3x4f with Immutable
+{
+  p00 = c00; p10 = c10; p20 = c20
+  p01 = c01; p11 = c11; p21 = c21
+  p02 = c02; p12 = c12; p22 = c22
+  p03 = c03; p13 = c13; p23 = c23
+}
 
 object ConstMat3x4f {
   def apply(s: Float) = new ConstMat3x4f(
@@ -395,12 +419,35 @@ object ConstMat3x4f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Mat3x4f private[math] (
-  var m00: Float, var m10: Float, var m20: Float,
-  var m01: Float, var m11: Float, var m21: Float,
-  var m02: Float, var m12: Float, var m22: Float,
-  var m03: Float, var m13: Float, var m23: Float
+  c00: Float, c10: Float, c20: Float,
+  c01: Float, c11: Float, c21: Float,
+  c02: Float, c12: Float, c22: Float,
+  c03: Float, c13: Float, c23: Float
 ) extends AnyMat3x4f with Mutable with Implicits[On] with Composite
 {
+  p00 = c00; p10 = c10; p20 = c20
+  p01 = c01; p11 = c11; p21 = c21
+  p02 = c02; p12 = c12; p22 = c22
+  p03 = c03; p13 = c13; p23 = c23
+
+
+  override def m00_=(s: Float) { p00 = s }
+  override def m10_=(s: Float) { p10 = s }
+  override def m20_=(s: Float) { p20 = s }
+
+  override def m01_=(s: Float) { p01 = s }
+  override def m11_=(s: Float) { p11 = s }
+  override def m21_=(s: Float) { p21 = s }
+
+  override def m02_=(s: Float) { p02 = s }
+  override def m12_=(s: Float) { p12 = s }
+  override def m22_=(s: Float) { p22 = s }
+
+  override def m03_=(s: Float) { p03 = s }
+  override def m13_=(s: Float) { p13 = s }
+  override def m23_=(s: Float) { p23 = s }
+
+
   type Element = AnyMat3x4f
   type Component = Float1
 

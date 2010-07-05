@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4d extends Read4[Double] {
+sealed abstract class AnyVec4d extends ProtectedVec4d[Double] {
 
-  private[math] type R2 = ConstVec2d
-  private[math] type R3 = ConstVec3d
-  private[math] type R4 = ConstVec4d
+  private[math] type R2 = AnyVec2d
+  private[math] type R3 = AnyVec3d
+  private[math] type R4 = AnyVec4d
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
@@ -62,20 +62,67 @@ sealed abstract class AnyVec4d extends Read4[Double] {
   private[math] final def dw: Double = w
 
 
-  def x: Double
-  def y: Double
-  def z: Double
-  def w: Double
+  final def x = px
+  final def y = py
+  final def z = pz
+  final def w = pw
 
-  def r = x
-  def g = y
-  def b = z
-  def a = w
+  /** Alias for x.
+   * @return component x.
+   */
+  final def r = x
 
-  def s = x
-  def t = y
-  def p = z
-  def q = w
+  /** Alias for y.
+   * @return component y.
+   */
+  final def g = y
+
+  /** Alias for z.
+   * @return component z.
+   */
+  final def b = z
+
+  /** Alias for w.
+   * @return component w.
+   */
+  final def a = w
+
+
+  /** Alias for x.
+   * @return component x.
+   */
+  final def s = x
+
+  /** Alias for y.
+   * @return component y.
+   */
+  final def t = y
+
+  /** Alias for z.
+   * @return component z.
+   */
+  final def p = z
+
+  /** Alias for w.
+   * @return component w.
+   */
+  final def q = w
+
+
+  protected def x_=(s: Double) { throw new UnsupportedOperationException }
+  protected def y_=(s: Double) { throw new UnsupportedOperationException }
+  protected def z_=(s: Double) { throw new UnsupportedOperationException }
+  protected def w_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def r_=(s: Double) { throw new UnsupportedOperationException }
+  protected def g_=(s: Double) { throw new UnsupportedOperationException }
+  protected def b_=(s: Double) { throw new UnsupportedOperationException }
+  protected def a_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def s_=(s: Double) { throw new UnsupportedOperationException }
+  protected def t_=(s: Double) { throw new UnsupportedOperationException }
+  protected def p_=(s: Double) { throw new UnsupportedOperationException }
+  protected def q_=(s: Double) { throw new UnsupportedOperationException }
   
 
   final def apply(i: Int) :Double = {
@@ -139,8 +186,10 @@ sealed abstract class AnyVec4d extends Read4[Double] {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec4d private[math] (
-  val x: Double, val y: Double, val z: Double, val w: Double
-) extends AnyVec4d with Immutable
+  cx: Double, cy: Double, cz: Double, cw: Double
+) extends AnyVec4d with Immutable {
+  px = cx; py = cy; pz = cz; pw = cw
+}
 
 object ConstVec4d {
   def apply(s: Double) = new ConstVec4d(s, s, s, s)
@@ -180,31 +229,51 @@ object ConstVec4d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4d private[math] (
-  var x: Double, var y: Double, var z: Double, var w: Double
+  cx: Double, cy: Double, cz: Double, cw: Double
 ) extends AnyVec4d with Mutable with Implicits[On] with Composite
 {
   type Element = AnyVec4d
   type Component = Double1
 
-  override def r = x
-  override def g = y
-  override def b = z
-  override def a = w
+  px = cx; py = cy; pz = cz; pw = cw
 
-  override def s = x
-  override def t = y
-  override def p = z
-  override def q = w
+  override def x_=(s: Double) { px = s }
+  override def y_=(s: Double) { py = s }
+  override def z_=(s: Double) { pz = s }
+  override def w_=(s: Double) { pw = s }
 
-  def r_=(r: Double) { x = r }
-  def g_=(g: Double) { y = g }
-  def b_=(b: Double) { z = b }
-  def a_=(a: Double) { w = a }
+  /** Alias for x.
+   */
+  override def r_=(s: Double) { x = s }
 
-  def s_=(s: Double) { x = s }
-  def t_=(t: Double) { y = t }
-  def p_=(p: Double) { z = p }
-  def q_=(q: Double) { w = q }
+  /** Alias for y.
+   */
+  override def g_=(s: Double) { y = s }
+
+  /** Alias for z.
+   */
+  override def b_=(s: Double) { z = s }
+
+  /** Alias for w.
+   */
+  override def a_=(s: Double) { w = s }
+
+
+  /** Alias for x.
+   */
+  override def s_=(s: Double) { x = s }
+
+  /** Alias for y.
+   */
+  override def t_=(s: Double) { y = s }
+
+  /** Alias for z.
+   */
+  override def p_=(s: Double) { z = s }
+
+  /** Alias for w.
+   */
+  override def q_=(s: Double) { w = s }
 
 
   def *=(s: Double) { x *= s; y *= s; z *= s; w *= s }
@@ -238,384 +307,194 @@ final class Vec4d private[math] (
   }
 
   // Swizzling
-  override def xy: ConstVec2d = new ConstVec2d(x, y)
-  override def xz: ConstVec2d = new ConstVec2d(x, z)
-  override def xw: ConstVec2d = new ConstVec2d(x, w)
-  override def yx: ConstVec2d = new ConstVec2d(y, x)
-  override def yz: ConstVec2d = new ConstVec2d(y, z)
-  override def yw: ConstVec2d = new ConstVec2d(y, w)
-  override def zx: ConstVec2d = new ConstVec2d(z, x)
-  override def zy: ConstVec2d = new ConstVec2d(z, y)
-  override def zw: ConstVec2d = new ConstVec2d(z, w)
-  override def wx: ConstVec2d = new ConstVec2d(w, x)
-  override def wy: ConstVec2d = new ConstVec2d(w, y)
-  override def wz: ConstVec2d = new ConstVec2d(w, z)
+  override def xy_=(u: inVec2d) { x = u.x; y = u.y }
+  override def xz_=(u: inVec2d) { x = u.x; z = u.y }
+  override def xw_=(u: inVec2d) { x = u.x; w = u.y }
+  override def yx_=(u: inVec2d) { y = u.x; x = u.y }
+  override def yz_=(u: inVec2d) { y = u.x; z = u.y }
+  override def yw_=(u: inVec2d) { y = u.x; w = u.y }
+  override def zx_=(u: inVec2d) { z = u.x; x = u.y }
+  override def zy_=(u: inVec2d) { z = u.x; y = u.y }
+  override def zw_=(u: inVec2d) { z = u.x; w = u.y }
+  override def wx_=(u: inVec2d) { w = u.x; x = u.y }
+  override def wy_=(u: inVec2d) { w = u.x; y = u.y }
+  override def wz_=(u: inVec2d) { w = u.x; z = u.y }
 
-  override def xyz: ConstVec3d = new ConstVec3d(x, y, z)
-  override def xyw: ConstVec3d = new ConstVec3d(x, y, w)
-  override def xzy: ConstVec3d = new ConstVec3d(x, z, y)
-  override def xzw: ConstVec3d = new ConstVec3d(x, z, w)
-  override def xwy: ConstVec3d = new ConstVec3d(x, w, y)
-  override def xwz: ConstVec3d = new ConstVec3d(x, w, z)
-  override def yxz: ConstVec3d = new ConstVec3d(y, x, z)
-  override def yxw: ConstVec3d = new ConstVec3d(y, x, w)
-  override def yzx: ConstVec3d = new ConstVec3d(y, z, x)
-  override def yzw: ConstVec3d = new ConstVec3d(y, z, w)
-  override def ywx: ConstVec3d = new ConstVec3d(y, w, x)
-  override def ywz: ConstVec3d = new ConstVec3d(y, w, z)
-  override def zxy: ConstVec3d = new ConstVec3d(z, x, y)
-  override def zxw: ConstVec3d = new ConstVec3d(z, x, w)
-  override def zyx: ConstVec3d = new ConstVec3d(z, y, x)
-  override def zyw: ConstVec3d = new ConstVec3d(z, y, w)
-  override def zwx: ConstVec3d = new ConstVec3d(z, w, x)
-  override def zwy: ConstVec3d = new ConstVec3d(z, w, y)
-  override def wxy: ConstVec3d = new ConstVec3d(w, x, y)
-  override def wxz: ConstVec3d = new ConstVec3d(w, x, z)
-  override def wyx: ConstVec3d = new ConstVec3d(w, y, x)
-  override def wyz: ConstVec3d = new ConstVec3d(w, y, z)
-  override def wzx: ConstVec3d = new ConstVec3d(w, z, x)
-  override def wzy: ConstVec3d = new ConstVec3d(w, z, y)
+  override def xyz_=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+  override def xyw_=(u: inVec3d) { x = u.x; y = u.y; w = u.z }
+  override def xzy_=(u: inVec3d) { x = u.x; z = u.y; y = u.z }
+  override def xzw_=(u: inVec3d) { x = u.x; z = u.y; w = u.z }
+  override def xwy_=(u: inVec3d) { x = u.x; w = u.y; y = u.z }
+  override def xwz_=(u: inVec3d) { x = u.x; w = u.y; z = u.z }
+  override def yxz_=(u: inVec3d) { y = u.x; x = u.y; z = u.z }
+  override def yxw_=(u: inVec3d) { y = u.x; x = u.y; w = u.z }
+  override def yzx_=(u: inVec3d) { y = u.x; z = u.y; x = u.z }
+  override def yzw_=(u: inVec3d) { y = u.x; z = u.y; w = u.z }
+  override def ywx_=(u: inVec3d) { y = u.x; w = u.y; x = u.z }
+  override def ywz_=(u: inVec3d) { y = u.x; w = u.y; z = u.z }
+  override def zxy_=(u: inVec3d) { z = u.x; x = u.y; y = u.z }
+  override def zxw_=(u: inVec3d) { z = u.x; x = u.y; w = u.z }
+  override def zyx_=(u: inVec3d) { z = u.x; y = u.y; x = u.z }
+  override def zyw_=(u: inVec3d) { z = u.x; y = u.y; w = u.z }
+  override def zwx_=(u: inVec3d) { z = u.x; w = u.y; x = u.z }
+  override def zwy_=(u: inVec3d) { z = u.x; w = u.y; y = u.z }
+  override def wxy_=(u: inVec3d) { w = u.x; x = u.y; y = u.z }
+  override def wxz_=(u: inVec3d) { w = u.x; x = u.y; z = u.z }
+  override def wyx_=(u: inVec3d) { w = u.x; y = u.y; x = u.z }
+  override def wyz_=(u: inVec3d) { w = u.x; y = u.y; z = u.z }
+  override def wzx_=(u: inVec3d) { w = u.x; z = u.y; x = u.z }
+  override def wzy_=(u: inVec3d) { w = u.x; z = u.y; y = u.z }
 
-  override def xyzw: ConstVec4d = new ConstVec4d(x, y, z, w)
-  override def xywz: ConstVec4d = new ConstVec4d(x, y, w, z)
-  override def xzyw: ConstVec4d = new ConstVec4d(x, z, y, w)
-  override def xzwy: ConstVec4d = new ConstVec4d(x, z, w, y)
-  override def xwyz: ConstVec4d = new ConstVec4d(x, w, y, z)
-  override def xwzy: ConstVec4d = new ConstVec4d(x, w, z, y)
-  override def yxzw: ConstVec4d = new ConstVec4d(y, x, z, w)
-  override def yxwz: ConstVec4d = new ConstVec4d(y, x, w, z)
-  override def yzxw: ConstVec4d = new ConstVec4d(y, z, x, w)
-  override def yzwx: ConstVec4d = new ConstVec4d(y, z, w, x)
-  override def ywxz: ConstVec4d = new ConstVec4d(y, w, x, z)
-  override def ywzx: ConstVec4d = new ConstVec4d(y, w, z, x)
-  override def zxyw: ConstVec4d = new ConstVec4d(z, x, y, w)
-  override def zxwy: ConstVec4d = new ConstVec4d(z, x, w, y)
-  override def zyxw: ConstVec4d = new ConstVec4d(z, y, x, w)
-  override def zywx: ConstVec4d = new ConstVec4d(z, y, w, x)
-  override def zwxy: ConstVec4d = new ConstVec4d(z, w, x, y)
-  override def zwyx: ConstVec4d = new ConstVec4d(z, w, y, x)
-  override def wxyz: ConstVec4d = new ConstVec4d(w, x, y, z)
-  override def wxzy: ConstVec4d = new ConstVec4d(w, x, z, y)
-  override def wyxz: ConstVec4d = new ConstVec4d(w, y, x, z)
-  override def wyzx: ConstVec4d = new ConstVec4d(w, y, z, x)
-  override def wzxy: ConstVec4d = new ConstVec4d(w, z, x, y)
-  override def wzyx: ConstVec4d = new ConstVec4d(w, z, y, x)
+  override def xyzw_=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
+  override def xywz_=(u: inVec4d) { x = u.x; y = u.y; var t = u.w; w = u.z; z = t }
+  override def xzyw_=(u: inVec4d) { x = u.x; var t = u.z; z = u.y; y = t; w = u.w }
+  override def xzwy_=(u: inVec4d) { x = u.x; var t = u.z; z = u.y; y = u.w; w = t }
+  override def xwyz_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
+  override def xwzy_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
+  override def yxzw_=(u: inVec4d) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
+  override def yxwz_=(u: inVec4d) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z=t }
+  override def yzxw_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
+  override def yzwx_=(u: inVec4d) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
+  override def ywxz_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
+  override def ywzx_=(u: inVec4d) { var t = u.y; y = u.x; x = u.w; w = t; z = u.z }
+  override def zxyw_=(u: inVec4d) { var t = u.z; z = u.x; x = u.y; y = t; w = u.w }
+  override def zxwy_=(u: inVec4d) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
+  override def zyxw_=(u: inVec4d) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
+  override def zywx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
+  override def zwxy_=(u: inVec4d) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y=t }
+  override def zwyx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
+  override def wxyz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
+  override def wxzy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
+  override def wyxz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
+  override def wyzx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
+  override def wzxy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
+  override def wzyx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y=t }
 
-  override def rg = xy
-  override def rb = xz
-  override def ra = xw
-  override def gr = yx
-  override def gb = yz
-  override def ga = yw
-  override def br = zx
-  override def bg = zy
-  override def ba = zw
-  override def ar = wx
-  override def ag = wy
-  override def ab = wz
+  override def rg_=(u: inVec2d) { xy_=(u) }
+  override def rb_=(u: inVec2d) { xz_=(u) }
+  override def ra_=(u: inVec2d) { xw_=(u) }
+  override def gr_=(u: inVec2d) { yx_=(u) }
+  override def gb_=(u: inVec2d) { yz_=(u) }
+  override def ga_=(u: inVec2d) { yw_=(u) }
+  override def br_=(u: inVec2d) { zx_=(u) }
+  override def bg_=(u: inVec2d) { zy_=(u) }
+  override def ba_=(u: inVec2d) { zw_=(u) }
+  override def ar_=(u: inVec2d) { wx_=(u) }
+  override def ag_=(u: inVec2d) { wy_=(u) }
+  override def ab_=(u: inVec2d) { wz_=(u) }
 
-  override def rgb = xyz
-  override def rga = xyw
-  override def rbg = xzy
-  override def rba = xzw
-  override def rag = xwy
-  override def rab = xwz
-  override def grb = yxz
-  override def gra = yxw
-  override def gbr = yzx
-  override def gba = yzw
-  override def gar = ywx
-  override def gab = ywz
-  override def brg = zxy
-  override def bra = zxw
-  override def bgr = zyx
-  override def bga = zyw
-  override def bar = zwx
-  override def bag = zwy
-  override def arg = wxy
-  override def arb = wxz
-  override def agr = wyx
-  override def agb = wyz
-  override def abr = wzx
-  override def abg = wzy
+  override def rgb_=(u: inVec3d) { xyz_=(u) }
+  override def rga_=(u: inVec3d) { xyw_=(u) }
+  override def rbg_=(u: inVec3d) { xzy_=(u) }
+  override def rba_=(u: inVec3d) { xzw_=(u) }
+  override def rag_=(u: inVec3d) { xwy_=(u) }
+  override def rab_=(u: inVec3d) { xwz_=(u) }
+  override def grb_=(u: inVec3d) { yxz_=(u) }
+  override def gra_=(u: inVec3d) { yxw_=(u) }
+  override def gbr_=(u: inVec3d) { yzx_=(u) }
+  override def gba_=(u: inVec3d) { yzw_=(u) }
+  override def gar_=(u: inVec3d) { ywx_=(u) }
+  override def gab_=(u: inVec3d) { ywz_=(u) }
+  override def brg_=(u: inVec3d) { zxy_=(u) }
+  override def bra_=(u: inVec3d) { zxw_=(u) }
+  override def bgr_=(u: inVec3d) { zyx_=(u) }
+  override def bga_=(u: inVec3d) { zyw_=(u) }
+  override def bar_=(u: inVec3d) { zwx_=(u) }
+  override def bag_=(u: inVec3d) { zwy_=(u) }
+  override def arg_=(u: inVec3d) { wxy_=(u) }
+  override def arb_=(u: inVec3d) { wxz_=(u) }
+  override def agr_=(u: inVec3d) { wyx_=(u) }
+  override def agb_=(u: inVec3d) { wyz_=(u) }
+  override def abr_=(u: inVec3d) { wzx_=(u) }
+  override def abg_=(u: inVec3d) { wzy_=(u) }
 
-  override def rgba = xyzw
-  override def rgab = xywz
-  override def rbga = xzyw
-  override def rbag = xzwy
-  override def ragb = xwyz
-  override def rabg = xwzy
-  override def grba = yxzw
-  override def grab = yxwz
-  override def gbra = yzxw
-  override def gbar = yzwx
-  override def garb = ywxz
-  override def gabr = ywzx
-  override def brga = zxyw
-  override def brag = zxwy
-  override def bgra = zyxw
-  override def bgar = zywx
-  override def barg = zwxy
-  override def bagr = zwyx
-  override def argb = wxyz
-  override def arbg = wxzy
-  override def agrb = wyxz
-  override def agbr = wyzx
-  override def abrg = wzxy
-  override def abgr = wzyx
+  override def rgba_=(u: inVec4d) { xyzw_=(u) }
+  override def rgab_=(u: inVec4d) { xywz_=(u) }
+  override def rbga_=(u: inVec4d) { xzyw_=(u) }
+  override def rbag_=(u: inVec4d) { xzwy_=(u) }
+  override def ragb_=(u: inVec4d) { xwyz_=(u) }
+  override def rabg_=(u: inVec4d) { xwzy_=(u) }
+  override def grba_=(u: inVec4d) { yxzw_=(u) }
+  override def grab_=(u: inVec4d) { yxwz_=(u) }
+  override def gbra_=(u: inVec4d) { yzxw_=(u) }
+  override def gbar_=(u: inVec4d) { yzwx_=(u) }
+  override def garb_=(u: inVec4d) { ywxz_=(u) }
+  override def gabr_=(u: inVec4d) { ywzx_=(u) }
+  override def brga_=(u: inVec4d) { zxyw_=(u) }
+  override def brag_=(u: inVec4d) { zxwy_=(u) }
+  override def bgra_=(u: inVec4d) { zyxw_=(u) }
+  override def bgar_=(u: inVec4d) { zywx_=(u) }
+  override def barg_=(u: inVec4d) { zwxy_=(u) }
+  override def bagr_=(u: inVec4d) { zwyx_=(u) }
+  override def argb_=(u: inVec4d) { wxyz_=(u) }
+  override def arbg_=(u: inVec4d) { wxzy_=(u) }
+  override def agrb_=(u: inVec4d) { wyxz_=(u) }
+  override def agbr_=(u: inVec4d) { wyzx_=(u) }
+  override def abrg_=(u: inVec4d) { wzxy_=(u) }
+  override def abgr_=(u: inVec4d) { wzyx_=(u) }
 
-  override def st = xy
-  override def sp = xz
-  override def sq = xw
-  override def ts = yx
-  override def tp = yz
-  override def tq = yw
-  override def ps = zx
-  override def pt = zy
-  override def pq = zw
-  override def qs = wx
-  override def qt = wy
-  override def qp = wz
+  override def st_=(u: inVec2d) { xy_=(u) }
+  override def sp_=(u: inVec2d) { xz_=(u) }
+  override def sq_=(u: inVec2d) { xw_=(u) }
+  override def ts_=(u: inVec2d) { yx_=(u) }
+  override def tp_=(u: inVec2d) { yz_=(u) }
+  override def tq_=(u: inVec2d) { yw_=(u) }
+  override def ps_=(u: inVec2d) { zx_=(u) }
+  override def pt_=(u: inVec2d) { zy_=(u) }
+  override def pq_=(u: inVec2d) { zw_=(u) }
+  override def qs_=(u: inVec2d) { wx_=(u) }
+  override def qt_=(u: inVec2d) { wy_=(u) }
+  override def qp_=(u: inVec2d) { wz_=(u) }
 
-  override def stp = xyz
-  override def stq = xyw
-  override def spt = xzy
-  override def spq = xzw
-  override def sqt = xwy
-  override def sqp = xwz
-  override def tsp = yxz
-  override def tsq = yxw
-  override def tps = yzx
-  override def tpq = yzw
-  override def tqs = ywx
-  override def tqp = ywz
-  override def pst = zxy
-  override def psq = zxw
-  override def pts = zyx
-  override def ptq = zyw
-  override def pqs = zwx
-  override def pqt = zwy
-  override def qst = wxy
-  override def qsp = wxz
-  override def qts = wyx
-  override def qtp = wyz
-  override def qps = wzx
-  override def qpt = wzy
+  override def stp_=(u: inVec3d) { xyz_=(u) }
+  override def stq_=(u: inVec3d) { xyw_=(u) }
+  override def spt_=(u: inVec3d) { xzy_=(u) }
+  override def spq_=(u: inVec3d) { xzw_=(u) }
+  override def sqt_=(u: inVec3d) { xwy_=(u) }
+  override def sqp_=(u: inVec3d) { xwz_=(u) }
+  override def tsp_=(u: inVec3d) { yxz_=(u) }
+  override def tsq_=(u: inVec3d) { yxw_=(u) }
+  override def tps_=(u: inVec3d) { yzx_=(u) }
+  override def tpq_=(u: inVec3d) { yzw_=(u) }
+  override def tqs_=(u: inVec3d) { ywx_=(u) }
+  override def tqp_=(u: inVec3d) { ywz_=(u) }
+  override def pst_=(u: inVec3d) { zxy_=(u) }
+  override def psq_=(u: inVec3d) { zxw_=(u) }
+  override def pts_=(u: inVec3d) { zyx_=(u) }
+  override def ptq_=(u: inVec3d) { zyw_=(u) }
+  override def pqs_=(u: inVec3d) { zwx_=(u) }
+  override def pqt_=(u: inVec3d) { zwy_=(u) }
+  override def qst_=(u: inVec3d) { wxy_=(u) }
+  override def qsp_=(u: inVec3d) { wxz_=(u) }
+  override def qts_=(u: inVec3d) { wyx_=(u) }
+  override def qtp_=(u: inVec3d) { wyz_=(u) }
+  override def qps_=(u: inVec3d) { wzx_=(u) }
+  override def qpt_=(u: inVec3d) { wzy_=(u) }
 
-  override def stpq = xyzw
-  override def stqp = xywz
-  override def sptq = xzyw
-  override def spqt = xzwy
-  override def sqtp = xwyz
-  override def sqpt = xwzy
-  override def tspq = yxzw
-  override def tsqp = yxwz
-  override def tpsq = yzxw
-  override def tpqs = yzwx
-  override def tqsp = ywxz
-  override def tqps = ywzx
-  override def pstq = zxyw
-  override def psqt = zxwy
-  override def ptsq = zyxw
-  override def ptqs = zywx
-  override def pqst = zwxy
-  override def pqts = zwyx
-  override def qstp = wxyz
-  override def qspt = wxzy
-  override def qtsp = wyxz
-  override def qtps = wyzx
-  override def qpst = wzxy
-  override def qpts = wzyx
-
-  
-  def xy_=(u: inVec2d) { x = u.x; y = u.y }
-  def xz_=(u: inVec2d) { x = u.x; z = u.y }
-  def xw_=(u: inVec2d) { x = u.x; w = u.y }
-  def yx_=(u: inVec2d) { y = u.x; x = u.y }
-  def yz_=(u: inVec2d) { y = u.x; z = u.y }
-  def yw_=(u: inVec2d) { y = u.x; w = u.y }
-  def zx_=(u: inVec2d) { z = u.x; x = u.y }
-  def zy_=(u: inVec2d) { z = u.x; y = u.y }
-  def zw_=(u: inVec2d) { z = u.x; w = u.y }
-  def wx_=(u: inVec2d) { w = u.x; x = u.y }
-  def wy_=(u: inVec2d) { w = u.x; y = u.y }
-  def wz_=(u: inVec2d) { w = u.x; z = u.y }
-
-  def xyz_=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
-  def xyw_=(u: inVec3d) { x = u.x; y = u.y; w = u.z }
-  def xzy_=(u: inVec3d) { x = u.x; z = u.y; y = u.z }
-  def xzw_=(u: inVec3d) { x = u.x; z = u.y; w = u.z }
-  def xwy_=(u: inVec3d) { x = u.x; w = u.y; y = u.z }
-  def xwz_=(u: inVec3d) { x = u.x; w = u.y; z = u.z }
-  def yxz_=(u: inVec3d) { y = u.x; x = u.y; z = u.z }
-  def yxw_=(u: inVec3d) { y = u.x; x = u.y; w = u.z }
-  def yzx_=(u: inVec3d) { y = u.x; z = u.y; x = u.z }
-  def yzw_=(u: inVec3d) { y = u.x; z = u.y; w = u.z }
-  def ywx_=(u: inVec3d) { y = u.x; w = u.y; x = u.z }
-  def ywz_=(u: inVec3d) { y = u.x; w = u.y; z = u.z }
-  def zxy_=(u: inVec3d) { z = u.x; x = u.y; y = u.z }
-  def zxw_=(u: inVec3d) { z = u.x; x = u.y; w = u.z }
-  def zyx_=(u: inVec3d) { z = u.x; y = u.y; x = u.z }
-  def zyw_=(u: inVec3d) { z = u.x; y = u.y; w = u.z }
-  def zwx_=(u: inVec3d) { z = u.x; w = u.y; x = u.z }
-  def zwy_=(u: inVec3d) { z = u.x; w = u.y; y = u.z }
-  def wxy_=(u: inVec3d) { w = u.x; x = u.y; y = u.z }
-  def wxz_=(u: inVec3d) { w = u.x; x = u.y; z = u.z }
-  def wyx_=(u: inVec3d) { w = u.x; y = u.y; x = u.z }
-  def wyz_=(u: inVec3d) { w = u.x; y = u.y; z = u.z }
-  def wzx_=(u: inVec3d) { w = u.x; z = u.y; x = u.z }
-  def wzy_=(u: inVec3d) { w = u.x; z = u.y; y = u.z }
-
-  def xyzw_=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
-  def xywz_=(u: inVec4d) { x = u.x; y = u.y; var t = u.w; w = u.z; z = t }
-  def xzyw_=(u: inVec4d) { x = u.x; var t = u.z; z = u.y; y = t; w = u.w }
-  def xzwy_=(u: inVec4d) { x = u.x; var t = u.z; z = u.y; y = u.w; w = t }
-  def xwyz_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
-  def xwzy_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
-  def yxzw_=(u: inVec4d) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
-  def yxwz_=(u: inVec4d) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z=t }
-  def yzxw_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
-  def yzwx_=(u: inVec4d) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
-  def ywxz_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
-  def ywzx_=(u: inVec4d) { var t = u.y; y = u.x; x = u.w; w = t; z = u.z }
-  def zxyw_=(u: inVec4d) { var t = u.z; z = u.x; x = u.y; y = t; w = u.w }
-  def zxwy_=(u: inVec4d) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
-  def zyxw_=(u: inVec4d) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
-  def zywx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
-  def zwxy_=(u: inVec4d) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y=t }
-  def zwyx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
-  def wxyz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
-  def wxzy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
-  def wyxz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
-  def wyzx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
-  def wzxy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
-  def wzyx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y=t }
-
-  def rg_=(u: inVec2d) { xy_=(u) }
-  def rb_=(u: inVec2d) { xz_=(u) }
-  def ra_=(u: inVec2d) { xw_=(u) }
-  def gr_=(u: inVec2d) { yx_=(u) }
-  def gb_=(u: inVec2d) { yz_=(u) }
-  def ga_=(u: inVec2d) { yw_=(u) }
-  def br_=(u: inVec2d) { zx_=(u) }
-  def bg_=(u: inVec2d) { zy_=(u) }
-  def ba_=(u: inVec2d) { zw_=(u) }
-  def ar_=(u: inVec2d) { wx_=(u) }
-  def ag_=(u: inVec2d) { wy_=(u) }
-  def ab_=(u: inVec2d) { wz_=(u) }
-
-  def rgb_=(u: inVec3d) { xyz_=(u) }
-  def rga_=(u: inVec3d) { xyw_=(u) }
-  def rbg_=(u: inVec3d) { xzy_=(u) }
-  def rba_=(u: inVec3d) { xzw_=(u) }
-  def rag_=(u: inVec3d) { xwy_=(u) }
-  def rab_=(u: inVec3d) { xwz_=(u) }
-  def grb_=(u: inVec3d) { yxz_=(u) }
-  def gra_=(u: inVec3d) { yxw_=(u) }
-  def gbr_=(u: inVec3d) { yzx_=(u) }
-  def gba_=(u: inVec3d) { yzw_=(u) }
-  def gar_=(u: inVec3d) { ywx_=(u) }
-  def gab_=(u: inVec3d) { ywz_=(u) }
-  def brg_=(u: inVec3d) { zxy_=(u) }
-  def bra_=(u: inVec3d) { zxw_=(u) }
-  def bgr_=(u: inVec3d) { zyx_=(u) }
-  def bga_=(u: inVec3d) { zyw_=(u) }
-  def bar_=(u: inVec3d) { zwx_=(u) }
-  def bag_=(u: inVec3d) { zwy_=(u) }
-  def arg_=(u: inVec3d) { wxy_=(u) }
-  def arb_=(u: inVec3d) { wxz_=(u) }
-  def agr_=(u: inVec3d) { wyx_=(u) }
-  def agb_=(u: inVec3d) { wyz_=(u) }
-  def abr_=(u: inVec3d) { wzx_=(u) }
-  def abg_=(u: inVec3d) { wzy_=(u) }
-
-  def rgba_=(u: inVec4d) { xyzw_=(u) }
-  def rgab_=(u: inVec4d) { xywz_=(u) }
-  def rbga_=(u: inVec4d) { xzyw_=(u) }
-  def rbag_=(u: inVec4d) { xzwy_=(u) }
-  def ragb_=(u: inVec4d) { xwyz_=(u) }
-  def rabg_=(u: inVec4d) { xwzy_=(u) }
-  def grba_=(u: inVec4d) { yxzw_=(u) }
-  def grab_=(u: inVec4d) { yxwz_=(u) }
-  def gbra_=(u: inVec4d) { yzxw_=(u) }
-  def gbar_=(u: inVec4d) { yzwx_=(u) }
-  def garb_=(u: inVec4d) { ywxz_=(u) }
-  def gabr_=(u: inVec4d) { ywzx_=(u) }
-  def brga_=(u: inVec4d) { zxyw_=(u) }
-  def brag_=(u: inVec4d) { zxwy_=(u) }
-  def bgra_=(u: inVec4d) { zyxw_=(u) }
-  def bgar_=(u: inVec4d) { zywx_=(u) }
-  def barg_=(u: inVec4d) { zwxy_=(u) }
-  def bagr_=(u: inVec4d) { zwyx_=(u) }
-  def argb_=(u: inVec4d) { wxyz_=(u) }
-  def arbg_=(u: inVec4d) { wxzy_=(u) }
-  def agrb_=(u: inVec4d) { wyxz_=(u) }
-  def agbr_=(u: inVec4d) { wyzx_=(u) }
-  def abrg_=(u: inVec4d) { wzxy_=(u) }
-  def abgr_=(u: inVec4d) { wzyx_=(u) }
-
-  def st_=(u: inVec2d) { xy_=(u) }
-  def sp_=(u: inVec2d) { xz_=(u) }
-  def sq_=(u: inVec2d) { xw_=(u) }
-  def ts_=(u: inVec2d) { yx_=(u) }
-  def tp_=(u: inVec2d) { yz_=(u) }
-  def tq_=(u: inVec2d) { yw_=(u) }
-  def ps_=(u: inVec2d) { zx_=(u) }
-  def pt_=(u: inVec2d) { zy_=(u) }
-  def pq_=(u: inVec2d) { zw_=(u) }
-  def qs_=(u: inVec2d) { wx_=(u) }
-  def qt_=(u: inVec2d) { wy_=(u) }
-  def qp_=(u: inVec2d) { wz_=(u) }
-
-  def stp_=(u: inVec3d) { xyz_=(u) }
-  def stq_=(u: inVec3d) { xyw_=(u) }
-  def spt_=(u: inVec3d) { xzy_=(u) }
-  def spq_=(u: inVec3d) { xzw_=(u) }
-  def sqt_=(u: inVec3d) { xwy_=(u) }
-  def sqp_=(u: inVec3d) { xwz_=(u) }
-  def tsp_=(u: inVec3d) { yxz_=(u) }
-  def tsq_=(u: inVec3d) { yxw_=(u) }
-  def tps_=(u: inVec3d) { yzx_=(u) }
-  def tpq_=(u: inVec3d) { yzw_=(u) }
-  def tqs_=(u: inVec3d) { ywx_=(u) }
-  def tqp_=(u: inVec3d) { ywz_=(u) }
-  def pst_=(u: inVec3d) { zxy_=(u) }
-  def psq_=(u: inVec3d) { zxw_=(u) }
-  def pts_=(u: inVec3d) { zyx_=(u) }
-  def ptq_=(u: inVec3d) { zyw_=(u) }
-  def pqs_=(u: inVec3d) { zwx_=(u) }
-  def pqt_=(u: inVec3d) { zwy_=(u) }
-  def qst_=(u: inVec3d) { wxy_=(u) }
-  def qsp_=(u: inVec3d) { wxz_=(u) }
-  def qts_=(u: inVec3d) { wyx_=(u) }
-  def qtp_=(u: inVec3d) { wyz_=(u) }
-  def qps_=(u: inVec3d) { wzx_=(u) }
-  def qpt_=(u: inVec3d) { wzy_=(u) }
-
-  def stpq_=(u: inVec4d) { xyzw_=(u) }
-  def stqp_=(u: inVec4d) { xywz_=(u) }
-  def sptq_=(u: inVec4d) { xzyw_=(u) }
-  def spqt_=(u: inVec4d) { xzwy_=(u) }
-  def sqtp_=(u: inVec4d) { xwyz_=(u) }
-  def sqpt_=(u: inVec4d) { xwzy_=(u) }
-  def tspq_=(u: inVec4d) { yxzw_=(u) }
-  def tsqp_=(u: inVec4d) { yxwz_=(u) }
-  def tpsq_=(u: inVec4d) { yzxw_=(u) }
-  def tpqs_=(u: inVec4d) { yzwx_=(u) }
-  def tqsp_=(u: inVec4d) { ywxz_=(u) }
-  def tqps_=(u: inVec4d) { ywzx_=(u) }
-  def pstq_=(u: inVec4d) { zxyw_=(u) }
-  def psqt_=(u: inVec4d) { zxwy_=(u) }
-  def ptsq_=(u: inVec4d) { zyxw_=(u) }
-  def ptqs_=(u: inVec4d) { zywx_=(u) }
-  def pqst_=(u: inVec4d) { zwxy_=(u) }
-  def pqts_=(u: inVec4d) { zwyx_=(u) }
-  def qstp_=(u: inVec4d) { wxyz_=(u) }
-  def qspt_=(u: inVec4d) { wxzy_=(u) }
-  def qtsp_=(u: inVec4d) { wyxz_=(u) }
-  def qtps_=(u: inVec4d) { wyzx_=(u) }
-  def qpst_=(u: inVec4d) { wzxy_=(u) }
-  def qpts_=(u: inVec4d) { wzyx_=(u) }
+  override def stpq_=(u: inVec4d) { xyzw_=(u) }
+  override def stqp_=(u: inVec4d) { xywz_=(u) }
+  override def sptq_=(u: inVec4d) { xzyw_=(u) }
+  override def spqt_=(u: inVec4d) { xzwy_=(u) }
+  override def sqtp_=(u: inVec4d) { xwyz_=(u) }
+  override def sqpt_=(u: inVec4d) { xwzy_=(u) }
+  override def tspq_=(u: inVec4d) { yxzw_=(u) }
+  override def tsqp_=(u: inVec4d) { yxwz_=(u) }
+  override def tpsq_=(u: inVec4d) { yzxw_=(u) }
+  override def tpqs_=(u: inVec4d) { yzwx_=(u) }
+  override def tqsp_=(u: inVec4d) { ywxz_=(u) }
+  override def tqps_=(u: inVec4d) { ywzx_=(u) }
+  override def pstq_=(u: inVec4d) { zxyw_=(u) }
+  override def psqt_=(u: inVec4d) { zxwy_=(u) }
+  override def ptsq_=(u: inVec4d) { zyxw_=(u) }
+  override def ptqs_=(u: inVec4d) { zywx_=(u) }
+  override def pqst_=(u: inVec4d) { zwxy_=(u) }
+  override def pqts_=(u: inVec4d) { zwyx_=(u) }
+  override def qstp_=(u: inVec4d) { wxyz_=(u) }
+  override def qspt_=(u: inVec4d) { wxzy_=(u) }
+  override def qtsp_=(u: inVec4d) { wyxz_=(u) }
+  override def qtps_=(u: inVec4d) { wyzx_=(u) }
+  override def qpst_=(u: inVec4d) { wzxy_=(u) }
+  override def qpts_=(u: inVec4d) { wzyx_=(u) }
 }
 
 object Vec4d {

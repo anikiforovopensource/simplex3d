@@ -29,7 +29,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f extends ReadQ[Float] {
+sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float] {
 
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
@@ -41,10 +41,18 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
   private[math] final def dc: Double = c
   private[math] final def dd: Double = d
 
-  def a: Float
-  def b: Float
-  def c: Float
-  def d: Float
+
+  final def a = pa
+  final def b = pb
+  final def c = pc
+  final def d = pd
+
+
+  protected def a_=(s: Float) { throw new UnsupportedOperationException }
+  protected def b_=(s: Float) { throw new UnsupportedOperationException }
+  protected def c_=(s: Float) { throw new UnsupportedOperationException }
+  protected def d_=(s: Float) { throw new UnsupportedOperationException }
+
 
   final def apply(i: Int) :Float = {
     i match {
@@ -129,8 +137,10 @@ sealed abstract class AnyQuat4f extends ReadQ[Float] {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4f private[math] (
-  val a: Float, val b: Float, val c: Float, val d: Float
-) extends AnyQuat4f with Immutable
+  ca: Float, cb: Float, cc: Float, cd: Float
+) extends AnyQuat4f with Immutable {
+  pa = ca; pb = cb; pc = cc; pd = cd
+}
 
 object ConstQuat4f {
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
@@ -145,11 +155,19 @@ object ConstQuat4f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
-  var a: Float, var b: Float, var c: Float, var d: Float
+  ca: Float, cb: Float, cc: Float, cd: Float
 ) extends AnyQuat4f with Mutable with Implicits[On] with Composite
 {
   type Element = AnyQuat4f
   type Component = Float1
+
+  pa = ca; pb = cb; pc = cc; pd = cd
+
+  override def a_=(s: Float) { pa = s }
+  override def b_=(s: Float) { pb = s }
+  override def c_=(s: Float) { pc = s }
+  override def d_=(s: Float) { pd = s }
+
 
   def *=(s: Float) { a *= s; b *= s; c *= s; d *= s }
   def /=(s: Float) { val inv = 1/s; a *= inv; b *= inv; c *= inv; d *= inv }

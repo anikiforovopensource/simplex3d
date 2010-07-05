@@ -29,11 +29,19 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2d extends Read2x2[Double]
+sealed abstract class AnyMat2d extends ProtectedMat2d[Double]
 {
   // Column major order.
-  def m00: Double; def m10: Double // column
-  def m01: Double; def m11: Double // column
+  final def m00= p00; final def m10= p10
+  final def m01= p01; final def m11= p11
+
+
+  protected def m00_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m10_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def m01_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Double) { throw new UnsupportedOperationException }
+
 
   private[math] final override def f00 = float(m00)
   private[math] final override def f10 = float(m10)
@@ -192,9 +200,13 @@ sealed abstract class AnyMat2d extends Read2x2[Double]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat2d private[math] (
-  val m00: Double, val m10: Double,
-  val m01: Double, val m11: Double
+  c00: Double, c10: Double,
+  c01: Double, c11: Double
 ) extends AnyMat2d with Immutable
+{
+  p00 = c00; p10 = c10
+  p01 = c01; p11 = c11
+}
 
 object ConstMat2d {
   def apply(s: Double) = new ConstMat2d(
@@ -232,10 +244,21 @@ object ConstMat2d {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Mat2d private[math] (
-  var m00: Double, var m10: Double,
-  var m01: Double, var m11: Double
+  c00: Double, c10: Double,
+  c01: Double, c11: Double
 ) extends AnyMat2d with Mutable with Implicits[On] with Composite
 {
+  p00 = c00; p10 = c10
+  p01 = c01; p11 = c11
+
+
+  override def m00_=(s: Double) { p00 = s }
+  override def m10_=(s: Double) { p10 = s }
+
+  override def m01_=(s: Double) { p01 = s }
+  override def m11_=(s: Double) { p11 = s }
+
+
   type Element = AnyMat2d
   type Component = Double1
 

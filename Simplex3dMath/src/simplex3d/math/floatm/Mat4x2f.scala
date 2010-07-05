@@ -29,11 +29,23 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x2f extends Read4x2[Float]
+sealed abstract class AnyMat4x2f extends ProtectedMat4x2f[Float]
 {
   // Column major order.
-  def m00: Float; def m10: Float; def m20: Float; def m30: Float // column
-  def m01: Float; def m11: Float; def m21: Float; def m31: Float // column
+  final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
+  final def m01= p01; final def m11= p11; final def m21= p21; final def m31= p31
+
+
+  protected def m00_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m10_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m20_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m30_=(s: Float) { throw new UnsupportedOperationException }
+
+  protected def m01_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m21_=(s: Float) { throw new UnsupportedOperationException }
+  protected def m31_=(s: Float) { throw new UnsupportedOperationException }
+
 
   private[math] final override def f00 = m00
   private[math] final override def f10 = m10
@@ -232,9 +244,13 @@ sealed abstract class AnyMat4x2f extends Read4x2[Float]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstMat4x2f private[math] (
-  val m00: Float, val m10: Float, val m20: Float, val m30: Float,
-  val m01: Float, val m11: Float, val m21: Float, val m31: Float
+  c00: Float, c10: Float, c20: Float, c30: Float,
+  c01: Float, c11: Float, c21: Float, c31: Float
 ) extends AnyMat4x2f with Immutable
+{
+  p00 = c00; p10 = c10; p20 = c20; p30 = c30
+  p01 = c01; p11 = c11; p21 = c21; p31 = c31
+}
 
 object ConstMat4x2f {
   def apply(s: Float) = new ConstMat4x2f(
@@ -267,10 +283,25 @@ object ConstMat4x2f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Mat4x2f private[math] (
-  var m00: Float, var m10: Float, var m20: Float, var m30: Float,
-  var m01: Float, var m11: Float, var m21: Float, var m31: Float
+  c00: Float, c10: Float, c20: Float, c30: Float,
+  c01: Float, c11: Float, c21: Float, c31: Float
 ) extends AnyMat4x2f with Mutable with Implicits[On] with Composite
 {
+  p00 = c00; p10 = c10; p20 = c20; p30 = c30
+  p01 = c01; p11 = c11; p21 = c21; p31 = c31
+
+
+  override def m00_=(s: Float) { p00 = s }
+  override def m10_=(s: Float) { p10 = s }
+  override def m20_=(s: Float) { p20 = s }
+  override def m30_=(s: Float) { p30 = s }
+
+  override def m01_=(s: Float) { p01 = s }
+  override def m11_=(s: Float) { p11 = s }
+  override def m21_=(s: Float) { p21 = s }
+  override def m31_=(s: Float) { p31 = s }
+
+
   type Element = AnyMat4x2f
   type Component = Float1
 

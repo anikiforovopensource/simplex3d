@@ -28,8 +28,9 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3i extends ProtectedVec3i[Int] {
-
+sealed abstract class AnyVec3i
+extends ProtectedVec3i[Int] with PropertyValue[AnyVec3i]
+{
   private[math] type R2 = AnyVec2i
   private[math] type R3 = AnyVec3i
   private[math] type R4 = AnyVec4i
@@ -150,6 +151,8 @@ sealed abstract class AnyVec3i extends ProtectedVec3i[Int] {
   final def |(u: inVec3i) = new Vec3i( x | u.x, y | u.y, z | u.z)
   final def ^(u: inVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
 
+  final def copyAsMutable() = Vec3i(this)
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec3i => x == u.x && y == u.y && z == u.z
@@ -193,7 +196,7 @@ object ConstVec3i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
-extends AnyVec3i with AssignValue[AnyVec3i] with Implicits[On] with Composite
+extends AnyVec3i with MutableObject[AnyVec3i] with Implicits[On] with Composite
 {
   type Element = AnyVec3i
   type Component = Int1

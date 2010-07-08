@@ -29,7 +29,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3d extends ProtectedMat3d[Double]
+sealed abstract class AnyMat3d
+extends ProtectedMat3d[Double] with PropertyValue[AnyMat3d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20
@@ -215,6 +216,8 @@ sealed abstract class AnyMat3d extends ProtectedMat3d[Double]
     m02*u.x + m12*u.y + m22*u.z
   )
 
+  final def copyAsMutable() = Mat3d(this)
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read3x3[_] =>
@@ -309,7 +312,7 @@ final class Mat3d private[math] (
   c01: Double, c11: Double, c21: Double,
   c02: Double, c12: Double, c22: Double
 ) extends AnyMat3d
-  with AssignValue[AnyMat3d] with Implicits[On] with Composite
+  with MutableObject[AnyMat3d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

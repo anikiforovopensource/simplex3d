@@ -29,8 +29,9 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double] {
-
+sealed abstract class AnyQuat4d
+extends ProtectedQuat4d[Double] with PropertyValue[AnyQuat4d]
+{
   private[math] final def fa: Float = float(a)
   private[math] final def fb: Float = float(b)
   private[math] final def fc: Float = float(c)
@@ -111,6 +112,8 @@ sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double] {
   final def rotateVector(u: inVec3d) :Vec3d =
     DoubleMath.rotateVector(u, normalize(this))
 
+  final def copyAsMutable() = Quat4d(this)
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
@@ -156,7 +159,7 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends AnyQuat4d
-  with AssignValue[AnyQuat4d] with Implicits[On] with Composite
+  with MutableObject[AnyQuat4d] with Implicits[On] with Composite
 {
   type Element = AnyQuat4d
   type Component = Double1

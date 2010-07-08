@@ -29,8 +29,9 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float] {
-
+sealed abstract class AnyQuat4f
+extends ProtectedQuat4f[Float] with PropertyValue[AnyQuat4f]
+{
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
   private[math] final def fc: Float = c
@@ -112,6 +113,8 @@ sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float] {
   final def rotateVector(u: inVec3f) :Vec3f =
     FloatMath.rotateVector(u, normalize(this))
 
+  final def copyAsMutable() = Quat4f(this)
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
@@ -157,7 +160,7 @@ object ConstQuat4f {
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 ) extends AnyQuat4f
-  with AssignValue[AnyQuat4f] with Implicits[On] with Composite
+  with MutableObject[AnyQuat4f] with Implicits[On] with Composite
 {
   type Element = AnyQuat4f
   type Component = Float1

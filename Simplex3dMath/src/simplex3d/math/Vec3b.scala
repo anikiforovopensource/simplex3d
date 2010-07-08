@@ -46,8 +46,9 @@ import simplex3d.math.types._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean] {
-
+sealed abstract class AnyVec3b
+extends ProtectedVec3b[Boolean] with PropertyValue[AnyVec3b]
+{
   private[math] type R2 = AnyVec2b
   private[math] type R3 = AnyVec3b
   private[math] type R4 = AnyVec4b
@@ -140,6 +141,8 @@ sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean] {
         )
     }
   }
+
+  final def copyAsMutable() = Vec3b(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -290,7 +293,7 @@ object ConstVec3b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends AnyVec3b with AssignValue[AnyVec3b] with Implicits[On]
+extends AnyVec3b with MutableObject[AnyVec3b] with Implicits[On]
 {
   px = cx; py = cy; pz = cz
 

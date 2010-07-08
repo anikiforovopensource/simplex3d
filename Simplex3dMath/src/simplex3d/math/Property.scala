@@ -21,11 +21,34 @@
 package simplex3d.math
 
 
-/** <code>AssignValue</code> is a trait for all mutable math objects.
- * It allows uniform treatment for all the objects with := operator.
- *
+/**
  * @author Aleksey Nikiforov (lex)
  */
-trait AssignValue[T] extends Mutable {
-  def :=(value: T) :Unit
+trait Property[@specialized(Boolean, Int, Float, Double) T] {
+  protected def value: MutableValue[T]
+
+  final def apply() = this.value.asReadInstance()
+  final def :=(value: T) {
+    preSet()
+    this.value := value
+    postSet()
+  }
+  final def updateWith(function: (T) => T) {
+    this := function(value.asReadInstance())
+  }
+
+  protected def preSet() {}
+  protected def postSet() {}
+
+  override def toString() :String = {
+    def cleanClassName() = {
+      val name = this.getClass.getSimpleName
+      val id = name.indexOf('$')
+      
+      if (id == 0) "AnonymousProperty"
+      else if (id > 0) name.substring(0, id)
+      else name
+    }
+    cleanClassName + "(" + value.toString + ")"
+  }
 }

@@ -21,6 +21,22 @@
 package simplex3d.math
 
 
+/** <code>MathObject</code> is a superclass of all the vectors, quaternions,
+ * and matrices.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+private[math] sealed abstract class MathObject
+
+/** <code>ReadVec</code> is a superclass of all the vectors.
+ * <p>
+ *   There are double, float, int, and boolean vectors.
+ * </p>
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+private[math] abstract class ReadVec[P] extends MathObject
+
 /** <code>Read2</code> is a superclass of all the 2-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
@@ -28,7 +44,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2[T] extends Swizzle2Read {
+private[math] abstract class Read2[P] extends Swizzle2Read[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
 
@@ -49,7 +65,7 @@ private[math] abstract class Read2[T] extends Swizzle2Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3[T] extends Swizzle3Read {
+private[math] abstract class Read3[P] extends Swizzle3Read[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean
@@ -74,7 +90,7 @@ private[math] abstract class Read3[T] extends Swizzle3Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4[T] extends Swizzle4Read {
+private[math] abstract class Read4[P] extends Swizzle4Read[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean
@@ -103,7 +119,7 @@ private[math] abstract class Read4[T] extends Swizzle4Read {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class ReadQ[T] {
+private[math] abstract class ReadQ[P] extends MathObject {
   private[math] def fa: Float
   private[math] def fb: Float
   private[math] def fc: Float
@@ -122,7 +138,7 @@ private[math] abstract class ReadQ[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class ReadMat[T] {
+private[math] abstract class ReadMat[P] extends MathObject {
   private[math] def f00: Float
   private[math] def f10: Float
   private[math] def f20: Float = 0
@@ -172,7 +188,7 @@ private[math] abstract class ReadMat[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x2[T] extends ReadMat[T]
+private[math] abstract class Read2x2[P] extends ReadMat[P]
 
 /** <code>Read2x3</code> is a superclass of all the 2x3 matrices.
  * <p>
@@ -181,7 +197,7 @@ private[math] abstract class Read2x2[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x3[T] extends ReadMat[T]
+private[math] abstract class Read2x3[P] extends ReadMat[P]
 
 /** <code>Read2x4</code> is a superclass of all the 2x4 matrices.
  * <p>
@@ -190,7 +206,7 @@ private[math] abstract class Read2x3[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read2x4[T] extends ReadMat[T]
+private[math] abstract class Read2x4[P] extends ReadMat[P]
 
 /** <code>Read3x2</code> is a superclass of all the 3x2 matrices.
  * <p>
@@ -199,7 +215,7 @@ private[math] abstract class Read2x4[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x2[T] extends ReadMat[T]
+private[math] abstract class Read3x2[P] extends ReadMat[P]
 
 /** <code>Read3x3</code> is a superclass of all the 3x3 matrices.
  * <p>
@@ -208,7 +224,7 @@ private[math] abstract class Read3x2[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x3[T] extends ReadMat[T]
+private[math] abstract class Read3x3[P] extends ReadMat[P]
 
 /** <code>Read3x4</code> is a superclass of all the 3x4 matrices.
  * <p>
@@ -217,7 +233,7 @@ private[math] abstract class Read3x3[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read3x4[T] extends ReadMat[T]
+private[math] abstract class Read3x4[P] extends ReadMat[P]
 
 /** <code>Read4x2</code> is a superclass of all the 4x2 matrices.
  * <p>
@@ -226,7 +242,7 @@ private[math] abstract class Read3x4[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x2[T] extends ReadMat[T]
+private[math] abstract class Read4x2[P] extends ReadMat[P]
 
 /** <code>Read4x3</code> is a superclass of all the 4x3 matrices.
  * <p>
@@ -235,7 +251,7 @@ private[math] abstract class Read4x2[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x3[T] extends ReadMat[T]
+private[math] abstract class Read4x3[P] extends ReadMat[P]
 
 /** <code>Read4x4</code> is a superclass of all the 4x4 matrices.
  * <p>
@@ -244,4 +260,4 @@ private[math] abstract class Read4x3[T] extends ReadMat[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Read4x4[T] extends ReadMat[T]
+private[math] abstract class Read4x4[P] extends ReadMat[P]

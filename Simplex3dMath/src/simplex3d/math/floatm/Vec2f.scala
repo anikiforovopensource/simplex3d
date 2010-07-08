@@ -28,8 +28,9 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2f extends ProtectedVec2f[Float] {
-
+sealed abstract class AnyVec2f
+extends ProtectedVec2f[Float] with PropertyValue[AnyVec2f]
+{
   private[math] type R2 = AnyVec2f
   private[math] type R3 = AnyVec3f
   private[math] type R4 = AnyVec4f
@@ -118,6 +119,8 @@ sealed abstract class AnyVec2f extends ProtectedVec2f[Float] {
   final def *(m: inMat2x3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat2x4f) :Vec4f = m.transposeMul(this)
 
+  final def copyAsMutable() = Vec2f(this)
+  
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec2b => false
@@ -157,7 +160,7 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends AnyVec2f with AssignValue[AnyVec2f] with Implicits[On] with Composite
+extends AnyVec2f with MutableObject[AnyVec2f] with Implicits[On] with Composite
 {
   type Element = AnyVec2f
   type Component = Float1

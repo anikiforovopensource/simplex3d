@@ -29,7 +29,8 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2x4f extends ProtectedMat2x4f[Float]
+sealed abstract class AnyMat2x4f
+extends ProtectedMat2x4f[Float] with PropertyValue[AnyMat2x4f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -218,6 +219,8 @@ sealed abstract class AnyMat2x4f extends ProtectedMat2x4f[Float]
     m03*u.x + m13*u.y
   )
 
+  final def copyAsMutable() = Mat2x4f(this)
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: Read2x4[_] =>
@@ -320,7 +323,7 @@ final class Mat2x4f private[math] (
   c02: Float, c12: Float,
   c03: Float, c13: Float
 ) extends AnyMat2x4f
-  with AssignValue[AnyMat2x4f] with Implicits[On] with Composite
+  with MutableObject[AnyMat2x4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

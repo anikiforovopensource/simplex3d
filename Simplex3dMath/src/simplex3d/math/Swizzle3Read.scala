@@ -26,7 +26,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (ledx)
  */
-private[math] abstract class Swizzle3Read extends Swizzle2Read {
+private[math] abstract class Swizzle3Read[P] extends Swizzle2Read[P] {
   
   private[math] def dz: Double
 

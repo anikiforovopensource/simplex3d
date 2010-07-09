@@ -21,6 +21,7 @@
 package bench.property
 
 import simplex3d.math._
+import simplex3d.math.floatm.renamed._
 
 
 /**
@@ -41,6 +42,7 @@ object PrimitivePropBench {
   val len = 400*1000*1000
 
   def testReadWrite() {
+    println("\nTesting...")
     var start = 0L
 
     start = System.currentTimeMillis
@@ -68,6 +70,7 @@ object PrimitivePropBench {
     System.gc()
     val genericReadWriteDTime = System.currentTimeMillis - start
 
+    println("\nResults:")
     println("Var Int r/w time: " + varReadWriteTime + ".")
     println("Spec Int r/w time: " + specReadWriteTime + ".")
     println("Generic Int r/w time: " + genericReadWriteTime + ".")
@@ -81,8 +84,7 @@ object PrimitivePropBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val c = p
-      p = c + (c | i)
+      p = p + i
 
       i += 1
     }
@@ -99,8 +101,7 @@ object PrimitivePropBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val c = p()
-      p := c + (c | i)
+      p := p() + i
 
       i += 1
     }
@@ -117,8 +118,7 @@ object PrimitivePropBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val c = p()
-      p := c + (c | i)
+      p := p() + i
 
       i += 1
     }
@@ -135,8 +135,7 @@ object PrimitivePropBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val c = p()
-      p := c + i
+      p := p() + i
 
       i += 1
     }
@@ -153,8 +152,7 @@ object PrimitivePropBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val c = p()
-      p := c + i
+      p := p() + i
 
       i += 1
     }
@@ -164,6 +162,7 @@ object PrimitivePropBench {
 
 
   def testUpdate() {
+    println("\nTesting...")
     var start = 0L
 
     start = System.currentTimeMillis
@@ -191,17 +190,18 @@ object PrimitivePropBench {
     System.gc()
     val genericUpdateDTime = System.currentTimeMillis - start
 
-    println("Var Int r/w time: " + varUpdateTime + ".")
-    println("Spec Int r/w time: " + specUpdateTime + ".")
-    println("Generic Int r/w time: " + genericUpdateTime + ".")
-    println("Spec Double r/w time: " + specUpdateDTime + ".")
-    println("Generic Double r/w time: " + genericUpdateDTime + ".")
+    println("\nResults:")
+    println("Var Int function time: " + varUpdateTime + ".")
+    println("Spec Int function time: " + specUpdateTime + ".")
+    println("Generic Int function time: " + genericUpdateTime + ".")
+    println("Spec Double function time: " + specUpdateDTime + ".")
+    println("Generic Double function time: " + genericUpdateDTime + ".")
   }
 
   final var count = 0
   final val function = (x: Int) => { count += 1; x + count }
   final val functionD = (x: Double) => { count += 1; x + count }
-
+  
   final def testVarUpdate(length: Int) {
     count = 0
     var p = 0

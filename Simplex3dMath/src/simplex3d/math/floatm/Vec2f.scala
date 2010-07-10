@@ -21,15 +21,14 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2f
-extends ProtectedVec2f[Float] with PropertyValue[AnyVec2f]
+sealed abstract class AnyVec2f extends ProtectedVec2f[Float, AnyVec2f]
 {
   private[math] type R2 = AnyVec2f
   private[math] type R3 = AnyVec3f
@@ -120,11 +119,12 @@ extends ProtectedVec2f[Float] with PropertyValue[AnyVec2f]
   final def *(m: inMat2x4f) :Vec4f = m.transposeMul(this)
 
   final def copyAsMutable() = Vec2f(this)
+  final def copyAsImmutable() = ConstVec2f(this)
   
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec2b => false
-      case u: Read2[_] => dx == u.dx && dy == u.dy
+      case u: Read2[_, _] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -150,9 +150,9 @@ extends AnyVec2f with Immutable {
 object ConstVec2f {
   def apply(s: Float) = new ConstVec2f(s, s)
   /* main factory */ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
-  def apply(u: Read2[_]) = new ConstVec2f(u.fx, u.fy)
-  def apply(u: Read3[_]) = new ConstVec2f(u.fx, u.fy)
-  def apply(u: Read4[_]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: Read2[_, _]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: Read3[_, _]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: Read4[_, _]) = new ConstVec2f(u.fx, u.fy)
 
   implicit def toConst(u: AnyVec2f) = new ConstVec2f(u.x, u.y)
 }
@@ -201,7 +201,7 @@ extends AnyVec2f with MutableObject[AnyVec2f] with Implicits[On] with Composite
 
   def *=(m: inMat2f) { this := m.transposeMul(this) }
 
-  def :=(u: inVec2f) { x = u.x; y = u.y }
+  override def :=(u: inVec2f) { x = u.x; y = u.y }
 
   def update(i: Int, s: Float) {
     i match {
@@ -233,12 +233,12 @@ object Vec2f {
 
   def apply(s: Float) = new Vec2f(s, s)
   /* main factory */ def apply(x: Float, y: Float) = new Vec2f(x, y)
-  def apply(u: Read2[_]) = new Vec2f(u.fx, u.fy)
-  def apply(u: Read3[_]) = new Vec2f(u.fx, u.fy)
-  def apply(u: Read4[_]) = new Vec2f(u.fx, u.fy)
+  def apply(u: Read2[_, _]) = new Vec2f(u.fx, u.fy)
+  def apply(u: Read3[_, _]) = new Vec2f(u.fx, u.fy)
+  def apply(u: Read4[_, _]) = new Vec2f(u.fx, u.fy)
 
   def unapply(u: AnyVec2f) = Some((u.x, u.y))
 
   implicit def toMutable(u: AnyVec2f) = new Vec2f(u.x, u.y)
-  implicit def castInt(u: Read2[Int]) = new Vec2f(u.fx, u.fy)
+  implicit def castInt(u: Read2[Int, _]) = new Vec2f(u.fx, u.fy)
 }

@@ -21,7 +21,7 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -30,7 +30,7 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2d
-extends ProtectedMat2d[Double] with PropertyValue[AnyMat2d]
+extends ProtectedMat2d[Double, AnyMat2d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -170,10 +170,11 @@ extends ProtectedMat2d[Double] with PropertyValue[AnyMat2d]
   )
 
   final def copyAsMutable() = Mat2d(this)
+  final def copyAsImmutable() = ConstMat2d(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read2x2[_] =>
+      case m: Read2x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>
@@ -225,18 +226,18 @@ object ConstMat2d {
     m01, m11
   )
 
-  def apply(c0: Read2[_], c1: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
   new ConstMat2d(
     c0.dx, c0.dy,
     c1.dx, c1.dy
   )
 
-  def apply(u: Read4[_]) = new ConstMat2d(
+  def apply(u: Read4[_, _]) = new ConstMat2d(
     u.dx, u.dy,
     u.dz, u.dw
   )
 
-  def apply(m: ReadMat[_]) = new ConstMat2d(
+  def apply(m: ReadMat[_, _]) = new ConstMat2d(
     m.d00, m.d10,
     m.d01, m.d11
   )
@@ -303,7 +304,7 @@ final class Mat2d private[math] (
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def :=(m: inMat2d) {
+  override def :=(m: inMat2d) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }
@@ -360,18 +361,18 @@ object Mat2d {
     m01, m11
   )
 
-  def apply(c0: Read2[_], c1: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
   new Mat2d(
     c0.dx, c0.dy,
     c1.dx, c1.dy
   )
 
-  def apply(u: Read4[_]) = new Mat2d(
+  def apply(u: Read4[_, _]) = new Mat2d(
     u.dx, u.dy,
     u.dz, u.dw
   )
 
-  def apply(m: ReadMat[_]) = new Mat2d(
+  def apply(m: ReadMat[_, _]) = new Mat2d(
     m.d00, m.d10,
     m.d01, m.d11
   )
@@ -379,5 +380,5 @@ object Mat2d {
   def unapply(m: AnyMat2d) = Some((m(0), m(1)))
 
   implicit def toMutable(m: AnyMat2d) = Mat2d(m)
-  implicit def castFloat(m: Read2x2[Float]) = apply(m)
+  implicit def castFloat(m: Read2x2[Float, _]) = apply(m)
 }

@@ -21,15 +21,14 @@
 package simplex3d.math.intm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3i
-extends ProtectedVec3i[Int] with PropertyValue[AnyVec3i]
+sealed abstract class AnyVec3i extends ProtectedVec3i[Int, AnyVec3i]
 {
   private[math] type R2 = AnyVec2i
   private[math] type R3 = AnyVec3i
@@ -152,12 +151,13 @@ extends ProtectedVec3i[Int] with PropertyValue[AnyVec3i]
   final def ^(u: inVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
 
   final def copyAsMutable() = Vec3i(this)
+  final def copyAsImmutable() = ConstVec3i(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec3i => x == u.x && y == u.y && z == u.z
       case u: AnyVec3b => false
-      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: Read3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -185,10 +185,10 @@ extends AnyVec3i with Immutable {
 object ConstVec3i {
   def apply(s: Int) = new ConstVec3i(s, s, s)
   /* main factory */ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
-  def apply(u: Read3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
-  def apply(u: Read4[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
-  def apply(xy: Read2[_], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
-  def apply(x: Int, yz: Read2[_]) = new ConstVec3i(x, yz.ix, yz.iy)
+  def apply(u: Read3[_, _]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(u: Read4[_, _]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(xy: Read2[_, _], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
+  def apply(x: Int, yz: Read2[_, _]) = new ConstVec3i(x, yz.ix, yz.iy)
 
   implicit def toConst(u: AnyVec3i) = new ConstVec3i(u.x, u.y, u.z)
 }
@@ -259,7 +259,7 @@ extends AnyVec3i with MutableObject[AnyVec3i] with Implicits[On] with Composite
   def |=(u: inVec3i) = { x |= u.x; y |= u.y; z |= u.z }
   def ^=(u: inVec3i) = { x ^= u.x; y ^= u.y; z ^= u.z }
 
-  def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
+  override def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Int) {
     i match {
@@ -326,10 +326,10 @@ object Vec3i {
 
   def apply(s: Int) = new Vec3i(s, s, s)
   /* main factory */ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
-  def apply(u: Read3[_]) = new Vec3i(u.ix, u.iy, u.iz)
-  def apply(u: Read4[_]) = new Vec3i(u.ix, u.iy, u.iz)
-  def apply(xy: Read2[_], z: Int) = new Vec3i(xy.ix, xy.iy, z)
-  def apply(x: Int, yz: Read2[_]) = new Vec3i(x, yz.ix, yz.iy)
+  def apply(u: Read3[_, _]) = new Vec3i(u.ix, u.iy, u.iz)
+  def apply(u: Read4[_, _]) = new Vec3i(u.ix, u.iy, u.iz)
+  def apply(xy: Read2[_, _], z: Int) = new Vec3i(xy.ix, xy.iy, z)
+  def apply(x: Int, yz: Read2[_, _]) = new Vec3i(x, yz.ix, yz.iy)
 
   def unapply(u: AnyVec3i) = Some((u.x, u.y, u.z))
 

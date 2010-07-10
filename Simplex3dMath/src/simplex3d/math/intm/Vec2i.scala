@@ -21,15 +21,14 @@
 package simplex3d.math.intm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2i
-extends ProtectedVec2i[Int] with PropertyValue[AnyVec2i]
+sealed abstract class AnyVec2i extends ProtectedVec2i[Int, AnyVec2i]
 {
   private[math] type R2 = AnyVec2i
   private[math] type R3 = AnyVec3i
@@ -133,12 +132,13 @@ extends ProtectedVec2i[Int] with PropertyValue[AnyVec2i]
   final def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
   final def copyAsMutable() = Vec2i(this)
+  final def copyAsImmutable() = ConstVec2i(this)
   
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec2i => x == u.x && y == u.y
       case u: AnyVec2b => false
-      case u: Read2[_] => dx == u.dx && dy == u.dy
+      case u: Read2[_, _] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -163,9 +163,9 @@ extends AnyVec2i with Immutable {
 object ConstVec2i {
   def apply(s: Int) = new ConstVec2i(s, s)
   /* main factory */ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-  def apply(u: Read2[_]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: Read3[_]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: Read4[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: Read2[_, _]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: Read3[_, _]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: Read4[_, _]) = new ConstVec2i(u.ix, u.iy)
 
   implicit def toConst(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
 }
@@ -227,7 +227,7 @@ extends AnyVec2i with MutableObject[AnyVec2i] with Implicits[On] with Composite
   def |=(u: inVec2i) = { x |= u.x; y |= u.y }
   def ^=(u: inVec2i) = { x ^= u.x; y ^= u.y }
 
-  def :=(u: inVec2i) { x = u.x; y = u.y }
+  override def :=(u: inVec2i) { x = u.x; y = u.y }
 
   def update(i: Int, s: Int) {
     i match {
@@ -259,9 +259,9 @@ object Vec2i {
 
   def apply(s: Int) = new Vec2i(s, s)
   /* main factory */ def apply(x: Int, y: Int) = new Vec2i(x, y)
-  def apply(u: Read2[_]) = new Vec2i(u.ix, u.iy)
-  def apply(u: Read3[_]) = new Vec2i(u.ix, u.iy)
-  def apply(u: Read4[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: Read2[_, _]) = new Vec2i(u.ix, u.iy)
+  def apply(u: Read3[_, _]) = new Vec2i(u.ix, u.iy)
+  def apply(u: Read4[_, _]) = new Vec2i(u.ix, u.iy)
 
   def unapply(u: AnyVec2i) = Some((u.x, u.y))
 

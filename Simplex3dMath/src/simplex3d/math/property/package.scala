@@ -1,5 +1,5 @@
 /*
- * Simplex3d, BaseMath module
+ * Simplex3d, Property module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -21,11 +21,17 @@
 package simplex3d.math
 
 
-trait PropertyValue[T] {
-  def copyAsMutable() :MutableValue[T]
-}
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+package object property {
 
-object PropertyValue {
+  type PropertyValue[T] = integration.PropertyValue[T]
+  type MutableValue[T] = integration.MutableValue[T]
+  type MutablePrimitive[T <: AnyVal] = integration.MutablePrimitive[T]
+  type MutableObject[T] = integration.MutableObject[T]
+
+  
   implicit def booleanToPropertyValue(v: Boolean) :PropertyValue[Boolean] =
     new MutablePrimitive(v)
 
@@ -37,35 +43,4 @@ object PropertyValue {
 
   implicit def doubleToPropertyValue(v: Double) :PropertyValue[Double] =
     new MutablePrimitive(v)
-}
-
-sealed trait MutableValue[
-  @specialized(Boolean, Int, Float, Double) T
-] extends Mutable {
-  private[math] def asReadInstance() :T
-  private[math] def :=(value: T) :Unit
-}
-
-/** <code>ObjectValue</code> is a trait for all mutable math objects.
- * It allows uniform treatment for all the objects with := operator.
- *
- * @author Aleksey Nikiforov (lex)
- */
-trait MutableObject[T] extends MutableValue[T] {
-  private[math] def asReadInstance() :T = this.asInstanceOf[T]
-}
-
-final class MutablePrimitive[
-  @specialized(Boolean, Int, Float, Double) T <: AnyVal
-](private var value: T) extends PropertyValue[T] with MutableValue[T]
-{
-  def copyAsMutable() :MutableValue[T] = new MutablePrimitive[T](value)
-
-  override def asReadInstance() :T = value
-  def :=(value: T) { this.value = value }
-
-  override def toString() = {
-    value.asInstanceOf[AnyRef].getClass.getSimpleName +
-    "(" + value.toString + ")"
-  }
 }

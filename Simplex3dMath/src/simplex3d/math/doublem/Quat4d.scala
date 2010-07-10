@@ -21,7 +21,7 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -29,8 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d
-extends ProtectedQuat4d[Double] with PropertyValue[AnyQuat4d]
+sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double, AnyQuat4d]
 {
   private[math] final def fa: Float = float(a)
   private[math] final def fb: Float = float(b)
@@ -113,10 +112,11 @@ extends ProtectedQuat4d[Double] with PropertyValue[AnyQuat4d]
     DoubleMath.rotateVector(u, normalize(this))
 
   final def copyAsMutable() = Quat4d(this)
+  final def copyAsImmutable() = ConstQuat4d(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
+      case q: ReadQ[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -148,8 +148,8 @@ object ConstQuat4d {
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new ConstQuat4d(a, b, c, d)
 
-  def apply(u: ReadQ[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
-  def apply(u: Read4[_]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(u: ReadQ[_, _]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
+  def apply(u: Read4[_, _]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
 
   implicit def toConst(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }
@@ -188,7 +188,7 @@ final class Quat4d private[math] (
     a = na; b = nb; c = nc
   }
 
-  def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
+  override def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Double) {
     i match {
@@ -210,8 +210,8 @@ object Quat4d {
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
 
-  def apply(q: ReadQ[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
-  def apply(u: Read4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(q: ReadQ[_, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  def apply(u: Read4[_, _]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
 
   def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
 
@@ -230,5 +230,5 @@ object Quat4d {
   }
 
   implicit def toMutable(u: AnyQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
-  implicit def castFloat(q: ReadQ[Float]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  implicit def castFloat(q: ReadQ[Float, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
 }

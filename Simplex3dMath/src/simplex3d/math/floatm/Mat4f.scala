@@ -21,7 +21,7 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -30,7 +30,7 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat4f
-extends ProtectedMat4f[Float] with PropertyValue[AnyMat4f]
+extends ProtectedMat4f[Float, AnyMat4f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -272,10 +272,11 @@ extends ProtectedMat4f[Float] with PropertyValue[AnyMat4f]
   )
 
   final def copyAsMutable() = Mat4f(this)
+  final def copyAsImmutable() = ConstMat4f(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read4x4[_] =>
+      case m: Read4x4[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32 &&
@@ -365,7 +366,7 @@ object ConstMat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: Read4[_], c1: Read4[_], c2: Read4[_], c3: Read4[_]) = 
+  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _], c3: Read4[_, _]) = 
   new ConstMat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -373,7 +374,7 @@ object ConstMat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: ReadMat[_]) = new ConstMat4f(
+  def apply(m: ReadMat[_, _]) = new ConstMat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,
@@ -486,7 +487,7 @@ final class Mat4f private[math] (
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
   }
 
-  def :=(m: inMat4f) {
+  override def :=(m: inMat4f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
     m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32;
@@ -597,7 +598,7 @@ object Mat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: Read4[_], c1: Read4[_], c2: Read4[_], c3: Read4[_]) = 
+  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _], c3: Read4[_, _]) = 
   new Mat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -605,7 +606,7 @@ object Mat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: ReadMat[_]) = new Mat4f(
+  def apply(m: ReadMat[_, _]) = new Mat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,

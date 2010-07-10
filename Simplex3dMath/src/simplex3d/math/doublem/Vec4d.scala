@@ -21,15 +21,14 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4d
-extends ProtectedVec4d[Double] with PropertyValue[AnyVec4d]
+sealed abstract class AnyVec4d extends ProtectedVec4d[Double, AnyVec4d]
 {
   private[math] type R2 = AnyVec2d
   private[math] type R3 = AnyVec3d
@@ -162,11 +161,12 @@ extends ProtectedVec4d[Double] with PropertyValue[AnyVec4d]
   final def *(m: inMat4d) :Vec4d = m.transposeMul(this)
 
   final def copyAsMutable() = Vec4d(this)
+  final def copyAsImmutable() = ConstVec4d(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec4b => false
-      case u: Read4[_] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
+      case u: Read4[_, _] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
       case _ => false
     }
   }
@@ -200,30 +200,30 @@ object ConstVec4d {
   /* main factory */ def apply(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  def apply(u: Read4[_]) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
+  def apply(u: Read4[_, _]) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-  def apply(xy: Read2[_], z: Double, w: Double) =
+  def apply(xy: Read2[_, _], z: Double, w: Double) =
     new ConstVec4d(xy.dx, xy.dy, z, w)
 
-  def apply(x: Double, yz: Read2[_], w: Double) =
+  def apply(x: Double, yz: Read2[_, _], w: Double) =
     new ConstVec4d(x, yz.dx, yz.dy, w)
 
-  def apply(x: Double, y: Double, zw: Read2[_]) =
+  def apply(x: Double, y: Double, zw: Read2[_, _]) =
     new ConstVec4d(x, y, zw.dx, zw.dy)
 
-  def apply(xy: Read2[_], zw: Read2[_]) =
+  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
     new ConstVec4d(xy.dx, xy.dy, zw.dx, zw.dy)
 
-  def apply(xyz: Read3[_], w: Double) =
+  def apply(xyz: Read3[_, _], w: Double) =
     new ConstVec4d(xyz.dx, xyz.dy, xyz.dz, w)
 
-  def apply(x: Double, yzw: Read3[_]) =
+  def apply(x: Double, yzw: Read3[_, _]) =
     new ConstVec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(m: Read2x2[_]) =
+  def apply(m: Read2x2[_, _]) =
     new ConstVec4d(m.d00, m.d10, m.d01, m.d11)
 
-  def apply(q: ReadQ[_]) =
+  def apply(q: ReadQ[_, _]) =
     new ConstVec4d(q.db, q.dc, q.dd, q.da)
 
   implicit def toConst(u: AnyVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
@@ -292,7 +292,7 @@ final class Vec4d private[math] (
 
   def *=(m: inMat4d) { this := m.transposeMul(this) }
 
-  def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
+  override def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   def update(i: Int, s: Double) {
     i match {
@@ -512,36 +512,36 @@ object Vec4d {
   /* main factory */ def apply(x: Double, y: Double, z: Double, w: Double) =
     new Vec4d(x, y, z, w)
 
-  def apply(u: Read4[_]) =
+  def apply(u: Read4[_, _]) =
     new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
-  def apply(xy: Read2[_], z: Double, w: Double) =
+  def apply(xy: Read2[_, _], z: Double, w: Double) =
     new Vec4d(xy.dx, xy.dy, z, w)
 
-  def apply(x: Double, yz: Read2[_], w: Double) =
+  def apply(x: Double, yz: Read2[_, _], w: Double) =
     new Vec4d(x, yz.dx, yz.dy, w)
 
-  def apply(x: Double, y: Double, zw: Read2[_]) =
+  def apply(x: Double, y: Double, zw: Read2[_, _]) =
     new Vec4d(x, y, zw.dx, zw.dy)
 
-  def apply(xy: Read2[_], zw: Read2[_]) =
+  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
     new Vec4d(xy.dx, xy.dy, zw.dx, zw.dy)
 
-  def apply(xyz: Read3[_], w: Double) =
+  def apply(xyz: Read3[_, _], w: Double) =
     new Vec4d(xyz.dx, xyz.dy, xyz.dz, w)
 
-  def apply(x: Double, yzw: Read3[_]) =
+  def apply(x: Double, yzw: Read3[_, _]) =
     new Vec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(m: Read2x2[_]) =
+  def apply(m: Read2x2[_, _]) =
     new Vec4d(m.d00, m.d10, m.d01, m.d11)
 
-  def apply(q: ReadQ[_]) =
+  def apply(q: ReadQ[_, _]) =
     new Vec4d(q.db, q.dc, q.dd, q.da)
 
   def unapply(u: AnyVec4d) = Some((u.x, u.y, u.z, u.w))
 
   implicit def toMutable(u: AnyVec4d) = new Vec4d(u.x, u.y, u.z, u.w)
-  implicit def castInt(u: Read4[Int]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
-  implicit def castFloat(u: Read4[Float]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
+  implicit def castInt(u: Read4[Int, _]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
+  implicit def castFloat(u: Read4[Float, _]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
 }

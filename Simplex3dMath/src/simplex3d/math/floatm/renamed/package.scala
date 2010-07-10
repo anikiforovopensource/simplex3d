@@ -35,13 +35,13 @@ package object renamed {
   implicit def extendedFloatForFloat(s: Float) = new ExtendedFloat(s)
   implicit def extendedIntForFloat(s: Int) = new ExtendedInt(s)
 
-  implicit def vec2IntToFloat(u: Read2[Int]) :ConstVec2f =
+  implicit def vec2IntToFloat(u: Read2[Int, _]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)
 
-  implicit def vec3IntToFloat(u: Read3[Int]) :ConstVec3f =
+  implicit def vec3IntToFloat(u: Read3[Int, _]) :ConstVec3f =
     new ConstVec3f(u.fx, u.fy, u.fz)
 
-  implicit def vec4IntToFloat(u: Read4[Int]) :ConstVec4f =
+  implicit def vec4IntToFloat(u: Read4[Int, _]) :ConstVec4f =
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
 

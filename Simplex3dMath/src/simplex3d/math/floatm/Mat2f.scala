@@ -21,7 +21,7 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -30,7 +30,7 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2f
-extends ProtectedMat2f[Float] with PropertyValue[AnyMat2f]
+extends ProtectedMat2f[Float, AnyMat2f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -170,10 +170,11 @@ extends ProtectedMat2f[Float] with PropertyValue[AnyMat2f]
   )
 
   final def copyAsMutable() = Mat2f(this)
+  final def copyAsImmutable() = ConstMat2f(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read2x2[_] =>
+      case m: Read2x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>
@@ -225,18 +226,18 @@ object ConstMat2f {
     m01, m11
   )
 
-  def apply(c0: Read2[_], c1: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
   new ConstMat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: Read4[_]) = new ConstMat2f(
+  def apply(u: Read4[_, _]) = new ConstMat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: ReadMat[_]) = new ConstMat2f(
+  def apply(m: ReadMat[_, _]) = new ConstMat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )
@@ -303,7 +304,7 @@ final class Mat2f private[math] (
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def :=(m: inMat2f) {
+  override def :=(m: inMat2f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }
@@ -360,18 +361,18 @@ object Mat2f {
     m01, m11
   )
 
-  def apply(c0: Read2[_], c1: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
   new Mat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: Read4[_]) = new Mat2f(
+  def apply(u: Read4[_, _]) = new Mat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: ReadMat[_]) = new Mat2f(
+  def apply(m: ReadMat[_, _]) = new Mat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )

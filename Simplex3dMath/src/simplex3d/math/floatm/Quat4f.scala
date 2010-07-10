@@ -21,7 +21,7 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -29,8 +29,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f
-extends ProtectedQuat4f[Float] with PropertyValue[AnyQuat4f]
+sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float, AnyQuat4f]
 {
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
@@ -114,10 +113,11 @@ extends ProtectedQuat4f[Float] with PropertyValue[AnyQuat4f]
     FloatMath.rotateVector(u, normalize(this))
 
   final def copyAsMutable() = Quat4f(this)
+  final def copyAsImmutable() = ConstQuat4f(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: ReadQ[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
+      case q: ReadQ[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -149,8 +149,8 @@ object ConstQuat4f {
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
     new ConstQuat4f(a, b, c, d)
 
-  def apply(u: ReadQ[_]) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
-  def apply(u: Read4[_]) = new ConstQuat4f(u.fw, u.fx, u.fy, u.fz)
+  def apply(u: ReadQ[_, _]) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
+  def apply(u: Read4[_, _]) = new ConstQuat4f(u.fw, u.fx, u.fy, u.fz)
 
   implicit def toConst(u: AnyQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
@@ -190,7 +190,7 @@ final class Quat4f private[math] (
     a = na; b = nb; c = nc
   }
 
-  def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
+  override def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Float) {
     i match {
@@ -212,8 +212,8 @@ object Quat4f {
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
     new Quat4f(a, b, c, d)
 
-  def apply(q: ReadQ[_]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
-  def apply(u: Read4[_]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
+  def apply(q: ReadQ[_, _]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
+  def apply(u: Read4[_, _]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
 
   def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
 

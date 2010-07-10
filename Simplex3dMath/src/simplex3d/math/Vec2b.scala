@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 
 
 /** The <code>AnyVec2b</code> class represents Boolean 2-dimensional vectors,
@@ -46,8 +46,7 @@ import simplex3d.math.types._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b
-extends ProtectedVec2b[Boolean] with PropertyValue[AnyVec2b]
+sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean, AnyVec2b]
 {
   private[math] type R2 = AnyVec2b
   private[math] type R3 = AnyVec3b
@@ -123,7 +122,8 @@ extends ProtectedVec2b[Boolean] with PropertyValue[AnyVec2b]
     }
   }
 
-  final def copyAsMutable() = Vec2b(this)
+  final def copyAsMutable() :MutableValue[AnyVec2b] = Vec2b(this)
+  final def copyAsImmutable() = ConstVec2b(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -207,7 +207,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read2[_]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: Read2[_, _]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 3-dimensional vector.
@@ -216,7 +216,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read3[_]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: Read3[_, _]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 4-dimensional vector.
@@ -225,7 +225,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read4[_]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: Read4[_, _]) = new ConstVec2b(u.bx, u.by)
   
   implicit def toConst(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
 }
@@ -283,7 +283,7 @@ extends AnyVec2b with MutableObject[AnyVec2b] with Implicits[On]
   /** Set vector components to values from another vector.
    * @param u 2-dimensional Boolean vector.
    */
-  def :=(u: inVec2b) { x = u.x; y = u.y }
+  override def :=(u: inVec2b) { x = u.x; y = u.y }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y).
@@ -348,7 +348,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read2[_]) = new Vec2b(u.bx, u.by)
+  def apply(u: Read2[_, _]) = new Vec2b(u.bx, u.by)
 
   /** Makes a new instance of Vec2b from the first two components
    * of a 3-dimensional vector.
@@ -357,7 +357,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read3[_]) = new Vec2b(u.bx, u.by)
+  def apply(u: Read3[_, _]) = new Vec2b(u.bx, u.by)
   
   /** Makes a new instance of Vec2b from the first two components
    * of a 4-dimensional vector.
@@ -366,7 +366,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read4[_]) = new Vec2b(u.bx, u.by)
+  def apply(u: Read4[_, _]) = new Vec2b(u.bx, u.by)
 
   def unapply(u: AnyVec2b) = Some((u.x, u.y))
 

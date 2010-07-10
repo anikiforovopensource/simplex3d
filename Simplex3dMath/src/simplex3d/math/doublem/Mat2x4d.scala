@@ -21,7 +21,7 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -30,7 +30,7 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat2x4d
-extends ProtectedMat2x4d[Double] with PropertyValue[AnyMat2x4d]
+extends ProtectedMat2x4d[Double, AnyMat2x4d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -220,10 +220,11 @@ extends ProtectedMat2x4d[Double] with PropertyValue[AnyMat2x4d]
   )
 
   final def copyAsMutable() = Mat2x4d(this)
+  final def copyAsImmutable() = ConstMat2x4d(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read2x4[_] =>
+      case m: Read2x4[_, _] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11 &&
         d02 == m.d02 && d12 == m.d12 &&
@@ -297,7 +298,7 @@ object ConstMat2x4d {
     m03, m13
   )
 
-  def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_], c3: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _], c2: Read2[_, _], c3: Read2[_, _]) = 
   new ConstMat2x4d(
     c0.dx, c0.dy,
     c1.dx, c1.dy,
@@ -305,7 +306,7 @@ object ConstMat2x4d {
     c3.dx, c3.dy
   )
 
-  def apply(m: ReadMat[_]) = new ConstMat2x4d(
+  def apply(m: ReadMat[_, _]) = new ConstMat2x4d(
     m.d00, m.d10,
     m.d01, m.d11,
     m.d02, m.d12,
@@ -402,7 +403,7 @@ final class Mat2x4d private[math] (
     m03 /= m.m03; m13 /= m.m13
   }
 
-  def :=(m: inMat2x4d) {
+  override def :=(m: inMat2x4d) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11;
     m02 = m.m02; m12 = m.m12;
@@ -481,7 +482,7 @@ object Mat2x4d {
     m03, m13
   )
 
-  def apply(c0: Read2[_], c1: Read2[_], c2: Read2[_], c3: Read2[_]) = 
+  def apply(c0: Read2[_, _], c1: Read2[_, _], c2: Read2[_, _], c3: Read2[_, _]) = 
   new Mat2x4d(
     c0.dx, c0.dy,
     c1.dx, c1.dy,
@@ -489,7 +490,7 @@ object Mat2x4d {
     c3.dx, c3.dy
   )
 
-  def apply(m: ReadMat[_]) = new Mat2x4d(
+  def apply(m: ReadMat[_, _]) = new Mat2x4d(
     m.d00, m.d10,
     m.d01, m.d11,
     m.d02, m.d12,
@@ -499,5 +500,5 @@ object Mat2x4d {
   def unapply(m: AnyMat2x4d) = Some((m(0), m(1), m(2), m(3)))
 
   implicit def toMutable(m: AnyMat2x4d) = Mat2x4d(m)
-  implicit def castFloat(m: Read2x4[Float]) = apply(m)
+  implicit def castFloat(m: Read2x4[Float, _]) = apply(m)
 }

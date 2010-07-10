@@ -21,15 +21,14 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3f
-extends ProtectedVec3f[Float] with PropertyValue[AnyVec3f]
+sealed abstract class AnyVec3f extends ProtectedVec3f[Float, AnyVec3f]
 {
   private[math] type R2 = AnyVec2f
   private[math] type R3 = AnyVec3f
@@ -141,11 +140,12 @@ extends ProtectedVec3f[Float] with PropertyValue[AnyVec3f]
   final def *(m: inMat3x4f) :Vec4f = m.transposeMul(this)
 
   final def copyAsMutable() = Vec3f(this)
+  final def copyAsImmutable() = ConstVec3f(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec3b => false
-      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: Read3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -173,10 +173,10 @@ extends AnyVec3f with Immutable {
 object ConstVec3f {
   def apply(s: Float) = new ConstVec3f(s, s, s)
   /* main factory */ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
-  def apply(u: Read3[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
-  def apply(u: Read4[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
-  def apply(xy: Read2[_], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
-  def apply(x: Float, yz: Read2[_]) = new ConstVec3f(x, yz.fx, yz.fy)
+  def apply(u: Read3[_, _]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(u: Read4[_, _]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(xy: Read2[_, _], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
+  def apply(x: Float, yz: Read2[_, _]) = new ConstVec3f(x, yz.fx, yz.fy)
 
   implicit def toConst(u: AnyVec3f) = new ConstVec3f(u.x, u.y, u.z)
 }
@@ -234,7 +234,7 @@ extends AnyVec3f with MutableObject[AnyVec3f] with Implicits[On] with Composite
 
   def *=(m: inMat3f) { this := m.transposeMul(this) }
 
-  def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
+  override def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Float) {
     i match {
@@ -301,13 +301,13 @@ object Vec3f {
 
   def apply(s: Float) = new Vec3f(s, s, s)
   /* main factory */ def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
-  def apply(u: Read3[_]) = new Vec3f(u.fx, u.fy, u.fz)
-  def apply(u: Read4[_]) = new Vec3f(u.fx, u.fy, u.fz)
-  def apply(xy: Read2[_], z: Float) = new Vec3f(xy.fx, xy.fy, z)
-  def apply(x: Float, yz: Read2[_]) = new Vec3f(x, yz.fx, yz.fy)
+  def apply(u: Read3[_, _]) = new Vec3f(u.fx, u.fy, u.fz)
+  def apply(u: Read4[_, _]) = new Vec3f(u.fx, u.fy, u.fz)
+  def apply(xy: Read2[_, _], z: Float) = new Vec3f(xy.fx, xy.fy, z)
+  def apply(x: Float, yz: Read2[_, _]) = new Vec3f(x, yz.fx, yz.fy)
 
   def unapply(u: AnyVec3f) = Some((u.x, u.y, u.z))
 
   implicit def toMutable(u: AnyVec3f) = new Vec3f(u.x, u.y, u.z)
-  implicit def castInt(u: Read3[Int]) = new Vec3f(u.fx, u.fy, u.fz)
+  implicit def castInt(u: Read3[Int, _]) = new Vec3f(u.fx, u.fy, u.fz)
 }

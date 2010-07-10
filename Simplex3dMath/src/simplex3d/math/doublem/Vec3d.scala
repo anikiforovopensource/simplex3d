@@ -21,15 +21,14 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3d
-extends ProtectedVec3d[Double] with PropertyValue[AnyVec3d]
+sealed abstract class AnyVec3d extends ProtectedVec3d[Double, AnyVec3d]
 {
   private[math] type R2 = AnyVec2d
   private[math] type R3 = AnyVec3d
@@ -141,11 +140,12 @@ extends ProtectedVec3d[Double] with PropertyValue[AnyVec3d]
   final def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
 
   final def copyAsMutable() = Vec3d(this)
+  final def copyAsImmutable() = ConstVec3d(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: AnyVec3b => false
-      case u: Read3[_] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: Read3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -174,10 +174,10 @@ final class ConstVec3d private[math] (
 object ConstVec3d {
   def apply(s: Double) = new ConstVec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
-  def apply(u: Read3[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
-  def apply(u: Read4[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
-  def apply(xy: Read2[_], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
-  def apply(x: Double, yz: Read2[_]) = new ConstVec3d(x, yz.dx, yz.dy)
+  def apply(u: Read3[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(u: Read4[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(xy: Read2[_, _], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
+  def apply(x: Double, yz: Read2[_, _]) = new ConstVec3d(x, yz.dx, yz.dy)
 
   implicit def toConst(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
 }
@@ -236,7 +236,7 @@ final class Vec3d private[math] (
 
   def *=(m: inMat3d) { this := m.transposeMul(this) }
 
-  def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+  override def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Double) {
     i match {
@@ -303,14 +303,14 @@ object Vec3d {
 
   def apply(s: Double) = new Vec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)
-  def apply(u: Read3[_]) = new Vec3d(u.dx, u.dy, u.dz)
-  def apply(u: Read4[_]) = new Vec3d(u.dx, u.dy, u.dz)
-  def apply(xy: Read2[_], z: Double) = new Vec3d(xy.dx, xy.dy, z)
-  def apply(x: Double, yz: Read2[_]) = new Vec3d(x, yz.dx, yz.dy)
+  def apply(u: Read3[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  def apply(u: Read4[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  def apply(xy: Read2[_, _], z: Double) = new Vec3d(xy.dx, xy.dy, z)
+  def apply(x: Double, yz: Read2[_, _]) = new Vec3d(x, yz.dx, yz.dy)
 
   def unapply(u: AnyVec3d) = Some((u.x, u.y, u.z))
 
   implicit def toMutable(u: AnyVec3d) = new Vec3d(u.x, u.y, u.z)
-  implicit def castInt(u: Read3[Int]) = new Vec3d(u.dx, u.dy, u.dz)
-  implicit def castFloat(u: Read3[Float]) = new Vec3d(u.dx, u.dy, u.dz)
+  implicit def castInt(u: Read3[Int, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  implicit def castFloat(u: Read3[Float, _]) = new Vec3d(u.dx, u.dy, u.dz)
 }

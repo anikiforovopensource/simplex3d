@@ -21,7 +21,7 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -30,7 +30,7 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class AnyMat4x2f
-extends ProtectedMat4x2f[Float] with PropertyValue[AnyMat4x2f]
+extends ProtectedMat4x2f[Float, AnyMat4x2f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -206,10 +206,11 @@ extends ProtectedMat4x2f[Float] with PropertyValue[AnyMat4x2f]
   )
 
   final def copyAsMutable() = Mat4x2f(this)
+  final def copyAsImmutable() = ConstMat4x2f(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read4x2[_] =>
+      case m: Read4x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31
       case _ =>
@@ -269,13 +270,13 @@ object ConstMat4x2f {
     m01, m11, m21, m31
   )
 
-  def apply(c0: Read4[_], c1: Read4[_]) = 
+  def apply(c0: Read4[_, _], c1: Read4[_, _]) = 
   new ConstMat4x2f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw
   )
 
-  def apply(m: ReadMat[_]) = new ConstMat4x2f(
+  def apply(m: ReadMat[_, _]) = new ConstMat4x2f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31
   )
@@ -350,7 +351,7 @@ final class Mat4x2f private[math] (
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21; m31 /= m.m31
   }
 
-  def :=(m: inMat4x2f) {
+  override def :=(m: inMat4x2f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31
   }
@@ -431,13 +432,13 @@ object Mat4x2f {
     m01, m11, m21, m31
   )
 
-  def apply(c0: Read4[_], c1: Read4[_]) = 
+  def apply(c0: Read4[_, _], c1: Read4[_, _]) = 
   new Mat4x2f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw
   )
 
-  def apply(m: ReadMat[_]) = new Mat4x2f(
+  def apply(m: ReadMat[_, _]) = new Mat4x2f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31
   )

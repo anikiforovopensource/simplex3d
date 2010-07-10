@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.Manifest._
-import simplex3d.math.types._
+import simplex3d.math.integration._
 
 
 /** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,
@@ -46,8 +46,7 @@ import simplex3d.math.types._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3b
-extends ProtectedVec3b[Boolean] with PropertyValue[AnyVec3b]
+sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean, AnyVec3b]
 {
   private[math] type R2 = AnyVec2b
   private[math] type R3 = AnyVec3b
@@ -143,6 +142,7 @@ extends ProtectedVec3b[Boolean] with PropertyValue[AnyVec3b]
   }
 
   final def copyAsMutable() = Vec3b(this)
+  final def copyAsImmutable() = ConstVec3b(this)
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -232,7 +232,7 @@ object ConstVec3b {
    * @return a new instance of ConstVec3b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read3[_]) = new ConstVec3b(u.bx, u.by, u.bz)
+  def apply(u: Read3[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of ConstVec3b from the first three components
    * of a 4-dimensional vector.
@@ -241,7 +241,7 @@ object ConstVec3b {
    * @return a new instance of ConstVec3b with components initialized
    *         to the first three components of u converted to Boolean.
    */
-  def apply(u: Read4[_]) = new ConstVec3b(u.bx, u.by, u.bz)
+  def apply(u: Read4[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of ConstVec3b from values extracted from the specified
    * arguments.
@@ -252,7 +252,7 @@ object ConstVec3b {
    *         to x and y components of xy converted to Boolean
    *         and the specified value z.
    */
-  def apply(xy: Read2[_], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
+  def apply(xy: Read2[_, _], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
 
   /** Makes a new instance of ConstVec3b from values extracted from the specified
    * arguments.
@@ -263,7 +263,7 @@ object ConstVec3b {
    *         to the specified value x
    *         and x and y components of yz converted to Boolean.
    */
-  def apply(x: Boolean, yz: Read2[_]) = new ConstVec3b(x, yz.bx, yz.by)
+  def apply(x: Boolean, yz: Read2[_, _]) = new ConstVec3b(x, yz.bx, yz.by)
 
   implicit def toConst(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
 }
@@ -330,7 +330,7 @@ extends AnyVec3b with MutableObject[AnyVec3b] with Implicits[On]
   /** Set vector components to values from another vector.
    * @param u 3-dimensional Boolean vector.
    */
-  def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
+  override def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z).
@@ -430,7 +430,7 @@ object Vec3b {
    * @return a new instance of Vec3b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read3[_]) = new Vec3b(u.bx, u.by, u.bz)
+  def apply(u: Read3[_, _]) = new Vec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of Vec3b from the first three components
    * of a 4-dimensional vector.
@@ -439,7 +439,7 @@ object Vec3b {
    * @return a new instance of Vec3b with components initialized
    *         to the first three components of u converted to Boolean.
    */
-  def apply(u: Read4[_]) = new Vec3b(u.bx, u.by, u.bz)
+  def apply(u: Read4[_, _]) = new Vec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of Vec3b from values extracted from the specified
    * arguments.
@@ -450,7 +450,7 @@ object Vec3b {
    *         to x and y components of xy converted to Boolean
    *         and the specified value z.
    */
-  def apply(xy: Read2[_], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
+  def apply(xy: Read2[_, _], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
   
   /** Makes a new instance of Vec3b from values extracted from the specified
    * arguments.
@@ -461,7 +461,7 @@ object Vec3b {
    *         to the specified value x
    *         and x and y components of yz converted to Boolean.
    */
-  def apply(x: Boolean, yz: Read2[_]) = new Vec3b(x, yz.bx, yz.by)
+  def apply(x: Boolean, yz: Read2[_, _]) = new Vec3b(x, yz.bx, yz.by)
 
   def unapply(u: AnyVec3b) = Some((u.x, u.y, u.z))
 

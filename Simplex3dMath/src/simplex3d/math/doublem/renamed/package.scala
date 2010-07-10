@@ -37,53 +37,53 @@ package object renamed {
   implicit def extendedFloatForDouble(s: Float) = new ExtendedFloat(s)
   implicit def extendedIntForDouble(s: Int) = new ExtendedInt(s)
 
-  implicit def vec2IntToDouble(u: Read2[Int]) :ConstVec2d =
+  implicit def vec2IntToDouble(u: Read2[Int, _]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def vec3IntToDouble(u: Read3[Int]) :ConstVec3d =
+  implicit def vec3IntToDouble(u: Read3[Int, _]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def vec4IntToDouble(u: Read4[Int]) :ConstVec4d =
+  implicit def vec4IntToDouble(u: Read4[Int, _]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-  implicit def vec2FloatToDouble(u: Read2[Float]) :ConstVec2d =
+  implicit def vec2FloatToDouble(u: Read2[Float, _]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def vec3FloatToDouble(u: Read3[Float]) :ConstVec3d =
+  implicit def vec3FloatToDouble(u: Read3[Float, _]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def vec4FloatToDouble(u: Read4[Float]) :ConstVec4d =
+  implicit def vec4FloatToDouble(u: Read4[Float, _]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
 
-  implicit def quat4FloatToDouble(q: ReadQ[Float]) :ConstQuat4d =
+  implicit def quat4FloatToDouble(q: ReadQ[Float, _]) :ConstQuat4d =
     new ConstQuat4d(q.da, q.db, q.dc, q.dd)
 
-  implicit def mat2x2FloatToDouble(m: Read2x2[Float]) :ConstMat2d =
+  implicit def mat2x2FloatToDouble(m: Read2x2[Float, _]) :ConstMat2d =
     ConstMat2d(m)
 
-  implicit def mat2x3FloatToDouble(m: Read2x3[Float]) :ConstMat2x3d =
+  implicit def mat2x3FloatToDouble(m: Read2x3[Float, _]) :ConstMat2x3d =
     ConstMat2x3d(m)
 
-  implicit def mat2x4FloatToDouble(m: Read2x4[Float]) :ConstMat2x4d =
+  implicit def mat2x4FloatToDouble(m: Read2x4[Float, _]) :ConstMat2x4d =
     ConstMat2x4d(m)
 
-  implicit def mat3x2FloatToDouble(m: Read3x2[Float]) :ConstMat3x2d =
+  implicit def mat3x2FloatToDouble(m: Read3x2[Float, _]) :ConstMat3x2d =
     ConstMat3x2d(m)
 
-  implicit def mat3x3FloatToDouble(m: Read3x3[Float]) :ConstMat3d =
+  implicit def mat3x3FloatToDouble(m: Read3x3[Float, _]) :ConstMat3d =
     ConstMat3d(m)
 
-  implicit def mat3x4FloatToDouble(m: Read3x4[Float]) :ConstMat3x4d =
+  implicit def mat3x4FloatToDouble(m: Read3x4[Float, _]) :ConstMat3x4d =
     ConstMat3x4d(m)
 
-  implicit def mat4x2FloatToDouble(m: Read4x2[Float]) :ConstMat4x2d =
+  implicit def mat4x2FloatToDouble(m: Read4x2[Float, _]) :ConstMat4x2d =
     ConstMat4x2d(m)
 
-  implicit def mat4x3FloatToDouble(m: Read4x3[Float]) :ConstMat4x3d =
+  implicit def mat4x3FloatToDouble(m: Read4x3[Float, _]) :ConstMat4x3d =
     ConstMat4x3d(m)
 
-  implicit def mat4x4FloatToDouble(m: Read4x4[Float]) :ConstMat4d =
+  implicit def mat4x4FloatToDouble(m: Read4x4[Float, _]) :ConstMat4d =
     ConstMat4d(m)
   
 

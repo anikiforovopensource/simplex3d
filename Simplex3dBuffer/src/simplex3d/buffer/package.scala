@@ -21,6 +21,7 @@
 package simplex3d
 
 import java.nio._
+import simplex3d.math._
 
 
 /**
@@ -58,12 +59,12 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  type MetaElement = simplex3d.math.types.MetaElement
-  type Primitive = simplex3d.math.types.Primitive
-  type Composite = simplex3d.math.types.Composite
-  type Int1 = simplex3d.math.types.Int1
-  type Float1 = simplex3d.math.types.Float1
-  type Double1 = simplex3d.math.types.Double1
+  type MetaElement = integration.MetaElement
+  type Primitive = integration.Primitive
+  type Composite = integration.Composite
+  type Int1 = integration.Int1
+  type Float1 = integration.Float1
+  type Double1 = integration.Double1
 
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
   type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]

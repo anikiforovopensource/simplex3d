@@ -64,15 +64,15 @@ class DuplicateBench {
   
   def run() {
     var start = 0L
-
-    System.gc()
+    
     start = System.currentTimeMillis
     testBuffer(dataBuffer, loops)
+    System.gc()
     val bufferTime = System.currentTimeMillis - start
 
-    System.gc()
     start = System.currentTimeMillis
     testBufferDuplicate(dataBuffer, loops)
+    System.gc()
     val bufferDuplicateTime = System.currentTimeMillis - start
 
 

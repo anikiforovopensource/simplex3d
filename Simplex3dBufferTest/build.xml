@@ -111,6 +111,7 @@
                 Readme.txt
                 COPYING
                 simplex3d-buffer-test.license
+                manifest.mf
                 build.xml" />
         </zip>
     </target>

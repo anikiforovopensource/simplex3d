@@ -54,13 +54,15 @@ private[simplex3d] sealed trait MutableValue[
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] trait MutableObject[T] extends MutableValue[T] with Mutable {
+private[simplex3d] trait MutableObject[T <: AnyRef]
+extends MutableValue[T] with Mutable
+{
   //def asReadInstance() :T = copyAsImmutable() //Safer but slower.
   final override def asReadInstance() :T = this.asInstanceOf[T]
 }
 
 
-final class MutablePrimitive[
+private[simplex3d] final class MutablePrimitive[
   @specialized(Boolean, Int, Float, Double) T <: AnyVal
 ](private var value: T) extends MutableValue[T] with Mutable
 {

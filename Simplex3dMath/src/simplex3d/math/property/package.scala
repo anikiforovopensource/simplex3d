@@ -27,9 +27,10 @@ package simplex3d.math
 package object property {
 
   type PropertyValue[T] = integration.PropertyValue[T]
+  type PropertyObject[T <: AnyRef] = integration.PropertyObject[T]
   type MutableValue[T] = integration.MutableValue[T]
   type MutablePrimitive[T <: AnyVal] = integration.MutablePrimitive[T]
-  type MutableObject[T] = integration.MutableObject[T]
+  type MutableObject[T <: AnyRef] = integration.MutableObject[T]
 
   
   implicit def booleanToPropertyValue(v: Boolean) :PropertyValue[Boolean] =

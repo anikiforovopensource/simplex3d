@@ -141,6 +141,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
                 COPYING.LESSER
                 COPYING
                 simplex3d-math.license
+                manifest.mf
                 build.xml" />
         </zip>
     </target>

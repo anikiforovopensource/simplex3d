@@ -27,6 +27,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedQuat4f<T> extends ReadQ<T> implements Serializable {
+abstract class ProtectedQuat4f<P, T> extends ReadQ<P, T> implements Serializable {
     float pa; float pb; float pc; float pd;
 }

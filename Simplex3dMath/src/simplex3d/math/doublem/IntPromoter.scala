@@ -30,18 +30,18 @@ import simplex3d.math._
  */
 final class IntPromoter(val value: Double) {
   // Veci to Vecd promotion
-  def *(u: Read2[Int]) = new Vec2d(value*u.dx, value*u.dy)
-  def /(u: Read2[Int]) = new Vec2d(value/u.dx, value/u.dy)
-  def +(u: Read2[Int]) = new Vec2d(value + u.dx, value + u.dy)
-  def -(u: Read2[Int]) = new Vec2d(value - u.dx, value - u.dy)
+  def *(u: Read2[Int, _]) = new Vec2d(value*u.dx, value*u.dy)
+  def /(u: Read2[Int, _]) = new Vec2d(value/u.dx, value/u.dy)
+  def +(u: Read2[Int, _]) = new Vec2d(value + u.dx, value + u.dy)
+  def -(u: Read2[Int, _]) = new Vec2d(value - u.dx, value - u.dy)
 
-  def *(u: Read3[Int]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
-  def /(u: Read3[Int]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
-  def +(u: Read3[Int]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
-  def -(u: Read3[Int]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
+  def *(u: Read3[Int, _]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
+  def /(u: Read3[Int, _]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
+  def +(u: Read3[Int, _]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
+  def -(u: Read3[Int, _]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
 
-  def *(u: Read4[Int]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
-  def /(u: Read4[Int]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
-  def +(u: Read4[Int]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
-  def -(u: Read4[Int]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
+  def *(u: Read4[Int, _]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
+  def /(u: Read4[Int, _]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
+  def +(u: Read4[Int, _]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
+  def -(u: Read4[Int, _]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
 }

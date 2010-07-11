@@ -27,6 +27,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedVec4i<T> extends Read4<T> implements Serializable {
+abstract class ProtectedVec4i<P, T> extends Read4<P, T> implements Serializable {
     int px; int py; int pz; int pw;
 }

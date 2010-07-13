@@ -18,29 +18,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.property
+
+import simplex3d.math.integration._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object property {
+final class MutablePrimitive[
+  @specialized(Boolean, Int, Float, Double) T <: AnyVal
+](private var value: T) extends MutableInterface[T] with Mutable
+{
+  def copyAsMutable() = new MutablePrimitive[T](value)
+  def copyAsImmutable() :T = value
 
-  type PropertyValue[T] = integration.PropertyValue[T]
-  type PropertyObject[T <: AnyRef] = integration.PropertyObject[T]
-  type MutableValue[T] = integration.MutableInterface[T] with Mutable
-  type MutableObject[T <: AnyRef] = integration.MutableObject[T]
+  override def asReadInstance() :T = value
+  override def :=(value: T) { this.value = value }
 
-  
-  implicit def booleanToPropertyValue(v: Boolean) :PropertyValue[Boolean] =
-    new MutablePrimitive(v)
-
-  implicit def intToPropertyValue(v: Int) :PropertyValue[Int] =
-    new MutablePrimitive(v)
-
-  implicit def floatToPropertyValue(v: Float) :PropertyValue[Float] =
-    new MutablePrimitive(v)
-
-  implicit def doubleToPropertyValue(v: Double) :PropertyValue[Double] =
-    new MutablePrimitive(v)
+  override def toString() = {
+    value.asInstanceOf[AnyRef].getClass.getSimpleName +
+    "(" + value.toString + ")"
+  }
 }

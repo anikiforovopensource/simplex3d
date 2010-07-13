@@ -40,7 +40,7 @@ private[simplex3d] trait PropertyObject[T] extends PropertyValue[T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait MutableInterface[
+private[simplex3d] trait MutableInterface[
   @specialized(Boolean, Int, Float, Double) T
 ] extends PropertyValue[T] {
   private[math] def asReadInstance() :T
@@ -56,35 +56,4 @@ extends MutableInterface[T] with Mutable
 {
   //def asReadInstance() :T = copyAsImmutable() //Safer but slower.
   final override def asReadInstance() :T = this.asInstanceOf[T]
-}
-
-
-private[simplex3d] final class MutablePrimitive[
-  @specialized(Boolean, Int, Float, Double) T <: AnyVal
-](private var value: T) extends MutableInterface[T] with Mutable
-{
-  def copyAsMutable() :MutableInterface[T] with Mutable = {
-    new MutablePrimitive[T](value)
-  }
-  def copyAsImmutable() :T = value
-
-  override def asReadInstance() :T = value
-  override def :=(value: T) { this.value = value }
-
-  override def toString() = {
-    value.asInstanceOf[AnyRef].getClass.getSimpleName +
-    "(" + value.toString + ")"
-  }
-}
-
-
-/** <code>MathObject</code> is a superclass of all the vectors, quaternions,
- * and matrices.
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class MathObject[T]
-extends PropertyObject[T] with MutableInterface[T] {
-  private[math] override def asReadInstance() :T = throw new AssertionError
-  private[math] override def :=(value: T) :Unit = throw new AssertionError
 }

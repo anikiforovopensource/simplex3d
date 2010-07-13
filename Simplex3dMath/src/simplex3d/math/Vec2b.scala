@@ -123,7 +123,7 @@ sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean, AnyVec2b]
     }
   }
 
-  final def copyAsMutable() :MutableValue[AnyVec2b] = Vec2b(this)
+  final def copyAsMutable() = Vec2b(this)
   final def copyAsImmutable() = ConstVec2b(this)
 
   final override def equals(other: Any) :Boolean = {

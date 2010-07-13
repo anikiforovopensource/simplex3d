@@ -2072,7 +2072,8 @@ object FloatMath {
   /**
    * @param fieldOfView field of view angle in y direction, in radians.
    * @param aspectRatio width/height aspect ratio.
-   * @param near the distance to the near clipping plane, must be positive.
+   * @param near the distance to the near clipping plane, must be positive,
+   *   approximately log2(far/near) bits of depth buffer precision are lost.
    * @param far the distance to the far clipping plane, must be positive.
    */
   def perspectiveProj(
@@ -2080,13 +2081,40 @@ object FloatMath {
     near: Float, far: Float
   ) :Mat4f = {
     val focus = 1/tan(fieldOfView * 0.5f)
-    val n_f = 1/(near - far)
+    val inv_nf = 1/(near - far)
 
     new Mat4f(
       focus/aspectRatio, 0, 0, 0,
       0, focus, 0, 0,
-      0, 0, (near + far)*n_f, -1,
-      0, 0, 2*near*far*n_f, 0
+      0, 0, (near + far)*inv_nf, -1,
+      0, 0, 2*near*far*inv_nf, 0
+    )
+  }
+
+  /**
+   * @param left the coordinates of the left clipping plane.
+   * @param right the coordinates of the right clipping plane.
+   * @param bottom the coordinates of the bottom clipping plane.
+   * @param top the coordinates of the top clipping plane.
+   * @param near the distance to the near clipping plane, must be positive,
+   *   approximately log2(far/near) bits of depth buffer precision are lost.
+   * @param far the distance to the far clipping plane, must be positive.
+   */
+  def perspectiveProj(
+    left: Float, right: Float,
+    bottom: Float, top: Float,
+    near: Float, far: Float
+  ) :Mat4f = {
+    val near2 = near*2
+    val inv_rl = 1/(right - left)
+    val inv_tb = 1/(top - bottom)
+    val inv_nf = 1/(near - far)
+
+    new Mat4f(
+      near2*inv_rl, 0, 0, 0,
+      0, near2*inv_tb, 0, 0,
+      (right + left)*inv_rl, (top + bottom)*inv_tb, (near + far)*inv_nf, -1,
+      0, 0, near2*far*inv_nf, 0
     )
   }
 

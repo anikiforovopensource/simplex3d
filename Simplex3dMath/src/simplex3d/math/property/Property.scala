@@ -51,7 +51,7 @@ trait ChangeMonitor[@specialized(Boolean, Int, Float, Double) T]
 extends Property[T]
 {
   override def :=(value: T) {
-    if (this.value.specializedEquals(value)) {
+    if (this.value.asReadInstance() != value) {
       this.value := value
       onChange()
     }
@@ -61,15 +61,16 @@ extends Property[T]
 }
 
 trait ValueMonitor[@specialized(Boolean, Int, Float, Double) T]
-extends Property[T]
+extends ChangeMonitor[T]
 {
   override def :=(value: T) {
-    if (this.value.specializedEquals(value)) {
+    if (this.value.asReadInstance() != value) {
       val old = this.value.copyAsImmutable()
       this.value := value
+      onChange()
       onChange(old)
     }
   }
 
-  def onChange(old: T) {}
+  def onChange(oldValue: T)
 }

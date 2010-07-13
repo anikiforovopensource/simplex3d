@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.{MutableObject => _, _}
+import simplex3d.math.property._
 import simplex3d.math._
 
 

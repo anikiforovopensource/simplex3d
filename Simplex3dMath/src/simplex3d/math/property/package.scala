@@ -28,7 +28,7 @@ package object property {
 
   type PropertyValue[T] = integration.PropertyValue[T]
   type PropertyObject[T <: AnyRef] = integration.PropertyObject[T]
-  type MutableValue[T] = integration.MutableValue[T]
+  type MutableValue[T] = integration.MutableInterface[T] with Mutable
   type MutablePrimitive[T <: AnyVal] = integration.MutablePrimitive[T]
   type MutableObject[T <: AnyRef] = integration.MutableObject[T]
 

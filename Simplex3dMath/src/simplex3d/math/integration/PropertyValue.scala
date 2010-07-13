@@ -28,22 +28,19 @@ package simplex3d.math.integration
 private[simplex3d] sealed trait PropertyValue[
   @specialized(Boolean, Int, Float, Double) T
 ] {
-  def copyAsMutable() :MutableValue[T]
+  def copyAsMutable() :MutableInterface[T] with Mutable
   def copyAsImmutable() :T
-  def specializedEquals(value: T) :Boolean
 }
 
-trait PropertyObject[T] extends PropertyValue[T] {
-  def specializedEquals(value: T) :Boolean = (this.equals(value))
-}
+private[simplex3d] trait PropertyObject[T] extends PropertyValue[T]
 
 
-/** <code>MutableValue</code> is used to integrate with properties.
+/** <code>MutableInterface</code> is used to integrate with properties.
  * It allows uniform treatment for all the objects with := operator.
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait MutableValue[
+private[simplex3d] sealed trait MutableInterface[
   @specialized(Boolean, Int, Float, Double) T
 ] extends PropertyValue[T] {
   private[math] def asReadInstance() :T
@@ -55,7 +52,7 @@ private[simplex3d] sealed trait MutableValue[
  * @author Aleksey Nikiforov (lex)
  */
 private[simplex3d] trait MutableObject[T <: AnyRef]
-extends MutableValue[T] with Mutable
+extends MutableInterface[T] with Mutable
 {
   //def asReadInstance() :T = copyAsImmutable() //Safer but slower.
   final override def asReadInstance() :T = this.asInstanceOf[T]
@@ -64,11 +61,12 @@ extends MutableValue[T] with Mutable
 
 private[simplex3d] final class MutablePrimitive[
   @specialized(Boolean, Int, Float, Double) T <: AnyVal
-](private var value: T) extends MutableValue[T] with Mutable
+](private var value: T) extends MutableInterface[T] with Mutable
 {
-  def copyAsMutable() :MutableValue[T] = new MutablePrimitive[T](value)
+  def copyAsMutable() :MutableInterface[T] with Mutable = {
+    new MutablePrimitive[T](value)
+  }
   def copyAsImmutable() :T = value
-  override def specializedEquals(value: T) :Boolean = (this.value == value)
 
   override def asReadInstance() :T = value
   override def :=(value: T) { this.value = value }
@@ -86,7 +84,7 @@ private[simplex3d] final class MutablePrimitive[
  * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class MathObject[T]
-extends PropertyObject[T] with MutableValue[T] {
+extends PropertyObject[T] with MutableInterface[T] {
   private[math] override def asReadInstance() :T = throw new AssertionError
   private[math] override def :=(value: T) :Unit = throw new AssertionError
 }

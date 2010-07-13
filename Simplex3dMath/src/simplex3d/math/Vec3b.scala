@@ -21,7 +21,8 @@
 package simplex3d.math
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.{MutableObject => _, _}
+import simplex3d.math.property._
 
 
 /** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,

@@ -39,7 +39,373 @@ class PropertyTest extends FunSuite {
   ) extends Property[T] {
     protected val value = init.copyAsMutable()
   }
-  
+
+  test("PropertyVal") {
+    {
+      val v = Vec2b(true)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec2b])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec2b])
+    }
+    {
+      val v = Vec3b(true)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec3b])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec3b])
+    }
+    {
+      val v = Vec4b(true)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec4b])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec4b])
+    }
+
+    {
+      val v = Vec2i(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec2i])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec2i])
+    }
+    {
+      val v = Vec3i(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec3i])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec3i])
+    }
+    {
+      val v = Vec4i(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec4i])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec4i])
+    }
+
+    {
+      val v = Vec2f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec2f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec2f])
+    }
+    {
+      val v = Vec3f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec3f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec3f])
+    }
+    {
+      val v = Vec4f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec4f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec4f])
+    }
+
+    {
+      val v = Vec2d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec2d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec2d])
+    }
+    {
+      val v = Vec3d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec3d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec3d])
+    }
+    {
+      val v = Vec4d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Vec4d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstVec4d])
+    }
+
+    {
+      val v = Quat4f(1, 2, 3, 4)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Quat4f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstQuat4f])
+    }
+    {
+      val v = Quat4d(1, 2, 3, 4)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Quat4d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstQuat4d])
+    }
+
+    {
+      val v = Mat2x2f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x2f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x2f])
+    }
+    {
+      val v = Mat2x3f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x3f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x3f])
+    }
+    {
+      val v = Mat2x4f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x4f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x4f])
+    }
+
+    {
+      val v = Mat3x2f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x2f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x2f])
+    }
+    {
+      val v = Mat3x3f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x3f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x3f])
+    }
+    {
+      val v = Mat3x4f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x4f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x4f])
+    }
+
+    {
+      val v = Mat4x2f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x2f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x2f])
+    }
+    {
+      val v = Mat4x3f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x3f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x3f])
+    }
+    {
+      val v = Mat4x4f(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x4f])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x4f])
+    }
+
+
+    {
+      val v = Mat2x2d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x2d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x2d])
+    }
+    {
+      val v = Mat2x3d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x3d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x3d])
+    }
+    {
+      val v = Mat2x4d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat2x4d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat2x4d])
+    }
+
+    {
+      val v = Mat3x2d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x2d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x2d])
+    }
+    {
+      val v = Mat3x3d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x3d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x3d])
+    }
+    {
+      val v = Mat3x4d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat3x4d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat3x4d])
+    }
+
+    {
+      val v = Mat4x2d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x2d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x2d])
+    }
+    {
+      val v = Mat4x3d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x3d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x3d])
+    }
+    {
+      val v = Mat4x4d(2)
+
+      val m = v.copyAsMutable()
+      assert(m ne v); assert(m == v)
+      assert(m.isInstanceOf[Mat4x4d])
+
+      val c = v.copyAsImmutable()
+      assert(c ne v); assert(c == v)
+      assert(c.isInstanceOf[ConstMat4x4d])
+    }
+  }
+
   test("Properties") {
     {
       val p = new SimpleProperty(true)

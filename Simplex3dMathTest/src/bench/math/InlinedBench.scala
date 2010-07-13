@@ -84,19 +84,19 @@ class InlinedBenchCase {
     val inlinedTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testReg(length, loops)
-    val regularTime = System.currentTimeMillis - start
+    testSimple(length, loops)
+    val simpleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testMake(length, loops)
     val makeTime = System.currentTimeMillis - start
 
-    println("reg time: " + regularTime +
+    println("reg time: " + simpleTime +
             ", make time: " + makeTime +
             ", inlined time: " + inlinedTime + ".")
   }
 
-  def testReg(length: Int, loops: Int) {
+  def testSimple(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {

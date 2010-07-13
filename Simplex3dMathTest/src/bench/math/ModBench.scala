@@ -41,18 +41,18 @@ class ModFloat {
     var start = 0L
 
     start = System.currentTimeMillis
-    testRegular(length, loops)
-    val regularTime = System.currentTimeMillis - start
+    testSimple(length, loops)
+    val simpleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testAnother(length, loops)
     val anotherTime = System.currentTimeMillis - start
 
     println("Float. another time: " + anotherTime +
-            ", regular time: " + regularTime + ".")
+            ", normal time: " + simpleTime + ".")
   }
 
-  def modReg(x: Float, y: Float) :Float = {
+  def modSimple(x: Float, y: Float) :Float = {
     x - y*floor(x/y)
   }
 
@@ -64,14 +64,14 @@ class ModFloat {
     }
   }
 
-  def testRegular(length: Int, loops: Int) {
+  def testSimple(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(modReg(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += int(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }

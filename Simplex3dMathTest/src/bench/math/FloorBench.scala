@@ -40,15 +40,15 @@ class FloorFloat {
     var start = 0L
 
     start = System.currentTimeMillis
-    testRegular(length, loops)
-    val regularTime = System.currentTimeMillis - start
+    testSimple(length, loops)
+    val simpleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testOptimised(length, loops)
     val optimisedTime = System.currentTimeMillis - start
 
     println("Float. optimised time: " + optimisedTime +
-            ", regular time: " + regularTime + ".")
+            ", simple time: " + simpleTime + ".")
   }
 
   def floorOpt(x: Float) :Float = {
@@ -59,7 +59,7 @@ class FloorFloat {
     }
   }
 
-  def testRegular(length: Int, loops: Int) {
+  def testSimple(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
@@ -102,15 +102,15 @@ class FloorDouble {
     var start = 0L
 
     start = System.currentTimeMillis
-    testRegular(length, loops)
-    val regularTime = System.currentTimeMillis - start
+    testSimple(length, loops)
+    val simpleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testOptimised(length, loops)
     val optimisedTime = System.currentTimeMillis - start
 
     println("Double. optimised time: " + optimisedTime +
-        ", regular time: " + regularTime + ".")
+        ", simple time: " + simpleTime + ".")
   }
 
   def floorOpt(x: Double) :Double = {
@@ -121,14 +121,14 @@ class FloorDouble {
     }
   }
 
-  def testRegular(length: Int, loops: Int) {
+  def testSimple(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(StrictMath.floor((-i + 0.12345)*100)/23.4567)
+        answer += int(StrictMath.floor((-i + 0.12345)*4.26317427430115915709))
 
         i += 1
       }
@@ -145,7 +145,7 @@ class FloorDouble {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(floorOpt((-i + 0.12345)*100)/23.4567)
+        answer += int(floorOpt((-i + 0.12345)*4.26317427430115915709))
 
         i += 1
       }

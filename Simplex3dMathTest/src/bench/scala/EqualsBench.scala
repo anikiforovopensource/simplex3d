@@ -20,7 +20,6 @@
 
 package bench.scala
 
-import simplex3d.math.property._
 import simplex3d.math.floatm.renamed._
 import simplex3d.math.intm._
 

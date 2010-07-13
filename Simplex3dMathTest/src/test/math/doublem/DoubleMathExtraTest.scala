@@ -932,65 +932,114 @@ class DoubleMathExtraTest extends FunSuite {
     //
     //gl.glPopMatrix();
 
-    // gluPerspective(90, 640/480f, 10, 1000)
-    val p1 = Mat4(
-        0.75, 0, 0, 0,
-        0, 1.0, 0, 0,
-        0, 0, -1.020202, -1.0,
-        0, 0, -20.20202, 0.0
-    )
-    val m1 = perspectiveProj(radians(90), 640/480d, 10, 1000)
-    assert(approxEqual(m1, p1, 1e-6))
-    
-    // gluPerspective(120, 800/600f, 10, 10000)
-    val p2 = Mat4(
-        0.4330127, 0, 0, 0,
-        0, 0.57735026, 0, 0,
-        0, 0, -1.002002, -1.0,
-        0, 0, -20.02002, 0
-    )
-    val m2 = perspectiveProj(radians(120), 800/600d, 10, 10000)
-    assert(approxEqual(m2, p2, 1e-7))
+    def generalPerspectiveProj(
+      fov: Double, aspect: Double,
+      near: Double, far: Double
+    ) = {
+      val top = tan(fov*0.5)*near
+      val bottom = -top
 
-    // gluPerspective(100, 1680/1050f, 1, 800)
-    val p3 = Mat4(
-        0.52443725, 0, 0,
-        0, 0, 0.83909965, 0,
-        0, 0, 0, -1.0025032, -1.0,
-        0, 0, -2.0025032, 0
-    )
-    val m3 = perspectiveProj(radians(100), 1680/1050d, 1, 800)
-    assert(approxEqual(m3, p3, 1e-7))
+      val left = aspect*bottom
+      val right = aspect*top
 
-    // glOrtho(-100, 100, -100, 100, -100, 100)
-    val o1 = Mat4(
-        0.01, 0, 0, 0,
-        0, 0.01, 0, 0,
-        0, 0, -0.01, 0,
-        0, 0, 0, 1.0
-    )
-    val n1 = orthoProj(-100, 100, -100, 100, -100, 100)
-    assert(approxEqual(n1, o1, 1e-7))
+      perspectiveProj(left, right, bottom, top, near, far)
+    }
 
-    // gl.glOrtho(0, 300, -200, 400, -20, 500)
-    val o2 = Mat4(
-        0.006666667, 0, 0, 0,
-        0, 0.0033333334, 0, 0,
-        0, 0, -0.0038461538, 0,
-        -1.0, -0.33333334, -0.9230769, 1.0
-    )
-    val n2 = orthoProj(0, 300, -200, 400, -20, 500)
-    assert(approxEqual(n2, o2, 1e-7))
+    {
+      // gluPerspective(90, 640/480f, 10, 1000)
+      val p1 = Mat4(
+          0.75, 0, 0, 0,
+          0, 1.0, 0, 0,
+          0, 0, -1.020202, -1.0,
+          0, 0, -20.20202, 0.0
+      )
+      val m1 = perspectiveProj(radians(90), 640/480d, 10, 1000)
+      assert(approxEqual(m1, p1, 1e-6))
 
-    // gl.glOrtho(-500, 22, -800, -222, 100, 1000)
-    val o3 = Mat4(
-        0.0038314175, 0, 0, 0,
-        0, 0.0034602077, 0, 0,
-        0, 0, -0.0022222223, 0,
-        0.91570884, 1.7681661, -1.2222222, 1.0
-    )
-    val n3 = orthoProj(-500, 22, -800, -222, 100, 1000)
-    assert(approxEqual(n3, o3, 1e-6))
+      // gluPerspective(120, 800/600f, 10, 10000)
+      val p2 = Mat4(
+          0.4330127, 0, 0, 0,
+          0, 0.57735026, 0, 0,
+          0, 0, -1.002002, -1.0,
+          0, 0, -20.02002, 0
+      )
+      val m2 = perspectiveProj(radians(120), 800/600d, 10, 10000)
+      assert(approxEqual(m2, p2, 1e-7))
+
+      // gluPerspective(100, 1680/1050f, 1, 800)
+      val p3 = Mat4(
+          0.52443725, 0, 0,
+          0, 0, 0.83909965, 0,
+          0, 0, 0, -1.0025032, -1.0,
+          0, 0, -2.0025032, 0
+      )
+      val m3 = perspectiveProj(radians(100), 1680/1050d, 1, 800)
+      assert(approxEqual(m3, p3, 1e-7))
+    }
+
+    {
+      // gluPerspective(90, 640/480f, 10, 1000)
+        val p1 = Mat4(
+            0.75, 0, 0, 0,
+            0, 1.0, 0, 0,
+            0, 0, -1.020202, -1.0,
+            0, 0, -20.20202, 0.0
+        )
+        val m1 = generalPerspectiveProj(radians(90), 640/480d, 10, 1000)
+        assert(approxEqual(m1, p1, 1e-6))
+
+        // gluPerspective(120, 800/600f, 10, 10000)
+        val p2 = Mat4(
+            0.4330127, 0, 0, 0,
+            0, 0.57735026, 0, 0,
+            0, 0, -1.002002, -1.0,
+            0, 0, -20.02002, 0
+        )
+        val m2 = generalPerspectiveProj(radians(120), 800/600d, 10, 10000)
+        assert(approxEqual(m2, p2, 1e-7))
+
+        // gluPerspective(100, 1680/1050f, 1, 800)
+        val p3 = Mat4(
+            0.52443725, 0, 0,
+            0, 0, 0.83909965, 0,
+            0, 0, 0, -1.0025032, -1.0,
+            0, 0, -2.0025032, 0
+        )
+        val m3 = generalPerspectiveProj(radians(100), 1680/1050d, 1, 800)
+        assert(approxEqual(m3, p3, 1e-7))
+    }
+
+    {
+      // glOrtho(-100, 100, -100, 100, -100, 100)
+      val o1 = Mat4(
+          0.01, 0, 0, 0,
+          0, 0.01, 0, 0,
+          0, 0, -0.01, 0,
+          0, 0, 0, 1.0
+      )
+      val n1 = orthoProj(-100, 100, -100, 100, -100, 100)
+      assert(approxEqual(n1, o1, 1e-7))
+
+      // gl.glOrtho(0, 300, -200, 400, -20, 500)
+      val o2 = Mat4(
+          0.006666667, 0, 0, 0,
+          0, 0.0033333334, 0, 0,
+          0, 0, -0.0038461538, 0,
+          -1.0, -0.33333334, -0.9230769, 1.0
+      )
+      val n2 = orthoProj(0, 300, -200, 400, -20, 500)
+      assert(approxEqual(n2, o2, 1e-7))
+
+      // gl.glOrtho(-500, 22, -800, -222, 100, 1000)
+      val o3 = Mat4(
+          0.0038314175, 0, 0, 0,
+          0, 0.0034602077, 0, 0,
+          0, 0, -0.0022222223, 0,
+          0.91570884, 1.7681661, -1.2222222, 1.0
+      )
+      val n3 = orthoProj(-500, 22, -800, -222, 100, 1000)
+      assert(approxEqual(n3, o3, 1e-6))
+    }
   }
 
   test("Transformation") {

@@ -38,8 +38,8 @@ object RawData {
   final val RawFloat = 5126
   final val RawDouble = 5130
 
-  def byteLength(binding: Int) :Byte = {
-    (binding: @switch) match {
+  def byteLength(rawType: Int) :Byte = {
+    (rawType: @switch) match {
       case SByte => 1
       case UByte => 1
       case SShort => 2
@@ -49,7 +49,22 @@ object RawData {
       case HalfFloat => 2
       case RawFloat => 4
       case RawDouble => 8
-      case _ => throw new AssertionError("Binding not found.")
+      case _ => throw new AssertionError("RawType not found.")
+    }
+  }
+
+  def name(rawType: Int) :String = {
+    (rawType: @switch) match {
+      case SByte => "SByte"
+      case UByte => "UByte"
+      case SShort => "SShort"
+      case UShort => "UShort"
+      case SInt => "SInt"
+      case UInt => "UInt"
+      case HalfFloat => "HalfFloat"
+      case RawFloat => "RawFloat"
+      case RawDouble => "RawDouble"
+      case _ => throw new AssertionError("RawType not found.")
     }
   }
 }

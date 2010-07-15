@@ -31,6 +31,15 @@ trait ReadIndexSeq[+R <: RawData]
 extends ReadContiguousSeq[Int1, R] {
   def asReadOnlySeq() :ReadIndexSeq[R]
 
+  def mkReadIndexArray(size: Int) :ReadIndexArray[R] =
+    mkReadDataArray(size).asInstanceOf[ReadIndexArray[R]]
+  def mkReadIndexArray(array: R#ArrayType @uncheckedVariance) :ReadIndexArray[R] =
+    mkReadDataArray(array).asInstanceOf[ReadIndexArray[R]]
+  def mkReadIndexBuffer(size: Int) :ReadIndexBuffer[R] =
+    mkReadDataBuffer(size).asInstanceOf[ReadIndexBuffer[R]]
+  def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
+    mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
+
   def mkIndexArray(size: Int) :IndexArray[R] =
     mkDataArray(size).asInstanceOf[IndexArray[R]]
   def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] =
@@ -68,6 +77,15 @@ trait IndexBuffer[+R <: RawData]
 extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
 
 
+object ReadIndexArray {
+  def apply[R <: ReadableIndex](da: ReadDataArray[_, R])(
+    implicit ref: FactoryRef[Int1, R]
+  ) :ReadIndexArray[R] = {
+    val res = ref.factory.mkReadDataArray(da.sharedArray)
+    if (da.isReadOnly) res.asReadOnlySeq() else res
+  }
+}
+
 object IndexArray {
   def apply[R <: ReadableIndex](array: R#ArrayType)(
     implicit ref: FactoryRef[Int1, R]
@@ -92,19 +110,25 @@ object IndexArray {
   def apply[R <: ReadableIndex](da: DataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
-    if (da.isReadOnly) throw new IllegalArgumentException(
-      "The argument must not be read only."
+    if (da.isReadOnly) throw new ClassCastException(
+      "The DataArray must not be read-only."
     )
-
     ref.factory.mkDataArray(da.array)
   }
+}
 
-  def apply[R <: ReadableIndex](da: inDataArray[_, R])(
+object ReadIndexBuffer {
+  def apply[R <: ReadableIndex](buffer: ByteBuffer)(
     implicit ref: FactoryRef[Int1, R]
-  ) :ReadIndexArray[R] = {
-    val res = ref.factory.mkDataArray(da.sharedArray)
-    
-    if (da.isReadOnly) res.asReadOnlySeq() else res
+  ) :ReadIndexBuffer[R] = {
+    ref.factory.mkReadDataBuffer(buffer)
+  }
+
+  def apply[R <: ReadableIndex](db: ReadDataBuffer[_, _])(
+    implicit ref: FactoryRef[Int1, R]
+  ) :ReadIndexBuffer[R] = {
+    val res = ref.factory.mkReadDataBuffer(db.sharedBuffer)
+    if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -132,17 +156,9 @@ object IndexBuffer {
   def apply[R <: ReadableIndex](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
-    if (db.isReadOnly) throw new IllegalArgumentException(
-      "The argument must not be read only."
+    if (db.isReadOnly) throw new ClassCastException(
+      "The DataBuffer must not be read-only."
     )
-
     ref.factory.mkDataBuffer(db.sharedBuffer)
-  }
-
-  def apply[R <: ReadableIndex](db: inDataBuffer[_, _])(
-    implicit ref: FactoryRef[Int1, R]
-  ) :ReadIndexBuffer[R] = {
-    val res = ref.factory.mkDataBuffer(db.sharedBuffer)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }

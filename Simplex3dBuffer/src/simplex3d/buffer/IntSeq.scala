@@ -46,21 +46,21 @@ private[buffer] sealed abstract class SeqInt1UByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayInt1UByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Byte]) =
+  final def mkReadDataArray(array: Array[Byte]) =
     new ArrayInt1UByte(array, array, ByteBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferInt1UByte(buff, buff.duplicate())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1UByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
@@ -124,21 +124,21 @@ private[buffer] sealed abstract class SeqInt1UShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Char](size)
     new ArrayInt1UShort(array, array, CharBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Char]) =
+  final def mkReadDataArray(array: Array[Char]) =
     new ArrayInt1UShort(array, array, CharBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferInt1UShort(buff, buff.asCharBuffer())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UShort(byteBuffer, byteBuffer.asCharBuffer())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1UShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
   }
@@ -207,21 +207,21 @@ private[buffer] sealed abstract class SeqInt1UInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayInt1UInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Int]) =
+  final def mkReadDataArray(array: Array[Int]) =
     new ArrayInt1UInt(array, array, IntBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferInt1UInt(buff, buff.asIntBuffer())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1UInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }
@@ -283,21 +283,21 @@ private[buffer] sealed abstract class SeqInt1SByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayInt1SByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Byte]) =
+  final def mkReadDataArray(array: Array[Byte]) =
     new ArrayInt1SByte(array, array, ByteBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferInt1SByte(buff, buff.duplicate())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1SByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
   }
@@ -361,21 +361,21 @@ private[buffer] sealed abstract class SeqInt1SShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Short](size)
     new ArrayInt1SShort(array, array, ShortBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Short]) =
+  final def mkReadDataArray(array: Array[Short]) =
     new ArrayInt1SShort(array, array, ShortBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferInt1SShort(buff, buff.asShortBuffer())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SShort(byteBuffer, byteBuffer.asShortBuffer())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1SShort(byteBuffer, byteBuffer.asShortBuffer(), offset, stride)
   }
@@ -441,21 +441,21 @@ private[buffer] sealed abstract class SeqInt1SInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkDataArray(size: Int) = {
+  final def mkReadDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayInt1SInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkDataArray(array: Array[Int]) =
+  final def mkReadDataArray(array: Array[Int]) =
     new ArrayInt1SInt(array, array, IntBuffer.wrap(array))
-  final def mkDataBuffer(size: Int) = {
+  final def mkReadDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferInt1SInt(buff, buff.asIntBuffer())
   }
-  final def mkDataBuffer(byteBuffer: ByteBuffer) = {
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewInt1SInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
   }

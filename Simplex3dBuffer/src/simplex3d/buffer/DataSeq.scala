@@ -30,6 +30,7 @@ extends ReadBaseSeq[E, E#Element, R]
 trait DataSeq[E <: MetaElement, +R <: RawData]
 extends BaseSeq[E, E#Element, R] with ReadDataSeq[E, R]
 
+
 object DataSeq {
   def apply[E <: MetaElement, R <: ReadableData](
     implicit ref: FactoryRef[E, R]
@@ -37,6 +38,7 @@ object DataSeq {
     ref.factory
   }
 }
+
 
 trait ReadContiguousSeq[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {

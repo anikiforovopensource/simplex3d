@@ -73,11 +73,11 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def apply(i: Int) :S
 
 
-  def mkDataArray(size: Int) :DataArray[E, R]
-  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
-  def mkDataBuffer(size: Int) :DataBuffer[E, R]
-  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[E, R]
-  def mkDataView(byteBuffer: ByteBuffer, offset: Int,stride: Int):DataView[E, R]
+  def mkReadDataArray(size: Int) :ReadDataArray[E, R]
+  def mkReadDataArray(array: R#ArrayType @uncheckedVariance) :ReadDataArray[E, R]
+  def mkReadDataBuffer(size: Int) :ReadDataBuffer[E, R]
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
+  def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
 
   
   def components: Int
@@ -91,6 +91,38 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   final def isReadOnly(): Boolean = buffer.isReadOnly()
   def asReadOnlySeq() :ReadDataSeq[E, R]
 
+
+  final def mkDataArray(
+    size: Int
+  ) :DataArray[E, R] = mkReadDataArray(size).asInstanceOf[DataArray[E, R]]
+
+  final def mkDataArray(
+    array: R#ArrayType @uncheckedVariance
+  ) :DataArray[E, R] = mkReadDataArray(array).asInstanceOf[DataArray[E, R]]
+
+  final def mkDataBuffer(
+    size: Int
+  ) :DataBuffer[E, R] = mkReadDataBuffer(size).asInstanceOf[DataBuffer[E, R]]
+
+  final def mkDataBuffer(
+    byteBuffer: ByteBuffer
+  ) :DataBuffer[E, R] = {
+    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
+      "The buffer must not be read-only."
+    )
+    mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[E, R]]
+  }
+
+  final def mkDataView(
+    byteBuffer: ByteBuffer, offset: Int, stride: Int
+  ) :DataView[E, R] = {
+    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
+      "The buffer must not be read-only."
+    )
+    mkReadDataView(byteBuffer, offset, stride).asInstanceOf[DataView[E, R]]
+  }
+
+  
   final def copyAsDataArray() :DataArray[E, R] = {
     val copy = mkDataArray(size)
     copy.put(
@@ -124,6 +156,25 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       size
     )
     copy
+  }
+
+  override def toString() :String = {
+    def getElemName() = {
+      val name = elementManifest.erasure.getSimpleName
+      if (name.startsWith("Any")) name.substring(3) else name
+    }
+
+    var view = false
+
+    (if (isReadOnly()) "ReadOnly" else "") +
+    (this match {
+      case s: DataArray[_, _] => "DataArray"
+      case s: DataBuffer[_, _] => "DataBuffer"
+      case s: DataView[_, _] => view = true; "DataView"
+    }) +
+    "[" + getElemName() + ", " + RawData.name(rawType)+ "](" +
+    (if (view) "offset = " + offset + ", " else "") + "stride = " + stride +
+    ", size = " + size + ")"
   }
 }
 
@@ -528,15 +579,16 @@ private[buffer] abstract class BaseSeq[
 
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class CompositeSeq[E <: Composite, +R <: RawData](
+  backing: ReadContiguousSeq[E#Component, R]
+) extends BaseSeq[E, E#Element, R](backing.shared, backing.buffer) {
   val backingSeq: ContiguousSeq[E#Component, R]
-) extends BaseSeq[E, E#Element, R](backingSeq.shared, backingSeq.buffer) {
-  final def componentManifest = backingSeq.elementManifest
+  final def componentManifest = backing.elementManifest
 
-  final def asReadOnlyBuffer() :R#BufferType = backingSeq.asReadOnlyBuffer()
+  final def asReadOnlyBuffer() :R#BufferType = backing.asReadOnlyBuffer()
   final def asBuffer() :R#BufferType = backingSeq.asBuffer()
   
-  final def rawType = backingSeq.rawType
-  final def normalized: Boolean = backingSeq.normalized
+  final def rawType = backing.rawType
+  final def normalized: Boolean = backing.normalized
 
-  private[buffer] final override val bindingBuffer = backingSeq.bindingBuffer
+  private[buffer] final override val bindingBuffer = backing.bindingBuffer
 }

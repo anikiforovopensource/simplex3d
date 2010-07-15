@@ -34,6 +34,22 @@ extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
 trait DataBuffer[E <: MetaElement, +R <: RawData]
 extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
 
+
+object ReadDataBuffer {
+  def apply[E <: MetaElement, R <: ReadableData](buffer: ByteBuffer)(
+    implicit ref: FactoryRef[E, R]
+  ) :ReadDataBuffer[E, R] = {
+    ref.factory.mkReadDataBuffer(buffer)
+  }
+
+  def apply[E <: MetaElement, R <: ReadableData](db: ReadDataBuffer[_, _])(
+    implicit ref: FactoryRef[E, R]
+  ) :ReadDataBuffer[E, R] = {
+    val res = ref.factory.mkReadDataBuffer(db.sharedBuffer)
+    if (db.isReadOnly) res.asReadOnlySeq() else res
+  }
+}
+
 object DataBuffer {
   def apply[E <: MetaElement, R <: ReadableData](buffer: ByteBuffer)(
     implicit ref: FactoryRef[E, R]
@@ -58,14 +74,9 @@ object DataBuffer {
   def apply[E <: MetaElement, R <: ReadableData](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
-    val res = ref.factory.mkDataBuffer(db.sharedBuffer)
-    if (db.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataBuffer[E, R]] else res
-  }
-
-  def apply[E <: MetaElement, R <: ReadableData](db: inDataBuffer[_, _])(
-    implicit ref: FactoryRef[E, R]
-  ) :ReadDataBuffer[E, R] = {
-    val res = ref.factory.mkDataBuffer(db.sharedBuffer)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
+    if (db.isReadOnly) throw new ClassCastException(
+      "The DataBuffer must not be read-only."
+    )
+    ref.factory.mkDataBuffer(db.sharedBuffer)
   }
 }

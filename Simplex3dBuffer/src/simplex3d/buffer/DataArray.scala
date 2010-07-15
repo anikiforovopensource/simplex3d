@@ -48,6 +48,16 @@ extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
   def backingSeq: DataArray[E#Component, R]
 }
 
+
+object ReadDataArray {
+  def apply[E <: MetaElement, R <: ReadableData](da: ReadDataArray[_, R])(
+    implicit ref: FactoryRef[E, R]
+  ) :ReadDataArray[E, R] = {
+    val res = ref.factory.mkReadDataArray(da.sharedArray)
+    if (da.isReadOnly) res.asReadOnlySeq() else res
+  }
+}
+
 object DataArray {
   def apply[E <: MetaElement, R <: ReadableData](array: R#ArrayType)(
     implicit ref: FactoryRef[E, R]
@@ -72,14 +82,9 @@ object DataArray {
   def apply[E <: MetaElement, R <: ReadableData](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
-    val res = ref.factory.mkDataArray(da.sharedArray)
-    if (da.isReadOnly) res.asReadOnlySeq.asInstanceOf[DataArray[E, R]] else res
-  }
-
-  def apply[E <: MetaElement, R <: ReadableData](da: inDataArray[_, R])(
-    implicit ref: FactoryRef[E, R]
-  ) :ReadDataArray[E, R] = {
-    val res = ref.factory.mkDataArray(da.sharedArray)
-    if (da.isReadOnly) res.asReadOnlySeq() else res
+    if (da.isReadOnly) throw new ClassCastException(
+      "The DataArray must not be read-only."
+    )
+    ref.factory.mkDataArray(da.sharedArray)
   }
 }

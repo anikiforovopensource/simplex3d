@@ -101,10 +101,10 @@ private[optimize] trait TemplateWorker {
 
   protected def brackets(s: String) = "(" + s + ")"
   
-  protected def fixMkArrayDesc(name: String, desc: String) = {
+  protected def fixMakeArrayDesc(name: String, desc: String) = {
     if (
       isReplacingArraySig &&
-      name == "mkDataArray" &&
+      name == "mkReadDataArray" &&
       desc.take(4) == brackets(templateArraySig)
     ) {
       brackets(replacementArraySig) + desc.drop(4)
@@ -186,7 +186,7 @@ private[optimize] class TemplateClassVisitor(
     new TemplateMethodVisitor(
       template, replacement,
       cv.visitMethod(
-        access, replace(name), replace(fixMkArrayDesc(name, desc)),
+        access, replace(name), replace(fixMakeArrayDesc(name, desc)),
         replace(signature), exceptions
       )
     )
@@ -216,7 +216,7 @@ private[optimize] class TemplateMethodVisitor(
     opcode: Int, owner: String, name: String, desc: String
   ) {
     mv.visitMethodInsn(
-      opcode, replace(owner), replace(name), replace(fixMkArrayDesc(name, desc))
+      opcode, replace(owner), replace(name), replace(fixMakeArrayDesc(name, desc))
     )
   }
 

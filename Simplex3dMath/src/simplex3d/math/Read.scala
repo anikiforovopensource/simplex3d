@@ -28,24 +28,7 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class MathObject[T]
-extends PropertyObject[T] with MutableInterface[T] {
-
-  private[math] override def asReadInstance() :T =
-    throw new UnsupportedOperationException
-
-  private[math] override def :=(value: T) :Unit =
-    throw new UnsupportedOperationException
-}
-
-/** <code>ReadVec</code> is a superclass of all the vectors.
- * <p>
- *   There are double, float, int, and boolean vectors.
- * </p>
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class ReadVec[P, T] extends MathObject[T]
+private[math] abstract class MathObject[T] extends PropertyObject[T]
 
 /** <code>Read2</code> is a superclass of all the 2-dimensional vectors.
  * <p>

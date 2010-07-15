@@ -43,8 +43,8 @@ private[simplex3d] trait PropertyObject[T] extends PropertyValue[T]
 private[simplex3d] trait MutableInterface[
   @specialized(Boolean, Int, Float, Double) T
 ] extends PropertyValue[T] {
-  private[math] def asReadInstance() :T
-  private[math] def :=(value: T) :Unit
+  def asReadInstance() :T
+  def :=(value: T) :Unit
 }
 
 /** <code>MutableObject</code> is used to integrate objects with properties.

@@ -18,15 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bench.buffer
-
+package bench.scala
 
 import java.nio._
-
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.buffer._
-import simplex3d.buffer.floatm._
 
 
 /**

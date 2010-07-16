@@ -35,11 +35,12 @@ import simplex3d.buffer.floatm._
 object WrapperBench {
   def main(args: Array[String]) {
     //System.setProperty("simplex3d.buffer.optimize", "false")
-    new WrapperBenchTC().run()
-  }
-}
 
-class WrapperBenchTC {
+    test()
+    test()
+    test()
+  }
+
   val length = 20000
   val loops = 20000
 
@@ -64,42 +65,35 @@ class WrapperBenchTC {
     DataArray[Vec4f, UByte](t.array)
   }
 
-  def run() {
+  def test() {
+    println("\nTesting...")
     var start = 0L
 
     start = System.currentTimeMillis
     testBuffer(dataBuffer, loops)
+    System.gc()
     val bufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testArray(dataArray, loops)
+    System.gc()
     val arrayTime = System.currentTimeMillis - start
 
-
-    // Array, RoArray and Buffer
+    
     start = System.currentTimeMillis
     testImplementedArray(dataArray, loops)
+    System.gc()
     val implementedArrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedBuffer(byteBuffer, loops)
+    System.gc()
     val implementedBufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedConversion(convertedBytes, loops)
+    System.gc()
     val implementedConversionTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testImplementedAbs(DataArray[Vec4f, RawFloat](dataArray), loops)
-    val implementedArrayAbsTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testImplementedAbs(DataBuffer[Vec4f, RawFloat](byteBuffer), loops)
-    val implementedBufferAbsTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testImplementedAbs(convertedBytes, loops)
-    val implementedConversionAbsTime = System.currentTimeMillis - start
 
 
     // Choices
@@ -128,16 +122,12 @@ class WrapperBenchTC {
 //    val genClassBufTime = System.currentTimeMillis - start
 
 
+    println("\nResults:")
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
-
     println("Implemented Array time: " + implementedArrayTime + ".")
     println("Implemented Buffer time: " + implementedBufferTime + ".")
     println("Implemented Conversion time: " + implementedConversionTime + ".")
-    println("Implemented Array time: " + implementedArrayAbsTime + ".")
-    println("Implemented Buffer time: " + implementedBufferAbsTime + ".")
-    println("Implemented Conversion time: " + implementedConversionAbsTime + ".")
-
 //    println("Abstract class with Array time: " + absClassArrTime + ".")
 //    println("Generic class with Array time: " + genClassArrTime + ".")
 //    println("Generic Wrapper with Array time: " + genWrapperArrTime + ".")
@@ -384,26 +374,6 @@ class WrapperBenchTC {
   final def testImplementedConversion(s: DataSeq[Vec4f, UByte], loops: Int) {
     var answer = 0
     val seq = s
-    val end = seq.size
-    val step = 1
-
-    var l = 0; while (l < loops) {
-      var i = 0; while (i < end) {
-
-        val v = seq(i)
-        val u = v * 7.9f
-        answer += int(u.x + u.y + u.z + u.w)
-
-        i += step
-      }
-      l += 1
-    }
-
-    println(answer)
-  }
-
-  final def testImplementedAbs(seq: DataSeq[Vec4f, _], loops: Int) {
-    var answer = 0
     val end = seq.size
     val step = 1
 

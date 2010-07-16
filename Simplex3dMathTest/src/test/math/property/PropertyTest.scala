@@ -40,6 +40,30 @@ class PropertyTest extends FunSuite {
     protected val value = init.copyAsMutable()
   }
 
+  test("PrimitiveVal") {
+    def mutable[T](v: PropertyValue[T]) = v.copyAsMutable()
+
+    val b = mutable(true)
+    assert(b.asReadInstance() == true)
+    b := false
+    assert(b.asReadInstance() == false)
+
+    val i = mutable(1)
+    assert(i.asReadInstance() == 1)
+    i := 2
+    assert(i.asReadInstance() == 2)
+
+    val f = mutable(1f)
+    assert(f.asReadInstance() == 1f)
+    f := 2f
+    assert(f.asReadInstance() == 2f)
+
+    val d = mutable(1d)
+    assert(d.asReadInstance() == 1d)
+    d := 2d
+    assert(d.asReadInstance() == 2d)
+  }
+
   test("PropertyVal") {
     {
       val v = Vec2b(true)
@@ -406,7 +430,7 @@ class PropertyTest extends FunSuite {
     }
   }
 
-  test("Properties") {
+  test("Property") {
     {
       val p = new SimpleProperty(true)
       assert(p() == true)

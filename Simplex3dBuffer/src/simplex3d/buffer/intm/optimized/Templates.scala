@@ -31,24 +31,23 @@ import simplex3d.buffer._
  */
 // Vec2i SInt
 private[buffer] final class ArrayVec2iSInt(
-  backing: ReadDataArray[Int1, SInt]
+  backing: ArrayInt1SInt
 ) extends BaseVec2i[SInt](backing) with DataArray[Vec2i, SInt] {
+  override def backingSeq: ArrayInt1SInt = backing
   def this() = this(new ArrayInt1SInt)
-
-  val backingSeq = backing.asInstanceOf[DataArray[Int1, SInt]]
-  def asReadOnlySeq() = new ArrayVec2iSInt(backingSeq.asReadOnlySeq())
+  def asReadOnlySeq() = new ArrayVec2iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
     ConstVec2i(
-      backingSeq(j),
-      backingSeq(j + 1)
+      backing(j),
+      backing(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
+    backing(j) = v.x
+    backing(j + 1) = v.y
   }
 
   override def mkReadDataArray(size: Int) =
@@ -64,22 +63,22 @@ private[buffer] final class ArrayVec2iSInt(
 }
 
 private[buffer] final class BufferVec2iSInt(
-  backing: ReadDataBuffer[Int1, SInt]
+  backing: BufferInt1SInt
 ) extends BaseVec2i[SInt](backing) with DataBuffer[Vec2i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new BufferVec2iSInt(backingSeq.asReadOnlySeq())
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new BufferVec2iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
     ConstVec2i(
-      backingSeq(j),
-      backingSeq(j + 1)
+      backing(j),
+      backing(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
+    backing(j) = v.x
+    backing(j + 1) = v.y
   }
 
   override def mkReadDataArray(size: Int) =
@@ -95,24 +94,24 @@ private[buffer] final class BufferVec2iSInt(
 }
 
 private[buffer] final class ViewVec2iSInt(
-  backing: ReadDataBuffer[Int1, SInt],
+  backing: BufferInt1SInt,
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec2i[SInt](backing) with DataView[Vec2i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new ViewVec2iSInt(backingSeq.asReadOnlySeq(), offset, stride)
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new ViewVec2iSInt(backing.asReadOnlySeq(), offset, stride)
 
   override def apply(i: Int) :AnyVec2i = {
     val j = offset + i*stride
     ConstVec2i(
-      backingSeq(j),
-      backingSeq(j + 1)
+      backing(j),
+      backing(j + 1)
     )
   }
   override def update(i: Int, v: AnyVec2i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
+    backing(j) = v.x
+    backing(j + 1) = v.y
   }
 
   override def mkReadDataArray(size: Int) =
@@ -130,26 +129,25 @@ private[buffer] final class ViewVec2iSInt(
 
 // Vec3i SInt
 private[buffer] final class ArrayVec3iSInt(
-  backing: ReadDataArray[Int1, SInt]
+  backing: ArrayInt1SInt
 ) extends BaseVec3i[SInt](backing) with DataArray[Vec3i, SInt] {
   def this() = this(new ArrayInt1SInt)
-
-  val backingSeq = backing.asInstanceOf[DataArray[Int1, SInt]]
-  def asReadOnlySeq() = new ArrayVec3iSInt(backingSeq.asReadOnlySeq())
+  override def backingSeq: ArrayInt1SInt = backing
+  def asReadOnlySeq() = new ArrayVec3iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
     ConstVec3i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2)
     )
   }
   override def update(i: Int, v: AnyVec3i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
   }
 
   override def mkReadDataArray(size: Int) =
@@ -165,24 +163,24 @@ private[buffer] final class ArrayVec3iSInt(
 }
 
 private[buffer] final class BufferVec3iSInt(
-  backing: ReadDataBuffer[Int1, SInt]
+  backing: BufferInt1SInt
 ) extends BaseVec3i[SInt](backing) with DataBuffer[Vec3i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new BufferVec3iSInt(backingSeq.asReadOnlySeq())
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new BufferVec3iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
     ConstVec3i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2)
     )
   }
   override def update(i: Int, v: AnyVec3i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
   }
 
   override def mkReadDataArray(size: Int) =
@@ -198,26 +196,26 @@ private[buffer] final class BufferVec3iSInt(
 }
 
 private[buffer] final class ViewVec3iSInt(
-  backing: ReadDataBuffer[Int1, SInt],
+  backing: BufferInt1SInt,
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec3i[SInt](backing) with DataView[Vec3i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new ViewVec3iSInt(backingSeq.asReadOnlySeq(), offset, stride)
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new ViewVec3iSInt(backing.asReadOnlySeq(), offset, stride)
   
   override def apply(i: Int) :AnyVec3i = {
     val j = offset + i*stride
     ConstVec3i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2)
     )
   }
   override def update(i: Int, v: AnyVec3i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
   }
 
   override def mkReadDataArray(size: Int) =
@@ -235,28 +233,27 @@ private[buffer] final class ViewVec3iSInt(
 
 // Vec4i SInt
 private[buffer] final class ArrayVec4iSInt(
-  backing: ReadDataArray[Int1, SInt]
+  backing: ArrayInt1SInt
 ) extends BaseVec4i[SInt](backing) with DataArray[Vec4i, SInt] {
+  override def backingSeq: ArrayInt1SInt = backing
   def this() = this(new ArrayInt1SInt)
-
-  val backingSeq = backing.asInstanceOf[DataArray[Int1, SInt]]
-  def asReadOnlySeq() = new ArrayVec4iSInt(backingSeq.asReadOnlySeq())
+  def asReadOnlySeq() = new ArrayVec4iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4i = {
     val j = i*4
     ConstVec4i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2),
-      backingSeq(j + 3)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2),
+      backing(j + 3)
     )
   }
   override def update(i: Int, v: AnyVec4i) {
     val j = i*4
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
-    backingSeq(j + 3) = v.w
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
+    backing(j + 3) = v.w
   }
 
   override def mkReadDataArray(size: Int) =
@@ -272,26 +269,26 @@ private[buffer] final class ArrayVec4iSInt(
 }
 
 private[buffer] final class BufferVec4iSInt(
-  backing: ReadDataBuffer[Int1, SInt]
+  backing: BufferInt1SInt
 ) extends BaseVec4i[SInt](backing) with DataBuffer[Vec4i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new BufferVec4iSInt(backingSeq.asReadOnlySeq())
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new BufferVec4iSInt(backing.asReadOnlySeq())
 
   override def apply(i: Int) :AnyVec4i = {
     val j = i*4
     ConstVec4i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2),
-      backingSeq(j + 3)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2),
+      backing(j + 3)
     )
   }
   override def update(i: Int, v: AnyVec4i) {
     val j = i*4
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
-    backingSeq(j + 3) = v.w
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
+    backing(j + 3) = v.w
   }
 
   override def mkReadDataArray(size: Int) =
@@ -307,28 +304,28 @@ private[buffer] final class BufferVec4iSInt(
 }
 
 private[buffer] final class ViewVec4iSInt(
-  backing: ReadDataBuffer[Int1, SInt],
+  backing: BufferInt1SInt,
   override val offset: Int,
   override val stride: Int
 ) extends BaseVec4i[SInt](backing) with DataView[Vec4i, SInt] {
-  val backingSeq = backing.asInstanceOf[DataBuffer[Int1, SInt]]
-  def asReadOnlySeq() = new ViewVec4iSInt(backingSeq.asReadOnlySeq(), offset, stride)
+  override def backingSeq: BufferInt1SInt = backing
+  def asReadOnlySeq() = new ViewVec4iSInt(backing.asReadOnlySeq(), offset, stride)
 
   override def apply(i: Int) :AnyVec4i = {
     val j = offset + i*stride
     ConstVec4i(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2),
-      backingSeq(j + 3)
+      backing(j),
+      backing(j + 1),
+      backing(j + 2),
+      backing(j + 3)
     )
   }
   override def update(i: Int, v: AnyVec4i) {
     val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
-    backingSeq(j + 3) = v.w
+    backing(j) = v.x
+    backing(j + 1) = v.y
+    backing(j + 2) = v.z
+    backing(j + 3) = v.w
   }
 
   override def mkReadDataArray(size: Int) =

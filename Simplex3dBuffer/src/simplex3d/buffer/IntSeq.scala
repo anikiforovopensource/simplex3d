@@ -36,6 +36,8 @@ private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Int
   final def components: Int = 1
+
+  private[buffer] def mkBindingBuffer() = asReadOnlyBuffer()
 }
 
 
@@ -71,7 +73,7 @@ private[buffer] final class ArrayInt1UByte(
 ) extends SeqInt1UByte(rarray, buff) with IndexArray[UByte] {
   def this() = this(eaByte, eaByte, ebByte)
 
-  private[buffer] override val bindingBuffer = ByteBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
@@ -151,7 +153,7 @@ private[buffer] final class ArrayInt1UShort(
 ) with IndexArray[UShort] {
   def this() = this(eaChar, eaChar, ebChar)
 
-  private[buffer] override val bindingBuffer = CharBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = CharBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
@@ -232,7 +234,7 @@ private[buffer] final class ArrayInt1UInt(
 ) extends SeqInt1UInt(rarray, buff) with IndexArray[UInt] {
   def this() = this(eaInt, eaInt, ebInt)
 
-  private[buffer] override val bindingBuffer = IntBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
@@ -308,7 +310,7 @@ private[buffer] final class ArrayInt1SByte(
 ) extends SeqInt1SByte(rarray, buff) with DataArray[Int1, SByte] {
   def this() = this(eaByte, eaByte, ebByte)
 
-  private[buffer] override val bindingBuffer = ByteBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
@@ -388,7 +390,7 @@ private[buffer] final class ArrayInt1SShort(
 ) with DataArray[Int1, SShort] {
   def this() = this(eaShort, eaShort, ebShort)
 
-  private[buffer] override val bindingBuffer = ShortBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
@@ -466,7 +468,7 @@ private[buffer] final class ArrayInt1SInt(
 ) extends SeqInt1SInt(rarray, buff) with DataArray[Int1, SInt] {
   def this() = this(eaInt, eaInt, ebInt)
 
-  private[buffer] override val bindingBuffer = IntBuffer.wrap(rarray)
+  private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   def backingSeq = this
   def asReadOnlySeq() = new ArrayInt1SInt(rarray, null, buffer.asReadOnlyBuffer())
 

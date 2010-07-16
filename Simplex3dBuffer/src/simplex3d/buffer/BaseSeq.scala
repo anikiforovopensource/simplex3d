@@ -50,20 +50,20 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def elementManifest: Manifest[E#Element]
   def componentManifest: Manifest[E#Component#Element]
 
-  final val bytesPerRawComponent: Int = RawData.byteLength(rawType)
+  final val bytesPerRawComponent = RawData.byteLength(rawType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
   final def byteOffset = offset*bytesPerRawComponent
-  final val byteStride = stride*bytesPerRawComponent
+  final def byteStride = stride*bytesPerRawComponent
 
   def asReadOnlyBuffer() :R#BufferType
   def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
 
-  private[buffer] val bindingBuffer: Buffer = asReadOnlyBuffer()
+  private[buffer] def mkBindingBuffer(): Buffer
+  private final val bindingBuffer: Buffer = mkBindingBuffer()
   final def bindingBuffer(offset: Int) :Buffer = {
-    val buff = bindingBuffer
-    buff.limit(bindingBuffer.capacity)
-    buff.position(offset)
-    buff
+    bindingBuffer.limit(bindingBuffer.capacity)
+    bindingBuffer.position(offset)
+    bindingBuffer
   }
 
   final override val size: Int =
@@ -321,8 +321,8 @@ private[buffer] abstract class BaseSeq[
     src: inContiguousSeq[E#Component, _],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
-    def grp(binding: Int) = {
-      (binding: @switch) match {
+    def grp(rawType: Int) = {
+      (rawType: @switch) match {
         case RawData.SByte => 0
         case RawData.UByte => 0
         case RawData.SShort => 1
@@ -579,16 +579,16 @@ private[buffer] abstract class BaseSeq[
 
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class CompositeSeq[E <: Composite, +R <: RawData](
-  backing: ReadContiguousSeq[E#Component, R]
+  backing: ContiguousSeq[E#Component, R]
 ) extends BaseSeq[E, E#Element, R](backing.shared, backing.buffer) {
-  val backingSeq: ContiguousSeq[E#Component, R]
+  def backingSeq: ContiguousSeq[E#Component, R]
   final def componentManifest = backing.elementManifest
 
   final def asReadOnlyBuffer() :R#BufferType = backing.asReadOnlyBuffer()
-  final def asBuffer() :R#BufferType = backingSeq.asBuffer()
+  final def asBuffer() :R#BufferType = backing.asBuffer()
   
   final def rawType = backing.rawType
   final def normalized: Boolean = backing.normalized
 
-  private[buffer] final override val bindingBuffer = backing.bindingBuffer
+  private[buffer] final def mkBindingBuffer(): Buffer = backing.mkBindingBuffer
 }

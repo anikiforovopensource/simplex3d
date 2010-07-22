@@ -29,6 +29,7 @@ import scala.annotation.unchecked._
  */
 trait ReadIndexSeq[+R <: RawData]
 extends ReadContiguousSeq[Int1, R] {
+  protected def mkReadOnlyInstance() :ReadIndexSeq[R]
   def asReadOnlySeq() :ReadIndexSeq[R]
 
   def mkReadIndexArray(size: Int) :ReadIndexArray[R] =
@@ -61,7 +62,10 @@ extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 trait ReadIndexArray[+R <: RawData]
 extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
-  def asReadOnlySeq() :ReadIndexArray[R]
+  protected def mkReadOnlyInstance() :ReadIndexArray[R]
+  override def asReadOnlySeq() :ReadIndexArray[R] = {
+    asReadOnlySeqImpl().asInstanceOf[ReadIndexArray[R]]
+  }
 }
 
 trait IndexArray[+R <: RawData]
@@ -70,7 +74,10 @@ extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 trait ReadIndexBuffer[+R <: RawData]
 extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
-  def asReadOnlySeq() :ReadIndexBuffer[R]
+  protected def mkReadOnlyInstance() :ReadIndexBuffer[R]
+  override def asReadOnlySeq() :ReadIndexBuffer[R] = {
+    asReadOnlySeqImpl().asInstanceOf[ReadIndexBuffer[R]]
+  }
 }
 
 trait IndexBuffer[+R <: RawData]

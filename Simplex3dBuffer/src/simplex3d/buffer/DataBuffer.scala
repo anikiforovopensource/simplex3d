@@ -28,7 +28,10 @@ import java.nio._
  */
 trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
 extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
-  def asReadOnlySeq() :ReadDataBuffer[E, R]
+  protected def mkReadOnlyInstance() :ReadDataBuffer[E, R]
+  override def asReadOnlySeq() :ReadDataBuffer[E, R] = {
+    asReadOnlySeqImpl().asInstanceOf[ReadDataBuffer[E, R]]
+  }
 }
 
 trait DataBuffer[E <: MetaElement, +R <: RawData]

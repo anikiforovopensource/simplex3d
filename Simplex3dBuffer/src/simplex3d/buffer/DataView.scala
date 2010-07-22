@@ -44,7 +44,10 @@ extends ReadDataSeq[E, R] {
 
   
   def backingSeq: ReadDataBuffer[E#Component, R]
-  def asReadOnlySeq() :ReadDataView[E, R]
+  protected def mkReadOnlyInstance() :ReadDataView[E, R]
+  def asReadOnlySeq() :ReadDataView[E, R] = {
+    asReadOnlySeqImpl().asInstanceOf[ReadDataView[E, R]]
+  }
 
   final def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
     seq match {

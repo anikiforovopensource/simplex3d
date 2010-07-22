@@ -89,6 +89,11 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   def backingSeq: ReadContiguousSeq[E#Component, R]
   final def isReadOnly(): Boolean = buffer.isReadOnly()
+
+  protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
+  private[buffer] final def asReadOnlySeqImpl() :AnyRef = {
+    if (isReadOnly) this else mkReadOnlyInstance()
+  }
   def asReadOnlySeq() :ReadDataSeq[E, R]
 
 

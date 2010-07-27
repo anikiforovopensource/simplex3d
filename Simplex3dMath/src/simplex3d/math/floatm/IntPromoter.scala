@@ -30,18 +30,18 @@ import simplex3d.math._
  */
 final class IntPromoter(val value: Float) {
   // Veci to Vecf promotion
-  def *(u: Read2[Int, _]) = new Vec2f(value*u.fx, value*u.fy)
-  def /(u: Read2[Int, _]) = new Vec2f(value/u.fx, value/u.fy)
-  def +(u: Read2[Int, _]) = new Vec2f(value + u.fx, value + u.fy)
-  def -(u: Read2[Int, _]) = new Vec2f(value - u.fx, value - u.fy)
+  def *(u: AnyVec2[Int, _]) = new Vec2f(value*u.fx, value*u.fy)
+  def /(u: AnyVec2[Int, _]) = new Vec2f(value/u.fx, value/u.fy)
+  def +(u: AnyVec2[Int, _]) = new Vec2f(value + u.fx, value + u.fy)
+  def -(u: AnyVec2[Int, _]) = new Vec2f(value - u.fx, value - u.fy)
 
-  def *(u: Read3[Int, _]) = new Vec3f(value*u.fx, value*u.fy, value*u.fz)
-  def /(u: Read3[Int, _]) = new Vec3f(value/u.fx, value/u.fy, value/u.fz)
-  def +(u: Read3[Int, _]) = new Vec3f(value + u.fx, value + u.fy, value + u.fz)
-  def -(u: Read3[Int, _]) = new Vec3f(value - u.fx, value - u.fy, value - u.fz)
+  def *(u: AnyVec3[Int, _]) = new Vec3f(value*u.fx, value*u.fy, value*u.fz)
+  def /(u: AnyVec3[Int, _]) = new Vec3f(value/u.fx, value/u.fy, value/u.fz)
+  def +(u: AnyVec3[Int, _]) = new Vec3f(value + u.fx, value + u.fy, value + u.fz)
+  def -(u: AnyVec3[Int, _]) = new Vec3f(value - u.fx, value - u.fy, value - u.fz)
 
-  def *(u: Read4[Int, _]) = new Vec4f(value*u.fx, value*u.fy, value*u.fz, value*u.fw)
-  def /(u: Read4[Int, _]) = new Vec4f(value/u.fx, value/u.fy, value/u.fz, value/u.fw)
-  def +(u: Read4[Int, _]) = new Vec4f(value + u.fx, value + u.fy, value + u.fz, value + u.fw)
-  def -(u: Read4[Int, _]) = new Vec4f(value - u.fx, value - u.fy, value - u.fz, value - u.fw)
+  def *(u: AnyVec4[Int, _]) = new Vec4f(value*u.fx, value*u.fy, value*u.fz, value*u.fw)
+  def /(u: AnyVec4[Int, _]) = new Vec4f(value/u.fx, value/u.fy, value/u.fz, value/u.fw)
+  def +(u: AnyVec4[Int, _]) = new Vec4f(value + u.fx, value + u.fy, value + u.fz, value + u.fw)
+  def -(u: AnyVec4[Int, _]) = new Vec4f(value - u.fx, value - u.fy, value - u.fz, value - u.fw)
 }

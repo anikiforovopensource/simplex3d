@@ -29,8 +29,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x3d
-extends ProtectedMat4x3d[Double, AnyMat4x3d]
+sealed abstract class ReadMat4x3d
+extends ProtectedMat4x3d[Double, ReadMat4x3d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -132,7 +132,7 @@ extends ProtectedMat4x3d[Double, AnyMat4x3d]
     }
   }
 
-  final def unary_+() :AnyMat4x3d = this
+  final def unary_+() :ReadMat4x3d = this
   final def unary_-() = new Mat4x3d(
     -m00, -m10, -m20, -m30,
     -m01, -m11, -m21, -m31,
@@ -243,7 +243,7 @@ extends ProtectedMat4x3d[Double, AnyMat4x3d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read4x3[_, _] =>
+      case m: AnyMat4x3[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32
@@ -294,7 +294,7 @@ final class ConstMat4x3d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double
-) extends AnyMat4x3d with Immutable
+) extends ReadMat4x3d with Immutable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -318,20 +318,20 @@ object ConstMat4x3d {
     m02, m12, m22, m32
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _]) = 
   new ConstMat4x3d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw,
     c2.dx, c2.dy, c2.dz, c2.dw
   )
 
-  def apply(m: ReadMat[_, _]) = new ConstMat4x3d(
+  def apply(m: AnyMat[_, _]) = new ConstMat4x3d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31,
     m.d02, m.d12, m.d22, m.d32
   )
 
-  implicit def toConst(m: AnyMat4x3d) = ConstMat4x3d(m)
+  implicit def toConst(m: ReadMat4x3d) = ConstMat4x3d(m)
 }
 
 
@@ -340,8 +340,8 @@ final class Mat4x3d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double
-) extends AnyMat4x3d
-  with MutableObject[AnyMat4x3d] with Implicits[On] with Composite
+) extends ReadMat4x3d
+  with MutableObject[ReadMat4x3d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -362,7 +362,7 @@ final class Mat4x3d private[math] (
   override def m22_=(s: Double) { p22 = s }
   override def m32_=(s: Double) { p32 = s }
 
-  type Element = AnyMat4x3d
+  type Element = ReadMat4x3d
   type Component = Double1
 
   def *=(s: Double) {
@@ -497,7 +497,7 @@ final class Mat4x3d private[math] (
 object Mat4x3d {
   final val Zero = ConstMat4x3d(0)
   final val Identity = ConstMat4x3d(1)
-  final val Manifest = classType[AnyMat4x3d](classOf[AnyMat4x3d])
+  final val Manifest = classType[ReadMat4x3d](classOf[ReadMat4x3d])
 
   def apply(s: Double) = new Mat4x3d(
     s, 0, 0, 0,
@@ -515,21 +515,21 @@ object Mat4x3d {
     m02, m12, m22, m32
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _]) = 
   new Mat4x3d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw,
     c2.dx, c2.dy, c2.dz, c2.dw
   )
 
-  def apply(m: ReadMat[_, _]) = new Mat4x3d(
+  def apply(m: AnyMat[_, _]) = new Mat4x3d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31,
     m.d02, m.d12, m.d22, m.d32
   )
 
-  def unapply(m: AnyMat4x3d) = Some((m(0), m(1), m(2)))
+  def unapply(m: ReadMat4x3d) = Some((m(0), m(1), m(2)))
 
-  implicit def toMutable(m: AnyMat4x3d) = Mat4x3d(m)
-  implicit def castFloat(m: Read4x3[Float, _]) = apply(m)
+  implicit def toMutable(m: ReadMat4x3d) = Mat4x3d(m)
+  implicit def castFloat(m: AnyMat4x3[Float, _]) = apply(m)
 }

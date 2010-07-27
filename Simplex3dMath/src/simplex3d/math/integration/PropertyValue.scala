@@ -55,5 +55,5 @@ private[simplex3d] trait MutableObject[T <: AnyRef]
 extends MutableInterface[T] with Mutable
 {
   //def asReadInstance() :T = copyAsImmutable() //Safer but slower.
-  final override def asReadInstance() :T = this.asInstanceOf[T]
+  def asReadInstance() :T = this.asInstanceOf[T]
 }

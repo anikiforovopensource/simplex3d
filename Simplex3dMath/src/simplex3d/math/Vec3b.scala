@@ -24,7 +24,7 @@ import scala.reflect.Manifest._
 import simplex3d.math.integration._
 
 
-/** The <code>AnyVec3b</code> class represents Boolean 3-dimensional vectors,
+/** The <code>ReadVec3b</code> class represents Boolean 3-dimensional vectors,
  * either constant or mutable.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
@@ -46,11 +46,11 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean, AnyVec3b]
+sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean, ReadVec3b]
 {
-  private[math] type R2 = AnyVec2b
-  private[math] type R3 = AnyVec3b
-  private[math] type R4 = AnyVec4b
+  private[math] type R2 = ReadVec2b
+  private[math] type R3 = ReadVec3b
+  private[math] type R4 = ReadVec4b
   
   protected final def make2(x: Double, y: Double) =
     new ConstVec2b(bool(x), bool(y))
@@ -146,7 +146,7 @@ sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean, AnyVec3b]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec3b => x == u.x && y == u.y && z == u.z
+      case u: ReadVec3b => x == u.x && y == u.y && z == u.z
       case _ => false
     }
   }
@@ -193,7 +193,7 @@ sealed abstract class AnyVec3b extends ProtectedVec3b[Boolean, AnyVec3b]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean
-) extends AnyVec3b with Immutable {
+) extends ReadVec3b with Immutable {
   px = cx; py = cy; pz = cz
 }
 
@@ -232,7 +232,7 @@ object ConstVec3b {
    * @return a new instance of ConstVec3b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read3[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
+  def apply(u: AnyVec3[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of ConstVec3b from the first three components
    * of a 4-dimensional vector.
@@ -241,7 +241,7 @@ object ConstVec3b {
    * @return a new instance of ConstVec3b with components initialized
    *         to the first three components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
+  def apply(u: AnyVec4[_, _]) = new ConstVec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of ConstVec3b from values extracted from the specified
    * arguments.
@@ -252,7 +252,7 @@ object ConstVec3b {
    *         to x and y components of xy converted to Boolean
    *         and the specified value z.
    */
-  def apply(xy: Read2[_, _], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
+  def apply(xy: AnyVec2[_, _], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
 
   /** Makes a new instance of ConstVec3b from values extracted from the specified
    * arguments.
@@ -263,9 +263,9 @@ object ConstVec3b {
    *         to the specified value x
    *         and x and y components of yz converted to Boolean.
    */
-  def apply(x: Boolean, yz: Read2[_, _]) = new ConstVec3b(x, yz.bx, yz.by)
+  def apply(x: Boolean, yz: AnyVec2[_, _]) = new ConstVec3b(x, yz.bx, yz.by)
 
-  implicit def toConst(u: AnyVec3b) = new ConstVec3b(u.x, u.y, u.z)
+  implicit def toConst(u: ReadVec3b) = new ConstVec3b(u.x, u.y, u.z)
 }
 
 
@@ -293,7 +293,7 @@ object ConstVec3b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends AnyVec3b with MutableObject[AnyVec3b] with Implicits[On]
+extends ReadVec3b with MutableObject[ReadVec3b] with Implicits[On]
 {
   px = cx; py = cy; pz = cz
 
@@ -405,7 +405,7 @@ extends AnyVec3b with MutableObject[AnyVec3b] with Implicits[On]
 object Vec3b {
   final val True = new ConstVec3b(true, true, true)
   final val False = new ConstVec3b(false, false, false)
-  final val Manifest = classType[AnyVec3b](classOf[AnyVec3b])
+  final val Manifest = classType[ReadVec3b](classOf[ReadVec3b])
 
   /** Makes a new instance of Vec3b with all the components initialized
    * to the specified value.
@@ -430,7 +430,7 @@ object Vec3b {
    * @return a new instance of Vec3b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read3[_, _]) = new Vec3b(u.bx, u.by, u.bz)
+  def apply(u: AnyVec3[_, _]) = new Vec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of Vec3b from the first three components
    * of a 4-dimensional vector.
@@ -439,7 +439,7 @@ object Vec3b {
    * @return a new instance of Vec3b with components initialized
    *         to the first three components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) = new Vec3b(u.bx, u.by, u.bz)
+  def apply(u: AnyVec4[_, _]) = new Vec3b(u.bx, u.by, u.bz)
 
   /** Makes a new instance of Vec3b from values extracted from the specified
    * arguments.
@@ -450,7 +450,7 @@ object Vec3b {
    *         to x and y components of xy converted to Boolean
    *         and the specified value z.
    */
-  def apply(xy: Read2[_, _], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
+  def apply(xy: AnyVec2[_, _], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
   
   /** Makes a new instance of Vec3b from values extracted from the specified
    * arguments.
@@ -461,9 +461,9 @@ object Vec3b {
    *         to the specified value x
    *         and x and y components of yz converted to Boolean.
    */
-  def apply(x: Boolean, yz: Read2[_, _]) = new Vec3b(x, yz.bx, yz.by)
+  def apply(x: Boolean, yz: AnyVec2[_, _]) = new Vec3b(x, yz.bx, yz.by)
 
-  def unapply(u: AnyVec3b) = Some((u.x, u.y, u.z))
+  def unapply(u: ReadVec3b) = Some((u.x, u.y, u.z))
 
-  implicit def toMutable(u: AnyVec3b) = new Vec3b(u.x, u.y, u.z)
+  implicit def toMutable(u: ReadVec3b) = new Vec3b(u.x, u.y, u.z)
 }

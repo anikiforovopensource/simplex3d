@@ -29,8 +29,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat3x2d
-extends ProtectedMat3x2d[Double, AnyMat3x2d]
+sealed abstract class ReadMat3x2d
+extends ProtectedMat3x2d[Double, ReadMat3x2d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20
@@ -99,7 +99,7 @@ extends ProtectedMat3x2d[Double, AnyMat3x2d]
     }
   }
 
-  final def unary_+() :AnyMat3x2d = this
+  final def unary_+() :ReadMat3x2d = this
   final def unary_-() = new Mat3x2d(
     -m00, -m10, -m20,
     -m01, -m11, -m21
@@ -192,7 +192,7 @@ extends ProtectedMat3x2d[Double, AnyMat3x2d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read3x2[_, _] =>
+      case m: AnyMat3x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21
       case _ =>
@@ -228,7 +228,7 @@ extends ProtectedMat3x2d[Double, AnyMat3x2d]
 final class ConstMat3x2d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double
-) extends AnyMat3x2d with Immutable
+) extends ReadMat3x2d with Immutable
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
@@ -248,18 +248,18 @@ object ConstMat3x2d {
     m01, m11, m21
   )
 
-  def apply(c0: Read3[_, _], c1: Read3[_, _]) = 
+  def apply(c0: AnyVec3[_, _], c1: AnyVec3[_, _]) = 
   new ConstMat3x2d(
     c0.dx, c0.dy, c0.dz,
     c1.dx, c1.dy, c1.dz
   )
 
-  def apply(m: ReadMat[_, _]) = new ConstMat3x2d(
+  def apply(m: AnyMat[_, _]) = new ConstMat3x2d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21
   )
 
-  implicit def toConst(m: AnyMat3x2d) = ConstMat3x2d(m)
+  implicit def toConst(m: ReadMat3x2d) = ConstMat3x2d(m)
 }
 
 
@@ -267,8 +267,8 @@ object ConstMat3x2d {
 final class Mat3x2d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double
-) extends AnyMat3x2d
-  with MutableObject[AnyMat3x2d] with Implicits[On] with Composite
+) extends ReadMat3x2d
+  with MutableObject[ReadMat3x2d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
@@ -281,7 +281,7 @@ final class Mat3x2d private[math] (
   override def m11_=(s: Double) { p11 = s }
   override def m21_=(s: Double) { p21 = s }
 
-  type Element = AnyMat3x2d
+  type Element = ReadMat3x2d
   type Component = Double1
 
   def *=(s: Double) {
@@ -379,7 +379,7 @@ final class Mat3x2d private[math] (
 object Mat3x2d {
   final val Zero = ConstMat3x2d(0)
   final val Identity = ConstMat3x2d(1)
-  final val Manifest = classType[AnyMat3x2d](classOf[AnyMat3x2d])
+  final val Manifest = classType[ReadMat3x2d](classOf[ReadMat3x2d])
 
   def apply(s: Double) = new Mat3x2d(
     s, 0, 0,
@@ -394,19 +394,19 @@ object Mat3x2d {
     m01, m11, m21
   )
 
-  def apply(c0: Read3[_, _], c1: Read3[_, _]) = 
+  def apply(c0: AnyVec3[_, _], c1: AnyVec3[_, _]) = 
   new Mat3x2d(
     c0.dx, c0.dy, c0.dz,
     c1.dx, c1.dy, c1.dz
   )
 
-  def apply(m: ReadMat[_, _]) = new Mat3x2d(
+  def apply(m: AnyMat[_, _]) = new Mat3x2d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21
   )
 
-  def unapply(m: AnyMat3x2d) = Some((m(0), m(1)))
+  def unapply(m: ReadMat3x2d) = Some((m(0), m(1)))
 
-  implicit def toMutable(m: AnyMat3x2d) = Mat3x2d(m)
-  implicit def castFloat(m: Read3x2[Float, _]) = apply(m)
+  implicit def toMutable(m: ReadMat3x2d) = Mat3x2d(m)
+  implicit def castFloat(m: AnyMat3x2[Float, _]) = apply(m)
 }

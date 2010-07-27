@@ -29,8 +29,8 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat2f
-extends ProtectedMat2f[Float, AnyMat2f]
+sealed abstract class ReadMat2f
+extends ProtectedMat2f[Float, ReadMat2f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -91,7 +91,7 @@ extends ProtectedMat2f[Float, AnyMat2f]
     }
   }
 
-  final def unary_+() :AnyMat2f = this
+  final def unary_+() :ReadMat2f = this
   final def unary_-() = new Mat2f(
     -m00, -m10,
     -m01, -m11
@@ -174,7 +174,7 @@ extends ProtectedMat2f[Float, AnyMat2f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read2x2[_, _] =>
+      case m: AnyMat2x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>
@@ -206,7 +206,7 @@ extends ProtectedMat2f[Float, AnyMat2f]
 final class ConstMat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends AnyMat2f with Immutable
+) extends ReadMat2f with Immutable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -226,23 +226,23 @@ object ConstMat2f {
     m01, m11
   )
 
-  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
+  def apply(c0: AnyVec2[_, _], c1: AnyVec2[_, _]) = 
   new ConstMat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: Read4[_, _]) = new ConstMat2f(
+  def apply(u: AnyVec4[_, _]) = new ConstMat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: ReadMat[_, _]) = new ConstMat2f(
+  def apply(m: AnyMat[_, _]) = new ConstMat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )
 
-  implicit def toConst(m: AnyMat2f) = ConstMat2f(m)
+  implicit def toConst(m: ReadMat2f) = ConstMat2f(m)
 }
 
 
@@ -250,8 +250,8 @@ object ConstMat2f {
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends AnyMat2f
-  with MutableObject[AnyMat2f] with Implicits[On] with Composite
+) extends ReadMat2f
+  with MutableObject[ReadMat2f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -262,7 +262,7 @@ final class Mat2f private[math] (
   override def m01_=(s: Float) { p01 = s }
   override def m11_=(s: Float) { p11 = s }
 
-  type Element = AnyMat2f
+  type Element = ReadMat2f
   type Component = Float1
 
   def *=(s: Float) {
@@ -346,7 +346,7 @@ final class Mat2f private[math] (
 object Mat2f {
   final val Zero = ConstMat2f(0)
   final val Identity = ConstMat2f(1)
-  final val Manifest = classType[AnyMat2f](classOf[AnyMat2f])
+  final val Manifest = classType[ReadMat2f](classOf[ReadMat2f])
 
   def apply(s: Float) = new Mat2f(
     s, 0,
@@ -361,23 +361,23 @@ object Mat2f {
     m01, m11
   )
 
-  def apply(c0: Read2[_, _], c1: Read2[_, _]) = 
+  def apply(c0: AnyVec2[_, _], c1: AnyVec2[_, _]) = 
   new Mat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: Read4[_, _]) = new Mat2f(
+  def apply(u: AnyVec4[_, _]) = new Mat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: ReadMat[_, _]) = new Mat2f(
+  def apply(m: AnyMat[_, _]) = new Mat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )
 
-  def unapply(m: AnyMat2f) = Some((m(0), m(1)))
+  def unapply(m: ReadMat2f) = Some((m(0), m(1)))
 
-  implicit def toMutable(m: AnyMat2f) = Mat2f(m)
+  implicit def toMutable(m: ReadMat2f) = Mat2f(m)
 }

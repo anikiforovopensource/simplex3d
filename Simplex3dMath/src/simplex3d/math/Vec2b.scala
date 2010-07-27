@@ -24,7 +24,7 @@ import scala.reflect.Manifest._
 import simplex3d.math.integration._
 
 
-/** The <code>AnyVec2b</code> class represents Boolean 2-dimensional vectors,
+/** The <code>ReadVec2b</code> class represents Boolean 2-dimensional vectors,
  * either constant or mutable.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
@@ -46,11 +46,11 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean, AnyVec2b]
+sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean, ReadVec2b]
 {
-  private[math] type R2 = AnyVec2b
-  private[math] type R3 = AnyVec3b
-  private[math] type R4 = AnyVec4b
+  private[math] type R2 = ReadVec2b
+  private[math] type R3 = ReadVec3b
+  private[math] type R4 = ReadVec4b
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2b(bool(x), bool(y))
@@ -127,7 +127,7 @@ sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean, AnyVec2b]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec2b => x == u.x && y == u.y
+      case u: ReadVec2b => x == u.x && y == u.y
       case _ => false
     }
   }
@@ -170,7 +170,7 @@ sealed abstract class AnyVec2b extends ProtectedVec2b[Boolean, AnyVec2b]
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2b private[math] (cx: Boolean, cy: Boolean)
-extends AnyVec2b with Immutable {
+extends ReadVec2b with Immutable {
   px = cx; py = cy
 }
 
@@ -207,7 +207,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read2[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec2[_, _]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 3-dimensional vector.
@@ -216,7 +216,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read3[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec3[_, _]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 4-dimensional vector.
@@ -225,9 +225,9 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec4[_, _]) = new ConstVec2b(u.bx, u.by)
   
-  implicit def toConst(u: AnyVec2b) = new ConstVec2b(u.x, u.y)
+  implicit def toConst(u: ReadVec2b) = new ConstVec2b(u.x, u.y)
 }
 
 
@@ -255,7 +255,7 @@ object ConstVec2b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends AnyVec2b with MutableObject[AnyVec2b] with Implicits[On]
+extends ReadVec2b with MutableObject[ReadVec2b] with Implicits[On]
 {
   px = cx; py = cy
 
@@ -324,7 +324,7 @@ extends AnyVec2b with MutableObject[AnyVec2b] with Implicits[On]
 object Vec2b {
   final val True = new ConstVec2b(true, true)
   final val False = new ConstVec2b(false, false)
-  final val Manifest = classType[AnyVec2b](classOf[AnyVec2b])
+  final val Manifest = classType[ReadVec2b](classOf[ReadVec2b])
 
   /** Makes a new instance of Vec2b with all the components initialized
    * to the specified value.
@@ -348,7 +348,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read2[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec2[_, _]) = new Vec2b(u.bx, u.by)
 
   /** Makes a new instance of Vec2b from the first two components
    * of a 3-dimensional vector.
@@ -357,7 +357,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read3[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec3[_, _]) = new Vec2b(u.bx, u.by)
   
   /** Makes a new instance of Vec2b from the first two components
    * of a 4-dimensional vector.
@@ -366,9 +366,9 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec4[_, _]) = new Vec2b(u.bx, u.by)
 
-  def unapply(u: AnyVec2b) = Some((u.x, u.y))
+  def unapply(u: ReadVec2b) = Some((u.x, u.y))
 
-  implicit def toMutable(u: AnyVec2b) = new Vec2b(u.x, u.y)
+  implicit def toMutable(u: ReadVec2b) = new Vec2b(u.x, u.y)
 }

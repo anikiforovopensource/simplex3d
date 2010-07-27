@@ -30,68 +30,68 @@ import simplex3d.math._
  */
 final class FloatPromoter(val value: Double) {
   // Vecf to Vecd promotion
-  def *(u: Read2[Float, _]) = new Vec2d(value*u.dx, value*u.dy)
-  def /(u: Read2[Float, _]) = new Vec2d(value/u.dx, value/u.dy)
-  def +(u: Read2[Float, _]) = new Vec2d(value + u.dx, value + u.dy)
-  def -(u: Read2[Float, _]) = new Vec2d(value - u.dx, value - u.dy)
+  def *(u: AnyVec2[Float, _]) = new Vec2d(value*u.dx, value*u.dy)
+  def /(u: AnyVec2[Float, _]) = new Vec2d(value/u.dx, value/u.dy)
+  def +(u: AnyVec2[Float, _]) = new Vec2d(value + u.dx, value + u.dy)
+  def -(u: AnyVec2[Float, _]) = new Vec2d(value - u.dx, value - u.dy)
 
-  def *(u: Read3[Float, _]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
-  def /(u: Read3[Float, _]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
-  def +(u: Read3[Float, _]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
-  def -(u: Read3[Float, _]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
+  def *(u: AnyVec3[Float, _]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
+  def /(u: AnyVec3[Float, _]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
+  def +(u: AnyVec3[Float, _]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
+  def -(u: AnyVec3[Float, _]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
 
-  def *(u: Read4[Float, _]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
-  def /(u: Read4[Float, _]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
-  def +(u: Read4[Float, _]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
-  def -(u: Read4[Float, _]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
+  def *(u: AnyVec4[Float, _]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
+  def /(u: AnyVec4[Float, _]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
+  def +(u: AnyVec4[Float, _]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
+  def -(u: AnyVec4[Float, _]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
 
-  def *(q: ReadQ[Float, _]) = new Quat4d(value*q.da, value*q.db, value*q.dc, value*q.dd)
-  def /(q: ReadQ[Float, _]) = new Quat4d(value/q.da, value/q.db, value/q.dc, value/q.dd)
-  def +(q: ReadQ[Float, _]) = new Quat4d(value + q.da, value + q.db, value + q.dc, value + q.dd)
-  def -(q: ReadQ[Float, _]) = new Quat4d(value - q.da, value - q.db, value - q.dc, value - q.dd)
+  def *(q: AnyQuat4[Float, _]) = new Quat4d(value*q.da, value*q.db, value*q.dc, value*q.dd)
+  def /(q: AnyQuat4[Float, _]) = new Quat4d(value/q.da, value/q.db, value/q.dc, value/q.dd)
+  def +(q: AnyQuat4[Float, _]) = new Quat4d(value + q.da, value + q.db, value + q.dc, value + q.dd)
+  def -(q: AnyQuat4[Float, _]) = new Quat4d(value - q.da, value - q.db, value - q.dc, value - q.dd)
 
-  def *(m: Read2x2[Float, _]) = Mat2d(m)*value
-  def /(m: Read2x2[Float, _]) = Mat2d(m).divideByComponent(value)
-  def +(m: Read2x2[Float, _]) = Mat2d(m) + value
-  def -(m: Read2x2[Float, _]) = { val t = -Mat2d(m); t += value; t }
+  def *(m: AnyMat2x2[Float, _]) = Mat2d(m)*value
+  def /(m: AnyMat2x2[Float, _]) = Mat2d(m).divideByComponent(value)
+  def +(m: AnyMat2x2[Float, _]) = Mat2d(m) + value
+  def -(m: AnyMat2x2[Float, _]) = { val t = -Mat2d(m); t += value; t }
 
-  def *(m: Read2x3[Float, _]) = Mat2x3d(m)*value
-  def /(m: Read2x3[Float, _]) = Mat2x3d(m).divideByComponent(value)
-  def +(m: Read2x3[Float, _]) = Mat2x3d(m) + value
-  def -(m: Read2x3[Float, _]) = { val t = -Mat2x3d(m); t += value; t }
+  def *(m: AnyMat2x3[Float, _]) = Mat2x3d(m)*value
+  def /(m: AnyMat2x3[Float, _]) = Mat2x3d(m).divideByComponent(value)
+  def +(m: AnyMat2x3[Float, _]) = Mat2x3d(m) + value
+  def -(m: AnyMat2x3[Float, _]) = { val t = -Mat2x3d(m); t += value; t }
 
-  def *(m: Read2x4[Float, _]) = Mat2x4d(m)*value
-  def /(m: Read2x4[Float, _]) = Mat2x4d(m).divideByComponent(value)
-  def +(m: Read2x4[Float, _]) = Mat2x4d(m) + value
-  def -(m: Read2x4[Float, _]) = { val t = -Mat2x4d(m); t += value; t }
+  def *(m: AnyMat2x4[Float, _]) = Mat2x4d(m)*value
+  def /(m: AnyMat2x4[Float, _]) = Mat2x4d(m).divideByComponent(value)
+  def +(m: AnyMat2x4[Float, _]) = Mat2x4d(m) + value
+  def -(m: AnyMat2x4[Float, _]) = { val t = -Mat2x4d(m); t += value; t }
 
-  def *(m: Read3x2[Float, _]) = Mat3x2d(m)*value
-  def /(m: Read3x2[Float, _]) = Mat3x2d(m).divideByComponent(value)
-  def +(m: Read3x2[Float, _]) = Mat3x2d(m) + value
-  def -(m: Read3x2[Float, _]) = { val t = -Mat3x2d(m); t += value; t }
+  def *(m: AnyMat3x2[Float, _]) = Mat3x2d(m)*value
+  def /(m: AnyMat3x2[Float, _]) = Mat3x2d(m).divideByComponent(value)
+  def +(m: AnyMat3x2[Float, _]) = Mat3x2d(m) + value
+  def -(m: AnyMat3x2[Float, _]) = { val t = -Mat3x2d(m); t += value; t }
 
-  def *(m: Read3x3[Float, _]) = Mat3d(m)*value
-  def /(m: Read3x3[Float, _]) = Mat3d(m).divideByComponent(value)
-  def +(m: Read3x3[Float, _]) = Mat3d(m) + value
-  def -(m: Read3x3[Float, _]) = { val t = -Mat3d(m); t += value; t }
+  def *(m: AnyMat3x3[Float, _]) = Mat3d(m)*value
+  def /(m: AnyMat3x3[Float, _]) = Mat3d(m).divideByComponent(value)
+  def +(m: AnyMat3x3[Float, _]) = Mat3d(m) + value
+  def -(m: AnyMat3x3[Float, _]) = { val t = -Mat3d(m); t += value; t }
 
-  def *(m: Read3x4[Float, _]) = Mat3x4d(m)*value
-  def /(m: Read3x4[Float, _]) = Mat3x4d(m).divideByComponent(value)
-  def +(m: Read3x4[Float, _]) = Mat3x4d(m) + value
-  def -(m: Read3x4[Float, _]) = { val t = -Mat3x4d(m); t += value; t }
+  def *(m: AnyMat3x4[Float, _]) = Mat3x4d(m)*value
+  def /(m: AnyMat3x4[Float, _]) = Mat3x4d(m).divideByComponent(value)
+  def +(m: AnyMat3x4[Float, _]) = Mat3x4d(m) + value
+  def -(m: AnyMat3x4[Float, _]) = { val t = -Mat3x4d(m); t += value; t }
 
-  def *(m: Read4x2[Float, _]) = Mat4x2d(m)*value
-  def /(m: Read4x2[Float, _]) = Mat4x2d(m).divideByComponent(value)
-  def +(m: Read4x2[Float, _]) = Mat4x2d(m) + value
-  def -(m: Read4x2[Float, _]) = { val t = -Mat4x2d(m); t += value; t }
+  def *(m: AnyMat4x2[Float, _]) = Mat4x2d(m)*value
+  def /(m: AnyMat4x2[Float, _]) = Mat4x2d(m).divideByComponent(value)
+  def +(m: AnyMat4x2[Float, _]) = Mat4x2d(m) + value
+  def -(m: AnyMat4x2[Float, _]) = { val t = -Mat4x2d(m); t += value; t }
 
-  def *(m: Read4x3[Float, _]) = Mat4x3d(m)*value
-  def /(m: Read4x3[Float, _]) = Mat4x3d(m).divideByComponent(value)
-  def +(m: Read4x3[Float, _]) = Mat4x3d(m) + value
-  def -(m: Read4x3[Float, _]) = { val t = -Mat4x3d(m); t += value; t }
+  def *(m: AnyMat4x3[Float, _]) = Mat4x3d(m)*value
+  def /(m: AnyMat4x3[Float, _]) = Mat4x3d(m).divideByComponent(value)
+  def +(m: AnyMat4x3[Float, _]) = Mat4x3d(m) + value
+  def -(m: AnyMat4x3[Float, _]) = { val t = -Mat4x3d(m); t += value; t }
 
-  def *(m: Read4x4[Float, _]) = Mat4d(m)*value
-  def /(m: Read4x4[Float, _]) = Mat4d(m).divideByComponent(value)
-  def +(m: Read4x4[Float, _]) = Mat4d(m) + value
-  def -(m: Read4x4[Float, _]) = { val t = -Mat4d(m); t += value; t }
+  def *(m: AnyMat4x4[Float, _]) = Mat4d(m)*value
+  def /(m: AnyMat4x4[Float, _]) = Mat4d(m).divideByComponent(value)
+  def +(m: AnyMat4x4[Float, _]) = Mat4d(m) + value
+  def -(m: AnyMat4x4[Float, _]) = { val t = -Mat4d(m); t += value; t }
 }

@@ -29,7 +29,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float, AnyQuat4f]
+sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float, ReadQuat4f]
 {
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
@@ -66,7 +66,7 @@ sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float, AnyQuat4f]
     }
   }
 
-  final def unary_+() :AnyQuat4f = this
+  final def unary_+() :ReadQuat4f = this
   /**
    * This methods negates every term of this rotationQuat.
    * Negating the rotationQuat produces another rotationQuat which represent
@@ -117,7 +117,7 @@ sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float, AnyQuat4f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: ReadQ[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
+      case q: AnyQuat4[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -141,7 +141,7 @@ sealed abstract class AnyQuat4f extends ProtectedQuat4f[Float, AnyQuat4f]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends AnyQuat4f with Immutable {
+) extends ReadQuat4f with Immutable {
   pa = ca; pb = cb; pc = cc; pd = cd
 }
 
@@ -149,20 +149,20 @@ object ConstQuat4f {
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
     new ConstQuat4f(a, b, c, d)
 
-  def apply(u: ReadQ[_, _]) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
-  def apply(u: Read4[_, _]) = new ConstQuat4f(u.fw, u.fx, u.fy, u.fz)
+  def apply(u: AnyQuat4[_, _]) = new ConstQuat4f(u.fa, u.fb, u.fc, u.fd)
+  def apply(u: AnyVec4[_, _]) = new ConstQuat4f(u.fw, u.fx, u.fy, u.fz)
 
-  implicit def toConst(u: AnyQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
+  implicit def toConst(u: ReadQuat4f) = new ConstQuat4f(u.a, u.b, u.c, u.d)
 }
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends AnyQuat4f
-  with MutableObject[AnyQuat4f] with Implicits[On] with Composite
+) extends ReadQuat4f
+  with MutableObject[ReadQuat4f] with Implicits[On] with Composite
 {
-  type Element = AnyQuat4f
+  type Element = ReadQuat4f
   type Component = Float1
 
   pa = ca; pb = cb; pc = cc; pd = cd
@@ -207,15 +207,15 @@ final class Quat4f private[math] (
 
 object Quat4f {
   final val Identity = new ConstQuat4f(1, 0, 0, 0)
-  final val Manifest = classType[AnyQuat4f](classOf[AnyQuat4f])
+  final val Manifest = classType[ReadQuat4f](classOf[ReadQuat4f])
 
   /* main factory */ def apply(a: Float, b: Float, c: Float, d: Float) =
     new Quat4f(a, b, c, d)
 
-  def apply(q: ReadQ[_, _]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
-  def apply(u: Read4[_, _]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
+  def apply(q: AnyQuat4[_, _]) = new Quat4f(q.fa, q.fb, q.fc, q.fd)
+  def apply(u: AnyVec4[_, _]) = new Quat4f(u.fw, u.fx, u.fy, u.fz)
 
-  def unapply(q: AnyQuat4f) = Some((q.a, q.b, q.c, q.d))
+  def unapply(q: ReadQuat4f) = Some((q.a, q.b, q.c, q.d))
 
   def rotate(q: inQuat4f) :Quat4f = Quat4f(q)
   def rotate(angle: Float, axis: inVec3f) :Quat4f = {
@@ -231,5 +231,5 @@ object Quat4f {
     quaternion(angle, Vec3f.UnitZ)
   }
 
-  implicit def toMutable(u: AnyQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
+  implicit def toMutable(u: ReadQuat4f) = new Quat4f(u.a, u.b, u.c, u.d)
 }

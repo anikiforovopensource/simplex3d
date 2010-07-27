@@ -24,7 +24,7 @@ import scala.reflect.Manifest._
 import simplex3d.math.integration._
 
 
-/** The <code>AnyVec4b</code> class represents Boolean 4-dimensional vectors,
+/** The <code>ReadVec4b</code> class represents Boolean 4-dimensional vectors,
  * either constant or mutable.
  * <p>
  *   Boolean vectors do not contain many useful methods. You can operate on them
@@ -46,11 +46,11 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4b extends ProtectedVec4b[Boolean, AnyVec4b]
+sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean, ReadVec4b]
 {
-  private[math] type R2 = AnyVec2b
-  private[math] type R3 = AnyVec3b
-  private[math] type R4 = AnyVec4b
+  private[math] type R2 = ReadVec2b
+  private[math] type R3 = ReadVec3b
+  private[math] type R4 = ReadVec4b
   
   protected final def make2(x: Double, y: Double) =
     new ConstVec2b(bool(x), bool(y))
@@ -165,7 +165,7 @@ sealed abstract class AnyVec4b extends ProtectedVec4b[Boolean, AnyVec4b]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec4b => x == u.x && y == u.y && z == u.z && w == u.w
+      case u: ReadVec4b => x == u.x && y == u.y && z == u.z && w == u.w
       case _ => false
     }
   }
@@ -213,7 +213,7 @@ sealed abstract class AnyVec4b extends ProtectedVec4b[Boolean, AnyVec4b]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
-) extends AnyVec4b with Immutable {
+) extends ReadVec4b with Immutable {
   px = cx; py = cy; pz = cz; pw = cw
 }
 
@@ -253,7 +253,7 @@ object ConstVec4b {
    * @return a new instance of ConstVec4b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
+  def apply(u: AnyVec4[_, _]) = new ConstVec4b(u.bx, u.by, u.bz, u.bw)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
    * arguments.
@@ -265,7 +265,7 @@ object ConstVec4b {
    *         to x and y components of xy converted to Boolean
    *         and the specified values z and w.
    */
-  def apply(xy: Read2[_, _], z: Boolean, w: Boolean) =
+  def apply(xy: AnyVec2[_, _], z: Boolean, w: Boolean) =
     new ConstVec4b(xy.bx, xy.by, z, w)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
@@ -279,7 +279,7 @@ object ConstVec4b {
    *         x and y components of yz converted to Boolean,
    *         and the specified value w.
    */
-  def apply(x: Boolean, yz: Read2[_, _], w: Boolean) =
+  def apply(x: Boolean, yz: AnyVec2[_, _], w: Boolean) =
     new ConstVec4b(x, yz.bx, yz.by, w)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
@@ -292,7 +292,7 @@ object ConstVec4b {
    *         to the specified values x and y
    *         and x and y components of zw converted to Boolean.
    */
-  def apply(x: Boolean, y: Boolean, zw: Read2[_, _]) =
+  def apply(x: Boolean, y: Boolean, zw: AnyVec2[_, _]) =
     new ConstVec4b(x, y, zw.bx, zw.by)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
@@ -304,7 +304,7 @@ object ConstVec4b {
    *         to x and y components of xy converted to Boolean
    *         and x and y components of zw converted to Boolean.
    */
-  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
+  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
     new ConstVec4b(xy.bx, xy.by, zw.bx, zw.by)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
@@ -316,7 +316,7 @@ object ConstVec4b {
    *         to x, y, and z components of xyz converted to Boolean
    *         and the specified value w.
    */
-  def apply(xyz: Read3[_, _], w: Boolean) =
+  def apply(xyz: AnyVec3[_, _], w: Boolean) =
     new ConstVec4b(xyz.bx, xyz.by, xyz.bz, w)
 
   /** Makes a new instance of ConstVec4b from values extracted from the specified
@@ -328,7 +328,7 @@ object ConstVec4b {
    *         to the specified value x
    *         and x, y, and z components of yzw converted to Boolean.
    */
-  def apply(x: Boolean, yzw: Read3[_, _]) =
+  def apply(x: Boolean, yzw: AnyVec3[_, _]) =
     new ConstVec4b(x, yzw.bx, yzw.by, yzw.bz)
 
   /** Makes a new instance of ConstVec4b from values extracted from the argument
@@ -338,7 +338,7 @@ object ConstVec4b {
    * @return a new instance of ConstVec4b with components initialized
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
-  def apply(m: Read2x2[_, _]) =
+  def apply(m: AnyMat2x2[_, _]) =
     new ConstVec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 
   /** Makes a new instance of ConstVec4b from quaternion.
@@ -346,10 +346,10 @@ object ConstVec4b {
    * @return a new instance of ConstVec4b with components initialized
    *         to b, c, d, and a components of q converted to Boolean.
    */
-  def apply(q: ReadQ[_, _]) =
+  def apply(q: AnyQuat4[_, _]) =
     new ConstVec4b(bool(q.fb), bool(q.fc), bool(q.fd), bool(q.fa))
 
-  implicit def toConst(u: AnyVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
+  implicit def toConst(u: ReadVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
 
 
@@ -378,7 +378,7 @@ object ConstVec4b {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
-) extends AnyVec4b with MutableObject[AnyVec4b] with Implicits[On]
+) extends ReadVec4b with MutableObject[ReadVec4b] with Implicits[On]
 {
   px = cx; py = cy; pz = cz; pw = cw
 
@@ -647,7 +647,7 @@ final class Vec4b private[math] (
 object Vec4b {
   final val True = new ConstVec4b(true, true, true, true)
   final val False = new ConstVec4b(false, false, false, false)
-  final val Manifest = classType[AnyVec4b](classOf[AnyVec4b])
+  final val Manifest = classType[ReadVec4b](classOf[ReadVec4b])
 
   /** Makes a new instance of Vec4b with all the components initialized
    * to the specified value.
@@ -674,7 +674,7 @@ object Vec4b {
    * @return a new instance of Vec4b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: Read4[_, _]) =
+  def apply(u: AnyVec4[_, _]) =
     new Vec4b(u.bx, u.by, u.bz, u.bw)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -687,7 +687,7 @@ object Vec4b {
    *         to x and y components of xy converted to Boolean
    *         and the specified values z and w.
    */
-  def apply(xy: Read2[_, _], z: Boolean, w: Boolean) =
+  def apply(xy: AnyVec2[_, _], z: Boolean, w: Boolean) =
     new Vec4b(xy.bx, xy.by, z, w)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -701,7 +701,7 @@ object Vec4b {
    *         x and y components of yz converted to Boolean,
    *         and the specified value w.
    */
-  def apply(x: Boolean, yz: Read2[_, _], w: Boolean) =
+  def apply(x: Boolean, yz: AnyVec2[_, _], w: Boolean) =
     new Vec4b(x, yz.bx, yz.by, w)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -714,7 +714,7 @@ object Vec4b {
    *         to the specified values x and y
    *         and x and y components of zw converted to Boolean.
    */
-  def apply(x: Boolean, y: Boolean, zw: Read2[_, _]) =
+  def apply(x: Boolean, y: Boolean, zw: AnyVec2[_, _]) =
     new Vec4b(x, y, zw.bx, zw.by)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -726,7 +726,7 @@ object Vec4b {
    *         to x and y components of xy converted to Boolean
    *         and x and y components of zw converted to Boolean.
    */
-  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
+  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
     new Vec4b(xy.bx, xy.by, zw.bx, zw.by)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -738,7 +738,7 @@ object Vec4b {
    *         to x, y, and z components of xyz converted to Boolean
    *         and the specified value w.
    */
-  def apply(xyz: Read3[_, _], w: Boolean) =
+  def apply(xyz: AnyVec3[_, _], w: Boolean) =
     new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
 
   /** Makes a new instance of Vec4b from values extracted from the specified
@@ -750,7 +750,7 @@ object Vec4b {
    *         to the specified value x
    *         and x, y, and z components of yzw converted to Boolean.
    */
-  def apply(x: Boolean, yzw: Read3[_, _]) =
+  def apply(x: Boolean, yzw: AnyVec3[_, _]) =
     new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
   /** Makes a new instance of Vec4b from values extracted from the argument
@@ -760,7 +760,7 @@ object Vec4b {
    * @return a new instance of Vec4b with components initialized
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
-  def apply(m: Read2x2[_, _]) =
+  def apply(m: AnyMat2x2[_, _]) =
     new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
 
   /** Makes a new instance of Vec4b from quaternion.
@@ -768,10 +768,10 @@ object Vec4b {
    * @return a new instance of Vec4b with components initialized
    *         to b, c, d, and a components of q converted to Boolean.
    */
-  def apply(q: ReadQ[_, _]) =
+  def apply(q: AnyQuat4[_, _]) =
     new Vec4b(bool(q.fb), bool(q.fc), bool(q.fd), bool(q.fa))
 
-  def unapply(u: AnyVec4b) = Some((u.x, u.y, u.z, u.w))
+  def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))
 
-  implicit def toMutable(u: AnyVec4b) = new Vec4b(u.x, u.y, u.z, u.w)
+  implicit def toMutable(u: ReadVec4b) = new Vec4b(u.x, u.y, u.z, u.w)
 }

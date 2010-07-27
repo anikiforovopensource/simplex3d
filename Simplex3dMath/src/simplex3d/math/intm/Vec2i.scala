@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec2i extends ProtectedVec2i[Int, AnyVec2i]
+sealed abstract class ReadVec2i extends ProtectedVec2i[Int, ReadVec2i]
 {
-  private[math] type R2 = AnyVec2i
-  private[math] type R3 = AnyVec3i
-  private[math] type R4 = AnyVec4i
+  private[math] type R2 = ReadVec2i
+  private[math] type R3 = ReadVec3i
+  private[math] type R4 = ReadVec4i
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2i(int(x), int(y))
@@ -99,7 +99,7 @@ sealed abstract class AnyVec2i extends ProtectedVec2i[Int, AnyVec2i]
     }
   }
 
-  final def unary_+() :AnyVec2i = this
+  final def unary_+() :ReadVec2i = this
   final def unary_-() = new Vec2i(-x, -y)
   final def unary_~() = new Vec2i(~x, ~y)
 
@@ -136,9 +136,9 @@ sealed abstract class AnyVec2i extends ProtectedVec2i[Int, AnyVec2i]
   
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec2i => x == u.x && y == u.y
-      case u: AnyVec2b => false
-      case u: Read2[_, _] => dx == u.dx && dy == u.dy
+      case u: ReadVec2i => x == u.x && y == u.y
+      case u: ReadVec2b => false
+      case u: AnyVec2[_, _] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -156,26 +156,26 @@ sealed abstract class AnyVec2i extends ProtectedVec2i[Int, AnyVec2i]
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec2i private[math] (cx: Int, cy: Int)
-extends AnyVec2i with Immutable {
+extends ReadVec2i with Immutable {
   px = cx; py = cy
 }
 
 object ConstVec2i {
   def apply(s: Int) = new ConstVec2i(s, s)
   /* main factory */ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-  def apply(u: Read2[_, _]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: Read3[_, _]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: Read4[_, _]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec2[_, _]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_, _]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_, _]) = new ConstVec2i(u.ix, u.iy)
 
-  implicit def toConst(u: AnyVec2i) = new ConstVec2i(u.x, u.y)
+  implicit def toConst(u: ReadVec2i) = new ConstVec2i(u.x, u.y)
 }
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2i private[math] (cx: Int, cy: Int)
-extends AnyVec2i with MutableObject[AnyVec2i] with Implicits[On] with Composite
+extends ReadVec2i with MutableObject[ReadVec2i] with Implicits[On] with Composite
 {
-  type Element = AnyVec2i
+  type Element = ReadVec2i
   type Component = Int1
 
   px = cx; py = cy
@@ -255,15 +255,15 @@ object Vec2i {
   final val UnitX = new ConstVec2i(1, 0)
   final val UnitY = new ConstVec2i(0, 1)
   final val One = new ConstVec2i(1, 1)
-  final val Manifest = classType[AnyVec2i](classOf[AnyVec2i])
+  final val Manifest = classType[ReadVec2i](classOf[ReadVec2i])
 
   def apply(s: Int) = new Vec2i(s, s)
   /* main factory */ def apply(x: Int, y: Int) = new Vec2i(x, y)
-  def apply(u: Read2[_, _]) = new Vec2i(u.ix, u.iy)
-  def apply(u: Read3[_, _]) = new Vec2i(u.ix, u.iy)
-  def apply(u: Read4[_, _]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec2[_, _]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_, _]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_, _]) = new Vec2i(u.ix, u.iy)
 
-  def unapply(u: AnyVec2i) = Some((u.x, u.y))
+  def unapply(u: ReadVec2i) = Some((u.x, u.y))
 
-  implicit def toMutable(u: AnyVec2i) = new Vec2i(u.x, u.y)
+  implicit def toMutable(u: ReadVec2i) = new Vec2i(u.x, u.y)
 }

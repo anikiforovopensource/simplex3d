@@ -29,8 +29,8 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4f
-extends ProtectedMat4f[Float, AnyMat4f]
+sealed abstract class ReadMat4f
+extends ProtectedMat4f[Float, ReadMat4f]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -157,7 +157,7 @@ extends ProtectedMat4f[Float, AnyMat4f]
     }
   }
 
-  final def unary_+() :AnyMat4f = this
+  final def unary_+() :ReadMat4f = this
   final def unary_-() = new Mat4f(
     -m00, -m10, -m20, -m30,
     -m01, -m11, -m21, -m31,
@@ -276,7 +276,7 @@ extends ProtectedMat4f[Float, AnyMat4f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read4x4[_, _] =>
+      case m: AnyMat4x4[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32 &&
@@ -338,7 +338,7 @@ final class ConstMat4f private[math] (
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends AnyMat4f with Immutable
+) extends ReadMat4f with Immutable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -366,7 +366,7 @@ object ConstMat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _], c3: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _], c3: AnyVec4[_, _]) = 
   new ConstMat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -374,14 +374,14 @@ object ConstMat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: ReadMat[_, _]) = new ConstMat4f(
+  def apply(m: AnyMat[_, _]) = new ConstMat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,
     m.f03, m.f13, m.f23, m.f33
   )
 
-  implicit def toConst(m: AnyMat4f) = ConstMat4f(m)
+  implicit def toConst(m: ReadMat4f) = ConstMat4f(m)
 }
 
 
@@ -391,8 +391,8 @@ final class Mat4f private[math] (
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends AnyMat4f
-  with MutableObject[AnyMat4f] with Implicits[On] with Composite
+) extends ReadMat4f
+  with MutableObject[ReadMat4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -419,7 +419,7 @@ final class Mat4f private[math] (
   override def m23_=(s: Float) { p23 = s }
   override def m33_=(s: Float) { p33 = s }
 
-  type Element = AnyMat4f
+  type Element = ReadMat4f
   type Component = Float1
 
   def *=(s: Float) {
@@ -577,7 +577,7 @@ final class Mat4f private[math] (
 object Mat4f {
   final val Zero = ConstMat4f(0)
   final val Identity = ConstMat4f(1)
-  final val Manifest = classType[AnyMat4f](classOf[AnyMat4f])
+  final val Manifest = classType[ReadMat4f](classOf[ReadMat4f])
 
   def apply(s: Float) = new Mat4f(
     s, 0, 0, 0,
@@ -598,7 +598,7 @@ object Mat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _], c2: Read4[_, _], c3: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _], c3: AnyVec4[_, _]) = 
   new Mat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -606,14 +606,14 @@ object Mat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: ReadMat[_, _]) = new Mat4f(
+  def apply(m: AnyMat[_, _]) = new Mat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,
     m.f03, m.f13, m.f23, m.f33
   )
 
-  def unapply(m: AnyMat4f) = Some((m(0), m(1), m(2), m(3)))
+  def unapply(m: ReadMat4f) = Some((m(0), m(1), m(2), m(3)))
 
-  implicit def toMutable(m: AnyMat4f) = Mat4f(m)
+  implicit def toMutable(m: ReadMat4f) = Mat4f(m)
 }

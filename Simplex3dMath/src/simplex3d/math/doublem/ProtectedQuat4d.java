@@ -27,6 +27,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedQuat4d<P, T> extends ReadQ<P, T> implements Serializable {
+abstract class ProtectedQuat4d<P, T> extends AnyQuat4<P, T> implements Serializable {
     double pa; double pb; double pc; double pd;
 }

@@ -27,7 +27,7 @@ import simplex3d.math.*;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat3x2f<P, T> extends Read3x2<P, T> implements Serializable {
+abstract class ProtectedMat3x2f<P, T> extends AnyMat3x2<P, T> implements Serializable {
     float p00; float p10; float p20;
     float p01; float p11; float p21;
 }

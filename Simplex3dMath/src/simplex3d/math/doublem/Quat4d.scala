@@ -29,7 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double, AnyQuat4d]
+sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double, ReadQuat4d]
 {
   private[math] final def fa: Float = float(a)
   private[math] final def fb: Float = float(b)
@@ -66,7 +66,7 @@ sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double, AnyQuat4d]
     }
   }
 
-  final def unary_+() :AnyQuat4d = this
+  final def unary_+() :ReadQuat4d = this
   /**
    * This methods negates every term of this rotationQuat.
    * Negating the rotationQuat produces another rotationQuat which represent
@@ -116,7 +116,7 @@ sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double, AnyQuat4d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: ReadQ[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
+      case q: AnyQuat4[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -140,7 +140,7 @@ sealed abstract class AnyQuat4d extends ProtectedQuat4d[Double, AnyQuat4d]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstQuat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends AnyQuat4d with Immutable {
+) extends ReadQuat4d with Immutable {
   pa = ca; pb = cb; pc = cc; pd = cd
 }
 
@@ -148,20 +148,20 @@ object ConstQuat4d {
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new ConstQuat4d(a, b, c, d)
 
-  def apply(u: ReadQ[_, _]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
-  def apply(u: Read4[_, _]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(u: AnyQuat4[_, _]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
+  def apply(u: AnyVec4[_, _]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
 
-  implicit def toConst(u: AnyQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
+  implicit def toConst(u: ReadQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends AnyQuat4d
-  with MutableObject[AnyQuat4d] with Implicits[On] with Composite
+) extends ReadQuat4d
+  with MutableObject[ReadQuat4d] with Implicits[On] with Composite
 {
-  type Element = AnyQuat4d
+  type Element = ReadQuat4d
   type Component = Double1
 
   pa = ca; pb = cb; pc = cc; pd = cd
@@ -205,15 +205,15 @@ final class Quat4d private[math] (
 
 object Quat4d {
   final val Identity = new ConstQuat4d(1, 0, 0, 0)
-  final val Manifest = classType[AnyQuat4d](classOf[AnyQuat4d])
+  final val Manifest = classType[ReadQuat4d](classOf[ReadQuat4d])
   
   /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
 
-  def apply(q: ReadQ[_, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
-  def apply(u: Read4[_, _]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(q: AnyQuat4[_, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  def apply(u: AnyVec4[_, _]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
 
-  def unapply(q: AnyQuat4d) = Some((q.a, q.b, q.c, q.d))
+  def unapply(q: ReadQuat4d) = Some((q.a, q.b, q.c, q.d))
 
   def rotate(q: inQuat4d) :Quat4d = Quat4d(q)
   def rotate(angle: Double, axis: inVec3d) :Quat4d = {
@@ -229,6 +229,6 @@ object Quat4d {
     quaternion(angle, Vec3d.UnitZ)
   }
 
-  implicit def toMutable(u: AnyQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
-  implicit def castFloat(q: ReadQ[Float, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  implicit def toMutable(u: ReadQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
+  implicit def castFloat(q: AnyQuat4[Float, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
 }

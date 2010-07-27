@@ -29,8 +29,8 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyMat4x2d
-extends ProtectedMat4x2d[Double, AnyMat4x2d]
+sealed abstract class ReadMat4x2d
+extends ProtectedMat4x2d[Double, ReadMat4x2d]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -107,7 +107,7 @@ extends ProtectedMat4x2d[Double, AnyMat4x2d]
     }
   }
 
-  final def unary_+() :AnyMat4x2d = this
+  final def unary_+() :ReadMat4x2d = this
   final def unary_-() = new Mat4x2d(
     -m00, -m10, -m20, -m30,
     -m01, -m11, -m21, -m31
@@ -210,7 +210,7 @@ extends ProtectedMat4x2d[Double, AnyMat4x2d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: Read4x2[_, _] =>
+      case m: AnyMat4x2[_, _] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31
       case _ =>
@@ -250,7 +250,7 @@ extends ProtectedMat4x2d[Double, AnyMat4x2d]
 final class ConstMat4x2d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double
-) extends AnyMat4x2d with Immutable
+) extends ReadMat4x2d with Immutable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -270,18 +270,18 @@ object ConstMat4x2d {
     m01, m11, m21, m31
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _]) = 
   new ConstMat4x2d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw
   )
 
-  def apply(m: ReadMat[_, _]) = new ConstMat4x2d(
+  def apply(m: AnyMat[_, _]) = new ConstMat4x2d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31
   )
 
-  implicit def toConst(m: AnyMat4x2d) = ConstMat4x2d(m)
+  implicit def toConst(m: ReadMat4x2d) = ConstMat4x2d(m)
 }
 
 
@@ -289,8 +289,8 @@ object ConstMat4x2d {
 final class Mat4x2d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double
-) extends AnyMat4x2d
-  with MutableObject[AnyMat4x2d] with Implicits[On] with Composite
+) extends ReadMat4x2d
+  with MutableObject[ReadMat4x2d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -305,7 +305,7 @@ final class Mat4x2d private[math] (
   override def m21_=(s: Double) { p21 = s }
   override def m31_=(s: Double) { p31 = s }
 
-  type Element = AnyMat4x2d
+  type Element = ReadMat4x2d
   type Component = Double1
 
   def *=(s: Double) {
@@ -417,7 +417,7 @@ final class Mat4x2d private[math] (
 object Mat4x2d {
   final val Zero = ConstMat4x2d(0)
   final val Identity = ConstMat4x2d(1)
-  final val Manifest = classType[AnyMat4x2d](classOf[AnyMat4x2d])
+  final val Manifest = classType[ReadMat4x2d](classOf[ReadMat4x2d])
 
   def apply(s: Double) = new Mat4x2d(
     s, 0, 0, 0,
@@ -432,19 +432,19 @@ object Mat4x2d {
     m01, m11, m21, m31
   )
 
-  def apply(c0: Read4[_, _], c1: Read4[_, _]) = 
+  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _]) = 
   new Mat4x2d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw
   )
 
-  def apply(m: ReadMat[_, _]) = new Mat4x2d(
+  def apply(m: AnyMat[_, _]) = new Mat4x2d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31
   )
 
-  def unapply(m: AnyMat4x2d) = Some((m(0), m(1)))
+  def unapply(m: ReadMat4x2d) = Some((m(0), m(1)))
 
-  implicit def toMutable(m: AnyMat4x2d) = Mat4x2d(m)
-  implicit def castFloat(m: Read4x2[Float, _]) = apply(m)
+  implicit def toMutable(m: ReadMat4x2d) = Mat4x2d(m)
+  implicit def castFloat(m: AnyMat4x2[Float, _]) = apply(m)
 }

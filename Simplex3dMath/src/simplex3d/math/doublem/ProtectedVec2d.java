@@ -27,6 +27,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedVec2d<P, T> extends Read2<P, T> implements Serializable {
+abstract class ProtectedVec2d<P, T> extends AnyVec2<P, T> implements Serializable {
     double px; double py;
 }

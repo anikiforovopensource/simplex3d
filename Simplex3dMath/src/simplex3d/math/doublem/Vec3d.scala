@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec3d extends ProtectedVec3d[Double, AnyVec3d]
+sealed abstract class ReadVec3d extends ProtectedVec3d[Double, ReadVec3d]
 {
-  private[math] type R2 = AnyVec2d
-  private[math] type R3 = AnyVec3d
-  private[math] type R4 = AnyVec4d
+  private[math] type R2 = ReadVec2d
+  private[math] type R3 = ReadVec3d
+  private[math] type R4 = ReadVec4d
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)
@@ -118,7 +118,7 @@ sealed abstract class AnyVec3d extends ProtectedVec3d[Double, AnyVec3d]
     }
   }
 
-  final def unary_+() :AnyVec3d = this
+  final def unary_+() :ReadVec3d = this
   final def unary_-() = new Vec3d(-x, -y, -z)
   final def *(s: Double) = new Vec3d(x * s, y * s, z * s)
   final def /(s: Double) = { val inv = 1/s; new Vec3d(x * inv, y * inv, z * inv) }
@@ -144,8 +144,8 @@ sealed abstract class AnyVec3d extends ProtectedVec3d[Double, AnyVec3d]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec3b => false
-      case u: Read3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: ReadVec3b => false
+      case u: AnyVec3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -167,28 +167,28 @@ sealed abstract class AnyVec3d extends ProtectedVec3d[Double, AnyVec3d]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec3d private[math] (
   cx: Double, cy: Double, cz: Double
-) extends AnyVec3d with Immutable {
+) extends ReadVec3d with Immutable {
   px = cx; py = cy; pz = cz
 }
 
 object ConstVec3d {
   def apply(s: Double) = new ConstVec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new ConstVec3d(x, y, z)
-  def apply(u: Read3[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
-  def apply(u: Read4[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
-  def apply(xy: Read2[_, _], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
-  def apply(x: Double, yz: Read2[_, _]) = new ConstVec3d(x, yz.dx, yz.dy)
+  def apply(u: AnyVec3[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(u: AnyVec4[_, _]) = new ConstVec3d(u.dx, u.dy, u.dz)
+  def apply(xy: AnyVec2[_, _], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
+  def apply(x: Double, yz: AnyVec2[_, _]) = new ConstVec3d(x, yz.dx, yz.dy)
 
-  implicit def toConst(u: AnyVec3d) = new ConstVec3d(u.x, u.y, u.z)
+  implicit def toConst(u: ReadVec3d) = new ConstVec3d(u.x, u.y, u.z)
 }
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3d private[math] (
   cx: Double, cy: Double, cz: Double
-) extends AnyVec3d with MutableObject[AnyVec3d] with Implicits[On] with Composite
+) extends ReadVec3d with MutableObject[ReadVec3d] with Implicits[On] with Composite
 {
-  type Element = AnyVec3d
+  type Element = ReadVec3d
   type Component = Double1
 
   px = cx; py = cy; pz = cz
@@ -299,18 +299,18 @@ object Vec3d {
   final val UnitY = new ConstVec3d(0, 1, 0)
   final val UnitZ = new ConstVec3d(0, 0, 1)
   final val One = new ConstVec3d(1, 1, 1)
-  final val Manifest = classType[AnyVec3d](classOf[AnyVec3d])
+  final val Manifest = classType[ReadVec3d](classOf[ReadVec3d])
 
   def apply(s: Double) = new Vec3d(s, s, s)
   /* main factory */ def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)
-  def apply(u: Read3[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
-  def apply(u: Read4[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
-  def apply(xy: Read2[_, _], z: Double) = new Vec3d(xy.dx, xy.dy, z)
-  def apply(x: Double, yz: Read2[_, _]) = new Vec3d(x, yz.dx, yz.dy)
+  def apply(u: AnyVec3[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  def apply(u: AnyVec4[_, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  def apply(xy: AnyVec2[_, _], z: Double) = new Vec3d(xy.dx, xy.dy, z)
+  def apply(x: Double, yz: AnyVec2[_, _]) = new Vec3d(x, yz.dx, yz.dy)
 
-  def unapply(u: AnyVec3d) = Some((u.x, u.y, u.z))
+  def unapply(u: ReadVec3d) = Some((u.x, u.y, u.z))
 
-  implicit def toMutable(u: AnyVec3d) = new Vec3d(u.x, u.y, u.z)
-  implicit def castInt(u: Read3[Int, _]) = new Vec3d(u.dx, u.dy, u.dz)
-  implicit def castFloat(u: Read3[Float, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  implicit def toMutable(u: ReadVec3d) = new Vec3d(u.x, u.y, u.z)
+  implicit def castInt(u: AnyVec3[Int, _]) = new Vec3d(u.dx, u.dy, u.dz)
+  implicit def castFloat(u: AnyVec3[Float, _]) = new Vec3d(u.dx, u.dy, u.dz)
 }

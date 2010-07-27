@@ -28,11 +28,11 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class AnyVec4f extends ProtectedVec4f[Float, AnyVec4f]
+sealed abstract class ReadVec4f extends ProtectedVec4f[Float, ReadVec4f]
 {
-  private[math] type R2 = AnyVec2f
-  private[math] type R3 = AnyVec3f
-  private[math] type R4 = AnyVec4f
+  private[math] type R2 = ReadVec2f
+  private[math] type R3 = ReadVec3f
+  private[math] type R4 = ReadVec4f
 
   protected final def make2(x: Double, y: Double) =
     new ConstVec2f(float(x), float(y))
@@ -137,7 +137,7 @@ sealed abstract class AnyVec4f extends ProtectedVec4f[Float, AnyVec4f]
     }
   }
 
-  final def unary_+() :AnyVec4f = this
+  final def unary_+() :ReadVec4f = this
   final def unary_-() = new Vec4f(-x, -y, -z, -w)
   final def *(s: Float) = new Vec4f(x * s, y * s, z * s, w * s)
   final def /(s: Float) = { val inv = 1/s;
@@ -165,8 +165,8 @@ sealed abstract class AnyVec4f extends ProtectedVec4f[Float, AnyVec4f]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case u: AnyVec4b => false
-      case u: Read4[_, _] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
+      case u: ReadVec4b => false
+      case u: AnyVec4[_, _] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
       case _ => false
     }
   }
@@ -190,7 +190,7 @@ sealed abstract class AnyVec4f extends ProtectedVec4f[Float, AnyVec4f]
 @serializable @SerialVersionUID(5359695191257934190L)
 final class ConstVec4f private[math] (
   cx: Float, cy: Float, cz: Float, cw: Float
-) extends AnyVec4f with Immutable {
+) extends ReadVec4f with Immutable {
   px = cx; py = cy; pz = cz; pw = cw
 }
 
@@ -200,42 +200,42 @@ object ConstVec4f {
   /* main factory */ def apply(x: Float, y: Float, z: Float, w: Float) =
     new ConstVec4f(x, y, z, w)
 
-  def apply(u: Read4[_, _]) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
+  def apply(u: AnyVec4[_, _]) = new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
-  def apply(xy: Read2[_, _], z: Float, w: Float) =
+  def apply(xy: AnyVec2[_, _], z: Float, w: Float) =
     new ConstVec4f(xy.fx, xy.fy, z, w)
 
-  def apply(x: Float, yz: Read2[_, _], w: Float) =
+  def apply(x: Float, yz: AnyVec2[_, _], w: Float) =
     new ConstVec4f(x, yz.fx, yz.fy, w)
 
-  def apply(x: Float, y: Float, zw: Read2[_, _]) =
+  def apply(x: Float, y: Float, zw: AnyVec2[_, _]) =
     new ConstVec4f(x, y, zw.fx, zw.fy)
 
-  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
+  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
     new ConstVec4f(xy.fx, xy.fy, zw.fx, zw.fy)
 
-  def apply(xyz: Read3[_, _], w: Float) =
+  def apply(xyz: AnyVec3[_, _], w: Float) =
     new ConstVec4f(xyz.fx, xyz.fy, xyz.fz, w)
 
-  def apply(x: Float, yzw: Read3[_, _]) =
+  def apply(x: Float, yzw: AnyVec3[_, _]) =
     new ConstVec4f(x, yzw.fx, yzw.fy, yzw.fz)
 
-  def apply(m: Read2x2[_, _]) =
+  def apply(m: AnyMat2x2[_, _]) =
     new ConstVec4f(m.f00, m.f10, m.f01, m.f11)
 
-  def apply(q: ReadQ[_, _]) =
+  def apply(q: AnyQuat4[_, _]) =
     new ConstVec4f(q.fb, q.fc, q.fd, q.fa)
 
-  implicit def toConst(u: AnyVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
+  implicit def toConst(u: ReadVec4f) = new ConstVec4f(u.x, u.y, u.z, u.w)
 }
 
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4f private[math] (
   cx: Float, cy: Float, cz: Float, cw: Float
-) extends AnyVec4f with MutableObject[AnyVec4f] with Implicits[On] with Composite
+) extends ReadVec4f with MutableObject[ReadVec4f] with Implicits[On] with Composite
 {
-  type Element = AnyVec4f
+  type Element = ReadVec4f
   type Component = Float1
 
   px = cx; py = cy; pz = cz; pw = cw
@@ -504,7 +504,7 @@ object Vec4f {
   final val UnitZ = new ConstVec4f(0, 0, 1, 0)
   final val UnitW = new ConstVec4f(0, 0, 0, 1)
   final val One = new ConstVec4f(1, 1, 1, 1)
-  final val Manifest = classType[AnyVec4f](classOf[AnyVec4f])
+  final val Manifest = classType[ReadVec4f](classOf[ReadVec4f])
 
   def apply(s: Float) =
     new Vec4f(s, s, s, s)
@@ -512,35 +512,35 @@ object Vec4f {
   /* main factory */ def apply(x: Float, y: Float, z: Float, w: Float) =
     new Vec4f(x, y, z, w)
 
-  def apply(u: Read4[_, _]) =
+  def apply(u: AnyVec4[_, _]) =
     new Vec4f(u.fx, u.fy, u.fz, u.fw)
 
-  def apply(xy: Read2[_, _], z: Float, w: Float) =
+  def apply(xy: AnyVec2[_, _], z: Float, w: Float) =
     new Vec4f(xy.fx, xy.fy, z, w)
 
-  def apply(x: Float, yz: Read2[_, _], w: Float) =
+  def apply(x: Float, yz: AnyVec2[_, _], w: Float) =
     new Vec4f(x, yz.fx, yz.fy, w)
 
-  def apply(x: Float, y: Float, zw: Read2[_, _]) =
+  def apply(x: Float, y: Float, zw: AnyVec2[_, _]) =
     new Vec4f(x, y, zw.fx, zw.fy)
 
-  def apply(xy: Read2[_, _], zw: Read2[_, _]) =
+  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
     new Vec4f(xy.fx, xy.fy, zw.fx, zw.fy)
 
-  def apply(xyz: Read3[_, _], w: Float) =
+  def apply(xyz: AnyVec3[_, _], w: Float) =
     new Vec4f(xyz.fx, xyz.fy, xyz.fz, w)
 
-  def apply(x: Float, yzw: Read3[_, _]) =
+  def apply(x: Float, yzw: AnyVec3[_, _]) =
     new Vec4f(x, yzw.fx, yzw.fy, yzw.fz)
 
-  def apply(m: Read2x2[_, _]) =
+  def apply(m: AnyMat2x2[_, _]) =
     new Vec4f(m.f00, m.f10, m.f01, m.f11)
 
-  def apply(q: ReadQ[_, _]) =
+  def apply(q: AnyQuat4[_, _]) =
     new Vec4f(q.fb, q.fc, q.fd, q.fa)
 
-  def unapply(u: AnyVec4f) = Some((u.x, u.y, u.z, u.w))
+  def unapply(u: ReadVec4f) = Some((u.x, u.y, u.z, u.w))
 
-  implicit def toMutable(u: AnyVec4f) = new Vec4f(u.x, u.y, u.z, u.w)
-  implicit def castInt(u: Read4[Int, _]) = new Vec4f(u.fx, u.fy, u.fz, u.fw)
+  implicit def toMutable(u: ReadVec4f) = new Vec4f(u.x, u.y, u.z, u.w)
+  implicit def castInt(u: AnyVec4[Int, _]) = new Vec4f(u.fx, u.fy, u.fz, u.fw)
 }

@@ -35,7 +35,7 @@ private[buffer] abstract class BaseVec3f[+R <: ReadableFloat](
   final def elementManifest = Vec3f.Manifest
   final def components: Int = 3
 
-  def apply(i: Int) :AnyVec3f = {
+  def apply(i: Int) :ReadVec3f = {
     val j = offset + i*stride
     ConstVec3f(
       backingSeq(j),
@@ -43,7 +43,7 @@ private[buffer] abstract class BaseVec3f[+R <: ReadableFloat](
       backingSeq(j + 2)
     )
   }
-  def update(i: Int, v: AnyVec3f) {
+  def update(i: Int, v: ReadVec3f) {
     val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y

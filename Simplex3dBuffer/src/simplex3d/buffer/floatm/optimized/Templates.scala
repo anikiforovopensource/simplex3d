@@ -37,14 +37,14 @@ private[buffer] final class ArrayVec2fRawFloat(
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec2f = {
+  override def apply(i: Int) :ReadVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: AnyVec2f) {
+  override def update(i: Int, v: ReadVec2f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -68,14 +68,14 @@ private[buffer] final class BufferVec2fRawFloat(
   override def backingSeq: BufferFloat1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec2f = {
+  override def apply(i: Int) :ReadVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: AnyVec2f) {
+  override def update(i: Int, v: ReadVec2f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -103,14 +103,14 @@ private[buffer] final class ViewVec2fRawFloat(
     backing.mkReadOnlyInstance(), offset, stride
   )
 
-  override def apply(i: Int) :AnyVec2f = {
+  override def apply(i: Int) :ReadVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: AnyVec2f) {
+  override def update(i: Int, v: ReadVec2f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -137,7 +137,7 @@ private[buffer] final class ArrayVec3fRawFloat(
   override def backingSeq: ArrayFloat1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec3f = {
+  override def apply(i: Int) :ReadVec3f = {
     val j = offset + i*stride
     ConstVec3f(
       backing(j),
@@ -145,7 +145,7 @@ private[buffer] final class ArrayVec3fRawFloat(
       backing(j + 2)
     )
   }
-  override def update(i: Int, v: AnyVec3f) {
+  override def update(i: Int, v: ReadVec3f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -170,7 +170,7 @@ private[buffer] final class BufferVec3fRawFloat(
   override def backingSeq: BufferFloat1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec3f = {
+  override def apply(i: Int) :ReadVec3f = {
     val j = offset + i*stride
     ConstVec3f(
       backing(j),
@@ -178,7 +178,7 @@ private[buffer] final class BufferVec3fRawFloat(
       backing(j + 2)
     )
   }
-  override def update(i: Int, v: AnyVec3f) {
+  override def update(i: Int, v: ReadVec3f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -207,7 +207,7 @@ private[buffer] final class ViewVec3fRawFloat(
     backing.mkReadOnlyInstance(), offset, stride
   )
   
-  override def apply(i: Int) :AnyVec3f = {
+  override def apply(i: Int) :ReadVec3f = {
     val j = offset + i*stride
     ConstVec3f(
       backing(j),
@@ -215,7 +215,7 @@ private[buffer] final class ViewVec3fRawFloat(
       backing(j + 2)
     )
   }
-  override def update(i: Int, v: AnyVec3f) {
+  override def update(i: Int, v: ReadVec3f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -243,7 +243,7 @@ private[buffer] final class ArrayVec4fUByte(
   def this() = this(new ArrayFloat1UByte)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4fUByte(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec4f = {
+  override def apply(i: Int) :ReadVec4f = {
     val j = i*4
     ConstVec4f(
       backing(j),
@@ -252,7 +252,7 @@ private[buffer] final class ArrayVec4fUByte(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: AnyVec4f) {
+  override def update(i: Int, v: ReadVec4f) {
     val j = i*4
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -278,7 +278,7 @@ private[buffer] final class BufferVec4fUByte(
   override def backingSeq: BufferFloat1UByte = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4fUByte(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :AnyVec4f = {
+  override def apply(i: Int) :ReadVec4f = {
     val j = i*4
     ConstVec4f(
       backing(j),
@@ -287,7 +287,7 @@ private[buffer] final class BufferVec4fUByte(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: AnyVec4f) {
+  override def update(i: Int, v: ReadVec4f) {
     val j = i*4
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -317,7 +317,7 @@ private[buffer] final class ViewVec4fUByte(
     backing.mkReadOnlyInstance(), offset, stride
   )
 
-  override def apply(i: Int) :AnyVec4f = {
+  override def apply(i: Int) :ReadVec4f = {
     val j = offset + i*stride
     ConstVec4f(
       backing(j),
@@ -326,7 +326,7 @@ private[buffer] final class ViewVec4fUByte(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: AnyVec4f) {
+  override def update(i: Int, v: ReadVec4f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y

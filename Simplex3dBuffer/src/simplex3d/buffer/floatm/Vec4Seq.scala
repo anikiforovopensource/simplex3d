@@ -35,7 +35,7 @@ private[buffer] abstract class BaseVec4f[+R <: ReadableFloat](
   final def elementManifest = Vec4f.Manifest
   final def components: Int = 4
 
-  def apply(i: Int) :AnyVec4f = {
+  def apply(i: Int) :ReadVec4f = {
     val j = offset + i*stride
     ConstVec4f(
       backingSeq(j),
@@ -44,7 +44,7 @@ private[buffer] abstract class BaseVec4f[+R <: ReadableFloat](
       backingSeq(j + 3)
     )
   }
-  def update(i: Int, v: AnyVec4f) {
+  def update(i: Int, v: ReadVec4f) {
     val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y

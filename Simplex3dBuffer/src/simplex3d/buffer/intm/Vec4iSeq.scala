@@ -35,7 +35,7 @@ private[buffer] abstract class BaseVec4i[+R <: ReadableInt](
   final def elementManifest = Vec4i.Manifest
   final def components: Int = 4
 
-  def apply(i: Int) :AnyVec4i = {
+  def apply(i: Int) :ReadVec4i = {
     val j = offset + i*stride
     ConstVec4i(
       backingSeq(j),
@@ -44,7 +44,7 @@ private[buffer] abstract class BaseVec4i[+R <: ReadableInt](
       backingSeq(j + 3)
     )
   }
-  def update(i: Int, v: AnyVec4i) {
+  def update(i: Int, v: ReadVec4i) {
     val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y

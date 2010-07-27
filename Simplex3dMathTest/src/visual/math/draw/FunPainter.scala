@@ -34,7 +34,7 @@ import simplex3d.math.doublem.DoubleMath._
  */
 object FunPainter {
 
-  private final def rgb(c: AnyVec3) :Int = {
+  private final def rgb(c: ReadVec3) :Int = {
     (IntMath.clamp(int(c.r*255), 0, 255) << 16) |
     (IntMath.clamp(int(c.g*255), 0, 255) << 8) |
     IntMath.clamp(int(c.b*255), 0, 255) |

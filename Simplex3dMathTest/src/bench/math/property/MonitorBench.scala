@@ -60,7 +60,7 @@ object MonitorBench {
 
   var count = 0
   
-  class PropertyImpl(val value: Vec2) extends Property[AnyVec2]
+  class PropertyImpl(val value: Vec2) extends Property[ReadVec2]
 
   class ChangeMonitorImpl[T](init: PropertyValue[T]) extends ChangeMonitor[T] {
     protected val value = init.copyAsMutable()

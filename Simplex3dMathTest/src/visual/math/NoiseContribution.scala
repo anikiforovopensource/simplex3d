@@ -44,8 +44,8 @@ object NoiseContribution {
 
   def main(args: Array[String]) {
     FunFrame.launch(new Fun {
-    final def apply(pixel: AnyVec2, time: Double)
-    :AnyVec3 =
+    final def apply(pixel: ReadVec2, time: Double)
+    :ReadVec3 =
     {
       val lineWidth = 2.5
       val axisWidth = 1.5

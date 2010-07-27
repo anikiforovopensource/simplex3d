@@ -54,7 +54,7 @@ class Mat3x2dTest extends FunSuite {
   )
 
   test("Factories") {
-    var m: AnyMat3x2 = Mat3x2(1)
+    var m: ReadMat3x2 = Mat3x2(1)
 
     m = Mat3x2(d00)
     expect(classOf[Mat3x2]) { m.getClass }

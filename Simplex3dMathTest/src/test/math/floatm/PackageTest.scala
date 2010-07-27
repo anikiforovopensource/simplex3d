@@ -55,98 +55,98 @@ class PackageTest extends FunSuite {
     // the following passes if it compiles
     val pi = FloatMath.Pi
 
-    type av2 = AnyVec2f
+    type av2 = ReadVec2f
     type cv2 = ConstVec2f
     val cv2 = ConstVec2f
     type v2 = Vec2f
     val v2 = Vec2f
 
-    type av3 = AnyVec3f
+    type av3 = ReadVec3f
     type cv3 = ConstVec3f
     val cv3 = ConstVec3f
     type v3 = Vec3f
     val v3 = Vec3f
 
-    type av4 = AnyVec4f
+    type av4 = ReadVec4f
     type cv4 = ConstVec4f
     val cv4 = ConstVec4f
     type v4 = Vec4f
     val v4 = Vec4f
 
-    type am2 = AnyMat2f
+    type am2 = ReadMat2f
     type cm2 = ConstMat2f
     val cm2 = ConstMat2f
     type m2 = Mat2f
     val m2 = Mat2f
 
-    type am2x3 = AnyMat2x3f
+    type am2x3 = ReadMat2x3f
     type cm2x3 = ConstMat2x3f
     val cm2x3 = ConstMat2x3f
     type m2x3 = Mat2x3f
     val m2x3 = Mat2x3f
 
-    type am2x4 = AnyMat2x4f
+    type am2x4 = ReadMat2x4f
     type cm2x4 = ConstMat2x4f
     val cm2x4 = ConstMat2x4f
     type m2x4 = Mat2x4f
     val m2x4 = Mat2x4f
 
-    type am3x2 = AnyMat3x2f
+    type am3x2 = ReadMat3x2f
     type cm3x2 = ConstMat3x2f
     val cm3x2 = ConstMat3x2f
     type m3x2 = Mat3x2f
     val m3x2 = Mat3x2f
 
-    type am3 = AnyMat3f
+    type am3 = ReadMat3f
     type cm3 = ConstMat3f
     val cm3 = ConstMat3f
     type m3 = Mat3f
     val m3 = Mat3f
 
-    type am3x4 = AnyMat3x4f
+    type am3x4 = ReadMat3x4f
     type cm3x4 = ConstMat3x4f
     val cm3x4 = ConstMat3x4f
     type m3x4 = Mat3x4f
     val m3x4 = Mat3x4f
 
-    type am4x2 = AnyMat4x2f
+    type am4x2 = ReadMat4x2f
     type cm4x2 = ConstMat4x2f
     val cm4x2 = ConstMat4x2f
     type m4x2 = Mat4x2f
     val m4x2 = Mat4x2f
 
-    type am4x3 = AnyMat4x3f
+    type am4x3 = ReadMat4x3f
     type cm4x3 = ConstMat4x3f
     val cm4x3 = ConstMat4x3f
     type m4x3 = Mat4x3f
     val m4x3 = Mat4x3f
 
-    type am4 = AnyMat4f
+    type am4 = ReadMat4f
     type cm4 = ConstMat4f
     val cm4 = ConstMat4f
     type m4 = Mat4f
     val m4 = Mat4f
 
-    type aq4 = AnyQuat4f
+    type aq4 = ReadQuat4f
     type cq4 = ConstQuat4f
     val cq4 = ConstQuat4f
     type q4 = Quat4f
     val q4 = Quat4f
 
     // Aliases
-    type am2x2 = AnyMat2x2f
+    type am2x2 = ReadMat2x2f
     type cm2x2 = ConstMat2x2f
     val cm2x2 = ConstMat2x2f
     type m2x2 = Mat2x2f
     val m2x2 = Mat2x2f
 
-    type am3x3 = AnyMat3x3f
+    type am3x3 = ReadMat3x3f
     type cm3x3 = ConstMat3x3f
     val cm3x3 = ConstMat3x3f
     type m3x3 = Mat3x3f
     val m3x3 = Mat3x3f
 
-    type am4x4 = AnyMat4x4f
+    type am4x4 = ReadMat4x4f
     type cm4x4 = ConstMat4x4f
     val cm4x4 = ConstMat4x4f
     type m4x4 = Mat4x4f
@@ -178,98 +178,98 @@ class PackageTest extends FunSuite {
     // the following passes if it compiles
     val pi = FloatMath.Pi
 
-    type av2 = AnyVec2
+    type av2 = ReadVec2
     type cv2 = ConstVec2
     val cv2 = ConstVec2
     type v2 = Vec2
     val v2 = Vec2
 
-    type av3 = AnyVec3
+    type av3 = ReadVec3
     type cv3 = ConstVec3
     val cv3 = ConstVec3
     type v3 = Vec3
     val v3 = Vec3
 
-    type av4 = AnyVec4
+    type av4 = ReadVec4
     type cv4 = ConstVec4
     val cv4 = ConstVec4
     type v4 = Vec4
     val v4 = Vec4
 
-    type am2 = AnyMat2
+    type am2 = ReadMat2
     type cm2 = ConstMat2
     val cm2 = ConstMat2
     type m2 = Mat2
     val m2 = Mat2
 
-    type am2x3 = AnyMat2x3
+    type am2x3 = ReadMat2x3
     type cm2x3 = ConstMat2x3
     val cm2x3 = ConstMat2x3
     type m2x3 = Mat2x3
     val m2x3 = Mat2x3
 
-    type am2x4 = AnyMat2x4
+    type am2x4 = ReadMat2x4
     type cm2x4 = ConstMat2x4
     val cm2x4 = ConstMat2x4
     type m2x4 = Mat2x4
     val m2x4 = Mat2x4
 
-    type am3x2 = AnyMat3x2
+    type am3x2 = ReadMat3x2
     type cm3x2 = ConstMat3x2
     val cm3x2 = ConstMat3x2
     type m3x2 = Mat3x2
     val m3x2 = Mat3x2
 
-    type am3 = AnyMat3
+    type am3 = ReadMat3
     type cm3 = ConstMat3
     val cm3 = ConstMat3
     type m3 = Mat3
     val m3 = Mat3
 
-    type am3x4 = AnyMat3x4
+    type am3x4 = ReadMat3x4
     type cm3x4 = ConstMat3x4
     val cm3x4 = ConstMat3x4
     type m3x4 = Mat3x4
     val m3x4 = Mat3x4
 
-    type am4x2 = AnyMat4x2
+    type am4x2 = ReadMat4x2
     type cm4x2 = ConstMat4x2
     val cm4x2 = ConstMat4x2
     type m4x2 = Mat4x2
     val m4x2 = Mat4x2
 
-    type am4x3 = AnyMat4x3
+    type am4x3 = ReadMat4x3
     type cm4x3 = ConstMat4x3
     val cm4x3 = ConstMat4x3
     type m4x3 = Mat4x3
     val m4x3 = Mat4x3
 
-    type am4 = AnyMat4
+    type am4 = ReadMat4
     type cm4 = ConstMat4
     val cm4 = ConstMat4
     type m4 = Mat4
     val m4 = Mat4
 
-    type aq4 = AnyQuat4
+    type aq4 = ReadQuat4
     type cq4 = ConstQuat4
     val cq4 = ConstQuat4
     type q4 = Quat4
     val q4 = Quat4
 
     // Aliases
-    type am2x2 = AnyMat2x2
+    type am2x2 = ReadMat2x2
     type cm2x2 = ConstMat2x2
     val cm2x2 = ConstMat2x2
     type m2x2 = Mat2x2
     val m2x2 = Mat2x2
 
-    type am3x3 = AnyMat3x3
+    type am3x3 = ReadMat3x3
     type cm3x3 = ConstMat3x3
     val cm3x3 = ConstMat3x3
     type m3x3 = Mat3x3
     val m3x3 = Mat3x3
 
-    type am4x4 = AnyMat4x4
+    type am4x4 = ReadMat4x4
     type cm4x4 = ConstMat4x4
     val cm4x4 = ConstMat4x4
     type m4x4 = Mat4x4

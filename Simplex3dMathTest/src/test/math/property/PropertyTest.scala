@@ -688,78 +688,78 @@ class PropertyTest extends FunSuite {
     }
   }
 
-  def checkType(value: AnyVec2b) {}
+  def checkType(value: ReadVec2b) {}
   def checkType(value: Vec2b) { throw new AssertionError }
-  def checkType(value: AnyVec3b) {}
+  def checkType(value: ReadVec3b) {}
   def checkType(value: Vec3b) { throw new AssertionError }
-  def checkType(value: AnyVec4b) {}
+  def checkType(value: ReadVec4b) {}
   def checkType(value: Vec4b) { throw new AssertionError }
 
-  def checkType(value: AnyVec2i) {}
+  def checkType(value: ReadVec2i) {}
   def checkType(value: Vec2i) { throw new AssertionError }
-  def checkType(value: AnyVec3i) {}
+  def checkType(value: ReadVec3i) {}
   def checkType(value: Vec3i) { throw new AssertionError }
-  def checkType(value: AnyVec4i) {}
+  def checkType(value: ReadVec4i) {}
   def checkType(value: Vec4i) { throw new AssertionError }
 
-  def checkType(value: AnyVec2f) {}
+  def checkType(value: ReadVec2f) {}
   def checkType(value: Vec2f) { throw new AssertionError }
-  def checkType(value: AnyVec3f) {}
+  def checkType(value: ReadVec3f) {}
   def checkType(value: Vec3f) { throw new AssertionError }
-  def checkType(value: AnyVec4f) {}
+  def checkType(value: ReadVec4f) {}
   def checkType(value: Vec4f) { throw new AssertionError }
 
-  def checkType(value: AnyVec2d) {}
+  def checkType(value: ReadVec2d) {}
   def checkType(value: Vec2d) { throw new AssertionError }
-  def checkType(value: AnyVec3d) {}
+  def checkType(value: ReadVec3d) {}
   def checkType(value: Vec3d) { throw new AssertionError }
-  def checkType(value: AnyVec4d) {}
+  def checkType(value: ReadVec4d) {}
   def checkType(value: Vec4d) { throw new AssertionError }
 
-  def checkType(value: AnyQuat4f) {}
+  def checkType(value: ReadQuat4f) {}
   def checkType(value: Quat4f) { throw new AssertionError }
-  def checkType(value: AnyQuat4d) {}
+  def checkType(value: ReadQuat4d) {}
   def checkType(value: Quat4d) { throw new AssertionError }
 
-  def checkType(value: AnyMat2x2f) {}
+  def checkType(value: ReadMat2x2f) {}
   def checkType(value: Mat2x2f) { throw new AssertionError }
-  def checkType(value: AnyMat2x3f) {}
+  def checkType(value: ReadMat2x3f) {}
   def checkType(value: Mat2x3f) { throw new AssertionError }
-  def checkType(value: AnyMat2x4f) {}
+  def checkType(value: ReadMat2x4f) {}
   def checkType(value: Mat2x4f) { throw new AssertionError }
 
-  def checkType(value: AnyMat3x2f) {}
+  def checkType(value: ReadMat3x2f) {}
   def checkType(value: Mat3x2f) { throw new AssertionError }
-  def checkType(value: AnyMat3x3f) {}
+  def checkType(value: ReadMat3x3f) {}
   def checkType(value: Mat3x3f) { throw new AssertionError }
-  def checkType(value: AnyMat3x4f) {}
+  def checkType(value: ReadMat3x4f) {}
   def checkType(value: Mat3x4f) { throw new AssertionError }
 
-  def checkType(value: AnyMat4x2f) {}
+  def checkType(value: ReadMat4x2f) {}
   def checkType(value: Mat4x2f) { throw new AssertionError }
-  def checkType(value: AnyMat4x3f) {}
+  def checkType(value: ReadMat4x3f) {}
   def checkType(value: Mat4x3f) { throw new AssertionError }
-  def checkType(value: AnyMat4x4f) {}
+  def checkType(value: ReadMat4x4f) {}
   def checkType(value: Mat4x4f) { throw new AssertionError }
 
-  def checkType(value: AnyMat2x2d) {}
+  def checkType(value: ReadMat2x2d) {}
   def checkType(value: Mat2x2d) { throw new AssertionError }
-  def checkType(value: AnyMat2x3d) {}
+  def checkType(value: ReadMat2x3d) {}
   def checkType(value: Mat2x3d) { throw new AssertionError }
-  def checkType(value: AnyMat2x4d) {}
+  def checkType(value: ReadMat2x4d) {}
   def checkType(value: Mat2x4d) { throw new AssertionError }
 
-  def checkType(value: AnyMat3x2d) {}
+  def checkType(value: ReadMat3x2d) {}
   def checkType(value: Mat3x2d) { throw new AssertionError }
-  def checkType(value: AnyMat3x3d) {}
+  def checkType(value: ReadMat3x3d) {}
   def checkType(value: Mat3x3d) { throw new AssertionError }
-  def checkType(value: AnyMat3x4d) {}
+  def checkType(value: ReadMat3x4d) {}
   def checkType(value: Mat3x4d) { throw new AssertionError }
 
-  def checkType(value: AnyMat4x2d) {}
+  def checkType(value: ReadMat4x2d) {}
   def checkType(value: Mat4x2d) { throw new AssertionError }
-  def checkType(value: AnyMat4x3d) {}
+  def checkType(value: ReadMat4x3d) {}
   def checkType(value: Mat4x3d) { throw new AssertionError }
-  def checkType(value: AnyMat4x4d) {}
+  def checkType(value: ReadMat4x4d) {}
   def checkType(value: Mat4x4d) { throw new AssertionError }
 }

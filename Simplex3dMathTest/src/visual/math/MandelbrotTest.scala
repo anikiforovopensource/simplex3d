@@ -72,8 +72,8 @@ object MandelbrotTest {
     val iterations = colors.length
     val escapeColor = colors(iterations - 1)
 
-    final def apply(pixel: AnyVec2, time: Double)
-    :AnyVec3 =
+    final def apply(pixel: ReadVec2, time: Double)
+    :ReadVec3 =
     {
       val mid = dimensions/2
       val zoom = startScale + pow(zoomSpeed, 30 + time)

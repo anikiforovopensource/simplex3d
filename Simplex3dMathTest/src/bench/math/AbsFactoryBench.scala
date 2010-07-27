@@ -115,16 +115,16 @@ class AbsFactoryCase {
   }
 }
 
-abstract class MAnyVec2i {
+abstract class MReadVec2i {
   def x: Int
   def y: Int
 
-  def +(u: MAnyVec2i) = new MVec2i(x + u.x, y + u.y)
+  def +(u: MReadVec2i) = new MVec2i(x + u.x, y + u.y)
 }
-class MConstVec2i(val x: Int, val y: Int) extends MAnyVec2i
-class MVec2i(var x: Int, var y: Int) extends MAnyVec2i
+class MConstVec2i(val x: Int, val y: Int) extends MReadVec2i
+class MVec2i(var x: Int, var y: Int) extends MReadVec2i
 
-abstract class AbsFactoryMVec2i[T <: MAnyVec2i] {
+abstract class AbsFactoryMVec2i[T <: MReadVec2i] {
   def apply(x: Int, y: Int) :T
   def apply(x: Int) :T = apply(x, x)
 }

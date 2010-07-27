@@ -40,7 +40,7 @@ class Vec3iTest extends FunSuite {
     val z = 5
     val w = 6
 
-    var u: AnyVec3i = Vec3i(x)
+    var u: ReadVec3i = Vec3i(x)
     expect(classOf[Vec3i]) { u.getClass }
     expect(x) { u.x }
     expect(x) { u.y }
@@ -211,7 +211,7 @@ class Vec3iTest extends FunSuite {
 
   test("Boolean factories") {
     BooleanCombinations.test { (x, y, z, w) =>
-      var u: AnyVec3i = Vec3i(Vec3b(x, y, z))
+      var u: ReadVec3i = Vec3i(Vec3b(x, y, z))
       expect(classOf[Vec3i]) { u.getClass }
       expect(int(x)) { u.x }
       expect(int(y)) { u.y }
@@ -235,7 +235,7 @@ class Vec3iTest extends FunSuite {
       expect(int(y)) { u.y }
       expect(int(z)) { u.z }
 
-      var c: AnyVec3i = ConstVec3i(Vec3b(x, y, z))
+      var c: ReadVec3i = ConstVec3i(Vec3b(x, y, z))
       expect(classOf[ConstVec3i]) { c.getClass }
       expect(int(x)) { c.x }
       expect(int(y)) { c.y }

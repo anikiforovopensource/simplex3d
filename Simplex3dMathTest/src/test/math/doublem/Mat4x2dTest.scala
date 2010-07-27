@@ -54,7 +54,7 @@ class Mat4x2dTest extends FunSuite {
   )
 
   test("Factories") {
-    var m: AnyMat4x2 = Mat4x2(1)
+    var m: ReadMat4x2 = Mat4x2(1)
 
     m = Mat4x2(d00)
     expect(classOf[Mat4x2]) { m.getClass }

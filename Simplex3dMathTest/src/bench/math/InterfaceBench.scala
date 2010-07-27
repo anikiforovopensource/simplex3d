@@ -134,7 +134,7 @@ object Mat3x4m {
     0, 0, 0
   )
 
-  def apply(c0: AnyVec3, c1: AnyVec3, c2: AnyVec3, c3: AnyVec3) =
+  def apply(c0: ReadVec3, c1: ReadVec3, c2: ReadVec3, c3: ReadVec3) =
   new Mat3x4m(
     c0.x, c0.y, c0.z,
     c1.x, c1.y, c1.z,

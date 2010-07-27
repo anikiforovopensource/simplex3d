@@ -99,8 +99,8 @@ class ConstansTest extends FunSuite {
   test("Manifest") {
     import scala.reflect.Manifest._
 
-    assert(Vec2i.Manifest == classType[AnyVec2i](classOf[AnyVec2i]))
-    assert(Vec3i.Manifest == classType[AnyVec3i](classOf[AnyVec3i]))
-    assert(Vec4i.Manifest == classType[AnyVec4i](classOf[AnyVec4i]))
+    assert(Vec2i.Manifest == classType[ReadVec2i](classOf[ReadVec2i]))
+    assert(Vec3i.Manifest == classType[ReadVec3i](classOf[ReadVec3i]))
+    assert(Vec4i.Manifest == classType[ReadVec4i](classOf[ReadVec4i]))
   }
 }

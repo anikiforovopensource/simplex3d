@@ -101,7 +101,7 @@ object VecPropBench {
   }
 
   final def testVec2PropReadWrite(length: Int) {
-    val p: Property[AnyVec2] = new SimpleProperty(
+    val p: Property[ReadVec2] = new SimpleProperty(
       Vec2(0),
       (u: inVec2) => throw new AssertionError
     )
@@ -118,7 +118,7 @@ object VecPropBench {
   }
 
   final def testVec4PropReadWrite(length: Int) {
-    val p: Property[AnyVec4] = new SimpleProperty(
+    val p: Property[ReadVec4] = new SimpleProperty(
       Vec4(0),
       (u: inVec4) => throw new AssertionError
     )

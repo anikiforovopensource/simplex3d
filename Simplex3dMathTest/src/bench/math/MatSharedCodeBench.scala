@@ -274,7 +274,7 @@ class MatSharedCodeBench {
   }
 }
 
-sealed abstract class AnyMat3m {
+sealed abstract class ReadMat3m {
   // Column major order.
   def m00: Double; def m10: Double; def m20: Double // column
   def m01: Double; def m11: Double; def m21: Double // column
@@ -298,13 +298,13 @@ sealed abstract class AnyMat3m {
     m02 + s, m12 + s, m22 + s
   )
 
-  final def +(m: AnyMat3m) = new Mat3m(
+  final def +(m: ReadMat3m) = new Mat3m(
     m00 + m.m00, m10 + m.m10, m20 + m.m20,
     m01 + m.m01, m11 + m.m11, m21 + m.m21,
     m02 + m.m02, m12 + m.m12, m22 + m.m22
   )
 
-  final def *(m: AnyMat3m) = new Mat3m(
+  final def *(m: ReadMat3m) = new Mat3m(
     m00*m.m00 + m01*m.m10 + m02*m.m20,
     m10*m.m00 + m11*m.m10 + m12*m.m20,
     m20*m.m00 + m21*m.m10 + m22*m.m20,
@@ -332,15 +332,15 @@ final class Mat3m (
   var m00: Double, var m10: Double, var m20: Double,
   var m01: Double, var m11: Double, var m21: Double,
   var m02: Double, var m12: Double, var m22: Double
-) extends AnyMat3m with Mutable
+) extends ReadMat3m with Mutable
 {
-  def +=(m: AnyMat3m) {
+  def +=(m: ReadMat3m) {
     m00 += m.m00; m10 += m.m10; m20 += m.m20;
     m01 += m.m01; m11 += m.m11; m21 += m.m21;
     m02 += m.m02; m12 += m.m12; m22 += m.m22
   }
 
-  def *=(m: AnyMat3m) {
+  def *=(m: ReadMat3m) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
     val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
@@ -369,7 +369,7 @@ final class Mat3m (
   }
 }
 
-sealed abstract class AnyMat3s {
+sealed abstract class ReadMat3s {
   // Column major order.
   def m00: Double; def m10: Double; def m20: Double // column
   def m01: Double; def m11: Double; def m21: Double // column
@@ -383,15 +383,15 @@ sealed abstract class AnyMat3s {
   final def /(s: Double) = this*(1/s)
 
   // Test conclusion: this code interferes with EscapeAnalysis.
-  final def +(m: AnyMat3s) = { val res = new Mat3s(); add(m, res); res }
-  final def *(m: AnyMat3s) = { val res = new Mat3s(); mul(m, res); res }
+  final def +(m: ReadMat3s) = { val res = new Mat3s(); add(m, res); res }
+  final def *(m: ReadMat3s) = { val res = new Mat3s(); mul(m, res); res }
 
-  protected final def add(m: AnyMat3s, res: Mat3s) {
+  protected final def add(m: ReadMat3s, res: Mat3s) {
     res.m00 = m00 + m.m00; res.m10 = m10 + m.m10; res.m20 = m20 + m.m20;
     res.m01 = m01 + m.m01; res.m11 = m11 + m.m11; res.m21 = m21 + m.m21;
     res.m02 = m02 + m.m02; res.m12 = m12 + m.m12; res.m22 = m22 + m.m22
   }
-  protected final def mul(m: AnyMat3s, res: Mat3s) {
+  protected final def mul(m: ReadMat3s, res: Mat3s) {
     val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
     val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
     val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
@@ -423,12 +423,12 @@ final class Mat3s (
   var m00: Double, var m10: Double, var m20: Double,
   var m01: Double, var m11: Double, var m21: Double,
   var m02: Double, var m12: Double, var m22: Double
-) extends AnyMat3s with Mutable
+) extends ReadMat3s with Mutable
 {
   def this() = this(0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-  def +=(m: AnyMat3s) { add(m, this) }
-  def *=(m: AnyMat3s) { mul(m, this) }
+  def +=(m: ReadMat3s) { add(m, this) }
+  def *=(m: ReadMat3s) { mul(m, this) }
 
   def set(
     m00: Double, m10: Double, m20: Double,

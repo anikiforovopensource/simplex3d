@@ -70,7 +70,7 @@ object ClassVsTraitPropBench {
     println("BaseTrait2 time: " + testBaseTrait2Time + ".")
   }
 
-  final def testBaseClass(length: Int, p: BaseClass[AnyVec2]) {
+  final def testBaseClass(length: Int, p: BaseClass[ReadVec2]) {
     var i = 0; while (i < length) {
 
       // Bench code
@@ -82,7 +82,7 @@ object ClassVsTraitPropBench {
     println(p)
   }
 
-  final def testBaseTrait(length: Int, p: Property[AnyVec2]) {
+  final def testBaseTrait(length: Int, p: Property[ReadVec2]) {
     var i = 0; while (i < length) {
 
       // Bench code

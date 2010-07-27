@@ -44,7 +44,7 @@ class Quat4dTest extends FunSuite {
     val cd = 3 + 1e-15
     val dd = 4 + 1e-15
 
-    var q: AnyQuat4 = Quat4(ad, bd, cd, dd)
+    var q: ReadQuat4 = Quat4(ad, bd, cd, dd)
     expect(classOf[Quat4]) { q.getClass }
     expect(ad) { q.a }
     expect(bd) { q.b }
@@ -79,7 +79,7 @@ class Quat4dTest extends FunSuite {
     expect(double(cf)) { q.c }
     expect(double(df)) { q.d }
 
-    var p: AnyQuat4 = ConstQuat4(ad, bd, cd, dd)
+    var p: ReadQuat4 = ConstQuat4(ad, bd, cd, dd)
     expect(classOf[ConstQuat4]) { p.getClass }
     expect(ad) { p.a }
     expect(bd) { p.b }

@@ -831,7 +831,7 @@ class DoubleMathExtraTest extends FunSuite {
   }
 
   test("All if branches, quat from mat") {
-    def testMatrix(angle: Double, axis: AnyVec3) {
+    def testMatrix(angle: Double, axis: ReadVec3) {
       val m0: ConstMat3 = rotationMat(
         radians(angle), normalize(axis)
       )
@@ -855,7 +855,7 @@ class DoubleMathExtraTest extends FunSuite {
   }
 
   test("All if branches, angle axis from mat") {
-    def testMatrix(ax: AnyVec3) {
+    def testMatrix(ax: ReadVec3) {
       val m0: ConstMat3 = rotationMat(radians(180), normalize(ax))
 
       val axis = Vec3(0)

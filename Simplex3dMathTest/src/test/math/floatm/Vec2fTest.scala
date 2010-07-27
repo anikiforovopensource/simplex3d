@@ -36,7 +36,7 @@ class Vec2fTest extends FunSuite {
 
   test("Factories") {
     def test(x: Float, y: Float, z: Float, w: Float) {
-      var u: AnyVec2 = Vec2(x)
+      var u: ReadVec2 = Vec2(x)
       expect(classOf[Vec2]) { u.getClass }
       expect(x) { u.x }
       expect(x) { u.y }
@@ -154,7 +154,7 @@ class Vec2fTest extends FunSuite {
 
   test("Boolean factories") {
     BooleanCombinations.test { (x, y, z, w) =>
-      var u: AnyVec2 = Vec2(Vec2b(x, y))
+      var u: ReadVec2 = Vec2(Vec2b(x, y))
       expect(classOf[Vec2]) { u.getClass }
       expect(float(x)) { u.x }
       expect(float(y)) { u.y }
@@ -169,7 +169,7 @@ class Vec2fTest extends FunSuite {
       expect(float(x)) { u.x }
       expect(float(y)) { u.y }
 
-      var c: AnyVec2 = ConstVec2(Vec2b(x, y))
+      var c: ReadVec2 = ConstVec2(Vec2b(x, y))
       expect(classOf[ConstVec2]) { c.getClass }
       expect(float(x)) { c.x }
       expect(float(y)) { c.y }

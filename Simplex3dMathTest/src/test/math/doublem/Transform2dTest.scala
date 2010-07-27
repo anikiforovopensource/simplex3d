@@ -69,7 +69,7 @@ class Transform2dTest extends FunSuite {
       assert(Mat2x3.concatenate(m22) == Mat2x3(m22))
     }
 
-    def assertTransform(a: AnyMat2x3, m: AnyMat2x3, b: AnyMat2x3) {
+    def assertTransform(a: ReadMat2x3, m: ReadMat2x3, b: ReadMat2x3) {
       assert(a.ne(b))
       assert(m*Mat3(a) == b)
 
@@ -89,7 +89,7 @@ class Transform2dTest extends FunSuite {
         }
       }
     }
-    def test(t: AnyMat2x3) {
+    def test(t: ReadMat2x3) {
       val s = r
       assertTransform(t, Mat2x3(s), t scale(s))
 

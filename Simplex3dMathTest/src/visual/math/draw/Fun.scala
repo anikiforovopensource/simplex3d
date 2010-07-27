@@ -31,7 +31,7 @@ abstract class Fun {
   /**
    * Width and height of the rendering surface
    */
-  final val dimensions: AnyVec2 = Vec2(0)
+  final val dimensions: ReadVec2 = Vec2(0)
 
   /**
    * @param pixel
@@ -41,5 +41,5 @@ abstract class Fun {
    * @return
    *          rgb color with floating point components from 0 to 1
    */
-  def apply(pixel: AnyVec2, time: Double) :AnyVec3
+  def apply(pixel: ReadVec2, time: Double) :ReadVec3
 }

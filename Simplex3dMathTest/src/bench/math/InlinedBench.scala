@@ -57,7 +57,7 @@ class InlinedBenchCase {
     val p1 = normalize(cross(Vec3f.UnitY, dir)) * arrowLength*0.5f*headScale
     val p2 = -p1
 
-    def store(i: Int, u: AnyVec3f) {
+    def store(i: Int, u: ReadVec3f) {
       arrow(i*3) = u.x
       arrow(i*3 + 1) = u.y
       arrow(i*3 + 2) = u.z

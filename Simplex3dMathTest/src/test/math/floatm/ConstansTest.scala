@@ -221,22 +221,22 @@ class ConstansTest extends FunSuite {
   test("Manifest") {
     import scala.reflect.Manifest._
 
-    assert(Vec2.Manifest == classType[AnyVec2](classOf[AnyVec2]))
-    assert(Vec3.Manifest == classType[AnyVec3](classOf[AnyVec3]))
-    assert(Vec4.Manifest == classType[AnyVec4](classOf[AnyVec4]))
+    assert(Vec2.Manifest == classType[ReadVec2](classOf[ReadVec2]))
+    assert(Vec3.Manifest == classType[ReadVec3](classOf[ReadVec3]))
+    assert(Vec4.Manifest == classType[ReadVec4](classOf[ReadVec4]))
 
-    assert(Quat4.Manifest == classType[AnyQuat4](classOf[AnyQuat4]))
+    assert(Quat4.Manifest == classType[ReadQuat4](classOf[ReadQuat4]))
 
-    assert(Mat2x2.Manifest == classType[AnyMat2x2](classOf[AnyMat2x2]))
-    assert(Mat2x3.Manifest == classType[AnyMat2x3](classOf[AnyMat2x3]))
-    assert(Mat2x4.Manifest == classType[AnyMat2x4](classOf[AnyMat2x4]))
+    assert(Mat2x2.Manifest == classType[ReadMat2x2](classOf[ReadMat2x2]))
+    assert(Mat2x3.Manifest == classType[ReadMat2x3](classOf[ReadMat2x3]))
+    assert(Mat2x4.Manifest == classType[ReadMat2x4](classOf[ReadMat2x4]))
 
-    assert(Mat3x2.Manifest == classType[AnyMat3x2](classOf[AnyMat3x2]))
-    assert(Mat3x3.Manifest == classType[AnyMat3x3](classOf[AnyMat3x3]))
-    assert(Mat3x4.Manifest == classType[AnyMat3x4](classOf[AnyMat3x4]))
+    assert(Mat3x2.Manifest == classType[ReadMat3x2](classOf[ReadMat3x2]))
+    assert(Mat3x3.Manifest == classType[ReadMat3x3](classOf[ReadMat3x3]))
+    assert(Mat3x4.Manifest == classType[ReadMat3x4](classOf[ReadMat3x4]))
 
-    assert(Mat4x2.Manifest == classType[AnyMat4x2](classOf[AnyMat4x2]))
-    assert(Mat4x3.Manifest == classType[AnyMat4x3](classOf[AnyMat4x3]))
-    assert(Mat4x4.Manifest == classType[AnyMat4x4](classOf[AnyMat4x4]))
+    assert(Mat4x2.Manifest == classType[ReadMat4x2](classOf[ReadMat4x2]))
+    assert(Mat4x3.Manifest == classType[ReadMat4x3](classOf[ReadMat4x3]))
+    assert(Mat4x4.Manifest == classType[ReadMat4x4](classOf[ReadMat4x4]))
   }
 }

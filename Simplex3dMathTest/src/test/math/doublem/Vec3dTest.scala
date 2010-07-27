@@ -36,7 +36,7 @@ class Vec3dTest extends FunSuite {
 
   test("Factories") {
     def test(x: Double, y: Double, z: Double, w: Double) {
-      var u: AnyVec3 = Vec3(x)
+      var u: ReadVec3 = Vec3(x)
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
       expect(x) { u.y }
@@ -212,7 +212,7 @@ class Vec3dTest extends FunSuite {
 
   test("Boolean factories") {
     BooleanCombinations.test { (x, y, z, w) =>
-      var u: AnyVec3 = Vec3(Vec3b(x, y, z))
+      var u: ReadVec3 = Vec3(Vec3b(x, y, z))
       expect(classOf[Vec3]) { u.getClass }
       expect(double(x)) { u.x }
       expect(double(y)) { u.y }
@@ -236,7 +236,7 @@ class Vec3dTest extends FunSuite {
       expect(double(y)) { u.y }
       expect(double(z)) { u.z }
 
-      var c: AnyVec3 = ConstVec3(Vec3b(x, y, z))
+      var c: ReadVec3 = ConstVec3(Vec3b(x, y, z))
       expect(classOf[ConstVec3]) { c.getClass }
       expect(double(x)) { c.x }
       expect(double(y)) { c.y }

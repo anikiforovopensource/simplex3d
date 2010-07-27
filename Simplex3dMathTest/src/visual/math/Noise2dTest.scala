@@ -36,7 +36,7 @@ object Noise2dTest {
     val scrollSpeed = 10
 
     FunFrame.launch(new Fun {
-    final def apply(pixel: AnyVec2, t: Double) = {
+    final def apply(pixel: ReadVec2, t: Double) = {
       val p = pixel + t*scrollSpeed
       Vec3((noise1(p*scale) + 1)/2)
       //(noise3(p*scale) + 1)/2

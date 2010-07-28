@@ -19,10 +19,11 @@ To build the project:
   3) type: ant release-bin
 
 To run all test:
-Put simplex3d-math-core.jar, simplex3d-math-intm.jar, simplex3d-math-floatm.jar,
-simplex3d-math-doublem.jar, simplex3d-buffer-core.jar, simplex3d-buffer-intm.jar,
-simplex3d-buffer-floatm.jar, simplex3d-buffer-doublem.jar, scalatest-1.2.jar,
-and simplex3d-math-test.jar on the classpath.
+Put scalatest-1.2.jar, simplex3d-math-core.jar, simplex3d-math-int.jar,
+simplex3d-math-float.jar, simplex3d-math-double.jar,
+simplex3d-buffer-core.jar, simplex3d-buffer-int.jar,
+simplex3d-buffer-float.jar, simplex3d-buffer-double.jar,
+and simplex3d-buffer-test.jar on the classpath.
 Execute the main class "test.JarLauncher".
 
 Example (on GNU/Linux from Simplex3dBufferTest directory):

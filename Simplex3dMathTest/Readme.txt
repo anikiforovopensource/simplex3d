@@ -23,9 +23,9 @@ Alternative GNU/Linux-only build script that works with 2.0Gb RAM (until scalac 
   3) type: ./release.sh
 
 To run all test:
-Put simplex3d-math-core.jar, simplex3d-math-intm.jar, simplex3d-math-floatm.jar,
-simplex3d-math-doublem.jar, scalatest-1.2.jar, and simplex3d-math-test.jar
-on the classpath.
+Put scalatest-1.2.jar, simplex3d-math-core.jar, simplex3d-math-int.jar,
+simplex3d-math-float.jar, simplex3d-math-double.jar, and
+simplex3d-math-test.jar on the classpath.
 Execute the main class "test.JarLauncher".
 
 Example (on GNU/Linux from Simplex3dMathTest directory):

@@ -28,7 +28,10 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class MathObject[T] extends PropertyObject[T]
+private[math] abstract class MathObject[T] extends PropertyObject[T] {
+  //final def asReadInstance() :T = copyAsImmutable() //Safer but slower.
+  final def asReadInstance() :T = this.asInstanceOf[T]
+}
 
 /** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
  * <p>

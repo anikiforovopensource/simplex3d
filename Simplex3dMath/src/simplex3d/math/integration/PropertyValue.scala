@@ -30,6 +30,8 @@ private[simplex3d] sealed trait PropertyValue[
 ] {
   def copyAsMutable() :MutableInterface[T] with Mutable
   def copyAsImmutable() :T
+
+  def asReadInstance() :T
 }
 
 private[simplex3d] trait PropertyObject[T] extends PropertyValue[T]
@@ -43,7 +45,6 @@ private[simplex3d] trait PropertyObject[T] extends PropertyValue[T]
 private[simplex3d] trait MutableInterface[
   @specialized(Boolean, Int, Float, Double) T
 ] extends PropertyValue[T] {
-  def asReadInstance() :T
   def :=(value: T) :Unit
 }
 
@@ -53,7 +54,3 @@ private[simplex3d] trait MutableInterface[
  */
 private[simplex3d] trait MutableObject[T <: AnyRef]
 extends MutableInterface[T] with Mutable
-{
-  //def asReadInstance() :T = copyAsImmutable() //Safer but slower.
-  def asReadInstance() :T = this.asInstanceOf[T]
-}

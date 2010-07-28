@@ -25,4 +25,4 @@ and simplex3d-property-test.jar on the classpath.
 Execute the main class "test.JarLauncher".
 
 Example (on GNU/Linux from Simplex3dMathTest directory):
-java -cp $SCALA_HOME/lib/scala-library.jar:lib/scalatest-1.2.jar:../Simplex3dMath/release/jars/simplex3d-math-core.jar:../Simplex3dMath/release/jars/simplex3d-math-int.jar:../Simplex3dMath/release/jars/simplex3d-math-float.jar:../Simplex3dMath/release/jars/simplex3d-math-double.jar:../Simplex3dProperty/release/jars/simplex3d-property.jar:release/jars/simplex3d-property-test.jar test.JarLauncher
+java -cp $SCALA_HOME/lib/scala-library.jar:../Simplex3dMathTest/lib/scalatest-1.2.jar:../Simplex3dMath/release/jars/simplex3d-math-core.jar:../Simplex3dMath/release/jars/simplex3d-math-int.jar:../Simplex3dMath/release/jars/simplex3d-math-float.jar:../Simplex3dMath/release/jars/simplex3d-math-double.jar:../Simplex3dProperty/release/jars/simplex3d-property.jar:release/jars/simplex3d-property-test.jar test.JarLauncher

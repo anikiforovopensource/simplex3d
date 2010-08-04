@@ -27,22 +27,7 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 package object property {
-
-  type PropertyValue[T] = integration.PropertyValue[T]
-  type PropertyObject[T <: AnyRef] = integration.PropertyObject[T]
-  type MutableValue[T] = integration.MutableInterface[T] with Mutable
-  type MutableObject[T <: AnyRef] = integration.MutableObject[T]
-
-  
-  implicit def booleanToPropertyValue(v: Boolean) :PropertyValue[Boolean] =
-    new MutablePrimitive(v)
-
-  implicit def intToPropertyValue(v: Int) :PropertyValue[Int] =
-    new MutablePrimitive(v)
-
-  implicit def floatToPropertyValue(v: Float) :PropertyValue[Float] =
-    new MutablePrimitive(v)
-
-  implicit def doubleToPropertyValue(v: Double) :PropertyValue[Double] =
-    new MutablePrimitive(v)
+  val PropertyValue = integration.property.PropertyValue
+  type PropertyValue[T] = integration.property.PropertyValue[T]
+  type PropertyObject[T <: AnyRef] = integration.property.PropertyObject[T]
 }

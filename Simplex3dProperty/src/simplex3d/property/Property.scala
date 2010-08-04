@@ -25,7 +25,7 @@ package simplex3d.property
  * @author Aleksey Nikiforov (lex)
  */
 trait Property[@specialized(Boolean, Int, Float, Double) T] {
-  protected def value: MutableValue[T]
+  protected def value: PropertyValue[T]
 
   def apply() = this.value.asReadInstance()
   def :=(value: T) { this.value := value }
@@ -65,7 +65,7 @@ extends ChangeMonitor[T]
 {
   override def :=(value: T) {
     if (this.value.asReadInstance() != value) {
-      val old = this.value.copyAsImmutable()
+      val old = this.value.cloneValue()
       this.value := value
       onChange()
       onChange(old)

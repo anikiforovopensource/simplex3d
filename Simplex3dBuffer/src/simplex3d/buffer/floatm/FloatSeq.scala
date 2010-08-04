@@ -35,8 +35,7 @@ import simplex3d.buffer.HalfFloatUtil.{
  * @author Aleksey Nikiforov (lex)
  */
 private[floatm] object Shared {
-  // Use double multiplication for float sequences to prevent errors
-  // Use division for double sequences to prevent errors
+
   final val fromSByte = 0.00787401574803149606
   final val fromUByte = 0.00392156862745098039
   final val fromSShort = 3.05185094759971922971e-5

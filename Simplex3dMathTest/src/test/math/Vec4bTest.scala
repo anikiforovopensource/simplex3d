@@ -33,6 +33,15 @@ import simplex3d.math.doublem._
  */
 class Vec4bTest extends FunSuite {
 
+  test("Clone") {
+    var t: ReadVec4b = Vec4b(true)
+    assert(t.clone() ne t)
+    assert(t.clone() == t)
+
+    t = ConstVec4b(true)
+    assert(t.clone() eq t)
+  }
+
   test("Factories") {
     var u: ReadVec4b = Vec4b(true)
     expect(classOf[Vec4b]) { u.getClass }

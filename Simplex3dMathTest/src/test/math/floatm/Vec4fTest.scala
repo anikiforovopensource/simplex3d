@@ -34,6 +34,15 @@ import simplex3d.math.floatm.renamed._
  */
 class Vec4fTest extends FunSuite {
 
+  test("Clone") {
+    var t: ReadVec4 = Vec4(1)
+    assert(t.clone() ne t)
+    assert(t.clone() == t)
+
+    t = ConstVec4(1)
+    assert(t.clone() eq t)
+  }
+
   test("Factories") {
     def test(x: Float, y: Float, z: Float, w: Float) {
       var u: ReadVec4 = Vec4(x)

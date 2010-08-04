@@ -34,6 +34,15 @@ import simplex3d.math.doublem.renamed._
  */
 class Vec3dTest extends FunSuite {
 
+  test("Clone") {
+    var t: ReadVec3 = Vec3(1)
+    assert(t.clone() ne t)
+    assert(t.clone() == t)
+
+    t = ConstVec3(1)
+    assert(t.clone() eq t)
+  }
+
   test("Factories") {
     def test(x: Double, y: Double, z: Double, w: Double) {
       var u: ReadVec3 = Vec3(x)

@@ -54,9 +54,9 @@ class SwizzleBenchCase {
 //    testInlined(length, loops)
 //    val inlinedTime = System.currentTimeMillis - start
 //
-//    start = System.currentTimeMillis
-//    testNoSwizzle(length, loops)
-//    val noSwizzleTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testNoSwizzle(length, loops)
+    val noSwizzleTime = System.currentTimeMillis - start
 
 
     start = System.currentTimeMillis
@@ -103,7 +103,7 @@ class SwizzleBenchCase {
 //    println("Trait time: " + traitTime + ".")
 //    println("Abstract time: " + abstractTime + ".")
 //    println("Inlined time: " + inlinedTime + ".")
-//    println("No swizzle time: " + noSwizzleTime + ".")
+    println("No swizzle time: " + noSwizzleTime + ".")
 
     println("Implemented Double time: " + implementedDoubleTime + ".")
     println("Overridden Double time: " + overriddenDoubleTime + ".")

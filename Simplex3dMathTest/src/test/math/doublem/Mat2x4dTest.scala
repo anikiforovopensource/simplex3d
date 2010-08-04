@@ -53,6 +53,15 @@ class Mat2x4dTest extends FunSuite {
     m03, m13, m23, m33
   )
 
+  test("Clone") {
+    var t: ReadMat2x4 = Mat2x4(5)
+    assert(t.clone() ne t)
+    assert(t.clone() == t)
+
+    t = ConstMat2x4(5)
+    assert(t.clone() eq t)
+  }
+
   test("Factories") {
     var m: ReadMat2x4 = Mat2x4(1)
 

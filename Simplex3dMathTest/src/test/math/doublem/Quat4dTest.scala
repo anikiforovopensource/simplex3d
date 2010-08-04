@@ -33,6 +33,15 @@ import simplex3d.math.floatm._
  */
 class Quat4dTest extends FunSuite {
 
+  test("Clone") {
+    var t: ReadQuat4 = Quat4(1, 1, 1, 1)
+    assert(t.clone() ne t)
+    assert(t.clone() == t)
+
+    t = ConstQuat4(1, 1, 1, 1)
+    assert(t.clone() eq t)
+  }
+
   test("Factories") {
     val af = 1f + 1e-5f
     val bf = 2f + 1e-5f

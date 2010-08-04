@@ -59,12 +59,12 @@ package buffer {
 
 package object buffer extends UnsignedImplicits {
 
-  type MetaElement = integration.MetaElement
-  type Primitive = integration.Primitive
-  type Composite = integration.Composite
-  type Int1 = integration.Int1
-  type Float1 = integration.Float1
-  type Double1 = integration.Double1
+  type MetaElement = integration.buffer.MetaElement
+  type Primitive = integration.buffer.Primitive
+  type Composite = integration.buffer.Composite
+  type Int1 = integration.buffer.Int1
+  type Float1 = integration.buffer.Float1
+  type Double1 = integration.buffer.Double1
 
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
   type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]

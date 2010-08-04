@@ -63,7 +63,7 @@ object MonitorBench {
   class PropertyImpl(val value: Vec2) extends Property[ReadVec2]
 
   class ChangeMonitorImpl[T](init: PropertyValue[T]) extends ChangeMonitor[T] {
-    protected val value = init.copyAsMutable()
+    protected val value = init.clone()
     override def onChange() {
       count += 1
     }

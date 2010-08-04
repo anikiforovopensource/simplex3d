@@ -281,7 +281,7 @@ object PrimitivePropBench {
 final class GenericProperty[T](
   initialValue: PropertyValue[T], function: (T) => T
 ) extends Property[T] {
-  protected val value = initialValue.copyAsMutable()
+  protected val value = initialValue.clone()
   def update() {
     updateWith(function)
   }
@@ -290,7 +290,7 @@ final class GenericProperty[T](
 final class SpecializedProperty[@specialized(Boolean, Int, Float, Double) T](
   initialValue: PropertyValue[T], function: (T) => T
 ) extends Property[T] {
-  protected val value = initialValue.copyAsMutable()
+  protected val value = initialValue.clone()
 
   def update() {
     updateWith(function)

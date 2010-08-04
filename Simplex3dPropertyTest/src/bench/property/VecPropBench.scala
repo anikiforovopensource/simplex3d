@@ -234,7 +234,7 @@ object VecPropBench {
 final class SimpleProperty[@specialized(Boolean, Int, Float, Double) T](
   initialValue: PropertyValue[T], function: (T) => T
 ) extends Property[T] {
-  protected val value = initialValue.copyAsMutable()
+  protected val value = initialValue.clone()
 
   def update() {
     updateWith(function)

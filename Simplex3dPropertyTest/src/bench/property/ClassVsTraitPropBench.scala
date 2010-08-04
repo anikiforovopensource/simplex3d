@@ -96,15 +96,15 @@ object ClassVsTraitPropBench {
 }
 
 abstract class BaseClass[T](init: PropertyValue[T]) extends Property[T] {
-  protected val value = init.copyAsMutable()
+  protected val value = init.clone()
 }
 final class CProp1[T](init: PropertyValue[T]) extends BaseClass(init)
 final class CProp2[T](init: PropertyValue[T]) extends BaseClass(init)
 
 
 final class TProp1[T](init: PropertyValue[T]) extends Property[T] {
-  protected val value = init.copyAsMutable()
+  protected val value = init.clone()
 }
 final class TProp2[T](init: PropertyValue[T]) extends Property[T] {
-  protected val value = init.copyAsMutable()
+  protected val value = init.clone()
 }

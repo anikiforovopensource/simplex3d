@@ -21,14 +21,15 @@
 package simplex3d.math.intm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec4i extends ProtectedVec4i[Int, ReadVec4i]
+sealed abstract class ReadVec4i extends ProtectedVec4i[Int]
 {
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
@@ -171,14 +172,13 @@ sealed abstract class ReadVec4i extends ProtectedVec4i[Int, ReadVec4i]
   final def |(u: inVec4i) = new Vec4i( x | u.x, y | u.y, z | u.z, w | u.w)
   final def ^(u: inVec4i) = new Vec4i( x ^ u.x, y ^ u.y, z ^ u.z, w ^ u.w)
 
-  final def copyAsMutable() = Vec4i(this)
-  final def copyAsImmutable() = ConstVec4i(this)
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec4i => x == u.x && y == u.y && z == u.z && w == u.w
       case u: ReadVec4b => false
-      case u: AnyVec4[_, _] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
+      case u: AnyVec4[_] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
       case _ => false
     }
   }
@@ -205,38 +205,40 @@ final class ConstVec4i private[math] (
   cx: Int, cy: Int, cz: Int, cw: Int
 ) extends ReadVec4i with Immutable {
   px = cx; py = cy; pz = cz; pw = cw
+
+  override def clone() = this
 }
 
 object ConstVec4i {
   def apply(s: Int) = new ConstVec4i(s, s, s, s)
 
-  /* main factory */ def apply(x: Int, y: Int, z: Int, w: Int) =
+  /*main factory*/ def apply(x: Int, y: Int, z: Int, w: Int) =
     new ConstVec4i(x, y, z, w)
 
-  def apply(u: AnyVec4[_, _]) = new ConstVec4i(u.ix, u.iy, u.iz, u.iw)
+  def apply(u: AnyVec4[_]) = new ConstVec4i(u.ix, u.iy, u.iz, u.iw)
 
-  def apply(xy: AnyVec2[_, _], z: Int, w: Int) =
+  def apply(xy: AnyVec2[_], z: Int, w: Int) =
     new ConstVec4i(xy.ix, xy.iy, z, w)
 
-  def apply(x: Int, yz: AnyVec2[_, _], w: Int) =
+  def apply(x: Int, yz: AnyVec2[_], w: Int) =
     new ConstVec4i(x, yz.ix, yz.iy, w)
 
-  def apply(x: Int, y: Int, zw: AnyVec2[_, _]) =
+  def apply(x: Int, y: Int, zw: AnyVec2[_]) =
     new ConstVec4i(x, y, zw.ix, zw.iy)
 
-  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
+  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) =
     new ConstVec4i(xy.ix, xy.iy, zw.ix, zw.iy)
 
-  def apply(xyz: AnyVec3[_, _], w: Int) =
+  def apply(xyz: AnyVec3[_], w: Int) =
     new ConstVec4i(xyz.ix, xyz.iy, xyz.iz, w)
 
-  def apply(x: Int, yzw: AnyVec3[_, _]) =
+  def apply(x: Int, yzw: AnyVec3[_]) =
     new ConstVec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
-  def apply(m: AnyMat2x2[_, _]) =
+  def apply(m: AnyMat2x2[_]) =
     new ConstVec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
 
-  def apply(q: AnyQuat4[_, _]) =
+  def apply(q: AnyQuat4[_]) =
     new ConstVec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
 
   implicit def toConst(u: ReadVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
@@ -246,7 +248,7 @@ object ConstVec4i {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4i private[math] (
   cx: Int, cy: Int, cz: Int, cw: Int
-) extends ReadVec4i with MutableObject[ReadVec4i] with Implicits[On] with Composite
+) extends ReadVec4i with PropertyObject[ReadVec4i] with Implicits[On] with Composite
 {
   type Element = ReadVec4i
   type Component = Int1
@@ -318,6 +320,9 @@ final class Vec4i private[math] (
   def |=(u: inVec4i) = { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
   def ^=(u: inVec4i) = { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
 
+  def cloneValue() = ConstVec4i(this)
+  def asReadInstance() :ReadVec4i = this /*asReadInstance*/
+  override def clone() = Vec4i(this)
   override def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   def update(i: Int, s: Int) {
@@ -535,34 +540,34 @@ object Vec4i {
   def apply(s: Int) =
     new Vec4i(s, s, s, s)
 
-  /* main factory */ def apply(x: Int, y: Int, z: Int, w: Int) =
+  /*main factory*/ def apply(x: Int, y: Int, z: Int, w: Int) =
     new Vec4i(x, y, z, w)
 
-  def apply(u: AnyVec4[_, _]) =
+  def apply(u: AnyVec4[_]) =
     new Vec4i(u.ix, u.iy, u.iz, u.iw)
 
-  def apply(xy: AnyVec2[_, _], z: Int, w: Int) =
+  def apply(xy: AnyVec2[_], z: Int, w: Int) =
     new Vec4i(xy.ix, xy.iy, z, w)
 
-  def apply(x: Int, yz: AnyVec2[_, _], w: Int) =
+  def apply(x: Int, yz: AnyVec2[_], w: Int) =
     new Vec4i(x, yz.ix, yz.iy, w)
 
-  def apply(x: Int, y: Int, zw: AnyVec2[_, _]) =
+  def apply(x: Int, y: Int, zw: AnyVec2[_]) =
     new Vec4i(x, y, zw.ix, zw.iy)
 
-  def apply(xy: AnyVec2[_, _], zw: AnyVec2[_, _]) =
+  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) =
     new Vec4i(xy.ix, xy.iy, zw.ix, zw.iy)
 
-  def apply(xyz: AnyVec3[_, _], w: Int) =
+  def apply(xyz: AnyVec3[_], w: Int) =
     new Vec4i(xyz.ix, xyz.iy, xyz.iz, w)
 
-  def apply(x: Int, yzw: AnyVec3[_, _]) =
+  def apply(x: Int, yzw: AnyVec3[_]) =
     new Vec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
-  def apply(m: AnyMat2x2[_, _]) =
+  def apply(m: AnyMat2x2[_]) =
     new Vec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
 
-  def apply(q: AnyQuat4[_, _]) =
+  def apply(q: AnyQuat4[_]) =
     new Vec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
 
   def unapply(u: ReadVec4i) = Some((u.x, u.y, u.z, u.w))

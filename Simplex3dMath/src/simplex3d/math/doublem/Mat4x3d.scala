@@ -21,7 +21,8 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -30,7 +31,7 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class ReadMat4x3d
-extends ProtectedMat4x3d[Double, ReadMat4x3d]
+extends ProtectedMat4x3d[Double]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -238,12 +239,12 @@ extends ProtectedMat4x3d[Double, ReadMat4x3d]
     m02*u.x + m12*u.y + m22*u.z + m32*u.w
   )
 
-  final def copyAsMutable() = Mat4x3d(this)
-  final def copyAsImmutable() = ConstMat4x3d(this)
+
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat4x3[_, _] =>
+      case m: AnyMat4x3[_] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32
@@ -299,6 +300,8 @@ final class ConstMat4x3d private[math] (
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
+
+  override def clone() = this
 }
 
 object ConstMat4x3d {
@@ -308,7 +311,7 @@ object ConstMat4x3d {
     0, 0, s, 0
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double
@@ -318,14 +321,14 @@ object ConstMat4x3d {
     m02, m12, m22, m32
   )
 
-  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _]) = 
+  def apply(c0: AnyVec4[_], c1: AnyVec4[_], c2: AnyVec4[_]) = 
   new ConstMat4x3d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw,
     c2.dx, c2.dy, c2.dz, c2.dw
   )
 
-  def apply(m: AnyMat[_, _]) = new ConstMat4x3d(
+  def apply(m: AnyMat[_]) = new ConstMat4x3d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31,
     m.d02, m.d12, m.d22, m.d32
@@ -341,7 +344,7 @@ final class Mat4x3d private[math] (
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double
 ) extends ReadMat4x3d
-  with MutableObject[ReadMat4x3d] with Implicits[On] with Composite
+  with PropertyObject[ReadMat4x3d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -419,6 +422,10 @@ final class Mat4x3d private[math] (
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22; m32 /= m.m32
   }
 
+  def cloneValue() = ConstMat4x3d(this)
+  def asReadInstance() :ReadMat4x3d = this /*asReadInstance*/
+  override def clone() = Mat4x3d(this)
+  
   override def :=(m: inMat4x3d) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
@@ -505,7 +512,7 @@ object Mat4x3d {
     0, 0, s, 0
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Double, m10: Double, m20: Double, m30: Double,
     m01: Double, m11: Double, m21: Double, m31: Double,
     m02: Double, m12: Double, m22: Double, m32: Double
@@ -515,14 +522,14 @@ object Mat4x3d {
     m02, m12, m22, m32
   )
 
-  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _]) = 
+  def apply(c0: AnyVec4[_], c1: AnyVec4[_], c2: AnyVec4[_]) = 
   new Mat4x3d(
     c0.dx, c0.dy, c0.dz, c0.dw,
     c1.dx, c1.dy, c1.dz, c1.dw,
     c2.dx, c2.dy, c2.dz, c2.dw
   )
 
-  def apply(m: AnyMat[_, _]) = new Mat4x3d(
+  def apply(m: AnyMat[_]) = new Mat4x3d(
     m.d00, m.d10, m.d20, m.d30,
     m.d01, m.d11, m.d21, m.d31,
     m.d02, m.d12, m.d22, m.d32
@@ -531,5 +538,5 @@ object Mat4x3d {
   def unapply(m: ReadMat4x3d) = Some((m(0), m(1), m(2)))
 
   implicit def toMutable(m: ReadMat4x3d) = Mat4x3d(m)
-  implicit def castFloat(m: AnyMat4x3[Float, _]) = apply(m)
+  implicit def castFloat(m: AnyMat4x3[Float]) = apply(m)
 }

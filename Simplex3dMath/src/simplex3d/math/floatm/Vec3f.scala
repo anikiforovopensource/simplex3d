@@ -21,14 +21,15 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec3f extends ProtectedVec3f[Float, ReadVec3f]
+sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
 {
   private[math] type R2 = ReadVec2f
   private[math] type R3 = ReadVec3f
@@ -139,13 +140,12 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float, ReadVec3f]
   final def *(m: inMat3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat3x4f) :Vec4f = m.transposeMul(this)
 
-  final def copyAsMutable() = Vec3f(this)
-  final def copyAsImmutable() = ConstVec3f(this)
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec3b => false
-      case u: AnyVec3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: AnyVec3[_] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -168,15 +168,17 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float, ReadVec3f]
 final class ConstVec3f private[math] (cx: Float, cy: Float, cz: Float)
 extends ReadVec3f with Immutable {
   px = cx; py = cy; pz = cz
+
+  override def clone() = this
 }
 
 object ConstVec3f {
   def apply(s: Float) = new ConstVec3f(s, s, s)
-  /* main factory */ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
-  def apply(u: AnyVec3[_, _]) = new ConstVec3f(u.fx, u.fy, u.fz)
-  def apply(u: AnyVec4[_, _]) = new ConstVec3f(u.fx, u.fy, u.fz)
-  def apply(xy: AnyVec2[_, _], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
-  def apply(x: Float, yz: AnyVec2[_, _]) = new ConstVec3f(x, yz.fx, yz.fy)
+  /*main factory*/ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
+  def apply(u: AnyVec3[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(u: AnyVec4[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
+  def apply(xy: AnyVec2[_], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
+  def apply(x: Float, yz: AnyVec2[_]) = new ConstVec3f(x, yz.fx, yz.fy)
 
   implicit def toConst(u: ReadVec3f) = new ConstVec3f(u.x, u.y, u.z)
 }
@@ -184,7 +186,7 @@ object ConstVec3f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
-extends ReadVec3f with MutableObject[ReadVec3f] with Implicits[On] with Composite
+extends ReadVec3f with PropertyObject[ReadVec3f] with Implicits[On] with Composite
 {
   type Element = ReadVec3f
   type Component = Float1
@@ -234,6 +236,9 @@ extends ReadVec3f with MutableObject[ReadVec3f] with Implicits[On] with Composit
 
   def *=(m: inMat3f) { this := m.transposeMul(this) }
 
+  def cloneValue() = ConstVec3f(this)
+  def asReadInstance() :ReadVec3f = this /*asReadInstance*/
+  override def clone() = Vec3f(this)
   override def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Float) {
@@ -300,14 +305,14 @@ object Vec3f {
   final val Manifest = classType[ReadVec3f](classOf[ReadVec3f])
 
   def apply(s: Float) = new Vec3f(s, s, s)
-  /* main factory */ def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
-  def apply(u: AnyVec3[_, _]) = new Vec3f(u.fx, u.fy, u.fz)
-  def apply(u: AnyVec4[_, _]) = new Vec3f(u.fx, u.fy, u.fz)
-  def apply(xy: AnyVec2[_, _], z: Float) = new Vec3f(xy.fx, xy.fy, z)
-  def apply(x: Float, yz: AnyVec2[_, _]) = new Vec3f(x, yz.fx, yz.fy)
+  /*main factory*/ def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
+  def apply(u: AnyVec3[_]) = new Vec3f(u.fx, u.fy, u.fz)
+  def apply(u: AnyVec4[_]) = new Vec3f(u.fx, u.fy, u.fz)
+  def apply(xy: AnyVec2[_], z: Float) = new Vec3f(xy.fx, xy.fy, z)
+  def apply(x: Float, yz: AnyVec2[_]) = new Vec3f(x, yz.fx, yz.fy)
 
   def unapply(u: ReadVec3f) = Some((u.x, u.y, u.z))
 
   implicit def toMutable(u: ReadVec3f) = new Vec3f(u.x, u.y, u.z)
-  implicit def castInt(u: AnyVec3[Int, _]) = new Vec3f(u.fx, u.fy, u.fz)
+  implicit def castInt(u: AnyVec3[Int]) = new Vec3f(u.fx, u.fy, u.fz)
 }

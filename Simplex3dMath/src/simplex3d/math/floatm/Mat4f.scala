@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -30,7 +31,7 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class ReadMat4f
-extends ProtectedMat4f[Float, ReadMat4f]
+extends ProtectedMat4f[Float]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
@@ -271,12 +272,12 @@ extends ProtectedMat4f[Float, ReadMat4f]
     m03*u.x + m13*u.y + m23*u.z + m33*u.w
   )
 
-  final def copyAsMutable() = Mat4f(this)
-  final def copyAsImmutable() = ConstMat4f(this)
+
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat4x4[_, _] =>
+      case m: AnyMat4x4[_] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32 &&
@@ -344,6 +345,8 @@ final class ConstMat4f private[math] (
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
+
+  override def clone() = this
 }
 
 object ConstMat4f {
@@ -354,7 +357,7 @@ object ConstMat4f {
     0, 0, 0, s
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float,
     m02: Float, m12: Float, m22: Float, m32: Float,
@@ -366,7 +369,7 @@ object ConstMat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _], c3: AnyVec4[_, _]) = 
+  def apply(c0: AnyVec4[_], c1: AnyVec4[_], c2: AnyVec4[_], c3: AnyVec4[_]) = 
   new ConstMat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -374,7 +377,7 @@ object ConstMat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: AnyMat[_, _]) = new ConstMat4f(
+  def apply(m: AnyMat[_]) = new ConstMat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,
@@ -392,7 +395,7 @@ final class Mat4f private[math] (
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
 ) extends ReadMat4f
-  with MutableObject[ReadMat4f] with Implicits[On] with Composite
+  with PropertyObject[ReadMat4f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -487,6 +490,10 @@ final class Mat4f private[math] (
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
   }
 
+  def cloneValue() = ConstMat4f(this)
+  def asReadInstance() :ReadMat4f = this /*asReadInstance*/
+  override def clone() = Mat4f(this)
+  
   override def :=(m: inMat4f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
@@ -586,7 +593,7 @@ object Mat4f {
     0, 0, 0, s
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Float, m10: Float, m20: Float, m30: Float,
     m01: Float, m11: Float, m21: Float, m31: Float,
     m02: Float, m12: Float, m22: Float, m32: Float,
@@ -598,7 +605,7 @@ object Mat4f {
     m03, m13, m23, m33
   )
 
-  def apply(c0: AnyVec4[_, _], c1: AnyVec4[_, _], c2: AnyVec4[_, _], c3: AnyVec4[_, _]) = 
+  def apply(c0: AnyVec4[_], c1: AnyVec4[_], c2: AnyVec4[_], c3: AnyVec4[_]) = 
   new Mat4f(
     c0.fx, c0.fy, c0.fz, c0.fw,
     c1.fx, c1.fy, c1.fz, c1.fw,
@@ -606,7 +613,7 @@ object Mat4f {
     c3.fx, c3.fy, c3.fz, c3.fw
   )
 
-  def apply(m: AnyMat[_, _]) = new Mat4f(
+  def apply(m: AnyMat[_]) = new Mat4f(
     m.f00, m.f10, m.f20, m.f30,
     m.f01, m.f11, m.f21, m.f31,
     m.f02, m.f12, m.f22, m.f32,

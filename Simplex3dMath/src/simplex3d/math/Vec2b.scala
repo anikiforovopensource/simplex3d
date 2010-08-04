@@ -21,7 +21,8 @@
 package simplex3d.math
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 
 
 /** The <code>ReadVec2b</code> class represents Boolean 2-dimensional vectors,
@@ -46,7 +47,7 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean, ReadVec2b]
+sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
 {
   private[math] type R2 = ReadVec2b
   private[math] type R3 = ReadVec3b
@@ -122,8 +123,7 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean, ReadVec2b]
     }
   }
 
-  final def copyAsMutable() = Vec2b(this)
-  final def copyAsImmutable() = ConstVec2b(this)
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -172,6 +172,8 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean, ReadVec2b]
 final class ConstVec2b private[math] (cx: Boolean, cy: Boolean)
 extends ReadVec2b with Immutable {
   px = cx; py = cy
+
+  override def clone() = this
 }
 
 
@@ -200,14 +202,14 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the arguments.
    */
-  /* main factory */ def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
+  /*main factory*/ def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
 
   /** Makes a new instance of ConstVec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.
    * @return a new instance of ConstVec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: AnyVec2[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec2[_]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 3-dimensional vector.
@@ -216,7 +218,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec3[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec3[_]) = new ConstVec2b(u.bx, u.by)
 
   /** Makes a new instance of ConstVec2b from the first two components
    * of a 4-dimensional vector.
@@ -225,7 +227,7 @@ object ConstVec2b {
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec4[_, _]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec4[_]) = new ConstVec2b(u.bx, u.by)
   
   implicit def toConst(u: ReadVec2b) = new ConstVec2b(u.x, u.y)
 }
@@ -255,7 +257,7 @@ object ConstVec2b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with MutableObject[ReadVec2b] with Implicits[On]
+extends ReadVec2b with PropertyObject[ReadVec2b] with Implicits[On]
 {
   px = cx; py = cy
 
@@ -279,6 +281,9 @@ extends ReadVec2b with MutableObject[ReadVec2b] with Implicits[On]
    */
   override def t_=(s: Boolean) { y = s }
 
+  def cloneValue() = ConstVec2b(this)
+  def asReadInstance() :ReadVec2b = this /*asReadInstance*/
+  override def clone() = Vec2b(this)
 
   /** Set vector components to values from another vector.
    * @param u 2-dimensional Boolean vector.
@@ -341,14 +346,14 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the arguments.
    */
-  /* main factory */ def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
+  /*main factory*/ def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
 
   /** Makes a new instance of Vec2b from a 2-dimensional vector.
    * @param u any 2-dimensional vector.
    * @return a new instance of Vec2b with components initialized
    *         to the components of u converted to Boolean.
    */
-  def apply(u: AnyVec2[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec2[_]) = new Vec2b(u.bx, u.by)
 
   /** Makes a new instance of Vec2b from the first two components
    * of a 3-dimensional vector.
@@ -357,7 +362,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec3[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec3[_]) = new Vec2b(u.bx, u.by)
   
   /** Makes a new instance of Vec2b from the first two components
    * of a 4-dimensional vector.
@@ -366,7 +371,7 @@ object Vec2b {
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec4[_, _]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec4[_]) = new Vec2b(u.bx, u.by)
 
   def unapply(u: ReadVec2b) = Some((u.x, u.y))
 

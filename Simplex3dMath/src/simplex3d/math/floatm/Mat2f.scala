@@ -21,7 +21,8 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -30,7 +31,7 @@ import simplex3d.math.floatm.FloatMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class ReadMat2f
-extends ProtectedMat2f[Float, ReadMat2f]
+extends ProtectedMat2f[Float]
 {
   // Column major order.
   final def m00= p00; final def m10= p10
@@ -169,12 +170,12 @@ extends ProtectedMat2f[Float, ReadMat2f]
     m01*u.x + m11*u.y
   )
 
-  final def copyAsMutable() = Mat2f(this)
-  final def copyAsImmutable() = ConstMat2f(this)
+
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2x2[_, _] =>
+      case m: AnyMat2x2[_] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>
@@ -210,6 +211,8 @@ final class ConstMat2f private[math] (
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
+
+  override def clone() = this
 }
 
 object ConstMat2f {
@@ -218,7 +221,7 @@ object ConstMat2f {
     0, s
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float
   ) = new ConstMat2f(
@@ -226,18 +229,18 @@ object ConstMat2f {
     m01, m11
   )
 
-  def apply(c0: AnyVec2[_, _], c1: AnyVec2[_, _]) = 
+  def apply(c0: AnyVec2[_], c1: AnyVec2[_]) = 
   new ConstMat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: AnyVec4[_, _]) = new ConstMat2f(
+  def apply(u: AnyVec4[_]) = new ConstMat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: AnyMat[_, _]) = new ConstMat2f(
+  def apply(m: AnyMat[_]) = new ConstMat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )
@@ -251,7 +254,7 @@ final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
 ) extends ReadMat2f
-  with MutableObject[ReadMat2f] with Implicits[On] with Composite
+  with PropertyObject[ReadMat2f] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -304,6 +307,10 @@ final class Mat2f private[math] (
     m01 /= m.m01; m11 /= m.m11
   }
 
+  def cloneValue() = ConstMat2f(this)
+  def asReadInstance() :ReadMat2f = this /*asReadInstance*/
+  override def clone() = Mat2f(this)
+  
   override def :=(m: inMat2f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
@@ -353,7 +360,7 @@ object Mat2f {
     0, s
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Float, m10: Float,
     m01: Float, m11: Float
   ) = new Mat2f(
@@ -361,18 +368,18 @@ object Mat2f {
     m01, m11
   )
 
-  def apply(c0: AnyVec2[_, _], c1: AnyVec2[_, _]) = 
+  def apply(c0: AnyVec2[_], c1: AnyVec2[_]) = 
   new Mat2f(
     c0.fx, c0.fy,
     c1.fx, c1.fy
   )
 
-  def apply(u: AnyVec4[_, _]) = new Mat2f(
+  def apply(u: AnyVec4[_]) = new Mat2f(
     u.fx, u.fy,
     u.fz, u.fw
   )
 
-  def apply(m: AnyMat[_, _]) = new Mat2f(
+  def apply(m: AnyMat[_]) = new Mat2f(
     m.f00, m.f10,
     m.f01, m.f11
   )

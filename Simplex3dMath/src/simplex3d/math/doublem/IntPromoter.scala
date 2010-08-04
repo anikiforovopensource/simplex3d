@@ -30,18 +30,18 @@ import simplex3d.math._
  */
 final class IntPromoter(val value: Double) {
   // Veci to Vecd promotion
-  def *(u: AnyVec2[Int, _]) = new Vec2d(value*u.dx, value*u.dy)
-  def /(u: AnyVec2[Int, _]) = new Vec2d(value/u.dx, value/u.dy)
-  def +(u: AnyVec2[Int, _]) = new Vec2d(value + u.dx, value + u.dy)
-  def -(u: AnyVec2[Int, _]) = new Vec2d(value - u.dx, value - u.dy)
+  def *(u: AnyVec2[Int]) = new Vec2d(value*u.dx, value*u.dy)
+  def /(u: AnyVec2[Int]) = new Vec2d(value/u.dx, value/u.dy)
+  def +(u: AnyVec2[Int]) = new Vec2d(value + u.dx, value + u.dy)
+  def -(u: AnyVec2[Int]) = new Vec2d(value - u.dx, value - u.dy)
 
-  def *(u: AnyVec3[Int, _]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
-  def /(u: AnyVec3[Int, _]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
-  def +(u: AnyVec3[Int, _]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
-  def -(u: AnyVec3[Int, _]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
+  def *(u: AnyVec3[Int]) = new Vec3d(value*u.dx, value*u.dy, value*u.dz)
+  def /(u: AnyVec3[Int]) = new Vec3d(value/u.dx, value/u.dy, value/u.dz)
+  def +(u: AnyVec3[Int]) = new Vec3d(value + u.dx, value + u.dy, value + u.dz)
+  def -(u: AnyVec3[Int]) = new Vec3d(value - u.dx, value - u.dy, value - u.dz)
 
-  def *(u: AnyVec4[Int, _]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
-  def /(u: AnyVec4[Int, _]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
-  def +(u: AnyVec4[Int, _]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
-  def -(u: AnyVec4[Int, _]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
+  def *(u: AnyVec4[Int]) = new Vec4d(value*u.dx, value*u.dy, value*u.dz, value*u.dw)
+  def /(u: AnyVec4[Int]) = new Vec4d(value/u.dx, value/u.dy, value/u.dz, value/u.dw)
+  def +(u: AnyVec4[Int]) = new Vec4d(value + u.dx, value + u.dy, value + u.dz, value + u.dw)
+  def -(u: AnyVec4[Int]) = new Vec4d(value - u.dx, value - u.dy, value - u.dz, value - u.dw)
 }

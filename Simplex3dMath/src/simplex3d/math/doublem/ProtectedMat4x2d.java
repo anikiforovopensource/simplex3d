@@ -27,7 +27,7 @@ import simplex3d.math.*;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat4x2d<P, T> extends AnyMat4x2<P, T> implements Serializable {
+abstract class ProtectedMat4x2d<P> extends AnyMat4x2<P> implements Serializable {
     double p00; double p10; double p20; double p30;
     double p01; double p11; double p21; double p31;
 }

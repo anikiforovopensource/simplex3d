@@ -26,6 +26,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedVec3b<P, T> extends AnyVec3<P, T> implements Serializable {
+abstract class ProtectedVec3b<P> extends AnyVec3<P> implements Serializable {
     boolean px; boolean py; boolean pz;
 }

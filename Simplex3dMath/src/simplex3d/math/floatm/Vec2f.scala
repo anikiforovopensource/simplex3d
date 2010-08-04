@@ -21,14 +21,15 @@
 package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec2f extends ProtectedVec2f[Float, ReadVec2f]
+sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
 {
   private[math] type R2 = ReadVec2f
   private[math] type R3 = ReadVec3f
@@ -118,13 +119,12 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float, ReadVec2f]
   final def *(m: inMat2x3f) :Vec3f = m.transposeMul(this)
   final def *(m: inMat2x4f) :Vec4f = m.transposeMul(this)
 
-  final def copyAsMutable() = Vec2f(this)
-  final def copyAsImmutable() = ConstVec2f(this)
-  
+  override def clone() = this
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec2b => false
-      case u: AnyVec2[_, _] => dx == u.dx && dy == u.dy
+      case u: AnyVec2[_] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -145,14 +145,16 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float, ReadVec2f]
 final class ConstVec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with Immutable {
   px = cx; py = cy
+
+  override def clone() = this
 }
 
 object ConstVec2f {
   def apply(s: Float) = new ConstVec2f(s, s)
-  /* main factory */ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
-  def apply(u: AnyVec2[_, _]) = new ConstVec2f(u.fx, u.fy)
-  def apply(u: AnyVec3[_, _]) = new ConstVec2f(u.fx, u.fy)
-  def apply(u: AnyVec4[_, _]) = new ConstVec2f(u.fx, u.fy)
+  /*main factory*/ def apply(x: Float, y: Float) = new ConstVec2f(x, y)
+  def apply(u: AnyVec2[_]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: AnyVec3[_]) = new ConstVec2f(u.fx, u.fy)
+  def apply(u: AnyVec4[_]) = new ConstVec2f(u.fx, u.fy)
 
   implicit def toConst(u: ReadVec2f) = new ConstVec2f(u.x, u.y)
 }
@@ -160,7 +162,7 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with MutableObject[ReadVec2f] with Implicits[On] with Composite
+extends ReadVec2f with PropertyObject[ReadVec2f] with Implicits[On] with Composite
 {
   type Element = ReadVec2f
   type Component = Float1
@@ -201,6 +203,9 @@ extends ReadVec2f with MutableObject[ReadVec2f] with Implicits[On] with Composit
 
   def *=(m: inMat2f) { this := m.transposeMul(this) }
 
+  def cloneValue() = ConstVec2f(this)
+  def asReadInstance() :ReadVec2f = this /*asReadInstance*/
+  override def clone() = Vec2f(this)
   override def :=(u: inVec2f) { x = u.x; y = u.y }
 
   def update(i: Int, s: Float) {
@@ -232,13 +237,13 @@ object Vec2f {
   final val Manifest = classType[ReadVec2f](classOf[ReadVec2f])
 
   def apply(s: Float) = new Vec2f(s, s)
-  /* main factory */ def apply(x: Float, y: Float) = new Vec2f(x, y)
-  def apply(u: AnyVec2[_, _]) = new Vec2f(u.fx, u.fy)
-  def apply(u: AnyVec3[_, _]) = new Vec2f(u.fx, u.fy)
-  def apply(u: AnyVec4[_, _]) = new Vec2f(u.fx, u.fy)
+  /*main factory*/ def apply(x: Float, y: Float) = new Vec2f(x, y)
+  def apply(u: AnyVec2[_]) = new Vec2f(u.fx, u.fy)
+  def apply(u: AnyVec3[_]) = new Vec2f(u.fx, u.fy)
+  def apply(u: AnyVec4[_]) = new Vec2f(u.fx, u.fy)
 
   def unapply(u: ReadVec2f) = Some((u.x, u.y))
 
   implicit def toMutable(u: ReadVec2f) = new Vec2f(u.x, u.y)
-  implicit def castInt(u: AnyVec2[Int, _]) = new Vec2f(u.fx, u.fy)
+  implicit def castInt(u: AnyVec2[Int]) = new Vec2f(u.fx, u.fy)
 }

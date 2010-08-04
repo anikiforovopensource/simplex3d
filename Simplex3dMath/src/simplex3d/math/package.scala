@@ -21,6 +21,7 @@
 package simplex3d
 
 import java.nio._
+import simplex3d.math.integration.property._
 
 
 /**
@@ -28,6 +29,11 @@ import java.nio._
  */
 package object math {
 
+  // Property Implicits
+  implicit def vec2bToPropValue(u: ReadVec2b) :PropertyValue[ReadVec2b] = Vec2b(u)
+  implicit def vec3bToPropValue(u: ReadVec3b) :PropertyValue[ReadVec3b] = Vec3b(u)
+  implicit def vec4bToPropValue(u: ReadVec4b) :PropertyValue[ReadVec4b] = Vec4b(u)
+  
   // In and Out aliases
 
   /** <code>in</code> prefix for Vec2b.
@@ -485,7 +491,7 @@ package object math {
    * @param m the source matrix.
    * @param array the destanation array.
    */
-  def matrixToArray(m: AnyMat[_, _], array: Array[Float]) {
+  def matrixToArray(m: AnyMat[_], array: Array[Float]) {
     matrixToArray(m, array, 0)
   }
 
@@ -494,7 +500,7 @@ package object math {
    * @param array the destanation array.
    * @param offset an offset into the array.
    */
-  def matrixToArray(m: AnyMat[_, _], array: Array[Float], offset: Int) {
+  def matrixToArray(m: AnyMat[_], array: Array[Float], offset: Int) {
     array(offset + 0) = m.f00
     array(offset + 1) = m.f10
     array(offset + 2) = m.f20
@@ -522,7 +528,7 @@ package object math {
    * @param m the source matrix.
    * @param buffer the destanation buffer.
    */
-  def matrixToBuffer(m: AnyMat[_, _], buffer: FloatBuffer) {
+  def matrixToBuffer(m: AnyMat[_], buffer: FloatBuffer) {
     buffer.put(m.f00)
     buffer.put(m.f10)
     buffer.put(m.f20)
@@ -548,7 +554,7 @@ package object math {
    * @param m the source matrix.
    * @param array the destanation array.
    */
-  def matrixToArray(m: AnyMat[_, _], array: Array[Double]) {
+  def matrixToArray(m: AnyMat[_], array: Array[Double]) {
     matrixToArray(m, array, 0)
   }
 
@@ -557,7 +563,7 @@ package object math {
    * @param array the destanation array.
    * @param offset an offset into the array.
    */
-  def matrixToArray(m: AnyMat[_, _], array: Array[Double], offset: Int) {
+  def matrixToArray(m: AnyMat[_], array: Array[Double], offset: Int) {
     array(offset + 0) = m.d00
     array(offset + 1) = m.d10
     array(offset + 2) = m.d20
@@ -585,7 +591,7 @@ package object math {
    * @param m the source matrix.
    * @param buffer the destanation buffer.
    */
-  def matrixToBuffer(m: AnyMat[_, _], buffer: DoubleBuffer) {
+  def matrixToBuffer(m: AnyMat[_], buffer: DoubleBuffer) {
     buffer.put(m.d00)
     buffer.put(m.d10)
     buffer.put(m.d20)

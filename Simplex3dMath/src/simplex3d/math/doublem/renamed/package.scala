@@ -22,6 +22,7 @@ package simplex3d.math.doublem
 
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.integration.property._
 
 
 /**
@@ -37,55 +38,71 @@ package object renamed {
   implicit def extendedFloatForDouble(s: Float) = new ExtendedFloat(s)
   implicit def extendedIntForDouble(s: Int) = new ExtendedInt(s)
 
-  implicit def vec2IntToDouble(u: AnyVec2[Int, _]) :ConstVec2d =
+  implicit def vec2IntToDouble(u: AnyVec2[Int]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def vec3IntToDouble(u: AnyVec3[Int, _]) :ConstVec3d =
+  implicit def vec3IntToDouble(u: AnyVec3[Int]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def vec4IntToDouble(u: AnyVec4[Int, _]) :ConstVec4d =
+  implicit def vec4IntToDouble(u: AnyVec4[Int]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-  implicit def vec2FloatToDouble(u: AnyVec2[Float, _]) :ConstVec2d =
+  implicit def vec2FloatToDouble(u: AnyVec2[Float]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)
 
-  implicit def vec3FloatToDouble(u: AnyVec3[Float, _]) :ConstVec3d =
+  implicit def vec3FloatToDouble(u: AnyVec3[Float]) :ConstVec3d =
     new ConstVec3d(u.dx, u.dy, u.dz)
 
-  implicit def vec4FloatToDouble(u: AnyVec4[Float, _]) :ConstVec4d =
+  implicit def vec4FloatToDouble(u: AnyVec4[Float]) :ConstVec4d =
     new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
 
-  implicit def quat4FloatToDouble(q: AnyQuat4[Float, _]) :ConstQuat4d =
+  implicit def quat4FloatToDouble(q: AnyQuat4[Float]) :ConstQuat4d =
     new ConstQuat4d(q.da, q.db, q.dc, q.dd)
 
-  implicit def mat2x2FloatToDouble(m: AnyMat2x2[Float, _]) :ConstMat2d =
+  implicit def mat2x2FloatToDouble(m: AnyMat2x2[Float]) :ConstMat2d =
     ConstMat2d(m)
 
-  implicit def mat2x3FloatToDouble(m: AnyMat2x3[Float, _]) :ConstMat2x3d =
+  implicit def mat2x3FloatToDouble(m: AnyMat2x3[Float]) :ConstMat2x3d =
     ConstMat2x3d(m)
 
-  implicit def mat2x4FloatToDouble(m: AnyMat2x4[Float, _]) :ConstMat2x4d =
+  implicit def mat2x4FloatToDouble(m: AnyMat2x4[Float]) :ConstMat2x4d =
     ConstMat2x4d(m)
 
-  implicit def mat3x2FloatToDouble(m: AnyMat3x2[Float, _]) :ConstMat3x2d =
+  implicit def mat3x2FloatToDouble(m: AnyMat3x2[Float]) :ConstMat3x2d =
     ConstMat3x2d(m)
 
-  implicit def mat3x3FloatToDouble(m: AnyMat3x3[Float, _]) :ConstMat3d =
+  implicit def mat3x3FloatToDouble(m: AnyMat3x3[Float]) :ConstMat3d =
     ConstMat3d(m)
 
-  implicit def mat3x4FloatToDouble(m: AnyMat3x4[Float, _]) :ConstMat3x4d =
+  implicit def mat3x4FloatToDouble(m: AnyMat3x4[Float]) :ConstMat3x4d =
     ConstMat3x4d(m)
 
-  implicit def mat4x2FloatToDouble(m: AnyMat4x2[Float, _]) :ConstMat4x2d =
+  implicit def mat4x2FloatToDouble(m: AnyMat4x2[Float]) :ConstMat4x2d =
     ConstMat4x2d(m)
 
-  implicit def mat4x3FloatToDouble(m: AnyMat4x3[Float, _]) :ConstMat4x3d =
+  implicit def mat4x3FloatToDouble(m: AnyMat4x3[Float]) :ConstMat4x3d =
     ConstMat4x3d(m)
 
-  implicit def mat4x4FloatToDouble(m: AnyMat4x4[Float, _]) :ConstMat4d =
+  implicit def mat4x4FloatToDouble(m: AnyMat4x4[Float]) :ConstMat4d =
     ConstMat4d(m)
-  
+
+
+  // Property Implicits
+  implicit def vec2dToPropValue(u: ReadVec2d) :PropertyValue[ReadVec2d] = Vec2d(u)
+  implicit def vec3dToPropValue(u: ReadVec3d) :PropertyValue[ReadVec3d] = Vec3d(u)
+  implicit def vec4dToPropValue(u: ReadVec4d) :PropertyValue[ReadVec4d] = Vec4d(u)
+  implicit def quat4dToPropValue(u: ReadQuat4d) :PropertyValue[ReadQuat4d] = Quat4d(u)
+  implicit def mat2dToPropValue(u: ReadMat2d) :PropertyValue[ReadMat2d] = Mat2d(u)
+  implicit def mat2x3dToPropValue(u: ReadMat2x3d) :PropertyValue[ReadMat2x3d] = Mat2x3d(u)
+  implicit def mat2x4dToPropValue(u: ReadMat2x4d) :PropertyValue[ReadMat2x4d] = Mat2x4d(u)
+  implicit def mat3x2dToPropValue(u: ReadMat3x2d) :PropertyValue[ReadMat3x2d] = Mat3x2d(u)
+  implicit def mat3dToPropValue(u: ReadMat3d) :PropertyValue[ReadMat3d] = Mat3d(u)
+  implicit def mat3x4dToPropValue(u: ReadMat3x4d) :PropertyValue[ReadMat3x4d] = Mat3x4d(u)
+  implicit def mat4x2dToPropValue(u: ReadMat4x2d) :PropertyValue[ReadMat4x2d] = Mat4x2d(u)
+  implicit def mat4x3dToPropValue(u: ReadMat4x3d) :PropertyValue[ReadMat4x3d] = Mat4x3d(u)
+  implicit def mat4dToPropValue(u: ReadMat4d) :PropertyValue[ReadMat4d] = Mat4d(u)
+
 
   val DoubleMath = doublem.DoubleMath
 

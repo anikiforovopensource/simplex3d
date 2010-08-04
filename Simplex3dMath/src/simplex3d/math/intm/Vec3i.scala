@@ -21,14 +21,15 @@
 package simplex3d.math.intm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec3i extends ProtectedVec3i[Int, ReadVec3i]
+sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
 {
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
@@ -150,14 +151,13 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int, ReadVec3i]
   final def |(u: inVec3i) = new Vec3i( x | u.x, y | u.y, z | u.z)
   final def ^(u: inVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
 
-  final def copyAsMutable() = Vec3i(this)
-  final def copyAsImmutable() = ConstVec3i(this)
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec3i => x == u.x && y == u.y && z == u.z
       case u: ReadVec3b => false
-      case u: AnyVec3[_, _] => dx == u.dx && dy == u.dy && dz == u.dz
+      case u: AnyVec3[_] => dx == u.dx && dy == u.dy && dz == u.dz
       case _ => false
     }
   }
@@ -180,15 +180,17 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int, ReadVec3i]
 final class ConstVec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Immutable {
   px = cx; py = cy; pz = cz
+
+  override def clone() = this
 }
 
 object ConstVec3i {
   def apply(s: Int) = new ConstVec3i(s, s, s)
-  /* main factory */ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
-  def apply(u: AnyVec3[_, _]) = new ConstVec3i(u.ix, u.iy, u.iz)
-  def apply(u: AnyVec4[_, _]) = new ConstVec3i(u.ix, u.iy, u.iz)
-  def apply(xy: AnyVec2[_, _], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
-  def apply(x: Int, yz: AnyVec2[_, _]) = new ConstVec3i(x, yz.ix, yz.iy)
+  /*main factory*/ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
+  def apply(u: AnyVec3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(u: AnyVec4[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
+  def apply(xy: AnyVec2[_], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
+  def apply(x: Int, yz: AnyVec2[_]) = new ConstVec3i(x, yz.ix, yz.iy)
 
   implicit def toConst(u: ReadVec3i) = new ConstVec3i(u.x, u.y, u.z)
 }
@@ -196,7 +198,7 @@ object ConstVec3i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
-extends ReadVec3i with MutableObject[ReadVec3i] with Implicits[On] with Composite
+extends ReadVec3i with PropertyObject[ReadVec3i] with Implicits[On] with Composite
 {
   type Element = ReadVec3i
   type Component = Int1
@@ -259,6 +261,9 @@ extends ReadVec3i with MutableObject[ReadVec3i] with Implicits[On] with Composit
   def |=(u: inVec3i) = { x |= u.x; y |= u.y; z |= u.z }
   def ^=(u: inVec3i) = { x ^= u.x; y ^= u.y; z ^= u.z }
 
+  def cloneValue() = ConstVec3i(this)
+  def asReadInstance() :ReadVec3i = this /*asReadInstance*/
+  override def clone() = Vec3i(this)
   override def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Int) {
@@ -325,11 +330,11 @@ object Vec3i {
   final val Manifest = classType[ReadVec3i](classOf[ReadVec3i])
 
   def apply(s: Int) = new Vec3i(s, s, s)
-  /* main factory */ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
-  def apply(u: AnyVec3[_, _]) = new Vec3i(u.ix, u.iy, u.iz)
-  def apply(u: AnyVec4[_, _]) = new Vec3i(u.ix, u.iy, u.iz)
-  def apply(xy: AnyVec2[_, _], z: Int) = new Vec3i(xy.ix, xy.iy, z)
-  def apply(x: Int, yz: AnyVec2[_, _]) = new Vec3i(x, yz.ix, yz.iy)
+  /*main factory*/ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
+  def apply(u: AnyVec3[_]) = new Vec3i(u.ix, u.iy, u.iz)
+  def apply(u: AnyVec4[_]) = new Vec3i(u.ix, u.iy, u.iz)
+  def apply(xy: AnyVec2[_], z: Int) = new Vec3i(xy.ix, xy.iy, z)
+  def apply(x: Int, yz: AnyVec2[_]) = new Vec3i(x, yz.ix, yz.iy)
 
   def unapply(u: ReadVec3i) = Some((u.x, u.y, u.z))
 

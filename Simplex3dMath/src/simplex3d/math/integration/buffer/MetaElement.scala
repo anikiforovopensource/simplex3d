@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.integration
+package simplex3d.math.integration.buffer
 
 
 /** <code>MetaElement</code> is used to integrate math with sequences.
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] trait MetaElement {
+trait MetaElement {
   type Element
   type Component <: Primitive
 }
@@ -34,7 +34,7 @@ private[simplex3d] trait MetaElement {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait Primitive extends MetaElement {
+sealed trait Primitive extends MetaElement {
   type Element <: AnyVal
 }
 
@@ -42,7 +42,7 @@ private[simplex3d] sealed trait Primitive extends MetaElement {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait Int1 extends Primitive {
+sealed trait Int1 extends Primitive {
   type Element = Int
   type Component = Int1
 }
@@ -51,7 +51,7 @@ private[simplex3d] sealed trait Int1 extends Primitive {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait Float1 extends Primitive {
+sealed trait Float1 extends Primitive {
   type Element = Float
   type Component = Float1
 }
@@ -60,7 +60,7 @@ private[simplex3d] sealed trait Float1 extends Primitive {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] sealed trait Double1 extends Primitive {
+sealed trait Double1 extends Primitive {
   type Element = Double
   type Component = Double1
 }
@@ -70,6 +70,6 @@ private[simplex3d] sealed trait Double1 extends Primitive {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[simplex3d] trait Composite extends MetaElement {
+trait Composite extends MetaElement {
   type Element <: AnyRef
 }

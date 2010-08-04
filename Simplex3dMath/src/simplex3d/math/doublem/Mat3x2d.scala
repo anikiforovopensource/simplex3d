@@ -21,7 +21,8 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -30,7 +31,7 @@ import simplex3d.math.doublem.DoubleMath._
  * @author Aleksey Nikiforov (lex)
  */
 sealed abstract class ReadMat3x2d
-extends ProtectedMat3x2d[Double, ReadMat3x2d]
+extends ProtectedMat3x2d[Double]
 {
   // Column major order.
   final def m00= p00; final def m10= p10; final def m20= p20
@@ -187,12 +188,12 @@ extends ProtectedMat3x2d[Double, ReadMat3x2d]
     m01*u.x + m11*u.y + m21*u.z
   )
 
-  final def copyAsMutable() = Mat3x2d(this)
-  final def copyAsImmutable() = ConstMat3x2d(this)
+
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat3x2[_, _] =>
+      case m: AnyMat3x2[_] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21
       case _ =>
@@ -232,6 +233,8 @@ final class ConstMat3x2d private[math] (
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
+
+  override def clone() = this
 }
 
 object ConstMat3x2d {
@@ -240,7 +243,7 @@ object ConstMat3x2d {
     0, s, 0
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double
   ) = new ConstMat3x2d(
@@ -248,13 +251,13 @@ object ConstMat3x2d {
     m01, m11, m21
   )
 
-  def apply(c0: AnyVec3[_, _], c1: AnyVec3[_, _]) = 
+  def apply(c0: AnyVec3[_], c1: AnyVec3[_]) = 
   new ConstMat3x2d(
     c0.dx, c0.dy, c0.dz,
     c1.dx, c1.dy, c1.dz
   )
 
-  def apply(m: AnyMat[_, _]) = new ConstMat3x2d(
+  def apply(m: AnyMat[_]) = new ConstMat3x2d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21
   )
@@ -268,7 +271,7 @@ final class Mat3x2d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double
 ) extends ReadMat3x2d
-  with MutableObject[ReadMat3x2d] with Implicits[On] with Composite
+  with PropertyObject[ReadMat3x2d] with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
@@ -325,6 +328,10 @@ final class Mat3x2d private[math] (
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
   }
 
+  def cloneValue() = ConstMat3x2d(this)
+  def asReadInstance() :ReadMat3x2d = this /*asReadInstance*/
+  override def clone() = Mat3x2d(this)
+  
   override def :=(m: inMat3x2d) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20;
     m01 = m.m01; m11 = m.m11; m21 = m.m21
@@ -386,7 +393,7 @@ object Mat3x2d {
     0, s, 0
   )
 
-  /* main factory */ def apply(
+  /*main factory*/ def apply(
     m00: Double, m10: Double, m20: Double,
     m01: Double, m11: Double, m21: Double
   ) = new Mat3x2d(
@@ -394,13 +401,13 @@ object Mat3x2d {
     m01, m11, m21
   )
 
-  def apply(c0: AnyVec3[_, _], c1: AnyVec3[_, _]) = 
+  def apply(c0: AnyVec3[_], c1: AnyVec3[_]) = 
   new Mat3x2d(
     c0.dx, c0.dy, c0.dz,
     c1.dx, c1.dy, c1.dz
   )
 
-  def apply(m: AnyMat[_, _]) = new Mat3x2d(
+  def apply(m: AnyMat[_]) = new Mat3x2d(
     m.d00, m.d10, m.d20,
     m.d01, m.d11, m.d21
   )
@@ -408,5 +415,5 @@ object Mat3x2d {
   def unapply(m: ReadMat3x2d) = Some((m(0), m(1)))
 
   implicit def toMutable(m: ReadMat3x2d) = Mat3x2d(m)
-  implicit def castFloat(m: AnyMat3x2[Float, _]) = apply(m)
+  implicit def castFloat(m: AnyMat3x2[Float]) = apply(m)
 }

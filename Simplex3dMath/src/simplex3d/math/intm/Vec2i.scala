@@ -21,14 +21,15 @@
 package simplex3d.math.intm
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadVec2i extends ProtectedVec2i[Int, ReadVec2i]
+sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
 {
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
@@ -131,14 +132,13 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int, ReadVec2i]
   final def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
   final def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
 
-  final def copyAsMutable() = Vec2i(this)
-  final def copyAsImmutable() = ConstVec2i(this)
-  
+  override def clone() = this
+
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec2i => x == u.x && y == u.y
       case u: ReadVec2b => false
-      case u: AnyVec2[_, _] => dx == u.dx && dy == u.dy
+      case u: AnyVec2[_] => dx == u.dx && dy == u.dy
       case _ => false
     }
   }
@@ -158,14 +158,16 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int, ReadVec2i]
 final class ConstVec2i private[math] (cx: Int, cy: Int)
 extends ReadVec2i with Immutable {
   px = cx; py = cy
+
+  override def clone() = this
 }
 
 object ConstVec2i {
   def apply(s: Int) = new ConstVec2i(s, s)
-  /* main factory */ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-  def apply(u: AnyVec2[_, _]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: AnyVec3[_, _]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: AnyVec4[_, _]) = new ConstVec2i(u.ix, u.iy)
+  /*main factory*/ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
+  def apply(u: AnyVec2[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_]) = new ConstVec2i(u.ix, u.iy)
 
   implicit def toConst(u: ReadVec2i) = new ConstVec2i(u.x, u.y)
 }
@@ -173,7 +175,7 @@ object ConstVec2i {
 
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with MutableObject[ReadVec2i] with Implicits[On] with Composite
+extends ReadVec2i with PropertyObject[ReadVec2i] with Implicits[On] with Composite
 {
   type Element = ReadVec2i
   type Component = Int1
@@ -227,6 +229,9 @@ extends ReadVec2i with MutableObject[ReadVec2i] with Implicits[On] with Composit
   def |=(u: inVec2i) = { x |= u.x; y |= u.y }
   def ^=(u: inVec2i) = { x ^= u.x; y ^= u.y }
 
+  def cloneValue() = ConstVec2i(this)
+  def asReadInstance() :ReadVec2i = this /*asReadInstance*/
+  override def clone() = Vec2i(this)
   override def :=(u: inVec2i) { x = u.x; y = u.y }
 
   def update(i: Int, s: Int) {
@@ -258,10 +263,10 @@ object Vec2i {
   final val Manifest = classType[ReadVec2i](classOf[ReadVec2i])
 
   def apply(s: Int) = new Vec2i(s, s)
-  /* main factory */ def apply(x: Int, y: Int) = new Vec2i(x, y)
-  def apply(u: AnyVec2[_, _]) = new Vec2i(u.ix, u.iy)
-  def apply(u: AnyVec3[_, _]) = new Vec2i(u.ix, u.iy)
-  def apply(u: AnyVec4[_, _]) = new Vec2i(u.ix, u.iy)
+  /*main factory*/ def apply(x: Int, y: Int) = new Vec2i(x, y)
+  def apply(u: AnyVec2[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_]) = new Vec2i(u.ix, u.iy)
 
   def unapply(u: ReadVec2i) = Some((u.x, u.y))
 

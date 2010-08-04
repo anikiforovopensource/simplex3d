@@ -21,7 +21,8 @@
 package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
-import simplex3d.math.integration._
+import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -29,7 +30,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double, ReadQuat4d]
+sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 {
   private[math] final def fa: Float = float(a)
   private[math] final def fb: Float = float(b)
@@ -111,12 +112,12 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double, ReadQuat4d]
   final def rotateVector(u: inVec3d) :Vec3d =
     DoubleMath.rotateVector(u, normalize(this))
 
-  final def copyAsMutable() = Quat4d(this)
-  final def copyAsImmutable() = ConstQuat4d(this)
+
+  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case q: AnyQuat4[_, _] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
+      case q: AnyQuat4[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
       case _ => false
     }
   }
@@ -142,14 +143,16 @@ final class ConstQuat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Immutable {
   pa = ca; pb = cb; pc = cc; pd = cd
+
+  override def clone() = this
 }
 
 object ConstQuat4d {
-  /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
+  /*main factory*/ def apply(a: Double, b: Double, c: Double, d: Double) =
     new ConstQuat4d(a, b, c, d)
 
-  def apply(u: AnyQuat4[_, _]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
-  def apply(u: AnyVec4[_, _]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(u: AnyQuat4[_]) = new ConstQuat4d(u.da, u.db, u.dc, u.dd)
+  def apply(u: AnyVec4[_]) = new ConstQuat4d(u.dw, u.dx, u.dy, u.dz)
 
   implicit def toConst(u: ReadQuat4d) = new ConstQuat4d(u.a, u.b, u.c, u.d)
 }
@@ -159,7 +162,7 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d
-  with MutableObject[ReadQuat4d] with Implicits[On] with Composite
+  with PropertyObject[ReadQuat4d] with Implicits[On] with Composite
 {
   type Element = ReadQuat4d
   type Component = Double1
@@ -188,6 +191,9 @@ final class Quat4d private[math] (
     a = na; b = nb; c = nc
   }
 
+  def cloneValue() = ConstQuat4d(this)
+  def asReadInstance() :ReadQuat4d = this /*asReadInstance*/
+  override def clone() = Quat4d(this)
   override def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Double) {
@@ -207,11 +213,11 @@ object Quat4d {
   final val Identity = new ConstQuat4d(1, 0, 0, 0)
   final val Manifest = classType[ReadQuat4d](classOf[ReadQuat4d])
   
-  /* main factory */ def apply(a: Double, b: Double, c: Double, d: Double) =
+  /*main factory*/ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
 
-  def apply(q: AnyQuat4[_, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
-  def apply(u: AnyVec4[_, _]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
+  def apply(q: AnyQuat4[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  def apply(u: AnyVec4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)
 
   def unapply(q: ReadQuat4d) = Some((q.a, q.b, q.c, q.d))
 
@@ -230,5 +236,5 @@ object Quat4d {
   }
 
   implicit def toMutable(u: ReadQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
-  implicit def castFloat(q: AnyQuat4[Float, _]) = new Quat4d(q.da, q.db, q.dc, q.dd)
+  implicit def castFloat(q: AnyQuat4[Float]) = new Quat4d(q.da, q.db, q.dc, q.dd)
 }

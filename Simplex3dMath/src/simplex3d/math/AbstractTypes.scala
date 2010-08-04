@@ -20,7 +20,7 @@
 
 package simplex3d.math
 
-import simplex3d.math.integration._
+import simplex3d.math.integration.property._
 
 
 /** <code>MathObject</code> is a superclass of all the vectors, quaternions,
@@ -28,10 +28,7 @@ import simplex3d.math.integration._
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class MathObject[T] extends PropertyObject[T] {
-  //final def asReadInstance() :T = copyAsImmutable() //Safer but slower.
-  final def asReadInstance() :T = this.asInstanceOf[T]
-}
+private[math] abstract class MathObject[P]
 
 /** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
  * <p>
@@ -40,7 +37,7 @@ private[math] abstract class MathObject[T] extends PropertyObject[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec2[P, T] extends Swizzle2Read[P, T] {
+private[math] abstract class AnyVec2[P] extends AnyVec[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
 
@@ -61,7 +58,7 @@ private[math] abstract class AnyVec2[P, T] extends Swizzle2Read[P, T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec3[P, T] extends Swizzle3Read[P, T] {
+private[math] abstract class AnyVec3[P] extends Swizzle3Read[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean
@@ -86,7 +83,7 @@ private[math] abstract class AnyVec3[P, T] extends Swizzle3Read[P, T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec4[P, T] extends Swizzle4Read[P, T] {
+private[math] abstract class AnyVec4[P] extends Swizzle4Read[P] {
   private[math] def bx: Boolean
   private[math] def by: Boolean
   private[math] def bz: Boolean
@@ -115,7 +112,7 @@ private[math] abstract class AnyVec4[P, T] extends Swizzle4Read[P, T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyQuat4[P, T] extends MathObject[T] {
+private[math] abstract class AnyQuat4[P] {
   private[math] def fa: Float
   private[math] def fb: Float
   private[math] def fc: Float
@@ -134,7 +131,7 @@ private[math] abstract class AnyQuat4[P, T] extends MathObject[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat[P, T] extends MathObject[T] {
+private[math] abstract class AnyMat[P] {
   private[math] def f00: Float
   private[math] def f10: Float
   private[math] def f20: Float = 0
@@ -184,7 +181,7 @@ private[math] abstract class AnyMat[P, T] extends MathObject[T] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x2[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat2x2[P] extends AnyMat[P]
 
 /** <code>AnyMat2x3</code> is a superclass of all the 2x3 matrices.
  * <p>
@@ -193,7 +190,7 @@ private[math] abstract class AnyMat2x2[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x3[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat2x3[P] extends AnyMat[P]
 
 /** <code>AnyMat2x4</code> is a superclass of all the 2x4 matrices.
  * <p>
@@ -202,7 +199,7 @@ private[math] abstract class AnyMat2x3[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x4[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat2x4[P] extends AnyMat[P]
 
 /** <code>AnyMat3x2</code> is a superclass of all the 3x2 matrices.
  * <p>
@@ -211,7 +208,7 @@ private[math] abstract class AnyMat2x4[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x2[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat3x2[P] extends AnyMat[P]
 
 /** <code>AnyMat3x3</code> is a superclass of all the 3x3 matrices.
  * <p>
@@ -220,7 +217,7 @@ private[math] abstract class AnyMat3x2[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x3[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat3x3[P] extends AnyMat[P]
 
 /** <code>AnyMat3x4</code> is a superclass of all the 3x4 matrices.
  * <p>
@@ -229,7 +226,7 @@ private[math] abstract class AnyMat3x3[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x4[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat3x4[P] extends AnyMat[P]
 
 /** <code>AnyMat4x2</code> is a superclass of all the 4x2 matrices.
  * <p>
@@ -238,7 +235,7 @@ private[math] abstract class AnyMat3x4[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x2[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat4x2[P] extends AnyMat[P]
 
 /** <code>AnyMat4x3</code> is a superclass of all the 4x3 matrices.
  * <p>
@@ -247,7 +244,7 @@ private[math] abstract class AnyMat4x2[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x3[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat4x3[P] extends AnyMat[P]
 
 /** <code>AnyMat4x4</code> is a superclass of all the 4x4 matrices.
  * <p>
@@ -256,4 +253,4 @@ private[math] abstract class AnyMat4x3[P, T] extends AnyMat[P, T]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x4[P, T] extends AnyMat[P, T]
+private[math] abstract class AnyMat4x4[P] extends AnyMat[P]

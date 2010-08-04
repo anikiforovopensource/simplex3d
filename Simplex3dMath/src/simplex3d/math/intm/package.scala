@@ -21,6 +21,7 @@
 package simplex3d.math
 
 import simplex3d.math.intm.IntMath._
+import simplex3d.math.integration.property._
 
 
 /**
@@ -28,8 +29,13 @@ import simplex3d.math.intm.IntMath._
  */
 package object intm {
 
-  //Implicits
+  // Implicits
   implicit def imInt(s: Int) = new ExtendedInt(s)
+
+  // Property Implicits
+  implicit def vec2iToPropValue(u: ReadVec2i) :PropertyValue[ReadVec2i] = Vec2i(u)
+  implicit def vec3iToPropValue(u: ReadVec3i) :PropertyValue[ReadVec3i] = Vec3i(u)
+  implicit def vec4iToPropValue(u: ReadVec4i) :PropertyValue[ReadVec4i] = Vec4i(u)
 
   // In and Out aliases
   type inVec2i = ReadVec2i

@@ -27,6 +27,6 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedVec4d<P, T> extends AnyVec4<P, T> implements Serializable {
+abstract class ProtectedVec4d<P> extends AnyVec4<P> implements Serializable {
     double px; double py; double pz; double pw;
 }

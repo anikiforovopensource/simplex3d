@@ -20,8 +20,9 @@
 
 package simplex3d.math
 
-
 import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.integration.property._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
@@ -34,14 +35,29 @@ package object floatm {
   implicit def extendedFloatForFloat(s: Float) = new ExtendedFloat(s)
   implicit def extendedIntForFloat(s: Int) = new ExtendedInt(s)
 
-  implicit def vec2IntToFloat(u: AnyVec2[Int, _]) :ConstVec2f =
+  implicit def vec2IntToFloat(u: AnyVec2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)
 
-  implicit def vec3IntToFloat(u: AnyVec3[Int, _]) :ConstVec3f =
+  implicit def vec3IntToFloat(u: AnyVec3[Int]) :ConstVec3f =
     new ConstVec3f(u.fx, u.fy, u.fz)
 
-  implicit def vec4IntToFloat(u: AnyVec4[Int, _]) :ConstVec4f =
+  implicit def vec4IntToFloat(u: AnyVec4[Int]) :ConstVec4f =
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
+
+  // Property Implicits
+  implicit def vec2fToPropValue(u: ReadVec2f) :PropertyValue[ReadVec2f] = Vec2f(u)
+  implicit def vec3fToPropValue(u: ReadVec3f) :PropertyValue[ReadVec3f] = Vec3f(u)
+  implicit def vec4fToPropValue(u: ReadVec4f) :PropertyValue[ReadVec4f] = Vec4f(u)
+  implicit def quat4fToPropValue(u: ReadQuat4f) :PropertyValue[ReadQuat4f] = Quat4f(u)
+  implicit def mat2fToPropValue(u: ReadMat2f) :PropertyValue[ReadMat2f] = Mat2f(u)
+  implicit def mat2x3fToPropValue(u: ReadMat2x3f) :PropertyValue[ReadMat2x3f] = Mat2x3f(u)
+  implicit def mat2x4fToPropValue(u: ReadMat2x4f) :PropertyValue[ReadMat2x4f] = Mat2x4f(u)
+  implicit def mat3x2fToPropValue(u: ReadMat3x2f) :PropertyValue[ReadMat3x2f] = Mat3x2f(u)
+  implicit def mat3fToPropValue(u: ReadMat3f) :PropertyValue[ReadMat3f] = Mat3f(u)
+  implicit def mat3x4fToPropValue(u: ReadMat3x4f) :PropertyValue[ReadMat3x4f] = Mat3x4f(u)
+  implicit def mat4x2fToPropValue(u: ReadMat4x2f) :PropertyValue[ReadMat4x2f] = Mat4x2f(u)
+  implicit def mat4x3fToPropValue(u: ReadMat4x3f) :PropertyValue[ReadMat4x3f] = Mat4x3f(u)
+  implicit def mat4fToPropValue(u: ReadMat4f) :PropertyValue[ReadMat4f] = Mat4f(u)
 
   
   // Matrix aliases

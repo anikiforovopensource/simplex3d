@@ -21,12 +21,11 @@
 package simplex3d.math
 
 
-/** <code>Sizzle2Read</code> contains abstract read-only swizzling
- * for 2-dimensional vectors.
+/** <code>AnyVec</code> acts a base class for all vectors.
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle2Read[P, T] extends MathObject[T] {
+private[math] abstract class AnyVec[P] extends MathObject[P] {
 
   private[math] type R2
   private[math] type R3

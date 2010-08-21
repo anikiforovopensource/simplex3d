@@ -34,17 +34,18 @@ private[buffer] abstract class ReadBaseSeq[
   E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
   shared: AnyRef,
-  private[buffer] final val buffer: R#BufferType
+  private[buffer] final val buffer: R#BufferType,
+  final val offset: Int, final val stride: Int
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
-  if (stride <= 0)
-    throw new IllegalArgumentException(
-      "Stride must be greater than zero."
-    )
   if (offset < 0)
     throw new IllegalArgumentException(
       "Offset must be greater than or equal to zero."
+    )
+  if (stride <= 0)
+    throw new IllegalArgumentException(
+      "Stride must be greater than zero."
     )
 
   def elementManifest: Manifest[E#Element]
@@ -83,9 +84,6 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def components: Int
   def rawType: Int
   def normalized: Boolean
-
-  def offset: Int = 0
-  def stride: Int = components
 
   def backingSeq: ReadContiguousSeq[E#Component, R]
   final def isReadOnly(): Boolean = buffer.isReadOnly()
@@ -187,8 +185,8 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 private[buffer] abstract class BaseSeq[
   E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
-  shared: AnyRef, buff: R#BufferType
-) extends ReadBaseSeq[E, S, R](shared, buff) {
+  shared: AnyRef, buff: R#BufferType, offset: Int, stride: Int
+) extends ReadBaseSeq[E, S, R](shared, buff, offset, stride) {
 
   def asBuffer() :R#BufferType
 
@@ -584,8 +582,10 @@ private[buffer] abstract class BaseSeq[
 
 // Extend this, add implicit tuples to your package object to enable constructor
 abstract class CompositeSeq[E <: Composite, +R <: RawData](
-  backing: ContiguousSeq[E#Component, R]
-) extends BaseSeq[E, E#Element, R](backing.shared, backing.buffer) {
+  backing: ContiguousSeq[E#Component, R], offset: Int, stride: Int
+) extends BaseSeq[E, E#Element, R](
+  backing.shared, backing.buffer, offset, stride
+) {
   def backingSeq: ContiguousSeq[E#Component, R]
   final def componentManifest = backing.elementManifest
 

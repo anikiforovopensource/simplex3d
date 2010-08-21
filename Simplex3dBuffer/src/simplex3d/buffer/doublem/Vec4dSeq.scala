@@ -30,8 +30,8 @@ import simplex3d.buffer._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseVec4d[+R <: ReadableDouble](
-  backing: ContiguousSeq[Double1, R]
-) extends CompositeSeq[Vec4d, R](backing) {
+  backing: ContiguousSeq[Double1, R], offset: Int, stride: Int
+) extends CompositeSeq[Vec4d, R](backing, offset, stride) {
   final def elementManifest = Vec4d.Manifest
   final def components: Int = 4
 
@@ -86,7 +86,7 @@ private[buffer] abstract class BaseVec4d[+R <: ReadableDouble](
 
 private[buffer] final class ArrayVec4d[+R <: ReadableDouble](
   override val backingSeq: DataArray[Double1, R]
-) extends BaseVec4d[R](backingSeq) with DataArray[Vec4d, R] {
+) extends BaseVec4d[R](backingSeq, 0, 4) with DataArray[Vec4d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
   )
@@ -94,7 +94,7 @@ private[buffer] final class ArrayVec4d[+R <: ReadableDouble](
 
 private[buffer] final class BufferVec4d[+R <: ReadableDouble](
   override val backingSeq: DataBuffer[Double1, R]
-) extends BaseVec4d[R](backingSeq) with DataBuffer[Vec4d, R] {
+) extends BaseVec4d[R](backingSeq, 0, 4) with DataBuffer[Vec4d, R] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
   )
@@ -102,9 +102,9 @@ private[buffer] final class BufferVec4d[+R <: ReadableDouble](
 
 private[buffer] final class ViewVec4d[+R <: ReadableDouble](
   override val backingSeq: DataBuffer[Double1, R],
-  override val offset: Int,
-  override val stride: Int
-) extends BaseVec4d[R](backingSeq) with DataView[Vec4d, R] {
+  offset: Int,
+  stride: Int
+) extends BaseVec4d[R](backingSeq, offset, stride) with DataView[Vec4d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec4d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]],
     offset, stride

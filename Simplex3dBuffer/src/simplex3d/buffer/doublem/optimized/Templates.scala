@@ -32,7 +32,7 @@ import simplex3d.buffer._
 // Vec2d RawFloat
 private[buffer] final class ArrayVec2dRawFloat(
   backing: ArrayDouble1RawFloat
-) extends BaseVec2d[RawFloat](backing) with DataArray[Vec2d, RawFloat] {
+) extends BaseVec2d[RawFloat](backing, 0, 2) with DataArray[Vec2d, RawFloat] {
   override def backingSeq: ArrayDouble1RawFloat = backing
   def this() = this(new ArrayDouble1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2dRawFloat(backing.mkReadOnlyInstance())
@@ -64,7 +64,7 @@ private[buffer] final class ArrayVec2dRawFloat(
 
 private[buffer] final class BufferVec2dRawFloat(
   backing: BufferDouble1RawFloat
-) extends BaseVec2d[RawFloat](backing) with DataBuffer[Vec2d, RawFloat] {
+) extends BaseVec2d[RawFloat](backing, 0, 2) with DataBuffer[Vec2d, RawFloat] {
   override def backingSeq: BufferDouble1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2dRawFloat(backing.mkReadOnlyInstance())
 
@@ -95,9 +95,9 @@ private[buffer] final class BufferVec2dRawFloat(
 
 private[buffer] final class ViewVec2dRawFloat(
   backing: BufferDouble1RawFloat,
-  override val offset: Int,
-  override val stride: Int
-) extends BaseVec2d[RawFloat](backing) with DataView[Vec2d, RawFloat] {
+  offset: Int,
+  stride: Int
+) extends BaseVec2d[RawFloat](backing, offset, stride) with DataView[Vec2d, RawFloat] {
   override def backingSeq: BufferDouble1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new ViewVec2dRawFloat(
     backing.mkReadOnlyInstance(), offset, stride
@@ -132,7 +132,7 @@ private[buffer] final class ViewVec2dRawFloat(
 // Vec3d RawFloat
 private[buffer] final class ArrayVec3dRawFloat(
   backing: ArrayDouble1RawFloat
-) extends BaseVec3d[RawFloat](backing) with DataArray[Vec3d, RawFloat] {
+) extends BaseVec3d[RawFloat](backing, 0, 3) with DataArray[Vec3d, RawFloat] {
   def this() = this(new ArrayDouble1RawFloat)
   override def backingSeq: ArrayDouble1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3dRawFloat(backing.mkReadOnlyInstance())
@@ -166,7 +166,7 @@ private[buffer] final class ArrayVec3dRawFloat(
 
 private[buffer] final class BufferVec3dRawFloat(
   backing: BufferDouble1RawFloat
-) extends BaseVec3d[RawFloat](backing) with DataBuffer[Vec3d, RawFloat] {
+) extends BaseVec3d[RawFloat](backing, 0, 3) with DataBuffer[Vec3d, RawFloat] {
   override def backingSeq: BufferDouble1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3dRawFloat(backing.mkReadOnlyInstance())
 
@@ -199,9 +199,9 @@ private[buffer] final class BufferVec3dRawFloat(
 
 private[buffer] final class ViewVec3dRawFloat(
   backing: BufferDouble1RawFloat,
-  override val offset: Int,
-  override val stride: Int
-) extends BaseVec3d[RawFloat](backing) with DataView[Vec3d, RawFloat] {
+  offset: Int,
+  stride: Int
+) extends BaseVec3d[RawFloat](backing, offset, stride) with DataView[Vec3d, RawFloat] {
   override def backingSeq: BufferDouble1RawFloat = backing
   protected[buffer] def mkReadOnlyInstance() = new ViewVec3dRawFloat(
     backing.mkReadOnlyInstance(), offset, stride
@@ -238,7 +238,7 @@ private[buffer] final class ViewVec3dRawFloat(
 // Vec4d UByte
 private[buffer] final class ArrayVec4dUByte(
   backing: ArrayDouble1UByte
-) extends BaseVec4d[UByte](backing) with DataArray[Vec4d, UByte] {
+) extends BaseVec4d[UByte](backing, 0, 4) with DataArray[Vec4d, UByte] {
   override def backingSeq: ArrayDouble1UByte = backing
   def this() = this(new ArrayDouble1UByte)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4dUByte(backing.mkReadOnlyInstance())
@@ -274,7 +274,7 @@ private[buffer] final class ArrayVec4dUByte(
 
 private[buffer] final class BufferVec4dUByte(
   backing: BufferDouble1UByte
-) extends BaseVec4d[UByte](backing) with DataBuffer[Vec4d, UByte] {
+) extends BaseVec4d[UByte](backing, 0, 4) with DataBuffer[Vec4d, UByte] {
   override def backingSeq: BufferDouble1UByte = backing
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4dUByte(backing.mkReadOnlyInstance())
 
@@ -309,9 +309,9 @@ private[buffer] final class BufferVec4dUByte(
 
 private[buffer] final class ViewVec4dUByte(
   backing: BufferDouble1UByte,
-  override val offset: Int,
-  override val stride: Int
-) extends BaseVec4d[UByte](backing) with DataView[Vec4d, UByte] {
+  offset: Int,
+  stride: Int
+) extends BaseVec4d[UByte](backing, offset, stride) with DataView[Vec4d, UByte] {
   override def backingSeq: BufferDouble1UByte = backing
   protected[buffer] def mkReadOnlyInstance() = new ViewVec4dUByte(
     backing.mkReadOnlyInstance(), offset, stride

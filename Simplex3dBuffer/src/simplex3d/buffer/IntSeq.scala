@@ -31,8 +31,8 @@ import simplex3d.buffer.Util._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
-  shared: AnyRef, buff: R#BufferType
-) extends BaseSeq[Int1, Int, R](shared, buff) {
+  shared: AnyRef, buff: R#BufferType, offset: Int, stride: Int
+) extends BaseSeq[Int1, Int, R](shared, buff, offset, stride) {
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Int
   final def components: Int = 1
@@ -43,8 +43,8 @@ private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
 
 // Type: UByte
 private[buffer] sealed abstract class SeqInt1UByte(
-  shared: AnyRef, buff: ByteBuffer
-) extends BaseInt1[UByte](shared, buff) {
+  shared: AnyRef, buff: ByteBuffer, offset: Int, stride: Int
+) extends BaseInt1[UByte](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -70,7 +70,7 @@ private[buffer] sealed abstract class SeqInt1UByte(
 
 private[buffer] final class ArrayInt1UByte(
   rarray: Array[Byte], warray: Array[Byte], buff: ByteBuffer
-) extends SeqInt1UByte(rarray, buff) with IndexArray[UByte] {
+) extends SeqInt1UByte(rarray, buff, 0, 1) with IndexArray[UByte] {
   def this() = this(eaByte, eaByte, ebByte)
 
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
@@ -87,7 +87,7 @@ private[buffer] final class ArrayInt1UByte(
 private[buffer] final class BufferInt1UByte(
   shared: ByteBuffer,
   buff: ByteBuffer
-) extends SeqInt1UByte(shared, buff) with IndexBuffer[UByte] {
+) extends SeqInt1UByte(shared, buff, 0, 1) with IndexBuffer[UByte] {
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UByte(
     shared, buffer.asReadOnlyBuffer()
@@ -103,9 +103,9 @@ private[buffer] final class BufferInt1UByte(
 private[buffer] final class ViewInt1UByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1UByte(shared, buff) with DataView[Int1, UByte] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1UByte(shared, buff, offset, stride) with DataView[Int1, UByte] {
   val backingSeq = new BufferInt1UByte(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
@@ -121,8 +121,8 @@ private[buffer] final class ViewInt1UByte(
 
 // Type: UShort
 private[buffer] sealed abstract class SeqInt1UShort(
-  shared: AnyRef, buff: CharBuffer
-) extends BaseInt1[UShort](shared, buff) {
+  shared: AnyRef, buff: CharBuffer, offset: Int, stride: Int
+) extends BaseInt1[UShort](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -148,9 +148,7 @@ private[buffer] sealed abstract class SeqInt1UShort(
 
 private[buffer] final class ArrayInt1UShort(
   rarray: Array[Char], warray: Array[Char], buff: CharBuffer
-) extends SeqInt1UShort(
-  rarray, buff
-) with IndexArray[UShort] {
+) extends SeqInt1UShort(rarray, buff, 0, 1) with IndexArray[UShort] {
   def this() = this(eaChar, eaChar, ebChar)
 
   private[buffer] override def mkBindingBuffer() = CharBuffer.wrap(rarray)
@@ -167,7 +165,7 @@ private[buffer] final class ArrayInt1UShort(
 private[buffer] final class BufferInt1UShort(
   shared: ByteBuffer,
   buff: CharBuffer
-) extends SeqInt1UShort(shared, buff) with IndexBuffer[UShort] {
+) extends SeqInt1UShort(shared, buff, 0, 1) with IndexBuffer[UShort] {
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UShort(
     shared, buffer.asReadOnlyBuffer()
@@ -183,9 +181,9 @@ private[buffer] final class BufferInt1UShort(
 private[buffer] final class ViewInt1UShort(
   shared: ByteBuffer,
   buff: CharBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1UShort(shared, buff) with DataView[Int1, UShort] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1UShort(shared, buff, offset, stride) with DataView[Int1, UShort] {
   val backingSeq = new BufferInt1UShort(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
@@ -204,8 +202,8 @@ private[buffer] final class ViewInt1UShort(
 
 // Type: UInt
 private[buffer] sealed abstract class SeqInt1UInt(
-  shared: AnyRef, buff: IntBuffer
-) extends BaseInt1[UInt](shared, buff) {
+  shared: AnyRef, buff: IntBuffer, offset: Int, stride: Int
+) extends BaseInt1[UInt](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -231,7 +229,7 @@ private[buffer] sealed abstract class SeqInt1UInt(
 
 private[buffer] final class ArrayInt1UInt(
   rarray: Array[Int], warray: Array[Int], buff: IntBuffer
-) extends SeqInt1UInt(rarray, buff) with IndexArray[UInt] {
+) extends SeqInt1UInt(rarray, buff, 0, 1) with IndexArray[UInt] {
   def this() = this(eaInt, eaInt, ebInt)
 
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
@@ -248,7 +246,7 @@ private[buffer] final class ArrayInt1UInt(
 private[buffer] final class BufferInt1UInt(
   shared: ByteBuffer,
   buff: IntBuffer
-) extends SeqInt1UInt(shared, buff) with IndexBuffer[UInt]{
+) extends SeqInt1UInt(shared, buff, 0, 1) with IndexBuffer[UInt]{
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UInt(shared, buffer.asReadOnlyBuffer())
 
@@ -262,9 +260,9 @@ private[buffer] final class BufferInt1UInt(
 private[buffer] final class ViewInt1UInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1UInt(shared, buff) with DataView[Int1, UInt] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1UInt(shared, buff, offset, stride) with DataView[Int1, UInt] {
   val backingSeq = new BufferInt1UInt(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
@@ -280,8 +278,8 @@ private[buffer] final class ViewInt1UInt(
 
 // Type: SByte
 private[buffer] sealed abstract class SeqInt1SByte(
-  shared: AnyRef, buff: ByteBuffer
-) extends BaseInt1[SByte](shared, buff) {
+  shared: AnyRef, buff: ByteBuffer, offset: Int, stride: Int
+) extends BaseInt1[SByte](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -307,7 +305,7 @@ private[buffer] sealed abstract class SeqInt1SByte(
 
 private[buffer] final class ArrayInt1SByte(
   rarray: Array[Byte], warray: Array[Byte], buff: ByteBuffer
-) extends SeqInt1SByte(rarray, buff) with DataArray[Int1, SByte] {
+) extends SeqInt1SByte(rarray, buff, 0, 1) with DataArray[Int1, SByte] {
   def this() = this(eaByte, eaByte, ebByte)
 
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
@@ -324,7 +322,7 @@ private[buffer] final class ArrayInt1SByte(
 private[buffer] final class BufferInt1SByte(
   shared: ByteBuffer,
   buff: ByteBuffer
-) extends SeqInt1SByte(shared, buff) with DataBuffer[Int1, SByte] {
+) extends SeqInt1SByte(shared, buff, 0, 1) with DataBuffer[Int1, SByte] {
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SByte(
     shared, buffer.asReadOnlyBuffer()
@@ -340,9 +338,9 @@ private[buffer] final class BufferInt1SByte(
 private[buffer] final class ViewInt1SByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1SByte(shared, buff) with DataView[Int1, SByte] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1SByte(shared, buff, offset, stride) with DataView[Int1, SByte] {
   val backingSeq = new BufferInt1SByte(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
@@ -358,8 +356,8 @@ private[buffer] final class ViewInt1SByte(
 
 // Type: SShort
 private[buffer] sealed abstract class SeqInt1SShort(
-  shared: AnyRef, buff: ShortBuffer
-) extends BaseInt1[SShort](shared, buff) {
+  shared: AnyRef, buff: ShortBuffer, offset: Int, stride: Int
+) extends BaseInt1[SShort](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -385,9 +383,7 @@ private[buffer] sealed abstract class SeqInt1SShort(
 
 private[buffer] final class ArrayInt1SShort(
   rarray: Array[Short], warray: Array[Short], buff: ShortBuffer
-) extends SeqInt1SShort(
-  rarray, buff
-) with DataArray[Int1, SShort] {
+) extends SeqInt1SShort(rarray, buff, 0, 1) with DataArray[Int1, SShort] {
   def this() = this(eaShort, eaShort, ebShort)
 
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
@@ -404,7 +400,7 @@ private[buffer] final class ArrayInt1SShort(
 private[buffer] final class BufferInt1SShort(
   shared: ByteBuffer,
   buff: ShortBuffer
-) extends SeqInt1SShort(shared, buff) with DataBuffer[Int1, SShort] {
+) extends SeqInt1SShort(shared, buff, 0, 1) with DataBuffer[Int1, SShort] {
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SShort(
     shared, buffer.asReadOnlyBuffer()
@@ -420,9 +416,9 @@ private[buffer] final class BufferInt1SShort(
 private[buffer] final class ViewInt1SShort(
   shared: ByteBuffer,
   buff: ShortBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1SShort(shared, buff) with DataView[Int1, SShort] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1SShort(shared, buff, offset, stride) with DataView[Int1, SShort] {
   val backingSeq = new BufferInt1SShort(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
@@ -438,8 +434,8 @@ private[buffer] final class ViewInt1SShort(
 
 // Type: SInt
 private[buffer] sealed abstract class SeqInt1SInt(
-  shared: AnyRef, buff: IntBuffer
-) extends BaseInt1[SInt](shared, buff) {
+  shared: AnyRef, buff: IntBuffer, offset: Int, stride: Int
+) extends BaseInt1[SInt](shared, buff, offset, stride) {
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -465,7 +461,7 @@ private[buffer] sealed abstract class SeqInt1SInt(
 
 private[buffer] final class ArrayInt1SInt(
   rarray: Array[Int], warray: Array[Int], buff: IntBuffer
-) extends SeqInt1SInt(rarray, buff) with DataArray[Int1, SInt] {
+) extends SeqInt1SInt(rarray, buff, 0, 1) with DataArray[Int1, SInt] {
   def this() = this(eaInt, eaInt, ebInt)
 
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
@@ -482,7 +478,7 @@ private[buffer] final class ArrayInt1SInt(
 private[buffer] final class BufferInt1SInt(
   shared: ByteBuffer,
   buff: IntBuffer
-) extends SeqInt1SInt(shared, buff) with DataBuffer[Int1, SInt]{
+) extends SeqInt1SInt(shared, buff, 0, 1) with DataBuffer[Int1, SInt]{
   def backingSeq = this
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SInt(shared, buffer.asReadOnlyBuffer())
 
@@ -496,9 +492,9 @@ private[buffer] final class BufferInt1SInt(
 private[buffer] final class ViewInt1SInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  override val offset: Int,
-  override val stride: Int
-) extends SeqInt1SInt(shared, buff) with DataView[Int1, SInt] {
+  offset: Int,
+  stride: Int
+) extends SeqInt1SInt(shared, buff, offset, stride) with DataView[Int1, SInt] {
   val backingSeq = new BufferInt1SInt(shared, buff)
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride

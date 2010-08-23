@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import scala.annotation.unchecked._
 
 
 /**
@@ -43,7 +44,7 @@ extends ReadDataSeq[E, R] {
     )
 
   
-  def backingSeq: ReadDataBuffer[E#Component, R]
+  type BackingSeqType <: ReadDataBuffer[E#Component, R]
   protected def mkReadOnlyInstance() :ReadDataView[E, R]
   def asReadOnlySeq() :ReadDataView[E, R] = {
     asReadOnlySeqImpl().asInstanceOf[ReadDataView[E, R]]
@@ -61,7 +62,7 @@ extends ReadDataSeq[E, R] {
 
 trait DataView[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ReadDataView[E, R] {
-  def backingSeq: DataBuffer[E#Component, R]
+  type BackingSeqType = DataBuffer[E#Component, R @uncheckedVariance]
 }
 
 

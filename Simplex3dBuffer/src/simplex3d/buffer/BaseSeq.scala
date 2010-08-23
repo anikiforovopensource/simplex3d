@@ -35,7 +35,7 @@ private[buffer] abstract class ReadBaseSeq[
 ](
   shared: AnyRef,
   private[buffer] final val buffer: R#BufferType,
-  final val offset: Int, final val stride: Int
+  final val backing: AnyRef, final val offset: Int, final val stride: Int
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
@@ -50,6 +50,12 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   def elementManifest: Manifest[E#Element]
   def componentManifest: Manifest[E#Component#Element]
+
+  type BackingSeqType <: ReadContiguousSeq[E#Component, R]
+  final val backingSeq: BackingSeqType = {
+    if (backing == null) this.asInstanceOf[BackingSeqType]
+    else backing.asInstanceOf[BackingSeqType]
+  }
 
   final val bytesPerRawComponent = RawData.byteLength(rawType)
   final def byteSize = buffer.capacity*bytesPerRawComponent
@@ -85,7 +91,6 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def rawType: Int
   def normalized: Boolean
 
-  def backingSeq: ReadContiguousSeq[E#Component, R]
   final def isReadOnly(): Boolean = buffer.isReadOnly()
 
   protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
@@ -185,15 +190,15 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 private[buffer] abstract class BaseSeq[
   E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
-  shared: AnyRef, buff: R#BufferType, offset: Int, stride: Int
-) extends ReadBaseSeq[E, S, R](shared, buff, offset, stride) {
+  shared: AnyRef, buff: R#BufferType, backing: AnyRef, offset: Int, stride: Int
+) extends ReadBaseSeq[E, S, R](shared, buff, backing, offset, stride) {
 
   def asBuffer() :R#BufferType
 
   override def apply(i: Int) :S
   def update(i: Int, v: S)
 
-  def backingSeq: ContiguousSeq[E#Component, R]
+  type BackingSeqType <: ContiguousSeq[E#Component, R]
 
   
   private final def putArray(
@@ -584,9 +589,8 @@ private[buffer] abstract class BaseSeq[
 abstract class CompositeSeq[E <: Composite, +R <: RawData](
   backing: ContiguousSeq[E#Component, R], offset: Int, stride: Int
 ) extends BaseSeq[E, E#Element, R](
-  backing.shared, backing.buffer, offset, stride
+  backing.shared, backing.buffer, backing, offset, stride
 ) {
-  def backingSeq: ContiguousSeq[E#Component, R]
   final def componentManifest = backing.elementManifest
 
   final def asReadOnlyBuffer() :R#BufferType = backing.asReadOnlyBuffer()

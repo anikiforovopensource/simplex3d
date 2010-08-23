@@ -29,7 +29,7 @@ import scala.annotation.unchecked._
  */
 trait ReadDataArray[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
-  def backingSeq: ReadDataArray[E#Component, R]
+  type BackingSeqType <: ReadDataArray[E#Component, R]
 
   protected def mkReadOnlyInstance() :ReadDataArray[E, R]
   def asReadOnlySeq() :ReadDataArray[E, R] = {
@@ -49,7 +49,7 @@ extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
 trait DataArray[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
   def array: R#ArrayType = buffer.array.asInstanceOf[R#ArrayType]
-  def backingSeq: DataArray[E#Component, R]
+  type BackingSeqType = DataArray[E#Component, R @uncheckedVariance]
 }
 
 

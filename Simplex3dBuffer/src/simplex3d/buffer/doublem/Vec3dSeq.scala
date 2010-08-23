@@ -83,7 +83,7 @@ private[buffer] abstract class BaseVec3d[+R <: ReadableDouble](
 }
 
 private[buffer] final class ArrayVec3d[+R <: ReadableDouble](
-  override val backingSeq: DataArray[Double1, R]
+  backingSeq: DataArray[Double1, R]
 ) extends BaseVec3d[R](backingSeq, 0, 3) with DataArray[Vec3d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
@@ -91,7 +91,7 @@ private[buffer] final class ArrayVec3d[+R <: ReadableDouble](
 }
 
 private[buffer] final class BufferVec3d[+R <: ReadableDouble](
-  override val backingSeq: DataBuffer[Double1, R]
+  backingSeq: DataBuffer[Double1, R]
 ) extends BaseVec3d[R](backingSeq, 0, 3) with DataBuffer[Vec3d, R] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
@@ -99,7 +99,7 @@ private[buffer] final class BufferVec3d[+R <: ReadableDouble](
 }
 
 private[buffer] final class ViewVec3d[+R <: ReadableDouble](
-  override val backingSeq: DataBuffer[Double1, R],
+  backingSeq: DataBuffer[Double1, R],
   offset: Int,
   stride: Int
 ) extends BaseVec3d[R](backingSeq, offset, stride) with DataView[Vec3d, R] {

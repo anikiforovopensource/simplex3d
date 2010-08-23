@@ -32,11 +32,6 @@ package object intm {
   // Implicits
   implicit def imInt(s: Int) = new ExtendedInt(s)
 
-  // Property Implicits
-  implicit def vec2iToPropValue(u: ReadVec2i) :PropertyValue[ReadVec2i] = Vec2i(u)
-  implicit def vec3iToPropValue(u: ReadVec3i) :PropertyValue[ReadVec3i] = Vec3i(u)
-  implicit def vec4iToPropValue(u: ReadVec4i) :PropertyValue[ReadVec4i] = Vec4i(u)
-
   // In and Out aliases
   type inVec2i = ReadVec2i
   type outVec2i = Vec2i with Implicits[Off]

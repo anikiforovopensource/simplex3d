@@ -22,7 +22,6 @@ package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
@@ -188,7 +187,7 @@ object ConstVec3d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3d private[math] (
   cx: Double, cy: Double, cz: Double
-) extends ReadVec3d with PropertyObject[ReadVec3d] with Implicits[On] with Composite
+) extends ReadVec3d with Implicits[On] with Composite
 {
   type Element = ReadVec3d
   type Component = Double1
@@ -238,10 +237,8 @@ final class Vec3d private[math] (
 
   def *=(m: inMat3d) { this := m.transposeMul(this) }
 
-  def cloneValue() = ConstVec3d(this)
-  def asReadInstance() :ReadVec3d = this /*asReadInstance*/
   override def clone() = Vec3d(this)
-  override def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+  def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
 
   def update(i: Int, s: Double) {
     i match {

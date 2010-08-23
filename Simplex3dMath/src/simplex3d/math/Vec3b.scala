@@ -22,7 +22,6 @@ package simplex3d.math
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 
 
 /** The <code>ReadVec3b</code> class represents Boolean 3-dimensional vectors,
@@ -295,7 +294,7 @@ object ConstVec3b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with PropertyObject[ReadVec3b] with Implicits[On]
+extends ReadVec3b with Implicits[On]
 {
   px = cx; py = cy; pz = cz
 
@@ -328,14 +327,12 @@ extends ReadVec3b with PropertyObject[ReadVec3b] with Implicits[On]
    */
   override def p_=(s: Boolean) { z = s }
 
-  def cloneValue() = ConstVec3b(this)
-  def asReadInstance() :ReadVec3b = this /*asReadInstance*/
   override def clone() = Vec3b(this)
 
   /** Set vector components to values from another vector.
    * @param u 3-dimensional Boolean vector.
    */
-  override def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
+  def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z).

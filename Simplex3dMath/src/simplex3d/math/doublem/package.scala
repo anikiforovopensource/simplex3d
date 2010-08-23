@@ -87,22 +87,6 @@ package object doublem {
     ConstMat4d(m)
 
 
-  // Property Implicits
-  implicit def vec2dToPropValue(u: ReadVec2d) :PropertyValue[ReadVec2d] = Vec2d(u)
-  implicit def vec3dToPropValue(u: ReadVec3d) :PropertyValue[ReadVec3d] = Vec3d(u)
-  implicit def vec4dToPropValue(u: ReadVec4d) :PropertyValue[ReadVec4d] = Vec4d(u)
-  implicit def quat4dToPropValue(u: ReadQuat4d) :PropertyValue[ReadQuat4d] = Quat4d(u)
-  implicit def mat2dToPropValue(u: ReadMat2d) :PropertyValue[ReadMat2d] = Mat2d(u)
-  implicit def mat2x3dToPropValue(u: ReadMat2x3d) :PropertyValue[ReadMat2x3d] = Mat2x3d(u)
-  implicit def mat2x4dToPropValue(u: ReadMat2x4d) :PropertyValue[ReadMat2x4d] = Mat2x4d(u)
-  implicit def mat3x2dToPropValue(u: ReadMat3x2d) :PropertyValue[ReadMat3x2d] = Mat3x2d(u)
-  implicit def mat3dToPropValue(u: ReadMat3d) :PropertyValue[ReadMat3d] = Mat3d(u)
-  implicit def mat3x4dToPropValue(u: ReadMat3x4d) :PropertyValue[ReadMat3x4d] = Mat3x4d(u)
-  implicit def mat4x2dToPropValue(u: ReadMat4x2d) :PropertyValue[ReadMat4x2d] = Mat4x2d(u)
-  implicit def mat4x3dToPropValue(u: ReadMat4x3d) :PropertyValue[ReadMat4x3d] = Mat4x3d(u)
-  implicit def mat4dToPropValue(u: ReadMat4d) :PropertyValue[ReadMat4d] = Mat4d(u)
-
-
   // Matrix aliases
   type ReadMat2x2d = ReadMat2d
   type ConstMat2x2d = ConstMat2d

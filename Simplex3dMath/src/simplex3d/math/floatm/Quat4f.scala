@@ -22,7 +22,6 @@ package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -162,8 +161,7 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f
-  with PropertyObject[ReadQuat4f] with Implicits[On] with Composite
+) extends ReadQuat4f with Implicits[On] with Composite
 {
   type Element = ReadQuat4f
   type Component = Float1
@@ -193,10 +191,8 @@ final class Quat4f private[math] (
     a = na; b = nb; c = nc
   }
 
-  def cloneValue() = ConstQuat4f(this)
-  def asReadInstance() :ReadQuat4f = this /*asReadInstance*/
   override def clone() = Quat4f(this)
-  override def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
+  def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Float) {
     i match {

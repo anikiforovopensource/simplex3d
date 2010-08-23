@@ -22,7 +22,6 @@ package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -161,8 +160,7 @@ object ConstQuat4d {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends ReadQuat4d
-  with PropertyObject[ReadQuat4d] with Implicits[On] with Composite
+) extends ReadQuat4d with Implicits[On] with Composite
 {
   type Element = ReadQuat4d
   type Component = Double1
@@ -191,10 +189,8 @@ final class Quat4d private[math] (
     a = na; b = nb; c = nc
   }
 
-  def cloneValue() = ConstQuat4d(this)
-  def asReadInstance() :ReadQuat4d = this /*asReadInstance*/
   override def clone() = Quat4d(this)
-  override def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
+  def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Double) {
     i match {

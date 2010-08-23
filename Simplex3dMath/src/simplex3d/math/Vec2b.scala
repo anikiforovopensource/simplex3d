@@ -22,7 +22,6 @@ package simplex3d.math
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 
 
 /** The <code>ReadVec2b</code> class represents Boolean 2-dimensional vectors,
@@ -257,7 +256,7 @@ object ConstVec2b {
  */
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with PropertyObject[ReadVec2b] with Implicits[On]
+extends ReadVec2b with Implicits[On]
 {
   px = cx; py = cy
 
@@ -281,14 +280,12 @@ extends ReadVec2b with PropertyObject[ReadVec2b] with Implicits[On]
    */
   override def t_=(s: Boolean) { y = s }
 
-  def cloneValue() = ConstVec2b(this)
-  def asReadInstance() :ReadVec2b = this /*asReadInstance*/
   override def clone() = Vec2b(this)
 
   /** Set vector components to values from another vector.
    * @param u 2-dimensional Boolean vector.
    */
-  override def :=(u: inVec2b) { x = u.x; y = u.y }
+  def :=(u: inVec2b) { x = u.x; y = u.y }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y).

@@ -22,7 +22,6 @@ package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -253,8 +252,7 @@ object ConstMat2f {
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends ReadMat2f
-  with PropertyObject[ReadMat2f] with Implicits[On] with Composite
+) extends ReadMat2f with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -307,11 +305,9 @@ final class Mat2f private[math] (
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def cloneValue() = ConstMat2f(this)
-  def asReadInstance() :ReadMat2f = this /*asReadInstance*/
   override def clone() = Mat2f(this)
   
-  override def :=(m: inMat2f) {
+  def :=(m: inMat2f) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }

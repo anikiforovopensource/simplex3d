@@ -22,7 +22,6 @@ package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 
@@ -394,8 +393,7 @@ final class Mat4f private[math] (
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends ReadMat4f
-  with PropertyObject[ReadMat4f] with Implicits[On] with Composite
+) extends ReadMat4f with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -490,11 +488,9 @@ final class Mat4f private[math] (
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
   }
 
-  def cloneValue() = ConstMat4f(this)
-  def asReadInstance() :ReadMat4f = this /*asReadInstance*/
   override def clone() = Mat4f(this)
   
-  override def :=(m: inMat4f) {
+  def :=(m: inMat4f) {
     m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
     m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
     m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32;

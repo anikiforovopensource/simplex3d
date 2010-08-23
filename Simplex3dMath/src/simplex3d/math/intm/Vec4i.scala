@@ -22,7 +22,6 @@ package simplex3d.math.intm
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
@@ -248,7 +247,7 @@ object ConstVec4i {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4i private[math] (
   cx: Int, cy: Int, cz: Int, cw: Int
-) extends ReadVec4i with PropertyObject[ReadVec4i] with Implicits[On] with Composite
+) extends ReadVec4i with Implicits[On] with Composite
 {
   type Element = ReadVec4i
   type Component = Int1
@@ -320,10 +319,8 @@ final class Vec4i private[math] (
   def |=(u: inVec4i) = { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
   def ^=(u: inVec4i) = { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
 
-  def cloneValue() = ConstVec4i(this)
-  def asReadInstance() :ReadVec4i = this /*asReadInstance*/
   override def clone() = Vec4i(this)
-  override def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   def update(i: Int, s: Int) {
     i match {

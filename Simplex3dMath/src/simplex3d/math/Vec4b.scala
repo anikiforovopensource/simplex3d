@@ -22,7 +22,6 @@ package simplex3d.math
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 
 
 /** The <code>ReadVec4b</code> class represents Boolean 4-dimensional vectors,
@@ -380,7 +379,7 @@ object ConstVec4b {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
-) extends ReadVec4b with PropertyObject[ReadVec4b] with Implicits[On]
+) extends ReadVec4b with Implicits[On]
 {
   px = cx; py = cy; pz = cz; pw = cw
 
@@ -422,14 +421,12 @@ final class Vec4b private[math] (
    */
   override def q_=(s: Boolean) { w = s }
 
-  def cloneValue() = ConstVec4b(this)
-  def asReadInstance() :ReadVec4b = this /*asReadInstance*/
   override def clone() = Vec4b(this)
 
   /** Set vector components to values from another vector.
    * @param u 4-dimensional Boolean vector.
    */
-  override def :=(u: inVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(u: inVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   /** Set a component using sequence notation.
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).

@@ -28,11 +28,6 @@ import simplex3d.math.integration.property._
  * @author Aleksey Nikiforov (lex)
  */
 package object math {
-
-  // Property Implicits
-  implicit def vec2bToPropValue(u: ReadVec2b) :PropertyValue[ReadVec2b] = Vec2b(u)
-  implicit def vec3bToPropValue(u: ReadVec3b) :PropertyValue[ReadVec3b] = Vec3b(u)
-  implicit def vec4bToPropValue(u: ReadVec4b) :PropertyValue[ReadVec4b] = Vec4b(u)
   
   // In and Out aliases
 

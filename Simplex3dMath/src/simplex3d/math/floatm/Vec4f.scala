@@ -22,7 +22,6 @@ package simplex3d.math.floatm
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 
 
@@ -235,7 +234,7 @@ object ConstVec4f {
 @serializable @SerialVersionUID(5359695191257934190L)
 final class Vec4f private[math] (
   cx: Float, cy: Float, cz: Float, cw: Float
-) extends ReadVec4f with PropertyObject[ReadVec4f] with Implicits[On] with Composite
+) extends ReadVec4f with Implicits[On] with Composite
 {
   type Element = ReadVec4f
   type Component = Float1
@@ -294,10 +293,8 @@ final class Vec4f private[math] (
 
   def *=(m: inMat4f) { this := m.transposeMul(this) }
 
-  def cloneValue() = ConstVec4f(this)
-  def asReadInstance() :ReadVec4f = this /*asReadInstance*/
   override def clone() = Vec4f(this)
-  override def :=(u: inVec4f) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(u: inVec4f) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   def update(i: Int, s: Float) {
     i match {

@@ -22,7 +22,6 @@ package simplex3d.math.doublem
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math.integration.property._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -253,8 +252,7 @@ object ConstMat2d {
 final class Mat2d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double
-) extends ReadMat2d
-  with PropertyObject[ReadMat2d] with Implicits[On] with Composite
+) extends ReadMat2d with Implicits[On] with Composite
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -307,11 +305,9 @@ final class Mat2d private[math] (
     m01 /= m.m01; m11 /= m.m11
   }
 
-  def cloneValue() = ConstMat2d(this)
-  def asReadInstance() :ReadMat2d = this /*asReadInstance*/
   override def clone() = Mat2d(this)
   
-  override def :=(m: inMat2d) {
+  def :=(m: inMat2d) {
     m00 = m.m00; m10 = m.m10;
     m01 = m.m01; m11 = m.m11
   }

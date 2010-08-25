@@ -21,7 +21,6 @@
 package simplex3d.math
 
 import simplex3d.math.doublem.DoubleMath._
-import simplex3d.math.integration.property._
 
 
 /**

@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.integration.property._
-
 
 /** <code>MathObject</code> is a superclass of all the vectors, quaternions,
  * and matrices.

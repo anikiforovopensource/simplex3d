@@ -21,7 +21,6 @@
 package simplex3d
 
 import java.nio._
-import simplex3d.math.integration.property._
 
 
 /**

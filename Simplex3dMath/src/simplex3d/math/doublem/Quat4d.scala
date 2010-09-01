@@ -99,13 +99,25 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
     quaternion(angle, normalize(axis))*this
   }
   final def rotateX(angle: Double) :Quat4d = {
-    quaternion(angle, Vec3d.UnitX)*this
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qb = sin(halfAngle)
+
+    new Quat4d(qa*a - qb*b, qa*b + qb*a, qa*c - qb*d, qa*d + qb*c)
   }
   final def rotateY(angle: Double) :Quat4d = {
-    quaternion(angle, Vec3d.UnitY)*this
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qc = sin(halfAngle)
+
+    new Quat4d(qa*a - qc*c, qa*b + qc*d, qa*c + qc*a, qa*d - qc*b)
   }
   final def rotateZ(angle: Double) :Quat4d = {
-    quaternion(angle, Vec3d.UnitZ)*this
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qd = sin(halfAngle)
+
+    new Quat4d(qa*a - qd*d, qa*b - qd*c, qa*c + qd*b, qa*d + qd*a)
   }
 
   final def rotateVector(u: inVec3d) :Vec3d =

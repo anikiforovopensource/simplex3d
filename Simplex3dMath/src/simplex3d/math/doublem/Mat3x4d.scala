@@ -269,13 +269,37 @@ extends ProtectedMat3x4d[Double]
   }
 
   final def rotateX(angle: Double) :Mat3x4d = {
-    concatenate(rotationMat(angle, Vec3d.UnitX))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      m00, cosA*m10 - sinA*m20, sinA*m10 + cosA*m20,
+      m01, cosA*m11 - sinA*m21, sinA*m11 + cosA*m21,
+      m02, cosA*m12 - sinA*m22, sinA*m12 + cosA*m22,
+      m03, cosA*m13 - sinA*m23, sinA*m13 + cosA*m23
+    )
   }
   final def rotateY(angle: Double) :Mat3x4d = {
-    concatenate(rotationMat(angle, Vec3d.UnitY))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      cosA*m00 + sinA*m20, m10, cosA*m20 - sinA*m00,
+      cosA*m01 + sinA*m21, m11, cosA*m21 - sinA*m01,
+      cosA*m02 + sinA*m22, m12, cosA*m22 - sinA*m02,
+      cosA*m03 + sinA*m23, m13, cosA*m23 - sinA*m03
+    )
   }
   final def rotateZ(angle: Double) :Mat3x4d = {
-    concatenate(rotationMat(angle, Vec3d.UnitZ))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      cosA*m00 - sinA*m10, sinA*m00 + cosA*m10, m20,
+      cosA*m01 - sinA*m11, sinA*m01 + cosA*m11, m21,
+      cosA*m02 - sinA*m12, sinA*m02 + cosA*m12, m22,
+      cosA*m03 - sinA*m13, sinA*m03 + cosA*m13, m23
+    )
   }
 
   final def translate(u: inVec3d) :Mat3x4d = new Mat3x4d(
@@ -646,13 +670,37 @@ object Mat3x4d {
   }
 
   def rotateX(angle: Double) :Mat3x4d = {
-    Mat3x4d(rotationMat(angle, Vec3d.UnitX))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      1, 0, 0,
+      0, cosA, sinA,
+      0, -sinA, cosA,
+      0, 0, 0
+    )
   }
   def rotateY(angle: Double) :Mat3x4d = {
-    Mat3x4d(rotationMat(angle, Vec3d.UnitY))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      cosA, 0, -sinA,
+      0, 1, 0,
+      sinA, 0, cosA,
+      0, 0, 0
+    )
   }
   def rotateZ(angle: Double) :Mat3x4d = {
-    Mat3x4d(rotationMat(angle, Vec3d.UnitZ))
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    new Mat3x4d(
+      cosA, sinA, 0,
+      -sinA, cosA, 0,
+      0, 0, 1,
+      0, 0, 0
+    )
   }
 
   def translate(u: inVec3d) :Mat3x4d = {

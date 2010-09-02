@@ -111,7 +111,7 @@ package object buffer extends UnsignedImplicits {
   ) = d.asInstanceOf[IndexBuffer[R]]
 
   
-  def allocateByteBuffer(size: Int) = {
+  def allocateDirectBuffer(size: Int) = {
     val direct = ByteBuffer.allocateDirect(size)
     direct.order(ByteOrder.nativeOrder())
   }
@@ -509,7 +509,7 @@ package object buffer extends UnsignedImplicits {
     val byteStride = totalWidth + pad
 
     // generate
-    val byteBuffer = allocateByteBuffer(byteStride*size)
+    val byteBuffer = allocateDirectBuffer(byteStride*size)
     val result = new Array[DataView[_, _]](dataSeqs.length)
     var byteOffset = 0
     i = 0; while (i < dataSeqs.length) {

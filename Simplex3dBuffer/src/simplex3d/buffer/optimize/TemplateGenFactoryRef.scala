@@ -114,12 +114,12 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
       testDataBuffer(factory.mkDataBuffer(1))
       testDataBuffer(
-        factory.mkDataBuffer(allocateByteBuffer(fallbackFactory.bytesPerRawComponent))
+        factory.mkDataBuffer(allocateDirectBuffer(fallbackFactory.bytesPerRawComponent))
       )
 
       testDataView(
         factory.mkDataView(
-          allocateByteBuffer(fallbackFactory.bytesPerRawComponent),
+          allocateDirectBuffer(fallbackFactory.bytesPerRawComponent),
           0, fallbackFactory.components
         )
       )
@@ -132,7 +132,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
       testDataSeq(template, factory.mkDataBuffer(template.size))
       testDataSeq(template, factory.mkDataBuffer(
-          allocateByteBuffer(
+          allocateDirectBuffer(
             template.size*template.components*template.bytesPerRawComponent
           )
       ))
@@ -140,7 +140,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
       val offset = 3
       val stride = 5
       testDataSeq(template, factory.mkDataView(
-          allocateByteBuffer(
+          allocateDirectBuffer(
             (offset + template.size*stride)*template.bytesPerRawComponent
           ),
           offset,
@@ -171,7 +171,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
     assert(testing.isInstanceOf[DataView[_, _]])
     
     val fb = fallbackFactory.mkDataView(
-      allocateByteBuffer(0), 0, fallbackFactory.stride
+      allocateDirectBuffer(0), 0, fallbackFactory.stride
     )
     assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }

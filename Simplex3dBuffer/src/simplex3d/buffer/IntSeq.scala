@@ -23,7 +23,7 @@ package simplex3d.buffer
 import java.nio._
 import scala.reflect.Manifest
 import simplex3d.math._
-import simplex3d.buffer.{allocateByteBuffer => alloc}
+import simplex3d.buffer.{allocateDirectBuffer => alloc}
 import simplex3d.buffer.Util._
 
 

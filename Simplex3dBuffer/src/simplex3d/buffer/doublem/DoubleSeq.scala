@@ -24,7 +24,7 @@ import java.nio._
 import scala.reflect.Manifest
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
-import simplex3d.buffer.{allocateByteBuffer => alloc, _}
+import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.Util._
 import simplex3d.buffer.HalfFloatUtil.{
   doubleToHalfFloat => toHalfFloat, doubleFromHalfFloat => fromHalfFloat
@@ -55,7 +55,7 @@ private[doublem] object Shared {
     else int(x - 0.5)
   }
 
-  final def uround(x: Double) :Int = {
+  final def lround(x: Double) :Int = {
     if (x >= 0) int(long(x + 0.5))
     else int(long(x - 0.5))
   }
@@ -563,7 +563,7 @@ private[buffer] final class ArrayDouble1UInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Double = float((long(rarray(i)) & 0xFFFFFFFFL)*fromUInt)
-  def update(i: Int, v: Double) :Unit = warray(i) = uround(clamp(v, 0, 1)*toUInt)
+  def update(i: Int, v: Double) :Unit = warray(i) = lround(clamp(v, 0, 1)*toUInt)
 }
 
 private[buffer] final class BufferDouble1UInt(
@@ -582,7 +582,7 @@ private[buffer] final class BufferDouble1UInt(
   )
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
-    uround(clamp(v, 0, 1)*toUInt)
+    lround(clamp(v, 0, 1)*toUInt)
   )
 }
 
@@ -606,7 +606,7 @@ private[buffer] final class ViewDouble1UInt(
   )
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
-    uround(clamp(v, 0, 1)*toUInt)
+    lround(clamp(v, 0, 1)*toUInt)
   )
 }
 

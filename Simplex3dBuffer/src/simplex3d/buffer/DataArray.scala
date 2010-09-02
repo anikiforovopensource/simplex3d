@@ -30,13 +30,9 @@ import scala.annotation.unchecked._
 trait ReadDataArray[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
   type BackingSeqType <: ReadDataArray[E#Component, R]
+  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataArray[E, R]]
 
-  protected def mkReadOnlyInstance() :ReadDataArray[E, R]
-  def asReadOnlySeq() :ReadDataArray[E, R] = {
-    asReadOnlySeqImpl().asInstanceOf[ReadDataArray[E, R]]
-  }
-
-  final def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
+  final def sharesStoreObject(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
     seq match {
       case a: ReadDataArray[_, _] =>
         sharedArray eq a.sharedArray

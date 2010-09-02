@@ -24,7 +24,7 @@ import java.nio._
 import scala.reflect.Manifest
 import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
-import simplex3d.buffer.{allocateByteBuffer => alloc, _}
+import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.Util._
 import simplex3d.buffer.HalfFloatUtil.{
   floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat
@@ -47,17 +47,17 @@ private[floatm] object Shared {
   final val toUByte = 255f
   final val toSShort = 32767f
   final val toUShort = 65535f
-  final val toSInt = 2147483647f
-  final val toUInt = 4294967295f
+  final val toSInt = 2147483647d
+  final val toUInt = 4294967295d
 
   final def iround(x: Float) :Int = {
     if (x >= 0) int(x + 0.5f)
     else int(x - 0.5f)
   }
 
-  final def uround(x: Float) :Int = {
-    if (x >= 0) int(long(x + 0.5f))
-    else int(long(x - 0.5f))
+  final def lround(x: Double) :Int = {
+    if (x >= 0) int(long(x + 0.5))
+    else int(long(x - 0.5))
   }
 }
 import Shared._
@@ -474,7 +474,7 @@ private[buffer] final class ArrayFloat1SInt(
     if (v < -2147483647) -1 else float(v*fromSInt)
   }
   def update(i: Int, v: Float) :Unit =
-    warray(i) = iround(clamp(v, -1, 1)*toSInt)
+    warray(i) = lround(clamp(v, -1, 1)*toSInt)
 }
 
 private[buffer] final class BufferFloat1SInt(
@@ -494,7 +494,7 @@ private[buffer] final class BufferFloat1SInt(
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    iround(clamp(v, -1, 1)*toSInt)
+    lround(clamp(v, -1, 1)*toSInt)
   )
 }
 
@@ -519,7 +519,7 @@ private[buffer] final class ViewFloat1SInt(
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    iround(clamp(v, -1, 1)*toSInt)
+    lround(clamp(v, -1, 1)*toSInt)
   )
 }
 
@@ -563,7 +563,7 @@ private[buffer] final class ArrayFloat1UInt(
   def normalized: Boolean = true
 
   def apply(i: Int) :Float = float((long(rarray(i)) & 0xFFFFFFFFL)*fromUInt)
-  def update(i: Int, v: Float) :Unit = warray(i) = uround(clamp(v, 0, 1)*toUInt)
+  def update(i: Int, v: Float) :Unit = warray(i) = lround(clamp(v, 0, 1)*toUInt)
 }
 
 private[buffer] final class BufferFloat1UInt(
@@ -582,7 +582,7 @@ private[buffer] final class BufferFloat1UInt(
   )
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    uround(clamp(v, 0, 1)*toUInt)
+    lround(clamp(v, 0, 1)*toUInt)
   )
 }
 
@@ -606,7 +606,7 @@ private[buffer] final class ViewFloat1UInt(
   )
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    uround(clamp(v, 0, 1)*toUInt)
+    lround(clamp(v, 0, 1)*toUInt)
   )
 }
 

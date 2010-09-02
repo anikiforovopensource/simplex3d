@@ -21,6 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
+import scala.annotation.unchecked._
 
 
 /**
@@ -28,10 +29,7 @@ import java.nio._
  */
 trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
 extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
-  protected def mkReadOnlyInstance() :ReadDataBuffer[E, R]
-  override def asReadOnlySeq() :ReadDataBuffer[E, R] = {
-    asReadOnlySeqImpl().asInstanceOf[ReadDataBuffer[E, R]]
-  }
+  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataBuffer[E, R]]
 }
 
 trait DataBuffer[E <: MetaElement, +R <: RawData]

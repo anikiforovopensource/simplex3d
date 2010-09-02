@@ -99,7 +99,7 @@ private[optimize] object Util {
   }
 
 
-  val TestData = allocateByteBuffer(20*4);
+  val TestData = allocateDirectBuffer(20*4);
   {
     /* Positive and negative Int, Short, Byte, Float and Double;
      * Float and Double with absolute value less than 1.

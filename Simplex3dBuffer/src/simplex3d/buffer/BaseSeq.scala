@@ -35,7 +35,7 @@ private[buffer] abstract class ReadBaseSeq[
 ](
   shared: AnyRef,
   private[buffer] final val buffer: R#BufferType,
-  final val backing: AnyRef, final val offset: Int, final val stride: Int
+  backing: AnyRef, final val offset: Int, final val stride: Int
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
@@ -63,7 +63,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   final def byteStride = stride*bytesPerRawComponent
 
   def asReadOnlyBuffer() :R#BufferType
-  def sharesMemory(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
+  def sharesStoreObject(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
 
   private[buffer] def mkBindingBuffer(): Buffer
   private final val bindingBuffer: Buffer = mkBindingBuffer()
@@ -94,10 +94,10 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   final def isReadOnly(): Boolean = buffer.isReadOnly()
 
   protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
-  private[buffer] final def asReadOnlySeqImpl() :AnyRef = {
+  def asReadOnlySeq() :ReadDataSeq[E, R]
+  private[buffer] final def toReadOnly() :AnyRef = {
     if (isReadOnly) this else mkReadOnlyInstance()
   }
-  def asReadOnlySeq() :ReadDataSeq[E, R]
 
 
   final def mkDataArray(

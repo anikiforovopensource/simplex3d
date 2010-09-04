@@ -22,7 +22,6 @@ package simplex3d.buffer.floatm
 
 import java.nio._
 import scala.reflect.Manifest
-import simplex3d.math._
 import simplex3d.math.floatm.FloatMath._
 import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.Util._
@@ -51,13 +50,13 @@ private[floatm] object Shared {
   final val toUInt = 4294967295d
 
   final def iround(x: Float) :Int = {
-    if (x >= 0) int(x + 0.5f)
-    else int(x - 0.5f)
+    if (x >= 0) (x + 0.5f).toInt
+    else (x - 0.5f).toInt
   }
 
   final def lround(x: Double) :Int = {
-    if (x >= 0) int(long(x + 0.5))
-    else int(long(x - 0.5))
+    if (x >= 0) ((x + 0.5).toLong).toInt
+    else ((x - 0.5).toLong).toInt
   }
 }
 import Shared._
@@ -77,6 +76,9 @@ private[buffer] sealed abstract class BaseFloat1[+R <: ReadableFloat](
 private[buffer] sealed abstract class SeqFloat1SByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[SByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SByte
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -108,15 +110,12 @@ private[buffer] final class ArrayFloat1SByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = rarray(i)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else (v*fromSByte).toFloat
   }
   def update(i: Int, v: Float) :Unit =
-    warray(i) = byte(iround(clamp(v, -1, 1)*toSByte))
+    warray(i) = (iround(clamp(v, -1, 1)*toSByte)).toByte
 }
 
 private[buffer] final class BufferFloat1SByte(
@@ -127,16 +126,13 @@ private[buffer] final class BufferFloat1SByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = buff.get(i)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else (v*fromSByte).toFloat
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    byte(iround(clamp(v, -1, 1)*toSByte))
+    (iround(clamp(v, -1, 1)*toSByte)).toByte
   )
 }
 
@@ -152,16 +148,13 @@ private[buffer] final class ViewFloat1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = buff.get(offset + i*stride)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else (v*fromSByte).toFloat
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    byte(iround(clamp(v, -1, 1)*toSByte))
+    (iround(clamp(v, -1, 1)*toSByte)).toByte
   )
 }
 
@@ -170,6 +163,9 @@ private[buffer] final class ViewFloat1SByte(
 private[buffer] sealed abstract class SeqFloat1UByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[UByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UByte
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -201,12 +197,9 @@ private[buffer] final class ArrayFloat1UByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float((rarray(i) & 0xFF)*fromUByte)
+  def apply(i: Int) :Float = ((rarray(i) & 0xFF)*fromUByte).toFloat
   def update(i: Int, v: Float) :Unit =
-    warray(i) = byte(iround(clamp(v, 0, 1)*toUByte))
+    warray(i) = (iround(clamp(v, 0, 1)*toUByte)).toByte
 }
 
 private[buffer] final class BufferFloat1UByte(
@@ -217,13 +210,10 @@ private[buffer] final class BufferFloat1UByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float((buff.get(i) & 0xFF)*fromUByte)
+  def apply(i: Int) :Float = ((buff.get(i) & 0xFF)*fromUByte).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    byte(iround(clamp(v, 0, 1)*toUByte))
+    (iround(clamp(v, 0, 1)*toUByte)).toByte
   )
 }
 
@@ -239,15 +229,12 @@ private[buffer] final class ViewFloat1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(
+  def apply(i: Int) :Float = (
     (buff.get(offset + i*stride) & 0xFF)*fromUByte
-  )
+  ).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    byte(iround(clamp(v, 0, 1)*toUByte))
+    (iround(clamp(v, 0, 1)*toUByte)).toByte
   )
 }
 
@@ -256,6 +243,9 @@ private[buffer] final class ViewFloat1UByte(
 private[buffer] sealed abstract class SeqFloat1SShort(
   shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[SShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SShort
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -289,15 +279,12 @@ private[buffer] final class ArrayFloat1SShort(
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = rarray(i)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else (v*fromSShort).toFloat
   }
   def update(i: Int, v: Float) :Unit =
-    warray(i) = short(iround(clamp(v, -1, 1)*toSShort))
+    warray(i) = (iround(clamp(v, -1, 1)*toSShort)).toShort
 }
 
 private[buffer] final class BufferFloat1SShort(
@@ -308,16 +295,13 @@ private[buffer] final class BufferFloat1SShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = buff.get(i)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else (v*fromSShort).toFloat
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    short(iround(clamp(v, -1, 1)*toSShort))
+    (iround(clamp(v, -1, 1)*toSShort)).toShort
   )
 }
 
@@ -333,16 +317,13 @@ private[buffer] final class ViewFloat1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Float = {
     val v = buff.get(offset + i*stride)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else (v*fromSShort).toFloat
   }
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    short(iround(clamp(v, -1, 1)*toSShort))
+    (iround(clamp(v, -1, 1)*toSShort)).toShort
   )
 }
 
@@ -351,6 +332,9 @@ private[buffer] final class ViewFloat1SShort(
 private[buffer] sealed abstract class SeqFloat1UShort(
   shared: AnyRef, buff: CharBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[UShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UShort
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -382,12 +366,9 @@ private[buffer] final class ArrayFloat1UShort(
   private[buffer] override def mkBindingBuffer() = CharBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(rarray(i)*fromUShort)
+  def apply(i: Int) :Float = (rarray(i)*fromUShort).toFloat
   def update(i: Int, v: Float) =
-    warray(i) = iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    warray(i) = iround(clamp(v, 0, 1)*toUShort).toChar
 }
 
 private[buffer] final class BufferFloat1UShort(
@@ -398,13 +379,10 @@ private[buffer] final class BufferFloat1UShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(buff.get(i)*fromUShort)
+  def apply(i: Int) :Float = (buff.get(i)*fromUShort).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
-    iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    iround(clamp(v, 0, 1)*toUShort).toChar
   )
 }
 
@@ -420,13 +398,10 @@ private[buffer] final class ViewFloat1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(buff.get(offset + i*stride)*fromUShort)
+  def apply(i: Int) :Float = (buff.get(offset + i*stride)*fromUShort).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
-    iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    iround(clamp(v, 0, 1)*toUShort).toChar
   )
 }
 
@@ -435,6 +410,9 @@ private[buffer] final class ViewFloat1UShort(
 private[buffer] sealed abstract class SeqFloat1SInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[SInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SInt
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -466,13 +444,7 @@ private[buffer] final class ArrayFloat1SInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = {
-    val v = rarray(i)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Float = (rarray(i)*fromSInt).toFloat
   def update(i: Int, v: Float) :Unit =
     warray(i) = lround(clamp(v, -1, 1)*toSInt)
 }
@@ -485,13 +457,7 @@ private[buffer] final class BufferFloat1SInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = {
-    val v = buff.get(i)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Float = (buff.get(i)*fromSInt).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
     lround(clamp(v, -1, 1)*toSInt)
@@ -510,13 +476,7 @@ private[buffer] final class ViewFloat1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = {
-    val v = buff.get(offset + i*stride)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Float = (buff.get(offset + i*stride)*fromSInt).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     lround(clamp(v, -1, 1)*toSInt)
@@ -528,6 +488,9 @@ private[buffer] final class ViewFloat1SInt(
 private[buffer] sealed abstract class SeqFloat1UInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[UInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UInt
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -559,10 +522,7 @@ private[buffer] final class ArrayFloat1UInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float((long(rarray(i)) & 0xFFFFFFFFL)*fromUInt)
+  def apply(i: Int) :Float = ((rarray(i).toLong & 0xFFFFFFFFL)*fromUInt).toFloat
   def update(i: Int, v: Float) :Unit = warray(i) = lround(clamp(v, 0, 1)*toUInt)
 }
 
@@ -574,12 +534,9 @@ private[buffer] final class BufferFloat1UInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(
-    (long(buff.get(i)) & 0xFFFFFFFFL)*fromUInt
-  )
+  def apply(i: Int) :Float = (
+    (buff.get(i).toLong & 0xFFFFFFFFL)*fromUInt
+  ).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     i,
     lround(clamp(v, 0, 1)*toUInt)
@@ -598,12 +555,9 @@ private[buffer] final class ViewFloat1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Float = float(
-    (long(buff.get(offset + i*stride)) & 0xFFFFFFFFL)*fromUInt
-  )
+  def apply(i: Int) :Float = (
+    (buff.get(offset + i*stride).toLong & 0xFFFFFFFFL)*fromUInt
+  ).toFloat
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
     lround(clamp(v, 0, 1)*toUInt)
@@ -615,6 +569,9 @@ private[buffer] final class ViewFloat1UInt(
 private[buffer] sealed abstract class SeqFloat1HalfFloat(
   shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[HalfFloat](shared, buff, backing, offset, stride) {
+  final def rawType: Int = RawData.HalfFloat
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -648,9 +605,6 @@ private[buffer] final class ArrayFloat1HalfFloat(
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1HalfFloat(rarray, null, buffer.asReadOnlyBuffer())
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
-
   def apply(i: Int) :Float = fromHalfFloat(rarray(i))
   def update(i: Int, v: Float) :Unit = warray(i) = toHalfFloat(v)
 }
@@ -662,9 +616,6 @@ private[buffer] final class BufferFloat1HalfFloat(
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1HalfFloat(
     shared, buffer.asReadOnlyBuffer()
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
 
   def apply(i: Int) :Float = fromHalfFloat(buff.get(i))
   def update(i: Int, v: Float) :Unit = buff.put(i, toHalfFloat(v))
@@ -682,9 +633,6 @@ private[buffer] final class ViewFloat1HalfFloat(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
-
   def apply(i: Int) :Float = fromHalfFloat(buff.get(offset + i*stride))
   def update(i: Int, v: Float) :Unit = buff.put(
     offset + i*stride,
@@ -697,6 +645,9 @@ private[buffer] final class ViewFloat1HalfFloat(
 private[buffer] sealed abstract class SeqFloat1RawFloat(
   shared: AnyRef, buff: FloatBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseFloat1[RawFloat](shared, buff, backing, offset, stride) {
+  final def rawType: Int = RawData.RawFloat
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
   
@@ -730,9 +681,6 @@ private[buffer] final class ArrayFloat1RawFloat(
   private[buffer] override def mkBindingBuffer() = FloatBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1RawFloat(rarray, null, buffer.asReadOnlyBuffer())
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
-
   def apply(i: Int) :Float = rarray(i)
   def update(i: Int, v: Float) :Unit = warray(i) = v
 }
@@ -744,9 +692,6 @@ private[buffer] final class BufferFloat1RawFloat(
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1RawFloat(
     shared, buffer.asReadOnlyBuffer()
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
 
   def apply(i: Int) :Float = buff.get(i)
   def update(i: Int, v: Float) :Unit = buff.put(i, v)
@@ -763,9 +708,6 @@ private[buffer] final class ViewFloat1RawFloat(
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1RawFloat(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
 
   def apply(i: Int) :Float = buff.get(offset + i*stride)
   def update(i: Int, v: Float) :Unit = buff.put(offset + i*stride, v)

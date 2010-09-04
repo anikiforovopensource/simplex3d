@@ -22,7 +22,6 @@ package simplex3d.buffer.doublem
 
 import java.nio._
 import scala.reflect.Manifest
-import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.Util._
@@ -51,13 +50,13 @@ private[doublem] object Shared {
   final val toUInt = 4294967295d
 
   final def iround(x: Double) :Int = {
-    if (x >= 0) int(x + 0.5)
-    else int(x - 0.5)
+    if (x >= 0) (x + 0.5).toInt
+    else (x - 0.5).toInt
   }
 
   final def lround(x: Double) :Int = {
-    if (x >= 0) int(long(x + 0.5))
-    else int(long(x - 0.5))
+    if (x >= 0) ((x + 0.5).toLong).toInt
+    else ((x - 0.5).toLong).toInt
   }
 }
 import Shared._
@@ -77,6 +76,9 @@ private[buffer] sealed abstract class BaseDouble1[+R <: ReadableDouble](
 private[buffer] sealed abstract class SeqDouble1SByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[SByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SByte
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -108,15 +110,12 @@ private[buffer] final class ArrayDouble1SByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = rarray(i)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else v*fromSByte
   }
   def update(i: Int, v: Double) :Unit =
-    warray(i) = byte(iround(clamp(v, -1, 1)*toSByte))
+    warray(i) = (iround(clamp(v, -1, 1)*toSByte)).toByte
 }
 
 private[buffer] final class BufferDouble1SByte(
@@ -127,16 +126,13 @@ private[buffer] final class BufferDouble1SByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = buff.get(i)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else v*fromSByte
   }
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
-    byte(iround(clamp(v, -1, 1)*toSByte))
+    (iround(clamp(v, -1, 1)*toSByte)).toByte
   )
 }
 
@@ -152,16 +148,13 @@ private[buffer] final class ViewDouble1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = buff.get(offset + i*stride)
-    if (v < -127) -1 else float(v*fromSByte)
+    if (v < -127) -1 else v*fromSByte
   }
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
-    byte(iround(clamp(v, -1, 1)*toSByte))
+    (iround(clamp(v, -1, 1)*toSByte)).toByte
   )
 }
 
@@ -170,6 +163,9 @@ private[buffer] final class ViewDouble1SByte(
 private[buffer] sealed abstract class SeqDouble1UByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[UByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UByte
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -201,12 +197,9 @@ private[buffer] final class ArrayDouble1UByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float((rarray(i) & 0xFF)*fromUByte)
+  def apply(i: Int) :Double = (rarray(i) & 0xFF)*fromUByte
   def update(i: Int, v: Double) :Unit =
-    warray(i) = byte(iround(clamp(v, 0, 1)*toUByte))
+    warray(i) = (iround(clamp(v, 0, 1)*toUByte)).toByte
 }
 
 private[buffer] final class BufferDouble1UByte(
@@ -217,13 +210,10 @@ private[buffer] final class BufferDouble1UByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float((buff.get(i) & 0xFF)*fromUByte)
+  def apply(i: Int) :Double = (buff.get(i) & 0xFF)*fromUByte
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
-    byte(iround(clamp(v, 0, 1)*toUByte))
+    (iround(clamp(v, 0, 1)*toUByte)).toByte
   )
 }
 
@@ -239,15 +229,10 @@ private[buffer] final class ViewDouble1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(
-    (buff.get(offset + i*stride) & 0xFF)*fromUByte
-  )
+  def apply(i: Int) :Double = (buff.get(offset + i*stride) & 0xFF)*fromUByte
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
-    byte(iround(clamp(v, 0, 1)*toUByte))
+    (iround(clamp(v, 0, 1)*toUByte)).toByte
   )
 }
 
@@ -256,6 +241,9 @@ private[buffer] final class ViewDouble1UByte(
 private[buffer] sealed abstract class SeqDouble1SShort(
   shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[SShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SShort
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -289,15 +277,12 @@ private[buffer] final class ArrayDouble1SShort(
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = rarray(i)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else v*fromSShort
   }
   def update(i: Int, v: Double) :Unit =
-    warray(i) = short(iround(clamp(v, -1, 1)*toSShort))
+    warray(i) = (iround(clamp(v, -1, 1)*toSShort)).toShort
 }
 
 private[buffer] final class BufferDouble1SShort(
@@ -308,16 +293,13 @@ private[buffer] final class BufferDouble1SShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = buff.get(i)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else v*fromSShort
   }
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
-    short(iround(clamp(v, -1, 1)*toSShort))
+    (iround(clamp(v, -1, 1)*toSShort)).toShort
   )
 }
 
@@ -333,16 +315,13 @@ private[buffer] final class ViewDouble1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = true
-
   def apply(i: Int) :Double = {
     val v = buff.get(offset + i*stride)
-    if (v < -32767) -1 else float(v*fromSShort)
+    if (v < -32767) -1 else v*fromSShort
   }
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
-    short(iround(clamp(v, -1, 1)*toSShort))
+    (iround(clamp(v, -1, 1)*toSShort)).toShort
   )
 }
 
@@ -351,6 +330,9 @@ private[buffer] final class ViewDouble1SShort(
 private[buffer] sealed abstract class SeqDouble1UShort(
   shared: AnyRef, buff: CharBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[UShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UShort
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -382,12 +364,9 @@ private[buffer] final class ArrayDouble1UShort(
   private[buffer] override def mkBindingBuffer() = CharBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(rarray(i)*fromUShort)
+  def apply(i: Int) :Double = rarray(i)*fromUShort
   def update(i: Int, v: Double) =
-    warray(i) = iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    warray(i) = iround(clamp(v, 0, 1)*toUShort).toChar
 }
 
 private[buffer] final class BufferDouble1UShort(
@@ -398,13 +377,10 @@ private[buffer] final class BufferDouble1UShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(buff.get(i)*fromUShort)
+  def apply(i: Int) :Double = buff.get(i)*fromUShort
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
-    iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    iround(clamp(v, 0, 1)*toUShort).toChar
   )
 }
 
@@ -420,13 +396,10 @@ private[buffer] final class ViewDouble1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(buff.get(offset + i*stride)*fromUShort)
+  def apply(i: Int) :Double = buff.get(offset + i*stride)*fromUShort
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
-    iround(clamp(v, 0, 1)*toUShort).asInstanceOf[Char]
+    iround(clamp(v, 0, 1)*toUShort).toChar
   )
 }
 
@@ -435,6 +408,9 @@ private[buffer] final class ViewDouble1UShort(
 private[buffer] sealed abstract class SeqDouble1SInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[SInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SInt
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -466,13 +442,7 @@ private[buffer] final class ArrayDouble1SInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1SInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = {
-    val v = rarray(i)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Double = rarray(i)*fromSInt
   def update(i: Int, v: Double) :Unit =
     warray(i) = iround(clamp(v, -1, 1)*toSInt)
 }
@@ -485,13 +455,7 @@ private[buffer] final class BufferDouble1SInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = {
-    val v = buff.get(i)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Double = buff.get(i)*fromSInt
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
     iround(clamp(v, -1, 1)*toSInt)
@@ -510,13 +474,7 @@ private[buffer] final class ViewDouble1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = {
-    val v = buff.get(offset + i*stride)
-    if (v < -2147483647) -1 else float(v*fromSInt)
-  }
+  def apply(i: Int) :Double = buff.get(offset + i*stride)*fromSInt
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
     iround(clamp(v, -1, 1)*toSInt)
@@ -528,6 +486,9 @@ private[buffer] final class ViewDouble1SInt(
 private[buffer] sealed abstract class SeqDouble1UInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[UInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UInt
+  final def normalized = true
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -559,10 +520,7 @@ private[buffer] final class ArrayDouble1UInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float((long(rarray(i)) & 0xFFFFFFFFL)*fromUInt)
+  def apply(i: Int) :Double = (rarray(i).toLong & 0xFFFFFFFFL)*fromUInt
   def update(i: Int, v: Double) :Unit = warray(i) = lround(clamp(v, 0, 1)*toUInt)
 }
 
@@ -574,12 +532,7 @@ private[buffer] final class BufferDouble1UInt(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(
-    (long(buff.get(i)) & 0xFFFFFFFFL)*fromUInt
-  )
+  def apply(i: Int) :Double = (buff.get(i).toLong & 0xFFFFFFFFL)*fromUInt
   def update(i: Int, v: Double) :Unit = buff.put(
     i,
     lround(clamp(v, 0, 1)*toUInt)
@@ -598,12 +551,7 @@ private[buffer] final class ViewDouble1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = true
-
-  def apply(i: Int) :Double = float(
-    (long(buff.get(offset + i*stride)) & 0xFFFFFFFFL)*fromUInt
-  )
+  def apply(i: Int) :Double = (buff.get(offset + i*stride).toLong & 0xFFFFFFFFL)*fromUInt
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
     lround(clamp(v, 0, 1)*toUInt)
@@ -615,6 +563,9 @@ private[buffer] final class ViewDouble1UInt(
 private[buffer] sealed abstract class SeqDouble1HalfFloat(
   shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[HalfFloat](shared, buff, backing, offset, stride) {
+  final def rawType: Int = RawData.HalfFloat
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -648,9 +599,6 @@ private[buffer] final class ArrayDouble1HalfFloat(
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1HalfFloat(rarray, null, buffer.asReadOnlyBuffer())
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
-
   def apply(i: Int) :Double = fromHalfFloat(rarray(i))
   def update(i: Int, v: Double) :Unit = warray(i) = toHalfFloat(v)
 }
@@ -662,9 +610,6 @@ private[buffer] final class BufferDouble1HalfFloat(
   protected[buffer] def mkReadOnlyInstance() = new BufferDouble1HalfFloat(
     shared, buffer.asReadOnlyBuffer()
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
 
   def apply(i: Int) :Double = fromHalfFloat(buff.get(i))
   def update(i: Int, v: Double) :Unit = buff.put(i, toHalfFloat(v))
@@ -682,9 +627,6 @@ private[buffer] final class ViewDouble1HalfFloat(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.HalfFloat
-
   def apply(i: Int) :Double = fromHalfFloat(buff.get(offset + i*stride))
   def update(i: Int, v: Double) :Unit = buff.put(
     offset + i*stride,
@@ -697,6 +639,9 @@ private[buffer] final class ViewDouble1HalfFloat(
 private[buffer] sealed abstract class SeqDouble1RawFloat(
   shared: AnyRef, buff: FloatBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[RawFloat](shared, buff, backing, offset, stride) {
+  final def rawType: Int = RawData.RawFloat
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -730,11 +675,8 @@ private[buffer] final class ArrayDouble1RawFloat(
   private[buffer] override def mkBindingBuffer() = FloatBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1RawFloat(rarray, null, buffer.asReadOnlyBuffer())
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
-
   def apply(i: Int) :Double = rarray(i)
-  def update(i: Int, v: Double) :Unit = warray(i) = float(v)
+  def update(i: Int, v: Double) :Unit = warray(i) = v.toFloat
 }
 
 private[buffer] final class BufferDouble1RawFloat(
@@ -745,11 +687,8 @@ private[buffer] final class BufferDouble1RawFloat(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
-
   def apply(i: Int) :Double = buff.get(i)
-  def update(i: Int, v: Double) :Unit = buff.put(i, float(v))
+  def update(i: Int, v: Double) :Unit = buff.put(i, v.toFloat)
 }
 
 private[buffer] final class ViewDouble1RawFloat(
@@ -764,11 +703,8 @@ private[buffer] final class ViewDouble1RawFloat(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawFloat
-
   def apply(i: Int) :Double = buff.get(offset + i*stride)
-  def update(i: Int, v: Double) :Unit = buff.put(offset + i*stride, float(v))
+  def update(i: Int, v: Double) :Unit = buff.put(offset + i*stride, v.toFloat)
 }
 
 
@@ -776,6 +712,9 @@ private[buffer] final class ViewDouble1RawFloat(
 private[buffer] sealed abstract class SeqDouble1RawDouble(
   shared: AnyRef, buff: DoubleBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseDouble1[RawDouble](shared, buff, backing, offset, stride) {
+  final def rawType: Int = RawData.RawDouble
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
   
@@ -809,9 +748,6 @@ private[buffer] final class ArrayDouble1RawDouble(
   private[buffer] override def mkBindingBuffer() = DoubleBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayDouble1RawDouble(rarray, null, buffer.asReadOnlyBuffer())
 
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawDouble
-
   def apply(i: Int) :Double = rarray(i)
   def update(i: Int, v: Double) :Unit = warray(i) = v
 }
@@ -823,9 +759,6 @@ private[buffer] final class BufferDouble1RawDouble(
   protected[buffer] def mkReadOnlyInstance() = new BufferDouble1RawDouble(
     shared, buffer.asReadOnlyBuffer()
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawDouble
 
   def apply(i: Int) :Double = buff.get(i)
   def update(i: Int, v: Double) :Unit = buff.put(i, v)
@@ -842,9 +775,6 @@ private[buffer] final class ViewDouble1RawDouble(
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1RawDouble(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
-
-  def normalized: Boolean = false
-  def rawType: Int = RawData.RawDouble
 
   def apply(i: Int) :Double = buff.get(offset + i*stride)
   def update(i: Int, v: Double) :Unit = buff.put(offset + i*stride, v)

@@ -22,7 +22,6 @@ package simplex3d.buffer
 
 import java.nio._
 import scala.reflect.Manifest
-import simplex3d.math._
 import simplex3d.buffer.{allocateDirectBuffer => alloc}
 import simplex3d.buffer.Util._
 
@@ -45,6 +44,9 @@ private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
 private[buffer] sealed abstract class SeqInt1UByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[UByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UByte
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -76,11 +78,8 @@ private[buffer] final class ArrayInt1UByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1UByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = warray(i) = byte(v)
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
 }
 
 private[buffer] final class BufferInt1UByte(
@@ -91,11 +90,8 @@ private[buffer] final class BufferInt1UByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = buff.put(i, byte(v))
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
 private[buffer] final class ViewInt1UByte(
@@ -110,11 +106,8 @@ private[buffer] final class ViewInt1UByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, byte(v))
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
 }
 
 
@@ -122,6 +115,9 @@ private[buffer] final class ViewInt1UByte(
 private[buffer] sealed abstract class SeqInt1UShort(
   shared: AnyRef, buff: CharBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[UShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UShort
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -153,11 +149,8 @@ private[buffer] final class ArrayInt1UShort(
   private[buffer] override def mkBindingBuffer() = CharBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1UShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i)
-  def update(i: Int, v: Int) :Unit = warray(i) = v.asInstanceOf[Char]
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toChar
 }
 
 private[buffer] final class BufferInt1UShort(
@@ -168,11 +161,8 @@ private[buffer] final class BufferInt1UShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(i)
-  def update(i: Int, v: Int) :Unit = buff.put(i, v.asInstanceOf[Char])
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toChar)
 }
 
 private[buffer] final class ViewInt1UShort(
@@ -187,13 +177,10 @@ private[buffer] final class ViewInt1UShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(offset + i*stride)
   def update(i: Int, v: Int) :Unit = buff.put(
     offset + i*stride,
-    v.asInstanceOf[Char]
+    v.toChar
   )
 }
 
@@ -202,6 +189,9 @@ private[buffer] final class ViewInt1UShort(
 private[buffer] sealed abstract class SeqInt1UInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[UInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.UInt
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -233,9 +223,6 @@ private[buffer] final class ArrayInt1UInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1UInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i)
   def update(i: Int, v: Int) :Unit = warray(i) = v
 }
@@ -245,9 +232,6 @@ private[buffer] final class BufferInt1UInt(
   buff: IntBuffer
 ) extends SeqInt1UInt(shared, buff, null, 0, 1) with IndexBuffer[UInt]{
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UInt(shared, buffer.asReadOnlyBuffer())
-
-  def rawType = RawData.UInt
-  def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
   def update(i: Int, v: Int) :Unit = buff.put(i, v)
@@ -265,9 +249,6 @@ private[buffer] final class ViewInt1UInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.UInt
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(offset + i*stride)
   def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
 }
@@ -277,6 +258,9 @@ private[buffer] final class ViewInt1UInt(
 private[buffer] sealed abstract class SeqInt1SByte(
   shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[SByte](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SByte
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -308,11 +292,8 @@ private[buffer] final class ArrayInt1SByte(
   private[buffer] override def mkBindingBuffer() = ByteBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1SByte(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i)
-  def update(i: Int, v: Int) :Unit = warray(i) = byte(v)
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
 }
 
 private[buffer] final class BufferInt1SByte(
@@ -323,11 +304,8 @@ private[buffer] final class BufferInt1SByte(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(i)
-  def update(i: Int, v: Int) :Unit = buff.put(i, byte(v))
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
 private[buffer] final class ViewInt1SByte(
@@ -342,11 +320,8 @@ private[buffer] final class ViewInt1SByte(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SByte
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, byte(v))
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
 }
 
 
@@ -354,6 +329,9 @@ private[buffer] final class ViewInt1SByte(
 private[buffer] sealed abstract class SeqInt1SShort(
   shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[SShort](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SShort
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -385,11 +363,8 @@ private[buffer] final class ArrayInt1SShort(
   private[buffer] override def mkBindingBuffer() = ShortBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1SShort(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i)
-  def update(i: Int, v: Int) :Unit = warray(i) = short(v)
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toShort
 }
 
 private[buffer] final class BufferInt1SShort(
@@ -400,11 +375,8 @@ private[buffer] final class BufferInt1SShort(
     shared, buffer.asReadOnlyBuffer()
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(i)
-  def update(i: Int, v: Int) :Unit = buff.put(i, short(v))
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toShort)
 }
 
 private[buffer] final class ViewInt1SShort(
@@ -419,11 +391,8 @@ private[buffer] final class ViewInt1SShort(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
 
-  def rawType = RawData.SShort
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, short(v))
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toShort)
 }
 
 
@@ -431,6 +400,9 @@ private[buffer] final class ViewInt1SShort(
 private[buffer] sealed abstract class SeqInt1SInt(
   shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
 ) extends BaseInt1[SInt](shared, buff, backing, offset, stride) {
+  final def rawType = RawData.SInt
+  final def normalized = false
+
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
@@ -462,9 +434,6 @@ private[buffer] final class ArrayInt1SInt(
   private[buffer] override def mkBindingBuffer() = IntBuffer.wrap(rarray)
   protected[buffer] def mkReadOnlyInstance() = new ArrayInt1SInt(rarray, null, buffer.asReadOnlyBuffer())
 
-  def rawType = RawData.SInt
-  def normalized: Boolean = false
-
   def apply(i: Int) :Int = rarray(i)
   def update(i: Int, v: Int) :Unit = warray(i) = v
 }
@@ -474,9 +443,6 @@ private[buffer] final class BufferInt1SInt(
   buff: IntBuffer
 ) extends SeqInt1SInt(shared, buff, null, 0, 1) with DataBuffer[Int1, SInt]{
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SInt(shared, buffer.asReadOnlyBuffer())
-
-  def rawType = RawData.SInt
-  def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(i)
   def update(i: Int, v: Int) :Unit = buff.put(i, v)
@@ -493,9 +459,6 @@ private[buffer] final class ViewInt1SInt(
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SInt(
     shared, buffer.asReadOnlyBuffer(), offset, stride
   )
-
-  def rawType = RawData.SInt
-  def normalized: Boolean = false
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
   def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)

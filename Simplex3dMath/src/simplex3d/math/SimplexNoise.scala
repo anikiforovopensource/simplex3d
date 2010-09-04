@@ -109,7 +109,7 @@ private[math] object SimplexNoise {
     Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0))
 
   private def ifloor(x: Double) :Int = {
-    val i = int(x)
+    val i = x.toInt
     if (x > 0 || x == i) i else i - 1
   }
 

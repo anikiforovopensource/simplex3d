@@ -46,15 +46,15 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   private[math] final def bz: Boolean = bool(z)
   private[math] final def bw: Boolean = bool(w)
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
-  private[math] final def iz: Int = int(z)
-  private[math] final def iw: Int = int(w)
+  private[math] final def ix: Int = x.toInt
+  private[math] final def iy: Int = y.toInt
+  private[math] final def iz: Int = z.toInt
+  private[math] final def iw: Int = w.toInt
 
-  private[math] final def fx: Float = float(x)
-  private[math] final def fy: Float = float(y)
-  private[math] final def fz: Float = float(z)
-  private[math] final def fw: Float = float(w)
+  private[math] final def fx: Float = x.toFloat
+  private[math] final def fy: Float = y.toFloat
+  private[math] final def fz: Float = z.toFloat
+  private[math] final def fw: Float = w.toFloat
 
   private[math] final def dx: Double = x
   private[math] final def dy: Double = y

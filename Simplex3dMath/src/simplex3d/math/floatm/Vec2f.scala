@@ -35,17 +35,17 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
   private[math] type R4 = ReadVec4f
   
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2f(float(x), float(y))
+    new ConstVec2f(x.toFloat, y.toFloat)
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3f(float(x), float(y), float(z))
+    new ConstVec3f(x.toFloat, y.toFloat, z.toFloat)
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4f(float(x), float(y), float(z), float(w))
+    new ConstVec4f(x.toFloat, y.toFloat, z.toFloat, w.toFloat)
 
   private[math] final def bx: Boolean = bool(x)
   private[math] final def by: Boolean = bool(y)
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
+  private[math] final def ix: Int = x.toInt
+  private[math] final def iy: Int = y.toInt
 
   private[math] final def fx: Float = x
   private[math] final def fy: Float = y

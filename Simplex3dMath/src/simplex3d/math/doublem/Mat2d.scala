@@ -44,11 +44,11 @@ extends ProtectedMat2d[Double]
   protected def m11_=(s: Double) { throw new UnsupportedOperationException }
 
 
-  private[math] final override def f00 = float(m00)
-  private[math] final override def f10 = float(m10)
+  private[math] final override def f00 = m00.toFloat
+  private[math] final override def f10 = m10.toFloat
 
-  private[math] final override def f01 = float(m01)
-  private[math] final override def f11 = float(m11)
+  private[math] final override def f01 = m01.toFloat
+  private[math] final override def f11 = m11.toFloat
 
 
   private[math] final override def d00 = m00

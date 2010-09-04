@@ -48,42 +48,42 @@ object FloatMath {
   def radians(x: Float) :Float = x*DegToRad
   def degrees(x: Float) :Float = x*RadToDeg
 
-  def sin(w: Float) :Float = float(SMath.sin(w))
-  def cos(w: Float) :Float = float(SMath.cos(w))
-  def tan(w: Float) :Float = float(SMath.tan(w))
+  def sin(w: Float) :Float = SMath.sin(w).toFloat
+  def cos(w: Float) :Float = SMath.cos(w).toFloat
+  def tan(w: Float) :Float = SMath.tan(w).toFloat
 
-  def asin(w: Float) :Float = float(SMath.asin(w))
-  def acos(w: Float) :Float = float(SMath.acos(w))
-  def atan(y: Float, x: Float) :Float = float(SMath.atan2(y, x))
-  def atan(w: Float) :Float = float(SMath.atan(w))
+  def asin(w: Float) :Float = SMath.asin(w).toFloat
+  def acos(w: Float) :Float = SMath.acos(w).toFloat
+  def atan(y: Float, x: Float) :Float = SMath.atan2(y, x).toFloat
+  def atan(w: Float) :Float = SMath.atan(w).toFloat
 
-  def sinh(x: Float) :Float = float(SMath.sinh(x))
-  def cosh(x: Float) :Float = float(SMath.cosh(x))
-  def tanh(x: Float) :Float = float(SMath.tanh(x))
+  def sinh(x: Float) :Float = SMath.sinh(x).toFloat
+  def cosh(x: Float) :Float = SMath.cosh(x).toFloat
+  def tanh(x: Float) :Float = SMath.tanh(x).toFloat
 
   def asinh(x: Float) :Float = {
-    if (x < 0) float(-SMath.log(-x + SMath.sqrt(x*x + 1)))
-    else float(SMath.log(x + SMath.sqrt(x*x + 1)))
+    if (x < 0) (-SMath.log(-x + SMath.sqrt(x*x + 1))).toFloat
+    else (SMath.log(x + SMath.sqrt(x*x + 1))).toFloat
   }
   def acosh(x: Float) :Float = {
     if (x < 0) Float.NaN
-    else float(SMath.log(x + SMath.sqrt(x*x - 1)))
+    else (SMath.log(x + SMath.sqrt(x*x - 1))).toFloat
   }
   def atanh(x: Float) :Float = {
     if (x < 0) -atanh(-x)
-    else if (x < 0.2) float(0.5*SMath.log1p(2*x/(1 - x)))
-    else float(0.5*SMath.log((1 + x)/(1 - x)))
+    else if (x < 0.2) (0.5*SMath.log1p(2*x/(1 - x))).toFloat
+    else (0.5*SMath.log((1 + x)/(1 - x))).toFloat
   }
 
-  def pow(x: Float, y: Float) :Float = float(SMath.pow(x, y))
-  def exp(x: Float) :Float = float(SMath.exp(x))
-  def log(x: Float) :Float = float(SMath.log(x))
+  def pow(x: Float, y: Float) :Float = SMath.pow(x, y).toFloat
+  def exp(x: Float) :Float = SMath.exp(x).toFloat
+  def log(x: Float) :Float = SMath.log(x).toFloat
 
-  def exp2(x: Float) :Float = float(SMath.pow(2, x))
-  def log2(x: Float) :Float = float(SMath.log(x)*InvLog2)
+  def exp2(x: Float) :Float = SMath.pow(2, x).toFloat
+  def log2(x: Float) :Float = (SMath.log(x)*InvLog2).toFloat
 
-  def sqrt(s: Float) :Float = float(SMath.sqrt(s))
-  def inversesqrt(s: Float) :Float = float(1/SMath.sqrt(s))
+  def sqrt(s: Float) :Float = SMath.sqrt(s).toFloat
+  def inversesqrt(s: Float) :Float = (1/SMath.sqrt(s)).toFloat
 
   def abs(x: Float) :Float = { if (x > 0) x else -x }
   def sign(x: Float) :Float = {
@@ -95,26 +95,26 @@ object FloatMath {
   def floor(x: Float) :Float = {
     if (x > Int.MaxValue || x < Int.MinValue) x
     else {
-      val i = int(x)
+      val i = x.toInt
       if (x > 0 || x == i) i else if(isnan(x)) x else i - 1
     }
   }
   def trunc(x: Float) :Float = {
     if (x > Int.MaxValue || x < Int.MinValue || isnan(x)) x
-    else int(x)
+    else x.toInt
   }
   def round(x: Float) :Float = {
     if (x > Int.MaxValue || x < Int.MinValue) x
-    else if (x >= 0) int(x + 0.5f)
+    else if (x >= 0) (x + 0.5f).toInt
     else if (isnan(x)) x
-    else int(x - 0.5f)
+    else (x - 0.5f).toInt
   }
-  def roundEven(x: Float) :Float = float(SMath.rint(x))
+  def roundEven(x: Float) :Float = SMath.rint(x).toFloat
   def ceil(x: Float) :Float = {
     if (x > Int.MaxValue) x
     else if (x < Int.MinValue) x
     else {
-      val i = int(x)
+      val i = x.toInt
       if (x < 0 || x == i) i else if (isnan(x)) x else i + 1
     }
   }
@@ -204,26 +204,26 @@ object FloatMath {
   /**
    * meaningful return values for x withing [-2E8, +2E8]
    */
-  def noise1(x: Float) :Float = float(noise(x + offset00))
+  def noise1(x: Float) :Float = noise(x + offset00).toFloat
   def noise2(x: Float) :Vec2f = {
     new Vec2f(
-      float(noise(x + offset00)),
-      float(noise(x + offset10))
+      noise(x + offset00).toFloat,
+      noise(x + offset10).toFloat
     )
   }
   def noise3(x: Float) :Vec3f = {
     new Vec3f(
-      float(noise(x + offset00)),
-      float(noise(x + offset10)),
-      float(noise(x + offset20))
+      noise(x + offset00).toFloat,
+      noise(x + offset10).toFloat,
+      noise(x + offset20).toFloat
     )
   }
   def noise4(x: Float) :Vec4f = {
     new Vec4f(
-      float(noise(x + offset00)),
-      float(noise(x + offset10)),
-      float(noise(x + offset20)),
-      float(noise(x + offset30))
+      noise(x + offset00).toFloat,
+      noise(x + offset10).toFloat,
+      noise(x + offset20).toFloat,
+      noise(x + offset30).toFloat
     )
   }
 
@@ -419,27 +419,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec2f) :Float = {
-    float(noise(u.x + offset00, u.y + offset01))
+    noise(u.x + offset00, u.y + offset01).toFloat
   }
   def noise2(u: inVec2f) :Vec2f = {
     new Vec2f(
-      float(noise(u.x + offset00, u.y + offset01)),
-      float(noise(u.x + offset10, u.y + offset11))
+      noise(u.x + offset00, u.y + offset01).toFloat,
+      noise(u.x + offset10, u.y + offset11).toFloat
     )
   }
   def noise3(u: inVec2f) :Vec3f = {
     new Vec3f(
-      float(noise(u.x + offset00, u.y + offset01)),
-      float(noise(u.x + offset10, u.y + offset11)),
-      float(noise(u.x + offset20, u.y + offset21))
+      noise(u.x + offset00, u.y + offset01).toFloat,
+      noise(u.x + offset10, u.y + offset11).toFloat,
+      noise(u.x + offset20, u.y + offset21).toFloat
     )
   }
   def noise4(u: inVec2f) :Vec4f = {
     new Vec4f(
-      float(noise(u.x + offset00, u.y + offset01)),
-      float(noise(u.x + offset10, u.y + offset11)),
-      float(noise(u.x + offset20, u.y + offset21)),
-      float(noise(u.x + offset30, u.y + offset31))
+      noise(u.x + offset00, u.y + offset01).toFloat,
+      noise(u.x + offset10, u.y + offset11).toFloat,
+      noise(u.x + offset20, u.y + offset21).toFloat,
+      noise(u.x + offset30, u.y + offset31).toFloat
     )
   }
 
@@ -683,27 +683,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec3f) :Float = {
-    float(noise(u.x + offset00, u.y + offset01, u.z + offset02))
+    noise(u.x + offset00, u.y + offset01, u.z + offset02).toFloat
   }
   def noise2(u: inVec3f) :Vec2f = {
     new Vec2f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12).toFloat
     )
   }
   def noise3(u: inVec3f) :Vec3f = {
     new Vec3f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12)),
-      float(noise(u.x + offset20, u.y + offset21, u.z + offset22))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12).toFloat,
+      noise(u.x + offset20, u.y + offset21, u.z + offset22).toFloat
     )
   }
   def noise4(u: inVec3f) :Vec4f = {
     new Vec4f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12)),
-      float(noise(u.x + offset20, u.y + offset21, u.z + offset22)),
-      float(noise(u.x + offset30, u.y + offset31, u.z + offset32))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12).toFloat,
+      noise(u.x + offset20, u.y + offset21, u.z + offset22).toFloat,
+      noise(u.x + offset30, u.y + offset31, u.z + offset32).toFloat
     )
   }
 
@@ -1014,27 +1014,27 @@ object FloatMath {
   }
 
   def noise1(u: inVec4f) :Float = {
-    float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03))
+    noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03).toFloat
   }
   def noise2(u: inVec4f) :Vec2f = {
     new Vec2f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13).toFloat
     )
   }
   def noise3(u: inVec4f) :Vec3f = {
     new Vec3f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13)),
-      float(noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13).toFloat,
+      noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23).toFloat
     )
   }
   def noise4(u: inVec4f) :Vec4f = {
     new Vec4f(
-      float(noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03)),
-      float(noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13)),
-      float(noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23)),
-      float(noise(u.x + offset30, u.y + offset31, u.z + offset32, u.w + offset33))
+      noise(u.x + offset00, u.y + offset01, u.z + offset02, u.w + offset03).toFloat,
+      noise(u.x + offset10, u.y + offset11, u.z + offset12, u.w + offset13).toFloat,
+      noise(u.x + offset20, u.y + offset21, u.z + offset22, u.w + offset23).toFloat,
+      noise(u.x + offset30, u.y + offset31, u.z + offset32, u.w + offset33).toFloat
     )
   }
 

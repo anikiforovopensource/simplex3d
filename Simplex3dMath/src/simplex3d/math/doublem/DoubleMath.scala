@@ -95,26 +95,26 @@ object DoubleMath {
   def floor(x: Double) :Double = {
     if (x > Long.MaxValue || x < Long.MinValue) x
     else {
-      val i = long(x)
+      val i = x.toLong
       if (x > 0 || x == i) i else if(isnan(x)) x else i - 1
     }
   }
   def trunc(x: Double) :Double = {
     if (x > Long.MaxValue || x < Long.MinValue || isnan(x)) x
-    else long(x)
+    else x.toLong
   }
   def round(x: Double) :Double = {
     if (x > Long.MaxValue || x < Long.MinValue) x
-    else if (x >= 0) long(x + 0.5)
+    else if (x >= 0) (x + 0.5).toLong
     else if (isnan(x)) x
-    else long(x - 0.5)
+    else (x - 0.5).toLong
   }
   def roundEven(x: Double) :Double = SMath.rint(x)
   def ceil(x: Double) :Double = {
     if (x > Long.MaxValue) x
     else if (x < Long.MinValue) x
     else {
-      val i = long(x)
+      val i = x.toLong
       if (x < 0 || x == i) i else if (isnan(x)) x else i + 1
     }
   }

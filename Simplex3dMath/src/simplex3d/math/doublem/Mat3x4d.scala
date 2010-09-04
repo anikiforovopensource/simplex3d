@@ -56,21 +56,21 @@ extends ProtectedMat3x4d[Double]
   protected def m23_=(s: Double) { throw new UnsupportedOperationException }
 
 
-  private[math] final override def f00 = float(m00)
-  private[math] final override def f10 = float(m10)
-  private[math] final override def f20 = float(m20)
+  private[math] final override def f00 = m00.toFloat
+  private[math] final override def f10 = m10.toFloat
+  private[math] final override def f20 = m20.toFloat
 
-  private[math] final override def f01 = float(m01)
-  private[math] final override def f11 = float(m11)
-  private[math] final override def f21 = float(m21)
+  private[math] final override def f01 = m01.toFloat
+  private[math] final override def f11 = m11.toFloat
+  private[math] final override def f21 = m21.toFloat
 
-  private[math] final override def f02 = float(m02)
-  private[math] final override def f12 = float(m12)
-  private[math] final override def f22 = float(m22)
+  private[math] final override def f02 = m02.toFloat
+  private[math] final override def f12 = m12.toFloat
+  private[math] final override def f22 = m22.toFloat
 
-  private[math] final override def f03 = float(m03)
-  private[math] final override def f13 = float(m13)
-  private[math] final override def f23 = float(m23)
+  private[math] final override def f03 = m03.toFloat
+  private[math] final override def f13 = m13.toFloat
+  private[math] final override def f23 = m23.toFloat
 
 
   private[math] final override def d00 = m00

@@ -35,11 +35,11 @@ sealed abstract class ReadVec4i extends ProtectedVec4i[Int]
   private[math] type R4 = ReadVec4i
   
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2i(int(x), int(y))
+    new ConstVec2i(x.toInt, y.toInt)
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3i(int(x), int(y), int(z))
+    new ConstVec3i(x.toInt, y.toInt, z.toInt)
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4i(int(x), int(y), int(z), int(w))
+    new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
   private[math] final def bx: Boolean = bool(x)
   private[math] final def by: Boolean = bool(y)
@@ -235,10 +235,10 @@ object ConstVec4i {
     new ConstVec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
   def apply(m: AnyMat2x2[_]) =
-    new ConstVec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
+    new ConstVec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
 
   def apply(q: AnyQuat4[_]) =
-    new ConstVec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
+    new ConstVec4i(q.db.toInt, q.dc.toInt, q.dd.toInt, q.da.toInt)
 
   implicit def toConst(u: ReadVec4i) = new ConstVec4i(u.x, u.y, u.z, u.w)
 }
@@ -562,10 +562,10 @@ object Vec4i {
     new Vec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
   def apply(m: AnyMat2x2[_]) =
-    new Vec4i(int(m.d00), int(m.d10), int(m.d01), int(m.d11))
+    new Vec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
 
   def apply(q: AnyQuat4[_]) =
-    new Vec4i(int(q.db), int(q.dc), int(q.dd), int(q.da))
+    new Vec4i(q.db.toInt, q.dc.toInt, q.dd.toInt, q.da.toInt)
 
   def unapply(u: ReadVec4i) = Some((u.x, u.y, u.z, u.w))
 

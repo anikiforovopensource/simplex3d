@@ -31,10 +31,10 @@ import simplex3d.math.doublem.DoubleMath._
  */
 sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 {
-  private[math] final def fa: Float = float(a)
-  private[math] final def fb: Float = float(b)
-  private[math] final def fc: Float = float(c)
-  private[math] final def fd: Float = float(d)
+  private[math] final def fa: Float = a.toFloat
+  private[math] final def fb: Float = b.toFloat
+  private[math] final def fc: Float = c.toFloat
+  private[math] final def fd: Float = d.toFloat
 
   private[math] final def da: Double = a
   private[math] final def db: Double = b

@@ -50,22 +50,22 @@ private[buffer] abstract class BaseVec3d[+R <: ReadableDouble](
     backingSeq(j + 2) = v.z
   }
 
-  def mkReadDataArray(size: Int)
-  :ReadDataArray[Vec3d, R] =
+  def mkDataArray(size: Int)
+  :DataArray[Vec3d, R] =
     new ArrayVec3d[R](
-      backingSeq.mkReadDataArray(size*3).asInstanceOf[DataArray[Double1, R]]
+      backingSeq.mkDataArray(size*3).asInstanceOf[DataArray[Double1, R]]
     )
 
-  def mkReadDataArray(array: R#ArrayType @uncheckedVariance)
-  :ReadDataArray[Vec3d, R] =
+  def mkDataArray(array: R#ArrayType @uncheckedVariance)
+  :DataArray[Vec3d, R] =
     new ArrayVec3d[R](
-      backingSeq.mkReadDataArray(array).asInstanceOf[DataArray[Double1, R]]
+      backingSeq.mkDataArray(array).asInstanceOf[DataArray[Double1, R]]
     )
 
-  def mkReadDataBuffer(size: Int)
-  :ReadDataBuffer[Vec3d, R] =
+  def mkDataBuffer(size: Int)
+  :DataBuffer[Vec3d, R] =
     new BufferVec3d[R](
-      backingSeq.mkReadDataBuffer(size*3).asInstanceOf[DataBuffer[Double1, R]]
+      backingSeq.mkDataBuffer(size*3).asInstanceOf[DataBuffer[Double1, R]]
     )
 
   def mkReadDataBuffer(byteBuffer: ByteBuffer)

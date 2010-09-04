@@ -50,22 +50,22 @@ private[buffer] abstract class BaseVec3f[+R <: ReadableFloat](
     backingSeq(j + 2) = v.z
   }
 
-  def mkReadDataArray(size: Int)
-  :ReadDataArray[Vec3f, R] =
+  def mkDataArray(size: Int)
+  :DataArray[Vec3f, R] =
     new ArrayVec3f[R](
-      backingSeq.mkReadDataArray(size*3).asInstanceOf[DataArray[Float1, R]]
+      backingSeq.mkDataArray(size*3).asInstanceOf[DataArray[Float1, R]]
     )
 
-  def mkReadDataArray(array: R#ArrayType @uncheckedVariance)
-  :ReadDataArray[Vec3f, R] =
+  def mkDataArray(array: R#ArrayType @uncheckedVariance)
+  :DataArray[Vec3f, R] =
     new ArrayVec3f[R](
-      backingSeq.mkReadDataArray(array).asInstanceOf[DataArray[Float1, R]]
+      backingSeq.mkDataArray(array).asInstanceOf[DataArray[Float1, R]]
     )
 
-  def mkReadDataBuffer(size: Int)
-  :ReadDataBuffer[Vec3f, R] =
+  def mkDataBuffer(size: Int)
+  :DataBuffer[Vec3f, R] =
     new BufferVec3f[R](
-      backingSeq.mkReadDataBuffer(size*3).asInstanceOf[DataBuffer[Float1, R]]
+      backingSeq.mkDataBuffer(size*3).asInstanceOf[DataBuffer[Float1, R]]
     )
 
   def mkReadDataBuffer(byteBuffer: ByteBuffer)

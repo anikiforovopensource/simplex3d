@@ -52,22 +52,22 @@ private[buffer] abstract class BaseVec4i[+R <: ReadableInt](
     backingSeq(j + 3) = v.w
   }
 
-  def mkReadDataArray(size: Int)
-  :ReadDataArray[Vec4i, R] =
+  def mkDataArray(size: Int)
+  :DataArray[Vec4i, R] =
     new ArrayVec4i[R](
-      backingSeq.mkReadDataArray(size*4).asInstanceOf[DataArray[Int1, R]]
+      backingSeq.mkDataArray(size*4).asInstanceOf[DataArray[Int1, R]]
     )
 
-  def mkReadDataArray(array: R#ArrayType @uncheckedVariance)
-  :ReadDataArray[Vec4i, R] =
+  def mkDataArray(array: R#ArrayType @uncheckedVariance)
+  :DataArray[Vec4i, R] =
     new ArrayVec4i[R](
-      backingSeq.mkReadDataArray(array).asInstanceOf[DataArray[Int1, R]]
+      backingSeq.mkDataArray(array).asInstanceOf[DataArray[Int1, R]]
     )
 
-  def mkReadDataBuffer(size: Int)
-  :ReadDataBuffer[Vec4i, R] =
+  def mkDataBuffer(size: Int)
+  :DataBuffer[Vec4i, R] =
     new BufferVec4i[R](
-      backingSeq.mkReadDataBuffer(size*4).asInstanceOf[DataBuffer[Int1, R]]
+      backingSeq.mkDataBuffer(size*4).asInstanceOf[DataBuffer[Int1, R]]
     )
 
   def mkReadDataBuffer(byteBuffer: ByteBuffer)

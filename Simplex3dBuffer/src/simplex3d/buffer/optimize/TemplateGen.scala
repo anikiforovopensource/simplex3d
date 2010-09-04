@@ -104,7 +104,7 @@ private[optimize] trait TemplateWorker {
   protected def fixMakeArrayDesc(name: String, desc: String) = {
     if (
       isReplacingArraySig &&
-      name == "mkReadDataArray" &&
+      name == "mkDataArray" &&
       desc.take(4) == brackets(templateArraySig)
     ) {
       brackets(replacementArraySig) + desc.drop(4)

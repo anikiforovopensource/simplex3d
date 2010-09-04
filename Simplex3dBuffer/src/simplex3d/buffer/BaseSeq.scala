@@ -80,9 +80,9 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def apply(i: Int) :S
 
 
-  def mkReadDataArray(size: Int) :ReadDataArray[E, R]
-  def mkReadDataArray(array: R#ArrayType @uncheckedVariance) :ReadDataArray[E, R]
-  def mkReadDataBuffer(size: Int) :ReadDataBuffer[E, R]
+  def mkDataArray(size: Int) :DataArray[E, R]
+  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
+  def mkDataBuffer(size: Int) :DataBuffer[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
   def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
 
@@ -99,18 +99,6 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
     if (isReadOnly) this else mkReadOnlyInstance()
   }
 
-
-  final def mkDataArray(
-    size: Int
-  ) :DataArray[E, R] = mkReadDataArray(size).asInstanceOf[DataArray[E, R]]
-
-  final def mkDataArray(
-    array: R#ArrayType @uncheckedVariance
-  ) :DataArray[E, R] = mkReadDataArray(array).asInstanceOf[DataArray[E, R]]
-
-  final def mkDataBuffer(
-    size: Int
-  ) :DataBuffer[E, R] = mkReadDataBuffer(size).asInstanceOf[DataBuffer[E, R]]
 
   final def mkDataBuffer(
     byteBuffer: ByteBuffer
@@ -258,7 +246,7 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private def putIndexedSeq(
+  private final def putIndexedSeq(
     index: Int, seq: IndexedSeq[S], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
@@ -266,7 +254,7 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private def putSeq(index: Int, seq: Seq[S], first: Int, count: Int) {
+  private final def putSeq(index: Int, seq: Seq[S], first: Int, count: Int) {
     var i = index
     val iter = seq.iterator
     iter.drop(first)
@@ -504,20 +492,6 @@ private[buffer] abstract class BaseSeq[
         case _ => throw new AssertionError("Unsupported component type.")
       }
     }
-  }
-
-  final def put(
-    index: Int,
-    src: inContiguousSeq[E#Component, _],
-    srcOffset: Int, count: Int
-  ) {
-    put(
-      index,
-      src,
-      srcOffset,
-      components,
-      count
-    )
   }
 
   final def put(

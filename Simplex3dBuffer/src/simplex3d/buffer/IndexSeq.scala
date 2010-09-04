@@ -31,12 +31,6 @@ trait ReadIndexSeq[+R <: RawData]
 extends ReadContiguousSeq[Int1, R] {
   override def asReadOnlySeq() :ReadIndexSeq[R]
 
-  def mkReadIndexArray(size: Int) :ReadIndexArray[R] =
-    mkReadDataArray(size).asInstanceOf[ReadIndexArray[R]]
-  def mkReadIndexArray(array: R#ArrayType @uncheckedVariance) :ReadIndexArray[R] =
-    mkReadDataArray(array).asInstanceOf[ReadIndexArray[R]]
-  def mkReadIndexBuffer(size: Int) :ReadIndexBuffer[R] =
-    mkReadDataBuffer(size).asInstanceOf[ReadIndexBuffer[R]]
   def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
     mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
 
@@ -81,7 +75,7 @@ object ReadIndexArray {
   def apply[R <: ReadableIndex](da: ReadDataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :ReadIndexArray[R] = {
-    val res = ref.factory.mkReadDataArray(da.sharedArray)
+    val res = ref.factory.mkDataArray(da.sharedArray)
     if (da.isReadOnly) res.asReadOnlySeq() else res
   }
 }

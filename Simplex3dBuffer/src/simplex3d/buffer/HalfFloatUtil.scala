@@ -20,8 +20,6 @@
 
 package simplex3d.buffer
 
-import simplex3d.math._
-
 
 // An empty class to make -Xno-forwarders work
 private[buffer] class HalfFloatUtil
@@ -37,7 +35,7 @@ object HalfFloatUtil {
 
     // subnormal
     if (exponent < (113 << 23)) {
-      short((bits & 0x80000000) >> 16)
+      ((bits & 0x80000000) >> 16).toShort
     }
 
     // overflow, inf, or nan
@@ -45,11 +43,11 @@ object HalfFloatUtil {
       // inf or nan
       if (exponent == 0x7F800000) {
         val high = (bits & 0xC0000000) | ((bits << 3) & 0x3FFFFFFF)
-        short(high >> 16)
+        (high >> 16).toShort
       }
       // overflow
       else {
-        short(((bits & 0x80000000) | 0x7C000000) >> 16)
+        (((bits & 0x80000000) | 0x7C000000) >> 16).toShort
       }
     }
 
@@ -57,7 +55,7 @@ object HalfFloatUtil {
     else {
       val rounded = if ((bits & 0x00001000) != 0) bits + 0x00001000 else bits
       val high = (rounded & 0xC0000000) | ((rounded << 3) & 0x3FFFFFFF)
-      short(high >> 16)
+      (high >> 16).toShort
     }
   }
 
@@ -84,9 +82,9 @@ object HalfFloatUtil {
   }
 
   @inline final def doubleToHalfFloat(d: Double) :Short = {
-    floatToHalfFloat(float(d))
+    floatToHalfFloat(d.toFloat)
   }
   @inline final def doubleFromHalfFloat(s: Short) :Double = {
-    double(floatFromHalfFloat(s))
+    floatFromHalfFloat(s)
   }
 }

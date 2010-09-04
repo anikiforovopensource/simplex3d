@@ -53,7 +53,7 @@ object ReadDataArray {
   def apply[E <: MetaElement, R <: ReadableData](da: ReadDataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataArray[E, R] = {
-    val res = ref.factory.mkReadDataArray(da.sharedArray)
+    val res = ref.factory.mkDataArray(da.sharedArray)
     if (da.isReadOnly) res.asReadOnlySeq() else res
   }
 }

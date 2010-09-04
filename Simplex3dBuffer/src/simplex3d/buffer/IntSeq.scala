@@ -50,13 +50,13 @@ private[buffer] sealed abstract class SeqInt1UByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayInt1UByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayInt1UByte(array, array, ByteBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferInt1UByte(buff, buff.duplicate())
   }
@@ -121,13 +121,13 @@ private[buffer] sealed abstract class SeqInt1UShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Char](size)
     new ArrayInt1UShort(array, array, CharBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Char]) =
+  final def mkDataArray(array: Array[Char]) =
     new ArrayInt1UShort(array, array, CharBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferInt1UShort(buff, buff.asCharBuffer())
   }
@@ -195,13 +195,13 @@ private[buffer] sealed abstract class SeqInt1UInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayInt1UInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayInt1UInt(array, array, IntBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferInt1UInt(buff, buff.asIntBuffer())
   }
@@ -264,13 +264,13 @@ private[buffer] sealed abstract class SeqInt1SByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayInt1SByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayInt1SByte(array, array, ByteBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferInt1SByte(buff, buff.duplicate())
   }
@@ -335,13 +335,13 @@ private[buffer] sealed abstract class SeqInt1SShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Short](size)
     new ArrayInt1SShort(array, array, ShortBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Short]) =
+  final def mkDataArray(array: Array[Short]) =
     new ArrayInt1SShort(array, array, ShortBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferInt1SShort(buff, buff.asShortBuffer())
   }
@@ -406,13 +406,13 @@ private[buffer] sealed abstract class SeqInt1SInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayInt1SInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayInt1SInt(array, array, IntBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferInt1SInt(buff, buff.asIntBuffer())
   }

@@ -82,13 +82,13 @@ private[buffer] sealed abstract class SeqFloat1SByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayFloat1SByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1SByte(array, array, ByteBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1SByte(buff, buff.duplicate())
   }
@@ -169,13 +169,13 @@ private[buffer] sealed abstract class SeqFloat1UByte(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Byte](size)
     new ArrayFloat1UByte(array, array, ByteBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Byte]) =
+  final def mkDataArray(array: Array[Byte]) =
     new ArrayFloat1UByte(array, array, ByteBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size)
     new BufferFloat1UByte(buff, buff.duplicate())
   }
@@ -249,13 +249,13 @@ private[buffer] sealed abstract class SeqFloat1SShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Short](size)
     new ArrayFloat1SShort(array, array, ShortBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Short]) =
+  final def mkDataArray(array: Array[Short]) =
     new ArrayFloat1SShort(array, array, ShortBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1SShort(buff, buff.asShortBuffer())
   }
@@ -338,13 +338,13 @@ private[buffer] sealed abstract class SeqFloat1UShort(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Char](size)
     new ArrayFloat1UShort(array, array, CharBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Char]) =
+  final def mkDataArray(array: Array[Char]) =
     new ArrayFloat1UShort(array, array, CharBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1UShort(buff, buff.asCharBuffer())
   }
@@ -416,13 +416,13 @@ private[buffer] sealed abstract class SeqFloat1SInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayFloat1SInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1SInt(array, array, IntBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1SInt(buff, buff.asIntBuffer())
   }
@@ -494,13 +494,13 @@ private[buffer] sealed abstract class SeqFloat1UInt(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Int](size)
     new ArrayFloat1UInt(array, array, IntBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Int]) =
+  final def mkDataArray(array: Array[Int]) =
     new ArrayFloat1UInt(array, array, IntBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1UInt(buff, buff.asIntBuffer())
   }
@@ -575,13 +575,13 @@ private[buffer] sealed abstract class SeqFloat1HalfFloat(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
 
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Short](size)
     new ArrayFloat1HalfFloat(array, array, ShortBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Short]) =
+  final def mkDataArray(array: Array[Short]) =
     new ArrayFloat1HalfFloat(array, array, ShortBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*2)
     new BufferFloat1HalfFloat(buff, buff.asShortBuffer())
   }
@@ -651,13 +651,13 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
   final def asReadOnlyBuffer() = buffer.asReadOnlyBuffer()
   final def asBuffer() = buffer.duplicate()
   
-  final def mkReadDataArray(size: Int) = {
+  final def mkDataArray(size: Int) = {
     val array = new Array[Float](size)
     new ArrayFloat1RawFloat(array, array, FloatBuffer.wrap(array))
   }
-  final def mkReadDataArray(array: Array[Float]) =
+  final def mkDataArray(array: Array[Float]) =
     new ArrayFloat1RawFloat(array, array, FloatBuffer.wrap(array))
-  final def mkReadDataBuffer(size: Int) = {
+  final def mkDataBuffer(size: Int) = {
     val buff = alloc(size*4)
     new BufferFloat1RawFloat(buff, buff.asFloatBuffer())
   }

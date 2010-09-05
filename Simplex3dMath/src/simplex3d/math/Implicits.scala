@@ -41,7 +41,7 @@ private[math] sealed trait On extends StateSelector
 private[math] sealed trait Off extends On
 
 /** <code>Implicits</code> is a mix-in trait to enable or disable implicits
- * by setting the type perameter to On or Off.
+ * by setting the type parameter to On or Off.
  *
  * @author Aleksey Nikiforov (lex)
  */

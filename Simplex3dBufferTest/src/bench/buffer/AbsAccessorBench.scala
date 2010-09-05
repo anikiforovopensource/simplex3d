@@ -42,11 +42,13 @@ object AbsAccessorBench {
   val length = 1000
   val loops = 10000
 
-  val random = new java.util.Random()
-  val data = new Array[Float](length)
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    data(i) = random.nextFloat
+  val data = new Array[Float](length);
+  {
+    val random = new java.util.Random(1)
+    var i = 0; while( i < length) {
+      data(i) = random.nextFloat
+      i += 1
+    }
   }
 
   val dataArray0 = DataArray[Float1, RawFloat](data)

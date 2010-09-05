@@ -48,15 +48,17 @@ object WrapperBench {
 
   val dataArray = new Array[Float](length)
   random.setSeed(1)
-  for (i <- 0 until length) {
+  var i = 0; while (i < length) {
     dataArray(i) = random.nextFloat
+    i += 1
   }
 
   val byteBuffer = ByteBuffer.allocateDirect(4*length).order(ByteOrder.nativeOrder)
   val dataBuffer = byteBuffer.asFloatBuffer
   random.setSeed(1)
-  for (i <- 0 until length) {
+  i = 0; while (i < length) {
     dataBuffer.put(i, random.nextFloat)
+    i += 1
   }
 
   val convertedBytes = {

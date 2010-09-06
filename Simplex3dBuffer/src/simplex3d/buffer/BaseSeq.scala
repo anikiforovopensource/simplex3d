@@ -169,8 +169,8 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       case s: DataView[_, _] => view = true; "DataView"
     }) +
     "[" + getElemName() + ", " + RawData.name(rawType)+ "](" +
-    (if (view) "offset = " + offset + ", " else "") + "stride = " + stride +
-    ", size = " + size + ")"
+    (if (view) "offset = " + offset + ", " else "") +
+    "stride = " + stride + ", size = " + size + ")"
   }
 }
 
@@ -565,13 +565,14 @@ abstract class CompositeSeq[E <: Composite, +R <: RawData](
 ) extends BaseSeq[E, E#Element, R](
   backing.shared, backing.buffer, backing, offset, stride
 ) {
-  final def componentManifest = backing.elementManifest
+  final def componentManifest = backingSeq.elementManifest
 
-  final def asReadOnlyBuffer() :R#BufferType = backing.asReadOnlyBuffer()
-  final def asBuffer() :R#BufferType = backing.asBuffer()
+  final def asReadOnlyBuffer() :R#BufferType = backingSeq.asReadOnlyBuffer()
+  final def asBuffer() :R#BufferType =
+    backingSeq.asInstanceOf[ContiguousSeq[E#Component, R]].asBuffer()
   
-  final def rawType = backing.rawType
-  final def normalized: Boolean = backing.normalized
+  final def rawType = backingSeq.rawType
+  final def normalized: Boolean = backingSeq.normalized
 
-  private[buffer] final def mkBindingBuffer(): Buffer = backing.mkBindingBuffer
+  private[buffer] final def mkBindingBuffer(): Buffer = backingSeq.mkBindingBuffer
 }

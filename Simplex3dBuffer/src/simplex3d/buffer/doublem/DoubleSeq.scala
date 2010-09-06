@@ -62,8 +62,8 @@ private[doublem] object Shared {
 import Shared._
 
 private[buffer] sealed abstract class BaseDouble1[+R <: ReadableDouble](
-  shared: AnyRef, buff: R#BufferType, backing: AnyRef, offset: Int, stride: Int
-) extends BaseSeq[Double1, Double, R](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: R#BufferType, backing: AnyRef, off: Int, str: Int
+) extends BaseSeq[Double1, Double, R](shared, buff, backing, off, str) {
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Double
   final def components: Int = 1
@@ -74,8 +74,8 @@ private[buffer] sealed abstract class BaseDouble1[+R <: ReadableDouble](
 
 // Type: SByte
 private[buffer] sealed abstract class SeqDouble1SByte(
-  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[SByte](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[SByte](shared, buff, backing, off, str) {
   final def rawType = RawData.SByte
   final def normalized = true
 
@@ -96,9 +96,9 @@ private[buffer] sealed abstract class SeqDouble1SByte(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1SByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewDouble1SByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+    new ViewDouble1SByte(byteBuffer, byteBuffer.duplicate(), off, str)
   }
 }
 
@@ -139,13 +139,13 @@ private[buffer] final class BufferDouble1SByte(
 private[buffer] final class ViewDouble1SByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1SByte(
-  shared, buff, new BufferDouble1SByte(shared, buff), offset, stride
+  shared, buff, new BufferDouble1SByte(shared, buff), off, str
 ) with DataView[Double1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1SByte(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = {
@@ -161,8 +161,8 @@ private[buffer] final class ViewDouble1SByte(
 
 // Type: UByte
 private[buffer] sealed abstract class SeqDouble1UByte(
-  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[UByte](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[UByte](shared, buff, backing, off, str) {
   final def rawType = RawData.UByte
   final def normalized = true
 
@@ -183,9 +183,9 @@ private[buffer] sealed abstract class SeqDouble1UByte(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1UByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewDouble1UByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+    new ViewDouble1UByte(byteBuffer, byteBuffer.duplicate(), off, str)
   }
 }
 
@@ -220,13 +220,13 @@ private[buffer] final class BufferDouble1UByte(
 private[buffer] final class ViewDouble1UByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1UByte(
-  shared, buff, new BufferDouble1UByte(shared, buff), offset, stride
+  shared, buff, new BufferDouble1UByte(shared, buff), off, str
 ) with DataView[Double1, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1UByte(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = (buff.get(offset + i*stride) & 0xFF)*fromUByte
@@ -239,8 +239,8 @@ private[buffer] final class ViewDouble1UByte(
 
 // Type: SShort
 private[buffer] sealed abstract class SeqDouble1SShort(
-  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[SShort](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[SShort](shared, buff, backing, off, str) {
   final def rawType = RawData.SShort
   final def normalized = true
 
@@ -261,10 +261,10 @@ private[buffer] sealed abstract class SeqDouble1SShort(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1SShort(byteBuffer, byteBuffer.asShortBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewDouble1SShort(
-      byteBuffer, byteBuffer.asShortBuffer(), offset, stride
+      byteBuffer, byteBuffer.asShortBuffer(), off, str
     )
   }
 }
@@ -306,13 +306,13 @@ private[buffer] final class BufferDouble1SShort(
 private[buffer] final class ViewDouble1SShort(
   shared: ByteBuffer,
   buff: ShortBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1SShort(
-  shared, buff, new BufferDouble1SShort(shared, buff), offset, stride
+  shared, buff, new BufferDouble1SShort(shared, buff), off, str
 ) with DataView[Double1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1SShort(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = {
@@ -328,8 +328,8 @@ private[buffer] final class ViewDouble1SShort(
 
 // Type: UShort
 private[buffer] sealed abstract class SeqDouble1UShort(
-  shared: AnyRef, buff: CharBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[UShort](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: CharBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[UShort](shared, buff, backing, off, str) {
   final def rawType = RawData.UShort
   final def normalized = true
 
@@ -350,9 +350,9 @@ private[buffer] sealed abstract class SeqDouble1UShort(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1UShort(byteBuffer, byteBuffer.asCharBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewDouble1UShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
+    new ViewDouble1UShort(byteBuffer, byteBuffer.asCharBuffer(), off, str)
   }
 }
 
@@ -387,13 +387,13 @@ private[buffer] final class BufferDouble1UShort(
 private[buffer] final class ViewDouble1UShort(
   shared: ByteBuffer,
   buff: CharBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1UShort(
-  shared, buff, new BufferDouble1UShort(shared, buff), offset, stride
+  shared, buff, new BufferDouble1UShort(shared, buff), off, str
 ) with DataView[Double1, UShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1UShort(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = buff.get(offset + i*stride)*fromUShort
@@ -406,8 +406,8 @@ private[buffer] final class ViewDouble1UShort(
 
 // Type: SInt
 private[buffer] sealed abstract class SeqDouble1SInt(
-  shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[SInt](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: IntBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[SInt](shared, buff, backing, off, str) {
   final def rawType = RawData.SInt
   final def normalized = true
 
@@ -428,9 +428,9 @@ private[buffer] sealed abstract class SeqDouble1SInt(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1SInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewDouble1SInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+    new ViewDouble1SInt(byteBuffer, byteBuffer.asIntBuffer(), off, str)
   }
 }
 
@@ -465,13 +465,13 @@ private[buffer] final class BufferDouble1SInt(
 private[buffer] final class ViewDouble1SInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1SInt(
-  shared, buff, new BufferDouble1SInt(shared, buff), offset, stride
+  shared, buff, new BufferDouble1SInt(shared, buff), off, str
 ) with DataView[Double1, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1SInt(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = buff.get(offset + i*stride)*fromSInt
@@ -484,8 +484,8 @@ private[buffer] final class ViewDouble1SInt(
 
 // Type: UInt
 private[buffer] sealed abstract class SeqDouble1UInt(
-  shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[UInt](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: IntBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[UInt](shared, buff, backing, off, str) {
   final def rawType = RawData.UInt
   final def normalized = true
 
@@ -506,9 +506,9 @@ private[buffer] sealed abstract class SeqDouble1UInt(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1UInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewDouble1UInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+    new ViewDouble1UInt(byteBuffer, byteBuffer.asIntBuffer(), off, str)
   }
 }
 
@@ -542,13 +542,13 @@ private[buffer] final class BufferDouble1UInt(
 private[buffer] final class ViewDouble1UInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1UInt(
-  shared, buff, new BufferDouble1UInt(shared, buff), offset, stride
+  shared, buff, new BufferDouble1UInt(shared, buff), off, str
 ) with DataView[Double1, UInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1UInt(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = (buff.get(offset + i*stride).toLong & 0xFFFFFFFFL)*fromUInt
@@ -561,8 +561,8 @@ private[buffer] final class ViewDouble1UInt(
 
 // Type: HalfFloat
 private[buffer] sealed abstract class SeqDouble1HalfFloat(
-  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[HalfFloat](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[HalfFloat](shared, buff, backing, off, str) {
   final def rawType: Int = RawData.HalfFloat
   final def normalized = false
 
@@ -583,10 +583,10 @@ private[buffer] sealed abstract class SeqDouble1HalfFloat(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1HalfFloat(byteBuffer, byteBuffer.asShortBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewDouble1HalfFloat(
-      byteBuffer, byteBuffer.asShortBuffer(), offset, stride
+      byteBuffer, byteBuffer.asShortBuffer(), off, str
     )
   }
 }
@@ -618,13 +618,13 @@ private[buffer] final class BufferDouble1HalfFloat(
 private[buffer] final class ViewDouble1HalfFloat(
   shared: ByteBuffer,
   buff: ShortBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1HalfFloat(
-  shared, buff, new BufferDouble1HalfFloat(shared, buff), offset, stride
+  shared, buff, new BufferDouble1HalfFloat(shared, buff), off, str
 ) with DataView[Double1, HalfFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1HalfFloat(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = fromHalfFloat(buff.get(offset + i*stride))
@@ -637,8 +637,8 @@ private[buffer] final class ViewDouble1HalfFloat(
 
 // Type: RawFloat
 private[buffer] sealed abstract class SeqDouble1RawFloat(
-  shared: AnyRef, buff: FloatBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[RawFloat](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: FloatBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[RawFloat](shared, buff, backing, off, str) {
   final def rawType: Int = RawData.RawFloat
   final def normalized = false
 
@@ -659,10 +659,10 @@ private[buffer] sealed abstract class SeqDouble1RawFloat(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1RawFloat(byteBuffer, byteBuffer.asFloatBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewDouble1RawFloat(
-      byteBuffer, byteBuffer.asFloatBuffer(), offset, stride
+      byteBuffer, byteBuffer.asFloatBuffer(), off, str
     )
   }
 }
@@ -694,13 +694,13 @@ private[buffer] final class BufferDouble1RawFloat(
 private[buffer] final class ViewDouble1RawFloat(
   shared: ByteBuffer,
   buff: FloatBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1RawFloat(
-  shared, buff, new BufferDouble1RawFloat(shared, buff), offset, stride
+  shared, buff, new BufferDouble1RawFloat(shared, buff), off, str
 ) with DataView[Double1, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1RawFloat(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = buff.get(offset + i*stride)
@@ -710,8 +710,8 @@ private[buffer] final class ViewDouble1RawFloat(
 
 // Type: RawDouble
 private[buffer] sealed abstract class SeqDouble1RawDouble(
-  shared: AnyRef, buff: DoubleBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseDouble1[RawDouble](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: DoubleBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseDouble1[RawDouble](shared, buff, backing, off, str) {
   final def rawType: Int = RawData.RawDouble
   final def normalized = false
 
@@ -732,10 +732,10 @@ private[buffer] sealed abstract class SeqDouble1RawDouble(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferDouble1RawDouble(byteBuffer, byteBuffer.asDoubleBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new ViewDouble1RawDouble(
-      byteBuffer, byteBuffer.asDoubleBuffer(), offset, stride
+      byteBuffer, byteBuffer.asDoubleBuffer(), off, str
     )
   }
 }
@@ -767,13 +767,13 @@ private[buffer] final class BufferDouble1RawDouble(
 private[buffer] final class ViewDouble1RawDouble(
   shared: ByteBuffer,
   buff: DoubleBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqDouble1RawDouble(
-  shared, buff, new BufferDouble1RawDouble(shared, buff), offset, stride
+  shared, buff, new BufferDouble1RawDouble(shared, buff), off, str
 ) with DataView[Double1, RawDouble] {
   protected[buffer] def mkReadOnlyInstance() = new ViewDouble1RawDouble(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Double = buff.get(offset + i*stride)

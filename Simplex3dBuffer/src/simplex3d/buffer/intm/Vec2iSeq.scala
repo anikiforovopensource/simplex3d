@@ -30,8 +30,8 @@ import simplex3d.buffer._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseVec2i[+R <: ReadableInt](
-  backing: ContiguousSeq[Int1, R], offset: Int, stride: Int
-) extends CompositeSeq[Vec2i, R](backing, offset, stride) {
+  backing: ContiguousSeq[Int1, R], off: Int, str: Int
+) extends CompositeSeq[Vec2i, R](backing, off, str) {
   final def elementManifest = Vec2i.Manifest
   final def components: Int = 2
 
@@ -72,11 +72,11 @@ private[buffer] abstract class BaseVec2i[+R <: ReadableInt](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]]
     )
 
-  def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
+  def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int)
   :ReadDataView[Vec2i, R] =
     new ViewVec2i[R](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]],
-      offset, stride
+      off, str
     )
 }
 
@@ -98,11 +98,11 @@ private[buffer] final class BufferVec2i[+R <: ReadableInt](
 
 private[buffer] final class ViewVec2i[+R <: ReadableInt](
   backingSeq: DataBuffer[Int1, R],
-  offset: Int,
-  stride: Int
-) extends BaseVec2i[R](backingSeq, offset, stride) with DataView[Vec2i, R] {
+  off: Int,
+  str: Int
+) extends BaseVec2i[R](backingSeq, off, str) with DataView[Vec2i, R] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Int1, R]],
-    offset, stride
+    off, str
   )
 }

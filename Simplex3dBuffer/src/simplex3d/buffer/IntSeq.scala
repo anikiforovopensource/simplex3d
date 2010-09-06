@@ -30,8 +30,8 @@ import simplex3d.buffer.Util._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
-  shared: AnyRef, buff: R#BufferType, backing: AnyRef, offset: Int, stride: Int
-) extends BaseSeq[Int1, Int, R](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: R#BufferType, backing: AnyRef, off: Int, str: Int
+) extends BaseSeq[Int1, Int, R](shared, buff, backing, off, str) {
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Int
   final def components: Int = 1
@@ -42,8 +42,8 @@ private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
 
 // Type: UByte
 private[buffer] sealed abstract class SeqInt1UByte(
-  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[UByte](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[UByte](shared, buff, backing, off, str) {
   final def rawType = RawData.UByte
   final def normalized = false
 
@@ -64,9 +64,9 @@ private[buffer] sealed abstract class SeqInt1UByte(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1UByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+    new ViewInt1UByte(byteBuffer, byteBuffer.duplicate(), off, str)
   }
 }
 
@@ -97,13 +97,13 @@ private[buffer] final class BufferInt1UByte(
 private[buffer] final class ViewInt1UByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1UByte(
-  shared, buff, new BufferInt1UByte(shared, buff), offset, stride
+  shared, buff, new BufferInt1UByte(shared, buff), off, str
 ) with DataView[Int1, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UByte(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
@@ -113,8 +113,8 @@ private[buffer] final class ViewInt1UByte(
 
 // Type: UShort
 private[buffer] sealed abstract class SeqInt1UShort(
-  shared: AnyRef, buff: CharBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[UShort](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: CharBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[UShort](shared, buff, backing, off, str) {
   final def rawType = RawData.UShort
   final def normalized = false
 
@@ -135,9 +135,9 @@ private[buffer] sealed abstract class SeqInt1UShort(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UShort(byteBuffer, byteBuffer.asCharBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1UShort(byteBuffer, byteBuffer.asCharBuffer(), offset, stride)
+    new ViewInt1UShort(byteBuffer, byteBuffer.asCharBuffer(), off, str)
   }
 }
 
@@ -168,13 +168,13 @@ private[buffer] final class BufferInt1UShort(
 private[buffer] final class ViewInt1UShort(
   shared: ByteBuffer,
   buff: CharBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1UShort(
-  shared, buff, new BufferInt1UShort(shared, buff), offset, stride
+  shared, buff, new BufferInt1UShort(shared, buff), off, str
 ) with DataView[Int1, UShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UShort(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -187,8 +187,8 @@ private[buffer] final class ViewInt1UShort(
 
 // Type: UInt
 private[buffer] sealed abstract class SeqInt1UInt(
-  shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[UInt](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: IntBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[UInt](shared, buff, backing, off, str) {
   final def rawType = RawData.UInt
   final def normalized = false
 
@@ -209,9 +209,9 @@ private[buffer] sealed abstract class SeqInt1UInt(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1UInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1UInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+    new ViewInt1UInt(byteBuffer, byteBuffer.asIntBuffer(), off, str)
   }
 }
 
@@ -240,13 +240,13 @@ private[buffer] final class BufferInt1UInt(
 private[buffer] final class ViewInt1UInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1UInt(
-  shared, buff, new BufferInt1UInt(shared, buff), offset, stride
+  shared, buff, new BufferInt1UInt(shared, buff), off, str
 ) with DataView[Int1, UInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UInt(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -256,8 +256,8 @@ private[buffer] final class ViewInt1UInt(
 
 // Type: SByte
 private[buffer] sealed abstract class SeqInt1SByte(
-  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[SByte](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ByteBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[SByte](shared, buff, backing, off, str) {
   final def rawType = RawData.SByte
   final def normalized = false
 
@@ -278,9 +278,9 @@ private[buffer] sealed abstract class SeqInt1SByte(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SByte(byteBuffer, byteBuffer.duplicate())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1SByte(byteBuffer, byteBuffer.duplicate(), offset, stride)
+    new ViewInt1SByte(byteBuffer, byteBuffer.duplicate(), off, str)
   }
 }
 
@@ -311,13 +311,13 @@ private[buffer] final class BufferInt1SByte(
 private[buffer] final class ViewInt1SByte(
   shared: ByteBuffer,
   buff: ByteBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1SByte(
-  shared, buff, new BufferInt1SByte(shared, buff), offset, stride
+  shared, buff, new BufferInt1SByte(shared, buff), off, str
 ) with DataView[Int1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SByte(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -327,8 +327,8 @@ private[buffer] final class ViewInt1SByte(
 
 // Type: SShort
 private[buffer] sealed abstract class SeqInt1SShort(
-  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[SShort](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: ShortBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[SShort](shared, buff, backing, off, str) {
   final def rawType = RawData.SShort
   final def normalized = false
 
@@ -349,9 +349,9 @@ private[buffer] sealed abstract class SeqInt1SShort(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SShort(byteBuffer, byteBuffer.asShortBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1SShort(byteBuffer, byteBuffer.asShortBuffer(), offset, stride)
+    new ViewInt1SShort(byteBuffer, byteBuffer.asShortBuffer(), off, str)
   }
 }
 
@@ -382,13 +382,13 @@ private[buffer] final class BufferInt1SShort(
 private[buffer] final class ViewInt1SShort(
   shared: ByteBuffer,
   buff: ShortBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1SShort(
-  shared, buff, new BufferInt1SShort(shared, buff), offset, stride
+  shared, buff, new BufferInt1SShort(shared, buff), off, str
 ) with DataView[Int1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SShort(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)
@@ -398,8 +398,8 @@ private[buffer] final class ViewInt1SShort(
 
 // Type: SInt
 private[buffer] sealed abstract class SeqInt1SInt(
-  shared: AnyRef, buff: IntBuffer, backing: AnyRef, offset: Int, stride: Int
-) extends BaseInt1[SInt](shared, buff, backing, offset, stride) {
+  shared: AnyRef, buff: IntBuffer, backing: AnyRef, off: Int, str: Int
+) extends BaseInt1[SInt](shared, buff, backing, off, str) {
   final def rawType = RawData.SInt
   final def normalized = false
 
@@ -420,9 +420,9 @@ private[buffer] sealed abstract class SeqInt1SInt(
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
     new BufferInt1SInt(byteBuffer, byteBuffer.asIntBuffer())
   }
-  final def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) = {
+  final def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int) = {
     byteBuffer.clear(); byteBuffer.order(ByteOrder.nativeOrder())
-    new ViewInt1SInt(byteBuffer, byteBuffer.asIntBuffer(), offset, stride)
+    new ViewInt1SInt(byteBuffer, byteBuffer.asIntBuffer(), off, str)
   }
 }
 
@@ -451,13 +451,13 @@ private[buffer] final class BufferInt1SInt(
 private[buffer] final class ViewInt1SInt(
   shared: ByteBuffer,
   buff: IntBuffer,
-  offset: Int,
-  stride: Int
+  off: Int,
+  str: Int
 ) extends SeqInt1SInt(
-  shared, buff, new BufferInt1SInt(shared, buff), offset, stride
+  shared, buff, new BufferInt1SInt(shared, buff), off, str
 ) with DataView[Int1, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SInt(
-    shared, buffer.asReadOnlyBuffer(), offset, stride
+    shared, buffer.asReadOnlyBuffer(), off, str
   )
 
   def apply(i: Int) :Int = buff.get(offset + i*stride)

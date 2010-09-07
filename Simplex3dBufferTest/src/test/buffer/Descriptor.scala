@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test
+package test.buffer
+
+import simplex3d.buffer._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Launcher {
-  def main(args: Array[String]) {
-    org.scalatest.tools.Runner.main(Array[String](
-      "-p",
-      "out/production/Simplex3dBufferTest",
-      "-gNHL"
-    ))
-  }
-}
+case class Descriptor(
+  elementManifest: Manifest[_],
+  componentManifest: Manifest[_],
+  components: Int,
+  rawType: Int,
+  normalized: Boolean
+)

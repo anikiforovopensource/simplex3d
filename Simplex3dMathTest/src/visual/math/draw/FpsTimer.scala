@@ -27,34 +27,31 @@ package visual.math.draw
 class FpsTimer {
   private val start = System.currentTimeMillis
   private var last = System.currentTimeMillis
-  private var fpsVal: Float = 0
-  private val fpsCounter = new Loop(5)
-  private var uptimeVal: Float = 0
 
-  def fps = fpsVal
-  def uptime = uptimeVal
+  private val fpsSampleRateMillis = 500
+  private var timestamp = last
+  private var count = 0
+
+  private var _uptime: Float = 0
+  private var _tpf: Float = 0
+  private var _fps: Float = 0
+
+  def uptime = _uptime
+  def tpf = _tpf
+  def fps = _fps
 
   def update() {
     val cur = System.currentTimeMillis
-    fpsCounter.put(1000f/(cur - last))
+    _tpf = (cur - last)/1000f
     last = cur
-    uptimeVal = (cur - start)/1000f
-    fpsVal = fpsCounter.average
-  }
+    _uptime = (cur - start)/1000f
 
-  private class Loop(val size: Int) {
-    private var i = 0
-    private val a = new Array[Float](size)
+    count += 1
+    if (cur - timestamp >= fpsSampleRateMillis) {
+      _fps = count*1000f / (cur - timestamp)
 
-    def put(x: Float) {
-      a(i) = x
-      i += 1
-      if (i >= size) i = 0
-    }
-
-    def average() = {
-      val sum = (0f /: a) (_ + _)
-      sum / size
+      count = 0
+      timestamp = cur
     }
   }
 }

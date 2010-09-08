@@ -33,7 +33,7 @@ import simplex3d.math.doublem.DoubleMath._
 object MandelbrotSmoothTest {
 
   def main(args: Array[String]) {
-    FunFrame.launch(new Fun {
+    Launcher.launch(new Function {
 
     val dynamicColor = false
 

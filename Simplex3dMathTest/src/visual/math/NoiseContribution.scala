@@ -43,7 +43,7 @@ import simplex3d.math.doublem.DoubleMath._
 object NoiseContribution {
 
   def main(args: Array[String]) {
-    FunFrame.launch(new Fun {
+    Launcher.launch(new Function {
     final def apply(pixel: ReadVec2, time: Double)
     :ReadVec3 =
     {

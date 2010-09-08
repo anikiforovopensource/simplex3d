@@ -26,7 +26,7 @@ import simplex3d.math.doublem.renamed._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class Fun {
+abstract class Function {
 
   /**
    * Width and height of the rendering surface

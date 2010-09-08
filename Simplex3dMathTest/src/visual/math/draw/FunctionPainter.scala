@@ -32,7 +32,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object FunPainter {
+object FunctionPainter {
 
   private final def rgb(c: ReadVec3) :Int = {
     (IntMath.clamp(int(c.r*255), 0, 255) << 16) |
@@ -41,7 +41,7 @@ object FunPainter {
     0xFF000000
   }
 
-  private class FunJob(fun: Fun, es: ExecutorService) extends Job(es) {
+  private class PainJob(function: Function, es: ExecutorService) extends Job(es) {
     var buffer: Array[Int] = null
     var width = 0
     var height = 0
@@ -62,7 +62,7 @@ object FunPainter {
       yoffset = 0
       this.time = time
 
-      fun.dimensions.asInstanceOf[Vec2] := Vec2(width, height)
+      function.dimensions.asInstanceOf[Vec2] := Vec2(width, height)
     }
 
     def runSingleThreaded() {
@@ -73,7 +73,7 @@ object FunPainter {
 
         var x = 0; while(x < width) {
 
-          buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
+          buffer(x + y*width) = rgb(function(ConstVec2(x, h), time))
 
           x += 1
         }
@@ -101,7 +101,7 @@ object FunPainter {
 
         final def loop(y :Int, h: Int) {
           var x = 0; while(x < width) {
-            buffer(x + y*width) = rgb(fun(ConstVec2(x, h), time))
+            buffer(x + y*width) = rgb(function(ConstVec2(x, h), time))
 
             x += 1
           }
@@ -111,9 +111,9 @@ object FunPainter {
     }
   }
 
-  def apply(fun: Fun) :Painter = new Painter() {
+  def apply(function: Function) :Painter = new Painter() {
     private val start = System.currentTimeMillis
-    private val job = new FunJob(fun, newCachedThreadPool())
+    private val job = new PainJob(function, newCachedThreadPool())
 
     private var curFrame = 0
     // the rendering algorithm only uses 2 frames
@@ -124,6 +124,7 @@ object FunPainter {
     def paint(width: Int, height: Int) :Array[Int] = {
       def time = (System.currentTimeMillis - start)/1000.0
 
+      // Handle resize and/or wait for rendering to finish.
       val retBuffer: Array[Int] =
         if (job.width != width || job.height != height) {
           job.cancelAndWait()
@@ -138,22 +139,25 @@ object FunPainter {
           job.buffer
         }
 
+      // Setup the next rendering (handle resize if necessary).
       curFrame += 1
       if (curFrame >= frames.length) curFrame = 0
       var (buffer, w, h) = frames(curFrame)
-
       if (w != width || h != height) {
         buffer = new Array[Int](width*height)
         frames(curFrame) = (buffer, width, height)
       }
 
+      // Start the next rendering in a parallel thread.
       job.setData(buffer, width, height, time)
       job.exec
+
+      // Return perviously competed rendering.
       retBuffer
     }
   }
 
-  def testLoad(fun: Fun, iterations: Int) {
+  def testLoad(function: Function, iterations: Int) {
     val timer = new FpsTimer()
 
     def time = (System.currentTimeMillis % 100000000)/1000.0
@@ -161,7 +165,7 @@ object FunPainter {
     val height = 480
     val buffer = new Array[Int](width*height)
 
-    val job = new FunJob(fun, newCachedThreadPool())
+    val job = new PainJob(function, newCachedThreadPool())
 
     var i = 0; while (i < iterations) {
       timer.update()

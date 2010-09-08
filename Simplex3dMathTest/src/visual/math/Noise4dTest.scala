@@ -37,7 +37,7 @@ object Noise4dTest {
     val noiseSpeed2 = 1.0/5
     val scrollSpeed = 10
 
-    FunFrame.launch(new Fun {
+    Launcher.launch(new Function {
     final def apply(pixel: ReadVec2, t: Double) = {
       val p = pixel + t*scrollSpeed
       Vec3((noise1(Vec4(p*scale, t*noiseSpeed1, t*noiseSpeed2)) + 1)/2)

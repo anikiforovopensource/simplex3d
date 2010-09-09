@@ -23,7 +23,7 @@ package test.buffer
 import org.scalatest._
 
 import java.nio._
-import simplex3d.buffer._
+import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.RawData._
 
 
@@ -32,7 +32,7 @@ import simplex3d.buffer.RawData._
  */
 object TestUtil extends FunSuite {
 
-  private val random = new java.util.Random(0)
+  private val randomSrc = new java.util.Random(0)
 
   def checkBuffer(testing: Buffer, data: Buffer) {
     assert(testing ne data)
@@ -63,78 +63,98 @@ object TestUtil extends FunSuite {
     }
   }
 
-  private def byteArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Byte](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextInt.toByte
-      }
+  private def random(b: ByteBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextInt.toByte)
+      i += 1
     }
-    array
+    b
   }
-  private def shortArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Short](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextInt.toShort
-      }
+  private def random(b: ShortBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextInt.toShort)
+      i += 1
     }
-    array
+    b
   }
-  private def charArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Char](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextInt.toChar
-      }
+  private def random(b: CharBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextInt.toChar)
+      i += 1
     }
-    array
+    b
   }
-  private def intArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Int](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextInt
-      }
+  private def random(b: IntBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextInt)
+      i += 1
     }
-    array
+    b
   }
-  private def floatArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Float](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextFloat
-      }
+  private def random(b: FloatBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextFloat)
+      i += 1
     }
-    array
+    b
   }
-  private def doubleArray(size: Int, fillRandom: Boolean) = {
-    val array = new Array[Double](size)
-    if (fillRandom) {
-      var i = 0; while (i < array.length) {
-        array(i) = random.nextDouble
-      }
+  private def random(b: DoubleBuffer, fillRandom: Boolean) = {
+    var i = 0; while(i < b.limit) {
+      b.put(i, randomSrc.nextDouble)
+      i += 1
     }
-    array
+    b
   }
 
-  private def genArray[A](count: Int, descriptor: Descriptor[_, _], fillRandom: Boolean) :A = {
+  private def genArray[R <: RawData](
+    size: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
+  ) :R#ArrayType = {
     (descriptor.rawType match {
-      case SByte => byteArray(descriptor.components*count, fillRandom)
-      case UByte => byteArray(descriptor.components*count, fillRandom)
-      case SShort => shortArray(descriptor.components*count, fillRandom)
-      case UShort => charArray(descriptor.components*count, fillRandom)
-      case SInt => intArray(descriptor.components*count, fillRandom)
-      case UInt => intArray(descriptor.components*count, fillRandom)
-      case HalfFloat => shortArray(descriptor.components*count, fillRandom)
-      case RawFloat => floatArray(descriptor.components*count, fillRandom)
-      case RawDouble => doubleArray(descriptor.components*count, fillRandom)
-    }).asInstanceOf[A]
+      case SByte => random(ByteBuffer.wrap(new Array[Byte](size)), fillRandom).array
+      case UByte => random(ByteBuffer.wrap(new Array[Byte](size)), fillRandom).array
+      case SShort => random(ShortBuffer.wrap(new Array[Short](size)), fillRandom).array
+      case UShort => random(CharBuffer.wrap(new Array[Char](size)), fillRandom).array
+      case SInt => random(IntBuffer.wrap(new Array[Int](size)), fillRandom).array
+      case UInt => random(IntBuffer.wrap(new Array[Int](size)), fillRandom).array
+      case HalfFloat => random(ShortBuffer.wrap(new Array[Short](size)), fillRandom).array
+      case RawFloat => random(FloatBuffer.wrap(new Array[Float](size)), fillRandom).array
+      case RawDouble => random(DoubleBuffer.wrap(new Array[Double](size)), fillRandom).array
+    }).asInstanceOf[AnyRef].asInstanceOf[R#ArrayType]
   }
-  def genArray[A](count: Int, descriptor: Descriptor[_, _]) :A = {
-    genArray(count, descriptor, false)
+  def genArray[R <: RawData](
+    size: Int, descriptor: Descriptor[_, R]
+  ) :R#ArrayType = {
+    genArray(size, descriptor, false)
   }
-  def genRandomArray[A](count: Int, descriptor: Descriptor[_, _]) :A = {
-    genArray(count, descriptor, true)
+  def genRandomArray[R <: RawData](
+    size: Int, descriptor: Descriptor[_, R]
+  ) :R#ArrayType = {
+    genArray(size, descriptor, true)
+  }
+  
+  private def genBuffer[R <: RawData](
+    byteSize: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
+  ) :(ByteBuffer, R#BufferType) = {
+    (descriptor.rawType match {
+      case SByte => val b = alloc(byteSize); (b, random(b, fillRandom))
+      case UByte => val b = alloc(byteSize); (b, random(b, fillRandom))
+      case SShort => val b = alloc(byteSize); (b, random(b.asShortBuffer, fillRandom))
+      case UShort => val b = alloc(byteSize); (b, random(b.asCharBuffer, fillRandom))
+      case SInt => val b = alloc(byteSize); (b, random(b.asIntBuffer, fillRandom))
+      case UInt => val b = alloc(byteSize); (b, random(b.asIntBuffer, fillRandom))
+      case HalfFloat => val b = alloc(byteSize); (b, random(b.asShortBuffer, fillRandom))
+      case RawFloat => val b = alloc(byteSize); (b, random(b.asFloatBuffer, fillRandom))
+      case RawDouble => val b = alloc(byteSize); (b, random(b.asDoubleBuffer, fillRandom))
+    }).asInstanceOf[(ByteBuffer, R#BufferType)]
+  }
+  def genBuffer[R <: RawData](
+    byteSize: Int, descriptor: Descriptor[_, R]
+  ) :(ByteBuffer, R#BufferType) = {
+    genBuffer(byteSize, descriptor, false)
+  }
+  def genRandomBuffer[R <: RawData](
+    byteSize: Int, descriptor: Descriptor[_, R]
+  ) :(ByteBuffer, R#BufferType) = {
+    genBuffer(byteSize, descriptor, true)
   }
 }

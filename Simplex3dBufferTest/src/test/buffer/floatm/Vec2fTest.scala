@@ -22,11 +22,12 @@ package test.buffer
 package floatm
 
 import org.scalatest._
-
-import simplex3d.math._
 import simplex3d.math.floatm._
-import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
+import simplex3d.buffer._
 import simplex3d.buffer.floatm._
+
+import Descriptors._
+import FactoryTest._
 
 
 /**
@@ -35,11 +36,6 @@ import simplex3d.buffer.floatm._
 class Vec2fTest extends FunSuite {
 
   test("Factories") {
-    import java.nio._
-    import AttributeTest._
-    import Descriptors._
-    testArray(DataArray[Vec2f, UShort](10), false, CharBuffer.wrap(new Array[Char](20)))
-    testBuffer(DataBuffer[Vec2f, UShort](10), false, CharBuffer.wrap(new Array[Char](20)))
-    testView(DataView[Vec2f, UShort](alloc(10*2*2), 0, 2), 0, 2, false, CharBuffer.wrap(new Array[Char](20)))
+    testArrayFomSize(DataArray[Vec2f, UShort](_))
   }
 }

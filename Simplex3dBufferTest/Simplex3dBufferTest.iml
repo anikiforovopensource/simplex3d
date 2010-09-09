@@ -16,10 +16,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-library-2.8.0" level="application" />
+    <orderEntry type="library" name="scalatest" level="project" />
+    <orderEntry type="library" name="asm-3.2" level="project" />
     <orderEntry type="module" module-name="Simplex3dBuffer" />
     <orderEntry type="module" module-name="Simplex3dMath" />
-    <orderEntry type="library" name="asm-3.2" level="project" />
-    <orderEntry type="library" name="scalatest" level="project" />
   </component>
 </module>
 

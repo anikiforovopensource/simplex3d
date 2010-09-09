@@ -24,6 +24,7 @@ import org.scalatest._
 
 import java.nio._
 import simplex3d.buffer._
+
 import TestUtil._
 
 
@@ -74,17 +75,6 @@ object AttributeTest extends FunSuite {
     data.position(0)
   }
 
-  private def writeIntoArray(array: AnyRef) {
-    array match {
-      case a: Array[Byte] => a(0) = 1
-      case a: Array[Short] => a(0) = 1
-      case a: Array[Char] => a(0) = 1
-      case a: Array[Int] => a(0) = 1
-      case a: Array[Float] => a(0) = 1
-      case a: Array[Double] => a(0) = 1
-    }
-  }
-  
   private def testSeq[E <: MetaElement, R <: RawData](
     seq: ReadDataSeq[E, R],
     readOnly: Boolean,
@@ -159,9 +149,7 @@ object AttributeTest extends FunSuite {
       checkBuffer(wrapArray(ds.array), data)
     }
     else {
-      intercept[Exception] {
-        writeIntoArray(ds.array)
-      }
+      assert(ds.array == null)
     }
 
     testSeq(seq, readOnly, data, descriptor)
@@ -247,6 +235,10 @@ object AttributeTest extends FunSuite {
     assert(seq.sharesStoreObject(seq.asReadOnlySeq))
   }
 /*
+// Test Factory
+  varargFactories
+  test Sequence Cast; sharesStoreObject
+  
 // Test applyUpdate
   apply(i: Int)
   update(i: Int, v: S)

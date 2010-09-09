@@ -34,6 +34,12 @@ object TestUtil extends FunSuite {
 
   private val randomSrc = new java.util.Random(0)
 
+
+  def size(capacity: Int, offset: Int, stride: Int, components: Int) = {
+    val s = (capacity - offset + stride - components)/stride
+    if (s > 0) s else 0
+  }
+
   def checkBuffer(testing: Buffer, data: Buffer) {
     assert(testing ne data)
 
@@ -63,42 +69,48 @@ object TestUtil extends FunSuite {
     }
   }
 
-  private def random(b: ByteBuffer, fillRandom: Boolean) = {
+  private def random(b: ByteBuffer, fillRandom: Boolean) :ByteBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextInt.toByte)
       i += 1
     }
     b
   }
-  private def random(b: ShortBuffer, fillRandom: Boolean) = {
+  private def random(b: ShortBuffer, fillRandom: Boolean) :ShortBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextInt.toShort)
       i += 1
     }
     b
   }
-  private def random(b: CharBuffer, fillRandom: Boolean) = {
+  private def random(b: CharBuffer, fillRandom: Boolean) :CharBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextInt.toChar)
       i += 1
     }
     b
   }
-  private def random(b: IntBuffer, fillRandom: Boolean) = {
+  private def random(b: IntBuffer, fillRandom: Boolean) :IntBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextInt)
       i += 1
     }
     b
   }
-  private def random(b: FloatBuffer, fillRandom: Boolean) = {
+  private def random(b: FloatBuffer, fillRandom: Boolean) :FloatBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextFloat)
       i += 1
     }
     b
   }
-  private def random(b: DoubleBuffer, fillRandom: Boolean) = {
+  private def random(b: DoubleBuffer, fillRandom: Boolean) :DoubleBuffer = {
+    if (!fillRandom) return b
     var i = 0; while(i < b.limit) {
       b.put(i, randomSrc.nextDouble)
       i += 1

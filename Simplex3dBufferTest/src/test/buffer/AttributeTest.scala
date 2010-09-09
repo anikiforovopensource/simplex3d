@@ -96,7 +96,7 @@ object AttributeTest extends FunSuite {
     assert(seq.byteOffset == seq.bytesPerRawComponent*seq.offset)
     assert(seq.byteStride == seq.bytesPerRawComponent*seq.stride)
 
-    assert(seq.size == (data.limit - seq.offset)/seq.stride)
+    assert(seq.size == size(data.limit, seq.offset, seq.stride, seq.components))
     assert(seq.size == seq.length)
 
     if (seq.isReadOnly) {
@@ -149,7 +149,16 @@ object AttributeTest extends FunSuite {
       checkBuffer(wrapArray(ds.array), data)
     }
     else {
-      assert(ds.array == null)
+      intercept[Exception] {
+        ds.array match {
+          case a: Array[Byte] => a(0) = 1
+          case a: Array[Short] => a(0) = 1
+          case a: Array[Char] => a(0) = 1
+          case a: Array[Int] => a(0) = 1
+          case a: Array[Float] => a(0) = 1
+          case a: Array[Double] => a(0) = 1
+        }
+      }
     }
 
     testSeq(seq, readOnly, data, descriptor)
@@ -237,7 +246,7 @@ object AttributeTest extends FunSuite {
 /*
 // Test Factory
   varargFactories
-  test Sequence Cast; sharesStoreObject
+  test Sequence Cast (also with alterered position and limit); sharesStoreObject
   
 // Test applyUpdate
   apply(i: Int)

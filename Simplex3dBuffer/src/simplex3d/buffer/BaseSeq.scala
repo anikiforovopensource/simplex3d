@@ -43,6 +43,10 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
     throw new IllegalArgumentException(
       "Offset must be greater than or equal to zero."
     )
+  if (offset > buffer.capacity)
+    throw new IllegalArgumentException(
+      "Offset must not be greater than the buffer size."
+    )
   if (stride <= 0)
     throw new IllegalArgumentException(
       "Stride must be greater than zero."
@@ -73,8 +77,10 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
     bindingBuffer
   }
 
-  final override val size: Int =
-    (buffer.capacity - offset + stride - components)/stride
+  final override val size: Int = {
+    val s = (buffer.capacity - offset + stride - components)/stride
+    if (s > 0) s else 0
+  }
   final def length = size
 
   def apply(i: Int) :S

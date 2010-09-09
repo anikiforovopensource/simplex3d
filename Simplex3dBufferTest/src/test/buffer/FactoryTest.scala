@@ -22,6 +22,7 @@ package test.buffer
 
 import java.nio._
 import org.scalatest._
+import simplex3d.math.intm._
 import simplex3d.buffer._
 
 import TestUtil._
@@ -33,7 +34,7 @@ import AttributeTest._
  */
 object FactoryTest extends FunSuite {
 
-  def testArrayFomSize[E <: MetaElement, R <: RawData](
+  def testArrayFromSize[E <: MetaElement, R <: RawData](
     factory: (Int) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromSize(factory)(descriptor)
@@ -48,7 +49,7 @@ object FactoryTest extends FunSuite {
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
   }
 
-  def testArrayFomData[E <: MetaElement, R <: RawData](
+  def testArrayFromData[E <: MetaElement, R <: RawData](
     factory: (R#ArrayType) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromData(factory)(descriptor)
@@ -63,7 +64,7 @@ object FactoryTest extends FunSuite {
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
   }
 
-  def testBufferFomSize[E <: MetaElement, R <: RawData](
+  def testBufferFromSize[E <: MetaElement, R <: RawData](
     factory: (Int) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromSize(factory)(descriptor)
@@ -143,17 +144,17 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[Exception] { factory(-1) }
 
-    for (i <- 0 to 8) {
-      val data = wrapArray(genArray(i, descriptor))
-      testArray(factory(i), false, data)(descriptor)
+    for (size <- 0 to 8) {
+      val data = wrapArray(genArray(size*descriptor.components, descriptor))
+      testArray(factory(size), false, data)(descriptor)
     }
   }
 
   private def arrayFromData[E <: MetaElement, R <: RawData](
     factory: (R#ArrayType) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
-    for (i <- 0 to 8) {
-      val a = genRandomArray(i, descriptor);
+    for (size <- 0 to 8) {
+      val a = genRandomArray(size, descriptor);
       testArray(factory(a), false, wrapArray(a))(descriptor)
     }
   }
@@ -163,9 +164,12 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] { factory(-1) }
 
-    for (i <- 0 to 64) {
-      val (bytes, data) = genBuffer(i, descriptor)
-      testBuffer(factory(i), false, data)(descriptor)
+    for (size <- 0 to 64) {
+      val (bytes, data) = genBuffer(
+        size*descriptor.components*RawData.byteLength(descriptor.rawType),
+        descriptor
+      )
+      testBuffer(factory(size), false, data)(descriptor)
     }
   }
 
@@ -182,9 +186,17 @@ object FactoryTest extends FunSuite {
       factory(bytes.asReadOnlyBuffer)
     }
 
-    for (i <- 0 to 64) {
-      val (bytes, data) = genRandomBuffer(i, descriptor);
-      testBuffer(factory(bytes), false, data)(descriptor)
+    val rawBytes = RawData.byteLength(descriptor.rawType)
+
+    for (size <- 0 to 64) {
+      val (bytes, data) = genRandomBuffer(size, descriptor)
+
+      for (i <- 0 to 1; j <- 0 to 1) {
+        bytes.position(IntMath.min(i*rawBytes, size))
+        bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+
+        testBuffer(factory(bytes), false, data)(descriptor)
+      }
     }
   }
 
@@ -208,7 +220,7 @@ object FactoryTest extends FunSuite {
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 64, 1)
+      factory(bytes, 65, 1)
     }
 
     intercept[IllegalArgumentException] {
@@ -221,11 +233,25 @@ object FactoryTest extends FunSuite {
       factory(bytes, 0, 0)
     }
 
-    for (i <- 0 to 64) {
-      val (bytes, data) = genRandomBuffer(i, descriptor)
-      for (offset <- 0 to 4; stride <- 1 to 5) {
-        testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
+    val rawBytes = RawData.byteLength(descriptor.rawType)
+    def test(size: Int) {
+      val (bytes, data) = genRandomBuffer(size, descriptor)
+
+      for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
+        for (i <- 0 to 1; j <- 0 to 1) {
+          bytes.position(IntMath.min(i*rawBytes, size))
+          bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+
+          testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
+        }
       }
+    }
+
+    for (byteSize <- 0 to rawBytes; s <- 0 to 1) {
+      test(byteSize + rawBytes*descriptor.components*10*s)
+    }
+    for (size <- 1 to 10) {
+      test(size*rawBytes)
     }
   }
 
@@ -237,10 +263,18 @@ object FactoryTest extends FunSuite {
       factory(bytes)
     }
 
-    for (i <- 0 to 64) {
-      val (bytes, data) = genRandomBuffer(i, descriptor);
-      testBuffer(factory(bytes), false, data)(descriptor)
-      testBuffer(factory(bytes.asReadOnlyBuffer), true, data)(descriptor)
+    val rawBytes = RawData.byteLength(descriptor.rawType)
+    
+    for (size <- 0 to 64) {
+      val (bytes, data) = genRandomBuffer(size, descriptor);
+
+      for (i <- 0 to 1; j <- 0 to 1) {
+        bytes.position(IntMath.min(i*rawBytes, size))
+        bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+
+        testBuffer(factory(bytes), false, data)(descriptor)
+        testBuffer(factory(bytes.asReadOnlyBuffer), true, data)(descriptor)
+      }
     }
   }
 
@@ -259,7 +293,7 @@ object FactoryTest extends FunSuite {
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 64, 1)
+      factory(bytes, 65, 1)
     }
 
     intercept[IllegalArgumentException] {
@@ -271,13 +305,30 @@ object FactoryTest extends FunSuite {
       val (bytes, data) = genBuffer(64, descriptor)
       factory(bytes, 0, 0)
     }
+    
+    val rawBytes = RawData.byteLength(descriptor.rawType)
+    def test(size: Int) {
+      val (bytes, data) = genRandomBuffer(size, descriptor)
 
-    for (i <- 0 to 64) {
-      val (bytes, data) = genRandomBuffer(i, descriptor)
-      for (offset <- 0 to 4; stride <- 1 to 5) {
-        testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
-        testView(factory(bytes.asReadOnlyBuffer, offset, stride), offset, stride, true, data)(descriptor)
+      for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
+        for (i <- 0 to 1; j <- 0 to 1) {
+          bytes.position(IntMath.min(i*rawBytes, size))
+          bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+
+          val view = factory(bytes, offset, stride)
+          testView(view, offset, stride, false, data)(descriptor)
+
+          val rview = factory(bytes.asReadOnlyBuffer, offset, stride)
+          testView(rview, offset, stride, true, data)(descriptor)
+        }
       }
+    }
+
+    for (byteSize <- 0 to rawBytes; s <- 0 to 1) {
+      test(byteSize + rawBytes*descriptor.components*10*s)
+    }
+    for (size <- 1 to 10) {
+      test(size*rawBytes)
     }
   }
 }

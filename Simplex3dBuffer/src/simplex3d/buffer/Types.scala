@@ -70,7 +70,7 @@ object RawData {
 }
 
 sealed trait RawData {
-  type ArrayType <: Array[_]
+  type ArrayType <: AnyRef // Scalac is too buggy to handle the bound "<: Array[_]"
   type BufferType <: Buffer
 }
 

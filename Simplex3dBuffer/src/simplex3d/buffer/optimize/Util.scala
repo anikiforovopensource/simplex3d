@@ -32,17 +32,17 @@ private[optimize] class Util
  * @author Aleksey Nikiforov (lex)
  */
 private[optimize] object Util {
-  private final val syspropName = "simplex3d.buffer.optimize"
+  private final val sysPropName = "simplex3d.buffer.optimize"
   private final val UnsetOrUnknown = "unset/unknown"
 
   private val syspropValue :String = {
     try {
-      System.getProperty(syspropName, UnsetOrUnknown)
+      System.getProperty(sysPropName, UnsetOrUnknown)
     } catch {
       case any =>
         Logger.getLogger(getClass.getName).log(
           Level.WARNING,
-          "Unable to read the system property '" + syspropName + "'.",
+          "Unable to read the system property '" + sysPropName + "'.",
           any
         )
         UnsetOrUnknown
@@ -55,7 +55,7 @@ private[optimize] object Util {
 
   val helpMsg =
     "Disable buffer optimization by setting the system property '" +
-    syspropName + "' to false."
+    sysPropName + "' to false."
 
 
   def enableTemplateGen :Boolean = {

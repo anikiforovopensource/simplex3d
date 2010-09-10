@@ -66,7 +66,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
             Level.WARNING,
             "Wrong bytecode for '" + replaceString +
             "' from template '" + templateArrayClass + "'. Ensure that the " +
-            "template is compiled without -optimize coplier flag. " +
+            "template is compiled without -optimize compiler flag. " +
             Util.helpMsg,
             badcode.getCause
           )
@@ -105,7 +105,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
   private def testFactory(factory: DataSeq[E, R]) {
     try {
-      val template = fallbackFactory.mkDataBuffer(Util.TestData)
+      val fallback = fallbackFactory.mkDataBuffer(Util.TestData)
 
       testDataArray(factory.mkDataArray(1))
       testDataArray(
@@ -125,23 +125,23 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
       )
 
 
-      testDataSeq(template, factory.mkDataArray(template.size))
-      testDataSeq(template, factory.mkDataArray(
-          fallbackFactory.mkDataArray(template.size).array
+      testDataSeq(fallback, factory.mkDataArray(fallback.size))
+      testDataSeq(fallback, factory.mkDataArray(
+          fallbackFactory.mkDataArray(fallback.size).array
       ))
 
-      testDataSeq(template, factory.mkDataBuffer(template.size))
-      testDataSeq(template, factory.mkDataBuffer(
+      testDataSeq(fallback, factory.mkDataBuffer(fallback.size))
+      testDataSeq(fallback, factory.mkDataBuffer(
           allocateDirectBuffer(
-            template.size*template.components*template.bytesPerRawComponent
+            fallback.size*fallback.components*fallback.bytesPerRawComponent
           )
       ))
 
       val offset = 3
       val stride = 5
-      testDataSeq(template, factory.mkDataView(
+      testDataSeq(fallback, factory.mkDataView(
           allocateDirectBuffer(
-            (offset + template.size*stride)*template.bytesPerRawComponent
+            (offset + fallback.size*stride)*fallback.bytesPerRawComponent
           ),
           offset,
           stride
@@ -176,34 +176,34 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
     assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }
 
-  private def testDataSeq(template: DataSeq[E, R], testing: DataSeq[E, R]) {
+  private def testDataSeq(fallback: DataSeq[E, R], testing: DataSeq[E, R]) {
     assert(
-      template(0).asInstanceOf[Object].getClass ==
+      fallback(0).asInstanceOf[Object].getClass ==
       testing(0).asInstanceOf[Object].getClass
     )
-    assert(template.rawType == testing.rawType)
-    assert(template.normalized == testing.normalized)
+    assert(fallback.rawType == testing.rawType)
+    assert(fallback.normalized == testing.normalized)
 
-    testApplyUpdate(template, testing)
+    testApplyUpdate(fallback, testing)
   }
 
-  private def testApplyUpdate(template: DataSeq[E, R], testing: DataSeq[E, R]) {
-    assert(template.size == testing.size)
+  private def testApplyUpdate(fallback: DataSeq[E, R], testing: DataSeq[E, R]) {
+    assert(fallback.size == testing.size)
 
-    var i = 0; while (i < template.size) {
-      testing(i) = template(i)
+    var i = 0; while (i < fallback.size) {
+      testing(i) = fallback(i)
       i += 1
     }
 
     // check content
-    i = 0; while (i < template.size) {
-      assert(testing(i) == template(i))
+    i = 0; while (i < fallback.size) {
+      assert(testing(i) == fallback(i))
       i += 1
     }
 
     // check backing content
     val btest = testing.backingSeq
-    val btemp = template.backingSeq
+    val btemp = fallback.backingSeq
     var c = 0
     i = testing.offset; while (i < btest.size) {
       var j = 0; while (j < testing.components) {

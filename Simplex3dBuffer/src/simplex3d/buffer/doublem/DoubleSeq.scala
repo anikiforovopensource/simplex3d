@@ -725,7 +725,7 @@ private[buffer] sealed abstract class SeqDouble1RawDouble(
   final def mkDataArray(array: Array[Double]) =
     new ArrayDouble1RawDouble(array, array, DoubleBuffer.wrap(array))
   final def mkDataBuffer(size: Int) = {
-    val buff = alloc(size*4)
+    val buff = alloc(size*8)
     new BufferDouble1RawDouble(buff, buff.asDoubleBuffer())
   }
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {

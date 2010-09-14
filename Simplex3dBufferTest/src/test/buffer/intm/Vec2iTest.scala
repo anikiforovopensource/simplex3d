@@ -43,7 +43,11 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, SByte](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, SByte](_))
     testReadViewFromData(ReadDataView[Vec2i, SByte](_, _, _))
-    
+    testArrayFromCollection[Vec2i, SByte]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SByte](a: _*))
+    testArrayFromCollection[Vec2i, SByte]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SByte](a))
+    testBufferFromCollection[Vec2i, SByte]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SByte](a: _*))
+    testBufferFromCollection[Vec2i, SByte]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SByte](a))
+
     testArrayFromSize(DataArray[Vec2i, UByte](_))
     testArrayFromData[Vec2i, UByte](DataArray[Vec2i, UByte](_))
     testBufferFromSize(DataBuffer[Vec2i, UByte](_))
@@ -51,7 +55,11 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, UByte](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, UByte](_))
     testReadViewFromData(ReadDataView[Vec2i, UByte](_, _, _))
-    
+    testArrayFromCollection[Vec2i, UByte]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UByte](a: _*))
+    testArrayFromCollection[Vec2i, UByte]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UByte](a))
+    testBufferFromCollection[Vec2i, UByte]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UByte](a: _*))
+    testBufferFromCollection[Vec2i, UByte]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UByte](a))
+
     testArrayFromSize(DataArray[Vec2i, SShort](_))
     testArrayFromData[Vec2i, SShort](DataArray[Vec2i, SShort](_))
     testBufferFromSize(DataBuffer[Vec2i, SShort](_))
@@ -59,7 +67,11 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, SShort](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, SShort](_))
     testReadViewFromData(ReadDataView[Vec2i, SShort](_, _, _))
-    
+    testArrayFromCollection[Vec2i, SShort]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SShort](a: _*))
+    testArrayFromCollection[Vec2i, SShort]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SShort](a))
+    testBufferFromCollection[Vec2i, SShort]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SShort](a: _*))
+    testBufferFromCollection[Vec2i, SShort]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SShort](a))
+
     testArrayFromSize(DataArray[Vec2i, UShort](_))
     testArrayFromData[Vec2i, UShort](DataArray[Vec2i, UShort](_))
     testBufferFromSize(DataBuffer[Vec2i, UShort](_))
@@ -67,7 +79,11 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, UShort](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, UShort](_))
     testReadViewFromData(ReadDataView[Vec2i, UShort](_, _, _))
-    
+    testArrayFromCollection[Vec2i, UShort]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UShort](a: _*))
+    testArrayFromCollection[Vec2i, UShort]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UShort](a))
+    testBufferFromCollection[Vec2i, UShort]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UShort](a: _*))
+    testBufferFromCollection[Vec2i, UShort]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UShort](a))
+
     testArrayFromSize(DataArray[Vec2i, SInt](_))
     testArrayFromData[Vec2i, SInt](DataArray[Vec2i, SInt](_))
     testBufferFromSize(DataBuffer[Vec2i, SInt](_))
@@ -75,7 +91,11 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, SInt](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, SInt](_))
     testReadViewFromData(ReadDataView[Vec2i, SInt](_, _, _))
-    
+    testArrayFromCollection[Vec2i, SInt]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SInt](a: _*))
+    testArrayFromCollection[Vec2i, SInt]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, SInt](a))
+    testBufferFromCollection[Vec2i, SInt]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SInt](a: _*))
+    testBufferFromCollection[Vec2i, SInt]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, SInt](a))
+
     testArrayFromSize(DataArray[Vec2i, UInt](_))
     testArrayFromData[Vec2i, UInt](DataArray[Vec2i, UInt](_))
     testBufferFromSize(DataBuffer[Vec2i, UInt](_))
@@ -83,5 +103,9 @@ class Vec2iTest extends FunSuite {
     testViewFromData(DataView[Vec2i, UInt](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Vec2i, UInt](_))
     testReadViewFromData(ReadDataView[Vec2i, UInt](_, _, _))
+    testArrayFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UInt](a: _*))
+    testArrayFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UInt](a))
+    testBufferFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UInt](a: _*))
+    testBufferFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UInt](a))
   }
 }

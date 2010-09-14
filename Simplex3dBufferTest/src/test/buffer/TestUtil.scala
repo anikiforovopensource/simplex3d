@@ -23,8 +23,15 @@ package test.buffer
 import org.scalatest._
 
 import java.nio._
+import scala.reflect._
 import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.RawData._
+import simplex3d.buffer.intm._
+import simplex3d.buffer.floatm._
+import simplex3d.buffer.doublem._
+import simplex3d.math.intm._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem._
 
 
 /**
@@ -33,6 +40,9 @@ import simplex3d.buffer.RawData._
 object TestUtil extends FunSuite {
 
   private val randomSrc = new java.util.Random(0)
+  private def ni = randomSrc.nextInt
+  private def nf = randomSrc.nextFloat
+  private def nd = randomSrc.nextDouble
 
 
   def size(capacity: Int, offset: Int, stride: Int, components: Int) = {
@@ -168,5 +178,87 @@ object TestUtil extends FunSuite {
     byteSize: Int, descriptor: Descriptor[_, R]
   ) :(ByteBuffer, R#BufferType) = {
     genBuffer(byteSize, descriptor, true)
+  }
+
+  private def rand[T](m: Manifest[T]) :T = {
+    (m match {
+      case Manifest.Int => ni
+      case Vec2i.Manifest => Vec2i(ni, ni)
+      case Vec3i.Manifest => Vec3i(ni, ni, ni)
+      case Vec4i.Manifest => Vec4i(ni, ni, ni, ni)
+      case Manifest.Float => nf
+      case Vec2f.Manifest => Vec2f(nf, nf)
+      case Vec3f.Manifest => Vec3f(nf, nf, nf)
+      case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
+      case Manifest.Double => nd
+      case Vec2d.Manifest => Vec2d(nd, nd)
+      case Vec3d.Manifest => Vec3d(nd, nd, nd)
+      case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
+    }).asInstanceOf[T]
+  }
+  private def randPrim[T](m: Manifest[T]) :T = {
+    (m match {
+      case Manifest.Int => ni.asInstanceOf[AnyRef]
+      case Manifest.Float => nf.asInstanceOf[AnyRef]
+      case Manifest.Double => nd.asInstanceOf[AnyRef]
+    }).asInstanceOf[T]
+  }
+  private def mkPrimSeq[E <: MetaElement, R <: RawData](size: Int, descriptor: Descriptor[E, R]) = {
+    (descriptor.componentManifest match {
+      case Manifest.Int =>
+        descriptor.rawType match {
+          case SByte => DataArray[Int1, SByte](size*descriptor.components)
+          case UByte => DataArray[Int1, UByte](size*descriptor.components)
+          case SShort => DataArray[Int1, SShort](size*descriptor.components)
+          case UShort => DataArray[Int1, UShort](size*descriptor.components)
+          case SInt => DataArray[Int1, SInt](size*descriptor.components)
+          case UInt => DataArray[Int1, UInt](size*descriptor.components)
+        }
+      case Manifest.Float =>
+        descriptor.rawType match {
+          case SByte => DataArray[Float1, SByte](size*descriptor.components)
+          case UByte => DataArray[Float1, UByte](size*descriptor.components)
+          case SShort => DataArray[Float1, SShort](size*descriptor.components)
+          case UShort => DataArray[Float1, UShort](size*descriptor.components)
+          case SInt => DataArray[Float1, SInt](size*descriptor.components)
+          case UInt => DataArray[Float1, UInt](size*descriptor.components)
+          case HalfFloat => DataArray[Float1, HalfFloat](size*descriptor.components)
+          case RawFloat => DataArray[Float1, RawFloat](size*descriptor.components)
+        }
+      case Manifest.Double =>
+        descriptor.rawType match {
+          case SByte => DataArray[Double1, SByte](size*descriptor.components)
+          case UByte => DataArray[Double1, UByte](size*descriptor.components)
+          case SShort => DataArray[Double1, SShort](size*descriptor.components)
+          case UShort => DataArray[Double1, UShort](size*descriptor.components)
+          case SInt => DataArray[Double1, SInt](size*descriptor.components)
+          case UInt => DataArray[Double1, UInt](size*descriptor.components)
+          case HalfFloat => DataArray[Double1, HalfFloat](size*descriptor.components)
+          case RawFloat => DataArray[Double1, RawFloat](size*descriptor.components)
+          case RawDouble => DataArray[Double1, RawDouble](size*descriptor.components)
+        }
+    }).asInstanceOf[DataArray[E#Component, R]]
+  }
+  def genRandomCollection[E <: MetaElement, R <: RawData](
+    size: Int, descriptor: Descriptor[E, R]
+  ) :(Array[E#Element], Buffer) = {
+    val array = descriptor.elementManifest.newArray(size).asInstanceOf[Array[E#Element]]
+    val seq = mkPrimSeq(size, descriptor)
+
+    val seed = randomSrc.nextLong
+
+    randomSrc.setSeed(seed)
+    var i = 0; while (i < array.length) {
+      array(i) = rand(descriptor.elementManifest).asInstanceOf[E#Element]
+      i += 1
+    }
+
+    randomSrc.setSeed(seed)
+    i = 0; while (i < seq.length) {
+      seq(i) = randPrim(descriptor.componentManifest).asInstanceOf[E#Component#Element]
+      i += 1
+    }
+
+    (array, seq.asBuffer)
   }
 }

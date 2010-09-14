@@ -72,6 +72,14 @@ object DataBuffer {
     data
   }
 
+  def apply[E <: MetaElement, R <: ReadableData](vals: IndexedSeq[E#Element])(
+    implicit ref: FactoryRef[E, R]
+  ) :DataBuffer[E, R] = {
+    val data = ref.factory.mkDataBuffer(vals.size)
+    data.put(vals)
+    data
+  }
+
   def apply[E <: MetaElement, R <: ReadableData](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {

@@ -261,10 +261,17 @@ private[buffer] abstract class BaseSeq[
     }
   }
   private final def putSeq(index: Int, seq: Seq[S], first: Int, count: Int) {
-    var i = index
     val iter = seq.iterator
     iter.drop(first)
-    while (iter.hasNext) {
+    val lim = index + count
+    var i = index; while (i < lim) {
+      this(i) = iter.next
+      i += 1
+    }
+  }
+  private final def putSeq(index: Int, seq: Seq[S]) {
+    val iter = seq.iterator
+    var i = index; while (iter.hasNext) {
       this(i) = iter.next
       i += 1
     }
@@ -310,11 +317,14 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(index: Int, seq: Seq[E#Element]) {
-    put(index, seq, 0, seq.size)
+    seq match {
+      case is: IndexedSeq[_] => put(index, seq, 0, seq.size)
+      case _ => putSeq(index, seq.asInstanceOf[Seq[S]])
+    }
   }
 
   final def put(seq: Seq[E#Element]) {
-    put(0, seq, 0, seq.size)
+    put(0, seq)
   }
 
 

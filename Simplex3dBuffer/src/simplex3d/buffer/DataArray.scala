@@ -79,6 +79,14 @@ object DataArray {
     data
   }
 
+  def apply[E <: MetaElement, R <: ReadableData](vals: IndexedSeq[E#Element])(
+    implicit ref: FactoryRef[E, R]
+  ) :DataArray[E, R] = {
+    val data = ref.factory.mkDataArray(vals.size)
+    data.put(vals)
+    data
+  }
+
   def apply[E <: MetaElement, R <: ReadableData](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {

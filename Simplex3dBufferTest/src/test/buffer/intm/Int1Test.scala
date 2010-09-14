@@ -43,6 +43,10 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, SByte](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, SByte](_))
     testReadViewFromData(ReadDataView[Int1, SByte](_, _, _))
+    testArrayFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataArray[Int1, SByte](a: _*))
+    testArrayFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataArray[Int1, SByte](a))
+    testBufferFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, SByte](a: _*))
+    testBufferFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, SByte](a))
     
     testArrayFromSize(DataArray[Int1, UByte](_))
     testArrayFromData[Int1, UByte](DataArray[Int1, UByte](_))
@@ -51,6 +55,10 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, UByte](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, UByte](_))
     testReadViewFromData(ReadDataView[Int1, UByte](_, _, _))
+    testArrayFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataArray[Int1, UByte](a: _*))
+    testArrayFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataArray[Int1, UByte](a))
+    testBufferFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, UByte](a: _*))
+    testBufferFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, UByte](a))
     
     testArrayFromSize(DataArray[Int1, SShort](_))
     testArrayFromData[Int1, SShort](DataArray[Int1, SShort](_))
@@ -59,6 +67,10 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, SShort](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, SShort](_))
     testReadViewFromData(ReadDataView[Int1, SShort](_, _, _))
+    testArrayFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataArray[Int1, SShort](a: _*))
+    testArrayFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataArray[Int1, SShort](a))
+    testBufferFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, SShort](a: _*))
+    testBufferFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, SShort](a))
     
     testArrayFromSize(DataArray[Int1, UShort](_))
     testArrayFromData[Int1, UShort](DataArray[Int1, UShort](_))
@@ -67,6 +79,10 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, UShort](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, UShort](_))
     testReadViewFromData(ReadDataView[Int1, UShort](_, _, _))
+    testArrayFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataArray[Int1, UShort](a: _*))
+    testArrayFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataArray[Int1, UShort](a))
+    testBufferFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, UShort](a: _*))
+    testBufferFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, UShort](a))
     
     testArrayFromSize(DataArray[Int1, SInt](_))
     testArrayFromData[Int1, SInt](DataArray[Int1, SInt](_))
@@ -75,6 +91,10 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, SInt](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, SInt](_))
     testReadViewFromData(ReadDataView[Int1, SInt](_, _, _))
+    testArrayFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataArray[Int1, SInt](a: _*))
+    testArrayFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataArray[Int1, SInt](a))
+    testBufferFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, SInt](a: _*))
+    testBufferFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, SInt](a))
     
     testArrayFromSize(DataArray[Int1, UInt](_))
     testArrayFromData[Int1, UInt](DataArray[Int1, UInt](_))
@@ -83,5 +103,9 @@ class Int1Test extends FunSuite {
     testViewFromData(DataView[Int1, UInt](_, _, _))
     testReadBufferFromData(ReadDataBuffer[Int1, UInt](_))
     testReadViewFromData(ReadDataView[Int1, UInt](_, _, _))
+    testArrayFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataArray[Int1, UInt](a: _*))
+    testArrayFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataArray[Int1, UInt](a))
+    testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a: _*))
+    testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a))
   }
 }

@@ -139,6 +139,36 @@ object FactoryTest extends FunSuite {
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
   }
 
+  def testArrayFromCollection[E <: MetaElement, R <: RawData](
+    factory: (IndexedSeq[E#Element]) => DataArray[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    arrayFromCollection(factory)
+
+    val seq = factory(genRandomCollection(0, descriptor)._1)
+    arrayFromSize(seq.mkDataArray(_))(descriptor)
+    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
+    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
+    bufferFromData(seq.mkDataBuffer(_))(descriptor)
+    viewFromData(seq.mkDataView(_, _, _))(descriptor)
+    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
+    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+  }
+
+  def testBufferFromCollection[E <: MetaElement, R <: RawData](
+    factory: (IndexedSeq[E#Element]) => DataBuffer[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    bufferFromCollection(factory)
+
+    val seq = factory(genRandomCollection(0, descriptor)._1)
+    arrayFromSize(seq.mkDataArray(_))(descriptor)
+    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
+    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
+    bufferFromData(seq.mkDataBuffer(_))(descriptor)
+    viewFromData(seq.mkDataView(_, _, _))(descriptor)
+    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
+    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+  }
+
   private def arrayFromSize[E <: MetaElement, R <: RawData](
     factory: (Int) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
@@ -329,6 +359,24 @@ object FactoryTest extends FunSuite {
     }
     for (size <- 1 to 10) {
       test(size*rawBytes)
+    }
+  }
+
+  def arrayFromCollection[E <: MetaElement, R <: RawData](
+    factory: (IndexedSeq[E#Element]) => DataArray[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    for (size <- 0 to 8) {
+      val (col, data) = genRandomCollection(size, descriptor)
+      testArray(factory(col), false, data)(descriptor)
+    }
+  }
+
+  def bufferFromCollection[E <: MetaElement, R <: RawData](
+    factory: (IndexedSeq[E#Element]) => DataBuffer[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    for (size <- 0 to 8) {
+      val (col, data) = genRandomCollection(size, descriptor)
+      testBuffer(factory(col), false, data)(descriptor)
     }
   }
 }

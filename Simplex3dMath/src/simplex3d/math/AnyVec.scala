@@ -31,44 +31,48 @@ private[math] abstract class AnyVec[P] extends MathObject[P] {
   private[math] type R3
   private[math] type R4
   
-  protected def make2(x: Double, y: Double) :R2
-  protected def make3(x: Double, y: Double, z: Double) :R3
-  protected def make4(x: Double, y: Double, z: Double, w: Double) :R4
+  private[math] type C2 <: R2
+  private[math] type C3 <: R3
+  private[math] type C4 <: R4
+  
+  protected def make2(x: Double, y: Double) :C2
+  protected def make3(x: Double, y: Double, z: Double) :C3
+  protected def make4(x: Double, y: Double, z: Double, w: Double) :C4
 
   private[math] def dx: Double
   private[math] def dy: Double
 
 
-  final def xx: R2 = make2(dx, dx)
-  final def xy: R2 = make2(dx, dy)
-  final def yx: R2 = make2(dy, dx)
-  final def yy: R2 = make2(dy, dy)
+  final def xx: C2 = make2(dx, dx)
+  final def xy: C2 = make2(dx, dy)
+  final def yx: C2 = make2(dy, dx)
+  final def yy: C2 = make2(dy, dy)
 
-  final def xxx: R3 = make3(dx, dx, dx)
-  final def xxy: R3 = make3(dx, dx, dy)
-  final def xyx: R3 = make3(dx, dy, dx)
-  final def xyy: R3 = make3(dx, dy, dy)
-  final def yxx: R3 = make3(dy, dx, dx)
-  final def yxy: R3 = make3(dy, dx, dy)
-  final def yyx: R3 = make3(dy, dy, dx)
-  final def yyy: R3 = make3(dy, dy, dy)
+  final def xxx: C3 = make3(dx, dx, dx)
+  final def xxy: C3 = make3(dx, dx, dy)
+  final def xyx: C3 = make3(dx, dy, dx)
+  final def xyy: C3 = make3(dx, dy, dy)
+  final def yxx: C3 = make3(dy, dx, dx)
+  final def yxy: C3 = make3(dy, dx, dy)
+  final def yyx: C3 = make3(dy, dy, dx)
+  final def yyy: C3 = make3(dy, dy, dy)
 
-  final def xxxx: R4 = make4(dx, dx, dx, dx)
-  final def xxxy: R4 = make4(dx, dx, dx, dy)
-  final def xxyx: R4 = make4(dx, dx, dy, dx)
-  final def xxyy: R4 = make4(dx, dx, dy, dy)
-  final def xyxx: R4 = make4(dx, dy, dx, dx)
-  final def xyxy: R4 = make4(dx, dy, dx, dy)
-  final def xyyx: R4 = make4(dx, dy, dy, dx)
-  final def xyyy: R4 = make4(dx, dy, dy, dy)
-  final def yxxx: R4 = make4(dy, dx, dx, dx)
-  final def yxxy: R4 = make4(dy, dx, dx, dy)
-  final def yxyx: R4 = make4(dy, dx, dy, dx)
-  final def yxyy: R4 = make4(dy, dx, dy, dy)
-  final def yyxx: R4 = make4(dy, dy, dx, dx)
-  final def yyxy: R4 = make4(dy, dy, dx, dy)
-  final def yyyx: R4 = make4(dy, dy, dy, dx)
-  final def yyyy: R4 = make4(dy, dy, dy, dy)
+  final def xxxx: C4 = make4(dx, dx, dx, dx)
+  final def xxxy: C4 = make4(dx, dx, dx, dy)
+  final def xxyx: C4 = make4(dx, dx, dy, dx)
+  final def xxyy: C4 = make4(dx, dx, dy, dy)
+  final def xyxx: C4 = make4(dx, dy, dx, dx)
+  final def xyxy: C4 = make4(dx, dy, dx, dy)
+  final def xyyx: C4 = make4(dx, dy, dy, dx)
+  final def xyyy: C4 = make4(dx, dy, dy, dy)
+  final def yxxx: C4 = make4(dy, dx, dx, dx)
+  final def yxxy: C4 = make4(dy, dx, dx, dy)
+  final def yxyx: C4 = make4(dy, dx, dy, dx)
+  final def yxyy: C4 = make4(dy, dx, dy, dy)
+  final def yyxx: C4 = make4(dy, dy, dx, dx)
+  final def yyxy: C4 = make4(dy, dy, dx, dy)
+  final def yyyx: C4 = make4(dy, dy, dy, dx)
+  final def yyyy: C4 = make4(dy, dy, dy, dy)
 
   final def rr = xx
   final def rg = xy

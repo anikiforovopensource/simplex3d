@@ -33,6 +33,10 @@ sealed abstract class ReadVec2d extends ProtectedVec2d[Double]
   private[math] type R2 = ReadVec2d
   private[math] type R3 = ReadVec3d
   private[math] type R4 = ReadVec4d
+
+  private[math] type C2 = ConstVec2d
+  private[math] type C3 = ConstVec3d
+  private[math] type C4 = ConstVec4d
   
   protected final def make2(x: Double, y: Double) =
     new ConstVec2d(x, y)

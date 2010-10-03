@@ -256,16 +256,16 @@ extends ProtectedMat3x4f[Float]
   /** Appends rotation to the current transformation. The rotation quaternion
    * is normalized first and then transformed into a rotation matrix which
    * is concatenated with the current transformation. If you want to avoid
-   * normalization, use <code>concatenate(rotationMat(q))</code> instead.
+   * normalization, use <code>concat(rotationMat(q))</code> instead.
    * @param q rotation quaternion.
    * @return a new transformation wtih the specified rotation as
    *         the last operation.
    */
   final def rotate(q: inQuat4f) :Mat3x4f = {
-    concatenate(rotationMat(normalize(q)))
+    concat(rotationMat(normalize(q)))
   }
   final def rotate(angle: Float, axis: inVec3f) :Mat3x4f = {
-    concatenate(rotationMat(angle, normalize(axis)))
+    concat(rotationMat(angle, normalize(axis)))
   }
 
   final def rotateX(angle: Float) :Mat3x4f = {
@@ -309,7 +309,7 @@ extends ProtectedMat3x4f[Float]
     m03 + u.x, m13 + u.y, m23 + u.z
   )
 
-  final def concatenate(m: inMat3x4f) :Mat3x4f = new Mat3x4f(
+  final def concat(m: inMat3x4f) :Mat3x4f = new Mat3x4f(
     m.m00*m00 + m.m01*m10 + m.m02*m20,
     m.m10*m00 + m.m11*m10 + m.m12*m20,
     m.m20*m00 + m.m21*m10 + m.m22*m20,
@@ -326,7 +326,7 @@ extends ProtectedMat3x4f[Float]
     m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13,
     m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
   )
-  final def concatenate(m: inMat3f) :Mat3x4f = m*this
+  final def concat(m: inMat3f) :Mat3x4f = m*this
 
   final def transformPoint(p: inVec3f) :Vec3f = new Vec3f(
     m00*p.x + m01*p.y + m02*p.z + m03,
@@ -709,8 +709,8 @@ object Mat3x4f {
     m
   }
 
-  def concatenate(m: inMat3x4f) :Mat3x4f = Mat3x4f(m)
-  def concatenate(m: inMat3f) :Mat3x4f = Mat3x4f(m)
+  def concat(m: inMat3x4f) :Mat3x4f = Mat3x4f(m)
+  def concat(m: inMat3f) :Mat3x4f = Mat3x4f(m)
 
   implicit def toMutable(m: ReadMat3x4f) = Mat3x4f(m)
 }

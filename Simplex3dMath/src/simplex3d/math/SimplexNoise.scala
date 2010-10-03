@@ -45,7 +45,7 @@ private[math] class SimplexNoise
  */
 private[math] object SimplexNoise {
 
-  // Random offset values to prevent accidental aligning and grid artifacts
+  // Offset values to prevent accidental aligning and grid artifacts.
   final val offset00 = 44.91073226372865897
   final val offset01 = 73.80316654263014150
   final val offset02 = 25.52639314613530870

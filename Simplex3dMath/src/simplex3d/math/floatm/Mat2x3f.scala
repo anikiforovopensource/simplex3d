@@ -202,7 +202,7 @@ extends ProtectedMat2x3f[Float]
   )
 
   final def rotate(angle: Float) :Mat2x3f = {
-    concatenate(rotationMat(angle))
+    concat(rotationMat(angle))
   }
 
   final def translate(u: inVec2f) :Mat2x3f = new Mat2x3f(
@@ -211,7 +211,7 @@ extends ProtectedMat2x3f[Float]
     m02 + u.x, m12 + u.y
   )
 
-  final def concatenate(m: inMat2x3f) :Mat2x3f = new Mat2x3f(
+  final def concat(m: inMat2x3f) :Mat2x3f = new Mat2x3f(
     m.m00*m00 + m.m01*m10,
     m.m10*m00 + m.m11*m10,
 
@@ -221,7 +221,7 @@ extends ProtectedMat2x3f[Float]
     m.m00*m02 + m.m01*m12 + m.m02,
     m.m10*m02 + m.m11*m12 + m.m12
   )
-  final def concatenate(m: inMat2f) :Mat2x3f = m*this
+  final def concat(m: inMat2f) :Mat2x3f = m*this
 
   final def transformPoint(p: inVec2f) :Vec2f = new Vec2f(
     m00*p.x + m01*p.y + m02,
@@ -492,8 +492,8 @@ object Mat2x3f {
     m
   }
 
-  def concatenate(m: inMat2x3f) :Mat2x3f = Mat2x3f(m)
-  def concatenate(m: inMat2f) :Mat2x3f = Mat2x3f(m)
+  def concat(m: inMat2x3f) :Mat2x3f = Mat2x3f(m)
+  def concat(m: inMat2f) :Mat2x3f = Mat2x3f(m)
 
   implicit def toMutable(m: ReadMat2x3f) = Mat2x3f(m)
 }

@@ -77,10 +77,10 @@ class Transform3fTest extends FunSuite {
       assert(Mat3x4.translate(p) == Mat3x4.Identity.translate(p))
 
       val m34 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-      assert(Mat3x4.concatenate(m34) == m34)
+      assert(Mat3x4.concat(m34) == m34)
 
       val m33 = Mat3x3(r, r, r, r, r, r, r, r, r)
-      assert(Mat3x4.concatenate(m33) == Mat3x4(m33))
+      assert(Mat3x4.concat(m33) == Mat3x4(m33))
     }
 
     def assertTransform(a: inMat3x4, m: inMat3x4, b: inMat3x4) {
@@ -133,10 +133,10 @@ class Transform3fTest extends FunSuite {
       assertTransform(t, translationMat(p), t translate(p))
 
       val m3 = ConstMat3(r, r, r, r, r, r, r, r, r)
-      assertTransform(t, Mat3x4(m3), t concatenate(m3))
+      assertTransform(t, Mat3x4(m3), t concat(m3))
 
       val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-      assertTransform(t, m3x4, t concatenate(m3x4))
+      assertTransform(t, m3x4, t concat(m3x4))
     }
 
     // test transform classes

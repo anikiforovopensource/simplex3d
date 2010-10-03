@@ -63,10 +63,10 @@ class Transform2fTest extends FunSuite {
       assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
 
       val m23 = Mat2x3(r, r, r, r, r, r)
-      assert(Mat2x3.concatenate(m23) == m23)
+      assert(Mat2x3.concat(m23) == m23)
 
       val m22 = Mat2x2(r, r, r, r)
-      assert(Mat2x3.concatenate(m22) == Mat2x3(m22))
+      assert(Mat2x3.concat(m22) == Mat2x3(m22))
     }
 
     def assertTransform(a: ReadMat2x3, m: ReadMat2x3, b: ReadMat2x3) {
@@ -103,10 +103,10 @@ class Transform2fTest extends FunSuite {
       assertTransform(t, translationMat(p), t translate(p))
 
       val m2 = ConstMat2(r, r, r, r)
-      assertTransform(t, Mat2x3(m2), t concatenate(m2))
+      assertTransform(t, Mat2x3(m2), t concat(m2))
 
       val m2x3 = ConstMat2x3(r, r, r, r, r, r)
-      assertTransform(t, m2x3, t concatenate(m2x3))
+      assertTransform(t, m2x3, t concat(m2x3))
     }
 
     // test transform classes

@@ -34,11 +34,11 @@ import simplex3d.buffer.floatm._
  */
 object ArrayVsDirectBench {
   def main(args: Array[String]) {
-    new ArrayVsDirect().run()
+    run()
+    run()
+    run()
   }
-}
 
-class ArrayVsDirect {
   val length = 10000
   val loops = 50000
 
@@ -62,18 +62,21 @@ class ArrayVsDirect {
 
     start = System.currentTimeMillis
     testArray(dataArray, loops)
+    System.gc
     val arrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testBuffer(dataBuffer, loops)
+    testDirect(dataBuffer, loops)
+    System.gc
     val bufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testBuffer(wrappedBuffer, loops)
+    testWrapped(wrappedBuffer, loops)
+    System.gc
     val wrappedTime = System.currentTimeMillis - start
 
     println("Array time: " + arrayTime + ".")
-    println("Buffer time: " + bufferTime + ".")
+    println("Direct time: " + bufferTime + ".")
     println("Wrapped time: " + wrappedTime + ".")
   }
 
@@ -97,7 +100,7 @@ class ArrayVsDirect {
     println(answer)
   }
 
-  def testBuffer(data: java.nio.FloatBuffer, loops: Int) {
+  def testDirect(data: java.nio.FloatBuffer, loops: Int) {
     var answer = 0
     val end = data.limit - 1
     val step = 2
@@ -117,4 +120,23 @@ class ArrayVsDirect {
     println(answer)
   }
 
+  def testWrapped(data: java.nio.FloatBuffer, loops: Int) {
+    var answer = 0
+    val end = data.limit - 1
+    val step = 2
+
+    var l = 0; while (l < loops) {
+      var i = 0; while (i < end) {
+
+        val v = ConstVec2f(data.get(i), data.get(i + 1))
+        val u = v * 7.9f
+        answer += int(u.x + u.y)
+
+        i += step
+      }
+      l += 1
+    }
+
+    println(answer)
+  }
 }

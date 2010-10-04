@@ -202,7 +202,7 @@ object FactoryTest extends FunSuite {
       testBuffer(factory(size), false, data)(descriptor)
     }
   }
-
+  
   private def bufferFromData[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
@@ -221,11 +221,21 @@ object FactoryTest extends FunSuite {
     for (size <- 0 to 64) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
-      for (i <- 0 to 1; j <- 0 to 1) {
-        bytes.position(IntMath.min(i*rawBytes, size))
-        bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+      // Test different buffer configurations
+      for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
+        val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
+        val position = IntMath.min(i*rawBytes, size)
+        val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+
+        bytes.order(order)
+        bytes.position(position)
+        bytes.limit(limit)
 
         testBuffer(factory(bytes), false, data)(descriptor)
+
+        assert(bytes.order == order)
+        assert(bytes.position == position)
+        assert(bytes.limit == limit)
       }
     }
   }
@@ -277,8 +287,8 @@ object FactoryTest extends FunSuite {
       }
     }
 
-    for (byteSize <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteSize + rawBytes*descriptor.components*10*s)
+    for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
+      test(byteCapacity + rawBytes*descriptor.components*10*s)
     }
     for (size <- 1 to 10) {
       test(size*rawBytes)
@@ -354,8 +364,8 @@ object FactoryTest extends FunSuite {
       }
     }
 
-    for (byteSize <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteSize + rawBytes*descriptor.components*10*s)
+    for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
+      test(byteCapacity + rawBytes*descriptor.components*10*s)
     }
     for (size <- 1 to 10) {
       test(size*rawBytes)

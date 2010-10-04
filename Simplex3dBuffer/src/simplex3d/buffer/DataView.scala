@@ -29,32 +29,9 @@ import scala.annotation.unchecked._
  */
 trait ReadDataView[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
-
-  assert(buffer.position == 0)
-  assert(buffer.limit == buffer.capacity)
-
-  if (!buffer.isDirect)
-    throw new IllegalArgumentException(
-      "The buffer must be direct."
-    )
-
-  if (sharedBuffer.order != ByteOrder.nativeOrder)
-    throw new IllegalArgumentException(
-      "The buffer must have native order."
-    )
-
-  
   type BackingSeqType <: ReadDataBuffer[E#Component, R]
+  type BindingBufferType = ByteBuffer
   override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataView[E, R]]
-
-  final def sharesStoreObject(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) = {
-    seq match {
-      case v: ReadDataView[_, _] =>
-        sharedBuffer eq v.sharedBuffer
-      case _ =>
-        false
-    }
-  }
 }
 
 trait DataView[E <: MetaElement, +R <: RawData]

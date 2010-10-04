@@ -21,180 +21,46 @@
 package simplex3d.buffer
 
 import java.nio._
-import scala.reflect.Manifest
 import scala.annotation._
-import scala.annotation.unchecked._
-import scala.collection._
+import scala.reflect._
+import StoreType._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class ReadBaseSeq[
-  E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
-](
-  shared: AnyRef,
-  private[buffer] final val buffer: R#BufferType,
-  backing: AnyRef, final val offset: Int, final val stride: Int
-) extends Protected[R#ArrayType @uncheckedVariance](shared)
-with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
-
-  if (offset < 0)
-    throw new IllegalArgumentException(
-      "Offset must be greater than or equal to zero."
-    )
-  if (offset > buffer.capacity)
-    throw new IllegalArgumentException(
-      "Offset must not be greater than the buffer size."
-    )
-  if (stride <= 0)
-    throw new IllegalArgumentException(
-      "Stride must be greater than zero."
-    )
-
-  def elementManifest: Manifest[E#Element]
-  def componentManifest: Manifest[E#Component#Element]
-
-  type BackingSeqType <: ReadContiguousSeq[E#Component, R]
-  final val backingSeq: BackingSeqType = {
-    if (backing == null) this.asInstanceOf[BackingSeqType]
-    else backing.asInstanceOf[BackingSeqType]
-  }
-
-  final val bytesPerRawComponent = RawData.byteLength(rawType)
-  final def byteSize = buffer.capacity*bytesPerRawComponent
-  final def byteOffset = offset*bytesPerRawComponent
-  final def byteStride = stride*bytesPerRawComponent
-
-  def asReadOnlyBuffer() :R#BufferType
-  def sharesStoreObject(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean
-
-  private[buffer] def mkBindingBuffer(): Buffer
-  private final val bindingBuffer: Buffer = mkBindingBuffer()
-  final def bindingBuffer(offset: Int) :Buffer = {
-    bindingBuffer.limit(bindingBuffer.capacity)
-    bindingBuffer.position(offset)
-    bindingBuffer
-  }
-
-  final override val size: Int = {
-    val s = (buffer.capacity - offset + stride - components)/stride
-    if (s > 0) s else 0
-  }
-  final def length = size
-
-  def apply(i: Int) :S
-
-
-  def mkDataArray(size: Int) :DataArray[E, R]
-  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
-  def mkDataBuffer(size: Int) :DataBuffer[E, R]
-  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
-  def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
-
-  
-  def components: Int
-  def rawType: Int
-  def normalized: Boolean
-
-  final def isReadOnly(): Boolean = buffer.isReadOnly()
-
-  protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
-  def asReadOnlySeq() :ReadDataSeq[E, R]
-  private[buffer] final def toReadOnly() :AnyRef = {
-    if (isReadOnly) this else mkReadOnlyInstance()
-  }
-
-
-  final def mkDataBuffer(
-    byteBuffer: ByteBuffer
-  ) :DataBuffer[E, R] = {
-    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-    mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[E, R]]
-  }
-
-  final def mkDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :DataView[E, R] = {
-    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-    mkReadDataView(byteBuffer, offset, stride).asInstanceOf[DataView[E, R]]
-  }
-
-  
-  final def copyAsDataArray() :DataArray[E, R] = {
-    val copy = mkDataArray(size)
-    copy.put(
-      0,
-      backingSeq,
-      this.offset,
-      this.stride,
-      size
-    )
-    copy
-  }
-  final def copyAsDataBuffer() :DataBuffer[E, R] = {
-    val copy = mkDataBuffer(size)
-    copy.put(
-      0,
-      backingSeq,
-      this.offset,
-      this.stride,
-      size
-    )
-    copy
-  }
-  final def copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
-  :DataView[E, R] = {
-    val copy = mkDataView(byteBuffer, offset, stride)
-    copy.put(
-      0,
-      backingSeq,
-      this.offset,
-      this.stride,
-      size
-    )
-    copy
-  }
-
-  override def toString() :String = {
-    def getElemName() = {
-      val name = elementManifest.erasure.getSimpleName
-      if (name.startsWith("Any")) name.substring(3) else name
-    }
-
-    var view = false
-
-    (if (isReadOnly()) "ReadOnly" else "") +
-    (this match {
-      case s: DataArray[_, _] => "DataArray"
-      case s: DataBuffer[_, _] => "DataBuffer"
-      case s: DataView[_, _] => view = true; "DataView"
-    }) +
-    "[" + getElemName() + ", " + RawData.name(rawType)+ "](" +
-    (if (view) "offset = " + offset + ", " else "") +
-    "stride = " + stride + ", size = " + size + ")"
-  }
-}
-
-
 private[buffer] abstract class BaseSeq[
   E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
 ](
-  shared: AnyRef, buff: R#BufferType, backing: AnyRef, offset: Int, stride: Int
-) extends ReadBaseSeq[E, S, R](shared, buff, backing, offset, stride) {
+  shared: AnyRef, backing: AnyRef, ro: Boolean,
+  offset: Int, stride: Int, sz: java.lang.Integer
+) extends ReadBaseSeq[E, S, R](
+  shared, backing, ro,
+  offset, stride, sz
+) {
 
-  def asBuffer() :R#BufferType
+  type BackingSeqType <: ContiguousSeq[E#Component, R]
+  final def asBuffer() :R#BufferType = {
+    ((storeType: @switch) match {
+      case ByteStore =>
+        buffer.asInstanceOf[ByteBuffer].duplicate()
+      case ShortStore =>
+        buffer.asInstanceOf[ShortBuffer].duplicate()
+      case CharStore =>
+        buffer.asInstanceOf[CharBuffer].duplicate()
+      case IntStore =>
+        buffer.asInstanceOf[IntBuffer].duplicate()
+      case FloatStore =>
+        buffer.asInstanceOf[FloatBuffer].duplicate()
+      case DoubleStore =>
+        buffer.asInstanceOf[DoubleBuffer].duplicate()
+    }).asInstanceOf[R#BufferType]
+  }
 
   override def apply(i: Int) :S
   def update(i: Int, v: S)
 
-  type BackingSeqType <: ContiguousSeq[E#Component, R]
 
-  
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
@@ -344,7 +210,6 @@ private[buffer] abstract class BaseSeq[
         case RawData.HalfFloat => 4
         case RawData.RawFloat => 5
         case RawData.RawDouble => 6
-        case _ => throw new AssertionError("Binding not found.")
       }
     }
 
@@ -505,7 +370,6 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case _ => throw new AssertionError("Unsupported component type.")
       }
     }
   }
@@ -573,22 +437,4 @@ private[buffer] abstract class BaseSeq[
       src.size
     )
   }
-}
-
-// Extend this, add implicit tuples to your package object to enable constructor
-abstract class CompositeSeq[E <: Composite, +R <: RawData](
-  backing: ContiguousSeq[E#Component, R], offset: Int, stride: Int
-) extends BaseSeq[E, E#Element, R](
-  backing.shared, backing.buffer, backing, offset, stride
-) {
-  final def componentManifest = backingSeq.elementManifest
-
-  final def asReadOnlyBuffer() :R#BufferType = backingSeq.asReadOnlyBuffer()
-  final def asBuffer() :R#BufferType =
-    backingSeq.asInstanceOf[ContiguousSeq[E#Component, R]].asBuffer()
-  
-  final def rawType = backingSeq.rawType
-  final def normalized: Boolean = backingSeq.normalized
-
-  private[buffer] final def mkBindingBuffer(): Buffer = backingSeq.mkBindingBuffer
 }

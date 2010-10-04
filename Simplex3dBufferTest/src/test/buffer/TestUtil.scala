@@ -44,7 +44,6 @@ object TestUtil extends FunSuite {
   private def nf = randomSrc.nextFloat
   private def nd = randomSrc.nextDouble
 
-
   def size(capacity: Int, offset: Int, stride: Int, components: Int) = {
     val s = (capacity - offset + stride - components)/stride
     if (s > 0) s else 0
@@ -55,6 +54,7 @@ object TestUtil extends FunSuite {
 
     assert((testing.position, data.position) == (0, 0))
     assert(testing.capacity == data.capacity)
+    println(testing.limit, data.limit, testing.capacity)//XXX
     assert((testing.limit, data.limit) == (testing.capacity, testing.capacity))
     assert(testing.equals(data))
 
@@ -155,29 +155,29 @@ object TestUtil extends FunSuite {
   }
   
   private def genBuffer[R <: RawData](
-    byteSize: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
+    byteCapacity: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
   ) :(ByteBuffer, R#BufferType) = {
     (descriptor.rawType match {
-      case SByte => val b = alloc(byteSize); (b, random(b, fillRandom))
-      case UByte => val b = alloc(byteSize); (b, random(b, fillRandom))
-      case SShort => val b = alloc(byteSize); (b, random(b.asShortBuffer, fillRandom))
-      case UShort => val b = alloc(byteSize); (b, random(b.asCharBuffer, fillRandom))
-      case SInt => val b = alloc(byteSize); (b, random(b.asIntBuffer, fillRandom))
-      case UInt => val b = alloc(byteSize); (b, random(b.asIntBuffer, fillRandom))
-      case HalfFloat => val b = alloc(byteSize); (b, random(b.asShortBuffer, fillRandom))
-      case RawFloat => val b = alloc(byteSize); (b, random(b.asFloatBuffer, fillRandom))
-      case RawDouble => val b = alloc(byteSize); (b, random(b.asDoubleBuffer, fillRandom))
+      case SByte => val b = alloc(byteCapacity); (b, random(b, fillRandom))
+      case UByte => val b = alloc(byteCapacity); (b, random(b, fillRandom))
+      case SShort => val b = alloc(byteCapacity); (b, random(b.asShortBuffer, fillRandom))
+      case UShort => val b = alloc(byteCapacity); (b, random(b.asCharBuffer, fillRandom))
+      case SInt => val b = alloc(byteCapacity); (b, random(b.asIntBuffer, fillRandom))
+      case UInt => val b = alloc(byteCapacity); (b, random(b.asIntBuffer, fillRandom))
+      case HalfFloat => val b = alloc(byteCapacity); (b, random(b.asShortBuffer, fillRandom))
+      case RawFloat => val b = alloc(byteCapacity); (b, random(b.asFloatBuffer, fillRandom))
+      case RawDouble => val b = alloc(byteCapacity); (b, random(b.asDoubleBuffer, fillRandom))
     }).asInstanceOf[(ByteBuffer, R#BufferType)]
   }
   def genBuffer[R <: RawData](
-    byteSize: Int, descriptor: Descriptor[_, R]
+    byteCapacity: Int, descriptor: Descriptor[_, R]
   ) :(ByteBuffer, R#BufferType) = {
-    genBuffer(byteSize, descriptor, false)
+    genBuffer(byteCapacity, descriptor, false)
   }
   def genRandomBuffer[R <: RawData](
-    byteSize: Int, descriptor: Descriptor[_, R]
+    byteCapacity: Int, descriptor: Descriptor[_, R]
   ) :(ByteBuffer, R#BufferType) = {
-    genBuffer(byteSize, descriptor, true)
+    genBuffer(byteCapacity, descriptor, true)
   }
 
   private def rand[T](m: Manifest[T]) :T = {

@@ -30,8 +30,8 @@ import simplex3d.buffer._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseVec3d[+R <: ReadableDouble](
-  backing: ContiguousSeq[Double1, R], off: Int, str: Int
-) extends CompositeSeq[Vec3d, R](backing, off, str) {
+  backing: ContiguousSeq[Double1, R], off: Int, str: Int, sz: java.lang.Integer
+) extends CompositeSeq[Vec3d, R](backing, off, str, sz) {
   final def elementManifest = Vec3d.Manifest
   final def components: Int = 3
 
@@ -50,22 +50,10 @@ private[buffer] abstract class BaseVec3d[+R <: ReadableDouble](
     backingSeq(j + 2) = v.z
   }
 
-  def mkDataArray(size: Int)
-  :DataArray[Vec3d, R] =
-    new ArrayVec3d[R](
-      backingSeq.mkDataArray(size*3).asInstanceOf[DataArray[Double1, R]]
-    )
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec3d, R] =
     new ArrayVec3d[R](
       backingSeq.mkDataArray(array).asInstanceOf[DataArray[Double1, R]]
-    )
-
-  def mkDataBuffer(size: Int)
-  :DataBuffer[Vec3d, R] =
-    new BufferVec3d[R](
-      backingSeq.mkDataBuffer(size*3).asInstanceOf[DataBuffer[Double1, R]]
     )
 
   def mkReadDataBuffer(byteBuffer: ByteBuffer)
@@ -74,17 +62,17 @@ private[buffer] abstract class BaseVec3d[+R <: ReadableDouble](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Double1, R]]
     )
 
-  def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int)
+  protected def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int, sz: java.lang.Integer)
   :ReadDataView[Vec3d, R] =
     new ViewVec3d[R](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Double1, R]],
-      off, str
+      off, str, sz
     )
 }
 
 private[buffer] final class ArrayVec3d[+R <: ReadableDouble](
   backingSeq: DataArray[Double1, R]
-) extends BaseVec3d[R](backingSeq, 0, 3) with DataArray[Vec3d, R] {
+) extends BaseVec3d[R](backingSeq, 0, 3, null) with DataArray[Vec3d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
   )
@@ -92,19 +80,17 @@ private[buffer] final class ArrayVec3d[+R <: ReadableDouble](
 
 private[buffer] final class BufferVec3d[+R <: ReadableDouble](
   backingSeq: DataBuffer[Double1, R]
-) extends BaseVec3d[R](backingSeq, 0, 3) with DataBuffer[Vec3d, R] {
+) extends BaseVec3d[R](backingSeq, 0, 3, null) with DataBuffer[Vec3d, R] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
   )
 }
 
 private[buffer] final class ViewVec3d[+R <: ReadableDouble](
-  backingSeq: DataBuffer[Double1, R],
-  off: Int,
-  str: Int
-) extends BaseVec3d[R](backingSeq, off, str) with DataView[Vec3d, R] {
+  backingSeq: DataBuffer[Double1, R], off: Int, str: Int, sz: java.lang.Integer
+) extends BaseVec3d[R](backingSeq, off, str, sz) with DataView[Vec3d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]],
-    off, str
+    offset, stride, size
   )
 }

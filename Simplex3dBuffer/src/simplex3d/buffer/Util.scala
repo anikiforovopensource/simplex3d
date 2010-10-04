@@ -33,19 +33,12 @@ private[buffer] class Util
  */
 private[buffer] object Util {
 
-  final val eaByte = new Array[Byte](0)
-  final val eaChar = new Array[Char](0)
-  final val eaShort = new Array[Short](0)
-  final val eaInt = new Array[Int](0)
-  final val eaFloat = new Array[Float](0)
-  final val eaDouble = new Array[Double](0)
-
-  final val ebByte = ByteBuffer.wrap(eaByte)
-  final val ebChar = CharBuffer.wrap(eaChar)
-  final val ebShort = ShortBuffer.wrap(eaShort)
-  final val ebInt = IntBuffer.wrap(eaInt)
-  final val ebFloat = FloatBuffer.wrap(eaFloat)
-  final val ebDouble = DoubleBuffer.wrap(eaDouble)
+  final val emptyByte = new Array[Byte](0)
+  final val emptyChar = new Array[Char](0)
+  final val emptyShort = new Array[Short](0)
+  final val emptyInt = new Array[Int](0)
+  final val emptyFloat = new Array[Float](0)
+  final val emptyDouble = new Array[Double](0)
 
   
   // ByteBuffer

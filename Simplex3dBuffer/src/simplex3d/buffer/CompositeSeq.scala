@@ -18,28 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer;
+package simplex3d.buffer
 
-import java.nio.*;
+import java.nio._
 
 
-/** Prevents gaining access to read-only content.
+/**
+ * Extend this class and add implicit factories to your package object to enable constructor.
  *
  * @author Aleksey Nikiforov (lex)
  */
-class Protected<A> {
-    final Object sharedStore;
+abstract class CompositeSeq[E <: Composite, +R <: RawData](
+  backing: ContiguousSeq[E#Component, R],
+  offset: Int, stride: Int, sz: java.lang.Integer
+) extends BaseSeq[E, E#Element, R](
+  backing.sharedStore, backing, backing.isReadOnly,
+  offset, stride, sz
+) {
+  final def componentManifest = backingSeq.elementManifest
 
-    Protected(Object shared) {
-        this.sharedStore = shared;
-    }
-
-    @SuppressWarnings("unchecked")
-    final A sharedArray() {
-        return (A) sharedStore;
-    }
-
-    final ByteBuffer sharedBuffer() {
-        return (ByteBuffer) sharedStore;
-    }
+  final def rawType = backingSeq.rawType
+  final def normalized: Boolean = backingSeq.normalized
 }

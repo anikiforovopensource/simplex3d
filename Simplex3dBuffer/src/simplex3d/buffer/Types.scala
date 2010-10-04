@@ -38,7 +38,7 @@ object RawData {
   final val RawFloat = 5126
   final val RawDouble = 5130
 
-  def byteLength(rawType: Int) :Byte = {
+  def byteLength(rawType: Int) :Int = {
     (rawType: @switch) match {
       case SByte => 1
       case UByte => 1
@@ -49,7 +49,6 @@ object RawData {
       case HalfFloat => 2
       case RawFloat => 4
       case RawDouble => 8
-      case _ => throw new AssertionError("RawType not found.")
     }
   }
 
@@ -64,7 +63,30 @@ object RawData {
       case HalfFloat => "HalfFloat"
       case RawFloat => "RawFloat"
       case RawDouble => "RawDouble"
-      case _ => throw new AssertionError("RawType not found.")
+    }
+  }
+}
+
+private[buffer] object StoreType {
+  final val ByteStore = 0
+  final val ShortStore = 1
+  final val CharStore = 2
+  final val IntStore = 3
+  final val FloatStore = 4
+  final val DoubleStore = 5
+
+  def storeFromRaw(rawType: Int) = {
+    import RawData._
+    (rawType: @switch) match {
+      case SByte => ByteStore
+      case UByte => ByteStore
+      case SShort => ShortStore
+      case UShort => CharStore
+      case SInt => IntStore
+      case UInt => IntStore
+      case HalfFloat => ShortStore
+      case RawFloat => FloatStore
+      case RawDouble => DoubleStore
     }
   }
 }

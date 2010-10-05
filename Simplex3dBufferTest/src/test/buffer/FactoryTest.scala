@@ -196,7 +196,7 @@ object FactoryTest extends FunSuite {
 
     for (size <- 0 to 64) {
       val (bytes, data) = genBuffer(
-        size*descriptor.components*RawData.byteLength(descriptor.rawType),
+        size*descriptor.components*RawType.byteLength(descriptor.rawType),
         descriptor
       )
       testBuffer(factory(size), false, data)(descriptor)
@@ -216,7 +216,7 @@ object FactoryTest extends FunSuite {
       factory(bytes.asReadOnlyBuffer)
     }
 
-    val rawBytes = RawData.byteLength(descriptor.rawType)
+    val rawBytes = RawType.byteLength(descriptor.rawType)
 
     for (size <- 0 to 64) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
@@ -224,18 +224,20 @@ object FactoryTest extends FunSuite {
       // Test different buffer configurations
       for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
         val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
-        val position = IntMath.min(i*rawBytes, size)
+        val pos = IntMath.min(i*rawBytes, size)
         val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+        val position = (if (pos > limit) limit else pos)
 
+        bytes.clear()
         bytes.order(order)
-        bytes.position(position)
         bytes.limit(limit)
+        bytes.position(position)
 
         testBuffer(factory(bytes), false, data)(descriptor)
 
         assert(bytes.order == order)
-        assert(bytes.position == position)
         assert(bytes.limit == limit)
+        assert(bytes.position == position)
       }
     }
   }
@@ -273,16 +275,28 @@ object FactoryTest extends FunSuite {
       factory(bytes, 0, 0)
     }
 
-    val rawBytes = RawData.byteLength(descriptor.rawType)
+    val rawBytes = RawType.byteLength(descriptor.rawType)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
       for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
-        for (i <- 0 to 1; j <- 0 to 1) {
-          bytes.position(IntMath.min(i*rawBytes, size))
-          bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+        // Test different buffer configurations
+        for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
+          val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
+          val pos = IntMath.min(i*rawBytes, size)
+          val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+          val position = (if (pos > limit) limit else pos)
+
+          bytes.clear()
+          bytes.order(order)
+          bytes.limit(limit)
+          bytes.position(position)
 
           testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
+
+          assert(bytes.order == order)
+          assert(bytes.limit == limit)
+          assert(bytes.position == position)
         }
       }
     }
@@ -303,17 +317,29 @@ object FactoryTest extends FunSuite {
       factory(bytes)
     }
 
-    val rawBytes = RawData.byteLength(descriptor.rawType)
+    val rawBytes = RawType.byteLength(descriptor.rawType)
     
     for (size <- 0 to 64) {
       val (bytes, data) = genRandomBuffer(size, descriptor);
 
-      for (i <- 0 to 1; j <- 0 to 1) {
-        bytes.position(IntMath.min(i*rawBytes, size))
-        bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+      // Test different buffer configurations
+      for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
+        val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
+        val pos = IntMath.min(i*rawBytes, size)
+        val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+        val position = (if (pos > limit) limit else pos)
+
+        bytes.clear()
+        bytes.order(order)
+        bytes.limit(limit)
+        bytes.position(position)
 
         testBuffer(factory(bytes), false, data)(descriptor)
         testBuffer(factory(bytes.asReadOnlyBuffer), true, data)(descriptor)
+
+        assert(bytes.order == order)
+        assert(bytes.limit == limit)
+        assert(bytes.position == position)
       }
     }
   }
@@ -346,20 +372,32 @@ object FactoryTest extends FunSuite {
       factory(bytes, 0, 0)
     }
     
-    val rawBytes = RawData.byteLength(descriptor.rawType)
+    val rawBytes = RawType.byteLength(descriptor.rawType)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
       for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
-        for (i <- 0 to 1; j <- 0 to 1) {
-          bytes.position(IntMath.min(i*rawBytes, size))
-          bytes.limit(IntMath.max(0, bytes.capacity - j*rawBytes))
+        // Test different buffer configurations
+        for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
+          val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
+          val pos = IntMath.min(i*rawBytes, size)
+          val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+          val position = (if (pos > limit) limit else pos)
+
+          bytes.clear()
+          bytes.order(order)
+          bytes.limit(limit)
+          bytes.position(position)
 
           val view = factory(bytes, offset, stride)
           testView(view, offset, stride, false, data)(descriptor)
 
           val rview = factory(bytes.asReadOnlyBuffer, offset, stride)
           testView(rview, offset, stride, true, data)(descriptor)
+
+          assert(bytes.order == order)
+          assert(bytes.limit == limit)
+          assert(bytes.position == position)
         }
       }
     }

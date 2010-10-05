@@ -32,170 +32,114 @@ import simplex3d.buffer.intm.optimized._
  */
 package object intm extends UnsignedImplicits {
 
-  private final type GenFactory[E <: Composite, R <: ReadableFloat] =
-    TemplateGenFactoryRef[E, R]
-  private final type CompositeFactory[E <: Composite, R <: ReadableFloat] =
-    CompositeFactoryRef[E, R]
+  private final type SimpleFactory[E <: Composite, R <: ReadableInt] = SimpleFactoryRef[E, R]
+  private final type GenFactory[E <: Composite, R <: ReadableInt] = TemplateGenFactoryRef[E, R]
+  
+  private final def dataArray[R <: ReadableInt](f: SimpleFactoryRef[Int1, R]) =
+    f.factory.asInstanceOf[DataArray[Int1, R]]
 
 
   // Vec2i
-  private val vec2iTemplateClass =
-    "simplex3d.buffer.intm.optimized.ArrayVec2iSInt"
+  private val vec2iTemplateClass = "simplex3d.buffer.intm.optimized.ArrayVec2iSInt"
   private val vec2iTemplateString = "SInt"
-  private val vec2iFallbackClass = "simplex3d.buffer.intm.ArrayVec2i"
 
-  implicit final val FactoryVec2iSByte = new GenFactory[Vec2i, SByte](
+  implicit final lazy val FactoryVec2iSByte = new GenFactory[Vec2i, SByte](
     vec2iTemplateClass,
     vec2iTemplateString,
-    new CompositeFactory[Vec2i, SByte](
-      vec2iFallbackClass,
-      FactoryInt1SByte
-    )
+    new ArrayVec2i(dataArray(FactoryInt1SByte))
   )
-  implicit final val FactoryVec2iUByte = new GenFactory[Vec2i, UByte](
+  implicit final lazy val FactoryVec2iUByte = new GenFactory[Vec2i, UByte](
     vec2iTemplateClass,
     vec2iTemplateString,
-    new CompositeFactory[Vec2i, UByte](
-      vec2iFallbackClass,
-      FactoryInt1UByte
-    )
+    new ArrayVec2i(dataArray(FactoryInt1UByte))
   )
 
-  implicit final val FactoryVec2iSShort = new GenFactory[Vec2i, SShort](
+  implicit final lazy val FactoryVec2iSShort = new GenFactory[Vec2i, SShort](
     vec2iTemplateClass,
     vec2iTemplateString,
-    new CompositeFactory[Vec2i, SShort](
-      vec2iFallbackClass,
-      FactoryInt1SShort
-    )
+    new ArrayVec2i(dataArray(FactoryInt1SShort))
   )
-  implicit final val FactoryVec2iUShort = new GenFactory[Vec2i, UShort](
+  implicit final lazy val FactoryVec2iUShort = new GenFactory[Vec2i, UShort](
     vec2iTemplateClass,
     vec2iTemplateString,
-    new CompositeFactory[Vec2i, UShort](
-      vec2iFallbackClass,
-      FactoryInt1UShort
-    )
+    new ArrayVec2i(dataArray(FactoryInt1UShort))
   )
 
-  implicit final val FactoryVec2iSInt = new CompositeFactory[Vec2i, SInt](
-    vec2iTemplateClass,
-    FactoryInt1SInt
-  )
-  implicit final val FactoryVec2iUInt = new GenFactory[Vec2i, UInt](
+  implicit final lazy val FactoryVec2iSInt = new SimpleFactory[Vec2i, SInt](new ArrayVec2iSInt)
+  
+  implicit final lazy val FactoryVec2iUInt = new GenFactory[Vec2i, UInt](
     vec2iTemplateClass,
     vec2iTemplateString,
-    new CompositeFactory[Vec2i, UInt](
-      vec2iFallbackClass,
-      FactoryInt1UInt
-    )
+    new ArrayVec2i(dataArray(FactoryInt1UInt))
   )
 
 
   // Vec3i
-  private val vec3iTemplateClass =
-    "simplex3d.buffer.intm.optimized.ArrayVec3iSInt"
+  private val vec3iTemplateClass = "simplex3d.buffer.intm.optimized.ArrayVec3iSInt"
   private val vec3iTemplateString = "SInt"
-  private val vec3iFallbackClass = "simplex3d.buffer.intm.ArrayVec3i"
 
-  implicit final val FactoryVec3iSByte = new GenFactory[Vec3i, SByte](
+  implicit final lazy val FactoryVec3iSByte = new GenFactory[Vec3i, SByte](
     vec3iTemplateClass,
     vec3iTemplateString,
-    new CompositeFactory[Vec3i, SByte](
-      vec3iFallbackClass,
-      FactoryInt1SByte
-    )
+    new ArrayVec3i(dataArray(FactoryInt1SByte))
   )
-  implicit final val FactoryVec3iUByte = new GenFactory[Vec3i, UByte](
+  implicit final lazy val FactoryVec3iUByte = new GenFactory[Vec3i, UByte](
     vec3iTemplateClass,
     vec3iTemplateString,
-    new CompositeFactory[Vec3i, UByte](
-      vec3iFallbackClass,
-      FactoryInt1UByte
-    )
+    new ArrayVec3i(dataArray(FactoryInt1UByte))
   )
 
-  implicit final val FactoryVec3iSShort = new GenFactory[Vec3i, SShort](
+  implicit final lazy val FactoryVec3iSShort = new GenFactory[Vec3i, SShort](
     vec3iTemplateClass,
     vec3iTemplateString,
-    new CompositeFactory[Vec3i, SShort](
-      vec3iFallbackClass,
-      FactoryInt1SShort
-    )
+    new ArrayVec3i(dataArray(FactoryInt1SShort))
   )
-  implicit final val FactoryVec3iUShort = new GenFactory[Vec3i, UShort](
+  implicit final lazy val FactoryVec3iUShort = new GenFactory[Vec3i, UShort](
     vec3iTemplateClass,
     vec3iTemplateString,
-    new CompositeFactory[Vec3i, UShort](
-      vec3iFallbackClass,
-      FactoryInt1UShort
-    )
+    new ArrayVec3i(dataArray(FactoryInt1UShort))
   )
 
-  implicit final val FactoryVec3iSInt = new CompositeFactory[Vec3i, SInt](
-    vec3iTemplateClass,
-    FactoryInt1SInt
-  )
-  implicit final val FactoryVec3iUInt = new GenFactory[Vec3i, UInt](
+  implicit final lazy val FactoryVec3iSInt = new SimpleFactory[Vec3i, SInt](new ArrayVec3iSInt)
+  
+  implicit final lazy val FactoryVec3iUInt = new GenFactory[Vec3i, UInt](
     vec3iTemplateClass,
     vec3iTemplateString,
-    new CompositeFactory[Vec3i, UInt](
-      vec3iFallbackClass,
-      FactoryInt1UInt
-    )
+    new ArrayVec3i(dataArray(FactoryInt1UInt))
   )
 
 
   // Vec4i
-  private val vec4iTemplateClass =
-    "simplex3d.buffer.intm.optimized.ArrayVec4iSInt"
+  private val vec4iTemplateClass = "simplex3d.buffer.intm.optimized.ArrayVec4iSInt"
   private val vec4iTemplateString = "SInt"
-  private val vec4iFallbackClass = "simplex3d.buffer.intm.ArrayVec4i"
 
-  implicit final val FactoryVec4iSByte = new GenFactory[Vec4i, SByte](
+  implicit final lazy val FactoryVec4iSByte = new GenFactory[Vec4i, SByte](
     vec4iTemplateClass,
     vec4iTemplateString,
-    new CompositeFactory[Vec4i, SByte](
-      vec4iFallbackClass,
-      FactoryInt1SByte
-    )
+    new ArrayVec4i(dataArray(FactoryInt1SByte))
   )
-  implicit final val FactoryVec4iUByte = new GenFactory[Vec4i, UByte](
+  implicit final lazy val FactoryVec4iUByte = new GenFactory[Vec4i, UByte](
     vec4iTemplateClass,
     vec4iTemplateString,
-    new CompositeFactory[Vec4i, UByte](
-      vec4iFallbackClass,
-      FactoryInt1UByte
-    )
+    new ArrayVec4i(dataArray(FactoryInt1UByte))
   )
 
-  implicit final val FactoryVec4iSShort = new GenFactory[Vec4i, SShort](
+  implicit final lazy val FactoryVec4iSShort = new GenFactory[Vec4i, SShort](
     vec4iTemplateClass,
     vec4iTemplateString,
-    new CompositeFactory[Vec4i, SShort](
-      vec4iFallbackClass,
-      FactoryInt1SShort
-    )
+    new ArrayVec4i(dataArray(FactoryInt1SShort))
   )
-  implicit final val FactoryVec4iUShort = new GenFactory[Vec4i, UShort](
+  implicit final lazy val FactoryVec4iUShort = new GenFactory[Vec4i, UShort](
     vec4iTemplateClass,
     vec4iTemplateString,
-    new CompositeFactory[Vec4i, UShort](
-      vec4iFallbackClass,
-      FactoryInt1UShort
-    )
+    new ArrayVec4i(dataArray(FactoryInt1UShort))
   )
 
-  implicit final val FactoryVec4iSInt = new CompositeFactory[Vec4i, SInt](
-    vec4iTemplateClass,
-    FactoryInt1SInt
-  )
-  implicit final val FactoryVec4iUInt = new GenFactory[Vec4i, UInt](
+  implicit final lazy val FactoryVec4iSInt = new SimpleFactory[Vec4i, SInt](new ArrayVec4iSInt)
+  
+  implicit final lazy val FactoryVec4iUInt = new GenFactory[Vec4i, UInt](
     vec4iTemplateClass,
     vec4iTemplateString,
-    new CompositeFactory[Vec4i, UInt](
-      vec4iFallbackClass,
-      FactoryInt1UInt
-    )
+    new ArrayVec4i(dataArray(FactoryInt1UInt))
   )
 }

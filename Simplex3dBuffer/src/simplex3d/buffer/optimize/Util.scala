@@ -35,7 +35,7 @@ private[optimize] object Util {
   private final val sysPropName = "simplex3d.buffer.optimize"
   private final val UnsetOrUnknown = "unset/unknown"
 
-  private val syspropValue :String = {
+  private val sysPropValue :String = {
     try {
       System.getProperty(sysPropName, UnsetOrUnknown)
     } catch {
@@ -49,8 +49,8 @@ private[optimize] object Util {
     }
   }
 
-  private val syspropEnabled: Boolean = {
-    (syspropValue == UnsetOrUnknown) || (syspropValue.toLowerCase != "false")
+  private val sysPropEnabled: Boolean = {
+    (sysPropValue == UnsetOrUnknown) || (sysPropValue.toLowerCase != "false")
   }
 
   val helpMsg =
@@ -59,7 +59,7 @@ private[optimize] object Util {
 
 
   def enableTemplateGen :Boolean = {
-    syspropEnabled && (TemplateGen != null) && (DefineClassLoader != null)
+    sysPropEnabled && (TemplateGen != null) && (DefineClassLoader != null)
   }
 
   val TemplateGen: TemplateGen = {
@@ -69,7 +69,7 @@ private[optimize] object Util {
       ).newInstance().asInstanceOf[TemplateGen]
     } catch {
       case any =>
-        if (syspropEnabled && syspropValue != UnsetOrUnknown) {
+        if (sysPropEnabled && sysPropValue != UnsetOrUnknown) {
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
             "Unable to load optimized classes due to a missing asm library. " +
@@ -86,7 +86,7 @@ private[optimize] object Util {
       new DefineClassLoader(this.getClass.getClassLoader)
     } catch {
       case any =>
-        if (syspropEnabled) {
+        if (sysPropEnabled) {
           Logger.getLogger(getClass.getName).log(
             Level.WARNING,
             "Unable to create a custom classloader to load optimized classes. "+

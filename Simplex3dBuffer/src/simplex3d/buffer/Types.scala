@@ -27,7 +27,7 @@ import scala.annotation._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RawData {
+object RawType {
   final val SByte = 5120
   final val UByte = 5121
   final val SShort = 5122
@@ -76,7 +76,7 @@ private[buffer] object StoreType {
   final val DoubleStore = 5
 
   def storeFromRaw(rawType: Int) = {
-    import RawData._
+    import RawType._
     (rawType: @switch) match {
       case SByte => ByteStore
       case UByte => ByteStore

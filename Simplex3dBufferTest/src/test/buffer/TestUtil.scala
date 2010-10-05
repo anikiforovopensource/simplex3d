@@ -53,9 +53,9 @@ object TestUtil extends FunSuite {
     assert(testing ne data)
 
     assert((testing.position, data.position) == (0, 0))
+    assert(data.limit == data.capacity)
+    assert(testing.limit == data.capacity)
     assert(testing.capacity == data.capacity)
-    println(testing.limit, data.limit, testing.capacity)//XXX
-    assert((testing.limit, data.limit) == (testing.capacity, testing.capacity))
     assert(testing.equals(data))
 
     (testing, data) match {
@@ -158,8 +158,8 @@ object TestUtil extends FunSuite {
     byteCapacity: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
   ) :(ByteBuffer, R#BufferType) = {
     (descriptor.rawType match {
-      case SByte => val b = alloc(byteCapacity); (b, random(b, fillRandom))
-      case UByte => val b = alloc(byteCapacity); (b, random(b, fillRandom))
+      case SByte => val b = alloc(byteCapacity); (b, random(b.duplicate, fillRandom))
+      case UByte => val b = alloc(byteCapacity); (b, random(b.duplicate, fillRandom))
       case SShort => val b = alloc(byteCapacity); (b, random(b.asShortBuffer, fillRandom))
       case UShort => val b = alloc(byteCapacity); (b, random(b.asCharBuffer, fillRandom))
       case SInt => val b = alloc(byteCapacity); (b, random(b.asIntBuffer, fillRandom))

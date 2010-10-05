@@ -92,7 +92,7 @@ object AttributeTest extends FunSuite {
     assert(seq.asReadOnlyBuffer.isReadOnly)
 
     assert(seq.bytesPerRawComponent == rawLength(seq.rawType))
-    assert(seq.byteCapacity == seq.bytesPerRawComponent*data.limit)
+    assert(seq.byteCapacity >= seq.bytesPerRawComponent*data.limit)
     assert(seq.byteOffset == seq.bytesPerRawComponent*seq.offset)
     assert(seq.byteStride == seq.bytesPerRawComponent*seq.stride)
 
@@ -104,7 +104,7 @@ object AttributeTest extends FunSuite {
       assert(seq.asReadOnlySeq eq seq)
 
       if (!seq.isInstanceOf[DataArray[_, _]]) {
-        assert(seq.bindingBuffer().isReadOnly)
+        assert(seq.bindingBuffer(0).isReadOnly)
       }
     }
     else {
@@ -113,14 +113,14 @@ object AttributeTest extends FunSuite {
     }
 
     if (seq.isInstanceOf[DataArray[_, _]]) {
-      assert(seq.bindingBuffer().array != null)
+      assert(seq.bindingBuffer(0).array != null)
     }
 
-    checkBindingBuffer(0, seq.bindingBuffer(), data)
-//    if (data.limit >= 2) {
-//      checkBindingBuffer(1, seq.bindingBuffer(1), data)
-//      checkBindingBuffer(2, seq.bindingBuffer(2), data)
-//    }
+    checkBindingBuffer(0, seq.bindingBuffer(0), data)
+    if (data.limit >= 2) {
+      checkBindingBuffer(1, seq.bindingBuffer(1), data)
+      checkBindingBuffer(2, seq.bindingBuffer(2), data)
+    }
 
     val ds = seq.asInstanceOf[DataSeq[E, R]]
     checkBuffer(ds.asBuffer, data)
@@ -196,6 +196,7 @@ object AttributeTest extends FunSuite {
       assert(ds.backingSeq.isInstanceOf[DataBuffer[_, _]])
     }
 
+    
     testSeq(seq, readOnly, data, descriptor)
 
     // backingSeq

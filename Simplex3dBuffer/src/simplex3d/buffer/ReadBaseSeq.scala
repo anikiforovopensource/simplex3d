@@ -39,6 +39,16 @@ private[buffer] abstract class ReadBaseSeq[
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
+  // Argument checks.
+  if (offset < 0)
+    throw new IllegalArgumentException(
+      "Offset must be greater than or equal to zero."
+    )
+  if (stride <= 0)
+    throw new IllegalArgumentException(
+      "Stride must be greater than zero."
+    )
+
   // Essential init.
   final val backingSeq: BackingSeqType = {
     if (backing == null) this.asInstanceOf[BackingSeqType]
@@ -49,16 +59,17 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
 
   private[buffer] final val buffer: R#BufferType = {
     (if (sharedStore.isInstanceOf[ByteBuffer]) {
-      val buff = sharedStore.asInstanceOf[ByteBuffer].duplicate()
-      if (!buff.isDirect) {
+      val byteBuffer =
+        if (ro) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
+        else sharedStore.asInstanceOf[ByteBuffer].duplicate()
+
+      if (!byteBuffer.isDirect) {
         throw new IllegalArgumentException(
           "The buffer must be direct."
         )
       }
-      buff.clear()
-      buff.order(ByteOrder.nativeOrder())
-      
-      val byteBuffer = if (ro) buff.asReadOnlyBuffer() else buff
+      byteBuffer.clear()
+      byteBuffer.order(ByteOrder.nativeOrder())
 
       (storeType: @switch) match {
         case ByteStore => byteBuffer
@@ -92,42 +103,40 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       }
     }).asInstanceOf[R#BufferType]
   }
+  
+  if (offset > buffer.capacity)
+    throw new IllegalArgumentException(
+      "Offset must not be greater than limit."
+    )
 
   private final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
-    (capacity - offset + stride - components)/stride
+    val s = (capacity - offset + stride - components)/stride
+    if (s > 0) s else 0
   }
 
   final override val size: Int = {
+    val maxSize = sizeFrom(buffer.capacity, offset, stride, components)
+
     if (sz != null) {
       val size: Int = sz.intValue
-      
+
       if (size < 0)
         throw new IllegalArgumentException(
           "Size cannot be negative."
         )
-      else size
+      if (size > maxSize)
+        throw new IllegalArgumentException(
+          "Size exceeds storage capacity."
+        )
+
+      size
     }
     else {
-      val s = sizeFrom(buffer.capacity, offset, stride, components)
-      if (s > 0) s else 0
+      maxSize
     }
   }
   final def length = size
   final val limit = offset + size*stride + components - 1
-
-  // Argument checks.
-  if (offset < 0)
-    throw new IllegalArgumentException(
-      "Offset must be greater than or equal to zero."
-    )
-  if (offset > limit)
-    throw new IllegalArgumentException(
-      "Offset must not be greater than limit."
-    )
-  if (stride <= 0)
-    throw new IllegalArgumentException(
-      "Stride must be greater than zero."
-    )
 
   // Type defenitions.
   type BindingBufferType <: Buffer
@@ -141,7 +150,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   def rawType: Int
   def normalized: Boolean
 
-  final val bytesPerRawComponent = RawData.byteLength(rawType)
+  final val bytesPerRawComponent = RawType.byteLength(rawType)
   final def byteCapacity = {
     if (sharedStore.isInstanceOf[ByteBuffer])
       sharedStore.asInstanceOf[ByteBuffer].capacity
@@ -204,23 +213,32 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       }
     }
   }
-  final def bindingBuffer(offset: Int, limit: Int) :BindingBufferType = {
+  final def bindingBuffer(offset: Int, count: Int) :BindingBufferType = {
     val buff = mkBindingBuffer()
+    val lim = offset + count*stride
 
     if (sharedStore.isInstanceOf[ByteBuffer]) {
       buff.position(offset*bytesPerRawComponent)
-      buff.limit(limit*bytesPerRawComponent)
+      buff.limit(lim*bytesPerRawComponent)
     }
     else {
       buff.position(offset)
-      buff.limit(limit)
+      buff.limit(lim)
     }
 
     buff.asInstanceOf[BindingBufferType]
   }
-  final def bindingBuffer() :BindingBufferType = {
+  final def bindingBuffer(offset: Int) :BindingBufferType = {
     val buff = mkBindingBuffer()
-    buff.clear()
+    buff.limit(buff.capacity)
+
+    if (sharedStore.isInstanceOf[ByteBuffer]) {
+      buff.position(offset*bytesPerRawComponent)
+    }
+    else {
+      buff.position(offset)
+    }
+
     buff.asInstanceOf[BindingBufferType]
   }
 
@@ -354,7 +372,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       case s: DataBuffer[_, _] => "DataBuffer"
       case s: DataView[_, _] => view = true; "DataView"
     }) +
-    "[" + getElemName() + ", " + RawData.name(rawType)+ "](" +
+    "[" + getElemName() + ", " + RawType.name(rawType)+ "](" +
     (if (view) "offset = " + offset + ", " else "") +
     "stride = " + stride + ", size = " + size + ")"
   }

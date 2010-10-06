@@ -36,15 +36,15 @@ private[buffer] final class ArrayVec2fRawFloat(
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec2f = {
-    val j = offset + i*stride
+  override def apply(i: Int) :ConstVec2f = {
+    val j = i*2
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
   override def update(i: Int, v: ReadVec2f) {
-    val j = offset + i*stride
+    val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
   }
@@ -62,15 +62,15 @@ private[buffer] final class BufferVec2fRawFloat(
 ) extends BaseVec2f[RawFloat](backing, 0, 2, null) with DataBuffer[Vec2f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec2f = {
-    val j = offset + i*stride
+  override def apply(i: Int) :ConstVec2f = {
+    val j = i*2
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
   override def update(i: Int, v: ReadVec2f) {
-    val j = offset + i*stride
+    val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
   }
@@ -90,7 +90,7 @@ private[buffer] final class ViewVec2fRawFloat(
     backing.mkReadOnlyInstance(), offset, stride, size
   )
 
-  override def apply(i: Int) :ReadVec2f = {
+  override def apply(i: Int) :ConstVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backing(j),
@@ -119,8 +119,8 @@ private[buffer] final class ArrayVec3fRawFloat(
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec3f = {
-    val j = offset + i*stride
+  override def apply(i: Int) :ConstVec3f = {
+    val j = i*3
     ConstVec3f(
       backing(j),
       backing(j + 1),
@@ -128,7 +128,7 @@ private[buffer] final class ArrayVec3fRawFloat(
     )
   }
   override def update(i: Int, v: ReadVec3f) {
-    val j = offset + i*stride
+    val j = i*3
     backing(j) = v.x
     backing(j + 1) = v.y
     backing(j + 2) = v.z
@@ -147,8 +147,8 @@ private[buffer] final class BufferVec3fRawFloat(
 ) extends BaseVec3f[RawFloat](backing, 0, 3, null) with DataBuffer[Vec3f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec3f = {
-    val j = offset + i*stride
+  override def apply(i: Int) :ConstVec3f = {
+    val j = i*3
     ConstVec3f(
       backing(j),
       backing(j + 1),
@@ -156,7 +156,7 @@ private[buffer] final class BufferVec3fRawFloat(
     )
   }
   override def update(i: Int, v: ReadVec3f) {
-    val j = offset + i*stride
+    val j = i*3
     backing(j) = v.x
     backing(j + 1) = v.y
     backing(j + 2) = v.z
@@ -177,7 +177,7 @@ private[buffer] final class ViewVec3fRawFloat(
     backing.mkReadOnlyInstance(), offset, stride, size
   )
   
-  override def apply(i: Int) :ReadVec3f = {
+  override def apply(i: Int) :ConstVec3f = {
     val j = offset + i*stride
     ConstVec3f(
       backing(j),
@@ -208,7 +208,7 @@ private[buffer] final class ArrayVec4fUByte(
   def this() = this(new ArrayFloat1UByte)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4fUByte(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec4f = {
+  override def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
       backing(j),
@@ -238,7 +238,7 @@ private[buffer] final class BufferVec4fUByte(
 ) extends BaseVec4f[UByte](backing, 0, 4, null) with DataBuffer[Vec4f, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4fUByte(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ReadVec4f = {
+  override def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
       backing(j),
@@ -270,7 +270,7 @@ private[buffer] final class ViewVec4fUByte(
     backing.mkReadOnlyInstance(), offset, stride, size
   )
 
-  override def apply(i: Int) :ReadVec4f = {
+  override def apply(i: Int) :ConstVec4f = {
     val j = offset + i*stride
     ConstVec4f(
       backing(j),

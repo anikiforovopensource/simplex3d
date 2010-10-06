@@ -421,6 +421,7 @@ final class Mat4f private[math] (
   override def m33_=(s: Float) { p33 = s }
 
   type Element = ReadMat4f
+  type Immutable = ConstMat4f
   type Component = Float1
 
   def *=(s: Float) {

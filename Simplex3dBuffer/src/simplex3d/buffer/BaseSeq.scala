@@ -24,17 +24,21 @@ import java.nio._
 import scala.annotation._
 import scala.reflect._
 import StoreType._
+import RawType._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseSeq[
-  E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
+  E <: MetaElement,
+  @specialized(Int, Float, Double) SRead <: SWrite,
+  @specialized(Int, Float, Double) SWrite,
+  +R <: RawData
 ](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   offset: Int, stride: Int, sz: java.lang.Integer
-) extends ReadBaseSeq[E, S, R](
+) extends ReadBaseSeq[E, SRead, R](
   shared, backing, ro,
   offset, stride, sz
 ) {
@@ -57,8 +61,8 @@ private[buffer] abstract class BaseSeq[
     }).asInstanceOf[R#BufferType]
   }
 
-  override def apply(i: Int) :S
-  def update(i: Int, v: S)
+  override def apply(i: Int) :SRead
+  def update(i: Int, v: SWrite)
 
 
   private final def putArray(
@@ -70,7 +74,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Int, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Int, Int, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -86,7 +90,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Float, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Float, Float, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -102,7 +106,7 @@ private[buffer] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Double, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Double, Double, _ <: RawData]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -112,21 +116,21 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[_], first: Int, count: Int
   ) {
-    val arr = array.asInstanceOf[Array[S]]
+    val arr = array.asInstanceOf[Array[SWrite]]
     var i = 0; while (i < count) {
       this(index + i) = arr(first + i)
       i += 1
     }
   }
   private final def putIndexedSeq(
-    index: Int, seq: IndexedSeq[S], first: Int, count: Int
+    index: Int, seq: IndexedSeq[SWrite], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
       this(index + i) = seq(first + i)
       i += 1
     }
   }
-  private final def putSeq(index: Int, seq: Seq[S], first: Int, count: Int) {
+  private final def putSeq(index: Int, seq: Seq[SWrite], first: Int, count: Int) {
     val iter = seq.iterator
     iter.drop(first)
     val lim = index + count
@@ -135,7 +139,7 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private final def putSeq(index: Int, seq: Seq[S]) {
+  private final def putSeq(index: Int, seq: Seq[SWrite]) {
     val iter = seq.iterator
     var i = index; while (iter.hasNext) {
       this(i) = iter.next
@@ -176,16 +180,16 @@ private[buffer] abstract class BaseSeq[
           throw new IndexOutOfBoundsException(
             "Source sequence is not large enough."
           )
-        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[S]], first, count)
+        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[SWrite]], first, count)
       case _ =>
-        putSeq(index, seq.asInstanceOf[Seq[S]], first, count)
+        putSeq(index, seq.asInstanceOf[Seq[SWrite]], first, count)
     }
   }
 
   final def put(index: Int, seq: Seq[E#Element]) {
     seq match {
       case is: IndexedSeq[_] => put(index, seq, 0, seq.size)
-      case _ => putSeq(index, seq.asInstanceOf[Seq[S]])
+      case _ => putSeq(index, seq.asInstanceOf[Seq[SWrite]])
     }
   }
 
@@ -201,15 +205,15 @@ private[buffer] abstract class BaseSeq[
   ) {
     def grp(rawType: Int) = {
       (rawType: @switch) match {
-        case RawData.SByte => 0
-        case RawData.UByte => 0
-        case RawData.SShort => 1
-        case RawData.UShort => 2
-        case RawData.SInt => 3
-        case RawData.UInt => 3
-        case RawData.HalfFloat => 4
-        case RawData.RawFloat => 5
-        case RawData.RawDouble => 6
+        case SByte => 0
+        case UByte => 0
+        case SShort => 1
+        case UShort => 2
+        case SInt => 3
+        case UInt => 3
+        case HalfFloat => 4
+        case RawFloat => 5
+        case RawDouble => 6
       }
     }
 

@@ -238,7 +238,8 @@ object InlinedBench {
     var l = 0; while (l < loops) {
       var i = 0; while (i < end) {
 
-        val j = seq.offset + seq.stride*i
+        //val j = seq.offset + seq.stride*i
+        val j = i*4
         val v = ConstVec4f(
           seq.backingSeq(j), seq.backingSeq(j + 1),
           seq.backingSeq(j + 2), seq.backingSeq(j + 3)
@@ -263,7 +264,8 @@ object InlinedBench {
     var l = 0; while (l < loops) {
       var i = 0; while (i < end) {
 
-        val j = seq.offset + seq.stride*i
+        //val j = seq.offset + seq.stride*i
+        val j = i*4
         val v = ConstVec4f(
           seq.backingSeq(j), seq.backingSeq(j + 1),
           seq.backingSeq(j + 2), seq.backingSeq(j + 3)

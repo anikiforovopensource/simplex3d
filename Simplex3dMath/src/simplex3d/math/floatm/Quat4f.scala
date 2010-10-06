@@ -176,6 +176,7 @@ final class Quat4f private[math] (
 ) extends ReadQuat4f with Implicits[On] with Composite
 {
   type Element = ReadQuat4f
+  type Immutable = ConstQuat4f
   type Component = Float1
 
   pa = ca; pb = cb; pc = cc; pd = cd

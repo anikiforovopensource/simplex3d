@@ -168,6 +168,7 @@ final class Vec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with Implicits[On] with Composite
 {
   type Element = ReadVec2f
+  type Immutable = ConstVec2f
   type Component = Float1
 
   px = cx; py = cy

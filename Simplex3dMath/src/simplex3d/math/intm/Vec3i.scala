@@ -204,6 +204,7 @@ final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Implicits[On] with Composite
 {
   type Element = ReadVec3i
+  type Immutable = ConstVec3i
   type Component = Int1
 
   px = cx; py = cy; pz = cz

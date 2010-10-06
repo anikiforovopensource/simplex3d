@@ -25,7 +25,7 @@ import org.scalatest._
 import java.nio._
 import scala.reflect._
 import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
-import simplex3d.buffer.RawData._
+import simplex3d.buffer.RawType._
 import simplex3d.buffer.intm._
 import simplex3d.buffer.floatm._
 import simplex3d.buffer.doublem._

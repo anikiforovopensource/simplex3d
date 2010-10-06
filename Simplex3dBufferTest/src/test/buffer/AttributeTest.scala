@@ -34,7 +34,7 @@ import TestUtil._
 object AttributeTest extends FunSuite {
 
   private def rawLength(rawType: Int) :Int = {
-    import RawData._
+    import RawType._
     rawType match {
       case SByte => 1
       case UByte => 1
@@ -246,7 +246,7 @@ object AttributeTest extends FunSuite {
   }
 /*
 // Test Factory
-  test Sequence Cast (also with alterered position and limit); sharesStoreObject
+  test Sequence Cast; sharesStoreObject
   
 // Test applyUpdate
   apply(i: Int)

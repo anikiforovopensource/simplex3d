@@ -35,7 +35,7 @@ private[buffer] abstract class BaseVec4d[+R <: ReadableDouble](
   final def elementManifest = Vec4d.Manifest
   final def components: Int = 4
 
-  def apply(i: Int) :ReadVec4d = {
+  def apply(i: Int) :ConstVec4d = {
     val j = offset + i*stride
     ConstVec4d(
       backingSeq(j),

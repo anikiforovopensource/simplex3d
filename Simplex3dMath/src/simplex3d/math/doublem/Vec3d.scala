@@ -194,6 +194,7 @@ final class Vec3d private[math] (
 ) extends ReadVec3d with Implicits[On] with Composite
 {
   type Element = ReadVec3d
+  type Immutable = ConstVec3d
   type Component = Double1
 
   px = cx; py = cy; pz = cz

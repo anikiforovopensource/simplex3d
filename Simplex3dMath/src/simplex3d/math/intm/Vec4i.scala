@@ -254,6 +254,7 @@ final class Vec4i private[math] (
 ) extends ReadVec4i with Implicits[On] with Composite
 {
   type Element = ReadVec4i
+  type Immutable = ConstVec4i
   type Component = Int1
 
   px = cx; py = cy; pz = cz; pw = cw

@@ -27,6 +27,7 @@ package simplex3d.math.integration.buffer
  */
 trait MetaElement {
   type Element
+  type Immutable <: Element
   type Component <: Primitive
 }
 
@@ -36,6 +37,7 @@ trait MetaElement {
  */
 sealed trait Primitive extends MetaElement {
   type Element <: AnyVal
+  type Immutable = Element
 }
 
 /** <code>Int1</code> marker indicates Int elements/components.

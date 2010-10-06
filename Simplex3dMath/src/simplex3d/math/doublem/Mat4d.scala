@@ -421,6 +421,7 @@ final class Mat4d private[math] (
   override def m33_=(s: Double) { p33 = s }
 
   type Element = ReadMat4d
+  type Immutable = ConstMat4d
   type Component = Double1
 
   def *=(s: Double) {

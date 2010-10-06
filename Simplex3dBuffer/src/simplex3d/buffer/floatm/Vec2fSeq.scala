@@ -35,7 +35,7 @@ private[buffer] abstract class BaseVec2f[+R <: ReadableFloat](
   final def elementManifest = Vec2f.Manifest
   final def components: Int = 2
 
-  def apply(i: Int) :ReadVec2f = {
+  def apply(i: Int) :ConstVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backingSeq(j),

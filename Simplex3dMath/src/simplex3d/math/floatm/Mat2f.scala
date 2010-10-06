@@ -264,6 +264,7 @@ final class Mat2f private[math] (
   override def m11_=(s: Float) { p11 = s }
 
   type Element = ReadMat2f
+  type Immutable = ConstMat2f
   type Component = Float1
 
   def *=(s: Float) {

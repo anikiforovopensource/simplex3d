@@ -192,6 +192,7 @@ final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
 extends ReadVec3f with Implicits[On] with Composite
 {
   type Element = ReadVec3f
+  type Immutable = ConstVec3f
   type Component = Float1
 
   px = cx; py = cy; pz = cz

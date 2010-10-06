@@ -25,10 +25,10 @@ package simplex3d.buffer
  * @author Aleksey Nikiforov (lex)
  */
 trait ReadDataSeq[E <: MetaElement, +R <: RawData]
-extends ReadBaseSeq[E, E#Element, R]
+extends ReadBaseSeq[E, E#Immutable, R]
 
 trait DataSeq[E <: MetaElement, +R <: RawData]
-extends BaseSeq[E, E#Element, R] with ReadDataSeq[E, R]
+extends BaseSeq[E, E#Immutable, E#Element, R] with ReadDataSeq[E, R]
 
 
 object DataSeq {
@@ -44,6 +44,7 @@ trait ReadContiguousSeq[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
   assert(offset == 0)
   assert(stride == components)
+  assert(size == sizeFrom(buffer.capacity, offset, stride, components))
 }
 
 trait ContiguousSeq[E <: MetaElement, +R <: RawData]

@@ -32,7 +32,7 @@ import simplex3d.buffer.Util._
 private[buffer] sealed abstract class BaseInt1[+R <: ReadableInt](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
-) extends BaseSeq[Int1, Int, R](shared, backing, ro, off, str, sz) {
+) extends BaseSeq[Int1, Int, Int, R](shared, backing, ro, off, str, sz) {
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Int
   final def components: Int = 1
@@ -44,7 +44,7 @@ private[buffer] sealed abstract class SeqInt1UByte(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[UByte](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UByte
+  final def rawType = RawType.UByte
   final def normalized = false
 
   final def mkDataArray(array: Array[Byte]) =
@@ -93,7 +93,7 @@ private[buffer] sealed abstract class SeqInt1UShort(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[UShort](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UShort
+  final def rawType = RawType.UShort
   final def normalized = false
 
   final def mkDataArray(array: Array[Char]) =
@@ -145,7 +145,7 @@ private[buffer] sealed abstract class SeqInt1UInt(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[UInt](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UInt
+  final def rawType = RawType.UInt
   final def normalized = false
 
   final def mkDataArray(array: Array[Int]) =
@@ -194,7 +194,7 @@ private[buffer] sealed abstract class SeqInt1SByte(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[SByte](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SByte
+  final def rawType = RawType.SByte
   final def normalized = false
 
   final def mkDataArray(array: Array[Byte]) =
@@ -243,7 +243,7 @@ private[buffer] sealed abstract class SeqInt1SShort(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[SShort](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SShort
+  final def rawType = RawType.SShort
   final def normalized = false
 
   final def mkDataArray(array: Array[Short]) =
@@ -292,7 +292,7 @@ private[buffer] sealed abstract class SeqInt1SInt(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseInt1[SInt](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SInt
+  final def rawType = RawType.SInt
   final def normalized = false
 
   final def mkDataArray(array: Array[Int]) =

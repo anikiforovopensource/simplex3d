@@ -32,12 +32,12 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class ReadBaseSeq[
-  E <: MetaElement, @specialized(Int, Float, Double) S, +R <: RawData
+  E <: MetaElement, @specialized(Int, Float, Double) SRead, +R <: RawData
 ](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int, sz: java.lang.Integer
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
-with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
+with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Argument checks.
   if (offset < 0)
@@ -109,7 +109,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
       "Offset must not be greater than limit."
     )
 
-  private final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
+  private[buffer] final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
     val s = (capacity - offset + stride - components)/stride
     if (s > 0) s else 0
   }
@@ -166,7 +166,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
     sharedStore eq seq.sharedStore
   }
 
-  def apply(i: Int) :S
+  def apply(i: Int) :SRead
   
   final def asReadOnlyBuffer() :R#BufferType = {
     ((storeType: @switch) match {
@@ -347,7 +347,7 @@ with IndexedSeq[S] with IndexedSeqOptimized[S, IndexedSeq[S]] {
   }
   final def copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
   :DataView[E, R] = {
-    val copy = mkDataView(byteBuffer, offset, stride)
+    val copy = mkDataView(byteBuffer, offset, stride, size)
     copy.put(
       0,
       backingSeq,

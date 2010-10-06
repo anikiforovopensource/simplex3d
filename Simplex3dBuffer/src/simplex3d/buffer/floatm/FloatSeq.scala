@@ -64,7 +64,7 @@ import Shared._
 private[buffer] sealed abstract class BaseFloat1[+R <: ReadableFloat](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
-) extends BaseSeq[Float1, Float, R](shared, backing, ro, off, str, sz) {
+) extends BaseSeq[Float1, Float, Float, R](shared, backing, ro, off, str, sz) {
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Float
   final def components: Int = 1
@@ -76,7 +76,7 @@ private[buffer] sealed abstract class SeqFloat1SByte(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[SByte](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SByte
+  final def rawType = RawType.SByte
   final def normalized = true
 
   final def mkDataArray(array: Array[Byte]) =
@@ -141,7 +141,7 @@ private[buffer] sealed abstract class SeqFloat1UByte(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[UByte](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UByte
+  final def rawType = RawType.UByte
   final def normalized = true
 
   final def mkDataArray(array: Array[Byte]) =
@@ -199,7 +199,7 @@ private[buffer] sealed abstract class SeqFloat1SShort(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[SShort](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SShort
+  final def rawType = RawType.SShort
   final def normalized = true
 
   final def mkDataArray(array: Array[Short]) =
@@ -264,7 +264,7 @@ private[buffer] sealed abstract class SeqFloat1UShort(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[UShort](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UShort
+  final def rawType = RawType.UShort
   final def normalized = true
 
   final def mkDataArray(array: Array[Char]) =
@@ -320,7 +320,7 @@ private[buffer] sealed abstract class SeqFloat1SInt(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[SInt](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.SInt
+  final def rawType = RawType.SInt
   final def normalized = true
 
   final def mkDataArray(array: Array[Int]) =
@@ -376,7 +376,7 @@ private[buffer] sealed abstract class SeqFloat1UInt(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[UInt](shared, backing, ro, off, str, sz) {
-  final def rawType = RawData.UInt
+  final def rawType = RawType.UInt
   final def normalized = true
 
   final def mkDataArray(array: Array[Int]) =
@@ -435,7 +435,7 @@ private[buffer] sealed abstract class SeqFloat1HalfFloat(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[HalfFloat](shared, backing, ro, off, str, sz) {
-  final def rawType: Int = RawData.HalfFloat
+  final def rawType: Int = RawType.HalfFloat
   final def normalized = false
 
   final def mkDataArray(array: Array[Short]) =
@@ -487,7 +487,7 @@ private[buffer] sealed abstract class SeqFloat1RawFloat(
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int, sz: java.lang.Integer
 ) extends BaseFloat1[RawFloat](shared, backing, ro, off, str, sz) {
-  final def rawType: Int = RawData.RawFloat
+  final def rawType: Int = RawType.RawFloat
   final def normalized = false
 
   final def mkDataArray(array: Array[Float]) =

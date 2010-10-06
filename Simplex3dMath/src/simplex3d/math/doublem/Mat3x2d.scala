@@ -283,6 +283,7 @@ final class Mat3x2d private[math] (
   override def m21_=(s: Double) { p21 = s }
 
   type Element = ReadMat3x2d
+  type Immutable = ConstMat3x2d
   type Component = Double1
 
   def *=(s: Double) {

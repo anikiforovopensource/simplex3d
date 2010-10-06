@@ -264,6 +264,7 @@ final class Mat2d private[math] (
   override def m11_=(s: Double) { p11 = s }
 
   type Element = ReadMat2d
+  type Immutable = ConstMat2d
   type Component = Double1
 
   def *=(s: Double) {

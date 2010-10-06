@@ -241,6 +241,7 @@ final class Vec4d private[math] (
 ) extends ReadVec4d with Implicits[On] with Composite
 {
   type Element = ReadVec4d
+  type Immutable = ConstVec4d
   type Component = Double1
 
   px = cx; py = cy; pz = cz; pw = cw

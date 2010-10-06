@@ -23,6 +23,7 @@ package optimize
 
 import java.util.logging._
 import org.objectweb.asm._
+import RawType._
 
 
 /**
@@ -36,15 +37,15 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
   private val replaceString =
     fallbackFactory.rawType match {
-      case RawData.SByte => "SByte"
-      case RawData.UByte => "UByte"
-      case RawData.SShort => "SShort"
-      case RawData.UShort => "UShort"
-      case RawData.SInt => "SInt"
-      case RawData.UInt => "UInt"
-      case RawData.HalfFloat => "HalfFloat"
-      case RawData.RawFloat => "RawFloat"
-      case RawData.RawDouble => "RawDouble"
+      case SByte => "SByte"
+      case UByte => "UByte"
+      case SShort => "SShort"
+      case UShort => "UShort"
+      case SInt => "SInt"
+      case UInt => "UInt"
+      case HalfFloat => "HalfFloat"
+      case RawFloat => "RawFloat"
+      case RawDouble => "RawDouble"
     }
 
   val factory: DataSeq[E, R] = {

@@ -364,6 +364,7 @@ final class Mat4x3d private[math] (
   override def m32_=(s: Double) { p32 = s }
 
   type Element = ReadMat4x3d
+  type Immutable = ConstMat4x3d
   type Component = Double1
 
   def *=(s: Double) {

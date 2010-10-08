@@ -42,7 +42,7 @@ extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
 
 
 object ReadDataArray {
-  def apply[E <: MetaElement, R <: ReadableData](da: ReadDataArray[_, R])(
+  def apply[E <: MetaElement, R <: Defined](da: ReadDataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataArray[E, R] = {
     val res = ref.factory.mkDataArray(da.sharedArray)
@@ -51,19 +51,19 @@ object ReadDataArray {
 }
 
 object DataArray {
-  def apply[E <: MetaElement, R <: ReadableData](array: R#ArrayType)(
+  def apply[E <: MetaElement, R <: Defined](array: R#ArrayType)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     ref.factory.mkDataArray(array)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](size: Int)(
+  def apply[E <: MetaElement, R <: Defined](size: Int)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     ref.factory.mkDataArray(size)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](vals: E#Element*)(
+  def apply[E <: MetaElement, R <: Defined](vals: E#Element*)(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     val data = ref.factory.mkDataArray(vals.size)
@@ -71,7 +71,7 @@ object DataArray {
     data
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](vals: IndexedSeq[E#Element])(
+  def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Element])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     val data = ref.factory.mkDataArray(vals.size)
@@ -79,7 +79,7 @@ object DataArray {
     data
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](da: DataArray[_, R])(
+  def apply[E <: MetaElement, R <: Defined](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
     if (da.isReadOnly) throw new ClassCastException(

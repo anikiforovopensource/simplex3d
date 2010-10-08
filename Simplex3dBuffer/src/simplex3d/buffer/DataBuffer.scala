@@ -37,13 +37,13 @@ extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
 
 
 object ReadDataBuffer {
-  def apply[E <: MetaElement, R <: ReadableData](buffer: ByteBuffer)(
+  def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataBuffer[E, R] = {
     ref.factory.mkReadDataBuffer(buffer)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](db: ReadDataBuffer[_, _])(
+  def apply[E <: MetaElement, R <: Defined](db: ReadDataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :ReadDataBuffer[E, R] = {
     val res = ref.factory.mkReadDataBuffer(db.sharedBuffer)
@@ -52,19 +52,19 @@ object ReadDataBuffer {
 }
 
 object DataBuffer {
-  def apply[E <: MetaElement, R <: ReadableData](buffer: ByteBuffer)(
+  def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     ref.factory.mkDataBuffer(buffer)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](size: Int)(
+  def apply[E <: MetaElement, R <: Defined](size: Int)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     ref.factory.mkDataBuffer(size)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](vals: E#Element*)(
+  def apply[E <: MetaElement, R <: Defined](vals: E#Element*)(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     val data = ref.factory.mkDataBuffer(vals.size)
@@ -72,7 +72,7 @@ object DataBuffer {
     data
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](vals: IndexedSeq[E#Element])(
+  def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Element])(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     val data = ref.factory.mkDataBuffer(vals.size)
@@ -80,7 +80,7 @@ object DataBuffer {
     data
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](db: DataBuffer[_, _])(
+  def apply[E <: MetaElement, R <: Defined](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[E, R]
   ) :DataBuffer[E, R] = {
     if (db.isReadOnly) throw new ClassCastException(

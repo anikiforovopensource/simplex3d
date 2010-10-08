@@ -27,52 +27,46 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadIndexSeq[+R <: RawData]
+trait ReadIndexSeq[+R <: Unsigned]
 extends ReadContiguousSeq[Int1, R] {
   override def asReadOnlySeq() :ReadIndexSeq[R]
 
   def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
     mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
 
-  def mkIndexArray(size: Int) :IndexArray[R] =
-    mkDataArray(size).asInstanceOf[IndexArray[R]]
-  def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] =
-    mkDataArray(array).asInstanceOf[IndexArray[R]]
-  def mkIndexBuffer(size: Int) :IndexBuffer[R] =
-    mkDataBuffer(size).asInstanceOf[IndexBuffer[R]]
-  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] =
-    mkDataBuffer(byteBuffer).asInstanceOf[IndexBuffer[R]]
+  def mkIndexArray(size: Int) :IndexArray[R] = mkDataArray(size)
+  def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
+  def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
+  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
 
-  def copyAsIndexArray() :IndexArray[R] =
-    super.copyAsDataArray().asInstanceOf[IndexArray[R]]
-  def copyAsIndexBuffer() :IndexBuffer[R] =
-    super.copyAsDataBuffer().asInstanceOf[IndexBuffer[R]]
+  def copyAsIndexArray() :IndexArray[R] = copyAsDataArray()
+  def copyAsIndexBuffer() :IndexBuffer[R] = copyAsDataBuffer()
 }
 
-trait IndexSeq[+R <: RawData]
+trait IndexSeq[+R <: Unsigned]
 extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 
-trait ReadIndexArray[+R <: RawData]
+trait ReadIndexArray[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
   override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadIndexArray[R]]
 }
 
-trait IndexArray[+R <: RawData]
+trait IndexArray[+R <: Unsigned]
 extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 
-trait ReadIndexBuffer[+R <: RawData]
+trait ReadIndexBuffer[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
   override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadIndexBuffer[R]]
 }
 
-trait IndexBuffer[+R <: RawData]
+trait IndexBuffer[+R <: Unsigned]
 extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
 
 
 object ReadIndexArray {
-  def apply[R <: ReadableIndex](da: ReadDataArray[_, R])(
+  def apply[R <: DefinedIndex](da: ReadDataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :ReadIndexArray[R] = {
     val res = ref.factory.mkDataArray(da.sharedArray)
@@ -81,19 +75,19 @@ object ReadIndexArray {
 }
 
 object IndexArray {
-  def apply[R <: ReadableIndex](array: R#ArrayType)(
+  def apply[R <: DefinedIndex](array: R#ArrayType)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
     ref.factory.mkDataArray(array)
   }
 
-  def apply[R <: ReadableIndex](size: Int)(
+  def apply[R <: DefinedIndex](size: Int)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
     ref.factory.mkDataArray(size)
   }
 
-  def apply[R <: ReadableIndex](vals: Int*)(
+  def apply[R <: DefinedIndex](vals: Int*)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
     val data = ref.factory.mkDataArray(vals.size)
@@ -101,7 +95,7 @@ object IndexArray {
     data
   }
 
-  def apply[R <: ReadableIndex](da: DataArray[_, R])(
+  def apply[R <: DefinedIndex](da: DataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
     if (da.isReadOnly) throw new ClassCastException(
@@ -112,13 +106,13 @@ object IndexArray {
 }
 
 object ReadIndexBuffer {
-  def apply[R <: ReadableIndex](buffer: ByteBuffer)(
+  def apply[R <: DefinedIndex](buffer: ByteBuffer)(
     implicit ref: FactoryRef[Int1, R]
   ) :ReadIndexBuffer[R] = {
     ref.factory.mkReadDataBuffer(buffer)
   }
 
-  def apply[R <: ReadableIndex](db: ReadDataBuffer[_, _])(
+  def apply[R <: DefinedIndex](db: ReadDataBuffer[_, _])(
     implicit ref: FactoryRef[Int1, R]
   ) :ReadIndexBuffer[R] = {
     val res = ref.factory.mkReadDataBuffer(db.sharedBuffer)
@@ -127,19 +121,19 @@ object ReadIndexBuffer {
 }
 
 object IndexBuffer {
-  def apply[R <: ReadableIndex](buffer: ByteBuffer)(
+  def apply[R <: DefinedIndex](buffer: ByteBuffer)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     ref.factory.mkDataBuffer(buffer)
   }
 
-  def apply[R <: ReadableIndex](size: Int)(
+  def apply[R <: DefinedIndex](size: Int)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     ref.factory.mkDataBuffer(size)
   }
 
-  def apply[R <: ReadableIndex](vals: Int*)(
+  def apply[R <: DefinedIndex](vals: Int*)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     val data = ref.factory.mkDataBuffer(vals.size)
@@ -147,7 +141,7 @@ object IndexBuffer {
     data
   }
 
-  def apply[R <: ReadableIndex](db: DataBuffer[_, _])(
+  def apply[R <: DefinedIndex](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     if (db.isReadOnly) throw new ClassCastException(

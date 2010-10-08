@@ -96,11 +96,11 @@ sealed trait RawData {
   type BufferType <: Buffer
 }
 
-sealed trait ReadableData extends RawData
-sealed trait ReadableInt extends ReadableData
-sealed trait ReadableIndex extends ReadableInt with Unsigned
-sealed trait ReadableFloat extends ReadableData
-sealed trait ReadableDouble extends ReadableData
+sealed trait Defined extends RawData
+sealed trait DefinedInt extends Defined
+sealed trait DefinedIndex extends DefinedInt with Unsigned
+sealed trait DefinedFloat extends Defined
+sealed trait DefinedDouble extends Defined
 
 sealed trait Integral extends RawData
 
@@ -114,22 +114,22 @@ sealed trait RawByte extends Integral {
 }
 
 sealed trait SByte extends RawByte with Signed
-with ReadableInt with ReadableFloat with ReadableDouble
+with DefinedInt with DefinedFloat with DefinedDouble
 
 sealed trait UByte extends RawByte with Unsigned
-with ReadableIndex with ReadableFloat with ReadableDouble
+with DefinedIndex with DefinedFloat with DefinedDouble
 
 
 sealed trait RawShort extends Integral
 
 sealed trait SShort extends RawShort with Signed
-with ReadableInt with ReadableFloat with ReadableDouble {
+with DefinedInt with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait UShort extends RawShort with Unsigned
-with ReadableIndex with ReadableFloat with ReadableDouble {
+with DefinedIndex with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Char]
   type BufferType = CharBuffer
 }
@@ -141,28 +141,28 @@ sealed trait RawInt extends Integral {
 }
 
 sealed trait SInt extends RawInt with Signed
-with ReadableInt with ReadableFloat with ReadableDouble
+with DefinedInt with DefinedFloat with DefinedDouble
 
 sealed trait UInt extends RawInt with Unsigned
-with ReadableIndex with ReadableFloat with ReadableDouble
+with DefinedIndex with DefinedFloat with DefinedDouble
 
 
 sealed trait Fractional extends RawData
 
 sealed trait HalfFloat extends Fractional
-with ReadableFloat with ReadableDouble {
+with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
 sealed trait RawFloat extends Fractional
-with ReadableFloat with ReadableDouble {
+with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Float]
   type BufferType = FloatBuffer
 }
 
 sealed trait RawDouble extends Fractional
-with ReadableDouble {
+with DefinedDouble {
   type ArrayType = Array[Double]
   type BufferType = DoubleBuffer
 }

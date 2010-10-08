@@ -29,9 +29,9 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec2d[+R <: ReadableDouble](
-  backing: ContiguousSeq[Double1, R], off: Int, str: Int, sz: java.lang.Integer
-) extends CompositeSeq[Vec2d, R](backing, off, str, sz) {
+private[buffer] abstract class BaseVec2d[+R <: DefinedDouble](
+  backing: ContiguousSeq[Double1, R], off: Int, str: Int
+) extends CompositeSeq[Vec2d, R](backing, off, str) {
   final def elementManifest = Vec2d.Manifest
   final def components: Int = 2
 
@@ -60,35 +60,35 @@ private[buffer] abstract class BaseVec2d[+R <: ReadableDouble](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Double1, R]]
     )
 
-  protected def mkReadDataView(byteBuffer: ByteBuffer, off: Int, str: Int, sz: java.lang.Integer)
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int)
   :ReadDataView[Vec2d, R] =
     new ViewVec2d[R](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Double1, R]],
-      off, str, sz
+      off, str
     )
 }
 
-private[buffer] final class ArrayVec2d[+R <: ReadableDouble](
+private[buffer] final class ArrayVec2d[+R <: DefinedDouble](
   backingSeq: DataArray[Double1, R]
-) extends BaseVec2d[R](backingSeq, 0, 2, null) with DataArray[Vec2d, R] {
+) extends BaseVec2d[R](backingSeq, 0, 2) with DataArray[Vec2d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
   )
 }
 
-private[buffer] final class BufferVec2d[+R <: ReadableDouble](
+private[buffer] final class BufferVec2d[+R <: DefinedDouble](
   backingSeq: DataBuffer[Double1, R]
-) extends BaseVec2d[R](backingSeq, 0, 2, null) with DataBuffer[Vec2d, R] {
+) extends BaseVec2d[R](backingSeq, 0, 2) with DataBuffer[Vec2d, R] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
   )
 }
 
-private[buffer] final class ViewVec2d[+R <: ReadableDouble](
-  backingSeq: DataBuffer[Double1, R], off: Int, str: Int, sz: java.lang.Integer
-) extends BaseVec2d[R](backingSeq, off, str, sz) with DataView[Vec2d, R] {
+private[buffer] final class ViewVec2d[+R <: DefinedDouble](
+  backingSeq: DataBuffer[Double1, R], off: Int, str: Int
+) extends BaseVec2d[R](backingSeq, off, str) with DataView[Vec2d, R] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec2d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]],
-    offset, stride, size
+    offset, stride
   )
 }

@@ -32,11 +32,11 @@ import simplex3d.buffer.floatm.optimized._
  */
 package object floatm {
 
-  private final type PrimitiveFactory[R <: ReadableFloat] = SimpleFactoryRef[Float1, R]
-  private final type SimpleFactory[E <: Composite, R <: ReadableFloat] = SimpleFactoryRef[E, R]
-  private final type GenFactory[E <: Composite, R <: ReadableFloat] = TemplateGenFactoryRef[E, R]
+  private final type PrimitiveFactory[R <: DefinedFloat] = SimpleFactoryRef[Float1, R]
+  private final type SimpleFactory[E <: Composite, R <: DefinedFloat] = SimpleFactoryRef[E, R]
+  private final type GenFactory[E <: Composite, R <: DefinedFloat] = TemplateGenFactoryRef[E, R]
 
-  private final def dataArray[R <: ReadableFloat](f: SimpleFactoryRef[Float1, R]) =
+  private final def dataArray[R <: DefinedFloat](f: SimpleFactoryRef[Float1, R]) =
     f.factory.asInstanceOf[DataArray[Float1, R]]
 
 

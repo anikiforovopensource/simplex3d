@@ -262,7 +262,12 @@ object FactoryTest extends FunSuite {
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 65, 1)
+      factory(bytes, 1, 1)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 2, 1)
     }
 
     intercept[IllegalArgumentException] {
@@ -279,7 +284,7 @@ object FactoryTest extends FunSuite {
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
-      for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
+      for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
@@ -359,7 +364,12 @@ object FactoryTest extends FunSuite {
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 65, 1)
+      factory(bytes, 1, 1)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 2, 1)
     }
 
     intercept[IllegalArgumentException] {
@@ -376,7 +386,7 @@ object FactoryTest extends FunSuite {
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
-      for (offset <- 0 to IntMath.min(descriptor.components, data.limit); stride <- 1 to (descriptor.components + 1)) {
+      for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN

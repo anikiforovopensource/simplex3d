@@ -30,12 +30,12 @@ import simplex3d.buffer.intm.optimized._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object intm extends UnsignedImplicits {
+package object intm extends PrimitiveIntImplicits {
 
-  private final type SimpleFactory[E <: Composite, R <: ReadableInt] = SimpleFactoryRef[E, R]
-  private final type GenFactory[E <: Composite, R <: ReadableInt] = TemplateGenFactoryRef[E, R]
+  private final type SimpleFactory[E <: Composite, R <: DefinedInt] = SimpleFactoryRef[E, R]
+  private final type GenFactory[E <: Composite, R <: DefinedInt] = TemplateGenFactoryRef[E, R]
   
-  private final def dataArray[R <: ReadableInt](f: SimpleFactoryRef[Int1, R]) =
+  private final def dataArray[R <: DefinedInt](f: SimpleFactoryRef[Int1, R]) =
     f.factory.asInstanceOf[DataArray[Int1, R]]
 
 

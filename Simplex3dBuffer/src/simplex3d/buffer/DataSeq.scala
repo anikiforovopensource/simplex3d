@@ -32,7 +32,7 @@ extends BaseSeq[E, E#Immutable, E#Element, R] with ReadDataSeq[E, R]
 
 
 object DataSeq {
-  def apply[E <: MetaElement, R <: ReadableData](
+  def apply[E <: MetaElement, R <: Defined](
     implicit ref: FactoryRef[E, R]
   ) :DataSeq[E, R] = {
     ref.factory
@@ -44,7 +44,6 @@ trait ReadContiguousSeq[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
   assert(offset == 0)
   assert(stride == components)
-  assert(size == sizeFrom(buffer.capacity, offset, stride, components))
 }
 
 trait ContiguousSeq[E <: MetaElement, +R <: RawData]

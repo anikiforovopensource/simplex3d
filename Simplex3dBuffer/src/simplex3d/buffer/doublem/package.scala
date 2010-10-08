@@ -32,11 +32,11 @@ import simplex3d.buffer.doublem.optimized._
  */
 package object doublem {
 
-  private final type PrimitiveFactory[R <: ReadableDouble] = SimpleFactoryRef[Double1, R]
-  private final type SimpleFactory[E <: Composite, R <: ReadableDouble] = SimpleFactoryRef[E, R]
-  private final type GenFactory[E <: Composite, R <: ReadableDouble] = TemplateGenFactoryRef[E, R]
+  private final type PrimitiveFactory[R <: DefinedDouble] = SimpleFactoryRef[Double1, R]
+  private final type SimpleFactory[E <: Composite, R <: DefinedDouble] = SimpleFactoryRef[E, R]
+  private final type GenFactory[E <: Composite, R <: DefinedDouble] = TemplateGenFactoryRef[E, R]
 
-  private final def dataArray[R <: ReadableDouble](f: SimpleFactoryRef[Double1, R]) =
+  private final def dataArray[R <: DefinedDouble](f: SimpleFactoryRef[Double1, R]) =
     f.factory.asInstanceOf[DataArray[Double1, R]]
 
 

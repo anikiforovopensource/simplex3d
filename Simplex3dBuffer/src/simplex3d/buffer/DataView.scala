@@ -41,61 +41,33 @@ extends DataSeq[E, R] with ReadDataView[E, R] {
 
 
 object ReadDataView {
-  def apply[E <: MetaElement, R <: ReadableData](
+  def apply[E <: MetaElement, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
     ref.factory.mkReadDataView(buffer, offset, stride)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](
-    buffer: ByteBuffer, offset: Int, stride: Int, size: Int
-  )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
-    ref.factory.mkReadDataView(buffer, offset, stride, size)
-  }
-
-  def apply[E <: MetaElement, R <: ReadableData](
+  def apply[E <: MetaElement, R <: Defined](
     db: inDataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
     val res = ref.factory.mkReadDataView(db.sharedBuffer, offset, stride)
     if (db.isReadOnly) res.asReadOnlySeq() else res
   }
-
-  def apply[E <: MetaElement, R <: ReadableData](
-    db: inDataBuffer[_, _], offset: Int, stride: Int, size: Int
-  )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
-    val res = ref.factory.mkReadDataView(db.sharedBuffer, offset, stride, size)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
-  }
 }
 
 object DataView {
-  def apply[E <: MetaElement, R <: ReadableData](
+  def apply[E <: MetaElement, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     ref.factory.mkDataView(buffer, offset, stride)
   }
 
-  def apply[E <: MetaElement, R <: ReadableData](
-    buffer: ByteBuffer, offset: Int, stride: Int, size: Int
-  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    ref.factory.mkDataView(buffer, offset, stride, size)
-  }
-
-  def apply[E <: MetaElement, R <: ReadableData](
+  def apply[E <: MetaElement, R <: Defined](
     db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
     if (db.isReadOnly) throw new ClassCastException(
       "The DataBuffer must not be read-only."
     )
     ref.factory.mkDataView(db.sharedBuffer, offset, stride)
-  }
-
-  def apply[E <: MetaElement, R <: ReadableData](
-    db: DataBuffer[_, _], offset: Int, stride: Int, size: Int
-  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    if (db.isReadOnly) throw new ClassCastException(
-      "The DataBuffer must not be read-only."
-    )
-    ref.factory.mkDataView(db.sharedBuffer, offset, stride, size)
   }
 }

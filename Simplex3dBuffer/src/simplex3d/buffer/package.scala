@@ -28,9 +28,9 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 package buffer {
-  private[buffer] class UnsignedImplicits {
+  private[buffer] class PrimitiveIntImplicits {
 
-    private final type PrimitiveFactory[R <: ReadableInt] = SimpleFactoryRef[Int1, R]
+    private final type PrimitiveFactory[R <: DefinedInt] = SimpleFactoryRef[Int1, R]
 
     implicit final lazy val FactoryInt1SByte = new PrimitiveFactory[SByte](new ArrayInt1SByte)
     implicit final lazy val FactoryInt1UByte = new PrimitiveFactory[UByte](new ArrayInt1UByte)
@@ -41,7 +41,7 @@ package buffer {
   }
 }
 
-package object buffer extends UnsignedImplicits {
+package object buffer extends PrimitiveIntImplicits {
 
   type MetaElement = integration.buffer.MetaElement
   type Primitive = integration.buffer.Primitive
@@ -50,15 +50,24 @@ package object buffer extends UnsignedImplicits {
   type Float1 = integration.buffer.Float1
   type Double1 = integration.buffer.Double1
 
+  type ReadData[E <: MetaElement] = ReadDataSeq[E, RawData]
+  type Data[E <: MetaElement] = DataSeq[E, RawData]
+  type inData[E <: MetaElement] = inDataSeq[E, RawData]
+  type outData[E <: MetaElement] = outDataSeq[E, RawData]
+  type ReadIndex = ReadIndexSeq[Unsigned]
+  type Index = IndexSeq[Unsigned]
+  type inIndex = inIndexSeq[Unsigned]
+  type outIndex = outIndexSeq[Unsigned]
+
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
   type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]
   type inDataArray[E <: MetaElement, +R <: RawData] = ReadDataArray[E, R]
   type inDataBuffer[E <: MetaElement, +R <: RawData] = ReadDataBuffer[E, R]
   type inDataView[E <: MetaElement, +R <: RawData] = ReadDataView[E, R]
 
-  type inIndexSeq[+R <: RawData] = ReadIndexSeq[R]
-  type inIndexArray[+R <: RawData] = ReadIndexArray[R]
-  type inIndexBuffer[+R <: RawData] = ReadIndexBuffer[R]
+  type inIndexSeq[+R <: Unsigned] = ReadIndexSeq[R]
+  type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
+  type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
   type outDataSeq[E <: MetaElement, +R <: RawData] = DataSeq[E, R]
   type outContiguousSeq[E <: MetaElement, +R <: RawData] =ContiguousSeq[E, R]
@@ -66,31 +75,31 @@ package object buffer extends UnsignedImplicits {
   type outDataBuffer[E <: MetaElement, +R <: RawData] = DataBuffer[E, R]
   type outDataView[E <: MetaElement, +R <: RawData] = DataView[E, R]
 
-  type outIndexSeq[+R <: RawData] = IndexSeq[R]
-  type outIndexArray[+R <: RawData] = IndexArray[R]
-  type outIndexBuffer[+R <: RawData] = IndexBuffer[R]
+  type outIndexSeq[+R <: Unsigned] = IndexSeq[R]
+  type outIndexArray[+R <: Unsigned] = IndexArray[R]
+  type outIndexBuffer[+R <: Unsigned] = IndexBuffer[R]
 
-  @inline implicit final def readContegiousDataToIndex[R  <: ReadableIndex] (
+  @inline implicit final def readContegiousDataToIndex[R  <: Unsigned] (
     d: ReadContiguousSeq[Int1, R]
   ) = d.asInstanceOf[ReadIndexSeq[R]]
 
-  @inline implicit final def readArrayDataToIndex[R  <: ReadableIndex] (
+  @inline implicit final def readArrayDataToIndex[R  <: Unsigned] (
     d: ReadDataArray[Int1, R]
   ) = d.asInstanceOf[ReadIndexArray[R]]
 
-  @inline implicit final def readBufferDataToIndex[R  <: ReadableIndex](
+  @inline implicit final def readBufferDataToIndex[R  <: Unsigned](
     d: ReadDataBuffer[Int1, R]
   ) = d.asInstanceOf[ReadIndexBuffer[R]]
 
-  @inline implicit final def contegiousDataToIndex[R  <: ReadableIndex] (
+  @inline implicit final def contegiousDataToIndex[R  <: Unsigned] (
     d: ContiguousSeq[Int1, R]
   ) = d.asInstanceOf[IndexSeq[R]]
   
-  @inline implicit final def arrayDataToIndex[R  <: ReadableIndex](
+  @inline implicit final def arrayDataToIndex[R  <: Unsigned](
     d: DataArray[Int1, R]
   ) = d.asInstanceOf[IndexArray[R]]
 
-  @inline implicit final def bufferDataToIndex[R  <: ReadableIndex](
+  @inline implicit final def bufferDataToIndex[R  <: Unsigned](
     d: DataBuffer[Int1, R]
   ) = d.asInstanceOf[IndexBuffer[R]]
 

@@ -35,7 +35,7 @@ private[buffer] abstract class ReadBaseSeq[
   E <: MetaElement, @specialized(Int, Float, Double) SRead, +R <: RawData
 ](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
-  final val offset: Int, final val stride: Int, sz: java.lang.Integer
+  final val offset: Int, final val stride: Int
 ) extends Protected[R#ArrayType @uncheckedVariance](shared)
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
@@ -48,7 +48,11 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     throw new IllegalArgumentException(
       "Stride must be greater than zero."
     )
-
+  if (offset >= stride)
+    throw new IllegalArgumentException(
+      "Offset must be less than stride."
+    )
+  
   // Essential init.
   final val backingSeq: BackingSeqType = {
     if (backing == null) this.asInstanceOf[BackingSeqType]
@@ -114,29 +118,8 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     if (s > 0) s else 0
   }
 
-  final override val size: Int = {
-    val maxSize = sizeFrom(buffer.capacity, offset, stride, components)
-
-    if (sz != null) {
-      val size: Int = sz.intValue
-
-      if (size < 0)
-        throw new IllegalArgumentException(
-          "Size cannot be negative."
-        )
-      if (size > maxSize)
-        throw new IllegalArgumentException(
-          "Size exceeds storage capacity."
-        )
-
-      size
-    }
-    else {
-      maxSize
-    }
-  }
+  final override val size = sizeFrom(buffer.capacity, offset, stride, components)
   final def length = size
-  final val limit = offset + size*stride + components - 1
 
   // Type defenitions.
   type BindingBufferType <: Buffer
@@ -213,57 +196,24 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
       }
     }
   }
-  final def bindingBuffer(offset: Int, count: Int) :BindingBufferType = {
-    val buff = mkBindingBuffer()
-    val lim = offset + count*stride
-
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
-      buff.position(offset*bytesPerRawComponent)
-      buff.limit(lim*bytesPerRawComponent)
-    }
-    else {
-      buff.position(offset)
-      buff.limit(lim)
-    }
-
-    buff.asInstanceOf[BindingBufferType]
-  }
   final def bindingBuffer(offset: Int) :BindingBufferType = {
     val buff = mkBindingBuffer()
     buff.limit(buff.capacity)
 
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
-      buff.position(offset*bytesPerRawComponent)
-    }
-    else {
-      buff.position(offset)
-    }
+    if (sharedStore.isInstanceOf[ByteBuffer]) buff.position(offset*bytesPerRawComponent)
+    else buff.position(offset)
 
     buff.asInstanceOf[BindingBufferType]
   }
 
   def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
-
-  protected def mkReadDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer
-  ) :ReadDataView[E, R]
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
 
 
-  private[this] final def mkViewOrBuffer(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer
-  ) :ReadDataView[E, R] = {
-    if (
-      offset == 0 && stride == components && (
-        size == null ||
-        size.intValue == sizeFrom(byteBuffer.capacity/bytesPerRawComponent, offset, stride, components)
-      )
-    ) {
-      mkReadDataBuffer(byteBuffer)
-    }
-    else {
-      mkReadDataView(byteBuffer, offset, stride, size)
-    }
+  private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R] = {
+    if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
+    else mkReadDataViewInstance(byteBuffer, offset, stride)
   }
 
   final def mkDataArray(size: Int) :DataArray[E, R] = {
@@ -293,33 +243,18 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   }
 
   final def mkDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int, size: Int
-  ) :DataView[E, R] = {
-    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-    mkViewOrBuffer(byteBuffer, offset, stride, size.asInstanceOf[java.lang.Integer]).asInstanceOf[DataView[E, R]]
-  }
-
-  final def mkDataView(
     byteBuffer: ByteBuffer, offset: Int, stride: Int
   ) :DataView[E, R] = {
     if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
       "The buffer must not be read-only."
     )
-    mkViewOrBuffer(byteBuffer, offset, stride, null).asInstanceOf[DataView[E, R]]
-  }
-
-  final def mkReadDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int, size: Int
-  ) :ReadDataView[E, R] = {
-    mkViewOrBuffer(byteBuffer, offset, stride, size.asInstanceOf[java.lang.Integer])
+    mkViewOrBuffer(byteBuffer, offset, stride).asInstanceOf[DataView[E, R]]
   }
 
   final def mkReadDataView(
     byteBuffer: ByteBuffer, offset: Int, stride: Int
   ) :ReadDataView[E, R] = {
-    mkViewOrBuffer(byteBuffer, offset, stride, null)
+    mkViewOrBuffer(byteBuffer, offset, stride)
   }
 
   
@@ -347,7 +282,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   }
   final def copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
   :DataView[E, R] = {
-    val copy = mkDataView(byteBuffer, offset, stride, size)
+    val copy = mkDataView(byteBuffer, offset, stride)
     copy.put(
       0,
       backingSeq,

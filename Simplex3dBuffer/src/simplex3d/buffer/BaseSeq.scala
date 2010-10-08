@@ -37,10 +37,10 @@ private[buffer] abstract class BaseSeq[
   +R <: RawData
 ](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
-  offset: Int, stride: Int, sz: java.lang.Integer
+  offset: Int, stride: Int
 ) extends ReadBaseSeq[E, SRead, R](
   shared, backing, ro,
-  offset, stride, sz
+  offset, stride
 ) {
 
   type BackingSeqType <: ContiguousSeq[E#Component, R]
@@ -217,7 +217,7 @@ private[buffer] abstract class BaseSeq[
       }
     }
 
-    val destOffset = index*stride + offset
+    val destOffset = offset + index*stride
     val srcLim = srcOffset + count*srcStride
 
     if (index + count > size) throw new BufferOverflowException()
@@ -378,67 +378,23 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(
-    index: Int,
-    src: inContiguousSeq[E#Component, _]
-  ) {
-    put(
-      index,
-      src,
-      0,
-      components,
-      src.size/components
-    )
+  final def put(index: Int, src: inContiguousSeq[E#Component, _]) {
+    put(index, src, 0, components, src.size/components)
   }
 
-  final def put(
-    src: inContiguousSeq[E#Component, _]
-  ) {
-    put(
-      0,
-      src,
-      0,
-      components,
-      src.size/components
-    )
+  final def put(src: inContiguousSeq[E#Component, _]) {
+    put(0, src, 0, components, src.size/components)
   }
 
-  final def put(
-    index: Int,
-    src: inDataSeq[E, _],
-    first: Int, count: Int
-  ) {
-    put(
-      index,
-      src.backingSeq,
-      src.offset + first*src.stride,
-      src.stride,
-      count
-    )
+  final def put(index: Int, src: inDataSeq[E, _], first: Int, count: Int) {
+    put(index, src.backingSeq, src.offset + first*src.stride, src.stride, count)
   }
 
-  final def put(
-    index: Int,
-    src: inDataSeq[E, _]
-  ) {
-    put(
-      index,
-      src.backingSeq,
-      src.offset,
-      src.stride,
-      src.size
-    )
+  final def put(index: Int, src: inDataSeq[E, _]) {
+    put(index, src.backingSeq, src.offset, src.stride, src.size)
   }
 
-  final def put(
-    src: inDataSeq[E, _]
-  ) {
-    put(
-      0,
-      src.backingSeq,
-      src.offset,
-      src.stride,
-      src.size
-    )
+  final def put(src: inDataSeq[E, _]) {
+    put(0, src.backingSeq, src.offset, src.stride, src.size)
   }
 }

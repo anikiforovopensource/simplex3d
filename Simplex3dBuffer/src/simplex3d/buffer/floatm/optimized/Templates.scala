@@ -32,7 +32,7 @@ import simplex3d.buffer._
 // Vec2f RawFloat
 private[buffer] final class ArrayVec2fRawFloat(
   backing: ArrayFloat1RawFloat
-) extends BaseVec2f[RawFloat](backing, 0, 2, null) with DataArray[Vec2f, RawFloat] {
+) extends BaseVec2f[RawFloat](backing, 0, 2) with DataArray[Vec2f, RawFloat] {
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2fRawFloat(backing.mkReadOnlyInstance())
 
@@ -53,13 +53,13 @@ private[buffer] final class ArrayVec2fRawFloat(
     new ArrayVec2fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class BufferVec2fRawFloat(
   backing: BufferFloat1RawFloat
-) extends BaseVec2f[RawFloat](backing, 0, 2, null) with DataBuffer[Vec2f, RawFloat] {
+) extends BaseVec2f[RawFloat](backing, 0, 2) with DataBuffer[Vec2f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2fRawFloat(backing.mkReadOnlyInstance())
 
   override def apply(i: Int) :ConstVec2f = {
@@ -79,15 +79,15 @@ private[buffer] final class BufferVec2fRawFloat(
     new ArrayVec2fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ViewVec2fRawFloat(
-  backing: BufferFloat1RawFloat, off: Int, str: Int, sz: java.lang.Integer
-) extends BaseVec2f[RawFloat](backing, off, str, sz) with DataView[Vec2f, RawFloat] {
+  backing: BufferFloat1RawFloat, off: Int, str: Int
+) extends BaseVec2f[RawFloat](backing, off, str) with DataView[Vec2f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec2fRawFloat(
-    backing.mkReadOnlyInstance(), offset, stride, size
+    backing.mkReadOnlyInstance(), offset, stride
   )
 
   override def apply(i: Int) :ConstVec2f = {
@@ -107,15 +107,15 @@ private[buffer] final class ViewVec2fRawFloat(
     new ArrayVec2fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec2fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 
 // Vec3f RawFloat
 private[buffer] final class ArrayVec3fRawFloat(
   backing: ArrayFloat1RawFloat
-) extends BaseVec3f[RawFloat](backing, 0, 3, null) with DataArray[Vec3f, RawFloat] {
+) extends BaseVec3f[RawFloat](backing, 0, 3) with DataArray[Vec3f, RawFloat] {
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3fRawFloat(backing.mkReadOnlyInstance())
 
@@ -138,13 +138,13 @@ private[buffer] final class ArrayVec3fRawFloat(
     new ArrayVec3fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class BufferVec3fRawFloat(
   backing: BufferFloat1RawFloat
-) extends BaseVec3f[RawFloat](backing, 0, 3, null) with DataBuffer[Vec3f, RawFloat] {
+) extends BaseVec3f[RawFloat](backing, 0, 3) with DataBuffer[Vec3f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3fRawFloat(backing.mkReadOnlyInstance())
 
   override def apply(i: Int) :ConstVec3f = {
@@ -166,15 +166,15 @@ private[buffer] final class BufferVec3fRawFloat(
     new ArrayVec3fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ViewVec3fRawFloat(
-  backing: BufferFloat1RawFloat, off: Int, str: Int, sz: java.lang.Integer
-) extends BaseVec3f[RawFloat](backing, off, str, sz) with DataView[Vec3f, RawFloat] {
+  backing: BufferFloat1RawFloat, off: Int, str: Int
+) extends BaseVec3f[RawFloat](backing, off, str) with DataView[Vec3f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec3fRawFloat(
-    backing.mkReadOnlyInstance(), offset, stride, size
+    backing.mkReadOnlyInstance(), offset, stride
   )
   
   override def apply(i: Int) :ConstVec3f = {
@@ -196,15 +196,15 @@ private[buffer] final class ViewVec3fRawFloat(
     new ArrayVec3fRawFloat(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec3fRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 
 // Vec4f UByte
 private[buffer] final class ArrayVec4fUByte(
   backing: ArrayFloat1UByte
-) extends BaseVec4f[UByte](backing, 0, 4, null) with DataArray[Vec4f, UByte] {
+) extends BaseVec4f[UByte](backing, 0, 4) with DataArray[Vec4f, UByte] {
   def this() = this(new ArrayFloat1UByte)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4fUByte(backing.mkReadOnlyInstance())
 
@@ -229,13 +229,13 @@ private[buffer] final class ArrayVec4fUByte(
     new ArrayVec4fUByte(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec4fUByte(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class BufferVec4fUByte(
   backing: BufferFloat1UByte
-) extends BaseVec4f[UByte](backing, 0, 4, null) with DataBuffer[Vec4f, UByte] {
+) extends BaseVec4f[UByte](backing, 0, 4) with DataBuffer[Vec4f, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4fUByte(backing.mkReadOnlyInstance())
 
   override def apply(i: Int) :ConstVec4f = {
@@ -259,15 +259,15 @@ private[buffer] final class BufferVec4fUByte(
     new ArrayVec4fUByte(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec4fUByte(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ViewVec4fUByte(
-  backing: BufferFloat1UByte, off: Int, str: Int, sz: java.lang.Integer
-) extends BaseVec4f[UByte](backing, off, str, sz) with DataView[Vec4f, UByte] {
+  backing: BufferFloat1UByte, off: Int, str: Int
+) extends BaseVec4f[UByte](backing, off, str) with DataView[Vec4f, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec4fUByte(
-    backing.mkReadOnlyInstance(), offset, stride, size
+    backing.mkReadOnlyInstance(), offset, stride
   )
 
   override def apply(i: Int) :ConstVec4f = {
@@ -291,6 +291,6 @@ private[buffer] final class ViewVec4fUByte(
     new ArrayVec4fUByte(backing.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
     new BufferVec4fUByte(backing.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int, size: java.lang.Integer) =
-    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride, size)
+  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
+    new ViewVec4fUByte(backing.mkReadDataBuffer(byteBuffer), offset, stride)
 }

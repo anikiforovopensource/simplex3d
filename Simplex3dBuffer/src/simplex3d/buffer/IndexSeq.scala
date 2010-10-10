@@ -95,6 +95,14 @@ object IndexArray {
     data
   }
 
+  def apply[R <: DefinedIndex](vals: IndexedSeq[Int])(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexArray[R] = {
+    val data = ref.factory.mkDataArray(vals.size)
+    data.put(vals)
+    data
+  }
+
   def apply[R <: DefinedIndex](da: DataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
@@ -134,6 +142,14 @@ object IndexBuffer {
   }
 
   def apply[R <: DefinedIndex](vals: Int*)(
+    implicit ref: FactoryRef[Int1, R]
+  ) :IndexBuffer[R] = {
+    val data = ref.factory.mkDataBuffer(vals.size)
+    data.put(vals)
+    data
+  }
+
+  def apply[R <: DefinedIndex](vals: IndexedSeq[Int])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     val data = ref.factory.mkDataBuffer(vals.size)

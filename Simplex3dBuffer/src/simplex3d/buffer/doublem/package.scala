@@ -32,72 +32,81 @@ import simplex3d.buffer.doublem.optimized._
  */
 package object doublem {
 
-  private final type PrimitiveFactory[R <: DefinedDouble] = SimpleFactoryRef[Double1, R]
-  private final type SimpleFactory[E <: Composite, R <: DefinedDouble] = SimpleFactoryRef[E, R]
-  private final type GenFactory[E <: Composite, R <: DefinedDouble] = TemplateGenFactoryRef[E, R]
+  private final def primitiveFactory[R <: DefinedDouble](s: DataSeq[Double1, R]) :FactoryRef[Double1, R] = {
+    new SimpleFactoryRef[Double1, R](s)
+  }
+  private final def simpleFactory[E <: Composite, R <: DefinedDouble](s: DataSeq[E, R]) :FactoryRef[E, R] = {
+    new SimpleFactoryRef[E, R](s)
+  }
+  private final def genFactory[E <: Composite, R <: DefinedDouble](
+    template: String, replace: String, fallback: DataSeq[E, R]
+  ) :FactoryRef[E, R] = {
+    new TemplateGenFactoryRef[E, R](template, replace, fallback)
+  }
 
-  private final def dataArray[R <: DefinedDouble](f: SimpleFactoryRef[Double1, R]) =
+  private final def dataArray[R <: DefinedDouble](f: FactoryRef[Double1, R]) = {
     f.factory.asInstanceOf[DataArray[Double1, R]]
+  }
 
 
   // Double1
-  implicit final lazy val FactoryDouble1SByte = new PrimitiveFactory[SByte](new ArrayDouble1SByte)
-  implicit final lazy val FactoryDouble1UByte = new PrimitiveFactory[UByte](new ArrayDouble1UByte)
-  implicit final lazy val FactoryDouble1SShort = new PrimitiveFactory[SShort](new ArrayDouble1SShort)
-  implicit final lazy val FactoryDouble1UShort = new PrimitiveFactory[UShort](new ArrayDouble1UShort)
-  implicit final lazy val FactoryDouble1SInt = new PrimitiveFactory[SInt](new ArrayDouble1SInt)
-  implicit final lazy val FactoryDouble1UInt = new PrimitiveFactory[UInt](new ArrayDouble1UInt)
-  implicit final lazy val FactoryDouble1HalfFloat = new PrimitiveFactory[HalfFloat](new ArrayDouble1HalfFloat)
-  implicit final lazy val FactoryDouble1RawFloat = new PrimitiveFactory[RawFloat](new ArrayDouble1RawFloat)
-  implicit final val FactoryDouble1RawDouble = new PrimitiveFactory[RawDouble](new ArrayDouble1RawDouble)
+  implicit final lazy val FactoryDouble1SByte = primitiveFactory[SByte](new ArrayDouble1SByte)
+  implicit final lazy val FactoryDouble1UByte = primitiveFactory[UByte](new ArrayDouble1UByte)
+  implicit final lazy val FactoryDouble1SShort = primitiveFactory[SShort](new ArrayDouble1SShort)
+  implicit final lazy val FactoryDouble1UShort = primitiveFactory[UShort](new ArrayDouble1UShort)
+  implicit final lazy val FactoryDouble1SInt = primitiveFactory[SInt](new ArrayDouble1SInt)
+  implicit final lazy val FactoryDouble1UInt = primitiveFactory[UInt](new ArrayDouble1UInt)
+  implicit final lazy val FactoryDouble1HalfFloat = primitiveFactory[HalfFloat](new ArrayDouble1HalfFloat)
+  implicit final lazy val FactoryDouble1RawFloat = primitiveFactory[RawFloat](new ArrayDouble1RawFloat)
+  implicit final val FactoryDouble1RawDouble = primitiveFactory[RawDouble](new ArrayDouble1RawDouble)
 
 
   // Vec2d
   private val vec2dTemplateClass = "simplex3d.buffer.doublem.optimized.ArrayVec2dRawFloat"
   private val vec2dTemplateString = "RawFloat"
 
-  implicit final lazy val FactoryVec2dSByte = new GenFactory[Vec2d, SByte](
+  implicit final lazy val FactoryVec2dSByte = genFactory[Vec2d, SByte](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1SByte))
   )
-  implicit final lazy val FactoryVec2dUByte = new GenFactory[Vec2d, UByte](
+  implicit final lazy val FactoryVec2dUByte = genFactory[Vec2d, UByte](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1UByte))
   )
 
-  implicit final lazy val FactoryVec2dSShort = new GenFactory[Vec2d, SShort](
+  implicit final lazy val FactoryVec2dSShort = genFactory[Vec2d, SShort](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1SShort))
   )
-  implicit final lazy val FactoryVec2dUShort = new GenFactory[Vec2d, UShort](
+  implicit final lazy val FactoryVec2dUShort = genFactory[Vec2d, UShort](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1UShort))
   )
 
-  implicit final lazy val FactoryVec2dSInt = new GenFactory[Vec2d, SInt](
+  implicit final lazy val FactoryVec2dSInt = genFactory[Vec2d, SInt](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1SInt))
   )
-  implicit final lazy val FactoryVec2dUInt = new GenFactory[Vec2d, UInt](
+  implicit final lazy val FactoryVec2dUInt = genFactory[Vec2d, UInt](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1UInt))
   )
 
-  implicit final lazy val FactoryVec2dHalfFloat = new GenFactory[Vec2d, HalfFloat](
+  implicit final lazy val FactoryVec2dHalfFloat = genFactory[Vec2d, HalfFloat](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1HalfFloat))
   )
 
-  implicit final lazy val FactoryVec2dRawFloat = new SimpleFactory[Vec2d, RawFloat](new ArrayVec2dRawFloat)
+  implicit final lazy val FactoryVec2dRawFloat = simpleFactory[Vec2d, RawFloat](new ArrayVec2dRawFloat)
   
-  implicit final val FactoryVec2dRawDouble = new GenFactory[Vec2d, RawDouble](
+  implicit final val FactoryVec2dRawDouble = genFactory[Vec2d, RawDouble](
     vec2dTemplateClass,
     vec2dTemplateString,
     new ArrayVec2d(dataArray(FactoryDouble1RawDouble))
@@ -108,48 +117,48 @@ package object doublem {
   private val vec3dTemplateClass = "simplex3d.buffer.doublem.optimized.ArrayVec3dRawFloat"
   private val vec3dTemplateString = "RawFloat"
 
-  implicit final lazy val FactoryVec3dSByte = new GenFactory[Vec3d, SByte](
+  implicit final lazy val FactoryVec3dSByte = genFactory[Vec3d, SByte](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1SByte))
   )
-  implicit final lazy val FactoryVec3dUByte = new GenFactory[Vec3d, UByte](
+  implicit final lazy val FactoryVec3dUByte = genFactory[Vec3d, UByte](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1UByte))
   )
 
-  implicit final lazy val FactoryVec3dSShort = new GenFactory[Vec3d, SShort](
+  implicit final lazy val FactoryVec3dSShort = genFactory[Vec3d, SShort](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1SShort))
   )
-  implicit final lazy val FactoryVec3dUShort = new GenFactory[Vec3d, UShort](
+  implicit final lazy val FactoryVec3dUShort = genFactory[Vec3d, UShort](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1UShort))
   )
 
-  implicit final lazy val FactoryVec3dSInt = new GenFactory[Vec3d, SInt](
+  implicit final lazy val FactoryVec3dSInt = genFactory[Vec3d, SInt](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1SInt))
   )
-  implicit final lazy val FactoryVec3dUInt = new GenFactory[Vec3d, UInt](
+  implicit final lazy val FactoryVec3dUInt = genFactory[Vec3d, UInt](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1UInt))
   )
 
-  implicit final lazy val FactoryVec3dHalfFloat = new GenFactory[Vec3d, HalfFloat](
+  implicit final lazy val FactoryVec3dHalfFloat = genFactory[Vec3d, HalfFloat](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1HalfFloat))
   )
 
-  implicit final lazy val FactoryVec3dRawFloat = new SimpleFactory[Vec3d, RawFloat](new ArrayVec3dRawFloat)
+  implicit final lazy val FactoryVec3dRawFloat = simpleFactory[Vec3d, RawFloat](new ArrayVec3dRawFloat)
   
-  implicit final val FactoryVec3dRawDouble = new GenFactory[Vec3d, RawDouble](
+  implicit final val FactoryVec3dRawDouble = genFactory[Vec3d, RawDouble](
     vec3dTemplateClass,
     vec3dTemplateString,
     new ArrayVec3d(dataArray(FactoryDouble1RawDouble))
@@ -160,48 +169,48 @@ package object doublem {
   private val vec4dTemplateClass = "simplex3d.buffer.doublem.optimized.ArrayVec4dUByte"
   private val vec4dTemplateString = "UByte"
 
-  implicit final lazy val FactoryVec4dSByte = new GenFactory[Vec4d, SByte](
+  implicit final lazy val FactoryVec4dSByte = genFactory[Vec4d, SByte](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1SByte))
   )
-  implicit final lazy val FactoryVec4dUByte = new SimpleFactory[Vec4d, UByte](new ArrayVec4dUByte)
+  implicit final lazy val FactoryVec4dUByte = simpleFactory[Vec4d, UByte](new ArrayVec4dUByte)
 
-  implicit final lazy val FactoryVec4dSShort = new GenFactory[Vec4d, SShort](
+  implicit final lazy val FactoryVec4dSShort = genFactory[Vec4d, SShort](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1SShort))
   )
-  implicit final lazy val FactoryVec4dUShort = new GenFactory[Vec4d, UShort](
+  implicit final lazy val FactoryVec4dUShort = genFactory[Vec4d, UShort](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1UShort))
   )
 
-  implicit final lazy val FactoryVec4dSInt = new GenFactory[Vec4d, SInt](
+  implicit final lazy val FactoryVec4dSInt = genFactory[Vec4d, SInt](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1SInt))
   )
-  implicit final lazy val FactoryVec4dUInt = new GenFactory[Vec4d, UInt](
+  implicit final lazy val FactoryVec4dUInt = genFactory[Vec4d, UInt](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1UInt))
   )
 
-  implicit final lazy val FactoryVec4dHalfFloat = new GenFactory[Vec4d, HalfFloat](
+  implicit final lazy val FactoryVec4dHalfFloat = genFactory[Vec4d, HalfFloat](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1HalfFloat))
   )
 
-  implicit final val FactoryVec4dRawFloat = new GenFactory[Vec4d, RawFloat](
+  implicit final val FactoryVec4dRawFloat = genFactory[Vec4d, RawFloat](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1RawFloat))
   )
 
-  implicit final val FactoryVec4dRawDouble = new GenFactory[Vec4d, RawDouble](
+  implicit final val FactoryVec4dRawDouble = genFactory[Vec4d, RawDouble](
     vec4dTemplateClass,
     vec4dTemplateString,
     new ArrayVec4d(dataArray(FactoryDouble1RawDouble))

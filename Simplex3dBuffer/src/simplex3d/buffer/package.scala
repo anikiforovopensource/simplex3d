@@ -30,14 +30,16 @@ import simplex3d.math._
 package buffer {
   private[buffer] class PrimitiveIntImplicits {
 
-    private final type PrimitiveFactory[R <: DefinedInt] = SimpleFactoryRef[Int1, R]
+    private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :FactoryRef[Int1, R] = {
+      new SimpleFactoryRef(s)
+    }
 
-    implicit final lazy val FactoryInt1SByte = new PrimitiveFactory[SByte](new ArrayInt1SByte)
-    implicit final lazy val FactoryInt1UByte = new PrimitiveFactory[UByte](new ArrayInt1UByte)
-    implicit final lazy val FactoryInt1SShort = new PrimitiveFactory[SShort](new ArrayInt1SShort)
-    implicit final lazy val FactoryInt1UShort = new PrimitiveFactory[UShort](new ArrayInt1UShort)
-    implicit final lazy val FactoryInt1SInt = new PrimitiveFactory[SInt](new ArrayInt1SInt)
-    implicit final lazy val FactoryInt1UInt = new PrimitiveFactory[UInt](new ArrayInt1UInt)
+    implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
+    implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)
+    implicit final lazy val FactoryInt1SShort = primitiveFactory[SShort](new ArrayInt1SShort)
+    implicit final lazy val FactoryInt1UShort = primitiveFactory[UShort](new ArrayInt1UShort)
+    implicit final lazy val FactoryInt1SInt = primitiveFactory[SInt](new ArrayInt1SInt)
+    implicit final lazy val FactoryInt1UInt = primitiveFactory[UInt](new ArrayInt1UInt)
   }
 }
 

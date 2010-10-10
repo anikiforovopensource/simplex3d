@@ -137,3 +137,5 @@ extends ClassLoader(parent) {
    def define(name: String, b: Array[Byte], off: Int, len: Int) :Class[_] =
      defineClass(name, b, off, len)
 }
+
+private[optimize] class BytecodeCheckException(e: Throwable) extends Exception(e)

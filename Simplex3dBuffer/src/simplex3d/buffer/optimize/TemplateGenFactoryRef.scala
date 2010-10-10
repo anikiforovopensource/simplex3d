@@ -215,6 +215,3 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
     }
   }
 }
-
-
-private[optimize] class BytecodeCheckException(e: Throwable) extends Exception(e)

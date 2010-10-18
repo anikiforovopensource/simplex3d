@@ -73,7 +73,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
         )
       }
       byteBuffer.clear()
-      byteBuffer.order(ByteOrder.nativeOrder())
+      byteBuffer.order(ByteOrder.nativeOrder)
 
       (storeType: @switch) match {
         case ByteStore => byteBuffer
@@ -88,7 +88,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
       (storeType: @switch) match {
         case ByteStore =>
           val buff = ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
-          if (ro) buff.asReadOnlyBuffer() else buff
+          if (ro) buff.asReadOnlyBuffer().order(ByteOrder.nativeOrder) else buff.order(ByteOrder.nativeOrder)
         case ShortStore =>
           val buff = ShortBuffer.wrap(sharedStore.asInstanceOf[Array[Short]])
           if (ro) buff.asReadOnlyBuffer() else buff
@@ -121,7 +121,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   final override val size = sizeFrom(buffer.capacity, offset, stride, components)
   final def length = size
 
-  // Type defenitions.
+  // Type definitions.
   type BindingBufferType <: Buffer
   type BackingSeqType <: ReadContiguousSeq[E#Component, R]
 
@@ -145,7 +145,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
 
   final def isReadOnly(): Boolean = buffer.isReadOnly()
-  final def sharesStoreObject(seq: inDataSeq[_ <: MetaElement, _ <: RawData]) :Boolean = {
+  final def sharesStoreObject(seq: inDataSeq[_, _]) :Boolean = {
     sharedStore eq seq.sharedStore
   }
 
@@ -154,7 +154,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   final def asReadOnlyBuffer() :R#BufferType = {
     ((storeType: @switch) match {
       case ByteStore =>
-        buffer.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
+        buffer.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
       case ShortStore =>
         buffer.asInstanceOf[ShortBuffer].asReadOnlyBuffer()
       case CharStore =>
@@ -174,15 +174,19 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     if (isReadOnly) this else mkReadOnlyInstance()
   }
 
-  private[this] final def mkBindingBuffer() :Buffer = {
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
+  final def bindingBuffer(offset: Int) :BindingBufferType = {
+    (if (sharedStore.isInstanceOf[ByteBuffer]) {
       val buff = sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
-      buff.order(ByteOrder.nativeOrder())
+      buff.order(ByteOrder.nativeOrder)
+      buff.limit(buff.capacity)
+      buff.position(offset*bytesPerRawComponent)
+      buff
     }
     else {
-      (storeType: @switch) match {
+      val buff = (storeType: @switch) match {
         case ByteStore =>
-          ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
+          val buff = ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
+          buff.order(ByteOrder.nativeOrder)
         case ShortStore =>
           ShortBuffer.wrap(sharedStore.asInstanceOf[Array[Short]])
         case CharStore =>
@@ -194,16 +198,10 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
         case DoubleStore =>
           DoubleBuffer.wrap(sharedStore.asInstanceOf[Array[Double]])
       }
-    }
-  }
-  final def bindingBuffer(offset: Int) :BindingBufferType = {
-    val buff = mkBindingBuffer()
-    buff.limit(buff.capacity)
-
-    if (sharedStore.isInstanceOf[ByteBuffer]) buff.position(offset*bytesPerRawComponent)
-    else buff.position(offset)
-
-    buff.asInstanceOf[BindingBufferType]
+      buff.limit(buff.capacity)
+      buff.position(offset)
+      buff
+    }).asInstanceOf[BindingBufferType]
   }
 
   def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
@@ -230,7 +228,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   }
 
   final def mkDataBuffer(size: Int) :DataBuffer[E, R] = {
-    mkDataBuffer(allocateDirectBuffer(size*bytesPerRawComponent*components))
+    mkDataBuffer(ByteBuffer.allocateDirect(size*bytesPerRawComponent*components))
   }
 
   final def mkDataBuffer(

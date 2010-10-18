@@ -24,7 +24,7 @@ import org.scalatest._
 
 import java.nio._
 import scala.reflect._
-import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
+import simplex3d.buffer._
 import simplex3d.buffer.RawType._
 import simplex3d.buffer.intm._
 import simplex3d.buffer.floatm._
@@ -44,9 +44,22 @@ object TestUtil extends FunSuite {
   private def nf = randomSrc.nextFloat
   private def nd = randomSrc.nextDouble
 
+  private def alloc(size: Int) = {
+    ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder)
+  }
+  
   def size(capacity: Int, offset: Int, stride: Int, components: Int) = {
     val s = (capacity - offset + stride - components)/stride
     if (s > 0) s else 0
+  }
+
+  def isUnsigned(rawType: Int) :Boolean = {
+    rawType match {
+      case UByte => true
+      case UShort => true
+      case UInt => true
+      case _ => false
+    }
   }
 
   def checkBuffer(testing: Buffer, data: Buffer) {
@@ -183,17 +196,17 @@ object TestUtil extends FunSuite {
   private def rand[T](m: Manifest[T]) :T = {
     (m match {
       case Manifest.Int => ni
-      case Vec2i.Manifest => Vec2i(ni, ni)
-      case Vec3i.Manifest => Vec3i(ni, ni, ni)
-      case Vec4i.Manifest => Vec4i(ni, ni, ni, ni)
+      case Vec2i.ReadManifest => Vec2i(ni, ni)
+      case Vec3i.ReadManifest => Vec3i(ni, ni, ni)
+      case Vec4i.ReadManifest => Vec4i(ni, ni, ni, ni)
       case Manifest.Float => nf
-      case Vec2f.Manifest => Vec2f(nf, nf)
-      case Vec3f.Manifest => Vec3f(nf, nf, nf)
-      case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
+      case Vec2f.ReadManifest => Vec2f(nf, nf)
+      case Vec3f.ReadManifest => Vec3f(nf, nf, nf)
+      case Vec4f.ReadManifest => Vec4f(nf, nf, nf, nf)
       case Manifest.Double => nd
-      case Vec2d.Manifest => Vec2d(nd, nd)
-      case Vec3d.Manifest => Vec3d(nd, nd, nd)
-      case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
+      case Vec2d.ReadManifest => Vec2d(nd, nd)
+      case Vec3d.ReadManifest => Vec3d(nd, nd, nd)
+      case Vec4d.ReadManifest => Vec4d(nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
   private def randPrim[T](m: Manifest[T]) :T = {

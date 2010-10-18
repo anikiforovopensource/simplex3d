@@ -102,13 +102,13 @@ sealed trait DefinedIndex extends DefinedInt with Unsigned
 sealed trait DefinedFloat extends Defined
 sealed trait DefinedDouble extends Defined
 
-sealed trait Integral extends RawData
+sealed trait IntegralData extends RawData
 
-sealed trait Signed extends Integral
-sealed trait Unsigned extends Integral
+sealed trait Signed extends IntegralData
+sealed trait Unsigned extends IntegralData
 
 
-sealed trait RawByte extends Integral {
+sealed trait RawByte extends IntegralData {
   type ArrayType = Array[Byte]
   type BufferType = ByteBuffer
 }
@@ -120,7 +120,7 @@ sealed trait UByte extends RawByte with Unsigned
 with DefinedIndex with DefinedFloat with DefinedDouble
 
 
-sealed trait RawShort extends Integral
+sealed trait RawShort extends IntegralData
 
 sealed trait SShort extends RawShort with Signed
 with DefinedInt with DefinedFloat with DefinedDouble {
@@ -135,7 +135,7 @@ with DefinedIndex with DefinedFloat with DefinedDouble {
 }
 
 
-sealed trait RawInt extends Integral {
+sealed trait RawInt extends IntegralData {
   type ArrayType = Array[Int]
   type BufferType = IntBuffer
 }
@@ -147,21 +147,21 @@ sealed trait UInt extends RawInt with Unsigned
 with DefinedIndex with DefinedFloat with DefinedDouble
 
 
-sealed trait Fractional extends RawData
+sealed trait FloatingPointData extends RawData
 
-sealed trait HalfFloat extends Fractional
+sealed trait HalfFloat extends FloatingPointData
 with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Short]
   type BufferType = ShortBuffer
 }
 
-sealed trait RawFloat extends Fractional
+sealed trait RawFloat extends FloatingPointData
 with DefinedFloat with DefinedDouble {
   type ArrayType = Array[Float]
   type BufferType = FloatBuffer
 }
 
-sealed trait RawDouble extends Fractional
+sealed trait RawDouble extends FloatingPointData
 with DefinedDouble {
   type ArrayType = Array[Double]
   type BufferType = DoubleBuffer

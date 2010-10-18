@@ -36,6 +36,31 @@ import FactoryTest._
 class Int1Test extends FunSuite {
 
   test("Factories") {
+    testIndexArrayFromSize(IndexArray[UByte](_))
+    testIndexArrayFromData[UByte](IndexArray[UByte](_))
+    testIndexBufferFromSize(IndexBuffer[UByte](_))
+    testIndexBufferFromData(IndexBuffer[UByte](_))
+    testReadIndexBufferFromData(ReadIndexBuffer[UByte](_))
+    testIndexArrayFromCollection(IndexArray[UByte](_))
+    testIndexBufferFromCollection(IndexBuffer[UByte](_))
+    
+    testIndexArrayFromSize(IndexArray[UShort](_))
+    testIndexArrayFromData[UShort](IndexArray[UShort](_))
+    testIndexBufferFromSize(IndexBuffer[UShort](_))
+    testIndexBufferFromData(IndexBuffer[UShort](_))
+    testReadIndexBufferFromData(ReadIndexBuffer[UShort](_))
+    testIndexArrayFromCollection(IndexArray[UShort](_))
+    testIndexBufferFromCollection(IndexBuffer[UShort](_))
+    
+    testIndexArrayFromSize(IndexArray[UInt](_))
+    testIndexArrayFromData[UInt](IndexArray[UInt](_))
+    testIndexBufferFromSize(IndexBuffer[UInt](_))
+    testIndexBufferFromData(IndexBuffer[UInt](_))
+    testReadIndexBufferFromData(ReadIndexBuffer[UInt](_))
+    testIndexArrayFromCollection(IndexArray[UInt](_))
+    testIndexBufferFromCollection(IndexBuffer[UInt](_))
+    
+
     testArrayFromSize(DataArray[Int1, SByte](_))
     testArrayFromData[Int1, SByte](DataArray[Int1, SByte](_))
     testBufferFromSize(DataBuffer[Int1, SByte](_))

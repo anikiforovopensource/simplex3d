@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer.floatm
+package simplex3d.buffer
+package floatm
 
 import java.nio._
 import scala.reflect.Manifest
 import simplex3d.math.floatm.FloatMath._
-import simplex3d.buffer.{allocateDirectBuffer => alloc, _}
 import simplex3d.buffer.Util._
 import simplex3d.buffer.HalfFloatUtil.{
   floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat

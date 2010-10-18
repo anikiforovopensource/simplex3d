@@ -22,7 +22,6 @@ package simplex3d.buffer
 
 import java.nio._
 import scala.reflect.Manifest
-import simplex3d.buffer.{allocateDirectBuffer => alloc}
 import simplex3d.buffer.Util._
 
 

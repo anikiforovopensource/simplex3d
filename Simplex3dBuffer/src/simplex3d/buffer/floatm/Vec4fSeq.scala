@@ -32,7 +32,7 @@ import simplex3d.buffer._
 private[buffer] abstract class BaseVec4f[+R <: DefinedFloat](
   backing: ContiguousSeq[Float1, R], off: Int, str: Int
 ) extends CompositeSeq[Vec4f, R](backing, off, str) {
-  final def elementManifest = Vec4f.Manifest
+  final def elementManifest = Vec4f.ReadManifest
   final def components: Int = 4
 
   def apply(i: Int) :ConstVec4f = {

@@ -24,6 +24,7 @@ import org.scalatest._
 
 import java.nio._
 import simplex3d.buffer._
+import simplex3d.buffer.RawType._
 
 import TestUtil._
 
@@ -34,7 +35,6 @@ import TestUtil._
 object AttributeTest extends FunSuite {
 
   private def rawLength(rawType: Int) :Int = {
-    import RawType._
     rawType match {
       case SByte => 1
       case UByte => 1
@@ -45,6 +45,17 @@ object AttributeTest extends FunSuite {
       case HalfFloat => 2
       case RawFloat => 4
       case RawDouble => 8
+    }
+  }
+
+  private def checkOrder(buff: Buffer) {
+    buff match {
+      case b: ByteBuffer => assert(b.order == ByteOrder.nativeOrder)
+      case b: ShortBuffer => assert(b.order == ByteOrder.nativeOrder)
+      case b: CharBuffer => assert(b.order == ByteOrder.nativeOrder)
+      case b: IntBuffer => assert(b.order == ByteOrder.nativeOrder)
+      case b: FloatBuffer => assert(b.order == ByteOrder.nativeOrder)
+      case b: DoubleBuffer => assert(b.order == ByteOrder.nativeOrder)
     }
   }
 
@@ -90,6 +101,7 @@ object AttributeTest extends FunSuite {
 
     checkBuffer(seq.asReadOnlyBuffer, data)
     assert(seq.asReadOnlyBuffer.isReadOnly)
+    checkOrder(seq.asReadOnlyBuffer)
 
     assert(seq.bytesPerRawComponent == rawLength(seq.rawType))
     assert(seq.byteCapacity >= seq.bytesPerRawComponent*data.limit)
@@ -102,19 +114,20 @@ object AttributeTest extends FunSuite {
     if (seq.isReadOnly) {
       assert(seq.backingSeq.isReadOnly)
       assert(seq.asReadOnlySeq eq seq)
-
-      if (!seq.isInstanceOf[DataArray[_, _]]) {
-        assert(seq.bindingBuffer(0).isReadOnly)
-      }
     }
     else {
       assert(!seq.backingSeq.isReadOnly)
-      assert(seq.asReadOnlySeq ne seq)
     }
+
 
     if (seq.isInstanceOf[DataArray[_, _]]) {
       assert(seq.bindingBuffer(0).array != null)
     }
+    else {
+      assert(seq.bindingBuffer(0).isReadOnly)
+    }
+
+    checkOrder(seq.bindingBuffer(0))
 
     checkBindingBuffer(0, seq.bindingBuffer(0), data)
     if (data.limit >= 2) {
@@ -122,9 +135,11 @@ object AttributeTest extends FunSuite {
       checkBindingBuffer(2, seq.bindingBuffer(2), data)
     }
 
+
     val ds = seq.asInstanceOf[DataSeq[E, R]]
     checkBuffer(ds.asBuffer, data)
     assert(ds.asBuffer.isReadOnly == readOnly)
+    checkOrder(ds.asBuffer)
   }
 
   def testArray[E <: MetaElement, R <: RawData](
@@ -158,6 +173,13 @@ object AttributeTest extends FunSuite {
           case a: Array[Float] => a(0) = 1
           case a: Array[Double] => a(0) = 1
         }
+      }
+    }
+
+    if (seq.elementManifest == scala.reflect.Manifest.Int) {
+      if (isUnsigned(seq.rawType)) {
+        assert(seq.isInstanceOf[ReadIndexArray[_]])
+        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexArray[_]])
       }
     }
 
@@ -196,7 +218,13 @@ object AttributeTest extends FunSuite {
       assert(ds.backingSeq.isInstanceOf[DataBuffer[_, _]])
     }
 
-    
+    if (seq.elementManifest == scala.reflect.Manifest.Int) {
+      if (isUnsigned(seq.rawType)) {
+        assert(seq.isInstanceOf[ReadIndexBuffer[_]])
+        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
+      }
+    }
+
     testSeq(seq, readOnly, data, descriptor)
 
     // backingSeq
@@ -245,9 +273,6 @@ object AttributeTest extends FunSuite {
     assert(seq.sharesStoreObject(seq.asReadOnlySeq))
   }
 /*
-// Test Factory
-  test Sequence Cast; sharesStoreObject
-  
 // Test applyUpdate
   apply(i: Int)
   update(i: Int, v: S)

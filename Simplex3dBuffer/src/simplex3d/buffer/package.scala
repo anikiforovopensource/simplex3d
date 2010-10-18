@@ -105,12 +105,7 @@ package object buffer extends PrimitiveIntImplicits {
     d: DataBuffer[Int1, R]
   ) = d.asInstanceOf[IndexBuffer[R]]
 
-  
-  def allocateDirectBuffer(size: Int) = {
-    val direct = ByteBuffer.allocateDirect(size)
-    direct.order(ByteOrder.nativeOrder())
-  }
-  
+
   def interleave[
     E1 <: MetaElement, R1 <: RawData,
     E2 <: MetaElement, R2 <: RawData
@@ -450,7 +445,7 @@ package object buffer extends PrimitiveIntImplicits {
 
 
   def interleaveAny(
-    dataSeqs: inDataSeq[_ <: MetaElement, _ <: RawData]*
+    dataSeqs: inDataSeq[_, RawData]*
   )(size: Int) :Array[DataView[_, _]] = {
     // check arguments
     if (dataSeqs.length == 0) return new Array[DataView[_, _]](0)
@@ -504,7 +499,7 @@ package object buffer extends PrimitiveIntImplicits {
     val byteStride = totalWidth + pad
 
     // generate
-    val byteBuffer = allocateDirectBuffer(byteStride*size)
+    val byteBuffer = ByteBuffer.allocateDirect(byteStride*size)
     val result = new Array[DataView[_, _]](dataSeqs.length)
     var byteOffset = 0
     i = 0; while (i < dataSeqs.length) {

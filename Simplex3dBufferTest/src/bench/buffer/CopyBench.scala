@@ -119,7 +119,7 @@ class CopyBenchTC {
 
   def testCopyBuffer(data: FloatBuffer, loops: Int) {
     var answer = 0
-    val dest = allocateDirectBuffer(data.capacity*4).asFloatBuffer
+    val dest = ByteBuffer.allocateDirect(data.capacity*4).order(ByteOrder.nativeOrder).asFloatBuffer
 
     var l = 0; while (l < loops) {
       data.clear()
@@ -169,7 +169,7 @@ class CopyBenchTC {
     val offset = 2
     val stride = 2
     val dest = DataView[Float1, RawFloat](
-      allocateDirectBuffer(
+      ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
@@ -192,7 +192,7 @@ class CopyBenchTC {
     val offset = 2
     val stride = 2
     val dest = DataView[Float1, RawFloat](
-      allocateDirectBuffer(
+      ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
@@ -215,7 +215,7 @@ class CopyBenchTC {
     val offset = 2
     val stride = 2
     val dest = DataView[Float1, RawFloat](
-      allocateDirectBuffer(
+      ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride

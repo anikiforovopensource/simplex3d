@@ -65,7 +65,7 @@ object DataView {
   def apply[E <: MetaElement, R <: Defined](
     db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    if (db.isReadOnly) throw new ClassCastException(
+    if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     ref.factory.mkDataView(db.sharedBuffer, offset, stride)

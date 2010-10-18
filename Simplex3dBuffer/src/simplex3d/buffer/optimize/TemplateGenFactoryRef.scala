@@ -21,6 +21,7 @@
 package simplex3d.buffer
 package optimize
 
+import java.nio._
 import java.util.logging._
 import org.objectweb.asm._
 import RawType._
@@ -114,12 +115,12 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
       testDataBuffer(factory.mkDataBuffer(1))
       testDataBuffer(
-        factory.mkDataBuffer(allocateDirectBuffer(fallbackFactory.bytesPerRawComponent))
+        factory.mkDataBuffer(ByteBuffer.allocateDirect(fallbackFactory.bytesPerRawComponent))
       )
 
       testDataView(
         factory.mkDataView(
-          allocateDirectBuffer(fallbackFactory.bytesPerRawComponent),
+          ByteBuffer.allocateDirect(fallbackFactory.bytesPerRawComponent),
           0, fallbackFactory.components
         )
       )
@@ -132,7 +133,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
 
       testDataSeq(fallback, factory.mkDataBuffer(fallback.size))
       testDataSeq(fallback, factory.mkDataBuffer(
-          allocateDirectBuffer(
+          ByteBuffer.allocateDirect(
             fallback.size*fallback.components*fallback.bytesPerRawComponent
           )
       ))
@@ -140,7 +141,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
       val offset = 3
       val stride = 5
       testDataSeq(fallback, factory.mkDataView(
-          allocateDirectBuffer(
+          ByteBuffer.allocateDirect(
             (offset + fallback.size*stride)*fallback.bytesPerRawComponent
           ),
           offset,
@@ -171,7 +172,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
     assert(testing.isInstanceOf[DataView[_, _]])
     
     val fb = fallbackFactory.mkDataView(
-      allocateDirectBuffer(0), 0, fallbackFactory.stride
+      ByteBuffer.allocateDirect(0), 0, fallbackFactory.stride
     )
     assert(fb.asBuffer.getClass == testing.asBuffer.getClass)
   }

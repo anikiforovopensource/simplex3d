@@ -64,7 +64,7 @@ object HalfFloatUtil {
 
     // subnormal
     if ((bits & 0x7C000000) == 0) {
-      java.lang.Float.intBitsToFloat(bits & 0x80000000)
+      java.lang.Float.intBitsToFloat(bits & 0x80000000) //XXX change to if else
     }
 
     // other

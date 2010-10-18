@@ -102,7 +102,7 @@ class ConvertBenchTC {
     val offset = 2
     val stride = 2
     val dest = DataView[Float1, UInt](
-      allocateDirectBuffer(
+      ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
@@ -125,7 +125,7 @@ class ConvertBenchTC {
     val offset = 2
     val stride = 2
     val dest = DataView[Float1, HalfFloat](
-      allocateDirectBuffer(
+      ByteBuffer.allocateDirect(
         size*2*(stride + 1) + offset*4
       ),
       offset, stride

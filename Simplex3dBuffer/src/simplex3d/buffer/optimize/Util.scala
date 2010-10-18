@@ -21,6 +21,7 @@
 package simplex3d.buffer
 package optimize
 
+import java.nio._
 import java.util.logging._
 
 
@@ -99,7 +100,7 @@ private[optimize] object Util {
   }
 
 
-  val TestData = allocateDirectBuffer(20*4);
+  val TestData = ByteBuffer.allocateDirect(20*4).order(ByteOrder.nativeOrder);
   {
     /* Positive and negative Int, Short, Byte, Float and Double;
      * Float and Double with absolute value less than 1.

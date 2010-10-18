@@ -106,7 +106,7 @@ object IndexArray {
   def apply[R <: DefinedIndex](da: DataArray[_, R])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
-    if (da.isReadOnly) throw new ClassCastException(
+    if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     ref.factory.mkDataArray(da.array)
@@ -160,7 +160,7 @@ object IndexBuffer {
   def apply[R <: DefinedIndex](db: DataBuffer[_, _])(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
-    if (db.isReadOnly) throw new ClassCastException(
+    if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     ref.factory.mkDataBuffer(db.sharedBuffer)

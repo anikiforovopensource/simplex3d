@@ -82,7 +82,7 @@ object DataArray {
   def apply[E <: MetaElement, R <: Defined](da: DataArray[_, R])(
     implicit ref: FactoryRef[E, R]
   ) :DataArray[E, R] = {
-    if (da.isReadOnly) throw new ClassCastException(
+    if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     ref.factory.mkDataArray(da.sharedArray)

@@ -47,7 +47,7 @@ private[buffer] abstract class BaseSeq[
   final def asBuffer() :R#BufferType = {
     ((storeType: @switch) match {
       case ByteStore =>
-        buffer.asInstanceOf[ByteBuffer].duplicate()
+        buffer.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
       case ShortStore =>
         buffer.asInstanceOf[ShortBuffer].duplicate()
       case CharStore =>

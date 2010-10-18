@@ -34,12 +34,7 @@ import AttributeTest._
  */
 object FactoryTest extends FunSuite {
 
-  def testArrayFromSize[E <: MetaElement, R <: RawData](
-    factory: (Int) => DataArray[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
-    arrayFromSize(factory)(descriptor)
-
-    val seq = factory(0)
+  private def testMakeIndex[R <: Unsigned](seq: ReadIndexSeq[R], descriptor: Descriptor[Int1, R]) {
     arrayFromSize(seq.mkDataArray(_))(descriptor)
     arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
     bufferFromSize(seq.mkDataBuffer(_))(descriptor)
@@ -47,126 +42,137 @@ object FactoryTest extends FunSuite {
     viewFromData(seq.mkDataView(_, _, _))(descriptor)
     readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+
+    arrayFromSize(seq.mkIndexArray(_))(descriptor)
+    arrayFromData((a: R#ArrayType) => seq.mkIndexArray(a))(descriptor)
+    bufferFromSize(seq.mkIndexBuffer(_))(descriptor)
+    bufferFromData(seq.mkIndexBuffer(_))(descriptor)
+    readBufferFromData(seq.mkReadIndexBuffer(_))(descriptor)
+  }
+
+  def testIndexArrayFromSize[R <: Unsigned](
+    factory: (Int) => IndexArray[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    arrayFromSize(factory)(descriptor)
+    testMakeIndex(factory(0), descriptor)
+  }
+
+  def testIndexArrayFromData[R <: Unsigned](
+    factory: (R#ArrayType) => IndexArray[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    arrayFromData(factory)(descriptor)
+    testMakeIndex(factory(genArray(0, descriptor)), descriptor)
+  }
+
+  def testIndexBufferFromSize[R <: Unsigned](
+    factory: (Int) => IndexBuffer[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    bufferFromSize(factory)(descriptor)
+    testMakeIndex(factory(0), descriptor)
+  }
+
+  def testIndexBufferFromData[R <: Unsigned](
+    factory: (ByteBuffer) => IndexBuffer[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    bufferFromData(factory)(descriptor)
+    testMakeIndex(factory(genBuffer(0, descriptor)._1), descriptor)
+  }
+
+  def testReadIndexBufferFromData[R <: Unsigned](
+    factory: (ByteBuffer) => ReadIndexBuffer[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    readBufferFromData(factory)(descriptor)
+    testMakeIndex(factory(genBuffer(0, descriptor)._1), descriptor)
+  }
+
+  def testIndexArrayFromCollection[R <: Unsigned](
+    factory: (IndexedSeq[Int]) => IndexArray[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    arrayFromCollection[Int1, R](factory)
+    testMakeIndex(factory(genRandomCollection(0, descriptor)._1), descriptor)
+  }
+
+  def testIndexBufferFromCollection[R <: Unsigned](
+    factory: (IndexedSeq[Int]) => IndexBuffer[R]
+  )(implicit descriptor: Descriptor[Int1, R]) {
+    bufferFromCollection[Int1, R](factory)
+    testMakeIndex(factory(genRandomCollection(0, descriptor)._1), descriptor)
+  }
+
+
+  private def testMakeData[E <: MetaElement, R <: RawData](seq: ReadDataSeq[E, R], descriptor: Descriptor[E, R]) {
+    arrayFromSize(seq.mkDataArray(_))(descriptor)
+    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
+    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
+    bufferFromData(seq.mkDataBuffer(_))(descriptor)
+    viewFromData(seq.mkDataView(_, _, _))(descriptor)
+    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
+    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+  }
+
+  def testArrayFromSize[E <: MetaElement, R <: RawData](
+    factory: (Int) => DataArray[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    arrayFromSize(factory)(descriptor)
+    testMakeData(factory(0), descriptor)
   }
 
   def testArrayFromData[E <: MetaElement, R <: RawData](
     factory: (R#ArrayType) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromData(factory)(descriptor)
+    testMakeData(factory(genArray(0, descriptor)), descriptor)
 
-    val seq = factory(genArray(0, descriptor))
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    CastTest.testArrayCast(factory)(descriptor)
   }
 
   def testBufferFromSize[E <: MetaElement, R <: RawData](
     factory: (Int) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromSize(factory)(descriptor)
-
-    val seq = factory(0)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(0), descriptor)
   }
 
   def testBufferFromData[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromData(factory)(descriptor)
-
-    val seq = factory(genBuffer(0, descriptor)._1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1), descriptor)
   }
 
   def testViewFromData[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     viewFromData(factory)(descriptor)
-
-    val seq = factory(genBuffer(0, descriptor)._1, 0, 1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 1), descriptor)
   }
 
   def testReadBufferFromData[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer) => ReadDataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readBufferFromData(factory)(descriptor)
-
-    val seq = factory(genBuffer(0, descriptor)._1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1), descriptor)
   }
 
   def testReadViewFromData[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer, Int, Int) => ReadDataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readViewFromData(factory)(descriptor)
-
-    val seq = factory(genBuffer(0, descriptor)._1, 0, 1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 1), descriptor)
   }
 
   def testArrayFromCollection[E <: MetaElement, R <: RawData](
     factory: (IndexedSeq[E#Element]) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromCollection(factory)
-
-    val seq = factory(genRandomCollection(0, descriptor)._1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
   def testBufferFromCollection[E <: MetaElement, R <: RawData](
     factory: (IndexedSeq[E#Element]) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromCollection(factory)
-
-    val seq = factory(genRandomCollection(0, descriptor)._1)
-    arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
-    bufferFromSize(seq.mkDataBuffer(_))(descriptor)
-    bufferFromData(seq.mkDataBuffer(_))(descriptor)
-    viewFromData(seq.mkDataView(_, _, _))(descriptor)
-    readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
-    readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+    testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
   private def arrayFromSize[E <: MetaElement, R <: RawData](
@@ -174,7 +180,7 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[Exception] { factory(-1) }
 
-    for (size <- 0 to 8) {
+    for (size <- 0 to 9) {
       val data = wrapArray(genArray(size*descriptor.components, descriptor))
       testArray(factory(size), false, data)(descriptor)
     }
@@ -183,7 +189,7 @@ object FactoryTest extends FunSuite {
   private def arrayFromData[E <: MetaElement, R <: RawData](
     factory: (R#ArrayType) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
-    for (size <- 0 to 8) {
+    for (size <- 0 to 9) {
       val a = genRandomArray(size, descriptor);
       testArray(factory(a), false, wrapArray(a))(descriptor)
     }
@@ -297,7 +303,14 @@ object FactoryTest extends FunSuite {
           bytes.limit(limit)
           bytes.position(position)
 
-          testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
+          if (offset == 0 && stride == descriptor.components) {
+            val view = factory(bytes, offset, stride)
+            testView(view, offset, stride, false, data)(descriptor)
+            testBuffer(view.asInstanceOf[ReadDataBuffer[E, R]], false, data)(descriptor)
+          }
+          else {
+            testView(factory(bytes, offset, stride), offset, stride, false, data)(descriptor)
+          }
 
           assert(bytes.order == order)
           assert(bytes.limit == limit)
@@ -307,9 +320,9 @@ object FactoryTest extends FunSuite {
     }
 
     for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteCapacity + rawBytes*descriptor.components*10*s)
+      test(byteCapacity + rawBytes*descriptor.components*3*s)
     }
-    for (size <- 1 to 10) {
+    for (size <- 1 to 9) {
       test(size*rawBytes)
     }
   }
@@ -399,11 +412,22 @@ object FactoryTest extends FunSuite {
           bytes.limit(limit)
           bytes.position(position)
 
-          val view = factory(bytes, offset, stride)
-          testView(view, offset, stride, false, data)(descriptor)
+          if (offset == 0 && stride == descriptor.components) {
+            val view = factory(bytes, offset, stride)
+            testView(view, offset, stride, false, data)(descriptor)
+            testBuffer(view.asInstanceOf[ReadDataBuffer[E, R]], false, data)(descriptor)
 
-          val rview = factory(bytes.asReadOnlyBuffer, offset, stride)
-          testView(rview, offset, stride, true, data)(descriptor)
+            val rview = factory(bytes.asReadOnlyBuffer, offset, stride)
+            testView(rview, offset, stride, true, data)(descriptor)
+            testBuffer(rview.asInstanceOf[ReadDataBuffer[E, R]], true, data)(descriptor)
+          }
+          else {
+            val view = factory(bytes, offset, stride)
+            testView(view, offset, stride, false, data)(descriptor)
+
+            val rview = factory(bytes.asReadOnlyBuffer, offset, stride)
+            testView(rview, offset, stride, true, data)(descriptor)
+          }
 
           assert(bytes.order == order)
           assert(bytes.limit == limit)
@@ -413,9 +437,9 @@ object FactoryTest extends FunSuite {
     }
 
     for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteCapacity + rawBytes*descriptor.components*10*s)
+      test(byteCapacity + rawBytes*descriptor.components*3*s)
     }
-    for (size <- 1 to 10) {
+    for (size <- 1 to 9) {
       test(size*rawBytes)
     }
   }
@@ -423,7 +447,7 @@ object FactoryTest extends FunSuite {
   def arrayFromCollection[E <: MetaElement, R <: RawData](
     factory: (IndexedSeq[E#Element]) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
-    for (size <- 0 to 8) {
+    for (size <- 0 to 3) {
       val (col, data) = genRandomCollection(size, descriptor)
       testArray(factory(col), false, data)(descriptor)
     }
@@ -432,7 +456,7 @@ object FactoryTest extends FunSuite {
   def bufferFromCollection[E <: MetaElement, R <: RawData](
     factory: (IndexedSeq[E#Element]) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
-    for (size <- 0 to 8) {
+    for (size <- 0 to 3) {
       val (col, data) = genRandomCollection(size, descriptor)
       testBuffer(factory(col), false, data)(descriptor)
     }

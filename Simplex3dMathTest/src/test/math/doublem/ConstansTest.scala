@@ -221,22 +221,56 @@ class ConstansTest extends FunSuite {
   test("Manifest") {
     import scala.reflect.Manifest._
 
-    assert(Vec2.Manifest == classType[ReadVec2](classOf[ReadVec2]))
-    assert(Vec3.Manifest == classType[ReadVec3](classOf[ReadVec3]))
-    assert(Vec4.Manifest == classType[ReadVec4](classOf[ReadVec4]))
+    assert(Vec2.Manifest == classType[Vec2](classOf[Vec2]))
+    assert(Vec2.ConstManifest == classType[ConstVec2](classOf[ConstVec2]))
+    assert(Vec2.ReadManifest == classType[ReadVec2](classOf[ReadVec2]))
 
-    assert(Quat4.Manifest == classType[ReadQuat4](classOf[ReadQuat4]))
+    assert(Vec3.Manifest == classType[Vec3](classOf[Vec3]))
+    assert(Vec3.ConstManifest == classType[ConstVec3](classOf[ConstVec3]))
+    assert(Vec3.ReadManifest == classType[ReadVec3](classOf[ReadVec3]))
 
-    assert(Mat2x2.Manifest == classType[ReadMat2x2](classOf[ReadMat2x2]))
-    assert(Mat2x3.Manifest == classType[ReadMat2x3](classOf[ReadMat2x3]))
-    assert(Mat2x4.Manifest == classType[ReadMat2x4](classOf[ReadMat2x4]))
+    assert(Vec4.Manifest == classType[Vec4](classOf[Vec4]))
+    assert(Vec4.ConstManifest == classType[ConstVec4](classOf[ConstVec4]))
+    assert(Vec4.ReadManifest == classType[ReadVec4](classOf[ReadVec4]))
 
-    assert(Mat3x2.Manifest == classType[ReadMat3x2](classOf[ReadMat3x2]))
-    assert(Mat3x3.Manifest == classType[ReadMat3x3](classOf[ReadMat3x3]))
-    assert(Mat3x4.Manifest == classType[ReadMat3x4](classOf[ReadMat3x4]))
+    assert(Quat4.Manifest == classType[Quat4](classOf[Quat4]))
+    assert(Quat4.ConstManifest == classType[ConstQuat4](classOf[ConstQuat4]))
+    assert(Quat4.ReadManifest == classType[ReadQuat4](classOf[ReadQuat4]))
 
-    assert(Mat4x2.Manifest == classType[ReadMat4x2](classOf[ReadMat4x2]))
-    assert(Mat4x3.Manifest == classType[ReadMat4x3](classOf[ReadMat4x3]))
-    assert(Mat4x4.Manifest == classType[ReadMat4x4](classOf[ReadMat4x4]))
+    assert(Mat2x2.Manifest == classType[Mat2x2](classOf[Mat2x2]))
+    assert(Mat2x2.ConstManifest == classType[ConstMat2x2](classOf[ConstMat2x2]))
+    assert(Mat2x2.ReadManifest == classType[ReadMat2x2](classOf[ReadMat2x2]))
+
+    assert(Mat2x3.Manifest == classType[Mat2x3](classOf[Mat2x3]))
+    assert(Mat2x3.ConstManifest == classType[ConstMat2x3](classOf[ConstMat2x3]))
+    assert(Mat2x3.ReadManifest == classType[ReadMat2x3](classOf[ReadMat2x3]))
+
+    assert(Mat2x4.Manifest == classType[Mat2x4](classOf[Mat2x4]))
+    assert(Mat2x4.ConstManifest == classType[ConstMat2x4](classOf[ConstMat2x4]))
+    assert(Mat2x4.ReadManifest == classType[ReadMat2x4](classOf[ReadMat2x4]))
+
+    assert(Mat3x2.Manifest == classType[Mat3x2](classOf[Mat3x2]))
+    assert(Mat3x2.ConstManifest == classType[ConstMat3x2](classOf[ConstMat3x2]))
+    assert(Mat3x2.ReadManifest == classType[ReadMat3x2](classOf[ReadMat3x2]))
+
+    assert(Mat3x3.Manifest == classType[Mat3x3](classOf[Mat3x3]))
+    assert(Mat3x3.ConstManifest == classType[ConstMat3x3](classOf[ConstMat3x3]))
+    assert(Mat3x3.ReadManifest == classType[ReadMat3x3](classOf[ReadMat3x3]))
+
+    assert(Mat3x4.Manifest == classType[Mat3x4](classOf[Mat3x4]))
+    assert(Mat3x4.ConstManifest == classType[ConstMat3x4](classOf[ConstMat3x4]))
+    assert(Mat3x4.ReadManifest == classType[ReadMat3x4](classOf[ReadMat3x4]))
+
+    assert(Mat4x2.Manifest == classType[Mat4x2](classOf[Mat4x2]))
+    assert(Mat4x2.ConstManifest == classType[ConstMat4x2](classOf[ConstMat4x2]))
+    assert(Mat4x2.ReadManifest == classType[ReadMat4x2](classOf[ReadMat4x2]))
+
+    assert(Mat4x3.Manifest == classType[Mat4x3](classOf[Mat4x3]))
+    assert(Mat4x3.ConstManifest == classType[ConstMat4x3](classOf[ConstMat4x3]))
+    assert(Mat4x3.ReadManifest == classType[ReadMat4x3](classOf[ReadMat4x3]))
+
+    assert(Mat4x4.Manifest == classType[Mat4x4](classOf[Mat4x4]))
+    assert(Mat4x4.ConstManifest == classType[ConstMat4x4](classOf[ConstMat4x4]))
+    assert(Mat4x4.ReadManifest == classType[ReadMat4x4](classOf[ReadMat4x4]))
   }
 }

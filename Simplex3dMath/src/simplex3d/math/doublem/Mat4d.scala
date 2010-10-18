@@ -581,7 +581,10 @@ final class Mat4d private[math] (
 object Mat4d {
   final val Zero = ConstMat4d(0)
   final val Identity = ConstMat4d(1)
-  final val Manifest = classType[ReadMat4d](classOf[ReadMat4d])
+
+  final val Manifest = classType[Mat4d](classOf[Mat4d])
+  final val ConstManifest = classType[ConstMat4d](classOf[ConstMat4d])
+  final val ReadManifest = classType[ReadMat4d](classOf[ReadMat4d])
 
   def apply(s: Double) = new Mat4d(
     s, 0, 0, 0,

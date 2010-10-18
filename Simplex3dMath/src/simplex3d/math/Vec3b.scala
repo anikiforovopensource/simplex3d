@@ -411,7 +411,10 @@ extends ReadVec3b with Implicits[On]
 object Vec3b {
   final val True = new ConstVec3b(true, true, true)
   final val False = new ConstVec3b(false, false, false)
-  final val Manifest = classType[ReadVec3b](classOf[ReadVec3b])
+
+  final val Manifest = classType[Vec3b](classOf[Vec3b])
+  final val ConstManifest = classType[ConstVec3b](classOf[ConstVec3b])
+  final val ReadManifest = classType[ReadVec3b](classOf[ReadVec3b])
 
   /** Makes a new instance of Vec3b with all the components initialized
    * to the specified value.

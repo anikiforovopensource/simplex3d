@@ -501,7 +501,10 @@ final class Mat4x3d private[math] (
 object Mat4x3d {
   final val Zero = ConstMat4x3d(0)
   final val Identity = ConstMat4x3d(1)
-  final val Manifest = classType[ReadMat4x3d](classOf[ReadMat4x3d])
+
+  final val Manifest = classType[Mat4x3d](classOf[Mat4x3d])
+  final val ConstManifest = classType[ConstMat4x3d](classOf[ConstMat4x3d])
+  final val ReadManifest = classType[ReadMat4x3d](classOf[ReadMat4x3d])
 
   def apply(s: Double) = new Mat4x3d(
     s, 0, 0, 0,

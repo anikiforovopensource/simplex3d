@@ -350,7 +350,10 @@ final class Mat2d private[math] (
 object Mat2d {
   final val Zero = ConstMat2d(0)
   final val Identity = ConstMat2d(1)
-  final val Manifest = classType[ReadMat2d](classOf[ReadMat2d])
+
+  final val Manifest = classType[Mat2d](classOf[Mat2d])
+  final val ConstManifest = classType[ConstMat2d](classOf[ConstMat2d])
+  final val ReadManifest = classType[ReadMat2d](classOf[ReadMat2d])
 
   def apply(s: Double) = new Mat2d(
     s, 0,

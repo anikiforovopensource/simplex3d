@@ -653,7 +653,10 @@ final class Vec4b private[math] (
 object Vec4b {
   final val True = new ConstVec4b(true, true, true, true)
   final val False = new ConstVec4b(false, false, false, false)
-  final val Manifest = classType[ReadVec4b](classOf[ReadVec4b])
+
+  final val Manifest = classType[Vec4b](classOf[Vec4b])
+  final val ConstManifest = classType[ConstVec4b](classOf[ConstVec4b])
+  final val ReadManifest = classType[ReadVec4b](classOf[ReadVec4b])
 
   /** Makes a new instance of Vec4b with all the components initialized
    * to the specified value.

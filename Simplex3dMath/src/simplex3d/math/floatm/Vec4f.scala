@@ -511,7 +511,10 @@ object Vec4f {
   final val UnitZ = new ConstVec4f(0, 0, 1, 0)
   final val UnitW = new ConstVec4f(0, 0, 0, 1)
   final val One = new ConstVec4f(1, 1, 1, 1)
-  final val Manifest = classType[ReadVec4f](classOf[ReadVec4f])
+
+  final val Manifest = classType[Vec4f](classOf[Vec4f])
+  final val ConstManifest = classType[ConstVec4f](classOf[ConstVec4f])
+  final val ReadManifest = classType[ReadVec4f](classOf[ReadVec4f])
 
   def apply(s: Float) =
     new Vec4f(s, s, s, s)

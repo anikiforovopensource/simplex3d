@@ -537,7 +537,10 @@ object Vec4i {
   final val UnitZ = new ConstVec4i(0, 0, 1, 0)
   final val UnitW = new ConstVec4i(0, 0, 0, 1)
   final val One = new ConstVec4i(1, 1, 1, 1)
-  final val Manifest = classType[ReadVec4i](classOf[ReadVec4i])
+
+  final val Manifest = classType[Vec4i](classOf[Vec4i])
+  final val ConstManifest = classType[ConstVec4i](classOf[ConstVec4i])
+  final val ReadManifest = classType[ReadVec4i](classOf[ReadVec4i])
 
   def apply(s: Int) =
     new Vec4i(s, s, s, s)

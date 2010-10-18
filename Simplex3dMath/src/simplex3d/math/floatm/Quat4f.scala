@@ -222,7 +222,10 @@ final class Quat4f private[math] (
 
 object Quat4f {
   final val Identity = new ConstQuat4f(1, 0, 0, 0)
-  final val Manifest = classType[ReadQuat4f](classOf[ReadQuat4f])
+
+  final val Manifest = classType[Quat4f](classOf[Quat4f])
+  final val ConstManifest = classType[ConstQuat4f](classOf[ConstQuat4f])
+  final val ReadManifest = classType[ReadQuat4f](classOf[ReadQuat4f])
 
   /*main factory*/ def apply(a: Float, b: Float, c: Float, d: Float) =
     new Quat4f(a, b, c, d)

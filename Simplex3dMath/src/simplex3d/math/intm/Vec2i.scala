@@ -262,7 +262,10 @@ object Vec2i {
   final val UnitX = new ConstVec2i(1, 0)
   final val UnitY = new ConstVec2i(0, 1)
   final val One = new ConstVec2i(1, 1)
-  final val Manifest = classType[ReadVec2i](classOf[ReadVec2i])
+
+  final val Manifest = classType[Vec2i](classOf[Vec2i])
+  final val ConstManifest = classType[ConstVec2i](classOf[ConstVec2i])
+  final val ReadManifest = classType[ReadVec2i](classOf[ReadVec2i])
 
   def apply(s: Int) = new Vec2i(s, s)
   /*main factory*/ def apply(x: Int, y: Int) = new Vec2i(x, y)

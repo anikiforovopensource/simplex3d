@@ -511,7 +511,10 @@ object Vec4d {
   final val UnitZ = new ConstVec4d(0, 0, 1, 0)
   final val UnitW = new ConstVec4d(0, 0, 0, 1)
   final val One = new ConstVec4d(1, 1, 1, 1)
-  final val Manifest = classType[ReadVec4d](classOf[ReadVec4d])
+
+  final val Manifest = classType[Vec4d](classOf[Vec4d])
+  final val ConstManifest = classType[ConstVec4d](classOf[ConstVec4d])
+  final val ReadManifest = classType[ReadVec4d](classOf[ReadVec4d])
 
   def apply(s: Double) =
     new Vec4d(s, s, s, s)

@@ -306,7 +306,10 @@ object Vec3d {
   final val UnitY = new ConstVec3d(0, 1, 0)
   final val UnitZ = new ConstVec3d(0, 0, 1)
   final val One = new ConstVec3d(1, 1, 1)
-  final val Manifest = classType[ReadVec3d](classOf[ReadVec3d])
+
+  final val Manifest = classType[Vec3d](classOf[Vec3d])
+  final val ConstManifest = classType[ConstVec3d](classOf[ConstVec3d])
+  final val ReadManifest = classType[ReadVec3d](classOf[ReadVec3d])
 
   def apply(s: Double) = new Vec3d(s, s, s)
   /*main factory*/ def apply(x: Double, y: Double, z: Double) = new Vec3d(x, y, z)

@@ -330,7 +330,10 @@ extends ReadVec2b with Implicits[On]
 object Vec2b {
   final val True = new ConstVec2b(true, true)
   final val False = new ConstVec2b(false, false)
-  final val Manifest = classType[ReadVec2b](classOf[ReadVec2b])
+
+  final val Manifest = classType[Vec2b](classOf[Vec2b])
+  final val ConstManifest = classType[ConstVec2b](classOf[ConstVec2b])
+  final val ReadManifest = classType[ReadVec2b](classOf[ReadVec2b])
 
   /** Makes a new instance of Vec2b with all the components initialized
    * to the specified value.

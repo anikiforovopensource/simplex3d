@@ -350,7 +350,10 @@ final class Mat2f private[math] (
 object Mat2f {
   final val Zero = ConstMat2f(0)
   final val Identity = ConstMat2f(1)
-  final val Manifest = classType[ReadMat2f](classOf[ReadMat2f])
+
+  final val Manifest = classType[Mat2f](classOf[Mat2f])
+  final val ConstManifest = classType[ConstMat2f](classOf[ConstMat2f])
+  final val ReadManifest = classType[ReadMat2f](classOf[ReadMat2f])
 
   def apply(s: Float) = new Mat2f(
     s, 0,

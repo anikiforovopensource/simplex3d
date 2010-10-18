@@ -453,7 +453,10 @@ final class Mat3f private[math] (
 object Mat3f {
   final val Zero = ConstMat3f(0)
   final val Identity = ConstMat3f(1)
-  final val Manifest = classType[ReadMat3f](classOf[ReadMat3f])
+
+  final val Manifest = classType[Mat3f](classOf[Mat3f])
+  final val ConstManifest = classType[ConstMat3f](classOf[ConstMat3f])
+  final val ReadManifest = classType[ReadMat3f](classOf[ReadMat3f])
 
   def apply(s: Float) = new Mat3f(
     s, 0, 0,

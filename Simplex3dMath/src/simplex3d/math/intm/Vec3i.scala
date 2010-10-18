@@ -329,7 +329,10 @@ object Vec3i {
   final val UnitY = new ConstVec3i(0, 1, 0)
   final val UnitZ = new ConstVec3i(0, 0, 1)
   final val One = new ConstVec3i(1, 1, 1)
-  final val Manifest = classType[ReadVec3i](classOf[ReadVec3i])
+
+  final val Manifest = classType[Vec3i](classOf[Vec3i])
+  final val ConstManifest = classType[ConstVec3i](classOf[ConstVec3i])
+  final val ReadManifest = classType[ReadVec3i](classOf[ReadVec3i])
 
   def apply(s: Int) = new Vec3i(s, s, s)
   /*main factory*/ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)

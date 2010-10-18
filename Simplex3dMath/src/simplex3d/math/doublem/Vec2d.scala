@@ -236,7 +236,10 @@ object Vec2d {
   final val UnitX = new ConstVec2d(1, 0)
   final val UnitY = new ConstVec2d(0, 1)
   final val One = new ConstVec2d(1, 1)
-  final val Manifest = classType[ReadVec2d](classOf[ReadVec2d])
+
+  final val Manifest = classType[Vec2d](classOf[Vec2d])
+  final val ConstManifest = classType[ConstVec2d](classOf[ConstVec2d])
+  final val ReadManifest = classType[ReadVec2d](classOf[ReadVec2d])
 
   def apply(s: Double) = new Vec2d(s, s)
   /*main factory*/ def apply(x: Double, y: Double) = new Vec2d(x, y)

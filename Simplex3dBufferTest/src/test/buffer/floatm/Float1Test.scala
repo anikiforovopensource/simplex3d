@@ -28,6 +28,7 @@ import simplex3d.buffer.floatm._
 
 import Descriptors._
 import FactoryTest._
+import TestUtil._
 
 
 /**
@@ -132,4 +133,188 @@ class Float1Test extends FunSuite {
     testBufferFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, RawFloat](a: _*))
     testBufferFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, RawFloat](a))
   }
+  
+  private val size = 10
+  
+  test("Apply/Update") {
+    testSByte(DataArray[Float1, SByte](size))
+    testSByte(DataBuffer[Float1, SByte](size))
+    testSByte(DataView[Float1, SByte](genBuffer(size, Descriptors.Float1SByte)._1, 0, 2))
+    testSByte(DataView[Float1, SByte](genBuffer(size, Descriptors.Float1SByte)._1, 1, 2))
+    
+    testUByte(DataArray[Float1, UByte](size))
+    testUByte(DataBuffer[Float1, UByte](size))
+    testUByte(DataView[Float1, UByte](genBuffer(size, Descriptors.Float1UByte)._1, 0, 2))
+    testUByte(DataView[Float1, UByte](genBuffer(size, Descriptors.Float1UByte)._1, 1, 2))
+    
+    testSShort(DataArray[Float1, SShort](size))
+    testSShort(DataBuffer[Float1, SShort](size))
+    testSShort(DataView[Float1, SShort](genBuffer(size, Descriptors.Float1SShort)._1, 0, 2))
+    testSShort(DataView[Float1, SShort](genBuffer(size, Descriptors.Float1SShort)._1, 1, 2))
+    
+    testUShort(DataArray[Float1, UShort](size))
+    testUShort(DataBuffer[Float1, UShort](size))
+    testUShort(DataView[Float1, UShort](genBuffer(size, Descriptors.Float1UShort)._1, 0, 2))
+    testUShort(DataView[Float1, UShort](genBuffer(size, Descriptors.Float1UShort)._1, 1, 2))
+    
+    testSInt(DataArray[Float1, SInt](size))
+    testSInt(DataBuffer[Float1, SInt](size))
+    testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 0, 2))
+    testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 1, 2))
+    
+//    testUInt(DataArray[Float1, UInt](size))
+//    testUInt(DataBuffer[Float1, UInt](size))
+//    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 0, 2))
+//    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 1, 2))
+  }
+
+  private def testSByte(seq: DataSeq[Float1, SByte]) {
+    testIndex(seq)
+
+    seq.asBuffer().put(seq.offset, -128); assert(seq(0) == -1)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, -1, -127)
+    testApplyUpdate(seq, -Float.MaxValue, -1, -127)
+    testApplyUpdate(seq, -2, -1, -127)
+    testApplyUpdate(seq, -128/127f, -1, -127)
+    testApplyUpdate(seq, -1, -1, -127)
+    testApplyUpdate(seq, -0.5f, -64/127f, -64)
+    testApplyUpdate(seq, -1/84f, -2/127f, -2)
+    testApplyUpdate(seq, -1/85f, -1/127f, -1)
+    testApplyUpdate(seq, -1/127f, -1/127f, -1)
+    testApplyUpdate(seq, -1/254f, -1/127f, -1)
+    testApplyUpdate(seq, -1/255f, 0, 0)
+    testApplyUpdate(seq, Float.NaN, 0, 0)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1/255f, 0, 0)
+    testApplyUpdate(seq, 1/254f, 1/127f, 1)
+    testApplyUpdate(seq, 1/127f, 1/127f, 1)
+    testApplyUpdate(seq, 1/85f, 1/127f, 1)
+    testApplyUpdate(seq, 1/84f, 2/127f, 2)
+    testApplyUpdate(seq, 0.5f, 64/127f, 64)
+    testApplyUpdate(seq, 1, 1, 127)
+    testApplyUpdate(seq, 2, 1, 127)
+    testApplyUpdate(seq, Float.MaxValue, 1, 127)
+    testApplyUpdate(seq, Float.PositiveInfinity, 1, 127)
+  }
+
+  private def testUByte(seq: DataSeq[Float1, UByte]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
+    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
+    testApplyUpdate(seq, -1, 0, 0)
+    testApplyUpdate(seq, -0.5f, 0, 0)
+    testApplyUpdate(seq, Float.NaN, 0, 0)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1/511f, 0, 0)
+    testApplyUpdate(seq, 1/510f, 1/255f, 1)
+    testApplyUpdate(seq, 1/255f, 1/255f, 1)
+    testApplyUpdate(seq, 1/171f, 1/255f, 1)
+    testApplyUpdate(seq, 1/170f, 2/255f, 2)
+    testApplyUpdate(seq, 0.25f, 64/255f, 64)
+    testApplyUpdate(seq, 0.5f, 128/255f, -128)
+    testApplyUpdate(seq, 1, 1, -1)
+    testApplyUpdate(seq, 2, 1, -1)
+    testApplyUpdate(seq, Float.MaxValue, 1, -1)
+    testApplyUpdate(seq, Float.PositiveInfinity, 1, -1)
+  }
+
+  private def testSShort(seq: DataSeq[Float1, SShort]) {
+    testIndex(seq)
+
+    seq.asBuffer().put(seq.offset, -32768); assert(seq(0) == -1)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, -1, -32767)
+    testApplyUpdate(seq, -Float.MaxValue, -1, -32767)
+    testApplyUpdate(seq, -2, -1, -32767)
+    testApplyUpdate(seq, -32768/32767f, -1, -32767)
+    testApplyUpdate(seq, -1, -1, -32767)
+    testApplyUpdate(seq, -0.5f, -16384/32767f, -16384)
+    testApplyUpdate(seq, -1/21844f, -2/32767f, -2)
+    testApplyUpdate(seq, -1/21845f, -1/32767f, -1)
+    testApplyUpdate(seq, -1/32767f, -1/32767f, -1)
+    testApplyUpdate(seq, -1/65534f, -1/32767f, -1)
+    testApplyUpdate(seq, -1/65535f, 0, 0)
+    testApplyUpdate(seq, Float.NaN, 0, 0)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1/65535f, 0, 0)
+    testApplyUpdate(seq, 1/65534f, 1/32767f, 1)
+    testApplyUpdate(seq, 1/32767f, 1/32767f, 1)
+    testApplyUpdate(seq, 1/21845f, 1/32767f, 1)
+    testApplyUpdate(seq, 1/21844f, 2/32767f, 2)
+    testApplyUpdate(seq, 0.5f, 16384/32767f, 16384)
+    testApplyUpdate(seq, 1, 1, 32767)
+    testApplyUpdate(seq, 2, 1, 32767)
+    testApplyUpdate(seq, Float.MaxValue, 1, 32767)
+    testApplyUpdate(seq, Float.PositiveInfinity, 1, 32767)
+  }
+
+  private def testUShort(seq: DataSeq[Float1, UShort]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
+    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
+    testApplyUpdate(seq, -1, 0, 0)
+    testApplyUpdate(seq, -0.5f, 0, 0)
+    testApplyUpdate(seq, Float.NaN, 0, 0)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1/131071f, 0, 0)
+    testApplyUpdate(seq, 1/131070f, 1/65535f, 1)
+    testApplyUpdate(seq, 1/65535f, 1/65535f, 1)
+    testApplyUpdate(seq, 1/43691f, 1/65535f, 1)
+    testApplyUpdate(seq, 1/43690f, 2/65535f, 2)
+    testApplyUpdate(seq, 0.25f, 16384/65535f, 16384)
+    testApplyUpdate(seq, 0.5f, 32768/65535f, 32768)
+    testApplyUpdate(seq, 1, 1, 65535)
+    testApplyUpdate(seq, 2, 1, 65535)
+    testApplyUpdate(seq, Float.MaxValue, 1, 65535)
+    testApplyUpdate(seq, Float.PositiveInfinity, 1, 65535)
+  }
+  
+  private def testSInt(seq: DataSeq[Float1, SInt]) {
+    testIndex(seq)
+
+    seq.asBuffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, -1, -2147483647)
+    testApplyUpdate(seq, -Float.MaxValue, -1, -2147483647)
+    testApplyUpdate(seq, -2, -1, -2147483647)
+    testApplyUpdate(seq, Int.MinValue/2147483647f, -1, -2147483647)
+    testApplyUpdate(seq, -1, -1, -2147483647)
+    testApplyUpdate(seq, -0.5f, -1073741824/2147483647f, -1073741824)
+//    testApplyUpdate(seq, -1/84f, -3/2147483647f, -3)
+//    testApplyUpdate(seq, -1/84f, -2/2147483647f, -2)
+    testApplyUpdate(seq, Float.NaN, 0, 0)
+    testApplyUpdate(seq, 0, 0, 0)
+//    testApplyUpdate(seq, 1/84f, 2/2147483647f, 2)
+//    testApplyUpdate(seq, 1/84f, 3/2147483647f, 3)
+    testApplyUpdate(seq, 0.5f, 1073741824/2147483647f, 1073741824)
+    testApplyUpdate(seq, 1, 1, 2147483647f)
+    testApplyUpdate(seq, 2, 1, 2147483647f)
+    testApplyUpdate(seq, Float.MaxValue, 1, 2147483647)
+    testApplyUpdate(seq, Float.PositiveInfinity, 1, 2147483647)
+  }
+
+//  private def testUInt(seq: DataSeq[Float1, UInt]) {
+//    testIndex(seq)
+//
+//    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
+//    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
+//    testApplyUpdate(seq, -1, 0, 0)
+//    testApplyUpdate(seq, -0.5f, 0, 0)
+//    testApplyUpdate(seq, Float.NaN, 0, 0)
+//    testApplyUpdate(seq, 0, 0, 0)
+//    testApplyUpdate(seq, 1/511f, 0, 0)
+//    testApplyUpdate(seq, 1/510f, 1/255f, 1)
+//    testApplyUpdate(seq, 1/255f, 1/255f, 1)
+//    testApplyUpdate(seq, 1/171f, 1/255f, 1)
+//    testApplyUpdate(seq, 1/170f, 2/255f, 2)
+//    testApplyUpdate(seq, 0.25f, 64/255f, 64)
+//    testApplyUpdate(seq, 0.5f, 128/255f, -128)
+//    testApplyUpdate(seq, 1, 1, -1)
+//    testApplyUpdate(seq, 2, 1, -1)
+//    testApplyUpdate(seq, Float.MaxValue, 1, -1)
+//    testApplyUpdate(seq, Float.PositiveInfinity, 1, -1)
+//  }
 }

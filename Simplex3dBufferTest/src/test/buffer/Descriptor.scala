@@ -31,7 +31,7 @@ import simplex3d.math.doublem._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-case class Descriptor[E <: MetaElement, R <: RawData](
+case class Descriptor[E <: MetaElement, +R <: RawData](
   elementManifest: Manifest[_],
   componentManifest: Manifest[_],
   components: Int,

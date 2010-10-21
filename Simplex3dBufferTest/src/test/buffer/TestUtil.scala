@@ -62,6 +62,77 @@ object TestUtil extends FunSuite {
     }
   }
 
+  def testIndex[E <: MetaElement](seq: DataSeq[E, RawData]) {
+    assert(seq.size > 0)
+
+    intercept[Exception] { seq(-1) }
+    seq(0)
+    seq(seq.size - 1)
+    intercept[Exception] {seq(seq.size) }
+
+    val ro = seq.asReadOnlySeq().asInstanceOf[DataSeq[E, RawData]]
+    intercept[Exception] { ro(0) = seq(0) }
+    intercept[Exception] { ro(seq.size - 1) = seq(0) }
+  }
+
+  def testApplyUpdate(seq: DataSeq[Int1, _], value: Int, expected: Int, store: AnyVal) {
+    assert(seq.size > 0)
+    val i = randomSrc.nextInt(seq.size)
+
+    seq(i) = value
+    assert(seq(i) == expected)
+    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+  }
+
+  def testApplyUpdate(seq: DataSeq[Float1, _], value: Float, expected: Float, store: AnyVal) {
+    assert(seq.size > 0)
+    val i = randomSrc.nextInt(seq.size)
+
+    seq(i) = value
+    assert(seq(i) == expected)
+    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+  }
+
+  def testApplyUpdate(seq: DataSeq[Double1, _], value: Double, expected: Double, store: AnyVal) {
+    assert(seq.size > 0)
+    val i = randomSrc.nextInt(seq.size)
+
+    seq(i) = value
+    assert(seq(i) == expected)
+    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+  }
+
+  private def verify(buff: Buffer, index: Int, value: AnyVal) {
+    buff match {
+      case b: ByteBuffer => assert(b.get(index) == value)
+      case b: ShortBuffer => assert(b.get(index) == value)
+      case b: CharBuffer => assert(b.get(index) == value)
+      case b: IntBuffer => assert(b.get(index) == value)
+      case b: FloatBuffer =>
+        val stored = b.get(index)
+        if (FloatMath.isnan(stored)) assert(FloatMath.isnan(value.asInstanceOf[Float]))
+        else assert(b.get(index) == value)
+      case b: DoubleBuffer =>
+        val stored = b.get(index)
+        if (DoubleMath.isnan(stored)) assert(DoubleMath.isnan(value.asInstanceOf[Double]))
+        else assert(b.get(index) == value)
+    }
+  }
+
+  def wrap(bytes: ByteBuffer, descriptor: Descriptor[_, _]) :Buffer = {
+    descriptor.rawType match {
+      case SByte => bytes
+      case UByte => bytes
+      case SShort => bytes.asShortBuffer()
+      case UShort => bytes.asCharBuffer()
+      case SInt => bytes.asIntBuffer()
+      case UInt => bytes.asIntBuffer()
+      case HalfFloat => bytes.asShortBuffer()
+      case RawFloat => bytes.asFloatBuffer()
+      case RawDouble => bytes.asDoubleBuffer()
+    }
+  }
+
   def checkBuffer(testing: Buffer, data: Buffer) {
     assert(testing ne data)
 
@@ -254,21 +325,21 @@ object TestUtil extends FunSuite {
   }
   def genRandomCollection[E <: MetaElement, R <: RawData](
     size: Int, descriptor: Descriptor[E, R]
-  ) :(Array[E#Element], Buffer) = {
-    val array = descriptor.elementManifest.newArray(size).asInstanceOf[Array[E#Element]]
+  ) :(Array[E#Read], Buffer) = {
+    val array = descriptor.elementManifest.newArray(size).asInstanceOf[Array[E#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
 
     randomSrc.setSeed(seed)
     var i = 0; while (i < array.length) {
-      array(i) = rand(descriptor.elementManifest).asInstanceOf[E#Element]
+      array(i) = rand(descriptor.elementManifest).asInstanceOf[E#Read]
       i += 1
     }
 
     randomSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(descriptor.componentManifest).asInstanceOf[E#Component#Element]
+      seq(i) = randPrim(descriptor.componentManifest).asInstanceOf[E#Component#Read]
       i += 1
     }
 

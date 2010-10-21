@@ -28,6 +28,7 @@ import simplex3d.buffer.intm._
 
 import Descriptors._
 import FactoryTest._
+import TestUtil._
 
 
 /**
@@ -36,6 +37,9 @@ import FactoryTest._
 class Int1Test extends FunSuite {
 
   test("Factories") {
+    testIndexArrayUsingDataSize(IndexArray(_, _))
+    testIndexBufferUsingDataSize(IndexBuffer(_, _))
+    
     testIndexArrayFromSize(IndexArray[UByte](_))
     testIndexArrayFromData[UByte](IndexArray[UByte](_))
     testIndexBufferFromSize(IndexBuffer[UByte](_))
@@ -132,5 +136,109 @@ class Int1Test extends FunSuite {
     testArrayFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataArray[Int1, UInt](a))
     testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a: _*))
     testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a))
+  }
+
+  private val size = 10
+
+  test("Apply/Update") {
+    testSByte(DataArray[Int1, SByte](size))
+    testSByte(DataBuffer[Int1, SByte](size))
+    testSByte(DataView[Int1, SByte](genBuffer(size, Descriptors.Int1SByte)._1, 0, 2))
+    testSByte(DataView[Int1, SByte](genBuffer(size, Descriptors.Int1SByte)._1, 1, 2))
+
+    testUByte(DataArray[Int1, UByte](size))
+    testUByte(DataBuffer[Int1, UByte](size))
+    testUByte(DataView[Int1, UByte](genBuffer(size, Descriptors.Int1UByte)._1, 0, 2))
+    testUByte(DataView[Int1, UByte](genBuffer(size, Descriptors.Int1UByte)._1, 1, 2))
+    
+    testSShort(DataArray[Int1, SShort](size))
+    testSShort(DataBuffer[Int1, SShort](size))
+    testSShort(DataView[Int1, SShort](genBuffer(size, Descriptors.Int1SShort)._1, 0, 2))
+    testSShort(DataView[Int1, SShort](genBuffer(size, Descriptors.Int1SShort)._1, 1, 2))
+
+    testUShort(DataArray[Int1, UShort](size))
+    testUShort(DataBuffer[Int1, UShort](size))
+    testUShort(DataView[Int1, UShort](genBuffer(size, Descriptors.Int1UShort)._1, 0, 2))
+    testUShort(DataView[Int1, UShort](genBuffer(size, Descriptors.Int1UShort)._1, 1, 2))
+
+    testSInt(DataArray[Int1, SInt](size))
+    testSInt(DataBuffer[Int1, SInt](size))
+    testSInt(DataView[Int1, SInt](genBuffer(size, Descriptors.Int1SInt)._1, 0, 2))
+    testSInt(DataView[Int1, SInt](genBuffer(size, Descriptors.Int1SInt)._1, 1, 2))
+
+    testUInt(DataArray[Int1, UInt](size))
+    testUInt(DataBuffer[Int1, UInt](size))
+    testUInt(DataView[Int1, UInt](genBuffer(size, Descriptors.Int1UInt)._1, 0, 2))
+    testUInt(DataView[Int1, UInt](genBuffer(size, Descriptors.Int1UInt)._1, 1, 2))
+  }
+
+  private def testSByte(seq: DataSeq[Int1, SByte]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, -129, 127, 127)
+    testApplyUpdate(seq, -128, -128, -128)
+    testApplyUpdate(seq, -1, -1, -1)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, 127, 127, 127)
+    testApplyUpdate(seq, 128, -128, -128)
+  }
+
+  private def testUByte(seq: DataSeq[Int1, UByte]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, -1, 255, -1)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, 127, 127, 127)
+    testApplyUpdate(seq, 128, 128, -128)
+    testApplyUpdate(seq, 255, 255, -1)
+    testApplyUpdate(seq, 256, 0, 0)
+    testApplyUpdate(seq, 257, 1, 1)
+  }
+  
+  private def testSShort(seq: DataSeq[Int1, SShort]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, -32769, 32767, 32767)
+    testApplyUpdate(seq, -32768, -32768, -32768)
+    testApplyUpdate(seq, -1, -1, -1)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, 32767, 32767, 32767)
+    testApplyUpdate(seq, 32768, -32768, -32768)
+  }
+
+  private def testUShort(seq: DataSeq[Int1, UShort]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, -1, 65535, 65535)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, 32767, 32767, 32767)
+    testApplyUpdate(seq, 32768, 32768, 32768)
+    testApplyUpdate(seq, 65535, 65535, 65535)
+    testApplyUpdate(seq, 65536, 0, 0)
+    testApplyUpdate(seq, 65537, 1, 1)
+  }
+  
+  private def testSInt(seq: DataSeq[Int1, SInt]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)
+    testApplyUpdate(seq, -1, -1, -1)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, Int.MaxValue, Int.MaxValue, Int.MaxValue)
+  }
+
+  private def testUInt(seq: DataSeq[Int1, UInt]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)
+    testApplyUpdate(seq, -1, -1, -1)
+    testApplyUpdate(seq, 0, 0, 0)
+    testApplyUpdate(seq, 1, 1, 1)
+    testApplyUpdate(seq, Int.MaxValue, Int.MaxValue, Int.MaxValue)
   }
 }

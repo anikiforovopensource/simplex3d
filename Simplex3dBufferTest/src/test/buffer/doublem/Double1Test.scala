@@ -28,6 +28,7 @@ import simplex3d.buffer.doublem._
 
 import Descriptors._
 import FactoryTest._
+import TestUtil._
 
 
 /**

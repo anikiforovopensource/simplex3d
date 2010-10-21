@@ -39,9 +39,9 @@ object DoubleMath {
   final val Pi = SMath.PI
   final val E = SMath.E
 
-  private final val DegToRad = Pi / 180
-  private final val RadToDeg = 180 / Pi
-  private final val InvLog2 = 1/0.69314718055994530942
+  private final val DegToRad = 0.01745329251994329577
+  private final val RadToDeg = 57.2957795130823208768
+  private final val InvLog2 = 1.44269504088896340736
 
 
   // Double functions

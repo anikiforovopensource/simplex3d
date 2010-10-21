@@ -39,9 +39,9 @@ object FloatMath {
   final val Pi = 3.14159265358979323846f
   final val E = 2.71828182845904523536f
 
-  private final val DegToRad = Pi / 180
-  private final val RadToDeg = 180 / Pi
-  private final val InvLog2 = 1/0.69314718055994530942f
+  private final val DegToRad = 0.01745329251994329577f
+  private final val RadToDeg = 57.2957795130823208768f
+  private final val InvLog2 = 1.44269504088896340736
 
 
   // Float functions

@@ -81,7 +81,8 @@ private[math] object SimplexNoise {
     193, 238, 210, 144, 12, 191, 179, 162, 241,  81, 51, 145, 235, 249, 14,
     239, 107, 49, 192, 214,  31, 181, 199, 106, 157, 184,  84, 204, 176,
     115, 121, 50, 45, 127,  4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
-    29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180)
+    29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
+  )
 
   private final val perm: Array[Int] = new Array[Int](halfPerm.length*2)
   
@@ -96,7 +97,8 @@ private[math] object SimplexNoise {
     Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
     Array(1,0,1), Array(1,0,-1), Array(-1,0,1), Array(-1,0,-1),
     Array(1,1,0), Array(1,-1,0), Array(-1,1,0), Array(-1,-1,0),
-    Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1))
+    Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1)
+  )
 
   private final val grad4: Array[Array[Int]] = Array(
     Array(0,1,1,1), Array(0,1,1,-1), Array(0,1,-1,1), Array(0,1,-1,-1),
@@ -106,79 +108,84 @@ private[math] object SimplexNoise {
     Array(1,1,0,1), Array(1,1,0,-1), Array(1,-1,0,1), Array(1,-1,0,-1),
     Array(-1,1,0,1), Array(-1,1,0,-1), Array(-1,-1,0,1), Array(-1,-1,0,-1),
     Array(1,1,1,0), Array(1,1,-1,0), Array(1,-1,1,0), Array(1,-1,-1,0),
-    Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0))
+    Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0)
+  )
 
   private def ifloor(x: Double) :Int = {
     val i = x.toInt
     if (x > 0 || x == i) i else i - 1
   }
 
-  // Skew and unskew factors making the noise frequency consistent with 2D/3D/4D
-  final val F1 = 1.4142135623730950488 //Math.sqrt(2.0)
-  final val G1 = 0.7071067811865475244 //1 / Math.sqrt(2.0)
+  // Skew and unskew factors making the noise frequency consistent with 2D/3D/4D.
+  private final val F1 = 1.4142135623730950488 //Math.sqrt(2.0)
+  private final val G1 = 0.7071067811865475244 //1 / Math.sqrt(2.0)
 
   /** Computes 1D simplex noise.
-   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
+   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
    * @return simplex noise value for the specified coordinate.
    */
   def noise(x: Double) :Double = {
     val pix = ifloor(x*F1)
 
-    // The x distance from the cell origin
+    // The x distance from the cell origin.
     val p0x = x - pix*G1
 
     val ix = pix & 0xFF
 
     // For the 1D case, the simplex shape is an interval of length 1.
 
-    // Noise contribution from left point
+    // Noise contribution from left point.
     val t0 = 0.5 - p0x*p0x
     val n0 =
       if (t0 < 0.0) 0.0
       else {
         val px = perm(ix)
-        // Gradient function, produces ints in [-8, 8] excluding 0 from perm
+        // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
         val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
         val t = t0 * t0
         t * t * grad*p0x
       }
 
-    // Noise contribution from right point
+    // Noise contribution from right point.
     val p1x = p0x - G1
     val t1 = 0.5 - p1x*p1x
     val n1 =
       if (t1 < 0.0) 0.0
       else {
         val px = perm(ix + 1)
-        // Gradient function, produces ints in [-8, 8] excluding 0 from perm
+        // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
         val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
         val t = t1 * t1
         t * t * grad*p1x
       }
 
-    // Sum up and scale the result to cover the range [-1,1]
-    8.85 * (n0 + n1)
+    // The maximum noise value is at the center of the interval with grad0 = 8 and grad1 = -8.
+    // The length of the interval is 1/(sqrt(2).
+    // scale = 1/((0.5 - (1/(sqrt(2)*2))^2)^4*8*(1/(sqrt(2)*2))*2) = 8.93922646833363783934
+
+    // Sum up and scale the result to cover the range [-1,1].
+    8.93922646833363783934 * (n0 + n1)
   }
   
-  // Skew and unskew factors are a bit hairy for 2D, so define them as constants
+  // Skew and unskew factors are a bit hairy for 2D, so define them as constants.
   private final val F2 = 0.36602540378443864676 //(Math.sqrt(3.0) - 1.0) / 2.0
   private final val G2 = 0.21132486540518711775 //(3.0 - Math.sqrt(3.0)) / 6.0
   private final val G22 = 0.57735026918962576451 //1 - 2.0 * (3.0 - Math.sqrt(3.0)) / 6.0
 
   /** Computes 2D simplex noise. Somewhat slower but much better looking
    * than classic (Perlin) noise.
-   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
-   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
+   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
+   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
    * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double) :Double = {
-    // Skew the (x,y) space to determine which cell of 2 simplices we're in
-    val s = (x + y) * F2 // Hairy factor for 2D skewing
+    // Skew the (x,y) space to determine which cell of 2 simplices we're in.
+    val s = (x + y) * F2 // Hairy factor for 2D skewing.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
-    val t = (pix + piy) * G2 // Hairy factor for unskewing
+    val t = (pix + piy) * G2 // Hairy factor for unskewing.
 
-    // The x,y distances from the cell origin
+    // The x,y distances from the cell origin.
     val p0x = x - pix + t
     val p0y = y - piy + t
 
@@ -191,7 +198,7 @@ private[math] object SimplexNoise {
     val o1x = if(p0x >= p0y) 1 else 0
     val o1y = 1 - o1x
 
-    // Noise contribution from simplex origin
+    // Noise contribution from simplex origin.
     val t0 = 0.5 - p0x*p0x - p0y*p0y
     val n0 =
       if (t0 < 0.0) 0.0
@@ -203,7 +210,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p0x + grad(1)*p0y)
       }
 
-    // Noise contribution from middle corner
+    // Noise contribution from middle corner.
     val p1x = p0x - o1x + G2
     val p1y = p0y - o1y + G2
     val t1 = 0.5 - p1x*p1x - p1y*p1y
@@ -217,7 +224,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p1x + grad(1)*p1y)
       }
 
-    // Noise contribution from last corner
+    // Noise contribution from last corner.
     val p2x = p0x - G22
     val p2y = p0y - G22
     val t2 = 0.5 - p2x*p2x - p2y*p2y
@@ -231,11 +238,17 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p2x + grad(1)*p2y)
       }
 
-    // Sum up and scale the result to cover the range [-1,1]
-    70.0 * (n0 + n1 + n2)
+    // The maximum noise value is at the center of the interval between p0 and p2,
+    // with gradient vectors maximizing the gradient sum,
+    // for example: (grad(0)*p0x + grad(1)*p0y) = abs(p0x) + abs(p0y).
+    // p1 is out of range of influence and is discarded. The formula then becomes:
+    // scale = 1/((0.5 - 2*G22*G22/4)^4*(4*G22/2))
+
+    // Sum up and scale the result to cover the range [-1,1].
+    70.14805770653953038786 * (n0 + n1 + n2)
   }
 
-  // The skewing and unskewing factors are much simpler for the 3D case
+  // The skewing and unskewing factors are much simpler for the 3D case.
   private final val F3 = 1 / 3.0
   private final val G3 = 1 / 6.0
   private final val G32 = 2 / 6.0
@@ -243,20 +256,20 @@ private[math] object SimplexNoise {
 
   /** Computes 3D simplex noise. Comparable in speed to classic (Perlin) noise,
    * better looking.
-   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
-   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
-   * @param z z coordinate, must be in range of [-2E-8, +2E-8].
+   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
+   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
+   * @param z z coordinate, must be in range of [-2E+8, +2E+8].
    * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double, z:Double) :Double = {
-    // Skew the (x,y,z) space to determine which cell of 6 simplices we're in
-    val s = (x + y + z) * F3 // Factor for 3D skewing
+    // Skew the (x,y,z) space to determine which cell of 6 simplices we're in.
+    val s = (x + y + z) * F3 // Factor for 3D skewing.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
     val t = (pix + piy + piz) * G3
 
-    // The x,y,z distances from the cell origin
+    // The x,y,z distances from the cell origin.
     val p0x = x - pix + t
     val p0y = y - piy + t
     val p0z = z - piz + t
@@ -267,7 +280,7 @@ private[math] object SimplexNoise {
 
     // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
     // To find out which of the six possible tetrahedra we're in, we need to
-    // determine the magnitude ordering of x, y and z components of Pf0.
+    // determine the magnitude ordering of x, y and z components of p0.
     var o1x = 0; var o1y = 0; var o1z = 0
     var o2x = 0; var o2y = 0; var o2z = 0
 
@@ -299,7 +312,7 @@ private[math] object SimplexNoise {
       }
     }
 
-    // Noise contribution from simplex origin
+    // Noise contribution from simplex origin.
     val t0 = 0.5 - p0x*p0x - p0y*p0y - p0z*p0z
     val n0 =
       if (t0 < 0.0) 0.0
@@ -312,7 +325,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z)
       }
 
-    // Noise contribution from second corner
+    // Noise contribution from second corner.
     val p1x = p0x - o1x + G3
     val p1y = p0y - o1y + G3
     val p1z = p0z - o1z + G3
@@ -328,7 +341,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z)
       }
 
-    // Noise contribution from third corner
+    // Noise contribution from third corner.
     val p2x = p0x - o2x + G32
     val p2y = p0y - o2y + G32
     val p2z = p0z - o2z + G32
@@ -344,7 +357,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z)
       }
 
-    // Noise contribution from last corner
+    // Noise contribution from last corner.
     val p3x = p0x - G33
     val p3y = p0y - G33
     val p3z = p0z - G33
@@ -360,11 +373,15 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z)
       }
 
-    // Sum up and scale the result to cover the range [-1,1]
-    76.0 * (n0 + n1 + n2 + n3)
+    // This formula is a guess based on a numeric search for max value.
+    // max value point (after floor): (1/2, 2/3, 2/3)
+    // scale = 1/((0.5 - (1/6)*(1/6) - (1/6)*(1/6))^4*((1/6) + (1/6)))
+
+    // Sum up and scale the result to cover the range [-1,1].
+    76.88671875 * (n0 + n1 + n2 + n3)
   }
 
-  // The skewing and unskewing factors are hairy again for the 4D case
+  // The skewing and unskewing factors are hairy again for the 4D case.
   private final val F4 = 0.3090169943749474241 //(Math.sqrt(5.0) - 1.0) / 4.0
   private final val G4 = 0.13819660112501051518 //(5.0 - Math.sqrt(5.0)) / 20.0
   private final val G42 = 0.27639320225002103036 //2.0 * ((5.0 - Math.sqrt(5.0)) / 20.0)
@@ -373,22 +390,22 @@ private[math] object SimplexNoise {
 
   /** Computes 4D simplex noise. A lot faster than classic (Perlin) 4D noise,
    * and better looking.
-   * @param x x coordinate, must be in range of [-2E-8, +2E-8].
-   * @param y y coordinate, must be in range of [-2E-8, +2E-8].
-   * @param z z coordinate, must be in range of [-2E-8, +2E-8].
-   * @param w w coordinate, must be in range of [-2E-8, +2E-8].
+   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
+   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
+   * @param z z coordinate, must be in range of [-2E+8, +2E+8].
+   * @param w w coordinate, must be in range of [-2E+8, +2E+8].
    * @return simplex noise value for the specified coordinates.
    */
   def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
-    // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
-    val s = (x + y + z + w) * F4 // Factor for 4D skewing
+    // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in.
+    val s = (x + y + z + w) * F4 // Factor for 4D skewing.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
     val piw = ifloor(w + s)
     val t = (pix + piy + piz + piw) * G4
 
-    // The x,y,z,w distances from the cell origin
+    // The x,y,z,w distances from the cell origin.
     val p0x = x - pix + t
     val p0y = y - piy + t
     val p0z = z - piz + t
@@ -401,7 +418,7 @@ private[math] object SimplexNoise {
 
     // For the 4D case, the simplex is a 4D shape I won't even try to describe.
     // To find out which of the 24 possible simplices we're in, we need to
-    // determine the magnitude ordering of x, y, z and w components of Pf0.
+    // determine the magnitude ordering of x, y, z and w components of p0.
     var bx = 0; var by = 0; var bz = 0; var bw = 0
     if (p0x >= p0y) bx += 1 else by += 1
     if (p0x >= p0z) bx += 1 else bz += 1
@@ -425,7 +442,7 @@ private[math] object SimplexNoise {
     val o1z = if (bz > 2) 1 else 0
     val o1w = if (bw > 2) 1 else 0
 
-    // Noise contribution from simplex origin
+    // Noise contribution from simplex origin.
     val t0 = 0.5 - p0x*p0x - p0y*p0y - p0z*p0z - p0w*p0w
     val n0 =
       if (t0 < 0.0) 0.0
@@ -439,7 +456,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z + grad(3)*p0w)
       }
 
-    // Noise contribution from second corner
+    // Noise contribution from second corner.
     val p1x = p0x - o1x + G4
     val p1y = p0y - o1y + G4
     val p1z = p0z - o1z + G4
@@ -457,7 +474,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z + grad(3)*p1w)
       }
 
-    // Noise contribution from third corner
+    // Noise contribution from third corner.
     val p2x = p0x - o2x + G42
     val p2y = p0y - o2y + G42
     val p2z = p0z - o2z + G42
@@ -475,7 +492,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z + grad(3)*p2w)
       }
 
-    // Noise contribution from fourth corner
+    // Noise contribution from fourth corner.
     val p3x = p0x - o3x + G43
     val p3y = p0y - o3y + G43
     val p3z = p0z - o3z + G43
@@ -493,7 +510,7 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z + grad(3)*p3w)
       }
 
-    // Noise contribution from last corner
+    // Noise contribution from last corner.
     val p4x = p0x - G44
     val p4y = p0y - G44
     val p4z = p0z - G44
@@ -511,7 +528,11 @@ private[math] object SimplexNoise {
         t * t * (grad(0)*p4x + grad(1)*p4y + grad(2)*p4z + grad(3)*p4w)
       }
 
-    // Sum up and scale the result to cover the range [-1,1]
-    62.0 * (n0 + n1 + n2 + n3 + n4)
+    // This number is a result of a numeric search for max value.
+    // max value point (after floor): Vec4(0, Vec3(0.13608593378889))
+    // Discarding digits will affect scale after 0.13608593000000.
+
+    // Sum up and scale the result to cover the range [-1,1].
+    62.777711789695920 * (n0 + n1 + n2 + n3 + n4)
   }
 }

@@ -87,6 +87,14 @@ object IndexArray {
     ref.factory.mkDataArray(size)
   }
 
+  def apply(indexSize: Int, dataSize: Int) :IndexArray[Unsigned] = {
+    if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
+
+    if (dataSize <= 256) FactoryInt1UByte.factory.mkDataArray(indexSize)
+    else if (dataSize <= 65536) FactoryInt1UShort.factory.mkDataArray(indexSize)
+    else FactoryInt1UInt.factory.mkDataArray(indexSize)
+  }
+
   def apply[R <: DefinedIndex](vals: Int*)(
     implicit ref: FactoryRef[Int1, R]
   ) :IndexArray[R] = {
@@ -139,6 +147,14 @@ object IndexBuffer {
     implicit ref: FactoryRef[Int1, R]
   ) :IndexBuffer[R] = {
     ref.factory.mkDataBuffer(size)
+  }
+
+  def apply(indexSize: Int, dataSize: Int) :IndexBuffer[Unsigned] = {
+    if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
+
+    if (dataSize <= 256) FactoryInt1UByte.factory.mkDataBuffer(indexSize)
+    else if (dataSize <= 65536) FactoryInt1UShort.factory.mkDataBuffer(indexSize)
+    else FactoryInt1UInt.factory.mkDataBuffer(indexSize)
   }
 
   def apply[R <: DefinedIndex](vals: Int*)(

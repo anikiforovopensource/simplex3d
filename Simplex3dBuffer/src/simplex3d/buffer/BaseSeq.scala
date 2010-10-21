@@ -147,7 +147,7 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, seq: Seq[E#Element], first: Int, count: Int) {
+  final def put(index: Int, seq: Seq[E#Read], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
 
     import scala.collection.mutable.{WrappedArray}
@@ -186,14 +186,14 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, seq: Seq[E#Element]) {
+  final def put(index: Int, seq: Seq[E#Read]) {
     seq match {
       case is: IndexedSeq[_] => put(index, seq, 0, seq.size)
       case _ => putSeq(index, seq.asInstanceOf[Seq[SWrite]])
     }
   }
 
-  final def put(seq: Seq[E#Element]) {
+  final def put(seq: Seq[E#Read]) {
     put(0, seq)
   }
 

@@ -18,18 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer
+package simplex3d.buffer.conversion
 
 
 // An empty class to make -Xno-forwarders work
-private[buffer] class HalfFloatUtil
+private[buffer] class HalfFloat
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object HalfFloatUtil {
-  @inline final def floatToHalfFloat(f: Float) :Short = {
+object HalfFloat {
+  @inline final def fromFloat(f: Float) :Short = {
     val bits = java.lang.Float.floatToRawIntBits(f)
     val exponent = bits & 0x7F800000
 
@@ -59,7 +59,7 @@ object HalfFloatUtil {
     }
   }
 
-  @inline final def floatFromHalfFloat(s: Short) :Float = {
+  @inline final def toFloat(s: Short) :Float = {
     val bits = s << 16
 
     // subnormal
@@ -81,10 +81,10 @@ object HalfFloatUtil {
     }
   }
 
-  @inline final def doubleToHalfFloat(d: Double) :Short = {
-    floatToHalfFloat(d.toFloat)
+  @inline final def fromDouble(d: Double) :Short = {
+    fromFloat(d.toFloat)
   }
-  @inline final def doubleFromHalfFloat(s: Short) :Double = {
-    floatFromHalfFloat(s)
+  @inline final def toDouble(s: Short) :Double = {
+    toFloat(s)
   }
 }

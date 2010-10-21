@@ -25,8 +25,8 @@ import java.nio._
 import scala.reflect.Manifest
 import simplex3d.math.floatm.FloatMath._
 import simplex3d.buffer.Util._
-import simplex3d.buffer.HalfFloatUtil.{
-  floatToHalfFloat => toHalfFloat, floatFromHalfFloat => fromHalfFloat
+import simplex3d.buffer.conversion.HalfFloat.{
+  fromFloat => toHalfFloat, toFloat => fromHalfFloat
 }
 
 

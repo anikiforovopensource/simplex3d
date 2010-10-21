@@ -31,7 +31,7 @@ import java.nio._
 abstract class CompositeSeq[E <: Composite, +R <: RawData](
   backing: ContiguousSeq[E#Component, R],
   offset: Int, stride: Int
-) extends BaseSeq[E, E#Immutable, E#Element, R](
+) extends BaseSeq[E, E#Const, E#Read, R](
   backing.sharedStore, backing, backing.isReadOnly,
   offset, stride
 ) {

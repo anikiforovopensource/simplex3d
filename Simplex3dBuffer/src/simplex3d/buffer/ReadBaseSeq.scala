@@ -126,8 +126,8 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   type BackingSeqType <: ReadContiguousSeq[E#Component, R]
 
   // Public API.
-  def elementManifest: Manifest[E#Element]
-  def componentManifest: Manifest[E#Component#Element]
+  def elementManifest: Manifest[E#Read]
+  def componentManifest: Manifest[E#Component#Read]
 
   def components: Int
   def rawType: Int

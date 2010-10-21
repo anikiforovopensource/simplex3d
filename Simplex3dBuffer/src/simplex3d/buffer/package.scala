@@ -45,7 +45,7 @@ package buffer {
 
 package object buffer extends PrimitiveIntImplicits {
 
-  type MetaElement = integration.buffer.MetaElement
+  type MetaElement = integration.buffer.Meta
   type Primitive = integration.buffer.Primitive
   type Composite = integration.buffer.Composite
   type Int1 = integration.buffer.Int1

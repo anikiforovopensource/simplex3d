@@ -25,10 +25,10 @@ package simplex3d.buffer
  * @author Aleksey Nikiforov (lex)
  */
 trait ReadDataSeq[E <: MetaElement, +R <: RawData]
-extends ReadBaseSeq[E, E#Immutable, R]
+extends ReadBaseSeq[E, E#Const, R]
 
 trait DataSeq[E <: MetaElement, +R <: RawData]
-extends BaseSeq[E, E#Immutable, E#Element, R] with ReadDataSeq[E, R]
+extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
 
 
 object DataSeq {

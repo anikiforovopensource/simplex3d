@@ -77,7 +77,7 @@ object NoiseContribution {
         val y = u.y*scale
 
         val timeSlot = (int(time)/5)%9
-        val shade = 
+        val shade =
           if (timeSlot == 0) nc1(x)
           else if (timeSlot == 1) nc2(x, y)
           else if (timeSlot < 5) nc3(x, y, z)

@@ -167,8 +167,8 @@ object ConstVec2d {
 final class Vec2d private[math] (cx: Double, cy: Double)
 extends ReadVec2d with Implicits[On] with Composite
 {
-  type Element = ReadVec2d
-  type Immutable = ConstVec2d
+  type Read = ReadVec2d
+  type Const = ConstVec2d
   type Component = Double1
 
   px = cx; py = cy

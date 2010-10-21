@@ -174,8 +174,8 @@ final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Implicits[On] with Composite
 {
-  type Element = ReadQuat4d
-  type Immutable = ConstQuat4d
+  type Read = ReadQuat4d
+  type Const = ConstQuat4d
   type Component = Double1
 
   pa = ca; pb = cb; pc = cc; pd = cd

@@ -332,8 +332,8 @@ final class Mat3f private[math] (
   override def m12_=(s: Float) { p12 = s }
   override def m22_=(s: Float) { p22 = s }
 
-  type Element = ReadMat3f
-  type Immutable = ConstMat3f
+  type Read = ReadMat3f
+  type Const = ConstMat3f
   type Component = Float1
 
   def *=(s: Float) {

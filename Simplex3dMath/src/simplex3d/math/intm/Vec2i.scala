@@ -180,8 +180,8 @@ object ConstVec2i {
 final class Vec2i private[math] (cx: Int, cy: Int)
 extends ReadVec2i with Implicits[On] with Composite
 {
-  type Element = ReadVec2i
-  type Immutable = ConstVec2i
+  type Read = ReadVec2i
+  type Const = ConstVec2i
   type Component = Int1
 
   px = cx; py = cy

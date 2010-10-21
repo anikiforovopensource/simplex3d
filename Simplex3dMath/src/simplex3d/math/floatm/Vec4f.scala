@@ -240,8 +240,8 @@ final class Vec4f private[math] (
   cx: Float, cy: Float, cz: Float, cw: Float
 ) extends ReadVec4f with Implicits[On] with Composite
 {
-  type Element = ReadVec4f
-  type Immutable = ConstVec4f
+  type Read = ReadVec4f
+  type Const = ConstVec4f
   type Component = Float1
 
   px = cx; py = cy; pz = cz; pw = cw

@@ -25,9 +25,9 @@ package simplex3d.math.integration.buffer
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait MetaElement {
-  type Element
-  type Immutable <: Element
+trait Meta {
+  type Read
+  type Const <: Read
   type Component <: Primitive
 }
 
@@ -35,9 +35,9 @@ trait MetaElement {
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Primitive extends MetaElement {
-  type Element <: AnyVal
-  type Immutable = Element
+sealed trait Primitive extends Meta {
+  type Read <: AnyVal
+  type Const = Read
 }
 
 /** <code>Int1</code> marker indicates Int elements/components.
@@ -45,7 +45,7 @@ sealed trait Primitive extends MetaElement {
  * @author Aleksey Nikiforov (lex)
  */
 sealed trait Int1 extends Primitive {
-  type Element = Int
+  type Read = Int
   type Component = Int1
 }
 
@@ -54,7 +54,7 @@ sealed trait Int1 extends Primitive {
  * @author Aleksey Nikiforov (lex)
  */
 sealed trait Float1 extends Primitive {
-  type Element = Float
+  type Read = Float
   type Component = Float1
 }
 
@@ -63,7 +63,7 @@ sealed trait Float1 extends Primitive {
  * @author Aleksey Nikiforov (lex)
  */
 sealed trait Double1 extends Primitive {
-  type Element = Double
+  type Read = Double
   type Component = Double1
 }
 
@@ -72,6 +72,6 @@ sealed trait Double1 extends Primitive {
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Composite extends MetaElement {
-  type Element <: AnyRef
+trait Composite extends Meta {
+  type Read <: AnyRef
 }

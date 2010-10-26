@@ -104,10 +104,12 @@ object FloatMath {
     else x.toInt
   }
   def round(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue) x
-    else if (x >= 0) (x + 0.5f).toInt
-    else if (isnan(x)) x
-    else (x - 0.5f).toInt
+    if (x > (Int.MaxValue - 1) || x < (Int.MinValue + 1)) x
+    else {
+      val f = x + 0.5f
+      val i = f.toInt
+      if (f > 0 || f == i) i else if(isnan(f)) f else i - 1
+    }
   }
   def roundEven(x: Float) :Float = SMath.rint(x).toFloat
   def ceil(x: Float) :Float = {

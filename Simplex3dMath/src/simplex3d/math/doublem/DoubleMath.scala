@@ -104,10 +104,12 @@ object DoubleMath {
     else x.toLong
   }
   def round(x: Double) :Double = {
-    if (x > Long.MaxValue || x < Long.MinValue) x
-    else if (x >= 0) (x + 0.5).toLong
-    else if (isnan(x)) x
-    else (x - 0.5).toLong
+    if (x > (Long.MaxValue - 1) || x < (Long.MinValue + 1)) x
+    else {
+      val f = x + 0.5
+      val i = f.toLong
+      if (f > 0 || f == i) i else if(isnan(f)) f else i - 1
+    }
   }
   def roundEven(x: Double) :Double = SMath.rint(x)
   def ceil(x: Double) :Double = {

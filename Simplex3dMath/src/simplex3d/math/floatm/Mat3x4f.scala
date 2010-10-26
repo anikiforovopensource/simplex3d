@@ -264,9 +264,6 @@ extends ProtectedMat3x4f[Float]
   final def rotate(q: inQuat4f) :Mat3x4f = {
     concat(rotationMat(normalize(q)))
   }
-  final def rotate(angle: Float, axis: inVec3f) :Mat3x4f = {
-    concat(rotationMat(angle, normalize(axis)))
-  }
 
   final def rotateX(angle: Float) :Mat3x4f = {
     val sinA = sin(angle)
@@ -668,9 +665,6 @@ object Mat3x4f {
 
   def rotate(q: inQuat4f) :Mat3x4f = {
     Mat3x4f(rotationMat(normalize(q)))
-  }
-  def rotate(angle: Float, axis: inVec3f) :Mat3x4f = {
-    Mat3x4f(rotationMat(angle, normalize(axis)))
   }
 
   def rotateX(angle: Float) :Mat3x4f = {

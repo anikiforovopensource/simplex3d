@@ -1,5 +1,5 @@
 /*
- * Simplex3d, BaseMath module
+ * Simplex3d, CoreMath module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -25,7 +25,7 @@ package simplex3d.math.integration.buffer
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Meta {
+trait MetaElement {
   type Read
   type Const <: Read
   type Component <: Primitive
@@ -35,7 +35,7 @@ trait Meta {
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Primitive extends Meta {
+sealed trait Primitive extends MetaElement {
   type Read <: AnyVal
   type Const = Read
 }
@@ -72,6 +72,6 @@ sealed trait Double1 extends Primitive {
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Composite extends Meta {
+trait Composite extends MetaElement {
   type Read <: AnyRef
 }

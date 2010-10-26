@@ -64,43 +64,32 @@ private[math] object SimplexNoise {
   final val offset33 = 39.54148706115616316
 
 
-  private final val halfPerm: Array[Int] = Array(
-    151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
-    140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190,  6, 148,
-    247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32,
-    57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168,  68,
-    175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111,
-    229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244,
-    102, 143, 54,  65, 25, 63, 161,  1, 216, 80, 73, 209, 76, 132, 187, 208,
-    89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198,
-    173, 186,  3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118,
-    126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28,
-    42, 223, 183, 170, 213, 119, 248, 152,  2, 44, 154, 163,  70, 221, 153,
-    101, 155, 167,  43, 172, 9, 129, 22, 39, 253,  19, 98, 108, 110, 79,
-    113, 224, 232, 178, 185,  112, 104, 218, 246, 97, 228, 251, 34, 242,
-    193, 238, 210, 144, 12, 191, 179, 162, 241,  81, 51, 145, 235, 249, 14,
-    239, 107, 49, 192, 214,  31, 181, 199, 106, 157, 184,  84, 204, 176,
-    115, 121, 50, 45, 127,  4, 150, 254, 138, 236, 205, 93, 222, 114, 67,
-    29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
+  private final val perm: Array[Byte] = Array(
+    -105, -96, -119, 91, 90, 15, -125, 13, -55, 95, 96, 53, -62, -23, 7, -31, -116,
+    36, 103, 30, 69, -114, 8, 99, 37, -16, 21, 10, 23, -66, 6, -108, -9, 120, -22,
+    75, 0, 26, -59, 62, 94, -4, -37, -53, 117, 35, 11, 32, 57, -79, 33, 88, -19,
+    -107, 56, 87, -82, 20, 125, -120, -85, -88, 68, -81, 74, -91, 71, -122, -117,
+    48, 27, -90, 77, -110, -98, -25, 83, 111, -27, 122, 60, -45, -123, -26, -36,
+    105, 92, 41, 55, 46, -11, 40, -12, 102, -113, 54, 65, 25, 63, -95, 1, -40, 80,
+    73, -47, 76, -124, -69, -48, 89, 18, -87, -56, -60, -121, -126, 116, -68, -97,
+    86, -92, 100, 109, -58, -83, -70, 3, 64, 52, -39, -30, -6, 124, 123, 5, -54, 38,
+    -109, 118, 126, -1, 82, 85, -44, -49, -50, 59, -29, 47, 16, 58, 17, -74, -67,
+    28, 42, -33, -73, -86, -43, 119, -8, -104, 2, 44, -102, -93, 70, -35, -103, 101,
+    -101, -89, 43, -84, 9, -127, 22, 39, -3, 19, 98, 108, 110, 79, 113, -32, -24,
+    -78, -71, 112, 104, -38, -10, 97, -28, -5, 34, -14, -63, -18, -46, -112, 12,
+    -65, -77, -94, -15, 81, 51, -111, -21, -7, 14, -17, 107, 49, -64, -42, 31, -75,
+    -57, 106, -99, -72, 84, -52, -80, 115, 121, 50, 45, 127, 4, -106, -2, -118, -20,
+    -51, 93, -34, 114, 67, 29, 24, 72, -13, -115, -128, -61, 78, 66, -41, 61, -100, -76
   )
 
-  private final val perm: Array[Int] = new Array[Int](halfPerm.length*2)
-  
-  {
-    var i = 0; while(i < perm.length) {
-      perm(i) = halfPerm(i & 0xFF)
-      i += 1
-    }
-  }
-
-  private final val grad3: Array[Array[Int]] = Array(
+  private final val grad3: Array[Array[Byte]] = Array(
     Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
     Array(1,0,1), Array(1,0,-1), Array(-1,0,1), Array(-1,0,-1),
     Array(1,1,0), Array(1,-1,0), Array(-1,1,0), Array(-1,-1,0),
     Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1)
   )
 
-  private final val grad4: Array[Array[Int]] = Array(
+  private final val grad4: Array[Array[Byte]] = Array(
     Array(0,1,1,1), Array(0,1,1,-1), Array(0,1,-1,1), Array(0,1,-1,-1),
     Array(0,-1,1,1), Array(0,-1,1,-1), Array(0,-1,-1,1), Array(0,-1,-1,-1),
     Array(1,0,1,1), Array(1,0,1,-1), Array(1,0,-1,1), Array(1,0,-1,-1),
@@ -152,7 +141,7 @@ private[math] object SimplexNoise {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val px = perm(ix + 1)
+        val px = perm((ix + 1) & 0xFF)
         // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
         val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
         val t = t1 * t1
@@ -204,7 +193,7 @@ private[math] object SimplexNoise {
       if (t0 < 0.0) 0.0
       else {
         val py = perm(iy)
-        val px = perm(ix + py)
+        val px = perm((ix + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y)
@@ -217,8 +206,8 @@ private[math] object SimplexNoise {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val py = perm(iy + o1y)
-        val px = perm(ix + o1x + py)
+        val py = perm((iy + o1y) & 0xFF)
+        val px = perm((ix + o1x + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y)
@@ -231,8 +220,8 @@ private[math] object SimplexNoise {
     val n2 =
       if(t2 < 0.0) 0.0
       else {
-        val py = perm(iy + 1)
-        val px = perm(ix + 1 + py)
+        val py = perm((iy + 1) & 0xFF)
+        val px = perm((ix + 1 + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y)
@@ -318,8 +307,8 @@ private[math] object SimplexNoise {
       if (t0 < 0.0) 0.0
       else {
         val pz = perm(iz)
-        val py = perm(iy + pz)
-        val px = perm(ix + py)
+        val py = perm((iy + pz) & 0xFF)
+        val px = perm((ix + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z)
@@ -333,9 +322,9 @@ private[math] object SimplexNoise {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val pz = perm(iz + o1z)
-        val py = perm(iy + o1y + pz)
-        val px = perm(ix + o1x + py)
+        val pz = perm((iz + o1z) & 0xFF)
+        val py = perm((iy + o1y + pz) & 0xFF)
+        val px = perm((ix + o1x + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z)
@@ -349,9 +338,9 @@ private[math] object SimplexNoise {
     val n2 =
       if (t2 < 0.0) 0.0
       else {
-        val pz = perm(iz + o2z)
-        val py = perm(iy + o2y + pz)
-        val px = perm(ix + o2x + py)
+        val pz = perm((iz + o2z) & 0xFF)
+        val py = perm((iy + o2y + pz) & 0xFF)
+        val px = perm((ix + o2x + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z)
@@ -365,9 +354,9 @@ private[math] object SimplexNoise {
     val n3 =
       if(t3 < 0.0) 0.0
       else {
-        val pz = perm(iz + 1)
-        val py = perm(iy + 1 + pz)
-        val px = perm(ix + 1 + py)
+        val pz = perm((iz + 1) & 0xFF)
+        val py = perm((iy + 1 + pz) & 0xFF)
+        val px = perm((ix + 1 + py) & 0xFF)
         val grad = grad3(px & 0x0F)
         val t = t3 * t3
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z)
@@ -448,9 +437,9 @@ private[math] object SimplexNoise {
       if (t0 < 0.0) 0.0
       else {
         val pw = perm(iw)
-        val pz = perm(iz + pw)
-        val py = perm(iy + pz)
-        val px = perm(ix + py)
+        val pz = perm((iz + pw) & 0xFF)
+        val py = perm((iy + pz) & 0xFF)
+        val px = perm((ix + py) & 0xFF)
         val grad = grad4(px & 0x1F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z + grad(3)*p0w)
@@ -465,10 +454,10 @@ private[math] object SimplexNoise {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val pw = perm(iw + o1w)
-        val pz = perm(iz + o1z + pw)
-        val py = perm(iy + o1y + pz)
-        val px = perm(ix + o1x + py)
+        val pw = perm((iw + o1w) & 0xFF)
+        val pz = perm((iz + o1z + pw) & 0xFF)
+        val py = perm((iy + o1y + pz) & 0xFF)
+        val px = perm((ix + o1x + py) & 0xFF)
         val grad = grad4(px & 0x1F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z + grad(3)*p1w)
@@ -483,10 +472,10 @@ private[math] object SimplexNoise {
     val n2 =
       if (t2 < 0.0) 0.0
       else {
-        val pw = perm(iw + o2w)
-        val pz = perm(iz + o2z + pw)
-        val py = perm(iy + o2y + pz)
-        val px = perm(ix + o2x + py)
+        val pw = perm((iw + o2w) & 0xFF)
+        val pz = perm((iz + o2z + pw) & 0xFF)
+        val py = perm((iy + o2y + pz) & 0xFF)
+        val px = perm((ix + o2x + py) & 0xFF)
         val grad = grad4(px & 0x1F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z + grad(3)*p2w)
@@ -501,10 +490,10 @@ private[math] object SimplexNoise {
     val n3 =
       if (t3 < 0.0) 0.0
       else {
-        val pw = perm(iw + o3w)
-        val pz = perm(iz + o3z + pw)
-        val py = perm(iy + o3y + pz)
-        val px = perm(ix + o3x + py)
+        val pw = perm((iw + o3w) & 0xFF)
+        val pz = perm((iz + o3z + pw) & 0xFF)
+        val py = perm((iy + o3y + pz) & 0xFF)
+        val px = perm((ix + o3x + py) & 0xFF)
         val grad = grad4(px & 0x1F)
         val t = t3 * t3
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z + grad(3)*p3w)
@@ -519,10 +508,10 @@ private[math] object SimplexNoise {
     val n4 =
       if(t4 < 0.0) 0.0
       else {
-        val pw = perm(iw + 1)
-        val pz = perm(iz + 1 + pw)
-        val py = perm(iy + 1 + pz)
-        val px = perm(ix + 1 + py)
+        val pw = perm((iw + 1) & 0xFF)
+        val pz = perm((iz + 1 + pw) & 0xFF)
+        val py = perm((iy + 1 + pz) & 0xFF)
+        val px = perm((ix + 1 + py) & 0xFF)
         val grad = grad4(px & 0x1F)
         val t = t4 * t4
         t * t * (grad(0)*p4x + grad(1)*p4y + grad(2)*p4z + grad(3)*p4w)

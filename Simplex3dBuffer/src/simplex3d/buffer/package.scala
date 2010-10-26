@@ -1,5 +1,5 @@
 /*
- * Simplex3d, BaseBuffer module
+ * Simplex3d, CoreBuffer module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBuffer.
@@ -45,7 +45,7 @@ package buffer {
 
 package object buffer extends PrimitiveIntImplicits {
 
-  type MetaElement = integration.buffer.Meta
+  type MetaElement = integration.buffer.MetaElement
   type Primitive = integration.buffer.Primitive
   type Composite = integration.buffer.Composite
   type Int1 = integration.buffer.Int1

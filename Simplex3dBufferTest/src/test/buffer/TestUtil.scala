@@ -62,63 +62,6 @@ object TestUtil extends FunSuite {
     }
   }
 
-  def testIndex[E <: MetaElement](seq: DataSeq[E, RawData]) {
-    assert(seq.size > 0)
-
-    intercept[Exception] { seq(-1) }
-    seq(0)
-    seq(seq.size - 1)
-    intercept[Exception] {seq(seq.size) }
-
-    val ro = seq.asReadOnlySeq().asInstanceOf[DataSeq[E, RawData]]
-    intercept[Exception] { ro(0) = seq(0) }
-    intercept[Exception] { ro(seq.size - 1) = seq(0) }
-  }
-
-  def testApplyUpdate(seq: DataSeq[Int1, _], value: Int, expected: Int, store: AnyVal) {
-    assert(seq.size > 0)
-    val i = randomSrc.nextInt(seq.size)
-
-    seq(i) = value
-    assert(seq(i) == expected)
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
-  }
-
-  def testApplyUpdate(seq: DataSeq[Float1, _], value: Float, expected: Float, store: AnyVal) {
-    assert(seq.size > 0)
-    val i = randomSrc.nextInt(seq.size)
-
-    seq(i) = value
-    assert(seq(i) == expected)
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
-  }
-
-  def testApplyUpdate(seq: DataSeq[Double1, _], value: Double, expected: Double, store: AnyVal) {
-    assert(seq.size > 0)
-    val i = randomSrc.nextInt(seq.size)
-
-    seq(i) = value
-    assert(seq(i) == expected)
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
-  }
-
-  private def verify(buff: Buffer, index: Int, value: AnyVal) {
-    buff match {
-      case b: ByteBuffer => assert(b.get(index) == value)
-      case b: ShortBuffer => assert(b.get(index) == value)
-      case b: CharBuffer => assert(b.get(index) == value)
-      case b: IntBuffer => assert(b.get(index) == value)
-      case b: FloatBuffer =>
-        val stored = b.get(index)
-        if (FloatMath.isnan(stored)) assert(FloatMath.isnan(value.asInstanceOf[Float]))
-        else assert(b.get(index) == value)
-      case b: DoubleBuffer =>
-        val stored = b.get(index)
-        if (DoubleMath.isnan(stored)) assert(DoubleMath.isnan(value.asInstanceOf[Double]))
-        else assert(b.get(index) == value)
-    }
-  }
-
   def wrap(bytes: ByteBuffer, descriptor: Descriptor[_, _]) :Buffer = {
     descriptor.rawType match {
       case SByte => bytes

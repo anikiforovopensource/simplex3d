@@ -28,6 +28,7 @@ import simplex3d.buffer.floatm._
 
 import Descriptors._
 import FactoryTest._
+import ApplyUpdateTest._
 
 
 /**
@@ -131,5 +132,39 @@ class Vec3fTest extends FunSuite {
     testArrayFromCollection[Vec3f, RawFloat]((a: IndexedSeq[ReadVec3f]) => DataArray[Vec3f, RawFloat](a))
     testBufferFromCollection[Vec3f, RawFloat]((a: IndexedSeq[ReadVec3f]) => DataBuffer[Vec3f, RawFloat](a: _*))
     testBufferFromCollection[Vec3f, RawFloat]((a: IndexedSeq[ReadVec3f]) => DataBuffer[Vec3f, RawFloat](a))
+  }
+
+  test("Apply/Update") {
+    testApplyUpdateArray[Vec3f, SByte](DataArray[Vec3f, SByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, SByte](_))
+    testApplyUpdateView(DataView[Vec3f, SByte](_, _, _))
+
+    testApplyUpdateArray[Vec3f, UByte](DataArray[Vec3f, UByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, UByte](_))
+    testApplyUpdateView(DataView[Vec3f, UByte](_, _, _))
+
+    testApplyUpdateArray[Vec3f, SShort](DataArray[Vec3f, SShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, SShort](_))
+    testApplyUpdateView(DataView[Vec3f, SShort](_, _, _))
+
+    testApplyUpdateArray[Vec3f, UShort](DataArray[Vec3f, UShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, UShort](_))
+    testApplyUpdateView(DataView[Vec3f, UShort](_, _, _))
+
+    testApplyUpdateArray[Vec3f, SInt](DataArray[Vec3f, SInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, SInt](_))
+    testApplyUpdateView(DataView[Vec3f, SInt](_, _, _))
+
+    testApplyUpdateArray[Vec3f, UInt](DataArray[Vec3f, UInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, UInt](_))
+    testApplyUpdateView(DataView[Vec3f, UInt](_, _, _))
+
+    testApplyUpdateArray[Vec3f, HalfFloat](DataArray[Vec3f, HalfFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, HalfFloat](_))
+    testApplyUpdateView(DataView[Vec3f, HalfFloat](_, _, _))
+
+    testApplyUpdateArray[Vec3f, RawFloat](DataArray[Vec3f, RawFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3f, RawFloat](_))
+    testApplyUpdateView(DataView[Vec3f, RawFloat](_, _, _))
   }
 }

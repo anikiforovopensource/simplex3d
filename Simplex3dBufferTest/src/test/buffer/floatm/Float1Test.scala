@@ -29,6 +29,7 @@ import simplex3d.buffer.floatm._
 import Descriptors._
 import FactoryTest._
 import TestUtil._
+import ApplyUpdateTest._
 
 
 /**
@@ -162,10 +163,56 @@ class Float1Test extends FunSuite {
     testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 0, 2))
     testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 1, 2))
     
-//    testUInt(DataArray[Float1, UInt](size))
-//    testUInt(DataBuffer[Float1, UInt](size))
-//    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 0, 2))
-//    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 1, 2))
+    testUInt(DataArray[Float1, UInt](size))
+    testUInt(DataBuffer[Float1, UInt](size))
+    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 0, 2))
+    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 1, 2))
+    
+    testHalfFloat(DataArray[Float1, HalfFloat](size))
+    testHalfFloat(DataBuffer[Float1, HalfFloat](size))
+    testHalfFloat(DataView[Float1, HalfFloat](genBuffer(size, Descriptors.Float1HalfFloat)._1, 0, 2))
+    testHalfFloat(DataView[Float1, HalfFloat](genBuffer(size, Descriptors.Float1HalfFloat)._1, 1, 2))
+    
+    testRawFloat(DataArray[Float1, RawFloat](size))
+    testRawFloat(DataBuffer[Float1, RawFloat](size))
+    testRawFloat(DataView[Float1, RawFloat](genBuffer(size, Descriptors.Float1RawFloat)._1, 0, 2))
+    testRawFloat(DataView[Float1, RawFloat](genBuffer(size, Descriptors.Float1RawFloat)._1, 1, 2))
+  }
+
+  private def testFloatSByte(seq: DataSeq[Float1, SByte], testValue: Float) {
+    val converted = conversion.Float.toSByte(testValue)
+    val convertedDack = conversion.Float.fromSByte(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatUByte(seq: DataSeq[Float1, UByte], testValue: Float) {
+    val converted = conversion.Float.toUByte(testValue)
+    val convertedDack = conversion.Float.fromUByte(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatSShort(seq: DataSeq[Float1, SShort], testValue: Float) {
+    val converted = conversion.Float.toSShort(testValue)
+    val convertedDack = conversion.Float.fromSShort(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatUShort(seq: DataSeq[Float1, UShort], testValue: Float) {
+    val converted = conversion.Float.toUShort(testValue)
+    val convertedDack = conversion.Float.fromUShort(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatSInt(seq: DataSeq[Float1, SInt], testValue: Float) {
+    val converted = conversion.Float.toSInt(testValue)
+    val convertedDack = conversion.Float.fromSInt(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatUInt(seq: DataSeq[Float1, UInt], testValue: Float) {
+    val converted = conversion.Float.toUInt(testValue)
+    val convertedDack = conversion.Float.fromUInt(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
+  }
+  private def testFloatHalfFloat(seq: DataSeq[Float1, HalfFloat], testValue: Float) {
+    val converted = conversion.Float.toHalfFloat(testValue)
+    val convertedDack = conversion.Float.fromHalfFloat(converted)
+    testApplyUpdate(seq, testValue, convertedDack, converted)
   }
 
   private def testSByte(seq: DataSeq[Float1, SByte]) {
@@ -173,51 +220,51 @@ class Float1Test extends FunSuite {
 
     seq.asBuffer().put(seq.offset, -128); assert(seq(0) == -1)
 
-    testApplyUpdate(seq, Float.NegativeInfinity, -1, -127)
-    testApplyUpdate(seq, -Float.MaxValue, -1, -127)
-    testApplyUpdate(seq, -2, -1, -127)
-    testApplyUpdate(seq, -128/127f, -1, -127)
-    testApplyUpdate(seq, -1, -1, -127)
-    testApplyUpdate(seq, -0.5f, -64/127f, -64)
-    testApplyUpdate(seq, -1/84f, -2/127f, -2)
-    testApplyUpdate(seq, -1/85f, -1/127f, -1)
-    testApplyUpdate(seq, -1/127f, -1/127f, -1)
-    testApplyUpdate(seq, -1/254f, -1/127f, -1)
-    testApplyUpdate(seq, -1/255f, 0, 0)
-    testApplyUpdate(seq, Float.NaN, 0, 0)
-    testApplyUpdate(seq, 0, 0, 0)
-    testApplyUpdate(seq, 1/255f, 0, 0)
-    testApplyUpdate(seq, 1/254f, 1/127f, 1)
-    testApplyUpdate(seq, 1/127f, 1/127f, 1)
-    testApplyUpdate(seq, 1/85f, 1/127f, 1)
-    testApplyUpdate(seq, 1/84f, 2/127f, 2)
-    testApplyUpdate(seq, 0.5f, 64/127f, 64)
-    testApplyUpdate(seq, 1, 1, 127)
-    testApplyUpdate(seq, 2, 1, 127)
-    testApplyUpdate(seq, Float.MaxValue, 1, 127)
-    testApplyUpdate(seq, Float.PositiveInfinity, 1, 127)
+    testFloatSByte(seq, Float.NegativeInfinity)
+    testFloatSByte(seq, -Float.MaxValue)
+    testFloatSByte(seq, -2)
+    testFloatSByte(seq, -128/127f)
+    testFloatSByte(seq, -1)
+    testFloatSByte(seq, -0.5f)
+    testFloatSByte(seq, -1/84f)
+    testFloatSByte(seq, -1/85f)
+    testFloatSByte(seq, -1/127f)
+    testFloatSByte(seq, -1/254f)
+    testFloatSByte(seq, -1/255f)
+    testFloatSByte(seq, Float.NaN)
+    testFloatSByte(seq, 0)
+    testFloatSByte(seq, 1/255f)
+    testFloatSByte(seq, 1/254f)
+    testFloatSByte(seq, 1/127f)
+    testFloatSByte(seq, 1/85f)
+    testFloatSByte(seq, 1/84f)
+    testFloatSByte(seq, 0.5f)
+    testFloatSByte(seq, 1)
+    testFloatSByte(seq, 2)
+    testFloatSByte(seq, Float.MaxValue)
+    testFloatSByte(seq, Float.PositiveInfinity)
   }
 
   private def testUByte(seq: DataSeq[Float1, UByte]) {
     testIndex(seq)
 
-    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
-    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
-    testApplyUpdate(seq, -1, 0, 0)
-    testApplyUpdate(seq, -0.5f, 0, 0)
-    testApplyUpdate(seq, Float.NaN, 0, 0)
-    testApplyUpdate(seq, 0, 0, 0)
-    testApplyUpdate(seq, 1/511f, 0, 0)
-    testApplyUpdate(seq, 1/510f, 1/255f, 1)
-    testApplyUpdate(seq, 1/255f, 1/255f, 1)
-    testApplyUpdate(seq, 1/171f, 1/255f, 1)
-    testApplyUpdate(seq, 1/170f, 2/255f, 2)
-    testApplyUpdate(seq, 0.25f, 64/255f, 64)
-    testApplyUpdate(seq, 0.5f, 128/255f, -128)
-    testApplyUpdate(seq, 1, 1, -1)
-    testApplyUpdate(seq, 2, 1, -1)
-    testApplyUpdate(seq, Float.MaxValue, 1, -1)
-    testApplyUpdate(seq, Float.PositiveInfinity, 1, -1)
+    testFloatUByte(seq, Float.NegativeInfinity)
+    testFloatUByte(seq, -Float.MaxValue)
+    testFloatUByte(seq, -1)
+    testFloatUByte(seq, -0.5f)
+    testFloatUByte(seq, Float.NaN)
+    testFloatUByte(seq, 0)
+    testFloatUByte(seq, 1/511f)
+    testFloatUByte(seq, 1/510f)
+    testFloatUByte(seq, 1/255f)
+    testFloatUByte(seq, 1/171f)
+    testFloatUByte(seq, 1/170f)
+    testFloatUByte(seq, 0.25f)
+    testFloatUByte(seq, 0.5f)
+    testFloatUByte(seq, 1)
+    testFloatUByte(seq, 2)
+    testFloatUByte(seq, Float.MaxValue)
+    testFloatUByte(seq, Float.PositiveInfinity)
   }
 
   private def testSShort(seq: DataSeq[Float1, SShort]) {
@@ -225,51 +272,51 @@ class Float1Test extends FunSuite {
 
     seq.asBuffer().put(seq.offset, -32768); assert(seq(0) == -1)
 
-    testApplyUpdate(seq, Float.NegativeInfinity, -1, -32767)
-    testApplyUpdate(seq, -Float.MaxValue, -1, -32767)
-    testApplyUpdate(seq, -2, -1, -32767)
-    testApplyUpdate(seq, -32768/32767f, -1, -32767)
-    testApplyUpdate(seq, -1, -1, -32767)
-    testApplyUpdate(seq, -0.5f, -16384/32767f, -16384)
-    testApplyUpdate(seq, -1/21844f, -2/32767f, -2)
-    testApplyUpdate(seq, -1/21845f, -1/32767f, -1)
-    testApplyUpdate(seq, -1/32767f, -1/32767f, -1)
-    testApplyUpdate(seq, -1/65534f, -1/32767f, -1)
-    testApplyUpdate(seq, -1/65535f, 0, 0)
-    testApplyUpdate(seq, Float.NaN, 0, 0)
-    testApplyUpdate(seq, 0, 0, 0)
-    testApplyUpdate(seq, 1/65535f, 0, 0)
-    testApplyUpdate(seq, 1/65534f, 1/32767f, 1)
-    testApplyUpdate(seq, 1/32767f, 1/32767f, 1)
-    testApplyUpdate(seq, 1/21845f, 1/32767f, 1)
-    testApplyUpdate(seq, 1/21844f, 2/32767f, 2)
-    testApplyUpdate(seq, 0.5f, 16384/32767f, 16384)
-    testApplyUpdate(seq, 1, 1, 32767)
-    testApplyUpdate(seq, 2, 1, 32767)
-    testApplyUpdate(seq, Float.MaxValue, 1, 32767)
-    testApplyUpdate(seq, Float.PositiveInfinity, 1, 32767)
+    testFloatSShort(seq, Float.NegativeInfinity)
+    testFloatSShort(seq, -Float.MaxValue)
+    testFloatSShort(seq, -2)
+    testFloatSShort(seq, -32768/32767f)
+    testFloatSShort(seq, -1)
+    testFloatSShort(seq, -0.5f)
+    testFloatSShort(seq, -1/21844f)
+    testFloatSShort(seq, -1/21845f)
+    testFloatSShort(seq, -1/32767f)
+    testFloatSShort(seq, -1/65534f)
+    testFloatSShort(seq, -1/65535f)
+    testFloatSShort(seq, Float.NaN)
+    testFloatSShort(seq, 0)
+    testFloatSShort(seq, 1/65535f)
+    testFloatSShort(seq, 1/65534f)
+    testFloatSShort(seq, 1/32767f)
+    testFloatSShort(seq, 1/21845f)
+    testFloatSShort(seq, 1/21844f)
+    testFloatSShort(seq, 0.5f)
+    testFloatSShort(seq, 1)
+    testFloatSShort(seq, 2)
+    testFloatSShort(seq, Float.MaxValue)
+    testFloatSShort(seq, Float.PositiveInfinity)
   }
 
   private def testUShort(seq: DataSeq[Float1, UShort]) {
     testIndex(seq)
 
-    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
-    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
-    testApplyUpdate(seq, -1, 0, 0)
-    testApplyUpdate(seq, -0.5f, 0, 0)
-    testApplyUpdate(seq, Float.NaN, 0, 0)
-    testApplyUpdate(seq, 0, 0, 0)
-    testApplyUpdate(seq, 1/131071f, 0, 0)
-    testApplyUpdate(seq, 1/131070f, 1/65535f, 1)
-    testApplyUpdate(seq, 1/65535f, 1/65535f, 1)
-    testApplyUpdate(seq, 1/43691f, 1/65535f, 1)
-    testApplyUpdate(seq, 1/43690f, 2/65535f, 2)
-    testApplyUpdate(seq, 0.25f, 16384/65535f, 16384)
-    testApplyUpdate(seq, 0.5f, 32768/65535f, 32768)
-    testApplyUpdate(seq, 1, 1, 65535)
-    testApplyUpdate(seq, 2, 1, 65535)
-    testApplyUpdate(seq, Float.MaxValue, 1, 65535)
-    testApplyUpdate(seq, Float.PositiveInfinity, 1, 65535)
+    testFloatUShort(seq, Float.NegativeInfinity)
+    testFloatUShort(seq, -Float.MaxValue)
+    testFloatUShort(seq, -1)
+    testFloatUShort(seq, -0.5f)
+    testFloatUShort(seq, Float.NaN)
+    testFloatUShort(seq, 0)
+    testFloatUShort(seq, 1/131071f)
+    testFloatUShort(seq, 1/131070f)
+    testFloatUShort(seq, 1/65535f)
+    testFloatUShort(seq, 1/43691f)
+    testFloatUShort(seq, 1/43690f)
+    testFloatUShort(seq, 0.25f)
+    testFloatUShort(seq, 0.5f)
+    testFloatUShort(seq, 1)
+    testFloatUShort(seq, 2)
+    testFloatUShort(seq, Float.MaxValue)
+    testFloatUShort(seq, Float.PositiveInfinity)
   }
   
   private def testSInt(seq: DataSeq[Float1, SInt]) {
@@ -277,44 +324,139 @@ class Float1Test extends FunSuite {
 
     seq.asBuffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
 
-    testApplyUpdate(seq, Float.NegativeInfinity, -1, -2147483647)
-    testApplyUpdate(seq, -Float.MaxValue, -1, -2147483647)
-    testApplyUpdate(seq, -2, -1, -2147483647)
-    testApplyUpdate(seq, Int.MinValue/2147483647f, -1, -2147483647)
-    testApplyUpdate(seq, -1, -1, -2147483647)
-    testApplyUpdate(seq, -0.5f, -1073741824/2147483647f, -1073741824)
-//    testApplyUpdate(seq, -1/84f, -3/2147483647f, -3)
-//    testApplyUpdate(seq, -1/84f, -2/2147483647f, -2)
-    testApplyUpdate(seq, Float.NaN, 0, 0)
-    testApplyUpdate(seq, 0, 0, 0)
-//    testApplyUpdate(seq, 1/84f, 2/2147483647f, 2)
-//    testApplyUpdate(seq, 1/84f, 3/2147483647f, 3)
-    testApplyUpdate(seq, 0.5f, 1073741824/2147483647f, 1073741824)
-    testApplyUpdate(seq, 1, 1, 2147483647f)
-    testApplyUpdate(seq, 2, 1, 2147483647f)
-    testApplyUpdate(seq, Float.MaxValue, 1, 2147483647)
-    testApplyUpdate(seq, Float.PositiveInfinity, 1, 2147483647)
+    testFloatSInt(seq, Float.NegativeInfinity)
+    testFloatSInt(seq, -Float.MaxValue)
+    testFloatSInt(seq, -2)
+    testFloatSInt(seq, Int.MinValue/2147483647f)
+    testFloatSInt(seq, -1)
+    testFloatSInt(seq, -0.5f)
+    testFloatSInt(seq, -1/858993440f)
+    testFloatSInt(seq, -1/858993441f)
+    testFloatSInt(seq, -2/2147483647f)
+    testFloatSInt(seq, -1/1431655744f)
+    testFloatSInt(seq, -1/1431655745f)
+    testFloatSInt(seq, Float.NaN)
+    testFloatSInt(seq, 0)
+    testFloatSInt(seq, 1/1431655745f)
+    testFloatSInt(seq, 1/1431655744f)
+    testFloatSInt(seq, 2/2147483647f)
+    testFloatSInt(seq, 1/858993441f)
+    testFloatSInt(seq, 1/858993440f)
+    testFloatSInt(seq, 0.5f)
+    testFloatSInt(seq, 1)
+    testFloatSInt(seq, 2)
+    testFloatSInt(seq, Float.MaxValue)
+    testFloatSInt(seq, Float.PositiveInfinity)
   }
 
-//  private def testUInt(seq: DataSeq[Float1, UInt]) {
-//    testIndex(seq)
-//
-//    testApplyUpdate(seq, Float.NegativeInfinity, 0, 0)
-//    testApplyUpdate(seq, -Float.MaxValue, 0, 0)
-//    testApplyUpdate(seq, -1, 0, 0)
-//    testApplyUpdate(seq, -0.5f, 0, 0)
-//    testApplyUpdate(seq, Float.NaN, 0, 0)
-//    testApplyUpdate(seq, 0, 0, 0)
-//    testApplyUpdate(seq, 1/511f, 0, 0)
-//    testApplyUpdate(seq, 1/510f, 1/255f, 1)
-//    testApplyUpdate(seq, 1/255f, 1/255f, 1)
-//    testApplyUpdate(seq, 1/171f, 1/255f, 1)
-//    testApplyUpdate(seq, 1/170f, 2/255f, 2)
-//    testApplyUpdate(seq, 0.25f, 64/255f, 64)
-//    testApplyUpdate(seq, 0.5f, 128/255f, -128)
-//    testApplyUpdate(seq, 1, 1, -1)
-//    testApplyUpdate(seq, 2, 1, -1)
-//    testApplyUpdate(seq, Float.MaxValue, 1, -1)
-//    testApplyUpdate(seq, Float.PositiveInfinity, 1, -1)
-//  }
+  private def testUInt(seq: DataSeq[Float1, UInt]) {
+    testIndex(seq)
+
+    testFloatUInt(seq, Float.NegativeInfinity)
+    testFloatUInt(seq, -Float.MaxValue)
+    testFloatUInt(seq, -1)
+    testFloatUInt(seq, -0.5f)
+    testFloatUInt(seq, Float.NaN)
+    testFloatUInt(seq, 0)
+    testFloatUInt(seq, 1/2863311489f)
+    testFloatUInt(seq, 1/2863311488f)
+    testFloatUInt(seq, 2/4294967295f)
+    testFloatUInt(seq, 1/1717986881f)
+    testFloatUInt(seq, 1/1717986880f)
+    testFloatUInt(seq, 0.25f)
+    testFloatUInt(seq, 0.5f)
+    testFloatUInt(seq, 1)
+    testFloatUInt(seq, 2)
+    testFloatUInt(seq, Float.MaxValue)
+    testFloatUInt(seq, Float.PositiveInfinity)
+  }
+  
+  private def testHalfFloat(seq: DataSeq[Float1, HalfFloat]) {
+    testIndex(seq)
+
+    // Inf.
+    testFloatHalfFloat(seq, Float.NegativeInfinity)
+    testFloatHalfFloat(seq, Float.PositiveInfinity)
+
+    // NaN.
+    testFloatHalfFloat(seq, Float.NaN)
+
+    // More NaN.
+    testFloatHalfFloat(seq, floatFromBits("01111111 11100000 00000000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("01111111 10100000 00000000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("11111111 11100000 00000000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("11111111 10100000 00000000 00000000"))
+
+    // Zero.
+    testFloatHalfFloat(seq, -0f)
+    testFloatHalfFloat(seq, 0)
+
+    // Subnormal.
+    testFloatHalfFloat(seq, floatFromBits("00000000 01000000 00000000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("10000000 01000000 00000000 00000000"))
+
+    // Out of range values.
+    testFloatHalfFloat(seq, -Float.MaxValue)
+    testFloatHalfFloat(seq, Float.MaxValue)
+
+    // Min and Max
+    testFloatHalfFloat(seq, -65504.0f)
+    testFloatHalfFloat(seq, 65504.0f)
+
+    // Closest to Zero.
+    testFloatHalfFloat(seq, -6.103515625E-5f)
+    testFloatHalfFloat(seq, 6.103515625E-5f)
+    testFloatHalfFloat(seq, -java.lang.Float.MIN_VALUE)
+    testFloatHalfFloat(seq, java.lang.Float.MIN_VALUE)
+
+    // Rounding.
+    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11100000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11110000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11100000 00000000"))
+    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11110000 00000000"))
+
+    // Normalized.
+    testFloatHalfFloat(seq, -1)
+    testFloatHalfFloat(seq, -0.5f)
+    testFloatHalfFloat(seq, 0.5f)
+    testFloatHalfFloat(seq, 1)
+
+    // Round trip conversion excluding Subnormal and Zero.
+    val buff = seq.asBuffer
+    def putRaw(v: Short) { buff.put(seq.offset, v) }
+    def getRaw() = buff.get(seq.offset + seq.stride)
+    
+    var i = 0; while (i < 65536) {
+      if ((i & 0x7C00) != 0) {
+        val h = i.toShort
+        
+        putRaw(h)
+        seq(1) = seq(0)
+        assert(h == getRaw())
+      }
+
+      i += 1
+    }
+  }
+  
+  private def testRawFloat(seq: DataSeq[Float1, RawFloat]) {
+    testIndex(seq)
+
+    testApplyUpdate(seq, Float.NegativeInfinity, Float.NegativeInfinity, Float.NegativeInfinity)
+    testApplyUpdate(seq, Float.PositiveInfinity, Float.PositiveInfinity, Float.PositiveInfinity)
+
+    testApplyUpdate(seq, -Float.MaxValue, -Float.MaxValue, -Float.MaxValue)
+    testApplyUpdate(seq, Float.MaxValue, Float.MaxValue, Float.MaxValue)
+
+    testApplyUpdate(seq, -java.lang.Float.MIN_VALUE, -java.lang.Float.MIN_VALUE, -java.lang.Float.MIN_VALUE)
+    testApplyUpdate(seq, java.lang.Float.MIN_VALUE, java.lang.Float.MIN_VALUE, java.lang.Float.MIN_VALUE)
+
+    testApplyUpdate(seq, Float.NaN, Float.NaN, Float.NaN)
+    testApplyUpdate(seq, 0, 0, 0)
+
+    testApplyUpdate(seq, -0.5f, -0.5f, -0.5f)
+    testApplyUpdate(seq, -1.5f, -1.5f, -1.5f)
+    testApplyUpdate(seq, 0.5f, 0.5f, 0.5f)
+    testApplyUpdate(seq, 1.5f, 1.5f, 1.5f)
+  }
 }

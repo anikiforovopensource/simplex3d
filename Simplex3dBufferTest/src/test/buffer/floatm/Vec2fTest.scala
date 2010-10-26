@@ -28,6 +28,7 @@ import simplex3d.buffer.floatm._
 
 import Descriptors._
 import FactoryTest._
+import ApplyUpdateTest._
 
 
 /**
@@ -131,5 +132,39 @@ class Vec2fTest extends FunSuite {
     testArrayFromCollection[Vec2f, RawFloat]((a: IndexedSeq[ReadVec2f]) => DataArray[Vec2f, RawFloat](a))
     testBufferFromCollection[Vec2f, RawFloat]((a: IndexedSeq[ReadVec2f]) => DataBuffer[Vec2f, RawFloat](a: _*))
     testBufferFromCollection[Vec2f, RawFloat]((a: IndexedSeq[ReadVec2f]) => DataBuffer[Vec2f, RawFloat](a))
+  }
+  
+  test("Apply/Update") {
+    testApplyUpdateArray[Vec2f, SByte](DataArray[Vec2f, SByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, SByte](_))
+    testApplyUpdateView(DataView[Vec2f, SByte](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, UByte](DataArray[Vec2f, UByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, UByte](_))
+    testApplyUpdateView(DataView[Vec2f, UByte](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, SShort](DataArray[Vec2f, SShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, SShort](_))
+    testApplyUpdateView(DataView[Vec2f, SShort](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, UShort](DataArray[Vec2f, UShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, UShort](_))
+    testApplyUpdateView(DataView[Vec2f, UShort](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, SInt](DataArray[Vec2f, SInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, SInt](_))
+    testApplyUpdateView(DataView[Vec2f, SInt](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, UInt](DataArray[Vec2f, UInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, UInt](_))
+    testApplyUpdateView(DataView[Vec2f, UInt](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, HalfFloat](DataArray[Vec2f, HalfFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, HalfFloat](_))
+    testApplyUpdateView(DataView[Vec2f, HalfFloat](_, _, _))
+    
+    testApplyUpdateArray[Vec2f, RawFloat](DataArray[Vec2f, RawFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec2f, RawFloat](_))
+    testApplyUpdateView(DataView[Vec2f, RawFloat](_, _, _))
   }
 }

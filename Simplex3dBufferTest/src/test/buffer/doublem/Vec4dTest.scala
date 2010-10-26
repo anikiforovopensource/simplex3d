@@ -28,6 +28,7 @@ import simplex3d.buffer.doublem._
 
 import Descriptors._
 import FactoryTest._
+import ApplyUpdateTest._
 
 
 /**
@@ -143,5 +144,43 @@ class Vec4dTest extends FunSuite {
     testArrayFromCollection[Vec4d, RawDouble]((a: IndexedSeq[ReadVec4d]) => DataArray[Vec4d, RawDouble](a))
     testBufferFromCollection[Vec4d, RawDouble]((a: IndexedSeq[ReadVec4d]) => DataBuffer[Vec4d, RawDouble](a: _*))
     testBufferFromCollection[Vec4d, RawDouble]((a: IndexedSeq[ReadVec4d]) => DataBuffer[Vec4d, RawDouble](a))
+  }
+  
+  test("Apply/Update") {
+    testApplyUpdateArray[Vec4d, SByte](DataArray[Vec4d, SByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, SByte](_))
+    testApplyUpdateView(DataView[Vec4d, SByte](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, UByte](DataArray[Vec4d, UByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, UByte](_))
+    testApplyUpdateView(DataView[Vec4d, UByte](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, SShort](DataArray[Vec4d, SShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, SShort](_))
+    testApplyUpdateView(DataView[Vec4d, SShort](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, UShort](DataArray[Vec4d, UShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, UShort](_))
+    testApplyUpdateView(DataView[Vec4d, UShort](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, SInt](DataArray[Vec4d, SInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, SInt](_))
+    testApplyUpdateView(DataView[Vec4d, SInt](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, UInt](DataArray[Vec4d, UInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, UInt](_))
+    testApplyUpdateView(DataView[Vec4d, UInt](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, HalfFloat](DataArray[Vec4d, HalfFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, HalfFloat](_))
+    testApplyUpdateView(DataView[Vec4d, HalfFloat](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, RawFloat](DataArray[Vec4d, RawFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, RawFloat](_))
+    testApplyUpdateView(DataView[Vec4d, RawFloat](_, _, _))
+    
+    testApplyUpdateArray[Vec4d, RawDouble](DataArray[Vec4d, RawDouble](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4d, RawDouble](_))
+    testApplyUpdateView(DataView[Vec4d, RawDouble](_, _, _))
   }
 }

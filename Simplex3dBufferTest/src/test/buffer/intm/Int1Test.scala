@@ -29,6 +29,7 @@ import simplex3d.buffer.intm._
 import Descriptors._
 import FactoryTest._
 import TestUtil._
+import ApplyUpdateTest._
 
 
 /**

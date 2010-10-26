@@ -28,6 +28,7 @@ import simplex3d.buffer.intm._
 
 import Descriptors._
 import FactoryTest._
+import ApplyUpdateTest._
 
 
 /**
@@ -107,5 +108,31 @@ class Vec3iTest extends FunSuite {
     testArrayFromCollection[Vec3i, UInt]((a: IndexedSeq[ReadVec3i]) => DataArray[Vec3i, UInt](a))
     testBufferFromCollection[Vec3i, UInt]((a: IndexedSeq[ReadVec3i]) => DataBuffer[Vec3i, UInt](a: _*))
     testBufferFromCollection[Vec3i, UInt]((a: IndexedSeq[ReadVec3i]) => DataBuffer[Vec3i, UInt](a))
+  }
+  
+  test("Apply/Update") {
+    testApplyUpdateArray[Vec3i, SByte](DataArray[Vec3i, SByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, SByte](_))
+    testApplyUpdateView(DataView[Vec3i, SByte](_, _, _))
+    
+    testApplyUpdateArray[Vec3i, UByte](DataArray[Vec3i, UByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, UByte](_))
+    testApplyUpdateView(DataView[Vec3i, UByte](_, _, _))
+    
+    testApplyUpdateArray[Vec3i, SShort](DataArray[Vec3i, SShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, SShort](_))
+    testApplyUpdateView(DataView[Vec3i, SShort](_, _, _))
+    
+    testApplyUpdateArray[Vec3i, UShort](DataArray[Vec3i, UShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, UShort](_))
+    testApplyUpdateView(DataView[Vec3i, UShort](_, _, _))
+    
+    testApplyUpdateArray[Vec3i, SInt](DataArray[Vec3i, SInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, SInt](_))
+    testApplyUpdateView(DataView[Vec3i, SInt](_, _, _))
+    
+    testApplyUpdateArray[Vec3i, UInt](DataArray[Vec3i, UInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec3i, UInt](_))
+    testApplyUpdateView(DataView[Vec3i, UInt](_, _, _))
   }
 }

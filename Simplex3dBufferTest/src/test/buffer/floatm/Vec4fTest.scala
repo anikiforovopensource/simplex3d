@@ -28,6 +28,7 @@ import simplex3d.buffer.floatm._
 
 import Descriptors._
 import FactoryTest._
+import ApplyUpdateTest._
 
 
 /**
@@ -131,5 +132,40 @@ class Vec4fTest extends FunSuite {
     testArrayFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, RawFloat](a))
     testBufferFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RawFloat](a: _*))
     testBufferFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RawFloat](a))
+  }
+  
+    
+  test("Apply/Update") {
+    testApplyUpdateArray[Vec4f, SByte](DataArray[Vec4f, SByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, SByte](_))
+    testApplyUpdateView(DataView[Vec4f, SByte](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, UByte](DataArray[Vec4f, UByte](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, UByte](_))
+    testApplyUpdateView(DataView[Vec4f, UByte](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, SShort](DataArray[Vec4f, SShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, SShort](_))
+    testApplyUpdateView(DataView[Vec4f, SShort](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, UShort](DataArray[Vec4f, UShort](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, UShort](_))
+    testApplyUpdateView(DataView[Vec4f, UShort](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, SInt](DataArray[Vec4f, SInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, SInt](_))
+    testApplyUpdateView(DataView[Vec4f, SInt](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, UInt](DataArray[Vec4f, UInt](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, UInt](_))
+    testApplyUpdateView(DataView[Vec4f, UInt](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, HalfFloat](DataArray[Vec4f, HalfFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, HalfFloat](_))
+    testApplyUpdateView(DataView[Vec4f, HalfFloat](_, _, _))
+    
+    testApplyUpdateArray[Vec4f, RawFloat](DataArray[Vec4f, RawFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, RawFloat](_))
+    testApplyUpdateView(DataView[Vec4f, RawFloat](_, _, _))
   }
 }

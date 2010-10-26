@@ -273,10 +273,6 @@ object AttributeTest extends FunSuite {
     assert(seq.sharesStoreObject(seq.asReadOnlySeq))
   }
 /*
-// Test applyUpdate
-  apply(i: Int)
-  update(i: Int, v: S)
-
 // Test Copy
   copyAsDataArray()
   copyAsDataBuffer()

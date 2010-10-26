@@ -30,7 +30,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise4dTest {
+object NoiseDistribution {
 
   def main(args: Array[String]) {
     val scale = 1.0/50

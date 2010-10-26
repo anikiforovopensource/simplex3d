@@ -60,10 +60,6 @@ class Transform3fTest extends FunSuite {
       val rq = normalize(Quat4(r, r, r, r))
       assert(Mat3x4.rotate(rq) == Mat3x4.Identity.rotate(rq))
 
-      val (angle, axis) = (r, normalize(Vec3(r, r, r)))
-      assert(Mat3x4.rotate(angle, axis) ==
-           Mat3x4.Identity.rotate(angle, axis))
-
       val rx = r
       assert(Mat3x4.rotateX(rx) == Mat3x4.Identity.rotateX(rx))
 
@@ -112,13 +108,6 @@ class Transform3fTest extends FunSuite {
 
       val rq = Quat4(r, r, r, r)
       assertTransform(t, Mat3x4(rotationMat(normalize(rq))), t rotate(rq))
-
-      val (angle, axis) = (r, Vec3(r, r, r))
-      assertTransform(
-        t,
-        Mat3x4(rotationMat(angle, normalize(axis))),
-        t rotate(angle, axis)
-      )
 
       val rx = r
       assertTransform(t, Mat3x4(rotationMat(rx, Vec3.UnitX)), t rotateX(rx))

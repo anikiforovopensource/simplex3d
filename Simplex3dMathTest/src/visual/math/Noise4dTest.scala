@@ -39,8 +39,9 @@ object Noise4dTest {
 
     Launcher.launch(new Function {
     final def apply(pixel: ReadVec2, t: Double) = {
+      val h = dimensions*0.5 - pixel
       val p = pixel + t*scrollSpeed
-      Vec3((noise1(Vec4(p*scale, t*noiseSpeed1, t*noiseSpeed2)) + 1)/2)
+      Vec3((noise1(Vec4(p*scale, t*noiseSpeed1, length(h)*scale)) + 1)/2)
       //(noise3(Vec4(p*scale, t*noiseSpeed1, t*noiseSpeed2)) + 1)/2
     }})
   }

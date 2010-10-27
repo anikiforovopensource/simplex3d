@@ -213,7 +213,7 @@ sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
 ) extends ReadVec4b with Immutable {
@@ -380,11 +380,15 @@ object ConstVec4b {
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
-) extends ReadVec4b with Implicits[On]
+) extends ReadVec4b with Implicits[On] with Composite
 {
+  type Read = ReadVec4b
+  type Const = ConstVec4b
+  type Component = Boolean1
+
   px = cx; py = cy; pz = cz; pw = cw
 
   @noinline override def x_=(s: Boolean) { px = s }

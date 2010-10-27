@@ -150,7 +150,7 @@ sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstQuat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 ) extends ReadQuat4f with Immutable {
@@ -170,7 +170,7 @@ object ConstQuat4f {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 ) extends ReadQuat4f with Implicits[On] with Composite

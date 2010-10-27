@@ -332,7 +332,7 @@ extends ProtectedMat4d[Double]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstMat4d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double,
@@ -387,7 +387,7 @@ object ConstMat4d {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Mat4d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double,

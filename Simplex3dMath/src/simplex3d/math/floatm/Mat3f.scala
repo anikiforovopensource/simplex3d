@@ -261,7 +261,7 @@ extends ProtectedMat3f[Float]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstMat3f private[math] (
   c00: Float, c10: Float, c20: Float,
   c01: Float, c11: Float, c21: Float,
@@ -309,7 +309,7 @@ object ConstMat3f {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Mat3f private[math] (
   c00: Float, c10: Float, c20: Float,
   c01: Float, c11: Float, c21: Float,

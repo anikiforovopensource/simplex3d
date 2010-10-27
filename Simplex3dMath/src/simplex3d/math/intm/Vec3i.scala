@@ -179,7 +179,7 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Immutable {
   px = cx; py = cy; pz = cz
@@ -199,7 +199,7 @@ object ConstVec3i {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Implicits[On] with Composite
 {

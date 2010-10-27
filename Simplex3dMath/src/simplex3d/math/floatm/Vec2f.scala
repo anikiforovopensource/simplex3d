@@ -144,7 +144,7 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with Immutable {
   px = cx; py = cy
@@ -163,7 +163,7 @@ object ConstVec2f {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with Implicits[On] with Composite
 {

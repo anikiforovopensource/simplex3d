@@ -167,7 +167,7 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec3d private[math] (
   cx: Double, cy: Double, cz: Double
 ) extends ReadVec3d with Immutable {
@@ -188,7 +188,7 @@ object ConstVec3d {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec3d private[math] (
   cx: Double, cy: Double, cz: Double
 ) extends ReadVec3d with Implicits[On] with Composite

@@ -171,7 +171,7 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec2b private[math] (cx: Boolean, cy: Boolean)
 extends ReadVec2b with Immutable {
   px = cx; py = cy
@@ -258,10 +258,14 @@ object ConstVec2b {
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with Implicits[On]
+extends ReadVec2b with Implicits[On] with Composite
 {
+  type Read = ReadVec2b
+  type Const = ConstVec2b
+  type Component = Boolean1
+
   px = cx; py = cy
 
   @noinline override def x_=(s: Boolean) { px = s }

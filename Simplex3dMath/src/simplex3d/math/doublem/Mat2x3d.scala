@@ -271,7 +271,7 @@ extends ProtectedMat2x3d[Double]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstMat2x3d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double,
@@ -319,7 +319,7 @@ object ConstMat2x3d {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Mat2x3d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double,

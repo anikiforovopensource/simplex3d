@@ -22,7 +22,7 @@ package simplex3d.math.floatm
 
 import simplex3d.math._
 import simplex3d.math.SimplexNoise._
-import java.lang.{StrictMath => SMath}
+import java.lang.{Math => JMath}
 
 
 // An empty class to make -Xno-forwarders work
@@ -48,42 +48,42 @@ object FloatMath {
   def radians(x: Float) :Float = x*DegToRad
   def degrees(x: Float) :Float = x*RadToDeg
 
-  def sin(w: Float) :Float = SMath.sin(w).toFloat
-  def cos(w: Float) :Float = SMath.cos(w).toFloat
-  def tan(w: Float) :Float = SMath.tan(w).toFloat
+  def sin(w: Float) :Float = JMath.sin(w).toFloat
+  def cos(w: Float) :Float = JMath.cos(w).toFloat
+  def tan(w: Float) :Float = JMath.tan(w).toFloat
 
-  def asin(w: Float) :Float = SMath.asin(w).toFloat
-  def acos(w: Float) :Float = SMath.acos(w).toFloat
-  def atan(y: Float, x: Float) :Float = SMath.atan2(y, x).toFloat
-  def atan(w: Float) :Float = SMath.atan(w).toFloat
+  def asin(w: Float) :Float = JMath.asin(w).toFloat
+  def acos(w: Float) :Float = JMath.acos(w).toFloat
+  def atan(y: Float, x: Float) :Float = JMath.atan2(y, x).toFloat
+  def atan(w: Float) :Float = JMath.atan(w).toFloat
 
-  def sinh(x: Float) :Float = SMath.sinh(x).toFloat
-  def cosh(x: Float) :Float = SMath.cosh(x).toFloat
-  def tanh(x: Float) :Float = SMath.tanh(x).toFloat
+  def sinh(x: Float) :Float = JMath.sinh(x).toFloat
+  def cosh(x: Float) :Float = JMath.cosh(x).toFloat
+  def tanh(x: Float) :Float = JMath.tanh(x).toFloat
 
   def asinh(x: Float) :Float = {
-    if (x < 0) (-SMath.log(-x + SMath.sqrt(x*x + 1))).toFloat
-    else (SMath.log(x + SMath.sqrt(x*x + 1))).toFloat
+    if (x < 0) (-JMath.log(-x + JMath.sqrt(x*x + 1))).toFloat
+    else (JMath.log(x + JMath.sqrt(x*x + 1))).toFloat
   }
   def acosh(x: Float) :Float = {
     if (x < 0) Float.NaN
-    else (SMath.log(x + SMath.sqrt(x*x - 1))).toFloat
+    else (JMath.log(x + JMath.sqrt(x*x - 1))).toFloat
   }
   def atanh(x: Float) :Float = {
     if (x < 0) -atanh(-x)
-    else if (x < 0.2) (0.5*SMath.log1p(2*x/(1 - x))).toFloat
-    else (0.5*SMath.log((1 + x)/(1 - x))).toFloat
+    else if (x < 0.2) (0.5*JMath.log1p(2*x/(1 - x))).toFloat
+    else (0.5*JMath.log((1 + x)/(1 - x))).toFloat
   }
 
-  def pow(x: Float, y: Float) :Float = SMath.pow(x, y).toFloat
-  def exp(x: Float) :Float = SMath.exp(x).toFloat
-  def log(x: Float) :Float = SMath.log(x).toFloat
+  def pow(x: Float, y: Float) :Float = JMath.pow(x, y).toFloat
+  def exp(x: Float) :Float = JMath.exp(x).toFloat
+  def log(x: Float) :Float = JMath.log(x).toFloat
 
-  def exp2(x: Float) :Float = SMath.pow(2, x).toFloat
-  def log2(x: Float) :Float = (SMath.log(x)*InvLog2).toFloat
+  def exp2(x: Float) :Float = JMath.pow(2, x).toFloat
+  def log2(x: Float) :Float = (JMath.log(x)*InvLog2).toFloat
 
-  def sqrt(s: Float) :Float = SMath.sqrt(s).toFloat
-  def inversesqrt(s: Float) :Float = (1/SMath.sqrt(s)).toFloat
+  def sqrt(s: Float) :Float = JMath.sqrt(s).toFloat
+  def inversesqrt(s: Float) :Float = (1/JMath.sqrt(s)).toFloat
 
   def abs(x: Float) :Float = { if (x > 0) x else -x }
   def sign(x: Float) :Float = {
@@ -111,7 +111,7 @@ object FloatMath {
       if (f > 0 || f == i) i else if(isnan(f)) f else i - 1
     }
   }
-  def roundEven(x: Float) :Float = SMath.rint(x).toFloat
+  def roundEven(x: Float) :Float = JMath.rint(x).toFloat
   def ceil(x: Float) :Float = {
     if (x > Int.MaxValue) x
     else if (x < Int.MinValue) x

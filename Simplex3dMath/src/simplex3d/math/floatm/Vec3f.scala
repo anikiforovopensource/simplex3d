@@ -167,7 +167,7 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstVec3f private[math] (cx: Float, cy: Float, cz: Float)
 extends ReadVec3f with Immutable {
   px = cx; py = cy; pz = cz
@@ -187,7 +187,7 @@ object ConstVec3f {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
 extends ReadVec3f with Implicits[On] with Composite
 {

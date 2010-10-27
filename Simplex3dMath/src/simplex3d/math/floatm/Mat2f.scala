@@ -202,7 +202,7 @@ extends ProtectedMat2f[Float]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstMat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
@@ -248,7 +248,7 @@ object ConstMat2f {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float

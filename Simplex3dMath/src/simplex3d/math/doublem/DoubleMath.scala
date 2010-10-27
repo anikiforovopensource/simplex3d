@@ -22,7 +22,7 @@ package simplex3d.math.doublem
 
 import simplex3d.math._
 import simplex3d.math.SimplexNoise._
-import java.lang.{StrictMath => SMath}
+import java.lang.{Math => JMath}
 
 
 // An empty class to make -Xno-forwarders work
@@ -36,8 +36,8 @@ object DoubleMath {
 
   // Constants
   final val DoubleEpsilon = 2.22045e-16;
-  final val Pi = SMath.PI
-  final val E = SMath.E
+  final val Pi = JMath.PI
+  final val E = JMath.E
 
   private final val DegToRad = 0.01745329251994329577
   private final val RadToDeg = 57.2957795130823208768
@@ -48,42 +48,42 @@ object DoubleMath {
   def radians(x: Double) :Double = x*DegToRad
   def degrees(x: Double) :Double = x*RadToDeg
 
-  def sin(w: Double) :Double = SMath.sin(w)
-  def cos(w: Double) :Double = SMath.cos(w)
-  def tan(w: Double) :Double = SMath.tan(w)
+  def sin(w: Double) :Double = JMath.sin(w)
+  def cos(w: Double) :Double = JMath.cos(w)
+  def tan(w: Double) :Double = JMath.tan(w)
 
-  def asin(w: Double) :Double = SMath.asin(w)
-  def acos(w: Double) :Double = SMath.acos(w)
-  def atan(y: Double, x: Double) :Double = SMath.atan2(y, x)
-  def atan(w: Double) :Double = SMath.atan(w)
+  def asin(w: Double) :Double = JMath.asin(w)
+  def acos(w: Double) :Double = JMath.acos(w)
+  def atan(y: Double, x: Double) :Double = JMath.atan2(y, x)
+  def atan(w: Double) :Double = JMath.atan(w)
 
-  def sinh(x: Double) :Double = SMath.sinh(x)
-  def cosh(x: Double) :Double = SMath.cosh(x)
-  def tanh(x: Double) :Double = SMath.tanh(x)
+  def sinh(x: Double) :Double = JMath.sinh(x)
+  def cosh(x: Double) :Double = JMath.cosh(x)
+  def tanh(x: Double) :Double = JMath.tanh(x)
 
   def asinh(x: Double) :Double = {
-    if (x < 0) -SMath.log(-x + SMath.sqrt(x*x + 1))
-    else SMath.log(x + SMath.sqrt(x*x + 1))
+    if (x < 0) -JMath.log(-x + JMath.sqrt(x*x + 1))
+    else JMath.log(x + JMath.sqrt(x*x + 1))
   }
   def acosh(x: Double) :Double = {
     if (x < 0) Double.NaN
-    else SMath.log(x + SMath.sqrt(x*x - 1))
+    else JMath.log(x + JMath.sqrt(x*x - 1))
   }
   def atanh(x: Double) :Double = {
     if (x < 0) -atanh(-x)
-    else if (x < 0.2) 0.5*SMath.log1p(2*x/(1 - x))
-    else 0.5*SMath.log((1 + x)/(1 - x))
+    else if (x < 0.2) 0.5*JMath.log1p(2*x/(1 - x))
+    else 0.5*JMath.log((1 + x)/(1 - x))
   }
 
-  def pow(x: Double, y: Double) :Double = SMath.pow(x, y)
-  def exp(x: Double) :Double = SMath.exp(x)
-  def log(x: Double) :Double = SMath.log(x)
+  def pow(x: Double, y: Double) :Double = JMath.pow(x, y)
+  def exp(x: Double) :Double = JMath.exp(x)
+  def log(x: Double) :Double = JMath.log(x)
 
-  def exp2(x: Double) :Double = SMath.pow(2, x)
-  def log2(x: Double) :Double = SMath.log(x)*InvLog2
+  def exp2(x: Double) :Double = JMath.pow(2, x)
+  def log2(x: Double) :Double = JMath.log(x)*InvLog2
 
-  def sqrt(s: Double) :Double = SMath.sqrt(s)
-  def inversesqrt(s: Double) :Double = 1/SMath.sqrt(s)
+  def sqrt(s: Double) :Double = JMath.sqrt(s)
+  def inversesqrt(s: Double) :Double = 1/JMath.sqrt(s)
 
   def abs(x: Double) :Double = { if (x > 0) x else -x }
   def sign(x: Double) :Double = {
@@ -111,7 +111,7 @@ object DoubleMath {
       if (f > 0 || f == i) i else if(isnan(f)) f else i - 1
     }
   }
-  def roundEven(x: Double) :Double = SMath.rint(x)
+  def roundEven(x: Double) :Double = JMath.rint(x)
   def ceil(x: Double) :Double = {
     if (x > Long.MaxValue) x
     else if (x < Long.MinValue) x

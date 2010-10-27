@@ -149,7 +149,7 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class ConstQuat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Immutable {
@@ -169,7 +169,7 @@ object ConstQuat4d {
 }
 
 
-@serializable @SerialVersionUID(5359695191257934190L)
+@serializable @SerialVersionUID(5506053470245508685L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Implicits[On] with Composite

@@ -40,6 +40,15 @@ sealed trait Primitive extends MetaElement {
   type Const = Read
 }
 
+/** <code>Boolean1</code> marker indicates Boolean elements/components.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+sealed trait Boolean1 extends Primitive {
+  type Read = Boolean
+  type Component = Boolean1
+}
+
 /** <code>Int1</code> marker indicates Int elements/components.
  *
  * @author Aleksey Nikiforov (lex)

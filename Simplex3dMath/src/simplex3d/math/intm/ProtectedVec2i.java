@@ -28,5 +28,6 @@ import java.io.Serializable;
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ProtectedVec2i<P> extends AnyVec2<P> implements Serializable {
+    public static final long serialVersionUID = 8104346712419693669L;
     int px; int py;
 }

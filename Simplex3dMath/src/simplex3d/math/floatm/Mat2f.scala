@@ -29,6 +29,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat2f
 extends ProtectedMat2f[Float]
 {
@@ -202,7 +203,7 @@ extends ProtectedMat2f[Float]
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class ConstMat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
@@ -248,7 +249,7 @@ object ConstMat2f {
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float

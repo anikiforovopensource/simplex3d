@@ -28,6 +28,7 @@ import simplex3d.math.*;
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ProtectedMat2d<P> extends AnyMat2x2<P> implements Serializable {
+    public static final long serialVersionUID = 8104346712419693669L;
     double p00; double p10;
     double p01; double p11;
 }

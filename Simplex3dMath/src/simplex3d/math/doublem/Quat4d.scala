@@ -29,6 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 {
   private[math] final def fa: Float = a.toFloat
@@ -149,7 +150,7 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class ConstQuat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Immutable {
@@ -169,7 +170,7 @@ object ConstQuat4d {
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 ) extends ReadQuat4d with Implicits[On] with Composite

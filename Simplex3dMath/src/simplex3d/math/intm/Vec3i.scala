@@ -28,6 +28,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
 {
   private[math] type R2 = ReadVec2i
@@ -179,7 +180,7 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class ConstVec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Immutable {
   px = cx; py = cy; pz = cz
@@ -199,7 +200,7 @@ object ConstVec3i {
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Implicits[On] with Composite
 {

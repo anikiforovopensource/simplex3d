@@ -28,5 +28,6 @@ import java.io.Serializable;
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ProtectedQuat4f<P> extends AnyQuat4<P> implements Serializable {
+    public static final long serialVersionUID = 8104346712419693669L;
     float pa; float pb; float pc; float pd;
 }

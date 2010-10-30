@@ -29,6 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat3x4d
 extends ProtectedMat3x4d[Double]
 {
@@ -389,7 +390,7 @@ extends ProtectedMat3x4d[Double]
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class ConstMat3x4d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double,
@@ -444,7 +445,7 @@ object ConstMat3x4d {
 }
 
 
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class Mat3x4d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double,

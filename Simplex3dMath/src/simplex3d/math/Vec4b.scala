@@ -46,6 +46,7 @@ import simplex3d.math.integration.buffer._
  *
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
 {
   private[math] type R2 = ReadVec2b
@@ -213,7 +214,7 @@ sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class ConstVec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
 ) extends ReadVec4b with Immutable {
@@ -380,7 +381,7 @@ object ConstVec4b {
  *
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(5506053470245508685L)
+@serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4b private[math] (
   cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean
 ) extends ReadVec4b with Implicits[On] with Composite

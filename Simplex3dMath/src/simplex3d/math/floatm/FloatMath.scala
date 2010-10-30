@@ -1268,10 +1268,10 @@ object FloatMath {
    * If matrix determinant is zero the result is undefined.
    */
   def inverse(m: inMat2f) :Mat2f = {
-    val detInv = 1/determinant(m)
+    val invDet = 1/determinant(m)
     new Mat2f(
-       m.m11*detInv, -m.m10*detInv,
-      -m.m01*detInv, m.m00*detInv
+       m.m11*invDet, -m.m10*invDet,
+      -m.m01*invDet,  m.m00*invDet
     )
   }
 
@@ -1293,24 +1293,21 @@ object FloatMath {
     val c1 = m12*m20 - m10*m22
     val c2 = m10*m21 - m11*m20
 
-    val det = m00*c0 + m01*c1 + m02*c2
+    val invDet = 1/(m00*c0 + m01*c1 + m02*c2)
 
-    val mat = new Mat3f(
-      c0,
-      c1,
-      c2,
+    new Mat3f(
+      c0*invDet,
+      c1*invDet,
+      c2*invDet,
 
-      m02*m21 - m01*m22,
-      m00*m22 - m02*m20,
-      m01*m20 - m00*m21,
+      (m02*m21 - m01*m22)*invDet,
+      (m00*m22 - m02*m20)*invDet,
+      (m01*m20 - m00*m21)*invDet,
 
-      m01*m12 - m02*m11,
-      m02*m10 - m00*m12,
-      m00*m11 - m01*m10
+      (m01*m12 - m02*m11)*invDet,
+      (m02*m10 - m00*m12)*invDet,
+      (m00*m11 - m01*m10)*invDet
     )
-
-    mat /= det
-    mat
   }
 
   /**
@@ -1340,32 +1337,29 @@ object FloatMath {
     val b4 = m21*m33 - m23*m31
     val b5 = m22*m33 - m23*m32
 
-    val det = a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0
+    val invDet = 1/(a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0)
 
-    val mat = new Mat4f(
-       m11*b5 - m12*b4 + m13*b3,
-      -m10*b5 + m12*b2 - m13*b1,
-       m10*b4 - m11*b2 + m13*b0,
-      -m10*b3 + m11*b1 - m12*b0,
+    new Mat4f(
+      ( m11*b5 - m12*b4 + m13*b3)*invDet,
+      (-m10*b5 + m12*b2 - m13*b1)*invDet,
+      ( m10*b4 - m11*b2 + m13*b0)*invDet,
+      (-m10*b3 + m11*b1 - m12*b0)*invDet,
 
-      -m01*b5 + m02*b4 - m03*b3,
-       m00*b5 - m02*b2 + m03*b1,
-      -m00*b4 + m01*b2 - m03*b0,
-       m00*b3 - m01*b1 + m02*b0,
+      (-m01*b5 + m02*b4 - m03*b3)*invDet,
+      ( m00*b5 - m02*b2 + m03*b1)*invDet,
+      (-m00*b4 + m01*b2 - m03*b0)*invDet,
+      ( m00*b3 - m01*b1 + m02*b0)*invDet,
 
-       m31*a5 - m32*a4 + m33*a3,
-      -m30*a5 + m32*a2 - m33*a1,
-       m30*a4 - m31*a2 + m33*a0,
-      -m30*a3 + m31*a1 - m32*a0,
+      ( m31*a5 - m32*a4 + m33*a3)*invDet,
+      (-m30*a5 + m32*a2 - m33*a1)*invDet,
+      ( m30*a4 - m31*a2 + m33*a0)*invDet,
+      (-m30*a3 + m31*a1 - m32*a0)*invDet,
 
-      -m21*a5 + m22*a4 - m23*a3,
-       m20*a5 - m22*a2 + m23*a1,
-      -m20*a4 + m21*a2 - m23*a0,
-       m20*a3 - m21*a1 + m22*a0
+      (-m21*a5 + m22*a4 - m23*a3)*invDet,
+      ( m20*a5 - m22*a2 + m23*a1)*invDet,
+      (-m20*a4 + m21*a2 - m23*a0)*invDet,
+      ( m20*a3 - m21*a1 + m22*a0)*invDet
     )
-
-    mat /= det
-    mat
   }
 
   // *** Extra Math functions ************************************************
@@ -1710,16 +1704,13 @@ object FloatMath {
   def inverse(m: inMat2x3f) :Mat2x3f = {
     import m._
 
-    val det = m00*m11 - m01*m10
+    val invDet = 1/(m00*m11 - m01*m10)
 
-    val mat = new Mat2x3f(
-      m11, -m10,
-      -m01, m00,
-      m01*m12 - m02*m11, m02*m10 - m00*m12
+    new Mat2x3f(
+       m11*invDet, -m10*invDet,
+      -m01*invDet,  m00*invDet,
+      (m01*m12 - m02*m11)*invDet, (m02*m10 - m00*m12)*invDet
     )
-
-    mat /= det
-    mat
   }
 
   /**
@@ -1746,28 +1737,25 @@ object FloatMath {
     val a4 = m01*m13 - m03*m11
     val a5 = m02*m13 - m03*m12
 
-    val det = a0*m22 - a1*m21 + a3*m20
+    val invDet = 1/(a0*m22 - a1*m21 + a3*m20)
 
-    val mat = new Mat3x4f(
-       m11*m22 - m12*m21,
-      -m10*m22 + m12*m20,
-       m10*m21 - m11*m20,
+    new Mat3x4f(
+      ( m11*m22 - m12*m21)*invDet,
+      (-m10*m22 + m12*m20)*invDet,
+      ( m10*m21 - m11*m20)*invDet,
 
-      -m01*m22 + m02*m21,
-       m00*m22 - m02*m20,
-      -m00*m21 + m01*m20,
+      (-m01*m22 + m02*m21)*invDet,
+      ( m00*m22 - m02*m20)*invDet,
+      (-m00*m21 + m01*m20)*invDet,
 
-       a3,
-      -a1,
-       a0,
+       a3*invDet,
+      -a1*invDet,
+       a0*invDet,
 
-      -m21*a5 + m22*a4 - m23*a3,
-       m20*a5 - m22*a2 + m23*a1,
-      -m20*a4 + m21*a2 - m23*a0
+      (-m21*a5 + m22*a4 - m23*a3)*invDet,
+      ( m20*a5 - m22*a2 + m23*a1)*invDet,
+      (-m20*a4 + m21*a2 - m23*a0)*invDet
     )
-
-    mat /= det
-    mat
   }
 
   // Quaternion

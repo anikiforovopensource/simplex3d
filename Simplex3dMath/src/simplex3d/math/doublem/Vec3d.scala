@@ -28,7 +28,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@SerialVersionUID(8104346712419693669L)
+@serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
 {
   private[math] type R2 = ReadVec2d

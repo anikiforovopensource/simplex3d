@@ -29,7 +29,7 @@ import simplex3d.math.doublem.DoubleMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@SerialVersionUID(8104346712419693669L)
+@serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
 {
   private[math] final def fa: Float = a.toFloat

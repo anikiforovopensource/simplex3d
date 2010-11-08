@@ -29,7 +29,7 @@ import simplex3d.math.floatm.FloatMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@SerialVersionUID(8104346712419693669L)
+@serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
 {
   private[math] final def fa: Float = a

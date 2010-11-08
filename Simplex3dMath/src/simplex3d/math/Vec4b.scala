@@ -46,7 +46,7 @@ import simplex3d.math.integration.buffer._
  *
  * @author Aleksey Nikiforov (lex)
  */
-@SerialVersionUID(8104346712419693669L)
+@serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
 {
   private[math] type R2 = ReadVec2b

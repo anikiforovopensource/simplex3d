@@ -1320,7 +1320,10 @@ object CastTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     val data = wrap(bytes, descriptor)
 
-    for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
+    for (
+      stride <- descriptor.components to (descriptor.components + 4);
+      offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+    ) {
       val cast = factory(original, offset, stride)
       testView(cast, offset, stride, false, data)(descriptor)
       assert(original.sharesStoreObject(cast))
@@ -1339,7 +1342,10 @@ object CastTest extends FunSuite {
     val data = wrap(bytes, descriptor)
     val ro = original.asReadOnlySeq()
 
-    for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
+    for (
+      stride <- descriptor.components to (descriptor.components + 4);
+      offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+    ) {
       {
         val cast = factory(original, offset, stride)
         testView(cast, offset, stride, false, data)(descriptor)

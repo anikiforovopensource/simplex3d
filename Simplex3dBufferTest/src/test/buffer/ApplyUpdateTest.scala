@@ -262,21 +262,22 @@ object ApplyUpdateTest extends FunSuite {
   def testApplyUpdateView[E <: MetaElement, R <: RawData](
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
-    val size = 10*descriptor.components*RawType.byteLength(descriptor.rawType)
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, 1))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, 2))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, 3))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, 4))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, 5))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, 2))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, 3))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, 4))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, 5))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, 3))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, 4))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, 5))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 3, 4))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 3, 5))
-    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 4, 5))
+    val c = descriptor.components
+    val size = 10*c*RawType.byteLength(descriptor.rawType)
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 1))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 2))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 3))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 4))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, c + 1))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, c + 2))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, c + 3))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 1, c + 4))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, c + 2))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, c + 3))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 2, c + 4))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 3, c + 3))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 3, c + 4))
+    testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 4, c + 4))
   }
 }

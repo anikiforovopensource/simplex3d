@@ -172,7 +172,7 @@ object FactoryTest extends FunSuite {
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     viewFromData(factory)(descriptor)
-    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 1), descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
   }
 
   def testReadBufferFromData[E <: MetaElement, R <: RawData](
@@ -186,7 +186,7 @@ object FactoryTest extends FunSuite {
     factory: (ByteBuffer, Int, Int) => ReadDataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readViewFromData(factory)(descriptor)
-    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 1), descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
   }
 
   def testArrayFromCollection[E <: MetaElement, R <: RawData](
@@ -281,27 +281,17 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
       val bytes = ByteBuffer.wrap(new Array[Byte](64))
-      factory(bytes, 0, 1)
+      factory(bytes, 0, 4)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor);
-      factory(bytes.asReadOnlyBuffer, 0, 1)
+      factory(bytes.asReadOnlyBuffer, 0, 4)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, -1, 1)
-    }
-
-    intercept[IllegalArgumentException] {
-      val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 1, 1)
-    }
-
-    intercept[IllegalArgumentException] {
-      val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 2, 1)
+      factory(bytes, -1, 4)
     }
 
     intercept[IllegalArgumentException] {
@@ -314,11 +304,30 @@ object FactoryTest extends FunSuite {
       factory(bytes, 0, 0)
     }
 
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 0, descriptor.components - 1)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 1, descriptor.components)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 2 + 1, descriptor.components + 2)
+    }
+
+
     val rawBytes = RawType.byteLength(descriptor.rawType)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
-      for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
+      for (
+        stride <- descriptor.components to (descriptor.components + 4);
+        offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+      ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
@@ -395,22 +404,12 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
       val bytes = ByteBuffer.wrap(new Array[Byte](64))
-      factory(bytes, 0, 1)
+      factory(bytes, 0, 4)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, -1, 1)
-    }
-
-    intercept[IllegalArgumentException] {
-      val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 1, 1)
-    }
-
-    intercept[IllegalArgumentException] {
-      val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, 2, 1)
+      factory(bytes, -1, 4)
     }
 
     intercept[IllegalArgumentException] {
@@ -422,12 +421,31 @@ object FactoryTest extends FunSuite {
       val (bytes, data) = genBuffer(64, descriptor)
       factory(bytes, 0, 0)
     }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 0, descriptor.components - 1)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 1, descriptor.components)
+    }
+
+    intercept[IllegalArgumentException] {
+      val (bytes, data) = genBuffer(64, descriptor)
+      factory(bytes, 2 + 1, descriptor.components + 2)
+    }
+
     
     val rawBytes = RawType.byteLength(descriptor.rawType)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
-      for (stride <- 1 to (descriptor.components + 1); offset <- 0 to IntMath.min(stride - 1, data.limit)) {
+      for (
+        stride <- descriptor.components to (descriptor.components + 4);
+        offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+      ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN

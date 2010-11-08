@@ -121,19 +121,17 @@ object AttributeTest extends FunSuite {
 
 
     if (seq.isInstanceOf[DataArray[_, _]]) {
-      assert(seq.bindingBuffer(0).array != null)
+      assert(seq.rawBuffer().array != null)
     }
     else {
-      assert(seq.bindingBuffer(0).isReadOnly)
+      if (seq.isReadOnly) assert(seq.rawBuffer().isReadOnly)
+      else assert(!seq.rawBuffer().isReadOnly) 
     }
 
-    checkOrder(seq.bindingBuffer(0))
+    checkOrder(seq.rawBuffer())
 
-    checkBindingBuffer(0, seq.bindingBuffer(0), data)
-    if (data.limit >= 2) {
-      checkBindingBuffer(1, seq.bindingBuffer(1), data)
-      checkBindingBuffer(2, seq.bindingBuffer(2), data)
-    }
+    checkBindingBuffer(0, seq.rawBuffer(), data)
+    // check other rawBuffer getters
 
 
     val ds = seq.asInstanceOf[DataSeq[E, R]]

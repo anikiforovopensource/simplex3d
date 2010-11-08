@@ -36,7 +36,7 @@ private[buffer] final class ArrayVec4iSInt(
   def this() = this(new ArrayInt1SInt)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4iSInt(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec4i = {
+  def apply(i: Int) :ConstVec4i = {
     val j = i*4
     ConstVec4i(
       backing(j),
@@ -45,7 +45,7 @@ private[buffer] final class ArrayVec4iSInt(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: ReadVec4i) {
+  def update(i: Int, v: ReadVec4i) {
     val j = i*4
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -66,7 +66,7 @@ private[buffer] final class BufferVec4iSInt(
 ) extends BaseVec4i[SInt](backing, 0, 4) with DataBuffer[Vec4i, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4iSInt(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec4i = {
+  def apply(i: Int) :ConstVec4i = {
     val j = i*4
     ConstVec4i(
       backing(j),
@@ -75,7 +75,7 @@ private[buffer] final class BufferVec4iSInt(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: ReadVec4i) {
+  def update(i: Int, v: ReadVec4i) {
     val j = i*4
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -96,7 +96,7 @@ private[buffer] final class ViewVec4iSInt(
 ) extends BaseVec4i[SInt](backing, off, str) with DataView[Vec4i, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec4iSInt(backing.mkReadOnlyInstance(), offset, stride)
 
-  override def apply(i: Int) :ConstVec4i = {
+  def apply(i: Int) :ConstVec4i = {
     val j = offset + i*stride
     ConstVec4i(
       backing(j),
@@ -105,7 +105,7 @@ private[buffer] final class ViewVec4iSInt(
       backing(j + 3)
     )
   }
-  override def update(i: Int, v: ReadVec4i) {
+  def update(i: Int, v: ReadVec4i) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y

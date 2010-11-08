@@ -35,19 +35,6 @@ private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
   final def elementManifest = Vec2f.ReadManifest
   final def components: Int = 2
 
-  def apply(i: Int) :ConstVec2f = {
-    val j = offset + i*stride
-    ConstVec2f(
-      backingSeq(j),
-      backingSeq(j + 1)
-    )
-  }
-  def update(i: Int, v: ReadVec2f) {
-    val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-  }
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec2f, R] =
     new ArrayVec2f[R](
@@ -74,6 +61,19 @@ private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2f(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Float1, R]]
   )
+
+  def apply(i: Int) :ConstVec2f = {
+    val j = i*2
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2f) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class BufferVec2f[+R <: DefinedFloat](
@@ -82,6 +82,19 @@ private[buffer] final class BufferVec2f[+R <: DefinedFloat](
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2f(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Float1, R]]
   )
+
+  def apply(i: Int) :ConstVec2f = {
+    val j = i*2
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2f) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class ViewVec2f[+R <: DefinedFloat](
@@ -91,4 +104,17 @@ private[buffer] final class ViewVec2f[+R <: DefinedFloat](
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Float1, R]],
     offset, stride
   )
+
+  def apply(i: Int) :ConstVec2f = {
+    val j = offset + i*stride
+    ConstVec2f(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2f) {
+    val j = offset + i*stride
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }

@@ -36,14 +36,14 @@ private[buffer] final class ArrayVec2fRawFloat(
   def this() = this(new ArrayFloat1RawFloat)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec2f = {
+  def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2f) {
+  def update(i: Int, v: ReadVec2f) {
     val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -62,14 +62,14 @@ private[buffer] final class BufferVec2fRawFloat(
 ) extends BaseVec2f[RawFloat](backing, 0, 2) with DataBuffer[Vec2f, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2fRawFloat(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec2f = {
+  def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2f) {
+  def update(i: Int, v: ReadVec2f) {
     val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -90,14 +90,14 @@ private[buffer] final class ViewVec2fRawFloat(
     backing.mkReadOnlyInstance(), offset, stride
   )
 
-  override def apply(i: Int) :ConstVec2f = {
+  def apply(i: Int) :ConstVec2f = {
     val j = offset + i*stride
     ConstVec2f(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2f) {
+  def update(i: Int, v: ReadVec2f) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y

@@ -35,19 +35,6 @@ private[buffer] abstract class BaseVec2d[+R <: DefinedDouble](
   final def elementManifest = Vec2d.ReadManifest
   final def components: Int = 2
 
-  def apply(i: Int) :ConstVec2d = {
-    val j = offset + i*stride
-    ConstVec2d(
-      backingSeq(j),
-      backingSeq(j + 1)
-    )
-  }
-  def update(i: Int, v: ReadVec2d) {
-    val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-  }
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec2d, R] =
     new ArrayVec2d[R](
@@ -74,6 +61,19 @@ private[buffer] final class ArrayVec2d[+R <: DefinedDouble](
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
   )
+
+  def apply(i: Int) :ConstVec2d = {
+    val j = i*2
+    ConstVec2d(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2d) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class BufferVec2d[+R <: DefinedDouble](
@@ -82,6 +82,19 @@ private[buffer] final class BufferVec2d[+R <: DefinedDouble](
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
   )
+
+  def apply(i: Int) :ConstVec2d = {
+    val j = i*2
+    ConstVec2d(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2d) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class ViewVec2d[+R <: DefinedDouble](
@@ -91,4 +104,17 @@ private[buffer] final class ViewVec2d[+R <: DefinedDouble](
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]],
     offset, stride
   )
+
+  def apply(i: Int) :ConstVec2d = {
+    val j = offset + i*stride
+    ConstVec2d(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2d) {
+    val j = offset + i*stride
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }

@@ -35,21 +35,6 @@ private[buffer] abstract class BaseVec3d[+R <: DefinedDouble](
   final def elementManifest = Vec3d.ReadManifest
   final def components: Int = 3
 
-  def apply(i: Int) :ConstVec3d = {
-    val j = offset + i*stride
-    ConstVec3d(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
-    )
-  }
-  def update(i: Int, v: ReadVec3d) {
-    val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
-  }
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec3d, R] =
     new ArrayVec3d[R](
@@ -76,6 +61,21 @@ private[buffer] final class ArrayVec3d[+R <: DefinedDouble](
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Double1, R]]
   )
+
+  def apply(i: Int) :ConstVec3d = {
+    val j = i*3
+    ConstVec3d(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  def update(i: Int, v: ReadVec3d) {
+    val j = i*3
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
 }
 
 private[buffer] final class BufferVec3d[+R <: DefinedDouble](
@@ -84,6 +84,21 @@ private[buffer] final class BufferVec3d[+R <: DefinedDouble](
   protected[buffer] def mkReadOnlyInstance() = new BufferVec3d(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]]
   )
+
+  def apply(i: Int) :ConstVec3d = {
+    val j = i*3
+    ConstVec3d(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  def update(i: Int, v: ReadVec3d) {
+    val j = i*3
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
 }
 
 private[buffer] final class ViewVec3d[+R <: DefinedDouble](
@@ -93,4 +108,19 @@ private[buffer] final class ViewVec3d[+R <: DefinedDouble](
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Double1, R]],
     offset, stride
   )
+
+  def apply(i: Int) :ConstVec3d = {
+    val j = offset + i*stride
+    ConstVec3d(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2)
+    )
+  }
+  def update(i: Int, v: ReadVec3d) {
+    val j = offset + i*stride
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+  }
 }

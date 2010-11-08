@@ -35,23 +35,6 @@ private[buffer] abstract class BaseVec4f[+R <: DefinedFloat](
   final def elementManifest = Vec4f.ReadManifest
   final def components: Int = 4
 
-  def apply(i: Int) :ConstVec4f = {
-    val j = offset + i*stride
-    ConstVec4f(
-      backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2),
-      backingSeq(j + 3)
-    )
-  }
-  def update(i: Int, v: ReadVec4f) {
-    val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
-    backingSeq(j + 3) = v.w
-  }
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec4f, R] =
     new ArrayVec4f[R](
@@ -78,6 +61,23 @@ private[buffer] final class ArrayVec4f[+R <: DefinedFloat](
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec4f(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Float1, R]]
   )
+
+  def apply(i: Int) :ConstVec4f = {
+    val j = i*4
+    ConstVec4f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2),
+      backingSeq(j + 3)
+    )
+  }
+  def update(i: Int, v: ReadVec4f) {
+    val j = i*4
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+    backingSeq(j + 3) = v.w
+  }
 }
 
 private[buffer] final class BufferVec4f[+R <: DefinedFloat](
@@ -86,6 +86,23 @@ private[buffer] final class BufferVec4f[+R <: DefinedFloat](
   protected[buffer] def mkReadOnlyInstance() = new BufferVec4f(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Float1, R]]
   )
+
+  def apply(i: Int) :ConstVec4f = {
+    val j = i*4
+    ConstVec4f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2),
+      backingSeq(j + 3)
+    )
+  }
+  def update(i: Int, v: ReadVec4f) {
+    val j = i*4
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+    backingSeq(j + 3) = v.w
+  }
 }
 
 private[buffer] final class ViewVec4f[+R <: DefinedFloat](
@@ -95,4 +112,21 @@ private[buffer] final class ViewVec4f[+R <: DefinedFloat](
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Float1, R]],
     offset, stride
   )
+
+  def apply(i: Int) :ConstVec4f = {
+    val j = offset + i*stride
+    ConstVec4f(
+      backingSeq(j),
+      backingSeq(j + 1),
+      backingSeq(j + 2),
+      backingSeq(j + 3)
+    )
+  }
+  def update(i: Int, v: ReadVec4f) {
+    val j = offset + i*stride
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+    backingSeq(j + 2) = v.z
+    backingSeq(j + 3) = v.w
+  }
 }

@@ -35,19 +35,6 @@ private[buffer] abstract class BaseVec2i[+R <: DefinedInt](
   final def elementManifest = Vec2i.ReadManifest
   final def components: Int = 2
 
-  def apply(i: Int) :ConstVec2i = {
-    val j = offset + i*stride
-    ConstVec2i(
-      backingSeq(j),
-      backingSeq(j + 1)
-    )
-  }
-  def update(i: Int, v: ReadVec2i) {
-    val j = offset + i*stride
-    backingSeq(j) = v.x
-    backingSeq(j + 1) = v.y
-  }
-
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
   :DataArray[Vec2i, R] =
     new ArrayVec2i[R](
@@ -74,6 +61,19 @@ private[buffer] final class ArrayVec2i[+R <: DefinedInt](
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Int1, R]]
   )
+
+  def apply(i: Int) :ConstVec2i = {
+    val j = i*2
+    ConstVec2i(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2i) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class BufferVec2i[+R <: DefinedInt](
@@ -82,6 +82,19 @@ private[buffer] final class BufferVec2i[+R <: DefinedInt](
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Int1, R]]
   )
+
+  def apply(i: Int) :ConstVec2i = {
+    val j = i*2
+    ConstVec2i(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2i) {
+    val j = i*2
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }
 
 private[buffer] final class ViewVec2i[+R <: DefinedInt](
@@ -91,4 +104,17 @@ private[buffer] final class ViewVec2i[+R <: DefinedInt](
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Int1, R]],
     offset, stride
   )
+
+  def apply(i: Int) :ConstVec2i = {
+    val j = offset + i*stride
+    ConstVec2i(
+      backingSeq(j),
+      backingSeq(j + 1)
+    )
+  }
+  def update(i: Int, v: ReadVec2i) {
+    val j = offset + i*stride
+    backingSeq(j) = v.x
+    backingSeq(j + 1) = v.y
+  }
 }

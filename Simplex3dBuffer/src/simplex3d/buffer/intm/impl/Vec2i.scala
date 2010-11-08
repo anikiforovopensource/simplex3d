@@ -36,14 +36,14 @@ private[buffer] final class ArrayVec2iSInt(
   def this() = this(new ArrayInt1SInt)
   protected[buffer] def mkReadOnlyInstance() = new ArrayVec2iSInt(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec2i = {
+  def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2i) {
+  def update(i: Int, v: ReadVec2i) {
     val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -62,14 +62,14 @@ private[buffer] final class BufferVec2iSInt(
 ) extends BaseVec2i[SInt](backing, 0, 2) with DataBuffer[Vec2i, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new BufferVec2iSInt(backing.mkReadOnlyInstance())
 
-  override def apply(i: Int) :ConstVec2i = {
+  def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2i) {
+  def update(i: Int, v: ReadVec2i) {
     val j = i*2
     backing(j) = v.x
     backing(j + 1) = v.y
@@ -88,14 +88,14 @@ private[buffer] final class ViewVec2iSInt(
 ) extends BaseVec2i[SInt](backing, off, str) with DataView[Vec2i, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewVec2iSInt(backing.mkReadOnlyInstance(), offset, stride)
 
-  override def apply(i: Int) :ConstVec2i = {
+  def apply(i: Int) :ConstVec2i = {
     val j = offset + i*stride
     ConstVec2i(
       backing(j),
       backing(j + 1)
     )
   }
-  override def update(i: Int, v: ReadVec2i) {
+  def update(i: Int, v: ReadVec2i) {
     val j = offset + i*stride
     backing(j) = v.x
     backing(j + 1) = v.y

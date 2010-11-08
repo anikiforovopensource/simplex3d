@@ -30,9 +30,7 @@ import simplex3d.math._
 package buffer {
   private[buffer] class PrimitiveIntImplicits {
 
-    private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :FactoryRef[Int1, R] = {
-      new SimpleFactoryRef(s)
-    }
+    private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :Factory[Int1, R] = s
 
     implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
     implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)

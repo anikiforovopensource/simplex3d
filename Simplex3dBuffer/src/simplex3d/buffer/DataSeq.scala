@@ -33,9 +33,9 @@ extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
 
 object DataSeq {
   def apply[E <: MetaElement, R <: Defined](
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataSeq[E, R] = {
-    ref.factory
+    factory.emptyMarker()
   }
 }
 

@@ -30,12 +30,27 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
+private[buffer] class TemplateGenFactory[E <: Composite, R <: RawData](
   val templateArrayClass: String,
   val templateString: String,
   val fallbackFactory: DataSeq[E, R]
-) extends FactoryRef[E, R] {
+) extends Factory[E, R] {
 
+  def mkDataArray(array: R#ArrayType) :DataArray[E, R] = factory.mkDataArray(array)
+  def mkDataArray(size: Int) :DataArray[E, R] = factory.mkDataArray(size)
+
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R] = factory.mkReadDataBuffer(byteBuffer)
+  def mkDataBuffer(size: Int) :DataBuffer[E, R] = factory.mkDataBuffer(size)
+  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[E, R] = factory.mkDataBuffer(byteBuffer)
+
+  def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R] =
+    factory.mkReadDataView(byteBuffer, offset, stride)
+  def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[E, R] =
+    factory.mkDataView(byteBuffer, offset, stride)
+
+  override def emptyMarker() :DataSeq[E, R] = factory
+
+  
   private val replaceString =
     fallbackFactory.rawType match {
       case SByte => "SByte"
@@ -138,7 +153,7 @@ private[buffer] class TemplateGenFactoryRef[E <: Composite, R <: RawData](
           )
       ))
 
-      val offset = 3
+      val offset = 1
       val stride = 5
       testDataSeq(fallback, factory.mkDataView(
           ByteBuffer.allocateDirect(

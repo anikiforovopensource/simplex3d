@@ -38,54 +38,54 @@ extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
 
 object ReadDataBuffer {
   def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :ReadDataBuffer[E, R] = {
-    ref.factory.mkReadDataBuffer(buffer)
+    factory.mkReadDataBuffer(buffer)
   }
 
   def apply[E <: MetaElement, R <: Defined](db: ReadDataBuffer[_, _])(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :ReadDataBuffer[E, R] = {
-    val res = ref.factory.mkReadDataBuffer(db.sharedBuffer)
+    val res = factory.mkReadDataBuffer(db.sharedBuffer)
     if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }
 
 object DataBuffer {
   def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
-    ref.factory.mkDataBuffer(buffer)
+    factory.mkDataBuffer(buffer)
   }
 
   def apply[E <: MetaElement, R <: Defined](size: Int)(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
-    ref.factory.mkDataBuffer(size)
+    factory.mkDataBuffer(size)
   }
 
   def apply[E <: MetaElement, R <: Defined](vals: E#Read*)(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
-    val data = ref.factory.mkDataBuffer(vals.size)
+    val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
   }
 
   def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Read])(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
-    val data = ref.factory.mkDataBuffer(vals.size)
+    val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
   }
 
   def apply[E <: MetaElement, R <: Defined](db: DataBuffer[_, _])(
-    implicit ref: FactoryRef[E, R]
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
-    ref.factory.mkDataBuffer(db.sharedBuffer)
+    factory.mkDataBuffer(db.sharedBuffer)
   }
 }

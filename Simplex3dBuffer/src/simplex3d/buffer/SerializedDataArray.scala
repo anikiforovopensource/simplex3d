@@ -18,36 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer;
+package simplex3d.buffer
 
-import java.io.*;
-import java.nio.*;
+import java.io._
 
 
-/** Prevents gaining access to read-only content.
- *
- * @author Aleksey Nikiforov (lex)
- */
-class Protected<A> {
-    final Object sharedStore;
+@serializable @SerialVersionUID(8104346712419693669L)
+private[buffer] class SerializedDataArray(
+  val array: AnyRef
+) {
 
-    Protected(Object shared) {
-        this.sharedStore = shared;
-    }
-
-    @SuppressWarnings("unchecked")
-    final A sharedArray() {
-        return (A) sharedStore;
-    }
-
-    final ByteBuffer sharedBuffer() {
-        return (ByteBuffer) sharedStore;
-    }
-
-    protected final Object writeReplace() throws ObjectStreamException {
-        if (this instanceof ReadDataArray) {
-            return new SerializedDataArray(sharedStore);
-        }
-        throw new UnsupportedOperationException();
-    }
+  @throws(classOf[ObjectStreamException])
+  def readResolve() :Object = {
+    null
+  }
 }

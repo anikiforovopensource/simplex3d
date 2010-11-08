@@ -43,7 +43,7 @@ private[buffer] abstract class BaseSeq[
   offset, stride
 ) {
 
-  type BackingSeqType <: ContiguousSeq[E#Component, R]
+  type BackingSeq <: ContiguousSeq[E#Component, R]
   final def asBuffer() :R#BufferType = {
     ((storeType: @switch) match {
       case ByteStore =>
@@ -203,7 +203,7 @@ private[buffer] abstract class BaseSeq[
     src: inContiguousSeq[E#Component, _],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
-    def grp(rawType: Int) = {
+    def group(rawType: Int) = {
       (rawType: @switch) match {
         case SByte => 0
         case UByte => 0
@@ -223,10 +223,9 @@ private[buffer] abstract class BaseSeq[
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
 
-    val group = grp(rawType)
     val noConversion = (
       (rawType == src.rawType) ||
-      (!normalized && group == grp(src.rawType))
+      (!normalized && group(rawType) == group(src.rawType))
     )
 
     if (stride == components && srcStride == components && noConversion) {
@@ -237,40 +236,36 @@ private[buffer] abstract class BaseSeq[
       srcBuff.position(srcOffset)
       srcBuff.limit(srcLim)
 
-      (group: @switch) match {
-        case 0 =>
+      (storeType: @switch) match {
+        case ByteStore =>
           destBuff.asInstanceOf[ByteBuffer].put(
             srcBuff.asInstanceOf[ByteBuffer]
           )
-        case 1 =>
+        case ShortStore =>
           destBuff.asInstanceOf[ShortBuffer].put(
             srcBuff.asInstanceOf[ShortBuffer]
           )
-        case 2 =>
+        case CharStore =>
           destBuff.asInstanceOf[CharBuffer].put(
             srcBuff.asInstanceOf[CharBuffer]
           )
-        case 3 =>
+        case IntStore =>
           destBuff.asInstanceOf[IntBuffer].put(
             srcBuff.asInstanceOf[IntBuffer]
           )
-        case 4 =>
-          destBuff.asInstanceOf[ShortBuffer].put(
-            srcBuff.asInstanceOf[ShortBuffer]
-        )
-        case 5 =>
+        case FloatStore =>
           destBuff.asInstanceOf[FloatBuffer].put(
             srcBuff.asInstanceOf[FloatBuffer]
           )
-        case 6 =>
+        case DoubleStore =>
           destBuff.asInstanceOf[DoubleBuffer].put(
             srcBuff.asInstanceOf[DoubleBuffer]
           )
       }
     }
     else if (noConversion) {
-      (group: @switch) match {
-        case 0 => Util.copyBuffer(
+      (storeType: @switch) match {
+        case ByteStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[ByteBuffer],
             destOffset,
@@ -280,7 +275,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 1 => Util.copyBuffer(
+        case ShortStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[ShortBuffer],
             destOffset,
@@ -290,7 +285,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 2 => Util.copyBuffer(
+        case CharStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[CharBuffer],
             destOffset,
@@ -300,7 +295,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 3 => Util.copyBuffer(
+        case IntStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[IntBuffer],
             destOffset,
@@ -310,17 +305,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 4 => Util.copyBuffer(
-            components,
-            asBuffer().asInstanceOf[ShortBuffer],
-            destOffset,
-            stride,
-            src.asReadOnlyBuffer().asInstanceOf[ShortBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
-          )
-        case 5 => Util.copyBuffer(
+        case FloatStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[FloatBuffer],
             destOffset,
@@ -330,7 +315,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case 6 => Util.copyBuffer(
+        case DoubleStore => Util.copyBuffer(
             components,
             asBuffer().asInstanceOf[DoubleBuffer],
             destOffset,

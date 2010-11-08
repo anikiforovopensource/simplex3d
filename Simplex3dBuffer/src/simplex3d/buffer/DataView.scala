@@ -29,28 +29,28 @@ import scala.annotation.unchecked._
  */
 trait ReadDataView[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
-  type BackingSeqType <: ReadDataBuffer[E#Component, R]
-  type BindingBufferType = ByteBuffer
+  type BackingSeq <: ReadDataBuffer[E#Component, R]
+  type RawBuffer = ByteBuffer
   override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataView[E, R]]
 }
 
 trait DataView[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ReadDataView[E, R] {
-  type BackingSeqType = DataBuffer[E#Component, R @uncheckedVariance]
+  type BackingSeq = DataBuffer[E#Component, R @uncheckedVariance]
 }
 
 
 object ReadDataView {
   def apply[E <: MetaElement, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
-    ref.factory.mkReadDataView(buffer, offset, stride)
+  )(implicit factory: Factory[E, R]) :ReadDataView[E, R] = {
+    factory.mkReadDataView(buffer, offset, stride)
   }
 
   def apply[E <: MetaElement, R <: Defined](
     db: inDataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[E, R]) :ReadDataView[E, R] = {
-    val res = ref.factory.mkReadDataView(db.sharedBuffer, offset, stride)
+  )(implicit factory: Factory[E, R]) :ReadDataView[E, R] = {
+    val res = factory.mkReadDataView(db.sharedBuffer, offset, stride)
     if (db.isReadOnly) res.asReadOnlySeq() else res
   }
 }
@@ -58,16 +58,16 @@ object ReadDataView {
 object DataView {
   def apply[E <: MetaElement, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
-    ref.factory.mkDataView(buffer, offset, stride)
+  )(implicit factory: Factory[E, R]) :DataView[E, R] = {
+    factory.mkDataView(buffer, offset, stride)
   }
 
   def apply[E <: MetaElement, R <: Defined](
     db: DataBuffer[_, _], offset: Int, stride: Int
-  )(implicit ref: FactoryRef[E, R]) :DataView[E, R] = {
+  )(implicit factory: Factory[E, R]) :DataView[E, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
-    ref.factory.mkDataView(db.sharedBuffer, offset, stride)
+    factory.mkDataView(db.sharedBuffer, offset, stride)
   }
 }

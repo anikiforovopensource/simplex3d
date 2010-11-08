@@ -18,36 +18,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer;
+package simplex3d.buffer
 
-import java.io.*;
-import java.nio.*;
+import java.nio._
+import scala.annotation.unchecked._
 
 
-/** Prevents gaining access to read-only content.
- *
+/**
  * @author Aleksey Nikiforov (lex)
  */
-class Protected<A> {
-    final Object sharedStore;
+trait Factory[E <: MetaElement, +R <: RawData] {
+  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
+  def mkDataArray(size: Int) :DataArray[E, R]
 
-    Protected(Object shared) {
-        this.sharedStore = shared;
-    }
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
+  def mkDataBuffer(size: Int) :DataBuffer[E, R]
+  def mkDataBuffer(byteBuffer: ByteBuffer) :DataBuffer[E, R]
 
-    @SuppressWarnings("unchecked")
-    final A sharedArray() {
-        return (A) sharedStore;
-    }
+  def mkReadDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
+  def mkDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int) :DataView[E, R]
 
-    final ByteBuffer sharedBuffer() {
-        return (ByteBuffer) sharedStore;
+  def emptyMarker() :DataSeq[E, R] = {
+    this match {
+      case s: DataSeq[_, _] if (s.byteCapacity == 0) => s.asInstanceOf[DataSeq[E, R]]
+      case _ => mkDataArray(0)
     }
-
-    protected final Object writeReplace() throws ObjectStreamException {
-        if (this instanceof ReadDataArray) {
-            return new SerializedDataArray(sharedStore);
-        }
-        throw new UnsupportedOperationException();
-    }
+  }
 }

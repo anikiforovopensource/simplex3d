@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntMath module
+ ** Simplex3d, CoreMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm
-
-import simplex3d.math._
+package simplex3d.math
 
 
 /** The <code>ExtendedInt</code> class encapsulates glue code to make Ints

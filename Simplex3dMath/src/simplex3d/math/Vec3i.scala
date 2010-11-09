@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntMath module
+ ** Simplex3d, CoreMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm
+package simplex3d.math
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._

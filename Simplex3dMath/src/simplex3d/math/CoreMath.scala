@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntMath module
+ ** Simplex3d, CoreMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,20 +18,107 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm
+package simplex3d.math
 
-import simplex3d.math._
-
-
-// An empty class to make -Xno-forwarders work
-private[math] class IntMath
+import java.nio._
 
 
-/** <code>IntMath</code> contains functions to operate on Ints and Int vectors.
- *
- * @author Aleksey Nikiforov (lex)
- */
-object IntMath {
+private[math] class CoreMath {
+
+  // Boolean functions.
+  
+  // Vec2b functions.
+
+  /** This function is equivalent to logical OR on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if any of the components are true, false otherwise.
+   */
+  def any(u: inVec2b) :Boolean = {
+    u.x || u.y
+  }
+
+  /** This function is equivalent to logical AND on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if all the components are true, false otherwise.
+   */
+  def all(u: inVec2b) :Boolean = {
+    u.x && u.y
+  }
+
+  /** This function is equivalent to logical NOT on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return a boolean vector with negated components of u.
+   */
+  def not(u: inVec2b) :Vec2b = Vec2b(!u.x, !u.y)
+
+
+  // Vec3b functions.
+
+  /** This function is equivalent to logical OR on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if any of the components are true, false otherwise.
+   */
+  def any(u: inVec3b) :Boolean = {
+    u.x || u.y || u.z
+  }
+
+  /** This function is equivalent to logical AND on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if all the components are true, false otherwise.
+   */
+  def all(u: inVec3b) :Boolean = {
+    u.x && u.y && u.z
+  }
+
+  /** This function is equivalent to logical NOT on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return a boolean vector with negated components of u.
+   */
+  def not(u: inVec3b) :Vec3b = Vec3b(!u.x, !u.y, !u.z)
+
+
+  // Vec4b functions.
+
+  /** This function is equivalent to logical OR on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if any of the components are true, false otherwise.
+   */
+  def any(u: inVec4b) :Boolean = {
+    u.x || u.y || u.z || u.w
+  }
+
+  /** This function is equivalent to logical AND on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return true if all the components are true, false otherwise.
+   */
+  def all(u: inVec4b) :Boolean = {
+    u.x && u.y && u.z && u.w
+  }
+
+  /** This function is equivalent to logical NOT on components
+   * of the argument vector.
+   *
+   * @param u a boolean vector.
+   * @return a boolean vector with negated components of u.
+   */
+  def not(u: inVec4b) :Vec4b = Vec4b(!u.x, !u.y, !u.z, !u.w)
+
 
   // Int functions
 
@@ -63,7 +150,7 @@ object IntMath {
 
   /** Clamps a value to a given range.
    * The result is undefined if minVal > maxVal.
-   * 
+   *
    * @param x, value to clamp.
    * @param minVal, range lower bound, inclusive.
    * @param maxVal, range upper bound, inclusive.
@@ -95,7 +182,7 @@ object IntMath {
       clamp(u.y, minVal.y, maxVal.y)
     )
   }
-  
+
   def lessThan(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
       u.x < v.x,
@@ -290,4 +377,140 @@ object IntMath {
       u.w != v.w
     )
   }
+
+
+  // Generic matrix functions.
+
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   */
+  def matrixToArray(m: AnyMat[_], array: Array[Float]) {
+    matrixToArray(m, array, 0)
+  }
+
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   * @param offset an offset into the array.
+   */
+  def matrixToArray(m: AnyMat[_], array: Array[Float], offset: Int) {
+    array(offset + 0) = m.f00
+    array(offset + 1) = m.f10
+    array(offset + 2) = m.f20
+    array(offset + 3) = m.f30
+
+    array(offset + 4) = m.f01
+    array(offset + 5) = m.f11
+    array(offset + 6) = m.f21
+    array(offset + 7) = m.f31
+
+    array(offset + 8) = m.f02
+    array(offset + 9) = m.f12
+    array(offset + 10)= m.f22
+    array(offset + 11)= m.f32
+
+    array(offset + 12)= m.f03
+    array(offset + 13)= m.f13
+    array(offset + 14)= m.f23
+    array(offset + 15)= m.f33
+  }
+
+  /** Writes a matrix into a given buffer in column major order.
+   * Use buffer.position() to change buffer offset.
+   *
+   * @param m the source matrix.
+   * @param buffer the destanation buffer.
+   */
+  def matrixToBuffer(m: AnyMat[_], buffer: FloatBuffer) {
+    buffer.put(m.f00)
+    buffer.put(m.f10)
+    buffer.put(m.f20)
+    buffer.put(m.f30)
+
+    buffer.put(m.f01)
+    buffer.put(m.f11)
+    buffer.put(m.f21)
+    buffer.put(m.f31)
+
+    buffer.put(m.f02)
+    buffer.put(m.f12)
+    buffer.put(m.f22)
+    buffer.put(m.f32)
+
+    buffer.put(m.f03)
+    buffer.put(m.f13)
+    buffer.put(m.f23)
+    buffer.put(m.f33)
+  }
+
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   */
+  def matrixToArray(m: AnyMat[_], array: Array[Double]) {
+    matrixToArray(m, array, 0)
+  }
+
+  /** Writes a matrix into a given array in column major order.
+   * @param m the source matrix.
+   * @param array the destanation array.
+   * @param offset an offset into the array.
+   */
+  def matrixToArray(m: AnyMat[_], array: Array[Double], offset: Int) {
+    array(offset + 0) = m.d00
+    array(offset + 1) = m.d10
+    array(offset + 2) = m.d20
+    array(offset + 3) = m.d30
+
+    array(offset + 4) = m.d01
+    array(offset + 5) = m.d11
+    array(offset + 6) = m.d21
+    array(offset + 7) = m.d31
+
+    array(offset + 8) = m.d02
+    array(offset + 9) = m.d12
+    array(offset + 10)= m.d22
+    array(offset + 11)= m.d32
+
+    array(offset + 12)= m.d03
+    array(offset + 13)= m.d13
+    array(offset + 14)= m.d23
+    array(offset + 15)= m.d33
+  }
+
+  /** Writes a matrix into a given buffer in column major order.
+   * Use buffer.position() to change buffer offset.
+   *
+   * @param m the source matrix.
+   * @param buffer the destanation buffer.
+   */
+  def matrixToBuffer(m: AnyMat[_], buffer: DoubleBuffer) {
+    buffer.put(m.d00)
+    buffer.put(m.d10)
+    buffer.put(m.d20)
+    buffer.put(m.d30)
+
+    buffer.put(m.d01)
+    buffer.put(m.d11)
+    buffer.put(m.d21)
+    buffer.put(m.d31)
+
+    buffer.put(m.d02)
+    buffer.put(m.d12)
+    buffer.put(m.d22)
+    buffer.put(m.d32)
+
+    buffer.put(m.d03)
+    buffer.put(m.d13)
+    buffer.put(m.d23)
+    buffer.put(m.d33)
+  }
 }
+
+
+/** <code>CoreMath</code> contains functions to operate on Ints and Int vectors.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+object CoreMath extends CoreMath

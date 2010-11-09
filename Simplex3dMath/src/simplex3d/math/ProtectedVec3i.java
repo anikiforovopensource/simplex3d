@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntMath module
+ ** Simplex3d, CoreMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,29 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math;
 
-import simplex3d.math.intm.IntMath._
+import simplex3d.math.*;
+import java.io.Serializable;
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object intm {
-
-  // Implicits
-  implicit def imInt(s: Int) = new ExtendedInt(s)
-
-  // In and Out aliases
-  type inVec2i = ReadVec2i
-  type outVec2i = Vec2i with Implicits[Off]
-  @inline implicit def outVec2i(u: Vec2i) = u.asInstanceOf[outVec2i]
-
-  type inVec3i = ReadVec3i
-  type outVec3i = Vec3i with Implicits[Off]
-  @inline implicit def outVec3i(u: Vec3i) = u.asInstanceOf[outVec3i]
-
-  type inVec4i = ReadVec4i
-  type outVec4i = Vec4i with Implicits[Off]
-  @inline implicit def outVec4i(u: Vec4i) = u.asInstanceOf[outVec4i]
+abstract class ProtectedVec3i<P> extends AnyVec3<P> implements Serializable {
+    public static final long serialVersionUID = 8104346712419693669L;
+    int px; int py; int pz;
 }

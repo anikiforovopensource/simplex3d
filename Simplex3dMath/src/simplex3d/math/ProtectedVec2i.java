@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntMath module
+ ** Simplex3d, CoreMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.intm;
+package simplex3d.math;
 
 import simplex3d.math.*;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ import java.io.Serializable;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedVec4i<P> extends AnyVec4<P> implements Serializable {
+abstract class ProtectedVec2i<P> extends AnyVec2<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
-    int px; int py; int pz; int pw;
+    int px; int py;
 }

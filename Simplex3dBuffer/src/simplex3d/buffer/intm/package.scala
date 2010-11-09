@@ -22,6 +22,7 @@ package simplex3d.buffer
 
 import java.nio._
 import simplex3d.math.intm._
+import simplex3d.buffer._
 import simplex3d.buffer.intm._
 import simplex3d.buffer.intm.impl._
 
@@ -29,7 +30,7 @@ import simplex3d.buffer.intm.impl._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object intm extends PrimitiveIntImplicits {
+package object intm {
 
   private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :Factory[E, R] = s
   private final def cast[R <: DefinedInt](f: Factory[Int1, R]) = f.asInstanceOf[DataArray[Int1, R]]

@@ -27,22 +27,18 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package buffer {
-  private[buffer] class PrimitiveIntImplicits {
+package object buffer {
 
-    private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :Factory[Int1, R] = s
+  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :Factory[Int1, R] = s
 
-    implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
-    implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)
-    implicit final lazy val FactoryInt1SShort = primitiveFactory[SShort](new ArrayInt1SShort)
-    implicit final lazy val FactoryInt1UShort = primitiveFactory[UShort](new ArrayInt1UShort)
-    implicit final lazy val FactoryInt1SInt = primitiveFactory[SInt](new ArrayInt1SInt)
-    implicit final lazy val FactoryInt1UInt = primitiveFactory[UInt](new ArrayInt1UInt)
-  }
-}
+  implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
+  implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)
+  implicit final lazy val FactoryInt1SShort = primitiveFactory[SShort](new ArrayInt1SShort)
+  implicit final lazy val FactoryInt1UShort = primitiveFactory[UShort](new ArrayInt1UShort)
+  implicit final lazy val FactoryInt1SInt = primitiveFactory[SInt](new ArrayInt1SInt)
+  implicit final lazy val FactoryInt1UInt = primitiveFactory[UInt](new ArrayInt1UInt)
 
-package object buffer extends PrimitiveIntImplicits {
-
+  
   type MetaElement = integration.buffer.MetaElement
   type Primitive = integration.buffer.Primitive
   type Composite = integration.buffer.Composite

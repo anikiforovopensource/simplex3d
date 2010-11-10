@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.intm
+package test.math
 
 import org.scalatest._
 
@@ -29,15 +29,13 @@ import org.scalatest._
 class PackageTest extends FunSuite {
 
   test("Package") {
-    import simplex3d.math.intm._
+    import simplex3d.math._
 
     // implicits
     val i2 = 2*Vec2i(1)
     assert(i2.isInstanceOf[Vec2i])
 
     // the following passes if it compiles
-    def abs(x: Int) = IntMath.abs(x)
-
     type av2 = ReadVec2i
     type cv2 = ConstVec2i
     val cv2 = ConstVec2i

@@ -21,7 +21,6 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.intm._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
 

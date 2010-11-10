@@ -18,15 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.intm
+package test.math
 
 import org.scalatest._
 import test.math.BooleanCombinations
 
 import simplex3d.math._
-import simplex3d.math.intm._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
+import simplex3d.math.CoreMath._
 
 
 /**

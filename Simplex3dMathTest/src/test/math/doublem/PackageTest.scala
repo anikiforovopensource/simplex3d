@@ -22,7 +22,7 @@ package test.math.doublem
 
 import org.scalatest._
 
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm._
 
 
@@ -207,8 +207,6 @@ class PackageTest extends FunSuite {
     assert(pf4.isInstanceOf[Vec4])
 
     // the following passes if it compiles
-    val pi = DoubleMath.Pi
-
     type av2 = ReadVec2
     type cv2 = ConstVec2
     val cv2 = ConstVec2

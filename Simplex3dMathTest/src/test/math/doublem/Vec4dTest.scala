@@ -24,9 +24,9 @@ import org.scalatest._
 import test.math.BooleanCombinations
 
 import simplex3d.math._
-import simplex3d.math.intm._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
+import simplex3d.math.CoreMath._
 
 
 /**

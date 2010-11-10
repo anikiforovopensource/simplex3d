@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors._
 
 import simplex3d.math._
-import simplex3d.math.intm.IntMath
 import simplex3d.math.doublem.renamed._
 import simplex3d.math.doublem.DoubleMath._
 
@@ -35,9 +34,9 @@ import simplex3d.math.doublem.DoubleMath._
 object FunctionPainter {
 
   private final def rgb(c: ReadVec3) :Int = {
-    (IntMath.clamp(int(c.r*255), 0, 255) << 16) |
-    (IntMath.clamp(int(c.g*255), 0, 255) << 8) |
-    IntMath.clamp(int(c.b*255), 0, 255) |
+    (clamp(int(c.r*255), 0, 255) << 16) |
+    (clamp(int(c.g*255), 0, 255) << 8) |
+    clamp(int(c.b*255), 0, 255) |
     0xFF000000
   }
 

@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.intm
+package test.math
 
 import org.scalatest._
-
-import simplex3d.math.intm._
+import simplex3d.math._
 
 
 /**

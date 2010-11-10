@@ -22,7 +22,7 @@ package test.math.doublem
 
 import org.scalatest._
 
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem.renamed._
 
@@ -38,7 +38,7 @@ class PrimitiveMathTest extends FunSuite {
   )
   val C = 7 + 1e-9
 
-  test("doublem Primitive Math") {
+  test("Double Primitive Math") {
     {
       val u = ConstVec2(7, 8)
 

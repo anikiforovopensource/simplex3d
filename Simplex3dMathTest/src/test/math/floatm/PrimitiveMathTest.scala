@@ -22,7 +22,7 @@ package test.math.floatm
 
 import org.scalatest._
 
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm.renamed._
 
 
@@ -31,7 +31,7 @@ import simplex3d.math.floatm.renamed._
  */
 class PrimitiveMathTest extends FunSuite {
 
-  test("floatm Primitive Math") {
+  test("Float Primitive Math") {
     {
       val u = ConstVec2(7, 8)
 

@@ -22,7 +22,7 @@ package test.math.doublem
 
 import org.scalatest._
 
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm._
 
 

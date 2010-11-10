@@ -54,7 +54,7 @@ class FloorFloat {
   def floorOpt(x: Float) :Float = {
     if (x > Int.MaxValue || x < Int.MinValue) x
     else {
-      val i = int(x)
+      val i = x.toInt
       if (x > 0 || x == i) i else if(java.lang.Float.isNaN(x)) x else i - 1
     }
   }
@@ -66,7 +66,7 @@ class FloorFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(StrictMath.floor((-i + 0.12345f)*100)/23.4567f)
+        answer += (StrictMath.floor((-i + 0.12345f)*100)/23.4567f).toInt
 
         i += 1
       }
@@ -83,7 +83,7 @@ class FloorFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(floorOpt((-i + 0.12345f)*100)/23.4567f)
+        answer += (floorOpt((-i + 0.12345f)*100)/23.4567f).toInt
 
         i += 1
       }
@@ -116,7 +116,7 @@ class FloorDouble {
   def floorOpt(x: Double) :Double = {
     if (x > Long.MaxValue || x < Long.MinValue) x
     else {
-      val i = long(x)
+      val i = x.toLong
       if (x > 0 || x == i) i else if(java.lang.Double.isNaN(x)) x else i - 1
     }
   }
@@ -128,7 +128,7 @@ class FloorDouble {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(StrictMath.floor((-i + 0.12345)*4.26317427430115915709))
+        answer += (StrictMath.floor((-i + 0.12345)*4.26317427430115915709)).toInt
 
         i += 1
       }
@@ -145,7 +145,7 @@ class FloorDouble {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(floorOpt((-i + 0.12345)*4.26317427430115915709))
+        answer += (floorOpt((-i + 0.12345)*4.26317427430115915709)).toInt
 
         i += 1
       }

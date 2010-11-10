@@ -18,11 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.intm
+package test.math
 
 import org.scalatest._
-
-import simplex3d.math.intm._
+import simplex3d.math._
 
 
 /**
@@ -30,7 +29,7 @@ import simplex3d.math.intm._
  */
 class PrimitiveMathTest extends FunSuite {
 
-  test("intm Primitive Math") {
+  test("Int Primitive Math") {
     {
       val u = ConstVec2i(10, 20)
       val b = ConstVec2i(0xF, 0xFF)

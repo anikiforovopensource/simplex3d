@@ -18,19 +18,122 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.math.intm
+package test.math
 
 import org.scalatest._
-
 import simplex3d.math._
-import simplex3d.math.intm._
-import simplex3d.math.intm.IntMath._
+import simplex3d.math.CoreMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class IntMathTest extends FunSuite {
+class CoreMathTest extends FunSuite {
+
+  test("Casting") {
+    val t0: Boolean = false
+    val i0: Int = 0
+    val f0: Float = 0
+    val d0: Double = 0
+
+    val t1: Boolean = true
+    val i1: Int = 1
+    val f1: Float = 1
+    val d1: Double = 1
+
+    val i2: Int = 2
+    val f2: Float = 2
+    val d2: Double = 2
+
+    val i3: Int = -1
+    val f3: Float = -1
+    val d3: Double = -1
+
+    assert(bool(t1).isInstanceOf[Boolean])
+    assert(bool(i1).isInstanceOf[Boolean])
+    assert(bool(f1).isInstanceOf[Boolean])
+    assert(bool(d1).isInstanceOf[Boolean])
+
+    assert(bool(t1))
+    assert(bool(i1))
+    assert(bool(f1))
+    assert(bool(d1))
+
+    assert(bool(i2))
+    assert(bool(f2))
+    assert(bool(d2))
+
+    assert(bool(i3))
+    assert(bool(f3))
+    assert(bool(d3))
+
+    assert(!bool(t0))
+    assert(!bool(i0))
+    assert(!bool(f0))
+    assert(!bool(d0))
+
+    assert(int(t1).isInstanceOf[Int])
+    assert(int(i1).isInstanceOf[Int])
+    assert(int(f1).isInstanceOf[Int])
+    assert(int(d1).isInstanceOf[Int])
+
+    assert(int(t1) == i1)
+    assert(int(i1) == i1)
+    assert(int(f1) == i1)
+    assert(int(d1) == i1)
+
+    assert(int(t0) == i0)
+    assert(int(i0) == i0)
+    assert(int(f0) == i0)
+    assert(int(d0) == i0)
+
+    assert(float(t1).isInstanceOf[Float])
+    assert(float(i1).isInstanceOf[Float])
+    assert(float(f1).isInstanceOf[Float])
+    assert(float(d1).isInstanceOf[Float])
+
+    assert(float(t1) == f1)
+    assert(float(i1) == f1)
+    assert(float(f1) == f1)
+    assert(float(d1) == f1)
+
+    assert(float(t0) == f0)
+    assert(float(i0) == f0)
+    assert(float(f0) == f0)
+    assert(float(d0) == f0)
+
+    assert(double(t1).isInstanceOf[Double])
+    assert(double(i1).isInstanceOf[Double])
+    assert(double(f1).isInstanceOf[Double])
+    assert(double(d1).isInstanceOf[Double])
+
+    assert(double(t1) == d1)
+    assert(double(i1) == d1)
+    assert(double(f1) == d1)
+    assert(double(d1) == d1)
+
+    assert(double(t0) == d0)
+    assert(double(i0) == d0)
+    assert(double(f0) == d0)
+    assert(double(d0) == d0)
+  }
+
+  test("Boolean functions") {
+    BooleanCombinations.test { (x, y, z, w) =>
+      assert(any(Vec2b(x, y)) == (x || y))
+      assert(all(Vec2b(x, y)) == (x && y))
+      assert(not(Vec2b(x, y)) == Vec2b(!x, !y))
+
+      assert(any(Vec3b(x, y, z)) == (x || y || z))
+      assert(all(Vec3b(x, y, z)) == (x && y && z))
+      assert(not(Vec3b(x, y, z)) == Vec3b(!x, !y, !z))
+
+      assert(any(Vec4b(x, y, z, w)) == (x || y || z || w))
+      assert(all(Vec4b(x, y, z, w)) == (x && y && z && w))
+      assert(not(Vec4b(x, y, z, w)) == Vec4b(!x, !y, !z, !w))
+    }
+  }
+
 
   val random = new java.util.Random
   import random._

@@ -22,7 +22,7 @@ package test.math.floatm
 
 import org.scalatest._
 
-import simplex3d.math.intm._
+import simplex3d.math._
 
 
 /**

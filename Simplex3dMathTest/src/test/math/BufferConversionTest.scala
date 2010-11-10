@@ -26,6 +26,7 @@ import org.scalatest._
 import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
+import simplex3d.math.CoreMath._
 
 
 /**

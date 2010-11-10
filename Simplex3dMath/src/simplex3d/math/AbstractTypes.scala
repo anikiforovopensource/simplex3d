@@ -21,13 +21,6 @@
 package simplex3d.math
 
 
-/** <code>MathObject</code> is a superclass of all the vectors, quaternions,
- * and matrices.
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class MathObject[P]
-
 /** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.

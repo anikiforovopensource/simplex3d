@@ -25,7 +25,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec[P] extends MathObject[P] {
+private[math] abstract class AnyVec[P] {
 
   private[math] type R2
   private[math] type R3

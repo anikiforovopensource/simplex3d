@@ -18,11 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublem
+package simplex3d.math
+package doublem
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
-import simplex3d.math._
+import simplex3d.math.CoreMath._
 
 
 /**

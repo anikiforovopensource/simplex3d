@@ -80,7 +80,6 @@ name="Simplex3dMath" default="release-all" basedir=".">
     <property name="release.src" value="${release.dir}/Simplex3dMath_src.zip"/>
     <property name="root.pkg" value="simplex3d/math"/>
 
-    <property name="intm.pkg" value="${root.pkg}/intm/**"/>
     <property name="floatm.pkg" value="${root.pkg}/floatm/**"/>
     <property name="doublem.pkg" value="${root.pkg}/doublem/**"/>
 
@@ -99,11 +98,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${intm.pkg} ${floatm.pkg} ${doublem.pkg}"/>
-        </jar>
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-int.jar">
-            <fileset dir="${build.classes.dir}" includes="${intm.pkg}"/>
+            excludes="${floatm.pkg} ${doublem.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-float.jar">

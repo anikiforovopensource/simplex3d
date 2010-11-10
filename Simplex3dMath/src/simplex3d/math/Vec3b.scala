@@ -22,6 +22,7 @@ package simplex3d.math
 
 import scala.reflect.Manifest._
 import simplex3d.math.integration.buffer._
+import simplex3d.math.CoreMath._
 
 
 /** The <code>ReadVec3b</code> class represents Boolean 3-dimensional vectors,
@@ -32,7 +33,7 @@ import simplex3d.math.integration.buffer._
  *   and <code>BaseMath.not(bvec)</code>.
  * </p>
  * <p>
- *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   Boolean vectors are produced by relational functions in CoreMath, FloatMath,
  *   and DoubleMath:
  *   <ul>
  *     <li><code>lessThan(vec1, vec2)</code></li>
@@ -68,22 +69,22 @@ sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean]
   private[math] final def by: Boolean = y
   private[math] final def bz: Boolean = z
 
-  private[math] final def ix: Int = simplex3d.math.int(x)
-  private[math] final def iy: Int = simplex3d.math.int(y)
-  private[math] final def iz: Int = simplex3d.math.int(z)
+  private[math] final def ix: Int = int(x)
+  private[math] final def iy: Int = int(y)
+  private[math] final def iz: Int = int(z)
 
-  private[math] final def fx: Float = simplex3d.math.float(x)
-  private[math] final def fy: Float = simplex3d.math.float(y)
-  private[math] final def fz: Float = simplex3d.math.float(z)
+  private[math] final def fx: Float = float(x)
+  private[math] final def fy: Float = float(y)
+  private[math] final def fz: Float = float(z)
 
-  private[math] final def dx: Double = simplex3d.math.double(x)
-  private[math] final def dy: Double = simplex3d.math.double(y)
-  private[math] final def dz: Double = simplex3d.math.double(z)
+  private[math] final def dx: Double = double(x)
+  private[math] final def dy: Double = double(y)
+  private[math] final def dz: Double = double(z)
 
 
-  @noinline final def x = px
-  @noinline final def y = py
-  @noinline final def z = pz
+  final def x = px
+  final def y = py
+  final def z = pz
 
   /** Alias for x.
    * @return component x.
@@ -283,7 +284,7 @@ object ConstVec3b {
  *   and <code>BaseMath.not(bvec)</code>.
  * </p>
  * <p>
- *   Boolean vectors are produced by relational functions in IntMath, FloatMath,
+ *   Boolean vectors are produced by relational functions in CoreMath, FloatMath,
  *   and DoubleMath:
  *   <ul>
  *     <li><code>lessThan(vec1, vec2)</code></li>

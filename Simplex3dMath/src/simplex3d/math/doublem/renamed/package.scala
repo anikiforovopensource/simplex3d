@@ -87,8 +87,6 @@ package object renamed {
     ConstMat4d(m)
 
 
-  val DoubleMath = doublem.DoubleMath
-
   type ReadVec2 = ReadVec2d
   type ConstVec2 = ConstVec2d
   val ConstVec2 = ConstVec2d

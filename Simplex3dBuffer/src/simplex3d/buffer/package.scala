@@ -30,13 +30,40 @@ import simplex3d.math._
 package object buffer {
 
   private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :Factory[Int1, R] = s
+  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :Factory[E, R] = s
+  private final def cast[R <: DefinedInt](f: Factory[Int1, R]) = f.asInstanceOf[DataArray[Int1, R]]
 
+  // Int1
   implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
   implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)
   implicit final lazy val FactoryInt1SShort = primitiveFactory[SShort](new ArrayInt1SShort)
   implicit final lazy val FactoryInt1UShort = primitiveFactory[UShort](new ArrayInt1UShort)
   implicit final lazy val FactoryInt1SInt = primitiveFactory[SInt](new ArrayInt1SInt)
   implicit final lazy val FactoryInt1UInt = primitiveFactory[UInt](new ArrayInt1UInt)
+
+  // Vec2i
+  implicit final lazy val FactoryVec2iSByte = factory[Vec2i, SByte](new ArrayVec2i(cast(FactoryInt1SByte)))
+  implicit final lazy val FactoryVec2iUByte = factory[Vec2i, UByte](new ArrayVec2i(cast(FactoryInt1UByte)))
+  implicit final lazy val FactoryVec2iSShort = factory[Vec2i, SShort](new ArrayVec2i(cast(FactoryInt1SShort)))
+  implicit final lazy val FactoryVec2iUShort = factory[Vec2i, UShort](new ArrayVec2i(cast(FactoryInt1UShort)))
+  implicit final lazy val FactoryVec2iSInt = factory[Vec2i, SInt](new ArrayVec2i(cast(FactoryInt1SInt)))
+  implicit final lazy val FactoryVec2iUInt = factory[Vec2i, UInt](new ArrayVec2i(cast(FactoryInt1UInt)))
+
+  // Vec3i
+  implicit final lazy val FactoryVec3iSByte = factory[Vec3i, SByte](new ArrayVec3i(cast(FactoryInt1SByte)))
+  implicit final lazy val FactoryVec3iUByte = factory[Vec3i, UByte](new ArrayVec3i(cast(FactoryInt1UByte)))
+  implicit final lazy val FactoryVec3iSShort = factory[Vec3i, SShort](new ArrayVec3i(cast(FactoryInt1SShort)))
+  implicit final lazy val FactoryVec3iUShort = factory[Vec3i, UShort](new ArrayVec3i(cast(FactoryInt1UShort)))
+  implicit final lazy val FactoryVec3iSInt = factory[Vec3i, SInt](new ArrayVec3i(cast(FactoryInt1SInt)))
+  implicit final lazy val FactoryVec3iUInt = factory[Vec3i, UInt](new ArrayVec3i(cast(FactoryInt1UInt)))
+
+  // Vec4i
+  implicit final lazy val FactoryVec4iSByte = factory[Vec4i, SByte](new ArrayVec4i(cast(FactoryInt1SByte)))
+  implicit final lazy val FactoryVec4iUByte = factory[Vec4i, UByte](new ArrayVec4i(cast(FactoryInt1UByte)))
+  implicit final lazy val FactoryVec4iSShort = factory[Vec4i, SShort](new ArrayVec4i(cast(FactoryInt1SShort)))
+  implicit final lazy val FactoryVec4iUShort = factory[Vec4i, UShort](new ArrayVec4i(cast(FactoryInt1UShort)))
+  implicit final lazy val FactoryVec4iSInt = factory[Vec4i, SInt](new ArrayVec4i(cast(FactoryInt1SInt)))
+  implicit final lazy val FactoryVec4iUInt = factory[Vec4i, UInt](new ArrayVec4i(cast(FactoryInt1UInt)))
 
   
   type MetaElement = integration.buffer.MetaElement

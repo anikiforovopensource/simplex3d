@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntBuffer module
+ * Simplex3d, CoreBuffer module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBuffer.
@@ -18,109 +18,103 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer.intm
+package simplex3d.buffer
 
 import java.nio._
 import scala.annotation.unchecked._
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.buffer._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
+private[buffer] abstract class BaseVec2i[+R <: DefinedInt](
   backing: ContiguousSeq[Int1, R], off: Int, str: Int
-) extends CompositeSeq[Vec3i, R](backing, off, str) {
-  final def elementManifest = Vec3i.ReadManifest
-  final def components: Int = 3
+) extends CompositeSeq[Vec2i, R](backing, off, str) {
+  final def elementManifest = Vec2i.ReadManifest
+  final def components: Int = 2
 
   def mkDataArray(array: R#ArrayType @uncheckedVariance)
-  :DataArray[Vec3i, R] =
-    new ArrayVec3i[R](
+  :DataArray[Vec2i, R] =
+    new ArrayVec2i[R](
       backingSeq.mkDataArray(array).asInstanceOf[DataArray[Int1, R]]
     )
 
   def mkReadDataBuffer(byteBuffer: ByteBuffer)
-  :ReadDataBuffer[Vec3i, R] =
-    new BufferVec3i[R](
+  :ReadDataBuffer[Vec2i, R] =
+    new BufferVec2i[R](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]]
     )
 
   protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int)
-  :ReadDataView[Vec3i, R] =
-    new ViewVec3i[R](
+  :ReadDataView[Vec2i, R] =
+    new ViewVec2i[R](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]],
       off, str
     )
 }
 
-private[buffer] final class ArrayVec3i[+R <: DefinedInt](
+private[buffer] final class ArrayVec2i[+R <: DefinedInt](
   backingSeq: DataArray[Int1, R]
-) extends BaseVec3i[R](backingSeq, 0, 3) with DataArray[Vec3i, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec3i(
+) extends BaseVec2i[R](backingSeq, 0, 2) with DataArray[Vec2i, R] {
+  protected[buffer] def mkReadOnlyInstance() = new ArrayVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataArray[Int1, R]]
   )
 
-  def apply(i: Int) :ConstVec3i = {
-    val j = i*3
-    ConstVec3i(
+  def apply(i: Int) :ConstVec2i = {
+    val j = i*2
+    ConstVec2i(
       backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backingSeq(j + 1)
     )
   }
-  def update(i: Int, v: ReadVec3i) {
-    val j = i*3
+  def update(i: Int, v: ReadVec2i) {
+    val j = i*2
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
   }
 }
 
-private[buffer] final class BufferVec3i[+R <: DefinedInt](
+private[buffer] final class BufferVec2i[+R <: DefinedInt](
   backingSeq: DataBuffer[Int1, R]
-) extends BaseVec3i[R](backingSeq, 0, 3) with DataBuffer[Vec3i, R] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec3i(
+) extends BaseVec2i[R](backingSeq, 0, 2) with DataBuffer[Vec2i, R] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Int1, R]]
   )
 
-  def apply(i: Int) :ConstVec3i = {
-    val j = i*3
-    ConstVec3i(
+  def apply(i: Int) :ConstVec2i = {
+    val j = i*2
+    ConstVec2i(
       backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backingSeq(j + 1)
     )
   }
-  def update(i: Int, v: ReadVec3i) {
-    val j = i*3
+  def update(i: Int, v: ReadVec2i) {
+    val j = i*2
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
   }
 }
 
-private[buffer] final class ViewVec3i[+R <: DefinedInt](
+private[buffer] final class ViewVec2i[+R <: DefinedInt](
   backingSeq: DataBuffer[Int1, R], off: Int, str: Int
-) extends BaseVec3i[R](backingSeq, off, str) with DataView[Vec3i, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec3i(
+) extends BaseVec2i[R](backingSeq, off, str) with DataView[Vec2i, R] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewVec2i(
     backingSeq.asReadOnlySeq().asInstanceOf[DataBuffer[Int1, R]],
     offset, stride
   )
 
-  def apply(i: Int) :ConstVec3i = {
+  def apply(i: Int) :ConstVec2i = {
     val j = offset + i*stride
-    ConstVec3i(
+    ConstVec2i(
       backingSeq(j),
-      backingSeq(j + 1),
-      backingSeq(j + 2)
+      backingSeq(j + 1)
     )
   }
-  def update(i: Int, v: ReadVec3i) {
+  def update(i: Int, v: ReadVec2i) {
     val j = offset + i*stride
     backingSeq(j) = v.x
     backingSeq(j + 1) = v.y
-    backingSeq(j + 2) = v.z
   }
 }

@@ -46,8 +46,20 @@ class Protected<A> {
 
     protected final Object writeReplace() throws ObjectStreamException {
         if (this instanceof ReadDataArray) {
-            return new SerializedDataArray(sharedStore);
+            SerializableData sd = mkSerializableInstance();
+            sd.buffer_$eq(false);
+            sd.content_$eq(sharedStore);
+            return sd;
         }
-        throw new UnsupportedOperationException();
+        else if (this instanceof ReadDataBuffer) {
+            DataArray da = ((ReadDataBuffer) this).copyAsDataArray();
+            SerializableData sd = mkSerializableInstance();
+            sd.buffer_$eq(true);
+            sd.content_$eq(da.array());
+            return sd;
+        }
+        throw new NotSerializableException();
     }
+
+    protected SerializableData mkSerializableInstance() { return null; }
 }

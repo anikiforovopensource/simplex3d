@@ -1,5 +1,5 @@
 /*
- * Simplex3d, IntBuffer module
+ * Simplex3d, CoreBuffer module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBuffer.
@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer.intm
+package simplex3d.buffer
 
 import java.nio._
 import scala.annotation.unchecked._
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.buffer._
 
 

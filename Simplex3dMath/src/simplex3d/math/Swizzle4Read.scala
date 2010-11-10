@@ -24,7 +24,7 @@ package simplex3d.math
 /** <code>Sizzle4Read</code> contains abstract read-only swizzling
  * for 4-dimensional vectors.
  *
- * @author Aleksey Nikiforov (ledx)
+ * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Swizzle4Read[P] extends Swizzle3Read[P] {
 

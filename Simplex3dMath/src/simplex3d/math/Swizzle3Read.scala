@@ -24,7 +24,7 @@ package simplex3d.math
 /** <code>Sizzle3Read</code> contains abstract read-only swizzling
  * for 3-dimensional vectors.
  *
- * @author Aleksey Nikiforov (ledx)
+ * @author Aleksey Nikiforov (lex)
  */
 private[math] abstract class Swizzle3Read[P] extends AnyVec[P] {
   

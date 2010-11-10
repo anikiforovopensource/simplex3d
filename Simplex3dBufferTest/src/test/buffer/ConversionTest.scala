@@ -19,12 +19,9 @@
  */
 
 package test.buffer
-package intm
 
 import org.scalatest._
-import simplex3d.math.intm._
 import simplex3d.buffer._
-import simplex3d.buffer.intm._
 
 import Descriptors._
 import FactoryTest._

@@ -26,10 +26,10 @@ import java.nio._
 import scala.reflect._
 import simplex3d.buffer._
 import simplex3d.buffer.RawType._
-import simplex3d.buffer.intm._
+import simplex3d.buffer._
 import simplex3d.buffer.floatm._
 import simplex3d.buffer.doublem._
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
 

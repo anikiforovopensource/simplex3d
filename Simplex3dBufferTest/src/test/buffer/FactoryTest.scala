@@ -22,7 +22,8 @@ package test.buffer
 
 import java.nio._
 import org.scalatest._
-import simplex3d.math.intm._
+import simplex3d.math._
+import simplex3d.math.CoreMath._
 import simplex3d.buffer._
 
 import TestUtil._
@@ -258,8 +259,8 @@ object FactoryTest extends FunSuite {
       // Test different buffer configurations
       for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
         val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
-        val pos = IntMath.min(i*rawBytes, size)
-        val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+        val pos = min(i*rawBytes, size)
+        val limit = max(0, bytes.capacity - j*rawBytes)
         val position = (if (pos > limit) limit else pos)
 
         bytes.clear()
@@ -326,13 +327,13 @@ object FactoryTest extends FunSuite {
 
       for (
         stride <- descriptor.components to (descriptor.components + 4);
-        offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+        offset <- 0 to min(stride - descriptor.components, data.limit)
       ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
-          val pos = IntMath.min(i*rawBytes, size)
-          val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+          val pos = min(i*rawBytes, size)
+          val limit = max(0, bytes.capacity - j*rawBytes)
           val position = (if (pos > limit) limit else pos)
 
           bytes.clear()
@@ -380,8 +381,8 @@ object FactoryTest extends FunSuite {
       // Test different buffer configurations
       for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
         val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
-        val pos = IntMath.min(i*rawBytes, size)
-        val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+        val pos = min(i*rawBytes, size)
+        val limit = max(0, bytes.capacity - j*rawBytes)
         val position = (if (pos > limit) limit else pos)
 
         bytes.clear()
@@ -444,13 +445,13 @@ object FactoryTest extends FunSuite {
 
       for (
         stride <- descriptor.components to (descriptor.components + 4);
-        offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+        offset <- 0 to min(stride - descriptor.components, data.limit)
       ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
           val order = if (n == 0) ByteOrder.LITTLE_ENDIAN else ByteOrder.BIG_ENDIAN
-          val pos = IntMath.min(i*rawBytes, size)
-          val limit = IntMath.max(0, bytes.capacity - j*rawBytes)
+          val pos = min(i*rawBytes, size)
+          val limit = max(0, bytes.capacity - j*rawBytes)
           val position = (if (pos > limit) limit else pos)
 
           bytes.clear()

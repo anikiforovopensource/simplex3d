@@ -23,12 +23,12 @@ package test.buffer
 import java.nio._
 import scala.reflect._
 import org.scalatest._
-import simplex3d.math.intm._
+import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._
+import simplex3d.math.CoreMath._
 import simplex3d.buffer._
 import simplex3d.buffer.RawType._
-import simplex3d.buffer.intm._
 import simplex3d.buffer.floatm._
 import simplex3d.buffer.doublem._
 
@@ -1322,7 +1322,7 @@ object CastTest extends FunSuite {
 
     for (
       stride <- descriptor.components to (descriptor.components + 4);
-      offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+      offset <- 0 to min(stride - descriptor.components, data.limit)
     ) {
       val cast = factory(original, offset, stride)
       testView(cast, offset, stride, false, data)(descriptor)
@@ -1344,7 +1344,7 @@ object CastTest extends FunSuite {
 
     for (
       stride <- descriptor.components to (descriptor.components + 4);
-      offset <- 0 to IntMath.min(stride - descriptor.components, data.limit)
+      offset <- 0 to min(stride - descriptor.components, data.limit)
     ) {
       {
         val cast = factory(original, offset, stride)

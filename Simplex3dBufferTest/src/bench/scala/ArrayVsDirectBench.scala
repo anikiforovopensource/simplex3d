@@ -24,6 +24,7 @@ import java.nio._
 
 import simplex3d.math._
 import simplex3d.math.floatm._
+import simplex3d.math.floatm.FloatMath._
 import simplex3d.buffer._
 import simplex3d.buffer.floatm._
 

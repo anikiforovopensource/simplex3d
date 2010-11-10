@@ -35,7 +35,6 @@ import simplex3d.buffer.floatm._
  */
 object PrimitiveWrapperBench {
   def main(args: Array[String]) {
-    //System.setProperty("simplex3d.buffer.optimize", "false")
     val tc = new PrimitiveWrapperBenchTC()
     tc.run()
   }

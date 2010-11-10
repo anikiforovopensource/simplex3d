@@ -28,7 +28,7 @@ object Launcher {
   def main(args: Array[String]) {
     org.scalatest.tools.Runner.main(Array[String](
       "-p",
-      "out/production/Simplex3dBufferTest",
+      "out/production/Simplex3dBufferTest",//"build/classes",//
       "-gNHL"
     ))
   }

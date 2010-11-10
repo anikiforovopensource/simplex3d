@@ -34,8 +34,6 @@ import simplex3d.buffer.floatm._
  */
 object ConversionReadWrite {
   def main(args: Array[String]) {
-    //System.setProperty("simplex3d.buffer.optimize", "false")
-
     for (i <- 0 until 6) { test() }
   }
 

@@ -35,8 +35,6 @@ import simplex3d.buffer.floatm._
  */
 object AbsBufferBench {
   def main(args: Array[String]) {
-    //System.setProperty("simplex3d.buffer.optimize", "false")
-
     test()
     test()
     test()

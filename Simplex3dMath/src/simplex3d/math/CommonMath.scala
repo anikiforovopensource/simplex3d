@@ -23,6 +23,9 @@ package simplex3d.math
 import java.nio._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 private[math] class CommonMath {
 
   // Casting.

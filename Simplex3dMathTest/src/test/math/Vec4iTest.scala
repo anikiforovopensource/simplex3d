@@ -21,8 +21,6 @@
 package test.math
 
 import org.scalatest._
-import test.math.BooleanCombinations
-
 import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.doublem._

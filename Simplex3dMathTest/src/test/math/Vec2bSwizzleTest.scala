@@ -28,7 +28,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Vec2iSwizzleTest extends FunSuite {
+class Vec2bSwizzleTest extends FunSuite {
 
   test("Swizzled read") {
   BooleanCombinations.test { (x, y, z, w) =>

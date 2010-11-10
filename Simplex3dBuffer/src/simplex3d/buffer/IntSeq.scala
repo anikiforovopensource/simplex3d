@@ -35,6 +35,8 @@ private[buffer] sealed abstract class BaseInt1[+R <: DefinedInt](
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Int
   final def components: Int = 1
+
+  override def mkSerializableInstance() = new SerializableIntData(components, rawType)
 }
 
 

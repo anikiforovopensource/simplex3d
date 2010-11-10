@@ -53,6 +53,8 @@ private[buffer] abstract class BaseVec4d[+R <: DefinedDouble](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Double1, R]],
       off, str
     )
+
+  override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
 }
 
 private[buffer] final class ArrayVec4d[+R <: DefinedDouble](

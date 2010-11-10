@@ -38,6 +38,8 @@ private[buffer] sealed abstract class BaseDouble1[+R <: DefinedDouble](
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Double
   final def components: Int = 1
+
+  override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
 }
 
 

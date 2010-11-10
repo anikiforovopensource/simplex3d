@@ -28,7 +28,7 @@ import java.nio.*;
  *
  * @author Aleksey Nikiforov (lex)
  */
-class Protected<A> {
+abstract class Protected<A> {
     final Object sharedStore;
 
     Protected(Object shared) {
@@ -46,20 +46,24 @@ class Protected<A> {
 
     protected final Object writeReplace() throws ObjectStreamException {
         if (this instanceof ReadDataArray) {
-            SerializableData sd = mkSerializableInstance();
-            sd.buffer_$eq(false);
-            sd.content_$eq(sharedStore);
-            return sd;
+            SerializableData data = mkSerializableInstance();
+            data.buffer_$eq(false);
+            data.content_$eq(sharedStore);
+            return data;
         }
         else if (this instanceof ReadDataBuffer) {
-            DataArray da = ((ReadDataBuffer) this).copyAsDataArray();
-            SerializableData sd = mkSerializableInstance();
-            sd.buffer_$eq(true);
-            sd.content_$eq(da.array());
-            return sd;
+            DataArray acopy = (DataArray) ((ReadBaseSeq)this).copyAsDataArray();
+            SerializableData data = mkSerializableInstance();
+            data.buffer_$eq(true);
+            data.content_$eq(acopy.array());
+            return data;
         }
         throw new NotSerializableException();
     }
 
-    protected SerializableData mkSerializableInstance() { return null; }
+    protected SerializableData mkSerializableInstance()
+    throws NotSerializableException
+    {
+        throw new NotSerializableException();
+    }
 }

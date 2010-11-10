@@ -53,6 +53,8 @@ private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]],
       off, str
     )
+
+  override def mkSerializableInstance() = new SerializableIntData(components, rawType)
 }
 
 private[buffer] final class ArrayVec3i[+R <: DefinedInt](

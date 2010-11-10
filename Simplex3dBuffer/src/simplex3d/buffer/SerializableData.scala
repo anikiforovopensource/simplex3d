@@ -23,6 +23,9 @@ package simplex3d.buffer
 import java.io._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 @serializable @SerialVersionUID(8104346712419693669L)
 abstract class SerializableData {
   var buffer: Boolean = _
@@ -30,56 +33,9 @@ abstract class SerializableData {
 
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
-    if (buffer) resolve().copyAsDataBuffer() else resolve()
+    if (buffer) toDataArray().copyAsDataBuffer()
+    else toDataArray()
   }
 
-  protected def resolve(): DataArray[_, _]
-}
-
-class SerializableIntData extends SerializableData {
-  var rawType: Int = _
-  var components: Int = _
-
-  protected def resolve(): DataArray[_, _] = {
-    import RawType._
-
-    components match {
-      case 1 =>
-        rawType match {
-          case SByte => FactoryInt1SByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryInt1UByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryInt1SShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryInt1UShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryInt1SInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryInt1UInt.mkDataArray(content.asInstanceOf[Array[Int]])
-        }
-      case 2 =>
-        rawType match {
-          case SByte => FactoryVec2iSByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryVec2iUByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryVec2iSShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryVec2iUShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryVec2iSInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryVec2iUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-        }
-      case 3 =>
-        rawType match {
-          case SByte => FactoryVec3iSByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryVec3iUByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryVec3iSShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryVec3iUShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryVec3iSInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryVec3iUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-        }
-      case 4 =>
-        rawType match {
-          case SByte => FactoryVec4iSByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryVec4iUByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryVec4iSShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryVec4iUShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryVec4iSInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryVec4iUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-        }
-    }
-  }
+  protected def toDataArray(): DataArray[_, _]
 }

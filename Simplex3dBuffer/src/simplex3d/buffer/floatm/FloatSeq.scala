@@ -38,6 +38,8 @@ private[buffer] sealed abstract class BaseFloat1[+R <: DefinedFloat](
   final def elementManifest = componentManifest
   final def componentManifest = Manifest.Float
   final def components: Int = 1
+  
+  override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
 }
 
 

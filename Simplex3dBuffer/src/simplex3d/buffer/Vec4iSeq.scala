@@ -53,6 +53,8 @@ private[buffer] abstract class BaseVec4i[+R <: DefinedInt](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Int1, R]],
       off, str
     )
+
+  override def mkSerializableInstance() = new SerializableIntData(components, rawType)
 }
 
 private[buffer] final class ArrayVec4i[+R <: DefinedInt](

@@ -27,6 +27,7 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
+@serializable @SerialVersionUID(8104346712419693669L)
 trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
 extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
   override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataBuffer[E, R]]

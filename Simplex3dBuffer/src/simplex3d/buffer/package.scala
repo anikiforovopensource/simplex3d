@@ -81,6 +81,7 @@ package object buffer {
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
+  type AnyView = ReadDataView[_, RawData]
 
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
   type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]
@@ -465,11 +466,11 @@ package object buffer {
   }
 
 
-  def interleaveAny(
-    dataSeqs: inDataSeq[_, RawData]*
-  )(size: Int) :Array[DataView[_, _]] = {
+  def interleaveAny(seqs: inData[_]*)(size: Int) :Array[AnyView] = {
+    val dataSeqs = seqs.toArray
+
     // check arguments
-    if (dataSeqs.length == 0) return new Array[DataView[_, _]](0)
+    if (dataSeqs.length == 0) return new Array[AnyView](0)
 
     // verify size
     var i = 0; while(i < dataSeqs.length) {
@@ -515,15 +516,17 @@ package object buffer {
     }
 
     // find pad value
-    var pad = totalWidth%maxComponentWidth
+    var pad = totalWidth % maxComponentWidth
     if (pad > 0) pad = maxComponentWidth - pad
     val byteStride = totalWidth + pad
 
     // generate
     val byteBuffer = ByteBuffer.allocateDirect(byteStride*size)
-    val result = new Array[DataView[_, _]](dataSeqs.length)
+    val result = new Array[AnyView](dataSeqs.length)
     var byteOffset = 0
+
     i = 0; while (i < dataSeqs.length) {
+
       val seq = dataSeqs(order(i))
       result(order(i)) = seq.copyAsDataView(
         byteBuffer,

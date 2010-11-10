@@ -53,6 +53,8 @@ private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
       backingSeq.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[Float1, R]],
       off, str
     )
+
+  override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
 }
 
 private[buffer] final class ArrayVec2f[+R <: DefinedFloat](

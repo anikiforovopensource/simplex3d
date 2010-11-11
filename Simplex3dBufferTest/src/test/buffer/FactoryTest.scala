@@ -135,6 +135,8 @@ object FactoryTest extends FunSuite {
     viewFromData(seq.mkDataView(_, _, _))(descriptor)
     readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
+
+    emptyMarker(seq.emptyMarker)(descriptor)
   }
 
   def testArrayFromSize[E <: MetaElement, R <: RawData](
@@ -489,6 +491,18 @@ object FactoryTest extends FunSuite {
     for (size <- 1 to 9) {
       test(size*rawBytes)
     }
+  }
+
+  def emptyMarker[E <: MetaElement, R <: RawData](
+    seq: inDataSeq[E, R]
+  )(implicit descriptor: Descriptor[E, R]) {
+    assert(seq.elementManifest == descriptor.elementManifest)
+    assert(seq.componentManifest == descriptor.componentManifest)
+    assert(seq.components == descriptor.components)
+    assert(seq.rawType == descriptor.rawType)
+    assert(seq.normalized == descriptor.normalized)
+    assert(seq.size == 0)
+    assert(seq.byteCapacity == 0)
   }
 
   def arrayFromCollection[E <: MetaElement, R <: RawData](

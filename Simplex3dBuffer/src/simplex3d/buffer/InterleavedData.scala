@@ -29,15 +29,15 @@ import java.nio._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-class InterleavedData private (dviews: Seq[AnyView]) extends immutable.IndexedSeq[AnyView] {
+class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] {
 
   verify(dviews)
   @transient private[this] var views = dviews.toArray
   
-  def apply(i: Int) :AnyView = views(i)
+  def apply(i: Int) :RawView = views(i)
   def length = views.length
 
-  private[this] def verify(seqs: Seq[AnyView]) {
+  private[this] def verify(seqs: Seq[RawView]) {
     val first = seqs.head
     val checks = new Array[Boolean](first.stride*first.bytesPerRawComponent)
 
@@ -108,7 +108,7 @@ class InterleavedData private (dviews: Seq[AnyView]) extends immutable.IndexedSe
     }
 
     // Restore views from saved data arrays.
-    val views = new Array[AnyView](size)
+    val views = new Array[RawView](size)
 
     i = 0; while (i < size) {
       val darray = in.readObject().asInstanceOf[Data[_]]
@@ -125,7 +125,7 @@ class InterleavedData private (dviews: Seq[AnyView]) extends immutable.IndexedSe
 }
 
 object InterleavedData {
-  def apply(seqs: AnyView*) = new InterleavedData(seqs)
-  def apply(seqs: IndexedSeq[AnyView]) = new InterleavedData(seqs)
+  def apply(seqs: RawView*) = new InterleavedData(seqs)
+  def apply(seqs: IndexedSeq[RawView]) = new InterleavedData(seqs)
   def apply(seqs: inData[_]*)(size: Int) = new InterleavedData(interleaveAny(seqs: _*)(size))
 }

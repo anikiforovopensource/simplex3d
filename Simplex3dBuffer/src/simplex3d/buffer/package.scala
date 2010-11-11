@@ -29,9 +29,9 @@ import simplex3d.math._
  */
 package object buffer {
 
-  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :Factory[Int1, R] = s
-  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :Factory[E, R] = s
-  private final def cast[R <: DefinedInt](f: Factory[Int1, R]) = f.asInstanceOf[DataArray[Int1, R]]
+  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :DataSeqFactory[Int1, R] = s
+  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :DataSeqFactory[E, R] = s
+  private final def cast[R <: DefinedInt](f: DataSeqFactory[Int1, R]) = f.asInstanceOf[DataArray[Int1, R]]
 
   // Int1
   implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
@@ -81,7 +81,7 @@ package object buffer {
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
-  type AnyView = ReadDataView[_, RawData]
+  type RawView = ReadDataView[_, RawData]
 
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
   type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]
@@ -466,11 +466,11 @@ package object buffer {
   }
 
 
-  def interleaveAny(seqs: inData[_]*)(size: Int) :Array[AnyView] = {
+  def interleaveAny(seqs: inData[_]*)(size: Int) :Array[RawView] = {
     val dataSeqs = seqs.toArray
 
     // check arguments
-    if (dataSeqs.length == 0) return new Array[AnyView](0)
+    if (dataSeqs.length == 0) return new Array[RawView](0)
 
     // verify size
     var i = 0; while(i < dataSeqs.length) {
@@ -522,7 +522,7 @@ package object buffer {
 
     // generate
     val byteBuffer = ByteBuffer.allocateDirect(byteStride*size)
-    val result = new Array[AnyView](dataSeqs.length)
+    val result = new Array[RawView](dataSeqs.length)
     var byteOffset = 0
 
     i = 0; while (i < dataSeqs.length) {

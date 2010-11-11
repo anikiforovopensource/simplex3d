@@ -36,7 +36,7 @@ private[buffer] abstract class ReadBaseSeq[
 ](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends Protected[R#ArrayType @uncheckedVariance](shared) with Factory[E, R]
+) extends Protected[R#ArrayType @uncheckedVariance](shared) with DataSeqFactory[E, R]
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Assertions
@@ -132,8 +132,8 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   def elementManifest: Manifest[E#Read]
   def componentManifest: Manifest[E#Component#Read]
 
-  def components: Int
-  def rawType: Int
+  override def components: Int
+  override def rawType: Int
   def normalized: Boolean
 
   final val bytesPerRawComponent = RawType.byteLength(rawType)
@@ -246,58 +246,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     buff.asInstanceOf[RawBuffer]
   }
 
-  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
-  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
 
-
-  private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R] = {
-    if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
-    else mkReadDataViewInstance(byteBuffer, offset, stride)
-  }
-
-  final def mkDataArray(size: Int) :DataArray[E, R] = {
-    val array = ((storeType: @switch) match {
-      case ByteStore => new Array[Byte](size*components)
-      case ShortStore => new Array[Short](size*components)
-      case CharStore => new Array[Char](size*components)
-      case IntStore => new Array[Int](size*components)
-      case FloatStore => new Array[Float](size*components)
-      case DoubleStore => new Array[Double](size*components)
-    }).asInstanceOf[AnyRef]
-
-    mkDataArray(array.asInstanceOf[R#ArrayType])
-  }
-
-  final def mkDataBuffer(size: Int) :DataBuffer[E, R] = {
-    mkDataBuffer(ByteBuffer.allocateDirect(size*bytesPerRawComponent*components))
-  }
-
-  final def mkDataBuffer(
-    byteBuffer: ByteBuffer
-  ) :DataBuffer[E, R] = {
-    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-    mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[E, R]]
-  }
-
-  final def mkDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :DataView[E, R] = {
-    if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
-      "The buffer must not be read-only."
-    )
-    mkViewOrBuffer(byteBuffer, offset, stride).asInstanceOf[DataView[E, R]]
-  }
-
-  final def mkReadDataView(
-    byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :ReadDataView[E, R] = {
-    mkViewOrBuffer(byteBuffer, offset, stride)
-  }
-
-  
   final def copyAsDataArray() :DataArray[E, R] = {
     val copy = mkDataArray(size)
     copy.put(

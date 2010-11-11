@@ -218,7 +218,7 @@ private[buffer] abstract class BaseSeq[
     }
 
     val destOffset = offset + index*stride
-    val srcLim = srcOffset + (count - 1)*srcStride + components
+    val srcLim = srcOffset + (count - 1)*srcStride + components // TODO: Rework for general case.
 
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()

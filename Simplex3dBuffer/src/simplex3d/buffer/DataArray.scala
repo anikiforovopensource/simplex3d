@@ -44,7 +44,7 @@ extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
 
 object ReadDataArray {
   def apply[E <: MetaElement, R <: Defined](da: ReadDataArray[_, R])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :ReadDataArray[E, R] = {
     val res = factory.mkDataArray(da.sharedArray)
     if (da.isReadOnly) res.asReadOnlySeq() else res
@@ -53,19 +53,19 @@ object ReadDataArray {
 
 object DataArray {
   def apply[E <: MetaElement, R <: Defined](array: R#ArrayType)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
     factory.mkDataArray(array)
   }
 
   def apply[E <: MetaElement, R <: Defined](size: Int)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
     factory.mkDataArray(size)
   }
 
   def apply[E <: MetaElement, R <: Defined](vals: E#Read*)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
@@ -73,7 +73,7 @@ object DataArray {
   }
 
   def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Read])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
@@ -81,7 +81,7 @@ object DataArray {
   }
 
   def apply[E <: MetaElement, R <: Defined](da: DataArray[_, R])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
     if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."

@@ -31,9 +31,9 @@ import simplex3d.buffer.doublem.impl._
  */
 package object doublem {
 
-  private final def primitiveFactory[R <: DefinedDouble](s: DataSeq[Double1, R]) :Factory[Double1, R] = s
-  private final def factory[E <: Composite, R <: DefinedDouble](s: DataSeq[E, R]) :Factory[E, R] = s
-  private final def cast[R <: DefinedDouble](f: Factory[Double1, R]) = f.asInstanceOf[DataArray[Double1, R]]
+  private final def primitiveFactory[R <: DefinedDouble](s: DataSeq[Double1, R]) :DataSeqFactory[Double1, R] = s
+  private final def factory[E <: Composite, R <: DefinedDouble](s: DataSeq[E, R]) :DataSeqFactory[E, R] = s
+  private final def cast[R <: DefinedDouble](f: DataSeqFactory[Double1, R]) = f.asInstanceOf[DataArray[Double1, R]]
 
 
   // Double1

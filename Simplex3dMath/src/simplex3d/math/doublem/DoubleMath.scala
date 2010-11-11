@@ -45,6 +45,7 @@ object DoubleMath extends CommonMath {
 
 
   // Int functions
+  // Copied here until the compiler can safely resolve overloaded functions from inherited classes.
 
   /** Computes an absolute value of the argument.
    * @param x, function argument.

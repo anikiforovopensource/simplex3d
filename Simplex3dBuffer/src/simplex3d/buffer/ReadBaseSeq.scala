@@ -233,7 +233,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     if (sharedStore.isInstanceOf[ByteBuffer]) {
       val off = first*stride*bytesPerRawComponent
       var lim = off + count*stride*bytesPerRawComponent
-      if (lim > buff.capacity) lim = buff.capacity
+      if (lim > buff.capacity && first + count == size) lim = buff.capacity
       buff.limit(lim)
       buff.position(off)
     }

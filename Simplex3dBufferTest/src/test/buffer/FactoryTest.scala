@@ -35,6 +35,20 @@ import AttributeTest._
  */
 object FactoryTest extends FunSuite {
 
+  private def nameType(seq: ReadDataSeq[_, _]) :(String, String) = {
+    val name = seq.getClass.getName
+    val min = name.lastIndexOf('.') + 1
+    val stype =
+      if (name.indexOf("Array", min) >= min) "Array"
+      else if (name.indexOf("Buffer", min) >= min) "Buffer"
+      else if (name.indexOf("View", min) >= min) "View"
+      else throw new AssertionError()
+    (name, stype)
+  }
+  private def verifyClass(seq: ReadDataSeq[_, _], expected: String) {
+    assert(seq.getClass.getName == expected)
+  }
+
   private def testMakeIndex[R <: Unsigned](seq: ReadIndexSeq[R], descriptor: Descriptor[Int1, R]) {
     arrayFromSize(seq.mkDataArray(_))(descriptor)
     arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
@@ -49,6 +63,25 @@ object FactoryTest extends FunSuite {
     bufferFromSize(seq.mkIndexBuffer(_))(descriptor)
     bufferFromData(seq.mkIndexBuffer(_))(descriptor)
     readBufferFromData(seq.mkReadIndexBuffer(_))(descriptor)
+
+    emptyMarker(seq.emptyMarker)(descriptor)
+
+    val (name, stype) = nameType(seq)
+    def nameWith(exp: String) = name.replace(stype, exp)
+    
+    verifyClass(seq.mkDataArray(0), nameWith("Array"))
+    verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
+    verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
+    verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+    verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+    
+    verifyClass(seq.mkIndexArray(0), nameWith("Array"))
+    verifyClass(seq.mkIndexArray(genArray(0, descriptor)), nameWith("Array"))
+    verifyClass(seq.mkIndexBuffer(0), nameWith("Buffer"))
+    verifyClass(seq.mkIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    verifyClass(seq.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
   }
 
   def testIndexArrayUsingDataSize(factory: (Int, Int) => IndexArray[Unsigned]) {
@@ -137,6 +170,18 @@ object FactoryTest extends FunSuite {
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
 
     emptyMarker(seq.emptyMarker)(descriptor)
+
+    
+    val (name, stype) = nameType(seq)
+    def nameWith(exp: String) = name.replace(stype, exp)
+
+    verifyClass(seq.mkDataArray(0), nameWith("Array"))
+    verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
+    verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
+    verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+    verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
   }
 
   def testArrayFromSize[E <: MetaElement, R <: RawData](
@@ -144,6 +189,8 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromSize(factory)(descriptor)
     testMakeData(factory(0), descriptor)
+
+    checkSubDataExceptions(factory(2))
   }
 
   def testArrayFromData[E <: MetaElement, R <: RawData](
@@ -160,6 +207,8 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromSize(factory)(descriptor)
     testMakeData(factory(0), descriptor)
+
+    checkSubDataExceptions(factory(2))
   }
 
   def testBufferFromData[E <: MetaElement, R <: RawData](
@@ -176,6 +225,8 @@ object FactoryTest extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     viewFromData(factory)(descriptor)
     testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
+
+    checkSubDataExceptions(factory(genBuffer(2*4*8, descriptor)._1, 0, 4))
   }
 
   def testReadBufferFromData[E <: MetaElement, R <: RawData](

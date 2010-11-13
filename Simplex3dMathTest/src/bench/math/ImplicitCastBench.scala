@@ -35,6 +35,7 @@ object ImplicitCastBench {
     test()
     test()
     test()
+    test()
   }
 
   val len = 100*1000*1000
@@ -57,7 +58,7 @@ object ImplicitCastBench {
     testMatNoPromotion(len)
     System.gc()
     val matNoPromotionTime = System.currentTimeMillis - start
-    
+
     start = System.currentTimeMillis
     testMatPromotion(len)
     System.gc()
@@ -94,7 +95,7 @@ object ImplicitCastBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val u = Vec3f(i + 0, i + 1, i + 2)
+      val u = Vec3i(i + 0, i + 1, i + 2)
       val t = u + v
       p ^= int(t.x + t.y + t.z)
 

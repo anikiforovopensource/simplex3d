@@ -76,6 +76,24 @@ object TestUtil extends FunSuite {
     }
   }
 
+  def checkSubDataExceptions(seq: ReadDataSeq[_, _]) {
+    intercept[IllegalArgumentException] {
+      seq.rawBufferSubData(-1, seq.size)
+    }
+
+    intercept[IllegalArgumentException] {
+      seq.rawBufferSubData(seq.size, seq.size)
+    }
+
+    intercept[IllegalArgumentException] {
+      seq.rawBufferSubData(0, -1)
+    }
+
+    intercept[IllegalArgumentException] {
+      seq.rawBufferSubData(0, seq.size + 1)
+    }
+  }
+
   def checkBuffer(testing: Buffer, data: Buffer) {
     assert(testing ne data)
 

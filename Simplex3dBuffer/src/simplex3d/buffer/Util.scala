@@ -93,7 +93,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -108,7 +108,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -124,7 +124,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -142,7 +142,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -207,7 +207,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -222,7 +222,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -238,7 +238,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -256,7 +256,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -321,7 +321,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -336,7 +336,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -352,7 +352,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -370,7 +370,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -435,7 +435,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -450,7 +450,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -466,7 +466,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -484,7 +484,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -549,7 +549,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -564,7 +564,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -580,7 +580,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -598,7 +598,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -663,7 +663,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       desti += destStride
@@ -678,7 +678,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -694,7 +694,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest.put(desti, src.get(srci))
       dest.put(desti + 1, src.get(srci + 1))
       dest.put(desti + 2, src.get(srci + 2))
@@ -712,7 +712,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest.put(desti + j, src.get(srci + j))
@@ -777,7 +777,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       desti += destStride
@@ -792,7 +792,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -808,7 +808,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -826,7 +826,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest(desti + j) = src(srci + j)
@@ -890,7 +890,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       desti += destStride
@@ -905,7 +905,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -921,7 +921,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -939,7 +939,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest(desti + j) = src(srci + j)
@@ -1004,7 +1004,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 1) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       desti += destStride
@@ -1019,7 +1019,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 2) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -1035,7 +1035,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci < srcLim - 3) {
       dest(desti) = src(srci)
       dest(desti + 1) = src(srci + 1)
       dest(desti + 2) = src(srci + 2)
@@ -1053,7 +1053,7 @@ private[buffer] object Util {
     var desti = destOffset
     var srci = srcOffset
 
-    while (srci < srcLim) {
+    while (srci <= srcLim - components) {
 
       var j = 0; while (j < components) {
         dest(desti + j) = src(srci + j)

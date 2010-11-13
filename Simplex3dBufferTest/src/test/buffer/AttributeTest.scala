@@ -59,13 +59,15 @@ object AttributeTest extends FunSuite {
     }
   }
 
-  private def checkBindingBuffer(offset: Int, binding: Buffer, data: Buffer) {
+  private def checkRawBuffer(offset: Int, rawBuffer: Buffer, data: Buffer) {
+    checkOrder(rawBuffer)
+
     data.position(offset)
 
-    assert(binding ne data)
-    assert(binding.capacity == binding.limit)
+    assert(rawBuffer ne data)
+    assert(rawBuffer.capacity == rawBuffer.limit)
 
-    binding match {
+    rawBuffer match {
       case b: ByteBuffer => {
         data match {
           case d: ByteBuffer => assert(b.position == offset); assert(b equals data)
@@ -76,14 +78,66 @@ object AttributeTest extends FunSuite {
           case d: DoubleBuffer => assert(b.position == offset*8); assert(b.asDoubleBuffer equals data)
         }
       }
-      case b: ShortBuffer => assert(b.position == offset); assert(b equals data)
-      case b: CharBuffer => assert(b.position == offset); assert(b equals data)
-      case b: IntBuffer => assert(b.position == offset); assert(b equals data)
-      case b: FloatBuffer => assert(b.position == offset); assert(b equals data)
-      case b: DoubleBuffer => assert(b.position == offset); assert(b equals data)
+      case _ => assert(rawBuffer.position == offset); assert(rawBuffer equals data)
     }
 
     data.position(0)
+  }
+
+  private def checkRawBuffer(offset: Int, limit: Int, rawBuffer: Buffer, data: Buffer) {
+    checkOrder(rawBuffer)
+
+    data.position(offset)
+    if (limit > data.capacity) data.limit(data.capacity) else data.limit(limit)
+
+    assert(rawBuffer ne data)
+
+    rawBuffer match {
+      case b: ByteBuffer => {
+        data match {
+          case d: ByteBuffer =>
+            assert(b.position == offset)
+            if (limit > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit)
+            assert(b equals data)
+          case d: ShortBuffer =>
+            assert(b.position == offset*2)
+            if (limit*2 > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit*2)
+            assert(b.asShortBuffer equals data)
+          case d: CharBuffer =>
+            assert(b.position == offset*2)
+            if (limit*2 > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit*2)
+            assert(b.asCharBuffer equals data)
+          case d: IntBuffer =>
+            assert(b.position == offset*4)
+            if (limit*4 > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit*4)
+            assert(b.asIntBuffer equals data)
+          case d: FloatBuffer =>
+            assert(b.position == offset*4)
+            if (limit*4 > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit*4)
+            assert(b.asFloatBuffer equals data)
+          case d: DoubleBuffer =>
+            assert(b.position == offset*8)
+            if (limit*8 > b.capacity) assert(b.limit == b.capacity) else assert(b.limit == limit*8)
+            assert(b.asDoubleBuffer equals data)
+        }
+      }
+      case _ =>
+        assert(rawBuffer.position == offset)
+        assert(rawBuffer.limit == limit)
+        assert(rawBuffer equals data)
+    }
+
+    data.position(0)
+    data.limit(data.capacity)
+  }
+
+  private def checkRawBufferSubData[E <: MetaElement, R <: RawData](seq: ReadDataSeq[E, R], data: Buffer) {
+    checkRawBuffer(0, 0, seq.rawBufferSubData(0, 0), data)
+    checkRawBuffer(0, seq.size*seq.stride, seq.rawBufferSubData(0, seq.size), data)
+    if (seq.size > 1) {
+      checkRawBuffer(1*seq.stride, 1*seq.stride, seq.rawBufferSubData(1, 0), data)
+      checkRawBuffer(1*seq.stride, seq.size*seq.stride, seq.rawBufferSubData(1, seq.size - 1), data)
+    }
   }
 
   private def testSeq[E <: MetaElement, R <: RawData](
@@ -119,21 +173,31 @@ object AttributeTest extends FunSuite {
       assert(!seq.backingSeq.isReadOnly)
     }
 
-
+    // Check rawBuffer.
     if (seq.isInstanceOf[DataArray[_, _]]) {
       assert(seq.rawBuffer().array != null)
+      assert(seq.rawBufferWithOffset().array != null)
+      assert(seq.rawBufferSubData(0, seq.size).array != null)
     }
     else {
-      if (seq.isReadOnly) assert(seq.rawBuffer().isReadOnly)
-      else assert(!seq.rawBuffer().isReadOnly) 
+      if (seq.isReadOnly) {
+        assert(seq.rawBuffer().isReadOnly)
+        assert(seq.rawBufferWithOffset().isReadOnly)
+        assert(seq.rawBufferSubData(0, seq.size).isReadOnly)
+      }
+      else {
+        assert(!seq.rawBuffer().isReadOnly)
+        assert(!seq.rawBufferWithOffset().isReadOnly)
+        assert(!seq.rawBufferSubData(0, seq.size).isReadOnly)
+      }
     }
 
-    checkOrder(seq.rawBuffer())
+    checkRawBuffer(0, seq.rawBuffer(), data)
+    checkRawBuffer(seq.offset, seq.rawBufferWithOffset(), data)
+    checkRawBufferSubData(seq, data)
 
-    checkBindingBuffer(0, seq.rawBuffer(), data)
-    // check other rawBuffer getters
 
-
+    // Check DataSeq methods.
     val ds = seq.asInstanceOf[DataSeq[E, R]]
     checkBuffer(ds.asBuffer, data)
     assert(ds.asBuffer.isReadOnly == readOnly)

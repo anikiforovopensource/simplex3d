@@ -139,16 +139,10 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private final def putSeq(index: Int, seq: Seq[SWrite]) {
-    val iter = seq.iterator
-    var i = index; while (iter.hasNext) {
-      this(i) = iter.next
-      i += 1
-    }
-  }
 
   final def put(index: Int, seq: Seq[E#Read], first: Int, count: Int) {
     if (index + count > size) throw new BufferOverflowException()
+    if (first + count > seq.size) throw new BufferUnderflowException()
 
     import scala.collection.mutable.{WrappedArray}
     seq match {
@@ -187,14 +181,11 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(index: Int, seq: Seq[E#Read]) {
-    seq match {
-      case is: IndexedSeq[_] => put(index, seq, 0, seq.size)
-      case _ => putSeq(index, seq.asInstanceOf[Seq[SWrite]])
-    }
+    put(index, seq, 0, seq.size)
   }
 
   final def put(seq: Seq[E#Read]) {
-    put(0, seq)
+    put(0, seq, 0, seq.size)
   }
 
 
@@ -217,8 +208,10 @@ private[buffer] abstract class BaseSeq[
       }
     }
 
+    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' must be greater than or equal to one.")
+
     val destOffset = offset + index*stride
-    val srcLim = srcOffset + (count - 1)*srcStride + components // TODO: Rework for general case.
+    val srcLim = srcOffset + (count - 1)*srcStride + components
 
     if (index + count > size) throw new BufferOverflowException()
     if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()

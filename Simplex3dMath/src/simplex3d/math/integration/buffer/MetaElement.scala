@@ -20,6 +20,8 @@
 
 package simplex3d.math.integration.buffer
 
+import scala.reflect.ClassManifest._
+
 
 /** <code>MetaElement</code> is used to integrate math with sequences.
  *
@@ -83,4 +85,11 @@ sealed trait Double1 extends Primitive {
  */
 trait Composite extends MetaElement {
   type Read <: AnyRef
+}
+
+object MetaManifest {
+  final val Boolean1 = classType[Boolean1](classOf[Boolean1])
+  final val Int1 = classType[Int1](classOf[Int1])
+  final val Float1 = classType[Float1](classOf[Float1])
+  final val Double1 = classType[Double1](classOf[Double1])
 }

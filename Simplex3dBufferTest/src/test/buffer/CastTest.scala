@@ -73,7 +73,7 @@ object CastTest extends FunSuite {
   }
 
   private def testSByteArrayCast(da: DataArray[_, SByte]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Int1, SByte](da), false, data)(Descriptors.Int1SByte)
     testCastToArray(da, DataArray[Vec2i, SByte](da), false, data)(Descriptors.Vec2iSByte)
@@ -142,7 +142,7 @@ object CastTest extends FunSuite {
   }
   
   private def testUByteArrayCast(da: DataArray[_, UByte]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
     
     testCastToArray(da, DataArray[Int1, UByte](da), false, data)(Descriptors.Int1UByte)
     testCastToArray(da, DataArray[Vec2i, UByte](da), false, data)(Descriptors.Vec2iUByte)
@@ -219,7 +219,7 @@ object CastTest extends FunSuite {
   }
 
   private def testSShortArrayCast(da: DataArray[_, SShort]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Int1, SShort](da), false, data)(Descriptors.Int1SShort)
     testCastToArray(da, DataArray[Vec2i, SShort](da), false, data)(Descriptors.Vec2iSShort)
@@ -288,7 +288,7 @@ object CastTest extends FunSuite {
   }
   
   private def testUShortArrayCast(da: DataArray[_, UShort]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
     
     testCastToArray(da, DataArray[Int1, UShort](da), false, data)(Descriptors.Int1UShort)
     testCastToArray(da, DataArray[Vec2i, UShort](da), false, data)(Descriptors.Vec2iUShort)
@@ -365,7 +365,7 @@ object CastTest extends FunSuite {
   }
   
   private def testSIntArrayCast(da: DataArray[_, SInt]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Int1, SInt](da), false, data)(Descriptors.Int1SInt)
     testCastToArray(da, DataArray[Vec2i, SInt](da), false, data)(Descriptors.Vec2iSInt)
@@ -434,7 +434,7 @@ object CastTest extends FunSuite {
   }
   
   private def testUIntArrayCast(da: DataArray[_, UInt]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
     
     testCastToArray(da, DataArray[Int1, UInt](da), false, data)(Descriptors.Int1UInt)
     testCastToArray(da, DataArray[Vec2i, UInt](da), false, data)(Descriptors.Vec2iUInt)
@@ -511,7 +511,7 @@ object CastTest extends FunSuite {
   }
 
   private def testHalfFloatArrayCast(da: DataArray[_, HalfFloat]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Float1, HalfFloat](da), false, data)(Descriptors.Float1HalfFloat)
     testCastToArray(da, DataArray[Vec2f, HalfFloat](da), false, data)(Descriptors.Vec2fHalfFloat)
@@ -560,7 +560,7 @@ object CastTest extends FunSuite {
   }
   
   private def testRawFloatArrayCast(da: DataArray[_, RawFloat]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Float1, RawFloat](da), false, data)(Descriptors.Float1RawFloat)
     testCastToArray(da, DataArray[Vec2f, RawFloat](da), false, data)(Descriptors.Vec2fRawFloat)
@@ -609,7 +609,7 @@ object CastTest extends FunSuite {
   }
   
   private def testRawDoubleArrayCast(da: DataArray[_, RawDouble]) {
-    val data = da.asBuffer()
+    val data = da.buffer()
 
     testCastToArray(da, DataArray[Double1, RawDouble](da), false, data)(Descriptors.Double1RawDouble)
     testCastToArray(da, DataArray[Vec2d, RawDouble](da), false, data)(Descriptors.Vec2dRawDouble)
@@ -1338,7 +1338,7 @@ object CastTest extends FunSuite {
     factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[E, R],
     bytes: ByteBuffer
   )(implicit descriptor: Descriptor[E, R]) {
-    assert(!original.isReadOnly)
+    assert(!original.readOnly)
     val data = wrap(bytes, descriptor)
     val ro = original.asReadOnlySeq()
 

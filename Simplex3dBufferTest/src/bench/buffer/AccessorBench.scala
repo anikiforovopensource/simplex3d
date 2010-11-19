@@ -32,33 +32,34 @@ import simplex3d.buffer.floatm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object AbsAccessorBench {
+object AccessorBench {
   def main(args: Array[String]) {
     test()
     test()
     test()
   }
 
-  val length = 1000
+  val size = 1000
   val loops = 10000
+  val buffLoops = 10*1000*1000
 
-  val data = new Array[Float](length);
+  val data = new Array[Float](size);
   {
     val random = new java.util.Random(1)
-    var i = 0; while( i < length) {
+    var i = 0; while( i < size) {
       data(i) = random.nextFloat
       i += 1
     }
   }
 
   val dataArray0 = DataArray[Float1, RawFloat](data)
-  val dataBuffer0 = DataBuffer[Float1, RawFloat](data.length)
+  val dataBuffer0 = DataBuffer[Float1, RawFloat](data.size)
   dataBuffer0.put(dataArray0)
   val dataView0 = DataView[Float1, RawFloat](dataBuffer0, 0, 1)
 
-  val dataArray1 = DataArray[Float1, UByte](data.length)
+  val dataArray1 = DataArray[Float1, UByte](data.size)
   dataArray1.put(dataArray0)
-  val dataBuffer1 = DataBuffer[Float1, UByte](data.length)
+  val dataBuffer1 = DataBuffer[Float1, UByte](data.size)
   dataBuffer1.put(dataArray1)
   val dataView1 = DataView[Float1, UByte](dataBuffer1, 0, 1)
 
@@ -86,10 +87,22 @@ object AbsAccessorBench {
     testInlined(dataView1, loops)
     System.gc()
     val testInlinedTime = System.currentTimeMillis - start
+    
+    start = System.currentTimeMillis
+    testRawBuffer(dataArray0, buffLoops)
+    System.gc()
+    val testRawBufferTime = System.currentTimeMillis - start
+    
+    start = System.currentTimeMillis
+    testBuffer(dataArray0, buffLoops)
+    System.gc()
+    val testBufferTime = System.currentTimeMillis - start
 
     println("\nResults:")
     println("Simple time: " + testSimpleTime + ".")
     println("Inlined time: " + testInlinedTime + ".")
+    println("rawBuffer time: " + testRawBufferTime + ".")
+    println("buffer time: " + testBufferTime + ".")
   }
 
   final def testSimple(seq: DataSeq[Float1, RawData], loops: Int) {
@@ -109,17 +122,41 @@ object AbsAccessorBench {
 
   final def testInlined(seq: DataSeq[Float1, RawData], loops: Int) {
     var answer = 0.0
-//    val size = seq.size
-//    val offset = seq.offset
+    val size = seq.size
+    val offset = seq.offset
     val stride = seq.stride
 
     var l = 0; while (l < loops) {
-      //var i = offset; while (i < size) {
-      var i = seq.offset; while (i < seq.size) {
+      var i = offset; while (i < size) {
+//      var i = seq.offset; while (i < seq.size) {
         answer += seq(i)
 
         i += stride
       }
+      l += 1
+    }
+
+    println(answer)
+  }
+  
+  final def testRawBuffer(seq: DataSeq[Float1, RawData], loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      answer += seq.rawBuffer.capacity
+      
+      l += 1
+    }
+
+    println(answer)
+  }
+  
+  final def testBuffer(seq: DataSeq[Float1, RawData], loops: Int) {
+    var answer = 0
+
+    var l = 0; while (l < loops) {
+      answer += seq.buffer.capacity
+
       l += 1
     }
 

@@ -225,32 +225,32 @@ object TestUtil extends FunSuite {
     genBuffer(byteCapacity, descriptor, true)
   }
 
-  private def rand[T](m: Manifest[T]) :T = {
+  private def rand[T](m: ClassManifest[T]) :T = {
     (m match {
-      case Manifest.Int => ni
-      case Vec2i.ReadManifest => Vec2i(ni, ni)
-      case Vec3i.ReadManifest => Vec3i(ni, ni, ni)
-      case Vec4i.ReadManifest => Vec4i(ni, ni, ni, ni)
-      case Manifest.Float => nf
-      case Vec2f.ReadManifest => Vec2f(nf, nf)
-      case Vec3f.ReadManifest => Vec3f(nf, nf, nf)
-      case Vec4f.ReadManifest => Vec4f(nf, nf, nf, nf)
-      case Manifest.Double => nd
-      case Vec2d.ReadManifest => Vec2d(nd, nd)
-      case Vec3d.ReadManifest => Vec3d(nd, nd, nd)
-      case Vec4d.ReadManifest => Vec4d(nd, nd, nd, nd)
+      case MetaManifest.Int1 => ni
+      case Vec2i.Manifest => Vec2i(ni, ni)
+      case Vec3i.Manifest => Vec3i(ni, ni, ni)
+      case Vec4i.Manifest => Vec4i(ni, ni, ni, ni)
+      case MetaManifest.Float1 => nf
+      case Vec2f.Manifest => Vec2f(nf, nf)
+      case Vec3f.Manifest => Vec3f(nf, nf, nf)
+      case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
+      case MetaManifest.Double1 => nd
+      case Vec2d.Manifest => Vec2d(nd, nd)
+      case Vec3d.Manifest => Vec3d(nd, nd, nd)
+      case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
-  private def randPrim[T](m: Manifest[T]) :T = {
+  private def randPrim[T](m: ClassManifest[T]) :T = {
     (m match {
-      case Manifest.Int => ni.asInstanceOf[AnyRef]
-      case Manifest.Float => nf.asInstanceOf[AnyRef]
-      case Manifest.Double => nd.asInstanceOf[AnyRef]
+      case MetaManifest.Int1 => ni.asInstanceOf[AnyRef]
+      case MetaManifest.Float1 => nf.asInstanceOf[AnyRef]
+      case MetaManifest.Double1 => nd.asInstanceOf[AnyRef]
     }).asInstanceOf[T]
   }
   private def mkPrimSeq[E <: MetaElement, R <: RawData](size: Int, descriptor: Descriptor[E, R]) = {
     (descriptor.componentManifest match {
-      case Manifest.Int =>
+      case MetaManifest.Int1 =>
         descriptor.rawType match {
           case SByte => DataArray[Int1, SByte](size*descriptor.components)
           case UByte => DataArray[Int1, UByte](size*descriptor.components)
@@ -259,7 +259,7 @@ object TestUtil extends FunSuite {
           case SInt => DataArray[Int1, SInt](size*descriptor.components)
           case UInt => DataArray[Int1, UInt](size*descriptor.components)
         }
-      case Manifest.Float =>
+      case MetaManifest.Float1 =>
         descriptor.rawType match {
           case SByte => DataArray[Float1, SByte](size*descriptor.components)
           case UByte => DataArray[Float1, UByte](size*descriptor.components)
@@ -270,7 +270,7 @@ object TestUtil extends FunSuite {
           case HalfFloat => DataArray[Float1, HalfFloat](size*descriptor.components)
           case RawFloat => DataArray[Float1, RawFloat](size*descriptor.components)
         }
-      case Manifest.Double =>
+      case MetaManifest.Double1 =>
         descriptor.rawType match {
           case SByte => DataArray[Double1, SByte](size*descriptor.components)
           case UByte => DataArray[Double1, UByte](size*descriptor.components)
@@ -287,7 +287,7 @@ object TestUtil extends FunSuite {
   def genRandomCollection[E <: MetaElement, R <: RawData](
     size: Int, descriptor: Descriptor[E, R]
   ) :(Array[E#Read], Buffer) = {
-    val array = descriptor.elementManifest.newArray(size).asInstanceOf[Array[E#Read]]
+    val array = descriptor.readManifest.newArray(size).asInstanceOf[Array[E#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
@@ -304,6 +304,6 @@ object TestUtil extends FunSuite {
       i += 1
     }
 
-    (array, seq.asBuffer)
+    (array, seq.buffer)
   }
 }

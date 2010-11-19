@@ -45,17 +45,58 @@ object SerializationTest extends FunSuite {
     val size = 10
 
     val array = factory(genRandomArray(size, descriptor))
-    val buffer = array.copyAsDataBuffer()
 
     val bytes = new ByteArrayOutputStream()
     val out = new ObjectOutputStream(bytes)
     out.writeObject(array)
-    out.writeObject(buffer)
+    out.writeObject(array.asReadOnlySeq())
     out.close()
 
     val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))
-    val sarray = in.readObject().asInstanceOf[DataArray[E, R]]
-    val sbuffer = in.readObject().asInstanceOf[DataBuffer[E, R]]
+
+    val rwArray = in.readObject().asInstanceOf[DataArray[E, R]]
+    testArray(rwArray, false, array.buffer())(descriptor)
+
+    val roArray = in.readObject().asInstanceOf[ReadDataArray[E, R]]
+    testArray(roArray, true, array.buffer())(descriptor)
+
+    in.close()
+  }
+
+  def testCase[E <: MetaElement, R <: RawData](
+    factory: (R#ArrayType) => DataArray[E, R]
+  )(implicit descriptor: Descriptor[E, R]) = {
+    (factory, descriptor)
+  }
+
+  def testInterleavedSerialization[E <: MetaElement, R <: RawData](
+    pairs: ((R#ArrayType) => DataArray[E, R], Descriptor[E, R])*
+  )(implicit descriptor: Descriptor[E, R]) {
+    val size = 10
+
+    val arrays = (
+      for ((factory, descritor) <- pairs) yield {
+        factory(genRandomArray(size, descriptor))
+      }
+    )
+
+    val rwdata = InterleavedData(interleaveAll(arrays: _*)(size))
+    val rodata = InterleavedData(rwdata.map(_.asReadOnlySeq()))
+
+    val bytes = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bytes)
+    out.writeObject(rwdata)
+    out.writeObject(rodata)
+    out.close()
+
+    val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))
+
+    val rwrestored = in.readObject().asInstanceOf[InterleavedData]
+    //testInterleaved(rwrestored)
+
+    val rorestored = in.readObject().asInstanceOf[InterleavedData]
+    //testInterleaved(rorestored)
+
     in.close()
   }
 }

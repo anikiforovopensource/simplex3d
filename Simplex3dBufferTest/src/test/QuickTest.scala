@@ -24,11 +24,13 @@ package test
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Launcher {
+object QuickTest {
   def main(args: Array[String]) {
     org.scalatest.tools.Runner.main(Array[String](
       "-p",
       "build/classes",//"out/production/Simplex3dBufferTest",//
+      "-s",
+      "test.buffer.doublem.Vec2dTest",
       "-gNHL"
     ))
   }

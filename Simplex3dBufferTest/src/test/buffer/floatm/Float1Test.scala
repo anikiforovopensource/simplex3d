@@ -218,7 +218,7 @@ class Float1Test extends FunSuite {
   private def testSByte(seq: DataSeq[Float1, SByte]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, -128); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, -128); assert(seq(0) == -1)
 
     testFloatSByte(seq, Float.NegativeInfinity)
     testFloatSByte(seq, -Float.MaxValue)
@@ -270,7 +270,7 @@ class Float1Test extends FunSuite {
   private def testSShort(seq: DataSeq[Float1, SShort]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, -32768); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, -32768); assert(seq(0) == -1)
 
     testFloatSShort(seq, Float.NegativeInfinity)
     testFloatSShort(seq, -Float.MaxValue)
@@ -322,7 +322,7 @@ class Float1Test extends FunSuite {
   private def testSInt(seq: DataSeq[Float1, SInt]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
 
     testFloatSInt(seq, Float.NegativeInfinity)
     testFloatSInt(seq, -Float.MaxValue)
@@ -422,7 +422,7 @@ class Float1Test extends FunSuite {
     testFloatHalfFloat(seq, 1)
 
     // Round trip conversion excluding Subnormal and Zero.
-    val buff = seq.asBuffer
+    val buff = seq.buffer
     def putRaw(v: Short) { buff.put(seq.offset, v) }
     def getRaw() = buff.get(seq.offset + seq.stride)
     

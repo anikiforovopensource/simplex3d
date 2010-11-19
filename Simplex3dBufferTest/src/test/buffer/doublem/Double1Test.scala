@@ -235,7 +235,7 @@ class Double1Test extends FunSuite {
   private def testSByte(seq: DataSeq[Double1, SByte]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, -128); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, -128); assert(seq(0) == -1)
 
     testFloatSByte(seq, Double.NegativeInfinity)
     testFloatSByte(seq, -Double.MaxValue)
@@ -287,7 +287,7 @@ class Double1Test extends FunSuite {
   private def testSShort(seq: DataSeq[Double1, SShort]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, -32768); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, -32768); assert(seq(0) == -1)
 
     testFloatSShort(seq, Double.NegativeInfinity)
     testFloatSShort(seq, -Double.MaxValue)
@@ -339,7 +339,7 @@ class Double1Test extends FunSuite {
   private def testSInt(seq: DataSeq[Double1, SInt]) {
     testIndex(seq)
 
-    seq.asBuffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
+    seq.buffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
 
     testFloatSInt(seq, Double.NegativeInfinity)
     testFloatSInt(seq, -Double.MaxValue)
@@ -433,7 +433,7 @@ class Double1Test extends FunSuite {
     testFloatHalfFloat(seq, 1)
 
     // Round trip conversion excluding Subnormal, Zero, and NaN
-    val buff = seq.asBuffer
+    val buff = seq.buffer
     def putRaw(v: Short) { buff.put(seq.offset, v) }
     def getRaw() = buff.get(seq.offset + seq.stride)
     

@@ -32,59 +32,48 @@ import simplex3d.buffer.floatm._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object SerializationBench {
+object FactoryBench {
   def main(args: Array[String]) {
     test()
     test()
     test()
   }
 
-  val size = 10000
-  val loops = 10000
+  val size = 10
+  val loops = 10*1000*1000
 
-  val random = new java.util.Random()
-
-  val dataArray = DataArray[Float1, RawFloat](size)
-  var i = 0; while (i < size) {
-    dataArray(i) = random.nextFloat()
-    i += 1
-  }
-
-  val dataBuffer = dataArray.copyAsDataBuffer()
 
   def test() {
     println("\nTesting...")
     var start = 0L
 
     start = System.currentTimeMillis
-    testWriteArray(dataArray, loops)
+    testPackageFactory(size, loops)
     System.gc()
-    val writeArrayTime = System.currentTimeMillis - start
+    val packageFactoryTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testReadArray(dataArray, loops)
+    testMkDataSeq(size, loops)
     System.gc()
-    val readArrayTime = System.currentTimeMillis - start
+    val mkDataSeqTime = System.currentTimeMillis - start
 
+    start = System.currentTimeMillis
+    testAsReadOnlySeq(size, loops)
+    System.gc()
+    val asReadOnlySeqTime = System.currentTimeMillis - start
 
     println("\nResults:")
-    println("Write array time: " + writeArrayTime + ".")
-    println("Read array time: " + readArrayTime + ".")
+    println("Package factory time: " + packageFactoryTime + ".")
+    println("mkDataSeq time: " + mkDataSeqTime + ".")
+    println("asReadOnlySeq time: " + asReadOnlySeqTime + ".")
   }
 
-  final def testWriteArray(data: DataArray[Float1, RawFloat], loops: Int) {
+  final def testPackageFactory(size: Int, loops: Int) {
     var a = 0
 
-    val bytes = new ByteArrayOutputStream()
-    val out = new ObjectOutputStream(bytes)
-
     var l = 0; while (l < loops) {
-
-      out.writeObject(data)
-      out.close()
-
-      a += bytes.size
-      bytes.reset
+      val da = DataArray[Float1, RawFloat](size)
+      a += da.size
 
       l += 1
     }
@@ -92,21 +81,26 @@ object SerializationBench {
     println(a)
   }
 
-  final def testReadArray(data: DataArray[Float1, RawFloat], loops: Int) {
+  final def testMkDataSeq(size: Int, loops: Int) {
     var a = 0
-
-    val bytes = new ByteArrayOutputStream()
-    val out = new ObjectOutputStream(bytes)
-    out.writeObject(data)
-    out.close()
-    val src = bytes.toByteArray
+    val factory = DataArray[Float1, RawFloat](0)
 
     var l = 0; while (l < loops) {
-      val in = new ObjectInputStream(new ByteArrayInputStream(src))
-      val data = in.readObject().asInstanceOf[DataArray[Float1, RawFloat]]
-      in.close()
+      val da = factory.mkDataArray(size)
+      a += da.size
 
-      a += data.size
+      l += 1
+    }
+
+    println(a)
+  }
+
+  final def testAsReadOnlySeq(size: Int, loops: Int) {
+    var a = 0
+    val da = DataArray[Float1, RawFloat](size)
+
+    var l = 0; while (l < loops) {
+      a += da.asReadOnlySeq().size
 
       l += 1
     }

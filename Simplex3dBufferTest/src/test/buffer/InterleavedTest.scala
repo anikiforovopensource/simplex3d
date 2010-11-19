@@ -18,18 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test
+package test.buffer
+
+import java.io._
+import java.nio._
+import org.scalatest._
+import simplex3d.math._
+import simplex3d.math.floatm._
+import simplex3d.math.doublem._
+import simplex3d.buffer._
+import simplex3d.buffer.floatm._
+import simplex3d.buffer.doublem._
+
+import TestUtil._
+import AttributeTest._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Launcher {
-  def main(args: Array[String]) {
-    org.scalatest.tools.Runner.main(Array[String](
-      "-p",
-      "build/classes",//"out/production/Simplex3dBufferTest",//
-      "-gNHL"
-    ))
+object InterleavedTest extends FunSuite {
+
+  def testInterleaved() {
+    
   }
 }

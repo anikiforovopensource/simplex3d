@@ -66,7 +66,7 @@ object InlinedBench {
     var start = 0L
 
     start = System.currentTimeMillis
-    testBuffer(dataBuffer.asBuffer(), loops)
+    testBuffer(dataBuffer.buffer(), loops)
     System.gc()
     val bufferTime = System.currentTimeMillis - start
 

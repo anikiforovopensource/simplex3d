@@ -97,7 +97,7 @@ object ApplyUpdateTest extends FunSuite {
 
     seq(i) = value
     assert(seq(i) == expected)
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+    verify(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
   def testApplyUpdate(seq: DataSeq[Float1, _], value: Float, expected: Float, store: AnyVal) {
@@ -109,7 +109,7 @@ object ApplyUpdateTest extends FunSuite {
     if (FloatMath.isnan(expected)) assert(FloatMath.isnan(seq(i)))
     else assert(seq(i) == expected)
 
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+    verify(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
   def testApplyUpdate(seq: DataSeq[Double1, _], value: Double, expected: Double, store: AnyVal) {
@@ -121,23 +121,53 @@ object ApplyUpdateTest extends FunSuite {
     if (DoubleMath.isnan(expected)) assert(DoubleMath.isnan(seq(i)))
     else assert(seq(i) == expected)
 
-    verify(seq.asBuffer(), seq.offset + i*seq.stride, store)
+    verify(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
+  private[this] final def toByte(value: AnyVal) :Byte = {
+    (value: @unchecked) match {
+      case x: Int => x.toByte
+      case x: Byte => x
+    }
+  }
+  private[this] final def toShort(value: AnyVal) :Short = {
+    (value: @unchecked) match {
+      case x: Int => x.toShort
+      case x: Short => x
+    }
+  }
+  private[this] final def toChar(value: AnyVal) :Char = {
+    (value: @unchecked) match {
+      case x: Int => x.toChar
+      case x: Char => x
+    }
+  }
+  private[this] final def toFloat(value: AnyVal) :Float = {
+    (value: @unchecked) match {
+      case x: Int => x.toFloat
+      case x: Float => x
+    }
+  }
+  private[this] final def toDouble(value: AnyVal) :Double = {
+    (value: @unchecked) match {
+      case x: Int => x.toDouble
+      case x: Double => x
+    }
+  }
   private def verify(buff: Buffer, index: Int, value: AnyVal) {
     buff match {
-      case b: ByteBuffer => assert(b.get(index) == value)
-      case b: ShortBuffer => assert(b.get(index) == value)
-      case b: CharBuffer => assert(b.get(index) == value)
-      case b: IntBuffer => assert(b.get(index) == value)
+      case b: ByteBuffer => assert(b.get(index) == toByte(value))
+      case b: ShortBuffer => assert(b.get(index) == toShort(value))
+      case b: CharBuffer => assert(b.get(index) == toChar(value))
+      case b: IntBuffer => assert(b.get(index) == value.asInstanceOf[Int])
       case b: FloatBuffer =>
         val stored = b.get(index)
         if (FloatMath.isnan(stored)) assert(FloatMath.isnan(value.asInstanceOf[Float]))
-        else assert(b.get(index) == value)
+        else assert(b.get(index) == toFloat(value))
       case b: DoubleBuffer =>
         val stored = b.get(index)
         if (DoubleMath.isnan(stored)) assert(DoubleMath.isnan(value.asInstanceOf[Double]))
-        else assert(b.get(index) == value)
+        else assert(b.get(index) == toDouble(value))
     }
   }
 
@@ -184,39 +214,39 @@ object ApplyUpdateTest extends FunSuite {
     }
 
     val e = seq.elementManifest match {
-      case Vec2i.ReadManifest =>
+      case Vec2i.Manifest =>
         val u = Vec2i(ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y)
         u
-      case Vec3i.ReadManifest =>
+      case Vec3i.Manifest =>
         val u = Vec3i(ni, ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y); iput(i, 2, u.z)
         u
-      case Vec4i.ReadManifest =>
+      case Vec4i.Manifest =>
         val u = Vec4i(ni, ni, ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y); iput(i, 2, u.z); iput(i, 3, u.w)
         u
-      case Vec2f.ReadManifest =>
+      case Vec2f.Manifest =>
         val u = Vec2f(nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y)
         u
-      case Vec3f.ReadManifest =>
+      case Vec3f.Manifest =>
         val u = Vec3f(nf, nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y); fput(i, 2, u.z)
         u
-      case Vec4f.ReadManifest =>
+      case Vec4f.Manifest =>
         val u = Vec4f(nf, nf, nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y); fput(i, 2, u.z); fput(i, 3, u.w)
         u
-      case Vec2d.ReadManifest =>
+      case Vec2d.Manifest =>
         val u = Vec2d(nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y)
         u
-      case Vec3d.ReadManifest =>
+      case Vec3d.Manifest =>
         val u = Vec3d(nd, nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y); dput(i, 2, u.z)
         u
-      case Vec4d.ReadManifest =>
+      case Vec4d.Manifest =>
         val u = Vec4d(nd, nd, nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y); dput(i, 2, u.z); dput(i, 3, u.w)
         u

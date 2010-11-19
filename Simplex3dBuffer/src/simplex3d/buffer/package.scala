@@ -72,15 +72,18 @@ package object buffer {
   type Int1 = integration.buffer.Int1
   type Float1 = integration.buffer.Float1
   type Double1 = integration.buffer.Double1
+  val MetaManifest = integration.buffer.MetaManifest
 
   type ReadData[E <: MetaElement] = ReadDataSeq[E, RawData]
   type Data[E <: MetaElement] = DataSeq[E, RawData]
   type inData[E <: MetaElement] = inDataSeq[E, RawData]
   type outData[E <: MetaElement] = outDataSeq[E, RawData]
+
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
+  
   type RawView = ReadDataView[_, RawData]
 
   type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
@@ -135,7 +138,7 @@ package object buffer {
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2]
   )(size: Int) = {
-    val views = interleaveAny(seq1, seq2)(size)
+    val views = interleaveAll(seq1, seq2)(size)
     (
       views(0).asInstanceOf[DataView[E1, R1]],
       views(1).asInstanceOf[DataView[E2, R2]]
@@ -151,7 +154,7 @@ package object buffer {
     seq2: inDataSeq[E2, R2],
     seq3: inDataSeq[E3, R3]
   )(size: Int) = {
-    val views = interleaveAny(seq1, seq2, seq3)(size)
+    val views = interleaveAll(seq1, seq2, seq3)(size)
     (
       views(0).asInstanceOf[DataView[E1, R1]],
       views(1).asInstanceOf[DataView[E2, R2]],
@@ -170,7 +173,7 @@ package object buffer {
     seq3: inDataSeq[E3, R3],
     seq4: inDataSeq[E4, R4]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4
     )(size)
     (
@@ -194,7 +197,7 @@ package object buffer {
     seq4: inDataSeq[E4, R4],
     seq5: inDataSeq[E5, R5]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5
     )(size)
     (
@@ -221,7 +224,7 @@ package object buffer {
     seq5: inDataSeq[E5, R5],
     seq6: inDataSeq[E6, R6]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6
     )(size)
     (
@@ -251,7 +254,7 @@ package object buffer {
     seq6: inDataSeq[E6, R6],
     seq7: inDataSeq[E7, R7]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7
     )(size)
     (
@@ -284,7 +287,7 @@ package object buffer {
     seq7: inDataSeq[E7, R7],
     seq8: inDataSeq[E8, R8]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8
     )(size)
     (
@@ -320,7 +323,7 @@ package object buffer {
     seq8: inDataSeq[E8, R8],
     seq9: inDataSeq[E9, R9]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9
     )(size)
     (
@@ -359,7 +362,7 @@ package object buffer {
     seq9: inDataSeq[E9, R9],
     seq10: inDataSeq[E10, R10]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10
     )(size)
     (
@@ -401,7 +404,7 @@ package object buffer {
     seq10: inDataSeq[E10, R10],
     seq11: inDataSeq[E11, R11]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11
     )(size)
     (
@@ -446,7 +449,7 @@ package object buffer {
     seq11: inDataSeq[E11, R11],
     seq12: inDataSeq[E12, R12]
   )(size: Int) = {
-    val views = interleaveAny(
+    val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11, seq12
     )(size)
     (
@@ -466,7 +469,7 @@ package object buffer {
   }
 
 
-  def interleaveAny(seqs: inData[_]*)(size: Int) :Array[RawView] = {
+  def interleaveAll(seqs: inData[_]*)(size: Int) :IndexedSeq[RawView] = {
     val dataSeqs = seqs.toArray
 
     // check arguments

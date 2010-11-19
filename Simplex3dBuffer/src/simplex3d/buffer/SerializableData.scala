@@ -28,12 +28,12 @@ import java.io._
  */
 @serializable @SerialVersionUID(8104346712419693669L)
 abstract class SerializableData {
-  var buffer: Boolean = _
   var content: AnyRef = _
+  var readOnly: Boolean = _
 
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
-    if (buffer) toDataArray().copyAsDataBuffer()
+    if (readOnly) toDataArray().asReadOnlySeq()
     else toDataArray()
   }
 

@@ -64,7 +64,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   
   protected final val storeType = storeFromRaw(rawType)
 
-  private[buffer] final val buffer: R#BufferType = {
+  private[buffer] final val buff: R#BufferType = {
     (if (sharedStore.isInstanceOf[ByteBuffer]) {
       val byteBuffer =
         if (ro) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
@@ -111,7 +111,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     }).asInstanceOf[R#BufferType]
   }
   
-  if (offset > buffer.capacity)
+  if (offset > buff.capacity)
     throw new IllegalArgumentException(
       "Offset must not be greater than limit."
     )
@@ -121,7 +121,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     if (s > 0) s else 0
   }
 
-  final override val size = sizeFrom(buffer.capacity, offset, stride, components)
+  final override val size = sizeFrom(buff.capacity, offset, stride, components)
   final def length = size
 
   // Type definitions.
@@ -129,8 +129,8 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   type BackingSeq <: ReadContiguousSeq[E#Component, R]
 
   // Public API.
-  def elementManifest: Manifest[E#Read]
-  def componentManifest: Manifest[E#Component#Read]
+  def elementManifest: ClassManifest[E]
+  def readManifest: ClassManifest[E#Read]
 
   override def components: Int
   override def rawType: Int
@@ -141,40 +141,40 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     if (sharedStore.isInstanceOf[ByteBuffer])
       sharedStore.asInstanceOf[ByteBuffer].capacity
     else
-      buffer.capacity*bytesPerRawComponent
+      buff.capacity*bytesPerRawComponent
   }
   final def byteOffset = offset*bytesPerRawComponent
   final def byteStride = stride*bytesPerRawComponent
 
 
-  final def isReadOnly(): Boolean = buffer.isReadOnly()
+  final def readOnly: Boolean = buff.isReadOnly()
   final def sharesStoreObject(seq: inDataSeq[_, _]) :Boolean = {
     sharedStore eq seq.sharedStore
   }
 
   def apply(i: Int) :SRead
 
-  final def asReadOnlyBuffer() :R#BufferType = {
+  final def readOnlyBuffer() :R#BufferType = {
     ((storeType: @switch) match {
       case ByteStore =>
-        buffer.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
+        buff.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
       case ShortStore =>
-        buffer.asInstanceOf[ShortBuffer].asReadOnlyBuffer()
+        buff.asInstanceOf[ShortBuffer].asReadOnlyBuffer()
       case CharStore =>
-        buffer.asInstanceOf[CharBuffer].asReadOnlyBuffer()
+        buff.asInstanceOf[CharBuffer].asReadOnlyBuffer()
       case IntStore =>
-        buffer.asInstanceOf[IntBuffer].asReadOnlyBuffer()
+        buff.asInstanceOf[IntBuffer].asReadOnlyBuffer()
       case FloatStore =>
-        buffer.asInstanceOf[FloatBuffer].asReadOnlyBuffer()
+        buff.asInstanceOf[FloatBuffer].asReadOnlyBuffer()
       case DoubleStore =>
-        buffer.asInstanceOf[DoubleBuffer].asReadOnlyBuffer()
+        buff.asInstanceOf[DoubleBuffer].asReadOnlyBuffer()
     }).asInstanceOf[R#BufferType]
   }
 
   protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
   def asReadOnlySeq() :ReadDataSeq[E, R]
-  private[buffer] final def toReadOnly() :AnyRef = {
-    if (isReadOnly) this else mkReadOnlyInstance()
+  private[buffer] final lazy val readOnlySeq :AnyRef = {
+    if (readOnly) this else mkReadOnlyInstance()
   }
 
   private[this] final def wrapStoreArray() :Buffer = {
@@ -197,7 +197,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   private[this] final def binding() :Buffer = {
     if (sharedStore.isInstanceOf[ByteBuffer]) {
       val buff =
-        if (isReadOnly) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
+        if (readOnly) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
         else sharedStore.asInstanceOf[ByteBuffer].duplicate()
       
       buff.order(ByteOrder.nativeOrder)
@@ -284,19 +284,12 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   override def toString() :String = {
     def getElemName() = {
-      elementManifest match {
-        case Manifest.Int => "Int1"
-        case Manifest.Float => "Float1"
-        case Manifest.Double => "Double1"
-        case _ =>
-          val name = elementManifest.erasure.getSimpleName
-          if (name.startsWith("Read")) name.substring(4) else name
-      }
+      elementManifest.erasure.getSimpleName
     }
 
     var view = false
 
-    (if (isReadOnly()) "ReadOnly" else "") +
+    (if (readOnly) "ReadOnly" else "") +
     (this match {
       case s: DataArray[_, _] => "DataArray"
       case s: DataBuffer[_, _] => "DataBuffer"

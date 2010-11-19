@@ -37,12 +37,12 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
   def apply(i: Int) :RawView = views(i)
   def length = views.length
 
-  private[this] def verify(seqs: Seq[RawView]) {
+  private[this] final def verify(seqs: Seq[RawView]) {
     val first = seqs.head
     val checks = new Array[Boolean](first.stride*first.bytesPerRawComponent)
 
-    def checkOverlap(offset: Int, components: Int) {
-      var i = offset; while (i < offset + components) {
+    def checkOverlap(byteOffset: Int, bytesTaken: Int) {
+      var i = byteOffset; while (i < byteOffset + bytesTaken) {
         if (checks(i)) throw new IllegalArgumentException("Views must not have overlapping data.")
         checks(i) = true
 
@@ -60,7 +60,7 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
       if(!first.sharesStoreObject(seq))
         throw new IllegalArgumentException("Views must share the same ByteByffer object.")
 
-      checkOverlap(seq.byteOffset, seq.components)
+      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerRawComponent)
     }
   }
 
@@ -127,5 +127,4 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
 object InterleavedData {
   def apply(seqs: RawView*) = new InterleavedData(seqs)
   def apply(seqs: IndexedSeq[RawView]) = new InterleavedData(seqs)
-  def apply(seqs: inData[_]*)(size: Int) = new InterleavedData(interleaveAny(seqs: _*)(size))
 }

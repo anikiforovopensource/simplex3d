@@ -31,7 +31,7 @@ trait ReadDataView[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] {
   type BackingSeq <: ReadDataBuffer[E#Component, R]
   type RawBuffer = ByteBuffer
-  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataView[E, R]]
+  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadDataView[E, R]]
 }
 
 trait DataView[E <: MetaElement, +R <: RawData]
@@ -51,7 +51,7 @@ object ReadDataView {
     db: inDataBuffer[_, _], offset: Int, stride: Int
   )(implicit factory: DataSeqFactory[E, R]) :ReadDataView[E, R] = {
     val res = factory.mkReadDataView(db.sharedBuffer, offset, stride)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
+    if (db.readOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -65,7 +65,7 @@ object DataView {
   def apply[E <: MetaElement, R <: Defined](
     db: DataBuffer[_, _], offset: Int, stride: Int
   )(implicit factory: DataSeqFactory[E, R]) :DataView[E, R] = {
-    if (db.isReadOnly) throw new IllegalArgumentException(
+    if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     factory.mkDataView(db.sharedBuffer, offset, stride)

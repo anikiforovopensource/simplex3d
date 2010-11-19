@@ -40,13 +40,10 @@ trait DataSeqFactory[E <: MetaElement, +R <: RawData] {
 
   final def mkDataArray(size: Int) :DataArray[E, R] = {
     val array = ((rawType: @switch) match {
-      case SByte => new Array[Byte](size*components)
-      case UByte => new Array[Byte](size*components)
-      case SShort => new Array[Short](size*components)
+      case SByte | UByte => new Array[Byte](size*components)
+      case SShort | HalfFloat=> new Array[Short](size*components)
       case UShort => new Array[Char](size*components)
-      case SInt => new Array[Int](size*components)
-      case UInt => new Array[Int](size*components)
-      case HalfFloat => new Array[Short](size*components)
+      case SInt | UInt => new Array[Int](size*components)
       case RawFloat => new Array[Float](size*components)
       case RawDouble => new Array[Double](size*components)
     }).asInstanceOf[AnyRef]
@@ -87,13 +84,5 @@ trait DataSeqFactory[E <: MetaElement, +R <: RawData] {
   private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R] = {
     if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
     else mkReadDataViewInstance(byteBuffer, offset, stride)
-  }
-
-
-  def emptyMarker() :DataSeq[E, R] = {
-    this match {
-      case s: DataSeq[_, _] if (s.byteCapacity == 0) => s.asInstanceOf[DataSeq[E, R]]
-      case _ => mkDataArray(0)
-    }
   }
 }

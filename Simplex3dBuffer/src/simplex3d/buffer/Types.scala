@@ -40,14 +40,9 @@ object RawType {
 
   def byteLength(rawType: Int) :Int = {
     (rawType: @switch) match {
-      case SByte => 1
-      case UByte => 1
-      case SShort => 2
-      case UShort => 2
-      case SInt => 4
-      case UInt => 4
-      case HalfFloat => 2
-      case RawFloat => 4
+      case SByte | UByte => 1
+      case SShort | UShort | HalfFloat => 2
+      case SInt | UInt | RawFloat => 4
       case RawDouble => 8
     }
   }
@@ -78,13 +73,10 @@ private[buffer] object StoreType {
   def storeFromRaw(rawType: Int) = {
     import RawType._
     (rawType: @switch) match {
-      case SByte => ByteStore
-      case UByte => ByteStore
-      case SShort => ShortStore
+      case SByte | UByte => ByteStore
+      case SShort | HalfFloat => ShortStore
       case UShort => CharStore
-      case SInt => IntStore
-      case UInt => IntStore
-      case HalfFloat => ShortStore
+      case SInt | UInt => IntStore
       case RawFloat => FloatStore
       case RawDouble => DoubleStore
     }

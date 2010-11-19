@@ -44,20 +44,20 @@ private[buffer] abstract class BaseSeq[
 ) {
 
   type BackingSeq <: ContiguousSeq[E#Component, R]
-  final def asBuffer() :R#BufferType = {
+  final def buffer() :R#BufferType = {
     ((storeType: @switch) match {
       case ByteStore =>
-        buffer.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
+        buff.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
       case ShortStore =>
-        buffer.asInstanceOf[ShortBuffer].duplicate()
+        buff.asInstanceOf[ShortBuffer].duplicate()
       case CharStore =>
-        buffer.asInstanceOf[CharBuffer].duplicate()
+        buff.asInstanceOf[CharBuffer].duplicate()
       case IntStore =>
-        buffer.asInstanceOf[IntBuffer].duplicate()
+        buff.asInstanceOf[IntBuffer].duplicate()
       case FloatStore =>
-        buffer.asInstanceOf[FloatBuffer].duplicate()
+        buff.asInstanceOf[FloatBuffer].duplicate()
       case DoubleStore =>
-        buffer.asInstanceOf[DoubleBuffer].duplicate()
+        buff.asInstanceOf[DoubleBuffer].duplicate()
     }).asInstanceOf[R#BufferType]
   }
 
@@ -68,8 +68,8 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
-    if (stride == components && buffer.isInstanceOf[IntBuffer]) {
-      val b = asBuffer().asInstanceOf[IntBuffer]
+    if (stride == components && buff.isInstanceOf[IntBuffer]) {
+      val b = buffer().asInstanceOf[IntBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
@@ -84,8 +84,8 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[Float], first: Int, count: Int
   ) {
-    if (stride == components && buffer.isInstanceOf[FloatBuffer]) {
-      val b = asBuffer().asInstanceOf[FloatBuffer]
+    if (stride == components && buff.isInstanceOf[FloatBuffer]) {
+      val b = buffer().asInstanceOf[FloatBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
@@ -100,8 +100,8 @@ private[buffer] abstract class BaseSeq[
   private final def putArray(
     index: Int, array: Array[Double], first: Int, count: Int
   ) {
-    if (stride == components && buffer.isInstanceOf[DoubleBuffer]) {
-      val b = asBuffer().asInstanceOf[DoubleBuffer]
+    if (stride == components && buff.isInstanceOf[DoubleBuffer]) {
+      val b = buffer().asInstanceOf[DoubleBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
@@ -196,12 +196,10 @@ private[buffer] abstract class BaseSeq[
   ) {
     def group(rawType: Int) = {
       (rawType: @switch) match {
-        case SByte => 0
-        case UByte => 0
+        case SByte | UByte => 0
         case SShort => 1
         case UShort => 2
-        case SInt => 3
-        case UInt => 3
+        case SInt | UInt => 3
         case HalfFloat => 4
         case RawFloat => 5
         case RawDouble => 6
@@ -214,7 +212,7 @@ private[buffer] abstract class BaseSeq[
     val srcLim = srcOffset + (count - 1)*srcStride + components
 
     if (index + count > size) throw new BufferOverflowException()
-    if (srcLim > src.buffer.capacity) throw new BufferUnderflowException()
+    if (srcLim > src.buff.capacity) throw new BufferUnderflowException()
 
     val noConversion = (
       (rawType == src.rawType) ||
@@ -222,8 +220,8 @@ private[buffer] abstract class BaseSeq[
     )
 
     if (stride == components && srcStride == components && noConversion) {
-      val destBuff = asBuffer()
-      val srcBuff = src.asReadOnlyBuffer()
+      val destBuff = buffer()
+      val srcBuff = src.readOnlyBuffer()
 
       destBuff.position(destOffset)
       srcBuff.position(srcOffset)
@@ -260,60 +258,60 @@ private[buffer] abstract class BaseSeq[
       (storeType: @switch) match {
         case ByteStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[ByteBuffer],
+            buff.asInstanceOf[ByteBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[ByteBuffer],
+            src.buff.asInstanceOf[ByteBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case ShortStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[ShortBuffer],
+            buff.asInstanceOf[ShortBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[ShortBuffer],
+            src.buff.asInstanceOf[ShortBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case CharStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[CharBuffer],
+            buff.asInstanceOf[CharBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[CharBuffer],
+            src.buff.asInstanceOf[CharBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case IntStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[IntBuffer],
+            buff.asInstanceOf[IntBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[IntBuffer],
+            src.buff.asInstanceOf[IntBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case FloatStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[FloatBuffer],
+            buff.asInstanceOf[FloatBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[FloatBuffer],
+            src.buff.asInstanceOf[FloatBuffer],
             srcOffset,
             srcStride,
             srcLim
           )
         case DoubleStore => Util.copyBuffer(
             components,
-            asBuffer().asInstanceOf[DoubleBuffer],
+            buff.asInstanceOf[DoubleBuffer],
             destOffset,
             stride,
-            src.asReadOnlyBuffer().asInstanceOf[DoubleBuffer],
+            src.buff.asInstanceOf[DoubleBuffer],
             srcOffset,
             srcStride,
             srcLim
@@ -321,8 +319,8 @@ private[buffer] abstract class BaseSeq[
       }
     }
     else {
-      componentManifest match {
-        case Manifest.Int => Util.copySeqInt(
+      backingSeq.elementManifest match {
+        case MetaManifest.Int1 => Util.copySeqInt(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
             destOffset,
@@ -332,7 +330,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case Manifest.Float => Util.copySeqFloat(
+        case MetaManifest.Float1 => Util.copySeqFloat(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
             destOffset,
@@ -342,7 +340,7 @@ private[buffer] abstract class BaseSeq[
             srcStride,
             srcLim
           )
-        case Manifest.Double => Util.copySeqDouble(
+        case MetaManifest.Double1 => Util.copySeqDouble(
             components,
             backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
             destOffset,
@@ -365,14 +363,23 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(index: Int, src: inDataSeq[E, _], first: Int, count: Int) {
+    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+      throw new ClassCastException()
+
     put(index, src.backingSeq, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inDataSeq[E, _]) {
+    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+      throw new ClassCastException()
+
     put(index, src.backingSeq, src.offset, src.stride, src.size)
   }
 
   final def put(src: inDataSeq[E, _]) {
+    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+      throw new ClassCastException()
+
     put(0, src.backingSeq, src.offset, src.stride, src.size)
   }
 }

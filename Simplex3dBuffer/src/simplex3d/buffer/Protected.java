@@ -46,16 +46,10 @@ abstract class Protected<A> {
 
     protected final Object writeReplace() throws ObjectStreamException {
         if (this instanceof ReadDataArray) {
+            ReadBaseSeq src = (ReadBaseSeq) this;
             SerializableData data = mkSerializableInstance();
-            data.buffer_$eq(false);
             data.content_$eq(sharedStore);
-            return data;
-        }
-        else if (this instanceof ReadDataBuffer) {
-            DataArray acopy = (DataArray) ((ReadBaseSeq)this).copyAsDataArray();
-            SerializableData data = mkSerializableInstance();
-            data.buffer_$eq(true);
-            data.content_$eq(acopy.array());
+            data.readOnly_$eq(src.readOnly());
             return data;
         }
         throw new NotSerializableException();

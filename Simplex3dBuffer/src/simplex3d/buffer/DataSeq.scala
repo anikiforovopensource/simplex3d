@@ -30,12 +30,14 @@ extends ReadBaseSeq[E, E#Const, R]
 trait DataSeq[E <: MetaElement, +R <: RawData]
 extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
 
-
 object DataSeq {
   def apply[E <: MetaElement, R <: Defined](
     implicit factory: DataSeqFactory[E, R]
   ) :DataSeq[E, R] = {
-    factory.emptyMarker()
+    factory match {
+      case ds: DataSeq[_, _] => ds.asInstanceOf[DataSeq[E, R]]
+      case _ => factory.mkDataArray(0)
+    }
   }
 }
 

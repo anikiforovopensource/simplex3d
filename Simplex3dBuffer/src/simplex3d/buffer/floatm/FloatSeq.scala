@@ -22,8 +22,8 @@ package simplex3d.buffer
 package floatm
 
 import java.nio._
-import scala.reflect.Manifest
-import simplex3d.math.floatm.FloatMath._
+import scala.reflect._
+import simplex3d.buffer.MetaManifest
 import simplex3d.buffer.Util._
 import simplex3d.buffer.conversion.Float._
 
@@ -35,8 +35,8 @@ private[buffer] sealed abstract class BaseFloat1[+R <: DefinedFloat](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int
 ) extends BaseSeq[Float1, Float, Float, R](shared, backing, ro, off, str) {
-  final def elementManifest = componentManifest
-  final def componentManifest = Manifest.Float
+  final def elementManifest = MetaManifest.Float1
+  final def readManifest = Manifest.Float
   final def components: Int = 1
   
   override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
@@ -76,8 +76,8 @@ private[buffer] final class BufferFloat1SByte(
 ) extends SeqFloat1SByte(shared, null, ro, 0, 1) with DataBuffer[Float1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SByte(shared, true)
 
-  def apply(i: Int) :Float = fromSByte(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toSByte(v)) }
+  def apply(i: Int) :Float = fromSByte(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toSByte(v)) }
 }
 
 private[buffer] final class ViewFloat1SByte(
@@ -87,8 +87,8 @@ private[buffer] final class ViewFloat1SByte(
 ) with DataView[Float1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SByte(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromSByte(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toSByte(v)) }
+  def apply(i: Int) :Float = fromSByte(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toSByte(v)) }
 }
 
 
@@ -125,8 +125,8 @@ private[buffer] final class BufferFloat1UByte(
 ) extends SeqFloat1UByte(shared, null, ro, 0, 1) with DataBuffer[Float1, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UByte(shared, true)
 
-  def apply(i: Int) :Float = fromUByte(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toUByte(v)) }
+  def apply(i: Int) :Float = fromUByte(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toUByte(v)) }
 }
 
 private[buffer] final class ViewFloat1UByte(
@@ -136,8 +136,8 @@ private[buffer] final class ViewFloat1UByte(
 ) with DataView[Float1, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UByte(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromUByte(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toUByte(v)) }
+  def apply(i: Int) :Float = fromUByte(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toUByte(v)) }
 }
 
 
@@ -174,8 +174,8 @@ private[buffer] final class BufferFloat1SShort(
 ) extends SeqFloat1SShort(shared, null, ro, 0, 1) with DataBuffer[Float1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SShort(shared, true)
 
-  def apply(i: Int) :Float = fromSShort(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toSShort(v)) }
+  def apply(i: Int) :Float = fromSShort(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toSShort(v)) }
 }
 
 private[buffer] final class ViewFloat1SShort(
@@ -185,8 +185,8 @@ private[buffer] final class ViewFloat1SShort(
 ) with DataView[Float1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SShort(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromSShort(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toSShort(v)) }
+  def apply(i: Int) :Float = fromSShort(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toSShort(v)) }
 }
 
 
@@ -223,8 +223,8 @@ private[buffer] final class BufferFloat1UShort(
 ) extends SeqFloat1UShort(shared, null, ro, 0, 1) with DataBuffer[Float1, UShort] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UShort(shared, true)
 
-  def apply(i: Int) :Float = fromUShort(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toUShort(v)) }
+  def apply(i: Int) :Float = fromUShort(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toUShort(v)) }
 }
 
 private[buffer] final class ViewFloat1UShort(
@@ -234,8 +234,8 @@ private[buffer] final class ViewFloat1UShort(
 ) with DataView[Float1, UShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UShort(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromUShort(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toUShort(v)) }
+  def apply(i: Int) :Float = fromUShort(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toUShort(v)) }
 }
 
 
@@ -272,8 +272,8 @@ private[buffer] final class BufferFloat1SInt(
 ) extends SeqFloat1SInt(shared, null, ro, 0, 1) with DataBuffer[Float1, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SInt(shared, true)
 
-  def apply(i: Int) :Float = fromSInt(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toSInt(v)) }
+  def apply(i: Int) :Float = fromSInt(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toSInt(v)) }
 }
 
 private[buffer] final class ViewFloat1SInt(
@@ -283,8 +283,8 @@ private[buffer] final class ViewFloat1SInt(
 ) with DataView[Float1, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SInt(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromSInt(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toSInt(v)) }
+  def apply(i: Int) :Float = fromSInt(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toSInt(v)) }
 }
 
 
@@ -321,8 +321,8 @@ private[buffer] final class BufferFloat1UInt(
 ) extends SeqFloat1UInt(shared, null, ro, 0, 1) with DataBuffer[Float1, UInt] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UInt(shared, true)
 
-  def apply(i: Int) :Float = fromUInt(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toUInt(v)) }
+  def apply(i: Int) :Float = fromUInt(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toUInt(v)) }
 }
 
 private[buffer] final class ViewFloat1UInt(
@@ -332,8 +332,8 @@ private[buffer] final class ViewFloat1UInt(
 ) with DataView[Float1, UInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UInt(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromUInt(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toUInt(v)) }
+  def apply(i: Int) :Float = fromUInt(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toUInt(v)) }
 }
 
 
@@ -370,8 +370,8 @@ private[buffer] final class BufferFloat1HalfFloat(
 ) extends SeqFloat1HalfFloat(shared, null, ro, 0, 1) with DataBuffer[Float1, HalfFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1HalfFloat(shared, true)
 
-  def apply(i: Int) :Float = fromHalfFloat(buffer.get(i))
-  def update(i: Int, v: Float) { buffer.put(i, toHalfFloat(v)) }
+  def apply(i: Int) :Float = fromHalfFloat(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toHalfFloat(v)) }
 }
 
 private[buffer] final class ViewFloat1HalfFloat(
@@ -381,8 +381,8 @@ private[buffer] final class ViewFloat1HalfFloat(
 ) with DataView[Float1, HalfFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1HalfFloat(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromHalfFloat(buffer.get(offset + i*stride))
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, toHalfFloat(v)) }
+  def apply(i: Int) :Float = fromHalfFloat(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toHalfFloat(v)) }
 }
 
 
@@ -419,8 +419,8 @@ private[buffer] final class BufferFloat1RawFloat(
 ) extends SeqFloat1RawFloat(shared, null, ro, 0, 1) with DataBuffer[Float1, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new BufferFloat1RawFloat(shared, true)
 
-  def apply(i: Int) :Float = buffer.get(i)
-  def update(i: Int, v: Float) { buffer.put(i, v) }
+  def apply(i: Int) :Float = buff.get(i)
+  def update(i: Int, v: Float) { buff.put(i, v) }
 }
 
 private[buffer] final class ViewFloat1RawFloat(
@@ -430,6 +430,6 @@ private[buffer] final class ViewFloat1RawFloat(
 ) with DataView[Float1, RawFloat] {
   protected[buffer] def mkReadOnlyInstance() = new ViewFloat1RawFloat(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = buffer.get(offset + i*stride)
-  def update(i: Int, v: Float) { buffer.put(offset + i*stride, v) }
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, v) }
 }

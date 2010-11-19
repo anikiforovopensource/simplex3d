@@ -32,12 +32,12 @@ trait ReadDataArray[E <: MetaElement, +R <: RawData]
 extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
   type BackingSeq <: ReadDataArray[E#Component, R]
   type RawBuffer = Buffer
-  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataArray[E, R]]
+  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadDataArray[E, R]]
 }
 
 trait DataArray[E <: MetaElement, +R <: RawData]
 extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
-  def array: R#ArrayType = buffer.array.asInstanceOf[R#ArrayType]
+  def array: R#ArrayType = buff.array.asInstanceOf[R#ArrayType]
   type BackingSeq = DataArray[E#Component, R @uncheckedVariance]
 }
 
@@ -47,7 +47,7 @@ object ReadDataArray {
     implicit factory: DataSeqFactory[E, R]
   ) :ReadDataArray[E, R] = {
     val res = factory.mkDataArray(da.sharedArray)
-    if (da.isReadOnly) res.asReadOnlySeq() else res
+    if (da.readOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -83,7 +83,7 @@ object DataArray {
   def apply[E <: MetaElement, R <: Defined](da: DataArray[_, R])(
     implicit factory: DataSeqFactory[E, R]
   ) :DataArray[E, R] = {
-    if (da.isReadOnly) throw new IllegalArgumentException(
+    if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     factory.mkDataArray(da.sharedArray)

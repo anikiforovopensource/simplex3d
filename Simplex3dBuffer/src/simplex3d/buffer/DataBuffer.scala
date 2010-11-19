@@ -27,10 +27,9 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
 trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
 extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
-  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadDataBuffer[E, R]]
+  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadDataBuffer[E, R]]
 }
 
 trait DataBuffer[E <: MetaElement, +R <: RawData]
@@ -48,7 +47,7 @@ object ReadDataBuffer {
     implicit factory: DataSeqFactory[E, R]
   ) :ReadDataBuffer[E, R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
+    if (db.readOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -84,7 +83,7 @@ object DataBuffer {
   def apply[E <: MetaElement, R <: Defined](db: DataBuffer[_, _])(
     implicit factory: DataSeqFactory[E, R]
   ) :DataBuffer[E, R] = {
-    if (db.isReadOnly) throw new IllegalArgumentException(
+    if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     factory.mkDataBuffer(db.sharedBuffer)

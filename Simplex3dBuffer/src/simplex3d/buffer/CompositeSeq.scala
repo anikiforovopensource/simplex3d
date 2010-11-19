@@ -32,11 +32,9 @@ abstract class CompositeSeq[E <: Composite, +R <: RawData](
   backing: ContiguousSeq[E#Component, R],
   offset: Int, stride: Int
 ) extends BaseSeq[E, E#Const, E#Read, R](
-  backing.sharedStore, backing, backing.isReadOnly,
+  backing.sharedStore, backing, backing.readOnly,
   offset, stride
 ) {
-  final def componentManifest = backingSeq.elementManifest
-
   final def rawType = backingSeq.rawType
   final def normalized: Boolean = backingSeq.normalized
 }

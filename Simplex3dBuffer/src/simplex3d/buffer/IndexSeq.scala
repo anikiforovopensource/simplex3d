@@ -49,7 +49,7 @@ extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
 
 trait ReadIndexArray[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
-  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadIndexArray[R]]
+  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadIndexArray[R]]
 }
 
 trait IndexArray[+R <: Unsigned]
@@ -58,7 +58,7 @@ extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
 
 trait ReadIndexBuffer[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
-  override def asReadOnlySeq() = toReadOnly.asInstanceOf[ReadIndexBuffer[R]]
+  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadIndexBuffer[R]]
 }
 
 trait IndexBuffer[+R <: Unsigned]
@@ -70,7 +70,7 @@ object ReadIndexArray {
     implicit factory: DataSeqFactory[Int1, R]
   ) :ReadIndexArray[R] = {
     val res = factory.mkDataArray(da.sharedArray)
-    if (da.isReadOnly) res.asReadOnlySeq() else res
+    if (da.readOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -114,7 +114,7 @@ object IndexArray {
   def apply[R <: DefinedIndex](da: DataArray[_, R])(
     implicit factory: DataSeqFactory[Int1, R]
   ) :IndexArray[R] = {
-    if (da.isReadOnly) throw new IllegalArgumentException(
+    if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     factory.mkDataArray(da.array)
@@ -132,7 +132,7 @@ object ReadIndexBuffer {
     implicit factory: DataSeqFactory[Int1, R]
   ) :ReadIndexBuffer[R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
-    if (db.isReadOnly) res.asReadOnlySeq() else res
+    if (db.readOnly) res.asReadOnlySeq() else res
   }
 }
 
@@ -176,7 +176,7 @@ object IndexBuffer {
   def apply[R <: DefinedIndex](db: DataBuffer[_, _])(
     implicit factory: DataSeqFactory[Int1, R]
   ) :IndexBuffer[R] = {
-    if (db.isReadOnly) throw new IllegalArgumentException(
+    if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     factory.mkDataBuffer(db.sharedBuffer)

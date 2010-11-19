@@ -32,7 +32,8 @@ import simplex3d.buffer._
 private[buffer] abstract class BaseVec4d[+R <: DefinedDouble](
   backing: ContiguousSeq[Double1, R], off: Int, str: Int
 ) extends CompositeSeq[Vec4d, R](backing, off, str) {
-  final def elementManifest = Vec4d.ReadManifest
+  final def elementManifest = Vec4d.Manifest
+  final def readManifest = Vec4d.ReadManifest
   final def components: Int = 4
 
   def mkDataArray(array: R#ArrayType @uncheckedVariance)

@@ -21,7 +21,7 @@
 package simplex3d.buffer
 
 import java.nio._
-import scala.reflect.Manifest
+import scala.reflect._
 import simplex3d.buffer.Util._
 
 
@@ -32,8 +32,8 @@ private[buffer] sealed abstract class BaseInt1[+R <: DefinedInt](
   shared: AnyRef, backing: AnyRef, ro: Boolean,
   off: Int, str: Int
 ) extends BaseSeq[Int1, Int, Int, R](shared, backing, ro, off, str) {
-  final def elementManifest = componentManifest
-  final def componentManifest = Manifest.Int
+  final def elementManifest = MetaManifest.Int1
+  final def readManifest = Manifest.Int
   final def components: Int = 1
 
   override def mkSerializableInstance() = new SerializableIntData(components, rawType)
@@ -73,8 +73,8 @@ private[buffer] final class BufferInt1UByte(
 ) extends SeqInt1UByte(shared, null, ro, 0, 1) with IndexBuffer[UByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UByte(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v.toByte)
+  def apply(i: Int) :Int = buff.get(i) & 0xFF
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
 private[buffer] final class ViewInt1UByte(
@@ -84,8 +84,8 @@ private[buffer] final class ViewInt1UByte(
 ) with DataView[Int1, UByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UByte(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v.toByte)
+  def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
 }
 
 
@@ -122,8 +122,8 @@ private[buffer] final class BufferInt1UShort(
 ) extends SeqInt1UShort(shared, null, ro, 0, 1) with IndexBuffer[UShort] {
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UShort(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v.toChar)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toChar)
 }
 
 private[buffer] final class ViewInt1UShort(
@@ -133,8 +133,8 @@ private[buffer] final class ViewInt1UShort(
 ) with DataView[Int1, UShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UShort(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(
     offset + i*stride,
     v.toChar
   )
@@ -174,8 +174,8 @@ private[buffer] final class BufferInt1UInt(
 ) extends SeqInt1UInt(shared, null, ro, 0, 1) with IndexBuffer[UInt]{
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1UInt(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }
 
 private[buffer] final class ViewInt1UInt(
@@ -185,8 +185,8 @@ private[buffer] final class ViewInt1UInt(
 ) with DataView[Int1, UInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1UInt(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
 }
 
 
@@ -223,8 +223,8 @@ private[buffer] final class BufferInt1SByte(
 ) extends SeqInt1SByte(shared, null, ro, 0, 1) with DataBuffer[Int1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SByte(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v.toByte)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
 private[buffer] final class ViewInt1SByte(
@@ -234,8 +234,8 @@ private[buffer] final class ViewInt1SByte(
 ) with DataView[Int1, SByte] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SByte(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v.toByte)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
 }
 
 
@@ -272,8 +272,8 @@ private[buffer] final class BufferInt1SShort(
 ) extends SeqInt1SShort(shared, null, ro, 0, 1) with DataBuffer[Int1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SShort(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v.toShort)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toShort)
 }
 
 private[buffer] final class ViewInt1SShort(
@@ -283,8 +283,8 @@ private[buffer] final class ViewInt1SShort(
 ) with DataView[Int1, SShort] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SShort(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v.toShort)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toShort)
 }
 
 
@@ -321,8 +321,8 @@ private[buffer] final class BufferInt1SInt(
 ) extends SeqInt1SInt(shared, null, ro, 0, 1) with DataBuffer[Int1, SInt]{
   protected[buffer] def mkReadOnlyInstance() = new BufferInt1SInt(shared, true)
 
-  def apply(i: Int) :Int = buffer.get(i)
-  def update(i: Int, v: Int) :Unit = buffer.put(i, v)
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }
 
 private[buffer] final class ViewInt1SInt(
@@ -332,6 +332,6 @@ private[buffer] final class ViewInt1SInt(
 ) with DataView[Int1, SInt] {
   protected[buffer] def mkReadOnlyInstance() = new ViewInt1SInt(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buffer.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buffer.put(offset + i*stride, v)
+  def apply(i: Int) :Int = buff.get(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
 }

@@ -27,9 +27,9 @@ import simplex3d.buffer._
 import simplex3d.buffer.floatm._
 
 import Descriptors._
-import FactoryTest._
+import FactoryTestUtil._
 import TestUtil._
-import ApplyUpdateTest._
+import ApplyUpdateTestUtil._
 
 
 /**

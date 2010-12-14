@@ -39,7 +39,7 @@ import TestUtil._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object ApplyUpdateTest extends FunSuite {
+object ApplyUpdateTestUtil extends FunSuite {
 
   private val randomSrc = new java.util.Random(0)
   private def ni = randomSrc.nextInt
@@ -97,7 +97,7 @@ object ApplyUpdateTest extends FunSuite {
 
     seq(i) = value
     assert(seq(i) == expected)
-    verify(seq.buffer(), seq.offset + i*seq.stride, store)
+    verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
   def testApplyUpdate(seq: DataSeq[Float1, _], value: Float, expected: Float, store: AnyVal) {
@@ -109,7 +109,7 @@ object ApplyUpdateTest extends FunSuite {
     if (FloatMath.isnan(expected)) assert(FloatMath.isnan(seq(i)))
     else assert(seq(i) == expected)
 
-    verify(seq.buffer(), seq.offset + i*seq.stride, store)
+    verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
   def testApplyUpdate(seq: DataSeq[Double1, _], value: Double, expected: Double, store: AnyVal) {
@@ -121,7 +121,7 @@ object ApplyUpdateTest extends FunSuite {
     if (DoubleMath.isnan(expected)) assert(DoubleMath.isnan(seq(i)))
     else assert(seq(i) == expected)
 
-    verify(seq.buffer(), seq.offset + i*seq.stride, store)
+    verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
   private[this] final def toByte(value: AnyVal) :Byte = {
@@ -154,7 +154,7 @@ object ApplyUpdateTest extends FunSuite {
       case x: Double => x
     }
   }
-  private def verify(buff: Buffer, index: Int, value: AnyVal) {
+  private def verifyValue(buff: Buffer, index: Int, value: AnyVal) {
     buff match {
       case b: ByteBuffer => assert(b.get(index) == toByte(value))
       case b: ShortBuffer => assert(b.get(index) == toShort(value))
@@ -171,20 +171,19 @@ object ApplyUpdateTest extends FunSuite {
     }
   }
 
-  private def cmp(x: Any, y: Any) {
-    (x, y) match {
-      case (a: Int, b: Int) => assert(a == b)
-      case (a: Float, b: Float) =>
-        if (FloatMath.isnan(a)) assert(FloatMath.isnan(b))
-        else assert(a == b)
-      case (a: Double, b: Double) =>
-        if (DoubleMath.isnan(a)) assert(DoubleMath.isnan(b))
-        else assert(a == b)
-    }
-  }
-
-  private def verifyValue(seq: inData[_ <: MetaElement], i: Int) {
+  private def verifyComponents(seq: inData[_ <: MetaElement], i: Int) {
     def get(i: Int, j: Int) :Any = seq.backingSeq(seq.offset + seq.stride*i + j)
+    def cmp(x: Any, y: Any) {
+      (x, y) match {
+        case (a: Int, b: Int) => assert(a == b)
+        case (a: Float, b: Float) =>
+          if (FloatMath.isnan(a)) assert(FloatMath.isnan(b))
+          else assert(a == b)
+        case (a: Double, b: Double) =>
+          if (DoubleMath.isnan(a)) assert(DoubleMath.isnan(b))
+          else assert(a == b)
+      }
+    }
 
     seq(i) match {
       case Vec2i(x, y) =>       cmp(x, get(i, 0)); cmp(y, get(i, 1))
@@ -261,7 +260,7 @@ object ApplyUpdateTest extends FunSuite {
     val bcopy = seq.backingSeq.copyAsDataArray()
 
     var i = 0; while (i < seq.size) {
-      verifyValue(seq, i)
+      verifyComponents(seq, i)
       i += 1
     }
 
@@ -270,10 +269,7 @@ object ApplyUpdateTest extends FunSuite {
       i += 1
     }
 
-    i = 0; while (i < bcopy.size) {
-      cmp(bcopy(i), seq.backingSeq(i))
-      i += 1
-    }
+    testContent(1, bcopy, 0, seq.backingSeq, 0, bcopy.size)
   }
 
   def testApplyUpdateArray[E <: MetaElement, R <: RawData](

@@ -24,9 +24,9 @@ import org.scalatest._
 import simplex3d.buffer._
 
 import Descriptors._
-import FactoryTest._
+import FactoryTestUtil._
 import TestUtil._
-import ApplyUpdateTest._
+import ApplyUpdateTestUtil._
 
 
 /**
@@ -73,7 +73,7 @@ class ConversionTest extends FunSuite {
     else assert(conversion.Float.fromHalfFloat(c) == convertedBack)
   }
   
-  test("Conversion: Float-SByte") {
+  test("Float-SByte") {
     assert(conversion.Float.fromSByte(-128) == -1)
 
     testFloatSByte(Float.NegativeInfinity, -1, -127)
@@ -101,7 +101,7 @@ class ConversionTest extends FunSuite {
     testFloatSByte(Float.PositiveInfinity, 1, 127)
   }
 
-  test("Conversion: Float-UByte") {
+  test("Float-UByte") {
     testFloatUByte(Float.NegativeInfinity, 0, 0)
     testFloatUByte(-Float.MaxValue, 0, 0)
     testFloatUByte(-1, 0, 0)
@@ -121,7 +121,7 @@ class ConversionTest extends FunSuite {
     testFloatUByte(Float.PositiveInfinity, 1, -1)
   }
 
-  test("Conversion: Float-SShort") {
+  test("Float-SShort") {
     assert(conversion.Float.fromSShort(-32768) == -1)
 
     testFloatSShort(Float.NegativeInfinity, -1, -32767)
@@ -149,7 +149,7 @@ class ConversionTest extends FunSuite {
     testFloatSShort(Float.PositiveInfinity, 1, 32767)
   }
 
-  test("Conversion: Float-UShort") {
+  test("Float-UShort") {
     testFloatUShort(Float.NegativeInfinity, 0, 0)
     testFloatUShort(-Float.MaxValue, 0, 0)
     testFloatUShort(-1, 0, 0)
@@ -169,7 +169,7 @@ class ConversionTest extends FunSuite {
     testFloatUShort(Float.PositiveInfinity, 1, 65535)
   }
 
-  test("Conversion: Float-SInt") {
+  test("Float-SInt") {
     assert(conversion.Float.fromSInt(Int.MinValue) == -1)
 
     testFloatSInt(Float.NegativeInfinity, -1, -2147483647)
@@ -197,7 +197,7 @@ class ConversionTest extends FunSuite {
     testFloatSInt(Float.PositiveInfinity, 1, 2147483647)
   }
 
-  test("Conversion: Float-UInt") {
+  test("Float-UInt") {
     testFloatUInt(Float.NegativeInfinity, 0, 0)
     testFloatUInt(-Float.MaxValue, 0, 0)
     testFloatUInt(-1, 0, 0)
@@ -217,7 +217,7 @@ class ConversionTest extends FunSuite {
     testFloatUInt(Float.PositiveInfinity, 1, -1)
   }
   
-  test("Conversion: Float-HalfFloat") {
+  test("Float-HalfFloat") {
     // Inf.
     testFloatHalfFloat(Float.NegativeInfinity, Float.NegativeInfinity, 0xFC00.toShort)
     testFloatHalfFloat(Float.PositiveInfinity, Float.PositiveInfinity, 0x7C00.toShort)
@@ -357,7 +357,7 @@ class ConversionTest extends FunSuite {
     else assert(conversion.Double.fromHalfFloat(c) == convertedBack)
   }
   
-  test("Conversion: Double-SByte") {
+  test("Double-SByte") {
     val div127 = 1/127.0
     
     assert(conversion.Double.fromSByte(-128) == -1)
@@ -387,7 +387,7 @@ class ConversionTest extends FunSuite {
     testDoubleSByte(Double.PositiveInfinity, 1, 127)
   }
 
-  test("Conversion: Double-UByte") {
+  test("Double-UByte") {
     val div255 = 1/255.0
     
     testDoubleUByte(Double.NegativeInfinity, 0, 0)
@@ -409,7 +409,7 @@ class ConversionTest extends FunSuite {
     testDoubleUByte(Double.PositiveInfinity, 1, -1)
   }
 
-  test("Conversion: Double-SShort") {
+  test("Double-SShort") {
     val div32767 = 1/32767.0
 
     assert(conversion.Double.fromSShort(-32768) == -1)
@@ -439,7 +439,7 @@ class ConversionTest extends FunSuite {
     testDoubleSShort(Double.PositiveInfinity, 1, 32767)
   }
 
-  test("Conversion: Double-UShort") {
+  test("Double-UShort") {
     val div65535 = 1/65535.0
 
     testDoubleUShort(Double.NegativeInfinity, 0, 0)
@@ -461,7 +461,7 @@ class ConversionTest extends FunSuite {
     testDoubleUShort(Double.PositiveInfinity, 1, 65535)
   }
 
-  test("Conversion: Double-SInt") {
+  test("Double-SInt") {
     val div2147483647 = 1/2147483647.0
 
     assert(conversion.Double.fromSInt(Int.MinValue) == -1)
@@ -491,7 +491,7 @@ class ConversionTest extends FunSuite {
     testDoubleSInt(Double.PositiveInfinity, 1, 2147483647)
   }
 
-  test("Conversion: Double-UInt") {
+  test("Double-UInt") {
     val div4294967295 = 1/4294967295.0
 
     testDoubleUInt(Double.NegativeInfinity, 0, 0)
@@ -513,7 +513,7 @@ class ConversionTest extends FunSuite {
     testDoubleUInt(Double.PositiveInfinity, 1, -1)
   }
   
-  test("Conversion: Double-HalfFloat") {
+  test("Double-HalfFloat") {
     // Inf.
     testDoubleHalfFloat(Double.NegativeInfinity, Double.NegativeInfinity, 0xFC00.toShort)
     testDoubleHalfFloat(Double.PositiveInfinity, Double.PositiveInfinity, 0x7C00.toShort)

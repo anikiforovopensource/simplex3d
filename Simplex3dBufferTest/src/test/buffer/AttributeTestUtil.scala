@@ -32,7 +32,7 @@ import TestUtil._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object AttributeTest extends FunSuite {
+object AttributeTestUtil extends FunSuite {
 
   private def rawLength(rawType: Int) :Int = {
     rawType match {
@@ -347,22 +347,4 @@ object AttributeTest extends FunSuite {
     if (!readOnly) testView(seq.asReadOnlySeq, offset, stride, true, data)
     assert(seq.sharesStoreObject(seq.asReadOnlySeq))
   }
-/*
-// Test Copy
-  copyAsDataArray()
-  copyAsDataBuffer()
-  copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
-
-  put(index: Int, seq: Seq[E#Element], first: Int, count: Int)
-  put(index: Int, seq: Seq[E#Element])
-  put(seq: Seq[E#Element])
-
-  put(index: Int, src: inContiguousSeq[E#Component, _], srcOffset: Int, srcStride: Int, count: Int)
-  put(index: Int, src: inContiguousSeq[E#Component, _])
-  put(src: inContiguousSeq[E#Component, _])
-
-  put(index: Int, src: inDataSeq[E, _], first: Int, count: Int)
-  put(index: Int, src: inDataSeq[E, _])
-  put(src: inDataSeq[E, _])
-*/
 }

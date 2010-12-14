@@ -27,13 +27,13 @@ import simplex3d.math.CoreMath._
 import simplex3d.buffer._
 
 import TestUtil._
-import AttributeTest._
+import AttributeTestUtil._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object FactoryTest extends FunSuite {
+object FactoryTestUtil extends FunSuite {
 
   private def nameType(seq: ReadDataSeq[_, _]) :(String, String) = {
     val name = seq.getClass.getName
@@ -196,7 +196,8 @@ object FactoryTest extends FunSuite {
     arrayFromData(factory)(descriptor)
     testMakeData(factory(genArray(0, descriptor)), descriptor)
 
-    CastTest.testArrayCast(factory)(descriptor)
+    CastTestUtil.testArrayCast(factory)(descriptor)
+    SerializationTestUtil.testSerialization(factory)(descriptor)
   }
 
   def testBufferFromSize[E <: MetaElement, R <: RawData](
@@ -214,7 +215,7 @@ object FactoryTest extends FunSuite {
     bufferFromData(factory)(descriptor)
     testMakeData(factory(genBuffer(0, descriptor)._1), descriptor)
 
-    CastTest.testBufferCast(factory)(descriptor)
+    CastTestUtil.testBufferCast(factory)(descriptor)
   }
 
   def testViewFromData[E <: MetaElement, R <: RawData](

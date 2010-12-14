@@ -25,8 +25,8 @@ import simplex3d.math._
 import simplex3d.buffer._
 
 import Descriptors._
-import FactoryTest._
-import ApplyUpdateTest._
+import FactoryTestUtil._
+import ApplyUpdateTestUtil._
 
 
 /**

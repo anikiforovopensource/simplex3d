@@ -33,13 +33,13 @@ import simplex3d.buffer.floatm._
 import simplex3d.buffer.doublem._
 
 import TestUtil._
-import AttributeTest._
+import AttributeTestUtil._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object CastTest extends FunSuite {
+object CastTestUtil extends FunSuite {
 
   def testArrayCast[E <: MetaElement, R <: RawData](
     factory: (R#ArrayType) => DataArray[E, R]

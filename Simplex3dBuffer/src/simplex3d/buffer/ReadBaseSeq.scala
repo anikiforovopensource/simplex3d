@@ -21,7 +21,6 @@
 package simplex3d.buffer
 
 import java.nio._
-import scala.reflect.Manifest
 import scala.annotation._
 import scala.annotation.unchecked._
 import scala.collection._
@@ -129,11 +128,10 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   type BackingSeq <: ReadContiguousSeq[E#Component, R]
 
   // Public API.
-  def elementManifest: ClassManifest[E]
-  def readManifest: ClassManifest[E#Read]
-
-  override def components: Int
   override def rawType: Int
+  override def components: Int
+  override def elementManifest: ClassManifest[E]
+  def readManifest: ClassManifest[E#Read]
   def normalized: Boolean
 
   final val bytesPerRawComponent = RawType.byteLength(rawType)

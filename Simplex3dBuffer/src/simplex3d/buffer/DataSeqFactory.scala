@@ -30,8 +30,9 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 trait DataSeqFactory[E <: MetaElement, +R <: RawData] {
-  protected def rawType: Int
-  protected def components: Int
+  def rawType: Int
+  def components: Int
+  def elementManifest: ClassManifest[E]
 
   def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]

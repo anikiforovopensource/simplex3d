@@ -31,38 +31,11 @@ import java.nio._
 @serializable @SerialVersionUID(8104346712419693669L)
 class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] {
 
-  verify(dviews)
+  InterleavedData.verify(dviews)
   @transient private[this] var views = dviews.toArray
   
   def apply(i: Int) :RawView = views(i)
   def length = views.length
-
-  private[this] final def verify(seqs: Seq[RawView]) {
-    val first = seqs.head
-    val checks = new Array[Boolean](first.stride*first.bytesPerRawComponent)
-
-    def checkOverlap(byteOffset: Int, bytesTaken: Int) {
-      var i = byteOffset; while (i < byteOffset + bytesTaken) {
-        if (checks(i)) throw new IllegalArgumentException("Views must not have overlapping data.")
-        checks(i) = true
-
-        i += 1
-      }
-    }
-
-    for (seq <- seqs) {
-      if (first.byteStride != seq.byteStride)
-        throw new IllegalArgumentException("Views must have the same byte stride.")
-
-      if(first.size != seq.size)
-        throw new IllegalArgumentException("Views must have the same size.")
-
-      if(!first.sharesStoreObject(seq))
-        throw new IllegalArgumentException("Views must share the same ByteByffer object.")
-
-      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerRawComponent)
-    }
-  }
 
   @throws(classOf[IOException])
   private[this] def writeObject(out: ObjectOutputStream) {
@@ -83,7 +56,9 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
 
     // Save views as data arrays.
     i = 0; while (i < length) {
-      out.writeObject(views(i).copyAsDataArray())
+      val array = views(i).copyAsDataArray()
+      val store = if (views(i).readOnly) array.asReadOnlySeq() else array
+      out.writeObject(store)
 
       i += 1
     }
@@ -114,12 +89,13 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
       val darray = in.readObject().asInstanceOf[Data[_]]
       val (offset, stride) = header(i)
 
-      views(i) = darray.copyAsDataView(byteBuffer, offset, stride)
+      val view = darray.copyAsDataView(byteBuffer, offset, stride)
+      views(i) = if (darray.readOnly) view.asReadOnlySeq() else view
 
       i += 1
     }
 
-    verify(views)
+    InterleavedData.verify(views)
     this.views = views
   }
 }
@@ -127,4 +103,31 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
 object InterleavedData {
   def apply(seqs: RawView*) = new InterleavedData(seqs)
   def apply(seqs: IndexedSeq[RawView]) = new InterleavedData(seqs)
+
+  final def verify(views: Seq[RawView]) {
+    val first = views.head
+    val interval = new Array[Boolean](first.stride*first.bytesPerRawComponent)
+
+    def checkOverlap(byteOffset: Int, bytesTaken: Int) {
+      var i = byteOffset; while (i < byteOffset + bytesTaken) {
+        if (interval(i)) throw new IllegalArgumentException("Views must not have overlapping data.")
+        interval(i) = true
+
+        i += 1
+      }
+    }
+
+    for (seq <- views) {
+      if (first.byteStride != seq.byteStride)
+        throw new IllegalArgumentException("Views must have the same byte stride.")
+
+      if(first.size != seq.size)
+        throw new IllegalArgumentException("Views must have the same size.")
+
+      if(!first.sharesStoreObject(seq))
+        throw new IllegalArgumentException("Views must share the same ByteByffer object.")
+
+      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerRawComponent)
+    }
+  }
 }

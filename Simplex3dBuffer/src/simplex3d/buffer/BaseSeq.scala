@@ -191,7 +191,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: inContiguousSeq[E#Component, _],
+    src: inContiguousSeq[E#Component, RawData],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
     def group(rawType: Int) = {
@@ -354,29 +354,29 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, src: inContiguousSeq[E#Component, _]) {
+  final def put(index: Int, src: inContiguousSeq[E#Component, RawData]) {
     put(index, src, 0, components, src.size/components)
   }
 
-  final def put(src: inContiguousSeq[E#Component, _]) {
+  final def put(src: inContiguousSeq[E#Component, RawData]) {
     put(0, src, 0, components, src.size/components)
   }
 
-  final def put(index: Int, src: inDataSeq[E, _], first: Int, count: Int) {
+  final def put(index: Int, src: inData[E], first: Int, count: Int) {
     if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
       throw new ClassCastException()
 
     put(index, src.backingSeq, src.offset + first*src.stride, src.stride, count)
   }
 
-  final def put(index: Int, src: inDataSeq[E, _]) {
+  final def put(index: Int, src: inData[E]) {
     if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
       throw new ClassCastException()
 
     put(index, src.backingSeq, src.offset, src.stride, src.size)
   }
 
-  final def put(src: inDataSeq[E, _]) {
+  final def put(src: inData[E]) {
     if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
       throw new ClassCastException()
 

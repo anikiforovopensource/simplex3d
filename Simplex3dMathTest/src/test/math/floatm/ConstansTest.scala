@@ -219,7 +219,7 @@ class ConstansTest extends FunSuite {
   }
 
   test("Manifest") {
-    import scala.reflect.Manifest._
+    import scala.reflect.ClassManifest._
 
     assert(Vec2.Manifest == classType[Vec2](classOf[Vec2]))
     assert(Vec2.ConstManifest == classType[ConstVec2](classOf[ConstVec2]))

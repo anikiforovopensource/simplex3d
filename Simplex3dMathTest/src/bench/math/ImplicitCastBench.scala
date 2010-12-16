@@ -31,6 +31,8 @@ import simplex3d.math.CoreMath._
  */
 object ImplicitCastBench {
 
+  // Implicit cast is eliminated by escape analysis.
+  // Performance impact is small to moderate, depending on the size of the objects.
   def main(args: Array[String]) {
     test()
     test()

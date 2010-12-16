@@ -29,12 +29,12 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait DataSeqFactory[E <: MetaElement, +R <: RawData] {
+trait Factory[E <: Meta, +R <: Raw] {
   def rawType: Int
   def components: Int
-  def elementManifest: ClassManifest[E]
+  def elemManifest: ClassManifest[E]
 
-  def mkDataArray(array: R#ArrayType @uncheckedVariance) :DataArray[E, R]
+  def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
   protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
 
@@ -42,14 +42,14 @@ trait DataSeqFactory[E <: MetaElement, +R <: RawData] {
   final def mkDataArray(size: Int) :DataArray[E, R] = {
     val array = ((rawType: @switch) match {
       case SByte | UByte => new Array[Byte](size*components)
-      case SShort | HalfFloat=> new Array[Short](size*components)
+      case SShort | HFloat=> new Array[Short](size*components)
       case UShort => new Array[Char](size*components)
       case SInt | UInt => new Array[Int](size*components)
-      case RawFloat => new Array[Float](size*components)
-      case RawDouble => new Array[Double](size*components)
+      case RFloat => new Array[Float](size*components)
+      case RDouble => new Array[Double](size*components)
     }).asInstanceOf[AnyRef]
 
-    mkDataArray(array.asInstanceOf[R#ArrayType])
+    mkDataArray(array.asInstanceOf[R#Array])
   }
 
 

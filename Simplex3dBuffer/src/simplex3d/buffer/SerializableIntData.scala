@@ -34,12 +34,12 @@ extends SerializableData
     components match {
       case 1 =>
         rawType match {
-          case SByte => FactoryInt1SByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryInt1UByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryInt1SShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryInt1UShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryInt1SInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryInt1UInt.mkDataArray(content.asInstanceOf[Array[Int]])
+          case SByte => FactorySIntSByte.mkDataArray(content.asInstanceOf[Array[Byte]])
+          case UByte => FactorySIntUByte.mkDataArray(content.asInstanceOf[Array[Byte]])
+          case SShort => FactorySIntSShort.mkDataArray(content.asInstanceOf[Array[Short]])
+          case UShort => FactorySIntUShort.mkDataArray(content.asInstanceOf[Array[Char]])
+          case SInt => FactorySIntSInt.mkDataArray(content.asInstanceOf[Array[Int]])
+          case UInt => FactorySIntUInt.mkDataArray(content.asInstanceOf[Array[Int]])
         }
       case 2 =>
         rawType match {

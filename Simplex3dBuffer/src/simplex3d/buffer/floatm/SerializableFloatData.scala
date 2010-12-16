@@ -35,14 +35,14 @@ extends SerializableData
     components match {
       case 1 =>
         rawType match {
-          case SByte => FactoryFloat1SByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case UByte => FactoryFloat1UByte.mkDataArray(content.asInstanceOf[Array[Byte]])
-          case SShort => FactoryFloat1SShort.mkDataArray(content.asInstanceOf[Array[Short]])
-          case UShort => FactoryFloat1UShort.mkDataArray(content.asInstanceOf[Array[Char]])
-          case SInt => FactoryFloat1SInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case UInt => FactoryFloat1UInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case HalfFloat => FactoryFloat1HalfFloat.mkDataArray(content.asInstanceOf[Array[Short]])
-          case RawFloat => FactoryFloat1RawFloat.mkDataArray(content.asInstanceOf[Array[Float]])
+          case SByte => FactoryRFloatSByte.mkDataArray(content.asInstanceOf[Array[Byte]])
+          case UByte => FactoryRFloatUByte.mkDataArray(content.asInstanceOf[Array[Byte]])
+          case SShort => FactoryRFloatSShort.mkDataArray(content.asInstanceOf[Array[Short]])
+          case UShort => FactoryRFloatUShort.mkDataArray(content.asInstanceOf[Array[Char]])
+          case SInt => FactoryRFloatSInt.mkDataArray(content.asInstanceOf[Array[Int]])
+          case UInt => FactoryRFloatUInt.mkDataArray(content.asInstanceOf[Array[Int]])
+          case HFloat => FactoryRFloatHFloat.mkDataArray(content.asInstanceOf[Array[Short]])
+          case RFloat => FactoryRFloatRFloat.mkDataArray(content.asInstanceOf[Array[Float]])
         }
       case 2 =>
         rawType match {
@@ -52,8 +52,8 @@ extends SerializableData
           case UShort => FactoryVec2fUShort.mkDataArray(content.asInstanceOf[Array[Char]])
           case SInt => FactoryVec2fSInt.mkDataArray(content.asInstanceOf[Array[Int]])
           case UInt => FactoryVec2fUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case HalfFloat => FactoryVec2fHalfFloat.mkDataArray(content.asInstanceOf[Array[Short]])
-          case RawFloat => FactoryVec2fRawFloat.mkDataArray(content.asInstanceOf[Array[Float]])
+          case HFloat => FactoryVec2fHFloat.mkDataArray(content.asInstanceOf[Array[Short]])
+          case RFloat => FactoryVec2fRFloat.mkDataArray(content.asInstanceOf[Array[Float]])
         }
       case 3 =>
         rawType match {
@@ -63,8 +63,8 @@ extends SerializableData
           case UShort => FactoryVec3fUShort.mkDataArray(content.asInstanceOf[Array[Char]])
           case SInt => FactoryVec3fSInt.mkDataArray(content.asInstanceOf[Array[Int]])
           case UInt => FactoryVec3fUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case HalfFloat => FactoryVec3fHalfFloat.mkDataArray(content.asInstanceOf[Array[Short]])
-          case RawFloat => FactoryVec3fRawFloat.mkDataArray(content.asInstanceOf[Array[Float]])
+          case HFloat => FactoryVec3fHFloat.mkDataArray(content.asInstanceOf[Array[Short]])
+          case RFloat => FactoryVec3fRFloat.mkDataArray(content.asInstanceOf[Array[Float]])
         }
       case 4 =>
         rawType match {
@@ -74,8 +74,8 @@ extends SerializableData
           case UShort => FactoryVec4fUShort.mkDataArray(content.asInstanceOf[Array[Char]])
           case SInt => FactoryVec4fSInt.mkDataArray(content.asInstanceOf[Array[Int]])
           case UInt => FactoryVec4fUInt.mkDataArray(content.asInstanceOf[Array[Int]])
-          case HalfFloat => FactoryVec4fHalfFloat.mkDataArray(content.asInstanceOf[Array[Short]])
-          case RawFloat => FactoryVec4fRawFloat.mkDataArray(content.asInstanceOf[Array[Float]])
+          case HFloat => FactoryVec4fHFloat.mkDataArray(content.asInstanceOf[Array[Short]])
+          case RFloat => FactoryVec4fRFloat.mkDataArray(content.asInstanceOf[Array[Float]])
         }
     }
   }

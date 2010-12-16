@@ -24,19 +24,11 @@ package simplex3d.buffer
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[E <: Meta, +R <: Raw]
-extends ReadBaseSeq[E, E#Const, R]
-
-trait DataSeq[E <: Meta, +R <: Raw]
-extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
-
-object DataSeq {
-  def apply[E <: Meta, R <: Defined](
-    implicit factory: Factory[E, R]
-  ) :DataSeq[E, R] = {
-    factory match {
-      case ds: DataSeq[_, _] => ds.asInstanceOf[DataSeq[E, R]]
-      case _ => factory.mkDataArray(0)
-    }
-  }
+trait ReadContiguous[E <: Meta, +R <: Raw]
+extends ReadDataSeq[E, R] {
+  assert(offset == 0)
+  assert(stride == components)
 }
+
+trait Contiguous[E <: Meta, +R <: Raw]
+extends DataSeq[E, R] with ReadContiguous[E, R]

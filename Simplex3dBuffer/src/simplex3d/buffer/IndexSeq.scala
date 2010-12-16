@@ -28,14 +28,14 @@ import scala.annotation.unchecked._
  * @author Aleksey Nikiforov (lex)
  */
 trait ReadIndexSeq[+R <: Unsigned]
-extends ReadContiguousSeq[Int1, R] {
-  override def asReadOnlySeq() :ReadIndexSeq[R]
+extends ReadContiguous[SInt, R] {
+  override def asReadOnly() :ReadIndexSeq[R]
 
   def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
     mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
 
   def mkIndexArray(size: Int) :IndexArray[R] = mkDataArray(size)
-  def mkIndexArray(array: R#ArrayType @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
+  def mkIndexArray(array: R#Array @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
   def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
   def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
 
@@ -44,45 +44,45 @@ extends ReadContiguousSeq[Int1, R] {
 }
 
 trait IndexSeq[+R <: Unsigned]
-extends ContiguousSeq[Int1, R] with ReadIndexSeq[R]
+extends Contiguous[SInt, R] with ReadIndexSeq[R]
 
 
 trait ReadIndexArray[+R <: Unsigned]
-extends ReadIndexSeq[R] with ReadDataArray[Int1, R] {
-  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadIndexArray[R]]
+extends ReadIndexSeq[R] with ReadDataArray[SInt, R] {
+  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadIndexArray[R]]
 }
 
 trait IndexArray[+R <: Unsigned]
-extends IndexSeq[R] with DataArray[Int1, R] with ReadIndexArray[R]
+extends IndexSeq[R] with DataArray[SInt, R] with ReadIndexArray[R]
 
 
 trait ReadIndexBuffer[+R <: Unsigned]
-extends ReadIndexSeq[R] with ReadDataBuffer[Int1, R] {
-  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadIndexBuffer[R]]
+extends ReadIndexSeq[R] with ReadDataBuffer[SInt, R] {
+  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadIndexBuffer[R]]
 }
 
 trait IndexBuffer[+R <: Unsigned]
-extends IndexSeq[R] with DataBuffer[Int1, R] with ReadIndexBuffer[R]
+extends IndexSeq[R] with DataBuffer[SInt, R] with ReadIndexBuffer[R]
 
 
 object ReadIndexArray {
   def apply[R <: DefinedIndex](da: ReadDataArray[_, R])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :ReadIndexArray[R] = {
     val res = factory.mkDataArray(da.sharedArray)
-    if (da.readOnly) res.asReadOnlySeq() else res
+    if (da.readOnly) res.asReadOnly() else res
   }
 }
 
 object IndexArray {
-  def apply[R <: DefinedIndex](array: R#ArrayType)(
-    implicit factory: DataSeqFactory[Int1, R]
+  def apply[R <: DefinedIndex](array: R#Array)(
+    implicit factory: Factory[SInt, R]
   ) :IndexArray[R] = {
     factory.mkDataArray(array)
   }
 
   def apply[R <: DefinedIndex](size: Int)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexArray[R] = {
     factory.mkDataArray(size)
   }
@@ -90,13 +90,13 @@ object IndexArray {
   def apply(indexSize: Int, dataSize: Int) :IndexArray[Unsigned] = {
     if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
 
-    if (dataSize <= 256) FactoryInt1UByte.mkDataArray(indexSize)
-    else if (dataSize <= 65536) FactoryInt1UShort.mkDataArray(indexSize)
-    else FactoryInt1UInt.mkDataArray(indexSize)
+    if (dataSize <= 256) FactorySIntUByte.mkDataArray(indexSize)
+    else if (dataSize <= 65536) FactorySIntUShort.mkDataArray(indexSize)
+    else FactorySIntUInt.mkDataArray(indexSize)
   }
 
   def apply[R <: DefinedIndex](vals: Int*)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexArray[R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
@@ -104,7 +104,7 @@ object IndexArray {
   }
 
   def apply[R <: DefinedIndex](vals: IndexedSeq[Int])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexArray[R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
@@ -112,7 +112,7 @@ object IndexArray {
   }
 
   def apply[R <: DefinedIndex](da: DataArray[_, R])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexArray[R] = {
     if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
@@ -123,28 +123,28 @@ object IndexArray {
 
 object ReadIndexBuffer {
   def apply[R <: DefinedIndex](buffer: ByteBuffer)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :ReadIndexBuffer[R] = {
     factory.mkReadDataBuffer(buffer)
   }
 
   def apply[R <: DefinedIndex](db: ReadDataBuffer[_, _])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :ReadIndexBuffer[R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
-    if (db.readOnly) res.asReadOnlySeq() else res
+    if (db.readOnly) res.asReadOnly() else res
   }
 }
 
 object IndexBuffer {
   def apply[R <: DefinedIndex](buffer: ByteBuffer)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexBuffer[R] = {
     factory.mkDataBuffer(buffer)
   }
 
   def apply[R <: DefinedIndex](size: Int)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexBuffer[R] = {
     factory.mkDataBuffer(size)
   }
@@ -152,13 +152,13 @@ object IndexBuffer {
   def apply(indexSize: Int, dataSize: Int) :IndexBuffer[Unsigned] = {
     if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
 
-    if (dataSize <= 256) FactoryInt1UByte.mkDataBuffer(indexSize)
-    else if (dataSize <= 65536) FactoryInt1UShort.mkDataBuffer(indexSize)
-    else FactoryInt1UInt.mkDataBuffer(indexSize)
+    if (dataSize <= 256) FactorySIntUByte.mkDataBuffer(indexSize)
+    else if (dataSize <= 65536) FactorySIntUShort.mkDataBuffer(indexSize)
+    else FactorySIntUInt.mkDataBuffer(indexSize)
   }
 
   def apply[R <: DefinedIndex](vals: Int*)(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexBuffer[R] = {
     val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
@@ -166,7 +166,7 @@ object IndexBuffer {
   }
 
   def apply[R <: DefinedIndex](vals: IndexedSeq[Int])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexBuffer[R] = {
     val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
@@ -174,7 +174,7 @@ object IndexBuffer {
   }
 
   def apply[R <: DefinedIndex](db: DataBuffer[_, _])(
-    implicit factory: DataSeqFactory[Int1, R]
+    implicit factory: Factory[SInt, R]
   ) :IndexBuffer[R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."

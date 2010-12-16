@@ -57,7 +57,7 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
     // Save views as data arrays.
     i = 0; while (i < length) {
       val array = views(i).copyAsDataArray()
-      val store = if (views(i).readOnly) array.asReadOnlySeq() else array
+      val store = if (views(i).readOnly) array.asReadOnly() else array
       out.writeObject(store)
 
       i += 1
@@ -90,7 +90,7 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
       val (offset, stride) = header(i)
 
       val view = darray.copyAsDataView(byteBuffer, offset, stride)
-      views(i) = if (darray.readOnly) view.asReadOnlySeq() else view
+      views(i) = if (darray.readOnly) view.asReadOnly() else view
 
       i += 1
     }

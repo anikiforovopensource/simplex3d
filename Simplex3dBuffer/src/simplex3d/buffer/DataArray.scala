@@ -28,60 +28,60 @@ import scala.annotation.unchecked._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-trait ReadDataArray[E <: MetaElement, +R <: RawData]
-extends ReadDataSeq[E, R] with ReadContiguousSeq[E, R] {
-  type BackingSeq <: ReadDataArray[E#Component, R]
+trait ReadDataArray[E <: Meta, +R <: Raw]
+extends ReadDataSeq[E, R] with ReadContiguous[E, R] {
+  type Backing <: ReadDataArray[E#Component, R]
   type RawBuffer = Buffer
-  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadDataArray[E, R]]
+  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataArray[E, R]]
 }
 
-trait DataArray[E <: MetaElement, +R <: RawData]
-extends DataSeq[E, R] with ContiguousSeq[E, R] with ReadDataArray[E, R] {
-  def array: R#ArrayType = buff.array.asInstanceOf[R#ArrayType]
-  type BackingSeq = DataArray[E#Component, R @uncheckedVariance]
+trait DataArray[E <: Meta, +R <: Raw]
+extends DataSeq[E, R] with Contiguous[E, R] with ReadDataArray[E, R] {
+  def array: R#Array = buff.array.asInstanceOf[R#Array]
+  type Backing = DataArray[E#Component, R @uncheckedVariance]
 }
 
 
 object ReadDataArray {
-  def apply[E <: MetaElement, R <: Defined](da: ReadDataArray[_, R])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](da: ReadDataArray[_, R])(
+    implicit factory: Factory[E, R]
   ) :ReadDataArray[E, R] = {
     val res = factory.mkDataArray(da.sharedArray)
-    if (da.readOnly) res.asReadOnlySeq() else res
+    if (da.readOnly) res.asReadOnly() else res
   }
 }
 
 object DataArray {
-  def apply[E <: MetaElement, R <: Defined](array: R#ArrayType)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](array: R#Array)(
+    implicit factory: Factory[E, R]
   ) :DataArray[E, R] = {
     factory.mkDataArray(array)
   }
 
-  def apply[E <: MetaElement, R <: Defined](size: Int)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](size: Int)(
+    implicit factory: Factory[E, R]
   ) :DataArray[E, R] = {
     factory.mkDataArray(size)
   }
 
-  def apply[E <: MetaElement, R <: Defined](vals: E#Read*)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](vals: E#Read*)(
+    implicit factory: Factory[E, R]
   ) :DataArray[E, R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Read])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](vals: IndexedSeq[E#Read])(
+    implicit factory: Factory[E, R]
   ) :DataArray[E, R] = {
     val data = factory.mkDataArray(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[E <: MetaElement, R <: Defined](da: DataArray[_, R])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](da: DataArray[_, R])(
+    implicit factory: Factory[E, R]
   ) :DataArray[E, R] = {
     if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."

@@ -27,61 +27,61 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataBuffer[E <: MetaElement, +R <: RawData]
-extends ReadDataView[E, R] with ReadContiguousSeq[E, R] {
-  override def asReadOnlySeq() = readOnlySeq.asInstanceOf[ReadDataBuffer[E, R]]
+trait ReadDataBuffer[E <: Meta, +R <: Raw]
+extends ReadDataView[E, R] with ReadContiguous[E, R] {
+  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataBuffer[E, R]]
 }
 
-trait DataBuffer[E <: MetaElement, +R <: RawData]
-extends DataView[E, R] with ContiguousSeq[E, R] with ReadDataBuffer[E, R]
+trait DataBuffer[E <: Meta, +R <: Raw]
+extends DataView[E, R] with Contiguous[E, R] with ReadDataBuffer[E, R]
 
 
 object ReadDataBuffer {
-  def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
+    implicit factory: Factory[E, R]
   ) :ReadDataBuffer[E, R] = {
     factory.mkReadDataBuffer(buffer)
   }
 
-  def apply[E <: MetaElement, R <: Defined](db: ReadDataBuffer[_, _])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](db: ReadDataBuffer[_, _])(
+    implicit factory: Factory[E, R]
   ) :ReadDataBuffer[E, R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
-    if (db.readOnly) res.asReadOnlySeq() else res
+    if (db.readOnly) res.asReadOnly() else res
   }
 }
 
 object DataBuffer {
-  def apply[E <: MetaElement, R <: Defined](buffer: ByteBuffer)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     factory.mkDataBuffer(buffer)
   }
 
-  def apply[E <: MetaElement, R <: Defined](size: Int)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](size: Int)(
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     factory.mkDataBuffer(size)
   }
 
-  def apply[E <: MetaElement, R <: Defined](vals: E#Read*)(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](vals: E#Read*)(
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[E <: MetaElement, R <: Defined](vals: IndexedSeq[E#Read])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](vals: IndexedSeq[E#Read])(
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
     data
   }
 
-  def apply[E <: MetaElement, R <: Defined](db: DataBuffer[_, _])(
-    implicit factory: DataSeqFactory[E, R]
+  def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _])(
+    implicit factory: Factory[E, R]
   ) :DataBuffer[E, R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."

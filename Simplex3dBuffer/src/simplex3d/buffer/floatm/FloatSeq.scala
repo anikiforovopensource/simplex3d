@@ -31,11 +31,11 @@ import simplex3d.buffer.conversion.Float._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] sealed abstract class BaseFloat1[+R <: DefinedFloat](
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class BaseRFloat[+R <: DefinedFloat](
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseSeq[Float1, Float, Float, R](shared, backing, ro, off, str) {
-  final def elementManifest = MetaManifest.Float1
+) extends BaseSeq[RFloat, Float, Float, R](shared, primitive, ro, off, str) {
+  final def elemManifest = MetaManifest.RFloat
   final def readManifest = Manifest.Float
   final def components: Int = 1
   
@@ -44,48 +44,48 @@ private[buffer] sealed abstract class BaseFloat1[+R <: DefinedFloat](
 
 
 // Type: SByte
-private[buffer] sealed abstract class SeqFloat1SByte(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatSByte(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[SByte](shared, backing, ro, off, str) {
+) extends BaseRFloat[SByte](shared, primitive, ro, off, str) {
   final def rawType = RawType.SByte
   final def normalized = true
 
   final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1SByte(array, array)
+    new ArrayRFloatSByte(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1SByte(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatSByte(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1SByte(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatSByte(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1SByte(
+private[buffer] final class ArrayRFloatSByte(
   rarray: Array[Byte], warray: Array[Byte]
-) extends SeqFloat1SByte(rarray, null, warray == null, 0, 1) with DataArray[Float1, SByte] {
+) extends SeqRFloatSByte(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SByte] {
   def this() = this(emptyByte, emptyByte)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SByte(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatSByte(rarray, null)
 
   def apply(i: Int) :Float = fromSByte(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSByte(v) }
 }
 
-private[buffer] final class BufferFloat1SByte(
+private[buffer] final class BufferRFloatSByte(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1SByte(shared, null, ro, 0, 1) with DataBuffer[Float1, SByte] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SByte(shared, true)
+) extends SeqRFloatSByte(shared, null, ro, 0, 1) with DataBuffer[RFloat, SByte] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatSByte(shared, true)
 
   def apply(i: Int) :Float = fromSByte(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSByte(v)) }
 }
 
-private[buffer] final class ViewFloat1SByte(
+private[buffer] final class ViewRFloatSByte(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1SByte(
-  shared, new BufferFloat1SByte(shared, ro), ro, off, str
-) with DataView[Float1, SByte] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SByte(shared, true, offset, stride)
+) extends SeqRFloatSByte(
+  shared, new BufferRFloatSByte(shared, ro), ro, off, str
+) with DataView[RFloat, SByte] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatSByte(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromSByte(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toSByte(v)) }
@@ -93,48 +93,48 @@ private[buffer] final class ViewFloat1SByte(
 
 
 // Type: UByte
-private[buffer] sealed abstract class SeqFloat1UByte(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatUByte(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[UByte](shared, backing, ro, off, str) {
+) extends BaseRFloat[UByte](shared, primitive, ro, off, str) {
   final def rawType = RawType.UByte
   final def normalized = true
 
   final def mkDataArray(array: Array[Byte]) =
-    new ArrayFloat1UByte(array, array)
+    new ArrayRFloatUByte(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1UByte(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatUByte(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1UByte(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatUByte(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1UByte(
+private[buffer] final class ArrayRFloatUByte(
   rarray: Array[Byte], warray: Array[Byte]
-) extends SeqFloat1UByte(rarray, null, warray == null, 0, 1) with DataArray[Float1, UByte] {
+) extends SeqRFloatUByte(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UByte] {
   def this() = this(emptyByte, emptyByte)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UByte(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatUByte(rarray, null)
 
   def apply(i: Int) :Float = fromUByte(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUByte(v) }
 }
 
-private[buffer] final class BufferFloat1UByte(
+private[buffer] final class BufferRFloatUByte(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1UByte(shared, null, ro, 0, 1) with DataBuffer[Float1, UByte] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UByte(shared, true)
+) extends SeqRFloatUByte(shared, null, ro, 0, 1) with DataBuffer[RFloat, UByte] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatUByte(shared, true)
 
   def apply(i: Int) :Float = fromUByte(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUByte(v)) }
 }
 
-private[buffer] final class ViewFloat1UByte(
+private[buffer] final class ViewRFloatUByte(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1UByte(
-  shared, new BufferFloat1UByte(shared, ro), ro, off, str
-) with DataView[Float1, UByte] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UByte(shared, true, offset, stride)
+) extends SeqRFloatUByte(
+  shared, new BufferRFloatUByte(shared, ro), ro, off, str
+) with DataView[RFloat, UByte] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatUByte(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromUByte(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toUByte(v)) }
@@ -142,48 +142,48 @@ private[buffer] final class ViewFloat1UByte(
 
 
 // Type: SShort
-private[buffer] sealed abstract class SeqFloat1SShort(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatSShort(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[SShort](shared, backing, ro, off, str) {
+) extends BaseRFloat[SShort](shared, primitive, ro, off, str) {
   final def rawType = RawType.SShort
   final def normalized = true
 
   final def mkDataArray(array: Array[Short]) =
-    new ArrayFloat1SShort(array, array)
+    new ArrayRFloatSShort(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1SShort(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatSShort(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1SShort(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatSShort(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1SShort(
+private[buffer] final class ArrayRFloatSShort(
   rarray: Array[Short], warray: Array[Short]
-) extends SeqFloat1SShort(rarray, null, warray == null, 0, 1) with DataArray[Float1, SShort] {
+) extends SeqRFloatSShort(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SShort] {
   def this() = this(emptyShort, emptyShort)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SShort(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatSShort(rarray, null)
 
   def apply(i: Int) :Float = fromSShort(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSShort(v) }
 }
 
-private[buffer] final class BufferFloat1SShort(
+private[buffer] final class BufferRFloatSShort(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1SShort(shared, null, ro, 0, 1) with DataBuffer[Float1, SShort] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SShort(shared, true)
+) extends SeqRFloatSShort(shared, null, ro, 0, 1) with DataBuffer[RFloat, SShort] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatSShort(shared, true)
 
   def apply(i: Int) :Float = fromSShort(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSShort(v)) }
 }
 
-private[buffer] final class ViewFloat1SShort(
+private[buffer] final class ViewRFloatSShort(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1SShort(
-  shared, new BufferFloat1SShort(shared, ro), ro, off, str
-) with DataView[Float1, SShort] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SShort(shared, true, offset, stride)
+) extends SeqRFloatSShort(
+  shared, new BufferRFloatSShort(shared, ro), ro, off, str
+) with DataView[RFloat, SShort] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatSShort(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromSShort(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toSShort(v)) }
@@ -191,48 +191,48 @@ private[buffer] final class ViewFloat1SShort(
 
 
 // Type: UShort
-private[buffer] sealed abstract class SeqFloat1UShort(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatUShort(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[UShort](shared, backing, ro, off, str) {
+) extends BaseRFloat[UShort](shared, primitive, ro, off, str) {
   final def rawType = RawType.UShort
   final def normalized = true
 
   final def mkDataArray(array: Array[Char]) =
-    new ArrayFloat1UShort(array, array)
+    new ArrayRFloatUShort(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1UShort(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatUShort(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1UShort(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatUShort(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1UShort(
+private[buffer] final class ArrayRFloatUShort(
   rarray: Array[Char], warray: Array[Char]
-) extends SeqFloat1UShort(rarray, null, warray == null, 0, 1) with DataArray[Float1, UShort] {
+) extends SeqRFloatUShort(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UShort] {
   def this() = this(emptyChar, emptyChar)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UShort(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatUShort(rarray, null)
 
   def apply(i: Int) :Float = fromUShort(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUShort(v) }
 }
 
-private[buffer] final class BufferFloat1UShort(
+private[buffer] final class BufferRFloatUShort(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1UShort(shared, null, ro, 0, 1) with DataBuffer[Float1, UShort] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UShort(shared, true)
+) extends SeqRFloatUShort(shared, null, ro, 0, 1) with DataBuffer[RFloat, UShort] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatUShort(shared, true)
 
   def apply(i: Int) :Float = fromUShort(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUShort(v)) }
 }
 
-private[buffer] final class ViewFloat1UShort(
+private[buffer] final class ViewRFloatUShort(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1UShort(
-  shared, new BufferFloat1UShort(shared, ro), ro, off, str
-) with DataView[Float1, UShort] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UShort(shared, true, offset, stride)
+) extends SeqRFloatUShort(
+  shared, new BufferRFloatUShort(shared, ro), ro, off, str
+) with DataView[RFloat, UShort] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatUShort(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromUShort(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toUShort(v)) }
@@ -240,48 +240,48 @@ private[buffer] final class ViewFloat1UShort(
 
 
 // Type: SInt
-private[buffer] sealed abstract class SeqFloat1SInt(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatSInt(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[SInt](shared, backing, ro, off, str) {
+) extends BaseRFloat[SInt](shared, primitive, ro, off, str) {
   final def rawType = RawType.SInt
   final def normalized = true
 
   final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1SInt(array, array)
+    new ArrayRFloatSInt(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1SInt(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatSInt(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1SInt(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatSInt(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1SInt(
+private[buffer] final class ArrayRFloatSInt(
   rarray: Array[Int], warray: Array[Int]
-) extends SeqFloat1SInt(rarray, null, warray == null, 0, 1) with DataArray[Float1, SInt] {
+) extends SeqRFloatSInt(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SInt] {
   def this() = this(emptyInt, emptyInt)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1SInt(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatSInt(rarray, null)
 
   def apply(i: Int) :Float = fromSInt(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSInt(v) }
 }
 
-private[buffer] final class BufferFloat1SInt(
+private[buffer] final class BufferRFloatSInt(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1SInt(shared, null, ro, 0, 1) with DataBuffer[Float1, SInt] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1SInt(shared, true)
+) extends SeqRFloatSInt(shared, null, ro, 0, 1) with DataBuffer[RFloat, SInt] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatSInt(shared, true)
 
   def apply(i: Int) :Float = fromSInt(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSInt(v)) }
 }
 
-private[buffer] final class ViewFloat1SInt(
+private[buffer] final class ViewRFloatSInt(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1SInt(
-  shared, new BufferFloat1SInt(shared, ro), ro, off, str
-) with DataView[Float1, SInt] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1SInt(shared, true, offset, stride)
+) extends SeqRFloatSInt(
+  shared, new BufferRFloatSInt(shared, ro), ro, off, str
+) with DataView[RFloat, SInt] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatSInt(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromSInt(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toSInt(v)) }
@@ -289,146 +289,146 @@ private[buffer] final class ViewFloat1SInt(
 
 
 // Type: UInt
-private[buffer] sealed abstract class SeqFloat1UInt(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+private[buffer] sealed abstract class SeqRFloatUInt(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[UInt](shared, backing, ro, off, str) {
+) extends BaseRFloat[UInt](shared, primitive, ro, off, str) {
   final def rawType = RawType.UInt
   final def normalized = true
 
   final def mkDataArray(array: Array[Int]) =
-    new ArrayFloat1UInt(array, array)
+    new ArrayRFloatUInt(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1UInt(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatUInt(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1UInt(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatUInt(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1UInt(
+private[buffer] final class ArrayRFloatUInt(
   rarray: Array[Int], warray: Array[Int]
-) extends SeqFloat1UInt(rarray, null, warray == null, 0, 1) with DataArray[Float1, UInt] {
+) extends SeqRFloatUInt(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UInt] {
   def this() = this(emptyInt, emptyInt)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1UInt(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatUInt(rarray, null)
 
   def apply(i: Int) :Float = fromUInt(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUInt(v) }
 }
 
-private[buffer] final class BufferFloat1UInt(
+private[buffer] final class BufferRFloatUInt(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1UInt(shared, null, ro, 0, 1) with DataBuffer[Float1, UInt] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1UInt(shared, true)
+) extends SeqRFloatUInt(shared, null, ro, 0, 1) with DataBuffer[RFloat, UInt] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatUInt(shared, true)
 
   def apply(i: Int) :Float = fromUInt(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUInt(v)) }
 }
 
-private[buffer] final class ViewFloat1UInt(
+private[buffer] final class ViewRFloatUInt(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1UInt(
-  shared, new BufferFloat1UInt(shared, ro), ro, off, str
-) with DataView[Float1, UInt] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1UInt(shared, true, offset, stride)
+) extends SeqRFloatUInt(
+  shared, new BufferRFloatUInt(shared, ro), ro, off, str
+) with DataView[RFloat, UInt] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatUInt(shared, true, offset, stride)
 
   def apply(i: Int) :Float = fromUInt(buff.get(offset + i*stride))
   def update(i: Int, v: Float) { buff.put(offset + i*stride, toUInt(v)) }
 }
 
 
-// Type: HalfFloat
-private[buffer] sealed abstract class SeqFloat1HalfFloat(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+// Type: HFloat
+private[buffer] sealed abstract class SeqRFloatHFloat(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[HalfFloat](shared, backing, ro, off, str) {
-  final def rawType: Int = RawType.HalfFloat
+) extends BaseRFloat[HFloat](shared, primitive, ro, off, str) {
+  final def rawType: Int = RawType.HFloat
   final def normalized = false
 
   final def mkDataArray(array: Array[Short]) =
-    new ArrayFloat1HalfFloat(array, array)
+    new ArrayRFloatHFloat(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1HalfFloat(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatHFloat(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1HalfFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatHFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1HalfFloat(
+private[buffer] final class ArrayRFloatHFloat(
   rarray: Array[Short], warray: Array[Short]
-) extends SeqFloat1HalfFloat(rarray, null, warray == null, 0, 1) with DataArray[Float1, HalfFloat] {
+) extends SeqRFloatHFloat(rarray, null, warray == null, 0, 1) with DataArray[RFloat, HFloat] {
   def this() = this(emptyShort, emptyShort)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1HalfFloat(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatHFloat(rarray, null)
 
-  def apply(i: Int) :Float = fromHalfFloat(rarray(i))
-  def update(i: Int, v: Float) { warray(i) = toHalfFloat(v) }
+  def apply(i: Int) :Float = fromHFloat(rarray(i))
+  def update(i: Int, v: Float) { warray(i) = toHFloat(v) }
 }
 
-private[buffer] final class BufferFloat1HalfFloat(
+private[buffer] final class BufferRFloatHFloat(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1HalfFloat(shared, null, ro, 0, 1) with DataBuffer[Float1, HalfFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1HalfFloat(shared, true)
+) extends SeqRFloatHFloat(shared, null, ro, 0, 1) with DataBuffer[RFloat, HFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatHFloat(shared, true)
 
-  def apply(i: Int) :Float = fromHalfFloat(buff.get(i))
-  def update(i: Int, v: Float) { buff.put(i, toHalfFloat(v)) }
+  def apply(i: Int) :Float = fromHFloat(buff.get(i))
+  def update(i: Int, v: Float) { buff.put(i, toHFloat(v)) }
 }
 
-private[buffer] final class ViewFloat1HalfFloat(
+private[buffer] final class ViewRFloatHFloat(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1HalfFloat(
-  shared, new BufferFloat1HalfFloat(shared, ro), ro, off, str
-) with DataView[Float1, HalfFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1HalfFloat(shared, true, offset, stride)
+) extends SeqRFloatHFloat(
+  shared, new BufferRFloatHFloat(shared, ro), ro, off, str
+) with DataView[RFloat, HFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatHFloat(shared, true, offset, stride)
 
-  def apply(i: Int) :Float = fromHalfFloat(buff.get(offset + i*stride))
-  def update(i: Int, v: Float) { buff.put(offset + i*stride, toHalfFloat(v)) }
+  def apply(i: Int) :Float = fromHFloat(buff.get(offset + i*stride))
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, toHFloat(v)) }
 }
 
 
-// Type: RawFloat
-private[buffer] sealed abstract class SeqFloat1RawFloat(
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+// Type: RFloat
+private[buffer] sealed abstract class SeqRFloatRFloat(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseFloat1[RawFloat](shared, backing, ro, off, str) {
-  final def rawType: Int = RawType.RawFloat
+) extends BaseRFloat[RFloat](shared, primitive, ro, off, str) {
+  final def rawType: Int = RawType.RFloat
   final def normalized = false
 
   final def mkDataArray(array: Array[Float]) =
-    new ArrayFloat1RawFloat(array, array)
+    new ArrayRFloatRFloat(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferFloat1RawFloat(byteBuffer, byteBuffer.isReadOnly)
+    new BufferRFloatRFloat(byteBuffer, byteBuffer.isReadOnly)
   }
   protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewFloat1RawFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
+    new ViewRFloatRFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
-private[buffer] final class ArrayFloat1RawFloat(
+private[buffer] final class ArrayRFloatRFloat(
   rarray: Array[Float], warray: Array[Float]
-) extends SeqFloat1RawFloat(rarray, null, warray == null, 0, 1) with DataArray[Float1, RawFloat] {
+) extends SeqRFloatRFloat(rarray, null, warray == null, 0, 1) with DataArray[RFloat, RFloat] {
   def this() = this(emptyFloat, emptyFloat)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayFloat1RawFloat(rarray, null)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayRFloatRFloat(rarray, null)
 
   def apply(i: Int) :Float = rarray(i)
   def update(i: Int, v: Float) { warray(i) = v }
 }
 
-private[buffer] final class BufferFloat1RawFloat(
+private[buffer] final class BufferRFloatRFloat(
   shared: ByteBuffer, ro: Boolean
-) extends SeqFloat1RawFloat(shared, null, ro, 0, 1) with DataBuffer[Float1, RawFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferFloat1RawFloat(shared, true)
+) extends SeqRFloatRFloat(shared, null, ro, 0, 1) with DataBuffer[RFloat, RFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferRFloatRFloat(shared, true)
 
   def apply(i: Int) :Float = buff.get(i)
   def update(i: Int, v: Float) { buff.put(i, v) }
 }
 
-private[buffer] final class ViewFloat1RawFloat(
+private[buffer] final class ViewRFloatRFloat(
   shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqFloat1RawFloat(
-  shared, new BufferFloat1RawFloat(shared, ro), ro, off, str
-) with DataView[Float1, RawFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewFloat1RawFloat(shared, true, offset, stride)
+) extends SeqRFloatRFloat(
+  shared, new BufferRFloatRFloat(shared, ro), ro, off, str
+) with DataView[RFloat, RFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewRFloatRFloat(shared, true, offset, stride)
 
   def apply(i: Int) :Float = buff.get(offset + i*stride)
   def update(i: Int, v: Float) { buff.put(offset + i*stride, v) }

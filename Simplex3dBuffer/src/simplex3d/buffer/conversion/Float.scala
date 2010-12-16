@@ -86,8 +86,8 @@ object Float {
     (s + 0.5).toLong.toInt // round
   }
 
-  // HalfFloat
-  @inline final def fromHalfFloat(x: Short) :Float = {
+  // HFloat
+  @inline final def fromHFloat(x: Short) :Float = {
     val bits = x << 16
     val x7C = (bits & 0x7C000000)
 
@@ -106,7 +106,7 @@ object Float {
       java.lang.Float.intBitsToFloat(f)
     }
   }
-  @inline final def toHalfFloat(x: Float) :Short = {
+  @inline final def toHFloat(x: Float) :Short = {
     val bits = java.lang.Float.floatToRawIntBits(x)
     val exponent = bits & 0x7F800000
 

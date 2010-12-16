@@ -28,13 +28,13 @@ import java.nio._
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class CompositeSeq[E <: Composite, +R <: RawData](
-  backing: ContiguousSeq[E#Component, R],
+abstract class CompositeSeq[E <: Composite, +R <: Raw](
+  primitive: Contiguous[E#Component, R],
   offset: Int, stride: Int
 ) extends BaseSeq[E, E#Const, E#Read, R](
-  backing.sharedStore, backing, backing.readOnly,
+  primitive.sharedStore, primitive, primitive.readOnly,
   offset, stride
 ) {
-  final def rawType = backingSeq.rawType
-  final def normalized: Boolean = backingSeq.normalized
+  final def rawType = backing.rawType
+  final def normalized: Boolean = backing.normalized
 }

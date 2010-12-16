@@ -29,111 +29,129 @@ import simplex3d.math._
  */
 package object buffer {
 
-  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[Int1, R]) :DataSeqFactory[Int1, R] = s
-  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :DataSeqFactory[E, R] = s
-  private final def cast[R <: DefinedInt](f: DataSeqFactory[Int1, R]) = f.asInstanceOf[DataArray[Int1, R]]
+  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[SInt, R]) :Factory[SInt, R] = s
+  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :Factory[E, R] = s
+  private final def cast[R <: DefinedInt](f: Factory[SInt, R]) = f.asInstanceOf[DataArray[SInt, R]]
 
-  // Int1
-  implicit final lazy val FactoryInt1SByte = primitiveFactory[SByte](new ArrayInt1SByte)
-  implicit final lazy val FactoryInt1UByte = primitiveFactory[UByte](new ArrayInt1UByte)
-  implicit final lazy val FactoryInt1SShort = primitiveFactory[SShort](new ArrayInt1SShort)
-  implicit final lazy val FactoryInt1UShort = primitiveFactory[UShort](new ArrayInt1UShort)
-  implicit final lazy val FactoryInt1SInt = primitiveFactory[SInt](new ArrayInt1SInt)
-  implicit final lazy val FactoryInt1UInt = primitiveFactory[UInt](new ArrayInt1UInt)
+  // SInt
+  implicit final lazy val FactorySIntSByte = primitiveFactory[SByte](new ArraySIntSByte)
+  implicit final lazy val FactorySIntUByte = primitiveFactory[UByte](new ArraySIntUByte)
+  implicit final lazy val FactorySIntSShort = primitiveFactory[SShort](new ArraySIntSShort)
+  implicit final lazy val FactorySIntUShort = primitiveFactory[UShort](new ArraySIntUShort)
+  implicit final lazy val FactorySIntSInt = primitiveFactory[SInt](new ArraySIntSInt)
+  implicit final lazy val FactorySIntUInt = primitiveFactory[UInt](new ArraySIntUInt)
 
   // Vec2i
-  implicit final lazy val FactoryVec2iSByte = factory[Vec2i, SByte](new ArrayVec2i(cast(FactoryInt1SByte)))
-  implicit final lazy val FactoryVec2iUByte = factory[Vec2i, UByte](new ArrayVec2i(cast(FactoryInt1UByte)))
-  implicit final lazy val FactoryVec2iSShort = factory[Vec2i, SShort](new ArrayVec2i(cast(FactoryInt1SShort)))
-  implicit final lazy val FactoryVec2iUShort = factory[Vec2i, UShort](new ArrayVec2i(cast(FactoryInt1UShort)))
-  implicit final lazy val FactoryVec2iSInt = factory[Vec2i, SInt](new ArrayVec2i(cast(FactoryInt1SInt)))
-  implicit final lazy val FactoryVec2iUInt = factory[Vec2i, UInt](new ArrayVec2i(cast(FactoryInt1UInt)))
+  implicit final lazy val FactoryVec2iSByte = factory[Vec2i, SByte](new ArrayVec2i(cast(FactorySIntSByte)))
+  implicit final lazy val FactoryVec2iUByte = factory[Vec2i, UByte](new ArrayVec2i(cast(FactorySIntUByte)))
+  implicit final lazy val FactoryVec2iSShort = factory[Vec2i, SShort](new ArrayVec2i(cast(FactorySIntSShort)))
+  implicit final lazy val FactoryVec2iUShort = factory[Vec2i, UShort](new ArrayVec2i(cast(FactorySIntUShort)))
+  implicit final lazy val FactoryVec2iSInt = factory[Vec2i, SInt](new ArrayVec2i(cast(FactorySIntSInt)))
+  implicit final lazy val FactoryVec2iUInt = factory[Vec2i, UInt](new ArrayVec2i(cast(FactorySIntUInt)))
 
   // Vec3i
-  implicit final lazy val FactoryVec3iSByte = factory[Vec3i, SByte](new ArrayVec3i(cast(FactoryInt1SByte)))
-  implicit final lazy val FactoryVec3iUByte = factory[Vec3i, UByte](new ArrayVec3i(cast(FactoryInt1UByte)))
-  implicit final lazy val FactoryVec3iSShort = factory[Vec3i, SShort](new ArrayVec3i(cast(FactoryInt1SShort)))
-  implicit final lazy val FactoryVec3iUShort = factory[Vec3i, UShort](new ArrayVec3i(cast(FactoryInt1UShort)))
-  implicit final lazy val FactoryVec3iSInt = factory[Vec3i, SInt](new ArrayVec3i(cast(FactoryInt1SInt)))
-  implicit final lazy val FactoryVec3iUInt = factory[Vec3i, UInt](new ArrayVec3i(cast(FactoryInt1UInt)))
+  implicit final lazy val FactoryVec3iSByte = factory[Vec3i, SByte](new ArrayVec3i(cast(FactorySIntSByte)))
+  implicit final lazy val FactoryVec3iUByte = factory[Vec3i, UByte](new ArrayVec3i(cast(FactorySIntUByte)))
+  implicit final lazy val FactoryVec3iSShort = factory[Vec3i, SShort](new ArrayVec3i(cast(FactorySIntSShort)))
+  implicit final lazy val FactoryVec3iUShort = factory[Vec3i, UShort](new ArrayVec3i(cast(FactorySIntUShort)))
+  implicit final lazy val FactoryVec3iSInt = factory[Vec3i, SInt](new ArrayVec3i(cast(FactorySIntSInt)))
+  implicit final lazy val FactoryVec3iUInt = factory[Vec3i, UInt](new ArrayVec3i(cast(FactorySIntUInt)))
 
   // Vec4i
-  implicit final lazy val FactoryVec4iSByte = factory[Vec4i, SByte](new ArrayVec4i(cast(FactoryInt1SByte)))
-  implicit final lazy val FactoryVec4iUByte = factory[Vec4i, UByte](new ArrayVec4i(cast(FactoryInt1UByte)))
-  implicit final lazy val FactoryVec4iSShort = factory[Vec4i, SShort](new ArrayVec4i(cast(FactoryInt1SShort)))
-  implicit final lazy val FactoryVec4iUShort = factory[Vec4i, UShort](new ArrayVec4i(cast(FactoryInt1UShort)))
-  implicit final lazy val FactoryVec4iSInt = factory[Vec4i, SInt](new ArrayVec4i(cast(FactoryInt1SInt)))
-  implicit final lazy val FactoryVec4iUInt = factory[Vec4i, UInt](new ArrayVec4i(cast(FactoryInt1UInt)))
+  implicit final lazy val FactoryVec4iSByte = factory[Vec4i, SByte](new ArrayVec4i(cast(FactorySIntSByte)))
+  implicit final lazy val FactoryVec4iUByte = factory[Vec4i, UByte](new ArrayVec4i(cast(FactorySIntUByte)))
+  implicit final lazy val FactoryVec4iSShort = factory[Vec4i, SShort](new ArrayVec4i(cast(FactorySIntSShort)))
+  implicit final lazy val FactoryVec4iUShort = factory[Vec4i, UShort](new ArrayVec4i(cast(FactorySIntUShort)))
+  implicit final lazy val FactoryVec4iSInt = factory[Vec4i, SInt](new ArrayVec4i(cast(FactorySIntSInt)))
+  implicit final lazy val FactoryVec4iUInt = factory[Vec4i, UInt](new ArrayVec4i(cast(FactorySIntUInt)))
 
   
-  type MetaElement = integration.buffer.MetaElement
+  type Meta = integration.buffer.Meta
   type Primitive = integration.buffer.Primitive
   type Composite = integration.buffer.Composite
-  type Int1 = integration.buffer.Int1
-  type Float1 = integration.buffer.Float1
-  type Double1 = integration.buffer.Double1
   val MetaManifest = integration.buffer.MetaManifest
+  type Raw = integration.buffer.Raw
+  type Defined = integration.buffer.Defined
+  type DefinedInt = integration.buffer.DefinedInt
+  type DefinedIndex = integration.buffer.DefinedIndex
+  type DefinedFloat = integration.buffer.DefinedFloat
+  type DefinedDouble = integration.buffer.DefinedDouble
+  type Integral = integration.buffer.Integral
+  type Signed = integration.buffer.Signed
+  type Unsigned = integration.buffer.Unsigned
+  type RawByte = integration.buffer.RawByte
+  type SByte = integration.buffer.SByte
+  type UByte = integration.buffer.UByte
+  type SShort = integration.buffer.SShort
+  type UShort = integration.buffer.UShort
+  type SInt = integration.buffer.SInt
+  type UInt = integration.buffer.UInt
+  type FloatingPoint = integration.buffer.FloatingPoint
+  type HFloat = integration.buffer.HFloat
+  type RFloat = integration.buffer.RFloat
+  type RDouble = integration.buffer.RDouble
 
-  type ReadData[E <: MetaElement] = ReadDataSeq[E, RawData]
-  type Data[E <: MetaElement] = DataSeq[E, RawData]
-  type inData[E <: MetaElement] = inDataSeq[E, RawData]
-  type outData[E <: MetaElement] = outDataSeq[E, RawData]
+
+  type ReadData[E <: Meta] = ReadDataSeq[E, Raw]
+  type Data[E <: Meta] = DataSeq[E, Raw]
+  type inData[E <: Meta] = inDataSeq[E, Raw]
+  type outData[E <: Meta] = outDataSeq[E, Raw]
 
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
   
-  type RawView = ReadDataView[_, RawData]
+  type RawView = ReadDataView[_, Raw]
 
-  type inDataSeq[E <: MetaElement, +R <: RawData] = ReadDataSeq[E, R]
-  type inContiguousSeq[E <: MetaElement, +R <: RawData] =ReadContiguousSeq[E, R]
-  type inDataArray[E <: MetaElement, +R <: RawData] = ReadDataArray[E, R]
-  type inDataBuffer[E <: MetaElement, +R <: RawData] = ReadDataBuffer[E, R]
-  type inDataView[E <: MetaElement, +R <: RawData] = ReadDataView[E, R]
+  type inDataSeq[E <: Meta, +R <: Raw] = ReadDataSeq[E, R]
+  type inContiguous[E <: Meta, +R <: Raw] =ReadContiguous[E, R]
+  type inDataArray[E <: Meta, +R <: Raw] = ReadDataArray[E, R]
+  type inDataBuffer[E <: Meta, +R <: Raw] = ReadDataBuffer[E, R]
+  type inDataView[E <: Meta, +R <: Raw] = ReadDataView[E, R]
 
   type inIndexSeq[+R <: Unsigned] = ReadIndexSeq[R]
   type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
-  type outDataSeq[E <: MetaElement, +R <: RawData] = DataSeq[E, R]
-  type outContiguousSeq[E <: MetaElement, +R <: RawData] =ContiguousSeq[E, R]
-  type outDataArray[E <: MetaElement, +R <: RawData] = DataArray[E, R]
-  type outDataBuffer[E <: MetaElement, +R <: RawData] = DataBuffer[E, R]
-  type outDataView[E <: MetaElement, +R <: RawData] = DataView[E, R]
+  type outDataSeq[E <: Meta, +R <: Raw] = DataSeq[E, R]
+  type outContiguous[E <: Meta, +R <: Raw] =Contiguous[E, R]
+  type outDataArray[E <: Meta, +R <: Raw] = DataArray[E, R]
+  type outDataBuffer[E <: Meta, +R <: Raw] = DataBuffer[E, R]
+  type outDataView[E <: Meta, +R <: Raw] = DataView[E, R]
 
   type outIndexSeq[+R <: Unsigned] = IndexSeq[R]
   type outIndexArray[+R <: Unsigned] = IndexArray[R]
   type outIndexBuffer[+R <: Unsigned] = IndexBuffer[R]
 
   @inline implicit final def readContegiousDataToIndex[R  <: Unsigned] (
-    d: ReadContiguousSeq[Int1, R]
+    d: ReadContiguous[SInt, R]
   ) = d.asInstanceOf[ReadIndexSeq[R]]
 
   @inline implicit final def readArrayDataToIndex[R  <: Unsigned] (
-    d: ReadDataArray[Int1, R]
+    d: ReadDataArray[SInt, R]
   ) = d.asInstanceOf[ReadIndexArray[R]]
 
   @inline implicit final def readBufferDataToIndex[R  <: Unsigned](
-    d: ReadDataBuffer[Int1, R]
+    d: ReadDataBuffer[SInt, R]
   ) = d.asInstanceOf[ReadIndexBuffer[R]]
 
   @inline implicit final def contegiousDataToIndex[R  <: Unsigned] (
-    d: ContiguousSeq[Int1, R]
+    d: Contiguous[SInt, R]
   ) = d.asInstanceOf[IndexSeq[R]]
   
   @inline implicit final def arrayDataToIndex[R  <: Unsigned](
-    d: DataArray[Int1, R]
+    d: DataArray[SInt, R]
   ) = d.asInstanceOf[IndexArray[R]]
 
   @inline implicit final def bufferDataToIndex[R  <: Unsigned](
-    d: DataBuffer[Int1, R]
+    d: DataBuffer[SInt, R]
   ) = d.asInstanceOf[IndexBuffer[R]]
 
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2]
@@ -146,9 +164,9 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -163,10 +181,10 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -185,11 +203,11 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -210,12 +228,12 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -238,13 +256,13 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -269,14 +287,14 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData,
-    E8 <: MetaElement, R8 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw,
+    E8 <: Meta, R8 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -303,15 +321,15 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData,
-    E8 <: MetaElement, R8 <: RawData,
-    E9 <: MetaElement, R9 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw,
+    E8 <: Meta, R8 <: Raw,
+    E9 <: Meta, R9 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -340,16 +358,16 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData,
-    E8 <: MetaElement, R8 <: RawData,
-    E9 <: MetaElement, R9 <: RawData,
-    E10 <: MetaElement, R10 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw,
+    E8 <: Meta, R8 <: Raw,
+    E9 <: Meta, R9 <: Raw,
+    E10 <: Meta, R10 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -380,17 +398,17 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData,
-    E8 <: MetaElement, R8 <: RawData,
-    E9 <: MetaElement, R9 <: RawData,
-    E10 <: MetaElement, R10 <: RawData,
-    E11 <: MetaElement, R11 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw,
+    E8 <: Meta, R8 <: Raw,
+    E9 <: Meta, R9 <: Raw,
+    E10 <: Meta, R10 <: Raw,
+    E11 <: Meta, R11 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -423,18 +441,18 @@ package object buffer {
   }
 
   def interleave[
-    E1 <: MetaElement, R1 <: RawData,
-    E2 <: MetaElement, R2 <: RawData,
-    E3 <: MetaElement, R3 <: RawData,
-    E4 <: MetaElement, R4 <: RawData,
-    E5 <: MetaElement, R5 <: RawData,
-    E6 <: MetaElement, R6 <: RawData,
-    E7 <: MetaElement, R7 <: RawData,
-    E8 <: MetaElement, R8 <: RawData,
-    E9 <: MetaElement, R9 <: RawData,
-    E10 <: MetaElement, R10 <: RawData,
-    E11 <: MetaElement, R11 <: RawData,
-    E12 <: MetaElement, R12 <: RawData
+    E1 <: Meta, R1 <: Raw,
+    E2 <: Meta, R2 <: Raw,
+    E3 <: Meta, R3 <: Raw,
+    E4 <: Meta, R4 <: Raw,
+    E5 <: Meta, R5 <: Raw,
+    E6 <: Meta, R6 <: Raw,
+    E7 <: Meta, R7 <: Raw,
+    E8 <: Meta, R8 <: Raw,
+    E9 <: Meta, R9 <: Raw,
+    E10 <: Meta, R10 <: Raw,
+    E11 <: Meta, R11 <: Raw,
+    E12 <: Meta, R12 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],

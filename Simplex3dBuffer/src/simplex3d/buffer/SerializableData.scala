@@ -33,7 +33,7 @@ abstract class SerializableData {
 
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
-    if (readOnly) toDataArray().asReadOnlySeq()
+    if (readOnly) toDataArray().asReadOnly()
     else toDataArray()
   }
 

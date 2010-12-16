@@ -86,11 +86,11 @@ object Double {
     (s + 0.5).toLong.toInt // round
   }
 
-  // HalfFloat
-  @inline final def fromHalfFloat(s: Short) :Double = {
-    Float.fromHalfFloat(s)
+  // HFloat
+  @inline final def fromHFloat(s: Short) :Double = {
+    Float.fromHFloat(s)
   }
-  @inline final def toHalfFloat(d: Double) :Short = {
-    Float.toHalfFloat(d.toFloat)
+  @inline final def toHFloat(d: Double) :Short = {
+    Float.toHFloat(d.toFloat)
   }
 }

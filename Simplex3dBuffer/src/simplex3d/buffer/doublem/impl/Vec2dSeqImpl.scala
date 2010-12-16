@@ -29,84 +29,84 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-// Vec2d RawFloat
-private[buffer] final class ArrayVec2dRawFloat(
-  backing: ArrayDouble1RawFloat
-) extends BaseVec2d[RawFloat](backing, 0, 2) with DataArray[Vec2d, RawFloat] {
-  def this() = this(new ArrayDouble1RawFloat)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec2dRawFloat(backing.mkReadOnlyInstance())
+// Vec2d RFloat
+private[buffer] final class ArrayVec2dRFloat(
+  primitive: ArrayRDoubleRFloat
+) extends BaseVec2d[RFloat](primitive, 0, 2) with DataArray[Vec2d, RFloat] {
+  def this() = this(new ArrayRDoubleRFloat)
+  protected[buffer] def mkReadOnlyInstance() = new ArrayVec2dRFloat(primitive.mkReadOnlyInstance())
 
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 
   override def mkDataArray(array: Array[Float]) =
-    new ArrayVec2dRawFloat(backing.mkDataArray(array))
+    new ArrayVec2dRFloat(primitive.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer))
+    new BufferVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer))
   override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
+    new ViewVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class BufferVec2dRawFloat(
-  backing: BufferDouble1RawFloat
-) extends BaseVec2d[RawFloat](backing, 0, 2) with DataBuffer[Vec2d, RawFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec2dRawFloat(backing.mkReadOnlyInstance())
+private[buffer] final class BufferVec2dRFloat(
+  primitive: BufferRDoubleRFloat
+) extends BaseVec2d[RFloat](primitive, 0, 2) with DataBuffer[Vec2d, RFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new BufferVec2dRFloat(primitive.mkReadOnlyInstance())
 
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 
   override def mkDataArray(array: Array[Float]) =
-    new ArrayVec2dRawFloat(backing.mkDataArray(array))
+    new ArrayVec2dRFloat(primitive.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer))
+    new BufferVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer))
   override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
+    new ViewVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
-private[buffer] final class ViewVec2dRawFloat(
-  backing: BufferDouble1RawFloat, off: Int, str: Int
-) extends BaseVec2d[RawFloat](backing, off, str) with DataView[Vec2d, RawFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec2dRawFloat(
-    backing.mkReadOnlyInstance(), offset, stride
+private[buffer] final class ViewVec2dRFloat(
+  primitive: BufferRDoubleRFloat, off: Int, str: Int
+) extends BaseVec2d[RFloat](primitive, off, str) with DataView[Vec2d, RFloat] {
+  protected[buffer] def mkReadOnlyInstance() = new ViewVec2dRFloat(
+    primitive.mkReadOnlyInstance(), offset, stride
   )
 
   def apply(i: Int) :ConstVec2d = {
     val j = offset + i*stride
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = offset + i*stride
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 
   override def mkDataArray(array: Array[Float]) =
-    new ArrayVec2dRawFloat(backing.mkDataArray(array))
+    new ArrayVec2dRFloat(primitive.mkDataArray(array))
   override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer))
+    new BufferVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer))
   override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec2dRawFloat(backing.mkReadDataBuffer(byteBuffer), offset, stride)
+    new ViewVec2dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }

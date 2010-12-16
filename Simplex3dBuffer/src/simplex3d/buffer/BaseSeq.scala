@@ -23,6 +23,7 @@ package simplex3d.buffer
 import java.nio._
 import scala.annotation._
 import scala.reflect._
+import scala.collection.mutable.WrappedArray
 import StoreType._
 import RawType._
 
@@ -31,20 +32,20 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class BaseSeq[
-  E <: MetaElement,
+  E <: Meta,
   @specialized(Int, Float, Double) SRead <: SWrite,
   @specialized(Int, Float, Double) SWrite,
-  +R <: RawData
+  +R <: Raw
 ](
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   offset: Int, stride: Int
 ) extends ReadBaseSeq[E, SRead, R](
-  shared, backing, ro,
+  shared, primitive, ro,
   offset, stride
 ) {
 
-  type BackingSeq <: ContiguousSeq[E#Component, R]
-  final def buffer() :R#BufferType = {
+  type Backing <: Contiguous[E#Component, R]
+  final def buffer() :R#Buffer = {
     ((storeType: @switch) match {
       case ByteStore =>
         buff.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
@@ -58,62 +59,68 @@ private[buffer] abstract class BaseSeq[
         buff.asInstanceOf[FloatBuffer].duplicate()
       case DoubleStore =>
         buff.asInstanceOf[DoubleBuffer].duplicate()
-    }).asInstanceOf[R#BufferType]
+    }).asInstanceOf[R#Buffer]
   }
 
   override def apply(i: Int) :SRead
   def update(i: Int, v: SWrite)
 
 
-  private final def putArray(
+  private[this] final def putArray(
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[IntBuffer]) {
+      if (index < 0) throw new IndexOutOfBoundsException()
+
       val b = buffer().asInstanceOf[IntBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Int, Int, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Int, Int, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
       }
     }
   }
-  private final def putArray(
+  private[this] final def putArray(
     index: Int, array: Array[Float], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[FloatBuffer]) {
+      if (index < 0) throw new IndexOutOfBoundsException()
+
       val b = buffer().asInstanceOf[FloatBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Float, Float, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Float, Float, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
       }
     }
   }
-  private final def putArray(
+  private[this] final def putArray(
     index: Int, array: Array[Double], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[DoubleBuffer]) {
+      if (index < 0) throw new IndexOutOfBoundsException()
+
       val b = buffer().asInstanceOf[DoubleBuffer]
       b.position(index + offset)
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: MetaElement, Double, Double, _ <: RawData]]
+      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Double, Double, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
       }
     }
   }
-  private final def putArray(
+  private[this] final def putArray(
     index: Int, array: Array[_], first: Int, count: Int
   ) {
     val arr = array.asInstanceOf[Array[SWrite]]
@@ -122,7 +129,7 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private final def putIndexedSeq(
+  private[this] final def putIndexedSeq(
     index: Int, seq: IndexedSeq[SWrite], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
@@ -130,7 +137,9 @@ private[buffer] abstract class BaseSeq[
       i += 1
     }
   }
-  private final def putSeq(index: Int, seq: Seq[SWrite], first: Int, count: Int) {
+  private[this] final def putSeq(index: Int, seq: Seq[SWrite], first: Int, count: Int) {
+    if (first < 0) throw new IndexOutOfBoundsException()
+
     val iter = seq.iterator
     iter.drop(first)
     val lim = index + count
@@ -141,39 +150,34 @@ private[buffer] abstract class BaseSeq[
   }
 
   final def put(index: Int, seq: Seq[E#Read], first: Int, count: Int) {
+    if (count < 0) throw new IllegalArgumentException("Count must be greater than or equal to zero.")
     if (index + count > size) throw new BufferOverflowException()
     if (first + count > seq.size) throw new BufferUnderflowException()
 
-    import scala.collection.mutable.{WrappedArray}
     seq match {
-
-      case wrapped: WrappedArray[_] =>
-
-        if (first + count > wrapped.array.length)
-          throw new IndexOutOfBoundsException(
-            "Source sequence is not large enough."
+      case wrapped: WrappedArray[_] => wrapped.elemManifest match {
+        case Manifest.Int =>
+          if (readManifest != Manifest.Int) throw new ClassCastException()
+          putArray(
+            index, wrapped.array.asInstanceOf[Array[Int]], first, count
           )
-
-        wrapped.elemManifest match {
-          case Manifest.Int => putArray(
-              index, wrapped.array.asInstanceOf[Array[Int]], first, count
-            )
-          case Manifest.Float => putArray(
-              index, wrapped.array.asInstanceOf[Array[Float]], first, count
-            )
-          case Manifest.Double => putArray(
-              index, wrapped.array.asInstanceOf[Array[Double]], first, count
-            )
-          case _ => putArray(
-              index, wrapped.array, first, count
-            )
-        }
-
+        case Manifest.Float =>
+          if (readManifest != Manifest.Float) throw new ClassCastException()
+          putArray(
+            index, wrapped.array.asInstanceOf[Array[Float]], first, count
+          )
+        case Manifest.Double =>
+          if (readManifest != Manifest.Double) throw new ClassCastException()
+          putArray(
+            index, wrapped.array.asInstanceOf[Array[Double]], first, count
+          )
+        case m =>
+          if (readManifest != m) throw new ClassCastException()
+          putArray(
+            index, wrapped.array, first, count
+          )
+      }
       case is: IndexedSeq[_] =>
-        if (first + count > is.length)
-          throw new IndexOutOfBoundsException(
-            "Source sequence is not large enough."
-          )
         putIndexedSeq(index, is.asInstanceOf[IndexedSeq[SWrite]], first, count)
       case _ =>
         putSeq(index, seq.asInstanceOf[Seq[SWrite]], first, count)
@@ -191,7 +195,7 @@ private[buffer] abstract class BaseSeq[
 
   final def put(
     index: Int,
-    src: inContiguousSeq[E#Component, RawData],
+    src: inContiguous[E#Component, Raw],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
     def group(rawType: Int) = {
@@ -200,13 +204,18 @@ private[buffer] abstract class BaseSeq[
         case SShort => 1
         case UShort => 2
         case SInt | UInt => 3
-        case HalfFloat => 4
-        case RawFloat => 5
-        case RawDouble => 6
+        case HFloat => 4
+        case RFloat => 5
+        case RDouble => 6
       }
     }
 
-    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' must be greater than or equal to one.")
+    if ((backing.readManifest ne src.readManifest) && (backing.readManifest != src.readManifest))
+      throw new ClassCastException()
+
+    if (srcStride < 1)
+      throw new IllegalArgumentException("'srcStride' must be greater than or equal to one.")
+
 
     val destOffset = offset + index*stride
     val srcLim = srcOffset + (count - 1)*srcStride + components
@@ -228,30 +237,24 @@ private[buffer] abstract class BaseSeq[
       srcBuff.limit(srcLim)
 
       (storeType: @switch) match {
-        case ByteStore =>
-          destBuff.asInstanceOf[ByteBuffer].put(
-            srcBuff.asInstanceOf[ByteBuffer]
-          )
-        case ShortStore =>
-          destBuff.asInstanceOf[ShortBuffer].put(
-            srcBuff.asInstanceOf[ShortBuffer]
-          )
-        case CharStore =>
-          destBuff.asInstanceOf[CharBuffer].put(
-            srcBuff.asInstanceOf[CharBuffer]
-          )
-        case IntStore =>
-          destBuff.asInstanceOf[IntBuffer].put(
-            srcBuff.asInstanceOf[IntBuffer]
-          )
-        case FloatStore =>
-          destBuff.asInstanceOf[FloatBuffer].put(
-            srcBuff.asInstanceOf[FloatBuffer]
-          )
-        case DoubleStore =>
-          destBuff.asInstanceOf[DoubleBuffer].put(
-            srcBuff.asInstanceOf[DoubleBuffer]
-          )
+        case ByteStore => destBuff.asInstanceOf[ByteBuffer].put(
+          srcBuff.asInstanceOf[ByteBuffer]
+        )
+        case ShortStore => destBuff.asInstanceOf[ShortBuffer].put(
+          srcBuff.asInstanceOf[ShortBuffer]
+        )
+        case CharStore => destBuff.asInstanceOf[CharBuffer].put(
+          srcBuff.asInstanceOf[CharBuffer]
+        )
+        case IntStore => destBuff.asInstanceOf[IntBuffer].put(
+          srcBuff.asInstanceOf[IntBuffer]
+        )
+        case FloatStore => destBuff.asInstanceOf[FloatBuffer].put(
+          srcBuff.asInstanceOf[FloatBuffer]
+        )
+        case DoubleStore => destBuff.asInstanceOf[DoubleBuffer].put(
+          srcBuff.asInstanceOf[DoubleBuffer]
+        )
       }
     }
     else if (noConversion) {
@@ -319,33 +322,33 @@ private[buffer] abstract class BaseSeq[
       }
     }
     else {
-      backingSeq.elementManifest match {
-        case MetaManifest.Int1 => Util.copySeqInt(
+      backing.elemManifest match {
+        case MetaManifest.SInt => Util.copySeqInt(
             components,
-            backingSeq.asInstanceOf[ContiguousSeq[Int1, _]],
+            backing.asInstanceOf[Contiguous[SInt, _]],
             destOffset,
             stride,
-            src.asInstanceOf[inContiguousSeq[Int1, _]],
+            src.asInstanceOf[inContiguous[SInt, _]],
             srcOffset,
             srcStride,
             srcLim
           )
-        case MetaManifest.Float1 => Util.copySeqFloat(
+        case MetaManifest.RFloat => Util.copySeqFloat(
             components,
-            backingSeq.asInstanceOf[ContiguousSeq[Float1, _]],
+            backing.asInstanceOf[Contiguous[RFloat, _]],
             destOffset,
             stride,
-            src.asInstanceOf[inContiguousSeq[Float1, _]],
+            src.asInstanceOf[inContiguous[RFloat, _]],
             srcOffset,
             srcStride,
             srcLim
           )
-        case MetaManifest.Double1 => Util.copySeqDouble(
+        case MetaManifest.RDouble => Util.copySeqDouble(
             components,
-            backingSeq.asInstanceOf[ContiguousSeq[Double1, _]],
+            backing.asInstanceOf[Contiguous[RDouble, _]],
             destOffset,
             stride,
-            src.asInstanceOf[inContiguousSeq[Double1, _]],
+            src.asInstanceOf[inContiguous[RDouble, _]],
             srcOffset,
             srcStride,
             srcLim
@@ -354,32 +357,32 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, src: inContiguousSeq[E#Component, RawData]) {
+  final def put(index: Int, src: inContiguous[E#Component, Raw]) {
     put(index, src, 0, components, src.size/components)
   }
 
-  final def put(src: inContiguousSeq[E#Component, RawData]) {
+  final def put(src: inContiguous[E#Component, Raw]) {
     put(0, src, 0, components, src.size/components)
   }
 
   final def put(index: Int, src: inData[E], first: Int, count: Int) {
-    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
       throw new ClassCastException()
 
-    put(index, src.backingSeq, src.offset + first*src.stride, src.stride, count)
+    put(index, src.backing, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inData[E]) {
-    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
       throw new ClassCastException()
 
-    put(index, src.backingSeq, src.offset, src.stride, src.size)
+    put(index, src.backing, src.offset, src.stride, src.size)
   }
 
   final def put(src: inData[E]) {
-    if ((elementManifest ne src.elementManifest) && (elementManifest != src.elementManifest))
+    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
       throw new ClassCastException()
 
-    put(0, src.backingSeq, src.offset, src.stride, src.size)
+    put(0, src.backing, src.offset, src.stride, src.size)
   }
 }

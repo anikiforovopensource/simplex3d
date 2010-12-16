@@ -31,11 +31,11 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 private[buffer] abstract class ReadBaseSeq[
-  E <: MetaElement, @specialized(Int, Float, Double) SRead, +R <: RawData
+  E <: Meta, @specialized(Int, Float, Double) SRead, +R <: Raw
 ](
-  shared: AnyRef, backing: AnyRef, ro: Boolean,
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends Protected[R#ArrayType @uncheckedVariance](shared) with DataSeqFactory[E, R]
+) extends Protected[R#Array @uncheckedVariance](shared) with Factory[E, R]
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Assertions
@@ -56,58 +56,63 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     )
   
   // Essential init.
-  final val backingSeq: BackingSeq = {
-    if (backing == null) this.asInstanceOf[BackingSeq]
-    else backing.asInstanceOf[BackingSeq]
+  final val backing: Backing = {
+    if (primitive == null) this.asInstanceOf[Backing]
+    else primitive.asInstanceOf[Backing]
   }
   
   protected final val storeType = storeFromRaw(rawType)
 
-  private[buffer] final val buff: R#BufferType = {
-    (if (sharedStore.isInstanceOf[ByteBuffer]) {
-      val byteBuffer =
-        if (ro) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
-        else sharedStore.asInstanceOf[ByteBuffer].duplicate()
-
-      if (!byteBuffer.isDirect) {
-        throw new IllegalArgumentException(
-          "The buffer must be direct."
-        )
-      }
-      byteBuffer.clear()
-      byteBuffer.order(ByteOrder.nativeOrder)
-
-      (storeType: @switch) match {
-        case ByteStore => byteBuffer
-        case ShortStore => byteBuffer.asShortBuffer()
-        case CharStore => byteBuffer.asCharBuffer()
-        case IntStore => byteBuffer.asIntBuffer()
-        case FloatStore => byteBuffer.asFloatBuffer()
-        case DoubleStore => byteBuffer.asDoubleBuffer()
-      }
+  private[buffer] final val buff: R#Buffer = {
+    if (primitive != null) {
+      backing.buff
     }
     else {
-      (storeType: @switch) match {
-        case ByteStore =>
-          val buff = ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
-          if (ro) buff.asReadOnlyBuffer().order(ByteOrder.nativeOrder) else buff.order(ByteOrder.nativeOrder)
-        case ShortStore =>
-          val buff = ShortBuffer.wrap(sharedStore.asInstanceOf[Array[Short]])
-          if (ro) buff.asReadOnlyBuffer() else buff
-        case CharStore =>
-          val buff = CharBuffer.wrap(sharedStore.asInstanceOf[Array[Char]])
-          if (ro) buff.asReadOnlyBuffer() else buff
-        case IntStore =>
-          val buff = IntBuffer.wrap(sharedStore.asInstanceOf[Array[Int]])
-          if (ro) buff.asReadOnlyBuffer() else buff
-        case FloatStore =>
-          val buff = FloatBuffer.wrap(sharedStore.asInstanceOf[Array[Float]])
-          if (ro) buff.asReadOnlyBuffer() else buff
-        case DoubleStore =>
-          val buff = DoubleBuffer.wrap(sharedStore.asInstanceOf[Array[Double]])
-          if (ro) buff.asReadOnlyBuffer() else buff
+      (if (sharedStore.isInstanceOf[ByteBuffer]) {
+        val byteBuffer =
+          if (ro) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
+          else sharedStore.asInstanceOf[ByteBuffer].duplicate()
+
+        if (!byteBuffer.isDirect) {
+          throw new IllegalArgumentException(
+            "The buffer must be direct."
+          )
+        }
+        byteBuffer.clear()
+        byteBuffer.order(ByteOrder.nativeOrder)
+
+        (storeType: @switch) match {
+          case ByteStore => byteBuffer
+          case ShortStore => byteBuffer.asShortBuffer()
+          case CharStore => byteBuffer.asCharBuffer()
+          case IntStore => byteBuffer.asIntBuffer()
+          case FloatStore => byteBuffer.asFloatBuffer()
+          case DoubleStore => byteBuffer.asDoubleBuffer()
+        }
       }
-    }).asInstanceOf[R#BufferType]
+      else {
+        (storeType: @switch) match {
+          case ByteStore =>
+            val buff = ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
+            if (ro) buff.asReadOnlyBuffer().order(ByteOrder.nativeOrder) else buff.order(ByteOrder.nativeOrder)
+          case ShortStore =>
+            val buff = ShortBuffer.wrap(sharedStore.asInstanceOf[Array[Short]])
+            if (ro) buff.asReadOnlyBuffer() else buff
+          case CharStore =>
+            val buff = CharBuffer.wrap(sharedStore.asInstanceOf[Array[Char]])
+            if (ro) buff.asReadOnlyBuffer() else buff
+          case IntStore =>
+            val buff = IntBuffer.wrap(sharedStore.asInstanceOf[Array[Int]])
+            if (ro) buff.asReadOnlyBuffer() else buff
+          case FloatStore =>
+            val buff = FloatBuffer.wrap(sharedStore.asInstanceOf[Array[Float]])
+            if (ro) buff.asReadOnlyBuffer() else buff
+          case DoubleStore =>
+            val buff = DoubleBuffer.wrap(sharedStore.asInstanceOf[Array[Double]])
+            if (ro) buff.asReadOnlyBuffer() else buff
+        }
+      }).asInstanceOf[R#Buffer]
+    }
   }
   
   if (offset > buff.capacity)
@@ -125,12 +130,12 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Type definitions.
   type RawBuffer <: Buffer
-  type BackingSeq <: ReadContiguousSeq[E#Component, R]
+  type Backing <: ReadContiguous[E#Component, R]
 
   // Public API.
   override def rawType: Int
   override def components: Int
-  override def elementManifest: ClassManifest[E]
+  override def elemManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
   def normalized: Boolean
 
@@ -152,7 +157,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   def apply(i: Int) :SRead
 
-  final def readOnlyBuffer() :R#BufferType = {
+  final def readOnlyBuffer() :R#Buffer = {
     ((storeType: @switch) match {
       case ByteStore =>
         buff.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
@@ -166,11 +171,11 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
         buff.asInstanceOf[FloatBuffer].asReadOnlyBuffer()
       case DoubleStore =>
         buff.asInstanceOf[DoubleBuffer].asReadOnlyBuffer()
-    }).asInstanceOf[R#BufferType]
+    }).asInstanceOf[R#Buffer]
   }
 
   protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
-  def asReadOnlySeq() :ReadDataSeq[E, R]
+  def asReadOnly() :ReadDataSeq[E, R]
   private[buffer] final lazy val readOnlySeq :AnyRef = {
     if (readOnly) this else mkReadOnlyInstance()
   }
@@ -194,10 +199,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   }
   private[this] final def binding() :Buffer = {
     if (sharedStore.isInstanceOf[ByteBuffer]) {
-      val buff =
-        if (readOnly) sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
-        else sharedStore.asInstanceOf[ByteBuffer].duplicate()
-      
+      val buff = sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
       buff.order(ByteOrder.nativeOrder)
       buff
     }
@@ -249,7 +251,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val copy = mkDataArray(size)
     copy.put(
       0,
-      backingSeq,
+      backing,
       this.offset,
       this.stride,
       size
@@ -260,7 +262,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val copy = mkDataBuffer(size)
     copy.put(
       0,
-      backingSeq,
+      backing,
       this.offset,
       this.stride,
       size
@@ -272,7 +274,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val copy = mkDataView(byteBuffer, offset, stride)
     copy.put(
       0,
-      backingSeq,
+      backing,
       this.offset,
       this.stride,
       size
@@ -282,7 +284,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   override def toString() :String = {
     def getElemName() = {
-      elementManifest.erasure.getSimpleName
+      elemManifest.erasure.getSimpleName
     }
 
     var view = false

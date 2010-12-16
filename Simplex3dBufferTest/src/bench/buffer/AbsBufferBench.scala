@@ -60,7 +60,7 @@ object AbsBufferBench {
   }
 
   val convertedBytes = {
-    val t = DataArray[Float1, UByte](length)
+    val t = DataArray[RFloat, UByte](length)
     t.put(dataArray)
     DataArray[Vec4f, UByte](t.array)
   }
@@ -85,12 +85,12 @@ object AbsBufferBench {
     val implementedConversionTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testImplementedAbs(DataArray[Vec4f, RawFloat](dataArray), loops)
+    testImplementedAbs(DataArray[Vec4f, RFloat](dataArray), loops)
     System.gc()
     val implementedArrayAbsTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testImplementedAbs(DataBuffer[Vec4f, RawFloat](byteBuffer), loops)
+    testImplementedAbs(DataBuffer[Vec4f, RFloat](byteBuffer), loops)
     System.gc()
     val implementedBufferAbsTime = System.currentTimeMillis - start
 
@@ -110,7 +110,7 @@ object AbsBufferBench {
 
   final def testImplementedArray(data: Array[Float], loops: Int) {
     var answer = 0
-    val seq = DataArray[Vec4f, RawFloat](data)
+    val seq = DataArray[Vec4f, RFloat](data)
     val end = seq.size
     val step = 1
 
@@ -131,7 +131,7 @@ object AbsBufferBench {
 
   final def testImplementedBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
-    val seq = DataBuffer[Vec4f, RawFloat](data)
+    val seq = DataBuffer[Vec4f, RFloat](data)
     val end = seq.size
     val step = 1
 

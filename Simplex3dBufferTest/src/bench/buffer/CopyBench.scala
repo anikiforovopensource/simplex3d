@@ -136,7 +136,7 @@ class CopyBenchTC {
 
   def testPutArray(data: Array[Float], loops: Int) {
     var answer = 0
-    val dest = DataArray[Float1, RawFloat](data.size)
+    val dest = DataArray[RFloat, RFloat](data.size)
 
     var l = 0; while (l < loops) {
       dest.put(data)
@@ -151,8 +151,8 @@ class CopyBenchTC {
   def testPutDataBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
     val size = data.capacity/4
-    val dest = DataArray[Float1, RawFloat](size)
-    val src = DataBuffer[Float1, RawFloat](data)
+    val dest = DataArray[RFloat, RFloat](size)
+    val src = DataBuffer[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)
@@ -169,13 +169,13 @@ class CopyBenchTC {
     val size = data.capacity/4
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, RawFloat](
+    val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
     )
-    val src = DataBuffer[Float1, RawFloat](data)
+    val src = DataBuffer[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)
@@ -192,13 +192,13 @@ class CopyBenchTC {
     val size = data.capacity/4
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, RawFloat](
+    val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
     )
-    val src = DataBuffer[Float1, RawFloat](data)
+    val src = DataBuffer[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)
@@ -215,13 +215,13 @@ class CopyBenchTC {
     val size = data.length
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, RawFloat](
+    val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
     )
-    val src = DataArray[Float1, RawFloat](data)
+    val src = DataArray[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)

@@ -43,7 +43,7 @@ object InlinedBench {
   val length = 20000
   val loops = 20000
 
-  val dataArray = DataArray[Float1, RawFloat](length);
+  val dataArray = DataArray[RFloat, RFloat](length);
   {
     val random = new java.util.Random(1)
     var i = 0; while( i < length) {
@@ -52,11 +52,11 @@ object InlinedBench {
     }
   }
 
-  val dataBuffer = DataBuffer[Float1, RawFloat](length)
+  val dataBuffer = DataBuffer[RFloat, RFloat](length)
   dataBuffer.put(dataArray)
 
   val converted = {
-    val tmp = DataArray[Float1, UByte](length)
+    val tmp = DataArray[RFloat, UByte](length)
     tmp.put(dataArray)
     tmp
   }
@@ -77,12 +77,12 @@ object InlinedBench {
 
     
     start = System.currentTimeMillis
-    testImplementedArray(DataArray[Vec4f, RawFloat](dataArray), loops)
+    testImplementedArray(DataArray[Vec4f, RFloat](dataArray), loops)
     System.gc()
     val implementedArrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testImplementedBuffer(DataBuffer[Vec4f, RawFloat](dataBuffer), loops)
+    testImplementedBuffer(DataBuffer[Vec4f, RFloat](dataBuffer), loops)
     System.gc()
     val implementedBufferTime = System.currentTimeMillis - start
 
@@ -93,12 +93,12 @@ object InlinedBench {
 
 
     start = System.currentTimeMillis
-    testInlinedArray(DataArray[Vec4f, RawFloat](dataArray), loops)
+    testInlinedArray(DataArray[Vec4f, RFloat](dataArray), loops)
     System.gc()
     val inlinedArrayTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testInlinedBuffer(DataBuffer[Vec4f, RawFloat](dataBuffer), loops)
+    testInlinedBuffer(DataBuffer[Vec4f, RFloat](dataBuffer), loops)
     System.gc()
     val inlinedBufferTime = System.currentTimeMillis - start
 
@@ -165,7 +165,7 @@ object InlinedBench {
     println(answer)
   }
 
-  final def testImplementedArray(s: DataArray[Vec4f, RawFloat], loops: Int) {
+  final def testImplementedArray(s: DataArray[Vec4f, RFloat], loops: Int) {
     var answer = 0
     val seq = s
     val end = seq.size
@@ -186,7 +186,7 @@ object InlinedBench {
     println(answer)
   }
 
-  final def testImplementedBuffer(s: DataBuffer[Vec4f, RawFloat], loops: Int) {
+  final def testImplementedBuffer(s: DataBuffer[Vec4f, RFloat], loops: Int) {
     var answer = 0
     val seq = s
     val end = seq.size
@@ -228,7 +228,7 @@ object InlinedBench {
     println(answer)
   }
 
-  final def testInlinedArray(seq: DataArray[Vec4f, RawFloat], loops: Int) {
+  final def testInlinedArray(seq: DataArray[Vec4f, RFloat], loops: Int) {
     var answer = 0
 
     val end = seq.size
@@ -240,8 +240,8 @@ object InlinedBench {
         //val j = seq.offset + seq.stride*i
         val j = i*4
         val v = ConstVec4f(
-          seq.backingSeq(j), seq.backingSeq(j + 1),
-          seq.backingSeq(j + 2), seq.backingSeq(j + 3)
+          seq.backing(j), seq.backing(j + 1),
+          seq.backing(j + 2), seq.backing(j + 3)
         )
         val u = v * 7.9f
         answer += int(u.x + u.y + u.z + u.w)
@@ -254,7 +254,7 @@ object InlinedBench {
     println(answer)
   }
 
-  final def testInlinedBuffer(seq: DataBuffer[Vec4f, RawFloat], loops: Int) {
+  final def testInlinedBuffer(seq: DataBuffer[Vec4f, RFloat], loops: Int) {
     var answer = 0
 
     val end = seq.size
@@ -266,8 +266,8 @@ object InlinedBench {
         //val j = seq.offset + seq.stride*i
         val j = i*4
         val v = ConstVec4f(
-          seq.backingSeq(j), seq.backingSeq(j + 1),
-          seq.backingSeq(j + 2), seq.backingSeq(j + 3)
+          seq.backing(j), seq.backing(j + 1),
+          seq.backing(j + 2), seq.backing(j + 3)
         )
         val u = v * 7.9f
         answer += int(u.x + u.y + u.z + u.w)
@@ -291,8 +291,8 @@ object InlinedBench {
 
         val j = seq.offset + seq.stride*i
         val v = ConstVec4f(
-          seq.backingSeq(j), seq.backingSeq(j + 1),
-          seq.backingSeq(j + 2), seq.backingSeq(j + 3)
+          seq.backing(j), seq.backing(j + 1),
+          seq.backing(j + 2), seq.backing(j + 3)
         )
         val u = v * 7.9f
         answer += int(u.x + u.y + u.z + u.w)

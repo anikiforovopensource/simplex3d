@@ -30,192 +30,204 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
+import CopyTestUtil._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Float1Test extends FunSuite {
+class RFloatTest extends FunSuite {
 
   test("Factories") {
-    testArrayFromSize(DataArray[Float1, SByte](_))
-    testArrayFromData[Float1, SByte](DataArray[Float1, SByte](_))
-    testBufferFromSize(DataBuffer[Float1, SByte](_))
-    testBufferFromData(DataBuffer[Float1, SByte](_))
-    testViewFromData(DataView[Float1, SByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, SByte](_))
-    testReadViewFromData(ReadDataView[Float1, SByte](_, _, _))
-    testArrayFromCollection[Float1, SByte]((a: IndexedSeq[Float]) => DataArray[Float1, SByte](a: _*))
-    testArrayFromCollection[Float1, SByte]((a: IndexedSeq[Float]) => DataArray[Float1, SByte](a))
-    testBufferFromCollection[Float1, SByte]((a: IndexedSeq[Float]) => DataBuffer[Float1, SByte](a: _*))
-    testBufferFromCollection[Float1, SByte]((a: IndexedSeq[Float]) => DataBuffer[Float1, SByte](a))
+    testArrayFromSize(DataArray[RFloat, SByte](_))
+    testArrayFromData[RFloat, SByte](DataArray[RFloat, SByte](_))
+    testBufferFromSize(DataBuffer[RFloat, SByte](_))
+    testBufferFromData(DataBuffer[RFloat, SByte](_))
+    testViewFromData(DataView[RFloat, SByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, SByte](_))
+    testReadViewFromData(ReadDataView[RFloat, SByte](_, _, _))
+    testArrayFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataArray[RFloat, SByte](a: _*))
+    testArrayFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataArray[RFloat, SByte](a))
+    testBufferFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SByte](a: _*))
+    testBufferFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SByte](a))
 
-    testArrayFromSize(DataArray[Float1, UByte](_))
-    testArrayFromData[Float1, UByte](DataArray[Float1, UByte](_))
-    testBufferFromSize(DataBuffer[Float1, UByte](_))
-    testBufferFromData(DataBuffer[Float1, UByte](_))
-    testViewFromData(DataView[Float1, UByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, UByte](_))
-    testReadViewFromData(ReadDataView[Float1, UByte](_, _, _))
-    testArrayFromCollection[Float1, UByte]((a: IndexedSeq[Float]) => DataArray[Float1, UByte](a: _*))
-    testArrayFromCollection[Float1, UByte]((a: IndexedSeq[Float]) => DataArray[Float1, UByte](a))
-    testBufferFromCollection[Float1, UByte]((a: IndexedSeq[Float]) => DataBuffer[Float1, UByte](a: _*))
-    testBufferFromCollection[Float1, UByte]((a: IndexedSeq[Float]) => DataBuffer[Float1, UByte](a))
+    testArrayFromSize(DataArray[RFloat, UByte](_))
+    testArrayFromData[RFloat, UByte](DataArray[RFloat, UByte](_))
+    testBufferFromSize(DataBuffer[RFloat, UByte](_))
+    testBufferFromData(DataBuffer[RFloat, UByte](_))
+    testViewFromData(DataView[RFloat, UByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, UByte](_))
+    testReadViewFromData(ReadDataView[RFloat, UByte](_, _, _))
+    testArrayFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataArray[RFloat, UByte](a: _*))
+    testArrayFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataArray[RFloat, UByte](a))
+    testBufferFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UByte](a: _*))
+    testBufferFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UByte](a))
 
-    testArrayFromSize(DataArray[Float1, SShort](_))
-    testArrayFromData[Float1, SShort](DataArray[Float1, SShort](_))
-    testBufferFromSize(DataBuffer[Float1, SShort](_))
-    testBufferFromData(DataBuffer[Float1, SShort](_))
-    testViewFromData(DataView[Float1, SShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, SShort](_))
-    testReadViewFromData(ReadDataView[Float1, SShort](_, _, _))
-    testArrayFromCollection[Float1, SShort]((a: IndexedSeq[Float]) => DataArray[Float1, SShort](a: _*))
-    testArrayFromCollection[Float1, SShort]((a: IndexedSeq[Float]) => DataArray[Float1, SShort](a))
-    testBufferFromCollection[Float1, SShort]((a: IndexedSeq[Float]) => DataBuffer[Float1, SShort](a: _*))
-    testBufferFromCollection[Float1, SShort]((a: IndexedSeq[Float]) => DataBuffer[Float1, SShort](a))
+    testArrayFromSize(DataArray[RFloat, SShort](_))
+    testArrayFromData[RFloat, SShort](DataArray[RFloat, SShort](_))
+    testBufferFromSize(DataBuffer[RFloat, SShort](_))
+    testBufferFromData(DataBuffer[RFloat, SShort](_))
+    testViewFromData(DataView[RFloat, SShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, SShort](_))
+    testReadViewFromData(ReadDataView[RFloat, SShort](_, _, _))
+    testArrayFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataArray[RFloat, SShort](a: _*))
+    testArrayFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataArray[RFloat, SShort](a))
+    testBufferFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SShort](a: _*))
+    testBufferFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SShort](a))
 
-    testArrayFromSize(DataArray[Float1, UShort](_))
-    testArrayFromData[Float1, UShort](DataArray[Float1, UShort](_))
-    testBufferFromSize(DataBuffer[Float1, UShort](_))
-    testBufferFromData(DataBuffer[Float1, UShort](_))
-    testViewFromData(DataView[Float1, UShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, UShort](_))
-    testReadViewFromData(ReadDataView[Float1, UShort](_, _, _))
-    testArrayFromCollection[Float1, UShort]((a: IndexedSeq[Float]) => DataArray[Float1, UShort](a: _*))
-    testArrayFromCollection[Float1, UShort]((a: IndexedSeq[Float]) => DataArray[Float1, UShort](a))
-    testBufferFromCollection[Float1, UShort]((a: IndexedSeq[Float]) => DataBuffer[Float1, UShort](a: _*))
-    testBufferFromCollection[Float1, UShort]((a: IndexedSeq[Float]) => DataBuffer[Float1, UShort](a))
+    testArrayFromSize(DataArray[RFloat, UShort](_))
+    testArrayFromData[RFloat, UShort](DataArray[RFloat, UShort](_))
+    testBufferFromSize(DataBuffer[RFloat, UShort](_))
+    testBufferFromData(DataBuffer[RFloat, UShort](_))
+    testViewFromData(DataView[RFloat, UShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, UShort](_))
+    testReadViewFromData(ReadDataView[RFloat, UShort](_, _, _))
+    testArrayFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataArray[RFloat, UShort](a: _*))
+    testArrayFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataArray[RFloat, UShort](a))
+    testBufferFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UShort](a: _*))
+    testBufferFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UShort](a))
 
-    testArrayFromSize(DataArray[Float1, SInt](_))
-    testArrayFromData[Float1, SInt](DataArray[Float1, SInt](_))
-    testBufferFromSize(DataBuffer[Float1, SInt](_))
-    testBufferFromData(DataBuffer[Float1, SInt](_))
-    testViewFromData(DataView[Float1, SInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, SInt](_))
-    testReadViewFromData(ReadDataView[Float1, SInt](_, _, _))
-    testArrayFromCollection[Float1, SInt]((a: IndexedSeq[Float]) => DataArray[Float1, SInt](a: _*))
-    testArrayFromCollection[Float1, SInt]((a: IndexedSeq[Float]) => DataArray[Float1, SInt](a))
-    testBufferFromCollection[Float1, SInt]((a: IndexedSeq[Float]) => DataBuffer[Float1, SInt](a: _*))
-    testBufferFromCollection[Float1, SInt]((a: IndexedSeq[Float]) => DataBuffer[Float1, SInt](a))
+    testArrayFromSize(DataArray[RFloat, SInt](_))
+    testArrayFromData[RFloat, SInt](DataArray[RFloat, SInt](_))
+    testBufferFromSize(DataBuffer[RFloat, SInt](_))
+    testBufferFromData(DataBuffer[RFloat, SInt](_))
+    testViewFromData(DataView[RFloat, SInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, SInt](_))
+    testReadViewFromData(ReadDataView[RFloat, SInt](_, _, _))
+    testArrayFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataArray[RFloat, SInt](a: _*))
+    testArrayFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataArray[RFloat, SInt](a))
+    testBufferFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SInt](a: _*))
+    testBufferFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SInt](a))
 
-    testArrayFromSize(DataArray[Float1, UInt](_))
-    testArrayFromData[Float1, UInt](DataArray[Float1, UInt](_))
-    testBufferFromSize(DataBuffer[Float1, UInt](_))
-    testBufferFromData(DataBuffer[Float1, UInt](_))
-    testViewFromData(DataView[Float1, UInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, UInt](_))
-    testReadViewFromData(ReadDataView[Float1, UInt](_, _, _))
-    testArrayFromCollection[Float1, UInt]((a: IndexedSeq[Float]) => DataArray[Float1, UInt](a: _*))
-    testArrayFromCollection[Float1, UInt]((a: IndexedSeq[Float]) => DataArray[Float1, UInt](a))
-    testBufferFromCollection[Float1, UInt]((a: IndexedSeq[Float]) => DataBuffer[Float1, UInt](a: _*))
-    testBufferFromCollection[Float1, UInt]((a: IndexedSeq[Float]) => DataBuffer[Float1, UInt](a))
+    testArrayFromSize(DataArray[RFloat, UInt](_))
+    testArrayFromData[RFloat, UInt](DataArray[RFloat, UInt](_))
+    testBufferFromSize(DataBuffer[RFloat, UInt](_))
+    testBufferFromData(DataBuffer[RFloat, UInt](_))
+    testViewFromData(DataView[RFloat, UInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, UInt](_))
+    testReadViewFromData(ReadDataView[RFloat, UInt](_, _, _))
+    testArrayFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataArray[RFloat, UInt](a: _*))
+    testArrayFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataArray[RFloat, UInt](a))
+    testBufferFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UInt](a: _*))
+    testBufferFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UInt](a))
     
-    testArrayFromSize(DataArray[Float1, HalfFloat](_))
-    testArrayFromData[Float1, HalfFloat](DataArray[Float1, HalfFloat](_))
-    testBufferFromSize(DataBuffer[Float1, HalfFloat](_))
-    testBufferFromData(DataBuffer[Float1, HalfFloat](_))
-    testViewFromData(DataView[Float1, HalfFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, HalfFloat](_))
-    testReadViewFromData(ReadDataView[Float1, HalfFloat](_, _, _))
-    testArrayFromCollection[Float1, HalfFloat]((a: IndexedSeq[Float]) => DataArray[Float1, HalfFloat](a: _*))
-    testArrayFromCollection[Float1, HalfFloat]((a: IndexedSeq[Float]) => DataArray[Float1, HalfFloat](a))
-    testBufferFromCollection[Float1, HalfFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, HalfFloat](a: _*))
-    testBufferFromCollection[Float1, HalfFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, HalfFloat](a))
+    testArrayFromSize(DataArray[RFloat, HFloat](_))
+    testArrayFromData[RFloat, HFloat](DataArray[RFloat, HFloat](_))
+    testBufferFromSize(DataBuffer[RFloat, HFloat](_))
+    testBufferFromData(DataBuffer[RFloat, HFloat](_))
+    testViewFromData(DataView[RFloat, HFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, HFloat](_))
+    testReadViewFromData(ReadDataView[RFloat, HFloat](_, _, _))
+    testArrayFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, HFloat](a: _*))
+    testArrayFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, HFloat](a))
+    testBufferFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, HFloat](a: _*))
+    testBufferFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, HFloat](a))
     
-    testArrayFromSize(DataArray[Float1, RawFloat](_))
-    testArrayFromData[Float1, RawFloat](DataArray[Float1, RawFloat](_))
-    testBufferFromSize(DataBuffer[Float1, RawFloat](_))
-    testBufferFromData(DataBuffer[Float1, RawFloat](_))
-    testViewFromData(DataView[Float1, RawFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Float1, RawFloat](_))
-    testReadViewFromData(ReadDataView[Float1, RawFloat](_, _, _))
-    testArrayFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataArray[Float1, RawFloat](a: _*))
-    testArrayFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataArray[Float1, RawFloat](a))
-    testBufferFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, RawFloat](a: _*))
-    testBufferFromCollection[Float1, RawFloat]((a: IndexedSeq[Float]) => DataBuffer[Float1, RawFloat](a))
+    testArrayFromSize(DataArray[RFloat, RFloat](_))
+    testArrayFromData[RFloat, RFloat](DataArray[RFloat, RFloat](_))
+    testBufferFromSize(DataBuffer[RFloat, RFloat](_))
+    testBufferFromData(DataBuffer[RFloat, RFloat](_))
+    testViewFromData(DataView[RFloat, RFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RFloat, RFloat](_))
+    testReadViewFromData(ReadDataView[RFloat, RFloat](_, _, _))
+    testArrayFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, RFloat](a: _*))
+    testArrayFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, RFloat](a))
+    testBufferFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, RFloat](a: _*))
+    testBufferFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, RFloat](a))
+  }
+  
+  test("Copy") {
+    testCopy(DataSeq[RFloat, UByte])
+    testCopy(DataSeq[RFloat, SByte])
+    testCopy(DataSeq[RFloat, UShort])
+    testCopy(DataSeq[RFloat, SShort])
+    testCopy(DataSeq[RFloat, UInt])
+    testCopy(DataSeq[RFloat, SInt])
+    testCopy(DataSeq[RFloat, HFloat])
+    testCopy(DataSeq[RFloat, RFloat])
   }
   
   private val size = 10
   
   test("Apply/Update") {
-    testSByte(DataArray[Float1, SByte](size))
-    testSByte(DataBuffer[Float1, SByte](size))
-    testSByte(DataView[Float1, SByte](genBuffer(size, Descriptors.Float1SByte)._1, 0, 2))
-    testSByte(DataView[Float1, SByte](genBuffer(size, Descriptors.Float1SByte)._1, 1, 2))
+    testSByte(DataArray[RFloat, SByte](size))
+    testSByte(DataBuffer[RFloat, SByte](size))
+    testSByte(DataView[RFloat, SByte](genBuffer(size, Descriptors.RFloatSByte)._1, 0, 2))
+    testSByte(DataView[RFloat, SByte](genBuffer(size, Descriptors.RFloatSByte)._1, 1, 2))
     
-    testUByte(DataArray[Float1, UByte](size))
-    testUByte(DataBuffer[Float1, UByte](size))
-    testUByte(DataView[Float1, UByte](genBuffer(size, Descriptors.Float1UByte)._1, 0, 2))
-    testUByte(DataView[Float1, UByte](genBuffer(size, Descriptors.Float1UByte)._1, 1, 2))
+    testUByte(DataArray[RFloat, UByte](size))
+    testUByte(DataBuffer[RFloat, UByte](size))
+    testUByte(DataView[RFloat, UByte](genBuffer(size, Descriptors.RFloatUByte)._1, 0, 2))
+    testUByte(DataView[RFloat, UByte](genBuffer(size, Descriptors.RFloatUByte)._1, 1, 2))
     
-    testSShort(DataArray[Float1, SShort](size))
-    testSShort(DataBuffer[Float1, SShort](size))
-    testSShort(DataView[Float1, SShort](genBuffer(size, Descriptors.Float1SShort)._1, 0, 2))
-    testSShort(DataView[Float1, SShort](genBuffer(size, Descriptors.Float1SShort)._1, 1, 2))
+    testSShort(DataArray[RFloat, SShort](size))
+    testSShort(DataBuffer[RFloat, SShort](size))
+    testSShort(DataView[RFloat, SShort](genBuffer(size, Descriptors.RFloatSShort)._1, 0, 2))
+    testSShort(DataView[RFloat, SShort](genBuffer(size, Descriptors.RFloatSShort)._1, 1, 2))
     
-    testUShort(DataArray[Float1, UShort](size))
-    testUShort(DataBuffer[Float1, UShort](size))
-    testUShort(DataView[Float1, UShort](genBuffer(size, Descriptors.Float1UShort)._1, 0, 2))
-    testUShort(DataView[Float1, UShort](genBuffer(size, Descriptors.Float1UShort)._1, 1, 2))
+    testUShort(DataArray[RFloat, UShort](size))
+    testUShort(DataBuffer[RFloat, UShort](size))
+    testUShort(DataView[RFloat, UShort](genBuffer(size, Descriptors.RFloatUShort)._1, 0, 2))
+    testUShort(DataView[RFloat, UShort](genBuffer(size, Descriptors.RFloatUShort)._1, 1, 2))
     
-    testSInt(DataArray[Float1, SInt](size))
-    testSInt(DataBuffer[Float1, SInt](size))
-    testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 0, 2))
-    testSInt(DataView[Float1, SInt](genBuffer(size, Descriptors.Float1SInt)._1, 1, 2))
+    testSInt(DataArray[RFloat, SInt](size))
+    testSInt(DataBuffer[RFloat, SInt](size))
+    testSInt(DataView[RFloat, SInt](genBuffer(size, Descriptors.RFloatSInt)._1, 0, 2))
+    testSInt(DataView[RFloat, SInt](genBuffer(size, Descriptors.RFloatSInt)._1, 1, 2))
     
-    testUInt(DataArray[Float1, UInt](size))
-    testUInt(DataBuffer[Float1, UInt](size))
-    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 0, 2))
-    testUInt(DataView[Float1, UInt](genBuffer(size, Descriptors.Float1UInt)._1, 1, 2))
+    testUInt(DataArray[RFloat, UInt](size))
+    testUInt(DataBuffer[RFloat, UInt](size))
+    testUInt(DataView[RFloat, UInt](genBuffer(size, Descriptors.RFloatUInt)._1, 0, 2))
+    testUInt(DataView[RFloat, UInt](genBuffer(size, Descriptors.RFloatUInt)._1, 1, 2))
     
-    testHalfFloat(DataArray[Float1, HalfFloat](size))
-    testHalfFloat(DataBuffer[Float1, HalfFloat](size))
-    testHalfFloat(DataView[Float1, HalfFloat](genBuffer(size, Descriptors.Float1HalfFloat)._1, 0, 2))
-    testHalfFloat(DataView[Float1, HalfFloat](genBuffer(size, Descriptors.Float1HalfFloat)._1, 1, 2))
+    testHFloat(DataArray[RFloat, HFloat](size))
+    testHFloat(DataBuffer[RFloat, HFloat](size))
+    testHFloat(DataView[RFloat, HFloat](genBuffer(size, Descriptors.RFloatHFloat)._1, 0, 2))
+    testHFloat(DataView[RFloat, HFloat](genBuffer(size, Descriptors.RFloatHFloat)._1, 1, 2))
     
-    testRawFloat(DataArray[Float1, RawFloat](size))
-    testRawFloat(DataBuffer[Float1, RawFloat](size))
-    testRawFloat(DataView[Float1, RawFloat](genBuffer(size, Descriptors.Float1RawFloat)._1, 0, 2))
-    testRawFloat(DataView[Float1, RawFloat](genBuffer(size, Descriptors.Float1RawFloat)._1, 1, 2))
+    testRFloat(DataArray[RFloat, RFloat](size))
+    testRFloat(DataBuffer[RFloat, RFloat](size))
+    testRFloat(DataView[RFloat, RFloat](genBuffer(size, Descriptors.RFloatRFloat)._1, 0, 2))
+    testRFloat(DataView[RFloat, RFloat](genBuffer(size, Descriptors.RFloatRFloat)._1, 1, 2))
   }
 
-  private def testFloatSByte(seq: DataSeq[Float1, SByte], testValue: Float) {
+  private def testFloatSByte(seq: DataSeq[RFloat, SByte], testValue: Float) {
     val converted = conversion.Float.toSByte(testValue)
     val convertedDack = conversion.Float.fromSByte(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUByte(seq: DataSeq[Float1, UByte], testValue: Float) {
+  private def testFloatUByte(seq: DataSeq[RFloat, UByte], testValue: Float) {
     val converted = conversion.Float.toUByte(testValue)
     val convertedDack = conversion.Float.fromUByte(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatSShort(seq: DataSeq[Float1, SShort], testValue: Float) {
+  private def testFloatSShort(seq: DataSeq[RFloat, SShort], testValue: Float) {
     val converted = conversion.Float.toSShort(testValue)
     val convertedDack = conversion.Float.fromSShort(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUShort(seq: DataSeq[Float1, UShort], testValue: Float) {
+  private def testFloatUShort(seq: DataSeq[RFloat, UShort], testValue: Float) {
     val converted = conversion.Float.toUShort(testValue)
     val convertedDack = conversion.Float.fromUShort(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatSInt(seq: DataSeq[Float1, SInt], testValue: Float) {
+  private def testFloatSInt(seq: DataSeq[RFloat, SInt], testValue: Float) {
     val converted = conversion.Float.toSInt(testValue)
     val convertedDack = conversion.Float.fromSInt(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUInt(seq: DataSeq[Float1, UInt], testValue: Float) {
+  private def testFloatUInt(seq: DataSeq[RFloat, UInt], testValue: Float) {
     val converted = conversion.Float.toUInt(testValue)
     val convertedDack = conversion.Float.fromUInt(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatHalfFloat(seq: DataSeq[Float1, HalfFloat], testValue: Float) {
-    val converted = conversion.Float.toHalfFloat(testValue)
-    val convertedDack = conversion.Float.fromHalfFloat(converted)
+  private def testFloatHFloat(seq: DataSeq[RFloat, HFloat], testValue: Float) {
+    val converted = conversion.Float.toHFloat(testValue)
+    val convertedDack = conversion.Float.fromHFloat(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
 
-  private def testSByte(seq: DataSeq[Float1, SByte]) {
+  private def testSByte(seq: DataSeq[RFloat, SByte]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, -128); assert(seq(0) == -1)
@@ -245,7 +257,7 @@ class Float1Test extends FunSuite {
     testFloatSByte(seq, Float.PositiveInfinity)
   }
 
-  private def testUByte(seq: DataSeq[Float1, UByte]) {
+  private def testUByte(seq: DataSeq[RFloat, UByte]) {
     testIndex(seq)
 
     testFloatUByte(seq, Float.NegativeInfinity)
@@ -267,7 +279,7 @@ class Float1Test extends FunSuite {
     testFloatUByte(seq, Float.PositiveInfinity)
   }
 
-  private def testSShort(seq: DataSeq[Float1, SShort]) {
+  private def testSShort(seq: DataSeq[RFloat, SShort]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, -32768); assert(seq(0) == -1)
@@ -297,7 +309,7 @@ class Float1Test extends FunSuite {
     testFloatSShort(seq, Float.PositiveInfinity)
   }
 
-  private def testUShort(seq: DataSeq[Float1, UShort]) {
+  private def testUShort(seq: DataSeq[RFloat, UShort]) {
     testIndex(seq)
 
     testFloatUShort(seq, Float.NegativeInfinity)
@@ -319,7 +331,7 @@ class Float1Test extends FunSuite {
     testFloatUShort(seq, Float.PositiveInfinity)
   }
   
-  private def testSInt(seq: DataSeq[Float1, SInt]) {
+  private def testSInt(seq: DataSeq[RFloat, SInt]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
@@ -349,7 +361,7 @@ class Float1Test extends FunSuite {
     testFloatSInt(seq, Float.PositiveInfinity)
   }
 
-  private def testUInt(seq: DataSeq[Float1, UInt]) {
+  private def testUInt(seq: DataSeq[RFloat, UInt]) {
     testIndex(seq)
 
     testFloatUInt(seq, Float.NegativeInfinity)
@@ -371,55 +383,55 @@ class Float1Test extends FunSuite {
     testFloatUInt(seq, Float.PositiveInfinity)
   }
   
-  private def testHalfFloat(seq: DataSeq[Float1, HalfFloat]) {
+  private def testHFloat(seq: DataSeq[RFloat, HFloat]) {
     testIndex(seq)
 
     // Inf.
-    testFloatHalfFloat(seq, Float.NegativeInfinity)
-    testFloatHalfFloat(seq, Float.PositiveInfinity)
+    testFloatHFloat(seq, Float.NegativeInfinity)
+    testFloatHFloat(seq, Float.PositiveInfinity)
 
     // NaN.
-    testFloatHalfFloat(seq, Float.NaN)
+    testFloatHFloat(seq, Float.NaN)
 
     // More NaN.
-    testFloatHalfFloat(seq, floatFromBits("01111111 11100000 00000000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("01111111 10100000 00000000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("11111111 11100000 00000000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("11111111 10100000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("01111111 11100000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("01111111 10100000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("11111111 11100000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("11111111 10100000 00000000 00000000"))
 
     // Zero.
-    testFloatHalfFloat(seq, -0f)
-    testFloatHalfFloat(seq, 0)
+    testFloatHFloat(seq, -0f)
+    testFloatHFloat(seq, 0)
 
     // Subnormal.
-    testFloatHalfFloat(seq, floatFromBits("00000000 01000000 00000000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("10000000 01000000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("00000000 01000000 00000000 00000000"))
+    testFloatHFloat(seq, floatFromBits("10000000 01000000 00000000 00000000"))
 
     // Out of range values.
-    testFloatHalfFloat(seq, -Float.MaxValue)
-    testFloatHalfFloat(seq, Float.MaxValue)
+    testFloatHFloat(seq, -Float.MaxValue)
+    testFloatHFloat(seq, Float.MaxValue)
 
     // Min and Max
-    testFloatHalfFloat(seq, -65504.0f)
-    testFloatHalfFloat(seq, 65504.0f)
+    testFloatHFloat(seq, -65504.0f)
+    testFloatHFloat(seq, 65504.0f)
 
     // Closest to Zero.
-    testFloatHalfFloat(seq, -6.103515625E-5f)
-    testFloatHalfFloat(seq, 6.103515625E-5f)
-    testFloatHalfFloat(seq, -java.lang.Float.MIN_VALUE)
-    testFloatHalfFloat(seq, java.lang.Float.MIN_VALUE)
+    testFloatHFloat(seq, -6.103515625E-5f)
+    testFloatHFloat(seq, 6.103515625E-5f)
+    testFloatHFloat(seq, -java.lang.Float.MIN_VALUE)
+    testFloatHFloat(seq, java.lang.Float.MIN_VALUE)
 
     // Rounding.
-    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11100000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11110000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11100000 00000000"))
-    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11110000 00000000"))
+    testFloatHFloat(seq, floatFromBits("00111101 11000000 11100000 00000000"))
+    testFloatHFloat(seq, floatFromBits("00111101 11000000 11110000 00000000"))
+    testFloatHFloat(seq, floatFromBits("10111101 11000000 11100000 00000000"))
+    testFloatHFloat(seq, floatFromBits("10111101 11000000 11110000 00000000"))
 
     // Normalized.
-    testFloatHalfFloat(seq, -1)
-    testFloatHalfFloat(seq, -0.5f)
-    testFloatHalfFloat(seq, 0.5f)
-    testFloatHalfFloat(seq, 1)
+    testFloatHFloat(seq, -1)
+    testFloatHFloat(seq, -0.5f)
+    testFloatHFloat(seq, 0.5f)
+    testFloatHFloat(seq, 1)
 
     // Round trip conversion excluding Subnormal and Zero.
     val buff = seq.buffer
@@ -439,7 +451,7 @@ class Float1Test extends FunSuite {
     }
   }
   
-  private def testRawFloat(seq: DataSeq[Float1, RawFloat]) {
+  private def testRFloat(seq: DataSeq[RFloat, RFloat]) {
     testIndex(seq)
 
     testApplyUpdate(seq, Float.NegativeInfinity, Float.NegativeInfinity, Float.NegativeInfinity)

@@ -47,8 +47,8 @@ class InterleavedTest extends FunSuite {
     intercept[IllegalArgumentException] {
       InterleavedData.verify(
         Array(
-          DataView[Float1, RawFloat](buff, 0, 2),
-          DataView[Float1, RawFloat](buff, 1, 3)
+          DataView[RFloat, RFloat](buff, 0, 2),
+          DataView[RFloat, RFloat](buff, 1, 3)
         )
       )
     }
@@ -58,8 +58,8 @@ class InterleavedTest extends FunSuite {
     intercept[IllegalArgumentException] {
       InterleavedData.verify(
         Array(
-          DataView[Float1, RawFloat](wrongSizeBuff, 0, 2),
-          DataView[Float1, SByte](wrongSizeBuff, 4, 8)
+          DataView[RFloat, RFloat](wrongSizeBuff, 0, 2),
+          DataView[RFloat, SByte](wrongSizeBuff, 4, 8)
         )
       )
     }
@@ -68,8 +68,8 @@ class InterleavedTest extends FunSuite {
     intercept[IllegalArgumentException] {
       InterleavedData.verify(
         Array(
-          DataView[Float1, RawFloat](buff, 0, 2),
-          DataView[Float1, RawFloat](ByteBuffer.allocateDirect(64), 1, 2)
+          DataView[RFloat, RFloat](buff, 0, 2),
+          DataView[RFloat, RFloat](ByteBuffer.allocateDirect(64), 1, 2)
         )
       )
     }
@@ -78,8 +78,8 @@ class InterleavedTest extends FunSuite {
     intercept[IllegalArgumentException] {
       InterleavedData.verify(
         Array(
-          DataView[Float1, RawFloat](buff, 0, 2),
-          DataView[Float1, RawFloat](buff, 0, 2)
+          DataView[RFloat, RFloat](buff, 0, 2),
+          DataView[RFloat, RFloat](buff, 0, 2)
         )
       )
     }
@@ -87,20 +87,20 @@ class InterleavedTest extends FunSuite {
     // Working
     InterleavedData.verify(
       Array(
-        DataView[Float1, RawFloat](buff, 0, 2),
-        DataView[Float1, RawFloat](buff, 1, 2)
+        DataView[RFloat, RFloat](buff, 0, 2),
+        DataView[RFloat, RFloat](buff, 1, 2)
       )
     )
   }
 
-  test("Factory") {
+  test("Factories") {
     val buff = ByteBuffer.allocateDirect(64)
 
     // Exception: non-matching stride.
     intercept[IllegalArgumentException] {
       InterleavedData(
-        DataView[Float1, RawFloat](buff, 0, 2),
-        DataView[Float1, RawFloat](buff, 1, 3)
+        DataView[RFloat, RFloat](buff, 0, 2),
+        DataView[RFloat, RFloat](buff, 1, 3)
       )
     }
 
@@ -108,31 +108,31 @@ class InterleavedTest extends FunSuite {
     val wrongSizeBuff = ByteBuffer.allocateDirect(68)
     intercept[IllegalArgumentException] {
       InterleavedData(
-        DataView[Float1, RawFloat](wrongSizeBuff, 0, 2),
-        DataView[Float1, SByte](wrongSizeBuff, 4, 8)
+        DataView[RFloat, RFloat](wrongSizeBuff, 0, 2),
+        DataView[RFloat, SByte](wrongSizeBuff, 4, 8)
       )
     }
 
     // Exception: different storeObject.
     intercept[IllegalArgumentException] {
       InterleavedData(
-        DataView[Float1, RawFloat](buff, 0, 2),
-        DataView[Float1, RawFloat](ByteBuffer.allocateDirect(64), 1, 2)
+        DataView[RFloat, RFloat](buff, 0, 2),
+        DataView[RFloat, RFloat](ByteBuffer.allocateDirect(64), 1, 2)
       )
     }
 
     // Exception: data overlap.
     intercept[IllegalArgumentException] {
       InterleavedData(
-        DataView[Float1, RawFloat](buff, 0, 2),
-        DataView[Float1, RawFloat](buff, 0, 2)
+        DataView[RFloat, RFloat](buff, 0, 2),
+        DataView[RFloat, RFloat](buff, 0, 2)
       )
     }
 
     // Working
     val views = Array(
-      DataView[Float1, RawFloat](buff, 0, 2),
-      DataView[Float1, RawFloat](buff, 1, 2)
+      DataView[RFloat, RFloat](buff, 0, 2),
+      DataView[RFloat, RFloat](buff, 1, 2)
     )
 
     {
@@ -170,7 +170,7 @@ class InterleavedTest extends FunSuite {
 
     for (i <- 0 until 1000) {
       {
-        val src = Array[Data[_ <: MetaElement]](mkRandOrEmpty(size), mkRandOrEmpty(size))
+        val src = Array[Data[_ <: Meta]](mkRandOrEmpty(size), mkRandOrEmpty(size))
         val (i1, i2) = interleave(src(0), src(1))(size)
         testInterleaved(src, Array[RawView](i1, i2))
 
@@ -182,7 +182,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[Data[_ <: MetaElement]](mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size))
+        val src = Array[Data[_ <: Meta]](mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size))
         val (i1, i2, i3) = interleave(src(0), src(1), src(2))(size)
         testInterleaved(src, Array[RawView](i1, i2, i3))
 
@@ -194,7 +194,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
         val (i1, i2, i3, i4) = interleave(src(0), src(1), src(2), src(3))(size)
@@ -208,7 +208,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size)
         )
@@ -223,7 +223,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -238,7 +238,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -258,7 +258,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -278,7 +278,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size)
@@ -299,7 +299,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -320,7 +320,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -341,7 +341,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[Data[_ <: MetaElement]](
+        val src = Array[Data[_ <: Meta]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -371,7 +371,7 @@ class InterleavedTest extends FunSuite {
       val src = (for (c <- 0 until count) yield genRandomSeq(size))
 
       val rwdata = InterleavedData(interleaveAll(src: _*)(size))
-      val rodata = InterleavedData(rwdata.map(_.asReadOnlySeq()))
+      val rodata = InterleavedData(rwdata.map(_.asReadOnly()))
 
       val bytes = new ByteArrayOutputStream()
       val out = new ObjectOutputStream(bytes)
@@ -407,10 +407,10 @@ class InterleavedTest extends FunSuite {
 
     // Test types
     for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {
-      assert(a.elementManifest == b.elementManifest)
+      assert(a.elemManifest == b.elemManifest)
       assert(a.readManifest == b.readManifest)
-      assert(a.backingSeq.elementManifest == b.backingSeq.elementManifest)
-      assert(a.backingSeq.readManifest == b.backingSeq.readManifest)
+      assert(a.backing.elemManifest == b.backing.elemManifest)
+      assert(a.backing.readManifest == b.backing.readManifest)
       assert(a.rawType == b.rawType)
     }
     
@@ -423,7 +423,7 @@ class InterleavedTest extends FunSuite {
   }
 
   private val randomSrc = new java.util.Random(1)
-  private def mkRandOrEmpty(sizeWhenSet: Int) :Data[_ <: MetaElement] = {
+  private def mkRandOrEmpty(sizeWhenSet: Int) :Data[_ <: Meta] = {
     val size = if (randomSrc.nextBoolean) sizeWhenSet else 0
     genRandomSeq(size)
   }

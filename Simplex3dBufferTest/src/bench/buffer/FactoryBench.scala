@@ -60,19 +60,19 @@ object FactoryBench {
     start = System.currentTimeMillis
     testAsReadOnlySeq(size, loops)
     System.gc()
-    val asReadOnlySeqTime = System.currentTimeMillis - start
+    val asReadOnlyTime = System.currentTimeMillis - start
 
     println("\nResults:")
     println("Package factory time: " + packageFactoryTime + ".")
     println("mkDataSeq time: " + mkDataSeqTime + ".")
-    println("asReadOnlySeq time: " + asReadOnlySeqTime + ".")
+    println("asReadOnly time: " + asReadOnlyTime + ".")
   }
 
   final def testPackageFactory(size: Int, loops: Int) {
     var a = 0
 
     var l = 0; while (l < loops) {
-      val da = DataArray[Float1, RawFloat](size)
+      val da = DataArray[RFloat, RFloat](size)
       a += da.size
 
       l += 1
@@ -83,7 +83,7 @@ object FactoryBench {
 
   final def testMkDataSeq(size: Int, loops: Int) {
     var a = 0
-    val factory = DataArray[Float1, RawFloat](0)
+    val factory = DataArray[RFloat, RFloat](0)
 
     var l = 0; while (l < loops) {
       val da = factory.mkDataArray(size)
@@ -97,10 +97,10 @@ object FactoryBench {
 
   final def testAsReadOnlySeq(size: Int, loops: Int) {
     var a = 0
-    val da = DataArray[Float1, RawFloat](size)
+    val da = DataArray[RFloat, RFloat](size)
 
     var l = 0; while (l < loops) {
-      a += da.asReadOnlySeq().size
+      a += da.asReadOnly().size
 
       l += 1
     }

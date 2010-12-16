@@ -40,7 +40,7 @@ object ConversionReadWrite {
   val length = 20000
   val loops = 20000
 
-  val dataArray = DataArray[Float1, UByte](length);
+  val dataArray = DataArray[RFloat, UByte](length);
   {
     val random = new java.util.Random(1)
     var i = 0; while( i < length) {
@@ -64,7 +64,7 @@ object ConversionReadWrite {
     println("Conversion rw time: " + conversionRwTime + ".")
   }
 
-  final def testConversion(s: DataArray[Float1, UByte], loops: Int) {
+  final def testConversion(s: DataArray[RFloat, UByte], loops: Int) {
     var answer = 0
     val seq = s
     val end = seq.size

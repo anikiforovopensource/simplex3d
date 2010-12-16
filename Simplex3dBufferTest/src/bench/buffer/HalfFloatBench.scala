@@ -26,7 +26,7 @@ import simplex3d.buffer.conversion.Float._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object HalfFloatBench {
+object HFloatBench {
   def main(args: Array[String]) {
     test()
     test()
@@ -40,44 +40,44 @@ object HalfFloatBench {
     var start = 0L
 
     start = System.currentTimeMillis
-    testFromHalfFloat(loops)
-    val fromHalfFloatTime = System.currentTimeMillis - start
+    testFromHFloat(loops)
+    val fromHFloatTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testToHalfFloat(loops)
-    val toHalfFloatTime = System.currentTimeMillis - start
+    testToHFloat(loops)
+    val toHFloatTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testRoundTrip(loops)
     val roundTripTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testFromHalfFloatLookup(loops)
-    val fromHalfFloatLookupTime = System.currentTimeMillis - start
+    testFromHFloatLookup(loops)
+    val fromHFloatLookupTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testToHalfFloatLookup(loops)
-    val toHalfFloatLookupTime = System.currentTimeMillis - start
+    testToHFloatLookup(loops)
+    val toHFloatLookupTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testRoundTripLookup(loops)
     val roundTripLookupTime = System.currentTimeMillis - start
 
     println("\nResults:")
-    println("From HaflFloat time: " + fromHalfFloatTime + ".")
-    println("To HaflFloat time: " + toHalfFloatTime + ".")
+    println("From HaflFloat time: " + fromHFloatTime + ".")
+    println("To HaflFloat time: " + toHFloatTime + ".")
     println("Round-trip time: " + roundTripTime + ".")
-    println("From HaflFloat Lookup time: " + fromHalfFloatLookupTime + ".")
-    println("To HaflFloat Lookup time: " + toHalfFloatLookupTime + ".")
+    println("From HaflFloat Lookup time: " + fromHFloatLookupTime + ".")
+    println("To HaflFloat Lookup time: " + toHFloatLookupTime + ".")
     println("Round-trip Lookup time: " + roundTripLookupTime + ".")
   }
 
-  final def testFromHalfFloat(loops: Int) {
+  final def testFromHFloat(loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += fromHalfFloat(i.toShort).toInt
+        answer += fromHFloat(i.toShort).toInt
 
         i += 1
       }
@@ -87,12 +87,12 @@ object HalfFloatBench {
     println(answer)
   }
 
-  final def testToHalfFloat(loops: Int) {
+  final def testToHFloat(loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += toHalfFloat(i*1.111f)
+        answer += toHFloat(i*1.111f)
 
         i += 1
       }
@@ -107,7 +107,7 @@ object HalfFloatBench {
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += toHalfFloat(fromHalfFloat(i.toShort))
+        answer += toHFloat(fromHFloat(i.toShort))
 
         i += 1
       }
@@ -117,12 +117,12 @@ object HalfFloatBench {
     println(answer)
   }
 
-  final def testFromHalfFloatLookup(loops: Int) {
+  final def testFromHFloatLookup(loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += HalfFloatTableLookup.fromHalfFloat(i.toShort).toInt
+        answer += HFloatTableLookup.fromHFloat(i.toShort).toInt
 
         i += 1
       }
@@ -132,12 +132,12 @@ object HalfFloatBench {
     println(answer)
   }
 
-  final def testToHalfFloatLookup(loops: Int) {
+  final def testToHFloatLookup(loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += HalfFloatTableLookup.toHalfFloat(i*1.111f)
+        answer += HFloatTableLookup.toHFloat(i*1.111f)
 
         i += 1
       }
@@ -152,7 +152,7 @@ object HalfFloatBench {
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < 65535) {
-        answer += HalfFloatTableLookup.toHalfFloat(HalfFloatTableLookup.fromHalfFloat(i.toShort))
+        answer += HFloatTableLookup.toHFloat(HFloatTableLookup.fromHFloat(i.toShort))
 
         i += 1
       }
@@ -165,7 +165,7 @@ object HalfFloatBench {
 
 /* This implementation is uncomplete, untested, and probably buggy.
  */
-object HalfFloatTableLookup {
+object HFloatTableLookup {
   /* Base on the paper "Fast Half Float Conversions" by Jeroen van der Zijp */
   private def convertMantissa(i: Int) :Int = {
     var m = i << 13
@@ -230,7 +230,7 @@ object HalfFloatTableLookup {
     exponentTable(63) = 0xC7800000
   }
 
-  def fromHalfFloat(x: Short) :Float = {
+  def fromHFloat(x: Short) :Float = {
     val i = ((x & 0xFFFF) >> 10) & 0xFF
     val j = (offsetTable(i) + (x & 0x3FF)) & 0x7FF
     val m = mantissaTable(j)
@@ -280,7 +280,7 @@ object HalfFloatTableLookup {
     }
   }
 
-  def toHalfFloat(x: Float) :Short = {
+  def toHFloat(x: Float) :Short = {
     val b = java.lang.Float.floatToRawIntBits(x)
     val i = (b >> 23) & 0x1FF
 

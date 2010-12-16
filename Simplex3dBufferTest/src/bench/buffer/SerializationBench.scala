@@ -44,7 +44,7 @@ object SerializationBench {
 
   val random = new java.util.Random()
 
-  val dataArray = DataArray[Float1, RawFloat](size)
+  val dataArray = DataArray[RFloat, RFloat](size)
   var i = 0; while (i < size) {
     dataArray(i) = random.nextFloat()
     i += 1
@@ -72,7 +72,7 @@ object SerializationBench {
     println("Read array time: " + readArrayTime + ".")
   }
 
-  final def testWriteArray(data: DataArray[Float1, RawFloat], loops: Int) {
+  final def testWriteArray(data: DataArray[RFloat, RFloat], loops: Int) {
     var a = 0
 
     val bytes = new ByteArrayOutputStream()
@@ -92,7 +92,7 @@ object SerializationBench {
     println(a)
   }
 
-  final def testReadArray(data: DataArray[Float1, RawFloat], loops: Int) {
+  final def testReadArray(data: DataArray[RFloat, RFloat], loops: Int) {
     var a = 0
 
     val bytes = new ByteArrayOutputStream()
@@ -103,7 +103,7 @@ object SerializationBench {
 
     var l = 0; while (l < loops) {
       val in = new ObjectInputStream(new ByteArrayInputStream(src))
-      val data = in.readObject().asInstanceOf[DataArray[Float1, RawFloat]]
+      val data = in.readObject().asInstanceOf[DataArray[RFloat, RFloat]]
       in.close()
 
       a += data.size

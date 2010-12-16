@@ -41,8 +41,8 @@ object IterleavedBench {
   val length = 2000000
   val loops = 10
 
-  val vertices = DataBuffer[Vec3, RawFloat](length)
-  val normals = DataBuffer[Vec3, RawFloat](length)
+  val vertices = DataBuffer[Vec3, RFloat](length)
+  val normals = DataBuffer[Vec3, RFloat](length)
   val colors = DataBuffer[Vec4, UByte](length);
   {
     val random = new java.util.Random(1)
@@ -79,9 +79,9 @@ object IterleavedBench {
   }
 
   final def testContigious(
-    v: DataSeq[Vec3, RawData],
-    n: DataSeq[Vec3, RawData],
-    c: DataSeq[Vec4, RawData],
+    v: DataSeq[Vec3, Raw],
+    n: DataSeq[Vec3, Raw],
+    c: DataSeq[Vec4, Raw],
     loops: Int
   ) {
     val (av, an, ac) = (Vec3(0), Vec3(0), Vec4(0))
@@ -105,9 +105,9 @@ object IterleavedBench {
   }
 
   final def testInterleaved(
-    v: DataView[Vec3, RawData],
-    n: DataView[Vec3, RawData],
-    c: DataView[Vec4, RawData],
+    v: DataView[Vec3, Raw],
+    n: DataView[Vec3, Raw],
+    c: DataView[Vec4, Raw],
     loops: Int
   ) {
     val (av, an, ac) = (Vec3(0), Vec3(0), Vec4(0))

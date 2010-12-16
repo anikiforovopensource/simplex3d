@@ -28,12 +28,13 @@ import Descriptors._
 import TestUtil._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import CopyTestUtil._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Int1Test extends FunSuite {
+class SIntTest extends FunSuite {
 
   test("Factories") {
     testIndexArrayUsingDataSize(IndexArray(_, _))
@@ -64,114 +65,123 @@ class Int1Test extends FunSuite {
     testIndexBufferFromCollection(IndexBuffer[UInt](_))
     
 
-    testArrayFromSize(DataArray[Int1, SByte](_))
-    testArrayFromData[Int1, SByte](DataArray[Int1, SByte](_))
-    testBufferFromSize(DataBuffer[Int1, SByte](_))
-    testBufferFromData(DataBuffer[Int1, SByte](_))
-    testViewFromData(DataView[Int1, SByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, SByte](_))
-    testReadViewFromData(ReadDataView[Int1, SByte](_, _, _))
-    testArrayFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataArray[Int1, SByte](a: _*))
-    testArrayFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataArray[Int1, SByte](a))
-    testBufferFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, SByte](a: _*))
-    testBufferFromCollection[Int1, SByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, SByte](a))
+    testArrayFromSize(DataArray[SInt, SByte](_))
+    testArrayFromData[SInt, SByte](DataArray[SInt, SByte](_))
+    testBufferFromSize(DataBuffer[SInt, SByte](_))
+    testBufferFromData(DataBuffer[SInt, SByte](_))
+    testViewFromData(DataView[SInt, SByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, SByte](_))
+    testReadViewFromData(ReadDataView[SInt, SByte](_, _, _))
+    testArrayFromCollection[SInt, SByte]((a: IndexedSeq[Int]) => DataArray[SInt, SByte](a: _*))
+    testArrayFromCollection[SInt, SByte]((a: IndexedSeq[Int]) => DataArray[SInt, SByte](a))
+    testBufferFromCollection[SInt, SByte]((a: IndexedSeq[Int]) => DataBuffer[SInt, SByte](a: _*))
+    testBufferFromCollection[SInt, SByte]((a: IndexedSeq[Int]) => DataBuffer[SInt, SByte](a))
     
-    testArrayFromSize(DataArray[Int1, UByte](_))
-    testArrayFromData[Int1, UByte](DataArray[Int1, UByte](_))
-    testBufferFromSize(DataBuffer[Int1, UByte](_))
-    testBufferFromData(DataBuffer[Int1, UByte](_))
-    testViewFromData(DataView[Int1, UByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, UByte](_))
-    testReadViewFromData(ReadDataView[Int1, UByte](_, _, _))
-    testArrayFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataArray[Int1, UByte](a: _*))
-    testArrayFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataArray[Int1, UByte](a))
-    testBufferFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, UByte](a: _*))
-    testBufferFromCollection[Int1, UByte]((a: IndexedSeq[Int]) => DataBuffer[Int1, UByte](a))
+    testArrayFromSize(DataArray[SInt, UByte](_))
+    testArrayFromData[SInt, UByte](DataArray[SInt, UByte](_))
+    testBufferFromSize(DataBuffer[SInt, UByte](_))
+    testBufferFromData(DataBuffer[SInt, UByte](_))
+    testViewFromData(DataView[SInt, UByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, UByte](_))
+    testReadViewFromData(ReadDataView[SInt, UByte](_, _, _))
+    testArrayFromCollection[SInt, UByte]((a: IndexedSeq[Int]) => DataArray[SInt, UByte](a: _*))
+    testArrayFromCollection[SInt, UByte]((a: IndexedSeq[Int]) => DataArray[SInt, UByte](a))
+    testBufferFromCollection[SInt, UByte]((a: IndexedSeq[Int]) => DataBuffer[SInt, UByte](a: _*))
+    testBufferFromCollection[SInt, UByte]((a: IndexedSeq[Int]) => DataBuffer[SInt, UByte](a))
     
-    testArrayFromSize(DataArray[Int1, SShort](_))
-    testArrayFromData[Int1, SShort](DataArray[Int1, SShort](_))
-    testBufferFromSize(DataBuffer[Int1, SShort](_))
-    testBufferFromData(DataBuffer[Int1, SShort](_))
-    testViewFromData(DataView[Int1, SShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, SShort](_))
-    testReadViewFromData(ReadDataView[Int1, SShort](_, _, _))
-    testArrayFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataArray[Int1, SShort](a: _*))
-    testArrayFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataArray[Int1, SShort](a))
-    testBufferFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, SShort](a: _*))
-    testBufferFromCollection[Int1, SShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, SShort](a))
+    testArrayFromSize(DataArray[SInt, SShort](_))
+    testArrayFromData[SInt, SShort](DataArray[SInt, SShort](_))
+    testBufferFromSize(DataBuffer[SInt, SShort](_))
+    testBufferFromData(DataBuffer[SInt, SShort](_))
+    testViewFromData(DataView[SInt, SShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, SShort](_))
+    testReadViewFromData(ReadDataView[SInt, SShort](_, _, _))
+    testArrayFromCollection[SInt, SShort]((a: IndexedSeq[Int]) => DataArray[SInt, SShort](a: _*))
+    testArrayFromCollection[SInt, SShort]((a: IndexedSeq[Int]) => DataArray[SInt, SShort](a))
+    testBufferFromCollection[SInt, SShort]((a: IndexedSeq[Int]) => DataBuffer[SInt, SShort](a: _*))
+    testBufferFromCollection[SInt, SShort]((a: IndexedSeq[Int]) => DataBuffer[SInt, SShort](a))
     
-    testArrayFromSize(DataArray[Int1, UShort](_))
-    testArrayFromData[Int1, UShort](DataArray[Int1, UShort](_))
-    testBufferFromSize(DataBuffer[Int1, UShort](_))
-    testBufferFromData(DataBuffer[Int1, UShort](_))
-    testViewFromData(DataView[Int1, UShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, UShort](_))
-    testReadViewFromData(ReadDataView[Int1, UShort](_, _, _))
-    testArrayFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataArray[Int1, UShort](a: _*))
-    testArrayFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataArray[Int1, UShort](a))
-    testBufferFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, UShort](a: _*))
-    testBufferFromCollection[Int1, UShort]((a: IndexedSeq[Int]) => DataBuffer[Int1, UShort](a))
+    testArrayFromSize(DataArray[SInt, UShort](_))
+    testArrayFromData[SInt, UShort](DataArray[SInt, UShort](_))
+    testBufferFromSize(DataBuffer[SInt, UShort](_))
+    testBufferFromData(DataBuffer[SInt, UShort](_))
+    testViewFromData(DataView[SInt, UShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, UShort](_))
+    testReadViewFromData(ReadDataView[SInt, UShort](_, _, _))
+    testArrayFromCollection[SInt, UShort]((a: IndexedSeq[Int]) => DataArray[SInt, UShort](a: _*))
+    testArrayFromCollection[SInt, UShort]((a: IndexedSeq[Int]) => DataArray[SInt, UShort](a))
+    testBufferFromCollection[SInt, UShort]((a: IndexedSeq[Int]) => DataBuffer[SInt, UShort](a: _*))
+    testBufferFromCollection[SInt, UShort]((a: IndexedSeq[Int]) => DataBuffer[SInt, UShort](a))
     
-    testArrayFromSize(DataArray[Int1, SInt](_))
-    testArrayFromData[Int1, SInt](DataArray[Int1, SInt](_))
-    testBufferFromSize(DataBuffer[Int1, SInt](_))
-    testBufferFromData(DataBuffer[Int1, SInt](_))
-    testViewFromData(DataView[Int1, SInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, SInt](_))
-    testReadViewFromData(ReadDataView[Int1, SInt](_, _, _))
-    testArrayFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataArray[Int1, SInt](a: _*))
-    testArrayFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataArray[Int1, SInt](a))
-    testBufferFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, SInt](a: _*))
-    testBufferFromCollection[Int1, SInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, SInt](a))
+    testArrayFromSize(DataArray[SInt, SInt](_))
+    testArrayFromData[SInt, SInt](DataArray[SInt, SInt](_))
+    testBufferFromSize(DataBuffer[SInt, SInt](_))
+    testBufferFromData(DataBuffer[SInt, SInt](_))
+    testViewFromData(DataView[SInt, SInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, SInt](_))
+    testReadViewFromData(ReadDataView[SInt, SInt](_, _, _))
+    testArrayFromCollection[SInt, SInt]((a: IndexedSeq[Int]) => DataArray[SInt, SInt](a: _*))
+    testArrayFromCollection[SInt, SInt]((a: IndexedSeq[Int]) => DataArray[SInt, SInt](a))
+    testBufferFromCollection[SInt, SInt]((a: IndexedSeq[Int]) => DataBuffer[SInt, SInt](a: _*))
+    testBufferFromCollection[SInt, SInt]((a: IndexedSeq[Int]) => DataBuffer[SInt, SInt](a))
     
-    testArrayFromSize(DataArray[Int1, UInt](_))
-    testArrayFromData[Int1, UInt](DataArray[Int1, UInt](_))
-    testBufferFromSize(DataBuffer[Int1, UInt](_))
-    testBufferFromData(DataBuffer[Int1, UInt](_))
-    testViewFromData(DataView[Int1, UInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Int1, UInt](_))
-    testReadViewFromData(ReadDataView[Int1, UInt](_, _, _))
-    testArrayFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataArray[Int1, UInt](a: _*))
-    testArrayFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataArray[Int1, UInt](a))
-    testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a: _*))
-    testBufferFromCollection[Int1, UInt]((a: IndexedSeq[Int]) => DataBuffer[Int1, UInt](a))
+    testArrayFromSize(DataArray[SInt, UInt](_))
+    testArrayFromData[SInt, UInt](DataArray[SInt, UInt](_))
+    testBufferFromSize(DataBuffer[SInt, UInt](_))
+    testBufferFromData(DataBuffer[SInt, UInt](_))
+    testViewFromData(DataView[SInt, UInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[SInt, UInt](_))
+    testReadViewFromData(ReadDataView[SInt, UInt](_, _, _))
+    testArrayFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataArray[SInt, UInt](a: _*))
+    testArrayFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataArray[SInt, UInt](a))
+    testBufferFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataBuffer[SInt, UInt](a: _*))
+    testBufferFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataBuffer[SInt, UInt](a))
+  }
+  
+  test("Copy") {
+    testCopy(DataSeq[SInt, UByte])
+    testCopy(DataSeq[SInt, SByte])
+    testCopy(DataSeq[SInt, UShort])
+    testCopy(DataSeq[SInt, SShort])
+    testCopy(DataSeq[SInt, UInt])
+    testCopy(DataSeq[SInt, SInt])
   }
 
   private val size = 10
 
   test("Apply/Update") {
-    testSByte(DataArray[Int1, SByte](size))
-    testSByte(DataBuffer[Int1, SByte](size))
-    testSByte(DataView[Int1, SByte](genBuffer(size, Descriptors.Int1SByte)._1, 0, 2))
-    testSByte(DataView[Int1, SByte](genBuffer(size, Descriptors.Int1SByte)._1, 1, 2))
+    testSByte(DataArray[SInt, SByte](size))
+    testSByte(DataBuffer[SInt, SByte](size))
+    testSByte(DataView[SInt, SByte](genBuffer(size, Descriptors.SIntSByte)._1, 0, 2))
+    testSByte(DataView[SInt, SByte](genBuffer(size, Descriptors.SIntSByte)._1, 1, 2))
 
-    testUByte(DataArray[Int1, UByte](size))
-    testUByte(DataBuffer[Int1, UByte](size))
-    testUByte(DataView[Int1, UByte](genBuffer(size, Descriptors.Int1UByte)._1, 0, 2))
-    testUByte(DataView[Int1, UByte](genBuffer(size, Descriptors.Int1UByte)._1, 1, 2))
+    testUByte(DataArray[SInt, UByte](size))
+    testUByte(DataBuffer[SInt, UByte](size))
+    testUByte(DataView[SInt, UByte](genBuffer(size, Descriptors.SIntUByte)._1, 0, 2))
+    testUByte(DataView[SInt, UByte](genBuffer(size, Descriptors.SIntUByte)._1, 1, 2))
     
-    testSShort(DataArray[Int1, SShort](size))
-    testSShort(DataBuffer[Int1, SShort](size))
-    testSShort(DataView[Int1, SShort](genBuffer(size, Descriptors.Int1SShort)._1, 0, 2))
-    testSShort(DataView[Int1, SShort](genBuffer(size, Descriptors.Int1SShort)._1, 1, 2))
+    testSShort(DataArray[SInt, SShort](size))
+    testSShort(DataBuffer[SInt, SShort](size))
+    testSShort(DataView[SInt, SShort](genBuffer(size, Descriptors.SIntSShort)._1, 0, 2))
+    testSShort(DataView[SInt, SShort](genBuffer(size, Descriptors.SIntSShort)._1, 1, 2))
 
-    testUShort(DataArray[Int1, UShort](size))
-    testUShort(DataBuffer[Int1, UShort](size))
-    testUShort(DataView[Int1, UShort](genBuffer(size, Descriptors.Int1UShort)._1, 0, 2))
-    testUShort(DataView[Int1, UShort](genBuffer(size, Descriptors.Int1UShort)._1, 1, 2))
+    testUShort(DataArray[SInt, UShort](size))
+    testUShort(DataBuffer[SInt, UShort](size))
+    testUShort(DataView[SInt, UShort](genBuffer(size, Descriptors.SIntUShort)._1, 0, 2))
+    testUShort(DataView[SInt, UShort](genBuffer(size, Descriptors.SIntUShort)._1, 1, 2))
 
-    testSInt(DataArray[Int1, SInt](size))
-    testSInt(DataBuffer[Int1, SInt](size))
-    testSInt(DataView[Int1, SInt](genBuffer(size, Descriptors.Int1SInt)._1, 0, 2))
-    testSInt(DataView[Int1, SInt](genBuffer(size, Descriptors.Int1SInt)._1, 1, 2))
+    testSInt(DataArray[SInt, SInt](size))
+    testSInt(DataBuffer[SInt, SInt](size))
+    testSInt(DataView[SInt, SInt](genBuffer(size, Descriptors.SIntSInt)._1, 0, 2))
+    testSInt(DataView[SInt, SInt](genBuffer(size, Descriptors.SIntSInt)._1, 1, 2))
 
-    testUInt(DataArray[Int1, UInt](size))
-    testUInt(DataBuffer[Int1, UInt](size))
-    testUInt(DataView[Int1, UInt](genBuffer(size, Descriptors.Int1UInt)._1, 0, 2))
-    testUInt(DataView[Int1, UInt](genBuffer(size, Descriptors.Int1UInt)._1, 1, 2))
+    testUInt(DataArray[SInt, UInt](size))
+    testUInt(DataBuffer[SInt, UInt](size))
+    testUInt(DataView[SInt, UInt](genBuffer(size, Descriptors.SIntUInt)._1, 0, 2))
+    testUInt(DataView[SInt, UInt](genBuffer(size, Descriptors.SIntUInt)._1, 1, 2))
   }
 
-  private def testSByte(seq: DataSeq[Int1, SByte]) {
+  private def testSByte(seq: DataSeq[SInt, SByte]) {
     testIndex(seq)
 
     testApplyUpdate(seq, -129, 127, 127)
@@ -183,7 +193,7 @@ class Int1Test extends FunSuite {
     testApplyUpdate(seq, 128, -128, -128)
   }
 
-  private def testUByte(seq: DataSeq[Int1, UByte]) {
+  private def testUByte(seq: DataSeq[SInt, UByte]) {
     testIndex(seq)
 
     testApplyUpdate(seq, -1, 255, -1)
@@ -196,7 +206,7 @@ class Int1Test extends FunSuite {
     testApplyUpdate(seq, 257, 1, 1)
   }
   
-  private def testSShort(seq: DataSeq[Int1, SShort]) {
+  private def testSShort(seq: DataSeq[SInt, SShort]) {
     testIndex(seq)
 
     testApplyUpdate(seq, -32769, 32767, 32767)
@@ -208,7 +218,7 @@ class Int1Test extends FunSuite {
     testApplyUpdate(seq, 32768, -32768, -32768)
   }
 
-  private def testUShort(seq: DataSeq[Int1, UShort]) {
+  private def testUShort(seq: DataSeq[SInt, UShort]) {
     testIndex(seq)
 
     testApplyUpdate(seq, -1, 65535, 65535)
@@ -221,7 +231,7 @@ class Int1Test extends FunSuite {
     testApplyUpdate(seq, 65537, 1, 1)
   }
   
-  private def testSInt(seq: DataSeq[Int1, SInt]) {
+  private def testSInt(seq: DataSeq[SInt, SInt]) {
     testIndex(seq)
 
     testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)
@@ -231,7 +241,7 @@ class Int1Test extends FunSuite {
     testApplyUpdate(seq, Int.MaxValue, Int.MaxValue, Int.MaxValue)
   }
 
-  private def testUInt(seq: DataSeq[Int1, UInt]) {
+  private def testUInt(seq: DataSeq[SInt, UInt]) {
     testIndex(seq)
 
     testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)

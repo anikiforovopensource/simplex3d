@@ -80,11 +80,11 @@ class PrimitiveWrapperBenchTC {
     val wrapperBuffer1 = System.currentTimeMillis - start
     
     start = System.currentTimeMillis
-    testImplementedFloat1(DataArray[Float1, RawFloat](dataArray), loops)
+    testImplementedRFloat(DataArray[RFloat, RFloat](dataArray), loops)
     val implementedArray1 = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testImplementedFloat1(DataBuffer[Float1, RawFloat](byteBuffer), loops)
+    testImplementedRFloat(DataBuffer[RFloat, RFloat](byteBuffer), loops)
     val implementedBuffer1 = System.currentTimeMillis - start
 
     println("Array time: " + arrayTime + ".")
@@ -154,7 +154,7 @@ class PrimitiveWrapperBenchTC {
     println(answer)
   }
 
-  final def testImplementedFloat1(seq: DataSeq[Float1, _], loops: Int) {
+  final def testImplementedRFloat(seq: DataSeq[RFloat, _], loops: Int) {
     var answer = 0
     val end = seq.size
     val step = 1

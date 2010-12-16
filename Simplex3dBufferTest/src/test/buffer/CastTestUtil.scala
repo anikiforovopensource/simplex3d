@@ -41,8 +41,8 @@ import AttributeTestUtil._
  */
 object CastTestUtil extends FunSuite {
 
-  def testArrayCast[E <: MetaElement, R <: RawData](
-    factory: (R#ArrayType) => DataArray[E, R]
+  def testArrayCast[E <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     for (size <- 0 to 9) {
       val seq = factory(genRandomArray(size, descriptor))
@@ -54,14 +54,14 @@ object CastTestUtil extends FunSuite {
         case UShort => testUShortArrayCast(seq.asInstanceOf[DataArray[_, UShort]])
         case SInt => testSIntArrayCast(seq.asInstanceOf[DataArray[_, SInt]])
         case UInt => testUIntArrayCast(seq.asInstanceOf[DataArray[_, UInt]])
-        case HalfFloat => testHalfFloatArrayCast(seq.asInstanceOf[DataArray[_, HalfFloat]])
-        case RawFloat => testRawFloatArrayCast(seq.asInstanceOf[DataArray[_, RawFloat]])
-        case RawDouble => testRawDoubleArrayCast(seq.asInstanceOf[DataArray[_, RawDouble]])
+        case HFloat => testHFloatArrayCast(seq.asInstanceOf[DataArray[_, HFloat]])
+        case RFloat => testRFloatArrayCast(seq.asInstanceOf[DataArray[_, RFloat]])
+        case RDouble => testRDoubleArrayCast(seq.asInstanceOf[DataArray[_, RDouble]])
       }
     }
   }
 
-  private def testCastToArray[E <: MetaElement, R <: RawData](
+  private def testCastToArray[E <: Meta, R <: Raw](
     original: ReadDataArray[_, _],
     cast: ReadDataArray[E, R],
     readOnly: Boolean,
@@ -75,67 +75,67 @@ object CastTestUtil extends FunSuite {
   private def testSByteArrayCast(da: DataArray[_, SByte]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Int1, SByte](da), false, data)(Descriptors.Int1SByte)
+    testCastToArray(da, DataArray[SInt, SByte](da), false, data)(Descriptors.SIntSByte)
     testCastToArray(da, DataArray[Vec2i, SByte](da), false, data)(Descriptors.Vec2iSByte)
     testCastToArray(da, DataArray[Vec3i, SByte](da), false, data)(Descriptors.Vec3iSByte)
     testCastToArray(da, DataArray[Vec4i, SByte](da), false, data)(Descriptors.Vec4iSByte)
 
-    testCastToArray(da, DataArray[Float1, SByte](da), false, data)(Descriptors.Float1SByte)
+    testCastToArray(da, DataArray[RFloat, SByte](da), false, data)(Descriptors.RFloatSByte)
     testCastToArray(da, DataArray[Vec2f, SByte](da), false, data)(Descriptors.Vec2fSByte)
     testCastToArray(da, DataArray[Vec3f, SByte](da), false, data)(Descriptors.Vec3fSByte)
     testCastToArray(da, DataArray[Vec4f, SByte](da), false, data)(Descriptors.Vec4fSByte)
     
-    testCastToArray(da, DataArray[Double1, SByte](da), false, data)(Descriptors.Double1SByte)
+    testCastToArray(da, DataArray[RDouble, SByte](da), false, data)(Descriptors.RDoubleSByte)
     testCastToArray(da, DataArray[Vec2d, SByte](da), false, data)(Descriptors.Vec2dSByte)
     testCastToArray(da, DataArray[Vec3d, SByte](da), false, data)(Descriptors.Vec3dSByte)
     testCastToArray(da, DataArray[Vec4d, SByte](da), false, data)(Descriptors.Vec4dSByte)
 
     
-    testCastToArray(da, ReadDataArray[Int1, SByte](da), false, data)(Descriptors.Int1SByte)
+    testCastToArray(da, ReadDataArray[SInt, SByte](da), false, data)(Descriptors.SIntSByte)
     testCastToArray(da, ReadDataArray[Vec2i, SByte](da), false, data)(Descriptors.Vec2iSByte)
     testCastToArray(da, ReadDataArray[Vec3i, SByte](da), false, data)(Descriptors.Vec3iSByte)
     testCastToArray(da, ReadDataArray[Vec4i, SByte](da), false, data)(Descriptors.Vec4iSByte)
 
-    testCastToArray(da, ReadDataArray[Float1, SByte](da), false, data)(Descriptors.Float1SByte)
+    testCastToArray(da, ReadDataArray[RFloat, SByte](da), false, data)(Descriptors.RFloatSByte)
     testCastToArray(da, ReadDataArray[Vec2f, SByte](da), false, data)(Descriptors.Vec2fSByte)
     testCastToArray(da, ReadDataArray[Vec3f, SByte](da), false, data)(Descriptors.Vec3fSByte)
     testCastToArray(da, ReadDataArray[Vec4f, SByte](da), false, data)(Descriptors.Vec4fSByte)
     
-    testCastToArray(da, ReadDataArray[Double1, SByte](da), false, data)(Descriptors.Double1SByte)
+    testCastToArray(da, ReadDataArray[RDouble, SByte](da), false, data)(Descriptors.RDoubleSByte)
     testCastToArray(da, ReadDataArray[Vec2d, SByte](da), false, data)(Descriptors.Vec2dSByte)
     testCastToArray(da, ReadDataArray[Vec3d, SByte](da), false, data)(Descriptors.Vec3dSByte)
     testCastToArray(da, ReadDataArray[Vec4d, SByte](da), false, data)(Descriptors.Vec4dSByte)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, SByte]]
-    intercept[IllegalArgumentException] { DataArray[Int1, SByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, SByte](roCast) }
     
-    intercept[IllegalArgumentException] { DataArray[Float1, SByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, SByte](roCast) }
     
-    intercept[IllegalArgumentException] { DataArray[Double1, SByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, SByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, SByte](roCast) }
     
     
-    testCastToArray(ro, ReadDataArray[Int1, SByte](ro), true, data)(Descriptors.Int1SByte)
+    testCastToArray(ro, ReadDataArray[SInt, SByte](ro), true, data)(Descriptors.SIntSByte)
     testCastToArray(ro, ReadDataArray[Vec2i, SByte](ro), true, data)(Descriptors.Vec2iSByte)
     testCastToArray(ro, ReadDataArray[Vec3i, SByte](ro), true, data)(Descriptors.Vec3iSByte)
     testCastToArray(ro, ReadDataArray[Vec4i, SByte](ro), true, data)(Descriptors.Vec4iSByte)
 
-    testCastToArray(ro, ReadDataArray[Float1, SByte](ro), true, data)(Descriptors.Float1SByte)
+    testCastToArray(ro, ReadDataArray[RFloat, SByte](ro), true, data)(Descriptors.RFloatSByte)
     testCastToArray(ro, ReadDataArray[Vec2f, SByte](ro), true, data)(Descriptors.Vec2fSByte)
     testCastToArray(ro, ReadDataArray[Vec3f, SByte](ro), true, data)(Descriptors.Vec3fSByte)
     testCastToArray(ro, ReadDataArray[Vec4f, SByte](ro), true, data)(Descriptors.Vec4fSByte)
     
-    testCastToArray(ro, ReadDataArray[Double1, SByte](ro), true, data)(Descriptors.Double1SByte)
+    testCastToArray(ro, ReadDataArray[RDouble, SByte](ro), true, data)(Descriptors.RDoubleSByte)
     testCastToArray(ro, ReadDataArray[Vec2d, SByte](ro), true, data)(Descriptors.Vec2dSByte)
     testCastToArray(ro, ReadDataArray[Vec3d, SByte](ro), true, data)(Descriptors.Vec3dSByte)
     testCastToArray(ro, ReadDataArray[Vec4d, SByte](ro), true, data)(Descriptors.Vec4dSByte)
@@ -144,75 +144,75 @@ object CastTestUtil extends FunSuite {
   private def testUByteArrayCast(da: DataArray[_, UByte]) {
     val data = da.buffer()
     
-    testCastToArray(da, DataArray[Int1, UByte](da), false, data)(Descriptors.Int1UByte)
+    testCastToArray(da, DataArray[SInt, UByte](da), false, data)(Descriptors.SIntUByte)
     testCastToArray(da, DataArray[Vec2i, UByte](da), false, data)(Descriptors.Vec2iUByte)
     testCastToArray(da, DataArray[Vec3i, UByte](da), false, data)(Descriptors.Vec3iUByte)
     testCastToArray(da, DataArray[Vec4i, UByte](da), false, data)(Descriptors.Vec4iUByte)
 
-    testCastToArray(da, IndexArray[UByte](da), false, data)(Descriptors.Int1UByte)
+    testCastToArray(da, IndexArray[UByte](da), false, data)(Descriptors.SIntUByte)
 
-    testCastToArray(da, DataArray[Float1, UByte](da), false, data)(Descriptors.Float1UByte)
+    testCastToArray(da, DataArray[RFloat, UByte](da), false, data)(Descriptors.RFloatUByte)
     testCastToArray(da, DataArray[Vec2f, UByte](da), false, data)(Descriptors.Vec2fUByte)
     testCastToArray(da, DataArray[Vec3f, UByte](da), false, data)(Descriptors.Vec3fUByte)
     testCastToArray(da, DataArray[Vec4f, UByte](da), false, data)(Descriptors.Vec4fUByte)
     
-    testCastToArray(da, DataArray[Double1, UByte](da), false, data)(Descriptors.Double1UByte)
+    testCastToArray(da, DataArray[RDouble, UByte](da), false, data)(Descriptors.RDoubleUByte)
     testCastToArray(da, DataArray[Vec2d, UByte](da), false, data)(Descriptors.Vec2dUByte)
     testCastToArray(da, DataArray[Vec3d, UByte](da), false, data)(Descriptors.Vec3dUByte)
     testCastToArray(da, DataArray[Vec4d, UByte](da), false, data)(Descriptors.Vec4dUByte)
 
     
-    testCastToArray(da, ReadDataArray[Int1, UByte](da), false, data)(Descriptors.Int1UByte)
+    testCastToArray(da, ReadDataArray[SInt, UByte](da), false, data)(Descriptors.SIntUByte)
     testCastToArray(da, ReadDataArray[Vec2i, UByte](da), false, data)(Descriptors.Vec2iUByte)
     testCastToArray(da, ReadDataArray[Vec3i, UByte](da), false, data)(Descriptors.Vec3iUByte)
     testCastToArray(da, ReadDataArray[Vec4i, UByte](da), false, data)(Descriptors.Vec4iUByte)
 
-    testCastToArray(da, ReadIndexArray[UByte](da), false, data)(Descriptors.Int1UByte)
+    testCastToArray(da, ReadIndexArray[UByte](da), false, data)(Descriptors.SIntUByte)
 
-    testCastToArray(da, ReadDataArray[Float1, UByte](da), false, data)(Descriptors.Float1UByte)
+    testCastToArray(da, ReadDataArray[RFloat, UByte](da), false, data)(Descriptors.RFloatUByte)
     testCastToArray(da, ReadDataArray[Vec2f, UByte](da), false, data)(Descriptors.Vec2fUByte)
     testCastToArray(da, ReadDataArray[Vec3f, UByte](da), false, data)(Descriptors.Vec3fUByte)
     testCastToArray(da, ReadDataArray[Vec4f, UByte](da), false, data)(Descriptors.Vec4fUByte)
     
-    testCastToArray(da, ReadDataArray[Double1, UByte](da), false, data)(Descriptors.Double1UByte)
+    testCastToArray(da, ReadDataArray[RDouble, UByte](da), false, data)(Descriptors.RDoubleUByte)
     testCastToArray(da, ReadDataArray[Vec2d, UByte](da), false, data)(Descriptors.Vec2dUByte)
     testCastToArray(da, ReadDataArray[Vec3d, UByte](da), false, data)(Descriptors.Vec3dUByte)
     testCastToArray(da, ReadDataArray[Vec4d, UByte](da), false, data)(Descriptors.Vec4dUByte)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, UByte]]
-    intercept[IllegalArgumentException] { DataArray[Int1, UByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, UByte](roCast) }
     
     intercept[IllegalArgumentException] { IndexArray[UByte](roCast) }
     
-    intercept[IllegalArgumentException] { DataArray[Float1, UByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, UByte](roCast) }
     
-    intercept[IllegalArgumentException] { DataArray[Double1, UByte](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, UByte](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, UByte](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Int1, UByte](ro), true, data)(Descriptors.Int1UByte)
+    testCastToArray(ro, ReadDataArray[SInt, UByte](ro), true, data)(Descriptors.SIntUByte)
     testCastToArray(ro, ReadDataArray[Vec2i, UByte](ro), true, data)(Descriptors.Vec2iUByte)
     testCastToArray(ro, ReadDataArray[Vec3i, UByte](ro), true, data)(Descriptors.Vec3iUByte)
     testCastToArray(ro, ReadDataArray[Vec4i, UByte](ro), true, data)(Descriptors.Vec4iUByte)
 
-    testCastToArray(ro, ReadIndexArray[UByte](ro), true, data)(Descriptors.Int1UByte)
+    testCastToArray(ro, ReadIndexArray[UByte](ro), true, data)(Descriptors.SIntUByte)
 
-    testCastToArray(ro, ReadDataArray[Float1, UByte](ro), true, data)(Descriptors.Float1UByte)
+    testCastToArray(ro, ReadDataArray[RFloat, UByte](ro), true, data)(Descriptors.RFloatUByte)
     testCastToArray(ro, ReadDataArray[Vec2f, UByte](ro), true, data)(Descriptors.Vec2fUByte)
     testCastToArray(ro, ReadDataArray[Vec3f, UByte](ro), true, data)(Descriptors.Vec3fUByte)
     testCastToArray(ro, ReadDataArray[Vec4f, UByte](ro), true, data)(Descriptors.Vec4fUByte)
     
-    testCastToArray(ro, ReadDataArray[Double1, UByte](ro), true, data)(Descriptors.Double1UByte)
+    testCastToArray(ro, ReadDataArray[RDouble, UByte](ro), true, data)(Descriptors.RDoubleUByte)
     testCastToArray(ro, ReadDataArray[Vec2d, UByte](ro), true, data)(Descriptors.Vec2dUByte)
     testCastToArray(ro, ReadDataArray[Vec3d, UByte](ro), true, data)(Descriptors.Vec3dUByte)
     testCastToArray(ro, ReadDataArray[Vec4d, UByte](ro), true, data)(Descriptors.Vec4dUByte)
@@ -221,67 +221,67 @@ object CastTestUtil extends FunSuite {
   private def testSShortArrayCast(da: DataArray[_, SShort]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Int1, SShort](da), false, data)(Descriptors.Int1SShort)
+    testCastToArray(da, DataArray[SInt, SShort](da), false, data)(Descriptors.SIntSShort)
     testCastToArray(da, DataArray[Vec2i, SShort](da), false, data)(Descriptors.Vec2iSShort)
     testCastToArray(da, DataArray[Vec3i, SShort](da), false, data)(Descriptors.Vec3iSShort)
     testCastToArray(da, DataArray[Vec4i, SShort](da), false, data)(Descriptors.Vec4iSShort)
 
-    testCastToArray(da, DataArray[Float1, SShort](da), false, data)(Descriptors.Float1SShort)
+    testCastToArray(da, DataArray[RFloat, SShort](da), false, data)(Descriptors.RFloatSShort)
     testCastToArray(da, DataArray[Vec2f, SShort](da), false, data)(Descriptors.Vec2fSShort)
     testCastToArray(da, DataArray[Vec3f, SShort](da), false, data)(Descriptors.Vec3fSShort)
     testCastToArray(da, DataArray[Vec4f, SShort](da), false, data)(Descriptors.Vec4fSShort)
     
-    testCastToArray(da, DataArray[Double1, SShort](da), false, data)(Descriptors.Double1SShort)
+    testCastToArray(da, DataArray[RDouble, SShort](da), false, data)(Descriptors.RDoubleSShort)
     testCastToArray(da, DataArray[Vec2d, SShort](da), false, data)(Descriptors.Vec2dSShort)
     testCastToArray(da, DataArray[Vec3d, SShort](da), false, data)(Descriptors.Vec3dSShort)
     testCastToArray(da, DataArray[Vec4d, SShort](da), false, data)(Descriptors.Vec4dSShort)
 
     
-    testCastToArray(da, ReadDataArray[Int1, SShort](da), false, data)(Descriptors.Int1SShort)
+    testCastToArray(da, ReadDataArray[SInt, SShort](da), false, data)(Descriptors.SIntSShort)
     testCastToArray(da, ReadDataArray[Vec2i, SShort](da), false, data)(Descriptors.Vec2iSShort)
     testCastToArray(da, ReadDataArray[Vec3i, SShort](da), false, data)(Descriptors.Vec3iSShort)
     testCastToArray(da, ReadDataArray[Vec4i, SShort](da), false, data)(Descriptors.Vec4iSShort)
 
-    testCastToArray(da, ReadDataArray[Float1, SShort](da), false, data)(Descriptors.Float1SShort)
+    testCastToArray(da, ReadDataArray[RFloat, SShort](da), false, data)(Descriptors.RFloatSShort)
     testCastToArray(da, ReadDataArray[Vec2f, SShort](da), false, data)(Descriptors.Vec2fSShort)
     testCastToArray(da, ReadDataArray[Vec3f, SShort](da), false, data)(Descriptors.Vec3fSShort)
     testCastToArray(da, ReadDataArray[Vec4f, SShort](da), false, data)(Descriptors.Vec4fSShort)
     
-    testCastToArray(da, ReadDataArray[Double1, SShort](da), false, data)(Descriptors.Double1SShort)
+    testCastToArray(da, ReadDataArray[RDouble, SShort](da), false, data)(Descriptors.RDoubleSShort)
     testCastToArray(da, ReadDataArray[Vec2d, SShort](da), false, data)(Descriptors.Vec2dSShort)
     testCastToArray(da, ReadDataArray[Vec3d, SShort](da), false, data)(Descriptors.Vec3dSShort)
     testCastToArray(da, ReadDataArray[Vec4d, SShort](da), false, data)(Descriptors.Vec4dSShort)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, SShort]]
-    intercept[IllegalArgumentException] { DataArray[Int1, SShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, SShort](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Float1, SShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, SShort](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Double1, SShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, SShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, SShort](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Int1, SShort](ro), true, data)(Descriptors.Int1SShort)
+    testCastToArray(ro, ReadDataArray[SInt, SShort](ro), true, data)(Descriptors.SIntSShort)
     testCastToArray(ro, ReadDataArray[Vec2i, SShort](ro), true, data)(Descriptors.Vec2iSShort)
     testCastToArray(ro, ReadDataArray[Vec3i, SShort](ro), true, data)(Descriptors.Vec3iSShort)
     testCastToArray(ro, ReadDataArray[Vec4i, SShort](ro), true, data)(Descriptors.Vec4iSShort)
 
-    testCastToArray(ro, ReadDataArray[Float1, SShort](ro), true, data)(Descriptors.Float1SShort)
+    testCastToArray(ro, ReadDataArray[RFloat, SShort](ro), true, data)(Descriptors.RFloatSShort)
     testCastToArray(ro, ReadDataArray[Vec2f, SShort](ro), true, data)(Descriptors.Vec2fSShort)
     testCastToArray(ro, ReadDataArray[Vec3f, SShort](ro), true, data)(Descriptors.Vec3fSShort)
     testCastToArray(ro, ReadDataArray[Vec4f, SShort](ro), true, data)(Descriptors.Vec4fSShort)
     
-    testCastToArray(ro, ReadDataArray[Double1, SShort](ro), true, data)(Descriptors.Double1SShort)
+    testCastToArray(ro, ReadDataArray[RDouble, SShort](ro), true, data)(Descriptors.RDoubleSShort)
     testCastToArray(ro, ReadDataArray[Vec2d, SShort](ro), true, data)(Descriptors.Vec2dSShort)
     testCastToArray(ro, ReadDataArray[Vec3d, SShort](ro), true, data)(Descriptors.Vec3dSShort)
     testCastToArray(ro, ReadDataArray[Vec4d, SShort](ro), true, data)(Descriptors.Vec4dSShort)
@@ -290,75 +290,75 @@ object CastTestUtil extends FunSuite {
   private def testUShortArrayCast(da: DataArray[_, UShort]) {
     val data = da.buffer()
     
-    testCastToArray(da, DataArray[Int1, UShort](da), false, data)(Descriptors.Int1UShort)
+    testCastToArray(da, DataArray[SInt, UShort](da), false, data)(Descriptors.SIntUShort)
     testCastToArray(da, DataArray[Vec2i, UShort](da), false, data)(Descriptors.Vec2iUShort)
     testCastToArray(da, DataArray[Vec3i, UShort](da), false, data)(Descriptors.Vec3iUShort)
     testCastToArray(da, DataArray[Vec4i, UShort](da), false, data)(Descriptors.Vec4iUShort)
 
-    testCastToArray(da, IndexArray[UShort](da), false, data)(Descriptors.Int1UShort)
+    testCastToArray(da, IndexArray[UShort](da), false, data)(Descriptors.SIntUShort)
 
-    testCastToArray(da, DataArray[Float1, UShort](da), false, data)(Descriptors.Float1UShort)
+    testCastToArray(da, DataArray[RFloat, UShort](da), false, data)(Descriptors.RFloatUShort)
     testCastToArray(da, DataArray[Vec2f, UShort](da), false, data)(Descriptors.Vec2fUShort)
     testCastToArray(da, DataArray[Vec3f, UShort](da), false, data)(Descriptors.Vec3fUShort)
     testCastToArray(da, DataArray[Vec4f, UShort](da), false, data)(Descriptors.Vec4fUShort)
     
-    testCastToArray(da, DataArray[Double1, UShort](da), false, data)(Descriptors.Double1UShort)
+    testCastToArray(da, DataArray[RDouble, UShort](da), false, data)(Descriptors.RDoubleUShort)
     testCastToArray(da, DataArray[Vec2d, UShort](da), false, data)(Descriptors.Vec2dUShort)
     testCastToArray(da, DataArray[Vec3d, UShort](da), false, data)(Descriptors.Vec3dUShort)
     testCastToArray(da, DataArray[Vec4d, UShort](da), false, data)(Descriptors.Vec4dUShort)
 
     
-    testCastToArray(da, ReadDataArray[Int1, UShort](da), false, data)(Descriptors.Int1UShort)
+    testCastToArray(da, ReadDataArray[SInt, UShort](da), false, data)(Descriptors.SIntUShort)
     testCastToArray(da, ReadDataArray[Vec2i, UShort](da), false, data)(Descriptors.Vec2iUShort)
     testCastToArray(da, ReadDataArray[Vec3i, UShort](da), false, data)(Descriptors.Vec3iUShort)
     testCastToArray(da, ReadDataArray[Vec4i, UShort](da), false, data)(Descriptors.Vec4iUShort)
 
-    testCastToArray(da, ReadIndexArray[UShort](da), false, data)(Descriptors.Int1UShort)
+    testCastToArray(da, ReadIndexArray[UShort](da), false, data)(Descriptors.SIntUShort)
 
-    testCastToArray(da, ReadDataArray[Float1, UShort](da), false, data)(Descriptors.Float1UShort)
+    testCastToArray(da, ReadDataArray[RFloat, UShort](da), false, data)(Descriptors.RFloatUShort)
     testCastToArray(da, ReadDataArray[Vec2f, UShort](da), false, data)(Descriptors.Vec2fUShort)
     testCastToArray(da, ReadDataArray[Vec3f, UShort](da), false, data)(Descriptors.Vec3fUShort)
     testCastToArray(da, ReadDataArray[Vec4f, UShort](da), false, data)(Descriptors.Vec4fUShort)
     
-    testCastToArray(da, ReadDataArray[Double1, UShort](da), false, data)(Descriptors.Double1UShort)
+    testCastToArray(da, ReadDataArray[RDouble, UShort](da), false, data)(Descriptors.RDoubleUShort)
     testCastToArray(da, ReadDataArray[Vec2d, UShort](da), false, data)(Descriptors.Vec2dUShort)
     testCastToArray(da, ReadDataArray[Vec3d, UShort](da), false, data)(Descriptors.Vec3dUShort)
     testCastToArray(da, ReadDataArray[Vec4d, UShort](da), false, data)(Descriptors.Vec4dUShort)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, UShort]]
-    intercept[IllegalArgumentException] { DataArray[Int1, UShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, UShort](roCast) }
 
     intercept[IllegalArgumentException] { IndexArray[UShort](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Float1, UShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, UShort](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Double1, UShort](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, UShort](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, UShort](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Int1, UShort](ro), true, data)(Descriptors.Int1UShort)
+    testCastToArray(ro, ReadDataArray[SInt, UShort](ro), true, data)(Descriptors.SIntUShort)
     testCastToArray(ro, ReadDataArray[Vec2i, UShort](ro), true, data)(Descriptors.Vec2iUShort)
     testCastToArray(ro, ReadDataArray[Vec3i, UShort](ro), true, data)(Descriptors.Vec3iUShort)
     testCastToArray(ro, ReadDataArray[Vec4i, UShort](ro), true, data)(Descriptors.Vec4iUShort)
 
-    testCastToArray(ro, ReadIndexArray[UShort](ro), true, data)(Descriptors.Int1UShort)
+    testCastToArray(ro, ReadIndexArray[UShort](ro), true, data)(Descriptors.SIntUShort)
 
-    testCastToArray(ro, ReadDataArray[Float1, UShort](ro), true, data)(Descriptors.Float1UShort)
+    testCastToArray(ro, ReadDataArray[RFloat, UShort](ro), true, data)(Descriptors.RFloatUShort)
     testCastToArray(ro, ReadDataArray[Vec2f, UShort](ro), true, data)(Descriptors.Vec2fUShort)
     testCastToArray(ro, ReadDataArray[Vec3f, UShort](ro), true, data)(Descriptors.Vec3fUShort)
     testCastToArray(ro, ReadDataArray[Vec4f, UShort](ro), true, data)(Descriptors.Vec4fUShort)
     
-    testCastToArray(ro, ReadDataArray[Double1, UShort](ro), true, data)(Descriptors.Double1UShort)
+    testCastToArray(ro, ReadDataArray[RDouble, UShort](ro), true, data)(Descriptors.RDoubleUShort)
     testCastToArray(ro, ReadDataArray[Vec2d, UShort](ro), true, data)(Descriptors.Vec2dUShort)
     testCastToArray(ro, ReadDataArray[Vec3d, UShort](ro), true, data)(Descriptors.Vec3dUShort)
     testCastToArray(ro, ReadDataArray[Vec4d, UShort](ro), true, data)(Descriptors.Vec4dUShort)
@@ -367,67 +367,67 @@ object CastTestUtil extends FunSuite {
   private def testSIntArrayCast(da: DataArray[_, SInt]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Int1, SInt](da), false, data)(Descriptors.Int1SInt)
+    testCastToArray(da, DataArray[SInt, SInt](da), false, data)(Descriptors.SIntSInt)
     testCastToArray(da, DataArray[Vec2i, SInt](da), false, data)(Descriptors.Vec2iSInt)
     testCastToArray(da, DataArray[Vec3i, SInt](da), false, data)(Descriptors.Vec3iSInt)
     testCastToArray(da, DataArray[Vec4i, SInt](da), false, data)(Descriptors.Vec4iSInt)
 
-    testCastToArray(da, DataArray[Float1, SInt](da), false, data)(Descriptors.Float1SInt)
+    testCastToArray(da, DataArray[RFloat, SInt](da), false, data)(Descriptors.RFloatSInt)
     testCastToArray(da, DataArray[Vec2f, SInt](da), false, data)(Descriptors.Vec2fSInt)
     testCastToArray(da, DataArray[Vec3f, SInt](da), false, data)(Descriptors.Vec3fSInt)
     testCastToArray(da, DataArray[Vec4f, SInt](da), false, data)(Descriptors.Vec4fSInt)
     
-    testCastToArray(da, DataArray[Double1, SInt](da), false, data)(Descriptors.Double1SInt)
+    testCastToArray(da, DataArray[RDouble, SInt](da), false, data)(Descriptors.RDoubleSInt)
     testCastToArray(da, DataArray[Vec2d, SInt](da), false, data)(Descriptors.Vec2dSInt)
     testCastToArray(da, DataArray[Vec3d, SInt](da), false, data)(Descriptors.Vec3dSInt)
     testCastToArray(da, DataArray[Vec4d, SInt](da), false, data)(Descriptors.Vec4dSInt)
 
     
-    testCastToArray(da, ReadDataArray[Int1, SInt](da), false, data)(Descriptors.Int1SInt)
+    testCastToArray(da, ReadDataArray[SInt, SInt](da), false, data)(Descriptors.SIntSInt)
     testCastToArray(da, ReadDataArray[Vec2i, SInt](da), false, data)(Descriptors.Vec2iSInt)
     testCastToArray(da, ReadDataArray[Vec3i, SInt](da), false, data)(Descriptors.Vec3iSInt)
     testCastToArray(da, ReadDataArray[Vec4i, SInt](da), false, data)(Descriptors.Vec4iSInt)
 
-    testCastToArray(da, ReadDataArray[Float1, SInt](da), false, data)(Descriptors.Float1SInt)
+    testCastToArray(da, ReadDataArray[RFloat, SInt](da), false, data)(Descriptors.RFloatSInt)
     testCastToArray(da, ReadDataArray[Vec2f, SInt](da), false, data)(Descriptors.Vec2fSInt)
     testCastToArray(da, ReadDataArray[Vec3f, SInt](da), false, data)(Descriptors.Vec3fSInt)
     testCastToArray(da, ReadDataArray[Vec4f, SInt](da), false, data)(Descriptors.Vec4fSInt)
     
-    testCastToArray(da, ReadDataArray[Double1, SInt](da), false, data)(Descriptors.Double1SInt)
+    testCastToArray(da, ReadDataArray[RDouble, SInt](da), false, data)(Descriptors.RDoubleSInt)
     testCastToArray(da, ReadDataArray[Vec2d, SInt](da), false, data)(Descriptors.Vec2dSInt)
     testCastToArray(da, ReadDataArray[Vec3d, SInt](da), false, data)(Descriptors.Vec3dSInt)
     testCastToArray(da, ReadDataArray[Vec4d, SInt](da), false, data)(Descriptors.Vec4dSInt)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, SInt]]
-    intercept[IllegalArgumentException] { DataArray[Int1, SInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, SInt](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Float1, SInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, SInt](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Double1, SInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, SInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, SInt](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Int1, SInt](ro), true, data)(Descriptors.Int1SInt)
+    testCastToArray(ro, ReadDataArray[SInt, SInt](ro), true, data)(Descriptors.SIntSInt)
     testCastToArray(ro, ReadDataArray[Vec2i, SInt](ro), true, data)(Descriptors.Vec2iSInt)
     testCastToArray(ro, ReadDataArray[Vec3i, SInt](ro), true, data)(Descriptors.Vec3iSInt)
     testCastToArray(ro, ReadDataArray[Vec4i, SInt](ro), true, data)(Descriptors.Vec4iSInt)
 
-    testCastToArray(ro, ReadDataArray[Float1, SInt](ro), true, data)(Descriptors.Float1SInt)
+    testCastToArray(ro, ReadDataArray[RFloat, SInt](ro), true, data)(Descriptors.RFloatSInt)
     testCastToArray(ro, ReadDataArray[Vec2f, SInt](ro), true, data)(Descriptors.Vec2fSInt)
     testCastToArray(ro, ReadDataArray[Vec3f, SInt](ro), true, data)(Descriptors.Vec3fSInt)
     testCastToArray(ro, ReadDataArray[Vec4f, SInt](ro), true, data)(Descriptors.Vec4fSInt)
     
-    testCastToArray(ro, ReadDataArray[Double1, SInt](ro), true, data)(Descriptors.Double1SInt)
+    testCastToArray(ro, ReadDataArray[RDouble, SInt](ro), true, data)(Descriptors.RDoubleSInt)
     testCastToArray(ro, ReadDataArray[Vec2d, SInt](ro), true, data)(Descriptors.Vec2dSInt)
     testCastToArray(ro, ReadDataArray[Vec3d, SInt](ro), true, data)(Descriptors.Vec3dSInt)
     testCastToArray(ro, ReadDataArray[Vec4d, SInt](ro), true, data)(Descriptors.Vec4dSInt)
@@ -436,227 +436,227 @@ object CastTestUtil extends FunSuite {
   private def testUIntArrayCast(da: DataArray[_, UInt]) {
     val data = da.buffer()
     
-    testCastToArray(da, DataArray[Int1, UInt](da), false, data)(Descriptors.Int1UInt)
+    testCastToArray(da, DataArray[SInt, UInt](da), false, data)(Descriptors.SIntUInt)
     testCastToArray(da, DataArray[Vec2i, UInt](da), false, data)(Descriptors.Vec2iUInt)
     testCastToArray(da, DataArray[Vec3i, UInt](da), false, data)(Descriptors.Vec3iUInt)
     testCastToArray(da, DataArray[Vec4i, UInt](da), false, data)(Descriptors.Vec4iUInt)
 
-    testCastToArray(da, IndexArray[UInt](da), false, data)(Descriptors.Int1UInt)
+    testCastToArray(da, IndexArray[UInt](da), false, data)(Descriptors.SIntUInt)
 
-    testCastToArray(da, DataArray[Float1, UInt](da), false, data)(Descriptors.Float1UInt)
+    testCastToArray(da, DataArray[RFloat, UInt](da), false, data)(Descriptors.RFloatUInt)
     testCastToArray(da, DataArray[Vec2f, UInt](da), false, data)(Descriptors.Vec2fUInt)
     testCastToArray(da, DataArray[Vec3f, UInt](da), false, data)(Descriptors.Vec3fUInt)
     testCastToArray(da, DataArray[Vec4f, UInt](da), false, data)(Descriptors.Vec4fUInt)
     
-    testCastToArray(da, DataArray[Double1, UInt](da), false, data)(Descriptors.Double1UInt)
+    testCastToArray(da, DataArray[RDouble, UInt](da), false, data)(Descriptors.RDoubleUInt)
     testCastToArray(da, DataArray[Vec2d, UInt](da), false, data)(Descriptors.Vec2dUInt)
     testCastToArray(da, DataArray[Vec3d, UInt](da), false, data)(Descriptors.Vec3dUInt)
     testCastToArray(da, DataArray[Vec4d, UInt](da), false, data)(Descriptors.Vec4dUInt)
 
     
-    testCastToArray(da, ReadDataArray[Int1, UInt](da), false, data)(Descriptors.Int1UInt)
+    testCastToArray(da, ReadDataArray[SInt, UInt](da), false, data)(Descriptors.SIntUInt)
     testCastToArray(da, ReadDataArray[Vec2i, UInt](da), false, data)(Descriptors.Vec2iUInt)
     testCastToArray(da, ReadDataArray[Vec3i, UInt](da), false, data)(Descriptors.Vec3iUInt)
     testCastToArray(da, ReadDataArray[Vec4i, UInt](da), false, data)(Descriptors.Vec4iUInt)
 
-    testCastToArray(da, ReadIndexArray[UInt](da), false, data)(Descriptors.Int1UInt)
+    testCastToArray(da, ReadIndexArray[UInt](da), false, data)(Descriptors.SIntUInt)
 
-    testCastToArray(da, ReadDataArray[Float1, UInt](da), false, data)(Descriptors.Float1UInt)
+    testCastToArray(da, ReadDataArray[RFloat, UInt](da), false, data)(Descriptors.RFloatUInt)
     testCastToArray(da, ReadDataArray[Vec2f, UInt](da), false, data)(Descriptors.Vec2fUInt)
     testCastToArray(da, ReadDataArray[Vec3f, UInt](da), false, data)(Descriptors.Vec3fUInt)
     testCastToArray(da, ReadDataArray[Vec4f, UInt](da), false, data)(Descriptors.Vec4fUInt)
     
-    testCastToArray(da, ReadDataArray[Double1, UInt](da), false, data)(Descriptors.Double1UInt)
+    testCastToArray(da, ReadDataArray[RDouble, UInt](da), false, data)(Descriptors.RDoubleUInt)
     testCastToArray(da, ReadDataArray[Vec2d, UInt](da), false, data)(Descriptors.Vec2dUInt)
     testCastToArray(da, ReadDataArray[Vec3d, UInt](da), false, data)(Descriptors.Vec3dUInt)
     testCastToArray(da, ReadDataArray[Vec4d, UInt](da), false, data)(Descriptors.Vec4dUInt)
 
 
-    val ro = da.asReadOnlySeq()
+    val ro = da.asReadOnly()
     val roCast = ro.asInstanceOf[DataArray[_, UInt]]
-    intercept[IllegalArgumentException] { DataArray[Int1, UInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[SInt, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2i, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3i, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4i, UInt](roCast) }
 
     intercept[IllegalArgumentException] { IndexArray[UInt](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Float1, UInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RFloat, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2f, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3f, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4f, UInt](roCast) }
 
-    intercept[IllegalArgumentException] { DataArray[Double1, UInt](roCast) }
+    intercept[IllegalArgumentException] { DataArray[RDouble, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec2d, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec3d, UInt](roCast) }
     intercept[IllegalArgumentException] { DataArray[Vec4d, UInt](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Int1, UInt](ro), true, data)(Descriptors.Int1UInt)
+    testCastToArray(ro, ReadDataArray[SInt, UInt](ro), true, data)(Descriptors.SIntUInt)
     testCastToArray(ro, ReadDataArray[Vec2i, UInt](ro), true, data)(Descriptors.Vec2iUInt)
     testCastToArray(ro, ReadDataArray[Vec3i, UInt](ro), true, data)(Descriptors.Vec3iUInt)
     testCastToArray(ro, ReadDataArray[Vec4i, UInt](ro), true, data)(Descriptors.Vec4iUInt)
 
-    testCastToArray(ro, ReadIndexArray[UInt](ro), true, data)(Descriptors.Int1UInt)
+    testCastToArray(ro, ReadIndexArray[UInt](ro), true, data)(Descriptors.SIntUInt)
 
-    testCastToArray(ro, ReadDataArray[Float1, UInt](ro), true, data)(Descriptors.Float1UInt)
+    testCastToArray(ro, ReadDataArray[RFloat, UInt](ro), true, data)(Descriptors.RFloatUInt)
     testCastToArray(ro, ReadDataArray[Vec2f, UInt](ro), true, data)(Descriptors.Vec2fUInt)
     testCastToArray(ro, ReadDataArray[Vec3f, UInt](ro), true, data)(Descriptors.Vec3fUInt)
     testCastToArray(ro, ReadDataArray[Vec4f, UInt](ro), true, data)(Descriptors.Vec4fUInt)
     
-    testCastToArray(ro, ReadDataArray[Double1, UInt](ro), true, data)(Descriptors.Double1UInt)
+    testCastToArray(ro, ReadDataArray[RDouble, UInt](ro), true, data)(Descriptors.RDoubleUInt)
     testCastToArray(ro, ReadDataArray[Vec2d, UInt](ro), true, data)(Descriptors.Vec2dUInt)
     testCastToArray(ro, ReadDataArray[Vec3d, UInt](ro), true, data)(Descriptors.Vec3dUInt)
     testCastToArray(ro, ReadDataArray[Vec4d, UInt](ro), true, data)(Descriptors.Vec4dUInt)
   }
 
-  private def testHalfFloatArrayCast(da: DataArray[_, HalfFloat]) {
+  private def testHFloatArrayCast(da: DataArray[_, HFloat]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Float1, HalfFloat](da), false, data)(Descriptors.Float1HalfFloat)
-    testCastToArray(da, DataArray[Vec2f, HalfFloat](da), false, data)(Descriptors.Vec2fHalfFloat)
-    testCastToArray(da, DataArray[Vec3f, HalfFloat](da), false, data)(Descriptors.Vec3fHalfFloat)
-    testCastToArray(da, DataArray[Vec4f, HalfFloat](da), false, data)(Descriptors.Vec4fHalfFloat)
+    testCastToArray(da, DataArray[RFloat, HFloat](da), false, data)(Descriptors.RFloatHFloat)
+    testCastToArray(da, DataArray[Vec2f, HFloat](da), false, data)(Descriptors.Vec2fHFloat)
+    testCastToArray(da, DataArray[Vec3f, HFloat](da), false, data)(Descriptors.Vec3fHFloat)
+    testCastToArray(da, DataArray[Vec4f, HFloat](da), false, data)(Descriptors.Vec4fHFloat)
 
-    testCastToArray(da, DataArray[Double1, HalfFloat](da), false, data)(Descriptors.Double1HalfFloat)
-    testCastToArray(da, DataArray[Vec2d, HalfFloat](da), false, data)(Descriptors.Vec2dHalfFloat)
-    testCastToArray(da, DataArray[Vec3d, HalfFloat](da), false, data)(Descriptors.Vec3dHalfFloat)
-    testCastToArray(da, DataArray[Vec4d, HalfFloat](da), false, data)(Descriptors.Vec4dHalfFloat)
-
-
-    testCastToArray(da, ReadDataArray[Float1, HalfFloat](da), false, data)(Descriptors.Float1HalfFloat)
-    testCastToArray(da, ReadDataArray[Vec2f, HalfFloat](da), false, data)(Descriptors.Vec2fHalfFloat)
-    testCastToArray(da, ReadDataArray[Vec3f, HalfFloat](da), false, data)(Descriptors.Vec3fHalfFloat)
-    testCastToArray(da, ReadDataArray[Vec4f, HalfFloat](da), false, data)(Descriptors.Vec4fHalfFloat)
-
-    testCastToArray(da, ReadDataArray[Double1, HalfFloat](da), false, data)(Descriptors.Double1HalfFloat)
-    testCastToArray(da, ReadDataArray[Vec2d, HalfFloat](da), false, data)(Descriptors.Vec2dHalfFloat)
-    testCastToArray(da, ReadDataArray[Vec3d, HalfFloat](da), false, data)(Descriptors.Vec3dHalfFloat)
-    testCastToArray(da, ReadDataArray[Vec4d, HalfFloat](da), false, data)(Descriptors.Vec4dHalfFloat)
+    testCastToArray(da, DataArray[RDouble, HFloat](da), false, data)(Descriptors.RDoubleHFloat)
+    testCastToArray(da, DataArray[Vec2d, HFloat](da), false, data)(Descriptors.Vec2dHFloat)
+    testCastToArray(da, DataArray[Vec3d, HFloat](da), false, data)(Descriptors.Vec3dHFloat)
+    testCastToArray(da, DataArray[Vec4d, HFloat](da), false, data)(Descriptors.Vec4dHFloat)
 
 
-    val ro = da.asReadOnlySeq()
-    val roCast = ro.asInstanceOf[DataArray[_, HalfFloat]]
-    intercept[IllegalArgumentException] { DataArray[Float1, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec2f, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec3f, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec4f, HalfFloat](roCast) }
+    testCastToArray(da, ReadDataArray[RFloat, HFloat](da), false, data)(Descriptors.RFloatHFloat)
+    testCastToArray(da, ReadDataArray[Vec2f, HFloat](da), false, data)(Descriptors.Vec2fHFloat)
+    testCastToArray(da, ReadDataArray[Vec3f, HFloat](da), false, data)(Descriptors.Vec3fHFloat)
+    testCastToArray(da, ReadDataArray[Vec4f, HFloat](da), false, data)(Descriptors.Vec4fHFloat)
 
-    intercept[IllegalArgumentException] { DataArray[Double1, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec2d, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec3d, HalfFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec4d, HalfFloat](roCast) }
+    testCastToArray(da, ReadDataArray[RDouble, HFloat](da), false, data)(Descriptors.RDoubleHFloat)
+    testCastToArray(da, ReadDataArray[Vec2d, HFloat](da), false, data)(Descriptors.Vec2dHFloat)
+    testCastToArray(da, ReadDataArray[Vec3d, HFloat](da), false, data)(Descriptors.Vec3dHFloat)
+    testCastToArray(da, ReadDataArray[Vec4d, HFloat](da), false, data)(Descriptors.Vec4dHFloat)
 
 
-    testCastToArray(ro, ReadDataArray[Float1, HalfFloat](ro), true, data)(Descriptors.Float1HalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec2f, HalfFloat](ro), true, data)(Descriptors.Vec2fHalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec3f, HalfFloat](ro), true, data)(Descriptors.Vec3fHalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec4f, HalfFloat](ro), true, data)(Descriptors.Vec4fHalfFloat)
+    val ro = da.asReadOnly()
+    val roCast = ro.asInstanceOf[DataArray[_, HFloat]]
+    intercept[IllegalArgumentException] { DataArray[RFloat, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec2f, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec3f, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec4f, HFloat](roCast) }
 
-    testCastToArray(ro, ReadDataArray[Double1, HalfFloat](ro), true, data)(Descriptors.Double1HalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec2d, HalfFloat](ro), true, data)(Descriptors.Vec2dHalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec3d, HalfFloat](ro), true, data)(Descriptors.Vec3dHalfFloat)
-    testCastToArray(ro, ReadDataArray[Vec4d, HalfFloat](ro), true, data)(Descriptors.Vec4dHalfFloat)
+    intercept[IllegalArgumentException] { DataArray[RDouble, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec2d, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec3d, HFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec4d, HFloat](roCast) }
+
+
+    testCastToArray(ro, ReadDataArray[RFloat, HFloat](ro), true, data)(Descriptors.RFloatHFloat)
+    testCastToArray(ro, ReadDataArray[Vec2f, HFloat](ro), true, data)(Descriptors.Vec2fHFloat)
+    testCastToArray(ro, ReadDataArray[Vec3f, HFloat](ro), true, data)(Descriptors.Vec3fHFloat)
+    testCastToArray(ro, ReadDataArray[Vec4f, HFloat](ro), true, data)(Descriptors.Vec4fHFloat)
+
+    testCastToArray(ro, ReadDataArray[RDouble, HFloat](ro), true, data)(Descriptors.RDoubleHFloat)
+    testCastToArray(ro, ReadDataArray[Vec2d, HFloat](ro), true, data)(Descriptors.Vec2dHFloat)
+    testCastToArray(ro, ReadDataArray[Vec3d, HFloat](ro), true, data)(Descriptors.Vec3dHFloat)
+    testCastToArray(ro, ReadDataArray[Vec4d, HFloat](ro), true, data)(Descriptors.Vec4dHFloat)
   }
   
-  private def testRawFloatArrayCast(da: DataArray[_, RawFloat]) {
+  private def testRFloatArrayCast(da: DataArray[_, RFloat]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Float1, RawFloat](da), false, data)(Descriptors.Float1RawFloat)
-    testCastToArray(da, DataArray[Vec2f, RawFloat](da), false, data)(Descriptors.Vec2fRawFloat)
-    testCastToArray(da, DataArray[Vec3f, RawFloat](da), false, data)(Descriptors.Vec3fRawFloat)
-    testCastToArray(da, DataArray[Vec4f, RawFloat](da), false, data)(Descriptors.Vec4fRawFloat)
+    testCastToArray(da, DataArray[RFloat, RFloat](da), false, data)(Descriptors.RFloatRFloat)
+    testCastToArray(da, DataArray[Vec2f, RFloat](da), false, data)(Descriptors.Vec2fRFloat)
+    testCastToArray(da, DataArray[Vec3f, RFloat](da), false, data)(Descriptors.Vec3fRFloat)
+    testCastToArray(da, DataArray[Vec4f, RFloat](da), false, data)(Descriptors.Vec4fRFloat)
 
-    testCastToArray(da, DataArray[Double1, RawFloat](da), false, data)(Descriptors.Double1RawFloat)
-    testCastToArray(da, DataArray[Vec2d, RawFloat](da), false, data)(Descriptors.Vec2dRawFloat)
-    testCastToArray(da, DataArray[Vec3d, RawFloat](da), false, data)(Descriptors.Vec3dRawFloat)
-    testCastToArray(da, DataArray[Vec4d, RawFloat](da), false, data)(Descriptors.Vec4dRawFloat)
-
-
-    testCastToArray(da, ReadDataArray[Float1, RawFloat](da), false, data)(Descriptors.Float1RawFloat)
-    testCastToArray(da, ReadDataArray[Vec2f, RawFloat](da), false, data)(Descriptors.Vec2fRawFloat)
-    testCastToArray(da, ReadDataArray[Vec3f, RawFloat](da), false, data)(Descriptors.Vec3fRawFloat)
-    testCastToArray(da, ReadDataArray[Vec4f, RawFloat](da), false, data)(Descriptors.Vec4fRawFloat)
-
-    testCastToArray(da, ReadDataArray[Double1, RawFloat](da), false, data)(Descriptors.Double1RawFloat)
-    testCastToArray(da, ReadDataArray[Vec2d, RawFloat](da), false, data)(Descriptors.Vec2dRawFloat)
-    testCastToArray(da, ReadDataArray[Vec3d, RawFloat](da), false, data)(Descriptors.Vec3dRawFloat)
-    testCastToArray(da, ReadDataArray[Vec4d, RawFloat](da), false, data)(Descriptors.Vec4dRawFloat)
+    testCastToArray(da, DataArray[RDouble, RFloat](da), false, data)(Descriptors.RDoubleRFloat)
+    testCastToArray(da, DataArray[Vec2d, RFloat](da), false, data)(Descriptors.Vec2dRFloat)
+    testCastToArray(da, DataArray[Vec3d, RFloat](da), false, data)(Descriptors.Vec3dRFloat)
+    testCastToArray(da, DataArray[Vec4d, RFloat](da), false, data)(Descriptors.Vec4dRFloat)
 
 
-    val ro = da.asReadOnlySeq()
-    val roCast = ro.asInstanceOf[DataArray[_, RawFloat]]
-    intercept[IllegalArgumentException] { DataArray[Float1, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec2f, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec3f, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec4f, RawFloat](roCast) }
+    testCastToArray(da, ReadDataArray[RFloat, RFloat](da), false, data)(Descriptors.RFloatRFloat)
+    testCastToArray(da, ReadDataArray[Vec2f, RFloat](da), false, data)(Descriptors.Vec2fRFloat)
+    testCastToArray(da, ReadDataArray[Vec3f, RFloat](da), false, data)(Descriptors.Vec3fRFloat)
+    testCastToArray(da, ReadDataArray[Vec4f, RFloat](da), false, data)(Descriptors.Vec4fRFloat)
 
-    intercept[IllegalArgumentException] { DataArray[Double1, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec2d, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec3d, RawFloat](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec4d, RawFloat](roCast) }
+    testCastToArray(da, ReadDataArray[RDouble, RFloat](da), false, data)(Descriptors.RDoubleRFloat)
+    testCastToArray(da, ReadDataArray[Vec2d, RFloat](da), false, data)(Descriptors.Vec2dRFloat)
+    testCastToArray(da, ReadDataArray[Vec3d, RFloat](da), false, data)(Descriptors.Vec3dRFloat)
+    testCastToArray(da, ReadDataArray[Vec4d, RFloat](da), false, data)(Descriptors.Vec4dRFloat)
 
 
-    testCastToArray(ro, ReadDataArray[Float1, RawFloat](ro), true, data)(Descriptors.Float1RawFloat)
-    testCastToArray(ro, ReadDataArray[Vec2f, RawFloat](ro), true, data)(Descriptors.Vec2fRawFloat)
-    testCastToArray(ro, ReadDataArray[Vec3f, RawFloat](ro), true, data)(Descriptors.Vec3fRawFloat)
-    testCastToArray(ro, ReadDataArray[Vec4f, RawFloat](ro), true, data)(Descriptors.Vec4fRawFloat)
+    val ro = da.asReadOnly()
+    val roCast = ro.asInstanceOf[DataArray[_, RFloat]]
+    intercept[IllegalArgumentException] { DataArray[RFloat, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec2f, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec3f, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec4f, RFloat](roCast) }
 
-    testCastToArray(ro, ReadDataArray[Double1, RawFloat](ro), true, data)(Descriptors.Double1RawFloat)
-    testCastToArray(ro, ReadDataArray[Vec2d, RawFloat](ro), true, data)(Descriptors.Vec2dRawFloat)
-    testCastToArray(ro, ReadDataArray[Vec3d, RawFloat](ro), true, data)(Descriptors.Vec3dRawFloat)
-    testCastToArray(ro, ReadDataArray[Vec4d, RawFloat](ro), true, data)(Descriptors.Vec4dRawFloat)
+    intercept[IllegalArgumentException] { DataArray[RDouble, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec2d, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec3d, RFloat](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec4d, RFloat](roCast) }
+
+
+    testCastToArray(ro, ReadDataArray[RFloat, RFloat](ro), true, data)(Descriptors.RFloatRFloat)
+    testCastToArray(ro, ReadDataArray[Vec2f, RFloat](ro), true, data)(Descriptors.Vec2fRFloat)
+    testCastToArray(ro, ReadDataArray[Vec3f, RFloat](ro), true, data)(Descriptors.Vec3fRFloat)
+    testCastToArray(ro, ReadDataArray[Vec4f, RFloat](ro), true, data)(Descriptors.Vec4fRFloat)
+
+    testCastToArray(ro, ReadDataArray[RDouble, RFloat](ro), true, data)(Descriptors.RDoubleRFloat)
+    testCastToArray(ro, ReadDataArray[Vec2d, RFloat](ro), true, data)(Descriptors.Vec2dRFloat)
+    testCastToArray(ro, ReadDataArray[Vec3d, RFloat](ro), true, data)(Descriptors.Vec3dRFloat)
+    testCastToArray(ro, ReadDataArray[Vec4d, RFloat](ro), true, data)(Descriptors.Vec4dRFloat)
   }
   
-  private def testRawDoubleArrayCast(da: DataArray[_, RawDouble]) {
+  private def testRDoubleArrayCast(da: DataArray[_, RDouble]) {
     val data = da.buffer()
 
-    testCastToArray(da, DataArray[Double1, RawDouble](da), false, data)(Descriptors.Double1RawDouble)
-    testCastToArray(da, DataArray[Vec2d, RawDouble](da), false, data)(Descriptors.Vec2dRawDouble)
-    testCastToArray(da, DataArray[Vec3d, RawDouble](da), false, data)(Descriptors.Vec3dRawDouble)
-    testCastToArray(da, DataArray[Vec4d, RawDouble](da), false, data)(Descriptors.Vec4dRawDouble)
+    testCastToArray(da, DataArray[RDouble, RDouble](da), false, data)(Descriptors.RDoubleRDouble)
+    testCastToArray(da, DataArray[Vec2d, RDouble](da), false, data)(Descriptors.Vec2dRDouble)
+    testCastToArray(da, DataArray[Vec3d, RDouble](da), false, data)(Descriptors.Vec3dRDouble)
+    testCastToArray(da, DataArray[Vec4d, RDouble](da), false, data)(Descriptors.Vec4dRDouble)
 
 
-    testCastToArray(da, ReadDataArray[Double1, RawDouble](da), false, data)(Descriptors.Double1RawDouble)
-    testCastToArray(da, ReadDataArray[Vec2d, RawDouble](da), false, data)(Descriptors.Vec2dRawDouble)
-    testCastToArray(da, ReadDataArray[Vec3d, RawDouble](da), false, data)(Descriptors.Vec3dRawDouble)
-    testCastToArray(da, ReadDataArray[Vec4d, RawDouble](da), false, data)(Descriptors.Vec4dRawDouble)
+    testCastToArray(da, ReadDataArray[RDouble, RDouble](da), false, data)(Descriptors.RDoubleRDouble)
+    testCastToArray(da, ReadDataArray[Vec2d, RDouble](da), false, data)(Descriptors.Vec2dRDouble)
+    testCastToArray(da, ReadDataArray[Vec3d, RDouble](da), false, data)(Descriptors.Vec3dRDouble)
+    testCastToArray(da, ReadDataArray[Vec4d, RDouble](da), false, data)(Descriptors.Vec4dRDouble)
 
 
-    val ro = da.asReadOnlySeq()
-    val roCast = ro.asInstanceOf[DataArray[_, RawDouble]]
-    intercept[IllegalArgumentException] { DataArray[Double1, RawDouble](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec2d, RawDouble](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec3d, RawDouble](roCast) }
-    intercept[IllegalArgumentException] { DataArray[Vec4d, RawDouble](roCast) }
+    val ro = da.asReadOnly()
+    val roCast = ro.asInstanceOf[DataArray[_, RDouble]]
+    intercept[IllegalArgumentException] { DataArray[RDouble, RDouble](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec2d, RDouble](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec3d, RDouble](roCast) }
+    intercept[IllegalArgumentException] { DataArray[Vec4d, RDouble](roCast) }
 
 
-    testCastToArray(ro, ReadDataArray[Double1, RawDouble](ro), true, data)(Descriptors.Double1RawDouble)
-    testCastToArray(ro, ReadDataArray[Vec2d, RawDouble](ro), true, data)(Descriptors.Vec2dRawDouble)
-    testCastToArray(ro, ReadDataArray[Vec3d, RawDouble](ro), true, data)(Descriptors.Vec3dRawDouble)
-    testCastToArray(ro, ReadDataArray[Vec4d, RawDouble](ro), true, data)(Descriptors.Vec4dRawDouble)
+    testCastToArray(ro, ReadDataArray[RDouble, RDouble](ro), true, data)(Descriptors.RDoubleRDouble)
+    testCastToArray(ro, ReadDataArray[Vec2d, RDouble](ro), true, data)(Descriptors.Vec2dRDouble)
+    testCastToArray(ro, ReadDataArray[Vec3d, RDouble](ro), true, data)(Descriptors.Vec3dRDouble)
+    testCastToArray(ro, ReadDataArray[Vec4d, RDouble](ro), true, data)(Descriptors.Vec4dRDouble)
   }
 
 
-  def testBufferCast[E <: MetaElement, R <: RawData](
+  def testBufferCast[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
 
     for (size <- 0 to 1; extraBytes <- 0 to 8) {
-      val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.Int1SByte)
+      val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntSByte)
       val seq = factory(bytes)
 
 
-      testCastToBuffer(seq, IndexBuffer[UByte](seq), false, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, IndexBuffer[UShort](seq), false, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, IndexBuffer[UInt](seq), false, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, IndexBuffer[UByte](seq), false, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, IndexBuffer[UShort](seq), false, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, IndexBuffer[UInt](seq), false, bytes)(Descriptors.SIntUInt)
       
-      testCastToBuffer(seq, DataBuffer[Int1, SByte](seq), false, bytes)(Descriptors.Int1SByte)
-      testCastToBuffer(seq, DataBuffer[Int1, UByte](seq), false, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, DataBuffer[Int1, SShort](seq), false, bytes)(Descriptors.Int1SShort)
-      testCastToBuffer(seq, DataBuffer[Int1, UShort](seq), false, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, DataBuffer[Int1, SInt](seq), false, bytes)(Descriptors.Int1SInt)
-      testCastToBuffer(seq, DataBuffer[Int1, UInt](seq), false, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, DataBuffer[SInt, SByte](seq), false, bytes)(Descriptors.SIntSByte)
+      testCastToBuffer(seq, DataBuffer[SInt, UByte](seq), false, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, DataBuffer[SInt, SShort](seq), false, bytes)(Descriptors.SIntSShort)
+      testCastToBuffer(seq, DataBuffer[SInt, UShort](seq), false, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, DataBuffer[SInt, SInt](seq), false, bytes)(Descriptors.SIntSInt)
+      testCastToBuffer(seq, DataBuffer[SInt, UInt](seq), false, bytes)(Descriptors.SIntUInt)
       
       testCastToBuffer(seq, DataBuffer[Vec2i, SByte](seq), false, bytes)(Descriptors.Vec2iSByte)
       testCastToBuffer(seq, DataBuffer[Vec2i, UByte](seq), false, bytes)(Descriptors.Vec2iUByte)
@@ -679,14 +679,14 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec4i, SInt](seq), false, bytes)(Descriptors.Vec4iSInt)
       testCastToBuffer(seq, DataBuffer[Vec4i, UInt](seq), false, bytes)(Descriptors.Vec4iUInt)
       
-      testCastToBuffer(seq, DataBuffer[Float1, SByte](seq), false, bytes)(Descriptors.Float1SByte)
-      testCastToBuffer(seq, DataBuffer[Float1, UByte](seq), false, bytes)(Descriptors.Float1UByte)
-      testCastToBuffer(seq, DataBuffer[Float1, SShort](seq), false, bytes)(Descriptors.Float1SShort)
-      testCastToBuffer(seq, DataBuffer[Float1, UShort](seq), false, bytes)(Descriptors.Float1UShort)
-      testCastToBuffer(seq, DataBuffer[Float1, SInt](seq), false, bytes)(Descriptors.Float1SInt)
-      testCastToBuffer(seq, DataBuffer[Float1, UInt](seq), false, bytes)(Descriptors.Float1UInt)
-      testCastToBuffer(seq, DataBuffer[Float1, HalfFloat](seq), false, bytes)(Descriptors.Float1HalfFloat)
-      testCastToBuffer(seq, DataBuffer[Float1, RawFloat](seq), false, bytes)(Descriptors.Float1RawFloat)
+      testCastToBuffer(seq, DataBuffer[RFloat, SByte](seq), false, bytes)(Descriptors.RFloatSByte)
+      testCastToBuffer(seq, DataBuffer[RFloat, UByte](seq), false, bytes)(Descriptors.RFloatUByte)
+      testCastToBuffer(seq, DataBuffer[RFloat, SShort](seq), false, bytes)(Descriptors.RFloatSShort)
+      testCastToBuffer(seq, DataBuffer[RFloat, UShort](seq), false, bytes)(Descriptors.RFloatUShort)
+      testCastToBuffer(seq, DataBuffer[RFloat, SInt](seq), false, bytes)(Descriptors.RFloatSInt)
+      testCastToBuffer(seq, DataBuffer[RFloat, UInt](seq), false, bytes)(Descriptors.RFloatUInt)
+      testCastToBuffer(seq, DataBuffer[RFloat, HFloat](seq), false, bytes)(Descriptors.RFloatHFloat)
+      testCastToBuffer(seq, DataBuffer[RFloat, RFloat](seq), false, bytes)(Descriptors.RFloatRFloat)
       
       testCastToBuffer(seq, DataBuffer[Vec2f, SByte](seq), false, bytes)(Descriptors.Vec2fSByte)
       testCastToBuffer(seq, DataBuffer[Vec2f, UByte](seq), false, bytes)(Descriptors.Vec2fUByte)
@@ -694,8 +694,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec2f, UShort](seq), false, bytes)(Descriptors.Vec2fUShort)
       testCastToBuffer(seq, DataBuffer[Vec2f, SInt](seq), false, bytes)(Descriptors.Vec2fSInt)
       testCastToBuffer(seq, DataBuffer[Vec2f, UInt](seq), false, bytes)(Descriptors.Vec2fUInt)
-      testCastToBuffer(seq, DataBuffer[Vec2f, HalfFloat](seq), false, bytes)(Descriptors.Vec2fHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec2f, RawFloat](seq), false, bytes)(Descriptors.Vec2fRawFloat)
+      testCastToBuffer(seq, DataBuffer[Vec2f, HFloat](seq), false, bytes)(Descriptors.Vec2fHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec2f, RFloat](seq), false, bytes)(Descriptors.Vec2fRFloat)
       
       testCastToBuffer(seq, DataBuffer[Vec3f, SByte](seq), false, bytes)(Descriptors.Vec3fSByte)
       testCastToBuffer(seq, DataBuffer[Vec3f, UByte](seq), false, bytes)(Descriptors.Vec3fUByte)
@@ -703,8 +703,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec3f, UShort](seq), false, bytes)(Descriptors.Vec3fUShort)
       testCastToBuffer(seq, DataBuffer[Vec3f, SInt](seq), false, bytes)(Descriptors.Vec3fSInt)
       testCastToBuffer(seq, DataBuffer[Vec3f, UInt](seq), false, bytes)(Descriptors.Vec3fUInt)
-      testCastToBuffer(seq, DataBuffer[Vec3f, HalfFloat](seq), false, bytes)(Descriptors.Vec3fHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec3f, RawFloat](seq), false, bytes)(Descriptors.Vec3fRawFloat)
+      testCastToBuffer(seq, DataBuffer[Vec3f, HFloat](seq), false, bytes)(Descriptors.Vec3fHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec3f, RFloat](seq), false, bytes)(Descriptors.Vec3fRFloat)
       
       testCastToBuffer(seq, DataBuffer[Vec4f, SByte](seq), false, bytes)(Descriptors.Vec4fSByte)
       testCastToBuffer(seq, DataBuffer[Vec4f, UByte](seq), false, bytes)(Descriptors.Vec4fUByte)
@@ -712,18 +712,18 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec4f, UShort](seq), false, bytes)(Descriptors.Vec4fUShort)
       testCastToBuffer(seq, DataBuffer[Vec4f, SInt](seq), false, bytes)(Descriptors.Vec4fSInt)
       testCastToBuffer(seq, DataBuffer[Vec4f, UInt](seq), false, bytes)(Descriptors.Vec4fUInt)
-      testCastToBuffer(seq, DataBuffer[Vec4f, HalfFloat](seq), false, bytes)(Descriptors.Vec4fHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec4f, RawFloat](seq), false, bytes)(Descriptors.Vec4fRawFloat)
+      testCastToBuffer(seq, DataBuffer[Vec4f, HFloat](seq), false, bytes)(Descriptors.Vec4fHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec4f, RFloat](seq), false, bytes)(Descriptors.Vec4fRFloat)
       
-      testCastToBuffer(seq, DataBuffer[Double1, SByte](seq), false, bytes)(Descriptors.Double1SByte)
-      testCastToBuffer(seq, DataBuffer[Double1, UByte](seq), false, bytes)(Descriptors.Double1UByte)
-      testCastToBuffer(seq, DataBuffer[Double1, SShort](seq), false, bytes)(Descriptors.Double1SShort)
-      testCastToBuffer(seq, DataBuffer[Double1, UShort](seq), false, bytes)(Descriptors.Double1UShort)
-      testCastToBuffer(seq, DataBuffer[Double1, SInt](seq), false, bytes)(Descriptors.Double1SInt)
-      testCastToBuffer(seq, DataBuffer[Double1, UInt](seq), false, bytes)(Descriptors.Double1UInt)
-      testCastToBuffer(seq, DataBuffer[Double1, HalfFloat](seq), false, bytes)(Descriptors.Double1HalfFloat)
-      testCastToBuffer(seq, DataBuffer[Double1, RawFloat](seq), false, bytes)(Descriptors.Double1RawFloat)
-      testCastToBuffer(seq, DataBuffer[Double1, RawDouble](seq), false, bytes)(Descriptors.Double1RawDouble)
+      testCastToBuffer(seq, DataBuffer[RDouble, SByte](seq), false, bytes)(Descriptors.RDoubleSByte)
+      testCastToBuffer(seq, DataBuffer[RDouble, UByte](seq), false, bytes)(Descriptors.RDoubleUByte)
+      testCastToBuffer(seq, DataBuffer[RDouble, SShort](seq), false, bytes)(Descriptors.RDoubleSShort)
+      testCastToBuffer(seq, DataBuffer[RDouble, UShort](seq), false, bytes)(Descriptors.RDoubleUShort)
+      testCastToBuffer(seq, DataBuffer[RDouble, SInt](seq), false, bytes)(Descriptors.RDoubleSInt)
+      testCastToBuffer(seq, DataBuffer[RDouble, UInt](seq), false, bytes)(Descriptors.RDoubleUInt)
+      testCastToBuffer(seq, DataBuffer[RDouble, HFloat](seq), false, bytes)(Descriptors.RDoubleHFloat)
+      testCastToBuffer(seq, DataBuffer[RDouble, RFloat](seq), false, bytes)(Descriptors.RDoubleRFloat)
+      testCastToBuffer(seq, DataBuffer[RDouble, RDouble](seq), false, bytes)(Descriptors.RDoubleRDouble)
       
       testCastToBuffer(seq, DataBuffer[Vec2d, SByte](seq), false, bytes)(Descriptors.Vec2dSByte)
       testCastToBuffer(seq, DataBuffer[Vec2d, UByte](seq), false, bytes)(Descriptors.Vec2dUByte)
@@ -731,9 +731,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec2d, UShort](seq), false, bytes)(Descriptors.Vec2dUShort)
       testCastToBuffer(seq, DataBuffer[Vec2d, SInt](seq), false, bytes)(Descriptors.Vec2dSInt)
       testCastToBuffer(seq, DataBuffer[Vec2d, UInt](seq), false, bytes)(Descriptors.Vec2dUInt)
-      testCastToBuffer(seq, DataBuffer[Vec2d, HalfFloat](seq), false, bytes)(Descriptors.Vec2dHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec2d, RawFloat](seq), false, bytes)(Descriptors.Vec2dRawFloat)
-      testCastToBuffer(seq, DataBuffer[Vec2d, RawDouble](seq), false, bytes)(Descriptors.Vec2dRawDouble)
+      testCastToBuffer(seq, DataBuffer[Vec2d, HFloat](seq), false, bytes)(Descriptors.Vec2dHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec2d, RFloat](seq), false, bytes)(Descriptors.Vec2dRFloat)
+      testCastToBuffer(seq, DataBuffer[Vec2d, RDouble](seq), false, bytes)(Descriptors.Vec2dRDouble)
       
       testCastToBuffer(seq, DataBuffer[Vec3d, SByte](seq), false, bytes)(Descriptors.Vec3dSByte)
       testCastToBuffer(seq, DataBuffer[Vec3d, UByte](seq), false, bytes)(Descriptors.Vec3dUByte)
@@ -741,9 +741,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec3d, UShort](seq), false, bytes)(Descriptors.Vec3dUShort)
       testCastToBuffer(seq, DataBuffer[Vec3d, SInt](seq), false, bytes)(Descriptors.Vec3dSInt)
       testCastToBuffer(seq, DataBuffer[Vec3d, UInt](seq), false, bytes)(Descriptors.Vec3dUInt)
-      testCastToBuffer(seq, DataBuffer[Vec3d, HalfFloat](seq), false, bytes)(Descriptors.Vec3dHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec3d, RawFloat](seq), false, bytes)(Descriptors.Vec3dRawFloat)
-      testCastToBuffer(seq, DataBuffer[Vec3d, RawDouble](seq), false, bytes)(Descriptors.Vec3dRawDouble)
+      testCastToBuffer(seq, DataBuffer[Vec3d, HFloat](seq), false, bytes)(Descriptors.Vec3dHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec3d, RFloat](seq), false, bytes)(Descriptors.Vec3dRFloat)
+      testCastToBuffer(seq, DataBuffer[Vec3d, RDouble](seq), false, bytes)(Descriptors.Vec3dRDouble)
       
       testCastToBuffer(seq, DataBuffer[Vec4d, SByte](seq), false, bytes)(Descriptors.Vec4dSByte)
       testCastToBuffer(seq, DataBuffer[Vec4d, UByte](seq), false, bytes)(Descriptors.Vec4dUByte)
@@ -751,21 +751,21 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, DataBuffer[Vec4d, UShort](seq), false, bytes)(Descriptors.Vec4dUShort)
       testCastToBuffer(seq, DataBuffer[Vec4d, SInt](seq), false, bytes)(Descriptors.Vec4dSInt)
       testCastToBuffer(seq, DataBuffer[Vec4d, UInt](seq), false, bytes)(Descriptors.Vec4dUInt)
-      testCastToBuffer(seq, DataBuffer[Vec4d, HalfFloat](seq), false, bytes)(Descriptors.Vec4dHalfFloat)
-      testCastToBuffer(seq, DataBuffer[Vec4d, RawFloat](seq), false, bytes)(Descriptors.Vec4dRawFloat)
-      testCastToBuffer(seq, DataBuffer[Vec4d, RawDouble](seq), false, bytes)(Descriptors.Vec4dRawDouble)
+      testCastToBuffer(seq, DataBuffer[Vec4d, HFloat](seq), false, bytes)(Descriptors.Vec4dHFloat)
+      testCastToBuffer(seq, DataBuffer[Vec4d, RFloat](seq), false, bytes)(Descriptors.Vec4dRFloat)
+      testCastToBuffer(seq, DataBuffer[Vec4d, RDouble](seq), false, bytes)(Descriptors.Vec4dRDouble)
       
       
-      testCastToBuffer(seq, ReadIndexBuffer[UByte](seq), false, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, ReadIndexBuffer[UShort](seq), false, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, ReadIndexBuffer[UInt](seq), false, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, ReadIndexBuffer[UByte](seq), false, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, ReadIndexBuffer[UShort](seq), false, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, ReadIndexBuffer[UInt](seq), false, bytes)(Descriptors.SIntUInt)
       
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SByte](seq), false, bytes)(Descriptors.Int1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UByte](seq), false, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SShort](seq), false, bytes)(Descriptors.Int1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UShort](seq), false, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SInt](seq), false, bytes)(Descriptors.Int1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UInt](seq), false, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SByte](seq), false, bytes)(Descriptors.SIntSByte)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UByte](seq), false, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SShort](seq), false, bytes)(Descriptors.SIntSShort)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UShort](seq), false, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SInt](seq), false, bytes)(Descriptors.SIntSInt)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UInt](seq), false, bytes)(Descriptors.SIntUInt)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2i, SByte](seq), false, bytes)(Descriptors.Vec2iSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2i, UByte](seq), false, bytes)(Descriptors.Vec2iUByte)
@@ -788,14 +788,14 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4i, SInt](seq), false, bytes)(Descriptors.Vec4iSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4i, UInt](seq), false, bytes)(Descriptors.Vec4iUInt)
       
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SByte](seq), false, bytes)(Descriptors.Float1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UByte](seq), false, bytes)(Descriptors.Float1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SShort](seq), false, bytes)(Descriptors.Float1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UShort](seq), false, bytes)(Descriptors.Float1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SInt](seq), false, bytes)(Descriptors.Float1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UInt](seq), false, bytes)(Descriptors.Float1UInt)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, HalfFloat](seq), false, bytes)(Descriptors.Float1HalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, RawFloat](seq), false, bytes)(Descriptors.Float1RawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SByte](seq), false, bytes)(Descriptors.RFloatSByte)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UByte](seq), false, bytes)(Descriptors.RFloatUByte)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SShort](seq), false, bytes)(Descriptors.RFloatSShort)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UShort](seq), false, bytes)(Descriptors.RFloatUShort)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SInt](seq), false, bytes)(Descriptors.RFloatSInt)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UInt](seq), false, bytes)(Descriptors.RFloatUInt)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, HFloat](seq), false, bytes)(Descriptors.RFloatHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, RFloat](seq), false, bytes)(Descriptors.RFloatRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, SByte](seq), false, bytes)(Descriptors.Vec2fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UByte](seq), false, bytes)(Descriptors.Vec2fUByte)
@@ -803,8 +803,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UShort](seq), false, bytes)(Descriptors.Vec2fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, SInt](seq), false, bytes)(Descriptors.Vec2fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UInt](seq), false, bytes)(Descriptors.Vec2fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2f, HalfFloat](seq), false, bytes)(Descriptors.Vec2fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2f, RawFloat](seq), false, bytes)(Descriptors.Vec2fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2f, HFloat](seq), false, bytes)(Descriptors.Vec2fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2f, RFloat](seq), false, bytes)(Descriptors.Vec2fRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, SByte](seq), false, bytes)(Descriptors.Vec3fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UByte](seq), false, bytes)(Descriptors.Vec3fUByte)
@@ -812,8 +812,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UShort](seq), false, bytes)(Descriptors.Vec3fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, SInt](seq), false, bytes)(Descriptors.Vec3fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UInt](seq), false, bytes)(Descriptors.Vec3fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3f, HalfFloat](seq), false, bytes)(Descriptors.Vec3fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3f, RawFloat](seq), false, bytes)(Descriptors.Vec3fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3f, HFloat](seq), false, bytes)(Descriptors.Vec3fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3f, RFloat](seq), false, bytes)(Descriptors.Vec3fRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, SByte](seq), false, bytes)(Descriptors.Vec4fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UByte](seq), false, bytes)(Descriptors.Vec4fUByte)
@@ -821,18 +821,18 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UShort](seq), false, bytes)(Descriptors.Vec4fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, SInt](seq), false, bytes)(Descriptors.Vec4fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UInt](seq), false, bytes)(Descriptors.Vec4fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4f, HalfFloat](seq), false, bytes)(Descriptors.Vec4fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4f, RawFloat](seq), false, bytes)(Descriptors.Vec4fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4f, HFloat](seq), false, bytes)(Descriptors.Vec4fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4f, RFloat](seq), false, bytes)(Descriptors.Vec4fRFloat)
       
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SByte](seq), false, bytes)(Descriptors.Double1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UByte](seq), false, bytes)(Descriptors.Double1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SShort](seq), false, bytes)(Descriptors.Double1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UShort](seq), false, bytes)(Descriptors.Double1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SInt](seq), false, bytes)(Descriptors.Double1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UInt](seq), false, bytes)(Descriptors.Double1UInt)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, HalfFloat](seq), false, bytes)(Descriptors.Double1HalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, RawFloat](seq), false, bytes)(Descriptors.Double1RawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, RawDouble](seq), false, bytes)(Descriptors.Double1RawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SByte](seq), false, bytes)(Descriptors.RDoubleSByte)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UByte](seq), false, bytes)(Descriptors.RDoubleUByte)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SShort](seq), false, bytes)(Descriptors.RDoubleSShort)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UShort](seq), false, bytes)(Descriptors.RDoubleUShort)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SInt](seq), false, bytes)(Descriptors.RDoubleSInt)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UInt](seq), false, bytes)(Descriptors.RDoubleUInt)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, HFloat](seq), false, bytes)(Descriptors.RDoubleHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, RFloat](seq), false, bytes)(Descriptors.RDoubleRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, RDouble](seq), false, bytes)(Descriptors.RDoubleRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, SByte](seq), false, bytes)(Descriptors.Vec2dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UByte](seq), false, bytes)(Descriptors.Vec2dUByte)
@@ -840,9 +840,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UShort](seq), false, bytes)(Descriptors.Vec2dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, SInt](seq), false, bytes)(Descriptors.Vec2dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UInt](seq), false, bytes)(Descriptors.Vec2dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, HalfFloat](seq), false, bytes)(Descriptors.Vec2dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RawFloat](seq), false, bytes)(Descriptors.Vec2dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RawDouble](seq), false, bytes)(Descriptors.Vec2dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, HFloat](seq), false, bytes)(Descriptors.Vec2dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RFloat](seq), false, bytes)(Descriptors.Vec2dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RDouble](seq), false, bytes)(Descriptors.Vec2dRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, SByte](seq), false, bytes)(Descriptors.Vec3dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UByte](seq), false, bytes)(Descriptors.Vec3dUByte)
@@ -850,9 +850,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UShort](seq), false, bytes)(Descriptors.Vec3dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, SInt](seq), false, bytes)(Descriptors.Vec3dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UInt](seq), false, bytes)(Descriptors.Vec3dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, HalfFloat](seq), false, bytes)(Descriptors.Vec3dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RawFloat](seq), false, bytes)(Descriptors.Vec3dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RawDouble](seq), false, bytes)(Descriptors.Vec3dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, HFloat](seq), false, bytes)(Descriptors.Vec3dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RFloat](seq), false, bytes)(Descriptors.Vec3dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RDouble](seq), false, bytes)(Descriptors.Vec3dRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, SByte](seq), false, bytes)(Descriptors.Vec4dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UByte](seq), false, bytes)(Descriptors.Vec4dUByte)
@@ -860,24 +860,24 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UShort](seq), false, bytes)(Descriptors.Vec4dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, SInt](seq), false, bytes)(Descriptors.Vec4dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UInt](seq), false, bytes)(Descriptors.Vec4dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, HalfFloat](seq), false, bytes)(Descriptors.Vec4dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RawFloat](seq), false, bytes)(Descriptors.Vec4dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RawDouble](seq), false, bytes)(Descriptors.Vec4dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, HFloat](seq), false, bytes)(Descriptors.Vec4dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RFloat](seq), false, bytes)(Descriptors.Vec4dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RDouble](seq), false, bytes)(Descriptors.Vec4dRDouble)
       
       
-      val ro = seq.asReadOnlySeq()
-      val roCast = ro.asInstanceOf[DataBuffer[_, RawData]]
+      val ro = seq.asReadOnly()
+      val roCast = ro.asInstanceOf[DataBuffer[_, Raw]]
       
       intercept[IllegalArgumentException] { IndexBuffer[UByte](roCast) }
       intercept[IllegalArgumentException] { IndexBuffer[UShort](roCast) }
       intercept[IllegalArgumentException] { IndexBuffer[UInt](roCast) }
       
-      intercept[IllegalArgumentException] { DataBuffer[Int1, SByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Int1, UByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Int1, SShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Int1, UShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Int1, SInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Int1, UInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, SByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, UByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, SShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, UShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, SInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[SInt, UInt](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec2i, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2i, UByte](roCast) }
@@ -900,14 +900,14 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec4i, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4i, UInt](roCast) }
 
-      intercept[IllegalArgumentException] { DataBuffer[Float1, SByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, UByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, SShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, UShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, SInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Float1, RawFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, SByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, UByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, SShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, UShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, SInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, UInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RFloat, RFloat](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec2f, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2f, UByte](roCast) }
@@ -915,8 +915,8 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec2f, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2f, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2f, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec2f, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec2f, RawFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec2f, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec2f, RFloat](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec3f, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3f, UByte](roCast) }
@@ -924,8 +924,8 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec3f, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3f, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3f, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec3f, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec3f, RawFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec3f, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec3f, RFloat](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec4f, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4f, UByte](roCast) }
@@ -933,18 +933,18 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec4f, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4f, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4f, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec4f, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec4f, RawFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec4f, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec4f, RFloat](roCast) }
 
-      intercept[IllegalArgumentException] { DataBuffer[Double1, SByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, UByte](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, SShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, UShort](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, SInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, RawFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Double1, RawDouble](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, SByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, UByte](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, SShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, UShort](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, SInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, UInt](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, RFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[RDouble, RDouble](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec2d, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2d, UByte](roCast) }
@@ -952,9 +952,9 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec2d, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2d, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec2d, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec2d, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec2d, RawFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec2d, RawDouble](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec2d, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec2d, RFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec2d, RDouble](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec3d, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3d, UByte](roCast) }
@@ -962,9 +962,9 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec3d, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3d, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec3d, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec3d, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec3d, RawFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec3d, RawDouble](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec3d, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec3d, RFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec3d, RDouble](roCast) }
 
       intercept[IllegalArgumentException] { DataBuffer[Vec4d, SByte](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4d, UByte](roCast) }
@@ -972,21 +972,21 @@ object CastTestUtil extends FunSuite {
       intercept[IllegalArgumentException] { DataBuffer[Vec4d, UShort](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4d, SInt](roCast) }
       intercept[IllegalArgumentException] { DataBuffer[Vec4d, UInt](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec4d, HalfFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec4d, RawFloat](roCast) }
-      intercept[IllegalArgumentException] { DataBuffer[Vec4d, RawDouble](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec4d, HFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec4d, RFloat](roCast) }
+      intercept[IllegalArgumentException] { DataBuffer[Vec4d, RDouble](roCast) }
 
 
-      testCastToBuffer(seq, ReadIndexBuffer[UByte](ro), true, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, ReadIndexBuffer[UShort](ro), true, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, ReadIndexBuffer[UInt](ro), true, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, ReadIndexBuffer[UByte](ro), true, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, ReadIndexBuffer[UShort](ro), true, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, ReadIndexBuffer[UInt](ro), true, bytes)(Descriptors.SIntUInt)
       
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SByte](ro), true, bytes)(Descriptors.Int1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UByte](ro), true, bytes)(Descriptors.Int1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SShort](ro), true, bytes)(Descriptors.Int1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UShort](ro), true, bytes)(Descriptors.Int1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, SInt](ro), true, bytes)(Descriptors.Int1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Int1, UInt](ro), true, bytes)(Descriptors.Int1UInt)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SByte](ro), true, bytes)(Descriptors.SIntSByte)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UByte](ro), true, bytes)(Descriptors.SIntUByte)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SShort](ro), true, bytes)(Descriptors.SIntSShort)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UShort](ro), true, bytes)(Descriptors.SIntUShort)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, SInt](ro), true, bytes)(Descriptors.SIntSInt)
+      testCastToBuffer(seq, ReadDataBuffer[SInt, UInt](ro), true, bytes)(Descriptors.SIntUInt)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2i, SByte](ro), true, bytes)(Descriptors.Vec2iSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2i, UByte](ro), true, bytes)(Descriptors.Vec2iUByte)
@@ -1009,14 +1009,14 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4i, SInt](ro), true, bytes)(Descriptors.Vec4iSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4i, UInt](ro), true, bytes)(Descriptors.Vec4iUInt)
       
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SByte](ro), true, bytes)(Descriptors.Float1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UByte](ro), true, bytes)(Descriptors.Float1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SShort](ro), true, bytes)(Descriptors.Float1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UShort](ro), true, bytes)(Descriptors.Float1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, SInt](ro), true, bytes)(Descriptors.Float1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, UInt](ro), true, bytes)(Descriptors.Float1UInt)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, HalfFloat](ro), true, bytes)(Descriptors.Float1HalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Float1, RawFloat](ro), true, bytes)(Descriptors.Float1RawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SByte](ro), true, bytes)(Descriptors.RFloatSByte)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UByte](ro), true, bytes)(Descriptors.RFloatUByte)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SShort](ro), true, bytes)(Descriptors.RFloatSShort)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UShort](ro), true, bytes)(Descriptors.RFloatUShort)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, SInt](ro), true, bytes)(Descriptors.RFloatSInt)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, UInt](ro), true, bytes)(Descriptors.RFloatUInt)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, HFloat](ro), true, bytes)(Descriptors.RFloatHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RFloat, RFloat](ro), true, bytes)(Descriptors.RFloatRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, SByte](ro), true, bytes)(Descriptors.Vec2fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UByte](ro), true, bytes)(Descriptors.Vec2fUByte)
@@ -1024,8 +1024,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UShort](ro), true, bytes)(Descriptors.Vec2fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, SInt](ro), true, bytes)(Descriptors.Vec2fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec2f, UInt](ro), true, bytes)(Descriptors.Vec2fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2f, HalfFloat](ro), true, bytes)(Descriptors.Vec2fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2f, RawFloat](ro), true, bytes)(Descriptors.Vec2fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2f, HFloat](ro), true, bytes)(Descriptors.Vec2fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2f, RFloat](ro), true, bytes)(Descriptors.Vec2fRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, SByte](ro), true, bytes)(Descriptors.Vec3fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UByte](ro), true, bytes)(Descriptors.Vec3fUByte)
@@ -1033,8 +1033,8 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UShort](ro), true, bytes)(Descriptors.Vec3fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, SInt](ro), true, bytes)(Descriptors.Vec3fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec3f, UInt](ro), true, bytes)(Descriptors.Vec3fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3f, HalfFloat](ro), true, bytes)(Descriptors.Vec3fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3f, RawFloat](ro), true, bytes)(Descriptors.Vec3fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3f, HFloat](ro), true, bytes)(Descriptors.Vec3fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3f, RFloat](ro), true, bytes)(Descriptors.Vec3fRFloat)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, SByte](ro), true, bytes)(Descriptors.Vec4fSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UByte](ro), true, bytes)(Descriptors.Vec4fUByte)
@@ -1042,18 +1042,18 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UShort](ro), true, bytes)(Descriptors.Vec4fUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, SInt](ro), true, bytes)(Descriptors.Vec4fSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4f, UInt](ro), true, bytes)(Descriptors.Vec4fUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4f, HalfFloat](ro), true, bytes)(Descriptors.Vec4fHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4f, RawFloat](ro), true, bytes)(Descriptors.Vec4fRawFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4f, HFloat](ro), true, bytes)(Descriptors.Vec4fHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4f, RFloat](ro), true, bytes)(Descriptors.Vec4fRFloat)
       
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SByte](ro), true, bytes)(Descriptors.Double1SByte)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UByte](ro), true, bytes)(Descriptors.Double1UByte)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SShort](ro), true, bytes)(Descriptors.Double1SShort)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UShort](ro), true, bytes)(Descriptors.Double1UShort)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, SInt](ro), true, bytes)(Descriptors.Double1SInt)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, UInt](ro), true, bytes)(Descriptors.Double1UInt)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, HalfFloat](ro), true, bytes)(Descriptors.Double1HalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, RawFloat](ro), true, bytes)(Descriptors.Double1RawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Double1, RawDouble](ro), true, bytes)(Descriptors.Double1RawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SByte](ro), true, bytes)(Descriptors.RDoubleSByte)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UByte](ro), true, bytes)(Descriptors.RDoubleUByte)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SShort](ro), true, bytes)(Descriptors.RDoubleSShort)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UShort](ro), true, bytes)(Descriptors.RDoubleUShort)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, SInt](ro), true, bytes)(Descriptors.RDoubleSInt)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, UInt](ro), true, bytes)(Descriptors.RDoubleUInt)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, HFloat](ro), true, bytes)(Descriptors.RDoubleHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, RFloat](ro), true, bytes)(Descriptors.RDoubleRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[RDouble, RDouble](ro), true, bytes)(Descriptors.RDoubleRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, SByte](ro), true, bytes)(Descriptors.Vec2dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UByte](ro), true, bytes)(Descriptors.Vec2dUByte)
@@ -1061,9 +1061,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UShort](ro), true, bytes)(Descriptors.Vec2dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, SInt](ro), true, bytes)(Descriptors.Vec2dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec2d, UInt](ro), true, bytes)(Descriptors.Vec2dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, HalfFloat](ro), true, bytes)(Descriptors.Vec2dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RawFloat](ro), true, bytes)(Descriptors.Vec2dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RawDouble](ro), true, bytes)(Descriptors.Vec2dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, HFloat](ro), true, bytes)(Descriptors.Vec2dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RFloat](ro), true, bytes)(Descriptors.Vec2dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec2d, RDouble](ro), true, bytes)(Descriptors.Vec2dRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, SByte](ro), true, bytes)(Descriptors.Vec3dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UByte](ro), true, bytes)(Descriptors.Vec3dUByte)
@@ -1071,9 +1071,9 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UShort](ro), true, bytes)(Descriptors.Vec3dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, SInt](ro), true, bytes)(Descriptors.Vec3dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec3d, UInt](ro), true, bytes)(Descriptors.Vec3dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, HalfFloat](ro), true, bytes)(Descriptors.Vec3dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RawFloat](ro), true, bytes)(Descriptors.Vec3dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RawDouble](ro), true, bytes)(Descriptors.Vec3dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, HFloat](ro), true, bytes)(Descriptors.Vec3dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RFloat](ro), true, bytes)(Descriptors.Vec3dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec3d, RDouble](ro), true, bytes)(Descriptors.Vec3dRDouble)
       
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, SByte](ro), true, bytes)(Descriptors.Vec4dSByte)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UByte](ro), true, bytes)(Descriptors.Vec4dUByte)
@@ -1081,22 +1081,22 @@ object CastTestUtil extends FunSuite {
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UShort](ro), true, bytes)(Descriptors.Vec4dUShort)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, SInt](ro), true, bytes)(Descriptors.Vec4dSInt)
       testCastToBuffer(seq, ReadDataBuffer[Vec4d, UInt](ro), true, bytes)(Descriptors.Vec4dUInt)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, HalfFloat](ro), true, bytes)(Descriptors.Vec4dHalfFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RawFloat](ro), true, bytes)(Descriptors.Vec4dRawFloat)
-      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RawDouble](ro), true, bytes)(Descriptors.Vec4dRawDouble)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, HFloat](ro), true, bytes)(Descriptors.Vec4dHFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RFloat](ro), true, bytes)(Descriptors.Vec4dRFloat)
+      testCastToBuffer(seq, ReadDataBuffer[Vec4d, RDouble](ro), true, bytes)(Descriptors.Vec4dRDouble)
     }
     
     for (size <- 0 to 1; extraBytes <- 0 to 8) {
-      val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.Int1SByte)
+      val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntSByte)
       val seq = factory(bytes)
 
       
-      testCastToView(seq, DataView[Int1, SByte](_, _, _), bytes)(Descriptors.Int1SByte)
-      testCastToView(seq, DataView[Int1, UByte](_, _, _), bytes)(Descriptors.Int1UByte)
-      testCastToView(seq, DataView[Int1, SShort](_, _, _), bytes)(Descriptors.Int1SShort)
-      testCastToView(seq, DataView[Int1, UShort](_, _, _), bytes)(Descriptors.Int1UShort)
-      testCastToView(seq, DataView[Int1, SInt](_, _, _), bytes)(Descriptors.Int1SInt)
-      testCastToView(seq, DataView[Int1, UInt](_, _, _), bytes)(Descriptors.Int1UInt)
+      testCastToView(seq, DataView[SInt, SByte](_, _, _), bytes)(Descriptors.SIntSByte)
+      testCastToView(seq, DataView[SInt, UByte](_, _, _), bytes)(Descriptors.SIntUByte)
+      testCastToView(seq, DataView[SInt, SShort](_, _, _), bytes)(Descriptors.SIntSShort)
+      testCastToView(seq, DataView[SInt, UShort](_, _, _), bytes)(Descriptors.SIntUShort)
+      testCastToView(seq, DataView[SInt, SInt](_, _, _), bytes)(Descriptors.SIntSInt)
+      testCastToView(seq, DataView[SInt, UInt](_, _, _), bytes)(Descriptors.SIntUInt)
       
       testCastToView(seq, DataView[Vec2i, SByte](_, _, _), bytes)(Descriptors.Vec2iSByte)
       testCastToView(seq, DataView[Vec2i, UByte](_, _, _), bytes)(Descriptors.Vec2iUByte)
@@ -1119,14 +1119,14 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec4i, SInt](_, _, _), bytes)(Descriptors.Vec4iSInt)
       testCastToView(seq, DataView[Vec4i, UInt](_, _, _), bytes)(Descriptors.Vec4iUInt)
       
-      testCastToView(seq, DataView[Float1, SByte](_, _, _), bytes)(Descriptors.Float1SByte)
-      testCastToView(seq, DataView[Float1, UByte](_, _, _), bytes)(Descriptors.Float1UByte)
-      testCastToView(seq, DataView[Float1, SShort](_, _, _), bytes)(Descriptors.Float1SShort)
-      testCastToView(seq, DataView[Float1, UShort](_, _, _), bytes)(Descriptors.Float1UShort)
-      testCastToView(seq, DataView[Float1, SInt](_, _, _), bytes)(Descriptors.Float1SInt)
-      testCastToView(seq, DataView[Float1, UInt](_, _, _), bytes)(Descriptors.Float1UInt)
-      testCastToView(seq, DataView[Float1, HalfFloat](_, _, _), bytes)(Descriptors.Float1HalfFloat)
-      testCastToView(seq, DataView[Float1, RawFloat](_, _, _), bytes)(Descriptors.Float1RawFloat)
+      testCastToView(seq, DataView[RFloat, SByte](_, _, _), bytes)(Descriptors.RFloatSByte)
+      testCastToView(seq, DataView[RFloat, UByte](_, _, _), bytes)(Descriptors.RFloatUByte)
+      testCastToView(seq, DataView[RFloat, SShort](_, _, _), bytes)(Descriptors.RFloatSShort)
+      testCastToView(seq, DataView[RFloat, UShort](_, _, _), bytes)(Descriptors.RFloatUShort)
+      testCastToView(seq, DataView[RFloat, SInt](_, _, _), bytes)(Descriptors.RFloatSInt)
+      testCastToView(seq, DataView[RFloat, UInt](_, _, _), bytes)(Descriptors.RFloatUInt)
+      testCastToView(seq, DataView[RFloat, HFloat](_, _, _), bytes)(Descriptors.RFloatHFloat)
+      testCastToView(seq, DataView[RFloat, RFloat](_, _, _), bytes)(Descriptors.RFloatRFloat)
       
       testCastToView(seq, DataView[Vec2f, SByte](_, _, _), bytes)(Descriptors.Vec2fSByte)
       testCastToView(seq, DataView[Vec2f, UByte](_, _, _), bytes)(Descriptors.Vec2fUByte)
@@ -1134,8 +1134,8 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec2f, UShort](_, _, _), bytes)(Descriptors.Vec2fUShort)
       testCastToView(seq, DataView[Vec2f, SInt](_, _, _), bytes)(Descriptors.Vec2fSInt)
       testCastToView(seq, DataView[Vec2f, UInt](_, _, _), bytes)(Descriptors.Vec2fUInt)
-      testCastToView(seq, DataView[Vec2f, HalfFloat](_, _, _), bytes)(Descriptors.Vec2fHalfFloat)
-      testCastToView(seq, DataView[Vec2f, RawFloat](_, _, _), bytes)(Descriptors.Vec2fRawFloat)
+      testCastToView(seq, DataView[Vec2f, HFloat](_, _, _), bytes)(Descriptors.Vec2fHFloat)
+      testCastToView(seq, DataView[Vec2f, RFloat](_, _, _), bytes)(Descriptors.Vec2fRFloat)
       
       testCastToView(seq, DataView[Vec3f, SByte](_, _, _), bytes)(Descriptors.Vec3fSByte)
       testCastToView(seq, DataView[Vec3f, UByte](_, _, _), bytes)(Descriptors.Vec3fUByte)
@@ -1143,8 +1143,8 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec3f, UShort](_, _, _), bytes)(Descriptors.Vec3fUShort)
       testCastToView(seq, DataView[Vec3f, SInt](_, _, _), bytes)(Descriptors.Vec3fSInt)
       testCastToView(seq, DataView[Vec3f, UInt](_, _, _), bytes)(Descriptors.Vec3fUInt)
-      testCastToView(seq, DataView[Vec3f, HalfFloat](_, _, _), bytes)(Descriptors.Vec3fHalfFloat)
-      testCastToView(seq, DataView[Vec3f, RawFloat](_, _, _), bytes)(Descriptors.Vec3fRawFloat)
+      testCastToView(seq, DataView[Vec3f, HFloat](_, _, _), bytes)(Descriptors.Vec3fHFloat)
+      testCastToView(seq, DataView[Vec3f, RFloat](_, _, _), bytes)(Descriptors.Vec3fRFloat)
       
       testCastToView(seq, DataView[Vec4f, SByte](_, _, _), bytes)(Descriptors.Vec4fSByte)
       testCastToView(seq, DataView[Vec4f, UByte](_, _, _), bytes)(Descriptors.Vec4fUByte)
@@ -1152,18 +1152,18 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec4f, UShort](_, _, _), bytes)(Descriptors.Vec4fUShort)
       testCastToView(seq, DataView[Vec4f, SInt](_, _, _), bytes)(Descriptors.Vec4fSInt)
       testCastToView(seq, DataView[Vec4f, UInt](_, _, _), bytes)(Descriptors.Vec4fUInt)
-      testCastToView(seq, DataView[Vec4f, HalfFloat](_, _, _), bytes)(Descriptors.Vec4fHalfFloat)
-      testCastToView(seq, DataView[Vec4f, RawFloat](_, _, _), bytes)(Descriptors.Vec4fRawFloat)
+      testCastToView(seq, DataView[Vec4f, HFloat](_, _, _), bytes)(Descriptors.Vec4fHFloat)
+      testCastToView(seq, DataView[Vec4f, RFloat](_, _, _), bytes)(Descriptors.Vec4fRFloat)
       
-      testCastToView(seq, DataView[Double1, SByte](_, _, _), bytes)(Descriptors.Double1SByte)
-      testCastToView(seq, DataView[Double1, UByte](_, _, _), bytes)(Descriptors.Double1UByte)
-      testCastToView(seq, DataView[Double1, SShort](_, _, _), bytes)(Descriptors.Double1SShort)
-      testCastToView(seq, DataView[Double1, UShort](_, _, _), bytes)(Descriptors.Double1UShort)
-      testCastToView(seq, DataView[Double1, SInt](_, _, _), bytes)(Descriptors.Double1SInt)
-      testCastToView(seq, DataView[Double1, UInt](_, _, _), bytes)(Descriptors.Double1UInt)
-      testCastToView(seq, DataView[Double1, HalfFloat](_, _, _), bytes)(Descriptors.Double1HalfFloat)
-      testCastToView(seq, DataView[Double1, RawFloat](_, _, _), bytes)(Descriptors.Double1RawFloat)
-      testCastToView(seq, DataView[Double1, RawDouble](_, _, _), bytes)(Descriptors.Double1RawDouble)
+      testCastToView(seq, DataView[RDouble, SByte](_, _, _), bytes)(Descriptors.RDoubleSByte)
+      testCastToView(seq, DataView[RDouble, UByte](_, _, _), bytes)(Descriptors.RDoubleUByte)
+      testCastToView(seq, DataView[RDouble, SShort](_, _, _), bytes)(Descriptors.RDoubleSShort)
+      testCastToView(seq, DataView[RDouble, UShort](_, _, _), bytes)(Descriptors.RDoubleUShort)
+      testCastToView(seq, DataView[RDouble, SInt](_, _, _), bytes)(Descriptors.RDoubleSInt)
+      testCastToView(seq, DataView[RDouble, UInt](_, _, _), bytes)(Descriptors.RDoubleUInt)
+      testCastToView(seq, DataView[RDouble, HFloat](_, _, _), bytes)(Descriptors.RDoubleHFloat)
+      testCastToView(seq, DataView[RDouble, RFloat](_, _, _), bytes)(Descriptors.RDoubleRFloat)
+      testCastToView(seq, DataView[RDouble, RDouble](_, _, _), bytes)(Descriptors.RDoubleRDouble)
       
       testCastToView(seq, DataView[Vec2d, SByte](_, _, _), bytes)(Descriptors.Vec2dSByte)
       testCastToView(seq, DataView[Vec2d, UByte](_, _, _), bytes)(Descriptors.Vec2dUByte)
@@ -1171,9 +1171,9 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec2d, UShort](_, _, _), bytes)(Descriptors.Vec2dUShort)
       testCastToView(seq, DataView[Vec2d, SInt](_, _, _), bytes)(Descriptors.Vec2dSInt)
       testCastToView(seq, DataView[Vec2d, UInt](_, _, _), bytes)(Descriptors.Vec2dUInt)
-      testCastToView(seq, DataView[Vec2d, HalfFloat](_, _, _), bytes)(Descriptors.Vec2dHalfFloat)
-      testCastToView(seq, DataView[Vec2d, RawFloat](_, _, _), bytes)(Descriptors.Vec2dRawFloat)
-      testCastToView(seq, DataView[Vec2d, RawDouble](_, _, _), bytes)(Descriptors.Vec2dRawDouble)
+      testCastToView(seq, DataView[Vec2d, HFloat](_, _, _), bytes)(Descriptors.Vec2dHFloat)
+      testCastToView(seq, DataView[Vec2d, RFloat](_, _, _), bytes)(Descriptors.Vec2dRFloat)
+      testCastToView(seq, DataView[Vec2d, RDouble](_, _, _), bytes)(Descriptors.Vec2dRDouble)
       
       testCastToView(seq, DataView[Vec3d, SByte](_, _, _), bytes)(Descriptors.Vec3dSByte)
       testCastToView(seq, DataView[Vec3d, UByte](_, _, _), bytes)(Descriptors.Vec3dUByte)
@@ -1181,9 +1181,9 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec3d, UShort](_, _, _), bytes)(Descriptors.Vec3dUShort)
       testCastToView(seq, DataView[Vec3d, SInt](_, _, _), bytes)(Descriptors.Vec3dSInt)
       testCastToView(seq, DataView[Vec3d, UInt](_, _, _), bytes)(Descriptors.Vec3dUInt)
-      testCastToView(seq, DataView[Vec3d, HalfFloat](_, _, _), bytes)(Descriptors.Vec3dHalfFloat)
-      testCastToView(seq, DataView[Vec3d, RawFloat](_, _, _), bytes)(Descriptors.Vec3dRawFloat)
-      testCastToView(seq, DataView[Vec3d, RawDouble](_, _, _), bytes)(Descriptors.Vec3dRawDouble)
+      testCastToView(seq, DataView[Vec3d, HFloat](_, _, _), bytes)(Descriptors.Vec3dHFloat)
+      testCastToView(seq, DataView[Vec3d, RFloat](_, _, _), bytes)(Descriptors.Vec3dRFloat)
+      testCastToView(seq, DataView[Vec3d, RDouble](_, _, _), bytes)(Descriptors.Vec3dRDouble)
       
       testCastToView(seq, DataView[Vec4d, SByte](_, _, _), bytes)(Descriptors.Vec4dSByte)
       testCastToView(seq, DataView[Vec4d, UByte](_, _, _), bytes)(Descriptors.Vec4dUByte)
@@ -1191,17 +1191,17 @@ object CastTestUtil extends FunSuite {
       testCastToView(seq, DataView[Vec4d, UShort](_, _, _), bytes)(Descriptors.Vec4dUShort)
       testCastToView(seq, DataView[Vec4d, SInt](_, _, _), bytes)(Descriptors.Vec4dSInt)
       testCastToView(seq, DataView[Vec4d, UInt](_, _, _), bytes)(Descriptors.Vec4dUInt)
-      testCastToView(seq, DataView[Vec4d, HalfFloat](_, _, _), bytes)(Descriptors.Vec4dHalfFloat)
-      testCastToView(seq, DataView[Vec4d, RawFloat](_, _, _), bytes)(Descriptors.Vec4dRawFloat)
-      testCastToView(seq, DataView[Vec4d, RawDouble](_, _, _), bytes)(Descriptors.Vec4dRawDouble)
+      testCastToView(seq, DataView[Vec4d, HFloat](_, _, _), bytes)(Descriptors.Vec4dHFloat)
+      testCastToView(seq, DataView[Vec4d, RFloat](_, _, _), bytes)(Descriptors.Vec4dRFloat)
+      testCastToView(seq, DataView[Vec4d, RDouble](_, _, _), bytes)(Descriptors.Vec4dRDouble)
 
       
-      testCastToReadView(seq, ReadDataView[Int1, SByte](_, _, _), bytes)(Descriptors.Int1SByte)
-      testCastToReadView(seq, ReadDataView[Int1, UByte](_, _, _), bytes)(Descriptors.Int1UByte)
-      testCastToReadView(seq, ReadDataView[Int1, SShort](_, _, _), bytes)(Descriptors.Int1SShort)
-      testCastToReadView(seq, ReadDataView[Int1, UShort](_, _, _), bytes)(Descriptors.Int1UShort)
-      testCastToReadView(seq, ReadDataView[Int1, SInt](_, _, _), bytes)(Descriptors.Int1SInt)
-      testCastToReadView(seq, ReadDataView[Int1, UInt](_, _, _), bytes)(Descriptors.Int1UInt)
+      testCastToReadView(seq, ReadDataView[SInt, SByte](_, _, _), bytes)(Descriptors.SIntSByte)
+      testCastToReadView(seq, ReadDataView[SInt, UByte](_, _, _), bytes)(Descriptors.SIntUByte)
+      testCastToReadView(seq, ReadDataView[SInt, SShort](_, _, _), bytes)(Descriptors.SIntSShort)
+      testCastToReadView(seq, ReadDataView[SInt, UShort](_, _, _), bytes)(Descriptors.SIntUShort)
+      testCastToReadView(seq, ReadDataView[SInt, SInt](_, _, _), bytes)(Descriptors.SIntSInt)
+      testCastToReadView(seq, ReadDataView[SInt, UInt](_, _, _), bytes)(Descriptors.SIntUInt)
       
       testCastToReadView(seq, ReadDataView[Vec2i, SByte](_, _, _), bytes)(Descriptors.Vec2iSByte)
       testCastToReadView(seq, ReadDataView[Vec2i, UByte](_, _, _), bytes)(Descriptors.Vec2iUByte)
@@ -1224,14 +1224,14 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec4i, SInt](_, _, _), bytes)(Descriptors.Vec4iSInt)
       testCastToReadView(seq, ReadDataView[Vec4i, UInt](_, _, _), bytes)(Descriptors.Vec4iUInt)
       
-      testCastToReadView(seq, ReadDataView[Float1, SByte](_, _, _), bytes)(Descriptors.Float1SByte)
-      testCastToReadView(seq, ReadDataView[Float1, UByte](_, _, _), bytes)(Descriptors.Float1UByte)
-      testCastToReadView(seq, ReadDataView[Float1, SShort](_, _, _), bytes)(Descriptors.Float1SShort)
-      testCastToReadView(seq, ReadDataView[Float1, UShort](_, _, _), bytes)(Descriptors.Float1UShort)
-      testCastToReadView(seq, ReadDataView[Float1, SInt](_, _, _), bytes)(Descriptors.Float1SInt)
-      testCastToReadView(seq, ReadDataView[Float1, UInt](_, _, _), bytes)(Descriptors.Float1UInt)
-      testCastToReadView(seq, ReadDataView[Float1, HalfFloat](_, _, _), bytes)(Descriptors.Float1HalfFloat)
-      testCastToReadView(seq, ReadDataView[Float1, RawFloat](_, _, _), bytes)(Descriptors.Float1RawFloat)
+      testCastToReadView(seq, ReadDataView[RFloat, SByte](_, _, _), bytes)(Descriptors.RFloatSByte)
+      testCastToReadView(seq, ReadDataView[RFloat, UByte](_, _, _), bytes)(Descriptors.RFloatUByte)
+      testCastToReadView(seq, ReadDataView[RFloat, SShort](_, _, _), bytes)(Descriptors.RFloatSShort)
+      testCastToReadView(seq, ReadDataView[RFloat, UShort](_, _, _), bytes)(Descriptors.RFloatUShort)
+      testCastToReadView(seq, ReadDataView[RFloat, SInt](_, _, _), bytes)(Descriptors.RFloatSInt)
+      testCastToReadView(seq, ReadDataView[RFloat, UInt](_, _, _), bytes)(Descriptors.RFloatUInt)
+      testCastToReadView(seq, ReadDataView[RFloat, HFloat](_, _, _), bytes)(Descriptors.RFloatHFloat)
+      testCastToReadView(seq, ReadDataView[RFloat, RFloat](_, _, _), bytes)(Descriptors.RFloatRFloat)
       
       testCastToReadView(seq, ReadDataView[Vec2f, SByte](_, _, _), bytes)(Descriptors.Vec2fSByte)
       testCastToReadView(seq, ReadDataView[Vec2f, UByte](_, _, _), bytes)(Descriptors.Vec2fUByte)
@@ -1239,8 +1239,8 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec2f, UShort](_, _, _), bytes)(Descriptors.Vec2fUShort)
       testCastToReadView(seq, ReadDataView[Vec2f, SInt](_, _, _), bytes)(Descriptors.Vec2fSInt)
       testCastToReadView(seq, ReadDataView[Vec2f, UInt](_, _, _), bytes)(Descriptors.Vec2fUInt)
-      testCastToReadView(seq, ReadDataView[Vec2f, HalfFloat](_, _, _), bytes)(Descriptors.Vec2fHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec2f, RawFloat](_, _, _), bytes)(Descriptors.Vec2fRawFloat)
+      testCastToReadView(seq, ReadDataView[Vec2f, HFloat](_, _, _), bytes)(Descriptors.Vec2fHFloat)
+      testCastToReadView(seq, ReadDataView[Vec2f, RFloat](_, _, _), bytes)(Descriptors.Vec2fRFloat)
       
       testCastToReadView(seq, ReadDataView[Vec3f, SByte](_, _, _), bytes)(Descriptors.Vec3fSByte)
       testCastToReadView(seq, ReadDataView[Vec3f, UByte](_, _, _), bytes)(Descriptors.Vec3fUByte)
@@ -1248,8 +1248,8 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec3f, UShort](_, _, _), bytes)(Descriptors.Vec3fUShort)
       testCastToReadView(seq, ReadDataView[Vec3f, SInt](_, _, _), bytes)(Descriptors.Vec3fSInt)
       testCastToReadView(seq, ReadDataView[Vec3f, UInt](_, _, _), bytes)(Descriptors.Vec3fUInt)
-      testCastToReadView(seq, ReadDataView[Vec3f, HalfFloat](_, _, _), bytes)(Descriptors.Vec3fHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec3f, RawFloat](_, _, _), bytes)(Descriptors.Vec3fRawFloat)
+      testCastToReadView(seq, ReadDataView[Vec3f, HFloat](_, _, _), bytes)(Descriptors.Vec3fHFloat)
+      testCastToReadView(seq, ReadDataView[Vec3f, RFloat](_, _, _), bytes)(Descriptors.Vec3fRFloat)
       
       testCastToReadView(seq, ReadDataView[Vec4f, SByte](_, _, _), bytes)(Descriptors.Vec4fSByte)
       testCastToReadView(seq, ReadDataView[Vec4f, UByte](_, _, _), bytes)(Descriptors.Vec4fUByte)
@@ -1257,18 +1257,18 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec4f, UShort](_, _, _), bytes)(Descriptors.Vec4fUShort)
       testCastToReadView(seq, ReadDataView[Vec4f, SInt](_, _, _), bytes)(Descriptors.Vec4fSInt)
       testCastToReadView(seq, ReadDataView[Vec4f, UInt](_, _, _), bytes)(Descriptors.Vec4fUInt)
-      testCastToReadView(seq, ReadDataView[Vec4f, HalfFloat](_, _, _), bytes)(Descriptors.Vec4fHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec4f, RawFloat](_, _, _), bytes)(Descriptors.Vec4fRawFloat)
+      testCastToReadView(seq, ReadDataView[Vec4f, HFloat](_, _, _), bytes)(Descriptors.Vec4fHFloat)
+      testCastToReadView(seq, ReadDataView[Vec4f, RFloat](_, _, _), bytes)(Descriptors.Vec4fRFloat)
       
-      testCastToReadView(seq, ReadDataView[Double1, SByte](_, _, _), bytes)(Descriptors.Double1SByte)
-      testCastToReadView(seq, ReadDataView[Double1, UByte](_, _, _), bytes)(Descriptors.Double1UByte)
-      testCastToReadView(seq, ReadDataView[Double1, SShort](_, _, _), bytes)(Descriptors.Double1SShort)
-      testCastToReadView(seq, ReadDataView[Double1, UShort](_, _, _), bytes)(Descriptors.Double1UShort)
-      testCastToReadView(seq, ReadDataView[Double1, SInt](_, _, _), bytes)(Descriptors.Double1SInt)
-      testCastToReadView(seq, ReadDataView[Double1, UInt](_, _, _), bytes)(Descriptors.Double1UInt)
-      testCastToReadView(seq, ReadDataView[Double1, HalfFloat](_, _, _), bytes)(Descriptors.Double1HalfFloat)
-      testCastToReadView(seq, ReadDataView[Double1, RawFloat](_, _, _), bytes)(Descriptors.Double1RawFloat)
-      testCastToReadView(seq, ReadDataView[Double1, RawDouble](_, _, _), bytes)(Descriptors.Double1RawDouble)
+      testCastToReadView(seq, ReadDataView[RDouble, SByte](_, _, _), bytes)(Descriptors.RDoubleSByte)
+      testCastToReadView(seq, ReadDataView[RDouble, UByte](_, _, _), bytes)(Descriptors.RDoubleUByte)
+      testCastToReadView(seq, ReadDataView[RDouble, SShort](_, _, _), bytes)(Descriptors.RDoubleSShort)
+      testCastToReadView(seq, ReadDataView[RDouble, UShort](_, _, _), bytes)(Descriptors.RDoubleUShort)
+      testCastToReadView(seq, ReadDataView[RDouble, SInt](_, _, _), bytes)(Descriptors.RDoubleSInt)
+      testCastToReadView(seq, ReadDataView[RDouble, UInt](_, _, _), bytes)(Descriptors.RDoubleUInt)
+      testCastToReadView(seq, ReadDataView[RDouble, HFloat](_, _, _), bytes)(Descriptors.RDoubleHFloat)
+      testCastToReadView(seq, ReadDataView[RDouble, RFloat](_, _, _), bytes)(Descriptors.RDoubleRFloat)
+      testCastToReadView(seq, ReadDataView[RDouble, RDouble](_, _, _), bytes)(Descriptors.RDoubleRDouble)
       
       testCastToReadView(seq, ReadDataView[Vec2d, SByte](_, _, _), bytes)(Descriptors.Vec2dSByte)
       testCastToReadView(seq, ReadDataView[Vec2d, UByte](_, _, _), bytes)(Descriptors.Vec2dUByte)
@@ -1276,9 +1276,9 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec2d, UShort](_, _, _), bytes)(Descriptors.Vec2dUShort)
       testCastToReadView(seq, ReadDataView[Vec2d, SInt](_, _, _), bytes)(Descriptors.Vec2dSInt)
       testCastToReadView(seq, ReadDataView[Vec2d, UInt](_, _, _), bytes)(Descriptors.Vec2dUInt)
-      testCastToReadView(seq, ReadDataView[Vec2d, HalfFloat](_, _, _), bytes)(Descriptors.Vec2dHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec2d, RawFloat](_, _, _), bytes)(Descriptors.Vec2dRawFloat)
-      testCastToReadView(seq, ReadDataView[Vec2d, RawDouble](_, _, _), bytes)(Descriptors.Vec2dRawDouble)
+      testCastToReadView(seq, ReadDataView[Vec2d, HFloat](_, _, _), bytes)(Descriptors.Vec2dHFloat)
+      testCastToReadView(seq, ReadDataView[Vec2d, RFloat](_, _, _), bytes)(Descriptors.Vec2dRFloat)
+      testCastToReadView(seq, ReadDataView[Vec2d, RDouble](_, _, _), bytes)(Descriptors.Vec2dRDouble)
       
       testCastToReadView(seq, ReadDataView[Vec3d, SByte](_, _, _), bytes)(Descriptors.Vec3dSByte)
       testCastToReadView(seq, ReadDataView[Vec3d, UByte](_, _, _), bytes)(Descriptors.Vec3dUByte)
@@ -1286,9 +1286,9 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec3d, UShort](_, _, _), bytes)(Descriptors.Vec3dUShort)
       testCastToReadView(seq, ReadDataView[Vec3d, SInt](_, _, _), bytes)(Descriptors.Vec3dSInt)
       testCastToReadView(seq, ReadDataView[Vec3d, UInt](_, _, _), bytes)(Descriptors.Vec3dUInt)
-      testCastToReadView(seq, ReadDataView[Vec3d, HalfFloat](_, _, _), bytes)(Descriptors.Vec3dHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec3d, RawFloat](_, _, _), bytes)(Descriptors.Vec3dRawFloat)
-      testCastToReadView(seq, ReadDataView[Vec3d, RawDouble](_, _, _), bytes)(Descriptors.Vec3dRawDouble)
+      testCastToReadView(seq, ReadDataView[Vec3d, HFloat](_, _, _), bytes)(Descriptors.Vec3dHFloat)
+      testCastToReadView(seq, ReadDataView[Vec3d, RFloat](_, _, _), bytes)(Descriptors.Vec3dRFloat)
+      testCastToReadView(seq, ReadDataView[Vec3d, RDouble](_, _, _), bytes)(Descriptors.Vec3dRDouble)
       
       testCastToReadView(seq, ReadDataView[Vec4d, SByte](_, _, _), bytes)(Descriptors.Vec4dSByte)
       testCastToReadView(seq, ReadDataView[Vec4d, UByte](_, _, _), bytes)(Descriptors.Vec4dUByte)
@@ -1296,13 +1296,13 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec4d, UShort](_, _, _), bytes)(Descriptors.Vec4dUShort)
       testCastToReadView(seq, ReadDataView[Vec4d, SInt](_, _, _), bytes)(Descriptors.Vec4dSInt)
       testCastToReadView(seq, ReadDataView[Vec4d, UInt](_, _, _), bytes)(Descriptors.Vec4dUInt)
-      testCastToReadView(seq, ReadDataView[Vec4d, HalfFloat](_, _, _), bytes)(Descriptors.Vec4dHalfFloat)
-      testCastToReadView(seq, ReadDataView[Vec4d, RawFloat](_, _, _), bytes)(Descriptors.Vec4dRawFloat)
-      testCastToReadView(seq, ReadDataView[Vec4d, RawDouble](_, _, _), bytes)(Descriptors.Vec4dRawDouble)
+      testCastToReadView(seq, ReadDataView[Vec4d, HFloat](_, _, _), bytes)(Descriptors.Vec4dHFloat)
+      testCastToReadView(seq, ReadDataView[Vec4d, RFloat](_, _, _), bytes)(Descriptors.Vec4dRFloat)
+      testCastToReadView(seq, ReadDataView[Vec4d, RDouble](_, _, _), bytes)(Descriptors.Vec4dRDouble)
     }
   }
 
-  private def testCastToBuffer[E <: MetaElement, R <: RawData](
+  private def testCastToBuffer[E <: Meta, R <: Raw](
     original: ReadDataBuffer[_, _],
     cast: ReadDataBuffer[E, R],
     readOnly: Boolean,
@@ -1313,7 +1313,7 @@ object CastTestUtil extends FunSuite {
     assert(cast.sharesStoreObject(original))
   }
 
-  private def testCastToView[E <: MetaElement, R <: RawData](
+  private def testCastToView[E <: Meta, R <: Raw](
     original: DataBuffer[_, _],
     factory: (DataBuffer[_, _], Int, Int) => DataView[E, R],
     bytes: ByteBuffer
@@ -1330,17 +1330,17 @@ object CastTestUtil extends FunSuite {
       assert(cast.sharesStoreObject(original))
     }
 
-    intercept[IllegalArgumentException] { factory(original.asReadOnlySeq().asInstanceOf[DataBuffer[_, _]], 0, 1) }
+    intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]], 0, 1) }
   }
 
-  private def testCastToReadView[E <: MetaElement, R <: RawData](
-    original: ReadDataBuffer[_, RawData],
+  private def testCastToReadView[E <: Meta, R <: Raw](
+    original: ReadDataBuffer[_, Raw],
     factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[E, R],
     bytes: ByteBuffer
   )(implicit descriptor: Descriptor[E, R]) {
     assert(!original.readOnly)
     val data = wrap(bytes, descriptor)
-    val ro = original.asReadOnlySeq()
+    val ro = original.asReadOnly()
 
     for (
       stride <- descriptor.components to (descriptor.components + 4);

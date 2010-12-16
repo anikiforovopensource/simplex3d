@@ -78,7 +78,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   def floatFromBits(bits: String) = java.lang.Float.intBitsToFloat(intFromBits(bits))
   def floatToBits(x: Float) = intToBits(java.lang.Float.floatToRawIntBits(x))
 
-  def testIndex[E <: MetaElement](seq: DataSeq[E, RawData]) {
+  def testIndex[E <: Meta](seq: DataSeq[E, Raw]) {
     assert(seq.size > 0)
 
     intercept[Exception] { seq(-1) }
@@ -86,12 +86,12 @@ object ApplyUpdateTestUtil extends FunSuite {
     seq(seq.size - 1)
     intercept[Exception] { seq(seq.size) }
 
-    val ro = seq.asReadOnlySeq().asInstanceOf[DataSeq[E, RawData]]
+    val ro = seq.asReadOnly().asInstanceOf[DataSeq[E, Raw]]
     intercept[Exception] { ro(0) = seq(0) }
     intercept[Exception] { ro(seq.size - 1) = seq(0) }
   }
 
-  def testApplyUpdate(seq: DataSeq[Int1, _], value: Int, expected: Int, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[SInt, _], value: Int, expected: Int, store: AnyVal) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -100,7 +100,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
-  def testApplyUpdate(seq: DataSeq[Float1, _], value: Float, expected: Float, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[RFloat, _], value: Float, expected: Float, store: AnyVal) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -112,7 +112,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
-  def testApplyUpdate(seq: DataSeq[Double1, _], value: Double, expected: Double, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[RDouble, _], value: Double, expected: Double, store: AnyVal) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -171,8 +171,8 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def verifyComponents(seq: inData[_ <: MetaElement], i: Int) {
-    def get(i: Int, j: Int) :Any = seq.backingSeq(seq.offset + seq.stride*i + j)
+  private def verifyComponents(seq: inData[_ <: Meta], i: Int) {
+    def get(i: Int, j: Int) :Any = seq.backing(seq.offset + seq.stride*i + j)
     def cmp(x: Any, y: Any) {
       (x, y) match {
         case (a: Int, b: Int) => assert(a == b)
@@ -198,21 +198,21 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def updateValue[E <: MetaElement](seq: outData[E], i: Int, bcopy: outData[E#Component]) {
+  private def updateValue[E <: Meta](seq: outData[E], i: Int, bcopy: outData[E#Component]) {
     def iput(i: Int, j: Int, u: Int) {
-      val s = bcopy.asInstanceOf[Data[Int1]]
+      val s = bcopy.asInstanceOf[Data[SInt]]
       s(seq.offset + seq.stride*i + j) = u
     }
     def fput(i: Int, j: Int, u: Float) {
-      val s = bcopy.asInstanceOf[Data[Float1]]
+      val s = bcopy.asInstanceOf[Data[RFloat]]
       s(seq.offset + seq.stride*i + j) = u
     }
     def dput(i: Int, j: Int, u: Double) {
-      val s = bcopy.asInstanceOf[Data[Double1]]
+      val s = bcopy.asInstanceOf[Data[RDouble]]
       s(seq.offset + seq.stride*i + j) = u
     }
 
-    val e = seq.elementManifest match {
+    val e = seq.elemManifest match {
       case Vec2i.Manifest =>
         val u = Vec2i(ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y)
@@ -254,10 +254,10 @@ object ApplyUpdateTestUtil extends FunSuite {
     seq(i) = e.asInstanceOf[E#Read]
   }
 
-  private def testApplyUpdate[E <: MetaElement](seq: outData[E]) {
+  private def testApplyUpdate[E <: Meta](seq: outData[E]) {
     testIndex(seq)
 
-    val bcopy = seq.backingSeq.copyAsDataArray()
+    val bcopy = seq.backing.copyAsDataArray()
 
     var i = 0; while (i < seq.size) {
       verifyComponents(seq, i)
@@ -269,23 +269,23 @@ object ApplyUpdateTestUtil extends FunSuite {
       i += 1
     }
 
-    testContent(1, bcopy, 0, seq.backingSeq, 0, bcopy.size)
+    testContent(1, bcopy, 0, seq.backing, 0, bcopy.size)
   }
 
-  def testApplyUpdateArray[E <: MetaElement, R <: RawData](
-    factory: (R#ArrayType) => DataArray[E, R]
+  def testApplyUpdateArray[E <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     testApplyUpdate(factory(genRandomArray(10, descriptor)))
   }
 
-  def testApplyUpdateBuffer[E <: MetaElement, R <: RawData](
+  def testApplyUpdateBuffer[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     val size = 10*descriptor.components*RawType.byteLength(descriptor.rawType)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1))
   }
 
-  def testApplyUpdateView[E <: MetaElement, R <: RawData](
+  def testApplyUpdateView[E <: Meta, R <: Raw](
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     val c = descriptor.components

@@ -33,8 +33,8 @@ import AttributeTestUtil._
  */
 object SerializationTestUtil extends FunSuite {
 
-  def testSerialization[E <: MetaElement, R <: RawData](
-    factory: (R#ArrayType) => DataArray[E, R]
+  def testSerialization[E <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     val size = 10
 
@@ -43,7 +43,7 @@ object SerializationTestUtil extends FunSuite {
     val bytes = new ByteArrayOutputStream()
     val out = new ObjectOutputStream(bytes)
     out.writeObject(array)
-    out.writeObject(array.asReadOnlySeq())
+    out.writeObject(array.asReadOnly())
     out.close()
 
     val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))

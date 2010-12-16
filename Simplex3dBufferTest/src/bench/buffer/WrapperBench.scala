@@ -61,7 +61,7 @@ object WrapperBench {
   }
 
   val convertedBytes = {
-    val t = DataArray[Float1, UByte](length)
+    val t = DataArray[RFloat, UByte](length)
     t.put(dataArray)
     DataArray[Vec4f, UByte](t.array)
   }
@@ -311,7 +311,7 @@ object WrapperBench {
 
   final def testImplementedArray(data: Array[Float], loops: Int) {
     var answer = 0
-    val seq = DataArray[Vec4f, RawFloat](data)
+    val seq = DataArray[Vec4f, RFloat](data)
     val end = seq.size
     val step = 1
 
@@ -332,7 +332,7 @@ object WrapperBench {
 
   final def testImplementedRoArray(data: Array[Float], loops: Int) {
     var answer = 0
-    val seq = DataArray[Vec4f, RawFloat](data).asReadOnlySeq()
+    val seq = DataArray[Vec4f, RFloat](data).asReadOnly()
     val end = seq.size
     val step = 1
 
@@ -353,7 +353,7 @@ object WrapperBench {
 
   final def testImplementedBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
-    val seq = DataBuffer[Vec4f, RawFloat](data)
+    val seq = DataBuffer[Vec4f, RFloat](data)
     val end = seq.size
     val step = 1
 

@@ -64,13 +64,13 @@ class ConversionTest extends FunSuite {
     assert(c == converted)
     assert(conversion.Float.fromUInt(c) == convertedBack)
   }
-  private def testFloatHalfFloat(testValue: Float, convertedBack: Float, converted: Short) {
-    val c = conversion.Float.toHalfFloat(testValue)
+  private def testFloatHFloat(testValue: Float, convertedBack: Float, converted: Short) {
+    val c = conversion.Float.toHFloat(testValue)
     assert(c == converted)
 
     import simplex3d.math.floatm.FloatMath._
     if (isnan(testValue)) assert(isnan(convertedBack))
-    else assert(conversion.Float.fromHalfFloat(c) == convertedBack)
+    else assert(conversion.Float.fromHFloat(c) == convertedBack)
   }
   
   test("Float-SByte") {
@@ -217,100 +217,100 @@ class ConversionTest extends FunSuite {
     testFloatUInt(Float.PositiveInfinity, 1, -1)
   }
   
-  test("Float-HalfFloat") {
+  test("Float-HFloat") {
     // Inf.
-    testFloatHalfFloat(Float.NegativeInfinity, Float.NegativeInfinity, 0xFC00.toShort)
-    testFloatHalfFloat(Float.PositiveInfinity, Float.PositiveInfinity, 0x7C00.toShort)
+    testFloatHFloat(Float.NegativeInfinity, Float.NegativeInfinity, 0xFC00.toShort)
+    testFloatHFloat(Float.PositiveInfinity, Float.PositiveInfinity, 0x7C00.toShort)
 
     // NaN.
-    testFloatHalfFloat(Float.NaN, Float.NaN, 0x7E00)
+    testFloatHFloat(Float.NaN, Float.NaN, 0x7E00)
     
     // More NaN.
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("01111111 11100000 00000000 00000000"),
       floatFromBits("01111111 11100000 00000000 00000000"),
       intFromBits("01111111 00000000").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("01111111 10100000 00000000 00000000"),
       floatFromBits("01111111 10100000 00000000 00000000"),
       intFromBits("01111101 00000000").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("11111111 11100000 00000000 00000000"),
       floatFromBits("11111111 11100000 00000000 00000000"),
       intFromBits("11111111 00000000").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("11111111 10100000 00000000 00000000"),
       floatFromBits("11111111 10100000 00000000 00000000"),
       intFromBits("11111101 00000000").toShort
     )
 
     // Zero.
-    testFloatHalfFloat(-0f, -0f, intFromBits("10000000 00000000").toShort)
-    testFloatHalfFloat(0, 0, 0)
+    testFloatHFloat(-0f, -0f, intFromBits("10000000 00000000").toShort)
+    testFloatHFloat(0, 0, 0)
 
     // Subnormal.
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("00000000 01000000 00000000 00000000"),
       floatFromBits("00000000 00000000 00000000 00000000"),
       intFromBits("00000000 00000000").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("10000000 01000000 00000000 00000000"),
       floatFromBits("10000000 00000000 00000000 00000000"),
       intFromBits("10000000 00000000").toShort
     )
 
     // Out of range values.
-    testFloatHalfFloat(-Float.MaxValue, Float.NegativeInfinity, 0xFC00.toShort)
-    testFloatHalfFloat(Float.MaxValue, Float.PositiveInfinity, 0x7C00.toShort)
+    testFloatHFloat(-Float.MaxValue, Float.NegativeInfinity, 0xFC00.toShort)
+    testFloatHFloat(Float.MaxValue, Float.PositiveInfinity, 0x7C00.toShort)
 
     // Min and Max
-    testFloatHalfFloat(-65504.0f, -65504.0f, 0xFBFF.toShort)
-    testFloatHalfFloat(65504.0f, 65504.0f, 0x7BFF.toShort)
+    testFloatHFloat(-65504.0f, -65504.0f, 0xFBFF.toShort)
+    testFloatHFloat(65504.0f, 65504.0f, 0x7BFF.toShort)
 
     // Closest to Zero.
-    testFloatHalfFloat(-6.103515625E-5f, -6.103515625E-5f, 0x8400.toShort)
-    testFloatHalfFloat(6.103515625E-5f, 6.103515625E-5f, 0x0400.toShort)
-    testFloatHalfFloat(-java.lang.Float.MIN_VALUE, -0f, intFromBits("10000000 00000000").toShort)
-    testFloatHalfFloat(java.lang.Float.MIN_VALUE, 0, 0)
+    testFloatHFloat(-6.103515625E-5f, -6.103515625E-5f, 0x8400.toShort)
+    testFloatHFloat(6.103515625E-5f, 6.103515625E-5f, 0x0400.toShort)
+    testFloatHFloat(-java.lang.Float.MIN_VALUE, -0f, intFromBits("10000000 00000000").toShort)
+    testFloatHFloat(java.lang.Float.MIN_VALUE, 0, 0)
 
     // Rounding.
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("00111101 11000000 11100000 00000000"), //0.094177246
       floatFromBits("00111101 11000000 11100000 00000000"), //0.094177246
       intFromBits("00101110 00000111").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("00111101 11000000 11110000 00000000"), //0.09420776
       floatFromBits("00111101 11000001 00000000 00000000"), //0.09423828
       intFromBits("00101110 00001000").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("10111101 11000000 11100000 00000000"), //-0.094177246
       floatFromBits("10111101 11000000 11100000 00000000"), //-0.094177246
       intFromBits("10101110 00000111").toShort
     )
-    testFloatHalfFloat(
+    testFloatHFloat(
       floatFromBits("10111101 11000000 11110000 00000000"), //-0.09420776
       floatFromBits("10111101 11000001 00000000 00000000"), //-0.09423828
       intFromBits("10101110 00001000").toShort
     )
     
     // Normalized.
-    testFloatHalfFloat(-1, -1, intFromBits("10111100 00000000").toShort)
-    testFloatHalfFloat(-0.5f, -0.5f, intFromBits("10111000 00000000").toShort)
-    testFloatHalfFloat(0.5f, 0.5f, intFromBits("00111000 00000000").toShort)
-    testFloatHalfFloat(1, 1, intFromBits("00111100 00000000").toShort)
+    testFloatHFloat(-1, -1, intFromBits("10111100 00000000").toShort)
+    testFloatHFloat(-0.5f, -0.5f, intFromBits("10111000 00000000").toShort)
+    testFloatHFloat(0.5f, 0.5f, intFromBits("00111000 00000000").toShort)
+    testFloatHFloat(1, 1, intFromBits("00111100 00000000").toShort)
 
     // Round trip conversion excluding Subnormal and Zero.
     var i = 0; while (i < 65536) {
       if ((i & 0x7C00) != 0) {
         val h = i.toShort
-        val f = conversion.Float.fromHalfFloat(h)
-        assert(h == conversion.Float.toHalfFloat(f))
+        val f = conversion.Float.fromHFloat(h)
+        assert(h == conversion.Float.toHFloat(f))
       }
 
       i += 1
@@ -348,13 +348,13 @@ class ConversionTest extends FunSuite {
     assert(c == converted)
     assert(conversion.Double.fromUInt(c) == convertedBack)
   }
-  private def testDoubleHalfFloat(testValue: Double, convertedBack: Double, converted: Short) {
-    val c = conversion.Double.toHalfFloat(testValue)
+  private def testDoubleHFloat(testValue: Double, convertedBack: Double, converted: Short) {
+    val c = conversion.Double.toHFloat(testValue)
     assert(c == converted)
 
     import simplex3d.math.doublem.DoubleMath._
     if (isnan(testValue)) assert(isnan(convertedBack))
-    else assert(conversion.Double.fromHalfFloat(c) == convertedBack)
+    else assert(conversion.Double.fromHFloat(c) == convertedBack)
   }
   
   test("Double-SByte") {
@@ -513,79 +513,79 @@ class ConversionTest extends FunSuite {
     testDoubleUInt(Double.PositiveInfinity, 1, -1)
   }
   
-  test("Double-HalfFloat") {
+  test("Double-HFloat") {
     // Inf.
-    testDoubleHalfFloat(Double.NegativeInfinity, Double.NegativeInfinity, 0xFC00.toShort)
-    testDoubleHalfFloat(Double.PositiveInfinity, Double.PositiveInfinity, 0x7C00.toShort)
+    testDoubleHFloat(Double.NegativeInfinity, Double.NegativeInfinity, 0xFC00.toShort)
+    testDoubleHFloat(Double.PositiveInfinity, Double.PositiveInfinity, 0x7C00.toShort)
 
     // NaN.
-    testDoubleHalfFloat(Double.NaN, Double.NaN, 0x7E00)
+    testDoubleHFloat(Double.NaN, Double.NaN, 0x7E00)
 
     // Zero.
-    testDoubleHalfFloat(-0.0, -0.0, intFromBits("10000000 00000000").toShort)
-    testDoubleHalfFloat(0, 0, 0)
+    testDoubleHFloat(-0.0, -0.0, intFromBits("10000000 00000000").toShort)
+    testDoubleHFloat(0, 0, 0)
 
     // Subnormal.
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("00000000 01000000 00000000 00000000").toDouble,
       floatFromBits("00000000 00000000 00000000 00000000").toDouble,
       intFromBits("00000000 00000000").toShort
     )
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("10000000 01000000 00000000 00000000").toDouble,
       floatFromBits("10000000 00000000 00000000 00000000").toDouble,
       intFromBits("10000000 00000000").toShort
     )
 
     // Out of range values.
-    testDoubleHalfFloat(-Double.MaxValue, Double.NegativeInfinity, 0xFC00.toShort)
-    testDoubleHalfFloat(Double.MaxValue, Double.PositiveInfinity, 0x7C00.toShort)
+    testDoubleHFloat(-Double.MaxValue, Double.NegativeInfinity, 0xFC00.toShort)
+    testDoubleHFloat(Double.MaxValue, Double.PositiveInfinity, 0x7C00.toShort)
 
     // Min and Max
-    testDoubleHalfFloat(-65504.0, -65504.0, 0xFBFF.toShort)
-    testDoubleHalfFloat(65504.0, 65504.0, 0x7BFF.toShort)
+    testDoubleHFloat(-65504.0, -65504.0, 0xFBFF.toShort)
+    testDoubleHFloat(65504.0, 65504.0, 0x7BFF.toShort)
 
     // Closest to Zero.
-    testDoubleHalfFloat(-6.103515625E-5, -6.103515625E-5, 0x8400.toShort)
-    testDoubleHalfFloat(6.103515625E-5, 6.103515625E-5, 0x0400.toShort)
-    testDoubleHalfFloat(-java.lang.Double.MIN_VALUE, -0.0, intFromBits("10000000 00000000").toShort)
-    testDoubleHalfFloat(java.lang.Double.MIN_VALUE, 0, 0)
+    testDoubleHFloat(-6.103515625E-5, -6.103515625E-5, 0x8400.toShort)
+    testDoubleHFloat(6.103515625E-5, 6.103515625E-5, 0x0400.toShort)
+    testDoubleHFloat(-java.lang.Double.MIN_VALUE, -0.0, intFromBits("10000000 00000000").toShort)
+    testDoubleHFloat(java.lang.Double.MIN_VALUE, 0, 0)
 
     // Rounding.
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("00111101 11000000 11100000 00000000").toDouble, //0.094177246
       floatFromBits("00111101 11000000 11100000 00000000").toDouble, //0.094177246
       intFromBits("00101110 00000111").toShort
     )
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("00111101 11000000 11110000 00000000").toDouble, //0.09420776
       floatFromBits("00111101 11000001 00000000 00000000").toDouble, //0.09423828
       intFromBits("00101110 00001000").toShort
     )
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("10111101 11000000 11100000 00000000").toDouble, //-0.094177246
       floatFromBits("10111101 11000000 11100000 00000000").toDouble, //-0.094177246
       intFromBits("10101110 00000111").toShort
     )
-    testDoubleHalfFloat(
+    testDoubleHFloat(
       floatFromBits("10111101 11000000 11110000 00000000").toDouble, //-0.09420776
       floatFromBits("10111101 11000001 00000000 00000000").toDouble, //-0.09423828
       intFromBits("10101110 00001000").toShort
     )
     
     // Normalized.
-    testDoubleHalfFloat(-1, -1, intFromBits("10111100 00000000").toShort)
-    testDoubleHalfFloat(-0.5, -0.5, intFromBits("10111000 00000000").toShort)
-    testDoubleHalfFloat(0.5, 0.5, intFromBits("00111000 00000000").toShort)
-    testDoubleHalfFloat(1, 1, intFromBits("00111100 00000000").toShort)
+    testDoubleHFloat(-1, -1, intFromBits("10111100 00000000").toShort)
+    testDoubleHFloat(-0.5, -0.5, intFromBits("10111000 00000000").toShort)
+    testDoubleHFloat(0.5, 0.5, intFromBits("00111000 00000000").toShort)
+    testDoubleHFloat(1, 1, intFromBits("00111100 00000000").toShort)
 
     // Round trip conversion excluding Subnormal, Zero, and NaN
     var i = 0; while (i < 65536) {
       val t = (i & 0x7C00)
       if (t != 0 && t != 0x7C00) {
         val h = i.toShort
-        val d = conversion.Double.fromHalfFloat(h)
-        assert(h == conversion.Double.toHalfFloat(d))
+        val d = conversion.Double.fromHFloat(h)
+        assert(h == conversion.Double.toHFloat(d))
       }
 
       i += 1

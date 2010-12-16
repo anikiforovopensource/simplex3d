@@ -30,209 +30,222 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
+import CopyTestUtil._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Double1Test extends FunSuite {
+class RDoubleTest extends FunSuite {
 
   test("Factories") {
-    testArrayFromSize(DataArray[Double1, SByte](_))
-    testArrayFromData[Double1, SByte](DataArray[Double1, SByte](_))
-    testBufferFromSize(DataBuffer[Double1, SByte](_))
-    testBufferFromData(DataBuffer[Double1, SByte](_))
-    testViewFromData(DataView[Double1, SByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, SByte](_))
-    testReadViewFromData(ReadDataView[Double1, SByte](_, _, _))
-    testArrayFromCollection[Double1, SByte]((a: IndexedSeq[Double]) => DataArray[Double1, SByte](a: _*))
-    testArrayFromCollection[Double1, SByte]((a: IndexedSeq[Double]) => DataArray[Double1, SByte](a))
-    testBufferFromCollection[Double1, SByte]((a: IndexedSeq[Double]) => DataBuffer[Double1, SByte](a: _*))
-    testBufferFromCollection[Double1, SByte]((a: IndexedSeq[Double]) => DataBuffer[Double1, SByte](a))
+    testArrayFromSize(DataArray[RDouble, SByte](_))
+    testArrayFromData[RDouble, SByte](DataArray[RDouble, SByte](_))
+    testBufferFromSize(DataBuffer[RDouble, SByte](_))
+    testBufferFromData(DataBuffer[RDouble, SByte](_))
+    testViewFromData(DataView[RDouble, SByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, SByte](_))
+    testReadViewFromData(ReadDataView[RDouble, SByte](_, _, _))
+    testArrayFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataArray[RDouble, SByte](a: _*))
+    testArrayFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataArray[RDouble, SByte](a))
+    testBufferFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SByte](a: _*))
+    testBufferFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SByte](a))
 
-    testArrayFromSize(DataArray[Double1, UByte](_))
-    testArrayFromData[Double1, UByte](DataArray[Double1, UByte](_))
-    testBufferFromSize(DataBuffer[Double1, UByte](_))
-    testBufferFromData(DataBuffer[Double1, UByte](_))
-    testViewFromData(DataView[Double1, UByte](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, UByte](_))
-    testReadViewFromData(ReadDataView[Double1, UByte](_, _, _))
-    testArrayFromCollection[Double1, UByte]((a: IndexedSeq[Double]) => DataArray[Double1, UByte](a: _*))
-    testArrayFromCollection[Double1, UByte]((a: IndexedSeq[Double]) => DataArray[Double1, UByte](a))
-    testBufferFromCollection[Double1, UByte]((a: IndexedSeq[Double]) => DataBuffer[Double1, UByte](a: _*))
-    testBufferFromCollection[Double1, UByte]((a: IndexedSeq[Double]) => DataBuffer[Double1, UByte](a))
+    testArrayFromSize(DataArray[RDouble, UByte](_))
+    testArrayFromData[RDouble, UByte](DataArray[RDouble, UByte](_))
+    testBufferFromSize(DataBuffer[RDouble, UByte](_))
+    testBufferFromData(DataBuffer[RDouble, UByte](_))
+    testViewFromData(DataView[RDouble, UByte](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, UByte](_))
+    testReadViewFromData(ReadDataView[RDouble, UByte](_, _, _))
+    testArrayFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataArray[RDouble, UByte](a: _*))
+    testArrayFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataArray[RDouble, UByte](a))
+    testBufferFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UByte](a: _*))
+    testBufferFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UByte](a))
 
-    testArrayFromSize(DataArray[Double1, SShort](_))
-    testArrayFromData[Double1, SShort](DataArray[Double1, SShort](_))
-    testBufferFromSize(DataBuffer[Double1, SShort](_))
-    testBufferFromData(DataBuffer[Double1, SShort](_))
-    testViewFromData(DataView[Double1, SShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, SShort](_))
-    testReadViewFromData(ReadDataView[Double1, SShort](_, _, _))
-    testArrayFromCollection[Double1, SShort]((a: IndexedSeq[Double]) => DataArray[Double1, SShort](a: _*))
-    testArrayFromCollection[Double1, SShort]((a: IndexedSeq[Double]) => DataArray[Double1, SShort](a))
-    testBufferFromCollection[Double1, SShort]((a: IndexedSeq[Double]) => DataBuffer[Double1, SShort](a: _*))
-    testBufferFromCollection[Double1, SShort]((a: IndexedSeq[Double]) => DataBuffer[Double1, SShort](a))
+    testArrayFromSize(DataArray[RDouble, SShort](_))
+    testArrayFromData[RDouble, SShort](DataArray[RDouble, SShort](_))
+    testBufferFromSize(DataBuffer[RDouble, SShort](_))
+    testBufferFromData(DataBuffer[RDouble, SShort](_))
+    testViewFromData(DataView[RDouble, SShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, SShort](_))
+    testReadViewFromData(ReadDataView[RDouble, SShort](_, _, _))
+    testArrayFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataArray[RDouble, SShort](a: _*))
+    testArrayFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataArray[RDouble, SShort](a))
+    testBufferFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SShort](a: _*))
+    testBufferFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SShort](a))
 
-    testArrayFromSize(DataArray[Double1, UShort](_))
-    testArrayFromData[Double1, UShort](DataArray[Double1, UShort](_))
-    testBufferFromSize(DataBuffer[Double1, UShort](_))
-    testBufferFromData(DataBuffer[Double1, UShort](_))
-    testViewFromData(DataView[Double1, UShort](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, UShort](_))
-    testReadViewFromData(ReadDataView[Double1, UShort](_, _, _))
-    testArrayFromCollection[Double1, UShort]((a: IndexedSeq[Double]) => DataArray[Double1, UShort](a: _*))
-    testArrayFromCollection[Double1, UShort]((a: IndexedSeq[Double]) => DataArray[Double1, UShort](a))
-    testBufferFromCollection[Double1, UShort]((a: IndexedSeq[Double]) => DataBuffer[Double1, UShort](a: _*))
-    testBufferFromCollection[Double1, UShort]((a: IndexedSeq[Double]) => DataBuffer[Double1, UShort](a))
+    testArrayFromSize(DataArray[RDouble, UShort](_))
+    testArrayFromData[RDouble, UShort](DataArray[RDouble, UShort](_))
+    testBufferFromSize(DataBuffer[RDouble, UShort](_))
+    testBufferFromData(DataBuffer[RDouble, UShort](_))
+    testViewFromData(DataView[RDouble, UShort](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, UShort](_))
+    testReadViewFromData(ReadDataView[RDouble, UShort](_, _, _))
+    testArrayFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataArray[RDouble, UShort](a: _*))
+    testArrayFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataArray[RDouble, UShort](a))
+    testBufferFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UShort](a: _*))
+    testBufferFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UShort](a))
 
-    testArrayFromSize(DataArray[Double1, SInt](_))
-    testArrayFromData[Double1, SInt](DataArray[Double1, SInt](_))
-    testBufferFromSize(DataBuffer[Double1, SInt](_))
-    testBufferFromData(DataBuffer[Double1, SInt](_))
-    testViewFromData(DataView[Double1, SInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, SInt](_))
-    testReadViewFromData(ReadDataView[Double1, SInt](_, _, _))
-    testArrayFromCollection[Double1, SInt]((a: IndexedSeq[Double]) => DataArray[Double1, SInt](a: _*))
-    testArrayFromCollection[Double1, SInt]((a: IndexedSeq[Double]) => DataArray[Double1, SInt](a))
-    testBufferFromCollection[Double1, SInt]((a: IndexedSeq[Double]) => DataBuffer[Double1, SInt](a: _*))
-    testBufferFromCollection[Double1, SInt]((a: IndexedSeq[Double]) => DataBuffer[Double1, SInt](a))
+    testArrayFromSize(DataArray[RDouble, SInt](_))
+    testArrayFromData[RDouble, SInt](DataArray[RDouble, SInt](_))
+    testBufferFromSize(DataBuffer[RDouble, SInt](_))
+    testBufferFromData(DataBuffer[RDouble, SInt](_))
+    testViewFromData(DataView[RDouble, SInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, SInt](_))
+    testReadViewFromData(ReadDataView[RDouble, SInt](_, _, _))
+    testArrayFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataArray[RDouble, SInt](a: _*))
+    testArrayFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataArray[RDouble, SInt](a))
+    testBufferFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SInt](a: _*))
+    testBufferFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SInt](a))
 
-    testArrayFromSize(DataArray[Double1, UInt](_))
-    testArrayFromData[Double1, UInt](DataArray[Double1, UInt](_))
-    testBufferFromSize(DataBuffer[Double1, UInt](_))
-    testBufferFromData(DataBuffer[Double1, UInt](_))
-    testViewFromData(DataView[Double1, UInt](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, UInt](_))
-    testReadViewFromData(ReadDataView[Double1, UInt](_, _, _))
-    testArrayFromCollection[Double1, UInt]((a: IndexedSeq[Double]) => DataArray[Double1, UInt](a: _*))
-    testArrayFromCollection[Double1, UInt]((a: IndexedSeq[Double]) => DataArray[Double1, UInt](a))
-    testBufferFromCollection[Double1, UInt]((a: IndexedSeq[Double]) => DataBuffer[Double1, UInt](a: _*))
-    testBufferFromCollection[Double1, UInt]((a: IndexedSeq[Double]) => DataBuffer[Double1, UInt](a))
+    testArrayFromSize(DataArray[RDouble, UInt](_))
+    testArrayFromData[RDouble, UInt](DataArray[RDouble, UInt](_))
+    testBufferFromSize(DataBuffer[RDouble, UInt](_))
+    testBufferFromData(DataBuffer[RDouble, UInt](_))
+    testViewFromData(DataView[RDouble, UInt](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, UInt](_))
+    testReadViewFromData(ReadDataView[RDouble, UInt](_, _, _))
+    testArrayFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataArray[RDouble, UInt](a: _*))
+    testArrayFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataArray[RDouble, UInt](a))
+    testBufferFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UInt](a: _*))
+    testBufferFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UInt](a))
     
-    testArrayFromSize(DataArray[Double1, HalfFloat](_))
-    testArrayFromData[Double1, HalfFloat](DataArray[Double1, HalfFloat](_))
-    testBufferFromSize(DataBuffer[Double1, HalfFloat](_))
-    testBufferFromData(DataBuffer[Double1, HalfFloat](_))
-    testViewFromData(DataView[Double1, HalfFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, HalfFloat](_))
-    testReadViewFromData(ReadDataView[Double1, HalfFloat](_, _, _))
-    testArrayFromCollection[Double1, HalfFloat]((a: IndexedSeq[Double]) => DataArray[Double1, HalfFloat](a: _*))
-    testArrayFromCollection[Double1, HalfFloat]((a: IndexedSeq[Double]) => DataArray[Double1, HalfFloat](a))
-    testBufferFromCollection[Double1, HalfFloat]((a: IndexedSeq[Double]) => DataBuffer[Double1, HalfFloat](a: _*))
-    testBufferFromCollection[Double1, HalfFloat]((a: IndexedSeq[Double]) => DataBuffer[Double1, HalfFloat](a))
+    testArrayFromSize(DataArray[RDouble, HFloat](_))
+    testArrayFromData[RDouble, HFloat](DataArray[RDouble, HFloat](_))
+    testBufferFromSize(DataBuffer[RDouble, HFloat](_))
+    testBufferFromData(DataBuffer[RDouble, HFloat](_))
+    testViewFromData(DataView[RDouble, HFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, HFloat](_))
+    testReadViewFromData(ReadDataView[RDouble, HFloat](_, _, _))
+    testArrayFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, HFloat](a: _*))
+    testArrayFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, HFloat](a))
+    testBufferFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, HFloat](a: _*))
+    testBufferFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, HFloat](a))
     
-    testArrayFromSize(DataArray[Double1, RawFloat](_))
-    testArrayFromData[Double1, RawFloat](DataArray[Double1, RawFloat](_))
-    testBufferFromSize(DataBuffer[Double1, RawFloat](_))
-    testBufferFromData(DataBuffer[Double1, RawFloat](_))
-    testViewFromData(DataView[Double1, RawFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, RawFloat](_))
-    testReadViewFromData(ReadDataView[Double1, RawFloat](_, _, _))
-    testArrayFromCollection[Double1, RawFloat]((a: IndexedSeq[Double]) => DataArray[Double1, RawFloat](a: _*))
-    testArrayFromCollection[Double1, RawFloat]((a: IndexedSeq[Double]) => DataArray[Double1, RawFloat](a))
-    testBufferFromCollection[Double1, RawFloat]((a: IndexedSeq[Double]) => DataBuffer[Double1, RawFloat](a: _*))
-    testBufferFromCollection[Double1, RawFloat]((a: IndexedSeq[Double]) => DataBuffer[Double1, RawFloat](a))
+    testArrayFromSize(DataArray[RDouble, RFloat](_))
+    testArrayFromData[RDouble, RFloat](DataArray[RDouble, RFloat](_))
+    testBufferFromSize(DataBuffer[RDouble, RFloat](_))
+    testBufferFromData(DataBuffer[RDouble, RFloat](_))
+    testViewFromData(DataView[RDouble, RFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, RFloat](_))
+    testReadViewFromData(ReadDataView[RDouble, RFloat](_, _, _))
+    testArrayFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, RFloat](a: _*))
+    testArrayFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, RFloat](a))
+    testBufferFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RFloat](a: _*))
+    testBufferFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RFloat](a))
     
-    testArrayFromSize(DataArray[Double1, RawDouble](_))
-    testArrayFromData[Double1, RawDouble](DataArray[Double1, RawDouble](_))
-    testBufferFromSize(DataBuffer[Double1, RawDouble](_))
-    testBufferFromData(DataBuffer[Double1, RawDouble](_))
-    testViewFromData(DataView[Double1, RawDouble](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Double1, RawDouble](_))
-    testReadViewFromData(ReadDataView[Double1, RawDouble](_, _, _))
-    testArrayFromCollection[Double1, RawDouble]((a: IndexedSeq[Double]) => DataArray[Double1, RawDouble](a: _*))
-    testArrayFromCollection[Double1, RawDouble]((a: IndexedSeq[Double]) => DataArray[Double1, RawDouble](a))
-    testBufferFromCollection[Double1, RawDouble]((a: IndexedSeq[Double]) => DataBuffer[Double1, RawDouble](a: _*))
-    testBufferFromCollection[Double1, RawDouble]((a: IndexedSeq[Double]) => DataBuffer[Double1, RawDouble](a))
+    testArrayFromSize(DataArray[RDouble, RDouble](_))
+    testArrayFromData[RDouble, RDouble](DataArray[RDouble, RDouble](_))
+    testBufferFromSize(DataBuffer[RDouble, RDouble](_))
+    testBufferFromData(DataBuffer[RDouble, RDouble](_))
+    testViewFromData(DataView[RDouble, RDouble](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[RDouble, RDouble](_))
+    testReadViewFromData(ReadDataView[RDouble, RDouble](_, _, _))
+    testArrayFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataArray[RDouble, RDouble](a: _*))
+    testArrayFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataArray[RDouble, RDouble](a))
+    testBufferFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RDouble](a: _*))
+    testBufferFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RDouble](a))
+  }
+  
+  test("Copy") {
+    testCopy(DataSeq[RDouble, UByte])
+    testCopy(DataSeq[RDouble, SByte])
+    testCopy(DataSeq[RDouble, UShort])
+    testCopy(DataSeq[RDouble, SShort])
+    testCopy(DataSeq[RDouble, UInt])
+    testCopy(DataSeq[RDouble, SInt])
+    testCopy(DataSeq[RDouble, HFloat])
+    testCopy(DataSeq[RDouble, RFloat])
+    testCopy(DataSeq[RDouble, RDouble])
   }
   
   private val size = 20
   
   test("Apply/Update") {
-    testSByte(DataArray[Double1, SByte](size))
-    testSByte(DataBuffer[Double1, SByte](size))
-    testSByte(DataView[Double1, SByte](genBuffer(size, Descriptors.Double1SByte)._1, 0, 2))
-    testSByte(DataView[Double1, SByte](genBuffer(size, Descriptors.Double1SByte)._1, 1, 2))
+    testSByte(DataArray[RDouble, SByte](size))
+    testSByte(DataBuffer[RDouble, SByte](size))
+    testSByte(DataView[RDouble, SByte](genBuffer(size, Descriptors.RDoubleSByte)._1, 0, 2))
+    testSByte(DataView[RDouble, SByte](genBuffer(size, Descriptors.RDoubleSByte)._1, 1, 2))
     
-    testUByte(DataArray[Double1, UByte](size))
-    testUByte(DataBuffer[Double1, UByte](size))
-    testUByte(DataView[Double1, UByte](genBuffer(size, Descriptors.Double1UByte)._1, 0, 2))
-    testUByte(DataView[Double1, UByte](genBuffer(size, Descriptors.Double1UByte)._1, 1, 2))
+    testUByte(DataArray[RDouble, UByte](size))
+    testUByte(DataBuffer[RDouble, UByte](size))
+    testUByte(DataView[RDouble, UByte](genBuffer(size, Descriptors.RDoubleUByte)._1, 0, 2))
+    testUByte(DataView[RDouble, UByte](genBuffer(size, Descriptors.RDoubleUByte)._1, 1, 2))
     
-    testSShort(DataArray[Double1, SShort](size))
-    testSShort(DataBuffer[Double1, SShort](size))
-    testSShort(DataView[Double1, SShort](genBuffer(size, Descriptors.Double1SShort)._1, 0, 2))
-    testSShort(DataView[Double1, SShort](genBuffer(size, Descriptors.Double1SShort)._1, 1, 2))
+    testSShort(DataArray[RDouble, SShort](size))
+    testSShort(DataBuffer[RDouble, SShort](size))
+    testSShort(DataView[RDouble, SShort](genBuffer(size, Descriptors.RDoubleSShort)._1, 0, 2))
+    testSShort(DataView[RDouble, SShort](genBuffer(size, Descriptors.RDoubleSShort)._1, 1, 2))
     
-    testUShort(DataArray[Double1, UShort](size))
-    testUShort(DataBuffer[Double1, UShort](size))
-    testUShort(DataView[Double1, UShort](genBuffer(size, Descriptors.Double1UShort)._1, 0, 2))
-    testUShort(DataView[Double1, UShort](genBuffer(size, Descriptors.Double1UShort)._1, 1, 2))
+    testUShort(DataArray[RDouble, UShort](size))
+    testUShort(DataBuffer[RDouble, UShort](size))
+    testUShort(DataView[RDouble, UShort](genBuffer(size, Descriptors.RDoubleUShort)._1, 0, 2))
+    testUShort(DataView[RDouble, UShort](genBuffer(size, Descriptors.RDoubleUShort)._1, 1, 2))
     
-    testSInt(DataArray[Double1, SInt](size))
-    testSInt(DataBuffer[Double1, SInt](size))
-    testSInt(DataView[Double1, SInt](genBuffer(size, Descriptors.Double1SInt)._1, 0, 2))
-    testSInt(DataView[Double1, SInt](genBuffer(size, Descriptors.Double1SInt)._1, 1, 2))
+    testSInt(DataArray[RDouble, SInt](size))
+    testSInt(DataBuffer[RDouble, SInt](size))
+    testSInt(DataView[RDouble, SInt](genBuffer(size, Descriptors.RDoubleSInt)._1, 0, 2))
+    testSInt(DataView[RDouble, SInt](genBuffer(size, Descriptors.RDoubleSInt)._1, 1, 2))
     
-    testUInt(DataArray[Double1, UInt](size))
-    testUInt(DataBuffer[Double1, UInt](size))
-    testUInt(DataView[Double1, UInt](genBuffer(size, Descriptors.Double1UInt)._1, 0, 2))
-    testUInt(DataView[Double1, UInt](genBuffer(size, Descriptors.Double1UInt)._1, 1, 2))
+    testUInt(DataArray[RDouble, UInt](size))
+    testUInt(DataBuffer[RDouble, UInt](size))
+    testUInt(DataView[RDouble, UInt](genBuffer(size, Descriptors.RDoubleUInt)._1, 0, 2))
+    testUInt(DataView[RDouble, UInt](genBuffer(size, Descriptors.RDoubleUInt)._1, 1, 2))
     
-    testHalfFloat(DataArray[Double1, HalfFloat](size))
-    testHalfFloat(DataBuffer[Double1, HalfFloat](size))
-    testHalfFloat(DataView[Double1, HalfFloat](genBuffer(size, Descriptors.Double1HalfFloat)._1, 0, 2))
-    testHalfFloat(DataView[Double1, HalfFloat](genBuffer(size, Descriptors.Double1HalfFloat)._1, 1, 2))
+    testHFloat(DataArray[RDouble, HFloat](size))
+    testHFloat(DataBuffer[RDouble, HFloat](size))
+    testHFloat(DataView[RDouble, HFloat](genBuffer(size, Descriptors.RDoubleHFloat)._1, 0, 2))
+    testHFloat(DataView[RDouble, HFloat](genBuffer(size, Descriptors.RDoubleHFloat)._1, 1, 2))
     
-    testRawFloat(DataArray[Double1, RawFloat](size))
-    testRawFloat(DataBuffer[Double1, RawFloat](size))
-    testRawFloat(DataView[Double1, RawFloat](genBuffer(size, Descriptors.Double1RawFloat)._1, 0, 2))
-    testRawFloat(DataView[Double1, RawFloat](genBuffer(size, Descriptors.Double1RawFloat)._1, 1, 2))
+    testRFloat(DataArray[RDouble, RFloat](size))
+    testRFloat(DataBuffer[RDouble, RFloat](size))
+    testRFloat(DataView[RDouble, RFloat](genBuffer(size, Descriptors.RDoubleRFloat)._1, 0, 2))
+    testRFloat(DataView[RDouble, RFloat](genBuffer(size, Descriptors.RDoubleRFloat)._1, 1, 2))
     
-    testRawDouble(DataArray[Double1, RawDouble](size))
-    testRawDouble(DataBuffer[Double1, RawDouble](size))
-    testRawDouble(DataView[Double1, RawDouble](genBuffer(size, Descriptors.Double1RawDouble)._1, 0, 2))
-    testRawDouble(DataView[Double1, RawDouble](genBuffer(size, Descriptors.Double1RawDouble)._1, 1, 2))
+    testRDouble(DataArray[RDouble, RDouble](size))
+    testRDouble(DataBuffer[RDouble, RDouble](size))
+    testRDouble(DataView[RDouble, RDouble](genBuffer(size, Descriptors.RDoubleRDouble)._1, 0, 2))
+    testRDouble(DataView[RDouble, RDouble](genBuffer(size, Descriptors.RDoubleRDouble)._1, 1, 2))
   }
 
-  private def testFloatSByte(seq: DataSeq[Double1, SByte], testValue: Double) {
+  private def testFloatSByte(seq: DataSeq[RDouble, SByte], testValue: Double) {
     val converted = conversion.Double.toSByte(testValue)
     val convertedDack = conversion.Double.fromSByte(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUByte(seq: DataSeq[Double1, UByte], testValue: Double) {
+  private def testFloatUByte(seq: DataSeq[RDouble, UByte], testValue: Double) {
     val converted = conversion.Double.toUByte(testValue)
     val convertedDack = conversion.Double.fromUByte(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatSShort(seq: DataSeq[Double1, SShort], testValue: Double) {
+  private def testFloatSShort(seq: DataSeq[RDouble, SShort], testValue: Double) {
     val converted = conversion.Double.toSShort(testValue)
     val convertedDack = conversion.Double.fromSShort(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUShort(seq: DataSeq[Double1, UShort], testValue: Double) {
+  private def testFloatUShort(seq: DataSeq[RDouble, UShort], testValue: Double) {
     val converted = conversion.Double.toUShort(testValue)
     val convertedDack = conversion.Double.fromUShort(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatSInt(seq: DataSeq[Double1, SInt], testValue: Double) {
+  private def testFloatSInt(seq: DataSeq[RDouble, SInt], testValue: Double) {
     val converted = conversion.Double.toSInt(testValue)
     val convertedDack = conversion.Double.fromSInt(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatUInt(seq: DataSeq[Double1, UInt], testValue: Double) {
+  private def testFloatUInt(seq: DataSeq[RDouble, UInt], testValue: Double) {
     val converted = conversion.Double.toUInt(testValue)
     val convertedDack = conversion.Double.fromUInt(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
-  private def testFloatHalfFloat(seq: DataSeq[Double1, HalfFloat], testValue: Double) {
-    val converted = conversion.Double.toHalfFloat(testValue)
-    val convertedDack = conversion.Double.fromHalfFloat(converted)
+  private def testFloatHFloat(seq: DataSeq[RDouble, HFloat], testValue: Double) {
+    val converted = conversion.Double.toHFloat(testValue)
+    val convertedDack = conversion.Double.fromHFloat(converted)
     testApplyUpdate(seq, testValue, convertedDack, converted)
   }
 
-  private def testSByte(seq: DataSeq[Double1, SByte]) {
+  private def testSByte(seq: DataSeq[RDouble, SByte]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, -128); assert(seq(0) == -1)
@@ -262,7 +275,7 @@ class Double1Test extends FunSuite {
     testFloatSByte(seq, Double.PositiveInfinity)
   }
 
-  private def testUByte(seq: DataSeq[Double1, UByte]) {
+  private def testUByte(seq: DataSeq[RDouble, UByte]) {
     testIndex(seq)
 
     testFloatUByte(seq, Double.NegativeInfinity)
@@ -284,7 +297,7 @@ class Double1Test extends FunSuite {
     testFloatUByte(seq, Double.PositiveInfinity)
   }
 
-  private def testSShort(seq: DataSeq[Double1, SShort]) {
+  private def testSShort(seq: DataSeq[RDouble, SShort]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, -32768); assert(seq(0) == -1)
@@ -314,7 +327,7 @@ class Double1Test extends FunSuite {
     testFloatSShort(seq, Double.PositiveInfinity)
   }
 
-  private def testUShort(seq: DataSeq[Double1, UShort]) {
+  private def testUShort(seq: DataSeq[RDouble, UShort]) {
     testIndex(seq)
 
     testFloatUShort(seq, Double.NegativeInfinity)
@@ -336,7 +349,7 @@ class Double1Test extends FunSuite {
     testFloatUShort(seq, Double.PositiveInfinity)
   }
   
-  private def testSInt(seq: DataSeq[Double1, SInt]) {
+  private def testSInt(seq: DataSeq[RDouble, SInt]) {
     testIndex(seq)
 
     seq.buffer().put(seq.offset, Int.MinValue); assert(seq(0) == -1)
@@ -366,7 +379,7 @@ class Double1Test extends FunSuite {
     testFloatSInt(seq, Double.PositiveInfinity)
   }
 
-  private def testUInt(seq: DataSeq[Double1, UInt]) {
+  private def testUInt(seq: DataSeq[RDouble, UInt]) {
     testIndex(seq)
 
     testFloatUInt(seq, Double.NegativeInfinity)
@@ -388,49 +401,49 @@ class Double1Test extends FunSuite {
     testFloatUInt(seq, Double.PositiveInfinity)
   }
   
-  private def testHalfFloat(seq: DataSeq[Double1, HalfFloat]) {
+  private def testHFloat(seq: DataSeq[RDouble, HFloat]) {
     testIndex(seq)
 
     // Inf.
-    testFloatHalfFloat(seq, Double.NegativeInfinity)
-    testFloatHalfFloat(seq, Double.PositiveInfinity)
+    testFloatHFloat(seq, Double.NegativeInfinity)
+    testFloatHFloat(seq, Double.PositiveInfinity)
 
     // NaN.
-    testFloatHalfFloat(seq, Double.NaN)
+    testFloatHFloat(seq, Double.NaN)
 
     // Zero.
-    testFloatHalfFloat(seq, -0.0)
-    testFloatHalfFloat(seq, 0)
+    testFloatHFloat(seq, -0.0)
+    testFloatHFloat(seq, 0)
 
     // Subnormal.
-    testFloatHalfFloat(seq, floatFromBits("00000000 01000000 00000000 00000000").toDouble)
-    testFloatHalfFloat(seq, floatFromBits("10000000 01000000 00000000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("00000000 01000000 00000000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("10000000 01000000 00000000 00000000").toDouble)
 
     // Out of range values.
-    testFloatHalfFloat(seq, -Double.MaxValue)
-    testFloatHalfFloat(seq, Double.MaxValue)
+    testFloatHFloat(seq, -Double.MaxValue)
+    testFloatHFloat(seq, Double.MaxValue)
 
     // Min and Max
-    testFloatHalfFloat(seq, -65504.0)
-    testFloatHalfFloat(seq, 65504.0)
+    testFloatHFloat(seq, -65504.0)
+    testFloatHFloat(seq, 65504.0)
 
     // Closest to Zero.
-    testFloatHalfFloat(seq, -6.103515625E-5)
-    testFloatHalfFloat(seq, 6.103515625E-5)
-    testFloatHalfFloat(seq, -java.lang.Double.MIN_VALUE)
-    testFloatHalfFloat(seq, java.lang.Double.MIN_VALUE)
+    testFloatHFloat(seq, -6.103515625E-5)
+    testFloatHFloat(seq, 6.103515625E-5)
+    testFloatHFloat(seq, -java.lang.Double.MIN_VALUE)
+    testFloatHFloat(seq, java.lang.Double.MIN_VALUE)
 
     // Rounding.
-    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11100000 00000000").toDouble)
-    testFloatHalfFloat(seq, floatFromBits("00111101 11000000 11110000 00000000").toDouble)
-    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11100000 00000000").toDouble)
-    testFloatHalfFloat(seq, floatFromBits("10111101 11000000 11110000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("00111101 11000000 11100000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("00111101 11000000 11110000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("10111101 11000000 11100000 00000000").toDouble)
+    testFloatHFloat(seq, floatFromBits("10111101 11000000 11110000 00000000").toDouble)
 
     // Normalized.
-    testFloatHalfFloat(seq, -1)
-    testFloatHalfFloat(seq, -0.5)
-    testFloatHalfFloat(seq, 0.5)
-    testFloatHalfFloat(seq, 1)
+    testFloatHFloat(seq, -1)
+    testFloatHFloat(seq, -0.5)
+    testFloatHFloat(seq, 0.5)
+    testFloatHFloat(seq, 1)
 
     // Round trip conversion excluding Subnormal, Zero, and NaN
     val buff = seq.buffer
@@ -451,7 +464,7 @@ class Double1Test extends FunSuite {
     }
   }
 
-  private def testRawFloat(seq: DataSeq[Double1, RawFloat]) {
+  private def testRFloat(seq: DataSeq[RDouble, RFloat]) {
     testIndex(seq)
 
     testApplyUpdate(seq, Float.NegativeInfinity.toDouble, Float.NegativeInfinity, Float.NegativeInfinity)
@@ -472,7 +485,7 @@ class Double1Test extends FunSuite {
     testApplyUpdate(seq, 1.5, 1.5, 1.5f)
   }
   
-  private def testRawDouble(seq: DataSeq[Double1, RawDouble]) {
+  private def testRDouble(seq: DataSeq[RDouble, RDouble]) {
     testIndex(seq)
 
     testApplyUpdate(seq, Double.NegativeInfinity, Double.NegativeInfinity, Double.NegativeInfinity)

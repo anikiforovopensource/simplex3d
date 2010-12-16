@@ -49,9 +49,9 @@ object FactoryTestUtil extends FunSuite {
     assert(seq.getClass.getName == expected)
   }
 
-  private def testMakeIndex[R <: Unsigned](seq: ReadIndexSeq[R], descriptor: Descriptor[Int1, R]) {
+  private def testMakeIndex[R <: Unsigned](seq: ReadIndexSeq[R], descriptor: Descriptor[SInt, R]) {
     arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
+    arrayFromData((a: R#Array) => seq.mkDataArray(a))(descriptor)
     bufferFromSize(seq.mkDataBuffer(_))(descriptor)
     bufferFromData(seq.mkDataBuffer(_))(descriptor)
     viewFromData(seq.mkDataView(_, _, _))(descriptor)
@@ -59,7 +59,7 @@ object FactoryTestUtil extends FunSuite {
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
 
     arrayFromSize(seq.mkIndexArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkIndexArray(a))(descriptor)
+    arrayFromData((a: R#Array) => seq.mkIndexArray(a))(descriptor)
     bufferFromSize(seq.mkIndexBuffer(_))(descriptor)
     bufferFromData(seq.mkIndexBuffer(_))(descriptor)
     readBufferFromData(seq.mkReadIndexBuffer(_))(descriptor)
@@ -84,84 +84,84 @@ object FactoryTestUtil extends FunSuite {
   }
 
   def testIndexArrayUsingDataSize(factory: (Int, Int) => IndexArray[Unsigned]) {
-    arrayFromSize(factory(_, 0))(Descriptors.Int1UByte)
-    arrayFromSize(factory(_, 100))(Descriptors.Int1UByte)
-    arrayFromSize(factory(_, 256))(Descriptors.Int1UByte)
+    arrayFromSize(factory(_, 0))(Descriptors.SIntUByte)
+    arrayFromSize(factory(_, 100))(Descriptors.SIntUByte)
+    arrayFromSize(factory(_, 256))(Descriptors.SIntUByte)
 
-    arrayFromSize(factory(_, 257))(Descriptors.Int1UShort)
-    arrayFromSize(factory(_, 1000))(Descriptors.Int1UShort)
-    arrayFromSize(factory(_, 65536))(Descriptors.Int1UShort)
+    arrayFromSize(factory(_, 257))(Descriptors.SIntUShort)
+    arrayFromSize(factory(_, 1000))(Descriptors.SIntUShort)
+    arrayFromSize(factory(_, 65536))(Descriptors.SIntUShort)
 
-    arrayFromSize(factory(_, 65537))(Descriptors.Int1UInt)
-    arrayFromSize(factory(_, 100000))(Descriptors.Int1UInt)
+    arrayFromSize(factory(_, 65537))(Descriptors.SIntUInt)
+    arrayFromSize(factory(_, 100000))(Descriptors.SIntUInt)
   }
 
   def testIndexBufferUsingDataSize(factory: (Int, Int) => IndexBuffer[Unsigned]) {
-    bufferFromSize(factory(_, 0))(Descriptors.Int1UByte)
-    bufferFromSize(factory(_, 100))(Descriptors.Int1UByte)
-    bufferFromSize(factory(_, 256))(Descriptors.Int1UByte)
+    bufferFromSize(factory(_, 0))(Descriptors.SIntUByte)
+    bufferFromSize(factory(_, 100))(Descriptors.SIntUByte)
+    bufferFromSize(factory(_, 256))(Descriptors.SIntUByte)
 
-    bufferFromSize(factory(_, 257))(Descriptors.Int1UShort)
-    bufferFromSize(factory(_, 1000))(Descriptors.Int1UShort)
-    bufferFromSize(factory(_, 65536))(Descriptors.Int1UShort)
+    bufferFromSize(factory(_, 257))(Descriptors.SIntUShort)
+    bufferFromSize(factory(_, 1000))(Descriptors.SIntUShort)
+    bufferFromSize(factory(_, 65536))(Descriptors.SIntUShort)
 
-    bufferFromSize(factory(_, 65537))(Descriptors.Int1UInt)
-    bufferFromSize(factory(_, 100000))(Descriptors.Int1UInt)
+    bufferFromSize(factory(_, 65537))(Descriptors.SIntUInt)
+    bufferFromSize(factory(_, 100000))(Descriptors.SIntUInt)
   }
 
   def testIndexArrayFromSize[R <: Unsigned](
     factory: (Int) => IndexArray[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
+  )(implicit descriptor: Descriptor[SInt, R]) {
     arrayFromSize(factory)(descriptor)
     testMakeIndex(factory(0), descriptor)
   }
 
   def testIndexArrayFromData[R <: Unsigned](
-    factory: (R#ArrayType) => IndexArray[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
+    factory: (R#Array) => IndexArray[R]
+  )(implicit descriptor: Descriptor[SInt, R]) {
     arrayFromData(factory)(descriptor)
     testMakeIndex(factory(genArray(0, descriptor)), descriptor)
   }
 
   def testIndexBufferFromSize[R <: Unsigned](
     factory: (Int) => IndexBuffer[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
+  )(implicit descriptor: Descriptor[SInt, R]) {
     bufferFromSize(factory)(descriptor)
     testMakeIndex(factory(0), descriptor)
   }
 
   def testIndexBufferFromData[R <: Unsigned](
     factory: (ByteBuffer) => IndexBuffer[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
+  )(implicit descriptor: Descriptor[SInt, R]) {
     bufferFromData(factory)(descriptor)
     testMakeIndex(factory(genBuffer(0, descriptor)._1), descriptor)
   }
 
   def testReadIndexBufferFromData[R <: Unsigned](
     factory: (ByteBuffer) => ReadIndexBuffer[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
+  )(implicit descriptor: Descriptor[SInt, R]) {
     readBufferFromData(factory)(descriptor)
     testMakeIndex(factory(genBuffer(0, descriptor)._1), descriptor)
   }
 
   def testIndexArrayFromCollection[R <: Unsigned](
     factory: (IndexedSeq[Int]) => IndexArray[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
-    arrayFromCollection[Int1, R](factory)
+  )(implicit descriptor: Descriptor[SInt, R]) {
+    arrayFromCollection[SInt, R](factory)
     testMakeIndex(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
   def testIndexBufferFromCollection[R <: Unsigned](
     factory: (IndexedSeq[Int]) => IndexBuffer[R]
-  )(implicit descriptor: Descriptor[Int1, R]) {
-    bufferFromCollection[Int1, R](factory)
+  )(implicit descriptor: Descriptor[SInt, R]) {
+    bufferFromCollection[SInt, R](factory)
     testMakeIndex(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
 
-  private def testMakeData[E <: MetaElement, R <: RawData](seq: ReadDataSeq[E, R], descriptor: Descriptor[E, R]) {
+  private def testMakeData[E <: Meta, R <: Raw](seq: ReadDataSeq[E, R], descriptor: Descriptor[E, R]) {
     arrayFromSize(seq.mkDataArray(_))(descriptor)
-    arrayFromData((a: R#ArrayType) => seq.mkDataArray(a))(descriptor)
+    arrayFromData((a: R#Array) => seq.mkDataArray(a))(descriptor)
     bufferFromSize(seq.mkDataBuffer(_))(descriptor)
     bufferFromData(seq.mkDataBuffer(_))(descriptor)
     viewFromData(seq.mkDataView(_, _, _))(descriptor)
@@ -181,7 +181,7 @@ object FactoryTestUtil extends FunSuite {
     verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
   }
 
-  def testArrayFromSize[E <: MetaElement, R <: RawData](
+  def testArrayFromSize[E <: Meta, R <: Raw](
     factory: (Int) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromSize(factory)(descriptor)
@@ -190,8 +190,8 @@ object FactoryTestUtil extends FunSuite {
     checkSubDataExceptions(factory(2))
   }
 
-  def testArrayFromData[E <: MetaElement, R <: RawData](
-    factory: (R#ArrayType) => DataArray[E, R]
+  def testArrayFromData[E <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromData(factory)(descriptor)
     testMakeData(factory(genArray(0, descriptor)), descriptor)
@@ -200,7 +200,7 @@ object FactoryTestUtil extends FunSuite {
     SerializationTestUtil.testSerialization(factory)(descriptor)
   }
 
-  def testBufferFromSize[E <: MetaElement, R <: RawData](
+  def testBufferFromSize[E <: Meta, R <: Raw](
     factory: (Int) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromSize(factory)(descriptor)
@@ -209,7 +209,7 @@ object FactoryTestUtil extends FunSuite {
     checkSubDataExceptions(factory(2))
   }
 
-  def testBufferFromData[E <: MetaElement, R <: RawData](
+  def testBufferFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromData(factory)(descriptor)
@@ -218,7 +218,7 @@ object FactoryTestUtil extends FunSuite {
     CastTestUtil.testBufferCast(factory)(descriptor)
   }
 
-  def testViewFromData[E <: MetaElement, R <: RawData](
+  def testViewFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     viewFromData(factory)(descriptor)
@@ -227,35 +227,35 @@ object FactoryTestUtil extends FunSuite {
     checkSubDataExceptions(factory(genBuffer(2*4*8, descriptor)._1, 0, 4))
   }
 
-  def testReadBufferFromData[E <: MetaElement, R <: RawData](
+  def testReadBufferFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => ReadDataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readBufferFromData(factory)(descriptor)
     testMakeData(factory(genBuffer(0, descriptor)._1), descriptor)
   }
 
-  def testReadViewFromData[E <: MetaElement, R <: RawData](
+  def testReadViewFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer, Int, Int) => ReadDataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readViewFromData(factory)(descriptor)
     testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
   }
 
-  def testArrayFromCollection[E <: MetaElement, R <: RawData](
+  def testArrayFromCollection[E <: Meta, R <: Raw](
     factory: (IndexedSeq[E#Read]) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     arrayFromCollection(factory)
     testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
-  def testBufferFromCollection[E <: MetaElement, R <: RawData](
+  def testBufferFromCollection[E <: Meta, R <: Raw](
     factory: (IndexedSeq[E#Read]) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     bufferFromCollection(factory)
     testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
-  private def arrayFromSize[E <: MetaElement, R <: RawData](
+  private def arrayFromSize[E <: Meta, R <: Raw](
     factory: (Int) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[Exception] { factory(-1) }
@@ -266,8 +266,8 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  private def arrayFromData[E <: MetaElement, R <: RawData](
-    factory: (R#ArrayType) => DataArray[E, R]
+  private def arrayFromData[E <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     for (size <- 0 to 9) {
       val a = genRandomArray(size, descriptor);
@@ -275,7 +275,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  private def bufferFromSize[E <: MetaElement, R <: RawData](
+  private def bufferFromSize[E <: Meta, R <: Raw](
     factory: (Int) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] { factory(-1) }
@@ -289,7 +289,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
   
-  private def bufferFromData[E <: MetaElement, R <: RawData](
+  private def bufferFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
@@ -328,7 +328,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  private def viewFromData[E <: MetaElement, R <: RawData](
+  private def viewFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
@@ -416,7 +416,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  private def readBufferFromData[E <: MetaElement, R <: RawData](
+  private def readBufferFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer) => ReadDataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
@@ -451,7 +451,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  private def readViewFromData[E <: MetaElement, R <: RawData](
+  private def readViewFromData[E <: Meta, R <: Raw](
     factory: (ByteBuffer, Int, Int) => ReadDataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
@@ -542,7 +542,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  def arrayFromCollection[E <: MetaElement, R <: RawData](
+  def arrayFromCollection[E <: Meta, R <: Raw](
     factory: (IndexedSeq[E#Read]) => DataArray[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     for (size <- 0 to 3) {
@@ -551,7 +551,7 @@ object FactoryTestUtil extends FunSuite {
     }
   }
 
-  def bufferFromCollection[E <: MetaElement, R <: RawData](
+  def bufferFromCollection[E <: Meta, R <: Raw](
     factory: (IndexedSeq[E#Read]) => DataBuffer[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     for (size <- 0 to 3) {

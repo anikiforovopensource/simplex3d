@@ -42,9 +42,9 @@ object AttributeTestUtil extends FunSuite {
       case UShort => 2
       case SInt => 4
       case UInt => 4
-      case HalfFloat => 2
-      case RawFloat => 4
-      case RawDouble => 8
+      case HFloat => 2
+      case RFloat => 4
+      case RDouble => 8
     }
   }
 
@@ -131,7 +131,7 @@ object AttributeTestUtil extends FunSuite {
     data.limit(data.capacity)
   }
 
-  private def checkRawBufferSubData[E <: MetaElement, R <: RawData](seq: ReadDataSeq[E, R], data: Buffer) {
+  private def checkRawBufferSubData[E <: Meta, R <: Raw](seq: ReadDataSeq[E, R], data: Buffer) {
     checkRawBuffer(0, 0, seq.rawBufferSubData(0, 0), data)
     checkRawBuffer(0, seq.size*seq.stride, seq.rawBufferSubData(0, seq.size), data)
     if (seq.size > 1) {
@@ -140,38 +140,38 @@ object AttributeTestUtil extends FunSuite {
     }
   }
 
-  private def testSeq[E <: MetaElement, R <: RawData](
+  private def testSeq[E <: Meta, R <: Raw](
     seq: ReadDataSeq[E, R],
     readOnly: Boolean,
     data: Buffer,
     descriptor: Descriptor[E, R]
   ) {
-    assert(seq.elementManifest == descriptor.elementManifest)
+    assert(seq.elemManifest == descriptor.elemManifest)
     assert(seq.readManifest == descriptor.readManifest)
-    assert(seq.backingSeq.elementManifest == descriptor.componentManifest)
+    assert(seq.backing.elemManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
     assert(seq.normalized == descriptor.normalized)
     assert(seq.readOnly == readOnly)
 
-    checkBuffer(seq.readOnlyBuffer(), data)
+    if (data != null) checkBuffer(seq.readOnlyBuffer(), data)
     assert(seq.readOnlyBuffer().isReadOnly)
     checkOrder(seq.readOnlyBuffer())
 
     assert(seq.bytesPerRawComponent == rawLength(seq.rawType))
-    assert(seq.byteCapacity >= seq.bytesPerRawComponent*data.limit)
+    if (data != null) assert(seq.byteCapacity >= seq.bytesPerRawComponent*data.limit)
     assert(seq.byteOffset == seq.bytesPerRawComponent*seq.offset)
     assert(seq.byteStride == seq.bytesPerRawComponent*seq.stride)
 
-    assert(seq.size == size(data.limit, seq.offset, seq.stride, seq.components))
+    if (data != null) assert(seq.size == size(data.limit, seq.offset, seq.stride, seq.components))
     assert(seq.size == seq.length)
 
     if (seq.readOnly) {
-      assert(seq.backingSeq.readOnly)
-      assert(seq.asReadOnlySeq() eq seq)
+      assert(seq.backing.readOnly)
+      assert(seq.asReadOnly() eq seq)
     }
     else {
-      assert(!seq.backingSeq.readOnly)
+      assert(!seq.backing.readOnly)
     }
 
     // Check rawBuffer.
@@ -181,31 +181,26 @@ object AttributeTestUtil extends FunSuite {
       assert(seq.rawBufferSubData(0, seq.size).array != null)
     }
     else {
-      if (seq.readOnly) {
-        assert(seq.rawBuffer().isReadOnly)
-        assert(seq.rawBufferWithOffset().isReadOnly)
-        assert(seq.rawBufferSubData(0, seq.size).isReadOnly)
-      }
-      else {
-        assert(!seq.rawBuffer().isReadOnly)
-        assert(!seq.rawBufferWithOffset().isReadOnly)
-        assert(!seq.rawBufferSubData(0, seq.size).isReadOnly)
-      }
+      assert(seq.rawBuffer().isReadOnly)
+      assert(seq.rawBufferWithOffset().isReadOnly)
+      assert(seq.rawBufferSubData(0, seq.size).isReadOnly)
     }
 
-    checkRawBuffer(0, seq.rawBuffer(), data)
-    checkRawBuffer(seq.offset, seq.rawBufferWithOffset(), data)
-    checkRawBufferSubData(seq, data)
+    if (data != null) {
+      checkRawBuffer(0, seq.rawBuffer(), data)
+      checkRawBuffer(seq.offset, seq.rawBufferWithOffset(), data)
+      checkRawBufferSubData(seq, data)
+    }
 
 
     // Check DataSeq methods.
     val ds = seq.asInstanceOf[DataSeq[E, R]]
-    checkBuffer(ds.buffer(), data)
+    if (data != null) checkBuffer(ds.buffer(), data)
     assert(ds.buffer().isReadOnly == readOnly)
     checkOrder(ds.buffer())
   }
 
-  def testArray[E <: MetaElement, R <: RawData](
+  def testArray[E <: Meta, R <: Raw](
     seq: ReadDataArray[E, R],
     readOnly: Boolean,
     data: Buffer
@@ -214,17 +209,17 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == seq.components)
 
     assert(!seq.readOnlyBuffer.isDirect)
-    assert(seq.backingSeq.isInstanceOf[ReadDataArray[_, _]])
-    assert(seq.asReadOnlySeq.isInstanceOf[ReadDataArray[_, _]])
+    assert(seq.backing.isInstanceOf[ReadDataArray[_, _]])
+    assert(seq.asReadOnly.isInstanceOf[ReadDataArray[_, _]])
 
     val ds = seq.asInstanceOf[DataArray[E, R]]
     assert(!ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.backingSeq.isInstanceOf[DataArray[_, _]])
+      assert(ds.backing.isInstanceOf[DataArray[_, _]])
 
       assert(ds.array != null)
-      checkBuffer(wrapArray(ds.array), data)
+      if (data != null) checkBuffer(wrapArray(ds.array), data)
     }
     else {
       intercept[Exception] {
@@ -239,7 +234,7 @@ object AttributeTestUtil extends FunSuite {
       }
     }
 
-    if (seq.elementManifest == MetaManifest.Int1) {
+    if (seq.elemManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexArray[_]])
         if (!seq.readOnly) assert(seq.isInstanceOf[IndexArray[_]])
@@ -248,25 +243,25 @@ object AttributeTestUtil extends FunSuite {
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // backingSeq
+    // backing
     if (seq.components == 1) {
-      assert(seq eq seq.backingSeq)
+      assert(seq eq seq.backing)
     }
     else {
       val backingDesc = descriptor.copy(
-        elementManifest = seq.backingSeq.elementManifest,
-        readManifest = seq.backingSeq.readManifest,
+        elemManifest = seq.backing.elemManifest,
+        readManifest = seq.backing.readManifest,
         components = 1
       )
-      testArray(seq.backingSeq, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
+      testArray(seq.backing, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
     }
 
-    //asReadOnlySeq
-    if (!readOnly) testArray(seq.asReadOnlySeq, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnlySeq))
+    //asReadOnly
+    if (!readOnly) testArray(seq.asReadOnly, true, data)
+    assert(seq.sharesStoreObject(seq.asReadOnly))
   }
 
-  def testBuffer[E <: MetaElement, R <: RawData](
+  def testBuffer[E <: Meta, R <: Raw](
     seq: ReadDataBuffer[E, R],
     readOnly: Boolean,
     data: Buffer
@@ -275,17 +270,17 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == seq.components)
 
     assert(seq.readOnlyBuffer.isDirect)
-    assert(seq.backingSeq.isInstanceOf[ReadDataBuffer[_, _]])
-    assert(seq.asReadOnlySeq.isInstanceOf[ReadDataBuffer[_, _]])
+    assert(seq.backing.isInstanceOf[ReadDataBuffer[_, _]])
+    assert(seq.asReadOnly.isInstanceOf[ReadDataBuffer[_, _]])
 
     val ds = seq.asInstanceOf[DataBuffer[E, R]]
     assert(ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.backingSeq.isInstanceOf[DataBuffer[_, _]])
+      assert(ds.backing.isInstanceOf[DataBuffer[_, _]])
     }
 
-    if (seq.elementManifest == MetaManifest.Int1) {
+    if (seq.elemManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexBuffer[_]])
         if (!seq.readOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
@@ -294,25 +289,25 @@ object AttributeTestUtil extends FunSuite {
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // backingSeq
+    // backing
     if (seq.components == 1) {
-      assert(seq eq seq.backingSeq)
+      assert(seq eq seq.backing)
     }
     else {
       val backingDesc = descriptor.copy(
-        elementManifest = seq.backingSeq.elementManifest,
-        readManifest = seq.backingSeq.readManifest,
+        elemManifest = seq.backing.elemManifest,
+        readManifest = seq.backing.readManifest,
         components = 1
       )
-      testBuffer(seq.backingSeq, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
+      testBuffer(seq.backing, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
     }
 
-    //asReadOnlySeq
-    if (!readOnly) testBuffer(seq.asReadOnlySeq, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnlySeq))
+    //asReadOnly
+    if (!readOnly) testBuffer(seq.asReadOnly, true, data)
+    assert(seq.sharesStoreObject(seq.asReadOnly))
   }
 
-  def testView[E <: MetaElement, R <: RawData](
+  def testView[E <: Meta, R <: Raw](
     seq: ReadDataView[E, R],
     offset: Int,
     stride: Int,
@@ -323,28 +318,28 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == stride)
 
     assert(seq.readOnlyBuffer.isDirect)
-    assert(seq.backingSeq.isInstanceOf[ReadDataBuffer[_, _]])
-    assert(seq.asReadOnlySeq.isInstanceOf[ReadDataView[_, _]])
+    assert(seq.backing.isInstanceOf[ReadDataBuffer[_, _]])
+    assert(seq.asReadOnly.isInstanceOf[ReadDataView[_, _]])
 
     val ds = seq.asInstanceOf[DataView[E, R]]
     assert(ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.backingSeq.isInstanceOf[DataBuffer[_, _]])
+      assert(ds.backing.isInstanceOf[DataBuffer[_, _]])
     }
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // backingSeq
+    // backing
     val backingDesc = descriptor.copy(
-      elementManifest = seq.backingSeq.elementManifest,
-      readManifest = seq.backingSeq.readManifest,
+      elemManifest = seq.backing.elemManifest,
+      readManifest = seq.backing.readManifest,
       components = 1
     )
-    testBuffer(seq.backingSeq, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
+    testBuffer(seq.backing, readOnly, data)(backingDesc.asInstanceOf[Descriptor[E#Component, R]])
 
-    //asReadOnlySeq
-    if (!readOnly) testView(seq.asReadOnlySeq, offset, stride, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnlySeq))
+    //asReadOnly
+    if (!readOnly) testView(seq.asReadOnly, offset, stride, true, data)
+    assert(seq.sharesStoreObject(seq.asReadOnly))
   }
 }

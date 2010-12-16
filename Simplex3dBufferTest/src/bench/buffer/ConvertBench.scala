@@ -79,22 +79,22 @@ class ConvertBenchTC {
     val convertPutDataBufferTime = System.currentTimeMillis - start
     
     start = System.currentTimeMillis
-    testConvertPutHalfFloat(floatByteBuffer, loops)
-    val convertPutHalfFloatTime = System.currentTimeMillis - start
+    testConvertPutHFloat(floatByteBuffer, loops)
+    val convertPutHFloatTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testConvertPutDataBuffer(floatByteBuffer, loops)
     val convertPutDataBufferTime2 = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testConvertPutHalfFloat(floatByteBuffer, loops)
-    val convertPutHalfFloatTime2 = System.currentTimeMillis - start
+    testConvertPutHFloat(floatByteBuffer, loops)
+    val convertPutHFloatTime2 = System.currentTimeMillis - start
 
 
     println("ConvertPutDataBuffer time: " + convertPutDataBufferTime + ".")
-    println("ConvertPutHalfFloat time: " + convertPutHalfFloatTime + ".")
+    println("ConvertPutHFloat time: " + convertPutHFloatTime + ".")
     println("ConvertPutDataBuffer time: " + convertPutDataBufferTime2 + ".")
-    println("ConvertPutHalfFloat time: " + convertPutHalfFloatTime2 + ".")
+    println("ConvertPutHFloat time: " + convertPutHFloatTime2 + ".")
   }
 
   def testConvertPutDataBuffer(data: ByteBuffer, loops: Int) {
@@ -102,13 +102,13 @@ class ConvertBenchTC {
     val size = data.capacity/4
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, UInt](
+    val dest = DataView[RFloat, UInt](
       ByteBuffer.allocateDirect(
         size*4*(stride + 1) + offset*4
       ),
       offset, stride
     )
-    val src = DataBuffer[Float1, SInt](data)
+    val src = DataBuffer[RFloat, SInt](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)
@@ -120,18 +120,18 @@ class ConvertBenchTC {
     println(answer)
   }
 
-  def testConvertPutHalfFloat(data: ByteBuffer, loops: Int) {
+  def testConvertPutHFloat(data: ByteBuffer, loops: Int) {
     var answer = 0
     val size = data.capacity/4
     val offset = 2
     val stride = 2
-    val dest = DataView[Float1, HalfFloat](
+    val dest = DataView[RFloat, HFloat](
       ByteBuffer.allocateDirect(
         size*2*(stride + 1) + offset*4
       ),
       offset, stride
     )
-    val src = DataBuffer[Float1, RawFloat](data)
+    val src = DataBuffer[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)

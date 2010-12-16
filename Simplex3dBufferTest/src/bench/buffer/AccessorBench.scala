@@ -52,16 +52,16 @@ object AccessorBench {
     }
   }
 
-  val dataArray0 = DataArray[Float1, RawFloat](data)
-  val dataBuffer0 = DataBuffer[Float1, RawFloat](data.size)
+  val dataArray0 = DataArray[RFloat, RFloat](data)
+  val dataBuffer0 = DataBuffer[RFloat, RFloat](data.size)
   dataBuffer0.put(dataArray0)
-  val dataView0 = DataView[Float1, RawFloat](dataBuffer0, 0, 1)
+  val dataView0 = DataView[RFloat, RFloat](dataBuffer0, 0, 1)
 
-  val dataArray1 = DataArray[Float1, UByte](data.size)
+  val dataArray1 = DataArray[RFloat, UByte](data.size)
   dataArray1.put(dataArray0)
-  val dataBuffer1 = DataBuffer[Float1, UByte](data.size)
+  val dataBuffer1 = DataBuffer[RFloat, UByte](data.size)
   dataBuffer1.put(dataArray1)
-  val dataView1 = DataView[Float1, UByte](dataBuffer1, 0, 1)
+  val dataView1 = DataView[RFloat, UByte](dataBuffer1, 0, 1)
 
 
   def test() {
@@ -105,7 +105,7 @@ object AccessorBench {
     println("buffer time: " + testBufferTime + ".")
   }
 
-  final def testSimple(seq: DataSeq[Float1, RawData], loops: Int) {
+  final def testSimple(seq: DataSeq[RFloat, Raw], loops: Int) {
     var answer = 0.0
 
     var l = 0; while (l < loops) {
@@ -120,7 +120,7 @@ object AccessorBench {
     println(answer)
   }
 
-  final def testInlined(seq: DataSeq[Float1, RawData], loops: Int) {
+  final def testInlined(seq: DataSeq[RFloat, Raw], loops: Int) {
     var answer = 0.0
     val size = seq.size
     val offset = seq.offset
@@ -139,7 +139,7 @@ object AccessorBench {
     println(answer)
   }
   
-  final def testRawBuffer(seq: DataSeq[Float1, RawData], loops: Int) {
+  final def testRawBuffer(seq: DataSeq[RFloat, Raw], loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
@@ -151,7 +151,7 @@ object AccessorBench {
     println(answer)
   }
   
-  final def testBuffer(seq: DataSeq[Float1, RawData], loops: Int) {
+  final def testBuffer(seq: DataSeq[RFloat, Raw], loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {

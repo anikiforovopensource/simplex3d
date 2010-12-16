@@ -29,6 +29,7 @@ import simplex3d.buffer.floatm._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import CopyTestUtil._
 
 
 /**
@@ -109,32 +110,42 @@ class Vec4fTest extends FunSuite {
     testBufferFromCollection[Vec4f, UInt]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, UInt](a: _*))
     testBufferFromCollection[Vec4f, UInt]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, UInt](a))
     
-    testArrayFromSize(DataArray[Vec4f, HalfFloat](_))
-    testArrayFromData[Vec4f, HalfFloat](DataArray[Vec4f, HalfFloat](_))
-    testBufferFromSize(DataBuffer[Vec4f, HalfFloat](_))
-    testBufferFromData(DataBuffer[Vec4f, HalfFloat](_))
-    testViewFromData(DataView[Vec4f, HalfFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Vec4f, HalfFloat](_))
-    testReadViewFromData(ReadDataView[Vec4f, HalfFloat](_, _, _))
-    testArrayFromCollection[Vec4f, HalfFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, HalfFloat](a: _*))
-    testArrayFromCollection[Vec4f, HalfFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, HalfFloat](a))
-    testBufferFromCollection[Vec4f, HalfFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, HalfFloat](a: _*))
-    testBufferFromCollection[Vec4f, HalfFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, HalfFloat](a))
+    testArrayFromSize(DataArray[Vec4f, HFloat](_))
+    testArrayFromData[Vec4f, HFloat](DataArray[Vec4f, HFloat](_))
+    testBufferFromSize(DataBuffer[Vec4f, HFloat](_))
+    testBufferFromData(DataBuffer[Vec4f, HFloat](_))
+    testViewFromData(DataView[Vec4f, HFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[Vec4f, HFloat](_))
+    testReadViewFromData(ReadDataView[Vec4f, HFloat](_, _, _))
+    testArrayFromCollection[Vec4f, HFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, HFloat](a: _*))
+    testArrayFromCollection[Vec4f, HFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, HFloat](a))
+    testBufferFromCollection[Vec4f, HFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, HFloat](a: _*))
+    testBufferFromCollection[Vec4f, HFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, HFloat](a))
     
-    testArrayFromSize(DataArray[Vec4f, RawFloat](_))
-    testArrayFromData[Vec4f, RawFloat](DataArray[Vec4f, RawFloat](_))
-    testBufferFromSize(DataBuffer[Vec4f, RawFloat](_))
-    testBufferFromData(DataBuffer[Vec4f, RawFloat](_))
-    testViewFromData(DataView[Vec4f, RawFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Vec4f, RawFloat](_))
-    testReadViewFromData(ReadDataView[Vec4f, RawFloat](_, _, _))
-    testArrayFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, RawFloat](a: _*))
-    testArrayFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, RawFloat](a))
-    testBufferFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RawFloat](a: _*))
-    testBufferFromCollection[Vec4f, RawFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RawFloat](a))
+    testArrayFromSize(DataArray[Vec4f, RFloat](_))
+    testArrayFromData[Vec4f, RFloat](DataArray[Vec4f, RFloat](_))
+    testBufferFromSize(DataBuffer[Vec4f, RFloat](_))
+    testBufferFromData(DataBuffer[Vec4f, RFloat](_))
+    testViewFromData(DataView[Vec4f, RFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[Vec4f, RFloat](_))
+    testReadViewFromData(ReadDataView[Vec4f, RFloat](_, _, _))
+    testArrayFromCollection[Vec4f, RFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, RFloat](a: _*))
+    testArrayFromCollection[Vec4f, RFloat]((a: IndexedSeq[ReadVec4f]) => DataArray[Vec4f, RFloat](a))
+    testBufferFromCollection[Vec4f, RFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RFloat](a: _*))
+    testBufferFromCollection[Vec4f, RFloat]((a: IndexedSeq[ReadVec4f]) => DataBuffer[Vec4f, RFloat](a))
   }
   
-    
+  test("Copy") {
+    testCopy(DataSeq[Vec4f, UByte])
+    testCopy(DataSeq[Vec4f, SByte])
+    testCopy(DataSeq[Vec4f, UShort])
+    testCopy(DataSeq[Vec4f, SShort])
+    testCopy(DataSeq[Vec4f, UInt])
+    testCopy(DataSeq[Vec4f, SInt])
+    testCopy(DataSeq[Vec4f, HFloat])
+    testCopy(DataSeq[Vec4f, RFloat])
+  }
+
   test("Apply/Update") {
     testApplyUpdateArray[Vec4f, SByte](DataArray[Vec4f, SByte](_))
     testApplyUpdateBuffer(DataBuffer[Vec4f, SByte](_))
@@ -160,12 +171,12 @@ class Vec4fTest extends FunSuite {
     testApplyUpdateBuffer(DataBuffer[Vec4f, UInt](_))
     testApplyUpdateView(DataView[Vec4f, UInt](_, _, _))
     
-    testApplyUpdateArray[Vec4f, HalfFloat](DataArray[Vec4f, HalfFloat](_))
-    testApplyUpdateBuffer(DataBuffer[Vec4f, HalfFloat](_))
-    testApplyUpdateView(DataView[Vec4f, HalfFloat](_, _, _))
+    testApplyUpdateArray[Vec4f, HFloat](DataArray[Vec4f, HFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, HFloat](_))
+    testApplyUpdateView(DataView[Vec4f, HFloat](_, _, _))
     
-    testApplyUpdateArray[Vec4f, RawFloat](DataArray[Vec4f, RawFloat](_))
-    testApplyUpdateBuffer(DataBuffer[Vec4f, RawFloat](_))
-    testApplyUpdateView(DataView[Vec4f, RawFloat](_, _, _))
+    testApplyUpdateArray[Vec4f, RFloat](DataArray[Vec4f, RFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Vec4f, RFloat](_))
+    testApplyUpdateView(DataView[Vec4f, RFloat](_, _, _))
   }
 }

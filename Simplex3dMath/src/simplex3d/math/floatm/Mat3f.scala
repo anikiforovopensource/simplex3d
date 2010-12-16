@@ -335,7 +335,7 @@ final class Mat3f private[math] (
 
   type Read = ReadMat3f
   type Const = ConstMat3f
-  type Component = Float1
+  type Component = RFloat
 
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s;

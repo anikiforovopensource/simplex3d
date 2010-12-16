@@ -178,7 +178,7 @@ final class Quat4f private[math] (
 {
   type Read = ReadQuat4f
   type Const = ConstQuat4f
-  type Component = Float1
+  type Component = RFloat
 
   pa = ca; pb = cb; pc = cc; pd = cd
 

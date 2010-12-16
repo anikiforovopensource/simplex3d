@@ -171,7 +171,7 @@ extends ReadVec2d with Implicits[On] with Composite
 {
   type Read = ReadVec2d
   type Const = ConstVec2d
-  type Component = Double1
+  type Component = RDouble
 
   px = cx; py = cy
 

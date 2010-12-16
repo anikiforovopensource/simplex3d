@@ -206,7 +206,7 @@ extends ReadVec3i with Implicits[On] with Composite
 {
   type Read = ReadVec3i
   type Const = ConstVec3i
-  type Component = Int1
+  type Component = SInt
 
   px = cx; py = cy; pz = cz
 

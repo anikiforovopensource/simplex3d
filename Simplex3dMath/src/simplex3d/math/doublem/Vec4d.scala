@@ -244,7 +244,7 @@ final class Vec4d private[math] (
 {
   type Read = ReadVec4d
   type Const = ConstVec4d
-  type Component = Double1
+  type Component = RDouble
 
   px = cx; py = cy; pz = cz; pw = cw
 

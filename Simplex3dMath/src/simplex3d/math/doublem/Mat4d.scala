@@ -423,7 +423,7 @@ final class Mat4d private[math] (
 
   type Read = ReadMat4d
   type Const = ConstMat4d
-  type Component = Double1
+  type Component = RDouble
 
   def *=(s: Double) {
     m00 *= s; m10 *= s; m20 *= s; m30 *= s;

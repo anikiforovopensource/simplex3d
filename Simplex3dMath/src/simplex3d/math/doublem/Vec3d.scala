@@ -197,7 +197,7 @@ final class Vec3d private[math] (
 {
   type Read = ReadVec3d
   type Const = ConstVec3d
-  type Component = Double1
+  type Component = RDouble
 
   px = cx; py = cy; pz = cz
 

@@ -266,7 +266,7 @@ extends ReadVec2b with Implicits[On] with Composite
 {
   type Read = ReadVec2b
   type Const = ConstVec2b
-  type Component = Boolean1
+  type Component = Bool
 
   px = cx; py = cy
 

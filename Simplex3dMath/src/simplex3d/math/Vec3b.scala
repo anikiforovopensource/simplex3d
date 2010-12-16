@@ -304,7 +304,7 @@ extends ReadVec3b with Implicits[On] with Composite
 {
   type Read = ReadVec3b
   type Const = ConstVec3b
-  type Component = Boolean1
+  type Component = Bool
 
   px = cx; py = cy; pz = cz
 

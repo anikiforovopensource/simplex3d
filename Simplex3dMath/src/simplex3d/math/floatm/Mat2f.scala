@@ -266,7 +266,7 @@ final class Mat2f private[math] (
 
   type Read = ReadMat2f
   type Const = ConstMat2f
-  type Component = Float1
+  type Component = RFloat
 
   def *=(s: Float) {
     m00 *= s; m10 *= s;

@@ -342,7 +342,7 @@ final class Mat2x3d private[math] (
 
   type Read = ReadMat2x3d
   type Const = ConstMat2x3d
-  type Component = Double1
+  type Component = RDouble
 
   def *=(s: Double) {
     m00 *= s; m10 *= s;

@@ -244,7 +244,7 @@ final class Vec4f private[math] (
 {
   type Read = ReadVec4f
   type Const = ConstVec4f
-  type Component = Float1
+  type Component = RFloat
 
   px = cx; py = cy; pz = cz; pw = cw
 

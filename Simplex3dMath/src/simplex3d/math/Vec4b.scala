@@ -389,7 +389,7 @@ final class Vec4b private[math] (
 {
   type Read = ReadVec4b
   type Const = ConstVec4b
-  type Component = Boolean1
+  type Component = Bool
 
   px = cx; py = cy; pz = cz; pw = cw
 

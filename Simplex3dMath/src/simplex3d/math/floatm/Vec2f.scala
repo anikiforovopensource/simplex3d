@@ -171,7 +171,7 @@ extends ReadVec2f with Implicits[On] with Composite
 {
   type Read = ReadVec2f
   type Const = ConstVec2f
-  type Component = Float1
+  type Component = RFloat
 
   px = cx; py = cy
 

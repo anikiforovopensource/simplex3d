@@ -256,7 +256,7 @@ final class Vec4i private[math] (
 {
   type Read = ReadVec4i
   type Const = ConstVec4i
-  type Component = Int1
+  type Component = SInt
 
   px = cx; py = cy; pz = cz; pw = cw
 

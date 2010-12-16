@@ -183,7 +183,7 @@ extends ReadVec2i with Implicits[On] with Composite
 {
   type Read = ReadVec2i
   type Const = ConstVec2i
-  type Component = Int1
+  type Component = SInt
 
   px = cx; py = cy
 

@@ -177,7 +177,7 @@ final class Quat4d private[math] (
 {
   type Read = ReadQuat4d
   type Const = ConstQuat4d
-  type Component = Double1
+  type Component = RDouble
 
   pa = ca; pb = cb; pc = cc; pd = cd
 

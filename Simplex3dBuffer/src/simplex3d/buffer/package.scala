@@ -29,9 +29,9 @@ import simplex3d.math._
  */
 package object buffer {
 
-  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[SInt, R]) :Factory[SInt, R] = s
-  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :Factory[E, R] = s
-  private final def cast[R <: DefinedInt](f: Factory[SInt, R]) = f.asInstanceOf[DataArray[SInt, R]]
+  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[SInt, R]) :DataFactory[SInt, R] = s
+  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :DataFactory[E, R] = s
+  private final def cast[R <: DefinedInt](f: DataFactory[SInt, R]) = f.asInstanceOf[DataArray[SInt, R]]
 
   // SInt
   implicit final lazy val FactorySIntSByte = primitiveFactory[SByte](new ArraySIntSByte)

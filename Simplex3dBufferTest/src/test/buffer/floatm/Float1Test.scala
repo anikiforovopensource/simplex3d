@@ -47,9 +47,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, SByte](_))
     testReadViewFromData(ReadDataView[RFloat, SByte](_, _, _))
     testArrayFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataArray[RFloat, SByte](a: _*))
-    testArrayFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataArray[RFloat, SByte](a))
     testBufferFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SByte](a: _*))
-    testBufferFromCollection[RFloat, SByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SByte](a))
 
     testArrayFromSize(DataArray[RFloat, UByte](_))
     testArrayFromData[RFloat, UByte](DataArray[RFloat, UByte](_))
@@ -59,9 +57,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, UByte](_))
     testReadViewFromData(ReadDataView[RFloat, UByte](_, _, _))
     testArrayFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataArray[RFloat, UByte](a: _*))
-    testArrayFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataArray[RFloat, UByte](a))
     testBufferFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UByte](a: _*))
-    testBufferFromCollection[RFloat, UByte]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UByte](a))
 
     testArrayFromSize(DataArray[RFloat, SShort](_))
     testArrayFromData[RFloat, SShort](DataArray[RFloat, SShort](_))
@@ -71,9 +67,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, SShort](_))
     testReadViewFromData(ReadDataView[RFloat, SShort](_, _, _))
     testArrayFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataArray[RFloat, SShort](a: _*))
-    testArrayFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataArray[RFloat, SShort](a))
     testBufferFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SShort](a: _*))
-    testBufferFromCollection[RFloat, SShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SShort](a))
 
     testArrayFromSize(DataArray[RFloat, UShort](_))
     testArrayFromData[RFloat, UShort](DataArray[RFloat, UShort](_))
@@ -83,9 +77,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, UShort](_))
     testReadViewFromData(ReadDataView[RFloat, UShort](_, _, _))
     testArrayFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataArray[RFloat, UShort](a: _*))
-    testArrayFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataArray[RFloat, UShort](a))
     testBufferFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UShort](a: _*))
-    testBufferFromCollection[RFloat, UShort]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UShort](a))
 
     testArrayFromSize(DataArray[RFloat, SInt](_))
     testArrayFromData[RFloat, SInt](DataArray[RFloat, SInt](_))
@@ -95,9 +87,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, SInt](_))
     testReadViewFromData(ReadDataView[RFloat, SInt](_, _, _))
     testArrayFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataArray[RFloat, SInt](a: _*))
-    testArrayFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataArray[RFloat, SInt](a))
     testBufferFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SInt](a: _*))
-    testBufferFromCollection[RFloat, SInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, SInt](a))
 
     testArrayFromSize(DataArray[RFloat, UInt](_))
     testArrayFromData[RFloat, UInt](DataArray[RFloat, UInt](_))
@@ -107,9 +97,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, UInt](_))
     testReadViewFromData(ReadDataView[RFloat, UInt](_, _, _))
     testArrayFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataArray[RFloat, UInt](a: _*))
-    testArrayFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataArray[RFloat, UInt](a))
     testBufferFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UInt](a: _*))
-    testBufferFromCollection[RFloat, UInt]((a: IndexedSeq[Float]) => DataBuffer[RFloat, UInt](a))
     
     testArrayFromSize(DataArray[RFloat, HFloat](_))
     testArrayFromData[RFloat, HFloat](DataArray[RFloat, HFloat](_))
@@ -119,9 +107,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, HFloat](_))
     testReadViewFromData(ReadDataView[RFloat, HFloat](_, _, _))
     testArrayFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, HFloat](a: _*))
-    testArrayFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, HFloat](a))
     testBufferFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, HFloat](a: _*))
-    testBufferFromCollection[RFloat, HFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, HFloat](a))
     
     testArrayFromSize(DataArray[RFloat, RFloat](_))
     testArrayFromData[RFloat, RFloat](DataArray[RFloat, RFloat](_))
@@ -131,9 +117,7 @@ class RFloatTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RFloat, RFloat](_))
     testReadViewFromData(ReadDataView[RFloat, RFloat](_, _, _))
     testArrayFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, RFloat](a: _*))
-    testArrayFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, RFloat](a))
     testBufferFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, RFloat](a: _*))
-    testBufferFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, RFloat](a))
   }
   
   test("Copy") {

@@ -43,13 +43,13 @@ extends DataSeq[E, R] with ReadDataView[E, R] {
 object ReadDataView {
   def apply[E <: Meta, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit factory: Factory[E, R]) :ReadDataView[E, R] = {
+  )(implicit factory: DataFactory[E, R]) :ReadDataView[E, R] = {
     factory.mkReadDataView(buffer, offset, stride)
   }
 
   def apply[E <: Meta, R <: Defined](
     db: inDataBuffer[_, _], offset: Int, stride: Int
-  )(implicit factory: Factory[E, R]) :ReadDataView[E, R] = {
+  )(implicit factory: DataFactory[E, R]) :ReadDataView[E, R] = {
     val res = factory.mkReadDataView(db.sharedBuffer, offset, stride)
     if (db.readOnly) res.asReadOnly() else res
   }
@@ -58,13 +58,13 @@ object ReadDataView {
 object DataView {
   def apply[E <: Meta, R <: Defined](
     buffer: ByteBuffer, offset: Int, stride: Int
-  )(implicit factory: Factory[E, R]) :DataView[E, R] = {
+  )(implicit factory: DataFactory[E, R]) :DataView[E, R] = {
     factory.mkDataView(buffer, offset, stride)
   }
 
   def apply[E <: Meta, R <: Defined](
     db: DataBuffer[_, _], offset: Int, stride: Int
-  )(implicit factory: Factory[E, R]) :DataView[E, R] = {
+  )(implicit factory: DataFactory[E, R]) :DataView[E, R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )

@@ -35,7 +35,7 @@ private[buffer] abstract class ReadBaseSeq[
 ](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends Protected[R#Array @uncheckedVariance](shared) with Factory[E, R]
+) extends Protected[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Assertions

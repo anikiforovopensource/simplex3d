@@ -311,7 +311,7 @@ object TestUtil extends FunSuite {
   }
 
   private def RandomDataArray[E <: Meta, R <: Raw](size: Int)(
-    implicit factory: Factory[E, R], descriptor: Descriptor[E, R]
+    implicit factory: DataFactory[E, R], descriptor: Descriptor[E, R]
   ) :DataArray[E, R] = {
     factory.mkDataArray(genRandomArray(size*descriptor.components, descriptor))
   }

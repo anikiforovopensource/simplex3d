@@ -32,7 +32,7 @@ extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
 
 object DataSeq {
   def apply[E <: Meta, R <: Defined](
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :DataSeq[E, R] = {
     factory match {
       case ds: DataSeq[_, _] => ds.asInstanceOf[DataSeq[E, R]]

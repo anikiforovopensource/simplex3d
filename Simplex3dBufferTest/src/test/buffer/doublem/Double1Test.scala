@@ -47,9 +47,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, SByte](_))
     testReadViewFromData(ReadDataView[RDouble, SByte](_, _, _))
     testArrayFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataArray[RDouble, SByte](a: _*))
-    testArrayFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataArray[RDouble, SByte](a))
     testBufferFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SByte](a: _*))
-    testBufferFromCollection[RDouble, SByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SByte](a))
 
     testArrayFromSize(DataArray[RDouble, UByte](_))
     testArrayFromData[RDouble, UByte](DataArray[RDouble, UByte](_))
@@ -59,9 +57,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, UByte](_))
     testReadViewFromData(ReadDataView[RDouble, UByte](_, _, _))
     testArrayFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataArray[RDouble, UByte](a: _*))
-    testArrayFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataArray[RDouble, UByte](a))
     testBufferFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UByte](a: _*))
-    testBufferFromCollection[RDouble, UByte]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UByte](a))
 
     testArrayFromSize(DataArray[RDouble, SShort](_))
     testArrayFromData[RDouble, SShort](DataArray[RDouble, SShort](_))
@@ -71,9 +67,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, SShort](_))
     testReadViewFromData(ReadDataView[RDouble, SShort](_, _, _))
     testArrayFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataArray[RDouble, SShort](a: _*))
-    testArrayFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataArray[RDouble, SShort](a))
     testBufferFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SShort](a: _*))
-    testBufferFromCollection[RDouble, SShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SShort](a))
 
     testArrayFromSize(DataArray[RDouble, UShort](_))
     testArrayFromData[RDouble, UShort](DataArray[RDouble, UShort](_))
@@ -83,9 +77,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, UShort](_))
     testReadViewFromData(ReadDataView[RDouble, UShort](_, _, _))
     testArrayFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataArray[RDouble, UShort](a: _*))
-    testArrayFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataArray[RDouble, UShort](a))
     testBufferFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UShort](a: _*))
-    testBufferFromCollection[RDouble, UShort]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UShort](a))
 
     testArrayFromSize(DataArray[RDouble, SInt](_))
     testArrayFromData[RDouble, SInt](DataArray[RDouble, SInt](_))
@@ -95,9 +87,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, SInt](_))
     testReadViewFromData(ReadDataView[RDouble, SInt](_, _, _))
     testArrayFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataArray[RDouble, SInt](a: _*))
-    testArrayFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataArray[RDouble, SInt](a))
     testBufferFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SInt](a: _*))
-    testBufferFromCollection[RDouble, SInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, SInt](a))
 
     testArrayFromSize(DataArray[RDouble, UInt](_))
     testArrayFromData[RDouble, UInt](DataArray[RDouble, UInt](_))
@@ -107,9 +97,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, UInt](_))
     testReadViewFromData(ReadDataView[RDouble, UInt](_, _, _))
     testArrayFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataArray[RDouble, UInt](a: _*))
-    testArrayFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataArray[RDouble, UInt](a))
     testBufferFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UInt](a: _*))
-    testBufferFromCollection[RDouble, UInt]((a: IndexedSeq[Double]) => DataBuffer[RDouble, UInt](a))
     
     testArrayFromSize(DataArray[RDouble, HFloat](_))
     testArrayFromData[RDouble, HFloat](DataArray[RDouble, HFloat](_))
@@ -119,9 +107,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, HFloat](_))
     testReadViewFromData(ReadDataView[RDouble, HFloat](_, _, _))
     testArrayFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, HFloat](a: _*))
-    testArrayFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, HFloat](a))
     testBufferFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, HFloat](a: _*))
-    testBufferFromCollection[RDouble, HFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, HFloat](a))
     
     testArrayFromSize(DataArray[RDouble, RFloat](_))
     testArrayFromData[RDouble, RFloat](DataArray[RDouble, RFloat](_))
@@ -131,9 +117,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, RFloat](_))
     testReadViewFromData(ReadDataView[RDouble, RFloat](_, _, _))
     testArrayFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, RFloat](a: _*))
-    testArrayFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataArray[RDouble, RFloat](a))
     testBufferFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RFloat](a: _*))
-    testBufferFromCollection[RDouble, RFloat]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RFloat](a))
     
     testArrayFromSize(DataArray[RDouble, RDouble](_))
     testArrayFromData[RDouble, RDouble](DataArray[RDouble, RDouble](_))
@@ -143,9 +127,7 @@ class RDoubleTest extends FunSuite {
     testReadBufferFromData(ReadDataBuffer[RDouble, RDouble](_))
     testReadViewFromData(ReadDataView[RDouble, RDouble](_, _, _))
     testArrayFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataArray[RDouble, RDouble](a: _*))
-    testArrayFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataArray[RDouble, RDouble](a))
     testBufferFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RDouble](a: _*))
-    testBufferFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RDouble](a))
   }
   
   test("Copy") {

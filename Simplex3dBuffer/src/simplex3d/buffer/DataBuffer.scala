@@ -38,13 +38,13 @@ extends DataView[E, R] with Contiguous[E, R] with ReadDataBuffer[E, R]
 
 object ReadDataBuffer {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :ReadDataBuffer[E, R] = {
     factory.mkReadDataBuffer(buffer)
   }
 
   def apply[E <: Meta, R <: Defined](db: ReadDataBuffer[_, _])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :ReadDataBuffer[E, R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
     if (db.readOnly) res.asReadOnly() else res
@@ -53,27 +53,19 @@ object ReadDataBuffer {
 
 object DataBuffer {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :DataBuffer[E, R] = {
     factory.mkDataBuffer(buffer)
   }
 
   def apply[E <: Meta, R <: Defined](size: Int)(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :DataBuffer[E, R] = {
     factory.mkDataBuffer(size)
   }
 
   def apply[E <: Meta, R <: Defined](vals: E#Read*)(
-    implicit factory: Factory[E, R]
-  ) :DataBuffer[E, R] = {
-    val data = factory.mkDataBuffer(vals.size)
-    data.put(vals)
-    data
-  }
-
-  def apply[E <: Meta, R <: Defined](vals: IndexedSeq[E#Read])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :DataBuffer[E, R] = {
     val data = factory.mkDataBuffer(vals.size)
     data.put(vals)
@@ -81,7 +73,7 @@ object DataBuffer {
   }
 
   def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _])(
-    implicit factory: Factory[E, R]
+    implicit factory: DataFactory[E, R]
   ) :DataBuffer[E, R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."

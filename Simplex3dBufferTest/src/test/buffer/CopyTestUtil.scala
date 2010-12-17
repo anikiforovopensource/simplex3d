@@ -48,7 +48,7 @@ object CopyTestUtil extends FunSuite {
   }
   
   def testCopy[E <: Meta, R <: Raw](
-    factory: Factory[E, R]
+    factory: DataFactory[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     
     val dataArray = factory.mkDataArray(genArray(0, descriptor))

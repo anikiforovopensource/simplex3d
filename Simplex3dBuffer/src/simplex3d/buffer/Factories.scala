@@ -29,7 +29,7 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait Factory[E <: Meta, +R <: Raw] {
+trait DataFactory[E <: Meta, +R <: Raw] {
   def rawType: Int
   def components: Int
   def elemManifest: ClassManifest[E]
@@ -86,4 +86,15 @@ trait Factory[E <: Meta, +R <: Raw] {
     if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
     else mkReadDataViewInstance(byteBuffer, offset, stride)
   }
+}
+
+
+trait IndexFactory[+R <: Unsigned] extends DataFactory[SInt, R] {
+  def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
+    mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
+
+  def mkIndexArray(size: Int) :IndexArray[R] = mkDataArray(size)
+  def mkIndexArray(array: R#Array @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
+  def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
+  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
 }

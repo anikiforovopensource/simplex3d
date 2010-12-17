@@ -31,9 +31,9 @@ import simplex3d.buffer.floatm.impl._
  */
 package object floatm {
 
-  private final def primitiveFactory[R <: DefinedFloat](s: DataSeq[RFloat, R]) :Factory[RFloat, R] = s
-  private final def factory[E <: Composite, R <: DefinedFloat](s: DataSeq[E, R]) :Factory[E, R] = s
-  private final def cast[R <: DefinedFloat](f: Factory[RFloat, R]) = f.asInstanceOf[DataArray[RFloat, R]]
+  private final def primitiveFactory[R <: DefinedFloat](s: DataSeq[RFloat, R]) :DataFactory[RFloat, R] = s
+  private final def factory[E <: Composite, R <: DefinedFloat](s: DataSeq[E, R]) :DataFactory[E, R] = s
+  private final def cast[R <: DefinedFloat](f: DataFactory[RFloat, R]) = f.asInstanceOf[DataArray[RFloat, R]]
 
 
   // RFloat

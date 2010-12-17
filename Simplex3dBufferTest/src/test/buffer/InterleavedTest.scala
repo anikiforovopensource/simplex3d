@@ -401,24 +401,24 @@ class InterleavedTest extends FunSuite {
     }
   }
 
-  private def testInterleaved(src: Seq[Data[_]], interleaved: Seq[RawView]) {
+  private def testInterleaved(src: Seq[Data[_ <: Meta]], interleaved: Seq[RawView]) {
     // Test interleaved constraints.
     InterleavedData.verify(interleaved)
 
-    // Test types
+    
     for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {
+      // Test types
+
       assert(a.elemManifest == b.elemManifest)
       assert(a.readManifest == b.readManifest)
       assert(a.backing.elemManifest == b.backing.elemManifest)
       assert(a.backing.readManifest == b.backing.readManifest)
       assert(a.rawType == b.rawType)
-    }
-    
-    // Test content.
-    for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {
-      assert(a.size == b.size)
 
-      testContent(a.components, a, 0, b, 0, a.size)
+      // Test content.
+      assert(a.size == b.size)
+      type T = E forSome { type E <: Meta }
+      testContent(a.components, a.asInstanceOf[ReadData[T]], 0, b.asInstanceOf[ReadData[T]], 0, a.size)
     }
   }
 

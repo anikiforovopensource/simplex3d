@@ -139,15 +139,15 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   def readManifest: ClassManifest[E#Read]
   def normalized: Boolean
 
-  final val bytesPerRawComponent = RawType.byteLength(rawType)
+  final val bytesPerComponent = RawType.byteLength(rawType)
   final def byteCapacity = {
     if (sharedStore.isInstanceOf[ByteBuffer])
       sharedStore.asInstanceOf[ByteBuffer].capacity
     else
-      buff.capacity*bytesPerRawComponent
+      buff.capacity*bytesPerComponent
   }
-  final def byteOffset = offset*bytesPerRawComponent
-  final def byteStride = stride*bytesPerRawComponent
+  final def byteOffset = offset*bytesPerComponent
+  final def byteStride = stride*bytesPerComponent
 
 
   final def readOnly: Boolean = buff.isReadOnly()
@@ -219,7 +219,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
     if (sharedStore.isInstanceOf[ByteBuffer]) {
       buff.limit(buff.capacity)
-      buff.position(offset*bytesPerRawComponent)
+      buff.position(offset*bytesPerComponent)
     }
     else {
       buff.position(offset)
@@ -231,8 +231,8 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val buff = binding()
 
     if (sharedStore.isInstanceOf[ByteBuffer]) {
-      val off = first*stride*bytesPerRawComponent
-      var lim = off + count*stride*bytesPerRawComponent
+      val off = first*stride*bytesPerComponent
+      var lim = off + count*stride*bytesPerComponent
       if (lim > buff.capacity && first + count == size) lim = buff.capacity
       buff.limit(lim)
       buff.position(off)
@@ -269,18 +269,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     )
     copy
   }
-  final def copyAsDataView(byteBuffer: ByteBuffer, offset: Int, stride: Int)
-  :DataView[E, R] = {
-    val copy = mkDataView(byteBuffer, offset, stride)
-    copy.put(
-      0,
-      backing,
-      this.offset,
-      this.stride,
-      size
-    )
-    copy
-  }
+
 
   override def toString() :String = {
     def getElemName() = {

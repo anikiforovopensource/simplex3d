@@ -86,10 +86,12 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
     val views = new Array[RawView](size)
 
     i = 0; while (i < size) {
-      val darray = in.readObject().asInstanceOf[Data[_]]
+      type T = E forSome { type E <: Meta }
+      val darray = in.readObject().asInstanceOf[Data[T]]
       val (offset, stride) = header(i)
 
-      val view = darray.copyAsDataView(byteBuffer, offset, stride)
+      val view = darray.mkDataView(byteBuffer, offset, stride)
+      view.put(darray)
       views(i) = if (darray.readOnly) view.asReadOnly() else view
 
       i += 1
@@ -106,7 +108,7 @@ object InterleavedData {
 
   final def verify(views: Seq[RawView]) {
     val first = views.head
-    val interval = new Array[Boolean](first.stride*first.bytesPerRawComponent)
+    val interval = new Array[Boolean](first.stride*first.bytesPerComponent)
 
     def checkOverlap(byteOffset: Int, bytesTaken: Int) {
       var i = byteOffset; while (i < byteOffset + bytesTaken) {
@@ -127,7 +129,7 @@ object InterleavedData {
       if(!first.sharesStoreObject(seq))
         throw new IllegalArgumentException("Views must share the same ByteByffer object.")
 
-      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerRawComponent)
+      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerComponent)
     }
   }
 }

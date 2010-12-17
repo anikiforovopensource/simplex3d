@@ -102,10 +102,10 @@ package object buffer {
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
   
-  type RawView = ReadDataView[_, Raw]
+  type RawView = ReadDataView[_ <: Meta, Raw]
 
   type inDataSeq[E <: Meta, +R <: Raw] = ReadDataSeq[E, R]
-  type inContiguous[E <: Meta, +R <: Raw] =ReadContiguous[E, R]
+  type inContiguous[E <: Meta, +R <: Raw] = ReadContiguous[E, R]
   type inDataArray[E <: Meta, +R <: Raw] = ReadDataArray[E, R]
   type inDataBuffer[E <: Meta, +R <: Raw] = ReadDataBuffer[E, R]
   type inDataView[E <: Meta, +R <: Raw] = ReadDataView[E, R]
@@ -115,7 +115,7 @@ package object buffer {
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
   type outDataSeq[E <: Meta, +R <: Raw] = DataSeq[E, R]
-  type outContiguous[E <: Meta, +R <: Raw] =Contiguous[E, R]
+  type outContiguous[E <: Meta, +R <: Raw] = Contiguous[E, R]
   type outDataArray[E <: Meta, +R <: Raw] = DataArray[E, R]
   type outDataBuffer[E <: Meta, +R <: Raw] = DataBuffer[E, R]
   type outDataView[E <: Meta, +R <: Raw] = DataView[E, R]
@@ -509,9 +509,9 @@ package object buffer {
     i = 0; while (i < dataSeqs.length) {
       val seq = dataSeqs(i)
 
-      totalWidth += seq.bytesPerRawComponent*seq.components
-      if (seq.bytesPerRawComponent > maxComponentWidth) {
-        maxComponentWidth = seq.bytesPerRawComponent
+      totalWidth += seq.bytesPerComponent*seq.components
+      if (seq.bytesPerComponent > maxComponentWidth) {
+        maxComponentWidth = seq.bytesPerComponent
       }
 
       i += 1
@@ -525,7 +525,7 @@ package object buffer {
     var width = maxComponentWidth; while (width > 0) {
 
       i = 0; while (i < dataSeqs.length) {
-        if (dataSeqs(i).bytesPerRawComponent == width) {
+        if (dataSeqs(i).bytesPerComponent == width) {
           order(count) = i
           count += 1
         }
@@ -548,13 +548,16 @@ package object buffer {
 
     i = 0; while (i < dataSeqs.length) {
 
-      val seq = dataSeqs(order(i))
-      result(order(i)) = seq.copyAsDataView(
+      type T = E forSome { type E <: Meta }
+      val seq = dataSeqs(order(i)).asInstanceOf[Data[T]]
+      val view = seq.mkDataView(
         byteBuffer,
-        byteOffset/seq.bytesPerRawComponent,
-        byteStride/seq.bytesPerRawComponent
+        byteOffset/seq.bytesPerComponent,
+        byteStride/seq.bytesPerComponent
       )
-      byteOffset += seq.bytesPerRawComponent*seq.components
+      view.put(seq)
+      result(order(i)) = view
+      byteOffset += seq.bytesPerComponent*seq.components
       
       i += 1
     }

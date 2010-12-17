@@ -70,8 +70,6 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Int], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[IntBuffer]) {
-      if (index < 0) throw new IndexOutOfBoundsException()
-
       val b = buffer().asInstanceOf[IntBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -88,8 +86,6 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Float], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[FloatBuffer]) {
-      if (index < 0) throw new IndexOutOfBoundsException()
-
       val b = buffer().asInstanceOf[FloatBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -106,8 +102,6 @@ private[buffer] abstract class BaseSeq[
     index: Int, array: Array[Double], first: Int, count: Int
   ) {
     if (stride == components && buff.isInstanceOf[DoubleBuffer]) {
-      if (index < 0) throw new IndexOutOfBoundsException()
-
       val b = buffer().asInstanceOf[DoubleBuffer]
       b.position(index + offset)
       b.put(array, first, count)
@@ -138,8 +132,6 @@ private[buffer] abstract class BaseSeq[
     }
   }
   private[this] final def putSeq(index: Int, seq: Seq[SWrite], first: Int, count: Int) {
-    if (first < 0) throw new IndexOutOfBoundsException()
-
     val iter = seq.iterator
     iter.drop(first)
     val lim = index + count
@@ -149,12 +141,23 @@ private[buffer] abstract class BaseSeq[
     }
   }
 
-  final def put(index: Int, seq: Seq[E#Read], first: Int, count: Int) {
-    if (count < 0) throw new IllegalArgumentException("Count must be greater than or equal to zero.")
-    if (index + count > size) throw new BufferOverflowException()
-    if (first + count > seq.size) throw new BufferUnderflowException()
+  private[this] final def put(index: Int, src: Seq[E#Read], srcSize: Int, first: Int, count: Int) {
+    
+    if (readOnly) throw new ReadOnlyBufferException()
+    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
+    if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
+    if (first < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
 
-    seq match {
+    if (index + count > size) {
+      if (index > size) throw new IndexOutOfBoundsException("'index' exceeds size.")
+      else throw new BufferOverflowException()
+    }
+    if (first + count > srcSize) {
+      if (first > srcSize) throw new IndexOutOfBoundsException("'first' exceeds src.size.")
+      else throw new BufferUnderflowException()
+    }
+
+    src match {
       case wrapped: WrappedArray[_] => wrapped.elemManifest match {
         case Manifest.Int =>
           if (readManifest != Manifest.Int) throw new ClassCastException()
@@ -180,16 +183,22 @@ private[buffer] abstract class BaseSeq[
       case is: IndexedSeq[_] =>
         putIndexedSeq(index, is.asInstanceOf[IndexedSeq[SWrite]], first, count)
       case _ =>
-        putSeq(index, seq.asInstanceOf[Seq[SWrite]], first, count)
+        putSeq(index, src.asInstanceOf[Seq[SWrite]], first, count)
     }
   }
 
-  final def put(index: Int, seq: Seq[E#Read]) {
-    put(index, seq, 0, seq.size)
+  final def put(index: Int, src: Seq[E#Read], first: Int, count: Int) {
+    put(index, src, src.size, first, count)
+  }
+  
+  final def put(index: Int, src: Seq[E#Read]) {
+    val size = src.size
+    put(index, src, size, 0, size)
   }
 
-  final def put(seq: Seq[E#Read]) {
-    put(0, seq, 0, seq.size)
+  final def put(src: Seq[E#Read]) {
+    val size = src.size
+    put(0, src, size, 0, size)
   }
 
 
@@ -213,15 +222,24 @@ private[buffer] abstract class BaseSeq[
     if ((backing.readManifest ne src.readManifest) && (backing.readManifest != src.readManifest))
       throw new ClassCastException()
 
-    if (srcStride < 1)
-      throw new IllegalArgumentException("'srcStride' must be greater than or equal to one.")
+    if (readOnly) throw new ReadOnlyBufferException()
+    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
+    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' is less than 1.")
+    if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
+    if (srcOffset < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
 
 
     val destOffset = offset + index*stride
     val srcLim = srcOffset + (count - 1)*srcStride + components
 
-    if (index + count > size) throw new BufferOverflowException()
-    if (srcLim > src.buff.capacity) throw new BufferUnderflowException()
+    if (index + count > size) {
+      if (index > size) throw new IndexOutOfBoundsException("'index' exceeds size.")
+      else throw new BufferOverflowException()
+    }
+    if (srcLim > src.buff.capacity) {
+      if (srcOffset > src.size) throw new IndexOutOfBoundsException("'srcOffset' exceeds src.size.")
+      else throw new BufferUnderflowException()
+    }
 
     val noConversion = (
       (rawType == src.rawType) ||

@@ -486,53 +486,65 @@ object TestUtil extends FunSuite {
     }
   }
   
-  final def testContent(
+  final def testContent[E <: Meta](
     components: Int,
-    dest: inData[_], destFirst: Int,
-    src: inData[_], srcFirst: Int,
+    dest: inData[E], destFirst: Int,
+    src: inData[E], srcFirst: Int,
+    count: Int
+  ) {
+    testContent(
+      components,
+      dest, destFirst,
+      src.backing, src.offset + srcFirst*src.stride, src.stride,
+      count
+    )
+  }
+  final def testContent[E <: Meta](
+    components: Int,
+    dest: inData[E], destFirst: Int,
+    src: inData[E#Component], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
     val d = dest.backing
-    val s = src.backing
     
     d.elemManifest match {
       case MetaManifest.SInt =>
         testIntContent(
           components,
           d.asInstanceOf[ReadData[SInt]], dest.offset + destFirst*dest.stride, dest.stride,
-          s.asInstanceOf[ReadData[SInt]], src.offset + srcFirst*src.stride, src.stride,
+          src.asInstanceOf[ReadData[SInt]], srcFirst, srcStride,
           count
         )
       case MetaManifest.RFloat =>
         testFloatContent(
           components,
           d.asInstanceOf[ReadData[RFloat]], dest.offset + destFirst*dest.stride, dest.stride,
-          s.asInstanceOf[ReadData[RFloat]], src.offset + srcFirst*src.stride, src.stride,
+          src.asInstanceOf[ReadData[RFloat]], srcFirst, srcStride,
           count
         )
       case MetaManifest.RDouble =>
         testDoubleContent(
           components,
           d.asInstanceOf[ReadData[RDouble]], dest.offset + destFirst*dest.stride, dest.stride,
-          s.asInstanceOf[ReadData[RDouble]], src.offset + srcFirst*src.stride, src.stride,
+          src.asInstanceOf[ReadData[RDouble]], srcFirst, srcStride,
           count
         )
     }
   }
   
   // Test that remaining memory not tested by testContent is unmodified.
-  final def testTheRest(
+  final def testTheRest[E <: Meta](
     components: Int,
-    dest: inData[_], destFirst: Int,
-    original: inData[_],
+    dest: inData[E], destFirst: Int,
+    original: inData[E],
     count: Int
   ) {
     if (dest.isInstanceOf[DataView[_, _]]) {
-      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[_, _]].backing)
-      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[_, _]].backing)
+      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].backing)
+      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].backing)
       
       val byteOffset = dest.byteOffset + dest.byteStride*destFirst
-      val byteSkip = components*dest.bytesPerRawComponent
+      val byteSkip = components*dest.bytesPerComponent
       val byteLimit = max(0, byteOffset + dest.byteStride*count - (dest.byteStride - byteSkip))
       
       // Beggining

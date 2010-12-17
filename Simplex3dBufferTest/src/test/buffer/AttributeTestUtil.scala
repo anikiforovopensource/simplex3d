@@ -158,10 +158,10 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.readOnlyBuffer().isReadOnly)
     checkOrder(seq.readOnlyBuffer())
 
-    assert(seq.bytesPerRawComponent == rawLength(seq.rawType))
-    if (data != null) assert(seq.byteCapacity >= seq.bytesPerRawComponent*data.limit)
-    assert(seq.byteOffset == seq.bytesPerRawComponent*seq.offset)
-    assert(seq.byteStride == seq.bytesPerRawComponent*seq.stride)
+    assert(seq.bytesPerComponent == rawLength(seq.rawType))
+    if (data != null) assert(seq.byteCapacity >= seq.bytesPerComponent*data.limit)
+    assert(seq.byteOffset == seq.bytesPerComponent*seq.offset)
+    assert(seq.byteStride == seq.bytesPerComponent*seq.stride)
 
     if (data != null) assert(seq.size == size(data.limit, seq.offset, seq.stride, seq.components))
     assert(seq.size == seq.length)

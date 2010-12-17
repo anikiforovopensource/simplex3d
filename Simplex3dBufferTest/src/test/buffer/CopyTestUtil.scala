@@ -52,7 +52,7 @@ object CopyTestUtil extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     
     val dataArray = factory.mkDataArray(genArray(0, descriptor))
-    val bytesPerComponent = dataArray.bytesPerRawComponent
+    val bytesPerComponent = dataArray.bytesPerComponent
     val components = dataArray.components
     val byteSize = size*components*bytesPerComponent
 
@@ -95,7 +95,7 @@ object CopyTestUtil extends FunSuite {
 
     {
       val copy = seq.copyAsDataArray()
-      assert(copy.byteCapacity == seq.components*seq.bytesPerRawComponent*seq.size)
+      assert(copy.byteCapacity == seq.components*seq.bytesPerComponent*seq.size)
       assert(copy.size == seq.size)
       testArray(copy, false, null)(descriptor)
       testContent(seq.components, copy, 0, original, 0, seq.size)
@@ -104,34 +104,16 @@ object CopyTestUtil extends FunSuite {
 
     {
       val copy = seq.copyAsDataBuffer()
-      assert(copy.byteCapacity == seq.components*seq.bytesPerRawComponent*seq.size)
+      assert(copy.byteCapacity == seq.components*seq.bytesPerComponent*seq.size)
       assert(copy.size == seq.size)
       testBuffer(copy, false, null)(descriptor)
       testContent(seq.components, copy, 0, original, 0, seq.size)
       assert(seq.readOnlyBuffer() == original.readOnlyBuffer())
     }
-
-    {
-      for (
-        stride <- seq.components until seq.components + 4;
-        offset <- 0 until (stride - seq.components);
-        extraBytes <- 0 until seq.bytesPerRawComponent
-      ) {
-        val buffer = genRandomBuffer(offset + seq.size*stride*seq.bytesPerRawComponent + extraBytes, descriptor)._1
-        val rest = DataBuffer[SInt, SByte](dupBuffer(buffer))
-
-        val copy = seq.copyAsDataView(buffer, offset, stride)
-        assert(copy.size == seq.size)
-        testView(copy, offset, stride, false, null)(descriptor)
-        testContent(seq.components, copy, 0, original, 0, seq.size)
-        testTheRest(seq.components, copy, 0, rest, seq.size)
-        assert(seq.readOnlyBuffer() == original.readOnlyBuffer())
-      }
-    }
   }
 
   private def putSeq[E <: Meta](original: inData[E]) {
-    // Test exceptions. Destination must remain unchanged.
+    // Test exceptions. Destination and src must remain unchanged.
     {
       val src = genRandomSeq(original.elemManifest, original.rawType, size).asInstanceOf[ReadData[E]]
       val array = src.toArray(src.readManifest)
@@ -184,7 +166,7 @@ object CopyTestUtil extends FunSuite {
 
     {
       val (index, first, count) = (0, 0, 1)
-      intercept[Exception] {
+      intercept[ReadOnlyBufferException] {
         dest.asReadOnly().asInstanceOf[Data[E]].put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
@@ -228,6 +210,15 @@ object CopyTestUtil extends FunSuite {
     }
 
     {
+      val (index, first, count) = (size + 1, 0, 1)
+      intercept[IndexOutOfBoundsException] {
+        dest.put(index, collection, first, count)
+      }
+      verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+      verify(collection, backupCollection)
+    }
+
+    {
       val (index, first, count) = (size, 0, 1)
       intercept[BufferOverflowException] {
         dest.put(index, collection, first, count)
@@ -246,10 +237,36 @@ object CopyTestUtil extends FunSuite {
     }
 
     {
+      val (index, first, count) = (0, size + 1, 1)
+      intercept[IndexOutOfBoundsException] {
+        dest.put(index, collection, first, count)
+      }
+      verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+      verify(collection, backupCollection)
+    }
+
+    {
       val (index, first, count) = (0, size, 1)
       intercept[BufferUnderflowException] {
         dest.put(index, collection, first, count)
       }
+      verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+      verify(collection, backupCollection)
+    }
+    
+    // Corner cases
+    {
+      val (index, first, count) = (size, 0, 0)
+      dest.put(index, collection, first, count)
+
+      verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+      verify(collection, backupCollection)
+    }
+    
+    {
+      val (index, first, count) = (0, size, 0)
+      dest.put(index, collection, first, count)
+
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
       verify(collection, backupCollection)
     }
@@ -279,22 +296,182 @@ object CopyTestUtil extends FunSuite {
       }
     }
   }
-  private def verify(a: Buffer, b: Buffer) {
-    assert(a.position == 0)
-    assert(a.limit == a.capacity)
+
+
+  private def putPrimitive[E <: Meta](original: inData[E]) {
+    // Test exceptions. Destination and src must remain unchanged.
+    {
+      val src = genRandomSeq(original.elemManifest, original.rawType, size).asInstanceOf[ReadData[E]].backing
+      val dest = dupSeq1(original)
+
+      {
+        val wrongSrc = wrongType(src).asInstanceOf[ReadContiguous[E#Component, Raw]]
+        val wrongSrcBackup = dupSeq2(wrongSrc)
+        
+        intercept[ClassCastException] {
+          dest.put(0, wrongSrc, 0, dest.components, 1)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(wrongSrc.readOnlyBuffer, wrongSrcBackup.readOnlyBuffer)
+      }
+
+
+      val srcBackup = dupSeq2(src)
+      
+      {
+        val (index, first, stride, count) = (0, 0, dest.components, 1)
+        intercept[ReadOnlyBufferException] {
+          dest.asReadOnly().asInstanceOf[Data[E]].put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, 0, dest.components, -1)
+        intercept[IllegalArgumentException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+
+      {
+        val (index, first, stride, count) = (0, 0, dest.components, size + 1)
+        intercept[BufferOverflowException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, 1, dest.components, size)
+        intercept[BufferUnderflowException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, 0, 0, size)
+        intercept[IllegalArgumentException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, 0, -1, size)
+        intercept[IllegalArgumentException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+
+      {
+        val (index, first, stride, count) = (-1, 0, dest.components, 1)
+        intercept[IndexOutOfBoundsException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+
+      {
+        val (index, first, stride, count) = (size + 1, 0, dest.components, 1)
+        intercept[IndexOutOfBoundsException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (size, 0, dest.components, 1)
+        intercept[BufferOverflowException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+
+      {
+        val (index, first, stride, count) = (0, -1, dest.components, 1)
+        intercept[IndexOutOfBoundsException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+
+      {
+        val (index, first, stride, count) = (0, src.size + 1, dest.components, 1)
+        intercept[IndexOutOfBoundsException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, src.size, dest.components, 1)
+        intercept[BufferUnderflowException] {
+          dest.put(index, src, first, stride, count)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      //Corener cases
+      {
+        val (index, first, stride, count) = (size, 0, dest.components, 0)
+        dest.put(index, src, first, stride, count)
+
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+      
+      {
+        val (index, first, stride, count) = (0, src.size, dest.components, 0)
+        dest.put(index, src, first, stride, count)
+
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+    }
+
+
+    val psize = original.size*original.components
+    val poffset = maxCopyOffset*original.components
     
-    assert(b.position == 0)
-    assert(b.limit == b.capacity)
+    for (size <- psize - poffset until psize) {
+      val random = genRandomSeq(original.backing.elemManifest, original.rawType, size)
+      val src = random.asInstanceOf[ReadContiguous[E#Component, Raw]]
+      val srcBackup = dupSeq2(src)
     
-    assert(a == b)
+      for (
+        index <- 0 until maxCopyOffset;
+        first <- 0 until maxCopyOffset;
+        stride <- 1 until 2*original.components;
+        count <- 0 until min(original.size - index, (src.size - first)/stride)
+      ) {
+        val dest = dupSeq1(original)
+        dest.put(index, src, first, stride, count)
+        testContent(original.components, dest, index, src, first, stride, count)
+        testTheRest(original.components, dest, index, original, count)
+        verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
+      }
+    }
   }
-  
-  private def putPrimitive(original: inData[_]) {
-    // generate randomSeq and test put(primitive)
-  }
+
   private def putData(original: inData[_]) {
     // generate randomSeq and test put(data)
   }
+
 
   private def wrongType[E <: Meta](s: inData[E]) :Data[E] = {
     if (s.backing.elemManifest == MetaManifest.SInt) {
@@ -304,6 +481,16 @@ object CopyTestUtil extends FunSuite {
       genRandomSeq(MetaManifest.SInt, RawType.SInt, s.size).asInstanceOf[Data[E]]
     }
   }
+  private def verify(a: Buffer, b: Buffer) {
+    assert(a.position == 0)
+    assert(a.limit == a.capacity)
+    
+    assert(b.position == 0)
+    assert(b.limit == b.capacity)
+    
+    assert(a == b)
+  }
+
   private def dupArray[T](array: T) :T = {
     (array match {
       case a: Array[Byte] => a.clone()

@@ -318,7 +318,9 @@ object TestUtil extends FunSuite {
   def genRandomSeq(size: Int) :Data[_ <: Meta] = {
     genRandomSeq(None, None, size)
   }
-  def genRandomSeq(manifest: Option[ClassManifest[_]], rawType: Option[Int], size: Int) :Data[_ <: Meta] = {
+  def genRandomSeq(
+    manifest: Option[ClassManifest[_ <: Meta]], rawType: Option[Int], size: Int
+  ) :Contiguous[_ <: Meta, Raw] = {
     val m = manifest match {
       case Some(man) =>
         man
@@ -363,8 +365,8 @@ object TestUtil extends FunSuite {
       genRandomSeq(m, r, size)
   }
   
-  def genRandomSeq(manifest: ClassManifest[_], rawType: Int, size: Int) :Data[_ <: Meta] = {
-    manifest match {
+  def genRandomSeq[E <: Meta](manifest: ClassManifest[E], rawType: Int, size: Int) :Contiguous[E, Raw] = {
+    (manifest match {
       case MetaManifest.SInt => rawType match {
         case SByte => RandomDataArray[SInt, SByte](size)
         case UByte => RandomDataArray[SInt, UByte](size)
@@ -483,7 +485,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec4d, RFloat](size)
         case RDouble => RandomDataArray[Vec4d, RDouble](size)
       }
-    }
+    }).asInstanceOf[Contiguous[E, Raw]]
   }
   
   final def testContent[E <: Meta](
@@ -649,30 +651,30 @@ object TestUtil extends FunSuite {
     }
   }
   
-  def convert(src: inData[_], rawType: Int) :Contiguous[_, Raw] = {
-    val factory = genRandomSeq(src.backing.elemManifest, rawType, 0)
+  def convert[E <: Meta](src: inData[E], rawType: Int) :Contiguous[E, Raw] = {
+    val factory = genRandomSeq(src.elemManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
     src.backing.elemManifest match {
       case MetaManifest.SInt =>
         putIntContent(
           src.components,
-          contiguousCopy.asInstanceOf[Contiguous[SInt, Raw]],
-          src.backing.asInstanceOf[ReadData[SInt]], src.offset, src.stride,
+          contiguousCopy.backing.asInstanceOf[Contiguous[SInt, Raw]],
+          src.backing.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RFloat =>
         putFloatContent(
           src.components,
-          contiguousCopy.asInstanceOf[Contiguous[RFloat, Raw]],
-          src.backing.asInstanceOf[ReadData[RFloat]], src.offset, src.stride,
+          contiguousCopy.backing.asInstanceOf[Contiguous[RFloat, Raw]],
+          src.backing.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RDouble =>
         putDoubleContent(
           src.components,
-          contiguousCopy.asInstanceOf[Contiguous[RDouble, Raw]],
-          src.backing.asInstanceOf[ReadData[RDouble]], src.offset, src.stride,
+          contiguousCopy.backing.asInstanceOf[Contiguous[RDouble, Raw]],
+          src.backing.asInstanceOf[ReadContiguous[RDouble, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
     }
@@ -683,7 +685,7 @@ object TestUtil extends FunSuite {
   private final def putIntContent(
     components: Int,
     dest: outContiguous[SInt, Raw],
-    src: inData[SInt], srcFirst: Int, srcStride: Int,
+    src: inContiguous[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
     assert(dest.elemManifest == MetaManifest.SInt)
@@ -703,7 +705,7 @@ object TestUtil extends FunSuite {
   private final def putFloatContent(
     components: Int,
     dest: outContiguous[RFloat, Raw],
-    src: inData[RFloat], srcFirst: Int, srcStride: Int,
+    src: inContiguous[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
     assert(dest.elemManifest == MetaManifest.RFloat)
@@ -723,7 +725,7 @@ object TestUtil extends FunSuite {
   private final def putDoubleContent(
     components: Int,
     dest: outContiguous[RDouble, Raw],
-    src: inData[RDouble], srcFirst: Int, srcStride: Int,
+    src: inContiguous[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
     assert(dest.elemManifest == MetaManifest.RDouble)

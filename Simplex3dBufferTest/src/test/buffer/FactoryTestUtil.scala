@@ -408,11 +408,13 @@ object FactoryTestUtil extends FunSuite {
       }
     }
 
-    for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteCapacity + rawBytes*descriptor.components*3*s)
-    }
-    for (size <- 1 to 9) {
-      test(size*rawBytes)
+    test(0)
+    test(1)
+    for (i <- 1 to descriptor.components; s <- 0 to 1) {
+      val oversize = s*5*(descriptor.components + 4)*rawBytes
+      test(i*rawBytes - 1 + oversize)
+      test(i*rawBytes + oversize)
+      test(i*rawBytes + 1 + oversize)
     }
   }
 
@@ -534,11 +536,13 @@ object FactoryTestUtil extends FunSuite {
       }
     }
 
-    for (byteCapacity <- 0 to rawBytes; s <- 0 to 1) {
-      test(byteCapacity + rawBytes*descriptor.components*3*s)
-    }
-    for (size <- 1 to 9) {
-      test(size*rawBytes)
+    test(0)
+    test(1)
+    for (i <- 1 to descriptor.components; s <- 0 to 1) {
+      val oversize = s*5*(descriptor.components + 4)*rawBytes
+      test(i*rawBytes - 1 + oversize)
+      test(i*rawBytes + oversize)
+      test(i*rawBytes + 1 + oversize)
     }
   }
 

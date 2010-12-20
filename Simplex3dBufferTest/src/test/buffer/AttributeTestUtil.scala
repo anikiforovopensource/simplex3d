@@ -176,9 +176,9 @@ object AttributeTestUtil extends FunSuite {
 
     // Check rawBuffer.
     if (seq.isInstanceOf[DataArray[_, _]]) {
-      assert(seq.rawBuffer().array != null)
-      assert(seq.rawBufferWithOffset().array != null)
-      assert(seq.rawBufferSubData(0, seq.size).array != null)
+      assert(seq.rawBuffer().isReadOnly == seq.readOnly)
+      assert(seq.rawBufferWithOffset().isReadOnly == seq.readOnly)
+      assert(seq.rawBufferSubData(0, seq.size).isReadOnly == seq.readOnly)
     }
     else {
       assert(seq.rawBuffer().isReadOnly)

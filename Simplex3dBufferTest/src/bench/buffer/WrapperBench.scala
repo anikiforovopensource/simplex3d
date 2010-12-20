@@ -98,29 +98,29 @@ object WrapperBench {
 
 
     // Choices
-//    start = System.currentTimeMillis
-//    testAbstractClassArray(dataArray, loops)
-//    val absClassArrTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testGenericClassArray(dataArray, loops)
-//    val genClassArrTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testGenericWrapperArray(dataArray, loops)
-//    val genWrapperArrTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testAbstractClassBuffer(dataBuffer, loops)
-//    val absClassBuffTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testAbstractInterleavedBuffer(dataBuffer, loops)
-//    val absInterleavedTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testGenericClassBuffer(dataBuffer, loops)
-//    val genClassBufTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testWrapperArray(dataArray, loops)
+    val timeWrapperArray = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testFunctionArray(dataArray, loops)
+    val timeFunctionArray = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testGenericWrapperArray(dataArray, loops)
+    val timeGenericWrapperArray = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testWrapperBuffer(dataBuffer, loops)
+    val timeWrapperBuffer = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testWrapperInterleavedBuffer(dataBuffer, loops)
+    val timeWrapperInterleavedBuffer = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testFunctionBuffer(dataBuffer, loops)
+    val timeFunctionBuffer = System.currentTimeMillis - start
 
 
     println("\nResults:")
@@ -129,12 +129,12 @@ object WrapperBench {
     println("Implemented Array time: " + implementedArrayTime + ".")
     println("Implemented Buffer time: " + implementedBufferTime + ".")
     println("Implemented Conversion time: " + implementedConversionTime + ".")
-//    println("Abstract class with Array time: " + absClassArrTime + ".")
-//    println("Generic class with Array time: " + genClassArrTime + ".")
-//    println("Generic Wrapper with Array time: " + genWrapperArrTime + ".")
-//    println("Abstract class with Buffer time: " + absClassBuffTime + ".")
-//    println("Abstract Interleaved with Buffer time: " + absInterleavedTime + ".")
-//    println("Generic class with Buffer time: " + genClassBufTime + ".")
+    println("Wrapper class with Array time: " + timeWrapperArray + ".")
+    println("Function with Array time: " + timeFunctionArray + ".")
+    println("Generic Wrapper with Array time: " + timeGenericWrapperArray + ".")
+    println("Wrapper class with Buffer time: " + timeWrapperBuffer + ".")
+    println("Wrapper with Interleaved Buffer time: " + timeWrapperInterleavedBuffer + ".")
+    println("Function with Buffer time: " + timeFunctionBuffer + ".")
   }
 
   final def testArray(data: Array[Float], loops: Int) {
@@ -183,7 +183,7 @@ object WrapperBench {
     println(answer)
   }
 
-  final def testAbstractClassArray(data: Array[Float], loops: Int) {
+  final def testWrapperArray(data: Array[Float], loops: Int) {
     var answer = 0
     val wrapper = new WrapperClass(new ArrayWrapper(data))
     val end = wrapper.size
@@ -204,7 +204,7 @@ object WrapperBench {
     println(answer)
   }
 
-  final def testGenericClassArray(data: Array[Float], loops: Int) {
+  final def testFunctionArray(data: Array[Float], loops: Int) {
     var answer = 0
     val wrapper = new WrapperFunction(new ArrayWrapper(data), new ReadFactoryImpl)
     val end = wrapper.size
@@ -225,7 +225,7 @@ object WrapperBench {
     println(answer)
   }
 
-  final def testAbstractClassBuffer(data: FloatBuffer, loops: Int) {
+  final def testWrapperBuffer(data: FloatBuffer, loops: Int) {
     var answer = 0
     val wrapper = new WrapperClass(new BufferWrapper(data))
     val end = wrapper.size
@@ -246,7 +246,7 @@ object WrapperBench {
     println(answer)
   }
 
-  final def testGenericClassBuffer(data: FloatBuffer, loops: Int) {
+  final def testFunctionBuffer(data: FloatBuffer, loops: Int) {
     var answer = 0
     val wrapper = new WrapperFunction(new BufferWrapper(data), new ReadFactoryImpl)
     val end = wrapper.size
@@ -267,7 +267,7 @@ object WrapperBench {
     println(answer)
   }
 
-  final def testAbstractInterleavedBuffer(data: FloatBuffer, loops: Int) {
+  final def testWrapperInterleavedBuffer(data: FloatBuffer, loops: Int) {
     var answer = 0
     val wrapper = new InterleavedWrapper(new BufferWrapper(data), 0, 0)
     val end = wrapper.size

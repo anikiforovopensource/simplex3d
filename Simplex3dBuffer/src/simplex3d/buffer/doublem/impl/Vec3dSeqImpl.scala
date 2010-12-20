@@ -34,7 +34,6 @@ private[buffer] final class ArrayVec3dRFloat(
   primitive: ArrayRDoubleRFloat
 ) extends BaseVec3d[RFloat](primitive, 0, 3) with DataArray[Vec3d, RFloat] {
   def this() = this(new ArrayRDoubleRFloat)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec3dRFloat(primitive.mkReadOnlyInstance())
 
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
@@ -50,20 +49,11 @@ private[buffer] final class ArrayVec3dRFloat(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Float]) =
-    new ArrayVec3dRFloat(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class BufferVec3dRFloat(
   primitive: BufferRDoubleRFloat
 ) extends BaseVec3d[RFloat](primitive, 0, 3) with DataBuffer[Vec3d, RFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec3dRFloat(primitive.mkReadOnlyInstance())
-
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -78,22 +68,11 @@ private[buffer] final class BufferVec3dRFloat(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Float]) =
-    new ArrayVec3dRFloat(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ViewVec3dRFloat(
   primitive: BufferRDoubleRFloat, off: Int, str: Int
 ) extends BaseVec3d[RFloat](primitive, off, str) with DataView[Vec3d, RFloat] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec3dRFloat(
-    primitive.mkReadOnlyInstance(), offset, stride
-  )
-
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(
@@ -108,13 +87,6 @@ private[buffer] final class ViewVec3dRFloat(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Float]) =
-    new ArrayVec3dRFloat(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dRFloat(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 
@@ -123,7 +95,6 @@ private[buffer] final class ArrayVec3dUByte(
   primitive: ArrayRDoubleUByte
 ) extends BaseVec3d[UByte](primitive, 0, 3) with DataArray[Vec3d, UByte] {
   def this() = this(new ArrayRDoubleUByte)
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec3dUByte(primitive.mkReadOnlyInstance())
 
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
@@ -139,20 +110,11 @@ private[buffer] final class ArrayVec3dUByte(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec3dUByte(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dUByte(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dUByte(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class BufferVec3dUByte(
   primitive: BufferRDoubleUByte
 ) extends BaseVec3d[UByte](primitive, 0, 3) with DataBuffer[Vec3d, UByte] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec3dUByte(primitive.mkReadOnlyInstance())
-
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -167,22 +129,11 @@ private[buffer] final class BufferVec3dUByte(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec3dUByte(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dUByte(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dUByte(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }
 
 private[buffer] final class ViewVec3dUByte(
   primitive: BufferRDoubleUByte, off: Int, str: Int
 ) extends BaseVec3d[UByte](primitive, off, str) with DataView[Vec3d, UByte] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec3dUByte(
-    primitive.mkReadOnlyInstance(), offset, stride
-  )
-
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(
@@ -197,11 +148,4 @@ private[buffer] final class ViewVec3dUByte(
     primitive(j + 1) = v.y
     primitive(j + 2) = v.z
   }
-
-  override def mkDataArray(array: Array[Byte]) =
-    new ArrayVec3dUByte(primitive.mkDataArray(array))
-  override def mkReadDataBuffer(byteBuffer: ByteBuffer) =
-    new BufferVec3dUByte(primitive.mkReadDataBuffer(byteBuffer))
-  override protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) =
-    new ViewVec3dUByte(primitive.mkReadDataBuffer(byteBuffer), offset, stride)
 }

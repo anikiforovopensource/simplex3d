@@ -174,27 +174,26 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     }).asInstanceOf[R#Buffer]
   }
 
-  protected def mkReadOnlyInstance() :ReadDataSeq[E, R]
+  private[buffer] def mkReadOnlyInstance() :ReadDataSeq[E, R]
   def asReadOnly() :ReadDataSeq[E, R]
   private[buffer] final lazy val readOnlySeq :AnyRef = {
     if (readOnly) this else mkReadOnlyInstance()
   }
 
-  private[this] final def wrapStoreArray() :Buffer = {
+  private[this] final def dupBuff() :Buffer = {
     (storeType: @switch) match {
       case ByteStore =>
-        val buff = ByteBuffer.wrap(sharedStore.asInstanceOf[Array[Byte]])
-        buff.order(ByteOrder.nativeOrder)
+        buff.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
       case ShortStore =>
-        ShortBuffer.wrap(sharedStore.asInstanceOf[Array[Short]])
+        buff.asInstanceOf[ShortBuffer].duplicate()
       case CharStore =>
-        CharBuffer.wrap(sharedStore.asInstanceOf[Array[Char]])
+        buff.asInstanceOf[CharBuffer].duplicate()
       case IntStore =>
-        IntBuffer.wrap(sharedStore.asInstanceOf[Array[Int]])
+        buff.asInstanceOf[IntBuffer].duplicate()
       case FloatStore =>
-        FloatBuffer.wrap(sharedStore.asInstanceOf[Array[Float]])
+        buff.asInstanceOf[FloatBuffer].duplicate()
       case DoubleStore =>
-        DoubleBuffer.wrap(sharedStore.asInstanceOf[Array[Double]])
+        buff.asInstanceOf[DoubleBuffer].duplicate()
     }
   }
   private[this] final def binding() :Buffer = {
@@ -204,7 +203,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
       buff
     }
     else {
-      wrapStoreArray()
+      dupBuff()
     }
   }
 

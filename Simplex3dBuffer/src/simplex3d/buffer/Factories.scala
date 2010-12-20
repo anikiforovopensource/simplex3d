@@ -98,3 +98,6 @@ trait IndexFactory[+R <: Unsigned] extends DataFactory[SInt, R] {
   def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
   def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
 }
+
+
+trait CompositeFactory //TODO

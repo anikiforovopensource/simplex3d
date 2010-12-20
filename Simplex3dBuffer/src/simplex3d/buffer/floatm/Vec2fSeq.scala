@@ -24,47 +24,47 @@ import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.floatm._
 import simplex3d.buffer._
+import RawType._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
-  primitive: Contiguous[RFloat, R], off: Int, str: Int
+private[buffer] abstract class BaseVec2f[+R <: Raw](
+  primitive: ReadContiguous[RFloat, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2f, R](primitive, off, str) {
   final def elemManifest = Vec2f.Manifest
   final def readManifest = Vec2f.ReadManifest
   final def components: Int = 2
 
-  def mkDataArray(array: R#Array @uncheckedVariance)
-  :DataArray[Vec2f, R] =
-    new ArrayVec2f[R](
-      backing.mkDataArray(array).asInstanceOf[DataArray[RFloat, R]]
-    )
-
-  def mkReadDataBuffer(byteBuffer: ByteBuffer)
-  :ReadDataBuffer[Vec2f, R] =
-    new BufferVec2f[R](
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[RFloat, R]]
-    )
-
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int)
-  :ReadDataView[Vec2f, R] =
-    new ViewVec2f[R](
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[RFloat, R]],
-      off, str
-    )
+  final def mkReadDataArray[P <: Defined](primitive: ReadDataArray[Vec2f#Component, P])
+  :ReadDataArray[Vec2f, P] = {
+    (primitive.rawType match {
+      case RFloat => new impl.ArrayVec2fRFloat(primitive.asInstanceOf[ArrayRFloatRFloat])
+      case _ => new ArrayVec2f[P](primitive)
+    }).asInstanceOf[ReadDataArray[Vec2f, P]]
+  }
+  final def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[Vec2f#Component, P])
+  :ReadDataBuffer[Vec2f, P] = {
+    (primitive.rawType match {
+      case RFloat => new impl.BufferVec2fRFloat(primitive.asInstanceOf[BufferRFloatRFloat])
+      case _ => new BufferVec2f[P](primitive)
+    }).asInstanceOf[ReadDataBuffer[Vec2f, P]]
+  }
+  final def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[Vec2f#Component, P], off: Int, str: Int)
+  :ReadDataView[Vec2f, P] = {
+    (primitive.rawType match {
+      case RFloat => new impl.ViewVec2fRFloat(primitive.asInstanceOf[BufferRFloatRFloat], off, str)
+      case _ => new ViewVec2f[P](primitive, off, str)
+    }).asInstanceOf[ReadDataView[Vec2f, P]]
+  }
 
   override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
 }
 
-private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
-  backing: DataArray[RFloat, R]
-) extends BaseVec2f[R](backing, 0, 2) with DataArray[Vec2f, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec2f(
-    backing.asReadOnly().asInstanceOf[DataArray[RFloat, R]]
-  )
-
+private[buffer] final class ArrayVec2f[+R <: Raw](
+  primitive: ReadDataArray[RFloat, R]
+) extends BaseVec2f[R](primitive, 0, 2) with DataArray[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
@@ -79,13 +79,9 @@ private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
   }
 }
 
-private[buffer] final class BufferVec2f[+R <: DefinedFloat](
-  backing: DataBuffer[RFloat, R]
-) extends BaseVec2f[R](backing, 0, 2) with DataBuffer[Vec2f, R] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec2f(
-    backing.asReadOnly().asInstanceOf[DataBuffer[RFloat, R]]
-  )
-
+private[buffer] final class BufferVec2f[+R <: Raw](
+  primitive: ReadDataBuffer[RFloat, R]
+) extends BaseVec2f[R](primitive, 0, 2) with DataBuffer[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
@@ -100,14 +96,9 @@ private[buffer] final class BufferVec2f[+R <: DefinedFloat](
   }
 }
 
-private[buffer] final class ViewVec2f[+R <: DefinedFloat](
-  backing: DataBuffer[RFloat, R], off: Int, str: Int
-) extends BaseVec2f[R](backing, off, str) with DataView[Vec2f, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec2f(
-    backing.asReadOnly().asInstanceOf[DataBuffer[RFloat, R]],
-    offset, stride
-  )
-
+private[buffer] final class ViewVec2f[+R <: Raw](
+  primitive: ReadDataBuffer[RFloat, R], off: Int, str: Int
+) extends BaseVec2f[R](primitive, off, str) with DataView[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
     val j = offset + i*stride
     ConstVec2f(

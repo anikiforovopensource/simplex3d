@@ -24,47 +24,50 @@ import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.doublem._
 import simplex3d.buffer._
+import RawType._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec3d[+R <: DefinedDouble](
-  primitive: Contiguous[RDouble, R], off: Int, str: Int
+private[buffer] abstract class BaseVec3d[+R <: Raw](
+  primitive: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3d, R](primitive, off, str) {
   final def elemManifest = Vec3d.Manifest
   final def readManifest = Vec3d.ReadManifest
   final def components: Int = 3
 
-  def mkDataArray(array: R#Array @uncheckedVariance)
-  :DataArray[Vec3d, R] =
-    new ArrayVec3d[R](
-      backing.mkDataArray(array).asInstanceOf[DataArray[RDouble, R]]
-    )
-
-  def mkReadDataBuffer(byteBuffer: ByteBuffer)
-  :ReadDataBuffer[Vec3d, R] =
-    new BufferVec3d[R](
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[RDouble, R]]
-    )
-
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int)
-  :ReadDataView[Vec3d, R] =
-    new ViewVec3d[R](
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[RDouble, R]],
-      off, str
-    )
+  final def mkReadDataArray[P <: Defined](primitive: ReadDataArray[Vec3d#Component, P])
+  :ReadDataArray[Vec3d, P] = {
+    (primitive.rawType match {
+      case UByte => new impl.ArrayVec3dUByte(primitive.asInstanceOf[ArrayRDoubleUByte])
+      case RFloat => new impl.ArrayVec3dRFloat(primitive.asInstanceOf[ArrayRDoubleRFloat])
+      case _ => new ArrayVec3d[P](primitive)
+    }).asInstanceOf[ReadDataArray[Vec3d, P]]
+  }
+  final def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[Vec3d#Component, P])
+  :ReadDataBuffer[Vec3d, P] = {
+    (primitive.rawType match {
+      case UByte => new impl.BufferVec3dUByte(primitive.asInstanceOf[BufferRDoubleUByte])
+      case RFloat => new impl.BufferVec3dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat])
+      case _ => new BufferVec3d[P](primitive)
+    }).asInstanceOf[ReadDataBuffer[Vec3d, P]]
+  }
+  final def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[Vec3d#Component, P], off: Int, str: Int)
+  :ReadDataView[Vec3d, P] = {
+    (primitive.rawType match {
+      case UByte => new impl.ViewVec3dUByte(primitive.asInstanceOf[BufferRDoubleUByte], off, str)
+      case RFloat => new impl.ViewVec3dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat], off, str)
+      case _ => new ViewVec3d[P](primitive, off, str)
+    }).asInstanceOf[ReadDataView[Vec3d, P]]
+  }
 
   override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
 }
 
-private[buffer] final class ArrayVec3d[+R <: DefinedDouble](
-  backing: DataArray[RDouble, R]
-) extends BaseVec3d[R](backing, 0, 3) with DataArray[Vec3d, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ArrayVec3d(
-    backing.asReadOnly().asInstanceOf[DataArray[RDouble, R]]
-  )
-
+private[buffer] final class ArrayVec3d[+R <: Raw](
+  primitive: ReadDataArray[RDouble, R]
+) extends BaseVec3d[R](primitive, 0, 3) with DataArray[Vec3d, R] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -81,13 +84,9 @@ private[buffer] final class ArrayVec3d[+R <: DefinedDouble](
   }
 }
 
-private[buffer] final class BufferVec3d[+R <: DefinedDouble](
-  backing: DataBuffer[RDouble, R]
-) extends BaseVec3d[R](backing, 0, 3) with DataBuffer[Vec3d, R] {
-  protected[buffer] def mkReadOnlyInstance() = new BufferVec3d(
-    backing.asReadOnly().asInstanceOf[DataBuffer[RDouble, R]]
-  )
-
+private[buffer] final class BufferVec3d[+R <: Raw](
+  primitive: ReadDataBuffer[RDouble, R]
+) extends BaseVec3d[R](primitive, 0, 3) with DataBuffer[Vec3d, R] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -104,14 +103,9 @@ private[buffer] final class BufferVec3d[+R <: DefinedDouble](
   }
 }
 
-private[buffer] final class ViewVec3d[+R <: DefinedDouble](
-  backing: DataBuffer[RDouble, R], off: Int, str: Int
-) extends BaseVec3d[R](backing, off, str) with DataView[Vec3d, R] {
-  protected[buffer] def mkReadOnlyInstance() = new ViewVec3d(
-    backing.asReadOnly().asInstanceOf[DataBuffer[RDouble, R]],
-    offset, stride
-  )
-
+private[buffer] final class ViewVec3d[+R <: Raw](
+  primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
+) extends BaseVec3d[R](primitive, off, str) with DataView[Vec3d, R] {
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(

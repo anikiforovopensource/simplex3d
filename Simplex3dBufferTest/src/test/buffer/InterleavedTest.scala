@@ -362,7 +362,7 @@ class InterleavedTest extends FunSuite {
       }
     }
   }
-
+/*TODO
   test("Serialization") {
     val count = 10
     val size = 10
@@ -400,7 +400,7 @@ class InterleavedTest extends FunSuite {
       in.close()
     }
   }
-
+*/
   private def testInterleaved(src: Seq[Data[_ <: Meta]], interleaved: Seq[RawView]) {
     // Test interleaved constraints.
     InterleavedData.verify(interleaved)

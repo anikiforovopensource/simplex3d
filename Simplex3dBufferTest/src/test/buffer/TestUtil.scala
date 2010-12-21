@@ -311,9 +311,11 @@ object TestUtil extends FunSuite {
   }
 
   private def RandomDataArray[E <: Meta, R <: Raw](size: Int)(
-    implicit factory: DataFactory[E, R], descriptor: Descriptor[E, R]
+    implicit composition: CompositionFactory[E, _ >: R],
+    primitive: DataFactory[E#Component, R],
+    descriptor: Descriptor[E, R]
   ) :DataArray[E, R] = {
-    factory.mkDataArray(genRandomArray(size*descriptor.components, descriptor))
+    composition.mkDataArray(primitive.mkDataArray(genRandomArray(size*descriptor.components, descriptor)))
   }
   def genRandomSeq(size: Int) :Data[_ <: Meta] = {
     genRandomSeq(None, None, size)

@@ -68,19 +68,24 @@ object FactoryTestUtil extends FunSuite {
     val (name, stype) = nameType(seq)
     def nameWith(exp: String) = name.replace(stype, exp)
     
-    verifyClass(seq.mkDataArray(0), nameWith("Array"))
-    verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
-    verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
-    verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-    verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-    verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-    verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-    
-    verifyClass(seq.mkIndexArray(0), nameWith("Array"))
-    verifyClass(seq.mkIndexArray(genArray(0, descriptor)), nameWith("Array"))
-    verifyClass(seq.mkIndexBuffer(0), nameWith("Buffer"))
-    verifyClass(seq.mkIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-    verifyClass(seq.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    if (seq.components > 1 || seq.stride == 1) {
+      verifyClass(seq.mkDataArray(0), nameWith("Array"))
+      verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
+      verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
+      verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+      verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+      
+      if (seq.components > 1) {
+        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+      }
+      
+      verifyClass(seq.mkIndexArray(0), nameWith("Array"))
+      verifyClass(seq.mkIndexArray(genArray(0, descriptor)), nameWith("Array"))
+      verifyClass(seq.mkIndexBuffer(0), nameWith("Buffer"))
+      verifyClass(seq.mkIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+      verifyClass(seq.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    }
   }
 
   def testIndexArrayUsingDataSize(factory: (Int, Int) => IndexArray[Unsigned]) {
@@ -172,13 +177,18 @@ object FactoryTestUtil extends FunSuite {
     val (name, stype) = nameType(seq)
     def nameWith(exp: String) = name.replace(stype, exp)
 
-    verifyClass(seq.mkDataArray(0), nameWith("Array"))
-    verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
-    verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
-    verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-    verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-    verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-    verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+    if (seq.components > 1 || seq.stride == 1) {
+      verifyClass(seq.mkDataArray(0), nameWith("Array"))
+      verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
+      verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
+      verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+      verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+      
+      if (seq.components > 1) {
+        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+      }
+    }
   }
 
   def testArrayFromSize[E <: Meta, R <: Raw](
@@ -197,7 +207,7 @@ object FactoryTestUtil extends FunSuite {
     testMakeData(factory(genArray(0, descriptor)), descriptor)
 
     CastTestUtil.testArrayCast(factory)(descriptor)
-    SerializationTestUtil.testSerialization(factory)(descriptor)
+    //SerializationTestUtil.testSerialization(factory)(descriptor)//TODO
   }
 
   def testBufferFromSize[E <: Meta, R <: Raw](
@@ -395,6 +405,7 @@ object FactoryTestUtil extends FunSuite {
           if (offset == 0 && stride == descriptor.components) {
             val view = factory(bytes, offset, stride)
             testView(view, offset, stride, false, data)(descriptor)
+            view.asInstanceOf[ReadDataBuffer[E, R]]
             testBuffer(view.asInstanceOf[ReadDataBuffer[E, R]], false, data)(descriptor)
           }
           else {

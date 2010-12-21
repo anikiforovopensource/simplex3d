@@ -126,6 +126,7 @@ with DefinedIndex with DefinedFloat with DefinedDouble
 
 
 sealed trait FloatingPoint extends Raw
+sealed trait SystemFloatingPoint extends FloatingPoint
 
 sealed trait HFloat extends FloatingPoint
 with DefinedFloat with DefinedDouble {
@@ -133,7 +134,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.ShortBuffer
 }
 
-sealed trait RFloat extends Primitive with FloatingPoint
+sealed trait RFloat extends Primitive with SystemFloatingPoint
 with DefinedFloat with DefinedDouble {
   type Read = Float
   type Component = RFloat
@@ -142,7 +143,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.FloatBuffer
 }
 
-sealed trait RDouble extends Primitive with FloatingPoint
+sealed trait RDouble extends Primitive with SystemFloatingPoint
 with DefinedDouble {
   type Read = Double
   type Component = RDouble

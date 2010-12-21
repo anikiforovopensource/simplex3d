@@ -32,7 +32,12 @@ abstract class Protected<A> {
     final Object sharedStore;
 
     Protected(Object shared) {
-        this.sharedStore = shared;
+        if (shared instanceof Protected) {
+            this.sharedStore = ((Protected) shared).sharedStore;
+        }
+        else {
+            this.sharedStore = shared;
+        }
     }
 
     @SuppressWarnings("unchecked")

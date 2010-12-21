@@ -33,8 +33,6 @@ import simplex3d.buffer._
 private[buffer] final class ArrayVec4fRFloat(
   primitive: ArrayRFloatRFloat
 ) extends BaseVec4f[RFloat](primitive, 0, 4) with DataArray[Vec4f, RFloat] {
-  def this() = this(new ArrayRFloatRFloat)
-
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
@@ -100,8 +98,6 @@ private[buffer] final class ViewVec4fRFloat(
 private[buffer] final class ArrayVec4fUByte(
   primitive: ArrayRFloatUByte
 ) extends BaseVec4f[UByte](primitive, 0, 4) with DataArray[Vec4f, UByte] {
-  def this() = this(new ArrayRFloatUByte)
-
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(

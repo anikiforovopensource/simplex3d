@@ -23,6 +23,7 @@ package doublem
 
 import java.nio._
 import scala.reflect._
+import scala.annotation.unchecked._
 import simplex3d.buffer.MetaManifest
 import simplex3d.buffer.Util._
 import simplex3d.buffer.conversion.Double._
@@ -34,12 +35,57 @@ import simplex3d.buffer.conversion.Double._
 private[buffer] sealed abstract class BaseRDouble[+R <: DefinedDouble](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseSeq[RDouble, Double, Double, R](shared, primitive, ro, off, str) {
+)
+extends BaseSeq[RDouble, Double, Double, R](shared, primitive, ro, off, str)
+with CompositionFactory[RDouble, DefinedDouble]
+{
   final def elemManifest = MetaManifest.RDouble
   final def readManifest = Manifest.Double
   final def components: Int = 1
 
+  final def mkReadDataArray[P <: DefinedDouble](primitive: ReadDataArray[RDouble, P])
+  :ReadDataArray[RDouble, P] = primitive
+  final def mkReadDataBuffer[P <: DefinedDouble](primitive: ReadDataBuffer[RDouble, P])
+  :ReadDataBuffer[RDouble, P] = primitive
+  protected final def mkReadDataViewInstance[P <: DefinedDouble](
+    primitive: ReadDataBuffer[RDouble, P], off: Int, str: Int
+  ) :ReadDataView[RDouble, P] = {
+    (primitive.rawType match {
+      case RawType.RFloat =>
+        new impl.ViewRDoubleRFloat(primitive.asInstanceOf[ReadDataBuffer[RDouble, RFloat]], off, str)
+      case _ =>
+        new ViewRDouble(primitive, off, str)
+    }).asInstanceOf[ReadDataView[RDouble, P]]
+  }
+
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[RDouble, R] = {
+    (rawType match {
+      case RawType.RFloat =>
+        val primitive = backing.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RDouble, RFloat]]
+        new impl.ViewRDoubleRFloat(primitive, off, str)
+      case _ =>
+        new ViewRDouble(backing.mkReadDataBuffer(byteBuffer), off, str)
+    }).asInstanceOf[ReadDataView[RDouble, R]]
+  }
+
   override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
+}
+
+private[buffer] final class ViewRDouble[+R <: DefinedDouble](
+  primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
+) extends BaseRDouble[R](primitive, primitive, primitive.readOnly, off, str) with DataView[RDouble, R]
+{
+  final def normalized = backing.normalized
+  final def rawType = backing.rawType
+  private[buffer] def mkReadOnlyInstance() = new ViewRDouble(backing.asReadOnly(), offset, stride)
+
+  def apply(i: Int) :Double = backing(offset + i*stride)
+  def update(i: Int, v: Double) :Unit = backing(offset + i*stride) = v
+
+  final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[RDouble, R] =
+    backing.mkDataArray(array)
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[RDouble, R] =
+    backing.mkReadDataBuffer(byteBuffer)
 }
 
 
@@ -55,9 +101,6 @@ private[buffer] sealed abstract class SeqRDoubleSByte(
     new ArrayRDoubleSByte(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleSByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleSByte(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -80,17 +123,6 @@ private[buffer] final class BufferRDoubleSByte(
   def update(i: Int, v: Double) { buff.put(i, toSByte(v)) }
 }
 
-private[buffer] final class ViewRDoubleSByte(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleSByte(
-  shared, new BufferRDoubleSByte(shared, ro), ro, off, str
-) with DataView[RDouble, SByte] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleSByte(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromSByte(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toSByte(v)) }
-}
-
 
 // Type: UByte
 private[buffer] sealed abstract class SeqRDoubleUByte(
@@ -104,9 +136,6 @@ private[buffer] sealed abstract class SeqRDoubleUByte(
     new ArrayRDoubleUByte(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleUByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleUByte(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -129,17 +158,6 @@ private[buffer] final class BufferRDoubleUByte(
   def update(i: Int, v: Double) { buff.put(i, toUByte(v)) }
 }
 
-private[buffer] final class ViewRDoubleUByte(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleUByte(
-  shared, new BufferRDoubleUByte(shared, ro), ro, off, str
-) with DataView[RDouble, UByte] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleUByte(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromUByte(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toUByte(v)) }
-}
-
 
 // Type: SShort
 private[buffer] sealed abstract class SeqRDoubleSShort(
@@ -153,9 +171,6 @@ private[buffer] sealed abstract class SeqRDoubleSShort(
     new ArrayRDoubleSShort(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleSShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleSShort(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -178,17 +193,6 @@ private[buffer] final class BufferRDoubleSShort(
   def update(i: Int, v: Double) { buff.put(i, toSShort(v)) }
 }
 
-private[buffer] final class ViewRDoubleSShort(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleSShort(
-  shared, new BufferRDoubleSShort(shared, ro), ro, off, str
-) with DataView[RDouble, SShort] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleSShort(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromSShort(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toSShort(v)) }
-}
-
 
 // Type: UShort
 private[buffer] sealed abstract class SeqRDoubleUShort(
@@ -202,9 +206,6 @@ private[buffer] sealed abstract class SeqRDoubleUShort(
     new ArrayRDoubleUShort(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleUShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleUShort(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -227,17 +228,6 @@ private[buffer] final class BufferRDoubleUShort(
   def update(i: Int, v: Double) { buff.put(i, toUShort(v)) }
 }
 
-private[buffer] final class ViewRDoubleUShort(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleUShort(
-  shared, new BufferRDoubleUShort(shared, ro), ro, off, str
-) with DataView[RDouble, UShort] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleUShort(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromUShort(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toUShort(v)) }
-}
-
 
 // Type: SInt
 private[buffer] sealed abstract class SeqRDoubleSInt(
@@ -251,9 +241,6 @@ private[buffer] sealed abstract class SeqRDoubleSInt(
     new ArrayRDoubleSInt(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleSInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleSInt(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -276,17 +263,6 @@ private[buffer] final class BufferRDoubleSInt(
   def update(i: Int, v: Double) { buff.put(i, toSInt(v)) }
 }
 
-private[buffer] final class ViewRDoubleSInt(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleSInt(
-  shared, new BufferRDoubleSInt(shared, ro), ro, off, str
-) with DataView[RDouble, SInt] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleSInt(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromSInt(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toSInt(v)) }
-}
-
 
 // Type: UInt
 private[buffer] sealed abstract class SeqRDoubleUInt(
@@ -300,9 +276,6 @@ private[buffer] sealed abstract class SeqRDoubleUInt(
     new ArrayRDoubleUInt(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleUInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleUInt(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -325,17 +298,6 @@ private[buffer] final class BufferRDoubleUInt(
   def update(i: Int, v: Double) { buff.put(i, toUInt(v)) }
 }
 
-private[buffer] final class ViewRDoubleUInt(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleUInt(
-  shared, new BufferRDoubleUInt(shared, ro), ro, off, str
-) with DataView[RDouble, UInt] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleUInt(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromUInt(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toUInt(v)) }
-}
-
 
 // Type: HFloat
 private[buffer] sealed abstract class SeqRDoubleHFloat(
@@ -349,9 +311,6 @@ private[buffer] sealed abstract class SeqRDoubleHFloat(
     new ArrayRDoubleHFloat(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleHFloat(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleHFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -374,20 +333,9 @@ private[buffer] final class BufferRDoubleHFloat(
   def update(i: Int, v: Double) { buff.put(i, toHFloat(v)) }
 }
 
-private[buffer] final class ViewRDoubleHFloat(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleHFloat(
-  shared, new BufferRDoubleHFloat(shared, ro), ro, off, str
-) with DataView[RDouble, HFloat] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleHFloat(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = fromHFloat(buff.get(offset + i*stride))
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, toHFloat(v)) }
-}
-
 
 // Type: RFloat
-private[buffer] sealed abstract class SeqRDoubleRFloat(
+private[buffer] abstract class SeqRDoubleRFloat(
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
 ) extends BaseRDouble[RFloat](shared, primitive, ro, off, str) {
@@ -398,9 +346,6 @@ private[buffer] sealed abstract class SeqRDoubleRFloat(
     new ArrayRDoubleRFloat(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleRFloat(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleRFloat(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -423,17 +368,6 @@ private[buffer] final class BufferRDoubleRFloat(
   def update(i: Int, v: Double) { buff.put(i, v.toFloat) }
 }
 
-private[buffer] final class ViewRDoubleRFloat(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleRFloat(
-  shared, new BufferRDoubleRFloat(shared, ro), ro, off, str
-) with DataView[RDouble, RFloat] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleRFloat(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = buff.get(offset + i*stride)
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, v.toFloat) }
-}
-
 
 // Type: RDouble
 private[buffer] sealed abstract class SeqRDoubleRDouble(
@@ -447,9 +381,6 @@ private[buffer] sealed abstract class SeqRDoubleRDouble(
     new ArrayRDoubleRDouble(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferRDoubleRDouble(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewRDoubleRDouble(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -470,15 +401,4 @@ private[buffer] final class BufferRDoubleRDouble(
 
   def apply(i: Int) :Double = buff.get(i)
   def update(i: Int, v: Double) { buff.put(i, v) }
-}
-
-private[buffer] final class ViewRDoubleRDouble(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqRDoubleRDouble(
-  shared, new BufferRDoubleRDouble(shared, ro), ro, off, str
-) with DataView[RDouble, RDouble] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRDoubleRDouble(shared, true, offset, stride)
-
-  def apply(i: Int) :Double = buff.get(offset + i*stride)
-  def update(i: Int, v: Double) { buff.put(offset + i*stride, v) }
 }

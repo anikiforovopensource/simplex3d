@@ -30,42 +30,43 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec4d[+R <: Raw](
+private[buffer] abstract class BaseVec4d[+R <: DefinedDouble](
   primitive: ReadContiguous[RDouble, R], off: Int, str: Int
-) extends CompositeSeq[Vec4d, R](primitive, off, str) {
+) extends CompositeSeq[Vec4d, R, DefinedDouble](primitive, off, str) {
   final def elemManifest = Vec4d.Manifest
   final def readManifest = Vec4d.ReadManifest
   final def components: Int = 4
 
-  final def mkReadDataArray[P <: Defined](primitive: ReadDataArray[Vec4d#Component, P])
+  final def mkReadDataArray[P <: DefinedDouble](primitive: ReadDataArray[Vec4d#Component, P])
   :ReadDataArray[Vec4d, P] = {
     (primitive.rawType match {
       case UByte => new impl.ArrayVec4dUByte(primitive.asInstanceOf[ArrayRDoubleUByte])
       case RFloat => new impl.ArrayVec4dRFloat(primitive.asInstanceOf[ArrayRDoubleRFloat])
-      case _ => new ArrayVec4d[P](primitive)
+      case _ => new ArrayVec4d(primitive)
     }).asInstanceOf[ReadDataArray[Vec4d, P]]
   }
-  final def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[Vec4d#Component, P])
+  final def mkReadDataBuffer[P <: DefinedDouble](primitive: ReadDataBuffer[Vec4d#Component, P])
   :ReadDataBuffer[Vec4d, P] = {
     (primitive.rawType match {
       case UByte => new impl.BufferVec4dUByte(primitive.asInstanceOf[BufferRDoubleUByte])
       case RFloat => new impl.BufferVec4dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat])
-      case _ => new BufferVec4d[P](primitive)
+      case _ => new BufferVec4d(primitive)
     }).asInstanceOf[ReadDataBuffer[Vec4d, P]]
   }
-  final def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[Vec4d#Component, P], off: Int, str: Int)
-  :ReadDataView[Vec4d, P] = {
+  protected final def mkReadDataViewInstance[P <: DefinedDouble](
+    primitive: ReadDataBuffer[Vec4d#Component, P], off: Int, str: Int
+  ) :ReadDataView[Vec4d, P] = {
     (primitive.rawType match {
       case UByte => new impl.ViewVec4dUByte(primitive.asInstanceOf[BufferRDoubleUByte], off, str)
       case RFloat => new impl.ViewVec4dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat], off, str)
-      case _ => new ViewVec4d[P](primitive, off, str)
+      case _ => new ViewVec4d(primitive, off, str)
     }).asInstanceOf[ReadDataView[Vec4d, P]]
   }
 
   override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
 }
 
-private[buffer] final class ArrayVec4d[+R <: Raw](
+private[buffer] final class ArrayVec4d[+R <: DefinedDouble](
   primitive: ReadDataArray[RDouble, R]
 ) extends BaseVec4d[R](primitive, 0, 4) with DataArray[Vec4d, R] {
   def apply(i: Int) :ConstVec4d = {
@@ -86,7 +87,7 @@ private[buffer] final class ArrayVec4d[+R <: Raw](
   }
 }
 
-private[buffer] final class BufferVec4d[+R <: Raw](
+private[buffer] final class BufferVec4d[+R <: DefinedDouble](
   primitive: ReadDataBuffer[RDouble, R]
 ) extends BaseVec4d[R](primitive, 0, 4) with DataBuffer[Vec4d, R] {
   def apply(i: Int) :ConstVec4d = {
@@ -107,7 +108,7 @@ private[buffer] final class BufferVec4d[+R <: Raw](
   }
 }
 
-private[buffer] final class ViewVec4d[+R <: Raw](
+private[buffer] final class ViewVec4d[+R <: DefinedDouble](
   primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseVec4d[R](primitive, off, str) with DataView[Vec4d, R] {
   def apply(i: Int) :ConstVec4d = {

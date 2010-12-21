@@ -34,8 +34,6 @@ import RawType._
 private[buffer] final class ArrayVec4dRFloat(
   primitive: ArrayRDoubleRFloat
 ) extends BaseVec4d[RFloat](primitive, 0, 4) with DataArray[Vec4d, RFloat] {
-  def this() = this(new ArrayRDoubleRFloat)
-
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
@@ -101,8 +99,6 @@ private[buffer] final class ViewVec4dRFloat(
 private[buffer] final class ArrayVec4dUByte(
   primitive: ArrayRDoubleUByte
 ) extends BaseVec4d[UByte](primitive, 0, 4) with DataArray[Vec4d, UByte] {
-  def this() = this(new ArrayRDoubleUByte)
-
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(

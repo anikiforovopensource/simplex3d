@@ -33,8 +33,6 @@ import simplex3d.buffer._
 private[buffer] final class ArrayVec2dRFloat(
   primitive: ArrayRDoubleRFloat
 ) extends BaseVec2d[RFloat](primitive, 0, 2) with DataArray[Vec2d, RFloat] {
-  def this() = this(new ArrayRDoubleRFloat)
-
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(

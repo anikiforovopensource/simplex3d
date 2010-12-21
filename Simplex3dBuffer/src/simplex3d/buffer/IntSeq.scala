@@ -22,6 +22,7 @@ package simplex3d.buffer
 
 import java.nio._
 import scala.reflect._
+import scala.annotation.unchecked._
 import simplex3d.buffer.Util._
 
 
@@ -31,162 +32,44 @@ import simplex3d.buffer.Util._
 private[buffer] sealed abstract class BaseSInt[+R <: DefinedInt](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends BaseSeq[SInt, Int, Int, R](shared, primitive, ro, off, str) {
+)
+extends BaseSeq[SInt, Int, Int, R](shared, primitive, ro, off, str)
+with CompositionFactory[SInt, DefinedInt]
+{
   final def elemManifest = MetaManifest.SInt
   final def readManifest = Manifest.Int
   final def components: Int = 1
+  final def normalized = false
 
+  final def mkReadDataArray[P <: DefinedInt](primitive: ReadDataArray[SInt, P])
+  :ReadDataArray[SInt, P] = primitive
+  final def mkReadDataBuffer[P <: DefinedInt](primitive: ReadDataBuffer[SInt, P])
+  :ReadDataBuffer[SInt, P] = primitive
+  protected final def mkReadDataViewInstance[P <: DefinedInt](
+    primitive: ReadDataBuffer[SInt, P], off: Int, str: Int
+  ) :ReadDataView[SInt, P] = new ViewSInt(primitive, off, str)
+
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[SInt, R] = {
+    new ViewSInt(backing.mkReadDataBuffer(byteBuffer), off, str)
+  }
+  
   override def mkSerializableInstance() = new SerializableIntData(components, rawType)
 }
 
+private[buffer] final class ViewSInt[+R <: DefinedInt](
+  primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
+) extends BaseSInt[R](primitive, primitive, primitive.readOnly, off, str) with DataView[SInt, R]
+{
+  final def rawType = backing.rawType
+  private[buffer] def mkReadOnlyInstance() = new ViewSInt(backing.asReadOnly(), offset, stride)
 
-// Type: UByte
-private[buffer] sealed abstract class SeqSIntUByte(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseSInt[UByte](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UByte
-  final def normalized = false
+  def apply(i: Int) :Int = backing(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = backing(offset + i*stride) = v
 
-  final def mkDataArray(array: Array[Byte]) =
-    new ArraySIntUByte(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferSIntUByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntUByte(byteBuffer, byteBuffer.isReadOnly, off, str)
-  }
-}
-
-private[buffer] final class ArraySIntUByte(
-  rarray: Array[Byte], warray: Array[Byte]
-) extends SeqSIntUByte(rarray, null, warray == null, 0, 1) with IndexArray[UByte] {
-  def this() = this(emptyByte, emptyByte)
-  private[buffer] def mkReadOnlyInstance() = new ArraySIntUByte(rarray, null)
-
-  def apply(i: Int) :Int = rarray(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
-}
-
-private[buffer] final class BufferSIntUByte(
-  shared: ByteBuffer, ro: Boolean
-) extends SeqSIntUByte(shared, null, ro, 0, 1) with IndexBuffer[UByte] {
-  private[buffer] def mkReadOnlyInstance() = new BufferSIntUByte(shared, true)
-
-  def apply(i: Int) :Int = buff.get(i) & 0xFF
-  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
-}
-
-private[buffer] final class ViewSIntUByte(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntUByte(
-  shared, new BufferSIntUByte(shared, ro), ro, off, str
-) with DataView[SInt, UByte] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntUByte(shared, true, offset, stride)
-
-  def apply(i: Int) :Int = buff.get(offset + i*stride) & 0xFF
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
-}
-
-
-// Type: UShort
-private[buffer] sealed abstract class SeqSIntUShort(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseSInt[UShort](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UShort
-  final def normalized = false
-
-  final def mkDataArray(array: Array[Char]) =
-    new ArraySIntUShort(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferSIntUShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntUShort(byteBuffer, byteBuffer.isReadOnly, off, str)
-  }
-}
-
-private[buffer] final class ArraySIntUShort(
-  rarray: Array[Char], warray: Array[Char]
-) extends SeqSIntUShort(rarray, null, warray == null, 0, 1) with IndexArray[UShort] {
-  def this() = this(emptyChar, emptyChar)
-  private[buffer] def mkReadOnlyInstance() = new ArraySIntUShort(rarray, null)
-
-  def apply(i: Int) :Int = rarray(i)
-  def update(i: Int, v: Int) :Unit = warray(i) = v.toChar
-}
-
-private[buffer] final class BufferSIntUShort(
-  shared: ByteBuffer, ro: Boolean
-) extends SeqSIntUShort(shared, null, ro, 0, 1) with IndexBuffer[UShort] {
-  private[buffer] def mkReadOnlyInstance() = new BufferSIntUShort(shared, true)
-
-  def apply(i: Int) :Int = buff.get(i)
-  def update(i: Int, v: Int) :Unit = buff.put(i, v.toChar)
-}
-
-private[buffer] final class ViewSIntUShort(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntUShort(
-  shared, new BufferSIntUShort(shared, ro), ro, off, str
-) with DataView[SInt, UShort] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntUShort(shared, true, offset, stride)
-
-  def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(
-    offset + i*stride,
-    v.toChar
-  )
-}
-
-
-// Type: UInt
-private[buffer] sealed abstract class SeqSIntUInt(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseSInt[UInt](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UInt
-  final def normalized = false
-
-  final def mkDataArray(array: Array[Int]) =
-    new ArraySIntUInt(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferSIntUInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntUInt(byteBuffer, byteBuffer.isReadOnly, off, str)
-  }
-}
-
-private[buffer] final class ArraySIntUInt(
-  rarray: Array[Int], warray: Array[Int]
-) extends SeqSIntUInt(rarray, null, warray == null, 0, 1) with IndexArray[UInt] {
-  def this() = this(emptyInt, emptyInt)
-  private[buffer] def mkReadOnlyInstance() = new ArraySIntUInt(rarray, null)
-
-  def apply(i: Int) :Int = rarray(i)
-  def update(i: Int, v: Int) :Unit = warray(i) = v
-}
-
-private[buffer] final class BufferSIntUInt(
-  shared: ByteBuffer, ro: Boolean
-) extends SeqSIntUInt(shared, null, ro, 0, 1) with IndexBuffer[UInt]{
-  private[buffer] def mkReadOnlyInstance() = new BufferSIntUInt(shared, true)
-
-  def apply(i: Int) :Int = buff.get(i)
-  def update(i: Int, v: Int) :Unit = buff.put(i, v)
-}
-
-private[buffer] final class ViewSIntUInt(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntUInt(
-  shared, new BufferSIntUInt(shared, ro), ro, off, str
-) with DataView[SInt, UInt] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntUInt(shared, true, offset, stride)
-
-  def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
+  final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[SInt, R] =
+    backing.mkDataArray(array)
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[SInt, R] =
+    backing.mkReadDataBuffer(byteBuffer)
 }
 
 
@@ -196,15 +79,11 @@ private[buffer] sealed abstract class SeqSIntSByte(
   off: Int, str: Int
 ) extends BaseSInt[SByte](shared, primitive, ro, off, str) {
   final def rawType = RawType.SByte
-  final def normalized = false
 
   final def mkDataArray(array: Array[Byte]) =
     new ArraySIntSByte(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferSIntSByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntSByte(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -227,15 +106,38 @@ private[buffer] final class BufferSIntSByte(
   def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
-private[buffer] final class ViewSIntSByte(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntSByte(
-  shared, new BufferSIntSByte(shared, ro), ro, off, str
-) with DataView[SInt, SByte] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntSByte(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toByte)
+// Type: UByte
+private[buffer] sealed abstract class SeqSIntUByte(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
+  off: Int, str: Int
+) extends BaseSInt[UByte](shared, primitive, ro, off, str) {
+  final def rawType = RawType.UByte
+
+  final def mkDataArray(array: Array[Byte]) =
+    new ArraySIntUByte(array, array)
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferSIntUByte(byteBuffer, byteBuffer.isReadOnly)
+  }
+}
+
+private[buffer] final class ArraySIntUByte(
+  rarray: Array[Byte], warray: Array[Byte]
+) extends SeqSIntUByte(rarray, null, warray == null, 0, 1) with IndexArray[UByte] {
+  def this() = this(emptyByte, emptyByte)
+  private[buffer] def mkReadOnlyInstance() = new ArraySIntUByte(rarray, null)
+
+  def apply(i: Int) :Int = rarray(i) & 0xFF
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
+}
+
+private[buffer] final class BufferSIntUByte(
+  shared: ByteBuffer, ro: Boolean
+) extends SeqSIntUByte(shared, null, ro, 0, 1) with IndexBuffer[UByte] {
+  private[buffer] def mkReadOnlyInstance() = new BufferSIntUByte(shared, true)
+
+  def apply(i: Int) :Int = buff.get(i) & 0xFF
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toByte)
 }
 
 
@@ -245,15 +147,11 @@ private[buffer] sealed abstract class SeqSIntSShort(
   off: Int, str: Int
 ) extends BaseSInt[SShort](shared, primitive, ro, off, str) {
   final def rawType = RawType.SShort
-  final def normalized = false
 
   final def mkDataArray(array: Array[Short]) =
     new ArraySIntSShort(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferSIntSShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntSShort(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -276,15 +174,38 @@ private[buffer] final class BufferSIntSShort(
   def update(i: Int, v: Int) :Unit = buff.put(i, v.toShort)
 }
 
-private[buffer] final class ViewSIntSShort(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntSShort(
-  shared, new BufferSIntSShort(shared, ro), ro, off, str
-) with DataView[SInt, SShort] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntSShort(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v.toShort)
+// Type: UShort
+private[buffer] sealed abstract class SeqSIntUShort(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
+  off: Int, str: Int
+) extends BaseSInt[UShort](shared, primitive, ro, off, str) {
+  final def rawType = RawType.UShort
+
+  final def mkDataArray(array: Array[Char]) =
+    new ArraySIntUShort(array, array)
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferSIntUShort(byteBuffer, byteBuffer.isReadOnly)
+  }
+}
+
+private[buffer] final class ArraySIntUShort(
+  rarray: Array[Char], warray: Array[Char]
+) extends SeqSIntUShort(rarray, null, warray == null, 0, 1) with IndexArray[UShort] {
+  def this() = this(emptyChar, emptyChar)
+  private[buffer] def mkReadOnlyInstance() = new ArraySIntUShort(rarray, null)
+
+  def apply(i: Int) :Int = rarray(i)
+  def update(i: Int, v: Int) :Unit = warray(i) = v.toChar
+}
+
+private[buffer] final class BufferSIntUShort(
+  shared: ByteBuffer, ro: Boolean
+) extends SeqSIntUShort(shared, null, ro, 0, 1) with IndexBuffer[UShort] {
+  private[buffer] def mkReadOnlyInstance() = new BufferSIntUShort(shared, true)
+
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v.toChar)
 }
 
 
@@ -294,15 +215,11 @@ private[buffer] sealed abstract class SeqSIntSInt(
   off: Int, str: Int
 ) extends BaseSInt[SInt](shared, primitive, ro, off, str) {
   final def rawType = RawType.SInt
-  final def normalized = false
 
   final def mkDataArray(array: Array[Int]) =
     new ArraySIntSInt(array, array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
     new BufferSIntSInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-  protected final def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) = {
-    new ViewSIntSInt(byteBuffer, byteBuffer.isReadOnly, off, str)
   }
 }
 
@@ -325,13 +242,36 @@ private[buffer] final class BufferSIntSInt(
   def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }
 
-private[buffer] final class ViewSIntSInt(
-  shared: ByteBuffer, ro: Boolean, off: Int, str: Int
-) extends SeqSIntSInt(
-  shared, new BufferSIntSInt(shared, ro), ro, off, str
-) with DataView[SInt, SInt] {
-  private[buffer] def mkReadOnlyInstance() = new ViewSIntSInt(shared, true, offset, stride)
 
-  def apply(i: Int) :Int = buff.get(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = buff.put(offset + i*stride, v)
+// Type: UInt
+private[buffer] sealed abstract class SeqSIntUInt(
+  shared: AnyRef, primitive: AnyRef, ro: Boolean,
+  off: Int, str: Int
+) extends BaseSInt[UInt](shared, primitive, ro, off, str) {
+  final def rawType = RawType.UInt
+
+  final def mkDataArray(array: Array[Int]) =
+    new ArraySIntUInt(array, array)
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferSIntUInt(byteBuffer, byteBuffer.isReadOnly)
+  }
+}
+
+private[buffer] final class ArraySIntUInt(
+  rarray: Array[Int], warray: Array[Int]
+) extends SeqSIntUInt(rarray, null, warray == null, 0, 1) with IndexArray[UInt] {
+  def this() = this(emptyInt, emptyInt)
+  private[buffer] def mkReadOnlyInstance() = new ArraySIntUInt(rarray, null)
+
+  def apply(i: Int) :Int = rarray(i)
+  def update(i: Int, v: Int) :Unit = warray(i) = v
+}
+
+private[buffer] final class BufferSIntUInt(
+  shared: ByteBuffer, ro: Boolean
+) extends SeqSIntUInt(shared, null, ro, 0, 1) with IndexBuffer[UInt]{
+  private[buffer] def mkReadOnlyInstance() = new BufferSIntUInt(shared, true)
+
+  def apply(i: Int) :Int = buff.get(i)
+  def update(i: Int, v: Int) :Unit = buff.put(i, v)
 }

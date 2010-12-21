@@ -33,8 +33,6 @@ import simplex3d.buffer._
 private[buffer] final class ArrayVec3dRFloat(
   primitive: ArrayRDoubleRFloat
 ) extends BaseVec3d[RFloat](primitive, 0, 3) with DataArray[Vec3d, RFloat] {
-  def this() = this(new ArrayRDoubleRFloat)
-
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -94,8 +92,6 @@ private[buffer] final class ViewVec3dRFloat(
 private[buffer] final class ArrayVec3dUByte(
   primitive: ArrayRDoubleUByte
 ) extends BaseVec3d[UByte](primitive, 0, 3) with DataArray[Vec3d, UByte] {
-  def this() = this(new ArrayRDoubleUByte)
-
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(

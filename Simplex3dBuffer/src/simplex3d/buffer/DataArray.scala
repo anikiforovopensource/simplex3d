@@ -44,40 +44,40 @@ extends DataSeq[E, R] with Contiguous[E, R] with ReadDataArray[E, R] {
 
 object ReadDataArray {
   def apply[E <: Meta, R <: Defined](da: ReadDataArray[_, R])(
-    implicit factory: DataFactory[E, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
   ) :ReadDataArray[E, R] = {
-    val res = factory.mkDataArray(da.sharedArray)
+    val res = composition.mkDataArray(primitive.mkDataArray(da.sharedArray))
     if (da.readOnly) res.asReadOnly() else res
   }
 }
 
 object DataArray {
   def apply[E <: Meta, R <: Defined](array: R#Array)(
-    implicit factory: DataFactory[E, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
   ) :DataArray[E, R] = {
-    factory.mkDataArray(array)
+    composition.mkDataArray(primitive.mkDataArray(array))
   }
 
   def apply[E <: Meta, R <: Defined](size: Int)(
-    implicit factory: DataFactory[E, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
   ) :DataArray[E, R] = {
-    factory.mkDataArray(size)
+    composition.mkDataArray(primitive.mkDataArray(size*composition.components))
   }
 
   def apply[E <: Meta, R <: Defined](vals: E#Read*)(
-    implicit factory: DataFactory[E, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
   ) :DataArray[E, R] = {
-    val data = factory.mkDataArray(vals.size)
+    val data = composition.mkDataArray(primitive.mkDataArray(vals.size*composition.components))
     data.put(vals)
     data
   }
 
   def apply[E <: Meta, R <: Defined](da: DataArray[_, R])(
-    implicit factory: DataFactory[E, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
   ) :DataArray[E, R] = {
     if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
-    factory.mkDataArray(da.sharedArray)
+    composition.mkDataArray(primitive.mkDataArray(da.sharedArray))
   }
 }

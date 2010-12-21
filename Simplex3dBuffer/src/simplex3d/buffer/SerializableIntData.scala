@@ -30,7 +30,7 @@ extends SerializableData
 {
   protected def toDataArray(): DataArray[_, _] = {
     import RawType._
-
+/*
     components match {
       case 1 =>
         rawType match {
@@ -69,5 +69,7 @@ extends SerializableData
           case UInt => FactoryVec4iUInt.mkDataArray(content.asInstanceOf[Array[Int]])
         }
     }
+*/
+    null
   }
 }

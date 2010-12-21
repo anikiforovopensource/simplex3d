@@ -29,41 +29,23 @@ import simplex3d.math._
  */
 package object buffer {
 
-  private final def primitiveFactory[R <: DefinedInt](s: DataSeq[SInt, R]) :DataFactory[SInt, R] = s
-  private final def factory[E <: Composite, R <: DefinedInt](s: DataSeq[E, R]) :DataFactory[E, R] = s
-  private final def cast[R <: DefinedInt](f: DataFactory[SInt, R]) = f.asInstanceOf[DataArray[SInt, R]]
+  private final def primitiveFactory[R <: DefinedInt](f: DataFactory[SInt, R]) = f
+  private final def factory[E <: Meta](f: CompositionFactory[E, DefinedInt]) = f
+  private[this] final val array = new ArraySIntSInt
 
   // SInt
-  implicit final lazy val FactorySIntSByte = primitiveFactory[SByte](new ArraySIntSByte)
-  implicit final lazy val FactorySIntUByte = primitiveFactory[UByte](new ArraySIntUByte)
-  implicit final lazy val FactorySIntSShort = primitiveFactory[SShort](new ArraySIntSShort)
-  implicit final lazy val FactorySIntUShort = primitiveFactory[UShort](new ArraySIntUShort)
-  implicit final lazy val FactorySIntSInt = primitiveFactory[SInt](new ArraySIntSInt)
-  implicit final lazy val FactorySIntUInt = primitiveFactory[UInt](new ArraySIntUInt)
+  implicit final val FactorySIntSByte = primitiveFactory[SByte](new ArraySIntSByte)
+  implicit final val FactorySIntUByte = primitiveFactory[UByte](new ArraySIntUByte)
+  implicit final val FactorySIntSShort = primitiveFactory[SShort](new ArraySIntSShort)
+  implicit final val FactorySIntUShort = primitiveFactory[UShort](new ArraySIntUShort)
+  implicit final val FactorySIntSInt = primitiveFactory[SInt](array)
+  implicit final val FactorySIntUInt = primitiveFactory[UInt](new ArraySIntUInt)
 
-  // Vec2i
-  implicit final lazy val FactoryVec2iSByte = factory[Vec2i, SByte](new ArrayVec2i(cast(FactorySIntSByte)))
-  implicit final lazy val FactoryVec2iUByte = factory[Vec2i, UByte](new ArrayVec2i(cast(FactorySIntUByte)))
-  implicit final lazy val FactoryVec2iSShort = factory[Vec2i, SShort](new ArrayVec2i(cast(FactorySIntSShort)))
-  implicit final lazy val FactoryVec2iUShort = factory[Vec2i, UShort](new ArrayVec2i(cast(FactorySIntUShort)))
-  implicit final lazy val FactoryVec2iSInt = factory[Vec2i, SInt](new ArrayVec2i(cast(FactorySIntSInt)))
-  implicit final lazy val FactoryVec2iUInt = factory[Vec2i, UInt](new ArrayVec2i(cast(FactorySIntUInt)))
-
-  // Vec3i
-  implicit final lazy val FactoryVec3iSByte = factory[Vec3i, SByte](new ArrayVec3i(cast(FactorySIntSByte)))
-  implicit final lazy val FactoryVec3iUByte = factory[Vec3i, UByte](new ArrayVec3i(cast(FactorySIntUByte)))
-  implicit final lazy val FactoryVec3iSShort = factory[Vec3i, SShort](new ArrayVec3i(cast(FactorySIntSShort)))
-  implicit final lazy val FactoryVec3iUShort = factory[Vec3i, UShort](new ArrayVec3i(cast(FactorySIntUShort)))
-  implicit final lazy val FactoryVec3iSInt = factory[Vec3i, SInt](new ArrayVec3i(cast(FactorySIntSInt)))
-  implicit final lazy val FactoryVec3iUInt = factory[Vec3i, UInt](new ArrayVec3i(cast(FactorySIntUInt)))
-
-  // Vec4i
-  implicit final lazy val FactoryVec4iSByte = factory[Vec4i, SByte](new ArrayVec4i(cast(FactorySIntSByte)))
-  implicit final lazy val FactoryVec4iUByte = factory[Vec4i, UByte](new ArrayVec4i(cast(FactorySIntUByte)))
-  implicit final lazy val FactoryVec4iSShort = factory[Vec4i, SShort](new ArrayVec4i(cast(FactorySIntSShort)))
-  implicit final lazy val FactoryVec4iUShort = factory[Vec4i, UShort](new ArrayVec4i(cast(FactorySIntUShort)))
-  implicit final lazy val FactoryVec4iSInt = factory[Vec4i, SInt](new ArrayVec4i(cast(FactorySIntSInt)))
-  implicit final lazy val FactoryVec4iUInt = factory[Vec4i, UInt](new ArrayVec4i(cast(FactorySIntUInt)))
+  // Composition
+  implicit final val FactorySInt = factory[SInt](array)
+  implicit final val FactoryVec2i = factory[Vec2i](new ArrayVec2i(array))
+  implicit final val FactoryVec3i = factory[Vec3i](new ArrayVec3i(array))
+  implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(array))
 
   
   type Meta = integration.buffer.Meta
@@ -87,6 +69,7 @@ package object buffer {
   type SInt = integration.buffer.SInt
   type UInt = integration.buffer.UInt
   type FloatingPoint = integration.buffer.FloatingPoint
+  type SystemFloatingPoint = integration.buffer.SystemFloatingPoint
   type HFloat = integration.buffer.HFloat
   type RFloat = integration.buffer.RFloat
   type RDouble = integration.buffer.RDouble

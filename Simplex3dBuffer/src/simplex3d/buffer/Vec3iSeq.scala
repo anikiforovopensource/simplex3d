@@ -29,24 +29,25 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec3i[+R <: Raw](
+private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
   primitive: ReadContiguous[SInt, R], off: Int, str: Int
-) extends CompositeSeq[Vec3i, R](primitive, off, str) {
+) extends CompositeSeq[Vec3i, R, DefinedInt](primitive, off, str) {
   final def elemManifest = Vec3i.Manifest
   final def readManifest = Vec3i.ReadManifest
   final def components: Int = 3
 
-  def mkReadDataArray[P <: Defined](primitive: ReadDataArray[Vec3i#Component, P])
-  :ReadDataArray[Vec3i, P] = new ArrayVec3i[P](primitive)
-  def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[Vec3i#Component, P])
-  :ReadDataBuffer[Vec3i, P] = new BufferVec3i[P](primitive)
-  def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[Vec3i#Component, P], off: Int, str: Int)
-  :ReadDataView[Vec3i, P] = new ViewVec3i[P](primitive, off, str)
+  final def mkReadDataArray[P <: DefinedInt](primitive: ReadDataArray[Vec3i#Component, P])
+  :ReadDataArray[Vec3i, P] = new ArrayVec3i(primitive)
+  final def mkReadDataBuffer[P <: DefinedInt](primitive: ReadDataBuffer[Vec3i#Component, P])
+  :ReadDataBuffer[Vec3i, P] = new BufferVec3i(primitive)
+  protected final def mkReadDataViewInstance[P <: DefinedInt](
+    primitive: ReadDataBuffer[Vec3i#Component, P], off: Int, str: Int
+  ) :ReadDataView[Vec3i, P] = new ViewVec3i(primitive, off, str)
 
   override def mkSerializableInstance() = new SerializableIntData(components, rawType)
 }
 
-private[buffer] final class ArrayVec3i[+R <: Raw](
+private[buffer] final class ArrayVec3i[+R <: DefinedInt](
   primitive: ReadDataArray[SInt, R]
 ) extends BaseVec3i[R](primitive, 0, 3) with DataArray[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {
@@ -65,7 +66,7 @@ private[buffer] final class ArrayVec3i[+R <: Raw](
   }
 }
 
-private[buffer] final class BufferVec3i[+R <: Raw](
+private[buffer] final class BufferVec3i[+R <: DefinedInt](
   primitive: ReadDataBuffer[SInt, R]
 ) extends BaseVec3i[R](primitive, 0, 3) with DataBuffer[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {
@@ -84,7 +85,7 @@ private[buffer] final class BufferVec3i[+R <: Raw](
   }
 }
 
-private[buffer] final class ViewVec3i[+R <: Raw](
+private[buffer] final class ViewVec3i[+R <: DefinedInt](
   primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseVec3i[R](primitive, off, str) with DataView[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {

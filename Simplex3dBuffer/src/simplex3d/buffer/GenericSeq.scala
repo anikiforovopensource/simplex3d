@@ -30,18 +30,9 @@ import simplex3d.buffer._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class DataAdapter[E <: Meta, RawSelection](
-  final val elemManifest: ClassManifest[E],
-  final val readManifest: ClassManifest[E#Read],
-  final val components: Int
-) {
-  def apply(backing: inContiguous[E#Component, Raw], j: Int) :E#Const
-  def update(backing: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
-}
-
-sealed abstract class GenericSeq[E <: Composite, +R <: Raw](
-  adapter: DataAdapter[E, _], primitive: ReadContiguous[E#Component, R], off: Int, str: Int
-) extends CompositeSeq[E, R](primitive, off, str) {
+sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[E, B], primitive: ReadContiguous[E#Component, R], off: Int, str: Int
+) extends CompositeSeq[E, R, B](primitive, off, str) {
   final def elemManifest = adapter.elemManifest
   final def readManifest = adapter.readManifest
   final def components: Int = adapter.components
@@ -49,24 +40,24 @@ sealed abstract class GenericSeq[E <: Composite, +R <: Raw](
   def apply(i: Int) :E#Const = adapter.apply(backing, offset + i*stride)
   def update(i: Int, v: E#Read) { adapter.update(backing, offset + i*stride, v) }
 
-  def mkReadDataArray[P <: Defined](primitive: ReadDataArray[E#Component, P])
-  :ReadDataArray[E, P] = new GenericArray[E, P](adapter, primitive)
-  def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[E#Component, P])
-  :ReadDataBuffer[E, P] = new GenericBuffer[E, P](adapter, primitive)
-  def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
-  :ReadDataView[E, P] = new GenericView[E, P](adapter, primitive, off, str)
+  def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P])
+  :ReadDataArray[E, P] = new GenericArray(adapter, primitive)
+  def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P])
+  :ReadDataBuffer[E, P] = new GenericBuffer(adapter, primitive)
+  protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
+  :ReadDataView[E, P] = new GenericView(adapter, primitive, off, str)
 
   override def mkSerializableInstance() = null
 }
 
-final class GenericArray[E<: Composite, +R <: Raw](
-  adapter: DataAdapter[E, _], primitive: ReadDataArray[E#Component, R]
-) extends GenericSeq[E, R](adapter, primitive, 0, adapter.components) with DataArray[E, R]
+final class GenericArray[E<: Composite, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[E, B], primitive: ReadDataArray[E#Component, R]
+) extends GenericSeq[E, R, B](adapter, primitive, 0, adapter.components) with DataArray[E, R]
 
-final class GenericBuffer[E<: Composite, +R <: Raw](
-  adapter: DataAdapter[E, _], primitive: ReadDataBuffer[E#Component, R]
-) extends GenericSeq[E, R](adapter, primitive, 0, adapter.components) with DataBuffer[E, R]
+final class GenericBuffer[E<: Composite, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[E, B], primitive: ReadDataBuffer[E#Component, R]
+) extends GenericSeq[E, R, B](adapter, primitive, 0, adapter.components) with DataBuffer[E, R]
 
-final class GenericView[E<: Composite, +R <: Raw](
-  adapter: DataAdapter[E, _], primitive: ReadDataBuffer[E#Component, R], off: Int, str: Int
-) extends GenericSeq[E, R](adapter, primitive, off, str) with DataView[E, R]
+final class GenericView[E<: Composite, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[E, B], primitive: ReadDataBuffer[E#Component, R], off: Int, str: Int
+) extends GenericSeq[E, R, B](adapter, primitive, off, str) with DataView[E, R]

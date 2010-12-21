@@ -1,5 +1,5 @@
 /*
- * Simplex3d, CoreBuffer module
+ * Simplex3d, FloatBuffer module
  * Copyright (C) 2010, Simplex3d Team
  *
  * This file is part of Simplex3dBuffer.
@@ -18,22 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer
+package simplex3d.buffer.floatm
+package impl
+
+import java.nio._
+import simplex3d.math.floatm._
+import simplex3d.buffer._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[E <: Meta, +R <: Raw]
-extends ReadBaseSeq[E, E#Const, R]
+private[buffer] final class ViewRFloatRFloat(
+  primitive: ReadDataBuffer[RFloat, RFloat], off: Int, str: Int
+) extends SeqRFloatRFloat(
+  primitive, primitive, primitive.readOnly, off, str
+) with DataView[RFloat, RFloat] {
+  private[buffer] def mkReadOnlyInstance() = new ViewRFloatRFloat(backing.asReadOnly(), offset, stride)
 
-trait DataSeq[E <: Meta, +R <: Raw]
-extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
-
-object DataSeq {
-  def apply[E <: Meta, R <: Defined](
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
-  ) :DataSeq[E, R] = {
-    composition.mkDataArray(primitive.mkDataArray(0))
-  }
+  def apply(i: Int) :Float = buff.get(offset + i*stride)
+  def update(i: Int, v: Float) { buff.put(offset + i*stride, v) }
 }

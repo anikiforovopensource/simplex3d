@@ -30,39 +30,40 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec2f[+R <: Raw](
+private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
   primitive: ReadContiguous[RFloat, R], off: Int, str: Int
-) extends CompositeSeq[Vec2f, R](primitive, off, str) {
+) extends CompositeSeq[Vec2f, R, DefinedFloat](primitive, off, str) {
   final def elemManifest = Vec2f.Manifest
   final def readManifest = Vec2f.ReadManifest
   final def components: Int = 2
 
-  final def mkReadDataArray[P <: Defined](primitive: ReadDataArray[Vec2f#Component, P])
+  final def mkReadDataArray[P <: DefinedFloat](primitive: ReadDataArray[Vec2f#Component, P])
   :ReadDataArray[Vec2f, P] = {
     (primitive.rawType match {
       case RFloat => new impl.ArrayVec2fRFloat(primitive.asInstanceOf[ArrayRFloatRFloat])
-      case _ => new ArrayVec2f[P](primitive)
+      case _ => new ArrayVec2f(primitive)
     }).asInstanceOf[ReadDataArray[Vec2f, P]]
   }
-  final def mkReadDataBuffer[P <: Defined](primitive: ReadDataBuffer[Vec2f#Component, P])
+  final def mkReadDataBuffer[P <: DefinedFloat](primitive: ReadDataBuffer[Vec2f#Component, P])
   :ReadDataBuffer[Vec2f, P] = {
     (primitive.rawType match {
       case RFloat => new impl.BufferVec2fRFloat(primitive.asInstanceOf[BufferRFloatRFloat])
-      case _ => new BufferVec2f[P](primitive)
+      case _ => new BufferVec2f(primitive)
     }).asInstanceOf[ReadDataBuffer[Vec2f, P]]
   }
-  final def mkReadDataView[P <: Defined](primitive: ReadDataBuffer[Vec2f#Component, P], off: Int, str: Int)
-  :ReadDataView[Vec2f, P] = {
+  protected final def mkReadDataViewInstance[P <: DefinedFloat](
+    primitive: ReadDataBuffer[Vec2f#Component, P], off: Int, str: Int
+  ) :ReadDataView[Vec2f, P] = {
     (primitive.rawType match {
       case RFloat => new impl.ViewVec2fRFloat(primitive.asInstanceOf[BufferRFloatRFloat], off, str)
-      case _ => new ViewVec2f[P](primitive, off, str)
+      case _ => new ViewVec2f(primitive, off, str)
     }).asInstanceOf[ReadDataView[Vec2f, P]]
   }
 
   override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
 }
 
-private[buffer] final class ArrayVec2f[+R <: Raw](
+private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
   primitive: ReadDataArray[RFloat, R]
 ) extends BaseVec2f[R](primitive, 0, 2) with DataArray[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
@@ -79,7 +80,7 @@ private[buffer] final class ArrayVec2f[+R <: Raw](
   }
 }
 
-private[buffer] final class BufferVec2f[+R <: Raw](
+private[buffer] final class BufferVec2f[+R <: DefinedFloat](
   primitive: ReadDataBuffer[RFloat, R]
 ) extends BaseVec2f[R](primitive, 0, 2) with DataBuffer[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
@@ -96,7 +97,7 @@ private[buffer] final class BufferVec2f[+R <: Raw](
   }
 }
 
-private[buffer] final class ViewVec2f[+R <: Raw](
+private[buffer] final class ViewVec2f[+R <: DefinedFloat](
   primitive: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseVec2f[R](primitive, off, str) with DataView[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {

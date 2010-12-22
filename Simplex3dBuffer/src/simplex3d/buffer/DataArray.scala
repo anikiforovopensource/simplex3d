@@ -44,7 +44,7 @@ extends DataSeq[E, R] with Contiguous[E, R] with ReadDataArray[E, R] {
 
 object ReadDataArray {
   def apply[E <: Meta, R <: Defined](da: ReadDataArray[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataArray[E, R] = {
     val res = composition.mkDataArray(primitive.mkDataArray(da.sharedArray))
     if (da.readOnly) res.asReadOnly() else res
@@ -53,19 +53,19 @@ object ReadDataArray {
 
 object DataArray {
   def apply[E <: Meta, R <: Defined](array: R#Array)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataArray[E, R] = {
     composition.mkDataArray(primitive.mkDataArray(array))
   }
 
   def apply[E <: Meta, R <: Defined](size: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataArray[E, R] = {
     composition.mkDataArray(primitive.mkDataArray(size*composition.components))
   }
 
   def apply[E <: Meta, R <: Defined](vals: E#Read*)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataArray[E, R] = {
     val data = composition.mkDataArray(primitive.mkDataArray(vals.size*composition.components))
     data.put(vals)
@@ -73,7 +73,7 @@ object DataArray {
   }
 
   def apply[E <: Meta, R <: Defined](da: DataArray[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataArray[E, R] = {
     if (da.readOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."

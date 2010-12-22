@@ -44,7 +44,7 @@ private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
     primitive: ReadDataBuffer[Vec3i#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec3i, P] = new ViewVec3i(primitive, off, str)
 
-  override def mkSerializableInstance() = new SerializableIntData(components, rawType)
+  final override def mkSerializableInstance() = new CompositeSInt(components)
 }
 
 private[buffer] final class ArrayVec3i[+R <: DefinedInt](

@@ -82,3 +82,35 @@ private[buffer] object StoreType {
     }
   }
 }
+
+object RawManifest {
+  import scala.reflect.ClassManifest._
+  
+  final val SByte = classType[SByte](classOf[SByte])
+  final val UByte = classType[UByte](classOf[UByte])
+  final val SShort = classType[SShort](classOf[SShort])
+  final val UShort = classType[UShort](classOf[UShort])
+  final val SInt = MetaManifest.SInt
+  final val UInt = classType[UInt](classOf[UInt])
+  final val HFloat = classType[HFloat](classOf[HFloat])
+  final val RFloat = MetaManifest.RFloat
+  final val RDouble = MetaManifest.RDouble
+
+  final val AllDefined = List[ClassManifest[_ <: Defined]](
+    SByte, UByte, SShort, UShort, SInt, UInt, HFloat, RFloat, RDouble
+  )
+
+  def toRawType(m: ClassManifest[_]) :Int = {
+    m match {
+      case SByte => RawType.SByte
+      case UByte => RawType.UByte
+      case SShort => RawType.SShort
+      case UShort => RawType.UShort
+      case SInt => RawType.SInt
+      case UInt => RawType.UInt
+      case HFloat => RawType.HFloat
+      case RFloat => RawType.RFloat
+      case RDouble => RawType.RDouble
+    }
+  }
+}

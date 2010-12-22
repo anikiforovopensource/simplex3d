@@ -27,15 +27,29 @@ import java.io._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-abstract class SerializableData {
-  var content: AnyRef = _
-  var readOnly: Boolean = _
+sealed abstract class SerializableData {
+  final var content: AnyRef = _
+}
+
+@serializable @SerialVersionUID(8104346712419693669L)
+private[buffer] abstract class SerializablePrimitive extends SerializableData {
+  final var readOnly: Boolean = _
 
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
-    if (readOnly) toDataArray().asReadOnly()
-    else toDataArray()
+    if (readOnly) toReadDataArray().asReadOnly()
+    else toReadDataArray()
   }
 
-  protected def toDataArray(): DataArray[_, _]
+  protected def toReadDataArray(): ReadDataArray[_, _]
+}
+
+@serializable @SerialVersionUID(8104346712419693669L)
+abstract class SerializableComposite extends SerializableData {
+  @throws(classOf[ObjectStreamException])
+  final def readResolve() :Object = {
+    toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: Primitive, _]])
+  }
+
+  protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _]
 }

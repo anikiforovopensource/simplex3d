@@ -41,13 +41,21 @@ sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
   def update(i: Int, v: E#Read) { adapter.update(backing, offset + i*stride, v) }
 
   def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P])
-  :ReadDataArray[E, P] = new GenericArray(adapter, primitive)
+  :ReadDataArray[E, P] = adapter.mkReadDataArray(primitive)
   def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P])
-  :ReadDataBuffer[E, P] = new GenericBuffer(adapter, primitive)
-  protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
-  :ReadDataView[E, P] = new GenericView(adapter, primitive, off, str)
+  :ReadDataBuffer[E, P] = adapter.mkReadDataBuffer(primitive)
+  protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int)
+  :ReadDataView[E, P] = adapter.mkReadDataViewInstance(primitive, offset, stride)
 
-  override def mkSerializableInstance() = null
+  protected[buffer] final override def mkSerializableInstance() = new SerializableGeneric(adapter)
+}
+
+private[buffer] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
+  protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
+    type E = T forSome { type T <: Composite }
+    val primitiveArray = primitive.asInstanceOf[ReadDataArray[E#Component, Defined]]
+    adapter.asInstanceOf[DataAdapter[E, Defined]].mkReadDataArray(primitiveArray)
+  }
 }
 
 final class GenericArray[E<: Composite, +R <: Raw, B <: Defined](

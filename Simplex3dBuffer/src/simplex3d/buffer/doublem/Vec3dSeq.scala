@@ -63,7 +63,7 @@ private[buffer] abstract class BaseVec3d[+R <: DefinedDouble](
     }).asInstanceOf[ReadDataView[Vec3d, P]]
   }
 
-  override def mkSerializableInstance() = new SerializableDoubleData(components, rawType)
+  final override def mkSerializableInstance() = new CompositeRDouble(components)
 }
 
 private[buffer] final class ArrayVec3d[+R <: DefinedDouble](

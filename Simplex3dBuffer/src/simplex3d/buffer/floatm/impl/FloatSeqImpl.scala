@@ -31,10 +31,18 @@ import simplex3d.buffer._
  */
 private[buffer] final class ViewRFloatRFloat(
   primitive: ReadDataBuffer[RFloat, RFloat], off: Int, str: Int
-) extends SeqRFloatRFloat(
+) extends BaseRFloat[RFloat](
   primitive, primitive, primitive.readOnly, off, str
 ) with DataView[RFloat, RFloat] {
-  private[buffer] def mkReadOnlyInstance() = new ViewRFloatRFloat(backing.asReadOnly(), offset, stride)
+  def mkReadOnlyInstance() = new ViewRFloatRFloat(backing.asReadOnly(), offset, stride)
+  def rawType: Int = RawType.RFloat
+  def normalized = false
+
+  def mkDataArray(array: Array[Float]) =
+    new ArrayRFloatRFloat(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatRFloat(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = buff.get(offset + i*stride)
   def update(i: Int, v: Float) { buff.put(offset + i*stride, v) }

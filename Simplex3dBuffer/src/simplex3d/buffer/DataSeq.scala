@@ -32,7 +32,7 @@ extends BaseSeq[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
 
 object DataSeq {
   def apply[E <: Meta, R <: Defined](
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataSeq[E, R] = {
     composition.mkDataArray(primitive.mkDataArray(0))
   }

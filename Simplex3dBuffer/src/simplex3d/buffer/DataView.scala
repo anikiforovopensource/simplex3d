@@ -42,13 +42,13 @@ extends DataSeq[E, R] with ReadDataView[E, R] {
 
 object ReadDataView {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataView[E, R] = {
     composition.mkReadDataView(primitive.mkReadDataBuffer(buffer), offset, stride)
   }
 
   def apply[E <: Meta, R <: Defined](db: inDataBuffer[_, _], offset: Int, stride: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataView[E, R] = {
     val res = composition.mkReadDataView(primitive.mkReadDataBuffer(db.sharedBuffer), offset, stride)
     if (db.readOnly) res.asReadOnly() else res
@@ -57,13 +57,13 @@ object ReadDataView {
 
 object DataView {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataView[E, R] = {
     composition.mkDataView(primitive.mkDataBuffer(buffer), offset, stride)
   }
 
   def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _], offset: Int, stride: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataView[E, R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."

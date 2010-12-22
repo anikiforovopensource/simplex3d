@@ -63,7 +63,7 @@ private[buffer] abstract class BaseVec4f[+R <: DefinedFloat](
     }).asInstanceOf[ReadDataView[Vec4f, P]]
   }
 
-  override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
+  final override def mkSerializableInstance() = new CompositeRFloat(components)
 }
 
 private[buffer] final class ArrayVec4f[+R <: DefinedFloat](

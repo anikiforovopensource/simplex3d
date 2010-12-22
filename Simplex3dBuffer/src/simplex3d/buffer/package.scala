@@ -29,25 +29,25 @@ import simplex3d.math._
  */
 package object buffer {
 
-  private final def primitiveFactory[R <: DefinedInt](f: DataFactory[SInt, R]) = f
-  private final def factory[E <: Meta](f: CompositionFactory[E, DefinedInt]) = f
-  private[this] final val array = new ArraySIntSInt
+  private[this] final def primitiveFactory[R <: DefinedInt](f: PrimitiveFactory[SInt, R]) = f
+  private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedInt]) = f
+  private[this] final val default = new ArraySIntSInt
 
   // SInt
   implicit final val FactorySIntSByte = primitiveFactory[SByte](new ArraySIntSByte)
   implicit final val FactorySIntUByte = primitiveFactory[UByte](new ArraySIntUByte)
   implicit final val FactorySIntSShort = primitiveFactory[SShort](new ArraySIntSShort)
   implicit final val FactorySIntUShort = primitiveFactory[UShort](new ArraySIntUShort)
-  implicit final val FactorySIntSInt = primitiveFactory[SInt](array)
+  implicit final val FactorySIntSInt = primitiveFactory[SInt](default)
   implicit final val FactorySIntUInt = primitiveFactory[UInt](new ArraySIntUInt)
 
   // Composition
-  implicit final val FactorySInt = factory[SInt](array)
-  implicit final val FactoryVec2i = factory[Vec2i](new ArrayVec2i(array))
-  implicit final val FactoryVec3i = factory[Vec3i](new ArrayVec3i(array))
-  implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(array))
+  implicit final val FactorySInt = factory[SInt](default)
+  implicit final val FactoryVec2i = factory[Vec2i](new ArrayVec2i(default))
+  implicit final val FactoryVec3i = factory[Vec3i](new ArrayVec3i(default))
+  implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(default))
 
-  
+
   type Meta = integration.buffer.Meta
   type Primitive = integration.buffer.Primitive
   type Composite = integration.buffer.Composite
@@ -64,8 +64,10 @@ package object buffer {
   type RawByte = integration.buffer.RawByte
   type SByte = integration.buffer.SByte
   type UByte = integration.buffer.UByte
+  type RawShort = integration.buffer.RawShort
   type SShort = integration.buffer.SShort
   type UShort = integration.buffer.UShort
+  type RawInt = integration.buffer.RawInt
   type SInt = integration.buffer.SInt
   type UInt = integration.buffer.UInt
   type FloatingPoint = integration.buffer.FloatingPoint

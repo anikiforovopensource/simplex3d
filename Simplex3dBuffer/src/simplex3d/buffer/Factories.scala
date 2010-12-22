@@ -34,6 +34,7 @@ trait DataFactory[E <: Meta, +R <: Raw] {
   def components: Int
   def elemManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
+  def backing: DataFactory[E#Component, R]
 
   def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
@@ -99,6 +100,9 @@ trait IndexFactory[+R <: Unsigned] extends DataFactory[SInt, R] {
   def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
   def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
 }
+
+
+trait PrimitiveFactory[E <: Primitive, +R <: Raw] extends DataFactory[E, R]
 
 
 trait CompositionFactory[E <: Meta, B <: Defined] {

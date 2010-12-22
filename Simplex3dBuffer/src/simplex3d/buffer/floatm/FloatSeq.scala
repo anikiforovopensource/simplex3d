@@ -32,7 +32,7 @@ import simplex3d.buffer.conversion.Float._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] sealed abstract class BaseRFloat[+R <: DefinedFloat](
+private[buffer] abstract class BaseRFloat[+R <: DefinedFloat](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
@@ -58,7 +58,9 @@ with CompositionFactory[RFloat, DefinedFloat]
     }).asInstanceOf[ReadDataView[RFloat, P]]
   }
 
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[RFloat, R] = {
+  protected final def mkReadDataViewInstance(
+    byteBuffer: ByteBuffer, off: Int, str: Int
+  ) :ReadDataView[RFloat, R] = {
     (rawType match {
       case RawType.RFloat =>
         val primitive = backing.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RFloat, RFloat]]
@@ -68,16 +70,15 @@ with CompositionFactory[RFloat, DefinedFloat]
     }).asInstanceOf[ReadDataView[RFloat, R]]
   }
   
-  override def mkSerializableInstance() = new SerializableFloatData(components, rawType)
+  final override def mkSerializableInstance() = new PrimitiveRFloat(rawType)
 }
 
 private[buffer] final class ViewRFloat[+R <: DefinedFloat](
   primitive: ReadDataBuffer[RFloat, R], off: Int, str: Int
-) extends BaseRFloat[R](primitive, primitive, primitive.readOnly, off, str) with DataView[RFloat, R]
-{
+) extends BaseRFloat[R](primitive, primitive, primitive.readOnly, off, str) with DataView[RFloat, R] {
   final def normalized = backing.normalized
   final def rawType = backing.rawType
-  private[buffer] def mkReadOnlyInstance() = new ViewRFloat(backing.asReadOnly(), offset, stride)
+  def mkReadOnlyInstance() = new ViewRFloat(backing.asReadOnly(), offset, stride)
 
   def apply(i: Int) :Float = backing(offset + i*stride)
   def update(i: Int, v: Float) :Unit = backing(offset + i*stride) = v
@@ -90,25 +91,22 @@ private[buffer] final class ViewRFloat[+R <: DefinedFloat](
 
 
 // Type: SByte
-private[buffer] sealed abstract class SeqRFloatSByte(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[SByte](shared, primitive, ro, off, str) {
-  final def rawType = RawType.SByte
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayRFloatSByte(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatSByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatSByte(
   rarray: Array[Byte], warray: Array[Byte]
-) extends SeqRFloatSByte(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SByte] {
+)
+extends BaseRFloat[SByte](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SByte]
+with PrimitiveFactory[RFloat, SByte]
+{
   def this() = this(emptyByte, emptyByte)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatSByte(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatSByte(rarray, null)
+  def rawType = RawType.SByte
+  def normalized = true
+
+  def mkDataArray(array: Array[Byte]) =
+    new ArrayRFloatSByte(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSByte(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSByte(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSByte(v) }
@@ -116,8 +114,16 @@ private[buffer] final class ArrayRFloatSByte(
 
 private[buffer] final class BufferRFloatSByte(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatSByte(shared, null, ro, 0, 1) with DataBuffer[RFloat, SByte] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatSByte(shared, true)
+) extends BaseRFloat[SByte](shared, null, ro, 0, 1) with DataBuffer[RFloat, SByte] {
+  def mkReadOnlyInstance() = new BufferRFloatSByte(shared, true)
+  def rawType = RawType.SByte
+  def normalized = true
+
+  def mkDataArray(array: Array[Byte]) =
+    new ArrayRFloatSByte(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSByte(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSByte(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSByte(v)) }
@@ -125,25 +131,22 @@ private[buffer] final class BufferRFloatSByte(
 
 
 // Type: UByte
-private[buffer] sealed abstract class SeqRFloatUByte(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[UByte](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UByte
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Byte]) =
-    new ArrayRFloatUByte(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatUByte(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatUByte(
   rarray: Array[Byte], warray: Array[Byte]
-) extends SeqRFloatUByte(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UByte] {
+)
+extends BaseRFloat[UByte](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UByte]
+with PrimitiveFactory[RFloat, UByte]
+{
   def this() = this(emptyByte, emptyByte)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatUByte(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatUByte(rarray, null)
+  def rawType = RawType.UByte
+  def normalized = true
+
+  def mkDataArray(array: Array[Byte]) =
+    new ArrayRFloatUByte(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUByte(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUByte(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUByte(v) }
@@ -151,8 +154,16 @@ private[buffer] final class ArrayRFloatUByte(
 
 private[buffer] final class BufferRFloatUByte(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatUByte(shared, null, ro, 0, 1) with DataBuffer[RFloat, UByte] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatUByte(shared, true)
+) extends BaseRFloat[UByte](shared, null, ro, 0, 1) with DataBuffer[RFloat, UByte] {
+  def mkReadOnlyInstance() = new BufferRFloatUByte(shared, true)
+  def rawType = RawType.UByte
+  def normalized = true
+
+  def mkDataArray(array: Array[Byte]) =
+    new ArrayRFloatUByte(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUByte(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUByte(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUByte(v)) }
@@ -160,25 +171,22 @@ private[buffer] final class BufferRFloatUByte(
 
 
 // Type: SShort
-private[buffer] sealed abstract class SeqRFloatSShort(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[SShort](shared, primitive, ro, off, str) {
-  final def rawType = RawType.SShort
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Short]) =
-    new ArrayRFloatSShort(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatSShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatSShort(
   rarray: Array[Short], warray: Array[Short]
-) extends SeqRFloatSShort(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SShort] {
+)
+extends BaseRFloat[SShort](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SShort]
+with PrimitiveFactory[RFloat, SShort]
+{
   def this() = this(emptyShort, emptyShort)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatSShort(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatSShort(rarray, null)
+  def rawType = RawType.SShort
+  def normalized = true
+
+  def mkDataArray(array: Array[Short]) =
+    new ArrayRFloatSShort(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSShort(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSShort(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSShort(v) }
@@ -186,8 +194,16 @@ private[buffer] final class ArrayRFloatSShort(
 
 private[buffer] final class BufferRFloatSShort(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatSShort(shared, null, ro, 0, 1) with DataBuffer[RFloat, SShort] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatSShort(shared, true)
+) extends BaseRFloat[SShort](shared, null, ro, 0, 1) with DataBuffer[RFloat, SShort] {
+  def mkReadOnlyInstance() = new BufferRFloatSShort(shared, true)
+  def rawType = RawType.SShort
+  def normalized = true
+
+  def mkDataArray(array: Array[Short]) =
+    new ArrayRFloatSShort(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSShort(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSShort(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSShort(v)) }
@@ -195,25 +211,22 @@ private[buffer] final class BufferRFloatSShort(
 
 
 // Type: UShort
-private[buffer] sealed abstract class SeqRFloatUShort(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[UShort](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UShort
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Char]) =
-    new ArrayRFloatUShort(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatUShort(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatUShort(
   rarray: Array[Char], warray: Array[Char]
-) extends SeqRFloatUShort(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UShort] {
+)
+extends BaseRFloat[UShort](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UShort]
+with PrimitiveFactory[RFloat, UShort]
+{
   def this() = this(emptyChar, emptyChar)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatUShort(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatUShort(rarray, null)
+  def rawType = RawType.UShort
+  def normalized = true
+
+  def mkDataArray(array: Array[Char]) =
+    new ArrayRFloatUShort(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUShort(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUShort(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUShort(v) }
@@ -221,8 +234,16 @@ private[buffer] final class ArrayRFloatUShort(
 
 private[buffer] final class BufferRFloatUShort(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatUShort(shared, null, ro, 0, 1) with DataBuffer[RFloat, UShort] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatUShort(shared, true)
+) extends BaseRFloat[UShort](shared, null, ro, 0, 1) with DataBuffer[RFloat, UShort] {
+  def mkReadOnlyInstance() = new BufferRFloatUShort(shared, true)
+  def rawType = RawType.UShort
+  def normalized = true
+
+  def mkDataArray(array: Array[Char]) =
+    new ArrayRFloatUShort(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUShort(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUShort(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUShort(v)) }
@@ -230,25 +251,22 @@ private[buffer] final class BufferRFloatUShort(
 
 
 // Type: SInt
-private[buffer] sealed abstract class SeqRFloatSInt(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[SInt](shared, primitive, ro, off, str) {
-  final def rawType = RawType.SInt
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayRFloatSInt(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatSInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatSInt(
   rarray: Array[Int], warray: Array[Int]
-) extends SeqRFloatSInt(rarray, null, warray == null, 0, 1) with DataArray[RFloat, SInt] {
+)
+extends BaseRFloat[SInt](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SInt]
+with PrimitiveFactory[RFloat, SInt]
+{
   def this() = this(emptyInt, emptyInt)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatSInt(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatSInt(rarray, null)
+  def rawType = RawType.SInt
+  def normalized = true
+
+  def mkDataArray(array: Array[Int]) =
+    new ArrayRFloatSInt(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSInt(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSInt(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toSInt(v) }
@@ -256,8 +274,16 @@ private[buffer] final class ArrayRFloatSInt(
 
 private[buffer] final class BufferRFloatSInt(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatSInt(shared, null, ro, 0, 1) with DataBuffer[RFloat, SInt] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatSInt(shared, true)
+) extends BaseRFloat[SInt](shared, null, ro, 0, 1) with DataBuffer[RFloat, SInt] {
+  def mkReadOnlyInstance() = new BufferRFloatSInt(shared, true)
+  def rawType = RawType.SInt
+  def normalized = true
+
+  def mkDataArray(array: Array[Int]) =
+    new ArrayRFloatSInt(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatSInt(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromSInt(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toSInt(v)) }
@@ -265,25 +291,22 @@ private[buffer] final class BufferRFloatSInt(
 
 
 // Type: UInt
-private[buffer] sealed abstract class SeqRFloatUInt(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[UInt](shared, primitive, ro, off, str) {
-  final def rawType = RawType.UInt
-  final def normalized = true
-
-  final def mkDataArray(array: Array[Int]) =
-    new ArrayRFloatUInt(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatUInt(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatUInt(
   rarray: Array[Int], warray: Array[Int]
-) extends SeqRFloatUInt(rarray, null, warray == null, 0, 1) with DataArray[RFloat, UInt] {
+)
+extends BaseRFloat[UInt](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UInt]
+with PrimitiveFactory[RFloat, UInt]
+{
   def this() = this(emptyInt, emptyInt)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatUInt(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatUInt(rarray, null)
+  def rawType = RawType.UInt
+  def normalized = true
+
+  def mkDataArray(array: Array[Int]) =
+    new ArrayRFloatUInt(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUInt(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUInt(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toUInt(v) }
@@ -291,8 +314,16 @@ private[buffer] final class ArrayRFloatUInt(
 
 private[buffer] final class BufferRFloatUInt(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatUInt(shared, null, ro, 0, 1) with DataBuffer[RFloat, UInt] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatUInt(shared, true)
+) extends BaseRFloat[UInt](shared, null, ro, 0, 1) with DataBuffer[RFloat, UInt] {
+  def mkReadOnlyInstance() = new BufferRFloatUInt(shared, true)
+  def rawType = RawType.UInt
+  def normalized = true
+
+  def mkDataArray(array: Array[Int]) =
+    new ArrayRFloatUInt(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatUInt(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromUInt(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toUInt(v)) }
@@ -300,25 +331,22 @@ private[buffer] final class BufferRFloatUInt(
 
 
 // Type: HFloat
-private[buffer] sealed abstract class SeqRFloatHFloat(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[HFloat](shared, primitive, ro, off, str) {
-  final def rawType: Int = RawType.HFloat
-  final def normalized = false
-
-  final def mkDataArray(array: Array[Short]) =
-    new ArrayRFloatHFloat(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatHFloat(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatHFloat(
   rarray: Array[Short], warray: Array[Short]
-) extends SeqRFloatHFloat(rarray, null, warray == null, 0, 1) with DataArray[RFloat, HFloat] {
+)
+extends BaseRFloat[HFloat](rarray, null, warray == null, 0, 1) with DataArray[RFloat, HFloat]
+with PrimitiveFactory[RFloat, HFloat]
+{
   def this() = this(emptyShort, emptyShort)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatHFloat(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatHFloat(rarray, null)
+  def rawType: Int = RawType.HFloat
+  def normalized = false
+
+  def mkDataArray(array: Array[Short]) =
+    new ArrayRFloatHFloat(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatHFloat(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromHFloat(rarray(i))
   def update(i: Int, v: Float) { warray(i) = toHFloat(v) }
@@ -326,8 +354,16 @@ private[buffer] final class ArrayRFloatHFloat(
 
 private[buffer] final class BufferRFloatHFloat(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatHFloat(shared, null, ro, 0, 1) with DataBuffer[RFloat, HFloat] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatHFloat(shared, true)
+) extends BaseRFloat[HFloat](shared, null, ro, 0, 1) with DataBuffer[RFloat, HFloat] {
+  def mkReadOnlyInstance() = new BufferRFloatHFloat(shared, true)
+  def rawType: Int = RawType.HFloat
+  def normalized = false
+
+  def mkDataArray(array: Array[Short]) =
+    new ArrayRFloatHFloat(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatHFloat(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = fromHFloat(buff.get(i))
   def update(i: Int, v: Float) { buff.put(i, toHFloat(v)) }
@@ -335,25 +371,22 @@ private[buffer] final class BufferRFloatHFloat(
 
 
 // Type: RFloat
-private[buffer] abstract class SeqRFloatRFloat(
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  off: Int, str: Int
-) extends BaseRFloat[RFloat](shared, primitive, ro, off, str) {
-  final def rawType: Int = RawType.RFloat
-  final def normalized = false
-
-  final def mkDataArray(array: Array[Float]) =
-    new ArrayRFloatRFloat(array, array)
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
-    new BufferRFloatRFloat(byteBuffer, byteBuffer.isReadOnly)
-  }
-}
-
 private[buffer] final class ArrayRFloatRFloat(
   rarray: Array[Float], warray: Array[Float]
-) extends SeqRFloatRFloat(rarray, null, warray == null, 0, 1) with DataArray[RFloat, RFloat] {
+)
+extends BaseRFloat[RFloat](rarray, null, warray == null, 0, 1) with DataArray[RFloat, RFloat]
+with PrimitiveFactory[RFloat, RFloat]
+{
   def this() = this(emptyFloat, emptyFloat)
-  private[buffer] def mkReadOnlyInstance() = new ArrayRFloatRFloat(rarray, null)
+  def mkReadOnlyInstance() = new ArrayRFloatRFloat(rarray, null)
+  def rawType: Int = RawType.RFloat
+  def normalized = false
+
+  def mkDataArray(array: Array[Float]) =
+    new ArrayRFloatRFloat(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatRFloat(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = rarray(i)
   def update(i: Int, v: Float) { warray(i) = v }
@@ -361,8 +394,16 @@ private[buffer] final class ArrayRFloatRFloat(
 
 private[buffer] final class BufferRFloatRFloat(
   shared: ByteBuffer, ro: Boolean
-) extends SeqRFloatRFloat(shared, null, ro, 0, 1) with DataBuffer[RFloat, RFloat] {
-  private[buffer] def mkReadOnlyInstance() = new BufferRFloatRFloat(shared, true)
+) extends BaseRFloat[RFloat](shared, null, ro, 0, 1) with DataBuffer[RFloat, RFloat] {
+  def mkReadOnlyInstance() = new BufferRFloatRFloat(shared, true)
+  def rawType: Int = RawType.RFloat
+  def normalized = false
+
+  def mkDataArray(array: Array[Float]) =
+    new ArrayRFloatRFloat(array, array)
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) = {
+    new BufferRFloatRFloat(byteBuffer, byteBuffer.isReadOnly)
+  }
 
   def apply(i: Int) :Float = buff.get(i)
   def update(i: Int, v: Float) { buff.put(i, v) }

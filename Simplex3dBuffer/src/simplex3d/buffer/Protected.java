@@ -52,17 +52,23 @@ abstract class Protected<A> {
     protected final Object writeReplace() throws ObjectStreamException {
         if (this instanceof ReadDataArray) {
             ReadBaseSeq src = (ReadBaseSeq) this;
-            SerializableData data = mkSerializableInstance();
-            data.content_$eq(sharedStore);
-            data.readOnly_$eq(src.readOnly());
-            return data;
+
+            if (src.backing() == this) {
+                SerializablePrimitive data = (SerializablePrimitive) mkSerializableInstance();
+                data.content_$eq(sharedStore);
+                data.readOnly_$eq(src.readOnly());
+                return data;
+            }
+            else {
+                SerializableComposite data = (SerializableComposite) mkSerializableInstance();
+                data.content_$eq(src.backing());
+                return data;
+            }
         }
         throw new NotSerializableException();
     }
 
-    protected SerializableData mkSerializableInstance()
-    throws NotSerializableException
-    {
+    protected SerializableData mkSerializableInstance() throws NotSerializableException {
         throw new NotSerializableException();
     }
 }

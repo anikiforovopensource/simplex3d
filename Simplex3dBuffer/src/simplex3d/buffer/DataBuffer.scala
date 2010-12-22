@@ -38,13 +38,13 @@ extends DataView[E, R] with Contiguous[E, R] with ReadDataBuffer[E, R]
 
 object ReadDataBuffer {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataBuffer[E, R] = {
     composition.mkReadDataBuffer(primitive.mkReadDataBuffer(buffer))
   }
 
   def apply[E <: Meta, R <: Defined](db: ReadDataBuffer[_, _])(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataBuffer[E, R] = {
     val res = composition.mkReadDataBuffer(primitive.mkReadDataBuffer(db.sharedBuffer))
     if (db.readOnly) res.asReadOnly() else res
@@ -53,19 +53,19 @@ object ReadDataBuffer {
 
 object DataBuffer {
   def apply[E <: Meta, R <: Defined](buffer: ByteBuffer)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataBuffer[E, R] = {
     composition.mkDataBuffer(primitive.mkDataBuffer(buffer))
   }
 
   def apply[E <: Meta, R <: Defined](size: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataBuffer[E, R] = {
     composition.mkDataBuffer(primitive.mkDataBuffer(size*composition.components))
   }
 
   def apply[E <: Meta, R <: Defined](vals: E#Read*)(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataBuffer[E, R] = {
     val data = composition.mkDataBuffer(primitive.mkDataBuffer(vals.size*composition.components))
     data.put(vals)
@@ -73,7 +73,7 @@ object DataBuffer {
   }
 
   def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _])(
-    implicit composition: CompositionFactory[E, _ >: R], primitive: DataFactory[E#Component, R]
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataBuffer[E, R] = {
     if (db.readOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."

@@ -45,23 +45,10 @@ private[math] class SimplexNoise
  */
 private[math] object SimplexNoise {
 
-  // Offset values to prevent accidental aligning and grid artifacts.
-  final val offset00 = 44.91073226372865897
-  final val offset01 = 73.80316654263014150
-  final val offset02 = 25.52639314613530870
-  final val offset03 = 69.15921394510744191
-  final val offset10 = 55.00907939704654918
-  final val offset11 = 59.20756836241091634
-  final val offset12 = 29.43023400629879511
-  final val offset13 = 40.89360492013645179
-  final val offset20 = 13.44189793725531315
-  final val offset21 = 22.07870305513515650
-  final val offset22 = 34.60732581098390910
-  final val offset23 = 7.044401826440254312
-  final val offset30 = 78.83998379525183195
-  final val offset31 = 93.67278070772598331
-  final val offset32 = 84.58071950524306615
-  final val offset33 = 39.54148706115616316
+  // Offset values
+  final val offset1 = 7.2*0.7071067811865475244
+  final val offset2 = 15.9*0.7071067811865475244
+  final val offset3 = 22.3*0.7071067811865475244
 
 
   private final val perm: Array[Byte] = Array(

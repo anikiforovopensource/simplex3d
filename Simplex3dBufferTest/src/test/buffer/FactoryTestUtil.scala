@@ -207,7 +207,7 @@ object FactoryTestUtil extends FunSuite {
     testMakeData(factory(genArray(0, descriptor)), descriptor)
 
     CastTestUtil.testArrayCast(factory)(descriptor)
-    //SerializationTestUtil.testSerialization(factory)(descriptor)//TODO
+    SerializationTestUtil.testSerialization(factory)(descriptor)
   }
 
   def testBufferFromSize[E <: Meta, R <: Raw](

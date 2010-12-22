@@ -44,35 +44,47 @@ object SerializationBench {
 
   val random = new java.util.Random()
 
-  val dataArray = DataArray[RFloat, RFloat](size)
+  val primitive = DataArray[RFloat, RFloat](size)
   var i = 0; while (i < size) {
-    dataArray(i) = random.nextFloat()
+    primitive(i) = random.nextFloat()
     i += 1
   }
 
-  val dataBuffer = dataArray.copyAsDataBuffer()
+  val composite = DataArray[Vec4, RFloat](primitive)
 
   def test() {
     println("\nTesting...")
     var start = 0L
 
     start = System.currentTimeMillis
-    testWriteArray(dataArray, loops)
+    testWritePrimitive(primitive, loops)
     System.gc()
-    val writeArrayTime = System.currentTimeMillis - start
+    val timeWritePrimitive = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testReadArray(dataArray, loops)
+    testReadPrimitive(primitive, loops)
     System.gc()
-    val readArrayTime = System.currentTimeMillis - start
+    val timeReadPrimitive = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testWriteComposite(composite, loops)
+    System.gc()
+    val timeWriteComposite = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testReadComposite(composite, loops)
+    System.gc()
+    val timeReadComposite = System.currentTimeMillis - start
 
 
     println("\nResults:")
-    println("Write array time: " + writeArrayTime + ".")
-    println("Read array time: " + readArrayTime + ".")
+    println("Write Primitive time: " + timeWritePrimitive + ".")
+    println("Read Primitive time: " + timeReadPrimitive + ".")
+    println("Write Composite time: " + timeWriteComposite + ".")
+    println("Read Composite time: " + timeReadComposite + ".")
   }
 
-  final def testWriteArray(data: DataArray[RFloat, RFloat], loops: Int) {
+  final def testWritePrimitive(data: DataArray[RFloat, Raw], loops: Int) {
     var a = 0
 
     val bytes = new ByteArrayOutputStream()
@@ -92,7 +104,49 @@ object SerializationBench {
     println(a)
   }
 
-  final def testReadArray(data: DataArray[RFloat, RFloat], loops: Int) {
+  final def testReadPrimitive(data: DataArray[RFloat, Raw], loops: Int) {
+    var a = 0
+
+    val bytes = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bytes)
+    out.writeObject(data)
+    out.close()
+    val src = bytes.toByteArray
+
+    var l = 0; while (l < loops) {
+      val in = new ObjectInputStream(new ByteArrayInputStream(src))
+      val data = in.readObject().asInstanceOf[DataArray[RFloat, RFloat]]
+      in.close()
+
+      a += data.size
+
+      l += 1
+    }
+
+    println(a)
+  }
+
+  final def testWriteComposite(data: DataArray[Vec4, Raw], loops: Int) {
+    var a = 0
+
+    val bytes = new ByteArrayOutputStream()
+    val out = new ObjectOutputStream(bytes)
+
+    var l = 0; while (l < loops) {
+
+      out.writeObject(data)
+      out.close()
+
+      a += bytes.size
+      bytes.reset
+
+      l += 1
+    }
+
+    println(a)
+  }
+
+  final def testReadComposite(data: DataArray[Vec4, Raw], loops: Int) {
     var a = 0
 
     val bytes = new ByteArrayOutputStream()

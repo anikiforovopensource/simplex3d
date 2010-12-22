@@ -72,7 +72,7 @@ object FactoryBench {
     var a = 0
 
     var l = 0; while (l < loops) {
-      val da = DataArray[RFloat, RFloat](size)
+      val da = DataArray[Mat2, RFloat](size)
       a += da.size
 
       l += 1
@@ -83,7 +83,7 @@ object FactoryBench {
 
   final def testMkDataSeq(size: Int, loops: Int) {
     var a = 0
-    val factory = DataArray[RFloat, RFloat](0)
+    val factory = DataArray[Mat2, RFloat](0)
 
     var l = 0; while (l < loops) {
       val da = factory.mkDataArray(size)
@@ -97,7 +97,7 @@ object FactoryBench {
 
   final def testAsReadOnlySeq(size: Int, loops: Int) {
     var a = 0
-    val da = DataArray[RFloat, RFloat](size)
+    val da = DataArray[Mat2, RFloat](size)
 
     var l = 0; while (l < loops) {
       a += da.asReadOnly().size

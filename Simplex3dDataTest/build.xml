@@ -2,8 +2,8 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="Simplex3dBufferTest" default="release-all" basedir=".">
-    <description>Builds, tests, and runs the project Simplex3dBufferTest.</description>
+<project name="Simplex3dDataTest" default="release-all" basedir=".">
+    <description>Builds, tests, and runs the project Simplex3dDataTest.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -54,7 +54,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="Simplex3dBufferTest-impl.jar">
+        <target name="run" depends="Simplex3dDataTest-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
@@ -110,9 +110,9 @@
     </target>
 
     <property name="release.dir" value="release"/>
-    <property name="release.name" value="simplex3d-buffer-test"/>
-    <property name="release.bin" value="${release.dir}/Simplex3dBufferTest_bin.zip"/>
-    <property name="release.src" value="${release.dir}/Simplex3dBufferTest_src.zip"/>
+    <property name="release.name" value="simplex3d-data-test"/>
+    <property name="release.bin" value="${release.dir}/Simplex3dDataTest_bin.zip"/>
+    <property name="release.src" value="${release.dir}/Simplex3dDataTest_src.zip"/>
     <property name="root.pkg" value=""/>
 
     <target name="release-all" depends="release-clean, release-src, release-bin" />
@@ -137,7 +137,7 @@
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING
-                simplex3d-buffer-test.license" />
+                simplex3d-data-test.license" />
         </zip>
     </target>
 
@@ -152,7 +152,7 @@
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING
-                simplex3d-buffer-test.license
+                simplex3d-data-test.license
                 manifest.mf
                 build.xml" />
         </zip>

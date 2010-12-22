@@ -1,15 +1,15 @@
 /*
- * Simplex3d, BufferTest package
+ * Simplex3d, DataTest package
  * Copyright (C) 2010, Simplex3d Team
  *
- * This file is part of Simplex3dBufferTest.
+ * This file is part of Simplex3dDataTest.
  *
- * Simplex3dBufferTest is free software: you can redistribute it and/or modify
+ * Simplex3dDataTest is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Simplex3dBufferTest is distributed in the hope that it will be useful,
+ * Simplex3dDataTest is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,8 +25,8 @@ import java.nio._
 import simplex3d.math._
 import simplex3d.math.floatm._
 import simplex3d.math.floatm.FloatMath._
-import simplex3d.buffer._
-import simplex3d.buffer.floatm._
+import simplex3d.data._
+import simplex3d.data.floatm._
 
 
 

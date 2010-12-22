@@ -21,7 +21,7 @@
 package simplex3d.math.doublem
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.buffer._
+import simplex3d.math.integration.data._
 import simplex3d.math._
 import simplex3d.math.doublem.DoubleMath._
 

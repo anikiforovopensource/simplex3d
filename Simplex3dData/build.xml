@@ -3,8 +3,8 @@
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
 <project xmlns:scalaProject1="http://www.netbeans.org/ns/scala-project/1"
-name="Simplex3dBuffer" default="release-all" basedir=".">
-    <description>Builds, tests, and runs the project Simplex3dBuffer.</description>
+name="Simplex3dData" default="release-all" basedir=".">
+    <description>Builds, tests, and runs the project Simplex3dData.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -55,7 +55,7 @@ name="Simplex3dBuffer" default="release-all" basedir=".">
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="Simplex3dBuffer-impl.jar">
+        <target name="run" depends="Simplex3dData-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
@@ -75,10 +75,10 @@ name="Simplex3dBuffer" default="release-all" basedir=".">
 
 
     <property name="release.dir" value="release"/>
-    <property name="release.name" value="simplex3d-buffer"/>
-    <property name="release.bin" value="${release.dir}/Simplex3dBuffer_bin.zip"/>
-    <property name="release.src" value="${release.dir}/Simplex3dBuffer_src.zip"/>
-    <property name="root.pkg" value="simplex3d/buffer"/>
+    <property name="release.name" value="simplex3d-data"/>
+    <property name="release.bin" value="${release.dir}/Simplex3dData_bin.zip"/>
+    <property name="release.src" value="${release.dir}/Simplex3dData_src.zip"/>
+    <property name="root.pkg" value="simplex3d/data"/>
 
     <property name="floatm.pkg" value="${root.pkg}/floatm/**"/>
     <property name="doublem.pkg" value="${root.pkg}/doublem/**"/>
@@ -116,7 +116,7 @@ name="Simplex3dBuffer" default="release-all" basedir=".">
                 Readme.txt
                 COPYING.LESSER
                 COPYING
-                simplex3d-buffer.license" />
+                simplex3d-data.license" />
         </zip>
     </target>
 
@@ -132,7 +132,7 @@ name="Simplex3dBuffer" default="release-all" basedir=".">
                 Readme.txt
                 COPYING.LESSER
                 COPYING
-                simplex3d-buffer.license
+                simplex3d-data.license
                 manifest.mf
                 build.xml" />
         </zip>

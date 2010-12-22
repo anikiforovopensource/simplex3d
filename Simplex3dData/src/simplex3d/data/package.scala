@@ -1,15 +1,15 @@
 /*
- * Simplex3d, CoreBuffer module
+ * Simplex3d, CoreData module
  * Copyright (C) 2010, Simplex3d Team
  *
- * This file is part of Simplex3dBuffer.
+ * This file is part of Simplex3dData.
  *
- * Simplex3dBuffer is free software: you can redistribute it and/or modify
+ * Simplex3dData is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Simplex3dBuffer is distributed in the hope that it will be useful,
+ * Simplex3dData is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
@@ -27,7 +27,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object buffer {
+package object data {
 
   private[this] final def primitiveFactory[R <: DefinedInt](f: PrimitiveFactory[SInt, R]) = f
   private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedInt]) = f
@@ -48,33 +48,33 @@ package object buffer {
   implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(default))
 
 
-  type Meta = integration.buffer.Meta
-  type Primitive = integration.buffer.Primitive
-  type Composite = integration.buffer.Composite
-  val MetaManifest = integration.buffer.MetaManifest
-  type Raw = integration.buffer.Raw
-  type Defined = integration.buffer.Defined
-  type DefinedInt = integration.buffer.DefinedInt
-  type DefinedIndex = integration.buffer.DefinedIndex
-  type DefinedFloat = integration.buffer.DefinedFloat
-  type DefinedDouble = integration.buffer.DefinedDouble
-  type Integral = integration.buffer.Integral
-  type Signed = integration.buffer.Signed
-  type Unsigned = integration.buffer.Unsigned
-  type RawByte = integration.buffer.RawByte
-  type SByte = integration.buffer.SByte
-  type UByte = integration.buffer.UByte
-  type RawShort = integration.buffer.RawShort
-  type SShort = integration.buffer.SShort
-  type UShort = integration.buffer.UShort
-  type RawInt = integration.buffer.RawInt
-  type SInt = integration.buffer.SInt
-  type UInt = integration.buffer.UInt
-  type FloatingPoint = integration.buffer.FloatingPoint
-  type SystemFloatingPoint = integration.buffer.SystemFloatingPoint
-  type HFloat = integration.buffer.HFloat
-  type RFloat = integration.buffer.RFloat
-  type RDouble = integration.buffer.RDouble
+  type Meta = integration.data.Meta
+  type Primitive = integration.data.Primitive
+  type Composite = integration.data.Composite
+  val MetaManifest = integration.data.MetaManifest
+  type Raw = integration.data.Raw
+  type Defined = integration.data.Defined
+  type DefinedInt = integration.data.DefinedInt
+  type DefinedIndex = integration.data.DefinedIndex
+  type DefinedFloat = integration.data.DefinedFloat
+  type DefinedDouble = integration.data.DefinedDouble
+  type Integral = integration.data.Integral
+  type Signed = integration.data.Signed
+  type Unsigned = integration.data.Unsigned
+  type RawByte = integration.data.RawByte
+  type SByte = integration.data.SByte
+  type UByte = integration.data.UByte
+  type RawShort = integration.data.RawShort
+  type SShort = integration.data.SShort
+  type UShort = integration.data.UShort
+  type RawInt = integration.data.RawInt
+  type SInt = integration.data.SInt
+  type UInt = integration.data.UInt
+  type FloatingPoint = integration.data.FloatingPoint
+  type SystemFloatingPoint = integration.data.SystemFloatingPoint
+  type HFloat = integration.data.HFloat
+  type RFloat = integration.data.RFloat
+  type RDouble = integration.data.RDouble
 
 
   type ReadData[E <: Meta] = ReadDataSeq[E, Raw]

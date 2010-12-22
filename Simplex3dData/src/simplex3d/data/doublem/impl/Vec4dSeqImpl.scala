@@ -1,15 +1,15 @@
 /*
- * Simplex3d, DoubleBuffer module
+ * Simplex3d, DoubleData module
  * Copyright (C) 2010, Simplex3d Team
  *
- * This file is part of Simplex3dBuffer.
+ * This file is part of Simplex3dData.
  *
- * Simplex3dBuffer is free software: you can redistribute it and/or modify
+ * Simplex3dData is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Simplex3dBuffer is distributed in the hope that it will be useful,
+ * Simplex3dData is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.buffer.doublem
+package simplex3d.data.doublem
 package impl
 
 import java.nio._
 import simplex3d.math.doublem._
-import simplex3d.buffer._
+import simplex3d.data._
 import RawType._
 
 

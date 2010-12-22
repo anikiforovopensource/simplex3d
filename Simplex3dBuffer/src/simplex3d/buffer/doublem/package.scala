@@ -34,7 +34,7 @@ package object doublem {
 
   private[this] final def primitiveFactory[R <: DefinedDouble](f: PrimitiveFactory[RDouble, R]) = f
   private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedDouble]) = f
-  private[this] final val array = new ArrayRDoubleRFloat
+  private[this] final val default = new ArrayRDoubleRFloat
 
   // RDouble
   implicit final val FactoryRDoubleSByte = primitiveFactory[SByte](new ArrayRDoubleSByte)
@@ -44,14 +44,14 @@ package object doublem {
   implicit final val FactoryRDoubleSInt = primitiveFactory[SInt](new ArrayRDoubleSInt)
   implicit final val FactoryRDoubleUInt = primitiveFactory[UInt](new ArrayRDoubleUInt)
   implicit final val FactoryRDoubleHFloat = primitiveFactory[HFloat](new ArrayRDoubleHFloat)
-  implicit final val FactoryRDoubleRFloat = primitiveFactory[RFloat](array)
+  implicit final val FactoryRDoubleRFloat = primitiveFactory[RFloat](default)
   implicit final val FactoryRDoubleRDouble = primitiveFactory[RDouble](new ArrayRDoubleRDouble)
 
   // Composition
-  implicit final val FactoryRDouble = factory[RDouble](array)
-  implicit final val FactoryVec2d = factory[Vec2d](new ArrayVec2d(array))
-  implicit final val FactoryVec3d = factory[Vec3d](new ArrayVec3d(array))
-  implicit final val FactoryVec4d = factory[Vec4d](new ArrayVec4d(array))
+  implicit final val FactoryRDouble = factory[RDouble](default)
+  implicit final val FactoryVec2d = factory[Vec2d](new ArrayVec2d(default))
+  implicit final val FactoryVec3d = factory[Vec3d](new ArrayVec3d(default))
+  implicit final val FactoryVec4d = factory[Vec4d](new ArrayVec4d(default))
 
 
    private[this] final val matrixBound = Manifest.intersectionType[DefinedFloat with SystemFloatingPoint](

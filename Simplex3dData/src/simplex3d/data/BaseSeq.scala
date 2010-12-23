@@ -31,7 +31,7 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseSeq[
+private[data] abstract class BaseSeq[
   E <: Meta,
   @specialized(Int, Float, Double) SRead <: SWrite,
   @specialized(Int, Float, Double) SWrite,

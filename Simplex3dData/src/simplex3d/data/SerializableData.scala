@@ -32,7 +32,7 @@ sealed abstract class SerializableData {
 }
 
 @serializable @SerialVersionUID(8104346712419693669L)
-private[buffer] abstract class SerializablePrimitive extends SerializableData {
+private[data] abstract class SerializablePrimitive extends SerializableData {
   final var readOnly: Boolean = _
 
   @throws(classOf[ObjectStreamException])

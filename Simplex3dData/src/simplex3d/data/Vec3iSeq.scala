@@ -28,7 +28,7 @@ import simplex3d.math._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
+private[data] abstract class BaseVec3i[+R <: DefinedInt](
   primitive: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3i, R, DefinedInt](primitive, off, str) {
   final def elemManifest = Vec3i.Manifest
@@ -46,7 +46,7 @@ private[buffer] abstract class BaseVec3i[+R <: DefinedInt](
   final override def mkSerializableInstance() = new CompositeSInt(components)
 }
 
-private[buffer] final class ArrayVec3i[+R <: DefinedInt](
+private[data] final class ArrayVec3i[+R <: DefinedInt](
   primitive: ReadDataArray[SInt, R]
 ) extends BaseVec3i[R](primitive, 0, 3) with DataArray[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {
@@ -65,7 +65,7 @@ private[buffer] final class ArrayVec3i[+R <: DefinedInt](
   }
 }
 
-private[buffer] final class BufferVec3i[+R <: DefinedInt](
+private[data] final class BufferVec3i[+R <: DefinedInt](
   primitive: ReadDataBuffer[SInt, R]
 ) extends BaseVec3i[R](primitive, 0, 3) with DataBuffer[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {
@@ -84,7 +84,7 @@ private[buffer] final class BufferVec3i[+R <: DefinedInt](
   }
 }
 
-private[buffer] final class ViewVec3i[+R <: DefinedInt](
+private[data] final class ViewVec3i[+R <: DefinedInt](
   primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseVec3i[R](primitive, off, str) with DataView[Vec3i, R] {
   def apply(i: Int) :ConstVec3i = {

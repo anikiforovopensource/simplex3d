@@ -32,7 +32,7 @@ import simplex3d.data.conversion.Double._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseRDouble[+R <: DefinedDouble](
+private[data] abstract class BaseRDouble[+R <: DefinedDouble](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
@@ -73,7 +73,7 @@ with CompositionFactory[RDouble, DefinedDouble]
   final override def mkSerializableInstance() = new PrimitiveRDouble(rawType)
 }
 
-private[buffer] final class ViewRDouble[+R <: DefinedDouble](
+private[data] final class ViewRDouble[+R <: DefinedDouble](
   primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseRDouble[R](primitive, primitive, primitive.readOnly, off, str) with DataView[RDouble, R] {
   final def normalized = backing.normalized
@@ -91,7 +91,7 @@ private[buffer] final class ViewRDouble[+R <: DefinedDouble](
 
 
 // Type: SByte
-private[buffer] final class ArrayRDoubleSByte(
+private[data] final class ArrayRDoubleSByte(
   rarray: Array[Byte], warray: Array[Byte]
 )
 extends BaseRDouble[SByte](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SByte]
@@ -112,7 +112,7 @@ with PrimitiveFactory[RDouble, SByte]
   def update(i: Int, v: Double) { warray(i) = toSByte(v) }
 }
 
-private[buffer] final class BufferRDoubleSByte(
+private[data] final class BufferRDoubleSByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, SByte] {
   def mkReadOnlyInstance() = new BufferRDoubleSByte(shared, true)
@@ -131,7 +131,7 @@ private[buffer] final class BufferRDoubleSByte(
 
 
 // Type: UByte
-private[buffer] final class ArrayRDoubleUByte(
+private[data] final class ArrayRDoubleUByte(
   rarray: Array[Byte], warray: Array[Byte]
 )
 extends BaseRDouble[UByte](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UByte]
@@ -152,7 +152,7 @@ with PrimitiveFactory[RDouble, UByte]
   def update(i: Int, v: Double) { warray(i) = toUByte(v) }
 }
 
-private[buffer] final class BufferRDoubleUByte(
+private[data] final class BufferRDoubleUByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, UByte] {
   def mkReadOnlyInstance() = new BufferRDoubleUByte(shared, true)
@@ -171,7 +171,7 @@ private[buffer] final class BufferRDoubleUByte(
 
 
 // Type: SShort
-private[buffer] final class ArrayRDoubleSShort(
+private[data] final class ArrayRDoubleSShort(
   rarray: Array[Short], warray: Array[Short]
 )
 extends BaseRDouble[SShort](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SShort]
@@ -192,7 +192,7 @@ with PrimitiveFactory[RDouble, SShort]
   def update(i: Int, v: Double) { warray(i) = toSShort(v) }
 }
 
-private[buffer] final class BufferRDoubleSShort(
+private[data] final class BufferRDoubleSShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, SShort] {
   def mkReadOnlyInstance() = new BufferRDoubleSShort(shared, true)
@@ -211,7 +211,7 @@ private[buffer] final class BufferRDoubleSShort(
 
 
 // Type: UShort
-private[buffer] final class ArrayRDoubleUShort(
+private[data] final class ArrayRDoubleUShort(
   rarray: Array[Char], warray: Array[Char]
 )
 extends BaseRDouble[UShort](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UShort]
@@ -232,7 +232,7 @@ with PrimitiveFactory[RDouble, UShort]
   def update(i: Int, v: Double) { warray(i) = toUShort(v) }
 }
 
-private[buffer] final class BufferRDoubleUShort(
+private[data] final class BufferRDoubleUShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, UShort] {
   def mkReadOnlyInstance() = new BufferRDoubleUShort(shared, true)
@@ -251,7 +251,7 @@ private[buffer] final class BufferRDoubleUShort(
 
 
 // Type: SInt
-private[buffer] final class ArrayRDoubleSInt(
+private[data] final class ArrayRDoubleSInt(
   rarray: Array[Int], warray: Array[Int]
 )
 extends BaseRDouble[SInt](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SInt]
@@ -272,7 +272,7 @@ with PrimitiveFactory[RDouble, SInt]
   def update(i: Int, v: Double) { warray(i) = toSInt(v) }
 }
 
-private[buffer] final class BufferRDoubleSInt(
+private[data] final class BufferRDoubleSInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, SInt] {
   def mkReadOnlyInstance() = new BufferRDoubleSInt(shared, true)
@@ -291,7 +291,7 @@ private[buffer] final class BufferRDoubleSInt(
 
 
 // Type: UInt
-private[buffer] final class ArrayRDoubleUInt(
+private[data] final class ArrayRDoubleUInt(
   rarray: Array[Int], warray: Array[Int]
 )
 extends BaseRDouble[UInt](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UInt]
@@ -312,7 +312,7 @@ with PrimitiveFactory[RDouble, UInt]
   def update(i: Int, v: Double) { warray(i) = toUInt(v) }
 }
 
-private[buffer] final class BufferRDoubleUInt(
+private[data] final class BufferRDoubleUInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, UInt] {
   def mkReadOnlyInstance() = new BufferRDoubleUInt(shared, true)
@@ -331,7 +331,7 @@ private[buffer] final class BufferRDoubleUInt(
 
 
 // Type: HFloat
-private[buffer] final class ArrayRDoubleHFloat(
+private[data] final class ArrayRDoubleHFloat(
   rarray: Array[Short], warray: Array[Short]
 )
 extends BaseRDouble[HFloat](rarray, null, warray == null, 0, 1) with DataArray[RDouble, HFloat]
@@ -352,7 +352,7 @@ with PrimitiveFactory[RDouble, HFloat]
   def update(i: Int, v: Double) { warray(i) = toHFloat(v) }
 }
 
-private[buffer] final class BufferRDoubleHFloat(
+private[data] final class BufferRDoubleHFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[HFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, HFloat] {
   def mkReadOnlyInstance() = new BufferRDoubleHFloat(shared, true)
@@ -371,7 +371,7 @@ private[buffer] final class BufferRDoubleHFloat(
 
 
 // Type: RFloat
-private[buffer] final class ArrayRDoubleRFloat(
+private[data] final class ArrayRDoubleRFloat(
   rarray: Array[Float], warray: Array[Float]
 )
 extends BaseRDouble[RFloat](rarray, null, warray == null, 0, 1) with DataArray[RDouble, RFloat]
@@ -392,7 +392,7 @@ with PrimitiveFactory[RDouble, RFloat]
   def update(i: Int, v: Double) { warray(i) = v.toFloat }
 }
 
-private[buffer] final class BufferRDoubleRFloat(
+private[data] final class BufferRDoubleRFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[RFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, RFloat] {
   def mkReadOnlyInstance() = new BufferRDoubleRFloat(shared, true)
@@ -411,7 +411,7 @@ private[buffer] final class BufferRDoubleRFloat(
 
 
 // Type: RDouble
-private[buffer] final class ArrayRDoubleRDouble(
+private[data] final class ArrayRDoubleRDouble(
   rarray: Array[Double], warray: Array[Double]
 )
 extends BaseRDouble[RDouble](rarray, null, warray == null, 0, 1) with DataArray[RDouble, RDouble]
@@ -432,7 +432,7 @@ with PrimitiveFactory[RDouble, RDouble]
   def update(i: Int, v: Double) { warray(i) = v }
 }
 
-private[buffer] final class BufferRDoubleRDouble(
+private[data] final class BufferRDoubleRDouble(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[RDouble](shared, null, ro, 0, 1) with DataBuffer[RDouble, RDouble] {
   def mkReadOnlyInstance() = new BufferRDoubleRDouble(shared, true)

@@ -47,10 +47,10 @@ sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
   protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int)
   :ReadDataView[E, P] = adapter.mkReadDataViewInstance(primitive, offset, stride)
 
-  protected[buffer] final override def mkSerializableInstance() = new SerializableGeneric(adapter)
+  protected[data] final override def mkSerializableInstance() = new SerializableGeneric(adapter)
 }
 
-private[buffer] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
+private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
   protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
     type E = T forSome { type T <: Composite }
     val primitiveArray = primitive.asInstanceOf[ReadDataArray[E#Component, Defined]]

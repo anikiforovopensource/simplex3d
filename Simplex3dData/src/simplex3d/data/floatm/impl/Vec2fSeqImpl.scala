@@ -30,7 +30,7 @@ import simplex3d.data._
  * @author Aleksey Nikiforov (lex)
  */
 // Vec2f RFloat
-private[buffer] final class ArrayVec2fRFloat(
+private[data] final class ArrayVec2fRFloat(
   primitive: ArrayRFloatRFloat
 ) extends BaseVec2f[RFloat](primitive, 0, 2) with DataArray[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {
@@ -47,7 +47,7 @@ private[buffer] final class ArrayVec2fRFloat(
   }
 }
 
-private[buffer] final class BufferVec2fRFloat(
+private[data] final class BufferVec2fRFloat(
   primitive: BufferRFloatRFloat
 ) extends BaseVec2f[RFloat](primitive, 0, 2) with DataBuffer[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {
@@ -64,7 +64,7 @@ private[buffer] final class BufferVec2fRFloat(
   }
 }
 
-private[buffer] final class ViewVec2fRFloat(
+private[data] final class ViewVec2fRFloat(
   primitive: BufferRFloatRFloat, off: Int, str: Int
 ) extends BaseVec2f[RFloat](primitive, off, str) with DataView[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {

@@ -31,7 +31,7 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 // Vec4d RFloat
-private[buffer] final class ArrayVec4dRFloat(
+private[data] final class ArrayVec4dRFloat(
   primitive: ArrayRDoubleRFloat
 ) extends BaseVec4d[RFloat](primitive, 0, 4) with DataArray[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
@@ -52,7 +52,7 @@ private[buffer] final class ArrayVec4dRFloat(
   }
 }
 
-private[buffer] final class BufferVec4dRFloat(
+private[data] final class BufferVec4dRFloat(
   primitive: BufferRDoubleRFloat
 ) extends BaseVec4d[RFloat](primitive, 0, 4) with DataBuffer[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
@@ -73,7 +73,7 @@ private[buffer] final class BufferVec4dRFloat(
   }
 }
 
-private[buffer] final class ViewVec4dRFloat(
+private[data] final class ViewVec4dRFloat(
   primitive: BufferRDoubleRFloat, off: Int, str: Int
 ) extends BaseVec4d[RFloat](primitive, off, str) with DataView[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
@@ -96,7 +96,7 @@ private[buffer] final class ViewVec4dRFloat(
 
 
 // Vec4d UByte
-private[buffer] final class ArrayVec4dUByte(
+private[data] final class ArrayVec4dUByte(
   primitive: ArrayRDoubleUByte
 ) extends BaseVec4d[UByte](primitive, 0, 4) with DataArray[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {
@@ -117,7 +117,7 @@ private[buffer] final class ArrayVec4dUByte(
   }
 }
 
-private[buffer] final class BufferVec4dUByte(
+private[data] final class BufferVec4dUByte(
   primitive: BufferRDoubleUByte
 ) extends BaseVec4d[UByte](primitive, 0, 4) with DataBuffer[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {
@@ -138,7 +138,7 @@ private[buffer] final class BufferVec4dUByte(
   }
 }
 
-private[buffer] final class ViewVec4dUByte(
+private[data] final class ViewVec4dUByte(
   primitive: BufferRDoubleUByte, off: Int, str: Int
 ) extends BaseVec4d[UByte](primitive, off, str) with DataView[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {

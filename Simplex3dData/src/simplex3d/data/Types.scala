@@ -62,7 +62,7 @@ object RawType {
   }
 }
 
-private[buffer] object StoreType {
+private[data] object StoreType {
   final val ByteStore = 0
   final val ShortStore = 1
   final val CharStore = 2

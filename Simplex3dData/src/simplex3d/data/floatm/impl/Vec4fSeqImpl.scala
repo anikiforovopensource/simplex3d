@@ -30,7 +30,7 @@ import simplex3d.data._
  * @author Aleksey Nikiforov (lex)
  */
 // Vec4f RFloat
-private[buffer] final class ArrayVec4fRFloat(
+private[data] final class ArrayVec4fRFloat(
   primitive: ArrayRFloatRFloat
 ) extends BaseVec4f[RFloat](primitive, 0, 4) with DataArray[Vec4f, RFloat] {
   def apply(i: Int) :ConstVec4f = {
@@ -51,7 +51,7 @@ private[buffer] final class ArrayVec4fRFloat(
   }
 }
 
-private[buffer] final class BufferVec4fRFloat(
+private[data] final class BufferVec4fRFloat(
   primitive: BufferRFloatRFloat
 ) extends BaseVec4f[RFloat](primitive, 0, 4) with DataBuffer[Vec4f, RFloat] {
   def apply(i: Int) :ConstVec4f = {
@@ -72,7 +72,7 @@ private[buffer] final class BufferVec4fRFloat(
   }
 }
 
-private[buffer] final class ViewVec4fRFloat(
+private[data] final class ViewVec4fRFloat(
   primitive: BufferRFloatRFloat, off: Int, str: Int
 ) extends BaseVec4f[RFloat](primitive, off, str) with DataView[Vec4f, RFloat] {
   def apply(i: Int) :ConstVec4f = {
@@ -95,7 +95,7 @@ private[buffer] final class ViewVec4fRFloat(
 
 
 // Vec4f UByte
-private[buffer] final class ArrayVec4fUByte(
+private[data] final class ArrayVec4fUByte(
   primitive: ArrayRFloatUByte
 ) extends BaseVec4f[UByte](primitive, 0, 4) with DataArray[Vec4f, UByte] {
   def apply(i: Int) :ConstVec4f = {
@@ -116,7 +116,7 @@ private[buffer] final class ArrayVec4fUByte(
   }
 }
 
-private[buffer] final class BufferVec4fUByte(
+private[data] final class BufferVec4fUByte(
   primitive: BufferRFloatUByte
 ) extends BaseVec4f[UByte](primitive, 0, 4) with DataBuffer[Vec4f, UByte] {
   def apply(i: Int) :ConstVec4f = {
@@ -137,7 +137,7 @@ private[buffer] final class BufferVec4fUByte(
   }
 }
 
-private[buffer] final class ViewVec4fUByte(
+private[data] final class ViewVec4fUByte(
   primitive: BufferRFloatUByte, off: Int, str: Int
 ) extends BaseVec4f[UByte](primitive, off, str) with DataView[Vec4f, UByte] {
   def apply(i: Int) :ConstVec4f = {

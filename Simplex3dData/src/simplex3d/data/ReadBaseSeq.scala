@@ -30,7 +30,7 @@ import StoreType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class ReadBaseSeq[
+private[data] abstract class ReadBaseSeq[
   E <: Meta, @specialized(Int, Float, Double) SRead, +R <: Raw
 ](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
@@ -63,7 +63,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   
   protected final val storeType = storeFromRaw(rawType)
 
-  private[buffer] final val buff: R#Buffer = {
+  private[data] final val buff: R#Buffer = {
     if (primitive != null) {
       backing.buff
     }
@@ -120,7 +120,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
       "Offset must not be greater than limit."
     )
 
-  private[buffer] final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
+  private[data] final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
     val s = (capacity - offset + stride - components)/stride
     if (s > 0) s else 0
   }
@@ -174,9 +174,9 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     }).asInstanceOf[R#Buffer]
   }
 
-  private[buffer] def mkReadOnlyInstance() :ReadDataSeq[E, R]
+  private[data] def mkReadOnlyInstance() :ReadDataSeq[E, R]
   def asReadOnly() :ReadDataSeq[E, R]
-  private[buffer] final lazy val readOnlySeq :AnyRef = {
+  private[data] final lazy val readOnlySeq :AnyRef = {
     if (readOnly) this else mkReadOnlyInstance()
   }
 

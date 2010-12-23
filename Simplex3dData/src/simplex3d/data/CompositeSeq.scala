@@ -60,7 +60,7 @@ abstract class CompositeSeq[E <: Composite, +R <: Raw, B <: Defined](
     ).asInstanceOf[ReadDataView[E, R]]
 
 
-  private[buffer] final def mkReadOnlyInstance() :ReadDataSeq[E, R] = {
+  private[data] final def mkReadOnlyInstance() :ReadDataSeq[E, R] = {
     val self: AnyRef = this
     (self match {
       case _: DataArray[_, _] => mkReadDataArray(

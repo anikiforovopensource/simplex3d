@@ -26,7 +26,7 @@ package doublem
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-private[buffer] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimitive {
+private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimitive {
   protected def toReadDataArray(): ReadDataArray[_, _] = {
     import RawType._
 
@@ -46,7 +46,7 @@ private[buffer] class PrimitiveRDouble(val rawType: Int) extends SerializablePri
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
-private[buffer] class CompositeRDouble(val components: Int) extends SerializableComposite {
+private[data] class CompositeRDouble(val components: Int) extends SerializableComposite {
   protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
     components match {
       case 2 => FactoryVec2d.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])

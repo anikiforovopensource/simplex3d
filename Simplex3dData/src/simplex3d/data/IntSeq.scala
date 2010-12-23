@@ -29,7 +29,7 @@ import simplex3d.data.Util._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] sealed abstract class BaseSInt[+R <: DefinedInt](
+private[data] sealed abstract class BaseSInt[+R <: DefinedInt](
   shared: AnyRef, primitive: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
@@ -58,7 +58,7 @@ with CompositionFactory[SInt, DefinedInt]
   final override def mkSerializableInstance() = new PrimitiveSInt(rawType)
 }
 
-private[buffer] final class ViewSInt[+R <: DefinedInt](
+private[data] final class ViewSInt[+R <: DefinedInt](
   primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseSInt[R](primitive, primitive, primitive.readOnly, off, str) with DataView[SInt, R] {
   final def rawType = backing.rawType
@@ -75,7 +75,7 @@ private[buffer] final class ViewSInt[+R <: DefinedInt](
 
 
 // Type: SByte
-private[buffer] final class ArraySIntSByte(
+private[data] final class ArraySIntSByte(
   rarray: Array[Byte], warray: Array[Byte]
 )
 extends BaseSInt[SByte](rarray, null, warray == null, 0, 1) with DataArray[SInt, SByte]
@@ -95,7 +95,7 @@ with PrimitiveFactory[SInt, SByte]
   def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
 }
 
-private[buffer] final class BufferSIntSByte(
+private[data] final class BufferSIntSByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[SByte](shared, null, ro, 0, 1) with DataBuffer[SInt, SByte] {
   def mkReadOnlyInstance() = new BufferSIntSByte(shared, true)
@@ -113,7 +113,7 @@ private[buffer] final class BufferSIntSByte(
 
 
 // Type: UByte
-private[buffer] final class ArraySIntUByte(
+private[data] final class ArraySIntUByte(
   rarray: Array[Byte], warray: Array[Byte]
 )
 extends BaseSInt[UByte](rarray, null, warray == null, 0, 1) with IndexArray[UByte]
@@ -133,7 +133,7 @@ with PrimitiveFactory[SInt, UByte]
   def update(i: Int, v: Int) :Unit = warray(i) = v.toByte
 }
 
-private[buffer] final class BufferSIntUByte(
+private[data] final class BufferSIntUByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[UByte](shared, null, ro, 0, 1) with IndexBuffer[UByte] {
   def mkReadOnlyInstance() = new BufferSIntUByte(shared, true)
@@ -151,7 +151,7 @@ private[buffer] final class BufferSIntUByte(
 
 
 // Type: SShort
-private[buffer] final class ArraySIntSShort(
+private[data] final class ArraySIntSShort(
   rarray: Array[Short], warray: Array[Short]
 )
 extends BaseSInt[SShort](rarray, null, warray == null, 0, 1) with DataArray[SInt, SShort]
@@ -171,7 +171,7 @@ with PrimitiveFactory[SInt, SShort]
   def update(i: Int, v: Int) :Unit = warray(i) = v.toShort
 }
 
-private[buffer] final class BufferSIntSShort(
+private[data] final class BufferSIntSShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[SShort](shared, null, ro, 0, 1) with DataBuffer[SInt, SShort] {
   def mkReadOnlyInstance() = new BufferSIntSShort(shared, true)
@@ -189,7 +189,7 @@ private[buffer] final class BufferSIntSShort(
 
 
 // Type: UShort
-private[buffer] final class ArraySIntUShort(
+private[data] final class ArraySIntUShort(
   rarray: Array[Char], warray: Array[Char]
 )
 extends BaseSInt[UShort](rarray, null, warray == null, 0, 1) with IndexArray[UShort]
@@ -209,7 +209,7 @@ with PrimitiveFactory[SInt, UShort]
   def update(i: Int, v: Int) :Unit = warray(i) = v.toChar
 }
 
-private[buffer] final class BufferSIntUShort(
+private[data] final class BufferSIntUShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[UShort](shared, null, ro, 0, 1) with IndexBuffer[UShort] {
   def mkReadOnlyInstance() = new BufferSIntUShort(shared, true)
@@ -227,7 +227,7 @@ private[buffer] final class BufferSIntUShort(
 
 
 // Type: SInt
-private[buffer] final class ArraySIntSInt(
+private[data] final class ArraySIntSInt(
   rarray: Array[Int], warray: Array[Int]
 ) extends BaseSInt[SInt](rarray, null, warray == null, 0, 1) with DataArray[SInt, SInt]
 with PrimitiveFactory[SInt, SInt]
@@ -246,7 +246,7 @@ with PrimitiveFactory[SInt, SInt]
   def update(i: Int, v: Int) :Unit = warray(i) = v
 }
 
-private[buffer] final class BufferSIntSInt(
+private[data] final class BufferSIntSInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[SInt](shared, null, ro, 0, 1) with DataBuffer[SInt, SInt]{
   def mkReadOnlyInstance() = new BufferSIntSInt(shared, true)
@@ -264,7 +264,7 @@ private[buffer] final class BufferSIntSInt(
 
 
 // Type: UInt
-private[buffer] final class ArraySIntUInt(
+private[data] final class ArraySIntUInt(
   rarray: Array[Int], warray: Array[Int]
 )
 extends BaseSInt[UInt](rarray, null, warray == null, 0, 1) with IndexArray[UInt]
@@ -284,7 +284,7 @@ with PrimitiveFactory[SInt, UInt]
   def update(i: Int, v: Int) :Unit = warray(i) = v
 }
 
-private[buffer] final class BufferSIntUInt(
+private[data] final class BufferSIntUInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseSInt[UInt](shared, null, ro, 0, 1) with IndexBuffer[UInt]{
   def mkReadOnlyInstance() = new BufferSIntUInt(shared, true)

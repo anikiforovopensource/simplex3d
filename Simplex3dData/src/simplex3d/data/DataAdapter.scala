@@ -50,7 +50,7 @@ extends CompositionFactory[E, B] {
     enforceRawType(primitive.rawType)
     new GenericBuffer(this, primitive)
   }
-  protected[buffer] def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
+  protected[data] def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
   :ReadDataView[E, P] = {
     enforceRawType(primitive.rawType)
     new GenericView(this, primitive, off, str)

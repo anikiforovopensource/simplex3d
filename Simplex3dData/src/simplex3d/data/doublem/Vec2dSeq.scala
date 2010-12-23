@@ -30,7 +30,7 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec2d[+R <: DefinedDouble](
+private[data] abstract class BaseVec2d[+R <: DefinedDouble](
   primitive: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2d, R, DefinedDouble](primitive, off, str) {
   final def elemManifest = Vec2d.Manifest
@@ -63,7 +63,7 @@ private[buffer] abstract class BaseVec2d[+R <: DefinedDouble](
   final override def mkSerializableInstance() = new CompositeRDouble(components)
 }
 
-private[buffer] final class ArrayVec2d[+R <: DefinedDouble](
+private[data] final class ArrayVec2d[+R <: DefinedDouble](
   primitive: ReadDataArray[RDouble, R]
 ) extends BaseVec2d[R](primitive, 0, 2) with DataArray[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {
@@ -80,7 +80,7 @@ private[buffer] final class ArrayVec2d[+R <: DefinedDouble](
   }
 }
 
-private[buffer] final class BufferVec2d[+R <: DefinedDouble](
+private[data] final class BufferVec2d[+R <: DefinedDouble](
   primitive: ReadDataBuffer[RDouble, R]
 ) extends BaseVec2d[R](primitive, 0, 2) with DataBuffer[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {
@@ -97,7 +97,7 @@ private[buffer] final class BufferVec2d[+R <: DefinedDouble](
   }
 }
 
-private[buffer] final class ViewVec2d[+R <: DefinedDouble](
+private[data] final class ViewVec2d[+R <: DefinedDouble](
   primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseVec2d[R](primitive, off, str) with DataView[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {

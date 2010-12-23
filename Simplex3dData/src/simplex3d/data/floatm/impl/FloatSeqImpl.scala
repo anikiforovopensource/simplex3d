@@ -29,7 +29,7 @@ import simplex3d.data._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] final class ViewRFloatRFloat(
+private[data] final class ViewRFloatRFloat(
   primitive: ReadDataBuffer[RFloat, RFloat], off: Int, str: Int
 ) extends BaseRFloat[RFloat](
   primitive, primitive, primitive.readOnly, off, str

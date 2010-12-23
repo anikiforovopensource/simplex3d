@@ -30,7 +30,7 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
+private[data] abstract class BaseVec2f[+R <: DefinedFloat](
   primitive: ReadContiguous[RFloat, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2f, R, DefinedFloat](primitive, off, str) {
   final def elemManifest = Vec2f.Manifest
@@ -63,7 +63,7 @@ private[buffer] abstract class BaseVec2f[+R <: DefinedFloat](
   final override def mkSerializableInstance() = new CompositeRFloat(components)
 }
 
-private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
+private[data] final class ArrayVec2f[+R <: DefinedFloat](
   primitive: ReadDataArray[RFloat, R]
 ) extends BaseVec2f[R](primitive, 0, 2) with DataArray[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
@@ -80,7 +80,7 @@ private[buffer] final class ArrayVec2f[+R <: DefinedFloat](
   }
 }
 
-private[buffer] final class BufferVec2f[+R <: DefinedFloat](
+private[data] final class BufferVec2f[+R <: DefinedFloat](
   primitive: ReadDataBuffer[RFloat, R]
 ) extends BaseVec2f[R](primitive, 0, 2) with DataBuffer[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {
@@ -97,7 +97,7 @@ private[buffer] final class BufferVec2f[+R <: DefinedFloat](
   }
 }
 
-private[buffer] final class ViewVec2f[+R <: DefinedFloat](
+private[data] final class ViewVec2f[+R <: DefinedFloat](
   primitive: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseVec2f[R](primitive, off, str) with DataView[Vec2f, R] {
   def apply(i: Int) :ConstVec2f = {

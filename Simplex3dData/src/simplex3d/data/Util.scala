@@ -25,13 +25,13 @@ import scala.annotation._
 
 
 // An empty class to make -Xno-forwarders work
-private[buffer] class Util
+private[data] class Util
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] object Util {
+private[data] object Util {
 
   final val emptyByte = new Array[Byte](0)
   final val emptyChar = new Array[Char](0)

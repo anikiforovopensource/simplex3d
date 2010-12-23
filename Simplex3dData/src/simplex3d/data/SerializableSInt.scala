@@ -25,7 +25,7 @@ package simplex3d.data
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-private[buffer] class PrimitiveSInt(val rawType: Int) extends SerializablePrimitive {
+private[data] class PrimitiveSInt(val rawType: Int) extends SerializablePrimitive {
   protected def toReadDataArray(): ReadDataArray[_, _] = {
     import RawType._
 
@@ -42,7 +42,7 @@ private[buffer] class PrimitiveSInt(val rawType: Int) extends SerializablePrimit
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
-private[buffer] class CompositeSInt(val components: Int) extends SerializableComposite {
+private[data] class CompositeSInt(val components: Int) extends SerializableComposite {
   protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
     components match {
       case 2 => FactoryVec2i.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])

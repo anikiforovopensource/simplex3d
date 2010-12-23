@@ -29,7 +29,7 @@ import simplex3d.data._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[buffer] final class ViewRDoubleRFloat(
+private[data] final class ViewRDoubleRFloat(
   primitive: ReadDataBuffer[RDouble, RFloat], off: Int, str: Int
 ) extends BaseRDouble[RFloat](
   primitive, primitive, primitive.readOnly, off, str

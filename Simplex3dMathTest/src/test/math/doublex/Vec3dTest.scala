@@ -26,7 +26,7 @@ import test.math.BooleanCombinations
 import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.double._
-import simplex3d.math.CoreMath._
+import simplex3d.math.doublex.functions._
 
 
 /**

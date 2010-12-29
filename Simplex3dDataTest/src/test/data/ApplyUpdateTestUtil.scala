@@ -25,14 +25,13 @@ import org.scalatest._
 import java.nio._
 import scala.reflect._
 import simplex3d.data._
-import simplex3d.data.RawType._
-import simplex3d.data._
 import simplex3d.data.floatm._
 import simplex3d.data.doublem._
 import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
 
+import RawType._
 import TestUtil._
 
 
@@ -106,7 +105,7 @@ object ApplyUpdateTestUtil extends FunSuite {
 
     seq(i) = value
 
-    if (FloatMath.isnan(expected)) assert(FloatMath.isnan(seq(i)))
+    if (floatx.functions.isnan(expected)) assert(floatx.functions.isnan(seq(i)))
     else assert(seq(i) == expected)
 
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
@@ -118,7 +117,7 @@ object ApplyUpdateTestUtil extends FunSuite {
 
     seq(i) = value
 
-    if (DoubleMath.isnan(expected)) assert(DoubleMath.isnan(seq(i)))
+    if (doublex.functions.isnan(expected)) assert(doublex.functions.isnan(seq(i)))
     else assert(seq(i) == expected)
 
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
@@ -162,11 +161,11 @@ object ApplyUpdateTestUtil extends FunSuite {
       case b: IntBuffer => assert(b.get(index) == value.asInstanceOf[Int])
       case b: FloatBuffer =>
         val stored = b.get(index)
-        if (FloatMath.isnan(stored)) assert(FloatMath.isnan(value.asInstanceOf[Float]))
+        if (floatx.functions.isnan(stored)) assert(floatx.functions.isnan(value.asInstanceOf[Float]))
         else assert(b.get(index) == toFloat(value))
       case b: DoubleBuffer =>
         val stored = b.get(index)
-        if (DoubleMath.isnan(stored)) assert(DoubleMath.isnan(value.asInstanceOf[Double]))
+        if (doublex.functions.isnan(stored)) assert(doublex.functions.isnan(value.asInstanceOf[Double]))
         else assert(b.get(index) == toDouble(value))
     }
   }
@@ -177,10 +176,10 @@ object ApplyUpdateTestUtil extends FunSuite {
       (x, y) match {
         case (a: Int, b: Int) => assert(a == b)
         case (a: Float, b: Float) =>
-          if (FloatMath.isnan(a)) assert(FloatMath.isnan(b))
+          if (floatx.functions.isnan(a)) assert(floatx.functions.isnan(b))
           else assert(a == b)
         case (a: Double, b: Double) =>
-          if (DoubleMath.isnan(a)) assert(DoubleMath.isnan(b))
+          if (doublex.functions.isnan(a)) assert(doublex.functions.isnan(b))
           else assert(a == b)
       }
     }

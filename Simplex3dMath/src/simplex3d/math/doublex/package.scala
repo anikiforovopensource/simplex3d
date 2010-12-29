@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.doublex.DoubleMath._
-
 
 /**
  * @author Aleksey Nikiforov (lex)

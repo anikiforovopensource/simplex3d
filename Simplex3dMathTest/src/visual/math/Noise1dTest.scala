@@ -23,7 +23,7 @@ package visual.math
 import visual.math.draw._
 
 import simplex3d.math.double._
-import simplex3d.math.doublex.DoubleMath._
+import simplex3d.math.doublex.functions._
 
 
 /**

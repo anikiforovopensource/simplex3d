@@ -23,9 +23,9 @@ package test.buffer
 import java.nio._
 import org.scalatest._
 import simplex3d.data._
-import simplex3d.math.floatx.FloatMath
-import simplex3d.math.doublex.DoubleMath
-import simplex3d.math.CoreMath._
+import simplex3d.math.floatx.{functions => float}
+import simplex3d.math.doublex.{functions => double}
+import simplex3d.math.doublex.functions._
 
 import TestUtil._
 import AttributeTestUtil._
@@ -295,8 +295,8 @@ object CopyTestUtil extends FunSuite {
   private def verify[T](collection: Seq[T], backupCollection: List[T]) {
     for ((u, v) <- collection zip backupCollection) {
       (u, v) match {
-        case (a: Float, b: Float) => if (FloatMath.isnan(a)) assert(FloatMath.isnan(b)) else assert(a == b)
-        case (a: Double, b: Double) => if (DoubleMath.isnan(a)) assert(DoubleMath.isnan(b)) else assert(a == b)
+        case (a: Float, b: Float) => if (float.isnan(a)) assert(float.isnan(b)) else assert(a == b)
+        case (a: Double, b: Double) => if (double.isnan(a)) assert(double.isnan(b)) else assert(a == b)
         case (a: Int, b: Int) => assert(a == b)
         case (a: AnyRef, b: AnyRef) => assert(a eq b)
       }

@@ -20,7 +20,7 @@
 
 package bench.math
 
-import simplex3d.math.floatx.FloatMath._
+import simplex3d.math.floatx.functions._
 import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._

@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatx.FloatMath
-import simplex3d.math.doublex.DoubleMath
+import simplex3d.math.floatx.{functions => float}
+import simplex3d.math.doublex.{functions => double}
 
 
 /**
@@ -65,7 +65,7 @@ object RoundBench {
     var a = 0
 
     var i = -loops; while (i < loops) {
-      a += FloatMath.round(i*1.111f).toInt
+      a += float.round(i*1.111f).toInt
 
       i += 1
     }
@@ -77,7 +77,7 @@ object RoundBench {
     var a = 0
 
     var i = -loops; while (i < loops) {
-      a += DoubleMath.round(i*1.111).toInt
+      a += double.round(i*1.111).toInt
 
       i += 1
     }

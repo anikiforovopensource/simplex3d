@@ -21,7 +21,6 @@
 package simplex3d.math
 
 import simplex3d.math.floatx._
-import simplex3d.math.floatx.FloatMath._
 
 
 /**
@@ -45,7 +44,7 @@ package object float {
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
 
-  val functions = FloatMath
+  val functions = floatx.functions
 
   type ReadVec2 = ReadVec2f
   type ConstVec2 = ConstVec2f

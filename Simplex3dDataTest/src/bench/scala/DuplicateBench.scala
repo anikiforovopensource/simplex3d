@@ -22,7 +22,7 @@ package bench.scala
 
 import java.nio._
 import simplex3d.math._
-import simplex3d.math.CoreMath._
+import simplex3d.math.doublex.functions._
 
 
 /**

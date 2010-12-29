@@ -23,6 +23,9 @@ package simplex3d.math
 import java.nio._
 
 
+private[math] object CommonMath extends CommonMath
+
+
 /**
  * @author Aleksey Nikiforov (lex)
  */

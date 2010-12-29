@@ -22,7 +22,7 @@ package simplex3d.math
 
 import scala.reflect.ClassManifest._
 import simplex3d.integration.data._
-import simplex3d.math.CoreMath._
+import simplex3d.math.CommonMath._
 
 
 /** The <code>ReadVec2b</code> class represents Boolean 2-dimensional vectors,

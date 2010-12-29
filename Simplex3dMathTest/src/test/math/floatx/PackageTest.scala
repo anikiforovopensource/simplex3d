@@ -54,7 +54,7 @@ class PackageTest extends FunSuite {
 
 
     // the following passes if it compiles
-    val pi = FloatMath.Pi
+    val pi = functions.Pi
 
     type av2 = ReadVec2f
     type cv2 = ConstVec2f
@@ -177,7 +177,7 @@ class PackageTest extends FunSuite {
     assert(pi4.isInstanceOf[Vec4])
 
 
-    assert(functions == simplex3d.math.floatx.FloatMath)
+    assert(functions == simplex3d.math.floatx.functions)
 
     // the following passes if it compiles
     type av2 = ReadVec2

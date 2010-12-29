@@ -23,7 +23,7 @@ package test.math.floatx
 import org.scalatest._
 
 import simplex3d.math.float._
-import simplex3d.math.floatx.FloatMath._
+import simplex3d.math.floatx.functions._
 import simplex3d.math.doublex._
 
 

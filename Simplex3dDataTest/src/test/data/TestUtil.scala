@@ -32,7 +32,7 @@ import simplex3d.data.doublem._
 import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
-import simplex3d.math.CoreMath._
+import simplex3d.math.doublex.functions._
 
 import Descriptors._
 
@@ -620,7 +620,7 @@ object TestUtil extends FunSuite {
       var j = 0; while (j < components) {
         val a = dest(destFirst + destStride*i + j)
         val b = src(srcFirst + srcStride*i + j)
-        if (FloatMath.isnan(a)) assert(FloatMath.isnan(b))
+        if (floatx.functions.isnan(a)) assert(floatx.functions.isnan(b))
         else assert(a == b)
         
         j += 1
@@ -643,7 +643,7 @@ object TestUtil extends FunSuite {
       var j = 0; while (j < components) {
         val a = dest(destFirst + destStride*i + j)
         val b = src(srcFirst + srcStride*i + j)
-        if (DoubleMath.isnan(a)) assert(DoubleMath.isnan(b))
+        if (doublex.functions.isnan(a)) assert(doublex.functions.isnan(b))
         else assert(a == b)
         
         j += 1

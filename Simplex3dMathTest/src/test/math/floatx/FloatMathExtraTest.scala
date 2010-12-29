@@ -25,7 +25,7 @@ import java.util.Random
 
 import simplex3d.math._
 import simplex3d.math.float._
-import simplex3d.math.floatx.FloatMath._
+import simplex3d.math.floatx.functions._
 
 
 /**

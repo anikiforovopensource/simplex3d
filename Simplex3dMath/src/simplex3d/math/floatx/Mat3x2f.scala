@@ -23,7 +23,7 @@ package simplex3d.math.floatx
 import scala.reflect.ClassManifest._
 import simplex3d.integration.data._
 import simplex3d.math._
-import simplex3d.math.floatx.FloatMath._
+import simplex3d.math.floatx.functions._
 
 
 /**

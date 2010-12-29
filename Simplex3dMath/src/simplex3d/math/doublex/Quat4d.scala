@@ -23,7 +23,7 @@ package simplex3d.math.doublex
 import scala.reflect.ClassManifest._
 import simplex3d.integration.data._
 import simplex3d.math._
-import simplex3d.math.doublex.DoubleMath._
+import simplex3d.math.doublex.functions._
 
 
 /**
@@ -122,7 +122,7 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
   }
 
   final def rotateVector(u: inVec3d) :Vec3d =
-    DoubleMath.rotateVector(u, normalize(this))
+    functions.rotateVector(u, normalize(this))
 
 
   override def clone() = this

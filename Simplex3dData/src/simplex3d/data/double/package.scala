@@ -23,14 +23,14 @@ package simplex3d.data
 import java.nio._
 import scala.reflect._
 import simplex3d.math.doublex._
-import simplex3d.data.doublem._
-import simplex3d.data.doublem.impl._
+import simplex3d.data.double._
+import simplex3d.data.double.impl._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object doublem {
+package object double {
 
   private[this] final def primitiveFactory[R <: DefinedDouble](f: PrimitiveFactory[RDouble, R]) = f
   private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedDouble]) = f

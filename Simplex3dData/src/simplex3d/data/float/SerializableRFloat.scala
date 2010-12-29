@@ -19,7 +19,7 @@
  */
 
 package simplex3d.data
-package floatm
+package float
 
 
 /**

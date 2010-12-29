@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.buffer
+package test.data
 
 import java.nio._
 import org.scalatest._
 import simplex3d.data._
-import simplex3d.math.floatx.{functions => float}
-import simplex3d.math.doublex.{functions => double}
+import simplex3d.math.floatx.{functions => fx}
+import simplex3d.math.doublex.{functions => dx}
 import simplex3d.math.doublex.functions._
 
 import TestUtil._
@@ -295,8 +295,8 @@ object CopyTestUtil extends FunSuite {
   private def verify[T](collection: Seq[T], backupCollection: List[T]) {
     for ((u, v) <- collection zip backupCollection) {
       (u, v) match {
-        case (a: Float, b: Float) => if (float.isnan(a)) assert(float.isnan(b)) else assert(a == b)
-        case (a: Double, b: Double) => if (double.isnan(a)) assert(double.isnan(b)) else assert(a == b)
+        case (a: Float, b: Float) => if (fx.isnan(a)) assert(fx.isnan(b)) else assert(a == b)
+        case (a: Double, b: Double) => if (dx.isnan(a)) assert(dx.isnan(b)) else assert(a == b)
         case (a: Int, b: Int) => assert(a == b)
         case (a: AnyRef, b: AnyRef) => assert(a eq b)
       }

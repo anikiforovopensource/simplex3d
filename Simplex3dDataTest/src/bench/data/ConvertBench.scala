@@ -27,7 +27,7 @@ import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.floatx.functions._
 import simplex3d.data._
-import simplex3d.data.floatm._
+import simplex3d.data.float._
 
 
 /**

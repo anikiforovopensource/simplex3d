@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.buffer
+package test.data
 
 import java.io._
 import java.nio._
@@ -27,8 +27,8 @@ import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
 import simplex3d.data._
-import simplex3d.data.floatm._
-import simplex3d.data.doublem._
+import simplex3d.data.float._
+import simplex3d.data.double._
 
 import Descriptors._
 import TestUtil._

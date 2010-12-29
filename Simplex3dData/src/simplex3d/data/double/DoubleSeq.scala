@@ -19,7 +19,7 @@
  */
 
 package simplex3d.data
-package doublem
+package double
 
 import java.nio._
 import scala.reflect._

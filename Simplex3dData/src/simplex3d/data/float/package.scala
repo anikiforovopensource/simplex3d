@@ -23,14 +23,14 @@ package simplex3d.data
 import java.nio._
 import scala.reflect._
 import simplex3d.math.floatx._
-import simplex3d.data.floatm._
-import simplex3d.data.floatm.impl._
+import simplex3d.data.float._
+import simplex3d.data.float.impl._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object floatm {
+package object float {
 
   private[this] final def primitiveFactory[R <: DefinedFloat](f: PrimitiveFactory[RFloat, R]) = f
   private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedFloat]) = f

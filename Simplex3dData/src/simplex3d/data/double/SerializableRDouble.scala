@@ -19,7 +19,7 @@
  */
 
 package simplex3d.data
-package doublem
+package double
 
 
 /**

@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.buffer
-package floatm
+package test.data
+package float
 
 import org.scalatest._
 import simplex3d.math.floatx._
 import simplex3d.data._
-import simplex3d.data.floatm._
+import simplex3d.data.float._
 
 import Descriptors._
 import FactoryTestUtil._

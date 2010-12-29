@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.data.floatm
+package simplex3d.data.float
 
 import java.nio._
 import scala.annotation.unchecked._

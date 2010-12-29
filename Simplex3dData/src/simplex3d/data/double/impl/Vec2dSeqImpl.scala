@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.data.doublem
+package simplex3d.data.double
 package impl
 
 import java.nio._

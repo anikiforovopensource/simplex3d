@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test.buffer
+package test.data
 
 import java.nio._
 import org.scalatest._

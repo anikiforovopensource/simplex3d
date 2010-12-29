@@ -21,7 +21,6 @@
 package simplex3d.math
 
 import simplex3d.math.doublex._
-import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -87,7 +86,7 @@ package object double {
     ConstMat4d(m)
 
 
-  val functions = DoubleMath
+  val functions = doublex.functions
 
   type ReadVec2 = ReadVec2d
   type ConstVec2 = ConstVec2d

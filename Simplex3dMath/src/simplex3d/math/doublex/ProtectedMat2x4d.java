@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublem;
+package simplex3d.math.doublex;
 
 import java.io.Serializable;
 import simplex3d.math.*;
@@ -27,9 +27,10 @@ import simplex3d.math.*;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat2x3d<P> extends AnyMat2x3<P> implements Serializable {
+abstract class ProtectedMat2x4d<P> extends AnyMat2x4<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
     double p00; double p10;
     double p01; double p11;
     double p02; double p12;
+    double p03; double p13;
 }

@@ -18,19 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm;
+package simplex3d.math.floatx;
 
-import java.io.Serializable;
 import simplex3d.math.*;
+import java.io.Serializable;
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat2x4f<P> extends AnyMat2x4<P> implements Serializable {
+abstract class ProtectedQuat4f<P> extends AnyQuat4<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
-    float p00; float p10;
-    float p01; float p11;
-    float p02; float p12;
-    float p03; float p13;
+    float pa; float pb; float pc; float pd;
 }

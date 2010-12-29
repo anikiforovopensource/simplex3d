@@ -1,5 +1,5 @@
 /*
- * Simplex3d, FloatMath module
+ * Simplex3d, DoubleMath module
  * Copyright (C) 2009-2010, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
@@ -18,17 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm;
+package simplex3d.math.doublex;
 
-import java.io.Serializable;
 import simplex3d.math.*;
+import java.io.Serializable;
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat3x2f<P> extends AnyMat3x2<P> implements Serializable {
+abstract class ProtectedQuat4d<P> extends AnyQuat4<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
-    float p00; float p10; float p20;
-    float p01; float p11; float p21;
+    double pa; double pb; double pc; double pd;
 }

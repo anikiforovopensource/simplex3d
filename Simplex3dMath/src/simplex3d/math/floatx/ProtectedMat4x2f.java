@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm;
+package simplex3d.math.floatx;
 
 import java.io.Serializable;
 import simplex3d.math.*;

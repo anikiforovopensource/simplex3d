@@ -18,17 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublem;
+package simplex3d.math.doublex;
 
-import java.io.Serializable;
 import simplex3d.math.*;
+import java.io.Serializable;
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat2d<P> extends AnyMat2x2<P> implements Serializable {
+abstract class ProtectedVec2d<P> extends AnyVec2<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
-    double p00; double p10;
-    double p01; double p11;
+    double px; double py;
 }

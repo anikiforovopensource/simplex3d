@@ -22,8 +22,8 @@ package test.math.doublem
 
 import org.scalatest._
 
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**

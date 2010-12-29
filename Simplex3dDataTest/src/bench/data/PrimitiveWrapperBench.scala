@@ -24,8 +24,8 @@ package bench.buffer
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 import simplex3d.data._
 import simplex3d.data.floatm._
 
@@ -106,7 +106,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = data(i)
-        answer += int(v + 7.9f)
+        answer += toInt(v + 7.9f)
 
         i += step
       }
@@ -125,7 +125,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = data.get(i)
-        answer += int(v + 7.9f)
+        answer += toInt(v + 7.9f)
 
         i += step
       }
@@ -144,7 +144,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += int(v + 7.9f)
+        answer += toInt(v + 7.9f)
 
         i += step
       }
@@ -163,7 +163,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += int(v + 7.9f)
+        answer += toInt(v + 7.9f)
 
         i += step
       }

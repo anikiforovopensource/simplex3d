@@ -22,7 +22,7 @@ package simplex3d.data.doublem
 
 import java.nio._
 import scala.annotation.unchecked._
-import simplex3d.math.doublem._
+import simplex3d.math.doublex._
 import simplex3d.data._
 import RawType._
 

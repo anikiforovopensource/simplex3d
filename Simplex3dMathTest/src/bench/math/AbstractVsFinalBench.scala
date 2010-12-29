@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.float._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**
@@ -64,12 +64,12 @@ class AbstractVsFinal {
 
   final def abstractArgs(v1: ReadVec4, v2: ReadVec4) = {
     val a = (v1 + v2)
-    int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   final def finalArgs(v1: Vec4, v2: Vec4) = {
     val a = (v1 + v2)
-    int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   def testAbstract(length: Int, loops: Int, a: ReadVec4) {

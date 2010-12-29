@@ -23,8 +23,8 @@ package test.buffer
 import java.nio._
 import org.scalatest._
 import simplex3d.data._
-import simplex3d.math.floatm.FloatMath
-import simplex3d.math.doublem.DoubleMath
+import simplex3d.math.floatx.FloatMath
+import simplex3d.math.doublex.DoubleMath
 import simplex3d.math.CoreMath._
 
 import TestUtil._

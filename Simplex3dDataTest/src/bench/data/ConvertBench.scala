@@ -24,8 +24,8 @@ package bench.buffer
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 import simplex3d.data._
 import simplex3d.data.floatm._
 
@@ -112,7 +112,7 @@ class ConvertBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }
@@ -135,7 +135,7 @@ class ConvertBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }

@@ -20,13 +20,13 @@
 
 package simplex3d.math
 
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object doublem {
+package object doublex {
 
   // Implicits
   implicit def intToDoublePromoter(s: Double) = new IntPromoter(s)

@@ -22,8 +22,8 @@ package test.math
 
 import org.scalatest._
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -87,7 +87,7 @@ class NoiseTest extends FunSuite {
     val delta = 1e-2
     val invdelta = 1/delta
 
-    val loopCount = int((to - from)*invdelta)
+    val loopCount = toInt((to - from)*invdelta)
 
     var x = from; while(x < to) {
       var y = from; while(y < to) {

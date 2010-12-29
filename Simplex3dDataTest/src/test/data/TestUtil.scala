@@ -30,8 +30,8 @@ import simplex3d.data._
 import simplex3d.data.floatm._
 import simplex3d.data.doublem._
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 import simplex3d.math.CoreMath._
 
 import Descriptors._

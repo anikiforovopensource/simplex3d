@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.data._
+import simplex3d.integration.data._
 import simplex3d.math.CoreMath._
 
 
@@ -59,31 +59,31 @@ sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
   private[math] type C4 = ConstVec4b
   
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(bool(x), bool(y))
+    new ConstVec2b(toBool(x), toBool(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(bool(x), bool(y), bool(z))
+    new ConstVec3b(toBool(x), toBool(y), toBool(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(bool(x), bool(y), bool(z), bool(w))
+    new ConstVec4b(toBool(x), toBool(y), toBool(z), toBool(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
   private[math] final def bz: Boolean = z
   private[math] final def bw: Boolean = w
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
-  private[math] final def iz: Int = int(z)
-  private[math] final def iw: Int = int(w)
+  private[math] final def ix: Int = toInt(x)
+  private[math] final def iy: Int = toInt(y)
+  private[math] final def iz: Int = toInt(z)
+  private[math] final def iw: Int = toInt(w)
 
-  private[math] final def fx: Float = float(x)
-  private[math] final def fy: Float = float(y)
-  private[math] final def fz: Float = float(z)
-  private[math] final def fw: Float = float(w)
+  private[math] final def fx: Float = toFloat(x)
+  private[math] final def fy: Float = toFloat(y)
+  private[math] final def fz: Float = toFloat(z)
+  private[math] final def fw: Float = toFloat(w)
 
-  private[math] final def dx: Double = double(x)
-  private[math] final def dy: Double = double(y)
-  private[math] final def dz: Double = double(z)
-  private[math] final def dw: Double = double(w)
+  private[math] final def dx: Double = toDouble(x)
+  private[math] final def dy: Double = toDouble(y)
+  private[math] final def dz: Double = toDouble(z)
+  private[math] final def dw: Double = toDouble(w)
 
 
   final def x = px
@@ -346,7 +346,7 @@ object ConstVec4b {
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
   def apply(m: AnyMat2x2[_]) =
-    new ConstVec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
+    new ConstVec4b(toBool(m.f00), toBool(m.f10), toBool(m.f01), toBool(m.f11))
 
   /** Makes a new instance of ConstVec4b from quaternion.
    * @param q any quaternion.
@@ -354,7 +354,7 @@ object ConstVec4b {
    *         to b, c, d, and a components of q converted to Boolean.
    */
   def apply(q: AnyQuat4[_]) =
-    new ConstVec4b(bool(q.fb), bool(q.fc), bool(q.fd), bool(q.fa))
+    new ConstVec4b(toBool(q.fb), toBool(q.fc), toBool(q.fd), toBool(q.fa))
 
   implicit def toConst(u: ReadVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
@@ -776,7 +776,7 @@ object Vec4b {
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
   def apply(m: AnyMat2x2[_]) =
-    new Vec4b(bool(m.f00), bool(m.f10), bool(m.f01), bool(m.f11))
+    new Vec4b(toBool(m.f00), toBool(m.f10), toBool(m.f01), toBool(m.f11))
 
   /** Makes a new instance of Vec4b from quaternion.
    * @param q any quaternion.
@@ -784,7 +784,7 @@ object Vec4b {
    *         to b, c, d, and a components of q converted to Boolean.
    */
   def apply(q: AnyQuat4[_]) =
-    new Vec4b(bool(q.fb), bool(q.fc), bool(q.fd), bool(q.fa))
+    new Vec4b(toBool(q.fb), toBool(q.fc), toBool(q.fd), toBool(q.fa))
 
   def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))
 

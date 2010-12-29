@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm.FloatMath
-import simplex3d.math.doublem.DoubleMath
+import simplex3d.math.floatx.FloatMath
+import simplex3d.math.doublex.DoubleMath
 
 
 /**

@@ -23,8 +23,8 @@ package test.math.floatm
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.float._
+import simplex3d.math.floatx.FloatMath._
 import Float.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -206,9 +206,9 @@ class FloatMathVec3Test extends FunSuite {
       }
       val bool1 = s > 0; val bool2 = t > 0; val bool3 = p > 0
       expect(Vec3(
-          mix(x, r, float(bool1)),
-          mix(y, g, float(bool2)),
-          mix(z, b, float(bool3)))
+          mix(x, r, toFloat(bool1)),
+          mix(y, g, toFloat(bool2)),
+          mix(z, b, toFloat(bool3)))
       ) {
         mix(Vec3(x, y, z), Vec3(r, g, b), Vec3b(bool1, bool2, bool3))
       }

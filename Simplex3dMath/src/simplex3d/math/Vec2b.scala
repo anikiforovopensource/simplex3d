@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.data._
+import simplex3d.integration.data._
 import simplex3d.math.CoreMath._
 
 
@@ -59,23 +59,23 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
   private[math] type C4 = ConstVec4b
 
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(bool(x), bool(y))
+    new ConstVec2b(toBool(x), toBool(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(bool(x), bool(y), bool(z))
+    new ConstVec3b(toBool(x), toBool(y), toBool(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(bool(x), bool(y), bool(z), bool(w))
+    new ConstVec4b(toBool(x), toBool(y), toBool(z), toBool(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
 
-  private[math] final def ix: Int = int(x)
-  private[math] final def iy: Int = int(y)
+  private[math] final def ix: Int = toInt(x)
+  private[math] final def iy: Int = toInt(y)
 
-  private[math] final def fx: Float = float(x)
-  private[math] final def fy: Float = float(y)
+  private[math] final def fx: Float = toFloat(x)
+  private[math] final def fy: Float = toFloat(y)
 
-  private[math] final def dx: Double = double(x)
-  private[math] final def dy: Double = double(y)
+  private[math] final def dx: Double = toDouble(x)
+  private[math] final def dy: Double = toDouble(y)
 
 
   final def x = px

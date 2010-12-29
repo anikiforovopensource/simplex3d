@@ -20,8 +20,8 @@
 
 package bench.math
 
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**

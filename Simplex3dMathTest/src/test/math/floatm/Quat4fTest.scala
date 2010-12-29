@@ -23,9 +23,9 @@ package test.math.floatm
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
-import simplex3d.math.doublem._
+import simplex3d.math.float._
+import simplex3d.math.floatx.FloatMath._
+import simplex3d.math.doublex._
 
 
 /**
@@ -76,17 +76,17 @@ class Quat4fTest extends FunSuite {
 
     q = Quat4(Quat4d(ad, bd, cd, dd))
     expect(classOf[Quat4]) { q.getClass }
-    expect(float(ad)) { q.a }
-    expect(float(bd)) { q.b }
-    expect(float(cd)) { q.c }
-    expect(float(dd)) { q.d }
+    expect(toFloat(ad)) { q.a }
+    expect(toFloat(bd)) { q.b }
+    expect(toFloat(cd)) { q.c }
+    expect(toFloat(dd)) { q.d }
 
     q = Quat4(Vec4d(bd, cd, dd, ad))
     expect(classOf[Quat4]) { q.getClass }
-    expect(float(ad)) { q.a }
-    expect(float(bd)) { q.b }
-    expect(float(cd)) { q.c }
-    expect(float(dd)) { q.d }
+    expect(toFloat(ad)) { q.a }
+    expect(toFloat(bd)) { q.b }
+    expect(toFloat(cd)) { q.c }
+    expect(toFloat(dd)) { q.d }
 
     var p: ReadQuat4 = ConstQuat4(af, bf, cf, df)
     expect(classOf[ConstQuat4]) { p.getClass }
@@ -111,17 +111,17 @@ class Quat4fTest extends FunSuite {
 
     p = ConstQuat4(Quat4d(ad, bd, cd, dd))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(float(ad)) { p.a }
-    expect(float(bd)) { p.b }
-    expect(float(cd)) { p.c }
-    expect(float(dd)) { p.d }
+    expect(toFloat(ad)) { p.a }
+    expect(toFloat(bd)) { p.b }
+    expect(toFloat(cd)) { p.c }
+    expect(toFloat(dd)) { p.d }
 
     p = ConstQuat4(Vec4d(bd, cd, dd, ad))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(float(ad)) { p.a }
-    expect(float(bd)) { p.b }
-    expect(float(cd)) { p.c }
-    expect(float(dd)) { p.d }
+    expect(toFloat(ad)) { p.a }
+    expect(toFloat(bd)) { p.b }
+    expect(toFloat(cd)) { p.c }
+    expect(toFloat(dd)) { p.d }
   }
 
   test("Unapply") {

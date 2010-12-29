@@ -22,7 +22,7 @@ package test.buffer
 package floatm
 
 import org.scalatest._
-import simplex3d.math.floatm._
+import simplex3d.math.floatx._
 import simplex3d.data._
 import simplex3d.data.floatm._
 

@@ -22,7 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.reflect._
-import simplex3d.math.floatm._
+import simplex3d.math.floatx._
 import simplex3d.data.floatm._
 import simplex3d.data.floatm.impl._
 

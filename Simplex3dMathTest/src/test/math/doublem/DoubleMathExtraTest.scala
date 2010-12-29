@@ -24,8 +24,8 @@ import org.scalatest._
 import java.util.Random
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -149,10 +149,10 @@ class DoubleMathExtraTest extends FunSuite {
     }
 
     var i = 0L; while(i < 16*16*16*16) {
-      val (a1, a2, a3, a4) = makeErrors(int(i))
-      val (b1, b2, b3, b4) = makeErrors(int(i >> 4))
-      val (c1, c2, c3, c4) = makeErrors(int(i >> 8))
-      val (d1, d2, d3, d4) = makeErrors(int(i >> 12))
+      val (a1, a2, a3, a4) = makeErrors(toInt(i))
+      val (b1, b2, b3, b4) = makeErrors(toInt(i >> 4))
+      val (c1, c2, c3, c4) = makeErrors(toInt(i >> 8))
+      val (d1, d2, d3, d4) = makeErrors(toInt(i >> 12))
 
       assert(
         hasErrors(Vec2(a1, a2)) ==

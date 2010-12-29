@@ -24,8 +24,8 @@ package bench.buffer
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 import simplex3d.data._
 import simplex3d.data.floatm._
 
@@ -110,7 +110,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       System.arraycopy(data, 0, dest, 0, data.length)
-      answer += int(dest(l % data.length)*1000)
+      answer += toInt(dest(l % data.length)*1000)
 
       l += 1
     }
@@ -126,7 +126,7 @@ class CopyBenchTC {
       data.clear()
       dest.clear()
       dest.put(data)
-      answer += int(dest.get(l % data.capacity)*1000)
+      answer += toInt(dest.get(l % data.capacity)*1000)
 
       l += 1
     }
@@ -140,7 +140,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(data)
-      answer += int(dest(l % data.length)*1000)
+      answer += toInt(dest(l % data.length)*1000)
 
       l += 1
     }
@@ -156,7 +156,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }
@@ -179,7 +179,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }
@@ -202,7 +202,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }
@@ -225,7 +225,7 @@ class CopyBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += int(dest(l % size)*1000)
+      answer += toInt(dest(l % size)*1000)
 
       l += 1
     }

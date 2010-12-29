@@ -23,8 +23,8 @@ package visual.math
 import visual.math.draw._
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -100,7 +100,7 @@ object MandelbrotTest {
       if (i == iterations) return escapeColor
 
       if (dynamicColor) {
-        var j = i - int(pow(log(zoom), 1.35))
+        var j = i - toInt(pow(log(zoom), 1.35))
         if (j < 0) j = 0
         colors(j)
       }
@@ -136,7 +136,7 @@ abstract class ColorGen {
 
   final def gradient(start: Vec3, end: Vec3, count: Int) = {
     (for (i <- 0 until count) yield {
-      ConstVec3(mix(start, end, double(i)/count))
+      ConstVec3(mix(start, end, toDouble(i)/count))
     }).toList
   }
 }
@@ -154,7 +154,7 @@ extends ColorGen
 
     val clamped = clamp(contrast, 0, 1)
 
-    val pre = int(round(count*clamped))
+    val pre = toInt(round(count*clamped))
     val post = count - pre
 
     gradient(from, shade, pre) :::

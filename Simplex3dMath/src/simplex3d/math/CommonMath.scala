@@ -34,37 +34,37 @@ private[math] class CommonMath {
    * @param x a value to cast.
    * @return x.
    */
-  final def bool(x: Boolean) :Boolean = x
+  final def toBool(x: Boolean) :Boolean = x
 
   /** Casts an Int to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  final def bool(x: Int) :Boolean = (x != 0)
+  final def toBool(x: Int) :Boolean = (x != 0)
 
   /** Casts a Float to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def bool(x: Float) :Boolean = (x != 0)
+  final def toBool(x: Float) :Boolean = (x != 0)
 
   /** Casts a Double to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def bool(x: Double) :Boolean = (x != 0)
+  final def toBool(x: Double) :Boolean = (x != 0)
 
   /** Casts a Boolean to an Int.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  final def int(x: Boolean) :Int = if (x) 1 else 0
+  final def toInt(x: Boolean) :Int = if (x) 1 else 0
 
   /** Casts an Int to an Int. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def int(x: Int) :Int = x
+  final def toInt(x: Int) :Int = x
 
   /** Casts a Float to an Int.
    * @param x a value to cast.
@@ -73,7 +73,7 @@ private[math] class CommonMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  final def int(x: Float) :Int = x.asInstanceOf[Int]
+  final def toInt(x: Float) :Int = x.asInstanceOf[Int]
 
   /** Casts a Double to an Int.
    * @param x a value to cast.
@@ -82,55 +82,55 @@ private[math] class CommonMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  final def int(x: Double) :Int = x.asInstanceOf[Int]
+  final def toInt(x: Double) :Int = x.asInstanceOf[Int]
 
   /** Casts a Boolean to a Float.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  final def float(x: Boolean) :Float = if (x) 1 else 0
+  final def toFloat(x: Boolean) :Float = if (x) 1 else 0
 
   /** Casts an Int to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  final def float(x: Int) :Float = x.asInstanceOf[Float]
+  final def toFloat(x: Int) :Float = x.asInstanceOf[Float]
 
   /** Casts a Float to a Float. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def float(x: Float) :Float = x
+  final def toFloat(x: Float) :Float = x
 
   /** Casts a Double to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  final def float(x: Double) :Float = x.asInstanceOf[Float]
+  final def toFloat(x: Double) :Float = x.asInstanceOf[Float]
 
   /** Casts a Boolean to a Douoble.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  final def double(x: Boolean) :Double = if (x) 1 else 0
+  final def toDouble(x: Boolean) :Double = if (x) 1 else 0
 
   /** Casts an Int to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  final def double(x: Int) :Double = x.asInstanceOf[Double]
+  final def toDouble(x: Int) :Double = x.asInstanceOf[Double]
 
   /** Casts a Float to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  final def double(x: Float) :Double = x.asInstanceOf[Double]
+  final def toDouble(x: Float) :Double = x.asInstanceOf[Double]
 
   /** Casts a Double to a Douoble. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def double(x: Double) :Double = x
+  final def toDouble(x: Double) :Double = x
 
 
   // Boolean functions.

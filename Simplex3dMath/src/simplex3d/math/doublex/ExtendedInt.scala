@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublem
+package simplex3d.math.doublex
 
 import simplex3d.math._
 

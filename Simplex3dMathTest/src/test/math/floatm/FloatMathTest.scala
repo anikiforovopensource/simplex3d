@@ -23,8 +23,8 @@ package test.math.floatm
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.float._
+import simplex3d.math.floatx.FloatMath._
 import Float.{
   NaN => nan,
   PositiveInfinity => posinf,

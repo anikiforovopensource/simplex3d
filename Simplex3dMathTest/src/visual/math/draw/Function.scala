@@ -20,7 +20,7 @@
 
 package visual.math.draw
 
-import simplex3d.math.doublem.renamed._
+import simplex3d.math.double._
 
 
 /**

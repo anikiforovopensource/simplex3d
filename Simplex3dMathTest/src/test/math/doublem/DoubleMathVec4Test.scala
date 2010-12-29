@@ -23,8 +23,8 @@ package test.math.doublem
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 import Double.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -246,10 +246,10 @@ class DoubleMathVec4Test extends FunSuite {
       val bool1 = s > 0; val bool2 = t > 0
       val bool3 = p > 0; val bool4 = q > 0
       expect(Vec4(
-          mix(x, r, double(bool1)),
-          mix(y, g, double(bool2)),
-          mix(z, b, double(bool3)),
-          mix(w, a, double(bool4))
+          mix(x, r, toDouble(bool1)),
+          mix(y, g, toDouble(bool2)),
+          mix(z, b, toDouble(bool3)),
+          mix(w, a, toDouble(bool4))
       )) {
         mix(
           Vec4(x, y, z, w),

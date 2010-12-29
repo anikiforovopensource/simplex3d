@@ -21,8 +21,8 @@
 package bench.math
 
 import java.io._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 
 
 /**

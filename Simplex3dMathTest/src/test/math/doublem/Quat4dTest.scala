@@ -23,9 +23,9 @@ package test.math.doublem
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
-import simplex3d.math.floatm._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
+import simplex3d.math.floatx._
 
 
 /**
@@ -76,17 +76,17 @@ class Quat4dTest extends FunSuite {
 
     q = Quat4(Quat4f(af, bf, cf, df))
     expect(classOf[Quat4]) { q.getClass }
-    expect(double(af)) { q.a }
-    expect(double(bf)) { q.b }
-    expect(double(cf)) { q.c }
-    expect(double(df)) { q.d }
+    expect(toDouble(af)) { q.a }
+    expect(toDouble(bf)) { q.b }
+    expect(toDouble(cf)) { q.c }
+    expect(toDouble(df)) { q.d }
 
     q = Quat4(Vec4f(bf, cf, df, af))
     expect(classOf[Quat4]) { q.getClass }
-    expect(double(af)) { q.a }
-    expect(double(bf)) { q.b }
-    expect(double(cf)) { q.c }
-    expect(double(df)) { q.d }
+    expect(toDouble(af)) { q.a }
+    expect(toDouble(bf)) { q.b }
+    expect(toDouble(cf)) { q.c }
+    expect(toDouble(df)) { q.d }
 
     var p: ReadQuat4 = ConstQuat4(ad, bd, cd, dd)
     expect(classOf[ConstQuat4]) { p.getClass }
@@ -111,17 +111,17 @@ class Quat4dTest extends FunSuite {
 
     p = ConstQuat4(Quat4f(af, bf, cf, df))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(double(af)) { p.a }
-    expect(double(bf)) { p.b }
-    expect(double(cf)) { p.c }
-    expect(double(df)) { p.d }
+    expect(toDouble(af)) { p.a }
+    expect(toDouble(bf)) { p.b }
+    expect(toDouble(cf)) { p.c }
+    expect(toDouble(df)) { p.d }
 
     p = ConstQuat4(Vec4f(bf, cf, df, af))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(double(af)) { p.a }
-    expect(double(bf)) { p.b }
-    expect(double(cf)) { p.c }
-    expect(double(df)) { p.d }
+    expect(toDouble(af)) { p.a }
+    expect(toDouble(bf)) { p.b }
+    expect(toDouble(cf)) { p.c }
+    expect(toDouble(df)) { p.d }
   }
 
   test("Unapply") {

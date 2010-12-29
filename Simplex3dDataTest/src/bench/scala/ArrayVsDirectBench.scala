@@ -23,8 +23,8 @@ package bench.scala
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 import simplex3d.data._
 import simplex3d.data.floatm._
 
@@ -91,7 +91,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data(i), data(i + 1))
         val u = v * 7.9f
-        answer += int(u.x + u.y)
+        answer += toInt(u.x + u.y)
 
         i += step
       }
@@ -111,7 +111,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data.get(i), data.get(i + 1))
         val u = v * 7.9f
-        answer += int(u.x + u.y)
+        answer += toInt(u.x + u.y)
 
         i += step
       }
@@ -131,7 +131,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data.get(i), data.get(i + 1))
         val u = v * 7.9f
-        answer += int(u.x + u.y)
+        answer += toInt(u.x + u.y)
 
         i += step
       }

@@ -23,8 +23,8 @@ package visual.math
 import visual.math.draw._
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -42,7 +42,7 @@ object NoiseDistribution {
     final def apply(pixel: ReadVec2, t: Double) = {
       val p = pixel + t*scrollSpeed
 
-      val timeSlot = (int(t)/10)%4
+      val timeSlot = (toInt(t)/10)%4
       val noise =
         if (timeSlot == 0) noise1(p.x*scale)
         else if (timeSlot == 1) noise1(p*scale)

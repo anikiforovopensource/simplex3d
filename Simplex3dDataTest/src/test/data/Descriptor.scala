@@ -24,8 +24,8 @@ import scala.reflect._
 import simplex3d.data.{MetaManifest => Man, _}
 import simplex3d.data.RawType._
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 
 
 /**

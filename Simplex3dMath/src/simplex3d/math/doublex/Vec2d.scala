@@ -19,10 +19,10 @@
  */
 
 package simplex3d.math
-package doublem
+package doublex
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.data._
+import simplex3d.integration.data._
 import simplex3d.math.CoreMath._
 
 
@@ -47,8 +47,8 @@ sealed abstract class ReadVec2d extends ProtectedVec2d[Double]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] final def bx: Boolean = bool(x)
-  private[math] final def by: Boolean = bool(y)
+  private[math] final def bx: Boolean = toBool(x)
+  private[math] final def by: Boolean = toBool(y)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt

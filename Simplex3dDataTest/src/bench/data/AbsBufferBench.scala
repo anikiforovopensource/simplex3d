@@ -24,8 +24,8 @@ package bench.buffer
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 import simplex3d.data._
 import simplex3d.data.floatm._
 
@@ -119,7 +119,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += int(u.x + u.y + u.z + u.w)
+        answer += toInt(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -140,7 +140,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += int(u.x + u.y + u.z + u.w)
+        answer += toInt(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -161,7 +161,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += int(u.x + u.y + u.z + u.w)
+        answer += toInt(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -181,7 +181,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += int(u.x + u.y + u.z + u.w)
+        answer += toInt(u.x + u.y + u.z + u.w)
 
         i += step
       }

@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.data._
+import simplex3d.integration.data._
 import simplex3d.math.CoreMath._
 
 
@@ -46,9 +46,9 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
-  private[math] final def bx: Boolean = bool(x)
-  private[math] final def by: Boolean = bool(y)
-  private[math] final def bz: Boolean = bool(z)
+  private[math] final def bx: Boolean = toBool(x)
+  private[math] final def by: Boolean = toBool(y)
+  private[math] final def bz: Boolean = toBool(z)
 
   private[math] final def ix: Int = x
   private[math] final def iy: Int = y

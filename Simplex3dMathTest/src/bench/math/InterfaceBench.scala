@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.float._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**
@@ -69,7 +69,7 @@ class InterfaceBenchCase {
         // Bench code
         val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
         val q = IBMath.quatFrom(Mat3x3m(m))
-        answer += int((q.a + q.b + q.c + q.d))
+        answer += toInt((q.a + q.b + q.c + q.d))
 
         i += 1
       }
@@ -89,7 +89,7 @@ class InterfaceBenchCase {
         val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
         val q = Quat4(1, 0, 0, 0)
         IBMath.quatFrom(m, q)
-        answer += int((q.a + q.b + q.c + q.d))
+        answer += toInt((q.a + q.b + q.c + q.d))
 
         i += 1
       }

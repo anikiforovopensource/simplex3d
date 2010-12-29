@@ -80,8 +80,10 @@ name="Simplex3dMath" default="release-all" basedir=".">
     <property name="release.src" value="${release.dir}/Simplex3dMath_src.zip"/>
     <property name="root.pkg" value="simplex3d/math"/>
 
-    <property name="floatm.pkg" value="${root.pkg}/floatm/**"/>
-    <property name="doublem.pkg" value="${root.pkg}/doublem/**"/>
+    <property name="floatx.pkg" value="${root.pkg}/floatx/**"/>
+    <property name="float.pkg" value="${root.pkg}/float/**"/>
+    <property name="doublex.pkg" value="${root.pkg}/doublex/**"/>
+    <property name="double.pkg" value="${root.pkg}/double/**"/>
 
 
     <target name="release-all" depends="release-clean, release-src, release-bin" />
@@ -98,15 +100,15 @@ name="Simplex3dMath" default="release-all" basedir=".">
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${floatm.pkg} ${doublem.pkg}"/>
+            excludes="${floatx.pkg} ${float.pkg} ${doublex.pkg} ${double.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-float.jar">
-            <fileset dir="${build.classes.dir}" includes="${floatm.pkg}"/>
+            <fileset dir="${build.classes.dir}" includes="${floatx.pkg} ${float.pkg}"/>
         </jar>
         <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-double.jar">
-            <fileset dir="${build.classes.dir}" includes="${doublem.pkg}"/>
+            <fileset dir="${build.classes.dir}" includes="${doublex.pkg} ${double.pkg}"/>
         </jar>
 
         <zip destfile="${release.bin}">

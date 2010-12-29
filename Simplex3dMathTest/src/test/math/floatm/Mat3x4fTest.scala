@@ -23,8 +23,8 @@ package test.math.floatm
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
-import simplex3d.math.doublem._
+import simplex3d.math.float._
+import simplex3d.math.doublex._
 import simplex3d.math.CoreMath._
 
 
@@ -203,18 +203,18 @@ class Mat3x4fTest extends FunSuite {
       Vec3d(d03, d13, d23)
     )
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), float(d23))) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), toFloat(d23))) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat2x2d(
       d00, d10,
       d01, d11
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d00), toFloat(d10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), 0)) { (m.m01, m.m11, m.m21) }
     expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
@@ -224,9 +224,9 @@ class Mat3x4fTest extends FunSuite {
       d02, d12
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), 0)) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), 1)) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d00), toFloat(d10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), 1)) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat2x4d(
@@ -236,18 +236,18 @@ class Mat3x4fTest extends FunSuite {
       d03, d13
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), 0)) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), 1)) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), 0)) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), 1)) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), 0)) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat3x2d(
       d00, d10, d20,
       d01, d11, d21
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
     expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
@@ -257,9 +257,9 @@ class Mat3x4fTest extends FunSuite {
       d02, d12, d22
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat3x4d(
@@ -269,18 +269,18 @@ class Mat3x4fTest extends FunSuite {
       d03, d13, d23
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), float(d23))) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), toFloat(d23))) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat4x2d(
       d00, d10, d20, d30,
       d01, d11, d21, d31
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
     expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
@@ -290,9 +290,9 @@ class Mat3x4fTest extends FunSuite {
       d02, d12, d22, d32
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
     expect((0, 0, 0)) { (m.m03, m.m13, m.m23) }
 
     m = Mat3x4(Mat4x4d(
@@ -302,10 +302,10 @@ class Mat3x4fTest extends FunSuite {
       d03, d13, d23, d33
     ))
     expect(classOf[Mat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), float(d23))) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), toFloat(d23))) { (m.m03, m.m13, m.m23) }
 
 
     m = ConstMat3x4(
@@ -351,10 +351,10 @@ class Mat3x4fTest extends FunSuite {
       Vec3d(d03, d13, d23)
     )
     expect(classOf[ConstMat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), float(d23))) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), toFloat(d23))) { (m.m03, m.m13, m.m23) }
 
     m = ConstMat3x4(Mat3x4d(
       d00, d10, d20,
@@ -363,10 +363,10 @@ class Mat3x4fTest extends FunSuite {
       d03, d13, d23
     ))
     expect(classOf[ConstMat3x4]) { m.getClass }
-    expect((float(d00), float(d10), float(d20))) { (m.m00, m.m10, m.m20) }
-    expect((float(d01), float(d11), float(d21))) { (m.m01, m.m11, m.m21) }
-    expect((float(d02), float(d12), float(d22))) { (m.m02, m.m12, m.m22) }
-    expect((float(d03), float(d13), float(d23))) { (m.m03, m.m13, m.m23) }
+    expect((toFloat(d00), toFloat(d10), toFloat(d20))) { (m.m00, m.m10, m.m20) }
+    expect((toFloat(d01), toFloat(d11), toFloat(d21))) { (m.m01, m.m11, m.m21) }
+    expect((toFloat(d02), toFloat(d12), toFloat(d22))) { (m.m02, m.m12, m.m22) }
+    expect((toFloat(d03), toFloat(d13), toFloat(d23))) { (m.m03, m.m13, m.m23) }
   }
 
   test("Unapply") {

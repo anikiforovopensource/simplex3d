@@ -20,13 +20,13 @@
 
 package simplex3d.math
 
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object floatm {
+package object floatx {
 
   // Implicits
   implicit def intToFloatPromoter(s: Float) = new IntPromoter(s)

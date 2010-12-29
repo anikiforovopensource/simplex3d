@@ -23,8 +23,8 @@ package test.math
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 import simplex3d.math.CoreMath._
 
 
@@ -84,47 +84,47 @@ class Vec2bTest extends FunSuite {
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec2i(int(x), int(y)))
+      u = Vec2b(Vec2i(toInt(x), toInt(y)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec3i(int(x), int(y), int(z)))
+      u = Vec2b(Vec3i(toInt(x), toInt(y), toInt(z)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec4i(int(x), int(y), int(z), int(w)))
+      u = Vec2b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec2f(float(x), float(y)))
+      u = Vec2b(Vec2f(toFloat(x), toFloat(y)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec3f(float(x), float(y), float(z)))
+      u = Vec2b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec4f(float(x), float(y), float(z), float(w)))
+      u = Vec2b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec2d(double(x), double(y)))
+      u = Vec2b(Vec2d(toDouble(x), toDouble(y)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec3d(double(x), double(y), double(z)))
+      u = Vec2b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
 
-      u = Vec2b(Vec4d(double(x), double(y), double(z), double(w)))
+      u = Vec2b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
       expect(classOf[Vec2b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
@@ -149,47 +149,47 @@ class Vec2bTest extends FunSuite {
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec2i(int(x), int(y)))
+      c = ConstVec2b(Vec2i(toInt(x), toInt(y)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec3i(int(x), int(y), int(z)))
+      c = ConstVec2b(Vec3i(toInt(x), toInt(y), toInt(z)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec4i(int(x), int(y), int(z), int(w)))
+      c = ConstVec2b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec2f(float(x), float(y)))
+      c = ConstVec2b(Vec2f(toFloat(x), toFloat(y)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec3f(float(x), float(y), float(z)))
+      c = ConstVec2b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec4f(float(x), float(y), float(z), float(w)))
+      c = ConstVec2b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec2d(double(x), double(y)))
+      c = ConstVec2b(Vec2d(toDouble(x), toDouble(y)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec3d(double(x), double(y), double(z)))
+      c = ConstVec2b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
 
-      c = ConstVec2b(Vec4d(double(x), double(y), double(z), double(w)))
+      c = ConstVec2b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
       expect(classOf[ConstVec2b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -243,9 +243,9 @@ class Vec2bTest extends FunSuite {
       assert(Vec2b(x, y) != Vec2b(!x, y))
       assert(Vec2b(x, y) != Vec2b(x, !y))
 
-      assert(Vec2b(x, y) != Vec2i(int(x), int(y)))
-      assert(Vec2b(x, y) != Vec2f(float(x), float(y)))
-      assert(Vec2b(x, y) != Vec2d(double(x), double(y)))
+      assert(Vec2b(x, y) != Vec2i(toInt(x), toInt(y)))
+      assert(Vec2b(x, y) != Vec2f(toFloat(x), toFloat(y)))
+      assert(Vec2b(x, y) != Vec2d(toDouble(x), toDouble(y)))
     }
   }
 

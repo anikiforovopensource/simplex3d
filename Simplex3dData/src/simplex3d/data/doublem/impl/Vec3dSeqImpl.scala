@@ -22,7 +22,7 @@ package simplex3d.data.doublem
 package impl
 
 import java.nio._
-import simplex3d.math.doublem._
+import simplex3d.math.doublex._
 import simplex3d.data._
 
 

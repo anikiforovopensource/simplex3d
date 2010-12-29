@@ -24,7 +24,7 @@ package bench.buffer
 import java.nio._
 
 import simplex3d.math._
-import simplex3d.math.floatm.renamed._
+import simplex3d.math.float._
 import simplex3d.data._
 import simplex3d.data.floatm._
 

@@ -19,10 +19,10 @@
  */
 
 package simplex3d.math
-package floatm
+package floatx
 
 import scala.reflect.ClassManifest._
-import simplex3d.math.integration.data._
+import simplex3d.integration.data._
 import simplex3d.math.CoreMath._
 
 
@@ -47,9 +47,9 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4f(x.toFloat, y.toFloat, z.toFloat, w.toFloat)
 
-  private[math] final def bx: Boolean = bool(x)
-  private[math] final def by: Boolean = bool(y)
-  private[math] final def bz: Boolean = bool(z)
+  private[math] final def bx: Boolean = toBool(x)
+  private[math] final def by: Boolean = toBool(y)
+  private[math] final def bz: Boolean = toBool(z)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt

@@ -21,7 +21,7 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**
@@ -71,7 +71,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += toInt(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }
@@ -88,7 +88,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += toInt(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }

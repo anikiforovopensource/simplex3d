@@ -33,8 +33,8 @@ package visual.math
 import visual.math.draw._
 
 import simplex3d.math._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -76,7 +76,7 @@ object NoiseContribution {
         val x = u.x*scale
         val y = u.y*scale
 
-        val timeSlot = (int(time)/5)%9
+        val timeSlot = (toInt(time)/5)%9
         val shade =
           if (timeSlot == 0) nc1(x)
           else if (timeSlot == 1) nc2(x, y)
@@ -114,7 +114,7 @@ object NoiseContribution {
   }
 
   final def ifloor(x: Double) :Int = {
-    val i = int(x)
+    val i = toInt(x)
     if (x > 0 || x == i) i else i - 1
   }
 

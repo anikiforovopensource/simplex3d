@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm
+package simplex3d.math.floatx
 
 import simplex3d.math._
 import simplex3d.math.SimplexNoise._

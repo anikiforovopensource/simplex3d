@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublem
+package simplex3d.math
 
-import simplex3d.math._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.doublex._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object renamed {
+package object double {
 
   // Implicits
   implicit def intToDoublePromoter(s: Double) = new IntPromoter(s)
@@ -86,6 +86,8 @@ package object renamed {
   implicit def mat4x4FloatToDouble(m: AnyMat4x4[Float]) :ConstMat4d =
     ConstMat4d(m)
 
+
+  val functions = DoubleMath
 
   type ReadVec2 = ReadVec2d
   type ConstVec2 = ConstVec2d

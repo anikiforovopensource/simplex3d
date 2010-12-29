@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.integration.data
+package simplex3d.integration.data
 
 import java.nio
 import scala.reflect.ClassManifest._

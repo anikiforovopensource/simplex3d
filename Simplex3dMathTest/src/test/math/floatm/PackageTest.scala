@@ -31,7 +31,7 @@ import simplex3d.math._
 class PackageTest extends FunSuite {
 
   test("Regular package") {
-    import simplex3d.math.floatm._
+    import simplex3d.math.floatx._
 
     // implicits
     val i2 = 2.0f*Vec2i(1)
@@ -154,7 +154,7 @@ class PackageTest extends FunSuite {
   }
 
   test("Renamed package") {
-    import simplex3d.math.floatm.renamed._
+    import simplex3d.math.float._
 
     // implicits
     val i2 = 2.0f*Vec2i(1)

@@ -31,7 +31,7 @@ import simplex3d.math._
 class PromotionsTest extends FunSuite {
 
   test("Promotions") {
-    import simplex3d.math.floatm._
+    import simplex3d.math.floatx._
 
     val i2: Vec2f = Vec2i(1, 2)
     expect(classOf[Vec2f]) { i2.getClass }
@@ -59,7 +59,7 @@ class PromotionsTest extends FunSuite {
   }
 
   test("Renamed promotions") {
-    import simplex3d.math.floatm.renamed._
+    import simplex3d.math.float._
 
     val i2: Vec2 = Vec2i(1, 2)
     expect(classOf[Vec2]) { i2.getClass }

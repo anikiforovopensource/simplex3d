@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.doublem._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.doublex._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -185,7 +185,7 @@ class MatSharedCodeBench {
 
         // Bench code
         val a = new Mat3m(i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8)
-        res += a/double(i + 10)
+        res += a/toDouble(i + 10)
 
         i += 1
       }
@@ -204,7 +204,7 @@ class MatSharedCodeBench {
 
         // Bench code
         val a = new Mat3s(i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8)
-        res += a/double(i + 10)
+        res += a/toDouble(i + 10)
 
         i += 1
       }
@@ -223,7 +223,7 @@ class MatSharedCodeBench {
 
         // Bench code
         val a = Mat3d(i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8)
-        res += a/double(i + 10)
+        res += a/toDouble(i + 10)
 
         i += 1
       }

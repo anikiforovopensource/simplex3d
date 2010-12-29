@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.doublem.DoubleMath._
-import simplex3d.math.doublem.renamed._
+import simplex3d.math.doublex.DoubleMath._
+import simplex3d.math.double._
 
 
 /**
@@ -68,7 +68,7 @@ class NormalizeTC {
         // Bench code
         val u = normalize(Vec3(i, i + 1, i + 2))
         val t = normalize(u)
-        answer += int(t.x + t.y + t.z)
+        answer += toInt(t.x + t.y + t.z)
 
         i += 1
       }
@@ -87,7 +87,7 @@ class NormalizeTC {
         // Bench code
         val u = normalize(Vec3(i, i + 1, i + 2))
         val t = normalizeTo(u, 1e-14)
-        answer += int(t.x + t.y + t.z)
+        answer += toInt(t.x + t.y + t.z)
 
         i += 1
       }

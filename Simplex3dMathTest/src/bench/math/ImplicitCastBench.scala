@@ -21,8 +21,8 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 import simplex3d.math.CoreMath._
 
 
@@ -82,7 +82,7 @@ object ImplicitCastBench {
       // Bench code
       val u = Vec3d(i + 0, i + 1, i + 2)
       val t = u + v
-      p ^= int(t.x + t.y + t.z)
+      p ^= toInt(t.x + t.y + t.z)
 
       i += 1
     }
@@ -99,7 +99,7 @@ object ImplicitCastBench {
       // Bench code
       val u = Vec3i(i + 0, i + 1, i + 2)
       val t = u + v
-      p ^= int(t.x + t.y + t.z)
+      p ^= toInt(t.x + t.y + t.z)
 
       i += 1
     }
@@ -121,7 +121,7 @@ object ImplicitCastBench {
         i + 9, i + 10, i +11
       )
       val t = m.transformPoint(v)
-      p ^= int(t.x + t.y + t.z)
+      p ^= toInt(t.x + t.y + t.z)
 
       i += 1
     }
@@ -143,7 +143,7 @@ object ImplicitCastBench {
         i + 9, i + 10, i +11
       )
       val t = m.transformPoint(v)
-      p ^= int(t.x + t.y + t.z)
+      p ^= toInt(t.x + t.y + t.z)
 
       i += 1
     }

@@ -18,16 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatm
+package simplex3d.math
 
-import simplex3d.math._
-import simplex3d.math.floatm.FloatMath._
+import simplex3d.math.floatx._
+import simplex3d.math.floatx.FloatMath._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object renamed {
+package object float {
   
   // Implicits
   implicit def intToFloatPromoter(s: Float) = new IntPromoter(s)
@@ -43,7 +43,9 @@ package object renamed {
 
   implicit def vec4IntToFloat(u: AnyVec4[Int]) :ConstVec4f =
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
-  
+
+
+  val functions = FloatMath
 
   type ReadVec2 = ReadVec2f
   type ConstVec2 = ConstVec2f

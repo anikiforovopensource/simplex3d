@@ -22,7 +22,7 @@ package test.buffer
 package doublem
 
 import org.scalatest._
-import simplex3d.math.doublem._
+import simplex3d.math.doublex._
 import simplex3d.data._
 import simplex3d.data.doublem._
 

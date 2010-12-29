@@ -21,9 +21,9 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatm._
-import simplex3d.math.doublem.renamed._
-import simplex3d.math.doublem.DoubleMath._
+import simplex3d.math.floatx._
+import simplex3d.math.double._
+import simplex3d.math.doublex.DoubleMath._
 
 
 /**
@@ -104,7 +104,7 @@ class MatConversionCase {
         b += Mat3(Mat4x2f(m))
         b += Mat3(Mat4x3f(m))
         b += Mat3(Mat4x4f(m))
-        answer += int(determinant(b))
+        answer += toInt(determinant(b))
 
         i += 1
       }
@@ -129,7 +129,7 @@ class MatConversionCase {
         )
         a += 1
         val b = Mat3(a)
-        answer += int(determinant(b))
+        answer += toInt(determinant(b))
 
         i += 1
       }
@@ -154,7 +154,7 @@ class MatConversionCase {
         )
         a += 1
         val b = makeMat3(a)
-        answer += int(determinant(b))
+        answer += toInt(determinant(b))
 
         i += 1
       }

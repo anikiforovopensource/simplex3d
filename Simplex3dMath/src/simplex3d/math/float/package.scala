@@ -30,9 +30,8 @@ package object float {
   
   // Implicits
   implicit def intToFloatPromoter(s: Float) = new IntPromoter(s)
-
-  implicit def extendedFloatForFloat(s: Float) = new ExtendedFloat(s)
-  implicit def extendedIntForFloat(s: Int) = new ExtendedInt(s)
+  implicit def intToExtendedFloat(s: Int) = new ExtendedFloat(s)
+  implicit def floatToExtendedFloat(s: Float) = new ExtendedFloat(s)
 
   implicit def vec2IntToFloat(u: AnyVec2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)

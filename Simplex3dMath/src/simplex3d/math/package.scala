@@ -29,7 +29,7 @@ import java.nio._
 package object math {
 
   // Implicits
-  implicit def imInt(s: Int) = new ExtendedInt(s)
+  implicit def intToExtendedInt(s: Int) = new ExtendedInt(s)
 
   // In and Out aliases
 

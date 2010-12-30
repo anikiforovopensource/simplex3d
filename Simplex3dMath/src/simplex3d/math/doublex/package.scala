@@ -29,10 +29,9 @@ package object doublex {
   // Implicits
   implicit def intToDoublePromoter(s: Double) = new IntPromoter(s)
   implicit def floatToDoublePromoter(s: Double) = new FloatPromoter(s)
-
-  implicit def extendedDoubleForDouble(s: Double) = new ExtendedDouble(s)
-  implicit def extendedFloatForDouble(s: Float) = new ExtendedFloat(s)
-  implicit def extendedIntForDouble(s: Int) = new ExtendedInt(s)
+  implicit def intToExtendedDoube(s: Int) = new ExtendedDouble(s)
+  implicit def floatToExtendedDoube(s: Float) = new ExtendedDouble(s)
+  implicit def doubleToExtendedDoube(s: Double) = new ExtendedDouble(s)
 
   implicit def vec2IntToDouble(u: AnyVec2[Int]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)

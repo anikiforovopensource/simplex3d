@@ -232,19 +232,9 @@ class ConversionTest extends FunSuite {
       intFromBits("01111111 00000000").toShort
     )
     testFloatHFloat(
-      floatFromBits("01111111 10100000 00000000 00000000"),
-      floatFromBits("01111111 10100000 00000000 00000000"),
-      intFromBits("01111101 00000000").toShort
-    )
-    testFloatHFloat(
       floatFromBits("11111111 11100000 00000000 00000000"),
       floatFromBits("11111111 11100000 00000000 00000000"),
       intFromBits("11111111 00000000").toShort
-    )
-    testFloatHFloat(
-      floatFromBits("11111111 10100000 00000000 00000000"),
-      floatFromBits("11111111 10100000 00000000 00000000"),
-      intFromBits("11111101 00000000").toShort
     )
 
     // Zero.

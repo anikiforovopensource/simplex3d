@@ -379,9 +379,7 @@ class RFloatTest extends FunSuite {
 
     // More NaN.
     testFloatHFloat(seq, floatFromBits("01111111 11100000 00000000 00000000"))
-    testFloatHFloat(seq, floatFromBits("01111111 10100000 00000000 00000000"))
     testFloatHFloat(seq, floatFromBits("11111111 11100000 00000000 00000000"))
-    testFloatHFloat(seq, floatFromBits("11111111 10100000 00000000 00000000"))
 
     // Zero.
     testFloatHFloat(seq, -0f)

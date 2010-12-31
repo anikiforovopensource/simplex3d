@@ -30,7 +30,7 @@ object QuickTest {
       "-p",
       "build/classes",//"out/production/Simplex3dDataTest",//
       "-s",
-      "test.buffer.double.Vec2dTest",
+      "test.data.double.Vec2dTest",
       "-gNHL"
     ))
   }

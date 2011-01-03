@@ -1,6 +1,6 @@
 /*
  * Simplex3d, NoiseContributionTest
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -76,7 +76,7 @@ object NoiseContribution {
         val x = u.x*scale
         val y = u.y*scale
 
-        val timeSlot = (toInt(time)/5)%9
+        val timeSlot = (Int(time)/5)%9
         val shade =
           if (timeSlot == 0) nc1(x)
           else if (timeSlot == 1) nc2(x, y)
@@ -114,7 +114,7 @@ object NoiseContribution {
   }
 
   final def ifloor(x: Double) :Int = {
-    val i = toInt(x)
+    val i = Int(x)
     if (x > 0 || x == i) i else i - 1
   }
 

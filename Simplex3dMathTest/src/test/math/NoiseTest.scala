@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -87,7 +87,7 @@ class NoiseTest extends FunSuite {
     val delta = 1e-2
     val invdelta = 1/delta
 
-    val loopCount = toInt((to - from)*invdelta)
+    val loopCount = Int((to - from)*invdelta)
 
     var x = from; while(x < to) {
       var y = from; while(y < to) {

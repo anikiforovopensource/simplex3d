@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -21,7 +21,7 @@
 package simplex3d.integration.data
 
 import java.nio
-import scala.reflect.ClassManifest._
+import scala.reflect.ClassManifest.{classType}
 
 
 /** <code>Meta</code> is used to integrate the math package with buffers.

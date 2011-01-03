@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -21,7 +21,7 @@
 package simplex3d.math
 package doublex
 
-import scala.reflect.ClassManifest._
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.integration.data._
 import simplex3d.math.doublex.functions._
 
@@ -47,8 +47,8 @@ sealed abstract class ReadVec2d extends ProtectedVec2d[Double]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] final def bx: Boolean = toBool(x)
-  private[math] final def by: Boolean = toBool(y)
+  private[math] final def bx: Boolean = Bool(x)
+  private[math] final def by: Boolean = Bool(y)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt
@@ -157,9 +157,7 @@ extends ReadVec2d with Immutable {
 object ConstVec2d {
   def apply(s: Double) = new ConstVec2d(s, s)
   /*main factory*/ def apply(x: Double, y: Double) = new ConstVec2d(x, y)
-  def apply(u: AnyVec2[_]) = new ConstVec2d(u.dx, u.dy)
-  def apply(u: AnyVec3[_]) = new ConstVec2d(u.dx, u.dy)
-  def apply(u: AnyVec4[_]) = new ConstVec2d(u.dx, u.dy)
+  def apply(u: AnyVec[_]) = new ConstVec2d(u.dx, u.dy)
 
   implicit def toConst(u: ReadVec2d) = new ConstVec2d(u.x, u.y)
 }
@@ -245,9 +243,7 @@ object Vec2d {
 
   def apply(s: Double) = new Vec2d(s, s)
   /*main factory*/ def apply(x: Double, y: Double) = new Vec2d(x, y)
-  def apply(u: AnyVec2[_]) = new Vec2d(u.dx, u.dy)
-  def apply(u: AnyVec3[_]) = new Vec2d(u.dx, u.dy)
-  def apply(u: AnyVec4[_]) = new Vec2d(u.dx, u.dy)
+  def apply(u: AnyVec[_]) = new Vec2d(u.dx, u.dy)
 
   def unapply(u: ReadVec2d) = Some((u.x, u.y))
 

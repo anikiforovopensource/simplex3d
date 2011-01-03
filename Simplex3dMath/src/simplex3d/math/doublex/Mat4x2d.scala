@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublex
-
-import scala.reflect.ClassManifest._
+package simplex3d.math
+package doublex
+                      
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.integration.data._
-import simplex3d.math._
 import simplex3d.math.doublex.functions._
 
 
@@ -34,8 +34,8 @@ sealed abstract class ReadMat4x2d
 extends ProtectedMat4x2d[Double]
 {
   // Column major order.
-  final def m00= p00; final def m10= p10; final def m20= p20; final def m30= p30
-  final def m01= p01; final def m11= p11; final def m21= p21; final def m31= p31
+  final def m00 = p00; final def m10 = p10; final def m20 = p20; final def m30 = p30
+  final def m01 = p01; final def m11 = p11; final def m21 = p21; final def m31 = p31
 
 
   protected def m00_=(s: Double) { throw new UnsupportedOperationException }

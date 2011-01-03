@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -22,100 +22,154 @@ package test.math
 
 import org.scalatest._
 import simplex3d.math._
+import simplex3d.math.floatx._
+import simplex3d.math.doublex._
 import simplex3d.math.doublex.functions._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class CoreMathTest extends FunSuite {
+class CommonMathTest extends FunSuite {
 
   test("Casting") {
-    val t0: Boolean = false
+    val b0: Boolean = false
     val i0: Int = 0
     val f0: Float = 0
     val d0: Double = 0
 
-    val t1: Boolean = true
+    val b1: Boolean = true
     val i1: Int = 1
     val f1: Float = 1
     val d1: Double = 1
 
     val i2: Int = 2
-    val f2: Float = 2
-    val d2: Double = 2
+    val f2: Float = 2.1f
+    val d2: Double = 2.1
 
     val i3: Int = -1
     val f3: Float = -1
     val d3: Double = -1
 
-    assert(toBool(t1).isInstanceOf[Boolean])
-    assert(toBool(i1).isInstanceOf[Boolean])
-    assert(toBool(f1).isInstanceOf[Boolean])
-    assert(toBool(d1).isInstanceOf[Boolean])
+    assert(Bool(b1).isInstanceOf[Boolean])
+    assert(Bool(i1).isInstanceOf[Boolean])
+    assert(Bool(f1).isInstanceOf[Boolean])
+    assert(Bool(d1).isInstanceOf[Boolean])
 
-    assert(toBool(t1))
-    assert(toBool(i1))
-    assert(toBool(f1))
-    assert(toBool(d1))
+    assert(Bool(b1))
+    assert(Bool(i1))
+    assert(Bool(f1))
+    assert(Bool(d1))
 
-    assert(toBool(i2))
-    assert(toBool(f2))
-    assert(toBool(d2))
+    assert(Bool(i2))
+    assert(Bool(f2))
+    assert(Bool(d2))
 
-    assert(toBool(i3))
-    assert(toBool(f3))
-    assert(toBool(d3))
+    assert(Bool(i3))
+    assert(Bool(f3))
+    assert(Bool(d3))
 
-    assert(!toBool(t0))
-    assert(!toBool(i0))
-    assert(!toBool(f0))
-    assert(!toBool(d0))
+    assert(!Bool(b0))
+    assert(!Bool(i0))
+    assert(!Bool(f0))
+    assert(!Bool(d0))
 
-    assert(toInt(t1).isInstanceOf[Int])
-    assert(toInt(i1).isInstanceOf[Int])
-    assert(toInt(f1).isInstanceOf[Int])
-    assert(toInt(d1).isInstanceOf[Int])
+    assert(Int(b1).isInstanceOf[Int])
+    assert(Int(i1).isInstanceOf[Int])
+    assert(Int(f1).isInstanceOf[Int])
+    assert(Int(d1).isInstanceOf[Int])
 
-    assert(toInt(t1) == i1)
-    assert(toInt(i1) == i1)
-    assert(toInt(f1) == i1)
-    assert(toInt(d1) == i1)
+    assert(Int(b1) == 1)
+    assert(Int(i1) == 1)
+    assert(Int(f1) == 1)
+    assert(Int(d1) == 1)
 
-    assert(toInt(t0) == i0)
-    assert(toInt(i0) == i0)
-    assert(toInt(f0) == i0)
-    assert(toInt(d0) == i0)
+    assert(Int(b0) == 0)
+    assert(Int(i0) == 0)
+    assert(Int(f0) == 0)
+    assert(Int(d0) == 0)
 
-    assert(toFloat(t1).isInstanceOf[Float])
-    assert(toFloat(i1).isInstanceOf[Float])
-    assert(toFloat(f1).isInstanceOf[Float])
-    assert(toFloat(d1).isInstanceOf[Float])
+    assert(Float(b1).isInstanceOf[Float])
+    assert(Float(i1).isInstanceOf[Float])
+    assert(Float(f1).isInstanceOf[Float])
+    assert(Float(d1).isInstanceOf[Float])
 
-    assert(toFloat(t1) == f1)
-    assert(toFloat(i1) == f1)
-    assert(toFloat(f1) == f1)
-    assert(toFloat(d1) == f1)
+    assert(Float(b1) == 1f)
+    assert(Float(i1) == 1f)
+    assert(Float(f1) == 1f)
+    assert(Float(d1) == 1f)
 
-    assert(toFloat(t0) == f0)
-    assert(toFloat(i0) == f0)
-    assert(toFloat(f0) == f0)
-    assert(toFloat(d0) == f0)
+    assert(Float(b0) == 0f)
+    assert(Float(i0) == 0f)
+    assert(Float(f0) == 0f)
+    assert(Float(d0) == 0f)
 
-    assert(toDouble(t1).isInstanceOf[Double])
-    assert(toDouble(i1).isInstanceOf[Double])
-    assert(toDouble(f1).isInstanceOf[Double])
-    assert(toDouble(d1).isInstanceOf[Double])
+    assert(Double(b1).isInstanceOf[Double])
+    assert(Double(i1).isInstanceOf[Double])
+    assert(Double(f1).isInstanceOf[Double])
+    assert(Double(d1).isInstanceOf[Double])
 
-    assert(toDouble(t1) == d1)
-    assert(toDouble(i1) == d1)
-    assert(toDouble(f1) == d1)
-    assert(toDouble(d1) == d1)
+    assert(Double(b1) == 1d)
+    assert(Double(i1) == 1d)
+    assert(Double(f1) == 1d)
+    assert(Double(d1) == 1d)
 
-    assert(toDouble(t0) == d0)
-    assert(toDouble(i0) == d0)
-    assert(toDouble(f0) == d0)
-    assert(toDouble(d0) == d0)
+    assert(Double(b0) == 0d)
+    assert(Double(i0) == 0d)
+    assert(Double(f0) == 0d)
+    assert(Double(d0) == 0d)
+
+
+    // Vectors
+    assert(!Bool(Vec2b(false, false)))
+    assert(!Bool(Vec2b(false, true)))
+    assert(Bool(Vec2b(true, false)))
+    assert(Bool(Vec2b(true, true)))
+
+    assert(!Bool(Vec2i(0, 0)))
+    assert(!Bool(Vec2i(0, 1)))
+    assert(Bool(Vec2i(1, 0)))
+    assert(Bool(Vec2i(1, 1)))
+
+    assert(!Bool(Vec2f(0, 0)))
+    assert(!Bool(Vec2f(0, 1)))
+    assert(Bool(Vec2f(1, 0)))
+    assert(Bool(Vec2f(1, 1)))
+
+    assert(!Bool(Vec2d(0, 0)))
+    assert(!Bool(Vec2d(0, 1)))
+    assert(Bool(Vec2d(1, 0)))
+    assert(Bool(Vec2d(1, 1)))
+
+
+    assert(Int(Vec2b(false, false)) == 0)
+    assert(Int(Vec2b(false, true)) == 0)
+    assert(Int(Vec2b(true, false)) == 1)
+    assert(Int(Vec2b(true, true)) == 1)
+
+    assert(Int(Vec2i(7, 8)) == 7)
+    assert(Int(Vec2f(7.5f, 8.5f)) == 7)
+    assert(Int(Vec2d(7.5, 8.5)) == 7)
+
+
+    assert(Float(Vec2b(false, false)) == 0f)
+    assert(Float(Vec2b(false, true)) == 0f)
+    assert(Float(Vec2b(true, false)) == 1f)
+    assert(Float(Vec2b(true, true)) == 1f)
+
+    assert(Float(Vec2i(7, 8)) == 7f)
+    assert(Float(Vec2f(7.5f, 8.5f)) == 7.5f)
+    assert(Float(Vec2d(7.5, 8.5)) == 7.5f)
+
+
+    assert(Double(Vec2b(false, false)) == 0d)
+    assert(Double(Vec2b(false, true)) == 0d)
+    assert(Double(Vec2b(true, false)) == 1d)
+    assert(Double(Vec2b(true, true)) == 1d)
+
+    assert(Double(Vec2i(7, 8)) == 7d)
+    assert(Double(Vec2f(7.5f, 8.5f)) == 7.5)
+    assert(Double(Vec2d(7.5, 8.5)) == 7.5)
   }
 
   test("Boolean functions") {

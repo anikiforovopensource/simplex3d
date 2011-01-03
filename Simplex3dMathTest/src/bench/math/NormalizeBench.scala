@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -68,7 +68,7 @@ class NormalizeTC {
         // Bench code
         val u = normalize(Vec3(i, i + 1, i + 2))
         val t = normalize(u)
-        answer += toInt(t.x + t.y + t.z)
+        answer += Int(t.x + t.y + t.z)
 
         i += 1
       }
@@ -87,7 +87,7 @@ class NormalizeTC {
         // Bench code
         val u = normalize(Vec3(i, i + 1, i + 2))
         val t = normalizeTo(u, 1e-14)
-        answer += toInt(t.x + t.y + t.z)
+        answer += Int(t.x + t.y + t.z)
 
         i += 1
       }

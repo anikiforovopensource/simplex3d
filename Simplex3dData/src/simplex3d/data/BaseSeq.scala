@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dData.
  *
@@ -160,22 +160,30 @@ private[data] abstract class BaseSeq[
     src match {
       case wrapped: WrappedArray[_] => wrapped.elemManifest match {
         case Manifest.Int =>
-          if (readManifest != Manifest.Int) throw new ClassCastException()
+          if (readManifest != Manifest.Int) throw new ClassCastException(
+            "Seq[Int] cannot be cast to Seq[" + readManifest + "]."
+          )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Int]], first, count
           )
         case Manifest.Float =>
-          if (readManifest != Manifest.Float) throw new ClassCastException()
+          if (readManifest != Manifest.Float) throw new ClassCastException(
+            "Seq[Float] cannot be cast to Seq[" + readManifest + "]."
+          )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Float]], first, count
           )
         case Manifest.Double =>
-          if (readManifest != Manifest.Double) throw new ClassCastException()
+          if (readManifest != Manifest.Double) throw new ClassCastException(
+            "Seq[Double] cannot be cast to Seq[" + readManifest + "]."
+          )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Double]], first, count
           )
         case m =>
-          if (readManifest != m) throw new ClassCastException()
+          if (readManifest != m) throw new ClassCastException(
+            "Seq[" + m + "] cannot be cast to Seq[" + readManifest + "]."
+          )
           putArray(
             index, wrapped.array, first, count
           )
@@ -220,7 +228,9 @@ private[data] abstract class BaseSeq[
     }
 
     if ((backing.readManifest ne src.readManifest) && (backing.readManifest != src.readManifest))
-      throw new ClassCastException()
+      throw new ClassCastException(
+        "DataSeq[" + src.readManifest + "] cannot be cast to DataSeq[" + backing.readManifest + "]."
+      )
 
     if (readOnly) throw new ReadOnlyBufferException()
     if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
@@ -385,21 +395,27 @@ private[data] abstract class BaseSeq[
 
   final def put(index: Int, src: inData[E], first: Int, count: Int) {
     if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
-      throw new ClassCastException()
+      throw new ClassCastException(
+        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+      )
 
     put(index, src.backing, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inData[E]) {
     if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
-      throw new ClassCastException()
+      throw new ClassCastException(
+        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+      )
 
     put(index, src.backing, src.offset, src.stride, src.size)
   }
 
   final def put(src: inData[E]) {
     if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
-      throw new ClassCastException()
+      throw new ClassCastException(
+        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+      )
 
     put(0, src.backing, src.offset, src.stride, src.size)
   }

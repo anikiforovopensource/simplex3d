@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -69,7 +69,7 @@ class InterfaceBenchCase {
         // Bench code
         val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
         val q = IBMath.quatFrom(Mat3x3m(m))
-        answer += toInt((q.a + q.b + q.c + q.d))
+        answer += Int((q.a + q.b + q.c + q.d))
 
         i += 1
       }
@@ -89,7 +89,7 @@ class InterfaceBenchCase {
         val m = Mat3x4m(data(i), data(i + 1), data(i + 2), data(i + 3))
         val q = Quat4(1, 0, 0, 0)
         IBMath.quatFrom(m, q)
-        answer += toInt((q.a + q.b + q.c + q.d))
+        answer += Int((q.a + q.b + q.c + q.d))
 
         i += 1
       }

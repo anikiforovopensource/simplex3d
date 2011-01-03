@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -25,7 +25,7 @@ import org.scalatest._
 import simplex3d.math._
 import simplex3d.math.float._
 import simplex3d.math.floatx.functions._
-import Float.{
+import scala.Float.{
   NaN => nan,
   PositiveInfinity => posinf,
   NegativeInfinity => neginf
@@ -247,10 +247,10 @@ class FloatMathVec4Test extends FunSuite {
       val bool1 = s > 0; val bool2 = t > 0
       val bool3 = p > 0; val bool4 = q > 0
       expect(Vec4(
-          mix(x, r, toFloat(bool1)),
-          mix(y, g, toFloat(bool2)),
-          mix(z, b, toFloat(bool3)),
-          mix(w, a, toFloat(bool4))
+          mix(x, r, Float(bool1)),
+          mix(y, g, Float(bool2)),
+          mix(z, b, Float(bool3)),
+          mix(w, a, Float(bool4))
       )) {
         mix(
           Vec4(x, y, z, w),

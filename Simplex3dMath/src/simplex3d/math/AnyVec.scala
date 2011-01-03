@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -21,7 +21,7 @@
 package simplex3d.math
 
 
-/** <code>AnyVec</code> acts a base class for all vectors.
+/** <code>AnyVec</code> is a base class for all vectors.
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -38,6 +38,16 @@ private[math] abstract class AnyVec[P] {
   protected def make2(x: Double, y: Double) :C2
   protected def make3(x: Double, y: Double, z: Double) :C3
   protected def make4(x: Double, y: Double, z: Double, w: Double) :C4
+
+
+  private[math] def bx: Boolean
+  private[math] def by: Boolean
+
+  private[math] def ix: Int
+  private[math] def iy: Int
+
+  private[math] def fx: Float
+  private[math] def fy: Float
 
   private[math] def dx: Double
   private[math] def dy: Double

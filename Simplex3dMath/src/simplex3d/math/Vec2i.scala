@@ -1,6 +1,6 @@
 /*
  ** Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,7 +20,7 @@
 
 package simplex3d.math
 
-import scala.reflect.ClassManifest._
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.integration.data._
 import simplex3d.math.CommonMath._
 
@@ -46,8 +46,8 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
-  private[math] final def bx: Boolean = toBool(x)
-  private[math] final def by: Boolean = toBool(y)
+  private[math] final def bx: Boolean = Bool(x)
+  private[math] final def by: Boolean = Bool(y)
 
   private[math] final def ix: Int = x
   private[math] final def iy: Int = y
@@ -169,9 +169,7 @@ extends ReadVec2i with Immutable {
 object ConstVec2i {
   def apply(s: Int) = new ConstVec2i(s, s)
   /*main factory*/ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-  def apply(u: AnyVec2[_]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: AnyVec3[_]) = new ConstVec2i(u.ix, u.iy)
-  def apply(u: AnyVec4[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec[_]) = new ConstVec2i(u.ix, u.iy)
 
   implicit def toConst(u: ReadVec2i) = new ConstVec2i(u.x, u.y)
 }
@@ -270,9 +268,7 @@ object Vec2i {
 
   def apply(s: Int) = new Vec2i(s, s)
   /*main factory*/ def apply(x: Int, y: Int) = new Vec2i(x, y)
-  def apply(u: AnyVec2[_]) = new Vec2i(u.ix, u.iy)
-  def apply(u: AnyVec3[_]) = new Vec2i(u.ix, u.iy)
-  def apply(u: AnyVec4[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec[_]) = new Vec2i(u.ix, u.iy)
 
   def unapply(u: ReadVec2i) = Some((u.x, u.y))
 

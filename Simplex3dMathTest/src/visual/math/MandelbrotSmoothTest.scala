@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -109,7 +109,7 @@ object MandelbrotSmoothTest {
       var g = i - log2(abs(log2(length(z))))
       if (dynamicColor) { g = g - pow(log(zoom), 1.35) }
       g = clamp(g, 0, colors.length - 2)
-      val j = toInt(g)
+      val j = Int(g)
       mix(colors(j), colors(j + 1), fract(g))
     }})
   }
@@ -140,7 +140,7 @@ abstract class ColorGen {
 
   final def gradient(start: Vec3, end: Vec3, count: Int) = {
     (for (i <- 0 until count) yield {
-      ConstVec3(mix(start, end, toDouble(i)/count))
+      ConstVec3(mix(start, end, Double(i)/count))
     }).toList
   }
 }
@@ -158,7 +158,7 @@ extends ColorGen
 
     val clamped = clamp(contrast, 0, 1)
 
-    val pre = toInt(round(count*clamped))
+    val pre = Int(round(count*clamped))
     val post = count - pre
 
     gradient(from, shade, pre) :::

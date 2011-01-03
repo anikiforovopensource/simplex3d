@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,7 +20,7 @@
 
 package simplex3d.math
 
-import scala.reflect.ClassManifest._
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.integration.data._
 import simplex3d.math.CommonMath._
 
@@ -59,23 +59,23 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
   private[math] type C4 = ConstVec4b
 
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(toBool(x), toBool(y))
+    new ConstVec2b(Bool(x), Bool(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(toBool(x), toBool(y), toBool(z))
+    new ConstVec3b(Bool(x), Bool(y), Bool(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(toBool(x), toBool(y), toBool(z), toBool(w))
+    new ConstVec4b(Bool(x), Bool(y), Bool(z), Bool(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
 
-  private[math] final def ix: Int = toInt(x)
-  private[math] final def iy: Int = toInt(y)
+  private[math] final def ix: Int = Int(x)
+  private[math] final def iy: Int = Int(y)
 
-  private[math] final def fx: Float = toFloat(x)
-  private[math] final def fy: Float = toFloat(y)
+  private[math] final def fx: Float = Float(x)
+  private[math] final def fy: Float = Float(y)
 
-  private[math] final def dx: Double = toDouble(x)
-  private[math] final def dy: Double = toDouble(y)
+  private[math] final def dx: Double = Double(x)
+  private[math] final def dy: Double = Double(y)
 
 
   final def x = px
@@ -209,30 +209,12 @@ object ConstVec2b {
    */
   /*main factory*/ def apply(x: Boolean, y: Boolean) = new ConstVec2b(x, y)
 
-  /** Makes a new instance of ConstVec2b from a 2-dimensional vector.
-   * @param u any 2-dimensional vector.
-   * @return a new instance of ConstVec2b with components initialized
-   *         to the components of u converted to Boolean.
-   */
-  def apply(u: AnyVec2[_]) = new ConstVec2b(u.bx, u.by)
-
-  /** Makes a new instance of ConstVec2b from the first two components
-   * of a 3-dimensional vector.
-   *
-   * @param u any 3-dimensional vector.
+  /** Makes a new instance of ConstVec2b from any vector.
+   * @param u any vector.
    * @return a new instance of ConstVec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec3[_]) = new ConstVec2b(u.bx, u.by)
-
-  /** Makes a new instance of ConstVec2b from the first two components
-   * of a 4-dimensional vector.
-   *
-   * @param u any 4-dimensional vector.
-   * @return a new instance of ConstVec2b with components initialized
-   *         to the first two components of u converted to Boolean.
-   */
-  def apply(u: AnyVec4[_]) = new ConstVec2b(u.bx, u.by)
+  def apply(u: AnyVec[_]) = new ConstVec2b(u.bx, u.by)
   
   implicit def toConst(u: ReadVec2b) = new ConstVec2b(u.x, u.y)
 }
@@ -358,30 +340,12 @@ object Vec2b {
    */
   /*main factory*/ def apply(x: Boolean, y: Boolean) = new Vec2b(x, y)
 
-  /** Makes a new instance of Vec2b from a 2-dimensional vector.
-   * @param u any 2-dimensional vector.
-   * @return a new instance of Vec2b with components initialized
-   *         to the components of u converted to Boolean.
-   */
-  def apply(u: AnyVec2[_]) = new Vec2b(u.bx, u.by)
-
-  /** Makes a new instance of Vec2b from the first two components
-   * of a 3-dimensional vector.
-   *
-   * @param u any 3-dimensional vector.
+  /** Makes a new instance of Vec2b from any vector.
+   * @param u any vector.
    * @return a new instance of Vec2b with components initialized
    *         to the first two components of u converted to Boolean.
    */
-  def apply(u: AnyVec3[_]) = new Vec2b(u.bx, u.by)
-  
-  /** Makes a new instance of Vec2b from the first two components
-   * of a 4-dimensional vector.
-   *
-   * @param u any 4-dimensional vector.
-   * @return a new instance of Vec2b with components initialized
-   *         to the first two components of u converted to Boolean.
-   */
-  def apply(u: AnyVec4[_]) = new Vec2b(u.bx, u.by)
+  def apply(u: AnyVec[_]) = new Vec2b(u.bx, u.by)
 
   def unapply(u: ReadVec2b) = Some((u.x, u.y))
 

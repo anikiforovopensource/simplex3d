@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -53,7 +53,7 @@ class NanFloat {
   }
 
   def getNan(i: Int) :Float = {
-    if (i % 2 == 0) Float.NaN
+    if (i % 2 == 0) scala.Float.NaN
     else 1
   }
 

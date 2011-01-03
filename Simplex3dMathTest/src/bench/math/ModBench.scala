@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -71,7 +71,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += toInt(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += Int(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }
@@ -88,7 +88,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += toInt(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += Int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }

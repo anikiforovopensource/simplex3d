@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -326,7 +326,7 @@ object functions extends CommonMath {
     else (JMath.log(x + JMath.sqrt(x*x + 1))).toFloat
   }
   def acosh(x: Float) :Float = {
-    if (x < 0) Float.NaN
+    if (x < 0) scala.Float.NaN
     else (JMath.log(x + JMath.sqrt(x*x - 1))).toFloat
   }
   def atanh(x: Float) :Float = {
@@ -353,18 +353,18 @@ object functions extends CommonMath {
     else x
   }
   def floor(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue) x
+    if (x > scala.Int.MaxValue || x < scala.Int.MinValue) x
     else {
       val i = x.toInt
       if (x > 0 || x == i) i else if(isnan(x)) x else i - 1
     }
   }
   def trunc(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue || isnan(x)) x
+    if (x > scala.Int.MaxValue || x < scala.Int.MinValue || isnan(x)) x
     else x.toInt
   }
   def round(x: Float) :Float = {
-    if (x > (Int.MaxValue - 1) || x < (Int.MinValue + 1)) x
+    if (x > (scala.Int.MaxValue - 1) || x < (scala.Int.MinValue + 1)) x
     else {
       val f = x + 0.5f
       val i = f.toInt
@@ -373,8 +373,8 @@ object functions extends CommonMath {
   }
   def roundEven(x: Float) :Float = JMath.rint(x).toFloat
   def ceil(x: Float) :Float = {
-    if (x > Int.MaxValue) x
-    else if (x < Int.MinValue) x
+    if (x > scala.Int.MaxValue) x
+    else if (x < scala.Int.MinValue) x
     else {
       val i = x.toInt
       if (x < 0 || x == i) i else if (isnan(x)) x else i + 1
@@ -391,7 +391,7 @@ object functions extends CommonMath {
    * Equivalent to <code>x - y*floor(x/y)</code>
    */
   def mod(x: Float, y: Float) :Float = {
-    if (isinf(x)) Float.NaN
+    if (isinf(x)) scala.Float.NaN
     else x - y*floor(x/y)
   }
 

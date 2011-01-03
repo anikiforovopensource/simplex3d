@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -25,7 +25,7 @@ import org.scalatest._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
-import Double.{
+import scala.Double.{
   NaN => nan,
   PositiveInfinity => posinf,
   NegativeInfinity => neginf

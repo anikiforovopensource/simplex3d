@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.floatx
-
-import scala.reflect.ClassManifest._
+package simplex3d.math
+package floatx
+                      
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.integration.data._
-import simplex3d.math._
 import simplex3d.math.floatx.functions._
 
 
@@ -34,10 +34,10 @@ sealed abstract class ReadMat3x4f
 extends ProtectedMat3x4f[Float]
 {
   // Column major order.
-  final def m00= p00; final def m10= p10; final def m20= p20
-  final def m01= p01; final def m11= p11; final def m21= p21
-  final def m02= p02; final def m12= p12; final def m22= p22
-  final def m03= p03; final def m13= p13; final def m23= p23
+  final def m00 = p00; final def m10 = p10; final def m20 = p20
+  final def m01 = p01; final def m11 = p11; final def m21 = p21
+  final def m02 = p02; final def m12 = p12; final def m22 = p22
+  final def m03 = p03; final def m13 = p13; final def m23 = p23
 
 
   protected def m00_=(s: Float) { throw new UnsupportedOperationException }

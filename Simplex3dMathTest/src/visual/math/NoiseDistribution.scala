@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -42,7 +42,7 @@ object NoiseDistribution {
     final def apply(pixel: ReadVec2, t: Double) = {
       val p = pixel + t*scrollSpeed
 
-      val timeSlot = (toInt(t)/10)%4
+      val timeSlot = (Int(t)/10)%4
       val noise =
         if (timeSlot == 0) noise1(p.x*scale)
         else if (timeSlot == 1) noise1(p*scale)

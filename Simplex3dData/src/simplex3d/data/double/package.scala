@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleData module
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dData.
  *
@@ -54,12 +54,12 @@ package object double {
   implicit final val FactoryVec4d = factory[Vec4d](new ArrayVec4d(default))
 
 
-   private[this] final val matrixBound = Manifest.intersectionType[DefinedFloat with SystemFloatingPoint](
-    Manifest.classType(classOf[DefinedFloat]),
+   private[this] final val matrixBound = Manifest.intersectionType[DefinedDouble with SystemFloatingPoint](
+    Manifest.classType(classOf[DefinedDouble]),
     Manifest.classType(classOf[SystemFloatingPoint])
   )
 
-  implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, DefinedFloat with SystemFloatingPoint](components = 4)(
+  implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, DefinedDouble with SystemFloatingPoint](components = 4)(
     elemManifest = Mat2x2d.Manifest,
     readManifest = Mat2x2d.ReadManifest,
     boundManifest = matrixBound
@@ -76,7 +76,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, DefinedFloat with SystemFloatingPoint](components = 6)(
+  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, DefinedDouble with SystemFloatingPoint](components = 6)(
     elemManifest = Mat2x3d.Manifest,
     readManifest = Mat2x3d.ReadManifest,
     boundManifest = matrixBound
@@ -95,7 +95,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, DefinedFloat with SystemFloatingPoint](components = 8)(
+  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, DefinedDouble with SystemFloatingPoint](components = 8)(
     elemManifest = Mat2x4d.Manifest,
     readManifest = Mat2x4d.ReadManifest,
     boundManifest = matrixBound
@@ -116,7 +116,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, DefinedFloat with SystemFloatingPoint](components = 6)(
+  implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, DefinedDouble with SystemFloatingPoint](components = 6)(
     elemManifest = Mat3x2d.Manifest,
     readManifest = Mat3x2d.ReadManifest,
     boundManifest = matrixBound
@@ -133,7 +133,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, DefinedFloat with SystemFloatingPoint](components = 9)(
+  implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, DefinedDouble with SystemFloatingPoint](components = 9)(
     elemManifest = Mat3x3d.Manifest,
     readManifest = Mat3x3d.ReadManifest,
     boundManifest = matrixBound
@@ -152,7 +152,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, DefinedFloat with SystemFloatingPoint](components = 12)(
+  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, DefinedDouble with SystemFloatingPoint](components = 12)(
     elemManifest = Mat3x4d.Manifest,
     readManifest = Mat3x4d.ReadManifest,
     boundManifest = matrixBound
@@ -173,7 +173,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, DefinedFloat with SystemFloatingPoint](components = 8)(
+  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, DefinedDouble with SystemFloatingPoint](components = 8)(
     elemManifest = Mat4x2d.Manifest,
     readManifest = Mat4x2d.ReadManifest,
     boundManifest = matrixBound
@@ -190,7 +190,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, DefinedFloat with SystemFloatingPoint](components = 12)(
+  implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, DefinedDouble with SystemFloatingPoint](components = 12)(
     elemManifest = Mat4x3d.Manifest,
     readManifest = Mat4x3d.ReadManifest,
     boundManifest = matrixBound
@@ -209,7 +209,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, DefinedFloat with SystemFloatingPoint](components = 16)(
+  implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, DefinedDouble with SystemFloatingPoint](components = 16)(
     elemManifest = Mat4x4d.Manifest,
     readManifest = Mat4x4d.ReadManifest,
     boundManifest = matrixBound

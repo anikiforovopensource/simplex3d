@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dData.
  *
@@ -75,6 +75,10 @@ extends CompositionFactory[E, B] {
       if (allowedTypes(i) == rawType) return
       i += 1
     }
-    throw new ClassCastException()
+
+    throw new IllegalArgumentException(
+      RawType.name(rawType) + " is not one of the allowed types: " +
+      allowedTypes.map(RawType.name(_)).mkString(", ") + "."
+    )
   }
 }

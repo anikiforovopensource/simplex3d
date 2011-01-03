@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -173,16 +173,16 @@ class Mat3x2dTest extends FunSuite {
       Vec3f(f01, f11, f21)
     )
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat2x2f(
       f00, f10,
       f01, f11
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), 0)) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat2x3f(
       f00, f10,
@@ -190,8 +190,8 @@ class Mat3x2dTest extends FunSuite {
       f02, f12
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), 0)) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat2x4f(
       f00, f10,
@@ -200,16 +200,16 @@ class Mat3x2dTest extends FunSuite {
       f03, f13
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), 0)) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), 0)) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat3x2f(
       f00, f10, f20,
       f01, f11, f21
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat3x3f(
       f00, f10, f20,
@@ -217,8 +217,8 @@ class Mat3x2dTest extends FunSuite {
       f02, f12, f22
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat3x4f(
       f00, f10, f20,
@@ -227,16 +227,16 @@ class Mat3x2dTest extends FunSuite {
       f03, f13, f23
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat4x2f(
       f00, f10, f20, f30,
       f01, f11, f21, f31
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat4x3f(
       f00, f10, f20, f30,
@@ -244,8 +244,8 @@ class Mat3x2dTest extends FunSuite {
       f02, f12, f22, f32
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = Mat3x2(Mat4x4f(
       f00, f10, f20, f30,
@@ -254,8 +254,8 @@ class Mat3x2dTest extends FunSuite {
       f03, f13, f23, f33
     ))
     expect(classOf[Mat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
 
     m = ConstMat3x2(
@@ -287,16 +287,16 @@ class Mat3x2dTest extends FunSuite {
       Vec3f(f01, f11, f21)
     )
     expect(classOf[ConstMat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
 
     m = ConstMat3x2(Mat3x2f(
       f00, f10, f20,
       f01, f11, f21
     ))
     expect(classOf[ConstMat3x2]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
+    expect((Double(f00), Double(f10), Double(f20))) { (m.m00, m.m10, m.m20) }
+    expect((Double(f01), Double(f11), Double(f21))) { (m.m01, m.m11, m.m21) }
   }
 
   test("Unapply") {

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -63,73 +63,73 @@ class Vec3dTest extends FunSuite {
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3(Vec3i(toInt(x), toInt(y), toInt(z)))
+      u = Vec3(Vec3i(Int(x), Int(y), Int(z)))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = Vec3(x, Vec2i(toInt(y), toInt(z)))
-      expect(classOf[Vec3]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-
-      u = Vec3(Vec2i(toInt(x), toInt(y)), z)
-      expect(classOf[Vec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(z) { u.z }
-
-      u = Vec3(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[Vec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-
-      u = Vec3(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[Vec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-
-      u = Vec3(x, Vec2f(toFloat(y), toFloat(z)))
+      u = Vec3(x, Vec2i(Int(y), Int(z)))
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = Vec3(Vec2f(toFloat(x), toFloat(y)), z)
+      u = Vec3(Vec2i(Int(x), Int(y)), z)
       expect(classOf[Vec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
       expect(z) { u.z }
 
-      u = Vec3(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
+      u = Vec3(Vec4i(Int(x), Int(y), Int(z), Int(w)))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = Vec3(Vec3(toDouble(x), toDouble(y), toDouble(z)))
+      u = Vec3(Vec3f(Float(x), Float(y), Float(z)))
+      expect(classOf[Vec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = Vec3(x, Vec2f(Float(y), Float(z)))
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
-      expect(y) { u.y }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = Vec3(Vec2f(Float(x), Float(y)), z)
+      expect(classOf[Vec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
       expect(z) { u.z }
 
-      u = Vec3(x, Vec2(toDouble(y), toDouble(z)))
+      u = Vec3(Vec4f(Float(x), Float(y), Float(z), Float(w)))
+      expect(classOf[Vec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = Vec3(Vec3(Double(x), Double(y), Double(z)))
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3(Vec2(toDouble(x), toDouble(y)), z)
+      u = Vec3(x, Vec2(Double(y), Double(z)))
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3(Vec4(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
+      u = Vec3(Vec2(Double(x), Double(y)), z)
+      expect(classOf[Vec3]) { u.getClass }
+      expect(x) { u.x }
+      expect(y) { u.y }
+      expect(z) { u.z }
+
+      u = Vec3(Vec4(Double(x), Double(y), Double(z), Double(w)))
       expect(classOf[Vec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
@@ -141,73 +141,73 @@ class Vec3dTest extends FunSuite {
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = ConstVec3(ConstVec3i(toInt(x), toInt(y), toInt(z)))
+      u = ConstVec3(ConstVec3i(Int(x), Int(y), Int(z)))
       expect(classOf[ConstVec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = ConstVec3(x, Vec2i(toInt(y), toInt(z)))
-      expect(classOf[ConstVec3]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-
-      u = ConstVec3(Vec2i(toInt(x), toInt(y)), z)
-      expect(classOf[ConstVec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(z) { u.z }
-
-      u = ConstVec3(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[ConstVec3]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-
-      u = ConstVec3(ConstVec3f(toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[ConstVec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-
-      u = ConstVec3(x, Vec2f(toFloat(y), toFloat(z)))
+      u = ConstVec3(x, Vec2i(Int(y), Int(z)))
       expect(classOf[ConstVec3]) { u.getClass }
       expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = ConstVec3(Vec2f(toFloat(x), toFloat(y)), z)
+      u = ConstVec3(Vec2i(Int(x), Int(y)), z)
       expect(classOf[ConstVec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
       expect(z) { u.z }
 
-      u = ConstVec3(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
+      u = ConstVec3(Vec4i(Int(x), Int(y), Int(z), Int(w)))
       expect(classOf[ConstVec3]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
+      expect(Int(x)) { u.x }
+      expect(Int(y)) { u.y }
+      expect(Int(z)) { u.z }
 
-      u = ConstVec3(ConstVec3(toDouble(x), toDouble(y), toDouble(z)))
+      u = ConstVec3(ConstVec3f(Float(x), Float(y), Float(z)))
+      expect(classOf[ConstVec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = ConstVec3(x, Vec2f(Float(y), Float(z)))
       expect(classOf[ConstVec3]) { u.getClass }
       expect(x) { u.x }
-      expect(y) { u.y }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = ConstVec3(Vec2f(Float(x), Float(y)), z)
+      expect(classOf[ConstVec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
       expect(z) { u.z }
 
-      u = ConstVec3(x, Vec2(toDouble(y), toDouble(z)))
+      u = ConstVec3(Vec4f(Float(x), Float(y), Float(z), Float(w)))
+      expect(classOf[ConstVec3]) { u.getClass }
+      expect(Float(x)) { u.x }
+      expect(Float(y)) { u.y }
+      expect(Float(z)) { u.z }
+
+      u = ConstVec3(ConstVec3(Double(x), Double(y), Double(z)))
       expect(classOf[ConstVec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = ConstVec3(Vec2(toDouble(x), toDouble(y)), z)
+      u = ConstVec3(x, Vec2(Double(y), Double(z)))
       expect(classOf[ConstVec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = ConstVec3(Vec4(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
+      u = ConstVec3(Vec2(Double(x), Double(y)), z)
+      expect(classOf[ConstVec3]) { u.getClass }
+      expect(x) { u.x }
+      expect(y) { u.y }
+      expect(z) { u.z }
+
+      u = ConstVec3(Vec4(Double(x), Double(y), Double(z), Double(w)))
       expect(classOf[ConstVec3]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
@@ -223,33 +223,33 @@ class Vec3dTest extends FunSuite {
     BooleanCombinations.test { (x, y, z, w) =>
       var u: ReadVec3 = Vec3(Vec3b(x, y, z))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
+      expect(Double(x)) { u.x }
+      expect(Double(y)) { u.y }
+      expect(Double(z)) { u.z }
 
-      u = Vec3(toDouble(x), Vec2b(y, z))
+      u = Vec3(Double(x), Vec2b(y, z))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
+      expect(Double(x)) { u.x }
+      expect(Double(y)) { u.y }
+      expect(Double(z)) { u.z }
 
-      u = Vec3(Vec2b(x, y), toDouble(z))
+      u = Vec3(Vec2b(x, y), Double(z))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
+      expect(Double(x)) { u.x }
+      expect(Double(y)) { u.y }
+      expect(Double(z)) { u.z }
 
       u = Vec3(Vec4b(x, y, z, w))
       expect(classOf[Vec3]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
+      expect(Double(x)) { u.x }
+      expect(Double(y)) { u.y }
+      expect(Double(z)) { u.z }
 
       var c: ReadVec3 = ConstVec3(Vec3b(x, y, z))
       expect(classOf[ConstVec3]) { c.getClass }
-      expect(toDouble(x)) { c.x }
-      expect(toDouble(y)) { c.y }
-      expect(toDouble(z)) { c.z }
+      expect(Double(x)) { c.x }
+      expect(Double(y)) { c.y }
+      expect(Double(z)) { c.z }
     }
   }
 

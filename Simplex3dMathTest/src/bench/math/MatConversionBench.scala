@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -104,7 +104,7 @@ class MatConversionCase {
         b += Mat3(Mat4x2f(m))
         b += Mat3(Mat4x3f(m))
         b += Mat3(Mat4x4f(m))
-        answer += toInt(determinant(b))
+        answer += Int(determinant(b))
 
         i += 1
       }
@@ -129,7 +129,7 @@ class MatConversionCase {
         )
         a += 1
         val b = Mat3(a)
-        answer += toInt(determinant(b))
+        answer += Int(determinant(b))
 
         i += 1
       }
@@ -154,7 +154,7 @@ class MatConversionCase {
         )
         a += 1
         val b = makeMat3(a)
-        answer += toInt(determinant(b))
+        answer += Int(determinant(b))
 
         i += 1
       }

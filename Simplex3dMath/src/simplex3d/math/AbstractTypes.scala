@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,81 +20,6 @@
 
 package simplex3d.math
 
-
-/** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
- * <p>
- *   There are double, float, int, and boolean vectors.
- * </p>
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class AnyVec2[P] extends AnyVec[P] {
-  private[math] def bx: Boolean
-  private[math] def by: Boolean
-
-  private[math] def ix: Int
-  private[math] def iy: Int
-
-  private[math] def fx: Float
-  private[math] def fy: Float
-
-  private[math] def dx: Double
-  private[math] def dy: Double
-}
-
-/** <code>AnyVec3</code> is a superclass of all the 3-dimensional vectors.
- * <p>
- *   There are double, float, int, and boolean vectors.
- * </p>
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class AnyVec3[P] extends Swizzle3Read[P] {
-  private[math] def bx: Boolean
-  private[math] def by: Boolean
-  private[math] def bz: Boolean
-
-  private[math] def ix: Int
-  private[math] def iy: Int
-  private[math] def iz: Int
-
-  private[math] def fx: Float
-  private[math] def fy: Float
-  private[math] def fz: Float
-
-  private[math] def dx: Double
-  private[math] def dy: Double
-  private[math] def dz: Double
-}
-
-/** <code>AnyVec4</code> is a superclass of all the 4-dimensional vectors.
- * <p>
- *   There are double, float, int, and boolean vectors.
- * </p>
- *
- * @author Aleksey Nikiforov (lex)
- */
-private[math] abstract class AnyVec4[P] extends Swizzle4Read[P] {
-  private[math] def bx: Boolean
-  private[math] def by: Boolean
-  private[math] def bz: Boolean
-  private[math] def bw: Boolean
-
-  private[math] def ix: Int
-  private[math] def iy: Int
-  private[math] def iz: Int
-  private[math] def iw: Int
-
-  private[math] def fx: Float
-  private[math] def fy: Float
-  private[math] def fz: Float
-  private[math] def fw: Float
-
-  private[math] def dx: Double
-  private[math] def dy: Double
-  private[math] def dz: Double
-  private[math] def dw: Double
-}
 
 /** <code>AnyQuat4</code> is a superclass of all the quaternions.
  * <p>

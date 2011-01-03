@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -64,12 +64,12 @@ class AbstractVsFinal {
 
   final def abstractArgs(v1: ReadVec4, v2: ReadVec4) = {
     val a = (v1 + v2)
-    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    Int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   final def finalArgs(v1: Vec4, v2: Vec4) = {
     val a = (v1 + v2)
-    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    Int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   def testAbstract(length: Int, loops: Int, a: ReadVec4) {

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -25,7 +25,7 @@ import org.scalatest._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
-import Double.{
+import scala.Double.{
   NaN => nan,
   PositiveInfinity => posinf,
   NegativeInfinity => neginf
@@ -206,9 +206,9 @@ class DoubleMathVec3Test extends FunSuite {
       }
       val bool1 = s > 0; val bool2 = t > 0; val bool3 = p > 0
       expect(Vec3(
-          mix(x, r, toDouble(bool1)),
-          mix(y, g, toDouble(bool2)),
-          mix(z, b, toDouble(bool3))
+          mix(x, r, Double(bool1)),
+          mix(y, g, Double(bool2)),
+          mix(z, b, Double(bool3))
       )) {
         mix(Vec3(x, y, z), Vec3(r, g, b), Vec3b(bool1, bool2, bool3))
       }

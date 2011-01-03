@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -21,13 +21,15 @@
 package simplex3d.math
 
 
-/** <code>Sizzle3Read</code> contains abstract read-only swizzling
- * for 3-dimensional vectors.
+/** <code>AnyVec3or4</code> is a base class for all the 3 and 4 dimensional vectors.
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class Swizzle3Read[P] extends AnyVec[P] {
-  
+private[math] abstract class AnyVec3or4[P] extends AnyVec[P] {
+
+  private[math] def bz: Boolean
+  private[math] def iz: Int
+  private[math] def fz: Float
   private[math] def dz: Double
 
 

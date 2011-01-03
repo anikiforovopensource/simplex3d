@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -127,18 +127,18 @@ class DoubleMathExtraTest extends FunSuite {
     assert(!hasErrors(0))
     assert(!hasErrors(1))
     assert(!hasErrors(-1))
-    assert(hasErrors(Double.NaN))
-    assert(hasErrors(Double.PositiveInfinity))
-    assert(hasErrors(Double.NegativeInfinity))
+    assert(hasErrors(scala.Double.NaN))
+    assert(hasErrors(scala.Double.PositiveInfinity))
+    assert(hasErrors(scala.Double.NegativeInfinity))
 
     
     val random = new Random(1)
     def makeErrors(id: Int) :(Double, Double, Double, Double) = {
       val v = id%4 match {
         case 0 => random.nextDouble
-        case 1 => Double.NaN
-        case 2 => Double.PositiveInfinity
-        case 3 => Double.NegativeInfinity
+        case 1 => scala.Double.NaN
+        case 2 => scala.Double.PositiveInfinity
+        case 3 => scala.Double.NegativeInfinity
       }
       val j = (id >> 2)%4
       val seq = for (i <- 0 until 4) yield {
@@ -149,10 +149,10 @@ class DoubleMathExtraTest extends FunSuite {
     }
 
     var i = 0L; while(i < 16*16*16*16) {
-      val (a1, a2, a3, a4) = makeErrors(toInt(i))
-      val (b1, b2, b3, b4) = makeErrors(toInt(i >> 4))
-      val (c1, c2, c3, c4) = makeErrors(toInt(i >> 8))
-      val (d1, d2, d3, d4) = makeErrors(toInt(i >> 12))
+      val (a1, a2, a3, a4) = makeErrors(Int(i))
+      val (b1, b2, b3, b4) = makeErrors(Int(i >> 4))
+      val (c1, c2, c3, c4) = makeErrors(Int(i >> 8))
+      val (d1, d2, d3, d4) = makeErrors(Int(i >> 12))
 
       assert(
         hasErrors(Vec2(a1, a2)) ==

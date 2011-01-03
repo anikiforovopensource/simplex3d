@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -100,7 +100,7 @@ object MandelbrotTest {
       if (i == iterations) return escapeColor
 
       if (dynamicColor) {
-        var j = i - toInt(pow(log(zoom), 1.35))
+        var j = i - Int(pow(log(zoom), 1.35))
         if (j < 0) j = 0
         colors(j)
       }
@@ -136,7 +136,7 @@ abstract class ColorGen {
 
   final def gradient(start: Vec3, end: Vec3, count: Int) = {
     (for (i <- 0 until count) yield {
-      ConstVec3(mix(start, end, toDouble(i)/count))
+      ConstVec3(mix(start, end, Double(i)/count))
     }).toList
   }
 }
@@ -154,7 +154,7 @@ extends ColorGen
 
     val clamped = clamp(contrast, 0, 1)
 
-    val pre = toInt(round(count*clamped))
+    val pre = Int(round(count*clamped))
     val post = count - pre
 
     gradient(from, shade, pre) :::

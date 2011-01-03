@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -82,7 +82,7 @@ object ImplicitCastBench {
       // Bench code
       val u = Vec3d(i + 0, i + 1, i + 2)
       val t = u + v
-      p ^= toInt(t.x + t.y + t.z)
+      p ^= Int(t.x + t.y + t.z)
 
       i += 1
     }
@@ -99,7 +99,7 @@ object ImplicitCastBench {
       // Bench code
       val u = Vec3i(i + 0, i + 1, i + 2)
       val t = u + v
-      p ^= toInt(t.x + t.y + t.z)
+      p ^= Int(t.x + t.y + t.z)
 
       i += 1
     }
@@ -121,7 +121,7 @@ object ImplicitCastBench {
         i + 9, i + 10, i +11
       )
       val t = m.transformPoint(v)
-      p ^= toInt(t.x + t.y + t.z)
+      p ^= Int(t.x + t.y + t.z)
 
       i += 1
     }
@@ -143,7 +143,7 @@ object ImplicitCastBench {
         i + 9, i + 10, i +11
       )
       val t = m.transformPoint(v)
-      p ^= toInt(t.x + t.y + t.z)
+      p ^= Int(t.x + t.y + t.z)
 
       i += 1
     }

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -203,18 +203,18 @@ class Mat2x4dTest extends FunSuite {
       Vec2f(f03, f13)
     )
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat2x2f(
       f00, f10,
       f01, f11
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
     expect((0, 0)) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
@@ -224,9 +224,9 @@ class Mat2x4dTest extends FunSuite {
       f02, f12
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat2x4f(
@@ -236,18 +236,18 @@ class Mat2x4dTest extends FunSuite {
       f03, f13
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat3x2f(
       f00, f10, f20,
       f01, f11, f21
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
     expect((0, 0)) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
@@ -257,9 +257,9 @@ class Mat2x4dTest extends FunSuite {
       f02, f12, f22
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat3x4f(
@@ -269,18 +269,18 @@ class Mat2x4dTest extends FunSuite {
       f03, f13, f23
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat4x2f(
       f00, f10, f20, f30,
       f01, f11, f21, f31
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
     expect((0, 0)) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
@@ -290,9 +290,9 @@ class Mat2x4dTest extends FunSuite {
       f02, f12, f22, f32
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
     expect((0, 0)) { (m.m03, m.m13) }
 
     m = Mat2x4(Mat4x4f(
@@ -302,10 +302,10 @@ class Mat2x4dTest extends FunSuite {
       f03, f13, f23, f33
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
 
 
     m = ConstMat2x4(
@@ -351,10 +351,10 @@ class Mat2x4dTest extends FunSuite {
       Vec2f(f03, f13)
     )
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
 
     m = ConstMat2x4(Mat2x4f(
       f00, f10,
@@ -363,10 +363,10 @@ class Mat2x4dTest extends FunSuite {
       f03, f13
     ))
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10))) { (m.m00, m.m10) }
-    expect((toDouble(f01), toDouble(f11))) { (m.m01, m.m11) }
-    expect((toDouble(f02), toDouble(f12))) { (m.m02, m.m12) }
-    expect((toDouble(f03), toDouble(f13))) { (m.m03, m.m13) }
+    expect((Double(f00), Double(f10))) { (m.m00, m.m10) }
+    expect((Double(f01), Double(f11))) { (m.m01, m.m11) }
+    expect((Double(f02), Double(f12))) { (m.m02, m.m12) }
+    expect((Double(f03), Double(f13))) { (m.m03, m.m13) }
   }
 
   test("Unapply") {

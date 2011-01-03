@@ -1,6 +1,6 @@
 /*
  ** Simplex3d, CoreMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -37,37 +37,39 @@ private[math] class CommonMath {
    * @param x a value to cast.
    * @return x.
    */
-  final def toBool(x: Boolean) :Boolean = x
+  final def Bool(x: Boolean) :Boolean = x
 
   /** Casts an Int to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  final def toBool(x: Int) :Boolean = (x != 0)
+  final def Bool(x: Int) :Boolean = (x != 0)
 
   /** Casts a Float to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def toBool(x: Float) :Boolean = (x != 0)
+  final def Bool(x: Float) :Boolean = (x != 0)
 
   /** Casts a Double to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def toBool(x: Double) :Boolean = (x != 0)
+  final def Bool(x: Double) :Boolean = (x != 0)
+  
+  final def Bool(u: AnyVec[_]) :Boolean = u.bx
 
   /** Casts a Boolean to an Int.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  final def toInt(x: Boolean) :Int = if (x) 1 else 0
+  final def Int(x: Boolean) :Int = if (x) 1 else 0
 
   /** Casts an Int to an Int. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def toInt(x: Int) :Int = x
+  final def Int(x: Int) :Int = x
 
   /** Casts a Float to an Int.
    * @param x a value to cast.
@@ -76,7 +78,7 @@ private[math] class CommonMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  final def toInt(x: Float) :Int = x.asInstanceOf[Int]
+  final def Int(x: Float) :Int = x.asInstanceOf[Int]
 
   /** Casts a Double to an Int.
    * @param x a value to cast.
@@ -85,55 +87,61 @@ private[math] class CommonMath {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  final def toInt(x: Double) :Int = x.asInstanceOf[Int]
+  final def Int(x: Double) :Int = x.asInstanceOf[Int]
+  
+  final def Int(u: AnyVec[_]) :Int = u.ix
 
   /** Casts a Boolean to a Float.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  final def toFloat(x: Boolean) :Float = if (x) 1 else 0
+  final def Float(x: Boolean) :Float = if (x) 1 else 0
 
   /** Casts an Int to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  final def toFloat(x: Int) :Float = x.asInstanceOf[Float]
+  final def Float(x: Int) :Float = x.asInstanceOf[Float]
 
   /** Casts a Float to a Float. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def toFloat(x: Float) :Float = x
+  final def Float(x: Float) :Float = x
 
   /** Casts a Double to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  final def toFloat(x: Double) :Float = x.asInstanceOf[Float]
+  final def Float(x: Double) :Float = x.asInstanceOf[Float]
+  
+  final def Float(u: AnyVec[_]) :Float = u.fx
 
   /** Casts a Boolean to a Douoble.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  final def toDouble(x: Boolean) :Double = if (x) 1 else 0
+  final def Double(x: Boolean) :Double = if (x) 1 else 0
 
   /** Casts an Int to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  final def toDouble(x: Int) :Double = x.asInstanceOf[Double]
+  final def Double(x: Int) :Double = x.asInstanceOf[Double]
 
   /** Casts a Float to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  final def toDouble(x: Float) :Double = x.asInstanceOf[Double]
+  final def Double(x: Float) :Double = x.asInstanceOf[Double]
 
   /** Casts a Double to a Douoble. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  final def toDouble(x: Double) :Double = x
+  final def Double(x: Double) :Double = x
+  
+  final def Double(u: AnyVec[_]) :Double = u.dx
 
 
   // Boolean functions.

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -326,7 +326,7 @@ object functions extends CommonMath {
     else JMath.log(x + JMath.sqrt(x*x + 1))
   }
   def acosh(x: Double) :Double = {
-    if (x < 0) Double.NaN
+    if (x < 0) scala.Double.NaN
     else JMath.log(x + JMath.sqrt(x*x - 1))
   }
   def atanh(x: Double) :Double = {
@@ -391,7 +391,7 @@ object functions extends CommonMath {
    * Equivalent to <code>x - y*floor(x/y)</code>
    */
   def mod(x: Double, y: Double) :Double = {
-    if (isinf(x)) Double.NaN
+    if (isinf(x)) scala.Double.NaN
     else x - y*floor(x/y)
   }
 

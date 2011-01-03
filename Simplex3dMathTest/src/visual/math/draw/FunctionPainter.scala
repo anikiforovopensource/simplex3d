@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2010, Simplex3d Team
+ * Copyright (C) 2010-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -34,9 +34,9 @@ import simplex3d.math.doublex.functions._
 object FunctionPainter {
 
   private final def rgb(c: ReadVec3) :Int = {
-    (clamp(toInt(c.r*255), 0, 255) << 16) |
-    (clamp(toInt(c.g*255), 0, 255) << 8) |
-    clamp(toInt(c.b*255), 0, 255) |
+    (clamp(Int(c.r*255), 0, 255) << 16) |
+    (clamp(Int(c.g*255), 0, 255) << 8) |
+    clamp(Int(c.b*255), 0, 255) |
     0xFF000000
   }
 

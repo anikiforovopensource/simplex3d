@@ -1,6 +1,6 @@
 /*
  * Simplex3d, MathTest package
- * Copyright (C) 2009-2010, Simplex3d Team
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMathTest.
  *
@@ -76,17 +76,17 @@ class Quat4dTest extends FunSuite {
 
     q = Quat4(Quat4f(af, bf, cf, df))
     expect(classOf[Quat4]) { q.getClass }
-    expect(toDouble(af)) { q.a }
-    expect(toDouble(bf)) { q.b }
-    expect(toDouble(cf)) { q.c }
-    expect(toDouble(df)) { q.d }
+    expect(Double(af)) { q.a }
+    expect(Double(bf)) { q.b }
+    expect(Double(cf)) { q.c }
+    expect(Double(df)) { q.d }
 
     q = Quat4(Vec4f(bf, cf, df, af))
     expect(classOf[Quat4]) { q.getClass }
-    expect(toDouble(af)) { q.a }
-    expect(toDouble(bf)) { q.b }
-    expect(toDouble(cf)) { q.c }
-    expect(toDouble(df)) { q.d }
+    expect(Double(af)) { q.a }
+    expect(Double(bf)) { q.b }
+    expect(Double(cf)) { q.c }
+    expect(Double(df)) { q.d }
 
     var p: ReadQuat4 = ConstQuat4(ad, bd, cd, dd)
     expect(classOf[ConstQuat4]) { p.getClass }
@@ -111,17 +111,17 @@ class Quat4dTest extends FunSuite {
 
     p = ConstQuat4(Quat4f(af, bf, cf, df))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(toDouble(af)) { p.a }
-    expect(toDouble(bf)) { p.b }
-    expect(toDouble(cf)) { p.c }
-    expect(toDouble(df)) { p.d }
+    expect(Double(af)) { p.a }
+    expect(Double(bf)) { p.b }
+    expect(Double(cf)) { p.c }
+    expect(Double(df)) { p.d }
 
     p = ConstQuat4(Vec4f(bf, cf, df, af))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(toDouble(af)) { p.a }
-    expect(toDouble(bf)) { p.b }
-    expect(toDouble(cf)) { p.c }
-    expect(toDouble(df)) { p.d }
+    expect(Double(af)) { p.a }
+    expect(Double(bf)) { p.b }
+    expect(Double(cf)) { p.c }
+    expect(Double(df)) { p.d }
   }
 
   test("Unapply") {

@@ -37,8 +37,8 @@ abstract class DataAdapter[E <: Composite, B <: Defined](final val components: I
   final val boundManifest: Manifest[B]
 )
 extends CompositionFactory[E, B] {
-  def apply(backing: inContiguous[E#Component, Raw], j: Int) :E#Const
-  def update(backing: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
+  def apply(primitive: inContiguous[E#Component, Raw], j: Int) :E#Const
+  def update(primitive: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
 
   def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P])
   :ReadDataArray[E, P] = {

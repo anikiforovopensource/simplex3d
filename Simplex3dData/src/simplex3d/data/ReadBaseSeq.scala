@@ -33,7 +33,7 @@ import StoreType._
 private[data] abstract class ReadBaseSeq[
   E <: Meta, @specialized(Int, Float, Double) SRead, +R <: Raw
 ](
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
+  shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
 ) extends Protected[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
@@ -56,16 +56,16 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     )
   
   // Essential init.
-  final val backing: Backing = {
-    if (primitive == null) this.asInstanceOf[Backing]
-    else primitive.asInstanceOf[Backing]
+  final val primitive: Primitive = {
+    if (prim == null) this.asInstanceOf[Primitive]
+    else prim.asInstanceOf[Primitive]
   }
   
   protected final val storeType = storeFromRaw(rawType)
 
   private[data] final val buff: R#Buffer = {
-    if (primitive != null) {
-      backing.buff
+    if (prim != null) {
+      primitive.buff
     }
     else {
       (if (sharedStore.isInstanceOf[ByteBuffer]) {
@@ -130,7 +130,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Type definitions.
   type RawBuffer <: Buffer
-  type Backing <: ReadContiguous[E#Component, R]
+  type Primitive <: ReadContiguous[E#Component, R]
 
   // Public API.
   override def rawType: Int
@@ -250,7 +250,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val copy = mkDataArray(size)
     copy.put(
       0,
-      backing,
+      primitive,
       this.offset,
       this.stride,
       size
@@ -261,7 +261,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     val copy = mkDataBuffer(size)
     copy.put(
       0,
-      backing,
+      primitive,
       this.offset,
       this.stride,
       size

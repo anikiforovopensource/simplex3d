@@ -30,10 +30,10 @@ import simplex3d.data.Util._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] sealed abstract class BaseSInt[+R <: DefinedInt](
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
+  shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends BaseSeq[SInt, Int, Int, R](shared, primitive, ro, off, str)
+extends BaseSeq[SInt, Int, Int, R](shared, prim, ro, off, str)
 with CompositionFactory[SInt, DefinedInt]
 {
   final def elemManifest = MetaManifest.SInt
@@ -41,36 +41,36 @@ with CompositionFactory[SInt, DefinedInt]
   final def components: Int = 1
   final def normalized = false
 
-  final def mkReadDataArray[P <: DefinedInt](primitive: ReadDataArray[SInt, P])
-  :ReadDataArray[SInt, P] = primitive
-  final def mkReadDataBuffer[P <: DefinedInt](primitive: ReadDataBuffer[SInt, P])
-  :ReadDataBuffer[SInt, P] = primitive
+  final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[SInt, P])
+  :ReadDataArray[SInt, P] = prim
+  final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[SInt, P])
+  :ReadDataBuffer[SInt, P] = prim
   protected final def mkReadDataViewInstance[P <: DefinedInt](
-    primitive: ReadDataBuffer[SInt, P], off: Int, str: Int
-  ) :ReadDataView[SInt, P] = new ViewSInt(primitive, off, str)
+    prim: ReadDataBuffer[SInt, P], off: Int, str: Int
+  ) :ReadDataView[SInt, P] = new ViewSInt(prim, off, str)
 
   protected final def mkReadDataViewInstance(
     byteBuffer: ByteBuffer, off: Int, str: Int
   ) :ReadDataView[SInt, R] = {
-    new ViewSInt(backing.mkReadDataBuffer(byteBuffer), off, str)
+    new ViewSInt(primitive.mkReadDataBuffer(byteBuffer), off, str)
   }
   
   final override def mkSerializableInstance() = new PrimitiveSInt(rawType)
 }
 
 private[data] final class ViewSInt[+R <: DefinedInt](
-  primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
-) extends BaseSInt[R](primitive, primitive, primitive.readOnly, off, str) with DataView[SInt, R] {
-  final def rawType = backing.rawType
-  def mkReadOnlyInstance() = new ViewSInt(backing.asReadOnly(), offset, stride)
+  prim: ReadDataBuffer[SInt, R], off: Int, str: Int
+) extends BaseSInt[R](prim, prim, prim.readOnly, off, str) with DataView[SInt, R] {
+  final def rawType = primitive.rawType
+  def mkReadOnlyInstance() = new ViewSInt(primitive.asReadOnly(), offset, stride)
 
-  def apply(i: Int) :Int = backing(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = backing(offset + i*stride) = v
+  def apply(i: Int) :Int = primitive(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = primitive(offset + i*stride) = v
 
   final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[SInt, R] =
-    backing.mkDataArray(array)
+    primitive.mkDataArray(array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[SInt, R] =
-    backing.mkReadDataBuffer(byteBuffer)
+    primitive.mkReadDataBuffer(byteBuffer)
 }
 
 

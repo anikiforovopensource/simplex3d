@@ -37,14 +37,14 @@ private[data] abstract class BaseSeq[
   @specialized(Int, Float, Double) SWrite,
   +R <: Raw
 ](
-  shared: AnyRef, primitive: AnyRef, ro: Boolean,
-  offset: Int, stride: Int
+  shared: AnyRef, prim: AnyRef, ro: Boolean,
+  off: Int, str: Int
 ) extends ReadBaseSeq[E, SRead, R](
-  shared, primitive, ro,
-  offset, stride
+  shared, prim, ro,
+  off, str
 ) {
 
-  type Backing <: Contiguous[E#Component, R]
+  type Primitive <: Contiguous[E#Component, R]
   final def buffer() :R#Buffer = {
     ((storeType: @switch) match {
       case ByteStore =>
@@ -227,9 +227,9 @@ private[data] abstract class BaseSeq[
       }
     }
 
-    if ((backing.readManifest ne src.readManifest) && (backing.readManifest != src.readManifest))
+    if ((primitive.readManifest ne src.readManifest) && (primitive.readManifest != src.readManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.readManifest + "] cannot be cast to DataSeq[" + backing.readManifest + "]."
+        "DataSeq[" + src.readManifest + "] cannot be cast to DataSeq[" + primitive.readManifest + "]."
       )
 
     if (readOnly) throw new ReadOnlyBufferException()
@@ -350,10 +350,10 @@ private[data] abstract class BaseSeq[
       }
     }
     else {
-      backing.elemManifest match {
+      primitive.elemManifest match {
         case MetaManifest.SInt => Util.copySeqInt(
             components,
-            backing.asInstanceOf[Contiguous[SInt, _]],
+            primitive.asInstanceOf[Contiguous[SInt, _]],
             destOffset,
             stride,
             src.asInstanceOf[inContiguous[SInt, _]],
@@ -363,7 +363,7 @@ private[data] abstract class BaseSeq[
           )
         case MetaManifest.RFloat => Util.copySeqFloat(
             components,
-            backing.asInstanceOf[Contiguous[RFloat, _]],
+            primitive.asInstanceOf[Contiguous[RFloat, _]],
             destOffset,
             stride,
             src.asInstanceOf[inContiguous[RFloat, _]],
@@ -373,7 +373,7 @@ private[data] abstract class BaseSeq[
           )
         case MetaManifest.RDouble => Util.copySeqDouble(
             components,
-            backing.asInstanceOf[Contiguous[RDouble, _]],
+            primitive.asInstanceOf[Contiguous[RDouble, _]],
             destOffset,
             stride,
             src.asInstanceOf[inContiguous[RDouble, _]],
@@ -399,7 +399,7 @@ private[data] abstract class BaseSeq[
         "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
       )
 
-    put(index, src.backing, src.offset + first*src.stride, src.stride, count)
+    put(index, src.primitive, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inData[E]) {
@@ -408,7 +408,7 @@ private[data] abstract class BaseSeq[
         "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
       )
 
-    put(index, src.backing, src.offset, src.stride, src.size)
+    put(index, src.primitive, src.offset, src.stride, src.size)
   }
 
   final def put(src: inData[E]) {
@@ -417,6 +417,6 @@ private[data] abstract class BaseSeq[
         "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
       )
 
-    put(0, src.backing, src.offset, src.stride, src.size)
+    put(0, src.primitive, src.offset, src.stride, src.size)
   }
 }

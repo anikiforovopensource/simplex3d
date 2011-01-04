@@ -31,52 +31,52 @@ import simplex3d.data._
  */
 // Vec2f RFloat
 private[data] final class ArrayVec2fRFloat(
-  primitive: ArrayRFloatRFloat
-) extends BaseVec2f[RFloat](primitive, 0, 2) with DataArray[Vec2f, RFloat] {
+  prim: ArrayRFloatRFloat
+) extends BaseVec2f[RFloat](prim, 0, 2) with DataArray[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
-      primitive(j),
-      primitive(j + 1)
+      prim(j),
+      prim(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2f) {
     val j = i*2
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    prim(j) = v.x
+    prim(j + 1) = v.y
   }
 }
 
 private[data] final class BufferVec2fRFloat(
-  primitive: BufferRFloatRFloat
-) extends BaseVec2f[RFloat](primitive, 0, 2) with DataBuffer[Vec2f, RFloat] {
+  prim: BufferRFloatRFloat
+) extends BaseVec2f[RFloat](prim, 0, 2) with DataBuffer[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {
     val j = i*2
     ConstVec2f(
-      primitive(j),
-      primitive(j + 1)
+      prim(j),
+      prim(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2f) {
     val j = i*2
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    prim(j) = v.x
+    prim(j + 1) = v.y
   }
 }
 
 private[data] final class ViewVec2fRFloat(
-  primitive: BufferRFloatRFloat, off: Int, str: Int
-) extends BaseVec2f[RFloat](primitive, off, str) with DataView[Vec2f, RFloat] {
+  prim: BufferRFloatRFloat, off: Int, str: Int
+) extends BaseVec2f[RFloat](prim, off, str) with DataView[Vec2f, RFloat] {
   def apply(i: Int) :ConstVec2f = {
     val j = offset + i*stride
     ConstVec2f(
-      primitive(j),
-      primitive(j + 1)
+      prim(j),
+      prim(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2f) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    prim(j) = v.x
+    prim(j + 1) = v.y
   }
 }

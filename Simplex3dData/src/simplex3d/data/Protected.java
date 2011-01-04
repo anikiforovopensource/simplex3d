@@ -53,7 +53,7 @@ abstract class Protected<A> {
         if (this instanceof ReadDataArray) {
             ReadBaseSeq src = (ReadBaseSeq) this;
 
-            if (src.backing() == this) {
+            if (src.primitive() == this) {
                 SerializablePrimitive data = (SerializablePrimitive) mkSerializableInstance();
                 data.content_$eq(sharedStore);
                 data.readOnly_$eq(src.readOnly());
@@ -61,7 +61,7 @@ abstract class Protected<A> {
             }
             else {
                 SerializableComposite data = (SerializableComposite) mkSerializableInstance();
-                data.content_$eq(src.backing());
+                data.content_$eq(src.primitive());
                 return data;
             }
         }

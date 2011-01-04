@@ -150,7 +150,7 @@ object WrapperBench {
           data(i + 2), data(i + 3)
         )
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -173,7 +173,7 @@ object WrapperBench {
           data.get(i + 2), data.get(i + 3)
         )
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -194,7 +194,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -215,7 +215,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -236,7 +236,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -257,7 +257,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -278,7 +278,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -299,7 +299,7 @@ object WrapperBench {
 
         val v = wrapper(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -320,7 +320,7 @@ object WrapperBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -341,7 +341,7 @@ object WrapperBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -362,7 +362,7 @@ object WrapperBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }
@@ -383,7 +383,7 @@ object WrapperBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += toInt(u.x + u.y + u.z + u.w)
+        answer += Int(u.x + u.y + u.z + u.w)
 
         i += step
       }

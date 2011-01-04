@@ -30,11 +30,11 @@ import simplex3d.data._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] final class ViewRFloatRFloat(
-  primitive: ReadDataBuffer[RFloat, RFloat], off: Int, str: Int
+  prim: ReadDataBuffer[RFloat, RFloat], off: Int, str: Int
 ) extends BaseRFloat[RFloat](
-  primitive, primitive, primitive.readOnly, off, str
+  prim, prim, prim.readOnly, off, str
 ) with DataView[RFloat, RFloat] {
-  def mkReadOnlyInstance() = new ViewRFloatRFloat(backing.asReadOnly(), offset, stride)
+  def mkReadOnlyInstance() = new ViewRFloatRFloat(primitive.asReadOnly(), offset, stride)
   def rawType: Int = RawType.RFloat
   def normalized = false
 

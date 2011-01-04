@@ -91,7 +91,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data(i), data(i + 1))
         val u = v * 7.9f
-        answer += toInt(u.x + u.y)
+        answer += Int(u.x + u.y)
 
         i += step
       }
@@ -111,7 +111,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data.get(i), data.get(i + 1))
         val u = v * 7.9f
-        answer += toInt(u.x + u.y)
+        answer += Int(u.x + u.y)
 
         i += step
       }
@@ -131,7 +131,7 @@ object ArrayVsDirectBench {
 
         val v = ConstVec2f(data.get(i), data.get(i + 1))
         val u = v * 7.9f
-        answer += toInt(u.x + u.y)
+        answer += Int(u.x + u.y)
 
         i += step
       }

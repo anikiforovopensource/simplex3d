@@ -171,7 +171,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   }
 
   private def verifyComponents(seq: inData[_ <: Meta], i: Int) {
-    def get(i: Int, j: Int) :Any = seq.backing(seq.offset + seq.stride*i + j)
+    def get(i: Int, j: Int) :Any = seq.primitive(seq.offset + seq.stride*i + j)
     def cmp(x: Any, y: Any) {
       (x, y) match {
         case (a: Int, b: Int) => assert(a == b)
@@ -256,7 +256,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   private def testApplyUpdate[E <: Meta](seq: outData[E]) {
     testIndex(seq)
 
-    val bcopy = seq.backing.copyAsDataArray()
+    val bcopy = seq.primitive.copyAsDataArray()
 
     var i = 0; while (i < seq.size) {
       verifyComponents(seq, i)
@@ -268,7 +268,7 @@ object ApplyUpdateTestUtil extends FunSuite {
       i += 1
     }
 
-    testContent(1, bcopy, 0, seq.backing, 0, bcopy.size)
+    testContent(1, bcopy, 0, seq.primitive, 0, bcopy.size)
   }
 
   def testApplyUpdateArray[E <: Meta, R <: Raw](

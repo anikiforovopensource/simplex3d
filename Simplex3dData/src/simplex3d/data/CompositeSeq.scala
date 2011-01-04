@@ -30,33 +30,35 @@ import scala.annotation.unchecked._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class CompositeSeq[E <: Composite, +R <: Raw, B <: Defined](
-  primitive: ReadContiguous[E#Component, R],
+  prim: ReadContiguous[E#Component, R],
   off: Int, str: Int
 ) extends BaseSeq[E, E#Const, E#Read, R](
-  primitive.sharedStore, primitive, primitive.readOnly,
+  prim.sharedStore, prim, prim.readOnly,
   off, str
 ) with CompositionFactory[E, B] {
-  final def rawType = backing.rawType
-  final def normalized: Boolean = backing.normalized
+  final def rawType = primitive.rawType
+  final def normalized: Boolean = primitive.normalized
 
-  def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
-  def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
-  protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int) :ReadDataView[E, P]
+  def mkReadDataArray[P <: B](prim: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
+  def mkReadDataBuffer[P <: B](prim: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
+  protected def mkReadDataViewInstance[P <: B](
+    prim: ReadDataBuffer[E#Component, P], off: Int, str: Int
+  ) :ReadDataView[E, P]
 
 
   final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R] =
     mkReadDataArray(
-      backing.mkDataArray(array).asInstanceOf[DataArray[E#Component, B]]
+      primitive.mkDataArray(array).asInstanceOf[DataArray[E#Component, B]]
     ).asInstanceOf[DataArray[E, R]]
 
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R] =
     mkReadDataBuffer(
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]]
+      primitive.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]]
     ).asInstanceOf[ReadDataBuffer[E, R]]
 
   protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[E, R] =
     mkReadDataView(
-      backing.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]], off, str
+      primitive.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]], off, str
     ).asInstanceOf[ReadDataView[E, R]]
 
 
@@ -64,13 +66,13 @@ abstract class CompositeSeq[E <: Composite, +R <: Raw, B <: Defined](
     val self: AnyRef = this
     (self match {
       case _: DataArray[_, _] => mkReadDataArray(
-          backing.asReadOnly().asInstanceOf[DataArray[E#Component, B]]
+          primitive.asReadOnly().asInstanceOf[DataArray[E#Component, B]]
         )
       case _: DataBuffer[_, _] => mkReadDataBuffer(
-          backing.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]]
+          primitive.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]]
         )
       case _: DataView[_, _] => mkReadDataView(
-          backing.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
+          primitive.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
         )
     }).asInstanceOf[ReadDataSeq[E, R]]
   }

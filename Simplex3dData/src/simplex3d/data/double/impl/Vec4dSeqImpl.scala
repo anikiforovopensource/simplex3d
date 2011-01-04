@@ -32,129 +32,129 @@ import RawType._
  */
 // Vec4d RFloat
 private[data] final class ArrayVec4dRFloat(
-  primitive: ArrayRDoubleRFloat
-) extends BaseVec4d[RFloat](primitive, 0, 4) with DataArray[Vec4d, RFloat] {
+  prim: ArrayRDoubleRFloat
+) extends BaseVec4d[RFloat](prim, 0, 4) with DataArray[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }
 
 private[data] final class BufferVec4dRFloat(
-  primitive: BufferRDoubleRFloat
-) extends BaseVec4d[RFloat](primitive, 0, 4) with DataBuffer[Vec4d, RFloat] {
+  prim: BufferRDoubleRFloat
+) extends BaseVec4d[RFloat](prim, 0, 4) with DataBuffer[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }
 
 private[data] final class ViewVec4dRFloat(
-  primitive: BufferRDoubleRFloat, off: Int, str: Int
-) extends BaseVec4d[RFloat](primitive, off, str) with DataView[Vec4d, RFloat] {
+  prim: BufferRDoubleRFloat, off: Int, str: Int
+) extends BaseVec4d[RFloat](prim, off, str) with DataView[Vec4d, RFloat] {
   def apply(i: Int) :ConstVec4d = {
     val j = offset + i*stride
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }
 
 
 // Vec4d UByte
 private[data] final class ArrayVec4dUByte(
-  primitive: ArrayRDoubleUByte
-) extends BaseVec4d[UByte](primitive, 0, 4) with DataArray[Vec4d, UByte] {
+  prim: ArrayRDoubleUByte
+) extends BaseVec4d[UByte](prim, 0, 4) with DataArray[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }
 
 private[data] final class BufferVec4dUByte(
-  primitive: BufferRDoubleUByte
-) extends BaseVec4d[UByte](primitive, 0, 4) with DataBuffer[Vec4d, UByte] {
+  prim: BufferRDoubleUByte
+) extends BaseVec4d[UByte](prim, 0, 4) with DataBuffer[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }
 
 private[data] final class ViewVec4dUByte(
-  primitive: BufferRDoubleUByte, off: Int, str: Int
-) extends BaseVec4d[UByte](primitive, off, str) with DataView[Vec4d, UByte] {
+  prim: BufferRDoubleUByte, off: Int, str: Int
+) extends BaseVec4d[UByte](prim, off, str) with DataView[Vec4d, UByte] {
   def apply(i: Int) :ConstVec4d = {
     val j = offset + i*stride
     ConstVec4d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2),
+      prim(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4d) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
+    prim(j + 3) = v.w
   }
 }

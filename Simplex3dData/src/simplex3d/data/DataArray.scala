@@ -30,7 +30,7 @@ import scala.annotation.unchecked._
 @serializable @SerialVersionUID(8104346712419693669L)
 trait ReadDataArray[E <: Meta, +R <: Raw]
 extends ReadDataSeq[E, R] with ReadContiguous[E, R] {
-  type Backing <: ReadDataArray[E#Component, R]
+  type Primitive <: ReadDataArray[E#Component, R]
   type RawBuffer = Buffer
   override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataArray[E, R]]
 }
@@ -38,7 +38,7 @@ extends ReadDataSeq[E, R] with ReadContiguous[E, R] {
 trait DataArray[E <: Meta, +R <: Raw]
 extends DataSeq[E, R] with Contiguous[E, R] with ReadDataArray[E, R] {
   def array: R#Array = buff.array.asInstanceOf[R#Array]
-  type Backing = DataArray[E#Component, R @uncheckedVariance]
+  type Primitive = DataArray[E#Component, R @uncheckedVariance]
 }
 
 

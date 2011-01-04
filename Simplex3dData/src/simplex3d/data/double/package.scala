@@ -64,15 +64,15 @@ package object double {
     readManifest = Mat2x2d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat2x2d#Component, Raw], j: Int) :Mat2x2d#Const = {
+    def apply(p: inContiguous[Mat2x2d#Component, Raw], j: Int) :Mat2x2d#Const = {
       Mat2x2d(
-        backing(j),     backing(j + 1),
-        backing(j + 2), backing(j + 3)
+        p(j),     p(j + 1),
+        p(j + 2), p(j + 3)
       )
     }
-    def update(backing: outContiguous[Mat2x2d#Component, Raw], j: Int, value: Mat2x2d#Read) {
-      backing(j) =     value.m00; backing(j + 1) = value.m10
-      backing(j + 2) = value.m01; backing(j + 3) = value.m11
+    def update(p: outContiguous[Mat2x2d#Component, Raw], j: Int, v: Mat2x2d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m10
+      p(j + 2) = v.m01; p(j + 3) = v.m11
     }
   }
 
@@ -81,17 +81,17 @@ package object double {
     readManifest = Mat2x3d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
+    def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
       Mat2x3d(
-        backing(j),     backing(j + 1),
-        backing(j + 2), backing(j + 3),
-        backing(j + 4), backing(j + 5)
+        p(j),     p(j + 1),
+        p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5)
       )
     }
-    def update(backing: outContiguous[Mat2x3d#Component, Raw], j: Int, value: Mat2x3d#Read) {
-      backing(j) =     value.m00; backing(j + 1) = value.m10
-      backing(j + 2) = value.m01; backing(j + 3) = value.m11
-      backing(j + 4) = value.m02; backing(j + 5) = value.m12
+    def update(p: outContiguous[Mat2x3d#Component, Raw], j: Int, v: Mat2x3d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m10
+      p(j + 2) = v.m01; p(j + 3) = v.m11
+      p(j + 4) = v.m02; p(j + 5) = v.m12
     }
   }
 
@@ -100,19 +100,19 @@ package object double {
     readManifest = Mat2x4d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
+    def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
       Mat2x4d(
-        backing(j),     backing(j + 1),
-        backing(j + 2), backing(j + 3),
-        backing(j + 4), backing(j + 5),
-        backing(j + 6), backing(j + 7)
+        p(j),     p(j + 1),
+        p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5),
+        p(j + 6), p(j + 7)
       )
     }
-    def update(backing: outContiguous[Mat2x4d#Component, Raw], j: Int, value: Mat2x4d#Read) {
-      backing(j) =     value.m00; backing(j + 1) = value.m10
-      backing(j + 2) = value.m01; backing(j + 3) = value.m11
-      backing(j + 4) = value.m02; backing(j + 5) = value.m12
-      backing(j + 6) = value.m03; backing(j + 7) = value.m13
+    def update(p: outContiguous[Mat2x4d#Component, Raw], j: Int, v: Mat2x4d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m10
+      p(j + 2) = v.m01; p(j + 3) = v.m11
+      p(j + 4) = v.m02; p(j + 5) = v.m12
+      p(j + 6) = v.m03; p(j + 7) = v.m13
     }
   }
 
@@ -121,15 +121,15 @@ package object double {
     readManifest = Mat3x2d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
+    def apply(p: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
       Mat3x2d(
-        backing(j),     backing(j + 1), backing(j + 2),
-        backing(j + 3), backing(j + 4), backing(j + 5)
+        p(j),     p(j + 1), p(j + 2),
+        p(j + 3), p(j + 4), p(j + 5)
       )
     }
-    def update(backing: outContiguous[Mat3x2d#Component, Raw], j: Int, value: Mat3x2d#Read) {
-      backing(j) =     value.m00; backing(j + 1) = value.m10; backing(j + 2) = value.m20
-      backing(j + 3) = value.m01; backing(j + 4) = value.m11; backing(j + 5) = value.m21
+    def update(p: outContiguous[Mat3x2d#Component, Raw], j: Int, v: Mat3x2d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
+      p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
     }
   }
 
@@ -138,17 +138,17 @@ package object double {
     readManifest = Mat3x3d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat3x3d#Component, Raw], j: Int) :Mat3x3d#Const = {
+    def apply(p: inContiguous[Mat3x3d#Component, Raw], j: Int) :Mat3x3d#Const = {
       Mat3x3d(
-        backing(j),     backing(j + 1), backing(j + 2),
-        backing(j + 3), backing(j + 4), backing(j + 5),
-        backing(j + 6), backing(j + 7), backing(j + 8)
+        p(j),     p(j + 1), p(j + 2),
+        p(j + 3), p(j + 4), p(j + 5),
+        p(j + 6), p(j + 7), p(j + 8)
       )
     }
-    def update(backing: outContiguous[Mat3x3d#Component, Raw], j: Int, value: Mat3x3d#Read) {
-      backing(j) =     value.m00; backing(j + 1) = value.m10; backing(j + 2) = value.m20
-      backing(j + 3) = value.m01; backing(j + 4) = value.m11; backing(j + 5) = value.m21
-      backing(j + 6) = value.m02; backing(j + 7) = value.m12; backing(j + 8) = value.m22
+    def update(p: outContiguous[Mat3x3d#Component, Raw], j: Int, v: Mat3x3d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
+      p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
+      p(j + 6) = v.m02; p(j + 7) = v.m12; p(j + 8) = v.m22
     }
   }
 
@@ -157,19 +157,19 @@ package object double {
     readManifest = Mat3x4d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
+    def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
       Mat3x4d(
-        backing(j),     backing(j + 1),  backing(j + 2),
-        backing(j + 3), backing(j + 4),  backing(j + 5),
-        backing(j + 6), backing(j + 7),  backing(j + 8),
-        backing(j + 9), backing(j + 10), backing(j + 11)
+        p(j),     p(j + 1),  p(j + 2),
+        p(j + 3), p(j + 4),  p(j + 5),
+        p(j + 6), p(j + 7),  p(j + 8),
+        p(j + 9), p(j + 10), p(j + 11)
       )
     }
-    def update(backing: outContiguous[Mat3x4d#Component, Raw], j: Int, value: Mat3x4d#Read) {
-      backing(j) =     value.m00; backing(j + 1) =  value.m10; backing(j + 2) =  value.m20
-      backing(j + 3) = value.m01; backing(j + 4) =  value.m11; backing(j + 5) =  value.m21
-      backing(j + 6) = value.m02; backing(j + 7) =  value.m12; backing(j + 8) =  value.m22
-      backing(j + 9) = value.m03; backing(j + 10) = value.m13; backing(j + 11) = value.m23
+    def update(p: outContiguous[Mat3x4d#Component, Raw], j: Int, v: Mat3x4d#Read) {
+      p(j) =     v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20
+      p(j + 3) = v.m01; p(j + 4) =  v.m11; p(j + 5) =  v.m21
+      p(j + 6) = v.m02; p(j + 7) =  v.m12; p(j + 8) =  v.m22
+      p(j + 9) = v.m03; p(j + 10) = v.m13; p(j + 11) = v.m23
     }
   }
 
@@ -178,15 +178,15 @@ package object double {
     readManifest = Mat4x2d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
+    def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
       Mat4x2d(
-        backing(j),     backing(j + 1), backing(j + 2), backing(j + 3),
-        backing(j + 4), backing(j + 5), backing(j + 6), backing(j + 7)
+        p(j),     p(j + 1), p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5), p(j + 6), p(j + 7)
       )
     }
-    def update(backing: outContiguous[Mat4x2d#Component, Raw], j: Int, value: Mat4x2d#Read) {
-      backing(j) = value.m00;     backing(j + 1) = value.m10; backing(j + 2) = value.m20; backing(j + 3) = value.m30
-      backing(j + 4) = value.m01; backing(j + 5) = value.m11; backing(j + 6) = value.m21; backing(j + 7) = value.m31
+    def update(p: outContiguous[Mat4x2d#Component, Raw], j: Int, v: Mat4x2d#Read) {
+      p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) = v.m20; p(j + 3) = v.m30
+      p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) = v.m21; p(j + 7) = v.m31
     }
   }
 
@@ -195,17 +195,17 @@ package object double {
     readManifest = Mat4x3d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
+    def apply(p: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
       Mat4x3d(
-        backing(j),     backing(j + 1), backing(j + 2),  backing(j + 3),
-        backing(j + 4), backing(j + 5), backing(j + 6),  backing(j + 7),
-        backing(j + 8), backing(j + 9), backing(j + 10), backing(j + 11)
+        p(j),     p(j + 1), p(j + 2),  p(j + 3),
+        p(j + 4), p(j + 5), p(j + 6),  p(j + 7),
+        p(j + 8), p(j + 9), p(j + 10), p(j + 11)
       )
     }
-    def update(backing: outContiguous[Mat4x3d#Component, Raw], j: Int, value: Mat4x3d#Read) {
-      backing(j) = value.m00;     backing(j + 1) = value.m10; backing(j + 2) =  value.m20; backing(j + 3) =  value.m30
-      backing(j + 4) = value.m01; backing(j + 5) = value.m11; backing(j + 6) =  value.m21; backing(j + 7) =  value.m31
-      backing(j + 8) = value.m02; backing(j + 9) = value.m12; backing(j + 10) = value.m22; backing(j + 11) = value.m32
+    def update(p: outContiguous[Mat4x3d#Component, Raw], j: Int, v: Mat4x3d#Read) {
+      p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
+      p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
+      p(j + 8) = v.m02; p(j + 9) = v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32
     }
   }
 
@@ -214,19 +214,19 @@ package object double {
     readManifest = Mat4x4d.ReadManifest,
     boundManifest = matrixBound
   ) {
-    def apply(backing: inContiguous[Mat4x4d#Component, Raw], j: Int) :Mat4x4d#Const = {
+    def apply(p: inContiguous[Mat4x4d#Component, Raw], j: Int) :Mat4x4d#Const = {
       Mat4x4d(
-        backing(j),      backing(j + 1),  backing(j + 2),  backing(j + 3),
-        backing(j + 4),  backing(j + 5),  backing(j + 6),  backing(j + 7),
-        backing(j + 8),  backing(j + 9),  backing(j + 10), backing(j + 11),
-        backing(j + 12), backing(j + 13), backing(j + 14), backing(j + 15)
+        p(j),      p(j + 1),  p(j + 2),  p(j + 3),
+        p(j + 4),  p(j + 5),  p(j + 6),  p(j + 7),
+        p(j + 8),  p(j + 9),  p(j + 10), p(j + 11),
+        p(j + 12), p(j + 13), p(j + 14), p(j + 15)
       )
     }
-    def update(backing: outContiguous[Mat4x4d#Component, Raw], j: Int, value: Mat4x4d#Read) {
-      backing(j) =      value.m00; backing(j + 1) =  value.m10; backing(j + 2) =  value.m20; backing(j + 3) =  value.m30
-      backing(j + 4) =  value.m01; backing(j + 5) =  value.m11; backing(j + 6) =  value.m21; backing(j + 7) =  value.m31
-      backing(j + 8) =  value.m02; backing(j + 9) =  value.m12; backing(j + 10) = value.m22; backing(j + 11) = value.m32
-      backing(j + 12) = value.m03; backing(j + 13) = value.m13; backing(j + 14) = value.m23; backing(j + 15) = value.m33
+    def update(p: outContiguous[Mat4x4d#Component, Raw], j: Int, v: Mat4x4d#Read) {
+      p(j) =      v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
+      p(j + 4) =  v.m01; p(j + 5) =  v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
+      p(j + 8) =  v.m02; p(j + 9) =  v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32
+      p(j + 12) = v.m03; p(j + 13) = v.m13; p(j + 14) = v.m23; p(j + 15) = v.m33
     }
   }
 }

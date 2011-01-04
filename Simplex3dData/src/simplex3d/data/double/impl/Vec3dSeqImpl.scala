@@ -31,117 +31,117 @@ import simplex3d.data._
  */
 // Vec3d RFloat
 private[data] final class ArrayVec3dRFloat(
-  primitive: ArrayRDoubleRFloat
-) extends BaseVec3d[RFloat](primitive, 0, 3) with DataArray[Vec3d, RFloat] {
+  prim: ArrayRDoubleRFloat
+) extends BaseVec3d[RFloat](prim, 0, 3) with DataArray[Vec3d, RFloat] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }
 
 private[data] final class BufferVec3dRFloat(
-  primitive: BufferRDoubleRFloat
-) extends BaseVec3d[RFloat](primitive, 0, 3) with DataBuffer[Vec3d, RFloat] {
+  prim: BufferRDoubleRFloat
+) extends BaseVec3d[RFloat](prim, 0, 3) with DataBuffer[Vec3d, RFloat] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }
 
 private[data] final class ViewVec3dRFloat(
-  primitive: BufferRDoubleRFloat, off: Int, str: Int
-) extends BaseVec3d[RFloat](primitive, off, str) with DataView[Vec3d, RFloat] {
+  prim: BufferRDoubleRFloat, off: Int, str: Int
+) extends BaseVec3d[RFloat](prim, off, str) with DataView[Vec3d, RFloat] {
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }
 
 
 // Vec3d UByte
 private[data] final class ArrayVec3dUByte(
-  primitive: ArrayRDoubleUByte
-) extends BaseVec3d[UByte](primitive, 0, 3) with DataArray[Vec3d, UByte] {
+  prim: ArrayRDoubleUByte
+) extends BaseVec3d[UByte](prim, 0, 3) with DataArray[Vec3d, UByte] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }
 
 private[data] final class BufferVec3dUByte(
-  primitive: BufferRDoubleUByte
-) extends BaseVec3d[UByte](primitive, 0, 3) with DataBuffer[Vec3d, UByte] {
+  prim: BufferRDoubleUByte
+) extends BaseVec3d[UByte](prim, 0, 3) with DataBuffer[Vec3d, UByte] {
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }
 
 private[data] final class ViewVec3dUByte(
-  primitive: BufferRDoubleUByte, off: Int, str: Int
-) extends BaseVec3d[UByte](primitive, off, str) with DataView[Vec3d, UByte] {
+  prim: BufferRDoubleUByte, off: Int, str: Int
+) extends BaseVec3d[UByte](prim, off, str) with DataView[Vec3d, UByte] {
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      prim(j),
+      prim(j + 1),
+      prim(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3d) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    prim(j) = v.x
+    prim(j + 1) = v.y
+    prim(j + 2) = v.z
   }
 }

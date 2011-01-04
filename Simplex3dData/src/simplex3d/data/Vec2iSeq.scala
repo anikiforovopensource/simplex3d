@@ -29,70 +29,70 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] abstract class BaseVec2i[+R <: DefinedInt](
-  primitive: ReadContiguous[SInt, R], off: Int, str: Int
-) extends CompositeSeq[Vec2i, R, DefinedInt](primitive, off, str) {
+  prim: ReadContiguous[SInt, R], off: Int, str: Int
+) extends CompositeSeq[Vec2i, R, DefinedInt](prim, off, str) {
   final def elemManifest = Vec2i.Manifest
   final def readManifest = Vec2i.ReadManifest
   final def components: Int = 2
 
-  final def mkReadDataArray[P <: DefinedInt](primitive: ReadDataArray[Vec2i#Component, P])
-  :ReadDataArray[Vec2i, P] = new ArrayVec2i(primitive)
-  final def mkReadDataBuffer[P <: DefinedInt](primitive: ReadDataBuffer[Vec2i#Component, P])
-  :ReadDataBuffer[Vec2i, P] = new BufferVec2i(primitive)
+  final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec2i#Component, P])
+  :ReadDataArray[Vec2i, P] = new ArrayVec2i(prim)
+  final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[Vec2i#Component, P])
+  :ReadDataBuffer[Vec2i, P] = new BufferVec2i(prim)
   protected final def mkReadDataViewInstance[P <: DefinedInt](
-    primitive: ReadDataBuffer[Vec2i#Component, P], off: Int, str: Int
-  ) :ReadDataView[Vec2i, P] = new ViewVec2i(primitive, off, str)
+    prim: ReadDataBuffer[Vec2i#Component, P], off: Int, str: Int
+  ) :ReadDataView[Vec2i, P] = new ViewVec2i(prim, off, str)
 
   final override def mkSerializableInstance() = new CompositeSInt(components)
 }
 
 private[data] final class ArrayVec2i[+R <: DefinedInt](
-  primitive: ReadDataArray[SInt, R]
-) extends BaseVec2i[R](primitive, 0, 2) with DataArray[Vec2i, R] {
+  prim: ReadDataArray[SInt, R]
+) extends BaseVec2i[R](prim, 0, 2) with DataArray[Vec2i, R] {
   def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2i) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }
 
 private[data] final class BufferVec2i[+R <: DefinedInt](
-  primitive: ReadDataBuffer[SInt, R]
-) extends BaseVec2i[R](primitive, 0, 2) with DataBuffer[Vec2i, R] {
+  prim: ReadDataBuffer[SInt, R]
+) extends BaseVec2i[R](prim, 0, 2) with DataBuffer[Vec2i, R] {
   def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2i) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }
 
 private[data] final class ViewVec2i[+R <: DefinedInt](
-  primitive: ReadDataBuffer[SInt, R], off: Int, str: Int
-) extends BaseVec2i[R](primitive, off, str) with DataView[Vec2i, R] {
+  prim: ReadDataBuffer[SInt, R], off: Int, str: Int
+) extends BaseVec2i[R](prim, off, str) with DataView[Vec2i, R] {
   def apply(i: Int) :ConstVec2i = {
     val j = offset + i*stride
     ConstVec2i(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2i) {
     val j = offset + i*stride
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }

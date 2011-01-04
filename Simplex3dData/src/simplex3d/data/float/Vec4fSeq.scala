@@ -31,35 +31,35 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] abstract class BaseVec4f[+R <: DefinedFloat](
-  primitive: ReadContiguous[RFloat, R], off: Int, str: Int
-) extends CompositeSeq[Vec4f, R, DefinedFloat](primitive, off, str) {
+  prim: ReadContiguous[RFloat, R], off: Int, str: Int
+) extends CompositeSeq[Vec4f, R, DefinedFloat](prim, off, str) {
   final def elemManifest = Vec4f.Manifest
   final def readManifest = Vec4f.ReadManifest
   final def components: Int = 4
 
-  final def mkReadDataArray[P <: DefinedFloat](primitive: ReadDataArray[Vec4f#Component, P])
+  final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[Vec4f#Component, P])
   :ReadDataArray[Vec4f, P] = {
-    (primitive.rawType match {
-      case UByte => new impl.ArrayVec4fUByte(primitive.asInstanceOf[ArrayRFloatUByte])
-      case RFloat => new impl.ArrayVec4fRFloat(primitive.asInstanceOf[ArrayRFloatRFloat])
-      case _ => new ArrayVec4f(primitive)
+    (prim.rawType match {
+      case UByte => new impl.ArrayVec4fUByte(prim.asInstanceOf[ArrayRFloatUByte])
+      case RFloat => new impl.ArrayVec4fRFloat(prim.asInstanceOf[ArrayRFloatRFloat])
+      case _ => new ArrayVec4f(prim)
     }).asInstanceOf[ReadDataArray[Vec4f, P]]
   }
-  final def mkReadDataBuffer[P <: DefinedFloat](primitive: ReadDataBuffer[Vec4f#Component, P])
+  final def mkReadDataBuffer[P <: DefinedFloat](prim: ReadDataBuffer[Vec4f#Component, P])
   :ReadDataBuffer[Vec4f, P] = {
-    (primitive.rawType match {
-      case UByte => new impl.BufferVec4fUByte(primitive.asInstanceOf[BufferRFloatUByte])
-      case RFloat => new impl.BufferVec4fRFloat(primitive.asInstanceOf[BufferRFloatRFloat])
-      case _ => new BufferVec4f(primitive)
+    (prim.rawType match {
+      case UByte => new impl.BufferVec4fUByte(prim.asInstanceOf[BufferRFloatUByte])
+      case RFloat => new impl.BufferVec4fRFloat(prim.asInstanceOf[BufferRFloatRFloat])
+      case _ => new BufferVec4f(prim)
     }).asInstanceOf[ReadDataBuffer[Vec4f, P]]
   }
   protected final def mkReadDataViewInstance[P <: DefinedFloat](
-    primitive: ReadDataBuffer[Vec4f#Component, P], off: Int, str: Int
+    prim: ReadDataBuffer[Vec4f#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec4f, P] = {
-    (primitive.rawType match {
-      case UByte => new impl.ViewVec4fUByte(primitive.asInstanceOf[BufferRFloatUByte], off, str)
-      case RFloat => new impl.ViewVec4fRFloat(primitive.asInstanceOf[BufferRFloatRFloat], off, str)
-      case _ => new ViewVec4f(primitive, off, str)
+    (prim.rawType match {
+      case UByte => new impl.ViewVec4fUByte(prim.asInstanceOf[BufferRFloatUByte], off, str)
+      case RFloat => new impl.ViewVec4fRFloat(prim.asInstanceOf[BufferRFloatRFloat], off, str)
+      case _ => new ViewVec4f(prim, off, str)
     }).asInstanceOf[ReadDataView[Vec4f, P]]
   }
 
@@ -67,64 +67,64 @@ private[data] abstract class BaseVec4f[+R <: DefinedFloat](
 }
 
 private[data] final class ArrayVec4f[+R <: DefinedFloat](
-  primitive: ReadDataArray[RFloat, R]
-) extends BaseVec4f[R](primitive, 0, 4) with DataArray[Vec4f, R] {
+  prim: ReadDataArray[RFloat, R]
+) extends BaseVec4f[R](prim, 0, 4) with DataArray[Vec4f, R] {
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
-      backing(j),
-      backing(j + 1),
-      backing(j + 2),
-      backing(j + 3)
+      primitive(j),
+      primitive(j + 1),
+      primitive(j + 2),
+      primitive(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4f) {
     val j = i*4
-    backing(j) = v.x
-    backing(j + 1) = v.y
-    backing(j + 2) = v.z
-    backing(j + 3) = v.w
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
+    primitive(j + 2) = v.z
+    primitive(j + 3) = v.w
   }
 }
 
 private[data] final class BufferVec4f[+R <: DefinedFloat](
-  primitive: ReadDataBuffer[RFloat, R]
-) extends BaseVec4f[R](primitive, 0, 4) with DataBuffer[Vec4f, R] {
+  prim: ReadDataBuffer[RFloat, R]
+) extends BaseVec4f[R](prim, 0, 4) with DataBuffer[Vec4f, R] {
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
-      backing(j),
-      backing(j + 1),
-      backing(j + 2),
-      backing(j + 3)
+      primitive(j),
+      primitive(j + 1),
+      primitive(j + 2),
+      primitive(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4f) {
     val j = i*4
-    backing(j) = v.x
-    backing(j + 1) = v.y
-    backing(j + 2) = v.z
-    backing(j + 3) = v.w
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
+    primitive(j + 2) = v.z
+    primitive(j + 3) = v.w
   }
 }
 
 private[data] final class ViewVec4f[+R <: DefinedFloat](
-  primitive: ReadDataBuffer[RFloat, R], off: Int, str: Int
-) extends BaseVec4f[R](primitive, off, str) with DataView[Vec4f, R] {
+  prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
+) extends BaseVec4f[R](prim, off, str) with DataView[Vec4f, R] {
   def apply(i: Int) :ConstVec4f = {
     val j = offset + i*stride
     ConstVec4f(
-      backing(j),
-      backing(j + 1),
-      backing(j + 2),
-      backing(j + 3)
+      primitive(j),
+      primitive(j + 1),
+      primitive(j + 2),
+      primitive(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4f) {
     val j = offset + i*stride
-    backing(j) = v.x
-    backing(j + 1) = v.y
-    backing(j + 2) = v.z
-    backing(j + 3) = v.w
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
+    primitive(j + 2) = v.z
+    primitive(j + 3) = v.w
   }
 }

@@ -112,7 +112,7 @@ class ConvertBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += toInt(dest(l % size)*1000)
+      answer += Int(dest(l % size)*1000)
 
       l += 1
     }
@@ -135,7 +135,7 @@ class ConvertBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += toInt(dest(l % size)*1000)
+      answer += Int(dest(l % size)*1000)
 
       l += 1
     }

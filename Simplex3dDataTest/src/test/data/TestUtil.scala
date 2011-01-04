@@ -499,7 +499,7 @@ object TestUtil extends FunSuite {
     testContent(
       components,
       dest, destFirst,
-      src.backing, src.offset + srcFirst*src.stride, src.stride,
+      src.primitive, src.offset + srcFirst*src.stride, src.stride,
       count
     )
   }
@@ -509,7 +509,7 @@ object TestUtil extends FunSuite {
     src: inData[E#Component], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    val d = dest.backing
+    val d = dest.primitive
     
     d.elemManifest match {
       case MetaManifest.SInt =>
@@ -544,8 +544,8 @@ object TestUtil extends FunSuite {
     count: Int
   ) {
     if (dest.isInstanceOf[DataView[_, _]]) {
-      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].backing)
-      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].backing)
+      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].primitive)
+      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].primitive)
       
       val byteOffset = dest.byteOffset + dest.byteStride*destFirst
       val byteSkip = components*dest.bytesPerComponent
@@ -657,26 +657,26 @@ object TestUtil extends FunSuite {
     val factory = genRandomSeq(src.elemManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
-    src.backing.elemManifest match {
+    src.primitive.elemManifest match {
       case MetaManifest.SInt =>
         putIntContent(
           src.components,
-          contiguousCopy.backing.asInstanceOf[Contiguous[SInt, Raw]],
-          src.backing.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitive.asInstanceOf[Contiguous[SInt, Raw]],
+          src.primitive.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RFloat =>
         putFloatContent(
           src.components,
-          contiguousCopy.backing.asInstanceOf[Contiguous[RFloat, Raw]],
-          src.backing.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitive.asInstanceOf[Contiguous[RFloat, Raw]],
+          src.primitive.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RDouble =>
         putDoubleContent(
           src.components,
-          contiguousCopy.backing.asInstanceOf[Contiguous[RDouble, Raw]],
-          src.backing.asInstanceOf[ReadContiguous[RDouble, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitive.asInstanceOf[Contiguous[RDouble, Raw]],
+          src.primitive.asInstanceOf[ReadContiguous[RDouble, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
     }

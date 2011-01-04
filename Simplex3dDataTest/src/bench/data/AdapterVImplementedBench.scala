@@ -40,17 +40,17 @@ object AdapterVImplementedBench {
     type Component = Vec3#Component
   }
   implicit object V3Adapter extends DataAdapter[V3, DefinedFloat](components = 3) {
-    def apply(backing: inContiguous[V3#Component, Raw], j: Int) :V3#Const = {
+    def apply(primitive: inContiguous[V3#Component, Raw], j: Int) :V3#Const = {
       ConstVec3(
-        backing(j),
-        backing(j + 1),
-        backing(j + 2)
+        primitive(j),
+        primitive(j + 1),
+        primitive(j + 2)
       )
     }
-    def update(backing: outContiguous[V3#Component, Raw], j: Int, value: V3#Read) {
-      backing(j) = value.x
-      backing(j + 1) = value.y
-      backing(j + 2) = value.z
+    def update(primitive: outContiguous[V3#Component, Raw], j: Int, value: V3#Read) {
+      primitive(j) = value.x
+      primitive(j + 1) = value.y
+      primitive(j + 2) = value.z
     }
   }
 
@@ -60,19 +60,19 @@ object AdapterVImplementedBench {
     type Component = Vec4#Component
   }
   implicit object V4Adapter extends DataAdapter[V4, DefinedFloat](components = 4) {
-    def apply(backing: inContiguous[V4#Component, Raw], j: Int) :V4#Const = {
+    def apply(primitive: inContiguous[V4#Component, Raw], j: Int) :V4#Const = {
       ConstVec4(
-        backing(j),
-        backing(j + 1),
-        backing(j + 2),
-        backing(j + 3)
+        primitive(j),
+        primitive(j + 1),
+        primitive(j + 2),
+        primitive(j + 3)
       )
     }
-    def update(backing: outContiguous[V4#Component, Raw], j: Int, value: V4#Read) {
-      backing(j) = value.x
-      backing(j + 1) = value.y
-      backing(j + 2) = value.z
-      backing(j + 3) = value.w
+    def update(primitive: outContiguous[V4#Component, Raw], j: Int, value: V4#Read) {
+      primitive(j) = value.x
+      primitive(j + 1) = value.y
+      primitive(j + 2) = value.z
+      primitive(j + 3) = value.w
     }
   }
 

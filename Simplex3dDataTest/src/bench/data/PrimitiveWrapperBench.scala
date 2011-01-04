@@ -106,7 +106,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = data(i)
-        answer += toInt(v + 7.9f)
+        answer += Int(v + 7.9f)
 
         i += step
       }
@@ -125,7 +125,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = data.get(i)
-        answer += toInt(v + 7.9f)
+        answer += Int(v + 7.9f)
 
         i += step
       }
@@ -144,7 +144,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += toInt(v + 7.9f)
+        answer += Int(v + 7.9f)
 
         i += step
       }
@@ -163,7 +163,7 @@ class PrimitiveWrapperBenchTC {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += toInt(v + 7.9f)
+        answer += Int(v + 7.9f)
 
         i += step
       }

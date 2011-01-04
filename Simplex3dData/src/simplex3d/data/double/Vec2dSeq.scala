@@ -31,32 +31,32 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] abstract class BaseVec2d[+R <: DefinedDouble](
-  primitive: ReadContiguous[RDouble, R], off: Int, str: Int
-) extends CompositeSeq[Vec2d, R, DefinedDouble](primitive, off, str) {
+  prim: ReadContiguous[RDouble, R], off: Int, str: Int
+) extends CompositeSeq[Vec2d, R, DefinedDouble](prim, off, str) {
   final def elemManifest = Vec2d.Manifest
   final def readManifest = Vec2d.ReadManifest
   final def components: Int = 2
 
-  final def mkReadDataArray[P <: DefinedDouble](primitive: ReadDataArray[Vec2d#Component, P])
+  final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[Vec2d#Component, P])
   :ReadDataArray[Vec2d, P] = {
-    (primitive.rawType match {
-      case RFloat => new impl.ArrayVec2dRFloat(primitive.asInstanceOf[ArrayRDoubleRFloat])
-      case _ => new ArrayVec2d(primitive)
+    (prim.rawType match {
+      case RFloat => new impl.ArrayVec2dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
+      case _ => new ArrayVec2d(prim)
     }).asInstanceOf[ReadDataArray[Vec2d, P]]
   }
-  final def mkReadDataBuffer[P <: DefinedDouble](primitive: ReadDataBuffer[Vec2d#Component, P])
+  final def mkReadDataBuffer[P <: DefinedDouble](prim: ReadDataBuffer[Vec2d#Component, P])
   :ReadDataBuffer[Vec2d, P] = {
-    (primitive.rawType match {
-      case RFloat => new impl.BufferVec2dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat])
-      case _ => new BufferVec2d(primitive)
+    (prim.rawType match {
+      case RFloat => new impl.BufferVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
+      case _ => new BufferVec2d(prim)
     }).asInstanceOf[ReadDataBuffer[Vec2d, P]]
   }
   protected final def mkReadDataViewInstance[P <: DefinedDouble](
-    primitive: ReadDataBuffer[Vec2d#Component, P], off: Int, str: Int
+    prim: ReadDataBuffer[Vec2d#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec2d, P] = {
-    (primitive.rawType match {
-      case RFloat => new impl.ViewVec2dRFloat(primitive.asInstanceOf[BufferRDoubleRFloat], off, str)
-      case _ => new ViewVec2d(primitive, off, str)
+    (prim.rawType match {
+      case RFloat => new impl.ViewVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
+      case _ => new ViewVec2d(prim, off, str)
     }).asInstanceOf[ReadDataView[Vec2d, P]]
   }
 
@@ -64,52 +64,52 @@ private[data] abstract class BaseVec2d[+R <: DefinedDouble](
 }
 
 private[data] final class ArrayVec2d[+R <: DefinedDouble](
-  primitive: ReadDataArray[RDouble, R]
-) extends BaseVec2d[R](primitive, 0, 2) with DataArray[Vec2d, R] {
+  prim: ReadDataArray[RDouble, R]
+) extends BaseVec2d[R](prim, 0, 2) with DataArray[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }
 
 private[data] final class BufferVec2d[+R <: DefinedDouble](
-  primitive: ReadDataBuffer[RDouble, R]
-) extends BaseVec2d[R](primitive, 0, 2) with DataBuffer[Vec2d, R] {
+  prim: ReadDataBuffer[RDouble, R]
+) extends BaseVec2d[R](prim, 0, 2) with DataBuffer[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }
 
 private[data] final class ViewVec2d[+R <: DefinedDouble](
-  primitive: ReadDataBuffer[RDouble, R], off: Int, str: Int
-) extends BaseVec2d[R](primitive, off, str) with DataView[Vec2d, R] {
+  prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
+) extends BaseVec2d[R](prim, off, str) with DataView[Vec2d, R] {
   def apply(i: Int) :ConstVec2d = {
     val j = offset + i*stride
     ConstVec2d(
-      backing(j),
-      backing(j + 1)
+      primitive(j),
+      primitive(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = offset + i*stride
-    backing(j) = v.x
-    backing(j + 1) = v.y
+    primitive(j) = v.x
+    primitive(j + 1) = v.y
   }
 }

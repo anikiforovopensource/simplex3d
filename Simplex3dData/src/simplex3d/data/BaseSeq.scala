@@ -180,10 +180,7 @@ private[data] abstract class BaseSeq[
           putArray(
             index, wrapped.array.asInstanceOf[Array[Double]], first, count
           )
-        case m =>
-          if (!(readManifest >:> m)) throw new ClassCastException(
-            "Seq[" + m + "] cannot be cast to Seq[" + readManifest + "]."
-          )
+        case _ =>
           putArray(
             index, wrapped.array, first, count
           )

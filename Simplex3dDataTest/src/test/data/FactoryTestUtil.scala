@@ -185,8 +185,8 @@ object FactoryTestUtil extends FunSuite {
       verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
       
       if (seq.components > 1) {
-        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
+        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1), nameWith("View"))
+        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1), nameWith("View"))
       }
     }
   }
@@ -232,9 +232,9 @@ object FactoryTestUtil extends FunSuite {
     factory: (ByteBuffer, Int, Int) => DataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     viewFromData(factory)(descriptor)
-    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 6), descriptor)
 
-    checkSubDataExceptions(factory(genBuffer(2*4*8, descriptor)._1, 0, 4))
+    checkSubDataExceptions(factory(genBuffer(2*4*8, descriptor)._1, 0, 6))
   }
 
   def testReadBufferFromData[E <: Meta, R <: Raw](
@@ -248,7 +248,7 @@ object FactoryTestUtil extends FunSuite {
     factory: (ByteBuffer, Int, Int) => ReadDataView[E, R]
   )(implicit descriptor: Descriptor[E, R]) {
     readViewFromData(factory)(descriptor)
-    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 4), descriptor)
+    testMakeData(factory(genBuffer(0, descriptor)._1, 0, 6), descriptor)
   }
 
   def testArrayFromCollection[E <: Meta, R <: Raw](
@@ -343,17 +343,17 @@ object FactoryTestUtil extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
       val bytes = ByteBuffer.wrap(new Array[Byte](64))
-      factory(bytes, 0, 4)
+      factory(bytes, 0, 6)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor);
-      factory(bytes.asReadOnlyBuffer, 0, 4)
+      factory(bytes.asReadOnlyBuffer, 0, 6)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, -1, 4)
+      factory(bytes, -1, 6)
     }
 
     intercept[IllegalArgumentException] {
@@ -469,12 +469,12 @@ object FactoryTestUtil extends FunSuite {
   )(implicit descriptor: Descriptor[E, R]) {
     intercept[IllegalArgumentException] {
       val bytes = ByteBuffer.wrap(new Array[Byte](64))
-      factory(bytes, 0, 4)
+      factory(bytes, 0, 6)
     }
 
     intercept[IllegalArgumentException] {
       val (bytes, data) = genBuffer(64, descriptor)
-      factory(bytes, -1, 4)
+      factory(bytes, -1, 6)
     }
 
     intercept[IllegalArgumentException] {

@@ -51,7 +51,7 @@ object TestUtil extends FunSuite {
     ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder)
   }
   
-  def size(capacity: Int, offset: Int, stride: Int, components: Int) = {
+  def dataSeqSize(capacity: Int, offset: Int, stride: Int, components: Int) = {
     val s = (capacity - offset + stride - components)/stride
     if (s > 0) s else 0
   }
@@ -238,10 +238,12 @@ object TestUtil extends FunSuite {
       case Vec2f.Manifest => Vec2f(nf, nf)
       case Vec3f.Manifest => Vec3f(nf, nf, nf)
       case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
+      case Mat2x3f.Manifest => Mat2x3f(nf, nf, nf, nf, nf, nf)
       case MetaManifest.RDouble => nd
       case Vec2d.Manifest => Vec2d(nd, nd)
       case Vec3d.Manifest => Vec3d(nd, nd, nd)
       case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
+      case Mat2x3d.Manifest => Mat2x3d(nd, nd, nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
   private def randPrim[T](m: ClassManifest[T]) :T = {
@@ -327,7 +329,7 @@ object TestUtil extends FunSuite {
       case Some(man) =>
         man
       case None =>
-        randomSrc.nextInt(12) match {
+        randomSrc.nextInt(14) match {
           case 0 => MetaManifest.SInt
           case 1 => Vec2i.Manifest
           case 2 => Vec3i.Manifest
@@ -336,22 +338,26 @@ object TestUtil extends FunSuite {
           case 5 => Vec2f.Manifest
           case 6 => Vec3f.Manifest
           case 7 => Vec4f.Manifest
-          case 8 => MetaManifest.RDouble
-          case 9 => Vec2d.Manifest
-          case 10 => Vec3d.Manifest
-          case 11 => Vec4d.Manifest
+          case 8 => Mat2x3f.Manifest
+          case 9 => MetaManifest.RDouble
+          case 10 => Vec2d.Manifest
+          case 11 => Vec3d.Manifest
+          case 12 => Vec4d.Manifest
+          case 13 => Mat2x3d.Manifest
         }
       }
     
-    val max = m match {
-      case MetaManifest.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => 6
-      case MetaManifest.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => 8
-      case MetaManifest.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => 9
+    val (min, max) = m match {
+      case MetaManifest.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => (0, 6)
+      case MetaManifest.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => (0, 8)
+      case MetaManifest.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => (0, 9)
+      case Mat2x3f.Manifest => (7, 8)
+      case Mat2x3d.Manifest => (7, 9)
     }
     
     val r = rawType match {
       case Some(i) => assert(i < max); i
-      case None => randomSrc.nextInt(max) match {
+      case None => min + randomSrc.nextInt(max - min) match {
         case 0 => SByte
         case 1 => UByte
         case 2 => SShort
@@ -442,6 +448,9 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec4f, HFloat](size)
         case RFloat => RandomDataArray[Vec4f, RFloat](size)
       }
+      case Mat2x3f.Manifest => rawType match {
+        case RFloat => RandomDataArray[Mat2x3f, RFloat](size)
+      }
       
       case MetaManifest.RDouble => rawType match {
         case SByte => RandomDataArray[RDouble, SByte](size)
@@ -486,6 +495,10 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec4d, HFloat](size)
         case RFloat => RandomDataArray[Vec4d, RFloat](size)
         case RDouble => RandomDataArray[Vec4d, RDouble](size)
+      }
+      case Mat2x3d.Manifest => rawType match {
+        case RFloat => RandomDataArray[Mat2x3d, RFloat](size)
+        case RDouble => RandomDataArray[Mat2x3d, RDouble](size)
       }
     }).asInstanceOf[Contiguous[E, Raw]]
   }
@@ -741,6 +754,22 @@ object TestUtil extends FunSuite {
       }
       
       i += 1
+    }
+  }
+
+  final def supportsRawType(primitive: ClassManifest[_], raw: ClassManifest[_]) = {
+    import RawManifest._
+
+    primitive match {
+      case SInt => raw match {
+        case SByte | UByte | SShort | UShort | SInt | UInt => true
+        case _ => false
+      }
+      case RFloat => raw match {
+        case SByte | UByte | SShort | UShort | SInt | UInt | HFloat |RFloat => true
+        case _ => false
+      }
+      case RDouble => true
     }
   }
 }

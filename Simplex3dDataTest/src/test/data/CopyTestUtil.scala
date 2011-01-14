@@ -23,8 +23,8 @@ package test.data
 import java.nio._
 import org.scalatest._
 import simplex3d.data._
-import simplex3d.math.floatx.{functions => fx}
-import simplex3d.math.doublex.{functions => dx}
+import simplex3d.math.floatx.{functions => fx, _}
+import simplex3d.math.doublex.{functions => dx, _}
 import simplex3d.math.doublex.functions._
 
 import TestUtil._
@@ -39,7 +39,7 @@ object CopyTestUtil extends FunSuite {
   private val testSize = 7
   private val maxCopyOffset = 4
 
-  private val maxByteStride = 8*8 //8 bytes for Double * 8 elements stride
+  private val maxByteStride = 8*12 //8 bytes for Double * 12 elements stride
   private val maxTrailingBytes = 8
   private[this] val cacheSize = 1 + testSize*maxByteStride + maxTrailingBytes
   private[this] val buffCache = Array(new Array[ByteBuffer](cacheSize), new Array[ByteBuffer](cacheSize))
@@ -457,15 +457,19 @@ object CopyTestUtil extends FunSuite {
     val psize = original.size*original.components
     val poffset = maxCopyOffset*original.components
     
-    for (size <- psize - poffset until psize; conversion <- 0 to 1) {
+    for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (conversion == 0) genRandomSeq(original.primitive.elemManifest, original.rawType, size)
-        else genRandomSeq(original.primitive.elemManifest, conversionType(original.rawType), size)
+        if (conversion) genRandomSeq(original.primitive.elemManifest, original.rawType, size)
+        else genRandomSeq(
+          original.primitive.elemManifest,
+          conversionType(original.primitive.elemManifest, original.rawType),
+          size
+        )
 
       val srcBackup = dupSeq2(src)
 
       val converted =
-        if (conversion == 0) src
+        if (conversion) src
         else convert(src, original.rawType)
     
       for (
@@ -626,15 +630,15 @@ object CopyTestUtil extends FunSuite {
     }
 
 
-    for (size <- original.size - maxCopyOffset until original.size; conversion <- 0 to 1) {
+    for (size <- original.size - maxCopyOffset until original.size; conversion <- List(true, false)) {
       val src =
-        if (conversion == 0) genRandomSeq(original.elemManifest, original.rawType, size)
-        else genRandomSeq(original.elemManifest, conversionType(original.rawType), size)
+        if (conversion) genRandomSeq(original.elemManifest, original.rawType, size)
+        else genRandomSeq(original.elemManifest, conversionType(original.elemManifest, original.rawType), size)
 
       val srcBackup = dupSeq2(src)
 
       val converted =
-        if (conversion == 0) src
+        if (conversion) src
         else convert(src, original.rawType)
 
       for (
@@ -660,19 +664,27 @@ object CopyTestUtil extends FunSuite {
       genRandomSeq(MetaManifest.SInt, RawType.SInt, s.size).asInstanceOf[Data[E]]
     }
   }
-  private def conversionType(rawType: Int) :Int = {
+  private def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
     import RawType._
-    rawType match {
-      case SByte => UShort
-      case UByte => UShort
-      case SShort => UShort
-      case UShort => SByte
-      case SInt => UShort
-      case UInt => UShort
-      case HFloat => RFloat
-      case RFloat => SShort
-      case RDouble => SShort
+    elem match {
+      case Mat2x3f.Manifest => RFloat
+      case Mat2x3d.Manifest => rawType match {
+        case RFloat => RDouble
+        case RDouble => RFloat
+      }
+      case _ => rawType match {
+        case SByte => UShort
+        case UByte => UShort
+        case SShort => UShort
+        case UShort => SByte
+        case SInt => UShort
+        case UInt => UShort
+        case HFloat => RFloat
+        case RFloat => SShort
+        case RDouble => SShort
+      }
     }
+    
   }
   private def verify(a: Buffer, b: Buffer) {
     assert(a.position == 0)

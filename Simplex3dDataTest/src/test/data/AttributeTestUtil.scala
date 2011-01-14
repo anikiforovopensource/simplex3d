@@ -163,7 +163,7 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.byteOffset == seq.bytesPerComponent*seq.offset)
     assert(seq.byteStride == seq.bytesPerComponent*seq.stride)
 
-    if (data != null) assert(seq.size == size(data.limit, seq.offset, seq.stride, seq.components))
+    if (data != null) assert(seq.size == dataSeqSize(data.limit, seq.offset, seq.stride, seq.components))
     assert(seq.size == seq.length)
 
     if (seq.readOnly) {

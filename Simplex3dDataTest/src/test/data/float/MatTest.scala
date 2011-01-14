@@ -25,6 +25,8 @@ import org.scalatest._
 import simplex3d.math.floatx._
 import simplex3d.data._
 import simplex3d.data.float._
+import AdapterAttribs._
+import AdapterTestUtil._
 
 
 /**
@@ -32,7 +34,34 @@ import simplex3d.data.float._
  */
 class MatTest extends FunSuite {
 
+  val a1 = Vec2f(2, 3)
+  val a2 = Vec2f(4, 5)
+  val a3 = Vec2f(6, 7)
+  val a4 = Vec2f(8, 9)
+
+  val b1 = Vec3f(2, 3, 4)
+  val b2 = Vec3f(5, 6, 7)
+  val b3 = Vec3f(8, 9, 10)
+  val b4 = Vec3f(11, 12, 13)
+
+  val c1 = Vec4f(2, 3, 4, 5)
+  val c2 = Vec4f(6, 7, 8, 9)
+  val c3 = Vec4f(10, 11, 12, 13)
+  val c4 = Vec4f(14, 15, 16, 17)
+
+  def flatten2(values: Vec2f*) = DataArray[Vec2f, RFloat](values: _*).primitive
+  def flatten3(values: Vec3f*) = DataArray[Vec3f, RFloat](values: _*).primitive
+  def flatten4(values: Vec4f*) = DataArray[Vec4f, RFloat](values: _*).primitive
+
   test("Adapters") {
-    
+    testAdapter(FactoryMat2x2f)(Mat2x2f(a1, a2), flatten2(a1, a2))
+    testAdapter(FactoryMat2x3f)(Mat2x3f(a1, a2, a3), flatten2(a1, a2, a3))
+    testAdapter(FactoryMat2x4f)(Mat2x4f(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))
+    testAdapter(FactoryMat3x2f)(Mat3x2f(b1, b2), flatten3(b1, b2))
+    testAdapter(FactoryMat3x3f)(Mat3x3f(b1, b2, b3), flatten3(b1, b2, b3))
+    testAdapter(FactoryMat3x4f)(Mat3x4f(b1, b2, b3, b4), flatten3(b1, b2, b3, b4))
+    testAdapter(FactoryMat4x2f)(Mat4x2f(c1, c2), flatten4(c1, c2))
+    testAdapter(FactoryMat4x3f)(Mat4x3f(c1, c2, c3), flatten4(c1, c2, c3))
+    testAdapter(FactoryMat4x4f)(Mat4x4f(c1, c2, c3, c4), flatten4(c1, c2, c3, c4))
   }
 }

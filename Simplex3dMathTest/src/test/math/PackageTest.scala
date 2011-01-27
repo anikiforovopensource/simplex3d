@@ -35,6 +35,13 @@ class PackageTest extends FunSuite {
     val i2 = 2*Vec2i(1)
     assert(i2.isInstanceOf[Vec2i])
 
+    val i3 = 2*Vec3i(1)
+    assert(i3.isInstanceOf[Vec3i])
+
+    val i4 = 2*Vec4i(1)
+    assert(i4.isInstanceOf[Vec4i])
+
+
     // the following passes if it compiles
     type av2 = ReadVec2i
     type cv2 = ConstVec2i
@@ -53,5 +60,9 @@ class PackageTest extends FunSuite {
     val cv4 = ConstVec4i
     type v4 = Vec4i
     val v4 = Vec4i
+
+    type m2 = AnyMat2x2[_]
+    type m3 = AnyMat3x3[_]
+    type m4 = AnyMat4x4[_]
   }
 }

@@ -36,7 +36,7 @@ private[data] abstract class BaseRFloat[+R <: DefinedFloat](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends BaseSeq[RFloat, Float, Float, R](shared, prim, ro, off, str)
+extends AbstractData[RFloat, Float, Float, R](shared, prim, ro, off, str)
 with CompositionFactory[RFloat, DefinedFloat]
 {
   final def elemManifest = MetaManifest.RFloat

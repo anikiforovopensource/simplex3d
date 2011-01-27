@@ -36,7 +36,7 @@ private[data] abstract class BaseRDouble[+R <: DefinedDouble](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends BaseSeq[RDouble, Double, Double, R](shared, prim, ro, off, str)
+extends AbstractData[RDouble, Double, Double, R](shared, prim, ro, off, str)
 with CompositionFactory[RDouble, DefinedDouble]
 {
   final def elemManifest = MetaManifest.RDouble

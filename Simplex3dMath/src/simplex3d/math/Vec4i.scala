@@ -239,7 +239,7 @@ object ConstVec4i {
   def apply(x: Int, yzw: AnyVec3[_]) =
     new ConstVec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new ConstVec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
 
   def apply(q: AnyQuat4[_]) =
@@ -570,7 +570,7 @@ object Vec4i {
   def apply(x: Int, yzw: AnyVec3[_]) =
     new Vec4i(x, yzw.ix, yzw.iy, yzw.iz)
 
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new Vec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
 
   def apply(q: AnyQuat4[_]) =

@@ -27,7 +27,7 @@ import simplex3d.math.*;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedMat4f<P> extends AnyMat4x4<P> implements Serializable {
+abstract class ProtectedMat4f<P> extends AnyMat4<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
     float p00; float p10; float p20; float p30;
     float p01; float p11; float p21; float p31;

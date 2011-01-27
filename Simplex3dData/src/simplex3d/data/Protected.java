@@ -51,7 +51,7 @@ abstract class Protected<A> {
 
     protected final Object writeReplace() throws ObjectStreamException {
         if (this instanceof ReadDataArray) {
-            ReadBaseSeq src = (ReadBaseSeq) this;
+            ReadAbstractData src = (ReadAbstractData) this;
 
             if (src.primitive() == this) {
                 SerializablePrimitive data = (SerializablePrimitive) mkSerializableInstance();

@@ -25,7 +25,10 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec4[P] extends AnyVec3or4[P] {
+abstract class AnyVec4[P] private[math] () extends AnyVec3or4[P] {
+
+  override def clone() = this
+  
 
   private[math] def bw: Boolean
   private[math] def iw: Int

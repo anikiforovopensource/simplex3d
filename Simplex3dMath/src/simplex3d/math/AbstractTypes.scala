@@ -28,7 +28,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyQuat4[P] {
+abstract class AnyQuat4[P] private[math] () {
   private[math] def fa: Float
   private[math] def fb: Float
   private[math] def fc: Float
@@ -38,6 +38,8 @@ private[math] abstract class AnyQuat4[P] {
   private[math] def db: Double
   private[math] def dc: Double
   private[math] def dd: Double
+
+  override def clone() = this
 }
 
 /** <code>ReadMat</code> is a superclass of all the matrices.
@@ -47,7 +49,7 @@ private[math] abstract class AnyQuat4[P] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat[P] {
+abstract class AnyMat[P] private[math] () {
   private[math] def f00: Float
   private[math] def f10: Float
   private[math] def f20: Float = 0
@@ -88,16 +90,20 @@ private[math] abstract class AnyMat[P] {
   private[math] def d13: Double = 0
   private[math] def d23: Double = 0
   private[math] def d33: Double = 1
+
+  override def clone() = this
 }
 
-/** <code>AnyMat2x2</code> is a superclass of all the 2x2 matrices.
+/** <code>AnyMat2</code> is a superclass of all the 2x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x2[P] extends AnyMat[P]
+abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat2x3</code> is a superclass of all the 2x3 matrices.
  * <p>
@@ -106,7 +112,9 @@ private[math] abstract class AnyMat2x2[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x3[P] extends AnyMat[P]
+abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat2x4</code> is a superclass of all the 2x4 matrices.
  * <p>
@@ -115,7 +123,9 @@ private[math] abstract class AnyMat2x3[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat2x4[P] extends AnyMat[P]
+abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat3x2</code> is a superclass of all the 3x2 matrices.
  * <p>
@@ -124,16 +134,20 @@ private[math] abstract class AnyMat2x4[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x2[P] extends AnyMat[P]
+abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
-/** <code>AnyMat3x3</code> is a superclass of all the 3x3 matrices.
+/** <code>AnyMat3</code> is a superclass of all the 3x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x3[P] extends AnyMat[P]
+abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat3x4</code> is a superclass of all the 3x4 matrices.
  * <p>
@@ -142,7 +156,9 @@ private[math] abstract class AnyMat3x3[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat3x4[P] extends AnyMat[P]
+abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat4x2</code> is a superclass of all the 4x2 matrices.
  * <p>
@@ -151,7 +167,9 @@ private[math] abstract class AnyMat3x4[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x2[P] extends AnyMat[P]
+abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
 /** <code>AnyMat4x3</code> is a superclass of all the 4x3 matrices.
  * <p>
@@ -160,13 +178,17 @@ private[math] abstract class AnyMat4x2[P] extends AnyMat[P]
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x3[P] extends AnyMat[P]
+abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}
 
-/** <code>AnyMat4x4</code> is a superclass of all the 4x4 matrices.
+/** <code>AnyMat4</code> is a superclass of all the 4x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyMat4x4[P] extends AnyMat[P]
+abstract class AnyMat4[P] private[math] () extends AnyMat[P] {
+  override def clone() = this
+}

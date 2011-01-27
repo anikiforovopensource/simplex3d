@@ -277,7 +277,7 @@ extends ProtectedMat4d[Double]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat4x4[_] =>
+      case m: AnyMat4[_] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 && d30 == m.d30 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 && d31 == m.d31 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22 && d32 == m.d32 &&
@@ -624,5 +624,5 @@ object Mat4d {
   def unapply(m: ReadMat4d) = Some((m(0), m(1), m(2), m(3)))
 
   implicit def toMutable(m: ReadMat4d) = Mat4d(m)
-  implicit def castFloat(m: AnyMat4x4[Float]) = apply(m)
+  implicit def castFloat(m: AnyMat4[Float]) = apply(m)
 }

@@ -57,7 +57,7 @@ package object double {
   implicit def quat4FloatToDouble(q: AnyQuat4[Float]) :ConstQuat4d =
     new ConstQuat4d(q.da, q.db, q.dc, q.dd)
 
-  implicit def mat2x2FloatToDouble(m: AnyMat2x2[Float]) :ConstMat2d =
+  implicit def mat2x2FloatToDouble(m: AnyMat2[Float]) :ConstMat2d =
     ConstMat2d(m)
 
   implicit def mat2x3FloatToDouble(m: AnyMat2x3[Float]) :ConstMat2x3d =
@@ -69,7 +69,7 @@ package object double {
   implicit def mat3x2FloatToDouble(m: AnyMat3x2[Float]) :ConstMat3x2d =
     ConstMat3x2d(m)
 
-  implicit def mat3x3FloatToDouble(m: AnyMat3x3[Float]) :ConstMat3d =
+  implicit def mat3x3FloatToDouble(m: AnyMat3[Float]) :ConstMat3d =
     ConstMat3d(m)
 
   implicit def mat3x4FloatToDouble(m: AnyMat3x4[Float]) :ConstMat3x4d =
@@ -81,7 +81,7 @@ package object double {
   implicit def mat4x3FloatToDouble(m: AnyMat4x3[Float]) :ConstMat4x3d =
     ConstMat4x3d(m)
 
-  implicit def mat4x4FloatToDouble(m: AnyMat4x4[Float]) :ConstMat4d =
+  implicit def mat4x4FloatToDouble(m: AnyMat4[Float]) :ConstMat4d =
     ConstMat4d(m)
 
 

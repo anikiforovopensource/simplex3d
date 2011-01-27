@@ -32,7 +32,7 @@ import scala.annotation.unchecked._
 abstract class CompositeSeq[E <: Composite, +R <: Raw, B <: Defined](
   prim: ReadContiguous[E#Component, R],
   off: Int, str: Int
-) extends BaseSeq[E, E#Const, E#Read, R](
+) extends AbstractData[E, E#Const, E#Read, R](
   prim.sharedStore, prim, prim.readOnly,
   off, str
 ) with CompositionFactory[E, B] {

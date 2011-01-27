@@ -175,7 +175,7 @@ extends ProtectedMat2d[Double]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2x2[_] =>
+      case m: AnyMat2[_] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>
@@ -388,5 +388,5 @@ object Mat2d {
   def unapply(m: ReadMat2d) = Some((m(0), m(1)))
 
   implicit def toMutable(m: ReadMat2d) = Mat2d(m)
-  implicit def castFloat(m: AnyMat2x2[Float]) = apply(m)
+  implicit def castFloat(m: AnyMat2[Float]) = apply(m)
 }

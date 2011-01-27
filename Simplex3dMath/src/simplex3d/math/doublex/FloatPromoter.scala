@@ -50,10 +50,10 @@ final class FloatPromoter(val value: Double) {
   def +(q: AnyQuat4[Float]) = new Quat4d(value + q.da, value + q.db, value + q.dc, value + q.dd)
   def -(q: AnyQuat4[Float]) = new Quat4d(value - q.da, value - q.db, value - q.dc, value - q.dd)
 
-  def *(m: AnyMat2x2[Float]) = Mat2d(m)*value
-  def /(m: AnyMat2x2[Float]) = Mat2d(m).divideByComponent(value)
-  def +(m: AnyMat2x2[Float]) = Mat2d(m) + value
-  def -(m: AnyMat2x2[Float]) = { val t = -Mat2d(m); t += value; t }
+  def *(m: AnyMat2[Float]) = Mat2d(m)*value
+  def /(m: AnyMat2[Float]) = Mat2d(m).divideByComponent(value)
+  def +(m: AnyMat2[Float]) = Mat2d(m) + value
+  def -(m: AnyMat2[Float]) = { val t = -Mat2d(m); t += value; t }
 
   def *(m: AnyMat2x3[Float]) = Mat2x3d(m)*value
   def /(m: AnyMat2x3[Float]) = Mat2x3d(m).divideByComponent(value)
@@ -70,10 +70,10 @@ final class FloatPromoter(val value: Double) {
   def +(m: AnyMat3x2[Float]) = Mat3x2d(m) + value
   def -(m: AnyMat3x2[Float]) = { val t = -Mat3x2d(m); t += value; t }
 
-  def *(m: AnyMat3x3[Float]) = Mat3d(m)*value
-  def /(m: AnyMat3x3[Float]) = Mat3d(m).divideByComponent(value)
-  def +(m: AnyMat3x3[Float]) = Mat3d(m) + value
-  def -(m: AnyMat3x3[Float]) = { val t = -Mat3d(m); t += value; t }
+  def *(m: AnyMat3[Float]) = Mat3d(m)*value
+  def /(m: AnyMat3[Float]) = Mat3d(m).divideByComponent(value)
+  def +(m: AnyMat3[Float]) = Mat3d(m) + value
+  def -(m: AnyMat3[Float]) = { val t = -Mat3d(m); t += value; t }
 
   def *(m: AnyMat3x4[Float]) = Mat3x4d(m)*value
   def /(m: AnyMat3x4[Float]) = Mat3x4d(m).divideByComponent(value)
@@ -90,8 +90,8 @@ final class FloatPromoter(val value: Double) {
   def +(m: AnyMat4x3[Float]) = Mat4x3d(m) + value
   def -(m: AnyMat4x3[Float]) = { val t = -Mat4x3d(m); t += value; t }
 
-  def *(m: AnyMat4x4[Float]) = Mat4d(m)*value
-  def /(m: AnyMat4x4[Float]) = Mat4d(m).divideByComponent(value)
-  def +(m: AnyMat4x4[Float]) = Mat4d(m) + value
-  def -(m: AnyMat4x4[Float]) = { val t = -Mat4d(m); t += value; t }
+  def *(m: AnyMat4[Float]) = Mat4d(m)*value
+  def /(m: AnyMat4[Float]) = Mat4d(m).divideByComponent(value)
+  def +(m: AnyMat4[Float]) = Mat4d(m) + value
+  def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += value; t }
 }

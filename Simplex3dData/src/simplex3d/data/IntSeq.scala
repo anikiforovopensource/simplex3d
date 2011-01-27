@@ -33,7 +33,7 @@ private[data] sealed abstract class BaseSInt[+R <: DefinedInt](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends BaseSeq[SInt, Int, Int, R](shared, prim, ro, off, str)
+extends AbstractData[SInt, Int, Int, R](shared, prim, ro, off, str)
 with CompositionFactory[SInt, DefinedInt]
 {
   final def elemManifest = MetaManifest.SInt

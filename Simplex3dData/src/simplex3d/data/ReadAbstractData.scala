@@ -30,7 +30,7 @@ import StoreType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class ReadBaseSeq[
+private[data] abstract class ReadAbstractData[
   E <: Meta, @specialized(Int, Float, Double) SRead, +R <: Raw
 ](
   shared: AnyRef, prim: AnyRef, ro: Boolean,

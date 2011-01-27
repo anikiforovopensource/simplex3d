@@ -25,7 +25,10 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec[P] {
+abstract class AnyVec[P] private[math] () {
+
+  override def clone() = this
+
 
   private[math] type R2
   private[math] type R3

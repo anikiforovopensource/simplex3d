@@ -222,7 +222,7 @@ extends ProtectedMat3d[Double]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat3x3[_] =>
+      case m: AnyMat3[_] =>
         d00 == m.d00 && d10 == m.d10 && d20 == m.d20 &&
         d01 == m.d01 && d11 == m.d11 && d21 == m.d21 &&
         d02 == m.d02 && d12 == m.d12 && d22 == m.d22
@@ -491,5 +491,5 @@ object Mat3d {
   def unapply(m: ReadMat3d) = Some((m(0), m(1), m(2)))
 
   implicit def toMutable(m: ReadMat3d) = Mat3d(m)
-  implicit def castFloat(m: AnyMat3x3[Float]) = apply(m)
+  implicit def castFloat(m: AnyMat3[Float]) = apply(m)
 }

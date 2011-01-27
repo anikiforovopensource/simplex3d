@@ -345,7 +345,7 @@ object ConstVec4b {
    * @return a new instance of ConstVec4b with components initialized
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new ConstVec4b(Bool(m.f00), Bool(m.f10), Bool(m.f01), Bool(m.f11))
 
   /** Makes a new instance of ConstVec4b from quaternion.
@@ -775,7 +775,7 @@ object Vec4b {
    * @return a new instance of Vec4b with components initialized
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new Vec4b(Bool(m.f00), Bool(m.f10), Bool(m.f01), Bool(m.f11))
 
   /** Makes a new instance of Vec4b from quaternion.

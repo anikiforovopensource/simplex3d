@@ -31,7 +31,7 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseSeq[
+private[data] abstract class AbstractData[
   E <: Meta,
   @specialized(Int, Float, Double) SRead <: SWrite,
   @specialized(Int, Float, Double) SWrite,
@@ -39,7 +39,7 @@ private[data] abstract class BaseSeq[
 ](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadBaseSeq[E, SRead, R](
+) extends ReadAbstractData[E, SRead, R](
   shared, prim, ro,
   off, str
 ) {
@@ -75,7 +75,7 @@ private[data] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Int, Int, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[_ <: Meta, Int, Int, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -91,7 +91,7 @@ private[data] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Float, Float, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[_ <: Meta, Float, Float, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -107,7 +107,7 @@ private[data] abstract class BaseSeq[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[BaseSeq[_ <: Meta, Double, Double, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[_ <: Meta, Double, Double, _ <: Raw]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1

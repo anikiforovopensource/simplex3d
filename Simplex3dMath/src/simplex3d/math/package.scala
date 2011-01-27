@@ -80,4 +80,10 @@ package object math {
   type inVec4i = ReadVec4i
   type outVec4i = Vec4i with Implicits[Off]
   @inline implicit def outVec4i(u: Vec4i) = u.asInstanceOf[outVec4i]
+
+
+  // Matrix aliases
+  type AnyMat2x2[P] = AnyMat2[P]
+  type AnyMat3x3[P] = AnyMat3[P]
+  type AnyMat4x4[P] = AnyMat4[P]
 }

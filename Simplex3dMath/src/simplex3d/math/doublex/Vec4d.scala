@@ -227,7 +227,7 @@ object ConstVec4d {
   def apply(x: Double, yzw: AnyVec3[_]) =
     new ConstVec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new ConstVec4d(m.d00, m.d10, m.d01, m.d11)
 
   def apply(q: AnyQuat4[_]) =
@@ -545,7 +545,7 @@ object Vec4d {
   def apply(x: Double, yzw: AnyVec3[_]) =
     new Vec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(m: AnyMat2x2[_]) =
+  def apply(m: AnyMat2[_]) =
     new Vec4d(m.d00, m.d10, m.d01, m.d11)
 
   def apply(q: AnyQuat4[_]) =

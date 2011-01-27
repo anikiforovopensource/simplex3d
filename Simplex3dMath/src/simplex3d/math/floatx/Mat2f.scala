@@ -175,7 +175,7 @@ extends ProtectedMat2f[Float]
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case m: AnyMat2x2[_] =>
+      case m: AnyMat2[_] =>
         d00 == m.d00 && d10 == m.d10 &&
         d01 == m.d01 && d11 == m.d11
       case _ =>

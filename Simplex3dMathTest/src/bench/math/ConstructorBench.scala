@@ -112,7 +112,7 @@ object ConstructorBench {
         i + 3, i + 4, i + 5,
         i + 6, i + 7, i + 8
       )
-      val r = u*9
+      val r = u + 1
       a += Int(r.m00 + r.m11 + r.m22)
 
       i += 1
@@ -132,7 +132,7 @@ object ConstructorBench {
         i + 3, i + 4, i + 5,
         i + 6, i + 7, i + 8
       )
-      val r = u*9
+      val r = u + 1
       a += Int(r.m00 + r.m11 + r.m22)
 
       i += 1
@@ -151,9 +151,9 @@ class SimpleMat3d(
   var m01: Double, var m11: Double, var m21: Double,
   var m02: Double, var m12: Double, var m22: Double
 ) {
-  def *(c: Double) = new SimpleMat3d(
-    m00*c, m10*c, m20*c,
-    m01*c, m11*c, m21*c,
-    m02*c, m12*c, m22*c
+  def +(c: Double) = new SimpleMat3d(
+    m00+c, m10+c, m20+c,
+    m01+c, m11+c, m21+c,
+    m02+c, m12+c, m22+c
   )
 }

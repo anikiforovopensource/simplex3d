@@ -397,7 +397,7 @@ final class Mat2x4f private[math] (
     m03 = a03; m13 = a13
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat2x4f) {
     m00 /= m.m00; m10 /= m.m10
@@ -405,6 +405,7 @@ final class Mat2x4f private[math] (
     m02 /= m.m02; m12 /= m.m12
     m03 /= m.m03; m13 /= m.m13
   }
+
 
   override def clone() = Mat2x4f(this)
   

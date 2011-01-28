@@ -380,13 +380,14 @@ final class Mat3f private[math] (
     m02 = a02; m12 = a12; m22 = a22
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat3f) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22
   }
+
 
   override def clone() = Mat3f(this)
   

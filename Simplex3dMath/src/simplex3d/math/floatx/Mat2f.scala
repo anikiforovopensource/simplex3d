@@ -300,12 +300,13 @@ final class Mat2f private[math] (
     m01 = a01; m11 = a11
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat2f) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
   }
+
 
   override def clone() = Mat2f(this)
   

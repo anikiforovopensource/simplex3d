@@ -384,13 +384,58 @@ final class Mat2x3d private[math] (
     m02 = a02; m12 = a12
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat2x3d) {
     m00 /= m.m00; m10 /= m.m10
     m01 /= m.m01; m11 /= m.m11
     m02 /= m.m02; m12 /= m.m12
   }
+
+  final def applyScale(s: Double) { this *= s }
+  final def applyScale(s: inVec2d) {
+    m00 *= s.x; m10 *= s.y
+    m01 *= s.x; m11 *= s.y
+    m02 *= s.x; m12 *= s.y
+  }
+
+  final def applyRotation(angle: Double) {
+    applyTransform(rotationMat(angle))
+  }
+
+  final def applyTranslation(u: inVec2d) {
+    m02 += u.x; m12 += u.y
+  }
+
+  final def applyTransform(m: inMat2x3d) {
+    val t00 = m.m00*m00 + m.m01*m10
+    val t10 = m.m10*m00 + m.m11*m10
+
+    val t01 = m.m00*m01 + m.m01*m11
+    val t11 = m.m10*m01 + m.m11*m11
+
+    val t02 = m.m00*m02 + m.m01*m12 + m.m02
+    val t12 = m.m10*m02 + m.m11*m12 + m.m12
+    
+    m00 = t00; m10 = t10
+    m01 = t01; m11 = t11
+    m02 = t02; m12 = t12
+  }
+  final def applyTransform(m: inMat2d) {
+    val t00 = m.m00*m00 + m.m01*m10
+    val t10 = m.m10*m00 + m.m11*m10
+
+    val t01 = m.m00*m01 + m.m01*m11
+    val t11 = m.m10*m01 + m.m11*m11
+
+    val t02 = m.m00*m02 + m.m01*m12
+    val t12 = m.m10*m02 + m.m11*m12
+    
+    m00 = t00; m10 = t10
+    m01 = t01; m11 = t11
+    m02 = t02; m12 = t12
+  }
+
 
   override def clone() = Mat2x3d(this)
   

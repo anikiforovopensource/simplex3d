@@ -321,12 +321,13 @@ final class Mat3x2f private[math] (
     m01 = a01; m11 = a11; m21 = a21
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat3x2f) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
   }
+
 
   override def clone() = Mat3x2f(this)
   

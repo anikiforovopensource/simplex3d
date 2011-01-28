@@ -117,5 +117,43 @@ class Transform2fTest extends FunSuite {
       test(Mat2x3 translate(Vec2(r, r)))
       test(Mat2x3.Identity)
     }
+
+
+    // test applyTransform
+    def testApply(t: Mat2x3) {
+      val s = r
+      val ts = t.clone(); ts.applyScale(s)
+      assert(approxEqual(ts, t scale(s), 1e-6f))
+
+      val sv = Vec2(r, r)
+      val tsv = t.clone(); tsv.applyScale(sv)
+      assert(approxEqual(tsv, t scale(sv), 1e-6f))
+
+      val a = r
+      val ta = t.clone(); ta.applyRotation(a)
+      assert(approxEqual(ta, t rotate(a), 1e-6f))
+
+      val p = Vec2(r, r)
+      val tp = t.clone(); tp.applyTranslation(p)
+      assert(approxEqual(tp, t translate(p), 1e-6f))
+
+      val m2 = ConstMat2(r, r, r, r)
+      val tm2 = t.clone(); tm2.applyTransform(m2)
+      assert(approxEqual(tm2, t concat(m2), 1e-6f))
+
+      val m2x3 = ConstMat2x3(r, r, r, r, r, r)
+      val tm2x3 = t.clone(); tm2x3.applyTransform(m2x3)
+      assert(approxEqual(tm2x3, t concat(m2x3), 1e-6f))
+
+      val self = t.clone(); self.applyTransform(self)
+      assert(approxEqual(self, t concat(t), 1e-6f))
+    }
+
+    for (i <- 0 until 100) {
+      testApply(Mat2x3(r, r, r, r, r, r))
+      testApply(Mat2x3(Mat2x2(r, r, r, r)))
+      testApply(Mat2x3 scale(Vec2(r, r)))
+      testApply(Mat2x3 translate(Vec2(r, r)))
+    }
   }
 }

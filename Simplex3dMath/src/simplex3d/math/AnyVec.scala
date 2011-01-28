@@ -30,9 +30,9 @@ abstract class AnyVec[P] private[math] () {
   override def clone() = this
 
 
-  private[math] type R2
-  private[math] type R3
-  private[math] type R4
+  private[math] type R2 <: AnyVec2[P]
+  private[math] type R3 <: AnyVec3[P]
+  private[math] type R4 <: AnyVec4[P]
   
   private[math] type C2 <: R2
   private[math] type C3 <: R3

@@ -254,7 +254,7 @@ extends ProtectedMat3x4d[Double]
     m03*s.x, m13*s.y, m23*s.z
   )
 
-  /** Appends rotation to the current transformation. The rotation quaternion
+  /** Combines current transformation with rotation. The rotation quaternion
    * is normalized first and then transformed into a rotation matrix which
    * is concatenated with the current transformation. If you want to avoid
    * normalization, use <code>concat(rotationMat(q))</code> instead.
@@ -530,7 +530,7 @@ final class Mat3x4d private[math] (
     m03 = a03; m13 = a13; m23 = a23
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat3x4d) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
@@ -538,6 +538,117 @@ final class Mat3x4d private[math] (
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23
   }
+
+  final def applyScale(s: Double) { this *= s }
+  final def applyScale(s: inVec3d) {
+    m00 *= s.x; m10 *= s.y; m20 *= s.z
+    m01 *= s.x; m11 *= s.y; m21 *= s.z
+    m02 *= s.x; m12 *= s.y; m22 *= s.z
+    m03 *= s.x; m13 *= s.y; m23 *= s.z
+  }
+
+  /** Appends rotation to the current transformation. The rotation quaternion
+   * is normalized first and then transformed into a rotation matrix which
+   * is concatenated with the current transformation. If you want to avoid
+   * normalization, use <code>applyTransform(rotationMat(q))</code> instead.
+   * @param q rotation quaternion.
+   */
+  final def applyRotation(q: inQuat4d) {
+    applyTransform(rotationMat(normalize(q)))
+  }
+
+  final def applyRotationX(angle: Double) {
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    val t10 = cosA*m10 - sinA*m20; val t20 = sinA*m10 + cosA*m20
+    val t11 = cosA*m11 - sinA*m21; val t21 = sinA*m11 + cosA*m21
+    val t12 = cosA*m12 - sinA*m22; val t22 = sinA*m12 + cosA*m22
+    val t13 = cosA*m13 - sinA*m23; val t23 = sinA*m13 + cosA*m23
+    
+    m10 = t10; m20 = t20
+    m11 = t11; m21 = t21
+    m12 = t12; m22 = t22
+    m13 = t13; m23 = t23
+  }
+  final def applyRotationY(angle: Double) {
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+
+    val t00 = cosA*m00 + sinA*m20; val t20 = cosA*m20 - sinA*m00
+    val t01 = cosA*m01 + sinA*m21; val t21 = cosA*m21 - sinA*m01
+    val t02 = cosA*m02 + sinA*m22; val t22 = cosA*m22 - sinA*m02
+    val t03 = cosA*m03 + sinA*m23; val t23 = cosA*m23 - sinA*m03
+    
+    m00 = t00; m20 = t20
+    m01 = t01; m21 = t21
+    m02 = t02; m22 = t22
+    m03 = t03; m23 = t23
+  }
+  final def applyRotationZ(angle: Double) {
+    val sinA = sin(angle)
+    val cosA = cos(angle)
+    
+    val t00 = cosA*m00 - sinA*m10; val t10 = sinA*m00 + cosA*m10
+    val t01 = cosA*m01 - sinA*m11; val t11 = sinA*m01 + cosA*m11
+    val t02 = cosA*m02 - sinA*m12; val t12 = sinA*m02 + cosA*m12
+    val t03 = cosA*m03 - sinA*m13; val t13 = sinA*m03 + cosA*m13
+    
+    m00 = t00; m10 = t10
+    m01 = t01; m11 = t11
+    m02 = t02; m12 = t12
+    m03 = t03; m13 = t13
+  }
+
+  final def applyTranslation(u: inVec3d) {
+    m03 += u.x; m13 += u.y; m23 += u.z
+  }
+
+  final def applyTransform(m: inMat3x4d) {
+    val t00 = m.m00*m00 + m.m01*m10 + m.m02*m20
+    val t10 = m.m10*m00 + m.m11*m10 + m.m12*m20
+    val t20 = m.m20*m00 + m.m21*m10 + m.m22*m20
+
+    val t01 = m.m00*m01 + m.m01*m11 + m.m02*m21
+    val t11 = m.m10*m01 + m.m11*m11 + m.m12*m21
+    val t21 = m.m20*m01 + m.m21*m11 + m.m22*m21
+
+    val t02 = m.m00*m02 + m.m01*m12 + m.m02*m22
+    val t12 = m.m10*m02 + m.m11*m12 + m.m12*m22
+    val t22 = m.m20*m02 + m.m21*m12 + m.m22*m22
+
+    val t03 = m.m00*m03 + m.m01*m13 + m.m02*m23 + m.m03
+    val t13 = m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13
+    val t23 = m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
+    
+    m00 = t00; m10 = t10; m20 = t20
+    m01 = t01; m11 = t11; m21 = t21
+    m02 = t02; m12 = t12; m22 = t22
+    m03 = t03; m13 = t13; m23 = t23
+  }
+  final def applyTransform(m: inMat3d) {
+    val t00 = m.m00*m00 + m.m01*m10 + m.m02*m20
+    val t10 = m.m10*m00 + m.m11*m10 + m.m12*m20
+    val t20 = m.m20*m00 + m.m21*m10 + m.m22*m20
+
+    val t01 = m.m00*m01 + m.m01*m11 + m.m02*m21
+    val t11 = m.m10*m01 + m.m11*m11 + m.m12*m21
+    val t21 = m.m20*m01 + m.m21*m11 + m.m22*m21
+
+    val t02 = m.m00*m02 + m.m01*m12 + m.m02*m22
+    val t12 = m.m10*m02 + m.m11*m12 + m.m12*m22
+    val t22 = m.m20*m02 + m.m21*m12 + m.m22*m22
+
+    val t03 = m.m00*m03 + m.m01*m13 + m.m02*m23
+    val t13 = m.m10*m03 + m.m11*m13 + m.m12*m23
+    val t23 = m.m20*m03 + m.m21*m13 + m.m22*m23
+    
+    m00 = t00; m10 = t10; m20 = t20
+    m01 = t01; m11 = t11; m21 = t21
+    m02 = t02; m12 = t12; m22 = t22
+    m03 = t03; m13 = t13; m23 = t23
+  }
+
 
   override def clone() = Mat3x4d(this)
   

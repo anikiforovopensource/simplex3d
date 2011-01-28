@@ -481,7 +481,7 @@ final class Mat4f private[math] (
     m03 = a03; m13 = a13; m23 = a23; m33 = a33
   }
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   def /=(m: inMat4f) {
     m00 /= m.m00; m10 /= m.m10; m20 /= m.m20; m30 /= m.m30
@@ -489,6 +489,7 @@ final class Mat4f private[math] (
     m02 /= m.m02; m12 /= m.m12; m22 /= m.m22; m32 /= m.m32
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
   }
+
 
   override def clone() = Mat4f(this)
   

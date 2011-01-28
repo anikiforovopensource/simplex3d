@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DataTest package
- * Copyright (C) 2011, Simplex3d Team
+ * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dDataTest.
  *

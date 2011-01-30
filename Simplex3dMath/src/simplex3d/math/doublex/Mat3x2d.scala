@@ -1,6 +1,6 @@
 /*
  * Simplex3d, DoubleMath module
- * Copyright (C) 2009-2011, Aleksey Nikiforov
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -309,16 +309,16 @@ final class Mat3x2d private[math] (
   }
 
   def *=(m: inMat2d) {
-    val a00 = m00*m.m00 + m01*m.m10
-    val a10 = m10*m.m00 + m11*m.m10
-    val a20 = m20*m.m00 + m21*m.m10
+    val t00 = m00*m.m00 + m01*m.m10
+    val t10 = m10*m.m00 + m11*m.m10
+    val t20 = m20*m.m00 + m21*m.m10
 
-    val a01 = m00*m.m01 + m01*m.m11
-    val a11 = m10*m.m01 + m11*m.m11
-    val a21 = m20*m.m01 + m21*m.m11
+    val t01 = m00*m.m01 + m01*m.m11
+    val t11 = m10*m.m01 + m11*m.m11
+    val t21 = m20*m.m01 + m21*m.m11
 
-    m00 = a00; m10 = a10; m20 = a20
-    m01 = a01; m11 = a11; m21 = a21
+    m00 = t00; m10 = t10; m20 = t20
+    m01 = t01; m11 = t11; m21 = t21
   }
   /**
    * Component-wise division.

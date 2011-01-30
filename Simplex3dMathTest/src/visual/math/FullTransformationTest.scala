@@ -80,7 +80,7 @@ object FullTransformationTest {
       Vec3(0, s, 0), Vec3(0, s, s)
     )
   )
-  box.transformation := box.transformation translate Vec3(-s/2)
+  box.transformation.applyTranslation(Vec3(-s/2))
 
   val camRotataion = Quat4 rotateX(radians(-30))
   val cam = Camera(camRotataion, rotateVector(Vec3(0, 0, 20), camRotataion))

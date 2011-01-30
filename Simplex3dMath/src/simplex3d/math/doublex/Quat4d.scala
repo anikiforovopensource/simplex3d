@@ -96,9 +96,6 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
   )
 
   final def rotate(q: inQuat4d) :Quat4d = q*this
-  final def rotate(angle: Double, axis: inVec3d) :Quat4d = {
-    quaternion(angle, normalize(axis))*this
-  }
   final def rotateX(angle: Double) :Quat4d = {
     val halfAngle = angle*0.5
     val qa = cos(halfAngle)
@@ -203,6 +200,52 @@ final class Quat4d private[math] (
     a = na; b = nb; c = nc
   }
 
+  final def applyRotation(q: inQuat4d) {
+    val na = q.a*a - q.b*b - q.c*c - q.d*d
+    val nb = q.a*b + q.b*a + q.c*d - q.d*c
+    val nc = q.a*c - q.b*d + q.c*a + q.d*b
+    d = q.a*d + q.b*c - q.c*b + q.d*a
+
+    a = na; b = nb; c = nc
+  }
+  final def applyRotationX(angle: Double) {
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qb = sin(halfAngle)
+
+    val na = qa*a - qb*b
+    val nb = qa*b + qb*a
+    val nc = qa*c - qb*d
+    d = qa*d + qb*c
+
+    a = na; b = nb; c = nc
+  }
+  final def applyRotationY(angle: Double) {
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qc = sin(halfAngle)
+
+    val na = qa*a - qc*c
+    val nb = qa*b + qc*d
+    val nc = qa*c + qc*a
+    d = qa*d - qc*b
+
+    a = na; b = nb; c = nc
+  }
+  final def applyRotationZ(angle: Double) {
+    val halfAngle = angle*0.5
+    val qa = cos(halfAngle)
+    val qd = sin(halfAngle)
+
+    val na = qa*a - qd*d
+    val nb = qa*b - qd*c
+    val nc = qa*c + qd*b
+    d = qa*d + qd*a
+
+    a = na; b = nb; c = nc
+  }
+
+
   override def clone() = Quat4d(this)
   def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
 
@@ -235,9 +278,6 @@ object Quat4d {
   def unapply(q: ReadQuat4d) = Some((q.a, q.b, q.c, q.d))
 
   def rotate(q: inQuat4d) :Quat4d = Quat4d(q)
-  def rotate(angle: Double, axis: inVec3d) :Quat4d = {
-    quaternion(angle, normalize(axis))
-  }
   def rotateX(angle: Double) :Quat4d = {
     quaternion(angle, Vec3d.UnitX)
   }

@@ -1923,7 +1923,7 @@ object functions extends CommonMath {
   }
 
   /**
-   * This method is equivalent to casting the matrix as 3x3, inverting it
+   * This method is equivalent to casting the matrix to 3x3, inverting it
    * and then casting the result back to 2x3.<br/>
    *
    * This is a general matrix inverse. You can invert transofrmations
@@ -1949,7 +1949,7 @@ object functions extends CommonMath {
   }
 
   /**
-   * This method is equivalent to casting the matrix as 4x4, inverting it
+   * This method is equivalent to casting the matrix to 4x4, inverting it
    * and then casting the result back to 3x4.<br/>
    *
    * This is a general matrix inverse. You can invert transofrmations

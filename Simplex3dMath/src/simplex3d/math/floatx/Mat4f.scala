@@ -1,6 +1,6 @@
 /*
  * Simplex3d, FloatMath module
- * Copyright (C) 2009-2011, Aleksey Nikiforov
+ * Copyright (C) 2009-2011, Simplex3d Team
  *
  * This file is part of Simplex3dMath.
  *
@@ -455,30 +455,30 @@ final class Mat4f private[math] (
   }
 
   def *=(m: inMat4f) {
-    val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
-    val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
-    val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30
-    val a30 = m30*m.m00 + m31*m.m10 + m32*m.m20 + m33*m.m30
+    val t00 = m00*m.m00 + m01*m.m10 + m02*m.m20 + m03*m.m30
+    val t10 = m10*m.m00 + m11*m.m10 + m12*m.m20 + m13*m.m30
+    val t20 = m20*m.m00 + m21*m.m10 + m22*m.m20 + m23*m.m30
+    val t30 = m30*m.m00 + m31*m.m10 + m32*m.m20 + m33*m.m30
 
-    val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
-    val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
-    val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31
-    val a31 = m30*m.m01 + m31*m.m11 + m32*m.m21 + m33*m.m31
+    val t01 = m00*m.m01 + m01*m.m11 + m02*m.m21 + m03*m.m31
+    val t11 = m10*m.m01 + m11*m.m11 + m12*m.m21 + m13*m.m31
+    val t21 = m20*m.m01 + m21*m.m11 + m22*m.m21 + m23*m.m31
+    val t31 = m30*m.m01 + m31*m.m11 + m32*m.m21 + m33*m.m31
 
-    val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32
-    val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
-    val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32
-    val a32 = m30*m.m02 + m31*m.m12 + m32*m.m22 + m33*m.m32
+    val t02 = m00*m.m02 + m01*m.m12 + m02*m.m22 + m03*m.m32
+    val t12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
+    val t22 = m20*m.m02 + m21*m.m12 + m22*m.m22 + m23*m.m32
+    val t32 = m30*m.m02 + m31*m.m12 + m32*m.m22 + m33*m.m32
 
-    val a03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
-    val a13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
-    val a23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
-    val a33 = m30*m.m03 + m31*m.m13 + m32*m.m23 + m33*m.m33
+    val t03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
+    val t13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
+    val t23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
+    val t33 = m30*m.m03 + m31*m.m13 + m32*m.m23 + m33*m.m33
 
-    m00 = a00; m10 = a10; m20 = a20; m30 = a30
-    m01 = a01; m11 = a11; m21 = a21; m31 = a31
-    m02 = a02; m12 = a12; m22 = a22; m32 = a32
-    m03 = a03; m13 = a13; m23 = a23; m33 = a33
+    m00 = t00; m10 = t10; m20 = t20; m30 = t30
+    m01 = t01; m11 = t11; m21 = t21; m31 = t31
+    m02 = t02; m12 = t12; m22 = t22; m32 = t32
+    m03 = t03; m13 = t13; m23 = t23; m33 = t33
   }
   /**
    * Component-wise division.

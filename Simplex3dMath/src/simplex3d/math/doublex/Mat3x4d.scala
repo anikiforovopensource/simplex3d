@@ -522,12 +522,12 @@ final class Mat3x4d private[math] (
 
     val t03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
     val t13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
-    val t23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
+        m23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
 
     m00 = t00; m10 = t10; m20 = t20
     m01 = t01; m11 = t11; m21 = t21
     m02 = t02; m12 = t12; m22 = t22
-    m03 = t03; m13 = t13; m23 = t23
+    m03 = t03; m13 = t13
   }
   /**
    * Component-wise division.
@@ -564,12 +564,12 @@ final class Mat3x4d private[math] (
     val t10 = cosA*m10 - sinA*m20; val t20 = sinA*m10 + cosA*m20
     val t11 = cosA*m11 - sinA*m21; val t21 = sinA*m11 + cosA*m21
     val t12 = cosA*m12 - sinA*m22; val t22 = sinA*m12 + cosA*m22
-    val t13 = cosA*m13 - sinA*m23; val t23 = sinA*m13 + cosA*m23
+    val t13 = cosA*m13 - sinA*m23;     m23 = sinA*m13 + cosA*m23
     
     m10 = t10; m20 = t20
     m11 = t11; m21 = t21
     m12 = t12; m22 = t22
-    m13 = t13; m23 = t23
+    m13 = t13
   }
   final def applyRotationY(angle: Double) {
     val sinA = sin(angle)
@@ -578,12 +578,12 @@ final class Mat3x4d private[math] (
     val t00 = cosA*m00 + sinA*m20; val t20 = cosA*m20 - sinA*m00
     val t01 = cosA*m01 + sinA*m21; val t21 = cosA*m21 - sinA*m01
     val t02 = cosA*m02 + sinA*m22; val t22 = cosA*m22 - sinA*m02
-    val t03 = cosA*m03 + sinA*m23; val t23 = cosA*m23 - sinA*m03
+    val t03 = cosA*m03 + sinA*m23;     m23 = cosA*m23 - sinA*m03
     
     m00 = t00; m20 = t20
     m01 = t01; m21 = t21
     m02 = t02; m22 = t22
-    m03 = t03; m23 = t23
+    m03 = t03
   }
   final def applyRotationZ(angle: Double) {
     val sinA = sin(angle)
@@ -592,12 +592,12 @@ final class Mat3x4d private[math] (
     val t00 = cosA*m00 - sinA*m10; val t10 = sinA*m00 + cosA*m10
     val t01 = cosA*m01 - sinA*m11; val t11 = sinA*m01 + cosA*m11
     val t02 = cosA*m02 - sinA*m12; val t12 = sinA*m02 + cosA*m12
-    val t03 = cosA*m03 - sinA*m13; val t13 = sinA*m03 + cosA*m13
+    val t03 = cosA*m03 - sinA*m13;     m13 = sinA*m03 + cosA*m13
     
     m00 = t00; m10 = t10
     m01 = t01; m11 = t11
     m02 = t02; m12 = t12
-    m03 = t03; m13 = t13
+    m03 = t03
   }
 
   final def applyTranslation(u: inVec3d) {
@@ -619,12 +619,12 @@ final class Mat3x4d private[math] (
 
     val t03 = m.m00*m03 + m.m01*m13 + m.m02*m23 + m.m03
     val t13 = m.m10*m03 + m.m11*m13 + m.m12*m23 + m.m13
-    val t23 = m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
+        m23 = m.m20*m03 + m.m21*m13 + m.m22*m23 + m.m23
     
     m00 = t00; m10 = t10; m20 = t20
     m01 = t01; m11 = t11; m21 = t21
     m02 = t02; m12 = t12; m22 = t22
-    m03 = t03; m13 = t13; m23 = t23
+    m03 = t03; m13 = t13
   }
   final def applyTransform(m: inMat3d) {
     val t00 = m.m00*m00 + m.m01*m10 + m.m02*m20
@@ -641,12 +641,12 @@ final class Mat3x4d private[math] (
 
     val t03 = m.m00*m03 + m.m01*m13 + m.m02*m23
     val t13 = m.m10*m03 + m.m11*m13 + m.m12*m23
-    val t23 = m.m20*m03 + m.m21*m13 + m.m22*m23
+        m23 = m.m20*m03 + m.m21*m13 + m.m22*m23
     
     m00 = t00; m10 = t10; m20 = t20
     m01 = t01; m11 = t11; m21 = t21
     m02 = t02; m12 = t12; m22 = t22
-    m03 = t03; m13 = t13; m23 = t23
+    m03 = t03; m13 = t13
   }
 
 

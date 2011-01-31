@@ -389,12 +389,12 @@ final class Mat2x4f private[math] (
     val t12 = m10*m.m02 + m11*m.m12 + m12*m.m22 + m13*m.m32
 
     val t03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
-    val t13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
+        m13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
 
     m00 = t00; m10 = t10
     m01 = t01; m11 = t11
     m02 = t02; m12 = t12
-    m03 = t03; m13 = t13
+    m03 = t03
   }
   /**
    * Component-wise division.

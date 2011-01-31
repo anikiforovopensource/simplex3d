@@ -407,11 +407,11 @@ final class Mat4x3d private[math] (
     val t02 = m00*m.m02 + m01*m.m12 + m02*m.m22
     val t12 = m10*m.m02 + m11*m.m12 + m12*m.m22
     val t22 = m20*m.m02 + m21*m.m12 + m22*m.m22
-    val t32 = m30*m.m02 + m31*m.m12 + m32*m.m22
+        m32 = m30*m.m02 + m31*m.m12 + m32*m.m22
 
     m00 = t00; m10 = t10; m20 = t20; m30 = t30
     m01 = t01; m11 = t11; m21 = t21; m31 = t31
-    m02 = t02; m12 = t12; m22 = t22; m32 = t32
+    m02 = t02; m12 = t12; m22 = t22
   }
   /**
    * Component-wise division.

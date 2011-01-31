@@ -315,10 +315,10 @@ final class Mat3x2f private[math] (
 
     val t01 = m00*m.m01 + m01*m.m11
     val t11 = m10*m.m01 + m11*m.m11
-    val t21 = m20*m.m01 + m21*m.m11
+        m21 = m20*m.m01 + m21*m.m11
 
     m00 = t00; m10 = t10; m20 = t20
-    m01 = t01; m11 = t11; m21 = t21
+    m01 = t01; m11 = t11
   }
   /**
    * Component-wise division.

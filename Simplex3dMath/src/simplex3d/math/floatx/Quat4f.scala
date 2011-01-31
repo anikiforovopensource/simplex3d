@@ -197,7 +197,7 @@ final class Quat4f private[math] (
     val na = a*q.a - b*q.b - c*q.c - d*q.d
     val nb = a*q.b + b*q.a + c*q.d - d*q.c
     val nc = a*q.c - b*q.d + c*q.a + d*q.b
-    d = a*q.d + b*q.c - c*q.b + d*q.a
+         d = a*q.d + b*q.c - c*q.b + d*q.a
 
     a = na; b = nb; c = nc
   }
@@ -206,7 +206,7 @@ final class Quat4f private[math] (
     val na = q.a*a - q.b*b - q.c*c - q.d*d
     val nb = q.a*b + q.b*a + q.c*d - q.d*c
     val nc = q.a*c - q.b*d + q.c*a + q.d*b
-    d = q.a*d + q.b*c - q.c*b + q.d*a
+         d = q.a*d + q.b*c - q.c*b + q.d*a
 
     a = na; b = nb; c = nc
   }
@@ -218,7 +218,7 @@ final class Quat4f private[math] (
     val na = qa*a - qb*b
     val nb = qa*b + qb*a
     val nc = qa*c - qb*d
-    d = qa*d + qb*c
+         d = qa*d + qb*c
 
     a = na; b = nb; c = nc
   }
@@ -230,7 +230,7 @@ final class Quat4f private[math] (
     val na = qa*a - qc*c
     val nb = qa*b + qc*d
     val nc = qa*c + qc*a
-    d = qa*d - qc*b
+         d = qa*d - qc*b
 
     a = na; b = nb; c = nc
   }
@@ -242,7 +242,7 @@ final class Quat4f private[math] (
     val na = qa*a - qd*d
     val nb = qa*b - qd*c
     val nc = qa*c + qd*b
-    d = qa*d + qd*a
+         d = qa*d + qd*a
 
     a = na; b = nb; c = nc
   }

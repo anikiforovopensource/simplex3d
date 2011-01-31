@@ -377,11 +377,11 @@ final class Mat2x3d private[math] (
     val t11 = m10*m.m01 + m11*m.m11 + m12*m.m21
 
     val t02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-    val t12 = m10*m.m02 + m11*m.m12 + m12*m.m22
+        m12 = m10*m.m02 + m11*m.m12 + m12*m.m22
 
     m00 = t00; m10 = t10
     m01 = t01; m11 = t11
-    m02 = t02; m12 = t12
+    m02 = t02
   }
   /**
    * Component-wise division.
@@ -415,11 +415,11 @@ final class Mat2x3d private[math] (
     val t11 = m.m10*m01 + m.m11*m11
 
     val t02 = m.m00*m02 + m.m01*m12 + m.m02
-    val t12 = m.m10*m02 + m.m11*m12 + m.m12
+        m12 = m.m10*m02 + m.m11*m12 + m.m12
     
     m00 = t00; m10 = t10
     m01 = t01; m11 = t11
-    m02 = t02; m12 = t12
+    m02 = t02
   }
   final def applyTransform(m: inMat2d) {
     val t00 = m.m00*m00 + m.m01*m10
@@ -429,11 +429,11 @@ final class Mat2x3d private[math] (
     val t11 = m.m10*m01 + m.m11*m11
 
     val t02 = m.m00*m02 + m.m01*m12
-    val t12 = m.m10*m02 + m.m11*m12
+        m12 = m.m10*m02 + m.m11*m12
     
     m00 = t00; m10 = t10
     m01 = t01; m11 = t11
-    m02 = t02; m12 = t12
+    m02 = t02
   }
 
 

@@ -294,10 +294,10 @@ final class Mat2d private[math] (
     val t10 = m10*m.m00 + m11*m.m10
 
     val t01 = m00*m.m01 + m01*m.m11
-    val t11 = m10*m.m01 + m11*m.m11
+        m11 = m10*m.m01 + m11*m.m11
 
     m00 = t00; m10 = t10
-    m01 = t01; m11 = t11
+    m01 = t01
   }
   /**
    * Component-wise division.

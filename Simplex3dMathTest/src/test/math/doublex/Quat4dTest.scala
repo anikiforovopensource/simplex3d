@@ -280,17 +280,6 @@ class Quat4dTest extends FunSuite {
     def testInstance(q: inQuat4, angle: Float, axis: inVec3) {
       assert(q.rotate(quaternion(angle, axis)) == quaternion(angle, axis)*q)
 
-      assert(approxEqual(
-          q.rotate(angle, axis),
-          quaternion(angle, axis)*q,
-          1e-15
-      ))
-      assert(approxEqual(
-          q.rotate(angle, axis*float),
-          quaternion(angle, axis)*q,
-          1e-15
-      ))
-
       assert(q.rotateX(angle) == quaternion(angle, Vec3.UnitX)*q)
       assert(q.rotateY(angle) == quaternion(angle, Vec3.UnitY)*q)
       assert(q.rotateZ(angle) == quaternion(angle, Vec3.UnitZ)*q)
@@ -308,20 +297,25 @@ class Quat4dTest extends FunSuite {
             1e-15
         ))
       }
+
+      val c = Quat4(q); c.applyRotation(quaternion(angle, axis))
+      assert(c == q.rotate(quaternion(angle, axis)))
+
+      val cx = Quat4(q); cx.applyRotationX(angle)
+      assert(cx == q.rotate(quaternion(angle, Vec3.UnitX)))
+
+      val cy = Quat4(q); cy.applyRotationY(angle)
+      assert(cy == q.rotate(quaternion(angle, Vec3.UnitY)))
+
+      val cz = Quat4(q); cz.applyRotationZ(angle)
+      assert(cz == q.rotate(quaternion(angle, Vec3.UnitZ)))
+
+      val self = Quat4(q); self.applyRotation(self)
+      assert(self == q.rotate(q))
     }
     def testObject(angle: Float, axis: inVec3) {
       assert(Quat4.rotate(quaternion(angle, axis)) == quaternion(angle, axis))
 
-      assert(approxEqual(
-          Quat4.rotate(angle, axis),
-          quaternion(angle, axis),
-          1e-15
-      ))
-      assert(approxEqual(
-          Quat4.rotate(angle, axis*float),
-          quaternion(angle, axis),
-          1e-15
-      ))
       assert(Quat4.rotateX(angle) == quaternion(angle, Vec3.UnitX))
       assert(Quat4.rotateY(angle) == quaternion(angle, Vec3.UnitY))
       assert(Quat4.rotateZ(angle) == quaternion(angle, Vec3.UnitZ))

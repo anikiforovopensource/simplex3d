@@ -473,12 +473,12 @@ final class Mat4f private[math] (
     val t03 = m00*m.m03 + m01*m.m13 + m02*m.m23 + m03*m.m33
     val t13 = m10*m.m03 + m11*m.m13 + m12*m.m23 + m13*m.m33
     val t23 = m20*m.m03 + m21*m.m13 + m22*m.m23 + m23*m.m33
-    val t33 = m30*m.m03 + m31*m.m13 + m32*m.m23 + m33*m.m33
+        m33 = m30*m.m03 + m31*m.m13 + m32*m.m23 + m33*m.m33
 
     m00 = t00; m10 = t10; m20 = t20; m30 = t30
     m01 = t01; m11 = t11; m21 = t21; m31 = t31
     m02 = t02; m12 = t12; m22 = t22; m32 = t32
-    m03 = t03; m13 = t13; m23 = t23; m33 = t33
+    m03 = t03; m13 = t13; m23 = t23
   }
   /**
    * Component-wise division.

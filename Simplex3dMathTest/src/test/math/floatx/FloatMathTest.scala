@@ -24,7 +24,7 @@ import org.scalatest._
 
 import simplex3d.math._
 import simplex3d.math.float._
-import simplex3d.math.floatx.functions._
+import simplex3d.math.float.functions._
 import scala.Float.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -57,6 +57,16 @@ class FloatMathTest extends FunSuite {
     assert(!isneginf(posinf))
     assert(isneginf(neginf))
     assert(!isneginf(0))
+
+    assert(!isnegzero(-1f))
+    assert(isnegzero(-0f))
+    assert(!isnegzero(0f))
+    assert(!isnegzero(1f))
+
+    assert(!isposzero(-1f))
+    assert(!isposzero(-0f))
+    assert(isposzero(0f))
+    assert(!isposzero(1f))
 
     assert(isnan(radians(nan)))
     assert(isposinf(radians(posinf)))
@@ -270,14 +280,16 @@ class FloatMathTest extends FunSuite {
     assert(isposinf(abs(posinf)))
     assert(isposinf(abs(neginf)))
     assert(1 == abs(-1f))
-    assert(0 == abs(0f))
+    assert(isposzero(abs(-0f)))
+    assert(isposzero(abs(0f)))
     assert(1 == abs(1f))
 
     assert(isnan(sign(nan)))
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1f))
-    assert(0 == sign(0f))
+    assert(isnegzero(sign(-0f)))
+    assert(isposzero(sign(0f)))
     assert(1 == sign(1f))
 
     assert(isnan(floor(nan)))
@@ -285,7 +297,8 @@ class FloatMathTest extends FunSuite {
     assert(isneginf(floor(neginf)))
     assert(-1 == floor(-1))
     assert(-1 == floor(-0.5f))
-    assert(0 == floor(0))
+    assert(isnegzero(floor(-0f)))
+    assert(isposzero(floor(0f)))
     assert(1 == floor(1.5f))
     assert(1 == floor(1))
 
@@ -294,7 +307,10 @@ class FloatMathTest extends FunSuite {
     assert(isneginf(trunc(neginf)))
     assert(-1 == trunc(-1))
     assert(-1 == trunc(-1.5f))
-    assert(0 == trunc(0))
+    assert(isnegzero(trunc(-0.5f)))
+    assert(isnegzero(trunc(-0f)))
+    assert(isposzero(trunc(0f)))
+    assert(isposzero(trunc(0.5f)))
     assert(1 == trunc(1.5f))
     assert(1 == trunc(1))
 
@@ -306,7 +322,10 @@ class FloatMathTest extends FunSuite {
     assert(-1 == round(-1.4f))
     assert(-1 == round(-1.5f))
     assert(-2 == round(-1.6f))
-    assert(0 == round(0))
+    assert(isnegzero(round(-0.49f)))
+    assert(isnegzero(round(-0f)))
+    assert(isposzero(round(0.49f)))
+    assert(isposzero(round(0f)))
     assert(1 == round(0.5f))
     assert(1 == round(1))
     assert(1 == round(1.4f))
@@ -321,7 +340,10 @@ class FloatMathTest extends FunSuite {
     assert(-2 == roundEven(-1.5f))
     assert(-2 == roundEven(-1.6f))
     assert(-2 == roundEven(-2.5f))
-    assert(0 == roundEven(0))
+    assert(isnegzero(roundEven(-0.49f)))
+    assert(isnegzero(roundEven(-0f)))
+    assert(isposzero(roundEven(0f)))
+    assert(isposzero(roundEven(0.49f)))
     assert(1 == roundEven(1))
     assert(1 == roundEven(1.4f))
     assert(2 == roundEven(1.5f))
@@ -333,7 +355,9 @@ class FloatMathTest extends FunSuite {
     assert(isneginf(ceil(neginf)))
     assert(-1 == ceil(-1))
     assert(-1 == ceil(-1.1f))
-    assert(0 == ceil(0))
+    assert(isnegzero(ceil(-0.5f)))
+    assert(isnegzero(ceil(-0f)))
+    assert(isposzero(ceil(0f)))
     assert(1 == ceil(1))
     assert(1 == ceil(0.1f))
 
@@ -342,7 +366,8 @@ class FloatMathTest extends FunSuite {
     assert(0 == (fract(neginf)))
     assert(0.9f == fract(-1.1f))
     assert(0 == fract(-1))
-    assert(0 == fract(0))
+    assert(isnegzero(fract(-0f)))
+    assert(isposzero(fract(0f)))
     assert(0 == fract(1))
     assert(0.25f == fract(1.25f))
 
@@ -364,6 +389,8 @@ class FloatMathTest extends FunSuite {
     assert(isnan(min(2f, nan)))
     assert(2 == (min(2f, posinf)))
     assert(isneginf(min(2f, neginf)))
+    assert(isnegzero(min(-0f, 0f)))
+    assert(isnegzero(min(0f, -0f)))
     assert(1 == min(1f, 2f))
     assert(1 == min(2f, 1f))
     assert(1 == min(1f, 1f))
@@ -374,6 +401,8 @@ class FloatMathTest extends FunSuite {
     assert(isnan(max(2f, nan)))
     assert(isposinf(max(2f, posinf)))
     assert(2 == (max(2f, neginf)))
+    assert(isposzero(max(-0f, 0f)))
+    assert(isposzero(max(0f, -0f)))
     assert(2 == max(1f, 2f))
     assert(2 == max(2f, 1f))
     assert(2 == max(2f, 2f))

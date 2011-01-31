@@ -23,8 +23,8 @@ package test.math.floatx
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.float._
-import simplex3d.math.floatx.functions._
+import simplex3d.math.float.{functions => fn, _}
+import simplex3d.math.float.functions._
 import scala.Float.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -41,27 +41,10 @@ class FloatMathVec2Test extends FunSuite {
   import random._
   def randomFloat = random.nextFloat
 
+  private final def isposinf(u: inVec2) :Vec2b = Vec2b(fn.isposinf(u.x), fn.isposinf(u.y))
+  private final def isneginf(u: inVec2) :Vec2b = Vec2b(fn.isneginf(u.x), fn.isneginf(u.y))
+
   test("Vec2f numeric functions") {
-    assert(all(isnan(Vec2(nan))))
-    assert(!any(isnan(Vec2(neginf))))
-    assert(!any(isnan(Vec2(posinf))))
-    assert(!any(isnan(Vec2(0))))
-
-    assert(!any(isinf(Vec2(nan))))
-    assert(all(isinf(Vec2(neginf))))
-    assert(all(isinf(Vec2(posinf))))
-    assert(!any(isinf(Vec2(0))))
-
-    assert(!any(isposinf(Vec2(nan))))
-    assert(!any(isposinf(Vec2(neginf))))
-    assert(all(isposinf(Vec2(posinf))))
-    assert(!any(isposinf(Vec2(0))))
-
-    assert(!any(isneginf(Vec2(nan))))
-    assert(all(isneginf(Vec2(neginf))))
-    assert(!any(isneginf(Vec2(posinf))))
-    assert(!any(isneginf(Vec2(0))))
-
     {
       val u = Vec2(0)
       val i = Vec2(0)

@@ -24,7 +24,7 @@ import org.scalatest._
 
 import simplex3d.math._
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
 import scala.Double.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -57,6 +57,16 @@ class DoubleMathTest extends FunSuite {
     assert(!isneginf(posinf))
     assert(isneginf(neginf))
     assert(!isneginf(0))
+
+    assert(!isnegzero(-1d))
+    assert(isnegzero(-0d))
+    assert(!isnegzero(0d))
+    assert(!isnegzero(1d))
+
+    assert(!isposzero(-1d))
+    assert(!isposzero(-0d))
+    assert(isposzero(0d))
+    assert(!isposzero(1d))
 
     assert(isnan(radians(nan)))
     assert(isposinf(radians(posinf)))
@@ -270,14 +280,16 @@ class DoubleMathTest extends FunSuite {
     assert(isposinf(abs(posinf)))
     assert(isposinf(abs(neginf)))
     assert(1 == abs(-1d))
-    assert(0 == abs(0d))
+    assert(isposzero(abs(-0d)))
+    assert(isposzero(abs(0d)))
     assert(1 == abs(1d))
 
     assert(isnan(sign(nan)))
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1d))
-    assert(0 == sign(0d))
+    assert(isnegzero(sign(-0d)))
+    assert(isposzero(sign(0d)))
     assert(1 == sign(1d))
 
     assert(isnan(floor(nan)))
@@ -285,7 +297,8 @@ class DoubleMathTest extends FunSuite {
     assert(isneginf(floor(neginf)))
     assert(-1 == floor(-1))
     assert(-1 == floor(-0.5))
-    assert(0 == floor(0))
+    assert(isnegzero(floor(-0d)))
+    assert(isposzero(floor(0d)))
     assert(1 == floor(1.5))
     assert(1 == floor(1))
 
@@ -294,7 +307,10 @@ class DoubleMathTest extends FunSuite {
     assert(isneginf(trunc(neginf)))
     assert(-1 == trunc(-1))
     assert(-1 == trunc(-1.5))
-    assert(0 == trunc(0))
+    assert(isnegzero(trunc(-0.5d)))
+    assert(isnegzero(trunc(-0d)))
+    assert(isposzero(trunc(0d)))
+    assert(isposzero(trunc(0.5d)))
     assert(1 == trunc(1.5))
     assert(1 == trunc(1))
 
@@ -306,7 +322,10 @@ class DoubleMathTest extends FunSuite {
     assert(-1 == round(-1.4))
     assert(-1 == round(-1.5))
     assert(-2 == round(-1.6))
-    assert(0 == round(0))
+    assert(isnegzero(round(-0.49d)))
+    assert(isnegzero(round(-0d)))
+    assert(isposzero(round(0.49d)))
+    assert(isposzero(round(0d)))
     assert(1 == round(0.5))
     assert(1 == round(1))
     assert(1 == round(1.4))
@@ -321,7 +340,10 @@ class DoubleMathTest extends FunSuite {
     assert(-2 == roundEven(-1.5))
     assert(-2 == roundEven(-1.6))
     assert(-2 == roundEven(-2.5))
-    assert(0 == roundEven(0))
+    assert(isnegzero(roundEven(-0.49d)))
+    assert(isnegzero(roundEven(-0d)))
+    assert(isposzero(roundEven(0d)))
+    assert(isposzero(roundEven(0.49d)))
     assert(1 == roundEven(1))
     assert(1 == roundEven(1.4))
     assert(2 == roundEven(1.5))
@@ -333,7 +355,9 @@ class DoubleMathTest extends FunSuite {
     assert(isneginf(ceil(neginf)))
     assert(-1 == ceil(-1))
     assert(-1 == ceil(-1.1))
-    assert(0 == ceil(0))
+    assert(isnegzero(ceil(-0.5d)))
+    assert(isnegzero(ceil(-0d)))
+    assert(isposzero(ceil(0d)))
     assert(1 == ceil(1))
     assert(1 == ceil(0.1))
 
@@ -342,7 +366,8 @@ class DoubleMathTest extends FunSuite {
     assert(0 == (fract(neginf)))
     assert(approxEqual(0.9, fract(-1.1), 1e-15))
     assert(0 == fract(-1))
-    assert(0 == fract(0))
+    assert(isnegzero(fract(-0d)))
+    assert(isposzero(fract(0d)))
     assert(0 == fract(1))
     assert(0.25 == fract(1.25))
 
@@ -364,6 +389,8 @@ class DoubleMathTest extends FunSuite {
     assert(isnan(min(2d, nan)))
     assert(2 == (min(2d, posinf)))
     assert(isneginf(min(2d, neginf)))
+    assert(isnegzero(min(-0d, 0d)))
+    assert(isnegzero(min(0d, -0d)))
     assert(1 == min(1d, 2d))
     assert(1 == min(2d, 1d))
     assert(1 == min(1d, 1d))
@@ -374,6 +401,8 @@ class DoubleMathTest extends FunSuite {
     assert(isnan(max(2d, nan)))
     assert(isposinf(max(2d, posinf)))
     assert(2 == (max(2d, neginf)))
+    assert(isposzero(max(-0d, 0d)))
+    assert(isposzero(max(0d, -0d)))
     assert(2 == max(1d, 2d))
     assert(2 == max(2d, 1d))
     assert(2 == max(2d, 2d))

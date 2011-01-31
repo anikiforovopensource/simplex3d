@@ -21,14 +21,13 @@
 package bench.math
 
 import simplex3d.math._
-import simplex3d.math.floatx.{functions => fx}
-import simplex3d.math.doublex.{functions => dx}
+import simplex3d.math.doublex.functions._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RoundBench {
+object MinBench {
 
   def main(args: Array[String]) {
     test()
@@ -44,40 +43,23 @@ object RoundBench {
     var start = 0L
 
     start = System.currentTimeMillis
-    testImplementedFloat(loops)
-    val implementedFloatTime = System.currentTimeMillis - start
+    testJava(loops)
+    val javaTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedDouble(loops)
     val implementedDoubleTime = System.currentTimeMillis - start
 
-    start = System.currentTimeMillis
-    testJava(loops)
-    val javaTime = System.currentTimeMillis - start
-
     println("\nResults:")
-    println("Implemented Float time: " + implementedFloatTime + ".")
     println("Implemented Double time: " + implementedDoubleTime + ".")
     println("java.Math time: " + javaTime + ".")
-  }
-
-  final def testImplementedFloat(loops: Int) {
-    var a = 0
-
-    var i = -loops; while (i < loops) {
-      a += fx.round(i*1.111f).toInt
-
-      i += 1
-    }
-
-    println(a)
   }
 
   final def testImplementedDouble(loops: Int) {
     var a = 0
 
     var i = -loops; while (i < loops) {
-      a += dx.round(i*1.111).toInt
+      a += min(i*1.111, 1000 + i).toInt
 
       i += 1
     }
@@ -89,25 +71,11 @@ object RoundBench {
     var a = 0
 
     var i = -loops; while (i < loops) {
-      a += math.round(i*1.111).toInt
+      a += java.lang.Math.min(i*1.111, 1000 + i).toInt
 
       i += 1
     }
 
     println(a)
-  }
-
-  // StrictMath.rint is faster
-  private final def roundEven(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue) return x
-
-    val i = x.toInt
-    val h = x + 0.5f
-
-    if (h == i + 1) i + (i & 1)
-    else if (h == i) i - (i & 1)
-    else if (x >= 0) (x + 0.5f).toInt
-    else if (x < 0) (x - 0.5f).toInt
-    else x
   }
 }

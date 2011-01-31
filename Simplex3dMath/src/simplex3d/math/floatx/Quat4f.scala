@@ -216,11 +216,11 @@ final class Quat4f private[math] (
     val qb = sin(halfAngle)
 
     val na = qa*a - qb*b
-    val nb = qa*b + qb*a
+         b = qa*b + qb*a
     val nc = qa*c - qb*d
          d = qa*d + qb*c
 
-    a = na; b = nb; c = nc
+    a = na; c = nc
   }
   final def applyRotationY(angle: Float) {
     val halfAngle = angle*0.5f
@@ -229,10 +229,10 @@ final class Quat4f private[math] (
 
     val na = qa*a - qc*c
     val nb = qa*b + qc*d
-    val nc = qa*c + qc*a
+         c = qa*c + qc*a
          d = qa*d - qc*b
 
-    a = na; b = nb; c = nc
+    a = na; b = nb
   }
   final def applyRotationZ(angle: Float) {
     val halfAngle = angle*0.5f
@@ -241,10 +241,10 @@ final class Quat4f private[math] (
 
     val na = qa*a - qd*d
     val nb = qa*b - qd*c
-    val nc = qa*c + qd*b
+         c = qa*c + qd*b
          d = qa*d + qd*a
 
-    a = na; b = nb; c = nc
+    a = na; b = nb
   }
 
 

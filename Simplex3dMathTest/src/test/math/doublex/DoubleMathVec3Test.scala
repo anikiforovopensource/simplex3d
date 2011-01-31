@@ -23,8 +23,8 @@ package test.math.doublex
 import org.scalatest._
 
 import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.{functions => fn, _}
+import simplex3d.math.double.functions._
 import scala.Double.{
   NaN => nan,
   PositiveInfinity => posinf,
@@ -41,27 +41,14 @@ class DoubleMathVec3Test extends FunSuite {
   import random._
   def randomDouble = random.nextDouble
 
+  private final def isposinf(u: inVec3) :Vec3b = {
+    Vec3b(fn.isposinf(u.x), fn.isposinf(u.y), fn.isposinf(u.z))
+  }
+  private final def isneginf(u: inVec3) :Vec3b = {
+    Vec3b(fn.isneginf(u.x), fn.isneginf(u.y), fn.isneginf(u.z))
+  }
+
   test("Vec3d numeric functions") {
-    assert(all(isnan(Vec3(nan))))
-    assert(!any(isnan(Vec3(neginf))))
-    assert(!any(isnan(Vec3(posinf))))
-    assert(!any(isnan(Vec3(0))))
-
-    assert(!any(isinf(Vec3(nan))))
-    assert(all(isinf(Vec3(neginf))))
-    assert(all(isinf(Vec3(posinf))))
-    assert(!any(isinf(Vec3(0))))
-
-    assert(!any(isposinf(Vec3(nan))))
-    assert(!any(isposinf(Vec3(neginf))))
-    assert(all(isposinf(Vec3(posinf))))
-    assert(!any(isposinf(Vec3(0))))
-
-    assert(!any(isneginf(Vec3(nan))))
-    assert(all(isneginf(Vec3(neginf))))
-    assert(!any(isneginf(Vec3(posinf))))
-    assert(!any(isneginf(Vec3(0))))
-
     {
       val u = Vec3(0)
       val i = Vec3(0)

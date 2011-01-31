@@ -64,7 +64,8 @@ class NanFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        if (getNan(i) > 0) answer += 1
+        val n = getNan(i)
+        if (n != n) answer += 1
         else answer += 3
 
         i += 1
@@ -82,7 +83,8 @@ class NanFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        if (isnan(getNan(i))) answer += 3
+        val n = getNan(i)
+        if (isnan(n)) answer += 3
         else answer += 1
 
         i += 1

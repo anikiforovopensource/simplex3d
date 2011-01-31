@@ -28,30 +28,35 @@ import java.lang.StrictMath
  */
 object FloorBench {
   def main(args: Array[String]) {
-    new FloorDouble().run()
+    test()
+    test()
+    test()
   }
-}
 
-class FloorFloat {
   val length = 10000
   val loops = 20000
 
-  def run() {
+  def test() {
     var start = 0L
-
-    start = System.currentTimeMillis
-    testSimple(length, loops)
-    val simpleTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testOptimised(length, loops)
     val optimisedTime = System.currentTimeMillis - start
 
-    println("Float. optimised time: " + optimisedTime +
-            ", simple time: " + simpleTime + ".")
+    start = System.currentTimeMillis
+    testImplemented(length, loops)
+    val implementedTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testJava(length, loops)
+    val javaTime = System.currentTimeMillis - start
+
+    println("Optimised time: " + optimisedTime + ".")
+    println("Implemented time: " + implementedTime + ".")
+    println("System time: " + javaTime + ".")
   }
 
-  def floorOpt(x: Float) :Float = {
+  final def floorOpt(x: Float) :Float = {
     if (x > Int.MaxValue || x < Int.MinValue) x
     else {
       val i = x.toInt
@@ -59,14 +64,14 @@ class FloorFloat {
     }
   }
 
-  def testSimple(length: Int, loops: Int) {
+  def testJava(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += (StrictMath.floor((-i + 0.12345f)*100)/23.4567f).toInt
+        answer += (StrictMath.floor((-i + 0.12345f)*100)).toInt
 
         i += 1
       }
@@ -83,52 +88,7 @@ class FloorFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += (floorOpt((-i + 0.12345f)*100)/23.4567f).toInt
-
-        i += 1
-      }
-      l += 1
-    }
-
-    println(answer)
-  }
-}
-
-class FloorDouble {
-  val length = 10000
-  val loops = 20000
-  
-  def run() {
-    var start = 0L
-
-    start = System.currentTimeMillis
-    testSimple(length, loops)
-    val simpleTime = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testOptimised(length, loops)
-    val optimisedTime = System.currentTimeMillis - start
-
-    println("Double. optimised time: " + optimisedTime +
-        ", simple time: " + simpleTime + ".")
-  }
-
-  def floorOpt(x: Double) :Double = {
-    if (x > Long.MaxValue || x < Long.MinValue) x
-    else {
-      val i = x.toLong
-      if (x > 0 || x == i) i else if(java.lang.Double.isNaN(x)) x else i - 1
-    }
-  }
-
-  def testSimple(length: Int, loops: Int) {
-    var answer = 0
-
-    var l = 0; while (l < loops) {
-      var i = 0; while (i < length) {
-
-        // Bench code
-        answer += (StrictMath.floor((-i + 0.12345)*4.26317427430115915709)).toInt
+        answer += (floorOpt((-i + 0.12345f)*100)).toInt
 
         i += 1
       }
@@ -138,14 +98,14 @@ class FloorDouble {
     println(answer)
   }
 
-  def testOptimised(length: Int, loops: Int) {
+  def testImplemented(length: Int, loops: Int) {
     var answer = 0
 
     var l = 0; while (l < loops) {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += (floorOpt((-i + 0.12345)*4.26317427430115915709)).toInt
+        answer += (floatx.functions.floor((-i + 0.12345f)*100)).toInt
 
         i += 1
       }

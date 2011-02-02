@@ -288,7 +288,7 @@ class FloatMathTest extends FunSuite {
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1f))
-    assert(isposzero(sign(-0f)))
+    assert(isnegzero(sign(-0f)))
     assert(isposzero(sign(0f)))
     assert(1 == sign(1f))
 
@@ -468,7 +468,7 @@ class FloatMathTest extends FunSuite {
     assert(-1 == normalize(-2.5f))
     assert(-1 == normalize(-1))
     assert(-1 == normalize(-0.3f))
-    assert(0 == normalize(0))
+    assert(isnan(normalize(0)))
     assert(1 == normalize(0.5f))
     assert(1 == normalize(1))
     assert(1 == normalize(3.5f))

@@ -716,8 +716,7 @@ object functions extends CommonMath {
   def sign(x: Float) :Float = {
     if (x > 0) 1
     else if (x < 0) -1
-    else if (x == 0) 0 //strips -0
-    else x // preserves nan
+    else x // preserves nan and -0
   }
   
   /** Returns the nearest integral number less than the argument.
@@ -940,47 +939,41 @@ object functions extends CommonMath {
   def dot(x: Float, y: Float) :Float = x*y
   
   /** Returns the normalized value of the argument.
-   * For scalar components <code>normalize(x)</code> is equivalent to <code>sign(x)</code>.
    * @param x a float argument.
-   * @return the normalized value of the argument.
+   * @return 1 if <i>x</i> > 0; -1 if <i>x</i> < 0; NaN otherwise.
    */
-  def normalize(x: Float) :Float = sign(x)
+  def normalize(x: Float) :Float = {
+    if (x > 0) 1
+    else if (x < 0) -1
+    else scala.Float.NaN
+  }
 
-  //XXX
-  /**
-   * This function flips the normal vector n to face the direction opposite
-   * to incident vector i.
-   * 
-   * @param n normal
-   * @param i incident vector
-   * @param nref reference normal
-   * @return n if (i*nref) < 0, -n otherwise
+  /** Flips the normal vector <i>n</i> to face the direction opposite to the incident vector <i>i</i>.
+   * @param n the normal.
+   * @param i the incident vector.
+   * @param nref the reference normal.
+   * @return <i>n</i> if <code>(i*nref)</code> < 0, <i>-n</i> otherwise.
    */
   def faceforward(n: Float, i: Float, nref: Float) :Float = {
     if (i*nref < 0) n else -n
   }
 
-  /**
-   * This function reflects the incident vector i with respect to normal
-   * vector n.
-   *
-   * @param n normal, must be normalized to achieve the desired result
-   * @param i incident vector
-   * @return reflection vector
+  /** Reflects the incident vector <i>i</i> with respect to the normal vector <i>n</i>.
+   * This function is equivalent to <code>i - 2*dot(n, i)*n</code>.
+   * @param n the normal, must be normalized to achieve the desired result.
+   * @param i the incident vector.
+   * @return the reflection vector.
    */
   def reflect(i: Float, n: Float) :Float = {
     i - 2*(n*i)*n
   }
 
-  /**
-   * This function refracts the incident vector i with respect to normal
-   * vector n using the ratio of indices of refraction eta.
-   *
-   * @param n normal, must be normalized to achieve the desired result
-   * @param i incident vector, must be normalized to achieve
-   *          the desired result
-   * @param eta the ratio of indices of refration
-   * @return refraction vector
+  /** Refracts the incident vector <i>i</i> with respect to the normal vector <i>n</i>
+   * using the ratio of indices of refraction <i>eta</i>.
+   * @param n the normal, must be normalized to achieve the desired result.
+   * @param i the incident vector, must be normalized to achieve the desired result.
+   * @param eta the ratio of indices of refration.
+   * @return the refraction vector.
    */
   def refract(i: Float, n: Float, eta: Float) :Float = {
     val ni = n*i

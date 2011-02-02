@@ -593,8 +593,7 @@ object functions extends CommonMath {
   def sign(x: Double) :Double = {
     if (x > 0) 1
     else if (x < 0) -1
-    else if (x == 0) 0 // strips -0
-    else x // preserves nan
+    else x // preserves nan and -0
   }
   def floor(x: Double) :Double = {
     if (x > 0) {
@@ -722,7 +721,11 @@ object functions extends CommonMath {
   def length(x: Double) :Double = abs(x)
   def distance(x: Double, y: Double) :Double = abs(x - y)
   def dot(x: Double, y: Double) :Double = x*y
-  def normalize(x: Double) :Double = sign(x)
+  def normalize(x: Double) :Double = {
+    if (x > 0) 1
+    else if (x < 0) -1
+    else scala.Double.NaN
+  }
   def faceforward(n: Double, i: Double, nref: Double) :Double = {
     if (i*nref < 0) n else -n
   }

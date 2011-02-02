@@ -288,7 +288,7 @@ class DoubleMathTest extends FunSuite {
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1d))
-    assert(isposzero(sign(-0d)))
+    assert(isnegzero(sign(-0d)))
     assert(isposzero(sign(0d)))
     assert(1 == sign(1d))
 
@@ -468,7 +468,7 @@ class DoubleMathTest extends FunSuite {
     assert(-1 == normalize(-2.5))
     assert(-1 == normalize(-1))
     assert(-1 == normalize(-0.3))
-    assert(0 == normalize(0))
+    assert(isnan(normalize(0)))
     assert(1 == normalize(0.5))
     assert(1 == normalize(1))
     assert(1 == normalize(3.5))

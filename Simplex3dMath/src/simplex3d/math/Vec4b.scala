@@ -150,9 +150,9 @@ sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
 
 
   /** Read a component using sequence notation.
+   * Throws IndexOutOfBoundsException if i is outside the range of [0, 3].
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).
    * @return component with index i.
-   * @exception IndexOutOfBoundsException if i is outside the range of [0, 3].
    */
   final def apply(i: Int) :Boolean = {
     i match {
@@ -439,9 +439,9 @@ final class Vec4b private[math] (
   def :=(u: inVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   /** Set a component using sequence notation.
+   * Throws IndexOutOfBoundsException if i is outside the range of [0, 3].
    * @param i index of the component (0 -> x, 1 -> y, 2 -> z, 3 -> w).
    * @param s new component value.
-   * @exception IndexOutOfBoundsException if i is outside the range of [0, 3].
    */
   def update(i: Int, s: Boolean) {
     i match {

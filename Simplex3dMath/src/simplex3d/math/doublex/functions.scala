@@ -39,11 +39,11 @@ object functions extends CommonMath {
    */
   final val Epsilon = 2.22045e-16
   
-  /** Constant pi.
+  /** Constant <i>pi</i>.
    */
   final val Pi = JMath.PI
   
-  /** Constant e.
+  /** Constant <i>e</i>.
    */
   final val E = JMath.E
 
@@ -57,37 +57,35 @@ object functions extends CommonMath {
 
   /** Returns an absolute value of the argument.
    * @param x an integer argument.
-   * @return an absolute value of x.
+   * @return an absolute value of the agument.
    */
   final def abs(x: Int) :Int = if (x < 0) -x else x
 
   /** Returns the sign of the argument.
    * @param x an integer argument.
-   * @return 1 if x > 0, -1 if x < 0, 0 otherwise.
+   * @return 1 if <i>x</i> > 0; -1 if <i>x</i> < 0; 0 otherwise.
    */
   final def sign(x: Int) :Int = if (x > 0) 1 else if (x < 0) -1 else 0
 
   /** Returns the smaller one of two arguments.
    * @param x an integer argument.
    * @param y an integer argument.
-   * @return the smallest value.
+   * @return the smallest argument.
    */
   final def min(x: Int, y: Int) :Int = if (x < y) x else y
 
   /** Returns the larger one of two arguments.
    * @param x an integer argument.
    * @param y an integer argument.
-   * @return the largest value.
+   * @return the largest argument.
    */
   final def max(x: Int, y: Int) :Int = if (x > y) x else y
 
-  /** Clamps a value to a given range.
-   * The result is undefined if minVal > maxVal.
-   *
-   * @param x value to clamp.
-   * @param minVal, lower bound, inclusive.
-   * @param maxVal, upper bound, inclusive.
-   * @return minVal if x < minVal, maxVal if x > maxVal, x otherwise.
+  /** Clamps a value to a given range. The result is undefined if <i>minVal</i> > <i>maxVal</i>.
+   * @param x an integer value to clamp.
+   * @param minVal the lower bound (inclusive).
+   * @param maxVal the upper bound (inclusive).
+   * @return <i>minVal</i> if <i>x</i> < <i>minVal</i>; <i>maxVal</i> if <i>x</i> > <i>maxVal</i>; <i>x</i> otherwise.
    */
   final def clamp(x: Int, minVal: Int, maxVal: Int) :Int = {
     if (x <= minVal) minVal
@@ -96,59 +94,61 @@ object functions extends CommonMath {
   }
 
   // Vec2i functions
-  /** Performs component-wise abs.
-   * @param u an integer vector.
-   * @return a vector with components set to absolute values of components of u.
+  /** Performs component-wise <b>abs</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to absolute values of components of <i>u</i>.
    */
   final def abs(u: inVec2i) :Vec2i = new Vec2i(abs(u.x), abs(u.y))
   
-  /** Performs component-wise sign.
-   * @param u an integer vector.
-   * @return a vector with components set to sign of components of u.
+  /** Performs component-wise <b>sign</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to sign of components of <i>u</i>.
    */
   final def sign(u: inVec2i) :Vec2i = new Vec2i(sign(u.x), sign(u.y))
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @return a vector with components set to min(c, s) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
    */
   final def min(u: inVec2i, s: Int) :Vec2i = new Vec2i(min(u.x, s), min(u.y, s))
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to min(u.c, v.c) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def min(u: inVec2i, v: inVec2i) :Vec2i = new Vec2i(min(u.x, v.x), min(u.y, v.y))
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @return a vector with components set to max(c, s) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
    */
   final def max(u: inVec2i, s: Int) :Vec2i = new Vec2i(max(u.x, s), max(u.y, s))
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to max(u.c, v.c) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def max(u: inVec2i, v: inVec2i) :Vec2i = {
     new Vec2i(max(u.x, v.x), max(u.y, v.y))
   }
   
-  /** Clamps components to be in range between minValue (inclusive) and maxValue (inclusive).
-   * @param u an integer vector.
-   * @return a vector with components clamped to [minValue, maxValue].
+  /** Clamps components to the range from minValue (inclusive) to maxValue (inclusive).
+   * @param u an integer vector argument.
+   * @param minVal the lower bound (inclusive).
+   * @param maxVal the upper bound (inclusive).
+   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
    */
   final def clamp(u: inVec2i, minVal: Int, maxVal: Int) :Vec2i = {
     new Vec2i(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
   }
   
-  /** Performs component-wise clamp operation.
-   * @param u an integer vector.
-   * @param minVal, an integer vector.
-   * @param maxVal, an integer vector.
-   * @return a vector with components set to clamp(u.c, minVal.c, maxVal.c) for each component c.
+  /** Performs component-wise <b>clamp</b> operation.
+   * @param u an integer vector argument.
+   * @param minVal a vector with components used as lower bound (inclusive).
+   * @param maxVal a vector with components used as upper bound (inclusive).
+   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
    */
   final def clamp(u: inVec2i, minVal: inVec2i, maxVal: inVec2i) :Vec2i = {
     new Vec2i(
@@ -157,10 +157,10 @@ object functions extends CommonMath {
     )
   }
 
-  /** Performs component-wise less than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c < v.c) for each component c.
+  /** Performs component-wise <b>less than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
    */
   final def lessThan(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -169,10 +169,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise less than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c <= v.c) for each component c.
+  /** Performs component-wise <b>less than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
    */
   final def lessThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -181,10 +181,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c > v.c) for each component c.
+  /** Performs component-wise <b>greater than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
    */
   final def greaterThan(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -193,10 +193,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c >= v.c) for each component c.
+  /** Performs component-wise <b>greater than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
    */
   final def greaterThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -205,10 +205,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c == v.c) for each component c.
+  /** Performs component-wise <b>equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
    */
   final def equal(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -217,10 +217,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise not equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c != v.c) for each component c.
+  /** Performs component-wise <b>not equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
    */
   final def notEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -230,55 +230,57 @@ object functions extends CommonMath {
   }
 
   // Vec3i functions
-  /** Performs component-wise abs.
-   * @param u an integer vector.
-   * @return a vector with components set to absolute values of components of u.
+  /** Performs component-wise <b>abs</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to absolute values of components of <i>u</i>.
    */
   final def abs(u: inVec3i) :Vec3i = new Vec3i(abs(u.x), abs(u.y), abs(u.z))
   
-  /** Performs component-wise sign.
-   * @param u an integer vector.
-   * @return a vector with components set to sign of components of u.
+  /** Performs component-wise <b>sign</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to sign of components of <i>u</i>.
    */
   final def sign(u: inVec3i) :Vec3i = new Vec3i(sign(u.x), sign(u.y), sign(u.z))
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @return a vector with components set to min(c, s) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
    */
   final def min(u: inVec3i, s: Int) :Vec3i = {
     new Vec3i(min(u.x, s), min(u.y, s), min(u.z, s))
   }
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to min(u.c, v.c) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def min(u: inVec3i, v: inVec3i) :Vec3i = {
     new Vec3i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z))
   }
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @return a vector with components set to max(c, s) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
    */
   final def max(u: inVec3i, s: Int) :Vec3i = {
     new Vec3i(max(u.x, s), max(u.y, s), max(u.z, s))
   }
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to max(u.c, v.c) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def max(u: inVec3i, v: inVec3i) :Vec3i = {
     new Vec3i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z))
   }
   
-  /** Clamps components to be in range between minValue (inclusive) and maxValue (inclusive).
-   * @param u an integer vector.
-   * @return a vector with components clamped to [minValue, maxValue].
+  /** Clamps components to the range from minValue (inclusive) to maxValue (inclusive).
+   * @param u an integer vector argument.
+   * @param minVal the lower bound (inclusive).
+   * @param maxVal the upper bound (inclusive).
+   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
    */
   final def clamp(u: inVec3i, minVal: Int, maxVal: Int) :Vec3i = {
     new Vec3i(
@@ -288,11 +290,11 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise clamp operation.
-   * @param u an integer vector.
-   * @param minVal, an integer vector.
-   * @param maxVal, an integer vector.
-   * @return a vector with components set to clamp(u.c, minVal.c, maxVal.c) for each component c.
+  /** Performs component-wise <b>clamp</b> operation.
+   * @param u an integer vector argument.
+   * @param minVal a vector with components used as lower bound (inclusive).
+   * @param maxVal a vector with components used as upper bound (inclusive).
+   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
    */
   final def clamp(u: inVec3i, minVal: inVec3i, maxVal: inVec3i) :Vec3i = {
     new Vec3i(
@@ -302,10 +304,10 @@ object functions extends CommonMath {
     )
   }
 
-  /** Performs component-wise less than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c < v.c) for each component c.
+    /** Performs component-wise <b>less than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
    */
   final def lessThan(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -315,10 +317,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise less than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c <= v.c) for each component c.
+  /** Performs component-wise <b>less than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
    */
   final def lessThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -328,10 +330,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c > v.c) for each component c.
+  /** Performs component-wise <b>greater than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
    */
   final def greaterThan(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -341,10 +343,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c >= v.c) for each component c.
+  /** Performs component-wise <b>greater than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
    */
   final def greaterThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -354,10 +356,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c == v.c) for each component c.
+  /** Performs component-wise <b>equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
    */
   final def equal(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -367,10 +369,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise not equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c != v.c) for each component c.
+  /** Performs component-wise <b>not equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
    */
   final def notEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -381,59 +383,61 @@ object functions extends CommonMath {
   }
 
   // Vec4i functions
-  /** Performs component-wise abs.
-   * @param u an integer vector.
-   * @return a vector with components set to absolute values of components of u.
+  /** Performs component-wise <b>abs</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to absolute values of components of <i>u</i>.
    */
   final def abs(u: inVec4i) :Vec4i = {
     new Vec4i(abs(u.x), abs(u.y), abs(u.z), abs(u.w))
   }
   
-  /** Performs component-wise sign.
-   * @param u an integer vector.
-   * @return a vector with components set to sign of components of u.
+  /** Performs component-wise <b>sign</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to sign of components of <i>u</i>.
    */
   final def sign(u: inVec4i) :Vec4i = {
     new Vec4i(sign(u.x), sign(u.y), sign(u.z), sign(u.w))
   }
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @return a vector with components set to min(c, s) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
    */
   final def min(u: inVec4i, s: Int) :Vec4i = {
     new Vec4i(min(u.x, s), min(u.y, s), min(u.z, s), min(u.w, s))
   }
   
-  /** Performs component-wise min.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to min(u.c, v.c) for each component c.
+  /** Performs component-wise <b>min</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def min(u: inVec4i, v: inVec4i) :Vec4i = {
     new Vec4i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z), min(u.w, v.w))
   }
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @return a vector with components set to max(c, s) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
    */
   final def max(u: inVec4i, s: Int) :Vec4i = {
     new Vec4i(max(u.x, s), max(u.y, s), max(u.z, s), max(u.w, s))
   }
   
-  /** Performs component-wise max.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a vector with components set to max(u.c, v.c) for each component c.
+  /** Performs component-wise <b>max</b> operation.
+   * @param u an integer vector argument.
+   * @param v an integer vector argument.
+   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
    */
   final def max(u: inVec4i, v: inVec4i) :Vec4i = {
     new Vec4i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z), max(u.w, v.w))
   }
   
-  /** Clamps components to be in range between minValue (inclusive) and maxValue (inclusive).
-   * @param u an integer vector.
-   * @return a vector with components clamped to [minValue, maxValue].
+  /** Clamps components to the range from minValue (inclusive) to maxValue (inclusive).
+   * @param u an integer vector argument.
+   * @param minVal the lower bound (inclusive).
+   * @param maxVal the upper bound (inclusive).
+   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
    */
   final def clamp(u: inVec4i, minVal: Int, maxVal: Int) :Vec4i = {
     new Vec4i(
@@ -444,11 +448,11 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise clamp operation.
-   * @param u an integer vector.
-   * @param minVal, an integer vector.
-   * @param maxVal, an integer vector.
-   * @return a vector with components set to clamp(u.c, minVal.c, maxVal.c) for each component c.
+  /** Performs component-wise <b>clamp</b> operation.
+   * @param u an integer vector argument.
+   * @param minVal a vector with components used as lower bound (inclusive).
+   * @param maxVal a vector with components used as upper bound (inclusive).
+   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
    */
   final def clamp(u: inVec4i, minVal: inVec4i, maxVal: inVec4i) :Vec4i = {
     new Vec4i(
@@ -459,10 +463,10 @@ object functions extends CommonMath {
     )
   }
 
-  /** Performs component-wise less than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c < v.c) for each component c.
+  /** Performs component-wise <b>less than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
    */
   final def lessThan(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -473,10 +477,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise less than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c <= v.c) for each component c.
+  /** Performs component-wise <b>less than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
    */
   final def lessThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -487,10 +491,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c > v.c) for each component c.
+  /** Performs component-wise <b>greater than</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
    */
   final def greaterThan(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -501,10 +505,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise greater than or equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c >= v.c) for each component c.
+  /** Performs component-wise <b>greater than or equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
    */
   final def greaterThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -515,10 +519,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c == v.c) for each component c.
+  /** Performs component-wise <b>equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
    */
   final def equal(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -529,10 +533,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise not equal comparision.
-   * @param u an integer vector.
-   * @param v an integer vector.
-   * @return a boolean vector with components set to (u.c != v.c) for each component c.
+  /** Performs component-wise <b>not equal</b> comparison.
+   * @param u an integer vector on the left-hand side of comparison.
+   * @param v an integer vector on the right-hand side of comparison.
+   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
    */
   final def notEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -589,7 +593,8 @@ object functions extends CommonMath {
   def sign(x: Double) :Double = {
     if (x > 0) 1
     else if (x < 0) -1
-    else x // preserves nan and -0
+    else if (x == 0) 0 // strips -0
+    else x // preserves nan
   }
   def floor(x: Double) :Double = {
     if (x > 0) {
@@ -693,7 +698,8 @@ object functions extends CommonMath {
   }
   
   def clamp(x: Double, minVal: Double, maxVal: Double) :Double = {
-    if (x <= minVal) minVal
+    if (minVal > maxVal) scala.Double.NaN
+    else if (x <= minVal) minVal
     else if (x >= maxVal) maxVal
     else x
   }
@@ -701,7 +707,8 @@ object functions extends CommonMath {
   def mix(x: Double, y: Double, a: Double) :Double = x*(1 - a) + y*a
   def step(edge: Double, x: Double) :Double = if (x < edge) 0 else if (isnan(x)) x else 1
   def smoothstep(edge0: Double, edge1: Double, x: Double) :Double = {
-    if (x <= edge0) 0
+    if (edge0 > edge1) scala.Double.NaN
+    else if (x <= edge0) 0
     else if (x >= edge1) 1
     else {
       val t = (x - edge0)/(edge1 - edge0)
@@ -1895,8 +1902,8 @@ object functions extends CommonMath {
   def isnegzero(x: Double) :Boolean = (x == 0 && java.lang.Double.doubleToRawLongBits(x) != 0)
   def isposzero(x: Double) :Boolean = (x == 0 && java.lang.Double.doubleToRawLongBits(x) == 0)
   
-  def isposinf(x: Double) :Boolean = isinf(x) && x > 0
   def isneginf(x: Double) :Boolean = isinf(x) && x < 0
+  def isposinf(x: Double) :Boolean = isinf(x) && x > 0
 
   
   // Lerp

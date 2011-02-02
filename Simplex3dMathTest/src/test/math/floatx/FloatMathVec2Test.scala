@@ -159,10 +159,19 @@ class FloatMathVec2Test extends FunSuite {
         max(Vec2(x, y), Vec2(r, g))
       }
 
-      expect(Vec2(clamp(x, s, t), clamp(y, s, t))) {
+
+      def customExpect(u: inVec2)(f: => Vec2) {
+        val v = f
+        for (i <- 0 until 2) {
+          if (isnan(u(i))) assert(isnan(v(i)))
+          else assert(u(i) == v(i))
+        }
+      }
+
+      customExpect(Vec2(clamp(x, s, t), clamp(y, s, t))) {
         clamp(Vec2(x, y), s, t)
       }
-      expect(Vec2(clamp(x, r, s), clamp(y, g, t))) {
+      customExpect(Vec2(clamp(x, r, s), clamp(y, g, t))) {
         clamp(Vec2(x, y), Vec2(r, g), Vec2(s, t))
       }
 
@@ -182,10 +191,10 @@ class FloatMathVec2Test extends FunSuite {
         step(Vec2(x, y), Vec2(r, g))
       }
       
-      expect(Vec2(smoothstep(s, t, x), smoothstep(s, t, y))) {
+      customExpect(Vec2(smoothstep(s, t, x), smoothstep(s, t, y))) {
         smoothstep(s, t, Vec2(x, y))
       }
-      expect(Vec2(smoothstep(x, r, s), smoothstep(y, g, t))) {
+      customExpect(Vec2(smoothstep(x, r, s), smoothstep(y, g, t))) {
         smoothstep(Vec2(x, y), Vec2(r, g), Vec2(s, t))
       }
     }

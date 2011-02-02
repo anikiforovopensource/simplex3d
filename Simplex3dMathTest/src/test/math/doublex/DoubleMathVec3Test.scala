@@ -178,10 +178,19 @@ class DoubleMathVec3Test extends FunSuite {
         max(Vec3(x, y, z), Vec3(r, g, b))
       }
 
-      expect(Vec3(clamp(x, s, t), clamp(y, s, t), clamp(z, s, t))) {
+
+      def customExpect(u: inVec3)(f: => Vec3) {
+        val v = f
+        for (i <- 0 until 3) {
+          if (isnan(u(i))) assert(isnan(v(i)))
+          else assert(u(i) == v(i))
+        }
+      }
+
+      customExpect(Vec3(clamp(x, s, t), clamp(y, s, t), clamp(z, s, t))) {
         clamp(Vec3(x, y, z), s, t)
       }
-      expect(Vec3(clamp(x, r, s), clamp(y, g, t), clamp(z, b, p))) {
+      customExpect(Vec3(clamp(x, r, s), clamp(y, g, t), clamp(z, b, p))) {
         clamp(Vec3(x, y, z), Vec3(r, g, b), Vec3(s, t, p))
       }
 
@@ -207,14 +216,14 @@ class DoubleMathVec3Test extends FunSuite {
         step(Vec3(x, y, z), Vec3(r, g, b))
       }
       
-      expect(Vec3(
+      customExpect(Vec3(
           smoothstep(s, t, x),
           smoothstep(s, t, y),
           smoothstep(s, t, z)
       )) {
         smoothstep(s, t, Vec3(x, y, z))
       }
-      expect(Vec3(
+      customExpect(Vec3(
           smoothstep(x, r, s),
           smoothstep(y, g, t),
           smoothstep(z, b, p)

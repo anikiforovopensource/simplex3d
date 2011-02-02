@@ -212,14 +212,19 @@ class FloatMathVec4Test extends FunSuite {
         max(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
 
-      expect(Vec4(clamp(x, s, t), clamp(y, s, t),
-            clamp(z, s, t), clamp(w, s, t)))
-      {
+
+      def customExpect(u: inVec4)(f: => Vec4) {
+        val v = f
+        for (i <- 0 until 4) {
+          if (isnan(u(i))) assert(isnan(v(i)))
+          else assert(u(i) == v(i))
+        }
+      }
+
+      customExpect(Vec4(clamp(x, s, t), clamp(y, s, t), clamp(z, s, t), clamp(w, s, t))) {
         clamp(Vec4(x, y, z, w), s, t)
       }
-      expect(Vec4(clamp(x, r, s), clamp(y, g, t),
-            clamp(z, b, p), clamp(w, a, q)))
-      {
+      customExpect(Vec4(clamp(x, r, s), clamp(y, g, t), clamp(z, b, p), clamp(w, a, q))) {
         clamp(Vec4(x, y, z, w), Vec4(r, g, b, a), Vec4(s, t, p, q))
       }
 
@@ -253,13 +258,13 @@ class FloatMathVec4Test extends FunSuite {
         step(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
       
-      expect(Vec4(
+      customExpect(Vec4(
           smoothstep(s, t, x), smoothstep(s, t, y),
           smoothstep(s, t, z), smoothstep(s, t, w)
       )) {
         smoothstep(s, t, Vec4(x, y, z, w))
       }
-      expect(Vec4(
+      customExpect(Vec4(
           smoothstep(x, r, s), smoothstep(y, g, t),
           smoothstep(z, b, p), smoothstep(w, a, q)
       )) {

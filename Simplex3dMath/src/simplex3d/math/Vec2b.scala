@@ -114,9 +114,9 @@ sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
 
 
   /** Read a component using sequence notation.
+   * Throws IndexOutOfBoundsException if i is outside the range of [0, 1].
    * @param i index of the component (0 -> x, 1 -> y).
    * @return component with index i.
-   * @exception IndexOutOfBoundsException if i is outside the range of [0, 1].
    */
   final def apply(i: Int) :Boolean = {
     i match {
@@ -280,9 +280,9 @@ extends ReadVec2b with Implicits[On] with Composite
   def :=(u: inVec2b) { x = u.x; y = u.y }
 
   /** Set a component using sequence notation.
+   * Throws IndexOutOfBoundsException if i is outside the range of [0, 1].
    * @param i index of the component (0 -> x, 1 -> y).
    * @param s new component value.
-   * @exception IndexOutOfBoundsException if i is outside the range of [0, 1].
    */
   def update(i: Int, s: Boolean) {
     i match {

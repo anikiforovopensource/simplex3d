@@ -288,7 +288,7 @@ class DoubleMathTest extends FunSuite {
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1d))
-    assert(isnegzero(sign(-0d)))
+    assert(isposzero(sign(-0d)))
     assert(isposzero(sign(0d)))
     assert(1 == sign(1d))
 
@@ -407,6 +407,7 @@ class DoubleMathTest extends FunSuite {
     assert(2 == max(2d, 1d))
     assert(2 == max(2d, 2d))
 
+    assert(isnan(clamp(0d, 2d, 1d)))
     assert(isnan(clamp(nan, 1d, 3d)))
     assert(3 == (clamp(posinf, 1d, 3d)))
     assert(1 == (clamp(neginf, 1d, 3d)))
@@ -438,6 +439,7 @@ class DoubleMathTest extends FunSuite {
     assert(1 == step(2, 2))
     assert(1 == step(2, 3))
 
+    assert(isnan(smoothstep(2d, 1d, 0d)))
     assert(isnan(smoothstep(1, 2, nan)))
     assert(1 == (smoothstep(1, 2, posinf)))
     assert(0 == (smoothstep(1, 2, neginf)))

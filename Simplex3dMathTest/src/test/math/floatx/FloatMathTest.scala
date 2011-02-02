@@ -288,7 +288,7 @@ class FloatMathTest extends FunSuite {
     assert(1 == (sign(posinf)))
     assert(-1 == (sign(neginf)))
     assert(-1 == sign(-1f))
-    assert(isnegzero(sign(-0f)))
+    assert(isposzero(sign(-0f)))
     assert(isposzero(sign(0f)))
     assert(1 == sign(1f))
 
@@ -407,6 +407,7 @@ class FloatMathTest extends FunSuite {
     assert(2 == max(2f, 1f))
     assert(2 == max(2f, 2f))
 
+    assert(isnan(clamp(0f, 2f, 1f)))
     assert(isnan(clamp(nan, 1f, 3f)))
     assert(3 == (clamp(posinf, 1f, 3f)))
     assert(1 == (clamp(neginf, 1f, 3f)))
@@ -438,6 +439,7 @@ class FloatMathTest extends FunSuite {
     assert(1 == step(2, 2))
     assert(1 == step(2, 3))
 
+    assert(isnan(smoothstep(2f, 1f, 0f)))
     assert(isnan(smoothstep(1, 2, nan)))
     assert(1 == (smoothstep(1, 2, posinf)))
     assert(0 == (smoothstep(1, 2, neginf)))

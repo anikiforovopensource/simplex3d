@@ -981,10 +981,22 @@ object functions extends CommonMath {
     if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
   }
 
-  /**
-   * noise is 0 at multiples of length(simplex side),
-   * simplex side is 1/sqrt(2) = 0.7071067811865475244
-   * meaningful return values for x withing [-2E8, +2E8]
+  /** Computes the value of the 1-dimensional simplex noise function.
+   * The simplex noise function is C^2^ continuous (the first and the second derivatives are continuous).
+   * The return values of the simplex noise function have the following properties:
+   * <ul>
+   *   <li>They are in the range [-1, 1].</li>
+   *   <li>They have Gaussian dirstibution.</li>
+   *   <li>The overall average is zero.</li>
+   *   <li>A particular argument will always result in the same return value.</li>
+   *   <li>Statistical properties do not change with rotation and translation of the domain.</li>
+   * </ul>
+   * The function returns zero when the arguments are coordinates of simplex vertices.
+   * For 1-dimensional case this means that <code>noise1(N*simplexSide) == 0</code> for all integral N.
+   * Simplex side is the same for all dimensions and is equal to <code>1/sqrt(2) = 0.7071067811865475244</code>.
+   * The implementation is restricted to arguments in range [-2E8, +2E8].
+   * @param x a float argument.
+   * @return the value of the simplex noise function.
    */
   def noise1(x: Float) :Float = noise(x).toFloat
   def noise2(x: Float) :Vec2f = {

@@ -39,11 +39,11 @@ object functions extends CommonMath {
    */
   final val Epsilon = 1.19209e-7f
   
-  /** Constant <i>pi</i>.
+  /** Constant ''pi''.
    */
   final val Pi = 3.14159265358979323846f
   
-  /** Constant <i>e</i>.
+  /** Constant ''e''.
    */
   final val E = 2.71828182845904523536f
 
@@ -63,7 +63,10 @@ object functions extends CommonMath {
 
   /** Returns the sign of the argument.
    * @param x an integer argument.
-   * @return 1 if <i>x</i> > 0; -1 if <i>x</i> < 0; 0 otherwise.
+   * @return one of the following:
+   *   - -1 if ''x'' < 0.
+   *   - 1 if ''x'' > 0.
+   *   - 0 otherwise.
    */
   final def sign(x: Int) :Int = if (x > 0) 1 else if (x < 0) -1 else 0
 
@@ -81,11 +84,15 @@ object functions extends CommonMath {
    */
   final def max(x: Int, y: Int) :Int = if (x > y) x else y
 
-  /** Clamps a value to a given range. The result is undefined if <i>minVal</i> > <i>maxVal</i>.
+  /** Clamps a value to a given range.
+   * __Note:__ the result is undefined if ''minVal'' > ''maxVal''.
    * @param x an integer value to clamp.
    * @param minVal the lower bound (inclusive).
    * @param maxVal the upper bound (inclusive).
-   * @return <i>minVal</i> if <i>x</i> < <i>minVal</i>; <i>maxVal</i> if <i>x</i> > <i>maxVal</i>; <i>x</i> otherwise.
+   * @return one of the following:
+   *   - ''minVal'' if ''x'' < ''minVal''.
+   *   - ''maxVal'' if ''x'' > ''maxVal''.
+   *   - ''x'' otherwise.
    */
   final def clamp(x: Int, minVal: Int, maxVal: Int) :Int = {
     if (x <= minVal) minVal
@@ -94,41 +101,41 @@ object functions extends CommonMath {
   }
 
   // Vec2i functions
-  /** Performs component-wise <b>abs</b> operation.
+  /** Performs component-wise '''abs''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to absolute values of components of <i>u</i>.
+   * @return a vector with components set to absolute values of components of ''u''.
    */
   final def abs(u: inVec2i) :Vec2i = new Vec2i(abs(u.x), abs(u.y))
   
-  /** Performs component-wise <b>sign</b> operation.
+  /** Performs component-wise '''sign''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to sign of components of <i>u</i>.
+   * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
   final def sign(u: inVec2i) :Vec2i = new Vec2i(sign(u.x), sign(u.y))
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
   final def min(u: inVec2i, s: Int) :Vec2i = new Vec2i(min(u.x, s), min(u.y, s))
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
    */
   final def min(u: inVec2i, v: inVec2i) :Vec2i = new Vec2i(min(u.x, v.x), min(u.y, v.y))
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
   final def max(u: inVec2i, s: Int) :Vec2i = new Vec2i(max(u.x, s), max(u.y, s))
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
    */
   final def max(u: inVec2i, v: inVec2i) :Vec2i = {
     new Vec2i(max(u.x, v.x), max(u.y, v.y))
@@ -138,17 +145,17 @@ object functions extends CommonMath {
    * @param u an integer vector argument.
    * @param minVal the lower bound (inclusive).
    * @param maxVal the upper bound (inclusive).
-   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
+   * @return a vector with components clamped to [''minValue'', ''maxValue''].
    */
   final def clamp(u: inVec2i, minVal: Int, maxVal: Int) :Vec2i = {
     new Vec2i(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
   }
   
-  /** Performs component-wise <b>clamp</b> operation.
+  /** Performs component-wise '''clamp''' operation.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
-   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `clamp(u.c, minVal.c, maxVal.c)` for each component ''c''.
    */
   final def clamp(u: inVec2i, minVal: inVec2i, maxVal: inVec2i) :Vec2i = {
     new Vec2i(
@@ -157,10 +164,10 @@ object functions extends CommonMath {
     )
   }
 
-  /** Performs component-wise <b>less than</b> comparison.
+  /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c < v.c)` for each component ''c''.
    */
   final def lessThan(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -169,10 +176,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>less than or equal</b> comparison.
+  /** Performs component-wise '''less than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c <= v.c)` for each component ''c''.
    */
   final def lessThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -181,10 +188,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than</b> comparison.
+  /** Performs component-wise '''greater than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c > v.c)` for each component ''c''.
    */
   final def greaterThan(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -193,10 +200,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than or equal</b> comparison.
+  /** Performs component-wise '''greater than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c >= v.c)` for each component ''c''.
    */
   final def greaterThanEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -205,10 +212,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>equal</b> comparison.
+  /** Performs component-wise '''equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c == v.c)` for each component ''c''.
    */
   final def equal(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -217,10 +224,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>not equal</b> comparison.
+  /** Performs component-wise '''not equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c != v.c)` for each component ''c''.
    */
   final def notEqual(u: inVec2i, v: inVec2i) :Vec2b = {
     new Vec2b(
@@ -230,47 +237,47 @@ object functions extends CommonMath {
   }
 
   // Vec3i functions
-  /** Performs component-wise <b>abs</b> operation.
+  /** Performs component-wise '''abs''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to absolute values of components of <i>u</i>.
+   * @return a vector with components set to absolute values of components of ''u''.
    */
   final def abs(u: inVec3i) :Vec3i = new Vec3i(abs(u.x), abs(u.y), abs(u.z))
   
-  /** Performs component-wise <b>sign</b> operation.
+  /** Performs component-wise '''sign''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to sign of components of <i>u</i>.
+   * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
   final def sign(u: inVec3i) :Vec3i = new Vec3i(sign(u.x), sign(u.y), sign(u.z))
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
   final def min(u: inVec3i, s: Int) :Vec3i = {
     new Vec3i(min(u.x, s), min(u.y, s), min(u.z, s))
   }
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
    */
   final def min(u: inVec3i, v: inVec3i) :Vec3i = {
     new Vec3i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z))
   }
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
   final def max(u: inVec3i, s: Int) :Vec3i = {
     new Vec3i(max(u.x, s), max(u.y, s), max(u.z, s))
   }
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
    */
   final def max(u: inVec3i, v: inVec3i) :Vec3i = {
     new Vec3i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z))
@@ -280,7 +287,7 @@ object functions extends CommonMath {
    * @param u an integer vector argument.
    * @param minVal the lower bound (inclusive).
    * @param maxVal the upper bound (inclusive).
-   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
+   * @return a vector with components clamped to [''minValue'', ''maxValue''].
    */
   final def clamp(u: inVec3i, minVal: Int, maxVal: Int) :Vec3i = {
     new Vec3i(
@@ -290,11 +297,11 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>clamp</b> operation.
+  /** Performs component-wise '''clamp''' operation.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
-   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `clamp(u.c, minVal.c, maxVal.c)` for each component ''c''.
    */
   final def clamp(u: inVec3i, minVal: inVec3i, maxVal: inVec3i) :Vec3i = {
     new Vec3i(
@@ -304,10 +311,10 @@ object functions extends CommonMath {
     )
   }
 
-    /** Performs component-wise <b>less than</b> comparison.
+    /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c < v.c)` for each component ''c''.
    */
   final def lessThan(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -317,10 +324,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>less than or equal</b> comparison.
+  /** Performs component-wise '''less than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c <= v.c)` for each component ''c''.
    */
   final def lessThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -330,10 +337,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than</b> comparison.
+  /** Performs component-wise '''greater than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c > v.c)` for each component ''c''.
    */
   final def greaterThan(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -343,10 +350,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than or equal</b> comparison.
+  /** Performs component-wise '''greater than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c >= v.c)` for each component ''c''.
    */
   final def greaterThanEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -356,10 +363,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>equal</b> comparison.
+  /** Performs component-wise '''equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c == v.c)` for each component ''c''.
    */
   final def equal(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -369,10 +376,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>not equal</b> comparison.
+  /** Performs component-wise '''not equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c != v.c)` for each component ''c''.
    */
   final def notEqual(u: inVec3i, v: inVec3i) :Vec3b = {
     new Vec3b(
@@ -383,51 +390,51 @@ object functions extends CommonMath {
   }
 
   // Vec4i functions
-  /** Performs component-wise <b>abs</b> operation.
+  /** Performs component-wise '''abs''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to absolute values of components of <i>u</i>.
+   * @return a vector with components set to absolute values of components of ''u''.
    */
   final def abs(u: inVec4i) :Vec4i = {
     new Vec4i(abs(u.x), abs(u.y), abs(u.z), abs(u.w))
   }
   
-  /** Performs component-wise <b>sign</b> operation.
+  /** Performs component-wise '''sign''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to sign of components of <i>u</i>.
+   * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
   final def sign(u: inVec4i) :Vec4i = {
     new Vec4i(sign(u.x), sign(u.y), sign(u.z), sign(u.w))
   }
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>min(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
   final def min(u: inVec4i, s: Int) :Vec4i = {
     new Vec4i(min(u.x, s), min(u.y, s), min(u.z, s), min(u.w, s))
   }
   
-  /** Performs component-wise <b>min</b> operation.
+  /** Performs component-wise '''min''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>min(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
    */
   final def min(u: inVec4i, v: inVec4i) :Vec4i = {
     new Vec4i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z), min(u.w, v.w))
   }
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
-   * @return a vector with components set to <code>max(c, s)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
   final def max(u: inVec4i, s: Int) :Vec4i = {
     new Vec4i(max(u.x, s), max(u.y, s), max(u.z, s), max(u.w, s))
   }
   
-  /** Performs component-wise <b>max</b> operation.
+  /** Performs component-wise '''max''' operation.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
-   * @return a vector with components set to <code>max(u.c, v.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
    */
   final def max(u: inVec4i, v: inVec4i) :Vec4i = {
     new Vec4i(max(u.x, v.x), max(u.y, v.y), max(u.z, v.z), max(u.w, v.w))
@@ -437,7 +444,7 @@ object functions extends CommonMath {
    * @param u an integer vector argument.
    * @param minVal the lower bound (inclusive).
    * @param maxVal the upper bound (inclusive).
-   * @return a vector with components clamped to [<i>minValue</i>, <i>maxValue</i>].
+   * @return a vector with components clamped to [''minValue'', ''maxValue''].
    */
   final def clamp(u: inVec4i, minVal: Int, maxVal: Int) :Vec4i = {
     new Vec4i(
@@ -448,11 +455,11 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>clamp</b> operation.
+  /** Performs component-wise '''clamp''' operation.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
-   * @return a vector with components set to <code>clamp(u.c, minVal.c, maxVal.c)</code> for each component <i>c</i>.
+   * @return a vector with components set to `clamp(u.c, minVal.c, maxVal.c)` for each component ''c''.
    */
   final def clamp(u: inVec4i, minVal: inVec4i, maxVal: inVec4i) :Vec4i = {
     new Vec4i(
@@ -463,10 +470,10 @@ object functions extends CommonMath {
     )
   }
 
-  /** Performs component-wise <b>less than</b> comparison.
+  /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c < v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c < v.c)` for each component ''c''.
    */
   final def lessThan(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -477,10 +484,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>less than or equal</b> comparison.
+  /** Performs component-wise '''less than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c <= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c <= v.c)` for each component ''c''.
    */
   final def lessThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -491,10 +498,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than</b> comparison.
+  /** Performs component-wise '''greater than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c > v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c > v.c)` for each component ''c''.
    */
   final def greaterThan(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -505,10 +512,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>greater than or equal</b> comparison.
+  /** Performs component-wise '''greater than or equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c >= v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c >= v.c)` for each component ''c''.
    */
   final def greaterThanEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -519,10 +526,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>equal</b> comparison.
+  /** Performs component-wise '''equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c == v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c == v.c)` for each component ''c''.
    */
   final def equal(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -533,10 +540,10 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise <b>not equal</b> comparison.
+  /** Performs component-wise '''not equal''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
    * @param v an integer vector on the right-hand side of comparison.
-   * @return a boolean vector with components set to <code>(u.c != v.c)</code> for each component <i>c</i>.
+   * @return a boolean vector with components set to `(u.c != v.c)` for each component ''c''.
    */
   final def notEqual(u: inVec4i, v: inVec4i) :Vec4b = {
     new Vec4b(
@@ -575,39 +582,44 @@ object functions extends CommonMath {
   
   /** Computes the value of the trigonometric tangent function.
    * @param x an angle (in radians).
-   * @return the tangent of <i>x</i>.
+   * @return the tangent of ''x''.
    */
   def tan(w: Float) :Float = JMath.tan(w).toFloat
 
   /** Computes the value of the inverse sine function. Sine function has a range of [-1, 1],
    * so only the values from this range have meaningful results.
    * @param x a float argument.
-   * @return an angle (in radians) whose sine is <i>x</i>, if <i>x</i> is in [-1, 1]; NaN otherwise.
+   * @return one of the following:
+   *   - an angle (in radians) whose sine is ''x'' if ''x'' is in [-1, 1].
+   *   - NaN otherwise.
    */
   def asin(w: Float) :Float = JMath.asin(w).toFloat
   
   /** Computes the value of the inverse cosine function. Cosine function has a range of [-1, 1],
    * so only the values from this range have meaningful results.
    * @param x a float argument.
-   * @return an angle (in radians) whose cosine is <i>x</i>, if <i>x</i> is in [-1, 1]; NaN otherwise.
+   * @return one of the following:
+   *   - an angle (in radians) whose cosine is ''x'' if ''x'' is in [-1, 1].
+   *   - NaN otherwise.
    */
   def acos(w: Float) :Float = JMath.acos(w).toFloat
   
   /** Computes the value of the inverse tangent function.
-   * The resulting value <i>theta</i> is in range [-<i>pi</i>, <i>pi</i>]. <i>Theta</i> is
-   * the angular component of polar coordinates (<i>r</i>, <i>theta</i>) which correspond to
-   * the point (<i>x</i>, <i>y</i>) in Caretesian coordinates.
+   * The resulting value ''theta'' is in range [-''pi'', ''pi'']. ''Theta'' is
+   * the angular component of polar coordinates (''r'', ''theta'') which correspond to
+   * the point (''x'', ''y'') in Caretesian coordinates.
    * @param y coordinate.
    * @param x coordinate.
-   * @return  an angle (in radians) whose tangent is <code>y/x</code>, if both <i>x</i> and <i>y</i> are non-zero;
-   *          NaN otherwise.
+   * @return one of the following:
+   *   - an angle (in radians) whose tangent is `y/x` if both ''x'' and ''y'' are non-zero.
+   *   - 0 otherwise.
    */
   def atan(y: Float, x: Float) :Float = JMath.atan2(y, x).toFloat
   
   /** Computes the value of the inverse tangent function.
-   * The resulting value is in range [-<i>pi</i>/2, <i>pi</i>/2].
+   * The resulting value is in range [-''pi''/2, ''pi''/2].
    * @param w a float argument.
-   * @return an angle (in radians) whose tangent is <i>w</i>.
+   * @return an angle (in radians) whose tangent is ''w''.
    */
   def atan(w: Float) :Float = JMath.atan(w).toFloat
 
@@ -631,19 +643,23 @@ object functions extends CommonMath {
 
   /** Computes the value of the inverse hyperbolic sine function.
    * @param x a float argument.
-   * @return a value whose hyperbolic sine is <i>x</i>.
+   * @return a value whose hyperbolic sine is ''x''.
    */
   def asinh(x: Float) :Float = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) (-JMath.log(-x + JMath.sqrt(x*x + 1))).toFloat
     else (JMath.log(x + JMath.sqrt(x*x + 1))).toFloat
   }
   
   /** Computes the value of the inverse hyperbolic cosine function. This function is defined
-   * from 1 (inclusinve) to <i>+infinity</i>.
+   * from 1 (inclusinve) to `+`''infinity''.
    * @param x a float argument.
-   * @return a value whose hyperbolic cosine is <i>x</i>, if <i>x</i> is in [1, <i>+infinity</i>); NaN otherwise.
+   * @return one of the following:
+   *   - a value whose hyperbolic cosine is ''x'' if ''x'' >= 1.
+   *   - NaN otherwise.
    */
   def acosh(x: Float) :Float = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) scala.Float.NaN
     else (JMath.log(x + JMath.sqrt(x*x - 1))).toFloat
   }
@@ -651,10 +667,14 @@ object functions extends CommonMath {
   /** Computes the value of the inverse hyperbolic tangent function. This function is defined
    * from -1 (inclusinve) to 1 (inclusive).
    * @param x a float argument.
-   * @return a value whose hyperbolic tangent is <i>x</i>, if <i>x</i> is in (-1, 1);
-   *         <i>+infinity</i>, if <i>x</i> is 1; <i>-infinity</i>, if <i>x</i> is -1; NaN otherwise.
+   * @return one of the following:
+   *   - a value whose hyperbolic tangent is ''x'' if ''x'' is in range (-1, 1).
+   *   - `-`''infinity'' if ''x'' is -1.
+   *   - `+`''infinity'' if ''x'' is 1.
+   *   - NaN otherwise.
    */
   def atanh(x: Float) :Float = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) -atanh(-x)
     else if (x < 0.2) (0.5*JMath.log1p(2*x/(1 - x))).toFloat
     else (0.5*JMath.log((1 + x)/(1 - x))).toFloat
@@ -663,43 +683,57 @@ object functions extends CommonMath {
   /** Computes the value of the first argument raised to the power of the second.
    * @param x the value of the base.
    * @param y the value of the exponent.
-   * @return <code>x</code>^y^; or NaN if <i>x</i> < 0 and <i>y</i> is not an integer.
+   * @return one of the following:
+   *   - NaN if ''x'' < 0 and ''y'' is not an integer.
+   *   - `x`^y^ otherwise.
    */
   def pow(x: Float, y: Float) :Float = JMath.pow(x, y).toFloat
   
   /** Computes the value of the exponential function.
    * @param x the value of the exponent.
-   * @return <code>e</code>^x^, where <i>e</i> is the base of the natural logarithm.
+   * @return `e`^x^, where ''e'' is the base of the natural logarithm.
    */
   def exp(x: Float) :Float = JMath.exp(x).toFloat
   
   /** Computes the value of the natural logarithm.
    * @param x a float argument.
-   * @return natural logarithm of <i>x</i> if <i>x</i> > 0; <i>-infinity</i> if <i>x</i> == 0; NaN otherwise.
+   * @return one of the following:
+   *   - natural logarithm of ''x'' if ''x'' > 0.
+   *   - `-`''infinity'' if ''x'' == 0.
+   *   - NaN otherwise.
    */
   def log(x: Float) :Float = JMath.log(x).toFloat
 
   /** Computes the value of 2 raised to the value of the argument.
    * @param x the value of the exponent.
-   * @return <code>2</code>^x^.
+   * @return `2`^x^.
    */
   def exp2(x: Float) :Float = JMath.pow(2, x).toFloat
   
   /** Computes the value of base 2 logarithm.
    * @param x a float argument.
-   * @return base 2 logarithm of <i>x</i> if <i>x</i> > 0; <i>-infinity</i> if <i>x</i> == 0; NaN otherwise.
+   * @return one of the following:
+   *   - base 2 logarithm of ''x'' if ''x'' > 0.
+   *   - `-`''infinity'' if ''x'' == 0.
+   *   - NaN otherwise.
    */
   def log2(x: Float) :Float = (JMath.log(x)*InvLog2).toFloat
 
   /** Computes the value of the square root.
    * @param x a float argument.
-   * @return <code>√x</code> if <i>x</i> >= 0; NaN otherwise.
+   * @return one of the following:
+   *   - `√x` if ''x'' >= 0.
+   *   - NaN otherwise.
    */
   def sqrt(s: Float) :Float = JMath.sqrt(s).toFloat
   
   /** Computes the value of the multiplicative inverse of the square root.
    * @param x a float argument.
-   * @return <code>1/√x</code> if <i>x</i> > 0; <i>+infinity</i> if <i>x</i> == 0; NaN otherwise.
+   * @return one of the following:
+   *   - `1/√x` if ''x'' > 0.
+   *   - `-`''infinity'' if ''x'' is -0.
+   *   - `+`''infinity'' if ''x'' is +0.
+   *   - NaN otherwise.
    */
   def inversesqrt(s: Float) :Float = (1/JMath.sqrt(s)).toFloat
 
@@ -711,7 +745,10 @@ object functions extends CommonMath {
   
   /** Returns the sign of the argument.
    * @param x a float argument.
-   * @return 1 if <i>x</i> > 0; -1 if <i>x</i> < 0; 0 otherwise.
+   * @return one of the following:
+   *   - -1 if ''x'' < 0.
+   *   - 1 if ''x'' > 0.
+   *   - 0 otherwise.
    */
   def sign(x: Float) :Float = {
     if (x > 0) 1
@@ -816,7 +853,7 @@ object functions extends CommonMath {
   
   /** Returns the fractional part dicarded by the floor function.
    * @param x a float argument
-   * @return <code>x - floor(x)</code>.
+   * @return `x - floor(x)`.
    */
   def fract(x: Float) :Float = {
     if (isnegzero(x)) -0f
@@ -824,10 +861,10 @@ object functions extends CommonMath {
     else x - floor(x)
   }
   
-  /** Returns <code>x mod y</code>. Results of this function are different from scala % operator
+  /** Returns `x mod y`. Results of this function are different from scala % operator
    * when only one of the arguments is negative.
    * @param x a float argument
-   * @return <code>x - y*floor(x/y)</code>.
+   * @return `x - y*floor(x/y)`.
    */
   def mod(x: Float, y: Float) :Float = {
     if (isinf(x)) scala.Float.NaN
@@ -860,8 +897,11 @@ object functions extends CommonMath {
    * @param x a float value to clamp.
    * @param minVal the lower bound (inclusive).
    * @param maxVal the upper bound (inclusive).
-   * @return NaN if <i>minVal</i> > <i>maxVal</i>; <i>minVal</i> if <i>x</i> < <i>minVal</i>;
-   *         <i>maxVal</i> if <i>x</i> > <i>maxVal</i>; <i>x</i> otherwise.
+   * @return one of the following:
+   *   - NaN if ''minVal'' > ''maxVal''.
+   *   - ''minVal'' if ''x'' < ''minVal''.
+   *   - ''maxVal'' if ''x'' > ''maxVal''.
+   *   - ''x'' otherwise.
    */
   def clamp(x: Float, minVal: Float, maxVal: Float) :Float = {
     if (minVal > maxVal) scala.Float.NaN
@@ -870,29 +910,33 @@ object functions extends CommonMath {
     else x
   }
 
-  /** Returns the linear interpolation between <i>x</i> and <i>y</i> with a factor <i>a</i>.
-   * <i>a</i> must be in range [0, 1] to get the desired results.
+  /** Returns the linear interpolation between ''x'' and ''y'' with a factor ''a''.
    * @param x interpolation value for a factor 0.
    * @param y interpolation value for a factor 1.
-   * @param a interpolation factor from 0 (inclusive) to 1 (inclusive).
-   * @return <code>x*(1 - a) + y*a</code>.
+   * @param a interpolation factor, must be in range [0, 1] to achieve the desired result.
+   * @return `x*(1 - a) + y*a`.
    */
   def mix(x: Float, y: Float, a: Float) :Float = x*(1 - a) + y*a
   
   /** Returns the value of the step function.
    * @param edge a float argument.
    * @param x a float argument.
-   * @return 0 if <i>x</i> < <i>edge</i>; 1 otherwise.
+   * @return one of the following:
+   *   - 0 if ''x'' < ''edge''.
+   *   - 1 otherwise.
    */
   def step(edge: Float, x: Float) :Float = if (x < edge) 0 else if (isnan(x)) x else 1
   
-  /** Returns 0 if <i>x</i> < <i>edge0</i> and 1 if <i>x</i> > <i>edge1</i>,
+  /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
    * otherwise performs Hermite interpolation from 0 to 1.
    * @param edge0 the first edge.
    * @param edge1 the second edge.
    * @param x a float argument.
-   * @return NaN if <i>edge0</i> > <i>edge1</i>; 0 if <i>x</i> < <i>edge0</i>;
-   *         1 if <i>x</i> > <i>edge1</i>; smooth interpolation from 0 to 1 otherwise.
+   * @return one of the following:
+   *   - NaN if ''edge0'' > ''edge1''.
+   *   - 0 if ''x'' < ''edge0''.
+   *   - 1 if ''x'' > ''edge1''.
+   *   - smooth interpolation from 0 to 1 otherwise.
    */
   def smoothstep(edge0: Float, edge1: Float, x: Float) :Float = {
     if (edge0 > edge1) scala.Float.NaN
@@ -906,18 +950,22 @@ object functions extends CommonMath {
 
   /** Checks if the argument is NaN.
    * @param x a float argument.
-   * @return <i>true</i> if <i>x</i> is NaN; false otherwise.
+   * @return one of the following:
+   *   - ''true'' if ''x'' is NaN.
+   *   - ''false'' otherwise.
    */
   def isnan(x: Float) :Boolean = java.lang.Float.isNaN(x)
   
-  /** Checks if the argument is <i>infinity</i>.
+  /** Checks if the argument is ''infinity''.
    * @param x a float argument.
-   * @return <i>true</i> if <i>x</i> is <i>-infinity</i> or <i>+infinity</i>; false otherwise.
+   * @return one of the following:
+   *   - ''true'' if ''x'' is `-`''infinity'' or `+`''infinity''.
+   *   - ''false'' otherwise.
    */
   def isinf(x: Float) :Boolean = java.lang.Float.isInfinite(x)
 
   /** Computes the length of the argument.
-   * For scalar components <code>length(x)</code> is equivalent to <code>abs(x)</code>.
+   * For scalar components `length(x)` is equivalent to `abs(x)`.
    * @param x a float argument.
    * @return the distance between the argument and the origin.
    */
@@ -931,7 +979,7 @@ object functions extends CommonMath {
   def distance(x: Float, y: Float) :Float = abs(x - y)
   
   /** Computes the dot product of the arguments.
-   * For scalar components <code>dot(x, y)</code> is equivalent to <code>x*y</code>.
+   * For scalar components `dot(x, y)` is equivalent to `x*y`.
    * @param x a float argument.
    * @param y a float argument.
    * @return the dot product of the arguments.
@@ -940,7 +988,10 @@ object functions extends CommonMath {
   
   /** Returns the normalized value of the argument.
    * @param x a float argument.
-   * @return 1 if <i>x</i> > 0; -1 if <i>x</i> < 0; NaN otherwise.
+   * @return one of the following:
+   *   - -1 if ''x'' < 0.
+   *   - 1 if ''x'' > 0.
+   *   - NaN otherwise.
    */
   def normalize(x: Float) :Float = {
     if (x > 0) 1
@@ -948,18 +999,20 @@ object functions extends CommonMath {
     else scala.Float.NaN
   }
 
-  /** Flips the normal vector <i>n</i> to face the direction opposite to the incident vector <i>i</i>.
+  /** Flips the normal vector ''n'' to face the direction opposite to the incident vector ''i''.
    * @param n the normal.
    * @param i the incident vector.
    * @param nref the reference normal.
-   * @return <i>n</i> if <code>(i*nref)</code> < 0, <i>-n</i> otherwise.
+   * @return one of the following:
+   *   - ''n'' if (''i''*''nref'') < 0.
+   *   - ''-n'' otherwise.
    */
   def faceforward(n: Float, i: Float, nref: Float) :Float = {
     if (i*nref < 0) n else -n
   }
 
-  /** Reflects the incident vector <i>i</i> with respect to the normal vector <i>n</i>.
-   * This function is equivalent to <code>i - 2*dot(n, i)*n</code>.
+  /** Reflects the incident vector ''i'' with respect to the normal vector ''n''.
+   * This function is equivalent to `i - 2*dot(n, i)*n`.
    * @param n the normal, must be normalized to achieve the desired result.
    * @param i the incident vector.
    * @return the reflection vector.
@@ -968,8 +1021,8 @@ object functions extends CommonMath {
     i - 2*(n*i)*n
   }
 
-  /** Refracts the incident vector <i>i</i> with respect to the normal vector <i>n</i>
-   * using the ratio of indices of refraction <i>eta</i>.
+  /** Refracts the incident vector ''i'' with respect to the normal vector ''n''
+   * using the ratio of indices of refraction ''eta''.
    * @param n the normal, must be normalized to achieve the desired result.
    * @param i the incident vector, must be normalized to achieve the desired result.
    * @param eta the ratio of indices of refration.
@@ -983,28 +1036,44 @@ object functions extends CommonMath {
 
   /** Computes the value of the 1-dimensional simplex noise function.
    * The simplex noise function is C^2^ continuous (the first and the second derivatives are continuous).
+   * 
    * The return values of the simplex noise function have the following properties:
-   * <ul>
-   *   <li>They are in the range [-1, 1].</li>
-   *   <li>They have Gaussian dirstibution.</li>
-   *   <li>The overall average is zero.</li>
-   *   <li>A particular argument will always result in the same return value.</li>
-   *   <li>Statistical properties do not change with rotation and translation of the domain.</li>
-   * </ul>
-   * The function returns zero when the arguments are coordinates of simplex vertices.
-   * For 1-dimensional case this means that <code>noise1(N*simplexSide) == 0</code> for all integral N.
-   * Simplex side is the same for all dimensions and is equal to <code>1/sqrt(2) = 0.7071067811865475244</code>.
-   * The implementation is restricted to arguments in range [-2E8, +2E8].
+   *   - They are in the range [-1, 1].
+   *   - They have Gaussian dirstibution.
+   *   - The overall average is zero.
+   *   - A particular argument will always result in the same return value.
+   *   - Statistical properties do not change with rotation and translation of the domain.
+   * 
+   * '''noise1''' function returns zero when the arguments are coordinates of simplex vertices.
+   * For 1-dimensional case this means `noise1(N*simplexSide) == 0` for all integral N.
+   * Simplex side is the same for all dimensions and is equal to `1/sqrt(2) = 0.7071067811865475244`.
+   * 
    * @param x a float argument.
    * @return the value of the simplex noise function.
    */
   def noise1(x: Float) :Float = noise(x).toFloat
+  
+  /** Computes __two__ values of the 1-dimensional simplex noise function.
+   * The first return value is computed using the argument.
+   * The second is computed by adding a constant offset to the argument.
+   * @param x a float argument.
+   * @return two values of the simplex noise function packed as Vec2.
+   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
+   */
   def noise2(x: Float) :Vec2f = {
     new Vec2f(
       noise(x).toFloat,
       noise(x + offset1).toFloat
     )
   }
+  
+  /** Computes __three__ values of the 1-dimensional simplex noise function.
+   * The first return value is computed using the argument.
+   * The others are computed by adding a constant offset to the argument.
+   * @param x a float argument.
+   * @return three values of the simplex noise function packed as Vec3.
+   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
+   */
   def noise3(x: Float) :Vec3f = {
     new Vec3f(
       noise(x).toFloat,
@@ -1012,6 +1081,14 @@ object functions extends CommonMath {
       noise(x + offset2).toFloat
     )
   }
+  
+  /** Computes __four__ values of the 1-dimensional simplex noise function.
+   * The first return value is computed using the argument.
+   * The others are computed by adding a constant offset to the argument.
+   * @param x a float argument.
+   * @return four values of the simplex noise function packed as Vec4.
+   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
+   */
   def noise4(x: Float) :Vec4f = {
     new Vec4f(
       noise(x).toFloat,
@@ -2550,8 +2627,8 @@ object functions extends CommonMath {
 
   /**
    * This method is here for completness. Normally you should work with 
-   * unit quaternions (<code>norm(q) == 1</code>), and in this case
-   * <code>inverse(q) == conjugate(q)</code>.
+   * unit quaternions (`norm(q) == 1`), and in this case
+   * `inverse(q) == conjugate(q)`.
    */
   def inverse(q: inQuat4f) :Quat4f = conjugate(q)/normSquare(q)
 

@@ -566,14 +566,17 @@ object functions extends CommonMath {
   def tanh(x: Double) :Double = JMath.tanh(x)
 
   def asinh(x: Double) :Double = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) -JMath.log(-x + JMath.sqrt(x*x + 1))
     else JMath.log(x + JMath.sqrt(x*x + 1))
   }
   def acosh(x: Double) :Double = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) scala.Double.NaN
     else JMath.log(x + JMath.sqrt(x*x - 1))
   }
   def atanh(x: Double) :Double = {
+    // Possibly replace with a more accurate implementation.
     if (x < 0) -atanh(-x)
     else if (x < 0.2) 0.5*JMath.log1p(2*x/(1 - x))
     else 0.5*JMath.log((1 + x)/(1 - x))

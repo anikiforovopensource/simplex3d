@@ -87,8 +87,9 @@ private[math] object SimplexNoise {
     Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0)
   )
 
-  private def ifloor(x: Double) :Int = {
-    val i = x.toInt
+  // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
+  private def ifloor(x: Double) :Long = {
+    val i = x.toLong
     if (x > 0 || x == i) i else i - 1
   }
 
@@ -101,12 +102,13 @@ private[math] object SimplexNoise {
    * @return simplex noise value for the specified coordinate.
    */
   def noise(x: Double) :Double = {
+    // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
     val pix = ifloor(x*F1)
 
     // The x distance from the cell origin.
     val p0x = x - pix*G1
 
-    val ix = pix & 0xFF
+    val ix = pix.toInt & 0xFF
 
     // For the 1D case, the simplex shape is an interval of length 1.
 
@@ -157,6 +159,8 @@ private[math] object SimplexNoise {
   def noise(x: Double, y: Double) :Double = {
     // Skew the (x,y) space to determine which cell of 2 simplices we're in.
     val s = (x + y) * F2 // Hairy factor for 2D skewing.
+
+    // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val t = (pix + piy) * G2 // Hairy factor for unskewing.
@@ -165,8 +169,8 @@ private[math] object SimplexNoise {
     val p0x = x - pix + t
     val p0y = y - piy + t
 
-    val ix = pix & 0xFF
-    val iy = piy & 0xFF
+    val ix = pix.toInt & 0xFF
+    val iy = piy.toInt & 0xFF
 
     // For the 2D case, the simplex shape is an equilateral triangle.
     // Find out whether we are above or below the x=y diagonal to
@@ -240,6 +244,8 @@ private[math] object SimplexNoise {
   def noise(x: Double, y: Double, z:Double) :Double = {
     // Skew the (x,y,z) space to determine which cell of 6 simplices we're in.
     val s = (x + y + z) * F3 // Factor for 3D skewing.
+
+    // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
@@ -250,9 +256,9 @@ private[math] object SimplexNoise {
     val p0y = y - piy + t
     val p0z = z - piz + t
 
-    val ix = pix & 0xFF
-    val iy = piy & 0xFF
-    val iz = piz & 0xFF
+    val ix = pix.toInt & 0xFF
+    val iy = piy.toInt & 0xFF
+    val iz = piz.toInt & 0xFF
 
     // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
     // To find out which of the six possible tetrahedra we're in, we need to
@@ -375,6 +381,8 @@ private[math] object SimplexNoise {
   def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in.
     val s = (x + y + z + w) * F4 // Factor for 4D skewing.
+
+    // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
     val pix = ifloor(x + s)
     val piy = ifloor(y + s)
     val piz = ifloor(z + s)
@@ -387,10 +395,10 @@ private[math] object SimplexNoise {
     val p0z = z - piz + t
     val p0w = w - piw + t
 
-    val ix = pix & 0xFF
-    val iy = piy & 0xFF
-    val iz = piz & 0xFF
-    val iw = piw & 0xFF
+    val ix = pix.toInt & 0xFF
+    val iy = piy.toInt & 0xFF
+    val iz = piz.toInt & 0xFF
+    val iw = piw.toInt & 0xFF
 
     // For the 4D case, the simplex is a 4D shape I won't even try to describe.
     // To find out which of the 24 possible simplices we're in, we need to

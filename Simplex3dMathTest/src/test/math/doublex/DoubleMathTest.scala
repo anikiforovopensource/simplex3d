@@ -420,8 +420,18 @@ class DoubleMathTest extends FunSuite {
     assert(2 == max(2d, 1d))
     assert(2 == max(2d, 2d))
 
-    assert(isnan(clamp(0d, 2d, 1d)))
     assert(isnan(clamp(nan, 1d, 3d)))
+    assert(isnan(clamp(2d, nan, 3d)))
+    assert(isnan(clamp(2d, 1d, nan)))
+    assert(isnan(clamp(0d, 2d, 1d)))
+    assert(isnegzero(clamp(-0d, -0d, -0d)))
+    assert(isnegzero(clamp(-0d, -0d, 0d)))
+    assert(isnegzero(clamp(-0d, 0d,- 0d)))
+    assert(isnegzero(clamp(-0d, 0d, 0d)))
+    assert(isposzero(clamp(0d, -0d, -0d)))
+    assert(isposzero(clamp(0d, -0d, 0d)))
+    assert(isposzero(clamp(0d, 0d,- 0d)))
+    assert(isposzero(clamp(0d, 0d, 0d)))
     assert(3 == (clamp(posinf, 1d, 3d)))
     assert(1 == (clamp(neginf, 1d, 3d)))
     assert(1 == clamp(0d, 1d, 3d))
@@ -431,6 +441,8 @@ class DoubleMathTest extends FunSuite {
     assert(3 == clamp(4d, 1d, 3d))
 
     assert(isnan(mix(nan, 4, 0.25)))
+    assert(isnan(mix(3, nan, 0.25)))
+    assert(isnan(mix(3, 4, nan)))
     assert(isposinf(mix(posinf, 4, 0.25)))
     assert(isneginf(mix(neginf, 4, 0.25)))
     assert(isnan(mix(0, nan, 0.25)))
@@ -444,7 +456,8 @@ class DoubleMathTest extends FunSuite {
     assert(2 == mix(0, 4, 0.5))
     assert(3 == mix(0, 4, 0.75))
     assert(4 == mix(0, 4, 1))
-    
+
+    assert(isnan(step(nan, 3)))
     assert(isnan(step(2, nan)))
     assert(1 == (step(2, posinf)))
     assert(0 == (step(2, neginf)))
@@ -452,8 +465,11 @@ class DoubleMathTest extends FunSuite {
     assert(1 == step(2, 2))
     assert(1 == step(2, 3))
 
-    assert(isnan(smoothstep(2d, 1d, 0d)))
+    assert(isnan(smoothstep(nan, 2, 3)))
+    assert(isnan(smoothstep(1, nan, 3)))
     assert(isnan(smoothstep(1, 2, nan)))
+    assert(isnan(smoothstep(2d, 1d, 0d)))
+    assert(1 == smoothstep(1d, 1d, 1d))
     assert(1 == (smoothstep(1, 2, posinf)))
     assert(0 == (smoothstep(1, 2, neginf)))
     assert(0 == smoothstep(1, 2, 1))
@@ -486,10 +502,15 @@ class DoubleMathTest extends FunSuite {
     assert(1 == normalize(1))
     assert(1 == normalize(3.5))
 
+    assert(isnan(faceforward(nan, 3d, 2d)))
+    assert(isnan(faceforward(1d, nan, 2d)))
+    assert(isnan(faceforward(1d, 3d, nan)))
     assert(-2.2 == faceforward(2.2, 3, 2))
     assert(-2.2 == faceforward(2.2, 0, 2))
     assert(2.2 == faceforward(2.2, 3, -2))
-    
+
+    assert(isnan(reflect(nan, 1d)))
+    assert(isnan(reflect(1d, nan)))
     assert(-1 == reflect(1, 1))
     assert(-2.5 == reflect(2.5, 1))
     assert(1 == reflect(-1, 1))
@@ -499,6 +520,9 @@ class DoubleMathTest extends FunSuite {
     assert(1 == reflect(-1, -1))
     assert(2.5 == reflect(-2.5, -1))
 
+    assert(isnan(refract(nan, 1d, 0.3)))
+    assert(isnan(refract(1d, nan, 0.3)))
+    assert(isnan(refract(1d, 1d, nan)))
     assert(approxEqual(-1, refract(1, 1, 0.3), 1e-15))
     assert(approxEqual(1, refract(1, -1, 0.3), 1e-15))
     assert(approxEqual(-1, refract(-1, 1, 0.3), 1e-15))

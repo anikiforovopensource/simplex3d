@@ -51,6 +51,9 @@ object functions extends CommonMath {
   private final val RadToDeg = 57.2957795130823208768f
   private final val InvLog2 = 1.44269504088896340736
 
+  private final val MaxIntegralFp = 8388608f
+  private final val MinIntegralFp = -8388608f
+  
 
   // Copied here until the scala compiler can resolve inherited overloaded functions.
   // Int functions
@@ -762,13 +765,13 @@ object functions extends CommonMath {
    */
   def floor(x: Float) :Float = {
     if (x > 0) {
-      if (x > scala.Int.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         x.toInt
       }
     }
     else if (x < 0) {
-      if (x < scala.Int.MinValue) x
+      if (x < MinIntegralFp) x
       else {
         val i = x.toInt
         if (x == i) x else i - 1
@@ -785,12 +788,12 @@ object functions extends CommonMath {
    */
   def trunc(x: Float) :Float = {
     if (x > 0) {
-      if (x > scala.Int.MaxValue) x
+      if (x > MaxIntegralFp) x
       else if (x >= 1) x.toInt
       else 0
     }
     else if (x < 0) {
-      if (x < scala.Int.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x <= -1) x.toInt
       else -0f
     }
@@ -806,13 +809,13 @@ object functions extends CommonMath {
    */
   def round(x: Float) :Float = {
     if (x > 0) {
-      if (x > scala.Int.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         (x + 0.5f).toInt
       }
     }
     else if (x < 0) {
-      if (x < scala.Int.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x >= -0.5f) -0f
       else {
         val f = x + 0.5f
@@ -833,14 +836,14 @@ object functions extends CommonMath {
   def roundEven(x: Float) :Float = JMath.rint(x).toFloat
   def ceil(x: Float) :Float = {
     if (x > 0) {
-      if (x > scala.Int.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         val i = x.toInt
         if (x == i) x else i + 1
       }
     }
     else if (x < 0) {
-      if (x < scala.Int.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x > -1) -0f
       else {
         x.toInt
@@ -904,9 +907,9 @@ object functions extends CommonMath {
    *   - ''x'' otherwise.
    */
   def clamp(x: Float, minVal: Float, maxVal: Float) :Float = {
-    if (minVal > maxVal) scala.Float.NaN
-    else if (x <= minVal) minVal
-    else if (x >= maxVal) maxVal
+    if (!(minVal <= maxVal)) scala.Float.NaN
+    else if (x > maxVal) maxVal
+    else if (x < minVal) minVal
     else x
   }
 
@@ -925,7 +928,11 @@ object functions extends CommonMath {
    *   - 0 if ''x'' < ''edge''.
    *   - 1 otherwise.
    */
-  def step(edge: Float, x: Float) :Float = if (x < edge) 0 else if (isnan(x)) x else 1
+  def step(edge: Float, x: Float) :Float = {
+    if (x < edge) 0
+    else if (x >= edge) 1
+    else scala.Float.NaN
+  }
   
   /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
    * otherwise performs Hermite interpolation from 0 to 1.
@@ -939,9 +946,9 @@ object functions extends CommonMath {
    *   - smooth interpolation from 0 to 1 otherwise.
    */
   def smoothstep(edge0: Float, edge1: Float, x: Float) :Float = {
-    if (edge0 > edge1) scala.Float.NaN
-    else if (x <= edge0) 0
+    if (!(edge0 <= edge1)) scala.Float.NaN
     else if (x >= edge1) 1
+    else if (x <= edge0) 0
     else {
       val t = (x - edge0)/(edge1 - edge0)
       t*t*(3 - 2*t)
@@ -1004,11 +1011,14 @@ object functions extends CommonMath {
    * @param i the incident vector.
    * @param nref the reference normal.
    * @return one of the following:
-   *   - ''n'' if (''i''*''nref'') < 0.
+   *   - ''n'' if dot(''i'', ''nref'') < 0.
    *   - ''-n'' otherwise.
    */
   def faceforward(n: Float, i: Float, nref: Float) :Float = {
-    if (i*nref < 0) n else -n
+    val dot = i*nref
+    if (isnan(dot)) scala.Float.NaN
+    else if (dot < 0) n
+    else -n
   }
 
   /** Reflects the incident vector ''i'' with respect to the normal vector ''n''.

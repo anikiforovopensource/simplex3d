@@ -51,6 +51,9 @@ object functions extends CommonMath {
   private final val RadToDeg = 57.2957795130823208768
   private final val InvLog2 = 1.44269504088896340736
 
+  private final val MaxIntegralFp = 4503599627370496d
+  private final val MinIntegralFp = -4503599627370496d
+  
 
   // Copied here until the scala compiler can resolve inherited overloaded functions.
   // Int functions
@@ -600,13 +603,13 @@ object functions extends CommonMath {
   }
   def floor(x: Double) :Double = {
     if (x > 0) {
-      if (x > scala.Long.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         x.toLong
       }
     }
     else if (x < 0) {
-      if (x < scala.Long.MinValue) x
+      if (x < MinIntegralFp) x
       else {
         val i = x.toLong
         if (x == i) i else i - 1
@@ -618,12 +621,12 @@ object functions extends CommonMath {
   }
   def trunc(x: Double) :Double = {
     if (x > 0) {
-      if (x > scala.Long.MaxValue) x
+      if (x > MaxIntegralFp) x
       else if (x >= 1) x.toLong
       else 0
     }
     else if (x < 0) {
-      if (x < scala.Long.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x <= -1) x.toLong
       else -0d
     }
@@ -633,14 +636,14 @@ object functions extends CommonMath {
   }
   def round(x: Double) :Double = {
     if (x > 0) {
-      if (x > scala.Long.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         val f = x + 0.5
         f.toLong
       }
     }
     else if (x < 0) {
-      if (x < scala.Long.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x >= -0.5) -0d
       else {
         val f = x + 0.5
@@ -655,14 +658,14 @@ object functions extends CommonMath {
   def roundEven(x: Double) :Double = JMath.rint(x)
   def ceil(x: Double) :Double = {
     if (x > 0) {
-      if (x > scala.Long.MaxValue) x
+      if (x > MaxIntegralFp) x
       else {
         val i = x.toLong
         if (x == i) x else i + 1
       }
     }
     else if (x < 0) {
-      if (x < scala.Long.MinValue) x
+      if (x < MinIntegralFp) x
       else if (x > -1) -0d
       else {
         x.toLong
@@ -700,18 +703,22 @@ object functions extends CommonMath {
   }
   
   def clamp(x: Double, minVal: Double, maxVal: Double) :Double = {
-    if (minVal > maxVal) scala.Double.NaN
-    else if (x <= minVal) minVal
-    else if (x >= maxVal) maxVal
+    if (!(minVal <= maxVal)) scala.Double.NaN
+    else if (x > maxVal) maxVal
+    else if (x < minVal) minVal
     else x
   }
 
   def mix(x: Double, y: Double, a: Double) :Double = x*(1 - a) + y*a
-  def step(edge: Double, x: Double) :Double = if (x < edge) 0 else if (isnan(x)) x else 1
+  def step(edge: Double, x: Double) :Double = {
+    if (x < edge) 0
+    else if (x >= edge) 1
+    else scala.Double.NaN
+  }
   def smoothstep(edge0: Double, edge1: Double, x: Double) :Double = {
-    if (edge0 > edge1) scala.Double.NaN
-    else if (x <= edge0) 0
+    if (!(edge0 <= edge1)) scala.Double.NaN
     else if (x >= edge1) 1
+    else if (x <= edge0) 0
     else {
       val t = (x - edge0)/(edge1 - edge0)
       t*t*(3 - 2*t)
@@ -730,7 +737,10 @@ object functions extends CommonMath {
     else scala.Double.NaN
   }
   def faceforward(n: Double, i: Double, nref: Double) :Double = {
-    if (i*nref < 0) n else -n
+    val dot = i*nref
+    if (isnan(dot)) scala.Double.NaN
+    else if (dot < 0) n
+    else -n
   }
 
   def reflect(i: Double, n: Double) :Double = {

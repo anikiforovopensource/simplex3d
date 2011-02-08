@@ -1109,38 +1109,138 @@ object functions extends CommonMath {
   }
 
   // Vec2f functions
+  /** Performs component-wise conversion to radians.
+   * @param u a float vector argument.
+   * @return a vector with argument components converted to radians.
+   */
   def radians(u: inVec2f) :Vec2f = new Vec2f(radians(u.x), radians(u.y))
+  
+  /** Performs component-wise conversion to degrees.
+   * @param u a float vector argument.
+   * @return a vector with argument components converted to degrees.
+   */
   def degrees(u: inVec2f) :Vec2f = new Vec2f(degrees(u.x), degrees(u.y))
 
+  /** Performs component-wise '''sin''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `sin(c)` for each component ''c''.
+   */
   def sin(u: inVec2f) :Vec2f = new Vec2f(sin(u.x), sin(u.y))
+  
+  /** Performs component-wise '''cos''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `cos(c)` for each component ''c''.
+   */
   def cos(u: inVec2f) :Vec2f = new Vec2f(cos(u.x), cos(u.y))
+  
+  /** Performs component-wise '''tan''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `tan(c)` for each component ''c''.
+   */
   def tan(u: inVec2f) :Vec2f = new Vec2f(tan(u.x), tan(u.y))
 
+  /** Performs component-wise '''asin''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `asin(c)` for each component ''c''.
+   */
   def asin(u: inVec2f) :Vec2f = new Vec2f(asin(u.x), asin(u.y))
+  
+  /** Performs component-wise '''acos''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `acos(c)` for each component ''c''.
+   */
   def acos(u: inVec2f) :Vec2f = new Vec2f(acos(u.x), acos(u.y))
-  def atan(uy: inVec2f, ux: inVec2f) :Vec2f = {
-    new Vec2f(atan(uy.x, ux.x), atan(uy.y, ux.y))
-  }
+  
+  /** Performs component-wise '''atan''' operation.
+   * @param uy a float vector argument.
+   * @param ux a float vector argument.
+   * @return a vector with with components set to `atan(uy.c, ux.c)` for each component ''c''.
+   */
+  def atan(uy: inVec2f, ux: inVec2f) :Vec2f = new Vec2f(atan(uy.x, ux.x), atan(uy.y, ux.y))
+
+  /** Performs component-wise '''atan''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `atan(c)` for each component ''c''.
+   */
   def atan(u: inVec2f) :Vec2f = new Vec2f(atan(u.x), atan(u.y))
 
+  /** Performs component-wise '''sinh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `sinh(c)` for each component ''c''.
+   */
   def sinh(u: inVec2f) :Vec2f = new Vec2f(sinh(u.x), sinh(u.y))
+  
+  /** Performs component-wise '''cosh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `cosh(c)` for each component ''c''.
+   */
   def cosh(u: inVec2f) :Vec2f = new Vec2f(cosh(u.x), cosh(u.y))
+  
+  /** Performs component-wise '''tanh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `tanh(c)` for each component ''c''.
+   */
   def tanh(u: inVec2f) :Vec2f = new Vec2f(tanh(u.x), tanh(u.y))
 
+  /** Performs component-wise '''asinh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `asinh(c)` for each component ''c''.
+   */
   def asinh(u: inVec2f) :Vec2f = new Vec2f(asinh(u.x), asinh(u.y))
+  
+  /** Performs component-wise '''acosh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `acosh(c)` for each component ''c''.
+   */
   def acosh(u: inVec2f) :Vec2f = new Vec2f(acosh(u.x), acosh(u.y))
+  
+  /** Performs component-wise '''atanh''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `atanh(c)` for each component ''c''.
+   */
   def atanh(u: inVec2f) :Vec2f = new Vec2f(atanh(u.x), atanh(u.y))
 
-  def pow(u: inVec2f, v: inVec2f) :Vec2f = {
-    new Vec2f(pow(u.x, v.x), pow(u.y, v.y))
-  }
+  /** Performs component-wise '''pow''' operation.
+   * @param u a float vector argument.
+   * @param v a float vector argument.
+   * @return a vector with with components set to `pow(u.c, v.c)` for each component ''c''.
+   */
+  def pow(u: inVec2f, v: inVec2f) :Vec2f = new Vec2f(pow(u.x, v.x), pow(u.y, v.y))
+  
+  /** Applies exponential function to each component.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `e`^c^ for each component ''c''.
+   */
   def exp(u: inVec2f) :Vec2f = new Vec2f(exp(u.x), exp(u.y))
+  
+  /** Applies natural logarith function to each component.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `log(c)` for each component ''c''.
+   */
   def log(u: inVec2f) :Vec2f = new Vec2f(log(u.x), log(u.y))
 
+  /** Performs component-wise '''exp2''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `2`^c^ for each component ''c''.
+   */
   def exp2(u: inVec2f) :Vec2f = new Vec2f(exp2(u.x), exp2(u.y))
+  
+  /** Performs component-wise '''log2''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `log2(c)` for each component ''c''.
+   */
   def log2(u: inVec2f) :Vec2f = new Vec2f(log2(u.x), log2(u.y))
 
+  /** Performs component-wise '''sqrt''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `√c` for each component ''c''.
+   */
   def sqrt(u: inVec2f) :Vec2f = new Vec2f(sqrt(u.x), sqrt(u.y))
+  
+  /** Performs component-wise '''inversesqrt''' operation.
+   * @param u a float vector argument.
+   * @return a vector with with components set to `1/√c` for each component ''c''.
+   */
   def inversesqrt(u: inVec2f) :Vec2f = {
     new Vec2f(inversesqrt(u.x), inversesqrt(u.y))
   }

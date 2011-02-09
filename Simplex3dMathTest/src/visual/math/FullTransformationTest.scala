@@ -46,14 +46,14 @@ object FullTransformationTest {
   val z = Vec3(d, d, len + d)
   val labels = Model(
     Array(
-      // X
+      // X.
       x + Vec3(-d, d, 0), x + Vec3(d, -d, 0),
       x + Vec3(d, d, 0), x + Vec3(-d, -d, 0),
-      // Y
+      // Y.
       y + Vec3(-d, d, 0), y + Vec3(0),
       y + Vec3(d, d, 0), y + Vec3(0),
       y + Vec3(0), y + Vec3(0, -d, 0),
-      // Z
+      // Z.
       z + Vec3(-d, d, 0), z + Vec3(d, d, 0),
       z + Vec3(d, d, 0), z + Vec3(-d, -d, 0),
       z + Vec3(-d, -d, 0), z + Vec3(d, -d, 0)
@@ -63,17 +63,17 @@ object FullTransformationTest {
   val s = 8.0
   val box = Model(
     Array(
-      // Front
+      // Front.
       Vec3(0, 0, 0), Vec3(s, 0, 0),
       Vec3(s, 0, 0), Vec3(s, s, 0),
       Vec3(s, s, 0), Vec3(0, s, 0),
       Vec3(0, s, 0), Vec3(0, 0, 0),
-      // Back
+      // Back.
       Vec3(0, 0, s), Vec3(s, 0, s),
       Vec3(s, 0, s), Vec3(s, s, s),
       Vec3(s, s, s), Vec3(0, s, s),
       Vec3(0, s, s), Vec3(0, 0, s),
-      // Sides
+      // Sides.
       Vec3(0, 0, 0), Vec3(0, 0, s),
       Vec3(s, 0, 0), Vec3(s, 0, s),
       Vec3(s, s, 0), Vec3(s, s, s),
@@ -81,6 +81,27 @@ object FullTransformationTest {
     )
   )
   box.transformation.applyTranslation(Vec3(-s/2))
+
+  val side = 8.0
+  val height2d = sqrt(3.0/4.0*side*side)
+  val radius2d = side/sqrt(3.0)
+  val centerz = sqrt(radius2d*radius2d - 1.0/4.0*side*side)
+  val height3d = side*sqrt(6.0)/3.0
+  val radius3d = side*sqrt(3.0/8.0)
+  val centery = sqrt(radius3d*radius3d - radius2d*radius2d)
+  val simplex = Model(
+    Array(
+      // Base.
+      Vec3(0, 0, 0), Vec3(side, 0, 0),
+      Vec3(side, 0, 0), Vec3(side/2, 0, height2d),
+      Vec3(side/2, 0, height2d), Vec3(0, 0, 0),
+      // The remaining 3 edges.
+      Vec3(0, 0, 0), Vec3(side/2, height3d, centerz),
+      Vec3(side, 0, 0), Vec3(side/2, height3d, centerz),
+      Vec3(side/2, 0, height2d), Vec3(side/2, height3d, centerz)
+    )
+  )
+  simplex.transformation.applyTranslation(-Vec3(side/2, centery, centerz))
 
   val camRotataion = Quat4 rotateX(radians(-30))
   val cam = Camera(camRotataion, rotateVector(Vec3(0, 0, 20), camRotataion))
@@ -92,7 +113,7 @@ object FullTransformationTest {
         cam.rotation := cam.rotation rotateY(rotationSpeed*tpf)
         cam.translation := rotateVector(Vec3(0, 0, 20), cam.rotation)
 
-        LineEngine.render(drawLine, viewportDim, cam)(axis, labels)//, box)
+        LineEngine.render(drawLine, viewportDim, cam)(simplex)//(axis, labels)//(box)
       }
     )
   }

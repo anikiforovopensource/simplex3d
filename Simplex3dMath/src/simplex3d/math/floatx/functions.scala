@@ -104,38 +104,38 @@ object functions extends CommonMath {
   }
 
   // Vec2i functions
-  /** Performs component-wise '''abs''' operation.
+  /** Applies '''abs''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to absolute values of components of ''u''.
    */
   final def abs(u: inVec2i) :Vec2i = new Vec2i(abs(u.x), abs(u.y))
   
-  /** Performs component-wise '''sign''' operation.
+  /** Applies '''sign''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
   final def sign(u: inVec2i) :Vec2i = new Vec2i(sign(u.x), sign(u.y))
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
   final def min(u: inVec2i, s: Int) :Vec2i = new Vec2i(min(u.x, s), min(u.y, s))
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
    */
   final def min(u: inVec2i, v: inVec2i) :Vec2i = new Vec2i(min(u.x, v.x), min(u.y, v.y))
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
   final def max(u: inVec2i, s: Int) :Vec2i = new Vec2i(max(u.x, s), max(u.y, s))
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
@@ -154,7 +154,7 @@ object functions extends CommonMath {
     new Vec2i(clamp(u.x, minVal, maxVal), clamp(u.y, minVal, maxVal))
   }
   
-  /** Performs component-wise '''clamp''' operation.
+  /** Applies '''clamp''' function to each component.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
@@ -240,19 +240,19 @@ object functions extends CommonMath {
   }
 
   // Vec3i functions
-  /** Performs component-wise '''abs''' operation.
+  /** Applies '''abs''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to absolute values of components of ''u''.
    */
   final def abs(u: inVec3i) :Vec3i = new Vec3i(abs(u.x), abs(u.y), abs(u.z))
   
-  /** Performs component-wise '''sign''' operation.
+  /** Applies '''sign''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
   final def sign(u: inVec3i) :Vec3i = new Vec3i(sign(u.x), sign(u.y), sign(u.z))
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
@@ -260,7 +260,7 @@ object functions extends CommonMath {
     new Vec3i(min(u.x, s), min(u.y, s), min(u.z, s))
   }
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
@@ -269,7 +269,7 @@ object functions extends CommonMath {
     new Vec3i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z))
   }
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
@@ -277,7 +277,7 @@ object functions extends CommonMath {
     new Vec3i(max(u.x, s), max(u.y, s), max(u.z, s))
   }
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
@@ -300,7 +300,7 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise '''clamp''' operation.
+  /** Applies '''clamp''' function to each component.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
@@ -393,7 +393,7 @@ object functions extends CommonMath {
   }
 
   // Vec4i functions
-  /** Performs component-wise '''abs''' operation.
+  /** Applies '''abs''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to absolute values of components of ''u''.
    */
@@ -401,7 +401,7 @@ object functions extends CommonMath {
     new Vec4i(abs(u.x), abs(u.y), abs(u.z), abs(u.w))
   }
   
-  /** Performs component-wise '''sign''' operation.
+  /** Applies '''sign''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `sign(u.c)` for each component ''c''.
    */
@@ -409,7 +409,7 @@ object functions extends CommonMath {
     new Vec4i(sign(u.x), sign(u.y), sign(u.z), sign(u.w))
   }
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `min(c, s)` for each component ''c''.
    */
@@ -417,7 +417,7 @@ object functions extends CommonMath {
     new Vec4i(min(u.x, s), min(u.y, s), min(u.z, s), min(u.w, s))
   }
   
-  /** Performs component-wise '''min''' operation.
+  /** Applies '''min''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `min(u.c, v.c)` for each component ''c''.
@@ -426,7 +426,7 @@ object functions extends CommonMath {
     new Vec4i(min(u.x, v.x), min(u.y, v.y), min(u.z, v.z), min(u.w, v.w))
   }
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @return a vector with components set to `max(c, s)` for each component ''c''.
    */
@@ -434,7 +434,7 @@ object functions extends CommonMath {
     new Vec4i(max(u.x, s), max(u.y, s), max(u.z, s), max(u.w, s))
   }
   
-  /** Performs component-wise '''max''' operation.
+  /** Applies '''max''' function to each component.
    * @param u an integer vector argument.
    * @param v an integer vector argument.
    * @return a vector with components set to `max(u.c, v.c)` for each component ''c''.
@@ -458,7 +458,7 @@ object functions extends CommonMath {
     )
   }
   
-  /** Performs component-wise '''clamp''' operation.
+  /** Applies '''clamp''' function to each component.
    * @param u an integer vector argument.
    * @param minVal a vector with components used as lower bound (inclusive).
    * @param maxVal a vector with components used as upper bound (inclusive).
@@ -1121,86 +1121,86 @@ object functions extends CommonMath {
    */
   def degrees(u: inVec2f) :Vec2f = new Vec2f(degrees(u.x), degrees(u.y))
 
-  /** Performs component-wise '''sin''' operation.
+  /** Applies '''sin''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `sin(c)` for each component ''c''.
    */
   def sin(u: inVec2f) :Vec2f = new Vec2f(sin(u.x), sin(u.y))
   
-  /** Performs component-wise '''cos''' operation.
+  /** Applies '''cos''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `cos(c)` for each component ''c''.
    */
   def cos(u: inVec2f) :Vec2f = new Vec2f(cos(u.x), cos(u.y))
   
-  /** Performs component-wise '''tan''' operation.
+  /** Applies '''tan''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `tan(c)` for each component ''c''.
    */
   def tan(u: inVec2f) :Vec2f = new Vec2f(tan(u.x), tan(u.y))
 
-  /** Performs component-wise '''asin''' operation.
+  /** Applies '''asin''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `asin(c)` for each component ''c''.
    */
   def asin(u: inVec2f) :Vec2f = new Vec2f(asin(u.x), asin(u.y))
   
-  /** Performs component-wise '''acos''' operation.
+  /** Applies '''acos''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `acos(c)` for each component ''c''.
    */
   def acos(u: inVec2f) :Vec2f = new Vec2f(acos(u.x), acos(u.y))
   
-  /** Performs component-wise '''atan''' operation.
+  /** Applies '''atan''' function to each component.
    * @param uy a float vector argument.
    * @param ux a float vector argument.
    * @return a vector with with components set to `atan(uy.c, ux.c)` for each component ''c''.
    */
   def atan(uy: inVec2f, ux: inVec2f) :Vec2f = new Vec2f(atan(uy.x, ux.x), atan(uy.y, ux.y))
 
-  /** Performs component-wise '''atan''' operation.
+  /** Applies '''atan''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `atan(c)` for each component ''c''.
    */
   def atan(u: inVec2f) :Vec2f = new Vec2f(atan(u.x), atan(u.y))
 
-  /** Performs component-wise '''sinh''' operation.
+  /** Applies '''sinh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `sinh(c)` for each component ''c''.
    */
   def sinh(u: inVec2f) :Vec2f = new Vec2f(sinh(u.x), sinh(u.y))
   
-  /** Performs component-wise '''cosh''' operation.
+  /** Applies '''cosh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `cosh(c)` for each component ''c''.
    */
   def cosh(u: inVec2f) :Vec2f = new Vec2f(cosh(u.x), cosh(u.y))
   
-  /** Performs component-wise '''tanh''' operation.
+  /** Applies '''tanh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `tanh(c)` for each component ''c''.
    */
   def tanh(u: inVec2f) :Vec2f = new Vec2f(tanh(u.x), tanh(u.y))
 
-  /** Performs component-wise '''asinh''' operation.
+  /** Applies '''asinh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `asinh(c)` for each component ''c''.
    */
   def asinh(u: inVec2f) :Vec2f = new Vec2f(asinh(u.x), asinh(u.y))
   
-  /** Performs component-wise '''acosh''' operation.
+  /** Applies '''acosh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `acosh(c)` for each component ''c''.
    */
   def acosh(u: inVec2f) :Vec2f = new Vec2f(acosh(u.x), acosh(u.y))
   
-  /** Performs component-wise '''atanh''' operation.
+  /** Applies '''atanh''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `atanh(c)` for each component ''c''.
    */
   def atanh(u: inVec2f) :Vec2f = new Vec2f(atanh(u.x), atanh(u.y))
 
-  /** Performs component-wise '''pow''' operation.
+  /** Applies '''pow''' function to each component.
    * @param u a float vector argument.
    * @param v a float vector argument.
    * @return a vector with with components set to `pow(u.c, v.c)` for each component ''c''.
@@ -1219,25 +1219,25 @@ object functions extends CommonMath {
    */
   def log(u: inVec2f) :Vec2f = new Vec2f(log(u.x), log(u.y))
 
-  /** Performs component-wise '''exp2''' operation.
+  /** Applies '''exp2''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `2`^c^ for each component ''c''.
    */
   def exp2(u: inVec2f) :Vec2f = new Vec2f(exp2(u.x), exp2(u.y))
   
-  /** Performs component-wise '''log2''' operation.
+  /** Applies '''log2''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `log2(c)` for each component ''c''.
    */
   def log2(u: inVec2f) :Vec2f = new Vec2f(log2(u.x), log2(u.y))
 
-  /** Performs component-wise '''sqrt''' operation.
+  /** Applies '''sqrt''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `√c` for each component ''c''.
    */
   def sqrt(u: inVec2f) :Vec2f = new Vec2f(sqrt(u.x), sqrt(u.y))
   
-  /** Performs component-wise '''inversesqrt''' operation.
+  /** Applies '''inversesqrt''' function to each component.
    * @param u a float vector argument.
    * @return a vector with with components set to `1/√c` for each component ''c''.
    */

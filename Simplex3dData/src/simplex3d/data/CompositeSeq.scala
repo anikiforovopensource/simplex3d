@@ -33,11 +33,11 @@ abstract class CompositeSeq[E <: Composite, +R <: Raw, B <: Defined](
   prim: ReadContiguous[E#Component, R],
   off: Int, str: Int
 ) extends AbstractData[E, E#Const, E#Read, R](
-  prim.sharedStore, prim, prim.readOnly,
+  prim.sharedStore, prim, prim.isReadOnly,
   off, str
 ) with CompositionFactory[E, B] {
   final def rawType = primitive.rawType
-  final def normalized: Boolean = primitive.normalized
+  final def isNormalized: Boolean = primitive.isNormalized
 
   def mkReadDataArray[P <: B](prim: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
   def mkReadDataBuffer[P <: B](prim: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]

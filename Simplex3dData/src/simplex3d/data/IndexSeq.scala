@@ -62,7 +62,7 @@ object ReadIndexArray {
     implicit factory: PrimitiveFactory[SInt, R]
   ) :ReadIndexArray[R] = {
     val res = factory.mkDataArray(da.sharedArray)
-    if (da.readOnly) res.asReadOnly() else res
+    if (da.isReadOnly) res.asReadOnly() else res
   }
 }
 
@@ -98,7 +98,7 @@ object IndexArray {
   def apply[R <: DefinedIndex](da: DataArray[_, R])(
     implicit factory: PrimitiveFactory[SInt, R]
   ) :IndexArray[R] = {
-    if (da.readOnly) throw new IllegalArgumentException(
+    if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     factory.mkDataArray(da.array)
@@ -116,7 +116,7 @@ object ReadIndexBuffer {
     implicit factory: PrimitiveFactory[SInt, R]
   ) :ReadIndexBuffer[R] = {
     val res = factory.mkReadDataBuffer(db.sharedBuffer)
-    if (db.readOnly) res.asReadOnly() else res
+    if (db.isReadOnly) res.asReadOnly() else res
   }
 }
 
@@ -152,7 +152,7 @@ object IndexBuffer {
   def apply[R <: DefinedIndex](db: DataBuffer[_, _])(
     implicit factory: PrimitiveFactory[SInt, R]
   ) :IndexBuffer[R] = {
-    if (db.readOnly) throw new IllegalArgumentException(
+    if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     factory.mkDataBuffer(db.sharedBuffer)

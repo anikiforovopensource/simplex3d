@@ -125,19 +125,19 @@ trait CompositionFactory[E <: Meta, B <: Defined] {
   }
 
   final def mkDataArray[P <: B](primitive: DataArray[E#Component, P]) :DataArray[E, P] = {
-    if (primitive.readOnly) throw new IllegalArgumentException(
+    if (primitive.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     mkReadDataArray(primitive).asInstanceOf[DataArray[E, P]]
   }
   final def mkDataBuffer[P <: B](primitive: DataBuffer[E#Component, P]) :DataBuffer[E, P] = {
-    if (primitive.readOnly) throw new IllegalArgumentException(
+    if (primitive.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     mkReadDataBuffer(primitive).asInstanceOf[DataBuffer[E, P]]
   }
   final def mkDataView[P <: B](primitive: DataBuffer[E#Component, P], offset: Int, stride: Int) :DataView[E, P] = {
-    if (primitive.readOnly) throw new IllegalArgumentException(
+    if (primitive.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     mkViewOrBuffer(primitive, offset, stride).asInstanceOf[DataView[E, P]]

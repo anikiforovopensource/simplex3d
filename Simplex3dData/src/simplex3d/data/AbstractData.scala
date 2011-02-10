@@ -143,7 +143,7 @@ private[data] abstract class AbstractData[
 
   private[this] final def put(index: Int, src: Seq[E#Read], srcSize: Int, first: Int, count: Int) {
     
-    if (readOnly) throw new ReadOnlyBufferException()
+    if (isReadOnly) throw new ReadOnlyBufferException()
     if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
     if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
     if (first < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
@@ -229,7 +229,7 @@ private[data] abstract class AbstractData[
         "DataSeq[" + src.readManifest + "] cannot be cast to DataSeq[" + primitive.readManifest + "]."
       )
 
-    if (readOnly) throw new ReadOnlyBufferException()
+    if (isReadOnly) throw new ReadOnlyBufferException()
     if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
     if (srcStride < 1) throw new IllegalArgumentException("'srcStride' is less than 1.")
     if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
@@ -250,7 +250,7 @@ private[data] abstract class AbstractData[
 
     val noConversion = (
       (rawType == src.rawType) ||
-      (!normalized && group(rawType) == group(src.rawType))
+      (!isNormalized && group(rawType) == group(src.rawType))
     )
 
     if (stride == components && srcStride == components && noConversion) {

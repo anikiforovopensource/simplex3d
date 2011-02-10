@@ -55,7 +55,7 @@ object AdapterTestUtil extends FunSuite {
 
       val descriptor = Descriptor[E, R](
         attribs.elemManifest, attribs.componentManifest, attribs.readManifest,
-        attribs.components, original.rawType, original.normalized
+        attribs.components, original.rawType, original.isNormalized
       )
 
       val primitiveArray =

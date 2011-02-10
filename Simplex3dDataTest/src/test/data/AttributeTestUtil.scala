@@ -151,8 +151,8 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.primitive.elemManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
-    assert(seq.normalized == descriptor.normalized)
-    assert(seq.readOnly == readOnly)
+    assert(seq.isNormalized == descriptor.normalized)
+    assert(seq.isReadOnly == readOnly)
 
     if (data != null) checkBuffer(seq.readOnlyBuffer(), data)
     assert(seq.readOnlyBuffer().isReadOnly)
@@ -166,19 +166,19 @@ object AttributeTestUtil extends FunSuite {
     if (data != null) assert(seq.size == dataSeqSize(data.limit, seq.offset, seq.stride, seq.components))
     assert(seq.size == seq.length)
 
-    if (seq.readOnly) {
-      assert(seq.primitive.readOnly)
+    if (seq.isReadOnly) {
+      assert(seq.primitive.isReadOnly)
       assert(seq.asReadOnly() eq seq)
     }
     else {
-      assert(!seq.primitive.readOnly)
+      assert(!seq.primitive.isReadOnly)
     }
 
     // Check rawBuffer.
     if (seq.isInstanceOf[DataArray[_, _]]) {
-      assert(seq.rawBuffer().isReadOnly == seq.readOnly)
-      assert(seq.rawBufferWithOffset().isReadOnly == seq.readOnly)
-      assert(seq.rawBufferSubData(0, seq.size).isReadOnly == seq.readOnly)
+      assert(seq.rawBuffer().isReadOnly == seq.isReadOnly)
+      assert(seq.rawBufferWithOffset().isReadOnly == seq.isReadOnly)
+      assert(seq.rawBufferSubData(0, seq.size).isReadOnly == seq.isReadOnly)
     }
     else {
       assert(seq.rawBuffer().isReadOnly)
@@ -237,7 +237,7 @@ object AttributeTestUtil extends FunSuite {
     if (seq.elemManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexArray[_]])
-        if (!seq.readOnly) assert(seq.isInstanceOf[IndexArray[_]])
+        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexArray[_]])
       }
     }
 
@@ -283,7 +283,7 @@ object AttributeTestUtil extends FunSuite {
     if (seq.elemManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexBuffer[_]])
-        if (!seq.readOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
+        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
       }
     }
 

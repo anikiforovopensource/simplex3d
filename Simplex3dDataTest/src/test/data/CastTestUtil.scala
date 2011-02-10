@@ -1121,7 +1121,7 @@ object CastTestUtil extends FunSuite {
     factory: (ReadDataBuffer[_, _]) => ReadDataBuffer[E, R],
     bytes: ByteBuffer
   )(implicit descriptor: Descriptor[E, R]) {
-    assert(!original.readOnly)
+    assert(!original.isReadOnly)
     
     {
       val cast = factory(original)
@@ -1163,7 +1163,7 @@ object CastTestUtil extends FunSuite {
     factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[E, R],
     bytes: ByteBuffer
   )(implicit descriptor: Descriptor[E, R]) {
-    assert(!original.readOnly)
+    assert(!original.isReadOnly)
     val data = wrap(bytes, descriptor)
     val ro = original.asReadOnly()
 

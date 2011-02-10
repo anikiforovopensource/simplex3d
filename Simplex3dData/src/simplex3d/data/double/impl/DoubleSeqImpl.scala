@@ -32,11 +32,11 @@ import simplex3d.data._
 private[data] final class ViewRDoubleRFloat(
   prim: ReadDataBuffer[RDouble, RFloat], off: Int, str: Int
 ) extends BaseRDouble[RFloat](
-  prim, prim, prim.readOnly, off, str
+  prim, prim, prim.isReadOnly, off, str
 ) with DataView[RDouble, RFloat] {
   def mkReadOnlyInstance() = new ViewRDoubleRFloat(primitive.asReadOnly(), offset, stride)
   def rawType: Int = RawType.RFloat
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =
     new ArrayRDoubleRFloat(array, array)

@@ -51,7 +51,7 @@ object ReadDataView {
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataView[E, R] = {
     val res = composition.mkReadDataView(primitive.mkReadDataBuffer(db.sharedBuffer), offset, stride)
-    if (db.readOnly) res.asReadOnly() else res
+    if (db.isReadOnly) res.asReadOnly() else res
   }
 }
 
@@ -65,7 +65,7 @@ object DataView {
   def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _], offset: Int, stride: Int)(
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataView[E, R] = {
-    if (db.readOnly) throw new IllegalArgumentException(
+    if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     composition.mkDataView(primitive.mkDataBuffer(db.sharedBuffer), offset, stride)

@@ -28,12 +28,12 @@ import java.nio.*;
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class Protected<A> {
+abstract class ProtectedData<A> {
     final Object sharedStore;
 
-    Protected(Object shared) {
-        if (shared instanceof Protected) {
-            this.sharedStore = ((Protected) shared).sharedStore;
+    ProtectedData(Object shared) {
+        if (shared instanceof ProtectedData) {
+            this.sharedStore = ((ProtectedData) shared).sharedStore;
         }
         else {
             this.sharedStore = shared;
@@ -56,7 +56,7 @@ abstract class Protected<A> {
             if (src.primitive() == this) {
                 SerializablePrimitive data = (SerializablePrimitive) mkSerializableInstance();
                 data.content_$eq(sharedStore);
-                data.readOnly_$eq(src.readOnly());
+                data.readOnly_$eq(src.isReadOnly());
                 return data;
             }
             else {

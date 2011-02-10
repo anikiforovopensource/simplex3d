@@ -47,7 +47,7 @@ object ReadDataBuffer {
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataBuffer[E, R] = {
     val res = composition.mkReadDataBuffer(primitive.mkReadDataBuffer(db.sharedBuffer))
-    if (db.readOnly) res.asReadOnly() else res
+    if (db.isReadOnly) res.asReadOnly() else res
   }
 }
 
@@ -75,7 +75,7 @@ object DataBuffer {
   def apply[E <: Meta, R <: Defined](db: DataBuffer[_, _])(
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataBuffer[E, R] = {
-    if (db.readOnly) throw new IllegalArgumentException(
+    if (db.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
     composition.mkDataBuffer(primitive.mkDataBuffer(db.sharedBuffer))

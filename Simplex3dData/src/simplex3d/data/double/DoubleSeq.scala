@@ -75,8 +75,8 @@ with CompositionFactory[RDouble, DefinedDouble]
 
 private[data] final class ViewRDouble[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
-) extends BaseRDouble[R](prim, prim, prim.readOnly, off, str) with DataView[RDouble, R] {
-  final def normalized = primitive.normalized
+) extends BaseRDouble[R](prim, prim, prim.isReadOnly, off, str) with DataView[RDouble, R] {
+  final def isNormalized = primitive.isNormalized
   final def rawType = primitive.rawType
   def mkReadOnlyInstance() = new ViewRDouble(primitive.asReadOnly(), offset, stride)
 
@@ -100,7 +100,7 @@ with PrimitiveFactory[RDouble, SByte]
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRDoubleSByte(rarray, null)
   def rawType = RawType.SByte
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
     new ArrayRDoubleSByte(array, array)
@@ -117,7 +117,7 @@ private[data] final class BufferRDoubleSByte(
 ) extends BaseRDouble[SByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, SByte] {
   def mkReadOnlyInstance() = new BufferRDoubleSByte(shared, true)
   def rawType = RawType.SByte
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
     new ArrayRDoubleSByte(array, array)
@@ -140,7 +140,7 @@ with PrimitiveFactory[RDouble, UByte]
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRDoubleUByte(rarray, null)
   def rawType = RawType.UByte
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
     new ArrayRDoubleUByte(array, array)
@@ -157,7 +157,7 @@ private[data] final class BufferRDoubleUByte(
 ) extends BaseRDouble[UByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, UByte] {
   def mkReadOnlyInstance() = new BufferRDoubleUByte(shared, true)
   def rawType = RawType.UByte
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
     new ArrayRDoubleUByte(array, array)
@@ -180,7 +180,7 @@ with PrimitiveFactory[RDouble, SShort]
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRDoubleSShort(rarray, null)
   def rawType = RawType.SShort
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Short]) =
     new ArrayRDoubleSShort(array, array)
@@ -197,7 +197,7 @@ private[data] final class BufferRDoubleSShort(
 ) extends BaseRDouble[SShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, SShort] {
   def mkReadOnlyInstance() = new BufferRDoubleSShort(shared, true)
   def rawType = RawType.SShort
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Short]) =
     new ArrayRDoubleSShort(array, array)
@@ -220,7 +220,7 @@ with PrimitiveFactory[RDouble, UShort]
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArrayRDoubleUShort(rarray, null)
   def rawType = RawType.UShort
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Char]) =
     new ArrayRDoubleUShort(array, array)
@@ -237,7 +237,7 @@ private[data] final class BufferRDoubleUShort(
 ) extends BaseRDouble[UShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, UShort] {
   def mkReadOnlyInstance() = new BufferRDoubleUShort(shared, true)
   def rawType = RawType.UShort
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Char]) =
     new ArrayRDoubleUShort(array, array)
@@ -260,7 +260,7 @@ with PrimitiveFactory[RDouble, SInt]
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRDoubleSInt(rarray, null)
   def rawType = RawType.SInt
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
     new ArrayRDoubleSInt(array, array)
@@ -277,7 +277,7 @@ private[data] final class BufferRDoubleSInt(
 ) extends BaseRDouble[SInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, SInt] {
   def mkReadOnlyInstance() = new BufferRDoubleSInt(shared, true)
   def rawType = RawType.SInt
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
     new ArrayRDoubleSInt(array, array)
@@ -300,7 +300,7 @@ with PrimitiveFactory[RDouble, UInt]
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRDoubleUInt(rarray, null)
   def rawType = RawType.UInt
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
     new ArrayRDoubleUInt(array, array)
@@ -317,7 +317,7 @@ private[data] final class BufferRDoubleUInt(
 ) extends BaseRDouble[UInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, UInt] {
   def mkReadOnlyInstance() = new BufferRDoubleUInt(shared, true)
   def rawType = RawType.UInt
-  def normalized = true
+  def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
     new ArrayRDoubleUInt(array, array)
@@ -340,7 +340,7 @@ with PrimitiveFactory[RDouble, HFloat]
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRDoubleHFloat(rarray, null)
   def rawType: Int = RawType.HFloat
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Short]) =
     new ArrayRDoubleHFloat(array, array)
@@ -357,7 +357,7 @@ private[data] final class BufferRDoubleHFloat(
 ) extends BaseRDouble[HFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, HFloat] {
   def mkReadOnlyInstance() = new BufferRDoubleHFloat(shared, true)
   def rawType: Int = RawType.HFloat
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Short]) =
     new ArrayRDoubleHFloat(array, array)
@@ -380,7 +380,7 @@ with PrimitiveFactory[RDouble, RFloat]
   def this() = this(emptyFloat, emptyFloat)
   def mkReadOnlyInstance() = new ArrayRDoubleRFloat(rarray, null)
   def rawType: Int = RawType.RFloat
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =
     new ArrayRDoubleRFloat(array, array)
@@ -397,7 +397,7 @@ private[data] final class BufferRDoubleRFloat(
 ) extends BaseRDouble[RFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, RFloat] {
   def mkReadOnlyInstance() = new BufferRDoubleRFloat(shared, true)
   def rawType: Int = RawType.RFloat
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =
     new ArrayRDoubleRFloat(array, array)
@@ -420,7 +420,7 @@ with PrimitiveFactory[RDouble, RDouble]
   def this() = this(emptyDouble, emptyDouble)
   def mkReadOnlyInstance() = new ArrayRDoubleRDouble(rarray, null)
   def rawType: Int = RawType.RDouble
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Double]) =
     new ArrayRDoubleRDouble(array, array)
@@ -437,7 +437,7 @@ private[data] final class BufferRDoubleRDouble(
 ) extends BaseRDouble[RDouble](shared, null, ro, 0, 1) with DataBuffer[RDouble, RDouble] {
   def mkReadOnlyInstance() = new BufferRDoubleRDouble(shared, true)
   def rawType: Int = RawType.RDouble
-  def normalized = false
+  def isNormalized = false
 
   def mkDataArray(array: Array[Double]) =
     new ArrayRDoubleRDouble(array, array)

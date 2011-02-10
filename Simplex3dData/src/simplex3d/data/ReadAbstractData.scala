@@ -35,7 +35,7 @@ private[data] abstract class ReadAbstractData[
 ](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends Protected[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
+) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
 with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
   // Assertions
@@ -137,7 +137,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   override def components: Int
   override def elemManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
-  def normalized: Boolean
+  def isNormalized: Boolean
 
   final val bytesPerComponent = RawType.byteLength(rawType)
   final def byteCapacity = {
@@ -150,7 +150,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   final def byteStride = stride*bytesPerComponent
 
 
-  final def readOnly: Boolean = buff.isReadOnly()
+  final def isReadOnly: Boolean = buff.isReadOnly()
   final def sharesStoreObject(seq: inDataSeq[_, _]) :Boolean = {
     sharedStore eq seq.sharedStore
   }
@@ -177,7 +177,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
   private[data] def mkReadOnlyInstance() :ReadDataSeq[E, R]
   def asReadOnly() :ReadDataSeq[E, R]
   private[data] final lazy val readOnlySeq :AnyRef = {
-    if (readOnly) this else mkReadOnlyInstance()
+    if (isReadOnly) this else mkReadOnlyInstance()
   }
 
   private[this] final def dupBuff() :Buffer = {
@@ -277,7 +277,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
 
     var view = false
 
-    (if (readOnly) "ReadOnly" else "") +
+    (if (isReadOnly) "ReadOnly" else "") +
     (this match {
       case s: DataArray[_, _] => "DataArray"
       case s: DataBuffer[_, _] => "DataBuffer"

@@ -47,7 +47,7 @@ object ReadDataArray {
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :ReadDataArray[E, R] = {
     val res = composition.mkDataArray(primitive.mkDataArray(da.sharedArray))
-    if (da.readOnly) res.asReadOnly() else res
+    if (da.isReadOnly) res.asReadOnly() else res
   }
 }
 
@@ -75,7 +75,7 @@ object DataArray {
   def apply[E <: Meta, R <: Defined](da: DataArray[_, R])(
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :DataArray[E, R] = {
-    if (da.readOnly) throw new IllegalArgumentException(
+    if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
     composition.mkDataArray(primitive.mkDataArray(da.sharedArray))

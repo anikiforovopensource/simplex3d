@@ -386,7 +386,7 @@ class InterleavedTest extends FunSuite {
       for ((a, b) <- rwdata zip rwrestored) {
         assert(a.offset == b.offset)
         assert(a.stride == b.stride)
-        assert(a.readOnly == b.readOnly)
+        assert(a.isReadOnly == b.isReadOnly)
       }
 
       val rorestored = in.readObject().asInstanceOf[InterleavedData]
@@ -394,7 +394,7 @@ class InterleavedTest extends FunSuite {
       for ((a, b) <- rodata zip rorestored) {
         assert(a.offset == b.offset)
         assert(a.stride == b.stride)
-        assert(a.readOnly == b.readOnly)
+        assert(a.isReadOnly == b.isReadOnly)
       }
 
       in.close()

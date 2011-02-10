@@ -39,7 +39,7 @@ with CompositionFactory[SInt, DefinedInt]
   final def elemManifest = MetaManifest.SInt
   final def readManifest = Manifest.Int
   final def components: Int = 1
-  final def normalized = false
+  final def isNormalized = false
 
   final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[SInt, P])
   :ReadDataArray[SInt, P] = prim
@@ -60,7 +60,7 @@ with CompositionFactory[SInt, DefinedInt]
 
 private[data] final class ViewSInt[+R <: DefinedInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
-) extends BaseSInt[R](prim, prim, prim.readOnly, off, str) with DataView[SInt, R] {
+) extends BaseSInt[R](prim, prim, prim.isReadOnly, off, str) with DataView[SInt, R] {
   final def rawType = primitive.rawType
   def mkReadOnlyInstance() = new ViewSInt(primitive.asReadOnly(), offset, stride)
 

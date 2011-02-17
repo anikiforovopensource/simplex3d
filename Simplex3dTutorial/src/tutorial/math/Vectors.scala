@@ -5,7 +5,10 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 
 
-class Vectors {
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
+object Vectors {
 
   def main(args: Array[String]): Unit = {
     // Simple factories:
@@ -31,7 +34,7 @@ class Vectors {
     u == Vec3(u.s, u.t, u.p)
     u == Vec3(u(0), u(1), u(2))
 
-    // Vector operations:
+    // Vector operators:
     val add = u + v
     val sub = u - v
     val negation = -u

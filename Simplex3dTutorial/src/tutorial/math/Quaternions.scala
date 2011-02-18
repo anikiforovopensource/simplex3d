@@ -12,7 +12,8 @@ object Quaternions {
 
   def main(args: Array[String]): Unit = {
     // The identity quaternion:
-    val p = Quat4(1, 0, 0, 0)
+    val identity = Quat4(1, 0, 0, 0)
+    val p = Quat4(identity)
     val q: Quat4 = Quat4.Identity
 
     // Accessors:
@@ -29,24 +30,32 @@ object Quaternions {
     val mult1 = q*2
     val mult2 = 2*q
 
-    // Compound assignment operators:
-    q += p
-    q -= p
-    q *= 2
-    q *= p
+    // Rotating a vector
+    q.rotateVector(Vec3(1, 2, 3))
+
+    // Quaternion rotation:
+    val pq = q*p
+    pq == p.rotate(q)
+
+    // Axis-wise rotation.
+    val r = q rotateY(radians(10)) rotateX(0.3) rotateZ(Pi/2)
+
+    // Constructing rotations
+    val r1 = Quat4.Identity rotateX(radians(45)) rotateY(radians(30))
+    val r2 = Quat4 rotateX(radians(45)) rotateY(radians(30))
+    r1 == r2
 
     // Functions:
     norm(q)
     normalize(q)
     conjugate(q)
     inverse(q)
-
-    // Constructing rotations
-    val r1 = q rotate(p) rotateX(radians(10))
-    val r2 = Quat4 rotateZ(Pi/2) rotateY(0.3)
-
-    // Rotating a vector
-    q.rotateVector(Vec3(1, 2, 3))
+    
+    // Compound assignment operators:
+    q += p
+    q -= p
+    q *= 2
+    q *= p
 
     // Constant (immutable) vectors:
     val c1 = ConstQuat4(1, 2, 3, 4)

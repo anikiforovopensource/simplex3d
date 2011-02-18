@@ -31,7 +31,8 @@ object Quaternions {
     val mult2 = 2*q
 
     // Rotating a vector
-    q.rotateVector(Vec3(1, 2, 3))
+    val pos = Vec3(1, 2, 3)
+    q.rotateVector(pos)
 
     // Quaternion rotation:
     val pq = q*p

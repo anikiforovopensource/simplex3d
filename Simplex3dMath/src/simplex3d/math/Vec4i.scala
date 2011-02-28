@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import scala.reflect.ClassManifest.{classType}
-import simplex3d.integration.data._
+import simplex3d.math.integration._
 import simplex3d.math.CommonMath._
 
 

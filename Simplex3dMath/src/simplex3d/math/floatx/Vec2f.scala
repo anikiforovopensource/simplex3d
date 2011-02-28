@@ -22,7 +22,7 @@ package simplex3d.math
 package floatx
 
 import scala.reflect.ClassManifest.{classType}
-import simplex3d.integration.data._
+import simplex3d.math.integration._
 import simplex3d.math.floatx.functions._
 
 
@@ -141,7 +141,11 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName + "(" + x + ", " + y + ")"
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Vec2" + "(" + x + "f, " + y + "f)"
   }
 }
 

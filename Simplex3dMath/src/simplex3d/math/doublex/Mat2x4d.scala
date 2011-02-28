@@ -22,7 +22,7 @@ package simplex3d.math
 package doublex
                       
 import scala.reflect.ClassManifest.{classType}
-import simplex3d.integration.data._
+import simplex3d.math.integration._
 import simplex3d.math.doublex.functions._
 
 
@@ -254,11 +254,15 @@ extends ProtectedMat2x4d[Double]
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName +
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Mat2x4" +
     "(" +
-      m00 + ", " + m10 + "; " + 
-      m01 + ", " + m11 + "; " + 
-      m02 + ", " + m12 + "; " + 
+      m00 + ", " + m10 + ",   " + 
+      m01 + ", " + m11 + ",   " + 
+      m02 + ", " + m12 + ",   " + 
       m03 + ", " + m13 +
     ")"
   }

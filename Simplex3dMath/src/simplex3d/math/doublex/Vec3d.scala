@@ -22,7 +22,7 @@ package simplex3d.math
 package doublex
 
 import scala.reflect.ClassManifest.{classType}
-import simplex3d.integration.data._
+import simplex3d.math.integration._
 import simplex3d.math.doublex.functions._
 
 
@@ -164,7 +164,11 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Vec3" + "(" + x + ", " + y + ", " + z + ")"
   }
 }
 

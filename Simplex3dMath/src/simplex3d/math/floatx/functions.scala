@@ -166,6 +166,8 @@ object functions extends CommonMath {
       clamp(u.y, minVal.y, maxVal.y)
     )
   }
+  
+  final def length(u: inVec2i) = sqrt(u.x*u.x + u.y*u.y)
 
   /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
@@ -313,6 +315,8 @@ object functions extends CommonMath {
       clamp(u.z, minVal.z, maxVal.z)
     )
   }
+  
+  final def length(u: inVec3i) = sqrt(u.x*u.x + u.y*u.y + u.z*u.z)
 
     /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
@@ -472,6 +476,8 @@ object functions extends CommonMath {
       clamp(u.w, minVal.w, maxVal.w)
     )
   }
+  
+  final def length(u: inVec4i) = sqrt(u.x*u.x + u.y*u.y + u.z*u.z + u.w*u.w)
 
   /** Performs component-wise '''less than''' comparison.
    * @param u an integer vector on the left-hand side of comparison.
@@ -1016,9 +1022,7 @@ object functions extends CommonMath {
    */
   def faceforward(n: Float, i: Float, nref: Float) :Float = {
     val dot = i*nref
-    if (isnan(dot)) scala.Float.NaN
-    else if (dot < 0) n
-    else -n
+    if (dot < 0) n else if (isnan(dot)) scala.Float.NaN else -n
   }
 
   /** Reflects the incident vector ''i'' with respect to the normal vector ''n''.
@@ -1337,7 +1341,8 @@ object functions extends CommonMath {
   def normalize(u: inVec2f) :Vec2f = u*inversesqrt(u.x*u.x + u.y*u.y)
 
   def faceforward(n: inVec2f, i: inVec2f, nref: inVec2f) :Vec2f = {
-    if (dot(nref, i) < 0) Vec2f(n) else -n
+    val d = dot(nref, i)
+    if (d < 0) Vec2f(n) else if (isnan(d)) Vec2f(scala.Float.NaN) else -n
   }
 
   def reflect(i: inVec2f, n: inVec2f) :Vec2f = {
@@ -1593,7 +1598,8 @@ object functions extends CommonMath {
   }
 
   def faceforward(n: inVec3f, i: inVec3f, nref: inVec3f) :Vec3f = {
-    if (dot(nref, i) < 0) Vec3f(n) else -n
+    val d = dot(nref, i)
+    if (d < 0) Vec3f(n) else if (isnan(d)) Vec3f(scala.Float.NaN) else -n
   }
 
   def reflect(i: inVec3f, n: inVec3f) :Vec3f = {
@@ -1916,7 +1922,8 @@ object functions extends CommonMath {
   }
 
   def faceforward(n: inVec4f, i: inVec4f, nref: inVec4f) :Vec4f = {
-    if (dot(nref, i) < 0) Vec4f(n) else -n
+    val d = dot(nref, i)
+    if (d < 0) Vec4f(n) else if (isnan(d)) Vec4f(scala.Float.NaN) else -n
   }
 
   def reflect(i: inVec4f, n: inVec4f) :Vec4f = {

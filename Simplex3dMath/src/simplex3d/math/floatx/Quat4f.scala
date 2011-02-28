@@ -22,7 +22,7 @@ package simplex3d.math
 package floatx
 
 import scala.reflect.ClassManifest.{classType}
-import simplex3d.integration.data._
+import simplex3d.math.integration._
 import simplex3d.math.floatx.functions._
 
 
@@ -143,7 +143,11 @@ sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName + "(" + a + ", " + b + ", " + c + ", " + d + ")"
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Quat4" + "(" + a + "f, " + b + "f, " + c + "f, " + d + "f)"
   }
 }
 

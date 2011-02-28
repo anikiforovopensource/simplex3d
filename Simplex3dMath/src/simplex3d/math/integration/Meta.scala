@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.integration.data
+package simplex3d.math.integration
 
 import java.nio
 import scala.reflect.ClassManifest.{classType}
@@ -126,7 +126,10 @@ with DefinedIndex with DefinedFloat with DefinedDouble
 
 
 sealed trait FloatingPoint extends Raw
-sealed trait SystemFloatingPoint extends FloatingPoint
+
+/** System floating point: either float or double.
+ */
+sealed trait SysFP extends FloatingPoint
 
 sealed trait HFloat extends FloatingPoint
 with DefinedFloat with DefinedDouble {
@@ -134,7 +137,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.ShortBuffer
 }
 
-sealed trait RFloat extends Primitive with SystemFloatingPoint
+sealed trait RFloat extends Primitive with SysFP
 with DefinedFloat with DefinedDouble {
   type Read = Float
   type Component = RFloat
@@ -143,7 +146,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.FloatBuffer
 }
 
-sealed trait RDouble extends Primitive with SystemFloatingPoint
+sealed trait RDouble extends Primitive with SysFP
 with DefinedDouble {
   type Read = Double
   type Component = RDouble

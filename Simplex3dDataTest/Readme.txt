@@ -21,10 +21,10 @@ To build the project:
 To run all test:
 Put scalatest-1.2.jar, simplex3d-math-core.jar, simplex3d-math-int.jar,
 simplex3d-math-float.jar, simplex3d-math-double.jar,
-simplex3d-buffer-core.jar, simplex3d-buffer-int.jar,
-simplex3d-buffer-float.jar, simplex3d-buffer-double.jar,
-and simplex3d-buffer-test.jar on the classpath.
+simplex3d-data-core.jar, simplex3d-data-int.jar,
+simplex3d-data-float.jar, simplex3d-data-double.jar,
+and simplex3d-data-test.jar on the classpath.
 Execute the main class "test.JarLauncher".
 
 Example (on GNU/Linux from Simplex3dDataTest directory):
-java -cp $SCALA_HOME/lib/scala-library.jar:../Simplex3dMathTest/lib/scalatest-1.2.jar:../Simplex3dMath/release/jars/simplex3d-math-core.jar:../Simplex3dMath/release/jars/simplex3d-math-int.jar:../Simplex3dMath/release/jars/simplex3d-math-float.jar:../Simplex3dMath/release/jars/simplex3d-math-double.jar:../Simplex3dData/release/jars/simplex3d-buffer-core.jar:../Simplex3dData/release/jars/simplex3d-buffer-int.jar:../Simplex3dData/release/jars/simplex3d-buffer-float.jar:../Simplex3dData/release/jars/simplex3d-buffer-double.jar:release/jars/simplex3d-buffer-test.jar test.JarLauncher
+java -cp $SCALA_HOME/lib/scala-library.jar:../Simplex3dMathTest/lib/scalatest-1.2.jar:../Simplex3dMath/release/jars/simplex3d-math-core.jar:../Simplex3dMath/release/jars/simplex3d-math-int.jar:../Simplex3dMath/release/jars/simplex3d-math-float.jar:../Simplex3dMath/release/jars/simplex3d-math-double.jar:../Simplex3dData/release/jars/simplex3d-data-core.jar:../Simplex3dData/release/jars/simplex3d-data-int.jar:../Simplex3dData/release/jars/simplex3d-data-float.jar:../Simplex3dData/release/jars/simplex3d-data-double.jar:release/jars/simplex3d-data-test.jar test.JarLauncher

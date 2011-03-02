@@ -47,8 +47,8 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4f(x.toFloat, y.toFloat, z.toFloat, w.toFloat)
 
-  private[math] final def bx: Boolean = Bool(x)
-  private[math] final def by: Boolean = Bool(y)
+  private[math] final def bx: Boolean = Boolean(x)
+  private[math] final def by: Boolean = Boolean(y)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt
@@ -113,16 +113,16 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
   final def +(s: Float) = new Vec2f(x + s, y + s)
   final def -(s: Float) = new Vec2f(x - s, y - s)
 
-  private[math] final def divideByComponent(s: Float) = new Vec2f(s / x, s / y)
+  private[math] final def divByComp(s: Float) = new Vec2f(s / x, s / y)
 
   final def +(u: inVec2f) = new Vec2f(x + u.x, y + u.y)
   final def -(u: inVec2f) = new Vec2f(x - u.x, y - u.y)
   final def *(u: inVec2f) = new Vec2f(x * u.x, y * u.y)
   final def /(u: inVec2f) = new Vec2f(x / u.x, y / u.y)
 
-  final def *(m: inMat2f) :Vec2f = m.transposeMul(this)
-  final def *(m: inMat2x3f) :Vec3f = m.transposeMul(this)
-  final def *(m: inMat2x4f) :Vec4f = m.transposeMul(this)
+  final def *(m: inMat2f) :Vec2f = m.transposeMult(this)
+  final def *(m: inMat2x3f) :Vec3f = m.transposeMult(this)
+  final def *(m: inMat2x4f) :Vec4f = m.transposeMult(this)
 
   override def clone() = this
 
@@ -209,7 +209,7 @@ extends ReadVec2f with Implicits[On] with Composite
   def *=(u: inVec2f) { x *= u.x; y *= u.y }
   def /=(u: inVec2f) { x /= u.x; y /= u.y }
 
-  def *=(m: inMat2f) { this := m.transposeMul(this) }
+  def *=(m: inMat2f) { this := m.transposeMult(this) }
 
   override def clone() = Vec2f(this)
   def :=(u: inVec2f) { x = u.x; y = u.y }

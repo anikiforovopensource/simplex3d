@@ -28,6 +28,8 @@ package simplex3d.math
 abstract class AnyVec[P] private[math] () {
 
   override def clone() = this
+  def components: Int
+  def apply(i: Int) :P
 
 
   private[math] type R2 <: AnyVec2[P]

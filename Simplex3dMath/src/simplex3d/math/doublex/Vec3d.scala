@@ -47,9 +47,9 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] final def bx: Boolean = Bool(x)
-  private[math] final def by: Boolean = Bool(y)
-  private[math] final def bz: Boolean = Bool(z)
+  private[math] final def bx: Boolean = Boolean(x)
+  private[math] final def by: Boolean = Boolean(y)
+  private[math] final def bz: Boolean = Boolean(z)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt
@@ -132,7 +132,7 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
   final def +(s: Double) = new Vec3d(x + s, y + s, z + s)
   final def -(s: Double) = new Vec3d(x - s, y - s, z - s)
 
-  private[math] final def divideByComponent(s: Double) = {
+  private[math] final def divByComp(s: Double) = {
     new Vec3d(s / x, s / y, s / z)
   }
 
@@ -141,9 +141,9 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
   final def *(u: inVec3d) = new Vec3d(x * u.x, y * u.y, z * u.z)
   final def /(u: inVec3d) = new Vec3d(x / u.x, y / u.y, z / u.z)
 
-  final def *(m: inMat3x2d) :Vec2d = m.transposeMul(this)
-  final def *(m: inMat3d) :Vec3d = m.transposeMul(this)
-  final def *(m: inMat3x4d) :Vec4d = m.transposeMul(this)
+  final def *(m: inMat3x2d) :Vec2d = m.transposeMult(this)
+  final def *(m: inMat3d) :Vec3d = m.transposeMult(this)
+  final def *(m: inMat3x4d) :Vec4d = m.transposeMult(this)
 
   override def clone() = this
 
@@ -246,7 +246,7 @@ final class Vec3d private[math] (
   def *=(u: inVec3d) { x *= u.x; y *= u.y; z *= u.z }
   def /=(u: inVec3d) { x /= u.x; y /= u.y; z /= u.z }
 
-  def *=(m: inMat3d) { this := m.transposeMul(this) }
+  def *=(m: inMat3d) { this := m.transposeMult(this) }
 
   override def clone() = Vec3d(this)
   def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }

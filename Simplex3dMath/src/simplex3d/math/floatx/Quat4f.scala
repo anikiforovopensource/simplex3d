@@ -83,7 +83,7 @@ sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
   final def +(s: Float) = new Quat4f(a + s, b + s, c + s, d + s)
   final def -(s: Float) = new Quat4f(a - s, b - s, c - s, d - s)
 
-  private[math] final def divideByComponent(s: Float) = {
+  private[math] final def divByComp(s: Float) = {
     new Quat4f(s / a, s / b, s / c, s / d)
   }
 

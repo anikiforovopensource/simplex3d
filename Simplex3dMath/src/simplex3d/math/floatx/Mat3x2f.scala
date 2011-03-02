@@ -133,7 +133,7 @@ extends ProtectedMat3x2f[Float]
     m00/m.m00, m10/m.m10, m20/m.m20,
     m01/m.m01, m11/m.m11, m21/m.m21
   )
-  private[math] final def divideByComponent(s: Float) = new Mat3x2f(
+  private[math] final def divByComp(s: Float) = new Mat3x2f(
     s/m00, s/m10, s/m20,
     s/m01, s/m11, s/m21
   )
@@ -183,7 +183,7 @@ extends ProtectedMat3x2f[Float]
     m10*u.x + m11*u.y,
     m20*u.x + m21*u.y
   )
-  private[math] final def transposeMul(u: inVec3f) = new Vec2f(
+  private[math] final def transposeMult(u: inVec3f) = new Vec2f(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z
   )

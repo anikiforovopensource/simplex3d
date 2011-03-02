@@ -47,10 +47,10 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4d(x, y, z, w)
 
-  private[math] final def bx: Boolean = Bool(x)
-  private[math] final def by: Boolean = Bool(y)
-  private[math] final def bz: Boolean = Bool(z)
-  private[math] final def bw: Boolean = Bool(w)
+  private[math] final def bx: Boolean = Boolean(x)
+  private[math] final def by: Boolean = Boolean(y)
+  private[math] final def bz: Boolean = Boolean(z)
+  private[math] final def bw: Boolean = Boolean(w)
 
   private[math] final def ix: Int = x.toInt
   private[math] final def iy: Int = y.toInt
@@ -153,7 +153,7 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   final def +(s: Double) = new Vec4d(x + s, y + s, z + s, w + s)
   final def -(s: Double) = new Vec4d(x - s, y - s, z - s, w - s)
 
-  private[math] final def divideByComponent(s: Double) = {
+  private[math] final def divByComp(s: Double) = {
     new Vec4d(s / x, s / y, s / z, s / w)
   }
 
@@ -162,9 +162,9 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   final def *(u: inVec4d) = new Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
   final def /(u: inVec4d) = new Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
 
-  final def *(m: inMat4x2d) :Vec2d = m.transposeMul(this)
-  final def *(m: inMat4x3d) :Vec3d = m.transposeMul(this)
-  final def *(m: inMat4d) :Vec4d = m.transposeMul(this)
+  final def *(m: inMat4x2d) :Vec2d = m.transposeMult(this)
+  final def *(m: inMat4x3d) :Vec3d = m.transposeMult(this)
+  final def *(m: inMat4d) :Vec4d = m.transposeMult(this)
 
   override def clone() = this
 
@@ -302,7 +302,7 @@ final class Vec4d private[math] (
   def *=(u: inVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
   def /=(u: inVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
 
-  def *=(m: inMat4d) { this := m.transposeMul(this) }
+  def *=(m: inMat4d) { this := m.transposeMult(this) }
 
   override def clone() = Vec4d(this)
   def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }

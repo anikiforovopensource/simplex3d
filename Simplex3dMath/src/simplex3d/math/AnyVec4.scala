@@ -28,6 +28,7 @@ package simplex3d.math
 abstract class AnyVec4[P] private[math] () extends AnyVec3or4[P] {
 
   override def clone() = this
+  final def components = 4
   
 
   private[math] def bw: Boolean

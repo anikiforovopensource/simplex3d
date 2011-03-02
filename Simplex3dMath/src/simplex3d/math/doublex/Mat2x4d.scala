@@ -171,7 +171,7 @@ extends ProtectedMat2x4d[Double]
     m02/m.m02, m12/m.m12,
     m03/m.m03, m13/m.m13
   )
-  private[math] final def divideByComponent(s: Double) = new Mat2x4d(
+  private[math] final def divByComp(s: Double) = new Mat2x4d(
     s/m00, s/m10,
     s/m01, s/m11,
     s/m02, s/m12,
@@ -213,7 +213,7 @@ extends ProtectedMat2x4d[Double]
     m00*u.x + m01*u.y + m02*u.z + m03*u.w,
     m10*u.x + m11*u.y + m12*u.z + m13*u.w
   )
-  private[math] final def transposeMul(u: inVec2d) = new Vec4d(
+  private[math] final def transposeMult(u: inVec2d) = new Vec4d(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y,
     m02*u.x + m12*u.y,

@@ -59,11 +59,11 @@ sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean]
   private[math] type C4 = ConstVec4b
   
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(Bool(x), Bool(y))
+    new ConstVec2b(Boolean(x), Boolean(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(Bool(x), Bool(y), Bool(z))
+    new ConstVec3b(Boolean(x), Boolean(y), Boolean(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(Bool(x), Bool(y), Bool(z), Bool(w))
+    new ConstVec4b(Boolean(x), Boolean(y), Boolean(z), Boolean(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
@@ -346,7 +346,7 @@ object ConstVec4b {
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
   def apply(m: AnyMat2[_]) =
-    new ConstVec4b(Bool(m.f00), Bool(m.f10), Bool(m.f01), Bool(m.f11))
+    new ConstVec4b(Boolean(m.f00), Boolean(m.f10), Boolean(m.f01), Boolean(m.f11))
 
   /** Makes a new instance of ConstVec4b from quaternion.
    * @param q any quaternion.
@@ -354,7 +354,7 @@ object ConstVec4b {
    *         to b, c, d, and a components of q converted to Boolean.
    */
   def apply(q: AnyQuat4[_]) =
-    new ConstVec4b(Bool(q.fb), Bool(q.fc), Bool(q.fd), Bool(q.fa))
+    new ConstVec4b(Boolean(q.fb), Boolean(q.fc), Boolean(q.fd), Boolean(q.fa))
 
   implicit def toConst(u: ReadVec4b) = new ConstVec4b(u.x, u.y, u.z, u.w)
 }
@@ -776,7 +776,7 @@ object Vec4b {
    *         to m00, m10, m01, and m11 components of m converted to Boolean.
    */
   def apply(m: AnyMat2[_]) =
-    new Vec4b(Bool(m.f00), Bool(m.f10), Bool(m.f01), Bool(m.f11))
+    new Vec4b(Boolean(m.f00), Boolean(m.f10), Boolean(m.f01), Boolean(m.f11))
 
   /** Makes a new instance of Vec4b from quaternion.
    * @param q any quaternion.
@@ -784,7 +784,7 @@ object Vec4b {
    *         to b, c, d, and a components of q converted to Boolean.
    */
   def apply(q: AnyQuat4[_]) =
-    new Vec4b(Bool(q.fb), Bool(q.fc), Bool(q.fd), Bool(q.fa))
+    new Vec4b(Boolean(q.fb), Boolean(q.fc), Boolean(q.fd), Boolean(q.fa))
 
   def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))
 

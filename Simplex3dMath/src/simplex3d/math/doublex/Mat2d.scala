@@ -125,7 +125,7 @@ extends ProtectedMat2d[Double]
     m00/m.m00, m10/m.m10,
     m01/m.m01, m11/m.m11
   )
-  private[math] final def divideByComponent(s: Double) = new Mat2d(
+  private[math] final def divByComp(s: Double) = new Mat2d(
     s/m00, s/m10,
     s/m01, s/m11
   )
@@ -165,7 +165,7 @@ extends ProtectedMat2d[Double]
     m00*u.x + m01*u.y,
     m10*u.x + m11*u.y
   )
-  private[math] final def transposeMul(u: inVec2d) = new Vec2d(
+  private[math] final def transposeMult(u: inVec2d) = new Vec2d(
     m00*u.x + m10*u.y,
     m01*u.x + m11*u.y
   )

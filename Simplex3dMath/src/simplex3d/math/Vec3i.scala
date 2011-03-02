@@ -46,9 +46,9 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
-  private[math] final def bx: Boolean = Bool(x)
-  private[math] final def by: Boolean = Bool(y)
-  private[math] final def bz: Boolean = Bool(z)
+  private[math] final def bx: Boolean = Boolean(x)
+  private[math] final def by: Boolean = Boolean(y)
+  private[math] final def bz: Boolean = Boolean(z)
 
   private[math] final def ix: Int = x
   private[math] final def iy: Int = y
@@ -133,9 +133,9 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   final def +(s: Int) = new Vec3i(x + s, y + s, z + s)
   final def -(s: Int) = new Vec3i(x - s, y - s, z - s)
 
-  private[math] final def divideByComponent(s: Int) = new Vec3i(s / x, s / y, s / z)
+  private[math] final def divByComp(s: Int) = new Vec3i(s / x, s / y, s / z)
   final def %(s: Int) = new Vec3i(x % s, y % s, z % s)
-  private[math] final def modByComponent(s: Int) = new Vec3i(s % x, s % y, s % z)
+  private[math] final def remByComp(s: Int) = new Vec3i(s % x, s % y, s % z)
   final def >>(s: Int) = new Vec3i( x >> s, y >> s, z >> s)
   final def >>>(s: Int) = new Vec3i( x >>> s, y >>> s, z >>> s)
   final def <<(s: Int) = new Vec3i( x << s, y << s, z << s)

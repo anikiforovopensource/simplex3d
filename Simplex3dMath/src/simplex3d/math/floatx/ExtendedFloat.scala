@@ -50,47 +50,47 @@ final class ExtendedFloat(val value: Float) {
   def -(q: inQuat4f) = new Quat4f(value - q.a, value - q.b, value - q.c, value - q.d)
 
   def *(m: inMat2f) = m*value
-  def /(m: inMat2f) = m.divideByComponent(value)
+  def /(m: inMat2f) = m.divByComp(value)
   def +(m: inMat2f) = m + value
   def -(m: inMat2f) = { val t = -m; t += value; t }
 
   def *(m: inMat2x3f) = m*value
-  def /(m: inMat2x3f) = m.divideByComponent(value)
+  def /(m: inMat2x3f) = m.divByComp(value)
   def +(m: inMat2x3f) = m + value
   def -(m: inMat2x3f) = { val t = -m; t += value; t }
 
   def *(m: inMat2x4f) = m*value
-  def /(m: inMat2x4f) = m.divideByComponent(value)
+  def /(m: inMat2x4f) = m.divByComp(value)
   def +(m: inMat2x4f) = m + value
   def -(m: inMat2x4f) = { val t = -m; t += value; t }
 
   def *(m: inMat3x2f) = m*value
-  def /(m: inMat3x2f) = m.divideByComponent(value)
+  def /(m: inMat3x2f) = m.divByComp(value)
   def +(m: inMat3x2f) = m + value
   def -(m: inMat3x2f) = { val t = -m; t += value; t }
 
   def *(m: inMat3f) = m*value
-  def /(m: inMat3f) = m.divideByComponent(value)
+  def /(m: inMat3f) = m.divByComp(value)
   def +(m: inMat3f) = m + value
   def -(m: inMat3f) = { val t = -m; t += value; t }
 
   def *(m: inMat3x4f) = m*value
-  def /(m: inMat3x4f) = m.divideByComponent(value)
+  def /(m: inMat3x4f) = m.divByComp(value)
   def +(m: inMat3x4f) = m + value
   def -(m: inMat3x4f) = { val t = -m; t += value; t }
 
   def *(m: inMat4x2f) = m*value
-  def /(m: inMat4x2f) = m.divideByComponent(value)
+  def /(m: inMat4x2f) = m.divByComp(value)
   def +(m: inMat4x2f) = m + value
   def -(m: inMat4x2f) = { val t = -m; t += value; t }
 
   def *(m: inMat4x3f) = m*value
-  def /(m: inMat4x3f) = m.divideByComponent(value)
+  def /(m: inMat4x3f) = m.divByComp(value)
   def +(m: inMat4x3f) = m + value
   def -(m: inMat4x3f) = { val t = -m; t += value; t }
 
   def *(m: inMat4f) = m*value
-  def /(m: inMat4f) = m.divideByComponent(value)
+  def /(m: inMat4f) = m.divByComp(value)
   def +(m: inMat4f) = m + value
   def -(m: inMat4f) = { val t = -m; t += value; t }
 }

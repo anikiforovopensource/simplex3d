@@ -172,7 +172,7 @@ extends ProtectedMat4x3f[Float]
     m01/m.m01, m11/m.m11, m21/m.m21, m31/m.m31,
     m02/m.m02, m12/m.m12, m22/m.m22, m32/m.m32
   )
-  private[math] final def divideByComponent(s: Float) = new Mat4x3f(
+  private[math] final def divByComp(s: Float) = new Mat4x3f(
     s/m00, s/m10, s/m20, s/m30,
     s/m01, s/m11, s/m21, s/m31,
     s/m02, s/m12, s/m22, s/m32
@@ -233,7 +233,7 @@ extends ProtectedMat4x3f[Float]
     m20*u.x + m21*u.y + m22*u.z,
     m30*u.x + m31*u.y + m32*u.z
   )
-  private[math] final def transposeMul(u: inVec4f) = new Vec3f(
+  private[math] final def transposeMult(u: inVec4f) = new Vec3f(
     m00*u.x + m10*u.y + m20*u.z + m30*u.w,
     m01*u.x + m11*u.y + m21*u.z + m31*u.w,
     m02*u.x + m12*u.y + m22*u.z + m32*u.w

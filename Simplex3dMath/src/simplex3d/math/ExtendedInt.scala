@@ -54,19 +54,19 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s/u.x and s/u.y.
    */
-  def /(u: inVec2i) = u.divideByComponent(value)
+  def /(u: inVec2i) = u.divByComp(value)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, and s/u.z.
    */
-  def /(u: inVec3i) = u.divideByComponent(value)
+  def /(u: inVec3i) = u.divByComp(value)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, s/u.z, and s/u.w.
    */
-  def /(u: inVec4i) = u.divideByComponent(value)
+  def /(u: inVec4i) = u.divByComp(value)
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
@@ -113,7 +113,7 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x and s % u.y.
    */
-  def %(u: inVec2i) = u.modByComponent(value)
+  def %(u: inVec2i) = u.remByComp(value)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -121,7 +121,7 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, and s % u.z.
    */
-  def %(u: inVec3i) = u.modByComponent(value)
+  def %(u: inVec3i) = u.remByComp(value)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -129,7 +129,7 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, s % u.z, and s % u.w.
    */
-  def %(u: inVec4i) = u.modByComponent(value)
+  def %(u: inVec4i) = u.remByComp(value)
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.

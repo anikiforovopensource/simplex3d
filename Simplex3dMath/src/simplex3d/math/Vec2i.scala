@@ -46,8 +46,8 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
-  private[math] final def bx: Boolean = Bool(x)
-  private[math] final def by: Boolean = Bool(y)
+  private[math] final def bx: Boolean = Boolean(x)
+  private[math] final def by: Boolean = Boolean(y)
 
   private[math] final def ix: Int = x
   private[math] final def iy: Int = y
@@ -114,9 +114,9 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
   final def +(s: Int) = new Vec2i(x + s, y + s)
   final def -(s: Int) = new Vec2i(x - s, y - s)
 
-  private[math] final def divideByComponent(s: Int) = new Vec2i(s / x, s / y)
+  private[math] final def divByComp(s: Int) = new Vec2i(s / x, s / y)
   final def %(s: Int) = new Vec2i(x % s, y % s)
-  private[math] final def modByComponent(s: Int) = new Vec2i(s % x, s % y)
+  private[math] final def remByComp(s: Int) = new Vec2i(s % x, s % y)
   final def >>(s: Int) = new Vec2i( x >> s, y >> s)
   final def >>>(s: Int) = new Vec2i( x >>> s, y >>> s)
   final def <<(s: Int) = new Vec2i( x << s, y << s)

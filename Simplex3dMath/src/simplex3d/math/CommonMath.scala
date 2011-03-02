@@ -37,27 +37,27 @@ private[math] class CommonMath {
    * @param x a value to cast.
    * @return x.
    */
-  final def Bool(x: Boolean) :Boolean = x
+  final def Boolean(x: Boolean) :Boolean = x
 
   /** Casts an Int to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  final def Bool(x: Int) :Boolean = (x != 0)
+  final def Boolean(x: Int) :Boolean = (x != 0)
 
   /** Casts a Float to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def Bool(x: Float) :Boolean = (x != 0)
+  final def Boolean(x: Float) :Boolean = (x != 0)
 
   /** Casts a Double to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  final def Bool(x: Double) :Boolean = (x != 0)
+  final def Boolean(x: Double) :Boolean = (x != 0)
   
-  final def Bool(u: AnyVec[_]) :Boolean = u.bx
+  final def Boolean(u: AnyVec[_]) :Boolean = u.bx
 
   /** Casts a Boolean to an Int.
    * @param x a value to cast.

@@ -29,6 +29,9 @@ package simplex3d.math
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyQuat4[P] private[math] () {
+  override def clone() = this
+  def apply(i: Int) :P
+
   private[math] def fa: Float
   private[math] def fb: Float
   private[math] def fc: Float
@@ -38,8 +41,6 @@ abstract class AnyQuat4[P] private[math] () {
   private[math] def db: Double
   private[math] def dc: Double
   private[math] def dd: Double
-
-  override def clone() = this
 }
 
 /** <code>ReadMat</code> is a superclass of all the matrices.
@@ -50,6 +51,11 @@ abstract class AnyQuat4[P] private[math] () {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat[P] private[math] () {
+  override def clone() = this
+  def columns: Int
+  def rows: Int
+  def apply(c: Int, r: Int) :P
+
   private[math] def f00: Float
   private[math] def f10: Float
   private[math] def f20: Float = 0
@@ -90,8 +96,6 @@ abstract class AnyMat[P] private[math] () {
   private[math] def d13: Double = 0
   private[math] def d23: Double = 0
   private[math] def d33: Double = 1
-
-  override def clone() = this
 }
 
 /** <code>AnyMat2</code> is a superclass of all the 2x2 matrices.
@@ -103,6 +107,8 @@ abstract class AnyMat[P] private[math] () {
  */
 abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 2
+  final def rows = 2
 }
 
 /** <code>AnyMat2x3</code> is a superclass of all the 2x3 matrices.
@@ -114,6 +120,8 @@ abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 3
+  final def rows = 2
 }
 
 /** <code>AnyMat2x4</code> is a superclass of all the 2x4 matrices.
@@ -125,6 +133,8 @@ abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 4
+  final def rows = 2
 }
 
 /** <code>AnyMat3x2</code> is a superclass of all the 3x2 matrices.
@@ -136,6 +146,8 @@ abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 2
+  final def rows = 3
 }
 
 /** <code>AnyMat3</code> is a superclass of all the 3x3 matrices.
@@ -147,6 +159,8 @@ abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 3
+  final def rows = 3
 }
 
 /** <code>AnyMat3x4</code> is a superclass of all the 3x4 matrices.
@@ -158,6 +172,8 @@ abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 4
+  final def rows = 3
 }
 
 /** <code>AnyMat4x2</code> is a superclass of all the 4x2 matrices.
@@ -169,6 +185,8 @@ abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 2
+  final def rows = 4
 }
 
 /** <code>AnyMat4x3</code> is a superclass of all the 4x3 matrices.
@@ -180,6 +198,8 @@ abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 3
+  final def rows = 4
 }
 
 /** <code>AnyMat4</code> is a superclass of all the 4x4 matrices.
@@ -191,4 +211,6 @@ abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
  */
 abstract class AnyMat4[P] private[math] () extends AnyMat[P] {
   override def clone() = this
+  final def columns = 4
+  final def rows = 4
 }

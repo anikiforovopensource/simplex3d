@@ -82,7 +82,7 @@ sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
   final def +(s: Double) = new Quat4d(a + s, b + s, c + s, d + s)
   final def -(s: Double) = new Quat4d(a - s, b - s, c - s, d - s)
   
-  private[math] final def divideByComponent(s: Double) = {
+  private[math] final def divByComp(s: Double) = {
     new Quat4d(s / a, s / b, s / c, s / d)
   }
 

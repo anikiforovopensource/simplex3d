@@ -51,28 +51,28 @@ class CommonMathTest extends FunSuite {
     val f3: Float = -1
     val d3: Double = -1
 
-    assert(Bool(b1).isInstanceOf[Boolean])
-    assert(Bool(i1).isInstanceOf[Boolean])
-    assert(Bool(f1).isInstanceOf[Boolean])
-    assert(Bool(d1).isInstanceOf[Boolean])
+    assert(Boolean(b1).isInstanceOf[Boolean])
+    assert(Boolean(i1).isInstanceOf[Boolean])
+    assert(Boolean(f1).isInstanceOf[Boolean])
+    assert(Boolean(d1).isInstanceOf[Boolean])
 
-    assert(Bool(b1))
-    assert(Bool(i1))
-    assert(Bool(f1))
-    assert(Bool(d1))
+    assert(Boolean(b1))
+    assert(Boolean(i1))
+    assert(Boolean(f1))
+    assert(Boolean(d1))
 
-    assert(Bool(i2))
-    assert(Bool(f2))
-    assert(Bool(d2))
+    assert(Boolean(i2))
+    assert(Boolean(f2))
+    assert(Boolean(d2))
 
-    assert(Bool(i3))
-    assert(Bool(f3))
-    assert(Bool(d3))
+    assert(Boolean(i3))
+    assert(Boolean(f3))
+    assert(Boolean(d3))
 
-    assert(!Bool(b0))
-    assert(!Bool(i0))
-    assert(!Bool(f0))
-    assert(!Bool(d0))
+    assert(!Boolean(b0))
+    assert(!Boolean(i0))
+    assert(!Boolean(f0))
+    assert(!Boolean(d0))
 
     assert(Int(b1).isInstanceOf[Int])
     assert(Int(i1).isInstanceOf[Int])
@@ -121,25 +121,25 @@ class CommonMathTest extends FunSuite {
 
 
     // Vectors
-    assert(!Bool(Vec2b(false, false)))
-    assert(!Bool(Vec2b(false, true)))
-    assert(Bool(Vec2b(true, false)))
-    assert(Bool(Vec2b(true, true)))
+    assert(!Boolean(Vec2b(false, false)))
+    assert(!Boolean(Vec2b(false, true)))
+    assert(Boolean(Vec2b(true, false)))
+    assert(Boolean(Vec2b(true, true)))
 
-    assert(!Bool(Vec2i(0, 0)))
-    assert(!Bool(Vec2i(0, 1)))
-    assert(Bool(Vec2i(1, 0)))
-    assert(Bool(Vec2i(1, 1)))
+    assert(!Boolean(Vec2i(0, 0)))
+    assert(!Boolean(Vec2i(0, 1)))
+    assert(Boolean(Vec2i(1, 0)))
+    assert(Boolean(Vec2i(1, 1)))
 
-    assert(!Bool(Vec2f(0, 0)))
-    assert(!Bool(Vec2f(0, 1)))
-    assert(Bool(Vec2f(1, 0)))
-    assert(Bool(Vec2f(1, 1)))
+    assert(!Boolean(Vec2f(0, 0)))
+    assert(!Boolean(Vec2f(0, 1)))
+    assert(Boolean(Vec2f(1, 0)))
+    assert(Boolean(Vec2f(1, 1)))
 
-    assert(!Bool(Vec2d(0, 0)))
-    assert(!Bool(Vec2d(0, 1)))
-    assert(Bool(Vec2d(1, 0)))
-    assert(Bool(Vec2d(1, 1)))
+    assert(!Boolean(Vec2d(0, 0)))
+    assert(!Boolean(Vec2d(0, 1)))
+    assert(Boolean(Vec2d(1, 0)))
+    assert(Boolean(Vec2d(1, 1)))
 
 
     assert(Int(Vec2b(false, false)) == 0)

@@ -203,7 +203,7 @@ extends ProtectedMat4d[Double]
     m02/m.m02, m12/m.m12, m22/m.m22, m32/m.m32,
     m03/m.m03, m13/m.m13, m23/m.m23, m33/m.m33
   )
-  private[math] final def divideByComponent(s: Double) = new Mat4d(
+  private[math] final def divByComp(s: Double) = new Mat4d(
     s/m00, s/m10, s/m20, s/m30,
     s/m01, s/m11, s/m21, s/m31,
     s/m02, s/m12, s/m22, s/m32,
@@ -265,7 +265,7 @@ extends ProtectedMat4d[Double]
     m20*u.x + m21*u.y + m22*u.z + m23*u.w,
     m30*u.x + m31*u.y + m32*u.z + m33*u.w
   )
-  private[math] final def transposeMul(u: inVec4d) = new Vec4d(
+  private[math] final def transposeMult(u: inVec4d) = new Vec4d(
     m00*u.x + m10*u.y + m20*u.z + m30*u.w,
     m01*u.x + m11*u.y + m21*u.z + m31*u.w,
     m02*u.x + m12*u.y + m22*u.z + m32*u.w,

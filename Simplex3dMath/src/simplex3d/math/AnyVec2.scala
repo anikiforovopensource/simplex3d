@@ -30,4 +30,5 @@ package simplex3d.math
  */
 abstract class AnyVec2[P] private[math] () extends AnyVec[P] {
   override def clone() = this
+  final def components = 2
 }

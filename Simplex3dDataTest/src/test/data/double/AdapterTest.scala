@@ -32,7 +32,7 @@ import AdapterTestUtil._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class MatTest extends FunSuite {
+class AdapterTest extends FunSuite {
 
   val a1 = Vec2d(2, 3)
   val a2 = Vec2d(4, 5)
@@ -54,6 +54,7 @@ class MatTest extends FunSuite {
   def flatten4(values: Vec4d*) = DataArray[Vec4d, RFloat](values: _*).primitive
 
   test("Adapters") {
+    testAdapter(FactoryQuat4d)(Quat4d(c1.x, c1.y, c1.z, c1.w), flatten4(c1))
     testAdapter(FactoryMat2x2d)(Mat2x2d(a1, a2), flatten2(a1, a2))
     testAdapter(FactoryMat2x3d)(Mat2x3d(a1, a2, a3), flatten2(a1, a2, a3))
     testAdapter(FactoryMat2x4d)(Mat2x4d(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))

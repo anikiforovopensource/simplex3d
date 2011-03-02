@@ -53,15 +53,28 @@ package object float {
   implicit final val FactoryVec4f = factory[Vec4f](new ArrayVec4f(default))
 
 
-  private[this] final val matrixBound = Manifest.intersectionType[DefinedFloat with SysFP](
+  private[this] final val sysfpBound = Manifest.intersectionType[DefinedFloat with SysFP](
     Manifest.classType(classOf[DefinedFloat]),
     Manifest.classType(classOf[SysFP])
   )
 
+  implicit object FactoryQuat4f extends DataAdapter[Quat4f, DefinedFloat with SysFP](components = 4)(
+    elemManifest = Quat4f.Manifest,
+    readManifest = Quat4f.ReadManifest,
+    boundManifest = sysfpBound
+  ) {
+    def apply(p: inContiguous[Quat4f#Component, Raw], j: Int) :Quat4f#Const = {
+      Quat4f(p(j), p(j + 1), p(j + 2), p(j + 3))
+    }
+    def update(p: outContiguous[Quat4f#Component, Raw], j: Int, v: Quat4f#Read) {
+      p(j) = v.a; p(j + 1) = v.b; p(j + 2) = v.c; p(j + 3) = v.d
+    }
+  }
+
   implicit object FactoryMat2x2f extends DataAdapter[Mat2x2f, DefinedFloat with SysFP](components = 4)(
     elemManifest = Mat2x2f.Manifest,
     readManifest = Mat2x2f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x2f#Component, Raw], j: Int) :Mat2x2f#Const = {
       Mat2x2f(
@@ -78,7 +91,7 @@ package object float {
   implicit object FactoryMat2x3f extends DataAdapter[Mat2x3f, DefinedFloat with SysFP](components = 6)(
     elemManifest = Mat2x3f.Manifest,
     readManifest = Mat2x3f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x3f#Component, Raw], j: Int) :Mat2x3f#Const = {
       Mat2x3f(
@@ -97,7 +110,7 @@ package object float {
   implicit object FactoryMat2x4f extends DataAdapter[Mat2x4f, DefinedFloat with SysFP](components = 8)(
     elemManifest = Mat2x4f.Manifest,
     readManifest = Mat2x4f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x4f#Component, Raw], j: Int) :Mat2x4f#Const = {
       Mat2x4f(
@@ -118,7 +131,7 @@ package object float {
   implicit object FactoryMat3x2f extends DataAdapter[Mat3x2f, DefinedFloat with SysFP](components = 6)(
     elemManifest = Mat3x2f.Manifest,
     readManifest = Mat3x2f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x2f#Component, Raw], j: Int) :Mat3x2f#Const = {
       Mat3x2f(
@@ -135,7 +148,7 @@ package object float {
   implicit object FactoryMat3x3f extends DataAdapter[Mat3x3f, DefinedFloat with SysFP](components = 9)(
     elemManifest = Mat3x3f.Manifest,
     readManifest = Mat3x3f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x3f#Component, Raw], j: Int) :Mat3x3f#Const = {
       Mat3x3f(
@@ -154,7 +167,7 @@ package object float {
   implicit object FactoryMat3x4f extends DataAdapter[Mat3x4f, DefinedFloat with SysFP](components = 12)(
     elemManifest = Mat3x4f.Manifest,
     readManifest = Mat3x4f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x4f#Component, Raw], j: Int) :Mat3x4f#Const = {
       Mat3x4f(
@@ -175,7 +188,7 @@ package object float {
   implicit object FactoryMat4x2f extends DataAdapter[Mat4x2f, DefinedFloat with SysFP](components = 8)(
     elemManifest = Mat4x2f.Manifest,
     readManifest = Mat4x2f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x2f#Component, Raw], j: Int) :Mat4x2f#Const = {
       Mat4x2f(
@@ -192,7 +205,7 @@ package object float {
   implicit object FactoryMat4x3f extends DataAdapter[Mat4x3f, DefinedFloat with SysFP](components = 12)(
     elemManifest = Mat4x3f.Manifest,
     readManifest = Mat4x3f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x3f#Component, Raw], j: Int) :Mat4x3f#Const = {
       Mat4x3f(
@@ -211,7 +224,7 @@ package object float {
   implicit object FactoryMat4x4f extends DataAdapter[Mat4x4f, DefinedFloat with SysFP](components = 16)(
     elemManifest = Mat4x4f.Manifest,
     readManifest = Mat4x4f.ReadManifest,
-    boundManifest = matrixBound
+    boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x4f#Component, Raw], j: Int) :Mat4x4f#Const = {
       Mat4x4f(

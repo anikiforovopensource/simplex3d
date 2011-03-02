@@ -194,7 +194,8 @@ case class AdapterAttrib[E <: Meta, B <: Defined](components: Int, allowed: Clas
 
 object AdapterAttribs {
   import RawManifest._
-  
+
+  implicit val Quat4fAttribs = AdapterAttrib[Quat4f, DefinedFloat with SysFP](4, RFloat)
   implicit val Mat2x2fAttribs = AdapterAttrib[Mat2x2f, DefinedFloat with SysFP](4, RFloat)
   implicit val Mat2x3fAttribs = AdapterAttrib[Mat2x3f, DefinedFloat with SysFP](6, RFloat)
   implicit val Mat2x4fAttribs = AdapterAttrib[Mat2x4f, DefinedFloat with SysFP](8, RFloat)
@@ -205,6 +206,7 @@ object AdapterAttribs {
   implicit val Mat4x3fAttribs = AdapterAttrib[Mat4x3f, DefinedFloat with SysFP](12, RFloat)
   implicit val Mat4x4fAttribs = AdapterAttrib[Mat4x4f, DefinedFloat with SysFP](16, RFloat)
 
+  implicit val Quat4dAttribs = AdapterAttrib[Quat4d, DefinedDouble with SysFP](4, RFloat, RDouble)
   implicit val Mat2x2dAttribs = AdapterAttrib[Mat2x2d, DefinedDouble with SysFP](4, RFloat, RDouble)
   implicit val Mat2x3dAttribs = AdapterAttrib[Mat2x3d, DefinedDouble with SysFP](6, RFloat, RDouble)
   implicit val Mat2x4dAttribs = AdapterAttrib[Mat2x4d, DefinedDouble with SysFP](8, RFloat, RDouble)

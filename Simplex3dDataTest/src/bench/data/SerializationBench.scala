@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bench.buffer
+package bench.data
 
 import java.io._
 import java.nio._

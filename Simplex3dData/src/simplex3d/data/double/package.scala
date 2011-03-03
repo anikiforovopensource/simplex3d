@@ -65,7 +65,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Quat4d#Component, Raw], j: Int) :Quat4d#Const = {
-      Quat4d(p(j), p(j + 1), p(j + 2), p(j + 3))
+      ConstQuat4d(p(j), p(j + 1), p(j + 2), p(j + 3))
     }
     def update(p: outContiguous[Quat4d#Component, Raw], j: Int, v: Quat4d#Read) {
       p(j) = v.a; p(j + 1) = v.b; p(j + 2) = v.c; p(j + 3) = v.d
@@ -78,7 +78,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x2d#Component, Raw], j: Int) :Mat2x2d#Const = {
-      Mat2x2d(
+      ConstMat2x2d(
         p(j),     p(j + 1),
         p(j + 2), p(j + 3)
       )
@@ -95,7 +95,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
-      Mat2x3d(
+      ConstMat2x3d(
         p(j),     p(j + 1),
         p(j + 2), p(j + 3),
         p(j + 4), p(j + 5)
@@ -114,7 +114,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
-      Mat2x4d(
+      ConstMat2x4d(
         p(j),     p(j + 1),
         p(j + 2), p(j + 3),
         p(j + 4), p(j + 5),
@@ -135,7 +135,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
-      Mat3x2d(
+      ConstMat3x2d(
         p(j),     p(j + 1), p(j + 2),
         p(j + 3), p(j + 4), p(j + 5)
       )
@@ -152,7 +152,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x3d#Component, Raw], j: Int) :Mat3x3d#Const = {
-      Mat3x3d(
+      ConstMat3x3d(
         p(j),     p(j + 1), p(j + 2),
         p(j + 3), p(j + 4), p(j + 5),
         p(j + 6), p(j + 7), p(j + 8)
@@ -171,7 +171,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
-      Mat3x4d(
+      ConstMat3x4d(
         p(j),     p(j + 1),  p(j + 2),
         p(j + 3), p(j + 4),  p(j + 5),
         p(j + 6), p(j + 7),  p(j + 8),
@@ -192,7 +192,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
-      Mat4x2d(
+      ConstMat4x2d(
         p(j),     p(j + 1), p(j + 2), p(j + 3),
         p(j + 4), p(j + 5), p(j + 6), p(j + 7)
       )
@@ -209,7 +209,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
-      Mat4x3d(
+      ConstMat4x3d(
         p(j),     p(j + 1), p(j + 2),  p(j + 3),
         p(j + 4), p(j + 5), p(j + 6),  p(j + 7),
         p(j + 8), p(j + 9), p(j + 10), p(j + 11)
@@ -228,7 +228,7 @@ package object double {
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x4d#Component, Raw], j: Int) :Mat4x4d#Const = {
-      Mat4x4d(
+      ConstMat4x4d(
         p(j),      p(j + 1),  p(j + 2),  p(j + 3),
         p(j + 4),  p(j + 5),  p(j + 6),  p(j + 7),
         p(j + 8),  p(j + 9),  p(j + 10), p(j + 11),

@@ -25,7 +25,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-private[math] abstract class AnyVec3or4[P] extends AnyVec[P] {
+private[math] abstract class VecImpl34[P] extends VecImpl234[P] {
 
   private[math] def bz: Boolean
   private[math] def iz: Int

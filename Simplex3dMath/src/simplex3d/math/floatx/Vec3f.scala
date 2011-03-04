@@ -30,8 +30,10 @@ import simplex3d.math.floatx.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
-{
+sealed abstract class ReadVec3f extends ProtectedVec3f[Float] {
+
+  type Clone <: ReadVec3f
+
   private[math] type R2 = ReadVec2f
   private[math] type R3 = ReadVec3f
   private[math] type R4 = ReadVec4f
@@ -68,36 +70,13 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
   final def y = py
   final def z = pz
 
-  /** Alias for x.
-   * @return component x.
-   */
-  final def r = x
+  final def r = px
+  final def g = py
+  final def b = pz
 
-  /** Alias for y.
-   * @return component y.
-   */
-  final def g = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def b = z
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  final def s = x
-
-  /** Alias for y.
-   * @return component y.
-   */
-  final def t = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def p = z
+  final def s = px
+  final def t = py
+  final def p = pz
 
 
   protected def x_=(s: Float) { throw new UnsupportedOperationException }
@@ -112,7 +91,6 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
   protected def t_=(s: Float) { throw new UnsupportedOperationException }
   protected def p_=(s: Float) { throw new UnsupportedOperationException }
 
-  
   final def apply(i: Int) :Float = {
     i match {
       case 0 => x
@@ -126,26 +104,22 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
 
   final def unary_+() :ReadVec3f = this
   final def unary_-() = new Vec3f(-x, -y, -z)
-  final def *(s: Float) = new Vec3f(x * s, y * s, z * s)
-  final def /(s: Float) = { val inv = 1/s; new Vec3f(x * inv, y * inv, z * inv) }
 
+  final def *(s: Float) = new Vec3f(x * s, y * s, z * s)
+  final def /(s: Float) = new Vec3f(x / s, y / s, z / s)
+  private[math] final def divByComp(s: Float) = new Vec3f(s / x, s / y, s / z)
   final def +(s: Float) = new Vec3f(x + s, y + s, z + s)
   final def -(s: Float) = new Vec3f(x - s, y - s, z - s)
 
-  private[math] final def divByComp(s: Float) = {
-    new Vec3f(s / x, s / y, s / z)
-  }
-
-  final def +(u: inVec3f) = new Vec3f(x + u.x, y + u.y, z + u.z)
-  final def -(u: inVec3f) = new Vec3f(x - u.x, y - u.y, z - u.z)
   final def *(u: inVec3f) = new Vec3f(x * u.x, y * u.y, z * u.z)
   final def /(u: inVec3f) = new Vec3f(x / u.x, y / u.y, z / u.z)
+  final def +(u: inVec3f) = new Vec3f(x + u.x, y + u.y, z + u.z)
+  final def -(u: inVec3f) = new Vec3f(x - u.x, y - u.y, z - u.z)
 
   final def *(m: inMat3x2f) :Vec2f = m.transposeMult(this)
   final def *(m: inMat3f) :Vec3f = m.transposeMult(this)
   final def *(m: inMat3x4f) :Vec4f = m.transposeMult(this)
 
-  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -158,9 +132,9 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
   final override def hashCode() :Int = {
     41 * (
       41 * (
-        41 + x.hashCode
+        41 + z.hashCode
       ) + y.hashCode
-    ) + z.hashCode
+    ) + x.hashCode
   }
 
   final override def toString() :String = {
@@ -168,7 +142,7 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float]
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec3" + "(" + x + "f, " + y + "f, " + z + "f)"
+    prefix + "Vec3f" + "(" + x + ", " + y + ", " + z + ")"
   }
 }
 
@@ -178,24 +152,29 @@ final class ConstVec3f private[math] (cx: Float, cy: Float, cz: Float)
 extends ReadVec3f with Immutable {
   px = cx; py = cy; pz = cz
 
+  type Clone = ConstVec3f
   override def clone() = this
 }
 
+
 object ConstVec3f {
+
   def apply(s: Float) = new ConstVec3f(s, s, s)
-  /*main factory*/ def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
+  def apply(x: Float, y: Float, z: Float) = new ConstVec3f(x, y, z)
+
   def apply(u: AnyVec3[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
   def apply(u: AnyVec4[_]) = new ConstVec3f(u.fx, u.fy, u.fz)
+
   def apply(xy: AnyVec2[_], z: Float) = new ConstVec3f(xy.fx, xy.fy, z)
   def apply(x: Float, yz: AnyVec2[_]) = new ConstVec3f(x, yz.fx, yz.fy)
 
-  implicit def toConst(u: ReadVec3f) = new ConstVec3f(u.x, u.y, u.z)
+  implicit def toConst(u: ReadVec3f) = apply(u)
 }
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
-extends ReadVec3f with Implicits[On] with Composite
+extends ReadVec3f with MathRef with Composite with Implicits[On]
 {
   type Read = ReadVec3f
   type Const = ConstVec3f
@@ -203,51 +182,17 @@ extends ReadVec3f with Implicits[On] with Composite
 
   px = cx; py = cy; pz = cz
 
-  override def x_=(s: Float) { px = s }
-  override def y_=(s: Float) { py = s }
-  override def z_=(s: Float) { pz = s }
+  @noinline override def x_=(s: Float) { px = s }
+  @noinline override def y_=(s: Float) { py = s }
+  @noinline override def z_=(s: Float) { pz = s }
 
-  /** Alias for x.
-   */
-  override def r_=(s: Float) { x = s }
+  override def r_=(s: Float) { px = s }
+  override def g_=(s: Float) { py = s }
+  override def b_=(s: Float) { pz = s }
 
-  /** Alias for y.
-   */
-  override def g_=(s: Float) { y = s }
-
-  /** Alias for z.
-   */
-  override def b_=(s: Float) { z = s }
-
-
-  /** Alias for x.
-   */
-  override def s_=(s: Float) { x = s }
-
-  /** Alias for y.
-   */
-  override def t_=(s: Float) { y = s }
-
-  /** Alias for z.
-   */
-  override def p_=(s: Float) { z = s }
-
-
-  def *=(s: Float) { x *= s; y *= s; z *= s }
-  def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
-
-  def +=(s: Float) { x += s; y += s; z += s }
-  def -=(s: Float) { x -= s; y -= s; z -= s }
-
-  def +=(u: inVec3f) { x += u.x; y += u.y; z += u.z }
-  def -=(u: inVec3f) { x -= u.x; y -= u.y; z -= u.z }
-  def *=(u: inVec3f) { x *= u.x; y *= u.y; z *= u.z }
-  def /=(u: inVec3f) { x /= u.x; y /= u.y; z /= u.z }
-
-  def *=(m: inMat3f) { this := m.transposeMult(this) }
-
-  override def clone() = Vec3f(this)
-  def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
+  override def s_=(s: Float) { px = s }
+  override def t_=(s: Float) { py = s }
+  override def p_=(s: Float) { pz = s }
 
   def update(i: Int, s: Float) {
     i match {
@@ -259,6 +204,24 @@ extends ReadVec3f with Implicits[On] with Composite
         )
     }
   }
+
+  def *=(s: Float) { x *= s; y *= s; z *= s }
+  def /=(s: Float) { x /= s; y /= s; z /= s }
+  def +=(s: Float) { x += s; y += s; z += s }
+  def -=(s: Float) { x -= s; y -= s; z -= s }
+
+  def *=(u: inVec3f) { x *= u.x; y *= u.y; z *= u.z }
+  def /=(u: inVec3f) { x /= u.x; y /= u.y; z /= u.z }
+  def +=(u: inVec3f) { x += u.x; y += u.y; z += u.z }
+  def -=(u: inVec3f) { x -= u.x; y -= u.y; z -= u.z }
+
+  def *=(m: inMat3f) { this := m.transposeMult(this) }
+
+
+  type Clone = Vec3f
+  override def clone() = Vec3f(this)
+  def toConst() = ConstVec3f(this)
+  def :=(u: inVec3f) { x = u.x; y = u.y; z = u.z }
 
   // Swizzling
   override def xy_=(u: inVec2f) { x = u.x; y = u.y }
@@ -304,6 +267,7 @@ extends ReadVec3f with Implicits[On] with Composite
   override def pts_=(u: inVec3f) { zyx_=(u) }
 }
 
+
 object Vec3f {
   final val Zero = new ConstVec3f(0, 0, 0)
   final val UnitX = new ConstVec3f(1, 0, 0)
@@ -315,15 +279,18 @@ object Vec3f {
   final val ConstManifest = classType[ConstVec3f](classOf[ConstVec3f])
   final val ReadManifest = classType[ReadVec3f](classOf[ReadVec3f])
 
+
   def apply(s: Float) = new Vec3f(s, s, s)
-  /*main factory*/ def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
+  def apply(x: Float, y: Float, z: Float) = new Vec3f(x, y, z)
+
   def apply(u: AnyVec3[_]) = new Vec3f(u.fx, u.fy, u.fz)
   def apply(u: AnyVec4[_]) = new Vec3f(u.fx, u.fy, u.fz)
+
   def apply(xy: AnyVec2[_], z: Float) = new Vec3f(xy.fx, xy.fy, z)
   def apply(x: Float, yz: AnyVec2[_]) = new Vec3f(x, yz.fx, yz.fy)
 
   def unapply(u: ReadVec3f) = Some((u.x, u.y, u.z))
+  implicit def toMutable(u: ReadVec3f) = apply(u)
 
-  implicit def toMutable(u: ReadVec3f) = new Vec3f(u.x, u.y, u.z)
   implicit def castInt(u: AnyVec3[Int]) = new Vec3f(u.fx, u.fy, u.fz)
 }

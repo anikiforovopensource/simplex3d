@@ -33,6 +33,8 @@ import simplex3d.math.floatx.functions._
 sealed abstract class ReadMat2x3f
 extends ProtectedMat2x3f[Float]
 {
+  type Clone <: ReadMat2x3f
+
   // Column major order.
   final def m00 = p00; final def m10 = p10
   final def m01 = p01; final def m11 = p11
@@ -234,8 +236,6 @@ extends ProtectedMat2x3f[Float]
   )
 
 
-  override def clone() = this
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: AnyMat2x3[_] =>
@@ -287,6 +287,7 @@ final class ConstMat2x3f private[math] (
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
 
+  type Clone = ConstMat2x3f
   override def clone() = this
 }
 
@@ -329,7 +330,7 @@ final class Mat2x3f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float,
   c02: Float, c12: Float
-) extends ReadMat2x3f with Implicits[On] with Composite
+) extends ReadMat2x3f with MathRef with Composite with Implicits[On]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -441,7 +442,9 @@ final class Mat2x3f private[math] (
   }
 
 
+  type Clone = Mat2x3f
   override def clone() = Mat2x3f(this)
+  def toConst() = ConstMat2x3f(this)
   
   def :=(m: inMat2x3f) {
     m00 = m.m00; m10 = m.m10;

@@ -33,6 +33,8 @@ import simplex3d.math.doublex.functions._
 sealed abstract class ReadMat2x4d
 extends ProtectedMat2x4d[Double]
 {
+  type Clone <: ReadMat2x4d
+
   // Column major order.
   final def m00 = p00; final def m10 = p10
   final def m01 = p01; final def m11 = p11
@@ -221,8 +223,6 @@ extends ProtectedMat2x4d[Double]
   )
 
 
-  override def clone() = this
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: AnyMat2x4[_] =>
@@ -282,6 +282,7 @@ final class ConstMat2x4d private[math] (
   p02 = c02; p12 = c12
   p03 = c03; p13 = c13
 
+  type Clone = ConstMat2x4d
   override def clone() = this
 }
 
@@ -330,7 +331,7 @@ final class Mat2x4d private[math] (
   c01: Double, c11: Double,
   c02: Double, c12: Double,
   c03: Double, c13: Double
-) extends ReadMat2x4d with Implicits[On] with Composite
+) extends ReadMat2x4d with MathRef with Composite with Implicits[On]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -411,7 +412,9 @@ final class Mat2x4d private[math] (
   }
 
 
+  type Clone = Mat2x4d
   override def clone() = Mat2x4d(this)
+  def toConst() = ConstMat2x4d(this)
   
   def :=(m: inMat2x4d) {
     m00 = m.m00; m10 = m.m10;

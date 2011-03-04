@@ -32,6 +32,8 @@ import simplex3d.math.floatx.functions._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
 {
+  type Clone <: ReadQuat4f
+
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
   private[math] final def fc: Float = c
@@ -123,8 +125,6 @@ sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
     functions.rotateVector(u, normalize(this))
 
 
-  override def clone() = this
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case q: AnyQuat4[_] => da == q.da && db == q.db && dc == q.dc && dd == q.dd
@@ -158,6 +158,7 @@ final class ConstQuat4f private[math] (
 ) extends ReadQuat4f with Immutable {
   pa = ca; pb = cb; pc = cc; pd = cd
 
+  type Clone = ConstQuat4f
   override def clone() = this
 }
 
@@ -175,7 +176,7 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with Implicits[On] with Composite
+) extends ReadQuat4f with MathRef with Composite with Implicits[On]
 {
   type Read = ReadQuat4f
   type Const = ConstQuat4f
@@ -252,7 +253,9 @@ final class Quat4f private[math] (
   }
 
 
+  type Clone = Quat4f
   override def clone() = Quat4f(this)
+  def toConst() = ConstQuat4f(this)
   def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Float) {

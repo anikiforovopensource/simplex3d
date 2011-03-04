@@ -30,8 +30,10 @@ import simplex3d.math.doublex.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
-{
+sealed abstract class ReadVec4d extends ProtectedVec4d[Double] {
+
+  type Clone <: ReadVec4d
+
   private[math] type R2 = ReadVec2d
   private[math] type R3 = ReadVec3d
   private[math] type R4 = ReadVec4d
@@ -73,46 +75,15 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   final def z = pz
   final def w = pw
 
-  /** Alias for x.
-   * @return component x.
-   */
-  final def r = x
+  final def r = px
+  final def g = py
+  final def b = pz
+  final def a = pw
 
-  /** Alias for y.
-   * @return component y.
-   */
-  final def g = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def b = z
-
-  /** Alias for w.
-   * @return component w.
-   */
-  final def a = w
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  final def s = x
-
-  /** Alias for y.
-   * @return component y.
-   */
-  final def t = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def p = z
-
-  /** Alias for w.
-   * @return component w.
-   */
-  final def q = w
+  final def s = px
+  final def t = py
+  final def p = pz
+  final def q = pw
 
 
   protected def x_=(s: Double) { throw new UnsupportedOperationException }
@@ -129,7 +100,6 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
   protected def t_=(s: Double) { throw new UnsupportedOperationException }
   protected def p_=(s: Double) { throw new UnsupportedOperationException }
   protected def q_=(s: Double) { throw new UnsupportedOperationException }
-  
 
   final def apply(i: Int) :Double = {
     i match {
@@ -145,33 +115,27 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
 
   final def unary_+() :ReadVec4d = this
   final def unary_-() = new Vec4d(-x, -y, -z, -w)
-  final def *(s: Double) = new Vec4d(x * s, y * s, z * s, w * s)
-  final def /(s: Double) = { val inv = 1/s;
-    new Vec4d(x * inv, y * inv, z * inv, w * inv)
-  }
 
+  final def *(s: Double) = new Vec4d(x * s, y * s, z * s, w * s)
+  final def /(s: Double) = new Vec4d(x / s, y / s, z / s, w / s)
+  private[math] final def divByComp(s: Double) = new Vec4d(s / x, s / y, s / z, s / w)
   final def +(s: Double) = new Vec4d(x + s, y + s, z + s, w + s)
   final def -(s: Double) = new Vec4d(x - s, y - s, z - s, w - s)
 
-  private[math] final def divByComp(s: Double) = {
-    new Vec4d(s / x, s / y, s / z, s / w)
-  }
-
-  final def +(u: inVec4d) = new Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
-  final def -(u: inVec4d) = new Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
   final def *(u: inVec4d) = new Vec4d(x * u.x, y * u.y, z * u.z, w * u.w)
   final def /(u: inVec4d) = new Vec4d(x / u.x, y / u.y, z / u.z, w / u.w)
+  final def +(u: inVec4d) = new Vec4d(x + u.x, y + u.y, z + u.z, w + u.w)
+  final def -(u: inVec4d) = new Vec4d(x - u.x, y - u.y, z - u.z, w - u.w)
 
   final def *(m: inMat4x2d) :Vec2d = m.transposeMult(this)
   final def *(m: inMat4x3d) :Vec3d = m.transposeMult(this)
   final def *(m: inMat4d) :Vec4d = m.transposeMult(this)
 
-  override def clone() = this
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case u: ReadVec4b => false
-      case u: AnyVec4[_] => dx == u.dx && dy == u.dy && dz == u.dz && dw == u.dw
+      case u: AnyVec4[_] => x == u.dx && y == u.dy && z == u.dz && w == u.dw
       case _ => false
     }
   }
@@ -180,10 +144,10 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
     41 * (
       41 * (
         41 * (
-          41 + x.hashCode
-        ) + y.hashCode
-      ) + z.hashCode
-    ) + w.hashCode
+          41 + w.hashCode
+        ) + z.hashCode
+      ) + y.hashCode
+    ) + x.hashCode
   }
 
   final override def toString() :String = {
@@ -191,60 +155,46 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec4" + "(" + x + ", " + y + ", " + z + ", " + w + ")"
+    prefix + "Vec4d" + "(" + x + ", " + y + ", " + z + ", " + w + ")"
   }
 }
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
-final class ConstVec4d private[math] (
-  cx: Double, cy: Double, cz: Double, cw: Double
-) extends ReadVec4d with Immutable {
+final class ConstVec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
+extends ReadVec4d with Immutable {
   px = cx; py = cy; pz = cz; pw = cw
 
+  type Clone = ConstVec4d
   override def clone() = this
 }
 
-object ConstVec4d {
-  def apply(s: Double) = new ConstVec4d(s, s, s, s)
 
-  /*main factory*/ def apply(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4d(x, y, z, w)
+object ConstVec4d {
+
+  def apply(s: Double) = new ConstVec4d(s, s, s, s)
+  def apply(x: Double, y: Double, z: Double, w: Double) = new ConstVec4d(x, y, z, w)
 
   def apply(u: AnyVec4[_]) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
 
-  def apply(xy: AnyVec2[_], z: Double, w: Double) =
-    new ConstVec4d(xy.dx, xy.dy, z, w)
+  def apply(xy: AnyVec2[_], z: Double, w: Double) = new ConstVec4d(xy.dx, xy.dy, z, w)
+  def apply(x: Double, yz: AnyVec2[_], w: Double) = new ConstVec4d(x, yz.dx, yz.dy, w)
+  def apply(x: Double, y: Double, zw: AnyVec2[_]) = new ConstVec4d(x, y, zw.dx, zw.dy)
+  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) = new ConstVec4d(xy.dx, xy.dy, zw.dx, zw.dy)
+  def apply(xyz: AnyVec3[_], w: Double) = new ConstVec4d(xyz.dx, xyz.dy, xyz.dz, w)
+  def apply(x: Double, yzw: AnyVec3[_]) = new ConstVec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(x: Double, yz: AnyVec2[_], w: Double) =
-    new ConstVec4d(x, yz.dx, yz.dy, w)
+  def apply(m: AnyMat2[_]) = new ConstVec4d(m.d00, m.d10, m.d01, m.d11)
+  def apply(q: AnyQuat4[_]) = new ConstVec4d(q.db, q.dc, q.dd, q.da)
 
-  def apply(x: Double, y: Double, zw: AnyVec2[_]) =
-    new ConstVec4d(x, y, zw.dx, zw.dy)
 
-  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) =
-    new ConstVec4d(xy.dx, xy.dy, zw.dx, zw.dy)
-
-  def apply(xyz: AnyVec3[_], w: Double) =
-    new ConstVec4d(xyz.dx, xyz.dy, xyz.dz, w)
-
-  def apply(x: Double, yzw: AnyVec3[_]) =
-    new ConstVec4d(x, yzw.dx, yzw.dy, yzw.dz)
-
-  def apply(m: AnyMat2[_]) =
-    new ConstVec4d(m.d00, m.d10, m.d01, m.d11)
-
-  def apply(q: AnyQuat4[_]) =
-    new ConstVec4d(q.db, q.dc, q.dd, q.da)
-
-  implicit def toConst(u: ReadVec4d) = new ConstVec4d(u.x, u.y, u.z, u.w)
+  implicit def toConst(u: ReadVec4d) = apply(u)
 }
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
-final class Vec4d private[math] (
-  cx: Double, cy: Double, cz: Double, cw: Double
-) extends ReadVec4d with Implicits[On] with Composite
+final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
+extends ReadVec4d with MathRef with Composite with Implicits[On]
 {
   type Read = ReadVec4d
   type Const = ConstVec4d
@@ -252,60 +202,20 @@ final class Vec4d private[math] (
 
   px = cx; py = cy; pz = cz; pw = cw
 
-  override def x_=(s: Double) { px = s }
-  override def y_=(s: Double) { py = s }
-  override def z_=(s: Double) { pz = s }
-  override def w_=(s: Double) { pw = s }
+  @noinline override def x_=(s: Double) { px = s }
+  @noinline override def y_=(s: Double) { py = s }
+  @noinline override def z_=(s: Double) { pz = s }
+  @noinline override def w_=(s: Double) { pw = s }
 
-  /** Alias for x.
-   */
-  override def r_=(s: Double) { x = s }
+  override def r_=(s: Double) { px = s }
+  override def g_=(s: Double) { py = s }
+  override def b_=(s: Double) { pz = s }
+  override def a_=(s: Double) { pw = s }
 
-  /** Alias for y.
-   */
-  override def g_=(s: Double) { y = s }
-
-  /** Alias for z.
-   */
-  override def b_=(s: Double) { z = s }
-
-  /** Alias for w.
-   */
-  override def a_=(s: Double) { w = s }
-
-
-  /** Alias for x.
-   */
-  override def s_=(s: Double) { x = s }
-
-  /** Alias for y.
-   */
-  override def t_=(s: Double) { y = s }
-
-  /** Alias for z.
-   */
-  override def p_=(s: Double) { z = s }
-
-  /** Alias for w.
-   */
-  override def q_=(s: Double) { w = s }
-
-
-  def *=(s: Double) { x *= s; y *= s; z *= s; w *= s }
-  def /=(s: Double) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
-
-  def +=(s: Double) { x += s; y += s; z += s; w += s }
-  def -=(s: Double) { x -= s; y -= s; z -= s; w -= s }
-
-  def +=(u: inVec4d) { x += u.x; y += u.y; z += u.z; w += u.w }
-  def -=(u: inVec4d) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
-  def *=(u: inVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
-  def /=(u: inVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
-
-  def *=(m: inMat4d) { this := m.transposeMult(this) }
-
-  override def clone() = Vec4d(this)
-  def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
+  override def s_=(s: Double) { px = s }
+  override def t_=(s: Double) { py = s }
+  override def p_=(s: Double) { pz = s }
+  override def q_=(s: Double) { pw = s }
 
   def update(i: Int, s: Double) {
     i match {
@@ -318,6 +228,24 @@ final class Vec4d private[math] (
         )
     }
   }
+
+  def *=(s: Double) { x *= s; y *= s; z *= s; w *= s }
+  def /=(s: Double) { x /= s; y /= s; z /= s; w /= s }
+  def +=(s: Double) { x += s; y += s; z += s; w += s }
+  def -=(s: Double) { x -= s; y -= s; z -= s; w -= s }
+
+  def *=(u: inVec4d) { x *= u.x; y *= u.y; z *= u.z; w *= u.w }
+  def /=(u: inVec4d) { x /= u.x; y /= u.y; z /= u.z; w /= u.w }
+  def +=(u: inVec4d) { x += u.x; y += u.y; z += u.z; w += u.w }
+  def -=(u: inVec4d) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
+
+  def *=(m: inMat4d) { this := m.transposeMult(this) }
+
+
+  type Clone = Vec4d
+  override def clone() = Vec4d(this)
+  def toConst() = ConstVec4d(this)
+  def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   // Swizzling
   override def xy_=(u: inVec2d) { x = u.x; y = u.y }
@@ -365,7 +293,7 @@ final class Vec4d private[math] (
   override def xwyz_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = u.z; z = t }
   override def xwzy_=(u: inVec4d) { x = u.x; var t = u.w; w = u.y; y = t; z = u.z }
   override def yxzw_=(u: inVec4d) { var t = u.y; y = u.x; x = t; z = u.z; w = u.w }
-  override def yxwz_=(u: inVec4d) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z=t }
+  override def yxwz_=(u: inVec4d) { var t = u.y; y = u.x; x = t; t = u.w; w = u.z; z = t }
   override def yzxw_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = t; w = u.w }
   override def yzwx_=(u: inVec4d) { var t = u.y; y = u.x; x = u.w; w = u.z; z = t }
   override def ywxz_=(u: inVec4d) { var t = u.y; y = u.x; x = u.z; z = u.w; w = t }
@@ -374,14 +302,14 @@ final class Vec4d private[math] (
   override def zxwy_=(u: inVec4d) { var t = u.z; z = u.x; x = u.y; y = u.w; w = t }
   override def zyxw_=(u: inVec4d) { var t = u.z; z = u.x; x = t; y = u.y; w = u.w }
   override def zywx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = t; y = u.y }
-  override def zwxy_=(u: inVec4d) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y=t }
+  override def zwxy_=(u: inVec4d) { var t = u.z; z = u.x; x = t; t = u.w; w = u.y; y = t }
   override def zwyx_=(u: inVec4d) { var t = u.z; z = u.x; x = u.w; w = u.y; y = t }
   override def wxyz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = u.z; z = t }
   override def wxzy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.y; y = t; z = u.z }
   override def wyxz_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = t; y = u.y }
   override def wyzx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; y = u.y; z = u.z }
   override def wzxy_=(u: inVec4d) { var t = u.w; w = u.x; x = u.z; z = u.y; y = t }
-  override def wzyx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y=t }
+  override def wzyx_=(u: inVec4d) { var t = u.w; w = u.x; x = t; t = u.z; z = u.y; y = t }
 
   override def rg_=(u: inVec2d) { xy_=(u) }
   override def rb_=(u: inVec2d) { xz_=(u) }
@@ -510,6 +438,7 @@ final class Vec4d private[math] (
   override def qpts_=(u: inVec4d) { wzyx_=(u) }
 }
 
+
 object Vec4d {
   final val Zero = new ConstVec4d(0, 0, 0, 0)
   final val UnitX = new ConstVec4d(1, 0, 0, 0)
@@ -522,42 +451,26 @@ object Vec4d {
   final val ConstManifest = classType[ConstVec4d](classOf[ConstVec4d])
   final val ReadManifest = classType[ReadVec4d](classOf[ReadVec4d])
 
-  def apply(s: Double) =
-    new Vec4d(s, s, s, s)
 
-  /*main factory*/ def apply(x: Double, y: Double, z: Double, w: Double) =
-    new Vec4d(x, y, z, w)
+  def apply(s: Double) = new Vec4d(s, s, s, s)
+  def apply(x: Double, y: Double, z: Double, w: Double) = new Vec4d(x, y, z, w)
 
-  def apply(u: AnyVec4[_]) =
-    new Vec4d(u.dx, u.dy, u.dz, u.dw)
+  def apply(u: AnyVec4[_]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
 
-  def apply(xy: AnyVec2[_], z: Double, w: Double) =
-    new Vec4d(xy.dx, xy.dy, z, w)
+  def apply(xy: AnyVec2[_], z: Double, w: Double) = new Vec4d(xy.dx, xy.dy, z, w)
+  def apply(x: Double, yz: AnyVec2[_], w: Double) = new Vec4d(x, yz.dx, yz.dy, w)
+  def apply(x: Double, y: Double, zw: AnyVec2[_]) = new Vec4d(x, y, zw.dx, zw.dy)
+  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) = new Vec4d(xy.dx, xy.dy, zw.dx, zw.dy)
+  def apply(xyz: AnyVec3[_], w: Double) = new Vec4d(xyz.dx, xyz.dy, xyz.dz, w)
+  def apply(x: Double, yzw: AnyVec3[_]) = new Vec4d(x, yzw.dx, yzw.dy, yzw.dz)
 
-  def apply(x: Double, yz: AnyVec2[_], w: Double) =
-    new Vec4d(x, yz.dx, yz.dy, w)
+  def apply(m: AnyMat2[_]) = new Vec4d(m.d00, m.d10, m.d01, m.d11)
+  def apply(q: AnyQuat4[_]) = new Vec4d(q.db, q.dc, q.dd, q.da)
 
-  def apply(x: Double, y: Double, zw: AnyVec2[_]) =
-    new Vec4d(x, y, zw.dx, zw.dy)
-
-  def apply(xy: AnyVec2[_], zw: AnyVec2[_]) =
-    new Vec4d(xy.dx, xy.dy, zw.dx, zw.dy)
-
-  def apply(xyz: AnyVec3[_], w: Double) =
-    new Vec4d(xyz.dx, xyz.dy, xyz.dz, w)
-
-  def apply(x: Double, yzw: AnyVec3[_]) =
-    new Vec4d(x, yzw.dx, yzw.dy, yzw.dz)
-
-  def apply(m: AnyMat2[_]) =
-    new Vec4d(m.d00, m.d10, m.d01, m.d11)
-
-  def apply(q: AnyQuat4[_]) =
-    new Vec4d(q.db, q.dc, q.dd, q.da)
 
   def unapply(u: ReadVec4d) = Some((u.x, u.y, u.z, u.w))
+  implicit def toMutable(u: ReadVec4d) = apply(u)
 
-  implicit def toMutable(u: ReadVec4d) = new Vec4d(u.x, u.y, u.z, u.w)
   implicit def castInt(u: AnyVec4[Int]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
   implicit def castFloat(u: AnyVec4[Float]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
 }

@@ -28,25 +28,33 @@ package simplex3d.math
 object Accessors {
 
   /** Read the component as Boolean. */ def bx(u: AnyVec[_]) = u.bx
-  /** Read the component as Boolean. */ def by(u: AnyVec[_]) = u.by
+  /** Read the component as Boolean. */ def by(u: AnyVec2[_]) = u.by
+  /** Read the component as Boolean. */ def by(u: AnyVec3[_]) = u.by
+  /** Read the component as Boolean. */ def by(u: AnyVec4[_]) = u.by
   /** Read the component as Boolean. */ def bz(u: AnyVec3[_]) = u.bz
   /** Read the component as Boolean. */ def bz(u: AnyVec4[_]) = u.bz
   /** Read the component as Boolean. */ def bw(u: AnyVec4[_]) = u.bw
 
   /** Read the component as Int. */ def ix(u: AnyVec[_]) = u.ix
-  /** Read the component as Int. */ def iy(u: AnyVec[_]) = u.iy
+  /** Read the component as Int. */ def iy(u: AnyVec2[_]) = u.iy
+  /** Read the component as Int. */ def iy(u: AnyVec3[_]) = u.iy
+  /** Read the component as Int. */ def iy(u: AnyVec4[_]) = u.iy
   /** Read the component as Int. */ def iz(u: AnyVec3[_]) = u.iz
   /** Read the component as Int. */ def iz(u: AnyVec4[_]) = u.iz
   /** Read the component as Int. */ def iw(u: AnyVec4[_]) = u.iw
 
   /** Read the component as Float. */ def fx(u: AnyVec[_]) = u.fx
-  /** Read the component as Float. */ def fy(u: AnyVec[_]) = u.fy
+  /** Read the component as Float. */ def fy(u: AnyVec2[_]) = u.fy
+  /** Read the component as Float. */ def fy(u: AnyVec3[_]) = u.fy
+  /** Read the component as Float. */ def fy(u: AnyVec4[_]) = u.fy
   /** Read the component as Float. */ def fz(u: AnyVec3[_]) = u.fz
   /** Read the component as Float. */ def fz(u: AnyVec4[_]) = u.fz
   /** Read the component as Float. */ def fw(u: AnyVec4[_]) = u.fw
 
   /** Read the component as Double. */ def dx(u: AnyVec[_]) = u.dx
-  /** Read the component as Double. */ def dy(u: AnyVec[_]) = u.dy
+  /** Read the component as Double. */ def dy(u: AnyVec2[_]) = u.dy
+  /** Read the component as Double. */ def dy(u: AnyVec3[_]) = u.dy
+  /** Read the component as Double. */ def dy(u: AnyVec4[_]) = u.dy
   /** Read the component as Double. */ def dz(u: AnyVec3[_]) = u.dz
   /** Read the component as Double. */ def dz(u: AnyVec4[_]) = u.dz
   /** Read the component as Double. */ def dw(u: AnyVec4[_]) = u.dw

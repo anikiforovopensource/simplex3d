@@ -29,8 +29,10 @@ import simplex3d.math.CommonMath._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
-{
+sealed abstract class ReadVec2i extends ProtectedVec2i[Int] {
+
+  type Clone <: ReadVec2i
+
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
   private[math] type R4 = ReadVec4i
@@ -62,26 +64,11 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
   final def x = px
   final def y = py
 
-  /** Alias for x.
-   * @return component x.
-   */
-  final def r = x
+  final def r = px
+  final def g = py
 
-  /** Alias for y.
-   * @return component y.
-   */
-  final def g = y
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  final def s = x
-
-  /** Alias for y.
-   * @return component y.
-   */
-  final def t = y
+  final def s = px
+  final def t = py
 
 
   protected def x_=(s: Int) { throw new UnsupportedOperationException }
@@ -92,7 +79,6 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
 
   protected def s_=(s: Int) { throw new UnsupportedOperationException }
   protected def t_=(s: Int) { throw new UnsupportedOperationException }
-
 
   final def apply(i: Int) :Int = {
     i match {
@@ -106,37 +92,37 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
 
   final def unary_+() :ReadVec2i = this
   final def unary_-() = new Vec2i(-x, -y)
-  final def unary_~() = new Vec2i(~x, ~y)
 
   final def *(s: Int) = new Vec2i(x * s, y * s)
   final def /(s: Int) = new Vec2i(x / s, y / s)
-
+  private[math] final def divByComp(s: Int) = new Vec2i(s / x, s / y)
   final def +(s: Int) = new Vec2i(x + s, y + s)
   final def -(s: Int) = new Vec2i(x - s, y - s)
 
-  private[math] final def divByComp(s: Int) = new Vec2i(s / x, s / y)
-  final def %(s: Int) = new Vec2i(x % s, y % s)
-  private[math] final def remByComp(s: Int) = new Vec2i(s % x, s % y)
-  final def >>(s: Int) = new Vec2i( x >> s, y >> s)
-  final def >>>(s: Int) = new Vec2i( x >>> s, y >>> s)
-  final def <<(s: Int) = new Vec2i( x << s, y << s)
-  final def &(s: Int) = new Vec2i( x & s, y & s)
-  final def |(s: Int) = new Vec2i( x | s, y | s)
-  final def ^(s: Int) = new Vec2i( x ^ s, y ^ s)
-
-  final def +(u: inVec2i) = new Vec2i(x + u.x, y + u.y)
-  final def -(u: inVec2i) = new Vec2i(x - u.x, y - u.y)
   final def *(u: inVec2i) = new Vec2i(x * u.x, y * u.y)
   final def /(u: inVec2i) = new Vec2i(x / u.x, y / u.y)
-  final def %(u: inVec2i) = new Vec2i(x % u.x, y % u.y)
-  final def >>(u: inVec2i) = new Vec2i( x >> u.x, y >> u.y)
-  final def >>>(u: inVec2i) = new Vec2i( x >>> u.x, y >>> u.y)
-  final def <<(u: inVec2i) = new Vec2i( x << u.x, y << u.y)
-  final def &(u: inVec2i) = new Vec2i( x & u.x, y & u.y)
-  final def |(u: inVec2i) = new Vec2i( x | u.x, y | u.y)
-  final def ^(u: inVec2i) = new Vec2i( x ^ u.x, y ^ u.y)
+  final def +(u: inVec2i) = new Vec2i(x + u.x, y + u.y)
+  final def -(u: inVec2i) = new Vec2i(x - u.x, y - u.y)
 
-  override def clone() = this
+  final def unary_~() = new Vec2i(~x, ~y)
+
+  final def %(s: Int) = new Vec2i(x % s, y % s)
+  private[math] final def remByComp(s: Int) = new Vec2i(s % x, s % y)
+  final def >>(s: Int) = new Vec2i(x >> s, y >> s)
+  final def >>>(s: Int) = new Vec2i(x >>> s, y >>> s)
+  final def <<(s: Int) = new Vec2i(x << s, y << s)
+  final def &(s: Int) = new Vec2i(x & s, y & s)
+  final def |(s: Int) = new Vec2i(x | s, y | s)
+  final def ^(s: Int) = new Vec2i(x ^ s, y ^ s)
+
+  final def %(u: inVec2i) = new Vec2i(x % u.x, y % u.y)
+  final def >>(u: inVec2i) = new Vec2i(x >> u.x, y >> u.y)
+  final def >>>(u: inVec2i) = new Vec2i(x >>> u.x, y >>> u.y)
+  final def <<(u: inVec2i) = new Vec2i(x << u.x, y << u.y)
+  final def &(u: inVec2i) = new Vec2i(x & u.x, y & u.y)
+  final def |(u: inVec2i) = new Vec2i(x | u.x, y | u.y)
+  final def ^(u: inVec2i) = new Vec2i(x ^ u.x, y ^ u.y)
+
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -149,35 +135,48 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
 
   final override def hashCode() :Int = {
     41 * (
-      41 + x.hashCode
-    ) + y.hashCode
+      41 + y.hashCode
+    ) + x.hashCode
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName + "(" + x + ", " + y + ")"
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Vec2i" + "(" + x + ", " + y + ")"
   }
 }
+
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class ConstVec2i private[math] (cx: Int, cy: Int)
 extends ReadVec2i with Immutable {
   px = cx; py = cy
 
+  type Clone = ConstVec2i
   override def clone() = this
 }
 
-object ConstVec2i {
-  def apply(s: Int) = new ConstVec2i(s, s)
-  /*main factory*/ def apply(x: Int, y: Int) = new ConstVec2i(x, y)
-  def apply(u: AnyVec[_]) = new ConstVec2i(u.ix, u.iy)
 
-  implicit def toConst(u: ReadVec2i) = new ConstVec2i(u.x, u.y)
+object ConstVec2i {
+
+  def apply(s: Int) = new ConstVec2i(s, s)
+  def apply(x: Int, y: Int) = new ConstVec2i(x, y)
+
+  def apply(u: AnyVec2[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_]) = new ConstVec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_]) = new ConstVec2i(u.ix, u.iy)
+
+
+
+  implicit def toConst(u: ReadVec2i) = apply(u)
 }
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with Implicits[On] with Composite
+extends ReadVec2i with MathRef with Composite with Implicits[On]
 {
   type Read = ReadVec2i
   type Const = ConstVec2i
@@ -185,55 +184,14 @@ extends ReadVec2i with Implicits[On] with Composite
 
   px = cx; py = cy
 
-  override def x_=(s: Int) { px = s }
-  override def y_=(s: Int) { py = s }
+  @noinline override def x_=(s: Int) { px = s }
+  @noinline override def y_=(s: Int) { py = s }
 
-  /** Alias for x.
-   */
-  override def r_=(s: Int) { x = s }
+  override def r_=(s: Int) { px = s }
+  override def g_=(s: Int) { py = s }
 
-  /** Alias for y.
-   */
-  override def g_=(s: Int) { y = s }
-
-
-  /** Alias for x.
-   */
-  override def s_=(s: Int) { x = s }
-
-  /** Alias for y.
-   */
-  override def t_=(s: Int) { y = s }
-
-
-  def *=(s: Int) { x *= s; y *= s }
-  def /=(s: Int) { x /= s; y /= s }
-
-  def +=(s: Int) { x += s; y += s }
-  def -=(s: Int) { x -= s; y -= s }
-  
-  def %=(s: Int) { x %= s; y %= s }
-  def >>=(s: Int) = { x >>= s; y >>= s }
-  def >>>=(s: Int) = { x >>>= s; y >>>= s }
-  def <<=(s: Int) = { x <<= s; y <<= s }
-  def &=(s: Int) = { x &= s; y &= s }
-  def |=(s: Int) = { x |= s; y |= s }
-  def ^=(s: Int) = { x ^= s; y ^= s }
-
-  def +=(u: inVec2i) { x += u.x; y += u.y }
-  def -=(u: inVec2i) { x -= u.x; y -= u.y }
-  def *=(u: inVec2i) { x *= u.x; y *= u.y }
-  def /=(u: inVec2i) { x /= u.x; y /= u.y }
-  def %=(u: inVec2i) { x %= u.x; y %= u.y }
-  def >>=(u: inVec2i) = { x >>= u.x; y >>= u.y }
-  def >>>=(u: inVec2i) = { x >>>= u.x; y >>>= u.y }
-  def <<=(u: inVec2i) = { x <<= u.x; y <<= u.y }
-  def &=(u: inVec2i) = { x &= u.x; y &= u.y }
-  def |=(u: inVec2i) = { x |= u.x; y |= u.y }
-  def ^=(u: inVec2i) = { x ^= u.x; y ^= u.y }
-
-  override def clone() = Vec2i(this)
-  def :=(u: inVec2i) { x = u.x; y = u.y }
+  override def s_=(s: Int) { px = s }
+  override def t_=(s: Int) { py = s }
 
   def update(i: Int, s: Int) {
     i match {
@@ -244,6 +202,38 @@ extends ReadVec2i with Implicits[On] with Composite
         )
     }
   }
+
+  def *=(s: Int) { x *= s; y *= s }
+  def /=(s: Int) { x /= s; y /= s }
+  def +=(s: Int) { x += s; y += s }
+  def -=(s: Int) { x -= s; y -= s }
+
+  def *=(u: inVec2i) { x *= u.x; y *= u.y }
+  def /=(u: inVec2i) { x /= u.x; y /= u.y }
+  def +=(u: inVec2i) { x += u.x; y += u.y }
+  def -=(u: inVec2i) { x -= u.x; y -= u.y }
+
+  def %=(s: Int) { x %= s; y %= s }
+  def >>=(s: Int) { x >>= s; y >>= s }
+  def >>>=(s: Int) { x >>>= s; y >>>= s }
+  def <<=(s: Int) { x <<= s; y <<= s }
+  def &=(s: Int) { x &= s; y &= s }
+  def |=(s: Int) { x |= s; y |= s }
+  def ^=(s: Int) { x ^= s; y ^= s }
+
+  def %=(u: inVec2i) { x %= u.x; y %= u.y }
+  def >>=(u: inVec2i) { x >>= u.x; y >>= u.y }
+  def >>>=(u: inVec2i) { x >>>= u.x; y >>>= u.y }
+  def <<=(u: inVec2i) { x <<= u.x; y <<= u.y }
+  def &=(u: inVec2i) { x &= u.x; y &= u.y }
+  def |=(u: inVec2i) { x |= u.x; y |= u.y }
+  def ^=(u: inVec2i) { x ^= u.x; y ^= u.y }
+
+
+  type Clone = Vec2i
+  override def clone() = Vec2i(this)
+  def toConst() = ConstVec2i(this)
+  def :=(u: inVec2i) { x = u.x; y = u.y }
 
   // Swizzling
   override def xy_=(u: inVec2i) { x = u.x; y = u.y }
@@ -256,6 +246,7 @@ extends ReadVec2i with Implicits[On] with Composite
   override def ts_=(u: inVec2i) { yx_=(u) }
 }
 
+
 object Vec2i {
   final val Zero = new ConstVec2i(0, 0)
   final val UnitX = new ConstVec2i(1, 0)
@@ -266,11 +257,16 @@ object Vec2i {
   final val ConstManifest = classType[ConstVec2i](classOf[ConstVec2i])
   final val ReadManifest = classType[ReadVec2i](classOf[ReadVec2i])
 
+
   def apply(s: Int) = new Vec2i(s, s)
-  /*main factory*/ def apply(x: Int, y: Int) = new Vec2i(x, y)
-  def apply(u: AnyVec[_]) = new Vec2i(u.ix, u.iy)
+  def apply(x: Int, y: Int) = new Vec2i(x, y)
+
+  def apply(u: AnyVec2[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec3[_]) = new Vec2i(u.ix, u.iy)
+  def apply(u: AnyVec4[_]) = new Vec2i(u.ix, u.iy)
+
+
 
   def unapply(u: ReadVec2i) = Some((u.x, u.y))
-
-  implicit def toMutable(u: ReadVec2i) = new Vec2i(u.x, u.y)
+  implicit def toMutable(u: ReadVec2i) = apply(u)
 }

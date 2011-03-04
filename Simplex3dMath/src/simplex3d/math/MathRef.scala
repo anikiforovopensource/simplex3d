@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreMath module
- * Copyright (C) 2009-2011, Aleksey Nikiforov
+ * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,15 +20,19 @@
 
 package simplex3d.math
 
+import simplex3d.math.integration._
 
-/** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
- * <p>
- *   There are double, float, int, and boolean vectors.
- * </p>
- *
+
+/** 
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyVec2[P] private[math] () extends VecImpl234[P] {
-  type Clone <: AnyVec2[P]
-  final def components = 2
+trait ReadMathRef {
+  type Clone <: ReadMathRef
+  override def clone() :Clone = throw new UnsupportedOperationException();
+}
+
+trait MathRef extends ReadMathRef with Mutable with Meta {
+  type Clone <: MathRef
+  def :=(v: Read)
+  def toConst() :Const
 }

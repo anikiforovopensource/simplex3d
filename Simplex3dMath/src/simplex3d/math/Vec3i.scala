@@ -29,8 +29,10 @@ import simplex3d.math.CommonMath._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
-{
+sealed abstract class ReadVec3i extends ProtectedVec3i[Int] {
+
+  type Clone <: ReadVec3i
+
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
   private[math] type R4 = ReadVec4i
@@ -67,36 +69,13 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   final def y = py
   final def z = pz
 
-  /** Alias for x.
-   * @return component x.
-   */
-  final def r = x
+  final def r = px
+  final def g = py
+  final def b = pz
 
-  /** Alias for y.
-   * @return component y.
-   */
-  final def g = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def b = z
-
-
-  /** Alias for x.
-   * @return component x.
-   */
-  final def s = x
-
-  /** Alias for y.
-   * @return component y.
-   */
-  final def t = y
-
-  /** Alias for z.
-   * @return component z.
-   */
-  final def p = z
+  final def s = px
+  final def t = py
+  final def p = pz
 
 
   protected def x_=(s: Int) { throw new UnsupportedOperationException }
@@ -111,7 +90,6 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   protected def t_=(s: Int) { throw new UnsupportedOperationException }
   protected def p_=(s: Int) { throw new UnsupportedOperationException }
 
-
   final def apply(i: Int) :Int = {
     i match {
       case 0 => x
@@ -125,37 +103,37 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
 
   final def unary_+() :ReadVec3i = this
   final def unary_-() = new Vec3i(-x, -y, -z)
-  final def unary_~() = new Vec3i(~x, ~y, ~z)
 
   final def *(s: Int) = new Vec3i(x * s, y * s, z * s)
   final def /(s: Int) = new Vec3i(x / s, y / s, z / s)
-
+  private[math] final def divByComp(s: Int) = new Vec3i(s / x, s / y, s / z)
   final def +(s: Int) = new Vec3i(x + s, y + s, z + s)
   final def -(s: Int) = new Vec3i(x - s, y - s, z - s)
 
-  private[math] final def divByComp(s: Int) = new Vec3i(s / x, s / y, s / z)
-  final def %(s: Int) = new Vec3i(x % s, y % s, z % s)
-  private[math] final def remByComp(s: Int) = new Vec3i(s % x, s % y, s % z)
-  final def >>(s: Int) = new Vec3i( x >> s, y >> s, z >> s)
-  final def >>>(s: Int) = new Vec3i( x >>> s, y >>> s, z >>> s)
-  final def <<(s: Int) = new Vec3i( x << s, y << s, z << s)
-  final def &(s: Int) = new Vec3i( x & s, y & s, z & s)
-  final def |(s: Int) = new Vec3i( x | s, y | s, z | s)
-  final def ^(s: Int) = new Vec3i( x ^ s, y ^ s, z ^ s)
-
-  final def +(u: inVec3i) = new Vec3i(x + u.x, y + u.y, z + u.z)
-  final def -(u: inVec3i) = new Vec3i(x - u.x, y - u.y, z - u.z)
   final def *(u: inVec3i) = new Vec3i(x * u.x, y * u.y, z * u.z)
   final def /(u: inVec3i) = new Vec3i(x / u.x, y / u.y, z / u.z)
-  final def %(u: inVec3i) = new Vec3i(x % u.x, y % u.y, z % u.z)
-  final def >>(u: inVec3i) = new Vec3i( x >> u.x, y >> u.y, z >> u.z)
-  final def >>>(u: inVec3i) = new Vec3i( x >>> u.x, y >>> u.y, z >>> u.z)
-  final def <<(u: inVec3i) = new Vec3i( x << u.x, y << u.y, z << u.z)
-  final def &(u: inVec3i) = new Vec3i( x & u.x, y & u.y, z & u.z)
-  final def |(u: inVec3i) = new Vec3i( x | u.x, y | u.y, z | u.z)
-  final def ^(u: inVec3i) = new Vec3i( x ^ u.x, y ^ u.y, z ^ u.z)
+  final def +(u: inVec3i) = new Vec3i(x + u.x, y + u.y, z + u.z)
+  final def -(u: inVec3i) = new Vec3i(x - u.x, y - u.y, z - u.z)
 
-  override def clone() = this
+  final def unary_~() = new Vec3i(~x, ~y, ~z)
+
+  final def %(s: Int) = new Vec3i(x % s, y % s, z % s)
+  private[math] final def remByComp(s: Int) = new Vec3i(s % x, s % y, s % z)
+  final def >>(s: Int) = new Vec3i(x >> s, y >> s, z >> s)
+  final def >>>(s: Int) = new Vec3i(x >>> s, y >>> s, z >>> s)
+  final def <<(s: Int) = new Vec3i(x << s, y << s, z << s)
+  final def &(s: Int) = new Vec3i(x & s, y & s, z & s)
+  final def |(s: Int) = new Vec3i(x | s, y | s, z | s)
+  final def ^(s: Int) = new Vec3i(x ^ s, y ^ s, z ^ s)
+
+  final def %(u: inVec3i) = new Vec3i(x % u.x, y % u.y, z % u.z)
+  final def >>(u: inVec3i) = new Vec3i(x >> u.x, y >> u.y, z >> u.z)
+  final def >>>(u: inVec3i) = new Vec3i(x >>> u.x, y >>> u.y, z >>> u.z)
+  final def <<(u: inVec3i) = new Vec3i(x << u.x, y << u.y, z << u.z)
+  final def &(u: inVec3i) = new Vec3i(x & u.x, y & u.y, z & u.z)
+  final def |(u: inVec3i) = new Vec3i(x | u.x, y | u.y, z | u.z)
+  final def ^(u: inVec3i) = new Vec3i(x ^ u.x, y ^ u.y, z ^ u.z)
+
 
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -169,13 +147,17 @@ sealed abstract class ReadVec3i extends ProtectedVec3i[Int]
   final override def hashCode() :Int = {
     41 * (
       41 * (
-        41 + x.hashCode
+        41 + z.hashCode
       ) + y.hashCode
-    ) + z.hashCode
+    ) + x.hashCode
   }
 
   final override def toString() :String = {
-    this.getClass.getSimpleName + "(" + x + ", " + y + ", " + z + ")"
+    val prefix = this match {
+      case self: Immutable => "Const"
+      case _ => ""
+    }
+    prefix + "Vec3i" + "(" + x + ", " + y + ", " + z + ")"
   }
 }
 
@@ -185,24 +167,29 @@ final class ConstVec3i private[math] (cx: Int, cy: Int, cz: Int)
 extends ReadVec3i with Immutable {
   px = cx; py = cy; pz = cz
 
+  type Clone = ConstVec3i
   override def clone() = this
 }
 
+
 object ConstVec3i {
+
   def apply(s: Int) = new ConstVec3i(s, s, s)
-  /*main factory*/ def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
+  def apply(x: Int, y: Int, z: Int) = new ConstVec3i(x, y, z)
+
   def apply(u: AnyVec3[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
   def apply(u: AnyVec4[_]) = new ConstVec3i(u.ix, u.iy, u.iz)
+
   def apply(xy: AnyVec2[_], z: Int) = new ConstVec3i(xy.ix, xy.iy, z)
   def apply(x: Int, yz: AnyVec2[_]) = new ConstVec3i(x, yz.ix, yz.iy)
 
-  implicit def toConst(u: ReadVec3i) = new ConstVec3i(u.x, u.y, u.z)
+  implicit def toConst(u: ReadVec3i) = apply(u)
 }
 
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
-extends ReadVec3i with Implicits[On] with Composite
+extends ReadVec3i with MathRef with Composite with Implicits[On]
 {
   type Read = ReadVec3i
   type Const = ConstVec3i
@@ -210,64 +197,17 @@ extends ReadVec3i with Implicits[On] with Composite
 
   px = cx; py = cy; pz = cz
 
-  override def x_=(s: Int) { px = s }
-  override def y_=(s: Int) { py = s }
-  override def z_=(s: Int) { pz = s }
+  @noinline override def x_=(s: Int) { px = s }
+  @noinline override def y_=(s: Int) { py = s }
+  @noinline override def z_=(s: Int) { pz = s }
 
-  /** Alias for x.
-   */
-  override def r_=(s: Int) { x = s }
+  override def r_=(s: Int) { px = s }
+  override def g_=(s: Int) { py = s }
+  override def b_=(s: Int) { pz = s }
 
-  /** Alias for y.
-   */
-  override def g_=(s: Int) { y = s }
-
-  /** Alias for z.
-   */
-  override def b_=(s: Int) { z = s }
-
-
-  /** Alias for x.
-   */
-  override def s_=(s: Int) { x = s }
-
-  /** Alias for y.
-   */
-  override def t_=(s: Int) { y = s }
-
-  /** Alias for z.
-   */
-  override def p_=(s: Int) { z = s }
-
-
-  def *=(s: Int) { x *= s; y *= s; z *= s }
-  def /=(s: Int) { x /= s; y /= s; z /= s }
-
-  def +=(s: Int) { x += s; y += s; z += s }
-  def -=(s: Int) { x -= s; y -= s; z -= s }
-  
-  def %=(s: Int) { x %= s; y %= s; z %= s }
-  def >>=(s: Int) = { x >>= s; y >>= s; z >>= s }
-  def >>>=(s: Int) = { x >>>= s; y >>>= s; z >>>= s }
-  def <<=(s: Int) = { x <<= s; y <<= s; z <<= s }
-  def &=(s: Int) = { x &= s; y &= s; z &= s }
-  def |=(s: Int) = { x |= s; y |= s; z |= s }
-  def ^=(s: Int) = { x ^= s; y ^= s; z ^= s }
-
-  def +=(u: inVec3i) { x += u.x; y += u.y; z += u.z }
-  def -=(u: inVec3i) { x -= u.x; y -= u.y; z -= u.z }
-  def *=(u: inVec3i) { x *= u.x; y *= u.y; z *= u.z }
-  def /=(u: inVec3i) { x /= u.x; y /= u.y; z /= u.z }
-  def %=(u: inVec3i) { x %= u.x; y %= u.y; z %= u.z }
-  def >>=(u: inVec3i) = { x >>= u.x; y >>= u.y; z >>= u.z }
-  def >>>=(u: inVec3i) = { x >>>= u.x; y >>>= u.y; z >>>= u.z }
-  def <<=(u: inVec3i) = { x <<= u.x; y <<= u.y; z <<= u.z }
-  def &=(u: inVec3i) = { x &= u.x; y &= u.y; z &= u.z }
-  def |=(u: inVec3i) = { x |= u.x; y |= u.y; z |= u.z }
-  def ^=(u: inVec3i) = { x ^= u.x; y ^= u.y; z ^= u.z }
-
-  override def clone() = Vec3i(this)
-  def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
+  override def s_=(s: Int) { px = s }
+  override def t_=(s: Int) { py = s }
+  override def p_=(s: Int) { pz = s }
 
   def update(i: Int, s: Int) {
     i match {
@@ -279,6 +219,38 @@ extends ReadVec3i with Implicits[On] with Composite
         )
     }
   }
+
+  def *=(s: Int) { x *= s; y *= s; z *= s }
+  def /=(s: Int) { x /= s; y /= s; z /= s }
+  def +=(s: Int) { x += s; y += s; z += s }
+  def -=(s: Int) { x -= s; y -= s; z -= s }
+
+  def *=(u: inVec3i) { x *= u.x; y *= u.y; z *= u.z }
+  def /=(u: inVec3i) { x /= u.x; y /= u.y; z /= u.z }
+  def +=(u: inVec3i) { x += u.x; y += u.y; z += u.z }
+  def -=(u: inVec3i) { x -= u.x; y -= u.y; z -= u.z }
+
+  def %=(s: Int) { x %= s; y %= s; z %= s }
+  def >>=(s: Int) { x >>= s; y >>= s; z >>= s }
+  def >>>=(s: Int) { x >>>= s; y >>>= s; z >>>= s }
+  def <<=(s: Int) { x <<= s; y <<= s; z <<= s }
+  def &=(s: Int) { x &= s; y &= s; z &= s }
+  def |=(s: Int) { x |= s; y |= s; z |= s }
+  def ^=(s: Int) { x ^= s; y ^= s; z ^= s }
+
+  def %=(u: inVec3i) { x %= u.x; y %= u.y; z %= u.z }
+  def >>=(u: inVec3i) { x >>= u.x; y >>= u.y; z >>= u.z }
+  def >>>=(u: inVec3i) { x >>>= u.x; y >>>= u.y; z >>>= u.z }
+  def <<=(u: inVec3i) { x <<= u.x; y <<= u.y; z <<= u.z }
+  def &=(u: inVec3i) { x &= u.x; y &= u.y; z &= u.z }
+  def |=(u: inVec3i) { x |= u.x; y |= u.y; z |= u.z }
+  def ^=(u: inVec3i) { x ^= u.x; y ^= u.y; z ^= u.z }
+
+
+  type Clone = Vec3i
+  override def clone() = Vec3i(this)
+  def toConst() = ConstVec3i(this)
+  def :=(u: inVec3i) { x = u.x; y = u.y; z = u.z }
 
   // Swizzling
   override def xy_=(u: inVec2i) { x = u.x; y = u.y }
@@ -324,6 +296,7 @@ extends ReadVec3i with Implicits[On] with Composite
   override def pts_=(u: inVec3i) { zyx_=(u) }
 }
 
+
 object Vec3i {
   final val Zero = new ConstVec3i(0, 0, 0)
   final val UnitX = new ConstVec3i(1, 0, 0)
@@ -335,14 +308,16 @@ object Vec3i {
   final val ConstManifest = classType[ConstVec3i](classOf[ConstVec3i])
   final val ReadManifest = classType[ReadVec3i](classOf[ReadVec3i])
 
+
   def apply(s: Int) = new Vec3i(s, s, s)
-  /*main factory*/ def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
+  def apply(x: Int, y: Int, z: Int) = new Vec3i(x, y, z)
+
   def apply(u: AnyVec3[_]) = new Vec3i(u.ix, u.iy, u.iz)
   def apply(u: AnyVec4[_]) = new Vec3i(u.ix, u.iy, u.iz)
+
   def apply(xy: AnyVec2[_], z: Int) = new Vec3i(xy.ix, xy.iy, z)
   def apply(x: Int, yz: AnyVec2[_]) = new Vec3i(x, yz.ix, yz.iy)
 
   def unapply(u: ReadVec3i) = Some((u.x, u.y, u.z))
-
-  implicit def toMutable(u: ReadVec3i) = new Vec3i(u.x, u.y, u.z)
+  implicit def toMutable(u: ReadVec3i) = apply(u)
 }

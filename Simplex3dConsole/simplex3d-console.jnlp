@@ -6,7 +6,6 @@
         <homepage href="http://www.simplex3d.org/"/>
         <description>An interactive Scala console.</description>
         <icon href="simplex3d-icon.png"/>
-        <icon kind="splash" href="simplex3d-logo.png"/>
         <offline-allowed/> 
         <shortcut online="true">
           <desktop/>

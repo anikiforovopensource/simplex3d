@@ -157,7 +157,6 @@
         <copy file="simplex3d-console.jnlp" todir="${web.dir}"/>
         <copy file="simplex3d-console-local.jnlp" todir="${web.dir}"/>
         <copy file="simplex3d-icon.png" todir="${web.dir}"/>
-        <copy file="simplex3d-logo.png" todir="${web.dir}"/>
     </target>
     
     
@@ -206,7 +205,6 @@
                 simplex3d-console-local.jnlp
                 simplex3d-console.jnlp
                 simplex3d-icon.png
-                simplex3d-logo.png
                 build.xml" />
         </zip>
     </target>

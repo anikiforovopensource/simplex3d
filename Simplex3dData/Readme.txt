@@ -7,7 +7,7 @@ Runtime requirements:
   - Simplex3dMath of matching version.
 
 Build requirements:
-  - Ant 1.7 or higher.
+  - Ant 1.7.1 or higher.
   - SCALA_HOME set to Scala 2.8.1.final or higher.
   - Simplex3dMath (built with ant) in the same folder as this project folder.
 

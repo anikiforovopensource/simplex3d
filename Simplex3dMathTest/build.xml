@@ -128,7 +128,7 @@
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
 
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
         </jar>
@@ -149,7 +149,7 @@
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
 
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
         </jar>

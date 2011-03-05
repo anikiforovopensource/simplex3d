@@ -95,16 +95,16 @@ name="Simplex3dData" default="release-all" basedir=".">
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
 
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
             excludes="${float.pkg} ${double.pkg}"/>
         </jar>
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-float.jar">
             <fileset dir="${build.classes.dir}" includes="${float.pkg}"/>
         </jar>
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-double.jar">
             <fileset dir="${build.classes.dir}" includes="${double.pkg}"/>
         </jar>

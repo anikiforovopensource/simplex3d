@@ -97,16 +97,16 @@ name="Simplex3dMath" default="release-all" basedir=".">
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
 
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/** simplex3d/integration/**"
             excludes="${floatx.pkg} ${float.pkg} ${doublex.pkg} ${double.pkg}"/>
         </jar>
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-float.jar">
             <fileset dir="${build.classes.dir}" includes="${floatx.pkg} ${float.pkg}"/>
         </jar>
-        <jar compress="${jar.compress}" manifest="${basedir}/manifest.mf"
+        <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-double.jar">
             <fileset dir="${build.classes.dir}" includes="${doublex.pkg} ${double.pkg}"/>
         </jar>

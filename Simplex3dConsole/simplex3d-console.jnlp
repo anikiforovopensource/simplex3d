@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://project.simplex3d.net/webstart/console" href="simplex3d-console.jnlp">
+    <information>
+        <title>Simplex3D Console</title>
+        <vendor>Lex</vendor>
+        <homepage href="http://www.simplex3d.org/"/>
+        <description>An interactive Scala console.</description>
+        <icon href="simplex3d-icon.png"/>
+        <icon kind="splash" href="simplex3d-logo.png"/>
+        <offline-allowed/> 
+        <shortcut online="true">
+          <desktop/>
+          <menu submenu="Scala Console"/>
+        </shortcut>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <property name="jnlp.packEnabled" value="true"/>
+        <j2se version="1.6+" java-vm-args="-Dsun.java2d.noddraw=true -Dsun.java2d.d3d=false"/>
+        <jar href="simplex3d-console-deps.jar"/>
+        <jar href="simplex3d-console-web.jar" main="true"/>
+    </resources>
+    <application-desc main-class="simplex3d.console.Main"/>
+    <update check="background"/>
+</jnlp>

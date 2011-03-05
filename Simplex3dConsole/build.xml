@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="Simplex3dConsole" default="release-all" basedir=".">
+    <description>Builds, tests, and runs the project Simplex3dConsole.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="Simplex3dConsole-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+    
+    <property name="release.dir" value="release"/>
+    <property name="web.dir" value="${release.dir}/web"/>
+    
+    <property name="release.name" value="simplex3d-console"/>
+    <property name="release.src" value="${release.dir}/Simplex3dConsole_src.zip"/>
+    <property name="release.bin" value="${release.dir}/Simplex3dConsole_bin.zip"/>
+    <property name="root.pkg" value="simplex3d/console"/>
+    
+    <property name="math.dir" value="../Simplex3dMath/release/jars"/>
+    <property name="data.dir" value="../Simplex3dData/release/jars"/>
+
+
+    <property name="keystore.location" value="keystore.local"/>
+
+    <target name="make-keystore">
+        <delete file="${keystore.location}" />
+        
+        <echo message="Generating a new keystore file (the old file will be replaced)..." />
+        
+        <input message="Enter the keystore password: " addproperty="keystore.storepass" />
+        <input message="Enter your alias: " addproperty="keystore.alias" />
+        <input message="Enter the keypass: " addproperty="keystore.keypass" />
+        
+        <input message="Enter 'Common Name': " addproperty="signature.commonName" />
+        <input message="Enter 'Organization Unit': " addproperty="signature.organizationUnit" />
+        <input message="Enter 'Organization': " addproperty="signature.organization" />
+        <input message="Enter 'Country Code': " addproperty="signature.countryCode" />
+  
+        <exec dir="." executable="keytool" failonerror="true">
+            <arg value="-genkeypair"/>
+            <arg value="-keystore"/><arg value="${keystore.location}" />
+            <arg value="-storepass"/><arg value="${keystore.storepass}" />
+            <arg value="-alias"/><arg value="${keystore.alias}"/>
+            <arg value="-keypass"/><arg value="${keystore.keypass}" />
+            <arg value="-dname"/><arg value="cn=${signature.commonName}, ou=${signature.organizationUnit}, o=${signature.organization}, c=${signature.countryCode}" />
+        </exec>
+    </target>
+
+    <target name="release-web" depends="release-clean, init, clean, compile, jar" >
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${dist.dir}" />
+
+        <jar jarfile="${web.dir}/${release.name}-deps.jar">
+            <zipfileset src="${env.SCALA_HOME}/lib/scala-library.jar" includes="**/*.class"/>
+            <zipfileset src="${env.SCALA_HOME}/lib/scala-compiler.jar" includes="**/*.class"/>
+            
+            <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**/*.class"/>
+            <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**/*.class"/>
+            <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**/*.class"/>
+            <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**/*.class"/>
+        </jar>
+        
+        <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
+            <zipfileset src="${dist.dir}/Simplex3dConsole.jar" includes="${root.pkg}/**"/>
+            <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
+        </jar>
+
+        <apply executable="pack200" parallel="false">
+            <arg value="--repack"/>
+            <fileset dir="${web.dir}" includes="**/*.jar" />
+        </apply>
+
+
+        <echo message="Accessing the keystore (you can generate a new keystore file with 'ant make-keystore')..." />
+        
+        <input message="Enter the keystore password: " addproperty="keystore.storepass" >
+           <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+        <input message="Enter your alias: " addproperty="keystore.alias" />
+        <input message="Enter the keypass: " addproperty="keystore.keypass" >
+           <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+        
+        <signjar keystore="${keystore.location}" storepass="${keystore.storepass}" alias="${keystore.alias}" keypass="${keystore.keypass}" >
+            <fileset dir="${web.dir}" includes="**/*.jar" />
+        </signjar>
+        
+        
+        <apply executable="pack200" parallel="false" dest="${web.dir}">
+            <arg value="--deflate-hint=true"/>
+            <arg value="--effort=9"/>
+            <targetfile/>
+            <srcfile/>
+            <fileset dir="${web.dir}" includes="**/*.jar" />
+            <mapper type="glob" from="*" to="*.pack.gz" />
+        </apply>
+
+        <copy file="simplex3d-console.jnlp" todir="${web.dir}"/>
+        <copy file="simplex3d-console-local.jnlp" todir="${web.dir}"/>
+        <copy file="simplex3d-icon.png" todir="${web.dir}"/>
+        <copy file="simplex3d-logo.png" todir="${web.dir}"/>
+    </target>
+    
+    
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
+
+    <target name="release-clean" >
+        <delete dir="${release.dir}" />
+    </target>
+    
+    <target name="release-bin" depends="init, clean, compile, jar" >
+        <delete file="${release.bin}" />
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${release.dir}/jars" />
+
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"/>
+        </jar>
+
+        <zip destfile="${release.bin}">
+            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${release.dir}/jars" includes="*.jar"/>
+            <fileset dir="${basedir}" includes="
+                Readme.txt
+                COPYING.LESSER
+                COPYING
+                simplex3d-icon.png
+                simplex3d-console.license" />
+        </zip>
+    </target>
+    
+    <target name="release-src" depends="init" >
+        <delete file="${release.src}" />
+        <mkdir dir="${release.dir}" />
+
+        <zip destfile="${release.src}">
+            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
+            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
+            <fileset dir="${basedir}" includes="
+                Readme.txt
+                COPYING.LESSER
+                COPYING
+                simplex3d-console.license
+                manifest.mf
+                simplex3d-console-local.jnlp
+                simplex3d-console.jnlp
+                simplex3d-icon.png
+                simplex3d-logo.png
+                build.xml" />
+        </zip>
+    </target>
+    
+</project>

@@ -74,6 +74,7 @@
     <property name="release.src" value="${release.dir}/Simplex3dConsole_src.zip"/>
     <property name="release.bin" value="${release.dir}/Simplex3dConsole_bin.zip"/>
     <property name="root.pkg" value="simplex3d/console"/>
+    <property name="example.pkg" value="${root.pkg}/example"/>
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>
     <property name="data.dir" value="../Simplex3dData/release/jars"/>
@@ -120,7 +121,9 @@
         </jar>
         
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
-            <zipfileset src="${dist.dir}/Simplex3dConsole.jar" includes="${root.pkg}/**"/>
+            <zipfileset src="${dist.dir}/Simplex3dConsole.jar" includes="${root.pkg}/**"
+            excludes="${example.pkg}/**/*.class"/>
+            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
 
@@ -173,7 +176,9 @@
 
         <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"/>
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
+            excludes="${example.pkg}/**/*.class"/>
+            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </jar>
 
         <zip destfile="${release.bin}">

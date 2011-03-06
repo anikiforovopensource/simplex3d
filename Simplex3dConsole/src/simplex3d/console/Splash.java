@@ -22,7 +22,6 @@ package simplex3d.console;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -35,6 +34,16 @@ public class Splash extends javax.swing.JFrame {
     /** Creates new form Splash */
     public Splash() {
         initComponents();
+    }
+
+    public void setStatusText(final String text) {
+        try {
+            java.awt.EventQueue.invokeAndWait(new Runnable() {
+                public void run() {
+                    feedbackLabel.setText("Starting Console: " + text);
+                }
+            });
+        } catch (Exception ignore) {}
     }
 
     private ImageIcon loadSplash() {
@@ -70,10 +79,11 @@ public class Splash extends javax.swing.JFrame {
         feedbackLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Starting Console");
         setResizable(false);
         setUndecorated(true);
 
-        feedbackLabel.setText("Starting the Console: extracting Scala jars...");
+        feedbackLabel.setText("Starting Console: rebuilding jars...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,15 +109,18 @@ public class Splash extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Splash().setVisible(true);
-            }
-        });
+    public static Splash showSplash() {
+        final Splash[] splashRef = new Splash[1];
+        try {
+            java.awt.EventQueue.invokeAndWait(new Runnable() {
+                public void run() {
+                    splashRef[0] = new Splash();
+                    Main.positionMiddle(splashRef[0]);
+                    splashRef[0].setVisible(true);
+                }
+            });
+        } catch (Exception ignore) {}
+        return splashRef[0];
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

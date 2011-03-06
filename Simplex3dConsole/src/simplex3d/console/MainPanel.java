@@ -21,8 +21,13 @@
 package simplex3d.console;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -37,6 +42,7 @@ public class MainPanel extends javax.swing.JPanel {
     private JScrollPane scrollPane;
     private RSyntaxTextArea textComponent;
     private final AbstractAction runAction;
+    private final AbstractAction resetInterpreterAction;
     private SimplexInterpreter interpreter;
 
 
@@ -53,14 +59,12 @@ public class MainPanel extends javax.swing.JPanel {
         textComponent.setTabsEmulated(true);
         textComponent.setTabSize(2);
 
-        textComponent.setText(
-            "// Type some code and hit run.\n" +
-            "println(\"Hello World\")\n"
-        );
+        textComponent.setText(Examples.getExample("scala/Greeting.scala"));
 
 
         runAction = new AbstractAction("Run") {
             {
+                putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK));
                 putValue(MNEMONIC_KEY, (int) 'R');
                 putValue(ACTION_COMMAND_KEY, "runCmd");
             }
@@ -91,19 +95,54 @@ public class MainPanel extends javax.swing.JPanel {
             }
         };
 
+        resetInterpreterAction = new AbstractAction("Reset Interpreter") {
+            {
+                putValue(MNEMONIC_KEY, (int) 'I');
+                putValue(ACTION_COMMAND_KEY, "resetInterpreterCmd");
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                runAction.setEnabled(false);
+                resetInterpreterAction.setEnabled(false);
+                consoleTextArea.setText("");
+
+                new SwingWorker() {
+                    @Override protected String doInBackground() throws Exception {
+                        setInterpreter(new SimplexInterpreter());
+                        return null;
+                    }
+
+                    @Override protected void done() {
+                        runAction.setEnabled(true);
+                        resetInterpreterAction.setEnabled(true);
+                    }
+                }.execute();
+            }
+        };
+
         runButton.setAction(runAction);
+        resetInterpreterButton.setAction(resetInterpreterAction);
     }
 
-    public AbstractAction getRunAction() {
-        return runAction;
-    }
-
-    public SimplexInterpreter getInterpreter() {
+    public SimpleInterpreter getInterpreter() {
         return interpreter;
     }
 
     public void setInterpreter(SimplexInterpreter interpreter) {
+        interpreter.dispose();
         this.interpreter = interpreter;
+    }
+
+    public JTextArea getTextComponent() {
+        return textComponent;
+    }
+
+    public Action getRunAction() {
+        return runAction;
+    }
+
+    public Action getResetInterpreterAction() {
+        return resetInterpreterAction;
     }
 
 
@@ -118,6 +157,8 @@ public class MainPanel extends javax.swing.JPanel {
 
         buttonPanel = new javax.swing.JPanel();
         runButton = new javax.swing.JButton();
+        clearEditorButton = new javax.swing.JButton();
+        resetInterpreterButton = new javax.swing.JButton();
         splitPane = new javax.swing.JSplitPane();
         editorPanel = new javax.swing.JPanel();
         consolePanel = new javax.swing.JPanel();
@@ -128,19 +169,34 @@ public class MainPanel extends javax.swing.JPanel {
 
         runButton.setText("Run");
 
+        clearEditorButton.setText("Clear Editor");
+        clearEditorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearEditorButtonActionPerformed(evt);
+            }
+        });
+
+        resetInterpreterButton.setText("Reset Interpreter");
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
                 .addComponent(runButton)
-                .addContainerGap(626, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
+                .addComponent(clearEditorButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(resetInterpreterButton))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(runButton)
+                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(resetInterpreterButton)
+                    .addComponent(runButton)
+                    .addComponent(clearEditorButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -174,13 +230,19 @@ public class MainPanel extends javax.swing.JPanel {
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void clearEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearEditorButtonActionPerformed
+        textComponent.setText("");
+    }//GEN-LAST:event_clearEditorButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
+    private javax.swing.JButton clearEditorButton;
     private javax.swing.JPanel consolePanel;
     private javax.swing.JScrollPane consoleScrollPane;
     private javax.swing.JTextArea consoleTextArea;
     private javax.swing.JPanel editorPanel;
+    private javax.swing.JButton resetInterpreterButton;
     private javax.swing.JButton runButton;
     private javax.swing.JSplitPane splitPane;
     // End of variables declaration//GEN-END:variables

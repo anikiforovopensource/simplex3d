@@ -41,12 +41,16 @@ public class Main extends javax.swing.JFrame {
         MainPanel mainPanel = new MainPanel();
         layout.replace(this.mainPanel, mainPanel);
         this.mainPanel = mainPanel;
+
+        runMenuItem.setAction(mainPanel.getRunAction());
+        resetInterpreterMenuItem.setAction(mainPanel.getResetInterpreterAction());
+
+        Examples.populateMenus(mainPanel.getTextComponent(), scalaExamples, simplex3dExamples);
     }
 
     public MainPanel getMainPanel() {
         return ((MainPanel) mainPanel);
     }
-
 
 
     /** This method is called from within the constructor to
@@ -59,10 +63,13 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         runMenuItem = new javax.swing.JMenuItem();
+        resetInterpreterMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
+        scalaExamples = new javax.swing.JMenu();
+        simplex3dExamples = new javax.swing.JMenu();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -77,7 +84,7 @@ public class Main extends javax.swing.JFrame {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
+            .addGap(0, 623, Short.MAX_VALUE)
         );
 
         fileMenu.setText("File");
@@ -85,12 +92,10 @@ public class Main extends javax.swing.JFrame {
         runMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         runMenuItem.setMnemonic('R');
         runMenuItem.setText("Run");
-        runMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                runMenuItemActionPerformed(evt);
-            }
-        });
         fileMenu.add(runMenuItem);
+
+        resetInterpreterMenuItem.setText("Reset Interpreter");
+        fileMenu.add(resetInterpreterMenuItem);
 
         exitMenuItem.setMnemonic('X');
         exitMenuItem.setText("Exit");
@@ -101,7 +106,13 @@ public class Main extends javax.swing.JFrame {
         });
         fileMenu.add(exitMenuItem);
 
-        jMenuBar1.add(fileMenu);
+        mainMenuBar.add(fileMenu);
+
+        scalaExamples.setText("  Scala Examples ");
+        mainMenuBar.add(scalaExamples);
+
+        simplex3dExamples.setText(" Simplex3d Examples  ");
+        mainMenuBar.add(simplex3dExamples);
 
         helpMenu.setText("Help");
 
@@ -114,9 +125,9 @@ public class Main extends javax.swing.JFrame {
         });
         helpMenu.add(aboutMenuItem);
 
-        jMenuBar1.add(helpMenu);
+        mainMenuBar.add(helpMenu);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(mainMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,10 +142,6 @@ public class Main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void runMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runMenuItemActionPerformed
-        getMainPanel().getRunAction().actionPerformed(evt);
-    }//GEN-LAST:event_runMenuItemActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         this.dispose();
@@ -154,20 +161,18 @@ public class Main extends javax.swing.JFrame {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {}
 
-        final JFrame[] splashRef = new JFrame[1];
-        try {
-            java.awt.EventQueue.invokeAndWait(new Runnable() {
-                public void run() {
-                    splashRef[0] = new Splash();
-                    positionMiddle(splashRef[0]);
-                    splashRef[0].setVisible(true);
-                }
-            });
-        } catch (Exception ignore) {}
-        final JFrame splash = splashRef[0];
+        
+        final Splash splash = Splash.showSplash();
 
+        splash.setStatusText("rebuilding jars...");
+        Utils.resolveDeps();
+
+        splash.setStatusText("preloading the interpreter...");
         final SimplexInterpreter interpreter = new SimplexInterpreter();
+        
+        Utils.setSecurity();
 
+        splash.setStatusText("launching the application...");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Main main = new Main();
@@ -179,7 +184,7 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    private static void positionMiddle(JFrame frame) {
+    static void positionMiddle(JFrame frame) {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int x = dim.width/2 - frame.getWidth()/2;
         int y = dim.height/2 - frame.getHeight()/2;
@@ -191,8 +196,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JMenuItem resetInterpreterMenuItem;
     private javax.swing.JMenuItem runMenuItem;
+    private javax.swing.JMenu scalaExamples;
+    private javax.swing.JMenu simplex3dExamples;
     // End of variables declaration//GEN-END:variables
 }

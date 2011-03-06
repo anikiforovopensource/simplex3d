@@ -44,19 +44,15 @@ class SimplexInterpreter extends SimpleInterpreter {
 }
 
 class SimpleInterpreter {
-  protected val out = new AccumPrintStream()
+  protected val out = Utils.redirectSystemOut()
   protected val flusher = new PrintWriter(out)
-  System.setOut(out)
 
   protected val interpreter = {
     val settings = new GenericRunnerSettings(out.println(_))
     settings.usejavacp.value = false
-    settings.classpath.value = Util.mkDeps("simplex3d/console/deps.index")
+    settings.classpath.value = Utils.resolveDeps()
     new Interpreter(settings, flusher)
   }
-
-  Policy.setPolicy(new InterpretedPolicy)
-  System.setSecurityManager(new SecurityManager())
 
   def interpret(code: String) :String = {
     interpreter.interpret(code)
@@ -65,57 +61,8 @@ class SimpleInterpreter {
     out.clear()
     res
   }
-}
 
-object Util {
-  def mkDeps(indexPath: String) :String = {
-    val is = this.getClass.getClassLoader.getResourceAsStream(indexPath)
-    val index = scala.io.Source.fromInputStream(is).getLines()
-
-    val tmpFile = File.createTempFile("simplex3d-console-deps", ".jar")
-    tmpFile.deleteOnExit()
-
-    val buff = new Array[Byte](1024*8)
-    val zipOut = new java.util.zip.ZipOutputStream(new FileOutputStream(tmpFile))
-    zipOut.setLevel(1)
-
-    for (path <- index) {
-      zipOut.putNextEntry(new ZipEntry(path))
-      val jarIn = this.getClass.getClassLoader.getResourceAsStream(path)
-
-      var len = 0; while (len >= 0) {
-        len = jarIn.read(buff)
-        if (len > 0) zipOut.write(buff, 0, len)
-      }
-      zipOut.closeEntry()
-    }
-    zipOut.close()
-
-    tmpFile.getAbsolutePath
+  def dispose() {
+    interpreter.close()
   }
-}
-
-class InterpretedPolicy extends Policy {
-  private val allPermissions = new Permissions
-  allPermissions.add(new AllPermission)
-  allPermissions.setReadOnly
-
-  private val noPermissions = new Permissions
-  noPermissions.setReadOnly
-
-  override def getPermissions(codesource: CodeSource) = {
-    if (codesource.getLocation == null) noPermissions
-    else allPermissions
-  }
-
-  override def getPermissions(domain: ProtectionDomain) = {
-    if (domain.getCodeSource.getLocation == null) noPermissions
-    else allPermissions
-  }
-}
-
-class AccumPrintStream(private[this] val bstream: ByteArrayOutputStream) extends PrintStream(bstream) {
-  def this() { this(new ByteArrayOutputStream) }
-  def text :String = bstream.toString()
-  def clear() { bstream.reset() }
 }

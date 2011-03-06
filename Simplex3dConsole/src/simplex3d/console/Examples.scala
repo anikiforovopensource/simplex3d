@@ -34,7 +34,7 @@ import javax.swing.JTextArea
 object Examples {
 
   def populateMenus(txt: JTextArea, scalaMenu: JMenu, simplex3dMenu: JMenu) {
-    val is = this.getClass.getClassLoader.getResourceAsStream("simplex3d/console/examples.index")
+    val is = getClass.getClassLoader.getResourceAsStream("simplex3d/console/examples.index")
     val index = scala.io.Source.fromInputStream(is).getLines().toList
     is.close()
 
@@ -72,9 +72,7 @@ object Examples {
 
   def getExample(path: String) :String = {
     val fullPath = "simplex3d/console/example/" + path
-
-    var is = this.getClass.getClassLoader.getResourceAsStream(fullPath)
-    if (is == null) is = new FileInputStream("src/" + fullPath)
+    var is = getClass.getClassLoader.getResourceAsStream(fullPath)
 
     if (is != null) {
       val code = scala.io.Source.fromInputStream(is).mkString

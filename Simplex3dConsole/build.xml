@@ -66,7 +66,30 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
+
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile"
+    description="Compile project." name="compile">
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
+        </copy>
+
+        <jar jarfile="${build.dir}/deps.jar">
+            <zipfileset src="${env.SCALA_HOME}/lib/scala-library.jar" includes="**"/>
+            <zipfileset src="${env.SCALA_HOME}/lib/scala-compiler.jar" includes="**"/>
+
+            <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**"/>
+            <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
+            <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**"/>
+            <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**"/>
+        </jar>
+
+        <echo level="info" message="Starting indexer." />
+        <exec dir="." executable="scala" failonerror="true">
+            <arg value="Indexer.scala"/>
+        </exec>
+    </target>
+
+
     <property name="release.dir" value="release"/>
     <property name="web.dir" value="${release.dir}/web"/>
     
@@ -107,33 +130,25 @@
     </target>
 
     <target name="release-web" depends="release-clean, init, clean, compile, jar" >
-        <mkdir dir="${release.dir}" />
+        <mkdir dir="${web.dir}" />
         <mkdir dir="${dist.dir}" />
-
-        <jar jarfile="${web.dir}/${release.name}-deps.jar">
-            <zipfileset src="${env.SCALA_HOME}/lib/scala-library.jar" includes="**/*.class"/>
-            <zipfileset src="${env.SCALA_HOME}/lib/scala-compiler.jar" includes="**/*.class"/>
-            
-            <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**/*.class"/>
-            <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**/*.class"/>
-            <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**/*.class"/>
-            <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**/*.class"/>
-        </jar>
         
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
             <zipfileset src="${dist.dir}/Simplex3dConsole.jar" includes="${root.pkg}/**"
             excludes="${example.pkg}/**/*.class"/>
-            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
+        <copy file="${build.dir}/deps.jar" todir="${web.dir}/${release.name}-deps.jar"/>
 
         <apply executable="pack200" parallel="false">
             <arg value="--repack"/>
-            <fileset dir="${web.dir}" includes="**/*.jar" />
+            <fileset dir="${web.dir}" includes="*.jar" />
         </apply>
 
 
-        <echo message="Accessing the keystore (you can generate a new keystore file with 'ant make-keystore')..." />
+        <echo level="info"
+        message="Accessing the keystore (you can generate a new keystore file with 'ant make-keystore')..."
+        />
         
         <input message="Enter the keystore password: " addproperty="keystore.storepass" >
            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
@@ -144,7 +159,7 @@
         </input>
         
         <signjar keystore="${keystore.location}" storepass="${keystore.storepass}" alias="${keystore.alias}" keypass="${keystore.keypass}" >
-            <fileset dir="${web.dir}" includes="**/*.jar" />
+            <fileset dir="${web.dir}" includes="*.jar" />
         </signjar>
         
         
@@ -153,7 +168,7 @@
             <arg value="--effort=9"/>
             <targetfile/>
             <srcfile/>
-            <fileset dir="${web.dir}" includes="**/*.jar" />
+            <fileset dir="${web.dir}" includes="*.jar" />
             <mapper type="glob" from="*" to="*.pack.gz" />
         </apply>
 
@@ -178,7 +193,6 @@
         jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
             excludes="${example.pkg}/**/*.class"/>
-            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </jar>
 
         <zip destfile="${release.bin}">
@@ -206,10 +220,11 @@
                 COPYING.LESSER
                 COPYING
                 simplex3d-console.license
-                manifest.mf
                 simplex3d-console-local.jnlp
                 simplex3d-console.jnlp
                 simplex3d-icon.png
+                manifest.mf
+                Indexer.scala
                 build.xml" />
         </zip>
     </target>

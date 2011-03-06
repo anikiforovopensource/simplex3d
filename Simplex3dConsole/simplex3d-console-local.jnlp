@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.0+" codebase="file:///home/lex/Dev/Code/Simplex3d/Simplex3dConsole/release/web" href="simplex3d-console-local.jnlp">
+<jnlp spec="1.0+" href="simplex3d-console-local.jnlp">
     <information>
         <title>Simplex3D Console</title>
         <vendor>Lex</vendor>

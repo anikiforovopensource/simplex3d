@@ -138,7 +138,7 @@
             excludes="${example.pkg}/**/*.class"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
-        <copy file="${build.dir}/deps.jar" todir="${web.dir}/${release.name}-deps.jar"/>
+        <copy file="${build.dir}/deps.jar" tofile="${web.dir}/${release.name}-deps.jar"/>
 
         <apply executable="pack200" parallel="false">
             <arg value="--repack"/>

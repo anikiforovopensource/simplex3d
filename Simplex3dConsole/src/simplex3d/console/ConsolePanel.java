@@ -25,6 +25,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
@@ -37,7 +38,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-public class MainPanel extends javax.swing.JPanel {
+public class ConsolePanel extends javax.swing.JPanel {
 
     private JScrollPane scrollPane;
     private RSyntaxTextArea textComponent;
@@ -46,7 +47,7 @@ public class MainPanel extends javax.swing.JPanel {
     private SimplexInterpreter interpreter;
 
 
-    public MainPanel() {
+    public ConsolePanel() {
         initComponents();
 
         textComponent = new RSyntaxTextArea();
@@ -60,6 +61,7 @@ public class MainPanel extends javax.swing.JPanel {
         textComponent.setTabSize(2);
 
         textComponent.setText(Examples.getExample("scala/Greeting.scala"));
+        textComponent.getCaret().setDot(0);
 
 
         runAction = new AbstractAction("Run") {
@@ -80,14 +82,14 @@ public class MainPanel extends javax.swing.JPanel {
 
                     @Override protected void done() {
                         try {
-                            consoleTextArea.setText((String) get());
+                            feedTextArea.setText((String) get());
                             runAction.setEnabled(true);
                         } catch (Exception e) {
                             String error = "EXCEPTION:\n" + e.toString();
                             for (StackTraceElement st : e.getStackTrace()) {
                                 error += "\n" + st.toString();
                             }
-                            consoleTextArea.setText(error);
+                            feedTextArea.setText(error);
                             runAction.setEnabled(true);
                         }
                     }
@@ -104,11 +106,11 @@ public class MainPanel extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 runAction.setEnabled(false);
                 resetInterpreterAction.setEnabled(false);
-                consoleTextArea.setText("");
+                feedTextArea.setText("");
 
                 new SwingWorker() {
                     @Override protected String doInBackground() throws Exception {
-                        setInterpreter(new SimplexInterpreter());
+                        interpreter.reset();
                         return null;
                     }
 
@@ -122,6 +124,40 @@ public class MainPanel extends javax.swing.JPanel {
 
         runButton.setAction(runAction);
         resetInterpreterButton.setAction(resetInterpreterAction);
+
+        Utils.setSandboxEnabled(true);
+    }
+
+    
+    public void takeFocus() {
+        textComponent.requestFocus();
+    }
+
+    public final void setSandboxEnabled(boolean enabled) {
+        if (!enabled) {
+            String[] options = new String[]{ "Cancel", "Disable", "No", "Yes" };
+
+            int selection = JOptionPane.showOptionDialog(
+                this,
+                "Turning off the sandbox will give the code from the editor\n" +
+                "a full access to your system.\n" +
+                "Are you sure you want to disable sandbox?\n",
+                "Warning: turning off the sandbox!", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                options, "Cancel"
+            );
+
+            if ("Disable".equals(options[selection])) {
+                Utils.setSandboxEnabled(enabled);
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(
+                this,
+                "The sandbox mode has been enabled.",
+                "Info: sandbox enabled.", JOptionPane.INFORMATION_MESSAGE
+            );
+            Utils.setSandboxEnabled(true);
+        }
     }
 
     public SimpleInterpreter getInterpreter() {
@@ -129,7 +165,7 @@ public class MainPanel extends javax.swing.JPanel {
     }
 
     public void setInterpreter(SimplexInterpreter interpreter) {
-        interpreter.dispose();
+        if (this.interpreter != null) this.interpreter.dispose();
         this.interpreter = interpreter;
     }
 
@@ -161,9 +197,9 @@ public class MainPanel extends javax.swing.JPanel {
         resetInterpreterButton = new javax.swing.JButton();
         splitPane = new javax.swing.JSplitPane();
         editorPanel = new javax.swing.JPanel();
-        consolePanel = new javax.swing.JPanel();
-        consoleScrollPane = new javax.swing.JScrollPane();
-        consoleTextArea = new javax.swing.JTextArea();
+        feedPanel = new javax.swing.JPanel();
+        feedScrollPane = new javax.swing.JScrollPane();
+        feedTextArea = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -209,39 +245,40 @@ public class MainPanel extends javax.swing.JPanel {
         editorPanel.setLayout(new java.awt.BorderLayout());
         splitPane.setTopComponent(editorPanel);
 
-        consoleTextArea.setColumns(20);
-        consoleTextArea.setEditable(false);
-        consoleTextArea.setRows(5);
-        consoleScrollPane.setViewportView(consoleTextArea);
+        feedTextArea.setColumns(20);
+        feedTextArea.setEditable(false);
+        feedTextArea.setRows(5);
+        feedScrollPane.setViewportView(feedTextArea);
 
-        javax.swing.GroupLayout consolePanelLayout = new javax.swing.GroupLayout(consolePanel);
-        consolePanel.setLayout(consolePanelLayout);
-        consolePanelLayout.setHorizontalGroup(
-            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(consoleScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
+        javax.swing.GroupLayout feedPanelLayout = new javax.swing.GroupLayout(feedPanel);
+        feedPanel.setLayout(feedPanelLayout);
+        feedPanelLayout.setHorizontalGroup(
+            feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(feedScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
         );
-        consolePanelLayout.setVerticalGroup(
-            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(consoleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+        feedPanelLayout.setVerticalGroup(
+            feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
         );
 
-        splitPane.setRightComponent(consolePanel);
+        splitPane.setRightComponent(feedPanel);
 
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearEditorButtonActionPerformed
         textComponent.setText("");
+        textComponent.requestFocus();
     }//GEN-LAST:event_clearEditorButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton clearEditorButton;
-    private javax.swing.JPanel consolePanel;
-    private javax.swing.JScrollPane consoleScrollPane;
-    private javax.swing.JTextArea consoleTextArea;
     private javax.swing.JPanel editorPanel;
+    private javax.swing.JPanel feedPanel;
+    private javax.swing.JScrollPane feedScrollPane;
+    private javax.swing.JTextArea feedTextArea;
     private javax.swing.JButton resetInterpreterButton;
     private javax.swing.JButton runButton;
     private javax.swing.JSplitPane splitPane;

@@ -51,7 +51,7 @@ object Utils {
     newJar
   }
 
-  private def rebuildDeps() :String = {
+  private[this] def rebuildDeps() :String = {
     val is = this.getClass.getClassLoader.getResourceAsStream("simplex3d/console/deps.index")
     val index = scala.io.Source.fromInputStream(is).getLines().toList
     is.close()
@@ -85,8 +85,14 @@ object Utils {
     System.out.asInstanceOf[AccumPrintStream]
   }
 
-  def setSecurity() {
-    Policy.setPolicy(new InterpretedPolicy)
-    System.setSecurityManager(new SecurityManager)
+  def setSandboxEnabled(enabled: Boolean) {
+    if (enabled) {
+      Policy.setPolicy(new InterpretedPolicy)
+      System.setSecurityManager(new SecurityManager)
+    }
+    else {
+      System.setSecurityManager(null)
+      Policy.setPolicy(null)
+    }
   }
 }

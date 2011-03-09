@@ -31,25 +31,25 @@ import javax.swing.UIManager;
 /**
  * @author Aleksey Nikiforov (lex)
  */
-public class Main extends javax.swing.JFrame {
+public class ConsoleFrame extends javax.swing.JFrame {
 
     
-    public Main() {
+    public ConsoleFrame() {
         initComponents();
 
         javax.swing.GroupLayout layout = (javax.swing.GroupLayout) getContentPane().getLayout();
-        MainPanel mainPanel = new MainPanel();
-        layout.replace(this.mainPanel, mainPanel);
-        this.mainPanel = mainPanel;
+        ConsolePanel consolePanel = new ConsolePanel();
+        layout.replace(this.consolePanel, consolePanel);
+        this.consolePanel = consolePanel;
 
-        runMenuItem.setAction(mainPanel.getRunAction());
-        resetInterpreterMenuItem.setAction(mainPanel.getResetInterpreterAction());
+        runMenuItem.setAction(consolePanel.getRunAction());
+        resetInterpreterMenuItem.setAction(consolePanel.getResetInterpreterAction());
 
-        Examples.populateMenus(mainPanel.getTextComponent(), scalaExamples, simplex3dExamples);
+        Examples.populateMenus(consolePanel.getTextComponent(), scalaExamples, simplex3dExamples);
     }
 
-    public MainPanel getMainPanel() {
-        return ((MainPanel) mainPanel);
+    public ConsolePanel getConsolePanel() {
+        return ((ConsolePanel) consolePanel);
     }
 
 
@@ -62,7 +62,7 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JPanel();
+        consolePanel = new javax.swing.JPanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         runMenuItem = new javax.swing.JMenuItem();
@@ -70,23 +70,26 @@ public class Main extends javax.swing.JFrame {
         exitMenuItem = new javax.swing.JMenuItem();
         scalaExamples = new javax.swing.JMenu();
         simplex3dExamples = new javax.swing.JMenu();
+        settingsMenu = new javax.swing.JMenu();
+        sandboxMenuItem = new javax.swing.JCheckBoxMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Simplex3D Console");
 
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout consolePanelLayout = new javax.swing.GroupLayout(consolePanel);
+        consolePanel.setLayout(consolePanelLayout);
+        consolePanelLayout.setHorizontalGroup(
+            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 670, Short.MAX_VALUE)
         );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        consolePanelLayout.setVerticalGroup(
+            consolePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 623, Short.MAX_VALUE)
         );
 
+        fileMenu.setMnemonic('F');
         fileMenu.setText("File");
 
         runMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
@@ -94,6 +97,7 @@ public class Main extends javax.swing.JFrame {
         runMenuItem.setText("Run");
         fileMenu.add(runMenuItem);
 
+        resetInterpreterMenuItem.setMnemonic('I');
         resetInterpreterMenuItem.setText("Reset Interpreter");
         fileMenu.add(resetInterpreterMenuItem);
 
@@ -108,12 +112,29 @@ public class Main extends javax.swing.JFrame {
 
         mainMenuBar.add(fileMenu);
 
+        scalaExamples.setMnemonic('E');
         scalaExamples.setText("  Scala Examples ");
         mainMenuBar.add(scalaExamples);
 
-        simplex3dExamples.setText(" Simplex3d Examples  ");
+        simplex3dExamples.setMnemonic('X');
+        simplex3dExamples.setText(" Simplex3D Examples  ");
         mainMenuBar.add(simplex3dExamples);
 
+        settingsMenu.setMnemonic('S');
+        settingsMenu.setText("Settings");
+
+        sandboxMenuItem.setSelected(true);
+        sandboxMenuItem.setText("Sandbox");
+        sandboxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sandboxMenuItemActionPerformed(evt);
+            }
+        });
+        settingsMenu.add(sandboxMenuItem);
+
+        mainMenuBar.add(settingsMenu);
+
+        helpMenu.setMnemonic('H');
         helpMenu.setText("Help");
 
         aboutMenuItem.setMnemonic('A');
@@ -133,11 +154,11 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(consolePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(consolePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -152,6 +173,11 @@ public class Main extends javax.swing.JFrame {
             "Interactive Scala Console,\ndeveloped for Simplex3D Project.\nhttp://www.simplex3d.org"
         );
     }//GEN-LAST:event_aboutMenuItemActionPerformed
+
+    private void sandboxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sandboxMenuItemActionPerformed
+        ((ConsolePanel) consolePanel).setSandboxEnabled(sandboxMenuItem.isSelected());
+        sandboxMenuItem.setSelected(System.getSecurityManager() != null);
+    }//GEN-LAST:event_sandboxMenuItemActionPerformed
 
     /**
     * @param args the command line arguments
@@ -169,17 +195,16 @@ public class Main extends javax.swing.JFrame {
 
         splash.setStatusText("preloading the interpreter...");
         final SimplexInterpreter interpreter = new SimplexInterpreter();
-        
-        Utils.setSecurity();
 
         splash.setStatusText("launching the application...");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Main main = new Main();
-                main.getMainPanel().setInterpreter(interpreter);
+                ConsoleFrame main = new ConsoleFrame();
+                main.getConsolePanel().setInterpreter(interpreter);
                 splash.dispose();
                 positionMiddle(main);
                 main.setVisible(true);
+                main.getConsolePanel().takeFocus();
             }
         });
     }
@@ -193,14 +218,16 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JPanel consolePanel;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuBar mainMenuBar;
-    private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem resetInterpreterMenuItem;
     private javax.swing.JMenuItem runMenuItem;
+    private javax.swing.JCheckBoxMenuItem sandboxMenuItem;
     private javax.swing.JMenu scalaExamples;
+    private javax.swing.JMenu settingsMenu;
     private javax.swing.JMenu simplex3dExamples;
     // End of variables declaration//GEN-END:variables
 }

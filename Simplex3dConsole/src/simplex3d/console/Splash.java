@@ -115,7 +115,7 @@ public class Splash extends javax.swing.JFrame {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
                     splashRef[0] = new Splash();
-                    Main.positionMiddle(splashRef[0]);
+                    ConsoleFrame.positionMiddle(splashRef[0]);
                     splashRef[0].setVisible(true);
                 }
             });

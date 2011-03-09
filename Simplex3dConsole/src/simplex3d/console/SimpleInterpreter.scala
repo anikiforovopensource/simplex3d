@@ -30,17 +30,21 @@ import scala.tools.nsc._
  * @author Aleksey Nikiforov (lex)
  */
 class SimplexInterpreter extends SimpleInterpreter {
-  interpreter.interpret(
-    """
-    import simplex3d.math._
-    import simplex3d.math.double._
-    import simplex3d.math.double.functions._
-    import simplex3d.data._
-    import simplex3d.data.double._
-    """
-  )
-  flusher.flush()
-  out.clear()
+  override def init() {
+    super.init()
+
+    interpreter.interpret(
+      """
+      import simplex3d.math._
+      import simplex3d.math.double._
+      import simplex3d.math.double.functions._
+      import simplex3d.data._
+      import simplex3d.data.double._
+      """
+    )
+    flusher.flush()
+    out.clear()
+  }
 }
 
 class SimpleInterpreter {
@@ -54,12 +58,25 @@ class SimpleInterpreter {
     new Interpreter(settings, flusher)
   }
 
+  init()
+
+  
+  def init() {}
+
   def interpret(code: String) :String = {
-    interpreter.interpret(code)
+    interpreter.interpret(
+      code +
+      "\nprintln(\"\\n_______________________________________________________________\\n\")"
+    )
     flusher.flush()
     val res = out.text
     out.clear()
     res
+  }
+
+  def reset() {
+    interpreter.reset()
+    init()
   }
 
   def dispose() {

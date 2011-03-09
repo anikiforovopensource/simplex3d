@@ -73,18 +73,19 @@ object Examples {
   def getExample(path: String) :String = {
     val fullPath = "simplex3d/console/example/" + path
     var is = getClass.getClassLoader.getResourceAsStream(fullPath)
+    val name = path.take(path.lastIndexOf(".")).drop(path.lastIndexOf("/") + 1)
 
     if (is != null) {
       val code = scala.io.Source.fromInputStream(is).mkString
       is.close()
-      extractInnerCode(code)
+      extractInnerCode(name, code)
     }
     else {
       null
     }
   }
 
-  private def extractInnerCode(code: String) :String = {
+  private def extractInnerCode(name: String, code: String) :String = {
     val extIdx = code.indexOf("extends")
     val next0 = extIdx + "extends".length
     if (extIdx > 0) {
@@ -94,7 +95,7 @@ object Examples {
         val cbIdx = code.indexOf("{", next1)
         if (cbIdx > 0 && code.substring(next1, cbIdx).trim.isEmpty) {
           val endIdx = code.lastIndexOf("}")
-          if (endIdx > 0) return cleanup(code.substring(cbIdx + 1, endIdx))
+          if (endIdx > 0) return "//" + name + "\n\n" + cleanup(code.substring(cbIdx + 1, endIdx))
         }
       }
     }
@@ -114,11 +115,11 @@ object Examples {
     val lines = codeLines.map(_.replace("\t", "  "))
     val Spaces = """^(\s*).*""".r
     val Spaces(hs) = lines.head
-    var min = 0; if (hs != null) min = hs.length
+    var min = scala.Int.MaxValue
 
     for (line <- lines) {
       val Spaces(s) = line
-      if (s != null && s.length < min) min = s.length
+      if (s != null && !line.trim.isEmpty && s.length < min) min = s.length
     }
 
     lines.map(_.drop(min))
@@ -129,7 +130,11 @@ class SelectExampleAction(name: String, val path: String, txt: JTextArea)
 extends AbstractAction(name) {
   override def actionPerformed(e: ActionEvent) {
     val code = Examples.getExample(path)
-    if (code != null) txt.setText(code)
+    if (code != null) {
+      txt.setText(code)
+      txt.getCaret.setDot(0)
+      txt.requestFocus()
+    }
   }
 }
 

@@ -174,10 +174,11 @@ public class ConsolePanel extends javax.swing.JPanel {
 
             int selection = JOptionPane.showOptionDialog(
                 this,
-                "Turning off the sandbox will give the code from the editor\n" +
-                "a full access to your system.\n" +
-                "Are you sure you want to disable sandbox?\n",
-                "Warning: turning off the sandbox!", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                "Turning off the sandbox mode will give the code from\n" +
+                "the editor a full access to your system.\n\n" +
+                "Are you sure you want to do this?\n",
+                "Warning: turning off the sandbox mode!",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                 options, "Cancel"
             );
 
@@ -189,7 +190,7 @@ public class ConsolePanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(
                 this,
                 "The sandbox mode has been enabled.",
-                "Info: sandbox enabled.", JOptionPane.INFORMATION_MESSAGE
+                "Info: the sandbox mode is enabled.", JOptionPane.INFORMATION_MESSAGE
             );
             Utils.setSandboxEnabled(true);
         }

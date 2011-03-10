@@ -11,6 +11,7 @@ Build requirements:
   - SCALA_HOME set to Scala 2.8.1.final or higher.
   - Simplex3dMath (built with ant) in the same folder as this project folder.
 
+
 To build the project:
   1) open a console,
   2) cd into the project directory,

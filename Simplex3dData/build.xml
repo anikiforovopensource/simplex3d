@@ -84,13 +84,13 @@ name="Simplex3dData" default="release-all" basedir=".">
     <property name="double.pkg" value="${root.pkg}/double/**"/>
 
 
-    <target name="release-all" depends="release-clean, release-src, release-bin" />
+    <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
 
     <target name="release-clean" >
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-bin" depends="init, clean, compile, jar" >
+    <target name="release-bin" depends="init, clean, compile" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />

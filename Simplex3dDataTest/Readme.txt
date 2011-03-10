@@ -13,10 +13,12 @@ Build requirements:
   - Simplex3dMath (built with ant) in the same folder as this project folder
   - Simplex3dData (built with ant) in the same folder as this project folder
 
+
 To build the project:
   1) open a console,
   2) cd into the project directory,
   3) type: ant
+
 
 To run all test:
 Put

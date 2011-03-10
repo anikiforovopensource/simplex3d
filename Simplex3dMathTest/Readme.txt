@@ -11,11 +11,13 @@ Build requirements:
   - SCALA_HOME set to Scala 2.8.1.final or higher.
   - Simplex3dMath (built with ant) in the same folder as this project folder.
 
-NOTE: you need at least 1.5Gb RAM to build with Scala 2.8.1.final.
+
+NOTE: you need at least 1.2Gb RAM to build with Scala 2.8.1.final.
 To build the project:
   1) open a console,
   2) cd into the project directory,
   3) type: ant
+
 
 To run all test:
 Put

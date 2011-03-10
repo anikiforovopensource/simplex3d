@@ -9,6 +9,7 @@ Build requirements:
   - Ant 1.7.1 or higher.
   - SCALA_HOME set to Scala 2.8.1.final or higher.
 
+
 To build the project:
   1) open a console,
   2) cd into the project directory,

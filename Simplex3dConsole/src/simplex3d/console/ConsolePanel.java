@@ -20,16 +20,23 @@
 
 package simplex3d.console;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import simplex3d.console.findreplace.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -40,7 +47,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
  */
 public class ConsolePanel extends javax.swing.JPanel {
 
-    private JScrollPane scrollPane;
     private RSyntaxTextArea textComponent;
     private final AbstractAction runAction;
     private final AbstractAction resetInterpreterAction;
@@ -49,21 +55,50 @@ public class ConsolePanel extends javax.swing.JPanel {
 
     public ConsolePanel() {
         initComponents();
+        
+        Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
         textComponent = new RSyntaxTextArea();
-        scrollPane = new RTextScrollPane();
-        scrollPane.setViewportView(textComponent);
-        editorPanel.add(scrollPane, java.awt.BorderLayout.CENTER);
+        FindReplacePanel findReplace = new FindReplacePanel(
+            prefs,
+            textComponent, new RTextScrollPane(),
+            JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
 
         textComponent.setTextAntiAliasHint("VALUE_TEXT_ANTIALIAS_LCD_HRGB");
         textComponent.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA);
         textComponent.setTabsEmulated(true);
         textComponent.setTabSize(2);
 
+        // Setup undo.
+        findReplace.setUndoForwards(
+            RSyntaxTextArea.getAction(RSyntaxTextArea.UNDO_ACTION),
+            RSyntaxTextArea.getAction(RSyntaxTextArea.REDO_ACTION)
+        );
+
+        JPopupMenu menu = textComponent.getPopupMenu();
+        menu.remove(0);
+        menu.remove(0);
+        menu.insert(findReplace.getRedoAction(), 0);
+        menu.insert(findReplace.getUndoAction(), 0);
+        menu.addSeparator();
+        menu.add(new JMenuItem(findReplace.getShowFindDialogAction()));
+        menu.add(new JMenuItem(findReplace.getShowReplaceDialogAction()));
+
+        InputMap map = (InputMap) UIManager.get("RSyntaxTextAreaUI.inputMap");
+        int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        map.remove(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mods));
+        map.remove(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mods));
+
+        // Set the default example.
         textComponent.setText(Examples.getExample("scala/Greeting.scala"));
         textComponent.getCaret().setDot(0);
 
+        // Add the find/replace panel.
+        editorPanel.add(findReplace, java.awt.BorderLayout.CENTER);
 
+
+        // Setup actions.
         runAction = new AbstractAction("Run") {
             {
                 putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK));
@@ -220,7 +255,7 @@ public class ConsolePanel extends javax.swing.JPanel {
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
                 .addComponent(runButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 358, Short.MAX_VALUE)
                 .addComponent(clearEditorButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resetInterpreterButton))
@@ -239,8 +274,9 @@ public class ConsolePanel extends javax.swing.JPanel {
         add(buttonPanel, java.awt.BorderLayout.PAGE_START);
 
         splitPane.setDividerLocation(400);
+        splitPane.setDividerSize(5);
         splitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        splitPane.setResizeWeight(0.5);
+        splitPane.setResizeWeight(0.7);
 
         editorPanel.setLayout(new java.awt.BorderLayout());
         splitPane.setTopComponent(editorPanel);
@@ -254,11 +290,11 @@ public class ConsolePanel extends javax.swing.JPanel {
         feedPanel.setLayout(feedPanelLayout);
         feedPanelLayout.setHorizontalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(feedScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
+            .addComponent(feedScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
         );
         feedPanelLayout.setVerticalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+            .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
         );
 
         splitPane.setRightComponent(feedPanel);

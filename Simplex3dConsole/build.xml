@@ -129,12 +129,12 @@
         </exec>
     </target>
 
-    <target name="release-web" depends="release-clean, init, clean, compile, jar" >
+    <target name="release-web" depends="release-clean, init, clean, compile" >
         <mkdir dir="${web.dir}" />
         <mkdir dir="${dist.dir}" />
         
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
-            <zipfileset src="${dist.dir}/Simplex3dConsole.jar" includes="${root.pkg}/**"
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
             excludes="${example.pkg}/**/*.class"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
@@ -178,13 +178,13 @@
     </target>
     
     
-    <target name="release-all" depends="release-clean, release-src, release-bin" />
+    <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
 
     <target name="release-clean" >
         <delete dir="${release.dir}" />
     </target>
     
-    <target name="release-bin" depends="init, clean, compile, jar" >
+    <target name="release-bin" depends="init, clean, compile" >
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
@@ -202,8 +202,8 @@
                 Readme.txt
                 COPYING.LESSER
                 COPYING
-                simplex3d-icon.png
-                simplex3d-console.license" />
+                simplex3d-console.license
+                simplex3d-icon.png" />
         </zip>
     </target>
     
@@ -220,9 +220,9 @@
                 COPYING.LESSER
                 COPYING
                 simplex3d-console.license
+                simplex3d-icon.png
                 simplex3d-console-local.jnlp
                 simplex3d-console.jnlp
-                simplex3d-icon.png
                 manifest.mf
                 Indexer.scala
                 build.xml" />

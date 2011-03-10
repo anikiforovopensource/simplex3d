@@ -136,6 +136,7 @@
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
             excludes="${example.pkg}/**/*.class"/>
+            <zipfileset src="${basedir}/lib/find-replace-panel.jar" includes="**"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
         <copy file="${build.dir}/deps.jar" tofile="${web.dir}/${release.name}-deps.jar"/>

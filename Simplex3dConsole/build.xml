@@ -92,7 +92,7 @@
         </exec>
     </target>
 
-    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile,-console-extra"
+    <target depends="init,-console-extra,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile"
     description="Compile project." name="compile" />
     
 

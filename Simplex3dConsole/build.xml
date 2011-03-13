@@ -67,8 +67,11 @@
 
     -->
 
-    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile"
-    description="Compile project." name="compile">
+    <target name="-check-deps">
+        <available file="${build.dir}/deps.jar" property="deps.present"/>
+    </target>
+
+    <target name="-console-extra" depends="-check-deps" unless="deps.present">
         <copy todir="${build.dir}/classes">
             <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </copy>
@@ -88,6 +91,10 @@
             <arg value="Indexer.scala"/>
         </exec>
     </target>
+
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile,-console-extra"
+    description="Compile project." name="compile" />
+    
 
 
     <property name="release.dir" value="release"/>

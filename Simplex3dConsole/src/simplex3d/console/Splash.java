@@ -20,27 +20,64 @@
 
 package simplex3d.console;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-public class Splash extends javax.swing.JFrame {
+public class Splash extends JFrame implements ActionListener {
+
+    private Timer timer;
+    private int delay = 1000;
+    private String feedbackText;
+    private int dotCount = 0;
+
 
     /** Creates new form Splash */
     public Splash() {
         initComponents();
+
+        timer = new Timer(delay, this);
+        timer.setInitialDelay(delay);
+        timer.start();
+    }
+
+
+    public void actionPerformed(ActionEvent e) {
+        updateFeedbackLabel();
+    }
+
+    private String getDots() {
+        dotCount += 1;
+        if (dotCount > 3) dotCount = 1;
+
+        String res = "";
+        for (int i = 0; i < dotCount; i++) {
+            res += ".";
+        }
+
+        return res;
+    }
+
+    private void updateFeedbackLabel() {
+        feedbackLabel.setText("Starting Console: " + feedbackText + getDots());
     }
 
     public void setStatusText(final String text) {
         try {
             java.awt.EventQueue.invokeAndWait(new Runnable() {
                 public void run() {
-                    feedbackLabel.setText("Starting Console: " + text);
+                    feedbackText = text;
+                    dotCount = 0;
+                    updateFeedbackLabel();
                 }
             });
         } catch (Exception ignore) {}
@@ -75,6 +112,7 @@ public class Splash extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        logoPanel = new javax.swing.JPanel();
         logoLabel = new javax.swing.JLabel("", loadSplash(), JLabel.CENTER);
         feedbackLabel = new javax.swing.JLabel();
 
@@ -83,27 +121,43 @@ public class Splash extends javax.swing.JFrame {
         setResizable(false);
         setUndecorated(true);
 
+        logoPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        logoLabel.setBorder(null);
+
+        javax.swing.GroupLayout logoPanelLayout = new javax.swing.GroupLayout(logoPanel);
+        logoPanel.setLayout(logoPanelLayout);
+        logoPanelLayout.setHorizontalGroup(
+            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        logoPanelLayout.setVerticalGroup(
+            logoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(logoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         feedbackLabel.setText("Starting Console: rebuilding jars...");
+        feedbackLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addComponent(feedbackLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(feedbackLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(logoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(feedbackLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(feedbackLabel))
         );
 
         pack();
@@ -126,6 +180,7 @@ public class Splash extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel feedbackLabel;
     private javax.swing.JLabel logoLabel;
+    private javax.swing.JPanel logoPanel;
     // End of variables declaration//GEN-END:variables
 
 }

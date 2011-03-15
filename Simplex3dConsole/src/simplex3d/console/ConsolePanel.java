@@ -85,11 +85,12 @@ public class ConsolePanel extends javax.swing.JPanel {
         menu.add(new JMenuItem(findReplace.getShowFindDialogAction()));
         menu.add(new JMenuItem(findReplace.getShowReplaceDialogAction()));
 
-        InputMap map = (InputMap) UIManager.get("RSyntaxTextAreaUI.inputMap");
-        int mods = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-        map.remove(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mods));
-        map.remove(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mods));
+        int mod = textComponent.getToolkit().getMenuShortcutKeyMask();
+        InputMap map = textComponent.getInputMap();
+        map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, mod), "nothing");
+        map.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, mod), "nothing");
 
+        
         // Set the default example.
         textComponent.setText(Examples.getExample("scala/Greeting.scala"));
         textComponent.getCaret().setDot(0);

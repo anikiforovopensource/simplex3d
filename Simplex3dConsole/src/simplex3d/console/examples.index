@@ -3,6 +3,7 @@ scala/HelloWorld.scala
 scala/Regex.scala
 scala/Tuples.scala
 scala/Version.scala
+scala/advanced/TypeAliasing.scala
 scala/collection/Filter.scala
 scala/collection/Map.scala
 simplex3d/Swizzling.scala

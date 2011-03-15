@@ -27,9 +27,9 @@ package simplex3d.math
 package object floatx {
 
   // Implicits
-  implicit def intToFloatPromoter(s: Float) = new IntPromoter(s)
-  implicit def intToExtendedFloat(s: Int) = new ExtendedFloat(s)
-  implicit def floatToExtendedFloat(s: Float) = new ExtendedFloat(s)
+  implicit def intToFloatRef(s: Int) = new FloatRef(s)
+  implicit def floatToRef(s: Float) = new FloatRef(s)
+  implicit def refToFloat(v: FloatRef) = v.toConst
 
   implicit def vec2IntToFloat(u: AnyVec2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)

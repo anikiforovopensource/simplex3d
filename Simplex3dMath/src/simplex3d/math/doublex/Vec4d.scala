@@ -194,7 +194,7 @@ object ConstVec4d {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
-extends ReadVec4d with MathRef with Composite with Implicits[On]
+extends ReadVec4d with PropertyRef with Composite with Implicits[On]
 {
   type Read = ReadVec4d
   type Const = ConstVec4d

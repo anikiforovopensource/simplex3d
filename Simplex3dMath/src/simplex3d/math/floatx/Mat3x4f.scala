@@ -456,7 +456,7 @@ final class Mat3x4f private[math] (
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float,
   c03: Float, c13: Float, c23: Float
-) extends ReadMat3x4f with MathRef with Composite with Implicits[On]
+) extends ReadMat3x4f with PropertyRef with Composite with Implicits[On]
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

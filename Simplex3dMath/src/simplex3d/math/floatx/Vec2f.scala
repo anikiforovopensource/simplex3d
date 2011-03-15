@@ -161,7 +161,7 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with MathRef with Composite with Implicits[On]
+extends ReadVec2f with PropertyRef with Composite with Implicits[On]
 {
   type Read = ReadVec2f
   type Const = ConstVec2f

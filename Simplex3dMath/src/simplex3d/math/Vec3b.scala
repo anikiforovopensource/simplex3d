@@ -155,7 +155,7 @@ object ConstVec3b {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with MathRef with Composite with Implicits[On]
+extends ReadVec3b with PropertyRef with Composite with Implicits[On]
 {
   type Read = ReadVec3b
   type Const = ConstVec3b

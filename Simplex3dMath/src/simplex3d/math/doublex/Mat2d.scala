@@ -258,7 +258,7 @@ object ConstMat2d {
 final class Mat2d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double
-) extends ReadMat2d with MathRef with Composite with Implicits[On]
+) extends ReadMat2d with PropertyRef with Composite with Implicits[On]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

@@ -21,6 +21,15 @@
 package simplex3d.math
 
 
+/** Instead of AnyVec1[P].
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with PropertyRef {
+  type Clone <: PrimitiveRef[P]
+}
+
+
 /** <code>AnyQuat4</code> is a superclass of all the quaternions.
  * <p>
  *   There are double and float quaternions.
@@ -28,7 +37,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyQuat4[P] private[math] () extends ReadMathRef {
+abstract class AnyQuat4[P] private[math] () extends ReadPropertyRef {
   type Clone <: AnyQuat4[P]
   def apply(i: Int) :P
 
@@ -50,7 +59,7 @@ abstract class AnyQuat4[P] private[math] () extends ReadMathRef {
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyMat[P] private[math] () extends ReadMathRef {
+abstract class AnyMat[P] private[math] () extends ReadPropertyRef {
   type Clone <: AnyMat[P]
   def columns: Int
   def rows: Int

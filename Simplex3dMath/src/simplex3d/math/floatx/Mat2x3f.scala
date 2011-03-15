@@ -330,7 +330,7 @@ final class Mat2x3f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float,
   c02: Float, c12: Float
-) extends ReadMat2x3f with MathRef with Composite with Implicits[On]
+) extends ReadMat2x3f with PropertyRef with Composite with Implicits[On]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

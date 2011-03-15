@@ -72,6 +72,8 @@ class PackageTest extends FunSuite {
     // the following passes if it compiles
     val pi = functions.Pi
 
+    type dref = DoubleRef
+
     type av2 = ReadVec2d
     type cv2 = ConstVec2d
     val cv2 = ConstVec2d
@@ -211,6 +213,8 @@ class PackageTest extends FunSuite {
     assert(functions == simplex3d.math.doublex.functions)
     
     // the following passes if it compiles
+    type dref = DoubleRef
+    
     type av2 = ReadVec2
     type cv2 = ConstVec2
     val cv2 = ConstVec2

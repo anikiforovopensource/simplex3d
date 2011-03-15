@@ -41,6 +41,13 @@ class AccessorsTest extends FunSuite {
 
   test("Vector Accessors") {
     for (i <- 0 until 100) {
+      val vb1 = new BooleanRef(rb)
+
+      assert(Accessors.bx(vb1) == Boolean(vb1.toConst))
+      assert(Accessors.ix(vb1) == Int(vb1.toConst))
+      assert(Accessors.fx(vb1) == Float(vb1.toConst))
+      assert(Accessors.dx(vb1) == Double(vb1.toConst))
+
       val vb2 = Vec2b(rb, rb)
 
       assert(Accessors.bx(vb2) == Boolean(vb2.x))
@@ -95,6 +102,13 @@ class AccessorsTest extends FunSuite {
       assert(Accessors.dz(vb4) == Double(vb4.z))
       assert(Accessors.dw(vb4) == Double(vb4.w))
 
+
+      val vi1 = new IntRef(ri)
+
+      assert(Accessors.bx(vi1) == Boolean(vi1.toConst))
+      assert(Accessors.ix(vi1) == Int(vi1.toConst))
+      assert(Accessors.fx(vi1) == Float(vi1.toConst))
+      assert(Accessors.dx(vi1) == Double(vi1.toConst))
 
       val vi2 = Vec2i(ri, ri)
 
@@ -151,6 +165,13 @@ class AccessorsTest extends FunSuite {
       assert(Accessors.dw(vi4) == Double(vi4.w))
 
 
+      val vf1 = new FloatRef(rf)
+
+      assert(Accessors.bx(vf1) == Boolean(vf1.toConst))
+      assert(Accessors.ix(vf1) == Int(vf1.toConst))
+      assert(Accessors.fx(vf1) == Float(vf1.toConst))
+      assert(Accessors.dx(vf1) == Double(vf1.toConst))
+
       val vf2 = Vec2f(rf, rf)
 
       assert(Accessors.bx(vf2) == Boolean(vf2.x))
@@ -205,6 +226,13 @@ class AccessorsTest extends FunSuite {
       assert(Accessors.dz(vf4) == Double(vf4.z))
       assert(Accessors.dw(vf4) == Double(vf4.w))
 
+
+      val vd1 = new DoubleRef(rd)
+
+      assert(Accessors.bx(vd1) == Boolean(vd1.toConst))
+      assert(Accessors.ix(vd1) == Int(vd1.toConst))
+      assert(Accessors.fx(vd1) == Float(vd1.toConst))
+      assert(Accessors.dx(vd1) == Double(vd1.toConst))
 
       val vd2 = Vec2d(rd, rd)
 

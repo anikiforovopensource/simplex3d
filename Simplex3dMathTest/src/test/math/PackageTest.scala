@@ -42,25 +42,6 @@ class PackageTest extends FunSuite {
     assert(i4.isInstanceOf[Vec4i])
 
 
-    // the following passes if it compiles
-    type av2 = ReadVec2i
-    type cv2 = ConstVec2i
-    val cv2 = ConstVec2i
-    type v2 = Vec2i
-    val v2 = Vec2i
-
-    type av3 = ReadVec3i
-    type cv3 = ConstVec3i
-    val cv3 = ConstVec3i
-    type v3 = Vec3i
-    val v3 = Vec3i
-
-    type av4 = ReadVec4i
-    type cv4 = ConstVec4i
-    val cv4 = ConstVec4i
-    type v4 = Vec4i
-    val v4 = Vec4i
-
     type m2 = AnyMat2x2[_]
     type m3 = AnyMat3x3[_]
     type m4 = AnyMat4x4[_]

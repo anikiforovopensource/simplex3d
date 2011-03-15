@@ -175,7 +175,7 @@ object ConstQuat4d {
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends ReadQuat4d with MathRef with Composite with Implicits[On]
+) extends ReadQuat4d with PropertyRef with Composite with Implicits[On]
 {
   type Read = ReadQuat4d
   type Const = ConstQuat4d

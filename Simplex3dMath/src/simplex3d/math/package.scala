@@ -29,7 +29,12 @@ import java.nio._
 package object math {
 
   // Implicits
-  implicit def intToExtendedInt(s: Int) = new ExtendedInt(s)
+  implicit def booleanToRef(s: Boolean) = new BooleanRef(s)
+  implicit def refToBoolean(v: BooleanRef) = v.toConst
+
+  implicit def intToRef(s: Int) = new IntRef(s)
+  implicit def refToInt(v: IntRef) = v.toConst
+  
 
   // In and Out aliases
 

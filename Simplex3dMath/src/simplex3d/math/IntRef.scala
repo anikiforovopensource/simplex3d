@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.CommonMath._
+
 
 /** The <code>ExtendedInt</code> class encapsulates glue code to make Ints
  * interact with Int vectors.
@@ -30,82 +32,117 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ExtendedInt(val value: Int) {
+final class IntRef(private[this] var x: Int) extends PrimitiveRef[Int] {
+  type Clone = IntRef
+  type Read = IntRef
+  type Const = Int
+
+  def components = 1
+  def apply(i: Int) :Int = {
+    if (i == 0) x
+    else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
+  }
+
+  def :=(s: Int) { x = s }
+  def :=(v: IntRef) { x = v.toConst }
+  def toConst() :Int = x
+  override def clone() = new IntRef(x)
+
+  private[math] def bx: Boolean = Boolean(x)
+  private[math] def ix: Int = x
+  private[math] def fx: Float = x
+  private[math] def dx: Double = x
+
+
+  final override def equals(other: Any) :Boolean = {
+    other match {
+      case r: IntRef => x == r.toConst
+      case r: BooleanRef => false
+      case r: PrimitiveRef[_] => dx == r.dx
+      case a => x == a
+    }
+  }
+
+  final override def hashCode() :Int = {
+    x.hashCode
+  }
+
+  final override def toString() :String = {
+    "IntRef" + "(" + x + ")"
+  }
+
 
   /** Multiplies this scalar by a vector.
    * @param u a vector to multiply by.
    * @return u*scalar.
    */
-  def *(u: inVec2i) = u*value
+  def *(u: inVec2i) = u*x
 
   /** Multiplies this scalar by a vector.
    * @param u a vector to multiply by.
    * @return u*scalar.
    */
-  def *(u: inVec3i) = u*value
+  def *(u: inVec3i) = u*x
 
   /** Multiplies this scalar by a vector.
    * @param u a vector to multiply by.
    * @return u*scalar.
    */
-  def *(u: inVec4i) = u*value
+  def *(u: inVec4i) = u*x
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x and s/u.y.
    */
-  def /(u: inVec2i) = u.divByComp(value)
+  def /(u: inVec2i) = u.divByComp(x)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, and s/u.z.
    */
-  def /(u: inVec3i) = u.divByComp(value)
+  def /(u: inVec3i) = u.divByComp(x)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, s/u.z, and s/u.w.
    */
-  def /(u: inVec4i) = u.divByComp(value)
+  def /(u: inVec4i) = u.divByComp(x)
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x and s + u.y.
    */
-  def +(u: inVec2i) = u + value
+  def +(u: inVec2i) = u + x
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x, s + u.y, and s + u.z.
    */
-  def +(u: inVec3i) = u + value
+  def +(u: inVec3i) = u + x
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x, s + u.y, s + u.z, and s + u.w.
    */
-  def +(u: inVec4i) = u + value
+  def +(u: inVec4i) = u + x
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x and s - u.y.
    */
-  def -(u: inVec2i) =
-    new Vec2i(value - u.x, value - u.y)
+  def -(u: inVec2i) = new Vec2i(x - u.x, x - u.y)
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x, s - u.y, and s - u.z.
    */
-  def -(u: inVec3i) =
-    new Vec3i(value - u.x, value - u.y, value - u.z)
+  def -(u: inVec3i) = new Vec3i(x - u.x, x - u.y, x - u.z)
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x, s - u.y, s - u.z, and s - u.w.
    */
-  def -(u: inVec4i) =
-    new Vec4i(value - u.x, value - u.y, value - u.z, value - u.w)
+  def -(u: inVec4i) = new Vec4i(x - u.x, x - u.y, x - u.z, x - u.w)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -113,7 +150,7 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x and s % u.y.
    */
-  def %(u: inVec2i) = u.remByComp(value)
+  def %(u: inVec2i) = u.remByComp(x)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -121,7 +158,7 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, and s % u.z.
    */
-  def %(u: inVec3i) = u.remByComp(value)
+  def %(u: inVec3i) = u.remByComp(x)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -129,59 +166,59 @@ final class ExtendedInt(val value: Int) {
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, s % u.z, and s % u.w.
    */
-  def %(u: inVec4i) = u.remByComp(value)
+  def %(u: inVec4i) = u.remByComp(x)
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x and s & u.y.
    */
-  def &(u: inVec2i) = u & value
+  def &(u: inVec2i) = u & x
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x, s & u.y, and s & u.z.
    */
-  def &(u: inVec3i) = u & value
+  def &(u: inVec3i) = u & x
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x, s & u.y, s & u.z, and s & u.w.
    */
-  def &(u: inVec4i) = u & value
+  def &(u: inVec4i) = u & x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x and s | u.y.
    */
-  def |(u: inVec2i) = u | value
+  def |(u: inVec2i) = u | x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x, s | u.y, and s | u.z.
    */
-  def |(u: inVec3i) = u | value
+  def |(u: inVec3i) = u | x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x, s | u.y, s | u.z, and s | u.w.
    */
-  def |(u: inVec4i) = u | value
+  def |(u: inVec4i) = u | x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x and s ^ u.y.
    */
-  def ^(u: inVec2i) = u ^ value
+  def ^(u: inVec2i) = u ^ x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x, s ^ u.y, and s ^ u.z.
    */
-  def ^(u: inVec3i) = u ^ value
+  def ^(u: inVec3i) = u ^ x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x, s ^ u.y, s ^ u.z, and s ^ u.w.
    */
-  def ^(u: inVec4i) = u ^ value
+  def ^(u: inVec4i) = u ^ x
 }

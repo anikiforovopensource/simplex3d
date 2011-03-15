@@ -26,13 +26,13 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadMathRef {
-  type Clone <: ReadMathRef
+trait ReadPropertyRef {
+  type Clone <: ReadPropertyRef
   override def clone() :Clone = throw new UnsupportedOperationException();
 }
 
-trait MathRef extends ReadMathRef with Mutable with Meta {
-  type Clone <: MathRef
+trait PropertyRef extends ReadPropertyRef with Mutable with Meta {
+  type Clone <: PropertyRef
   def :=(v: Read)
   def toConst() :Const
 }

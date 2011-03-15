@@ -72,7 +72,7 @@ extends ProtectedMat3x2f[Float]
       case 0 => new ConstVec3f(m00, m10, m20)
       case 1 => new ConstVec3f(m01, m11, m21)
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Expected from 0 to 1, got " + j + "."
         )
     }
   }

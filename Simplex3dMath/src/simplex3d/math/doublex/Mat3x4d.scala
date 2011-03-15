@@ -100,7 +100,7 @@ extends ProtectedMat3x4d[Double]
       case 2 => new ConstVec3d(m02, m12, m22)
       case 3 => new ConstVec3d(m03, m13, m23)
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Expected from 0 to 3, got " + j + "."
         )
     }
   }

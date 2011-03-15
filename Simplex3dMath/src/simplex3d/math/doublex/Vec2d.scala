@@ -86,7 +86,7 @@ sealed abstract class ReadVec2d extends ProtectedVec2d[Double] {
       case 0 => x
       case 1 => y
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Expected from 0 to 1, got " + j + "."
         )
     }
   }

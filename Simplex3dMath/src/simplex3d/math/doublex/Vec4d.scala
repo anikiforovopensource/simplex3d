@@ -108,7 +108,7 @@ sealed abstract class ReadVec4d extends ProtectedVec4d[Double] {
       case 2 => z
       case 3 => w
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Expected from 0 to 3, got " + j + "."
         )
     }
   }

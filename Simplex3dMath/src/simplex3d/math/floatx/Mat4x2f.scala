@@ -78,7 +78,7 @@ extends ProtectedMat4x2f[Float]
       case 0 => new ConstVec4f(m00, m10, m20, m30)
       case 1 => new ConstVec4f(m01, m11, m21, m31)
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Expected from 0 to 1, got " + j + "."
         )
     }
   }

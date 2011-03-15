@@ -88,7 +88,7 @@ extends ProtectedMat2x4d[Double]
       case 2 => new ConstVec2d(m02, m12)
       case 3 => new ConstVec2d(m03, m13)
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Expected from 0 to 3, got " + j + "."
         )
     }
   }

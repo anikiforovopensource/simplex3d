@@ -96,7 +96,7 @@ sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean] {
       case 1 => y
       case 2 => z
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 2, got " + j
+          "Expected from 0 to 2, got " + j + "."
         )
     }
   }

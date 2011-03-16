@@ -61,7 +61,7 @@ object Quaternions extends Application {
   q *= 2
   q *= p
 
-  // Constant (immutable) vectors:
+  // Constant (immutable) quaternions:
   val c1 = ConstQuat4(1, 2, 3, 4)
   val c2 = ConstQuat4(q)
   val c3: ConstQuat4 = q

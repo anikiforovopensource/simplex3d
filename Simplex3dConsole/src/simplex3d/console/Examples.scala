@@ -61,7 +61,7 @@ object Examples {
     }
 
     def mkName(file: String) = {
-      val idx = file.indexOf(".")
+      val idx = file.lastIndexOf(".")
       val name = if (idx > 0) file.take(idx) else file
       name.take(1).toUpperCase + name.drop(1)
     }

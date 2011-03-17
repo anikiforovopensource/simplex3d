@@ -129,7 +129,7 @@ sealed abstract class ReadVec2d extends ProtectedVec2d[Double] {
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec2d" + "(" + x + ", " + y + ")"
+    prefix + "Vec2" + "(" + x + ", " + y + ")"
   }
 }
 

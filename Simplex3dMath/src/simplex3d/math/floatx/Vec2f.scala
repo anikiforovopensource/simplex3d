@@ -129,7 +129,7 @@ sealed abstract class ReadVec2f extends ProtectedVec2f[Float] {
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec2f" + "(" + x + ", " + y + ")"
+    prefix + "Vec2" + "(" + x + "f, " + y + "f)"
   }
 }
 

@@ -155,7 +155,7 @@ sealed abstract class ReadVec4f extends ProtectedVec4f[Float] {
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec4f" + "(" + x + ", " + y + ", " + z + ", " + w + ")"
+    prefix + "Vec4" + "(" + x + "f, " + y + "f, " + z + "f, " + w + "f)"
   }
 }
 

@@ -142,7 +142,7 @@ sealed abstract class ReadVec3f extends ProtectedVec3f[Float] {
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Vec3f" + "(" + x + ", " + y + ", " + z + ")"
+    prefix + "Vec3" + "(" + x + "f, " + y + "f, " + z + "f)"
   }
 }
 

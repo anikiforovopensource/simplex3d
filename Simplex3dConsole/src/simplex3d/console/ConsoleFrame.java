@@ -191,7 +191,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         final Splash splash = Splash.showSplash();
 
         splash.setStatusText("rebuilding jars");
-        Utils.resolveDeps();
+        DepsManager.resolveDeps();
 
         splash.setStatusText("preloading the interpreter");
         final SimplexInterpreter interpreter = new SimplexInterpreter();

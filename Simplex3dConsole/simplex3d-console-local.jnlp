@@ -14,8 +14,9 @@
     <resources>
         <property name="jnlp.packEnabled" value="true"/>
         <j2se version="1.6+" java-vm-args="-Dsun.java2d.noddraw=true -Dsun.java2d.d3d=false"/>
-        <jar href="simplex3d-console-deps.jar"/>
         <jar href="simplex3d-console-web.jar" main="true"/>
+        <jar href="scala-deps.jar"/>
+        <jar href="simplex3d-deps.jar"/>
     </resources>
     <application-desc main-class="simplex3d.console.ConsoleFrame"/>
     <update check="background"/>

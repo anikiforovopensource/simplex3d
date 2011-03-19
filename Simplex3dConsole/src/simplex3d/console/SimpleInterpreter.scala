@@ -40,6 +40,7 @@ class SimplexInterpreter extends SimpleInterpreter {
       import simplex3d.math.double.functions._
       import simplex3d.data._
       import simplex3d.data.double._
+      import simplex3d.console.extension.ImageUtils._
       """
     )
     flusher.flush()
@@ -48,19 +49,26 @@ class SimplexInterpreter extends SimpleInterpreter {
 }
 
 class SimpleInterpreter {
-  protected val out = Utils.redirectSystemOut()
+  protected val out = redirectSystemOut()
   protected val flusher = new PrintWriter(out)
 
   protected val interpreter = {
     val settings = new GenericRunnerSettings(out.println(_))
     settings.usejavacp.value = false
-    settings.classpath.value = Utils.resolveDeps()
+    settings.classpath.value = DepsManager.resolveDeps()
     new Interpreter(settings, flusher)
   }
 
   init()
 
-  
+
+  private def redirectSystemOut() :AccumPrintStream = {
+    if (!System.out.isInstanceOf[AccumPrintStream]) {
+      System.setOut(new AccumPrintStream())
+    }
+    System.out.asInstanceOf[AccumPrintStream]
+  }
+
   def init() {}
 
   def interpret(code: String) :String = {

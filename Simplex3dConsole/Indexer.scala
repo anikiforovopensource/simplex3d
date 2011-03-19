@@ -31,15 +31,19 @@ import scala.collection.mutable.HashMap
  * @author Aleksey Nikiforov (lex)
  */
 object Indexer {
-  val DependenciesJar = "build/deps.jar"
+  val DepsJars = List("build/scala-deps.jar", "build/simplex3d-deps.jar")
 
   def main(args: Array[String]) {
     println("Indexing files...")
 
-    val index = makeDepsIndex()
-    writeFile("src/simplex3d/console/deps.index", index.mkString("\n"))
-    writeFile("src/simplex3d/console/deps.sum", makeSum(index))
-    writeFile("src/simplex3d/console/examples.index", makeExampleIndex().mkString("\n"))
+    val depsIndices = for (jar <- DepsJars) yield { makeJarIndex(jar) }
+    val depsIndex = combineIndices(depsIndices)
+    val depsSum = makeSum(DepsJars, depsIndices)
+    val exampleIndex = makeExampleIndex().mkString("\n")
+
+    writeFile("build/classes/simplex3d/console/deps.index", depsIndex)
+    writeFile("build/classes/simplex3d/console/deps.sum", depsSum)
+    writeFile("build/classes/simplex3d/console/examples.index", exampleIndex)
 
     println("Indexing complete.")
   }
@@ -66,8 +70,12 @@ object Indexer {
     res.toList.sorted
   }
 
-  private def makeDepsIndex() :List[String] = {
-    val zipStream = new ZipInputStream(new FileInputStream(DependenciesJar))
+  private def combineIndices(indices: Seq[List[String]]) :String = {
+    indices.flatten.sorted.mkString("\n")
+  }
+
+  private def makeJarIndex(jar: String) :List[String] = {
+    val zipStream = new ZipInputStream(new FileInputStream(jar))
 
     var names = List[String]();
     var entry = zipStream.getNextEntry()
@@ -81,10 +89,21 @@ object Indexer {
     names.sorted
   }
 
-  private def makeSum(index: List[String]) :String = {
+  private def makeSum(jars: List[String], jarIndices: Seq[List[String]]) :String = {
+    val digest = MessageDigest.getInstance("MD5")
+
+    for ((jar, index) <- jars.zip(jarIndices)) {
+      jarSum(digest, jar, index)
+    }
+
+    val sum = digest.digest()
+    new BigInteger(sum).abs.toString(16).toUpperCase
+  }
+
+  private def jarSum(digest: MessageDigest, jar: String, index: List[String]) {
     val fileMap = new HashMap[String, Array[Byte]]()
 
-    val zipStream = new ZipInputStream(new FileInputStream(DependenciesJar))
+    val zipStream = new ZipInputStream(new FileInputStream(jar))
     val buff = new Array[Byte](1024*8)
 
     var entry = zipStream.getNextEntry(); while (entry != null) {
@@ -103,7 +122,7 @@ object Indexer {
     zipStream.close()
 
 
-    val digest = MessageDigest.getInstance("MD5")
+    
 
     var count = 0
     for (path <- index) {
@@ -111,10 +130,7 @@ object Indexer {
       count += data.length
       digest.update(data)
     }
-    println("Deps size: " + count)
-
-    val sum = digest.digest()
-    new BigInteger(sum).abs.toString(16).toUpperCase
+    println(jar + " size: " + count)
   }
 }
 

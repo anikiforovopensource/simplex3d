@@ -24,6 +24,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.security.Policy;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -161,12 +162,23 @@ public class ConsolePanel extends javax.swing.JPanel {
         runButton.setAction(runAction);
         resetInterpreterButton.setAction(resetInterpreterAction);
 
-        Utils.setSandboxEnabled(true);
+        setInterpreterPolicy(true);
     }
 
     
     public void takeFocus() {
         textComponent.requestFocus();
+    }
+
+    private void setInterpreterPolicy(boolean enabled) {
+        if (enabled) {
+            Policy.setPolicy(new InterpretedPolicy());
+            System.setSecurityManager(new SecurityManager());
+        }
+        else {
+            System.setSecurityManager(null);
+            Policy.setPolicy(null);
+        }
     }
 
     public final void setSandboxEnabled(boolean enabled) {
@@ -184,7 +196,7 @@ public class ConsolePanel extends javax.swing.JPanel {
             );
 
             if ("Disable".equals(options[selection])) {
-                Utils.setSandboxEnabled(enabled);
+                setInterpreterPolicy(enabled);
             }
         }
         else {
@@ -193,7 +205,7 @@ public class ConsolePanel extends javax.swing.JPanel {
                 "The sandbox mode has been enabled.",
                 "Info: the sandbox mode is enabled.", JOptionPane.INFORMATION_MESSAGE
             );
-            Utils.setSandboxEnabled(true);
+            setInterpreterPolicy(true);
         }
     }
 

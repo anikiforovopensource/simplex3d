@@ -68,18 +68,21 @@
     -->
 
     <target name="-check-deps">
-        <available file="${build.dir}/deps.jar" property="deps.present"/>
+        <available file="${build.dir}/scala-deps.jar" property="deps.present"/>
     </target>
 
-    <target name="-console-extra" depends="-check-deps" unless="deps.present">
+    <target name="-console-deps" depends="-check-deps" unless="deps.present">
         <copy todir="${build.dir}/classes">
             <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </copy>
 
-        <jar jarfile="${build.dir}/deps.jar">
+        <jar jarfile="${build.dir}/scala-deps.jar">
             <zipfileset src="${env.SCALA_HOME}/lib/scala-library.jar" includes="**"/>
             <zipfileset src="${env.SCALA_HOME}/lib/scala-compiler.jar" includes="**"/>
+        </jar>
 
+        <jar jarfile="${build.dir}/simplex3d-deps.jar">
+            <fileset dir="${build.dir}/classes" includes="${extension.pkg}/**"/>
             <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**"/>
             <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
             <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**"/>
@@ -92,7 +95,7 @@
         </exec>
     </target>
 
-    <target depends="init,-console-extra,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile"
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile,-console-deps"
     description="Compile project." name="compile" />
     
 
@@ -105,6 +108,7 @@
     <property name="release.bin" value="${release.dir}/Simplex3dConsole_bin.zip"/>
     <property name="root.pkg" value="simplex3d/console"/>
     <property name="example.pkg" value="${root.pkg}/example"/>
+    <property name="extension.pkg" value="${root.pkg}/extension"/>
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>
     <property name="data.dir" value="../Simplex3dData/release/jars"/>
@@ -142,11 +146,12 @@
         
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${example.pkg}/**/*.class"/>
+            excludes="${example.pkg}/**/*.class ${extension.pkg}/**"/>
             <zipfileset src="${basedir}/lib/find-replace-panel.jar" includes="**"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
         </jar>
-        <copy file="${build.dir}/deps.jar" tofile="${web.dir}/${release.name}-deps.jar"/>
+        <copy file="${build.dir}/scala-deps.jar" tofile="${web.dir}/scala-deps.jar"/>
+        <copy file="${build.dir}/simplex3d-deps.jar" tofile="${web.dir}/simplex3d-deps.jar"/>
 
         <apply executable="pack200" parallel="false">
             <arg value="--repack"/>

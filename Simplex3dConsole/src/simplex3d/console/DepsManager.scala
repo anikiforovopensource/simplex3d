@@ -21,7 +21,6 @@
 package simplex3d.console
 
 import java.io._
-import java.security.Policy
 import java.util.prefs.Preferences
 import java.util.zip._
 
@@ -29,7 +28,7 @@ import java.util.zip._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Utils {
+object DepsManager {
 
   def resolveDeps() :String = {
     val prefs = Preferences.userNodeForPackage(this.getClass)
@@ -76,23 +75,5 @@ object Utils {
     zipOut.close()
 
     depsFile.getAbsolutePath
-  }
-
-  def redirectSystemOut() :AccumPrintStream = {
-    if (!System.out.isInstanceOf[AccumPrintStream]) {
-      System.setOut(new AccumPrintStream())
-    }
-    System.out.asInstanceOf[AccumPrintStream]
-  }
-
-  def setSandboxEnabled(enabled: Boolean) {
-    if (enabled) {
-      Policy.setPolicy(new InterpretedPolicy)
-      System.setSecurityManager(new SecurityManager)
-    }
-    else {
-      System.setSecurityManager(null)
-      Policy.setPolicy(null)
-    }
   }
 }

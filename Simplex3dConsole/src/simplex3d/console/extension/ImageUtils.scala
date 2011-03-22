@@ -21,6 +21,7 @@
 package simplex3d.console.extension
 
 import java.awt.Dimension
+import java.awt.EventQueue
 import java.awt.Graphics
 import java.awt.Point
 import java.awt.Toolkit
@@ -44,8 +45,12 @@ object ImageUtils {
     ((toUByte(c.r) & 0xFF) << 16) | ((toUByte(c.g) & 0xFF) << 8) | ((toUByte(c.b) & 0xFF))
   }
 
-  def showImage(data: inData[Vec3], dims: Vec2i) {
-    // Convert to BufferedImage
+  private[this] def rgb(j: Int, d: inContiguous[SInt, UByte]) :Int = {
+    (d(j) << 16) | (d(j + 1) << 8) | (d(j + 2))
+  }
+
+
+  private[this] def mkImgRgbVec3(dims: inVec2i, data: inData[Vec3]) = {
     val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
 
     var y = 0; while (y < dims.y) {
@@ -58,27 +63,86 @@ object ImageUtils {
       y += 1
     }
 
-
-    // Show the image using swing.
-    val panel = new JPanel() {
-      override def paint(g: Graphics) {
-        g.drawImage(img, 0, 0, this)
-      }
-    }
-    panel.setPreferredSize(new Dimension(dims.x, dims.y))
-
-    val frame = new JFrame("Image " + dims.x + "x" + dims.y)
-    frame.getContentPane.add(panel)
-    frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    frame.pack()
-    frame.setResizable(false)
-
-    val dim = Toolkit.getDefaultToolkit().getScreenSize();
-    val px = dim.width/2 - frame.getWidth()/2;
-    val py = dim.height/2 - frame.getHeight()/2;
-    frame.setLocation(new Point(px, py));
-
-    frame.setVisible(true);
+    img
   }
 
+  private[this] def mkImgRgbUByte(dims: inVec2i, data: inDataSeq[_, UByte]) = {
+    val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+    val p = ReadContiguous[SInt, UByte](data.primitive)
+
+    var y = 0; while (y < dims.y) {
+      var x = 0; while (x < dims.x) {
+
+        val i = y*dims.x + x
+        val j = i*data.stride + data.offset
+        img.setRGB(x, y, rgb(j, p))
+
+        x += 1
+      }
+      y += 1
+    }
+
+    img
+  }
+
+  private[this] def showImage(title: String, img: BufferedImage) {
+    EventQueue.invokeLater(new Runnable {
+      def run() {
+        val panel = new JPanel() {
+          override def paint(g: Graphics) {
+            g.drawImage(img, 0, 0, this)
+          }
+        }
+        panel.setPreferredSize(new Dimension(img.getWidth, img.getHeight))
+
+        val frame = new JFrame(title + " " + img.getWidth + "x" + img.getHeight)
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.getContentPane.add(panel)
+        frame.pack()
+        frame.setResizable(false)
+
+        val dim = Toolkit.getDefaultToolkit().getScreenSize();
+        val px = dim.width/2 - frame.getWidth()/2;
+        val py = dim.height/2 - frame.getHeight()/2;
+        frame.setLocation(new Point(px, py));
+
+        frame.setVisible(true);
+      }
+    })
+  }
+
+  def showImage(dims: inVec2i, data: inData[Vec3]) {
+    showImage("Image", dims, data)
+  }
+  def showImage(title: String, dims: inVec2i, data: inData[Vec3]) {
+    val img = {
+      if (data.rawType == RawType.UByte) {
+        mkImgRgbUByte(dims, data.asInstanceOf[inDataSeq[_, UByte]])
+      }
+      else {
+        mkImgRgbVec3(dims, data)
+      }
+    }
+
+    showImage(title, img)
+  }
+
+  def genImage(dims: inVec2i)(function: inVec2 => ReadVec3) {
+    genImage("Image", dims)(function)
+  }
+  def genImage(title: String, dims: inVec2i)(function: inVec2 => ReadVec3) {
+    val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+
+    var y = 0; while (y < dims.y) {
+      var x = 0; while (x < dims.x) {
+
+        img.setRGB(x, y, rgb(function(ConstVec2(x, y))))
+
+        x += 1
+      }
+      y += 1
+    }
+
+    showImage(title, img)
+  }
 }

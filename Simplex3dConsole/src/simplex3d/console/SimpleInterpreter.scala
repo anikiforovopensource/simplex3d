@@ -55,6 +55,7 @@ class SimpleInterpreter {
   protected val interpreter = {
     val settings = new GenericRunnerSettings(out.println(_))
     settings.usejavacp.value = false
+    settings.nocompdaemon.value = true
     settings.classpath.value = DepsManager.resolveDeps()
     new Interpreter(settings, flusher)
   }

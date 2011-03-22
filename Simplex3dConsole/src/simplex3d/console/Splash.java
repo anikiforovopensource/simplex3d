@@ -122,7 +122,7 @@ public class Splash extends JFrame implements ActionListener {
         setResizable(false);
         setUndecorated(true);
 
-        splashPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(146, 151, 161)));
+        splashPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(146, 151, 161), 1, true));
 
         separator.setBorder(null);
 

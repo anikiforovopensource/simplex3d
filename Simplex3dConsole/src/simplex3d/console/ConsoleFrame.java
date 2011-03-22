@@ -165,6 +165,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        ((ConsolePanel) consolePanel).dispose();
         this.dispose();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 

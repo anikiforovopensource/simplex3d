@@ -230,6 +230,10 @@ public class ConsolePanel extends javax.swing.JPanel {
         return resetInterpreterAction;
     }
 
+    public void dispose() {
+        if (interpreter != null) interpreter.dispose();
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.

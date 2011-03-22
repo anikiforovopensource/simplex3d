@@ -23,5 +23,5 @@
         <jar href="simplex3d-deps.jar"/>
     </resources>
     <application-desc main-class="simplex3d.console.ConsoleFrame"/>
-    <update check="background"/>
+    <update check="always"/>
 </jnlp>

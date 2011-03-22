@@ -33,7 +33,7 @@ import RawType._
  */
 private[data] abstract class AbstractData[
   E <: Meta,
-  @specialized(Int, Float, Double) SRead <: SWrite,
+  @specialized(Int, Float, Double) SRead,
   @specialized(Int, Float, Double) SWrite,
   +R <: Raw
 ](

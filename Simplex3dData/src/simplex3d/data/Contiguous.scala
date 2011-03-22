@@ -32,3 +32,30 @@ extends ReadDataSeq[E, R] {
 
 trait Contiguous[E <: Meta, +R <: Raw]
 extends DataSeq[E, R] with ReadContiguous[E, R]
+
+
+object ReadContiguous {
+  def apply[E <: Meta, R <: Defined](dc: ReadContiguous[_, R])(
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
+  ) :ReadContiguous[E, R] = {
+    val res = dc match {
+      case d: DataArray[_, _] => composition.mkDataArray(primitive.mkDataArray(dc.sharedArray))
+      case d: DataBuffer[_, _] => composition.mkDataBuffer(primitive.mkDataBuffer(dc.sharedBuffer))
+    }
+    if (dc.isReadOnly) res.asReadOnly() else res
+  }
+}
+
+object Contiguous {
+  def apply[E <: Meta, R <: Defined](dc: Contiguous[_, R])(
+    implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
+  ) :Contiguous[E, R] = {
+    if (dc.isReadOnly) throw new IllegalArgumentException(
+      "The DataArray must not be read-only."
+    )
+    dc match {
+      case d: DataArray[_, _] => composition.mkDataArray(primitive.mkDataArray(dc.sharedArray))
+      case d: DataBuffer[_, _] => composition.mkDataBuffer(primitive.mkDataBuffer(dc.sharedBuffer))
+    }
+  }
+}

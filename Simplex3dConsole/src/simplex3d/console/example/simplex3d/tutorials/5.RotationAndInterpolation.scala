@@ -11,7 +11,7 @@ import simplex3d.math.double.functions._
 object RotationAndInterpolation extends Application {
 
   // Complete tutorial at:
-  // http://www.simplex3d.org/tutorials/tutorial-?/
+  // http://www.simplex3d.org/tutorials/tutorial-rotation-and-interpolation/
 
 
   // Quaternion rotation.
@@ -28,9 +28,9 @@ object RotationAndInterpolation extends Application {
   // Angle-axis rotation.
   val axis = Vec3(0)
   var angle = angleAxis(q, axis)
-  println("Angle-axis from quaternion: " + angle + "radians, " + axis)
+  println("Angle-axis from quaternion: " + angle + " radians, " + axis)
   angle = angleAxis(m, axis)
-  println("Angle-axis from matrix: " + angle + "radians, " + axis)
+  println("Angle-axis from matrix: " + angle + " radians, " + axis)
 
   // Converting rotations.
   val qm = quaternion(m)
@@ -67,6 +67,6 @@ object RotationAndInterpolation extends Application {
 
   // Spherical interpolation.
   val sq = slerp(lookAtQuat, q, 0.9)
-  println("Spherical linear interpolation: ", q.rotateVector(p))
+  println("Spherical linear interpolation: " + q.rotateVector(p))
 
 }

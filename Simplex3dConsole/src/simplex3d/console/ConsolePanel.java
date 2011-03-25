@@ -20,7 +20,6 @@
 
 package simplex3d.console;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -36,7 +35,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
 import simplex3d.console.findreplace.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -110,6 +108,7 @@ public class ConsolePanel extends javax.swing.JPanel {
 
             public void actionPerformed(ActionEvent e) {
                 runAction.setEnabled(false);
+                resetInterpreterAction.setEnabled(false);
 
                 new SwingWorker() {
                     @Override protected String doInBackground() throws Exception {
@@ -120,14 +119,16 @@ public class ConsolePanel extends javax.swing.JPanel {
                     @Override protected void done() {
                         try {
                             feedTextArea.setText((String) get());
-                            runAction.setEnabled(true);
                         } catch (Exception e) {
                             String error = "EXCEPTION:\n" + e.toString();
                             for (StackTraceElement st : e.getStackTrace()) {
                                 error += "\n" + st.toString();
                             }
                             feedTextArea.setText(error);
+                        }
+                        finally {
                             runAction.setEnabled(true);
+                            resetInterpreterAction.setEnabled(true);
                         }
                     }
                 }.execute();

@@ -24,18 +24,18 @@ object Transformations extends Application {
 
   // Example.
   val p = Vec3(1, 0, 0)
-  val t1 = Mat3x4 rotateY(radians(-90)) scale(Vec3(1, 1, 2)) translate(Vec3(2, 0, 0))
+  val t1 = Mat3x4 rotateY(-Pi/2) scale(Vec3(1, 1, 2)) translate(Vec3(2, 0, 0))
   println("order1: " + t1.transformPoint(p))
 
   // Order-dependent.
-  val t2 = Mat3x4 scale(Vec3(1, 1, 2)) translate(Vec3(2, 0, 0)) rotateY(radians(-90))
+  val t2 = Mat3x4 scale(Vec3(1, 1, 2)) translate(Vec3(2, 0, 0)) rotateY(-Pi/2)
   println("order2: " + t2.transformPoint(p))
 
   // Apply.
   val t3 = Mat3x4(1)
   t3.applyScale(Vec3(1, 1, 2))
   t3.applyTranslation(Vec3(2, 0, 0))
-  t3.applyRotationY(radians(-90))
+  t3.applyRotationY(-Pi/2)
   val p3 = t3.transformPoint(p)
   println("original: " + p + ", after transformation: " + p3)
 

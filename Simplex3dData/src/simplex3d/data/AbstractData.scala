@@ -33,13 +33,13 @@ import RawType._
  */
 private[data] abstract class AbstractData[
   E <: Meta,
-  @specialized(Int, Float, Double) SRead,
-  @specialized(Int, Float, Double) SWrite,
+  @specialized(Int, Float, Double) ReadAs <: WriteAs,
+  @specialized(Int, Float, Double) WriteAs,
   +R <: Raw
 ](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadAbstractData[E, SRead, R](
+) extends ReadAbstractData[E, ReadAs, R](
   shared, prim, ro,
   off, str
 ) {
@@ -62,8 +62,8 @@ private[data] abstract class AbstractData[
     }).asInstanceOf[R#Buffer]
   }
 
-  override def apply(i: Int) :SRead
-  def update(i: Int, v: SWrite)
+  override def apply(i: Int) :ReadAs
+  def update(i: Int, v: WriteAs)
 
 
   private[this] final def putArray(
@@ -117,21 +117,21 @@ private[data] abstract class AbstractData[
   private[this] final def putArray(
     index: Int, array: Array[_], first: Int, count: Int
   ) {
-    val arr = array.asInstanceOf[Array[SWrite]]
+    val arr = array.asInstanceOf[Array[WriteAs]]
     var i = 0; while (i < count) {
       this(index + i) = arr(first + i)
       i += 1
     }
   }
   private[this] final def putIndexedSeq(
-    index: Int, seq: IndexedSeq[SWrite], first: Int, count: Int
+    index: Int, seq: IndexedSeq[WriteAs], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
       this(index + i) = seq(first + i)
       i += 1
     }
   }
-  private[this] final def putSeq(index: Int, seq: Seq[SWrite], first: Int, count: Int) {
+  private[this] final def putSeq(index: Int, seq: Seq[WriteAs], first: Int, count: Int) {
     val iter = seq.iterator
     iter.drop(first)
     val lim = index + count
@@ -186,9 +186,9 @@ private[data] abstract class AbstractData[
           )
       }
       case is: IndexedSeq[_] =>
-        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[SWrite]], first, count)
+        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
       case _ =>
-        putSeq(index, src.asInstanceOf[Seq[SWrite]], first, count)
+        putSeq(index, src.asInstanceOf[Seq[WriteAs]], first, count)
     }
   }
 

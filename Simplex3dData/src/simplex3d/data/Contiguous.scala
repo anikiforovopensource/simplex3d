@@ -51,7 +51,7 @@ object Contiguous {
     implicit composition: CompositionFactory[E, _ >: R], primitive: PrimitiveFactory[E#Component, R]
   ) :Contiguous[E, R] = {
     if (dc.isReadOnly) throw new IllegalArgumentException(
-      "The DataArray must not be read-only."
+      "The Sequence must not be read-only."
     )
     dc match {
       case d: DataArray[_, _] => composition.mkDataArray(primitive.mkDataArray(dc.sharedArray))

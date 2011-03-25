@@ -31,12 +31,12 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 private[data] abstract class ReadAbstractData[
-  E <: Meta, @specialized(Int, Float, Double) SRead, +R <: Raw
+  E <: Meta, @specialized(Int, Float, Double) ReadAs, +R <: Raw
 ](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
 ) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
-with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
+with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   // Assertions
   assert(components >= 1)
@@ -155,7 +155,7 @@ with IndexedSeq[SRead] with IndexedSeqOptimized[SRead, IndexedSeq[SRead]] {
     sharedStore eq seq.sharedStore
   }
 
-  def apply(i: Int) :SRead
+  def apply(i: Int) :ReadAs
 
   final def readOnlyBuffer() :R#Buffer = {
     ((storeType: @switch) match {

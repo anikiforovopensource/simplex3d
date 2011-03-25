@@ -57,6 +57,33 @@ trait IndexBuffer[+R <: Unsigned]
 extends IndexSeq[R] with DataBuffer[SInt, R] with ReadIndexBuffer[R]
 
 
+object ReadIndexSeq {
+  def apply[R <: DefinedIndex](dc: ReadContiguous[_, R])(
+    implicit factory: PrimitiveFactory[SInt, R]
+  ) :ReadIndexSeq[R] = {
+    val res = dc match {
+      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedArray)
+      case d: DataBuffer[_, _] => factory.mkDataBuffer(dc.sharedBuffer)
+    }
+    if (dc.isReadOnly) res.asReadOnly() else res
+  }
+}
+
+object IndexSeq {
+  def apply[R <: DefinedIndex](dc: Contiguous[_, R])(
+    implicit factory: PrimitiveFactory[SInt, R]
+  ) :IndexSeq[R] = {
+    if (dc.isReadOnly) throw new IllegalArgumentException(
+      "The Sequence must not be read-only."
+    )
+    dc match {
+      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedArray)
+      case d: DataBuffer[_, _] => factory.mkDataBuffer(dc.sharedBuffer)
+    }
+  }
+}
+
+
 object ReadIndexArray {
   def apply[R <: DefinedIndex](da: ReadDataArray[_, R])(
     implicit factory: PrimitiveFactory[SInt, R]

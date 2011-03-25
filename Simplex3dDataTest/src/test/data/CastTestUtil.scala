@@ -139,6 +139,13 @@ object CastTestUtil extends FunSuite {
     testCastToArray(ro, ReadDataArray[Vec2d, SByte](ro), true, data)(Descriptors.Vec2dSByte)
     testCastToArray(ro, ReadDataArray[Vec3d, SByte](ro), true, data)(Descriptors.Vec3dSByte)
     testCastToArray(ro, ReadDataArray[Vec4d, SByte](ro), true, data)(Descriptors.Vec4dSByte)
+    
+    
+    val contigTest = Contiguous[SInt, SByte](da).asInstanceOf[DataArray[SInt, SByte]]
+    testCastToArray(da, contigTest, false, data)(Descriptors.SIntSByte)
+    intercept[IllegalArgumentException] { Contiguous[SInt, SByte](roCast) }
+    val readContigTest = ReadContiguous[SInt, SByte](ro).asInstanceOf[ReadDataArray[SInt, SByte]]
+    testCastToArray(ro, readContigTest, true, data)(Descriptors.SIntSByte)
   }
   
   private def testUByteArrayCast(da: DataArray[_, UByte]) {
@@ -216,6 +223,13 @@ object CastTestUtil extends FunSuite {
     testCastToArray(ro, ReadDataArray[Vec2d, UByte](ro), true, data)(Descriptors.Vec2dUByte)
     testCastToArray(ro, ReadDataArray[Vec3d, UByte](ro), true, data)(Descriptors.Vec3dUByte)
     testCastToArray(ro, ReadDataArray[Vec4d, UByte](ro), true, data)(Descriptors.Vec4dUByte)
+    
+    
+    val indexTest = IndexSeq[UByte](da).asInstanceOf[IndexArray[UByte]]
+    testCastToArray(da, indexTest, false, data)(Descriptors.SIntUByte)
+    intercept[IllegalArgumentException] { IndexSeq[UByte](roCast) }
+    val readIndexTest = ReadIndexSeq[UByte](ro).asInstanceOf[ReadIndexArray[UByte]]
+    testCastToArray(ro, readIndexTest, true, data)(Descriptors.SIntUByte)
   }
 
   private def testSShortArrayCast(da: DataArray[_, SShort]) {
@@ -1101,6 +1115,46 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec4d, RFloat](_, _, _), bytes)(Descriptors.Vec4dRFloat)
       testCastToReadView(seq, ReadDataView[Vec4d, RDouble](_, _, _), bytes)(Descriptors.Vec4dRDouble)
     }
+    
+    if (descriptor.rawType == RawType.SByte) {
+      for (size <- 0 to 1; extraBytes <- 0 to 8) {
+        val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntSByte)
+        val seq = factory(bytes).asInstanceOf[Contiguous[_, SByte]]
+        
+        val contigTest = Contiguous[SInt, SByte](seq).asInstanceOf[DataBuffer[SInt, SByte]]
+        testBuffer(contigTest, false, bytes)(Descriptors.SIntSByte)
+        assert(seq.sharesStoreObject(contigTest))
+        assert(contigTest.sharesStoreObject(seq))
+        
+        val ro = seq.asReadOnly().asInstanceOf[ReadContiguous[_, SByte]]
+        intercept[IllegalArgumentException] { Contiguous[SInt, SByte](ro.asInstanceOf[Contiguous[_, SByte]]) }
+        
+        val readContigTest = ReadContiguous[SInt, SByte](ro).asInstanceOf[ReadDataBuffer[SInt, SByte]]
+        testBuffer(readContigTest, true, bytes)(Descriptors.SIntSByte)
+        assert(seq.sharesStoreObject(readContigTest))
+        assert(readContigTest.sharesStoreObject(seq))
+      }
+    }
+    
+    if (descriptor.rawType == RawType.UByte) {
+      for (size <- 0 to 1; extraBytes <- 0 to 8) {
+        val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntUByte)
+        val seq = factory(bytes).asInstanceOf[Contiguous[_, UByte]]
+        
+        val indexTest = IndexSeq[UByte](seq).asInstanceOf[IndexBuffer[UByte]]
+        testBuffer(indexTest, false, bytes)(Descriptors.SIntUByte)
+        assert(seq.sharesStoreObject(indexTest))
+        assert(indexTest.sharesStoreObject(seq))
+        
+        val ro = seq.asReadOnly().asInstanceOf[ReadContiguous[_, UByte]]
+        intercept[IllegalArgumentException] { IndexSeq[UByte](ro.asInstanceOf[Contiguous[_, UByte]]) }
+        
+        val readIndexTest = ReadIndexSeq[UByte](ro).asInstanceOf[ReadIndexBuffer[UByte]]
+        testBuffer(readIndexTest, true, bytes)(Descriptors.SIntUByte)
+        assert(seq.sharesStoreObject(readIndexTest))
+        assert(readIndexTest.sharesStoreObject(seq))
+      }
+    }
   }
 
   private def testCastToBuffer[E <: Meta, R <: Raw](
@@ -1186,4 +1240,5 @@ object CastTestUtil extends FunSuite {
       }
     }
   }
+
 }

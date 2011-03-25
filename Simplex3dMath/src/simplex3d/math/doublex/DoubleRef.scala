@@ -31,7 +31,7 @@ import simplex3d.math.doublex.functions._
  */
 final class DoubleRef(private[this] var x: Double) extends PrimitiveRef[Double] {
   type Clone = DoubleRef
-  type Read = DoubleRef
+  type Read = Double
   type Const = Double
 
   def components = 1

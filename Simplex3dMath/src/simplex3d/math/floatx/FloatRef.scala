@@ -31,7 +31,7 @@ import simplex3d.math.floatx.functions._
  */
 final class FloatRef(private[this] var x: Float) extends PrimitiveRef[Float] {
   type Clone = FloatRef
-  type Read = FloatRef
+  type Read = Float
   type Const = Float
 
   def components = 1

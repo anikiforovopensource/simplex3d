@@ -29,7 +29,7 @@ import simplex3d.math.CommonMath._
  */
 final class BooleanRef(private[this] var x: Boolean) extends PrimitiveRef[Boolean] {
   type Clone = BooleanRef
-  type Read = BooleanRef
+  type Read = Boolean
   type Const = Boolean
 
   def components = 1

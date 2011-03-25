@@ -34,7 +34,7 @@ import simplex3d.math.CommonMath._
  */
 final class IntRef(private[this] var x: Int) extends PrimitiveRef[Int] {
   type Clone = IntRef
-  type Read = IntRef
+  type Read = Int
   type Const = Int
 
   def components = 1

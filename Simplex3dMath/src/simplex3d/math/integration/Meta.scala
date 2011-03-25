@@ -30,7 +30,7 @@ import scala.reflect.ClassManifest.{classType}
  */
 trait Meta {
   type Read
-  type Const
+  type Const <: Read
   type Component <: Primitive
 }
 
@@ -50,7 +50,6 @@ sealed trait Primitive extends Meta {
  */
 trait Composite extends Meta {
   type Read <: AnyRef
-  type Const <: Read
 }
 
 sealed trait Bool extends Primitive {

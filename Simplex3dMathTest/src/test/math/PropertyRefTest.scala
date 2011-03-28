@@ -30,7 +30,7 @@ import simplex3d.math.doublex.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class AbstractTypeTest extends FunSuite {
+class PropertyRefTest extends FunSuite {
 
   val random = new java.util.Random(1)
   def rb = random.nextBoolean

@@ -32,7 +32,9 @@ import simplex3d.math.floatx.functions._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec2f extends ProtectedVec2f[Float] {
 
-  type Clone <: ReadVec2f
+  type Read = ReadVec2f
+  type Const = ConstVec2f
+  def toConst() = ConstVec2f(this)
 
   private[math] type R2 = ReadVec2f
   private[math] type R3 = ReadVec3f
@@ -153,8 +155,6 @@ object ConstVec2f {
   def apply(u: AnyVec3[_]) = new ConstVec2f(u.fx, u.fy)
   def apply(u: AnyVec4[_]) = new ConstVec2f(u.fx, u.fy)
 
-
-
   implicit def toConst(u: ReadVec2f) = apply(u)
 }
 
@@ -163,11 +163,14 @@ object ConstVec2f {
 final class Vec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadVec2f
-  type Const = ConstVec2f
-  type Component = RFloat
-
   px = cx; py = cy
+
+  type Component = RFloat
+  type Clone = Vec2f
+  override def clone() = Vec2f(this)
+  def :=(u: ConstVec2f) { this := u.asInstanceOf[inVec2f] }
+  def :=(u: inVec2f) { x = u.x; y = u.y }
+
 
   @noinline override def x_=(s: Float) { px = s }
   @noinline override def y_=(s: Float) { py = s }
@@ -200,12 +203,6 @@ extends ReadVec2f with PropertyRef with Composite with Implicits[On]
 
   def *=(m: inMat2f) { this := m.transposeMult(this) }
 
-
-  type Clone = Vec2f
-  override def clone() = Vec2f(this)
-  def toConst() = ConstVec2f(this)
-  def :=(u: inVec2f) { x = u.x; y = u.y }
-
   // Swizzling
   override def xy_=(u: inVec2f) { x = u.x; y = u.y }
   override def yx_=(u: inVec2f) { var t = u.y; y = u.x; x = t }
@@ -235,8 +232,6 @@ object Vec2f {
   def apply(u: AnyVec2[_]) = new Vec2f(u.fx, u.fy)
   def apply(u: AnyVec3[_]) = new Vec2f(u.fx, u.fy)
   def apply(u: AnyVec4[_]) = new Vec2f(u.fx, u.fy)
-
-
 
   def unapply(u: ReadVec2f) = Some((u.x, u.y))
   implicit def toMutable(u: ReadVec2f) = apply(u)

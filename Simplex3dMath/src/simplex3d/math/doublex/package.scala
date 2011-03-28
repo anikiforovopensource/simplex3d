@@ -27,10 +27,10 @@ package simplex3d.math
 package object doublex {
 
   // Implicits
-  implicit def intToDoubeRef(s: Int) = new DoubleRef(s)
-  implicit def floatToDoubeRef(s: Float) = new DoubleRef(s)
-  implicit def doubleToRef(s: Double) = new DoubleRef(s)
-  implicit def refToDouble(v: DoubleRef) = v.toConst
+  implicit def intToDoubeRef(s: Int) :ReadDoubleRef = new DoubleRef(s)
+  implicit def floatToDoubeRef(s: Float) :ReadDoubleRef = new DoubleRef(s)
+  implicit def doubleToRef(s: Double) :ReadDoubleRef = new DoubleRef(s)
+  implicit def refToDouble(r: DoubleRef) = r.toConst
 
   implicit def vec2IntToDouble(u: AnyVec2[Int]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)

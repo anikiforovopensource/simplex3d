@@ -27,7 +27,7 @@ package simplex3d.math
  */
 abstract class AnyVec4[P] private[math] () extends VecImpl34[P] {
 
-  type Clone <: AnyVec4[P]
+  type Read <: AnyVec4[P]
   final def components = 4
   
 

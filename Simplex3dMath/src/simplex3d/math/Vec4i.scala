@@ -31,7 +31,9 @@ import simplex3d.math.CommonMath._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4i extends ProtectedVec4i[Int] {
 
-  type Clone <: ReadVec4i
+  type Read = ReadVec4i
+  type Const = ConstVec4i
+  def toConst() = ConstVec4i(this)
 
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
@@ -191,7 +193,6 @@ object ConstVec4i {
   def apply(x: Int, y: Int, z: Int, w: Int) = new ConstVec4i(x, y, z, w)
 
   def apply(u: AnyVec4[_]) = new ConstVec4i(u.ix, u.iy, u.iz, u.iw)
-
   def apply(xy: AnyVec2[_], z: Int, w: Int) = new ConstVec4i(xy.ix, xy.iy, z, w)
   def apply(x: Int, yz: AnyVec2[_], w: Int) = new ConstVec4i(x, yz.ix, yz.iy, w)
   def apply(x: Int, y: Int, zw: AnyVec2[_]) = new ConstVec4i(x, y, zw.ix, zw.iy)
@@ -202,7 +203,6 @@ object ConstVec4i {
   def apply(m: AnyMat2[_]) = new ConstVec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
   def apply(q: AnyQuat4[_]) = new ConstVec4i(q.db.toInt, q.dc.toInt, q.dd.toInt, q.da.toInt)
 
-
   implicit def toConst(u: ReadVec4i) = apply(u)
 }
 
@@ -211,11 +211,14 @@ object ConstVec4i {
 final class Vec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
 extends ReadVec4i with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadVec4i
-  type Const = ConstVec4i
-  type Component = SInt
-
   px = cx; py = cy; pz = cz; pw = cw
+
+  type Component = SInt
+  type Clone = Vec4i
+  override def clone() = Vec4i(this)
+  def :=(u: ConstVec4i) { this := u.asInstanceOf[inVec4i] }
+  def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
+
 
   @noinline override def x_=(s: Int) { px = s }
   @noinline override def y_=(s: Int) { py = s }
@@ -269,12 +272,6 @@ extends ReadVec4i with PropertyRef with Composite with Implicits[On]
   def &=(u: inVec4i) { x &= u.x; y &= u.y; z &= u.z; w &= u.w }
   def |=(u: inVec4i) { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
   def ^=(u: inVec4i) { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
-
-
-  type Clone = Vec4i
-  override def clone() = Vec4i(this)
-  def toConst() = ConstVec4i(this)
-  def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   // Swizzling
   override def xy_=(u: inVec2i) { x = u.x; y = u.y }
@@ -485,7 +482,6 @@ object Vec4i {
   def apply(x: Int, y: Int, z: Int, w: Int) = new Vec4i(x, y, z, w)
 
   def apply(u: AnyVec4[_]) = new Vec4i(u.ix, u.iy, u.iz, u.iw)
-
   def apply(xy: AnyVec2[_], z: Int, w: Int) = new Vec4i(xy.ix, xy.iy, z, w)
   def apply(x: Int, yz: AnyVec2[_], w: Int) = new Vec4i(x, yz.ix, yz.iy, w)
   def apply(x: Int, y: Int, zw: AnyVec2[_]) = new Vec4i(x, y, zw.ix, zw.iy)
@@ -495,7 +491,6 @@ object Vec4i {
 
   def apply(m: AnyMat2[_]) = new Vec4i(m.d00.toInt, m.d10.toInt, m.d01.toInt, m.d11.toInt)
   def apply(q: AnyQuat4[_]) = new Vec4i(q.db.toInt, q.dc.toInt, q.dd.toInt, q.da.toInt)
-
 
   def unapply(u: ReadVec4i) = Some((u.x, u.y, u.z, u.w))
   implicit def toMutable(u: ReadVec4i) = apply(u)

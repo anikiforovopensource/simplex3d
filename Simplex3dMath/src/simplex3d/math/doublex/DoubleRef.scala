@@ -29,21 +29,16 @@ import simplex3d.math.doublex.functions._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class DoubleRef(private[this] var x: Double) extends PrimitiveRef[Double] {
-  type Clone = DoubleRef
-  type Read = Double
+sealed abstract class ReadDoubleRef(protected var x: Double) extends PrimitiveRef[Double] {
+  type Read = ReadDoubleRef
   type Const = Double
+  def toConst() :Double = x
 
   def components = 1
   def apply(i: Int) :Double = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
-
-  def :=(s: Double) { x = s }
-  def :=(v: DoubleRef) { x = v.toConst }
-  def toConst() :Double = x
-  override def clone() = new DoubleRef(x)
 
   private[math] def bx: Boolean = Boolean(x)
   private[math] def ix: Int = x.toInt
@@ -216,4 +211,23 @@ final class DoubleRef(private[this] var x: Double) extends PrimitiveRef[Double] 
   def /(m: AnyMat4[Float]) = Mat4d(m).divByComp(x)
   def +(m: AnyMat4[Float]) = Mat4d(m) + x
   def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += x; t }
+}
+
+final class DoubleRef(cx: Double) extends ReadDoubleRef(cx) with PropertyRef {
+  type Clone = DoubleRef
+  override def clone() = new DoubleRef(x)
+
+  def :=(s: Double) { x = s }
+  def :=(r: ReadDoubleRef) { x = r.toConst }
+
+
+  def *=(s: Double) { x *= s }
+  def /=(s: Double) { x /= s }
+  def +=(s: Double) { x += s }
+  def -=(s: Double) { x -= s }
+}
+
+object DoubleRef {
+  def unapply(r: ReadDoubleRef) = Some(r.toConst)
+  implicit def toMutable(r: ReadDoubleRef) = new DoubleRef(r.toConst)
 }

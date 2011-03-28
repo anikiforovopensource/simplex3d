@@ -33,7 +33,9 @@ import simplex3d.math.floatx.functions._
 sealed abstract class ReadMat3x2f
 extends ProtectedMat3x2f[Float]
 {
-  type Clone <: ReadMat3x2f
+  type Read = ReadMat3x2f
+  type Const = ConstMat3x2f
+  def toConst() = ConstMat3x2f(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10; final def m20 = p20
@@ -280,6 +282,17 @@ final class Mat3x2f private[math] (
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
 
+  type Component = RFloat
+  type Clone = Mat3x2f
+  override def clone() = Mat3x2f(this)
+  def :=(u: ConstMat3x2f) { this := u.asInstanceOf[inMat3x2f] }
+  
+  def :=(m: inMat3x2f) {
+    m00 = m.m00; m10 = m.m10; m20 = m.m20;
+    m01 = m.m01; m11 = m.m11; m21 = m.m21
+  }
+
+  
   override def m00_=(s: Float) { p00 = s }
   override def m10_=(s: Float) { p10 = s }
   override def m20_=(s: Float) { p20 = s }
@@ -288,9 +301,6 @@ final class Mat3x2f private[math] (
   override def m11_=(s: Float) { p11 = s }
   override def m21_=(s: Float) { p21 = s }
 
-  type Read = ReadMat3x2f
-  type Const = ConstMat3x2f
-  type Component = RFloat
 
   def *=(s: Float) {
     m00 *= s; m10 *= s; m20 *= s;
@@ -333,15 +343,6 @@ final class Mat3x2f private[math] (
     m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
   }
 
-
-  type Clone = Mat3x2f
-  override def clone() = Mat3x2f(this)
-  def toConst() = ConstMat3x2f(this)
-  
-  def :=(m: inMat3x2f) {
-    m00 = m.m00; m10 = m.m10; m20 = m.m20;
-    m01 = m.m01; m11 = m.m11; m21 = m.m21
-  }
 
   def update(c: Int, r: Int, s: Float) {
     def error() = throw new IndexOutOfBoundsException(

@@ -29,11 +29,11 @@ import java.nio._
 package object math {
 
   // Implicits
-  implicit def booleanToRef(s: Boolean) = new BooleanRef(s)
-  implicit def refToBoolean(v: BooleanRef) = v.toConst
+  implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
+  implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
 
-  implicit def intToRef(s: Int) = new IntRef(s)
-  implicit def refToInt(v: IntRef) = v.toConst
+  implicit def intToRef(s: Int) :ReadIntRef = new IntRef(s)
+  implicit def refToInt(r: ReadIntRef) = r.toConst
   
 
   // In and Out aliases

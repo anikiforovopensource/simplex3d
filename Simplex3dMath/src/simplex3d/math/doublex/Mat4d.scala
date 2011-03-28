@@ -33,7 +33,9 @@ import simplex3d.math.doublex.functions._
 sealed abstract class ReadMat4d
 extends ProtectedMat4d[Double]
 {
-  type Clone <: ReadMat4d
+  type Read = ReadMat4d
+  type Const = ConstMat4d
+  def toConst() = ConstMat4d(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10; final def m20 = p20; final def m30 = p30
@@ -406,6 +408,19 @@ final class Mat4d private[math] (
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
 
+  type Component = RDouble
+  type Clone = Mat4d
+  override def clone() = Mat4d(this)
+  def :=(u: ConstMat4d) { this := u.asInstanceOf[inMat4d] }
+  
+  def :=(m: inMat4d) {
+    m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
+    m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
+    m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32;
+    m03 = m.m03; m13 = m.m13; m23 = m.m23; m33 = m.m33
+  }
+
+  
   override def m00_=(s: Double) { p00 = s }
   override def m10_=(s: Double) { p10 = s }
   override def m20_=(s: Double) { p20 = s }
@@ -426,9 +441,6 @@ final class Mat4d private[math] (
   override def m23_=(s: Double) { p23 = s }
   override def m33_=(s: Double) { p33 = s }
 
-  type Read = ReadMat4d
-  type Const = ConstMat4d
-  type Component = RDouble
 
   def *=(s: Double) {
     m00 *= s; m10 *= s; m20 *= s; m30 *= s;
@@ -495,17 +507,6 @@ final class Mat4d private[math] (
     m03 /= m.m03; m13 /= m.m13; m23 /= m.m23; m33 /= m.m33
   }
 
-
-  type Clone = Mat4d
-  override def clone() = Mat4d(this)
-  def toConst() = ConstMat4d(this)
-  
-  def :=(m: inMat4d) {
-    m00 = m.m00; m10 = m.m10; m20 = m.m20; m30 = m.m30;
-    m01 = m.m01; m11 = m.m11; m21 = m.m21; m31 = m.m31;
-    m02 = m.m02; m12 = m.m12; m22 = m.m22; m32 = m.m32;
-    m03 = m.m03; m13 = m.m13; m23 = m.m23; m33 = m.m33
-  }
 
   def update(c: Int, r: Int, s: Double) {
     def error() = throw new IndexOutOfBoundsException(

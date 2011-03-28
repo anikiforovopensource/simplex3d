@@ -32,7 +32,9 @@ import simplex3d.math.floatx.functions._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
 {
-  type Clone <: ReadQuat4f
+  type Read = ReadQuat4f
+  type Const = ConstQuat4f
+  def toConst() = ConstQuat4f(this)
 
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
@@ -178,11 +180,14 @@ final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 ) extends ReadQuat4f with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadQuat4f
-  type Const = ConstQuat4f
-  type Component = RFloat
-
   pa = ca; pb = cb; pc = cc; pd = cd
+
+  type Component = RFloat
+  type Clone = Quat4f
+  override def clone() = Quat4f(this)
+  def :=(q: ConstQuat4f) { this := q.asInstanceOf[inQuat4f] }
+  def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
+
 
   override def a_=(s: Float) { pa = s }
   override def b_=(s: Float) { pb = s }
@@ -251,12 +256,6 @@ final class Quat4f private[math] (
 
     a = na; b = nb
   }
-
-
-  type Clone = Quat4f
-  override def clone() = Quat4f(this)
-  def toConst() = ConstQuat4f(this)
-  def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
 
   def update(i: Int, s: Float) {
     i match {

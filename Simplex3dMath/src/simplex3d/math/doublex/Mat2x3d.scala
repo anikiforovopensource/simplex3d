@@ -33,7 +33,9 @@ import simplex3d.math.doublex.functions._
 sealed abstract class ReadMat2x3d
 extends ProtectedMat2x3d[Double]
 {
-  type Clone <: ReadMat2x3d
+  type Read = ReadMat2x3d
+  type Const = ConstMat2x3d
+  def toConst() = ConstMat2x3d(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10
@@ -336,6 +338,18 @@ final class Mat2x3d private[math] (
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
 
+  type Component = RDouble
+  type Clone = Mat2x3d
+  override def clone() = Mat2x3d(this)
+  def :=(u: ConstMat2x3d) { this := u.asInstanceOf[inMat2x3d] }
+  
+  def :=(m: inMat2x3d) {
+    m00 = m.m00; m10 = m.m10;
+    m01 = m.m01; m11 = m.m11;
+    m02 = m.m02; m12 = m.m12
+  }
+
+  
   override def m00_=(s: Double) { p00 = s }
   override def m10_=(s: Double) { p10 = s }
 
@@ -345,9 +359,6 @@ final class Mat2x3d private[math] (
   override def m02_=(s: Double) { p02 = s }
   override def m12_=(s: Double) { p12 = s }
 
-  type Read = ReadMat2x3d
-  type Const = ConstMat2x3d
-  type Component = RDouble
 
   def *=(s: Double) {
     m00 *= s; m10 *= s;
@@ -441,16 +452,6 @@ final class Mat2x3d private[math] (
     m02 = t02
   }
 
-
-  type Clone = Mat2x3d
-  override def clone() = Mat2x3d(this)
-  def toConst() = ConstMat2x3d(this)
-  
-  def :=(m: inMat2x3d) {
-    m00 = m.m00; m10 = m.m10;
-    m01 = m.m01; m11 = m.m11;
-    m02 = m.m02; m12 = m.m12
-  }
 
   def update(c: Int, r: Int, s: Double) {
     def error() = throw new IndexOutOfBoundsException(

@@ -29,6 +29,6 @@ package simplex3d.math
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyVec2[P] private[math] () extends VecImpl234[P] {
-  type Clone <: AnyVec2[P]
+  type Read <: AnyVec2[P]
   final def components = 2
 }

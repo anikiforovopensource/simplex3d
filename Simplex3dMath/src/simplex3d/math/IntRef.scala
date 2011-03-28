@@ -32,21 +32,16 @@ import simplex3d.math.CommonMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class IntRef(private[this] var x: Int) extends PrimitiveRef[Int] {
-  type Clone = IntRef
-  type Read = Int
+sealed abstract class ReadIntRef(protected var x: Int) extends PrimitiveRef[Int] {
+  type Read = ReadIntRef
   type Const = Int
+  def toConst() :Int = x
 
   def components = 1
   def apply(i: Int) :Int = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
-
-  def :=(s: Int) { x = s }
-  def :=(v: IntRef) { x = v.toConst }
-  def toConst() :Int = x
-  override def clone() = new IntRef(x)
 
   private[math] def bx: Boolean = Boolean(x)
   private[math] def ix: Int = x
@@ -56,8 +51,8 @@ final class IntRef(private[this] var x: Int) extends PrimitiveRef[Int] {
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case r: IntRef => x == r.toConst
-      case r: BooleanRef => false
+      case r: ReadIntRef => x == r.toConst
+      case r: ReadBooleanRef => false
       case r: PrimitiveRef[_] => dx == r.dx
       case a => x == a
     }
@@ -221,4 +216,31 @@ final class IntRef(private[this] var x: Int) extends PrimitiveRef[Int] {
    * @return a vector with components s ^ u.x, s ^ u.y, s ^ u.z, and s ^ u.w.
    */
   def ^(u: inVec4i) = u ^ x
+}
+
+final class IntRef(cx: Int) extends ReadIntRef(cx) with PropertyRef {
+  type Clone = IntRef
+  override def clone() = new IntRef(x)
+  
+  def :=(s: Int) { x = s }
+  def :=(r: ReadIntRef) { x = r.toConst }
+
+  
+  def *=(s: Int) { x *= s }
+  def /=(s: Int) { x /= s }
+  def +=(s: Int) { x += s }
+  def -=(s: Int) { x -= s }
+
+  def %=(s: Int) { x %= s }
+  def >>=(s: Int) { x >>= s }
+  def >>>=(s: Int) { x >>>= s }
+  def <<=(s: Int) { x <<= s }
+  def &=(s: Int) { x &= s }
+  def |=(s: Int) { x |= s }
+  def ^=(s: Int) { x ^= s }
+}
+
+object IntRef {
+  def unapply(r: ReadIntRef) = Some(r.toConst)
+  implicit def toMutable(r: ReadIntRef) = new IntRef(r.toConst)
 }

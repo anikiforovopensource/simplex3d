@@ -29,9 +29,9 @@ import simplex3d.math.floatx._
 package object float {
   
   // Implicits
-  implicit def intToFloatRef(s: Int) = new FloatRef(s)
-  implicit def floatToRef(s: Float) = new FloatRef(s)
-  implicit def refToFloat(v: FloatRef) = v.toConst
+  implicit def intToFloatRef(s: Int) :ReadFloatRef = new FloatRef(s)
+  implicit def floatToRef(s: Float) :ReadFloatRef = new FloatRef(s)
+  implicit def refToFloat(r: FloatRef) = r.toConst
 
   implicit def vec2IntToFloat(u: AnyVec2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)
@@ -43,6 +43,7 @@ package object float {
     new ConstVec4f(u.fx, u.fy, u.fz, u.fw)
 
 
+  type ReadFloatRef = floatx.ReadFloatRef
   type FloatRef = floatx.FloatRef
   val functions = floatx.functions
 

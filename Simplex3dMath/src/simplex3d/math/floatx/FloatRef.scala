@@ -29,10 +29,10 @@ import simplex3d.math.floatx.functions._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class FloatRef(private[this] var x: Float) extends PrimitiveRef[Float] {
-  type Clone = FloatRef
-  type Read = Float
+sealed abstract class ReadFloatRef(protected var x: Float) extends PrimitiveRef[Float] {
+  type Read = ReadFloatRef
   type Const = Float
+  def toConst() :Float = x
 
   def components = 1
   def apply(i: Int) :Float = {
@@ -40,10 +40,6 @@ final class FloatRef(private[this] var x: Float) extends PrimitiveRef[Float] {
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  def :=(s: Float) { x = s }
-  def :=(v: FloatRef) { x = v.toConst }
-  def toConst() :Float = x
-  override def clone() = new FloatRef(x)
 
   private[math] def bx: Boolean = Boolean(x)
   private[math] def ix: Int = x.toInt
@@ -149,4 +145,23 @@ final class FloatRef(private[this] var x: Float) extends PrimitiveRef[Float] {
   def /(u: inVec4i) = new Vec4f(x/u.fx, x/u.fy, x/u.fz, x/u.fw)
   def +(u: inVec4i) = new Vec4f(x + u.fx, x + u.fy, x + u.fz, x + u.fw)
   def -(u: inVec4i) = new Vec4f(x - u.fx, x - u.fy, x - u.fz, x - u.fw)
+}
+
+final class FloatRef(cx: Float) extends ReadFloatRef(cx) with PropertyRef {
+  type Clone = FloatRef
+  override def clone() = new FloatRef(x)
+
+  def :=(s: Float) { x = s }
+  def :=(r: ReadFloatRef) { x = r.toConst }
+
+  
+  def *=(s: Float) { x *= s }
+  def /=(s: Float) { x /= s }
+  def +=(s: Float) { x += s }
+  def -=(s: Float) { x -= s }
+}
+
+object FloatRef {
+  def unapply(r: ReadFloatRef) = Some(r.toConst)
+  implicit def toMutable(r: ReadFloatRef) = new FloatRef(r.toConst)
 }

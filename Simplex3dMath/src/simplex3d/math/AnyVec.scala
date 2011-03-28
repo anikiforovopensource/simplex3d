@@ -26,7 +26,7 @@ package simplex3d.math
  * @author Aleksey Nikiforov (lex)
  */
 trait AnyVec[P] extends ReadPropertyRef {
-  type Clone <: AnyVec[P]
+  type Read <: AnyVec[P]
   def components: Int
   def apply(i: Int) :P
 

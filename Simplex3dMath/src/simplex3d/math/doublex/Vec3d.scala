@@ -32,7 +32,9 @@ import simplex3d.math.doublex.functions._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3d extends ProtectedVec3d[Double] {
 
-  type Clone <: ReadVec3d
+  type Read = ReadVec3d
+  type Const = ConstVec3d
+  def toConst() = ConstVec3d(this)
 
   private[math] type R2 = ReadVec2d
   private[math] type R3 = ReadVec3d
@@ -164,7 +166,6 @@ object ConstVec3d {
 
   def apply(u: AnyVec3[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
   def apply(u: AnyVec4[_]) = new ConstVec3d(u.dx, u.dy, u.dz)
-
   def apply(xy: AnyVec2[_], z: Double) = new ConstVec3d(xy.dx, xy.dy, z)
   def apply(x: Double, yz: AnyVec2[_]) = new ConstVec3d(x, yz.dx, yz.dy)
 
@@ -176,11 +177,14 @@ object ConstVec3d {
 final class Vec3d private[math] (cx: Double, cy: Double, cz: Double)
 extends ReadVec3d with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadVec3d
-  type Const = ConstVec3d
-  type Component = RDouble
-
   px = cx; py = cy; pz = cz
+
+  type Component = RDouble
+  type Clone = Vec3d
+  override def clone() = Vec3d(this)
+  def :=(u: ConstVec3d) { this := u.asInstanceOf[inVec3d] }
+  def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
+
 
   @noinline override def x_=(s: Double) { px = s }
   @noinline override def y_=(s: Double) { py = s }
@@ -216,12 +220,6 @@ extends ReadVec3d with PropertyRef with Composite with Implicits[On]
   def -=(u: inVec3d) { x -= u.x; y -= u.y; z -= u.z }
 
   def *=(m: inMat3d) { this := m.transposeMult(this) }
-
-
-  type Clone = Vec3d
-  override def clone() = Vec3d(this)
-  def toConst() = ConstVec3d(this)
-  def :=(u: inVec3d) { x = u.x; y = u.y; z = u.z }
 
   // Swizzling
   override def xy_=(u: inVec2d) { x = u.x; y = u.y }
@@ -285,7 +283,6 @@ object Vec3d {
 
   def apply(u: AnyVec3[_]) = new Vec3d(u.dx, u.dy, u.dz)
   def apply(u: AnyVec4[_]) = new Vec3d(u.dx, u.dy, u.dz)
-
   def apply(xy: AnyVec2[_], z: Double) = new Vec3d(xy.dx, xy.dy, z)
   def apply(x: Double, yz: AnyVec2[_]) = new Vec3d(x, yz.dx, yz.dy)
 

@@ -31,7 +31,9 @@ import simplex3d.math.CommonMath._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean] {
 
-  type Clone <: ReadVec3b
+  type Read = ReadVec3b
+  type Const = ConstVec3b
+  def toConst() = ConstVec3b(this)
 
   private[math] type R2 = ReadVec2b
   private[math] type R3 = ReadVec3b
@@ -145,7 +147,6 @@ object ConstVec3b {
 
   def apply(u: AnyVec3[_]) = new ConstVec3b(u.bx, u.by, u.bz)
   def apply(u: AnyVec4[_]) = new ConstVec3b(u.bx, u.by, u.bz)
-
   def apply(xy: AnyVec2[_], z: Boolean) = new ConstVec3b(xy.bx, xy.by, z)
   def apply(x: Boolean, yz: AnyVec2[_]) = new ConstVec3b(x, yz.bx, yz.by)
 
@@ -157,11 +158,14 @@ object ConstVec3b {
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
 extends ReadVec3b with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadVec3b
-  type Const = ConstVec3b
-  type Component = Bool
-
   px = cx; py = cy; pz = cz
+
+  type Component = Bool
+  type Clone = Vec3b
+  override def clone() = Vec3b(this)
+  def :=(u: ConstVec3b) { this := u.asInstanceOf[inVec3b] }
+  def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
+
 
   @noinline override def x_=(s: Boolean) { px = s }
   @noinline override def y_=(s: Boolean) { py = s }
@@ -186,12 +190,6 @@ extends ReadVec3b with PropertyRef with Composite with Implicits[On]
     }
   }
 
-
-
-  type Clone = Vec3b
-  override def clone() = Vec3b(this)
-  def toConst() = ConstVec3b(this)
-  def :=(u: inVec3b) { x = u.x; y = u.y; z = u.z }
 
   // Swizzling
   override def xy_=(u: inVec2b) { x = u.x; y = u.y }
@@ -252,7 +250,6 @@ object Vec3b {
 
   def apply(u: AnyVec3[_]) = new Vec3b(u.bx, u.by, u.bz)
   def apply(u: AnyVec4[_]) = new Vec3b(u.bx, u.by, u.bz)
-
   def apply(xy: AnyVec2[_], z: Boolean) = new Vec3b(xy.bx, xy.by, z)
   def apply(x: Boolean, yz: AnyVec2[_]) = new Vec3b(x, yz.bx, yz.by)
 

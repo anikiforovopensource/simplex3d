@@ -25,8 +25,8 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with PropertyRef {
-  type Clone <: PrimitiveRef[P]
+abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with ReadPropertyRef {
+  type Read <: PrimitiveRef[P]
 }
 
 
@@ -38,7 +38,7 @@ abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with PropertyR
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyQuat4[P] private[math] () extends ReadPropertyRef {
-  type Clone <: AnyQuat4[P]
+  type Read <: AnyQuat4[P]
   def apply(i: Int) :P
 
   private[math] def fa: Float
@@ -60,7 +60,7 @@ abstract class AnyQuat4[P] private[math] () extends ReadPropertyRef {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat[P] private[math] () extends ReadPropertyRef {
-  type Clone <: AnyMat[P]
+  type Read <: AnyMat[P]
   def columns: Int
   def rows: Int
   def apply(c: Int, r: Int) :P
@@ -115,7 +115,7 @@ abstract class AnyMat[P] private[math] () extends ReadPropertyRef {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat2[P]
+  type Read <: AnyMat2[P]
   final def columns = 2
   final def rows = 2
 }
@@ -128,7 +128,7 @@ abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat2x3[P]
+  type Read <: AnyMat2x3[P]
   final def columns = 3
   final def rows = 2
 }
@@ -141,7 +141,7 @@ abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat2x4[P]
+  type Read <: AnyMat2x4[P]
   final def columns = 4
   final def rows = 2
 }
@@ -154,7 +154,7 @@ abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat3x2[P]
+  type Read <: AnyMat3x2[P]
   final def columns = 2
   final def rows = 3
 }
@@ -167,7 +167,7 @@ abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat3[P]
+  type Read <: AnyMat3[P]
   final def columns = 3
   final def rows = 3
 }
@@ -180,7 +180,7 @@ abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat3x4[P]
+  type Read <: AnyMat3x4[P]
   final def columns = 4
   final def rows = 3
 }
@@ -193,7 +193,7 @@ abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat4x2[P]
+  type Read <: AnyMat4x2[P]
   final def columns = 2
   final def rows = 4
 }
@@ -206,7 +206,7 @@ abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat4x3[P]
+  type Read <: AnyMat4x3[P]
   final def columns = 3
   final def rows = 4
 }
@@ -219,7 +219,7 @@ abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyMat4[P] private[math] () extends AnyMat[P] {
-  type Clone <: AnyMat4[P]
+  type Read <: AnyMat4[P]
   final def columns = 4
   final def rows = 4
 }

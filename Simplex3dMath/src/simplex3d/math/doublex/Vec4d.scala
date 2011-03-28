@@ -32,7 +32,9 @@ import simplex3d.math.doublex.functions._
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4d extends ProtectedVec4d[Double] {
 
-  type Clone <: ReadVec4d
+  type Read = ReadVec4d
+  type Const = ConstVec4d
+  def toConst() = ConstVec4d(this)
 
   private[math] type R2 = ReadVec2d
   private[math] type R3 = ReadVec3d
@@ -176,7 +178,6 @@ object ConstVec4d {
   def apply(x: Double, y: Double, z: Double, w: Double) = new ConstVec4d(x, y, z, w)
 
   def apply(u: AnyVec4[_]) = new ConstVec4d(u.dx, u.dy, u.dz, u.dw)
-
   def apply(xy: AnyVec2[_], z: Double, w: Double) = new ConstVec4d(xy.dx, xy.dy, z, w)
   def apply(x: Double, yz: AnyVec2[_], w: Double) = new ConstVec4d(x, yz.dx, yz.dy, w)
   def apply(x: Double, y: Double, zw: AnyVec2[_]) = new ConstVec4d(x, y, zw.dx, zw.dy)
@@ -187,7 +188,6 @@ object ConstVec4d {
   def apply(m: AnyMat2[_]) = new ConstVec4d(m.d00, m.d10, m.d01, m.d11)
   def apply(q: AnyQuat4[_]) = new ConstVec4d(q.db, q.dc, q.dd, q.da)
 
-
   implicit def toConst(u: ReadVec4d) = apply(u)
 }
 
@@ -196,11 +196,14 @@ object ConstVec4d {
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
 extends ReadVec4d with PropertyRef with Composite with Implicits[On]
 {
-  type Read = ReadVec4d
-  type Const = ConstVec4d
-  type Component = RDouble
-
   px = cx; py = cy; pz = cz; pw = cw
+
+  type Component = RDouble
+  type Clone = Vec4d
+  override def clone() = Vec4d(this)
+  def :=(u: ConstVec4d) { this := u.asInstanceOf[inVec4d] }
+  def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
+
 
   @noinline override def x_=(s: Double) { px = s }
   @noinline override def y_=(s: Double) { py = s }
@@ -240,12 +243,6 @@ extends ReadVec4d with PropertyRef with Composite with Implicits[On]
   def -=(u: inVec4d) { x -= u.x; y -= u.y; z -= u.z; w -= u.w }
 
   def *=(m: inMat4d) { this := m.transposeMult(this) }
-
-
-  type Clone = Vec4d
-  override def clone() = Vec4d(this)
-  def toConst() = ConstVec4d(this)
-  def :=(u: inVec4d) { x = u.x; y = u.y; z = u.z; w = u.w }
 
   // Swizzling
   override def xy_=(u: inVec2d) { x = u.x; y = u.y }
@@ -456,7 +453,6 @@ object Vec4d {
   def apply(x: Double, y: Double, z: Double, w: Double) = new Vec4d(x, y, z, w)
 
   def apply(u: AnyVec4[_]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
-
   def apply(xy: AnyVec2[_], z: Double, w: Double) = new Vec4d(xy.dx, xy.dy, z, w)
   def apply(x: Double, yz: AnyVec2[_], w: Double) = new Vec4d(x, yz.dx, yz.dy, w)
   def apply(x: Double, y: Double, zw: AnyVec2[_]) = new Vec4d(x, y, zw.dx, zw.dy)
@@ -466,7 +462,6 @@ object Vec4d {
 
   def apply(m: AnyMat2[_]) = new Vec4d(m.d00, m.d10, m.d01, m.d11)
   def apply(q: AnyQuat4[_]) = new Vec4d(q.db, q.dc, q.dd, q.da)
-
 
   def unapply(u: ReadVec4d) = Some((u.x, u.y, u.z, u.w))
   implicit def toMutable(u: ReadVec4d) = apply(u)

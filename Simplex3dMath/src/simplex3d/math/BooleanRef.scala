@@ -27,21 +27,16 @@ import simplex3d.math.CommonMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class BooleanRef(private[this] var x: Boolean) extends PrimitiveRef[Boolean] {
-  type Clone = BooleanRef
-  type Read = Boolean
+sealed abstract class ReadBooleanRef(protected var x: Boolean) extends PrimitiveRef[Boolean] {
+  type Read = ReadBooleanRef
   type Const = Boolean
+  def toConst() :Boolean = x
 
   def components = 1
   def apply(i: Int) :Boolean = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
-
-  def :=(s: Boolean) { x = s }
-  def :=(v: BooleanRef) { x = v.toConst }
-  def toConst() :Boolean = x
-  override def clone() = new BooleanRef(x)
 
   private[math] def bx: Boolean = x
   private[math] def ix: Int = Int(x)
@@ -51,7 +46,7 @@ final class BooleanRef(private[this] var x: Boolean) extends PrimitiveRef[Boolea
 
   final override def equals(other: Any) :Boolean = {
     other match {
-      case r: BooleanRef => x == r.toConst
+      case r: ReadBooleanRef => x == r.toConst
       case a => x == a
     }
   }
@@ -63,4 +58,22 @@ final class BooleanRef(private[this] var x: Boolean) extends PrimitiveRef[Boolea
   final override def toString() :String = {
     "BooleanRef" + "(" + x + ")"
   }
+}
+
+final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx) with PropertyRef {
+  type Clone = BooleanRef
+  override def clone() = new BooleanRef(x)
+
+  def :=(s: Boolean) { x = s }
+  def :=(r: ReadBooleanRef) { x = r.toConst }
+
+  
+  def &=(s: Boolean) { x &= s }
+  def |=(s: Boolean) { x |= s }
+  def ^=(s: Boolean) { x ^= s }
+}
+
+object BooleanRef {
+  def unapply(r: ReadBooleanRef) = Some(r.toConst)
+  implicit def toMutable(r: ReadBooleanRef) = new BooleanRef(r.toConst)
 }

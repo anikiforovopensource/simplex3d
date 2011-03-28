@@ -27,12 +27,15 @@ import simplex3d.math.integration._
  * @author Aleksey Nikiforov (lex)
  */
 trait ReadPropertyRef {
-  type Clone <: ReadPropertyRef
+  type Read <: ReadPropertyRef
+  type Clone <: Read with AnyRef
+  type Const
+  
   override def clone() :Clone = throw new UnsupportedOperationException();
+  def toConst() :Const
 }
 
-trait PropertyRef extends ReadPropertyRef with Mutable with Meta {
-  type Clone <: PropertyRef
+trait PropertyRef extends ReadPropertyRef with Mutable {
   def :=(v: Read)
-  def toConst() :Const
+  def :=(v: Const)
 }

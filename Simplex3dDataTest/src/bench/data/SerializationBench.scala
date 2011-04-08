@@ -52,6 +52,7 @@ object SerializationBench {
 
   val composite = DataArray[Vec4, RFloat](primitive)
 
+  
   def test() {
     println("\nTesting...")
     var start = 0L

@@ -34,6 +34,7 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object WrapperBench {
+
   def main(args: Array[String]) {
     test()
     test()
@@ -65,6 +66,7 @@ object WrapperBench {
     t.put(dataArray)
     DataArray[Vec4f, UByte](t.array)
   }
+
 
   def test() {
     println("\nTesting...")

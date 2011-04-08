@@ -33,6 +33,7 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object AccessorBench {
+  
   def main(args: Array[String]) {
     test()
     test()

@@ -27,6 +27,7 @@ import simplex3d.data.conversion.Float._
  * @author Aleksey Nikiforov (lex)
  */
 object HFloatBench {
+
   def main(args: Array[String]) {
     test()
     test()
@@ -35,6 +36,7 @@ object HFloatBench {
 
   val loops = 10000
 
+  
   def test() {
     println("\nTesting...")
     var start = 0L

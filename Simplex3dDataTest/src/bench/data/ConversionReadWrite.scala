@@ -33,7 +33,10 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object ConversionReadWrite {
+  
   def main(args: Array[String]) {
+    init()
+
     for (i <- 0 until 6) { test() }
   }
 
@@ -41,14 +44,15 @@ object ConversionReadWrite {
   val loops = 20000
 
   val dataArray = DataArray[RFloat, UByte](length);
-  {
+
+
+  def init() {
     val random = new java.util.Random(1)
     var i = 0; while( i < length) {
       dataArray(i) = random.nextFloat
       i += 1
     }
   }
-
 
   def test() {
     println("\nTesting...")

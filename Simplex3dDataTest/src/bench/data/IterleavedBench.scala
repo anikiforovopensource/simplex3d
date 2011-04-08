@@ -34,6 +34,7 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object IterleavedBench {
+  
   def main(args: Array[String]) {
     for (i <- 0 until 6) { test() }
   }

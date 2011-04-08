@@ -34,6 +34,7 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object InlinedBench {
+
   def main(args: Array[String]) {
     test()
     test()
@@ -61,6 +62,7 @@ object InlinedBench {
     tmp
   }
 
+  
   def test() {
     println("\nTesting...")
     var start = 0L

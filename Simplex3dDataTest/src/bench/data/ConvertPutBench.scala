@@ -33,86 +33,63 @@ import simplex3d.data.float._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object ConvertBench {
-  def main(args: Array[String]) {
-    new ConvertBenchTC().run()
-  }
-}
+object ConvertPutBench {
 
-class ConvertBenchTC {
-  val length = 100000
+  def main(args: Array[String]) {
+    init()
+    
+    test()
+    test()
+    test()
+  }
+
+  val length = 10000
   val loops = 10000
 
   val random = new java.util.Random()
-
-  val floatArray = new Array[Float](length)
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    floatArray(i) = random.nextFloat
-  }
-
-  val intArray = new Array[Int](length)
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    intArray(i) = random.nextInt
-  }
-
   val floatByteBuffer = ByteBuffer.allocateDirect(4*length).order(ByteOrder.nativeOrder)
-  val floatBuffer = floatByteBuffer.asFloatBuffer
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    floatBuffer.put(i, random.nextFloat)
+
+  def init() {
+    val floatBuffer = floatByteBuffer.asFloatBuffer
+    random.setSeed(1)
+    for (i <- 0 until length) {
+      floatBuffer.put(i, random.nextFloat)
+    }
   }
 
-  val intByteBuffer = ByteBuffer.allocateDirect(4*length).order(ByteOrder.nativeOrder)
-  val intBuffer = intByteBuffer.asIntBuffer
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    intBuffer.put(i, random.nextInt)
-  }
-
-  def run() {
+  def test() {
     var start = 0L
 
     start = System.currentTimeMillis
-    testConvertPutDataBuffer(floatByteBuffer, loops)
-    val convertPutDataBufferTime = System.currentTimeMillis - start
+    testConvertPutSShort(floatByteBuffer, loops)
+    val convertPutSShortTime = System.currentTimeMillis - start
     
     start = System.currentTimeMillis
     testConvertPutHFloat(floatByteBuffer, loops)
     val convertPutHFloatTime = System.currentTimeMillis - start
 
-    start = System.currentTimeMillis
-    testConvertPutDataBuffer(floatByteBuffer, loops)
-    val convertPutDataBufferTime2 = System.currentTimeMillis - start
-
-    start = System.currentTimeMillis
-    testConvertPutHFloat(floatByteBuffer, loops)
-    val convertPutHFloatTime2 = System.currentTimeMillis - start
-
-
-    println("ConvertPutDataBuffer time: " + convertPutDataBufferTime + ".")
+    println("ConvertPutSShort time: " + convertPutSShortTime + ".")
     println("ConvertPutHFloat time: " + convertPutHFloatTime + ".")
-    println("ConvertPutDataBuffer time: " + convertPutDataBufferTime2 + ".")
-    println("ConvertPutHFloat time: " + convertPutHFloatTime2 + ".")
   }
 
-  def testConvertPutDataBuffer(data: ByteBuffer, loops: Int) {
+  def testConvertPutSShort(data: ByteBuffer, loops: Int) {
     var answer = 0
+
     val size = data.capacity/4
-    val offset = 2
+    val offset = 1
     val stride = 2
-    val dest = DataView[RFloat, UInt](
+    val bytes = 2
+    val dest = DataView[RFloat, SShort](
       ByteBuffer.allocateDirect(
-        size*4*(stride + 1) + offset*4
+        size*bytes*stride + offset*bytes
       ),
       offset, stride
     )
-    val src = DataBuffer[RFloat, SInt](data)
+    val src = DataBuffer[RFloat, RFloat](data)
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }
@@ -122,12 +99,14 @@ class ConvertBenchTC {
 
   def testConvertPutHFloat(data: ByteBuffer, loops: Int) {
     var answer = 0
+
     val size = data.capacity/4
-    val offset = 2
+    val offset = 1
     val stride = 2
+    val bytes = 2
     val dest = DataView[RFloat, HFloat](
       ByteBuffer.allocateDirect(
-        size*2*(stride + 1) + offset*4
+        size*bytes*stride + offset*bytes
       ),
       offset, stride
     )
@@ -135,7 +114,7 @@ class ConvertBenchTC {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }

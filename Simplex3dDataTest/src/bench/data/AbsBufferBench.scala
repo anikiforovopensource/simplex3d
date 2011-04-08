@@ -34,12 +34,12 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object AbsBufferBench {
+
   def main(args: Array[String]) {
     test()
     test()
     test()
   }
-
 
   val length = 20000
   val loops = 20000
@@ -65,6 +65,7 @@ object AbsBufferBench {
     DataArray[Vec4f, UByte](t.array)
   }
 
+  
   def test() {
     println("\nTesting...")
     var start = 0L

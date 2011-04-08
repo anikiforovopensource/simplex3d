@@ -34,13 +34,11 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object PrimitiveWrapperBench {
-  def main(args: Array[String]) {
-    val tc = new PrimitiveWrapperBenchTC()
-    tc.run()
-  }
-}
 
-class PrimitiveWrapperBenchTC {
+  def main(args: Array[String]) {
+    test()
+  }
+
   val length = 20000
   val loops = 20000
 
@@ -60,7 +58,7 @@ class PrimitiveWrapperBenchTC {
   }
 
   
-  def run() {
+  def test() {
     var start = 0L
 
     start = System.currentTimeMillis
@@ -73,28 +71,28 @@ class PrimitiveWrapperBenchTC {
 
     start = System.currentTimeMillis
     testRawWrapper(new ArrayWrapper1(dataArray), loops)
-    val wrapperArray1 = System.currentTimeMillis - start
+    val wrapperArray = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testRawWrapper(new BufferWrapper1(dataBuffer), loops)
-    val wrapperBuffer1 = System.currentTimeMillis - start
+    val wrapperBuffer = System.currentTimeMillis - start
     
     start = System.currentTimeMillis
     testImplementedRFloat(DataArray[RFloat, RFloat](dataArray), loops)
-    val implementedArray1 = System.currentTimeMillis - start
+    val implementedArray = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testImplementedRFloat(DataBuffer[RFloat, RFloat](byteBuffer), loops)
-    val implementedBuffer1 = System.currentTimeMillis - start
+    val implementedBuffer = System.currentTimeMillis - start
 
     println("Array time: " + arrayTime + ".")
     println("Buffer time: " + bufferTime + ".")
 
-    println("Wrapper Array1 time: " + wrapperArray1 + ".")
-    println("Wrapper Buffer1 time: " + wrapperBuffer1 + ".")
+    println("Wrapper Array1 time: " + wrapperArray + ".")
+    println("Wrapper Buffer1 time: " + wrapperBuffer + ".")
 
-    println("Implemented Array1 time: " + implementedArray1 + ".")
-    println("Implemented Buffer1 time: " + implementedBuffer1 + ".")
+    println("Implemented Array1 time: " + implementedArray + ".")
+    println("Implemented Buffer1 time: " + implementedBuffer + ".")
   }
 
   final def testArray(data: Array[Float], loops: Int) {

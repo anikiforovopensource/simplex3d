@@ -34,52 +34,59 @@ import simplex3d.data.float._
  * @author Aleksey Nikiforov (lex)
  */
 object CopyBench {
-  def main(args: Array[String]) {
-    new CopyBenchTC().run()
-  }
-}
 
-class CopyBenchTC {
+  def main(args: Array[String]) {
+    init()
+
+    test()
+    test()
+    test()
+  }
+
   val length = 100000
-  val loops = 10000
+  val loops = 1000
 
   val random = new java.util.Random()
 
   val dataArray = new Array[Float](length)
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    dataArray(i) = random.nextFloat
-  }
-
   val byteBuffer = ByteBuffer.allocateDirect(4*length).order(ByteOrder.nativeOrder)
   val dataBuffer = byteBuffer.asFloatBuffer
-  random.setSeed(1)
-  for (i <- 0 until length) {
-    dataBuffer.put(i, random.nextFloat)
+  
+  def init() {
+    random.setSeed(1)
+    for (i <- 0 until length) {
+      dataArray(i) = random.nextFloat
+    }
+
+    random.setSeed(1)
+    for (i <- 0 until length) {
+      dataBuffer.put(i, random.nextFloat)
+    }
   }
 
-  def run() {
+
+  def test() {
     var start = 0L
 
-//    start = System.currentTimeMillis
-//    testCopyBuffer(dataBuffer, loops)
-//    val bufferTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testCopyArray(dataArray, loops)
-//    val arrayTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testPutArray(dataArray, loops)
-//    val putArrayTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testPutDataBuffer(byteBuffer, loops)
-//    val putDataBufferTime = System.currentTimeMillis - start
-//
-//    start = System.currentTimeMillis
-//    testInterleavedPutDataBuffer(byteBuffer, loops)
-//    val interleavedPutDataBufferTime = System.currentTimeMillis - start
+    start = System.currentTimeMillis
+    testCopyBuffer(dataBuffer, loops)
+    val bufferTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testCopyArray(dataArray, loops)
+    val arrayTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testPutArray(dataArray, loops)
+    val putArrayTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testPutDataBuffer(byteBuffer, loops)
+    val putDataBufferTime = System.currentTimeMillis - start
+
+    start = System.currentTimeMillis
+    testInterleavedPutDataBuffer(byteBuffer, loops)
+    val interleavedPutDataBufferTime = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
     testNoConvertPutDataBuffer(byteBuffer, loops)
@@ -94,11 +101,11 @@ class CopyBenchTC {
     val noConvertPutDataArrayTime2 = System.currentTimeMillis - start
 
 
-//    println("Array time: " + arrayTime + ".")
-//    println("Buffer time: " + bufferTime + ".")
-//    println("PutArray time: " + putArrayTime + ".")
-//    println("PutDataBuffer time: " + putDataBufferTime + ".")
-//    println("InterleavedPutDataBuffer time: " + interleavedPutDataBufferTime + ".")
+    println("Array time: " + arrayTime + ".")
+    println("Buffer time: " + bufferTime + ".")
+    println("PutArray time: " + putArrayTime + ".")
+    println("PutDataBuffer time: " + putDataBufferTime + ".")
+    println("InterleavedPutDataBuffer time: " + interleavedPutDataBufferTime + ".")
     println("NoConvertPutDataBuffer time: " + noConvertPutDataBufferTime + ".")
     println("NoConvertPutDataArray time: " + noConvertPutDataArrayTime + ".")
     println("NoConvertPutDataArray time: " + noConvertPutDataArrayTime2 + ".")
@@ -167,11 +174,11 @@ class CopyBenchTC {
   def testInterleavedPutDataBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
     val size = data.capacity/4
-    val offset = 2
+    val offset = 1
     val stride = 2
     val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
-        size*4*(stride + 1) + offset*4
+        size*4*stride + offset*4
       ),
       offset, stride
     )
@@ -190,11 +197,11 @@ class CopyBenchTC {
   def testNoConvertPutDataBuffer(data: ByteBuffer, loops: Int) {
     var answer = 0
     val size = data.capacity/4
-    val offset = 2
+    val offset = 1
     val stride = 2
     val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
-        size*4*(stride + 1) + offset*4
+        size*4*stride + offset*4
       ),
       offset, stride
     )
@@ -213,11 +220,11 @@ class CopyBenchTC {
   def testNoConvertPutDataArray(data: Array[Float], loops: Int) {
     var answer = 0
     val size = data.length
-    val offset = 2
+    val offset = 1
     val stride = 2
     val dest = DataView[RFloat, RFloat](
       ByteBuffer.allocateDirect(
-        size*4*(stride + 1) + offset*4
+        size*4*stride + offset*4
       ),
       offset, stride
     )

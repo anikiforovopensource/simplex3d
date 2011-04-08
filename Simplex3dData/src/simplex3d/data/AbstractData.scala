@@ -45,22 +45,8 @@ private[data] abstract class AbstractData[
 ) {
 
   type Primitive <: Contiguous[E#Component, R]
-  final def buffer() :R#Buffer = {
-    ((storeType: @switch) match {
-      case ByteStore =>
-        buff.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
-      case ShortStore =>
-        buff.asInstanceOf[ShortBuffer].duplicate()
-      case CharStore =>
-        buff.asInstanceOf[CharBuffer].duplicate()
-      case IntStore =>
-        buff.asInstanceOf[IntBuffer].duplicate()
-      case FloatStore =>
-        buff.asInstanceOf[FloatBuffer].duplicate()
-      case DoubleStore =>
-        buff.asInstanceOf[DoubleBuffer].duplicate()
-    }).asInstanceOf[R#Buffer]
-  }
+
+  final def buffer() :R#Buffer = Util.duplicateBuff(storeType, buff).asInstanceOf[R#Buffer]
 
   override def apply(i: Int) :ReadAs
   def update(i: Int, v: WriteAs)
@@ -286,63 +272,33 @@ private[data] abstract class AbstractData[
       (storeType: @switch) match {
         case ByteStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[ByteBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[ByteBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[ByteBuffer], destOffset, stride,
+            src.buff.asInstanceOf[ByteBuffer], srcOffset, srcStride, srcLim
           )
         case ShortStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[ShortBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[ShortBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[ShortBuffer], destOffset, stride,
+            src.buff.asInstanceOf[ShortBuffer], srcOffset, srcStride, srcLim
           )
         case CharStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[CharBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[CharBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[CharBuffer], destOffset, stride,
+            src.buff.asInstanceOf[CharBuffer], srcOffset, srcStride, srcLim
           )
         case IntStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[IntBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[IntBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[IntBuffer], destOffset, stride,
+            src.buff.asInstanceOf[IntBuffer], srcOffset, srcStride, srcLim
           )
         case FloatStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[FloatBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[FloatBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[FloatBuffer], destOffset, stride,
+            src.buff.asInstanceOf[FloatBuffer], srcOffset, srcStride, srcLim
           )
         case DoubleStore => Util.copyBuffer(
             components,
-            buff.asInstanceOf[DoubleBuffer],
-            destOffset,
-            stride,
-            src.buff.asInstanceOf[DoubleBuffer],
-            srcOffset,
-            srcStride,
-            srcLim
+            buff.asInstanceOf[DoubleBuffer], destOffset, stride,
+            src.buff.asInstanceOf[DoubleBuffer], srcOffset, srcStride, srcLim
           )
       }
     }
@@ -350,33 +306,18 @@ private[data] abstract class AbstractData[
       primitive.elemManifest match {
         case MetaManifest.SInt => Util.copySeqInt(
             components,
-            primitive.asInstanceOf[Contiguous[SInt, _]],
-            destOffset,
-            stride,
-            src.asInstanceOf[inContiguous[SInt, _]],
-            srcOffset,
-            srcStride,
-            srcLim
+            primitive.asInstanceOf[Contiguous[SInt, _]], destOffset, stride,
+            src.asInstanceOf[inContiguous[SInt, _]], srcOffset, srcStride, srcLim
           )
         case MetaManifest.RFloat => Util.copySeqFloat(
             components,
-            primitive.asInstanceOf[Contiguous[RFloat, _]],
-            destOffset,
-            stride,
-            src.asInstanceOf[inContiguous[RFloat, _]],
-            srcOffset,
-            srcStride,
-            srcLim
+            primitive.asInstanceOf[Contiguous[RFloat, _]], destOffset, stride,
+            src.asInstanceOf[inContiguous[RFloat, _]], srcOffset, srcStride, srcLim
           )
         case MetaManifest.RDouble => Util.copySeqDouble(
             components,
-            primitive.asInstanceOf[Contiguous[RDouble, _]],
-            destOffset,
-            stride,
-            src.asInstanceOf[inContiguous[RDouble, _]],
-            srcOffset,
-            srcStride,
-            srcLim
+            primitive.asInstanceOf[Contiguous[RDouble, _]], destOffset, stride,
+            src.asInstanceOf[inContiguous[RDouble, _]], srcOffset, srcStride, srcLim
           )
       }
     }

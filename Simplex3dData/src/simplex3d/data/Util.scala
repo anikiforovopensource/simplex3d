@@ -22,6 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.annotation._
+import StoreType._
 
 
 // An empty class to make -Xno-forwarders work
@@ -39,6 +40,40 @@ private[data] object Util {
   final val emptyInt = new Array[Int](0)
   final val emptyFloat = new Array[Float](0)
   final val emptyDouble = new Array[Double](0)
+
+
+  final def wrapArray(storeType: Int, array: AnyRef) :Buffer = {
+    (storeType: @switch) match {
+      case ByteStore => ByteBuffer.wrap(array.asInstanceOf[Array[Byte]]).order(ByteOrder.nativeOrder)
+      case ShortStore => ShortBuffer.wrap(array.asInstanceOf[Array[Short]])
+      case CharStore => CharBuffer.wrap(array.asInstanceOf[Array[Char]])
+      case IntStore => IntBuffer.wrap(array.asInstanceOf[Array[Int]])
+      case FloatStore => FloatBuffer.wrap(array.asInstanceOf[Array[Float]])
+      case DoubleStore => DoubleBuffer.wrap(array.asInstanceOf[Array[Double]])
+    }
+  }
+
+  final def duplicateBuff(storeType: Int, buffer: AnyRef) :Buffer = {
+    (storeType: @switch) match {
+      case ByteStore => buffer.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
+      case ShortStore => buffer.asInstanceOf[ShortBuffer].duplicate()
+      case CharStore => buffer.asInstanceOf[CharBuffer].duplicate()
+      case IntStore => buffer.asInstanceOf[IntBuffer].duplicate()
+      case FloatStore => buffer.asInstanceOf[FloatBuffer].duplicate()
+      case DoubleStore => buffer.asInstanceOf[DoubleBuffer].duplicate()
+    }
+  }
+
+  final def readOnlyBuff(storeType: Int, buffer: AnyRef) :Buffer = {
+    (storeType: @switch) match {
+      case ByteStore => buffer.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
+      case ShortStore => buffer.asInstanceOf[ShortBuffer].asReadOnlyBuffer()
+      case CharStore => buffer.asInstanceOf[CharBuffer].asReadOnlyBuffer()
+      case IntStore => buffer.asInstanceOf[IntBuffer].asReadOnlyBuffer()
+      case FloatStore => buffer.asInstanceOf[FloatBuffer].asReadOnlyBuffer()
+      case DoubleStore => buffer.asInstanceOf[DoubleBuffer].asReadOnlyBuffer()
+    }
+  }
 
   
   // ByteBuffer

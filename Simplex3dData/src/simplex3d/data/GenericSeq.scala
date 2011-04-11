@@ -33,7 +33,7 @@ import simplex3d.data._
 sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadContiguous[E#Component, R], off: Int, str: Int
 ) extends CompositeSeq[E, R, B](prim, off, str) {
-  final def elemManifest = adapter.elemManifest
+  final def metaManifest = adapter.metaManifest
   final def readManifest = adapter.readManifest
   final def components: Int = adapter.components
 

@@ -23,6 +23,7 @@ package simplex3d.data
 import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math._
+import RawType._
 
 
 /**
@@ -31,14 +32,26 @@ import simplex3d.math._
 private[data] abstract class BaseVec3i[+R <: DefinedInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3i, R, DefinedInt](prim, off, str) {
-  final def elemManifest = Vec3i.Manifest
+  final def metaManifest = Vec3i.Manifest
   final def readManifest = Vec3i.ReadManifest
   final def components: Int = 3
 
   final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec3i#Component, P])
-  :ReadDataArray[Vec3i, P] = new ArrayVec3i(prim)
+  :ReadDataArray[Vec3i, P] = {
+    (prim.rawType match {
+      case UShort => new impl.ArrayVec3iUShort(prim.asInstanceOf[ArraySIntUShort])
+      case UInt => new impl.ArrayVec3iUInt(prim.asInstanceOf[ArraySIntUInt])
+      case _ => new ArrayVec3i(prim)
+    }).asInstanceOf[ReadDataArray[Vec3i, P]]
+  }
   final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[Vec3i#Component, P])
-  :ReadDataBuffer[Vec3i, P] = new BufferVec3i(prim)
+  :ReadDataBuffer[Vec3i, P] = {
+    (prim.rawType match {
+      case UShort => new impl.BufferVec3iUShort(prim.asInstanceOf[BufferSIntUShort])
+      case UInt => new impl.BufferVec3iUInt(prim.asInstanceOf[BufferSIntUInt])
+      case _ => new BufferVec3i(prim)
+    }).asInstanceOf[ReadDataBuffer[Vec3i, P]]
+  }
   protected final def mkReadDataViewInstance[P <: DefinedInt](
     prim: ReadDataBuffer[Vec3i#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec3i, P] = new ViewVec3i(prim, off, str)

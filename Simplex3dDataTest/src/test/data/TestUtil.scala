@@ -299,7 +299,7 @@ object TestUtil extends FunSuite {
 
     randomSrc.setSeed(seed)
     var i = 0; while (i < array.length) {
-      array(i) = rand(descriptor.elemManifest).asInstanceOf[E#Read]
+      array(i) = rand(descriptor.metaManifest).asInstanceOf[E#Read]
       i += 1
     }
 
@@ -524,7 +524,7 @@ object TestUtil extends FunSuite {
   ) {
     val d = dest.primitive
     
-    d.elemManifest match {
+    d.metaManifest match {
       case MetaManifest.SInt =>
         testIntContent(
           components,
@@ -606,8 +606,8 @@ object TestUtil extends FunSuite {
     src: inData[SInt], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.SInt)
-    assert(src.elemManifest == MetaManifest.SInt)
+    assert(dest.metaManifest == MetaManifest.SInt)
+    assert(src.metaManifest == MetaManifest.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -626,8 +626,8 @@ object TestUtil extends FunSuite {
     src: inData[RFloat], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.RFloat)
-    assert(src.elemManifest == MetaManifest.RFloat)
+    assert(dest.metaManifest == MetaManifest.RFloat)
+    assert(src.metaManifest == MetaManifest.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -649,8 +649,8 @@ object TestUtil extends FunSuite {
     src: inData[RDouble], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.RDouble)
-    assert(src.elemManifest == MetaManifest.RDouble)
+    assert(dest.metaManifest == MetaManifest.RDouble)
+    assert(src.metaManifest == MetaManifest.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -667,10 +667,10 @@ object TestUtil extends FunSuite {
   }
   
   def convert[E <: Meta](src: inData[E], rawType: Int) :Contiguous[E, Raw] = {
-    val factory = genRandomSeq(src.elemManifest, rawType, 0)
+    val factory = genRandomSeq(src.metaManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
-    src.primitive.elemManifest match {
+    src.primitive.metaManifest match {
       case MetaManifest.SInt =>
         putIntContent(
           src.components,
@@ -703,8 +703,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.SInt)
-    assert(src.elemManifest == MetaManifest.SInt)
+    assert(dest.metaManifest == MetaManifest.SInt)
+    assert(src.metaManifest == MetaManifest.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -723,8 +723,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.RFloat)
-    assert(src.elemManifest == MetaManifest.RFloat)
+    assert(dest.metaManifest == MetaManifest.RFloat)
+    assert(src.metaManifest == MetaManifest.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -743,8 +743,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.elemManifest == MetaManifest.RDouble)
-    assert(src.elemManifest == MetaManifest.RDouble)
+    assert(dest.metaManifest == MetaManifest.RDouble)
+    assert(src.metaManifest == MetaManifest.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {

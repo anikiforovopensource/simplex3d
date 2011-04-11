@@ -33,7 +33,7 @@ import RawType._
 private[data] abstract class BaseVec4f[+R <: DefinedFloat](
   prim: ReadContiguous[RFloat, R], off: Int, str: Int
 ) extends CompositeSeq[Vec4f, R, DefinedFloat](prim, off, str) {
-  final def elemManifest = Vec4f.Manifest
+  final def metaManifest = Vec4f.Manifest
   final def readManifest = Vec4f.ReadManifest
   final def components: Int = 4
 

@@ -60,7 +60,7 @@ package object double {
   )
 
   implicit object FactoryQuat4d extends DataAdapter[Quat4d, DefinedDouble with SysFP](components = 4)(
-    elemManifest = Quat4d.Manifest,
+    metaManifest = Quat4d.Manifest,
     readManifest = Quat4d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -73,7 +73,7 @@ package object double {
   }
 
   implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, DefinedDouble with SysFP](components = 4)(
-    elemManifest = Mat2x2d.Manifest,
+    metaManifest = Mat2x2d.Manifest,
     readManifest = Mat2x2d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -90,7 +90,7 @@ package object double {
   }
 
   implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, DefinedDouble with SysFP](components = 6)(
-    elemManifest = Mat2x3d.Manifest,
+    metaManifest = Mat2x3d.Manifest,
     readManifest = Mat2x3d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -109,7 +109,7 @@ package object double {
   }
 
   implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, DefinedDouble with SysFP](components = 8)(
-    elemManifest = Mat2x4d.Manifest,
+    metaManifest = Mat2x4d.Manifest,
     readManifest = Mat2x4d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -130,7 +130,7 @@ package object double {
   }
 
   implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, DefinedDouble with SysFP](components = 6)(
-    elemManifest = Mat3x2d.Manifest,
+    metaManifest = Mat3x2d.Manifest,
     readManifest = Mat3x2d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -147,7 +147,7 @@ package object double {
   }
 
   implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, DefinedDouble with SysFP](components = 9)(
-    elemManifest = Mat3x3d.Manifest,
+    metaManifest = Mat3x3d.Manifest,
     readManifest = Mat3x3d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -166,7 +166,7 @@ package object double {
   }
 
   implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, DefinedDouble with SysFP](components = 12)(
-    elemManifest = Mat3x4d.Manifest,
+    metaManifest = Mat3x4d.Manifest,
     readManifest = Mat3x4d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -187,7 +187,7 @@ package object double {
   }
 
   implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, DefinedDouble with SysFP](components = 8)(
-    elemManifest = Mat4x2d.Manifest,
+    metaManifest = Mat4x2d.Manifest,
     readManifest = Mat4x2d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -204,7 +204,7 @@ package object double {
   }
 
   implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, DefinedDouble with SysFP](components = 12)(
-    elemManifest = Mat4x3d.Manifest,
+    metaManifest = Mat4x3d.Manifest,
     readManifest = Mat4x3d.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -223,7 +223,7 @@ package object double {
   }
 
   implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, DefinedDouble with SysFP](components = 16)(
-    elemManifest = Mat4x4d.Manifest,
+    metaManifest = Mat4x4d.Manifest,
     readManifest = Mat4x4d.ReadManifest,
     boundManifest = sysfpBound
   ) {

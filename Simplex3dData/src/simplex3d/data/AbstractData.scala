@@ -303,7 +303,7 @@ private[data] abstract class AbstractData[
       }
     }
     else {
-      primitive.elemManifest match {
+      primitive.metaManifest match {
         case MetaManifest.SInt => Util.copySeqInt(
             components,
             primitive.asInstanceOf[Contiguous[SInt, _]], destOffset, stride,
@@ -332,27 +332,27 @@ private[data] abstract class AbstractData[
   }
 
   final def put(index: Int, src: inData[E], first: Int, count: Int) {
-    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
+    if ((metaManifest ne src.metaManifest) && (metaManifest != src.metaManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+        "DataSeq[" + src.metaManifest + "] cannot be cast to DataSeq[" + metaManifest + "]."
       )
 
     put(index, src.primitive, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inData[E]) {
-    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
+    if ((metaManifest ne src.metaManifest) && (metaManifest != src.metaManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+        "DataSeq[" + src.metaManifest + "] cannot be cast to DataSeq[" + metaManifest + "]."
       )
 
     put(index, src.primitive, src.offset, src.stride, src.size)
   }
 
   final def put(src: inData[E]) {
-    if ((elemManifest ne src.elemManifest) && (elemManifest != src.elemManifest))
+    if ((metaManifest ne src.metaManifest) && (metaManifest != src.metaManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.elemManifest + "] cannot be cast to DataSeq[" + elemManifest + "]."
+        "DataSeq[" + src.metaManifest + "] cannot be cast to DataSeq[" + metaManifest + "]."
       )
 
     put(0, src.primitive, src.offset, src.stride, src.size)

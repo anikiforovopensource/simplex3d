@@ -35,18 +35,20 @@ import AttributeTestUtil._
  */
 object FactoryTestUtil extends FunSuite {
 
-  private def nameType(seq: ReadDataSeq[_, _]) :(String, String) = {
-    val name = seq.getClass.getName
-    val min = name.lastIndexOf('.') + 1
-    val stype =
-      if (name.indexOf("Array", min) >= min) "Array"
-      else if (name.indexOf("Buffer", min) >= min) "Buffer"
-      else if (name.indexOf("View", min) >= min) "View"
-      else throw new AssertionError()
-    (name, stype)
+  private def verifyClass[R <: Unsigned](
+    seq: ReadIndexSeq[R], factory: ReadIndexSeq[R] => ReadIndexSeq[R]
+  ) {
+    val f1 = factory(seq)
+    val f2 = factory(f1)
+    assert(f1.getClass == f2.getClass)
   }
-  private def verifyClass(seq: ReadDataSeq[_, _], expected: String) {
-    assert(seq.getClass.getName == expected)
+
+  private def verifyClass[E <: Meta, R <: Raw](
+    seq: ReadDataSeq[E, R], factory: ReadDataSeq[E, R] => ReadDataSeq[E, R]
+  ) {
+    val f1 = factory(seq)
+    val f2 = factory(f1)
+    assert(f1.getClass == f2.getClass)
   }
 
   private def testMakeIndex[R <: Unsigned](seq: ReadIndexSeq[R], descriptor: Descriptor[SInt, R]) {
@@ -65,27 +67,37 @@ object FactoryTestUtil extends FunSuite {
     readBufferFromData(seq.mkReadIndexBuffer(_))(descriptor)
 
 
-    val (name, stype) = nameType(seq)
-    def nameWith(exp: String) = name.replace(stype, exp)
-    
-    if (seq.components > 1 || seq.stride == 1) {
-      verifyClass(seq.mkDataArray(0), nameWith("Array"))
-      verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
-      verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
-      verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-      verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-      
-      if (seq.components > 1) {
-        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, 5), nameWith("View"))
-      }
-      
-      verifyClass(seq.mkIndexArray(0), nameWith("Array"))
-      verifyClass(seq.mkIndexArray(genArray(0, descriptor)), nameWith("Array"))
-      verifyClass(seq.mkIndexBuffer(0), nameWith("Buffer"))
-      verifyClass(seq.mkIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-      verifyClass(seq.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
+    seq match {
+      case s: ReadDataArray[_, _] =>
+        assert(seq.getClass == seq.mkDataArray(0).getClass)
+        assert(seq.getClass == seq.mkDataArray(genArray(0, descriptor)).getClass)
+        assert(seq.getClass == seq.mkIndexArray(0).getClass)
+        assert(seq.getClass == seq.mkIndexArray(genArray(0, descriptor)).getClass)
+      case s: ReadDataBuffer[_, _] =>
+        assert(seq.getClass == seq.mkDataBuffer(0).getClass)
+        assert(seq.getClass == seq.mkDataBuffer(ByteBuffer.allocateDirect(0)).getClass)
+        assert(seq.getClass == seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)).getClass)
+        assert(seq.getClass == seq.mkIndexBuffer(0).getClass)
+        assert(seq.getClass == seq.mkIndexBuffer(ByteBuffer.allocateDirect(0)).getClass)
+        assert(seq.getClass == seq.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)).getClass)
+      case s: ReadDataView[_, _] =>
+        assert(seq.getClass == seq.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1).getClass)
+        assert(seq.getClass == seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1).getClass)
     }
+
+    verifyClass[SInt, R](seq, _.mkDataArray(0))
+    verifyClass[SInt, R](seq, _.mkDataArray(genArray(0, descriptor)))
+    verifyClass[SInt, R](seq, _.mkDataBuffer(0))
+    verifyClass[SInt, R](seq, _.mkDataBuffer(ByteBuffer.allocateDirect(0)))
+    verifyClass[SInt, R](seq, _.mkReadDataBuffer(ByteBuffer.allocateDirect(0)))
+    verifyClass[SInt, R](seq, _.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1))
+    verifyClass[SInt, R](seq, _.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1))
+    
+    verifyClass[R](seq, _.mkIndexArray(0))
+    verifyClass[R](seq, _.mkIndexArray(genArray(0, descriptor)))
+    verifyClass[R](seq, _.mkIndexBuffer(0))
+    verifyClass[R](seq, _.mkIndexBuffer(ByteBuffer.allocateDirect(0)))
+    verifyClass[R](seq, _.mkReadIndexBuffer(ByteBuffer.allocateDirect(0)))
   }
 
   def testIndexArrayUsingDataSize(factory: (Int, Int) => IndexArray[Unsigned]) {
@@ -173,22 +185,27 @@ object FactoryTestUtil extends FunSuite {
     readBufferFromData(seq.mkReadDataBuffer(_))(descriptor)
     readViewFromData(seq.mkReadDataView(_, _, _))(descriptor)
 
-    
-    val (name, stype) = nameType(seq)
-    def nameWith(exp: String) = name.replace(stype, exp)
 
-    if (seq.components > 1 || seq.stride == 1) {
-      verifyClass(seq.mkDataArray(0), nameWith("Array"))
-      verifyClass(seq.mkDataArray(genArray(0, descriptor)), nameWith("Array"))
-      verifyClass(seq.mkDataBuffer(0), nameWith("Buffer"))
-      verifyClass(seq.mkDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-      verifyClass(seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)), nameWith("Buffer"))
-      
-      if (seq.components > 1) {
-        verifyClass(seq.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1), nameWith("View"))
-        verifyClass(seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1), nameWith("View"))
-      }
+    seq match {
+      case s: ReadDataArray[_, _] =>
+        assert(seq.getClass == seq.mkDataArray(0).getClass)
+        assert(seq.getClass == seq.mkDataArray(genArray(0, descriptor)).getClass)
+      case s: ReadDataBuffer[_, _] =>
+        assert(seq.getClass == seq.mkDataBuffer(0).getClass)
+        assert(seq.getClass == seq.mkDataBuffer(ByteBuffer.allocateDirect(0)).getClass)
+        assert(seq.getClass == seq.mkReadDataBuffer(ByteBuffer.allocateDirect(0)).getClass)
+      case s: ReadDataView[_, _] =>
+        assert(seq.getClass == seq.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1).getClass)
+        assert(seq.getClass == seq.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1).getClass)
     }
+
+    verifyClass[E, R](seq, _.mkDataArray(0))
+    verifyClass[E, R](seq, _.mkDataArray(genArray(0, descriptor)))
+    verifyClass[E, R](seq, _.mkDataBuffer(0))
+    verifyClass[E, R](seq, _.mkDataBuffer(ByteBuffer.allocateDirect(0)))
+    verifyClass[E, R](seq, _.mkReadDataBuffer(ByteBuffer.allocateDirect(0)))
+    verifyClass[E, R](seq, _.mkDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1))
+    verifyClass[E, R](seq, _.mkReadDataView(ByteBuffer.allocateDirect(0), 0, seq.components + 1))
   }
 
   def testArrayFromSize[E <: Meta, R <: Raw](

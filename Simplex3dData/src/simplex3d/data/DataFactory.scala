@@ -32,7 +32,7 @@ import RawType._
 trait DataFactory[E <: Meta, +R <: Raw] {
   def rawType: Int
   def components: Int
-  def elemManifest: ClassManifest[E]
+  def metaManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
   def primitive: DataFactory[E#Component, R]
 

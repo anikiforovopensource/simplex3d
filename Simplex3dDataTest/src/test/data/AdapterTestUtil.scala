@@ -40,7 +40,7 @@ object AdapterTestUtil extends FunSuite {
   {
     // Test attributes.
     assert(adapter.components == attribs.components)
-    assert(adapter.elemManifest == attribs.elemManifest)
+    assert(adapter.metaManifest == attribs.metaManifest)
     assert(adapter.readManifest == attribs.readManifest)
     assert(adapter.boundManifest == attribs.boundManifest)
 
@@ -54,7 +54,7 @@ object AdapterTestUtil extends FunSuite {
       ).asInstanceOf[ReadDataArray[E#Component, R]]
 
       val descriptor = Descriptor[E, R](
-        attribs.elemManifest, attribs.componentManifest, attribs.readManifest,
+        attribs.metaManifest, attribs.componentManifest, attribs.readManifest,
         attribs.components, original.rawType, original.isNormalized
       )
 
@@ -171,7 +171,7 @@ object AdapterTestUtil extends FunSuite {
     }
 
     // Test apply/update.
-    assert(sampleData.elemManifest == attribs.componentManifest)
+    assert(sampleData.metaManifest == attribs.componentManifest)
 
     val j = 1
     val writeBuffer = genRandomSeq(
@@ -186,7 +186,7 @@ object AdapterTestUtil extends FunSuite {
 }
 
 case class AdapterAttrib[E <: Meta, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
-  val elemManifest: ClassManifest[E],
+  val metaManifest: ClassManifest[E],
   val readManifest: ClassManifest[E#Read],
   val boundManifest: Manifest[B],
   val componentManifest: ClassManifest[E#Component]

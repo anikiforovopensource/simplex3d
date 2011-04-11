@@ -39,7 +39,7 @@ private[data] abstract class BaseRDouble[+R <: DefinedDouble](
 extends AbstractData[RDouble, Double, Double, R](shared, prim, ro, off, str)
 with CompositionFactory[RDouble, DefinedDouble]
 {
-  final def elemManifest = MetaManifest.RDouble
+  final def metaManifest = MetaManifest.RDouble
   final def readManifest = Manifest.Double
   final def components: Int = 1
 

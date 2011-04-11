@@ -33,7 +33,7 @@ import RawType._
 private[data] abstract class BaseVec3d[+R <: DefinedDouble](
   prim: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3d, R, DefinedDouble](prim, off, str) {
-  final def elemManifest = Vec3d.Manifest
+  final def metaManifest = Vec3d.Manifest
   final def readManifest = Vec3d.ReadManifest
   final def components: Int = 3
 

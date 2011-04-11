@@ -118,7 +118,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   // Public API.
   def rawType: Int
   def components: Int
-  def elemManifest: ClassManifest[E]
+  def metaManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
   def isNormalized: Boolean
 
@@ -210,7 +210,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   override def toString() :String = {
     def getElemName() = {
-      elemManifest.erasure.getSimpleName
+      metaManifest.erasure.getSimpleName
     }
 
     var view = false

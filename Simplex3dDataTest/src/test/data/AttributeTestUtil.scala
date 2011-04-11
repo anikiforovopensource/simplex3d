@@ -146,9 +146,9 @@ object AttributeTestUtil extends FunSuite {
     data: Buffer,
     descriptor: Descriptor[E, R]
   ) {
-    assert(seq.elemManifest == descriptor.elemManifest)
+    assert(seq.metaManifest == descriptor.metaManifest)
     assert(seq.readManifest == descriptor.readManifest)
-    assert(seq.primitive.elemManifest == descriptor.componentManifest)
+    assert(seq.primitive.metaManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
     assert(seq.isNormalized == descriptor.normalized)
@@ -234,7 +234,7 @@ object AttributeTestUtil extends FunSuite {
       }
     }
 
-    if (seq.elemManifest == MetaManifest.SInt) {
+    if (seq.metaManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexArray[_]])
         if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexArray[_]])
@@ -249,7 +249,7 @@ object AttributeTestUtil extends FunSuite {
     }
     else {
       val primitiveDesc = descriptor.copy(
-        elemManifest = seq.primitive.elemManifest,
+        metaManifest = seq.primitive.metaManifest,
         readManifest = seq.primitive.readManifest,
         components = 1
       )
@@ -280,7 +280,7 @@ object AttributeTestUtil extends FunSuite {
       assert(ds.primitive.isInstanceOf[DataBuffer[_, _]])
     }
 
-    if (seq.elemManifest == MetaManifest.SInt) {
+    if (seq.metaManifest == MetaManifest.SInt) {
       if (isUnsigned(seq.rawType)) {
         assert(seq.isInstanceOf[ReadIndexBuffer[_]])
         if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
@@ -295,7 +295,7 @@ object AttributeTestUtil extends FunSuite {
     }
     else {
       val primitiveDesc = descriptor.copy(
-        elemManifest = seq.primitive.elemManifest,
+        metaManifest = seq.primitive.metaManifest,
         readManifest = seq.primitive.readManifest,
         components = 1
       )
@@ -332,7 +332,7 @@ object AttributeTestUtil extends FunSuite {
 
     // primitive
     val primitiveDesc = descriptor.copy(
-      elemManifest = seq.primitive.elemManifest,
+      metaManifest = seq.primitive.metaManifest,
       readManifest = seq.primitive.readManifest,
       components = 1
     )

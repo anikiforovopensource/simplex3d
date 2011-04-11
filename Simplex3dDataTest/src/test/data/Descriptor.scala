@@ -32,7 +32,7 @@ import simplex3d.math.doublex._
  * @author Aleksey Nikiforov (lex)
  */
 case class Descriptor[E <: Meta, +R <: Raw](
-  elemManifest: ClassManifest[_],
+  metaManifest: ClassManifest[_],
   componentManifest: ClassManifest[_],
   readManifest: ClassManifest[_],
   components: Int,

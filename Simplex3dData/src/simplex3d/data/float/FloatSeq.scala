@@ -39,7 +39,7 @@ private[data] abstract class BaseRFloat[+R <: DefinedFloat](
 extends AbstractData[RFloat, Float, Float, R](shared, prim, ro, off, str)
 with CompositionFactory[RFloat, DefinedFloat]
 {
-  final def elemManifest = MetaManifest.RFloat
+  final def metaManifest = MetaManifest.RFloat
   final def readManifest = Manifest.Float
   final def components: Int = 1
   

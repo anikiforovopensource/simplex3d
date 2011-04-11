@@ -409,9 +409,9 @@ class InterleavedTest extends FunSuite {
     for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {
       // Test types
 
-      assert(a.elemManifest == b.elemManifest)
+      assert(a.metaManifest == b.metaManifest)
       assert(a.readManifest == b.readManifest)
-      assert(a.primitive.elemManifest == b.primitive.elemManifest)
+      assert(a.primitive.metaManifest == b.primitive.metaManifest)
       assert(a.primitive.readManifest == b.primitive.readManifest)
       assert(a.rawType == b.rawType)
 

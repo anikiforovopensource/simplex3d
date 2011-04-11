@@ -31,7 +31,7 @@ import simplex3d.math._
 private[data] abstract class BaseVec4i[+R <: DefinedInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec4i, R, DefinedInt](prim, off, str) {
-  final def elemManifest = Vec4i.Manifest
+  final def metaManifest = Vec4i.Manifest
   final def readManifest = Vec4i.ReadManifest
   final def components: Int = 4
 

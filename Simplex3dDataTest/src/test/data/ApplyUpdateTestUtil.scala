@@ -219,7 +219,7 @@ object ApplyUpdateTestUtil extends FunSuite {
       s(seq.offset + seq.stride*i + j) = u
     }
 
-    val e = seq.elemManifest match {
+    val e = seq.metaManifest match {
       case Vec2i.Manifest =>
         val u = Vec2i(ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y)

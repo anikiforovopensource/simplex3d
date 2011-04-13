@@ -155,22 +155,33 @@ object ImageUtils {
       def run() {
 
         val panel = new JPanel() {
+          var error = false
+
           override def paint(g: Graphics) {
+            if (error) return
 
             val dims = ConstVec2i(getWidth, getHeight)
             val fpSize: ConstVec2 = dims
             val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
 
-            var y = 0; while (y < dims.y) {
-              val h = dims.y - 1 - y
+            try {
+              var y = 0; while (y < dims.y) {
+                val h = dims.y - 1 - y
 
-              var x = 0; while (x < dims.x) {
+                var x = 0; while (x < dims.x) {
+                  
+                  img.setRGB(x, y, rgb(function(fpSize, ConstVec2(x, h))))
 
-                img.setRGB(x, y, rgb(function(fpSize, ConstVec2(x, h))))
-
-                x += 1
+                  x += 1
+                }
+                y += 1
               }
-              y += 1
+            }
+            catch {
+              case t: Throwable =>
+                t.printStackTrace(System.out)
+                error = true
+                frame.dispose()
             }
 
             g.drawImage(img, 0, 0, this)
@@ -205,8 +216,16 @@ object ImageUtils {
 
     val drawFps = true
 
-    val frame = new JFrame(title + " " + dims.x + "x" + dims.y)
-    val animator = FunctionAnimator(function)
+    val animator = FunctionAnimator(function, _.printStackTrace(System.out))
+    var actionTimer: Timer = null
+
+    val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
+      override def dispose() {
+        actionTimer.stop()
+        animator.dispose()
+        super.dispose()
+      }
+    }
 
     EventQueue.invokeLater(new Runnable {
       def run() {
@@ -215,8 +234,11 @@ object ImageUtils {
           val fpsTimer = new SystemTimer()
           private[this] var dims = ConstVec2i(0)
           var img: BufferedImage = _
+          var error = false
 
           override def paint(g: Graphics) {
+            if (error) return
+
             fpsTimer.update()
 
             if (dims.x != getWidth || dims.y != getHeight) {
@@ -224,8 +246,16 @@ object ImageUtils {
               img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
             }
 
-            img.setRGB(0, 0, dims.x, dims.y, animator.nextFrame(dims, fpsTimer.uptime), 0, dims.x)
-            g.drawImage(img, 0, 0, null)
+            try {
+              val buffer = animator.nextFrame(dims, fpsTimer.uptime)
+              img.setRGB(0, 0, dims.x, dims.y, buffer, 0, dims.x)
+              g.drawImage(img, 0, 0, null)
+            }
+            catch {
+              case t: Throwable =>
+                error = true
+                frame.dispose()
+            }
 
             if (drawFps) {
               g.setColor(Color.LIGHT_GRAY)
@@ -247,17 +277,9 @@ object ImageUtils {
         }
 
         panel.setPreferredSize(new Dimension(dims.x, dims.y))
-        val actionTimer = new Timer(1, panel)
+        actionTimer = new Timer(1, panel)
 
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-        frame.addWindowListener(new WindowAdapter() {
-          override def windowClosing(e: WindowEvent) {
-            animator.dispose()
-            actionTimer.stop()
-            super.windowClosing(e)
-          }
-        })
-
         frame.getContentPane.add(panel)
         frame.pack()
         frame.setResizable(true)

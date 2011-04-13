@@ -23,6 +23,7 @@ package simplex3d.console.extension
 import java.util.concurrent.{ConcurrentLinkedQueue => Queue}
 import java.security.AccessControlException
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.TimeUnit
 import scala.concurrent.ops.spawn
 
 
@@ -32,14 +33,25 @@ import scala.concurrent.ops.spawn
 private[extension] object ThreadingTest {
 
   def main(args: Array[String]) {
-    testFactoring()
+    var start = 0L
+
+    start = System.currentTimeMillis
+    testJobMultithreading()
+    val jobTime = System.currentTimeMillis - start
+    
+    start = System.currentTimeMillis
+    testCustomMultithreading()
+    val customTime = System.currentTimeMillis - start
+
+    println("Job time: " + jobTime)
+    println("Custom time: " + customTime)
   }
 
-  def testFactoring() {
+  def testJobMultithreading() {
     var pool = java.util.concurrent.Executors.newCachedThreadPool()
 
-    // Not meant to be fast, just load the CPU and have some meaningful output.
-    class TestJob extends Job(pool) {
+    // Not meant to be fast, just to load the CPU and have some meaningful output.
+    class TestJob extends Job(pool, _.printStackTrace()) {
       override val maxThreads = 4
 
       val factoring = Integer.MAX_VALUE - 3
@@ -58,7 +70,6 @@ private[extension] object ThreadingTest {
             var i = start; while (i < end) {
               val remainder = factoring % i
               if (remainder == 0) println(i)
-
               i += 1
             }
           }
@@ -77,7 +88,6 @@ private[extension] object ThreadingTest {
 
     val test = new TestJob
     test.execAndWait()
-    println("end method")
 
     if (pool != null) pool.shutdown()
   }
@@ -86,9 +96,8 @@ private[extension] object ThreadingTest {
     var pool = java.util.concurrent.Executors.newCachedThreadPool()
 
     val factoring = Integer.MAX_VALUE - 3
-    class TestIndependent(val factoring: Int, val start: Int, val end: Int)
-    extends Runnable
-    {
+
+    class TestIndependent(val factoring: Int, val start: Int, val end: Int) extends Runnable {
       def run() {
         var i = start; while(i < end) {
           val remainder = factoring % i
@@ -101,14 +110,16 @@ private[extension] object ThreadingTest {
     val threads = 4
     val step = factoring/threads
     val runners = for (i <- 0 until threads) yield {
-      new TestIndependent(factoring, i*step + 1, (i + 1)*step)
+      val start = i*step + 1
+      val end = if (i != threads - 1) (i + 1)*step else factoring
+      new TestIndependent(factoring, start, end)
     }
     for (runner <- runners) {
-      if (pool != null) pool.execute(runner)
-      else spawn { runner.run() }
+      pool.execute(runner)
     }
 
-    if (pool != null) pool.shutdown()
+    pool.shutdown()
+    pool.awaitTermination(Long.MaxValue, TimeUnit.HOURS)
   }
 }
 
@@ -117,8 +128,12 @@ private[extension] abstract class Chunk {
   def run() :Unit
 }
 
-private[extension] abstract class Job(private val threadPool: ExecutorService = null) {
-  private var error: Exception = null
+private[extension] abstract class Job(
+  private val threadPool: ExecutorService = null,
+  private val exceptionHandler: Throwable => Unit
+) {
+
+  private var error: Throwable = null
   private var stop = false
   private val queue = new Queue[Chunk]
   private var liveThreads = 1
@@ -139,6 +154,7 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
       if (executing) throw new IllegalStateException("Already executing.")
       executing = true
       stop = false
+      error = null
     }
 
     val unused = if (unusedProcessors > 0) unusedProcessors else 0
@@ -152,9 +168,11 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
             runSingleThreaded()
           }
           catch {
-            case e: Exception => handleError(e)
+            case e: Throwable => handleError(e)
           }
-          exitingThread()
+          finally {
+            exitingThread()
+          }
         }
       }
 
@@ -184,9 +202,11 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
             while (chunk != null)
           }
           catch {
-            case e: Exception => handleError(e)
+            case t: Exception => handleError(t)
           }
-          exitingThread()
+          finally {
+            exitingThread()
+          }
         }}
       }
 
@@ -211,11 +231,11 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
     }
   }
 
-  private[this] final def handleError(e: Exception) {
+  private[this] final def handleError(t: Throwable) {
     synchronized {
       if (error == null) {
-        error = e
-        e.printStackTrace() //or an error handler
+        error = t
+        exceptionHandler(t)
       }
       stop = true
     }
@@ -240,7 +260,6 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
   final def execAndWait() {
     exec()
     waitForCompletion()
-    if (error != null) throw error
   }
 
   final def cancel() {
@@ -257,6 +276,7 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
   final def waitForCompletion() {
     synchronized {
       while (executing) wait()
+      if (error != null) throw error
     }
   }
 
@@ -265,7 +285,12 @@ private[extension] abstract class Job(private val threadPool: ExecutorService = 
   def nextChunk() :Chunk
 
   def dispose() {
-    cancelAndWait()
+    try {
+      cancelAndWait()
+    }
+    catch {
+      case t: Throwable => // do nothing
+    }
     
     if (threadPool != null) try {
       threadPool.shutdown()

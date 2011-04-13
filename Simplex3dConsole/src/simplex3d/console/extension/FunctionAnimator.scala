@@ -41,8 +41,9 @@ private[extension] object FunctionAnimator {
 
   private class Painter (
     function: (inVec2, Double, inVec2) => ReadVec3,
-    es: ExecutorService
-  ) extends Job(es) {
+    es: ExecutorService,
+    exceptionHandler: Throwable => Unit
+  ) extends Job(es, exceptionHandler) {
 
     var buffer: Array[Int] = null
     var dims = ConstVec2i(0)
@@ -110,9 +111,12 @@ private[extension] object FunctionAnimator {
     }
   }
 
-  def apply(function: (inVec2, Double, inVec2) => ReadVec3) = new FunctionAnimator() {
+  def apply(
+    function: (inVec2, Double, inVec2) => ReadVec3,
+    exceptionHandler: Throwable => Unit = _.printStackTrace()
+  ) = new FunctionAnimator() {
     private val start = System.currentTimeMillis
-    private val job = new Painter(function, Executors.newCachedThreadPool())
+    private val job = new Painter(function, Executors.newCachedThreadPool(), exceptionHandler)
 
     private var current = 0
 
@@ -164,16 +168,15 @@ private[extension] object FunctionAnimator {
   def testLoad(function: (inVec2, Double, inVec2) => ReadVec3, iterations: Int) {
     val timer = new SystemTimer()
 
-    def time = (System.currentTimeMillis % 100000000)/1000.0
     val dims = ConstVec2i(640, 480)
     val buffer = new Array[Int](dims.x*dims.y)
 
-    val job = new Painter(function, Executors.newCachedThreadPool())
+    val job = new Painter(function, Executors.newCachedThreadPool(), _.printStackTrace())
 
     var i = 0; while (i < iterations) {
       timer.update()
 
-      job.setData(buffer, dims, time)
+      job.setData(buffer, dims, timer.uptime)
       job.execAndWait()
 
       if (i % 10 == 0) println("fps: " + timer.averageFps)

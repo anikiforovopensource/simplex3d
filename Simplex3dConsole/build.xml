@@ -145,7 +145,7 @@
         <mkdir dir="${dist.dir}" />
         
         <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/** ${example.pkg}/**/*.scala"
             excludes="${example.pkg}/**/*.class ${extension.pkg}/**"/>
             <zipfileset src="${basedir}/lib/find-replace-panel.jar" includes="**"/>
             <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>

@@ -18,28 +18,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package visual.math.draw
-
-import simplex3d.math.double._
+package visual.math.lines
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-abstract class Function {
+class FpsTimer {
+  private val start = System.currentTimeMillis
+  private var last = System.currentTimeMillis
 
-  /**
-   * Width and height of the rendering surface
-   */
-  final val dimensions: ReadVec2 = Vec2(0)
+  private val fpsSampleRateMillis = 500
+  private var timestamp = last
+  private var count = 0
 
-  /**
-   * @param pixel
-   *          pixel coordinates
-   * @param time
-   *          time, in seconds
-   * @return
-   *          rgb color with floating point components from 0 to 1
-   */
-  def apply(pixel: ReadVec2, time: Double) :ReadVec3
+  private var _uptime: Float = 0
+  private var _tpf: Float = 0
+  private var _fps: Float = 0
+
+  def uptime = _uptime
+  def tpf = _tpf
+  def fps = _fps
+
+  def update() {
+    val cur = System.currentTimeMillis
+    _tpf = (cur - last)/1000f
+    last = cur
+    _uptime = (cur - start)/1000f
+
+    count += 1
+    if (cur - timestamp >= fpsSampleRateMillis) {
+      _fps = count*1000f / (cur - timestamp)
+
+      count = 0
+      timestamp = cur
+    }
+  }
 }

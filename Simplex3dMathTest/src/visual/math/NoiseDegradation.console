@@ -18,29 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package visual.math
-
-import visual.math.draw._
-
-import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
-
-
-/**
+/** Run with Simplex3dConsole.
+ * 
  * @author Aleksey Nikiforov (lex)
  */
-object Noise3dTest {
+val scale = 1.0/50
+val noiseSpeed = 1.0/3
+val scrollSpeed = 10
 
-  def main(args: Array[String]) {
-    val scale = 1.0/50
-    val noiseSpeed = 1.0/3
-    val scrollSpeed = 10
+val f = 3.0
+def largeOffset(time: Double) :Double = {
+  val local = time.toInt % 18
+  if (local < 3) 5e13
+  else if (local < 6) 5e13*f
+  else if (local < 9) 5e13*f*f
+  else if (local < 12) 5e13*f*f*f
+  else if (local < 15) 5e13*f*f*f*f
+  else 5e13*f*f*f*f*f
+}
 
-    Launcher.launch(new Function {
-    final def apply(pixel: ReadVec2, t: Double) = {
-      val p = pixel + t*scrollSpeed
-      Vec3((noise1(Vec3(p*scale, t*noiseSpeed)) + 1)/2)
-      //(noise3(Vec3(p*scale, t*noiseSpeed)) + 1)/2
-    }})
-  }
+// Shows gradual noise degradation at large offsets.
+animateFunction("Noise Degradation") { (dims, time, pixel) =>
+  val p = pixel + time*scrollSpeed
+  Vec3((noise1(Vec3(p*scale + largeOffset(time), time*noiseSpeed)) + 1)/2)
 }

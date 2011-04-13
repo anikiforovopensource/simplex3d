@@ -1,4 +1,4 @@
-package simplex3d.console.example.simplex3d.procedural
+package example.simplex3d.procedural.texture
 
 import simplex3d.math._
 import simplex3d.math.double._
@@ -8,21 +8,23 @@ import simplex3d.data.double._
 import simplex3d.console.extension.ImageUtils._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 object MultifractalNoise extends Application {
-
-  val size = ConstVec2i(800, 600)
 
   val octaves = 5
   val lacunarity = 2
-  val halfScale = 1.5
+  val expectedMagnitude = 1.5
+
+  val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
 
   def noiseSum(p: inVec2) = {
     val varying = lacunarity + noise1(p)*0.5
 
     def octave(i: Int, p: inVec2) = {
-      val s1 = pow(lacunarity, i)
-      val s2 = pow(varying, -i)
-      noise1(p*s1)*s2
+      val amplitudeFactor = pow(varying, -i)
+      noise1(p*frequencyFactors(i))*amplitudeFactor
     }
 
     var sum = 0.0; var i = 0; while (i < octaves) {
@@ -32,9 +34,9 @@ object MultifractalNoise extends Application {
     sum
   }
 
-  genImage("Multifractal Noise", size){ pix =>
-    val p = pix/100
-    Vec3((noiseSum(p) + halfScale)/(2*halfScale))
+  drawFunction("Multifractal Noise") { (dims, pixel) =>
+    val p = pixel/100
+    Vec3((noiseSum(p) + expectedMagnitude)/(2*expectedMagnitude))
   }
 
 }

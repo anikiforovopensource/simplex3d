@@ -188,36 +188,46 @@ public class ConsoleFrame extends javax.swing.JFrame {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {}
 
-        
-        final Splash splash = Splash.showSplash();
+        try {
+            final Splash splash = Splash.showSplash();
 
-        splash.setStatusText("rebuilding jars");
-        DepsManager.resolveDeps();
+            splash.setStatusText("rebuilding jars");
+            DepsManager.resolveDeps();
 
-        splash.setStatusText("preloading the interpreter");
-        final SimplexInterpreter interpreter = new SimplexInterpreter();
+            splash.setStatusText("preloading the interpreter");
+            final SimplexInterpreter interpreter = new SimplexInterpreter();
 
-        splash.setStatusText("launching the application");
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ConsoleFrame main = new ConsoleFrame();
-                    main.getConsolePanel().setInterpreter(interpreter);
-                    splash.dispose();
-                    positionMiddle(main);
-                    main.setVisible(true);
-                    main.getConsolePanel().takeFocus();
-                }
-                catch (Throwable t) {
-                    String errorStr = t.toString();
-                    for (StackTraceElement st : t.getStackTrace()) {
-                        errorStr += "\n" + st.toString();
+            splash.setStatusText("launching the application");
+
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        ConsoleFrame main = new ConsoleFrame();
+                        main.getConsolePanel().setInterpreter(interpreter);
+                        splash.dispose();
+                        positionMiddle(main);
+                        main.setVisible(true);
+                        main.getConsolePanel().takeFocus();
                     }
-                    JOptionPane.showMessageDialog(null, errorStr, "Error!", JOptionPane.ERROR_MESSAGE);
-                    System.exit(-1);
+                    catch (Throwable t) {
+                        String errorStr = t.toString();
+                        for (StackTraceElement st : t.getStackTrace()) {
+                            errorStr += "\n" + st.toString();
+                        }
+                        JOptionPane.showMessageDialog(null, errorStr, "Error!", JOptionPane.ERROR_MESSAGE);
+                        System.exit(-1);
+                    }
                 }
+            });
+        }
+        catch (Throwable t) {
+            String errorStr = t.toString();
+            for (StackTraceElement st : t.getStackTrace()) {
+                errorStr += "\n" + st.toString();
             }
-        });
+            JOptionPane.showMessageDialog(null, errorStr, "Error!", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        }
     }
 
     static void positionMiddle(JFrame frame) {

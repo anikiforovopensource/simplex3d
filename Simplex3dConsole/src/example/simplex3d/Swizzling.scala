@@ -1,7 +1,11 @@
-package simplex3d.console.example.simplex3d
+package example.simplex3d
 
 import simplex3d.math.double._
 
+
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 object Swizzling extends Application {
 
   val u = Vec3(1, 2, 3)

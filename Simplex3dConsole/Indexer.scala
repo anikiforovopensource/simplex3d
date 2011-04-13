@@ -55,7 +55,7 @@ object Indexer {
   }
 
   private def makeExampleIndex() :List[String] = {
-    val baseDir = "src/simplex3d/console/example/"
+    val baseDir = "src/example/"
     val res = ListBuffer[String]()
 
     def makeExampleIndexRec(dir: File, res: ListBuffer[String]) {

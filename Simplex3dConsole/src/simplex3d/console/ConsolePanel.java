@@ -91,7 +91,7 @@ public class ConsolePanel extends javax.swing.JPanel {
 
         
         // Set the default example.
-        textComponent.setText(Examples.getExample("scala/Greeting.scala"));
+        textComponent.setText(Examples.getExample("scala/01.Greeting.scala"));
         textComponent.getCaret().setDot(0);
 
         // Add the find/replace panel.

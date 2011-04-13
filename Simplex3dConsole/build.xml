@@ -107,7 +107,7 @@
     <property name="release.src" value="${release.dir}/Simplex3dConsole_src.zip"/>
     <property name="release.bin" value="${release.dir}/Simplex3dConsole_bin.zip"/>
     <property name="root.pkg" value="simplex3d/console"/>
-    <property name="example.pkg" value="${root.pkg}/example"/>
+    <property name="example.pkg" value="example"/>
     <property name="extension.pkg" value="${root.pkg}/extension"/>
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>

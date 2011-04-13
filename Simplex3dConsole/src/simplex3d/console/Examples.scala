@@ -21,7 +21,6 @@
 package simplex3d.console
 
 import java.awt.event.ActionEvent
-import java.io.FileInputStream
 import javax.swing.AbstractAction
 import javax.swing.JMenu
 import javax.swing.JMenuItem
@@ -32,6 +31,9 @@ import javax.swing.JTextArea
  * @author Aleksey Nikiforov (lex)
  */
 object Examples {
+
+  private[this] val ExtractName = """[\d]*[\.]?(.*)""".r
+
 
   def populateMenus(txt: JTextArea, scalaMenu: JMenu, simplex3dMenu: JMenu) {
     val is = getClass.getClassLoader.getResourceAsStream("simplex3d/console/examples.index")
@@ -60,25 +62,26 @@ object Examples {
       }
     }
 
-    def mkName(file: String) = {
-      val idx = file.lastIndexOf(".")
-      val name = if (idx > 0) file.take(idx) else file
-      name.take(1).toUpperCase + name.drop(1)
-    }
-
     mkMenus(root.findChild("scala").get, scalaMenu)
     mkMenus(root.findChild("simplex3d").get, simplex3dMenu)
   }
 
+  private[this] def mkName(file: String) = {
+    val idx = file.lastIndexOf(".")
+    val noExtension = if (idx > 0) file.take(idx) else file
+    val ExtractName(name) = noExtension
+    name.take(1).toUpperCase + name.drop(1)
+  }
+
   def getExample(path: String) :String = {
-    val fullPath = "simplex3d/console/example/" + path
+    val fullPath = "example/" + path
     var is = getClass.getClassLoader.getResourceAsStream(fullPath)
-    val name = path.take(path.lastIndexOf(".")).drop(path.lastIndexOf("/") + 1)
+    val fileName = path.drop(path.lastIndexOf("/") + 1)
 
     if (is != null) {
       val code = scala.io.Source.fromInputStream(is).mkString
       is.close()
-      extractInnerCode(name, code)
+      extractInnerCode(mkName(fileName), code)
     }
     else {
       null
@@ -95,7 +98,7 @@ object Examples {
         val cbIdx = code.indexOf("{", next1)
         if (cbIdx > 0 && code.substring(next1, cbIdx).trim.isEmpty) {
           val endIdx = code.lastIndexOf("}")
-          if (endIdx > 0) return "//" + name + "\n\n" + cleanup(code.substring(cbIdx + 1, endIdx))
+          if (endIdx > 0) return "// " + name + "\n\n" + cleanup(code.substring(cbIdx + 1, endIdx))
         }
       }
     }

@@ -1,4 +1,4 @@
-package simplex3d.console.example.simplex3d.tutorials
+package example.simplex3d.tutorials
 
 import simplex3d.math._
 import simplex3d.math.double._

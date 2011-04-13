@@ -20,14 +20,21 @@
 
 package simplex3d.console.extension
 
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.EventQueue
+import java.awt.Font
 import java.awt.Graphics
 import java.awt.Point
 import java.awt.Toolkit
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.awt.image.BufferedImage
 import javax.swing.JFrame
 import javax.swing.JPanel
+import javax.swing.Timer
 import javax.swing.WindowConstants
 import simplex3d.math._
 import simplex3d.math.double._
@@ -41,11 +48,11 @@ import conversion.Double._
  */
 object ImageUtils {
 
-  private[this] def rgb(c: inVec3) :Int = {
+  private[extension] def rgb(c: inVec3) :Int = {
     ((toUByte(c.r) & 0xFF) << 16) | ((toUByte(c.g) & 0xFF) << 8) | ((toUByte(c.b) & 0xFF))
   }
 
-  private[this] def rgb(j: Int, d: inContiguous[SInt, UByte]) :Int = {
+  private[extension] def rgb(j: Int, d: inContiguous[SInt, UByte]) :Int = {
     (d(j) << 16) | (d(j + 1) << 8) | (d(j + 2))
   }
 
@@ -85,7 +92,14 @@ object ImageUtils {
     img
   }
 
-  private[this] def showImage(title: String, img: BufferedImage) {
+  private[this] def position(frame: JFrame) {
+    val dimensions = Toolkit.getDefaultToolkit.getScreenSize
+    val px = dimensions.width/2 - frame.getWidth/2
+    val py = dimensions.height/2 - frame.getHeight/2
+    frame.setLocation(new Point(px, py))
+  }
+
+  private[this] def showBufferedImage(title: String, img: BufferedImage) {
     EventQueue.invokeLater(new Runnable {
       def run() {
         val panel = new JPanel() {
@@ -96,17 +110,13 @@ object ImageUtils {
         panel.setPreferredSize(new Dimension(img.getWidth, img.getHeight))
 
         val frame = new JFrame(title + " " + img.getWidth + "x" + img.getHeight)
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
         frame.getContentPane.add(panel)
         frame.pack()
         frame.setResizable(false)
 
-        val dim = Toolkit.getDefaultToolkit().getScreenSize();
-        val px = dim.width/2 - frame.getWidth()/2;
-        val py = dim.height/2 - frame.getHeight()/2;
-        frame.setLocation(new Point(px, py));
-
-        frame.setVisible(true);
+        position(frame)
+        frame.setVisible(true)
       }
     })
   }
@@ -124,25 +134,138 @@ object ImageUtils {
       }
     }
 
-    showImage(title, img)
+    showBufferedImage(title, img)
   }
 
-  def genImage(dims: inVec2i)(function: inVec2 => ReadVec3) {
-    genImage("Image", dims)(function)
+
+  def drawFunction(function: (inVec2, inVec2) => ReadVec3) {
+    drawFunction("Generated Image", ConstVec2i(640, 480))(function)
   }
-  def genImage(title: String, dims: inVec2i)(function: inVec2 => ReadVec3) {
-    val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+  def drawFunction(title: String)(function: (inVec2, inVec2) => ReadVec3) {
+    drawFunction(title, ConstVec2i(640, 480))(function)
+  }
+  def drawFunction
+    (title: String, dims: inVec2i)
+    (function: (inVec2, inVec2) => ReadVec3)
+  {
 
-    var y = 0; while (y < dims.y) {
-      var x = 0; while (x < dims.x) {
+    val frame = new JFrame(title + " " + dims.x + "x" + dims.y)
 
-        img.setRGB(x, y, rgb(function(ConstVec2(x, y))))
+    EventQueue.invokeLater(new Runnable {
+      def run() {
 
-        x += 1
+        val panel = new JPanel() {
+          override def paint(g: Graphics) {
+
+            val dims = ConstVec2i(getWidth, getHeight)
+            val fpSize: ConstVec2 = dims
+            val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+
+            var y = 0; while (y < dims.y) {
+              val h = dims.y - 1 - y
+
+              var x = 0; while (x < dims.x) {
+
+                img.setRGB(x, y, rgb(function(fpSize, ConstVec2(x, h))))
+
+                x += 1
+              }
+              y += 1
+            }
+
+            g.drawImage(img, 0, 0, this)
+            frame.setTitle(title + " " + dims.x + "x" + dims.y)
+          }
+        }
+
+        panel.setPreferredSize(new Dimension(dims.x, dims.y))
+
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+        frame.getContentPane.add(panel)
+        frame.pack()
+        frame.setResizable(true)
+
+        position(frame)
+        frame.setVisible(true)
       }
-      y += 1
-    }
+    })
+  }
 
-    showImage(title, img)
+
+  def animateFunction(function: (inVec2, Double, inVec2) => ReadVec3) {
+    animateFunction("Animation", ConstVec2i(640, 480))(function)
+  }
+  def animateFunction(title: String)(function: (inVec2, Double, inVec2) => ReadVec3) {
+    animateFunction(title, ConstVec2i(640, 480))(function)
+  }
+  def animateFunction
+    (title: String, dims: inVec2i)
+    (function: (inVec2, Double, inVec2) => ReadVec3)
+  {
+
+    val drawFps = true
+
+    val frame = new JFrame(title + " " + dims.x + "x" + dims.y)
+    val animator = FunctionAnimator(function)
+
+    EventQueue.invokeLater(new Runnable {
+      def run() {
+        val panel = new JPanel() with ActionListener {
+
+          val fpsTimer = new SystemTimer()
+          private[this] var dims = ConstVec2i(0)
+          var img: BufferedImage = _
+
+          override def paint(g: Graphics) {
+            fpsTimer.update()
+
+            if (dims.x != getWidth || dims.y != getHeight) {
+              dims = ConstVec2i(getWidth, getHeight)
+              img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+            }
+
+            img.setRGB(0, 0, dims.x, dims.y, animator.nextFrame(dims, fpsTimer.uptime), 0, dims.x)
+            g.drawImage(img, 0, 0, null)
+
+            if (drawFps) {
+              g.setColor(Color.LIGHT_GRAY)
+              g.fillRect(9, 6, 32, 16)
+              g.setColor(Color.BLACK)
+
+              val bold = new Font("Monospaced", Font.BOLD, 16)
+              g.setFont(bold)
+              g.setColor(Color.BLACK)
+              g.drawString(fpsTimer.averageFps.toInt.toString, 10, 20)
+            }
+
+            frame.setTitle(title + " " + dims.x + "x" + dims.y)
+          }
+
+          def actionPerformed(e: ActionEvent) {
+            repaint()
+          }
+        }
+
+        panel.setPreferredSize(new Dimension(dims.x, dims.y))
+        val actionTimer = new Timer(1, panel)
+
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+        frame.addWindowListener(new WindowAdapter() {
+          override def windowClosing(e: WindowEvent) {
+            animator.dispose()
+            actionTimer.stop()
+            super.windowClosing(e)
+          }
+        })
+
+        frame.getContentPane.add(panel)
+        frame.pack()
+        frame.setResizable(true)
+
+        position(frame)
+        frame.setVisible(true)
+        actionTimer.start()
+      }
+    })
   }
 }

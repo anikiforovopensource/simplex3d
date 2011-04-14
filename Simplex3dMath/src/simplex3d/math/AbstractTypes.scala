@@ -21,15 +21,6 @@
 package simplex3d.math
 
 
-/** Instead of AnyVec1[P].
- *
- * @author Aleksey Nikiforov (lex)
- */
-abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with ReadPropertyRef {
-  type Read <: PrimitiveRef[P]
-}
-
-
 /** <code>AnyQuat4</code> is a superclass of all the quaternions.
  * <p>
  *   There are double and float quaternions.

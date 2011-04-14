@@ -34,7 +34,6 @@ sealed abstract class ReadDoubleRef(protected var x: Double) extends PrimitiveRe
   type Const = Double
   def toConst() :Double = x
 
-  def components = 1
   def apply(i: Int) :Double = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
@@ -230,4 +229,5 @@ final class DoubleRef(cx: Double) extends ReadDoubleRef(cx) with PropertyRef {
 object DoubleRef {
   def unapply(r: ReadDoubleRef) = Some(r.toConst)
   implicit def toMutable(r: ReadDoubleRef) = new DoubleRef(r.toConst)
+  implicit def toMutable(x: Double) = new DoubleRef(x)
 }

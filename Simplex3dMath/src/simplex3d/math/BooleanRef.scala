@@ -32,7 +32,6 @@ sealed abstract class ReadBooleanRef(protected var x: Boolean) extends Primitive
   type Const = Boolean
   def toConst() :Boolean = x
 
-  def components = 1
   def apply(i: Int) :Boolean = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
@@ -76,4 +75,5 @@ final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx) with PropertyRef 
 object BooleanRef {
   def unapply(r: ReadBooleanRef) = Some(r.toConst)
   implicit def toMutable(r: ReadBooleanRef) = new BooleanRef(r.toConst)
+  implicit def toMutable(x: Boolean) = new BooleanRef(x)
 }

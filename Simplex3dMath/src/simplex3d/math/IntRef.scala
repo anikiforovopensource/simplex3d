@@ -37,7 +37,6 @@ sealed abstract class ReadIntRef(protected var x: Int) extends PrimitiveRef[Int]
   type Const = Int
   def toConst() :Int = x
 
-  def components = 1
   def apply(i: Int) :Int = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
@@ -243,4 +242,5 @@ final class IntRef(cx: Int) extends ReadIntRef(cx) with PropertyRef {
 object IntRef {
   def unapply(r: ReadIntRef) = Some(r.toConst)
   implicit def toMutable(r: ReadIntRef) = new IntRef(r.toConst)
+  implicit def toMutable(x: Int) = new IntRef(x)
 }

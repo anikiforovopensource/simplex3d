@@ -25,7 +25,7 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class VecImpl234[P] private[math] () extends AnyVec[P] {
+private[math] abstract class VecImpl234[P] {
 
   private[math] type R2 <: AnyVec2[P]
   private[math] type R3 <: AnyVec3[P]

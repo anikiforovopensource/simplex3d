@@ -34,7 +34,6 @@ sealed abstract class ReadFloatRef(protected var x: Float) extends PrimitiveRef[
   type Const = Float
   def toConst() :Float = x
 
-  def components = 1
   def apply(i: Int) :Float = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
@@ -164,4 +163,5 @@ final class FloatRef(cx: Float) extends ReadFloatRef(cx) with PropertyRef {
 object FloatRef {
   def unapply(r: ReadFloatRef) = Some(r.toConst)
   implicit def toMutable(r: ReadFloatRef) = new FloatRef(r.toConst)
+  implicit def toMutable(x: Float) = new FloatRef(x)
 }

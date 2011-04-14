@@ -31,7 +31,7 @@ import java.nio._
 @serializable @SerialVersionUID(8104346712419693669L)
 class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] {
 
-  InterleavedData.verify(dviews)
+  InterleavedData.verifyFormat(dviews)
   @transient private[this] var views = dviews.toArray
   
   def apply(i: Int) :RawView = views(i)
@@ -97,7 +97,7 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
       i += 1
     }
 
-    InterleavedData.verify(views)
+    InterleavedData.verifyFormat(views)
     this.views = views
   }
 }
@@ -106,13 +106,13 @@ object InterleavedData {
   def apply(seqs: RawView*) = new InterleavedData(seqs)
   def apply(seqs: IndexedSeq[RawView]) = new InterleavedData(seqs)
 
-  final def verify(views: Seq[RawView]) {
+  final def verifyFormat(views: Seq[RawView]) {
     val first = views.head
     val interval = new Array[Boolean](first.stride*first.bytesPerComponent)
 
     def checkOverlap(byteOffset: Int, bytesTaken: Int) {
       var i = byteOffset; while (i < byteOffset + bytesTaken) {
-        if (interval(i)) throw new IllegalArgumentException("Views must not have overlapping data.")
+        if (interval(i)) throw new DataFormatException("Views must not have overlapping data.")
         interval(i) = true
 
         i += 1
@@ -121,13 +121,13 @@ object InterleavedData {
 
     for (seq <- views) {
       if (first.byteStride != seq.byteStride)
-        throw new IllegalArgumentException("Views must have the same byte stride.")
+        throw new DataFormatException("Views must have the same byte stride.")
 
       if(first.size != seq.size)
-        throw new IllegalArgumentException("Views must have the same size.")
+        throw new DataFormatException("Views must have the same size.")
 
       if(!first.sharesStoreObject(seq))
-        throw new IllegalArgumentException("Views must share the same ByteByffer object.")
+        throw new DataFormatException("Views must share the same ByteByffer object.")
 
       checkOverlap(seq.byteOffset, seq.components*seq.bytesPerComponent)
     }

@@ -44,8 +44,8 @@ class InterleavedTest extends FunSuite {
     val buff = ByteBuffer.allocateDirect(64)
 
     // Exception: non-matching stride.
-    intercept[IllegalArgumentException] {
-      InterleavedData.verify(
+    intercept[DataFormatException] {
+      InterleavedData.verifyFormat(
         Array(
           DataView[RFloat, RFloat](buff, 0, 2),
           DataView[RFloat, RFloat](buff, 1, 3)
@@ -55,8 +55,8 @@ class InterleavedTest extends FunSuite {
 
     // Exception: non-matching size
     val wrongSizeBuff = ByteBuffer.allocateDirect(68)
-    intercept[IllegalArgumentException] {
-      InterleavedData.verify(
+    intercept[DataFormatException] {
+      InterleavedData.verifyFormat(
         Array(
           DataView[RFloat, RFloat](wrongSizeBuff, 0, 2),
           DataView[RFloat, SByte](wrongSizeBuff, 4, 8)
@@ -65,8 +65,8 @@ class InterleavedTest extends FunSuite {
     }
 
     // Exception: different storeObject.
-    intercept[IllegalArgumentException] {
-      InterleavedData.verify(
+    intercept[DataFormatException] {
+      InterleavedData.verifyFormat(
         Array(
           DataView[RFloat, RFloat](buff, 0, 2),
           DataView[RFloat, RFloat](ByteBuffer.allocateDirect(64), 1, 2)
@@ -75,8 +75,8 @@ class InterleavedTest extends FunSuite {
     }
 
     // Exception: data overlap.
-    intercept[IllegalArgumentException] {
-      InterleavedData.verify(
+    intercept[DataFormatException] {
+      InterleavedData.verifyFormat(
         Array(
           DataView[RFloat, RFloat](buff, 0, 2),
           DataView[RFloat, RFloat](buff, 0, 2)
@@ -85,7 +85,7 @@ class InterleavedTest extends FunSuite {
     }
 
     // Working
-    InterleavedData.verify(
+    InterleavedData.verifyFormat(
       Array(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](buff, 1, 2)
@@ -97,7 +97,7 @@ class InterleavedTest extends FunSuite {
     val buff = ByteBuffer.allocateDirect(64)
 
     // Exception: non-matching stride.
-    intercept[IllegalArgumentException] {
+    intercept[DataFormatException] {
       InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](buff, 1, 3)
@@ -106,7 +106,7 @@ class InterleavedTest extends FunSuite {
 
     // Exception: non-matching size
     val wrongSizeBuff = ByteBuffer.allocateDirect(68)
-    intercept[IllegalArgumentException] {
+    intercept[DataFormatException] {
       InterleavedData(
         DataView[RFloat, RFloat](wrongSizeBuff, 0, 2),
         DataView[RFloat, SByte](wrongSizeBuff, 4, 8)
@@ -114,7 +114,7 @@ class InterleavedTest extends FunSuite {
     }
 
     // Exception: different storeObject.
-    intercept[IllegalArgumentException] {
+    intercept[DataFormatException] {
       InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](ByteBuffer.allocateDirect(64), 1, 2)
@@ -122,7 +122,7 @@ class InterleavedTest extends FunSuite {
     }
 
     // Exception: data overlap.
-    intercept[IllegalArgumentException] {
+    intercept[DataFormatException] {
       InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](buff, 0, 2)
@@ -403,7 +403,7 @@ class InterleavedTest extends FunSuite {
 
   private def testInterleaved(src: Seq[Data[_ <: Meta]], interleaved: Seq[RawView]) {
     // Test interleaved constraints.
-    InterleavedData.verify(interleaved)
+    InterleavedData.verifyFormat(interleaved)
 
     
     for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {

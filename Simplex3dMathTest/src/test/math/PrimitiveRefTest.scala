@@ -52,6 +52,34 @@ class PrimitiveRefTest extends FunSuite {
     
     r ^= false; assert(r.toConst == true)
     r ^= true; assert(r.toConst == false)
+
+    assert(new BooleanRef(false) == new BooleanRef(false))
+    assert(new BooleanRef(true) == new BooleanRef(true))
+    assert(new BooleanRef(false) != new BooleanRef(true))
+    assert(new BooleanRef(true) != new BooleanRef(false))
+
+    new BooleanRef(true) match {
+      case BooleanRef(true) => // do nothing
+      case BooleanRef(false) => throw new AssertionError
+    }
+
+    new BooleanRef(false) match {
+      case BooleanRef(true) => throw new AssertionError
+      case BooleanRef(false) => // do nothing
+    }
+
+    {
+      val conv1: BooleanRef = new BooleanRef(true).asInstanceOf[ReadBooleanRef]
+      assert(conv1.toConst == true)
+      val conv2: BooleanRef = true
+      assert(conv2.toConst == true)
+    }
+    {
+      val conv1: BooleanRef = new BooleanRef(false).asInstanceOf[ReadBooleanRef]
+      assert(conv1.toConst == false)
+      val conv2: BooleanRef = false
+      assert(conv2.toConst == false)
+    }
   }
   
   test("Mutable IntRef") {
@@ -69,6 +97,23 @@ class PrimitiveRefTest extends FunSuite {
     r &= 6; assert(r.toConst == 4); r := 4
     r |= 2; assert(r.toConst == 6); r := 4
     r ^= 6; assert(r.toConst == 2)
+
+    assert(new IntRef(1) == new IntRef(1))
+    assert(new IntRef(5) == new IntRef(5))
+    assert(new IntRef(5) != new IntRef(1))
+    assert(new IntRef(1) != new BooleanRef(true))
+    assert(new IntRef(0) != new BooleanRef(false))
+
+    new IntRef(2) match {
+      case IntRef(1) => throw new AssertionError
+      case IntRef(2) => // do nothing
+      case IntRef(3) => throw new AssertionError
+    }
+
+    val conv1: IntRef = new IntRef(7).asInstanceOf[ReadIntRef]
+    assert(conv1.toConst == 7)
+    val conv2: IntRef = 7
+    assert(conv2.toConst == 7)
   }
   
   test("Mutable FloatRef") {
@@ -78,6 +123,25 @@ class PrimitiveRefTest extends FunSuite {
     r /= 2; assert(r.toConst == 2); r := 4
     r += 3; assert(r.toConst == 7); r := 4
     r -= 3; assert(r.toConst == 1); r := 4
+
+    assert(new FloatRef(1) == new FloatRef(1))
+    assert(new FloatRef(5) == new FloatRef(5))
+    assert(new FloatRef(5) != new FloatRef(1))
+    assert(new FloatRef(1) != new BooleanRef(true))
+    assert(new FloatRef(0) != new BooleanRef(false))
+    assert(new FloatRef(5) == new IntRef(5))
+    assert(new FloatRef(5) != new IntRef(1))
+
+    new FloatRef(2) match {
+      case FloatRef(1) => throw new AssertionError
+      case FloatRef(2) => // do nothing
+      case FloatRef(3) => throw new AssertionError
+    }
+
+    val conv1: FloatRef = new FloatRef(7).asInstanceOf[ReadFloatRef]
+    assert(conv1.toConst == 7)
+    val conv2: FloatRef = 7
+    assert(conv2.toConst == 7)
   }
   
   test("Mutable DoubleRef") {
@@ -87,5 +151,26 @@ class PrimitiveRefTest extends FunSuite {
     r /= 2; assert(r.toConst == 2); r := 4
     r += 3; assert(r.toConst == 7); r := 4
     r -= 3; assert(r.toConst == 1); r := 4
+
+    assert(new DoubleRef(1) == new DoubleRef(1))
+    assert(new DoubleRef(5) == new DoubleRef(5))
+    assert(new DoubleRef(5) != new DoubleRef(1))
+    assert(new DoubleRef(1) != new BooleanRef(true))
+    assert(new DoubleRef(0) != new BooleanRef(false))
+    assert(new DoubleRef(5) == new IntRef(5))
+    assert(new DoubleRef(5) != new IntRef(1))
+    assert(new DoubleRef(5) == new FloatRef(5))
+    assert(new DoubleRef(5) != new FloatRef(1))
+
+    new DoubleRef(2) match {
+      case DoubleRef(1) => throw new AssertionError
+      case DoubleRef(2) => // do nothing
+      case DoubleRef(3) => throw new AssertionError
+    }
+
+    val conv1: DoubleRef = new DoubleRef(7).asInstanceOf[ReadDoubleRef]
+    assert(conv1.toConst == 7)
+    val conv2: DoubleRef = 7
+    assert(conv2.toConst == 7)
   }
 }

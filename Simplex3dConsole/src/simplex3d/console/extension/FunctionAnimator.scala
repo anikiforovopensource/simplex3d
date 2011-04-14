@@ -40,7 +40,7 @@ trait FunctionAnimator {
 private[extension] object FunctionAnimator {
 
   private class Painter (
-    function: (inVec2, Double, inVec2) => ReadVec3,
+    function: (inVec2i, Double, inVec2) => ReadVec3,
     es: ExecutorService,
     exceptionHandler: Throwable => Unit
   ) extends Job(es, exceptionHandler) {
@@ -54,27 +54,28 @@ private[extension] object FunctionAnimator {
     
     def setData(
       buffer: Array[Int],
-      dimensions: inVec2i,
+      dims: inVec2i,
       time: Double
     ) {
       if (isExecuting) throw new IllegalStateException(
         "Cannot change while executing.")
 
       this.buffer = buffer
-      this.dims = dimensions
+      this.dims = dims
       yoffset = 0
       this.time = time
     }
 
     def runSingleThreaded() {
-      val h1 = dims.y - 1
+      val pixel = Vec2(0)
 
       var y = 0; while(y < dims.y) {
-        val h = h1 - y
+        val h = dims.y - 1 - y
 
         var x = 0; while(x < dims.x) {
 
-          buffer(x + y*dims.x) = ImageUtils.rgb(function(dims, time.asInstanceOf[Double], ConstVec2(x, h)))
+          pixel.x = x; pixel.y = h
+          buffer(x + y*dims.x) = ImageUtils.rgb(function(dims, time.asInstanceOf[Double], pixel))
 
           x += 1
         }
@@ -93,16 +94,20 @@ private[extension] object FunctionAnimator {
 
       new Chunk() {
         final def run() {
-          val h1 = dims.y - 1
+          val pixel = Vec2(0)
+
           var y = ystart; while (y < yend) {
-            loop(y, h1 - y)
+            loop(y, dims.y - 1 - y, pixel)
             y += 1
           }
         }
 
-        final def loop(y :Int, h: Int) {
+        final def loop(y :Int, h: Int, pixel: outVec2) {
           var x = 0; while(x < dims.x) {
-            buffer(x + y*dims.x) = ImageUtils.rgb(function(dims, time.asInstanceOf[Double], ConstVec2(x, h)))
+
+            pixel.x = x; pixel.y = h
+            buffer(x + y*dims.x) = ImageUtils.rgb(function(dims, time.asInstanceOf[Double], pixel))
+
             x += 1
           }
         }
@@ -112,7 +117,7 @@ private[extension] object FunctionAnimator {
   }
 
   def apply(
-    function: (inVec2, Double, inVec2) => ReadVec3,
+    function: (inVec2i, Double, inVec2) => ReadVec3,
     exceptionHandler: Throwable => Unit = _.printStackTrace()
   ) = new FunctionAnimator() {
     private val start = System.currentTimeMillis
@@ -165,7 +170,7 @@ private[extension] object FunctionAnimator {
     }
   }
 
-  def testLoad(function: (inVec2, Double, inVec2) => ReadVec3, iterations: Int) {
+  def testLoad(function: (inVec2i, Double, inVec2) => ReadVec3, iterations: Int) {
     val timer = new SystemTimer()
 
     val dims = ConstVec2i(640, 480)

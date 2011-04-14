@@ -52,7 +52,7 @@ private[extension] object ThreadingTest {
 
     // Not meant to be fast, just to load the CPU and have some meaningful output.
     class TestJob extends Job(pool, _.printStackTrace()) {
-      override val maxThreads = 4
+      override val maxThreads = Runtime.getRuntime.availableProcessors
 
       val factoring = Integer.MAX_VALUE - 3
       var current = 1
@@ -107,7 +107,7 @@ private[extension] object ThreadingTest {
       }
     }
 
-    val threads = 4
+    val threads = Runtime.getRuntime.availableProcessors
     val step = factoring/threads
     val runners = for (i <- 0 until threads) yield {
       val start = i*step + 1

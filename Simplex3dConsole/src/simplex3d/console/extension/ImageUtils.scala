@@ -138,15 +138,15 @@ object ImageUtils {
   }
 
 
-  def drawFunction(function: (inVec2, inVec2) => ReadVec3) {
+  def drawFunction(function: (inVec2i, inVec2) => ReadVec3) {
     drawFunction("Generated Image", ConstVec2i(640, 480))(function)
   }
-  def drawFunction(title: String)(function: (inVec2, inVec2) => ReadVec3) {
+  def drawFunction(title: String)(function: (inVec2i, inVec2) => ReadVec3) {
     drawFunction(title, ConstVec2i(640, 480))(function)
   }
   def drawFunction
     (title: String, dims: inVec2i)
-    (function: (inVec2, inVec2) => ReadVec3)
+    (function: (inVec2i, inVec2) => ReadVec3)
   {
 
     val frame = new JFrame(title + " " + dims.x + "x" + dims.y)
@@ -161,7 +161,6 @@ object ImageUtils {
             if (error) return
 
             val dims = ConstVec2i(getWidth, getHeight)
-            val fpSize: ConstVec2 = dims
             val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
 
             try {
@@ -170,7 +169,7 @@ object ImageUtils {
 
                 var x = 0; while (x < dims.x) {
                   
-                  img.setRGB(x, y, rgb(function(fpSize, ConstVec2(x, h))))
+                  img.setRGB(x, y, rgb(function(dims, ConstVec2(x, h))))
 
                   x += 1
                 }
@@ -203,15 +202,15 @@ object ImageUtils {
   }
 
 
-  def animateFunction(function: (inVec2, Double, inVec2) => ReadVec3) {
+  def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
     animateFunction("Animation", ConstVec2i(640, 480))(function)
   }
-  def animateFunction(title: String)(function: (inVec2, Double, inVec2) => ReadVec3) {
+  def animateFunction(title: String)(function: (inVec2i, Double, inVec2) => ReadVec3) {
     animateFunction(title, ConstVec2i(640, 480))(function)
   }
   def animateFunction
     (title: String, dims: inVec2i)
-    (function: (inVec2, Double, inVec2) => ReadVec3)
+    (function: (inVec2i, Double, inVec2) => ReadVec3)
   {
 
     val drawFps = true

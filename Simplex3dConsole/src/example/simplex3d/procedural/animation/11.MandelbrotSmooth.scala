@@ -14,7 +14,7 @@ object MandelbrotSmooth extends Application {
   val startScale: Double = 200
   val zoomSpeed: Double = 1.1
 
-//    val zoomPoint = Vec2(-0.743643887037158704752191506114774, 0.131825904205311970493132056385139)
+//  val zoomPoint = Vec2(-0.743643887037158704752191506114774, 0.131825904205311970493132056385139)
   val zoomPoint = Vec2(0.001643721971153, -0.822467633298876)
 
   val colors = {
@@ -37,7 +37,7 @@ object MandelbrotSmooth extends Application {
   val extraIterations = 3
 
   animateFunction("Mandelbrot") { (dims, time, pixel) =>
-    val mid = dims/2
+    val mid = dims/2.0
     val zoom = startScale + pow(zoomSpeed, 30 + time)
     val c = (pixel - mid)/zoom + zoomPoint
 

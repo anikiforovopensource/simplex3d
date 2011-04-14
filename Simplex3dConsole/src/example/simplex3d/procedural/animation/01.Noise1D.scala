@@ -18,9 +18,11 @@ object Noise1D extends Application {
   val axisColor = ConstVec3(0)
 
   animateFunction("Noise1D", ConstVec2i(800, 300)) { (dims, time, pixel) =>
-    val mid = dims/2
+    val mid = dims/2.0
     val u = pixel - mid
 
+    //val color = out
+    //color := background
     val color: Vec3 = background
 
     color *= {

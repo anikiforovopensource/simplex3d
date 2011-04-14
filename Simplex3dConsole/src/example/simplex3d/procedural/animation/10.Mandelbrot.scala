@@ -35,7 +35,7 @@ object Mandelbrot extends Application {
   val escapeColor = colors(iterations - 1)
 
   animateFunction("Mandelbrot") { (dims, time, pixel) =>
-    val mid = dims/2
+    val mid = dims/2.0
     val zoom = startScale + pow(zoomSpeed, 30 + time)
     val c = (pixel - mid)/zoom + zoomPoint
 

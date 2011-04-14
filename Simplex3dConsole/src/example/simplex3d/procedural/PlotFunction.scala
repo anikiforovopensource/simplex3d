@@ -17,7 +17,7 @@ object PlotFunction extends Application {
   val axisColor = ConstVec3(0)
 
   drawFunction("Plot") { (dims, pixel) =>
-    val mid = dims/2
+    val mid = dims/2.0
     val p = pixel - mid
 
     val color: Vec3 = background

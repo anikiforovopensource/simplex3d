@@ -35,7 +35,7 @@ object VaryingFrequency extends Application {
   }
 
   drawFunction("Varying Frequency") { (dims, pixel) =>
-    val p = (dims/2 + pixel)/80
+    val p = (dims/2.0 + pixel)/80
     Vec3((noiseSum(p) + expectedMagnitude)/(2*expectedMagnitude))
   }
 

@@ -30,9 +30,11 @@ import simplex3d.math.floatx.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec2f extends ProtectedVec2f[Float] {
+sealed abstract class ReadVec2f
+extends ProtectedVec2f[Float] with ReadPropertyRef[ReadVec2f]
+{
 
-  type Read = ReadVec2f
+  type Clone <: ReadVec2f
   type Const = ConstVec2f
   def toConst() = ConstVec2f(this)
 
@@ -161,10 +163,11 @@ object ConstVec2f {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with PropertyRef with Composite with Implicits[On]
+extends ReadVec2f with Composite with Implicits[On] with PropertyRef[ReadVec2f]
 {
   px = cx; py = cy
 
+  type Read = ReadVec2f
   type Component = RFloat
   type Clone = Vec2f
   override def clone() = Vec2f(this)

@@ -30,9 +30,10 @@ import simplex3d.math.doublex.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
+sealed abstract class ReadQuat4d
+extends ProtectedQuat4d[Double] with ReadPropertyRef[ReadQuat4d]
 {
-  type Read = ReadQuat4d
+  type Clone <: ReadQuat4d
   type Const = ConstQuat4d
   def toConst() = ConstQuat4d(this)
 
@@ -177,10 +178,11 @@ object ConstQuat4d {
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends ReadQuat4d with PropertyRef with Composite with Implicits[On]
+) extends ReadQuat4d with Composite with Implicits[On] with PropertyRef[ReadQuat4d]
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
+  type Read = ReadQuat4d
   type Component = RDouble
   type Clone = Quat4d
   override def clone() = Quat4d(this)

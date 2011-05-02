@@ -25,8 +25,8 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait AnyVec[P] extends ReadPropertyRef {
-  type Read <: AnyVec[P]
+sealed trait AnyVec[P] extends Cloneable {
+  type Clone <: AnyVec[P]
   def components: Int
   def apply(i: Int) :P
 
@@ -42,7 +42,7 @@ sealed trait AnyVec[P] extends ReadPropertyRef {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
-  type Read <: PrimitiveRef[P]
+  type Clone <: PrimitiveRef[P]
   final def components = 1
 }
 
@@ -55,7 +55,7 @@ abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyVec2[P] private[math] () extends VecImpl234[P] with AnyVec[P] {
-  type Read <: AnyVec2[P]
+  type Clone <: AnyVec2[P]
   final def components = 2
 }
 
@@ -68,7 +68,7 @@ abstract class AnyVec2[P] private[math] () extends VecImpl234[P] with AnyVec[P] 
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AnyVec3[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
-  type Read <: AnyVec3[P]
+  type Clone <: AnyVec3[P]
   final def components = 3
 }
 
@@ -82,7 +82,7 @@ abstract class AnyVec3[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
  */
 abstract class AnyVec4[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
 
-  type Read <: AnyVec4[P]
+  type Clone <: AnyVec4[P]
   final def components = 4
 
 

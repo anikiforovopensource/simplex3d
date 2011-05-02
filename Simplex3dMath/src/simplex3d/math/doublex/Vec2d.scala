@@ -30,9 +30,11 @@ import simplex3d.math.doublex.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec2d extends ProtectedVec2d[Double] {
+sealed abstract class ReadVec2d
+extends ProtectedVec2d[Double] with ReadPropertyRef[ReadVec2d]
+{
 
-  type Read = ReadVec2d
+  type Clone <: ReadVec2d
   type Const = ConstVec2d
   def toConst() = ConstVec2d(this)
 
@@ -161,10 +163,11 @@ object ConstVec2d {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec2d private[math] (cx: Double, cy: Double)
-extends ReadVec2d with PropertyRef with Composite with Implicits[On]
+extends ReadVec2d with Composite with Implicits[On] with PropertyRef[ReadVec2d]
 {
   px = cx; py = cy
 
+  type Read = ReadVec2d
   type Component = RDouble
   type Clone = Vec2d
   override def clone() = Vec2d(this)

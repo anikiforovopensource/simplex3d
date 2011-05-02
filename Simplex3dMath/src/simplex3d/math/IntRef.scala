@@ -32,8 +32,10 @@ import simplex3d.math.CommonMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadIntRef(protected var x: Int) extends PrimitiveRef[Int] {
-  type Read = ReadIntRef
+sealed abstract class ReadIntRef(protected var x: Int)
+extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef]
+{
+  type Clone <: ReadIntRef
   type Const = Int
   def toConst() :Int = x
 
@@ -217,7 +219,9 @@ sealed abstract class ReadIntRef(protected var x: Int) extends PrimitiveRef[Int]
   def ^(u: inVec4i) = u ^ x
 }
 
-final class IntRef(cx: Int) extends ReadIntRef(cx) with PropertyRef {
+final class IntRef(cx: Int)
+extends ReadIntRef(cx) with PropertyRef[ReadIntRef]
+{
   type Clone = IntRef
   override def clone() = new IntRef(x)
   

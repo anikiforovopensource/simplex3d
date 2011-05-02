@@ -29,8 +29,10 @@ import simplex3d.math.floatx.functions._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadFloatRef(protected var x: Float) extends PrimitiveRef[Float] {
-  type Read = ReadFloatRef
+sealed abstract class ReadFloatRef(protected var x: Float)
+extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef]
+{
+  type Clone <: ReadFloatRef
   type Const = Float
   def toConst() :Float = x
 
@@ -146,7 +148,9 @@ sealed abstract class ReadFloatRef(protected var x: Float) extends PrimitiveRef[
   def -(u: inVec4i) = new Vec4f(x - u.fx, x - u.fy, x - u.fz, x - u.fw)
 }
 
-final class FloatRef(cx: Float) extends ReadFloatRef(cx) with PropertyRef {
+final class FloatRef(cx: Float)
+extends ReadFloatRef(cx) with PropertyRef[ReadFloatRef]
+{
   type Clone = FloatRef
   override def clone() = new FloatRef(x)
 

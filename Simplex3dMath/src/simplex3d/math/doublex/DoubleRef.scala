@@ -29,8 +29,10 @@ import simplex3d.math.doublex.functions._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadDoubleRef(protected var x: Double) extends PrimitiveRef[Double] {
-  type Read = ReadDoubleRef
+sealed abstract class ReadDoubleRef(protected var x: Double)
+extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef]
+{
+  type Clone <: ReadDoubleRef
   type Const = Double
   def toConst() :Double = x
 
@@ -212,7 +214,9 @@ sealed abstract class ReadDoubleRef(protected var x: Double) extends PrimitiveRe
   def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += x; t }
 }
 
-final class DoubleRef(cx: Double) extends ReadDoubleRef(cx) with PropertyRef {
+final class DoubleRef(cx: Double)
+extends ReadDoubleRef(cx) with PropertyRef[ReadDoubleRef]
+{
   type Clone = DoubleRef
   override def clone() = new DoubleRef(x)
 

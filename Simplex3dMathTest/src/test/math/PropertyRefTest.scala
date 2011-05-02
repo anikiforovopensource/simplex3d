@@ -41,8 +41,7 @@ class PropertyRefTest extends FunSuite {
   def md = ConstMat4d(rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd)
 
 
-  type P[R] = PropertyRef { type Read = R }
-  def test[R](mutable: P[R], read: R) {
+  def test[R <: ReadPropertyRef[R]](mutable: PropertyRef[R], read: R) {
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 
@@ -98,13 +97,13 @@ class PropertyRefTest extends FunSuite {
   test("Primitive Refs") {
     for (i <- 0 until 100) {
       val b = rb
-      test(new BooleanRef(b), !b)
+      test[ReadBooleanRef](new BooleanRef(b), !b)
 
-      test(new IntRef(ri), ri)
+      test[ReadIntRef](new IntRef(ri), ri)
 
-      test(new FloatRef(rf), rf)
+      test[ReadFloatRef](new FloatRef(rf), rf)
 
-      test(new DoubleRef(rd), rd)
+      test[ReadDoubleRef](new DoubleRef(rd), rd)
     }
   }
 

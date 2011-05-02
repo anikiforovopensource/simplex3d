@@ -29,9 +29,11 @@ import simplex3d.math.CommonMath._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec4b extends ProtectedVec4b[Boolean] {
+sealed abstract class ReadVec4b
+extends ProtectedVec4b[Boolean] with ReadPropertyRef[ReadVec4b]
+{
 
-  type Read = ReadVec4b
+  type Clone <: ReadVec4b
   type Const = ConstVec4b
   def toConst() = ConstVec4b(this)
 
@@ -175,10 +177,11 @@ object ConstVec4b {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4b private[math] (cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean)
-extends ReadVec4b with PropertyRef with Composite with Implicits[On]
+extends ReadVec4b with Composite with Implicits[On] with PropertyRef[ReadVec4b]
 {
   px = cx; py = cy; pz = cz; pw = cw
 
+  type Read = ReadVec4b
   type Component = Bool
   type Clone = Vec4b
   override def clone() = Vec4b(this)

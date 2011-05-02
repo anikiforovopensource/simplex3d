@@ -30,9 +30,10 @@ import simplex3d.math.floatx.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
+sealed abstract class ReadQuat4f
+extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f]
 {
-  type Read = ReadQuat4f
+  type Clone <: ReadQuat4f
   type Const = ConstQuat4f
   def toConst() = ConstQuat4f(this)
 
@@ -178,10 +179,11 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with PropertyRef with Composite with Implicits[On]
+) extends ReadQuat4f with Composite with Implicits[On] with PropertyRef[ReadQuat4f]
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
+  type Read = ReadQuat4f
   type Component = RFloat
   type Clone = Quat4f
   override def clone() = Quat4f(this)

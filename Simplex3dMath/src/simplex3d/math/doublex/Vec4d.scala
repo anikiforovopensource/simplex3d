@@ -30,9 +30,11 @@ import simplex3d.math.doublex.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec4d extends ProtectedVec4d[Double] {
+sealed abstract class ReadVec4d
+extends ProtectedVec4d[Double] with ReadPropertyRef[ReadVec4d]
+{
 
-  type Read = ReadVec4d
+  type Clone <: ReadVec4d
   type Const = ConstVec4d
   def toConst() = ConstVec4d(this)
 
@@ -194,10 +196,11 @@ object ConstVec4d {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
-extends ReadVec4d with PropertyRef with Composite with Implicits[On]
+extends ReadVec4d with Composite with Implicits[On] with PropertyRef[ReadVec4d]
 {
   px = cx; py = cy; pz = cz; pw = cw
 
+  type Read = ReadVec4d
   type Component = RDouble
   type Clone = Vec4d
   override def clone() = Vec4d(this)

@@ -27,8 +27,10 @@ import simplex3d.math.CommonMath._
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class ReadBooleanRef(protected var x: Boolean) extends PrimitiveRef[Boolean] {
-  type Read = ReadBooleanRef
+sealed abstract class ReadBooleanRef(protected var x: Boolean)
+extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef]
+{
+  type Clone <: ReadBooleanRef
   type Const = Boolean
   def toConst() :Boolean = x
 
@@ -59,7 +61,9 @@ sealed abstract class ReadBooleanRef(protected var x: Boolean) extends Primitive
   }
 }
 
-final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx) with PropertyRef {
+final class BooleanRef(cx: Boolean)
+extends ReadBooleanRef(cx) with PropertyRef[ReadBooleanRef]
+{
   type Clone = BooleanRef
   override def clone() = new BooleanRef(x)
 

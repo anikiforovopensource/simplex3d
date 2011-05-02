@@ -31,9 +31,10 @@ import simplex3d.math.doublex.functions._
  */
 @serializable @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat4d
-extends ProtectedMat4d[Double]
+extends ProtectedMat4d[Double] with ReadPropertyRef[ReadMat4d]
 {
-  type Read = ReadMat4d
+
+  type Clone <: ReadMat4d
   type Const = ConstMat4d
   def toConst() = ConstMat4d(this)
 
@@ -401,13 +402,14 @@ final class Mat4d private[math] (
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double,
   c03: Double, c13: Double, c23: Double, c33: Double
-) extends ReadMat4d with PropertyRef with Composite with Implicits[On]
+) extends ReadMat4d with Composite with Implicits[On] with PropertyRef[ReadMat4d]
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
 
+  type Read = ReadMat4d
   type Component = RDouble
   type Clone = Mat4d
   override def clone() = Mat4d(this)

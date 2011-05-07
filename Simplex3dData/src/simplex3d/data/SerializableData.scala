@@ -48,8 +48,8 @@ private[data] abstract class SerializablePrimitive extends SerializableData {
 abstract class SerializableComposite extends SerializableData {
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
-    toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: Primitive, _]])
+    toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: PrimitiveMeta, _]])
   }
 
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _]
+  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _]
 }

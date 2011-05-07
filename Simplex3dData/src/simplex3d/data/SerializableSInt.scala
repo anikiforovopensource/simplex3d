@@ -43,7 +43,7 @@ private[data] class PrimitiveSInt(val rawType: Int) extends SerializablePrimitiv
 
 @serializable @SerialVersionUID(8104346712419693669L)
 private[data] class CompositeSInt(val components: Int) extends SerializableComposite {
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
+  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
     components match {
       case 2 => FactoryVec2i.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])
       case 3 => FactoryVec3i.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])

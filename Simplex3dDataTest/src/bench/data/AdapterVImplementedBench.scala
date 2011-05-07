@@ -34,7 +34,7 @@ import simplex3d.data.float._
  */
 object AdapterVImplementedBench {
 
-  trait V3 extends Composite {
+  trait V3 extends CompositeMeta {
     type Read = Vec3#Read
     type Const = Vec3#Const
     type Component = Vec3#Component
@@ -54,7 +54,7 @@ object AdapterVImplementedBench {
     }
   }
 
-  trait V4 extends Composite {
+  trait V4 extends CompositeMeta {
     type Read = Vec4#Read
     type Const = Vec4#Const
     type Component = Vec4#Component

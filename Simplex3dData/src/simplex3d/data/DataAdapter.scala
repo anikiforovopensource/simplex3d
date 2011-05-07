@@ -31,7 +31,7 @@ import simplex3d.data._
  * @author Aleksey Nikiforov (lex)
  */
 @serializable @SerialVersionUID(8104346712419693669L)
-abstract class DataAdapter[E <: Composite, B <: Defined](final val components: Int)(implicit
+abstract class DataAdapter[E <: CompositeMeta, B <: Defined](final val components: Int)(implicit
   final val metaManifest: ClassManifest[E],
   final val readManifest: ClassManifest[E#Read],
   final val boundManifest: Manifest[B]

@@ -30,7 +30,7 @@ import simplex3d.data._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
+sealed abstract class GenericSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadContiguous[E#Component, R], off: Int, str: Int
 ) extends CompositeSeq[E, R, B](prim, off, str) {
   final def metaManifest = adapter.metaManifest
@@ -51,21 +51,21 @@ sealed abstract class GenericSeq[E <: Composite, +R <: Raw, B <: Defined](
 }
 
 private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: Primitive, _]): ReadDataArray[_ <: Composite, _] = {
-    type E = T forSome { type T <: Composite }
+  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
+    type E = T forSome { type T <: CompositeMeta }
     val primitiveArray = primitive.asInstanceOf[ReadDataArray[E#Component, Defined]]
     adapter.asInstanceOf[DataAdapter[E, Defined]].mkReadDataArray(primitiveArray)
   }
 }
 
-final class GenericArray[E<: Composite, +R <: Raw, B <: Defined](
+final class GenericArray[E<: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataArray[E#Component, R]
 ) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataArray[E, R]
 
-final class GenericBuffer[E<: Composite, +R <: Raw, B <: Defined](
+final class GenericBuffer[E<: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R]
 ) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataBuffer[E, R]
 
-final class GenericView[E<: Composite, +R <: Raw, B <: Defined](
+final class GenericView[E<: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R], off: Int, str: Int
 ) extends GenericSeq[E, R, B](adapter, prim, off, str) with DataView[E, R]

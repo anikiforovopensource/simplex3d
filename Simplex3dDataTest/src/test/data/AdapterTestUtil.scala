@@ -34,7 +34,7 @@ import AttributeTestUtil._
  */
 object AdapterTestUtil extends FunSuite {
 
-  def testAdapter[E <: Composite, B <: Defined](adapter: DataAdapter[E, B])(
+  def testAdapter[E <: CompositeMeta, B <: Defined](adapter: DataAdapter[E, B])(
     sample: E#Read, sampleData: DataArray[E#Component, Raw]
   )(implicit attribs: AdapterAttrib[E, B])
   {

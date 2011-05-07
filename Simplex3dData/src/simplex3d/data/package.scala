@@ -49,8 +49,8 @@ package object data {
 
 
   type Meta = integration.Meta
-  type Primitive = integration.Primitive
-  type Composite = integration.Composite
+  type PrimitiveMeta = integration.PrimitiveMeta
+  type CompositeMeta = integration.CompositeMeta
   val MetaManifest = integration.MetaManifest
   type Raw = integration.Raw
   type Defined = integration.Defined

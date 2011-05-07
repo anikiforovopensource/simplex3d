@@ -261,7 +261,7 @@ object ConstMat2f {
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends ReadMat2f with Composite with Implicits[On] with PropertyRef[ReadMat2f]
+) extends ReadMat2f with CompositeMeta with Implicits[On] with PropertyRef[ReadMat2f]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

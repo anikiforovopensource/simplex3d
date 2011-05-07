@@ -192,7 +192,7 @@ object ConstVec3i {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3i private[math] (cx: Int, cy: Int, cz: Int)
-extends ReadVec3i with Composite with Implicits[On] with PropertyRef[ReadVec3i]
+extends ReadVec3i with CompositeMeta with Implicits[On] with PropertyRef[ReadVec3i]
 {
   px = cx; py = cy; pz = cz
 

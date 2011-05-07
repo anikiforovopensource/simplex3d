@@ -278,7 +278,7 @@ object ConstMat3x2d {
 final class Mat3x2d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double
-) extends ReadMat3x2d with Composite with Implicits[On] with PropertyRef[ReadMat3x2d]
+) extends ReadMat3x2d with CompositeMeta with Implicits[On] with PropertyRef[ReadMat3x2d]
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

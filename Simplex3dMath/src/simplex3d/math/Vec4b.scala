@@ -177,7 +177,7 @@ object ConstVec4b {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4b private[math] (cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean)
-extends ReadVec4b with Composite with Implicits[On] with PropertyRef[ReadVec4b]
+extends ReadVec4b with CompositeMeta with Implicits[On] with PropertyRef[ReadVec4b]
 {
   px = cx; py = cy; pz = cz; pw = cw
 

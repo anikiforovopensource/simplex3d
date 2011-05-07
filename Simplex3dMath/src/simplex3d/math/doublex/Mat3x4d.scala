@@ -459,7 +459,7 @@ final class Mat3x4d private[math] (
   c01: Double, c11: Double, c21: Double,
   c02: Double, c12: Double, c22: Double,
   c03: Double, c13: Double, c23: Double
-) extends ReadMat3x4d with Composite with Implicits[On] with PropertyRef[ReadMat3x4d]
+) extends ReadMat3x4d with CompositeMeta with Implicits[On] with PropertyRef[ReadMat3x4d]
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

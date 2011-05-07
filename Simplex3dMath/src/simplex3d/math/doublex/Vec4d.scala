@@ -196,7 +196,7 @@ object ConstVec4d {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
-extends ReadVec4d with Composite with Implicits[On] with PropertyRef[ReadVec4d]
+extends ReadVec4d with CompositeMeta with Implicits[On] with PropertyRef[ReadVec4d]
 {
   px = cx; py = cy; pz = cz; pw = cw
 

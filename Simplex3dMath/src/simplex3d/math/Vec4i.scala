@@ -211,7 +211,7 @@ object ConstVec4i {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
-extends ReadVec4i with Composite with Implicits[On] with PropertyRef[ReadVec4i]
+extends ReadVec4i with CompositeMeta with Implicits[On] with PropertyRef[ReadVec4i]
 {
   px = cx; py = cy; pz = cz; pw = cw
 

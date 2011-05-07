@@ -179,7 +179,7 @@ object ConstQuat4f {
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with Composite with Implicits[On] with PropertyRef[ReadQuat4f]
+) extends ReadQuat4f with CompositeMeta with Implicits[On] with PropertyRef[ReadQuat4f]
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 

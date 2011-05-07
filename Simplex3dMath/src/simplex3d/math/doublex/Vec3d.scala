@@ -177,7 +177,7 @@ object ConstVec3d {
 
 @serializable @SerialVersionUID(8104346712419693669L)
 final class Vec3d private[math] (cx: Double, cy: Double, cz: Double)
-extends ReadVec3d with Composite with Implicits[On] with PropertyRef[ReadVec3d]
+extends ReadVec3d with CompositeMeta with Implicits[On] with PropertyRef[ReadVec3d]
 {
   px = cx; py = cy; pz = cz
 

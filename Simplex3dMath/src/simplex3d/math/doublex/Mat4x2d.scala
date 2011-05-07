@@ -300,7 +300,7 @@ object ConstMat4x2d {
 final class Mat4x2d private[math] (
   c00: Double, c10: Double, c20: Double, c30: Double,
   c01: Double, c11: Double, c21: Double, c31: Double
-) extends ReadMat4x2d with Composite with Implicits[On] with PropertyRef[ReadMat4x2d]
+) extends ReadMat4x2d with CompositeMeta with Implicits[On] with PropertyRef[ReadMat4x2d]
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31

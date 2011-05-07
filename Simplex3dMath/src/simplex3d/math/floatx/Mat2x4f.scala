@@ -334,7 +334,7 @@ final class Mat2x4f private[math] (
   c01: Float, c11: Float,
   c02: Float, c12: Float,
   c03: Float, c13: Float
-) extends ReadMat2x4f with Composite with Implicits[On] with PropertyRef[ReadMat2x4f]
+) extends ReadMat2x4f with CompositeMeta with Implicits[On] with PropertyRef[ReadMat2x4f]
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

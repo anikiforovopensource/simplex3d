@@ -14,7 +14,7 @@ object Biomass extends Application {
   val changeSpeed = 1.0/10
 
   val amplitudeDivisor = 2
-  val expectedMagnitude = 0.6
+  val expectedMagnitude = 0.7
 
   val amplitudeFactors = (for (i <- 0 until 3) yield pow(amplitudeDivisor, -i)).toArray
 

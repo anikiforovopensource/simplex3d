@@ -54,18 +54,14 @@ object DataBindingAPI extends Application {
     vertices(1) += position
     var i = 0; while (i < vertices.size) { vertices(i) += position; i += 1 }
 
-    // Primitive for DataArrays and DataBuffers.
-    val prim = texture.primitive // prim: DataArray[RFloat, UByte]
-    texture(10) == Vec4(prim(40), prim(41), prim(42), prim(43))
-
-    // New Primitive.
-    val prim1 = DataArray[SInt, SInt](100)
-    val prim2 = DataArray[RDouble, RFloat](100)
-
     // Data conversion
-    val double = prim2(0)
-    prim2(0) = 1/3.0
-    prim2(0) != 1/3.0 // lost precision
+    val doubleVec = vertices(0)
+    vertices(0) = Vec3(1/3.0)
+    vertices(0) != Vec3(1/3.0) // lost precision
+
+    // Read only
+    val ro = vertices.asReadOnly()
+    // ro(0) = Vec3(0) // will not compile
   }
 
 }

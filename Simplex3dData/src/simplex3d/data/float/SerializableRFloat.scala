@@ -46,11 +46,11 @@ private[data] class PrimitiveRFloat(val rawType: Int) extends SerializablePrimit
 
 @serializable @SerialVersionUID(8104346712419693669L)
 private[data] class CompositeRFloat(val components: Int) extends SerializableComposite {
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
+  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
     components match {
-      case 2 => FactoryVec2f.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
-      case 3 => FactoryVec3f.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
-      case 4 => FactoryVec4f.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
+      case 2 => FactoryVec2f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
+      case 3 => FactoryVec3f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
+      case 4 => FactoryVec4f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
     }
   }
 }

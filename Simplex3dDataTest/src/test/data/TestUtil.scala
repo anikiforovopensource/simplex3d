@@ -314,10 +314,10 @@ object TestUtil extends FunSuite {
 
   private def RandomDataArray[E <: Meta, R <: Raw](size: Int)(
     implicit composition: CompositionFactory[E, _ >: R],
-    primitive: DataFactory[E#Component, R],
+    primitives: DataFactory[E#Component, R],
     descriptor: Descriptor[E, R]
   ) :DataArray[E, R] = {
-    composition.mkDataArray(primitive.mkDataArray(genRandomArray(size*descriptor.components, descriptor)))
+    composition.mkDataArray(primitives.mkDataArray(genRandomArray(size*descriptor.components, descriptor)))
   }
   def genRandomSeq(size: Int) :Data[_ <: Meta] = {
     genRandomSeq(None, None, size)
@@ -512,7 +512,7 @@ object TestUtil extends FunSuite {
     testContent(
       components,
       dest, destFirst,
-      src.primitive, src.offset + srcFirst*src.stride, src.stride,
+      src.primitives, src.offset + srcFirst*src.stride, src.stride,
       count
     )
   }
@@ -522,7 +522,7 @@ object TestUtil extends FunSuite {
     src: inData[E#Component], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    val d = dest.primitive
+    val d = dest.primitives
     
     d.metaManifest match {
       case MetaManifest.SInt =>
@@ -557,8 +557,8 @@ object TestUtil extends FunSuite {
     count: Int
   ) {
     if (dest.isInstanceOf[DataView[_, _]]) {
-      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].primitive)
-      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].primitive)
+      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].primitives)
+      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].primitives)
       
       val byteOffset = dest.byteOffset + dest.byteStride*destFirst
       val byteSkip = components*dest.bytesPerComponent
@@ -670,26 +670,26 @@ object TestUtil extends FunSuite {
     val factory = genRandomSeq(src.metaManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
-    src.primitive.metaManifest match {
+    src.primitives.metaManifest match {
       case MetaManifest.SInt =>
         putIntContent(
           src.components,
-          contiguousCopy.primitive.asInstanceOf[Contiguous[SInt, Raw]],
-          src.primitive.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitives.asInstanceOf[Contiguous[SInt, Raw]],
+          src.primitives.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RFloat =>
         putFloatContent(
           src.components,
-          contiguousCopy.primitive.asInstanceOf[Contiguous[RFloat, Raw]],
-          src.primitive.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitives.asInstanceOf[Contiguous[RFloat, Raw]],
+          src.primitives.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
       case MetaManifest.RDouble =>
         putDoubleContent(
           src.components,
-          contiguousCopy.primitive.asInstanceOf[Contiguous[RDouble, Raw]],
-          src.primitive.asInstanceOf[ReadContiguous[RDouble, Raw]], src.offset*src.stride, src.stride,
+          contiguousCopy.primitives.asInstanceOf[Contiguous[RDouble, Raw]],
+          src.primitives.asInstanceOf[ReadContiguous[RDouble, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
     }
@@ -757,10 +757,10 @@ object TestUtil extends FunSuite {
     }
   }
 
-  final def supportsRawType(primitive: ClassManifest[_], raw: ClassManifest[_]) = {
+  final def supportsRawType(primitives: ClassManifest[_], raw: ClassManifest[_]) = {
     import RawManifest._
 
-    primitive match {
+    primitives match {
       case SInt => raw match {
         case SByte | UByte | SShort | UShort | SInt | UInt => true
         case _ => false

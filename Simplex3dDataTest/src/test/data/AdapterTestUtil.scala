@@ -109,10 +109,10 @@ object AdapterTestUtil extends FunSuite {
 
     val factory = {
       type R = T forSome { type T <: B }
-      val primitive = genRandomSeq(
+      val primitives = genRandomSeq(
         attribs.componentManifest, RawManifest.toRawType(attribs.componentManifest), 0
       ).asInstanceOf[ReadDataArray[E#Component, R]]
-      adapter.mkReadDataArray(primitive).asInstanceOf[CompositionFactory[E, B]]
+      adapter.mkReadDataArray(primitives).asInstanceOf[CompositionFactory[E, B]]
     }
 
     // Test raw types that are not allowed.

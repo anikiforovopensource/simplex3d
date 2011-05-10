@@ -37,23 +37,23 @@ sealed abstract class GenericSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
   final def readManifest = adapter.readManifest
   final def components: Int = adapter.components
 
-  def apply(i: Int) :E#Const = adapter.apply(primitive, offset + i*stride)
-  def update(i: Int, v: E#Read) { adapter.update(primitive, offset + i*stride, v) }
+  def apply(i: Int) :E#Const = adapter.apply(primitives, offset + i*stride)
+  def update(i: Int, v: E#Read) { adapter.update(primitives, offset + i*stride, v) }
 
-  def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P])
-  :ReadDataArray[E, P] = adapter.mkReadDataArray(primitive)
-  def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P])
-  :ReadDataBuffer[E, P] = adapter.mkReadDataBuffer(primitive)
-  protected def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int)
-  :ReadDataView[E, P] = adapter.mkReadDataViewInstance(primitive, offset, stride)
+  def mkReadDataArray[P <: B](primitives: ReadDataArray[E#Component, P])
+  :ReadDataArray[E, P] = adapter.mkReadDataArray(primitives)
+  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[E#Component, P])
+  :ReadDataBuffer[E, P] = adapter.mkReadDataBuffer(primitives)
+  protected def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[E#Component, P], offset: Int, stride: Int)
+  :ReadDataView[E, P] = adapter.mkReadDataViewInstance(primitives, offset, stride)
 
   protected[data] final override def mkSerializableInstance() = new SerializableGeneric(adapter)
 }
 
 private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
+  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
     type E = T forSome { type T <: CompositeMeta }
-    val primitiveArray = primitive.asInstanceOf[ReadDataArray[E#Component, Defined]]
+    val primitiveArray = primitives.asInstanceOf[ReadDataArray[E#Component, Defined]]
     adapter.asInstanceOf[DataAdapter[E, Defined]].mkReadDataArray(primitiveArray)
   }
 }

@@ -47,11 +47,11 @@ private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimi
 
 @serializable @SerialVersionUID(8104346712419693669L)
 private[data] class CompositeRDouble(val components: Int) extends SerializableComposite {
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
+  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
     components match {
-      case 2 => FactoryVec2d.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
-      case 3 => FactoryVec3d.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
-      case 4 => FactoryVec4d.mkReadDataArray(primitive.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
+      case 2 => FactoryVec2d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
+      case 3 => FactoryVec3d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
+      case 4 => FactoryVec4d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
     }
   }
 }

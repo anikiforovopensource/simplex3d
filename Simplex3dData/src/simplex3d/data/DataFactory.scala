@@ -34,7 +34,7 @@ trait DataFactory[E <: Meta, +R <: Raw] {
   def components: Int
   def metaManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
-  def primitive: DataFactory[E#Component, R]
+  def primitives: DataFactory[E#Component, R]
 
   def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R]
   def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]

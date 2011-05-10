@@ -40,17 +40,17 @@ object AdapterVImplementedBench {
     type Component = Vec3#Component
   }
   implicit object V3Adapter extends DataAdapter[V3, DefinedFloat](components = 3) {
-    def apply(primitive: inContiguous[V3#Component, Raw], j: Int) :V3#Const = {
+    def apply(primitives: inContiguous[V3#Component, Raw], j: Int) :V3#Const = {
       ConstVec3(
-        primitive(j),
-        primitive(j + 1),
-        primitive(j + 2)
+        primitives(j),
+        primitives(j + 1),
+        primitives(j + 2)
       )
     }
-    def update(primitive: outContiguous[V3#Component, Raw], j: Int, value: V3#Read) {
-      primitive(j) = value.x
-      primitive(j + 1) = value.y
-      primitive(j + 2) = value.z
+    def update(primitives: outContiguous[V3#Component, Raw], j: Int, value: V3#Read) {
+      primitives(j) = value.x
+      primitives(j + 1) = value.y
+      primitives(j + 2) = value.z
     }
   }
 
@@ -60,19 +60,19 @@ object AdapterVImplementedBench {
     type Component = Vec4#Component
   }
   implicit object V4Adapter extends DataAdapter[V4, DefinedFloat](components = 4) {
-    def apply(primitive: inContiguous[V4#Component, Raw], j: Int) :V4#Const = {
+    def apply(primitives: inContiguous[V4#Component, Raw], j: Int) :V4#Const = {
       ConstVec4(
-        primitive(j),
-        primitive(j + 1),
-        primitive(j + 2),
-        primitive(j + 3)
+        primitives(j),
+        primitives(j + 1),
+        primitives(j + 2),
+        primitives(j + 3)
       )
     }
-    def update(primitive: outContiguous[V4#Component, Raw], j: Int, value: V4#Read) {
-      primitive(j) = value.x
-      primitive(j + 1) = value.y
-      primitive(j + 2) = value.z
-      primitive(j + 3) = value.w
+    def update(primitives: outContiguous[V4#Component, Raw], j: Int, value: V4#Read) {
+      primitives(j) = value.x
+      primitives(j + 1) = value.y
+      primitives(j + 2) = value.z
+      primitives(j + 3) = value.w
     }
   }
 
@@ -86,19 +86,19 @@ object AdapterVImplementedBench {
   val size = 1000
   val loops = 200*1000
 
-  val primitive = DataArray[RFloat, RFloat](size);
+  val primitives = DataArray[RFloat, RFloat](size);
   {
     val random = new java.util.Random(1)
-    var i = 0; while( i < primitive.size) {
-      primitive(i) = random.nextFloat
+    var i = 0; while( i < primitives.size) {
+      primitives(i) = random.nextFloat
       i += 1
     }
   }
 
-  val impl3 = DataArray[Vec3, RFloat](primitive)
-  val impl4 = DataArray[Vec4, RFloat](primitive)
-  val adp3 = DataArray[V3, RFloat](primitive)
-  val adp4 = DataArray[V4, RFloat](primitive)
+  val impl3 = DataArray[Vec3, RFloat](primitives)
+  val impl4 = DataArray[Vec4, RFloat](primitives)
+  val adp3 = DataArray[V3, RFloat](primitives)
+  val adp4 = DataArray[V4, RFloat](primitives)
 
   def test() {
     println("\nTesting...")

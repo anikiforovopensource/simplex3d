@@ -310,7 +310,7 @@ object CopyTestUtil extends FunSuite {
     // Test exceptions. Destination and src must remain unchanged.
     {
       val random = genRandomSeq(original.metaManifest, original.rawType, size)
-      val src = random.asInstanceOf[ReadData[E]].primitive
+      val src = random.asInstanceOf[ReadData[E]].primitives
       val dest = dupSeq1(original)
 
       {
@@ -459,10 +459,10 @@ object CopyTestUtil extends FunSuite {
     
     for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (conversion) genRandomSeq(original.primitive.metaManifest, original.rawType, size)
+        if (conversion) genRandomSeq(original.primitives.metaManifest, original.rawType, size)
         else genRandomSeq(
-          original.primitive.metaManifest,
-          conversionType(original.primitive.metaManifest, original.rawType),
+          original.primitives.metaManifest,
+          conversionType(original.primitives.metaManifest, original.rawType),
           size
         )
 
@@ -657,7 +657,7 @@ object CopyTestUtil extends FunSuite {
 
 
   private def wrongType[E <: Meta](s: inData[E]) :Data[E] = {
-    if (s.primitive.metaManifest == MetaManifest.SInt) {
+    if (s.primitives.metaManifest == MetaManifest.SInt) {
       genRandomSeq(MetaManifest.RFloat, RawType.RFloat, s.size).asInstanceOf[Data[E]]
     }
     else {

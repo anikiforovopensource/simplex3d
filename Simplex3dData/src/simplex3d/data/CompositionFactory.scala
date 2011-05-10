@@ -29,43 +29,43 @@ trait CompositionFactory[E <: Meta, B <: Defined] {
   def metaManifest: ClassManifest[E]
   def readManifest: ClassManifest[E#Read]
 
-  def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
-  def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
+  def mkReadDataArray[P <: B](primitives: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
+  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
 
   protected def mkReadDataViewInstance[P <: B](
-    primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
+    primitives: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
   ) :ReadDataView[E, P]
 
 
   final def mkReadDataView[P <: B](
-    primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
+    primitives: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
   ) :ReadDataView[E, P] = {
-    mkViewOrBuffer(primitive, offset, stride)
+    mkViewOrBuffer(primitives, offset, stride)
   }
 
-  final def mkDataArray[P <: B](primitive: DataArray[E#Component, P]) :DataArray[E, P] = {
-    if (primitive.isReadOnly) throw new IllegalArgumentException(
+  final def mkDataArray[P <: B](primitives: DataArray[E#Component, P]) :DataArray[E, P] = {
+    if (primitives.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )
-    mkReadDataArray(primitive).asInstanceOf[DataArray[E, P]]
+    mkReadDataArray(primitives).asInstanceOf[DataArray[E, P]]
   }
-  final def mkDataBuffer[P <: B](primitive: DataBuffer[E#Component, P]) :DataBuffer[E, P] = {
-    if (primitive.isReadOnly) throw new IllegalArgumentException(
+  final def mkDataBuffer[P <: B](primitives: DataBuffer[E#Component, P]) :DataBuffer[E, P] = {
+    if (primitives.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
-    mkReadDataBuffer(primitive).asInstanceOf[DataBuffer[E, P]]
+    mkReadDataBuffer(primitives).asInstanceOf[DataBuffer[E, P]]
   }
-  final def mkDataView[P <: B](primitive: DataBuffer[E#Component, P], offset: Int, stride: Int) :DataView[E, P] = {
-    if (primitive.isReadOnly) throw new IllegalArgumentException(
+  final def mkDataView[P <: B](primitives: DataBuffer[E#Component, P], offset: Int, stride: Int) :DataView[E, P] = {
+    if (primitives.isReadOnly) throw new IllegalArgumentException(
       "The DataBuffer must not be read-only."
     )
-    mkViewOrBuffer(primitive, offset, stride).asInstanceOf[DataView[E, P]]
+    mkViewOrBuffer(primitives, offset, stride).asInstanceOf[DataView[E, P]]
   }
   
   private[this] final def mkViewOrBuffer[P <: B](
-    primitive: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
+    primitives: ReadDataBuffer[E#Component, P], offset: Int, stride: Int
   ) :ReadDataView[E, P] = {
-    if (offset == 0 && stride == components) mkReadDataBuffer(primitive)
-    else mkReadDataViewInstance(primitive, offset, stride)
+    if (offset == 0 && stride == components) mkReadDataBuffer(primitives)
+    else mkReadDataViewInstance(primitives, offset, stride)
   }
 }

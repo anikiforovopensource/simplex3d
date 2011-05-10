@@ -49,9 +49,9 @@ class AdapterTest extends FunSuite {
   val c3 = Vec4f(10, 11, 12, 13)
   val c4 = Vec4f(14, 15, 16, 17)
 
-  def flatten2(values: Vec2f*) = DataArray[Vec2f, RFloat](values: _*).primitive
-  def flatten3(values: Vec3f*) = DataArray[Vec3f, RFloat](values: _*).primitive
-  def flatten4(values: Vec4f*) = DataArray[Vec4f, RFloat](values: _*).primitive
+  def flatten2(values: Vec2f*) = DataArray[Vec2f, RFloat](values: _*).primitives
+  def flatten3(values: Vec3f*) = DataArray[Vec3f, RFloat](values: _*).primitives
+  def flatten4(values: Vec4f*) = DataArray[Vec4f, RFloat](values: _*).primitives
 
   test("Adapters") {
     testAdapter(FactoryQuat4f)(Quat4f(c1.x, c1.y, c1.z, c1.w), flatten4(c1))

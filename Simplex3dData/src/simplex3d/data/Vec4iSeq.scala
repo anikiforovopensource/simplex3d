@@ -52,18 +52,18 @@ private[data] final class ArrayVec4i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec4i = {
     val j = i*4
     ConstVec4i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2),
+      primitives(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4i) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
+    primitives(j + 3) = v.w
   }
 }
 
@@ -73,18 +73,18 @@ private[data] final class BufferVec4i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec4i = {
     val j = i*4
     ConstVec4i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2),
+      primitives(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4i) {
     val j = i*4
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
+    primitives(j + 3) = v.w
   }
 }
 
@@ -94,17 +94,17 @@ private[data] final class ViewVec4i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec4i = {
     val j = offset + i*stride
     ConstVec4i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2),
-      primitive(j + 3)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2),
+      primitives(j + 3)
     )
   }
   def update(i: Int, v: ReadVec4i) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
-    primitive(j + 3) = v.w
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
+    primitives(j + 3) = v.w
   }
 }

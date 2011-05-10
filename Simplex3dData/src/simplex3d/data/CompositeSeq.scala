@@ -36,8 +36,8 @@ abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
   prim.sharedStore, prim, prim.isReadOnly,
   off, str
 ) with CompositionFactory[E, B] {
-  final def rawType = primitive.rawType
-  final def isNormalized: Boolean = primitive.isNormalized
+  final def rawType = primitives.rawType
+  final def isNormalized: Boolean = primitives.isNormalized
 
   def mkReadDataArray[P <: B](prim: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
   def mkReadDataBuffer[P <: B](prim: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
@@ -48,17 +48,17 @@ abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
 
   final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R] =
     mkReadDataArray(
-      primitive.mkDataArray(array).asInstanceOf[DataArray[E#Component, B]]
+      primitives.mkDataArray(array).asInstanceOf[DataArray[E#Component, B]]
     ).asInstanceOf[DataArray[E, R]]
 
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R] =
     mkReadDataBuffer(
-      primitive.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]]
+      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]]
     ).asInstanceOf[ReadDataBuffer[E, R]]
 
   protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[E, R] =
     mkReadDataView(
-      primitive.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]], off, str
+      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]], off, str
     ).asInstanceOf[ReadDataView[E, R]]
 
 
@@ -66,13 +66,13 @@ abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
     val self: AnyRef = this
     (self match {
       case _: DataArray[_, _] => mkReadDataArray(
-          primitive.asReadOnly().asInstanceOf[DataArray[E#Component, B]]
+          primitives.asReadOnly().asInstanceOf[DataArray[E#Component, B]]
         )
       case _: DataBuffer[_, _] => mkReadDataBuffer(
-          primitive.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]]
+          primitives.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]]
         )
       case _: DataView[_, _] => mkReadDataView(
-          primitive.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
+          primitives.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
         )
     }).asInstanceOf[ReadDataSeq[E, R]]
   }

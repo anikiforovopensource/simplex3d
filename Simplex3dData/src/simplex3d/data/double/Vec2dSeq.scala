@@ -69,14 +69,14 @@ private[data] final class ArrayVec2d[+R <: DefinedDouble](
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      primitive(j),
-      primitive(j + 1)
+      primitives(j),
+      primitives(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
   }
 }
 
@@ -86,14 +86,14 @@ private[data] final class BufferVec2d[+R <: DefinedDouble](
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
-      primitive(j),
-      primitive(j + 1)
+      primitives(j),
+      primitives(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = i*2
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
   }
 }
 
@@ -103,13 +103,13 @@ private[data] final class ViewVec2d[+R <: DefinedDouble](
   def apply(i: Int) :ConstVec2d = {
     val j = offset + i*stride
     ConstVec2d(
-      primitive(j),
-      primitive(j + 1)
+      primitives(j),
+      primitives(j + 1)
     )
   }
   def update(i: Int, v: ReadVec2d) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
   }
 }

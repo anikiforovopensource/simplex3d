@@ -52,7 +52,7 @@ with CompositionFactory[SInt, DefinedInt]
   protected final def mkReadDataViewInstance(
     byteBuffer: ByteBuffer, off: Int, str: Int
   ) :ReadDataView[SInt, R] = {
-    new ViewSInt(primitive.mkReadDataBuffer(byteBuffer), off, str)
+    new ViewSInt(primitives.mkReadDataBuffer(byteBuffer), off, str)
   }
   
   final override def mkSerializableInstance() = new PrimitiveSInt(rawType)
@@ -61,16 +61,16 @@ with CompositionFactory[SInt, DefinedInt]
 private[data] final class ViewSInt[+R <: DefinedInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseSInt[R](prim, prim, prim.isReadOnly, off, str) with DataView[SInt, R] {
-  final def rawType = primitive.rawType
-  def mkReadOnlyInstance() = new ViewSInt(primitive.asReadOnly(), offset, stride)
+  final def rawType = primitives.rawType
+  def mkReadOnlyInstance() = new ViewSInt(primitives.asReadOnly(), offset, stride)
 
-  def apply(i: Int) :Int = primitive(offset + i*stride)
-  def update(i: Int, v: Int) :Unit = primitive(offset + i*stride) = v
+  def apply(i: Int) :Int = primitives(offset + i*stride)
+  def update(i: Int, v: Int) :Unit = primitives(offset + i*stride) = v
 
   final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[SInt, R] =
-    primitive.mkDataArray(array)
+    primitives.mkDataArray(array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[SInt, R] =
-    primitive.mkReadDataBuffer(byteBuffer)
+    primitives.mkReadDataBuffer(byteBuffer)
 }
 
 

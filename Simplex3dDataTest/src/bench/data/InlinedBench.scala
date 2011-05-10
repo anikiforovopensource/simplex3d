@@ -242,8 +242,8 @@ object InlinedBench {
         //val j = seq.offset + seq.stride*i
         val j = i*4
         val v = ConstVec4f(
-          seq.primitive(j), seq.primitive(j + 1),
-          seq.primitive(j + 2), seq.primitive(j + 3)
+          seq.primitives(j), seq.primitives(j + 1),
+          seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
         answer += Int(u.x + u.y + u.z + u.w)
@@ -268,8 +268,8 @@ object InlinedBench {
         //val j = seq.offset + seq.stride*i
         val j = i*4
         val v = ConstVec4f(
-          seq.primitive(j), seq.primitive(j + 1),
-          seq.primitive(j + 2), seq.primitive(j + 3)
+          seq.primitives(j), seq.primitives(j + 1),
+          seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
         answer += Int(u.x + u.y + u.z + u.w)
@@ -293,8 +293,8 @@ object InlinedBench {
 
         val j = seq.offset + seq.stride*i
         val v = ConstVec4f(
-          seq.primitive(j), seq.primitive(j + 1),
-          seq.primitive(j + 2), seq.primitive(j + 3)
+          seq.primitives(j), seq.primitives(j + 1),
+          seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
         answer += Int(u.x + u.y + u.z + u.w)

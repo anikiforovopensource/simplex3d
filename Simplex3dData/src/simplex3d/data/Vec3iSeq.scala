@@ -65,16 +65,16 @@ private[data] final class ArrayVec3i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3i) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
   }
 }
 
@@ -84,16 +84,16 @@ private[data] final class BufferVec3i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3i) {
     val j = i*3
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
   }
 }
 
@@ -103,15 +103,15 @@ private[data] final class ViewVec3i[+R <: DefinedInt](
   def apply(i: Int) :ConstVec3i = {
     val j = offset + i*stride
     ConstVec3i(
-      primitive(j),
-      primitive(j + 1),
-      primitive(j + 2)
+      primitives(j),
+      primitives(j + 1),
+      primitives(j + 2)
     )
   }
   def update(i: Int, v: ReadVec3i) {
     val j = offset + i*stride
-    primitive(j) = v.x
-    primitive(j + 1) = v.y
-    primitive(j + 2) = v.z
+    primitives(j) = v.x
+    primitives(j + 1) = v.y
+    primitives(j + 2) = v.z
   }
 }

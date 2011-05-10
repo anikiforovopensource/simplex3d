@@ -63,10 +63,10 @@ with CompositionFactory[RFloat, DefinedFloat]
   ) :ReadDataView[RFloat, R] = {
     (rawType match {
       case RawType.RFloat =>
-        val prim = primitive.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RFloat, RFloat]]
+        val prim = primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RFloat, RFloat]]
         new impl.ViewRFloatRFloat(prim, off, str)
       case _ =>
-        new ViewRFloat(primitive.mkReadDataBuffer(byteBuffer), off, str)
+        new ViewRFloat(primitives.mkReadDataBuffer(byteBuffer), off, str)
     }).asInstanceOf[ReadDataView[RFloat, R]]
   }
   
@@ -76,17 +76,17 @@ with CompositionFactory[RFloat, DefinedFloat]
 private[data] final class ViewRFloat[+R <: DefinedFloat](
   prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseRFloat[R](prim, prim, prim.isReadOnly, off, str) with DataView[RFloat, R] {
-  final def isNormalized = primitive.isNormalized
-  final def rawType = primitive.rawType
-  def mkReadOnlyInstance() = new ViewRFloat(primitive.asReadOnly(), offset, stride)
+  final def isNormalized = primitives.isNormalized
+  final def rawType = primitives.rawType
+  def mkReadOnlyInstance() = new ViewRFloat(primitives.asReadOnly(), offset, stride)
 
-  def apply(i: Int) :Float = primitive(offset + i*stride)
-  def update(i: Int, v: Float) :Unit = primitive(offset + i*stride) = v
+  def apply(i: Int) :Float = primitives(offset + i*stride)
+  def update(i: Int, v: Float) :Unit = primitives(offset + i*stride) = v
 
   final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[RFloat, R] =
-    primitive.mkDataArray(array)
+    primitives.mkDataArray(array)
   final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[RFloat, R] =
-    primitive.mkReadDataBuffer(byteBuffer)
+    primitives.mkReadDataBuffer(byteBuffer)
 }
 
 

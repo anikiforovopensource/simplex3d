@@ -148,7 +148,7 @@ object AttributeTestUtil extends FunSuite {
   ) {
     assert(seq.metaManifest == descriptor.metaManifest)
     assert(seq.readManifest == descriptor.readManifest)
-    assert(seq.primitive.metaManifest == descriptor.componentManifest)
+    assert(seq.primitives.metaManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
     assert(seq.isNormalized == descriptor.normalized)
@@ -167,11 +167,11 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.size == seq.length)
 
     if (seq.isReadOnly) {
-      assert(seq.primitive.isReadOnly)
+      assert(seq.primitives.isReadOnly)
       assert(seq.asReadOnly() eq seq)
     }
     else {
-      assert(!seq.primitive.isReadOnly)
+      assert(!seq.primitives.isReadOnly)
     }
 
     // Check rawBuffer.
@@ -209,14 +209,14 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == seq.components)
 
     assert(!seq.readOnlyBuffer.isDirect)
-    assert(seq.primitive.isInstanceOf[ReadDataArray[_, _]])
+    assert(seq.primitives.isInstanceOf[ReadDataArray[_, _]])
     assert(seq.asReadOnly.isInstanceOf[ReadDataArray[_, _]])
 
     val ds = seq.asInstanceOf[DataArray[E, R]]
     assert(!ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.primitive.isInstanceOf[DataArray[_, _]])
+      assert(ds.primitives.isInstanceOf[DataArray[_, _]])
 
       assert(ds.array != null)
       if (data != null) checkBuffer(wrapArray(ds.array), data)
@@ -243,17 +243,17 @@ object AttributeTestUtil extends FunSuite {
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // primitive
+    // primitives
     if (seq.components == 1) {
-      assert(seq eq seq.primitive)
+      assert(seq eq seq.primitives)
     }
     else {
       val primitiveDesc = descriptor.copy(
-        metaManifest = seq.primitive.metaManifest,
-        readManifest = seq.primitive.readManifest,
+        metaManifest = seq.primitives.metaManifest,
+        readManifest = seq.primitives.readManifest,
         components = 1
       )
-      testArray(seq.primitive, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
+      testArray(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
     }
 
     //asReadOnly
@@ -270,14 +270,14 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == seq.components)
 
     assert(seq.readOnlyBuffer.isDirect)
-    assert(seq.primitive.isInstanceOf[ReadDataBuffer[_, _]])
+    assert(seq.primitives.isInstanceOf[ReadDataBuffer[_, _]])
     assert(seq.asReadOnly.isInstanceOf[ReadDataBuffer[_, _]])
 
     val ds = seq.asInstanceOf[DataBuffer[E, R]]
     assert(ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.primitive.isInstanceOf[DataBuffer[_, _]])
+      assert(ds.primitives.isInstanceOf[DataBuffer[_, _]])
     }
 
     if (seq.metaManifest == MetaManifest.SInt) {
@@ -289,17 +289,17 @@ object AttributeTestUtil extends FunSuite {
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // primitive
+    // primitives
     if (seq.components == 1) {
-      assert(seq eq seq.primitive)
+      assert(seq eq seq.primitives)
     }
     else {
       val primitiveDesc = descriptor.copy(
-        metaManifest = seq.primitive.metaManifest,
-        readManifest = seq.primitive.readManifest,
+        metaManifest = seq.primitives.metaManifest,
+        readManifest = seq.primitives.readManifest,
         components = 1
       )
-      testBuffer(seq.primitive, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
+      testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
     }
 
     //asReadOnly
@@ -318,25 +318,25 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.stride == stride)
 
     assert(seq.readOnlyBuffer.isDirect)
-    assert(seq.primitive.isInstanceOf[ReadDataBuffer[_, _]])
+    assert(seq.primitives.isInstanceOf[ReadDataBuffer[_, _]])
     assert(seq.asReadOnly.isInstanceOf[ReadDataView[_, _]])
 
     val ds = seq.asInstanceOf[DataView[E, R]]
     assert(ds.buffer.isDirect)
 
     if (!readOnly) {
-      assert(ds.primitive.isInstanceOf[DataBuffer[_, _]])
+      assert(ds.primitives.isInstanceOf[DataBuffer[_, _]])
     }
 
     testSeq(seq, readOnly, data, descriptor)
 
-    // primitive
+    // primitives
     val primitiveDesc = descriptor.copy(
-      metaManifest = seq.primitive.metaManifest,
-      readManifest = seq.primitive.readManifest,
+      metaManifest = seq.primitives.metaManifest,
+      readManifest = seq.primitives.readManifest,
       components = 1
     )
-    testBuffer(seq.primitive, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
+    testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[E#Component, R]])
 
     //asReadOnly
     if (!readOnly) testView(seq.asReadOnly, offset, stride, true, data)

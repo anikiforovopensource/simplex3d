@@ -37,23 +37,23 @@ abstract class DataAdapter[E <: CompositeMeta, B <: Defined](final val component
   final val boundManifest: Manifest[B]
 )
 extends CompositionFactory[E, B] {
-  def apply(primitive: inContiguous[E#Component, Raw], j: Int) :E#Const
-  def update(primitive: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
+  def apply(primitives: inContiguous[E#Component, Raw], j: Int) :E#Const
+  def update(primitives: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
 
-  def mkReadDataArray[P <: B](primitive: ReadDataArray[E#Component, P])
+  def mkReadDataArray[P <: B](primitives: ReadDataArray[E#Component, P])
   :ReadDataArray[E, P] = {
-    enforceRawType(primitive.rawType)
-    new GenericArray(this, primitive)
+    enforceRawType(primitives.rawType)
+    new GenericArray(this, primitives)
   }
-  def mkReadDataBuffer[P <: B](primitive: ReadDataBuffer[E#Component, P])
+  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[E#Component, P])
   :ReadDataBuffer[E, P] = {
-    enforceRawType(primitive.rawType)
-    new GenericBuffer(this, primitive)
+    enforceRawType(primitives.rawType)
+    new GenericBuffer(this, primitives)
   }
-  protected[data] def mkReadDataViewInstance[P <: B](primitive: ReadDataBuffer[E#Component, P], off: Int, str: Int)
+  protected[data] def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[E#Component, P], off: Int, str: Int)
   :ReadDataView[E, P] = {
-    enforceRawType(primitive.rawType)
-    new GenericView(this, primitive, off, str)
+    enforceRawType(primitives.rawType)
+    new GenericView(this, primitives, off, str)
   }
 
   // Rework this initialization code when/if intersectingType manifest has an accesible list of parents

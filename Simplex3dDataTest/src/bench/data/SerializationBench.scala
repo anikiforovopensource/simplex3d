@@ -44,13 +44,13 @@ object SerializationBench {
 
   val random = new java.util.Random()
 
-  val primitive = DataArray[RFloat, RFloat](size)
+  val primitives = DataArray[RFloat, RFloat](size)
   var i = 0; while (i < size) {
-    primitive(i) = random.nextFloat()
+    primitives(i) = random.nextFloat()
     i += 1
   }
 
-  val composite = DataArray[Vec4, RFloat](primitive)
+  val composite = DataArray[Vec4, RFloat](primitives)
 
   
   def test() {
@@ -58,12 +58,12 @@ object SerializationBench {
     var start = 0L
 
     start = System.currentTimeMillis
-    testWritePrimitive(primitive, loops)
+    testWritePrimitive(primitives, loops)
     System.gc()
     val timeWritePrimitive = System.currentTimeMillis - start
 
     start = System.currentTimeMillis
-    testReadPrimitive(primitive, loops)
+    testReadPrimitive(primitives, loops)
     System.gc()
     val timeReadPrimitive = System.currentTimeMillis - start
 

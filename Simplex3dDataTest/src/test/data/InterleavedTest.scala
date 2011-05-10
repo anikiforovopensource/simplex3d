@@ -411,8 +411,8 @@ class InterleavedTest extends FunSuite {
 
       assert(a.metaManifest == b.metaManifest)
       assert(a.readManifest == b.readManifest)
-      assert(a.primitive.metaManifest == b.primitive.metaManifest)
-      assert(a.primitive.readManifest == b.primitive.readManifest)
+      assert(a.primitives.metaManifest == b.primitives.metaManifest)
+      assert(a.primitives.readManifest == b.primitives.readManifest)
       assert(a.rawType == b.rawType)
 
       // Test content.

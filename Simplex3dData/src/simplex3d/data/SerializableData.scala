@@ -51,5 +51,5 @@ abstract class SerializableComposite extends SerializableData {
     toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: PrimitiveMeta, _]])
   }
 
-  protected def toReadDataArray(primitive: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _]
+  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _]
 }

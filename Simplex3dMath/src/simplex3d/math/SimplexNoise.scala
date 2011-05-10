@@ -30,44 +30,38 @@
 package simplex3d.math
 
 
-// An empty class to make -Xno-forwarders work
-private[math] class SimplexNoise
-
-
 /** <code>SimplexNoise</code> contains the implementation
  * of simplex noise algorithm.
  *
  * @author Stefan Gustavson, ITN-LiTH
  * @author Bill Licea-Kane, ATI
  *
- * Ported to Scala, implemented 1D noise.
+ * Ported to Scala, implemented 1D noise, improved scaling constants, added seed.
  * @author Aleksey Nikiforov (lex)
  */
-private[math] object SimplexNoise {
+class SimplexNoise(val seed: Long) {
 
-  // Offset values
-  final val offset1 = 7.2*0.7071067811865475244
-  final val offset2 = 15.9*0.7071067811865475244
-  final val offset3 = 22.3*0.7071067811865475244
+  private final val perm: Array[Byte] = {
+    val array = new Array[Byte](256)
 
+    var i = 0; while (i < array.length) {
+      array(i) = i.toByte
+      i += 1
+    }
 
-  private final val perm: Array[Byte] = Array(
-    -105, -96, -119, 91, 90, 15, -125, 13, -55, 95, 96, 53, -62, -23, 7, -31, -116,
-    36, 103, 30, 69, -114, 8, 99, 37, -16, 21, 10, 23, -66, 6, -108, -9, 120, -22,
-    75, 0, 26, -59, 62, 94, -4, -37, -53, 117, 35, 11, 32, 57, -79, 33, 88, -19,
-    -107, 56, 87, -82, 20, 125, -120, -85, -88, 68, -81, 74, -91, 71, -122, -117,
-    48, 27, -90, 77, -110, -98, -25, 83, 111, -27, 122, 60, -45, -123, -26, -36,
-    105, 92, 41, 55, 46, -11, 40, -12, 102, -113, 54, 65, 25, 63, -95, 1, -40, 80,
-    73, -47, 76, -124, -69, -48, 89, 18, -87, -56, -60, -121, -126, 116, -68, -97,
-    86, -92, 100, 109, -58, -83, -70, 3, 64, 52, -39, -30, -6, 124, 123, 5, -54, 38,
-    -109, 118, 126, -1, 82, 85, -44, -49, -50, 59, -29, 47, 16, 58, 17, -74, -67,
-    28, 42, -33, -73, -86, -43, 119, -8, -104, 2, 44, -102, -93, 70, -35, -103, 101,
-    -101, -89, 43, -84, 9, -127, 22, 39, -3, 19, 98, 108, 110, 79, 113, -32, -24,
-    -78, -71, 112, 104, -38, -10, 97, -28, -5, 34, -14, -63, -18, -46, -112, 12,
-    -65, -77, -94, -15, 81, 51, -111, -21, -7, 14, -17, 107, 49, -64, -42, 31, -75,
-    -57, 106, -99, -72, 84, -52, -80, 115, 121, 50, 45, 127, 4, -106, -2, -118, -20,
-    -51, 93, -34, 114, 67, 29, 24, 72, -13, -115, -128, -61, 78, 66, -41, 61, -100, -76
-  )
+    val random = new java.util.Random(seed)
+    i = 0; while (i < array.length) {
+      val randomIndex = random.nextInt(array.length)
+
+      val tmp = array(i)
+      array(i) = array(randomIndex)
+      array(randomIndex) = tmp
+
+      i += 1
+    }
+
+    array
+  }
 
   private final val grad3: Array[Array[Byte]] = Array(
     Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
@@ -88,7 +82,7 @@ private[math] object SimplexNoise {
   )
 
   // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
-  private def ifloor(x: Double) :Long = {
+  private final def ifloor(x: Double) :Long = {
     val i = x.toLong
     if (x > 0 || x == i) i else i - 1
   }
@@ -98,10 +92,10 @@ private[math] object SimplexNoise {
   private final val G1 = 0.7071067811865475244 //1 / Math.sqrt(2.0)
 
   /** Computes 1D simplex noise.
-   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
+   * @param x x coordinate
    * @return simplex noise value for the specified coordinate.
    */
-  def noise(x: Double) :Double = {
+  final def noise(x: Double) :Double = {
     // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
     val pix = ifloor(x*F1)
 
@@ -152,11 +146,11 @@ private[math] object SimplexNoise {
 
   /** Computes 2D simplex noise. Somewhat slower but much better looking
    * than classic (Perlin) noise.
-   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
-   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
+   * @param x x coordinate
+   * @param y y coordinate
    * @return simplex noise value for the specified coordinates.
    */
-  def noise(x: Double, y: Double) :Double = {
+  final def noise(x: Double, y: Double) :Double = {
     // Skew the (x,y) space to determine which cell of 2 simplices we're in.
     val s = (x + y) * F2 // Hairy factor for 2D skewing.
 
@@ -236,12 +230,12 @@ private[math] object SimplexNoise {
 
   /** Computes 3D simplex noise. Comparable in speed to classic (Perlin) noise,
    * better looking.
-   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
-   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
-   * @param z z coordinate, must be in range of [-2E+8, +2E+8].
+   * @param x x coordinate
+   * @param y y coordinate
+   * @param z z coordinate
    * @return simplex noise value for the specified coordinates.
    */
-  def noise(x: Double, y: Double, z:Double) :Double = {
+  final def noise(x: Double, y: Double, z:Double) :Double = {
     // Skew the (x,y,z) space to determine which cell of 6 simplices we're in.
     val s = (x + y + z) * F3 // Factor for 3D skewing.
 
@@ -372,13 +366,13 @@ private[math] object SimplexNoise {
 
   /** Computes 4D simplex noise. A lot faster than classic (Perlin) 4D noise,
    * and better looking.
-   * @param x x coordinate, must be in range of [-2E+8, +2E+8].
-   * @param y y coordinate, must be in range of [-2E+8, +2E+8].
-   * @param z z coordinate, must be in range of [-2E+8, +2E+8].
-   * @param w w coordinate, must be in range of [-2E+8, +2E+8].
+   * @param x x coordinate
+   * @param y y coordinate
+   * @param z z coordinate
+   * @param w w coordinate
    * @return simplex noise value for the specified coordinates.
    */
-  def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
+  final def noise(x: Double, y: Double, z:Double, w:Double) :Double = {
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in.
     val s = (x + y + z + w) * F4 // Factor for 4D skewing.
 
@@ -514,9 +508,18 @@ private[math] object SimplexNoise {
 
     // This number is a result of a numeric search for max value.
     // max value point (after floor): Vec4(0, Vec3(0.13608593378889))
-    // Discarding digits will affect scale after 0.13608593000000.
+    // Discarding digits will not affect scale after 0.13608593000000.
 
     // Sum up and scale the result to cover the range [-1,1].
     62.777711789695920 * (n0 + n1 + n2 + n3 + n4)
   }
+}
+
+
+object SimplexNoise extends SimplexNoise(0) {
+
+  // Offset values
+  final val offset1 = 7.2*0.7071067811865475244
+  final val offset2 = 15.9*0.7071067811865475244
+  final val offset3 = 22.3*0.7071067811865475244
 }

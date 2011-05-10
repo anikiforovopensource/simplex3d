@@ -28,7 +28,7 @@ import scala.reflect.ClassManifest.{classType}
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Meta {
+sealed trait Meta {
   type Read
   type Const <: Read
   type Component <: PrimitiveMeta

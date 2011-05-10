@@ -20,14 +20,12 @@
 
 package simplex3d.math
 
-import simplex3d.math.integration.ShaderData
-
 
 /** <code>MathObject</code> is a supertype for all the math objects.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait MathObject extends Cloneable with ShaderData {
+sealed trait MathObject extends Cloneable {
   type Clone <: MathObject
 }
 

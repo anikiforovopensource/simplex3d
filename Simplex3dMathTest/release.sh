@@ -94,7 +94,7 @@ silent("ant", "clean")
 // Compile dependencies.
 val dependencies =
   "src/test/math/BooleanCombinations.scala" +:
-  listFiles("src/visual/math/draw", Nil)
+  listFiles("src/visual/math/lines", Nil)
 
 println("Compiling dependencies...")
 //println(dependencies.mkString("\n"))

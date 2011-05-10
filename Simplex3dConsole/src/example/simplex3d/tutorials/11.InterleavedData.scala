@@ -38,8 +38,8 @@ object InterleavedData extends Application {
       texCoords
     )(size)
 
-    // Primitive layout.
-    val prim = vertices.primitive
+    // PrimitiveSeq layout.
+    val prim = vertices.primitives
     vertices(0) == Vec3(prim(0), prim(1), prim(2))
     normals(0) == Vec3(prim(3), prim(4), prim(5))
     texCoords(0) == Vec2(prim(6), prim(7))

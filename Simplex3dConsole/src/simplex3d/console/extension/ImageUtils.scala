@@ -75,7 +75,7 @@ object ImageUtils {
 
   private[this] def mkImgRgbUByte(dims: inVec2i, data: inDataSeq[_, UByte]) = {
     val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
-    val p = ReadContiguous[SInt, UByte](data.primitive)
+    val p = ReadContiguous[SInt, UByte](data.primitives)
 
     var y = 0; while (y < dims.y) {
       var x = 0; while (x < dims.x) {

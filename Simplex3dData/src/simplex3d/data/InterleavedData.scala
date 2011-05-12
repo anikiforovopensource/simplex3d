@@ -28,8 +28,8 @@ import java.nio._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] {
+@SerialVersionUID(8104346712419693669L)
+class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] with Serializable {
 
   InterleavedData.verifyFormat(dviews)
   @transient private[this] var views = dviews.toArray

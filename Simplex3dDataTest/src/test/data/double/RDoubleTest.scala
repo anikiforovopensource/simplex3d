@@ -30,7 +30,6 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -130,17 +129,6 @@ class RDoubleTest extends FunSuite {
     testBufferFromCollection[RDouble, RDouble]((a: IndexedSeq[Double]) => DataBuffer[RDouble, RDouble](a: _*))
   }
   
-  test("Copy") {
-    testCopy(DataSeq[RDouble, UByte])
-    testCopy(DataSeq[RDouble, SByte])
-    testCopy(DataSeq[RDouble, UShort])
-    testCopy(DataSeq[RDouble, SShort])
-    testCopy(DataSeq[RDouble, UInt])
-    testCopy(DataSeq[RDouble, SInt])
-    testCopy(DataSeq[RDouble, HFloat])
-    testCopy(DataSeq[RDouble, RFloat])
-    testCopy(DataSeq[RDouble, RDouble])
-  }
   
   private val size = 20
   

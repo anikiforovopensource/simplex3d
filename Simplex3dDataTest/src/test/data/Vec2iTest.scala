@@ -27,7 +27,6 @@ import simplex3d.data._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -95,15 +94,6 @@ class Vec2iTest extends FunSuite {
     testReadViewFromData(ReadDataView[Vec2i, UInt](_, _, _))
     testArrayFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataArray[Vec2i, UInt](a: _*))
     testBufferFromCollection[Vec2i, UInt]((a: IndexedSeq[ReadVec2i]) => DataBuffer[Vec2i, UInt](a: _*))
-  }
-  
-  test("Copy") {
-    testCopy(DataSeq[Vec2i, UByte])
-    testCopy(DataSeq[Vec2i, SByte])
-    testCopy(DataSeq[Vec2i, UShort])
-    testCopy(DataSeq[Vec2i, SShort])
-    testCopy(DataSeq[Vec2i, UInt])
-    testCopy(DataSeq[Vec2i, SInt])
   }
 
   test("Apply/Update") {

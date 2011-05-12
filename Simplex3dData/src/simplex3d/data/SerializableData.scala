@@ -26,13 +26,13 @@ import java.io._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class SerializableData {
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class SerializableData extends Serializable {
   final var content: AnyRef = _
 }
 
-@serializable @SerialVersionUID(8104346712419693669L)
-private[data] abstract class SerializablePrimitive extends SerializableData {
+@SerialVersionUID(8104346712419693669L)
+private[data] abstract class SerializablePrimitive extends SerializableData with Serializable {
   final var readOnly: Boolean = _
 
   @throws(classOf[ObjectStreamException])
@@ -44,8 +44,8 @@ private[data] abstract class SerializablePrimitive extends SerializableData {
   protected def toReadDataArray(): ReadDataArray[_, _]
 }
 
-@serializable @SerialVersionUID(8104346712419693669L)
-abstract class SerializableComposite extends SerializableData {
+@SerialVersionUID(8104346712419693669L)
+abstract class SerializableComposite extends SerializableData with Serializable {
   @throws(classOf[ObjectStreamException])
   final def readResolve() :Object = {
     toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: PrimitiveMeta, _]])

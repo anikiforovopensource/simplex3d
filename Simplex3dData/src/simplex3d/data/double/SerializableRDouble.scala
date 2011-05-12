@@ -25,8 +25,8 @@ package double
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimitive {
+@SerialVersionUID(8104346712419693669L)
+private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimitive with Serializable {
   protected def toReadDataArray(): ReadDataArray[_, _] = {
     import RawType._
 
@@ -45,9 +45,11 @@ private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimi
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
-private[data] class CompositeRDouble(val components: Int) extends SerializableComposite {
-  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
+@SerialVersionUID(8104346712419693669L)
+private[data] class CompositeRDouble(val components: Int) extends SerializableComposite with Serializable {
+  protected def toReadDataArray(
+    primitives: ReadDataArray[_ <: PrimitiveMeta, _]
+  ): ReadDataArray[_ <: CompositeMeta, _] = {
     components match {
       case 2 => FactoryVec2d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
       case 3 => FactoryVec3d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])

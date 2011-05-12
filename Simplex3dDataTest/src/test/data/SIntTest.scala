@@ -28,7 +28,6 @@ import Descriptors._
 import TestUtil._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -125,16 +124,8 @@ class SIntTest extends FunSuite {
     testArrayFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataArray[SInt, UInt](a: _*))
     testBufferFromCollection[SInt, UInt]((a: IndexedSeq[Int]) => DataBuffer[SInt, UInt](a: _*))
   }
-  
-  test("Copy") {
-    testCopy(DataSeq[SInt, UByte])
-    testCopy(DataSeq[SInt, SByte])
-    testCopy(DataSeq[SInt, UShort])
-    testCopy(DataSeq[SInt, SShort])
-    testCopy(DataSeq[SInt, UInt])
-    testCopy(DataSeq[SInt, SInt])
-  }
 
+  
   private val size = 10
 
   test("Apply/Update") {

@@ -30,7 +30,6 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -119,18 +118,8 @@ class RFloatTest extends FunSuite {
     testArrayFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataArray[RFloat, RFloat](a: _*))
     testBufferFromCollection[RFloat, RFloat]((a: IndexedSeq[Float]) => DataBuffer[RFloat, RFloat](a: _*))
   }
-  
-  test("Copy") {
-    testCopy(DataSeq[RFloat, UByte])
-    testCopy(DataSeq[RFloat, SByte])
-    testCopy(DataSeq[RFloat, UShort])
-    testCopy(DataSeq[RFloat, SShort])
-    testCopy(DataSeq[RFloat, UInt])
-    testCopy(DataSeq[RFloat, SInt])
-    testCopy(DataSeq[RFloat, HFloat])
-    testCopy(DataSeq[RFloat, RFloat])
-  }
-  
+
+
   private val size = 10
   
   test("Apply/Update") {

@@ -43,9 +43,7 @@ import Descriptors._
 object TestUtil extends FunSuite {
 
   private val randomSrc = new java.util.Random(0)
-  private def ni = randomSrc.nextInt
-  private def nf = randomSrc.nextFloat
-  private def nd = randomSrc.nextDouble
+
 
   private def alloc(size: Int) = {
     ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder)
@@ -228,7 +226,11 @@ object TestUtil extends FunSuite {
     genBuffer(byteCapacity, descriptor, true)
   }
 
-  private def rand[T](m: ClassManifest[T]) :T = {
+  private def rand[T](randomSrc: java.util.Random, m: ClassManifest[T]) :T = {
+    def ni = randomSrc.nextInt
+    def nf = randomSrc.nextFloat
+    def nd = randomSrc.nextDouble
+
     (m match {
       case MetaManifest.SInt => ni
       case Vec2i.Manifest => Vec2i(ni, ni)
@@ -246,13 +248,18 @@ object TestUtil extends FunSuite {
       case Mat2x3d.Manifest => Mat2x3d(nd, nd, nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
-  private def randPrim[T](m: ClassManifest[T]) :T = {
+  private def randPrim[T](randomSrc: java.util.Random, m: ClassManifest[T]) :T = {
+    def ni = randomSrc.nextInt
+    def nf = randomSrc.nextFloat
+    def nd = randomSrc.nextDouble
+
     (m match {
       case MetaManifest.SInt => ni.asInstanceOf[AnyRef]
       case MetaManifest.RFloat => nf.asInstanceOf[AnyRef]
       case MetaManifest.RDouble => nd.asInstanceOf[AnyRef]
     }).asInstanceOf[T]
   }
+
   private def mkPrimSeq[E <: Meta, R <: Raw](size: Int, descriptor: Descriptor[E, R]) = {
     (descriptor.componentManifest match {
       case MetaManifest.SInt =>
@@ -296,16 +303,16 @@ object TestUtil extends FunSuite {
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
+    val localSrc = new java.util.Random(seed)
 
-    randomSrc.setSeed(seed)
     var i = 0; while (i < array.length) {
-      array(i) = rand(descriptor.metaManifest).asInstanceOf[E#Read]
+      array(i) = rand(localSrc, descriptor.metaManifest).asInstanceOf[E#Read]
       i += 1
     }
 
-    randomSrc.setSeed(seed)
+    localSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(descriptor.componentManifest).asInstanceOf[E#Component#Read]
+      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[E#Component#Read]
       i += 1
     }
 

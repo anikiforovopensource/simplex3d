@@ -29,7 +29,6 @@ import simplex3d.data.double._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -127,18 +126,6 @@ class Vec3dTest extends FunSuite {
     testReadViewFromData(ReadDataView[Vec3d, RDouble](_, _, _))
     testArrayFromCollection[Vec3d, RDouble]((a: IndexedSeq[ReadVec3d]) => DataArray[Vec3d, RDouble](a: _*))
     testBufferFromCollection[Vec3d, RDouble]((a: IndexedSeq[ReadVec3d]) => DataBuffer[Vec3d, RDouble](a: _*))
-  }
-  
-  test("Copy") {
-    testCopy(DataSeq[Vec3d, UByte])
-    testCopy(DataSeq[Vec3d, SByte])
-    testCopy(DataSeq[Vec3d, UShort])
-    testCopy(DataSeq[Vec3d, SShort])
-    testCopy(DataSeq[Vec3d, UInt])
-    testCopy(DataSeq[Vec3d, SInt])
-    testCopy(DataSeq[Vec3d, HFloat])
-    testCopy(DataSeq[Vec3d, RFloat])
-    testCopy(DataSeq[Vec3d, RDouble])
   }
   
   test("Apply/Update") {

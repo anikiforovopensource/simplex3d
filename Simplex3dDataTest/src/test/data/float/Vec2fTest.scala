@@ -29,7 +29,6 @@ import simplex3d.data.float._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -118,18 +117,7 @@ class Vec2fTest extends FunSuite {
     testArrayFromCollection[Vec2f, RFloat]((a: IndexedSeq[ReadVec2f]) => DataArray[Vec2f, RFloat](a: _*))
     testBufferFromCollection[Vec2f, RFloat]((a: IndexedSeq[ReadVec2f]) => DataBuffer[Vec2f, RFloat](a: _*))
   }
-  
-  test("Copy") {
-    testCopy(DataSeq[Vec2f, UByte])
-    testCopy(DataSeq[Vec2f, SByte])
-    testCopy(DataSeq[Vec2f, UShort])
-    testCopy(DataSeq[Vec2f, SShort])
-    testCopy(DataSeq[Vec2f, UInt])
-    testCopy(DataSeq[Vec2f, SInt])
-    testCopy(DataSeq[Vec2f, HFloat])
-    testCopy(DataSeq[Vec2f, RFloat])
-  }
-  
+
   test("Apply/Update") {
     testApplyUpdateArray[Vec2f, SByte](DataArray[Vec2f, SByte](_))
     testApplyUpdateBuffer(DataBuffer[Vec2f, SByte](_))

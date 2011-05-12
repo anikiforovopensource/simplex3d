@@ -29,7 +29,6 @@ import simplex3d.data.float._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
-import CopyTestUtil._
 
 
 /**
@@ -47,10 +46,6 @@ class Mat2x3fTest extends FunSuite {
     testReadViewFromData(ReadDataView[Mat2x3f, RFloat](_, _, _))
     testArrayFromCollection[Mat2x3f, RFloat]((a: IndexedSeq[ReadMat2x3f]) => DataArray[Mat2x3f, RFloat](a: _*))
     testBufferFromCollection[Mat2x3f, RFloat]((a: IndexedSeq[ReadMat2x3f]) => DataBuffer[Mat2x3f, RFloat](a: _*))
-  }
-  
-  test("Copy") {
-    testCopy(DataSeq[Mat2x3f, RFloat])
   }
   
   test("Apply/Update") {

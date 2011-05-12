@@ -25,7 +25,8 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait MathObject extends Cloneable {
+@SerialVersionUID(8104346712419693669L)
+sealed trait MathObject extends Cloneable with Serializable {
   type Clone <: MathObject
 }
 

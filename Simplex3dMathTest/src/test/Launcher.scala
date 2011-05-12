@@ -27,6 +27,7 @@ package test
 object Launcher {
   def main(args: Array[String]) {
     org.scalatest.tools.Runner.main(Array[String](
+      "-c",
       "-p",
       "build/classes",
       "-gNHL"

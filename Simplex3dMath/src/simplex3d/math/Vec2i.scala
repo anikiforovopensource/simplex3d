@@ -28,9 +28,9 @@ import simplex3d.math.CommonMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec2i
-extends ProtectedVec2i[Int] with ReadPropertyRef[ReadVec2i]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
+with ReadPropertyRef[ReadVec2i] with Serializable
 {
 
   type Clone <: ReadVec2i
@@ -153,9 +153,9 @@ extends ProtectedVec2i[Int] with ReadPropertyRef[ReadVec2i]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstVec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with Immutable {
+extends ReadVec2i with Immutable with Serializable {
   px = cx; py = cy
 
   type Clone = ConstVec2i
@@ -176,9 +176,10 @@ object ConstVec2i {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Vec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with CompositeMeta with Implicits[On] with PropertyRef[ReadVec2i]
+extends ReadVec2i with CompositeMeta with Implicits[On]
+with PropertyRef[ReadVec2i] with Serializable
 {
   px = cx; py = cy
 

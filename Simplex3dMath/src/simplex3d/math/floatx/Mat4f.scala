@@ -29,9 +29,9 @@ import simplex3d.math.floatx.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadMat4f
-extends ProtectedMat4f[Float] with ReadPropertyRef[ReadMat4f]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadMat4f extends ProtectedMat4f[Float]
+with ReadPropertyRef[ReadMat4f] with Serializable
 {
 
   type Clone <: ReadMat4f
@@ -340,13 +340,13 @@ extends ProtectedMat4f[Float] with ReadPropertyRef[ReadMat4f]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstMat4f private[math] (
   c00: Float, c10: Float, c20: Float, c30: Float,
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends ReadMat4f with Immutable
+) extends ReadMat4f with Immutable with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -396,13 +396,15 @@ object ConstMat4f {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Mat4f private[math] (
   c00: Float, c10: Float, c20: Float, c30: Float,
   c01: Float, c11: Float, c21: Float, c31: Float,
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
-) extends ReadMat4f with CompositeMeta with Implicits[On] with PropertyRef[ReadMat4f]
+)
+extends ReadMat4f with CompositeMeta with Implicits[On]
+with PropertyRef[ReadMat4f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31

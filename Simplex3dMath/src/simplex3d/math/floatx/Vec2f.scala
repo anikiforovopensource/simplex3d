@@ -29,9 +29,9 @@ import simplex3d.math.floatx.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec2f
-extends ProtectedVec2f[Float] with ReadPropertyRef[ReadVec2f]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
+with ReadPropertyRef[ReadVec2f] with Serializable
 {
 
   type Clone <: ReadVec2f
@@ -138,9 +138,9 @@ extends ProtectedVec2f[Float] with ReadPropertyRef[ReadVec2f]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstVec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with Immutable {
+extends ReadVec2f with Immutable with Serializable {
   px = cx; py = cy
 
   type Clone = ConstVec2f
@@ -161,9 +161,10 @@ object ConstVec2f {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with CompositeMeta with Implicits[On] with PropertyRef[ReadVec2f]
+extends ReadVec2f with CompositeMeta with Implicits[On]
+with PropertyRef[ReadVec2f] with Serializable
 {
   px = cx; py = cy
 

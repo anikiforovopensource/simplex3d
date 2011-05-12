@@ -29,9 +29,9 @@ import simplex3d.math.doublex.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadMat3x4d
-extends ProtectedMat3x4d[Double] with ReadPropertyRef[ReadMat3x4d]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadMat3x4d extends ProtectedMat3x4d[Double]
+with ReadPropertyRef[ReadMat3x4d] with Serializable
 {
 
   type Clone <: ReadMat3x4d
@@ -397,13 +397,13 @@ extends ProtectedMat3x4d[Double] with ReadPropertyRef[ReadMat3x4d]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstMat3x4d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double,
   c02: Double, c12: Double, c22: Double,
   c03: Double, c13: Double, c23: Double
-) extends ReadMat3x4d with Immutable
+) extends ReadMat3x4d with Immutable with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
@@ -453,13 +453,15 @@ object ConstMat3x4d {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Mat3x4d private[math] (
   c00: Double, c10: Double, c20: Double,
   c01: Double, c11: Double, c21: Double,
   c02: Double, c12: Double, c22: Double,
   c03: Double, c13: Double, c23: Double
-) extends ReadMat3x4d with CompositeMeta with Implicits[On] with PropertyRef[ReadMat3x4d]
+)
+extends ReadMat3x4d with CompositeMeta with Implicits[On]
+with PropertyRef[ReadMat3x4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

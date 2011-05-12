@@ -31,6 +31,10 @@ import simplex3d.math.double._
 class Vec4dSwizzleTest extends FunSuite {
 
   test("Swizzled read") {
+    testSwizzled()
+  }
+
+  def testSwizzled() { // Workaround for Scala-2.9.0.final bug#4573.
     val x = 5d
     val y = 6d
     val z = 7d

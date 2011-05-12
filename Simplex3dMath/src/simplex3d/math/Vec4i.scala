@@ -28,9 +28,9 @@ import simplex3d.math.CommonMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec4i
-extends ProtectedVec4i[Int] with ReadPropertyRef[ReadVec4i]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadVec4i extends ProtectedVec4i[Int]
+with ReadPropertyRef[ReadVec4i] with Serializable
 {
 
   type Clone <: ReadVec4i
@@ -179,9 +179,9 @@ extends ProtectedVec4i[Int] with ReadPropertyRef[ReadVec4i]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstVec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
-extends ReadVec4i with Immutable {
+extends ReadVec4i with Immutable with Serializable {
   px = cx; py = cy; pz = cz; pw = cw
 
   type Clone = ConstVec4i
@@ -209,9 +209,10 @@ object ConstVec4i {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Vec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
-extends ReadVec4i with CompositeMeta with Implicits[On] with PropertyRef[ReadVec4i]
+extends ReadVec4i with CompositeMeta with Implicits[On]
+with PropertyRef[ReadVec4i] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 

@@ -60,7 +60,7 @@ def filterJava(files: Seq[String]) :Seq[String] = {
 }
 
 val outputdir = "build/classes"
-val classpath = "../Simplex3dMath/dist/Simplex3dMath.jar:lib/scalatest-1.2.jar:" + outputdir + "/"
+val classpath = "../Simplex3dMath/dist/Simplex3dMath.jar:lib/scalatest-1.4.1.jar:" + outputdir + "/"
 def compile(srcfiles: Seq[String]) {
   val scalaEnv =
     "JAVACMD=" + System.getenv("JAVA_HOME") + "/bin/java" ::

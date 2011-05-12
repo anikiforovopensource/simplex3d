@@ -29,9 +29,9 @@ import simplex3d.math.floatx.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadMat2f
-extends ProtectedMat2f[Float] with ReadPropertyRef[ReadMat2f]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadMat2f extends ProtectedMat2f[Float]
+with ReadPropertyRef[ReadMat2f] with Serializable
 {
 
   type Clone <: ReadMat2f
@@ -210,11 +210,11 @@ extends ProtectedMat2f[Float] with ReadPropertyRef[ReadMat2f]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstMat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends ReadMat2f with Immutable
+) extends ReadMat2f with Immutable with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -257,11 +257,13 @@ object ConstMat2f {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends ReadMat2f with CompositeMeta with Implicits[On] with PropertyRef[ReadMat2f]
+)
+extends ReadMat2f with CompositeMeta with Implicits[On]
+with PropertyRef[ReadMat2f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

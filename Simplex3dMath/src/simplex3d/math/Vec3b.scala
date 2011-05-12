@@ -28,9 +28,9 @@ import simplex3d.math.CommonMath._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec3b
-extends ProtectedVec3b[Boolean] with ReadPropertyRef[ReadVec3b]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean]
+with ReadPropertyRef[ReadVec3b] with Serializable
 {
 
   type Clone <: ReadVec3b
@@ -132,9 +132,9 @@ extends ProtectedVec3b[Boolean] with ReadPropertyRef[ReadVec3b]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstVec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with Immutable {
+extends ReadVec3b with Immutable with Serializable {
   px = cx; py = cy; pz = cz
 
   type Clone = ConstVec3b
@@ -156,9 +156,10 @@ object ConstVec3b {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with CompositeMeta with Implicits[On] with PropertyRef[ReadVec3b]
+extends ReadVec3b with CompositeMeta with Implicits[On]
+with PropertyRef[ReadVec3b] with Serializable
 {
   px = cx; py = cy; pz = cz
 

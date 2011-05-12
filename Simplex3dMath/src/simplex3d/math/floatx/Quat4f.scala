@@ -29,9 +29,9 @@ import simplex3d.math.floatx.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4f
-extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f]
+extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f] with Serializable
 {
   type Clone <: ReadQuat4f
   type Const = ConstQuat4f
@@ -155,10 +155,10 @@ extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstQuat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with Immutable {
+) extends ReadQuat4f with Immutable with Serializable {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Clone = ConstQuat4f
@@ -176,10 +176,12 @@ object ConstQuat4f {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with CompositeMeta with Implicits[On] with PropertyRef[ReadQuat4f]
+)
+extends ReadQuat4f with CompositeMeta with Implicits[On]
+with PropertyRef[ReadQuat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 

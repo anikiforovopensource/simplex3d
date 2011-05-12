@@ -29,9 +29,9 @@ import simplex3d.math.doublex.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadVec3d
-extends ProtectedVec3d[Double] with ReadPropertyRef[ReadVec3d]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
+with ReadPropertyRef[ReadVec3d] with Serializable
 {
 
   type Clone <: ReadVec3d
@@ -151,9 +151,9 @@ extends ProtectedVec3d[Double] with ReadPropertyRef[ReadVec3d]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstVec3d private[math] (cx: Double, cy: Double, cz: Double)
-extends ReadVec3d with Immutable {
+extends ReadVec3d with Immutable with Serializable {
   px = cx; py = cy; pz = cz
 
   type Clone = ConstVec3d
@@ -175,9 +175,10 @@ object ConstVec3d {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Vec3d private[math] (cx: Double, cy: Double, cz: Double)
-extends ReadVec3d with CompositeMeta with Implicits[On] with PropertyRef[ReadVec3d]
+extends ReadVec3d with CompositeMeta with Implicits[On]
+with PropertyRef[ReadVec3d] with Serializable
 {
   px = cx; py = cy; pz = cz
 

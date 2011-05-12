@@ -29,9 +29,9 @@ import simplex3d.math.floatx.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-@serializable @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadMat3f
-extends ProtectedMat3f[Float] with ReadPropertyRef[ReadMat3f]
+@SerialVersionUID(8104346712419693669L)
+sealed abstract class ReadMat3f extends ProtectedMat3f[Float]
+with ReadPropertyRef[ReadMat3f] with Serializable
 {
 
   type Clone <: ReadMat3f
@@ -269,12 +269,12 @@ extends ProtectedMat3f[Float] with ReadPropertyRef[ReadMat3f]
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class ConstMat3f private[math] (
   c00: Float, c10: Float, c20: Float,
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float
-) extends ReadMat3f with Immutable
+) extends ReadMat3f with Immutable with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21
@@ -318,12 +318,14 @@ object ConstMat3f {
 }
 
 
-@serializable @SerialVersionUID(8104346712419693669L)
+@SerialVersionUID(8104346712419693669L)
 final class Mat3f private[math] (
   c00: Float, c10: Float, c20: Float,
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float
-) extends ReadMat3f with CompositeMeta with Implicits[On] with PropertyRef[ReadMat3f]
+)
+extends ReadMat3f with CompositeMeta with Implicits[On]
+with PropertyRef[ReadMat3f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
   p01 = c01; p11 = c11; p21 = c21

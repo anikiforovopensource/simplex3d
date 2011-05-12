@@ -39,6 +39,7 @@ object JarLauncher {
   def main(args: Array[String]) {
     
     org.scalatest.tools.Runner.main(Array[String](
+      "-c",
       "-p",
       findJar(this.getClass),
       "-gNHL"

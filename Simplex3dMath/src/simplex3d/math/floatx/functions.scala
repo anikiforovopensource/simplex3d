@@ -941,7 +941,8 @@ object functions extends CommonMath {
   }
   
   /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
-   * otherwise performs Hermite interpolation from 0 to 1.
+   * otherwise performs Hermite interpolation from 0 to 1 with
+   * 1st derivate 0 at x = edge0 and x = edge1.
    * @param edge0 the first edge.
    * @param edge1 the second edge.
    * @param x a float argument.
@@ -959,6 +960,43 @@ object functions extends CommonMath {
       val t = (x - edge0)/(edge1 - edge0)
       t*t*(3 - 2*t)
     }
+  }
+
+  /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
+   * otherwise performs smooth interpolation from 0 to 1 with
+   * 1st and 2nd derivaties 0 at x = edge0 and x = edge1.
+   * @param edge0 the first edge.
+   * @param edge1 the second edge.
+   * @param x a float argument.
+   * @return one of the following:
+   *   - NaN if ''edge0'' > ''edge1''.
+   *   - 0 if ''x'' < ''edge0''.
+   *   - 1 if ''x'' > ''edge1''.
+   *   - smooth interpolation from 0 to 1 otherwise.
+   */
+  def smootherstep(edge0: Float, edge1: Float, x: Float) :Float = {
+    if (!(edge0 <= edge1)) scala.Float.NaN
+    else if (x >= edge1) 1
+    else if (x <= edge0) 0
+    else {
+      val t = (x - edge0)/(edge1 - edge0)
+      t*t*t*(t*(t*6 - 15) + 10)
+    }
+  }
+
+  def pulse(edge0: Float, edge1: Float, x: Float): Float = {
+    if (!(edge0 <= edge1)) scala.Float.NaN
+    else if (x >= edge1) 0
+    else if (x <= edge0) 0
+    else {
+      val t = (2*x - (edge0 + edge1))/(edge1 - edge0)
+      t*(t*t*(t*t*((-2048/432.0f)*t*t + (6144/432.0f)) + (-6144/432.0f)) + (2048/432.0f))
+    }
+  }
+
+  def saturate(edge0: Float, edge1: Float, x: Float) :Float = {
+    val s = (edge1 - edge0)*0.1f
+    x + pulse(edge0 - s, edge1 + s, x)*s
   }
 
   /** Checks if the argument is NaN.

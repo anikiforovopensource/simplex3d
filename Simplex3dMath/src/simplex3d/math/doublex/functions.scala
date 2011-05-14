@@ -738,6 +738,31 @@ object functions extends CommonMath {
     }
   }
 
+  def smootherstep(edge0: Double, edge1: Double, x: Double) :Double = {
+    if (!(edge0 <= edge1)) scala.Double.NaN
+    else if (x >= edge1) 1
+    else if (x <= edge0) 0
+    else {
+      val t = (x - edge0)/(edge1 - edge0)
+      t*t*t*(t*(t*6 - 15) + 10)
+    }
+  }
+
+  def pulse(edge0: Double, edge1: Double, x: Double): Double = {
+    if (!(edge0 <= edge1)) scala.Double.NaN
+    else if (x >= edge1) 0
+    else if (x <= edge0) 0
+    else {
+      val t = (2*x - (edge0 + edge1))/(edge1 - edge0)
+      t*(t*t*(t*t*((-2048/432.0)*t*t + (6144/432.0)) + (-6144/432.0)) + (2048/432.0))
+    }
+  }
+
+  def saturate(edge0: Double, edge1: Double, x: Double) :Double = {
+    val s = (edge1 - edge0)*0.1
+    x + pulse(edge0 - s, edge1 + s, x)*s
+  }
+
   def isnan(x: Double) :Boolean = java.lang.Double.isNaN(x)
   def isinf(x: Double) :Boolean = java.lang.Double.isInfinite(x)
 

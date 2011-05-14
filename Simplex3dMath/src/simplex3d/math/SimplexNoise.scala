@@ -44,7 +44,7 @@ class SimplexNoise(val seed: Long) {
   import SimplexNoise._
 
   
-  private final val perm: Array[Byte] = {
+  private final val permArray: Array[Byte] = {
 
     val array = Array[Byte](
       -105, -96, -119, 91, 90, 15, -125, 13, -55, 95, 96, 53, -62, -23, 7, -31, -116,
@@ -77,6 +77,11 @@ class SimplexNoise(val seed: Long) {
 
     array
   }
+
+  private final def perm(i: Int) = {
+    val xx = i ^ (i >> 16)
+    permArray((xx ^ (xx >> 8)) & 0xFF)
+  }
   
 
   // The implementation is restricted to arguments in range [-2E8, +2E8] when using Ints.
@@ -97,7 +102,7 @@ class SimplexNoise(val seed: Long) {
     // The x distance from the cell origin.
     val p0x = x - pix*G1
 
-    val ix = pix.toInt & 0xFF
+    val ix = pix.toInt
 
     // For the 1D case, the simplex shape is an interval of length 1.
 
@@ -119,7 +124,7 @@ class SimplexNoise(val seed: Long) {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val px = perm((ix + 1) & 0xFF)
+        val px = perm(ix + 1)
         // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
         val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
         val t = t1 * t1
@@ -154,8 +159,8 @@ class SimplexNoise(val seed: Long) {
     val p0x = x - pix + t
     val p0y = y - piy + t
 
-    val ix = pix.toInt & 0xFF
-    val iy = piy.toInt & 0xFF
+    val ix = pix.toInt
+    val iy = piy.toInt
 
     // For the 2D case, the simplex shape is an equilateral triangle.
     // Find out whether we are above or below the x=y diagonal to
@@ -169,7 +174,7 @@ class SimplexNoise(val seed: Long) {
       if (t0 < 0.0) 0.0
       else {
         val py = perm(iy)
-        val px = perm((ix + py) & 0xFF)
+        val px = perm(ix + py)
         val grad = grad3(px & 0x0F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y)
@@ -182,8 +187,8 @@ class SimplexNoise(val seed: Long) {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val py = perm((iy + o1y) & 0xFF)
-        val px = perm((ix + o1x + py) & 0xFF)
+        val py = perm(iy + o1y)
+        val px = perm(ix + o1x + py)
         val grad = grad3(px & 0x0F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y)
@@ -196,8 +201,8 @@ class SimplexNoise(val seed: Long) {
     val n2 =
       if(t2 < 0.0) 0.0
       else {
-        val py = perm((iy + 1) & 0xFF)
-        val px = perm((ix + 1 + py) & 0xFF)
+        val py = perm(iy + 1)
+        val px = perm(ix + 1 + py)
         val grad = grad3(px & 0x0F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y)
@@ -236,9 +241,9 @@ class SimplexNoise(val seed: Long) {
     val p0y = y - piy + t
     val p0z = z - piz + t
 
-    val ix = pix.toInt & 0xFF
-    val iy = piy.toInt & 0xFF
-    val iz = piz.toInt & 0xFF
+    val ix = pix.toInt
+    val iy = piy.toInt
+    val iz = piz.toInt
 
     // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
     // To find out which of the six possible tetrahedra we're in, we need to
@@ -280,8 +285,8 @@ class SimplexNoise(val seed: Long) {
       if (t0 < 0.0) 0.0
       else {
         val pz = perm(iz)
-        val py = perm((iy + pz) & 0xFF)
-        val px = perm((ix + py) & 0xFF)
+        val py = perm(iy + pz)
+        val px = perm(ix + py)
         val grad = grad3(px & 0x0F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z)
@@ -295,9 +300,9 @@ class SimplexNoise(val seed: Long) {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val pz = perm((iz + o1z) & 0xFF)
-        val py = perm((iy + o1y + pz) & 0xFF)
-        val px = perm((ix + o1x + py) & 0xFF)
+        val pz = perm(iz + o1z)
+        val py = perm(iy + o1y + pz)
+        val px = perm(ix + o1x + py)
         val grad = grad3(px & 0x0F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z)
@@ -311,9 +316,9 @@ class SimplexNoise(val seed: Long) {
     val n2 =
       if (t2 < 0.0) 0.0
       else {
-        val pz = perm((iz + o2z) & 0xFF)
-        val py = perm((iy + o2y + pz) & 0xFF)
-        val px = perm((ix + o2x + py) & 0xFF)
+        val pz = perm(iz + o2z)
+        val py = perm(iy + o2y + pz)
+        val px = perm(ix + o2x + py)
         val grad = grad3(px & 0x0F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z)
@@ -327,9 +332,9 @@ class SimplexNoise(val seed: Long) {
     val n3 =
       if(t3 < 0.0) 0.0
       else {
-        val pz = perm((iz + 1) & 0xFF)
-        val py = perm((iy + 1 + pz) & 0xFF)
-        val px = perm((ix + 1 + py) & 0xFF)
+        val pz = perm(iz + 1)
+        val py = perm(iy + 1 + pz)
+        val px = perm(ix + 1 + py)
         val grad = grad3(px & 0x0F)
         val t = t3 * t3
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z)
@@ -369,10 +374,10 @@ class SimplexNoise(val seed: Long) {
     val p0z = z - piz + t
     val p0w = w - piw + t
 
-    val ix = pix.toInt & 0xFF
-    val iy = piy.toInt & 0xFF
-    val iz = piz.toInt & 0xFF
-    val iw = piw.toInt & 0xFF
+    val ix = pix.toInt
+    val iy = piy.toInt
+    val iz = piz.toInt
+    val iw = piw.toInt
 
     // For the 4D case, the simplex is a 4D shape I won't even try to describe.
     // To find out which of the 24 possible simplices we're in, we need to
@@ -406,9 +411,9 @@ class SimplexNoise(val seed: Long) {
       if (t0 < 0.0) 0.0
       else {
         val pw = perm(iw)
-        val pz = perm((iz + pw) & 0xFF)
-        val py = perm((iy + pz) & 0xFF)
-        val px = perm((ix + py) & 0xFF)
+        val pz = perm(iz + pw)
+        val py = perm(iy + pz)
+        val px = perm(ix + py)
         val grad = grad4(px & 0x1F)
         val t = t0 * t0
         t * t * (grad(0)*p0x + grad(1)*p0y + grad(2)*p0z + grad(3)*p0w)
@@ -423,10 +428,10 @@ class SimplexNoise(val seed: Long) {
     val n1 =
       if (t1 < 0.0) 0.0
       else {
-        val pw = perm((iw + o1w) & 0xFF)
-        val pz = perm((iz + o1z + pw) & 0xFF)
-        val py = perm((iy + o1y + pz) & 0xFF)
-        val px = perm((ix + o1x + py) & 0xFF)
+        val pw = perm(iw + o1w)
+        val pz = perm(iz + o1z + pw)
+        val py = perm(iy + o1y + pz)
+        val px = perm(ix + o1x + py)
         val grad = grad4(px & 0x1F)
         val t = t1 * t1
         t * t * (grad(0)*p1x + grad(1)*p1y + grad(2)*p1z + grad(3)*p1w)
@@ -441,10 +446,10 @@ class SimplexNoise(val seed: Long) {
     val n2 =
       if (t2 < 0.0) 0.0
       else {
-        val pw = perm((iw + o2w) & 0xFF)
-        val pz = perm((iz + o2z + pw) & 0xFF)
-        val py = perm((iy + o2y + pz) & 0xFF)
-        val px = perm((ix + o2x + py) & 0xFF)
+        val pw = perm(iw + o2w)
+        val pz = perm(iz + o2z + pw)
+        val py = perm(iy + o2y + pz)
+        val px = perm(ix + o2x + py)
         val grad = grad4(px & 0x1F)
         val t = t2 * t2
         t * t * (grad(0)*p2x + grad(1)*p2y + grad(2)*p2z + grad(3)*p2w)
@@ -459,10 +464,10 @@ class SimplexNoise(val seed: Long) {
     val n3 =
       if (t3 < 0.0) 0.0
       else {
-        val pw = perm((iw + o3w) & 0xFF)
-        val pz = perm((iz + o3z + pw) & 0xFF)
-        val py = perm((iy + o3y + pz) & 0xFF)
-        val px = perm((ix + o3x + py) & 0xFF)
+        val pw = perm(iw + o3w)
+        val pz = perm(iz + o3z + pw)
+        val py = perm(iy + o3y + pz)
+        val px = perm(ix + o3x + py)
         val grad = grad4(px & 0x1F)
         val t = t3 * t3
         t * t * (grad(0)*p3x + grad(1)*p3y + grad(2)*p3z + grad(3)*p3w)
@@ -477,10 +482,10 @@ class SimplexNoise(val seed: Long) {
     val n4 =
       if(t4 < 0.0) 0.0
       else {
-        val pw = perm((iw + 1) & 0xFF)
-        val pz = perm((iz + 1 + pw) & 0xFF)
-        val py = perm((iy + 1 + pz) & 0xFF)
-        val px = perm((ix + 1 + py) & 0xFF)
+        val pw = perm(iw + 1)
+        val pz = perm(iz + 1 + pw)
+        val py = perm(iy + 1 + pz)
+        val px = perm(ix + 1 + py)
         val grad = grad4(px & 0x1F)
         val t = t4 * t4
         t * t * (grad(0)*p4x + grad(1)*p4y + grad(2)*p4z + grad(3)*p4w)

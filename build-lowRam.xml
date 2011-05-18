@@ -6,7 +6,8 @@
     <target name="release-all">
       <ant dir="Simplex3dMath" target="release-all"/>
       
-      <ant dir="Simplex3dMathTest" target="release-all"/>
+      <!-- <ant dir="Simplex3dMathTest" target="release-all"/> -->
+      <exec dir="Simplex3dMathTest" executable="sh" failonerror="true"> <arg value="release.sh"/> </exec>
       
       <ant dir="Simplex3dData" target="release-all"/>
       

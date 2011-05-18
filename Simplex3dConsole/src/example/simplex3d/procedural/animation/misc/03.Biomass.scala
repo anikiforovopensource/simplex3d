@@ -1,4 +1,4 @@
-package example.simplex3d.procedural.animation
+package example.simplex3d.procedural.animation.misc
 
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
@@ -8,34 +8,36 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object VaryingFrequency extends Application {
+object Biomass extends App {
 
   val zoom = 1.0/100
   val changeSpeed = 1.0/10
 
-  val octaves = 3
   val amplitudeDivisor = 2
-  val expectedMagnitude = 1.5
+  val expectedMagnitude = 0.7
 
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until 3) yield pow(amplitudeDivisor, -i)).toArray
 
   def noiseSum(p: inVec3) = {
     val varying = amplitudeDivisor + noise1(p)*0.02
 
-    def octave(i: Int, p: inVec3) = {
+    def octave(i: Int, p: inVec3, c: outVec3) = {
       val frequencyFactor = pow(varying, i)
-      noise1(p*frequencyFactor)*amplitudeFactors(i)
+      c(i) = noise1(p*frequencyFactor)*amplitudeFactors(i)
     }
 
-    var sum = 0.0; var i = 0; while (i < octaves) {
-      sum += octave(i, p + i)
+    val color = Vec3(0)
+
+    var i = 0; while (i < 3) {
+      octave(i, p + i, color)
       i += 1
     }
-    sum
+
+    color
   }
 
-  animateFunction("Varying Frequency") { (dims, time, pixel) =>
-    val p = Vec2(pixel.x + 1500, pixel.y)
+  animateFunction("Biomass") { (dims, time, pixel) =>
+    val p = Vec2(pixel.x + 5000, pixel.y)
     val noise = noiseSum(Vec3(p*zoom , time*changeSpeed))
     Vec3((noise + expectedMagnitude)/(2*expectedMagnitude))
   }

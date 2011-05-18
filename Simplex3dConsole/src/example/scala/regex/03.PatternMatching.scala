@@ -4,7 +4,7 @@ package example.scala.regex
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object PatternMatching extends Application {
+object PatternMatching extends App {
 
   val string = "aaabbb"
 

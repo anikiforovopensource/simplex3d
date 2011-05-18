@@ -4,7 +4,7 @@ package example.scala.regex
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object UsingMatch extends Application {
+object UsingMatch extends App {
 
   import scala.util.matching.Regex.Match
 

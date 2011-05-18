@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object ShowImage extends Application {
+object ShowImage extends App {
 
   {
     val dims = ConstVec2i(600, 400)

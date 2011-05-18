@@ -9,7 +9,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object NoiseDistribution extends Application {
+object NoiseDistribution extends App {
 
   val zoom = 1.0/50
   val changeSpeed1 = 1.0/3

@@ -8,7 +8,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise2D extends Application {
+object Noise2D extends App {
 
   val zoom = 1.0/50
   val scrollSpeed = 10

@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object AnimateFunction extends Application {
+object AnimateFunction extends App {
 
   animateFunction { (dims, time, pixel) =>
     val f = 2*fract(time*0.1)

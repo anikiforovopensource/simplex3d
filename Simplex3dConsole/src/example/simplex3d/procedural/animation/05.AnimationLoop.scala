@@ -1,5 +1,6 @@
 package example.simplex3d.procedural.animation
 
+import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
 import simplex3d.console.extension.ImageUtils._
@@ -8,7 +9,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Turbulence extends App {
+object AnimationLoop extends App {
 
   val zoom = 1.0/150
   val scrollSpeed = 0.0//5.0
@@ -34,8 +35,16 @@ object Turbulence extends App {
     sum
   }
 
-  animateFunction("Turbulence") { (dims, time, pixel) =>
-    val p = (pixel + time*scrollSpeed)*zoom
-    Vec3(noiseSum(Vec3(p, time*changeSpeed))*0.6)
+  def loop(period: Double, noise: inVec3 => Double, u: inVec3) :Double = {
+    val p = Vec3(u.x, u.y, mod(u.z, period))
+    ((period - p.z)*noise(p) + p.z*noise(Vec3(p.x, p.y, p.z - period)))/period
+  }
+
+  val noise = (p: inVec3) => noiseSum(p)
+  animateFunction("Loop") { (dims, time, pixel) =>
+    val u = (pixel + time*scrollSpeed)*zoom
+    val p = Vec3(u, time*changeSpeed)
+    val intensity = loop(10*changeSpeed, noise, p)*0.6
+    Vec3(intensity)
   }
 }

@@ -28,15 +28,15 @@ import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
 
 
+/**
+ * @author Aleksey Nikiforov (lex)
+ */
 trait FunctionAnimator {
   def nextFrame(dims: inVec2i, time: Double) :Array[Int]
   def dispose() :Unit
 }
 
 
-/**
- * @author Aleksey Nikiforov (lex)
- */
 private[extension] object FunctionAnimator {
 
   private class Painter (
@@ -118,17 +118,19 @@ private[extension] object FunctionAnimator {
 
   def apply(
     function: (inVec2i, Double, inVec2) => ReadVec3,
-    exceptionHandler: Throwable => Unit = _.printStackTrace()
+    exceptionHandler: Throwable => Unit = _.printStackTrace(),
+    useThreadPool: Boolean = true
   ) = new FunctionAnimator() {
     private val start = System.currentTimeMillis
-    private val job = new Painter(function, Executors.newCachedThreadPool(), exceptionHandler)
+    val threadPool = if (useThreadPool) Executors.newCachedThreadPool() else null
+    private val job = new Painter(function, threadPool, exceptionHandler)
 
     private var current = 0
 
     // the rendering algorithm only uses 2 frames
-    private val frameBuffers = new Array[(Array[Int], ConstVec2i)](2)
-    frameBuffers(0) = (new Array[Int](0), ConstVec2i(0))
-    frameBuffers(1) = (new Array[Int](0), ConstVec2i(0))
+    private val frameBuffers = new Array[Array[Int]](2)
+    frameBuffers(0) = new Array[Int](0)
+    frameBuffers(1) = new Array[Int](0)
 
     def nextFrame(dims: inVec2i, time: Double) :Array[Int] = {
 
@@ -137,7 +139,7 @@ private[extension] object FunctionAnimator {
         if (job.dims != dims) {
           job.cancelAndWait()
           val buffer = new Array[Int](dims.x*dims.y)
-          frameBuffers(current) = (buffer, dims)
+          frameBuffers(current) = buffer
           job.setData(buffer, dims, time)
           job.execAndWait()
           job.buffer
@@ -151,18 +153,29 @@ private[extension] object FunctionAnimator {
       // Setup the next rendering (handle resize if necessary).
       current += 1
       if (current >= frameBuffers.length) current = 0
-      var (buffer, buffDims) = frameBuffers(current)
-      if (buffDims != dims) {
+      var buffer = frameBuffers(current)
+      if (buffer.length != dims.x*dims.y) {
         buffer = new Array[Int](dims.x*dims.y)
-        frameBuffers(current) = (buffer, dims)
+        frameBuffers(current) = buffer
       }
 
       // Start the next rendering in a parallel thread.
       job.setData(buffer, dims, time)
-      job.exec
+      job.exec()
 
       // Return perviously competed rendering.
       retBuffer
+    }
+
+
+    def oneFrame(dims: inVec2i, time: Double, buffer: Array[Int]) :Array[Int] = {
+      val buff = if (dims.x*dims.y == buffer.length) buffer else new Array[Int](dims.x*dims.y)
+
+      val singleJob = new Painter(function, threadPool, exceptionHandler)
+      singleJob.setData(buff, dims, time)
+      singleJob.execAndWait()
+
+      buff
     }
 
     def dispose() {

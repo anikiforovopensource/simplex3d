@@ -9,7 +9,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise1D extends Application {
+object Noise1D extends App {
 
   val lineWidth = 2.5
   val axisWidth = 1.5

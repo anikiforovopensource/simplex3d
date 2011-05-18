@@ -9,7 +9,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Mandelbrot extends Application {
+object Mandelbrot extends App {
 
   val startScale: Double = 200
   val zoomSpeed: Double = 1.1

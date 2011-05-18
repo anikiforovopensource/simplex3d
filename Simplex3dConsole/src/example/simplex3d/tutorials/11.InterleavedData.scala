@@ -9,7 +9,7 @@ import simplex3d.data.double._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object InterleavedData extends Application {
+object InterleavedData extends App {
 
   // Complete tutorial at:
   // http://www.simplex3d.org/tutorials/tutorial-interleaved-data/

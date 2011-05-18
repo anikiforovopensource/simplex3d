@@ -1,4 +1,4 @@
-package example.simplex3d.procedural.animation
+package example.simplex3d.procedural.animation.misc
 
 import simplex3d.math._
 import simplex3d.math.double._
@@ -9,7 +9,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object LostSouls extends Application {
+object LostSouls extends App {
 
   val zoom = 1.0/150
   val changeSpeed = 1.0/10

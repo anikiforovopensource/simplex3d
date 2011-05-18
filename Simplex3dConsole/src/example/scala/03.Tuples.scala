@@ -4,7 +4,7 @@ package example.scala
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Tuples extends Application {
+object Tuples extends App {
 
   // Return multiple values using tuples.
   def multipleReturn() :(String, Int) = {

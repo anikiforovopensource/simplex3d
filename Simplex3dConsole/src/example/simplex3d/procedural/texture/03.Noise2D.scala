@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Noise2D extends Application {
+object Noise2D extends App {
 
   drawFunction("Noise2D") { (dims, p) =>
     val n = noise1(p/100)

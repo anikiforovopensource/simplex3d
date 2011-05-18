@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Cells extends Application {
+object Cells extends App {
 
   def cell(x: Double, size: Double) = {
     floor(x/size)*size

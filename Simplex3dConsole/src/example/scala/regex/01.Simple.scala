@@ -4,7 +4,7 @@ package example.scala.regex
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Simple extends Application {
+object Simple extends App {
 
   val string = "aaabbb"
 

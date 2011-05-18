@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object MultifractalNoise extends Application {
+object MultifractalNoise extends App {
 
   val octaves = 5
   val lacunarity = 2

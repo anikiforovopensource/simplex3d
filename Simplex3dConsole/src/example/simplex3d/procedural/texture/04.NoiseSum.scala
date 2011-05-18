@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object NoiseSum extends Application {
+object NoiseSum extends App {
 
   val octaves = 6
   val lacunarity = 1.7
@@ -33,7 +33,7 @@ object NoiseSum extends Application {
     sum
   }
 
-  drawFunction("Noise Sum Parameters") { (dims, pixel) =>
+  drawFunction("Noise Sum") { (dims, pixel) =>
     val p = pixel/200
     Vec3((noiseSum(p) + expectedMagnitude)/(2*expectedMagnitude))
   }

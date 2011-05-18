@@ -92,8 +92,8 @@ object Examples {
     val extIdx = code.indexOf("extends")
     val next0 = extIdx + "extends".length
     if (extIdx > 0) {
-      val appIdx = code.indexOf("Application", next0)
-      val next1 = appIdx + "Application".length
+      val appIdx = code.indexOf("App", next0)
+      val next1 = appIdx + "App".length
       if (appIdx > 0 && code.substring(next0, appIdx).trim.isEmpty) {
         val cbIdx = code.indexOf("{", next1)
         if (cbIdx > 0 && code.substring(next1, cbIdx).trim.isEmpty) {

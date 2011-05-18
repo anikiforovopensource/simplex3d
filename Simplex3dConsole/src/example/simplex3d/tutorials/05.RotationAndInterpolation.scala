@@ -8,7 +8,7 @@ import simplex3d.math.double.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RotationAndInterpolation extends Application {
+object RotationAndInterpolation extends App {
 
   // Complete tutorial at:
   // http://www.simplex3d.org/tutorials/tutorial-rotation-and-interpolation/

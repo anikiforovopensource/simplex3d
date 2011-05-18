@@ -4,7 +4,7 @@ package example.scala
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Version extends Application {
+object Version extends App {
 
   println("Scala version: " + scala.util.Properties.versionString)
 

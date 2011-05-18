@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object DrawFunction extends Application {
+object DrawFunction extends App {
 
   drawFunction { (dims, p) =>
     Vec3(p/dims, 1)

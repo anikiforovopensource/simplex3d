@@ -149,12 +149,21 @@ object ImageUtils {
     (function: (inVec2i, inVec2) => ReadVec3)
   {
 
-    val frame = new JFrame(title + " " + dims.x + "x" + dims.y)
+    val f = (dims: inVec2i, t: Double, p: inVec2) => function(dims, p)
+    val animator = FunctionAnimator(f, _.printStackTrace(System.out), false)
+    
+    val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
+      override def dispose() {
+        animator.dispose()
+        super.dispose()
+      }
+    }
 
     EventQueue.invokeLater(new Runnable {
       def run() {
 
         val panel = new JPanel() {
+          var buffer = new Array[Int](0)
           var error = false
 
           override def paint(g: Graphics) {
@@ -164,21 +173,12 @@ object ImageUtils {
             val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
 
             try {
-              var y = 0; while (y < dims.y) {
-                val h = dims.y - 1 - y
-
-                var x = 0; while (x < dims.x) {
-                  
-                  img.setRGB(x, y, rgb(function(dims, ConstVec2(x, h))))
-
-                  x += 1
-                }
-                y += 1
-              }
+              buffer = animator.oneFrame(dims, 0, buffer)
+              img.setRGB(0, 0, dims.x, dims.y, buffer, 0, dims.x)
+              g.drawImage(img, 0, 0, null)
             }
             catch {
               case t: Throwable =>
-                t.printStackTrace(System.out)
                 error = true
                 frame.dispose()
             }

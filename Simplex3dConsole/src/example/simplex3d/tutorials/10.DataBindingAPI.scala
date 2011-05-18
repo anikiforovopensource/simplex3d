@@ -9,7 +9,7 @@ import simplex3d.data.double._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object DataBindingAPI extends Application {
+object DataBindingAPI extends App {
 
   // Complete tutorial at:
   // http://www.simplex3d.org/tutorials/tutorial-data-binding-api-intro/

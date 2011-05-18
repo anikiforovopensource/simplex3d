@@ -34,18 +34,19 @@ object DepsManager {
     val prefs = Preferences.userNodeForPackage(this.getClass)
     val depsJar = prefs.get("deps.jar", null)
 
+    val curSum = {
+      val is = this.getClass.getClassLoader.getResourceAsStream("simplex3d/console/deps.sum")
+      scala.io.Source.fromInputStream(is).getLines().next
+    }
+
     if (depsJar != null && new File(depsJar).exists) {
       val depsSum = prefs.get("deps.sum", "undefined")
-      val curSum = {
-        val is = this.getClass.getClassLoader.getResourceAsStream("simplex3d/console/deps.sum")
-        scala.io.Source.fromInputStream(is).getLines().next
-      }
       if (depsSum == curSum) return depsJar
-      else prefs.put("deps.sum", curSum)
     }
 
     val newJar = rebuildDeps()
     prefs.put("deps.jar", newJar)
+    prefs.put("deps.sum", curSum)
     prefs.flush()
     newJar
   }

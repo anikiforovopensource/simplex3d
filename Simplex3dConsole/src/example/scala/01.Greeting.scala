@@ -4,7 +4,7 @@ package example.scala
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Greeting extends Application {
+object Greeting extends App {
 
   // Type some code and hit Run or press Ctrl+Enter.
   val words = Array(

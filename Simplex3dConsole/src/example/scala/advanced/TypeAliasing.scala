@@ -4,7 +4,7 @@ package example.scala.advanced
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object TypeAliasing extends Application {
+object TypeAliasing extends App {
 
   // A trait/class with an abstract type.
   trait Trait { type AbstractType }

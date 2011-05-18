@@ -11,7 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object ContrastCells extends Application {
+object ContrastCells extends App {
 
   def cell(x: Double, size: Double) = {
     val s = x/size + 1e-6

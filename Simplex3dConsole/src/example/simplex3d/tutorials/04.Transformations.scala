@@ -8,7 +8,7 @@ import simplex3d.math.double.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object Transformations extends Application {
+object Transformations extends App {
 
   // Complete tutorial at:
   // http://www.simplex3d.org/tutorials/tutorial-using-transformations/

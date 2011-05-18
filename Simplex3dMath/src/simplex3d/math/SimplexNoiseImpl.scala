@@ -39,12 +39,12 @@ package simplex3d.math
  * Ported to Scala, implemented 1D noise, improved scaling constants, added seed.
  * @author Aleksey Nikiforov (lex)
  */
-class SimplexNoise(val seed: Long) {
+private[math] class SimplexNoiseImpl(val seed: Long) {
 
-  import SimplexNoise._
+  import SimplexNoiseImpl._
 
   
-  private final val permArray: Array[Byte] = {
+  private[this] final val permArray: Array[Byte] = {
 
     val array = Array[Byte](
       -105, -96, -119, 91, 90, 15, -125, 13, -55, 95, 96, 53, -62, -23, 7, -31, -116,
@@ -500,15 +500,8 @@ class SimplexNoise(val seed: Long) {
   }
 }
 
-object SimplexNoise extends SimplexNoise(0) {
 
-  final val frequency = 0.7071067811865475244
-
-  // Offset values
-  final val offset1 = 7.2*0.7071067811865475244
-  final val offset2 = 15.9*0.7071067811865475244
-  final val offset3 = 22.3*0.7071067811865475244
-
+private[math] object SimplexNoiseImpl extends SimplexNoiseImpl(0) {
 
   private final val grad3: Array[Array[Byte]] = Array(
     Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),

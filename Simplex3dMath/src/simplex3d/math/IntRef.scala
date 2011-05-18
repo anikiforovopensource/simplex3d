@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.CommonMath._
-
 
 /** The <code>ExtendedInt</code> class encapsulates glue code to make Ints
  * interact with Int vectors.
@@ -45,7 +43,7 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  private[math] def bx: Boolean = Boolean(x)
+  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
   private[math] def ix: Int = x
   private[math] def fx: Float = x
   private[math] def dx: Double = x

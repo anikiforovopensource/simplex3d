@@ -22,7 +22,7 @@ package simplex3d.math
 
 import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.integration._
-import simplex3d.math.CommonMath._
+import simplex3d.math.{Boolean => Bool}
 
 
 /**
@@ -46,31 +46,31 @@ with ReadPropertyRef[ReadVec4b] with Serializable
   private[math] type C4 = ConstVec4b
 
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(Boolean(x), Boolean(y))
+    new ConstVec2b(Bool(x), Bool(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(Boolean(x), Boolean(y), Boolean(z))
+    new ConstVec3b(Bool(x), Bool(y), Bool(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(Boolean(x), Boolean(y), Boolean(z), Boolean(w))
+    new ConstVec4b(Bool(x), Bool(y), Bool(z), Bool(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
   private[math] final def bz: Boolean = z
   private[math] final def bw: Boolean = w
 
-  private[math] final def ix: Int = Int(x)
-  private[math] final def iy: Int = Int(y)
-  private[math] final def iz: Int = Int(z)
-  private[math] final def iw: Int = Int(w)
+  private[math] final def ix: Int = simplex3d.math.Int(x)
+  private[math] final def iy: Int = simplex3d.math.Int(y)
+  private[math] final def iz: Int = simplex3d.math.Int(z)
+  private[math] final def iw: Int = simplex3d.math.Int(w)
 
-  private[math] final def fx: Float = Float(x)
-  private[math] final def fy: Float = Float(y)
-  private[math] final def fz: Float = Float(z)
-  private[math] final def fw: Float = Float(w)
+  private[math] final def fx: Float = simplex3d.math.Float(x)
+  private[math] final def fy: Float = simplex3d.math.Float(y)
+  private[math] final def fz: Float = simplex3d.math.Float(z)
+  private[math] final def fw: Float = simplex3d.math.Float(w)
 
-  private[math] final def dx: Double = Double(x)
-  private[math] final def dy: Double = Double(y)
-  private[math] final def dz: Double = Double(z)
-  private[math] final def dw: Double = Double(w)
+  private[math] final def dx: Double = simplex3d.math.Double(x)
+  private[math] final def dy: Double = simplex3d.math.Double(y)
+  private[math] final def dz: Double = simplex3d.math.Double(z)
+  private[math] final def dw: Double = simplex3d.math.Double(w)
 
 
   final def x = px
@@ -168,8 +168,8 @@ object ConstVec4b {
   def apply(xyz: AnyVec3[_], w: Boolean) = new ConstVec4b(xyz.bx, xyz.by, xyz.bz, w)
   def apply(x: Boolean, yzw: AnyVec3[_]) = new ConstVec4b(x, yzw.bx, yzw.by, yzw.bz)
 
-  def apply(m: AnyMat2[_]) = new ConstVec4b(Boolean(m.d00), Boolean(m.d10), Boolean(m.d01), Boolean(m.d11))
-  def apply(q: AnyQuat4[_]) = new ConstVec4b(Boolean(q.db), Boolean(q.dc), Boolean(q.dd), Boolean(q.da))
+  def apply(m: AnyMat2[_]) = new ConstVec4b(Bool(m.d00), Bool(m.d10), Bool(m.d01), Bool(m.d11))
+  def apply(q: AnyQuat4[_]) = new ConstVec4b(Bool(q.db), Bool(q.dc), Bool(q.dd), Bool(q.da))
 
   implicit def toConst(u: ReadVec4b) = apply(u)
 }
@@ -430,8 +430,8 @@ object Vec4b {
   def apply(xyz: AnyVec3[_], w: Boolean) = new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
   def apply(x: Boolean, yzw: AnyVec3[_]) = new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
-  def apply(m: AnyMat2[_]) = new Vec4b(Boolean(m.d00), Boolean(m.d10), Boolean(m.d01), Boolean(m.d11))
-  def apply(q: AnyQuat4[_]) = new Vec4b(Boolean(q.db), Boolean(q.dc), Boolean(q.dd), Boolean(q.da))
+  def apply(m: AnyMat2[_]) = new Vec4b(Bool(m.d00), Bool(m.d10), Bool(m.d01), Bool(m.d11))
+  def apply(q: AnyQuat4[_]) = new Vec4b(Bool(q.db), Bool(q.dc), Bool(q.dd), Bool(q.da))
 
   def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))
   implicit def toMutable(u: ReadVec4b) = apply(u)

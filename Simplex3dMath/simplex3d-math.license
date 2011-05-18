@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-simplex3d.math.SimplexNoise has the following license:
+simplex3d.math.SimplexNoise and simplex3d.math.SimplexNoiseImpl have the following license:
 
  * Simplex3d, SimplexNoise
  * Copyright (C) 2010-2011, Aleksey Nikiforov

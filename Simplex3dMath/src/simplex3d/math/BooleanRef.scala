@@ -20,8 +20,6 @@
 
 package simplex3d.math
 
-import simplex3d.math.CommonMath._
-
 
 /**
  *
@@ -41,9 +39,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   }
 
   private[math] def bx: Boolean = x
-  private[math] def ix: Int = Int(x)
-  private[math] def fx: Float = Float(x)
-  private[math] def dx: Double = Double(x)
+  private[math] def ix: Int = simplex3d.math.Int(x)
+  private[math] def fx: Float = simplex3d.math.Float(x)
+  private[math] def dx: Double = simplex3d.math.Double(x)
 
 
   final override def equals(other: Any) :Boolean = {

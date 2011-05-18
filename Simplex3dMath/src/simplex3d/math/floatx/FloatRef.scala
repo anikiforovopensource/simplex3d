@@ -43,7 +43,7 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   }
 
 
-  private[math] def bx: Boolean = Boolean(x)
+  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
   private[math] def ix: Int = x.toInt
   private[math] def fx: Float = x
   private[math] def dx: Double = x

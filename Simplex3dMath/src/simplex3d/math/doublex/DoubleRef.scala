@@ -42,7 +42,7 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  private[math] def bx: Boolean = Boolean(x)
+  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
   private[math] def ix: Int = x.toInt
   private[math] def fx: Float = x.toFloat
   private[math] def dx: Double = x

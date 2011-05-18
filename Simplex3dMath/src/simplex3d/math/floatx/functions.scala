@@ -21,7 +21,6 @@
 package simplex3d.math.floatx
 
 import simplex3d.math._
-import simplex3d.math.SimplexNoise._
 import java.lang.{Math => JMath}
 
 
@@ -32,7 +31,7 @@ private[math] class functions
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object functions extends CommonMath {
+object functions extends noise.SimplexNoise(0) {
 
   // Constants
   /** Machine float epsilon.
@@ -962,43 +961,6 @@ object functions extends CommonMath {
     }
   }
 
-  /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
-   * otherwise performs smooth interpolation from 0 to 1 with
-   * 1st and 2nd derivaties 0 at x = edge0 and x = edge1.
-   * @param edge0 the first edge.
-   * @param edge1 the second edge.
-   * @param x a float argument.
-   * @return one of the following:
-   *   - NaN if ''edge0'' > ''edge1''.
-   *   - 0 if ''x'' < ''edge0''.
-   *   - 1 if ''x'' > ''edge1''.
-   *   - smooth interpolation from 0 to 1 otherwise.
-   */
-  def smootherstep(edge0: Float, edge1: Float, x: Float) :Float = {
-    if (!(edge0 <= edge1)) scala.Float.NaN
-    else if (x >= edge1) 1
-    else if (x <= edge0) 0
-    else {
-      val t = (x - edge0)/(edge1 - edge0)
-      t*t*t*(t*(t*6 - 15) + 10)
-    }
-  }
-
-  def pulse(edge0: Float, edge1: Float, x: Float): Float = {
-    if (!(edge0 <= edge1)) scala.Float.NaN
-    else if (x >= edge1) 0
-    else if (x <= edge0) 0
-    else {
-      val t = (2*x - (edge0 + edge1))/(edge1 - edge0)
-      t*(t*t*(t*t*((-2048/432.0f)*t*t + (6144/432.0f)) + (-6144/432.0f)) + (2048/432.0f))
-    }
-  }
-
-  def saturate(edge0: Float, edge1: Float, x: Float) :Float = {
-    val s = (edge1 - edge0)*0.1f
-    x + pulse(edge0 - s, edge1 + s, x)*s
-  }
-
   /** Checks if the argument is NaN.
    * @param x a float argument.
    * @return one of the following:
@@ -1086,69 +1048,6 @@ object functions extends CommonMath {
     if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
   }
 
-  /** Computes the value of the 1-dimensional simplex noise function.
-   * The simplex noise function is C^2^ continuous (the first and the second derivatives are continuous).
-   * 
-   * The return values of the simplex noise function have the following properties:
-   *   - They are in the range [-1, 1].
-   *   - They have Gaussian dirstibution.
-   *   - The overall average is zero.
-   *   - A particular argument will always result in the same return value.
-   *   - Statistical properties do not change with rotation and translation of the domain.
-   * 
-   * '''noise1''' function returns zero when the arguments are coordinates of simplex vertices.
-   * For 1-dimensional case this means `noise1(N*simplexSide) == 0` for all integral N.
-   * Simplex side is the same for all dimensions and is equal to `1/sqrt(2) = 0.7071067811865475244`.
-   * 
-   * @param x a float argument.
-   * @return the value of the simplex noise function.
-   */
-  def noise1(x: Float) :Float = noise(x).toFloat
-  
-  /** Computes __two__ values of the 1-dimensional simplex noise function.
-   * The first return value is computed using the argument.
-   * The second is computed by adding a constant offset to the argument.
-   * @param x a float argument.
-   * @return two values of the simplex noise function packed as Vec2.
-   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
-   */
-  def noise2(x: Float) :Vec2f = {
-    new Vec2f(
-      noise(x).toFloat,
-      noise(x + offset1).toFloat
-    )
-  }
-  
-  /** Computes __three__ values of the 1-dimensional simplex noise function.
-   * The first return value is computed using the argument.
-   * The others are computed by adding a constant offset to the argument.
-   * @param x a float argument.
-   * @return three values of the simplex noise function packed as Vec3.
-   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
-   */
-  def noise3(x: Float) :Vec3f = {
-    new Vec3f(
-      noise(x).toFloat,
-      noise(x + offset1).toFloat,
-      noise(x + offset2).toFloat
-    )
-  }
-  
-  /** Computes __four__ values of the 1-dimensional simplex noise function.
-   * The first return value is computed using the argument.
-   * The others are computed by adding a constant offset to the argument.
-   * @param x a float argument.
-   * @return four values of the simplex noise function packed as Vec4.
-   * @see [[simplex3d.math.floatx.functions.noise1(Float)]]
-   */
-  def noise4(x: Float) :Vec4f = {
-    new Vec4f(
-      noise(x).toFloat,
-      noise(x + offset1).toFloat,
-      noise(x + offset2).toFloat,
-      noise(x + offset3).toFloat
-    )
-  }
 
   // Vec2f functions
   /** Performs component-wise conversion to radians.
@@ -1442,31 +1341,6 @@ object functions extends CommonMath {
     )
   }
 
-  def noise1(u: inVec2f) :Float = {
-    noise(u.x, u.y).toFloat
-  }
-  def noise2(u: inVec2f) :Vec2f = {
-    new Vec2f(
-      noise(u.x, u.y).toFloat,
-      noise(u.x + offset1, u.y + offset1).toFloat
-    )
-  }
-  def noise3(u: inVec2f) :Vec3f = {
-    new Vec3f(
-      noise(u.x, u.y).toFloat,
-      noise(u.x + offset1, u.y + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2).toFloat
-    )
-  }
-  def noise4(u: inVec2f) :Vec4f = {
-    new Vec4f(
-      noise(u.x, u.y).toFloat,
-      noise(u.x + offset1, u.y + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2).toFloat,
-      noise(u.x + offset3, u.y + offset3).toFloat
-    )
-  }
-
 
   // Vec3f functions
   def radians(u: inVec3f) :Vec3f = {
@@ -1707,30 +1581,6 @@ object functions extends CommonMath {
     )
   }
 
-  def noise1(u: inVec3f) :Float = {
-    noise(u.x, u.y, u.z).toFloat
-  }
-  def noise2(u: inVec3f) :Vec2f = {
-    new Vec2f(
-      noise(u.x, u.y, u.z).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1).toFloat
-    )
-  }
-  def noise3(u: inVec3f) :Vec3f = {
-    new Vec3f(
-      noise(u.x, u.y, u.z).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2, u.z + offset2).toFloat
-    )
-  }
-  def noise4(u: inVec3f) :Vec4f = {
-    new Vec4f(
-      noise(u.x, u.y, u.z).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2, u.z + offset2).toFloat,
-      noise(u.x + offset3, u.y + offset3, u.z + offset3).toFloat
-    )
-  }
 
   // Vec4f functions
   def radians(u: inVec4f) :Vec4f = {
@@ -2039,31 +1889,7 @@ object functions extends CommonMath {
     )
   }
 
-  def noise1(u: inVec4f) :Float = {
-    noise(u.x, u.y, u.z, u.w).toFloat
-  }
-  def noise2(u: inVec4f) :Vec2f = {
-    new Vec2f(
-      noise(u.x, u.y, u.z, u.w).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1).toFloat
-    )
-  }
-  def noise3(u: inVec4f) :Vec3f = {
-    new Vec3f(
-      noise(u.x, u.y, u.z, u.w).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2, u.z + offset2, u.w + offset2).toFloat
-    )
-  }
-  def noise4(u: inVec4f) :Vec4f = {
-    new Vec4f(
-      noise(u.x, u.y, u.z, u.w).toFloat,
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1).toFloat,
-      noise(u.x + offset2, u.y + offset2, u.z + offset2, u.w + offset2).toFloat,
-      noise(u.x + offset3, u.y + offset3, u.z + offset3, u.w + offset3).toFloat
-    )
-  }
-
+  
   // Mat functions
   def matrixCompMult(a: inMat2f, b: inMat2f) :Mat2f = {
     new Mat2f(
@@ -2393,6 +2219,64 @@ object functions extends CommonMath {
   
   def isneginf(x: Float) :Boolean = isinf(x) && x < 0
   def isposinf(x: Float) :Boolean = isinf(x) && x > 0
+
+  /** Returns 0 if ''x'' < ''edge0'' and 1 if ''x'' > ''edge1'',
+   * otherwise performs smooth interpolation from 0 to 1 with
+   * 1st and 2nd derivaties 0 at x = edge0 and x = edge1.
+   * @param edge0 the first edge.
+   * @param edge1 the second edge.
+   * @param x a float argument.
+   * @return one of the following:
+   *   - NaN if ''edge0'' > ''edge1''.
+   *   - 0 if ''x'' < ''edge0''.
+   *   - 1 if ''x'' > ''edge1''.
+   *   - smooth interpolation from 0 to 1 otherwise.
+   */
+  def smootherstep(edge0: Float, edge1: Float, x: Float) :Float = {
+    if (!(edge0 <= edge1)) scala.Float.NaN
+    else if (x >= edge1) 1
+    else if (x <= edge0) 0
+    else {
+      val t = (x - edge0)/(edge1 - edge0)
+      t*t*t*(t*(t*6 - 15) + 10)
+    }
+  }
+
+  def smootherstep(edge0: Float, edge1: Float, u: inVec2f) :Vec2f = new Vec2f(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y)
+  )
+
+  def smootherstep(edge0: Float, edge1: Float, u: inVec3f) :Vec3f = new Vec3f(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y),
+    smootherstep(edge0, edge1, u.z)
+  )
+
+  def smootherstep(edge0: Float, edge1: Float, u: inVec4f) :Vec4f = new Vec4f(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y),
+    smootherstep(edge0, edge1, u.z),
+    smootherstep(edge0, edge1, u.w)
+  )
+
+  def smootherstep(edge0: inVec2f, edge1: inVec2f, u: inVec2f) :Vec2f = new Vec2f(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y)
+  )
+
+  def smootherstep(edge0: inVec3f, edge1: inVec3f, u: inVec3f) :Vec3f = new Vec3f(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y),
+    smootherstep(edge0.z, edge1.z, u.z)
+  )
+
+  def smootherstep(edge0: inVec4f, edge1: inVec4f, u: inVec4f) :Vec4f = new Vec4f(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y),
+    smootherstep(edge0.z, edge1.z, u.z),
+    smootherstep(edge0.w, edge1.w, u.w)
+  )
 
 
   // Lerp

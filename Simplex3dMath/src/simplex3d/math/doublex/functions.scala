@@ -21,7 +21,6 @@
 package simplex3d.math.doublex
 
 import simplex3d.math._
-import simplex3d.math.SimplexNoise._
 import java.lang.{Math => JMath}
 
 
@@ -32,7 +31,7 @@ private[math] class functions
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object functions extends CommonMath {
+object functions extends noise.SimplexNoise(0) {
 
   // Constants
   /** Machine float epsilon.
@@ -738,31 +737,6 @@ object functions extends CommonMath {
     }
   }
 
-  def smootherstep(edge0: Double, edge1: Double, x: Double) :Double = {
-    if (!(edge0 <= edge1)) scala.Double.NaN
-    else if (x >= edge1) 1
-    else if (x <= edge0) 0
-    else {
-      val t = (x - edge0)/(edge1 - edge0)
-      t*t*t*(t*(t*6 - 15) + 10)
-    }
-  }
-
-  def pulse(edge0: Double, edge1: Double, x: Double): Double = {
-    if (!(edge0 <= edge1)) scala.Double.NaN
-    else if (x >= edge1) 0
-    else if (x <= edge0) 0
-    else {
-      val t = (2*x - (edge0 + edge1))/(edge1 - edge0)
-      t*(t*t*(t*t*((-2048/432.0)*t*t + (6144/432.0)) + (-6144/432.0)) + (2048/432.0))
-    }
-  }
-
-  def saturate(edge0: Double, edge1: Double, x: Double) :Double = {
-    val s = (edge1 - edge0)*0.1
-    x + pulse(edge0 - s, edge1 + s, x)*s
-  }
-
   def isnan(x: Double) :Boolean = java.lang.Double.isNaN(x)
   def isinf(x: Double) :Boolean = java.lang.Double.isInfinite(x)
 
@@ -788,33 +762,6 @@ object functions extends CommonMath {
     if (k < 0) 0 else eta*i - (eta*ni + sqrt(k))*n
   }
 
-  /**
-   * noise is 0 at multiples of length(simplex side),
-   * simplex side is 1/sqrt(2) = 0.7071067811865475244
-   * meaningful return values for x withing [-2E8, +2E8]
-   */
-  def noise1(x: Double) :Double = noise(x)
-  def noise2(x: Double) :Vec2d = {
-    new Vec2d(
-      noise(x),
-      noise(x + offset1)
-    )
-  }
-  def noise3(x: Double) :Vec3d = {
-    new Vec3d(
-      noise(x),
-      noise(x + offset1),
-      noise(x + offset2)
-    )
-  }
-  def noise4(x: Double) :Vec4d = {
-    new Vec4d(
-      noise(x),
-      noise(x + offset1),
-      noise(x + offset2),
-      noise(x + offset3)
-    )
-  }
 
   // Vec2d functions
   def radians(u: inVec2d) :Vec2d = new Vec2d(radians(u.x), radians(u.y))
@@ -1005,31 +952,6 @@ object functions extends CommonMath {
     new Vec2b(
       u.x != v.x,
       u.y != v.y
-    )
-  }
-
-  def noise1(u: inVec2d) :Double = {
-    noise(u.x, u.y)
-  }
-  def noise2(u: inVec2d) :Vec2d = {
-    new Vec2d(
-      noise(u.x, u.y),
-      noise(u.x + offset1, u.y + offset1)
-    )
-  }
-  def noise3(u: inVec2d) :Vec3d = {
-    new Vec3d(
-      noise(u.x, u.y),
-      noise(u.x + offset1, u.y + offset1),
-      noise(u.x + offset2, u.y + offset2)
-    )
-  }
-  def noise4(u: inVec2d) :Vec4d = {
-    new Vec4d(
-      noise(u.x, u.y),
-      noise(u.x + offset1, u.y + offset1),
-      noise(u.x + offset2, u.y + offset2),
-      noise(u.x + offset3, u.y + offset3)
     )
   }
 
@@ -1273,30 +1195,6 @@ object functions extends CommonMath {
     )
   }
 
-  def noise1(u: inVec3d) :Double = {
-    noise(u.x, u.y, u.z)
-  }
-  def noise2(u: inVec3d) :Vec2d = {
-    new Vec2d(
-      noise(u.x, u.y, u.z),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1)
-    )
-  }
-  def noise3(u: inVec3d) :Vec3d = {
-    new Vec3d(
-      noise(u.x, u.y, u.z),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1),
-      noise(u.x + offset2, u.y + offset2, u.z + offset2)
-    )
-  }
-  def noise4(u: inVec3d) :Vec4d = {
-    new Vec4d(
-      noise(u.x, u.y, u.z),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1),
-      noise(u.x + offset2, u.y + offset2, u.z + offset2),
-      noise(u.x + offset3, u.y + offset3, u.z + offset3)
-    )
-  }
 
   // Vec4d functions
   def radians(u: inVec4d) :Vec4d = {
@@ -1605,31 +1503,7 @@ object functions extends CommonMath {
     )
   }
 
-  def noise1(u: inVec4d) :Double = {
-    noise(u.x, u.y, u.z, u.w)
-  }
-  def noise2(u: inVec4d) :Vec2d = {
-    new Vec2d(
-      noise(u.x, u.y, u.z, u.w),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1)
-    )
-  }
-  def noise3(u: inVec4d) :Vec3d = {
-    new Vec3d(
-      noise(u.x, u.y, u.z, u.w),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1),
-      noise(u.x + offset2, u.y + offset2, u.z + offset2, u.w + offset2)
-    )
-  }
-  def noise4(u: inVec4d) :Vec4d = {
-    new Vec4d(
-      noise(u.x, u.y, u.z, u.w),
-      noise(u.x + offset1, u.y + offset1, u.z + offset1, u.w + offset1),
-      noise(u.x + offset2, u.y + offset2, u.z + offset2, u.w + offset2),
-      noise(u.x + offset3, u.y + offset3, u.z + offset3, u.w + offset3)
-    )
-  }
-
+  
   // Mat functions
   def matrixCompMult(a: inMat2d, b: inMat2d) :Mat2d = {
     new Mat2d(
@@ -1960,7 +1834,53 @@ object functions extends CommonMath {
   def isneginf(x: Double) :Boolean = isinf(x) && x < 0
   def isposinf(x: Double) :Boolean = isinf(x) && x > 0
 
-  
+  def smootherstep(edge0: Double, edge1: Double, x: Double) :Double = {
+    if (!(edge0 <= edge1)) scala.Double.NaN
+    else if (x >= edge1) 1
+    else if (x <= edge0) 0
+    else {
+      val t = (x - edge0)/(edge1 - edge0)
+      t*t*t*(t*(t*6 - 15) + 10)
+    }
+  }
+
+  def smootherstep(edge0: Double, edge1: Double, u: inVec2d) :Vec2d = new Vec2d(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y)
+  )
+
+  def smootherstep(edge0: Double, edge1: Double, u: inVec3d) :Vec3d = new Vec3d(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y),
+    smootherstep(edge0, edge1, u.z)
+  )
+
+  def smootherstep(edge0: Double, edge1: Double, u: inVec4d) :Vec4d = new Vec4d(
+    smootherstep(edge0, edge1, u.x),
+    smootherstep(edge0, edge1, u.y),
+    smootherstep(edge0, edge1, u.z),
+    smootherstep(edge0, edge1, u.w)
+  )
+
+  def smootherstep(edge0: inVec2d, edge1: inVec2d, u: inVec2d) :Vec2d = new Vec2d(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y)
+  )
+
+  def smootherstep(edge0: inVec3d, edge1: inVec3d, u: inVec3d) :Vec3d = new Vec3d(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y),
+    smootherstep(edge0.z, edge1.z, u.z)
+  )
+
+  def smootherstep(edge0: inVec4d, edge1: inVec4d, u: inVec4d) :Vec4d = new Vec4d(
+    smootherstep(edge0.x, edge1.x, u.x),
+    smootherstep(edge0.y, edge1.y, u.y),
+    smootherstep(edge0.z, edge1.z, u.z),
+    smootherstep(edge0.w, edge1.w, u.w)
+  )
+
+
   // Lerp
   def lerp(m: inMat2d, n: inMat2d, a: Double) :Mat2d = {
     val b = 1 - a

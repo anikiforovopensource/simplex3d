@@ -99,7 +99,7 @@ object RoundBench {
 
   // StrictMath.rint is faster
   private final def roundEven(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue) return x
+    if (x > scala.Int.MaxValue || x < scala.Int.MinValue) return x
 
     val i = x.toInt
     val h = x + 0.5f

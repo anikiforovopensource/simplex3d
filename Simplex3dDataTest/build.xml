@@ -157,4 +157,29 @@
         </zip>
     </target>
 
+
+    <target name="test-all" depends="init">
+      <path id="scalatest.classpath">
+        <pathelement location="../Simplex3dMathTest/lib/scalatest-1.4.1.jar"/>
+        <pathelement location="${scala.lib}/scala-library.jar"/>
+      </path>
+    
+      <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+        <classpath refid="scalatest.classpath"/>
+      </taskdef>
+      
+      <scalatest parallel="true">
+        <runpath>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-core.jar"/>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-float.jar"/>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-double.jar"/>
+          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-core.jar"/>
+          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-float.jar"/>
+          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-double.jar"/>
+          <pathelement location="release/jars/simplex3d-data-test.jar"/>
+        </runpath>
+        
+        <reporter type="stdout" config="NHLD"/>
+      </scalatest>
+    </target>
 </project>

@@ -2,8 +2,7 @@
 exec scala "$0" "$@"
 !#
 
-// Temporary release script, until scalac is fiexed.
-
+// Temporary release script, until scalac can run with less ram.
 
 import java.io._
 import scala.collection.mutable.ArrayBuffer
@@ -25,14 +24,16 @@ def exec(args: Seq[String], env: Seq[String]) {
     line = es.readLine()
   }
 
-  proc.waitFor
+  val exitCode = proc.waitFor
+  if (exitCode != 0) System.exit(exitCode)
 }
 def silent(args: String*) {
   val proc = Runtime.getRuntime.exec(args.toArray)
   val is = new BufferedReader(new InputStreamReader(proc.getInputStream))
   val es = new BufferedReader(new InputStreamReader(proc.getErrorStream))
 
-  proc.waitFor
+  val exitCode = proc.waitFor
+  if (exitCode != 0) System.exit(exitCode)
 }
 
 def listFilesHelper(
@@ -115,12 +116,7 @@ for (group <- groups) {
   println("Compiled " + count + " out of " + total + ".")
 }
 println("Done.")
-println("\nBUILD SUCCESSFUL")
+println("\nCompilation successful.")
 val time = (System.currentTimeMillis() - start)/1000
 val minutesStr = if (time >= 60) (time / 60) + " minutes, " else ""
 println("Total time: " + minutesStr + (time % 60) + " seconds.")
-
-
-silent("ant", "release-clean")
-exec("ant" :: "release-src" :: Nil, Nil)
-exec("ant" :: "precompiled-release-bin" :: Nil, Nil)

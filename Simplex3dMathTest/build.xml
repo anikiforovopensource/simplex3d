@@ -79,7 +79,7 @@
             <attribute default="" name="sourcepath"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <scalac addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" jvmargs="-Xss2048k -Xmx2000m" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
+                <scalac addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" jvmargs="-Xss2048k -Xmx3000m" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
                     <classpath>
                         <path>
                             <pathelement path="@{classpath}"/>
@@ -117,6 +117,7 @@
     <property name="release.src" value="${release.dir}/Simplex3dMathTest_src.zip"/>
 
     <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
+    <target name="release-all-lowRam" depends="release-clean, release-src, release-bin-lowRam" />
 
     <target name="release-clean" >
         <delete dir="${release.dir}" />
@@ -127,8 +128,7 @@
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
 
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
+        <jar manifest="${basedir}/manifest.mf" jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
         </jar>
 
@@ -142,8 +142,17 @@
         </zip>
     </target>
 
-    <!-- Temporary release target to use in conjunction with release.sh until scalac is fiexed. -->
-    <target name="precompiled-release-bin" depends="init" >
+    
+    <target name="release-bin-lowRam" depends="init, clean" >
+        <!-- replaces compile task-->
+        <exec executable="sh" failonerror="true"> <arg value="compile.sh"/> </exec>
+        
+        <!-- replaces jar task-->
+        <jar manifest="${basedir}/manifest.mf" jarfile="${dist.jar}">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+
+
         <delete file="${release.bin}" />
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
@@ -180,4 +189,27 @@
         </zip>
     </target>
 
+
+    <target name="test-all" depends="init">
+      <path id="scalatest.classpath">
+        <pathelement location="lib/scalatest-1.4.1.jar"/>
+        <pathelement location="${scala.lib}/scala-library.jar"/>
+      </path>
+    
+      <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
+        <classpath refid="scalatest.classpath"/>
+      </taskdef>
+      
+      <scalatest parallel="true">
+        <runpath>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-core.jar"/>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-float.jar"/>
+          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-double.jar"/>
+          <pathelement location="release/jars/simplex3d-math-test.jar"/>
+        </runpath>
+        
+        <reporter type="stdout" config="NHLD"/>
+      </scalatest>
+    </target>
+    
 </project>

@@ -57,7 +57,7 @@ object FloorBench {
   }
 
   final def floorOpt(x: Float) :Float = {
-    if (x > Int.MaxValue || x < Int.MinValue) x
+    if (x > scala.Int.MaxValue || x < scala.Int.MinValue) x
     else {
       val i = x.toInt
       if (x > 0 || x == i) i else if(java.lang.Float.isNaN(x)) x else i - 1

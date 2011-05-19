@@ -28,7 +28,7 @@ import org.scalatest._
  */
 class ExampleTest extends FunSuite {
 
-  test ("Example") {
+  test("Example") {
     assert(true)
     expect (1) { 3 - 2 }
 
@@ -39,7 +39,7 @@ class ExampleTest extends FunSuite {
     }
   }
 
-  test("Pending test example") {
+  test("Pending example") {
     pending
   }
 }

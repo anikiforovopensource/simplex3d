@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.console.extension
+package simplex3d.console
+package extension
 
 import java.awt.Color
 import java.awt.Dimension
@@ -46,7 +47,61 @@ import conversion.Double._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object ImageUtils {
+object ImageUtils extends ImageUtils {
+  val impl = new ImageUtils
+
+  override def showImage(dims: inVec2i, data: inData[Vec3]) {
+    PrivilegedRunner.queue {
+      impl.showImage(dims, data)
+    }
+  }
+  override def showImage(title: String, dims: inVec2i, data: inData[Vec3]) {
+    PrivilegedRunner.queue {
+      impl.showImage(title, dims, data)
+    }
+  }
+
+
+  override def drawFunction(function: (inVec2i, inVec2) => ReadVec3) {
+    PrivilegedRunner.queue {
+      impl.drawFunction(function)
+    }
+  }
+  override def drawFunction(title: String)(function: (inVec2i, inVec2) => ReadVec3) {
+    PrivilegedRunner.queue {
+      impl.drawFunction(title)(function)
+    }
+  }
+  override def drawFunction
+    (title: String, dims: inVec2i)
+    (function: (inVec2i, inVec2) => ReadVec3)
+  {
+    PrivilegedRunner.queue {
+      impl.drawFunction(title, dims)(function)
+    }
+  }
+
+  override def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
+    PrivilegedRunner.queue {
+      impl.animateFunction(function)
+    }
+  }
+  override def animateFunction(title: String)(function: (inVec2i, Double, inVec2) => ReadVec3) {
+    PrivilegedRunner.queue {
+      impl.animateFunction(title)(function)
+    }
+  }
+  override def animateFunction
+    (title: String, dims: inVec2i)
+    (function: (inVec2i, Double, inVec2) => ReadVec3)
+  {
+    PrivilegedRunner.queue {
+      impl.animateFunction(title, dims)(function)
+    }
+  }
+}
+
+class ImageUtils {
 
   private[extension] def rgb(c: inVec3) :Int = {
     ((toUByte(c.r) & 0xFF) << 16) | ((toUByte(c.g) & 0xFF) << 8) | ((toUByte(c.b) & 0xFF))

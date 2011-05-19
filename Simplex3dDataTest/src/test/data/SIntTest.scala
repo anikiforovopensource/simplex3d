@@ -213,20 +213,20 @@ class SIntTest extends FunSuite {
   private def testSInt(seq: DataSeq[SInt, SInt]) {
     testIndex(seq)
 
-    testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)
+    testApplyUpdate(seq, scala.Int.MinValue, scala.Int.MinValue, scala.Int.MinValue)
     testApplyUpdate(seq, -1, -1, -1)
     testApplyUpdate(seq, 0, 0, 0)
     testApplyUpdate(seq, 1, 1, 1)
-    testApplyUpdate(seq, Int.MaxValue, Int.MaxValue, Int.MaxValue)
+    testApplyUpdate(seq, scala.Int.MaxValue, scala.Int.MaxValue, scala.Int.MaxValue)
   }
 
   private def testUInt(seq: DataSeq[SInt, UInt]) {
     testIndex(seq)
 
-    testApplyUpdate(seq, Int.MinValue, Int.MinValue, Int.MinValue)
+    testApplyUpdate(seq, scala.Int.MinValue, scala.Int.MinValue, scala.Int.MinValue)
     testApplyUpdate(seq, -1, -1, -1)
     testApplyUpdate(seq, 0, 0, 0)
     testApplyUpdate(seq, 1, 1, 1)
-    testApplyUpdate(seq, Int.MaxValue, Int.MaxValue, Int.MaxValue)
+    testApplyUpdate(seq, scala.Int.MaxValue, scala.Int.MaxValue, scala.Int.MaxValue)
   }
 }

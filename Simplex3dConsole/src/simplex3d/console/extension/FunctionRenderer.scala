@@ -31,13 +31,13 @@ import simplex3d.math.doublex.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait FunctionAnimator {
+trait FunctionRenderer {
   def nextFrame(dims: inVec2i, time: Double) :Array[Int]
   def dispose() :Unit
 }
 
 
-private[extension] object FunctionAnimator {
+private[extension] object FunctionRenderer {
 
   private class Painter (
     function: (inVec2i, Double, inVec2) => ReadVec3,
@@ -117,12 +117,12 @@ private[extension] object FunctionAnimator {
   }
 
   def apply(
+    animate: Boolean,
     function: (inVec2i, Double, inVec2) => ReadVec3,
-    exceptionHandler: Throwable => Unit = _.printStackTrace(),
-    useThreadPool: Boolean = true
-  ) = new FunctionAnimator() {
+    exceptionHandler: Throwable => Unit = _.printStackTrace()
+  ) = new FunctionRenderer() {
     private val start = System.currentTimeMillis
-    val threadPool = if (useThreadPool) Executors.newCachedThreadPool() else null
+    val threadPool = if (animate) Executors.newCachedThreadPool() else null
     private val job = new Painter(function, threadPool, exceptionHandler)
 
     private var current = 0
@@ -150,32 +150,24 @@ private[extension] object FunctionAnimator {
         }
       }
 
-      // Setup the next rendering (handle resize if necessary).
-      current += 1
-      if (current >= frameBuffers.length) current = 0
-      var buffer = frameBuffers(current)
-      if (buffer.length != dims.x*dims.y) {
-        buffer = new Array[Int](dims.x*dims.y)
-        frameBuffers(current) = buffer
-      }
+      if (animate) {
+        // Setup the next rendering (handle resize if necessary).
+        current += 1
+        if (current >= frameBuffers.length) current = 0
+        
+        var buffer = frameBuffers(current)
+        if (buffer.length != dims.x*dims.y) {
+          buffer = new Array[Int](dims.x*dims.y)
+          frameBuffers(current) = buffer
+        }
 
-      // Start the next rendering in a parallel thread.
-      job.setData(buffer, dims, time)
-      job.exec()
+        // Start the next rendering in a parallel thread.
+        job.setData(buffer, dims, time)
+        job.exec()
+      }
 
       // Return perviously competed rendering.
       retBuffer
-    }
-
-
-    def oneFrame(dims: inVec2i, time: Double, buffer: Array[Int]) :Array[Int] = {
-      val buff = if (dims.x*dims.y == buffer.length) buffer else new Array[Int](dims.x*dims.y)
-
-      val singleJob = new Painter(function, threadPool, exceptionHandler)
-      singleJob.setData(buff, dims, time)
-      singleJob.execAndWait()
-
-      buff
     }
 
     def dispose() {

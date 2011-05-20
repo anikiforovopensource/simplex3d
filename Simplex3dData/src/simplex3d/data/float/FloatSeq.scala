@@ -75,7 +75,10 @@ with CompositionFactory[RFloat, DefinedFloat]
 
 private[data] final class ViewRFloat[+R <: DefinedFloat](
   prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
-) extends BaseRFloat[R](prim, prim, prim.isReadOnly, off, str) with DataView[RFloat, R] {
+) extends BaseRFloat[R](prim, prim, prim.isReadOnly, off, str) with DataView[RFloat, R]
+{
+  type Read = ReadDataView[RFloat, R @uncheckedVariance]
+
   final def isNormalized = primitives.isNormalized
   final def rawType = primitives.rawType
   def mkReadOnlyInstance() = new ViewRFloat(primitives.asReadOnly(), offset, stride)
@@ -97,6 +100,8 @@ private[data] final class ArrayRFloatSByte(
 extends BaseRFloat[SByte](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SByte]
 with PrimitiveFactory[RFloat, SByte]
 {
+  type Read = ReadDataArray[RFloat, SByte]
+
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRFloatSByte(rarray, null)
   def rawType = RawType.SByte
@@ -115,6 +120,8 @@ with PrimitiveFactory[RFloat, SByte]
 private[data] final class BufferRFloatSByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[SByte](shared, null, ro, 0, 1) with DataBuffer[RFloat, SByte] {
+  type Read = ReadDataBuffer[RFloat, SByte]
+
   def mkReadOnlyInstance() = new BufferRFloatSByte(shared, true)
   def rawType = RawType.SByte
   def isNormalized = true
@@ -137,6 +144,8 @@ private[data] final class ArrayRFloatUByte(
 extends BaseRFloat[UByte](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UByte]
 with PrimitiveFactory[RFloat, UByte]
 {
+  type Read = ReadDataArray[RFloat, UByte]
+
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRFloatUByte(rarray, null)
   def rawType = RawType.UByte
@@ -155,6 +164,8 @@ with PrimitiveFactory[RFloat, UByte]
 private[data] final class BufferRFloatUByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[UByte](shared, null, ro, 0, 1) with DataBuffer[RFloat, UByte] {
+  type Read = ReadDataBuffer[RFloat, UByte]
+
   def mkReadOnlyInstance() = new BufferRFloatUByte(shared, true)
   def rawType = RawType.UByte
   def isNormalized = true
@@ -177,6 +188,8 @@ private[data] final class ArrayRFloatSShort(
 extends BaseRFloat[SShort](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SShort]
 with PrimitiveFactory[RFloat, SShort]
 {
+  type Read = ReadDataArray[RFloat, SShort]
+
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRFloatSShort(rarray, null)
   def rawType = RawType.SShort
@@ -195,6 +208,8 @@ with PrimitiveFactory[RFloat, SShort]
 private[data] final class BufferRFloatSShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[SShort](shared, null, ro, 0, 1) with DataBuffer[RFloat, SShort] {
+  type Read = ReadDataBuffer[RFloat, SShort]
+
   def mkReadOnlyInstance() = new BufferRFloatSShort(shared, true)
   def rawType = RawType.SShort
   def isNormalized = true
@@ -217,6 +232,8 @@ private[data] final class ArrayRFloatUShort(
 extends BaseRFloat[UShort](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UShort]
 with PrimitiveFactory[RFloat, UShort]
 {
+  type Read = ReadDataArray[RFloat, UShort]
+
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArrayRFloatUShort(rarray, null)
   def rawType = RawType.UShort
@@ -235,6 +252,8 @@ with PrimitiveFactory[RFloat, UShort]
 private[data] final class BufferRFloatUShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[UShort](shared, null, ro, 0, 1) with DataBuffer[RFloat, UShort] {
+  type Read = ReadDataBuffer[RFloat, UShort]
+
   def mkReadOnlyInstance() = new BufferRFloatUShort(shared, true)
   def rawType = RawType.UShort
   def isNormalized = true
@@ -257,6 +276,8 @@ private[data] final class ArrayRFloatSInt(
 extends BaseRFloat[SInt](rarray, null, warray == null, 0, 1) with DataArray[RFloat, SInt]
 with PrimitiveFactory[RFloat, SInt]
 {
+  type Read = ReadDataArray[RFloat, SInt]
+
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRFloatSInt(rarray, null)
   def rawType = RawType.SInt
@@ -275,6 +296,8 @@ with PrimitiveFactory[RFloat, SInt]
 private[data] final class BufferRFloatSInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[SInt](shared, null, ro, 0, 1) with DataBuffer[RFloat, SInt] {
+  type Read = ReadDataBuffer[RFloat, SInt]
+
   def mkReadOnlyInstance() = new BufferRFloatSInt(shared, true)
   def rawType = RawType.SInt
   def isNormalized = true
@@ -297,6 +320,8 @@ private[data] final class ArrayRFloatUInt(
 extends BaseRFloat[UInt](rarray, null, warray == null, 0, 1) with DataArray[RFloat, UInt]
 with PrimitiveFactory[RFloat, UInt]
 {
+  type Read = ReadDataArray[RFloat, UInt]
+
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRFloatUInt(rarray, null)
   def rawType = RawType.UInt
@@ -315,6 +340,8 @@ with PrimitiveFactory[RFloat, UInt]
 private[data] final class BufferRFloatUInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[UInt](shared, null, ro, 0, 1) with DataBuffer[RFloat, UInt] {
+  type Read = ReadDataBuffer[RFloat, UInt]
+
   def mkReadOnlyInstance() = new BufferRFloatUInt(shared, true)
   def rawType = RawType.UInt
   def isNormalized = true
@@ -337,6 +364,8 @@ private[data] final class ArrayRFloatHFloat(
 extends BaseRFloat[HFloat](rarray, null, warray == null, 0, 1) with DataArray[RFloat, HFloat]
 with PrimitiveFactory[RFloat, HFloat]
 {
+  type Read = ReadDataArray[RFloat, HFloat]
+
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRFloatHFloat(rarray, null)
   def rawType: Int = RawType.HFloat
@@ -355,6 +384,8 @@ with PrimitiveFactory[RFloat, HFloat]
 private[data] final class BufferRFloatHFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[HFloat](shared, null, ro, 0, 1) with DataBuffer[RFloat, HFloat] {
+  type Read = ReadDataBuffer[RFloat, HFloat]
+
   def mkReadOnlyInstance() = new BufferRFloatHFloat(shared, true)
   def rawType: Int = RawType.HFloat
   def isNormalized = false
@@ -377,6 +408,8 @@ private[data] final class ArrayRFloatRFloat(
 extends BaseRFloat[RFloat](rarray, null, warray == null, 0, 1) with DataArray[RFloat, RFloat]
 with PrimitiveFactory[RFloat, RFloat]
 {
+  type Read = ReadDataArray[RFloat, RFloat]
+
   def this() = this(emptyFloat, emptyFloat)
   def mkReadOnlyInstance() = new ArrayRFloatRFloat(rarray, null)
   def rawType: Int = RawType.RFloat
@@ -395,6 +428,8 @@ with PrimitiveFactory[RFloat, RFloat]
 private[data] final class BufferRFloatRFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRFloat[RFloat](shared, null, ro, 0, 1) with DataBuffer[RFloat, RFloat] {
+  type Read = ReadDataBuffer[RFloat, RFloat]
+
   def mkReadOnlyInstance() = new BufferRFloatRFloat(shared, true)
   def rawType: Int = RawType.RFloat
   def isNormalized = false

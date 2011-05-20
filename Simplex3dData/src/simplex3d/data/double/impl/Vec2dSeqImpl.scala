@@ -33,6 +33,8 @@ import simplex3d.data._
 private[data] final class ArrayVec2dRFloat(
   prim: ArrayRDoubleRFloat
 ) extends BaseVec2d[RFloat](prim, 0, 2) with DataArray[Vec2d, RFloat] {
+  type Read = ReadDataArray[Vec2d, RFloat]
+
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
@@ -50,6 +52,8 @@ private[data] final class ArrayVec2dRFloat(
 private[data] final class BufferVec2dRFloat(
   prim: BufferRDoubleRFloat
 ) extends BaseVec2d[RFloat](prim, 0, 2) with DataBuffer[Vec2d, RFloat] {
+  type Read = ReadDataBuffer[Vec2d, RFloat]
+
   def apply(i: Int) :ConstVec2d = {
     val j = i*2
     ConstVec2d(
@@ -67,6 +71,8 @@ private[data] final class BufferVec2dRFloat(
 private[data] final class ViewVec2dRFloat(
   prim: BufferRDoubleRFloat, off: Int, str: Int
 ) extends BaseVec2d[RFloat](prim, off, str) with DataView[Vec2d, RFloat] {
+  type Read = ReadDataView[Vec2d, RFloat]
+
   def apply(i: Int) :ConstVec2d = {
     val j = offset + i*stride
     ConstVec2d(

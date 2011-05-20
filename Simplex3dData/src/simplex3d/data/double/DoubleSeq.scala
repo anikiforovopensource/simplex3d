@@ -75,7 +75,10 @@ with CompositionFactory[RDouble, DefinedDouble]
 
 private[data] final class ViewRDouble[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
-) extends BaseRDouble[R](prim, prim, prim.isReadOnly, off, str) with DataView[RDouble, R] {
+) extends BaseRDouble[R](prim, prim, prim.isReadOnly, off, str) with DataView[RDouble, R]
+{
+  type Read = ReadDataView[RDouble, R @uncheckedVariance]
+  
   final def isNormalized = primitives.isNormalized
   final def rawType = primitives.rawType
   def mkReadOnlyInstance() = new ViewRDouble(primitives.asReadOnly(), offset, stride)
@@ -97,6 +100,8 @@ private[data] final class ArrayRDoubleSByte(
 extends BaseRDouble[SByte](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SByte]
 with PrimitiveFactory[RDouble, SByte]
 {
+  type Read = ReadDataArray[RDouble, SByte]
+
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRDoubleSByte(rarray, null)
   def rawType = RawType.SByte
@@ -115,6 +120,8 @@ with PrimitiveFactory[RDouble, SByte]
 private[data] final class BufferRDoubleSByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, SByte] {
+  type Read = ReadDataBuffer[RDouble, SByte]
+
   def mkReadOnlyInstance() = new BufferRDoubleSByte(shared, true)
   def rawType = RawType.SByte
   def isNormalized = true
@@ -137,6 +144,8 @@ private[data] final class ArrayRDoubleUByte(
 extends BaseRDouble[UByte](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UByte]
 with PrimitiveFactory[RDouble, UByte]
 {
+  type Read = ReadDataArray[RDouble, UByte]
+
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRDoubleUByte(rarray, null)
   def rawType = RawType.UByte
@@ -155,6 +164,8 @@ with PrimitiveFactory[RDouble, UByte]
 private[data] final class BufferRDoubleUByte(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UByte](shared, null, ro, 0, 1) with DataBuffer[RDouble, UByte] {
+  type Read = ReadDataBuffer[RDouble, UByte]
+
   def mkReadOnlyInstance() = new BufferRDoubleUByte(shared, true)
   def rawType = RawType.UByte
   def isNormalized = true
@@ -177,6 +188,8 @@ private[data] final class ArrayRDoubleSShort(
 extends BaseRDouble[SShort](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SShort]
 with PrimitiveFactory[RDouble, SShort]
 {
+  type Read = ReadDataArray[RDouble, SShort]
+
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRDoubleSShort(rarray, null)
   def rawType = RawType.SShort
@@ -195,6 +208,8 @@ with PrimitiveFactory[RDouble, SShort]
 private[data] final class BufferRDoubleSShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, SShort] {
+  type Read = ReadDataBuffer[RDouble, SShort]
+
   def mkReadOnlyInstance() = new BufferRDoubleSShort(shared, true)
   def rawType = RawType.SShort
   def isNormalized = true
@@ -217,6 +232,8 @@ private[data] final class ArrayRDoubleUShort(
 extends BaseRDouble[UShort](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UShort]
 with PrimitiveFactory[RDouble, UShort]
 {
+  type Read = ReadDataArray[RDouble, UShort]
+
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArrayRDoubleUShort(rarray, null)
   def rawType = RawType.UShort
@@ -235,6 +252,8 @@ with PrimitiveFactory[RDouble, UShort]
 private[data] final class BufferRDoubleUShort(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UShort](shared, null, ro, 0, 1) with DataBuffer[RDouble, UShort] {
+  type Read = ReadDataBuffer[RDouble, UShort]
+
   def mkReadOnlyInstance() = new BufferRDoubleUShort(shared, true)
   def rawType = RawType.UShort
   def isNormalized = true
@@ -257,6 +276,8 @@ private[data] final class ArrayRDoubleSInt(
 extends BaseRDouble[SInt](rarray, null, warray == null, 0, 1) with DataArray[RDouble, SInt]
 with PrimitiveFactory[RDouble, SInt]
 {
+  type Read = ReadDataArray[RDouble, SInt]
+
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRDoubleSInt(rarray, null)
   def rawType = RawType.SInt
@@ -275,6 +296,8 @@ with PrimitiveFactory[RDouble, SInt]
 private[data] final class BufferRDoubleSInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[SInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, SInt] {
+  type Read = ReadDataBuffer[RDouble, SInt]
+
   def mkReadOnlyInstance() = new BufferRDoubleSInt(shared, true)
   def rawType = RawType.SInt
   def isNormalized = true
@@ -297,6 +320,8 @@ private[data] final class ArrayRDoubleUInt(
 extends BaseRDouble[UInt](rarray, null, warray == null, 0, 1) with DataArray[RDouble, UInt]
 with PrimitiveFactory[RDouble, UInt]
 {
+  type Read = ReadDataArray[RDouble, UInt]
+
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRDoubleUInt(rarray, null)
   def rawType = RawType.UInt
@@ -315,6 +340,8 @@ with PrimitiveFactory[RDouble, UInt]
 private[data] final class BufferRDoubleUInt(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[UInt](shared, null, ro, 0, 1) with DataBuffer[RDouble, UInt] {
+  type Read = ReadDataBuffer[RDouble, UInt]
+
   def mkReadOnlyInstance() = new BufferRDoubleUInt(shared, true)
   def rawType = RawType.UInt
   def isNormalized = true
@@ -337,6 +364,8 @@ private[data] final class ArrayRDoubleHFloat(
 extends BaseRDouble[HFloat](rarray, null, warray == null, 0, 1) with DataArray[RDouble, HFloat]
 with PrimitiveFactory[RDouble, HFloat]
 {
+  type Read = ReadDataArray[RDouble, HFloat]
+
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRDoubleHFloat(rarray, null)
   def rawType: Int = RawType.HFloat
@@ -355,6 +384,8 @@ with PrimitiveFactory[RDouble, HFloat]
 private[data] final class BufferRDoubleHFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[HFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, HFloat] {
+  type Read = ReadDataBuffer[RDouble, HFloat]
+
   def mkReadOnlyInstance() = new BufferRDoubleHFloat(shared, true)
   def rawType: Int = RawType.HFloat
   def isNormalized = false
@@ -377,6 +408,8 @@ private[data] final class ArrayRDoubleRFloat(
 extends BaseRDouble[RFloat](rarray, null, warray == null, 0, 1) with DataArray[RDouble, RFloat]
 with PrimitiveFactory[RDouble, RFloat]
 {
+  type Read = ReadDataArray[RDouble, RFloat]
+
   def this() = this(emptyFloat, emptyFloat)
   def mkReadOnlyInstance() = new ArrayRDoubleRFloat(rarray, null)
   def rawType: Int = RawType.RFloat
@@ -395,6 +428,8 @@ with PrimitiveFactory[RDouble, RFloat]
 private[data] final class BufferRDoubleRFloat(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[RFloat](shared, null, ro, 0, 1) with DataBuffer[RDouble, RFloat] {
+  type Read = ReadDataBuffer[RDouble, RFloat]
+
   def mkReadOnlyInstance() = new BufferRDoubleRFloat(shared, true)
   def rawType: Int = RawType.RFloat
   def isNormalized = false
@@ -417,6 +452,8 @@ private[data] final class ArrayRDoubleRDouble(
 extends BaseRDouble[RDouble](rarray, null, warray == null, 0, 1) with DataArray[RDouble, RDouble]
 with PrimitiveFactory[RDouble, RDouble]
 {
+  type Read = ReadDataArray[RDouble, RDouble]
+
   def this() = this(emptyDouble, emptyDouble)
   def mkReadOnlyInstance() = new ArrayRDoubleRDouble(rarray, null)
   def rawType: Int = RawType.RDouble
@@ -435,6 +472,8 @@ with PrimitiveFactory[RDouble, RDouble]
 private[data] final class BufferRDoubleRDouble(
   shared: ByteBuffer, ro: Boolean
 ) extends BaseRDouble[RDouble](shared, null, ro, 0, 1) with DataBuffer[RDouble, RDouble] {
+  type Read = ReadDataBuffer[RDouble, RDouble]
+
   def mkReadOnlyInstance() = new BufferRDoubleRDouble(shared, true)
   def rawType: Int = RawType.RDouble
   def isNormalized = false

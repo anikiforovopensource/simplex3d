@@ -69,6 +69,8 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
 private[data] final class ArrayVec3d[+R <: DefinedDouble](
   prim: ReadDataArray[RDouble, R]
 ) extends BaseVec3d[R](prim, 0, 3) with DataArray[Vec3d, R] {
+  type Read = ReadDataArray[Vec3d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -88,6 +90,8 @@ private[data] final class ArrayVec3d[+R <: DefinedDouble](
 private[data] final class BufferVec3d[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R]
 ) extends BaseVec3d[R](prim, 0, 3) with DataBuffer[Vec3d, R] {
+  type Read = ReadDataBuffer[Vec3d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec3d = {
     val j = i*3
     ConstVec3d(
@@ -107,6 +111,8 @@ private[data] final class BufferVec3d[+R <: DefinedDouble](
 private[data] final class ViewVec3d[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseVec3d[R](prim, off, str) with DataView[Vec3d, R] {
+  type Read = ReadDataView[Vec3d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec3d = {
     val j = offset + i*stride
     ConstVec3d(

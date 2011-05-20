@@ -34,6 +34,8 @@ private[data] final class ViewRDoubleRFloat(
 ) extends BaseRDouble[RFloat](
   prim, prim, prim.isReadOnly, off, str
 ) with DataView[RDouble, RFloat] {
+  type Read = ReadDataView[RDouble, RFloat]
+
   def mkReadOnlyInstance() = new ViewRDoubleRFloat(primitives.asReadOnly(), offset, stride)
   def rawType: Int = RawType.RFloat
   def isNormalized = false

@@ -33,6 +33,8 @@ import simplex3d.data._
 private[data] final class ArrayVec3fRFloat(
   prim: ArrayRFloatRFloat
 ) extends BaseVec3f[RFloat](prim, 0, 3) with DataArray[Vec3f, RFloat] {
+  type Read = ReadDataArray[Vec3f, RFloat]
+
   def apply(i: Int) :ConstVec3f = {
     val j = i*3
     ConstVec3f(
@@ -52,6 +54,8 @@ private[data] final class ArrayVec3fRFloat(
 private[data] final class BufferVec3fRFloat(
   prim: BufferRFloatRFloat
 ) extends BaseVec3f[RFloat](prim, 0, 3) with DataBuffer[Vec3f, RFloat] {
+  type Read = ReadDataBuffer[Vec3f, RFloat]
+
   def apply(i: Int) :ConstVec3f = {
     val j = i*3
     ConstVec3f(
@@ -71,6 +75,8 @@ private[data] final class BufferVec3fRFloat(
 private[data] final class ViewVec3fRFloat(
   prim: BufferRFloatRFloat, off: Int, str: Int
 ) extends BaseVec3f[RFloat](prim, off, str) with DataView[Vec3f, RFloat] {
+  type Read = ReadDataView[Vec3f, RFloat]
+
   def apply(i: Int) :ConstVec3f = {
     val j = offset + i*stride
     ConstVec3f(
@@ -92,6 +98,8 @@ private[data] final class ViewVec3fRFloat(
 private[data] final class ArrayVec3fUByte(
   prim: ArrayRFloatUByte
 ) extends BaseVec3f[UByte](prim, 0, 3) with DataArray[Vec3f, UByte] {
+  type Read = ReadDataArray[Vec3f, UByte]
+
   def apply(i: Int) :ConstVec3f = {
     val j = i*3
     ConstVec3f(
@@ -111,6 +119,8 @@ private[data] final class ArrayVec3fUByte(
 private[data] final class BufferVec3fUByte(
   prim: BufferRFloatUByte
 ) extends BaseVec3f[UByte](prim, 0, 3) with DataBuffer[Vec3f, UByte] {
+  type Read = ReadDataBuffer[Vec3f, UByte]
+
   def apply(i: Int) :ConstVec3f = {
     val j = i*3
     ConstVec3f(
@@ -130,6 +140,8 @@ private[data] final class BufferVec3fUByte(
 private[data] final class ViewVec3fUByte(
   prim: BufferRFloatUByte, off: Int, str: Int
 ) extends BaseVec3f[UByte](prim, off, str) with DataView[Vec3f, UByte] {
+  type Read = ReadDataView[Vec3f, UByte]
+
   def apply(i: Int) :ConstVec3f = {
     val j = offset + i*stride
     ConstVec3f(

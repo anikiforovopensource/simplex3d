@@ -69,6 +69,8 @@ private[data] abstract class BaseVec4f[+R <: DefinedFloat](
 private[data] final class ArrayVec4f[+R <: DefinedFloat](
   prim: ReadDataArray[RFloat, R]
 ) extends BaseVec4f[R](prim, 0, 4) with DataArray[Vec4f, R] {
+  type Read = ReadDataArray[Vec4f, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
@@ -90,6 +92,8 @@ private[data] final class ArrayVec4f[+R <: DefinedFloat](
 private[data] final class BufferVec4f[+R <: DefinedFloat](
   prim: ReadDataBuffer[RFloat, R]
 ) extends BaseVec4f[R](prim, 0, 4) with DataBuffer[Vec4f, R] {
+  type Read = ReadDataBuffer[Vec4f, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4f = {
     val j = i*4
     ConstVec4f(
@@ -111,6 +115,8 @@ private[data] final class BufferVec4f[+R <: DefinedFloat](
 private[data] final class ViewVec4f[+R <: DefinedFloat](
   prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseVec4f[R](prim, off, str) with DataView[Vec4f, R] {
+  type Read = ReadDataView[Vec4f, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4f = {
     val j = offset + i*stride
     ConstVec4f(

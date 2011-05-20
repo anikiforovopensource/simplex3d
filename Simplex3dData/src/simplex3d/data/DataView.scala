@@ -29,9 +29,10 @@ import scala.annotation.unchecked._
  */
 trait ReadDataView[E <: Meta, +R <: Raw]
 extends ReadDataSeq[E, R] {
+  type Read <: ReadDataView[E, R]
+
   type PrimitiveSeq <: ReadDataBuffer[E#Component, R]
   type RawBuffer = ByteBuffer
-  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataView[E, R]]
 }
 
 trait DataView[E <: Meta, +R <: Raw]

@@ -29,7 +29,7 @@ import scala.annotation.unchecked._
  */
 trait ReadDataBuffer[E <: Meta, +R <: Raw]
 extends ReadDataView[E, R] with ReadContiguous[E, R] {
-  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataBuffer[E, R]]
+  type Read <: ReadDataBuffer[E, R]
 }
 
 trait DataBuffer[E <: Meta, +R <: Raw]

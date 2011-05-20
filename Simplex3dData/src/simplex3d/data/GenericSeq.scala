@@ -58,14 +58,20 @@ private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) ex
   }
 }
 
-final class GenericArray[E<: CompositeMeta, +R <: Raw, B <: Defined](
+final class GenericArray[E <: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataArray[E#Component, R]
-) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataArray[E, R]
+) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataArray[E, R] {
+  type Read = ReadDataArray[E, R @uncheckedVariance]
+}
 
 final class GenericBuffer[E<: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R]
-) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataBuffer[E, R]
+) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataBuffer[E, R] {
+  type Read = ReadDataBuffer[E, R @uncheckedVariance]
+}
 
 final class GenericView[E<: CompositeMeta, +R <: Raw, B <: Defined](
   adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R], off: Int, str: Int
-) extends GenericSeq[E, R, B](adapter, prim, off, str) with DataView[E, R]
+) extends GenericSeq[E, R, B](adapter, prim, off, str) with DataView[E, R] {
+  type Read = ReadDataView[E, R @uncheckedVariance]
+}

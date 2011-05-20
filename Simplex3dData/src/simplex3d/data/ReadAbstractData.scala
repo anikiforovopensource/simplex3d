@@ -35,7 +35,7 @@ abstract class ReadAbstractData[
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[E, R]
+) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[E, R] with DataSource
 with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   // Argument checks.
@@ -81,15 +81,8 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
         byteBuffer.clear()
         byteBuffer.order(ByteOrder.nativeOrder)
-
-        (storeType: @switch) match {
-          case ByteStore => byteBuffer
-          case ShortStore => byteBuffer.asShortBuffer()
-          case CharStore => byteBuffer.asCharBuffer()
-          case IntStore => byteBuffer.asIntBuffer()
-          case FloatStore => byteBuffer.asFloatBuffer()
-          case DoubleStore => byteBuffer.asDoubleBuffer()
-        }
+        
+        Util.wrapBuffer(storeType, byteBuffer)
       }
       else {
         val buff = Util.wrapArray(storeType, sharedArray)
@@ -110,9 +103,9 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   final override val size = sizeFrom(buff.capacity, offset, stride, components)
   final def length = size
+  final def isCached = true
 
   // Type definitions.
-  type RawBuffer <: Buffer
   type PrimitiveSeq <: ReadContiguous[E#Component, R]
 
   // Public API.
@@ -124,7 +117,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   final val bytesPerComponent = RawType.byteLength(rawType)
   final def byteCapacity = {
-    if (sharedStore.isInstanceOf[ByteBuffer]) sharedBuffer.capacity
+    if (buff.isDirect) sharedBuffer.capacity
     else buff.capacity*bytesPerComponent
   }
   final def byteOffset = offset*bytesPerComponent
@@ -141,14 +134,14 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final def readOnlyBuffer() :R#Buffer = Util.readOnlyBuff(storeType, buff).asInstanceOf[R#Buffer]
   
 
-  private[data] def mkReadOnlyInstance() :ReadDataSeq[E, R]
-  def asReadOnly() :ReadDataSeq[E, R]
-  private[data] final lazy val readOnlySeq :AnyRef = if (isReadOnly) this else mkReadOnlyInstance()
+  private[data] def mkReadOnlyInstance() :Read
+  private[this] final lazy val readOnlySeq = (if (isReadOnly) this else mkReadOnlyInstance()).asInstanceOf[Read]
+  final def asReadOnly() :Read = readOnlySeq
 
 
   private[this] final def binding() :Buffer = {
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
-      val buff = sharedStore.asInstanceOf[ByteBuffer].asReadOnlyBuffer()
+    if (buff.isDirect) {
+      val buff = sharedBuffer.asReadOnlyBuffer()
       buff.order(ByteOrder.nativeOrder)
       buff
     }
@@ -166,7 +159,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final def rawBufferWithOffset() :RawBuffer = {
     val buff = binding()
 
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
+    if (buff.isDirect) {
       buff.limit(buff.capacity)
       buff.position(offset*bytesPerComponent)
     }
@@ -179,7 +172,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final def rawBufferSubData(first: Int, count: Int) :RawBuffer = {
     val buff = binding()
 
-    if (sharedStore.isInstanceOf[ByteBuffer]) {
+    if (buff.isDirect) {
       val off = first*stride*bytesPerComponent
       var lim = off + count*stride*bytesPerComponent
       if (lim > buff.capacity && first + count == size) lim = buff.capacity

@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2010-2011, Aleksey Nikiforov
+ * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -20,22 +20,23 @@
 
 package simplex3d.data
 
+import java.nio._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[E <: Meta, +R <: Raw]
-extends ReadAbstractData[E, E#Const, R] {
-  type Read <: ReadDataSeq[E, R]
-}
+trait DataSource {
+  type RawBuffer <: Buffer
+  type Read <: DataSource
 
-trait DataSeq[E <: Meta, +R <: Raw]
-extends AbstractData[E, E#Const, E#Read, R] with ReadDataSeq[E, R]
+  def asReadOnly() :Read
+  def byteCapacity: Int
 
-object DataSeq {
-  def apply[E <: Meta, R <: Defined](
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :DataSeq[E, R] = {
-    composition.mkDataArray(primitives.mkDataArray(0))
-  }
+  /** Raw buffer can be direct or non-direct. It may be a mapped buffer for a memory mapped file.
+   * If not cached a new buffer is loaded on demand, the buffer may or may not be cached after that.
+   * The buffer contents may be compressed or encoded.
+   */
+  def rawBuffer() :RawBuffer
+  def isCached :Boolean
 }

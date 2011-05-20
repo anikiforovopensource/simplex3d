@@ -24,8 +24,7 @@ import java.nio._
 import scala.annotation.unchecked._
 
 
-/**
- * Extend this class and add implicit factories to your package object.
+/** Extend this class and add implicit factories to your package object.
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -62,7 +61,7 @@ abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
     ).asInstanceOf[ReadDataView[E, R]]
 
 
-  private[data] final def mkReadOnlyInstance() :ReadDataSeq[E, R] = {
+  private[data] final def mkReadOnlyInstance() :Read = {
     val self: AnyRef = this
     (self match {
       case _: DataArray[_, _] => mkReadDataArray(
@@ -74,6 +73,6 @@ abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
       case _: DataView[_, _] => mkReadDataView(
           primitives.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
         )
-    }).asInstanceOf[ReadDataSeq[E, R]]
+    }).asInstanceOf[Read]
   }
 }

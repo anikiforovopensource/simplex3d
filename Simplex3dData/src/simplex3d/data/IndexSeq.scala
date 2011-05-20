@@ -29,7 +29,7 @@ import scala.annotation.unchecked._
  */
 trait ReadIndexSeq[+R <: Unsigned] extends ReadContiguous[SInt, R]
 with IndexFactory[R] {
-  override def asReadOnly() :ReadIndexSeq[R]
+  type Read <: ReadIndexSeq[R]
 
   def copyAsIndexArray() :IndexArray[R] = copyAsDataArray()
   def copyAsIndexBuffer() :IndexBuffer[R] = copyAsDataBuffer()
@@ -41,7 +41,7 @@ extends Contiguous[SInt, R] with ReadIndexSeq[R]
 
 trait ReadIndexArray[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataArray[SInt, R] {
-  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadIndexArray[R]]
+  type Read <: ReadIndexArray[R]
 }
 
 trait IndexArray[+R <: Unsigned]
@@ -50,7 +50,7 @@ extends IndexSeq[R] with DataArray[SInt, R] with ReadIndexArray[R]
 
 trait ReadIndexBuffer[+R <: Unsigned]
 extends ReadIndexSeq[R] with ReadDataBuffer[SInt, R] {
-  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadIndexBuffer[R]]
+  type Read <: ReadIndexBuffer[R]
 }
 
 trait IndexBuffer[+R <: Unsigned]

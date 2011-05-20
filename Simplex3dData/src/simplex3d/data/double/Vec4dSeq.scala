@@ -69,6 +69,8 @@ private[data] abstract class BaseVec4d[+R <: DefinedDouble](
 private[data] final class ArrayVec4d[+R <: DefinedDouble](
   prim: ReadDataArray[RDouble, R]
 ) extends BaseVec4d[R](prim, 0, 4) with DataArray[Vec4d, R] {
+  type Read = ReadDataArray[Vec4d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
@@ -90,6 +92,8 @@ private[data] final class ArrayVec4d[+R <: DefinedDouble](
 private[data] final class BufferVec4d[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R]
 ) extends BaseVec4d[R](prim, 0, 4) with DataBuffer[Vec4d, R] {
+  type Read = ReadDataBuffer[Vec4d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4d = {
     val j = i*4
     ConstVec4d(
@@ -111,6 +115,8 @@ private[data] final class BufferVec4d[+R <: DefinedDouble](
 private[data] final class ViewVec4d[+R <: DefinedDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseVec4d[R](prim, off, str) with DataView[Vec4d, R] {
+  type Read = ReadDataView[Vec4d, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec4d = {
     val j = offset + i*stride
     ConstVec4d(

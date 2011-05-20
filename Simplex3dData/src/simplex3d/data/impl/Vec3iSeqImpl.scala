@@ -31,6 +31,8 @@ import simplex3d.math._
 private[data] final class ArrayVec3iUShort(
   prim: ArraySIntUShort
 ) extends BaseVec3i[UShort](prim, 0, 3) with DataArray[Vec3i, UShort] {
+  type Read = ReadDataArray[Vec3i, UShort]
+
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(
@@ -50,6 +52,8 @@ private[data] final class ArrayVec3iUShort(
 private[data] final class BufferVec3iUShort(
   prim: BufferSIntUShort
 ) extends BaseVec3i[UShort](prim, 0, 3) with DataBuffer[Vec3i, UShort] {
+  type Read = ReadDataBuffer[Vec3i, UShort]
+
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(
@@ -71,6 +75,8 @@ private[data] final class BufferVec3iUShort(
 private[data] final class ArrayVec3iUInt(
   prim: ArraySIntUInt
 ) extends BaseVec3i[UInt](prim, 0, 3) with DataArray[Vec3i, UInt] {
+  type Read = ReadDataArray[Vec3i, UInt]
+
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(
@@ -90,6 +96,8 @@ private[data] final class ArrayVec3iUInt(
 private[data] final class BufferVec3iUInt(
   prim: BufferSIntUInt
 ) extends BaseVec3i[UInt](prim, 0, 3) with DataBuffer[Vec3i, UInt] {
+  type Read = ReadDataBuffer[Vec3i, UInt]
+
   def apply(i: Int) :ConstVec3i = {
     val j = i*3
     ConstVec3i(

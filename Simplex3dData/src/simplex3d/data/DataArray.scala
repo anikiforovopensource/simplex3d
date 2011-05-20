@@ -30,9 +30,10 @@ import scala.annotation.unchecked._
 @SerialVersionUID(8104346712419693669L)
 trait ReadDataArray[E <: Meta, +R <: Raw]
 extends ReadDataSeq[E, R] with ReadContiguous[E, R] with Serializable {
+  type Read <: ReadDataArray[E, R]
+
   type PrimitiveSeq <: ReadDataArray[E#Component, R]
   type RawBuffer = Buffer
-  override def asReadOnly() = readOnlySeq.asInstanceOf[ReadDataArray[E, R]]
 }
 
 trait DataArray[E <: Meta, +R <: Raw]

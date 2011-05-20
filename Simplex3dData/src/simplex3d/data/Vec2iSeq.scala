@@ -62,6 +62,8 @@ private[data] abstract class BaseVec2i[+R <: DefinedInt](
 private[data] final class ArrayVec2i[+R <: DefinedInt](
   prim: ReadDataArray[SInt, R]
 ) extends BaseVec2i[R](prim, 0, 2) with DataArray[Vec2i, R] {
+  type Read = ReadDataArray[Vec2i, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
@@ -79,6 +81,8 @@ private[data] final class ArrayVec2i[+R <: DefinedInt](
 private[data] final class BufferVec2i[+R <: DefinedInt](
   prim: ReadDataBuffer[SInt, R]
 ) extends BaseVec2i[R](prim, 0, 2) with DataBuffer[Vec2i, R] {
+  type Read = ReadDataBuffer[Vec2i, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec2i = {
     val j = i*2
     ConstVec2i(
@@ -96,6 +100,8 @@ private[data] final class BufferVec2i[+R <: DefinedInt](
 private[data] final class ViewVec2i[+R <: DefinedInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseVec2i[R](prim, off, str) with DataView[Vec2i, R] {
+  type Read = ReadDataView[Vec2i, R @uncheckedVariance]
+
   def apply(i: Int) :ConstVec2i = {
     val j = offset + i*stride
     ConstVec2i(

@@ -41,7 +41,16 @@ private[data] object Util {
   final val emptyFloat = new Array[Float](0)
   final val emptyDouble = new Array[Double](0)
 
-
+  final def wrapBuffer(storeType: Int, buffer: ByteBuffer) :Buffer = {
+    (storeType: @switch) match {
+      case ByteStore => buffer
+      case ShortStore => buffer.asShortBuffer()
+      case CharStore => buffer.asCharBuffer()
+      case IntStore => buffer.asIntBuffer()
+      case FloatStore => buffer.asFloatBuffer()
+      case DoubleStore => buffer.asDoubleBuffer()
+    }
+  }
   final def wrapArray(storeType: Int, array: AnyRef) :Buffer = {
     (storeType: @switch) match {
       case ByteStore => ByteBuffer.wrap(array.asInstanceOf[Array[Byte]]).order(ByteOrder.nativeOrder)

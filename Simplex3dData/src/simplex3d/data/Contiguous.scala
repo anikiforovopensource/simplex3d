@@ -26,6 +26,8 @@ package simplex3d.data
  */
 trait ReadContiguous[E <: Meta, +R <: Raw]
 extends ReadDataSeq[E, R] {
+  type Read <: ReadContiguous[E, R]
+
   assert(offset == 0)
   assert(stride == components)
 }

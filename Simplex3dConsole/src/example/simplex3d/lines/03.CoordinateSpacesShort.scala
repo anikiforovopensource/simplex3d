@@ -11,37 +11,35 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object SimplexLogo extends App {
+object CoordinateSpacesShort extends App {
 
 {
-  // Simplex logo.
-  val side = 8.0
-  val height2d = sqrt(3.0/4.0*side*side)
-  val radius2d = side/sqrt(3.0)
-  val centerz = sqrt(radius2d*radius2d - 1.0/4.0*side*side)
-  val height3d = side*sqrt(6.0)/3.0
-  val radius3d = side*sqrt(3.0/8.0)
-  val centery = sqrt(radius3d*radius3d - radius2d*radius2d)
-
-  val simplexTranslation = Mat3x4 translate(-Vec3(side/2, centery, centerz))
-
-  val simplex = List(
-    // Base.
-    Vec3(0, 0, 0), Vec3(side, 0, 0),
-    Vec3(side, 0, 0), Vec3(side/2, 0, height2d),
-    Vec3(side/2, 0, height2d), Vec3(0, 0, 0),
-    // The remaining 3 edges.
-    Vec3(0, 0, 0), Vec3(side/2, height3d, centerz),
-    Vec3(side, 0, 0), Vec3(side/2, height3d, centerz),
-    Vec3(side/2, 0, height2d), Vec3(side/2, height3d, centerz)
-  ).map(p => simplexTranslation.transformPoint(p))
-
-
-  val lines = DataArray[Vec3, RFloat](simplex: _*)
+  // Define a box so we have something to render.
+  val s = 8.0
+  val boxTranslation = Mat3x4 translate(Vec3(-s/2))
+  val box = List(
+    // Front.
+    Vec3(0, 0, 0), Vec3(s, 0, 0),
+    Vec3(s, 0, 0), Vec3(s, s, 0),
+    Vec3(s, s, 0), Vec3(0, s, 0),
+    Vec3(0, s, 0), Vec3(0, 0, 0),
+    // Back.
+    Vec3(0, 0, s), Vec3(s, 0, s),
+    Vec3(s, 0, s), Vec3(s, s, s),
+    Vec3(s, s, s), Vec3(0, s, s),
+    Vec3(0, s, s), Vec3(0, 0, s),
+    // Sides.
+    Vec3(0, 0, 0), Vec3(0, 0, s),
+    Vec3(s, 0, 0), Vec3(s, 0, s),
+    Vec3(s, s, 0), Vec3(s, s, s),
+    Vec3(0, s, 0), Vec3(0, s, s)
+  ).map(p => boxTranslation.transformPoint(p))
+  
+  val lines = DataArray[Vec3, RFloat](box: _*)
   val linesOut = DataArray[Vec2, RFloat](lines.size)
   
   val colors = DataArray[Vec3, UByte](lines.size)
-  for (i <- 0 until colors.size/2) { colors(i*2) = Vec3(1, 0, 0); colors(i*2 + 1) = Vec3(0, 0, 1) }
+  for (i <- 0 until colors.size/2) { colors(i*2) = Vec3(1, 0, 1); colors(i*2 + 1) = Vec3(0, 0, 1) }
 
 
   // All 3D transformations happen here.
@@ -66,7 +64,7 @@ object SimplexLogo extends App {
   }
 
 
-  animateLines("Simplex") { (dims, time) =>
+  animateLines("Box", Vec3(0)) { (dims, time) =>
     val camRotation = Quat4 rotateX(radians(-20)) rotateY(radians(30)*time)
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
 
@@ -76,7 +74,7 @@ object SimplexLogo extends App {
 
     transform(modelMat, cameraMat, projectionMat, dims)
 
-    (linesOut, colors)
+    (linesOut, colors, linesOut.size)
   }
 }
 

@@ -28,8 +28,8 @@ object Lines extends App {
   for (i <- 0 until colors.size/2) { colors(i*2) = Vec3(0, 1, 0); colors(i*2 + 1) = Vec3(0, 0, 1) }
 
 
-  drawLines("Lines") { (dims) =>
-    (lines, colors)
+  drawLines("Lines", Vec3(0)) { (dims) =>
+    (lines, colors, lines.size)
   }
 
 }

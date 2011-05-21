@@ -60,18 +60,21 @@ object ImageUtilsPrivileged extends ImageUtils {
 
   override protected def renderLines
     (animate: Boolean)
-    (title: String, dims: inVec2i)
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3, dims: inVec2i)
+    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
     PrivilegedRunner.queue {
-      super.renderLines(animate)(title, dims)(function)
+      super.renderLines(animate)(title, background, dims)(function)
     }
   }
 }
 
 
 class ImageUtils {
+
   val DefaultDims = ConstVec2i(640, 480)
+  val DefaultBackground = ConstVec3(0)
+
 
   private[extension] def rgb(c: inVec3) :Int = {
     ((toUByte(c.r) & 0xFF) << 16) | ((toUByte(c.g) & 0xFF) << 8) | ((toUByte(c.b) & 0xFF))
@@ -272,49 +275,49 @@ class ImageUtils {
   }
 
   def drawLines
-    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
     val f = (dims: inVec2i, time: Double) => function(dims)
-    renderLines(false)("Generated Image", DefaultDims)(f)
+    renderLines(false)("Generated Image", DefaultBackground, DefaultDims)(f)
   }
   def drawLines
-    (title: String)
-    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3)
+    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
     val f = (dims: inVec2i, time: Double) => function(dims)
-    renderLines(false)(title, DefaultDims)(f)
+    renderLines(false)(title, background, DefaultDims)(f)
   }
   def drawLines
-    (title: String, dims: inVec2i)
-    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3, dims: inVec2i)
+    (function: (inVec2i) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
     val f = (dims: inVec2i, time: Double) => function(dims)
-    renderLines(false)(title, dims)(f)
+    renderLines(false)(title, background, dims)(f)
   }
 
 
   def animateLines
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
-    renderLines(true)("Animation", DefaultDims)(function)
+    renderLines(true)("Animation", DefaultBackground, DefaultDims)(function)
   }
   def animateLines
-    (title: String)
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3)
+    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
-    renderLines(true)(title, DefaultDims)(function)
+    renderLines(true)(title, background, DefaultDims)(function)
   }
   def animateLines
-    (title: String, dims: inVec2i)
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3, dims: inVec2i)
+    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
-    renderLines(true)(title, dims)(function)
+    renderLines(true)(title, background, dims)(function)
   }
 
   protected def renderLines
     (animate: Boolean)
-    (title: String, dims: inVec2i)
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte]))
+    (title: String, background: inVec3, dims: inVec2i)
+    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
     val drawFps = animate
     var actionTimer: Timer = null
@@ -361,7 +364,7 @@ class ImageUtils {
 
             // Clear the framebuffer.
             g2.setComposite(AlphaComposite.Src)
-            g.setColor(new Color(0f, 0f, 0f))
+            g.setColor(new Color(background.r.toFloat, background.g.toFloat, background.b.toFloat))
             g.fillRect(0, 0, dims.x, dims.y)
 
             // Apply the line rendering settings.
@@ -370,9 +373,9 @@ class ImageUtils {
             g2.setComposite(AlphaComposite.SrcOver)
 
             try {
-              val (lines, colors) = function(dims, fpsTimer.uptime)
+              val (lines, colors, count) = function(dims, fpsTimer.uptime)
 
-              var i = 0; while (i < lines.size/2) {
+              var i = 0; while (i < count/2) {
                 val j = i*2
 
                 val lineStart = lines(j)

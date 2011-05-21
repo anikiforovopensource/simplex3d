@@ -84,7 +84,7 @@ object CoordinateSpaces extends App {
    * - Scale and translate the NormalizedDeviceCoordinates according to
    *   the Viewport parameters to produce the WindowCoordinates.
    */
-  animateLines("Axis") { (dims, time) =>
+  animateLines("Axis", Vec3(0)) { (dims, time) =>
     val camRotationSpeed = radians(30) // 30 degrees per second
     val camRotation = Quat4 rotateX(radians(-20)) rotateY(camRotationSpeed*time)
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
@@ -132,7 +132,7 @@ object CoordinateSpaces extends App {
       i += 1
     }
 
-    (linesOut, colors)
+    (linesOut, colors, linesOut.size)
   }
 }
 

@@ -26,6 +26,11 @@ import java.util.Random
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._
+import scala.Double.{
+  NaN => nan,
+  PositiveInfinity => posinf,
+  NegativeInfinity => neginf
+}
 
 
 /**
@@ -35,6 +40,20 @@ class DoubleMathExtraTest extends FunSuite {
 
   test("Mat lerp") {
     for (i <- 0 until 1000) {
+
+      assert(isnan(smootherstep(nan, 2, 3)))
+      assert(isnan(smootherstep(1, nan, 3)))
+      assert(isnan(smootherstep(1, 2, nan)))
+      assert(isnan(smootherstep(2d, 1d, 0d)))
+      assert(1 == smootherstep(1d, 1d, 1d))
+      assert(1 == (smootherstep(1, 2, posinf)))
+      assert(0 == (smootherstep(1, 2, neginf)))
+      assert(0 == smootherstep(1, 2, 1))
+      assert(0.5 == smootherstep(1, 2, 1.5))
+      assert(1 == smootherstep(1, 2, 2))
+      assert(1 == smootherstep(1, 2, 3))
+
+
       val random = new Random(i)
       def r = random.nextDouble
 

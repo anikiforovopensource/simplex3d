@@ -55,7 +55,7 @@ object CoordinateSpaces extends App {
    *   coordinates to view coordinates.
    *   
    * - Find the ModelMatrix, which positions the model in world coordinates.
-   *   This matrix will transform model coordinates to view coordinates.
+   *   This matrix will transform model coordinates to world coordinates.
    * 
    * - Mutliply the ViewMatrix by the ModelMatrix to produce ModelViewMatrix,
    *   which transforms ModelCoordinates to view coordinates.

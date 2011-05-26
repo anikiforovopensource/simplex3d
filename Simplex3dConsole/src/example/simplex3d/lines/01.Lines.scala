@@ -13,23 +13,13 @@ import simplex3d.console.extension.ImageUtils._
  */
 object Lines extends App {
 
-  val genLines = (for (i <- 0 until 30) yield {
-    val offset = Vec2(0, -800 + i*50)
-    
-    List(
-      Vec2(0) + offset,
-      Vec2(1000 + offset)
-    )
-  }).flatten
+{
+  val lines = DataArray[Vec2, RFloat](Vec2(100, 100), Vec2(100, 200))
+  val colors = DataArray[Vec3, UByte](Vec3(1, 0, 0), Vec3(0, 1, 0))
 
-  val lines = DataArray[Vec2, RFloat](genLines: _*)
-  val colors = DataArray[Vec3, UByte](lines.size)
-
-  for (i <- 0 until colors.size/2) { colors(i*2) = Vec3(0, 1, 0); colors(i*2 + 1) = Vec3(0, 0, 1) }
-
-
-  drawLines("Lines", Vec3(0)) { (dims) =>
+  drawLines("A Simple Line", Vec3(0)) { (dims) =>
     (lines, colors, lines.size)
   }
+}
 
 }

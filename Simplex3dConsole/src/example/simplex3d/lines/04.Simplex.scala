@@ -11,10 +11,10 @@ import simplex3d.console.extension.ImageUtils._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object SimplexLogo extends App {
+object Simplex extends App {
 
 {
-  // Simplex logo.
+  // Simplex.
   val side = 8.0
   val height2d = sqrt(3.0/4.0*side*side)
   val radius2d = side/sqrt(3.0)

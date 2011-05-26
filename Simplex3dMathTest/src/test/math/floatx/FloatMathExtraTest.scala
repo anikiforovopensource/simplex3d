@@ -26,6 +26,11 @@ import java.util.Random
 import simplex3d.math._
 import simplex3d.math.float._
 import simplex3d.math.floatx.functions._
+import scala.Float.{
+  NaN => nan,
+  PositiveInfinity => posinf,
+  NegativeInfinity => neginf
+}
 
 
 /**
@@ -35,6 +40,20 @@ class FloatMathExtraTest extends FunSuite {
 
   test("Mat lerp") {
     for (i <- 0 until 1000) {
+
+      assert(isnan(smootherstep(nan, 2, 3)))
+      assert(isnan(smootherstep(1, nan, 3)))
+      assert(isnan(smootherstep(1, 2, nan)))
+      assert(isnan(smootherstep(2f, 1f, 0f)))
+      assert(1 == smootherstep(1f, 1f, 1f))
+      assert(1 == (smootherstep(1, 2, posinf)))
+      assert(0 == (smootherstep(1, 2, neginf)))
+      assert(0 == smootherstep(1, 2, 1))
+      assert(0.5f == smootherstep(1, 2, 1.5f))
+      assert(1 == smootherstep(1, 2, 2))
+      assert(1 == smootherstep(1, 2, 3))
+
+
       val random = new Random(i)
       def r = random.nextFloat
 

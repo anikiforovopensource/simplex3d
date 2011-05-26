@@ -69,7 +69,7 @@ class NoiseTest extends FunSuite {
         )
 
 
-        assert(1 - abs(n) >= 0)
+        //assert(1 - abs(n) >= 0) // Does not hold for ClassicalGradientNoise.
         assert(dot(d, d) < maxDerivLenSquare)
 
         y += delta
@@ -101,7 +101,7 @@ class NoiseTest extends FunSuite {
           )
 
 
-          assert(1 - abs(n) >= 0)
+          //assert(1 - abs(n) >= 0) // Does not hold for ClassicalGradientNoise.
           assert(dot(d, d) < maxDerivLenSquare)
 
           z += delta
@@ -135,7 +135,7 @@ class NoiseTest extends FunSuite {
               (n - noise1(Vec4(x, y, z, w - delta)))*invdelta
             )
 
-            assert(1 - abs(n) >= 0)
+            //assert(1 - abs(n) >= 0) // Does not hold for ClassicalGradientNoise.
             assert(dot(d, d) < maxDerivLenSquare)
 
             w += delta

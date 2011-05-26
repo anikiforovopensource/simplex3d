@@ -29,21 +29,17 @@ import simplex3d.math.doublex.functions.{abs, pow}
  * @author Aleksey Nikiforov (lex)
  */
 final class NoiseSum(
-  val frequency: Double,
   val octaves: Int,
-  lacunarity: Double = 2.0,
-  persistence: Double = 0.5,
-  val noiseSrc: NoiseSource = functions
+  val lacunarity: Double = 2.0,
+  val persistence: Double = 0.5,
+  val noise: NoiseSource = NoiseDefaults.DefaultSource
 ) {
-
-  import noiseSrc._
-
 
   private[this] val frequencyFactors = {
     val array = new Array[Double](octaves)
 
     var i = 0; while (i < octaves) {
-      array(i) = pow(lacunarity, i)*frequency
+      array(i) = pow(lacunarity, i)
       i += 1
     }
 
@@ -60,265 +56,49 @@ final class NoiseSum(
     array
   }
 
-  //
-  def noise1(x: Double) :Double = {
+  
+  def apply(x: Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += nx.noise(x*f + (i << 4))*a
+      sum += noise(x*f + (i << 4))*a
 
       i += 1
     }
 
     sum
   }
-  def noise1(u: inVec2d) :Double = {
+  def apply(u: inVec2d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += nx.noise(u.x*f + (i << 4), u.y*f)*a
+      sum += noise(u.x*f + (i << 4), u.y*f)*a
 
       i += 1
     }
 
     sum
   }
-  def noise1(u: inVec3d) :Double = {
+  def apply(u: inVec3d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += nx.noise(u.x*f + (i << 4), u.y*f, u.z*f)*a
+      sum += noise(u.x*f + (i << 4), u.y*f, u.z*f)*a
 
       i += 1
     }
 
     sum
   }
-  def noise1(u: inVec4d) :Double = {
+  def apply(u: inVec4d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += nx.noise(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f)*a
-
-      i += 1
-    }
-
-    sum
-  }
-
-  //
-  def noise2(x: Double) :Vec2d = {
-    var sum = Vec2d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = x*f + (i << 4)
-
-      sum.x += nx.noise(px)*a
-      sum.y += ny.noise(px)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise2(u: inVec2d) :Vec2d = {
-    var sum = Vec2d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-
-      sum.x += nx.noise(px, py)*a
-      sum.y += ny.noise(px, py)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise2(u: inVec3d) :Vec2d = {
-    var sum = Vec2d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-
-      sum.x += nx.noise(px, py, pz)*a
-      sum.y += ny.noise(px, py, pz)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise2(u: inVec4d) :Vec2d = {
-    var sum = Vec2d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-      val pw = u.w*f
-
-      sum.x += nx.noise(px, py, pz, pw)*a
-      sum.y += ny.noise(px, py, pz, pw)*a
-
-      i += 1
-    }
-
-    sum
-  }
-
-  //
-  def noise3(x: Double) :Vec3d = {
-    var sum = Vec3d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = x*f + (i << 4)
-
-      sum.x += nx.noise(px)*a
-      sum.y += ny.noise(px)*a
-      sum.z += nz.noise(px)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise3(u: inVec2d) :Vec3d = {
-    var sum = Vec3d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-
-      sum.x += nx.noise(px, py)*a
-      sum.y += ny.noise(px, py)*a
-      sum.z += nz.noise(px, py)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise3(u: inVec3d) :Vec3d = {
-    var sum = Vec3d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-
-      sum.x += nx.noise(px, py, pz)*a
-      sum.y += ny.noise(px, py, pz)*a
-      sum.z += nz.noise(px, py, pz)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise3(u: inVec4d) :Vec3d = {
-    var sum = Vec3d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-      val pw = u.w*f
-
-      sum.x += nx.noise(px, py, pz, pw)*a
-      sum.y += ny.noise(px, py, pz, pw)*a
-      sum.z += nz.noise(px, py, pz, pw)*a
-
-      i += 1
-    }
-
-    sum
-  }
-
-  //
-  def noise4(x: Double) :Vec4d = {
-    var sum = Vec4d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = x*f + (i << 4)
-
-      sum.x += nx.noise(px)*a
-      sum.y += ny.noise(px)*a
-      sum.z += nz.noise(px)*a
-      sum.w += nw.noise(px)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise4(u: inVec2d) :Vec4d = {
-    var sum = Vec4d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-
-      sum.x += nx.noise(px, py)*a
-      sum.y += ny.noise(px, py)*a
-      sum.z += nz.noise(px, py)*a
-      sum.w += nw.noise(px, py)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise4(u: inVec3d) :Vec4d = {
-    var sum = Vec4d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-
-      sum.x += nx.noise(px, py, pz)*a
-      sum.y += ny.noise(px, py, pz)*a
-      sum.z += nz.noise(px, py, pz)*a
-      sum.w += nw.noise(px, py, pz)*a
-
-      i += 1
-    }
-
-    sum
-  }
-  def noise4(u: inVec4d) :Vec4d = {
-    var sum = Vec4d(0); var i = 0; while (i < octaves) {
-      val f = frequencyFactors(i)
-      val a = amplitudeFactors(i)
-
-      val px = u.x*f + (i << 4)
-      val py = u.y*f
-      val pz = u.z*f
-      val pw = u.w*f
-
-      sum.x += nx.noise(px, py, pz, pw)*a
-      sum.y += ny.noise(px, py, pz, pw)*a
-      sum.z += nz.noise(px, py, pz, pw)*a
-      sum.w += nw.noise(px, py, pz, pw)*a
+      sum += noise(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f)*a
 
       i += 1
     }

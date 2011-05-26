@@ -28,12 +28,12 @@ import simplex3d.math.floatx.functions._
  *
  * @author Aleksey Nikiforov (lex)
  */
-class NoiseSource(val seed: Long, val noiseFactory: NoiseFactory = ClassicalGradientNoise) {
+class Noise(val seed: Long, val sourceFactory: NoiseFactory = ClassicalGradientNoise) {
 
-  private[math] final val nx = noiseFactory(seed & ((1L << 46) - 1))
-  private[math] final val ny = noiseFactory(seed & ((1L << 46) - 1) | (1L << 46))
-  private[math] final val nz = noiseFactory(seed & ((1L << 46) - 1) | (2L << 46))
-  private[math] final val nw = noiseFactory(seed & ((1L << 46) - 1) | (3L << 46))
+  private[math] final val channel1 = sourceFactory(seed & ((1L << 46) - 1))
+  private[math] final val channel2 = sourceFactory(seed & ((1L << 46) - 1) | (1L << 46))
+  private[math] final val channel3 = sourceFactory(seed & ((1L << 46) - 1) | (2L << 46))
+  private[math] final val channel4 = sourceFactory(seed & ((1L << 46) - 1) | (3L << 46))
 
   
   /** Computes a value of a 1-dimensional noise function.
@@ -49,75 +49,75 @@ class NoiseSource(val seed: Long, val noiseFactory: NoiseFactory = ClassicalGrad
    * @param x a double argument.
    * @return a value of a noise function.
    */
-  final def noise1(x: Float) :Float = nx.noise(x).toFloat
-  final def noise1(u: inVec2f) :Float = nx.noise(u.x, u.y).toFloat
-  final def noise1(u: inVec3f) :Float = nx.noise(u.x, u.y, u.z).toFloat
-  final def noise1(u: inVec4f) :Float = nx.noise(u.x, u.y, u.z, u.w).toFloat
+  final def noise1(x: Float) :Float = channel1(x)
+  final def noise1(u: inVec2f) :Float = channel1(u.x, u.y)
+  final def noise1(u: inVec3f) :Float = channel1(u.x, u.y, u.z)
+  final def noise1(u: inVec4f) :Float = channel1(u.x, u.y, u.z, u.w)
 
   /** Computes __two__ independent values of a 1-dimensional noise function.
    * @param x a double argument.
    * @return two values of a noise function packed as Vec2.
    */
   final def noise2(x: Float) :Vec2f = new Vec2f(
-    nx.noise(x).toFloat,
-    ny.noise(x).toFloat
+    channel1(x),
+    channel2(x)
   )
   final def noise2(u: inVec2f) :Vec2f = new Vec2f(
-    nx.noise(u.x, u.y).toFloat,
-    ny.noise(u.x, u.y).toFloat
+    channel1(u.x, u.y),
+    channel2(u.x, u.y)
   )
   final def noise2(u: inVec3f) :Vec2f = new Vec2f(
-    nx.noise(u.x, u.y, u.z).toFloat,
-    ny.noise(u.x, u.y, u.z).toFloat
+    channel1(u.x, u.y, u.z),
+    channel2(u.x, u.y, u.z)
   )
   final def noise2(u: inVec4f) :Vec2f = new Vec2f(
-    nx.noise(u.x, u.y, u.z, u.w).toFloat,
-    ny.noise(u.x, u.y, u.z, u.w).toFloat
+    channel1(u.x, u.y, u.z, u.w),
+    channel2(u.x, u.y, u.z, u.w)
   )
 
   final def noise3(x: Float) :Vec3f = new Vec3f(
-    nx.noise(x).toFloat,
-    ny.noise(x).toFloat,
-    nz.noise(x).toFloat
+    channel1(x),
+    channel2(x),
+    channel3(x)
   )
   final def noise3(u: inVec2f) :Vec3f = new Vec3f(
-    nx.noise(u.x, u.y).toFloat,
-    ny.noise(u.x, u.y).toFloat,
-    nz.noise(u.x, u.y).toFloat
+    channel1(u.x, u.y),
+    channel2(u.x, u.y),
+    channel3(u.x, u.y)
   )
   final def noise3(u: inVec3f) :Vec3f = new Vec3f(
-    nx.noise(u.x, u.y, u.z).toFloat,
-    ny.noise(u.x, u.y, u.z).toFloat,
-    nz.noise(u.x, u.y, u.z).toFloat
+    channel1(u.x, u.y, u.z),
+    channel2(u.x, u.y, u.z),
+    channel3(u.x, u.y, u.z)
   )
   final def noise3(u: inVec4f) :Vec3f = new Vec3f(
-    nx.noise(u.x, u.y, u.z, u.w).toFloat,
-    ny.noise(u.x, u.y, u.z, u.w).toFloat,
-    nz.noise(u.x, u.y, u.z, u.w).toFloat
+    channel1(u.x, u.y, u.z, u.w),
+    channel2(u.x, u.y, u.z, u.w),
+    channel3(u.x, u.y, u.z, u.w)
   )
 
   final def noise4(x: Float) :Vec4f = new Vec4f(
-    nx.noise(x).toFloat,
-    ny.noise(x).toFloat,
-    nz.noise(x).toFloat,
-    nw.noise(x).toFloat
+    channel1(x),
+    channel2(x),
+    channel3(x),
+    channel4(x)
   )
   final def noise4(u: inVec2f) :Vec4f = new Vec4f(
-    nx.noise(u.x, u.y).toFloat,
-    ny.noise(u.x, u.y).toFloat,
-    nz.noise(u.x, u.y).toFloat,
-    nw.noise(u.x, u.y).toFloat
+    channel1(u.x, u.y),
+    channel2(u.x, u.y),
+    channel3(u.x, u.y),
+    channel4(u.x, u.y)
   )
   final def noise4(u: inVec3f) :Vec4f = new Vec4f(
-    nx.noise(u.x, u.y, u.z).toFloat,
-    ny.noise(u.x, u.y, u.z).toFloat,
-    nz.noise(u.x, u.y, u.z).toFloat,
-    nw.noise(u.x, u.y, u.z).toFloat
+    channel1(u.x, u.y, u.z),
+    channel2(u.x, u.y, u.z),
+    channel3(u.x, u.y, u.z),
+    channel4(u.x, u.y, u.z)
   )
   final def noise4(u: inVec4f) :Vec4f = new Vec4f(
-    nx.noise(u.x, u.y, u.z, u.w).toFloat,
-    ny.noise(u.x, u.y, u.z, u.w).toFloat,
-    nz.noise(u.x, u.y, u.z, u.w).toFloat,
-    nw.noise(u.x, u.y, u.z, u.w).toFloat
+    channel1(u.x, u.y, u.z, u.w),
+    channel2(u.x, u.y, u.z, u.w),
+    channel3(u.x, u.y, u.z, u.w),
+    channel4(u.x, u.y, u.z, u.w)
   )
 }

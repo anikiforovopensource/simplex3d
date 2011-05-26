@@ -31,7 +31,7 @@ private[math] class functions
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object functions extends NoiseSource(0) {
+object functions extends Noise(0) {
 
   // Constants
   /** Machine float epsilon.

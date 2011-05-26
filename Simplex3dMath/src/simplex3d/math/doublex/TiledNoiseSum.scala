@@ -21,26 +21,52 @@
 package simplex3d.math.doublex
 
 import simplex3d.math._
-import simplex3d.math.doublex.functions.{abs, pow}
+import simplex3d.math.doublex.functions.{abs, pow, round}
 
 
 /** Noise sum.
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class Turbulence(
+final class TiledNoiseSum(
+  val tile: ConstVec4d,
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5,
-  val roundness: Double = 0.0,
-  val noise: NoiseSource = NoiseDefaults.DefaultSource
+  val noise: TiledNoiseSource = NoiseDefaults.DefaultTiledSource
 ) {
 
-  private[this] val frequencyFactors = {
-    val array = new Array[Double](octaves)
+  private[this] val tiles = {
+    val array = new Array[ConstVec4i](octaves)
 
     var i = 0; while (i < octaves) {
-      array(i) = pow(lacunarity, i)
+      val octaveFreq = pow(lacunarity, i)
+
+      array(i) = ConstVec4i(
+        round(tile.x*octaveFreq/noise.tileSizeX).toInt,
+        round(tile.y*octaveFreq/noise.tileSizeY).toInt,
+        round(tile.z*octaveFreq/noise.tileSizeZ).toInt,
+        round(tile.w*octaveFreq/noise.tileSizeW).toInt
+      )
+
+      i += 1
+    }
+
+    array
+  }
+  private[this] val frequencyFactors = {
+    val array = new Array[ConstVec4d](octaves)
+
+    var i = 0; while (i < octaves) {
+      val t = tiles(i)
+      
+      array(i) = ConstVec4d(
+        (t.x*noise.tileSizeX)/tile.x,
+        (t.y*noise.tileSizeY)/tile.y,
+        (t.z*noise.tileSizeZ)/tile.z,
+        (t.w*noise.tileSizeW)/tile.w
+      )
+
       i += 1
     }
 
@@ -60,10 +86,14 @@ final class Turbulence(
   
   def apply(x: Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
+      val t = tiles(i)
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(x*f + (i << 4)) + roundness*a)*a
+      sum += noise(
+        t.x,
+        x*f.x + (i << 4)
+      )*a
 
       i += 1
     }
@@ -72,10 +102,14 @@ final class Turbulence(
   }
   def apply(u: inVec2d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
+      val t = tiles(i)
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f) + roundness*a)*a
+      sum += noise(
+        t.x, t.y,
+        u.x*f.x + (i << 4), u.y*f.y
+      )*a
 
       i += 1
     }
@@ -84,10 +118,14 @@ final class Turbulence(
   }
   def apply(u: inVec3d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
+      val t = tiles(i)
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f, u.z*f) + roundness*a)*a
+      sum += noise(
+        t.x, t.y, t.z,
+        u.x*f.x + (i << 4), u.y*f.y, u.z*f.z
+      )*a
 
       i += 1
     }
@@ -96,10 +134,14 @@ final class Turbulence(
   }
   def apply(u: inVec4d) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
+      val t = tiles(i)
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f) + roundness*a)*a
+      sum += noise(
+        t.x, t.y, t.z, t.w,
+        u.x*f.x + (i << 4), u.y*f.y, u.z*f.z, u.w*f.w
+      )*a
 
       i += 1
     }

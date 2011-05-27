@@ -25,16 +25,19 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait NoiseFactory {
+@SerialVersionUID(8104346712419693669L)
+trait NoiseFactory extends Serializable {
   def apply(seed: Long) :NoiseSource
 }
 
-trait TiledNoiseFactory extends NoiseFactory {
+@SerialVersionUID(8104346712419693669L)
+trait TiledNoiseFactory extends NoiseFactory with Serializable {
   override def apply(seed: Long) :TiledNoiseSource
 }
 
 
-abstract class NoiseSource(val seed: Long) {
+@SerialVersionUID(8104346712419693669L)
+abstract class NoiseSource(val seed: Long) extends Serializable {
   def apply(x: Double) :Double
   def apply(x: Double, y: Double) :Double
   def apply(x: Double, y: Double, z:Double) :Double
@@ -46,7 +49,8 @@ abstract class NoiseSource(val seed: Long) {
   def apply(x: Float, y: Float, z:Float, w:Float) :Float = apply(x.toDouble, y.toDouble, z.toDouble, w.toDouble).toFloat
 }
 
-abstract class TiledNoiseSource(seed: Long) extends NoiseSource(seed) {
+@SerialVersionUID(8104346712419693669L)
+abstract class TiledNoiseSource(seed: Long) extends NoiseSource(seed) with Serializable {
   val tileSizeX :Double
   val tileSizeY :Double
   val tileSizeZ :Double
@@ -99,6 +103,10 @@ abstract class TiledNoiseSource(seed: Long) extends NoiseSource(seed) {
   ) :Float = apply(tilex, tiley, tilez, tilew, x.toDouble, y.toDouble, z.toDouble, w.toDouble).toFloat
 }
 
+
+/** These may change from one release to the next to point to the best available implementation.
+ *
+ */
 object NoiseDefaults {
   final val DefaultTiledFactory: TiledNoiseFactory = ClassicalGradientNoise
   final val DefaultFactory: NoiseFactory = DefaultTiledFactory

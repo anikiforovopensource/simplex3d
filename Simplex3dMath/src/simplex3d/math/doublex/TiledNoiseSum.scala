@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublex
 
+import java.io._
 import simplex3d.math._
 import simplex3d.math.doublex.functions.{abs, pow, round}
 
@@ -28,21 +29,27 @@ import simplex3d.math.doublex.functions.{abs, pow, round}
  *
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 final class TiledNoiseSum(
   val tile: ConstVec4d,
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5,
   val noise: TiledNoiseSource = NoiseDefaults.DefaultTiledSource
-) {
+) extends Serializable {
 
-  private[this] val tiles = {
-    val array = new Array[ConstVec4i](octaves)
+  @transient private[this] var tiles: Array[ConstVec4i] = _
+  @transient private[this] var frequencyFactors: Array[ConstVec4d] = _
+  @transient private[this] var amplitudeFactors: Array[Double] = _
+  initTransient()
+
+  private[this] def initTransient() {
+    tiles = new Array[ConstVec4i](octaves)
 
     var i = 0; while (i < octaves) {
       val octaveFreq = pow(lacunarity, i)
 
-      array(i) = ConstVec4i(
+      tiles(i) = ConstVec4i(
         round(tile.x*octaveFreq/noise.tileSizeX).toInt,
         round(tile.y*octaveFreq/noise.tileSizeY).toInt,
         round(tile.z*octaveFreq/noise.tileSizeZ).toInt,
@@ -52,15 +59,13 @@ final class TiledNoiseSum(
       i += 1
     }
 
-    array
-  }
-  private[this] val frequencyFactors = {
-    val array = new Array[ConstVec4d](octaves)
 
-    var i = 0; while (i < octaves) {
+    frequencyFactors = new Array[ConstVec4d](octaves)
+
+    i = 0; while (i < octaves) {
       val t = tiles(i)
-      
-      array(i) = ConstVec4d(
+
+      frequencyFactors(i) = ConstVec4d(
         (t.x*noise.tileSizeX)/tile.x,
         (t.y*noise.tileSizeY)/tile.y,
         (t.z*noise.tileSizeZ)/tile.z,
@@ -70,17 +75,13 @@ final class TiledNoiseSum(
       i += 1
     }
 
-    array
-  }
-  private[this] val amplitudeFactors = {
-    val array = new Array[Double](octaves)
 
-    var i = 0; while (i < octaves) {
-      array(i) = pow(persistence, i)
+    amplitudeFactors = new Array[Double](octaves)
+
+    i = 0; while (i < octaves) {
+      amplitudeFactors(i) = pow(persistence, i)
       i += 1
     }
-
-    array
   }
 
   
@@ -147,5 +148,17 @@ final class TiledNoiseSum(
     }
 
     sum
+  }
+
+
+  @throws(classOf[IOException])
+  private[this] def writeObject(out: ObjectOutputStream) {
+    out.defaultWriteObject()
+  }
+
+  @throws(classOf[IOException]) @throws(classOf[ClassNotFoundException])
+  private[this] def readObject(in: ObjectInputStream) {
+    in.defaultReadObject()
+    initTransient()
   }
 }

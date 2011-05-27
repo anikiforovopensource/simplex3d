@@ -1,5 +1,5 @@
 /*
- * Simplex3d, DoubleMath module
+ * Simplex3d, FloatMath module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMath.
@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math.doublex
+package simplex3d.math.floatx
 
 import java.io._
 import simplex3d.math._
-import simplex3d.math.doublex.functions.{abs, pow}
+import simplex3d.math.floatx.functions._
 
 
 /** Noise sum.
@@ -32,17 +32,17 @@ import simplex3d.math.doublex.functions.{abs, pow}
 @SerialVersionUID(8104346712419693669L)
 final class NoiseSum(
   val octaves: Int,
-  val lacunarity: Double = 2.0,
-  val persistence: Double = 0.5,
+  val lacunarity: Float = 2.0f,
+  val persistence: Float = 0.5f,
   val noise: NoiseSource = NoiseDefaults.DefaultSource
 ) extends Serializable {
 
-  @transient private[this] var frequencyFactors: Array[Double] = _
-  @transient private[this] var amplitudeFactors: Array[Double] = _
+  @transient private[this] var frequencyFactors: Array[Float] = _
+  @transient private[this] var amplitudeFactors: Array[Float] = _
   initTransient()
 
   private[this] def initTransient() {
-    frequencyFactors = new Array[Double](octaves)
+    frequencyFactors = new Array[Float](octaves)
 
     var i = 0; while (i < octaves) {
       frequencyFactors(i) = pow(lacunarity, i)
@@ -50,7 +50,7 @@ final class NoiseSum(
     }
 
 
-    amplitudeFactors = new Array[Double](octaves)
+    amplitudeFactors = new Array[Float](octaves)
 
     i = 0; while (i < octaves) {
       amplitudeFactors(i) = pow(persistence, i)
@@ -59,8 +59,8 @@ final class NoiseSum(
   }
 
   
-  def apply(x: Double) :Double = {
-    var sum = 0.0; var i = 0; while (i < octaves) {
+  def apply(x: Float) :Float = {
+    var sum = 0.0f; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
@@ -71,8 +71,8 @@ final class NoiseSum(
 
     sum
   }
-  def apply(u: inVec2d) :Double = {
-    var sum = 0.0; var i = 0; while (i < octaves) {
+  def apply(u: inVec2f) :Float = {
+    var sum = 0.0f; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
@@ -83,8 +83,8 @@ final class NoiseSum(
 
     sum
   }
-  def apply(u: inVec3d) :Double = {
-    var sum = 0.0; var i = 0; while (i < octaves) {
+  def apply(u: inVec3f) :Float = {
+    var sum = 0.0f; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
@@ -95,8 +95,8 @@ final class NoiseSum(
 
     sum
   }
-  def apply(u: inVec4d) :Double = {
-    var sum = 0.0; var i = 0; while (i < octaves) {
+  def apply(u: inVec4f) :Float = {
+    var sum = 0.0f; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 

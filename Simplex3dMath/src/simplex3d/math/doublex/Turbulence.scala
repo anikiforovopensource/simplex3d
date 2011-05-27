@@ -20,6 +20,7 @@
 
 package simplex3d.math.doublex
 
+import java.io._
 import simplex3d.math._
 import simplex3d.math.doublex.functions.{abs, pow}
 
@@ -28,33 +29,34 @@ import simplex3d.math.doublex.functions.{abs, pow}
  *
  * @author Aleksey Nikiforov (lex)
  */
+@SerialVersionUID(8104346712419693669L)
 final class Turbulence(
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5,
   val roundness: Double = 0.0,
   val noise: NoiseSource = NoiseDefaults.DefaultSource
-) {
+) extends Serializable {
 
-  private[this] val frequencyFactors = {
-    val array = new Array[Double](octaves)
+  @transient private[this] var frequencyFactors: Array[Double] = _
+  @transient private[this] var amplitudeFactors: Array[Double] = _
+  initTransient()
+
+  private[this] def initTransient() {
+    frequencyFactors = new Array[Double](octaves)
 
     var i = 0; while (i < octaves) {
-      array(i) = pow(lacunarity, i)
+      frequencyFactors(i) = pow(lacunarity, i)
       i += 1
     }
 
-    array
-  }
-  private[this] val amplitudeFactors = {
-    val array = new Array[Double](octaves)
 
-    var i = 0; while (i < octaves) {
-      array(i) = pow(persistence, i)
+    amplitudeFactors = new Array[Double](octaves)
+
+    i = 0; while (i < octaves) {
+      amplitudeFactors(i) = pow(persistence, i)
       i += 1
     }
-
-    array
   }
 
   
@@ -105,5 +107,17 @@ final class Turbulence(
     }
 
     sum
+  }
+
+
+  @throws(classOf[IOException])
+  private[this] def writeObject(out: ObjectOutputStream) {
+    out.defaultWriteObject()
+  }
+
+  @throws(classOf[IOException]) @throws(classOf[ClassNotFoundException])
+  private[this] def readObject(in: ObjectInputStream) {
+    in.defaultReadObject()
+    initTransient()
   }
 }

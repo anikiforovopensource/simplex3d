@@ -25,8 +25,9 @@ package simplex3d.math
  *
  * @author Aleksey Nikiforov (lex)
  */
-final class ClassicalGradientNoise protected (seed: Long)
-extends TiledNoiseSource(seed)
+@SerialVersionUID(8104346712419693669L)
+final class ClassicalGradientNoise(seed: Long)
+extends TiledNoiseSource(seed) with Serializable
 {
 
   import ClassicalGradientNoise._
@@ -372,7 +373,7 @@ extends TiledNoiseSource(seed)
     (mz0*(1 - wfade) + mz1*wfade)*1.2// 1.2 is a guess
   }
 
-  // Tile noise
+  // Tiled noise
   final val tileSizeX :Double = 1.0
   final val tileSizeY :Double = 1.0
   final val tileSizeZ :Double = 1.0
@@ -384,7 +385,7 @@ extends TiledNoiseSource(seed)
   ) :Double = {
     val lx = ifloor(x)
     val fx = x - lx
-    val ix = lx.toInt & 0x3FFFFFFF
+    val ix = lx.toInt & 0x7FFFFFFF
 
     val n0 = {
       val px = perm(ix % tile)
@@ -414,8 +415,8 @@ extends TiledNoiseSource(seed)
     val fx = x - lx
     val fy = y - ly
 
-    val ix = lx.toInt & 0x3FFFFFFF
-    val iy = ly.toInt & 0x3FFFFFFF
+    val ix = lx.toInt & 0x7FFFFFFF
+    val iy = ly.toInt & 0x7FFFFFFF
 
     val px0 = perm(ix % tilex)
     val px1 = perm((ix + 1) % tilex)
@@ -466,9 +467,9 @@ extends TiledNoiseSource(seed)
     val fy = y - ly
     val fz = z - lz
 
-    val ix = lx.toInt & 0x3FFFFFFF
-    val iy = ly.toInt & 0x3FFFFFFF
-    val iz = lz.toInt & 0x3FFFFFFF
+    val ix = lx.toInt & 0x7FFFFFFF
+    val iy = ly.toInt & 0x7FFFFFFF
+    val iz = lz.toInt & 0x7FFFFFFF
 
     val px0 = perm(ix % tilex)
     val px1 = perm((ix + 1) % tilex)
@@ -557,10 +558,10 @@ extends TiledNoiseSource(seed)
     val fz = z - lz
     val fw = w - lw
 
-    val ix = lx.toInt & 0x3FFFFFFF
-    val iy = ly.toInt & 0x3FFFFFFF
-    val iz = lz.toInt & 0x3FFFFFFF
-    val iw = lw.toInt & 0x3FFFFFFF
+    val ix = lx.toInt & 0x7FFFFFFF
+    val iy = ly.toInt & 0x7FFFFFFF
+    val iz = lz.toInt & 0x7FFFFFFF
+    val iw = lw.toInt & 0x7FFFFFFF
 
     val px0 = perm(ix % tilex)
     val px1 = perm((ix + 1) % tilex)
@@ -706,7 +707,8 @@ extends TiledNoiseSource(seed)
 }
 
 
-object ClassicalGradientNoise extends TiledNoiseFactory {
+@SerialVersionUID(8104346712419693669L)
+object ClassicalGradientNoise extends TiledNoiseFactory with Serializable {
 
   def apply(seed: Long) = new ClassicalGradientNoise(seed)
 

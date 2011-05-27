@@ -21,14 +21,14 @@
 package simplex3d.math.doublex
 
 import simplex3d.math._
-import simplex3d.math.doublex.functions.{abs, pow}
 
 
 /** Noise source.
  *
  * @author Aleksey Nikiforov (lex)
  */
-class Noise(val seed: Long, val sourceFactory: NoiseFactory = ClassicalGradientNoise) {
+@SerialVersionUID(8104346712419693669L)
+class Noise(val seed: Long, val sourceFactory: NoiseFactory = ClassicalGradientNoise) extends Serializable {
 
   private[math] final val channel1 = sourceFactory(seed & ((1L << 46) - 1))
   private[math] final val channel2 = sourceFactory(seed & ((1L << 46) - 1) | (1L << 46))

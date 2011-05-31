@@ -1,4 +1,4 @@
-package example.simplex3d.procedural
+package example.simplex3d.functions
 
 import simplex3d.math.double._
 import simplex3d.math.doublex.functions._

@@ -1,4 +1,4 @@
-package example.simplex3d.procedural.animation
+package example.simplex3d.procedural.animation.misc
 
 import simplex3d.math._
 import simplex3d.math.double._
@@ -17,10 +17,10 @@ object Fire extends App {
 
   val octaves = 3
   val lacunarity = 1.8
-  val amplitudeDivisor = 1.7
+  val persistence = 0.6
 
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
 
   def noiseSum(p: inVec3) = {
     def octave(i: Int, p: inVec3) = {

@@ -13,18 +13,19 @@ import simplex3d.console.extension.ImageUtils._
  */
 object Turbulence extends App {
 
-  val octaves = 4
+  val octaves = 3
   val lacunarity = 2
-  val amplitudeDivisor = 2
+  val persistence = 0.5
+  val roundness = 0.3
   val expectedMagnitude = 1.6
 
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
 
   def noiseSum(p: inVec2) = {
     def octave(i: Int, p: inVec2) = {
       val f = amplitudeFactors(i)
-      abs(noise1(p*frequencyFactors(i)) - 0.3*f)*f
+      abs(noise1(p*frequencyFactors(i)) - roundness*f)*f
     }
 
     var sum = 0.0; var i = 0; while (i < octaves) {
@@ -35,7 +36,7 @@ object Turbulence extends App {
   }
 
   drawFunction("Turbulence") { (dims, pixel) =>
-    val p = pixel/200
+    val p = pixel/100
     Vec3(noiseSum(p)/expectedMagnitude)
   }
 

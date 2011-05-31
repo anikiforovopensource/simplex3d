@@ -10,31 +10,17 @@ import simplex3d.console.extension.ImageUtils._
  */
 object NoiseSum extends App {
 
-  val zoom = 1.0/200
+  val zoom = 1.0/150
   val scrollSpeed = 5.0
   val changeSpeed = 1.0/10
 
-  val octaves = 4
-  val lacunarity = 1.8
-  val amplitudeDivisor = 2
-  val expectedMagnitude = 1.5
-
-  val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
-
-  def noiseSum(p: inVec3) = {
-    def octave(i: Int, p: inVec3) = {
-      noise1(p*frequencyFactors(i))*amplitudeFactors(i)
-    }
-
-    var sum = 0.0; var i = 0; while (i < octaves) {
-      sum += octave(i, p + i)
-      i += 1
-    }
-    sum
-  }
+  val noiseSum = new NoiseSum(
+    frequency = 1,
+    octaves = 4, lacunarity = 1.8, persistence = 0.5
+  )
 
   animateFunction("Noise Sum") { (dims, time, pixel) =>
+    val expectedMagnitude = 1.5
     val p = pixel + time*scrollSpeed
     val noise = noiseSum(Vec3(p*zoom , time*changeSpeed))
     Vec3((noise + expectedMagnitude)/(2*expectedMagnitude))

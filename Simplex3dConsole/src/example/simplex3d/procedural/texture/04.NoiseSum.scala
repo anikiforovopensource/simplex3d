@@ -15,11 +15,11 @@ object NoiseSum extends App {
 
   val octaves = 6
   val lacunarity = 1.7
-  val amplitudeDivisor = 1.9
+  val persistence = 0.52
   val expectedMagnitude = 1.5
 
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
 
   def noiseSum(p: inVec2) = {
     def octave(i: Int, p: inVec2) = {

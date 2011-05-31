@@ -11,22 +11,23 @@ import simplex3d.console.extension.ImageUtils._
  */
 object LostSouls extends App {
 
-  val zoom = 1.0/150
+  val zoom = 1.0/100
   val changeSpeed = 1.0/10
 
   val octaves = 4
-  val amplitudeDivisor = 2
+  val persistence = 0.5
   val expectedMagnitude = 1.5
+  val roundness = 0.3
 
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
 
   def noiseSum(p: inVec3) = {
-    val varying = amplitudeDivisor + noise1(p)*0.02
+    val varying = 2 + noise1(p)*0.02
 
     def octave(i: Int, p: inVec3) = {
       val frequencyFactor = pow(varying, i)
       val f = amplitudeFactors(i)
-      abs(noise1(p*frequencyFactor) - 0.3*f)*f
+      abs(noise1(p*frequencyFactor) - roundness*f)*f
     }
 
     val c1 = (octave(1, p + 1) + octave(3, p + 3))*1.2

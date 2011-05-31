@@ -10,16 +10,16 @@ import simplex3d.console.extension.ImageUtils._
  */
 object Biomass extends App {
 
-  val zoom = 1.0/100
+  val zoom = 1.0/70
   val changeSpeed = 1.0/10
 
-  val amplitudeDivisor = 2
+  val persistence = 0.5
   val expectedMagnitude = 0.7
 
-  val amplitudeFactors = (for (i <- 0 until 3) yield pow(amplitudeDivisor, -i)).toArray
+  val amplitudeFactors = (for (i <- 0 until 3) yield pow(persistence, i)).toArray
 
   def noiseSum(p: inVec3) = {
-    val varying = amplitudeDivisor + noise1(p)*0.02
+    val varying = 2 + noise1(p)*0.02
 
     def octave(i: Int, p: inVec3, c: outVec3) = {
       val frequencyFactor = pow(varying, i)

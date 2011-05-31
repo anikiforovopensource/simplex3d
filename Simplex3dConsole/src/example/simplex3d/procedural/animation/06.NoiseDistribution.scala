@@ -34,7 +34,7 @@ object NoiseDistribution extends App {
     else color(Vec3(0, 1, 1), (scaledNoise)/0.25)
   }
 
-  private def color(shadeColor: inVec3, intencity: Double) :Vec3 = {
+  def color(shadeColor: inVec3, intencity: Double) :Vec3 = {
     mix(shadeColor/2, shadeColor, intencity)
   }
 }

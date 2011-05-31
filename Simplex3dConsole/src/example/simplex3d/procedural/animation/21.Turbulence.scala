@@ -14,28 +14,14 @@ object Turbulence extends App {
   val scrollSpeed = 0.0//5.0
   val changeSpeed = 0.7/10
 
-  val octaves = 3
-  val lacunarity = 2.2
-  val amplitudeDivisor = 2.5
-
-  val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val amplitudeFactors = (for (i <- 0 until octaves) yield pow(amplitudeDivisor, -i)).toArray
-
-  def noiseSum(p: inVec3) = {
-    def octave(i: Int, p: inVec3) = {
-      val f = amplitudeFactors(i)
-      abs(noise1(p*frequencyFactors(i)) - 0.3*f)*f
-    }
-
-    var sum = 0.0; var i = 0; while (i < octaves) {
-      sum += octave(i, p + i)
-      i += 1
-    }
-    sum
-  }
+  val turbulence = new Turbulence(
+    frequency = 1,
+    octaves = 3, lacunarity = 2.2, persistence = 0.4,
+    roundness = 0.3
+  )
 
   animateFunction("Turbulence") { (dims, time, pixel) =>
     val p = (pixel + time*scrollSpeed)*zoom
-    Vec3(noiseSum(Vec3(p, time*changeSpeed))*0.6)
+    Vec3(turbulence(Vec3(p, time*changeSpeed))*0.6)
   }
 }

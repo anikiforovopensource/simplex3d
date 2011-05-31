@@ -31,11 +31,12 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 final class Turbulence(
+  val frequency: Float,
   val octaves: Int,
   val lacunarity: Float = 2.0f,
   val persistence: Float = 0.5f,
   val roundness: Float = 0.0f,
-  val noise: NoiseSource = NoiseDefaults.DefaultSource
+  val source: NoiseSource = NoiseDefaults.DefaultSource
 ) extends Serializable {
 
   @transient private[this] var frequencyFactors: Array[Float] = _
@@ -46,7 +47,7 @@ final class Turbulence(
     frequencyFactors = new Array[Float](octaves)
 
     var i = 0; while (i < octaves) {
-      frequencyFactors(i) = pow(lacunarity, i)
+      frequencyFactors(i) = pow(lacunarity, i)*frequency
       i += 1
     }
 
@@ -65,7 +66,7 @@ final class Turbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(x*f + (i << 4)) + roundness*a)*a
+      sum += abs(source(x*f + (i << 4)) + roundness*a)*a
 
       i += 1
     }
@@ -77,7 +78,7 @@ final class Turbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f) + roundness*a)*a
+      sum += abs(source(u.x*f + (i << 4), u.y*f) + roundness*a)*a
 
       i += 1
     }
@@ -89,7 +90,7 @@ final class Turbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f, u.z*f) + roundness*a)*a
+      sum += abs(source(u.x*f + (i << 4), u.y*f, u.z*f) + roundness*a)*a
 
       i += 1
     }
@@ -101,7 +102,7 @@ final class Turbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f) + roundness*a)*a
+      sum += abs(source(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f) + roundness*a)*a
 
       i += 1
     }

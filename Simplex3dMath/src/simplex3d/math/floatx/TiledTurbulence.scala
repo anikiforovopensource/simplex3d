@@ -32,11 +32,12 @@ import simplex3d.math.floatx.functions._
 @SerialVersionUID(8104346712419693669L)
 final class TiledTurbulence(
   val tile: ConstVec4f,
+  val frequency: Float,
   val octaves: Int,
   val lacunarity: Float = 2.0f,
   val persistence: Float = 0.5f,
   val roundness: Float = 0.0f,
-  val noise: TiledNoiseSource = NoiseDefaults.DefaultTiledSource
+  val source: TiledNoiseSource = NoiseDefaults.DefaultTiledSource
 ) extends Serializable {
 
   @transient private[this] var tiles: Array[ConstVec4i] = _
@@ -48,13 +49,13 @@ final class TiledTurbulence(
     tiles = new Array[ConstVec4i](octaves)
 
     var i = 0; while (i < octaves) {
-      val octaveFreq = pow(lacunarity, i)
+      val octaveFreq = pow(lacunarity, i)*frequency
 
       tiles(i) = ConstVec4i(
-        round(tile.x*octaveFreq/noise.tileSizeXf).toInt,
-        round(tile.y*octaveFreq/noise.tileSizeYf).toInt,
-        round(tile.z*octaveFreq/noise.tileSizeZf).toInt,
-        round(tile.w*octaveFreq/noise.tileSizeWf).toInt
+        round(tile.x*octaveFreq/source.tileSizeXf).toInt,
+        round(tile.y*octaveFreq/source.tileSizeYf).toInt,
+        round(tile.z*octaveFreq/source.tileSizeZf).toInt,
+        round(tile.w*octaveFreq/source.tileSizeWf).toInt
       )
 
       i += 1
@@ -67,10 +68,10 @@ final class TiledTurbulence(
       val t = tiles(i)
 
       frequencyFactors(i) = ConstVec4f(
-        (t.x*noise.tileSizeXf)/tile.x,
-        (t.y*noise.tileSizeYf)/tile.y,
-        (t.z*noise.tileSizeZf)/tile.z,
-        (t.w*noise.tileSizeWf)/tile.w
+        (t.x*source.tileSizeXf)/tile.x,
+        (t.y*source.tileSizeYf)/tile.y,
+        (t.z*source.tileSizeZf)/tile.z,
+        (t.w*source.tileSizeWf)/tile.w
       )
 
       i += 1
@@ -92,7 +93,7 @@ final class TiledTurbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(
+      sum += abs(source(
         t.x,
         x*f.x + (i << 4)
       ) + roundness*a)*a
@@ -108,7 +109,7 @@ final class TiledTurbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(
+      sum += abs(source(
         t.x, t.y,
         u.x*f.x + (i << 4), u.y*f.y
       ) + roundness*a)*a
@@ -124,7 +125,7 @@ final class TiledTurbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(
+      sum += abs(source(
         t.x, t.y, t.z,
         u.x*f.x + (i << 4), u.y*f.y, u.z*f.z
       ) + roundness*a)*a
@@ -140,7 +141,7 @@ final class TiledTurbulence(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += abs(noise(
+      sum += abs(source(
         t.x, t.y, t.z, t.w,
         u.x*f.x + (i << 4), u.y*f.y, u.z*f.z, u.w*f.w
       ) + roundness*a)*a

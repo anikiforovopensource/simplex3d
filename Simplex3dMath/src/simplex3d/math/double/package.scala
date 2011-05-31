@@ -247,4 +247,12 @@ package object double {
 
   type inMat4x4 = inMat4
   type outMat4x4 = outMat4
+
+
+  // Noise aliases
+  type Noise = simplex3d.math.doublex.Noise
+  type NoiseSum = simplex3d.math.doublex.NoiseSum
+  type Turbulence = simplex3d.math.doublex.Turbulence
+  type TiledNoiseSum = simplex3d.math.doublex.TiledNoiseSum
+  type TiledTurbulence = simplex3d.math.doublex.TiledTurbulence
 }

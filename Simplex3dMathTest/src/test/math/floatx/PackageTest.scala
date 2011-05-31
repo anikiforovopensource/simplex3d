@@ -154,6 +154,13 @@ class PackageTest extends FunSuite {
     val cm4x4 = ConstMat4x4f
     type m4x4 = Mat4x4f
     val m4x4 = Mat4x4f
+
+    // Noise
+    type n = Noise
+    type ns = NoiseSum
+    type t = Turbulence
+    type tns = TiledNoiseSum
+    type tt = TiledTurbulence
   }
 
   test("Renamed package") {
@@ -280,5 +287,12 @@ class PackageTest extends FunSuite {
     val cm4x4 = ConstMat4x4
     type m4x4 = Mat4x4
     val m4x4 = Mat4x4
+
+    // Noise
+    type n = Noise
+    type ns = NoiseSum
+    type t = Turbulence
+    type tns = TiledNoiseSum
+    type tt = TiledTurbulence
   }
 }

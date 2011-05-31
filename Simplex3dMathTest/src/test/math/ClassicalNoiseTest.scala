@@ -37,20 +37,40 @@ class ClassicalNoiseTest extends FunSuite {
   test("1d noise") {
     test1dNoise(-1, 1, noise(_))
     test1fNoise(-1, 1, noise(_))
+    
+    test1dTiles(1, noise(1, _))
+    test1fTiles(1, noise(1, _))
+    test1dTiles(2, noise(2, _))
+    test1fTiles(2, noise(2, _))
   }
 
   test("2d noise") {
     test2dNoise(0, 0, (u) => noise(u.x, u.y))
     test2fNoise(0, 0, (u) => noise(u.x, u.y))
+    
+    test2dTiles(Vec2d(1), (u) => noise(1, 1, u.x, u.y))
+    test2fTiles(Vec2f(1), (u) => noise(1, 1, u.x, u.y))
+    test2dTiles(Vec2d(2), (u) => noise(2, 2, u.x, u.y))
+    test2fTiles(Vec2f(2), (u) => noise(2, 2, u.x, u.y))
   }
 
   test("3d noise") {
     test3dNoise(0, 0, (u) => noise(u.x, u.y, u.z))
     test3fNoise(0, 0, (u) => noise(u.x, u.y, u.z))
+    
+    test3dTiles(Vec3d(1), (u) => noise(1, 1, 1, u.x, u.y, u.z))
+    test3fTiles(Vec3f(1), (u) => noise(1, 1, 1, u.x, u.y, u.z))
+    test3dTiles(Vec3d(2), (u) => noise(2, 2, 2, u.x, u.y, u.z))
+    test3fTiles(Vec3f(2), (u) => noise(2, 2, 2, u.x, u.y, u.z))
   }
 
   test("4d noise") {
     test4dNoise(0, 0, (u) => noise(u.x, u.y, u.z, u.w))
     test4fNoise(0, 0, (u) => noise(u.x, u.y, u.z, u.w))
+    
+    test4dTiles(Vec4d(1), (u) => noise(1, 1, 1, 1, u.x, u.y, u.z, u.w))
+    test4fTiles(Vec4f(1), (u) => noise(1, 1, 1, 1, u.x, u.y, u.z, u.w))
+    test4dTiles(Vec4d(2), (u) => noise(2, 2, 2, 2, u.x, u.y, u.z, u.w))
+    test4fTiles(Vec4f(2), (u) => noise(2, 2, 2, 2, u.x, u.y, u.z, u.w))
   }
 }

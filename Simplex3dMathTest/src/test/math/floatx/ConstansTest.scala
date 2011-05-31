@@ -21,7 +21,6 @@
 package test.math.floatx
 
 import org.scalatest._
-
 import simplex3d.math.float._
 
 

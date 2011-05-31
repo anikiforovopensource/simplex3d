@@ -21,7 +21,6 @@
 package test.math.doublex
 
 import org.scalatest._
-
 import simplex3d.math.double._
 
 

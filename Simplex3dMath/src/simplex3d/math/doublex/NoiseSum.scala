@@ -31,10 +31,11 @@ import simplex3d.math.doublex.functions.{abs, pow}
  */
 @SerialVersionUID(8104346712419693669L)
 final class NoiseSum(
+  val frequency: Double,
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5,
-  val noise: NoiseSource = NoiseDefaults.DefaultSource
+  val source: NoiseSource = NoiseDefaults.DefaultSource
 ) extends Serializable {
 
   @transient private[this] var frequencyFactors: Array[Double] = _
@@ -45,7 +46,7 @@ final class NoiseSum(
     frequencyFactors = new Array[Double](octaves)
 
     var i = 0; while (i < octaves) {
-      frequencyFactors(i) = pow(lacunarity, i)
+      frequencyFactors(i) = pow(lacunarity, i)*frequency
       i += 1
     }
 
@@ -64,7 +65,7 @@ final class NoiseSum(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += noise(x*f + (i << 4))*a
+      sum += source(x*f + (i << 4))*a
 
       i += 1
     }
@@ -76,7 +77,7 @@ final class NoiseSum(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += noise(u.x*f + (i << 4), u.y*f)*a
+      sum += source(u.x*f + (i << 4), u.y*f)*a
 
       i += 1
     }
@@ -88,7 +89,7 @@ final class NoiseSum(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += noise(u.x*f + (i << 4), u.y*f, u.z*f)*a
+      sum += source(u.x*f + (i << 4), u.y*f, u.z*f)*a
 
       i += 1
     }
@@ -100,7 +101,7 @@ final class NoiseSum(
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += noise(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f)*a
+      sum += source(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f)*a
 
       i += 1
     }

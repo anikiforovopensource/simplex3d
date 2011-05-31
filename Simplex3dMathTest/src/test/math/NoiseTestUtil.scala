@@ -32,21 +32,21 @@ import simplex3d.math.floatx._
 object NoiseTestUtil extends FunSuite {
 
   private[this] val random = new java.util.Random(0)
-  private def randomFloat = random.nextFloat
-  private def randomVec2f = Vec2f(random.nextFloat, random.nextFloat)
-  private def randomVec3f = Vec3f(random.nextFloat, random.nextFloat, random.nextFloat)
-  private def randomVec4f = Vec3f(random.nextFloat, random.nextFloat, random.nextFloat, random.nextFloat)
-  private def randomDouble = random.nextDouble
-  private def randomVec2d = Vec2f(random.nextDouble, random.nextDouble)
-  private def randomVec3d = Vec3f(random.nextDouble, random.nextDouble, random.nextDouble)
-  private def randomVec4d = Vec3f(random.nextDouble, random.nextDouble, random.nextDouble, random.nextDouble)
+  def randomFloat = random.nextFloat
+  def randomVec2f = Vec2f(random.nextFloat, random.nextFloat)
+  def randomVec3f = Vec3f(random.nextFloat, random.nextFloat, random.nextFloat)
+  def randomVec4f = Vec4f(random.nextFloat, random.nextFloat, random.nextFloat, random.nextFloat)
+  def randomDouble = random.nextDouble
+  def randomVec2d = Vec2d(random.nextDouble, random.nextDouble)
+  def randomVec3d = Vec3d(random.nextDouble, random.nextDouble, random.nextDouble)
+  def randomVec4d = Vec4d(random.nextDouble, random.nextDouble, random.nextDouble, random.nextDouble)
 
 
   // Double.
-  def test1dNoise(min: Double, max: Double, noise: (Double) => Double) {
+  def test1dNoise(rangeMin: Double, rangeMax: Double, noise: (Double) => Double) {
     import simplex3d.math.double.functions._
 
-    val maxDerivative = 8
+    val rangeMaxDerivative = 8
 
     val from = 0.0
     val to = 10.0
@@ -58,17 +58,17 @@ object NoiseTestUtil extends FunSuite {
       val n = noise(x)
       val d = (n - noise(x - delta))*invdelta
 
-      if (min < max) assert(min <= n && n <= max)
-      assert(length(d) < maxDerivative)
+      if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+      assert(length(d) < rangeMaxDerivative)
 
       x += delta
     }
   }
 
-  def test2dNoise(min: Double, max: Double, noise: (inVec2d) => Double) {
+  def test2dNoise(rangeMin: Double, rangeMax: Double, noise: (inVec2d) => Double) {
     import simplex3d.math.double.functions._
 
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0
     val to = 10.0
@@ -85,8 +85,8 @@ object NoiseTestUtil extends FunSuite {
         )
 
 
-        if (min < max) assert(min <= n && n <= max)
-        assert(dot(d, d) < maxDerivLenSquare)
+        if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+        assert(dot(d, d) < rangeMaxDerivLenSquare)
 
         y += delta
       }
@@ -95,10 +95,10 @@ object NoiseTestUtil extends FunSuite {
     }
   }
 
-  def test3dNoise(min: Double, max: Double, noise: (inVec3d) => Double) {
+  def test3dNoise(rangeMin: Double, rangeMax: Double, noise: (inVec3d) => Double) {
     import simplex3d.math.double.functions._
 
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0
     val to = 2.0
@@ -119,8 +119,8 @@ object NoiseTestUtil extends FunSuite {
           )
 
 
-          if (min < max) assert(min <= n && n <= max)
-          assert(dot(d, d) < maxDerivLenSquare)
+          if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+          assert(dot(d, d) < rangeMaxDerivLenSquare)
 
           z += delta
         }
@@ -132,10 +132,10 @@ object NoiseTestUtil extends FunSuite {
     }
   }
 
-  def test4dNoise(min: Double, max: Double, noise: (inVec4d) => Double) {
+  def test4dNoise(rangeMin: Double, rangeMax: Double, noise: (inVec4d) => Double) {
     import simplex3d.math.double.functions._
 
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0
     val to = 0.5
@@ -155,8 +155,8 @@ object NoiseTestUtil extends FunSuite {
               (n - noise1(Vec4d(x, y, z, w - delta)))*invdelta
             )
 
-            if (min < max) assert(min <= n && n <= max)
-            assert(dot(d, d) < maxDerivLenSquare)
+            if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+            assert(dot(d, d) < rangeMaxDerivLenSquare)
 
             w += delta
           }
@@ -175,32 +175,76 @@ object NoiseTestUtil extends FunSuite {
   def test1dTiles(tile: Double, noise: (Double) => Double) {
     import simplex3d.math.double.functions._
     
-    
+    var i = 0; while (i < 100) {
+      val p = randomDouble
+      val np = noise(p)
+
+      for (x <- -1 to 1) {
+        val t = x
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-13))
+      }
+      
+      i += 1
+    }
   }
 
   def test2dTiles(tile: inVec2d, noise: (inVec2d) => Double) {
     import simplex3d.math.double.functions._
-
     
+    var i = 0; while (i < 100) {
+      val p = randomVec2d
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1) {
+        val t = Vec2d(x, y)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-13))
+      }
+      
+      i += 1
+    }
   }
 
   def test3dTiles(tile: inVec3d, noise: (inVec3d) => Double) {
     import simplex3d.math.double.functions._
 
-    
+    var i = 0; while (i < 100) {
+      val p = randomVec3d
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1; z <- -1 to 1) {
+        val t = Vec3d(x, y, z)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-13))
+      }
+      
+      i += 1
+    }
   }
 
   def test4dTiles(tile: inVec4d, noise: (inVec4d) => Double) {
     import simplex3d.math.double.functions._
 
-    
+    var i = 0; while (i < 100) {
+      val p = randomVec4d
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1; z <- -1 to 1; w <- -1 to 1) {
+        val t = Vec4d(x, y, z, w)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-13))
+      }
+      
+      i += 1
+    }
   }
 
   // Float.
-  def test1fNoise(min: Float, max: Float, noise: (Float) => Float) {
+  def test1fNoise(rangeMin: Float, rangeMax: Float, noise: (Float) => Float) {
     import simplex3d.math.float.functions._
 
-    val maxDerivative = 8
+    val rangeMaxDerivative = 8
 
     val from = 0.0f
     val to = 10.0f
@@ -212,17 +256,17 @@ object NoiseTestUtil extends FunSuite {
       val n = noise(x)
       val d = (n - noise(x - delta))*invdelta
 
-      if (min < max) assert(min <= n && n <= max)
-      assert(length(d) < maxDerivative)
+      if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+      assert(length(d) < rangeMaxDerivative)
 
       x += delta
     }
   }
 
-  def test2fNoise(min: Float, max: Float, noise: (inVec2f) => Float) {
+  def test2fNoise(rangeMin: Float, rangeMax: Float, noise: (inVec2f) => Float) {
     import simplex3d.math.float.functions._
 
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0f
     val to = 10.0f
@@ -239,8 +283,8 @@ object NoiseTestUtil extends FunSuite {
         )
 
 
-        if (min < max) assert(min <= n && n <= max)
-        assert(dot(d, d) < maxDerivLenSquare)
+        if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+        assert(dot(d, d) < rangeMaxDerivLenSquare)
 
         y += delta
       }
@@ -249,10 +293,10 @@ object NoiseTestUtil extends FunSuite {
     }
   }
 
-  def test3fNoise(min: Float, max: Float, noise: (inVec3f) => Float) {
+  def test3fNoise(rangeMin: Float, rangeMax: Float, noise: (inVec3f) => Float) {
     import simplex3d.math.float.functions._
 
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0f
     val to = 2.0f
@@ -273,8 +317,8 @@ object NoiseTestUtil extends FunSuite {
           )
 
 
-          if (min < max) assert(min <= n && n <= max)
-          assert(dot(d, d) < maxDerivLenSquare)
+          if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+          assert(dot(d, d) < rangeMaxDerivLenSquare)
 
           z += delta
         }
@@ -286,10 +330,10 @@ object NoiseTestUtil extends FunSuite {
     }
   }
 
-  def test4fNoise(min: Float, max: Float, noise: (inVec4f) => Float) {
+  def test4fNoise(rangeMin: Float, rangeMax: Float, noise: (inVec4f) => Float) {
     import simplex3d.math.float.functions._
     
-    val maxDerivLenSquare = 8*8
+    val rangeMaxDerivLenSquare = 8*8
 
     val from = 0.0f
     val to = 0.5f
@@ -309,8 +353,8 @@ object NoiseTestUtil extends FunSuite {
               (n - noise1(Vec4f(x, y, z, w - delta)))*invdelta
             )
 
-            if (min < max) assert(min <= n && n <= max)
-            assert(dot(d, d) < maxDerivLenSquare)
+            if (rangeMin < rangeMax) assert(rangeMin <= n && n <= rangeMax)
+            assert(dot(d, d) < rangeMaxDerivLenSquare)
 
             w += delta
           }
@@ -322,6 +366,75 @@ object NoiseTestUtil extends FunSuite {
       }
 
       x += delta
+    }
+  }
+  
+  // Tiled float.
+  def test1fTiles(tile: Float, noise: (Float) => Float) {
+    import simplex3d.math.float.functions._
+    
+    var i = 0; while (i < 100) {
+      val p = randomFloat
+      val np = noise(p)
+
+      for (x <- -1 to 1) {
+        val t = x
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-6f))
+      }
+      
+      i += 1
+    }
+  }
+
+  def test2fTiles(tile: inVec2f, noise: (inVec2f) => Float) {
+    import simplex3d.math.float.functions._
+    
+    var i = 0; while (i < 100) {
+      val p = randomVec2f
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1) {
+        val t = Vec2f(x, y)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-6f))
+      }
+      
+      i += 1
+    }
+  }
+
+  def test3fTiles(tile: inVec3f, noise: (inVec3f) => Float) {
+    import simplex3d.math.float.functions._
+
+    var i = 0; while (i < 100) {
+      val p = randomVec3f
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1; z <- -1 to 1) {
+        val t = Vec3f(x, y, z)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-6f))
+      }
+      
+      i += 1
+    }
+  }
+
+  def test4fTiles(tile: inVec4f, noise: (inVec4f) => Float) {
+    import simplex3d.math.float.functions._
+
+    var i = 0; while (i < 100) {
+      val p = randomVec4f
+      val np = noise(p)
+
+      for (x <- -1 to 1; y <- -1 to 1; z <- -1 to 1; w <- -1 to 1) {
+        val t = Vec4f(x, y, z, w)
+        val nt = noise(t*tile + p)
+        assert(approxEqual(np, nt, 1e-6f))
+      }
+      
+      i += 1
     }
   }
 }

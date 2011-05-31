@@ -93,12 +93,12 @@ class InterleavedTest extends FunSuite {
     )
   }
 
-  test("Factories") {
+  test("Constructors") {
     val buff = ByteBuffer.allocateDirect(64)
 
     // Exception: non-matching stride.
     intercept[DataFormatException] {
-      InterleavedData(
+      new InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](buff, 1, 3)
       )
@@ -107,7 +107,7 @@ class InterleavedTest extends FunSuite {
     // Exception: non-matching size
     val wrongSizeBuff = ByteBuffer.allocateDirect(68)
     intercept[DataFormatException] {
-      InterleavedData(
+      new InterleavedData(
         DataView[RFloat, RFloat](wrongSizeBuff, 0, 2),
         DataView[RFloat, SByte](wrongSizeBuff, 4, 8)
       )
@@ -115,7 +115,7 @@ class InterleavedTest extends FunSuite {
 
     // Exception: different storeObject.
     intercept[DataFormatException] {
-      InterleavedData(
+      new InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](ByteBuffer.allocateDirect(64), 1, 2)
       )
@@ -123,7 +123,7 @@ class InterleavedTest extends FunSuite {
 
     // Exception: data overlap.
     intercept[DataFormatException] {
-      InterleavedData(
+      new InterleavedData(
         DataView[RFloat, RFloat](buff, 0, 2),
         DataView[RFloat, RFloat](buff, 0, 2)
       )
@@ -136,13 +136,13 @@ class InterleavedTest extends FunSuite {
     )
 
     {
-      val id = InterleavedData(views(0), views(1))
+      val id = new InterleavedData(views(0), views(1))
       assert(id(0) eq views(0))
       assert(id(1) eq views(1))
     }
 
     {
-      val id = InterleavedData(views)
+      val id = new InterleavedData(views)
       assert(id(0) eq views(0))
       assert(id(1) eq views(1))
     }
@@ -370,8 +370,8 @@ class InterleavedTest extends FunSuite {
     for (i <- 0 until 10000) {
       val src = (for (c <- 0 until count) yield genRandomSeq(size))
 
-      val rwdata = InterleavedData(interleaveAll(src: _*)(size))
-      val rodata = InterleavedData(rwdata.map(_.asReadOnly()))
+      val rwdata = new InterleavedData(interleaveAll(src: _*)(size))
+      val rodata = new InterleavedData(rwdata.map(_.asReadOnly()))
 
       val bytes = new ByteArrayOutputStream()
       val out = new ObjectOutputStream(bytes)

@@ -141,7 +141,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   private[this] final def binding() :Buffer = {
     if (buff.isDirect) {
-      val buff = sharedBuffer.asReadOnlyBuffer()
+      val buff = if (isReadOnly) sharedBuffer.asReadOnlyBuffer() else sharedBuffer.duplicate()
       buff.order(ByteOrder.nativeOrder)
       buff
     }

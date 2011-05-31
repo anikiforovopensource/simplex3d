@@ -29,10 +29,13 @@ import java.nio._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSeq[RawView] with Serializable {
+class InterleavedData(seqs: RawView*) extends immutable.IndexedSeq[RawView] with Serializable {
+  
+  def this(seqs: IndexedSeq[RawView]) = this(seqs: _*)
 
-  InterleavedData.verifyFormat(dviews)
-  @transient private[this] var views = dviews.toArray
+
+  InterleavedData.verifyFormat(seqs)
+  @transient private[this] var views = seqs.toArray
   
   def apply(i: Int) :RawView = views(i)
   def length = views.length
@@ -102,9 +105,8 @@ class InterleavedData private (dviews: Seq[RawView]) extends immutable.IndexedSe
   }
 }
 
+
 object InterleavedData {
-  def apply(seqs: RawView*) = new InterleavedData(seqs)
-  def apply(seqs: IndexedSeq[RawView]) = new InterleavedData(seqs)
 
   final def verifyFormat(views: Seq[RawView]) {
     val first = views.head

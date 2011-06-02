@@ -11,8 +11,7 @@ import simplex3d.console.extension.ImageUtils._
 object Turbulence extends App {
 
   val zoom = 1.0/150
-  val scrollSpeed = 0.0//5.0
-  val changeSpeed = 0.7/10
+  val changeSpeed = 0.07
 
   val turbulence = new Turbulence(
     frequency = 1,
@@ -21,7 +20,7 @@ object Turbulence extends App {
   )
 
   animateFunction("Turbulence") { (dims, time, pixel) =>
-    val p = (pixel + time*scrollSpeed)*zoom
-    Vec3(turbulence(Vec3(p, time*changeSpeed))*0.6)
+    val p = Vec3(pixel*zoom, time*changeSpeed)
+    Vec3(turbulence(p)*0.6)
   }
 }

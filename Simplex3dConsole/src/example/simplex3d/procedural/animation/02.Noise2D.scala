@@ -10,8 +10,8 @@ import simplex3d.console.extension.ImageUtils._
  */
 object Noise2D extends App {
 
-  val zoom = 1.0/50
-  val scrollSpeed = 10
+  val zoom = 1.0/30
+  val scrollSpeed = 20
 
   animateFunction("Noise2D") { (dims, time, pixel) =>
     val p = pixel + time*scrollSpeed

@@ -11,8 +11,8 @@ import simplex3d.console.extension.ImageUtils._
 object NoiseSum extends App {
 
   val zoom = 1.0/150
-  val scrollSpeed = 5.0
-  val changeSpeed = 1.0/10
+  val scrollSpeed = 0.1
+  val changeSpeed = 0.1
 
   val noiseSum = new NoiseSum(
     frequency = 1,
@@ -21,8 +21,8 @@ object NoiseSum extends App {
 
   animateFunction("Noise Sum") { (dims, time, pixel) =>
     val expectedMagnitude = 1.5
-    val p = pixel + time*scrollSpeed
-    val noise = noiseSum(Vec3(p*zoom , time*changeSpeed))
+    val p = Vec3(pixel*zoom + time*scrollSpeed, time*changeSpeed)
+    val noise = noiseSum(p)
     Vec3((noise + expectedMagnitude)/(2*expectedMagnitude))
   }
 }

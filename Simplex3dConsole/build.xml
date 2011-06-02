@@ -67,18 +67,20 @@
 
     -->
 
-    <target name="-check-deps">
-        <available file="${build.dir}/scala-deps.jar" property="deps.present"/>
-    </target>
-
-    <target name="-console-deps" depends="-check-deps" unless="deps.present">
+    <target name="-post-compile" depends="-console-deps" >
         <copy todir="${build.dir}/classes">
             <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </copy>
+    </target>
+    
+    <target name="-do-check-deps">
+        <available file="${build.dir}/scala-deps.jar" property="deps.present"/>
+    </target>
 
+    <target name="-console-deps" depends="-do-check-deps" unless="deps.present">
         <jar jarfile="${build.dir}/scala-deps.jar">
-            <zipfileset src="${env.SCALA_HOME}/lib/scala-library.jar" includes="**"/>
-            <zipfileset src="${env.SCALA_HOME}/lib/scala-compiler.jar" includes="**"/>
+            <zipfileset src="${scala.lib}/scala-library.jar" includes="**"/>
+            <zipfileset src="${scala.lib}/scala-compiler.jar" includes="**"/>
         </jar>
 
         <jar jarfile="${build.dir}/simplex3d-deps.jar">
@@ -94,10 +96,19 @@
             <arg value="Indexer.scala"/>
         </exec>
     </target>
-
-    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-do-compile,-post-compile,-console-deps"
-    description="Compile project." name="compile" />
     
+    <target name="-post-jar">
+        <delete dir="${release.dir}/jars" />
+        
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${release.dir}/jars" />
+        
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="${root.pkg}/** ${example.pkg}/**/*.scala"
+            excludes="${example.pkg}/**/*.class"/>
+        </jar>
+    </target>
 
 
     <property name="release.dir" value="release"/>
@@ -191,22 +202,14 @@
     </target>
     
     
-    <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
 
-    <target name="release-clean" >
+    <target name="release-clean" depends="clean" >
         <delete dir="${release.dir}" />
     </target>
     
-    <target name="release-bin" depends="init, clean, compile" >
+    <target name="release-bin" depends="init, clean, compile, jar" >
         <delete file="${release.bin}" />
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${example.pkg}/**/*.class"/>
-        </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**"/>

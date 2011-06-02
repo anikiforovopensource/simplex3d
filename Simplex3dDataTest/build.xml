@@ -108,27 +108,33 @@
             </sequential>
         </macrodef>
     </target>
+    
+    <target name="-post-jar">
+        <delete dir="${release.dir}/jars" />
+        
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${release.dir}/jars" />
+        
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
+        </jar>
+    </target>
+
 
     <property name="release.dir" value="release"/>
     <property name="release.name" value="simplex3d-data-test"/>
     <property name="release.bin" value="${release.dir}/Simplex3dDataTest_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dDataTest_src.zip"/>
 
-    <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
 
-    <target name="release-clean" >
+    <target name="release-clean" depends="clean" >
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-bin" depends="init, clean, compile" >
+    <target name="release-bin" depends="init, clean, compile, jar" >
         <delete file="${release.bin}" />
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
-        </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**"/>
@@ -170,12 +176,7 @@
       
       <scalatest parallel="true">
         <runpath>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-core.jar"/>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-float.jar"/>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-double.jar"/>
-          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-core.jar"/>
-          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-float.jar"/>
-          <pathelement location="../Simplex3dData/release/jars/simplex3d-data-double.jar"/>
+          <pathelement path="${javac.classpath}"/>
           <pathelement location="release/jars/simplex3d-data-test.jar"/>
         </runpath>
         

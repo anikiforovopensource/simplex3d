@@ -110,27 +110,32 @@
         </macrodef>
     </target>
 
-
+    <target name="-post-jar">
+        <delete dir="${release.dir}/jars" />
+        
+        <mkdir dir="${release.dir}" />
+        <mkdir dir="${release.dir}/jars" />
+        
+        <jar manifest="${basedir}/manifest.mf" jarfile="${release.dir}/jars/${release.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
+        </jar>
+    </target>
+    
+    
     <property name="release.dir" value="release"/>
     <property name="release.name" value="simplex3d-math-test"/>
     <property name="release.bin" value="${release.dir}/Simplex3dMathTest_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dMathTest_src.zip"/>
 
-    <target name="release-all" depends="release-clean, release-src, release-bin, jar" />
+    <target name="release-all" depends="release-clean, release-src, release-bin" />
     <target name="release-all-lowRam" depends="release-clean, release-src, release-bin-lowRam" />
 
-    <target name="release-clean" >
+    <target name="release-clean" depends="clean" >
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-bin" depends="init, clean, compile" >
+    <target name="-do-zip-bin" depends="init" >
         <delete file="${release.bin}" />
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-
-        <jar manifest="${basedir}/manifest.mf" jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
-        </jar>
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**"/>
@@ -141,35 +146,18 @@
                 simplex3d-math-test.license" />
         </zip>
     </target>
-
+    
+    <target name="release-bin" depends="init, clean, compile, jar, -do-zip-bin" />
     
     <target name="release-bin-lowRam" depends="init, clean" >
-        <!-- replaces compile task-->
         <exec executable="sh" failonerror="true"> <arg value="compile.sh"/> </exec>
         
-        <!-- replaces jar task-->
         <jar manifest="${basedir}/manifest.mf" jarfile="${dist.jar}">
             <fileset dir="${build.classes.dir}"/>
         </jar>
-
-
-        <delete file="${release.bin}" />
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
-        </jar>
-
-        <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**"/>
-            <fileset dir="${release.dir}/jars" includes="*.jar"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING
-                simplex3d-math-test.license" />
-        </zip>
+        
+        <ant target="-post-jar"/>
+        <ant target="-do-zip-bin"/>
     </target>
 
     <target name="release-src" depends="init" >
@@ -202,9 +190,7 @@
       
       <scalatest parallel="true">
         <runpath>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-core.jar"/>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-float.jar"/>
-          <pathelement location="../Simplex3dMath/release/jars/simplex3d-math-double.jar"/>
+          <pathelement path="${javac.classpath}"/>
           <pathelement location="release/jars/simplex3d-math-test.jar"/>
         </runpath>
         

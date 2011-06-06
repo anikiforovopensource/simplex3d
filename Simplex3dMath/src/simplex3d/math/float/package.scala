@@ -206,12 +206,4 @@ package object float {
 
   type inMat4x4 = inMat4
   type outMat4x4 = outMat4
-
-
-  // Noise aliases
-  type Noise = simplex3d.math.floatx.Noise
-  type NoiseSum = simplex3d.math.floatx.NoiseSum
-  type Turbulence = simplex3d.math.floatx.Turbulence
-  type TiledNoiseSum = simplex3d.math.floatx.TiledNoiseSum
-  type TiledTurbulence = simplex3d.math.floatx.TiledTurbulence
 }

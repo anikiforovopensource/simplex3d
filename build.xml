@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Simplex3d MasterBuild" default="release-all" basedir=".">
+<project name="Simplex3d MasterBuild" default="release-projects" basedir=".">
     <description>Builds all the Simplex3d sub-projects.</description>
 
     <target name="clean-projects">

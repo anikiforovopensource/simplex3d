@@ -174,7 +174,7 @@
         <classpath refid="scalatest.classpath"/>
       </taskdef>
       
-      <scalatest parallel="true">
+      <scalatest fork="true" maxmemory="1000M" parallel="true">
         <runpath>
           <pathelement path="${javac.classpath}"/>
           <pathelement location="release/jars/simplex3d-data-test.jar"/>

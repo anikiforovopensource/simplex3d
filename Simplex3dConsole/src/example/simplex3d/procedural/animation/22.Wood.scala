@@ -2,7 +2,8 @@ package example.simplex3d.procedural.animation
 
 import simplex3d.math._
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -38,17 +39,20 @@ object Wood extends App {
   val verticalChange = 0.3
   val irregularity = 0.4
 
+  val noise = new Noise(ClassicalGradientNoise)
+
   val turbulence = new Turbulence(
+    ClassicalGradientNoise,
     frequency = 1,
     octaves = 4, lacunarity = 2.0, persistence = 0.5
   )
 
   def wood(pos: inVec3) :Vec3 = {
     val p = rotateVector(pos, rotation)
-    val dist = length(p.xz) + noise1(Vec3(p.x, p.y*verticalChange, p.z))*irregularity
-    val a = abs(noise1(dist*ringFreq + turbulence(p)*0.2))
+    val dist = length(p.xz) + noise(Vec3(p.x, p.y*verticalChange, p.z))*irregularity
+    val a = abs(noise(dist*ringFreq + turbulence(p)*0.2))
     val color = mix(darkerCircles, lighterCircles, a)
-    val b = smootherstep(0.1, 1, a)*noise1(Vec2(p.x*50, p.y*5))*0.03
+    val b = smootherstep(0.1, 1, a)*noise(Vec2(p.x*50, p.y*5))*0.03
     color + blemish*b
   }
 }

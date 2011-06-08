@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import simplex3d.math._
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
 
 
 /**

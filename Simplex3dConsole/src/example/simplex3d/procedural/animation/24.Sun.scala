@@ -1,7 +1,8 @@
 package example.simplex3d.procedural.animation
 
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -18,6 +19,7 @@ object Sun extends App {
   val high = ConstVec3(1, 0.8, 0)
 
   val turbulence = new Turbulence(
+    ClassicalGradientNoise,
     frequency = 1.7,
     octaves = 3, lacunarity = 2.5, persistence = 0.66,
     roundness = 0.3

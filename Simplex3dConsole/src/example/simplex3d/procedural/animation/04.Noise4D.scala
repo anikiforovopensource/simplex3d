@@ -1,7 +1,8 @@
 package example.simplex3d.procedural.animation
 
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -14,9 +15,11 @@ object Noise4D extends App {
   val changeSpeed = 1.0/3
   val scrollSpeed = 10
 
+  val noise = new Noise(ClassicalGradientNoise)
+
   animateFunction("Noise4D") { (dims, time, pixel) =>
     val h = dims*0.5 - pixel
     val p = pixel + time*scrollSpeed
-    Vec3((noise1(Vec4(p*zoom, time*changeSpeed, length(h)*zoom)) + 1)/2)
+    Vec3((noise(Vec4(p*zoom, time*changeSpeed, length(h)*zoom)) + 1)/2)
   }
 }

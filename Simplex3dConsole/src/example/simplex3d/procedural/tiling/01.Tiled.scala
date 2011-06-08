@@ -3,8 +3,7 @@ package example.simplex3d.procedural.texture
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -14,6 +13,7 @@ import simplex3d.console.extension.ImageUtils._
 object Tiled extends App {
 
   val turbulence = new TiledTurbulence(
+    ClassicalGradientNoise,
     tile = Vec4(2),
     frequency = 1,
     octaves = 3, lacunarity = 2.5, persistence = 0.5,

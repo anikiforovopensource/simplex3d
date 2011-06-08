@@ -3,8 +3,7 @@ package example.simplex3d.procedural.texture
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -21,9 +20,11 @@ object NoiseSum extends App {
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
   val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
 
+  val noise = new Noise(ClassicalGradientNoise)
+
   def noiseSum(p: inVec2) = {
     def octave(i: Int, p: inVec2) = {
-      noise1(p*frequencyFactors(i))*amplitudeFactors(i)
+      noise(p*frequencyFactors(i))*amplitudeFactors(i)
     }
 
     var sum = 0.0; var i = 0; while (i < octaves) {

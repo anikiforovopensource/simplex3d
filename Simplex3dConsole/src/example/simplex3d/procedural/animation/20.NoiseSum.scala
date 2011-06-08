@@ -1,7 +1,8 @@
 package example.simplex3d.procedural.animation
 
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -15,6 +16,7 @@ object NoiseSum extends App {
   val changeSpeed = 0.1
 
   val noiseSum = new NoiseSum(
+    ClassicalGradientNoise,
     frequency = 1,
     octaves = 4, lacunarity = 1.8, persistence = 0.5
   )

@@ -3,8 +3,7 @@ package example.simplex3d.procedural.texture
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -26,16 +25,18 @@ object InterpolationTiling extends App {
   def contrast(f: Double, x: Double) :Double = f*(x - 0.5) + 0.5
 
   val turbulence = new Turbulence(
+    ClassicalGradientNoise,
     frequency = 1,
     octaves = 3, lacunarity = 2.5, persistence = 0.5,
     roundness = 0.3
   )
   val noise = (p: inVec2) => turbulence(p + 10)
 
+  // Interpolation tiling produces blurring artifacts.
   drawFunction("Interpolation Tiling") { (dims, pixel) =>
     val scale = 1.0/150
     val p = pixel*scale
-    val tiled = tile(Vec2(300*scale), noise, p)*0.7
+    val tiled = tile(Vec2(300*scale), noise, p)*0.6
     Vec3(contrast(1.2, tiled))
   }
 }

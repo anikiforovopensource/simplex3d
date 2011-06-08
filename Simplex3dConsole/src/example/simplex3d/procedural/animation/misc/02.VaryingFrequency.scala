@@ -1,7 +1,8 @@
 package example.simplex3d.procedural.animation.misc
 
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -18,13 +19,14 @@ object VaryingFrequency extends App {
   val expectedMagnitude = 1.5
 
   val amplitudeFactors = (for (i <- 0 until octaves) yield pow(persistence, i)).toArray
+  val noise = new Noise(ClassicalGradientNoise)
 
   def noiseSum(p: inVec3) = {
-    val varying = 2 + noise1(p)*0.02
+    val varying = 2 + noise(p)*0.02
 
     def octave(i: Int, p: inVec3) = {
       val frequencyFactor = pow(varying, i)
-      noise1(p*frequencyFactor)*amplitudeFactors(i)
+      noise(p*frequencyFactor)*amplitudeFactors(i)
     }
 
     var sum = 0.0; var i = 0; while (i < octaves) {
@@ -36,7 +38,7 @@ object VaryingFrequency extends App {
 
   animateFunction("Varying Frequency") { (dims, time, pixel) =>
     val p = Vec2(pixel.x + 1500, pixel.y)
-    val noise = noiseSum(Vec3(p*zoom , time*changeSpeed))
-    Vec3((noise + expectedMagnitude)/(2*expectedMagnitude))
+    val n = noiseSum(Vec3(p*zoom , time*changeSpeed))
+    Vec3((n + expectedMagnitude)/(2*expectedMagnitude))
   }
 }

@@ -3,8 +3,7 @@ package example.simplex3d.procedural.texture
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -18,13 +17,14 @@ object MultifractalNoise extends App {
   val expectedMagnitude = 1.5
 
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
+  val noise = new Noise(ClassicalGradientNoise)
 
   def noiseSum(p: inVec2) = {
-    val varying = lacunarity + noise1(p)*0.5
+    val varying = lacunarity + noise(p)*0.5
 
     def octave(i: Int, p: inVec2) = {
       val amplitudeFactor = pow(varying, -i)
-      noise1(p*frequencyFactors(i))*amplitudeFactor
+      noise(p*frequencyFactors(i))*amplitudeFactor
     }
 
     var sum = 0.0; var i = 0; while (i < octaves) {

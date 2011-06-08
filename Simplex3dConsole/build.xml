@@ -89,6 +89,7 @@
             <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
             <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**"/>
             <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**"/>
+            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-noise.jar" includes="**"/>
         </jar>
 
         <echo level="info" message="Starting indexer." />
@@ -123,6 +124,7 @@
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>
     <property name="data.dir" value="../Simplex3dData/release/jars"/>
+    <property name="algorithm.dir" value="../Simplex3dAlgorithm/release/jars"/>
 
 
     <property name="keystore.location" value="keystore.local"/>

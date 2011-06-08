@@ -3,8 +3,7 @@ package example.simplex3d.procedural.texture
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -13,8 +12,10 @@ import simplex3d.console.extension.ImageUtils._
  */
 object Noise2D extends App {
 
+  val noise = new Noise(ClassicalGradientNoise)
+
   drawFunction("Noise2D") { (dims, p) =>
-    val n = noise1(p/50)
+    val n = noise(p/50)
     Vec3((n + 1)/2)
   }
 

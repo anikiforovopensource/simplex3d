@@ -2,7 +2,8 @@ package example.simplex3d.procedural.animation
 
 import simplex3d.math._
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -15,6 +16,7 @@ object Flame extends App {
   val changeSpeed = 0.4
 
   val turbulence = new Turbulence(
+    ClassicalGradientNoise,
     frequency = 1.5,
     octaves = 3, lacunarity = 1.5, persistence = 0.5,
     roundness = 0.3

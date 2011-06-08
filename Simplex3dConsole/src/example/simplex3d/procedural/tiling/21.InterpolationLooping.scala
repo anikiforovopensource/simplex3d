@@ -2,7 +2,8 @@ package example.simplex3d.procedural.animation
 
 import simplex3d.math._
 import simplex3d.math.double._
-import simplex3d.math.doublex.functions._
+import simplex3d.math.double.functions._
+import simplex3d.noise._
 import simplex3d.console.extension.ImageUtils._
 
 
@@ -17,12 +18,14 @@ object InterpolationLooping extends App {
   }
 
   val turbulence = new Turbulence(
+    ClassicalGradientNoise,
     frequency = 1.2,
     octaves = 3, lacunarity = 2.2, persistence = 0.4,
     roundness = 0.3
   )
   val noise = (p: inVec3) => turbulence(p)
 
+  // Interpolation looping produces blurring artifacts.
   animateFunction("Interpolation Looping") { (dims, time, pixel) =>
     val speed = 0.1
     val u = pixel/150

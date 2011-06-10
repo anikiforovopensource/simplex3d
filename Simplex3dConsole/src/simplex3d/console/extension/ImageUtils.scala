@@ -83,7 +83,7 @@ class ImageUtils {
     (d(j) << 16) | (d(j + 1) << 8) | (d(j + 2))
   }
 
-  private[this] def mkImgRgbVec3(dims: inVec2i, data: inData[Vec3]) = {
+  private[this] def mkImgRgbVec3(dims: inVec2i, data: inDataSeq[Vec3, Raw]) = {
     val img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
 
     var y = 0; while (y < dims.y) {
@@ -125,10 +125,10 @@ class ImageUtils {
   }
 
 
-  def showImage(dims: inVec2i, data: inData[Vec3]) {
+  def showImage(dims: inVec2i, data: inDataSeq[Vec3, Raw]) {
     showImage("Image", dims, data)
   }
-  def showImage(title: String, dims: inVec2i, data: inData[Vec3]) {
+  def showImage(title: String, dims: inVec2i, data: inDataSeq[Vec3, Raw]) {
     val img = {
       if (data.rawType == RawType.UByte) {
         mkImgRgbUByte(dims, data.asInstanceOf[inDataSeq[_, UByte]])

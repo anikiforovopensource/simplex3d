@@ -403,7 +403,7 @@ final class Mat4f private[math] (
   c02: Float, c12: Float, c22: Float, c32: Float,
   c03: Float, c13: Float, c23: Float, c33: Float
 )
-extends ReadMat4f with CompositeMeta with Implicits[On]
+extends ReadMat4f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat4f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30

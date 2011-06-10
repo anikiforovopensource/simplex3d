@@ -3,29 +3,32 @@
 <project name="Simplex3d MasterBuild" default="release-projects" basedir=".">
     <description>Builds all the Simplex3d sub-projects.</description>
 
-    <target name="clean-projects">
+    <target name="clean-all">
       <ant dir="Simplex3dMath" target="release-clean"/>
-      <ant dir="Simplex3dMathTest" target="release-clean"/>
       <ant dir="Simplex3dData" target="release-clean"/>
-      <ant dir="Simplex3dDataTest" target="release-clean"/>
+      <ant dir="Simplex3dAlgorithm" target="release-clean"/>
       <ant dir="Simplex3dConsole" target="release-clean"/>
+      
+      <ant dir="Simplex3dMathTest" target="release-clean"/>
+      <ant dir="Simplex3dDataTest" target="release-clean"/>
     </target>
       
     <target name="release-projects">
       <ant dir="Simplex3dMath" target="release-all"/>
-      <ant dir="Simplex3dMathTest" target="release-all"/>
       <ant dir="Simplex3dData" target="release-all"/>
-      <ant dir="Simplex3dDataTest" target="release-all"/>
+      <ant dir="Simplex3dAlgorithm" target="release-all"/>
       <ant dir="Simplex3dConsole" target="release-all"/>
+    </target>
+    
+    <target name="release-all" depends="release-projects">
+      <ant dir="Simplex3dMathTest" target="release-all"/>
+      <ant dir="Simplex3dDataTest" target="release-all"/>
       <ant target="test-projects"/>
     </target>
     
-    <target name="release-projects-lowRam">
-      <ant dir="Simplex3dMath" target="release-all"/>
+    <target name="release-all-lowRam" depends="release-projects">
       <ant dir="Simplex3dMathTest" target="release-all-lowRam"/>
-      <ant dir="Simplex3dData" target="release-all"/>
       <ant dir="Simplex3dDataTest" target="release-all"/>
-      <ant dir="Simplex3dConsole" target="release-all"/>
       <ant target="test-projects"/>
     </target>
 

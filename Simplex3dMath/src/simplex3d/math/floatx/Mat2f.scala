@@ -262,7 +262,7 @@ final class Mat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
 )
-extends ReadMat2f with CompositeMeta with Implicits[On]
+extends ReadMat2f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat2f] with Serializable
 {
   p00 = c00; p10 = c10

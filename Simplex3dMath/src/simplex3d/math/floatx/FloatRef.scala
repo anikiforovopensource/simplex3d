@@ -53,7 +53,8 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
     other match {
       case r: BooleanRef => false
       case r: PrimitiveRef[_] => dx == r.dx
-      case a => x == a
+      case a: Float => x == a
+      case _ => false
     }
   }
 

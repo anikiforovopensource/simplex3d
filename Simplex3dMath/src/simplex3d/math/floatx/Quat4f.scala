@@ -180,7 +180,7 @@ object ConstQuat4f {
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 )
-extends ReadQuat4f with CompositeMeta with Implicits[On]
+extends ReadQuat4f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadQuat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd

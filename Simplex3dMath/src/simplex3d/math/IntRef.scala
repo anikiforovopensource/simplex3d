@@ -54,7 +54,8 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
       case r: ReadIntRef => x == r.toConst
       case r: ReadBooleanRef => false
       case r: PrimitiveRef[_] => dx == r.dx
-      case a => x == a
+      case a: Int => x == a
+      case _ => false
     }
   }
 

@@ -47,7 +47,8 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   final override def equals(other: Any) :Boolean = {
     other match {
       case r: ReadBooleanRef => x == r.toConst
-      case a => x == a
+      case a: Boolean => x == a
+      case _ => false
     }
   }
 

@@ -334,7 +334,7 @@ final class Mat2x3d private[math] (
   c01: Double, c11: Double,
   c02: Double, c12: Double
 )
-extends ReadMat2x3d with CompositeMeta with Implicits[On]
+extends ReadMat2x3d with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat2x3d] with Serializable
 {
   p00 = c00; p10 = c10

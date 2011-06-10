@@ -334,7 +334,7 @@ final class Mat2x3f private[math] (
   c01: Float, c11: Float,
   c02: Float, c12: Float
 )
-extends ReadMat2x3f with CompositeMeta with Implicits[On]
+extends ReadMat2x3f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat2x3f] with Serializable
 {
   p00 = c00; p10 = c10

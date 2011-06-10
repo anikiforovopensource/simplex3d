@@ -195,7 +195,7 @@ object ConstVec4f {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4f private[math] (cx: Float, cy: Float, cz: Float, cw: Float)
-extends ReadVec4f with CompositeMeta with Implicits[On]
+extends ReadVec4f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadVec4f] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw

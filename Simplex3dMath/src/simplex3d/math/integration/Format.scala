@@ -28,37 +28,46 @@ import scala.reflect.ClassManifest.{classType}
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Meta {
-  type Read
-  type Const <: Read
-  type Component <: PrimitiveMeta
-}
+sealed trait Format
+trait CompressedFormat extends Format
 
-/** <code>PrimitiveMeta</code> marker indicates primitive elements/components.
+
+/** <code>Meta</code> indicates format that can be decoded at runtime.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait PrimitiveMeta extends Meta {
+sealed trait Meta extends Format {
+  type Read
+  type Const <: Read
+  type Component <: PrimitiveFormat
+}
+
+/** <code>PrimitiveFormat</code> marker indicates primitive elements/components.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+sealed trait PrimitiveFormat extends Meta {
   type Read <: AnyVal
   type Const = Read
 }
 
-/** <code>CompositeMeta</code> marker indicates elements composed of
+/** <code>CompositeFormat</code> marker indicates elements composed of
  * primitive components.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait CompositeMeta extends Meta {
+trait CompositeFormat extends Meta {
   type Read <: AnyRef
 }
 
-sealed trait Bool extends PrimitiveMeta {
+
+sealed trait Bool extends PrimitiveFormat {
   type Read = Boolean
   type Component = Bool
 }
 
 
-object MetaManifest {
+object PrimitiveFormat {
   final val Bool = classType[Bool](classOf[Bool])
   final val SInt = classType[SInt](classOf[SInt])
   final val RFloat = classType[RFloat](classOf[RFloat])
@@ -115,7 +124,7 @@ sealed trait RawInt extends Integral {
   type Buffer = nio.IntBuffer
 }
 
-sealed trait SInt extends PrimitiveMeta with RawInt with Signed
+sealed trait SInt extends PrimitiveFormat with RawInt with Signed
 with DefinedInt with DefinedFloat with DefinedDouble {
   type Read = Int
   type Component = SInt
@@ -137,7 +146,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.ShortBuffer
 }
 
-sealed trait RFloat extends PrimitiveMeta with SysFP
+sealed trait RFloat extends PrimitiveFormat with SysFP
 with DefinedFloat with DefinedDouble {
   type Read = Float
   type Component = RFloat
@@ -146,7 +155,7 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.FloatBuffer
 }
 
-sealed trait RDouble extends PrimitiveMeta with SysFP
+sealed trait RDouble extends PrimitiveFormat with SysFP
 with DefinedDouble {
   type Read = Double
   type Component = RDouble

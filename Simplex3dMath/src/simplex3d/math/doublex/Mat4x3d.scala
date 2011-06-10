@@ -352,7 +352,7 @@ final class Mat4x3d private[math] (
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double
 )
-extends ReadMat4x3d with CompositeMeta with Implicits[On]
+extends ReadMat4x3d with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat4x3d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30

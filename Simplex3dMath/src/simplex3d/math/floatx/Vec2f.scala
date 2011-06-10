@@ -162,7 +162,7 @@ object ConstVec2f {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec2f private[math] (cx: Float, cy: Float)
-extends ReadVec2f with CompositeMeta with Implicits[On]
+extends ReadVec2f with CompositeFormat with Implicits[On]
 with PropertyRef[ReadVec2f] with Serializable
 {
   px = cx; py = cy

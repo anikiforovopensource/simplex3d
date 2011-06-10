@@ -144,7 +144,7 @@ object ConstVec2b {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with CompositeMeta with Implicits[On]
+extends ReadVec2b with CompositeFormat with Implicits[On]
 with PropertyRef[ReadVec2b] with Serializable
 {
   px = cx; py = cy

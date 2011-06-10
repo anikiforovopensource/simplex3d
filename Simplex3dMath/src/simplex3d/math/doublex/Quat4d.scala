@@ -179,7 +179,7 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
-extends ReadQuat4d with CompositeMeta with Implicits[On]
+extends ReadQuat4d with CompositeFormat with Implicits[On]
 with PropertyRef[ReadQuat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd

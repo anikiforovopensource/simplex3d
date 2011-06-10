@@ -41,9 +41,9 @@ import AttributeTestUtil._
  */
 object CastTestUtil extends FunSuite {
 
-  def testArrayCast[E <: Meta, R <: Raw](
-    factory: (R#Array) => DataArray[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testArrayCast[F <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     for (size <- 0 to 9) {
       val seq = factory(genRandomArray(size, descriptor))
 
@@ -61,12 +61,12 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToArray[E <: Meta, R <: Raw](
+  private def testCastToArray[F <: Meta, R <: Raw](
     original: ReadDataArray[_, _],
-    cast: ReadDataArray[E, R],
+    cast: ReadDataArray[F, R],
     readOnly: Boolean,
     data: Buffer
-  )(implicit descriptor: Descriptor[E, R]) {
+  )(implicit descriptor: Descriptor[F, R]) {
     testArray(cast, readOnly, data)(descriptor)
     assert(original.sharesStoreObject(cast))
     assert(cast.sharesStoreObject(original))
@@ -664,9 +664,9 @@ object CastTestUtil extends FunSuite {
   }
 
 
-  def testBufferCast[E <: Meta, R <: Raw](
-    factory: (ByteBuffer) => DataBuffer[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testBufferCast[F <: Meta, R <: Raw](
+    factory: (ByteBuffer) => DataBuffer[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
 
     for (size <- 0 to 1; extraBytes <- 0 to 8) {
       val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntSByte)
@@ -1157,11 +1157,11 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToBuffer[E <: Meta, R <: Raw](
+  private def testCastToBuffer[F <: Meta, R <: Raw](
     original: DataBuffer[_, _],
-    factory: (DataBuffer[_, _]) => DataBuffer[E, R],
+    factory: (DataBuffer[_, _]) => DataBuffer[F, R],
     bytes: ByteBuffer
-  )(implicit descriptor: Descriptor[E, R]) {
+  )(implicit descriptor: Descriptor[F, R]) {
     val cast = factory(original)
     testBuffer(cast, false, wrap(bytes, descriptor))(descriptor)
     assert(original.sharesStoreObject(cast))
@@ -1170,11 +1170,11 @@ object CastTestUtil extends FunSuite {
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]]) }
   }
   
-  private def testCastToReadBuffer[E <: Meta, R <: Raw](
+  private def testCastToReadBuffer[F <: Meta, R <: Raw](
     original: ReadDataBuffer[_, _],
-    factory: (ReadDataBuffer[_, _]) => ReadDataBuffer[E, R],
+    factory: (ReadDataBuffer[_, _]) => ReadDataBuffer[F, R],
     bytes: ByteBuffer
-  )(implicit descriptor: Descriptor[E, R]) {
+  )(implicit descriptor: Descriptor[F, R]) {
     assert(!original.isReadOnly)
     
     {
@@ -1192,11 +1192,11 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToView[E <: Meta, R <: Raw](
+  private def testCastToView[F <: Meta, R <: Raw](
     original: DataBuffer[_, _],
-    factory: (DataBuffer[_, _], Int, Int) => DataView[E, R],
+    factory: (DataBuffer[_, _], Int, Int) => DataView[F, R],
     bytes: ByteBuffer
-  )(implicit descriptor: Descriptor[E, R]) {
+  )(implicit descriptor: Descriptor[F, R]) {
     val data = wrap(bytes, descriptor)
 
     for (
@@ -1212,11 +1212,11 @@ object CastTestUtil extends FunSuite {
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]], 0, 1) }
   }
 
-  private def testCastToReadView[E <: Meta, R <: Raw](
+  private def testCastToReadView[F <: Meta, R <: Raw](
     original: ReadDataBuffer[_, Raw],
-    factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[E, R],
+    factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[F, R],
     bytes: ByteBuffer
-  )(implicit descriptor: Descriptor[E, R]) {
+  )(implicit descriptor: Descriptor[F, R]) {
     assert(!original.isReadOnly)
     val data = wrap(bytes, descriptor)
     val ro = original.asReadOnly()

@@ -31,12 +31,11 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ReadAbstractData[
-  E <: Meta, @specialized(Int, Float, Double) ReadAs, +R <: Raw
+  F <: Meta, @specialized(Int, Float, Double) ReadAs, +R <: Raw
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[E, R] with DataSource
-with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
+) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[F, R] with ReadBatch[ReadAs] {
 
   // Argument checks.
   assert(components >= 1)
@@ -106,13 +105,13 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final def isCached = true
 
   // Type definitions.
-  type PrimitiveSeq <: ReadContiguous[E#Component, R]
+  type PrimitiveSeq <: ReadContiguous[F#Component, R]
 
   // Public API.
   def rawType: Int
   def components: Int
-  def metaManifest: ClassManifest[E]
-  def readManifest: ClassManifest[E#Read]
+  def formatManifest: ClassManifest[F]
+  def readManifest: ClassManifest[F#Read]
   def isNormalized: Boolean
 
   final val bytesPerComponent = RawType.byteLength(rawType)
@@ -189,12 +188,12 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   }
 
 
-  final def copyAsDataArray() :DataArray[E, R] = {
+  final def copyAsDataArray() :DataArray[F, R] = {
     val copy = mkDataArray(size)
     copy.put(0, primitives, this.offset, this.stride, size)
     copy
   }
-  final def copyAsDataBuffer() :DataBuffer[E, R] = {
+  final def copyAsDataBuffer() :DataBuffer[F, R] = {
     val copy = mkDataBuffer(size)
     copy.put(0, primitives, this.offset, this.stride, size)
     copy
@@ -203,7 +202,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   override def toString() :String = {
     def getElemName() = {
-      metaManifest.erasure.getSimpleName
+      formatManifest.erasure.getSimpleName
     }
 
     var view = false

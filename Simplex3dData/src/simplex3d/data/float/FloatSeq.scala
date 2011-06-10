@@ -24,7 +24,7 @@ package float
 import java.nio._
 import scala.reflect._
 import scala.annotation.unchecked._
-import simplex3d.data.MetaManifest
+import simplex3d.data.PrimitiveFormat
 import simplex3d.data.Util._
 import simplex3d.data.conversion.Float._
 
@@ -39,7 +39,7 @@ private[data] abstract class BaseRFloat[+R <: DefinedFloat](
 extends AbstractData[RFloat, Float, Float, R](shared, prim, ro, off, str)
 with CompositionFactory[RFloat, DefinedFloat]
 {
-  final def metaManifest = MetaManifest.RFloat
+  final def formatManifest = PrimitiveFormat.RFloat
   final def readManifest = Manifest.Float
   final def components: Int = 1
   

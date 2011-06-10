@@ -89,8 +89,8 @@ class InterleavedData(seqs: RawView*) extends immutable.IndexedSeq[RawView] with
     val views = new Array[RawView](size)
 
     i = 0; while (i < size) {
-      type T = E forSome { type E <: Meta }
-      val darray = in.readObject().asInstanceOf[Data[T]]
+      type T = F forSome { type F <: Meta }
+      val darray = in.readObject().asInstanceOf[DataSeq[T, Raw]]
       val (offset, stride) = header(i)
 
       val view = darray.mkDataView(byteBuffer, offset, stride)

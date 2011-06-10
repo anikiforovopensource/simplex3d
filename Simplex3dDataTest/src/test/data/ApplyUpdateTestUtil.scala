@@ -77,7 +77,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   def floatFromBits(bits: String) = java.lang.Float.intBitsToFloat(intFromBits(bits))
   def floatToBits(x: Float) = intToBits(java.lang.Float.floatToRawIntBits(x))
 
-  def testIndex[E <: Meta](seq: DataSeq[E, Raw]) {
+  def testIndex[F <: Meta](seq: DataSeq[F, Raw]) {
     assert(seq.size > 0)
 
     intercept[Exception] { seq(-1) }
@@ -85,7 +85,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     seq(seq.size - 1)
     intercept[Exception] { seq(seq.size) }
 
-    val ro = seq.asReadOnly().asInstanceOf[DataSeq[E, Raw]]
+    val ro = seq.asReadOnly().asInstanceOf[DataSeq[F, Raw]]
     intercept[Exception] { ro(0) = seq(0) }
     intercept[Exception] { ro(seq.size - 1) = seq(0) }
   }
@@ -170,7 +170,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def verifyComponents(seq: inData[_ <: Meta], i: Int) {
+  private def verifyComponents(seq: inDataSeq[_ <: Meta, Raw], i: Int) {
     def get(i: Int, j: Int) :Any = seq.primitives(seq.offset + seq.stride*i + j)
     def cmp(x: Any, y: Any) {
       (x, y) match {
@@ -205,21 +205,21 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def updateValue[E <: Meta](seq: outData[E], i: Int, bcopy: outData[E#Component]) {
+  private def updateValue[F <: Meta](seq: outDataSeq[F, Raw], i: Int, bcopy: outDataSeq[F#Component, Raw]) {
     def iput(i: Int, j: Int, u: Int) {
-      val s = bcopy.asInstanceOf[Data[SInt]]
+      val s = bcopy.asInstanceOf[DataSeq[SInt, Raw]]
       s(seq.offset + seq.stride*i + j) = u
     }
     def fput(i: Int, j: Int, u: Float) {
-      val s = bcopy.asInstanceOf[Data[RFloat]]
+      val s = bcopy.asInstanceOf[DataSeq[RFloat, Raw]]
       s(seq.offset + seq.stride*i + j) = u
     }
     def dput(i: Int, j: Int, u: Double) {
-      val s = bcopy.asInstanceOf[Data[RDouble]]
+      val s = bcopy.asInstanceOf[DataSeq[RDouble, Raw]]
       s(seq.offset + seq.stride*i + j) = u
     }
 
-    val e = seq.metaManifest match {
+    val e = seq.formatManifest match {
       case Vec2i.Manifest =>
         val u = Vec2i(ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y)
@@ -270,10 +270,10 @@ object ApplyUpdateTestUtil extends FunSuite {
         m
     }
 
-    seq(i) = e.asInstanceOf[E#Read]
+    seq(i) = e.asInstanceOf[F#Read]
   }
 
-  private def testApplyUpdate[E <: Meta](seq: outData[E]) {
+  private def testApplyUpdate[F <: Meta](seq: outDataSeq[F, Raw]) {
     testIndex(seq)
 
     val bcopy = seq.primitives.copyAsDataArray()
@@ -291,22 +291,22 @@ object ApplyUpdateTestUtil extends FunSuite {
     testContent(1, bcopy, 0, seq.primitives, 0, bcopy.size)
   }
 
-  def testApplyUpdateArray[E <: Meta, R <: Raw](
-    factory: (R#Array) => DataArray[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testApplyUpdateArray[F <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     testApplyUpdate(factory(genRandomArray(10, descriptor)))
   }
 
-  def testApplyUpdateBuffer[E <: Meta, R <: Raw](
-    factory: (ByteBuffer) => DataBuffer[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testApplyUpdateBuffer[F <: Meta, R <: Raw](
+    factory: (ByteBuffer) => DataBuffer[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     val size = 10*descriptor.components*RawType.byteLength(descriptor.rawType)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1))
   }
 
-  def testApplyUpdateView[E <: Meta, R <: Raw](
-    factory: (ByteBuffer, Int, Int) => DataView[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testApplyUpdateView[F <: Meta, R <: Raw](
+    factory: (ByteBuffer, Int, Int) => DataView[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     val c = descriptor.components
     val size = 10*c*RawType.byteLength(descriptor.rawType)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c))

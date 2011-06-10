@@ -90,11 +90,11 @@ object RawManifest {
   final val UByte = classType[UByte](classOf[UByte])
   final val SShort = classType[SShort](classOf[SShort])
   final val UShort = classType[UShort](classOf[UShort])
-  final val SInt = MetaManifest.SInt
+  final val SInt = PrimitiveFormat.SInt
   final val UInt = classType[UInt](classOf[UInt])
   final val HFloat = classType[HFloat](classOf[HFloat])
-  final val RFloat = MetaManifest.RFloat
-  final val RDouble = MetaManifest.RDouble
+  final val RFloat = PrimitiveFormat.RFloat
+  final val RDouble = PrimitiveFormat.RDouble
 
   final val AllDefined = List[ClassManifest[_ <: Defined]](
     SByte, UByte, SShort, UShort, SInt, UInt, HFloat, RFloat, RDouble

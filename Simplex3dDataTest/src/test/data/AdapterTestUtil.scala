@@ -34,13 +34,13 @@ import AttributeTestUtil._
  */
 object AdapterTestUtil extends FunSuite {
 
-  def testAdapter[E <: CompositeMeta, B <: Defined](adapter: DataAdapter[E, B])(
-    sample: E#Read, sampleData: DataArray[E#Component, Raw]
-  )(implicit attribs: AdapterAttrib[E, B])
+  def testAdapter[F <: CompositeFormat, B <: Defined](adapter: DataAdapter[F, B])(
+    sample: F#Read, sampleData: DataArray[F#Component, Raw]
+  )(implicit attribs: AdapterAttrib[F, B])
   {
     // Test attributes.
     assert(adapter.components == attribs.components)
-    assert(adapter.metaManifest == attribs.metaManifest)
+    assert(adapter.formatManifest == attribs.formatManifest)
     assert(adapter.readManifest == attribs.readManifest)
     assert(adapter.boundManifest == attribs.boundManifest)
 
@@ -51,19 +51,19 @@ object AdapterTestUtil extends FunSuite {
       type R = T forSome { type T <: B }
       val original = genRandomSeq(
         attribs.componentManifest, RawManifest.toRawType(rawManifest), primSize
-      ).asInstanceOf[ReadDataArray[E#Component, R]]
+      ).asInstanceOf[ReadDataArray[F#Component, R]]
 
-      val descriptor = Descriptor[E, R](
-        attribs.metaManifest, attribs.componentManifest, attribs.readManifest,
+      val descriptor = Descriptor[F, R](
+        attribs.formatManifest, attribs.componentManifest, attribs.readManifest,
         attribs.components, original.rawType, original.isNormalized
       )
 
       val primitiveArray =
-        if (readOnly) original.copyAsDataArray().asReadOnly().asInstanceOf[DataArray[E#Component, R]]
+        if (readOnly) original.copyAsDataArray().asReadOnly().asInstanceOf[DataArray[F#Component, R]]
         else original.copyAsDataArray()
 
       val primitiveBuffer =
-        if (readOnly) original.copyAsDataBuffer().asReadOnly().asInstanceOf[DataBuffer[E#Component, R]]
+        if (readOnly) original.copyAsDataBuffer().asReadOnly().asInstanceOf[DataBuffer[F#Component, R]]
         else original.copyAsDataBuffer()
 
       val offset = 1; val stride = adapter.components + 1
@@ -111,8 +111,8 @@ object AdapterTestUtil extends FunSuite {
       type R = T forSome { type T <: B }
       val primitives = genRandomSeq(
         attribs.componentManifest, RawManifest.toRawType(attribs.componentManifest), 0
-      ).asInstanceOf[ReadDataArray[E#Component, R]]
-      adapter.mkReadDataArray(primitives).asInstanceOf[CompositionFactory[E, B]]
+      ).asInstanceOf[ReadDataArray[F#Component, R]]
+      adapter.mkReadDataArray(primitives).asInstanceOf[CompositionFactory[F, B]]
     }
 
     // Test raw types that are not allowed.
@@ -124,7 +124,7 @@ object AdapterTestUtil extends FunSuite {
 
       val array = genRandomSeq(
         attribs.componentManifest, RawManifest.toRawType(raw), primSize
-      ).asInstanceOf[DataArray[E#Component, R]]
+      ).asInstanceOf[DataArray[F#Component, R]]
 
       val buffer = array.copyAsDataBuffer()
       val offset = 1; val stride = adapter.components + 1
@@ -171,12 +171,12 @@ object AdapterTestUtil extends FunSuite {
     }
 
     // Test apply/update.
-    assert(sampleData.metaManifest == attribs.componentManifest)
+    assert(sampleData.formatManifest == attribs.componentManifest)
 
     val j = 1
     val writeBuffer = genRandomSeq(
       attribs.componentManifest, sampleData.rawType, sampleData.size + j
-    ).asInstanceOf[Contiguous[E#Component, Raw]]
+    ).asInstanceOf[Contiguous[F#Component, Raw]]
 
     assert(adapter.apply(sampleData, 0) == sample)
     assert(adapter.apply(writeBuffer, j) != sample)
@@ -185,11 +185,11 @@ object AdapterTestUtil extends FunSuite {
   }
 }
 
-case class AdapterAttrib[E <: Meta, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
-  val metaManifest: ClassManifest[E],
-  val readManifest: ClassManifest[E#Read],
+case class AdapterAttrib[F <: Meta, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
+  val formatManifest: ClassManifest[F],
+  val readManifest: ClassManifest[F#Read],
   val boundManifest: Manifest[B],
-  val componentManifest: ClassManifest[E#Component]
+  val componentManifest: ClassManifest[F#Component]
 )
 
 object AdapterAttribs {

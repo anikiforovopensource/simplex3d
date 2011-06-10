@@ -33,7 +33,7 @@ import simplex3d.data.float.impl._
 package object float {
 
   private[this] final def primitiveFactory[R <: DefinedFloat](f: PrimitiveFactory[RFloat, R]) = f
-  private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedFloat]) = f
+  private[this] final def factory[F <: Meta](f: CompositionFactory[F, DefinedFloat]) = f
   private[this] final val default = new ArrayRFloatRFloat
 
   // RFloat
@@ -59,7 +59,7 @@ package object float {
   )
 
   implicit object FactoryQuat4f extends DataAdapter[Quat4f, DefinedFloat with SysFP](components = 4)(
-    metaManifest = Quat4f.Manifest,
+    formatManifest = Quat4f.Manifest,
     readManifest = Quat4f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -72,7 +72,7 @@ package object float {
   }
 
   implicit object FactoryMat2x2f extends DataAdapter[Mat2x2f, DefinedFloat with SysFP](components = 4)(
-    metaManifest = Mat2x2f.Manifest,
+    formatManifest = Mat2x2f.Manifest,
     readManifest = Mat2x2f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -89,7 +89,7 @@ package object float {
   }
 
   implicit object FactoryMat2x3f extends DataAdapter[Mat2x3f, DefinedFloat with SysFP](components = 6)(
-    metaManifest = Mat2x3f.Manifest,
+    formatManifest = Mat2x3f.Manifest,
     readManifest = Mat2x3f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -108,7 +108,7 @@ package object float {
   }
 
   implicit object FactoryMat2x4f extends DataAdapter[Mat2x4f, DefinedFloat with SysFP](components = 8)(
-    metaManifest = Mat2x4f.Manifest,
+    formatManifest = Mat2x4f.Manifest,
     readManifest = Mat2x4f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -129,7 +129,7 @@ package object float {
   }
 
   implicit object FactoryMat3x2f extends DataAdapter[Mat3x2f, DefinedFloat with SysFP](components = 6)(
-    metaManifest = Mat3x2f.Manifest,
+    formatManifest = Mat3x2f.Manifest,
     readManifest = Mat3x2f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -146,7 +146,7 @@ package object float {
   }
 
   implicit object FactoryMat3x3f extends DataAdapter[Mat3x3f, DefinedFloat with SysFP](components = 9)(
-    metaManifest = Mat3x3f.Manifest,
+    formatManifest = Mat3x3f.Manifest,
     readManifest = Mat3x3f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -165,7 +165,7 @@ package object float {
   }
 
   implicit object FactoryMat3x4f extends DataAdapter[Mat3x4f, DefinedFloat with SysFP](components = 12)(
-    metaManifest = Mat3x4f.Manifest,
+    formatManifest = Mat3x4f.Manifest,
     readManifest = Mat3x4f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -186,7 +186,7 @@ package object float {
   }
 
   implicit object FactoryMat4x2f extends DataAdapter[Mat4x2f, DefinedFloat with SysFP](components = 8)(
-    metaManifest = Mat4x2f.Manifest,
+    formatManifest = Mat4x2f.Manifest,
     readManifest = Mat4x2f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -203,7 +203,7 @@ package object float {
   }
 
   implicit object FactoryMat4x3f extends DataAdapter[Mat4x3f, DefinedFloat with SysFP](components = 12)(
-    metaManifest = Mat4x3f.Manifest,
+    formatManifest = Mat4x3f.Manifest,
     readManifest = Mat4x3f.ReadManifest,
     boundManifest = sysfpBound
   ) {
@@ -222,7 +222,7 @@ package object float {
   }
 
   implicit object FactoryMat4x4f extends DataAdapter[Mat4x4f, DefinedFloat with SysFP](components = 16)(
-    metaManifest = Mat4x4f.Manifest,
+    formatManifest = Mat4x4f.Manifest,
     readManifest = Mat4x4f.ReadManifest,
     boundManifest = sysfpBound
   ) {

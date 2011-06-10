@@ -29,6 +29,10 @@ import java.nio._
 trait DataSource {
   type RawBuffer <: Buffer
   type Read <: DataSource
+  
+  def formatManifest: ClassManifest[_]
+  def rawType: Int
+  def isNormalized: Boolean
 
   def asReadOnly() :Read
   def byteCapacity: Int
@@ -40,3 +44,5 @@ trait DataSource {
   def rawBuffer() :RawBuffer
   def isCached :Boolean
 }
+
+trait ContiguousSource extends DataSource

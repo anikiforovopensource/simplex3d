@@ -28,50 +28,50 @@ import scala.annotation.unchecked._
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class CompositeSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
-  prim: ReadContiguous[E#Component, R],
+abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
+  prim: ReadContiguous[F#Component, R],
   off: Int, str: Int
-) extends AbstractData[E, E#Const, E#Read, R](
+) extends AbstractData[F, F#Const, F#Read, R](
   prim.sharedStore, prim, prim.isReadOnly,
   off, str
-) with CompositionFactory[E, B] {
+) with CompositionFactory[F, B] {
   final def rawType = primitives.rawType
   final def isNormalized: Boolean = primitives.isNormalized
 
-  def mkReadDataArray[P <: B](prim: ReadDataArray[E#Component, P]) :ReadDataArray[E, P]
-  def mkReadDataBuffer[P <: B](prim: ReadDataBuffer[E#Component, P]) :ReadDataBuffer[E, P]
+  def mkReadDataArray[P <: B](prim: ReadDataArray[F#Component, P]) :ReadDataArray[F, P]
+  def mkReadDataBuffer[P <: B](prim: ReadDataBuffer[F#Component, P]) :ReadDataBuffer[F, P]
   protected def mkReadDataViewInstance[P <: B](
-    prim: ReadDataBuffer[E#Component, P], off: Int, str: Int
-  ) :ReadDataView[E, P]
+    prim: ReadDataBuffer[F#Component, P], off: Int, str: Int
+  ) :ReadDataView[F, P]
 
 
-  final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R] =
+  final def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[F, R] =
     mkReadDataArray(
-      primitives.mkDataArray(array).asInstanceOf[DataArray[E#Component, B]]
-    ).asInstanceOf[DataArray[E, R]]
+      primitives.mkDataArray(array).asInstanceOf[DataArray[F#Component, B]]
+    ).asInstanceOf[DataArray[F, R]]
 
-  final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R] =
+  final def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[F, R] =
     mkReadDataBuffer(
-      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]]
-    ).asInstanceOf[ReadDataBuffer[E, R]]
+      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[F#Component, B]]
+    ).asInstanceOf[ReadDataBuffer[F, R]]
 
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[E, R] =
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, off: Int, str: Int) :ReadDataView[F, R] =
     mkReadDataView(
-      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[E#Component, B]], off, str
-    ).asInstanceOf[ReadDataView[E, R]]
+      primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[F#Component, B]], off, str
+    ).asInstanceOf[ReadDataView[F, R]]
 
 
   private[data] final def mkReadOnlyInstance() :Read = {
     val self: AnyRef = this
     (self match {
       case _: DataArray[_, _] => mkReadDataArray(
-          primitives.asReadOnly().asInstanceOf[DataArray[E#Component, B]]
+          primitives.asReadOnly().asInstanceOf[DataArray[F#Component, B]]
         )
       case _: DataBuffer[_, _] => mkReadDataBuffer(
-          primitives.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]]
+          primitives.asReadOnly().asInstanceOf[DataBuffer[F#Component, B]]
         )
       case _: DataView[_, _] => mkReadDataView(
-          primitives.asReadOnly().asInstanceOf[DataBuffer[E#Component, B]], offset, stride
+          primitives.asReadOnly().asInstanceOf[DataBuffer[F#Component, B]], offset, stride
         )
     }).asInstanceOf[Read]
   }

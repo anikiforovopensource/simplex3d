@@ -31,27 +31,27 @@ import simplex3d.data._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-abstract class DataAdapter[E <: CompositeMeta, B <: Defined](final val components: Int)(implicit
-  final val metaManifest: ClassManifest[E],
-  final val readManifest: ClassManifest[E#Read],
+abstract class DataAdapter[F <: CompositeFormat, B <: Defined](final val components: Int)(implicit
+  final val formatManifest: ClassManifest[F],
+  final val readManifest: ClassManifest[F#Read],
   final val boundManifest: Manifest[B]
 )
-extends CompositionFactory[E, B] with Serializable {
-  def apply(primitives: inContiguous[E#Component, Raw], j: Int) :E#Const
-  def update(primitives: outContiguous[E#Component, Raw], j: Int, value: E#Read) :Unit
+extends CompositionFactory[F, B] with Serializable {
+  def apply(primitives: inContiguous[F#Component, Raw], j: Int) :F#Const
+  def update(primitives: outContiguous[F#Component, Raw], j: Int, value: F#Read) :Unit
 
-  def mkReadDataArray[P <: B](primitives: ReadDataArray[E#Component, P])
-  :ReadDataArray[E, P] = {
+  def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
+  :ReadDataArray[F, P] = {
     enforceRawType(primitives.rawType)
     new GenericArray(this, primitives)
   }
-  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[E#Component, P])
-  :ReadDataBuffer[E, P] = {
+  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P])
+  :ReadDataBuffer[F, P] = {
     enforceRawType(primitives.rawType)
     new GenericBuffer(this, primitives)
   }
-  protected[data] def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[E#Component, P], off: Int, str: Int)
-  :ReadDataView[E, P] = {
+  protected[data] def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[F#Component, P], off: Int, str: Int)
+  :ReadDataView[F, P] = {
     enforceRawType(primitives.rawType)
     new GenericView(this, primitives, off, str)
   }

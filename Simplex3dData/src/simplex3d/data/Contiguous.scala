@@ -24,22 +24,22 @@ package simplex3d.data
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadContiguous[E <: Meta, +R <: Raw]
-extends ReadDataSeq[E, R] {
-  type Read <: ReadContiguous[E, R]
+trait ReadContiguous[F <: Meta, +R <: Raw]
+extends ReadDataSeq[F, R] with ContiguousSource {
+  type Read <: ReadContiguous[F, R]
 
   assert(offset == 0)
   assert(stride == components)
 }
 
-trait Contiguous[E <: Meta, +R <: Raw]
-extends DataSeq[E, R] with ReadContiguous[E, R]
+trait Contiguous[F <: Meta, +R <: Raw]
+extends DataSeq[F, R] with ReadContiguous[F, R]
 
 
 object ReadContiguous {
-  def apply[E <: Meta, R <: Defined](dc: ReadContiguous[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :ReadContiguous[E, R] = {
+  def apply[F <: Meta, R <: Defined](dc: ReadContiguous[_, R])(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :ReadContiguous[F, R] = {
     val res = dc match {
       case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedArray))
       case d: DataBuffer[_, _] => composition.mkDataBuffer(primitives.mkDataBuffer(dc.sharedBuffer))
@@ -49,9 +49,9 @@ object ReadContiguous {
 }
 
 object Contiguous {
-  def apply[E <: Meta, R <: Defined](dc: Contiguous[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :Contiguous[E, R] = {
+  def apply[F <: Meta, R <: Defined](dc: Contiguous[_, R])(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :Contiguous[F, R] = {
     if (dc.isReadOnly) throw new IllegalArgumentException(
       "The Sequence must not be read-only."
     )

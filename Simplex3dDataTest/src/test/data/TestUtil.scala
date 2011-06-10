@@ -232,16 +232,16 @@ object TestUtil extends FunSuite {
     def nd = randomSrc.nextDouble
 
     (m match {
-      case MetaManifest.SInt => ni
+      case PrimitiveFormat.SInt => ni
       case Vec2i.Manifest => Vec2i(ni, ni)
       case Vec3i.Manifest => Vec3i(ni, ni, ni)
       case Vec4i.Manifest => Vec4i(ni, ni, ni, ni)
-      case MetaManifest.RFloat => nf
+      case PrimitiveFormat.RFloat => nf
       case Vec2f.Manifest => Vec2f(nf, nf)
       case Vec3f.Manifest => Vec3f(nf, nf, nf)
       case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
       case Mat2x3f.Manifest => Mat2x3f(nf, nf, nf, nf, nf, nf)
-      case MetaManifest.RDouble => nd
+      case PrimitiveFormat.RDouble => nd
       case Vec2d.Manifest => Vec2d(nd, nd)
       case Vec3d.Manifest => Vec3d(nd, nd, nd)
       case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
@@ -254,15 +254,15 @@ object TestUtil extends FunSuite {
     def nd = randomSrc.nextDouble
 
     (m match {
-      case MetaManifest.SInt => ni.asInstanceOf[AnyRef]
-      case MetaManifest.RFloat => nf.asInstanceOf[AnyRef]
-      case MetaManifest.RDouble => nd.asInstanceOf[AnyRef]
+      case PrimitiveFormat.SInt => ni.asInstanceOf[AnyRef]
+      case PrimitiveFormat.RFloat => nf.asInstanceOf[AnyRef]
+      case PrimitiveFormat.RDouble => nd.asInstanceOf[AnyRef]
     }).asInstanceOf[T]
   }
 
-  private def mkPrimSeq[E <: Meta, R <: Raw](size: Int, descriptor: Descriptor[E, R]) = {
+  private def mkPrimSeq[F <: Meta, R <: Raw](size: Int, descriptor: Descriptor[F, R]) = {
     (descriptor.componentManifest match {
-      case MetaManifest.SInt =>
+      case PrimitiveFormat.SInt =>
         descriptor.rawType match {
           case SByte => DataArray[SInt, SByte](size*descriptor.components)
           case UByte => DataArray[SInt, UByte](size*descriptor.components)
@@ -271,7 +271,7 @@ object TestUtil extends FunSuite {
           case SInt => DataArray[SInt, SInt](size*descriptor.components)
           case UInt => DataArray[SInt, UInt](size*descriptor.components)
         }
-      case MetaManifest.RFloat =>
+      case PrimitiveFormat.RFloat =>
         descriptor.rawType match {
           case SByte => DataArray[RFloat, SByte](size*descriptor.components)
           case UByte => DataArray[RFloat, UByte](size*descriptor.components)
@@ -282,7 +282,7 @@ object TestUtil extends FunSuite {
           case HFloat => DataArray[RFloat, HFloat](size*descriptor.components)
           case RFloat => DataArray[RFloat, RFloat](size*descriptor.components)
         }
-      case MetaManifest.RDouble =>
+      case PrimitiveFormat.RDouble =>
         descriptor.rawType match {
           case SByte => DataArray[RDouble, SByte](size*descriptor.components)
           case UByte => DataArray[RDouble, UByte](size*descriptor.components)
@@ -294,39 +294,39 @@ object TestUtil extends FunSuite {
           case RFloat => DataArray[RDouble, RFloat](size*descriptor.components)
           case RDouble => DataArray[RDouble, RDouble](size*descriptor.components)
         }
-    }).asInstanceOf[DataArray[E#Component, R]]
+    }).asInstanceOf[DataArray[F#Component, R]]
   }
-  def genRandomCollection[E <: Meta, R <: Raw](
-    size: Int, descriptor: Descriptor[E, R]
-  ) :(Array[E#Read], Buffer) = {
-    val array = descriptor.readManifest.newArray(size).asInstanceOf[Array[E#Read]]
+  def genRandomCollection[F <: Meta, R <: Raw](
+    size: Int, descriptor: Descriptor[F, R]
+  ) :(Array[F#Read], Buffer) = {
+    val array = descriptor.readManifest.newArray(size).asInstanceOf[Array[F#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
     val localSrc = new java.util.Random(seed)
 
     var i = 0; while (i < array.length) {
-      array(i) = rand(localSrc, descriptor.metaManifest).asInstanceOf[E#Read]
+      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Read]
       i += 1
     }
 
     localSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[E#Component#Read]
+      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Read]
       i += 1
     }
 
     (array, seq.buffer)
   }
 
-  private def RandomDataArray[E <: Meta, R <: Raw](size: Int)(
-    implicit composition: CompositionFactory[E, _ >: R],
-    primitives: DataFactory[E#Component, R],
-    descriptor: Descriptor[E, R]
-  ) :DataArray[E, R] = {
+  private def RandomDataArray[F <: Meta, R <: Raw](size: Int)(
+    implicit composition: CompositionFactory[F, _ >: R],
+    primitives: DataFactory[F#Component, R],
+    descriptor: Descriptor[F, R]
+  ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(genRandomArray(size*descriptor.components, descriptor)))
   }
-  def genRandomSeq(size: Int) :Data[_ <: Meta] = {
+  def genRandomSeq(size: Int) :DataSeq[_ <: Meta, Raw] = {
     genRandomSeq(None, None, size)
   }
   def genRandomSeq(
@@ -337,16 +337,16 @@ object TestUtil extends FunSuite {
         man
       case None =>
         randomSrc.nextInt(14) match {
-          case 0 => MetaManifest.SInt
+          case 0 => PrimitiveFormat.SInt
           case 1 => Vec2i.Manifest
           case 2 => Vec3i.Manifest
           case 3 => Vec4i.Manifest
-          case 4 => MetaManifest.RFloat
+          case 4 => PrimitiveFormat.RFloat
           case 5 => Vec2f.Manifest
           case 6 => Vec3f.Manifest
           case 7 => Vec4f.Manifest
           case 8 => Mat2x3f.Manifest
-          case 9 => MetaManifest.RDouble
+          case 9 => PrimitiveFormat.RDouble
           case 10 => Vec2d.Manifest
           case 11 => Vec3d.Manifest
           case 12 => Vec4d.Manifest
@@ -355,9 +355,9 @@ object TestUtil extends FunSuite {
       }
     
     val (min, max) = m match {
-      case MetaManifest.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => (0, 6)
-      case MetaManifest.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => (0, 8)
-      case MetaManifest.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => (0, 9)
+      case PrimitiveFormat.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => (0, 6)
+      case PrimitiveFormat.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => (0, 8)
+      case PrimitiveFormat.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => (0, 9)
       case Mat2x3f.Manifest => (7, 8)
       case Mat2x3d.Manifest => (7, 9)
     }
@@ -380,9 +380,9 @@ object TestUtil extends FunSuite {
       genRandomSeq(m, r, size)
   }
   
-  def genRandomSeq[E <: Meta](manifest: ClassManifest[E], rawType: Int, size: Int) :Contiguous[E, Raw] = {
+  def genRandomSeq[F <: Meta](manifest: ClassManifest[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
     (manifest match {
-      case MetaManifest.SInt => rawType match {
+      case PrimitiveFormat.SInt => rawType match {
         case SByte => RandomDataArray[SInt, SByte](size)
         case UByte => RandomDataArray[SInt, UByte](size)
         case SShort => RandomDataArray[SInt, SShort](size)
@@ -415,7 +415,7 @@ object TestUtil extends FunSuite {
         case UInt => RandomDataArray[Vec4i, UInt](size)
       }
       
-      case MetaManifest.RFloat => rawType match {
+      case PrimitiveFormat.RFloat => rawType match {
         case SByte => RandomDataArray[RFloat, SByte](size)
         case UByte => RandomDataArray[RFloat, UByte](size)
         case SShort => RandomDataArray[RFloat, SShort](size)
@@ -459,7 +459,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Mat2x3f, RFloat](size)
       }
       
-      case MetaManifest.RDouble => rawType match {
+      case PrimitiveFormat.RDouble => rawType match {
         case SByte => RandomDataArray[RDouble, SByte](size)
         case UByte => RandomDataArray[RDouble, UByte](size)
         case SShort => RandomDataArray[RDouble, SShort](size)
@@ -507,13 +507,13 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Mat2x3d, RFloat](size)
         case RDouble => RandomDataArray[Mat2x3d, RDouble](size)
       }
-    }).asInstanceOf[Contiguous[E, Raw]]
+    }).asInstanceOf[Contiguous[F, Raw]]
   }
   
-  final def testContent[E <: Meta](
+  final def testContent[F <: Meta](
     components: Int,
-    dest: inData[E], destFirst: Int,
-    src: inData[E], srcFirst: Int,
+    dest: inDataSeq[F, Raw], destFirst: Int,
+    src: inDataSeq[F, Raw], srcFirst: Int,
     count: Int
   ) {
     testContent(
@@ -523,49 +523,49 @@ object TestUtil extends FunSuite {
       count
     )
   }
-  final def testContent[E <: Meta](
+  final def testContent[F <: Meta](
     components: Int,
-    dest: inData[E], destFirst: Int,
-    src: inData[E#Component], srcFirst: Int, srcStride: Int,
+    dest: inDataSeq[F, Raw], destFirst: Int,
+    src: inDataSeq[F#Component, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
     val d = dest.primitives
     
-    d.metaManifest match {
-      case MetaManifest.SInt =>
+    d.formatManifest match {
+      case PrimitiveFormat.SInt =>
         testIntContent(
           components,
-          d.asInstanceOf[ReadData[SInt]], dest.offset + destFirst*dest.stride, dest.stride,
-          src.asInstanceOf[ReadData[SInt]], srcFirst, srcStride,
+          d.asInstanceOf[ReadDataSeq[SInt, Raw]], dest.offset + destFirst*dest.stride, dest.stride,
+          src.asInstanceOf[ReadDataSeq[SInt, Raw]], srcFirst, srcStride,
           count
         )
-      case MetaManifest.RFloat =>
+      case PrimitiveFormat.RFloat =>
         testFloatContent(
           components,
-          d.asInstanceOf[ReadData[RFloat]], dest.offset + destFirst*dest.stride, dest.stride,
-          src.asInstanceOf[ReadData[RFloat]], srcFirst, srcStride,
+          d.asInstanceOf[ReadDataSeq[RFloat, Raw]], dest.offset + destFirst*dest.stride, dest.stride,
+          src.asInstanceOf[ReadDataSeq[RFloat, Raw]], srcFirst, srcStride,
           count
         )
-      case MetaManifest.RDouble =>
+      case PrimitiveFormat.RDouble =>
         testDoubleContent(
           components,
-          d.asInstanceOf[ReadData[RDouble]], dest.offset + destFirst*dest.stride, dest.stride,
-          src.asInstanceOf[ReadData[RDouble]], srcFirst, srcStride,
+          d.asInstanceOf[ReadDataSeq[RDouble, Raw]], dest.offset + destFirst*dest.stride, dest.stride,
+          src.asInstanceOf[ReadDataSeq[RDouble, Raw]], srcFirst, srcStride,
           count
         )
     }
   }
   
   // Test that remaining memory not tested by testContent is unmodified.
-  final def testTheRest[E <: Meta](
+  final def testTheRest[F <: Meta](
     components: Int,
-    dest: inData[E], destFirst: Int,
-    original: inData[E],
+    dest: inDataSeq[F, Raw], destFirst: Int,
+    original: inDataSeq[F, Raw],
     count: Int
   ) {
     if (dest.isInstanceOf[DataView[_, _]]) {
-      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[E, Raw]].primitives)
-      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[E, Raw]].primitives)
+      val d = DataBuffer[SInt, SByte](dest.asInstanceOf[DataView[F, Raw]].primitives)
+      val o = DataBuffer[SInt, SByte](original.asInstanceOf[DataView[F, Raw]].primitives)
       
       val byteOffset = dest.byteOffset + dest.byteStride*destFirst
       val byteSkip = components*dest.bytesPerComponent
@@ -609,12 +609,12 @@ object TestUtil extends FunSuite {
   
   private final def testIntContent(
     components: Int,
-    dest: inData[SInt], destFirst: Int, destStride: Int,
-    src: inData[SInt], srcFirst: Int, srcStride: Int,
+    dest: inDataSeq[SInt, Raw], destFirst: Int, destStride: Int,
+    src: inDataSeq[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.SInt)
-    assert(src.metaManifest == MetaManifest.SInt)
+    assert(dest.formatManifest == PrimitiveFormat.SInt)
+    assert(src.formatManifest == PrimitiveFormat.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -629,12 +629,12 @@ object TestUtil extends FunSuite {
   
   private final def testFloatContent(
     components: Int,
-    dest: inData[RFloat], destFirst: Int, destStride: Int,
-    src: inData[RFloat], srcFirst: Int, srcStride: Int,
+    dest: inDataSeq[RFloat, Raw], destFirst: Int, destStride: Int,
+    src: inDataSeq[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.RFloat)
-    assert(src.metaManifest == MetaManifest.RFloat)
+    assert(dest.formatManifest == PrimitiveFormat.RFloat)
+    assert(src.formatManifest == PrimitiveFormat.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -652,12 +652,12 @@ object TestUtil extends FunSuite {
   
   private final def testDoubleContent(
     components: Int,
-    dest: inData[RDouble], destFirst: Int, destStride: Int,
-    src: inData[RDouble], srcFirst: Int, srcStride: Int,
+    dest: inDataSeq[RDouble, Raw], destFirst: Int, destStride: Int,
+    src: inDataSeq[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.RDouble)
-    assert(src.metaManifest == MetaManifest.RDouble)
+    assert(dest.formatManifest == PrimitiveFormat.RDouble)
+    assert(src.formatManifest == PrimitiveFormat.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -673,26 +673,26 @@ object TestUtil extends FunSuite {
     }
   }
   
-  def convert[E <: Meta](src: inData[E], rawType: Int) :Contiguous[E, Raw] = {
-    val factory = genRandomSeq(src.metaManifest, rawType, 0)
+  def convert[F <: Meta](src: inDataSeq[F, Raw], rawType: Int) :Contiguous[F, Raw] = {
+    val factory = genRandomSeq(src.formatManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
-    src.primitives.metaManifest match {
-      case MetaManifest.SInt =>
+    src.primitives.formatManifest match {
+      case PrimitiveFormat.SInt =>
         putIntContent(
           src.components,
           contiguousCopy.primitives.asInstanceOf[Contiguous[SInt, Raw]],
           src.primitives.asInstanceOf[ReadContiguous[SInt, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
-      case MetaManifest.RFloat =>
+      case PrimitiveFormat.RFloat =>
         putFloatContent(
           src.components,
           contiguousCopy.primitives.asInstanceOf[Contiguous[RFloat, Raw]],
           src.primitives.asInstanceOf[ReadContiguous[RFloat, Raw]], src.offset*src.stride, src.stride,
           src.size
         )
-      case MetaManifest.RDouble =>
+      case PrimitiveFormat.RDouble =>
         putDoubleContent(
           src.components,
           contiguousCopy.primitives.asInstanceOf[Contiguous[RDouble, Raw]],
@@ -710,8 +710,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.SInt)
-    assert(src.metaManifest == MetaManifest.SInt)
+    assert(dest.formatManifest == PrimitiveFormat.SInt)
+    assert(src.formatManifest == PrimitiveFormat.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -730,8 +730,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.RFloat)
-    assert(src.metaManifest == MetaManifest.RFloat)
+    assert(dest.formatManifest == PrimitiveFormat.RFloat)
+    assert(src.formatManifest == PrimitiveFormat.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -750,8 +750,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.metaManifest == MetaManifest.RDouble)
-    assert(src.metaManifest == MetaManifest.RDouble)
+    assert(dest.formatManifest == PrimitiveFormat.RDouble)
+    assert(src.formatManifest == PrimitiveFormat.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {

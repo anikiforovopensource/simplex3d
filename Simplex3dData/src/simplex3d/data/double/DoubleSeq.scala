@@ -24,7 +24,7 @@ package double
 import java.nio._
 import scala.reflect._
 import scala.annotation.unchecked._
-import simplex3d.data.MetaManifest
+import simplex3d.data.PrimitiveFormat
 import simplex3d.data.Util._
 import simplex3d.data.conversion.Double._
 
@@ -39,7 +39,7 @@ private[data] abstract class BaseRDouble[+R <: DefinedDouble](
 extends AbstractData[RDouble, Double, Double, R](shared, prim, ro, off, str)
 with CompositionFactory[RDouble, DefinedDouble]
 {
-  final def metaManifest = MetaManifest.RDouble
+  final def formatManifest = PrimitiveFormat.RDouble
   final def readManifest = Manifest.Double
   final def components: Int = 1
 

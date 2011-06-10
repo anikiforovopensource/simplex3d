@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2010-2011, Aleksey Nikiforov
+ * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -20,22 +20,23 @@
 
 package simplex3d.data
 
+import scala.collection._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[F <: Meta, +R <: Raw]
-extends ReadAbstractData[F, F#Const, R] {
-  type Read <: ReadDataSeq[F, R]
+trait ReadBatch[@specialized(Int, Float, Double) +E] extends DataSource
+with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
+  type Read <: ReadBatch[E]
+  
+  def apply(i: Int) :E
 }
 
-trait DataSeq[F <: Meta, +R <: Raw]
-extends AbstractData[F, F#Const, F#Read, R] with ReadDataSeq[F, R]
-
-object DataSeq {
-  def apply[F <: Meta, R <: Defined](
-    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
-  ) :DataSeq[F, R] = {
-    composition.mkDataArray(primitives.mkDataArray(0))
-  }
+trait Batch[@specialized(Int, Float, Double) E] extends ReadBatch[E] {
+  def update(i: Int, v: E)
+  
+  def put(index: Int, src: Seq[E], first: Int, count: Int) :Unit
+  def put(index: Int, src: Seq[E]) :Unit
+  def put(src: Seq[E]) :Unit
 }

@@ -21,7 +21,7 @@
 package test.data
 
 import scala.reflect._
-import simplex3d.data.{MetaManifest => Man, _}
+import simplex3d.data.{PrimitiveFormat => Man, _}
 import simplex3d.data.RawType._
 import simplex3d.math._
 import simplex3d.math.floatx._
@@ -31,8 +31,8 @@ import simplex3d.math.doublex._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-case class Descriptor[E <: Meta, +R <: Raw](
-  metaManifest: ClassManifest[_],
+case class Descriptor[F <: Meta, +R <: Raw](
+  formatManifest: ClassManifest[_],
   componentManifest: ClassManifest[_],
   readManifest: ClassManifest[_],
   components: Int,

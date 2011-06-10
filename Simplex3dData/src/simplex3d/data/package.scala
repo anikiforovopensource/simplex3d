@@ -30,7 +30,7 @@ import simplex3d.math._
 package object data {
 
   private[this] final def primitiveFactory[R <: DefinedInt](f: PrimitiveFactory[SInt, R]) = f
-  private[this] final def factory[E <: Meta](f: CompositionFactory[E, DefinedInt]) = f
+  private[this] final def factory[F <: Meta](f: CompositionFactory[F, DefinedInt]) = f
   private[this] final val default = new ArraySIntSInt
 
   // SInt
@@ -48,10 +48,12 @@ package object data {
   implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(default))
 
 
+  type Format = integration.Format
+  type CompressedFormat = integration.CompressedFormat
   type Meta = integration.Meta
-  type PrimitiveMeta = integration.PrimitiveMeta
-  type CompositeMeta = integration.CompositeMeta
-  val MetaManifest = integration.MetaManifest
+  type PrimitiveFormat = integration.PrimitiveFormat
+  type CompositeFormat = integration.CompositeFormat
+  val PrimitiveFormat = integration.PrimitiveFormat
   type Raw = integration.Raw
   type Defined = integration.Defined
   type DefinedInt = integration.DefinedInt
@@ -77,11 +79,9 @@ package object data {
   type RDouble = integration.RDouble
 
 
-  type ReadData[E <: Meta] = ReadDataSeq[E, Raw]
-  type Data[E <: Meta] = DataSeq[E, Raw]
-  type inData[E <: Meta] = inDataSeq[E, Raw]
-  type outData[E <: Meta] = outDataSeq[E, Raw]
-
+  type inBatch[E] = ReadBatch[E]
+  type outBatch[E] = Batch[E]
+  
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
@@ -89,47 +89,47 @@ package object data {
   
   type RawView = ReadDataView[_ <: Meta, Raw]
 
-  type inDataSeq[E <: Meta, +R <: Raw] = ReadDataSeq[E, R]
-  type inContiguous[E <: Meta, +R <: Raw] = ReadContiguous[E, R]
-  type inDataArray[E <: Meta, +R <: Raw] = ReadDataArray[E, R]
-  type inDataBuffer[E <: Meta, +R <: Raw] = ReadDataBuffer[E, R]
-  type inDataView[E <: Meta, +R <: Raw] = ReadDataView[E, R]
+  type inDataSeq[F <: Meta, +R <: Raw] = ReadDataSeq[F, R]
+  type inContiguous[F <: Meta, +R <: Raw] = ReadContiguous[F, R]
+  type inDataArray[F <: Meta, +R <: Raw] = ReadDataArray[F, R]
+  type inDataBuffer[F <: Meta, +R <: Raw] = ReadDataBuffer[F, R]
+  type inDataView[F <: Meta, +R <: Raw] = ReadDataView[F, R]
 
   type inIndexSeq[+R <: Unsigned] = ReadIndexSeq[R]
   type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
-  type outDataSeq[E <: Meta, +R <: Raw] = DataSeq[E, R]
-  type outContiguous[E <: Meta, +R <: Raw] = Contiguous[E, R]
-  type outDataArray[E <: Meta, +R <: Raw] = DataArray[E, R]
-  type outDataBuffer[E <: Meta, +R <: Raw] = DataBuffer[E, R]
-  type outDataView[E <: Meta, +R <: Raw] = DataView[E, R]
+  type outDataSeq[F <: Meta, +R <: Raw] = DataSeq[F, R]
+  type outContiguous[F <: Meta, +R <: Raw] = Contiguous[F, R]
+  type outDataArray[F <: Meta, +R <: Raw] = DataArray[F, R]
+  type outDataBuffer[F <: Meta, +R <: Raw] = DataBuffer[F, R]
+  type outDataView[F <: Meta, +R <: Raw] = DataView[F, R]
 
   type outIndexSeq[+R <: Unsigned] = IndexSeq[R]
   type outIndexArray[+R <: Unsigned] = IndexArray[R]
   type outIndexBuffer[+R <: Unsigned] = IndexBuffer[R]
 
-  @inline implicit final def readContegiousDataToIndex[R  <: Unsigned] (
+  @inline implicit final def readContegiousDataToIndex[R <: Unsigned] (
     d: ReadContiguous[SInt, R]
   ) = d.asInstanceOf[ReadIndexSeq[R]]
 
-  @inline implicit final def readArrayDataToIndex[R  <: Unsigned] (
+  @inline implicit final def readArrayDataToIndex[R <: Unsigned] (
     d: ReadDataArray[SInt, R]
   ) = d.asInstanceOf[ReadIndexArray[R]]
 
-  @inline implicit final def readBufferDataToIndex[R  <: Unsigned](
+  @inline implicit final def readBufferDataToIndex[R <: Unsigned](
     d: ReadDataBuffer[SInt, R]
   ) = d.asInstanceOf[ReadIndexBuffer[R]]
 
-  @inline implicit final def contegiousDataToIndex[R  <: Unsigned] (
+  @inline implicit final def contegiousDataToIndex[R <: Unsigned] (
     d: Contiguous[SInt, R]
   ) = d.asInstanceOf[IndexSeq[R]]
   
-  @inline implicit final def arrayDataToIndex[R  <: Unsigned](
+  @inline implicit final def arrayDataToIndex[R <: Unsigned](
     d: DataArray[SInt, R]
   ) = d.asInstanceOf[IndexArray[R]]
 
-  @inline implicit final def bufferDataToIndex[R  <: Unsigned](
+  @inline implicit final def bufferDataToIndex[R <: Unsigned](
     d: DataBuffer[SInt, R]
   ) = d.asInstanceOf[IndexBuffer[R]]
 
@@ -472,7 +472,7 @@ package object data {
   }
 
 
-  def interleaveAll(seqs: inData[_]*)(size: Int) :IndexedSeq[RawView] = {
+  def interleaveAll(seqs: inDataSeq[_, Raw]*)(size: Int) :IndexedSeq[RawView] = {
     val dataSeqs = seqs.toArray
 
     // check arguments
@@ -533,8 +533,8 @@ package object data {
 
     i = 0; while (i < dataSeqs.length) {
 
-      type T = E forSome { type E <: Meta }
-      val seq = dataSeqs(order(i)).asInstanceOf[Data[T]]
+      type T = F forSome { type F <: Meta }
+      val seq = dataSeqs(order(i)).asInstanceOf[DataSeq[T, Raw]]
       val view = seq.mkDataView(
         byteBuffer,
         byteOffset/seq.bytesPerComponent,

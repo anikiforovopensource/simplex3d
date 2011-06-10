@@ -30,48 +30,50 @@ import simplex3d.data._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class GenericSeq[E <: CompositeMeta, +R <: Raw, B <: Defined](
-  adapter: DataAdapter[E, B], prim: ReadContiguous[E#Component, R], off: Int, str: Int
-) extends CompositeSeq[E, R, B](prim, off, str) {
-  final def metaManifest = adapter.metaManifest
+sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[F, B], prim: ReadContiguous[F#Component, R], off: Int, str: Int
+) extends CompositeSeq[F, R, B](prim, off, str) {
+  final def formatManifest = adapter.formatManifest
   final def readManifest = adapter.readManifest
   final def components: Int = adapter.components
 
-  def apply(i: Int) :E#Const = adapter.apply(primitives, offset + i*stride)
-  def update(i: Int, v: E#Read) { adapter.update(primitives, offset + i*stride, v) }
+  def apply(i: Int) :F#Const = adapter.apply(primitives, offset + i*stride)
+  def update(i: Int, v: F#Read) { adapter.update(primitives, offset + i*stride, v) }
 
-  def mkReadDataArray[P <: B](primitives: ReadDataArray[E#Component, P])
-  :ReadDataArray[E, P] = adapter.mkReadDataArray(primitives)
-  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[E#Component, P])
-  :ReadDataBuffer[E, P] = adapter.mkReadDataBuffer(primitives)
-  protected def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[E#Component, P], offset: Int, stride: Int)
-  :ReadDataView[E, P] = adapter.mkReadDataViewInstance(primitives, offset, stride)
+  def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
+  :ReadDataArray[F, P] = adapter.mkReadDataArray(primitives)
+  def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P])
+  :ReadDataBuffer[F, P] = adapter.mkReadDataBuffer(primitives)
+  protected def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[F#Component, P], offset: Int, stride: Int)
+  :ReadDataView[F, P] = adapter.mkReadDataViewInstance(primitives, offset, stride)
 
   protected[data] final override def mkSerializableInstance() = new SerializableGeneric(adapter)
 }
 
 private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) extends SerializableComposite {
-  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveMeta, _]): ReadDataArray[_ <: CompositeMeta, _] = {
-    type E = T forSome { type T <: CompositeMeta }
-    val primitiveArray = primitives.asInstanceOf[ReadDataArray[E#Component, Defined]]
-    adapter.asInstanceOf[DataAdapter[E, Defined]].mkReadDataArray(primitiveArray)
+  protected def toReadDataArray(
+    primitives: ReadDataArray[_ <: PrimitiveFormat, _]
+  ): ReadDataArray[_ <: CompositeFormat, _] = {
+    type F = T forSome { type T <: CompositeFormat }
+    val primitiveArray = primitives.asInstanceOf[ReadDataArray[F#Component, Defined]]
+    adapter.asInstanceOf[DataAdapter[F, Defined]].mkReadDataArray(primitiveArray)
   }
 }
 
-final class GenericArray[E <: CompositeMeta, +R <: Raw, B <: Defined](
-  adapter: DataAdapter[E, B], prim: ReadDataArray[E#Component, R]
-) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataArray[E, R] {
-  type Read = ReadDataArray[E, R @uncheckedVariance]
+final class GenericArray[F <: CompositeFormat, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[F, B], prim: ReadDataArray[F#Component, R]
+) extends GenericSeq[F, R, B](adapter, prim, 0, adapter.components) with DataArray[F, R] {
+  type Read = ReadDataArray[F, R @uncheckedVariance]
 }
 
-final class GenericBuffer[E<: CompositeMeta, +R <: Raw, B <: Defined](
-  adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R]
-) extends GenericSeq[E, R, B](adapter, prim, 0, adapter.components) with DataBuffer[E, R] {
-  type Read = ReadDataBuffer[E, R @uncheckedVariance]
+final class GenericBuffer[F <: CompositeFormat, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[F, B], prim: ReadDataBuffer[F#Component, R]
+) extends GenericSeq[F, R, B](adapter, prim, 0, adapter.components) with DataBuffer[F, R] {
+  type Read = ReadDataBuffer[F, R @uncheckedVariance]
 }
 
-final class GenericView[E<: CompositeMeta, +R <: Raw, B <: Defined](
-  adapter: DataAdapter[E, B], prim: ReadDataBuffer[E#Component, R], off: Int, str: Int
-) extends GenericSeq[E, R, B](adapter, prim, off, str) with DataView[E, R] {
-  type Read = ReadDataView[E, R @uncheckedVariance]
+final class GenericView[F <: CompositeFormat, +R <: Raw, B <: Defined](
+  adapter: DataAdapter[F, B], prim: ReadDataBuffer[F#Component, R], off: Int, str: Int
+) extends GenericSeq[F, R, B](adapter, prim, off, str) with DataView[F, R] {
+  type Read = ReadDataView[F, R @uncheckedVariance]
 }

@@ -34,7 +34,7 @@ import simplex3d.data.float._
  */
 object AdapterVImplementedBench {
 
-  trait V3 extends CompositeMeta {
+  trait V3 extends CompositeFormat {
     type Read = Vec3#Read
     type Const = Vec3#Const
     type Component = Vec3#Component
@@ -54,7 +54,7 @@ object AdapterVImplementedBench {
     }
   }
 
-  trait V4 extends CompositeMeta {
+  trait V4 extends CompositeFormat {
     type Read = Vec4#Read
     type Const = Vec4#Const
     type Component = Vec4#Component
@@ -122,7 +122,7 @@ object AdapterVImplementedBench {
     println("Adapter time: " + timeAdapter + ".")
   }
 
-  final def testImplemented3(seq: inData[Vec3], loops: Int) {
+  final def testImplemented3(seq: inDataSeq[Vec3, Raw], loops: Int) {
     var a = 0
 
     var l = 0; while (l < loops) {
@@ -137,7 +137,7 @@ object AdapterVImplementedBench {
 
     println(a)
   }
-  final def testImplemented4(seq: inData[Vec4], loops: Int) {
+  final def testImplemented4(seq: inDataSeq[Vec4, Raw], loops: Int) {
     var a = 0
 
     var l = 0; while (l < loops) {
@@ -153,7 +153,7 @@ object AdapterVImplementedBench {
     println(a)
   }
 
-  final def testAdapter3(seq: inData[V3], loops: Int) {
+  final def testAdapter3(seq: inDataSeq[V3, Raw], loops: Int) {
     var a = 0
 
     var l = 0; while (l < loops) {
@@ -168,7 +168,7 @@ object AdapterVImplementedBench {
 
     println(a)
   }
-  final def testAdapter4(seq: inData[V4], loops: Int) {
+  final def testAdapter4(seq: inDataSeq[V4, Raw], loops: Int) {
     var a = 0
 
     var l = 0; while (l < loops) {

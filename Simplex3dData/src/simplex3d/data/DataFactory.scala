@@ -29,19 +29,19 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait DataFactory[E <: Meta, +R <: Raw] {
+trait DataFactory[F <: Meta, +R <: Raw] {
   def rawType: Int
   def components: Int
-  def metaManifest: ClassManifest[E]
-  def readManifest: ClassManifest[E#Read]
-  def primitives: DataFactory[E#Component, R]
+  def formatManifest: ClassManifest[F]
+  def readManifest: ClassManifest[F#Read]
+  def primitives: DataFactory[F#Component, R]
 
-  def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[E, R]
-  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[E, R]
-  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R]
+  def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[F, R]
+  def mkReadDataBuffer(byteBuffer: ByteBuffer) :ReadDataBuffer[F, R]
+  protected def mkReadDataViewInstance(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[F, R]
 
 
-  final def mkDataArray(size: Int) :DataArray[E, R] = {
+  final def mkDataArray(size: Int) :DataArray[F, R] = {
     val array = ((rawType: @switch) match {
       case SByte | UByte => new Array[Byte](size*components)
       case SShort | HFloat=> new Array[Short](size*components)
@@ -57,34 +57,34 @@ trait DataFactory[E <: Meta, +R <: Raw] {
 
   final def mkDataBuffer(
     byteBuffer: ByteBuffer
-  ) :DataBuffer[E, R] = {
+  ) :DataBuffer[F, R] = {
     if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
       "The buffer must not be read-only."
     )
-    mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[E, R]]
+    mkReadDataBuffer(byteBuffer).asInstanceOf[DataBuffer[F, R]]
   }
 
-  final def mkDataBuffer(size: Int) :DataBuffer[E, R] = {
+  final def mkDataBuffer(size: Int) :DataBuffer[F, R] = {
     mkDataBuffer(ByteBuffer.allocateDirect(size*RawType.byteLength(rawType)*components))
   }
 
 
   final def mkReadDataView(
     byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :ReadDataView[E, R] = {
+  ) :ReadDataView[F, R] = {
     mkViewOrBuffer(byteBuffer, offset, stride)
   }
 
   final def mkDataView(
     byteBuffer: ByteBuffer, offset: Int, stride: Int
-  ) :DataView[E, R] = {
+  ) :DataView[F, R] = {
     if (byteBuffer.isReadOnly) throw new IllegalArgumentException(
       "The buffer must not be read-only."
     )
-    mkViewOrBuffer(byteBuffer, offset, stride).asInstanceOf[DataView[E, R]]
+    mkViewOrBuffer(byteBuffer, offset, stride).asInstanceOf[DataView[F, R]]
   }
 
-  private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[E, R] = {
+  private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[F, R] = {
     if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
     else mkReadDataViewInstance(byteBuffer, offset, stride)
   }

@@ -32,7 +32,7 @@ import RawType._
 private[data] abstract class BaseVec2i[+R <: DefinedInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2i, R, DefinedInt](prim, off, str) {
-  final def metaManifest = Vec2i.Manifest
+  final def formatManifest = Vec2i.Manifest
   final def readManifest = Vec2i.ReadManifest
   final def components: Int = 2
 

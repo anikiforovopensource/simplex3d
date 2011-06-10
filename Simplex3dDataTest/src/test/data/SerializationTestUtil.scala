@@ -33,9 +33,9 @@ import AttributeTestUtil._
  */
 object SerializationTestUtil extends FunSuite {
 
-  def testSerialization[E <: Meta, R <: Raw](
-    factory: (R#Array) => DataArray[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testSerialization[F <: Meta, R <: Raw](
+    factory: (R#Array) => DataArray[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     val size = 10
 
     val array = factory(genRandomArray(size, descriptor))
@@ -48,10 +48,10 @@ object SerializationTestUtil extends FunSuite {
 
     val in = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))
 
-    val rwArray = in.readObject().asInstanceOf[DataArray[E, R]]
+    val rwArray = in.readObject().asInstanceOf[DataArray[F, R]]
     testArray(rwArray, false, array.buffer())(descriptor)
 
-    val roArray = in.readObject().asInstanceOf[ReadDataArray[E, R]]
+    val roArray = in.readObject().asInstanceOf[ReadDataArray[F, R]]
     testArray(roArray, true, array.buffer())(descriptor)
 
     in.close()

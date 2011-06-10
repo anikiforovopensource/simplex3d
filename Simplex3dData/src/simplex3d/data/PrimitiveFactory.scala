@@ -24,4 +24,4 @@ package simplex3d.data
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait PrimitiveFactory[E <: PrimitiveMeta, +R <: Raw] extends DataFactory[E, R]
+trait PrimitiveFactory[F <: PrimitiveFormat, +R <: Raw] extends DataFactory[F, R]

@@ -33,7 +33,7 @@ import RawType._
 private[data] abstract class BaseVec2d[+R <: DefinedDouble](
   prim: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2d, R, DefinedDouble](prim, off, str) {
-  final def metaManifest = Vec2d.Manifest
+  final def formatManifest = Vec2d.Manifest
   final def readManifest = Vec2d.ReadManifest
   final def components: Int = 2
 

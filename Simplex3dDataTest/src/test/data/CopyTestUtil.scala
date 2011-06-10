@@ -48,9 +48,9 @@ object CopyTestUtil extends FunSuite {
     buffCache(1)(i) = ByteBuffer.allocateDirect(i)
   }
   
-  def testCopy[E <: Meta, R <: Raw](
-    factory: DataFactory[E, R]
-  )(implicit descriptor: Descriptor[E, R]) {
+  def testCopy[F <: Meta, R <: Raw](
+    factory: DataFactory[F, R]
+  )(implicit descriptor: Descriptor[F, R]) {
     
     val dataArray = factory.mkDataArray(genArray(0, descriptor))
     val bytesPerComponent = dataArray.bytesPerComponent
@@ -82,8 +82,8 @@ object CopyTestUtil extends FunSuite {
     }
   }
 
-  private def testCopying[E <: Meta, R <: Raw](
-    original: inData[E], descriptor: Descriptor[E, R]
+  private def testCopying[F <: Meta, R <: Raw](
+    original: inDataSeq[F, Raw], descriptor: Descriptor[F, R]
   ) {
     copyAs(original, descriptor)
     putSeq(original)
@@ -91,8 +91,8 @@ object CopyTestUtil extends FunSuite {
     putData(original)
   }
 
-  private def copyAs[E <: Meta, R <: Raw](
-    original: inData[E], descriptor: Descriptor[E, R]
+  private def copyAs[F <: Meta, R <: Raw](
+    original: inDataSeq[F, Raw], descriptor: Descriptor[F, R]
   ) {
     val seq = dupSeq1(original)
 
@@ -115,10 +115,10 @@ object CopyTestUtil extends FunSuite {
     }
   }
 
-  private def putSeq[E <: Meta](original: inData[E]) {
-    // Test exceptions. Destination and src must remain unchanged.
+  private def putSeq[F <: Meta](original: inDataSeq[F, Raw]) {
+    // Testing exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.metaManifest, original.rawType, original.size)
+      val src = genRandomSeq(original.formatManifest, original.rawType, original.size)
       val array = src.toArray(src.readManifest)
       
       {
@@ -126,7 +126,7 @@ object CopyTestUtil extends FunSuite {
         
         val wrongSrc = wrongType(src)
         val wrongArray = wrongSrc.toArray(wrongSrc.readManifest)
-        val wrongBackup = wrongArray.toList
+        val wrongBackup = wrongArray.toIndexedSeq
         val wrongList = wrongArray.toList
         val wrongIndexedSeq = wrongArray.toIndexedSeq
         
@@ -140,43 +140,50 @@ object CopyTestUtil extends FunSuite {
           dest.put(0, wrongList, 0, 1)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-        verify(wrongList, wrongBackup)
         
         intercept[ClassCastException] {
           dest.put(0, wrongIndexedSeq, 0, 1)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-        verify(wrongIndexedSeq, wrongBackup)
+        
+        intercept[ClassCastException] {
+          dest.put(0, wrongSrc.asReadOnly().asInstanceOf[IndexedSeq[F#Read]], 0, 1)
+        }
+        verify(dest.readOnlyBuffer, original.readOnlyBuffer)
       }
       
-      checkPutSeqExceptions(original, array)
-      checkPutSeqExceptions(original, array.toList)
-      checkPutSeqExceptions(original, array.toIndexedSeq)
+      checkPutSeqExceptions(original, array, true)
+      checkPutSeqExceptions(original, array.toList, false)
+      checkPutSeqExceptions(original, array.toIndexedSeq, false)
+      val d = original.mkDataArray(array.size); d.put(array); checkPutSeqExceptions(original, d.asReadOnly, false)
     }
 
     for (size <- original.size - maxCopyOffset until original.size) {
-      val src = genRandomSeq(original.metaManifest, original.rawType, size)
+      val src = genRandomSeq(original.formatManifest, original.rawType, size)
       val array = src.toArray(src.readManifest)
 
-      checkPutSeq(original, src, array)
-      checkPutSeq(original, src, array.toList)
-      checkPutSeq(original, src, array.toIndexedSeq)
+      checkPutSeq(original, src, array, true)
+      checkPutSeq(original, src, array.toList, false)
+      checkPutSeq(original, src, array.toIndexedSeq, false)
+      checkPutSeq(original, src, src.asReadOnly, false)
     }
   }
-  private def checkPutSeqExceptions[E <: Meta](original: inData[E], collection: Seq[E#Read]) {
+  private def checkPutSeqExceptions[F <: Meta](
+    original: inDataSeq[F, Raw], collection: Seq[F#Read], verifySource: Boolean
+  ) {
     assert(original.size == collection.size)
     val size = original.size
     
-    val backupCollection = collection.toList
+    val backupCollection = if (verifySource) collection.toIndexedSeq else null
     val dest = dupSeq1(original)
 
     {
       val (index, first, count) = (0, 0, 1)
       intercept[ReadOnlyBufferException] {
-        dest.asReadOnly().asInstanceOf[Data[E]].put(index, collection, first, count)
+        dest.asReadOnly().asInstanceOf[DataSeq[F, Raw]].put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
     
     {
@@ -185,7 +192,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -194,7 +201,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
   {
@@ -203,7 +210,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -212,7 +219,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -221,7 +228,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -230,7 +237,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -239,7 +246,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -248,7 +255,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
 
     {
@@ -257,7 +264,7 @@ object CopyTestUtil extends FunSuite {
         dest.put(index, collection, first, count)
       }
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
     
     // Corner cases
@@ -266,7 +273,7 @@ object CopyTestUtil extends FunSuite {
       dest.put(index, collection, first, count)
 
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
     
     {
@@ -274,11 +281,13 @@ object CopyTestUtil extends FunSuite {
       dest.put(index, collection, first, count)
 
       verify(dest.readOnlyBuffer, original.readOnlyBuffer)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
   }
-  private def checkPutSeq[E <: Meta](original: inData[E], src: inData[E], collection: Seq[E#Read]) {
-    val backupCollection = collection.toList
+  private def checkPutSeq[F <: Meta](
+    original: inDataSeq[F, Raw], src: inDataSeq[F, Raw], collection: Seq[F#Read], verifySource: Boolean
+  ) {
+    val backupCollection = if (verifySource) collection.toIndexedSeq else null
     
     for (
       index <- 0 to maxCopyOffset;
@@ -289,10 +298,10 @@ object CopyTestUtil extends FunSuite {
       dest.put(index, collection, first, count)
       testContent(original.components, dest, index, src, first, count)
       testTheRest(original.components, dest, index, original, count)
-      verify(collection, backupCollection)
+      if (verifySource) verify(collection, backupCollection)
     }
   }
-  private def verify[T](collection: Seq[T], backupCollection: List[T]) {
+  private def verify[T](collection: Seq[T], backupCollection: IndexedSeq[T]) {
     for ((u, v) <- collection zip backupCollection) {
       (u, v) match {
         case (a: Float, b: Float) => if (fx.isnan(a)) assert(fx.isnan(b)) else assert(a == b)
@@ -304,17 +313,17 @@ object CopyTestUtil extends FunSuite {
   }
 
 
-  private def putPrimitive[E <: Meta](original: inData[E]) {
+  private def putPrimitive[F <: Meta](original: inDataSeq[F, Raw]) {
     val size = original.size
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val random = genRandomSeq(original.metaManifest, original.rawType, size)
-      val src = random.asInstanceOf[ReadData[E]].primitives
+      val random = genRandomSeq(original.formatManifest, original.rawType, size)
+      val src = random.asInstanceOf[ReadDataSeq[F, Raw]].primitives
       val dest = dupSeq1(original)
 
       {
-        val wrongSrc = wrongType(src).asInstanceOf[ReadContiguous[E#Component, Raw]]
+        val wrongSrc = wrongType(src).asInstanceOf[ReadContiguous[F#Component, Raw]]
         val wrongSrcBackup = dupSeq2(wrongSrc)
         
         intercept[ClassCastException] {
@@ -330,7 +339,7 @@ object CopyTestUtil extends FunSuite {
       {
         val (index, first, stride, count) = (0, 0, dest.components, 1)
         intercept[ReadOnlyBufferException] {
-          dest.asReadOnly().asInstanceOf[Data[E]].put(index, src, first, stride, count)
+          dest.asReadOnly().asInstanceOf[DataSeq[F, Raw]].put(index, src, first, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
@@ -459,10 +468,10 @@ object CopyTestUtil extends FunSuite {
     
     for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (conversion) genRandomSeq(original.primitives.metaManifest, original.rawType, size)
+        if (conversion) genRandomSeq(original.primitives.formatManifest, original.rawType, size)
         else genRandomSeq(
-          original.primitives.metaManifest,
-          conversionType(original.primitives.metaManifest, original.rawType),
+          original.primitives.formatManifest,
+          conversionType(original.primitives.formatManifest, original.rawType),
           size
         )
 
@@ -487,12 +496,12 @@ object CopyTestUtil extends FunSuite {
     }
   }
 
-  private def putData[E <: Meta](original: inData[E]) {
+  private def putData[F <: Meta](original: inDataSeq[F, Raw]) {
     val size = original.size
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.metaManifest, original.rawType, size)
+      val src = genRandomSeq(original.formatManifest, original.rawType, size)
       val dest = dupSeq1(original)
 
       {
@@ -524,7 +533,7 @@ object CopyTestUtil extends FunSuite {
       {
         val (index, first, count) = (0, 0, 1)
         intercept[ReadOnlyBufferException] {
-          dest.asReadOnly().asInstanceOf[Data[E]].put(index, src, first, count)
+          dest.asReadOnly().asInstanceOf[DataSeq[F, Raw]].put(index, src, first, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
@@ -632,8 +641,8 @@ object CopyTestUtil extends FunSuite {
 
     for (size <- original.size - maxCopyOffset until original.size; conversion <- List(true, false)) {
       val src =
-        if (conversion) genRandomSeq(original.metaManifest, original.rawType, size)
-        else genRandomSeq(original.metaManifest, conversionType(original.metaManifest, original.rawType), size)
+        if (conversion) genRandomSeq(original.formatManifest, original.rawType, size)
+        else genRandomSeq(original.formatManifest, conversionType(original.formatManifest, original.rawType), size)
 
       val srcBackup = dupSeq2(src)
 
@@ -656,12 +665,12 @@ object CopyTestUtil extends FunSuite {
   }
 
 
-  private def wrongType[E <: Meta](s: inData[E]) :Data[E] = {
-    if (s.primitives.metaManifest == MetaManifest.SInt) {
-      genRandomSeq(MetaManifest.RFloat, RawType.RFloat, s.size).asInstanceOf[Data[E]]
+  private def wrongType[F <: Meta](s: inDataSeq[F, Raw]) :DataSeq[F, Raw] = {
+    if (s.primitives.formatManifest == PrimitiveFormat.SInt) {
+      genRandomSeq(PrimitiveFormat.RFloat, RawType.RFloat, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
     else {
-      genRandomSeq(MetaManifest.SInt, RawType.SInt, s.size).asInstanceOf[Data[E]]
+      genRandomSeq(PrimitiveFormat.SInt, RawType.SInt, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
   }
   private def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
@@ -714,9 +723,9 @@ object CopyTestUtil extends FunSuite {
     nb
   }
 
-  private[this] def dupSeq1[E <: Meta](seq: inData[E]) :Data[E] = dupSeqN(0, seq)
-  private[this] def dupSeq2[E <: Meta](seq: inData[E]) :Data[E] = dupSeqN(1, seq)
-  private[this] def dupSeqN[E <: Meta](id: Int, seq: inData[E]) :Data[E] = {
+  private[this] def dupSeq1[F <: Meta](seq: inDataSeq[F, Raw]) :DataSeq[F, Raw] = dupSeqN(0, seq)
+  private[this] def dupSeq2[F <: Meta](seq: inDataSeq[F, Raw]) :DataSeq[F, Raw] = dupSeqN(1, seq)
+  private[this] def dupSeqN[F <: Meta](id: Int, seq: inDataSeq[F, Raw]) :DataSeq[F, Raw] = {
     (seq match {
       case s: DataArray[_, _] =>
         val array = s.array match {
@@ -740,6 +749,6 @@ object CopyTestUtil extends FunSuite {
         val copy = s.mkDataView(buff, s.offset, s.stride)
         buff.put(s.rawBuffer)
         copy
-    }).asInstanceOf[Data[E]]
+    }).asInstanceOf[DataSeq[F, Raw]]
   }
 }

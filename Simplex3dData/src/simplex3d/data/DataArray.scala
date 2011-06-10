@@ -28,54 +28,54 @@ import scala.annotation.unchecked._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-trait ReadDataArray[E <: Meta, +R <: Raw]
-extends ReadDataSeq[E, R] with ReadContiguous[E, R] with Serializable {
-  type Read <: ReadDataArray[E, R]
+trait ReadDataArray[F <: Meta, +R <: Raw]
+extends ReadDataSeq[F, R] with ReadContiguous[F, R] with Serializable {
+  type Read <: ReadDataArray[F, R]
 
-  type PrimitiveSeq <: ReadDataArray[E#Component, R]
+  type PrimitiveSeq <: ReadDataArray[F#Component, R]
   type RawBuffer = Buffer
 }
 
-trait DataArray[E <: Meta, +R <: Raw]
-extends DataSeq[E, R] with Contiguous[E, R] with ReadDataArray[E, R] {
+trait DataArray[F <: Meta, +R <: Raw]
+extends DataSeq[F, R] with Contiguous[F, R] with ReadDataArray[F, R] {
   def array: R#Array = buff.array.asInstanceOf[R#Array]
-  type PrimitiveSeq = DataArray[E#Component, R @uncheckedVariance]
+  type PrimitiveSeq = DataArray[F#Component, R @uncheckedVariance]
 }
 
 
 object ReadDataArray {
-  def apply[E <: Meta, R <: Defined](da: ReadDataArray[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :ReadDataArray[E, R] = {
+  def apply[F <: Meta, R <: Defined](da: ReadDataArray[_, R])(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :ReadDataArray[F, R] = {
     val res = composition.mkDataArray(primitives.mkDataArray(da.sharedArray))
     if (da.isReadOnly) res.asReadOnly() else res
   }
 }
 
 object DataArray {
-  def apply[E <: Meta, R <: Defined](array: R#Array)(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :DataArray[E, R] = {
+  def apply[F <: Meta, R <: Defined](array: R#Array)(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(array))
   }
 
-  def apply[E <: Meta, R <: Defined](size: Int)(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :DataArray[E, R] = {
+  def apply[F <: Meta, R <: Defined](size: Int)(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(size*composition.components))
   }
 
-  def apply[E <: Meta, R <: Defined](vals: E#Read*)(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :DataArray[E, R] = {
+  def apply[F <: Meta, R <: Defined](vals: F#Read*)(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :DataArray[F, R] = {
     val data = composition.mkDataArray(primitives.mkDataArray(vals.size*composition.components))
     data.put(vals)
     data
   }
 
-  def apply[E <: Meta, R <: Defined](da: DataArray[_, R])(
-    implicit composition: CompositionFactory[E, _ >: R], primitives: PrimitiveFactory[E#Component, R]
-  ) :DataArray[E, R] = {
+  def apply[F <: Meta, R <: Defined](da: DataArray[_, R])(
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :DataArray[F, R] = {
     if (da.isReadOnly) throw new IllegalArgumentException(
       "The DataArray must not be read-only."
     )

@@ -79,19 +79,19 @@ object TestUtil extends FunSuite {
 
   def checkSubDataExceptions(seq: ReadDataSeq[_, _]) {
     intercept[IllegalArgumentException] {
-      seq.rawBufferSubData(-1, seq.size)
+      seq.bindingBufferSubData(-1, seq.size)
     }
 
     intercept[IllegalArgumentException] {
-      seq.rawBufferSubData(seq.size, seq.size)
+      seq.bindingBufferSubData(seq.size, seq.size)
     }
 
     intercept[IllegalArgumentException] {
-      seq.rawBufferSubData(0, -1)
+      seq.bindingBufferSubData(0, -1)
     }
 
     intercept[IllegalArgumentException] {
-      seq.rawBufferSubData(0, seq.size + 1)
+      seq.bindingBufferSubData(0, seq.size + 1)
     }
   }
 
@@ -260,7 +260,7 @@ object TestUtil extends FunSuite {
     }).asInstanceOf[T]
   }
 
-  private def mkPrimSeq[F <: Meta, R <: Raw](size: Int, descriptor: Descriptor[F, R]) = {
+  private def mkPrimSeq[F <: Format, R <: Raw](size: Int, descriptor: Descriptor[F, R]) = {
     (descriptor.componentManifest match {
       case PrimitiveFormat.SInt =>
         descriptor.rawType match {
@@ -296,42 +296,42 @@ object TestUtil extends FunSuite {
         }
     }).asInstanceOf[DataArray[F#Component, R]]
   }
-  def genRandomCollection[F <: Meta, R <: Raw](
+  def genRandomCollection[F <: Format, R <: Raw](
     size: Int, descriptor: Descriptor[F, R]
-  ) :(Array[F#Read], Buffer) = {
-    val array = descriptor.readManifest.newArray(size).asInstanceOf[Array[F#Read]]
+  ) :(Array[F#Meta#Read], Buffer) = {
+    val array = readManifest(descriptor.metaManifest).newArray(size).asInstanceOf[Array[F#Meta#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
     val localSrc = new java.util.Random(seed)
 
     var i = 0; while (i < array.length) {
-      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Read]
+      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Meta#Read]
       i += 1
     }
 
     localSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Read]
+      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Meta#Read]
       i += 1
     }
 
     (array, seq.buffer)
   }
 
-  private def RandomDataArray[F <: Meta, R <: Raw](size: Int)(
+  private def RandomDataArray[F <: Format, R <: Raw](size: Int)(
     implicit composition: CompositionFactory[F, _ >: R],
     primitives: DataFactory[F#Component, R],
     descriptor: Descriptor[F, R]
   ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(genRandomArray(size*descriptor.components, descriptor)))
   }
-  def genRandomSeq(size: Int) :DataSeq[_ <: Meta, Raw] = {
+  def genRandomSeq(size: Int) :DataSeq[_ <: Format, Raw] = {
     genRandomSeq(None, None, size)
   }
   def genRandomSeq(
-    manifest: Option[ClassManifest[_ <: Meta]], rawType: Option[Int], size: Int
-  ) :Contiguous[_ <: Meta, Raw] = {
+    manifest: Option[ClassManifest[_ <: Format]], rawType: Option[Int], size: Int
+  ) :Contiguous[_ <: Format, Raw] = {
     val m = manifest match {
       case Some(man) =>
         man
@@ -380,7 +380,7 @@ object TestUtil extends FunSuite {
       genRandomSeq(m, r, size)
   }
   
-  def genRandomSeq[F <: Meta](manifest: ClassManifest[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
+  def genRandomSeq[F <: Format](manifest: ClassManifest[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
     (manifest match {
       case PrimitiveFormat.SInt => rawType match {
         case SByte => RandomDataArray[SInt, SByte](size)
@@ -510,7 +510,7 @@ object TestUtil extends FunSuite {
     }).asInstanceOf[Contiguous[F, Raw]]
   }
   
-  final def testContent[F <: Meta](
+  final def testContent[F <: Format](
     components: Int,
     dest: inDataSeq[F, Raw], destFirst: Int,
     src: inDataSeq[F, Raw], srcFirst: Int,
@@ -523,7 +523,7 @@ object TestUtil extends FunSuite {
       count
     )
   }
-  final def testContent[F <: Meta](
+  final def testContent[F <: Format](
     components: Int,
     dest: inDataSeq[F, Raw], destFirst: Int,
     src: inDataSeq[F#Component, Raw], srcFirst: Int, srcStride: Int,
@@ -557,7 +557,7 @@ object TestUtil extends FunSuite {
   }
   
   // Test that remaining memory not tested by testContent is unmodified.
-  final def testTheRest[F <: Meta](
+  final def testTheRest[F <: Format](
     components: Int,
     dest: inDataSeq[F, Raw], destFirst: Int,
     original: inDataSeq[F, Raw],
@@ -673,7 +673,7 @@ object TestUtil extends FunSuite {
     }
   }
   
-  def convert[F <: Meta](src: inDataSeq[F, Raw], rawType: Int) :Contiguous[F, Raw] = {
+  def convert[F <: Format](src: inDataSeq[F, Raw], rawType: Int) :Contiguous[F, Raw] = {
     val factory = genRandomSeq(src.formatManifest, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
@@ -778,5 +778,24 @@ object TestUtil extends FunSuite {
       }
       case RDouble => true
     }
+  }
+  
+  final def readManifest[M <: Meta](m: ClassManifest[M]) :ClassManifest[M#Read] = {
+    (m match {
+      case PrimitiveFormat.SInt => Manifest.Int
+      case PrimitiveFormat.RFloat => Manifest.Float
+      case PrimitiveFormat.RDouble => Manifest.Double
+      case Vec2i.Manifest => Vec2i.ReadManifest
+      case Vec3i.Manifest => Vec3i.ReadManifest
+      case Vec4i.Manifest => Vec4i.ReadManifest
+      case Vec2f.Manifest => Vec2f.ReadManifest
+      case Vec3f.Manifest => Vec3f.ReadManifest
+      case Vec4f.Manifest => Vec4f.ReadManifest
+      case Mat2x3f.Manifest => Mat2x3f.ReadManifest
+      case Vec2d.Manifest => Vec2d.ReadManifest
+      case Vec3d.Manifest => Vec3d.ReadManifest
+      case Vec4d.Manifest => Vec4d.ReadManifest
+      case Mat2x3d.Manifest => Mat2x3d.ReadManifest
+    }).asInstanceOf[ClassManifest[M#Read]]
   }
 }

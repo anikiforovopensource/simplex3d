@@ -36,11 +36,11 @@ private[data] abstract class BaseRDouble[+R <: DefinedDouble](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends AbstractData[RDouble, Double, Double, R](shared, prim, ro, off, str)
-with CompositionFactory[RDouble, DefinedDouble]
+extends AbstractData[Double, Double](shared, prim, ro, off, str)
+with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
 {
   final def formatManifest = PrimitiveFormat.RDouble
-  final def readManifest = Manifest.Double
+  final def metaManifest = PrimitiveFormat.RDouble
   final def components: Int = 1
 
   final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[RDouble, P])

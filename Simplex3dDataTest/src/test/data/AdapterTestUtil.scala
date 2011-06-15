@@ -35,13 +35,13 @@ import AttributeTestUtil._
 object AdapterTestUtil extends FunSuite {
 
   def testAdapter[F <: CompositeFormat, B <: Defined](adapter: DataAdapter[F, B])(
-    sample: F#Read, sampleData: DataArray[F#Component, Raw]
+    sample: F#Meta#Read, sampleData: DataArray[F#Component, Raw]
   )(implicit attribs: AdapterAttrib[F, B])
   {
     // Test attributes.
     assert(adapter.components == attribs.components)
     assert(adapter.formatManifest == attribs.formatManifest)
-    assert(adapter.readManifest == attribs.readManifest)
+    assert(adapter.metaManifest == attribs.metaManifest)
     assert(adapter.boundManifest == attribs.boundManifest)
 
     // Test make.
@@ -54,7 +54,7 @@ object AdapterTestUtil extends FunSuite {
       ).asInstanceOf[ReadDataArray[F#Component, R]]
 
       val descriptor = Descriptor[F, R](
-        attribs.formatManifest, attribs.componentManifest, attribs.readManifest,
+        attribs.formatManifest, attribs.componentManifest, attribs.metaManifest,
         attribs.components, original.rawType, original.isNormalized
       )
 
@@ -185,9 +185,9 @@ object AdapterTestUtil extends FunSuite {
   }
 }
 
-case class AdapterAttrib[F <: Meta, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
+case class AdapterAttrib[F <: Format, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
   val formatManifest: ClassManifest[F],
-  val readManifest: ClassManifest[F#Read],
+  val metaManifest: ClassManifest[F#Meta],
   val boundManifest: Manifest[B],
   val componentManifest: ClassManifest[F#Component]
 )

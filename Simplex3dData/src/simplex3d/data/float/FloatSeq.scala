@@ -36,11 +36,11 @@ private[data] abstract class BaseRFloat[+R <: DefinedFloat](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends AbstractData[RFloat, Float, Float, R](shared, prim, ro, off, str)
-with CompositionFactory[RFloat, DefinedFloat]
+extends AbstractData[Float, Float](shared, prim, ro, off, str)
+with DataSeq[RFloat, R] with CompositionFactory[RFloat, DefinedFloat]
 {
   final def formatManifest = PrimitiveFormat.RFloat
-  final def readManifest = Manifest.Float
+  final def metaManifest = PrimitiveFormat.RFloat
   final def components: Int = 1
   
   final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[RFloat, P])

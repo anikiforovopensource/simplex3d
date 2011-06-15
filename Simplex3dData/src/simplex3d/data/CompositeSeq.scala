@@ -31,10 +31,11 @@ import scala.annotation.unchecked._
 abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
   prim: ReadContiguous[F#Component, R],
   off: Int, str: Int
-) extends AbstractData[F, F#Const, F#Read, R](
+) extends AbstractData[F#Meta#Const, F#Meta#Read](
   prim.sharedStore, prim, prim.isReadOnly,
   off, str
-) with CompositionFactory[F, B] {
+) with DataSeq[F, R] with CompositionFactory[F, B] {
+  
   final def rawType = primitives.rawType
   final def isNormalized: Boolean = primitives.isNormalized
 

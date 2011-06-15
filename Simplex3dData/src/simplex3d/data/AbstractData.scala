@@ -33,21 +33,20 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AbstractData[
-  F <: Meta,
   @specialized(Int, Float, Double) ReadAs <: WriteAs,
-  @specialized(Int, Float, Double) WriteAs,
-  +R <: Raw
+  @specialized(Int, Float, Double) WriteAs
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadAbstractData[F, ReadAs, R](
+) extends ReadAbstractData[ReadAs](
   shared, prim, ro,
   off, str
-) with Batch[WriteAs] {
+) {
 
-  type PrimitiveSeq <: Contiguous[F#Component, R]
+  type PrimitiveSeq <: Contiguous[Format#Component, Raw]
 
-  final def buffer() :R#Buffer = Util.duplicateBuff(storeType, buff).asInstanceOf[R#Buffer]
+  
+  final def buffer() :Raw#Buffer = Util.duplicateBuff(storeType, buff).asInstanceOf[Raw#Buffer]
 
   override def apply(i: Int) :ReadAs
   def update(i: Int, v: WriteAs)
@@ -62,7 +61,7 @@ abstract class AbstractData[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[AbstractData[_ <: Meta, Int, Int, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[Int, Int]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -78,7 +77,7 @@ abstract class AbstractData[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[AbstractData[_ <: Meta, Float, Float, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[Float, Float]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -94,7 +93,7 @@ abstract class AbstractData[
       b.put(array, first, count)
     }
     else {
-      val t = this.asInstanceOf[AbstractData[_ <: Meta, Double, Double, _ <: Raw]]
+      val t = this.asInstanceOf[AbstractData[Double, Double]]
       var i = 0; while (i < count) {
         t(i + index) = array(i + first)
         i += 1
@@ -138,22 +137,22 @@ abstract class AbstractData[
     src match {
       case wrapped: WrappedArray[_] => wrapped.elemManifest match {
         case Manifest.Int =>
-          if (readManifest != Manifest.Int) throw new ClassCastException(
-            "Seq[Int] cannot be cast to Seq[" + readManifest + "]."
+          if (metaManifest != PrimitiveFormat.SInt) throw new ClassCastException(
+            "Seq[Int] cannot be cast to Seq[" + metaManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Int]], first, count
           )
         case Manifest.Float =>
-          if (readManifest != Manifest.Float) throw new ClassCastException(
-            "Seq[Float] cannot be cast to Seq[" + readManifest + "]."
+          if (metaManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
+            "Seq[Float] cannot be cast to Seq[" + metaManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Float]], first, count
           )
         case Manifest.Double =>
-          if (readManifest != Manifest.Double) throw new ClassCastException(
-            "Seq[Double] cannot be cast to Seq[" + readManifest + "]."
+          if (metaManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
+            "Seq[Double] cannot be cast to Seq[" + metaManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Double]], first, count
@@ -165,8 +164,8 @@ abstract class AbstractData[
       }
       case ds: ReadDataSeq[_, _]
       if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) => {
-        val dsf = ds.asInstanceOf[ReadDataSeq[F, Raw]]
-        put(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
+        val dsf = ds.asInstanceOf[ReadDataSeq[Format, Raw]]
+        putImpl(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
       }
       case is: IndexedSeq[_] => {
         putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
@@ -190,9 +189,9 @@ abstract class AbstractData[
   }
 
 
-  final def put(
+  private[data] final def putImpl(
     index: Int,
-    src: inContiguous[F#Component, Raw],
+    src: inContiguous[Format#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
     def group(rawType: Int) = {
@@ -207,9 +206,9 @@ abstract class AbstractData[
       }
     }
 
-    if ((primitives.readManifest ne src.readManifest) && (primitives.readManifest != src.readManifest))
+    if ((primitives.metaManifest ne src.metaManifest) && (primitives.metaManifest != src.metaManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.readManifest + "] cannot be cast to DataSeq[" + primitives.readManifest + "]."
+        "DataSeq[" + src.metaManifest + "] cannot be cast to DataSeq[" + primitives.metaManifest + "]."
       )
 
     if (isReadOnly) throw new ReadOnlyBufferException()
@@ -318,40 +317,5 @@ abstract class AbstractData[
           )
       }
     }
-  }
-
-  final def put(index: Int, src: inContiguous[F#Component, Raw]) {
-    put(index, src, 0, components, src.size/components)
-  }
-
-  final def put(src: inContiguous[F#Component, Raw]) {
-    put(0, src, 0, components, src.size/components)
-  }
-
-  final def put(index: Int, src: inDataSeq[F, Raw], first: Int, count: Int) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
-      throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
-      )
-
-    put(index, src.primitives, src.offset + first*src.stride, src.stride, count)
-  }
-
-  final def put(index: Int, src: inDataSeq[F, Raw]) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
-      throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
-      )
-
-    put(index, src.primitives, src.offset, src.stride, src.size)
-  }
-
-  final def put(src: inDataSeq[F, Raw]) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
-      throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
-      )
-
-    put(0, src.primitives, src.offset, src.stride, src.size)
   }
 }

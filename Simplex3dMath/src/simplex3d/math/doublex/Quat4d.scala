@@ -179,13 +179,16 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
-extends ReadQuat4d with CompositeFormat with Implicits[On]
+extends ReadQuat4d with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadQuat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Read = ReadQuat4d
+  
+  type Meta = Quat4d
   type Component = RDouble
+  
   type Clone = Quat4d
   override def clone() = Quat4d(this)
   def :=(q: ConstQuat4d) { this := q.asInstanceOf[inQuat4d] }

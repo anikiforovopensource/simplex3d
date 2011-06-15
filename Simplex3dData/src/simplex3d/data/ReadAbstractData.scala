@@ -22,7 +22,6 @@ package simplex3d.data
 
 import java.nio._
 import scala.annotation._
-import scala.annotation.unchecked._
 import scala.collection._
 import StoreType._
 
@@ -31,11 +30,12 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ReadAbstractData[
-  F <: Meta, @specialized(Int, Float, Double) ReadAs, +R <: Raw
+  @specialized(Int, Float, Double) ReadAs
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends ProtectedData[R#Array @uncheckedVariance](shared) with DataFactory[F, R] with ReadBatch[ReadAs] {
+) extends ProtectedData(shared) with DataSrc
+with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   // Argument checks.
   assert(components >= 1)
@@ -61,7 +61,7 @@ abstract class ReadAbstractData[
   
   protected final val storeType = storeFromRaw(rawType)
 
-  private[data] final val buff: R#Buffer = {
+  private[data] final val buff: Raw#Buffer = {
     if (prim != null) {
       primitives.buff
     }
@@ -84,9 +84,9 @@ abstract class ReadAbstractData[
         Util.wrapBuffer(storeType, byteBuffer)
       }
       else {
-        val buff = Util.wrapArray(storeType, sharedArray)
+        val buff = Util.wrapArray(storeType, sharedStore.asInstanceOf[Raw#Array])
         if (ro) Util.readOnlyBuff(storeType, buff) else buff
-      }).asInstanceOf[R#Buffer]
+      }).asInstanceOf[Raw#Buffer]
     }
   }
   
@@ -104,15 +104,22 @@ abstract class ReadAbstractData[
   final def length = size
   final def isCached = true
 
+  
   // Type definitions.
-  type PrimitiveSeq <: ReadContiguous[F#Component, R]
+  type Format <: simplex3d.data.Format
+  type Raw <: simplex3d.data.Raw
+  
+  type PrimitiveSeq <: ReadContiguous[Format#Component, Raw]
 
+  
   // Public API.
   def rawType: Int
   def components: Int
-  def formatManifest: ClassManifest[F]
-  def readManifest: ClassManifest[F#Read]
   def isNormalized: Boolean
+  
+  def formatManifest: ClassManifest[Format]
+  def metaManifest: ClassManifest[Format#Meta]
+  
 
   final val bytesPerComponent = RawType.byteLength(rawType)
   final def byteCapacity = {
@@ -124,13 +131,13 @@ abstract class ReadAbstractData[
 
 
   final def isReadOnly: Boolean = buff.isReadOnly()
-  final def sharesStoreObject(seq: inDataSeq[_, _]) :Boolean = {
+  final def sharesStoreObject(seq: inData[_]) :Boolean = {
     sharedStore eq seq.sharedStore
   }
 
   def apply(i: Int) :ReadAs
 
-  final def readOnlyBuffer() :R#Buffer = Util.readOnlyBuff(storeType, buff).asInstanceOf[R#Buffer]
+  final def readOnlyBuffer() :Raw#Buffer = Util.readOnlyBuff(storeType, buff).asInstanceOf[Raw#Buffer]
   
 
   private[data] def mkReadOnlyInstance() :Read
@@ -149,13 +156,13 @@ abstract class ReadAbstractData[
     }
   }
 
-  final def rawBuffer() :RawBuffer = {
+  final def bindingBuffer() :BindingBuffer = {
     val buff = binding()
     buff.limit(buff.capacity)
     buff.position(0)
-    buff.asInstanceOf[RawBuffer]
+    buff.asInstanceOf[BindingBuffer]
   }
-  final def rawBufferWithOffset() :RawBuffer = {
+  final def bindingBufferWithOffset() :BindingBuffer = {
     val buff = binding()
 
     if (buff.isDirect) {
@@ -166,9 +173,9 @@ abstract class ReadAbstractData[
       buff.position(offset)
     }
 
-    buff.asInstanceOf[RawBuffer]
+    buff.asInstanceOf[BindingBuffer]
   }
-  final def rawBufferSubData(first: Int, count: Int) :RawBuffer = {
+  final def bindingBufferSubData(first: Int, count: Int) :BindingBuffer = {
     val buff = binding()
 
     if (buff.isDirect) {
@@ -184,19 +191,7 @@ abstract class ReadAbstractData[
       buff.position(off)
     }
 
-    buff.asInstanceOf[RawBuffer]
-  }
-
-
-  final def copyAsDataArray() :DataArray[F, R] = {
-    val copy = mkDataArray(size)
-    copy.put(0, primitives, this.offset, this.stride, size)
-    copy
-  }
-  final def copyAsDataBuffer() :DataBuffer[F, R] = {
-    val copy = mkDataBuffer(size)
-    copy.put(0, primitives, this.offset, this.stride, size)
-    copy
+    buff.asInstanceOf[BindingBuffer]
   }
 
 

@@ -144,13 +144,16 @@ object ConstVec2b {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with CompositeFormat with Implicits[On]
+extends ReadVec2b with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadVec2b] with Serializable
 {
   px = cx; py = cy
 
   type Read = ReadVec2b
+
+  type Meta = Vec2b
   type Component = Bool
+
   type Clone = Vec2b
   override def clone() = Vec2b(this)
   def :=(u: ConstVec2b) { this := u.asInstanceOf[inVec2b] }

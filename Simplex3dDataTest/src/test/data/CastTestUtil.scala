@@ -41,7 +41,7 @@ import AttributeTestUtil._
  */
 object CastTestUtil extends FunSuite {
 
-  def testArrayCast[F <: Meta, R <: Raw](
+  def testArrayCast[F <: Format, R <: Raw](
     factory: (R#Array) => DataArray[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     for (size <- 0 to 9) {
@@ -61,7 +61,7 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToArray[F <: Meta, R <: Raw](
+  private def testCastToArray[F <: Format, R <: Raw](
     original: ReadDataArray[_, _],
     cast: ReadDataArray[F, R],
     readOnly: Boolean,
@@ -664,7 +664,7 @@ object CastTestUtil extends FunSuite {
   }
 
 
-  def testBufferCast[F <: Meta, R <: Raw](
+  def testBufferCast[F <: Format, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
 
@@ -1157,7 +1157,7 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToBuffer[F <: Meta, R <: Raw](
+  private def testCastToBuffer[F <: Format, R <: Raw](
     original: DataBuffer[_, _],
     factory: (DataBuffer[_, _]) => DataBuffer[F, R],
     bytes: ByteBuffer
@@ -1170,7 +1170,7 @@ object CastTestUtil extends FunSuite {
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]]) }
   }
   
-  private def testCastToReadBuffer[F <: Meta, R <: Raw](
+  private def testCastToReadBuffer[F <: Format, R <: Raw](
     original: ReadDataBuffer[_, _],
     factory: (ReadDataBuffer[_, _]) => ReadDataBuffer[F, R],
     bytes: ByteBuffer
@@ -1192,7 +1192,7 @@ object CastTestUtil extends FunSuite {
     }
   }
 
-  private def testCastToView[F <: Meta, R <: Raw](
+  private def testCastToView[F <: Format, R <: Raw](
     original: DataBuffer[_, _],
     factory: (DataBuffer[_, _], Int, Int) => DataView[F, R],
     bytes: ByteBuffer
@@ -1212,7 +1212,7 @@ object CastTestUtil extends FunSuite {
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]], 0, 1) }
   }
 
-  private def testCastToReadView[F <: Meta, R <: Raw](
+  private def testCastToReadView[F <: Format, R <: Raw](
     original: ReadDataBuffer[_, Raw],
     factory: (ReadDataBuffer[_, _], Int, Int) => ReadDataView[F, R],
     bytes: ByteBuffer

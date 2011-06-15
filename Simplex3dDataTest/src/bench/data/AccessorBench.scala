@@ -102,7 +102,7 @@ object AccessorBench {
     println("\nResults:")
     println("Simple time: " + testSimpleTime + ".")
     println("Inlined time: " + testInlinedTime + ".")
-    println("rawBuffer time: " + testRawBufferTime + ".")
+    println("bindingBuffer time: " + testRawBufferTime + ".")
     println("buffer time: " + testBufferTime + ".")
   }
 
@@ -144,7 +144,7 @@ object AccessorBench {
     var answer = 0
 
     var l = 0; while (l < loops) {
-      answer += seq.rawBuffer.capacity
+      answer += seq.bindingBuffer.capacity
       
       l += 1
     }

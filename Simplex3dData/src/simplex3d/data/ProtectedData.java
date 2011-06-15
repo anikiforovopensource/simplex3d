@@ -28,7 +28,7 @@ import java.nio.*;
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class ProtectedData<A> {
+abstract class ProtectedData {
     final Object sharedStore;
 
     ProtectedData(Object shared) {
@@ -38,11 +38,6 @@ abstract class ProtectedData<A> {
         else {
             this.sharedStore = shared;
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    final A sharedArray() {
-        return (A) sharedStore;
     }
 
     final ByteBuffer sharedBuffer() {

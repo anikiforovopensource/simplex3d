@@ -27,28 +27,31 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataView[F <: Meta, +R <: Raw]
-extends ReadDataSeq[F, R] {
+sealed trait DirectStore
+
+
+trait ReadDataView[F <: Format, +R <: Raw]
+extends ReadDataSeq[F, R] with DirectStore {
   type Read <: ReadDataView[F, R]
 
   type PrimitiveSeq <: ReadDataBuffer[F#Component, R]
-  type RawBuffer = ByteBuffer
+  type BindingBuffer = ByteBuffer
 }
 
-trait DataView[F <: Meta, +R <: Raw]
+trait DataView[F <: Format, +R <: Raw]
 extends DataSeq[F, R] with ReadDataView[F, R] {
   type PrimitiveSeq = DataBuffer[F#Component, R @uncheckedVariance]
 }
 
 
 object ReadDataView {
-  def apply[F <: Meta, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
+  def apply[F <: Format, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadDataView[F, R] = {
     composition.mkReadDataView(primitives.mkReadDataBuffer(buffer), offset, stride)
   }
 
-  def apply[F <: Meta, R <: Defined](db: inDataBuffer[_, _], offset: Int, stride: Int)(
+  def apply[F <: Format, R <: Defined](db: inDataBuffer[_, _], offset: Int, stride: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadDataView[F, R] = {
     val res = composition.mkReadDataView(primitives.mkReadDataBuffer(db.sharedBuffer), offset, stride)
@@ -57,13 +60,13 @@ object ReadDataView {
 }
 
 object DataView {
-  def apply[F <: Meta, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
+  def apply[F <: Format, R <: Defined](buffer: ByteBuffer, offset: Int, stride: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataView[F, R] = {
     composition.mkDataView(primitives.mkDataBuffer(buffer), offset, stride)
   }
 
-  def apply[F <: Meta, R <: Defined](db: DataBuffer[_, _], offset: Int, stride: Int)(
+  def apply[F <: Format, R <: Defined](db: DataBuffer[_, _], offset: Int, stride: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataView[F, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(

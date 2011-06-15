@@ -47,6 +47,7 @@ private[data] class PrimitiveRDouble(val rawType: Int) extends SerializablePrimi
 
 @SerialVersionUID(8104346712419693669L)
 private[data] class CompositeRDouble(val components: Int) extends SerializableComposite with Serializable {
+  
   protected def toReadDataArray(
     primitives: ReadDataArray[_ <: PrimitiveFormat, _]
   ): ReadDataArray[_ <: CompositeFormat, _] = {

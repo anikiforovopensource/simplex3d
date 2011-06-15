@@ -33,12 +33,13 @@ import simplex3d.data._
 @SerialVersionUID(8104346712419693669L)
 abstract class DataAdapter[F <: CompositeFormat, B <: Defined](final val components: Int)(implicit
   final val formatManifest: ClassManifest[F],
-  final val readManifest: ClassManifest[F#Read],
+  final val metaManifest: ClassManifest[F#Meta],
   final val boundManifest: Manifest[B]
 )
 extends CompositionFactory[F, B] with Serializable {
-  def apply(primitives: inContiguous[F#Component, Raw], j: Int) :F#Const
-  def update(primitives: outContiguous[F#Component, Raw], j: Int, value: F#Read) :Unit
+  
+  def apply(primitives: inContiguous[F#Component, Raw], j: Int) :F#Meta#Const
+  def update(primitives: outContiguous[F#Component, Raw], j: Int, value: F#Meta#Read) :Unit
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
   :ReadDataArray[F, P] = {

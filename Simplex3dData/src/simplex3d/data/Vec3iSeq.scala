@@ -33,7 +33,7 @@ private[data] abstract class BaseVec3i[+R <: DefinedInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3i, R, DefinedInt](prim, off, str) {
   final def formatManifest = Vec3i.Manifest
-  final def readManifest = Vec3i.ReadManifest
+  final def metaManifest = Vec3i.Manifest
   final def components: Int = 3
 
   final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec3i#Component, P])

@@ -460,7 +460,7 @@ final class Mat3x4f private[math] (
   c02: Float, c12: Float, c22: Float,
   c03: Float, c13: Float, c23: Float
 )
-extends ReadMat3x4f with CompositeFormat with Implicits[On]
+extends ReadMat3x4f with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat3x4f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
@@ -469,7 +469,10 @@ with PropertyRef[ReadMat3x4f] with Serializable
   p03 = c03; p13 = c13; p23 = c23
 
   type Read = ReadMat3x4f
+
+  type Meta = Mat3x4f
   type Component = RFloat
+
   type Clone = Mat3x4f
   override def clone() = Mat3x4f(this)
   def :=(u: ConstMat3x4f) { this := u.asInstanceOf[inMat3x4f] }

@@ -334,7 +334,7 @@ final class Mat2x3d private[math] (
   c01: Double, c11: Double,
   c02: Double, c12: Double
 )
-extends ReadMat2x3d with CompositeFormat with Implicits[On]
+extends ReadMat2x3d with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat2x3d] with Serializable
 {
   p00 = c00; p10 = c10
@@ -342,7 +342,10 @@ with PropertyRef[ReadMat2x3d] with Serializable
   p02 = c02; p12 = c12
 
   type Read = ReadMat2x3d
+
+  type Meta = Mat2x3d
   type Component = RDouble
+
   type Clone = Mat2x3d
   override def clone() = Mat2x3d(this)
   def :=(u: ConstMat2x3d) { this := u.asInstanceOf[inMat2x3d] }

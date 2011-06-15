@@ -30,7 +30,7 @@ import simplex3d.math._
 package object data {
 
   private[this] final def primitiveFactory[R <: DefinedInt](f: PrimitiveFactory[SInt, R]) = f
-  private[this] final def factory[F <: Meta](f: CompositionFactory[F, DefinedInt]) = f
+  private[this] final def factory[F <: Format](f: CompositionFactory[F, DefinedInt]) = f
   private[this] final val default = new ArraySIntSInt
 
   // SInt
@@ -48,10 +48,13 @@ package object data {
   implicit final val FactoryVec4i = factory[Vec4i](new ArrayVec4i(default))
 
 
-  type Format = integration.Format
-  type CompressedFormat = integration.CompressedFormat
+  type FormatBound[F <: Format] = DataSrc { type Format <: F }
+  type MetaBound[E <: Meta] = DataSrc { type Format <: simplex3d.data.Format { type Meta <: E } }
+
   type Meta = integration.Meta
+  type Format = integration.Format
   type PrimitiveFormat = integration.PrimitiveFormat
+  type Compressed = integration.Compressed
   type CompositeFormat = integration.CompositeFormat
   val PrimitiveFormat = integration.PrimitiveFormat
   type Raw = integration.Raw
@@ -79,31 +82,31 @@ package object data {
   type RDouble = integration.RDouble
 
 
-  type inBatch[E] = ReadBatch[E]
-  type outBatch[E] = Batch[E]
+  type inData[E <: Meta] = ReadData[E]
+  type outData[E <: Meta] = Data[E]
   
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   type outIndex = outIndexSeq[Unsigned]
   
-  type RawView = ReadDataView[_ <: Meta, Raw]
+  type RawView = ReadDataView[_ <: Format, Raw]
 
-  type inDataSeq[F <: Meta, +R <: Raw] = ReadDataSeq[F, R]
-  type inContiguous[F <: Meta, +R <: Raw] = ReadContiguous[F, R]
-  type inDataArray[F <: Meta, +R <: Raw] = ReadDataArray[F, R]
-  type inDataBuffer[F <: Meta, +R <: Raw] = ReadDataBuffer[F, R]
-  type inDataView[F <: Meta, +R <: Raw] = ReadDataView[F, R]
+  type inDataSeq[F <: Format, +R <: Raw] = ReadDataSeq[F, R]
+  type inContiguous[F <: Format, +R <: Raw] = ReadContiguous[F, R]
+  type inDataArray[F <: Format, +R <: Raw] = ReadDataArray[F, R]
+  type inDataBuffer[F <: Format, +R <: Raw] = ReadDataBuffer[F, R]
+  type inDataView[F <: Format, +R <: Raw] = ReadDataView[F, R]
 
   type inIndexSeq[+R <: Unsigned] = ReadIndexSeq[R]
   type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
-  type outDataSeq[F <: Meta, +R <: Raw] = DataSeq[F, R]
-  type outContiguous[F <: Meta, +R <: Raw] = Contiguous[F, R]
-  type outDataArray[F <: Meta, +R <: Raw] = DataArray[F, R]
-  type outDataBuffer[F <: Meta, +R <: Raw] = DataBuffer[F, R]
-  type outDataView[F <: Meta, +R <: Raw] = DataView[F, R]
+  type outDataSeq[F <: Format, +R <: Raw] = DataSeq[F, R]
+  type outContiguous[F <: Format, +R <: Raw] = Contiguous[F, R]
+  type outDataArray[F <: Format, +R <: Raw] = DataArray[F, R]
+  type outDataBuffer[F <: Format, +R <: Raw] = DataBuffer[F, R]
+  type outDataView[F <: Format, +R <: Raw] = DataView[F, R]
 
   type outIndexSeq[+R <: Unsigned] = IndexSeq[R]
   type outIndexArray[+R <: Unsigned] = IndexArray[R]
@@ -135,8 +138,8 @@ package object data {
 
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2]
@@ -149,9 +152,9 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -166,10 +169,10 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -188,11 +191,11 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -213,12 +216,12 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -241,13 +244,13 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -272,14 +275,14 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw,
-    E8 <: Meta, R8 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw,
+    E8 <: Format, R8 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -306,15 +309,15 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw,
-    E8 <: Meta, R8 <: Raw,
-    E9 <: Meta, R9 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw,
+    E8 <: Format, R8 <: Raw,
+    E9 <: Format, R9 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -343,16 +346,16 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw,
-    E8 <: Meta, R8 <: Raw,
-    E9 <: Meta, R9 <: Raw,
-    E10 <: Meta, R10 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw,
+    E8 <: Format, R8 <: Raw,
+    E9 <: Format, R9 <: Raw,
+    E10 <: Format, R10 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -383,17 +386,17 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw,
-    E8 <: Meta, R8 <: Raw,
-    E9 <: Meta, R9 <: Raw,
-    E10 <: Meta, R10 <: Raw,
-    E11 <: Meta, R11 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw,
+    E8 <: Format, R8 <: Raw,
+    E9 <: Format, R9 <: Raw,
+    E10 <: Format, R10 <: Raw,
+    E11 <: Format, R11 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -426,18 +429,18 @@ package object data {
   }
 
   def interleave[
-    E1 <: Meta, R1 <: Raw,
-    E2 <: Meta, R2 <: Raw,
-    E3 <: Meta, R3 <: Raw,
-    E4 <: Meta, R4 <: Raw,
-    E5 <: Meta, R5 <: Raw,
-    E6 <: Meta, R6 <: Raw,
-    E7 <: Meta, R7 <: Raw,
-    E8 <: Meta, R8 <: Raw,
-    E9 <: Meta, R9 <: Raw,
-    E10 <: Meta, R10 <: Raw,
-    E11 <: Meta, R11 <: Raw,
-    E12 <: Meta, R12 <: Raw
+    E1 <: Format, R1 <: Raw,
+    E2 <: Format, R2 <: Raw,
+    E3 <: Format, R3 <: Raw,
+    E4 <: Format, R4 <: Raw,
+    E5 <: Format, R5 <: Raw,
+    E6 <: Format, R6 <: Raw,
+    E7 <: Format, R7 <: Raw,
+    E8 <: Format, R8 <: Raw,
+    E9 <: Format, R9 <: Raw,
+    E10 <: Format, R10 <: Raw,
+    E11 <: Format, R11 <: Raw,
+    E12 <: Format, R12 <: Raw
   ](
     seq1: inDataSeq[E1, R1],
     seq2: inDataSeq[E2, R2],
@@ -533,7 +536,7 @@ package object data {
 
     i = 0; while (i < dataSeqs.length) {
 
-      type T = F forSome { type F <: Meta }
+      type T = F forSome { type F <: Format }
       val seq = dataSeqs(order(i)).asInstanceOf[DataSeq[T, Raw]]
       val view = seq.mkDataView(
         byteBuffer,

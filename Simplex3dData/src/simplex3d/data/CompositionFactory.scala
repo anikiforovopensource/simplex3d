@@ -24,10 +24,10 @@ package simplex3d.data
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait CompositionFactory[F <: Meta, B <: Defined] {
+trait CompositionFactory[F <: Format, B <: Defined] {
   def components: Int
   def formatManifest: ClassManifest[F]
-  def readManifest: ClassManifest[F#Read]
+  def metaManifest: ClassManifest[F#Meta]
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P]) :ReadDataArray[F, P]
   def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P]) :ReadDataBuffer[F, P]

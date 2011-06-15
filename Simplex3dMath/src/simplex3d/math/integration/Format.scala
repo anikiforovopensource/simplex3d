@@ -24,50 +24,60 @@ import java.nio
 import scala.reflect.ClassManifest.{classType}
 
 
-/** <code>Meta</code> is used to integrate the math package with buffers.
+/** <code>Meta</code> declares distinct types for reading and writing data.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait Format
-trait CompressedFormat extends Format
-
-
-/** <code>Meta</code> indicates format that can be decoded at runtime.
- *
- * @author Aleksey Nikiforov (lex)
- */
-sealed trait Meta extends Format {
+trait Meta {
   type Read
   type Const <: Read
+}
+
+/** <code>Format</code> indicates format.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+sealed trait Format {
+  type Meta <: simplex3d.math.integration.Meta
   type Component <: PrimitiveFormat
 }
 
-/** <code>PrimitiveFormat</code> marker indicates primitive elements/components.
+/** <code>PrimitiveFormat</code>.
  *
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait PrimitiveFormat extends Meta {
-  type Read <: AnyVal
+sealed trait PrimitiveFormat extends Format {
+  type Meta <: simplex3d.math.integration.Meta { type Read <: AnyVal }
+}
+
+/** <code>CompositeFormat</code>.
+ *
+ * @author Aleksey Nikiforov (lex)
+ */
+trait CompositeFormat extends Format {
+  type Meta <: simplex3d.math.integration.Meta { type Read <: AnyRef }
+}
+
+
+sealed trait Compressed extends Meta with PrimitiveFormat {
+  type Read = Unit
   type Const = Read
+  
+  type Meta = Compressed
+  type Component = Compressed
 }
 
-/** <code>CompositeFormat</code> marker indicates elements composed of
- * primitive components.
- *
- * @author Aleksey Nikiforov (lex)
- */
-trait CompositeFormat extends Meta {
-  type Read <: AnyRef
-}
-
-
-sealed trait Bool extends PrimitiveFormat {
+sealed trait Bool extends Meta with PrimitiveFormat {
   type Read = Boolean
+  type Const = Read
+  
+  type Meta = Bool
   type Component = Bool
 }
 
 
 object PrimitiveFormat {
+  final val Compressed = classType[Compressed](classOf[Compressed])
   final val Bool = classType[Bool](classOf[Bool])
   final val SInt = classType[SInt](classOf[SInt])
   final val RFloat = classType[RFloat](classOf[RFloat])
@@ -124,9 +134,12 @@ sealed trait RawInt extends Integral {
   type Buffer = nio.IntBuffer
 }
 
-sealed trait SInt extends PrimitiveFormat with RawInt with Signed
+sealed trait SInt extends Meta with PrimitiveFormat with RawInt with Signed
 with DefinedInt with DefinedFloat with DefinedDouble {
   type Read = Int
+  type Const = Read
+  
+  type Meta = SInt
   type Component = SInt
 }
 
@@ -146,18 +159,24 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.ShortBuffer
 }
 
-sealed trait RFloat extends PrimitiveFormat with SysFP
+sealed trait RFloat extends Meta with PrimitiveFormat with SysFP
 with DefinedFloat with DefinedDouble {
   type Read = Float
+  type Const = Read
+  
+  type Meta = RFloat
   type Component = RFloat
 
   type Array = scala.Array[Float]
   type Buffer = nio.FloatBuffer
 }
 
-sealed trait RDouble extends PrimitiveFormat with SysFP
+sealed trait RDouble extends Meta with PrimitiveFormat with SysFP
 with DefinedDouble {
   type Read = Double
+  type Const = Read
+  
+  type Meta = RDouble
   type Component = RDouble
 
   type Array = scala.Array[Double]

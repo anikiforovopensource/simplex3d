@@ -35,19 +35,18 @@ import simplex3d.data.float._
 object AdapterVImplementedBench {
 
   trait V3 extends CompositeFormat {
-    type Read = Vec3#Read
-    type Const = Vec3#Const
+    type Meta = Vec3
     type Component = Vec3#Component
   }
   implicit object V3Adapter extends DataAdapter[V3, DefinedFloat](components = 3) {
-    def apply(primitives: inContiguous[V3#Component, Raw], j: Int) :V3#Const = {
+    def apply(primitives: inContiguous[V3#Component, Raw], j: Int) :V3#Meta#Const = {
       ConstVec3(
         primitives(j),
         primitives(j + 1),
         primitives(j + 2)
       )
     }
-    def update(primitives: outContiguous[V3#Component, Raw], j: Int, value: V3#Read) {
+    def update(primitives: outContiguous[V3#Component, Raw], j: Int, value: V3#Meta#Read) {
       primitives(j) = value.x
       primitives(j + 1) = value.y
       primitives(j + 2) = value.z
@@ -55,12 +54,11 @@ object AdapterVImplementedBench {
   }
 
   trait V4 extends CompositeFormat {
-    type Read = Vec4#Read
-    type Const = Vec4#Const
+    type Meta = Vec4
     type Component = Vec4#Component
   }
   implicit object V4Adapter extends DataAdapter[V4, DefinedFloat](components = 4) {
-    def apply(primitives: inContiguous[V4#Component, Raw], j: Int) :V4#Const = {
+    def apply(primitives: inContiguous[V4#Component, Raw], j: Int) :V4#Meta#Const = {
       ConstVec4(
         primitives(j),
         primitives(j + 1),
@@ -68,7 +66,7 @@ object AdapterVImplementedBench {
         primitives(j + 3)
       )
     }
-    def update(primitives: outContiguous[V4#Component, Raw], j: Int, value: V4#Read) {
+    def update(primitives: outContiguous[V4#Component, Raw], j: Int, value: V4#Meta#Read) {
       primitives(j) = value.x
       primitives(j + 1) = value.y
       primitives(j + 2) = value.z

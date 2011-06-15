@@ -33,7 +33,7 @@ import AttributeTestUtil._
  */
 object SerializationTestUtil extends FunSuite {
 
-  def testSerialization[F <: Meta, R <: Raw](
+  def testSerialization[F <: Format, R <: Raw](
     factory: (R#Array) => DataArray[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     val size = 10

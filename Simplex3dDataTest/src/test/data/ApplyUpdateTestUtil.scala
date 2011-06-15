@@ -77,7 +77,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   def floatFromBits(bits: String) = java.lang.Float.intBitsToFloat(intFromBits(bits))
   def floatToBits(x: Float) = intToBits(java.lang.Float.floatToRawIntBits(x))
 
-  def testIndex[F <: Meta](seq: DataSeq[F, Raw]) {
+  def testIndex[F <: Format](seq: DataSeq[F, Raw]) {
     assert(seq.size > 0)
 
     intercept[Exception] { seq(-1) }
@@ -170,7 +170,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def verifyComponents(seq: inDataSeq[_ <: Meta, Raw], i: Int) {
+  private def verifyComponents(seq: inDataSeq[_ <: Format, Raw], i: Int) {
     def get(i: Int, j: Int) :Any = seq.primitives(seq.offset + seq.stride*i + j)
     def cmp(x: Any, y: Any) {
       (x, y) match {
@@ -205,7 +205,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def updateValue[F <: Meta](seq: outDataSeq[F, Raw], i: Int, bcopy: outDataSeq[F#Component, Raw]) {
+  private def updateValue[F <: Format](seq: outDataSeq[F, Raw], i: Int, bcopy: outDataSeq[F#Component, Raw]) {
     def iput(i: Int, j: Int, u: Int) {
       val s = bcopy.asInstanceOf[DataSeq[SInt, Raw]]
       s(seq.offset + seq.stride*i + j) = u
@@ -270,10 +270,10 @@ object ApplyUpdateTestUtil extends FunSuite {
         m
     }
 
-    seq(i) = e.asInstanceOf[F#Read]
+    seq(i) = e.asInstanceOf[F#Meta#Read]
   }
 
-  private def testApplyUpdate[F <: Meta](seq: outDataSeq[F, Raw]) {
+  private def testApplyUpdate[F <: Format](seq: outDataSeq[F, Raw]) {
     testIndex(seq)
 
     val bcopy = seq.primitives.copyAsDataArray()
@@ -291,20 +291,20 @@ object ApplyUpdateTestUtil extends FunSuite {
     testContent(1, bcopy, 0, seq.primitives, 0, bcopy.size)
   }
 
-  def testApplyUpdateArray[F <: Meta, R <: Raw](
+  def testApplyUpdateArray[F <: Format, R <: Raw](
     factory: (R#Array) => DataArray[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     testApplyUpdate(factory(genRandomArray(10, descriptor)))
   }
 
-  def testApplyUpdateBuffer[F <: Meta, R <: Raw](
+  def testApplyUpdateBuffer[F <: Format, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     val size = 10*descriptor.components*RawType.byteLength(descriptor.rawType)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1))
   }
 
-  def testApplyUpdateView[F <: Meta, R <: Raw](
+  def testApplyUpdateView[F <: Format, R <: Raw](
     factory: (ByteBuffer, Int, Int) => DataView[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     val c = descriptor.components

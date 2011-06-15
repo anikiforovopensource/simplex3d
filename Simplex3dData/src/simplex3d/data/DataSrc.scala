@@ -20,23 +20,32 @@
 
 package simplex3d.data
 
-import scala.collection._
+import java.nio._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadBatch[@specialized(Int, Float, Double) +E] extends DataSource
-with IndexedSeq[E] with IndexedSeqOptimized[E, IndexedSeq[E]] {
-  type Read <: ReadBatch[E]
+trait DataSrc {
+  type Read <: DataSrc
+  def asReadOnly() :Read
   
-  def apply(i: Int) :E
+  type Format <: simplex3d.data.Format
+  def formatManifest: ClassManifest[Format]
+  def metaManifest: ClassManifest[Format#Meta]
+  
+  def rawType: Int
+  def isNormalized: Boolean
+
+  type BindingBuffer <: Buffer
+  
+  /** Binding buffer can be direct or non-direct. It can even be a mapped file.
+   * If not cached a new buffer is loaded on demand, the buffer may or may not be cached after that.
+   * The buffer contents may be compressed or encoded.
+   */
+  def bindingBuffer() :BindingBuffer
+  def byteCapacity: Int
+  def isCached :Boolean
 }
 
-trait Batch[@specialized(Int, Float, Double) E] extends ReadBatch[E] {
-  def update(i: Int, v: E)
-  
-  def put(index: Int, src: Seq[E], first: Int, count: Int) :Unit
-  def put(index: Int, src: Seq[E]) :Unit
-  def put(src: Seq[E]) :Unit
-}
+trait ContiguousSrc extends DataSrc

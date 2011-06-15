@@ -403,7 +403,7 @@ final class Mat4d private[math] (
   c02: Double, c12: Double, c22: Double, c32: Double,
   c03: Double, c13: Double, c23: Double, c33: Double
 )
-extends ReadMat4d with CompositeFormat with Implicits[On]
+extends ReadMat4d with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadMat4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
@@ -412,7 +412,10 @@ with PropertyRef[ReadMat4d] with Serializable
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
 
   type Read = ReadMat4d
+
+  type Meta = Mat4d
   type Component = RDouble
+
   type Clone = Mat4d
   override def clone() = Mat4d(this)
   def :=(u: ConstMat4d) { this := u.asInstanceOf[inMat4d] }

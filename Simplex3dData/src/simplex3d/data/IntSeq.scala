@@ -33,11 +33,11 @@ private[data] sealed abstract class BaseSInt[+R <: DefinedInt](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
-extends AbstractData[SInt, Int, Int, R](shared, prim, ro, off, str)
-with CompositionFactory[SInt, DefinedInt]
+extends AbstractData[Int, Int](shared, prim, ro, off, str)
+with DataSeq[SInt, R] with CompositionFactory[SInt, DefinedInt]
 {
   final def formatManifest = PrimitiveFormat.SInt
-  final def readManifest = Manifest.Int
+  final def metaManifest = PrimitiveFormat.SInt
   final def components: Int = 1
   final def isNormalized = false
 

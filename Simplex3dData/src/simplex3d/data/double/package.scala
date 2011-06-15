@@ -33,7 +33,7 @@ import simplex3d.data.double.impl._
 package object double {
 
   private[this] final def primitiveFactory[R <: DefinedDouble](f: PrimitiveFactory[RDouble, R]) = f
-  private[this] final def factory[F <: Meta](f: CompositionFactory[F, DefinedDouble]) = f
+  private[this] final def factory[F <: Format](f: CompositionFactory[F, DefinedDouble]) = f
   private[this] final val default = new ArrayRDoubleRFloat
 
   // RDouble
@@ -61,7 +61,7 @@ package object double {
 
   implicit object FactoryQuat4d extends DataAdapter[Quat4d, DefinedDouble with SysFP](components = 4)(
     formatManifest = Quat4d.Manifest,
-    readManifest = Quat4d.ReadManifest,
+    metaManifest = Quat4d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Quat4d#Component, Raw], j: Int) :Quat4d#Const = {
@@ -74,7 +74,7 @@ package object double {
 
   implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, DefinedDouble with SysFP](components = 4)(
     formatManifest = Mat2x2d.Manifest,
-    readManifest = Mat2x2d.ReadManifest,
+    metaManifest = Mat2x2d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x2d#Component, Raw], j: Int) :Mat2x2d#Const = {
@@ -91,7 +91,7 @@ package object double {
 
   implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, DefinedDouble with SysFP](components = 6)(
     formatManifest = Mat2x3d.Manifest,
-    readManifest = Mat2x3d.ReadManifest,
+    metaManifest = Mat2x3d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
@@ -110,7 +110,7 @@ package object double {
 
   implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, DefinedDouble with SysFP](components = 8)(
     formatManifest = Mat2x4d.Manifest,
-    readManifest = Mat2x4d.ReadManifest,
+    metaManifest = Mat2x4d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
@@ -131,7 +131,7 @@ package object double {
 
   implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, DefinedDouble with SysFP](components = 6)(
     formatManifest = Mat3x2d.Manifest,
-    readManifest = Mat3x2d.ReadManifest,
+    metaManifest = Mat3x2d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
@@ -148,7 +148,7 @@ package object double {
 
   implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, DefinedDouble with SysFP](components = 9)(
     formatManifest = Mat3x3d.Manifest,
-    readManifest = Mat3x3d.ReadManifest,
+    metaManifest = Mat3x3d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x3d#Component, Raw], j: Int) :Mat3x3d#Const = {
@@ -167,7 +167,7 @@ package object double {
 
   implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, DefinedDouble with SysFP](components = 12)(
     formatManifest = Mat3x4d.Manifest,
-    readManifest = Mat3x4d.ReadManifest,
+    metaManifest = Mat3x4d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
@@ -188,7 +188,7 @@ package object double {
 
   implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, DefinedDouble with SysFP](components = 8)(
     formatManifest = Mat4x2d.Manifest,
-    readManifest = Mat4x2d.ReadManifest,
+    metaManifest = Mat4x2d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
@@ -205,7 +205,7 @@ package object double {
 
   implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, DefinedDouble with SysFP](components = 12)(
     formatManifest = Mat4x3d.Manifest,
-    readManifest = Mat4x3d.ReadManifest,
+    metaManifest = Mat4x3d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
@@ -224,7 +224,7 @@ package object double {
 
   implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, DefinedDouble with SysFP](components = 16)(
     formatManifest = Mat4x4d.Manifest,
-    readManifest = Mat4x4d.ReadManifest,
+    metaManifest = Mat4x4d.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x4d#Component, Raw], j: Int) :Mat4x4d#Const = {

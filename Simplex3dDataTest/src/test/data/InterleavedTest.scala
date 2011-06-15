@@ -170,7 +170,7 @@ class InterleavedTest extends FunSuite {
 
     for (i <- 0 until 1000) {
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](mkRandOrEmpty(size), mkRandOrEmpty(size))
+        val src = Array[DataSeq[_ <: Format, Raw]](mkRandOrEmpty(size), mkRandOrEmpty(size))
         val (i1, i2) = interleave(src(0), src(1))(size)
         testInterleaved(src, Array[RawView](i1, i2))
 
@@ -182,7 +182,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size))
+        val src = Array[DataSeq[_ <: Format, Raw]](mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size))
         val (i1, i2, i3) = interleave(src(0), src(1), src(2))(size)
         testInterleaved(src, Array[RawView](i1, i2, i3))
 
@@ -194,7 +194,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
         val (i1, i2, i3, i4) = interleave(src(0), src(1), src(2), src(3))(size)
@@ -208,7 +208,7 @@ class InterleavedTest extends FunSuite {
       }
       
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size)
         )
@@ -223,7 +223,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -238,7 +238,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -258,7 +258,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
         )
@@ -278,7 +278,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size)
@@ -299,7 +299,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -320,7 +320,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -341,7 +341,7 @@ class InterleavedTest extends FunSuite {
       }
 
       {
-        val src = Array[DataSeq[_ <: Meta, Raw]](
+        val src = Array[DataSeq[_ <: Format, Raw]](
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size),
           mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size), mkRandOrEmpty(size)
@@ -401,7 +401,7 @@ class InterleavedTest extends FunSuite {
     }
   }
 
-  private def testInterleaved(src: Seq[DataSeq[_ <: Meta, Raw]], interleaved: Seq[RawView]) {
+  private def testInterleaved(src: Seq[DataSeq[_ <: Format, Raw]], interleaved: Seq[RawView]) {
     // Test interleaved constraints.
     InterleavedData.verifyFormat(interleaved)
 
@@ -410,20 +410,20 @@ class InterleavedTest extends FunSuite {
       // Test types
 
       assert(a.formatManifest == b.formatManifest)
-      assert(a.readManifest == b.readManifest)
+      assert(a.metaManifest == b.metaManifest)
       assert(a.primitives.formatManifest == b.primitives.formatManifest)
-      assert(a.primitives.readManifest == b.primitives.readManifest)
+      assert(a.primitives.metaManifest == b.primitives.metaManifest)
       assert(a.rawType == b.rawType)
 
       // Test content.
       assert(a.size == b.size)
-      type T = F forSome { type F <: Meta }
+      type T = F forSome { type F <: Format }
       testContent(a.components, a.asInstanceOf[ReadDataSeq[T, Raw]], 0, b.asInstanceOf[ReadDataSeq[T, Raw]], 0, a.size)
     }
   }
 
   private val randomSrc = new java.util.Random(1)
-  private def mkRandOrEmpty(sizeWhenSet: Int) :DataSeq[_ <: Meta, Raw] = {
+  private def mkRandOrEmpty(sizeWhenSet: Int) :DataSeq[_ <: Format, Raw] = {
     val size = if (randomSrc.nextBoolean) sizeWhenSet else 0
     genRandomSeq(size)
   }

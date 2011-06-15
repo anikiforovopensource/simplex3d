@@ -180,13 +180,16 @@ object ConstQuat4f {
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 )
-extends ReadQuat4f with CompositeFormat with Implicits[On]
+extends ReadQuat4f with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadQuat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Read = ReadQuat4f
+  
+  type Meta = Quat4f
   type Component = RFloat
+  
   type Clone = Quat4f
   override def clone() = Quat4f(this)
   def :=(q: ConstQuat4f) { this := q.asInstanceOf[inQuat4f] }

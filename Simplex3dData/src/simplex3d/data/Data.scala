@@ -20,29 +20,16 @@
 
 package simplex3d.data
 
-import java.nio._
+import scala.collection._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait DataSource {
-  type RawBuffer <: Buffer
-  type Read <: DataSource
+trait ReadData[E <: Meta] extends ReadAbstractData[E#Const] {
+  type Read <: ReadData[E]
   
-  def formatManifest: ClassManifest[_]
-  def rawType: Int
-  def isNormalized: Boolean
-
-  def asReadOnly() :Read
-  def byteCapacity: Int
-
-  /** Raw buffer can be direct or non-direct. It may be a mapped buffer for a memory mapped file.
-   * If not cached a new buffer is loaded on demand, the buffer may or may not be cached after that.
-   * The buffer contents may be compressed or encoded.
-   */
-  def rawBuffer() :RawBuffer
-  def isCached :Boolean
+  type Format <: simplex3d.data.Format { type Meta <: E }
 }
 
-trait ContiguousSource extends DataSource
+trait Data[E <: Meta] extends AbstractData[E#Const, E#Read] with ReadData[E]

@@ -195,13 +195,16 @@ object ConstVec4d {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
-extends ReadVec4d with CompositeFormat with Implicits[On]
+extends ReadVec4d with Meta with CompositeFormat with Implicits[On]
 with PropertyRef[ReadVec4d] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 
   type Read = ReadVec4d
+
+  type Meta = Vec4d
   type Component = RDouble
+
   type Clone = Vec4d
   override def clone() = Vec4d(this)
   def :=(u: ConstVec4d) { this := u.asInstanceOf[inVec4d] }

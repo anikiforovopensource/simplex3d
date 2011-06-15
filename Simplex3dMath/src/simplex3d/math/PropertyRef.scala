@@ -32,14 +32,14 @@ trait Cloneable {
   override def clone() :Clone = throw new UnsupportedOperationException()
 }
 
-trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Cloneable {
+trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Cloneable { self: R =>
   type Clone <: ReadPropertyRef[R] with Cloneable
   type Const
 
   def toConst() :R#Const
 }
 
-trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Mutable {
+trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Mutable { self: R =>
   type Clone <: PropertyRef[R] with Cloneable
   def :=(v: R)
   def :=(v: R#Const)

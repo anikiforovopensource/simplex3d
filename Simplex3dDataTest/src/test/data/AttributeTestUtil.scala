@@ -59,15 +59,15 @@ object AttributeTestUtil extends FunSuite {
     }
   }
 
-  private def checkRawBuffer(offset: Int, rawBuffer: Buffer, data: Buffer) {
-    checkOrder(rawBuffer)
+  private def checkRawBuffer(offset: Int, bindingBuffer: Buffer, data: Buffer) {
+    checkOrder(bindingBuffer)
 
     data.position(offset)
 
-    assert(rawBuffer ne data)
-    assert(rawBuffer.capacity == rawBuffer.limit)
+    assert(bindingBuffer ne data)
+    assert(bindingBuffer.capacity == bindingBuffer.limit)
 
-    rawBuffer match {
+    bindingBuffer match {
       case b: ByteBuffer => {
         data match {
           case d: ByteBuffer => assert(b.position == offset); assert(b equals data)
@@ -78,21 +78,21 @@ object AttributeTestUtil extends FunSuite {
           case d: DoubleBuffer => assert(b.position == offset*8); assert(b.asDoubleBuffer equals data)
         }
       }
-      case _ => assert(rawBuffer.position == offset); assert(rawBuffer equals data)
+      case _ => assert(bindingBuffer.position == offset); assert(bindingBuffer equals data)
     }
 
     data.position(0)
   }
 
-  private def checkRawBuffer(offset: Int, limit: Int, rawBuffer: Buffer, data: Buffer) {
-    checkOrder(rawBuffer)
+  private def checkRawBuffer(offset: Int, limit: Int, bindingBuffer: Buffer, data: Buffer) {
+    checkOrder(bindingBuffer)
 
     data.position(offset)
     if (limit > data.capacity) data.limit(data.capacity) else data.limit(limit)
 
-    assert(rawBuffer ne data)
+    assert(bindingBuffer ne data)
 
-    rawBuffer match {
+    bindingBuffer match {
       case b: ByteBuffer => {
         data match {
           case d: ByteBuffer =>
@@ -122,32 +122,32 @@ object AttributeTestUtil extends FunSuite {
         }
       }
       case _ =>
-        assert(rawBuffer.position == offset)
-        assert(rawBuffer.limit == limit)
-        assert(rawBuffer equals data)
+        assert(bindingBuffer.position == offset)
+        assert(bindingBuffer.limit == limit)
+        assert(bindingBuffer equals data)
     }
 
     data.position(0)
     data.limit(data.capacity)
   }
 
-  private def checkRawBufferSubData[F <: Meta, R <: Raw](seq: ReadDataSeq[F, R], data: Buffer) {
-    checkRawBuffer(0, 0, seq.rawBufferSubData(0, 0), data)
-    checkRawBuffer(0, seq.size*seq.stride, seq.rawBufferSubData(0, seq.size), data)
+  private def checkRawBufferSubData[F <: Format, R <: Raw](seq: ReadDataSeq[F, R], data: Buffer) {
+    checkRawBuffer(0, 0, seq.bindingBufferSubData(0, 0), data)
+    checkRawBuffer(0, seq.size*seq.stride, seq.bindingBufferSubData(0, seq.size), data)
     if (seq.size > 1) {
-      checkRawBuffer(1*seq.stride, 1*seq.stride, seq.rawBufferSubData(1, 0), data)
-      checkRawBuffer(1*seq.stride, seq.size*seq.stride, seq.rawBufferSubData(1, seq.size - 1), data)
+      checkRawBuffer(1*seq.stride, 1*seq.stride, seq.bindingBufferSubData(1, 0), data)
+      checkRawBuffer(1*seq.stride, seq.size*seq.stride, seq.bindingBufferSubData(1, seq.size - 1), data)
     }
   }
 
-  private def testSeq[F <: Meta, R <: Raw](
+  private def testSeq[F <: Format, R <: Raw](
     seq: ReadDataSeq[F, R],
     readOnly: Boolean,
     data: Buffer,
     descriptor: Descriptor[F, R]
   ) {
     assert(seq.formatManifest == descriptor.formatManifest)
-    assert(seq.readManifest == descriptor.readManifest)
+    assert(seq.metaManifest == descriptor.metaManifest)
     assert(seq.primitives.formatManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
@@ -174,14 +174,14 @@ object AttributeTestUtil extends FunSuite {
       assert(!seq.primitives.isReadOnly)
     }
 
-    // Check rawBuffer.
-    assert(seq.rawBuffer().isReadOnly == seq.isReadOnly)
-    assert(seq.rawBufferWithOffset().isReadOnly == seq.isReadOnly)
-    assert(seq.rawBufferSubData(0, seq.size).isReadOnly == seq.isReadOnly)
+    // Check bindingBuffer.
+    assert(seq.bindingBuffer().isReadOnly == seq.isReadOnly)
+    assert(seq.bindingBufferWithOffset().isReadOnly == seq.isReadOnly)
+    assert(seq.bindingBufferSubData(0, seq.size).isReadOnly == seq.isReadOnly)
 
     if (data != null) {
-      checkRawBuffer(0, seq.rawBuffer(), data)
-      checkRawBuffer(seq.offset, seq.rawBufferWithOffset(), data)
+      checkRawBuffer(0, seq.bindingBuffer(), data)
+      checkRawBuffer(seq.offset, seq.bindingBufferWithOffset(), data)
       checkRawBufferSubData(seq, data)
     }
 
@@ -193,7 +193,7 @@ object AttributeTestUtil extends FunSuite {
     checkOrder(ds.buffer())
   }
 
-  def testArray[F <: Meta, R <: Raw](
+  def testArray[F <: Format, R <: Raw](
     seq: ReadDataArray[F, R],
     readOnly: Boolean,
     data: Buffer
@@ -243,7 +243,7 @@ object AttributeTestUtil extends FunSuite {
     else {
       val primitiveDesc = descriptor.copy(
         formatManifest = seq.primitives.formatManifest,
-        readManifest = seq.primitives.readManifest,
+        metaManifest = seq.primitives.metaManifest,
         components = 1
       )
       testArray(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -254,7 +254,7 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.sharesStoreObject(seq.asReadOnly))
   }
 
-  def testBuffer[F <: Meta, R <: Raw](
+  def testBuffer[F <: Format, R <: Raw](
     seq: ReadDataBuffer[F, R],
     readOnly: Boolean,
     data: Buffer
@@ -289,7 +289,7 @@ object AttributeTestUtil extends FunSuite {
     else {
       val primitiveDesc = descriptor.copy(
         formatManifest = seq.primitives.formatManifest,
-        readManifest = seq.primitives.readManifest,
+        metaManifest = seq.primitives.metaManifest,
         components = 1
       )
       testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -300,7 +300,7 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.sharesStoreObject(seq.asReadOnly))
   }
 
-  def testView[F <: Meta, R <: Raw](
+  def testView[F <: Format, R <: Raw](
     seq: ReadDataView[F, R],
     offset: Int,
     stride: Int,
@@ -326,7 +326,7 @@ object AttributeTestUtil extends FunSuite {
     // primitives
     val primitiveDesc = descriptor.copy(
       formatManifest = seq.primitives.formatManifest,
-      readManifest = seq.primitives.readManifest,
+      metaManifest = seq.primitives.metaManifest,
       components = 1
     )
     testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])

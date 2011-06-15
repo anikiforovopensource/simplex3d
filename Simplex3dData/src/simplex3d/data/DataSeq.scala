@@ -20,20 +20,78 @@
 
 package simplex3d.data
 
+import scala.annotation.unchecked._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[F <: Meta, +R <: Raw]
-extends ReadAbstractData[F, F#Const, R] {
+trait ReadDataSeq[F <: Format, +R <: Raw] extends ReadData[F#Meta] with DataFactory[F, R] {
   type Read <: ReadDataSeq[F, R]
+  
+  type Format = F
+  type Raw = R @uncheckedVariance
+  
+  
+  final def copyAsDataArray() :DataArray[Format, Raw] = {
+    val copy = mkDataArray(size)
+    copy.put(0, primitives, this.offset, this.stride, size)
+    copy
+  }
+  final def copyAsDataBuffer() :DataBuffer[Format, Raw] = {
+    val copy = mkDataBuffer(size)
+    copy.put(0, primitives, this.offset, this.stride, size)
+    copy
+  }
 }
 
-trait DataSeq[F <: Meta, +R <: Raw]
-extends AbstractData[F, F#Const, F#Read, R] with ReadDataSeq[F, R]
+trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Meta] with ReadDataSeq[F, R] {
+  final def put(
+    index: Int,
+    src: inContiguous[F#Component, simplex3d.data.Raw],
+    srcOffset: Int, srcStride: Int, count: Int
+  ) {
+    putImpl(index, src, srcOffset, srcStride, count)
+  }
+
+  final def put(index: Int, src: inContiguous[F#Component, simplex3d.data.Raw]) {
+    putImpl(index, src, 0, components, src.size/components)
+  }
+
+  final def put(src: inContiguous[F#Component, simplex3d.data.Raw]) {
+    putImpl(0, src, 0, components, src.size/components)
+  }
+
+  final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw], first: Int, count: Int) {
+    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+      throw new ClassCastException(
+        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+      )
+
+    putImpl(index, src.primitives, src.offset + first*src.stride, src.stride, count)
+  }
+
+  final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw]) {
+    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+      throw new ClassCastException(
+        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+      )
+
+    putImpl(index, src.primitives, src.offset, src.stride, src.size)
+  }
+
+  final def put(src: inDataSeq[F, simplex3d.data.Raw]) {
+    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+      throw new ClassCastException(
+        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+      )
+
+    putImpl(0, src.primitives, src.offset, src.stride, src.size)
+  }
+}
 
 object DataSeq {
-  def apply[F <: Meta, R <: Defined](
+  def apply[F <: Format, R <: Defined](
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataSeq[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(0))

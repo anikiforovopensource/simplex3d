@@ -99,12 +99,6 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final def length = size
   final def isCached = true
 
-
-  if (offset > buff.capacity && size != 0)
-    throw new IllegalArgumentException(
-      "Offset must not be greater than capacity of the storage object."
-    )
-
   
   // Type definitions.
   type Format <: simplex3d.data.Format

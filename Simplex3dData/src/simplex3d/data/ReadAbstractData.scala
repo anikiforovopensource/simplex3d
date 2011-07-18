@@ -89,11 +89,6 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
       }).asInstanceOf[Raw#Buffer]
     }
   }
-  
-  if (offset > buff.capacity)
-    throw new IllegalArgumentException(
-      "Offset must not be greater than limit."
-    )
 
   private[data] final def sizeFrom(capacity: Int, offset: Int, stride: Int, components: Int) :Int = {
     val s = (capacity - offset + stride - components)/stride
@@ -103,6 +98,12 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   final override val size = sizeFrom(buff.capacity, offset, stride, components)
   final def length = size
   final def isCached = true
+
+
+  if (offset > buff.capacity && size != 0)
+    throw new IllegalArgumentException(
+      "Offset must not be greater than capacity of the storage object."
+    )
 
   
   // Type definitions.
@@ -163,17 +164,20 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
     buff.asInstanceOf[BindingBuffer]
   }
   final def bindingBufferWithOffset() :BindingBuffer = {
-    val buff = binding()
-
-    if (buff.isDirect) {
-      buff.limit(buff.capacity)
-      buff.position(offset*bytesPerComponent)
-    }
+    if (size == 0) bindingBuffer()
     else {
-      buff.position(offset)
-    }
+      val buff = binding()
 
-    buff.asInstanceOf[BindingBuffer]
+      if (buff.isDirect) {
+        buff.limit(buff.capacity)
+        buff.position(offset*bytesPerComponent)
+      }
+      else {
+        buff.position(offset)
+      }
+
+      buff.asInstanceOf[BindingBuffer]
+    }
   }
   final def bindingBufferSubData(first: Int, count: Int) :BindingBuffer = {
     val buff = binding()

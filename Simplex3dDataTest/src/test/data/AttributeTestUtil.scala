@@ -181,7 +181,7 @@ object AttributeTestUtil extends FunSuite {
 
     if (data != null) {
       checkRawBuffer(0, seq.bindingBuffer(), data)
-      checkRawBuffer(seq.offset, seq.bindingBufferWithOffset(), data)
+      if (seq.size != 0) checkRawBuffer(seq.offset, seq.bindingBufferWithOffset(), data)
       checkRawBufferSubData(seq, data)
     }
 

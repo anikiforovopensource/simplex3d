@@ -402,7 +402,7 @@ object FactoryTestUtil extends FunSuite {
 
       for (
         stride <- descriptor.components to (descriptor.components + 4);
-        offset <- 0 to min(stride - descriptor.components, data.limit)
+        offset <- 0 to (if (size == 0) stride - descriptor.components else min(stride - descriptor.components, data.limit))
       ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {
@@ -523,7 +523,7 @@ object FactoryTestUtil extends FunSuite {
 
       for (
         stride <- descriptor.components to (descriptor.components + 4);
-        offset <- 0 to min(stride - descriptor.components, data.limit)
+        offset <- 0 to (if (size == 0) stride - descriptor.components else min(stride - descriptor.components, data.limit))
       ) {
         // Test different buffer configurations
         for (i <- 0 to 1; j <- 0 to 1; n <- 0 to 1) {

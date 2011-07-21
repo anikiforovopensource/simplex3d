@@ -26,7 +26,7 @@ object Noise1D extends App {
 
     //val color = out
     //color := background
-    val color: Vec3 = background
+    val color = Vec3(background)
 
     color *= {
       val shade = clamp(abs(u.x)/axisWidth, 0, 1)

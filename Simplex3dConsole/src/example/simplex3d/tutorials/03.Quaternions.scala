@@ -15,9 +15,8 @@ object Quaternions extends App {
 
   
   // The identity quaternion:
-  val identity = Quat4(1, 0, 0, 0)
-  val p = Quat4(identity)
-  val q: Quat4 = Quat4.Identity
+  val p = Quat4(1, 0, 0, 0)
+  val q = Quat4(Quat4.Identity)
 
   // Accessors:
   q == Quat4(q.a, q.b, q.c, q.d)

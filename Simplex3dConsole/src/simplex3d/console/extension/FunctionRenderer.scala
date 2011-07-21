@@ -102,7 +102,7 @@ private[extension] object FunctionRenderer {
           }
         }
 
-        final def loop(y :Int, h: Int, pixel: outVec2) {
+        final def loop(y :Int, h: Int, pixel: Vec2) {
           var x = 0; while(x < dims.x) {
 
             pixel.x = x; pixel.y = h

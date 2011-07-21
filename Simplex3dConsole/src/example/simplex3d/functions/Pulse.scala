@@ -31,7 +31,7 @@ object Pulse extends App {
     val mid = dims/2.0
     val p = pixel - mid
 
-    val color: Vec3 = background
+    val color = Vec3(background)
 
     color *= {
       val shade = clamp(abs(p.x)/axisWidth, 0, 1)

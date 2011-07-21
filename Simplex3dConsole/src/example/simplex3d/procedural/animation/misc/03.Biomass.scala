@@ -23,7 +23,7 @@ object Biomass extends App {
   def noiseSum(p: inVec3) = {
     val varying = 2 + noise(p)*0.02
 
-    def octave(i: Int, p: inVec3, c: outVec3) = {
+    def octave(i: Int, p: inVec3, c: Vec3) = {
       val frequencyFactor = pow(varying, i)
       c(i) = noise(p*frequencyFactor)*amplitudeFactors(i)
     }

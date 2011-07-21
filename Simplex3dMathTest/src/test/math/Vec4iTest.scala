@@ -461,12 +461,7 @@ class Vec4iTest extends FunSuite {
     expect(classOf[ConstVec4i]) { t.getClass }
     assert(Vec4i(x, y, z, w) == t)
 
-    var c: ConstVec4i = Vec4i(x, y, z, w); var v = Vec4i(3)
-    expect(classOf[ConstVec4i]) { c.getClass }
-    v = c; assert(Vec4i(x, y, z, w) == v)
-    expect(classOf[Vec4i]) { v.getClass }
-
-    c = Vec4i(5); v = Vec4i(x, y, z, w)
+    var c = ConstVec4i(5); val v = Vec4i(x, y, z, w)
     expect(classOf[Vec4i]) { v.getClass }
     c = v; assert(Vec4i(x, y, z, w) == c)
     expect(classOf[ConstVec4i]) { c.getClass }

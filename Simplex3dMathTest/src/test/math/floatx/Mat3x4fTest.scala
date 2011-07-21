@@ -412,12 +412,7 @@ class Mat3x4fTest extends FunSuite {
     expect(classOf[ConstMat3x4]) { t.getClass }
     assert(i == t)
 
-    var c: ConstMat3x4 = i; var v = Mat3x4(2)
-    expect(classOf[ConstMat3x4]) { c.getClass }
-    v = c; assert(i == v)
-    expect(classOf[Mat3x4]) { v.getClass }
-
-    c = Mat3x4(2); v = i
+    var c = ConstMat3x4(2); val v = i
     expect(classOf[Mat3x4]) { v.getClass }
     c = v; assert(i == c)
     expect(classOf[ConstMat3x4]) { c.getClass }

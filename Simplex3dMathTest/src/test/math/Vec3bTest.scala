@@ -295,12 +295,7 @@ class Vec3bTest extends FunSuite {
       expect(classOf[ConstVec3b]) { t.getClass }
       assert(Vec3b(x, y, z) == t)
 
-      var c: ConstVec3b = Vec3b(x, y, z); var v = Vec3b(false)
-      expect(classOf[ConstVec3b]) { c.getClass }
-      v = c; assert(Vec3b(x, y, z) == v)
-      expect(classOf[Vec3b]) { v.getClass }
-
-      c = Vec3b(true); v = Vec3b(x, y, z)
+      var c = ConstVec3b(true); val v = Vec3b(x, y, z)
       expect(classOf[Vec3b]) { v.getClass }
       c = v; assert(Vec3b(x, y, z) == c)
       expect(classOf[ConstVec3b]) { c.getClass }

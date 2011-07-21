@@ -69,16 +69,12 @@ class PrimitiveRefTest extends FunSuite {
     }
 
     {
-      val conv1: BooleanRef = new BooleanRef(true).asInstanceOf[ReadBooleanRef]
-      assert(conv1.toConst == true)
-      val conv2: BooleanRef = true
-      assert(conv2.toConst == true)
+      val conv: ReadBooleanRef = true
+      assert(conv.toConst == true)
     }
     {
-      val conv1: BooleanRef = new BooleanRef(false).asInstanceOf[ReadBooleanRef]
-      assert(conv1.toConst == false)
-      val conv2: BooleanRef = false
-      assert(conv2.toConst == false)
+      val conv: ReadBooleanRef = false
+      assert(conv.toConst == false)
     }
   }
   
@@ -110,10 +106,8 @@ class PrimitiveRefTest extends FunSuite {
       case IntRef(3) => throw new AssertionError
     }
 
-    val conv1: IntRef = new IntRef(7).asInstanceOf[ReadIntRef]
-    assert(conv1.toConst == 7)
-    val conv2: IntRef = 7
-    assert(conv2.toConst == 7)
+    val conv: ReadIntRef = 7
+    assert(conv.toConst == 7)
   }
   
   test("Mutable FloatRef") {
@@ -138,10 +132,8 @@ class PrimitiveRefTest extends FunSuite {
       case FloatRef(3) => throw new AssertionError
     }
 
-    val conv1: FloatRef = new FloatRef(7).asInstanceOf[ReadFloatRef]
-    assert(conv1.toConst == 7)
-    val conv2: FloatRef = 7
-    assert(conv2.toConst == 7)
+    val conv: ReadFloatRef = 7
+    assert(conv.toConst == 7)
   }
   
   test("Mutable DoubleRef") {
@@ -168,9 +160,7 @@ class PrimitiveRefTest extends FunSuite {
       case DoubleRef(3) => throw new AssertionError
     }
 
-    val conv1: DoubleRef = new DoubleRef(7).asInstanceOf[ReadDoubleRef]
-    assert(conv1.toConst == 7)
-    val conv2: DoubleRef = 7
-    assert(conv2.toConst == 7)
+    val conv: ReadDoubleRef = 7
+    assert(conv.toConst == 7)
   }
 }

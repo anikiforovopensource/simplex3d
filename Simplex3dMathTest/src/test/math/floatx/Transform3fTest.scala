@@ -81,7 +81,7 @@ class Transform3fTest extends FunSuite {
 
     def assertTransform(a: inMat3x4, m: inMat3x4, b: inMat3x4) {
       assert(a.ne(b))
-      assert(m*Mat4(a) == b)
+      assert(approxEqual(m*Mat4(a), b, 1e-6f))
 
       for (i <- 0 until 100) {
         val v = Vec3(r, r, r)

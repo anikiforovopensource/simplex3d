@@ -148,12 +148,7 @@ class Quat4fTest extends FunSuite {
     expect(classOf[ConstQuat4]) { t.getClass }
     assert(Quat4(a, b, c, d) == t)
 
-    var con: ConstQuat4 = Quat4(a, b, c, d); var mut = Quat4(1, 0, 0, 0)
-    expect(classOf[ConstQuat4]) { con.getClass }
-    mut = con; assert(Quat4(a, b, c, d) == mut)
-    expect(classOf[Quat4]) { mut.getClass }
-
-    con = Quat4(1, 0, 0, 0); mut = Quat4(a, b, c, d)
+    var con = ConstQuat4(1, 0, 0, 0); val mut = Quat4(a, b, c, d)
     expect(classOf[Quat4]) { mut.getClass }
     con = mut; assert(Quat4(a, b, c, d) == con)
     expect(classOf[ConstQuat4]) { con.getClass }

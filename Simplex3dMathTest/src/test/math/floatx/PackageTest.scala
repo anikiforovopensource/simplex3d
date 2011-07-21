@@ -43,14 +43,14 @@ class PackageTest extends FunSuite {
     val f3 = 2.0f*Vec3f(1)
     assert(f3.isInstanceOf[Vec3f])
 
-    val pi2: Vec2f = Vec2i(1)
-    assert(pi2.isInstanceOf[Vec2f])
+    val pi2: ReadVec2f = Vec2i(1)
+    assert(pi2.isInstanceOf[ConstVec2f])
 
-    val pi3: Vec3f = Vec3i(1)
-    assert(pi3.isInstanceOf[Vec3f])
+    val pi3: ReadVec3f = Vec3i(1)
+    assert(pi3.isInstanceOf[ConstVec3f])
 
-    val pi4: Vec4f = Vec4i(1)
-    assert(pi4.isInstanceOf[Vec4f])
+    val pi4: ReadVec4f = Vec4i(1)
+    assert(pi4.isInstanceOf[ConstVec4f])
 
 
     // the following passes if it compiles
@@ -169,14 +169,14 @@ class PackageTest extends FunSuite {
     val f3 = 2.0f*Vec3(1)
     assert(f3.isInstanceOf[Vec3])
 
-    val pi2: Vec2 = Vec2i(1)
-    assert(pi2.isInstanceOf[Vec2])
+    val pi2: ReadVec2 = Vec2i(1)
+    assert(pi2.isInstanceOf[ConstVec2])
 
-    val pi3: Vec3 = Vec3i(1)
-    assert(pi3.isInstanceOf[Vec3])
+    val pi3: ReadVec3 = Vec3i(1)
+    assert(pi3.isInstanceOf[ConstVec3])
 
-    val pi4: Vec4 = Vec4i(1)
-    assert(pi4.isInstanceOf[Vec4])
+    val pi4: ReadVec4 = Vec4i(1)
+    assert(pi4.isInstanceOf[ConstVec4])
 
 
     assert(functions == simplex3d.math.floatx.functions)

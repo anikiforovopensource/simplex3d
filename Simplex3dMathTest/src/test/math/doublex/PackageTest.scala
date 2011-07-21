@@ -50,23 +50,23 @@ class PackageTest extends FunSuite {
     val d3 = 2.0d*Vec3d(1)
     assert(d3.isInstanceOf[Vec3d])
 
-    val pi2: Vec2d = Vec2i(1)
-    assert(pi2.isInstanceOf[Vec2d])
+    val pi2: ReadVec2d = Vec2i(1)
+    assert(pi2.isInstanceOf[ConstVec2d])
 
-    val pi3: Vec3d = Vec3i(1)
-    assert(pi3.isInstanceOf[Vec3d])
+    val pi3: ReadVec3d = Vec3i(1)
+    assert(pi3.isInstanceOf[ConstVec3d])
 
-    val pi4: Vec4d = Vec4i(1)
-    assert(pi4.isInstanceOf[Vec4d])
+    val pi4: ReadVec4d = Vec4i(1)
+    assert(pi4.isInstanceOf[ConstVec4d])
 
-    val pf2: Vec2d = Vec2f(1)
-    assert(pf2.isInstanceOf[Vec2d])
+    val pf2: ReadVec2d = Vec2f(1)
+    assert(pf2.isInstanceOf[ConstVec2d])
 
-    val pf3: Vec3d = Vec3f(1)
-    assert(pf3.isInstanceOf[Vec3d])
+    val pf3: ReadVec3d = Vec3f(1)
+    assert(pf3.isInstanceOf[ConstVec3d])
 
-    val pf4: Vec4d = Vec4f(1)
-    assert(pf4.isInstanceOf[Vec4d])
+    val pf4: ReadVec4d = Vec4f(1)
+    assert(pf4.isInstanceOf[ConstVec4d])
 
 
     // the following passes if it compiles
@@ -191,23 +191,23 @@ class PackageTest extends FunSuite {
     val d3 = 2.0d*Vec3(1)
     assert(d3.isInstanceOf[Vec3])
 
-    val pi2: Vec2 = Vec2i(1)
-    assert(pi2.isInstanceOf[Vec2])
+    val pi2: ReadVec2 = Vec2i(1)
+    assert(pi2.isInstanceOf[ConstVec2])
 
-    val pi3: Vec3 = Vec3i(1)
-    assert(pi3.isInstanceOf[Vec3])
+    val pi3: ReadVec3 = Vec3i(1)
+    assert(pi3.isInstanceOf[ConstVec3])
 
-    val pi4: Vec4 = Vec4i(1)
-    assert(pi4.isInstanceOf[Vec4])
+    val pi4: ReadVec4 = Vec4i(1)
+    assert(pi4.isInstanceOf[ConstVec4])
 
-    val pf2: Vec2 = Vec2f(1)
-    assert(pf2.isInstanceOf[Vec2])
+    val pf2: ReadVec2 = Vec2f(1)
+    assert(pf2.isInstanceOf[ConstVec2])
 
-    val pf3: Vec3 = Vec3f(1)
-    assert(pf3.isInstanceOf[Vec3])
+    val pf3: ReadVec3 = Vec3f(1)
+    assert(pf3.isInstanceOf[ConstVec3])
 
-    val pf4: Vec4 = Vec4f(1)
-    assert(pf4.isInstanceOf[Vec4])
+    val pf4: ReadVec4 = Vec4f(1)
+    assert(pf4.isInstanceOf[ConstVec4])
 
 
     assert(functions == simplex3d.math.doublex.functions)

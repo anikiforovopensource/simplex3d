@@ -215,12 +215,7 @@ class Vec2bTest extends FunSuite {
       expect(classOf[ConstVec2b]) { t.getClass }
       assert(Vec2b(x, y) == t)
 
-      var c: ConstVec2b = Vec2b(x, y); var v = Vec2b(false)
-      expect(classOf[ConstVec2b]) { c.getClass }
-      v = c; assert(Vec2b(x, y) == v)
-      expect(classOf[Vec2b]) { v.getClass }
-
-      c = Vec2b(true); v = Vec2b(x, y)
+      var c = ConstVec2b(true); val v = Vec2b(x, y)
       expect(classOf[Vec2b]) { v.getClass }
       c = v; assert(Vec2b(x, y) == c)
       expect(classOf[ConstVec2b]) { c.getClass }

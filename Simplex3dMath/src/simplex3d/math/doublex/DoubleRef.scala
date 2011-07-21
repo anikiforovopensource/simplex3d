@@ -35,7 +35,9 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
 {
   type Clone <: ReadDoubleRef
   type Const = Double
-  def toConst() :Double = x
+  type Mutable = DoubleRef
+  final def toConst() :Double = x
+  final def toMutable()  = new DoubleRef(x)
 
   def apply(i: Int) :Double = {
     if (i == 0) x

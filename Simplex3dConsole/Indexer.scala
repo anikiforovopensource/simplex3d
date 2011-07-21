@@ -121,9 +121,6 @@ object Indexer {
     }
     zipStream.close()
 
-
-    
-
     var count = 0
     for (path <- index) {
       val data = fileMap.get(path).get

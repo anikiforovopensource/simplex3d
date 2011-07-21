@@ -36,7 +36,9 @@ with ReadPropertyRef[ReadMat3x4d] with Serializable
 
   type Clone <: ReadMat3x4d
   type Const = ConstMat3x4d
-  def toConst() = ConstMat3x4d(this)
+  type Mutable = Mat3x4d
+  def toConst() :ConstMat3x4d
+  final def toMutable() = Mat3x4d(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10; final def m20 = p20
@@ -436,6 +438,7 @@ final class ConstMat3x4d private[math] (
 
   type Clone = ConstMat3x4d
   override def clone() = this
+  def toConst() = this
 }
 
 object ConstMat3x4d {
@@ -499,6 +502,7 @@ with PropertyRef[ReadMat3x4d] with Serializable
 
   type Clone = Mat3x4d
   override def clone() = Mat3x4d(this)
+  def toConst() = ConstMat3x4d(this)
   def :=(u: ConstMat3x4d) { this := u.asInstanceOf[inMat3x4d] }
   
   def :=(m: inMat3x4d) {

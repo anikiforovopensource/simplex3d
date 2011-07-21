@@ -36,7 +36,9 @@ with ReadPropertyRef[ReadMat2d] with Serializable
 
   type Clone <: ReadMat2d
   type Const = ConstMat2d
-  def toConst() = ConstMat2d(this)
+  type Mutable = Mat2d
+  def toConst() :ConstMat2d
+  final def toMutable() = Mat2d(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10
@@ -221,6 +223,7 @@ final class ConstMat2d private[math] (
 
   type Clone = ConstMat2d
   override def clone() = this
+  def toConst() = this
 }
 
 object ConstMat2d {
@@ -275,6 +278,7 @@ with PropertyRef[ReadMat2d] with Serializable
 
   type Clone = Mat2d
   override def clone() = Mat2d(this)
+  def toConst() = ConstMat2d(this)
   def :=(u: ConstMat2d) { this := u.asInstanceOf[inMat2d] }
   
   def :=(m: inMat2d) {

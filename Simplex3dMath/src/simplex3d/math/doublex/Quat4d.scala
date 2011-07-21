@@ -35,7 +35,9 @@ extends ProtectedQuat4d[Double] with ReadPropertyRef[ReadQuat4d] with Serializab
 {
   type Clone <: ReadQuat4d
   type Const = ConstQuat4d
-  def toConst() = ConstQuat4d(this)
+  type Mutable = Quat4d
+  def toConst() :ConstQuat4d
+  final def toMutable() = Quat4d(this)
 
   private[math] final def fa: Float = a.toFloat
   private[math] final def fb: Float = b.toFloat
@@ -162,6 +164,7 @@ final class ConstQuat4d private[math] (
 
   type Clone = ConstQuat4d
   override def clone() = this
+  def toConst() = this
 }
 
 object ConstQuat4d {
@@ -191,6 +194,7 @@ with PropertyRef[ReadQuat4d] with Serializable
   
   type Clone = Quat4d
   override def clone() = Quat4d(this)
+  def toConst() = ConstQuat4d(this)
   def :=(q: ConstQuat4d) { this := q.asInstanceOf[inQuat4d] }
   def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
   

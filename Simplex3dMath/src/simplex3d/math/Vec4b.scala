@@ -35,7 +35,9 @@ with ReadPropertyRef[ReadVec4b] with Serializable
 
   type Clone <: ReadVec4b
   type Const = ConstVec4b
-  def toConst() = ConstVec4b(this)
+  type Mutable = Vec4b
+  def toConst() :ConstVec4b
+  final def toMutable() = Vec4b(this)
 
   private[math] type R2 = ReadVec2b
   private[math] type R3 = ReadVec3b
@@ -152,6 +154,7 @@ extends ReadVec4b with Immutable with Serializable {
 
   type Clone = ConstVec4b
   override def clone() = this
+  def toConst() = this
 }
 
 
@@ -189,6 +192,7 @@ with PropertyRef[ReadVec4b] with Serializable
 
   type Clone = Vec4b
   override def clone() = Vec4b(this)
+  def toConst() = ConstVec4b(this)
   def :=(u: ConstVec4b) { this := u.asInstanceOf[inVec4b] }
   def :=(u: inVec4b) { x = u.x; y = u.y; z = u.z; w = u.w }
 

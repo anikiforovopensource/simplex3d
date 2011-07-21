@@ -36,7 +36,9 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
 {
   type Clone <: ReadIntRef
   type Const = Int
-  def toConst() :Int = x
+  type Mutable = IntRef
+  final def toConst() :Int = x
+  final def toMutable() = new IntRef(x)
 
   def apply(i: Int) :Int = {
     if (i == 0) x

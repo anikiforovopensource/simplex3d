@@ -35,8 +35,10 @@ trait Cloneable {
 trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Cloneable { self: R =>
   type Clone <: ReadPropertyRef[R] with Cloneable
   type Const
+  type Mutable <: PropertyRef[R] with Cloneable
 
   def toConst() :R#Const
+  def toMutable() :R#Mutable
 }
 
 trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Mutable { self: R =>

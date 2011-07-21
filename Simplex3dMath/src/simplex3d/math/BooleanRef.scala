@@ -31,7 +31,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
 {
   type Clone <: ReadBooleanRef
   type Const = Boolean
-  def toConst() :Boolean = x
+  type Mutable = BooleanRef
+  final def toConst() :Boolean = x
+  final def toMutable() = new BooleanRef(x)
 
   def apply(i: Int) :Boolean = {
     if (i == 0) x

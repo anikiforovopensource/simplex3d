@@ -36,55 +36,27 @@ package object math {
   implicit def refToInt(r: ReadIntRef) = r.toConst
   
 
-  // In and Out aliases
+  // In aliases
 
   /** <code>in</code> prefix for Vec2b.
    * Use the prefix when declaring functions.
    */
   type inVec2b = ReadVec2b
 
-  /** <code>out</code> prefix for Vec2b.
-   * Use the prefix when declaring functions.
-   */
-  type outVec2b = Vec2b with Implicits[Off]
-  @inline implicit def outVec2b(u: Vec2b) = u.asInstanceOf[outVec2b]
-
-
   /** <code>in</code> prefix for Vec3b.
    * Use the prefix when declaring functions.
    */
   type inVec3b = ReadVec3b
-
-  /** <code>out</code> prefix for Vec3b.
-   * Use the prefix when declaring functions.
-   */
-  type outVec3b = Vec3b with Implicits[Off]
-  @inline implicit def outVec3b(u: Vec3b) = u.asInstanceOf[outVec3b]
-
 
   /** <code>in</code> prefix for Vec4b.
    * Use the prefix when declaring functions.
    */
   type inVec4b = ReadVec4b
 
-  /** <code>out</code> prefix for Vec4b.
-   * Use the prefix when declaring functions.
-   */
-  type outVec4b = Vec4b with Implicits[Off]
-  @inline implicit def outVec4b(u: Vec4b) = u.asInstanceOf[outVec4b]
-
 
   type inVec2i = ReadVec2i
-  type outVec2i = Vec2i with Implicits[Off]
-  @inline implicit def outVec2i(u: Vec2i) = u.asInstanceOf[outVec2i]
-
   type inVec3i = ReadVec3i
-  type outVec3i = Vec3i with Implicits[Off]
-  @inline implicit def outVec3i(u: Vec3i) = u.asInstanceOf[outVec3i]
-
   type inVec4i = ReadVec4i
-  type outVec4i = Vec4i with Implicits[Off]
-  @inline implicit def outVec4i(u: Vec4i) = u.asInstanceOf[outVec4i]
 
 
   // Matrix aliases

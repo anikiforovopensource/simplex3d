@@ -208,7 +208,14 @@ with ReadPropertyRef[ReadMat2x3d] with Serializable
   )
 
   final def rotate(angle: Double) :Mat2x3d = {
-    concat(rotationMat(angle))
+    val cosA = cos(angle)
+    val sinA = sin(angle)
+  
+    new Mat2x3d(
+      cosA*m00 - sinA*m10, sinA*m00 + cosA*m10,
+      cosA*m01 - sinA*m11, sinA*m01 + cosA*m11,
+      cosA*m02 - sinA*m12, sinA*m02 + cosA*m12
+    )
   }
 
   final def translate(u: inVec2d) :Mat2x3d = new Mat2x3d(
@@ -334,7 +341,7 @@ final class Mat2x3d private[math] (
   c01: Double, c11: Double,
   c02: Double, c12: Double
 )
-extends ReadMat2x3d with Meta with CompositeFormat with Implicits[On]
+extends ReadMat2x3d with Meta with CompositeFormat
 with PropertyRef[ReadMat2x3d] with Serializable
 {
   p00 = c00; p10 = c10
@@ -423,7 +430,21 @@ with PropertyRef[ReadMat2x3d] with Serializable
   }
 
   final def applyRotation(angle: Double) {
-    applyTransform(rotationMat(angle))
+    val cosA = cos(angle)
+    val sinA = sin(angle)
+  
+    val t00 = cosA*m00 - sinA*m10
+    val t10 = sinA*m00 + cosA*m10
+
+    val t01 = cosA*m01 - sinA*m11
+    val t11 = sinA*m01 + cosA*m11
+
+    val t02 = cosA*m02 - sinA*m12
+        m12 = sinA*m02 + cosA*m12
+    
+    m00 = t00; m10 = t10
+    m01 = t01; m11 = t11
+    m02 = t02
   }
 
   final def applyTranslation(u: inVec2d) {
@@ -548,7 +569,14 @@ object Mat2x3d {
   }
 
   def rotate(angle: Double) :Mat2x3d = {
-    Mat2x3d(rotationMat(angle))
+    val cosA = cos(angle)
+    val sinA = sin(angle)
+
+    new Mat2x3d(
+       cosA, sinA,
+      -sinA, cosA,
+       0, 0
+    )
   }
 
   def translate(u: inVec2d) :Mat2x3d = {
@@ -559,7 +587,4 @@ object Mat2x3d {
 
   def concat(m: inMat2x3d) :Mat2x3d = Mat2x3d(m)
   def concat(m: inMat2d) :Mat2x3d = Mat2x3d(m)
-
-  implicit def toMutable(m: ReadMat2x3d) = Mat2x3d(m)
-  implicit def castFloat(m: AnyMat2x3[Float]) = apply(m)
 }

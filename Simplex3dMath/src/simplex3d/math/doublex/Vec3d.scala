@@ -176,7 +176,7 @@ object ConstVec3d {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec3d private[math] (cx: Double, cy: Double, cz: Double)
-extends ReadVec3d with Meta with CompositeFormat with Implicits[On]
+extends ReadVec3d with Meta with CompositeFormat
 with PropertyRef[ReadVec3d] with Serializable
 {
   px = cx; py = cy; pz = cz
@@ -293,8 +293,4 @@ object Vec3d {
   def apply(x: Double, yz: AnyVec2[_]) = new Vec3d(x, yz.dx, yz.dy)
 
   def unapply(u: ReadVec3d) = Some((u.x, u.y, u.z))
-  implicit def toMutable(u: ReadVec3d) = apply(u)
-
-  implicit def castInt(u: AnyVec3[Int]) = new Vec3d(u.dx, u.dy, u.dz)
-  implicit def castFloat(u: AnyVec3[Float]) = new Vec3d(u.dx, u.dy, u.dz)
 }

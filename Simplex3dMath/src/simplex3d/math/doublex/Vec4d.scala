@@ -195,7 +195,7 @@ object ConstVec4d {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
-extends ReadVec4d with Meta with CompositeFormat with Implicits[On]
+extends ReadVec4d with Meta with CompositeFormat
 with PropertyRef[ReadVec4d] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
@@ -470,8 +470,4 @@ object Vec4d {
   def apply(q: AnyQuat4[_]) = new Vec4d(q.db, q.dc, q.dd, q.da)
 
   def unapply(u: ReadVec4d) = Some((u.x, u.y, u.z, u.w))
-  implicit def toMutable(u: ReadVec4d) = apply(u)
-
-  implicit def castInt(u: AnyVec4[Int]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
-  implicit def castFloat(u: AnyVec4[Float]) = new Vec4d(u.dx, u.dy, u.dz, u.dw)
 }

@@ -210,7 +210,7 @@ object ConstVec4i {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
-extends ReadVec4i with Meta with CompositeFormat with Implicits[On]
+extends ReadVec4i with Meta with CompositeFormat
 with PropertyRef[ReadVec4i] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
@@ -499,5 +499,4 @@ object Vec4i {
   def apply(q: AnyQuat4[_]) = new Vec4i(q.db.toInt, q.dc.toInt, q.dd.toInt, q.da.toInt)
 
   def unapply(u: ReadVec4i) = Some((u.x, u.y, u.z, u.w))
-  implicit def toMutable(u: ReadVec4i) = apply(u)
 }

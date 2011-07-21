@@ -246,6 +246,4 @@ with PropertyRef[ReadIntRef] with Serializable
 
 object IntRef {
   def unapply(r: ReadIntRef) = Some(r.toConst)
-  implicit def toMutable(r: ReadIntRef) = new IntRef(r.toConst)
-  implicit def toMutable(x: Int) = new IntRef(x)
 }

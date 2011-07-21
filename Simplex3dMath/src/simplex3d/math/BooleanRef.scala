@@ -79,6 +79,4 @@ with PropertyRef[ReadBooleanRef] with Serializable
 
 object BooleanRef {
   def unapply(r: ReadBooleanRef) = Some(r.toConst)
-  implicit def toMutable(r: ReadBooleanRef) = new BooleanRef(r.toConst)
-  implicit def toMutable(x: Boolean) = new BooleanRef(x)
 }

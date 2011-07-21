@@ -144,7 +144,7 @@ object ConstVec2b {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
-extends ReadVec2b with Meta with CompositeFormat with Implicits[On]
+extends ReadVec2b with Meta with CompositeFormat
 with PropertyRef[ReadVec2b] with Serializable
 {
   px = cx; py = cy
@@ -209,5 +209,4 @@ object Vec2b {
   def apply(u: AnyVec4[_]) = new Vec2b(u.bx, u.by)
 
   def unapply(u: ReadVec2b) = Some((u.x, u.y))
-  implicit def toMutable(u: ReadVec2b) = apply(u)
 }

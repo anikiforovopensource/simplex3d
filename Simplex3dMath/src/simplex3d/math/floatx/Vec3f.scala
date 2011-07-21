@@ -176,7 +176,7 @@ object ConstVec3f {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
-extends ReadVec3f with Meta with CompositeFormat with Implicits[On]
+extends ReadVec3f with Meta with CompositeFormat
 with PropertyRef[ReadVec3f] with Serializable
 {
   px = cx; py = cy; pz = cz
@@ -293,7 +293,4 @@ object Vec3f {
   def apply(x: Float, yz: AnyVec2[_]) = new Vec3f(x, yz.fx, yz.fy)
 
   def unapply(u: ReadVec3f) = Some((u.x, u.y, u.z))
-  implicit def toMutable(u: ReadVec3f) = apply(u)
-
-  implicit def castInt(u: AnyVec3[Int]) = new Vec3f(u.fx, u.fy, u.fz)
 }

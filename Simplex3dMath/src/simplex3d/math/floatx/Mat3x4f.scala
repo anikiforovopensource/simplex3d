@@ -268,7 +268,31 @@ with ReadPropertyRef[ReadMat3x4f] with Serializable
    *         the last operation.
    */
   final def rotate(q: inQuat4f) :Mat3x4f = {
-    concat(rotationMat(normalize(q)))
+    val s = 2/normSquare(q)
+  
+    import q._
+    val tb = s*b*b
+    val tc = 1 - s*c*c
+    val td = s*d*d
+    val bc = s*b*c
+    val da = s*d*a
+    val bd = s*b*d
+    val ca = s*c*a
+    val cd = s*c*d
+    val ba = s*b*a
+
+    // Rotation matrix
+    val n00 = tc - td; val n10 = bc + da;     val n20 = bd - ca
+    val n01 = bc - da; val n11 = 1 - tb - td; val n21 = cd + ba
+    val n02 = bd + ca; val n12 = cd - ba;     val n22 = tc - tb
+    
+    // Combining with rotation matrix
+    new Mat3x4f(
+      n00*m00 + n01*m10 + n02*m20, n10*m00 + n11*m10 + n12*m20, n20*m00 + n21*m10 + n22*m20,
+      n00*m01 + n01*m11 + n02*m21, n10*m01 + n11*m11 + n12*m21, n20*m01 + n21*m11 + n22*m21,
+      n00*m02 + n01*m12 + n02*m22, n10*m02 + n11*m12 + n12*m22, n20*m02 + n21*m12 + n22*m22,
+      n00*m03 + n01*m13 + n02*m23, n10*m03 + n11*m13 + n12*m23, n20*m03 + n21*m13 + n22*m23
+    )
   }
 
   final def rotateX(angle: Float) :Mat3x4f = {
@@ -460,7 +484,7 @@ final class Mat3x4f private[math] (
   c02: Float, c12: Float, c22: Float,
   c03: Float, c13: Float, c23: Float
 )
-extends ReadMat3x4f with Meta with CompositeFormat with Implicits[On]
+extends ReadMat3x4f with Meta with CompositeFormat
 with PropertyRef[ReadMat3x4f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
@@ -578,7 +602,45 @@ with PropertyRef[ReadMat3x4f] with Serializable
    * @param q rotation quaternion.
    */
   final def applyRotation(q: inQuat4f) {
-    applyTransform(rotationMat(normalize(q)))
+    val s = 2/normSquare(q)
+  
+    import q._
+    val tb = s*b*b
+    val tc = 1 - s*c*c
+    val td = s*d*d
+    val bc = s*b*c
+    val da = s*d*a
+    val bd = s*b*d
+    val ca = s*c*a
+    val cd = s*c*d
+    val ba = s*b*a
+
+    // Rotation matrix
+    val n00 = tc - td; val n10 = bc + da;     val n20 = bd - ca
+    val n01 = bc - da; val n11 = 1 - tb - td; val n21 = cd + ba
+    val n02 = bd + ca; val n12 = cd - ba;     val n22 = tc - tb
+    
+    // Combining with rotation matrix
+    val t00 = n00*m00 + n01*m10 + n02*m20
+    val t10 = n10*m00 + n11*m10 + n12*m20
+    val t20 = n20*m00 + n21*m10 + n22*m20
+
+    val t01 = n00*m01 + n01*m11 + n02*m21
+    val t11 = n10*m01 + n11*m11 + n12*m21
+    val t21 = n20*m01 + n21*m11 + n22*m21
+
+    val t02 = n00*m02 + n01*m12 + n02*m22
+    val t12 = n10*m02 + n11*m12 + n12*m22
+    val t22 = n20*m02 + n21*m12 + n22*m22
+
+    val t03 = n00*m03 + n01*m13 + n02*m23
+    val t13 = n10*m03 + n11*m13 + n12*m23
+        m23 = n20*m03 + n21*m13 + n22*m23
+    
+    m00 = t00; m10 = t10; m20 = t20
+    m01 = t01; m11 = t11; m21 = t21
+    m02 = t02; m12 = t12; m22 = t22
+    m03 = t03; m13 = t13
   }
 
   final def applyRotationX(angle: Float) {
@@ -791,7 +853,25 @@ object Mat3x4f {
   }
 
   def rotate(q: inQuat4f) :Mat3x4f = {
-    Mat3x4f(rotationMat(normalize(q)))
+    val s = 2/normSquare(q)
+  
+    import q._
+    val tb = s*b*b
+    val tc = 1 - s*c*c
+    val td = s*d*d
+    val bc = s*b*c
+    val da = s*d*a
+    val bd = s*b*d
+    val ca = s*c*a
+    val cd = s*c*d
+    val ba = s*b*a
+
+    new Mat3x4f(
+      tc - td, bc + da, bd - ca,
+      bc - da, 1 - tb - td, cd + ba,
+      bd + ca, cd - ba, tc - tb,
+      0, 0, 0
+    )
   }
 
   def rotateX(angle: Float) :Mat3x4f = {
@@ -836,6 +916,4 @@ object Mat3x4f {
 
   def concat(m: inMat3x4f) :Mat3x4f = Mat3x4f(m)
   def concat(m: inMat3f) :Mat3x4f = Mat3x4f(m)
-
-  implicit def toMutable(m: ReadMat3x4f) = Mat3x4f(m)
 }

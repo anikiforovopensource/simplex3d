@@ -262,7 +262,7 @@ final class Mat2d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double
 )
-extends ReadMat2d with Meta with CompositeFormat with Implicits[On]
+extends ReadMat2d with Meta with CompositeFormat
 with PropertyRef[ReadMat2d] with Serializable
 {
   p00 = c00; p10 = c10
@@ -402,7 +402,4 @@ object Mat2d {
   )
 
   def unapply(m: ReadMat2d) = Some((m(0), m(1)))
-
-  implicit def toMutable(m: ReadMat2d) = Mat2d(m)
-  implicit def castFloat(m: AnyMat2[Float]) = apply(m)
 }

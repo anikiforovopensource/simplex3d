@@ -235,6 +235,4 @@ with PropertyRef[ReadDoubleRef] with Serializable
 
 object DoubleRef {
   def unapply(r: ReadDoubleRef) = Some(r.toConst)
-  implicit def toMutable(r: ReadDoubleRef) = new DoubleRef(r.toConst)
-  implicit def toMutable(x: Double) = new DoubleRef(x)
 }

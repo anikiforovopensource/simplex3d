@@ -324,7 +324,7 @@ final class Mat3f private[math] (
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float
 )
-extends ReadMat3f with Meta with CompositeFormat with Implicits[On]
+extends ReadMat3f with Meta with CompositeFormat
 with PropertyRef[ReadMat3f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
@@ -505,6 +505,4 @@ object Mat3f {
   )
 
   def unapply(m: ReadMat3f) = Some((m(0), m(1), m(2)))
-
-  implicit def toMutable(m: ReadMat3f) = Mat3f(m)
 }

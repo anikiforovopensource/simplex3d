@@ -101,66 +101,27 @@ package object doublex {
   type Mat4x4d = Mat4d
   val Mat4x4d = Mat4d
 
-  // In and Out aliases
+  // In aliases
   type inVec2d = ReadVec2d
-  type outVec2d = Vec2d with Implicits[Off]
-  @inline implicit def outVec2d(u: Vec2d) = u.asInstanceOf[outVec2d]
-
   type inVec3d = ReadVec3d
-  type outVec3d = Vec3d with Implicits[Off]
-  @inline implicit def outVec3d(u: Vec3d) = u.asInstanceOf[outVec3d]
-
   type inVec4d = ReadVec4d
-  type outVec4d = Vec4d with Implicits[Off]
-  @inline implicit def outVec4d(u: Vec4d) = u.asInstanceOf[outVec4d]
-
+  
   type inQuat4d = ReadQuat4d
-  type outQuat4d = Quat4d with Implicits[Off]
-  @inline implicit def outQuat4d(u: Quat4d) = u.asInstanceOf[outQuat4d]
-
+  
   type inMat2d = ReadMat2d
-  type outMat2d = Mat2d with Implicits[Off]
-  @inline implicit def outMat2x2d(u: Mat2d) = u.asInstanceOf[outMat2d]
-
   type inMat2x3d = ReadMat2x3d
-  type outMat2x3d = Mat2x3d with Implicits[Off]
-  @inline implicit def outMat2x3d(u: Mat2x3d) = u.asInstanceOf[outMat2x3d]
-
   type inMat2x4d = ReadMat2x4d
-  type outMat2x4d = Mat2x4d with Implicits[Off]
-  @inline implicit def outMat2x4d(u: Mat2x4d) = u.asInstanceOf[outMat2x4d]
-
+  
   type inMat3x2d = ReadMat3x2d
-  type outMat3x2d = Mat3x2d with Implicits[Off]
-  @inline implicit def outMat3x2d(u: Mat3x2d) = u.asInstanceOf[outMat3x2d]
-
   type inMat3d = ReadMat3d
-  type outMat3d = Mat3d with Implicits[Off]
-  @inline implicit def outMat3x3d(u: Mat3d) = u.asInstanceOf[outMat3d]
-
   type inMat3x4d = ReadMat3x4d
-  type outMat3x4d = Mat3x4d with Implicits[Off]
-  @inline implicit def outMat3x4d(u: Mat3x4d) = u.asInstanceOf[outMat3x4d]
-
+  
   type inMat4x2d = ReadMat4x2d
-  type outMat4x2d = Mat4x2d with Implicits[Off]
-  @inline implicit def outMat4x2d(u: Mat4x2d) = u.asInstanceOf[outMat4x2d]
-
   type inMat4x3d = ReadMat4x3d
-  type outMat4x3d = Mat4x3d with Implicits[Off]
-  @inline implicit def outMat4x3d(u: Mat4x3d) = u.asInstanceOf[outMat4x3d]
-
   type inMat4d = ReadMat4d
-  type outMat4d = Mat4d with Implicits[Off]
-  @inline implicit def outMat4x4d(u: Mat4d) = u.asInstanceOf[outMat4d]
 
-  // In and Out matrix aliases
+  // In matrix aliases
   type inMat2x2d = inMat2d
-  type outMat2x2d = outMat2d
-
   type inMat3x3d = inMat3d
-  type outMat3x3d = outMat3d
-
   type inMat4x4d = inMat4d
-  type outMat4x4d = outMat4d
 }

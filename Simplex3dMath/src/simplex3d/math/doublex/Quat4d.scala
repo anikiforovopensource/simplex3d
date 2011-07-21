@@ -179,7 +179,7 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
-extends ReadQuat4d with Meta with CompositeFormat with Implicits[On]
+extends ReadQuat4d with Meta with CompositeFormat
 with PropertyRef[ReadQuat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
@@ -301,7 +301,4 @@ object Quat4d {
   def rotateZ(angle: Double) :Quat4d = {
     quaternion(angle, Vec3d.UnitZ)
   }
-
-  implicit def toMutable(u: ReadQuat4d) = new Quat4d(u.a, u.b, u.c, u.d)
-  implicit def castFloat(q: AnyQuat4[Float]) = new Quat4d(q.da, q.db, q.dc, q.dd)
 }

@@ -177,7 +177,7 @@ object ConstVec4b {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4b private[math] (cx: Boolean, cy: Boolean, cz: Boolean, cw: Boolean)
-extends ReadVec4b with Meta with CompositeFormat with Implicits[On]
+extends ReadVec4b with Meta with CompositeFormat
 with PropertyRef[ReadVec4b] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
@@ -437,5 +437,4 @@ object Vec4b {
   def apply(q: AnyQuat4[_]) = new Vec4b(Bool(q.db), Bool(q.dc), Bool(q.dd), Bool(q.da))
 
   def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))
-  implicit def toMutable(u: ReadVec4b) = apply(u)
 }

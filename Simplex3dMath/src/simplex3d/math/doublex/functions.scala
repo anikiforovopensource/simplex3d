@@ -822,7 +822,7 @@ object functions {
    * @param i a result vector to store the integer parts of components of u.
    * @return a vector with fractional parts of components of u.
    */
-  def modf(u: inVec2d, i: outVec2d) :Vec2d = {
+  def modf(u: inVec2d, i: Vec2d) :Vec2d = {
     i.x = trunc(u.x)
     i.y = trunc(u.y)
     u - i
@@ -1027,7 +1027,7 @@ object functions {
   def mod(u: inVec3d, v: inVec3d) :Vec3d = {
     new Vec3d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z))
   }
-  def modf(u: inVec3d, i: outVec3d) :Vec3d = {
+  def modf(u: inVec3d, i: Vec3d) :Vec3d = {
     i.x = trunc(u.x)
     i.y = trunc(u.y)
     i.z = trunc(u.z)
@@ -1314,7 +1314,7 @@ object functions {
   def mod(u: inVec4d, v: inVec4d) :Vec4d = {
     new Vec4d(mod(u.x, v.x), mod(u.y, v.y), mod(u.z, v.z), mod(u.w, v.w))
   }
-  def modf(u: inVec4d, i: outVec4d) :Vec4d = {
+  def modf(u: inVec4d, i: Vec4d) :Vec4d = {
     i.x = trunc(u.x)
     i.y = trunc(u.y)
     i.z = trunc(u.z)
@@ -2459,7 +2459,7 @@ object functions {
    * If quaternion represents 0 degree rotation, then rotation
    * axis is not defined, in this case the UnitX axis is chosen.
    */
-  def angleAxis(q: inQuat4d, axis: outVec3d) :Double = {
+  def angleAxis(q: inQuat4d, axis: Vec3d) :Double = {
     import q._
 
     if (approxEqual(abs(a), 1, 1e-15)) {
@@ -2479,7 +2479,7 @@ object functions {
    * the desired result. If the matrix represents 0 degree rotation,
    * then rotation axis is undefined, in this case the UnitX axis is chosen.
    */
-  def angleAxis(m: inMat3d, axis: outVec3d) :Double = {
+  def angleAxis(m: inMat3d, axis: Vec3d) :Double = {
     import m._
 
     val cosAngle = (m00 + m11 + m22 - 1)*0.5

@@ -335,7 +335,7 @@ final class Mat2x4f private[math] (
   c02: Float, c12: Float,
   c03: Float, c13: Float
 )
-extends ReadMat2x4f with Meta with CompositeFormat with Implicits[On]
+extends ReadMat2x4f with Meta with CompositeFormat
 with PropertyRef[ReadMat2x4f] with Serializable
 {
   p00 = c00; p10 = c10
@@ -522,6 +522,4 @@ object Mat2x4f {
   )
 
   def unapply(m: ReadMat2x4f) = Some((m(0), m(1), m(2), m(3)))
-
-  implicit def toMutable(m: ReadMat2x4f) = Mat2x4f(m)
 }

@@ -169,6 +169,4 @@ with PropertyRef[ReadFloatRef] with Serializable
 
 object FloatRef {
   def unapply(r: ReadFloatRef) = Some(r.toConst)
-  implicit def toMutable(r: ReadFloatRef) = new FloatRef(r.toConst)
-  implicit def toMutable(x: Float) = new FloatRef(x)
 }

@@ -67,7 +67,7 @@ package object double {
     def apply(p: inContiguous[Quat4d#Component, Raw], j: Int) :Quat4d#Const = {
       ConstQuat4d(p(j), p(j + 1), p(j + 2), p(j + 3))
     }
-    def update(p: outContiguous[Quat4d#Component, Raw], j: Int, v: Quat4d#Read) {
+    def update(p: Contiguous[Quat4d#Component, Raw], j: Int, v: Quat4d#Read) {
       p(j) = v.a; p(j + 1) = v.b; p(j + 2) = v.c; p(j + 3) = v.d
     }
   }
@@ -83,7 +83,7 @@ package object double {
         p(j + 2), p(j + 3)
       )
     }
-    def update(p: outContiguous[Mat2x2d#Component, Raw], j: Int, v: Mat2x2d#Read) {
+    def update(p: Contiguous[Mat2x2d#Component, Raw], j: Int, v: Mat2x2d#Read) {
       p(j) =     v.m00; p(j + 1) = v.m10
       p(j + 2) = v.m01; p(j + 3) = v.m11
     }
@@ -101,7 +101,7 @@ package object double {
         p(j + 4), p(j + 5)
       )
     }
-    def update(p: outContiguous[Mat2x3d#Component, Raw], j: Int, v: Mat2x3d#Read) {
+    def update(p: Contiguous[Mat2x3d#Component, Raw], j: Int, v: Mat2x3d#Read) {
       p(j) =     v.m00; p(j + 1) = v.m10
       p(j + 2) = v.m01; p(j + 3) = v.m11
       p(j + 4) = v.m02; p(j + 5) = v.m12
@@ -121,7 +121,7 @@ package object double {
         p(j + 6), p(j + 7)
       )
     }
-    def update(p: outContiguous[Mat2x4d#Component, Raw], j: Int, v: Mat2x4d#Read) {
+    def update(p: Contiguous[Mat2x4d#Component, Raw], j: Int, v: Mat2x4d#Read) {
       p(j) =     v.m00; p(j + 1) = v.m10
       p(j + 2) = v.m01; p(j + 3) = v.m11
       p(j + 4) = v.m02; p(j + 5) = v.m12
@@ -140,7 +140,7 @@ package object double {
         p(j + 3), p(j + 4), p(j + 5)
       )
     }
-    def update(p: outContiguous[Mat3x2d#Component, Raw], j: Int, v: Mat3x2d#Read) {
+    def update(p: Contiguous[Mat3x2d#Component, Raw], j: Int, v: Mat3x2d#Read) {
       p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
       p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
     }
@@ -158,7 +158,7 @@ package object double {
         p(j + 6), p(j + 7), p(j + 8)
       )
     }
-    def update(p: outContiguous[Mat3x3d#Component, Raw], j: Int, v: Mat3x3d#Read) {
+    def update(p: Contiguous[Mat3x3d#Component, Raw], j: Int, v: Mat3x3d#Read) {
       p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
       p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
       p(j + 6) = v.m02; p(j + 7) = v.m12; p(j + 8) = v.m22
@@ -178,7 +178,7 @@ package object double {
         p(j + 9), p(j + 10), p(j + 11)
       )
     }
-    def update(p: outContiguous[Mat3x4d#Component, Raw], j: Int, v: Mat3x4d#Read) {
+    def update(p: Contiguous[Mat3x4d#Component, Raw], j: Int, v: Mat3x4d#Read) {
       p(j) =     v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20
       p(j + 3) = v.m01; p(j + 4) =  v.m11; p(j + 5) =  v.m21
       p(j + 6) = v.m02; p(j + 7) =  v.m12; p(j + 8) =  v.m22
@@ -197,7 +197,7 @@ package object double {
         p(j + 4), p(j + 5), p(j + 6), p(j + 7)
       )
     }
-    def update(p: outContiguous[Mat4x2d#Component, Raw], j: Int, v: Mat4x2d#Read) {
+    def update(p: Contiguous[Mat4x2d#Component, Raw], j: Int, v: Mat4x2d#Read) {
       p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) = v.m20; p(j + 3) = v.m30
       p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) = v.m21; p(j + 7) = v.m31
     }
@@ -215,7 +215,7 @@ package object double {
         p(j + 8), p(j + 9), p(j + 10), p(j + 11)
       )
     }
-    def update(p: outContiguous[Mat4x3d#Component, Raw], j: Int, v: Mat4x3d#Read) {
+    def update(p: Contiguous[Mat4x3d#Component, Raw], j: Int, v: Mat4x3d#Read) {
       p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
       p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
       p(j + 8) = v.m02; p(j + 9) = v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32
@@ -235,7 +235,7 @@ package object double {
         p(j + 12), p(j + 13), p(j + 14), p(j + 15)
       )
     }
-    def update(p: outContiguous[Mat4x4d#Component, Raw], j: Int, v: Mat4x4d#Read) {
+    def update(p: Contiguous[Mat4x4d#Component, Raw], j: Int, v: Mat4x4d#Read) {
       p(j) =      v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
       p(j + 4) =  v.m01; p(j + 5) =  v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
       p(j + 8) =  v.m02; p(j + 9) =  v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32

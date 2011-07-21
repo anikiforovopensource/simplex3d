@@ -46,7 +46,7 @@ object AdapterVImplementedBench {
         primitives(j + 2)
       )
     }
-    def update(primitives: outContiguous[V3#Component, Raw], j: Int, value: V3#Meta#Read) {
+    def update(primitives: Contiguous[V3#Component, Raw], j: Int, value: V3#Meta#Read) {
       primitives(j) = value.x
       primitives(j + 1) = value.y
       primitives(j + 2) = value.z
@@ -66,7 +66,7 @@ object AdapterVImplementedBench {
         primitives(j + 3)
       )
     }
-    def update(primitives: outContiguous[V4#Component, Raw], j: Int, value: V4#Meta#Read) {
+    def update(primitives: Contiguous[V4#Component, Raw], j: Int, value: V4#Meta#Read) {
       primitives(j) = value.x
       primitives(j + 1) = value.y
       primitives(j + 2) = value.z

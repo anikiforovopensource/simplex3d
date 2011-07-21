@@ -81,16 +81,13 @@ package object data {
   type RFloat = integration.RFloat
   type RDouble = integration.RDouble
 
-
-  type inData[E <: Meta] = ReadData[E]
-  type outData[E <: Meta] = Data[E]
+  type RawView = ReadDataView[_ <: Format, Raw]
   
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
-  type outIndex = outIndexSeq[Unsigned]
   
-  type RawView = ReadDataView[_ <: Format, Raw]
+  type inData[E <: Meta] = ReadData[E]
 
   type inDataSeq[F <: Format, +R <: Raw] = ReadDataSeq[F, R]
   type inContiguous[F <: Format, +R <: Raw] = ReadContiguous[F, R]
@@ -102,16 +99,7 @@ package object data {
   type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
-  type outDataSeq[F <: Format, +R <: Raw] = DataSeq[F, R]
-  type outContiguous[F <: Format, +R <: Raw] = Contiguous[F, R]
-  type outDataArray[F <: Format, +R <: Raw] = DataArray[F, R]
-  type outDataBuffer[F <: Format, +R <: Raw] = DataBuffer[F, R]
-  type outDataView[F <: Format, +R <: Raw] = DataView[F, R]
-
-  type outIndexSeq[+R <: Unsigned] = IndexSeq[R]
-  type outIndexArray[+R <: Unsigned] = IndexArray[R]
-  type outIndexBuffer[+R <: Unsigned] = IndexBuffer[R]
-
+  
   @inline implicit final def readContegiousDataToIndex[R <: Unsigned] (
     d: ReadContiguous[SInt, R]
   ) = d.asInstanceOf[ReadIndexSeq[R]]

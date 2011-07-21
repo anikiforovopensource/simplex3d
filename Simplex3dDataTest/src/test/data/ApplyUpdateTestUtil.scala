@@ -205,7 +205,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     }
   }
 
-  private def updateValue[F <: Format](seq: outDataSeq[F, Raw], i: Int, bcopy: outDataSeq[F#Component, Raw]) {
+  private def updateValue[F <: Format](seq: DataSeq[F, Raw], i: Int, bcopy: DataSeq[F#Component, Raw]) {
     def iput(i: Int, j: Int, u: Int) {
       val s = bcopy.asInstanceOf[DataSeq[SInt, Raw]]
       s(seq.offset + seq.stride*i + j) = u
@@ -273,7 +273,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     seq(i) = e.asInstanceOf[F#Meta#Read]
   }
 
-  private def testApplyUpdate[F <: Format](seq: outDataSeq[F, Raw]) {
+  private def testApplyUpdate[F <: Format](seq: DataSeq[F, Raw]) {
     testIndex(seq)
 
     val bcopy = seq.primitives.copyAsDataArray()

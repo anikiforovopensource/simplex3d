@@ -39,7 +39,7 @@ abstract class DataAdapter[F <: CompositeFormat, B <: Defined](final val compone
 extends CompositionFactory[F, B] with Serializable {
   
   def apply(primitives: inContiguous[F#Component, Raw], j: Int) :F#Meta#Const
-  def update(primitives: outContiguous[F#Component, Raw], j: Int, value: F#Meta#Read) :Unit
+  def update(primitives: Contiguous[F#Component, Raw], j: Int, value: F#Meta#Read) :Unit
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
   :ReadDataArray[F, P] = {

@@ -706,7 +706,7 @@ object TestUtil extends FunSuite {
   
   private final def putIntContent(
     components: Int,
-    dest: outContiguous[SInt, Raw],
+    dest: Contiguous[SInt, Raw],
     src: inContiguous[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
@@ -726,7 +726,7 @@ object TestUtil extends FunSuite {
   
   private final def putFloatContent(
     components: Int,
-    dest: outContiguous[RFloat, Raw],
+    dest: Contiguous[RFloat, Raw],
     src: inContiguous[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
@@ -746,7 +746,7 @@ object TestUtil extends FunSuite {
   
   private final def putDoubleContent(
     components: Int,
-    dest: outContiguous[RDouble, Raw],
+    dest: Contiguous[RDouble, Raw],
     src: inContiguous[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {

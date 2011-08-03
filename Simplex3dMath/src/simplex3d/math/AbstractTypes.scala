@@ -259,9 +259,23 @@ abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyVec2[P] private[math] () extends VecImpl234[P] with AnyVec[P] {
+abstract class AnyVec2[P] private[math] () extends
+/* @SwizzlingStart */ VecImpl234[P] with /* @SwizzlingEnd */
+AnyVec[P] {
   type Clone <: AnyVec2[P]
   final def components = 2
+  
+  private[math] def bx: Boolean
+  private[math] def by: Boolean
+
+  private[math] def ix: Int
+  private[math] def iy: Int
+
+  private[math] def fx: Float
+  private[math] def fy: Float
+
+  private[math] def dx: Double
+  private[math] def dy: Double
 }
 
 
@@ -272,9 +286,27 @@ abstract class AnyVec2[P] private[math] () extends VecImpl234[P] with AnyVec[P] 
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyVec3[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
+abstract class AnyVec3[P] private[math] () extends
+/* @SwizzlingStart */ VecImpl34[P] with /* @SwizzlingEnd */
+AnyVec[P] {
   type Clone <: AnyVec3[P]
   final def components = 3
+  
+  private[math] def bx: Boolean
+  private[math] def by: Boolean
+  private[math] def bz: Boolean
+
+  private[math] def ix: Int
+  private[math] def iy: Int
+  private[math] def iz: Int
+
+  private[math] def fx: Float
+  private[math] def fy: Float
+  private[math] def fz: Float
+
+  private[math] def dx: Double
+  private[math] def dy: Double
+  private[math] def dz: Double
 }
 
 
@@ -285,18 +317,35 @@ abstract class AnyVec3[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class AnyVec4[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
+abstract class AnyVec4[P] private[math] () extends
+/* @SwizzlingStart */ VecImpl34[P] with /* @SwizzlingEnd */
+AnyVec[P] {
 
   type Clone <: AnyVec4[P]
   final def components = 4
 
-
+  private[math] def bx: Boolean
+  private[math] def by: Boolean
+  private[math] def bz: Boolean
   private[math] def bw: Boolean
+
+  private[math] def ix: Int
+  private[math] def iy: Int
+  private[math] def iz: Int
   private[math] def iw: Int
+
+  private[math] def fx: Float
+  private[math] def fy: Float
+  private[math] def fz: Float
   private[math] def fw: Float
+
+  private[math] def dx: Double
+  private[math] def dy: Double
+  private[math] def dz: Double
   private[math] def dw: Double
-
-
+  
+  
+  // @SwizzlingStart
   final def xw: C2 = make2(dx, dw)
   final def yw: C2 = make2(dy, dw)
   final def zw: C2 = make2(dz, dw)
@@ -1116,4 +1165,5 @@ abstract class AnyVec4[P] private[math] () extends VecImpl34[P] with AnyVec[P] {
   protected def qtps_=(u: R4) { throw new UnsupportedOperationException }
   protected def qpst_=(u: R4) { throw new UnsupportedOperationException }
   protected def qpts_=(u: R4) { throw new UnsupportedOperationException }
+  // @SwizzlingEnd
 }

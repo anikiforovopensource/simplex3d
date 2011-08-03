@@ -242,7 +242,7 @@ with PropertyRef[ReadVec2i] with Serializable
   def |=(u: inVec2i) { x |= u.x; y |= u.y }
   def ^=(u: inVec2i) { x ^= u.x; y ^= u.y }
 
-  // Swizzling
+  // @SwizzlingStart
   override def xy_=(u: inVec2i) { x = u.x; y = u.y }
   override def yx_=(u: inVec2i) { var t = u.y; y = u.x; x = t }
 
@@ -251,6 +251,7 @@ with PropertyRef[ReadVec2i] with Serializable
 
   override def st_=(u: inVec2i) { xy_=(u) }
   override def ts_=(u: inVec2i) { yx_=(u) }
+  // @SwizzlingEnd
 }
 
 

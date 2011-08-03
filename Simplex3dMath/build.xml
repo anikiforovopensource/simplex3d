@@ -68,6 +68,32 @@ name="Simplex3dMath" default="release-all" basedir=".">
 
     -->
 
+    <target depends="init" name="-javadoc-build">
+        <exec dir="." executable="scala" failonerror="true">
+            <arg value="StripSwizzling.scala"/>
+        </exec>
+        
+        <mkdir dir="${dist.javadoc.dir}"/>
+        
+        <scaladoc
+            addparams="${javadoc.additionalparam}"
+            deprecation="yes"
+            destdir="${dist.javadoc.dir}"
+            doctitle="${javadoc.windowtitle}"
+            encoding="${javadoc.encoding.used}"
+            srcdir="${build.dir}/sdoc"
+            unchecked="yes">
+            
+            <classpath>
+                <path path="${javac.classpath}"/>
+                <fileset dir="${scala.lib}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </scaladoc>
+    </target>
+    
+    
     <target name="-post-jar">
         <delete dir="${release.dir}/jars" />
         

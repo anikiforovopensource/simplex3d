@@ -202,7 +202,7 @@ with PropertyRef[ReadVec3b] with Serializable
   }
 
 
-  // Swizzling
+  // @SwizzlingStart
   override def xy_=(u: inVec2b) { x = u.x; y = u.y }
   override def xz_=(u: inVec2b) { x = u.x; z = u.y }
   override def yx_=(u: inVec2b) { y = u.x; x = u.y }
@@ -244,6 +244,7 @@ with PropertyRef[ReadVec3b] with Serializable
   override def tps_=(u: inVec3b) { yzx_=(u) }
   override def pst_=(u: inVec3b) { zxy_=(u) }
   override def pts_=(u: inVec3b) { zyx_=(u) }
+  // @SwizzlingEnd
 }
 
 

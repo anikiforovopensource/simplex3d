@@ -231,7 +231,7 @@ with PropertyRef[ReadVec3d] with Serializable
 
   def *=(m: inMat3d) { this := m.transposeMult(this) }
 
-  // Swizzling
+  // @SwizzlingStart
   override def xy_=(u: inVec2d) { x = u.x; y = u.y }
   override def xz_=(u: inVec2d) { x = u.x; z = u.y }
   override def yx_=(u: inVec2d) { y = u.x; x = u.y }
@@ -273,6 +273,7 @@ with PropertyRef[ReadVec3d] with Serializable
   override def tps_=(u: inVec3d) { yzx_=(u) }
   override def pst_=(u: inVec3d) { zxy_=(u) }
   override def pts_=(u: inVec3d) { zyx_=(u) }
+  // @SwizzlingEnd
 }
 
 

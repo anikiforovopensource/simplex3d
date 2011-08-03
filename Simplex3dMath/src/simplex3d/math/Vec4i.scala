@@ -283,7 +283,7 @@ with PropertyRef[ReadVec4i] with Serializable
   def |=(u: inVec4i) { x |= u.x; y |= u.y; z |= u.z; w |= u.w }
   def ^=(u: inVec4i) { x ^= u.x; y ^= u.y; z ^= u.z; w ^= u.w }
 
-  // Swizzling
+  // @SwizzlingStart
   override def xy_=(u: inVec2i) { x = u.x; y = u.y }
   override def xz_=(u: inVec2i) { x = u.x; z = u.y }
   override def xw_=(u: inVec2i) { x = u.x; w = u.y }
@@ -472,6 +472,7 @@ with PropertyRef[ReadVec4i] with Serializable
   override def qtps_=(u: inVec4i) { wyzx_=(u) }
   override def qpst_=(u: inVec4i) { wzxy_=(u) }
   override def qpts_=(u: inVec4i) { wzyx_=(u) }
+  // @SwizzlingEnd
 }
 
 

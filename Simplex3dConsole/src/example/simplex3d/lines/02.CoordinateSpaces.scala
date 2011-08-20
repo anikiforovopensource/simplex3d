@@ -58,7 +58,8 @@ object CoordinateSpaces extends App {
    *   This matrix will transform model coordinates to world coordinates.
    * 
    * - Mutliply the ViewMatrix by the ModelMatrix to produce ModelViewMatrix,
-   *   which transforms ModelCoordinates to view coordinates.
+   *   which transforms ModelCoordinates to view coordinates. Lighting calculations
+   *   are done in this coordinate space.
    *   
    * - Find the ProjectionMatrix, which transforms view coordinates to
    *   ClipCoordinates. ProjectionMatrix can be set as perspective projection

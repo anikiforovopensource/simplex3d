@@ -33,19 +33,19 @@ extends TiledNoiseSource(seed) with Serializable
   
   // *** Hash **********************************************************************************************************
   
-  val a = (seed ^ 0x97CD8F8C) | ((1 << 16) + 1)
-  val b = seed ^ 0xA4BAA665
+  private val a = (seed ^ 0x97CD8F8C) | ((1 << 16) + 1)
+  private val b = seed ^ 0xA4BAA665
   
-  val c = (seed ^ 0xB5C18E6A) | ((1 << 16) + 1)
-  val d = seed ^ 0xF292D0B2
+  private val c = (seed ^ 0xB5C18E6A) | ((1 << 16) + 1)
+  private val d = seed ^ 0xF292D0B2
   
   // 16 bits of hash
-  def perm(x: Int) :Int = {
+  private final def perm(x: Int) :Int = {
     (a*(x ^ c)) >>> 16
   }
   
   // More expencive hash for 1d and 2d noise.
-  def perm2(x: Int) :Int = {
+  private final def perm2(x: Int) :Int = {
     val t = (a*(x ^ b)) >>> 16
     (c*(t ^ d)) >>> 16
   }
@@ -53,7 +53,7 @@ extends TiledNoiseSource(seed) with Serializable
   
   // *** Gradient ******************************************************************************************************
   
-  def grad2dot(i: Int)(x: Double, y: Double) :Double = {
+  private final def grad2dot(i: Int)(x: Double, y: Double) :Double = {
     import scala.annotation._
     
     ((i & 0x07): @switch) match {
@@ -68,7 +68,7 @@ extends TiledNoiseSource(seed) with Serializable
     }
   }
   
-  def grad3dot(i: Int)(x: Double, y: Double, z: Double) :Double = {
+  private final def grad3dot(i: Int)(x: Double, y: Double, z: Double) :Double = {
     import scala.annotation._
     
     val n = i % 12
@@ -85,7 +85,7 @@ extends TiledNoiseSource(seed) with Serializable
     }
   }
   
-  def grad4dot(i: Int)(x: Double, y: Double, z: Double, w: Double) :Double = {
+  private final def grad4dot(i: Int)(x: Double, y: Double, z: Double, w: Double) :Double = {
     import scala.annotation._
     
     val n = i & 0x1F

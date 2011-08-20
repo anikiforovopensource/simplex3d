@@ -24,10 +24,10 @@ import java.io._
 object StripSwizzling {
   
   def main(args: Array[String]) {
-    stripMove("src", "build/sdoc")
+    stripCopy("src", "build/sdoc")
   }
   
-  def stripMove(srcPath: String, destPath: String) {
+  def stripCopy(srcPath: String, destPath: String) {
     val src = new File(srcPath)
     val dest = new File(destPath)
     

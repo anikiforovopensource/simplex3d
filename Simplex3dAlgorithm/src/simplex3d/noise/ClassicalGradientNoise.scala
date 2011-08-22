@@ -26,54 +26,88 @@ package simplex3d.noise
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-class ClassicalGradientNoise(seed: Long)
+class ClassicalGradientNoise(seed: Int)
 extends TiledNoiseSource(seed) with Serializable
 {
 
-  import ClassicalGradientNoise.{grad3, grad4}
   
-
-  private[this] final val permArray: Array[Byte] = {
-
-    val array = Array[Byte](
-      -85, 6, -43, -11, -118, -116, 16, 71, -123, 27, 21, -46, 43, 78, 91, 116,
-      12, 8, 60, -4, -80, -21, -60, 123, 83, -117, 98, -19, -29, -72, 73, -58,
-      -22, -5, 104, -34, 70, -57, 114, 102, -40, -41, 57, 127, -24, 74, 122, -94,
-      -39, -10, -79, 109, 25, -55, 56, 58, 53, -42, 54, -47, -53, 19, -128, -49, 87,
-      -105, -102, -109, -45, 20, 85, -38, 108, -66, 117, 111, -2, 115, -115, 101,
-      15, -14, 5, -68, 65, 63, -108, -70, 39, -78, -54, -27, -26, 97, 36, -52, 110,
-      -50, -112, -8, 50, -81, -17, -89, -75, -69, 55, 124, -36, 47, 52, -90, -88,
-      -114, 31, 79, -100, 119, -15, 72, 28, 23, 126, -119, -64, -104, -98, 0, -13,
-      -16, 100, 113, -20, 66, 18, 96, -35, 45, 84, 118, 17, 90, -125, 32, -6, -73,
-      92, -63, 49, -23, 62, 94, -121, -48, 75, 13, 38, 40, 107, 125, -65, -93, 7, 77,
-      1, -124, -28, 44, -86, 26, -9, -103, -12, 59, -31, 10, 64, -33, 99, 9, -77, -71,
-      80, -95, -1, 103, -84, 95, -44, -67, 41, -91, 35, -106, 51, -61, -122, 121, 89,
-      -59, -62, 105, -74, -18, -32, -7, -82, -120, -110, 11, -30, -3, 34, 76, -87, -126,
-      42, 3, 46, -96, 30, -51, 82, -76, 68, 106, 112, 14, 81, 67, 48, -111, 120, 37,
-      -56, 33, 22, -92, -97, 29, -83, 88, 24, -25, 86, 69, 61, 2, -99, 93, -101, -113,
-      -107, 4, -127, -37
-    )
-
-    val random = new java.util.Random(seed)
-    var i = 0; while (i < array.length) {
-      val randomIndex = random.nextInt(array.length)
-
-      val tmp = array(i)
-      array(i) = array(randomIndex)
-      array(randomIndex) = tmp
-
-      i += 1
+  // *** Hash **********************************************************************************************************
+  
+  private val a = (seed ^ 0x97CD8F8C) | ((1 << 16) + 1)
+  private val b = seed ^ 0xA4BAA665
+  
+  private val c = (seed ^ 0xB5C18E6A) | ((1 << 16) + 1)
+  private val d = seed ^ 0xF292D0B2
+  
+  // 16 bits of hash
+  private final def perm(x: Int) :Int = {
+    (a*(x ^ c)) >>> 16
+  }
+  
+  // More expencive hash for 1d and 2d noise.
+  private final def perm2(x: Int) :Int = {
+    val t = (a*(x ^ b)) >>> 16
+    (c*(t ^ d)) >>> 16
+  }
+  
+  
+  // *** Gradient ******************************************************************************************************
+  
+  private final def grad2dot(i: Int)(x: Double, y: Double) :Double = {
+    import scala.annotation._
+    
+    ((i & 0x07): @switch) match {
+      case 0 => x
+      case 1 => y
+      case 2 => -x
+      case 3 => -y
+      case 4 => x + y
+      case 5 => x - y
+      case 6 => -x + y
+      case 7 => -x - y
     }
-
-    array
+  }
+  
+  private final def grad3dot(i: Int)(x: Double, y: Double, z: Double) :Double = {
+    import scala.annotation._
+    
+    val n = i % 12
+    var a = 0.0; var b = 0.0
+    
+    if (n < 8) { a = y; if (n < 4) b = x else b = z }
+    else { a = x; b = z }
+    
+    ((n & 0x03): @switch) match {
+      case 0 => a + b
+      case 1 => a - b
+      case 2 => -a + b
+      case 3 => -a - b
+    }
+  }
+  
+  private final def grad4dot(i: Int)(x: Double, y: Double, z: Double, w: Double) :Double = {
+    import scala.annotation._
+    
+    val n = i & 0x1F
+    var a = 0.0; var b = 0.0; var c = 0.0
+    
+    if (n < 16) { if (n < 8) { a = y; b = z; c = w } else { a = x; b = z; c = w } }
+    else { if (n < 24) { a = x; b = y; c = w } else { a = x; b = y; c = z } }
+    
+    ((n & 0x07): @switch) match {
+      case 0 => a + b + c
+      case 1 => a + b - c
+      case 2 => a - b + c
+      case 3 => a - b - c
+      case 4 => -a + b + c
+      case 5 => -a + b - c
+      case 6 => -a - b + c
+      case 7 => -a - b - c
+    }
   }
 
-
-  private final def perm(i: Int) = {
-    val xx = i ^ (i >> 16)
-    permArray((xx ^ (xx >> 8)) & 0xFF)
-  }
-
+  // *** Util **********************************************************************************************************
+  
   private final def ifloor(x: Double) :Long = {
     val i = x.toLong
     if (x > 0 || x == i) i else i - 1
@@ -84,20 +118,22 @@ extends TiledNoiseSource(seed) with Serializable
   }
 
 
+  // *** Noise *********************************************************************************************************
+  
   final def apply(x: Double) :Double = {
     val lx = ifloor(x)
     val fx = x - lx
     val ix = lx.toInt
 
     val n0 = {
-      val px = perm(ix)
+      val px = perm2(ix)
       // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
       val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
       grad*fx
     }
     
     val n1 = {
-      val px = perm(ix + 1)
+      val px = perm2(ix + 1)
       // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
       val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
       grad*(fx - 1)
@@ -117,32 +153,13 @@ extends TiledNoiseSource(seed) with Serializable
     val ix = lx.toInt
     val iy = ly.toInt
 
-    val px0 = perm(ix)
-    val px1 = perm(ix + 1)
+    val px0 = perm2(ix)
+    val px1 = perm2(ix + 1)
 
-    val n00 = {
-      val py = perm(px0 + iy)
-      val grad = grad3(py & 0x0F)
-      grad(0)*fx + grad(1)*fy
-    }
-
-    val n10 = {
-      val py = perm(px1 + iy)
-      val grad = grad3(py & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy
-    }
-
-    val n01 = {
-      val py = perm(px0 + iy + 1)
-      val grad = grad3(py & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1)
-    }
-
-    val n11 = {
-      val py = perm(px1 + iy + 1)
-      val grad = grad3(py & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1)
-    }
+    val n00 = grad2dot(perm2(px0 + iy))(fx, fy)
+    val n10 = grad2dot(perm2(px1 + iy))(fx - 1, fy)
+    val n01 = grad2dot(perm2(px0 + iy + 1))(fx, fy - 1)
+    val n11 = grad2dot(perm2(px1 + iy + 1))(fx - 1, fy - 1)
 
     val xfade = fade(fx)
     val mx0 = n00*(1 - xfade) + n10*xfade
@@ -172,53 +189,14 @@ extends TiledNoiseSource(seed) with Serializable
     val py01 = perm(px0 + iy + 1)
     val py11 = perm(px1 + iy + 1)
 
-    val n000 = {
-      val pz = perm(py00 + iz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz
-    }
-
-    val n100 = {
-      val pz = perm(py10 + iz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz
-    }
-
-    val n010 = {
-      val pz = perm(py01 + iz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz
-    }
-
-    val n110 = {
-      val pz = perm(py11 + iz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz
-    }
-
-    val n001 = {
-      val pz = perm(py00 + iz + 1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1)
-    }
-
-    val n101 = {
-      val pz = perm(py10 + iz + 1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1)
-    }
-
-    val n011 = {
-      val pz = perm(py01 + iz + 1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1)
-    }
-
-    val n111 = {
-      val pz = perm(py11 + iz + 1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1)
-    }
+    val n000 = grad3dot(perm(py00 + iz))(fx, fy, fz)
+    val n100 = grad3dot(perm(py10 + iz))(fx - 1, fy, fz)
+    val n010 = grad3dot(perm(py01 + iz))(fx, fy - 1, fz)
+    val n110 = grad3dot(perm(py11 + iz))(fx - 1, fy - 1, fz)
+    val n001 = grad3dot(perm(py00 + iz + 1))(fx, fy, fz - 1)
+    val n101 = grad3dot(perm(py10 + iz + 1))(fx - 1, fy, fz - 1)
+    val n011 = grad3dot(perm(py01 + iz + 1))(fx, fy - 1, fz - 1)
+    val n111 = grad3dot(perm(py11 + iz + 1))(fx - 1, fy - 1, fz - 1)
 
     val xfade = fade(fx)
     val mx00 = n000*(1 - xfade) + n100*xfade
@@ -265,102 +243,22 @@ extends TiledNoiseSource(seed) with Serializable
     val pz011 = perm(py01 + iz + 1)
     val pz111 = perm(py11 + iz + 1)
 
-    val n0000 = {
-      val pw = perm(pz000 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz + grad(3)*fw
-    }
-
-    val n1000 = {
-      val pw = perm(pz100 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz + grad(3)*fw
-    }
-
-    val n0100 = {
-      val pw = perm(pz010 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*fw
-    }
-
-    val n1100 = {
-      val pw = perm(pz110 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*fw
-    }
-
-    val n0010 = {
-      val pw = perm(pz001 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n1010 = {
-      val pw = perm(pz101 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n0110 = {
-      val pw = perm(pz011 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n1110 = {
-      val pw = perm(pz111 + iw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n0001 = {
-      val pw = perm(pz000 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n1001 = {
-      val pw = perm(pz100 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n0101 = {
-      val pw = perm(pz010 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n1101 = {
-      val pw = perm(pz110 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n0011 = {
-      val pw = perm(pz001 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n1011 = {
-      val pw = perm(pz101 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n0111 = {
-      val pw = perm(pz011 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n1111 = {
-      val pw = perm(pz111 + iw + 1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
+    val n0000 = grad4dot(perm(pz000 + iw))(fx, fy, fz, fw)
+    val n1000 = grad4dot(perm(pz100 + iw))(fx - 1, fy, fz, fw)
+    val n0100 = grad4dot(perm(pz010 + iw))(fx, fy - 1, fz, fw)
+    val n1100 = grad4dot(perm(pz110 + iw))(fx - 1, fy - 1, fz, fw)
+    val n0010 = grad4dot(perm(pz001 + iw))(fx, fy, fz - 1, fw)
+    val n1010 = grad4dot(perm(pz101 + iw))(fx - 1, fy, fz - 1, fw)
+    val n0110 = grad4dot(perm(pz011 + iw))(fx, fy - 1, fz - 1, fw)
+    val n1110 = grad4dot(perm(pz111 + iw))(fx - 1, fy - 1, fz - 1, fw)
+    val n0001 = grad4dot(perm(pz000 + iw + 1))(fx, fy, fz, fw - 1)
+    val n1001 = grad4dot(perm(pz100 + iw + 1))(fx - 1, fy, fz, fw - 1)
+    val n0101 = grad4dot(perm(pz010 + iw + 1))(fx, fy - 1, fz, fw - 1)
+    val n1101 = grad4dot(perm(pz110 + iw + 1))(fx - 1, fy - 1, fz, fw - 1)
+    val n0011 = grad4dot(perm(pz001 + iw + 1))(fx, fy, fz - 1, fw - 1)
+    val n1011 = grad4dot(perm(pz101 + iw + 1))(fx - 1, fy, fz - 1, fw - 1)
+    val n0111 = grad4dot(perm(pz011 + iw + 1))(fx, fy - 1, fz - 1, fw - 1)
+    val n1111 = grad4dot(perm(pz111 + iw + 1))(fx - 1, fy - 1, fz - 1, fw - 1)
 
     val xfade = fade(fx)
     val mx000 = n0000*(1 - xfade) + n1000*xfade
@@ -401,14 +299,14 @@ extends TiledNoiseSource(seed) with Serializable
     val ix = lx.toInt & 0x7FFFFFFF
 
     val n0 = {
-      val px = perm(ix % tile)
+      val px = perm2(ix % tile)
       // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
       val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
       grad*fx
     }
 
     val n1 = {
-      val px = perm((ix + 1) % tile)
+      val px = perm2((ix + 1) % tile)
       // Gradient function, produces ints in [-8, 8] excluding 0 from perm.
       val grad = if ((px & 0x8) == 0) ((px & 0x7) + 1) else (px | 0xFFFFFFF8)
       grad*(fx - 1)
@@ -431,34 +329,15 @@ extends TiledNoiseSource(seed) with Serializable
     val ix = lx.toInt & 0x7FFFFFFF
     val iy = ly.toInt & 0x7FFFFFFF
 
-    val px0 = perm(ix % tilex)
-    val px1 = perm((ix + 1) % tilex)
+    val px0 = perm2(ix % tilex)
+    val px1 = perm2((ix + 1) % tilex)
     val ty = iy % tiley
     val ty1 = (iy + 1) % tiley
 
-    val n00 = {
-      val py = perm(px0 + ty)
-      val grad = grad3(py & 0x0F)
-      grad(0)*fx + grad(1)*fy
-    }
-
-    val n10 = {
-      val py = perm(px1 + ty)
-      val grad = grad3(py & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy
-    }
-
-    val n01 = {
-      val py = perm(px0 + ty1)
-      val grad = grad3(py & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1)
-    }
-
-    val n11 = {
-      val py = perm(px1 + ty1)
-      val grad = grad3(py & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1)
-    }
+    val n00 = grad2dot(perm2(px0 + ty))(fx, fy)
+    val n10 = grad2dot(perm2(px1 + ty))(fx - 1, fy)
+    val n01 = grad2dot(perm2(px0 + ty1))(fx, fy - 1)
+    val n11 = grad2dot(perm2(px1 + ty1))(fx - 1, fy - 1)
 
     val xfade = fade(fx)
     val mx0 = n00*(1 - xfade) + n10*xfade
@@ -495,53 +374,14 @@ extends TiledNoiseSource(seed) with Serializable
     val tz = iz % tilez
     val tz1 = (iz + 1) % tilez
 
-    val n000 = {
-      val pz = perm(py00 + tz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz
-    }
-
-    val n100 = {
-      val pz = perm(py10 + tz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz
-    }
-
-    val n010 = {
-      val pz = perm(py01 + tz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz
-    }
-
-    val n110 = {
-      val pz = perm(py11 + tz)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz
-    }
-
-    val n001 = {
-      val pz = perm(py00 + tz1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1)
-    }
-
-    val n101 = {
-      val pz = perm(py10 + tz1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1)
-    }
-
-    val n011 = {
-      val pz = perm(py01 + tz1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1)
-    }
-
-    val n111 = {
-      val pz = perm(py11 + tz1)
-      val grad = grad3(pz & 0x0F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1)
-    }
+    val n000 = grad3dot(perm(py00 + tz))(fx, fy, fz)
+    val n100 = grad3dot(perm(py10 + tz))(fx - 1, fy, fz)
+    val n010 = grad3dot(perm(py01 + tz))(fx, fy - 1, fz)
+    val n110 = grad3dot(perm(py11 + tz))(fx - 1, fy - 1, fz)
+    val n001 = grad3dot(perm(py00 + tz1))(fx, fy, fz - 1)
+    val n101 = grad3dot(perm(py10 + tz1))(fx - 1, fy, fz - 1)
+    val n011 = grad3dot(perm(py01 + tz1))(fx, fy - 1, fz - 1)
+    val n111 = grad3dot(perm(py11 + tz1))(fx - 1, fy - 1, fz - 1)
 
     val xfade = fade(fx)
     val mx00 = n000*(1 - xfade) + n100*xfade
@@ -597,102 +437,22 @@ extends TiledNoiseSource(seed) with Serializable
     val tw = iw % tilew
     val tw1 = (iw + 1) % tilew
 
-    val n0000 = {
-      val pw = perm(pz000 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz + grad(3)*fw
-    }
-
-    val n1000 = {
-      val pw = perm(pz100 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz + grad(3)*fw
-    }
-
-    val n0100 = {
-      val pw = perm(pz010 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*fw
-    }
-
-    val n1100 = {
-      val pw = perm(pz110 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*fw
-    }
-
-    val n0010 = {
-      val pw = perm(pz001 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n1010 = {
-      val pw = perm(pz101 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n0110 = {
-      val pw = perm(pz011 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n1110 = {
-      val pw = perm(pz111 + tw)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*fw
-    }
-
-    val n0001 = {
-      val pw = perm(pz000 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n1001 = {
-      val pw = perm(pz100 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n0101 = {
-      val pw = perm(pz010 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n1101 = {
-      val pw = perm(pz110 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*fz + grad(3)*(fw - 1)
-    }
-
-    val n0011 = {
-      val pw = perm(pz001 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n1011 = {
-      val pw = perm(pz101 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*fy + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n0111 = {
-      val pw = perm(pz011 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*fx + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
-    val n1111 = {
-      val pw = perm(pz111 + tw1)
-      val grad = grad4(pw & 0x1F)
-      grad(0)*(fx - 1) + grad(1)*(fy - 1) + grad(2)*(fz - 1) + grad(3)*(fw - 1)
-    }
-
+    val n0000 = grad4dot(perm(pz000 + tw))(fx, fy, fz, fw)
+    val n1000 = grad4dot(perm(pz100 + tw))(fx - 1, fy, fz, fw)
+    val n0100 = grad4dot(perm(pz010 + tw))(fx, fy - 1, fz, fw)
+    val n1100 = grad4dot(perm(pz110 + tw))(fx - 1, fy - 1, fz, fw)
+    val n0010 = grad4dot(perm(pz001 + tw))(fx, fy, fz - 1, fw)
+    val n1010 = grad4dot(perm(pz101 + tw))(fx - 1, fy, fz - 1, fw)
+    val n0110 = grad4dot(perm(pz011 + tw))(fx, fy - 1, fz - 1, fw)
+    val n1110 = grad4dot(perm(pz111 + tw))(fx - 1, fy - 1, fz - 1, fw)
+    val n0001 = grad4dot(perm(pz000 + tw1))(fx, fy, fz, fw - 1)
+    val n1001 = grad4dot(perm(pz100 + tw1))(fx - 1, fy, fz, fw - 1)
+    val n0101 = grad4dot(perm(pz010 + tw1))(fx, fy - 1, fz, fw - 1)
+    val n1101 = grad4dot(perm(pz110 + tw1))(fx - 1, fy - 1, fz, fw - 1)
+    val n0011 = grad4dot(perm(pz001 + tw1))(fx, fy, fz - 1, fw - 1)
+    val n1011 = grad4dot(perm(pz101 + tw1))(fx - 1, fy, fz - 1, fw - 1)
+    val n0111 = grad4dot(perm(pz011 + tw1))(fx, fy - 1, fz - 1, fw - 1)
+    val n1111 = grad4dot(perm(pz111 + tw1))(fx - 1, fy - 1, fz - 1, fw - 1)
 
     val xfade = fade(fx)
     val mx000 = n0000*(1 - xfade) + n1000*xfade
@@ -720,23 +480,4 @@ extends TiledNoiseSource(seed) with Serializable
 }
 
 
-object ClassicalGradientNoise extends ClassicalGradientNoise(0) {
-
-  private final val grad3: Array[Array[Byte]] = Array(
-    Array(0,1,1), Array(0,1,-1), Array(0,-1,1), Array(0,-1,-1),
-    Array(1,0,1), Array(1,0,-1), Array(-1,0,1), Array(-1,0,-1),
-    Array(1,1,0), Array(1,-1,0), Array(-1,1,0), Array(-1,-1,0),
-    Array(1,0,-1), Array(-1,0,-1), Array(0,-1,1), Array(0,1,1)
-  )
-
-  private final val grad4: Array[Array[Byte]] = Array(
-    Array(0,1,1,1), Array(0,1,1,-1), Array(0,1,-1,1), Array(0,1,-1,-1),
-    Array(0,-1,1,1), Array(0,-1,1,-1), Array(0,-1,-1,1), Array(0,-1,-1,-1),
-    Array(1,0,1,1), Array(1,0,1,-1), Array(1,0,-1,1), Array(1,0,-1,-1),
-    Array(-1,0,1,1), Array(-1,0,1,-1), Array(-1,0,-1,1), Array(-1,0,-1,-1),
-    Array(1,1,0,1), Array(1,1,0,-1), Array(1,-1,0,1), Array(1,-1,0,-1),
-    Array(-1,1,0,1), Array(-1,1,0,-1), Array(-1,-1,0,1), Array(-1,-1,0,-1),
-    Array(1,1,1,0), Array(1,1,-1,0), Array(1,-1,1,0), Array(1,-1,-1,0),
-    Array(-1,1,1,0), Array(-1,1,-1,0), Array(-1,-1,1,0), Array(-1,-1,-1,0)
-  )
-}
+object ClassicalGradientNoise extends ClassicalGradientNoise(0)

@@ -251,7 +251,7 @@ object AttributeTestUtil extends FunSuite {
 
     //asReadOnly
     if (!readOnly) testArray(seq.asReadOnly, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnly))
+    assert(seq.sharesStorageWith(seq.asReadOnly))
   }
 
   def testBuffer[F <: Format, R <: Raw](
@@ -297,7 +297,7 @@ object AttributeTestUtil extends FunSuite {
 
     //asReadOnly
     if (!readOnly) testBuffer(seq.asReadOnly, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnly))
+    assert(seq.sharesStorageWith(seq.asReadOnly))
   }
 
   def testView[F <: Format, R <: Raw](
@@ -333,6 +333,6 @@ object AttributeTestUtil extends FunSuite {
 
     //asReadOnly
     if (!readOnly) testView(seq.asReadOnly, offset, stride, true, data)
-    assert(seq.sharesStoreObject(seq.asReadOnly))
+    assert(seq.sharesStorageWith(seq.asReadOnly))
   }
 }

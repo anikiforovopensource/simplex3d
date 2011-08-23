@@ -27,15 +27,11 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait DirectStore
-
-
 trait ReadDataView[F <: Format, +R <: Raw]
-extends ReadDataSeq[F, R] with DirectStore {
+extends ReadDataSeq[F, R] with DirectSrc {
   type Read <: ReadDataView[F, R]
 
   type PrimitiveSeq <: ReadDataBuffer[F#Component, R]
-  type BindingBuffer = ByteBuffer
 }
 
 trait DataView[F <: Format, +R <: Raw]

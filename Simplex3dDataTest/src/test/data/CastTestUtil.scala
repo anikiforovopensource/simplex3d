@@ -68,8 +68,8 @@ object CastTestUtil extends FunSuite {
     data: Buffer
   )(implicit descriptor: Descriptor[F, R]) {
     testArray(cast, readOnly, data)(descriptor)
-    assert(original.sharesStoreObject(cast))
-    assert(cast.sharesStoreObject(original))
+    assert(original.sharesStorageWith(cast))
+    assert(cast.sharesStorageWith(original))
   }
 
   private def testSByteArrayCast(da: DataArray[_, SByte]) {
@@ -1123,16 +1123,16 @@ object CastTestUtil extends FunSuite {
         
         val contigTest = Contiguous[SInt, SByte](seq).asInstanceOf[DataBuffer[SInt, SByte]]
         testBuffer(contigTest, false, bytes)(Descriptors.SIntSByte)
-        assert(seq.sharesStoreObject(contigTest))
-        assert(contigTest.sharesStoreObject(seq))
+        assert(seq.sharesStorageWith(contigTest))
+        assert(contigTest.sharesStorageWith(seq))
         
         val ro = seq.asReadOnly().asInstanceOf[ReadContiguous[_, SByte]]
         intercept[IllegalArgumentException] { Contiguous[SInt, SByte](ro.asInstanceOf[Contiguous[_, SByte]]) }
         
         val readContigTest = ReadContiguous[SInt, SByte](ro).asInstanceOf[ReadDataBuffer[SInt, SByte]]
         testBuffer(readContigTest, true, bytes)(Descriptors.SIntSByte)
-        assert(seq.sharesStoreObject(readContigTest))
-        assert(readContigTest.sharesStoreObject(seq))
+        assert(seq.sharesStorageWith(readContigTest))
+        assert(readContigTest.sharesStorageWith(seq))
       }
     }
     
@@ -1143,16 +1143,16 @@ object CastTestUtil extends FunSuite {
         
         val indexTest = IndexSeq[UByte](seq).asInstanceOf[IndexBuffer[UByte]]
         testBuffer(indexTest, false, bytes)(Descriptors.SIntUByte)
-        assert(seq.sharesStoreObject(indexTest))
-        assert(indexTest.sharesStoreObject(seq))
+        assert(seq.sharesStorageWith(indexTest))
+        assert(indexTest.sharesStorageWith(seq))
         
         val ro = seq.asReadOnly().asInstanceOf[ReadContiguous[_, UByte]]
         intercept[IllegalArgumentException] { IndexSeq[UByte](ro.asInstanceOf[Contiguous[_, UByte]]) }
         
         val readIndexTest = ReadIndexSeq[UByte](ro).asInstanceOf[ReadIndexBuffer[UByte]]
         testBuffer(readIndexTest, true, bytes)(Descriptors.SIntUByte)
-        assert(seq.sharesStoreObject(readIndexTest))
-        assert(readIndexTest.sharesStoreObject(seq))
+        assert(seq.sharesStorageWith(readIndexTest))
+        assert(readIndexTest.sharesStorageWith(seq))
       }
     }
   }
@@ -1164,8 +1164,8 @@ object CastTestUtil extends FunSuite {
   )(implicit descriptor: Descriptor[F, R]) {
     val cast = factory(original)
     testBuffer(cast, false, wrap(bytes, descriptor))(descriptor)
-    assert(original.sharesStoreObject(cast))
-    assert(cast.sharesStoreObject(original))
+    assert(original.sharesStorageWith(cast))
+    assert(cast.sharesStorageWith(original))
     
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]]) }
   }
@@ -1180,15 +1180,15 @@ object CastTestUtil extends FunSuite {
     {
       val cast = factory(original)
       testBuffer(cast, false, wrap(bytes, descriptor))(descriptor)
-      assert(original.sharesStoreObject(cast))
-      assert(cast.sharesStoreObject(original))
+      assert(original.sharesStorageWith(cast))
+      assert(cast.sharesStorageWith(original))
     }
     
     {
       val cast = factory(original.asReadOnly())
       testBuffer(cast, true, wrap(bytes, descriptor))(descriptor)
-      assert(original.sharesStoreObject(cast))
-      assert(cast.sharesStoreObject(original))
+      assert(original.sharesStorageWith(cast))
+      assert(cast.sharesStorageWith(original))
     }
   }
 
@@ -1205,8 +1205,8 @@ object CastTestUtil extends FunSuite {
     ) {
       val cast = factory(original, offset, stride)
       testView(cast, offset, stride, false, data)(descriptor)
-      assert(original.sharesStoreObject(cast))
-      assert(cast.sharesStoreObject(original))
+      assert(original.sharesStorageWith(cast))
+      assert(cast.sharesStorageWith(original))
     }
 
     intercept[IllegalArgumentException] { factory(original.asReadOnly().asInstanceOf[DataBuffer[_, _]], 0, 1) }
@@ -1228,15 +1228,15 @@ object CastTestUtil extends FunSuite {
       {
         val cast = factory(original, offset, stride)
         testView(cast, offset, stride, false, data)(descriptor)
-        assert(original.sharesStoreObject(cast))
-        assert(cast.sharesStoreObject(original))
+        assert(original.sharesStorageWith(cast))
+        assert(cast.sharesStorageWith(original))
       }
 
       {
         val cast = factory(ro, offset, stride)
         testView(cast, offset, stride, true, data)(descriptor)
-        assert(original.sharesStoreObject(cast))
-        assert(cast.sharesStoreObject(original))
+        assert(original.sharesStorageWith(cast))
+        assert(cast.sharesStorageWith(original))
       }
     }
   }

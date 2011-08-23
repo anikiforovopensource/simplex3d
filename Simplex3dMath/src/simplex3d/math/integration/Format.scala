@@ -153,12 +153,16 @@ sealed trait FloatingPoint extends Raw
  */
 sealed trait SysFP extends FloatingPoint
 
+/** Hafl-float, in other words 16-bit float.
+ */
 sealed trait HFloat extends FloatingPoint
 with DefinedFloat with DefinedDouble {
   type Array = scala.Array[Short]
   type Buffer = nio.ShortBuffer
 }
 
+/** Raw Float. 32-bit float.
+ */
 sealed trait RFloat extends Meta with PrimitiveFormat with SysFP
 with DefinedFloat with DefinedDouble {
   type Read = Float
@@ -171,6 +175,8 @@ with DefinedFloat with DefinedDouble {
   type Buffer = nio.FloatBuffer
 }
 
+/** Raw Double. 64-bit float.
+ */
 sealed trait RDouble extends Meta with PrimitiveFormat with SysFP
 with DefinedDouble {
   type Read = Double

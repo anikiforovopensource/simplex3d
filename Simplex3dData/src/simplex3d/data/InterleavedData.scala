@@ -128,7 +128,7 @@ object InterleavedData {
       if(first.size != seq.size)
         throw new DataFormatException("Views must have the same size.")
 
-      if(!first.sharesStoreObject(seq))
+      if(!first.sharesStorageWith(seq))
         throw new DataFormatException("Views must share the same ByteByffer object.")
 
       checkOverlap(seq.byteOffset, seq.components*seq.bytesPerComponent)

@@ -41,7 +41,7 @@ object ReadContiguous {
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadContiguous[F, R] = {
     val res = dc match {
-      case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStore.asInstanceOf[R#Array]))
+      case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array]))
       case d: DataBuffer[_, _] => composition.mkDataBuffer(primitives.mkDataBuffer(dc.sharedBuffer))
     }
     if (dc.isReadOnly) res.asReadOnly() else res
@@ -56,7 +56,7 @@ object Contiguous {
       "The Sequence must not be read-only."
     )
     dc match {
-      case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStore.asInstanceOf[R#Array]))
+      case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array]))
       case d: DataBuffer[_, _] => composition.mkDataBuffer(primitives.mkDataBuffer(dc.sharedBuffer))
     }
   }

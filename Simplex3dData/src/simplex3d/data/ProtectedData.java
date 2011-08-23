@@ -29,19 +29,19 @@ import java.nio.*;
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ProtectedData {
-    final Object sharedStore;
+    final Object sharedStorage;
 
     ProtectedData(Object shared) {
         if (shared instanceof ProtectedData) {
-            this.sharedStore = ((ProtectedData) shared).sharedStore;
+            this.sharedStorage = ((ProtectedData) shared).sharedStorage;
         }
         else {
-            this.sharedStore = shared;
+            this.sharedStorage = shared;
         }
     }
 
     final ByteBuffer sharedBuffer() {
-        return (ByteBuffer) sharedStore;
+        return (ByteBuffer) sharedStorage;
     }
 
     protected final Object writeReplace() throws ObjectStreamException {
@@ -50,7 +50,7 @@ abstract class ProtectedData {
 
             if (src.primitives() == this) {
                 SerializablePrimitive data = (SerializablePrimitive) mkSerializableInstance();
-                data.content_$eq(sharedStore);
+                data.content_$eq(sharedStorage);
                 data.readOnly_$eq(src.isReadOnly());
                 return data;
             }

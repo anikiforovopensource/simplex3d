@@ -32,7 +32,7 @@ abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
   prim: ReadContiguous[F#Component, R],
   off: Int, str: Int
 ) extends AbstractData[F#Meta#Const, F#Meta#Read](
-  prim.sharedStore, prim, prim.isReadOnly,
+  prim.sharedStorage, prim, prim.isReadOnly,
   off, str
 ) with DataSeq[F, R] with CompositionFactory[F, B] {
   

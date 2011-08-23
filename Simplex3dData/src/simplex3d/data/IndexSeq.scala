@@ -62,7 +62,7 @@ object ReadIndexSeq {
     implicit factory: PrimitiveFactory[SInt, R]
   ) :ReadIndexSeq[R] = {
     val res = dc match {
-      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedStore.asInstanceOf[R#Array])
+      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array])
       case d: DataBuffer[_, _] => factory.mkDataBuffer(dc.sharedBuffer)
     }
     if (dc.isReadOnly) res.asReadOnly() else res
@@ -77,7 +77,7 @@ object IndexSeq {
       "The Sequence must not be read-only."
     )
     dc match {
-      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedStore.asInstanceOf[R#Array])
+      case d: DataArray[_, _] => factory.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array])
       case d: DataBuffer[_, _] => factory.mkDataBuffer(dc.sharedBuffer)
     }
   }
@@ -88,7 +88,7 @@ object ReadIndexArray {
   def apply[R <: DefinedIndex](da: ReadDataArray[_, R])(
     implicit factory: PrimitiveFactory[SInt, R]
   ) :ReadIndexArray[R] = {
-    val res = factory.mkDataArray(da.sharedStore.asInstanceOf[R#Array])
+    val res = factory.mkDataArray(da.sharedStorage.asInstanceOf[R#Array])
     if (da.isReadOnly) res.asReadOnly() else res
   }
 }

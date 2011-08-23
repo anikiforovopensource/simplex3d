@@ -66,7 +66,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
       primitives.buff
     }
     else {
-      (if (sharedStore.isInstanceOf[ByteBuffer]) {
+      (if (sharedStorage.isInstanceOf[ByteBuffer]) {
         if (!sharedBuffer.isDirect) {
           throw new IllegalArgumentException(
             "The buffer must be direct."
@@ -84,7 +84,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
         Util.wrapBuffer(storeType, byteBuffer)
       }
       else {
-        val buff = Util.wrapArray(storeType, sharedStore.asInstanceOf[Raw#Array])
+        val buff = Util.wrapArray(storeType, sharedStorage.asInstanceOf[Raw#Array])
         if (ro) Util.readOnlyBuff(storeType, buff) else buff
       }).asInstanceOf[Raw#Buffer]
     }
@@ -108,8 +108,8 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   
   // Public API.
-  def rawType: Int
   def components: Int
+  def rawType: Int
   def isNormalized: Boolean
   
   def formatManifest: ClassManifest[Format]
@@ -126,8 +126,11 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
 
   final def isReadOnly: Boolean = buff.isReadOnly()
-  final def sharesStoreObject(seq: inData[_]) :Boolean = {
-    sharedStore eq seq.sharedStore
+  final def sharesStorageWith(src: DataSrc) :Boolean = {
+    src match {
+      case d: ReadData[_] => sharedStorage eq d.sharedStorage
+      case _ => false
+    }
   }
 
   def apply(i: Int) :ReadAs

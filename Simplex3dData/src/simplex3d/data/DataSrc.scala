@@ -34,6 +34,7 @@ trait DataSrc {
   def formatManifest: ClassManifest[Format]
   def metaManifest: ClassManifest[Format#Meta]
   
+  def components: Int
   def rawType: Int
   def isNormalized: Boolean
 
@@ -41,11 +42,25 @@ trait DataSrc {
   
   /** Binding buffer can be direct or non-direct. It can even be a mapped file.
    * If not cached a new buffer is loaded on demand, the buffer may or may not be cached after that.
-   * The buffer contents may be compressed or encoded.
+   * The buffer contents may be compressed or encoded depending on the Format.
    */
   def bindingBuffer() :BindingBuffer
+  def sharesStorageWith(d: DataSrc) :Boolean
+  
+  def byteOffset: Int
+  def byteStride: Int
   def byteCapacity: Int
+  
+  def size: Int
   def isCached :Boolean
 }
 
-trait ContiguousSrc extends DataSrc
+trait ContiguousSrc extends DataSrc {
+  type Read <: ContiguousSrc
+}
+
+trait DirectSrc extends DataSrc {
+  type Read <: DirectSrc
+  
+  type BindingBuffer = ByteBuffer
+}

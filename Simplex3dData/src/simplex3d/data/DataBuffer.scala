@@ -64,7 +64,7 @@ object DataBuffer {
     composition.mkDataBuffer(primitives.mkDataBuffer(size*composition.components))
   }
 
-  def apply[F <: Format, R <: Defined](vals: F#Meta#Read*)(
+  def apply[F <: Format, R <: Defined](vals: F#Accessor#Read*)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataBuffer[F, R] = {
     val data = composition.mkDataBuffer(primitives.mkDataBuffer(vals.size*composition.components))

@@ -182,14 +182,14 @@ object ConstQuat4d {
 final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
-extends ReadQuat4d with Meta with CompositeFormat
+extends ReadQuat4d with Accessor with CompositeFormat
 with PropertyRef[ReadQuat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Read = ReadQuat4d
   
-  type Meta = Quat4d
+  type Accessor = Quat4d
   type Component = RDouble
   
   type Clone = Quat4d

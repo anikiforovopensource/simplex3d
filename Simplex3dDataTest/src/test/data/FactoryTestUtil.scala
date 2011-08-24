@@ -266,14 +266,14 @@ object FactoryTestUtil extends FunSuite {
   }
 
   def testArrayFromCollection[F <: Format, R <: Raw](
-    factory: (IndexedSeq[F#Meta#Read]) => DataArray[F, R]
+    factory: (IndexedSeq[F#Accessor#Read]) => DataArray[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     arrayFromCollection(factory)
     testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
   }
 
   def testBufferFromCollection[F <: Format, R <: Raw](
-    factory: (IndexedSeq[F#Meta#Read]) => DataBuffer[F, R]
+    factory: (IndexedSeq[F#Accessor#Read]) => DataBuffer[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     bufferFromCollection(factory)
     testMakeData(factory(genRandomCollection(0, descriptor)._1), descriptor)
@@ -572,7 +572,7 @@ object FactoryTestUtil extends FunSuite {
   }
 
   def arrayFromCollection[F <: Format, R <: Raw](
-    factory: (IndexedSeq[F#Meta#Read]) => DataArray[F, R]
+    factory: (IndexedSeq[F#Accessor#Read]) => DataArray[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     for (size <- 0 to 3) {
       val (col, data) = genRandomCollection(size, descriptor)
@@ -581,7 +581,7 @@ object FactoryTestUtil extends FunSuite {
   }
 
   def bufferFromCollection[F <: Format, R <: Raw](
-    factory: (IndexedSeq[F#Meta#Read]) => DataBuffer[F, R]
+    factory: (IndexedSeq[F#Accessor#Read]) => DataBuffer[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     for (size <- 0 to 3) {
       val (col, data) = genRandomCollection(size, descriptor)

@@ -37,8 +37,8 @@ sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
   final def metaManifest = adapter.metaManifest
   final def components: Int = adapter.components
 
-  def apply(i: Int) :F#Meta#Const = adapter.apply(primitives, offset + i*stride)
-  def update(i: Int, v: F#Meta#Read) { adapter.update(primitives, offset + i*stride, v) }
+  def apply(i: Int) :F#Accessor#Const = adapter.apply(primitives, offset + i*stride)
+  def update(i: Int, v: F#Accessor#Read) { adapter.update(primitives, offset + i*stride, v) }
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
   :ReadDataArray[F, P] = adapter.mkReadDataArray(primitives)

@@ -183,14 +183,14 @@ object ConstQuat4f {
 final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 )
-extends ReadQuat4f with Meta with CompositeFormat
+extends ReadQuat4f with Accessor with CompositeFormat
 with PropertyRef[ReadQuat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Read = ReadQuat4f
   
-  type Meta = Quat4f
+  type Accessor = Quat4f
   type Component = RFloat
   
   type Clone = Quat4f

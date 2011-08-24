@@ -213,14 +213,14 @@ object ConstVec4i {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec4i private[math] (cx: Int, cy: Int, cz: Int, cw: Int)
-extends ReadVec4i with Meta with CompositeFormat
+extends ReadVec4i with Accessor with CompositeFormat
 with PropertyRef[ReadVec4i] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 
   type Read = ReadVec4i
 
-  type Meta = Vec4i
+  type Accessor = Vec4i
   type Component = SInt
 
   type Clone = Vec4i

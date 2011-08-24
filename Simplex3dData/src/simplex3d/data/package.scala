@@ -49,9 +49,9 @@ package object data {
 
 
   type FormatBound[F <: Format] = DataSrc { type Format <: F }
-  type MetaBound[E <: Meta] = DataSrc { type Format <: simplex3d.data.Format { type Meta <: E } }
+  type AccessorBound[A <: Accessor] = DataSrc { type Format <: simplex3d.data.Format { type Accessor <: A } }
 
-  type Meta = integration.Meta
+  type Accessor = integration.Accessor
   type Format = integration.Format
   type PrimitiveFormat = integration.PrimitiveFormat
   type Compressed = integration.Compressed
@@ -87,7 +87,7 @@ package object data {
   type Index = IndexSeq[Unsigned]
   type inIndex = inIndexSeq[Unsigned]
   
-  type inData[E <: Meta] = ReadData[E]
+  type inData[A <: Accessor] = ReadData[A]
 
   type inDataSeq[F <: Format, +R <: Raw] = ReadDataSeq[F, R]
   type inContiguous[F <: Format, +R <: Raw] = ReadContiguous[F, R]

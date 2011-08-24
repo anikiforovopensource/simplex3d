@@ -270,7 +270,7 @@ object ApplyUpdateTestUtil extends FunSuite {
         m
     }
 
-    seq(i) = e.asInstanceOf[F#Meta#Read]
+    seq(i) = e.asInstanceOf[F#Accessor#Read]
   }
 
   private def testApplyUpdate[F <: Format](seq: DataSeq[F, Raw]) {

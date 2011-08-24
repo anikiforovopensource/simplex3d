@@ -34,7 +34,7 @@ import simplex3d.math.doublex._
 case class Descriptor[F <: Format, +R <: Raw](
   formatManifest: ClassManifest[_],
   componentManifest: ClassManifest[_],
-  metaManifest: ClassManifest[_ <: Meta],
+  metaManifest: ClassManifest[_ <: Accessor],
   components: Int,
   rawType: Int,
   normalized: Boolean

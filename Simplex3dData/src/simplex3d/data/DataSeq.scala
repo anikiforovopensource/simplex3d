@@ -26,7 +26,7 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadDataSeq[F <: Format, +R <: Raw] extends ReadData[F#Meta] with DataFactory[F, R] {
+trait ReadDataSeq[F <: Format, +R <: Raw] extends ReadData[F#Accessor] with DataFactory[F, R] {
   type Read <: ReadDataSeq[F, R]
   
   type Format = F
@@ -45,7 +45,7 @@ trait ReadDataSeq[F <: Format, +R <: Raw] extends ReadData[F#Meta] with DataFact
   }
 }
 
-trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Meta] with ReadDataSeq[F, R] {
+trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[F, R] {
   final def put(
     index: Int,
     src: inContiguous[F#Component, simplex3d.data.Raw],

@@ -24,11 +24,11 @@ import java.nio
 import scala.reflect.ClassManifest.{classType}
 
 
-/** <code>Meta</code> declares distinct types for reading and writing data.
+/** <code>Accessor</code> declares distinct types for reading and writing data.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait Meta {
+trait Accessor {
   type Read
   type Const <: Read
 }
@@ -38,7 +38,7 @@ trait Meta {
  * @author Aleksey Nikiforov (lex)
  */
 sealed trait Format {
-  type Meta <: simplex3d.math.integration.Meta
+  type Accessor <: simplex3d.math.integration.Accessor
   type Component <: PrimitiveFormat
 }
 
@@ -47,7 +47,7 @@ sealed trait Format {
  * @author Aleksey Nikiforov (lex)
  */
 sealed trait PrimitiveFormat extends Format {
-  type Meta <: simplex3d.math.integration.Meta { type Read <: AnyVal }
+  type Accessor <: simplex3d.math.integration.Accessor { type Read <: AnyVal }
 }
 
 /** <code>CompositeFormat</code>.
@@ -55,23 +55,23 @@ sealed trait PrimitiveFormat extends Format {
  * @author Aleksey Nikiforov (lex)
  */
 trait CompositeFormat extends Format {
-  type Meta <: simplex3d.math.integration.Meta { type Read <: AnyRef }
+  type Accessor <: simplex3d.math.integration.Accessor { type Read <: AnyRef }
 }
 
 
-sealed trait Compressed extends Meta with PrimitiveFormat {
+sealed trait Compressed extends Accessor with PrimitiveFormat {
   type Read = Unit
   type Const = Read
   
-  type Meta = Compressed
+  type Accessor = Compressed
   type Component = Compressed
 }
 
-sealed trait Bool extends Meta with PrimitiveFormat {
+sealed trait Bool extends Accessor with PrimitiveFormat {
   type Read = Boolean
   type Const = Read
   
-  type Meta = Bool
+  type Accessor = Bool
   type Component = Bool
 }
 
@@ -134,12 +134,12 @@ sealed trait RawInt extends Integral {
   type Buffer = nio.IntBuffer
 }
 
-sealed trait SInt extends Meta with PrimitiveFormat with RawInt with Signed
+sealed trait SInt extends Accessor with PrimitiveFormat with RawInt with Signed
 with DefinedInt with DefinedFloat with DefinedDouble {
   type Read = Int
   type Const = Read
   
-  type Meta = SInt
+  type Accessor = SInt
   type Component = SInt
 }
 
@@ -163,12 +163,12 @@ with DefinedFloat with DefinedDouble {
 
 /** Raw Float. 32-bit float.
  */
-sealed trait RFloat extends Meta with PrimitiveFormat with SysFP
+sealed trait RFloat extends Accessor with PrimitiveFormat with SysFP
 with DefinedFloat with DefinedDouble {
   type Read = Float
   type Const = Read
   
-  type Meta = RFloat
+  type Accessor = RFloat
   type Component = RFloat
 
   type Array = scala.Array[Float]
@@ -177,12 +177,12 @@ with DefinedFloat with DefinedDouble {
 
 /** Raw Double. 64-bit float.
  */
-sealed trait RDouble extends Meta with PrimitiveFormat with SysFP
+sealed trait RDouble extends Accessor with PrimitiveFormat with SysFP
 with DefinedDouble {
   type Read = Double
   type Const = Read
   
-  type Meta = RDouble
+  type Accessor = RDouble
   type Component = RDouble
 
   type Array = scala.Array[Double]

@@ -298,21 +298,21 @@ object TestUtil extends FunSuite {
   }
   def genRandomCollection[F <: Format, R <: Raw](
     size: Int, descriptor: Descriptor[F, R]
-  ) :(Array[F#Meta#Read], Buffer) = {
-    val array = readManifest(descriptor.metaManifest).newArray(size).asInstanceOf[Array[F#Meta#Read]]
+  ) :(Array[F#Accessor#Read], Buffer) = {
+    val array = readManifest(descriptor.metaManifest).newArray(size).asInstanceOf[Array[F#Accessor#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
     val localSrc = new java.util.Random(seed)
 
     var i = 0; while (i < array.length) {
-      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Meta#Read]
+      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Accessor#Read]
       i += 1
     }
 
     localSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Meta#Read]
+      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Accessor#Read]
       i += 1
     }
 
@@ -780,7 +780,7 @@ object TestUtil extends FunSuite {
     }
   }
   
-  final def readManifest[M <: Meta](m: ClassManifest[M]) :ClassManifest[M#Read] = {
+  final def readManifest[M <: Accessor](m: ClassManifest[M]) :ClassManifest[M#Read] = {
     (m match {
       case PrimitiveFormat.SInt => Manifest.Int
       case PrimitiveFormat.RFloat => Manifest.Float

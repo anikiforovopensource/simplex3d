@@ -327,7 +327,7 @@ final class Mat3f private[math] (
   c01: Float, c11: Float, c21: Float,
   c02: Float, c12: Float, c22: Float
 )
-extends ReadMat3f with Meta with CompositeFormat
+extends ReadMat3f with Accessor with CompositeFormat
 with PropertyRef[ReadMat3f] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
@@ -336,7 +336,7 @@ with PropertyRef[ReadMat3f] with Serializable
 
   type Read = ReadMat3f
 
-  type Meta = Mat3f
+  type Accessor = Mat3f
   type Component = RFloat
 
   type Clone = Mat3f

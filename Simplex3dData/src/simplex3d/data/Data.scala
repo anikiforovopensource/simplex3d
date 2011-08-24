@@ -26,10 +26,10 @@ import scala.collection._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadData[E <: Meta] extends ReadAbstractData[E#Const] {
-  type Read <: ReadData[E]
+trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
+  type Read <: ReadData[A]
   
-  type Format <: simplex3d.data.Format { type Meta <: E }
+  type Format <: simplex3d.data.Format { type Accessor <: A }
 }
 
-trait Data[E <: Meta] extends AbstractData[E#Const, E#Read] with ReadData[E]
+trait Data[A <: Accessor] extends AbstractData[A#Const, A#Read] with ReadData[A]

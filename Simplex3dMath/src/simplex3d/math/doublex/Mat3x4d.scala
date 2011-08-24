@@ -487,7 +487,7 @@ final class Mat3x4d private[math] (
   c02: Double, c12: Double, c22: Double,
   c03: Double, c13: Double, c23: Double
 )
-extends ReadMat3x4d with Meta with CompositeFormat
+extends ReadMat3x4d with Accessor with CompositeFormat
 with PropertyRef[ReadMat3x4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20
@@ -497,7 +497,7 @@ with PropertyRef[ReadMat3x4d] with Serializable
 
   type Read = ReadMat3x4d
 
-  type Meta = Mat3x4d
+  type Accessor = Mat3x4d
   type Component = RDouble
 
   type Clone = Mat3x4d

@@ -33,7 +33,7 @@ trait DataFactory[F <: Format, +R <: Raw] {
   def rawType: Int
   def components: Int
   def formatManifest: ClassManifest[F]
-  def metaManifest: ClassManifest[F#Meta]
+  def metaManifest: ClassManifest[F#Accessor]
   def primitives: DataFactory[F#Component, R]
 
   def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[F, R]

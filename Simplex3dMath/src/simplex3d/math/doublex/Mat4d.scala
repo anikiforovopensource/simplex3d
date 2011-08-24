@@ -406,7 +406,7 @@ final class Mat4d private[math] (
   c02: Double, c12: Double, c22: Double, c32: Double,
   c03: Double, c13: Double, c23: Double, c33: Double
 )
-extends ReadMat4d with Meta with CompositeFormat
+extends ReadMat4d with Accessor with CompositeFormat
 with PropertyRef[ReadMat4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
@@ -416,7 +416,7 @@ with PropertyRef[ReadMat4d] with Serializable
 
   type Read = ReadMat4d
 
-  type Meta = Mat4d
+  type Accessor = Mat4d
   type Component = RDouble
 
   type Clone = Mat4d

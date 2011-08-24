@@ -31,7 +31,7 @@ import scala.annotation.unchecked._
 abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
   prim: ReadContiguous[F#Component, R],
   off: Int, str: Int
-) extends AbstractData[F#Meta#Const, F#Meta#Read](
+) extends AbstractData[F#Accessor#Const, F#Accessor#Read](
   prim.sharedStorage, prim, prim.isReadOnly,
   off, str
 ) with DataSeq[F, R] with CompositionFactory[F, B] {

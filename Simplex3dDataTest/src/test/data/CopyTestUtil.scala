@@ -147,7 +147,7 @@ object CopyTestUtil extends FunSuite {
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         
         intercept[ClassCastException] {
-          dest.put(0, wrongSrc.asReadOnly().asInstanceOf[IndexedSeq[F#Meta#Read]], 0, 1)
+          dest.put(0, wrongSrc.asReadOnly().asInstanceOf[IndexedSeq[F#Accessor#Read]], 0, 1)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
       }
@@ -169,7 +169,7 @@ object CopyTestUtil extends FunSuite {
     }
   }
   private def checkPutSeqExceptions[F <: Format](
-    original: inDataSeq[F, Raw], collection: Seq[F#Meta#Read], verifySource: Boolean
+    original: inDataSeq[F, Raw], collection: Seq[F#Accessor#Read], verifySource: Boolean
   ) {
     assert(original.size == collection.size)
     val size = original.size
@@ -285,7 +285,7 @@ object CopyTestUtil extends FunSuite {
     }
   }
   private def checkPutSeq[F <: Format](
-    original: inDataSeq[F, Raw], src: inDataSeq[F, Raw], collection: Seq[F#Meta#Read], verifySource: Boolean
+    original: inDataSeq[F, Raw], src: inDataSeq[F, Raw], collection: Seq[F#Accessor#Read], verifySource: Boolean
   ) {
     val backupCollection = if (verifySource) collection.toIndexedSeq else null
     

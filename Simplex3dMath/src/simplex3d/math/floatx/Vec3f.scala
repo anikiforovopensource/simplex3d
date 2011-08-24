@@ -179,14 +179,14 @@ object ConstVec3f {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec3f private[math] (cx: Float, cy: Float, cz: Float)
-extends ReadVec3f with Meta with CompositeFormat
+extends ReadVec3f with Accessor with CompositeFormat
 with PropertyRef[ReadVec3f] with Serializable
 {
   px = cx; py = cy; pz = cz
 
   type Read = ReadVec3f
 
-  type Meta = Vec3f
+  type Accessor = Vec3f
   type Component = RFloat
 
   type Clone = Vec3f

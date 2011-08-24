@@ -161,14 +161,14 @@ object ConstVec3b {
 
 @SerialVersionUID(8104346712419693669L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with Meta with CompositeFormat
+extends ReadVec3b with Accessor with CompositeFormat
 with PropertyRef[ReadVec3b] with Serializable
 {
   px = cx; py = cy; pz = cz
 
   type Read = ReadVec3b
 
-  type Meta = Vec3b
+  type Accessor = Vec3b
   type Component = Bool
 
   type Clone = Vec3b

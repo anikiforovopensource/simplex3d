@@ -68,7 +68,7 @@ object DataArray {
     composition.mkDataArray(primitives.mkDataArray(size*composition.components))
   }
 
-  def apply[F <: Format, R <: Defined](vals: F#Meta#Read*)(
+  def apply[F <: Format, R <: Defined](vals: F#Accessor#Read*)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataArray[F, R] = {
     val data = composition.mkDataArray(primitives.mkDataArray(vals.size*composition.components))

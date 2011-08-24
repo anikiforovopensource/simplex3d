@@ -32,7 +32,7 @@ trait DataSrc {
   
   type Format <: simplex3d.data.Format
   def formatManifest: ClassManifest[Format]
-  def metaManifest: ClassManifest[Format#Accessor]
+  def accessorManifest: ClassManifest[Format#Accessor]
   
   def components: Int
   def rawType: Int
@@ -47,6 +47,7 @@ trait DataSrc {
   def bindingBuffer() :BindingBuffer
   def sharesStorageWith(d: DataSrc) :Boolean
   
+  def bytesPerComponent: Int
   def byteOffset: Int
   def byteStride: Int
   def byteCapacity: Int

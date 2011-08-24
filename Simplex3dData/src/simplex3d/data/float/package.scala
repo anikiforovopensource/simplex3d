@@ -60,7 +60,7 @@ package object float {
 
   implicit object FactoryQuat4f extends DataAdapter[Quat4f, DefinedFloat with SysFP](components = 4)(
     formatManifest = Quat4f.Manifest,
-    metaManifest = Quat4f.Manifest,
+    accessorManifest = Quat4f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Quat4f#Component, Raw], j: Int) :Quat4f#Const = {
@@ -73,7 +73,7 @@ package object float {
 
   implicit object FactoryMat2x2f extends DataAdapter[Mat2x2f, DefinedFloat with SysFP](components = 4)(
     formatManifest = Mat2x2f.Manifest,
-    metaManifest = Mat2x2f.Manifest,
+    accessorManifest = Mat2x2f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x2f#Component, Raw], j: Int) :Mat2x2f#Const = {
@@ -90,7 +90,7 @@ package object float {
 
   implicit object FactoryMat2x3f extends DataAdapter[Mat2x3f, DefinedFloat with SysFP](components = 6)(
     formatManifest = Mat2x3f.Manifest,
-    metaManifest = Mat2x3f.Manifest,
+    accessorManifest = Mat2x3f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x3f#Component, Raw], j: Int) :Mat2x3f#Const = {
@@ -109,7 +109,7 @@ package object float {
 
   implicit object FactoryMat2x4f extends DataAdapter[Mat2x4f, DefinedFloat with SysFP](components = 8)(
     formatManifest = Mat2x4f.Manifest,
-    metaManifest = Mat2x4f.Manifest,
+    accessorManifest = Mat2x4f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat2x4f#Component, Raw], j: Int) :Mat2x4f#Const = {
@@ -130,7 +130,7 @@ package object float {
 
   implicit object FactoryMat3x2f extends DataAdapter[Mat3x2f, DefinedFloat with SysFP](components = 6)(
     formatManifest = Mat3x2f.Manifest,
-    metaManifest = Mat3x2f.Manifest,
+    accessorManifest = Mat3x2f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x2f#Component, Raw], j: Int) :Mat3x2f#Const = {
@@ -147,7 +147,7 @@ package object float {
 
   implicit object FactoryMat3x3f extends DataAdapter[Mat3x3f, DefinedFloat with SysFP](components = 9)(
     formatManifest = Mat3x3f.Manifest,
-    metaManifest = Mat3x3f.Manifest,
+    accessorManifest = Mat3x3f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x3f#Component, Raw], j: Int) :Mat3x3f#Const = {
@@ -166,7 +166,7 @@ package object float {
 
   implicit object FactoryMat3x4f extends DataAdapter[Mat3x4f, DefinedFloat with SysFP](components = 12)(
     formatManifest = Mat3x4f.Manifest,
-    metaManifest = Mat3x4f.Manifest,
+    accessorManifest = Mat3x4f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat3x4f#Component, Raw], j: Int) :Mat3x4f#Const = {
@@ -187,7 +187,7 @@ package object float {
 
   implicit object FactoryMat4x2f extends DataAdapter[Mat4x2f, DefinedFloat with SysFP](components = 8)(
     formatManifest = Mat4x2f.Manifest,
-    metaManifest = Mat4x2f.Manifest,
+    accessorManifest = Mat4x2f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x2f#Component, Raw], j: Int) :Mat4x2f#Const = {
@@ -204,7 +204,7 @@ package object float {
 
   implicit object FactoryMat4x3f extends DataAdapter[Mat4x3f, DefinedFloat with SysFP](components = 12)(
     formatManifest = Mat4x3f.Manifest,
-    metaManifest = Mat4x3f.Manifest,
+    accessorManifest = Mat4x3f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x3f#Component, Raw], j: Int) :Mat4x3f#Const = {
@@ -223,7 +223,7 @@ package object float {
 
   implicit object FactoryMat4x4f extends DataAdapter[Mat4x4f, DefinedFloat with SysFP](components = 16)(
     formatManifest = Mat4x4f.Manifest,
-    metaManifest = Mat4x4f.Manifest,
+    accessorManifest = Mat4x4f.Manifest,
     boundManifest = sysfpBound
   ) {
     def apply(p: inContiguous[Mat4x4f#Component, Raw], j: Int) :Mat4x4f#Const = {

@@ -40,7 +40,7 @@ extends AbstractData[Double, Double](shared, prim, ro, off, str)
 with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
 {
   final def formatManifest = PrimitiveFormat.RDouble
-  final def metaManifest = PrimitiveFormat.RDouble
+  final def accessorManifest = PrimitiveFormat.RDouble
   final def components: Int = 1
 
   final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[RDouble, P])

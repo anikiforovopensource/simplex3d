@@ -299,7 +299,7 @@ object TestUtil extends FunSuite {
   def genRandomCollection[F <: Format, R <: Raw](
     size: Int, descriptor: Descriptor[F, R]
   ) :(Array[F#Accessor#Read], Buffer) = {
-    val array = readManifest(descriptor.metaManifest).newArray(size).asInstanceOf[Array[F#Accessor#Read]]
+    val array = readManifest(descriptor.accessorManifest).newArray(size).asInstanceOf[Array[F#Accessor#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong

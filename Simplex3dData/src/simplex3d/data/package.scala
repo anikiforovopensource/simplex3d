@@ -126,344 +126,344 @@ package object data {
 
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2]
   )(size: Int) = {
     val views = interleaveAll(seq1, seq2)(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3]
   )(size: Int) = {
     val views = interleaveAll(seq1, seq2, seq3)(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw,
-    E8 <: Format, R8 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw,
+    F8 <: Format, R8 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7],
-    seq8: inDataSeq[E8, R8]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7],
+    seq8: inDataSeq[F8, R8]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]],
-      views(7).asInstanceOf[DataView[E8, R8]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]],
+      views(7).asInstanceOf[DataView[F8, R8]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw,
-    E8 <: Format, R8 <: Raw,
-    E9 <: Format, R9 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw,
+    F8 <: Format, R8 <: Raw,
+    F9 <: Format, R9 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7],
-    seq8: inDataSeq[E8, R8],
-    seq9: inDataSeq[E9, R9]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7],
+    seq8: inDataSeq[F8, R8],
+    seq9: inDataSeq[F9, R9]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]],
-      views(7).asInstanceOf[DataView[E8, R8]],
-      views(8).asInstanceOf[DataView[E9, R9]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]],
+      views(7).asInstanceOf[DataView[F8, R8]],
+      views(8).asInstanceOf[DataView[F9, R9]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw,
-    E8 <: Format, R8 <: Raw,
-    E9 <: Format, R9 <: Raw,
-    E10 <: Format, R10 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw,
+    F8 <: Format, R8 <: Raw,
+    F9 <: Format, R9 <: Raw,
+    F10 <: Format, R10 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7],
-    seq8: inDataSeq[E8, R8],
-    seq9: inDataSeq[E9, R9],
-    seq10: inDataSeq[E10, R10]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7],
+    seq8: inDataSeq[F8, R8],
+    seq9: inDataSeq[F9, R9],
+    seq10: inDataSeq[F10, R10]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]],
-      views(7).asInstanceOf[DataView[E8, R8]],
-      views(8).asInstanceOf[DataView[E9, R9]],
-      views(9).asInstanceOf[DataView[E10, R10]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]],
+      views(7).asInstanceOf[DataView[F8, R8]],
+      views(8).asInstanceOf[DataView[F9, R9]],
+      views(9).asInstanceOf[DataView[F10, R10]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw,
-    E8 <: Format, R8 <: Raw,
-    E9 <: Format, R9 <: Raw,
-    E10 <: Format, R10 <: Raw,
-    E11 <: Format, R11 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw,
+    F8 <: Format, R8 <: Raw,
+    F9 <: Format, R9 <: Raw,
+    F10 <: Format, R10 <: Raw,
+    F11 <: Format, R11 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7],
-    seq8: inDataSeq[E8, R8],
-    seq9: inDataSeq[E9, R9],
-    seq10: inDataSeq[E10, R10],
-    seq11: inDataSeq[E11, R11]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7],
+    seq8: inDataSeq[F8, R8],
+    seq9: inDataSeq[F9, R9],
+    seq10: inDataSeq[F10, R10],
+    seq11: inDataSeq[F11, R11]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]],
-      views(7).asInstanceOf[DataView[E8, R8]],
-      views(8).asInstanceOf[DataView[E9, R9]],
-      views(9).asInstanceOf[DataView[E10, R10]],
-      views(10).asInstanceOf[DataView[E11, R11]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]],
+      views(7).asInstanceOf[DataView[F8, R8]],
+      views(8).asInstanceOf[DataView[F9, R9]],
+      views(9).asInstanceOf[DataView[F10, R10]],
+      views(10).asInstanceOf[DataView[F11, R11]]
     )
   }
 
   def interleave[
-    E1 <: Format, R1 <: Raw,
-    E2 <: Format, R2 <: Raw,
-    E3 <: Format, R3 <: Raw,
-    E4 <: Format, R4 <: Raw,
-    E5 <: Format, R5 <: Raw,
-    E6 <: Format, R6 <: Raw,
-    E7 <: Format, R7 <: Raw,
-    E8 <: Format, R8 <: Raw,
-    E9 <: Format, R9 <: Raw,
-    E10 <: Format, R10 <: Raw,
-    E11 <: Format, R11 <: Raw,
-    E12 <: Format, R12 <: Raw
+    F1 <: Format, R1 <: Raw,
+    F2 <: Format, R2 <: Raw,
+    F3 <: Format, R3 <: Raw,
+    F4 <: Format, R4 <: Raw,
+    F5 <: Format, R5 <: Raw,
+    F6 <: Format, R6 <: Raw,
+    F7 <: Format, R7 <: Raw,
+    F8 <: Format, R8 <: Raw,
+    F9 <: Format, R9 <: Raw,
+    F10 <: Format, R10 <: Raw,
+    F11 <: Format, R11 <: Raw,
+    F12 <: Format, R12 <: Raw
   ](
-    seq1: inDataSeq[E1, R1],
-    seq2: inDataSeq[E2, R2],
-    seq3: inDataSeq[E3, R3],
-    seq4: inDataSeq[E4, R4],
-    seq5: inDataSeq[E5, R5],
-    seq6: inDataSeq[E6, R6],
-    seq7: inDataSeq[E7, R7],
-    seq8: inDataSeq[E8, R8],
-    seq9: inDataSeq[E9, R9],
-    seq10: inDataSeq[E10, R10],
-    seq11: inDataSeq[E11, R11],
-    seq12: inDataSeq[E12, R12]
+    seq1: inDataSeq[F1, R1],
+    seq2: inDataSeq[F2, R2],
+    seq3: inDataSeq[F3, R3],
+    seq4: inDataSeq[F4, R4],
+    seq5: inDataSeq[F5, R5],
+    seq6: inDataSeq[F6, R6],
+    seq7: inDataSeq[F7, R7],
+    seq8: inDataSeq[F8, R8],
+    seq9: inDataSeq[F9, R9],
+    seq10: inDataSeq[F10, R10],
+    seq11: inDataSeq[F11, R11],
+    seq12: inDataSeq[F12, R12]
   )(size: Int) = {
     val views = interleaveAll(
       seq1, seq2, seq3, seq4, seq5, seq6, seq7, seq8, seq9, seq10, seq11, seq12
     )(size)
     (
-      views(0).asInstanceOf[DataView[E1, R1]],
-      views(1).asInstanceOf[DataView[E2, R2]],
-      views(2).asInstanceOf[DataView[E3, R3]],
-      views(3).asInstanceOf[DataView[E4, R4]],
-      views(4).asInstanceOf[DataView[E5, R5]],
-      views(5).asInstanceOf[DataView[E6, R6]],
-      views(6).asInstanceOf[DataView[E7, R7]],
-      views(7).asInstanceOf[DataView[E8, R8]],
-      views(8).asInstanceOf[DataView[E9, R9]],
-      views(9).asInstanceOf[DataView[E10, R10]],
-      views(10).asInstanceOf[DataView[E11, R11]],
-      views(11).asInstanceOf[DataView[E12, R12]]
+      views(0).asInstanceOf[DataView[F1, R1]],
+      views(1).asInstanceOf[DataView[F2, R2]],
+      views(2).asInstanceOf[DataView[F3, R3]],
+      views(3).asInstanceOf[DataView[F4, R4]],
+      views(4).asInstanceOf[DataView[F5, R5]],
+      views(5).asInstanceOf[DataView[F6, R6]],
+      views(6).asInstanceOf[DataView[F7, R7]],
+      views(7).asInstanceOf[DataView[F8, R8]],
+      views(8).asInstanceOf[DataView[F9, R9]],
+      views(9).asInstanceOf[DataView[F10, R10]],
+      views(10).asInstanceOf[DataView[F11, R11]],
+      views(11).asInstanceOf[DataView[F12, R12]]
     )
   }
 
 
-  def interleaveAll(seqs: inDataSeq[_, Raw]*)(size: Int) :IndexedSeq[RawView] = {
+  def interleaveAll(seqs: inData[_]*)(size: Int) :IndexedSeq[RawView] = {
     val dataSeqs = seqs.toArray
 
     // check arguments

@@ -108,30 +108,30 @@ class InterleavedData(seqs: RawView*) extends immutable.IndexedSeq[RawView] with
 
 object InterleavedData {
 
-  final def verifyFormat(views: Seq[RawView]) {
-    val first = views.head
-    val interval = new Array[Boolean](first.stride*first.bytesPerComponent)
+  final def verifyFormat(sources: Seq[DataSrc]) {
+    val first = sources.head
+    val interval = new Array[Boolean](first.byteStride)
 
     def checkOverlap(byteOffset: Int, bytesTaken: Int) {
       var i = byteOffset; while (i < byteOffset + bytesTaken) {
-        if (interval(i)) throw new DataFormatException("Views must not have overlapping data.")
+        if (interval(i)) throw new DataFormatException("Interleaved data must not overlap.")
         interval(i) = true
 
         i += 1
       }
     }
 
-    for (seq <- views) {
-      if (first.byteStride != seq.byteStride)
-        throw new DataFormatException("Views must have the same byte stride.")
+    for (src <- sources) {
+      if (first.byteStride != src.byteStride)
+        throw new DataFormatException("Interleaved sources must have the same byte stride.")
 
-      if(first.size != seq.size)
-        throw new DataFormatException("Views must have the same size.")
+      if(first.size != src.size)
+        throw new DataFormatException("Interleaved sources must have the same size.")
 
-      if(!first.sharesStorageWith(seq))
-        throw new DataFormatException("Views must share the same ByteByffer object.")
+      if(!first.sharesStorageWith(src))
+        throw new DataFormatException("Interleaved sources must share the same storage.")
 
-      checkOverlap(seq.byteOffset, seq.components*seq.bytesPerComponent)
+      checkOverlap(src.byteOffset, src.components*src.bytesPerComponent)
     }
   }
 }

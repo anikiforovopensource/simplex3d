@@ -34,7 +34,7 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
   prim: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3d, R, DefinedDouble](prim, off, str) {
   final def formatManifest = Vec3d.Manifest
-  final def metaManifest = Vec3d.Manifest
+  final def accessorManifest = Vec3d.Manifest
   final def components: Int = 3
 
   final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[Vec3d#Component, P])

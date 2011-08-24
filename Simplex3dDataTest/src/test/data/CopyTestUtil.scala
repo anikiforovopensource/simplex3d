@@ -119,13 +119,13 @@ object CopyTestUtil extends FunSuite {
     // Testing exceptions. Destination and src must remain unchanged.
     {
       val src = genRandomSeq(original.formatManifest, original.rawType, original.size)
-      val array = src.toArray(readManifest(src.metaManifest))
+      val array = src.toArray(readManifest(src.accessorManifest))
       
       {
         val dest = dupSeq1(original)
         
         val wrongSrc = wrongType(src)
-        val wrongArray = wrongSrc.toArray(readManifest(wrongSrc.metaManifest))
+        val wrongArray = wrongSrc.toArray(readManifest(wrongSrc.accessorManifest))
         val wrongBackup = wrongArray.toIndexedSeq
         val wrongList = wrongArray.toList
         val wrongIndexedSeq = wrongArray.toIndexedSeq
@@ -160,7 +160,7 @@ object CopyTestUtil extends FunSuite {
 
     for (size <- original.size - maxCopyOffset until original.size) {
       val src = genRandomSeq(original.formatManifest, original.rawType, size)
-      val array = src.toArray(readManifest(src.metaManifest))
+      val array = src.toArray(readManifest(src.accessorManifest))
 
       checkPutSeq(original, src, array, true)
       checkPutSeq(original, src, array.toList, false)

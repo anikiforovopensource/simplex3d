@@ -40,7 +40,7 @@ extends AbstractData[Float, Float](shared, prim, ro, off, str)
 with DataSeq[RFloat, R] with CompositionFactory[RFloat, DefinedFloat]
 {
   final def formatManifest = PrimitiveFormat.RFloat
-  final def metaManifest = PrimitiveFormat.RFloat
+  final def accessorManifest = PrimitiveFormat.RFloat
   final def components: Int = 1
   
   final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[RFloat, P])

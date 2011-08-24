@@ -41,7 +41,7 @@ object AdapterTestUtil extends FunSuite {
     // Test attributes.
     assert(adapter.components == attribs.components)
     assert(adapter.formatManifest == attribs.formatManifest)
-    assert(adapter.metaManifest == attribs.metaManifest)
+    assert(adapter.accessorManifest == attribs.accessorManifest)
     assert(adapter.boundManifest == attribs.boundManifest)
 
     // Test make.
@@ -54,7 +54,7 @@ object AdapterTestUtil extends FunSuite {
       ).asInstanceOf[ReadDataArray[F#Component, R]]
 
       val descriptor = Descriptor[F, R](
-        attribs.formatManifest, attribs.componentManifest, attribs.metaManifest,
+        attribs.formatManifest, attribs.componentManifest, attribs.accessorManifest,
         attribs.components, original.rawType, original.isNormalized
       )
 
@@ -187,7 +187,7 @@ object AdapterTestUtil extends FunSuite {
 
 case class AdapterAttrib[F <: Format, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
   val formatManifest: ClassManifest[F],
-  val metaManifest: ClassManifest[F#Accessor],
+  val accessorManifest: ClassManifest[F#Accessor],
   val boundManifest: Manifest[B],
   val componentManifest: ClassManifest[F#Component]
 )

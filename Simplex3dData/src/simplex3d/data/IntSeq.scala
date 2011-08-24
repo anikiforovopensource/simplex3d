@@ -37,7 +37,7 @@ extends AbstractData[Int, Int](shared, prim, ro, off, str)
 with DataSeq[SInt, R] with CompositionFactory[SInt, DefinedInt]
 {
   final def formatManifest = PrimitiveFormat.SInt
-  final def metaManifest = PrimitiveFormat.SInt
+  final def accessorManifest = PrimitiveFormat.SInt
   final def components: Int = 1
   final def isNormalized = false
 

@@ -113,7 +113,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
   def isNormalized: Boolean
   
   def formatManifest: ClassManifest[Format]
-  def metaManifest: ClassManifest[Format#Accessor]
+  def accessorManifest: ClassManifest[Format#Accessor]
   
 
   final val bytesPerComponent = RawType.byteLength(rawType)

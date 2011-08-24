@@ -34,7 +34,7 @@ sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
   adapter: DataAdapter[F, B], prim: ReadContiguous[F#Component, R], off: Int, str: Int
 ) extends CompositeSeq[F, R, B](prim, off, str) {
   final def formatManifest = adapter.formatManifest
-  final def metaManifest = adapter.metaManifest
+  final def accessorManifest = adapter.accessorManifest
   final def components: Int = adapter.components
 
   def apply(i: Int) :F#Accessor#Const = adapter.apply(primitives, offset + i*stride)

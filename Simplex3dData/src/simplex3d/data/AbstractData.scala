@@ -135,24 +135,29 @@ abstract class AbstractData[
     }
 
     src match {
+      case ds: ReadDataSeq[_, _]
+      if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) => {
+        val dsf = ds.asInstanceOf[ReadDataSeq[Format, Raw]]
+        putImpl(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
+      }
       case wrapped: WrappedArray[_] => wrapped.elemManifest match {
         case Manifest.Int =>
-          if (metaManifest != PrimitiveFormat.SInt) throw new ClassCastException(
-            "Seq[Int] cannot be cast to Seq[" + metaManifest + "#Const]."
+          if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
+            "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Int]], first, count
           )
         case Manifest.Float =>
-          if (metaManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
-            "Seq[Float] cannot be cast to Seq[" + metaManifest + "#Const]."
+          if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
+            "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Float]], first, count
           )
         case Manifest.Double =>
-          if (metaManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
-            "Seq[Double] cannot be cast to Seq[" + metaManifest + "#Const]."
+          if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
+            "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
           )
           putArray(
             index, wrapped.array.asInstanceOf[Array[Double]], first, count
@@ -161,11 +166,6 @@ abstract class AbstractData[
           putIndexedSeq(
             index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
           )
-      }
-      case ds: ReadDataSeq[_, _]
-      if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) => {
-        val dsf = ds.asInstanceOf[ReadDataSeq[Format, Raw]]
-        putImpl(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
       }
       case is: IndexedSeq[_] => {
         putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
@@ -206,9 +206,9 @@ abstract class AbstractData[
       }
     }
 
-    if ((primitives.metaManifest ne src.metaManifest) && (primitives.metaManifest != src.metaManifest))
+    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.metaManifest + "] cannot be cast to DataSeq[" + primitives.metaManifest + "]."
+        "DataSeq[" + src.accessorManifest + "] cannot be cast to DataSeq[" + primitives.accessorManifest + "]."
       )
 
     if (isReadOnly) throw new ReadOnlyBufferException()

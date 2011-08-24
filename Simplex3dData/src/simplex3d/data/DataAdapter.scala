@@ -33,7 +33,7 @@ import simplex3d.data._
 @SerialVersionUID(8104346712419693669L)
 abstract class DataAdapter[F <: CompositeFormat, B <: Defined](final val components: Int)(implicit
   final val formatManifest: ClassManifest[F],
-  final val metaManifest: ClassManifest[F#Accessor],
+  final val accessorManifest: ClassManifest[F#Accessor],
   final val boundManifest: Manifest[B]
 )
 extends CompositionFactory[F, B] with Serializable {

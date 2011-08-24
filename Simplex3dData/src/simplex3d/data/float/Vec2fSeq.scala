@@ -34,7 +34,7 @@ private[data] abstract class BaseVec2f[+R <: DefinedFloat](
   prim: ReadContiguous[RFloat, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2f, R, DefinedFloat](prim, off, str) {
   final def formatManifest = Vec2f.Manifest
-  final def metaManifest = Vec2f.Manifest
+  final def accessorManifest = Vec2f.Manifest
   final def components: Int = 2
 
   final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[Vec2f#Component, P])

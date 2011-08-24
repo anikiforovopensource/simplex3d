@@ -147,7 +147,7 @@ object AttributeTestUtil extends FunSuite {
     descriptor: Descriptor[F, R]
   ) {
     assert(seq.formatManifest == descriptor.formatManifest)
-    assert(seq.metaManifest == descriptor.metaManifest)
+    assert(seq.accessorManifest == descriptor.accessorManifest)
     assert(seq.primitives.formatManifest == descriptor.componentManifest)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
@@ -243,7 +243,7 @@ object AttributeTestUtil extends FunSuite {
     else {
       val primitiveDesc = descriptor.copy(
         formatManifest = seq.primitives.formatManifest,
-        metaManifest = seq.primitives.metaManifest,
+        accessorManifest = seq.primitives.accessorManifest,
         components = 1
       )
       testArray(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -289,7 +289,7 @@ object AttributeTestUtil extends FunSuite {
     else {
       val primitiveDesc = descriptor.copy(
         formatManifest = seq.primitives.formatManifest,
-        metaManifest = seq.primitives.metaManifest,
+        accessorManifest = seq.primitives.accessorManifest,
         components = 1
       )
       testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -326,7 +326,7 @@ object AttributeTestUtil extends FunSuite {
     // primitives
     val primitiveDesc = descriptor.copy(
       formatManifest = seq.primitives.formatManifest,
-      metaManifest = seq.primitives.metaManifest,
+      accessorManifest = seq.primitives.accessorManifest,
       components = 1
     )
     testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])

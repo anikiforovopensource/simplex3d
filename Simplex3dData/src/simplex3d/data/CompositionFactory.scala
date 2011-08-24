@@ -27,7 +27,7 @@ package simplex3d.data
 trait CompositionFactory[F <: Format, B <: Defined] {
   def components: Int
   def formatManifest: ClassManifest[F]
-  def metaManifest: ClassManifest[F#Accessor]
+  def accessorManifest: ClassManifest[F#Accessor]
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P]) :ReadDataArray[F, P]
   def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P]) :ReadDataBuffer[F, P]

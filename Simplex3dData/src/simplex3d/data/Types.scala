@@ -113,4 +113,18 @@ object RawManifest {
       case RDouble => RawType.RDouble
     }
   }
+  
+  def fromRawType(t: Int) :ClassManifest[_] = {
+    t match {
+      case RawType.SByte => SByte
+      case RawType.UByte => UByte
+      case RawType.SShort => SShort
+      case RawType.UShort => UShort
+      case RawType.SInt => SInt
+      case RawType.UInt => UInt
+      case RawType.HFloat => HFloat
+      case RawType.RFloat => RFloat
+      case RawType.RDouble => RDouble
+    }
+  }
 }

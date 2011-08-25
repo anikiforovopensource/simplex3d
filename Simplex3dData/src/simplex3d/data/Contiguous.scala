@@ -27,9 +27,6 @@ package simplex3d.data
 trait ReadContiguous[F <: Format, +R <: Raw]
 extends ReadDataSeq[F, R] with ContiguousSrc {
   type Read <: ReadContiguous[F, R]
-
-  assert(offset == 0)
-  assert(stride == components)
 }
 
 trait Contiguous[F <: Format, +R <: Raw]

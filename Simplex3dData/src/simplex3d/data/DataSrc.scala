@@ -58,6 +58,9 @@ trait DataSrc {
 
 trait ContiguousSrc extends DataSrc {
   type Read <: ContiguousSrc
+  
+  assert(byteOffset == 0)
+  assert(byteStride == components*bytesPerComponent)
 }
 
 trait DirectSrc extends DataSrc {

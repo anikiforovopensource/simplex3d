@@ -13,6 +13,8 @@ Build requirements:
   - Simplex3dMath (built with ant) in the same folder as this project folder
   - Simplex3dData (built with ant) in the same folder as this project folder
 
+See SVN trunk for correct directory layout: http://code.google.com/p/simplex3d/source/browse/#svn%2Ftrunk
+
 
 To build the project:
   1) open a console,

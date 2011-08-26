@@ -78,6 +78,11 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
         jarfile="${release.dir}/jars/${release.name}-noise.jar">
             <fileset dir="${build.classes.dir}" includes="${noise.pkg}"/>
         </jar>
+        
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}-data-format.jar">
+            <fileset dir="${build.classes.dir}" includes="${data.format.pkg}"/>
+        </jar>
     </target>
 
     <target depends="init, compile" name="qrun">
@@ -93,6 +98,7 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
     <property name="root.pkg" value="simplex3d"/>
 
     <property name="noise.pkg" value="${root.pkg}/noise/**"/>
+    <property name="data.format.pkg" value="${root.pkg}/data/**"/>
 
     <target name="release-all" depends="release-clean, release-src, release-bin" />
 

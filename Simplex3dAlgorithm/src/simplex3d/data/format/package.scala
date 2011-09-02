@@ -71,11 +71,11 @@ package object format {
   
   
   // This format works with arrays retrieved from BufferedImage.
-  sealed trait ARGB_8_8_8_8 extends CompositeFormat {
+  sealed trait ARGB8 extends CompositeFormat {
     type Accessor = Vec4
     type Component = SInt
   }
-  implicit object ARGB_8_8_8_8_Adapter extends DataAdapter[ARGB_8_8_8_8, UInt](components = 1) {
+  implicit object ARGB8Adapter extends DataAdapter[ARGB8, UInt](components = 1) {
     def apply(backing: inContiguous[SInt, Raw], j: Int) :ConstVec4 = {
       val i = backing(j)
       ConstVec4(
@@ -95,11 +95,11 @@ package object format {
   }
   
   
-  sealed trait RGBA_10_10_10_2 extends CompositeFormat {
+  sealed trait RGB10A2 extends CompositeFormat {
     type Accessor = Vec4
     type Component = SInt
   }
-  implicit object RGBA_10_10_10_2_Adapter extends DataAdapter[RGBA_10_10_10_2, UInt](components = 1) {
+  implicit object RGB10A2Adapter extends DataAdapter[RGB10A2, UInt](components = 1) {
     def apply(backing: inContiguous[SInt, Raw], j: Int) :ConstVec4 = {
       val i = backing(j)
       ConstVec4(

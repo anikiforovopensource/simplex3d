@@ -80,7 +80,7 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
         </jar>
         
         <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-data-format.jar">
+        jarfile="${release.dir}/jars/simplex3d-data-format.jar">
             <fileset dir="${build.classes.dir}" includes="${data.format.pkg}"/>
         </jar>
     </target>

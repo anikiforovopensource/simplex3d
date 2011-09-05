@@ -51,14 +51,29 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
     src: inContiguous[F#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
+    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+      throw new ClassCastException(
+        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+      )
+    
     putImpl(index, src, srcOffset, srcStride, count)
   }
 
   final def put(index: Int, src: inContiguous[F#Component, simplex3d.data.Raw]) {
+    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+      throw new ClassCastException(
+        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+      )
+    
     putImpl(index, src, 0, components, src.size/components)
   }
 
   final def put(src: inContiguous[F#Component, simplex3d.data.Raw]) {
+    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+      throw new ClassCastException(
+        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+      )
+    
     putImpl(0, src, 0, components, src.size/components)
   }
 

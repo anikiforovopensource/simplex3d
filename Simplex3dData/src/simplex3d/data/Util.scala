@@ -85,1027 +85,1723 @@ private[data] object Util {
   }
 
   
-  // ByteBuffer
   final def copyBuffer(
     components: Int,
     dest: ByteBuffer, destOffset: Int, destStride: Int,
     src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copyBuffer1(
-    dest: ByteBuffer, destOffset: Int, destStride: Int,
-    src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer2(
-    dest: ByteBuffer, destOffset: Int, destStride: Int,
-    src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer3(
-    dest: ByteBuffer, destOffset: Int, destStride: Int,
-    src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer4(
-    dest: ByteBuffer, destOffset: Int, destStride: Int,
-    src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: ByteBuffer, destOffset: Int, destStride: Int,
-    src: ByteBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // ShortBuffer
+  
+  
   final def copyBuffer(
     components: Int,
     dest: ShortBuffer, destOffset: Int, destStride: Int,
     src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copyBuffer1(
-    dest: ShortBuffer, destOffset: Int, destStride: Int,
-    src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer2(
-    dest: ShortBuffer, destOffset: Int, destStride: Int,
-    src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer3(
-    dest: ShortBuffer, destOffset: Int, destStride: Int,
-    src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer4(
-    dest: ShortBuffer, destOffset: Int, destStride: Int,
-    src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: ShortBuffer, destOffset: Int, destStride: Int,
-    src: ShortBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // CharBuffer
+  
+  
   final def copyBuffer(
     components: Int,
     dest: CharBuffer, destOffset: Int, destStride: Int,
     src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copyBuffer1(
-    dest: CharBuffer, destOffset: Int, destStride: Int,
-    src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer2(
-    dest: CharBuffer, destOffset: Int, destStride: Int,
-    src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer3(
-    dest: CharBuffer, destOffset: Int, destStride: Int,
-    src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer4(
-    dest: CharBuffer, destOffset: Int, destStride: Int,
-    src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: CharBuffer, destOffset: Int, destStride: Int,
-    src: CharBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // IntBuffer
+  
+  
   final def copyBuffer(
     components: Int,
     dest: IntBuffer, destOffset: Int, destStride: Int,
     src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copyBuffer1(
-    dest: IntBuffer, destOffset: Int, destStride: Int,
-    src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer2(
-    dest: IntBuffer, destOffset: Int, destStride: Int,
-    src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer3(
-    dest: IntBuffer, destOffset: Int, destStride: Int,
-    src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer4(
-    dest: IntBuffer, destOffset: Int, destStride: Int,
-    src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: IntBuffer, destOffset: Int, destStride: Int,
-    src: IntBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // FloatBuffer
+  
+  
   final def copyBuffer(
     components: Int,
     dest: FloatBuffer, destOffset: Int, destStride: Int,
     src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copyBuffer1(
-    dest: FloatBuffer, destOffset: Int, destStride: Int,
-    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer2(
-    dest: FloatBuffer, destOffset: Int, destStride: Int,
-    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer3(
-    dest: FloatBuffer, destOffset: Int, destStride: Int,
-    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBuffer4(
-    dest: FloatBuffer, destOffset: Int, destStride: Int,
-    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: FloatBuffer, destOffset: Int, destStride: Int,
-    src: FloatBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // DoubleBuffer
+  
+  
   final def copyBuffer(
     components: Int,
     dest: DoubleBuffer, destOffset: Int, destStride: Int,
     src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copyBuffer1(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copyBuffer2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copyBuffer3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copyBuffer4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copyBufferAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-    }
-  }
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
 
-  final def copyBuffer1(
-    dest: DoubleBuffer, destOffset: Int, destStride: Int,
-    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
+          while (srci < srcLim) {
+            dest.put(desti, src.get(srci))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+      
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
 
-    while (srci < srcLim) {
-      dest.put(desti, src.get(srci))
-      desti += destStride
-      srci += srcStride
-    }
-  }
+          while (srci < srcLim - 1) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+      
+      case 3 =>  def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
 
-  final def copyBuffer2(
-    dest: DoubleBuffer, destOffset: Int, destStride: Int,
-    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
+          while (srci < srcLim - 2) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+      
+      case 4 =>  def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
 
-    while (srci < srcLim - 1) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      desti += destStride
-      srci += srcStride
-    }
-  }
+          while (srci < srcLim - 3) {
+            dest.put(desti, src.get(srci))
+            dest.put(desti + 1, src.get(srci + 1))
+            dest.put(desti + 2, src.get(srci + 2))
+            dest.put(desti + 3, src.get(srci + 3))
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+      
+      case _ =>  def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
 
-  final def copyBuffer3(
-    dest: DoubleBuffer, destOffset: Int, destStride: Int,
-    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
+          while (srci <= srcLim - components) {
 
-    while (srci < srcLim - 2) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      desti += destStride
-      srci += srcStride
-    }
-  }
+            var j = 0; while (j < components) {
+              dest.put(desti + j, src.get(srci + j))
+              j += 1
+            }
 
-  final def copyBuffer4(
-    dest: DoubleBuffer, destOffset: Int, destStride: Int,
-    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest.put(desti, src.get(srci))
-      dest.put(desti + 1, src.get(srci + 1))
-      dest.put(desti + 2, src.get(srci + 2))
-      dest.put(desti + 3, src.get(srci + 3))
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copyBufferAny(
-    components: Int,
-    dest: DoubleBuffer, destOffset: Int, destStride: Int,
-    src: DoubleBuffer, srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest.put(desti + j, src.get(srci + j))
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
 
 
-  // SeqInt
   final def copySeqInt(
     components: Int,
     dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
     src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copySeqSInt(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copySeqInt2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copySeqInt3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copySeqInt4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copySeqIntAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest(desti) = src(srci)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            dest(desti + 3) = src(srci + 3)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest(desti + j) = src(srci + j)
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
 
-  final def copySeqSInt(
-    dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
-    src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest(desti) = src(srci)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqInt2(
-    dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
-    src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqInt3(
-    dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
-    src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqInt4(
-    dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
-    src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      dest(desti + 3) = src(srci + 3)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqIntAny(
-    components: Int,
-    dest: Contiguous[SInt, _], destOffset: Int, destStride: Int,
-    src: inContiguous[SInt, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest(desti + j) = src(srci + j)
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  // SeqFloat
+  
   final def copySeqFloat(
     components: Int,
     dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
     src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copySeqRFloat(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copySeqFloat2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copySeqFloat3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copySeqFloat4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copySeqFloatAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest(desti) = src(srci)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            dest(desti + 3) = src(srci + 3)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest(desti + j) = src(srci + j)
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copySeqRFloat(
-    dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest(desti) = src(srci)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqFloat2(
-    dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqFloat3(
-    dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqFloat4(
-    dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      dest(desti + 3) = src(srci + 3)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqFloatAny(
-    components: Int,
-    dest: Contiguous[RFloat, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RFloat, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci <= srcLim - components) {
-
-      var j = 0; while (j < components) {
-        dest(desti + j) = src(srci + j)
-        j += 1
-      }
-
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-
-  // SeqDouble
+  
+  
   final def copySeqDouble(
     components: Int,
     dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
     src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
   ) {
     (components: @switch) match {
-      case 1 => copySeqRDouble(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 2 => copySeqDouble2(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 3 => copySeqDouble3(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case 4 => copySeqDouble4(
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
-      case _ => copySeqDoubleAny(
-          components,
-          dest, destOffset, destStride,
-          src, srcOffset, srcStride, srcLim
-        )
+      
+      case 1 => def cp1() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim) {
+            dest(desti) = src(srci)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 1) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 2) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci < srcLim - 3) {
+            dest(desti) = src(srci)
+            dest(desti + 1) = src(srci + 1)
+            dest(desti + 2) = src(srci + 2)
+            dest(desti + 3) = src(srci + 3)
+            desti += destStride
+            srci += srcStride
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          var desti = destOffset
+          var srci = srcOffset
+
+          while (srci <= srcLim - components) {
+
+            var j = 0; while (j < components) {
+              dest(desti + j) = src(srci + j)
+              j += 1
+            }
+
+            desti += destStride
+            srci += srcStride
+          }
+        }; cpAny()
     }
   }
-
-  final def copySeqRDouble(
-    dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim) {
-      dest(desti) = src(srci)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqDouble2(
-    dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 1) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqDouble3(
-    dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 2) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqDouble4(
-    dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
-  ) {
-    var desti = destOffset
-    var srci = srcOffset
-
-    while (srci < srcLim - 3) {
-      dest(desti) = src(srci)
-      dest(desti + 1) = src(srci + 1)
-      dest(desti + 2) = src(srci + 2)
-      dest(desti + 3) = src(srci + 3)
-      desti += destStride
-      srci += srcStride
-    }
-  }
-
-  final def copySeqDoubleAny(
+  
+  
+  // Copy2d
+  final def copyBuffer2d(
     components: Int,
-    dest: Contiguous[RDouble, _], destOffset: Int, destStride: Int,
-    src: inContiguous[RDouble, _], srcOffset: Int, srcStride: Int, srcLim: Int
+    dest: ByteBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: ByteBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
   ) {
-    var desti = destOffset
-    var srci = srcOffset
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
 
-    while (srci <= srcLim - components) {
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
 
-      var j = 0; while (j < components) {
-        dest(desti + j) = src(srci + j)
-        j += 1
+      y += 1
+    }
+  }
+  
+  final def copyBuffer2d(
+    components: Int,
+    dest: ShortBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: ShortBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
+
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
+
+      y += 1
+    }
+  }
+  
+  final def copyBuffer2d(
+    components: Int,
+    dest: CharBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: CharBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
+
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
+
+      y += 1
+    }
+  }
+  
+  final def copyBuffer2d(
+    components: Int,
+    dest: IntBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: IntBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
+
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
+
+      y += 1
+    }
+  }
+  
+  final def copyBuffer2d(
+    components: Int,
+    dest: FloatBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: FloatBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
+
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
+
+      y += 1
+    }
+  }
+  
+  final def copyBuffer2d(
+    components: Int,
+    dest: DoubleBuffer, destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: DoubleBuffer, srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    var y = 0; while (y < copyY) {
+      val pd = (destOffsetX + (y + destOffsetY)*destDimsX)*components
+      val ps = (srcOffsetX + (y + srcOffsetY)*srcDimsX)*components
+
+      dest.position(pd)
+      src.limit(ps + copyX*components)
+      src.position(ps)
+      dest.put(src)
+
+      y += 1
+    }
+  }
+  
+  
+  final def copySeqInt2d(
+    components: Int,
+    dest: Contiguous[SInt, _], destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: inContiguous[SInt, _], srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)
+              val srcIndex = (x + ts)
+              dest(destIndex) = src(srcIndex)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*2
+              val srcIndex = (x + ts)*2
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*3
+              val srcIndex = (x + ts)*3
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*4
+              val srcIndex = (x + ts)*4
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+              dest(destIndex + 3) = src(srcIndex + 3)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp4()
+      
+      case _ => def cpAny() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*components
+              val srcIndex = (x + ts)*components
+              
+              var j = 0; while (j < components) {
+                dest(destIndex + j) = src(srcIndex + j)
+                j += 1
+              }
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cpAny()
+    }
+  }
+  
+  final def copySeqFloat2d(
+    components: Int,
+    dest: Contiguous[RFloat, _], destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: inContiguous[RFloat, _], srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)
+              val srcIndex = (x + ts)
+              dest(destIndex) = src(srcIndex)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*2
+              val srcIndex = (x + ts)*2
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*3
+              val srcIndex = (x + ts)*3
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*4
+              val srcIndex = (x + ts)*4
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+              dest(destIndex + 3) = src(srcIndex + 3)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp4()
+      
+      case _ => def cpAny() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*components
+              val srcIndex = (x + ts)*components
+              
+              var j = 0; while (j < components) {
+                dest(destIndex + j) = src(srcIndex + j)
+                j += 1
+              }
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cpAny()
+    }
+  }
+  
+  final def copySeqDouble2d(
+    components: Int,
+    dest: Contiguous[RDouble, _], destDimsX: Int, destOffsetX: Int, destOffsetY: Int,
+    src: inContiguous[RDouble, _], srcDimsX: Int, srcOffsetX: Int, srcOffsetY: Int,
+    copyX: Int, copyY: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)
+              val srcIndex = (x + ts)
+              dest(destIndex) = src(srcIndex)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*2
+              val srcIndex = (x + ts)*2
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp2()
+        
+      case 3 => def cp3() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*3
+              val srcIndex = (x + ts)*3
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp3()
+        
+      case 4 => def cp4() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*4
+              val srcIndex = (x + ts)*4
+              dest(destIndex) = src(srcIndex)
+              dest(destIndex + 1) = src(srcIndex + 1)
+              dest(destIndex + 2) = src(srcIndex + 2)
+              dest(destIndex + 3) = src(srcIndex + 3)
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cp4()
+      
+      case _ => def cpAny() {
+          var y = 0; while (y < copyY) {
+            val td = destOffsetX + (y + destOffsetY)*destDimsX
+            val ts = srcOffsetX + (y + srcOffsetY)*srcDimsX
+            
+            var x = 0; while (x < copyX) {
+              
+              val destIndex = (x + td)*components
+              val srcIndex = (x + ts)*components
+              
+              var j = 0; while (j < components) {
+                dest(destIndex + j) = src(srcIndex + j)
+                j += 1
+              }
+
+              x += 1
+            }
+            y += 1
+          }
+        }; cpAny()
+    }
+  }
+  
+  
+  // Copy3d
+  final def copyBuffer3d(
+    components: Int,
+    dest: ByteBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: ByteBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
+
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
       }
+      z += 1
+    }
+  }
+  
+  final def copyBuffer3d(
+    components: Int,
+    dest: ShortBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: ShortBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
 
-      desti += destStride
-      srci += srcStride
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
+      }
+      z += 1
+    }
+  }
+  
+  final def copyBuffer3d(
+    components: Int,
+    dest: CharBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: CharBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
+
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
+      }
+      z += 1
+    }
+  }
+  
+  final def copyBuffer3d(
+    components: Int,
+    dest: IntBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: IntBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
+
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
+      }
+      z += 1
+    }
+  }
+  
+  final def copyBuffer3d(
+    components: Int,
+    dest: FloatBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: FloatBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
+
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
+      }
+      z += 1
+    }
+  }
+  
+  final def copyBuffer3d(
+    components: Int,
+    dest: DoubleBuffer, destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: DoubleBuffer, srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    val dmz = destDimsX*destDimsY
+    val smz = srcDimsX*srcDimsY
+    
+    var z = 0; while (z < copyZ) {
+      val td = destOffsetX + (z + destOffsetZ)*dmz
+      val ts = srcOffsetX + (z + srcOffsetZ)*smz
+      
+      var y = 0; while (y < copyY) {
+        val pd = ((y + destOffsetY)*destDimsX + td)*components
+        val ps = ((y + srcOffsetY)*srcDimsX + ts)*components
+
+        dest.position(pd)
+        src.limit(ps + copyX*components)
+        src.position(ps)
+        dest.put(src)
+
+        y += 1
+      }
+      z += 1
+    }
+  }
+  
+  final def copySeqInt3d(
+    components: Int,
+    dest: Contiguous[SInt, _], destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: inContiguous[SInt, _], srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)
+                val srcIndex = (x + sty)
+                dest(destIndex) = src(srcIndex)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*2
+                val srcIndex = (x + sty)*2
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp2()
+        
+        case 3 => def cp3() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*3
+                val srcIndex = (x + sty)*3
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp3()
+        
+        case 4 => def cp4() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*4
+                val srcIndex = (x + sty)*4
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+                dest(destIndex + 3) = src(srcIndex + 3)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*components
+                val srcIndex = (x + sty)*components
+                
+                var j = 0; while (j < components) {
+                  dest(destIndex + j) = src(srcIndex + j)
+                  j += 1
+                }
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cpAny()
+    }
+  }
+  
+  final def copySeqFloat3d(
+    components: Int,
+    dest: Contiguous[RFloat, _], destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: inContiguous[RFloat, _], srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)
+                val srcIndex = (x + sty)
+                dest(destIndex) = src(srcIndex)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*2
+                val srcIndex = (x + sty)*2
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp2()
+        
+        case 3 => def cp3() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*3
+                val srcIndex = (x + sty)*3
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp3()
+        
+        case 4 => def cp4() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*4
+                val srcIndex = (x + sty)*4
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+                dest(destIndex + 3) = src(srcIndex + 3)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*components
+                val srcIndex = (x + sty)*components
+                
+                var j = 0; while (j < components) {
+                  dest(destIndex + j) = src(srcIndex + j)
+                  j += 1
+                }
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cpAny()
+    }
+  }
+  
+  final def copySeqDouble3d(
+    components: Int,
+    dest: Contiguous[RDouble, _], destDimsX: Int, destDimsY: Int, destOffsetX: Int, destOffsetY: Int, destOffsetZ: Int,
+    src: inContiguous[RDouble, _], srcDimsX: Int, srcDimsY: Int, srcOffsetX: Int, srcOffsetY: Int, srcOffsetZ: Int,
+    copyX: Int, copyY: Int, copyZ: Int
+  ) {
+    (components: @switch) match {
+      
+      case 1 => def cp1() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)
+                val srcIndex = (x + sty)
+                dest(destIndex) = src(srcIndex)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp1()
+        
+      case 2 => def cp2() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*2
+                val srcIndex = (x + sty)*2
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp2()
+        
+        case 3 => def cp3() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*3
+                val srcIndex = (x + sty)*3
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp3()
+        
+        case 4 => def cp4() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*4
+                val srcIndex = (x + sty)*4
+                dest(destIndex) = src(srcIndex)
+                dest(destIndex + 1) = src(srcIndex + 1)
+                dest(destIndex + 2) = src(srcIndex + 2)
+                dest(destIndex + 3) = src(srcIndex + 3)
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cp4()
+        
+      case _ => def cpAny() {
+          val dmz = destDimsX*destDimsY
+          val smz = srcDimsX*srcDimsY
+
+          var z = 0; while (z < copyZ) {
+            val dtz = destOffsetX + (z + destOffsetZ)*dmz
+            val stz = srcOffsetX + (z + srcOffsetZ)*smz
+
+            var y = 0; while (y < copyY) {
+              val dty = (y + destOffsetY)*destDimsX + dtz
+              val sty = (y + srcOffsetY)*srcDimsX + stz
+
+              var x = 0; while (x < copyX) {
+                val destIndex = (x + dty)*components
+                val srcIndex = (x + sty)*components
+                
+                var j = 0; while (j < components) {
+                  dest(destIndex + j) = src(srcIndex + j)
+                  j += 1
+                }
+
+                x += 1
+              }
+              y += 1
+            }
+            z += 1
+          }
+        }; cpAny()
     }
   }
 }

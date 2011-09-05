@@ -121,9 +121,9 @@ abstract class AbstractData[
   private[this] final def put(index: Int, src: Seq[WriteAs], srcSize: Int, first: Int, count: Int) {
     
     if (isReadOnly) throw new ReadOnlyBufferException()
-    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
     if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
     if (first < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
+    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
 
     if (index + count > size) {
       if (index > size) throw new IndexOutOfBoundsException("'index' exceeds size.")
@@ -140,33 +140,35 @@ abstract class AbstractData[
         val dsf = ds.asInstanceOf[ReadDataSeq[Format, Raw]]
         putImpl(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
       }
-      case wrapped: WrappedArray[_] => wrapped.elemManifest match {
-        case Manifest.Int =>
-          if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
-            "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
-          )
-          putArray(
-            index, wrapped.array.asInstanceOf[Array[Int]], first, count
-          )
-        case Manifest.Float =>
-          if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
-            "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
-          )
-          putArray(
-            index, wrapped.array.asInstanceOf[Array[Float]], first, count
-          )
-        case Manifest.Double =>
-          if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
-            "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
-          )
-          putArray(
-            index, wrapped.array.asInstanceOf[Array[Double]], first, count
-          )
-        case _ =>
-          putIndexedSeq(
-            index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
-          )
-      }
+      case wrapped: WrappedArray[_] => def cpArray() {
+        wrapped.elemManifest match {
+          case Manifest.Int =>
+            if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
+              "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
+            )
+            putArray(
+              index, wrapped.array.asInstanceOf[Array[Int]], first, count
+            )
+          case Manifest.Float =>
+            if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
+              "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
+            )
+            putArray(
+              index, wrapped.array.asInstanceOf[Array[Float]], first, count
+            )
+          case Manifest.Double =>
+            if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
+              "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
+            )
+            putArray(
+              index, wrapped.array.asInstanceOf[Array[Double]], first, count
+            )
+          case _ =>
+            putIndexedSeq(
+              index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
+            )
+        }
+      }; cpArray()
       case is: IndexedSeq[_] => {
         putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
       }
@@ -189,34 +191,29 @@ abstract class AbstractData[
   }
 
 
+  private[data] def copyGroup(rawType: Int) = {
+    (rawType: @switch) match {
+      case SByte | UByte => 0
+      case SShort => 1
+      case UShort => 2
+      case SInt | UInt => 3
+      case HFloat => 4
+      case RFloat => 5
+      case RDouble => 6
+    }
+  }
+    
   private[data] final def putImpl(
     index: Int,
     src: inContiguous[Format#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
-    def group(rawType: Int) = {
-      (rawType: @switch) match {
-        case SByte | UByte => 0
-        case SShort => 1
-        case UShort => 2
-        case SInt | UInt => 3
-        case HFloat => 4
-        case RFloat => 5
-        case RDouble => 6
-      }
-    }
-
-    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
-      throw new ClassCastException(
-        "DataSeq[" + src.accessorManifest + "] cannot be cast to DataSeq[" + primitives.accessorManifest + "]."
-      )
 
     if (isReadOnly) throw new ReadOnlyBufferException()
-    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
-    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' is less than 1.")
     if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
     if (srcOffset < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
-
+    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' is less than 1.")
+    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
 
     val destOffset = offset + index*stride
     val srcLim = srcOffset + (count - 1)*srcStride + components
@@ -232,90 +229,99 @@ abstract class AbstractData[
 
     val noConversion = (
       (rawType == src.rawType) ||
-      (!isNormalized && group(rawType) == group(src.rawType))
+      (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
     )
 
     if (stride == components && srcStride == components && noConversion) {
-      val destBuff = buffer()
-      val srcBuff = src.readOnlyBuffer()
+      def putBuff() {
+        val destBuff = buffer()
+        val srcBuff = src.readOnlyBuffer()
 
-      destBuff.position(destOffset)
-      srcBuff.position(srcOffset)
-      srcBuff.limit(srcLim)
+        destBuff.position(destOffset)
+        srcBuff.position(srcOffset)
+        srcBuff.limit(srcLim)
 
-      (storeType: @switch) match {
-        case ByteStore => destBuff.asInstanceOf[ByteBuffer].put(
-          srcBuff.asInstanceOf[ByteBuffer]
-        )
-        case ShortStore => destBuff.asInstanceOf[ShortBuffer].put(
-          srcBuff.asInstanceOf[ShortBuffer]
-        )
-        case CharStore => destBuff.asInstanceOf[CharBuffer].put(
-          srcBuff.asInstanceOf[CharBuffer]
-        )
-        case IntStore => destBuff.asInstanceOf[IntBuffer].put(
-          srcBuff.asInstanceOf[IntBuffer]
-        )
-        case FloatStore => destBuff.asInstanceOf[FloatBuffer].put(
-          srcBuff.asInstanceOf[FloatBuffer]
-        )
-        case DoubleStore => destBuff.asInstanceOf[DoubleBuffer].put(
-          srcBuff.asInstanceOf[DoubleBuffer]
-        )
+        (storeType: @switch) match {
+          case ByteStore => destBuff.asInstanceOf[ByteBuffer].put(
+            srcBuff.asInstanceOf[ByteBuffer]
+          )
+          case ShortStore => destBuff.asInstanceOf[ShortBuffer].put(
+            srcBuff.asInstanceOf[ShortBuffer]
+          )
+          case CharStore => destBuff.asInstanceOf[CharBuffer].put(
+            srcBuff.asInstanceOf[CharBuffer]
+          )
+          case IntStore => destBuff.asInstanceOf[IntBuffer].put(
+            srcBuff.asInstanceOf[IntBuffer]
+          )
+          case FloatStore => destBuff.asInstanceOf[FloatBuffer].put(
+            srcBuff.asInstanceOf[FloatBuffer]
+          )
+          case DoubleStore => destBuff.asInstanceOf[DoubleBuffer].put(
+            srcBuff.asInstanceOf[DoubleBuffer]
+          )
+        }
       }
+      putBuff()
     }
     else if (noConversion) {
-      (storeType: @switch) match {
-        case ByteStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[ByteBuffer], destOffset, stride,
-            src.buff.asInstanceOf[ByteBuffer], srcOffset, srcStride, srcLim
-          )
-        case ShortStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[ShortBuffer], destOffset, stride,
-            src.buff.asInstanceOf[ShortBuffer], srcOffset, srcStride, srcLim
-          )
-        case CharStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[CharBuffer], destOffset, stride,
-            src.buff.asInstanceOf[CharBuffer], srcOffset, srcStride, srcLim
-          )
-        case IntStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[IntBuffer], destOffset, stride,
-            src.buff.asInstanceOf[IntBuffer], srcOffset, srcStride, srcLim
-          )
-        case FloatStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[FloatBuffer], destOffset, stride,
-            src.buff.asInstanceOf[FloatBuffer], srcOffset, srcStride, srcLim
-          )
-        case DoubleStore => Util.copyBuffer(
-            components,
-            buff.asInstanceOf[DoubleBuffer], destOffset, stride,
-            src.buff.asInstanceOf[DoubleBuffer], srcOffset, srcStride, srcLim
-          )
+      def copyBuff() {
+        (storeType: @switch) match {
+          case ByteStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[ByteBuffer], destOffset, stride,
+              src.buff.asInstanceOf[ByteBuffer], srcOffset, srcStride, srcLim
+            )
+          case ShortStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[ShortBuffer], destOffset, stride,
+              src.buff.asInstanceOf[ShortBuffer], srcOffset, srcStride, srcLim
+            )
+          case CharStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[CharBuffer], destOffset, stride,
+              src.buff.asInstanceOf[CharBuffer], srcOffset, srcStride, srcLim
+            )
+          case IntStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[IntBuffer], destOffset, stride,
+              src.buff.asInstanceOf[IntBuffer], srcOffset, srcStride, srcLim
+            )
+          case FloatStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[FloatBuffer], destOffset, stride,
+              src.buff.asInstanceOf[FloatBuffer], srcOffset, srcStride, srcLim
+            )
+          case DoubleStore => Util.copyBuffer(
+              components,
+              buff.asInstanceOf[DoubleBuffer], destOffset, stride,
+              src.buff.asInstanceOf[DoubleBuffer], srcOffset, srcStride, srcLim
+            )
+        }
       }
+      copyBuff()
     }
     else {
-      primitives.formatManifest match {
-        case PrimitiveFormat.SInt => Util.copySeqInt(
-            components,
-            primitives.asInstanceOf[Contiguous[SInt, _]], destOffset, stride,
-            src.asInstanceOf[inContiguous[SInt, _]], srcOffset, srcStride, srcLim
-          )
-        case PrimitiveFormat.RFloat => Util.copySeqFloat(
-            components,
-            primitives.asInstanceOf[Contiguous[RFloat, _]], destOffset, stride,
-            src.asInstanceOf[inContiguous[RFloat, _]], srcOffset, srcStride, srcLim
-          )
-        case PrimitiveFormat.RDouble => Util.copySeqDouble(
-            components,
-            primitives.asInstanceOf[Contiguous[RDouble, _]], destOffset, stride,
-            src.asInstanceOf[inContiguous[RDouble, _]], srcOffset, srcStride, srcLim
-          )
+      def copyPrimSeq() {
+        primitives.formatManifest match {
+          case PrimitiveFormat.SInt => Util.copySeqInt(
+              components,
+              primitives.asInstanceOf[Contiguous[SInt, _]], destOffset, stride,
+              src.asInstanceOf[inContiguous[SInt, _]], srcOffset, srcStride, srcLim
+            )
+          case PrimitiveFormat.RFloat => Util.copySeqFloat(
+              components,
+              primitives.asInstanceOf[Contiguous[RFloat, _]], destOffset, stride,
+              src.asInstanceOf[inContiguous[RFloat, _]], srcOffset, srcStride, srcLim
+            )
+          case PrimitiveFormat.RDouble => Util.copySeqDouble(
+              components,
+              primitives.asInstanceOf[Contiguous[RDouble, _]], destOffset, stride,
+              src.asInstanceOf[inContiguous[RDouble, _]], srcOffset, srcStride, srcLim
+            )
+        }
       }
+      copyPrimSeq()
     }
   }
 }

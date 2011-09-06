@@ -84,7 +84,7 @@ package object data {
   type RFloat = integration.RFloat
   type RDouble = integration.RDouble
 
-  type RawView = ReadDataView[_ <: Format, Raw]
+  type RawView = ReadDataView[_ <: Format, _ <: Raw]
   
   type ReadIndex = ReadIndexSeq[Unsigned]
   type Index = IndexSeq[Unsigned]

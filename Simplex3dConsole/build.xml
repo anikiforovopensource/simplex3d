@@ -68,7 +68,7 @@
     -->
 
     <target name="-post-compile" depends="-console-deps" >
-        <copy todir="${build.dir}/classes">
+        <copy todir="${build.classes.dir}">
             <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
         </copy>
     </target>
@@ -84,12 +84,13 @@
         </jar>
 
         <jar jarfile="${build.dir}/simplex3d-deps.jar">
-            <fileset dir="${build.dir}/classes" includes="${extension.pkg}/**"/>
+            <fileset dir="${build.classes.dir}" includes="${extension.pkg}/**"/>
             <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**"/>
             <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
             <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**"/>
             <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**"/>
             <zipfileset src="${algorithm.dir}/simplex3d-algorithm-noise.jar" includes="**"/>
+            <zipfileset src="${algorithm.dir}/simplex3d-data-format.jar" includes="**"/>
         </jar>
 
         <echo level="info" message="Starting indexer." />
@@ -126,8 +127,8 @@
     <property name="data.dir" value="../Simplex3dData/release/jars"/>
     <property name="algorithm.dir" value="../Simplex3dAlgorithm/release/jars"/>
 
-
     <property name="keystore.location" value="keystore.local"/>
+
 
     <target name="make-keystore">
         <delete file="${keystore.location}" />
@@ -214,7 +215,7 @@
         <delete file="${release.bin}" />
 
         <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${release.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
@@ -230,7 +231,7 @@
         <mkdir dir="${release.dir}" />
 
         <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
             <fileset dir="${basedir}" includes="

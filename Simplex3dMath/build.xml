@@ -132,6 +132,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
     <property name="doublex.pkg" value="${root.pkg}/doublex/**"/>
     <property name="double.pkg" value="${root.pkg}/double/**"/>
 
+
     <target name="release-all" depends="release-clean, release-src, release-bin" />
 
     <target name="release-clean" depends="clean" >
@@ -142,7 +143,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
         <delete file="${release.bin}" />
 
         <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${release.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
@@ -157,7 +158,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
         <mkdir dir="${release.dir}" />
 
         <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
             <fileset dir="${basedir}" includes="

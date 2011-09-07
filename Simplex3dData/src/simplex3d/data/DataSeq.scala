@@ -80,7 +80,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw], first: Int, count: Int) {
     if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
     putImpl(index, src.primitives, src.offset + first*src.stride, src.stride, count)
@@ -89,7 +89,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw]) {
     if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
     putImpl(index, src.primitives, src.offset, src.stride, src.size)
@@ -98,7 +98,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
   final def put(src: inDataSeq[F, simplex3d.data.Raw]) {
     if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
       throw new ClassCastException(
-        "DataSeq[" + src.formatManifest + "] cannot be cast to DataSeq[" + formatManifest + "]."
+        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
     putImpl(0, src.primitives, src.offset, src.stride, src.size)

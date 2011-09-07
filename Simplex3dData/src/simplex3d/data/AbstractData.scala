@@ -25,6 +25,7 @@ import scala.annotation._
 import scala.reflect._
 import scala.collection._
 import scala.collection.mutable.WrappedArray
+import simplex3d.math.{Vec2i, inVec2i, Vec3i, inVec3i}
 import StoreType._
 import RawType._
 
@@ -119,63 +120,73 @@ abstract class AbstractData[
   }
 
   private[this] final def put(index: Int, src: Seq[WriteAs], srcSize: Int, first: Int, count: Int) {
+    var dataCopy = false
     
-    if (isReadOnly) throw new ReadOnlyBufferException()
-    if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
-    if (first < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
-    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
-
-    if (index + count > size) {
-      if (index > size) throw new IndexOutOfBoundsException("'index' exceeds size.")
-      else throw new BufferOverflowException()
-    }
-    if (first + count > srcSize) {
-      if (first > srcSize) throw new IndexOutOfBoundsException("'first' exceeds src.size.")
-      else throw new BufferUnderflowException()
-    }
-
-    src match {
-      case ds: ReadDataSeq[_, _]
-      if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) => {
-        val dsf = ds.asInstanceOf[ReadDataSeq[Format, Raw]]
-        putImpl(index, dsf.primitives, dsf.offset + first*dsf.stride, dsf.stride, count)
+    if (src.isInstanceOf[ReadDataSeq[_, _]]) {
+      val ds = src.asInstanceOf[ReadDataSeq[Format, Raw]]
+      
+      if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) {
+        putImpl(index, ds.primitives, ds.offset + first*ds.stride, ds.stride, count)
+        dataCopy = true
       }
-      case wrapped: WrappedArray[_] => def cpArray() {
-        wrapped.elemManifest match {
-          case Manifest.Int =>
-            if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
-              "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
-            )
-            putArray(
-              index, wrapped.array.asInstanceOf[Array[Int]], first, count
-            )
-          case Manifest.Float =>
-            if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
-              "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
-            )
-            putArray(
-              index, wrapped.array.asInstanceOf[Array[Float]], first, count
-            )
-          case Manifest.Double =>
-            if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
-              "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
-            )
-            putArray(
-              index, wrapped.array.asInstanceOf[Array[Double]], first, count
-            )
-          case _ =>
-            putIndexedSeq(
-              index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
-            )
+    }
+    
+    if (!dataCopy) { def seqCopy() {
+
+      if (isReadOnly) throw new ReadOnlyBufferException()
+      if (index < 0) throw new IndexOutOfBoundsException("index = " + index + ", must be greater than or equal to 0.")
+      if (first < 0) throw new IndexOutOfBoundsException("first = " + first + ", must be greater than or equal to 0.")
+      if (count < 0) throw new IllegalArgumentException("count = " + count + ", must be greater than or equal to 0.")
+
+      if (index + count > size) {
+        if (index > size) throw new IndexOutOfBoundsException("index = " + index + " exceeds size = " + size + ".")
+        else throw new BufferOverflowException()
+      }
+      if (first + count > srcSize) {
+        if (first > srcSize) throw new IndexOutOfBoundsException(
+          "first = " + first + " exceeds src size = " + srcSize + "."
+        )
+        else throw new BufferUnderflowException()
+      }
+
+      src match {
+        case wrapped: WrappedArray[_] => def cpArray() {
+          wrapped.elemManifest match {
+            case Manifest.Int =>
+              if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
+                "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
+              )
+              putArray(
+                index, wrapped.array.asInstanceOf[Array[Int]], first, count
+              )
+            case Manifest.Float =>
+              if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
+                "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
+              )
+              putArray(
+                index, wrapped.array.asInstanceOf[Array[Float]], first, count
+              )
+            case Manifest.Double =>
+              if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
+                "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
+              )
+              putArray(
+                index, wrapped.array.asInstanceOf[Array[Double]], first, count
+              )
+            case _ =>
+              putIndexedSeq(
+                index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
+              )
+          }
+        }; cpArray()
+        case is: IndexedSeq[_] => {
+          putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
         }
-      }; cpArray()
-      case is: IndexedSeq[_] => {
-        putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
+        case _ => {
+          putSeq(index, src.asInstanceOf[Seq[WriteAs]], first, count)
+        }
       }
-      case _ => {
-        putSeq(index, src.asInstanceOf[Seq[WriteAs]], first, count)
-      }
-    }
+    }; seqCopy() }
   }
 
   final def put(index: Int, src: Seq[WriteAs], first: Int, count: Int) {
@@ -191,7 +202,7 @@ abstract class AbstractData[
   }
 
 
-  private[data] def copyGroup(rawType: Int) = {
+  private[data] final def copyGroup(rawType: Int) = {
     (rawType: @switch) match {
       case SByte | UByte => 0
       case SShort => 1
@@ -210,20 +221,24 @@ abstract class AbstractData[
   ) {
 
     if (isReadOnly) throw new ReadOnlyBufferException()
-    if (index < 0) throw new IndexOutOfBoundsException("'index' is less than 0.")
-    if (srcOffset < 0) throw new IndexOutOfBoundsException("'first' is less than 0.")
-    if (srcStride < 1) throw new IllegalArgumentException("'srcStride' is less than 1.")
-    if (count < 0) throw new IllegalArgumentException("'count' is less than 0.")
+    if (index < 0) throw new IndexOutOfBoundsException("index = " + index + ", must be greater than or equal to 0.")
+    if (srcOffset < 0) throw new IndexOutOfBoundsException(
+      "srcOffset = " + srcOffset + ", must be greater than or equal to 0."
+    )
+    if (srcStride < 1) throw new IllegalArgumentException("srcStride = " + srcStride + ", must be greater than 0.")
+    if (count < 0) throw new IllegalArgumentException("count = " + count + ", must be greater than or equal to 0.")
 
     val destOffset = offset + index*stride
     val srcLim = srcOffset + (count - 1)*srcStride + components
 
     if (index + count > size) {
-      if (index > size) throw new IndexOutOfBoundsException("'index' exceeds size.")
+      if (index > size) throw new IndexOutOfBoundsException("index = " + index + " exceeds size = " + size + ".")
       else throw new BufferOverflowException()
     }
     if (srcLim > src.buff.capacity) {
-      if (srcOffset > src.size) throw new IndexOutOfBoundsException("'srcOffset' exceeds src.size.")
+      if (srcOffset > src.size) throw new IndexOutOfBoundsException(
+        "srcOffset = " + srcOffset + " exceeds src size = " + src.size + "."
+      )
       else throw new BufferUnderflowException()
     }
 
@@ -322,6 +337,443 @@ abstract class AbstractData[
         }
       }
       copyPrimSeq()
+    }
+  }
+  
+  
+  /** This will copy a 2d sub image from the source sequence into this object.
+   */
+  final def put(
+    dimensions: inVec2i, offset: inVec2i,
+    src: IndexedSeq[WriteAs], srcDimensions: inVec2i
+  ) {
+    put(
+      dimensions, offset,
+      src, srcDimensions, Vec2i.Zero,
+      srcDimensions
+    )
+  }
+  
+  /** This will copy a 2d sub image from the source sequence into this object.
+   */
+  final def put(
+    dimensions: inVec2i, offset: inVec2i,
+    src: IndexedSeq[WriteAs], srcDimensions: inVec2i, srcOffset: inVec2i,
+    copyDimensions: inVec2i
+  ) {
+    var contiguousCopy = false
+    
+    if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      
+      if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
+        putImpl(
+          dimensions, offset,
+          src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
+          copyDimensions
+        )
+        
+        contiguousCopy = true
+      }
+    }
+    
+    if (!contiguousCopy) {
+      def seqCopy() {
+
+        checkArgs(
+          size, dimensions, offset,
+          src.size, srcDimensions, srcOffset,
+          copyDimensions
+        )
+
+        var y = 0; while (y < copyDimensions.y) {
+          val td = offset.x + (y + offset.y)*dimensions.x
+          val ts = srcOffset.x + (y + srcOffset.y)*srcDimensions.x
+
+          var x = 0; while (x < copyDimensions.x) {
+            this(x + td) = src(x + ts)
+
+            x += 1
+          }
+          y += 1
+        }
+      }
+      seqCopy()
+    }
+  }
+  
+  private[this] final def checkArgs(
+    destSize: Int, destDims: inVec2i, destOffset: inVec2i,
+    srcSize: Int, srcDims: inVec2i, srcOffset: inVec2i,
+    copyDims: inVec2i
+  ) {
+    if (destOffset.x < 0 || destOffset.y < 0) throw new IllegalArgumentException(
+      "offset = " + destOffset + " has negative components."
+    )
+    if (destDims.x*destDims.y > destSize) throw new IllegalArgumentException(
+      "dimensions = " + destDims + " exceed data size = " + destSize + "."
+    )
+    if (destOffset.x + copyDims.x > destDims.x || destOffset.y + copyDims.y > destDims.y)
+      throw new IllegalArgumentException(
+        "dest region from " + destOffset + " to " + (destOffset + copyDims) +
+        " lies outside dimensions = " + destDims + "."
+      )
+    
+    if (srcOffset.x < 0 || srcOffset.y < 0) throw new IllegalArgumentException(
+      "src offset = " + srcOffset + " has negative components."
+    )
+    if (srcDims.x*srcDims.y > srcSize) throw new IllegalArgumentException(
+      "src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
+    )
+    if (srcOffset.x + copyDims.x > srcDims.x || srcOffset.y + copyDims.y > srcDims.y)
+      throw new IllegalArgumentException(
+        "src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
+        " lies outside src dimensions = " + srcDims + "."
+      )
+    
+    if (copyDims.x < 0 || copyDims.y < 0) throw new IllegalArgumentException(
+      "copy region dimensions = " + copyDims + " contain negative components."
+    )
+  }
+  
+  private[data] final def putImpl(
+    dimensions: inVec2i, offset: inVec2i,
+    src: inContiguous[Format, simplex3d.data.Raw], srcDimensions: inVec2i, srcOffset: inVec2i,
+    copyDimensions: inVec2i
+  ) {
+    if (isReadOnly) throw new ReadOnlyBufferException()
+    
+    checkArgs(
+      size, dimensions, offset,
+      src.size, srcDimensions, srcOffset,
+      copyDimensions
+    )
+    
+    if (
+      offset.x == 0 && srcOffset.x == 0 &&
+      dimensions.x == copyDimensions.x && srcDimensions.x == copyDimensions.x
+    ) {
+      putImpl(
+        offset.y*dimensions.x,
+        src.primitives, src.offset + srcOffset.y*srcDimensions.x*src.stride, src.stride,
+        copyDimensions.x*copyDimensions.y
+      )
+    }
+    else {
+      
+      val noConversion = (
+        (rawType == src.rawType) ||
+        (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
+      )
+
+      if (noConversion) {
+        def copyBuff() {
+          val destBuff = buffer()
+          val srcBuff = src.readOnlyBuffer()
+
+          (storeType: @switch) match {
+            case ByteStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[ByteBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[ByteBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x, copyDimensions.y
+            )
+            case ShortStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[ShortBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[ShortBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x: Int, copyDimensions.y: Int
+            )
+            case CharStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[CharBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[CharBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x: Int, copyDimensions.y: Int
+            )
+            case IntStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[IntBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[IntBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x: Int, copyDimensions.y: Int
+            )
+            case FloatStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[FloatBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[FloatBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x: Int, copyDimensions.y: Int
+            )
+            case DoubleStore => Util.copyBuffer2d(
+              components,
+              destBuff.asInstanceOf[DoubleBuffer], dimensions.x, offset.x, offset.y,
+              srcBuff.asInstanceOf[DoubleBuffer], srcDimensions.x, srcOffset.x, srcOffset.y,
+              copyDimensions.x: Int, copyDimensions.y: Int
+            )
+          }
+        }
+        copyBuff()
+      }
+      else {
+        def copyPrimSeq() {
+          primitives.formatManifest match {
+            case PrimitiveFormat.SInt => Util.copySeqInt2d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[SInt, _]], dimensions.x, offset.x, offset.y,
+                src.primitives.asInstanceOf[inContiguous[SInt, _]], srcDimensions.x, srcOffset.x, srcOffset.y,
+                copyDimensions.x: Int, copyDimensions.y: Int
+              )
+            case PrimitiveFormat.RFloat => Util.copySeqFloat2d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[RFloat, _]], dimensions.x, offset.x, offset.y,
+                src.primitives.asInstanceOf[inContiguous[RFloat, _]], srcDimensions.x, srcOffset.x, srcOffset.y,
+                copyDimensions.x: Int, copyDimensions.y: Int
+              )
+            case PrimitiveFormat.RDouble => Util.copySeqDouble2d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[RDouble, _]], dimensions.x, offset.x, offset.y,
+                src.primitives.asInstanceOf[inContiguous[RDouble, _]], srcDimensions.x, srcOffset.x, srcOffset.y,
+                copyDimensions.x: Int, copyDimensions.y: Int
+              )
+          }
+        }
+        copyPrimSeq()
+      }
+    }
+  }
+  
+  
+  /** This will copy a 3d sub image from the source sequence into this object.
+   */
+  final def put(
+    dimensions: inVec3i, offset: inVec3i,
+    src: IndexedSeq[WriteAs], srcDimensions: inVec3i
+  ) {
+    put(
+      dimensions, offset,
+      src, srcDimensions, Vec3i.Zero,
+      srcDimensions
+    )
+  }
+  
+  /** This will copy a 3d sub image from the source sequence into this object.
+   */
+  final def put(
+    dimensions: inVec3i, offset: inVec3i,
+    src: IndexedSeq[WriteAs], srcDimensions: inVec3i, srcOffset: inVec3i,
+    copyDimensions: inVec3i
+  ) {
+    var contiguousCopy = false
+    
+    if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      
+      if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
+        putImpl(
+          dimensions, offset,
+          src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
+          copyDimensions
+        )
+        
+        contiguousCopy = true
+      }
+    }
+    
+    if (!contiguousCopy) {
+      def seqCopy() {
+      
+        checkArgs(
+          size, dimensions, offset,
+          src.size, srcDimensions, srcOffset,
+          copyDimensions
+        )
+
+        val dmz = dimensions.x*dimensions.y
+        val smz = srcDimensions.x*srcDimensions.y
+        
+        var z = 0; while (z < copyDimensions.z) {
+          val dtz = offset.x + (z + offset.z)*dmz
+          val stz = srcOffset.x + (z + srcOffset.z)*smz
+          
+          var y = 0; while (y < copyDimensions.y) {
+            val dty = (y + offset.y)*dimensions.x + dtz
+            val sty = (y + srcOffset.y)*srcDimensions.x + stz
+
+            var x = 0; while (x < copyDimensions.x) {
+              this(x + dty) = src(x + sty)
+
+              x += 1
+            }
+            y += 1
+          }
+          z += 1
+        }
+      }
+      seqCopy()
+    }
+  }
+  
+  private[this] final def checkArgs(
+    destSize: Int, destDims: inVec3i, destOffset: inVec3i,
+    srcSize: Int, srcDims: inVec3i, srcOffset: inVec3i,
+    copyDims: inVec3i
+  ) {
+    if (destOffset.x < 0 || destOffset.y < 0 || destOffset.z < 0) throw new IllegalArgumentException(
+      "offset = " + destOffset + " has negative components."
+    )
+    if (destDims.x*destDims.y*destDims.z > destSize) throw new IllegalArgumentException(
+      "dimensions = " + destDims + " exceed data size = " + destSize + "."
+    )
+    if (
+      destOffset.x + copyDims.x > destDims.x ||
+      destOffset.y + copyDims.y > destDims.y ||
+      destOffset.z + copyDims.z > destDims.z
+    )
+      throw new IllegalArgumentException(
+        "dest region from " + destOffset + " to " + (destOffset + copyDims) +
+        " lies outside dimensions = " + destDims + "."
+      )
+    
+    if (srcOffset.x < 0 || srcOffset.y < 0 || srcOffset.z < 0) throw new IllegalArgumentException(
+      "src offset = " + srcOffset + " has negative components."
+    )
+    if (srcDims.x*srcDims.y*srcDims.z > srcSize) throw new IllegalArgumentException(
+      "src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
+    )
+    if (
+      srcOffset.x + copyDims.x > srcDims.x ||
+      srcOffset.y + copyDims.y > srcDims.y ||
+      srcOffset.z + copyDims.z > srcDims.z
+    )
+      throw new IllegalArgumentException(
+        "src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
+        " lies outside src dimensions = " + srcDims + "."
+      )
+    
+    if (copyDims.x < 0 || copyDims.y < 0 || copyDims.z < 0) throw new IllegalArgumentException(
+      "copy region dimensions = " + copyDims + " contain negative components."
+    )
+  }
+  
+  private[data] final def putImpl(
+    dimensions: inVec3i, offset: inVec3i,
+    src: inContiguous[Format, simplex3d.data.Raw], srcDimensions: inVec3i, srcOffset: inVec3i,
+    copyDimensions: inVec3i
+  ) {
+    if (isReadOnly) throw new ReadOnlyBufferException()
+    
+    checkArgs(
+      size, dimensions, offset,
+      src.size, srcDimensions, srcOffset,
+      copyDimensions
+    )
+    
+    if (
+      offset.x == 0 && offset.y == 0 &&
+      srcOffset.x == 0 && srcOffset.y == 0 &&
+      dimensions.x == copyDimensions.x && dimensions.y == copyDimensions.y &&
+      srcDimensions.x == copyDimensions.x && srcDimensions.y == copyDimensions.y
+    ) {
+      putImpl(
+        offset.z*dimensions.x*dimensions.y,
+        src.primitives, src.offset + srcOffset.z*srcDimensions.x*srcDimensions.y*src.stride, src.stride,
+        copyDimensions.x*copyDimensions.y*copyDimensions.z
+      )
+    }
+    else {
+      
+      val noConversion = (
+        (rawType == src.rawType) ||
+        (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
+      )
+
+      if (noConversion) {
+        def copyBuff() {
+          val destBuff = buffer()
+          val srcBuff = src.readOnlyBuffer()
+
+          (storeType: @switch) match {
+            case ByteStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[ByteBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[ByteBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+            case ShortStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[ShortBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[ShortBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+            case CharStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[CharBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[CharBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+            case IntStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[IntBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[IntBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+            case FloatStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[FloatBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[FloatBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+            case DoubleStore => Util.copyBuffer3d(
+              components,
+              destBuff.asInstanceOf[DoubleBuffer], dimensions.x, dimensions.y,
+              offset.x, offset.y, offset.z,
+              srcBuff.asInstanceOf[DoubleBuffer], srcDimensions.x, srcDimensions.y,
+              srcOffset.x, srcOffset.y, srcOffset.z,
+              copyDimensions.x, copyDimensions.y, copyDimensions.z
+            )
+          }
+        }
+        copyBuff()
+      }
+      else {
+        def copyPrimSeq() {
+          primitives.formatManifest match {
+            case PrimitiveFormat.SInt => Util.copySeqInt3d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[SInt, _]], dimensions.x, dimensions.y,
+                offset.x, offset.y, offset.z,
+                src.primitives.asInstanceOf[inContiguous[SInt, _]], srcDimensions.x, srcDimensions.y,
+                srcOffset.x, srcOffset.y, srcOffset.z,
+                copyDimensions.x, copyDimensions.y, copyDimensions.z
+              )
+            case PrimitiveFormat.RFloat => Util.copySeqFloat3d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[RFloat, _]], dimensions.x, dimensions.y,
+                offset.x, offset.y, offset.z,
+                src.primitives.asInstanceOf[inContiguous[RFloat, _]], srcDimensions.x, srcDimensions.y,
+                srcOffset.x, srcOffset.y, srcOffset.z,
+                copyDimensions.x, copyDimensions.y, copyDimensions.z
+              )
+            case PrimitiveFormat.RDouble => Util.copySeqDouble3d(
+                components,
+                this.primitives.asInstanceOf[Contiguous[RDouble, _]], dimensions.x, dimensions.y,
+                offset.x, offset.y, offset.z,
+                src.primitives.asInstanceOf[inContiguous[RDouble, _]], srcDimensions.x, srcDimensions.y,
+                srcOffset.x, srcOffset.y, srcOffset.z,
+                copyDimensions.x, copyDimensions.y, copyDimensions.z
+              )
+          }
+        }
+        copyPrimSeq()
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ http://www.simplex3d.org/project/documentation/
 Runtime requirements:
   - Scala 2.9.0.final or higher.
   - Simplex3dMath.
+  - Simplex3dData
 
 Build requirements:
   - Ant 1.7.1 or higher.

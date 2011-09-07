@@ -110,7 +110,7 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
         <delete file="${release.bin}" />
 
         <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${release.dir}/jars" includes="*.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
@@ -125,7 +125,7 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
         <mkdir dir="${release.dir}" />
 
         <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**"/>
+            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
             <fileset dir="${basedir}" includes="

@@ -88,7 +88,7 @@ object CopyTestUtil extends FunSuite {
     copyAs(original, descriptor)
     putSeq(original)
     putPrimitive(original)
-    putData(original)
+    putDataSeq(original)
   }
 
   private def copyAs[F <: Format, R <: Raw](
@@ -468,7 +468,7 @@ object CopyTestUtil extends FunSuite {
     
     for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (conversion) genRandomSeq(original.primitives.formatManifest, original.rawType, size)
+        if (!conversion) genRandomSeq(original.primitives.formatManifest, original.rawType, size)
         else genRandomSeq(
           original.primitives.formatManifest,
           conversionType(original.primitives.formatManifest, original.rawType),
@@ -478,7 +478,7 @@ object CopyTestUtil extends FunSuite {
       val srcBackup = dupSeq2(src)
 
       val converted =
-        if (conversion) src
+        if (!conversion) src
         else convert(src, original.rawType)
     
       for (
@@ -496,7 +496,7 @@ object CopyTestUtil extends FunSuite {
     }
   }
 
-  private def putData[F <: Format](original: inDataSeq[F, Raw]) {
+  private def putDataSeq[F <: Format](original: inDataSeq[F, Raw]) {
     val size = original.size
 
     // Test exceptions. Destination and src must remain unchanged.
@@ -641,13 +641,17 @@ object CopyTestUtil extends FunSuite {
 
     for (size <- original.size - maxCopyOffset until original.size; conversion <- List(true, false)) {
       val src =
-        if (conversion) genRandomSeq(original.formatManifest, original.rawType, size)
+        if (!conversion) genRandomSeq(original.formatManifest, original.rawType, size)
         else genRandomSeq(original.formatManifest, conversionType(original.formatManifest, original.rawType), size)
 
       val srcBackup = dupSeq2(src)
+      
+      // Check the extra entry path
+      if (!conversion) checkPutSeq(original, src, src.asReadOnly, false)
+      
 
       val converted =
-        if (conversion) src
+        if (!conversion) src
         else convert(src, original.rawType)
 
       for (
@@ -673,7 +677,8 @@ object CopyTestUtil extends FunSuite {
       genRandomSeq(PrimitiveFormat.SInt, RawType.SInt, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
   }
-  private def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
+  
+  def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
     import RawType._
     elem match {
       case Mat2x3f.Manifest => RFloat
@@ -682,18 +687,17 @@ object CopyTestUtil extends FunSuite {
         case RDouble => RFloat
       }
       case _ => rawType match {
-        case SByte => UShort
-        case UByte => UShort
+        case SByte => UByte
+        case UByte => SShort
         case SShort => UShort
         case UShort => SByte
         case SInt => UShort
-        case UInt => UShort
-        case HFloat => RFloat
-        case RFloat => SShort
-        case RDouble => SShort
+        case UInt => SByte
+        case HFloat => SShort
+        case RFloat => UShort
+        case RDouble => SInt
       }
     }
-    
   }
   private def verify(a: Buffer, b: Buffer) {
     assert(a.position == 0)

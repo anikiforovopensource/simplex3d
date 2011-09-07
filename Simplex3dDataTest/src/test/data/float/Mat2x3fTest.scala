@@ -29,6 +29,7 @@ import simplex3d.data.float._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -52,5 +53,9 @@ class Mat2x3fTest extends FunSuite {
     testApplyUpdateArray[Mat2x3f, RFloat](DataArray[Mat2x3f, RFloat](_))
     testApplyUpdateBuffer(DataBuffer[Mat2x3f, RFloat](_))
     testApplyUpdateView(DataView[Mat2x3f, RFloat](_, _, _))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[Mat2x3f, RFloat])
   }
 }

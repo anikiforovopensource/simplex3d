@@ -30,6 +30,7 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -177,6 +178,18 @@ class RDoubleTest extends FunSuite {
     testRDouble(DataBuffer[RDouble, RDouble](size))
     testRDouble(DataView[RDouble, RDouble](genBuffer(size, Descriptors.RDoubleRDouble)._1, 0, 2))
     testRDouble(DataView[RDouble, RDouble](genBuffer(size, Descriptors.RDoubleRDouble)._1, 1, 2))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[RDouble, UByte])
+    testSubCopy(DataSeq[RDouble, SByte])
+    testSubCopy(DataSeq[RDouble, UShort])
+    testSubCopy(DataSeq[RDouble, SShort])
+    testSubCopy(DataSeq[RDouble, UInt])
+    testSubCopy(DataSeq[RDouble, SInt])
+    testSubCopy(DataSeq[RDouble, HFloat])
+    testSubCopy(DataSeq[RDouble, RFloat])
+    testSubCopy(DataSeq[RDouble, RDouble])
   }
 
   private def testRDoubleSByte(seq: DataSeq[RDouble, SByte], testValue: Double) {

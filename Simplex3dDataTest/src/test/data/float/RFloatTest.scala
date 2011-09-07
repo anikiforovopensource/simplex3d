@@ -30,6 +30,7 @@ import Descriptors._
 import FactoryTestUtil._
 import TestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -162,6 +163,17 @@ class RFloatTest extends FunSuite {
     testRFloat(DataBuffer[RFloat, RFloat](size))
     testRFloat(DataView[RFloat, RFloat](genBuffer(size, Descriptors.RFloatRFloat)._1, 0, 2))
     testRFloat(DataView[RFloat, RFloat](genBuffer(size, Descriptors.RFloatRFloat)._1, 1, 2))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[RFloat, UByte])
+    testSubCopy(DataSeq[RFloat, SByte])
+    testSubCopy(DataSeq[RFloat, UShort])
+    testSubCopy(DataSeq[RFloat, SShort])
+    testSubCopy(DataSeq[RFloat, UInt])
+    testSubCopy(DataSeq[RFloat, SInt])
+    testSubCopy(DataSeq[RFloat, HFloat])
+    testSubCopy(DataSeq[RFloat, RFloat])
   }
 
   private def testFloatSByte(seq: DataSeq[RFloat, SByte], testValue: Float) {

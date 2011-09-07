@@ -27,6 +27,7 @@ import simplex3d.data._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -120,5 +121,14 @@ class Vec4iTest extends FunSuite {
     testApplyUpdateArray[Vec4i, UInt](DataArray[Vec4i, UInt](_))
     testApplyUpdateBuffer(DataBuffer[Vec4i, UInt](_))
     testApplyUpdateView(DataView[Vec4i, UInt](_, _, _))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[Vec4i, UByte])
+    testSubCopy(DataSeq[Vec4i, SByte])
+    testSubCopy(DataSeq[Vec4i, UShort])
+    testSubCopy(DataSeq[Vec4i, SShort])
+    testSubCopy(DataSeq[Vec4i, UInt])
+    testSubCopy(DataSeq[Vec4i, SInt])
   }
 }

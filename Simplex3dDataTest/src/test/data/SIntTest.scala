@@ -28,6 +28,7 @@ import Descriptors._
 import TestUtil._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -158,6 +159,15 @@ class SIntTest extends FunSuite {
     testUInt(DataBuffer[SInt, UInt](size))
     testUInt(DataView[SInt, UInt](genBuffer(size, Descriptors.SIntUInt)._1, 0, 2))
     testUInt(DataView[SInt, UInt](genBuffer(size, Descriptors.SIntUInt)._1, 1, 2))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[SInt, SByte])
+    testSubCopy(DataSeq[SInt, UByte])
+    testSubCopy(DataSeq[SInt, SShort])
+    testSubCopy(DataSeq[SInt, UShort])
+    testSubCopy(DataSeq[SInt, SInt])
+    testSubCopy(DataSeq[SInt, UInt])
   }
 
   private def testSByte(seq: DataSeq[SInt, SByte]) {

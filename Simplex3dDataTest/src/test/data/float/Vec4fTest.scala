@@ -29,6 +29,7 @@ import simplex3d.data.float._
 import Descriptors._
 import FactoryTestUtil._
 import ApplyUpdateTestUtil._
+import SubCopyTestUtil._
 
 
 /**
@@ -150,5 +151,16 @@ class Vec4fTest extends FunSuite {
     testApplyUpdateArray[Vec4f, RFloat](DataArray[Vec4f, RFloat](_))
     testApplyUpdateBuffer(DataBuffer[Vec4f, RFloat](_))
     testApplyUpdateView(DataView[Vec4f, RFloat](_, _, _))
+  }
+  
+  test("Sub Copy") {
+    testSubCopy(DataSeq[Vec4f, UByte])
+    testSubCopy(DataSeq[Vec4f, SByte])
+    testSubCopy(DataSeq[Vec4f, UShort])
+    testSubCopy(DataSeq[Vec4f, SShort])
+    testSubCopy(DataSeq[Vec4f, UInt])
+    testSubCopy(DataSeq[Vec4f, SInt])
+    testSubCopy(DataSeq[Vec4f, HFloat])
+    testSubCopy(DataSeq[Vec4f, RFloat])
   }
 }

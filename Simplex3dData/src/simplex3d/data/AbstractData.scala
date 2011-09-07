@@ -126,7 +126,7 @@ abstract class AbstractData[
       val ds = src.asInstanceOf[ReadDataSeq[Format, Raw]]
       
       if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) {
-        putImpl(index, ds.primitives, ds.offset + first*ds.stride, ds.stride, count)
+        putPrimitivesImpl(index, ds.primitives, ds.offset + first*ds.stride, ds.stride, count)
         dataCopy = true
       }
     }
@@ -214,7 +214,7 @@ abstract class AbstractData[
     }
   }
     
-  private[data] final def putImpl(
+  private[data] final def putPrimitivesImpl(
     index: Int,
     src: inContiguous[Format#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
@@ -343,11 +343,11 @@ abstract class AbstractData[
   
   /** This will copy a 2d sub image from the source sequence into this object.
    */
-  final def put(
+  final def put2d(
     dimensions: inVec2i, offset: inVec2i,
     src: IndexedSeq[WriteAs], srcDimensions: inVec2i
   ) {
-    put(
+    put2d(
       dimensions, offset,
       src, srcDimensions, Vec2i.Zero,
       srcDimensions
@@ -356,7 +356,7 @@ abstract class AbstractData[
   
   /** This will copy a 2d sub image from the source sequence into this object.
    */
-  final def put(
+  final def put2d(
     dimensions: inVec2i, offset: inVec2i,
     src: IndexedSeq[WriteAs], srcDimensions: inVec2i, srcOffset: inVec2i,
     copyDimensions: inVec2i
@@ -367,7 +367,7 @@ abstract class AbstractData[
       val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
-        putImpl(
+        put2dImpl(
           dimensions, offset,
           src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
           copyDimensions
@@ -436,7 +436,7 @@ abstract class AbstractData[
     )
   }
   
-  private[data] final def putImpl(
+  private[data] final def put2dImpl(
     dimensions: inVec2i, offset: inVec2i,
     src: inContiguous[Format, simplex3d.data.Raw], srcDimensions: inVec2i, srcOffset: inVec2i,
     copyDimensions: inVec2i
@@ -453,7 +453,7 @@ abstract class AbstractData[
       offset.x == 0 && srcOffset.x == 0 &&
       dimensions.x == copyDimensions.x && srcDimensions.x == copyDimensions.x
     ) {
-      putImpl(
+      putPrimitivesImpl(
         offset.y*dimensions.x,
         src.primitives, src.offset + srcOffset.y*srcDimensions.x*src.stride, src.stride,
         copyDimensions.x*copyDimensions.y
@@ -543,11 +543,11 @@ abstract class AbstractData[
   
   /** This will copy a 3d sub image from the source sequence into this object.
    */
-  final def put(
+  final def put3d(
     dimensions: inVec3i, offset: inVec3i,
     src: IndexedSeq[WriteAs], srcDimensions: inVec3i
   ) {
-    put(
+    put3d(
       dimensions, offset,
       src, srcDimensions, Vec3i.Zero,
       srcDimensions
@@ -556,7 +556,7 @@ abstract class AbstractData[
   
   /** This will copy a 3d sub image from the source sequence into this object.
    */
-  final def put(
+  final def put3d(
     dimensions: inVec3i, offset: inVec3i,
     src: IndexedSeq[WriteAs], srcDimensions: inVec3i, srcOffset: inVec3i,
     copyDimensions: inVec3i
@@ -567,7 +567,7 @@ abstract class AbstractData[
       val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
-        putImpl(
+        put3dImpl(
           dimensions, offset,
           src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
           copyDimensions
@@ -653,7 +653,7 @@ abstract class AbstractData[
     )
   }
   
-  private[data] final def putImpl(
+  private[data] final def put3dImpl(
     dimensions: inVec3i, offset: inVec3i,
     src: inContiguous[Format, simplex3d.data.Raw], srcDimensions: inVec3i, srcOffset: inVec3i,
     copyDimensions: inVec3i
@@ -672,7 +672,7 @@ abstract class AbstractData[
       dimensions.x == copyDimensions.x && dimensions.y == copyDimensions.y &&
       srcDimensions.x == copyDimensions.x && srcDimensions.y == copyDimensions.y
     ) {
-      putImpl(
+      putPrimitivesImpl(
         offset.z*dimensions.x*dimensions.y,
         src.primitives, src.offset + srcOffset.z*srcDimensions.x*srcDimensions.y*src.stride, src.stride,
         copyDimensions.x*copyDimensions.y*copyDimensions.z

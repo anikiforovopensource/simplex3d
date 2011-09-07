@@ -86,7 +86,7 @@ object Put2dBench {
     val srcOffset = ConstVec2i(2)
     
     var l = 0; while (l < loops) {
-      dest.put(dims, offset, src, dims, srcOffset, copyDims)
+      dest.put2d(dims, offset, src, dims, srcOffset, copyDims)
 
       l += 1
     }

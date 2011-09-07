@@ -39,7 +39,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
   
   /** This will copy a 2d sub image from the source Data object into this object.
    */
-  def put(
+  def put2d(
     dimensions: inVec2i, offset: inVec2i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec2i
   ) {
@@ -48,7 +48,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
         "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
       )
     
-    putImpl(
+    put2dImpl(
       dimensions, offset,
       src, srcDimensions, Vec2i.Zero,
       srcDimensions
@@ -57,7 +57,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
   
   /** This will copy a 2d sub image from the source Data object into this object.
    */
-  def put(
+  def put2d(
     dimensions: inVec2i, offset: inVec2i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec2i, srcOffset: inVec2i,
     copyDimensions: inVec2i
@@ -67,7 +67,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
         "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
       )
     
-    putImpl(
+    put2dImpl(
       dimensions, offset,
       src, srcDimensions, srcOffset,
       copyDimensions
@@ -77,7 +77,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
   
   /** This will copy a 3d sub image from the source Data object into this object.
    */
-  def put(
+  def put3d(
     dimensions: inVec3i, offset: inVec3i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec3i
   ) {
@@ -86,7 +86,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
         "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
       )
     
-    putImpl(
+    put3dImpl(
       dimensions, offset,
       src, srcDimensions, Vec3i.Zero,
       srcDimensions
@@ -95,7 +95,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
   
   /** This will copy a 3d sub image from the source Data object into this object.
    */
-  def put(
+  def put3d(
     dimensions: inVec3i, offset: inVec3i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec3i, srcOffset: inVec3i,
     copyDimensions: inVec3i
@@ -105,7 +105,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
         "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
       )
     
-    putImpl(
+    put3dImpl(
       dimensions, offset,
       src, srcDimensions, srcOffset,
       copyDimensions

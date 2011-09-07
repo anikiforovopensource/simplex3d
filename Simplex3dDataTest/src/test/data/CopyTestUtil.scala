@@ -87,7 +87,7 @@ object CopyTestUtil extends FunSuite {
   ) {
     copyAs(original, descriptor)
     putSeq(original)
-    putPrimitive(original)
+    putPrimitives(original)
     putDataSeq(original)
   }
 
@@ -313,7 +313,7 @@ object CopyTestUtil extends FunSuite {
   }
 
 
-  private def putPrimitive[F <: Format](original: inDataSeq[F, Raw]) {
+  private def putPrimitives[F <: Format](original: inDataSeq[F, Raw]) {
     val size = original.size
 
     // Test exceptions. Destination and src must remain unchanged.
@@ -327,7 +327,7 @@ object CopyTestUtil extends FunSuite {
         val wrongSrcBackup = dupSeq2(wrongSrc)
         
         intercept[ClassCastException] {
-          dest.put(0, wrongSrc, 0, dest.components, 1)
+          dest.putPrimitives(0, wrongSrc, 0, dest.components, 1)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(wrongSrc.readOnlyBuffer, wrongSrcBackup.readOnlyBuffer)
@@ -337,108 +337,108 @@ object CopyTestUtil extends FunSuite {
       val srcBackup = dupSeq2(src)
       
       {
-        val (index, first, stride, count) = (0, 0, dest.components, 1)
+        val (index, srcOffset, stride, count) = (0, 0, dest.components, 1)
         intercept[ReadOnlyBufferException] {
-          dest.asReadOnly().asInstanceOf[DataSeq[F, Raw]].put(index, src, first, stride, count)
+          dest.asReadOnly().asInstanceOf[DataSeq[F, Raw]].putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, 0, dest.components, -1)
+        val (index, srcOffset, stride, count) = (0, 0, dest.components, -1)
         intercept[IllegalArgumentException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
 
       {
-        val (index, first, stride, count) = (0, 0, dest.components, size + 1)
+        val (index, srcOffset, stride, count) = (0, 0, dest.components, size + 1)
         intercept[BufferOverflowException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, 1, dest.components, size)
+        val (index, srcOffset, stride, count) = (0, 1, dest.components, size)
         intercept[BufferUnderflowException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, 0, 0, size)
+        val (index, srcOffset, stride, count) = (0, 0, 0, size)
         intercept[IllegalArgumentException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, 0, -1, size)
+        val (index, srcOffset, stride, count) = (0, 0, -1, size)
         intercept[IllegalArgumentException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
 
       {
-        val (index, first, stride, count) = (-1, 0, dest.components, 1)
+        val (index, srcOffset, stride, count) = (-1, 0, dest.components, 1)
         intercept[IndexOutOfBoundsException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
 
       {
-        val (index, first, stride, count) = (size + 1, 0, dest.components, 1)
+        val (index, srcOffset, stride, count) = (size + 1, 0, dest.components, 1)
         intercept[IndexOutOfBoundsException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (size, 0, dest.components, 1)
+        val (index, srcOffset, stride, count) = (size, 0, dest.components, 1)
         intercept[BufferOverflowException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
 
       {
-        val (index, first, stride, count) = (0, -1, dest.components, 1)
+        val (index, srcOffset, stride, count) = (0, -1, dest.components, 1)
         intercept[IndexOutOfBoundsException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
 
       {
-        val (index, first, stride, count) = (0, src.size + 1, dest.components, 1)
+        val (index, srcOffset, stride, count) = (0, src.size + 1, dest.components, 1)
         intercept[IndexOutOfBoundsException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, src.size, dest.components, 1)
+        val (index, srcOffset, stride, count) = (0, src.size, dest.components, 1)
         intercept[BufferUnderflowException] {
-          dest.put(index, src, first, stride, count)
+          dest.putPrimitives(index, src, srcOffset, stride, count)
         }
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
@@ -446,16 +446,16 @@ object CopyTestUtil extends FunSuite {
       
       //Corener cases
       {
-        val (index, first, stride, count) = (size, 0, dest.components, 0)
-        dest.put(index, src, first, stride, count)
+        val (index, srcOffset, stride, count) = (size, 0, dest.components, 0)
+        dest.putPrimitives(index, src, srcOffset, stride, count)
 
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }
       
       {
-        val (index, first, stride, count) = (0, src.size, dest.components, 0)
-        dest.put(index, src, first, stride, count)
+        val (index, srcOffset, stride, count) = (0, src.size, dest.components, 0)
+        dest.putPrimitives(index, src, srcOffset, stride, count)
 
         verify(dest.readOnlyBuffer, original.readOnlyBuffer)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
@@ -483,13 +483,13 @@ object CopyTestUtil extends FunSuite {
     
       for (
         index <- 0 to maxCopyOffset;
-        first <- 0 to maxCopyOffset;
+        srcOffset <- 0 to maxCopyOffset;
         stride <- 1 until 2*original.components;
-        count <- 0 to min(original.size - index, (src.size - first - original.components + 1)/stride)
+        count <- 0 to min(original.size - index, (src.size - srcOffset - original.components + 1)/stride)
       ) {
         val dest = dupSeq1(original)
-        dest.put(index, src, first, stride, count)
-        testContent(original.components, dest, index, converted, first, stride, count)
+        dest.putPrimitives(index, src, srcOffset, stride, count)
+        testContent(original.components, dest, index, converted, srcOffset, stride, count)
         testTheRest(original.components, dest, index, original, count)
         verify(src.readOnlyBuffer, srcBackup.readOnlyBuffer)
       }

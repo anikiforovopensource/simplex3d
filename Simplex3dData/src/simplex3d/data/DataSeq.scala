@@ -35,18 +35,18 @@ trait ReadDataSeq[F <: Format, +R <: Raw] extends ReadData[F#Accessor] with Data
   
   final def copyAsDataArray() :DataArray[Format, Raw] = {
     val copy = mkDataArray(size)
-    copy.put(0, primitives, this.offset, this.stride, size)
+    copy.putPrimitives(0, primitives, this.offset, this.stride, size)
     copy
   }
   final def copyAsDataBuffer() :DataBuffer[Format, Raw] = {
     val copy = mkDataBuffer(size)
-    copy.put(0, primitives, this.offset, this.stride, size)
+    copy.putPrimitives(0, primitives, this.offset, this.stride, size)
     copy
   }
 }
 
 trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[F, R] {
-  final def put(
+  final def putPrimitives(
     index: Int,
     src: inContiguous[F#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
@@ -56,25 +56,25 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
         "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
       )
     
-    putImpl(index, src, srcOffset, srcStride, count)
+    putPrimitivesImpl(index, src, srcOffset, srcStride, count)
   }
 
-  final def put(index: Int, src: inContiguous[F#Component, simplex3d.data.Raw]) {
+  final def putPrimitives(index: Int, src: inContiguous[F#Component, simplex3d.data.Raw]) {
     if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
       throw new ClassCastException(
         "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
       )
     
-    putImpl(index, src, 0, components, src.size/components)
+    putPrimitivesImpl(index, src, 0, components, src.size/components)
   }
 
-  final def put(src: inContiguous[F#Component, simplex3d.data.Raw]) {
+  final def putPrimitives(src: inContiguous[F#Component, simplex3d.data.Raw]) {
     if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
       throw new ClassCastException(
         "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
       )
     
-    putImpl(0, src, 0, components, src.size/components)
+    putPrimitivesImpl(0, src, 0, components, src.size/components)
   }
 
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw], first: Int, count: Int) {
@@ -83,7 +83,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
         "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
-    putImpl(index, src.primitives, src.offset + first*src.stride, src.stride, count)
+    putPrimitivesImpl(index, src.primitives, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw]) {
@@ -92,7 +92,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
         "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
-    putImpl(index, src.primitives, src.offset, src.stride, src.size)
+    putPrimitivesImpl(index, src.primitives, src.offset, src.stride, src.size)
   }
 
   final def put(src: inDataSeq[F, simplex3d.data.Raw]) {
@@ -101,7 +101,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
         "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
       )
 
-    putImpl(0, src.primitives, src.offset, src.stride, src.size)
+    putPrimitivesImpl(0, src.primitives, src.offset, src.stride, src.size)
   }
 }
 

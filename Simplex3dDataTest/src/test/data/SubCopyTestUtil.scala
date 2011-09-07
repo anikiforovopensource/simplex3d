@@ -58,22 +58,22 @@ object SubCopyTestUtil extends FunSuite {
     
     val dest = original.copyAsDataArray()
     def testExceptions(src: IndexedSeq[F#Accessor#Read]) {
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(-1, 0), src, dims, Vec2i(0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0, -1), src, dims, Vec2i(0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(-1, 0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0, -1), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(-1, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(0, -1)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(-1, 0), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0, -1), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(-1, 0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0, -1), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(-1, 0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(0, -1)) }
       
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(dims.x + 1, 0), src, dims, Vec2i(0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0, dims.y + 1), src, dims, Vec2i(0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(dims.x + 1, 0), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0, dims.y + 1), Vec2i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(dims.x + 1, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(0, dims.y + 1)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(dims.x + 1, 0), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0, dims.y + 1), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(dims.x + 1, 0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0, dims.y + 1), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(dims.x + 1, 0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(0), Vec2i(0, dims.y + 1)) }
       
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(1), src, dims, Vec2i(1), Vec2i(dims.x, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec2i(1), src, dims, Vec2i(1), Vec2i(0, dims.y)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(1), src, dims, Vec2i(1), Vec2i(dims.x, 0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(1), src, dims, Vec2i(1), Vec2i(0, dims.y)) }
     }
     
     testExceptions(matchingSrc)
@@ -106,7 +106,7 @@ object SubCopyTestUtil extends FunSuite {
       copyDims: inVec2i
     ) {
       val dest = original.copyAsDataArray()
-      dest.put(
+      dest.put2d(
         dims, destOffset,
         src, dims, srcOffset,
         copyDims
@@ -148,29 +148,29 @@ object SubCopyTestUtil extends FunSuite {
 
     val dest = original.copyAsDataArray()
     def testExceptions(src: IndexedSeq[F#Accessor#Read]) {
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(-1, 0, 0), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0, -1, 0), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0, 0, -1), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(-1, 0, 0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0, -1, 0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0, 0, -1), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(-1, 0, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, -1, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, 0, -1)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(-1, 0, 0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, -1, 0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, 0, -1), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(-1, 0, 0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0, -1, 0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0, 0, -1), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(-1, 0, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, -1, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, 0, -1)) }
       
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(dims.x + 1, 0, 0), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0, dims.y + 1, 0), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0, 0, dims.z + 1), src, dims, Vec3i(0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(dims.x + 1, 0, 0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0, dims.y + 1, 0), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0, 0, dims.z + 1), Vec3i(0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(dims.x + 1, 0, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, dims.y + 1, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, 0, dims.z + 1)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(dims.x + 1, 0, 0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, dims.y + 1, 0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, 0, dims.z + 1), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(dims.x + 1, 0, 0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0, dims.y + 1, 0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0, 0, dims.z + 1), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(dims.x + 1, 0, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, dims.y + 1, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, dims, Vec3i(0), Vec3i(0, 0, dims.z + 1)) }
       
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(dims.x, 0, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(0, dims.y, 0)) }
-      intercept[IllegalArgumentException] { dest.put(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(0, 0, dims.z)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(dims.x, 0, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(0, dims.y, 0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(1), src, dims, Vec3i(1), Vec3i(0, 0, dims.z)) }
     }
     
     testExceptions(matchingSrc)
@@ -205,7 +205,7 @@ object SubCopyTestUtil extends FunSuite {
       copyDims: inVec3i
     ) {
       val dest = original.copyAsDataArray()
-      dest.put(
+      dest.put3d(
         dims, destOffset,
         src, dims, srcOffset,
         copyDims

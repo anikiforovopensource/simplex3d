@@ -19,7 +19,6 @@
  */
 
 package simplex3d.data
-package impl
 
 import java.nio._
 import simplex3d.math._

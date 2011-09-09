@@ -39,16 +39,16 @@ private[data] abstract class BaseVec2i[+R <: DefinedInt](
   final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec2i#Component, P])
   :ReadDataArray[Vec2i, P] = {
     (prim.rawType match {
-      case UShort => new impl.ArrayVec2iUShort(prim.asInstanceOf[ArraySIntUShort])
-      case UInt => new impl.ArrayVec2iUInt(prim.asInstanceOf[ArraySIntUInt])
+      case UShort => new ArrayVec2iUShort(prim.asInstanceOf[ArraySIntUShort])
+      case UInt => new ArrayVec2iUInt(prim.asInstanceOf[ArraySIntUInt])
       case _ => new ArrayVec2i(prim)
     }).asInstanceOf[ReadDataArray[Vec2i, P]]
   }
   final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[Vec2i#Component, P])
   :ReadDataBuffer[Vec2i, P] = {
     (prim.rawType match {
-      case UShort => new impl.BufferVec2iUShort(prim.asInstanceOf[BufferSIntUShort])
-      case UInt => new impl.BufferVec2iUInt(prim.asInstanceOf[BufferSIntUInt])
+      case UShort => new BufferVec2iUShort(prim.asInstanceOf[BufferSIntUShort])
+      case UInt => new BufferVec2iUInt(prim.asInstanceOf[BufferSIntUInt])
       case _ => new BufferVec2i(prim)
     }).asInstanceOf[ReadDataBuffer[Vec2i, P]]
   }

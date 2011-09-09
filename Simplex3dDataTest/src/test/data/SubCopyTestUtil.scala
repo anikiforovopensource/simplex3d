@@ -58,6 +58,11 @@ object SubCopyTestUtil extends FunSuite {
     
     val dest = original.copyAsDataArray()
     def testExceptions(src: IndexedSeq[F#Accessor#Read]) {
+      intercept[IllegalArgumentException] { dest.put2d(Vec2i(-1, 1), Vec2i(0), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(Vec2i(1, -1), Vec2i(0), src, dims, Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, Vec2i(-1, 1), Vec2i(0), Vec2i(0)) }
+      intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, Vec2i(1, -1), Vec2i(0), Vec2i(0)) }
+      
       intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(-1, 0), src, dims, Vec2i(0), Vec2i(0)) }
       intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0, -1), src, dims, Vec2i(0), Vec2i(0)) }
       intercept[IllegalArgumentException] { dest.put2d(dims, Vec2i(0), src, dims, Vec2i(-1, 0), Vec2i(0)) }
@@ -148,6 +153,13 @@ object SubCopyTestUtil extends FunSuite {
 
     val dest = original.copyAsDataArray()
     def testExceptions(src: IndexedSeq[F#Accessor#Read]) {
+      intercept[IllegalArgumentException] { dest.put3d(Vec3i(-1, 1, 1), Vec3i(0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(Vec3i(1, -1, 1), Vec3i(0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(Vec3i(1, 1, -1), Vec3i(0), src, dims, Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, Vec3i(-1, 1, 1), Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, Vec3i(1, -1, 1), Vec3i(0), Vec3i(0)) }
+      intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0), src, Vec3i(1, 1, -1), Vec3i(0), Vec3i(0)) }
+      
       intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(-1, 0, 0), src, dims, Vec3i(0), Vec3i(0)) }
       intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, -1, 0), src, dims, Vec3i(0), Vec3i(0)) }
       intercept[IllegalArgumentException] { dest.put3d(dims, Vec3i(0, 0, -1), src, dims, Vec3i(0), Vec3i(0)) }

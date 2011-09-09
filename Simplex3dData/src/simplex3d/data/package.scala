@@ -476,7 +476,7 @@ package object data {
     var i = 0; while(i < dataSeqs.length) {
       val s = dataSeqs(i).size
       if (s != 0 && s != size) throw new IllegalArgumentException(
-        "All sequences must have the same size."
+        "All data sources must have the same size."
       )
       i += 1
     }

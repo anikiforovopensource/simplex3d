@@ -40,16 +40,16 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
   final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[Vec3d#Component, P])
   :ReadDataArray[Vec3d, P] = {
     (prim.rawType match {
-      case UByte => new impl.ArrayVec3dUByte(prim.asInstanceOf[ArrayRDoubleUByte])
-      case RFloat => new impl.ArrayVec3dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
+      case UByte => new ArrayVec3dUByte(prim.asInstanceOf[ArrayRDoubleUByte])
+      case RFloat => new ArrayVec3dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
       case _ => new ArrayVec3d(prim)
     }).asInstanceOf[ReadDataArray[Vec3d, P]]
   }
   final def mkReadDataBuffer[P <: DefinedDouble](prim: ReadDataBuffer[Vec3d#Component, P])
   :ReadDataBuffer[Vec3d, P] = {
     (prim.rawType match {
-      case UByte => new impl.BufferVec3dUByte(prim.asInstanceOf[BufferRDoubleUByte])
-      case RFloat => new impl.BufferVec3dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
+      case UByte => new BufferVec3dUByte(prim.asInstanceOf[BufferRDoubleUByte])
+      case RFloat => new BufferVec3dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
       case _ => new BufferVec3d(prim)
     }).asInstanceOf[ReadDataBuffer[Vec3d, P]]
   }
@@ -57,8 +57,8 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
     prim: ReadDataBuffer[Vec3d#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec3d, P] = {
     (prim.rawType match {
-      case UByte => new impl.ViewVec3dUByte(prim.asInstanceOf[BufferRDoubleUByte], off, str)
-      case RFloat => new impl.ViewVec3dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
+      case UByte => new ViewVec3dUByte(prim.asInstanceOf[BufferRDoubleUByte], off, str)
+      case RFloat => new ViewVec3dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
       case _ => new ViewVec3d(prim, off, str)
     }).asInstanceOf[ReadDataView[Vec3d, P]]
   }

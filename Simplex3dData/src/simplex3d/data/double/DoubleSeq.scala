@@ -52,7 +52,7 @@ with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
   ) :ReadDataView[RDouble, P] = {
     (prim.rawType match {
       case RawType.RFloat =>
-        new impl.ViewRDoubleRFloat(prim.asInstanceOf[ReadDataBuffer[RDouble, RFloat]], off, str)
+        new ViewRDoubleRFloat(prim.asInstanceOf[ReadDataBuffer[RDouble, RFloat]], off, str)
       case _ =>
         new ViewRDouble(prim, off, str)
     }).asInstanceOf[ReadDataView[RDouble, P]]
@@ -64,7 +64,7 @@ with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
     (rawType match {
       case RawType.RFloat =>
         val prim = primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RDouble, RFloat]]
-        new impl.ViewRDoubleRFloat(prim, off, str)
+        new ViewRDoubleRFloat(prim, off, str)
       case _ =>
         new ViewRDouble(primitives.mkReadDataBuffer(byteBuffer), off, str)
     }).asInstanceOf[ReadDataView[RDouble, R]]

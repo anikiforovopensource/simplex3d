@@ -24,7 +24,6 @@ import java.nio._
 import scala.reflect._
 import simplex3d.math.floatx._
 import simplex3d.data.float._
-import simplex3d.data.float.impl._
 
 
 /**

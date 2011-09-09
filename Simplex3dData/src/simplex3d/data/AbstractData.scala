@@ -134,17 +134,17 @@ abstract class AbstractData[
     if (!dataCopy) { def seqCopy() {
 
       if (isReadOnly) throw new ReadOnlyBufferException()
-      if (index < 0) throw new IndexOutOfBoundsException("index = " + index + ", must be greater than or equal to 0.")
-      if (first < 0) throw new IndexOutOfBoundsException("first = " + first + ", must be greater than or equal to 0.")
-      if (count < 0) throw new IllegalArgumentException("count = " + count + ", must be greater than or equal to 0.")
+      if (index < 0) throw new IndexOutOfBoundsException("Index = " + index + ", must be greater than or equal to 0.")
+      if (first < 0) throw new IndexOutOfBoundsException("First = " + first + ", must be greater than or equal to 0.")
+      if (count < 0) throw new IllegalArgumentException("Count = " + count + ", must be greater than or equal to 0.")
 
       if (index + count > size) {
-        if (index > size) throw new IndexOutOfBoundsException("index = " + index + " exceeds size = " + size + ".")
+        if (index > size) throw new IndexOutOfBoundsException("Index = " + index + " exceeds size = " + size + ".")
         else throw new BufferOverflowException()
       }
       if (first + count > srcSize) {
         if (first > srcSize) throw new IndexOutOfBoundsException(
-          "first = " + first + " exceeds src size = " + srcSize + "."
+          "First = " + first + " exceeds src size = " + srcSize + "."
         )
         else throw new BufferUnderflowException()
       }
@@ -221,23 +221,23 @@ abstract class AbstractData[
   ) {
 
     if (isReadOnly) throw new ReadOnlyBufferException()
-    if (index < 0) throw new IndexOutOfBoundsException("index = " + index + ", must be greater than or equal to 0.")
+    if (index < 0) throw new IndexOutOfBoundsException("Index = " + index + ", must be greater than or equal to 0.")
     if (srcOffset < 0) throw new IndexOutOfBoundsException(
-      "srcOffset = " + srcOffset + ", must be greater than or equal to 0."
+      "Src offset = " + srcOffset + ", must be greater than or equal to 0."
     )
-    if (srcStride < 1) throw new IllegalArgumentException("srcStride = " + srcStride + ", must be greater than 0.")
-    if (count < 0) throw new IllegalArgumentException("count = " + count + ", must be greater than or equal to 0.")
+    if (srcStride < 1) throw new IllegalArgumentException("Src stride = " + srcStride + ", must be greater than 0.")
+    if (count < 0) throw new IllegalArgumentException("Count = " + count + ", must be greater than or equal to 0.")
 
     val destOffset = offset + index*stride
     val srcLim = srcOffset + (count - 1)*srcStride + components
 
     if (index + count > size) {
-      if (index > size) throw new IndexOutOfBoundsException("index = " + index + " exceeds size = " + size + ".")
+      if (index > size) throw new IndexOutOfBoundsException("Index = " + index + " exceeds size = " + size + ".")
       else throw new BufferOverflowException()
     }
     if (srcLim > src.buff.capacity) {
       if (srcOffset > src.size) throw new IndexOutOfBoundsException(
-        "srcOffset = " + srcOffset + " exceeds src size = " + src.size + "."
+        "Src offset = " + srcOffset + " exceeds src size = " + src.size + "."
       )
       else throw new BufferUnderflowException()
     }
@@ -407,32 +407,38 @@ abstract class AbstractData[
     srcSize: Int, srcDims: inVec2i, srcOffset: inVec2i,
     copyDims: inVec2i
   ) {
+    if (destDims.x < 0 || destDims.y < 0) throw new IllegalArgumentException(
+      "Dimensions = " + destDims + " contain negative components."
+    )
     if (destOffset.x < 0 || destOffset.y < 0) throw new IllegalArgumentException(
-      "offset = " + destOffset + " has negative components."
+      "Offset = " + destOffset + " has negative components."
     )
     if (destDims.x*destDims.y > destSize) throw new IllegalArgumentException(
-      "dimensions = " + destDims + " exceed data size = " + destSize + "."
+      "Dimensions = " + destDims + " exceed data size = " + destSize + "."
     )
     if (destOffset.x + copyDims.x > destDims.x || destOffset.y + copyDims.y > destDims.y)
       throw new IllegalArgumentException(
-        "dest region from " + destOffset + " to " + (destOffset + copyDims) +
+        "Dest region from " + destOffset + " to " + (destOffset + copyDims) +
         " lies outside dimensions = " + destDims + "."
       )
     
+    if (srcDims.x < 0 || srcDims.y < 0) throw new IllegalArgumentException(
+      "Src dimensions = " + srcDims + " contain negative components."
+    )
     if (srcOffset.x < 0 || srcOffset.y < 0) throw new IllegalArgumentException(
-      "src offset = " + srcOffset + " has negative components."
+      "Src offset = " + srcOffset + " has negative components."
     )
     if (srcDims.x*srcDims.y > srcSize) throw new IllegalArgumentException(
-      "src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
+      "Src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
     )
     if (srcOffset.x + copyDims.x > srcDims.x || srcOffset.y + copyDims.y > srcDims.y)
       throw new IllegalArgumentException(
-        "src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
+        "Src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
         " lies outside src dimensions = " + srcDims + "."
       )
     
     if (copyDims.x < 0 || copyDims.y < 0) throw new IllegalArgumentException(
-      "copy region dimensions = " + copyDims + " contain negative components."
+      "Copy region dimensions = " + copyDims + " contain negative components."
     )
   }
   
@@ -616,11 +622,14 @@ abstract class AbstractData[
     srcSize: Int, srcDims: inVec3i, srcOffset: inVec3i,
     copyDims: inVec3i
   ) {
+    if (destDims.x < 0 || destDims.y < 0 || destDims.z < 0) throw new IllegalArgumentException(
+      "Dimensions = " + destDims + " contain negative components."
+    )
     if (destOffset.x < 0 || destOffset.y < 0 || destOffset.z < 0) throw new IllegalArgumentException(
-      "offset = " + destOffset + " has negative components."
+      "Offset = " + destOffset + " has negative components."
     )
     if (destDims.x*destDims.y*destDims.z > destSize) throw new IllegalArgumentException(
-      "dimensions = " + destDims + " exceed data size = " + destSize + "."
+      "Dimensions = " + destDims + " exceed data size = " + destSize + "."
     )
     if (
       destOffset.x + copyDims.x > destDims.x ||
@@ -628,15 +637,18 @@ abstract class AbstractData[
       destOffset.z + copyDims.z > destDims.z
     )
       throw new IllegalArgumentException(
-        "dest region from " + destOffset + " to " + (destOffset + copyDims) +
+        "Dest region from " + destOffset + " to " + (destOffset + copyDims) +
         " lies outside dimensions = " + destDims + "."
       )
     
+    if (srcDims.x < 0 || srcDims.y < 0 || srcDims.z < 0) throw new IllegalArgumentException(
+      "Src dimensions = " + srcDims + " contain negative components."
+    )
     if (srcOffset.x < 0 || srcOffset.y < 0 || srcOffset.z < 0) throw new IllegalArgumentException(
-      "src offset = " + srcOffset + " has negative components."
+      "Src offset = " + srcOffset + " has negative components."
     )
     if (srcDims.x*srcDims.y*srcDims.z > srcSize) throw new IllegalArgumentException(
-      "src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
+      "Src dimensions = " + srcDims + " exceed src size = " + srcSize + "."
     )
     if (
       srcOffset.x + copyDims.x > srcDims.x ||
@@ -644,12 +656,12 @@ abstract class AbstractData[
       srcOffset.z + copyDims.z > srcDims.z
     )
       throw new IllegalArgumentException(
-        "src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
+        "Src regioun from " + srcOffset + " to " + (srcOffset + copyDims) +
         " lies outside src dimensions = " + srcDims + "."
       )
     
     if (copyDims.x < 0 || copyDims.y < 0 || copyDims.z < 0) throw new IllegalArgumentException(
-      "copy region dimensions = " + copyDims + " contain negative components."
+      "Copy region dimensions = " + copyDims + " contain negative components."
     )
   }
   

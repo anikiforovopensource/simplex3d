@@ -40,14 +40,14 @@ private[data] abstract class BaseVec2d[+R <: DefinedDouble](
   final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[Vec2d#Component, P])
   :ReadDataArray[Vec2d, P] = {
     (prim.rawType match {
-      case RFloat => new impl.ArrayVec2dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
+      case RFloat => new ArrayVec2dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
       case _ => new ArrayVec2d(prim)
     }).asInstanceOf[ReadDataArray[Vec2d, P]]
   }
   final def mkReadDataBuffer[P <: DefinedDouble](prim: ReadDataBuffer[Vec2d#Component, P])
   :ReadDataBuffer[Vec2d, P] = {
     (prim.rawType match {
-      case RFloat => new impl.BufferVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
+      case RFloat => new BufferVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
       case _ => new BufferVec2d(prim)
     }).asInstanceOf[ReadDataBuffer[Vec2d, P]]
   }
@@ -55,7 +55,7 @@ private[data] abstract class BaseVec2d[+R <: DefinedDouble](
     prim: ReadDataBuffer[Vec2d#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec2d, P] = {
     (prim.rawType match {
-      case RFloat => new impl.ViewVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
+      case RFloat => new ViewVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
       case _ => new ViewVec2d(prim, off, str)
     }).asInstanceOf[ReadDataView[Vec2d, P]]
   }

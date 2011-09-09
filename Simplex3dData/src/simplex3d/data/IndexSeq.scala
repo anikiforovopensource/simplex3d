@@ -74,7 +74,7 @@ object IndexSeq {
     implicit factory: PrimitiveFactory[SInt, R]
   ) :IndexSeq[R] = {
     if (dc.isReadOnly) throw new IllegalArgumentException(
-      "The Sequence must not be read-only."
+      "The data source must not be read-only."
     )
     dc match {
       case d: DataArray[_, _] => factory.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array])
@@ -107,7 +107,7 @@ object IndexArray {
   }
 
   def apply(indexSize: Int, dataSize: Int) :IndexArray[Unsigned] = {
-    if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
+    if (dataSize < 0) throw new IllegalArgumentException("Data size must be non-negative.")
 
     if (dataSize <= 256) FactorySIntUByte.mkDataArray(indexSize)
     else if (dataSize <= 65536) FactorySIntUShort.mkDataArray(indexSize)
@@ -161,7 +161,7 @@ object IndexBuffer {
   }
 
   def apply(indexSize: Int, dataSize: Int) :IndexBuffer[Unsigned] = {
-    if (dataSize < 0) throw new IllegalArgumentException("dataSize must be non-negative.")
+    if (dataSize < 0) throw new IllegalArgumentException("Data size must be non-negative.")
 
     if (dataSize <= 256) FactorySIntUByte.mkDataBuffer(indexSize)
     else if (dataSize <= 65536) FactorySIntUShort.mkDataBuffer(indexSize)

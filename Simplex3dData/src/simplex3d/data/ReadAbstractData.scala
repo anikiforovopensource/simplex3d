@@ -59,7 +59,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
     else prim.asInstanceOf[PrimitiveSeq]
   }
   
-  protected final val storeType = storeFromRaw(rawType)
+  protected final val storeType = StoreType.fromRawType(rawType)
 
   private[data] final val buff: Raw#Buffer = {
     if (prim != null) {
@@ -209,7 +209,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
       case s: DataBuffer[_, _] => "DataBuffer"
       case s: DataView[_, _] => view = true; "DataView"
     }) +
-    "[" + getElemName() + ", " + RawType.name(rawType)+ "](" +
+    "[" + getElemName() + ", " + RawType.toString(rawType)+ "](" +
     (if (view) "offset = " + offset + ", " else "") +
     "stride = " + stride + ", size = " + size + ")"
   }

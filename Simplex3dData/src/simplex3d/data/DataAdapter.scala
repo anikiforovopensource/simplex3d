@@ -78,8 +78,8 @@ extends CompositionFactory[F, B] with Serializable {
     }
 
     throw new IllegalArgumentException(
-      RawType.name(rawType) + " is not one of the allowed types: " +
-      allowedTypes.map(RawType.name(_)).mkString(", ") + "."
+      RawType.toString(rawType) + " is not one of the allowed types: " +
+      allowedTypes.map(RawType.toString(_)).mkString(", ") + "."
     )
   }
 }

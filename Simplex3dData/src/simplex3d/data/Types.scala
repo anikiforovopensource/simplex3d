@@ -47,7 +47,7 @@ object RawType {
     }
   }
 
-  def name(rawType: Int) :String = {
+  def toString(rawType: Int) :String = {
     (rawType: @switch) match {
       case SByte => "SByte"
       case UByte => "UByte"
@@ -70,7 +70,7 @@ private[data] object StoreType {
   final val FloatStore = 4
   final val DoubleStore = 5
 
-  def storeFromRaw(rawType: Int) = {
+  def fromRawType(rawType: Int) = {
     import RawType._
     (rawType: @switch) match {
       case SByte | UByte => ByteStore

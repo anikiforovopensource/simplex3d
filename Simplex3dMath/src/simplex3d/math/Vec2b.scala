@@ -91,7 +91,7 @@ with ReadPropertyRef[ReadVec2b] with Serializable
       case 0 => x
       case 1 => y
       case j => throw new IndexOutOfBoundsException(
-          "Expected from 0 to 1, got " + j + "."
+          "Trying to read index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
@@ -178,7 +178,7 @@ with PropertyRef[ReadVec2b] with Serializable
       case 0 => x = s
       case 1 => y = s
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Trying to update index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

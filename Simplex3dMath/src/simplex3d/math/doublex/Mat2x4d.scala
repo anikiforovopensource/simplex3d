@@ -93,15 +93,14 @@ with ReadPropertyRef[ReadMat2x4d] with Serializable
       case 2 => new ConstVec2d(m02, m12)
       case 3 => new ConstVec2d(m03, m13)
       case j => throw new IndexOutOfBoundsException(
-          "Expected from 0 to 3, got " + j + "."
+          "Trying to read column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
 
   final def apply(c: Int, r: Int) :Double = {
     def error() :Double = throw new IndexOutOfBoundsException(
-      "Trying to read index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to read index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -437,8 +436,7 @@ with PropertyRef[ReadMat2x4d] with Serializable
 
   def update(c: Int, r: Int, s: Double) {
     def error() = throw new IndexOutOfBoundsException(
-      "Trying to update index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to update index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -477,7 +475,7 @@ with PropertyRef[ReadMat2x4d] with Serializable
       case 2 => m02 = v.x; m12 = v.y
       case 3 => m03 = v.x; m13 = v.y
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

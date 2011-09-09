@@ -71,15 +71,14 @@ with ReadPropertyRef[ReadMat2f] with Serializable
       case 0 => new ConstVec2f(m00, m10)
       case 1 => new ConstVec2f(m01, m11)
       case j => throw new IndexOutOfBoundsException(
-          "Expected from 0 to 1, got " + j + "."
+          "Trying to read column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
 
   final def apply(c: Int, r: Int) :Float = {
     def error() :Float = throw new IndexOutOfBoundsException(
-      "Trying to read index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to read index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -336,8 +335,7 @@ with PropertyRef[ReadMat2f] with Serializable
 
   def update(c: Int, r: Int, s: Float) {
     def error() = throw new IndexOutOfBoundsException(
-      "Trying to update index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to update index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -362,7 +360,7 @@ with PropertyRef[ReadMat2f] with Serializable
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

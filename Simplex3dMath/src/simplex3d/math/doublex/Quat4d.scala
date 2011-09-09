@@ -69,7 +69,7 @@ extends ProtectedQuat4d[Double] with ReadPropertyRef[ReadQuat4d] with Serializab
       case 2 => c
       case 3 => d
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Trying to read index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
@@ -274,7 +274,7 @@ with PropertyRef[ReadQuat4d] with Serializable
       case 2 => c = s
       case 3 => d = s
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Trying to update index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

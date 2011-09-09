@@ -83,15 +83,14 @@ with ReadPropertyRef[ReadMat4x2d] with Serializable
       case 0 => new ConstVec4d(m00, m10, m20, m30)
       case 1 => new ConstVec4d(m01, m11, m21, m31)
       case j => throw new IndexOutOfBoundsException(
-          "Expected from 0 to 1, got " + j + "."
+          "Trying to read column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
 
   final def apply(c: Int, r: Int) :Double = {
     def error() :Double = throw new IndexOutOfBoundsException(
-      "Trying to read index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to read index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -383,8 +382,7 @@ with PropertyRef[ReadMat4x2d] with Serializable
 
   def update(c: Int, r: Int, s: Double) {
     def error() = throw new IndexOutOfBoundsException(
-      "Trying to update index (" + c + ", " + r + ") in " +
-      this.getClass.getSimpleName
+      "Trying to update index (" + c + ", " + r + ") in " + this.getClass.getSimpleName + "."
     )
 
     c match {
@@ -413,7 +411,7 @@ with PropertyRef[ReadMat4x2d] with Serializable
       case 0 => m00 = v.x; m10 = v.y
       case 1 => m01 = v.x; m11 = v.y
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
@@ -423,7 +421,7 @@ with PropertyRef[ReadMat4x2d] with Serializable
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
@@ -433,7 +431,7 @@ with PropertyRef[ReadMat4x2d] with Serializable
       case 0 => m00 = v.x; m10 = v.y; m20 = v.z; m30 = v.w
       case 1 => m01 = v.x; m11 = v.y; m21 = v.z; m31 = v.w
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 1, got " + j
+          "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

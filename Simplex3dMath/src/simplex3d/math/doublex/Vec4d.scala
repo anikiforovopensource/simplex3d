@@ -113,7 +113,7 @@ with ReadPropertyRef[ReadVec4d] with Serializable
       case 2 => z
       case 3 => w
       case j => throw new IndexOutOfBoundsException(
-          "Expected from 0 to 3, got " + j + "."
+          "Trying to read index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }
@@ -237,7 +237,7 @@ with PropertyRef[ReadVec4d] with Serializable
       case 2 => z = s
       case 3 => w = s
       case j => throw new IndexOutOfBoundsException(
-          "excpected from 0 to 3, got " + j
+          "Trying to update index (" + j + ") in " + this.getClass.getSimpleName + "."
         )
     }
   }

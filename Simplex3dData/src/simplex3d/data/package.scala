@@ -50,10 +50,8 @@ package object data {
 
   type FormatBound[F <: Format] = DataSrc { type Format = F }
   type AccessorBound[A <: Accessor] = DataSrc { type Format <: simplex3d.data.Format { type Accessor = A } }
-  
-  implicit final def resolveDataWithContiguousSrc[A <: Accessor](d: Data[A] with ContiguousSrc) =
-  d.asInstanceOf[Contiguous[F, Raw] forSome { type F <: Format { type Accessor = A }} ]
 
+  
   type Accessor = integration.Accessor
   type Format = integration.Format
   type PrimitiveFormat = integration.PrimitiveFormat

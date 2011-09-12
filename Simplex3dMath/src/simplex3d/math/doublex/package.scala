@@ -30,7 +30,7 @@ package object doublex {
   implicit def intToDoubeRef(s: Int) :ReadDoubleRef = new DoubleRef(s)
   implicit def floatToDoubeRef(s: Float) :ReadDoubleRef = new DoubleRef(s)
   implicit def doubleToRef(s: Double) :ReadDoubleRef = new DoubleRef(s)
-  implicit def refToDouble(r: DoubleRef) = r.toConst
+  implicit def refToDouble(r: ReadDoubleRef) = r.toConst
 
   implicit def vec2IntToDouble(u: AnyVec2[Int]) :ConstVec2d =
     new ConstVec2d(u.dx, u.dy)

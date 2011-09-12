@@ -29,7 +29,7 @@ package object floatx {
   // Implicits
   implicit def intToFloatRef(s: Int) :ReadFloatRef = new FloatRef(s)
   implicit def floatToRef(s: Float) :ReadFloatRef = new FloatRef(s)
-  implicit def refToFloat(r: FloatRef) = r.toConst
+  implicit def refToFloat(r: ReadFloatRef) = r.toConst
 
   implicit def vec2IntToFloat(u: AnyVec2[Int]) :ConstVec2f =
     new ConstVec2f(u.fx, u.fy)

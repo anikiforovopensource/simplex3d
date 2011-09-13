@@ -69,10 +69,10 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   }
 
 
-  final def *(s: Float) :Float = x*s
-  final def /(s: Float) :Float = x/s
-  final def +(s: Float) :Float = x + s
-  final def -(s: Float) :Float = x - s
+  final def *(r: ReadFloatRef) :Float = x*r.toConst
+  final def /(r: ReadFloatRef) :Float = x/r.toConst
+  final def +(r: ReadFloatRef) :Float = x + r.toConst
+  final def -(r: ReadFloatRef) :Float = x - r.toConst
   
   
   final def *(u: inVec2f) = u*x

@@ -68,10 +68,10 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
   }
 
 
-  final def *(s: Double) :Double = x*s
-  final def /(s: Double) :Double = x/s
-  final def +(s: Double) :Double = x + s
-  final def -(s: Double) :Double = x - s
+  final def *(r: ReadDoubleRef) :Double = x*r.toConst
+  final def /(r: ReadDoubleRef) :Double = x/r.toConst
+  final def +(r: ReadDoubleRef) :Double = x + r.toConst
+  final def -(r: ReadDoubleRef) :Double = x - r.toConst
   
   
   final def *(u: inVec2d) = u*x

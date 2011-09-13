@@ -70,18 +70,18 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
   }
 
   
-  final def *(s: Int) :Int = x*s
-  final def /(s: Int) :Int = x/s
-  final def +(s: Int) :Int = x + s
-  final def -(s: Int) :Int = x - s
+  final def *(r: ReadIntRef) :Int = x*r.toConst
+  final def /(r: ReadIntRef) :Int = x/r.toConst
+  final def +(r: ReadIntRef) :Int = x + r.toConst
+  final def -(r: ReadIntRef) :Int = x - r.toConst
 
-  final def %(s: Int) :Int = x%s
-  final def >>(s: Int) :Int = x >> s
-  final def >>>(s: Int) :Int = x >>> s
-  final def <<(s: Int) :Int = x << s
-  final def &(s: Int) :Int = x & s
-  final def |(s: Int) :Int = x | s
-  final def ^(s: Int) :Int = x ^ s
+  final def %(r: ReadIntRef) :Int = x%r.toConst
+  final def >>(r: ReadIntRef) :Int = x >> r.toConst
+  final def >>>(r: ReadIntRef) :Int = x >>> r.toConst
+  final def <<(r: ReadIntRef) :Int = x << r.toConst
+  final def &(r: ReadIntRef) :Int = x & r.toConst
+  final def |(r: ReadIntRef) :Int = x | r.toConst
+  final def ^(r: ReadIntRef) :Int = x ^ r.toConst
   
   
   /** Multiplies this scalar by a vector.

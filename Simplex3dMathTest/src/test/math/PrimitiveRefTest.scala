@@ -35,6 +35,20 @@ class PrimitiveRefTest extends FunSuite {
   test("Mutable BooleanRef") {
     val r = new BooleanRef(false)
     
+    
+    val t: ReadBooleanRef = new BooleanRef(true)
+    val f: ReadBooleanRef = new BooleanRef(false)
+    
+    assert(!(r && t))
+    assert(!(r && f))
+    
+    assert(r || t)
+    assert(!(r || f))
+    
+    assert(r ^ t)
+    assert(!(r ^ f))
+    
+    
     r &= false; assert(r.toConst == false)
     r &= true; assert(r.toConst == false)
     
@@ -71,15 +85,40 @@ class PrimitiveRefTest extends FunSuite {
     {
       val conv: ReadBooleanRef = true
       assert(conv.toConst == true)
+      
+      val s: Boolean = conv
+      assert(s == true)
     }
     {
       val conv: ReadBooleanRef = false
       assert(conv.toConst == false)
+      
+      val s: Boolean = conv
+      assert(s == false)
     }
   }
   
   test("Mutable IntRef") {
     val r = new IntRef(4)
+    
+    
+    assert(r * (new IntRef(2)).asInstanceOf[ReadIntRef] == 8)
+    assert(r / (new IntRef(2)).asInstanceOf[ReadIntRef] == 2)
+    assert(r + (new IntRef(3)).asInstanceOf[ReadIntRef] == 7)
+    assert(r - (new IntRef(3)).asInstanceOf[ReadIntRef] == 1)
+    
+    assert(r % (new IntRef(3)).asInstanceOf[ReadIntRef] == 1)
+    
+    r := -4
+    assert(r >> (new IntRef(1)).asInstanceOf[ReadIntRef] == -2)
+    assert(r >>> (new IntRef(1)).asInstanceOf[ReadIntRef] == 0x7FFFFFFE)
+    
+    r := 4
+    assert(r << (new IntRef(1)).asInstanceOf[ReadIntRef] == 8)
+    assert((r & (new IntRef(6)).asInstanceOf[ReadIntRef]) == 4)
+    assert((r | (new IntRef(2)).asInstanceOf[ReadIntRef]) == 6)
+    assert((r ^ (new IntRef(6)).asInstanceOf[ReadIntRef]) == 2)
+    
     
     r *= 2; assert(r.toConst == 8); r := 4
     r /= 2; assert(r.toConst == 2); r := 4
@@ -108,10 +147,20 @@ class PrimitiveRefTest extends FunSuite {
 
     val conv: ReadIntRef = 7
     assert(conv.toConst == 7)
+    
+    val s: Int = conv
+    assert(s == 7)
   }
   
   test("Mutable FloatRef") {
     val r = new FloatRef(4)
+    
+    
+    assert(r * (new FloatRef(2)).asInstanceOf[ReadFloatRef] == 8)
+    assert(r / (new FloatRef(2)).asInstanceOf[ReadFloatRef] == 2)
+    assert(r + (new FloatRef(3)).asInstanceOf[ReadFloatRef] == 7)
+    assert(r - (new FloatRef(3)).asInstanceOf[ReadFloatRef] == 1)
+    
     
     r *= 2; assert(r.toConst == 8); r := 4
     r /= 2; assert(r.toConst == 2); r := 4
@@ -134,10 +183,20 @@ class PrimitiveRefTest extends FunSuite {
 
     val conv: ReadFloatRef = 7
     assert(conv.toConst == 7)
+    
+    val s: Float = conv
+    assert(s == 7)
   }
   
   test("Mutable DoubleRef") {
     val r = new DoubleRef(4)
+    
+    
+    assert(r * (new DoubleRef(2)).asInstanceOf[ReadDoubleRef] == 8)
+    assert(r / (new DoubleRef(2)).asInstanceOf[ReadDoubleRef] == 2)
+    assert(r + (new DoubleRef(3)).asInstanceOf[ReadDoubleRef] == 7)
+    assert(r - (new DoubleRef(3)).asInstanceOf[ReadDoubleRef] == 1)
+    
     
     r *= 2; assert(r.toConst == 8); r := 4
     r /= 2; assert(r.toConst == 2); r := 4
@@ -162,5 +221,8 @@ class PrimitiveRefTest extends FunSuite {
 
     val conv: ReadDoubleRef = 7
     assert(conv.toConst == 7)
+    
+    val s: Double = conv
+    assert(s == 7)
   }
 }

@@ -40,15 +40,15 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
   final def toConst() :Int = x
   final def toMutable() = new IntRef(x)
 
-  def apply(i: Int) :Int = {
+  final def apply(i: Int) :Int = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
-  private[math] def ix: Int = x
-  private[math] def fx: Float = x
-  private[math] def dx: Double = x
+  private[math] final def bx: Boolean = simplex3d.math.Boolean(x)
+  private[math] final def ix: Int = x
+  private[math] final def fx: Float = x
+  private[math] final def dx: Double = x
 
 
   final override def equals(other: Any) :Boolean = {
@@ -69,78 +69,92 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
     "IntRef" + "(" + x + ")"
   }
 
+  
+  final def *(s: Int) :Int = x*s
+  final def /(s: Int) :Int = x/s
+  final def +(s: Int) :Int = x + s
+  final def -(s: Int) :Int = x - s
+
+  final def %(s: Int) :Int = x%s
+  final def >>(s: Int) :Int = x >> s
+  final def >>>(s: Int) :Int = x >>> s
+  final def <<(s: Int) :Int = x << s
+  final def &(s: Int) :Int = x & s
+  final def |(s: Int) :Int = x | s
+  final def ^(s: Int) :Int = x ^ s
+  
+  
+  /** Multiplies this scalar by a vector.
+   * @param u a vector to multiply by.
+   * @return u*scalar.
+   */
+  final def *(u: inVec2i) = u*x
 
   /** Multiplies this scalar by a vector.
    * @param u a vector to multiply by.
    * @return u*scalar.
    */
-  def *(u: inVec2i) = u*x
+  final def *(u: inVec3i) = u*x
 
   /** Multiplies this scalar by a vector.
    * @param u a vector to multiply by.
    * @return u*scalar.
    */
-  def *(u: inVec3i) = u*x
-
-  /** Multiplies this scalar by a vector.
-   * @param u a vector to multiply by.
-   * @return u*scalar.
-   */
-  def *(u: inVec4i) = u*x
+  final def *(u: inVec4i) = u*x
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x and s/u.y.
    */
-  def /(u: inVec2i) = u.divByComp(x)
+  final def /(u: inVec2i) = u.divByComp(x)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, and s/u.z.
    */
-  def /(u: inVec3i) = u.divByComp(x)
+  final def /(u: inVec3i) = u.divByComp(x)
 
   /** Divides this scalar by a vector.
    * @param u a vector to divide by.
    * @return a vector with components s/u.x, s/u.y, s/u.z, and s/u.w.
    */
-  def /(u: inVec4i) = u.divByComp(x)
+  final def /(u: inVec4i) = u.divByComp(x)
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x and s + u.y.
    */
-  def +(u: inVec2i) = u + x
+  final def +(u: inVec2i) = u + x
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x, s + u.y, and s + u.z.
    */
-  def +(u: inVec3i) = u + x
+  final def +(u: inVec3i) = u + x
 
   /** Adds this scalar to each component of a vector.
    * @param u a vector to add to.
    * @return a vector with components s + u.x, s + u.y, s + u.z, and s + u.w.
    */
-  def +(u: inVec4i) = u + x
+  final def +(u: inVec4i) = u + x
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x and s - u.y.
    */
-  def -(u: inVec2i) = new Vec2i(x - u.x, x - u.y)
+  final def -(u: inVec2i) = new Vec2i(x - u.x, x - u.y)
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x, s - u.y, and s - u.z.
    */
-  def -(u: inVec3i) = new Vec3i(x - u.x, x - u.y, x - u.z)
+  final def -(u: inVec3i) = new Vec3i(x - u.x, x - u.y, x - u.z)
 
   /** Subtracts each component of a vector from this scalar.
    * @param u a vector to subtract.
    * @return a vector with components s - u.x, s - u.y, s - u.z, and s - u.w.
    */
-  def -(u: inVec4i) = new Vec4i(x - u.x, x - u.y, x - u.z, x - u.w)
+  final def -(u: inVec4i) = new Vec4i(x - u.x, x - u.y, x - u.z, x - u.w)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -148,7 +162,7 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
    * @param u a vector to divide by.
    * @return a vector with components s % u.x and s % u.y.
    */
-  def %(u: inVec2i) = u.remByComp(x)
+  final def %(u: inVec2i) = u.remByComp(x)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -156,7 +170,7 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, and s % u.z.
    */
-  def %(u: inVec3i) = u.remByComp(x)
+  final def %(u: inVec3i) = u.remByComp(x)
 
   /** Computes remainders of divisions of this scalar
    * by each component of a vector.
@@ -164,61 +178,61 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
    * @param u a vector to divide by.
    * @return a vector with components s % u.x, s % u.y, s % u.z, and s % u.w.
    */
-  def %(u: inVec4i) = u.remByComp(x)
+  final def %(u: inVec4i) = u.remByComp(x)
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x and s & u.y.
    */
-  def &(u: inVec2i) = u & x
+  final def &(u: inVec2i) = u & x
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x, s & u.y, and s & u.z.
    */
-  def &(u: inVec3i) = u & x
+  final def &(u: inVec3i) = u & x
 
   /** Computes bitwise AND of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s & u.x, s & u.y, s & u.z, and s & u.w.
    */
-  def &(u: inVec4i) = u & x
+  final def &(u: inVec4i) = u & x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x and s | u.y.
    */
-  def |(u: inVec2i) = u | x
+  final def |(u: inVec2i) = u | x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x, s | u.y, and s | u.z.
    */
-  def |(u: inVec3i) = u | x
+  final def |(u: inVec3i) = u | x
 
   /** Computes bitwise OR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s | u.x, s | u.y, s | u.z, and s | u.w.
    */
-  def |(u: inVec4i) = u | x
+  final def |(u: inVec4i) = u | x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x and s ^ u.y.
    */
-  def ^(u: inVec2i) = u ^ x
+  final def ^(u: inVec2i) = u ^ x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x, s ^ u.y, and s ^ u.z.
    */
-  def ^(u: inVec3i) = u ^ x
+  final def ^(u: inVec3i) = u ^ x
 
   /** Computes bitwise XOR of this scalar with each component of a vector.
    * @param u a vector.
    * @return a vector with components s ^ u.x, s ^ u.y, s ^ u.z, and s ^ u.w.
    */
-  def ^(u: inVec4i) = u ^ x
+  final def ^(u: inVec4i) = u ^ x
 }
 
 @SerialVersionUID(8104346712419693669L)

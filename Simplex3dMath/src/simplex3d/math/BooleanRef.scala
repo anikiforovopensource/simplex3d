@@ -35,15 +35,20 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   final def toConst() :Boolean = x
   final def toMutable() = new BooleanRef(x)
 
-  def apply(i: Int) :Boolean = {
+  final def apply(i: Int) :Boolean = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  private[math] def bx: Boolean = x
-  private[math] def ix: Int = simplex3d.math.Int(x)
-  private[math] def fx: Float = simplex3d.math.Float(x)
-  private[math] def dx: Double = simplex3d.math.Double(x)
+  private[math] final def bx: Boolean = x
+  private[math] final def ix: Int = simplex3d.math.Int(x)
+  private[math] final def fx: Float = simplex3d.math.Float(x)
+  private[math] final def dx: Double = simplex3d.math.Double(x)
+  
+  
+  final def &&(s: Boolean) :Boolean = (x && s)
+  final def ||(s: Boolean) :Boolean = (x || s)
+  final def ^(s: Boolean) :Boolean = (x ^ s)
 
 
   final override def equals(other: Any) :Boolean = {

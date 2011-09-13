@@ -39,16 +39,16 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   final def toConst() :Float = x
   final def toMutable() = new FloatRef(x)
 
-  def apply(i: Int) :Float = {
+  final def apply(i: Int) :Float = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
 
-  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
-  private[math] def ix: Int = x.toInt
-  private[math] def fx: Float = x
-  private[math] def dx: Double = x
+  private[math] final def bx: Boolean = simplex3d.math.Boolean(x)
+  private[math] final def ix: Int = x.toInt
+  private[math] final def fx: Float = x
+  private[math] final def dx: Double = x
 
 
   final override def equals(other: Any) :Boolean = {
@@ -69,87 +69,93 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   }
 
 
-  def *(u: inVec2f) = u*x
-  def /(u: inVec2f) = new Vec2f(x/u.x, x/u.y)
-  def +(u: inVec2f) = u + x
-  def -(u: inVec2f) = new Vec2f(x - u.x, x - u.y)
+  final def *(s: Float) :Float = x*s
+  final def /(s: Float) :Float = x/s
+  final def +(s: Float) :Float = x + s
+  final def -(s: Float) :Float = x - s
+  
+  
+  final def *(u: inVec2f) = u*x
+  final def /(u: inVec2f) = new Vec2f(x/u.x, x/u.y)
+  final def +(u: inVec2f) = u + x
+  final def -(u: inVec2f) = new Vec2f(x - u.x, x - u.y)
 
-  def *(u: inVec3f) = u*x
-  def /(u: inVec3f) = new Vec3f(x/u.x, x/u.y, x/u.z)
-  def +(u: inVec3f) = u + x
-  def -(u: inVec3f) = new Vec3f(x - u.x, x - u.y, x - u.z)
+  final def *(u: inVec3f) = u*x
+  final def /(u: inVec3f) = new Vec3f(x/u.x, x/u.y, x/u.z)
+  final def +(u: inVec3f) = u + x
+  final def -(u: inVec3f) = new Vec3f(x - u.x, x - u.y, x - u.z)
 
-  def *(u: inVec4f) = u*x
-  def /(u: inVec4f) = new Vec4f(x/u.x, x/u.y, x/u.z, x/u.w)
-  def +(u: inVec4f) = u + x
-  def -(u: inVec4f) = new Vec4f(x - u.x, x - u.y, x - u.z, x - u.w)
+  final def *(u: inVec4f) = u*x
+  final def /(u: inVec4f) = new Vec4f(x/u.x, x/u.y, x/u.z, x/u.w)
+  final def +(u: inVec4f) = u + x
+  final def -(u: inVec4f) = new Vec4f(x - u.x, x - u.y, x - u.z, x - u.w)
 
-  def *(q: inQuat4f) = q*x
-  def /(q: inQuat4f) = new Quat4f(x/q.a, x/q.b, x/q.c, x/q.d)
-  def +(q: inQuat4f) = q + x
-  def -(q: inQuat4f) = new Quat4f(x - q.a, x - q.b, x - q.c, x - q.d)
+  final def *(q: inQuat4f) = q*x
+  final def /(q: inQuat4f) = new Quat4f(x/q.a, x/q.b, x/q.c, x/q.d)
+  final def +(q: inQuat4f) = q + x
+  final def -(q: inQuat4f) = new Quat4f(x - q.a, x - q.b, x - q.c, x - q.d)
 
-  def *(m: inMat2f) = m*x
-  def /(m: inMat2f) = m.divByComp(x)
-  def +(m: inMat2f) = m + x
-  def -(m: inMat2f) = { val t = -m; t += x; t }
+  final def *(m: inMat2f) = m*x
+  final def /(m: inMat2f) = m.divByComp(x)
+  final def +(m: inMat2f) = m + x
+  final def -(m: inMat2f) = { val t = -m; t += x; t }
 
-  def *(m: inMat2x3f) = m*x
-  def /(m: inMat2x3f) = m.divByComp(x)
-  def +(m: inMat2x3f) = m + x
-  def -(m: inMat2x3f) = { val t = -m; t += x; t }
+  final def *(m: inMat2x3f) = m*x
+  final def /(m: inMat2x3f) = m.divByComp(x)
+  final def +(m: inMat2x3f) = m + x
+  final def -(m: inMat2x3f) = { val t = -m; t += x; t }
 
-  def *(m: inMat2x4f) = m*x
-  def /(m: inMat2x4f) = m.divByComp(x)
-  def +(m: inMat2x4f) = m + x
-  def -(m: inMat2x4f) = { val t = -m; t += x; t }
+  final def *(m: inMat2x4f) = m*x
+  final def /(m: inMat2x4f) = m.divByComp(x)
+  final def +(m: inMat2x4f) = m + x
+  final def -(m: inMat2x4f) = { val t = -m; t += x; t }
 
-  def *(m: inMat3x2f) = m*x
-  def /(m: inMat3x2f) = m.divByComp(x)
-  def +(m: inMat3x2f) = m + x
-  def -(m: inMat3x2f) = { val t = -m; t += x; t }
+  final def *(m: inMat3x2f) = m*x
+  final def /(m: inMat3x2f) = m.divByComp(x)
+  final def +(m: inMat3x2f) = m + x
+  final def -(m: inMat3x2f) = { val t = -m; t += x; t }
 
-  def *(m: inMat3f) = m*x
-  def /(m: inMat3f) = m.divByComp(x)
-  def +(m: inMat3f) = m + x
-  def -(m: inMat3f) = { val t = -m; t += x; t }
+  final def *(m: inMat3f) = m*x
+  final def /(m: inMat3f) = m.divByComp(x)
+  final def +(m: inMat3f) = m + x
+  final def -(m: inMat3f) = { val t = -m; t += x; t }
 
-  def *(m: inMat3x4f) = m*x
-  def /(m: inMat3x4f) = m.divByComp(x)
-  def +(m: inMat3x4f) = m + x
-  def -(m: inMat3x4f) = { val t = -m; t += x; t }
+  final def *(m: inMat3x4f) = m*x
+  final def /(m: inMat3x4f) = m.divByComp(x)
+  final def +(m: inMat3x4f) = m + x
+  final def -(m: inMat3x4f) = { val t = -m; t += x; t }
 
-  def *(m: inMat4x2f) = m*x
-  def /(m: inMat4x2f) = m.divByComp(x)
-  def +(m: inMat4x2f) = m + x
-  def -(m: inMat4x2f) = { val t = -m; t += x; t }
+  final def *(m: inMat4x2f) = m*x
+  final def /(m: inMat4x2f) = m.divByComp(x)
+  final def +(m: inMat4x2f) = m + x
+  final def -(m: inMat4x2f) = { val t = -m; t += x; t }
 
-  def *(m: inMat4x3f) = m*x
-  def /(m: inMat4x3f) = m.divByComp(x)
-  def +(m: inMat4x3f) = m + x
-  def -(m: inMat4x3f) = { val t = -m; t += x; t }
+  final def *(m: inMat4x3f) = m*x
+  final def /(m: inMat4x3f) = m.divByComp(x)
+  final def +(m: inMat4x3f) = m + x
+  final def -(m: inMat4x3f) = { val t = -m; t += x; t }
 
-  def *(m: inMat4f) = m*x
-  def /(m: inMat4f) = m.divByComp(x)
-  def +(m: inMat4f) = m + x
-  def -(m: inMat4f) = { val t = -m; t += x; t }
+  final def *(m: inMat4f) = m*x
+  final def /(m: inMat4f) = m.divByComp(x)
+  final def +(m: inMat4f) = m + x
+  final def -(m: inMat4f) = { val t = -m; t += x; t }
 
   
   // Veci to Vecf promotion
-  def *(u: inVec2i) = new Vec2f(x*u.fx, x*u.fy)
-  def /(u: inVec2i) = new Vec2f(x/u.fx, x/u.fy)
-  def +(u: inVec2i) = new Vec2f(x + u.fx, x + u.fy)
-  def -(u: inVec2i) = new Vec2f(x - u.fx, x - u.fy)
+  final def *(u: inVec2i) = new Vec2f(x*u.fx, x*u.fy)
+  final def /(u: inVec2i) = new Vec2f(x/u.fx, x/u.fy)
+  final def +(u: inVec2i) = new Vec2f(x + u.fx, x + u.fy)
+  final def -(u: inVec2i) = new Vec2f(x - u.fx, x - u.fy)
 
-  def *(u: inVec3i) = new Vec3f(x*u.fx, x*u.fy, x*u.fz)
-  def /(u: inVec3i) = new Vec3f(x/u.fx, x/u.fy, x/u.fz)
-  def +(u: inVec3i) = new Vec3f(x + u.fx, x + u.fy, x + u.fz)
-  def -(u: inVec3i) = new Vec3f(x - u.fx, x - u.fy, x - u.fz)
+  final def *(u: inVec3i) = new Vec3f(x*u.fx, x*u.fy, x*u.fz)
+  final def /(u: inVec3i) = new Vec3f(x/u.fx, x/u.fy, x/u.fz)
+  final def +(u: inVec3i) = new Vec3f(x + u.fx, x + u.fy, x + u.fz)
+  final def -(u: inVec3i) = new Vec3f(x - u.fx, x - u.fy, x - u.fz)
 
-  def *(u: inVec4i) = new Vec4f(x*u.fx, x*u.fy, x*u.fz, x*u.fw)
-  def /(u: inVec4i) = new Vec4f(x/u.fx, x/u.fy, x/u.fz, x/u.fw)
-  def +(u: inVec4i) = new Vec4f(x + u.fx, x + u.fy, x + u.fz, x + u.fw)
-  def -(u: inVec4i) = new Vec4f(x - u.fx, x - u.fy, x - u.fz, x - u.fw)
+  final def *(u: inVec4i) = new Vec4f(x*u.fx, x*u.fy, x*u.fz, x*u.fw)
+  final def /(u: inVec4i) = new Vec4f(x/u.fx, x/u.fy, x/u.fz, x/u.fw)
+  final def +(u: inVec4i) = new Vec4f(x + u.fx, x + u.fy, x + u.fz, x + u.fw)
+  final def -(u: inVec4i) = new Vec4f(x - u.fx, x - u.fy, x - u.fz, x - u.fw)
 }
 
 @SerialVersionUID(8104346712419693669L)

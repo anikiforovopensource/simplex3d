@@ -39,15 +39,15 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
   final def toConst() :Double = x
   final def toMutable()  = new DoubleRef(x)
 
-  def apply(i: Int) :Double = {
+  final def apply(i: Int) :Double = {
     if (i == 0) x
     else throw new IndexOutOfBoundsException("Expected from 0 to 0, got " + i + ".")
   }
 
-  private[math] def bx: Boolean = simplex3d.math.Boolean(x)
-  private[math] def ix: Int = x.toInt
-  private[math] def fx: Float = x.toFloat
-  private[math] def dx: Double = x
+  private[math] final def bx: Boolean = simplex3d.math.Boolean(x)
+  private[math] final def ix: Int = x.toInt
+  private[math] final def fx: Float = x.toFloat
+  private[math] final def dx: Double = x
 
 
   final override def equals(other: Any) :Boolean = {
@@ -68,154 +68,160 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
   }
 
 
-  def *(u: inVec2d) = u*x
-  def /(u: inVec2d) = new Vec2d(x/u.x, x/u.y)
-  def +(u: inVec2d) = u + x
-  def -(u: inVec2d) = new Vec2d(x - u.x, x - u.y)
+  final def *(s: Double) :Double = x*s
+  final def /(s: Double) :Double = x/s
+  final def +(s: Double) :Double = x + s
+  final def -(s: Double) :Double = x - s
+  
+  
+  final def *(u: inVec2d) = u*x
+  final def /(u: inVec2d) = new Vec2d(x/u.x, x/u.y)
+  final def +(u: inVec2d) = u + x
+  final def -(u: inVec2d) = new Vec2d(x - u.x, x - u.y)
 
-  def *(u: inVec3d) = u*x
-  def /(u: inVec3d) = new Vec3d(x/u.x, x/u.y, x/u.z)
-  def +(u: inVec3d) = u + x
-  def -(u: inVec3d) = new Vec3d(x - u.x, x - u.y, x - u.z)
+  final def *(u: inVec3d) = u*x
+  final def /(u: inVec3d) = new Vec3d(x/u.x, x/u.y, x/u.z)
+  final def +(u: inVec3d) = u + x
+  final def -(u: inVec3d) = new Vec3d(x - u.x, x - u.y, x - u.z)
 
-  def *(u: inVec4d) = u*x
-  def /(u: inVec4d) = new Vec4d(x/u.x, x/u.y, x/u.z, x/u.w)
-  def +(u: inVec4d) = u + x
-  def -(u: inVec4d) = new Vec4d(x - u.x, x - u.y, x - u.z, x - u.w)
+  final def *(u: inVec4d) = u*x
+  final def /(u: inVec4d) = new Vec4d(x/u.x, x/u.y, x/u.z, x/u.w)
+  final def +(u: inVec4d) = u + x
+  final def -(u: inVec4d) = new Vec4d(x - u.x, x - u.y, x - u.z, x - u.w)
 
-  def *(q: inQuat4d) = q*x
-  def /(q: inQuat4d) = new Quat4d(x/q.a, x/q.b, x/q.c, x/q.d)
-  def +(q: inQuat4d) = q + x
-  def -(q: inQuat4d) = new Quat4d(x - q.a, x - q.b, x - q.c, x - q.d)
+  final def *(q: inQuat4d) = q*x
+  final def /(q: inQuat4d) = new Quat4d(x/q.a, x/q.b, x/q.c, x/q.d)
+  final def +(q: inQuat4d) = q + x
+  final def -(q: inQuat4d) = new Quat4d(x - q.a, x - q.b, x - q.c, x - q.d)
 
-  def *(m: inMat2d) = m*x
-  def /(m: inMat2d) = m.divByComp(x)
-  def +(m: inMat2d) = m + x
-  def -(m: inMat2d) = { val t = -m; t += x; t }
+  final def *(m: inMat2d) = m*x
+  final def /(m: inMat2d) = m.divByComp(x)
+  final def +(m: inMat2d) = m + x
+  final def -(m: inMat2d) = { val t = -m; t += x; t }
 
-  def *(m: inMat2x3d) = m*x
-  def /(m: inMat2x3d) = m.divByComp(x)
-  def +(m: inMat2x3d) = m + x
-  def -(m: inMat2x3d) = { val t = -m; t += x; t }
+  final def *(m: inMat2x3d) = m*x
+  final def /(m: inMat2x3d) = m.divByComp(x)
+  final def +(m: inMat2x3d) = m + x
+  final def -(m: inMat2x3d) = { val t = -m; t += x; t }
 
-  def *(m: inMat2x4d) = m*x
-  def /(m: inMat2x4d) = m.divByComp(x)
-  def +(m: inMat2x4d) = m + x
-  def -(m: inMat2x4d) = { val t = -m; t += x; t }
+  final def *(m: inMat2x4d) = m*x
+  final def /(m: inMat2x4d) = m.divByComp(x)
+  final def +(m: inMat2x4d) = m + x
+  final def -(m: inMat2x4d) = { val t = -m; t += x; t }
 
-  def *(m: inMat3x2d) = m*x
-  def /(m: inMat3x2d) = m.divByComp(x)
-  def +(m: inMat3x2d) = m + x
-  def -(m: inMat3x2d) = { val t = -m; t += x; t }
+  final def *(m: inMat3x2d) = m*x
+  final def /(m: inMat3x2d) = m.divByComp(x)
+  final def +(m: inMat3x2d) = m + x
+  final def -(m: inMat3x2d) = { val t = -m; t += x; t }
 
-  def *(m: inMat3d) = m*x
-  def /(m: inMat3d) = m.divByComp(x)
-  def +(m: inMat3d) = m + x
-  def -(m: inMat3d) = { val t = -m; t += x; t }
+  final def *(m: inMat3d) = m*x
+  final def /(m: inMat3d) = m.divByComp(x)
+  final def +(m: inMat3d) = m + x
+  final def -(m: inMat3d) = { val t = -m; t += x; t }
 
-  def *(m: inMat3x4d) = m*x
-  def /(m: inMat3x4d) = m.divByComp(x)
-  def +(m: inMat3x4d) = m + x
-  def -(m: inMat3x4d) = { val t = -m; t += x; t }
+  final def *(m: inMat3x4d) = m*x
+  final def /(m: inMat3x4d) = m.divByComp(x)
+  final def +(m: inMat3x4d) = m + x
+  final def -(m: inMat3x4d) = { val t = -m; t += x; t }
 
-  def *(m: inMat4x2d) = m*x
-  def /(m: inMat4x2d) = m.divByComp(x)
-  def +(m: inMat4x2d) = m + x
-  def -(m: inMat4x2d) = { val t = -m; t += x; t }
+  final def *(m: inMat4x2d) = m*x
+  final def /(m: inMat4x2d) = m.divByComp(x)
+  final def +(m: inMat4x2d) = m + x
+  final def -(m: inMat4x2d) = { val t = -m; t += x; t }
 
-  def *(m: inMat4x3d) = m*x
-  def /(m: inMat4x3d) = m.divByComp(x)
-  def +(m: inMat4x3d) = m + x
-  def -(m: inMat4x3d) = { val t = -m; t += x; t }
+  final def *(m: inMat4x3d) = m*x
+  final def /(m: inMat4x3d) = m.divByComp(x)
+  final def +(m: inMat4x3d) = m + x
+  final def -(m: inMat4x3d) = { val t = -m; t += x; t }
 
-  def *(m: inMat4d) = m*x
-  def /(m: inMat4d) = m.divByComp(x)
-  def +(m: inMat4d) = m + x
-  def -(m: inMat4d) = { val t = -m; t += x; t }
+  final def *(m: inMat4d) = m*x
+  final def /(m: inMat4d) = m.divByComp(x)
+  final def +(m: inMat4d) = m + x
+  final def -(m: inMat4d) = { val t = -m; t += x; t }
 
 
   // Veci to Vecd promotion
-  def *(u: inVec2i) = new Vec2d(x*u.dx, x*u.dy)
-  def /(u: inVec2i) = new Vec2d(x/u.dx, x/u.dy)
-  def +(u: inVec2i) = new Vec2d(x + u.dx, x + u.dy)
-  def -(u: inVec2i) = new Vec2d(x - u.dx, x - u.dy)
+  final def *(u: inVec2i) = new Vec2d(x*u.dx, x*u.dy)
+  final def /(u: inVec2i) = new Vec2d(x/u.dx, x/u.dy)
+  final def +(u: inVec2i) = new Vec2d(x + u.dx, x + u.dy)
+  final def -(u: inVec2i) = new Vec2d(x - u.dx, x - u.dy)
 
-  def *(u: inVec3i) = new Vec3d(x*u.dx, x*u.dy, x*u.dz)
-  def /(u: inVec3i) = new Vec3d(x/u.dx, x/u.dy, x/u.dz)
-  def +(u: inVec3i) = new Vec3d(x + u.dx, x + u.dy, x + u.dz)
-  def -(u: inVec3i) = new Vec3d(x - u.dx, x - u.dy, x - u.dz)
+  final def *(u: inVec3i) = new Vec3d(x*u.dx, x*u.dy, x*u.dz)
+  final def /(u: inVec3i) = new Vec3d(x/u.dx, x/u.dy, x/u.dz)
+  final def +(u: inVec3i) = new Vec3d(x + u.dx, x + u.dy, x + u.dz)
+  final def -(u: inVec3i) = new Vec3d(x - u.dx, x - u.dy, x - u.dz)
 
-  def *(u: inVec4i) = new Vec4d(x*u.dx, x*u.dy, x*u.dz, x*u.dw)
-  def /(u: inVec4i) = new Vec4d(x/u.dx, x/u.dy, x/u.dz, x/u.dw)
-  def +(u: inVec4i) = new Vec4d(x + u.dx, x + u.dy, x + u.dz, x + u.dw)
-  def -(u: inVec4i) = new Vec4d(x - u.dx, x - u.dy, x - u.dz, x - u.dw)
+  final def *(u: inVec4i) = new Vec4d(x*u.dx, x*u.dy, x*u.dz, x*u.dw)
+  final def /(u: inVec4i) = new Vec4d(x/u.dx, x/u.dy, x/u.dz, x/u.dw)
+  final def +(u: inVec4i) = new Vec4d(x + u.dx, x + u.dy, x + u.dz, x + u.dw)
+  final def -(u: inVec4i) = new Vec4d(x - u.dx, x - u.dy, x - u.dz, x - u.dw)
 
 
   // Vecf to Vecd promotion
-  def *(u: AnyVec2[Float]) = new Vec2d(x*u.dx, x*u.dy)
-  def /(u: AnyVec2[Float]) = new Vec2d(x/u.dx, x/u.dy)
-  def +(u: AnyVec2[Float]) = new Vec2d(x + u.dx, x + u.dy)
-  def -(u: AnyVec2[Float]) = new Vec2d(x - u.dx, x - u.dy)
+  final def *(u: AnyVec2[Float]) = new Vec2d(x*u.dx, x*u.dy)
+  final def /(u: AnyVec2[Float]) = new Vec2d(x/u.dx, x/u.dy)
+  final def +(u: AnyVec2[Float]) = new Vec2d(x + u.dx, x + u.dy)
+  final def -(u: AnyVec2[Float]) = new Vec2d(x - u.dx, x - u.dy)
 
-  def *(u: AnyVec3[Float]) = new Vec3d(x*u.dx, x*u.dy, x*u.dz)
-  def /(u: AnyVec3[Float]) = new Vec3d(x/u.dx, x/u.dy, x/u.dz)
-  def +(u: AnyVec3[Float]) = new Vec3d(x + u.dx, x + u.dy, x + u.dz)
-  def -(u: AnyVec3[Float]) = new Vec3d(x - u.dx, x - u.dy, x - u.dz)
+  final def *(u: AnyVec3[Float]) = new Vec3d(x*u.dx, x*u.dy, x*u.dz)
+  final def /(u: AnyVec3[Float]) = new Vec3d(x/u.dx, x/u.dy, x/u.dz)
+  final def +(u: AnyVec3[Float]) = new Vec3d(x + u.dx, x + u.dy, x + u.dz)
+  final def -(u: AnyVec3[Float]) = new Vec3d(x - u.dx, x - u.dy, x - u.dz)
 
-  def *(u: AnyVec4[Float]) = new Vec4d(x*u.dx, x*u.dy, x*u.dz, x*u.dw)
-  def /(u: AnyVec4[Float]) = new Vec4d(x/u.dx, x/u.dy, x/u.dz, x/u.dw)
-  def +(u: AnyVec4[Float]) = new Vec4d(x + u.dx, x + u.dy, x + u.dz, x + u.dw)
-  def -(u: AnyVec4[Float]) = new Vec4d(x - u.dx, x - u.dy, x - u.dz, x - u.dw)
+  final def *(u: AnyVec4[Float]) = new Vec4d(x*u.dx, x*u.dy, x*u.dz, x*u.dw)
+  final def /(u: AnyVec4[Float]) = new Vec4d(x/u.dx, x/u.dy, x/u.dz, x/u.dw)
+  final def +(u: AnyVec4[Float]) = new Vec4d(x + u.dx, x + u.dy, x + u.dz, x + u.dw)
+  final def -(u: AnyVec4[Float]) = new Vec4d(x - u.dx, x - u.dy, x - u.dz, x - u.dw)
 
-  def *(q: AnyQuat4[Float]) = new Quat4d(x*q.da, x*q.db, x*q.dc, x*q.dd)
-  def /(q: AnyQuat4[Float]) = new Quat4d(x/q.da, x/q.db, x/q.dc, x/q.dd)
-  def +(q: AnyQuat4[Float]) = new Quat4d(x + q.da, x + q.db, x + q.dc, x + q.dd)
-  def -(q: AnyQuat4[Float]) = new Quat4d(x - q.da, x - q.db, x - q.dc, x - q.dd)
+  final def *(q: AnyQuat4[Float]) = new Quat4d(x*q.da, x*q.db, x*q.dc, x*q.dd)
+  final def /(q: AnyQuat4[Float]) = new Quat4d(x/q.da, x/q.db, x/q.dc, x/q.dd)
+  final def +(q: AnyQuat4[Float]) = new Quat4d(x + q.da, x + q.db, x + q.dc, x + q.dd)
+  final def -(q: AnyQuat4[Float]) = new Quat4d(x - q.da, x - q.db, x - q.dc, x - q.dd)
 
-  def *(m: AnyMat2[Float]) = Mat2d(m)*x
-  def /(m: AnyMat2[Float]) = Mat2d(m).divByComp(x)
-  def +(m: AnyMat2[Float]) = Mat2d(m) + x
-  def -(m: AnyMat2[Float]) = { val t = -Mat2d(m); t += x; t }
+  final def *(m: AnyMat2[Float]) = Mat2d(m)*x
+  final def /(m: AnyMat2[Float]) = Mat2d(m).divByComp(x)
+  final def +(m: AnyMat2[Float]) = Mat2d(m) + x
+  final def -(m: AnyMat2[Float]) = { val t = -Mat2d(m); t += x; t }
 
-  def *(m: AnyMat2x3[Float]) = Mat2x3d(m)*x
-  def /(m: AnyMat2x3[Float]) = Mat2x3d(m).divByComp(x)
-  def +(m: AnyMat2x3[Float]) = Mat2x3d(m) + x
-  def -(m: AnyMat2x3[Float]) = { val t = -Mat2x3d(m); t += x; t }
+  final def *(m: AnyMat2x3[Float]) = Mat2x3d(m)*x
+  final def /(m: AnyMat2x3[Float]) = Mat2x3d(m).divByComp(x)
+  final def +(m: AnyMat2x3[Float]) = Mat2x3d(m) + x
+  final def -(m: AnyMat2x3[Float]) = { val t = -Mat2x3d(m); t += x; t }
 
-  def *(m: AnyMat2x4[Float]) = Mat2x4d(m)*x
-  def /(m: AnyMat2x4[Float]) = Mat2x4d(m).divByComp(x)
-  def +(m: AnyMat2x4[Float]) = Mat2x4d(m) + x
-  def -(m: AnyMat2x4[Float]) = { val t = -Mat2x4d(m); t += x; t }
+  final def *(m: AnyMat2x4[Float]) = Mat2x4d(m)*x
+  final def /(m: AnyMat2x4[Float]) = Mat2x4d(m).divByComp(x)
+  final def +(m: AnyMat2x4[Float]) = Mat2x4d(m) + x
+  final def -(m: AnyMat2x4[Float]) = { val t = -Mat2x4d(m); t += x; t }
 
-  def *(m: AnyMat3x2[Float]) = Mat3x2d(m)*x
-  def /(m: AnyMat3x2[Float]) = Mat3x2d(m).divByComp(x)
-  def +(m: AnyMat3x2[Float]) = Mat3x2d(m) + x
-  def -(m: AnyMat3x2[Float]) = { val t = -Mat3x2d(m); t += x; t }
+  final def *(m: AnyMat3x2[Float]) = Mat3x2d(m)*x
+  final def /(m: AnyMat3x2[Float]) = Mat3x2d(m).divByComp(x)
+  final def +(m: AnyMat3x2[Float]) = Mat3x2d(m) + x
+  final def -(m: AnyMat3x2[Float]) = { val t = -Mat3x2d(m); t += x; t }
 
-  def *(m: AnyMat3[Float]) = Mat3d(m)*x
-  def /(m: AnyMat3[Float]) = Mat3d(m).divByComp(x)
-  def +(m: AnyMat3[Float]) = Mat3d(m) + x
-  def -(m: AnyMat3[Float]) = { val t = -Mat3d(m); t += x; t }
+  final def *(m: AnyMat3[Float]) = Mat3d(m)*x
+  final def /(m: AnyMat3[Float]) = Mat3d(m).divByComp(x)
+  final def +(m: AnyMat3[Float]) = Mat3d(m) + x
+  final def -(m: AnyMat3[Float]) = { val t = -Mat3d(m); t += x; t }
 
-  def *(m: AnyMat3x4[Float]) = Mat3x4d(m)*x
-  def /(m: AnyMat3x4[Float]) = Mat3x4d(m).divByComp(x)
-  def +(m: AnyMat3x4[Float]) = Mat3x4d(m) + x
-  def -(m: AnyMat3x4[Float]) = { val t = -Mat3x4d(m); t += x; t }
+  final def *(m: AnyMat3x4[Float]) = Mat3x4d(m)*x
+  final def /(m: AnyMat3x4[Float]) = Mat3x4d(m).divByComp(x)
+  final def +(m: AnyMat3x4[Float]) = Mat3x4d(m) + x
+  final def -(m: AnyMat3x4[Float]) = { val t = -Mat3x4d(m); t += x; t }
 
-  def *(m: AnyMat4x2[Float]) = Mat4x2d(m)*x
-  def /(m: AnyMat4x2[Float]) = Mat4x2d(m).divByComp(x)
-  def +(m: AnyMat4x2[Float]) = Mat4x2d(m) + x
-  def -(m: AnyMat4x2[Float]) = { val t = -Mat4x2d(m); t += x; t }
+  final def *(m: AnyMat4x2[Float]) = Mat4x2d(m)*x
+  final def /(m: AnyMat4x2[Float]) = Mat4x2d(m).divByComp(x)
+  final def +(m: AnyMat4x2[Float]) = Mat4x2d(m) + x
+  final def -(m: AnyMat4x2[Float]) = { val t = -Mat4x2d(m); t += x; t }
 
-  def *(m: AnyMat4x3[Float]) = Mat4x3d(m)*x
-  def /(m: AnyMat4x3[Float]) = Mat4x3d(m).divByComp(x)
-  def +(m: AnyMat4x3[Float]) = Mat4x3d(m) + x
-  def -(m: AnyMat4x3[Float]) = { val t = -Mat4x3d(m); t += x; t }
+  final def *(m: AnyMat4x3[Float]) = Mat4x3d(m)*x
+  final def /(m: AnyMat4x3[Float]) = Mat4x3d(m).divByComp(x)
+  final def +(m: AnyMat4x3[Float]) = Mat4x3d(m) + x
+  final def -(m: AnyMat4x3[Float]) = { val t = -Mat4x3d(m); t += x; t }
 
-  def *(m: AnyMat4[Float]) = Mat4d(m)*x
-  def /(m: AnyMat4[Float]) = Mat4d(m).divByComp(x)
-  def +(m: AnyMat4[Float]) = Mat4d(m) + x
-  def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += x; t }
+  final def *(m: AnyMat4[Float]) = Mat4d(m)*x
+  final def /(m: AnyMat4[Float]) = Mat4d(m).divByComp(x)
+  final def +(m: AnyMat4[Float]) = Mat4d(m) + x
+  final def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += x; t }
 }
 
 @SerialVersionUID(8104346712419693669L)

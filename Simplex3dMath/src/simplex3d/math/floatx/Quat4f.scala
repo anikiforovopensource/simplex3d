@@ -37,7 +37,7 @@ extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f] with Serializabl
   type Const = ConstQuat4f
   type Mutable = Quat4f
   def toConst() :ConstQuat4f
-  final def toMutable() = Quat4f(this)
+  final def mutableCopy() = Quat4f(this)
 
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b

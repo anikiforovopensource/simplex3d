@@ -37,7 +37,7 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   type Const = Float
   type Mutable = FloatRef
   final def toConst() :Float = x
-  final def toMutable() = new FloatRef(x)
+  final def mutableCopy() = new FloatRef(x)
 
   final def apply(i: Int) :Float = {
     if (i == 0) x

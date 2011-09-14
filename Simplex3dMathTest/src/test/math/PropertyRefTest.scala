@@ -63,12 +63,12 @@ class PropertyRefTest extends FunSuite {
     )
     assert(mutable == const)
     
-    val mcopy = mutable.toMutable
+    val mcopy = mutable.mutableCopy()
     assert(mcopy.isInstanceOf[Mutable])
     assert(mutable ne mcopy)
     assert(mutable == mcopy)
     
-    val rcopy = read.toMutable
+    val rcopy = read.mutableCopy()
     assert(rcopy.isInstanceOf[Mutable])
     assert(read ne rcopy)
     assert(read == rcopy)

@@ -33,7 +33,7 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   type Const = Boolean
   type Mutable = BooleanRef
   final def toConst() :Boolean = x
-  final def toMutable() = new BooleanRef(x)
+  final def mutableCopy() = new BooleanRef(x)
 
   final def apply(i: Int) :Boolean = {
     if (i == 0) x

@@ -38,7 +38,7 @@ with ReadPropertyRef[ReadMat2x4f] with Serializable
   type Const = ConstMat2x4f
   type Mutable = Mat2x4f
   def toConst() :ConstMat2x4f
-  final def toMutable() = Mat2x4f(this)
+  final def mutableCopy() = Mat2x4f(this)
 
   // Column major order.
   final def m00 = p00; final def m10 = p10

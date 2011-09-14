@@ -37,7 +37,7 @@ with ReadPropertyRef[ReadVec4b] with Serializable
   type Const = ConstVec4b
   type Mutable = Vec4b
   def toConst() :ConstVec4b
-  final def toMutable() = Vec4b(this)
+  final def mutableCopy() = Vec4b(this)
 
   private[math] type R2 = ReadVec2b
   private[math] type R3 = ReadVec3b

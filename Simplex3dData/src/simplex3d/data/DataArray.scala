@@ -27,12 +27,9 @@ import scala.annotation.unchecked._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed trait ArrayStore
-
-
 @SerialVersionUID(8104346712419693669L)
 trait ReadDataArray[F <: Format, +R <: Raw]
-extends ReadDataSeq[F, R] with ReadContiguous[F, R] with ArrayStore with Serializable {
+extends ReadDataSeq[F, R] with ReadContiguous[F, R] with ArraySrc with Serializable {
   type Read <: ReadDataArray[F, R]
 
   type PrimitiveSeq <: ReadDataArray[F#Component, R]

@@ -68,3 +68,7 @@ trait DirectSrc extends DataSrc {
   
   type BindingBuffer = ByteBuffer
 }
+
+trait ArraySrc extends DataSrc {
+  type Read <: ArraySrc
+}

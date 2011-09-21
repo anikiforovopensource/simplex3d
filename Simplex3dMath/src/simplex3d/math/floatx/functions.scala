@@ -34,9 +34,9 @@ private[math] class functions
 object functions {
 
   // Constants
-  /** Machine float epsilon.
+  /** Machine float epsilon, pow(2, -23).
    */
-  final val Epsilon = 1.19209e-7f
+  final val Epsilon = 1.1920928955078125e-7f
   
   /** Constant ''pi''.
    */

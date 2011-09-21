@@ -34,9 +34,13 @@ trait Cloneable {
 
 
 trait Readable[R <: Readable[R]] { self: R =>
-  type Mutable <: Readable[R] with scala.Mutable
+  type Mutable <: Writable[R]
   
   def mutableCopy() :R#Mutable
+}
+
+trait Writable[R <: Readable[R]] extends Readable[R] with Mutable { self: R =>
+  def :=(v: R)
 }
 
 
@@ -50,9 +54,9 @@ trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Readable[R] with Cloneabl
 }
 
 
-trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Mutable { self: R =>
+trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Writable[R] { self: R =>
   type Clone <: PropertyRef[R] with Cloneable
   
-  def :=(v: R) // Cleaner alternative is "def :=(v: ReadPropertyRef[R])"
+  def :=(v: R) // Another alternative is "def :=(v: ReadPropertyRef[R])" but it requires casting in implementation.
   def :=(v: R#Const)
 }

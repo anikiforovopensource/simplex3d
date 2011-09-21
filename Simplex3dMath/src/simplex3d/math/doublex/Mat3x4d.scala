@@ -601,7 +601,7 @@ with PropertyRef[ReadMat3x4d] with Serializable
   /** Appends rotation to the current transformation. The rotation quaternion
    * is normalized first and then transformed into a rotation matrix which
    * is concatenated with the current transformation. If you want to avoid
-   * normalization, use <code>applyTransform(rotationMat(q))</code> instead.
+   * normalization, use <code>applyTransformation(rotationMat(q))</code> instead.
    * @param q rotation quaternion.
    */
   final def applyRotation(q: inQuat4d) {
@@ -693,7 +693,7 @@ with PropertyRef[ReadMat3x4d] with Serializable
     m03 += u.x; m13 += u.y; m23 += u.z
   }
 
-  final def applyTransform(m: inMat3x4d) {
+  final def applyTransformation(m: inMat3x4d) {
     val t00 = m.m00*m00 + m.m01*m10 + m.m02*m20
     val t10 = m.m10*m00 + m.m11*m10 + m.m12*m20
     val t20 = m.m20*m00 + m.m21*m10 + m.m22*m20
@@ -715,7 +715,7 @@ with PropertyRef[ReadMat3x4d] with Serializable
     m02 = t02; m12 = t12; m22 = t22
     m03 = t03; m13 = t13
   }
-  final def applyTransform(m: inMat3d) {
+  final def applyTransformation(m: inMat3d) {
     val t00 = m.m00*m00 + m.m01*m10 + m.m02*m20
     val t10 = m.m10*m00 + m.m11*m10 + m.m12*m20
     val t20 = m.m20*m00 + m.m21*m10 + m.m22*m20

@@ -138,7 +138,7 @@ class Transform3fTest extends FunSuite {
     }
 
 
-    // test applyTransform
+    // test applyTransformation
     def testApply(t: Mat3x4) {
       val s = r
       val ts = t.clone(); ts.applyScale(s)
@@ -169,14 +169,14 @@ class Transform3fTest extends FunSuite {
       assert(approxEqual(tp, t translate(p), 1e-6f))
 
       val m3 = ConstMat3(r, r, r, r, r, r, r, r, r)
-      val tm3 = t.clone(); tm3.applyTransform(m3)
+      val tm3 = t.clone(); tm3.applyTransformation(m3)
       assert(approxEqual(tm3, t concat(m3), 1e-6f))
 
       val m3x4 = ConstMat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-      val tm3x4 = t.clone(); tm3x4.applyTransform(m3x4)
+      val tm3x4 = t.clone(); tm3x4.applyTransformation(m3x4)
       assert(approxEqual(tm3x4, t concat(m3x4), 1e-6f))
 
-      val self = t.clone(); self.applyTransform(self)
+      val self = t.clone(); self.applyTransformation(self)
       assert(approxEqual(self, t concat(t), 1e-6f))
     }
 

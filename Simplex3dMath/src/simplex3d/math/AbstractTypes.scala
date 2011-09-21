@@ -31,7 +31,7 @@ sealed trait MathObject extends Cloneable with Serializable {
 }
 
 
-/** <code>AnyQuat4</code> is a superclass of all the quaternions.
+/** <code>AnyQuat4</code> is a supertype of all the quaternions.
  * <p>
  *   There are double and float quaternions.
  * </p>
@@ -53,7 +53,7 @@ abstract class AnyQuat4[P] private[math] () extends MathObject {
   private[math] def dd: Double
 }
 
-/** <code>ReadMat</code> is a superclass of all the matrices.
+/** <code>AnyMat</code> is a supertype of all the matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -108,7 +108,7 @@ abstract class AnyMat[P] private[math] () extends MathObject {
   private[math] def d33: Double = 1
 }
 
-/** <code>AnyMat2</code> is a superclass of all the 2x2 matrices.
+/** <code>AnyMat2</code> is a supertype of all the 2x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -121,7 +121,7 @@ abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
   final def rows = 2
 }
 
-/** <code>AnyMat2x3</code> is a superclass of all the 2x3 matrices.
+/** <code>AnyMat2x3</code> is a supertype of all the 2x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -134,7 +134,7 @@ abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
   final def rows = 2
 }
 
-/** <code>AnyMat2x4</code> is a superclass of all the 2x4 matrices.
+/** <code>AnyMat2x4</code> is a supertype of all the 2x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -147,7 +147,7 @@ abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
   final def rows = 2
 }
 
-/** <code>AnyMat3x2</code> is a superclass of all the 3x2 matrices.
+/** <code>AnyMat3x2</code> is a supertype of all the 3x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -160,7 +160,7 @@ abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
   final def rows = 3
 }
 
-/** <code>AnyMat3</code> is a superclass of all the 3x3 matrices.
+/** <code>AnyMat3</code> is a supertype of all the 3x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -173,7 +173,7 @@ abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
   final def rows = 3
 }
 
-/** <code>AnyMat3x4</code> is a superclass of all the 3x4 matrices.
+/** <code>AnyMat3x4</code> is a supertype of all the 3x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -186,7 +186,7 @@ abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
   final def rows = 3
 }
 
-/** <code>AnyMat4x2</code> is a superclass of all the 4x2 matrices.
+/** <code>AnyMat4x2</code> is a supertype of all the 4x2 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -199,7 +199,7 @@ abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
   final def rows = 4
 }
 
-/** <code>AnyMat4x3</code> is a superclass of all the 4x3 matrices.
+/** <code>AnyMat4x3</code> is a supertype of all the 4x3 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -212,7 +212,7 @@ abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
   final def rows = 4
 }
 
-/** <code>AnyMat4</code> is a superclass of all the 4x4 matrices.
+/** <code>AnyMat4</code> is a supertype of all the 4x4 matrices.
  * <p>
  *   There are double and float matrices.
  * </p>
@@ -252,7 +252,7 @@ abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
 }
 
 
-/** <code>AnyVec2</code> is a superclass of all the 2-dimensional vectors.
+/** <code>AnyVec2</code> is a supertype of all the 2-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>
@@ -279,7 +279,7 @@ AnyVec[P] {
 }
 
 
-/** <code>AnyVec3</code> is a superclass of all the 3-dimensional vectors.
+/** <code>AnyVec3</code> is a supertype of all the 3-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>
@@ -310,7 +310,7 @@ AnyVec[P] {
 }
 
 
-/** <code>AnyVec4</code> is a superclass of all the 4-dimensional vectors.
+/** <code>AnyVec4</code> is a supertype of all the 4-dimensional vectors.
  * <p>
  *   There are double, float, int, and boolean vectors.
  * </p>

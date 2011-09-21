@@ -454,7 +454,7 @@ with PropertyRef[ReadMat2x3d] with Serializable
     m02 += u.x; m12 += u.y
   }
 
-  final def applyTransform(m: inMat2x3d) {
+  final def applyTransformation(m: inMat2x3d) {
     val t00 = m.m00*m00 + m.m01*m10
     val t10 = m.m10*m00 + m.m11*m10
 
@@ -468,7 +468,7 @@ with PropertyRef[ReadMat2x3d] with Serializable
     m01 = t01; m11 = t11
     m02 = t02
   }
-  final def applyTransform(m: inMat2d) {
+  final def applyTransformation(m: inMat2d) {
     val t00 = m.m00*m00 + m.m01*m10
     val t10 = m.m10*m00 + m.m11*m10
 

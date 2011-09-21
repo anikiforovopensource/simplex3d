@@ -62,7 +62,7 @@ object Transformations extends App {
   a2.applyScale(Vec2(2))
   a2.applyRotation(radians(10))
   a2.applyTranslation(Vec2(1))
-  a2.applyTransform(t2d)
+  a2.applyTransformation(t2d)
 
   // 3D apply.
   val a3 = Mat3x4(1)
@@ -73,6 +73,6 @@ object Transformations extends App {
   a3.applyRotationY(Pi/4)
   a3.applyRotationZ(Pi/6)
   a3.applyTranslation(Vec3(1))
-  a3.applyTransform(t3d)
+  a3.applyTransformation(t3d)
 
 }

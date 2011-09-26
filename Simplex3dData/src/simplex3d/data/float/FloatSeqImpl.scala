@@ -18,11 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.data.float
+package simplex3d.data
+package float
 
 import java.nio._
 import simplex3d.math.floatx._
-import simplex3d.data._
+import simplex3d.data.common._
 
 
 /**

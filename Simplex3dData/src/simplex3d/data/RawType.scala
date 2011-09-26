@@ -20,19 +20,43 @@
 
 package simplex3d.data
 
-import java.nio._
-import scala.annotation.unchecked._
+import scala.annotation._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait IndexFactory[+R <: Unsigned] extends DataFactory[SInt, R] {
-  def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
-    mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
+object RawType {
+  final val SByte = 5120
+  final val UByte = 5121
+  final val SShort = 5122
+  final val UShort = 5123
+  final val SInt = 5124
+  final val UInt = 5125
+  final val HFloat = 5131
+  final val RFloat = 5126
+  final val RDouble = 5130
 
-  def mkIndexArray(size: Int) :IndexArray[R] = mkDataArray(size)
-  def mkIndexArray(array: R#Array @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
-  def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
-  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
+  def byteLength(rawType: Int) :Int = {
+    (rawType: @switch) match {
+      case SByte | UByte => 1
+      case SShort | UShort | HFloat => 2
+      case SInt | UInt | RFloat => 4
+      case RDouble => 8
+    }
+  }
+
+  def toString(rawType: Int) :String = {
+    (rawType: @switch) match {
+      case SByte => "SByte"
+      case UByte => "UByte"
+      case SShort => "SShort"
+      case UShort => "UShort"
+      case SInt => "SInt"
+      case UInt => "UInt"
+      case HFloat => "HFloat"
+      case RFloat => "RFloat"
+      case RDouble => "RDouble"
+    }
+  }
 }

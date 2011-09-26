@@ -22,6 +22,7 @@ package simplex3d
 
 import java.nio._
 import simplex3d.math._
+import simplex3d.data.common._
 
 
 /**
@@ -101,7 +102,7 @@ package object data {
   type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
 
   
-  @inline implicit final def readContegiousDataToIndex[R <: Unsigned] (
+  @inline implicit final def readContiguousDataToIndex[R <: Unsigned] (
     d: ReadContiguous[SInt, R]
   ) = d.asInstanceOf[ReadIndexSeq[R]]
 
@@ -113,7 +114,7 @@ package object data {
     d: ReadDataBuffer[SInt, R]
   ) = d.asInstanceOf[ReadIndexBuffer[R]]
 
-  @inline implicit final def contegiousDataToIndex[R <: Unsigned] (
+  @inline implicit final def contiguousDataToIndex[R <: Unsigned] (
     d: Contiguous[SInt, R]
   ) = d.asInstanceOf[IndexSeq[R]]
   

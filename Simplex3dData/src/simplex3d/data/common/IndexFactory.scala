@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -19,18 +19,21 @@
  */
 
 package simplex3d.data
+package common
 
-import scala.collection._
-import simplex3d.data.common._
+import java.nio._
+import scala.annotation.unchecked._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
-  type Read <: ReadData[A]
-  
-  type Format <: simplex3d.data.Format { type Accessor <: A }
-}
+trait IndexFactory[+R <: Unsigned] extends DataFactory[SInt, R] {
+  def mkReadIndexBuffer(byteBuffer: ByteBuffer) :ReadIndexBuffer[R] =
+    mkReadDataBuffer(byteBuffer).asInstanceOf[ReadIndexBuffer[R]]
 
-trait Data[A <: Accessor] extends AbstractData[A#Const, A#Read] with ReadData[A]
+  def mkIndexArray(size: Int) :IndexArray[R] = mkDataArray(size)
+  def mkIndexArray(array: R#Array @uncheckedVariance) :IndexArray[R] = mkDataArray(array)
+  def mkIndexBuffer(size: Int) :IndexBuffer[R] = mkDataBuffer(size)
+  def mkIndexBuffer(byteBuffer: ByteBuffer) :IndexBuffer[R] = mkDataBuffer(byteBuffer)
+}

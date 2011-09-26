@@ -84,7 +84,7 @@ class DuplicateBench {
     var l = 0; while (l < loops) {
       var i = 0; while (i < end) {
 
-        answer += Int(data.get(i))
+        answer += (data.get(i)).toInt
 
         i += step
       }
@@ -104,7 +104,7 @@ class DuplicateBench {
       
       var i = 0; while (i < end) {
 
-        answer += Int(dup.get(i))
+        answer += (dup.get(i)).toInt
 
         i += step
       }

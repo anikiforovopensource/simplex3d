@@ -18,12 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.data.double
+package simplex3d.data
+package double
 
 import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.doublex._
-import simplex3d.data._
+import simplex3d.data.common._
 import RawType._
 
 

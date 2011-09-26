@@ -21,6 +21,7 @@
 package simplex3d.data
 
 import scala.annotation.unchecked._
+import simplex3d.data.common._
 
 
 /**

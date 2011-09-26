@@ -21,6 +21,8 @@
 package simplex3d.data
 package float
 
+import simplex3d.data.common._
+
 
 /**
  * @author Aleksey Nikiforov (lex)

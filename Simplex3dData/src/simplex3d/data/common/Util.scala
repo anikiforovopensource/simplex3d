@@ -19,6 +19,7 @@
  */
 
 package simplex3d.data
+package common
 
 import java.nio._
 import scala.annotation._

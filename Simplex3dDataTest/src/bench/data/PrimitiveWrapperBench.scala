@@ -104,7 +104,7 @@ object PrimitiveWrapperBench {
       var i = 0; while (i < end) {
 
         val v = data(i)
-        answer += Int(v + 7.9f)
+        answer += (v + 7.9f).toInt
 
         i += step
       }
@@ -123,7 +123,7 @@ object PrimitiveWrapperBench {
       var i = 0; while (i < end) {
 
         val v = data.get(i)
-        answer += Int(v + 7.9f)
+        answer += (v + 7.9f).toInt
 
         i += step
       }
@@ -142,7 +142,7 @@ object PrimitiveWrapperBench {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += Int(v + 7.9f)
+        answer += (v + 7.9f).toInt
 
         i += step
       }
@@ -161,7 +161,7 @@ object PrimitiveWrapperBench {
       var i = 0; while (i < end) {
 
         val v = seq(i)
-        answer += Int(v + 7.9f)
+        answer += (v + 7.9f).toInt
 
         i += step
       }

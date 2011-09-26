@@ -117,7 +117,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       System.arraycopy(data, 0, dest, 0, data.length)
-      answer += Int(dest(l % data.length)*1000)
+      answer += (dest(l % data.length)*1000).toInt
 
       l += 1
     }
@@ -133,7 +133,7 @@ object CopyBench {
       data.clear()
       dest.clear()
       dest.put(data)
-      answer += Int(dest.get(l % data.capacity)*1000)
+      answer += (dest.get(l % data.capacity)*1000).toInt
 
       l += 1
     }
@@ -147,7 +147,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       dest.put(data)
-      answer += Int(dest(l % data.length)*1000)
+      answer += (dest(l % data.length)*1000).toInt
 
       l += 1
     }
@@ -163,7 +163,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }
@@ -186,7 +186,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }
@@ -209,7 +209,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }
@@ -232,7 +232,7 @@ object CopyBench {
 
     var l = 0; while (l < loops) {
       dest.put(src)
-      answer += Int(dest(l % size)*1000)
+      answer += (dest(l % size)*1000).toInt
 
       l += 1
     }

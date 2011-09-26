@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.data
+package simplex3d.data.common
 
 import java.nio._
 import scala.reflect._

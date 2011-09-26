@@ -21,6 +21,8 @@
 package simplex3d.data
 package double
 
+import simplex3d.data.common._
+
 
 /**
  * @author Aleksey Nikiforov (lex)

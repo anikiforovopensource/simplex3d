@@ -25,7 +25,8 @@ import java.nio._
 import scala.reflect._
 import scala.annotation.unchecked._
 import simplex3d.data.PrimitiveFormat
-import simplex3d.data.Util._
+import simplex3d.data.common._
+import simplex3d.data.common.Util._
 import simplex3d.data.conversion.Float._
 
 

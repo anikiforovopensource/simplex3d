@@ -23,7 +23,8 @@ package simplex3d.data
 import java.nio._
 import scala.annotation._
 import scala.collection._
-import StoreType._
+import simplex3d.data.common._
+import simplex3d.data.common.StoreType._
 
 
 /**
@@ -34,7 +35,11 @@ abstract class ReadAbstractData[
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
-) extends ProtectedData(shared) with DataSrc
+)
+extends ProtectedData(
+  if (shared != null) shared else prim.asInstanceOf[ProtectedData].sharedStorage
+)
+with DataSrc
 with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
 
   // Argument checks.

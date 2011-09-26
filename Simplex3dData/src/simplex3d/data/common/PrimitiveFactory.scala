@@ -1,6 +1,6 @@
 /*
  * Simplex3d, CoreData module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -19,18 +19,10 @@
  */
 
 package simplex3d.data
-
-import scala.collection._
-import simplex3d.data.common._
+package common
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
-  type Read <: ReadData[A]
-  
-  type Format <: simplex3d.data.Format { type Accessor <: A }
-}
-
-trait Data[A <: Accessor] extends AbstractData[A#Const, A#Read] with ReadData[A]
+trait PrimitiveFactory[F <: PrimitiveFormat, +R <: Raw] extends DataFactory[F, R]

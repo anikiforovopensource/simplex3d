@@ -25,6 +25,7 @@ import org.scalatest._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
 import simplex3d.data._
+import simplex3d.data.common._
 import TestUtil._
 import AttributeTestUtil._
 

@@ -26,7 +26,8 @@ import scala.reflect._
 import scala.collection._
 import scala.collection.mutable.WrappedArray
 import simplex3d.math.{Vec2i, inVec2i, Vec3i, inVec3i}
-import StoreType._
+import simplex3d.data.common._
+import simplex3d.data.common.StoreType._
 import RawType._
 
 

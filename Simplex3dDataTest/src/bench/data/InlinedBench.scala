@@ -134,7 +134,7 @@ object InlinedBench {
           data(i + 2), data(i + 3)
         )
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -157,7 +157,7 @@ object InlinedBench {
           data.get(i + 2), data.get(i + 3)
         )
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -178,7 +178,7 @@ object InlinedBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -199,7 +199,7 @@ object InlinedBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -220,7 +220,7 @@ object InlinedBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -246,7 +246,7 @@ object InlinedBench {
           seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -272,7 +272,7 @@ object InlinedBench {
           seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -297,7 +297,7 @@ object InlinedBench {
           seq.primitives(j + 2), seq.primitives(j + 3)
         )
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }

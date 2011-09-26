@@ -23,6 +23,7 @@ package test.data
 import java.nio._
 import org.scalatest._
 import simplex3d.data._
+import simplex3d.data.common._
 import simplex3d.math.floatx.{functions => fx, _}
 import simplex3d.math.doublex.{functions => dx, _}
 import simplex3d.math.doublex.functions._

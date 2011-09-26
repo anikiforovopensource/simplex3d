@@ -120,7 +120,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -141,7 +141,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -162,7 +162,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }
@@ -182,7 +182,7 @@ object AbsBufferBench {
 
         val v = seq(i)
         val u = v * 7.9f
-        answer += Int(u.x + u.y + u.z + u.w)
+        answer += (u.x + u.y + u.z + u.w).toInt
 
         i += step
       }

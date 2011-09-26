@@ -20,6 +20,8 @@
 
 package simplex3d.data
 
+import simplex3d.data.common._
+
 
 /**
  * @author Aleksey Nikiforov (lex)

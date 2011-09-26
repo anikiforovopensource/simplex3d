@@ -27,6 +27,7 @@ import scala.reflect._
 import simplex3d.data._
 import simplex3d.data.RawType._
 import simplex3d.data._
+import simplex3d.data.common._
 import simplex3d.data.float._
 import simplex3d.data.double._
 import simplex3d.math._

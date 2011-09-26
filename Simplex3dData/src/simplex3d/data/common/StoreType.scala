@@ -19,9 +19,31 @@
  */
 
 package simplex3d.data
+package common
+
+import scala.annotation._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait PrimitiveFactory[F <: PrimitiveFormat, +R <: Raw] extends DataFactory[F, R]
+private[data] object StoreType {
+  final val ByteStore = 0
+  final val ShortStore = 1
+  final val CharStore = 2
+  final val IntStore = 3
+  final val FloatStore = 4
+  final val DoubleStore = 5
+
+  def fromRawType(rawType: Int) = {
+    import RawType._
+    (rawType: @switch) match {
+      case SByte | UByte => ByteStore
+      case SShort | HFloat => ShortStore
+      case UShort => CharStore
+      case SInt | UInt => IntStore
+      case RFloat => FloatStore
+      case RDouble => DoubleStore
+    }
+  }
+}

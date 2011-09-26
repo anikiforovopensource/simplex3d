@@ -64,12 +64,12 @@ class AbstractVsFinal {
 
   final def abstractArgs(v1: ReadVec4, v2: ReadVec4) = {
     val a = (v1 + v2)
-    Int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   final def finalArgs(v1: Vec4, v2: Vec4) = {
     val a = (v1 + v2)
-    Int(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
+    toInt(a.x*v2.x + a.y*v2.y + a.z*v2.z + a.w*v2.w)
   }
 
   def testAbstract(length: Int, loops: Int, a: ReadVec4) {

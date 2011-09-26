@@ -22,6 +22,7 @@ package simplex3d.math
 
 import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.integration._
+import simplex3d.math.types._
 
 
 /**
@@ -53,10 +54,10 @@ with ReadPropertyRef[ReadVec4i] with Serializable
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
     new ConstVec4i(x.toInt, y.toInt, z.toInt, w.toInt)
 
-  private[math] final def bx: Boolean = simplex3d.math.Boolean(x)
-  private[math] final def by: Boolean = simplex3d.math.Boolean(y)
-  private[math] final def bz: Boolean = simplex3d.math.Boolean(z)
-  private[math] final def bw: Boolean = simplex3d.math.Boolean(w)
+  private[math] final def bx: Boolean = simplex3d.math.toBoolean(x)
+  private[math] final def by: Boolean = simplex3d.math.toBoolean(y)
+  private[math] final def bz: Boolean = simplex3d.math.toBoolean(z)
+  private[math] final def bw: Boolean = simplex3d.math.toBoolean(w)
 
   private[math] final def ix: Int = x
   private[math] final def iy: Int = y

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.math
+package simplex3d.math.types
 
 
 /** <code>AnyVec3or4</code> is a base class for all the 3 and 4 dimensional vectors.

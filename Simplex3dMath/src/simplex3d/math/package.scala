@@ -20,7 +20,7 @@
 
 package simplex3d
 
-import java.nio._
+import simplex3d.math.types._
 
 
 /**
@@ -29,10 +29,10 @@ import java.nio._
 package object math {
 
   // Implicits
-  implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
+  implicit def toBooleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
   implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
 
-  implicit def intToRef(s: Int) :ReadIntRef = new IntRef(s)
+  implicit def toIntToRef(s: Int) :ReadIntRef = new IntRef(s)
   implicit def refToInt(r: ReadIntRef) = r.toConst
   
 
@@ -71,39 +71,39 @@ package object math {
    * @param x a value to cast.
    * @return x.
    */
-  @inline final def Boolean(x: Boolean) :Boolean = x
+  @inline final def toBoolean(x: Boolean) :Boolean = x
 
   /** Casts an Int to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0, true otherwise.
    */
-  @inline final def Boolean(x: Int) :Boolean = (x != 0)
+  @inline final def toBoolean(x: Int) :Boolean = (x != 0)
 
   /** Casts a Float to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  @inline final def Boolean(x: Float) :Boolean = (x != 0)
+  @inline final def toBoolean(x: Float) :Boolean = (x != 0)
 
   /** Casts a Double to a Boolean.
    * @param x a value to cast.
    * @return false if x == 0.0, true otherwise.
    */
-  @inline final def Boolean(x: Double) :Boolean = (x != 0)
+  @inline final def toBoolean(x: Double) :Boolean = (x != 0)
 
-  @inline final def Boolean(u: AnyVec[_]) :Boolean = u.bx
+  @inline final def toBoolean(u: AnyVec[_]) :Boolean = u.bx
 
   /** Casts a Boolean to an Int.
    * @param x a value to cast.
    * @return 1 if x is true, 0 otherwise.
    */
-  @inline final def Int(x: Boolean) :Int = if (x) 1 else 0
+  @inline final def toInt(x: Boolean) :Int = if (x) 1 else 0
 
   /** Casts an Int to an Int. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  @inline final def Int(x: Int) :Int = x
+  @inline final def toInt(x: Int) :Int = x
 
   /** Casts a Float to an Int.
    * @param x a value to cast.
@@ -112,7 +112,7 @@ package object math {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  @inline final def Int(x: Float) :Int = x.asInstanceOf[Int]
+  @inline final def toInt(x: Float) :Int = x.asInstanceOf[Int]
 
   /** Casts a Double to an Int.
    * @param x a value to cast.
@@ -121,61 +121,61 @@ package object math {
    *           Int.MaxValue if x >= Int.MaxValue,
    *           possible loss of precision.
    */
-  @inline final def Int(x: Double) :Int = x.asInstanceOf[Int]
+  @inline final def toInt(x: Double) :Int = x.asInstanceOf[Int]
 
-  @inline final def Int(u: AnyVec[_]) :Int = u.ix
+  @inline final def toInt(u: AnyVec[_]) :Int = u.ix
 
   /** Casts a Boolean to a Float.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  @inline final def Float(x: Boolean) :Float = if (x) 1 else 0
+  @inline final def toFloat(x: Boolean) :Float = if (x) 1 else 0
 
   /** Casts an Int to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  @inline final def Float(x: Int) :Float = x.asInstanceOf[Float]
+  @inline final def toFloat(x: Int) :Float = x.asInstanceOf[Float]
 
   /** Casts a Float to a Float. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  @inline final def Float(x: Float) :Float = x
+  @inline final def toFloat(x: Float) :Float = x
 
   /** Casts a Double to a Float.
    * @param x a value to cast.
    * @return x as Float, possible loss of precision.
    */
-  @inline final def Float(x: Double) :Float = x.asInstanceOf[Float]
+  @inline final def toFloat(x: Double) :Float = x.asInstanceOf[Float]
 
-  @inline final def Float(u: AnyVec[_]) :Float = u.fx
+  @inline final def toFloat(u: AnyVec[_]) :Float = u.fx
 
   /** Casts a Boolean to a Douoble.
    * @param x a value to cast.
    * @return 1.0 if x is true, 0.0 otherwise.
    */
-  @inline final def Double(x: Boolean) :Double = if (x) 1 else 0
+  @inline final def toDouble(x: Boolean) :Double = if (x) 1 else 0
 
   /** Casts an Int to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  @inline final def Double(x: Int) :Double = x.asInstanceOf[Double]
+  @inline final def toDouble(x: Int) :Double = x.asInstanceOf[Double]
 
   /** Casts a Float to a Douoble.
    * @param x a value to cast.
    * @return x as Double.
    */
-  @inline final def Double(x: Float) :Double = x.asInstanceOf[Double]
+  @inline final def toDouble(x: Float) :Double = x.asInstanceOf[Double]
 
   /** Casts a Double to a Douoble. This method is here for completeness.
    * @param x a value to cast.
    * @return x.
    */
-  @inline final def Double(x: Double) :Double = x
+  @inline final def toDouble(x: Double) :Double = x
 
-  @inline final def Double(u: AnyVec[_]) :Double = u.dx
+  @inline final def toDouble(u: AnyVec[_]) :Double = u.dx
 
 
   // Boolean functions.

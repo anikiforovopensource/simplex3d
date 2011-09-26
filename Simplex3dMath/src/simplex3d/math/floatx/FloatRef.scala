@@ -21,6 +21,7 @@
 package simplex3d.math.floatx
 
 import simplex3d.math._
+import simplex3d.math.types._
 import simplex3d.math.floatx.functions._
 
 
@@ -45,7 +46,7 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   }
 
 
-  private[math] final def bx: Boolean = simplex3d.math.Boolean(x)
+  private[math] final def bx: Boolean = simplex3d.math.toBoolean(x)
   private[math] final def ix: Int = x.toInt
   private[math] final def fx: Float = x
   private[math] final def dx: Double = x

@@ -238,10 +238,10 @@ class DoubleMathVec4Test extends FunSuite {
       val bool1 = s > 0; val bool2 = t > 0
       val bool3 = p > 0; val bool4 = q > 0
       expect(Vec4(
-          mix(x, r, Double(bool1)),
-          mix(y, g, Double(bool2)),
-          mix(z, b, Double(bool3)),
-          mix(w, a, Double(bool4))
+          mix(x, r, toDouble(bool1)),
+          mix(y, g, toDouble(bool2)),
+          mix(z, b, toDouble(bool3)),
+          mix(w, a, toDouble(bool4))
       )) {
         mix(
           Vec4(x, y, z, w),

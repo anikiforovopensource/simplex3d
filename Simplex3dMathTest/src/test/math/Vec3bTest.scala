@@ -98,73 +98,73 @@ class Vec3bTest extends FunSuite {
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec3i(Int(x), Int(y), Int(z)))
+      u = Vec3b(Vec3i(toInt(x), toInt(y), toInt(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(x, Vec2i(Int(y), Int(z)))
+      u = Vec3b(x, Vec2i(toInt(y), toInt(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec2i(Int(x), Int(y)), z)
+      u = Vec3b(Vec2i(toInt(x), toInt(y)), z)
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec4i(Int(x), Int(y), Int(z), Int(w)))
+      u = Vec3b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec3f(Float(x), Float(y), Float(z)))
+      u = Vec3b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(x, Vec2f(Float(y), Float(z)))
+      u = Vec3b(x, Vec2f(toFloat(y), toFloat(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec2f(Float(x), Float(y)), z)
+      u = Vec3b(Vec2f(toFloat(x), toFloat(y)), z)
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec4f(Float(x), Float(y), Float(z), Float(w)))
+      u = Vec3b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec3d(Double(x), Double(y), Double(z)))
+      u = Vec3b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(x, Vec2d(Double(y), Double(z)))
+      u = Vec3b(x, Vec2d(toDouble(y), toDouble(z)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec2d(Double(x), Double(y)), z)
+      u = Vec3b(Vec2d(toDouble(x), toDouble(y)), z)
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
       expect(z) { u.z }
 
-      u = Vec3b(Vec4d(Double(x), Double(y), Double(z), Double(w)))
+      u = Vec3b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
       expect(classOf[Vec3b]) { u.getClass }
       expect(x) { u.x }
       expect(y) { u.y }
@@ -200,73 +200,73 @@ class Vec3bTest extends FunSuite {
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec3i(Int(x), Int(y), Int(z)))
+      c = ConstVec3b(Vec3i(toInt(x), toInt(y), toInt(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(x, Vec2i(Int(y), Int(z)))
+      c = ConstVec3b(x, Vec2i(toInt(y), toInt(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec2i(Int(x), Int(y)), z)
+      c = ConstVec3b(Vec2i(toInt(x), toInt(y)), z)
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec4i(Int(x), Int(y), Int(z), Int(w)))
+      c = ConstVec3b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec3f(Float(x), Float(y), Float(z)))
+      c = ConstVec3b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(x, Vec2f(Float(y), Float(z)))
+      c = ConstVec3b(x, Vec2f(toFloat(y), toFloat(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec2f(Float(x), Float(y)), z)
+      c = ConstVec3b(Vec2f(toFloat(x), toFloat(y)), z)
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec4f(Float(x), Float(y), Float(z), Float(w)))
+      c = ConstVec3b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec3d(Double(x), Double(y), Double(z)))
+      c = ConstVec3b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(x, Vec2d(Double(y), Double(z)))
+      c = ConstVec3b(x, Vec2d(toDouble(y), toDouble(z)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec2d(Double(x), Double(y)), z)
+      c = ConstVec3b(Vec2d(toDouble(x), toDouble(y)), z)
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
       expect(z) { c.z }
 
-      c = ConstVec3b(Vec4d(Double(x), Double(y), Double(z), Double(w)))
+      c = ConstVec3b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
       expect(classOf[ConstVec3b]) { c.getClass }
       expect(x) { c.x }
       expect(y) { c.y }
@@ -319,9 +319,9 @@ class Vec3bTest extends FunSuite {
       assert(Vec3b(x, y, z) != Vec3b(x, !y, z))
       assert(Vec3b(x, y, z) != Vec3b(x, y, !z))
 
-      assert(Vec3b(x, y, z) != Vec3i(Int(x), Int(y), Int(z)))
-      assert(Vec3b(x, y, z) != Vec3f(Float(x), Float(y), Float(z)))
-      assert(Vec3b(x, y, z) != Vec3d(Double(x), Double(y), Double(z)))
+      assert(Vec3b(x, y, z) != Vec3i(toInt(x), toInt(y), toInt(z)))
+      assert(Vec3b(x, y, z) != Vec3f(toFloat(x), toFloat(y), toFloat(z)))
+      assert(Vec3b(x, y, z) != Vec3d(toDouble(x), toDouble(y), toDouble(z)))
     }
   }
 

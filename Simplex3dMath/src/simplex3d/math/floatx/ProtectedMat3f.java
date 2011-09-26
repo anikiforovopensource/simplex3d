@@ -21,7 +21,7 @@
 package simplex3d.math.floatx;
 
 import java.io.Serializable;
-import simplex3d.math.*;
+import simplex3d.math.types.*;
 
 
 /**

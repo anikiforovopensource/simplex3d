@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
 
 /**
  *
@@ -41,9 +43,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   }
 
   private[math] final def bx: Boolean = x
-  private[math] final def ix: Int = simplex3d.math.Int(x)
-  private[math] final def fx: Float = simplex3d.math.Float(x)
-  private[math] final def dx: Double = simplex3d.math.Double(x)
+  private[math] final def ix: Int = simplex3d.math.toInt(x)
+  private[math] final def fx: Float = simplex3d.math.toFloat(x)
+  private[math] final def dx: Double = simplex3d.math.toDouble(x)
   
   
   final def &&(r: ReadBooleanRef) :Boolean = (x && r.toConst)

@@ -71,7 +71,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += Int(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += toInt(modSimple(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }
@@ -88,7 +88,7 @@ class ModFloat {
       var i = 0; while (i < length) {
 
         // Bench code
-        answer += Int(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
+        answer += toInt(modAnother(-i*123 + 0.1234f, -i + 0.2345f))
 
         i += 1
       }

@@ -182,7 +182,7 @@ class FloatMathVec2Test extends FunSuite {
         mix(Vec2(x, y), Vec2(r, g), Vec2(s, t))
       }
       val bool1 = s > 0; val bool2 = t > 0
-      expect(Vec2(mix(x, r, Float(bool1)), mix(y, g, Float(bool2)))) {
+      expect(Vec2(mix(x, r, toFloat(bool1)), mix(y, g, toFloat(bool2)))) {
         mix(Vec2(x, y), Vec2(r, g), Vec2b(bool1, bool2))
       }
 

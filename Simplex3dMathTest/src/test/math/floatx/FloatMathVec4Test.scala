@@ -239,10 +239,10 @@ class FloatMathVec4Test extends FunSuite {
       val bool1 = s > 0; val bool2 = t > 0
       val bool3 = p > 0; val bool4 = q > 0
       expect(Vec4(
-          mix(x, r, Float(bool1)),
-          mix(y, g, Float(bool2)),
-          mix(z, b, Float(bool3)),
-          mix(w, a, Float(bool4))
+          mix(x, r, toFloat(bool1)),
+          mix(y, g, toFloat(bool2)),
+          mix(z, b, toFloat(bool3)),
+          mix(w, a, toFloat(bool4))
       )) {
         mix(
           Vec4(x, y, z, w),

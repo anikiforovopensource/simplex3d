@@ -77,7 +77,7 @@ object ConstructorBench {
       // Bench code
       val u = new SimpleVec4d(i, i + 1, i + 2, i + 3)
       val r = u*9
-      a += Int(r.x + r.y + r.z + r.w)
+      a += toInt(r.x + r.y + r.z + r.w)
 
       i += 1
     }
@@ -93,7 +93,7 @@ object ConstructorBench {
       // Bench code
       val u = Vec4d(i, i + 1, i + 2, i + 3)
       val r = u*9
-      a += Int(r.x + r.y + r.z + r.w)
+      a += toInt(r.x + r.y + r.z + r.w)
 
       i += 1
     }
@@ -113,7 +113,7 @@ object ConstructorBench {
         i + 6, i + 7, i + 8
       )
       val r = u + 1
-      a += Int(r.m00 + r.m11 + r.m22)
+      a += toInt(r.m00 + r.m11 + r.m22)
 
       i += 1
     }
@@ -133,7 +133,7 @@ object ConstructorBench {
         i + 6, i + 7, i + 8
       )
       val r = u + 1
-      a += Int(r.m00 + r.m11 + r.m22)
+      a += toInt(r.m00 + r.m11 + r.m22)
 
       i += 1
     }

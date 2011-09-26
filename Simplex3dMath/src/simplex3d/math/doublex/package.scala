@@ -20,6 +20,8 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
 
 /**
  * @author Aleksey Nikiforov (lex)

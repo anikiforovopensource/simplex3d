@@ -19,6 +19,7 @@
  */
 
 package simplex3d.math
+package types
 
 
 /** <code>MathObject</code> is a supertype for all the math objects.

@@ -76,17 +76,17 @@ class Quat4fTest extends FunSuite {
 
     q = Quat4(Quat4d(ad, bd, cd, dd))
     expect(classOf[Quat4]) { q.getClass }
-    expect(Float(ad)) { q.a }
-    expect(Float(bd)) { q.b }
-    expect(Float(cd)) { q.c }
-    expect(Float(dd)) { q.d }
+    expect(toFloat(ad)) { q.a }
+    expect(toFloat(bd)) { q.b }
+    expect(toFloat(cd)) { q.c }
+    expect(toFloat(dd)) { q.d }
 
     q = Quat4(Vec4d(bd, cd, dd, ad))
     expect(classOf[Quat4]) { q.getClass }
-    expect(Float(ad)) { q.a }
-    expect(Float(bd)) { q.b }
-    expect(Float(cd)) { q.c }
-    expect(Float(dd)) { q.d }
+    expect(toFloat(ad)) { q.a }
+    expect(toFloat(bd)) { q.b }
+    expect(toFloat(cd)) { q.c }
+    expect(toFloat(dd)) { q.d }
 
     var p: ReadQuat4 = ConstQuat4(af, bf, cf, df)
     expect(classOf[ConstQuat4]) { p.getClass }
@@ -111,17 +111,17 @@ class Quat4fTest extends FunSuite {
 
     p = ConstQuat4(Quat4d(ad, bd, cd, dd))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(Float(ad)) { p.a }
-    expect(Float(bd)) { p.b }
-    expect(Float(cd)) { p.c }
-    expect(Float(dd)) { p.d }
+    expect(toFloat(ad)) { p.a }
+    expect(toFloat(bd)) { p.b }
+    expect(toFloat(cd)) { p.c }
+    expect(toFloat(dd)) { p.d }
 
     p = ConstQuat4(Vec4d(bd, cd, dd, ad))
     expect(classOf[ConstQuat4]) { p.getClass }
-    expect(Float(ad)) { p.a }
-    expect(Float(bd)) { p.b }
-    expect(Float(cd)) { p.c }
-    expect(Float(dd)) { p.d }
+    expect(toFloat(ad)) { p.a }
+    expect(toFloat(bd)) { p.b }
+    expect(toFloat(cd)) { p.c }
+    expect(toFloat(dd)) { p.d }
   }
 
   test("Unapply") {

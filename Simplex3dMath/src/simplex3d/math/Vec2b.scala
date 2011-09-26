@@ -22,7 +22,8 @@ package simplex3d.math
 
 import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.integration._
-import simplex3d.math.{Boolean => Bool}
+import simplex3d.math.types._
+import simplex3d.math.{toBoolean => toBool}
 
 
 /**
@@ -48,23 +49,23 @@ with ReadPropertyRef[ReadVec2b] with Serializable
   private[math] type C4 = ConstVec4b
 
   protected final def make2(x: Double, y: Double) =
-    new ConstVec2b(Bool(x), Bool(y))
+    new ConstVec2b(toBool(x), toBool(y))
   protected final def make3(x: Double, y: Double, z: Double) =
-    new ConstVec3b(Bool(x), Bool(y), Bool(z))
+    new ConstVec3b(toBool(x), toBool(y), toBool(z))
   protected final def make4(x: Double, y: Double, z: Double, w: Double) =
-    new ConstVec4b(Bool(x), Bool(y), Bool(z), Bool(w))
+    new ConstVec4b(toBool(x), toBool(y), toBool(z), toBool(w))
 
   private[math] final def bx: Boolean = x
   private[math] final def by: Boolean = y
 
-  private[math] final def ix: Int = simplex3d.math.Int(x)
-  private[math] final def iy: Int = simplex3d.math.Int(y)
+  private[math] final def ix: Int = simplex3d.math.toInt(x)
+  private[math] final def iy: Int = simplex3d.math.toInt(y)
 
-  private[math] final def fx: Float = simplex3d.math.Float(x)
-  private[math] final def fy: Float = simplex3d.math.Float(y)
+  private[math] final def fx: Float = simplex3d.math.toFloat(x)
+  private[math] final def fy: Float = simplex3d.math.toFloat(y)
 
-  private[math] final def dx: Double = simplex3d.math.Double(x)
-  private[math] final def dy: Double = simplex3d.math.Double(y)
+  private[math] final def dx: Double = simplex3d.math.toDouble(x)
+  private[math] final def dy: Double = simplex3d.math.toDouble(y)
 
 
   final def x = px

@@ -23,6 +23,7 @@ package doublex
 
 import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.integration._
+import simplex3d.math.types._
 import simplex3d.math.doublex.functions._
 
 

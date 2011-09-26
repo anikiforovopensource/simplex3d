@@ -20,6 +20,12 @@
 
 package simplex3d.math
 
+import simplex3d.math.types._
+
+
+// An empty class to make -Xno-forwarders work
+private[math] class Accessors
+
 
 /** Allows access to components of undefined type.
  *

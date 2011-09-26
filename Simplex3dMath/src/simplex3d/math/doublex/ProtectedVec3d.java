@@ -20,8 +20,8 @@
 
 package simplex3d.math.doublex;
 
-import simplex3d.math.*;
 import java.io.Serializable;
+import simplex3d.math.types.*;
 
 
 /**

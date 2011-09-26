@@ -64,12 +64,12 @@ class ReadFactory {
         val i4 = Vec4i(i, i + 1, i + 2, i + 3)
         val f4 = Vec4f(i4.x, i4.y, i4.z, i4.w)*1.1f
         val t1 = i4 % 10
-        val t2 = Vec4b(Boolean(t1.x), Boolean(t1.y), Boolean(t1.z), Boolean(t1.w))
-        val d4 = Vec4d(Double(t2.x), Double(t2.y),
-                 Double(t2.z), Double(t2.w)) +
-             Vec4d(f4.x, f4.y, f4.z, f4.w)*2.3 +
-             Vec4d(i4.x, i4.y, i4.z, i4.w)*1.7
-        answer += (Int(d4.x + d4.y + d4.z + d4.w))
+        val t2 = Vec4b(toBoolean(t1.x), toBoolean(t1.y), toBoolean(t1.z), toBoolean(t1.w))
+        val d4 =
+          Vec4d(toDouble(t2.x), toDouble(t2.y), toDouble(t2.z), toDouble(t2.w)) +
+          Vec4d(f4.x, f4.y, f4.z, f4.w)*2.3 +
+          Vec4d(i4.x, i4.y, i4.z, i4.w)*1.7
+        answer += toInt(d4.x + d4.y + d4.z + d4.w)
 
         i += 1
       }
@@ -89,7 +89,7 @@ class ReadFactory {
         val i4 = Vec4i(i, i + 1, i + 2, i + 3)
         val f4 = Vec4f(i4)*1.1f
         val d4 = Vec4d(Vec4b(i4 % 10)) + Vec4d(f4)*2.3 + Vec4d(i4)*1.7
-        answer += (Int(d4.x + d4.y + d4.z + d4.w))
+        answer += toInt(d4.x + d4.y + d4.z + d4.w)
 
         i += 1
       }

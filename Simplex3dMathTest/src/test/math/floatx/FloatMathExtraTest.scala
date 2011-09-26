@@ -166,11 +166,11 @@ class FloatMathExtraTest extends FunSuite {
       (seq(0), seq(1), seq(2), seq(3))
     }
 
-    var i = 0L; while(i < 16*16*16*16) {
-      val (a1, a2, a3, a4) = makeErrors(Int(i))
-      val (b1, b2, b3, b4) = makeErrors(Int(i >> 4))
-      val (c1, c2, c3, c4) = makeErrors(Int(i >> 8))
-      val (d1, d2, d3, d4) = makeErrors(Int(i >> 12))
+    var i = 0; while(i < 16*16*16*16) {
+      val (a1, a2, a3, a4) = makeErrors(i)
+      val (b1, b2, b3, b4) = makeErrors(i >> 4)
+      val (c1, c2, c3, c4) = makeErrors(i >> 8)
+      val (d1, d2, d3, d4) = makeErrors(i >> 12)
 
       
       assert(

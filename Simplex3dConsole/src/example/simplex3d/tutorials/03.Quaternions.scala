@@ -16,7 +16,7 @@ object Quaternions extends App {
   
   // The identity quaternion:
   val p = Quat4(1, 0, 0, 0)
-  val q = Quat4.Identity.toMutable
+  val q = Quat4.Identity.mutableCopy
 
   // Accessors:
   q == Quat4(q.a, q.b, q.c, q.d)

@@ -114,7 +114,7 @@ object Mandelbrot extends App {
 
       val clamped = clamp(contrast, 0, 1)
 
-      val pre = Int(round(count*clamped))
+      val pre = (round(count*clamped)).toInt
       val post = count - pre
 
       gradient(from, shade, pre) :::

@@ -20,8 +20,8 @@
 
 package simplex3d.math.doublex
 
-import simplex3d.math._
 import simplex3d.math.types._
+import simplex3d.math._
 import simplex3d.math.doublex.functions._
 
 

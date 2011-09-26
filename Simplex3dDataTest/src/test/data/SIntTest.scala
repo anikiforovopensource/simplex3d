@@ -37,34 +37,6 @@ import SubCopyTestUtil._
 class SIntTest extends FunSuite {
 
   test("Factories") {
-    testIndexArrayUsingDataSize(IndexArray(_, _))
-    testIndexBufferUsingDataSize(IndexBuffer(_, _))
-    
-    testIndexArrayFromSize(IndexArray[UByte](_))
-    testIndexArrayFromData[UByte](IndexArray[UByte](_))
-    testIndexBufferFromSize(IndexBuffer[UByte](_))
-    testIndexBufferFromData(IndexBuffer[UByte](_))
-    testReadIndexBufferFromData(ReadIndexBuffer[UByte](_))
-    testIndexArrayFromCollection((a: IndexedSeq[Int]) => IndexArray[UByte](a: _*))
-    testIndexBufferFromCollection((a: IndexedSeq[Int]) => IndexBuffer[UByte](a: _*))
-    
-    testIndexArrayFromSize(IndexArray[UShort](_))
-    testIndexArrayFromData[UShort](IndexArray[UShort](_))
-    testIndexBufferFromSize(IndexBuffer[UShort](_))
-    testIndexBufferFromData(IndexBuffer[UShort](_))
-    testReadIndexBufferFromData(ReadIndexBuffer[UShort](_))
-    testIndexArrayFromCollection((a: IndexedSeq[Int]) => IndexArray[UShort](a: _*))
-    testIndexBufferFromCollection((a: IndexedSeq[Int]) => IndexBuffer[UShort](a: _*))
-    
-    testIndexArrayFromSize(IndexArray[UInt](_))
-    testIndexArrayFromData[UInt](IndexArray[UInt](_))
-    testIndexBufferFromSize(IndexBuffer[UInt](_))
-    testIndexBufferFromData(IndexBuffer[UInt](_))
-    testReadIndexBufferFromData(ReadIndexBuffer[UInt](_))
-    testIndexArrayFromCollection((a: IndexedSeq[Int]) => IndexArray[UInt](a: _*))
-    testIndexBufferFromCollection((a: IndexedSeq[Int]) => IndexBuffer[UInt](a: _*))
-    
-
     testArrayFromSize(DataArray[SInt, SByte](_))
     testArrayFromData[SInt, SByte](DataArray[SInt, SByte](_))
     testBufferFromSize(DataBuffer[SInt, SByte](_))

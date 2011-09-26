@@ -85,9 +85,9 @@ package object data {
 
   type RawView = ReadDataView[_ <: Format, _ <: Raw]
   
-  type ReadIndex = ReadIndexSeq[Unsigned]
-  type Index = IndexSeq[Unsigned]
-  type inIndex = inIndexSeq[Unsigned]
+  type ReadIndex = ReadContiguous[SInt, Unsigned]
+  type Index = Contiguous[SInt, Unsigned]
+  type inIndex = inContiguous[SInt, Unsigned]
   
   type inData[A <: Accessor] = ReadData[A]
 
@@ -96,35 +96,6 @@ package object data {
   type inDataArray[F <: Format, +R <: Raw] = ReadDataArray[F, R]
   type inDataBuffer[F <: Format, +R <: Raw] = ReadDataBuffer[F, R]
   type inDataView[F <: Format, +R <: Raw] = ReadDataView[F, R]
-
-  type inIndexSeq[+R <: Unsigned] = ReadIndexSeq[R]
-  type inIndexArray[+R <: Unsigned] = ReadIndexArray[R]
-  type inIndexBuffer[+R <: Unsigned] = ReadIndexBuffer[R]
-
-  
-  @inline implicit final def readContiguousDataToIndex[R <: Unsigned] (
-    d: ReadContiguous[SInt, R]
-  ) = d.asInstanceOf[ReadIndexSeq[R]]
-
-  @inline implicit final def readArrayDataToIndex[R <: Unsigned] (
-    d: ReadDataArray[SInt, R]
-  ) = d.asInstanceOf[ReadIndexArray[R]]
-
-  @inline implicit final def readBufferDataToIndex[R <: Unsigned](
-    d: ReadDataBuffer[SInt, R]
-  ) = d.asInstanceOf[ReadIndexBuffer[R]]
-
-  @inline implicit final def contiguousDataToIndex[R <: Unsigned] (
-    d: Contiguous[SInt, R]
-  ) = d.asInstanceOf[IndexSeq[R]]
-  
-  @inline implicit final def arrayDataToIndex[R <: Unsigned](
-    d: DataArray[SInt, R]
-  ) = d.asInstanceOf[IndexArray[R]]
-
-  @inline implicit final def bufferDataToIndex[R <: Unsigned](
-    d: DataBuffer[SInt, R]
-  ) = d.asInstanceOf[IndexBuffer[R]]
 
 
   def interleave[

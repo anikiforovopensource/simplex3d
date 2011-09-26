@@ -123,10 +123,10 @@ private[data] final class BufferSIntSByte(
 private[data] final class ArraySIntUByte(
   rarray: Array[Byte], warray: Array[Byte]
 )
-extends BaseSInt[UByte](rarray, null, warray == null, 0, 1) with IndexArray[UByte]
+extends BaseSInt[UByte](rarray, null, warray == null, 0, 1) with DataArray[SInt, UByte]
 with PrimitiveFactory[SInt, UByte]
 {
-  type Read = ReadIndexArray[UByte]
+  type Read = ReadDataArray[SInt, UByte]
 
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArraySIntUByte(rarray, null)
@@ -144,8 +144,8 @@ with PrimitiveFactory[SInt, UByte]
 
 private[data] final class BufferSIntUByte(
   shared: ByteBuffer, ro: Boolean
-) extends BaseSInt[UByte](shared, null, ro, 0, 1) with IndexBuffer[UByte] {
-  type Read = ReadIndexBuffer[UByte]
+) extends BaseSInt[UByte](shared, null, ro, 0, 1) with DataBuffer[SInt, UByte] {
+  type Read = ReadDataBuffer[SInt, UByte]
 
   def mkReadOnlyInstance() = new BufferSIntUByte(shared, true)
   def rawType = RawType.UByte
@@ -207,10 +207,10 @@ private[data] final class BufferSIntSShort(
 private[data] final class ArraySIntUShort(
   rarray: Array[Char], warray: Array[Char]
 )
-extends BaseSInt[UShort](rarray, null, warray == null, 0, 1) with IndexArray[UShort]
+extends BaseSInt[UShort](rarray, null, warray == null, 0, 1) with DataArray[SInt, UShort]
 with PrimitiveFactory[SInt, UShort]
 {
-  type Read = ReadIndexArray[UShort]
+  type Read = ReadDataArray[SInt, UShort]
 
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArraySIntUShort(rarray, null)
@@ -228,8 +228,8 @@ with PrimitiveFactory[SInt, UShort]
 
 private[data] final class BufferSIntUShort(
   shared: ByteBuffer, ro: Boolean
-) extends BaseSInt[UShort](shared, null, ro, 0, 1) with IndexBuffer[UShort] {
-  type Read = ReadIndexBuffer[UShort]
+) extends BaseSInt[UShort](shared, null, ro, 0, 1) with DataBuffer[SInt, UShort] {
+  type Read = ReadDataBuffer[SInt, UShort]
 
   def mkReadOnlyInstance() = new BufferSIntUShort(shared, true)
   def rawType = RawType.UShort
@@ -290,10 +290,10 @@ private[data] final class BufferSIntSInt(
 private[data] final class ArraySIntUInt(
   rarray: Array[Int], warray: Array[Int]
 )
-extends BaseSInt[UInt](rarray, null, warray == null, 0, 1) with IndexArray[UInt]
+extends BaseSInt[UInt](rarray, null, warray == null, 0, 1) with DataArray[SInt, UInt]
 with PrimitiveFactory[SInt, UInt]
 {
-  type Read = ReadIndexArray[UInt]
+  type Read = ReadDataArray[SInt, UInt]
 
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArraySIntUInt(rarray, null)
@@ -311,8 +311,8 @@ with PrimitiveFactory[SInt, UInt]
 
 private[data] final class BufferSIntUInt(
   shared: ByteBuffer, ro: Boolean
-) extends BaseSInt[UInt](shared, null, ro, 0, 1) with IndexBuffer[UInt]{
-  type Read = ReadIndexBuffer[UInt]
+) extends BaseSInt[UInt](shared, null, ro, 0, 1) with DataBuffer[SInt, UInt]{
+  type Read = ReadDataBuffer[SInt, UInt]
 
   def mkReadOnlyInstance() = new BufferSIntUInt(shared, true)
   def rawType = RawType.UInt

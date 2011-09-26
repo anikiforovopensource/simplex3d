@@ -227,13 +227,6 @@ object AttributeTestUtil extends FunSuite {
       }
     }
 
-    if (seq.formatManifest == PrimitiveFormat.SInt) {
-      if (isUnsigned(seq.rawType)) {
-        assert(seq.isInstanceOf[ReadIndexArray[_]])
-        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexArray[_]])
-      }
-    }
-
     testSeq(seq, readOnly, data, descriptor)
 
     // primitives
@@ -271,13 +264,6 @@ object AttributeTestUtil extends FunSuite {
 
     if (!readOnly) {
       assert(ds.primitives.isInstanceOf[DataBuffer[_, _]])
-    }
-
-    if (seq.formatManifest == PrimitiveFormat.SInt) {
-      if (isUnsigned(seq.rawType)) {
-        assert(seq.isInstanceOf[ReadIndexBuffer[_]])
-        if (!seq.isReadOnly) assert(seq.isInstanceOf[IndexBuffer[_]])
-      }
     }
 
     testSeq(seq, readOnly, data, descriptor)

@@ -52,5 +52,6 @@ abstract class SerializableComposite extends SerializableData with Serializable 
     toReadDataArray(content.asInstanceOf[ReadDataArray[_ <: PrimitiveFormat, _]])
   }
 
-  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveFormat, _]): ReadDataArray[_ <: CompositeFormat, _]
+  protected def toReadDataArray(primitives: ReadDataArray[_ <: PrimitiveFormat, _])
+  :ReadDataArray[_ <: CompositeFormat, _]
 }

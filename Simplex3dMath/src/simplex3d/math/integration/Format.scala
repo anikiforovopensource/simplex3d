@@ -24,15 +24,6 @@ import java.nio
 import scala.reflect.ClassManifest.{classType}
 
 
-/** <code>Accessor</code> declares distinct types for reading and writing data.
- *
- * @author Aleksey Nikiforov (lex)
- */
-trait Accessor {
-  type Read
-  type Const <: Read
-}
-
 /** <code>Format</code> indicates format.
  *
  * @author Aleksey Nikiforov (lex)
@@ -49,6 +40,15 @@ sealed trait Format {
 sealed trait PrimitiveFormat extends Format {
   type Accessor <: simplex3d.math.integration.Accessor { type Read <: AnyVal }
 }
+
+object PrimitiveFormat {
+  final val Compressed = classType[Compressed](classOf[Compressed])
+  final val Bool = classType[Bool](classOf[Bool])
+  final val SInt = classType[SInt](classOf[SInt])
+  final val RFloat = classType[RFloat](classOf[RFloat])
+  final val RDouble = classType[RDouble](classOf[RDouble])
+}
+
 
 /** <code>CompositeFormat</code>.
  *
@@ -73,15 +73,6 @@ sealed trait Bool extends Accessor with PrimitiveFormat {
   
   type Accessor = Bool
   type Component = Bool
-}
-
-
-object PrimitiveFormat {
-  final val Compressed = classType[Compressed](classOf[Compressed])
-  final val Bool = classType[Bool](classOf[Bool])
-  final val SInt = classType[SInt](classOf[SInt])
-  final val RFloat = classType[RFloat](classOf[RFloat])
-  final val RDouble = classType[RDouble](classOf[RDouble])
 }
 
 

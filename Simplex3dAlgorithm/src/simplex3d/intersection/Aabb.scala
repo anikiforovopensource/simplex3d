@@ -38,8 +38,8 @@ object Aabb {
    */
   def projectAabb(bmin: inVec3, bmax: inVec3, transformation: inMat3x4)(resultMin: Vec3, resultMax :Vec3) {
   
-    resultMin := Vec3(scala.Double.PositiveInfinity)
-    resultMax := Vec3(scala.Double.NegativeInfinity)
+    resultMin := Vec3(Double.PositiveInfinity)
+    resultMax := Vec3(Double.NegativeInfinity)
         
     def process(point: inVec3) {
       val trainsformed = transformation.transformPoint(point)

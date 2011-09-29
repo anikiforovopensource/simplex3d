@@ -81,38 +81,39 @@ class Frustum protected (
   }
 
   final def intersectAabb(min: inVec3, max: inVec3) :Int = {
-    var res = Inside
-
+    
     def testPlane(planeNormal: inVec3, planeCoef: Double) :Int = {
       val pSelector = greaterThanEqual(planeNormal, Vec3.Zero)
       val pVertex = mix(min, max, pSelector)
 
       val pTest = dot(pVertex, planeNormal)
-      if (pTest <= -planeCoef) res = Outside
+      if (pTest <= -planeCoef) Outside
       else {
         val nVertex = mix(min, max, not(pSelector))
 
         val nTest = dot(nVertex, planeNormal)
-        if (nTest < -planeCoef) res = Intersecting
+        if (nTest < -planeCoef) Intersecting else Inside
       }
-      
-      res
     }
     
-    if (testPlane(leftNormal, leftCoefficient) != Outside)
-      if (testPlane(rightNormal, rightCoefficient) != Outside)
-        if (testPlane(bottomNormal, bottomCoefficient) != Outside)
-          if (testPlane(topNormal, topCoefficient) != Outside)
-            if (testPlane(nearNormal, nearCoefficient) != Outside)
-              testPlane(farNormal, farCoefficient)
+    var res = Inside
+    res = testPlane(leftNormal, leftCoefficient); if (res != Outside) {
+      res = testPlane(rightNormal, rightCoefficient); if (res != Outside) {
+        res = testPlane(bottomNormal, bottomCoefficient); if (res != Outside) {
+          res = testPlane(topNormal, topCoefficient); if (res != Outside) {
+            res = testPlane(nearNormal, nearCoefficient); if (res != Outside) {
+              res = testPlane(farNormal, farCoefficient)
+            }
+          }
+        }
+      }
+    }
 
     res
   }
 
   
   final def intersectObb(min: inVec3, max: inVec3, worldTranformation: inMat3x4) :Int = {
-    var res = Inside
-
     val m = Mat3(worldTranformation)
     val c3 = worldTranformation(3)
 
@@ -134,23 +135,27 @@ class Frustum protected (
       val pVertex = mix(min, max, pSelector)
 
       val pTest = dot(pVertex, planeNormal)
-      if (pTest <= -planeCoef) res = Outside
+      if (pTest <= -planeCoef) Outside
       else {
         val nVertex = mix(min, max, not(pSelector))
 
         val nTest = dot(nVertex, planeNormal)
-        if (nTest < -planeCoef) res = Intersecting
+        if (nTest < -planeCoef) Intersecting else Inside
       }
-      
-      res
     }
     
-    if (testPlane(leftNormal, leftCoefficient) != Outside)
-      if (testPlane(rightNormal, rightCoefficient) != Outside)
-        if (testPlane(bottomNormal, bottomCoefficient) != Outside)
-          if (testPlane(topNormal, topCoefficient) != Outside)
-            if (testPlane(nearNormal, nearCoefficient) != Outside)
-              testPlane(farNormal, farCoefficient)
+    var res = Inside
+    res = testPlane(leftNormal, leftCoefficient); if (res != Outside) {
+      res = testPlane(rightNormal, rightCoefficient); if (res != Outside) {
+        res = testPlane(bottomNormal, bottomCoefficient); if (res != Outside) {
+          res = testPlane(topNormal, topCoefficient); if (res != Outside) {
+            res = testPlane(nearNormal, nearCoefficient); if (res != Outside) {
+              res = testPlane(farNormal, farCoefficient)
+            }
+          }
+        }
+      }
+    }
 
     res
   }

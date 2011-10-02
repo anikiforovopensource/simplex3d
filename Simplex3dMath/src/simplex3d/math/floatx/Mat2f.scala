@@ -35,7 +35,6 @@ sealed abstract class ReadMat2f extends ProtectedMat2f[Float]
 with ReadPropertyRef[ReadMat2f] with Serializable
 {
 
-  type Clone <: ReadMat2f
   type Const = ConstMat2f
   type Mutable = Mat2f
   def toConst() :ConstMat2f
@@ -216,12 +215,11 @@ with ReadPropertyRef[ReadMat2f] with Serializable
 final class ConstMat2f private[math] (
   c00: Float, c10: Float,
   c01: Float, c11: Float
-) extends ReadMat2f with Immutable with Serializable
+) extends ReadMat2f with Immutable with Cloneable[ConstMat2f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
 
-  type Clone = ConstMat2f
   override def clone() = this
   def toConst() = this
 }
@@ -266,7 +264,7 @@ final class Mat2f private[math] (
   c01: Float, c11: Float
 )
 extends ReadMat2f with Accessor with CompositeFormat
-with PropertyRef[ReadMat2f] with Serializable
+with PropertyRef[ReadMat2f] with Cloneable[Mat2f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -276,7 +274,6 @@ with PropertyRef[ReadMat2f] with Serializable
   type Accessor = Mat2f
   type Component = RFloat
 
-  type Clone = Mat2f
   override def clone() = Mat2f(this)
   def toConst() = ConstMat2f(this)
   def :=(u: ConstMat2f) { this := u.asInstanceOf[inMat2f] }

@@ -35,7 +35,6 @@ sealed abstract class ReadMat2x4f extends ProtectedMat2x4f[Float]
 with ReadPropertyRef[ReadMat2x4f] with Serializable
 {
 
-  type Clone <: ReadMat2x4f
   type Const = ConstMat2x4f
   type Mutable = Mat2x4f
   def toConst() :ConstMat2x4f
@@ -280,14 +279,13 @@ final class ConstMat2x4f private[math] (
   c01: Float, c11: Float,
   c02: Float, c12: Float,
   c03: Float, c13: Float
-) extends ReadMat2x4f with Immutable with Serializable
+) extends ReadMat2x4f with Immutable with Cloneable[ConstMat2x4f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
   p03 = c03; p13 = c13
 
-  type Clone = ConstMat2x4f
   override def clone() = this
   def toConst() = this
 }
@@ -339,7 +337,7 @@ final class Mat2x4f private[math] (
   c03: Float, c13: Float
 )
 extends ReadMat2x4f with Accessor with CompositeFormat
-with PropertyRef[ReadMat2x4f] with Serializable
+with PropertyRef[ReadMat2x4f] with Cloneable[Mat2x4f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -351,7 +349,6 @@ with PropertyRef[ReadMat2x4f] with Serializable
   type Accessor = Mat2x4f
   type Component = RFloat
 
-  type Clone = Mat2x4f
   override def clone() = Mat2x4f(this)
   def toConst() = ConstMat2x4f(this)
   def :=(u: ConstMat2x4f) { this := u.asInstanceOf[inMat2x4f] }

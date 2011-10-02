@@ -35,7 +35,6 @@ sealed abstract class ReadMat2x3d extends ProtectedMat2x3d[Double]
 with ReadPropertyRef[ReadMat2x3d] with Serializable
 {
 
-  type Clone <: ReadMat2x3d
   type Const = ConstMat2x3d
   type Mutable = Mat2x3d
   def toConst() :ConstMat2x3d
@@ -293,13 +292,12 @@ final class ConstMat2x3d private[math] (
   c00: Double, c10: Double,
   c01: Double, c11: Double,
   c02: Double, c12: Double
-) extends ReadMat2x3d with Immutable with Serializable
+) extends ReadMat2x3d with Immutable with Cloneable[ConstMat2x3d] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
   p02 = c02; p12 = c12
 
-  type Clone = ConstMat2x3d
   override def clone() = this
   def toConst() = this
 }
@@ -345,7 +343,7 @@ final class Mat2x3d private[math] (
   c02: Double, c12: Double
 )
 extends ReadMat2x3d with Accessor with CompositeFormat
-with PropertyRef[ReadMat2x3d] with Serializable
+with PropertyRef[ReadMat2x3d] with Cloneable[Mat2x3d] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11
@@ -356,7 +354,6 @@ with PropertyRef[ReadMat2x3d] with Serializable
   type Accessor = Mat2x3d
   type Component = RDouble
 
-  type Clone = Mat2x3d
   override def clone() = Mat2x3d(this)
   def toConst() = ConstMat2x3d(this)
   def :=(u: ConstMat2x3d) { this := u.asInstanceOf[inMat2x3d] }

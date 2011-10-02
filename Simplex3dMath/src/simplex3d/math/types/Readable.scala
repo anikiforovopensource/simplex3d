@@ -27,7 +27,7 @@ import simplex3d.math.integration._
  * @author Aleksey Nikiforov (lex)
  */
 trait Readable[R <: Readable[R]] { self: R =>
-  type Mutable <: Writable[R]
+  type Mutable <: Writable[R] with R
   
   def mutableCopy() :R#Mutable
 }

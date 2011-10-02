@@ -34,7 +34,6 @@ import simplex3d.math.floatx.functions._
 sealed abstract class ReadQuat4f
 extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f] with Serializable
 {
-  type Clone <: ReadQuat4f
   type Const = ConstQuat4f
   type Mutable = Quat4f
   def toConst() :ConstQuat4f
@@ -161,10 +160,9 @@ extends ProtectedQuat4f[Float] with ReadPropertyRef[ReadQuat4f] with Serializabl
 @SerialVersionUID(8104346712419693669L)
 final class ConstQuat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
-) extends ReadQuat4f with Immutable with Serializable {
+) extends ReadQuat4f with Immutable with Cloneable[ConstQuat4f] with Serializable {
   pa = ca; pb = cb; pc = cc; pd = cd
 
-  type Clone = ConstQuat4f
   override def clone() = this
   def toConst() = this
 }
@@ -185,7 +183,7 @@ final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 )
 extends ReadQuat4f with Accessor with CompositeFormat
-with PropertyRef[ReadQuat4f] with Serializable
+with PropertyRef[ReadQuat4f] with Cloneable[Quat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
@@ -194,7 +192,6 @@ with PropertyRef[ReadQuat4f] with Serializable
   type Accessor = Quat4f
   type Component = RFloat
   
-  type Clone = Quat4f
   override def clone() = Quat4f(this)
   def toConst() = ConstQuat4f(this)
   def :=(q: ConstQuat4f) { this := q.asInstanceOf[inQuat4f] }

@@ -34,7 +34,6 @@ sealed abstract class ReadVec3d extends ProtectedVec3d[Double]
 with ReadPropertyRef[ReadVec3d] with Serializable
 {
 
-  type Clone <: ReadVec3d
   type Const = ConstVec3d
   type Mutable = Vec3d
   def toConst() :ConstVec3d
@@ -155,10 +154,9 @@ with ReadPropertyRef[ReadVec3d] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstVec3d private[math] (cx: Double, cy: Double, cz: Double)
-extends ReadVec3d with Immutable with Serializable {
+extends ReadVec3d with Immutable with Cloneable[ConstVec3d] with Serializable {
   px = cx; py = cy; pz = cz
 
-  type Clone = ConstVec3d
   override def clone() = this
   def toConst() = this
 }
@@ -181,7 +179,7 @@ object ConstVec3d {
 @SerialVersionUID(8104346712419693669L)
 final class Vec3d private[math] (cx: Double, cy: Double, cz: Double)
 extends ReadVec3d with Accessor with CompositeFormat
-with PropertyRef[ReadVec3d] with Serializable
+with PropertyRef[ReadVec3d] with Cloneable[Vec3d] with Serializable
 {
   px = cx; py = cy; pz = cz
 
@@ -190,7 +188,6 @@ with PropertyRef[ReadVec3d] with Serializable
   type Accessor = Vec3d
   type Component = RDouble
 
-  type Clone = Vec3d
   override def clone() = Vec3d(this)
   def toConst() = ConstVec3d(this)
   def :=(u: ConstVec3d) { this := u.asInstanceOf[inVec3d] }

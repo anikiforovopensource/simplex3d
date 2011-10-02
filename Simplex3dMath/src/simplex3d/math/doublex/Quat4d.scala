@@ -31,10 +31,9 @@ import simplex3d.math.doublex.functions._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadQuat4d
-extends ProtectedQuat4d[Double] with ReadPropertyRef[ReadQuat4d] with Serializable
+sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
+with ReadPropertyRef[ReadQuat4d] with Serializable
 {
-  type Clone <: ReadQuat4d
   type Const = ConstQuat4d
   type Mutable = Quat4d
   def toConst() :ConstQuat4d
@@ -160,10 +159,9 @@ extends ProtectedQuat4d[Double] with ReadPropertyRef[ReadQuat4d] with Serializab
 @SerialVersionUID(8104346712419693669L)
 final class ConstQuat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
-) extends ReadQuat4d with Immutable with Serializable {
+) extends ReadQuat4d with Immutable with Cloneable[ConstQuat4d] with Serializable {
   pa = ca; pb = cb; pc = cc; pd = cd
 
-  type Clone = ConstQuat4d
   override def clone() = this
   def toConst() = this
 }
@@ -184,7 +182,7 @@ final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
 extends ReadQuat4d with Accessor with CompositeFormat
-with PropertyRef[ReadQuat4d] with Serializable
+with PropertyRef[ReadQuat4d] with Cloneable[Quat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
@@ -193,7 +191,6 @@ with PropertyRef[ReadQuat4d] with Serializable
   type Accessor = Quat4d
   type Component = RDouble
   
-  type Clone = Quat4d
   override def clone() = Quat4d(this)
   def toConst() = ConstQuat4d(this)
   def :=(q: ConstQuat4d) { this := q.asInstanceOf[inQuat4d] }

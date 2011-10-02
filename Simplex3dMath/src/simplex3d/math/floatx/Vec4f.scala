@@ -34,7 +34,6 @@ sealed abstract class ReadVec4f extends ProtectedVec4f[Float]
 with ReadPropertyRef[ReadVec4f] with Serializable
 {
 
-  type Clone <: ReadVec4f
   type Const = ConstVec4f
   type Mutable = Vec4f
   def toConst() :ConstVec4f
@@ -168,10 +167,9 @@ with ReadPropertyRef[ReadVec4f] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstVec4f private[math] (cx: Float, cy: Float, cz: Float, cw: Float)
-extends ReadVec4f with Immutable with Serializable {
+extends ReadVec4f with Immutable with Cloneable[ConstVec4f] with Serializable {
   px = cx; py = cy; pz = cz; pw = cw
 
-  type Clone = ConstVec4f
   override def clone() = this
   def toConst() = this
 }
@@ -200,7 +198,7 @@ object ConstVec4f {
 @SerialVersionUID(8104346712419693669L)
 final class Vec4f private[math] (cx: Float, cy: Float, cz: Float, cw: Float)
 extends ReadVec4f with Accessor with CompositeFormat
-with PropertyRef[ReadVec4f] with Serializable
+with PropertyRef[ReadVec4f] with Cloneable[Vec4f] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 
@@ -209,7 +207,6 @@ with PropertyRef[ReadVec4f] with Serializable
   type Accessor = Vec4f
   type Component = RFloat
 
-  type Clone = Vec4f
   override def clone() = Vec4f(this)
   def toConst() = ConstVec4f(this)
   def :=(u: ConstVec4f) { this := u.asInstanceOf[inVec4f] }

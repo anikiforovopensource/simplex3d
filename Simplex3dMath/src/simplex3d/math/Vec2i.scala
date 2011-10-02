@@ -33,7 +33,6 @@ sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
 with ReadPropertyRef[ReadVec2i] with Serializable
 {
 
-  type Clone <: ReadVec2i
   type Const = ConstVec2i
   type Mutable = Vec2i
   def toConst() :ConstVec2i
@@ -157,10 +156,9 @@ with ReadPropertyRef[ReadVec2i] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstVec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with Immutable with Serializable {
+extends ReadVec2i with Immutable with Cloneable[ConstVec2i] with Serializable {
   px = cx; py = cy
 
-  type Clone = ConstVec2i
   override def clone() = this
   def toConst() = this
 }
@@ -182,7 +180,7 @@ object ConstVec2i {
 @SerialVersionUID(8104346712419693669L)
 final class Vec2i private[math] (cx: Int, cy: Int)
 extends ReadVec2i with Accessor with CompositeFormat
-with PropertyRef[ReadVec2i] with Serializable
+with PropertyRef[ReadVec2i] with Cloneable[Vec2i] with Serializable
 {
   px = cx; py = cy
 
@@ -191,7 +189,6 @@ with PropertyRef[ReadVec2i] with Serializable
   type Accessor = Vec2i
   type Component = SInt
 
-  type Clone = Vec2i
   override def clone() = Vec2i(this)
   def toConst() = ConstVec2i(this)
   def :=(u: ConstVec2i) { this := u.asInstanceOf[inVec2i] }

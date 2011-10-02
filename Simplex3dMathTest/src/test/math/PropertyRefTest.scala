@@ -20,6 +20,7 @@
 
 package test.math
 
+import scala.annotation._
 import org.scalatest._
 import simplex3d.math.types._
 import simplex3d.math._
@@ -82,7 +83,7 @@ class PropertyRefTest extends FunSuite {
   }
 
   def testVec(u: AnyVec[_]) {
-    u match {
+    (u: @unchecked) match {
       case p: PrimitiveRef[_] => assert(p.components == 1)
       case v: AnyVec2[_] => assert(v.components == 2)
       case v: AnyVec3[_] => assert(v.components == 3)

@@ -35,7 +35,6 @@ sealed abstract class ReadMat4d extends ProtectedMat4d[Double]
 with ReadPropertyRef[ReadMat4d] with Serializable
 {
 
-  type Clone <: ReadMat4d
   type Const = ConstMat4d
   type Mutable = Mat4d
   def toConst() :ConstMat4d
@@ -348,14 +347,13 @@ final class ConstMat4d private[math] (
   c01: Double, c11: Double, c21: Double, c31: Double,
   c02: Double, c12: Double, c22: Double, c32: Double,
   c03: Double, c13: Double, c23: Double, c33: Double
-) extends ReadMat4d with Immutable with Serializable
+) extends ReadMat4d with Immutable with Cloneable[ConstMat4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
   p02 = c02; p12 = c12; p22 = c22; p32 = c32
   p03 = c03; p13 = c13; p23 = c23; p33 = c33
 
-  type Clone = ConstMat4d
   override def clone() = this
   def toConst() = this
 }
@@ -407,7 +405,7 @@ final class Mat4d private[math] (
   c03: Double, c13: Double, c23: Double, c33: Double
 )
 extends ReadMat4d with Accessor with CompositeFormat
-with PropertyRef[ReadMat4d] with Serializable
+with PropertyRef[ReadMat4d] with Cloneable[Mat4d] with Serializable
 {
   p00 = c00; p10 = c10; p20 = c20; p30 = c30
   p01 = c01; p11 = c11; p21 = c21; p31 = c31
@@ -419,7 +417,6 @@ with PropertyRef[ReadMat4d] with Serializable
   type Accessor = Mat4d
   type Component = RDouble
 
-  type Clone = Mat4d
   override def clone() = Mat4d(this)
   def toConst() = ConstMat4d(this)
   def :=(u: ConstMat4d) { this := u.asInstanceOf[inMat4d] }

@@ -26,8 +26,6 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait Cloneable {
-  type Clone <: Cloneable
-
-  override def clone() :Clone = throw new UnsupportedOperationException()
+trait Cloneable[+C <: AnyRef] {
+  override def clone() :C = throw new UnsupportedOperationException()
 }

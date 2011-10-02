@@ -31,7 +31,6 @@ import simplex3d.math.types._
 sealed abstract class ReadBooleanRef(protected var x: Boolean)
 extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializable
 {
-  type Clone <: ReadBooleanRef
   type Const = Boolean
   type Mutable = BooleanRef
   final def toConst() :Boolean = x
@@ -72,9 +71,8 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
 
 @SerialVersionUID(8104346712419693669L)
 final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx)
-with PropertyRef[ReadBooleanRef] with Serializable
+with PropertyRef[ReadBooleanRef] with Cloneable[BooleanRef] with Serializable
 {
-  type Clone = BooleanRef
   override def clone() = new BooleanRef(x)
 
   def :=(s: Boolean) { x = s }

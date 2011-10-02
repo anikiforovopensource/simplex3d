@@ -26,10 +26,9 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Readable[R] with Cloneable { self: R =>
-  type Clone <: ReadPropertyRef[R] with Cloneable
+trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Readable[R] with Cloneable[R] { self: R =>
   type Const
-  type Mutable <: PropertyRef[R] with Cloneable
+  type Mutable <: PropertyRef[R] with R
 
   def toConst() :R#Const
   def mutableCopy() :R#Mutable
@@ -37,8 +36,5 @@ trait ReadPropertyRef[R <: ReadPropertyRef[R]] extends Readable[R] with Cloneabl
 
 
 trait PropertyRef[R <: ReadPropertyRef[R]] extends ReadPropertyRef[R] with Writable[R] { self: R =>
-  type Clone <: PropertyRef[R] with Cloneable
-  
   def :=(v: R#Const)
-  final def :=(v: ReadPropertyRef[R]) { this.asInstanceOf[Writable[R]] := v.asInstanceOf[R] }
 }

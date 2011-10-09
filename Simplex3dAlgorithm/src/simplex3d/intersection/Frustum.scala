@@ -82,7 +82,7 @@ class Frustum protected (
 
   final def intersectAabb(min: inVec3, max: inVec3) :Int = {
     
-    def testPlane(planeNormal: inVec3, planeCoef: Double) :Int = {
+    def testPlane(planeNormal: inVec3, planeCoef: Double, res: Int) :Int = {
       val pSelector = greaterThanEqual(planeNormal, Vec3.Zero)
       val pVertex = mix(min, max, pSelector)
 
@@ -92,17 +92,17 @@ class Frustum protected (
         val nVertex = mix(min, max, not(pSelector))
 
         val nTest = dot(nVertex, planeNormal)
-        if (nTest < -planeCoef) Intersecting else Inside
+        if (nTest < -planeCoef) Intersecting else res
       }
     }
     
     var res = Inside
-    res = testPlane(leftNormal, leftCoefficient); if (res != Outside) {
-      res = testPlane(rightNormal, rightCoefficient); if (res != Outside) {
-        res = testPlane(bottomNormal, bottomCoefficient); if (res != Outside) {
-          res = testPlane(topNormal, topCoefficient); if (res != Outside) {
-            res = testPlane(nearNormal, nearCoefficient); if (res != Outside) {
-              res = testPlane(farNormal, farCoefficient)
+    res = testPlane(leftNormal, leftCoefficient, res); if (res != Outside) {
+      res = testPlane(rightNormal, rightCoefficient, res); if (res != Outside) {
+        res = testPlane(bottomNormal, bottomCoefficient, res); if (res != Outside) {
+          res = testPlane(topNormal, topCoefficient, res); if (res != Outside) {
+            res = testPlane(nearNormal, nearCoefficient, res); if (res != Outside) {
+              res = testPlane(farNormal, farCoefficient, res)
             }
           }
         }
@@ -117,7 +117,7 @@ class Frustum protected (
     val m = Mat3(worldTranformation)
     val c3 = worldTranformation(3)
 
-    def testPlane(frustumNormal: inVec3, frustumCoef: Double): Int = {
+    def testPlane(frustumNormal: inVec3, frustumCoef: Double, res: Int): Int = {
 
       // Transform the plane equation as follows:
       // val planeEq = Vec4(normal(i), coefficient(i))
@@ -140,17 +140,17 @@ class Frustum protected (
         val nVertex = mix(min, max, not(pSelector))
 
         val nTest = dot(nVertex, planeNormal)
-        if (nTest < -planeCoef) Intersecting else Inside
+        if (nTest < -planeCoef) Intersecting else res
       }
     }
     
     var res = Inside
-    res = testPlane(leftNormal, leftCoefficient); if (res != Outside) {
-      res = testPlane(rightNormal, rightCoefficient); if (res != Outside) {
-        res = testPlane(bottomNormal, bottomCoefficient); if (res != Outside) {
-          res = testPlane(topNormal, topCoefficient); if (res != Outside) {
-            res = testPlane(nearNormal, nearCoefficient); if (res != Outside) {
-              res = testPlane(farNormal, farCoefficient)
+    res = testPlane(leftNormal, leftCoefficient, res); if (res != Outside) {
+      res = testPlane(rightNormal, rightCoefficient, res); if (res != Outside) {
+        res = testPlane(bottomNormal, bottomCoefficient, res); if (res != Outside) {
+          res = testPlane(topNormal, topCoefficient, res); if (res != Outside) {
+            res = testPlane(nearNormal, nearCoefficient, res); if (res != Outside) {
+              res = testPlane(farNormal, farCoefficient, res)
             }
           }
         }

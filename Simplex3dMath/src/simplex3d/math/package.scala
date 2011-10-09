@@ -29,10 +29,10 @@ import simplex3d.math.types._
 package object math {
 
   // Implicits
-  implicit def toBooleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
+  implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
   implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
 
-  implicit def toIntToRef(s: Int) :ReadIntRef = new IntRef(s)
+  implicit def intToRef(s: Int) :ReadIntRef = new IntRef(s)
   implicit def refToInt(r: ReadIntRef) = r.toConst
   
 

@@ -172,7 +172,7 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
           transformation.rotation.applyRotation(q)
           transformation.translation := curve(i, time.total)
         }
-        controller.isEnabled = true
+        controller.isEnabled = false
       }
     }
   }

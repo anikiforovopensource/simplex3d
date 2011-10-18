@@ -1,5 +1,5 @@
 /*
- * Simplex3d, Noise module
+ * Simplex3dAlgorithm - Noise Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dAlgorithm.

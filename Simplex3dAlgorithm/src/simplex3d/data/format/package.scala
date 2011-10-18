@@ -1,5 +1,5 @@
 /*
- * Simplex3d, DataFormat module
+ * Simplex3dAlgorithm - DataFormat Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dAlgorithm.

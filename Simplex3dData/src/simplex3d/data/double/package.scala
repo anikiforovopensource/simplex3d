@@ -1,5 +1,5 @@
 /*
- * Simplex3d, DoubleData module
+ * Simplex3dData - Double Module
  * Copyright (C) 2010-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.

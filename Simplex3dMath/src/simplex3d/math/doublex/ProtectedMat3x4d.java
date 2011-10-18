@@ -1,5 +1,5 @@
 /*
- * Simplex3d, DoubleMath module
+ * Simplex3dMath - Double Module
  * Copyright (C) 2009-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMath.

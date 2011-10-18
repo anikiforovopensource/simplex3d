@@ -1,5 +1,5 @@
 /*
- * Simplex3d, CoreData module
+ * Simplex3dData - Core Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.

@@ -1,5 +1,5 @@
 /*
- * Simplex3d, CoreMath module
+ * Simplex3dMath - Core Module
  * Copyright (C) 2010-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMath.

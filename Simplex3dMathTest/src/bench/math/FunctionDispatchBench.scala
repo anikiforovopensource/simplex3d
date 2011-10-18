@@ -1,5 +1,5 @@
 /*
- * Simplex3d, MathTest package
+ * Simplex3dMath - Test Package
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMathTest.

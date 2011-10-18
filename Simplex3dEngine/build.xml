@@ -3,7 +3,7 @@
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
 <project xmlns:scalaProject1="http://www.netbeans.org/ns/scala-project/1"
-name="Simplex3dEngine" default="default" basedir=".">
+name="Simplex3dEngine" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dEngine.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
@@ -77,20 +77,27 @@ name="Simplex3dEngine" default="default" basedir=".">
         <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${lwjgl.pkg} ${gl-util.pkg} ${scenegraph.pkg}"/>
+            excludes="${root.pkg}/impl/** ${scenegraph.pkg} ${renderer.pkg}"/>
         </jar>
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-lwjgl.jar">
-            <fileset dir="${build.classes.dir}" includes="${lwjgl.pkg} ${gl-util.pkg}"/>
-        </jar>
+        
         <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-scenegraph.jar">
             <fileset dir="${build.classes.dir}" includes="${scenegraph.pkg}"/>
         </jar>
         
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}-renderer.jar">
+            <fileset dir="${build.classes.dir}" includes="${renderer.pkg}"/>
+        </jar>
         
         <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/simplex3d-framework.jar">
+        jarfile="${release.dir}/jars/${release.name}-lwjgl.jar">
+            <fileset dir="${build.classes.dir}" includes="${lwjgl.pkg} ${gl-util.pkg}"/>
+        </jar>
+        
+        
+        <jar manifest="${basedir}/manifest.mf"
+        jarfile="${release.dir}/jars/${release.name}-all.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"/>
             <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**"/>
             <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
@@ -110,43 +117,45 @@ name="Simplex3dEngine" default="default" basedir=".">
 
     <property name="release.dir" value="release"/>
     <property name="release.name" value="simplex3d-engine"/>
-    <property name="release.framework" value="${release.dir}/Simplex3dFramework_bin.zip"/>
+    <property name="release.binWithDeps" value="${release.dir}/Simplex3dEngineAll_bin.zip"/>
     <property name="release.bin" value="${release.dir}/Simplex3dEngine_bin.zip"/>
     <property name="release.src" value="${release.dir}/Simplex3dEngine_src.zip"/>
-    <property name="root.pkg" value="simplex3d"/>
+    
+    <property name="root.pkg" value="simplex3d/engine"/>
     <property name="test.pkg" value="test"/>
     
+    <property name="scenegraph.pkg" value="${root.pkg}/scenegraph/**"/>
+    <property name="renderer.pkg" value="${root.pkg}/renderer/**"/>
     <property name="lwjgl.pkg" value="${root.pkg}/impl/lwjgl/**"/>
     <property name="gl-util.pkg" value="${root.pkg}/impl/gl/**"/>
-    <property name="scenegraph.pkg" value="${root.pkg}/scenegraph/**"/>
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>
     <property name="data.dir" value="../Simplex3dData/release/jars"/>
     <property name="algorithm.dir" value="../Simplex3dAlgorithm/release/jars"/>
 
 
-    <target name="release-all" depends="release-clean, release-src, release-bin, release-framework" />
+    <target name="release-all" depends="release-clean, release-src, release-bin, release-binWithDeps" />
 
     <target name="release-clean" depends="clean" >
         <delete dir="${release.dir}" />
     </target>
 
-    <target name="release-framework" depends="init, clean, compile, jar" >
-        <delete file="${release.framework}" />
+    <target name="release-binWithDeps" depends="init, clean, compile, jar" >
+        <delete file="${release.binWithDeps}" />
         
-        <concat destfile="${build.dir}/simplex3d-framework.license" append="true">
+        <concat destfile="${build.dir}/${release.name}-all.license" append="true">
             <filelist dir="../Simplex3dMath" files="simplex3d-math.license"/>
             <filelist dir="../Simplex3dData" files="simplex3d-data.license"/>
             <filelist dir="../Simplex3dAlgorithm" files="simplex3d-algorithm.license"/>
             <filelist dir="${basedir}" files="simplex3d-engine.license"/>
         </concat>
 
-        <zip destfile="${release.framework}">
-            <fileset dir="${build.dir}" includes="simplex3d-framework.license"/>
-            <fileset dir="${release.dir}/jars" includes="simplex3d-framework.jar"/>
+        <zip destfile="${release.binWithDeps}">
+            <fileset dir="${build.dir}" includes="${release.name}-all.license"/>
+            <fileset dir="${release.dir}/jars" includes="${release.name}-all.jar"/>
             <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
             <fileset dir="${basedir}" includes="
-                FrameworkReadme.txt
+                Readme.txt
                 COPYING.LESSER
                 COPYING" />
         </zip>
@@ -157,7 +166,7 @@ name="Simplex3dEngine" default="default" basedir=".">
 
         <zip destfile="${release.bin}">
             <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${release.dir}/jars" includes="*.jar" excludes="simplex3d-framework.jar"/>
+            <fileset dir="${release.dir}/jars" includes="*.jar" excludes="${release.name}-all.jar"/>
             <fileset dir="${basedir}" includes="
                 Readme.txt
                 COPYING.LESSER

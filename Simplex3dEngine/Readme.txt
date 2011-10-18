@@ -3,7 +3,7 @@ http://www.simplex3d.org/project/documentation/
 
 
 Runtime requirements:
-  - Scala 2.9.0.final or higher.
+  - Scala 2.9.1.final or higher.
   - Simplex3dMath.
   - Simplex3dData.
   - Simplex3dAlgorithm.
@@ -23,3 +23,6 @@ To build the project:
   2) cd into the project directory,
   3) type: ant
 
+
+simplex3d-engine-all.jar includes all the necessary simplex3d dependencies.
+LWJGL and native libs can be found in the lib directory.

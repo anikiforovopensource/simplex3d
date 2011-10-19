@@ -39,7 +39,6 @@ extends Readable[ReadTextureBinding[T]] with Cloneable[ReadTextureBinding[T]] wi
   def isAccessible = (isBound && bound.isAccessible)
   def isWritable = (isBound && bound.isWritable)
   def src: DirectSrc with ContiguousSrc = if (isBound) bound.src else null
-  def hasChanges = (isBound && bound.hasDataChanges)
 
   
   final override def equals(other: Any) :Boolean = {

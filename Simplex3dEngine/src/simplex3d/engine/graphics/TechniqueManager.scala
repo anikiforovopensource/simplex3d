@@ -22,8 +22,8 @@ package simplex3d.engine
 package graphics
 
 
-abstract class TechniqueManager {
-  val graphicsContext: GraphicsContext
+abstract class TechniqueManager[G <: GraphicsContext] {
+  val graphicsContext: G
   
   def resolveTechnique(geometry: Geometry, material: Material, worldEnvironment: Environment) :Technique
 }

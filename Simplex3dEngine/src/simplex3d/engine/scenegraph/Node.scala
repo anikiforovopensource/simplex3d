@@ -27,15 +27,17 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-final class Node(implicit transformationContext: TransformationContext, graphicsContext: GraphicsContext)
-extends Entity {
+final class Node[T <: TransformationContext, G <: GraphicsContext](
+  implicit transformationContext: T, graphicsContext: G
+)
+extends Entity[T, G] {
   
   override def environment = super.environment
   
   override def parent = super.parent
   override def children = super.children
   
-  override def appendChild(elem: SceneElement) { super.appendChild(elem) }
-  override def removeChild(elem: SceneElement) = super.removeChild(elem)
-  override def removeNestedChild(elem: SceneElement) = super.removeNestedChild(elem)
+  override def appendChild(elem: SceneElement[T]) { super.appendChild(elem) }
+  override def removeChild(elem: SceneElement[T]) = super.removeChild(elem)
+  override def removeNestedChild(elem: SceneElement[T]) = super.removeNestedChild(elem)
 }

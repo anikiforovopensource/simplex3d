@@ -46,9 +46,9 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
   }
   
   def propagateChanges(parent: ReadComponentTransformation3d, result: ComponentTransformation3d) {
-    val parentChanged = if (parent != null) parent.hasChanged else false
+    val parentChanged = if (parent != null) parent.hasDataChanges else false
     
-    if (parentChanged || this.hasChanged) {
+    if (parentChanged || this.hasDataChanges) {
       if (parent != null && parent.isSet) {
         if (this.isSet) {
           val res = result.mutable
@@ -67,7 +67,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
           result.unset()
       }
       
-      this.clearChanges()
+      this.clearDataChanges()
     }
   }
 }
@@ -93,8 +93,8 @@ with Transformation[ReadComponentTransformation3d] {
   
   private[this] var changes = true
   private[this] var set = false
-  def hasChanged = changes
-  protected def clearChanges() { changes = false }
+  def hasDataChanges = changes
+  protected def clearDataChanges() { changes = false }
   
   def isSet = set
   def unset() {

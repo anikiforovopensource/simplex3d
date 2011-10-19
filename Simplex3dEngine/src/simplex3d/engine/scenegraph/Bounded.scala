@@ -31,7 +31,7 @@ import simplex3d.engine.graphics._
 
 
 // TODO change into abstract class when Scala's VerifyError bug is fixed: (XXX bug ref)
-trait Bounded extends SceneElement {
+trait Bounded[T <: TransformationContext] extends SceneElement[T] {
   
   private[scenegraph] final var boundingVolumeVersion: Long = 0
 
@@ -82,7 +82,7 @@ trait Bounded extends SceneElement {
   
   private[scenegraph] def updateAutoBound() :Boolean
   
-  private[scenegraph] def cull(version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement]) {
+  private[scenegraph] def cull(version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]) {
     if (worldTransformationVersion != version) {
       updateWorldTransformation()
       worldTransformationVersion = version
@@ -112,7 +112,7 @@ object Bounded {
   
   /** All the children must have updated transformations and bounds.
    */
-  def rebuildAabb(entity: Entity)(resultMin: Vec3, resultMax: Vec3) {
+  def rebuildAabb(entity: Entity[_, _])(resultMin: Vec3, resultMax: Vec3) {
     val size = entity.children.size
     if (size == 0) {
       resultMin := Vec3.Zero
@@ -126,7 +126,7 @@ object Bounded {
     val pmin = Vec3(0)
     val pmax = Vec3(0)
     
-    def process(bounded: Bounded, worldTransformation: ReadTransformation[_]) {
+    def process(bounded: Bounded[_], worldTransformation: ReadTransformation[_]) {
       bounded.resolveBoundingVolume match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)
@@ -156,7 +156,7 @@ object Bounded {
     var i = 0; while (i < size) { val current = entity.children(i)
       
       current match {
-        case bounded: Bounded => process(bounded, bounded.uncheckedWorldTransformation)
+        case bounded: Bounded[_] => process(bounded, bounded.uncheckedWorldTransformation)
         case _ => // Ignore.
       }
     

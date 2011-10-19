@@ -27,28 +27,33 @@ import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 
 
-abstract class Spatial private[scenegraph] (
-  implicit transformationContext: TransformationContext
-) extends scene.Spatial {
+abstract class Spatial[T <: TransformationContext] private[scenegraph] (
+  implicit transformationContext: T
+) extends scene.Spatial { self =>
   
-  private[scenegraph] final var _parent: Entity = _
-  protected def parent: Entity = _parent
+  private[scenegraph] final var _parent: Entity[T, _] = _
+  protected def parent: Entity[T, _] = _parent
   
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
+  final val transformation: T#Transformation#Mutable = transformationContext.factory()
   private[scenegraph] final var worldTransformationVersion: Long = 0
-  private[scenegraph] final val uncheckedWorldTransformation: Transformation[_] = transformationContext.factory()
-  final val transformation: Transformation[_] = transformationContext.factory()
+  private[scenegraph] final val uncheckedWorldTransformation: T#Transformation#Mutable =
+    transformationContext.factory()
   
-  WorldMatrixAccess.setWorldMatrixResolver(this, () => uncheckedWorldTransformation.matrix)
+  {
+    new EngineAccess {
+      setWorldMatrixResolver(self, () => uncheckedWorldTransformation.matrix)
+    }
+  }
   
   
-  final def worldTransformation: ReadTransformation[_] = {
-    def update(entity: Entity) :Boolean = {
+  final def worldTransformation: T#Transformation = {
+    def update(entity: Entity[T, _]) :Boolean = {
       val parentUpdated = if (entity.parent != null) update(entity.parent) else false
       
-      if (parentUpdated || entity.transformation.hasChanged) {
+      if (parentUpdated || entity.transformation.hasDataChanges) {
         entity.updateWorldTransformation()
         true
       }
@@ -62,20 +67,17 @@ abstract class Spatial private[scenegraph] (
   }
   
   private[scenegraph] def updateWorldTransformation() {
-    def update[T <: ReadTransformation[T]]() {
-      val parentTransformation =
-        if (parent == null ) null.asInstanceOf[T]
-        else parent.uncheckedWorldTransformation.asInstanceOf[T]
-      
-      val wordTransformation = uncheckedWorldTransformation.asInstanceOf[T#Mutable]
-      val childTransformation = transformation.asInstanceOf[T]
-      childTransformation.propagateChanges(parentTransformation, wordTransformation)
-    }; update()
+    val parentTransformation = if (parent == null) null else parent.uncheckedWorldTransformation
+    
+    transformation.asInstanceOf[UncheckedTransformation].propagateChanges(
+      parentTransformation.asInstanceOf[UncheckedTransformation],
+      uncheckedWorldTransformation.asInstanceOf[UncheckedTransformation]
+    )
   }
   
   
   private[scenegraph] def manageControllerContext(
-    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial]
+    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
   ) {
     this.controllerContext = controllerContext
     if (controllers != null) managed += this

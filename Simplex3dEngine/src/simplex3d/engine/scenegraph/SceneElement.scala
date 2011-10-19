@@ -26,6 +26,6 @@ import simplex3d.math.double._
 import simplex3d.engine.transformation._
 
 
-abstract class SceneElement private[scenegraph] (
-  implicit transformationContext: TransformationContext
-) extends Spatial
+abstract class SceneElement[T <: TransformationContext] private[scenegraph] (
+  implicit transformationContext: T
+) extends Spatial[T]

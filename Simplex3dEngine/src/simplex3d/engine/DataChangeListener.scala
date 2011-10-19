@@ -20,14 +20,13 @@
 
 package simplex3d.engine
 
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
 
-
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
+trait DataChangeListener { self =>
+  final class DataSubtext {
+    def clearDataChanges() { self.clearDataChanges() }
+  }
+  private[engine] final val dataSubtext = new DataSubtext
   
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+  def hasDataChanges: Boolean
+  protected def clearDataChanges() :Unit
 }

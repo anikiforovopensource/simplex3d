@@ -33,30 +33,30 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
 
 
-class SceneGraph(
+class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
   name: Symbol,
-  val camera: Camera,
-  final val techniqueManager: TechniqueManager
-)(implicit transformationContext: TransformationContext)
-extends Scene(name) with SceneAccess {
+  val camera: Camera[T],
+  final val techniqueManager: TechniqueManager[G]
+)(implicit transformationContext: T)
+extends Scene(name) {
   
-  import ListenerAccess._
+  import SubtextAccess._
   
   
   private[this] var version: Long = 0
   private[this] val controllerContext = new ControllerContext
   
-  protected val _root: Node = new Node()(transformationContext, techniqueManager.graphicsContext)
+  protected val _root: Node[T, G] = new Node()(transformationContext, techniqueManager.graphicsContext)
   protected def root = _root
   root.controllerContext = controllerContext
   root.customBoundingVolume.defineAs(new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))
   root.appendChild(camera)
   
   
-  protected def attach(elem: SceneElement) {
+  protected def attach(elem: SceneElement[T]) {
     root.appendChild(elem)
   }
-  protected def detach(elem: SceneElement) :Boolean = {
+  protected def detach(elem: SceneElement[T]) :Boolean = {
     root.removeNestedChild(elem)
   }
   
@@ -76,10 +76,10 @@ extends Scene(name) with SceneAccess {
     camera.sync()
     
     val frustum = Frustum(camera.viewProjection)
-    val view = new View(Vec2i(200, 200), camera, frustum) //XXX proper dimensions
+    val view = new View(Vec2i(-1), camera, frustum) //XXX proper dimensions
     
     // Build the render array while performing frustum culling.
-    root.cull(version, time, view, result.asInstanceOf[InplaceSortBuffer[SceneElement]]) // XXX rework casting
+    root.cull(version, time, view, result.asInstanceOf[InplaceSortBuffer[SceneElement[T]]]) // XXX rework casting
     
     // Resolve techniques.
     val size = result.size

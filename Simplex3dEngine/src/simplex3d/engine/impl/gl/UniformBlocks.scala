@@ -24,7 +24,7 @@ package impl.gl
 import scala.annotation._
 
 
-object UniformBlocks {
+private[impl] object UniformBlocks {
   final val Predefined = 0
   final val Material = 1
   final val Environment = 2

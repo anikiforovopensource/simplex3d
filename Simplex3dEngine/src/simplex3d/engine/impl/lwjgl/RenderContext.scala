@@ -49,11 +49,12 @@ private[lwjgl] object RenderContext {
 
 
 private[lwjgl] final class RenderContext(val capabilities: GraphicsCapabilities, val settings: AdvancedSettings)
-extends engine.RenderContext with ImplAccess {
+extends engine.RenderContext with GlAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._; import org.lwjgl.util.glu.MipMap._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
-
+  import SubtextAccess._
+  
 
   private val defaultTexture2d = Texture2d(Vec2i(4), DataBuffer[Vec3, UByte](4*4));
   {
@@ -565,9 +566,9 @@ extends engine.RenderContext with ImplAccess {
     var i = 0; while (i < uniformCount) {
       val name = glGetActiveUniform(id, i, uniformStringLength, sizeType)
       val size = sizeType.get(0)
-      val dataType = SeBindingTypes.fromGlType(sizeType.get(1))
+      val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
-      if (SeBindingTypes.isTexture(dataType)) {
+      if (EngineBindingTypes.isTexture(dataType)) {
             
         val blockType = resolveUniformBlock(name)
         if (size > 1) {
@@ -611,7 +612,7 @@ extends engine.RenderContext with ImplAccess {
     i = 0; while (i < attributeCount) {
       val name = glGetActiveAttrib(id, i, uniformStringLength, sizeType)
       val size = sizeType.get(0) // Not used by GL.
-      val dataType = SeBindingTypes.fromGlType(sizeType.get(1))
+      val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
       val location = glGetAttribLocation(id, name)
       
@@ -1062,39 +1063,39 @@ extends engine.RenderContext with ImplAccess {
       value match {
         case b: NestedBinding =>
           val correctType = programBinding.dataType match {
-            case SeBindingTypes.Float => b.isInstanceOf[DoubleRef]
-            case SeBindingTypes.Vec2 => b.isInstanceOf[Vec2]
-            case SeBindingTypes.Vec3 => b.isInstanceOf[Vec3]
-            case SeBindingTypes.Vec4 => b.isInstanceOf[Vec4]
-            case SeBindingTypes.Int => b.isInstanceOf[IntRef]
-            case SeBindingTypes.Vec2i => b.isInstanceOf[Vec2i]
-            case SeBindingTypes.Vec3i => b.isInstanceOf[Vec3i]
-            case SeBindingTypes.Vec4i => b.isInstanceOf[Vec4i]
-            case SeBindingTypes.Boolean => b.isInstanceOf[Boolean]
-            case SeBindingTypes.Vec2b => b.isInstanceOf[Vec2b]
-            case SeBindingTypes.Vec3b => b.isInstanceOf[Vec3b]
-            case SeBindingTypes.Vec4b => b.isInstanceOf[Vec4b]
-            case SeBindingTypes.Mat2x2 => b.isInstanceOf[Mat2x2]
-            case SeBindingTypes.Mat2x3 => b.isInstanceOf[Mat2x3]
-            case SeBindingTypes.Mat2x4 => b.isInstanceOf[Mat2x4]
-            case SeBindingTypes.Mat3x2 => b.isInstanceOf[Mat3x2]
-            case SeBindingTypes.Mat3x3 => b.isInstanceOf[Mat3x3]
-            case SeBindingTypes.Mat3x4 => b.isInstanceOf[Mat3x4]
-            case SeBindingTypes.Mat4x2 => b.isInstanceOf[Mat4x2]
-            case SeBindingTypes.Mat4x3 => b.isInstanceOf[Mat4x3]
-            case SeBindingTypes.Mat4x4 => b.isInstanceOf[Mat4x4]
-            case SeBindingTypes.Texture1d => false// XXX
-            case SeBindingTypes.Texture2d => b.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
-            case SeBindingTypes.Texture3d => false
-            case SeBindingTypes.CubeTexture => false
-            case SeBindingTypes.ShadowTexture1d => false
-            case SeBindingTypes.ShadowTexture2d => false
+            case EngineBindingTypes.Float => b.isInstanceOf[DoubleRef]
+            case EngineBindingTypes.Vec2 => b.isInstanceOf[Vec2]
+            case EngineBindingTypes.Vec3 => b.isInstanceOf[Vec3]
+            case EngineBindingTypes.Vec4 => b.isInstanceOf[Vec4]
+            case EngineBindingTypes.Int => b.isInstanceOf[IntRef]
+            case EngineBindingTypes.Vec2i => b.isInstanceOf[Vec2i]
+            case EngineBindingTypes.Vec3i => b.isInstanceOf[Vec3i]
+            case EngineBindingTypes.Vec4i => b.isInstanceOf[Vec4i]
+            case EngineBindingTypes.Boolean => b.isInstanceOf[Boolean]
+            case EngineBindingTypes.Vec2b => b.isInstanceOf[Vec2b]
+            case EngineBindingTypes.Vec3b => b.isInstanceOf[Vec3b]
+            case EngineBindingTypes.Vec4b => b.isInstanceOf[Vec4b]
+            case EngineBindingTypes.Mat2x2 => b.isInstanceOf[Mat2x2]
+            case EngineBindingTypes.Mat2x3 => b.isInstanceOf[Mat2x3]
+            case EngineBindingTypes.Mat2x4 => b.isInstanceOf[Mat2x4]
+            case EngineBindingTypes.Mat3x2 => b.isInstanceOf[Mat3x2]
+            case EngineBindingTypes.Mat3x3 => b.isInstanceOf[Mat3x3]
+            case EngineBindingTypes.Mat3x4 => b.isInstanceOf[Mat3x4]
+            case EngineBindingTypes.Mat4x2 => b.isInstanceOf[Mat4x2]
+            case EngineBindingTypes.Mat4x3 => b.isInstanceOf[Mat4x3]
+            case EngineBindingTypes.Mat4x4 => b.isInstanceOf[Mat4x4]
+            case EngineBindingTypes.Texture1d => false// XXX
+            case EngineBindingTypes.Texture2d => b.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
+            case EngineBindingTypes.Texture3d => false
+            case EngineBindingTypes.CubeTexture => false
+            case EngineBindingTypes.ShadowTexture1d => false
+            case EngineBindingTypes.ShadowTexture2d => false
           }
           
           if (!correctType) {
             log(
               Level.SEVERE, "Invalid glsl shader: Uniform property '" + programBinding.name +
-              "' is defined in the shader as '" + SeBindingTypes.toString(programBinding.dataType) +
+              "' is defined in the shader as '" + EngineBindingTypes.toString(programBinding.dataType) +
               "' but resolves to an instance of '" + b.getClass.getSimpleName + "'."
             )
           }

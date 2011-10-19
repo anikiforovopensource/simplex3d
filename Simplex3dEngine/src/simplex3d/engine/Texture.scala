@@ -29,8 +29,7 @@ import simplex3d.data._
 
 abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
   @transient protected val accessible: ReadData[A] with DirectSrc with ContiguousSrc,
-  protected val linked: DirectSrc with ContiguousSrc,
-  val accessorManifest: ClassManifest[A]
+  protected val linked: DirectSrc with ContiguousSrc
 )(
   private var _magFilter: ImageFilter.Value, private var _minFilter: ImageFilter.Value,
   private var _mipMapFilter: MipMapFilter.Value, private var _anisotropyLevel: Double
@@ -54,10 +53,6 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
     if (linked != null) count += 1
     
     require(count == 1, "Data source must not be null.")
-    
-    if (accessible != null) {
-      require(accessible.accessorManifest == accessorManifest, "Data accessor type doest not match manifest.")
-    }
   }
 
   
@@ -107,13 +102,12 @@ object ImageFilter extends Enumeration {
 class Texture2d[A <: Accessor with AnyVec[Double]] private (
   val dimensions: ConstVec2i,
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
-  linked: DirectSrc with ContiguousSrc,
-  accessorManifest: ClassManifest[A]
+  linked: DirectSrc with ContiguousSrc
 )(
   magFilter: ImageFilter.Value, minFilter: ImageFilter.Value,
   mipMapFilter: MipMapFilter.Value, anisotropyLevel: Double
 ) extends Texture[A](
-  accessible, linked, accessorManifest
+  accessible, linked
 )(magFilter, minFilter, mipMapFilter, anisotropyLevel) {
   
   if (accessible != null) {
@@ -133,9 +127,9 @@ object Texture2d {
     dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
-  )(implicit accessorManifest: ClassManifest[A])
+  )
   :Texture2d[A] = {
-    new Texture2d(dimensions, data, null, accessorManifest)(
+    new Texture2d(dimensions, data, null)(
       magFilter, minFilter, mipMapFilter, anisotropyLevel
     )
   }
@@ -145,6 +139,9 @@ object Texture2d {
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
   )(implicit accessorManifest: ClassManifest[A]) :Texture2d[A] = {
+    
+    require(src.accessorManifest == accessorManifest, "Data accessor type doest not match manifest.")
+    
     if (src.isInstanceOf[Data[_]]) {
       apply(
         dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc],
@@ -152,7 +149,7 @@ object Texture2d {
       )
     }
     else {
-      new Texture2d(dimensions, null, src, accessorManifest)(
+      new Texture2d(dimensions, null, src)(
         magFilter, minFilter, mipMapFilter, anisotropyLevel
       )
     }

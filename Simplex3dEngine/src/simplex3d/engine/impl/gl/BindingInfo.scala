@@ -29,7 +29,7 @@ import simplex3d.engine.graphics._
 private[impl] final class AttributeBinding(val name: String, val dataType: Int, val location: Int) {
   override def toString() :String = {
     "GeometryAttributes(\"" + name +
-    "\", type = " + SeBindingTypes.toString(dataType) + ", location = " + location + ")"
+    "\", type = " + EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
 }
 
@@ -44,7 +44,7 @@ private[impl] class UniformBinding(
   
   override def toString() :String = {
     UniformBlocks.toString(blockType) + "Uniform('" + name + "', index = " + index +
-    ", type = " + SeBindingTypes.toString(dataType) + ", location" + location + ")"
+    ", type = " + EngineBindingTypes.toString(dataType) + ", location" + location + ")"
   }
 }
 
@@ -53,6 +53,6 @@ private[impl] final class UniformTexBinding(
 ) extends UniformBinding(blockType, name, index, dataType, location) {
   override def toString() :String = {
     UniformBlocks.toString(blockType) + "Texture('" + name + "', index = " + index +
-    ", type = " + SeBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
+    ", type = " + EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
   }
 }

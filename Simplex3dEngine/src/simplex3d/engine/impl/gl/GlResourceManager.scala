@@ -32,7 +32,7 @@ private[impl] final class GlResourceManager(
   val textureManager: IdManager,
   val shaderDeallocator: Int => Unit,
   val programDeallocator: Int => Unit
-) extends ImplAccess {
+) extends GlAccess {
   
   private val managed = new HashSet[ManagedRef]
   private val deallocationQueue = new ReferenceQueue[ObjectInfo]

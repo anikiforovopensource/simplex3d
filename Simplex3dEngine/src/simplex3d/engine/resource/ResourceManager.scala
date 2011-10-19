@@ -31,7 +31,7 @@ import simplex3d.data.double._
 
 // XXX add loaded caching and linked sources
 abstract class ResourceManager {
-  // XXX work out default settings, and mass changes (after change tracking is implemented)
+  // XXX work out default settings, add mass changes
   private val magFilter = ImageFilter.Linear
   private val minFilter = ImageFilter.Linear
   private val mipMapFilter = MipMapFilter.Linear

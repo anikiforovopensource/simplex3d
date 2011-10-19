@@ -27,5 +27,5 @@ import simplex3d.math.double._
 
 abstract class Material extends StructuralChangeListener {
   def uniformNames: ReadArray[String]
-  def uniforms: ReadArray[ValueProperty[_ <: TechniqueBinding]]
+  def uniforms: ReadArray[ValueProperty[UncheckedBinding]]
 }

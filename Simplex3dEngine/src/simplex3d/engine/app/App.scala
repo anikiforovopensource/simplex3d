@@ -34,7 +34,7 @@ trait App {
   protected val frameTimer: FrameTimer
   protected val input: Input
   protected val renderManager: RenderManager
-  protected val techniqueManager: TechniqueManager
+  protected val techniqueManager: TechniqueManager[_]
   protected val resources: ResourceManager
   
   protected def init() :Unit

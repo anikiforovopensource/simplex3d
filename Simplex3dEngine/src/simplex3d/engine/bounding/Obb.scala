@@ -38,7 +38,7 @@ extends BoundingVolume {
   private val mutableSubtext = new MutableSubtext
   
   private var changes = true
-  def hasChanged = changes
+  def hasDataChanges = changes
   
   def mutable = {
     changes = true
@@ -60,7 +60,7 @@ extends BoundingVolume {
     mutable.transformation := r.transformation
   }
   
-  protected def clearChanges() { changes = false }
+  protected def clearDataChanges() { changes = false }
   
   override def toString() :String = "Obb(" + min + ", " + max + ", " + transformation + ")"
 }

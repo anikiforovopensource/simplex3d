@@ -43,14 +43,13 @@ private[lwjgl] object RenderManager {
 }
 
 
-private[lwjgl] final class RenderManager(val techniqueManager: TechniqueManager)
-extends engine.RenderManager with ImplAccess
+private[lwjgl] final class RenderManager(val techniqueManager: TechniqueManager[_])
+extends engine.RenderManager with GlUnsafeAccess
 {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
-  
-  import PropertyAccess._
+  import SubtextAccess._
   
   
   private val elementRange = new ElementRange()
@@ -88,7 +87,7 @@ extends engine.RenderManager with ImplAccess
     }
     
     
-    val transformation = WorldMatrixAccess.getWorldMatrix(mesh)
+    val transformation = getWorldMatrix(mesh)
     val geometry = mesh.geometry
     val material = mesh.material
     
@@ -113,7 +112,7 @@ extends engine.RenderManager with ImplAccess
     
 //    val directionalLightPos = Vec3(-0.25, 0.5, 1)
 //    val ecLightDir = -normalize(camera.view.transformVector(directionalLightPos))
-//    program("ecLightDir") = ecLightDir //XXX, figure out how to perform uniform transformations, given various matrices
+//    program("ecLightDir") = ecLightDir
     
     if (geometry.indices.isDefined) {
       context.init(geometry.indices.defined)
@@ -126,14 +125,18 @@ extends engine.RenderManager with ImplAccess
   }
   
   // XXX must be updated with new attributes
-  private val comparator = new java.util.Comparator[AbstractMesh] with ImplAccess {
+  private val comparator = new java.util.Comparator[AbstractMesh] with EngineAccess {
     
     def compare(a: AbstractMesh, b: AbstractMesh) :Int = {
       // XXX sort by textures: if (at0id < bt0id) -1 else if (at0id > bt0id)  1 else 0
       // XXX also sort by parent's environment
       
-      val apid = a.technique.defined.managedFields.id
-      val bpid = b.technique.defined.managedFields.id
+      val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[GlslProgramInfo]
+      val apid = if (ainfo != null) ainfo.managedFields.id else 0
+      
+      val binfo = getEngineInfo(b.technique.defined).asInstanceOf[GlslProgramInfo]
+      val bpid = if (binfo != null) binfo.managedFields.id else 0
+      
       if (apid < bpid) -1 else if (apid > bpid)  1 else 0
     }
   }

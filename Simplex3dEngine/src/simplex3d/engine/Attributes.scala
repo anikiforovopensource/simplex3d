@@ -27,12 +27,9 @@ import simplex3d.math.types._
 import simplex3d.data._
 
 
-// XXX track and free discarded gl buffers. Track and handle data changes.
 final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
   @transient private val accessible: ReadDataView[F, _ <: R],
-  private val linked: DirectSrc,
-  val formatManifest: ClassManifest[F],
-  val rawManifest: ClassManifest[_ <: R]
+  private val linked: DirectSrc
 ) {
 
   private[engine] var shared: AttributesSharedState = null
@@ -43,9 +40,6 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
     if (linked != null) count += 1
     
     require(count == 1, "Data source must not be null.")
-    
-    //require(src.formatManifest == formatManifest, "Data source format does not match manifest.") // XXX rething this
-    //require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.") // XXX rething this
   }
   
   def sharedState = shared
@@ -104,10 +98,9 @@ object Attributes {
     
   def apply[F <: Format with MathType, R <: Raw]
     (data: ReadDataBuffer[F, _ <: R], caching: Caching.Value = Caching.Dynamic)
-    (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
   :Attributes[F, R] = {
     val region = new Region(0, data.size)
-    val attributes = new Attributes[F, R](data, null, formatManifest, rawManifest)
+    val attributes = new Attributes[F, R](data, null)
     attributes.shared = new AttributesSharedState(
       region, new ReadSeq(ArrayBuffer(attributes)), caching, new InterleavedData(data)
     )
@@ -118,12 +111,16 @@ object Attributes {
     (src: DirectSrc with ContiguousSrc, caching: Caching.Value = Caching.Static)
     (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
   :Attributes[F, R] = {
+    
+    require(src.formatManifest == formatManifest, "Data source format does not match manifest.")
+    require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
+      
     if (src.isInstanceOf[ReadDataBuffer[_, _]]) {
-      apply(src.asInstanceOf[ReadDataBuffer[F, R]], caching)(formatManifest, rawManifest)
+      apply(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
     }
     else {
       val region = new Region(0, src.size)
-      val attributes = new Attributes[F, R](null, src, formatManifest, rawManifest)
+      val attributes = new Attributes[F, R](null, src)
       attributes.shared = new AttributesSharedState(
         region, new ReadSeq(ArrayBuffer(attributes)), caching, null
       )
@@ -141,9 +138,8 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
   
   final class InterleavedFactory {
     def apply[F <: Format with MathType, R <: Raw](view: ReadDataView[F, _ <: R])
-      (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
     :Attributes[F, R] = {
-      val attributes = new Attributes[F, R](view, null, formatManifest, rawManifest)
+      val attributes = new Attributes[F, R](view, null)
       related += attributes
       attributes
     }
@@ -151,11 +147,15 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
     def unchecked[F <: Format with MathType, R <: Raw](src: DirectSrc)
       (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
     :Attributes[F, R] = {
+      
+      require(src.formatManifest == formatManifest, "Data source format does not match manifest.")
+      require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
+    
       if (src.isInstanceOf[ReadDataView[_, _]]) {
-        apply[F, R](src.asInstanceOf[ReadDataView[F, R]])(formatManifest, rawManifest)
+        apply[F, R](src.asInstanceOf[ReadDataView[F, R]])
       }
       else {
-        val attributes = new Attributes[F, R](null, src, formatManifest, rawManifest)
+        val attributes = new Attributes[F, R](null, src)
         related += attributes
         attributes
       }

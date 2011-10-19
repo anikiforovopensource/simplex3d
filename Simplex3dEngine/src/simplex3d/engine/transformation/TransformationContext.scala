@@ -22,4 +22,7 @@ package simplex3d.engine
 package transformation
 
 
-final class TransformationContext(val factory: () => Transformation[_])
+abstract class TransformationContext {
+  type Transformation <: ReadTransformation[Transformation]
+  val factory: () => Transformation#Mutable
+}

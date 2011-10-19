@@ -142,19 +142,18 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
       boxVertices = vVertices.read.copyAsDataArray()
       
       
-      val mesh = new Mesh
-      mesh.customBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
+      val node = new InstancingNode(false)
+      node.instanceBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
       
-      mesh.geometry.faceCulling.undefine()
+      node.geometry.faceCulling.undefine()
       
-      mesh.geometry.indices.defineAs(vIndices)
-      mesh.geometry.vertices.defineAs(vVertices)
-      mesh.geometry.normals.defineAs(vNormals)
-      mesh.geometry.texCoords.defineAs(vTexCoords)
+      node.geometry.indices.defineAs(vIndices)
+      node.geometry.vertices.defineAs(vVertices)
+      node.geometry.normals.defineAs(vNormals)
+      node.geometry.texCoords.defineAs(vTexCoords)
       
-      mesh.material.texture.mutable := dynamicTexture
+      node.material.texture.mutable := dynamicTexture
       
-      val node = new InstancingNode(mesh.geometry, mesh.material, mesh.customBoundingVolume.defined, false)
       world.attach(node)
         
       for (i <- 0 until objCount) {

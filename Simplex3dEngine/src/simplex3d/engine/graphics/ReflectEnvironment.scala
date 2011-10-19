@@ -27,7 +27,7 @@ import simplex3d.math.types._
 trait ReflectEnvironment extends Environment {
 
   private[this] var _propertyNames: ReadArray[String] = null
-  private[this] var _properties: ReadArray[EnvironmentalProperty[_ <: EnvironmentalEffect[_]]] = null
+  private[this] var _properties: ReadArray[EnvironmentalProperty[UncheckedEffect]] = null
 
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
@@ -36,11 +36,11 @@ trait ReflectEnvironment extends Environment {
     
     val (pn, pv) = FieldReflection.getValueMap(this, classOf[EnvironmentalProperty[_]])
     _propertyNames = pn
-    _properties = pv.asInstanceOf[ReadArray[EnvironmentalProperty[_ <: EnvironmentalEffect[_]]]]
+    _properties = pv.asInstanceOf[ReadArray[EnvironmentalProperty[UncheckedEffect]]]
     
     initialized = true
   }
   
   override def propertyNames: ReadArray[String] = _propertyNames
-  override def properties: ReadArray[EnvironmentalProperty[_ <: EnvironmentalEffect[_]]] = _properties
+  override def properties: ReadArray[EnvironmentalProperty[UncheckedEffect]] = _properties
 }

@@ -25,13 +25,13 @@ import scala.collection.mutable.ArrayBuffer
 
 
 final class ControllerContext {
-  private[this] val controlled = ArrayBuffer[Spatial]()
+  private[this] val controlled = ArrayBuffer[Spatial[_]]()
   
-  def register(elements: Seq[Spatial]) {
+  def register(elements: Seq[Spatial[_]]) {
     controlled ++= elements
   }
   
-  def unregister(elements: Seq[Spatial]) {
+  def unregister(elements: Seq[Spatial[_]]) {
     controlled --= elements
   }
   
@@ -39,7 +39,7 @@ final class ControllerContext {
     (0 until controlled.size).par.foreach { i =>
       val c = controlled(i)
       c match {
-        case b: Bounded => b.shouldRunAnimators = true
+        case b: Bounded[_] => b.shouldRunAnimators = true
         case _ => // do nothing.
       }
       c.runUpdaters(c.controllers, time)

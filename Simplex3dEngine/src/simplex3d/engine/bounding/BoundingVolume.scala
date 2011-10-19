@@ -27,7 +27,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-trait BoundingVolume extends ChangeListener
+trait BoundingVolume extends DataChangeListener
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.

@@ -26,7 +26,9 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 
 
-trait ReadTransformation[R <: ReadTransformation[R]] extends Readable[R] with ChangeListener { self: R =>
+trait ReadTransformation[R <: ReadTransformation[R]] extends Readable[R] with DataChangeListener { self: R =>
+  type Mutable <: Transformation[R] with R
+  
   def propagateChanges(parent: R, result: R#Mutable) :Unit
   def matrix :ReadMat3x4
   

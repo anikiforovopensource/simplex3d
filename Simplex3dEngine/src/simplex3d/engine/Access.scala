@@ -28,24 +28,21 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 
 
-object ListenerAccess {
+object SubtextAccess {
   implicit def listenerSubtext(listener: StructuralChangeListener)
   :StructuralChangeListener#StructuralSubtext = listener.structuralSubtext
   
-  implicit def changeListenerSubtext(listener: ChangeListener)
-  :ChangeListener#ChangeSubtext = listener.changeSubtext
-}
+  implicit def changeListenerSubtext(listener: DataChangeListener)
+  :DataChangeListener#DataSubtext = listener.dataSubtext
 
-
-object PropertyAccess {
   implicit def accessSharedProperty(property: SharedProperty[_])
-  = property.asInstanceOf[AccessibleSharedProperty[_]]
+  = property.asInstanceOf[AccessibleSharedProperty]
   
   implicit def accessSharedAttributes(property: SharedAttributes[_, _])
   = property.asInstanceOf[AccessibleSharedAttributes[_, _]]
   
   implicit def accessProperty(property: Property[_])
-  = property.asInstanceOf[AccessibleProperty[_]]
+  = property.asInstanceOf[AccessibleProperty]
   
   implicit def accessValueProperty(property: ValueProperty[_])
   = property.asInstanceOf[AccessibleValueProperty[_]]
@@ -54,46 +51,25 @@ object PropertyAccess {
   = property.asInstanceOf[AccessibleEnvironmentalProperty[_]]
   
   implicit def accessDefinedProperty(property: DefinedProperty[_])
-  = property.asInstanceOf[AccessibleDefinedProperty[_]]
+  = property.asInstanceOf[AccessibleDefinedProperty]
   
   implicit def accessShaderProperty(property: ShaderProperty[_])
   = property.asInstanceOf[AccessibleShaderProperty[_]]
-}
-
-
-object WorldMatrixAccess { // XXX rework
-  def getWorldMatrix(spatial: Spatial) :ReadMat3x4 = spatial.resolveWorldMatrix()
-  def setWorldMatrixResolver(spatial: Spatial, resolver: () => ReadMat3x4) { spatial.resolveWorldMatrix = resolver }
-}
-
-
-trait SceneAccess {
+  
+  implicit def textureSubtext(texture: Texture[_]) =
+    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
+  
+  implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
+  :AttributesSharedState#Subtext = sharedState.subtext
+  
   implicit def meshSubtext(mesh: AbstractMesh)
   :AbstractMesh#MeshSubtext = mesh.meshSubtext
 }
 
 
-// XXX rework access
-object EngineAccess extends SceneAccess {
-  
-  implicit def textureSubtext(texture: Texture[_]) =
-    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
-  
-  implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
-  :AttributesSharedState#Subtext = sharedState.subtext
-  
-  def getEngineInfo(info: EngineInfo) :Object = info.engineInfo
-  def setEngineInfo(info: EngineInfo, data: Object) { info.engineInfo = data }
-}
-
-
-trait EngineAccess extends SceneAccess {
-  
-  implicit def textureSubtext(texture: Texture[_]) =
-    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
-  
-  implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
-  :AttributesSharedState#Subtext = sharedState.subtext
+trait EngineAccess {
+  def getWorldMatrix(spatial: Spatial) :ReadMat3x4 = spatial.resolveWorldMatrix()
+  def setWorldMatrixResolver(spatial: Spatial, resolver: () => ReadMat3x4) { spatial.resolveWorldMatrix = resolver }
   
   def getEngineInfo(info: EngineInfo) :Object = info.engineInfo
   def setEngineInfo(info: EngineInfo, data: Object) { info.engineInfo = data }

@@ -19,15 +19,23 @@
  */
 
 package simplex3d.engine
+package graphics
 
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+import simplex3d.math.types._
 
 
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
-  
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+sealed abstract class ValueProperty[R <: Readable[R] with Binding] private[engine] (
+  factory: R, listener: StructuralChangeListener
+) extends Property[R](factory, listener) { self: AccessibleProperty =>
+}
+
+final class AccessibleValueProperty[R <: Readable[R] with Binding](
+  factory: R, listener: StructuralChangeListener
+) extends ValueProperty[R](factory, listener) with AccessibleProperty {
+  def clearDataChanges() { changed = false }
+}
+
+object ValueProperty {
+  def apply[R <: Readable[R] with Binding](factory: R, listener: StructuralChangeListener)
+  :ValueProperty[R] = new AccessibleValueProperty(factory, listener)
 }

@@ -20,14 +20,18 @@
 
 package simplex3d.engine
 
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+import simplex3d.math.types._
+import simplex3d.data._
 
 
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
+package object graphics {
+  type TechniqueBinding = Readable[T] with NestedBinding forSome { type T <: Readable[T] }
   
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+  val EffectRecursor: { type Recursive <: EnvironmentalEffect[Recursive] } = null
+  type UncheckedEffect = EffectRecursor.type#Recursive
+  
+  val BindingRecursor: { type Recursive <: Readable[Recursive] with NestedBinding } = null
+  type UncheckedBinding = BindingRecursor.type#Recursive
+  
+  type UncheckedAttributes = SharedAttributes[Format with MathType, Raw]
 }

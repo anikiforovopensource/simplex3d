@@ -30,16 +30,17 @@ import simplex3d.engine.graphics._
 
 
 
-final class Mesh(
-  meshParent: Entity,
-  final val geometry: Geometry,
-  final val material: Material
-)(implicit transformationContext: TransformationContext)
-extends Bounded with AbstractMesh {
+final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
+  meshParent: Entity[T, G],
+  final val geometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
+  final val material: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
+)(implicit transformationContext: T, final val graphicsContext: G)
+extends Bounded[T] with AbstractMesh {
   
-  import PropertyAccess._; import ListenerAccess._
+  import SubtextAccess._
   
-  def this()(implicit transformationContext: TransformationContext, graphicsContext: GraphicsContext) {
+  
+  def this()(implicit transformationContext: T, graphicsContext: G) {
     this(null, graphicsContext.mkGeometry(), graphicsContext.mkMaterial())
   }
   
@@ -63,7 +64,7 @@ extends Bounded with AbstractMesh {
         autoBoundingVolume = new Oabb
       }
 
-      if (autoBoundingVolume.hasChanged || geometry.hasShapeChanges(elementRange)) {
+      if (autoBoundingVolume.hasDataChanges || geometry.hasShapeChanges(elementRange)) {
         autoBoundingVolume match {
           case bound: Oabb =>
             Bounded.rebuildAabb(elementRange.defined, geometry)(bound.mutable.min, bound.mutable.max)
@@ -72,10 +73,10 @@ extends Bounded with AbstractMesh {
       }
     }
     
-    uncheckedWorldTransformation.clearChanges()
+    uncheckedWorldTransformation.clearDataChanges()
     
-    if (resolveBoundingVolume.hasChanged || uncheckedWorldTransformation.hasChanged) {
-      resolveBoundingVolume.clearChanges()
+    if (resolveBoundingVolume.hasDataChanges || uncheckedWorldTransformation.hasDataChanges) {
+      resolveBoundingVolume.clearDataChanges()
       updated = true
     }
     

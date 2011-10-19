@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Core Module
+ * Simplex3dEngine - Renderer Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,15 +19,18 @@
  */
 
 package simplex3d.engine
-
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+package renderer
 
 
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
+final class GraphicsContext extends graphics.GraphicsContext {
   
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+  type Geometry = renderer.Geometry
+  type Material = renderer.Material
+  type Environment = renderer.Environment
+  
+  val mkGeometry = () => new Geometry
+  val mkMaterial = () => new Material
+  val mkEnvironment = () => new Environment
+  
+  initNamespace()
 }

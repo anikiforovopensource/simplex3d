@@ -33,34 +33,31 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 
 
-final class InstancingNode(
-  private[this] val geometry: Geometry,
-  private[this] val material: Material,
-  private[this] val instanceBounding: BoundingVolume,
+final class InstancingNode[T <: TransformationContext, G <: GraphicsContext](
   val cullingEnabled: Boolean = true
-)(implicit transformationContext: TransformationContext, graphicsContext: GraphicsContext)
-extends Entity {
+)(implicit transformationContext: T, graphicsContext: G)
+extends Entity[T, G] {
   
-  import PropertyAccess._; import ListenerAccess._; import EngineAccess._
+  import SubtextAccess._
   
-  
-  private final class BoundedInstance(implicit transformationContext: TransformationContext) extends Bounded {
+  private final class BoundedInstance(implicit transformationContext: T) extends Bounded[T] {
     private[scenegraph] def updateAutoBound() :Boolean = boundingUpdated
   }
   
-  private final class Instance(implicit transformationContext: TransformationContext) extends SceneElement
+  private final class Instance(implicit transformationContext: T) extends SceneElement[T]
   
   
-  private val localRenderArray = new ArrayBuffer[SceneElement](16)
+  private val srcMesh = new Mesh
+  final val instanceBoundingVolume = srcMesh.customBoundingVolume
+  final def geometry: G#Geometry = srcMesh.geometry
+  final def material: G#Material = srcMesh.material
+  override def environment = super.environment
   
-  private val srcMesh = new Mesh(null, geometry, material)
-  srcMesh.customBoundingVolume.defineAs(instanceBounding)
   private val displayMesh = new Mesh(this, graphicsContext.mkGeometry(), material)
+  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16)
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
-  
-  override def environment = super.environment
   
   private var rebuild = true
   private var srcVerticesSize = 0
@@ -74,7 +71,6 @@ extends Entity {
     srcVerticesSize = geometry.vertices.read.size
     val destVertexSize = childrenCount*srcVerticesSize
     
-    type A = SharedAttributes[Format with MathType, Raw]
     def copyAttributes(dest: DataView[Format with MathType, Raw], src: inDataView[Format with MathType, Raw]) {
       
       var i = 0; while (i < childrenCount) {
@@ -97,10 +93,10 @@ extends Entity {
     
     var i = 0; while (i < geometry.attributes.length) {
       
-      val srcAttribs = geometry.attributes(i).asInstanceOf[A].read
+      val srcAttribs = geometry.attributes(i).read
       if (srcAttribs != null) {
         val destAttribs = srcAttribs.mkDataBuffer(destVertexSize)
-        displayMesh.geometry.attributes(i).asInstanceOf[A].defineAs(Attributes(destAttribs))
+        displayMesh.geometry.attributes(i).defineAs(Attributes(destAttribs))
         if (i != indexVertices && i != indexNormals) {
           copyAttributes(destAttribs, srcAttribs)
         }
@@ -145,16 +141,16 @@ extends Entity {
     if (srcMesh.geometry.vertices.isDefined) srcMesh.geometry.vertices.defined.sharedState.clearDataChanges()
   }
   
-  def appendInstance() :Spatial = {
+  def appendInstance() :Spatial[T] = {
     val instance = if (cullingEnabled) new BoundedInstance else new Instance
     appendChild(instance)
     rebuild = true
     instance
   }
   
-  def removeInstance(instance: Spatial) :Boolean = {
+  def removeInstance(instance: Spatial[T]) :Boolean = {
     val removed = instance match {
-      case e: SceneElement => removeChild(e)
+      case e: SceneElement[_] => removeChild(e)
       case _ => false
     }
     if (removed) rebuild = true
@@ -164,7 +160,7 @@ extends Entity {
   
   private[scenegraph] override def conditionalCull(
     cullSelf: Boolean,
-    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement]
+    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
   ) {
     if (geometry.vertices.read == null) return
     
@@ -199,7 +195,7 @@ extends Entity {
     
     (0 until instanceArray.size).par.foreach(i => processChild(i, instanceArray(i)))
     
-    def processChild(childIndex: Int, child: SceneElement) {
+    def processChild(childIndex: Int, child: SceneElement[T]) {
       if (!cullingEnabled) child.updateWorldTransformation()
       
       val vertexOffset = childIndex*srcVerticesSize

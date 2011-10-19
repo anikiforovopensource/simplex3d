@@ -31,11 +31,11 @@ import simplex3d.data.double._
 abstract class Geometry extends StructuralChangeListener {
   
   def attributeNames: ReadArray[String]
-  def attributes: ReadArray[SharedAttributes[_, _]]
+  def attributes: ReadArray[UncheckedAttributes]
 
   
   final def hasShapeChanges(elementRange: ValueProperty[ReadElementRange] = null) :Boolean = {
-    if (elementRange != null && elementRange.hasChanged) {
+    if (elementRange != null && elementRange.hasDataChanges) {
       true
     }
     else if (elementRange != null && elementRange.isDefined) {

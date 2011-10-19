@@ -113,21 +113,21 @@ private[impl] final class LwjglProgramMapping(val program: Technique, val contex
   def setUniformVector(location: Int, dataType: Int, value: VectorBinding) {
     if (value != null) {
       (dataType: @switch) match {
-        case SeBindingTypes.Float => uniform(location, value.asInstanceOf[ReadDoubleRef])
-        case SeBindingTypes.Vec2 => uniform(location, value.asInstanceOf[ReadVec2])
-        case SeBindingTypes.Vec3 => uniform(location, value.asInstanceOf[ReadVec3])
-        case SeBindingTypes.Vec4 => {
+        case EngineBindingTypes.Float => uniform(location, value.asInstanceOf[ReadDoubleRef])
+        case EngineBindingTypes.Vec2 => uniform(location, value.asInstanceOf[ReadVec2])
+        case EngineBindingTypes.Vec3 => uniform(location, value.asInstanceOf[ReadVec3])
+        case EngineBindingTypes.Vec4 => {
           if (value.isInstanceOf[ReadQuat4]) uniform(location, value.asInstanceOf[ReadQuat4])
           else uniform(location, value.asInstanceOf[ReadVec4])
         }
-        case SeBindingTypes.Int => uniform(location, value.asInstanceOf[ReadIntRef])
-        case SeBindingTypes.Vec2i => uniform(location, value.asInstanceOf[ReadVec2i])
-        case SeBindingTypes.Vec3i => uniform(location, value.asInstanceOf[ReadVec3i])
-        case SeBindingTypes.Vec4i => uniform(location, value.asInstanceOf[ReadVec4i])
-        case SeBindingTypes.Boolean => uniform(location, value.asInstanceOf[ReadBooleanRef])
-        case SeBindingTypes.Vec2b => uniform(location, value.asInstanceOf[ReadVec2b])
-        case SeBindingTypes.Vec3b => uniform(location, value.asInstanceOf[ReadVec3b])
-        case SeBindingTypes.Vec4b => uniform(location, value.asInstanceOf[ReadVec4b])
+        case EngineBindingTypes.Int => uniform(location, value.asInstanceOf[ReadIntRef])
+        case EngineBindingTypes.Vec2i => uniform(location, value.asInstanceOf[ReadVec2i])
+        case EngineBindingTypes.Vec3i => uniform(location, value.asInstanceOf[ReadVec3i])
+        case EngineBindingTypes.Vec4i => uniform(location, value.asInstanceOf[ReadVec4i])
+        case EngineBindingTypes.Boolean => uniform(location, value.asInstanceOf[ReadBooleanRef])
+        case EngineBindingTypes.Vec2b => uniform(location, value.asInstanceOf[ReadVec2b])
+        case EngineBindingTypes.Vec3b => uniform(location, value.asInstanceOf[ReadVec3b])
+        case EngineBindingTypes.Vec4b => uniform(location, value.asInstanceOf[ReadVec4b])
       }
     }
   }
@@ -135,15 +135,15 @@ private[impl] final class LwjglProgramMapping(val program: Technique, val contex
   def setUniformMatrix(location: Int, dataType: Int, value: AnyMat[_]) {
     if (value != null) {
       (dataType: @switch) match {
-        case SeBindingTypes.Mat2x2 => uniform(location, value.asInstanceOf[ReadMat2x2])
-        case SeBindingTypes.Mat2x3 => uniform(location, value.asInstanceOf[ReadMat2x3])
-        case SeBindingTypes.Mat2x4 => uniform(location, value.asInstanceOf[ReadMat2x4])
-        case SeBindingTypes.Mat3x2 => uniform(location, value.asInstanceOf[ReadMat3x2])
-        case SeBindingTypes.Mat3x3 => uniform(location, value.asInstanceOf[ReadMat3x3])
-        case SeBindingTypes.Mat3x4 => uniform(location, value.asInstanceOf[ReadMat3x4])
-        case SeBindingTypes.Mat4x2 => uniform(location, value.asInstanceOf[ReadMat4x2])
-        case SeBindingTypes.Mat4x3 => uniform(location, value.asInstanceOf[ReadMat4x3])
-        case SeBindingTypes.Mat4x4 => uniform(location, value.asInstanceOf[ReadMat4x4])
+        case EngineBindingTypes.Mat2x2 => uniform(location, value.asInstanceOf[ReadMat2x2])
+        case EngineBindingTypes.Mat2x3 => uniform(location, value.asInstanceOf[ReadMat2x3])
+        case EngineBindingTypes.Mat2x4 => uniform(location, value.asInstanceOf[ReadMat2x4])
+        case EngineBindingTypes.Mat3x2 => uniform(location, value.asInstanceOf[ReadMat3x2])
+        case EngineBindingTypes.Mat3x3 => uniform(location, value.asInstanceOf[ReadMat3x3])
+        case EngineBindingTypes.Mat3x4 => uniform(location, value.asInstanceOf[ReadMat3x4])
+        case EngineBindingTypes.Mat4x2 => uniform(location, value.asInstanceOf[ReadMat4x2])
+        case EngineBindingTypes.Mat4x3 => uniform(location, value.asInstanceOf[ReadMat4x3])
+        case EngineBindingTypes.Mat4x4 => uniform(location, value.asInstanceOf[ReadMat4x4])
       }
     }
   }
@@ -151,12 +151,12 @@ private[impl] final class LwjglProgramMapping(val program: Technique, val contex
   def setUniformTexture(location: Int, textureUnit: Int, dataType: Int, value: ReadTextureBinding[_]) {
     if (value != null) {
       (dataType: @switch) match {
-        case SeBindingTypes.Texture1d => //XXX
-        case SeBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureBinding[_ <: Texture[_]]].bound)
-        case SeBindingTypes.Texture3d =>
-        case SeBindingTypes.CubeTexture =>
-        case SeBindingTypes.ShadowTexture1d =>
-        case SeBindingTypes.ShadowTexture2d =>
+        case EngineBindingTypes.Texture1d => //XXX
+        case EngineBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureBinding[_ <: Texture[_]]].bound)
+        case EngineBindingTypes.Texture3d =>
+        case EngineBindingTypes.CubeTexture =>
+        case EngineBindingTypes.ShadowTexture1d =>
+        case EngineBindingTypes.ShadowTexture2d =>
       }
     }
   }

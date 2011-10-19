@@ -22,17 +22,22 @@ package simplex3d.engine
 package graphics
 
 
-final class GraphicsContext(
-  val mkGeometry: () => Geometry,
-  val mkMaterial: () => Material,
-  val mkEnvironment: () => Environment
-) {
+abstract class GraphicsContext {
   
-  def namespace: Set[String] = combinedNamespace
-  private[this] var combinedNamespace: Set[String] = null
+  type Geometry <: graphics.Geometry
+  type Material <: graphics.Material
+  type Environment <: graphics.Environment
+  
+  val mkGeometry: () => Geometry
+  val mkMaterial: () => Material
+  val mkEnvironment: () => Environment
+  
+  
+  final def namespace: Set[String] = combinedNamespace
+  private[this] final var combinedNamespace: Set[String] = null
 
   
-  {
+  protected def initNamespace() {
     val geomNames = mkGeometry().attributeNames
     
     val predefNames = PredefinedUniforms.Names

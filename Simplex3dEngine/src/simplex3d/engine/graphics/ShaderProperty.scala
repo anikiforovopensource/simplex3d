@@ -19,15 +19,21 @@
  */
 
 package simplex3d.engine
+package graphics
 
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+import simplex3d.math.types._
 
 
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
-  
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+sealed abstract class ShaderProperty[R <: Readable[R] with NestedBinding] private[engine] (factory: R)
+extends DefinedProperty[R](factory) with AccessibleDefinedProperty { self: AccessibleDefinedProperty =>
+}
+
+final class AccessibleShaderProperty[R <: Readable[R] with NestedBinding](factory: R)
+extends ShaderProperty[R](factory) {
+  def clearDataChanges() { changed = false }
+}
+
+object ShaderProperty {
+  def apply[R <: Readable[R] with NestedBinding](factory: R)
+  :ShaderProperty[R] = new AccessibleShaderProperty(factory)
 }

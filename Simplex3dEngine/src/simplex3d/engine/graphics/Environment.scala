@@ -26,5 +26,5 @@ import simplex3d.math.types._
 
 abstract class Environment extends StructuralChangeListener {
   def propertyNames: ReadArray[String]
-  def properties: ReadArray[EnvironmentalProperty[_ <: EnvironmentalEffect[_]]]
+  def properties: ReadArray[EnvironmentalProperty[UncheckedEffect]]
 }

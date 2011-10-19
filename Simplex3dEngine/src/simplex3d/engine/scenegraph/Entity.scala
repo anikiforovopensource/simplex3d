@@ -28,53 +28,54 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-abstract class Entity(
-  implicit transformationContext: TransformationContext, graphicsContext: GraphicsContext
-) extends Bounded {
+abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
+  implicit transformationContext: T, final val graphicsContext: G
+) extends Bounded[T] {
   
-  import PropertyAccess._; import ListenerAccess._
+  import SubtextAccess._
+  
   
   private[this] final val env = graphicsContext.mkEnvironment()
-  protected def environment = env
+  protected def environment: G#Environment = env
   protected def inheritEnvironment = true
   private[scenegraph] final val worldEnvironment = graphicsContext.mkEnvironment()
   
-  private[this] final val _children = ArrayBuffer[SceneElement]()
+  private[this] final val _children = ArrayBuffer[SceneElement[T]]()
   private[this] final val readChildren = new ReadSeq(_children)
-  protected[scenegraph] def children: ReadSeq[SceneElement] = readChildren
+  protected[scenegraph] def children: ReadSeq[SceneElement[T]] = readChildren
 
   
-  protected def appendChild(element: SceneElement) {
+  protected def appendChild(element: SceneElement[T]) {
     append(element)
     
-    val managed = new ArrayBuffer[Spatial](4)
+    val managed = new ArrayBuffer[Spatial[T]](4)
     element.manageControllerContext(this.controllerContext, managed)
     this.controllerContext.register(managed)
   }
   
-  protected def removeChild(element: SceneElement) :Boolean = {
+  protected def removeChild(element: SceneElement[T]) :Boolean = {
     val removed = remove(element)
     if (removed) { onRemove(element) }
     removed
   }
   
-  protected def removeNestedChild(element: SceneElement) :Boolean = {
+  protected def removeNestedChild(element: SceneElement[T]) :Boolean = {
     val removed = removeNested(element)
     if (removed) { onRemove(element) }
     removed
   }
   
-  private[this] def onRemove(element: SceneElement) {
-    val managed = new ArrayBuffer[Spatial](4)
+  private[this] def onRemove(element: SceneElement[T]) {
+    val managed = new ArrayBuffer[Spatial[T]](4)
     element.manageControllerContext(null, managed)
     this.controllerContext.unregister(managed)
     
     element.worldTransformationVersion = 0
-    element match { case b: Bounded => b.boundingVolumeVersion = 0; case _ => }
+    element match { case b: Bounded[T] => b.boundingVolumeVersion = 0; case _ => }
   }
   
   private[scenegraph] final override def manageControllerContext(
-    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial]
+    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
   ) {
     super.manageControllerContext(controllerContext, managed)
     
@@ -87,14 +88,14 @@ abstract class Entity(
     }
   }
   
-  private[this] final def append(element: SceneElement) {
+  private[this] final def append(element: SceneElement[T]) {
     if (element._parent != null) element._parent.removeChild(element)
 
     _children += element
     element._parent = this
   }
 
-  private[this] final def remove(element: SceneElement) :Boolean = {
+  private[this] final def remove(element: SceneElement[T]) :Boolean = {
     var removed = false
 
     val oldSize = _children.size
@@ -105,13 +106,13 @@ abstract class Entity(
     removed
   }
 
-  private[this] final def removeNested(element: SceneElement) :Boolean = {
+  private[this] final def removeNested(element: SceneElement[T]) :Boolean = {
     var removed = removeChild(element)
 
     val size = _children.size
     var i = 0; while (!removed && i < size) { val current = _children(i)
       current match {
-        case entity: Entity => removed = entity.removeNestedChild(element)
+        case entity: Entity[_, _] => removed = entity.removeNestedChild(element)
         case _ => // do nothing.
       }
     
@@ -140,7 +141,7 @@ abstract class Entity(
       var i = 0; while (i < size) { val child = children(i)
         
         val childBoundingChanged = child match {
-          case bounded: Bounded => bounded.updateAutoBound()
+          case bounded: Bounded[_] => bounded.updateAutoBound()
           case _ => false
         }
         
@@ -154,17 +155,17 @@ abstract class Entity(
         updateBounding = true
       }
       
-      if (updateBounding || worldTransformation.hasChanged) {
+      if (updateBounding || worldTransformation.hasDataChanges) {
         val bound = autoBoundingVolume.asInstanceOf[Aabb]
         Bounded.rebuildAabb(this)(bound.mutable.min, bound.mutable.max)
         updated = true
       }
       
-      uncheckedWorldTransformation.clearChanges()
+      uncheckedWorldTransformation.clearDataChanges()
     }
     
-    if (resolveBoundingVolume.hasChanged) {
-      resolveBoundingVolume.clearChanges()
+    if (resolveBoundingVolume.hasDataChanges) {
+      resolveBoundingVolume.clearDataChanges()
       updated = true
     }
     
@@ -172,7 +173,7 @@ abstract class Entity(
   }
   
   private[scenegraph] override def cull(
-    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement]
+    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
   ) {
     conditionalCull(true, version, time, view, renderArray)
   }
@@ -180,7 +181,7 @@ abstract class Entity(
   private[scenegraph] def conditionalCull(
     cullSelf: Boolean, version: Long,
     time: TimeStamp, view: View,
-    renderArray: ArrayBuffer[SceneElement]
+    renderArray: ArrayBuffer[SceneElement[T]]
   ) {
     if (worldTransformationVersion != version) {
       updateWorldTransformation()
@@ -202,7 +203,7 @@ abstract class Entity(
       else true
     
     
-    def process[E <: EnvironmentalEffect[E]]() {
+    def process() {
       if (animators != null && shouldRunAnimators) {
         runUpdaters(animators, time)
         shouldRunAnimators = false
@@ -215,14 +216,14 @@ abstract class Entity(
       var i = 0; while (i < size) { val current = children(i)
         
         current match {
-          case entity: Entity =>
+          case entity: Entity[_, _] =>
             
             def propagateEnvironment() {
               val resultEnv = entity.worldEnvironment
       
-              val parentProps = this.worldEnvironment.properties.asInstanceOf[ReadArray[EnvironmentalProperty[E]]]
-              val childProps = entity.environment.properties.asInstanceOf[ReadArray[EnvironmentalProperty[E]]]
-              val resultProps = resultEnv.properties.asInstanceOf[ReadArray[EnvironmentalProperty[E]]]
+              val parentProps = this.worldEnvironment.properties
+              val childProps = entity.environment.properties
+              val resultProps = resultEnv.properties
               
               val size = parentProps.length
               var i = 0; while (i < size) {
@@ -231,7 +232,7 @@ abstract class Entity(
                 val childProp = childProps(i)
                 val resultProp = resultProps(i)
                 
-                if (parentProp.hasChanged || childProp.hasChanged) {
+                if (parentProp.hasDataChanges || childProp.hasDataChanges) {
                   def propagateEnvironmentalProperty() {
                     
                     if (parentProp.isDefined) {
@@ -253,7 +254,7 @@ abstract class Entity(
                     }
                     
                   }; propagateEnvironmentalProperty()
-                  childProp.clearChanges()
+                  childProp.clearDataChanges()
                 }
                 
                 i += 1
@@ -262,10 +263,10 @@ abstract class Entity(
             
             entity.conditionalCull(cullChildren, version, time, view, renderArray)
           
-          case mesh: Mesh =>
+          case mesh: Mesh[_, _] =>
             mesh.cull(version, time, view, renderArray)
             
-          case bounded: Bounded =>
+          case bounded: Bounded[_] =>
             bounded.cull(version, time, view, renderArray)
           
           case _ =>

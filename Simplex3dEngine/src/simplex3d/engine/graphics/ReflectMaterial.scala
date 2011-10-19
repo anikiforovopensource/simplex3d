@@ -27,7 +27,7 @@ import simplex3d.math.types._
 trait ReflectMaterial extends Material {
   
   private[this] var _uniformNames: ReadArray[String] = null
-  private[this] var _uniforms: ReadArray[ValueProperty[_ <: TechniqueBinding]] = null
+  private[this] var _uniforms: ReadArray[ValueProperty[UncheckedBinding]] = null
   
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
@@ -38,13 +38,13 @@ trait ReflectMaterial extends Material {
       this, classOf[ValueProperty[_]], ReflectMaterial.UniformBlacklist
     )
     _uniformNames = un
-    _uniforms = uv.asInstanceOf[ReadArray[ValueProperty[_ <: TechniqueBinding]]]
+    _uniforms = uv.asInstanceOf[ReadArray[ValueProperty[UncheckedBinding]]]
     
     initialized = true
   }
   
   override def uniformNames: ReadArray[String] = _uniformNames
-  override def uniforms: ReadArray[ValueProperty[_ <: TechniqueBinding]] = _uniforms
+  override def uniforms: ReadArray[ValueProperty[UncheckedBinding]] = _uniforms
 }
 
 object ReflectMaterial {

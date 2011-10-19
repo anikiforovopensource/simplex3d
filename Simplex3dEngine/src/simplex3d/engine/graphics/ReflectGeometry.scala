@@ -27,7 +27,7 @@ import simplex3d.math.types._
 trait ReflectGeometry extends Geometry {
   
   private[this] var _attributeNames: ReadArray[String] = null
-  private[this] var _attributes: ReadArray[SharedAttributes[_, _]] = null
+  private[this] var _attributes: ReadArray[UncheckedAttributes] = null
   
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
@@ -35,7 +35,7 @@ trait ReflectGeometry extends Geometry {
     if (initialized) return
     
     val (an, av) = FieldReflection.getValueMap(
-      this, classOf[SharedAttributes[_, _]], ReflectGeometry.AttributesBlacklist
+      this, classOf[UncheckedAttributes], ReflectGeometry.AttributesBlacklist
     )
     _attributeNames = an
     _attributes = av
@@ -44,7 +44,7 @@ trait ReflectGeometry extends Geometry {
   }
   
   override def attributeNames: ReadArray[String] = _attributeNames
-  override def attributes: ReadArray[SharedAttributes[_, _]] = _attributes
+  override def attributes: ReadArray[UncheckedAttributes] = _attributes
 }
 
 object ReflectGeometry {

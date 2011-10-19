@@ -32,7 +32,7 @@ abstract class Mouse {
   def isGrabbed: Boolean
   
   def setPosition(position: inVec2i) :Unit
-  //def setCursor() :Unit // XXX add later
+  //def setCursor() :Unit // TODO add later
   
   def isButtonDown(buttonCode: Int) :Boolean
   def position: Option[ConstVec2i]

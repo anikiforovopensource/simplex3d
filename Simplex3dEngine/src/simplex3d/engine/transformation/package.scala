@@ -20,14 +20,17 @@
 
 package simplex3d.engine
 
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+import simplex3d.math.types._
 
 
-package object default {
-  type DT = transformation.ComponentTransformation3dContext
-  type DG = renderer.GraphicsContext
+package object transformation {
   
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
+  val TransformationRecursor: { type Recursive <: ReadTransformation[Recursive] { type Mutable = Recursive } } = null
+  type UncheckedTransformation = TransformationRecursor.type#Recursive
+  
+  
+  final class ComponentTransformation3dContext extends TransformationContext {
+    type Transformation = ReadComponentTransformation3d
+    val factory = () => new ComponentTransformation3d
+  }
 }

@@ -24,7 +24,8 @@ package renderer
 import simplex3d.engine.graphics._
 
 
-class TechniqueManager(val graphicsContext: GraphicsContext) extends graphics.TechniqueManager {
+class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G)
+extends graphics.TechniqueManager[G] {
   
   private val cached = {
     val vertexShader = """

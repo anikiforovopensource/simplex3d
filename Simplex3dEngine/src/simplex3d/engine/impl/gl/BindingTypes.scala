@@ -54,7 +54,7 @@ private[gl] object GlBindingTypes {
   final val ShadowTexture2d = 35682
 }
 
-object SeBindingTypes {
+object EngineBindingTypes {
   final val Float = 0
   final val Vec2 = 1
   final val Vec3 = 2

@@ -31,9 +31,9 @@ private[impl] abstract class GlslProgramMapping(
   attributesSeq: Seq[AttributeBinding]
 ) {
   
-  final val uniformVectors = new ReadArray(uniformsSeq.filter(b => SeBindingTypes.isVector(b.dataType)).toArray)
-  final val uniformMatrices = new ReadArray(uniformsSeq.filter(b => SeBindingTypes.isMatrix(b.dataType)).toArray)
-  final val uniformTextures = new ReadArray(uniformsSeq.filter(b => SeBindingTypes.isTexture(b.dataType)).toArray)
+  final val uniformVectors = new ReadArray(uniformsSeq.filter(b => EngineBindingTypes.isVector(b.dataType)).toArray)
+  final val uniformMatrices = new ReadArray(uniformsSeq.filter(b => EngineBindingTypes.isMatrix(b.dataType)).toArray)
+  final val uniformTextures = new ReadArray(uniformsSeq.filter(b => EngineBindingTypes.isTexture(b.dataType)).toArray)
   final val attributes = new ReadArray(attributesSeq.toArray)
   
   def bind(meshMapping: MeshMapping) :Unit

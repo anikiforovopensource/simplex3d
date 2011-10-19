@@ -56,8 +56,8 @@ package object data {
   type Accessor = integration.Accessor
   type Format = integration.Format
   type PrimitiveFormat = integration.PrimitiveFormat
-  type Compressed = integration.Compressed
   type CompositeFormat = integration.CompositeFormat
+  type CompressedFormat = integration.CompressedFormat
   val PrimitiveFormat = integration.PrimitiveFormat
   type Raw = integration.Raw
   type Defined = integration.Defined

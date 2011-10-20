@@ -21,12 +21,11 @@
 package simplex3d.engine
 package scenegraph
 
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.HashSet
+import scala.collection.mutable._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.intersection.{ Frustum, Collision }
+import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 import simplex3d.engine.bounding._
@@ -71,6 +70,10 @@ extends Scene(name) {
     controllerContext.update(time)
   }
   
+  
+  private val batchArray = new ArrayBuffer[SceneElement[T]](100)
+  private val synchronizedResult = new ArrayBuffer[AbstractMesh](100) with SynchronizedBuffer[AbstractMesh] //XXX try with something more lightweight
+  
   def buildRenderArray(pass: Pass, time: TimeStamp, result: InplaceSortBuffer[AbstractMesh]) {
     val camera = this.camera // TODO camera should come from the pass.
     camera.sync()
@@ -78,8 +81,24 @@ extends Scene(name) {
     val frustum = Frustum(camera.viewProjection)
     val view = new View(Vec2i(-1), camera, frustum) //XXX proper dimensions
     
-    // Build the render array while performing frustum culling.
-    root.cull(version, time, view, result.asInstanceOf[InplaceSortBuffer[SceneElement[T]]]) // XXX rework casting
+    val allowMultithreading = true // XXX must come from settings
+    if (allowMultithreading) batchArray.clear()
+    
+    root.entityCull(
+      true, version, time, view, result.asInstanceOf[InplaceSortBuffer[SceneElement[T]]] //XXX rework casting
+    )(allowMultithreading, 50, batchArray, 3, 0) // XXX these args must come from settings
+    
+    if (allowMultithreading) {
+      synchronizedResult.clear()
+      
+      (0 until batchArray.size).par.foreach { i =>
+        batchArray(i) match {
+          case b: Bounded[_] => b.cull(version, time, view, synchronizedResult.asInstanceOf[ArrayBuffer[SceneElement[T]]])
+          case _ => // do nothing.
+        }
+      }
+      result ++= synchronizedResult
+    }
     
     // Resolve techniques.
     val size = result.size

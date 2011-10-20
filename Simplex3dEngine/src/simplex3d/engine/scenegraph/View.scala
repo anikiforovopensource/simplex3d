@@ -24,7 +24,7 @@ package scenegraph
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.intersection._
+import simplex3d.algorithm.intersection._
 
 
 final class View(val dimensions: ConstVec2i, val camera: Camera[_], val frustum: Frustum) {

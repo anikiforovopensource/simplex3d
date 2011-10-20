@@ -34,7 +34,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
   def translation: ReadVec3
   
   
-  def mutableCopy() = {
+  final def mutableCopy() = {
     val copy = new ComponentTransformation3d
     if (isSet) {
       val m = copy.mutable
@@ -45,7 +45,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
     copy
   }
   
-  def propagateChanges(parent: ReadComponentTransformation3d, result: ComponentTransformation3d) {
+  final def propagateChanges(parent: ReadComponentTransformation3d, result: ComponentTransformation3d) {
     val parentChanged = if (parent != null) parent.hasDataChanges else false
     
     if (parentChanged || this.hasDataChanges) {
@@ -66,8 +66,6 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
         else
           result.unset()
       }
-      
-      this.clearDataChanges()
     }
   }
 }
@@ -91,11 +89,7 @@ with Transformation[ReadComponentTransformation3d] {
   def translation: ReadVec3 = _translation
   
   
-  private[this] var changes = true
   private[this] var set = false
-  def hasDataChanges = changes
-  protected def clearDataChanges() { changes = false }
-  
   def isSet = set
   def unset() {
     val m = mutable
@@ -116,7 +110,7 @@ with Transformation[ReadComponentTransformation3d] {
   }
   
   def mutable = {
-    changes = true
+    dataChanges = true
     updateMatrix = true
     set = true
     mutableSubtext

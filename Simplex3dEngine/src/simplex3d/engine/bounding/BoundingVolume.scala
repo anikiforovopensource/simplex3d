@@ -22,12 +22,12 @@ package simplex3d.engine
 package bounding
 
 import simplex3d.math.double._
-import simplex3d.intersection._
+import simplex3d.algorithm.intersection._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-trait BoundingVolume extends DataChangeListener
+abstract class BoundingVolume extends DataChangeListener
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.

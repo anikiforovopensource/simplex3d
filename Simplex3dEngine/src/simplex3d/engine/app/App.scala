@@ -34,10 +34,10 @@ trait App {
   protected val frameTimer: FrameTimer
   protected val input: Input
   protected val renderManager: RenderManager
-  protected val techniqueManager: TechniqueManager[_]
   protected val resources: ResourceManager
   
   protected def init() :Unit
+  protected def preUpdate(time: TimeStamp) :Unit
   protected def update(time: TimeStamp) :Unit
   protected def render(context: RenderContext, time: TimeStamp) :Unit
   protected def manage(context: RenderContext) :Unit

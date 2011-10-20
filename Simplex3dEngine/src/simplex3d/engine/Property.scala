@@ -50,6 +50,10 @@ abstract class Property[R <: Readable[R]] private[engine] (
     value
   }
   
+  final def set(p: Property[R]) {
+    if (p.isDefined) mutable := p.defined else undefine()
+  }
+  
   final def hasDataChanges = changed
   
   final override def toString() :String =

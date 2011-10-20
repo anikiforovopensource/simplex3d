@@ -22,7 +22,7 @@ package simplex3d.engine
 package scenegraph
 
 import scala.collection.mutable.ArrayBuffer
-import simplex3d.intersection._
+import simplex3d.algorithm.intersection._
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 import simplex3d.engine.bounding._
@@ -50,7 +50,12 @@ extends Bounded[T] with AbstractMesh {
   override def parent = super.parent
   
   
-  private[scenegraph] def updateAutoBound() :Boolean = {
+  private[scenegraph] override def update(version: Long) :Boolean = {
+    if (updateVersion != version) {
+      propagateWorldTransformation()
+      updateVersion = version
+    }
+    
     var updated = false
     
     if (customBoundingVolume.hasRefChanges) {
@@ -73,13 +78,12 @@ extends Bounded[T] with AbstractMesh {
       }
     }
     
-    uncheckedWorldTransformation.clearDataChanges()
-    
     if (resolveBoundingVolume.hasDataChanges || uncheckedWorldTransformation.hasDataChanges) {
       resolveBoundingVolume.clearDataChanges()
       updated = true
     }
     
+    uncheckedWorldTransformation.clearDataChanges()
     updated
   }
 }

@@ -22,7 +22,7 @@ package simplex3d.engine
 package scenegraph
 
 import scala.collection.mutable.ArrayBuffer
-import simplex3d.intersection.{ Frustum, Collision }
+import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
@@ -70,8 +70,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     element.manageControllerContext(null, managed)
     this.controllerContext.unregister(managed)
     
-    element.worldTransformationVersion = 0
-    element match { case b: Bounded[T] => b.boundingVolumeVersion = 0; case _ => }
+    element.updateVersion = 0
   }
   
   private[scenegraph] final override def manageControllerContext(
@@ -123,7 +122,12 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
   }
   
     
-  private[scenegraph] def updateAutoBound() :Boolean = {
+  private[scenegraph] override def update(version: Long) :Boolean = {
+    if (updateVersion != version) {
+      propagateWorldTransformation()
+      updateVersion = version
+    }
+    
     var updated = false
     
     if (customBoundingVolume.hasRefChanges) {
@@ -132,19 +136,17 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
       updated = true
     }
     
+    
     if (!customBoundingVolume.isDefined) {
       var updateBounding = false
-      val worldTransformation = uncheckedWorldTransformation
-      
       
       val size = children.size
       var i = 0; while (i < size) { val child = children(i)
         
         val childBoundingChanged = child match {
-          case bounded: Bounded[_] => bounded.updateAutoBound()
-          case _ => false
+          case bounded: Bounded[_] => bounded.update(version)
+          case _ => child.update(version)
         }
-        
         updateBounding = childBoundingChanged || updateBounding
         
         i += 1
@@ -155,46 +157,47 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
         updateBounding = true
       }
       
-      if (updateBounding || worldTransformation.hasDataChanges) {
+      if (updateBounding || uncheckedWorldTransformation.hasDataChanges) {
         val bound = autoBoundingVolume.asInstanceOf[Aabb]
         Bounded.rebuildAabb(this)(bound.mutable.min, bound.mutable.max)
         updated = true
       }
-      
-      uncheckedWorldTransformation.clearDataChanges()
     }
+    
     
     if (resolveBoundingVolume.hasDataChanges) {
       resolveBoundingVolume.clearDataChanges()
       updated = true
     }
     
+    uncheckedWorldTransformation.clearDataChanges()
     updated
   }
   
   private[scenegraph] override def cull(
     version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
   ) {
-    conditionalCull(true, version, time, view, renderArray)
+    entityCull(
+      true, version, time, view, renderArray
+    )(false, 0, null, 0, 0)
   }
   
-  private[scenegraph] def conditionalCull(
-    cullSelf: Boolean, version: Long,
+  
+  private[scenegraph] def entityCull(
+    enableCulling: Boolean, version: Long,
     time: TimeStamp, view: View,
     renderArray: ArrayBuffer[SceneElement[T]]
+  )(
+    allowMultithreading: Boolean, minChildren: Int,
+    batchArray: ArrayBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
   ) {
-    if (worldTransformationVersion != version) {
-      updateWorldTransformation()
-      worldTransformationVersion = version
-    }
-    if (cullSelf && boundingVolumeVersion != version) {
-      updateAutoBound()
-      boundingVolumeVersion = version
-    }
+    
+    if (enableCulling) update(version)
+    else updateWorldTransformation(version)
     
     
     val frustumTest = 
-      if (!cullSelf) Collision.Inside
+      if (!enableCulling) Collision.Inside
       else BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
     
     val cullChildren = 
@@ -202,80 +205,90 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
       else if (frustumTest == Collision.Inside) false
       else true
     
+    if (animators != null && shouldRunAnimators) {
+      runUpdaters(animators, time)
+      shouldRunAnimators = false
+    }
     
-    def process() {
-      if (animators != null && shouldRunAnimators) {
-        runUpdaters(animators, time)
-        shouldRunAnimators = false
+    
+    var  batchChildren = false
+    if (allowMultithreading && batchArray != null) {
+      if (currentDepth >= maxDepth) {
+        batchChildren = true
       }
+      else if (minChildren <= this.children.size) {
+        batchChildren = true
+      }
+    }
+    
+    val children = this.children
+    val size = children.size
+    var i = 0; while (i < size) { val current = children(i)
       
-      
-      // Propagate environment.
-      val children = this.children
-      val size = children.size
-      var i = 0; while (i < size) { val current = children(i)
-        
-        current match {
-          case entity: Entity[_, _] =>
+      current match {
+        case entity: Entity[_, _] =>
+          
+          def propagateEnvironment() {
+            val resultEnv = entity.worldEnvironment
+    
+            val parentProps = this.worldEnvironment.properties
+            val childProps = entity.environment.properties
+            val resultProps = resultEnv.properties
             
-            def propagateEnvironment() {
-              val resultEnv = entity.worldEnvironment
-      
-              val parentProps = this.worldEnvironment.properties
-              val childProps = entity.environment.properties
-              val resultProps = resultEnv.properties
+            val size = parentProps.length
+            var i = 0; while (i < size) {
               
-              val size = parentProps.length
-              var i = 0; while (i < size) {
-                
-                val parentProp = parentProps(i)
-                val childProp = childProps(i)
-                val resultProp = resultProps(i)
-                
-                if (parentProp.hasDataChanges || childProp.hasDataChanges) {
-                  def propagateEnvironmentalProperty() {
-                    
-                    if (parentProp.isDefined) {
-                      if (childProp.isDefined) {
-                        val structChanges = childProp.defined.propagate(parentProp.defined, resultProp.mutable)
-                        if (structChanges) resultEnv.signalStructuralChanges()
-                      }
-                      else {
-                        resultProp.mutable := parentProp.defined
-                      }
+              val parentProp = parentProps(i)
+              val childProp = childProps(i)
+              val resultProp = resultProps(i)
+              
+              if (parentProp.hasDataChanges || childProp.hasDataChanges) {
+                def propagateEnvironmentalProperty() {
+                  
+                  if (parentProp.isDefined) {
+                    if (childProp.isDefined) {
+                      val structChanges = childProp.defined.propagate(parentProp.defined, resultProp.mutable)
+                      if (structChanges) resultEnv.signalStructuralChanges()
                     }
                     else {
-                      if (childProp.isDefined) {
-                        resultProp.mutable := childProp.defined
-                      }
-                      else {
-                        resultProp.undefine()
-                      }
+                      resultProp.mutable := parentProp.defined
                     }
-                    
-                  }; propagateEnvironmentalProperty()
-                  childProp.clearDataChanges()
-                }
-                
-                i += 1
+                  }
+                  else {
+                    if (childProp.isDefined) {
+                      resultProp.mutable := childProp.defined
+                    }
+                    else {
+                      resultProp.undefine()
+                    }
+                  }
+                  
+                }; propagateEnvironmentalProperty()
+                childProp.clearDataChanges()
               }
-            }; if (entity.inheritEnvironment) propagateEnvironment()
-            
-            entity.conditionalCull(cullChildren, version, time, view, renderArray)
-          
-          case mesh: Mesh[_, _] =>
-            mesh.cull(version, time, view, renderArray)
-            
-          case bounded: Bounded[_] =>
-            bounded.cull(version, time, view, renderArray)
-          
-          case _ =>
-            // do nothing.
-        }
+              
+              i += 1
+            }
+          }; if (entity.inheritEnvironment) propagateEnvironment()
+
+          if (batchChildren) batchArray += entity
+          else entity.entityCull(
+            cullChildren, version, time, view, renderArray
+          )(allowMultithreading, minChildren, batchArray, maxDepth, currentDepth + 1)
         
-        i += 1
+        case mesh: Mesh[_, _] =>
+          if (batchChildren) batchArray += mesh
+          else mesh.cull(version, time, view, renderArray)
+          
+        case bounded: Bounded[_] =>
+          if (batchChildren) batchArray += bounded
+          else bounded.cull(version, time, view, renderArray)
+        
+        case _ =>
+          // do nothing.
       }
       
-    }; process()
+      i += 1
+    }
   }
 }

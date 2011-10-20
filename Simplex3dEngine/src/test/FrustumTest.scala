@@ -26,33 +26,19 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.noise._
+import simplex3d.algorithm.noise._
+import simplex3d.algorithm.shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
 import simplex3d.engine.input._
+import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.handler._
 import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object FrustumTest {
-  def main(args: Array[String]) {
-    { // A hack to load libjawt.so with Java 7.
-      val frame = new java.awt.Frame
-      frame.setSize(200, 200)
-      frame.setVisible(true)
-      frame.dispose()
-      System.loadLibrary("jawt")
-    }
-    
-    FrustumTestApp.main(args)
-  }
-}
-
-
-object FrustumTestApp extends BasicApp with lwjgl.App {
+object FrustumTest extends BasicApp with lwjgl.App {
   val title = "Frustum Test"
   
   def main(args: Array[String]) {
@@ -79,7 +65,7 @@ object FrustumTestApp extends BasicApp with lwjgl.App {
   def init() {
     input.mouse.isGrabbed = true
     
-    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+    val (indices, vertices, normals, texCoords) = makeBox()
     
     cube.geometry.indices.defineAs(Attributes(indices))
     cube.geometry.vertices.defineAs(Attributes(vertices))
@@ -95,7 +81,7 @@ object FrustumTestApp extends BasicApp with lwjgl.App {
   
   
   val camControls = new FirstPersonHandler(world.camera.transformation)
-  camControls.position := Vec3(0, 0, 100)
+  world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
   addInputListener(camControls)
   
   addInputListener(new InputListener {
@@ -111,9 +97,7 @@ object FrustumTestApp extends BasicApp with lwjgl.App {
   
   
   def update(time: TimeStamp) {
-    world.updateControllers(time)
-    
-    import simplex3d.intersection._
+    import simplex3d.algorithm.intersection._
     
     val frustum = Frustum(world.camera.viewProjection)
     val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldTransformation.matrix)

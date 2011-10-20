@@ -26,14 +26,14 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.noise._
+import simplex3d.algorithm.noise._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
 import simplex3d.engine.app._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
+import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.handler._
 import simplex3d.engine.transformation._
 import simplex3d.engine.impl._
 

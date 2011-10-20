@@ -43,8 +43,7 @@ private[lwjgl] object RenderManager {
 }
 
 
-private[lwjgl] final class RenderManager(val techniqueManager: TechniqueManager[_])
-extends engine.RenderManager with GlUnsafeAccess
+private[lwjgl] final class RenderManager extends engine.RenderManager with GlUnsafeAccess
 {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
@@ -84,6 +83,20 @@ extends engine.RenderManager with GlUnsafeAccess
     if (mesh.technique.hasRefChanges) {
       context.rebuildMeshMapping(mesh, programMapping)
       mesh.technique.clearRefChanges()
+      
+      def resolveUpdatableEffects() {
+        var updatables = List[AnyRef]()
+        val properties = mesh.worldEnvironment.properties
+        var i = 0; while (i < properties.length) { val property = properties(i)
+          if (property.isDefined && property.defined.isInstanceOf[UpdatableEnvironmentalEffect[_]]) {
+            updatables ::= property.defined
+          }
+          
+          i += 1
+        }
+        
+        mesh.updatableEffects = new ReadArray(updatables.toArray).asInstanceOf[ReadArray[UncheckedUpdatableEffect]]
+      }; resolveUpdatableEffects()
     }
     
     
@@ -101,9 +114,9 @@ extends engine.RenderManager with GlUnsafeAccess
     predefinedUniforms.se_normalMatrix := transpose(inverse(Mat3(predefinedUniforms.se_modelViewMatrix)))
     
     // Update bindings using predefined uniforms.
-    val properties = mesh.worldEnvironment.properties
-    var i = 0; while (i < properties.length) { val property = properties(i)
-      if (property.isDefined) property.defined.updateBinding(predefinedUniforms)
+    val effects = mesh.updatableEffects
+    var i = 0; while (i < effects.length) { val property = effects(i)
+      property.updateBinding(predefinedUniforms)
       
       i += 1
     }

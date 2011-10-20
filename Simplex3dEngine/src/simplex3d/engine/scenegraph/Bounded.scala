@@ -24,7 +24,8 @@ package scenegraph
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.intersection.Collision
+import simplex3d.algorithm._
+import simplex3d.algorithm.intersection.Collision
 import simplex3d.engine.bounding._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
@@ -33,8 +34,9 @@ import simplex3d.engine.graphics._
 // TODO change into abstract class when Scala's VerifyError bug is fixed: (XXX bug ref)
 trait Bounded[T <: TransformationContext] extends SceneElement[T] {
   
-  private[scenegraph] final var boundingVolumeVersion: Long = 0
-
+  import SubtextAccess._
+  
+  
   /** Can be initialized to a custom-fit bounding volume, otherwise the SceneGraph will automatically calculate one.
    *  If specified by the user then the Scene Graph will not update the bounding when vertex data is modified.
    *  In this case the user is responsible for updating the bounding volume.
@@ -56,7 +58,7 @@ trait Bounded[T <: TransformationContext] extends SceneElement[T] {
   final def boundingVolume = {
     if (customBoundingVolume.isDefined) customBoundingVolume.defined
     else {
-      updateAutoBound()
+      update(updateVersion - 1)
       autoBoundingVolume
     }
   }
@@ -80,18 +82,8 @@ trait Bounded[T <: TransformationContext] extends SceneElement[T] {
   }
   
   
-  private[scenegraph] def updateAutoBound() :Boolean
-  
   private[scenegraph] def cull(version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]) {
-    if (worldTransformationVersion != version) {
-      updateWorldTransformation()
-      worldTransformationVersion = version
-    }
-    if (boundingVolumeVersion != version) {
-      updateAutoBound()
-      boundingVolumeVersion = version
-    }
-    
+    update(version)
     
     val res = BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
     if (res == Collision.Outside) return
@@ -133,7 +125,7 @@ object Bounded {
           resultMax := max(resultMax, b.max)
         case b: Oabb =>
           if (worldTransformation.isSet) {
-            simplex3d.intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.matrix)(pmin, pmax)
+            intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.matrix)(pmin, pmax)
             resultMin := min(resultMin, pmin)
             resultMax := max(resultMax, pmax)
           }
@@ -143,10 +135,10 @@ object Bounded {
           }
         case b: Obb =>
           if (worldTransformation.isSet) {
-            simplex3d.intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.matrix)(pmin, pmax)
+            intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.matrix)(pmin, pmax)
           }
           else {
-            simplex3d.intersection.Aabb.projectAabb(b.min, b.max, b.transformation)(pmin, pmax)
+            intersection.Aabb.projectAabb(b.min, b.max, b.transformation)(pmin, pmax)
           }
           resultMin := min(resultMin, pmin)
           resultMax := max(resultMax, pmax)

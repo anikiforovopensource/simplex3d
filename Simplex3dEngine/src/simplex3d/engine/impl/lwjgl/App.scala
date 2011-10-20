@@ -47,7 +47,7 @@ trait App extends app.App {
   private var renderContext: RenderContext = _
   protected val frameTimer = timer.frameTimer
   protected val input = new Input
-  protected val renderManager = new RenderManager(techniqueManager)
+  protected val renderManager = new RenderManager
   
   @volatile private var quit = false
   
@@ -98,6 +98,7 @@ trait App extends app.App {
       handleInput(time)
       if (Display.isCloseRequested) quit = true
       
+      preUpdate(time)
       update(time)
       render(renderContext, time)
       

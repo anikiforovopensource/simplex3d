@@ -36,6 +36,15 @@ import simplex3d.engine.default._
 
 trait BasicApp extends App {
   
+  addInputListener(new InputListener {
+    override val keyboardListener = new KeyboardListener {
+      override def keyTyped(input: Input, e: KeyEvent) {
+        if (KeyCode.K_Escape == e.keyCode) dispose()
+      }
+    }
+  })
+  
+  
   protected val techniqueManager = new renderer.TechniqueManager
   
   final class OpenSceneGraph[T <: TransformationContext]
@@ -48,21 +57,14 @@ trait BasicApp extends App {
   }
   val world = new OpenSceneGraph('World)
   
-  
-  val exitListener = new InputListener {
-    override val keyboardListener = new KeyboardListener {
-      override def keyTyped(input: Input, e: KeyEvent) {
-        if (KeyCode.K_Escape == e.keyCode) dispose()
-      }
-    }
-  }
-  addInputListener(exitListener)
-  
-  
   val resources = new ResourceManager {
     loaders += new ClasspathLoader
   }
   
+  
+  protected def preUpdate(time: TimeStamp) {
+    world.updateControllers(time)
+  }
   
   private val renderArray = new InplaceSortBuffer[AbstractMesh]()
   

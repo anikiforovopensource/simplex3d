@@ -72,4 +72,9 @@ abstract class Geometry extends StructuralChangeListener {
   final val normals = SharedAttributes[Vec3, RFloat](this)
   
   final val faceCulling = ValueProperty[ReadEnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Back), this)
+  
+  
+  final def setValueProperties(geometry: Geometry) {
+    faceCulling.set(geometry.faceCulling)
+  }
 }

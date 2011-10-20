@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.impl.gl
+package simplex3d.engine
+package impl.gl
 
 import simplex3d.engine.graphics._
 
@@ -26,4 +27,5 @@ import simplex3d.engine.graphics._
 private[impl] class MeshInfo {
   val mapping: MeshMapping = new MeshMapping
   val predefinedUniforms: PredefinedUniforms = new PredefinedUniforms
+  var updatableEffects: ReadArray[UncheckedUpdatableEffect] = null
 }

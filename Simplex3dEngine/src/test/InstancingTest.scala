@@ -26,34 +26,21 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.noise._
+import simplex3d.algorithm.noise._
+import simplex3d.algorithm.shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
+import simplex3d.engine.input.handler._
+import simplex3d.engine.graphics._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.handler._
 import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object InstancingTest {
-  def main(args: Array[String]) {
-    { // A hack to load libjawt.so with Java 7.
-      val frame = new java.awt.Frame
-      frame.setSize(200, 200)
-      frame.setVisible(true)
-      frame.dispose()
-      System.loadLibrary("jawt")
-    }
-    
-    InstancingTestApp.main(args)
-  }
-}
-
-
-object InstancingTestApp extends BasicApp with lwjgl.App {
+object InstancingTest extends BasicApp with lwjgl.App {
   val objCount = 3000
   val title = "Instancing Test: " + objCount + " objects."
   
@@ -101,11 +88,11 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
     input.mouse.isGrabbed = true
     
     if (false) {
-      val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+      val (indices, vertices, normals, texCoords) = makeBox()
       
       val obj = new Mesh
       
-      obj.geometry.faceCulling.undefine()
+      obj.geometry.faceCulling.mutable := FaceCulling.Back
       
       obj.geometry.indices.defineAs(Attributes(indices))
       obj.geometry.vertices.defineAs(Attributes(vertices))
@@ -124,7 +111,7 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
       def randomQuat() = normalize(Quat4(random.nextDouble, random.nextDouble, random.nextDouble, random.nextDouble))
       def smallQuat() = normalize(Quat4(1, random.nextDouble, random.nextDouble, random.nextDouble))
       
-      val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+      val (indices, vertices, normals, texCoords) = makeBox()
       
       val vIndices = Attributes(indices)
       
@@ -145,7 +132,7 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
       val node = new InstancingNode(false)
       node.instanceBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
       
-      node.geometry.faceCulling.undefine()
+      node.geometry.faceCulling.mutable := FaceCulling.Back
       
       node.geometry.indices.defineAs(vIndices)
       node.geometry.vertices.defineAs(vVertices)
@@ -178,7 +165,7 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
   
   
   val camControls = new FirstPersonHandler(world.camera.transformation)
-  camControls.position := Vec3(0, 0, 200)
+  world.camera.transformation.mutable.translation := Vec3(0, 0, 200)
   addInputListener(camControls)
   
   addInputListener(new InputListener {
@@ -193,7 +180,6 @@ object InstancingTestApp extends BasicApp with lwjgl.App {
   })
   
   def update(time: TimeStamp) {
-    world.updateControllers(time)
     
     val noise = ClassicalGradientNoise
     def n(i: Int) = noise(time.total + i*8.234)*0.25

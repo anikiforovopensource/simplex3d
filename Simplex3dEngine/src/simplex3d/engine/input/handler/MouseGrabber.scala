@@ -19,27 +19,37 @@
  */
 
 package simplex3d.engine
-package transformation
+package input
+package handler
 
-import simplex3d.math.types._
+import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
+import simplex3d.engine.input._
+import simplex3d.engine.transformation._
 
 
-abstract class ReadTransformation[R <: ReadTransformation[R]] extends DataChangeListener with Readable[R] 
-{ self: R =>
+class MouseGrabber(startWithGrabbedMouse: Boolean)(keys: Int*)(mouseDependentHandlers: InputListener*)
+extends InputListener {
   
-  type Mutable <: Transformation[R] with R
+  private var initialized = false
+  mouseDependentHandlers.foreach(_.isEnabled = false)
   
-  def propagateChanges(parent: R, result: R#Mutable) :Unit
-  def matrix :ReadMat3x4
+  override def update(input: Input, time: TimeStamp) {
+    if (!initialized) {
+      input.mouse.isGrabbed = startWithGrabbedMouse
+      initialized = true
+      
+      mouseDependentHandlers.foreach(_.isEnabled = input.mouse.isGrabbed)
+    }
+  }
   
-  def isSet: Boolean
-}
-
-trait Transformation[R <: ReadTransformation[R]] extends ReadTransformation[R] with Writable[R]
-{ self: R =>
-  
-  def :=(t: R) :Unit
-  def unset() :Unit
+  override val keyboardListener = new KeyboardListener {
+    override def keyTyped(input: Input, e: KeyEvent) {
+      if (keys.contains(e.keyCode)) {
+        input.mouse.isGrabbed = !input.mouse.isGrabbed
+        mouseDependentHandlers.foreach(_.isEnabled = input.mouse.isGrabbed)
+      }
+    }
+  }
 }

@@ -28,7 +28,7 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends EnvironmentalEffect[ReadLighting] {
+sealed abstract class ReadLighting extends UpdatableEnvironmentalEffect[ReadLighting] {
   type Mutable = Lighting
   
   def directionalLights: List[ReadDirectionalLight]

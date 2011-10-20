@@ -32,8 +32,3 @@ EXAMPLE
 
 To run an example (on GNU/Linux 32-bit from Simplex3dEngine directory):
 java -cp $SCALA_HOME/lib/scala-library.jar:lib/lwjgl/lwjgl.jar:lib/lwjgl/lwjgl_util.jar:release/jars/simplex3d-engine-all.jar:dist/Simplex3dEngine.jar -Djava.library.path="lib/lwjgl/native/linux64" test.InstancingTest
-
-
-KNOWN ISSUES
-
-There is a bug with lwjgl detection of 64 bit linux. Set your native library path to linux64 bit folder. You may have to append 64 to the name of the libs to make lwjgl work: libjinput-linux64.so, liblwjgl64.so, libopenal64.so.

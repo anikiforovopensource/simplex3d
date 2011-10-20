@@ -25,7 +25,8 @@ package graphics
 import simplex3d.math.types._
 
 
-abstract class EnvironmentalEffect[T <: EnvironmentalEffect[T]] extends Readable[T] { self: T =>
+abstract class EnvironmentalEffect[T <: EnvironmentalEffect[T]] extends Readable[T]
+{ self: T =>
   
   /** This method must return true to signal structural change events.
    * Structural change events indicate that a new binding must be resolved.
@@ -35,6 +36,11 @@ abstract class EnvironmentalEffect[T <: EnvironmentalEffect[T]] extends Readable
   /** Must return a stable binding that will no change until the next structural change event.
    */
   def resolveBinding(): TechniqueBinding
+}
+
+
+abstract class UpdatableEnvironmentalEffect[T <: UpdatableEnvironmentalEffect[T]] extends EnvironmentalEffect[T]
+{ self: T =>
   
   /** Update the stable binding with a set of predefined uniforms that are only available at the time of rendering.
    * 

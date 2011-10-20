@@ -21,18 +21,20 @@
 package simplex3d.engine
 package scenegraph
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable._
 import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
+import simplex3d.algorithm.intersection.Collision
 import simplex3d.engine.bounding._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 
 
+// XXX limit based on MAX_VBO_SIZE
 final class InstancingNode[T <: TransformationContext, G <: GraphicsContext](
   val cullingEnabled: Boolean = true
 )(implicit transformationContext: T, graphicsContext: G)
@@ -41,20 +43,29 @@ extends Entity[T, G] {
   import SubtextAccess._
   
   private final class BoundedInstance(implicit transformationContext: T) extends Bounded[T] {
-    private[scenegraph] def updateAutoBound() :Boolean = boundingUpdated
+    private[scenegraph] override def update(version: Long) :Boolean = {
+      if (updateVersion != version) {
+        propagateWorldTransformation()
+        updateVersion = version
+      }
+      uncheckedWorldTransformation.clearDataChanges()
+      boundingUpdated
+    }
   }
   
   private final class Instance(implicit transformationContext: T) extends SceneElement[T]
   
   
   private val srcMesh = new Mesh
+  srcMesh.uncheckedWorldTransformation.clearDataChanges()
+  
   final val instanceBoundingVolume = srcMesh.customBoundingVolume
   final def geometry: G#Geometry = srcMesh.geometry
   final def material: G#Material = srcMesh.material
   override def environment = super.environment
   
   private val displayMesh = new Mesh(this, graphicsContext.mkGeometry(), material)
-  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16)
+  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16) with SynchronizedBuffer[SceneElement[T]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
@@ -104,36 +115,38 @@ extends Entity[T, G] {
       
       i += 1
     }
-    
-    rebuild = false
   }
   
   private def rebuildBounding() {
-    boundingUpdated = srcMesh.updateAutoBound()
+    boundingUpdated = srcMesh.update(srcMesh.updateVersion + 1)
     
     if (boundingUpdated) {
       if (srcMesh.customBoundingVolume.isDefined) {
-        val size = children.size
-        var i = 0; while (i < size) {
-          val instance = children(i).asInstanceOf[BoundedInstance]
-          instance.customBoundingVolume.defineAs(srcMesh.customBoundingVolume.defined)
-          instance.autoBoundingVolume = null
-          
-          i += 1
-        }
+        def process() {
+          val size = children.size
+          var i = 0; while (i < size) {
+            val instance = children(i).asInstanceOf[BoundedInstance]
+            instance.customBoundingVolume.defineAs(srcMesh.customBoundingVolume.defined)
+            instance.autoBoundingVolume = null
+            
+            i += 1
+          }
+        }; process()
       }
       else {
-        val size = children.size
-        var i = 0; while (i < size) {
-          val instance = children(i).asInstanceOf[BoundedInstance]
-          instance.customBoundingVolume.undefine()
-          instance.autoBoundingVolume = srcMesh.autoBoundingVolume
-          
-          i += 1
-        }
+        def process() {
+          val size = children.size
+          var i = 0; while (i < size) {
+            val instance = children(i).asInstanceOf[BoundedInstance]
+            instance.customBoundingVolume.undefine()
+            instance.autoBoundingVolume = srcMesh.autoBoundingVolume
+            
+            i += 1
+          }
+        }; process()
       }
     }
-      
+    
     srcMesh.geometry.indices.clearRefChanges()
     if (srcMesh.geometry.indices.isDefined) srcMesh.geometry.indices.defined.sharedState.clearDataChanges()
     
@@ -157,10 +170,54 @@ extends Entity[T, G] {
     removed
   }
   
-  
-  private[scenegraph] override def conditionalCull(
-    cullSelf: Boolean,
+  private[this] final def instancingCull(
+    enableCulling: Boolean,
     version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
+  )(allowMultithreading: Boolean, minChildren: Int) {
+    
+    if (enableCulling) update(version)
+    else updateWorldTransformation(version)
+    
+    
+    val frustumTest = 
+      if (!enableCulling) Collision.Inside
+      else BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+    
+    val cullChildren = // XXX use this
+      if (frustumTest == Collision.Outside) return
+      else if (frustumTest == Collision.Inside) false
+      else true
+    
+    if (animators != null && shouldRunAnimators) {
+      runUpdaters(animators, time)
+      shouldRunAnimators = false
+    }
+    
+    
+    var multithreaded = (allowMultithreading && minChildren <= this.children.size)
+    
+    def processChild(child: SceneElement[T]) {
+      child match {
+        case bounded: Bounded[_] => bounded.cull(version, time, view, renderArray)
+        case _ => child.update(version)
+      }
+    }
+    
+    if (multithreaded) {
+      val children = this.children
+      (0 until children.size).par.foreach(i => processChild(children(i)))
+    }
+    else {
+      children.foreach(c => processChild(c))
+    }
+  }
+      
+  private[scenegraph] override def entityCull(
+    enableCulling: Boolean,
+    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
+  )(
+    allowMultithreading: Boolean, minChildren: Int,
+    batchArray: ArrayBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
   ) {
     if (geometry.vertices.read == null) return
     
@@ -175,16 +232,24 @@ extends Entity[T, G] {
     val srcIndices = geometry.indices.read
     val srcVertices = geometry.vertices.read
     
-    if (srcIndices != null) rebuild = rebuild || (srcIndices.size != srcIndicesSize)
-    rebuild = rebuild || (srcVertices.size != srcVerticesSize)
+    var geometryChanges = false
+    if (srcIndices != null) geometryChanges = geometryChanges || (srcIndices.size != srcIndicesSize)
+    geometryChanges = geometryChanges || (srcVertices.size != srcVerticesSize)
+    // XXX rebuild on changes to other non-vertex and non-normal attributes
     
-    if (rebuild) rebuildAttributes()
+    if (rebuild || geometryChanges) {
+      rebuildAttributes()
+      rebuild = false
+    }
+    
+    displayMesh.geometry.setValueProperties(geometry)
     
     
     localRenderArray.clear()
-    super.conditionalCull(cullSelf, version, time, view, localRenderArray)
+    instancingCull(enableCulling, version, time, view, localRenderArray)(allowMultithreading, minChildren)
+    
     boundingUpdated = false
-
+    
     val instanceArray = if (cullingEnabled) localRenderArray else children
     
     val srcNormals = geometry.normals.read
@@ -196,7 +261,6 @@ extends Entity[T, G] {
     (0 until instanceArray.size).par.foreach(i => processChild(i, instanceArray(i)))
     
     def processChild(childIndex: Int, child: SceneElement[T]) {
-      if (!cullingEnabled) child.updateWorldTransformation()
       
       val vertexOffset = childIndex*srcVerticesSize
       val indexOffset = childIndex*srcIndicesSize

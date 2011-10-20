@@ -30,6 +30,9 @@ package object graphics {
   val EffectRecursor: { type Recursive <: EnvironmentalEffect[Recursive] } = null
   type UncheckedEffect = EffectRecursor.type#Recursive
   
+  val UpdatableEffectRecursor: { type Recursive <: UpdatableEnvironmentalEffect[Recursive] } = null
+  type UncheckedUpdatableEffect = UpdatableEffectRecursor.type#Recursive
+  
   val BindingRecursor: { type Recursive <: Readable[Recursive] with NestedBinding } = null
   type UncheckedBinding = BindingRecursor.type#Recursive
   

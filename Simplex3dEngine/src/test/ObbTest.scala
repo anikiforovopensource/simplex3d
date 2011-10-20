@@ -26,33 +26,19 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.noise._
+import simplex3d.algorithm.noise._
+import simplex3d.algorithm.shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
 import simplex3d.engine.input._
+import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.handler._
 import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object ObbTest {
-  def main(args: Array[String]) {
-    { // A hack to load libjawt.so with Java 7.
-      val frame = new java.awt.Frame
-      frame.setSize(200, 200)
-      frame.setVisible(true)
-      frame.dispose()
-      System.loadLibrary("jawt")
-    }
-    
-    ObbTestApp.main(args)
-  }
-}
-
-
-object ObbTestApp extends BasicApp with lwjgl.App {
+object ObbTest extends BasicApp with lwjgl.App {
   val title = "Obb Test"
   
   def main(args: Array[String]) {
@@ -81,7 +67,7 @@ object ObbTestApp extends BasicApp with lwjgl.App {
   val translation = ConstVec3(20, 0, 0)
   
   def init() {
-    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+    val (indices, vertices, normals, texCoords) = makeBox()
     val aindices = Attributes(indices)
     val avertices = Attributes(vertices)
     val anormals = Attributes(normals)
@@ -145,7 +131,7 @@ object ObbTestApp extends BasicApp with lwjgl.App {
   addInputListener(cubeControls)
   
   val camControls = new FirstPersonHandler(world.camera.transformation)
-  camControls.position := Vec3(0, 0, 60)
+  world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
   camControls.isEnabled = false
   addInputListener(camControls)
   
@@ -164,9 +150,7 @@ object ObbTestApp extends BasicApp with lwjgl.App {
   
   
   def update(time: TimeStamp) {
-    world.updateControllers(time)
-    
-    //import simplex3d.intersection._
+    //import simplex3d.algorithm.intersection._
     
     val min = Vec3(-0.5)
     val max = Vec3(0.5)
@@ -187,7 +171,7 @@ object ObbTestApp extends BasicApp with lwjgl.App {
 }
 
 
-import simplex3d.intersection._
+import simplex3d.algorithm.intersection._
 object Obb {
   
   /** Intersect dynamic Obb (dmin, dmax, dtransformation) with a static Aabb (smin, smax).

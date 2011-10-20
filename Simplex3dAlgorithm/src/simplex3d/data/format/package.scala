@@ -70,7 +70,8 @@ package object format {
   }
   
   
-  // This format works with arrays retrieved from BufferedImage.
+  /** This format works with arrays retrieved from BufferedImage.
+   */ 
   sealed trait ARGB8 extends CompositeFormat {
     type Accessor = Vec4
     type Component = SInt

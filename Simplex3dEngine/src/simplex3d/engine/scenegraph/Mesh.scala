@@ -51,10 +51,11 @@ extends Bounded[T] with AbstractMesh {
   
   
   private[scenegraph] override def update(version: Long) :Boolean = {
-    if (updateVersion != version) {
-      propagateWorldTransformation()
-      updateVersion = version
-    }
+    if (updateVersion == version) return false
+    
+    propagateWorldTransformation()
+    updateVersion = version
+    
     
     var updated = false
     

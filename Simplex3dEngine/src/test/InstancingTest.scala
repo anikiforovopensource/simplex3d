@@ -129,8 +129,9 @@ object InstancingTest extends BasicApp with lwjgl.App {
       boxVertices = vVertices.read.copyAsDataArray()
       
       
-      val node = new InstancingNode(false)
+      val node = new InstancingNode
       node.instanceBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
+      node.customBoundingVolume.defineAs(new Oabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))
       
       node.geometry.faceCulling.mutable := FaceCulling.Back
       

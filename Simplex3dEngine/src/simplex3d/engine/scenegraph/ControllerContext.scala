@@ -36,6 +36,7 @@ final class ControllerContext {
   }
   
   def update(time: TimeStamp) {
+    // XXX must be set via settings
     (0 until controlled.size).par.foreach { i =>
       val c = controlled(i)
       c match {

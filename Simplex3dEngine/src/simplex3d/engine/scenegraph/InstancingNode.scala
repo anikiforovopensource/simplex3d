@@ -46,10 +46,28 @@ extends Entity[T, G] {
     private[scenegraph] override def update(version: Long) :Boolean = {
       if (updateVersion != version) {
         propagateWorldTransformation()
+        
         updateVersion = version
+        uncheckedWorldTransformation.clearDataChanges()
       }
-      uncheckedWorldTransformation.clearDataChanges()
       boundingUpdated
+    }
+    
+    // XXX this method is for experemintation with queue
+    private[scenegraph] def cullXXX(version: Long, time: TimeStamp, view: View, renderQueue: java.util.Queue[SceneElement[T]]) {
+      update(version)
+      
+      val res = BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+      if (res == Collision.Outside) return
+      
+      def process() {
+        if (animators != null && shouldRunAnimators) {
+          runUpdaters(animators, time)
+          shouldRunAnimators = false
+        }
+        
+        renderQueue.offer(this)
+      }; process()
     }
   }
   
@@ -65,7 +83,8 @@ extends Entity[T, G] {
   override def environment = super.environment
   
   private val displayMesh = new Mesh(this, graphicsContext.mkGeometry(), material)
-  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16) with SynchronizedBuffer[SceneElement[T]]
+  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16)// XXX with SynchronizedBuffer[SceneElement[T]]
+  private val localRenderQueue = new java.util.concurrent.ConcurrentLinkedQueue[SceneElement[T]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
@@ -123,8 +142,7 @@ extends Entity[T, G] {
     if (boundingUpdated) {
       if (srcMesh.customBoundingVolume.isDefined) {
         def process() {
-          val size = children.size
-          var i = 0; while (i < size) {
+          val size = children.size; var i = 0; while (i < size) {
             val instance = children(i).asInstanceOf[BoundedInstance]
             instance.customBoundingVolume.defineAs(srcMesh.customBoundingVolume.defined)
             instance.autoBoundingVolume = null
@@ -135,8 +153,7 @@ extends Entity[T, G] {
       }
       else {
         def process() {
-          val size = children.size
-          var i = 0; while (i < size) {
+          val size = children.size; var i = 0; while (i < size) {
             val instance = children(i).asInstanceOf[BoundedInstance]
             instance.customBoundingVolume.undefine()
             instance.autoBoundingVolume = srcMesh.autoBoundingVolume
@@ -172,10 +189,10 @@ extends Entity[T, G] {
   
   private[this] final def instancingCull(
     enableCulling: Boolean,
-    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
+    version: Long, time: TimeStamp, view: View, renderQueue: java.util.Queue[SceneElement[T]]//renderArray: ArrayBuffer[SceneElement[T]] //XXX
   )(allowMultithreading: Boolean, minChildren: Int) {
     
-    if (enableCulling) update(version)
+    if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
     else updateWorldTransformation(version)
     
     
@@ -194,11 +211,11 @@ extends Entity[T, G] {
     }
     
     
-    var multithreaded = (allowMultithreading && minChildren <= this.children.size)
+    var multithreaded = (allowMultithreading && this.children.size >= minChildren)
     
     def processChild(child: SceneElement[T]) {
       child match {
-        case bounded: Bounded[_] => bounded.cull(version, time, view, renderArray)
+        case bounded: Bounded[_] => bounded.asInstanceOf[BoundedInstance].cullXXX(version, time, view, renderQueue)
         case _ => child.update(version)
       }
     }
@@ -208,7 +225,10 @@ extends Entity[T, G] {
       (0 until children.size).par.foreach(i => processChild(children(i)))
     }
     else {
-      children.foreach(c => processChild(c))
+      val size = children.size; var i = 0; while (i < size) {
+        processChild(children(i))
+        i += 1
+      }
     }
   }
       
@@ -245,20 +265,24 @@ extends Entity[T, G] {
     displayMesh.geometry.setValueProperties(geometry)
     
     
-    localRenderArray.clear()
-    instancingCull(enableCulling, version, time, view, localRenderArray)(allowMultithreading, minChildren)
+    localRenderQueue.clear()
+    instancingCull(enableCulling, version, time, view, localRenderQueue)(allowMultithreading, minChildren)
     
     boundingUpdated = false
     
-    val instanceArray = if (cullingEnabled) localRenderArray else children
+    val instanceArray = if (cullingEnabled) {
+      localRenderArray.clear()
+      var next = localRenderQueue.poll(); while (next != null) {
+        localRenderArray += next
+        next = localRenderQueue.poll()
+      }
+      localRenderArray
+    } else children
     
     val srcNormals = geometry.normals.read
     val destIndices = displayMesh.geometry.indices.write(0, instanceArray.size*srcIndicesSize)
     val destVertices = displayMesh.geometry.vertices.write(0, instanceArray.size*srcVerticesSize)
     val destNormals = displayMesh.geometry.normals.write(0, instanceArray.size*srcVerticesSize)
-    
-    
-    (0 until instanceArray.size).par.foreach(i => processChild(i, instanceArray(i)))
     
     def processChild(childIndex: Int, child: SceneElement[T]) {
       
@@ -289,6 +313,16 @@ extends Entity[T, G] {
       
       if (srcIndices != null) {
         copyIndex()
+      }
+    }
+    
+    if (allowMultithreading) {
+      (0 until instanceArray.size).par.foreach(i => processChild(i, instanceArray(i)))
+    }
+    else {
+      val size = instanceArray.size; var i = 0; while (i < size) {
+        processChild(i, instanceArray(i))
+        i += 1
       }
     }
     

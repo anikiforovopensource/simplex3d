@@ -80,7 +80,6 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     
     val size = _children.size
     var i = 0; while (i < size) { val current = _children(i)
-      
       current.manageControllerContext(controllerContext, managed)
       
       i += 1
@@ -121,12 +120,19 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     removed
   }
   
-    
   private[scenegraph] override def update(version: Long) :Boolean = {
-    if (updateVersion != version) {
-      propagateWorldTransformation()
-      updateVersion = version
-    }
+    entityUpdate(version)(false, 0)
+  }
+  
+  private[scenegraph] final def entityUpdate(version: Long)
+    (allowMultithreading: Boolean, minChildren: Int)
+  :Boolean = {
+  
+    if (updateVersion == version) return false
+    
+    propagateWorldTransformation()
+    updateVersion = version
+    
     
     var updated = false
     
@@ -138,19 +144,36 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     
     
     if (!customBoundingVolume.isDefined) {
+      val atomicUpdateBounding = new java.util.concurrent.atomic.AtomicBoolean(false)
       var updateBounding = false
       
-      val size = children.size
-      var i = 0; while (i < size) { val child = children(i)
-        
+      def processChild(child: SceneElement[T])(allowMultithreading: Boolean, minChildren: Int) {
         val childBoundingChanged = child match {
-          case bounded: Bounded[_] => bounded.update(version)
+          case entity: Entity[_, _] => entity.entityUpdate(version)(allowMultithreading, minChildren)
           case _ => child.update(version)
         }
-        updateBounding = childBoundingChanged || updateBounding
-        
-        i += 1
+        atomicUpdateBounding.compareAndSet(false, childBoundingChanged || atomicUpdateBounding.get)
       }
+      
+      if (allowMultithreading && children.size >= minChildren) {
+        (0 until children.size).par.foreach(i => processChild(children(i))(false, 0))
+        updateBounding = atomicUpdateBounding.get
+      }
+      else {
+        def processChildren() {
+          val size = children.size; var i = 0; while (i < size) { val child = children(i)
+            
+            val childBoundingChanged = child match {
+              case entity: Entity[_, _] => entity.entityUpdate(version)(allowMultithreading, minChildren)
+              case _ => child.update(version)
+            }
+            updateBounding = childBoundingChanged || updateBounding
+            
+            i += 1
+          }
+        }; processChildren()
+      }
+      
       
       if (resolveBoundingVolume == null) {
         autoBoundingVolume = new Aabb
@@ -192,7 +215,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     batchArray: ArrayBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
   ) {
     
-    if (enableCulling) update(version)
+    if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
     else updateWorldTransformation(version)
     
     
@@ -216,14 +239,13 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
       if (currentDepth >= maxDepth) {
         batchChildren = true
       }
-      else if (minChildren <= this.children.size) {
+      else if (this.children.size >= minChildren) {
         batchChildren = true
       }
     }
     
     val children = this.children
-    val size = children.size
-    var i = 0; while (i < size) { val current = children(i)
+    val size = children.size; var i = 0; while (i < size) { val current = children(i)
       
       current match {
         case entity: Entity[_, _] =>
@@ -235,8 +257,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
             val childProps = entity.environment.properties
             val resultProps = resultEnv.properties
             
-            val size = parentProps.length
-            var i = 0; while (i < size) {
+            val size = parentProps.length; var i = 0; while (i < size) {
               
               val parentProp = parentProps(i)
               val childProp = childProps(i)
@@ -285,7 +306,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
           else bounded.cull(version, time, view, renderArray)
         
         case _ =>
-          // do nothing.
+          current.update(version)
       }
       
       i += 1

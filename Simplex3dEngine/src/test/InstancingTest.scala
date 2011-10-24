@@ -45,12 +45,13 @@ object InstancingTest extends BasicApp with lwjgl.App {
   val title = "Instancing Test: " + objCount + " objects."
   
   def main(args: Array[String]) {
-    val settings = new Settings
-    settings.fullScreen = false
-    settings.verticalSync = false
-    settings.capabilitiesLog = true
-    settings.performanceLog = true
-    settings.dimensions = Vec2i(800, 600)
+    val settings = new Settings(
+      fullScreen = false,
+      verticalSync = false,
+      capabilitiesLog = true,
+      performanceLog = true,
+      dimensions = Vec2i(800, 600)
+    )
     
     launch(settings)
   }

@@ -54,7 +54,7 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
   private val elementRange = new ElementRange()
   
   
-  def render(ctx: engine.RenderContext, camera: AbstractCamera, renderArray: InplaceSortBuffer[AbstractMesh]) {
+  def render(ctx: engine.RenderContext, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
     val context = ctx.asInstanceOf[RenderContext]
     if (context.requiresReset) context.resetState()
     
@@ -62,7 +62,7 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
     glEnable(GL_DEPTH_TEST)
     glDepthFunc(GL_LESS)
     
-    var i = 0; while (i < renderArray.length) {
+    var i = 0; while (i < renderArray.size) {
       val mesh = renderArray(i)
       render(context, camera, mesh)
       
@@ -154,7 +154,7 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
     }
   }
   
-  def sortRenderArray(pass: Pass, renderArray: InplaceSortBuffer[AbstractMesh]) {
+  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) {
     renderArray.inplaceSort(comparator)
   }
 }

@@ -24,6 +24,7 @@ package scenegraph
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.bounding._
+import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
@@ -161,17 +162,13 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
       }
       else {
         def processChildren() {
-          val size = children.size; var i = 0; while (i < size) { val child = children(i)
-            
-            val childBoundingChanged = child match {
-              case entity: Entity[_, _] => entity.entityUpdate(version)(allowMultithreading, minChildren)
-              case _ => child.update(version)
-            }
-            updateBounding = childBoundingChanged || updateBounding
+          val size = children.size; var i = 0; while (i < size) {
+            processChild(children(i))(allowMultithreading, minChildren)
             
             i += 1
           }
         }; processChildren()
+        updateBounding = atomicUpdateBounding.get
       }
       
       
@@ -197,22 +194,22 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
     updated
   }
   
-  private[scenegraph] override def cull(
-    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
+  private[scenegraph] override def updateCull(
+    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
   ) {
-    entityCull(
-      true, version, time, view, renderArray
+    entityUpdateCull(
+      version, true, time, view, renderArray
     )(false, 0, null, 0, 0)
   }
   
   
-  private[scenegraph] def entityCull(
-    enableCulling: Boolean, version: Long,
+  private[scenegraph] def entityUpdateCull(
+    version: Long, enableCulling: Boolean,
     time: TimeStamp, view: View,
-    renderArray: ArrayBuffer[SceneElement[T]]
+    renderArray: SortBuffer[AbstractMesh]
   )(
     allowMultithreading: Boolean, minChildren: Int,
-    batchArray: ArrayBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
+    batchArray: SortBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
   ) {
     
     if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
@@ -293,17 +290,17 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
           }; if (entity.inheritEnvironment) propagateEnvironment()
 
           if (batchChildren) batchArray += entity
-          else entity.entityCull(
-            cullChildren, version, time, view, renderArray
+          else entity.entityUpdateCull(
+            version, cullChildren, time, view, renderArray
           )(allowMultithreading, minChildren, batchArray, maxDepth, currentDepth + 1)
         
         case mesh: Mesh[_, _] =>
-          if (batchChildren) batchArray += mesh
-          else mesh.cull(version, time, view, renderArray)
+          if (batchChildren && cullChildren) batchArray += mesh
+          else mesh.updateCull(version, cullChildren, time, view, renderArray)
           
         case bounded: Bounded[_] =>
-          if (batchChildren) batchArray += bounded
-          else bounded.cull(version, time, view, renderArray)
+          if (batchChildren && cullChildren) batchArray += bounded
+          else bounded.updateCull(version, cullChildren, time, view, renderArray)
         
         case _ =>
           current.update(version)

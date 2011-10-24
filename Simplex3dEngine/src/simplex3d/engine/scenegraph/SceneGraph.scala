@@ -33,7 +33,8 @@ import simplex3d.engine.graphics._
 
 
 class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
-  name: Symbol,
+  name: String,
+  settings: SceneGraphSettings,
   val camera: Camera[T],
   final val techniqueManager: TechniqueManager[G]
 )(implicit transformationContext: T)
@@ -43,7 +44,7 @@ extends Scene(name) {
   
   
   private[this] var version: Long = 0
-  private[this] val controllerContext = new ControllerContext
+  private[this] val controllerContext = new ControllerContext(settings.multithreadControllers)
   
   protected val _root: Node[T, G] = new Node()(transformationContext, techniqueManager.graphicsContext)
   protected def root = _root
@@ -64,40 +65,41 @@ extends Scene(name) {
     1.0
   }
   
-  // TODO update controllers via PassManager
-  def updateControllers(time: TimeStamp) {
+  protected def updateControllers(time: TimeStamp) {
     version += 1
     controllerContext.update(time)
   }
   
+  private val batchArray = new SortBuffer[SceneElement[T]](100)
+  private val concurrentArray = new ConcurrentSortBuffer[AbstractMesh](100)
   
-  private val batchArray = new ArrayBuffer[SceneElement[T]](100)
-  private val synchronizedResult = new ArrayBuffer[AbstractMesh](100) with SynchronizedBuffer[AbstractMesh] //XXX try with something more lightweight
-  
-  def buildRenderArray(pass: Pass, time: TimeStamp, result: InplaceSortBuffer[AbstractMesh]) {
+  def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
     val camera = this.camera // TODO camera should come from the pass.
     camera.sync()
     
     val frustum = Frustum(camera.viewProjection)
     val view = new View(Vec2i(-1), camera, frustum) //XXX proper dimensions
     
-    val allowMultithreading = true // XXX must come from settings
+    val allowMultithreading = settings.multithreadParsing
     if (allowMultithreading) batchArray.clear()
     
-    root.entityCull(
-      true, version, time, view, result.asInstanceOf[InplaceSortBuffer[SceneElement[T]]] //XXX rework casting
-    )(allowMultithreading, 50, batchArray, 3, 0) // XXX these args must come from settings
+    root.entityUpdateCull(
+      version, true, time, view, result
+    )(
+      allowMultithreading, settings.multithreadParsing_NodesWithChildren,
+      batchArray, settings.multithreadParsing_FromDepth, 0
+    )
     
     if (allowMultithreading) {
-      synchronizedResult.clear()
+      concurrentArray.clear()
       
       (0 until batchArray.size).par.foreach { i =>
         batchArray(i) match {
-          case b: Bounded[_] => b.cull(version, time, view, synchronizedResult.asInstanceOf[ArrayBuffer[SceneElement[T]]])
+          case b: Bounded[_] => b.updateCull(version, true, time, view, concurrentArray)
           case _ => // do nothing.
         }
       }
-      result ++= synchronizedResult
+      result ++= concurrentArray
     }
     
     // Resolve techniques.

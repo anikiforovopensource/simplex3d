@@ -35,11 +35,11 @@ object SubtextAccess {
   implicit def changeListenerSubtext(listener: DataChangeListener)
   :DataChangeListener#DataSubtext = listener.dataSubtext
 
-  implicit def accessSharedProperty(property: SharedProperty[_])
-  = property.asInstanceOf[AccessibleSharedProperty]
+  implicit def accessDefinedProperty(property: DefinedProperty[_])
+  = property.asInstanceOf[AccessibleDefinedProperty]
   
-  implicit def accessSharedAttributes(property: SharedAttributes[_, _])
-  = property.asInstanceOf[AccessibleSharedAttributes[_, _]]
+  implicit def accessShaderProperty(property: ShaderProperty[_])
+  = property.asInstanceOf[AccessibleShaderProperty[_]]
   
   implicit def accessProperty(property: Property[_])
   = property.asInstanceOf[AccessibleProperty]
@@ -50,20 +50,23 @@ object SubtextAccess {
   implicit def accessEnvironmentalProperty(property: EnvironmentalProperty[_])
   = property.asInstanceOf[AccessibleEnvironmentalProperty[_]]
   
-  implicit def accessDefinedProperty(property: DefinedProperty[_])
-  = property.asInstanceOf[AccessibleDefinedProperty]
+  implicit def accessSharedProperty(property: SharedProperty[_])
+  = property.asInstanceOf[AccessibleSharedProperty]
   
-  implicit def accessShaderProperty(property: ShaderProperty[_])
-  = property.asInstanceOf[AccessibleShaderProperty[_]]
-  
-  implicit def textureSubtext(texture: Texture[_]) =
-    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
+  implicit def accessSharedAttributes(property: SharedAttributes[_, _])
+  = property.asInstanceOf[AccessibleSharedAttributes[_, _]]
   
   implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
   :AttributesSharedState#Subtext = sharedState.subtext
   
+  implicit def textureSubtext(texture: Texture[_]) =
+    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
+  
   implicit def meshSubtext(mesh: AbstractMesh)
   :AbstractMesh#MeshSubtext = mesh.meshSubtext
+  
+  implicit def sceneSubtext(scene: Scene)
+  :Scene#Subtext = scene.subtext
 }
 
 

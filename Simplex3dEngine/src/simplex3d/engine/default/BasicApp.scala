@@ -44,18 +44,17 @@ trait BasicApp extends App {
     }
   })
   
-  
-  protected val techniqueManager = new renderer.TechniqueManager
+  protected def sceneGraphSettings = new SceneGraphSettings
   
   final class OpenSceneGraph[T <: TransformationContext]
-    (name: Symbol)
+    (name: String)
     (implicit transformationContext: T)
-  extends SceneGraph[T, DG](name, new Camera, techniqueManager) {
+  extends SceneGraph[T, DG](name, sceneGraphSettings, new Camera, new renderer.TechniqueManager) {
     override def root = super.root
     override def attach(elem: SceneElement[T]) { super.attach(elem) }
     override def detach(elem: SceneElement[T]) :Boolean = super.detach(elem)
   }
-  val world = new OpenSceneGraph('World)
+  val world = new OpenSceneGraph("World")
   
   val resources = new ResourceManager {
     loaders += new ClasspathLoader
@@ -63,10 +62,11 @@ trait BasicApp extends App {
   
   
   protected def preUpdate(time: TimeStamp) {
+    import SubtextAccess._
     world.updateControllers(time)
   }
   
-  private val renderArray = new InplaceSortBuffer[AbstractMesh]()
+  private val renderArray = new SortBuffer[AbstractMesh]()
   
   // XXX this codes doesnt belong in App
   def render(context: RenderContext, time: TimeStamp) {

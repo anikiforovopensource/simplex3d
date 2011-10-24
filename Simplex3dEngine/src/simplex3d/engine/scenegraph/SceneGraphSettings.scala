@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Core Module
+ * Simplex3dEngine - SceneGraph Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,16 +19,22 @@
  */
 
 package simplex3d.engine
+package scenegraph
 
-import java.util._
-import scala.collection._
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable._
+import simplex3d.math._
+import simplex3d.math.double._
+import simplex3d.math.double.functions._
+import simplex3d.algorithm.intersection.{ Frustum, Collision }
+import simplex3d.engine.scene._
+import simplex3d.engine.transformation._
+import simplex3d.engine.bounding._
+import simplex3d.engine.graphics._
 
 
-final class InplaceSortBuffer[T](val initCapacity: Int) extends ArrayBuffer[T](initCapacity) {
-  def this() { this(16) }
-  
-  def inplaceSort(comparator: Comparator[T]) {
-    Arrays.sort(array, 0, size, comparator.asInstanceOf[Comparator[Object]])
-  }
-}
+class SceneGraphSettings(
+  val multithreadControllers: Boolean = true,
+  val multithreadParsing: Boolean = true,
+  val multithreadParsing_FromDepth: Int = 3,
+  val multithreadParsing_NodesWithChildren: Int = 50
+)

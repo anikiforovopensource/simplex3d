@@ -21,7 +21,6 @@
 package simplex3d.engine
 package scenegraph
 
-import scala.collection.mutable._
 import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -53,11 +52,22 @@ extends Entity[T, G] {
       boundingUpdated
     }
     
-    // XXX this method is for experemintation with queue
-    private[scenegraph] def cullXXX(version: Long, time: TimeStamp, view: View, renderQueue: java.util.Queue[SceneElement[T]]) {
-      update(version)
+    private[scenegraph] override def updateCull(
+      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
+    ) {
+      throw new UnsupportedOperationException
+    }
+    
+    private[scenegraph] def instanceUpdateCull(
+      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T]]
+    ) {
+      if (enableCulling) update(version)
+      else updateWorldTransformation(version)
       
-      val res = BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+      val res =
+        if (enableCulling) BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+        else Collision.Inside
+        
       if (res == Collision.Outside) return
       
       def process() {
@@ -66,7 +76,7 @@ extends Entity[T, G] {
           shouldRunAnimators = false
         }
         
-        renderQueue.offer(this)
+        renderArray += this
       }; process()
     }
   }
@@ -83,8 +93,7 @@ extends Entity[T, G] {
   override def environment = super.environment
   
   private val displayMesh = new Mesh(this, graphicsContext.mkGeometry(), material)
-  private val localRenderArray = new ArrayBuffer[SceneElement[T]](16)// XXX with SynchronizedBuffer[SceneElement[T]]
-  private val localRenderQueue = new java.util.concurrent.ConcurrentLinkedQueue[SceneElement[T]]
+  private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
@@ -189,7 +198,7 @@ extends Entity[T, G] {
   
   private[this] final def instancingCull(
     enableCulling: Boolean,
-    version: Long, time: TimeStamp, view: View, renderQueue: java.util.Queue[SceneElement[T]]//renderArray: ArrayBuffer[SceneElement[T]] //XXX
+    version: Long, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T]]
   )(allowMultithreading: Boolean, minChildren: Int) {
     
     if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
@@ -200,7 +209,7 @@ extends Entity[T, G] {
       if (!enableCulling) Collision.Inside
       else BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
     
-    val cullChildren = // XXX use this
+    val cullChildren =
       if (frustumTest == Collision.Outside) return
       else if (frustumTest == Collision.Inside) false
       else true
@@ -215,8 +224,10 @@ extends Entity[T, G] {
     
     def processChild(child: SceneElement[T]) {
       child match {
-        case bounded: Bounded[_] => bounded.asInstanceOf[BoundedInstance].cullXXX(version, time, view, renderQueue)
-        case _ => child.update(version)
+        case bounded: Bounded[_] =>
+          bounded.asInstanceOf[BoundedInstance].instanceUpdateCull(version, cullChildren, time, view, renderArray)
+        case _ =>
+          child.update(version)
       }
     }
     
@@ -232,12 +243,11 @@ extends Entity[T, G] {
     }
   }
       
-  private[scenegraph] override def entityCull(
-    enableCulling: Boolean,
-    version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]
+  private[scenegraph] override def entityUpdateCull(
+    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
   )(
     allowMultithreading: Boolean, minChildren: Int,
-    batchArray: ArrayBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
+    batchArray: SortBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
   ) {
     if (geometry.vertices.read == null) return
     
@@ -265,19 +275,12 @@ extends Entity[T, G] {
     displayMesh.geometry.setValueProperties(geometry)
     
     
-    localRenderQueue.clear()
-    instancingCull(enableCulling, version, time, view, localRenderQueue)(allowMultithreading, minChildren)
+    localRenderArray.clear()
+    instancingCull(enableCulling, version, time, view, localRenderArray)(allowMultithreading, minChildren)
     
     boundingUpdated = false
     
-    val instanceArray = if (cullingEnabled) {
-      localRenderArray.clear()
-      var next = localRenderQueue.poll(); while (next != null) {
-        localRenderArray += next
-        next = localRenderQueue.poll()
-      }
-      localRenderArray
-    } else children
+    val instanceArray = if (cullingEnabled) { localRenderArray } else children
     
     val srcNormals = geometry.normals.read
     val destIndices = displayMesh.geometry.indices.write(0, instanceArray.size*srcIndicesSize)

@@ -24,17 +24,17 @@ import scala.collection._
 import simplex3d.math._
 
 
-class Settings {
-  var fullScreen = false
-  var capabilitiesLog = false
-  var performanceLog = false
-  var location = Vec2i(0)
-  var dimensions = ConstVec2i(640, 480) 
-  var verticalSync = false
+class Settings(
+  val fullScreen: Boolean = false,
+  val capabilitiesLog: Boolean = false,
+  val performanceLog: Boolean = false,
+  val location: ConstVec2i = Vec2i(0),
+  val dimensions: ConstVec2i = Vec2i(640, 480) ,
+  val verticalSync: Boolean = false,
   
-  val advanced = new AdvancedSettings
-}
+  val advanced: AdvancedSettings = new AdvancedSettings
+)
 
-class AdvancedSettings {
-  var legacyMipMapGeneration = false
-}
+class AdvancedSettings(
+  val legacyMipMapGeneration: Boolean = false
+)

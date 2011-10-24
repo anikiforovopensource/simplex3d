@@ -87,4 +87,26 @@ extends Bounded[T] with AbstractMesh {
     uncheckedWorldTransformation.clearDataChanges()
     updated
   }
+  
+  private[scenegraph] override def updateCull(
+    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
+  ) {
+    if (enableCulling) update(version)
+    else updateWorldTransformation(version)
+    
+    val res =
+      if (enableCulling) BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+      else Collision.Inside
+
+    if (res == Collision.Outside) return
+    
+    def process() {
+      if (animators != null && shouldRunAnimators) {
+        runUpdaters(animators, time)
+        shouldRunAnimators = false
+      }
+      
+      renderArray += this
+    }; process()
+  }
 }

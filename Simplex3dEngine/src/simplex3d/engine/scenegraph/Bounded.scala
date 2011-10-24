@@ -27,12 +27,14 @@ import simplex3d.math.double.functions._
 import simplex3d.algorithm._
 import simplex3d.algorithm.intersection.Collision
 import simplex3d.engine.bounding._
+import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-// TODO change into abstract class when Scala's VerifyError bug is fixed: (XXX bug ref)
-trait Bounded[T <: TransformationContext] extends SceneElement[T] {
+abstract class Bounded[T <: TransformationContext] private[scenegraph] (
+  implicit transformationContext: T
+) extends SceneElement[T] {
   
   import SubtextAccess._
   
@@ -82,21 +84,9 @@ trait Bounded[T <: TransformationContext] extends SceneElement[T] {
   }
   
   
-  private[scenegraph] def cull(version: Long, time: TimeStamp, view: View, renderArray: ArrayBuffer[SceneElement[T]]) {
-    update(version)
-    
-    val res = BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
-    if (res == Collision.Outside) return
-    
-    def process() {
-      if (animators != null && shouldRunAnimators) {
-        runUpdaters(animators, time)
-        shouldRunAnimators = false
-      }
-      
-      renderArray += this
-    }; process()
-  }
+  private[scenegraph] def updateCull(
+    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
+  )
 }
 
 

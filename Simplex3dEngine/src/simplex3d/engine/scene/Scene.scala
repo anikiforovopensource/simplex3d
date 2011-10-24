@@ -24,17 +24,23 @@ package scene
 import scala.collection.mutable.ArrayBuffer
 
 
-abstract class Scene(val name: Symbol) {
+abstract class Scene(val name: String) { self =>
+  final class Subtext {
+    def updateControllers(time: TimeStamp) { self.updateControllers(time) }
+  }
+  private[engine] final val subtext = new Subtext
+  
+  
   val camera: AbstractCamera
   
   
   // preload some content within a soft bound given by timeSlice, return the overall completion 0-started, 1-done.
   def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double
  
-  def updateControllers(time: TimeStamp) :Unit
+  protected def updateControllers(time: TimeStamp) :Unit
   
   // combine attribs while culling
-  def buildRenderArray(pass: Pass, time: TimeStamp, result: InplaceSortBuffer[AbstractMesh]) :Unit
+  def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) :Unit
   
   // discard unwanted meshes
   def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Unit

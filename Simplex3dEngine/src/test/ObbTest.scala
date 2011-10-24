@@ -42,11 +42,13 @@ object ObbTest extends BasicApp with lwjgl.App {
   val title = "Obb Test"
   
   def main(args: Array[String]) {
-    val settings = new Settings
-    settings.fullScreen = false
-    settings.verticalSync = true
-    settings.performanceLog = true
-    settings.dimensions = Vec2i(800, 600)
+    val settings = new Settings(
+      fullScreen = false,
+      verticalSync = true,
+      capabilitiesLog = true,
+      performanceLog = true,
+      dimensions = Vec2i(800, 600)
+    )
     
     launch(settings)
   }

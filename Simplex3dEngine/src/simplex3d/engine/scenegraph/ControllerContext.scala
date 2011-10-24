@@ -24,7 +24,7 @@ package scenegraph
 import scala.collection.mutable.ArrayBuffer
 
 
-final class ControllerContext {
+final class ControllerContext(val enableMultithreading: Boolean) {
   private[this] val controlled = ArrayBuffer[Spatial[_]]()
   
   def register(elements: Seq[Spatial[_]]) {
@@ -36,14 +36,23 @@ final class ControllerContext {
   }
   
   def update(time: TimeStamp) {
-    // XXX must be set via settings
-    (0 until controlled.size).par.foreach { i =>
-      val c = controlled(i)
-      c match {
+    def processSpatial(spatial: Spatial[_]) {
+      spatial match {
         case b: Bounded[_] => b.shouldRunAnimators = true
         case _ => // do nothing.
       }
-      c.runUpdaters(c.controllers, time)
+      spatial.runUpdaters(spatial.controllers, time)
+    }
+    
+    if (enableMultithreading) {
+      (0 until controlled.size).par.foreach(i => processSpatial(controlled(i)))
+    } else {
+      def processControlled() {
+        val size = controlled.size; var i = 0; while (i < size) {
+          processSpatial(controlled(i))
+          i += 1
+        }
+      }; processControlled()
     }
   }
 }

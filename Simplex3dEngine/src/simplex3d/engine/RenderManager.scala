@@ -25,6 +25,6 @@ import simplex3d.engine.scene._
 
 
 trait RenderManager {
-  def render(context: RenderContext, camera: AbstractCamera, renderArray: InplaceSortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: InplaceSortBuffer[AbstractMesh]) :Unit
+  def render(context: RenderContext, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
 }

@@ -24,6 +24,7 @@ package graphics
 
 abstract class TechniqueManager[G <: GraphicsContext] {
   val graphicsContext: G
+  val passManager: PassManager[G]
   
   def resolveTechnique(geometry: Geometry, material: Material, worldEnvironment: Environment) :Technique
 }

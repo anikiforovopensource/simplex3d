@@ -65,8 +65,8 @@ object SubtextAccess {
   implicit def meshSubtext(mesh: AbstractMesh)
   :AbstractMesh#MeshSubtext = mesh.meshSubtext
   
-  implicit def sceneSubtext(scene: Scene)
-  :Scene#Subtext = scene.subtext
+  implicit def sceneSubtext(scene: Scene[_])
+  :Scene[GraphicsContext]#Subtext = scene.asInstanceOf[Scene[GraphicsContext]].subtext
 }
 
 

@@ -25,7 +25,10 @@ import simplex3d.engine.graphics._
 
 
 class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G)
-extends graphics.TechniqueManager[G] {
+extends graphics.TechniqueManager[G]
+{
+  val passManager = new PassManager[G]
+
   
   private val cached = {
     val vertexShader = """

@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - GL Module
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,14 +19,11 @@
  */
 
 package simplex3d.engine
-package impl.gl
+package graphics
 
-import simplex3d.engine.graphics._
+import simplex3d.engine.scene._
 
 
-private[impl] class MeshInfo {
-  val mapping: MeshMapping = new MeshMapping
-  val predefinedUniforms: PredefinedUniforms = new PredefinedUniforms
-  var updatableEffects: ReadArray[UncheckedUpdatableEffect] = null
-  var suspendLogging = false
+trait PassManager[G <: GraphicsContext] {
+  def render(renderManager: RenderManager, time: TimeStamp, scene: Scene[G]) :Unit
 }

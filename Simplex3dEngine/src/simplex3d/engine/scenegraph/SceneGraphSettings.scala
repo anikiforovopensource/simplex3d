@@ -33,8 +33,8 @@ import simplex3d.engine.graphics._
 
 
 class SceneGraphSettings(
-  val multithreadControllers: Boolean = true,
-  val multithreadParsing: Boolean = true,
-  val multithreadParsing_FromDepth: Int = 3,
-  val multithreadParsing_NodesWithChildren: Int = 50
+  val multithreadedControllers: Boolean = true,
+  val multithreadedParsing: Boolean = true,
+  val multithreadedParsing_FromDepth: Int = 3,
+  val multithreadedParsing_NodesWithChildren: Int = 50
 )

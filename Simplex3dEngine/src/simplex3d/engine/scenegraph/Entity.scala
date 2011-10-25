@@ -250,7 +250,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
           def propagateEnvironment() {
             val resultEnv = entity.worldEnvironment
     
-            val parentProps = this.worldEnvironment.properties
+            val parentProps = worldEnvironment.properties
             val childProps = entity.environment.properties
             val resultProps = resultEnv.properties
             
@@ -261,27 +261,24 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
               val resultProp = resultProps(i)
               
               if (parentProp.hasDataChanges || childProp.hasDataChanges) {
-                def propagateEnvironmentalProperty() {
-                  
-                  if (parentProp.isDefined) {
-                    if (childProp.isDefined) {
-                      val structChanges = childProp.defined.propagate(parentProp.defined, resultProp.mutable)
-                      if (structChanges) resultEnv.signalStructuralChanges()
-                    }
-                    else {
-                      resultProp.mutable := parentProp.defined
-                    }
+                if (parentProp.isDefined) {
+                  if (childProp.isDefined) {
+                    val structChanges = childProp.defined.propagate(parentProp.defined, resultProp.mutable)
+                    if (structChanges) resultEnv.signalStructuralChanges()
                   }
                   else {
-                    if (childProp.isDefined) {
-                      resultProp.mutable := childProp.defined
-                    }
-                    else {
-                      resultProp.undefine()
-                    }
+                    resultProp.mutable := parentProp.defined
                   }
-                  
-                }; propagateEnvironmentalProperty()
+                }
+                else {
+                  if (childProp.isDefined) {
+                    resultProp.mutable := childProp.defined
+                  }
+                  else {
+                    resultProp.undefine()
+                  }
+                }
+
                 childProp.clearDataChanges()
               }
               
@@ -308,5 +305,15 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       
       i += 1
     }
+    
+    
+    def clearProps() {
+      val parentProps = worldEnvironment.properties
+      val size = parentProps.length; var i = 0; while (i < size) {
+        parentProps(i).clearDataChanges()
+        
+        i += 1
+      }
+    }; clearProps()
   }
 }

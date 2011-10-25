@@ -22,28 +22,50 @@ package simplex3d.engine
 package scene
 
 import scala.collection.mutable.ArrayBuffer
+import simplex3d.engine.graphics._
 
 
-abstract class Scene(val name: String) { self =>
+abstract class Scene[G <: GraphicsContext](val name: String) { self =>
   final class Subtext {
-    def updateControllers(time: TimeStamp) { self.updateControllers(time) }
+    def camera = self.camera
+    
+    def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
+      self.preload(context, frameTimer, timeSlice)
+    }
+    def updateControllers(time: TimeStamp) {
+      self.updateControllers(time)
+    }
+    def render(renderManager: RenderManager, time: TimeStamp) {
+      self.render(renderManager, time)
+    }
+    def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
+      self.buildRenderArray(pass, time, result)
+    }
+    def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
+      self.manage(context, frameTimer, timeSlice)
+    }
+    def cleanup(context: RenderContext) {
+      self.cleanup(context)
+    }
   }
   private[engine] final val subtext = new Subtext
   
   
-  val camera: AbstractCamera
+  protected val camera: AbstractCamera
   
   
   // preload some content within a soft bound given by timeSlice, return the overall completion 0-started, 1-done.
-  def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double
+  protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double
  
   protected def updateControllers(time: TimeStamp) :Unit
   
+  protected def render(renderManager: RenderManager, time: TimeStamp) :Unit
+  
   // combine attribs while culling
-  def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) :Unit
+  protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) :Unit
   
   // discard unwanted meshes
-  def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Unit
+  protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Unit
 
-  def cleanup(context: RenderContext) :Unit
+  protected def cleanup(context: RenderContext) :Unit
 }

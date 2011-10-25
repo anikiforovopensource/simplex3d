@@ -74,3 +74,16 @@ abstract class GraphicsContext {
     }
   }
 }
+
+
+object DummyGraphicsContext extends GraphicsContext {
+  type Geometry = graphics.Geometry
+  type Material = graphics.Material
+  type Environment = graphics.Environment
+  
+  val mkGeometry = () => new Geometry with ReflectGeometry { reflect(this.getClass) }
+  val mkMaterial = () => new Material with ReflectMaterial { reflect(this.getClass) }
+  val mkEnvironment = () => new Environment with ReflectEnvironment { reflect(this.getClass) }
+  
+  initNamespace()
+}

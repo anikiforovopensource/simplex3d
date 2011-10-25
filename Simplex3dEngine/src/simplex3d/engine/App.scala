@@ -21,13 +21,35 @@
 package simplex3d.engine
 
 import scala.collection.mutable.ArrayBuffer
-import simplex3d.engine.scene._
+import simplex3d.math._
+import simplex3d.engine.input._
 import simplex3d.engine.graphics._
+import simplex3d.engine.resource._
 
 
-trait RenderManager {
-  val renderContext: RenderContext
+trait App {
+  protected val title: String
   
-  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
+  protected def frameTimer: FrameTimer
+  protected def renderManager: RenderManager
+  
+  protected def init() :Unit
+  protected def preUpdate(time: TimeStamp) :Unit
+  protected def update(time: TimeStamp) :Unit
+  protected def render(time: TimeStamp) :Unit
+  protected def manage() :Unit
+  protected def reshape(position: inVec2i, dimensions: inVec2i) :Unit
+  
+  def launch(settings: Settings) :Unit
+  def dispose() :Unit
+  
+  
+  protected val inputListeners = new ArrayBuffer[InputListener]
+  
+  def addInputListener(listener: InputListener) {
+    inputListeners += listener
+  }
+  def removeInputListener(listener: InputListener) {
+    inputListeners -= listener
+  }
 }

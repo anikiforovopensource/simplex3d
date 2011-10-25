@@ -35,16 +35,16 @@ import simplex3d.engine.graphics._
 class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
   name: String,
   settings: SceneGraphSettings,
-  val camera: Camera[T],
+  final val camera: Camera[T],
   final val techniqueManager: TechniqueManager[G]
 )(implicit transformationContext: T)
-extends Scene(name) {
+extends Scene[G](name) {
   
   import SubtextAccess._
   
   
   private[this] var version: Long = 0
-  private[this] val controllerContext = new ControllerContext(settings.multithreadControllers)
+  private[this] val controllerContext = new ControllerContext(settings.multithreadedControllers)
   
   protected val _root: Node[T, G] = new Node("Root")(transformationContext, techniqueManager.graphicsContext)
   protected def root = _root
@@ -61,7 +61,7 @@ extends Scene(name) {
   }
   
   
-  def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
+  protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
     1.0
   }
   
@@ -70,24 +70,29 @@ extends Scene(name) {
     controllerContext.update(time)
   }
   
+  protected def render(renderManager: RenderManager, time: TimeStamp) {
+    techniqueManager.passManager.render(renderManager, time, this)
+  }
+  
+  
   private val batchArray = new SortBuffer[SceneElement[T]](100)
   private val concurrentArray = new ConcurrentSortBuffer[AbstractMesh](100)
   
-  def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
+  protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
     val camera = this.camera // TODO camera should come from the pass.
     camera.sync()
     
     val frustum = Frustum(camera.viewProjection)
     val view = new View(Vec2i(-1), camera, frustum) //XXX proper dimensions
     
-    val allowMultithreading = settings.multithreadParsing
+    val allowMultithreading = settings.multithreadedParsing
     if (allowMultithreading) batchArray.clear()
     
     root.entityUpdateCull(
       version, true, time, view, result
     )(
-      allowMultithreading, settings.multithreadParsing_NodesWithChildren,
-      batchArray, settings.multithreadParsing_FromDepth, 0
+      allowMultithreading, settings.multithreadedParsing_NodesWithChildren,
+      batchArray, settings.multithreadedParsing_FromDepth, 0
     )
     
     if (allowMultithreading) {
@@ -118,11 +123,11 @@ extends Scene(name) {
     }
   }
   
-  def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
+  protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
     
   }
   
-  def cleanup(context: RenderContext) {
+  protected def cleanup(context: RenderContext) {
     
   }
 }

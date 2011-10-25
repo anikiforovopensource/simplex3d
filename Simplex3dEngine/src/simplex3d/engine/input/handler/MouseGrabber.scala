@@ -29,18 +29,21 @@ import simplex3d.engine.input._
 import simplex3d.engine.transformation._
 
 
-class MouseGrabber(startWithGrabbedMouse: Boolean)(keys: Int*)(mouseDependentHandlers: InputListener*)
+class MouseGrabber(startWithGrabbedMouse: Boolean)(keys: Int*)
+  (mouseGrabbedHandler: InputListener*)(mouseFreeHandler: InputListener*)
 extends InputListener {
   
   private var initialized = false
-  mouseDependentHandlers.foreach(_.isEnabled = false)
+  mouseGrabbedHandler.foreach(_.isEnabled = false)
+  mouseFreeHandler.foreach(_.isEnabled = false)
   
   override def update(input: Input, time: TimeStamp) {
     if (!initialized) {
       input.mouse.isGrabbed = startWithGrabbedMouse
       initialized = true
       
-      mouseDependentHandlers.foreach(_.isEnabled = input.mouse.isGrabbed)
+      mouseGrabbedHandler.foreach(_.isEnabled = input.mouse.isGrabbed)
+      mouseFreeHandler.foreach(_.isEnabled = !input.mouse.isGrabbed)
     }
   }
   
@@ -48,7 +51,8 @@ extends InputListener {
     override def keyTyped(input: Input, e: KeyEvent) {
       if (keys.contains(e.keyCode)) {
         input.mouse.isGrabbed = !input.mouse.isGrabbed
-        mouseDependentHandlers.foreach(_.isEnabled = input.mouse.isGrabbed)
+        mouseGrabbedHandler.foreach(_.isEnabled = input.mouse.isGrabbed)
+        mouseFreeHandler.foreach(_.isEnabled = !input.mouse.isGrabbed)
       }
     }
   }

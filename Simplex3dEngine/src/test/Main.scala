@@ -29,7 +29,6 @@ import simplex3d.data.double._
 import simplex3d.algorithm.noise._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
-import simplex3d.engine.app._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
@@ -41,29 +40,6 @@ import simplex3d.engine.impl._
 object Main {
   
   def main(args: Array[String]) {
-    val t1 = new ComponentTransformation3d;
-    {
-      val t = t1.mutable
-      t.scale := 10
-      t.rotation.applyRotationX(radians(30))
-      t.translation := Vec3(10)
-    }
     
-    val t2 = new ComponentTransformation3d;
-    {
-      val t = t2.mutable
-      t.scale := 20
-      t.rotation.applyRotationY(radians(40))
-      t.translation := Vec3(3)
-    }
-    
-    val t3 = new ComponentTransformation3d
-    t1.propagateChanges(t2, t3)
-    
-    val m1 = Mat3x4 scale 10 rotateX radians(30) translate Vec3(10)
-    val m2 = Mat3x4 scale 20 rotateY radians(40) translate Vec3(3)
-    val m3 = m1 concat m2
-    
-    println(t3.matrix - m3)
   }
 }

@@ -30,7 +30,6 @@ import simplex3d.algorithm.noise._
 import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
-import simplex3d.engine.app._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
@@ -65,7 +64,12 @@ object FrustumTest extends BasicApp with lwjgl.App {
   val cube = new Mesh("Cube")
   
   def init() {
-    input.mouse.isGrabbed = true
+    world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
+    
+    val camControls = new FirstPersonHandler(world.camera.transformation)
+    addInputListener(camControls)
+    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    
     
     val (indices, vertices, normals, texCoords) = makeBox()
     
@@ -75,29 +79,13 @@ object FrustumTest extends BasicApp with lwjgl.App {
     cube.geometry.texCoords.defineAs(Attributes(texCoords))
     
     cube.material.texture.mutable := texture
+    
     cube.transformation.mutable.scale := 20
     cube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
     
     world.attach(cube)
   }
-  
-  
-  val camControls = new FirstPersonHandler(world.camera.transformation)
-  world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
-  addInputListener(camControls)
-  
-  addInputListener(new InputListener {
-    override val keyboardListener = new KeyboardListener {
-      override def keyTyped(input: Input, e: KeyEvent) {
-        if (KeyCode.Num_Enter == e.keyCode || KeyCode.K_Enter == e.keyCode) {
-          input.mouse.isGrabbed = !input.mouse.isGrabbed
-          camControls.isEnabled = input.mouse.isGrabbed
-        }
-      }
-    }
-  })
-  
-  
+    
   def update(time: TimeStamp) {
     import simplex3d.algorithm.intersection._
     

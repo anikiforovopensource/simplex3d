@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Core Module
+ * Simplex3dEngine - Renderer Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,7 +19,23 @@
  */
 
 package simplex3d.engine
+package renderer
 
-class Pass {
+import simplex3d.engine.scene._
+import simplex3d.engine.graphics._
 
+
+class PassManager[G <: GraphicsContext] extends graphics.PassManager[G] {
+  import SubtextAccess._
+  
+  private val renderArray = new SortBuffer[AbstractMesh]()
+  
+  def render(renderManager: RenderManager, time: TimeStamp, scene: Scene[G]) {
+    renderManager.renderContext.clearFrameBuffer()
+    renderArray.clear()
+    
+    scene.buildRenderArray(null, time, renderArray)
+    renderManager.sortRenderArray(null, renderArray)
+    renderManager.render(scene.camera, renderArray)
+  }
 }

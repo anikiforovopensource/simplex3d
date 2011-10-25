@@ -35,7 +35,7 @@ private[lwjgl] object App {
 }
 
 
-trait App extends app.App {
+trait App extends simplex3d.engine.App {
   import App.logger._
   
 
@@ -44,15 +44,16 @@ trait App extends app.App {
   
   
   private val timer = new Timer
-  private var renderContext: RenderContext = _
   protected val frameTimer = timer.frameTimer
-  protected val input = new Input
-  protected val renderManager = new RenderManager
+  
+  private var _renderManager: RenderManager = _
+  protected def renderManager = _renderManager
+  
+  private val input = new Input
+  private var lastFps = 0.0
+
   
   @volatile private var quit = false
-  
-  private var lastFps = 0.0
-  
   
   final def launch(settings: Settings) {
     
@@ -80,8 +81,9 @@ trait App extends app.App {
     RawKeyboard.create()
     RawMouse.create()
     
-    renderContext = new RenderContext(detectGraphicsCaps(), settings.advanced)
-    if (settings.capabilitiesLog) log(Level.INFO, renderContext.capabilities.toString)
+    _renderManager = new RenderManager(new RenderContext(detectGraphicsCaps(), settings.advanced))
+    if (settings.capabilitiesLog) log(Level.INFO, renderManager.renderContext.capabilities.toString)
+    
     
     timer.reset()
     
@@ -91,7 +93,7 @@ trait App extends app.App {
     while (!quit) {
       profiler1.begin()
       
-      renderContext.resetState()
+      renderManager.renderContext.resetState()
       timer.update()
       val time = timer.timeStamp
       
@@ -100,7 +102,7 @@ trait App extends app.App {
       
       preUpdate(time)
       update(time)
-      render(renderContext, time)
+      render(time)
       
       profiler2.begin()
       Display.update()
@@ -108,8 +110,8 @@ trait App extends app.App {
       
       Thread.`yield`()
       
-      manage(renderContext)
-      renderContext.manage()
+      manage()
+      renderManager.renderContext.manage()
       
       if (settings.performanceLog && lastFps != timer.fps) {
         lastFps = timer.fps
@@ -120,7 +122,7 @@ trait App extends app.App {
       profiler1.end()
     }
     
-    if (renderContext != null) renderContext.cleanup()
+    renderManager.renderContext.cleanup()
     Display.destroy()
   }
   
@@ -200,5 +202,4 @@ trait App extends app.App {
   def dispose() {
     quit = true
   }
-
 }

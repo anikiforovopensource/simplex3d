@@ -38,8 +38,8 @@ import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object DynamicTexture extends BasicApp with lwjgl.App {
-  val title = "Dynamic Texture"
+object InterleavedAttributes extends BasicApp with lwjgl.App {
+  val title = "Interleaved Attributes"
   
   def main(args: Array[String]) {
     val settings = new Settings(
@@ -55,10 +55,26 @@ object DynamicTexture extends BasicApp with lwjgl.App {
   
   
   val noise = ClassicalGradientNoise
+  var vertices: DataBuffer[Vec3, RFloat] = _
+  var mesh: Mesh[DT, DG] = _
   
-  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
-  val subImgDims = ConstVec2i(64)
-  val subImg = DataBuffer[Vec3, UByte](subImgDims.x*subImgDims.y)
+  
+  //val objectTexture = resources.loadTexture2d[Vec3]("sample/texture.png").get
+  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128)); {
+    val img = objectTexture.write
+    
+    var y = 0; while (y < objectTexture.dimensions.y) {
+      var x = 0; while (x < objectTexture.dimensions.x) {
+        
+        val i = x + y*objectTexture.dimensions.x
+        val intencity = (noise(x*0.06, y*0.06, 2.324) + 1)*0.5
+        img(i) = Vec3(0, intencity, intencity)
+        
+        x += 1
+      }
+      y += 1
+    }
+  }
   
   
   def init() {
@@ -70,50 +86,37 @@ object DynamicTexture extends BasicApp with lwjgl.App {
     
     
     val (indices, vertices, normals, texCoords) = makeBox()
+    val (iVertices, iNormals, iTexCoords) = interleave(vertices, normals, texCoords)(vertices.size)
+    this.vertices = vertices.copyAsDataBuffer()
     
-    val mesh = new Mesh("Cube")
+    mesh = new Mesh("Cube")
     
     mesh.geometry.indices.defineAs(Attributes(indices))
-    mesh.geometry.vertices.defineAs(Attributes(vertices))
-    mesh.geometry.normals.defineAs(Attributes(normals))
-    
-    mesh.geometry.texCoords.defineAs(Attributes(texCoords))
+    new interleaved(Caching.Stream) {
+      mesh.geometry.vertices.defineAs(Attributes(iVertices))
+      mesh.geometry.normals.defineAs(Attributes(iNormals))
+      mesh.geometry.texCoords.defineAs(Attributes(iTexCoords))
+    }.delayedInit()
+    // delayedInit() call will be unnecessary when DelayedInit trait is fixed,
+    // please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
     mesh.material.texture.mutable := objectTexture
+    
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.mutable.scale := 50
+    mesh.transformation.mutable.scale := 40
     
     world.attach(mesh)
   }
   
   def update(time: TimeStamp) {
+    def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15
+    def fuzzyMat = Mat3x4(1) + Mat3x4(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
     
-    def writeImg(img: Data[Vec3], dims: inVec2i)(function: (Int, Int) => ReadVec3) {
-      var y = 0; while (y < dims.y) {
-        var x = 0; while (x < dims.x) {
-          
-          val i = x + y*dims.x
-          img(i) = function(x, y)
-          
-          x += 1
-        }
-        y += 1
-      }
-    }
-    
-    // Updating the texture: the changes will be synchronized with OpenGL automatically.
-    writeImg(objectTexture.write, objectTexture.dimensions) { (x, y) =>
-      val intencity = (noise(x*0.06, y*0.06, time.total*0.4) + 1)*0.5
-      Vec3(0, intencity, intencity)
-    }
-    
-    // An example on how to update sub-image.
-    if (true) {
-      writeImg(subImg, subImgDims) { (x, y) =>
-        val intencity = (noise(x*0.12, y*0.12, time.total*0.8) + 1)*0.5
-        Vec3(0, intencity, 0)
-      }
-      objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subImg, subImgDims)
+    // Interleaved and non-interleaved attributes are updated in the same fashion.
+    val data = mesh.geometry.vertices.write
+    var i = 0; while (i < data.size) {
+      data(i) = fuzzyMat.transformPoint(vertices(i))
+      i += 1
     }
   }
   

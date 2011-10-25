@@ -264,13 +264,13 @@ extends engine.RenderContext with GlAccess {
   }
   
   private def legacyMipMapGeneration(texture: Texture2d[_]) {
-    if (!texture.supressLog && (!isPowerOfTwo(texture.dimensions.x) || !isPowerOfTwo(texture.dimensions.y))) {
+    if (!texture.suspendLogging && (!isPowerOfTwo(texture.dimensions.x) || !isPowerOfTwo(texture.dimensions.y))) {
       log(
         Level.WARNING,
         "Using 'settings.advanced.legacyMipMapGeneration = true' with non-power-of-two textures. " +
         "The resulting texture will be resized."
       )
-      texture.supressLog = true
+      texture.suspendLogging = true
     }
     
     val src = texture.src
@@ -535,7 +535,7 @@ extends engine.RenderContext with GlAccess {
     
     
     // Query GL for program bindings.
-    val uniformBindings = ArrayBuffer[UniformBinding]()
+    var uniformBindings = ArrayBuffer[UniformBinding]()
     val attributeBindings = ArrayBuffer[AttributeBinding]()
     var textureUnitCount = 0
     
@@ -610,7 +610,7 @@ extends engine.RenderContext with GlAccess {
     val attributeCount = glGetProgram(id, GL_ACTIVE_ATTRIBUTES)
     val attributeStringLength = glGetProgram(id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
     i = 0; while (i < attributeCount) {
-      val name = glGetActiveAttrib(id, i, uniformStringLength, sizeType)
+      val name = glGetActiveAttrib(id, i, attributeStringLength, sizeType)
       val size = sizeType.get(0) // Not used by GL.
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
@@ -628,10 +628,14 @@ extends engine.RenderContext with GlAccess {
     // Uniforms
     val unusedUniformBindings = uniformBindings.filter(_.blockType == -1)
     
-    if (unusedUniformBindings.size != 0) log(
-      Level.SEVERE, "Uniforms do no exist: " +
-      unusedUniformBindings.map(_.name).mkString(", ")
-    )
+    if (unusedUniformBindings.size != 0) {
+      uniformBindings = uniformBindings.filterNot(_.blockType == -1)
+      
+      log(
+        Level.SEVERE, "Uniforms do no exist: " +
+        unusedUniformBindings.map(_.name).mkString(", ")
+      )
+    }
     
     
     // Attributes

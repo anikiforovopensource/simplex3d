@@ -43,7 +43,8 @@ private[lwjgl] object RenderManager {
 }
 
 
-private[lwjgl] final class RenderManager extends engine.RenderManager with GlUnsafeAccess
+private[lwjgl] final class RenderManager(val renderContext: RenderContext)
+extends engine.RenderManager with GlUnsafeAccess
 {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
@@ -53,10 +54,8 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
   
   private val elementRange = new ElementRange()
   
-  
-  def render(ctx: engine.RenderContext, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
-    val context = ctx.asInstanceOf[RenderContext]
-    if (context.requiresReset) context.resetState()
+  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
+    if (renderContext.requiresReset) renderContext.resetState()
     
     // XXX these should come from the path, and get activated via context
     glEnable(GL_DEPTH_TEST)
@@ -64,24 +63,33 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
     
     var i = 0; while (i < renderArray.size) {
       val mesh = renderArray(i)
-      render(context, camera, mesh)
+      render(camera, mesh)
       
       i += 1
     }
   }
 
   
-  private def render(context: RenderContext, camera: AbstractCamera, mesh: AbstractMesh) {
+  private def render(camera: AbstractCamera, mesh: AbstractMesh) {
     
     val program = mesh.technique.defined
     
+    if (program == null) {
+      if (!mesh.suspendLogging) {
+        log(Level.SEVERE, "Mesh '" + mesh.name + "' has an undefined technique.")
+        mesh.suspendLogging = true
+      }
+      return
+    }
+    
+    
     // Compiles shaders, links the program, build the program mapping, and calls glUseProgram.
-    context.bindProgram(program)
+    renderContext.bindProgram(program)
     
     val programMapping = program.mapping
     
     if (mesh.technique.hasRefChanges) {
-      context.rebuildMeshMapping(mesh, programMapping)
+      renderContext.rebuildMeshMapping(mesh, programMapping)
       mesh.technique.clearRefChanges()
       
       def resolveUpdatableEffects() {
@@ -105,7 +113,7 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
     val material = mesh.material
     
     mesh.resolveElementRange(elementRange)
-    context.setFaceCulling(geometry.faceCulling)
+    renderContext.setFaceCulling(geometry.faceCulling)
     
     
     val predefinedUniforms = mesh.predefinedUniforms
@@ -128,7 +136,7 @@ private[lwjgl] final class RenderManager extends engine.RenderManager with GlUns
 //    program("ecLightDir") = ecLightDir
     
     if (geometry.indices.isDefined) {
-      context.init(geometry.indices.defined)
+      renderContext.init(geometry.indices.defined)
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.indices.defined.managedFields.id)
       glDrawElements(GL_TRIANGLES, elementRange.count, geometry.indices.defined.src.rawType, elementRange.first.toConst)
     }

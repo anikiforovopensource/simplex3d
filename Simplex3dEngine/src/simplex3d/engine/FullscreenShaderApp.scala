@@ -19,40 +19,47 @@
  */
 
 package simplex3d.engine
-package app
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
+import simplex3d.math.double._
 import simplex3d.engine.input._
 import simplex3d.engine.graphics._
 import simplex3d.engine.resource._
 
 
-trait App {
-  protected val title: String
+trait FullscreenShaderApp extends App {
   
-  protected val frameTimer: FrameTimer
-  protected val input: Input
-  protected val renderManager: RenderManager
-  protected val resources: ResourceManager
+  protected val shader: Shader
   
-  protected def init() :Unit
-  protected def preUpdate(time: TimeStamp) :Unit
-  protected def update(time: TimeStamp) :Unit
-  protected def render(context: RenderContext, time: TimeStamp) :Unit
-  protected def manage(context: RenderContext) :Unit
-  protected def reshape(position: inVec2i, dimensions: inVec2i) :Unit
-  
-  def launch(settings: Settings) :Unit
-  def dispose() :Unit
+  protected def viewDimensions: ReadVec2i = viewDims.toConst()
   
   
-  protected val inputListeners = new ArrayBuffer[InputListener]
+  addInputListener(new InputListener {
+    override val keyboardListener = new KeyboardListener {
+      override def keyTyped(input: Input, e: KeyEvent) {
+        if (KeyCode.K_Escape == e.keyCode) dispose()
+      }
+    }
+  })
   
-  def addInputListener(listener: InputListener) {
-    inputListeners += listener
+  
+  import SubtextAccess._
+  
+  
+  private var effect: FullscreenEffect = _
+  private val viewDims = Vec2i(0)
+  
+  protected final def init() {
+    effect = new FullscreenEffect("Fullscreen Shader", shader)
   }
-  def removeInputListener(listener: InputListener) {
-    inputListeners -= listener
+  protected def render(time: TimeStamp) {
+    effect.render(renderManager, time)
   }
+  protected def reshape(position: inVec2i, dimensions: inVec2i) {
+    viewDims := dimensions
+  }
+  
+  
+  protected def preUpdate(time: TimeStamp) {}
+  protected def manage() {}
 }

@@ -26,5 +26,5 @@ import simplex3d.engine.graphics._
 
 private[impl] final class TextureInfo extends ObjectInfo(ManagedObjects.Texture) {
   var hasMatchingMipmaps = false
-  var supressLog = false
+  var suspendLogging = false
 }

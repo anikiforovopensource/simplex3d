@@ -30,7 +30,6 @@ import simplex3d.algorithm.noise._
 import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
-import simplex3d.engine.app._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
@@ -69,6 +68,13 @@ object ObbTest extends BasicApp with lwjgl.App {
   val translation = ConstVec3(20, 0, 0)
   
   def init() {
+    world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
+    
+    val camControls = new FirstPersonHandler(world.camera.transformation)
+    addInputListener(camControls)
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)(cubeControls))
+    
+    
     val (indices, vertices, normals, texCoords) = makeBox()
     val aindices = Attributes(indices)
     val avertices = Attributes(vertices)
@@ -82,6 +88,7 @@ object ObbTest extends BasicApp with lwjgl.App {
     movingCube.geometry.texCoords.defineAs(atexCoords)
     
     movingCube.material.texture.mutable := texture
+    
     movingCube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30))
     movingCube.transformation.mutable.scale := cubeScale
     
@@ -94,6 +101,7 @@ object ObbTest extends BasicApp with lwjgl.App {
     cube1.geometry.texCoords.defineAs(atexCoords)
     
     cube1.material.texture.mutable := texture
+    
     cube1.transformation.mutable.scale := cubeScale
     cube1.transformation.mutable.translation := -translation
     
@@ -106,6 +114,7 @@ object ObbTest extends BasicApp with lwjgl.App {
     cube2.geometry.texCoords.defineAs(atexCoords)
     
     cube2.material.texture.mutable := texture
+    
     cube2.transformation.mutable.rotation := Quat4 rotateX(radians(-15)) rotateZ(radians(30))
     cube2.transformation.mutable.scale := cubeScale
     cube2.transformation.mutable.translation := translation
@@ -132,24 +141,6 @@ object ObbTest extends BasicApp with lwjgl.App {
   }
   addInputListener(cubeControls)
   
-  val camControls = new FirstPersonHandler(world.camera.transformation)
-  world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
-  camControls.isEnabled = false
-  addInputListener(camControls)
-  
-  addInputListener(new InputListener {
-    override val keyboardListener = new KeyboardListener {
-      override def keyTyped(input: Input, e: KeyEvent) {
-        if (KeyCode.Num_Enter == e.keyCode || KeyCode.K_Enter == e.keyCode) {
-          input.mouse.isGrabbed = !input.mouse.isGrabbed
-          
-          camControls.isEnabled = input.mouse.isGrabbed
-          cubeControls.isEnabled = !input.mouse.isGrabbed
-        }
-      }
-    }
-  })
-  
   
   def update(time: TimeStamp) {
     //import simplex3d.algorithm.intersection._
@@ -168,7 +159,6 @@ object ObbTest extends BasicApp with lwjgl.App {
   def reshape(position: inVec2i, dimensions: inVec2i) {
     val aspect = dimensions.x.toDouble/dimensions.y
     world.camera.projection := perspectiveProj(radians(60), aspect, 5, 200)
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
   }
 }
 

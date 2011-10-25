@@ -23,7 +23,6 @@ package default
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
-import simplex3d.engine.app._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._
@@ -56,29 +55,22 @@ trait BasicApp extends App {
   }
   val world = new OpenSceneGraph("World")
   
-  val resources = new ResourceManager {
+  val resourceManager = new ResourceManager {
     loaders += new ClasspathLoader
   }
   
   
+  import SubtextAccess._
+  
   protected def preUpdate(time: TimeStamp) {
-    import SubtextAccess._
     world.updateControllers(time)
   }
   
-  private val renderArray = new SortBuffer[AbstractMesh]()
-  
-  // XXX this codes doesnt belong in App
-  def render(context: RenderContext, time: TimeStamp) {
-    context.clearFrameBuffer()
-    
-    renderArray.clear()
-    world.buildRenderArray(null, time, renderArray)
-    renderManager.sortRenderArray(null, renderArray)
-    renderManager.render(context, world.camera, renderArray)
+  def render(time: TimeStamp) {
+    world.render(renderManager, time)
   }
   
-  def manage(context: RenderContext) {
-    world.manage(context, frameTimer, 0.01) //XXX make this value relate to the refresh rate
+  def manage() {
+    world.manage(renderManager.renderContext, frameTimer, 0.01) //XXX make this value relate to the refresh rate
   }
 }

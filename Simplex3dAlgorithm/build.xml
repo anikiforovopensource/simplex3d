@@ -85,8 +85,8 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
         </jar>
         
         <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-shapes.jar">
-            <fileset dir="${build.classes.dir}" includes="${shapes.pkg}"/>
+        jarfile="${release.dir}/jars/${release.name}-mesh.jar">
+            <fileset dir="${build.classes.dir}" includes="${mesh.pkg}"/>
         </jar>
         
         <jar manifest="${basedir}/manifest.mf"
@@ -109,7 +109,7 @@ name="Simplex3dAlgorithm" default="release-all" basedir=".">
 
     <property name="noise.pkg" value="${root.pkg}/algorithm/noise/**"/>
     <property name="intersection.pkg" value="${root.pkg}/algorithm/intersection/**"/>
-    <property name="shapes.pkg" value="${root.pkg}/algorithm/shapes/**"/>
+    <property name="mesh.pkg" value="${root.pkg}/algorithm/mesh/**"/>
     <property name="data.format.pkg" value="${root.pkg}/data/**"/>
 
     <target name="release-all" depends="release-clean, release-src, release-bin" />

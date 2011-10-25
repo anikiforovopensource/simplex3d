@@ -91,7 +91,7 @@
             <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**"/>
             <zipfileset src="${algorithm.dir}/simplex3d-algorithm-intersection.jar" includes="**"/>
             <zipfileset src="${algorithm.dir}/simplex3d-algorithm-noise.jar" includes="**"/>
-            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-shapes.jar" includes="**"/>
+            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-mesh.jar" includes="**"/>
             <zipfileset src="${algorithm.dir}/simplex3d-data-format.jar" includes="**"/>
         </jar>
 

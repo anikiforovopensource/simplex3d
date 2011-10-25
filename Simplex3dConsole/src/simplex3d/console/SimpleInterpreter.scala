@@ -41,7 +41,7 @@ class SimplexInterpreter extends SimpleInterpreter {
       import simplex3d.math.double.functions._
       import simplex3d.data._
       import simplex3d.data.double._
-      import simplex3d.noise._
+      import simplex3d.algorithm.noise._
       import simplex3d.console.extension.ImageUtilsPrivileged._
       """
     )

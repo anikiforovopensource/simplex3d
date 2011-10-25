@@ -34,14 +34,15 @@ import simplex3d.engine.scene._
 
 
 // XXX limit based on MAX_VBO_SIZE
-final class InstancingNode[T <: TransformationContext, G <: GraphicsContext](
+final class InstancingNode[T <: TransformationContext, G <: GraphicsContext] (
+  name: String,
   val cullingEnabled: Boolean = true
 )(implicit transformationContext: T, graphicsContext: G)
-extends Entity[T, G] {
+extends Entity[T, G](name) {
   
   import SubtextAccess._
   
-  private final class BoundedInstance(implicit transformationContext: T) extends Bounded[T] {
+  private final class BoundedInstance(name: String)(implicit transformationContext: T) extends Bounded[T](name) {
     private[scenegraph] override def update(version: Long) :Boolean = {
       if (updateVersion != version) {
         propagateWorldTransformation()
@@ -81,10 +82,10 @@ extends Entity[T, G] {
     }
   }
   
-  private final class Instance(implicit transformationContext: T) extends SceneElement[T]
+  private final class Instance(name: String)(implicit transformationContext: T) extends SceneElement[T](name)
   
   
-  private val srcMesh = new Mesh
+  private val srcMesh = new Mesh(name + " - Source Mesh")
   srcMesh.uncheckedWorldTransformation.clearDataChanges()
   
   final val instanceBoundingVolume = srcMesh.customBoundingVolume
@@ -92,7 +93,7 @@ extends Entity[T, G] {
   final def material: G#Material = srcMesh.material
   override def environment = super.environment
   
-  private val displayMesh = new Mesh(this, graphicsContext.mkGeometry(), material)
+  private val displayMesh = new Mesh(name + " - Display Mesh", this, graphicsContext.mkGeometry(), material)
   private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
@@ -180,8 +181,8 @@ extends Entity[T, G] {
     if (srcMesh.geometry.vertices.isDefined) srcMesh.geometry.vertices.defined.sharedState.clearDataChanges()
   }
   
-  def appendInstance() :Spatial[T] = {
-    val instance = if (cullingEnabled) new BoundedInstance else new Instance
+  def appendInstance(name: String) :Spatial[T] = {
+    val instance = if (cullingEnabled) new BoundedInstance(name) else new Instance(name)
     appendChild(instance)
     rebuild = true
     instance

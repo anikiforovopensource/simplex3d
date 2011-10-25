@@ -29,9 +29,10 @@ import simplex3d.engine.transformation._
 
 
 class Camera[T <: TransformationContext](
+  name: String,
   val projection: Mat4 = orthoProj(-100, 100, -100, 100, 10, 200)
 )(implicit transformationContext: T)
-extends SceneElement[T] with AbstractCamera {
+extends SceneElement[T](name) with AbstractCamera {
   
   protected val _view = Mat3x4(1)
   protected val _viewProjection = Mat4(1)

@@ -29,9 +29,9 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-abstract class Entity[T <: TransformationContext, G <: GraphicsContext](
+abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: String)(
   implicit transformationContext: T, final val graphicsContext: G
-) extends Bounded[T] {
+) extends Bounded[T](name) {
   
   import SubtextAccess._
   

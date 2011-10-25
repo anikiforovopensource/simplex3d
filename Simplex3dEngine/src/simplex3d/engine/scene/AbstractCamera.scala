@@ -26,6 +26,8 @@ import simplex3d.math.double._
 
 
 trait AbstractCamera extends Spatial {
+  val name: String
+  
   def view: ReadMat3x4
   def projection: ReadMat4
   

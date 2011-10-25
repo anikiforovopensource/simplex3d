@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.shapes._
+import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
@@ -62,9 +62,9 @@ object ObbTest extends BasicApp with lwjgl.App {
     }
   }
   
-  val movingCube = new Mesh
-  val cube1 = new Mesh
-  val cube2 = new Mesh
+  val movingCube = new Mesh("Moving Cube")
+  val cube1 = new Mesh("Left Cube")
+  val cube2 = new Mesh("Right Cube")
   val cubeScale = 10
   val translation = ConstVec3(20, 0, 0)
   

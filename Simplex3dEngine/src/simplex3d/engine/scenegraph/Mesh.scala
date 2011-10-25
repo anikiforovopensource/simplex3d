@@ -31,17 +31,18 @@ import simplex3d.engine.graphics._
 
 
 final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
+  name: String,
   meshParent: Entity[T, G],
   final val geometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
   final val material: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
 )(implicit transformationContext: T, final val graphicsContext: G)
-extends Bounded[T] with AbstractMesh {
+extends Bounded[T](name) with AbstractMesh {
   
   import SubtextAccess._
   
   
-  def this()(implicit transformationContext: T, graphicsContext: G) {
-    this(null, graphicsContext.mkGeometry(), graphicsContext.mkMaterial())
+  def this(name: String)(implicit transformationContext: T, graphicsContext: G) {
+    this(name, null, graphicsContext.mkGeometry(), graphicsContext.mkMaterial())
   }
   
   protected def worldEnvironment = parent.worldEnvironment

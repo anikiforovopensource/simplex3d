@@ -27,10 +27,10 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-final class Node[T <: TransformationContext, G <: GraphicsContext](
+final class Node[T <: TransformationContext, G <: GraphicsContext] (name: String)(
   implicit transformationContext: T, graphicsContext: G
 )
-extends Entity[T, G] {
+extends Entity[T, G](name) {
   
   override def environment = super.environment
   

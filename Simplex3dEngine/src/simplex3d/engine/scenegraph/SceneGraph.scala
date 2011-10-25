@@ -46,7 +46,7 @@ extends Scene(name) {
   private[this] var version: Long = 0
   private[this] val controllerContext = new ControllerContext(settings.multithreadControllers)
   
-  protected val _root: Node[T, G] = new Node()(transformationContext, techniqueManager.graphicsContext)
+  protected val _root: Node[T, G] = new Node("Root")(transformationContext, techniqueManager.graphicsContext)
   protected def root = _root
   root.controllerContext = controllerContext
   root.customBoundingVolume.defineAs(new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))

@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.shapes._
+import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
@@ -91,7 +91,7 @@ object InstancingTest extends BasicApp with lwjgl.App {
     if (false) {
       val (indices, vertices, normals, texCoords) = makeBox()
       
-      val obj = new Mesh
+      val obj = new Mesh("Large Cube")
       
       obj.geometry.faceCulling.mutable := FaceCulling.Back
       
@@ -130,7 +130,7 @@ object InstancingTest extends BasicApp with lwjgl.App {
       boxVertices = vVertices.read.copyAsDataArray()
       
       
-      val node = new InstancingNode
+      val node = new InstancingNode("Instancing Node")
       node.instanceBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
       node.customBoundingVolume.defineAs(new Oabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))
       
@@ -146,7 +146,7 @@ object InstancingTest extends BasicApp with lwjgl.App {
       world.attach(node)
         
       for (i <- 0 until objCount) {
-        val obj = node.appendInstance()
+        val obj = node.appendInstance("Instance" + i)
         obj.transformation.mutable.rotation := randomQuat
         obj.transformation.mutable.translation := curve(i, 0)
         

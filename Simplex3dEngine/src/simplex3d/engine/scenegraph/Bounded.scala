@@ -32,9 +32,9 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-abstract class Bounded[T <: TransformationContext] private[scenegraph] (
+abstract class Bounded[T <: TransformationContext] private[scenegraph] (name: String)(
   implicit transformationContext: T
-) extends SceneElement[T] {
+) extends SceneElement[T](name) {
   
   import SubtextAccess._
   

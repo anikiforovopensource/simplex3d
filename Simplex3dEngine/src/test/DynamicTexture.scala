@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.shapes._
+import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
@@ -72,7 +72,7 @@ object DynamicTexture extends BasicApp with lwjgl.App {
     
     val (indices, vertices, normals, texCoords) = makeBox()
     
-    val obj = new Mesh
+    val obj = new Mesh("Cube")
     
     obj.geometry.faceCulling.undefine()
     

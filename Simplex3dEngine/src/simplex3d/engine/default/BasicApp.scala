@@ -49,7 +49,7 @@ trait BasicApp extends App {
   final class OpenSceneGraph[T <: TransformationContext]
     (name: String)
     (implicit transformationContext: T)
-  extends SceneGraph[T, DG](name, sceneGraphSettings, new Camera, new renderer.TechniqueManager) {
+  extends SceneGraph[T, DG](name, sceneGraphSettings, new Camera("World Camera"), new renderer.TechniqueManager) {
     override def root = super.root
     override def attach(elem: SceneElement[T]) { super.attach(elem) }
     override def detach(elem: SceneElement[T]) :Boolean = super.detach(elem)

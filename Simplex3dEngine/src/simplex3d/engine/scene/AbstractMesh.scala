@@ -56,7 +56,7 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   }
   private[engine] final val meshSubtext = new MeshSubtext
 
-  
+  val name: String
   final def elementRange = meshSubtext.elementRange
   def geometry: Geometry
   def material: Material

@@ -27,7 +27,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 
 
-abstract class Spatial[T <: TransformationContext] private[scenegraph] (
+abstract class Spatial[T <: TransformationContext] private[scenegraph] (final val name: String)(
   implicit transformationContext: T
 ) extends scene.Spatial { self =>
   

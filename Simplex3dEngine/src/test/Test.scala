@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.shapes._
+import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
@@ -90,7 +90,7 @@ object Test extends BasicApp with lwjgl.App {
     if (false) {
       val (indices, vertices, normals, texCoords) = makeBox()
       
-      val obj = new Mesh
+      val obj = new Mesh("Large Cube")
       
       obj.geometry.faceCulling.undefine()
       
@@ -145,7 +145,7 @@ object Test extends BasicApp with lwjgl.App {
       
       
       for (i <- 0 until objCount) {
-        val obj = new Mesh
+        val obj = new Mesh("Cube" + i)
         obj.customBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*1.5, Vec3(0.5)*1.5))
         
         obj.geometry.faceCulling.undefine()

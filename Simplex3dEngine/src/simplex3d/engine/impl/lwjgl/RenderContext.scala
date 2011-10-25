@@ -629,16 +629,14 @@ extends engine.RenderContext with GlAccess {
     val unusedUniformBindings = uniformBindings.filter(_.blockType == -1)
     
     if (unusedUniformBindings.size != 0) log(
-      Level.SEVERE, "Invalid glsl shader: " + 
-      "The following uniforms are required by the shader but do no exist in the rednerer: " +
+      Level.SEVERE, "Uniforms do no exist: " +
       unusedUniformBindings.map(_.name).mkString(", ")
     )
     
     
     // Attributes
     if (unusedAttributeBindings.size != 0) log(
-      Level.SEVERE, "Invalid glsl shader: " + 
-      "The following attributes are required by the shader but do no exist in the rednerer: " +
+      Level.SEVERE, "Attributes do no exist: " +
       unusedAttributeBindings.map(_.name).mkString(", ") + "."
     )
 
@@ -886,6 +884,7 @@ extends engine.RenderContext with GlAccess {
   private[this] val Name = """(\w*)(.*)""".r
   
   private[this] final def resolveUniform(
+    meshName: String,
     programBinding: UniformBinding,
     predefined: PredefinedUniforms,
     material: Material,
@@ -898,10 +897,7 @@ extends engine.RenderContext with GlAccess {
     
     def isIndexValid(index: Int, name: String) :Boolean = {
       if (index < 0) {
-        log(
-          Level.SEVERE, "Invalid glsl shader: Uniform property '" + name +
-          "' is required by the shader but cannot be resolved."
-        )
+        log(Level.SEVERE, "Uniform '" + name + "' cannot be resolved.")
         false
       }
       else true
@@ -909,16 +905,15 @@ extends engine.RenderContext with GlAccess {
     def checkValue(value: AnyRef, name: String) {
       if (value == null) {
         log(
-          Level.SEVERE, "Invalid glsl shader: Uniform property '" + name +
-          "' is required by the shader but has an undefined value."
+          Level.SEVERE, "Uniform '" + name + "' is not defined for mesh '" + meshName + "'."
         )
       }
       else if (value.isInstanceOf[ReadTextureBinding[_]]) {
         val textureBinding = value.asInstanceOf[ReadTextureBinding[_]]
         if (!textureBinding.isBound)
           log(
-            Level.SEVERE, "Invalid glsl shader: Texture '" + name +
-            "' required by the shader is not bound to the mesh, default texture will be used."
+            Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
+            meshName + "', default texture will be used."
           )
       }
     }
@@ -997,8 +992,8 @@ extends engine.RenderContext with GlAccess {
               val id = index.toInt
               if (id >= array.length) {
                 log(
-                  Level.SEVERE, "Invalid glsl shader: Uniform property '" + mkName(prefix, name) +
-                  "'[" + index + "] is required by the shader but exceeds defined array bounds."
+                  Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]' is out of bounds for mesh '" +
+                  meshName + "'." 
                 )
                 null
               }
@@ -1011,8 +1006,8 @@ extends engine.RenderContext with GlAccess {
                       parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
                     case _ =>
                       log(
-                        Level.SEVERE, "Incorrect nesting: Uniform property '" + mkName(prefix, name) +
-                        "'[" + index + "] does not resolve to a CompoundType."
+                        Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]'" +
+                        " resolves to a value that is not an instance of CompoundType for mesh '" + meshName + "'."
                       )
                       null
                   }
@@ -1020,8 +1015,8 @@ extends engine.RenderContext with GlAccess {
               }
             case _ =>
               log(
-                Level.SEVERE, "Invalid glsl shader: Uniform property '" + mkName(prefix, name) +
-                "' is defined as an array in the shader but does not resolve to an instance of BindingArray."
+                Level.SEVERE, "Uniform array '" + mkName(prefix, name) +
+                "' resolves to a value that is not an instance of BindingArray for mesh '" + meshName + "'."
               )
               null
           }
@@ -1039,8 +1034,8 @@ extends engine.RenderContext with GlAccess {
                 parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
               case _ =>
                 log(
-                  Level.SEVERE, "Incorrect nesting: Uniform property '" + mkName(prefix, name) +
-                  "' does not resolve to a CompoundType."
+                  Level.SEVERE, "Uniform '" + mkName(prefix, name) +
+                  "' resolves to a value that is not an instance of CompoundType for mesh '" + meshName + "'."
                 )
                 null
             }
@@ -1049,8 +1044,8 @@ extends engine.RenderContext with GlAccess {
         case _ =>
           
           log(
-            Level.SEVERE, "Unsupported shader format: Uniform property '" + mkName(prefix, path) +
-            "' is required by the shader but cannot be parsed."
+            Level.SEVERE, "Uniform path '" + mkName(prefix, path) +
+            "' cannot be parsed."
           )
           null
       }
@@ -1094,14 +1089,14 @@ extends engine.RenderContext with GlAccess {
           
           if (!correctType) {
             log(
-              Level.SEVERE, "Invalid glsl shader: Uniform property '" + programBinding.name +
-              "' is defined in the shader as '" + EngineBindingTypes.toString(programBinding.dataType) +
-              "' but resolves to an instance of '" + b.getClass.getSimpleName + "'."
+              Level.SEVERE, "Uniform '" + programBinding.name +
+              "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
+              "' but resolves to an instance of '" + b.getClass.getSimpleName + "' for mesh '" + meshName + "'."
             )
           }
         case _ => log(
-          Level.SEVERE, "Incorrect nesting: Uniform property '" + programBinding.name +
-          "' does not resolve to an instance of NestedBinding."
+          Level.SEVERE, "Uniform '" + programBinding.name +
+          "' resolves to a value that is not an instance of NestedBinding for mesh '" + meshName + "'."
         )
       }
     }
@@ -1123,7 +1118,7 @@ extends engine.RenderContext with GlAccess {
     
     var i = 0; while (i < programBindings.length) {
       val programBinding = programBindings(i)
-      uniformMapping(i) = resolveUniform(programBinding, predefined, material, environmentNames, resolvedEnv, program)
+      uniformMapping(i) = resolveUniform(mesh.name, programBinding, predefined, material, environmentNames, resolvedEnv, program)
       
       i += 1
     }
@@ -1141,19 +1136,13 @@ extends engine.RenderContext with GlAccess {
     ) :AnyRef = {
       val index = find(names, name)
       if (index < 0) {
-        log(
-          Level.SEVERE, "Invalid glsl shader: Attributes property '" + name +
-          "' is required by the shader but cannot be resolved."
-        )
+        log(Level.SEVERE, "Attributes '" + name + "' cannot be resolved for mesh '" + mesh.name + "'.")
         null
       }
       else {
         val shared = properties(index)
         if (!shared.isDefined) {
-          log(
-            Level.SEVERE, "Invalid glsl shader: Attributes property '" + name +
-            "' is required by the shader but has an undefined value."
-          )
+          log(Level.SEVERE, "Attributes '" + name + "' are not defined for mesh '" + mesh.name + "'.")
         }
         shared.defined.asInstanceOf[AnyRef]
       }

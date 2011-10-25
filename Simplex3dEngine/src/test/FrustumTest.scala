@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.shapes._
+import simplex3d.algorithm.mesh.Shapes._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.app._
@@ -62,7 +62,7 @@ object FrustumTest extends BasicApp with lwjgl.App {
     }
   }
   
-  val cube = new Mesh
+  val cube = new Mesh("Cube")
   
   def init() {
     input.mouse.isGrabbed = true

@@ -54,8 +54,7 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
     other match {
       case r: BooleanRef => false
       case r: PrimitiveRef[_] => dx == r.dx
-      case a: Double => x == a
-      case _ => false
+      case _ => x == other
     }
   }
 

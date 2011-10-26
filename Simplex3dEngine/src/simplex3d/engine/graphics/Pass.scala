@@ -21,7 +21,12 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.engine.scene._
 
-class Pass {
 
-}
+class Pass(
+  val frameBuffer: FrameBuffer,
+  val camera: Option[AbstractCamera]= None,
+  val technique: Option[Technique] = None,
+  val triggers: List[String] = Nil // TODO design and implement triggers
+)

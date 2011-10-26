@@ -38,7 +38,7 @@ final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scene
 )(implicit transformationContext: T, final val graphicsContext: G)
 extends Bounded[T](name) with AbstractMesh {
   
-  import SubtextAccess._
+  import ClearChangesAccess._
   
   
   def this(name: String)(implicit transformationContext: T, graphicsContext: G) {

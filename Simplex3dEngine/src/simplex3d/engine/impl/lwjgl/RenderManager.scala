@@ -49,7 +49,7 @@ extends engine.RenderManager with GlUnsafeAccess
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
-  import SubtextAccess._
+  import SceneAccess._; import ClearChangesAccess._
   
   
   private val elementRange = new ElementRange()
@@ -152,10 +152,10 @@ extends engine.RenderManager with GlUnsafeAccess
       // XXX sort by textures: if (at0id < bt0id) -1 else if (at0id > bt0id)  1 else 0
       // XXX also sort by parent's environment
       
-      val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[GlslProgramInfo]
+      val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[ProgramInfo]
       val apid = if (ainfo != null) ainfo.managedFields.id else 0
       
-      val binfo = getEngineInfo(b.technique.defined).asInstanceOf[GlslProgramInfo]
+      val binfo = getEngineInfo(b.technique.defined).asInstanceOf[ProgramInfo]
       val bpid = if (binfo != null) binfo.managedFields.id else 0
       
       if (apid < bpid) -1 else if (apid > bpid)  1 else 0

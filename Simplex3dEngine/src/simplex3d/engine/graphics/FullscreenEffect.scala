@@ -19,6 +19,7 @@
  */
 
 package simplex3d.engine
+package graphics
 
 import simplex3d.math._
 import simplex3d.math.double._
@@ -26,21 +27,20 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine.scene._
-import simplex3d.engine.graphics._
 
 
-final class FullscreenEffect(name: String, protected val shader: Shader)
-extends Scene[GraphicsContext](name) { effect =>
+abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](name) { effect =>
   
-  protected val camera = new AbstractCamera {
-    val name = effect.name + " Camera"
+  protected val shaderSrc: String
   
-    def view: ReadMat3x4 = Mat3x4.Identity
-    def projection: ReadMat4 = Mat4.Identity
-    
-    def viewProjection: ReadMat4 = Mat4.Identity
-    def inverseViewProjection: ReadMat4 = Mat4.Identity
-  }
+  
+  private val se_viewDimensions = ShaderProperty[ReadVec2i](Vec2i.Zero)
+  private val se_uptime = ShaderProperty[ReadDoubleRef](0)
+  
+  private val predefinedMap = Map(
+    "se_viewDimensions" -> se_viewDimensions,
+    "se_uptime" -> se_uptime
+  )
   
   private val vertexShader = new Shader(Shader.VertexShader,
     """
@@ -48,16 +48,18 @@ extends Scene[GraphicsContext](name) { effect =>
     void main() {
       gl_Position = vec4(vertices, 1.0);
     }
-    """,
-    Map()
+    """
   )
   
-  private val mesh = new AbstractMesh { self =>
+  private val renderArray = new SortBuffer[AbstractMesh](1)
+  
+  
+  private def mkMesh() = new AbstractMesh { self =>
     val name = effect.name + " Mesh"
     
-    val geometry = DummyGraphicsContext.mkGeometry()
-    val material = DummyGraphicsContext.mkMaterial()
-    protected val worldEnvironment = DummyGraphicsContext.mkEnvironment()
+    val geometry = MinimalGraphicsContext.mkGeometry()
+    val material = MinimalGraphicsContext.mkMaterial()
+    protected val worldEnvironment = MinimalGraphicsContext.mkEnvironment()
     new EngineAccess { setWorldMatrixResolver(self, () => Mat3x4.Identity) }
     
     geometry.vertices.defineAs(Attributes(DataBuffer[Vec3, RFloat](
@@ -65,25 +67,28 @@ extends Scene[GraphicsContext](name) { effect =>
       Vec3(-1, -1, 0), Vec3(1, -1, 0), Vec3(1, 1, 0)
     )))
     
-    import SubtextAccess._
-    this.technique.defineAs(new Technique(DummyGraphicsContext, List(vertexShader, shader)))
+    {
+      import SceneAccess._
+      
+      val (names, props) = FieldReflection.getValueMap(effect, classOf[ShaderProperty[_]])
+      val shaderUniforms = Map((names, props).zip: _*)
+      val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, predefinedMap ++ shaderUniforms)
+      this.technique.defineAs(new Technique(MinimalGraphicsContext, List(vertexShader, fragmentShader)))
+    }
   }
-  
-  private val renderArray = new SortBuffer[AbstractMesh](1)
-  renderArray += mesh
   
   
   protected def render(renderManager: RenderManager, time: TimeStamp) {
-    renderManager.render(camera, renderArray)
-  }
-  
-  protected def cleanup(context: RenderContext) {
+    if (renderArray.isEmpty) renderArray += mkMesh()
     
+    se_viewDimensions.mutable := renderManager.renderContext.viewportDimensions()
+    se_uptime.mutable := time.total
+    
+    renderManager.render(IdentityCamera, renderArray)
   }
-  
   
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = 1.0
-  protected def updateControllers(time: TimeStamp) {}
-  protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {}
+  protected def update(time: TimeStamp) {}
   protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {}
+  protected def cleanup(context: RenderContext) {}
 }

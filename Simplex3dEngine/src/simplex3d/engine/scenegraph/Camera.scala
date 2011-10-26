@@ -38,13 +38,26 @@ extends SceneElement[T](name) with AbstractCamera {
   protected val _viewProjection = Mat4(1)
   protected val _inverseViewProjection = Mat4(1)
   
-  def view: ReadMat3x4 = _view
-  def viewProjection: ReadMat4 = _viewProjection
-  def inverseViewProjection: ReadMat4 = _inverseViewProjection
+  def view: ReadMat3x4 = {
+    if (worldTransformation.hasDataChanges) sync()
+    _view
+  }
+  def viewProjection: ReadMat4 = {
+    if (worldTransformation.hasDataChanges) sync()
+    _viewProjection
+  }
+  def inverseViewProjection: ReadMat4 = {
+    if (worldTransformation.hasDataChanges) sync()
+    _inverseViewProjection
+  }
   
-  def sync() {
+  private def sync() {
+    import ClearChangesAccess._
+    
     _view := inverse(worldTransformation.matrix)
     _viewProjection := projection*Mat4(_view)
     _inverseViewProjection := inverse(_viewProjection)
+    
+    worldTransformation.clearDataChanges()
   }
 }

@@ -29,7 +29,7 @@ import simplex3d.math.types._
 class Shader(
   val shaderType: Int,
   val src: String,
-  val uniforms: Map[String, ShaderProperty[_ <: TechniqueBinding]] = Map()
+  val uniforms: Map[String, ShaderProperty[_]] = Map()
 ) extends EngineInfo
 
 

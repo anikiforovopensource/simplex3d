@@ -20,6 +20,8 @@
 
 package simplex3d.engine
 
+import simplex3d.math._
+
 
 trait RenderContext {
   val capabilities: GraphicsCapabilities
@@ -31,6 +33,7 @@ trait RenderContext {
   def release(texture: Texture[_]) :Unit
   
   def clearFrameBuffer() :Unit
+  def viewportDimensions() :ConstVec2i
   
   def manage() :Unit
   def cleanup() :Unit

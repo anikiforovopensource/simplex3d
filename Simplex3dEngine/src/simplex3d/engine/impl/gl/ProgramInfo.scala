@@ -24,6 +24,6 @@ import java.util.Arrays
 import simplex3d.engine.graphics._
 
 
-private[impl] final class GlslProgramInfo extends ObjectInfo(ManagedObjects.Program) {
-  var mapping: GlslProgramMapping = _
+private[impl] final class ProgramInfo extends ObjectInfo(ManagedObjects.Program) {
+  var mapping: ProgramMapping = _
 }

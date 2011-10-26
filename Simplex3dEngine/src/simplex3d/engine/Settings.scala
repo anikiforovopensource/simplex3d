@@ -25,11 +25,13 @@ import simplex3d.math._
 
 
 class Settings(
-  val fullScreen: Boolean = false,
+  val fullscreen: Boolean = false,
   val capabilitiesLog: Boolean = false,
   val performanceLog: Boolean = false,
   val location: ConstVec2i = Vec2i(0),
-  val dimensions: ConstVec2i = Vec2i(640, 480) ,
+  
+  /** Must start at desktop resolution if not specified. */
+  val resolution: Option[ConstVec2i] = None,
   val verticalSync: Boolean = false,
   
   val advanced: AdvancedSettings = new AdvancedSettings

@@ -40,7 +40,7 @@ final class InstancingNode[T <: TransformationContext, G <: GraphicsContext] (
 )(implicit transformationContext: T, graphicsContext: G)
 extends Entity[T, G](name) {
   
-  import SubtextAccess._
+  import ClearChangesAccess._
   
   private final class BoundedInstance(name: String)(implicit transformationContext: T) extends Bounded[T](name) {
     private[scenegraph] override def update(version: Long) :Boolean = {

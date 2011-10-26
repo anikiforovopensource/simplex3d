@@ -27,11 +27,9 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.resource._
 
 
-trait FullscreenShaderApp extends App {
+trait FullscreenEffectApp extends App { self =>
   
-  protected val shader: Shader
-  
-  protected def viewDimensions: ReadVec2i = viewDims.toConst()
+  protected def effect: FullscreenEffect
   
   
   addInputListener(new InputListener {
@@ -43,23 +41,16 @@ trait FullscreenShaderApp extends App {
   })
   
   
-  import SubtextAccess._
+  import SceneAccess._
   
-  
-  private var effect: FullscreenEffect = _
-  private val viewDims = Vec2i(0)
-  
-  protected final def init() {
-    effect = new FullscreenEffect("Fullscreen Shader", shader)
-  }
   protected def render(time: TimeStamp) {
+    renderManager.renderContext.clearFrameBuffer()
     effect.render(renderManager, time)
   }
-  protected def reshape(position: inVec2i, dimensions: inVec2i) {
-    viewDims := dimensions
-  }
   
-  
-  protected def preUpdate(time: TimeStamp) {}
+  protected def init() {}
+  protected def preUpdate(time: TimeStamp) { effect.update(time) }
+  protected def update(time: TimeStamp) {}
   protected def manage() {}
+  protected def reshape(position: inVec2i, dimensions: inVec2i) {}
 }

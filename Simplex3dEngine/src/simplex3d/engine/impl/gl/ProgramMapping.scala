@@ -26,7 +26,7 @@ import simplex3d.data._
 import simplex3d.engine.graphics._
 
 
-private[impl] abstract class GlslProgramMapping(
+private[impl] abstract class ProgramMapping(
   uniformsSeq: Seq[UniformBinding],
   attributesSeq: Seq[AttributeBinding]
 ) {

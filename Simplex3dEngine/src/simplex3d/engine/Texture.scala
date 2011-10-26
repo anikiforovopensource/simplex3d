@@ -32,7 +32,7 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
   protected val linked: DirectSrc with ContiguousSrc
 )(
   private var _magFilter: ImageFilter.Value, private var _minFilter: ImageFilter.Value,
-  private var _mipMapFilter: MipMapFilter.Value, private var _anisotropyLevel: Double
+  private var _mipMapFilter: MipMapFilter.Value, initAnisotropyLevel: Double
 ) extends EngineInfo {
   
   final class Subtext private[engine] () {
@@ -86,8 +86,10 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
   def mipMapFilter = _mipMapFilter
   def mipMapFilter_=(filter: MipMapFilter.Value) { subtext.filterChanges = true; _mipMapFilter = filter }
   
+  private var _anisotropyLevel: Double = 0
   def anisotropyLevel = _anisotropyLevel
   def anisotropyLevel_=(level: Double) { subtext.filterChanges = true; _anisotropyLevel = max(1, level) }
+  anisotropyLevel = initAnisotropyLevel
 }
 
 

@@ -54,10 +54,10 @@ private[impl] trait GlAccess extends EngineAccess {
     data
   }
   
-  implicit final def engineInfo(program: Technique) :GlslProgramInfo = {
-    var data = getEngineInfo(program).asInstanceOf[GlslProgramInfo]
+  implicit final def engineInfo(program: Technique) :ProgramInfo = {
+    var data = getEngineInfo(program).asInstanceOf[ProgramInfo]
     if (data == null) {
-      data = new GlslProgramInfo
+      data = new ProgramInfo
       setEngineInfo(program, data)
     }
     data
@@ -87,8 +87,8 @@ private[impl] trait GlUnsafeAccess extends EngineAccess {
     getEngineInfo(shader).asInstanceOf[ObjectInfo]
   }
   
-  implicit final def engineInfo(program: Technique) :GlslProgramInfo = {
-    getEngineInfo(program).asInstanceOf[GlslProgramInfo]
+  implicit final def engineInfo(program: Technique) :ProgramInfo = {
+    getEngineInfo(program).asInstanceOf[ProgramInfo]
   }
   
   implicit final def engineInfo(mesh: AbstractMesh) :MeshInfo = {

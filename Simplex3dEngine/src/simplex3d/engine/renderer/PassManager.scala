@@ -21,21 +21,23 @@
 package simplex3d.engine
 package renderer
 
+import simplex3d.math._
 import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 
 
 class PassManager[G <: GraphicsContext] extends graphics.PassManager[G] {
-  import SubtextAccess._
+  import SceneAccess._
   
+  private val singlePass = new Pass(new FrameBuffer(Vec2i(100))) //XXX get framebuffer from renderContext, keep track of viewport changes
   private val renderArray = new SortBuffer[AbstractMesh]()
   
-  def render(renderManager: RenderManager, time: TimeStamp, scene: Scene[G]) {
+  def render(renderManager: RenderManager, time: TimeStamp, scene: ManagedScene[G]) {
     renderManager.renderContext.clearFrameBuffer()
     renderArray.clear()
     
-    scene.buildRenderArray(null, time, renderArray)
-    renderManager.sortRenderArray(null, renderArray)
+    scene.buildRenderArray(singlePass, time, renderArray)
+    renderManager.sortRenderArray(singlePass, renderArray)
     renderManager.render(scene.camera, renderArray)
   }
 }

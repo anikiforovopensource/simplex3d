@@ -25,5 +25,5 @@ import simplex3d.engine.scene._
 
 
 trait PassManager[G <: GraphicsContext] {
-  def render(renderManager: RenderManager, time: TimeStamp, scene: Scene[G]) :Unit
+  def render(renderManager: RenderManager, time: TimeStamp, scene: ManagedScene[G]) :Unit
 }

@@ -36,7 +36,7 @@ abstract class Bounded[T <: TransformationContext] private[scenegraph] (name: St
   implicit transformationContext: T
 ) extends SceneElement[T](name) {
   
-  import SubtextAccess._
+  import ClearChangesAccess._
   
   
   /** Can be initialized to a custom-fit bounding volume, otherwise the SceneGraph will automatically calculate one.

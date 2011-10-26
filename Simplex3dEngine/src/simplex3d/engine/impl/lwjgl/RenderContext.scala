@@ -53,7 +53,7 @@ extends engine.RenderContext with GlAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._; import org.lwjgl.util.glu.MipMap._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
-  import SubtextAccess._
+  import SceneAccess._; import ClearChangesAccess._
   
 
   private val defaultTexture2d = Texture2d(Vec2i(4), DataBuffer[Vec3, UByte](4*4));
@@ -520,7 +520,7 @@ extends engine.RenderContext with GlAccess {
   
   private def initialize(program: Technique) :Int = {
     var id = glCreateProgram()
-      
+    
     for (shader <- program.shaders) {
       var shaderId = shader.managedFields.id
       if (shaderId == 0) shaderId = initialize(shader)
@@ -645,7 +645,7 @@ extends engine.RenderContext with GlAccess {
     )
 
     
-    program.mapping = new LwjglProgramMapping(program, this)(uniformBindings, attributeBindings)
+    program.mapping = new ProgramMapping(program, this)(uniformBindings, attributeBindings)
     
     id
   }
@@ -670,9 +670,17 @@ extends engine.RenderContext with GlAccess {
     invalidateState = true
   }
   
+  
   def clearFrameBuffer() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
   }
+  
+  def viewportDimensions() :ConstVec2i = {
+    // XXX this data must come from bound FrameBuffer (scala object).
+    glGetInteger(GL_VIEWPORT, intBuffer)
+    ConstVec2i(intBuffer.get(2), intBuffer.get(3))
+  }
+
   
   def manage() {
     resourceManager.manage()
@@ -685,178 +693,180 @@ extends engine.RenderContext with GlAccess {
   
   // *** Util methods ************************************************************************************************
   
-  private val matrixBuffer = DataBuffer[RDouble, RFloat](16).buffer()
+  private val intBuffer = DataBuffer[SInt, SInt](16).buffer()
+  private val floatBuffer = DataBuffer[RDouble, RFloat](16).buffer()
+  
   import simplex3d.math.Accessors._
   
   def mat2x2ToBuffer(m: AnyMat2x2[_]) :FloatBuffer = {
-    matrixBuffer.limit(4)
+    floatBuffer.limit(4)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat2x3ToBuffer(m: AnyMat2x3[_]) :FloatBuffer = {
-    matrixBuffer.limit(6)
+    floatBuffer.limit(6)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat2x4ToBuffer(m: AnyMat2x4[_]) :FloatBuffer = {
-    matrixBuffer.limit(8)
+    floatBuffer.limit(8)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
     
-    matrixBuffer.put(f03(m))
-    matrixBuffer.put(f13(m))
+    floatBuffer.put(f03(m))
+    floatBuffer.put(f13(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat3x2ToBuffer(m: AnyMat3x2[_]) :FloatBuffer = {
-    matrixBuffer.limit(6)
+    floatBuffer.limit(6)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat3x3ToBuffer(m: AnyMat3x3[_]) :FloatBuffer = {
-    matrixBuffer.limit(9)
+    floatBuffer.limit(9)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
-    matrixBuffer.put(f22(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
+    floatBuffer.put(f22(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat3x4ToBuffer(m: AnyMat3x4[_]) :FloatBuffer = {
-    matrixBuffer.limit(12)
+    floatBuffer.limit(12)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
-    matrixBuffer.put(f22(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
+    floatBuffer.put(f22(m))
     
-    matrixBuffer.put(f03(m))
-    matrixBuffer.put(f13(m))
-    matrixBuffer.put(f23(m))
+    floatBuffer.put(f03(m))
+    floatBuffer.put(f13(m))
+    floatBuffer.put(f23(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat4x2ToBuffer(m: AnyMat4x2[_]) :FloatBuffer = {
-    matrixBuffer.limit(8)
+    floatBuffer.limit(8)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
-    matrixBuffer.put(f30(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
+    floatBuffer.put(f30(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
-    matrixBuffer.put(f31(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
+    floatBuffer.put(f31(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat4x3ToBuffer(m: AnyMat4x3[_]) :FloatBuffer = {
-    matrixBuffer.limit(12)
+    floatBuffer.limit(12)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
-    matrixBuffer.put(f30(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
+    floatBuffer.put(f30(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
-    matrixBuffer.put(f31(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
+    floatBuffer.put(f31(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
-    matrixBuffer.put(f22(m))
-    matrixBuffer.put(f32(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
+    floatBuffer.put(f22(m))
+    floatBuffer.put(f32(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   def mat4x4ToBuffer(m: AnyMat4x4[_]) :FloatBuffer = {
-    matrixBuffer.limit(16)
+    floatBuffer.limit(16)
     
-    matrixBuffer.put(f00(m))
-    matrixBuffer.put(f10(m))
-    matrixBuffer.put(f20(m))
-    matrixBuffer.put(f30(m))
+    floatBuffer.put(f00(m))
+    floatBuffer.put(f10(m))
+    floatBuffer.put(f20(m))
+    floatBuffer.put(f30(m))
     
-    matrixBuffer.put(f01(m))
-    matrixBuffer.put(f11(m))
-    matrixBuffer.put(f21(m))
-    matrixBuffer.put(f31(m))
+    floatBuffer.put(f01(m))
+    floatBuffer.put(f11(m))
+    floatBuffer.put(f21(m))
+    floatBuffer.put(f31(m))
     
-    matrixBuffer.put(f02(m))
-    matrixBuffer.put(f12(m))
-    matrixBuffer.put(f22(m))
-    matrixBuffer.put(f32(m))
+    floatBuffer.put(f02(m))
+    floatBuffer.put(f12(m))
+    floatBuffer.put(f22(m))
+    floatBuffer.put(f32(m))
     
-    matrixBuffer.put(f03(m))
-    matrixBuffer.put(f13(m))
-    matrixBuffer.put(f23(m))
-    matrixBuffer.put(f33(m))
+    floatBuffer.put(f03(m))
+    floatBuffer.put(f13(m))
+    floatBuffer.put(f23(m))
+    floatBuffer.put(f33(m))
     
-    matrixBuffer.rewind()
-    matrixBuffer
+    floatBuffer.rewind()
+    floatBuffer
   }
   
   
@@ -917,7 +927,7 @@ extends engine.RenderContext with GlAccess {
         if (!textureBinding.isBound)
           log(
             Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
-            meshName + "', default texture will be used."
+            meshName + "'. Default texture will be used."
           )
       }
     }
@@ -956,7 +966,7 @@ extends engine.RenderContext with GlAccess {
         case UniformBlocks.Program => def resolveProgram() :AnyRef = {
           val index = find(program.uniformNames, name)
           if (isIndexValid(index, name)) {
-            val binding = program.uniforms(index).defined
+            val binding = program.uniforms(index).defined.asInstanceOf[TechniqueBinding]
             checkValue(binding, name)
             binding
           }
@@ -1059,49 +1069,44 @@ extends engine.RenderContext with GlAccess {
     val value = parse(null, null, programBinding.blockType, "", programBinding.name)
     
     if (value != null) {
-      value match {
-        case b: NestedBinding =>
-          val correctType = programBinding.dataType match {
-            case EngineBindingTypes.Float => b.isInstanceOf[DoubleRef]
-            case EngineBindingTypes.Vec2 => b.isInstanceOf[Vec2]
-            case EngineBindingTypes.Vec3 => b.isInstanceOf[Vec3]
-            case EngineBindingTypes.Vec4 => b.isInstanceOf[Vec4]
-            case EngineBindingTypes.Int => b.isInstanceOf[IntRef]
-            case EngineBindingTypes.Vec2i => b.isInstanceOf[Vec2i]
-            case EngineBindingTypes.Vec3i => b.isInstanceOf[Vec3i]
-            case EngineBindingTypes.Vec4i => b.isInstanceOf[Vec4i]
-            case EngineBindingTypes.Boolean => b.isInstanceOf[Boolean]
-            case EngineBindingTypes.Vec2b => b.isInstanceOf[Vec2b]
-            case EngineBindingTypes.Vec3b => b.isInstanceOf[Vec3b]
-            case EngineBindingTypes.Vec4b => b.isInstanceOf[Vec4b]
-            case EngineBindingTypes.Mat2x2 => b.isInstanceOf[Mat2x2]
-            case EngineBindingTypes.Mat2x3 => b.isInstanceOf[Mat2x3]
-            case EngineBindingTypes.Mat2x4 => b.isInstanceOf[Mat2x4]
-            case EngineBindingTypes.Mat3x2 => b.isInstanceOf[Mat3x2]
-            case EngineBindingTypes.Mat3x3 => b.isInstanceOf[Mat3x3]
-            case EngineBindingTypes.Mat3x4 => b.isInstanceOf[Mat3x4]
-            case EngineBindingTypes.Mat4x2 => b.isInstanceOf[Mat4x2]
-            case EngineBindingTypes.Mat4x3 => b.isInstanceOf[Mat4x3]
-            case EngineBindingTypes.Mat4x4 => b.isInstanceOf[Mat4x4]
-            case EngineBindingTypes.Texture1d => false// XXX
-            case EngineBindingTypes.Texture2d => b.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
-            case EngineBindingTypes.Texture3d => false
-            case EngineBindingTypes.CubeTexture => false
-            case EngineBindingTypes.ShadowTexture1d => false
-            case EngineBindingTypes.ShadowTexture2d => false
-          }
-          
-          if (!correctType) {
-            log(
-              Level.SEVERE, "Uniform '" + programBinding.name +
-              "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
-              "' but resolves to an instance of '" + b.getClass.getSimpleName + "' for mesh '" + meshName + "'."
-            )
-          }
-        case _ => log(
+      val correctType = programBinding.dataType match {
+        case EngineBindingTypes.Float => value.isInstanceOf[DoubleRef]
+        case EngineBindingTypes.Vec2 => value.isInstanceOf[Vec2]
+        case EngineBindingTypes.Vec3 => value.isInstanceOf[Vec3]
+        case EngineBindingTypes.Vec4 => value.isInstanceOf[Vec4]
+        case EngineBindingTypes.Int => value.isInstanceOf[IntRef]
+        case EngineBindingTypes.Vec2i => value.isInstanceOf[Vec2i]
+        case EngineBindingTypes.Vec3i => value.isInstanceOf[Vec3i]
+        case EngineBindingTypes.Vec4i => value.isInstanceOf[Vec4i]
+        case EngineBindingTypes.Boolean => value.isInstanceOf[Boolean]
+        case EngineBindingTypes.Vec2b => value.isInstanceOf[Vec2b]
+        case EngineBindingTypes.Vec3b => value.isInstanceOf[Vec3b]
+        case EngineBindingTypes.Vec4b => value.isInstanceOf[Vec4b]
+        case EngineBindingTypes.Mat2x2 => value.isInstanceOf[Mat2x2]
+        case EngineBindingTypes.Mat2x3 => value.isInstanceOf[Mat2x3]
+        case EngineBindingTypes.Mat2x4 => value.isInstanceOf[Mat2x4]
+        case EngineBindingTypes.Mat3x2 => value.isInstanceOf[Mat3x2]
+        case EngineBindingTypes.Mat3x3 => value.isInstanceOf[Mat3x3]
+        case EngineBindingTypes.Mat3x4 => value.isInstanceOf[Mat3x4]
+        case EngineBindingTypes.Mat4x2 => value.isInstanceOf[Mat4x2]
+        case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
+        case EngineBindingTypes.Mat4x4 => value.isInstanceOf[Mat4x4]
+        case EngineBindingTypes.Texture1d => false// XXX
+        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
+        case EngineBindingTypes.Texture3d => false
+        case EngineBindingTypes.CubeTexture => false
+        case EngineBindingTypes.ShadowTexture1d => false
+        case EngineBindingTypes.ShadowTexture2d => false
+      }
+      
+      if (!correctType) {
+        log(
           Level.SEVERE, "Uniform '" + programBinding.name +
-          "' resolves to a value that is not an instance of NestedBinding for mesh '" + meshName + "'."
+          "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
+          "' but resolves to an instance of '" + value.getClass.getSimpleName + "' for mesh '" + meshName +
+          "'. This uniform will have an undefined value in the shader."
         )
+        return null
       }
     }
     
@@ -1168,7 +1173,7 @@ extends engine.RenderContext with GlAccess {
   
   final def rebuildMeshMapping(
     mesh: AbstractMesh,
-    programMapping: GlslProgramMapping
+    programMapping: impl.gl.ProgramMapping
   ) {
     val meshMapping = mesh.mapping
     val resolvedEnv = resolveBindings(mesh)

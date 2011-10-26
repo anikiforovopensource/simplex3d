@@ -43,11 +43,11 @@ object InterleavedAttributes extends BasicApp with lwjgl.App {
   
   def main(args: Array[String]) {
     val settings = new Settings(
-      fullScreen = false,
+      fullscreen = false,
       verticalSync = true,
       capabilitiesLog = true,
       performanceLog = true,
-      dimensions = Vec2i(800, 600)
+      resolution = Some(Vec2i(800, 600))
     )
     
     launch(settings)

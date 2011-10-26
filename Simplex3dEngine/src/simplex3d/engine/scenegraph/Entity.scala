@@ -33,7 +33,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
   implicit transformationContext: T, final val graphicsContext: G
 ) extends Bounded[T](name) {
   
-  import SubtextAccess._
+  import ClearChangesAccess._
   
   
   private[this] final val env = graphicsContext.mkEnvironment()

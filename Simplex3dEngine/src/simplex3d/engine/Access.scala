@@ -28,7 +28,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 
 
-object SubtextAccess {
+object ClearChangesAccess {
   implicit def listenerSubtext(listener: StructuralChangeListener)
   :StructuralChangeListener#StructuralSubtext = listener.structuralSubtext
   
@@ -61,12 +61,18 @@ object SubtextAccess {
   
   implicit def textureSubtext(texture: Texture[_]) =
     texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
-  
+}
+
+
+object SceneAccess {
   implicit def meshSubtext(mesh: AbstractMesh)
   :AbstractMesh#MeshSubtext = mesh.meshSubtext
   
   implicit def sceneSubtext(scene: Scene[_])
-  :Scene[GraphicsContext]#Subtext = scene.asInstanceOf[Scene[GraphicsContext]].subtext
+  :Scene[GraphicsContext]#SceneSubtext = scene.asInstanceOf[Scene[GraphicsContext]].sceneSubtext
+  
+  implicit def managedSceneSubtext(managedScene: ManagedScene[_]) :ManagedScene[GraphicsContext]#ManagedSceneSubtext =
+    managedScene.asInstanceOf[ManagedScene[GraphicsContext]].managedSceneSubtext
 }
 
 

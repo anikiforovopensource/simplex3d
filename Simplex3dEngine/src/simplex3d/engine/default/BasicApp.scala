@@ -60,10 +60,10 @@ trait BasicApp extends App {
   }
   
   
-  import SubtextAccess._
+  import SceneAccess._
   
   protected def preUpdate(time: TimeStamp) {
-    world.updateControllers(time)
+    world.update(time)
   }
   
   def render(time: TimeStamp) {

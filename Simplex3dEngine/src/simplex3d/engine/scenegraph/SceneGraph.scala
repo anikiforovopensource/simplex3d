@@ -38,9 +38,9 @@ class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
   final val camera: Camera[T],
   final val techniqueManager: TechniqueManager[G]
 )(implicit transformationContext: T)
-extends Scene[G](name) {
+extends ManagedScene[G](name) {
   
-  import SubtextAccess._
+  import SceneAccess._; import ClearChangesAccess._
   
   
   private[this] var version: Long = 0
@@ -65,13 +65,9 @@ extends Scene[G](name) {
     1.0
   }
   
-  protected def updateControllers(time: TimeStamp) {
+  protected def update(time: TimeStamp) {
     version += 1
     controllerContext.update(time)
-  }
-  
-  protected def render(renderManager: RenderManager, time: TimeStamp) {
-    techniqueManager.passManager.render(renderManager, time, this)
   }
   
   
@@ -79,11 +75,10 @@ extends Scene[G](name) {
   private val concurrentArray = new ConcurrentSortBuffer[AbstractMesh](100)
   
   protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
-    val camera = this.camera // TODO camera should come from the pass.
-    camera.sync()
+    val camera = if (pass.camera.isDefined) pass.camera.get else this.camera
     
     val frustum = Frustum(camera.viewProjection)
-    val view = new View(Vec2i(-1), camera, frustum) //XXX proper dimensions
+    val view = new View(pass.frameBuffer.dimensions, camera, frustum) //XXX proper dimensions
     
     val allowMultithreading = settings.multithreadedParsing
     if (allowMultithreading) batchArray.clear()

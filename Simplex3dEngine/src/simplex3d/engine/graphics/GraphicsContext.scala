@@ -76,7 +76,7 @@ abstract class GraphicsContext {
 }
 
 
-object DummyGraphicsContext extends GraphicsContext {
+object MinimalGraphicsContext extends GraphicsContext {
   type Geometry = graphics.Geometry
   type Material = graphics.Material
   type Environment = graphics.Environment

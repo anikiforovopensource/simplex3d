@@ -27,14 +27,15 @@ import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
+import simplex3d.data.double._
 import simplex3d.engine.graphics._
 import simplex3d.engine.impl.gl._
 
 
-private[impl] final class LwjglProgramMapping(val program: Technique, val context: RenderContext)(
+private[impl] final class ProgramMapping(val program: Technique, val context: RenderContext)(
   uniformsSeq: Seq[UniformBinding],
   attributesSeq: Seq[AttributeBinding]
-) extends GlslProgramMapping(uniformsSeq, attributesSeq) {
+) extends impl.gl.ProgramMapping(uniformsSeq, attributesSeq) {
     
   // Fast access.
   private[this] val uniformVectorLocations = uniformVectors.map(_.location).toArray

@@ -45,11 +45,11 @@ object StressTestObjects extends BasicApp with lwjgl.App {
   
   def main(args: Array[String]) {
     val settings = new Settings(
-      fullScreen = false,
+      fullscreen = false,
       verticalSync = false,
       capabilitiesLog = true,
       performanceLog = true,
-      dimensions = Vec2i(800, 600)
+      resolution = Some(Vec2i(800, 600))
     )
     
     launch(settings)

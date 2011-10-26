@@ -57,22 +57,27 @@ trait App extends simplex3d.engine.App {
   
   final def launch(settings: Settings) {
     
+    val desktopMode = Display.getDesktopDisplayMode()
+    
+    val resolution = settings.resolution.getOrElse(ConstVec2i(desktopMode.getWidth, desktopMode.getHeight))
+    val fullscreen = if (settings.resolution.isDefined) settings.fullscreen else true
+    
     val detectedMode = Display.getAvailableDisplayModes().filter( mode =>
-      mode.getWidth == settings.dimensions.x &&
-      mode.getHeight == settings.dimensions.y &&
-      mode.getFrequency >= Display.getDesktopDisplayMode.getFrequency &&
+      mode.getWidth == resolution.x &&
+      mode.getHeight == resolution.y &&
+      mode.getFrequency >= desktopMode.getFrequency &&
       mode.getBitsPerPixel >= 24 &&
-      (if (settings.fullScreen) mode.isFullscreenCapable else true)
+      (if (fullscreen) mode.isFullscreenCapable else true)
     ).headOption
     
     val mode =
       if (detectedMode.isDefined) detectedMode.get
-      else new DisplayMode(settings.dimensions.x, settings.dimensions.y)
+      else new DisplayMode(resolution.x, resolution.y)
     
     
     Display.setVSyncEnabled(settings.verticalSync)
     Display.setDisplayMode(mode)
-    Display.setFullscreen(settings.fullScreen)
+    Display.setFullscreen(fullscreen)
     val pixelFormat = new PixelFormat().withBitsPerPixel(24).withAlphaBits(8).withDepthBits(24).withStencilBits(8)
     val glProfile = new ContextAttribs(2, 1)
     Display.setTitle(title)
@@ -88,7 +93,7 @@ trait App extends simplex3d.engine.App {
     timer.reset()
     
     init()
-    reshape(ConstVec2i(0), settings.dimensions)
+    reshape(ConstVec2i(0), resolution)
     
     while (!quit) {
       profiler1.begin()

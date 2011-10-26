@@ -25,9 +25,10 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.algorithm.intersection._
+import simplex3d.engine.scene._
 
 
-final class View(val dimensions: ConstVec2i, val camera: Camera[_], val frustum: Frustum) {
+final class View(val dimensions: ConstVec2i, val camera: AbstractCamera, val frustum: Frustum) {
   def pixelHeight(height: Double, worldLocation: inVec3) :Double = {
     0 // XXX implement
   }

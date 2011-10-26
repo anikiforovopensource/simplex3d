@@ -26,20 +26,15 @@ import simplex3d.engine.graphics._
 
 
 abstract class Scene[G <: GraphicsContext](val name: String) { self =>
-  final class Subtext {
-    def camera = self.camera
-    
+  final class SceneSubtext {
     def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
       self.preload(context, frameTimer, timeSlice)
     }
-    def updateControllers(time: TimeStamp) {
-      self.updateControllers(time)
+    def update(time: TimeStamp) {
+      self.update(time)
     }
     def render(renderManager: RenderManager, time: TimeStamp) {
       self.render(renderManager, time)
-    }
-    def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
-      self.buildRenderArray(pass, time, result)
     }
     def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
       self.manage(context, frameTimer, timeSlice)
@@ -48,21 +43,15 @@ abstract class Scene[G <: GraphicsContext](val name: String) { self =>
       self.cleanup(context)
     }
   }
-  private[engine] final val subtext = new Subtext
-  
-  
-  protected val camera: AbstractCamera
+  private[engine] final val sceneSubtext = new SceneSubtext
   
   
   // preload some content within a soft bound given by timeSlice, return the overall completion 0-started, 1-done.
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double
  
-  protected def updateControllers(time: TimeStamp) :Unit
+  protected def update(time: TimeStamp) :Unit
   
   protected def render(renderManager: RenderManager, time: TimeStamp) :Unit
-  
-  // combine attribs while culling
-  protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) :Unit
   
   // discard unwanted meshes
   protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Unit

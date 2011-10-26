@@ -19,41 +19,11 @@
  */
 
 package simplex3d.engine
-package scene
+package graphics
 
 import simplex3d.math._
-import simplex3d.math.double._
 
 
-trait AbstractCamera extends Spatial {
-  val name: String
+class FrameBuffer(val dimensions: ConstVec2i) {
   
-  def view: ReadMat3x4
-  def projection: ReadMat4
-  
-  def viewProjection: ReadMat4
-  def inverseViewProjection: ReadMat4
-  
-  // XXX untested
-  def toWorldCoords(normalizedScreenCoords: inVec3) = {
-    val worldCoords = inverseViewProjection*Vec4(normalizedScreenCoords, 1)
-    worldCoords.xyz/worldCoords.w
-  }
-
-  // XXX untested
-  def toNormalizedScreenCoords(worldCoords: inVec3) = {
-    val transformed = viewProjection*Vec4(worldCoords, 1)
-    transformed.xyz/transformed.w
-  }
-}
-
-
-object IdentityCamera extends AbstractCamera {
-  val name = "Identity Camera"
-
-  def view: ReadMat3x4 = Mat3x4.Identity
-  def projection: ReadMat4 = Mat4.Identity
-  
-  def viewProjection: ReadMat4 = Mat4.Identity
-  def inverseViewProjection: ReadMat4 = Mat4.Identity
 }

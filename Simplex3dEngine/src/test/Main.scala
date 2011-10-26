@@ -20,7 +20,7 @@
 
 package test
 
-import scala.collection.mutable.ArrayBuffer
+import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._

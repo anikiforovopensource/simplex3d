@@ -31,7 +31,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   implicit transformationContext: T
 ) extends scene.Spatial { self =>
   
-  import SubtextAccess._
+  import ClearChangesAccess._
   
   
   private[scenegraph] final var _parent: Entity[T, _] = _

@@ -47,9 +47,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
   private[math] final def dx: Double = simplex3d.math.toDouble(x)
   
   
-  final def &&(r: ReadBooleanRef) :Boolean = (x && r.toConst)
-  final def ||(r: ReadBooleanRef) :Boolean = (x || r.toConst)
-  final def ^(r: ReadBooleanRef) :Boolean = (x ^ r.toConst)
+  final def &&(s: Boolean) :Boolean = (x && s)
+  final def ||(s: Boolean) :Boolean = (x || s)
+  final def ^(s: Boolean) :Boolean = (x ^ s)
 
 
   final override def equals(other: Any) :Boolean = {
@@ -59,6 +59,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyRef[ReadBooleanRef] with Serializ
       case _ => false
     }
   }
+  
+  final def ==(s: Boolean) :Boolean = (x == s)
+  final def !=(s: Boolean) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
     x.hashCode

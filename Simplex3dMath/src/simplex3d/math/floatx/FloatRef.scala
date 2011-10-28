@@ -58,6 +58,9 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
       case _ => x == other
     }
   }
+  
+  final def ==(s: Double) :Boolean = (x == s)
+  final def !=(s: Double) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
     x.hashCode
@@ -68,10 +71,10 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
   }
 
 
-  final def *(r: ReadFloatRef) :Float = x*r.toConst
-  final def /(r: ReadFloatRef) :Float = x/r.toConst
-  final def +(r: ReadFloatRef) :Float = x + r.toConst
-  final def -(r: ReadFloatRef) :Float = x - r.toConst
+  final def *(s: Float) :Float = x*s
+  final def /(s: Float) :Float = x/s
+  final def +(s: Float) :Float = x + s
+  final def -(s: Float) :Float = x - s
   
   
   final def *(u: inVec2f) = u*x

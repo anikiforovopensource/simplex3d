@@ -57,6 +57,9 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
       case _ => x == other
     }
   }
+  
+  final def ==(s: Double) :Boolean = (x == s)
+  final def !=(s: Double) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
     x.hashCode
@@ -67,10 +70,10 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
   }
 
 
-  final def *(r: ReadDoubleRef) :Double = x*r.toConst
-  final def /(r: ReadDoubleRef) :Double = x/r.toConst
-  final def +(r: ReadDoubleRef) :Double = x + r.toConst
-  final def -(r: ReadDoubleRef) :Double = x - r.toConst
+  final def *(s: Double) :Double = x*s
+  final def /(s: Double) :Double = x/s
+  final def +(s: Double) :Double = x + s
+  final def -(s: Double) :Double = x - s
   
   
   final def *(u: inVec2d) = u*x

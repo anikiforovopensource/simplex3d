@@ -59,6 +59,9 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
       case _ => x == other
     }
   }
+  
+  final def ==(s: Double) :Boolean = (x == s)
+  final def !=(s: Double) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
     x.hashCode
@@ -69,18 +72,18 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
   }
 
   
-  final def *(r: ReadIntRef) :Int = x*r.toConst
-  final def /(r: ReadIntRef) :Int = x/r.toConst
-  final def +(r: ReadIntRef) :Int = x + r.toConst
-  final def -(r: ReadIntRef) :Int = x - r.toConst
+  final def *(s: Int) :Int = x*s
+  final def /(s: Int) :Int = x/s
+  final def +(s: Int) :Int = x + s
+  final def -(s: Int) :Int = x - s
 
-  final def %(r: ReadIntRef) :Int = x%r.toConst
-  final def >>(r: ReadIntRef) :Int = x >> r.toConst
-  final def >>>(r: ReadIntRef) :Int = x >>> r.toConst
-  final def <<(r: ReadIntRef) :Int = x << r.toConst
-  final def &(r: ReadIntRef) :Int = x & r.toConst
-  final def |(r: ReadIntRef) :Int = x | r.toConst
-  final def ^(r: ReadIntRef) :Int = x ^ r.toConst
+  final def %(s: Int) :Int = x%s
+  final def >>(s: Int) :Int = x >> s
+  final def >>>(s: Int) :Int = x >>> s
+  final def <<(s: Int) :Int = x << s
+  final def &(s: Int) :Int = x & s
+  final def |(s: Int) :Int = x | s
+  final def ^(s: Int) :Int = x ^ s
   
   
   /** Multiplies this scalar by a vector.

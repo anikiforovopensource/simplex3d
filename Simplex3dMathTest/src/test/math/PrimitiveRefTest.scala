@@ -88,6 +88,8 @@ class PrimitiveRefTest extends FunSuite {
       
       val s: Boolean = conv
       assert(s == true)
+      assert(s != false)
+      assert(s.asInstanceOf[Any] == true)
     }
     {
       val conv: ReadBooleanRef = false
@@ -95,6 +97,8 @@ class PrimitiveRefTest extends FunSuite {
       
       val s: Boolean = conv
       assert(s == false)
+      assert(s != true)
+      assert(s.asInstanceOf[Any] == false)
     }
   }
   
@@ -150,6 +154,8 @@ class PrimitiveRefTest extends FunSuite {
     
     val s: Int = conv
     assert(s == 7)
+    assert(s != 6)
+    assert(s.asInstanceOf[Any] == 7)
   }
   
   test("Mutable FloatRef") {
@@ -186,6 +192,8 @@ class PrimitiveRefTest extends FunSuite {
     
     val s: Float = conv
     assert(s == 7)
+    assert(s != 6)
+    assert(s.asInstanceOf[Any] == 7)
   }
   
   test("Mutable DoubleRef") {
@@ -224,5 +232,7 @@ class PrimitiveRefTest extends FunSuite {
     
     val s: Double = conv
     assert(s == 7)
+    assert(s != 6)
+    assert(s.asInstanceOf[Any] == 7)
   }
 }

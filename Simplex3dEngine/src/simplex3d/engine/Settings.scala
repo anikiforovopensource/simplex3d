@@ -38,5 +38,6 @@ class Settings(
 )
 
 class AdvancedSettings(
-  val legacyMipMapGeneration: Boolean = false
+  val legacyMipMapGeneration: Boolean = false,
+  val logShaderWarnings: Boolean = true
 )

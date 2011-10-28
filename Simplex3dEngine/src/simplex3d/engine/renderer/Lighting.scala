@@ -35,12 +35,10 @@ sealed abstract class ReadLighting extends UpdatableEnvironmentalEffect[ReadLigh
   def pointLights: List[ReadPointLight]
   
   
-  def mutableCopy() = {
-    val lighting = new Lighting
-    
-    //lighting.lights = lights.map(_.clone())
-    
-    lighting
+  final def mutableCopy() = {
+    val copy = new Lighting
+    copy := this
+    copy
   }
   
   def propagate(parentVal: ReadLighting, result: Lighting) :Boolean = {
@@ -62,7 +60,7 @@ sealed abstract class ReadLighting extends UpdatableEnvironmentalEffect[ReadLigh
 }
 
 
-final class Lighting extends ReadLighting with Writable[ReadLighting] {
+final class Lighting extends ReadLighting with Mutable[ReadLighting] {
   var directionalLights: List[DirectionalLight] = Nil
   var pointLights: List[PointLight] = Nil
   

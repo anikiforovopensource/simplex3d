@@ -19,6 +19,21 @@
  */
 
 package simplex3d.engine
+package graphics
+
+import simplex3d.math.types._
 
 
-class Region(val first: Int, val count: Int)
+trait Struct[C <: Struct[C]] extends Readable[C] with NestedBinding { self: C =>
+  protected def mkMutable() :Mutable
+  
+  def fieldNames: ReadArray[String]
+  def fields: ReadArray[TechniqueBinding]
+  
+  
+  final def mutableCopy(): Mutable = {
+    val copy = mkMutable()
+    copy := this
+    copy
+  }
+}

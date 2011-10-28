@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Core Module
+ * Simplex3dEngine - GL Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,13 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
-
-import simplex3d.math.types._
+package simplex3d.engine.impl.gl
 
 
-trait CompoundType[C <: CompoundType[C]] extends Readable[C] with NestedBinding { self: C =>
-  def fieldNames: ReadArray[String]
-  def fields: ReadArray[TechniqueBinding]
+private[impl] class CompiledInfo(objectType: Int) extends ObjectInfo(objectType) {
+  final var compilationFailed = false
 }

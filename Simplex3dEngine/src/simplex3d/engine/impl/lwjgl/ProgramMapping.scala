@@ -70,7 +70,7 @@ private[impl] final class ProgramMapping(val program: Technique, val context: Re
   }
   
   private[this] def bindUniformTextures(
-    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[ReadTextureBinding[_]]
+    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[ReadTextureRef[_]]
   ) {
     var i = 0; while (i < uniformBindings.length) {
       setUniformTexture(
@@ -149,11 +149,11 @@ private[impl] final class ProgramMapping(val program: Technique, val context: Re
     }
   }
   
-  def setUniformTexture(location: Int, textureUnit: Int, dataType: Int, value: ReadTextureBinding[_]) {
+  def setUniformTexture(location: Int, textureUnit: Int, dataType: Int, value: ReadTextureRef[_]) {
     if (value != null) {
       (dataType: @switch) match {
         case EngineBindingTypes.Texture1d => //XXX
-        case EngineBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureBinding[_ <: Texture[_]]].bound)
+        case EngineBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureRef[_ <: Texture[_]]].bound)
         case EngineBindingTypes.Texture3d =>
         case EngineBindingTypes.CubeTexture =>
         case EngineBindingTypes.ShadowTexture1d =>

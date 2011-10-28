@@ -32,17 +32,14 @@ sealed abstract class ReadElementRange extends Readable[ReadElementRange] with N
   def count: ReadIntRef
   
   final def mutableCopy() = {
-    val range = new ElementRange
-    
-    range.first := first
-    range.count := count
-    
-    range
+    val copy = new ElementRange
+    copy := this
+    copy
   }
 }
 
 final class ElementRange(firstElement: Int = 0, elementCount: Int = 0)
-extends ReadElementRange with Writable[ReadElementRange] {
+extends ReadElementRange with Mutable[ReadElementRange] {
   
   val first = new IntRef(firstElement)
   val count = new IntRef(elementCount)

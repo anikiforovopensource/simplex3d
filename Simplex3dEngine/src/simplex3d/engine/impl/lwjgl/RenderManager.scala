@@ -73,18 +73,27 @@ extends engine.RenderManager with GlUnsafeAccess
   private def render(camera: AbstractCamera, mesh: AbstractMesh) {
     
     val program = mesh.technique.defined
+    var useDefaultProgram = false
     
     if (program == null) {
-      if (!mesh.suspendLogging) {
-        log(Level.SEVERE, "Mesh '" + mesh.name + "' has an undefined technique.")
-        mesh.suspendLogging = true
-      }
+      useDefaultProgram = true
+      log(Level.SEVERE, "Mesh '" + mesh.name + "' has an undefined technique. Default technique will be used.")
+    }
+    else {
+      useDefaultProgram = !renderContext.bindProgram(program)
+      
+      if (useDefaultProgram) log(
+        Level.SEVERE, "Unable to use technique provided for mesh '" + mesh.name +
+        "'. Default technique will be used."
+      )
+    }
+    
+    if (useDefaultProgram) {
+      mesh.technique.defineAs(renderContext.defaultProgram)
+      render(camera, mesh)
       return
     }
     
-    
-    // Compiles shaders, links the program, build the program mapping, and calls glUseProgram.
-    renderContext.bindProgram(program)
     
     val programMapping = program.mapping
     

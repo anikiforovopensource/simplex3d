@@ -45,10 +45,10 @@ private[impl] trait GlAccess extends EngineAccess {
     data
   }
   
-  implicit final def engineInfo(shader: Shader) :ObjectInfo = {
-    var data = getEngineInfo(shader).asInstanceOf[ObjectInfo]
+  implicit final def engineInfo(shader: Shader) :CompiledInfo = {
+    var data = getEngineInfo(shader).asInstanceOf[CompiledInfo]
     if (data == null) {
-      data = new ObjectInfo(ManagedObjects.Shader)
+      data = new CompiledInfo(ManagedObjects.Shader)
       setEngineInfo(shader, data)
     }
     data

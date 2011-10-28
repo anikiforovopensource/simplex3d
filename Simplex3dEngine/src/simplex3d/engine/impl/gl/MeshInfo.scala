@@ -28,5 +28,4 @@ private[impl] class MeshInfo {
   val mapping: MeshMapping = new MeshMapping
   val predefinedUniforms: PredefinedUniforms = new PredefinedUniforms
   var updatableEffects: ReadArray[UncheckedUpdatableEffect] = null
-  var suspendLogging = false
 }

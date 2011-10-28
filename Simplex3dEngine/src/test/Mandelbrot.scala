@@ -20,14 +20,12 @@
 
 package test
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine._
-import simplex3d.engine.input._
 import simplex3d.engine.graphics._
 
 
@@ -47,10 +45,11 @@ object Mandelbrot extends FullscreenEffectApp with impl.lwjgl.App {
   }
 
   
-  val effect = new FullscreenEffect("Mandelbrot") {
+  val effect = new FullscreenEffect("Mandelbrot Fractal") {
     var startZoom = 30.0
     var zoomSpeed = 1.2
     
+    // Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.
     val zoomPoint = ShaderProperty[ReadVec2](Vec2(
       -0.743643887037158704752191506114774,
        0.131825904205311970493132056385139
@@ -60,7 +59,7 @@ object Mandelbrot extends FullscreenEffectApp with impl.lwjgl.App {
     protected val zoom = ShaderProperty[ReadDoubleRef](1)
     protected val iterations = ShaderProperty[ReadIntRef](0)
     
-    protected val colorTexture = ShaderProperty[ReadTextureBinding[Texture2d[Vec3]]](new TextureBinding);
+    protected val colorTexture = ShaderProperty[ReadTextureRef[Texture2d[Vec3]]](new TextureRef);
     {
       val colors: Array[ConstVec3] = ColorPreset.generate()
       val texture = Texture2d(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
@@ -74,9 +73,12 @@ object Mandelbrot extends FullscreenEffectApp with impl.lwjgl.App {
     }
     
     val shaderSrc = """
+// se_viewDimensions and se_uptime are provided by FullscreenEffect implementation.
 uniform ivec2 se_viewDimensions;
 
+// Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.
 uniform vec2 zoomPoint;
+
 uniform float zoom;
 uniform int iterations;
 
@@ -87,15 +89,15 @@ const int extraIterations = 4;
 
 void main() {
   vec2 pixel = gl_FragCoord.xy;
-  vec2 mid = se_viewDimensions*0.5;
+  vec2 mid = vec2(se_viewDimensions)*0.5;
 
   vec2 c = (pixel - mid)/zoom + zoomPoint;
   vec2 z = vec2(0);
 
-  int i = 0; while (z.x*z.x + z.y*z.y <= 4 && i < iterations) {
+  int i = 0; while (z.x*z.x + z.y*z.y <= 4.0 && i < iterations) {
     float xtemp = z.x*z.x - z.y*z.y + c.x;
 
-    z.y = 2*z.x*z.y + c.y;
+    z.y = 2.0*z.x*z.y + c.y;
     z.x = xtemp;
 
     i += 1;
@@ -105,13 +107,13 @@ void main() {
   while (i < extra) {
     float xtemp = z.x*z.x - z.y*z.y + c.x;
 
-    z.y = 2*z.x*z.y + c.y;
+    z.y = 2.0*z.x*z.y + c.y;
     z.x = xtemp;
 
     i += 1;
   }
 
-  float g = i - log2(abs(log2(length(z))));
+  float g = float(i) - log2(abs(log2(length(z))));
   g = clamp(g, 0.0, float(iterations - 1));
 
   gl_FragColor = texture2D(colorTexture, vec2(g/float(iterations), 0.5));

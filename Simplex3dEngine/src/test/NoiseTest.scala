@@ -20,7 +20,6 @@
 
 package test
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -28,8 +27,6 @@ import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
 import simplex3d.engine._
-import simplex3d.engine.input._
-import simplex3d.engine.graphics._
 
 
 object NoiseTest extends FunctionRendererApp with impl.lwjgl.App {

@@ -25,8 +25,8 @@ import java.util.logging._
 import simplex3d.math.types._
 
 
-trait ReflectCompoundType[C <: ReflectCompoundType[C]] extends CompoundType[C] { self: C =>
-  import ReflectCompoundType.logger._
+trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
+  import ReflectStruct.logger._
   
   
   private[this] var _fieldNames: ReadArray[String] = null
@@ -65,6 +65,6 @@ trait ReflectCompoundType[C <: ReflectCompoundType[C]] extends CompoundType[C] {
   override def fields: ReadArray[TechniqueBinding] = _fields
 }
 
-object ReflectCompoundType {
-  private final val logger = Logger.getLogger(classOf[ReflectCompoundType[_]].getName)
+object ReflectStruct {
+  private final val logger = Logger.getLogger(classOf[ReflectStruct[_]].getName)
 }

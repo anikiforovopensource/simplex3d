@@ -25,6 +25,8 @@ import simplex3d.data._
 
 
 package object graphics {
+  type Mutable[T <: Readable[T]] = Writable[T]
+  
   val EffectRecursor: { type Recursive <: EnvironmentalEffect[Recursive] } = null
   type UncheckedEffect = EffectRecursor.type#Recursive
   

@@ -35,14 +35,14 @@ extends Readable[ReadBindingArray[R]] with NestedBinding
 }
 
 
-final class BindingArray[R <: Readable[R] with NestedBinding] private (private val array :Array[R#Mutable])
-extends ReadBindingArray[R] with Writable[ReadBindingArray[R]]
+final class BindingArray[R <: Readable[R] with NestedBinding] private (private val array :Array[AnyRef])
+extends ReadBindingArray[R] with Mutable[ReadBindingArray[R]]
 {
-  def this(factory: R, size: Int) {
+  def this(elementFactory: R, size: Int) {
     this {
-      val array = new Array[AnyRef](size).asInstanceOf[Array[R#Mutable]]
+      val array = new Array[AnyRef](size)
       var i = 0; while (i < array.length) {
-        array(i) = factory.mutableCopy()
+        array(i) = elementFactory.mutableCopy()
         i += 1
       }
       array
@@ -51,21 +51,34 @@ extends ReadBindingArray[R] with Writable[ReadBindingArray[R]]
   
   
   final def mutableCopy(): BindingArray[R] = {
-    val carray = new Array[AnyRef](array.length).asInstanceOf[Array[R#Mutable]]
-    var i = 0; while (i < carray.length) {
-      carray(i) = array(i).mutableCopy()
-      i += 1
-    }
-    new BindingArray[R](carray)
+    val copy = new BindingArray[R](new Array[AnyRef](array.length))
+    copy := this
+    copy
   }
   
   def :=(a: ReadBindingArray[R]) {
     var i = 0; while (i < array.length) {
-      array(i) := a(i)
+      array(i).asInstanceOf[R#Mutable] := a(i).asInstanceOf[R#Mutable]
       i += 1
     }
   }
   
   def length: Int = array.length
-  def apply(i: Int) :R#Mutable = array(i)
+  def apply(i: Int) :R#Mutable = array(i).asInstanceOf[R#Mutable]
+}
+
+
+final class BindingArrayFactory[R <: Readable[R] with NestedBinding] (elementFactory: R, size: Int)
+extends ReadBindingArray[R] with Mutable[ReadBindingArray[R]]
+{
+  
+  final def mutableCopy(): BindingArray[R] = {
+    new BindingArray[R](elementFactory, size)
+  }
+  
+  
+  def :=(a: ReadBindingArray[R]) { throw new UnsupportedOperationException }
+  
+  def length: Int = throw new UnsupportedOperationException
+  def apply(i: Int) :R#Mutable = throw new UnsupportedOperationException
 }

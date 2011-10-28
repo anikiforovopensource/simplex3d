@@ -26,11 +26,11 @@ import simplex3d.data._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadTextureBinding[T <: Texture[_]] (protected[engine] var texture: T)
-extends Readable[ReadTextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with NestedBinding with Serializable
+sealed abstract class ReadTextureRef[T <: Texture[_]] (protected[engine] var texture: T)
+extends Readable[ReadTextureRef[T]] with Cloneable[ReadTextureRef[T]] with NestedBinding with Serializable
 {
-  type Mutable = TextureBinding[T]
-  final def mutableCopy() = new TextureBinding[T](texture)
+  type Mutable = TextureRef[T]
+  final def mutableCopy() = new TextureRef[T](texture)
   
   final def bound: T = texture
   final def isBound = (texture != null)
@@ -43,22 +43,22 @@ extends Readable[ReadTextureBinding[T]] with Cloneable[ReadTextureBinding[T]] wi
   
   final override def equals(other: Any) :Boolean = {
     other match {
-      case r: ReadTextureBinding[_] => texture == r.texture
+      case r: ReadTextureRef[_] => texture == r.texture
       case t: Texture[_] => texture == t
       case _ => false
     }
   }
 
   final override def hashCode() :Int = texture.hashCode
-  final override def toString() :String = "TextureBinding" + "(" + texture + ")"
+  final override def toString() :String = "TextureRef" + "(" + texture + ")"
 }
 
 @SerialVersionUID(8104346712419693669L)
-final class TextureBinding[T <: Texture[_]](texture: T = null) extends ReadTextureBinding[T](texture)
-with Writable[ReadTextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializable
+final class TextureRef[T <: Texture[_]](texture: T = null) extends ReadTextureRef[T](texture)
+with Mutable[ReadTextureRef[T]] with Cloneable[TextureRef[T]] with Serializable
 {
-  override def clone() = new TextureBinding[T](texture)
+  override def clone() = new TextureRef[T](texture)
 
-  def :=(r: ReadTextureBinding[T]) { texture_=(r.texture) }
+  def :=(r: ReadTextureRef[T]) { texture_=(r.texture) }
   def :=(t: T) { texture_=(t) }
 }

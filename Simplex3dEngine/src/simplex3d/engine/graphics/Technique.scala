@@ -61,7 +61,6 @@ final class Technique private (
       }
       
       val (uniformNames, unifromProps) = allUniforms.unzip
-      
       (new ReadArray(uniformNames.toArray), new ReadArray(unifromProps.toArray))
     })
   }

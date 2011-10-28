@@ -62,7 +62,7 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
         " exceeds the data size = " + accessible.size + "."
       )
       
-      shared.regions += new Region(first, count)
+      shared.regions.put(first, count)
       accessible.asInstanceOf[DataView[F, R]]
     }
     else null
@@ -73,23 +73,24 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
 
 
 final class AttributesSharedState private[engine] (
-  updateRegion: Region,
+  val size: Int,
   val related: ReadSeq[Attributes[_ <: Format with MathType, Raw]],
   val caching: Caching.Value,
   private[engine] var persistent: InterleavedData
 ) extends EngineInfo {
   
   final class Subtext private[engine] () {
+    def updatedRegions = regions
+    
     def clearDataChanges() {
       regions.clear()
     }
   }
-  
   private[engine] val subtext = new Subtext
   
+  private[engine] val regions = new IntervalMap(64)
+  regions.put(0, size) // Initialize as changed.
   
-  private[engine] val regions = ArrayBuffer[Region](updateRegion)
-  val updatedRegions = new ReadSeq(regions)
   def hasDataChanges = regions.size > 0
 }
 
@@ -99,10 +100,9 @@ object Attributes {
   def apply[F <: Format with MathType, R <: Raw]
     (data: ReadDataBuffer[F, _ <: R], caching: Caching.Value = Caching.Dynamic)
   :Attributes[F, R] = {
-    val region = new Region(0, data.size)
     val attributes = new Attributes[F, R](data, null)
     attributes.shared = new AttributesSharedState(
-      region, new ReadSeq(ArrayBuffer(attributes)), caching, new InterleavedData(data)
+      data.size, new ReadSeq(ArrayBuffer(attributes)), caching, new InterleavedData(data)
     )
     attributes
   }
@@ -119,10 +119,9 @@ object Attributes {
       apply(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
     }
     else {
-      val region = new Region(0, src.size)
       val attributes = new Attributes[F, R](null, src)
       attributes.shared = new AttributesSharedState(
-        region, new ReadSeq(ArrayBuffer(attributes)), caching, null
+        src.size, new ReadSeq(ArrayBuffer(attributes)), caching, null
       )
       attributes
     }
@@ -166,7 +165,6 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
     init
     
     if (related.size > 0) {
-      val region = new Region(0, related.head.src.size)
       val sources = related.map(_.src)
       val isAccessible = related.head.isInstanceOf[RawView]
       
@@ -174,7 +172,7 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
         if (isAccessible) new InterleavedData(sources.asInstanceOf[Seq[RawView]]: _*)
         else { InterleavedData.verifyFormat(sources); null }
       
-      val sharedState = new AttributesSharedState(region, new ReadSeq(related), caching, persistent)
+      val sharedState = new AttributesSharedState(related.head.src.size, new ReadSeq(related), caching, persistent)
       
       var i = 0; while (i < related.length) {
         related(i).shared = sharedState
@@ -182,5 +180,106 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
         i += 1
       }
     }
+  }
+}
+
+
+/** Specialized class to keep track of update range for VBO.
+ * 
+ * @param initCapacity
+ * @param mergeTolerance (mergeTolerance + 1) is the minimum gap between two intervals. If two consecutive intervals
+ *   are closer than this gap, they will be merged.
+ *   Example: intervals (1 until 5) and (10 until 20) have a gap of 5 between them, so if tolerance is set
+ *   to 5 or more, these two intervals will be merged into (1 until 20) when calling '''merge()'''.
+ */
+final class IntervalMap(private val initCapacity: Int, val mergeTolerance: Int) {
+  
+  def this(mergeTolerance: Int) {
+    this(4, mergeTolerance)
+  }
+  
+  
+  private[this] var array = new Array[Long](initCapacity)
+  private[this] var size0 = 0
+  private[this] var needsMerge = false
+  
+  def size = size0
+  
+  def first(index: Int) = upper(array(index))
+  def count(index: Int) = lower(array(index))
+  
+  private def upper(n: Long) = (n >> 32).toInt
+  private def lower(n: Long) = n.toInt
+  
+  private def put(index: Int, first: Int, count: Int) {
+    array(index) = ((first.toLong) << 32) | count
+  }
+  
+  /** Empty ranges are ignored.
+   * 
+   * @param start the beginning of the range (inclusive)
+   * @param end the end of the range (exclusive)
+   */
+  def put(first: Int, count: Int) {
+    if (first < 0 || count < 0) throw new IndexOutOfBoundsException(
+      "First and count must be non-negative: first = " + first + ", count = " + count + "."
+    )
+    if (count == 0) return
+    
+    
+    if (array.length == size0) {
+      val newarray = new Array[Long](2*size0)
+      System.arraycopy(array, 0, newarray, 0, size0)
+      array = newarray
+    }
+    
+    put(size0, first, count)
+    size0 += 1
+    
+    needsMerge = true
+  }
+  
+  def merge() {
+    if (!needsMerge || size0 < 2) return;
+    
+    java.util.Arrays.sort(array, 0, size0)
+    
+    var lastStart = first(0)
+    var lastEnd = lastStart + count(0)
+    
+    var lastRange = 0
+    
+    val size = size0; var i = 1; while (i < size) {
+      val start = first(i)
+      val end = start + count(i)
+      
+      if (start <= lastEnd + mergeTolerance) {
+        if (end > lastEnd) {
+          lastEnd = end
+        }
+      } else {
+        put(lastRange, lastStart, lastEnd - lastStart)
+        lastRange += 1
+        lastStart = start
+        lastEnd = end
+      }
+      
+      i += 1
+    }
+    
+    put(lastRange, lastStart, lastEnd - lastStart)
+    size0 = lastRange + 1
+    
+    needsMerge = false
+  }
+  
+  def clear() {
+    size0 = 0
+  }
+  
+  override def toString() :String = {
+    "UpdateIntervals(" +
+      array.take(size0).map(n => (upper(n), lower(n))).mkString(", ") +
+    ")"
   }
 }

@@ -30,7 +30,7 @@ import simplex3d.engine.graphics._
 
 class Material extends graphics.ReflectMaterial {
   val color = ValueProperty[ReadVec3](Vec3.Zero, this)
-  val texture = ValueProperty[ReadTextureBinding[Texture2d[Vec3]]](new TextureBinding[Texture2d[Vec3]], this)
+  val texture = ValueProperty[ReadTextureRef[Texture2d[Vec3]]](new TextureRef[Texture2d[Vec3]], this)
   
   reflect(classOf[Material])
 }

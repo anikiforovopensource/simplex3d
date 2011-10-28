@@ -36,12 +36,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
   
   final def mutableCopy() = {
     val copy = new ComponentTransformation3d
-    if (isSet) {
-      val m = copy.mutable
-      m.scale := scale
-      m.rotation := rotation
-      m.translation := translation
-    }
+    if (isSet) copy := this
     copy
   }
   

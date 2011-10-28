@@ -55,7 +55,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   
   
   private def mkMesh() = new AbstractMesh { self =>
-    val name = effect.name + " Mesh"
+    val name = effect.name + " Canvas"
     
     val geometry = MinimalGraphicsContext.mkGeometry()
     val material = MinimalGraphicsContext.mkMaterial()

@@ -56,14 +56,39 @@ extends engine.RenderContext with GlAccess {
   import SceneAccess._; import ClearChangesAccess._
   
 
-  private val defaultTexture2d = Texture2d(Vec2i(4), DataBuffer[Vec3, UByte](4*4));
-  {
-    val dims = defaultTexture2d.dimensions
-    val data = defaultTexture2d.write
+  val defaultTexture2d = {
+    val dims = ConstVec2i(4)
+    val data = DataBuffer[Vec3, UByte](4*4)
     
     for (y <- 0 until dims.y; x <- 0 until dims.x) {
       data(x + y*dims.x) = Vec3(1, 0, 1)
     }
+    
+    Texture2d(dims, data.asReadOnly())
+  }
+  
+  val defaultProgram = {
+    val vertexShader = """
+      uniform mat4 se_modelViewProjectionMatrix;
+      attribute vec3 vertices;
+      
+      void main() {
+        gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+      }
+    """
+    
+    val fragmentShader = """
+      void main() {
+        gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+      }
+    """
+    
+    val shaders = List[Shader](
+      new Shader(Shader.VertexShader, vertexShader),
+      new Shader(Shader.FragmentShader, fragmentShader)
+    )
+    
+    new Technique(MinimalGraphicsContext, shaders)
   }
   
   
@@ -227,12 +252,17 @@ extends engine.RenderContext with GlAccess {
     bindBuffer(id)
     
     val regions = attributes.sharedState.updatedRegions
-    var i = 0; while (i < regions.size) { val region = regions(i)
+    regions.merge()
+    
+    var i = 0; while (i < regions.size) {
+      
+      val first = regions.first(i)
+      val count = regions.count(i)
       
       glBufferSubData(
         GL_ARRAY_BUFFER,
-        region.first*data.byteStride,
-        data.bindingBufferSubData(region.first, region.count)
+        first*data.byteStride,
+        data.bindingBufferSubData(first, count)
       )
       
       i += 1
@@ -475,6 +505,7 @@ extends engine.RenderContext with GlAccess {
   
   
   private def initialize(shader: Shader) :Int = {
+    if (shader.compilationFailed) return 0
     
     def formatLineNumber(i: Int) :String = {
       if (i < 10) "00" + i.toString
@@ -504,11 +535,26 @@ extends engine.RenderContext with GlAccess {
     glShaderSource(id, shader.src)
     glCompileShader(id)
 
-    if (glGetShader(id, GL_COMPILE_STATUS) == 0) throw new RuntimeException(
-      "Shader compilation failed.\n\nErrors:\n" +
-      glGetShaderInfoLog(id, 1000) +
-      "\nSource:\n" + format(shader.src)
-    )
+    val logLength = glGetShader(id, GL_INFO_LOG_LENGTH)
+    val shaderLog = glGetShaderInfoLog(id, logLength)
+    
+    if (glGetShader(id, GL_COMPILE_STATUS) == 0) {
+      log(
+        Level.SEVERE,
+        "Shader compilation failed with the following errors:\n\n" + shaderLog + "\nSource:\n" + format(shader.src)
+      )
+      
+      glDeleteShader(id)
+      shader.compilationFailed = true
+      return 0
+    }
+    
+    if (settings.logShaderWarnings && shaderLog.length() > 0) {
+      log(
+        Level.WARNING,
+        "Shader compilation succeeded with some warnings:\n\n" + shaderLog + "\nSource:\n" + format(shader.src)
+      )
+    }
     
     shader.managedFields.id = id
     resourceManager.register(shader)
@@ -519,14 +565,25 @@ extends engine.RenderContext with GlAccess {
   private[this] val sizeType = DataBuffer[SInt, SInt](2).buffer()
   
   private def initialize(program: Technique) :Int = {
+    if (program.compilationFailed) return 0
+    
     var id = glCreateProgram()
+    var compilationFailed = false
     
     for (shader <- program.shaders) {
       var shaderId = shader.managedFields.id
       if (shaderId == 0) shaderId = initialize(shader)
       
-      glAttachShader(id, shaderId)
+      if (shaderId != 0) glAttachShader(id, shaderId)
+      else compilationFailed = true
     }
+    
+    if (compilationFailed) {
+      glDeleteProgram(id)
+      program.compilationFailed = true
+      return 0
+    }
+    
     
     glLinkProgram(id)
     
@@ -650,11 +707,15 @@ extends engine.RenderContext with GlAccess {
     id
   }
   
-  def bindProgram(program: Technique) {
+  def bindProgram(program: Technique) :Boolean = {
     var id = program.managedFields.id
     if (id == 0) id = initialize(program)
     
-    useProgram(id)
+    if (id != 0) {
+      useProgram(id)
+      true
+    }
+    else false
   }
   
   
@@ -922,8 +983,8 @@ extends engine.RenderContext with GlAccess {
           Level.SEVERE, "Uniform '" + name + "' is not defined for mesh '" + meshName + "'."
         )
       }
-      else if (value.isInstanceOf[ReadTextureBinding[_]]) {
-        val textureBinding = value.asInstanceOf[ReadTextureBinding[_]]
+      else if (value.isInstanceOf[ReadTextureRef[_]]) {
+        val textureBinding = value.asInstanceOf[ReadTextureRef[_]]
         if (!textureBinding.isBound)
           log(
             Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
@@ -1016,12 +1077,12 @@ extends engine.RenderContext with GlAccess {
                 if (rest.isEmpty) indexed
                 else {
                   indexed match {
-                    case c: CompoundType[_] =>
+                    case c: Struct[_] =>
                       parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
                     case _ =>
                       log(
                         Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]'" +
-                        " resolves to a value that is not an instance of CompoundType for mesh '" + meshName + "'."
+                        " resolves to a value that is not an instance of Struct for mesh '" + meshName + "'."
                       )
                       null
                   }
@@ -1044,12 +1105,12 @@ extends engine.RenderContext with GlAccess {
           if (rest.isEmpty) value
           else {
             value match {
-              case c: CompoundType[_] =>
+              case c: Struct[_] =>
                 parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
               case _ =>
                 log(
                   Level.SEVERE, "Uniform '" + mkName(prefix, name) +
-                  "' resolves to a value that is not an instance of CompoundType for mesh '" + meshName + "'."
+                  "' resolves to a value that is not an instance of Struct for mesh '" + meshName + "'."
                 )
                 null
             }
@@ -1092,7 +1153,7 @@ extends engine.RenderContext with GlAccess {
         case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
         case EngineBindingTypes.Mat4x4 => value.isInstanceOf[Mat4x4]
         case EngineBindingTypes.Texture1d => false// XXX
-        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
+        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureRef[_ <: Texture[_]]] // XXX verify type somehow
         case EngineBindingTypes.Texture3d => false
         case EngineBindingTypes.CubeTexture => false
         case EngineBindingTypes.ShadowTexture1d => false
@@ -1188,7 +1249,7 @@ extends engine.RenderContext with GlAccess {
     
     meshMapping.uniformTextures = buildUniformMapping(
       mesh, resolvedEnv, programMapping.uniformTextures
-    ).asInstanceOf[ReadArray[ReadTextureBinding[_]]]
+    ).asInstanceOf[ReadArray[ReadTextureRef[_]]]
     
     meshMapping.attributes = buildAttributeMapping(mesh, programMapping.attributes)
   }

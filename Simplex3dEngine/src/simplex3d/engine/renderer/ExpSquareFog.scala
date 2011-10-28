@@ -29,20 +29,14 @@ import simplex3d.engine.graphics._
 
 
 sealed abstract class ReadExpSquareFog extends EnvironmentalEffect[ReadExpSquareFog]
-with ReflectCompoundType[ReadExpSquareFog] {
+with ReflectStruct[ReadExpSquareFog] {
+
   type Mutable = ExpSquareFog
+  protected def mkMutable() = new Mutable
   
   def color: ReadVec3
   def density: ReadDoubleRef
   
-  def mutableCopy() = {
-    val fog = new ExpSquareFog
-    
-    fog.color := color
-    fog.density := density
-    
-    fog
-  }
   
   def propagate(parentVal: ReadExpSquareFog, result: ExpSquareFog) :Boolean = {
     val parent = parentVal.asInstanceOf[ReadExpSquareFog]
@@ -69,7 +63,7 @@ with ReflectCompoundType[ReadExpSquareFog] {
 }
 
 
-final class ExpSquareFog extends ReadExpSquareFog with Writable[ReadExpSquareFog] {
+final class ExpSquareFog extends ReadExpSquareFog with Mutable[ReadExpSquareFog] {
   val color = Vec3(1)
   val density = new DoubleRef(0)
   

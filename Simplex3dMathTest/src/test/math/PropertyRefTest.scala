@@ -43,7 +43,7 @@ class PropertyRefTest extends FunSuite {
   def md = ConstMat4d(rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd)
 
 
-  def test[R <: ReadPropertyRef[R]](mutable: PropertyRef[R], read: R) {
+  def testRef[W <: PropertyRef[W]](mutable: W, read: W#Read) {
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 
@@ -109,65 +109,65 @@ class PropertyRefTest extends FunSuite {
   test("Primitive Refs") {
     for (i <- 0 until 100) {
       val b = rb
-      test[ReadBooleanRef](new BooleanRef(b), !b)
+      testRef[BooleanRef](new BooleanRef(b), !b)
 
-      test[ReadIntRef](new IntRef(ri), ri)
+      testRef[IntRef](new IntRef(ri), ri)
 
-      test[ReadFloatRef](new FloatRef(rf), rf)
+      testRef[FloatRef](new FloatRef(rf), rf)
 
-      test[ReadDoubleRef](new DoubleRef(rd), rd)
+      testRef[DoubleRef](new DoubleRef(rd), rd)
     }
   }
 
   test("Abstract Vectors") {
     for (i <- 0 until 100) {
       val b = rb
-      test(Vec2b(b, rb), ConstVec2b(!b, rb))
-      test(Vec3b(b, rb, rb), ConstVec3b(!b, rb, rb))
-      test(Vec4b(b, rb, rb, rb), ConstVec4b(!b, rb, rb, rb))
+      testRef[Vec2b](Vec2b(b, rb), ConstVec2b(!b, rb))
+      testRef[Vec3b](Vec3b(b, rb, rb), ConstVec3b(!b, rb, rb))
+      testRef[Vec4b](Vec4b(b, rb, rb, rb), ConstVec4b(!b, rb, rb, rb))
 
-      test(Vec2i(ri, ri), ConstVec2i(ri, ri))
-      test(Vec3i(ri, ri, ri), ConstVec3i(ri, ri, ri))
-      test(Vec4i(ri, ri, ri, ri), ConstVec4i(ri, ri, ri, ri))
+      testRef[Vec2i](Vec2i(ri, ri), ConstVec2i(ri, ri))
+      testRef[Vec3i](Vec3i(ri, ri, ri), ConstVec3i(ri, ri, ri))
+      testRef[Vec4i](Vec4i(ri, ri, ri, ri), ConstVec4i(ri, ri, ri, ri))
 
-      test(Vec2f(rf, rf), ConstVec2f(rf, rf))
-      test(Vec3f(rf, rf, rf), ConstVec3f(rf, rf, rf))
-      test(Vec4f(rf, rf, rf, rf), ConstVec4f(rf, rf, rf, rf))
+      testRef[Vec2f](Vec2f(rf, rf), ConstVec2f(rf, rf))
+      testRef[Vec3f](Vec3f(rf, rf, rf), ConstVec3f(rf, rf, rf))
+      testRef[Vec4f](Vec4f(rf, rf, rf, rf), ConstVec4f(rf, rf, rf, rf))
 
-      test(Vec2d(rd, rd), ConstVec2d(rd, rd))
-      test(Vec3d(rd, rd, rd), ConstVec3d(rd, rd, rd))
-      test(Vec4d(rd, rd, rd, rd), ConstVec4d(rd, rd, rd, rd))
+      testRef[Vec2d](Vec2d(rd, rd), ConstVec2d(rd, rd))
+      testRef[Vec3d](Vec3d(rd, rd, rd), ConstVec3d(rd, rd, rd))
+      testRef[Vec4d](Vec4d(rd, rd, rd, rd), ConstVec4d(rd, rd, rd, rd))
     }
   }
 
   test("Abstract Quaternions") {
     for (i <- 0 until 100) {
-      test(Quat4f(rf, rf, rf, rf), ConstQuat4f(rf, rf, rf, rf))
-      test(Quat4d(rd, rd, rd, rd), ConstQuat4d(rd, rd, rd, rd))
+      testRef[Quat4f](Quat4f(rf, rf, rf, rf), ConstQuat4f(rf, rf, rf, rf))
+      testRef[Quat4d](Quat4d(rd, rd, rd, rd), ConstQuat4d(rd, rd, rd, rd))
     }
   }
 
   test("Abstract Matrices") {
     for (i <- 0 until 100) {
-      test(Mat2x2f(mf), ConstMat2x2f(mf))
-      test(Mat2x3f(mf), ConstMat2x3f(mf))
-      test(Mat2x4f(mf), ConstMat2x4f(mf))
-      test(Mat3x2f(mf), ConstMat3x2f(mf))
-      test(Mat3x3f(mf), ConstMat3x3f(mf))
-      test(Mat3x4f(mf), ConstMat3x4f(mf))
-      test(Mat4x2f(mf), ConstMat4x2f(mf))
-      test(Mat4x3f(mf), ConstMat4x3f(mf))
-      test(Mat4x4f(mf), ConstMat4x4f(mf))
+      testRef[Mat2x2f](Mat2x2f(mf), ConstMat2x2f(mf))
+      testRef[Mat2x3f](Mat2x3f(mf), ConstMat2x3f(mf))
+      testRef[Mat2x4f](Mat2x4f(mf), ConstMat2x4f(mf))
+      testRef[Mat3x2f](Mat3x2f(mf), ConstMat3x2f(mf))
+      testRef[Mat3x3f](Mat3x3f(mf), ConstMat3x3f(mf))
+      testRef[Mat3x4f](Mat3x4f(mf), ConstMat3x4f(mf))
+      testRef[Mat4x2f](Mat4x2f(mf), ConstMat4x2f(mf))
+      testRef[Mat4x3f](Mat4x3f(mf), ConstMat4x3f(mf))
+      testRef[Mat4x4f](Mat4x4f(mf), ConstMat4x4f(mf))
 
-      test(Mat2x2d(md), ConstMat2x2d(md))
-      test(Mat2x3d(md), ConstMat2x3d(md))
-      test(Mat2x4d(md), ConstMat2x4d(md))
-      test(Mat3x2d(md), ConstMat3x2d(md))
-      test(Mat3x3d(md), ConstMat3x3d(md))
-      test(Mat3x4d(md), ConstMat3x4d(md))
-      test(Mat4x2d(md), ConstMat4x2d(md))
-      test(Mat4x3d(md), ConstMat4x3d(md))
-      test(Mat4x4d(md), ConstMat4x4d(md))
+      testRef[Mat2x2d](Mat2x2d(md), ConstMat2x2d(md))
+      testRef[Mat2x3d](Mat2x3d(md), ConstMat2x3d(md))
+      testRef[Mat2x4d](Mat2x4d(md), ConstMat2x4d(md))
+      testRef[Mat3x2d](Mat3x2d(md), ConstMat3x2d(md))
+      testRef[Mat3x3d](Mat3x3d(md), ConstMat3x3d(md))
+      testRef[Mat3x4d](Mat3x4d(md), ConstMat3x4d(md))
+      testRef[Mat4x2d](Mat4x2d(md), ConstMat4x2d(md))
+      testRef[Mat4x3d](Mat4x3d(md), ConstMat4x3d(md))
+      testRef[Mat4x4d](Mat4x4d(md), ConstMat4x4d(md))
     }
   }
 }

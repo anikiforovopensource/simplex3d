@@ -21,21 +21,23 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
 
-
-sealed abstract class EnvironmentalProperty[R <: EnvironmentalEffect[R]] private[engine] (
-  factory: R, listener: StructuralChangeListener
-) extends Property[R](factory, listener){ self: AccessibleProperty =>
-}
-
-final class AccessibleEnvironmentalProperty[R <: EnvironmentalEffect[R]](
-  factory: R, listener: StructuralChangeListener
-) extends EnvironmentalProperty[R](factory, listener) with AccessibleProperty {
-  def clearDataChanges() { changed = false }
-}
-
-object EnvironmentalProperty {
-  def apply[R <: EnvironmentalEffect[R]](factory: R, listener: StructuralChangeListener)
-  :EnvironmentalProperty[R] = new AccessibleEnvironmentalProperty(factory, listener)
+class GraphicsCapabilities(
+  val maxAnisotropyLevel: Double,
+  val maxVertexUniformComponents: Int,
+  val maxFragmentUniformComponents: Int,
+  val maxAttributes: Int,
+  val maxVertexTextures: Int,
+  val maxFragmentTextures: Int
+) {
+  override def toString(): String = {
+    "GraphicsCapabilities(" +
+      "\n  maxAnisotropyLevel = " + maxAnisotropyLevel +
+      "\n  maxVertexUniformComponents = " + maxVertexUniformComponents +
+      "\n  maxFragmentUniformComponents = " + maxFragmentUniformComponents +
+      "\n  maxAttributes = " + maxAttributes +
+      "\n  maxVertexTextures = " + maxVertexTextures +
+      "\n  maxFragmentTextures = " + maxFragmentTextures +
+    "\n)"
+  }
 }

@@ -22,15 +22,14 @@ package simplex3d.engine
 package renderer
 
 import scala.annotation._
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.engine.graphics._
 
 
 class Material extends graphics.ReflectMaterial {
-  val color = ValueProperty[ReadVec3](Vec3.Zero, this)
-  val texture = ValueProperty[ReadTextureRef[Texture2d[Vec3]]](new TextureRef[Texture2d[Vec3]], this)
+  val color = Property[Vec3](Vec3.Zero, this)
+  val texture = Property[TextureBinding[Texture2d[Vec3]]](new TextureBinding, this)
   
   reflect(classOf[Material])
 }

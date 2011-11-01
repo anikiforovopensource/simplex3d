@@ -21,10 +21,8 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-
 
 abstract class Environment extends StructuralChangeListener {
   def propertyNames: ReadArray[String]
-  def properties: ReadArray[EnvironmentalProperty[UncheckedEffect]]
+  def properties: ReadArray[Property[UncheckedEffect]]
 }

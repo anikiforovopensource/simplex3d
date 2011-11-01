@@ -21,17 +21,16 @@
 package simplex3d.engine
 package graphics
 
-
 import simplex3d.math.types._
 
 
-abstract class EnvironmentalEffect[T <: EnvironmentalEffect[T]] extends Readable[T]
-{ self: T =>
+trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
+{ self: E =>
   
   /** This method must return true to signal structural change events.
    * Structural change events indicate that a new binding must be resolved.
    */
-  def propagate(parentVal: T, result: T#Mutable) :Boolean
+  def propagate(parentVal: E#Read, result: E) :Boolean
   
   /** Must return a stable binding that will no change until the next structural change event.
    */
@@ -39,8 +38,8 @@ abstract class EnvironmentalEffect[T <: EnvironmentalEffect[T]] extends Readable
 }
 
 
-abstract class UpdatableEnvironmentalEffect[T <: UpdatableEnvironmentalEffect[T]] extends EnvironmentalEffect[T]
-{ self: T =>
+trait UpdatableEnvironmentalEffect[E <: UpdatableEnvironmentalEffect[E]] extends EnvironmentalEffect[E]
+{ self: E =>
   
   /** Update the stable binding with a set of predefined uniforms that are only available at the time of rendering.
    * 

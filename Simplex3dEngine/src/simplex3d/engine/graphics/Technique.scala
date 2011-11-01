@@ -29,12 +29,12 @@ final class Technique private (
   val shaders: List[Shader],
   args: (
     ReadArray[String],
-    ReadArray[ShaderProperty[_]]
+    ReadArray[DefinedProperty[_ <: TechniqueBinding]]
   )
 ) extends EngineInfo {
   
   val uniformNames: ReadArray[String] = args._1
-  val uniforms: ReadArray[ShaderProperty[_]] = args._2
+  val uniforms: ReadArray[DefinedProperty[_ <: TechniqueBinding]] = args._2
   
 
   def this(graphicsContext: GraphicsContext, shaders: List[Shader]) {

@@ -21,8 +21,6 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-
 
 trait ReflectGeometry extends Geometry {
   
@@ -35,7 +33,7 @@ trait ReflectGeometry extends Geometry {
     if (initialized) return
     
     val (an, av) = FieldReflection.getValueMap(
-      this, classOf[UncheckedAttributes], ReflectGeometry.AttributesBlacklist
+      this, classOf[UncheckedAttributes], Nil, ReflectGeometry.AttributesBlacklist
     )
     _attributeNames = an
     _attributes = av

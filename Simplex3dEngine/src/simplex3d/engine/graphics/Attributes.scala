@@ -19,6 +19,7 @@
  */
 
 package simplex3d.engine
+package graphics
 
 import scala.annotation.unchecked._
 import scala.collection._

@@ -40,9 +40,9 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
-  final val transformation: T#Transformation#Mutable = transformationContext.factory()
+  final val transformation: T#Transformation = transformationContext.factory()
   private[scenegraph] final var updateVersion: Long = 0
-  private[scenegraph] final val uncheckedWorldTransformation: T#Transformation#Mutable =
+  private[scenegraph] final val uncheckedWorldTransformation: T#Transformation =
     transformationContext.factory()
   
   {
@@ -52,7 +52,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   }
   
   
-  final def worldTransformation: T#Transformation = {
+  final def worldTransformation: T#Transformation#Read = {
     def update(entity: Entity[T, _]) :Boolean = {
       val parentUpdated = if (entity.parent != null) update(entity.parent) else false
       

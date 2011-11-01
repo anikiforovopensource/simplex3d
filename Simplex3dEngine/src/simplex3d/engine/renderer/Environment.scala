@@ -21,13 +21,9 @@
 package simplex3d.engine
 package renderer
 
-import scala.annotation._
-import simplex3d.math.types._
-import simplex3d.engine.graphics._
-
 
 class Environment extends graphics.Environment with graphics.ReflectEnvironment {
-  val fog = EnvironmentalProperty(ExpSquareFog.Default, StructuralChangeListener.Ignore)
+  val fog = Property[ExpSquareFog](ExpSquareFog.Default, StructuralChangeListener.Ignore)
   
   reflect(classOf[Environment])
 }

@@ -34,7 +34,7 @@ abstract class Geometry extends StructuralChangeListener {
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  final def hasShapeChanges(elementRange: ValueProperty[ReadElementRange] = null) :Boolean = {
+  final def hasShapeChanges(elementRange: Property[ElementRange] = null) :Boolean = {
     if (elementRange != null && elementRange.hasDataChanges) {
       true
     }
@@ -71,7 +71,7 @@ abstract class Geometry extends StructuralChangeListener {
   final val vertices = SharedAttributes[Vec3, RFloat](this)
   final val normals = SharedAttributes[Vec3, RFloat](this)
   
-  final val faceCulling = ValueProperty[ReadEnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Back), this)
+  final val faceCulling = Property[EnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Back), this)
   
   
   final def setValueProperties(geometry: Geometry) {

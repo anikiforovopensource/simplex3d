@@ -30,7 +30,7 @@ import simplex3d.engine._
 import simplex3d.engine.graphics._
 
 
-abstract class FunctionRendererApp extends FullscreenEffectApp with impl.lwjgl.App {
+abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
   
   protected def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
     effect = new FunctionRenderer(function)
@@ -39,7 +39,7 @@ abstract class FunctionRendererApp extends FullscreenEffectApp with impl.lwjgl.A
   
   private final class FunctionRenderer(val function: (inVec2i, Double, inVec2) => ReadVec3)
   extends FullscreenEffect("Function Renderer") {
-    protected val texture = ShaderProperty[ReadTextureRef[Texture2d[Vec3]]](new TextureRef)
+    protected val texture = DefinedProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
     private val textureDims = Vec2i(0)
 
     private val renderLine = (img: Data[Vec3], dims: inVec2i, uptime: Double, y: Int) => {

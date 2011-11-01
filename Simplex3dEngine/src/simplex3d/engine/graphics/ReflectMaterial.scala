@@ -21,13 +21,11 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-
 
 trait ReflectMaterial extends Material {
   
   private[this] var _uniformNames: ReadArray[String] = null
-  private[this] var _uniforms: ReadArray[ValueProperty[UncheckedBinding]] = null
+  private[this] var _uniforms: ReadArray[Property[UncheckedBinding]] = null
   
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
@@ -35,16 +33,16 @@ trait ReflectMaterial extends Material {
     if (initialized) return
     
     val (un, uv) = FieldReflection.getValueMap(
-      this, classOf[ValueProperty[_]], ReflectMaterial.UniformBlacklist
+      this, classOf[Property[_]], TechniqueBindingFilter, ReflectMaterial.UniformBlacklist
     )
     _uniformNames = un
-    _uniforms = uv.asInstanceOf[ReadArray[ValueProperty[UncheckedBinding]]]
+    _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedBinding]]]
     
     initialized = true
   }
   
   override def uniformNames: ReadArray[String] = _uniformNames
-  override def uniforms: ReadArray[ValueProperty[UncheckedBinding]] = _uniforms
+  override def uniforms: ReadArray[Property[UncheckedBinding]] = _uniforms
 }
 
 object ReflectMaterial {

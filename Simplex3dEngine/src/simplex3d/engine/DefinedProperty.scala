@@ -23,15 +23,15 @@ package simplex3d.engine
 import simplex3d.math.types._
 
 
-abstract class DefinedProperty[R <: Readable[R]] private[engine] (initialValue: R)
+abstract class DefinedProperty[W <: Writable[W]] private[engine] (initialValue: Readable[W])
 { self: AccessibleDefinedProperty =>
-  private[this] final var value: R#Mutable = initialValue.mutableCopy()
+  private[this] final var value: W = initialValue.mutableCopy()
   protected final var changed = true // Initialize as changed.
   
-  final def defined: R = value
+  final def defined: W#Read = value
   final def isDefined = true
   
-  final def mutable: R#Mutable = {
+  final def mutable: W = {
     changed = true
     value
   }
@@ -46,12 +46,12 @@ trait AccessibleDefinedProperty {
   def clearDataChanges(): Unit
 }
 
-private[engine] final class AccessibleDefinedPropertyImpl[R <: Readable[R]](factory: R)
-extends DefinedProperty[R](factory) with AccessibleDefinedProperty {
+private[engine] final class AccessibleDefinedPropertyImpl[W <: Writable[W]](initialValue: Readable[W])
+extends DefinedProperty[W](initialValue) with AccessibleDefinedProperty {
   def clearDataChanges() { changed = false }
 }
 
 object DefinedProperty {
-  def apply[R <: Readable[R] with Binding](factory: R)
-  :DefinedProperty[R] = new AccessibleDefinedPropertyImpl(factory)
+  def apply[W <: Writable[W] with Binding](initialValue: Readable[W])
+  :DefinedProperty[W] = new AccessibleDefinedPropertyImpl(initialValue)
 }

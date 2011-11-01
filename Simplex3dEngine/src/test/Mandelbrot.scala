@@ -29,37 +29,33 @@ import simplex3d.engine._
 import simplex3d.engine.graphics._
 
 
-object Mandelbrot extends FullscreenEffectApp with impl.lwjgl.App {
+object Mandelbrot extends default.BasicFullscreenEffectApp {
   val title = "Mandelbrot"
   
-  def main(args: Array[String]) {
-    val settings = new Settings(
-      fullscreen = false,
-      verticalSync = true,
-      capabilitiesLog = true,
-      performanceLog = true,
-      resolution = None//Some(Vec2i(800, 600))
-    )
-    
-    launch(settings)
-  }
-
+  override lazy val settings = new Settings(
+    fullscreen = false,
+    verticalSync = true,
+    capabilitiesLog = true,
+    performanceLog = true,
+    resolution = None//Some(Vec2i(800, 600))
+  )
+  
   
   val effect = new FullscreenEffect("Mandelbrot Fractal") {
     var startZoom = 30.0
     var zoomSpeed = 1.2
     
     // Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.
-    val zoomPoint = ShaderProperty[ReadVec2](Vec2(
+    val zoomPoint = DefinedProperty[Vec2](Vec2(
       -0.743643887037158704752191506114774,
        0.131825904205311970493132056385139
     ))
     
     
-    protected val zoom = ShaderProperty[ReadDoubleRef](1)
-    protected val iterations = ShaderProperty[ReadIntRef](0)
+    protected val zoom = DefinedProperty[DoubleRef](1.0)
+    protected val iterations = DefinedProperty[IntRef](0)
     
-    protected val colorTexture = ShaderProperty[ReadTextureRef[Texture2d[Vec3]]](new TextureRef);
+    protected val colorTexture = DefinedProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding);
     {
       val colors: Array[ConstVec3] = ColorPreset.generate()
       val texture = Texture2d(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))

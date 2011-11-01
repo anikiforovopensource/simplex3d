@@ -24,14 +24,14 @@ package graphics
 import simplex3d.math.types._
 
 
-trait Struct[C <: Struct[C]] extends Readable[C] with NestedBinding { self: C =>
-  protected def mkMutable() :Mutable
+trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>
+  protected def mkMutable() :S
   
   def fieldNames: ReadArray[String]
   def fields: ReadArray[TechniqueBinding]
   
   
-  final def mutableCopy(): Mutable = {
+  final def mutableCopy(): S = {
     val copy = mkMutable()
     copy := this
     copy

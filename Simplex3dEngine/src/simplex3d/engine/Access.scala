@@ -29,32 +29,26 @@ import simplex3d.engine.scene._
 
 
 object ClearChangesAccess {
+  
   implicit def listenerSubtext(listener: StructuralChangeListener)
   :StructuralChangeListener#StructuralSubtext = listener.structuralSubtext
   
   implicit def changeListenerSubtext(listener: DataChangeListener)
   :DataChangeListener#DataSubtext = listener.dataSubtext
 
-  implicit def accessDefinedProperty(property: DefinedProperty[_])
-  = property.asInstanceOf[AccessibleDefinedProperty]
-  
-  implicit def accessShaderProperty(property: ShaderProperty[_])
-  = property.asInstanceOf[AccessibleShaderProperty[_]]
   
   implicit def accessProperty(property: Property[_])
   = property.asInstanceOf[AccessibleProperty]
   
-  implicit def accessValueProperty(property: ValueProperty[_])
-  = property.asInstanceOf[AccessibleValueProperty[_]]
-  
-  implicit def accessEnvironmentalProperty(property: EnvironmentalProperty[_])
-  = property.asInstanceOf[AccessibleEnvironmentalProperty[_]]
+  implicit def accessDefinedProperty(property: DefinedProperty[_])
+  = property.asInstanceOf[AccessibleDefinedProperty]
   
   implicit def accessSharedProperty(property: SharedProperty[_])
   = property.asInstanceOf[AccessibleSharedProperty]
   
   implicit def accessSharedAttributes(property: SharedAttributes[_, _])
   = property.asInstanceOf[AccessibleSharedAttributes[_, _]]
+  
   
   implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
   :AttributesSharedState#Subtext = sharedState.subtext

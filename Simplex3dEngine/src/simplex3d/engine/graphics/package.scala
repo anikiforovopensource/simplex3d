@@ -25,15 +25,21 @@ import simplex3d.data._
 
 
 package object graphics {
-  type Mutable[T <: Readable[T]] = Writable[T]
+  type TechniqueBinding = Readable[T] with NestedBinding forSome { type T <: Readable[T] }
   
-  val EffectRecursor: { type Recursive <: EnvironmentalEffect[Recursive] } = null
+  private[engine] val TechniqueBindingFilter = List(classOf[Readable[_]], classOf[NestedBinding])
+  private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])
+  
+  
+  val EffectRecursor: {
+    type Recursive <: EnvironmentalEffect[Recursive] { type Read <: EnvironmentalEffect[Recursive] }
+  } = null
   type UncheckedEffect = EffectRecursor.type#Recursive
   
   val UpdatableEffectRecursor: { type Recursive <: UpdatableEnvironmentalEffect[Recursive] } = null
   type UncheckedUpdatableEffect = UpdatableEffectRecursor.type#Recursive
   
-  val BindingRecursor: { type Recursive <: Readable[Recursive] with NestedBinding } = null
+  val BindingRecursor: { type Recursive <: Writable[Recursive] with NestedBinding } = null
   type UncheckedBinding = BindingRecursor.type#Recursive
   
   type UncheckedAttributes = SharedAttributes[Format with MathType, Raw]

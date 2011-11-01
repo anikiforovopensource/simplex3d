@@ -20,9 +20,7 @@
 
 package simplex3d
 
-import simplex3d.math.types._
-
 
 package object engine {
-  type TechniqueBinding = Readable[T] with NestedBinding forSome { type T <: Readable[T] }
+  
 }

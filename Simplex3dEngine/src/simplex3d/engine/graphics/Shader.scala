@@ -21,15 +21,13 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-
 
 /** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
  */
 class Shader(
   val shaderType: Int,
   val src: String,
-  val uniforms: Map[String, ShaderProperty[_]] = Map()
+  val uniforms: Map[String, DefinedProperty[_ <: TechniqueBinding]] = Map()
 ) extends EngineInfo
 
 

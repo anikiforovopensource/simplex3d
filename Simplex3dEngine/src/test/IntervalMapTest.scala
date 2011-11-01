@@ -23,6 +23,7 @@ package test
 import java.util._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.engine._
+import simplex3d.engine.graphics._
 
 
 object IntervalMapTest {

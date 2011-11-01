@@ -28,14 +28,35 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends UpdatableEnvironmentalEffect[ReadLighting] {
-  type Mutable = Lighting
-  
+sealed abstract class ReadLighting extends Readable[Lighting] {
   def directionalLights: List[ReadDirectionalLight]
   def pointLights: List[ReadPointLight]
   
+  final override def equals(other: Any) :Boolean = {
+    other match {
+      case lighting: ReadLighting =>
+        false //
+      case _ => false
+    }
+  }
   
-  final def mutableCopy() = {
+  final override def hashCode() = super.hashCode() //
+}
+
+
+final class Lighting extends ReadLighting
+with UpdatableEnvironmentalEffect[Lighting]
+{
+  type Read = ReadLighting
+  
+  var directionalLights: List[DirectionalLight] = Nil
+  var pointLights: List[PointLight] = Nil
+  
+  def :=(r: Readable[Lighting]) {
+    //
+  }
+  
+  def mutableCopy() = {
     val copy = new Lighting
     copy := this
     copy
@@ -46,27 +67,8 @@ sealed abstract class ReadLighting extends UpdatableEnvironmentalEffect[ReadLigh
     false
   }
   
-  override def equals(other: Any) :Boolean = {
-    other match {
-      case lighting: ReadLighting =>
-        false //
-      case _ => false
-    }
-  }
-  
   def resolveBinding() = null //XXX
-  
   def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {}
-}
-
-
-final class Lighting extends ReadLighting with Mutable[ReadLighting] {
-  var directionalLights: List[DirectionalLight] = Nil
-  var pointLights: List[PointLight] = Nil
-  
-  def :=(r: ReadLighting) {
-    //
-  }
 }
 
 

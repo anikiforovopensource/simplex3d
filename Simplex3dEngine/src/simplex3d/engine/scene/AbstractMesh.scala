@@ -28,7 +28,7 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   
   final class MeshSubtext {
     val technique = SharedProperty[Technique](StructuralChangeListener.Ignore)
-    val elementRange = ValueProperty(ElementRange.Default, StructuralChangeListener.Ignore)
+    val elementRange = Property(ElementRange.Default, StructuralChangeListener.Ignore)
     
     def worldEnvironment = self.worldEnvironment
     

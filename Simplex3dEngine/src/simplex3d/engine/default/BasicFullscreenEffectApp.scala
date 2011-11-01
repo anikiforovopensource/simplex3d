@@ -19,22 +19,35 @@
  */
 
 package simplex3d.engine
+package default
 
+import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
+import simplex3d.engine.graphics._
+import simplex3d.engine.scene._
+import simplex3d.engine.scenegraph._
+import simplex3d.engine.input._
+import simplex3d.engine.resource._
+import simplex3d.engine.renderer._
+import simplex3d.engine.transformation._
+import simplex3d.engine.default._
 
 
-trait RenderContext {
-  val capabilities: GraphicsCapabilities
+trait BasicFullscreenEffectApp extends app.FullscreenEffectApp with impl.lwjgl.App with scala.App {
   
-  def init(attributes: Attributes[_, _])
-  def release(attributes: Attributes[_, _])
+  addInputListener(new InputListener {
+    override val keyboardListener = new KeyboardListener {
+      override def keyTyped(input: Input, e: KeyEvent) {
+        if (KeyCode.K_Escape == e.keyCode) dispose()
+      }
+    }
+  })
   
-  def init(texture: Texture[_]) :Unit
-  def release(texture: Texture[_]) :Unit
   
-  def clearFrameBuffer() :Unit
-  def viewportDimensions() :ConstVec2i
-  
-  def manage() :Unit
-  def cleanup() :Unit
+  protected lazy val settings = new Settings
+
+  override def main(args: Array[String]) = {
+    super.main(args)
+    launch()
+  }
 }

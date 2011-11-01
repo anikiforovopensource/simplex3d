@@ -21,14 +21,14 @@
 package simplex3d.engine
 package transformation
 
+import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.scene._
 
 
-sealed abstract class ReadComponentTransformation3d extends ReadTransformation[ReadComponentTransformation3d] {
-  type Mutable = ComponentTransformation3d
-  
+sealed abstract class ReadComponentTransformation3d extends ReadTransformation[ComponentTransformation3d] {
+
   def scale: ReadDoubleRef
   def rotation: ReadQuat4
   def translation: ReadVec3
@@ -66,7 +66,8 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[R
 }
 
 final class ComponentTransformation3d extends ReadComponentTransformation3d
-with Transformation[ReadComponentTransformation3d] {
+with Transformation[ComponentTransformation3d] {
+  type Read = ReadComponentTransformation3d
   
   final class MutableSubtext {
     def scale = _scale
@@ -96,7 +97,8 @@ with Transformation[ReadComponentTransformation3d] {
     set = false
   }
   
-  def :=(t: ReadComponentTransformation3d) {
+  def :=(r: Readable[ComponentTransformation3d]) {
+    val t = r.asInstanceOf[ReadComponentTransformation3d]
     val m = mutable
     
     m.scale := t.scale

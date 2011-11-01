@@ -37,7 +37,7 @@ trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (fn, fv) = FieldReflection.getValueMap(this, classOf[NestedBinding])
+    val (fn, fv) = FieldReflection.getValueMap(this, classOf[NestedBinding], Nil, ReflectStruct.Blacklist)
     _fieldNames = fn
     _fields = fv.asInstanceOf[ReadArray[TechniqueBinding]]
     
@@ -67,4 +67,6 @@ trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
 
 object ReflectStruct {
   private final val logger = Logger.getLogger(classOf[ReflectStruct[_]].getName)
+  
+  private final val Blacklist = List("mutableCopy", "mkMutable")
 }

@@ -26,31 +26,34 @@ import simplex3d.math.types._
 
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadEnumRef[T <: EngineEnum] (protected var value: T#Value)
-extends ReadPropertyRef[ReadEnumRef[T]] with Binding with Serializable
+extends ReadPropertyRef[EnumRef[T]] with Binding with Serializable
 {
-  type Const = T#Value
-  type Mutable = EnumRef[T]
   final def toConst() :T#Value = value
   final def mutableCopy() = new EnumRef[T](value)
 
-  final override def equals(other: Any) :Boolean = {
-    other match {
-      case r: ReadEnumRef[_] => value == r.toConst
-      case e: AnyRef => value eq e
-      case _ => false
-    }
-  }
-
+  
+  // XXX enable after the next Scala release.
+//  final override def equals(other: Any) :Boolean = {
+//    other match {
+//      case r: ReadEnumRef[_] => value == r.toConst
+//      case e: AnyRef => value eq e
+//      case _ => false
+//    }
+//  }
+  
   final override def hashCode() :Int = value.hashCode
   final override def toString() :String = "EnumRef" + "(" + value + ")"
 }
 
 @SerialVersionUID(8104346712419693669L)
 final class EnumRef[T <: EngineEnum] private[engine] (value: T#Value) extends ReadEnumRef[T](value)
-with PropertyRef[ReadEnumRef[T]] with Cloneable[EnumRef[T]] with Serializable
+with PropertyRef[EnumRef[T]] with Cloneable[EnumRef[T]] with Serializable
 {
+  type Read = ReadEnumRef[T]
+  type Const = T#Value
+  
   override def clone() = new EnumRef[T](value)
 
   def :=(e: T#Value) { value_=(e) }
-  def :=(r: ReadEnumRef[T]) { value_=(r.toConst) }
+  def :=(r: Readable[EnumRef[T]]) { value_=(r.asInstanceOf[ReadEnumRef[T]].toConst) }
 }

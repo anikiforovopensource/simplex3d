@@ -20,17 +20,15 @@
 
 package simplex3d.engine
 
-import simplex3d.math.types._
-
 
 package object transformation {
   
-  val TransformationRecursor: { type Recursive <: ReadTransformation[Recursive] { type Mutable = Recursive } } = null
+  val TransformationRecursor: { type Recursive <: Transformation[Recursive] } = null
   type UncheckedTransformation = TransformationRecursor.type#Recursive
   
   
   final class ComponentTransformation3dContext extends TransformationContext {
-    type Transformation = ReadComponentTransformation3d
+    type Transformation = ComponentTransformation3d
     val factory = () => new ComponentTransformation3d
   }
 }

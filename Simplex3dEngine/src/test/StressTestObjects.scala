@@ -39,23 +39,20 @@ import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object StressTestObjects extends BasicApp with lwjgl.App {
+object StressTestObjects extends BasicApp {
   val objectCount = 3000
   val title = "Stress Test: " + objectCount + " objects."
   
-  def main(args: Array[String]) {
-    val settings = new Settings(
-      fullscreen = false,
-      verticalSync = false,
-      capabilitiesLog = true,
-      performanceLog = true,
-      resolution = Some(Vec2i(800, 600))
-    )
-    
-    launch(settings)
-  }
+  override lazy val settings = new Settings(
+    fullscreen = false,
+    verticalSync = false,
+    capabilitiesLog = true,
+    performanceLog = true,
+    resolution = Some(Vec2i(800, 600))
+  )
   
-  override def sceneGraphSettings = new SceneGraphSettings(
+  
+  override lazy val sceneGraphSettings = new SceneGraphSettings(
     multithreadedControllers = true,
     multithreadedParsing = true
   )

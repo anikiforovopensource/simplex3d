@@ -23,25 +23,25 @@ package simplex3d.engine
 import simplex3d.math.types._
 
 
-abstract class Property[R <: Readable[R]] private[engine] (
-  factory: R, listener: StructuralChangeListener
+abstract class Property[W <: Writable[W]] private[engine] (
+  factory: Readable[W], listener: StructuralChangeListener
 ) { self: AccessibleProperty =>
   
-  private[this] final var value: R#Mutable = _
+  private[this] final var value: W = _
   protected final var changed = true // Initialize as changed.
   
-  final def defined: R = value
+  final def defined: W#Read = value
   final def isDefined = (value != null)
   
   final def undefine() {
     if (isDefined) {
       listener.signalStructuralChanges()
       changed = true
-      value = null.asInstanceOf[R#Mutable]
+      value = null.asInstanceOf[W]
     }
   }
   
-  final def mutable: R#Mutable = {
+  final def mutable: W = {
     if (!isDefined) {
       listener.signalStructuralChanges()
       value = factory.mutableCopy()
@@ -50,7 +50,7 @@ abstract class Property[R <: Readable[R]] private[engine] (
     value
   }
   
-  final def set(p: Property[R]) {
+  final def set(p: Property[W]) {
     if (p.isDefined) mutable := p.defined else undefine()
   }
   
@@ -64,13 +64,13 @@ trait AccessibleProperty {
   def clearDataChanges() :Unit
 }
 
-private[engine] final class AccessiblePropertyImpl[R <: Readable[R]](
-  factory: R, listener: StructuralChangeListener
-) extends Property[R](factory, listener) with AccessibleProperty {
+private[engine] final class AccessiblePropertyImpl[W <: Writable[W]](
+  factory: Readable[W], listener: StructuralChangeListener
+) extends Property[W](factory, listener) with AccessibleProperty {
   def clearDataChanges() { changed = false }
 }
 
 object Property {
-  def apply[R <: Readable[R]](factory: R, listener: StructuralChangeListener)
-  :Property[R] = new AccessiblePropertyImpl(factory, listener)
+  def apply[W <: Writable[W]](factory: Readable[W], listener: StructuralChangeListener)
+  :Property[W] = new AccessiblePropertyImpl(factory, listener)
 }

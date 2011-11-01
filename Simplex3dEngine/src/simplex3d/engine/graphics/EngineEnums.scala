@@ -21,8 +21,6 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-
 
 sealed trait EngineEnum extends Enumeration
 

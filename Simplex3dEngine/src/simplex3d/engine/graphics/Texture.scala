@@ -19,6 +19,7 @@
  */
 
 package simplex3d.engine
+package graphics
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._

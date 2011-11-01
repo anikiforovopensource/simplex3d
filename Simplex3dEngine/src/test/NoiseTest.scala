@@ -32,16 +32,12 @@ import simplex3d.engine._
 object NoiseTest extends FunctionRendererApp with impl.lwjgl.App {
   val title = "Noise Test"
   
-  def main(args: Array[String]) {
-    val settings = new Settings(
-      verticalSync = true,
-      performanceLog = true,
-      resolution = Some(Vec2i(800, 600))
-    )
-    
-    launch(settings)
-  }
-
+  override lazy val settings = new Settings(
+    verticalSync = true,
+    performanceLog = true,
+    resolution = Some(Vec2i(800, 600))
+  )
+  
   
   val noise = new Noise(ClassicalGradientNoise)
     

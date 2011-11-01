@@ -35,7 +35,7 @@ private[lwjgl] object App {
 }
 
 
-trait App extends simplex3d.engine.App {
+trait App extends app.App {
   import App.logger._
   
 
@@ -55,8 +55,7 @@ trait App extends simplex3d.engine.App {
   
   @volatile private var quit = false
   
-  final def launch(settings: Settings) {
-    
+  final def launch() {
     val desktopMode = Display.getDesktopDisplayMode()
     
     val resolution = settings.resolution.getOrElse(ConstVec2i(desktopMode.getWidth, desktopMode.getHeight))

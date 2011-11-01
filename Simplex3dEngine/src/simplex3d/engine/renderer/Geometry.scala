@@ -22,7 +22,6 @@ package simplex3d.engine
 package renderer
 
 import scala.annotation._
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._

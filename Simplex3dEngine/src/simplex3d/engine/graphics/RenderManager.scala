@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Test Package
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,18 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test
+package simplex3d.engine
+package graphics
 
-import simplex3d.engine.graphics._
+import scala.collection.mutable.ArrayBuffer
+import simplex3d.engine.scene._
 
 
-sealed abstract class ReadExample extends ReflectStruct[ReadExample] {
-  type Mutable = Example
-  protected def mkMutable() = new Mutable
-}
-
-final class Example extends ReadExample with Mutable[ReadExample] {
-  def :=(r: ReadExample) {
-    // Copy fields.
-  }
+trait RenderManager {
+  val renderContext: RenderContext
+  
+  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
 }

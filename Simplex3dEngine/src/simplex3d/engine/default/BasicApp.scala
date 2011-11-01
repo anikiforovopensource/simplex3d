@@ -33,7 +33,7 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.default._
 
 
-trait BasicApp extends App {
+trait BasicApp extends app.App with impl.lwjgl.App with scala.App {
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
@@ -43,7 +43,9 @@ trait BasicApp extends App {
     }
   })
   
-  protected def sceneGraphSettings = new SceneGraphSettings
+  protected lazy val sceneGraphSettings = new SceneGraphSettings
+  protected lazy val settings = new Settings
+  
   
   final class OpenSceneGraph[T <: TransformationContext]
     (name: String)
@@ -72,5 +74,10 @@ trait BasicApp extends App {
   
   def manage() {
     world.manage(renderManager.renderContext, frameTimer, 0.01) //XXX make this value relate to the refresh rate
+  }
+  
+  override def main(args: Array[String]) = {
+    super.main(args)
+    launch()
   }
 }

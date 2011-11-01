@@ -21,7 +21,6 @@
 package simplex3d.engine
 package impl.gl
 
-import simplex3d.math.types._
 import simplex3d.data._
 import simplex3d.engine.graphics._
 

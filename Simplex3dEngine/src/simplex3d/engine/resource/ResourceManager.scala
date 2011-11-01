@@ -27,6 +27,7 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
 import simplex3d.data.double._
+import simplex3d.engine.graphics._
 
 
 // XXX add loaded caching and linked sources

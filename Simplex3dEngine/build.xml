@@ -68,6 +68,50 @@ name="Simplex3dEngine" default="release-all" basedir=".">
 
     -->
     
+    <target name="-init-macrodef-scalac">
+        <macrodef name="scalac" uri="http://www.netbeans.org/ns/scala-project/1">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}" name="classpath"/>
+            <attribute default="${extdirs}" name="extdirs"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${scalac.compilerargs}" name="addparams"/>
+            <attribute default="" name="sourcepath"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <scalac jvmargs="-Xss2048k -Xmx2500m" addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
+                    <classpath>
+                        <path>
+                            <pathelement path="@{classpath}"/>
+                            <fileset dir="${scala.lib}">
+                                <include name="**/*.jar"/>
+                            </fileset>
+                            <pathelement location="${build.classes.dir}"/>
+                        </path>
+                    </classpath>
+                    <customize/>
+                </scalac>
+            </sequential>
+        </macrodef>
+        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/scala-project/1">
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <sequential>
+                <fail unless="javac.includes">Must set javac.includes</fail>
+                <pathconvert pathsep="," property="javac.includes.binary">
+                    <path>
+                        <filelist dir="@{destdir}" files="${javac.includes}"/>
+                    </path>
+                    <globmapper from="*.scala" to="*.class"/>
+                </pathconvert>
+                <delete>
+                    <files includes="${javac.includes.binary}"/>
+                </delete>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    
     <target name="-post-jar">
         <delete dir="${release.dir}/jars" />
         

@@ -23,6 +23,6 @@ package transformation
 
 
 abstract class TransformationContext {
-  type Transformation <: ReadTransformation[Transformation]
-  val factory: () => Transformation#Mutable
+  type Transformation <: transformation.Transformation[Transformation] // XXX say WHAT?
+  val factory: () => Transformation
 }

@@ -21,7 +21,6 @@
 package simplex3d.engine
 package impl.gl
 
-import simplex3d.math.types._
 import simplex3d.data._
 import simplex3d.engine.graphics._
 
@@ -37,22 +36,21 @@ private[impl] final class AttributeBinding(val name: String, val dataType: Int, 
 private[impl] class UniformBinding(
   final val blockType: Int,
   final val name: String,
-  final val index: Int,
   final val dataType: Int,
   final val location: Int
 ) {
   
   override def toString() :String = {
-    UniformBlocks.toString(blockType) + "Uniform('" + name + "', index = " + index +
-    ", type = " + EngineBindingTypes.toString(dataType) + ", location" + location + ")"
+    UniformBlocks.toString(blockType) + "Uniform('" + name + "', type = " +
+    EngineBindingTypes.toString(dataType) + ", location" + location + ")"
   }
 }
 
 private[impl] final class UniformTexBinding(
-  blockType: Int, name: String, index: Int, dataType: Int, location: Int, final val textureUnit: Int
-) extends UniformBinding(blockType, name, index, dataType, location) {
+  blockType: Int, name: String, dataType: Int, location: Int, final val textureUnit: Int
+) extends UniformBinding(blockType, name, dataType, location) {
   override def toString() :String = {
-    UniformBlocks.toString(blockType) + "Texture('" + name + "', index = " + index +
-    ", type = " + EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
+    UniformBlocks.toString(blockType) + "Texture('" + name + "', type = " +
+    EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
   }
 }

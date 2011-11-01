@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d
-package engine
+package simplex3d.engine
 package impl.lwjgl
 
 import java.util.logging._
@@ -49,7 +48,7 @@ private[lwjgl] object RenderContext {
 
 
 private[lwjgl] final class RenderContext(val capabilities: GraphicsCapabilities, val settings: AdvancedSettings)
-extends engine.RenderContext with GlAccess {
+extends graphics.RenderContext with GlAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._; import org.lwjgl.util.glu.MipMap._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
@@ -124,7 +123,7 @@ extends engine.RenderContext with GlAccess {
   
   final def requiresReset = invalidateState
   
-  final def setFaceCulling(faceCulling: ValueProperty[ReadEnumRef[FaceCulling.type]]) {
+  final def setFaceCulling(faceCulling: Property[EnumRef[FaceCulling.type]]) {
     def resolve(value: FaceCulling.type#Value) :Int = {
       value match {
         case FaceCulling.Front => GL_FRONT
@@ -621,7 +620,8 @@ extends engine.RenderContext with GlAccess {
     val uniformCount = glGetProgram(id, GL_ACTIVE_UNIFORMS)
     val uniformStringLength = glGetProgram(id, GL_ACTIVE_UNIFORM_MAX_LENGTH)
     var i = 0; while (i < uniformCount) {
-      val name = glGetActiveUniform(id, i, uniformStringLength, sizeType)
+      val glName = glGetActiveUniform(id, i, uniformStringLength, sizeType)
+      val name = if (glName.endsWith("[0]")) glName.dropRight(3) else glName
       val size = sizeType.get(0)
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
@@ -630,8 +630,9 @@ extends engine.RenderContext with GlAccess {
         val blockType = resolveUniformBlock(name)
         if (size > 1) {
           var i = 0; while (i < size) {
-            val location = glGetUniformLocation(id, name + "[" + i + "]")
-            uniformBindings += new UniformTexBinding(blockType, name, i, dataType, location, textureUnitCount)
+            val arrayName = name + "[" + i + "]"
+            val location = glGetUniformLocation(id, arrayName)
+            uniformBindings += new UniformTexBinding(blockType, arrayName, dataType, location, textureUnitCount)
             textureUnitCount += 1
             
             i += 1
@@ -639,7 +640,7 @@ extends engine.RenderContext with GlAccess {
         }
         else {
           val location = glGetUniformLocation(id, name)
-          uniformBindings += new UniformTexBinding(blockType, name, 0, dataType, location, textureUnitCount)
+          uniformBindings += new UniformTexBinding(blockType, name, dataType, location, textureUnitCount)
           textureUnitCount += 1
         }
       }
@@ -648,15 +649,16 @@ extends engine.RenderContext with GlAccess {
         val blockType = resolveUniformBlock(name)
         if (size > 1) {
           var i = 0; while (i < size) {
-            val location = glGetUniformLocation(id, name + "[" + i + "]")
-            uniformBindings += new UniformBinding(blockType, name, i, dataType, location)
+            val arrayName = name + "[" + i + "]"
+            val location = glGetUniformLocation(id, arrayName)
+            uniformBindings += new UniformBinding(blockType, arrayName, dataType, location)
             
             i += 1
           }
         }
         else {
           val location = glGetUniformLocation(id, name)
-          uniformBindings += new UniformBinding(blockType, name, 0, dataType, location)
+          uniformBindings += new UniformBinding(blockType, name, dataType, location)
         }
       }
       
@@ -955,8 +957,8 @@ extends engine.RenderContext with GlAccess {
     -1
   }
   
-  private[this] val NameIndex = """(\w*)\[(\d+)\](.*)""".r
-  private[this] val Name = """(\w*)(.*)""".r
+  private[this] val NameIndex = """(\w*)\[(\d+)\]\.?(.*)""".r
+  private[this] val Name = """(\w*)\.?(.*)""".r
   
   private[this] final def resolveUniform(
     meshName: String,
@@ -983,8 +985,8 @@ extends engine.RenderContext with GlAccess {
           Level.SEVERE, "Uniform '" + name + "' is not defined for mesh '" + meshName + "'."
         )
       }
-      else if (value.isInstanceOf[ReadTextureRef[_]]) {
-        val textureBinding = value.asInstanceOf[ReadTextureRef[_]]
+      else if (value.isInstanceOf[ReadTextureBinding[_]]) {
+        val textureBinding = value.asInstanceOf[ReadTextureBinding[_]]
         if (!textureBinding.isBound)
           log(
             Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
@@ -1153,7 +1155,7 @@ extends engine.RenderContext with GlAccess {
         case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
         case EngineBindingTypes.Mat4x4 => value.isInstanceOf[Mat4x4]
         case EngineBindingTypes.Texture1d => false// XXX
-        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureRef[_ <: Texture[_]]] // XXX verify type somehow
+        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
         case EngineBindingTypes.Texture3d => false
         case EngineBindingTypes.CubeTexture => false
         case EngineBindingTypes.ShadowTexture1d => false
@@ -1249,7 +1251,7 @@ extends engine.RenderContext with GlAccess {
     
     meshMapping.uniformTextures = buildUniformMapping(
       mesh, resolvedEnv, programMapping.uniformTextures
-    ).asInstanceOf[ReadArray[ReadTextureRef[_]]]
+    ).asInstanceOf[ReadArray[ReadTextureBinding[_]]]
     
     meshMapping.attributes = buildAttributeMapping(mesh, programMapping.attributes)
   }

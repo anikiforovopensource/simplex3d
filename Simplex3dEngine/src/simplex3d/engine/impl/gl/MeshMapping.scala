@@ -28,6 +28,6 @@ import simplex3d.engine.graphics._
 private[impl] final class MeshMapping {
   var uniformVectors: ReadArray[VectorBinding] = ReadArray.Empty
   var uniformMatrices: ReadArray[AnyMat[_]] = ReadArray.Empty
-  var uniformTextures: ReadArray[ReadTextureRef[_]] = ReadArray.Empty
+  var uniformTextures: ReadArray[ReadTextureBinding[_]] = ReadArray.Empty
   var attributes: ReadArray[Attributes[_, _]] = ReadArray.Empty
 }

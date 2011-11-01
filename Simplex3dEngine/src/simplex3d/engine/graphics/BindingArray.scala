@@ -25,60 +25,47 @@ import scala.collection._
 import simplex3d.math.types._
 
 
-sealed abstract class ReadBindingArray[R <: Readable[R] with NestedBinding]
-extends Readable[ReadBindingArray[R]] with NestedBinding
-{
-  type Mutable = BindingArray[R]
-  
+sealed abstract class ReadBindingArray[W <: Writable[W] with NestedBinding]
+extends Readable[BindingArray[W]] with NestedBinding {
   def length: Int
-  def apply(i: Int) :R
+  def apply(i: Int) :W#Read
 }
 
 
-final class BindingArray[R <: Readable[R] with NestedBinding] private (private val array :Array[AnyRef])
-extends ReadBindingArray[R] with Mutable[ReadBindingArray[R]]
+final class BindingArray[W <: Writable[W] with NestedBinding] (private val elementFactory: Readable[W], val size: Int)
+extends ReadBindingArray[W] with Writable[BindingArray[W]]
 {
-  def this(elementFactory: R, size: Int) {
-    this {
-      val array = new Array[AnyRef](size)
-      var i = 0; while (i < array.length) {
-        array(i) = elementFactory.mutableCopy()
-        i += 1
-      }
-      array
+  type Read = ReadBindingArray[W]
+  
+  private[this] val array = {
+    val array = new Array[AnyRef](size)
+    var i = 0; while (i < array.length) {
+      array(i) = elementFactory.mutableCopy()
+      i += 1
     }
+    array
   }
   
   
-  final def mutableCopy(): BindingArray[R] = {
-    val copy = new BindingArray[R](new Array[AnyRef](array.length))
+  final def mutableCopy(): BindingArray[W] = {
+    val copy = new BindingArray[W](elementFactory, size)
     copy := this
     copy
   }
   
-  def :=(a: ReadBindingArray[R]) {
+  def :=(r: Readable[BindingArray[W]]) {
+    val a = r.asInstanceOf[ReadBindingArray[W]]
     var i = 0; while (i < array.length) {
-      array(i).asInstanceOf[R#Mutable] := a(i).asInstanceOf[R#Mutable]
+      array(i).asInstanceOf[W] := a(i).asInstanceOf[W]
       i += 1
     }
   }
   
   def length: Int = array.length
-  def apply(i: Int) :R#Mutable = array(i).asInstanceOf[R#Mutable]
-}
-
-
-final class BindingArrayFactory[R <: Readable[R] with NestedBinding] (elementFactory: R, size: Int)
-extends ReadBindingArray[R] with Mutable[ReadBindingArray[R]]
-{
+  def apply(i: Int) :W = array(i).asInstanceOf[W]
   
-  final def mutableCopy(): BindingArray[R] = {
-    new BindingArray[R](elementFactory, size)
+  
+  override def toString() :String = {
+    "BindingArray(" + array.mkString(", ") + ")"
   }
-  
-  
-  def :=(a: ReadBindingArray[R]) { throw new UnsupportedOperationException }
-  
-  def length: Int = throw new UnsupportedOperationException
-  def apply(i: Int) :R#Mutable = throw new UnsupportedOperationException
 }

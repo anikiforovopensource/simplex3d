@@ -34,10 +34,10 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   protected val shaderSrc: String
   
   
-  private val se_viewDimensions = ShaderProperty[ReadVec2i](Vec2i.Zero)
-  private val se_uptime = ShaderProperty[ReadDoubleRef](0)
+  private val se_viewDimensions = DefinedProperty[Vec2i](Vec2i.Zero)
+  private val se_uptime = DefinedProperty[DoubleRef](0)
   
-  private val predefinedMap = Map(
+  private val predefinedMap = Map[String, DefinedProperty[_ <: TechniqueBinding]](
     "se_viewDimensions" -> se_viewDimensions,
     "se_uptime" -> se_uptime
   )
@@ -70,8 +70,12 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
     {
       import SceneAccess._
       
-      val (names, props) = FieldReflection.getValueMap(effect, classOf[ShaderProperty[_]])
-      val shaderUniforms = Map((names, props).zip: _*)
+      val (names, props) = FieldReflection.getValueMap(
+        effect,
+        classOf[DefinedProperty[_ <: TechniqueBinding]], TechniqueBindingFilter,
+        Nil
+      )
+      val shaderUniforms = Map((names zip props): _*)
       val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, predefinedMap ++ shaderUniforms)
       this.technique.defineAs(new Technique(MinimalGraphicsContext, List(vertexShader, fragmentShader)))
     }

@@ -28,15 +28,45 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadExpSquareFog extends EnvironmentalEffect[ReadExpSquareFog]
-with ReflectStruct[ReadExpSquareFog] {
-
-  type Mutable = ExpSquareFog
-  protected def mkMutable() = new Mutable
-  
+sealed abstract class ReadExpSquareFog extends Readable[ExpSquareFog] {
   def color: ReadVec3
   def density: ReadDoubleRef
   
+  final override def equals(other: Any) :Boolean = {
+    other match {
+      case f: ReadExpSquareFog =>
+        color == f.color &&
+        density == f.density
+      case _ => false
+    }
+  }
+  
+  final override def hashCode() :Int = {
+    41 * (
+      41 + color.hashCode
+    ) + density.hashCode
+  }
+}
+
+
+final class ExpSquareFog extends ReadExpSquareFog 
+with EnvironmentalEffect[ExpSquareFog] with ReflectStruct[ExpSquareFog]
+{
+  type Read = ReadExpSquareFog
+  protected def mkMutable() = new ExpSquareFog
+  
+  
+  val color = Vec3(1)
+  val density = new DoubleRef(0)
+  
+  reflect(classOf[ExpSquareFog])
+  
+  
+  def :=(r: Readable[ExpSquareFog]) {
+    val e = r.asInstanceOf[ReadExpSquareFog]
+    color := e.color
+    density := e.density
+  }
   
   def propagate(parentVal: ReadExpSquareFog, result: ExpSquareFog) :Boolean = {
     val parent = parentVal.asInstanceOf[ReadExpSquareFog]
@@ -49,35 +79,10 @@ with ReflectStruct[ReadExpSquareFog] {
     false
   }
   
-  override def equals(other: Any) :Boolean = {
-    other match {
-      case f: ReadExpSquareFog =>
-        color == f.color &&
-        density == f.density
-      case _ => false
-    }
-  }
-  
   def resolveBinding() = this
-  def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {}
-}
-
-
-final class ExpSquareFog extends ReadExpSquareFog with Mutable[ReadExpSquareFog] {
-  val color = Vec3(1)
-  val density = new DoubleRef(0)
-  
-  reflect(classOf[ExpSquareFog])
-  
-  
-  def :=(r: ReadExpSquareFog) {
-    color := r.color
-    density := r.density
-  }
 }
 
 
 object ExpSquareFog {
-  val FieldNames = new ReadArray(Array[String]("color", "density"))
   val Default: ReadExpSquareFog = new ExpSquareFog
 }

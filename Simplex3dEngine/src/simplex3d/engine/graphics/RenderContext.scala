@@ -19,15 +19,24 @@
  */
 
 package simplex3d.engine
+package graphics
 
-import scala.collection.mutable.ArrayBuffer
-import simplex3d.engine.scene._
+import simplex3d.math._
 import simplex3d.engine.graphics._
 
 
-trait RenderManager {
-  val renderContext: RenderContext
+trait RenderContext {
+  val capabilities: GraphicsCapabilities
   
-  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def init(attributes: Attributes[_, _])
+  def release(attributes: Attributes[_, _])
+  
+  def init(texture: Texture[_]) :Unit
+  def release(texture: Texture[_]) :Unit
+  
+  def clearFrameBuffer() :Unit
+  def viewportDimensions() :ConstVec2i
+  
+  def manage() :Unit
+  def cleanup() :Unit
 }

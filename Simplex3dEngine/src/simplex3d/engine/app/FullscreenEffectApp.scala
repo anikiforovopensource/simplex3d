@@ -19,21 +19,30 @@
  */
 
 package simplex3d.engine
-package graphics
+package app
 
-import simplex3d.math.types._
+import simplex3d.math._
+import simplex3d.math.double._
+import simplex3d.engine.input._
+import simplex3d.engine.graphics._
+import simplex3d.engine.resource._
 
 
-sealed abstract class ShaderProperty[R <: Readable[R] with NestedBinding] private[engine] (factory: R)
-extends DefinedProperty[R](factory) with AccessibleDefinedProperty { self: AccessibleDefinedProperty =>
-}
-
-final class AccessibleShaderProperty[R <: Readable[R] with NestedBinding](factory: R)
-extends ShaderProperty[R](factory) {
-  def clearDataChanges() { changed = false }
-}
-
-object ShaderProperty {
-  def apply[R <: Readable[R] with NestedBinding](factory: R)
-  :ShaderProperty[R] = new AccessibleShaderProperty(factory)
+trait FullscreenEffectApp extends App { self =>
+  
+  protected def effect: FullscreenEffect
+  
+  
+  import SceneAccess._
+  
+  protected def render(time: TimeStamp) {
+    renderManager.renderContext.clearFrameBuffer()
+    effect.render(renderManager, time)
+  }
+  
+  protected def init() {}
+  protected def preUpdate(time: TimeStamp) { effect.update(time) }
+  protected def update(time: TimeStamp) {}
+  protected def manage() {}
+  protected def reshape(position: inVec2i, dimensions: inVec2i) {}
 }

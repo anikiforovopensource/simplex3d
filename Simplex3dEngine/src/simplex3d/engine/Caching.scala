@@ -22,5 +22,16 @@ package simplex3d.engine
 
 
 object Caching extends Enumeration {
-  val Dynamic, Static, Stream = Value
+  
+  /** Modified repeatedly, used many times.
+   */
+  val Dynamic = Value
+  
+  /** Modified once, used many times.
+   */
+  val Static = Value
+  
+  /** Modified one, used a few times.
+   */
+  val Stream = Value
 }

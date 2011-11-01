@@ -26,20 +26,19 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 
 
-abstract class ReadTransformation[R <: ReadTransformation[R]] extends DataChangeListener with Readable[R] 
-{ self: R =>
+abstract class ReadTransformation[W <: Transformation[W]] extends DataChangeListener with Readable[W] 
+{ self: W#Read =>
   
-  type Mutable <: Transformation[R] with R
-  
-  def propagateChanges(parent: R, result: R#Mutable) :Unit
+  def propagateChanges(parent: W#Read, result: W) :Unit
   def matrix :ReadMat3x4
   
   def isSet: Boolean
 }
 
-trait Transformation[R <: ReadTransformation[R]] extends ReadTransformation[R] with Writable[R]
-{ self: R =>
+trait Transformation[W <: Transformation[W]] extends ReadTransformation[W] with Writable[W]
+{ self: W =>
+  type Read >: W <: ReadTransformation[W]
   
-  def :=(t: R) :Unit
+  def :=(t: Readable[W]) :Unit
   def unset() :Unit
 }

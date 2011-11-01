@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d
-package engine
+package simplex3d.engine
 package impl.lwjgl
 
 import java.util.logging._
@@ -27,7 +26,6 @@ import java.nio._
 import scala.annotation._
 import scala.collection.mutable.ArrayBuffer
 import org.lwjgl.opengl._
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -44,7 +42,7 @@ private[lwjgl] object RenderManager {
 
 
 private[lwjgl] final class RenderManager(val renderContext: RenderContext)
-extends engine.RenderManager with GlUnsafeAccess
+extends graphics.RenderManager with GlUnsafeAccess
 {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._

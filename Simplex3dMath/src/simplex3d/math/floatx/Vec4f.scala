@@ -31,11 +31,9 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4f extends ProtectedVec4f[Float]
-with ReadPropertyRef[ReadVec4f] with Serializable
+with ReadPropertyRef[Vec4f] with Cloneable[ReadVec4f] with Serializable
 {
 
-  type Const = ConstVec4f
-  type Mutable = Vec4f
   def toConst() :ConstVec4f
   final def mutableCopy() = Vec4f(this)
 
@@ -198,11 +196,12 @@ object ConstVec4f {
 @SerialVersionUID(8104346712419693669L)
 final class Vec4f private[math] (cx: Float, cy: Float, cz: Float, cw: Float)
 extends ReadVec4f with Accessor with CompositeFormat
-with PropertyRef[ReadVec4f] with Cloneable[Vec4f] with Serializable
+with PropertyRef[Vec4f] with Cloneable[Vec4f] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 
   type Read = ReadVec4f
+  type Const = ConstVec4f
 
   type Accessor = Vec4f
   type Component = RFloat
@@ -210,7 +209,7 @@ with PropertyRef[ReadVec4f] with Cloneable[Vec4f] with Serializable
   override def clone() = Vec4f(this)
   def toConst() = ConstVec4f(this)
   def :=(u: ConstVec4f) { this := u.asInstanceOf[inVec4f] }
-  def :=(u: inVec4f) { x = u.x; y = u.y; z = u.z; w = u.w }
+  def :=(r: Readable[Vec4f]) { val u = r.asInstanceOf[ReadVec4f]; x = u.x; y = u.y; z = u.z; w = u.w }
 
 
   @noinline override def x_=(s: Float) { px = s }

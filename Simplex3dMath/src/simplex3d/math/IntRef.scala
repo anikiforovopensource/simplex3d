@@ -34,10 +34,9 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadIntRef(protected var x: Int)
-extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
+extends PrimitiveRef[Int] with ReadPropertyRef[IntRef] with Cloneable[ReadIntRef] with Serializable
 {
-  type Const = Int
-  type Mutable = IntRef
+
   final def toConst() :Int = x
   final def mutableCopy() = new IntRef(x)
 
@@ -239,12 +238,15 @@ extends PrimitiveRef[Int] with ReadPropertyRef[ReadIntRef] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class IntRef(cx: Int) extends ReadIntRef(cx)
-with PropertyRef[ReadIntRef] with Cloneable[IntRef] with Serializable
+with PropertyRef[IntRef] with Cloneable[IntRef] with Serializable
 {
+  type Read = ReadIntRef
+  type Const = Int
+  
   override def clone() = new IntRef(x)
   
   def :=(s: Int) { x = s }
-  def :=(r: ReadIntRef) { x = r.toConst }
+  def :=(r: Readable[IntRef]) { x = r.asInstanceOf[ReadIntRef].toConst }
 
   
   def *=(s: Int) { x *= s }

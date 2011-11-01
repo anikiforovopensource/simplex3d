@@ -32,10 +32,9 @@ import simplex3d.math.doublex.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadDoubleRef(protected var x: Double)
-extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializable
+extends PrimitiveRef[Double] with ReadPropertyRef[DoubleRef] with Cloneable[ReadDoubleRef] with Serializable
 {
-  type Const = Double
-  type Mutable = DoubleRef
+  
   final def toConst() :Double = x
   final def mutableCopy()  = new DoubleRef(x)
 
@@ -228,12 +227,15 @@ extends PrimitiveRef[Double] with ReadPropertyRef[ReadDoubleRef] with Serializab
 
 @SerialVersionUID(8104346712419693669L)
 final class DoubleRef(cx: Double) extends ReadDoubleRef(cx)
-with PropertyRef[ReadDoubleRef] with Cloneable[DoubleRef] with Serializable
+with PropertyRef[DoubleRef] with Cloneable[DoubleRef] with Serializable
 {
+  type Read = ReadDoubleRef
+  type Const = Double
+  
   override def clone() = new DoubleRef(x)
 
   def :=(s: Double) { x = s }
-  def :=(r: ReadDoubleRef) { x = r.toConst }
+  def :=(r: Readable[DoubleRef]) { x = r.asInstanceOf[ReadDoubleRef].toConst }
 
 
   def *=(s: Double) { x *= s }

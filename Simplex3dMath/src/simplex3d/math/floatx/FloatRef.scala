@@ -32,10 +32,9 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadFloatRef(protected var x: Float)
-extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
+extends PrimitiveRef[Float] with ReadPropertyRef[FloatRef] with Cloneable[ReadFloatRef] with Serializable
 {
-  type Const = Float
-  type Mutable = FloatRef
+  
   final def toConst() :Float = x
   final def mutableCopy() = new FloatRef(x)
 
@@ -162,12 +161,15 @@ extends PrimitiveRef[Float] with ReadPropertyRef[ReadFloatRef] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class FloatRef(cx: Float) extends ReadFloatRef(cx)
-with PropertyRef[ReadFloatRef] with Cloneable[FloatRef] with Serializable
+with PropertyRef[FloatRef] with Cloneable[FloatRef] with Serializable
 {
+  type Read = ReadFloatRef
+  type Const = Float
+  
   override def clone() = new FloatRef(x)
 
   def :=(s: Float) { x = s }
-  def :=(r: ReadFloatRef) { x = r.toConst }
+  def :=(r: Readable[FloatRef]) { x = r.asInstanceOf[ReadFloatRef].toConst }
 
   
   def *=(s: Float) { x *= s }

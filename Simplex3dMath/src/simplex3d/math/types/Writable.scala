@@ -26,6 +26,15 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait Writable[R <: Readable[R]] extends Readable[R] with Mutable { self: R =>
-  def :=(v: R)
+trait Readable[W <: Writable[W]] { self: W#Read =>
+  def mutableCopy() :W
+}
+
+
+/** 
+ * @author Aleksey Nikiforov (lex)
+ */
+trait Writable[W <: Writable[W]] extends Readable[W] with scala.Mutable { self: W =>
+  type Read >: W <: Readable[W]
+  def :=(r: Readable[W])
 }

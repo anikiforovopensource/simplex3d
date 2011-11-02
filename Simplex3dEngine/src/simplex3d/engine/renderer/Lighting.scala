@@ -57,10 +57,11 @@ with UpdatableEnvironmentalEffect[Lighting]
     //
   }
   
-  def propagate(parentVal: ReadLighting, result: Lighting) :Boolean = {
+  def propagate(parentVal: ReadLighting, result: Lighting) {
     //
-    false
   }
+  
+  def hasStructuralChanges = false // XXX
   
   def resolveBinding() = null //XXX
   def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {}

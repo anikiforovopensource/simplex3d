@@ -50,7 +50,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
     append(element)
     
     val managed = new ArrayBuffer[Spatial[T]](4)
-    element.manageControllerContext(controllerContext, managed)
+    element.onParentChange(controllerContext, managed)
     if (controllerContext != null) controllerContext.register(managed)
   }
   
@@ -69,20 +69,20 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
   
   private[this] def onRemove(element: SceneElement[T, G]) {
     val managed = new ArrayBuffer[Spatial[T]](4)
-    element.manageControllerContext(null, managed)
+    element.onParentChange(null, managed)
     if (controllerContext != null) controllerContext.unregister(managed)
     
     element.updateVersion = 0
   }
   
-  private[scenegraph] final override def manageControllerContext(
+  private[scenegraph] final override def onParentChange(
     controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
   ) {
-    super.manageControllerContext(controllerContext, managed)
+    super.onParentChange(controllerContext, managed)
     
     val size = _children.size
     var i = 0; while (i < size) { val current = _children(i)
-      current.manageControllerContext(controllerContext, managed)
+      current.onParentChange(controllerContext, managed)
       
       i += 1
     }
@@ -242,6 +242,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       }
     }
     
+    var hasLeafs = false
     val children = this.children
     val size = children.size; var i = 0; while (i < size) { val current = children(i)
       
@@ -266,18 +267,15 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
               if (parentProp.hasDataChanges || childProp.hasDataChanges) {
                 if (parentProp.isDefined) {
                   if (childProp.isDefined) {
-                    val structChanges = childProp.defined.propagate(parentProp.defined, resultProp.mutable)
-                    if (structChanges) resultEnv.signalStructuralChanges()
+                    childProp.defined.propagate(parentProp.defined, resultProp.mutable)
                   }
                   else {
                     resultProp.mutable := parentProp.defined
-                    //if (parentEnv.hasStructuralChanges) resultEnv.signalStructuralChanges()
                   }
                 }
                 else {
                   if (childProp.isDefined) {
                     resultProp.mutable := childProp.defined
-                    //if (childEnv.hasStructuralChanges) resultEnv.signalStructuralChanges()
                   }
                   else {
                     resultProp.undefine()
@@ -289,10 +287,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
               
               i += 1
             }
-            
-            //childEnv.clearStructuralChanges()
-          }
-          if (entity.inheritEnvironment) propagateEnvironment()
+          }; if (entity.inheritEnvironment) propagateEnvironment()
 
           
           if (batchChildren) batchArray += entity
@@ -301,14 +296,17 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
           )(allowMultithreading, minChildren, batchArray, maxDepth, currentDepth + 1)
         
         case mesh: Mesh[_, _] =>
+          hasLeafs = true
           if (batchChildren && cullChildren) batchArray += mesh
           else mesh.updateCull(version, cullChildren, time, view, renderArray)
           
         case bounded: Bounded[_, _] =>
+          hasLeafs = true
           if (batchChildren && cullChildren) batchArray += bounded
           else bounded.updateCull(version, cullChildren, time, view, renderArray)
         
         case _ =>
+          hasLeafs = true
           current.update(version)
       }
       
@@ -316,13 +314,16 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
     }
     
     
-    def clearProps() {
-      val parentProps = worldEnvironment.properties
-      val size = parentProps.length; var i = 0; while (i < size) {
-        parentProps(i).clearDataChanges()
+    def postPropagation() {
+      val props = worldEnvironment.properties
+      val size = props.length; var i = 0; while (i < size) { val prop = props(i)
+        if (prop.hasDataChanges) {
+          if (hasLeafs && prop.isDefined && prop.defined.hasStructuralChanges) worldEnvironment.signalStructuralChanges()
+          prop.clearDataChanges()
+        }
         
         i += 1
       }
-    }; clearProps()
+    }; postPropagation()
   }
 }

@@ -38,7 +38,35 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.impl._
 
 
-
+/** This test checks environment propagation under different conditions
+ * by using color, intensity, and contrast as environmental properties.
+ * 
+ * This test is meant for debugging rather than a demonstration.
+ * 
+ * Colors:
+ * Colors are used to test propagation by alternating red, green, and blue.
+ * Since odd nodes are empty, this pattern gets inverted for visible meshes to red, blue, and green.
+ * The last cube is red because its' closest two parents do not defined the color, so the last color gets inherited.
+ * 
+ * Intensity:
+ * Intensity is set at the level of the second and fourth cubes. So when intensity property on the second cube
+ * is undefined every 2 seconds, the second and third cubes reset to the default
+ * while forth and fifth cubes hold the intensity value.
+ * 
+ * Contrast:
+ * The contrast alternates between an array of one and two factors every 4 seconds.
+ * This servers as a test for dynamic binding resolution, which allows the same environmental property to
+ * resolve to different structs depending on the circumstances.
+ * Contrast inherits from UpdatableEnvironmentalEffect which can alter its' binding uniquely for each mesh
+ * depending on the camera matrices. When the camera is moved further from the meshes,
+ * they gradually loose color and become white.
+ * 
+ * The printout indicates what Meshes have their techniques re-evaluated.
+ * Notice that techniques do not change every frame, but only when the properties are altered in a way that requires
+ * a different shader. The bindings are resolved only in response to technique changes.
+ * These optimizations avoid expensive operations and results in exception performance
+ * without sacrificing the flexibility. 
+ */
 object DynamicEnvironment extends app.App with impl.lwjgl.App with scala.App {
   val title = "Dynamic Environment"
 
@@ -83,40 +111,43 @@ object DynamicEnvironment extends app.App with impl.lwjgl.App with scala.App {
     
     var node = new Node("Root")
     
-    nodes = (for (i <- 0 until 5) yield {
+    nodes = (for (i <- 0 until 9) yield {
       val newnode = new Node("Node Level " + i)
       node.appendChild(newnode)
       node = newnode
       
-      val mesh = new Mesh("Cube Level " + i)
+      if (i % 2 == 0) {
+        val mesh = new Mesh("Cube Level " + i)
+        
+        mesh.geometry.mode = Lines(3)
+        
+        mesh.geometry.indices.defineAs(Attributes(lineIndices))
+        mesh.geometry.vertices.defineAs(Attributes(vertices))
+        
+        val scale = 50 - i/2*10
+        mesh.transformation.mutable.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
+        mesh.transformation.mutable.scale := scale
+        
+        node.appendChild(mesh)
+      }
       
-      mesh.geometry.mode.defineAs(Lines(3))
-      
-      mesh.geometry.indices.defineAs(Attributes(lineIndices))
-      mesh.geometry.vertices.defineAs(Attributes(vertices))
-      
-      val scale = 50 - i*10
-      mesh.transformation.mutable.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
-      mesh.transformation.mutable.scale := scale
-      
-      node.appendChild(mesh)
       node
     }).toArray
 
     
-    nodes(2).environment.intencity.mutable.value := 0.75
-    for (i <- 0 until 4) { nodes(i).environment.nodeColor.mutable.color := Vec3(1, 0, 0) }
-    nodes(0).environment.dim.mutable.factor := 0.2
+    nodes(6).environment.intencity.mutable.value := 0.75
+    for (i <- 0 until 7) { nodes(i).environment.nodeColor.mutable.color := Vec3(1, 0, 0) }
+    nodes(0).environment.contrast.mutable.factor := 0.1
     
     scene.attach(nodes(0))
   } 
   
   def update(time: TimeStamp) {
-    if (time.total.toInt %2 == 0) nodes(1).environment.intencity.mutable.value := 0.5
+    if (time.total.toInt %2 == 0) nodes(1).environment.intencity.mutable.value := 0.75
     else nodes(1).environment.intencity.undefine()
     
-    if (time.total.toInt %4 == 0) nodes(0).environment.dim.mutable.secondary := true
-    else nodes(0).environment.dim.mutable.secondary := false
+    if (time.total.toInt %4 == 0) nodes(0).environment.contrast.mutable.secondary := true
+    else nodes(0).environment.contrast.mutable.secondary := false
   }
   
   
@@ -135,8 +166,8 @@ object DynamicEnvironment extends app.App with impl.lwjgl.App with scala.App {
     scene.manage(renderManager.renderContext, frameTimer, 0.01)
   }
   
-  override def reshape(position: inVec2i, dimensions: inVec2i) {
-    val aspect = dimensions.x.toDouble/dimensions.y
+  override def reshape(position: inVec2i, contrastensions: inVec2i) {
+    val aspect = contrastensions.x.toDouble/contrastensions.y
     scene.camera.projection := perspectiveProj(radians(60), aspect, 10, 500)
   }
   
@@ -163,10 +194,11 @@ package testenv {
       value := t.value
     }
     
-    def propagate(parentVal: ReadIntencity, result: Intencity) :Boolean = {
+    def propagate(parentVal: ReadIntencity, result: Intencity) {
       result.value := value
-      false
     }
+    
+    def hasStructuralChanges = false
     
     def resolveBinding() = value
   }
@@ -187,55 +219,57 @@ package testenv {
       color := t.color
     }
     
-    def propagate(parentVal: ReadNodeColor, result: NodeColor) :Boolean = {
+    def propagate(parentVal: ReadNodeColor, result: NodeColor) {
       if (parentVal.color == Vec3.UnitX) result.color := Vec3.UnitY
       else if (parentVal.color == Vec3.UnitY) result.color := Vec3.UnitZ
       else if (parentVal.color == Vec3.UnitZ) result.color := Vec3.UnitX
       else result.color := Vec3.One
-      false
     }
+    
+    def hasStructuralChanges = false
     
     def resolveBinding() = color
   }
   
   
-  sealed abstract class ReadDim extends Readable[Dim] {
+  sealed abstract class ReadContrast extends Readable[Contrast] {
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
   }
   
-  final class Dim extends ReadDim with EnvironmentalEffect[Dim] {
-    type Read = ReadDim
-    protected def mkMutable() = new Dim
+  final class Contrast extends ReadContrast with UpdatableEnvironmentalEffect[Contrast] {
+    type Read = ReadContrast
+    protected def mkMutable() = new Contrast
     
     val factor = new DoubleRef(0)
     val secondary = new BooleanRef(false)
   
-    def :=(r: Readable[Dim]) {
-      val t = r.asInstanceOf[Dim]
+    def :=(r: Readable[Contrast]) {
+      val t = r.asInstanceOf[Contrast]
+      
       factor := t.factor
       secondary := t.secondary
     }
     
-    def propagate(parentVal: ReadDim, result: Dim) :Boolean = {
-      val structuralChange =
-        if (result.secondary != secondary) true
-        else false
+    def propagate(parentVal: ReadContrast, result: Contrast) {
+      if (result.secondary != secondary) result.binding = null
       
       result.factor := factor
       result.secondary := secondary
-
-      structuralChange
     }
     
-    private var binding: DimBinding = _
+    def hasStructuralChanges = {
+      (binding == null) || (secondary ^ binding.factors.size == 2)
+    }
+    
+    private var binding: ContrastBinding = _
     
     def resolveBinding() = {
-      println("Resolving dim binding.")
+      println("Resolving contrast binding.")
       
       binding = 
-        if (secondary) new DimBinding(2)
-        else new DimBinding(1)
+        if (secondary) new ContrastBinding(2)
+        else new ContrastBinding(1)
       
       var i = 0; while (i < binding.factors.size) {
         binding.factors(i) := factor
@@ -244,22 +278,26 @@ package testenv {
       
       binding
     }
+    
+    def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {
+      binding.factors(0) := length(predefinedUniforms.se_modelViewMatrix(3))*0.004
+    }
   }
   
-  final class DimBinding(factorCount: Int) extends ReflectStruct[DimBinding] {
-    type Read = DimBinding
-    protected def mkMutable() = new DimBinding(factorCount)
+  final class ContrastBinding(factorCount: Int) extends ReflectStruct[ContrastBinding] {
+    type Read = ContrastBinding
+    protected def mkMutable() = new ContrastBinding(factorCount)
     
     val factors = new BindingArray(new DoubleRef(0), factorCount)
     
-    reflect(classOf[DimBinding])
+    reflect(classOf[ContrastBinding])
   }
   
   
   class Environment extends ReflectEnvironment {
     val intencity = OptionalProperty[Intencity](new Intencity, this)
     val nodeColor = OptionalProperty[NodeColor](new NodeColor, this)
-    val dim = OptionalProperty[Dim](new Dim, this)
+    val contrast = OptionalProperty[Contrast](new Contrast, this)
     
     reflect(classOf[Environment])
   }
@@ -296,10 +334,10 @@ package testenv {
         uniform vec3 nodeColor;
         
         float resolveIntensity();
-        float resolveDimFactor();
+        float resolveContrastFactor();
         
         void main() {
-          vec3 color = nodeColor * resolveIntensity() + vec3(resolveDimFactor());
+          vec3 color = nodeColor * resolveIntensity() + vec3(resolveContrastFactor());
           gl_FragColor = vec4(color, 1);
         }
       """
@@ -321,34 +359,46 @@ package testenv {
       """
     )
     
-    val dim1 = new Shader(Shader.FragmentShader, """
-        struct Dim {
+    val contrast1 = new Shader(Shader.FragmentShader, """
+        struct Contrast {
           float factors[1];
         };
         
-        uniform Dim dim;
+        uniform Contrast contrast;
         
-        float resolveDimFactor() {
-          return dim.factors[0];
+        float resolveContrastFactor() {
+          return contrast.factors[0];
         }
       """
     )
     
-    val dim2 = new Shader(Shader.FragmentShader, """
-        struct Dim {
+    val contrast2 = new Shader(Shader.FragmentShader, """
+        struct Contrast {
           float factors[2];
         };
         
-        uniform Dim dim;
+        uniform Contrast contrast;
         
-        float resolveDimFactor() {
-          return dim.factors[0] + dim.factors[1];
+        float resolveContrastFactor() {
+          return contrast.factors[0] + contrast.factors[1];
         }
       """
     )
   
-    private val envNames = graphicsContext.mkEnvironment().propertyNames
-
+    
+    private val cache = new java.util.HashMap[(Shader, Shader), Technique]
+    def getTechnique(intencityShader: Shader, contrastShader: Shader) :Technique = {
+      val key = (intencityShader, contrastShader)
+      var technique = cache.get(key)
+      if (technique == null) {
+        technique = new Technique(
+          graphicsContext,
+          List[Shader](vertexShader, fragmentShader, intencityShader, contrastShader)
+        )
+        cache.put(key, technique)
+      }
+      technique
+    }
     
     def resolveTechnique(
       meshName: String,
@@ -357,7 +407,7 @@ package testenv {
     :Technique = {
       
       assert(worldEnvironment.nodeColor.isDefined)
-      assert(worldEnvironment.dim.isDefined)
+      assert(worldEnvironment.contrast.isDefined)
       
       
       print("Resolving technique for mesh '" + meshName + "': ")
@@ -372,18 +422,17 @@ package testenv {
           withoutIntencity
         }
       
-      val dimShader =
-        if (worldEnvironment.dim.defined.secondary) {
-          println("with dim2.")
-          dim2
+      val contrastShader =
+        if (worldEnvironment.contrast.defined.secondary) {
+          println("with contrast2.")
+          contrast2
         }
         else {
-          println("with dim1.")
-          dim1
+          println("with contrast1.")
+          contrast1
         }
       
-      // XXX add technique caching
-      new Technique(graphicsContext, List[Shader](vertexShader, fragmentShader, intencityShader, dimShader))
+      getTechnique(intencityShader, contrastShader)
     }
   }
 }

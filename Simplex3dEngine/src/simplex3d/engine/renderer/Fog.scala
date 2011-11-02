@@ -61,16 +61,16 @@ final class Fog extends ReadFog with EnvironmentalEffect[Fog] with ReflectStruct
   reflect(classOf[Fog])
   
   
-  def propagate(parentVal: ReadFog, result: Fog) :Boolean = {
+  def propagate(parentVal: ReadFog, result: Fog) {
     val parent = parentVal.asInstanceOf[ReadFog]
     val res = result.asInstanceOf[Fog]
     
     val densitySum = parent.density + this.density
     res.color := mix(parent.color, this.color, parent.density/densitySum)
     res.density := densitySum
-    
-    false
   }
+  
+  def hasStructuralChanges = false
   
   def resolveBinding() = this
 }

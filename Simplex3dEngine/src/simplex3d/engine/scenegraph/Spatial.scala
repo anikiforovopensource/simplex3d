@@ -97,7 +97,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   }
   
   
-  private[scenegraph] def manageControllerContext(
+  private[scenegraph] def onParentChange(
     controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
   ) {
     this.controllerContext = controllerContext

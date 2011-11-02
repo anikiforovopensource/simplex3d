@@ -66,17 +66,22 @@ abstract class Geometry extends StructuralChangeListener {
     }
   }
 
+  private[this] final var vertexMode: VertexMode = Triangles 
+  final def mode = vertexMode
+  final def mode_=(m: VertexMode) {
+    if (vertexMode.getClass != m.getClass) this.signalStructuralChanges()
+    vertexMode = m
+  }
   
   final val indices = SharedAttributes[SInt, Unsigned](StructuralChangeListener.Ignore)
   final val vertices = SharedAttributes[Vec3, RFloat](this)
   final val normals = SharedAttributes[Vec3, RFloat](this)
   
-  final val mode = SharedRef[VertexMode](StructuralChangeListener.Ignore)
   final val faceCulling = DefinedProperty[EnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Disabled))
   
   
   final def copyNonattributes(geometry: Geometry) {
-    mode.set(geometry.mode)
+    mode = geometry.mode
     faceCulling.mutable := geometry.faceCulling.mutable
   }
 }

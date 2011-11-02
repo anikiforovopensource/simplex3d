@@ -142,22 +142,12 @@ extends graphics.RenderManager with GlUnsafeAccess
 //    val ecLightDir = -normalize(camera.view.transformVector(directionalLightPos))
 //    program("ecLightDir") = ecLightDir
     
-    val vertexMode =
-      if (geometry.mode.isDefined) {
-        geometry.mode.defined match {
-          case p: Points =>
-            glPointSize(p.size.toFloat)
-            GL_POINTS
-          case l: Lines =>
-            glLineWidth(l.width.toFloat)
-            GL_LINES
-         case Triangles =>
-            GL_TRIANGLES
-         case Quads =>
-            GL_QUADS
-        }
-      }
-      else GL_TRIANGLES
+    val vertexMode = geometry.mode match {
+      case p: Points => glPointSize(p.size.toFloat); GL_POINTS
+      case l: Lines => glLineWidth(l.width.toFloat); GL_LINES
+      case Triangles => GL_TRIANGLES
+      case Quads => GL_QUADS
+    }
       
     
     if (geometry.indices.isDefined) {

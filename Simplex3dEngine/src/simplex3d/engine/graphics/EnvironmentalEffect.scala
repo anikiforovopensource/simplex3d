@@ -37,7 +37,9 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
   /** This method must return true to signal structural change events.
    * Structural change events indicate that a new binding must be resolved.
    */
-  def propagate(parentVal: E#Read, result: E) :Boolean
+  def propagate(parentVal: E#Read, result: E) :Unit
+  
+  def hasStructuralChanges: Boolean
   
   /** Must return a stable binding that will no change until the next structural change event.
    */

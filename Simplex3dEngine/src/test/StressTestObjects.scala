@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.mesh.Shapes._
+import simplex3d.algorithm.mesh._
 import simplex3d.engine._
 import simplex3d.engine.renderer._
 import simplex3d.engine.bounding._
@@ -103,7 +103,7 @@ object StressTestObjects extends BasicApp {
     addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
-    val (indexBuffer, vertexBuffer, normalBuffer, texCoordBuffer) = makeBox()
+    val (indexBuffer, vertexBuffer, normalBuffer, texCoordBuffer) = Shapes.makeBox()
     val (iVertices, iNormals, iTexCoords) = interleave(vertexBuffer, normalBuffer, texCoordBuffer)(vertexBuffer.size)
     
     val indices = Attributes(indexBuffer)
@@ -146,10 +146,5 @@ object StressTestObjects extends BasicApp {
     
   def update(time: TimeStamp) {
     
-  }
-
-  def reshape(position: inVec2i, dimensions: inVec2i) {
-    val aspect = dimensions.x.toDouble/dimensions.y
-    world.camera.projection := perspectiveProj(radians(60), aspect, 5, 1000)
   }
 }

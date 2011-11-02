@@ -32,9 +32,9 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-abstract class Bounded[T <: TransformationContext] private[scenegraph] (name: String)(
-  implicit transformationContext: T
-) extends SceneElement[T](name) {
+abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (name: String)(
+  implicit transformationContext: T, graphicsContext: G
+) extends SceneElement[T, G](name) {
   
   import ClearChangesAccess._
   
@@ -46,7 +46,7 @@ abstract class Bounded[T <: TransformationContext] private[scenegraph] (name: St
    *  If the vertex geometry is not accessible (stored only in the GPU memory) then the bounding
    *  volume must be provided by the user.
    */
-  final val customBoundingVolume = SharedProperty[BoundingVolume](StructuralChangeListener.Ignore)
+  final val customBoundingVolume = SharedRef[BoundingVolume](StructuralChangeListener.Ignore)
   private[scenegraph] final var autoBoundingVolume: BoundingVolume = null
   
   private[scenegraph] final var shouldRunAnimators = false
@@ -108,7 +108,7 @@ object Bounded {
     val pmin = Vec3(0)
     val pmax = Vec3(0)
     
-    def process(bounded: Bounded[_], worldTransformation: ReadTransformation[_]) {
+    def process(bounded: Bounded[_, _], worldTransformation: ReadTransformation[_]) {
       bounded.resolveBoundingVolume match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)
@@ -138,7 +138,7 @@ object Bounded {
     var i = 0; while (i < size) { val current = entity.children(i)
       
       current match {
-        case bounded: Bounded[_] => process(bounded, bounded.uncheckedWorldTransformation)
+        case bounded: Bounded[_, _] => process(bounded, bounded.uncheckedWorldTransformation)
         case _ => // Ignore.
       }
     

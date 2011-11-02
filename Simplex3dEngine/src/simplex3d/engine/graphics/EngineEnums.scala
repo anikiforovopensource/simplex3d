@@ -22,9 +22,12 @@ package simplex3d.engine
 package graphics
 
 
-sealed trait EngineEnum extends Enumeration
+trait EngineEnum extends Enumeration
 
 object FaceCulling extends EngineEnum {
-  val Front, Back = Value
+  val Disabled, Front, Back = Value
 }
 
+object NonpolygonPrimitives extends EngineEnum {
+  val Points, Lines = Value
+}

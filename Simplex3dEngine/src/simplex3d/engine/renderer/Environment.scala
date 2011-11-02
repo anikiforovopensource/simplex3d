@@ -23,7 +23,7 @@ package renderer
 
 
 class Environment extends graphics.Environment with graphics.ReflectEnvironment {
-  val fog = Property[ExpSquareFog](ExpSquareFog.Default, StructuralChangeListener.Ignore)
+  val fog = OptionalProperty[Fog](Fog.Default, StructuralChangeListener.Ignore)
   
   reflect(classOf[Environment])
 }

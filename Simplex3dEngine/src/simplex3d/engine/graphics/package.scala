@@ -25,7 +25,7 @@ import simplex3d.data._
 
 
 package object graphics {
-  type TechniqueBinding = Readable[T] with NestedBinding forSome { type T <: Readable[T] }
+  type TechniqueBinding = Readable[W] with NestedBinding forSome { type W <: Writable[W] }
   
   private[engine] val TechniqueBindingFilter = List(classOf[Readable[_]], classOf[NestedBinding])
   private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])

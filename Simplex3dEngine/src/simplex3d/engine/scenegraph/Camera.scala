@@ -25,14 +25,15 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.scene._
+import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-class Camera[T <: TransformationContext](
+class Camera[T <: TransformationContext, G <: GraphicsContext](
   name: String,
   val projection: Mat4 = orthoProj(-100, 100, -100, 100, 10, 200)
-)(implicit transformationContext: T)
-extends SceneElement[T](name) with AbstractCamera {
+)(implicit transformationContext: T, graphicsContext: G)
+extends SceneElement[T, G](name) with AbstractCamera {
   
   protected val _view = Mat3x4(1)
   protected val _viewProjection = Mat4(1)

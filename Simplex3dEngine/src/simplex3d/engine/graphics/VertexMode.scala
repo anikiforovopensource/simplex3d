@@ -21,28 +21,12 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.math.types._
+import simplex3d.math.double._
 
-trait ReflectEnvironment extends Environment {
 
-  private[this] var _propertyNames: ReadArray[String] = null
-  private[this] var _properties: ReadArray[OptionalProperty[UncheckedEffect]] = null
-
-  private[this] var initialized = false 
-  protected final def reflect(clazz: Class[_]) {
-    if (clazz != this.getClass) return // Allows correct sub-classing.
-    if (initialized) return
-    
-    val (pn, pv) = FieldReflection.getValueMap(
-      this,
-      classOf[Property[_]], EnvironmentalEffectFilter,
-      Nil
-    )
-    _propertyNames = pn
-    _properties = pv.asInstanceOf[ReadArray[OptionalProperty[UncheckedEffect]]]
-    
-    initialized = true
-  }
-  
-  override def propertyNames: ReadArray[String] = _propertyNames
-  override def properties: ReadArray[OptionalProperty[UncheckedEffect]] = _properties
-}
+sealed abstract class VertexMode
+case class Points(var size: Double) extends VertexMode
+case class Lines(var width: Double) extends VertexMode
+object Triangles extends VertexMode
+object Quads extends VertexMode

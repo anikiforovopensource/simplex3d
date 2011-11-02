@@ -23,9 +23,12 @@ package scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
+import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-abstract class SceneElement[T <: TransformationContext] private[scenegraph] (name: String)(
-  implicit transformationContext: T
-) extends Spatial[T](name)
+abstract class SceneElement[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (name: String)(
+  implicit transformationContext: T, final val graphicsContext: G
+) extends Spatial[T](name) {
+  protected type Graphics = G
+}

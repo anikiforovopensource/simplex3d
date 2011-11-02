@@ -27,10 +27,8 @@ import simplex3d.engine.graphics._
 trait AbstractMesh extends Spatial with EngineInfo { self =>
   
   final class MeshSubtext {
-    val technique = SharedProperty[Technique](StructuralChangeListener.Ignore)
-    val elementRange = Property(ElementRange.Default, StructuralChangeListener.Ignore)
-    
-    def worldEnvironment = self.worldEnvironment
+    val technique = SharedRef[Technique](StructuralChangeListener.Ignore)
+    val elementRange = OptionalProperty(ElementRange.Default, StructuralChangeListener.Ignore)
     
     def hasStructuralChanges :Boolean = {
       geometry.hasStructuralChanges ||
@@ -60,7 +58,7 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   final def elementRange = meshSubtext.elementRange
   def geometry: Geometry
   def material: Material
-  protected def worldEnvironment: Environment
+  def worldEnvironment: Environment
   
   final def vertexCount :Int = {
     if (elementRange.isDefined) elementRange.defined.count

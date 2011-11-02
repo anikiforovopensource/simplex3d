@@ -30,7 +30,7 @@ import simplex3d.engine.resource._
 
 trait FullscreenEffectApp extends App { self =>
   
-  protected def effect: FullscreenEffect
+  protected val effect: FullscreenEffect
   
   
   import SceneAccess._

@@ -42,7 +42,9 @@ extends Entity[T, G](name) {
   
   import ClearChangesAccess._
   
-  private final class BoundedInstance(name: String)(implicit transformationContext: T) extends Bounded[T](name) {
+  private final class BoundedInstance(name: String)(
+    implicit transformationContext: T, graphicsContext: G
+  ) extends Bounded[T, G](name) {
     private[scenegraph] override def update(version: Long) :Boolean = {
       if (updateVersion != version) {
         propagateWorldTransformation()
@@ -60,7 +62,7 @@ extends Entity[T, G](name) {
     }
     
     private[scenegraph] def instanceUpdateCull(
-      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T]]
+      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T, G]]
     ) {
       if (enableCulling) update(version)
       else updateWorldTransformation(version)
@@ -82,7 +84,9 @@ extends Entity[T, G](name) {
     }
   }
   
-  private final class Instance(name: String)(implicit transformationContext: T) extends SceneElement[T](name)
+  private final class Instance(name: String)(
+    implicit transformationContext: T, graphicsContext: G
+  ) extends SceneElement[T, G](name)
   
   
   private val srcMesh = new Mesh(name + " - Source Mesh")
@@ -94,7 +98,7 @@ extends Entity[T, G](name) {
   override def environment = super.environment
   
   private val displayMesh = new Mesh(name + " - Display Mesh", this, graphicsContext.mkGeometry(), material)
-  private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T]]
+  private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T, G]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
@@ -190,7 +194,7 @@ extends Entity[T, G](name) {
   
   def removeInstance(instance: Spatial[T]) :Boolean = {
     val removed = instance match {
-      case e: SceneElement[_] => removeChild(e)
+      case e: SceneElement[_, _] => removeChild(e)
       case _ => false
     }
     if (removed) rebuild = true
@@ -199,7 +203,7 @@ extends Entity[T, G](name) {
   
   private[this] final def instancingCull(
     enableCulling: Boolean,
-    version: Long, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T]]
+    version: Long, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T, G]]
   )(allowMultithreading: Boolean, minChildren: Int) {
     
     if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
@@ -223,9 +227,9 @@ extends Entity[T, G](name) {
     
     var multithreaded = (allowMultithreading && this.children.size >= minChildren)
     
-    def processChild(child: SceneElement[T]) {
+    def processChild(child: SceneElement[T, G]) {
       child match {
-        case bounded: Bounded[_] =>
+        case bounded: Bounded[_, _] =>
           bounded.asInstanceOf[BoundedInstance].instanceUpdateCull(version, cullChildren, time, view, renderArray)
         case _ =>
           child.update(version)
@@ -248,7 +252,7 @@ extends Entity[T, G](name) {
     version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
   )(
     allowMultithreading: Boolean, minChildren: Int,
-    batchArray: SortBuffer[SceneElement[T]], maxDepth: Int, currentDepth: Int
+    batchArray: SortBuffer[SceneElement[T, G]], maxDepth: Int, currentDepth: Int
   ) {
     if (geometry.vertices.read == null) return
     
@@ -273,7 +277,7 @@ extends Entity[T, G](name) {
       rebuild = false
     }
     
-    displayMesh.geometry.setValueProperties(geometry)
+    displayMesh.geometry.copyNonattributes(geometry)
     
     
     localRenderArray.clear()
@@ -288,7 +292,7 @@ extends Entity[T, G](name) {
     val destVertices = displayMesh.geometry.vertices.write(0, instanceArray.size*srcVerticesSize)
     val destNormals = displayMesh.geometry.normals.write(0, instanceArray.size*srcVerticesSize)
     
-    def processChild(childIndex: Int, child: SceneElement[T]) {
+    def processChild(childIndex: Int, child: SceneElement[T, G]) {
       
       val vertexOffset = childIndex*srcVerticesSize
       val indexOffset = childIndex*srcIndicesSize

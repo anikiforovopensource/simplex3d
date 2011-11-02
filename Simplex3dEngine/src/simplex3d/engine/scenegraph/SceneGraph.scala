@@ -35,7 +35,7 @@ import simplex3d.engine.graphics._
 class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
   name: String,
   settings: SceneGraphSettings,
-  final val camera: Camera[T],
+  final val camera: Camera[T, G],
   final val techniqueManager: TechniqueManager[G]
 )(implicit transformationContext: T)
 extends ManagedScene[G](name) {
@@ -53,10 +53,10 @@ extends ManagedScene[G](name) {
   root.appendChild(camera)
   
   
-  protected def attach(elem: SceneElement[T]) {
+  def attach(elem: SceneElement[T, G]) {
     root.appendChild(elem)
   }
-  protected def detach(elem: SceneElement[T]) :Boolean = {
+  def detach(elem: SceneElement[T, G]) :Boolean = {
     root.removeNestedChild(elem)
   }
   
@@ -71,7 +71,7 @@ extends ManagedScene[G](name) {
   }
   
   
-  private val batchArray = new SortBuffer[SceneElement[T]](100)
+  private val batchArray = new SortBuffer[SceneElement[T, G]](100)
   private val concurrentArray = new ConcurrentSortBuffer[AbstractMesh](100)
   
   protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
@@ -95,7 +95,7 @@ extends ManagedScene[G](name) {
       
       (0 until batchArray.size).par.foreach { i =>
         batchArray(i) match {
-          case b: Bounded[_] => b.updateCull(version, true, time, view, concurrentArray)
+          case b: Bounded[_, _] => b.updateCull(version, true, time, view, concurrentArray)
           case _ => // do nothing.
         }
       }
@@ -104,15 +104,22 @@ extends ManagedScene[G](name) {
     
     // Resolve techniques.
     val size = result.size
-    var i = 0; while (i < size) { val mesh = result(i)
+    var i = 0; while (i < size) { val mesh = result(i).asInstanceOf[Mesh[T, G]]
       
-      if (mesh.hasStructuralChanges) {
-        val technique = techniqueManager.resolveTechnique(mesh.geometry, mesh.material, mesh.worldEnvironment)
+      if (mesh.hasStructuralChanges || mesh.geometry.mode.hasRefChanges) {
+        val technique = techniqueManager.resolveTechnique(mesh.name, mesh.geometry, mesh.material, mesh.worldEnvironment)
         mesh.technique.defineAs(technique)
         
+        mesh.geometry.mode.clearRefChanges()
         mesh.geometry.clearStructuralChanges()
         mesh.material.clearStructuralChanges()
       }
+      
+      i += 1
+    }
+    
+    i = 0; while (i < size) { val mesh = result(i)
+      mesh.worldEnvironment.clearStructuralChanges()
       
       i += 1
     }

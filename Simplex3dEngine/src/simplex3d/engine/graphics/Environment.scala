@@ -24,5 +24,5 @@ package graphics
 
 abstract class Environment extends StructuralChangeListener {
   def propertyNames: ReadArray[String]
-  def properties: ReadArray[Property[UncheckedEffect]]
+  def properties: ReadArray[OptionalProperty[UncheckedEffect]]
 }

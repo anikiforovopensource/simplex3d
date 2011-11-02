@@ -38,7 +38,7 @@ final class ControllerContext(val enableMultithreading: Boolean) {
   def update(time: TimeStamp) {
     def processSpatial(spatial: Spatial[_]) {
       spatial match {
-        case b: Bounded[_] => b.shouldRunAnimators = true
+        case b: Bounded[_, _] => b.shouldRunAnimators = true
         case _ => // do nothing.
       }
       spatial.runUpdaters(spatial.controllers, time)

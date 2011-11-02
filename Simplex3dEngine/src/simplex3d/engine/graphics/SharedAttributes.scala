@@ -26,7 +26,7 @@ import simplex3d.data._
 
 
 sealed abstract class SharedAttributes[F <: Format with MathType, R <: Raw](listener: StructuralChangeListener)
-extends SharedProperty[Attributes[F, R]](listener) { self: AccessibleSharedProperty =>
+extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
   def isAccessible = (isDefined && defined.isAccessible)
   def isWritable = (isDefined && defined.isWritable)
   
@@ -39,7 +39,7 @@ extends SharedProperty[Attributes[F, R]](listener) { self: AccessibleSharedPrope
 }
 
 sealed class AccessibleSharedAttributes[F <: Format with MathType, R <: Raw](listener: StructuralChangeListener)
-extends SharedAttributes[F, R](listener) with AccessibleSharedProperty {
+extends SharedAttributes[F, R](listener) with AccessibleSharedRef {
   def clearRefChanges() { reassigned = false }
 }
 

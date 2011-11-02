@@ -28,8 +28,8 @@ import simplex3d.engine.graphics._
 
 
 class Material extends graphics.ReflectMaterial {
-  val color = Property[Vec3](Vec3.Zero, this)
-  val texture = Property[TextureBinding[Texture2d[Vec3]]](new TextureBinding, this)
+  val color = OptionalProperty[Vec3](Vec3.Zero, this)
+  val texture = OptionalProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding, this)
   
   reflect(classOf[Material])
 }

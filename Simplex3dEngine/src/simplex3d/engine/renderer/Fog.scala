@@ -28,45 +28,54 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends Readable[Lighting] {
-  def directionalLights: List[ReadDirectionalLight]
-  def pointLights: List[ReadPointLight]
+sealed abstract class ReadFog extends Readable[Fog] {
+  def color: ReadVec3
+  def density: ReadDoubleRef
   
   final override def equals(other: Any) :Boolean = {
     other match {
-      case lighting: ReadLighting =>
-        false //
+      case f: ReadFog =>
+        color == f.color &&
+        density == f.density
       case _ => false
     }
   }
   
-  final override def hashCode() = super.hashCode() //
+  final override def hashCode() :Int = {
+    41 * (
+      41 + color.hashCode
+    ) + density.hashCode
+  }
 }
 
 
-final class Lighting extends ReadLighting
-with UpdatableEnvironmentalEffect[Lighting]
+final class Fog extends ReadFog with EnvironmentalEffect[Fog] with ReflectStruct[Fog]
 {
-  type Read = ReadLighting
-  protected def mkMutable() = new Lighting
+  type Read = ReadFog
+  protected def mkMutable() = new Fog
   
-  var directionalLights: List[DirectionalLight] = Nil
-  var pointLights: List[PointLight] = Nil
   
-  def :=(r: Readable[Lighting]) {
-    //
-  }
+  val color = Vec3(1)
+  val density = new DoubleRef(0)
   
-  def propagate(parentVal: ReadLighting, result: Lighting) :Boolean = {
-    //
+  reflect(classOf[Fog])
+  
+  
+  def propagate(parentVal: ReadFog, result: Fog) :Boolean = {
+    val parent = parentVal.asInstanceOf[ReadFog]
+    val res = result.asInstanceOf[Fog]
+    
+    val densitySum = parent.density + this.density
+    res.color := mix(parent.color, this.color, parent.density/densitySum)
+    res.density := densitySum
+    
     false
   }
   
-  def resolveBinding() = null //XXX
-  def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {}
+  def resolveBinding() = this
 }
 
 
-object Lighting {
-  val Default: ReadLighting = new Lighting
+object Fog {
+  val Default: ReadFog = new Fog
 }

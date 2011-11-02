@@ -26,7 +26,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 
 
-class PassManager[G <: GraphicsContext] extends graphics.PassManager[G] {
+class PassManager[G <: graphics.GraphicsContext] extends graphics.PassManager[G] {
   import SceneAccess._
   
   private val singlePass = new Pass(new FrameBuffer(Vec2i(100))) //XXX get framebuffer from renderContext, keep track of viewport changes

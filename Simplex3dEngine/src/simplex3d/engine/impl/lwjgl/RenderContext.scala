@@ -103,9 +103,7 @@ extends graphics.RenderContext with GlAccess {
   
   private var invalidateState = false
 
-  private var faceCullingState = -1
-  private var faceCullingValue: FaceCulling.type#Value = null
-  
+  private var faceCullingState: Int = 0
   private var mipmapHintEnabled = false
   
   private final var activeProgramId = 0
@@ -123,29 +121,22 @@ extends graphics.RenderContext with GlAccess {
   
   final def requiresReset = invalidateState
   
-  final def setFaceCulling(faceCulling: Property[EnumRef[FaceCulling.type]]) {
-    def resolve(value: FaceCulling.type#Value) :Int = {
-      value match {
+  final def setFaceCulling(faceCulling: FaceCulling.type#Value) {
+    val resolved = {
+      faceCulling match {
+        case FaceCulling.Disabled => 0
         case FaceCulling.Front => GL_FRONT
         case FaceCulling.Back => GL_BACK
       }
     }
     
-    if (faceCulling.isDefined) {
-      if (faceCullingState != 1) {
-        glEnable(GL_CULL_FACE)
-        faceCullingState = 1
+    if (resolved != faceCullingState) {
+      if (resolved > 0) {
+        if (faceCullingState <= 0) glEnable(GL_CULL_FACE)
+        glCullFace(resolved)
       }
-      if (faceCullingValue != faceCulling.defined.toConst) {
-        glCullFace(resolve(faceCulling.defined.toConst))
-        faceCullingValue = faceCulling.defined.toConst
-      }
-    }
-    else {
-      if (faceCullingState != 0) {
-        glDisable(GL_CULL_FACE)
-        faceCullingState = 0
-      }
+      else glDisable(GL_CULL_FACE)
+      faceCullingState = resolved
     }
   }
   
@@ -190,7 +181,6 @@ extends graphics.RenderContext with GlAccess {
   
   final def resetState() {
     faceCullingState = -1
-    faceCullingValue = null
   
     mipmapHintEnabled = false
     
@@ -621,14 +611,15 @@ extends graphics.RenderContext with GlAccess {
     val uniformStringLength = glGetProgram(id, GL_ACTIVE_UNIFORM_MAX_LENGTH)
     var i = 0; while (i < uniformCount) {
       val glName = glGetActiveUniform(id, i, uniformStringLength, sizeType)
-      val name = if (glName.endsWith("[0]")) glName.dropRight(3) else glName
+      val isArray = glName.endsWith("[0]")
+      val name = if (isArray) glName.dropRight(3) else glName
       val size = sizeType.get(0)
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
       if (EngineBindingTypes.isTexture(dataType)) {
             
         val blockType = resolveUniformBlock(name)
-        if (size > 1) {
+        if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(id, arrayName)
@@ -647,7 +638,7 @@ extends graphics.RenderContext with GlAccess {
       else {
           
         val blockType = resolveUniformBlock(name)
-        if (size > 1) {
+        if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(id, arrayName)

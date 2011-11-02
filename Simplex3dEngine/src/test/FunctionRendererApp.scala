@@ -33,12 +33,15 @@ import simplex3d.engine.graphics._
 abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
   
   protected def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
-    effect = new FunctionRenderer(function)
+    effect.function = function
   }
   
   
-  private final class FunctionRenderer(val function: (inVec2i, Double, inVec2) => ReadVec3)
-  extends FullscreenEffect("Function Renderer") {
+  protected val effect = new FunctionRenderer
+  
+  protected final class FunctionRenderer extends FullscreenEffect("Function Renderer") {
+    var function: (inVec2i, Double, inVec2) => ReadVec3 = _
+    
     protected val texture = DefinedProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
     private val textureDims = Vec2i(0)
 
@@ -66,8 +69,10 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
         this.texture.mutable := texture
       }
       
-      val img = texture.defined.bound.write
-      (0 until dims.y).par.foreach(y => renderLine(img, dims, time.total, y))
+      if (function != null) {
+        val img = texture.defined.bound.write
+        (0 until dims.y).par.foreach(y => renderLine(img, dims, time.total, y))
+      }
       
       super.render(renderManager, time)
     }
@@ -81,6 +86,4 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
       }
     """
   }
-  
-  protected var effect: FullscreenEffect = _
 }

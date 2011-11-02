@@ -23,6 +23,7 @@ package default
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
+import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._
@@ -47,17 +48,14 @@ trait BasicApp extends app.App with impl.lwjgl.App with scala.App {
   protected lazy val settings = new Settings
   
   
-  final class OpenSceneGraph[T <: TransformationContext]
-    (name: String)
-    (implicit transformationContext: T)
-  extends SceneGraph[T, DG](name, sceneGraphSettings, new Camera("World Camera"), new renderer.TechniqueManager) {
-    override def root = super.root
-    override def attach(elem: SceneElement[T]) { super.attach(elem) }
-    override def detach(elem: SceneElement[T]) :Boolean = super.detach(elem)
-  }
-  val world = new OpenSceneGraph("World")
+  protected val world = new SceneGraph(
+    "World",
+    sceneGraphSettings,
+    new Camera("World Camera"),
+    new renderer.TechniqueManager
+  )
   
-  val resourceManager = new ResourceManager {
+  protected val resourceManager = new ResourceManager {
     loaders += new ClasspathLoader
   }
   
@@ -68,12 +66,17 @@ trait BasicApp extends app.App with impl.lwjgl.App with scala.App {
     world.update(time)
   }
   
-  def render(time: TimeStamp) {
+  protected def render(time: TimeStamp) {
     world.render(renderManager, time)
   }
   
-  def manage() {
+  protected def manage() {
     world.manage(renderManager.renderContext, frameTimer, 0.01) //XXX make this value relate to the refresh rate
+  }
+  
+  protected def reshape(position: inVec2i, dimensions: inVec2i) {
+    val aspect = dimensions.x.toDouble/dimensions.y
+    world.camera.projection := perspectiveProj(radians(60), aspect, 10, 500)
   }
   
   override def main(args: Array[String]) = {

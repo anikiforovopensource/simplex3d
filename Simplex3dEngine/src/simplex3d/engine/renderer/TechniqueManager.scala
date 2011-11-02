@@ -93,9 +93,9 @@ void main() {
   
   
   def resolveTechnique(
-    geometry: graphics.Geometry,
-    material: graphics.Material,
-    worldEnvironment: graphics.Environment)
+    meshName: String,
+    geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
+  )
   :Technique = {
     cached
   }

@@ -26,7 +26,7 @@ import simplex3d.math.types._
 
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadEnumRef[T <: EngineEnum] (protected var value: T#Value)
-extends ReadPropertyRef[EnumRef[T]] with Binding with Serializable
+extends ReadPropertyValue[EnumRef[T]] with Binding with Serializable
 {
   final def toConst() :T#Value = value
   final def mutableCopy() = new EnumRef[T](value)
@@ -46,8 +46,8 @@ extends ReadPropertyRef[EnumRef[T]] with Binding with Serializable
 }
 
 @SerialVersionUID(8104346712419693669L)
-final class EnumRef[T <: EngineEnum] private[engine] (value: T#Value) extends ReadEnumRef[T](value)
-with PropertyRef[EnumRef[T]] with Cloneable[EnumRef[T]] with Serializable
+final class EnumRef[T <: EngineEnum] (value: T#Value) extends ReadEnumRef[T](value)
+with PropertyValue[EnumRef[T]] with Cloneable[EnumRef[T]] with Serializable
 {
   type Read = ReadEnumRef[T]
   type Const = T#Value

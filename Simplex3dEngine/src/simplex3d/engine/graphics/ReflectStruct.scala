@@ -25,29 +25,29 @@ import java.util.logging._
 import simplex3d.math.types._
 
 
-trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
-  import ReflectStruct.logger._
+trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>
+  import ReflectStruct._
   
   
-  private[this] var _fieldNames: ReadArray[String] = null
-  private[this] var _fields: ReadArray[TechniqueBinding] = null
+  private final var _fieldNames: ReadArray[String] = null
+  private final var _fields: ReadArray[UncheckedBinding] = null
 
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (fn, fv) = FieldReflection.getValueMap(this, classOf[NestedBinding], Nil, ReflectStruct.Blacklist)
+    val (fn, fv) = FieldReflection.getValueMap(this, classOf[NestedBinding], Nil, Blacklist)
     _fieldNames = fn
-    _fields = fv.asInstanceOf[ReadArray[TechniqueBinding]]
+    _fields = fv.asInstanceOf[ReadArray[UncheckedBinding]]
     
     var rebuild = false
     
     var i = 0; while (i < fv.length) {
-      if(!fv(i).isInstanceOf[Readable[_]]) {
-        log(
+      if(!fv(i).isInstanceOf[Writable[_]]) {
+        logger.log(
           Level.SEVERE, this.getClass.getSimpleName + " value '" + fieldNames(i) +
-          "' must be an instance of 'Readable[_]'."
+          "' must be an instance of 'Writable[_]'."
         )
         rebuild = true
       }
@@ -55,7 +55,8 @@ trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
     }
     
     if (rebuild) {
-      _fields = new ReadArray(_fields.filter(_.isInstanceOf[Readable[_]]).toArray)
+      val array = _fields.filter(_.isInstanceOf[Writable[_]]).toArray(ClassManifest.Any)
+      _fields = (new ReadArray(array)).asInstanceOf[ReadArray[UncheckedBinding]]
     }
     
     initialized = true
@@ -63,10 +64,17 @@ trait ReflectStruct[C <: ReflectStruct[C]] extends Struct[C] { self: C =>
   
   override def fieldNames: ReadArray[String] = _fieldNames
   override def fields: ReadArray[TechniqueBinding] = _fields
+  
+  final def :=(r: Readable[S]) {
+    val s = r.asInstanceOf[ReflectStruct[S]]
+    val size = _fields.length; var i = 0; while (i < size) {
+      _fields(i) := s._fields(i)
+      i += 1
+    }
+  }
 }
 
 object ReflectStruct {
   private final val logger = Logger.getLogger(classOf[ReflectStruct[_]].getName)
-  
   private final val Blacklist = List("mutableCopy", "mkMutable")
 }

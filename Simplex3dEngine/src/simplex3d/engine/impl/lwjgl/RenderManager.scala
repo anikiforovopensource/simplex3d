@@ -120,7 +120,7 @@ extends graphics.RenderManager with GlUnsafeAccess
     val material = mesh.material
     
     mesh.resolveElementRange(elementRange)
-    renderContext.setFaceCulling(geometry.faceCulling)
+    renderContext.setFaceCulling(geometry.faceCulling.defined.toConst)
     
     
     val predefinedUniforms = mesh.predefinedUniforms
@@ -142,13 +142,31 @@ extends graphics.RenderManager with GlUnsafeAccess
 //    val ecLightDir = -normalize(camera.view.transformVector(directionalLightPos))
 //    program("ecLightDir") = ecLightDir
     
+    val vertexMode =
+      if (geometry.mode.isDefined) {
+        geometry.mode.defined match {
+          case p: Points =>
+            glPointSize(p.size.toFloat)
+            GL_POINTS
+          case l: Lines =>
+            glLineWidth(l.width.toFloat)
+            GL_LINES
+         case Triangles =>
+            GL_TRIANGLES
+         case Quads =>
+            GL_QUADS
+        }
+      }
+      else GL_TRIANGLES
+      
+    
     if (geometry.indices.isDefined) {
       renderContext.init(geometry.indices.defined)
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.indices.defined.managedFields.id)
-      glDrawElements(GL_TRIANGLES, elementRange.count, geometry.indices.defined.src.rawType, elementRange.first.toConst)
+      glDrawElements(vertexMode, elementRange.count, geometry.indices.defined.src.rawType, elementRange.first.toConst)
     }
     else {
-      glDrawArrays(GL_TRIANGLES, elementRange.first, elementRange.count)
+      glDrawArrays(vertexMode, elementRange.first, elementRange.count)
     }
   }
   

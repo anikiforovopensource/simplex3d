@@ -26,5 +26,8 @@ abstract class TechniqueManager[G <: GraphicsContext] {
   val graphicsContext: G
   val passManager: PassManager[G]
   
-  def resolveTechnique(geometry: Geometry, material: Material, worldEnvironment: Environment) :Technique
+  def resolveTechnique(
+    meshName: String,
+    geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
+  ) :Technique
 }

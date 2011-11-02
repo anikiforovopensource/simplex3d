@@ -21,6 +21,8 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.math.types._
+
 
 trait ReflectMaterial extends Material {
   

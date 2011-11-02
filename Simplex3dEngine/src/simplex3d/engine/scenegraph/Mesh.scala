@@ -35,8 +35,8 @@ final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scene
   meshParent: Entity[T, G],
   final val geometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
   final val material: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
-)(implicit transformationContext: T, final val graphicsContext: G)
-extends Bounded[T](name) with AbstractMesh {
+)(implicit transformationCtx: T, graphicsCtx: G)
+extends Bounded[T, G](name) with AbstractMesh {
   
   import ClearChangesAccess._
   
@@ -45,7 +45,7 @@ extends Bounded[T](name) with AbstractMesh {
     this(name, null, graphicsContext.mkGeometry(), graphicsContext.mkMaterial())
   }
   
-  protected def worldEnvironment = parent.worldEnvironment
+  def worldEnvironment = parent.worldEnvironment
   
   _parent = meshParent
   override def parent = super.parent

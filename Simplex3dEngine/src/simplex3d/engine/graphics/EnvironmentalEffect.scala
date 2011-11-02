@@ -26,6 +26,13 @@ import simplex3d.math.types._
 
 trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
 { self: E =>
+  protected def mkMutable() :E
+  
+  override def mutableCopy(): E = {
+    val copy = mkMutable()
+    copy := this
+    copy
+  }
   
   /** This method must return true to signal structural change events.
    * Structural change events indicate that a new binding must be resolved.

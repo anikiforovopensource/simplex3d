@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.algorithm.noise._
-import simplex3d.algorithm.mesh.Shapes._
+import simplex3d.algorithm.mesh._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
 import simplex3d.engine.renderer._
@@ -82,7 +82,7 @@ object DynamicAttributes extends BasicApp {
     addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
-    val (indices, vertices, normals, texCoords) = makeBox()
+    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     this.vertices = vertices.copyAsDataBuffer()
     
     mesh = new Mesh("Cube")
@@ -110,10 +110,5 @@ object DynamicAttributes extends BasicApp {
       data(i) = fuzzyMat.transformPoint(vertices(i))
       i += 1
     }
-  }
-  
-  def reshape(position: inVec2i, dimensions: inVec2i) {
-    val aspect = dimensions.x.toDouble/dimensions.y
-    world.camera.projection := perspectiveProj(radians(60), aspect, 10, 500)
   }
 }

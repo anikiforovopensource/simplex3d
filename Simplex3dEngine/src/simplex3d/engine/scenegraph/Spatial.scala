@@ -31,11 +31,13 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   implicit transformationContext: T
 ) extends scene.Spatial { self =>
   
+  protected type Graphics <: graphics.GraphicsContext
+  
   import ClearChangesAccess._
   
   
-  private[scenegraph] final var _parent: Entity[T, _] = _
-  protected def parent: Entity[T, _] = _parent
+  private[scenegraph] final var _parent: Entity[T, Graphics] = _
+  protected def parent: Entity[T, Graphics] = _parent
   
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null

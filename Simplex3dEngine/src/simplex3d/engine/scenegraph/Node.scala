@@ -37,7 +37,7 @@ extends Entity[T, G](name) {
   override def parent = super.parent
   override def children = super.children
   
-  override def appendChild(elem: SceneElement[T]) { super.appendChild(elem) }
-  override def removeChild(elem: SceneElement[T]) = super.removeChild(elem)
-  override def removeNestedChild(elem: SceneElement[T]) = super.removeNestedChild(elem)
+  override def appendChild(elem: SceneElement[T, G]) { super.appendChild(elem) }
+  override def removeChild(elem: SceneElement[_, _]) = super.removeChild(elem)
+  override def removeNestedChild(elem: SceneElement[T, G]) = super.removeNestedChild(elem)
 }

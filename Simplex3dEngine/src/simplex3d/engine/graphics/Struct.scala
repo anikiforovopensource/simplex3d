@@ -27,13 +27,12 @@ import simplex3d.math.types._
 trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>
   protected def mkMutable() :S
   
-  def fieldNames: ReadArray[String]
-  def fields: ReadArray[TechniqueBinding]
-  
-  
-  final def mutableCopy(): S = {
+  override def mutableCopy(): S = {
     val copy = mkMutable()
     copy := this
     copy
   }
+  
+  def fieldNames: ReadArray[String]
+  def fields: ReadArray[TechniqueBinding]
 }

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package test
+package test.lowlevel
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
@@ -31,7 +31,6 @@ import simplex3d.algorithm.mesh._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
 import simplex3d.engine.renderer._
-import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
@@ -39,8 +38,8 @@ import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
-object DynamicTexture extends BasicApp {
-  val title = "Dynamic Texture"
+object FrustumTest extends BasicApp {
+  val title = "Frustum Test"
   
   override lazy val settings = new Settings(
     fullscreen = false,
@@ -51,12 +50,15 @@ object DynamicTexture extends BasicApp {
   )
   
   
-  val noise = ClassicalGradientNoise
+  val texture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128));
+  {
+    val data = texture.write
+    for (y <- 0 until texture.dimensions.y; x <- 0 until texture.dimensions.x) {
+      data(x + y*texture.dimensions.x) = Vec3(0, 1, 1)
+    }
+  }
   
-  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
-  val subImgDims = ConstVec2i(64)
-  val subImg = DataBuffer[Vec3, UByte](subImgDims.x*subImgDims.y)
-  
+  val cube = new Mesh("Cube")
   
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
@@ -68,49 +70,29 @@ object DynamicTexture extends BasicApp {
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     
-    val mesh = new Mesh("Cube")
+    cube.geometry.indices.defineAs(Attributes(indices))
+    cube.geometry.vertices.defineAs(Attributes(vertices))
+    cube.geometry.normals.defineAs(Attributes(normals))
+    cube.geometry.texCoords.defineAs(Attributes(texCoords))
     
-    mesh.geometry.indices.defineAs(Attributes(indices))
-    mesh.geometry.vertices.defineAs(Attributes(vertices))
-    mesh.geometry.normals.defineAs(Attributes(normals))
+    cube.material.texture.mutable := texture
     
-    mesh.geometry.texCoords.defineAs(Attributes(texCoords))
+    cube.transformation.mutable.scale := 20
+    cube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
     
-    mesh.material.texture.mutable := objectTexture
-    mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.mutable.scale := 50
-    
-    world.attach(mesh)
+    world.attach(cube)
   }
-  
+    
   def update(time: TimeStamp) {
+    import simplex3d.algorithm.intersection._
     
-    def writeImg(img: Data[Vec3], dims: inVec2i)(function: (Int, Int) => ReadVec3) {
-      var y = 0; while (y < dims.y) {
-        var x = 0; while (x < dims.x) {
-          
-          val i = x + y*dims.x
-          img(i) = function(x, y)
-          
-          x += 1
-        }
-        y += 1
-      }
-    }
-    
-    // Updating the texture: the changes will be synchronized with OpenGL automatically.
-    writeImg(objectTexture.write, objectTexture.dimensions) { (x, y) =>
-      val intencity = (noise(x*0.06, y*0.06, time.total*0.4) + 1)*0.5
-      Vec3(0, intencity, intencity)
-    }
-    
-    // An example on how to update sub-image.
-    if (true) {
-      writeImg(subImg, subImgDims) { (x, y) =>
-        val intencity = (noise(x*0.12, y*0.12, time.total*0.8) + 1)*0.5
-        Vec3(0, intencity, 0)
-      }
-      objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subImg, subImgDims)
-    }
+    val frustum = Frustum(world.camera.viewProjection)
+    val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldTransformation.matrix)
+    if (intersection != Collision.Inside) println(time.total + ": " + Collision.toString(intersection))
+  }
+
+  override def reshape(position: inVec2i, dimensions: inVec2i) {
+    val aspect = dimensions.x.toDouble/dimensions.y
+    world.camera.projection := perspectiveProj(radians(60), aspect, 20, 100)
   }
 }

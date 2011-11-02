@@ -31,7 +31,7 @@ import simplex3d.math.{toBoolean => toBool}
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean]
-with ReadPropertyRef[Vec3b] with Cloneable[ReadVec3b] with Serializable
+with ReadPropertyValue[Vec3b] with Cloneable[ReadVec3b] with Serializable
 {
 
   def toConst() :ConstVec3b
@@ -159,7 +159,7 @@ object ConstVec3b {
 @SerialVersionUID(8104346712419693669L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
 extends ReadVec3b with Accessor with CompositeFormat
-with PropertyRef[Vec3b] with Cloneable[Vec3b] with Serializable
+with PropertyValue[Vec3b] with Cloneable[Vec3b] with Serializable
 {
   px = cx; py = cy; pz = cz
 

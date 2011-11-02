@@ -31,7 +31,7 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec4d extends ProtectedVec4d[Double]
-with ReadPropertyRef[Vec4d] with Cloneable[ReadVec4d] with Serializable
+with ReadPropertyValue[Vec4d] with Cloneable[ReadVec4d] with Serializable
 {
 
   def toConst() :ConstVec4d
@@ -196,7 +196,7 @@ object ConstVec4d {
 @SerialVersionUID(8104346712419693669L)
 final class Vec4d private[math] (cx: Double, cy: Double, cz: Double, cw: Double)
 extends ReadVec4d with Accessor with CompositeFormat
-with PropertyRef[Vec4d] with Cloneable[Vec4d] with Serializable
+with PropertyValue[Vec4d] with Cloneable[Vec4d] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 

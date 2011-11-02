@@ -34,7 +34,7 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadIntRef(protected var x: Int)
-extends PrimitiveRef[Int] with ReadPropertyRef[IntRef] with Cloneable[ReadIntRef] with Serializable
+extends PrimitiveRef[Int] with ReadPropertyValue[IntRef] with Cloneable[ReadIntRef] with Serializable
 {
 
   final def toConst() :Int = x
@@ -238,7 +238,7 @@ extends PrimitiveRef[Int] with ReadPropertyRef[IntRef] with Cloneable[ReadIntRef
 
 @SerialVersionUID(8104346712419693669L)
 final class IntRef(cx: Int) extends ReadIntRef(cx)
-with PropertyRef[IntRef] with Cloneable[IntRef] with Serializable
+with PropertyValue[IntRef] with Cloneable[IntRef] with Serializable
 {
   type Read = ReadIntRef
   type Const = Int

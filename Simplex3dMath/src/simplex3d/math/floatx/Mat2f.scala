@@ -32,7 +32,7 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat2f extends ProtectedMat2f[Float]
-with ReadPropertyRef[Mat2f] with Cloneable[ReadMat2f] with Serializable
+with ReadPropertyValue[Mat2f] with Cloneable[ReadMat2f] with Serializable
 {
 
   def toConst() :ConstMat2f
@@ -262,7 +262,7 @@ final class Mat2f private[math] (
   c01: Float, c11: Float
 )
 extends ReadMat2f with Accessor with CompositeFormat
-with PropertyRef[Mat2f] with Cloneable[Mat2f] with Serializable
+with PropertyValue[Mat2f] with Cloneable[Mat2f] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

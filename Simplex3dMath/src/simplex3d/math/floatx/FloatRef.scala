@@ -32,7 +32,7 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadFloatRef(protected var x: Float)
-extends PrimitiveRef[Float] with ReadPropertyRef[FloatRef] with Cloneable[ReadFloatRef] with Serializable
+extends PrimitiveRef[Float] with ReadPropertyValue[FloatRef] with Cloneable[ReadFloatRef] with Serializable
 {
   
   final def toConst() :Float = x
@@ -161,7 +161,7 @@ extends PrimitiveRef[Float] with ReadPropertyRef[FloatRef] with Cloneable[ReadFl
 
 @SerialVersionUID(8104346712419693669L)
 final class FloatRef(cx: Float) extends ReadFloatRef(cx)
-with PropertyRef[FloatRef] with Cloneable[FloatRef] with Serializable
+with PropertyValue[FloatRef] with Cloneable[FloatRef] with Serializable
 {
   type Read = ReadFloatRef
   type Const = Float

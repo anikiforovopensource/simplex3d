@@ -32,7 +32,7 @@ import simplex3d.math.doublex.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat2x3d extends ProtectedMat2x3d[Double]
-with ReadPropertyRef[Mat2x3d] with Cloneable[ReadMat2x3d] with Serializable
+with ReadPropertyValue[Mat2x3d] with Cloneable[ReadMat2x3d] with Serializable
 {
 
   def toConst() :ConstMat2x3d
@@ -341,7 +341,7 @@ final class Mat2x3d private[math] (
   c02: Double, c12: Double
 )
 extends ReadMat2x3d with Accessor with CompositeFormat
-with PropertyRef[Mat2x3d] with Cloneable[Mat2x3d] with Serializable
+with PropertyValue[Mat2x3d] with Cloneable[Mat2x3d] with Serializable
 {
   p00 = c00; p10 = c10
   p01 = c01; p11 = c11

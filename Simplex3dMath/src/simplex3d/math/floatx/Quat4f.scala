@@ -32,7 +32,7 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4f extends ProtectedQuat4f[Float]
-with ReadPropertyRef[Quat4f] with Cloneable[ReadQuat4f] with Serializable
+with ReadPropertyValue[Quat4f] with Cloneable[ReadQuat4f] with Serializable
 {
 
   def toConst() :ConstQuat4f
@@ -182,7 +182,7 @@ final class Quat4f private[math] (
   ca: Float, cb: Float, cc: Float, cd: Float
 )
 extends ReadQuat4f with Accessor with CompositeFormat
-with PropertyRef[Quat4f] with Cloneable[Quat4f] with Serializable
+with PropertyValue[Quat4f] with Cloneable[Quat4f] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 

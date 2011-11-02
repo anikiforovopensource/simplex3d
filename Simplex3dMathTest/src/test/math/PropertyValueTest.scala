@@ -32,7 +32,7 @@ import simplex3d.math.doublex.functions._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class PropertyRefTest extends FunSuite {
+class PropertyValueTest extends FunSuite {
 
   val random = new java.util.Random(1)
   def rb = random.nextBoolean
@@ -43,7 +43,7 @@ class PropertyRefTest extends FunSuite {
   def md = ConstMat4d(rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd)
 
 
-  def testRef[W <: PropertyRef[W]](mutable: W, read: W#Read) {
+  def testRef[W <: PropertyValue[W]](mutable: W, read: W#Read) {
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 

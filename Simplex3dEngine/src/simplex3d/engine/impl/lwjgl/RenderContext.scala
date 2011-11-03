@@ -82,7 +82,7 @@ extends graphics.RenderContext with GlAccess {
       }
     """
     
-    val shaders = List[Shader](
+    val shaders = Set[Shader](
       new Shader(Shader.VertexShader, vertexShader),
       new Shader(Shader.FragmentShader, fragmentShader)
     )

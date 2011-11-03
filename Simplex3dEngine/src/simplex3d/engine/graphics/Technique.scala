@@ -26,7 +26,7 @@ import java.util.logging._
 
 final class Technique private (
   val graphicsContext: GraphicsContext,
-  val shaders: List[Shader],
+  val shaders: Set[Shader],
   args: (
     ReadArray[String],
     ReadArray[DefinedProperty[_ <: TechniqueBinding]]
@@ -37,10 +37,10 @@ final class Technique private (
   val uniforms: ReadArray[DefinedProperty[_ <: TechniqueBinding]] = args._2
   
 
-  def this(graphicsContext: GraphicsContext, shaders: List[Shader]) {
+  def this(graphicsContext: GraphicsContext, shaders: Set[Shader]) {
     this(graphicsContext, shaders, {
       
-      val allUniforms = shaders.flatMap(_.uniforms)
+      val allUniforms = shaders.toList.flatMap(_.uniforms)
       val allUniformNames = allUniforms.map(_._1)
       val uniqueUniformNames = allUniformNames.distinct
       

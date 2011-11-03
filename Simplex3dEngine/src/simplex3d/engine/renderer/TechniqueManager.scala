@@ -21,6 +21,7 @@
 package simplex3d.engine
 package renderer
 
+import scala.collection.mutable.HashMap
 import simplex3d.engine.graphics._
 
 
@@ -28,67 +29,60 @@ class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G)
 extends graphics.TechniqueManager[G]
 {
   val passManager = new PassManager[G]
-
   
-  private val cached = {
-    val vertexShader = """
-uniform mat4 se_modelViewMatrix;
-uniform mat4 se_modelViewProjectionMatrix;
-uniform mat3 se_normalMatrix;
-attribute vec3 vertices;
-
-//uniform float fogDensity;
-
-attribute vec3 normals;
-attribute vec2 texCoords;
-
-varying vec3 ecPosition;
-varying vec3 ecNormal;
-varying vec2 ecTexCoords;
-//varying float fogFactor;
-
-void main() {
-  gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-  ecPosition = vec3(se_modelViewMatrix*vec4(vertices, 1.0));
   
-  //fogFactor = clamp(exp(-fogDensity*fogDensity*dot(ecPosition, ecPosition)), 0.0, 1.0);
-
-  ecNormal = normalize(se_normalMatrix*normals);
-  ecTexCoords = texCoords.xy;
-}
-"""
+  private val cache = new java.util.HashMap[Set[Shader], Technique]
+  private def cachedTechnique(shaders: Set[Shader]) :Technique = {
+    var technique = cache.get(shaders)
+    if (technique == null) {
+      technique = new Technique(graphicsContext, shaders)
+      cache.put(shaders, technique)
+    }
+    technique
+  }
+  
+  
+  private val branchQueues = new HashMap[String, List[Branch]]
+  
+  private val geometryNames = graphicsContext.mkGeometry().attributeNames
+  private val materialNames = graphicsContext.mkMaterial().uniformNames
+  private val environmentNames = graphicsContext.mkEnvironment().propertyNames
+  
+  
+  private[this] def find(names: ReadArray[String], name: String) :Int = {
+    var i = 0; while (i < names.length) {
+      if (names(i) == name) return i
       
-    val fragmentShader = """
-//uniform vec3 ecLightDir;
-
-//uniform vec3 color;
-uniform sampler2D texture;
-
-//uniform vec3 fogColor;
-
-varying vec3 ecPosition;
-varying vec3 ecNormal;
-varying vec2 ecTexCoords;
-//varying float fogFactor;
-
-void main() {
-  vec3 ecLightDir = vec3(0.25, 0.5, -1); //XXX
-
-  vec3 normal = normalize(ecNormal);
-  if (!gl_FrontFacing) normal = -normal;
-  float intensity = max(0.0, dot(-ecLightDir, normal));
-  vec3 lighting = vec3(intensity) + 0.2;
-
-  vec3 matColor = texture2D(texture, ecTexCoords).rgb*lighting;//*color
-  gl_FragColor = vec4(matColor, 1);//vec4(mix(fogColor, matColor, fogFactor), 1.0);
-}
-"""
+      i += 1
+    }
+    -1
+  }
+  
+  def register(branch: Branch) {
+    var requiredGeometry = List[Int]()
+    var requiredMaterial = List[Int]()
+    var requiredEnvironment = List[Int]()
     
-    val shaders = List[Shader](
-      new Shader(Shader.VertexShader, vertexShader),
-      new Shader(Shader.FragmentShader, fragmentShader)
-    )
-    new Technique(graphicsContext, shaders)
+    for (prop <- branch.requiredProperties) {
+      var id = find(geometryNames, prop)
+      if (id >= 0) requiredGeometry ::= id
+      else {
+        id = find(materialNames, prop)
+        if (id >= 0) requiredMaterial ::= id
+        else {
+          id = find(environmentNames, prop)
+          if (id >= 0) requiredEnvironment ::= id
+          else throw new RuntimeException() //XXX log and return
+        }
+      }
+    }
+    
+    branch.requiredGeometry = requiredGeometry.sorted.toArray
+    branch.requiredMaterial = requiredMaterial.sorted.toArray
+    branch.requiredEnvironment = requiredEnvironment.sorted.toArray
+    
+    val branchQueue = branchQueues.get(branch.name).getOrElse(Nil)
+    branchQueues.put(branch.name, branch :: branchQueue)
   }
   
   
@@ -97,6 +91,126 @@ void main() {
     geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
   )
   :Technique = {
-    cached
+    
+    def allDefined(required: Array[Int], properties: ReadArray[Property[_]]) :Boolean = {
+      var passed = true
+      var i = 0; while (passed && i < required.length) {
+        if (!properties(required(i)).isDefined) passed = false
+
+        i += 1
+      }
+      passed
+    }
+    
+    def passesRequirements(branch: Branch) :Boolean = {
+      var passed = true
+      
+      val requiredGeometry = branch.requiredGeometry
+      var i = 0; while (passed && i < requiredGeometry.length) {
+        if (!geometry.attributes(requiredGeometry(i)).isDefined) {
+          passed = false
+        }
+
+        i += 1
+      }
+      
+      if (passed) passed = allDefined(branch.requiredMaterial, material.uniforms)
+      if (passed) passed = allDefined(branch.requiredEnvironment, worldEnvironment.properties)
+      
+      passed
+    }
+    
+    var result = Set[Shader]()
+    
+    def processQueue(queue: Option[List[Branch]]) :Boolean = {
+      if (!queue.isDefined) return false //XXX log
+      
+      val passed = queue.get.find(branch => passesRequirements(branch))
+      if (!passed.isDefined) return false // XXX log
+      
+      result ++= passed.get.shaders
+      
+      var resolved = true
+      for (subBranch <- passed.get.subBrachnges) {
+        resolved = resolved && processQueue(branchQueues.get(subBranch))
+      }
+      
+      resolved
+    }
+    
+    val resolved = processQueue(branchQueues.get("main"))
+    if (resolved) cachedTechnique(result)
+    else null
   }
+  
+  
+  // Default setup
+  {
+    register(new Branch("main", subBrachnges = Set("resolveColor"), requiredProperties = Set.empty)(
+      new Shader(Shader.VertexShader, """
+          uniform mat4 se_modelViewProjectionMatrix;
+          attribute vec3 vertices;
+          
+          void resolveColor();
+          
+          void main() {
+            gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+            resolveColor();
+          }
+        """
+      ),
+      new Shader(Shader.FragmentShader, """
+          vec4 resolveColor();
+          
+          void main() {
+            gl_FragColor = resolveColor();
+          }
+        """
+      )
+    ))
+    
+    register(new Branch("resolveColor", subBrachnges = Set.empty, requiredProperties = Set.empty)(
+      new Shader(Shader.VertexShader, """
+          void resolveColor() {}
+        """
+      ),
+      new Shader(Shader.FragmentShader, """
+          vec4 resolveColor() {
+            return vec4(1);
+          }
+        """
+      )
+    ))
+    
+    
+    register(new Branch("resolveColor", subBrachnges = Set.empty, requiredProperties = Set("texCoords", "texture"))(
+      new Shader(Shader.VertexShader, """
+          attribute vec2 texCoords;
+          varying vec2 ecTexCoords;
+          
+          void resolveColor() {
+            ecTexCoords = texCoords;
+          }
+        """
+      ),
+      new Shader(Shader.FragmentShader, """
+          varying vec2 ecTexCoords;
+          uniform sampler2D texture;
+          
+          vec4 resolveColor() {
+            return texture2D(texture, ecTexCoords);
+          }
+        """
+      )
+    ))
+  }
+}
+
+class Branch
+  (val name: String, val subBrachnges: Set[String], val requiredProperties: Set[String])
+  (val shaders: Shader*)
+{
+  private[renderer] var requiredGeometry: Array[Int] = _
+  private[renderer] var requiredMaterial: Array[Int] = _
+  private[renderer] var requiredEnvironment: Array[Int] = _
 }

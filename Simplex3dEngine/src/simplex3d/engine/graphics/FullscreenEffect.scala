@@ -77,7 +77,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
       )
       val shaderUniforms = Map((names zip props): _*)
       val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, predefinedMap ++ shaderUniforms)
-      this.technique.defineAs(new Technique(MinimalGraphicsContext, List(vertexShader, fragmentShader)))
+      this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fragmentShader)))
     }
   }
   

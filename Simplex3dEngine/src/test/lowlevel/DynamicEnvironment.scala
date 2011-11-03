@@ -393,7 +393,7 @@ package testenv {
       if (technique == null) {
         technique = new Technique(
           graphicsContext,
-          List[Shader](vertexShader, fragmentShader, intencityShader, contrastShader)
+          Set(vertexShader, fragmentShader, intencityShader, contrastShader)
         )
         cache.put(key, technique)
       }

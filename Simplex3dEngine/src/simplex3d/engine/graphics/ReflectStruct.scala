@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
+package simplex3d.engine.graphics
 
 import java.util.logging._
 import simplex3d.math.types._
+import simplex3d.engine.common._
 
 
 trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>

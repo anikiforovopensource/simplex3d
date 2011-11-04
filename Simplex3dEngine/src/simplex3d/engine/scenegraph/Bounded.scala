@@ -26,6 +26,7 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.algorithm._
 import simplex3d.algorithm.intersection.Collision
+import simplex3d.engine.common._
 import simplex3d.engine.bounding._
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._

@@ -21,6 +21,8 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.engine.common._
+
 
 abstract class Environment extends StructuralChangeListener {
   def propertyNames: ReadArray[String]

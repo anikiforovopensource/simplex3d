@@ -20,7 +20,6 @@
 
 package test.lowlevel
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
@@ -30,12 +29,12 @@ import simplex3d.data.double._
 import simplex3d.algorithm.noise._
 import simplex3d.algorithm.mesh._
 import simplex3d.engine._
+import simplex3d.engine.common._
 import simplex3d.engine.graphics._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.impl._
 
 
 /** This test checks environment propagation under different conditions
@@ -67,7 +66,7 @@ import simplex3d.engine.impl._
  * These optimizations avoid expensive operations and results in exception performance
  * without sacrificing the flexibility. 
  */
-object DynamicEnvironment extends app.App with impl.lwjgl.App with scala.App {
+object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
   val title = "Dynamic Environment"
 
   lazy val settings = new Settings(

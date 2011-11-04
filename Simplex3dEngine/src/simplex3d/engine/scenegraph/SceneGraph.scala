@@ -26,6 +26,7 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.algorithm.intersection.{ Frustum, Collision }
+import simplex3d.engine.common._
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 import simplex3d.engine.bounding._

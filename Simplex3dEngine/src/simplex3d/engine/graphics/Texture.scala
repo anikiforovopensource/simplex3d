@@ -21,11 +21,11 @@
 package simplex3d.engine
 package graphics
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.types._
 import simplex3d.math.double.functions._
 import simplex3d.data._
+import simplex3d.engine.common._
 
 
 abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (

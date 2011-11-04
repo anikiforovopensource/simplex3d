@@ -21,6 +21,9 @@
 package simplex3d.engine
 package renderer
 
+import simplex3d.engine.common._
+import simplex3d.engine.graphics._
+
 
 class Environment extends graphics.Environment with graphics.ReflectEnvironment {
   val fog = OptionalProperty[Fog](Fog.Default, StructuralChangeListener.Ignore)

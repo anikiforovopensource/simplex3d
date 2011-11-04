@@ -29,7 +29,7 @@ import simplex3d.algorithm.noise._
 import simplex3d.engine._
 
 
-object NoiseTest extends FunctionRendererApp with impl.lwjgl.App {
+object NoiseTest extends FunctionRendererApp {
   val title = "Noise Test"
   
   override lazy val settings = new Settings(

@@ -21,6 +21,8 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.engine.common._
+
 
 /** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
  */

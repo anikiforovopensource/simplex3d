@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics
 
 import java.util.logging._
+import simplex3d.engine.common._
 
 
 final class Technique private (

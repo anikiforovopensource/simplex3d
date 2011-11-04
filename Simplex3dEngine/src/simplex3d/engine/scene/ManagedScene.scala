@@ -22,6 +22,7 @@ package simplex3d.engine
 package scene
 
 import scala.collection.mutable.ArrayBuffer
+import simplex3d.engine.common._
 import simplex3d.engine.graphics._
 
 

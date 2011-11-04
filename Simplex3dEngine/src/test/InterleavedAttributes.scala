@@ -35,7 +35,6 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 
@@ -56,7 +55,7 @@ object InterleavedAttributes extends BasicApp {
   var mesh: Mesh[DT, DG] = _
   
   
-  //val objectTexture = resources.loadTexture2d[Vec3]("sample/texture.png").get
+  //val objectTexture = assetManager.loadTexture2d[Vec3]("sample/texture.png").get
   val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128)); {
     val img = objectTexture.write
     

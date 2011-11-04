@@ -26,6 +26,7 @@ import scala.collection._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
 import simplex3d.data._
+import simplex3d.engine.common._
 
 
 final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (

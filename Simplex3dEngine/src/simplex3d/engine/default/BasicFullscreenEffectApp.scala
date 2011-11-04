@@ -27,13 +27,13 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._
 import simplex3d.engine.input._
-import simplex3d.engine.resource._
+import simplex3d.engine.asset._
 import simplex3d.engine.renderer._
 import simplex3d.engine.transformation._
 import simplex3d.engine.default._
 
 
-trait BasicFullscreenEffectApp extends app.FullscreenEffectApp with impl.lwjgl.App with scala.App {
+trait BasicFullscreenEffectApp extends FullscreenEffectApp with backend.lwjgl.App with scala.App {
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {

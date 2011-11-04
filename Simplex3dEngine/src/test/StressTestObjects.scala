@@ -35,7 +35,6 @@ import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 import simplex3d.engine.graphics._
-import simplex3d.engine.impl._
 import simplex3d.engine.default._
 
 

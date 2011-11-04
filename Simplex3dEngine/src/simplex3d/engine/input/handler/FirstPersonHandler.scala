@@ -32,34 +32,48 @@ import simplex3d.engine.transformation._
 class FirstPersonHandler(
   val transformation: ComponentTransformation3d,
   val motionSpeed: Double = 20.0,
-  val rotationSpeed: Double = 0.3
+  val mouseRotationSpeed: Double = 0.3,
+  val keyboardRotationSpeed: Double = 100
 ) extends InputListener {
   
-  var horizontalAngle = 0.0
-  var verticalAngle = 0.0
   
-
   override def update(input: Input, time: TimeStamp) {
     val keyDown = input.keyboard.isKeyDown(_); import KeyCode._
     
-    // XXX recalculate angles from quaternion.
-    horizontalAngle -= input.mouse.delta.x*rotationSpeed
-    verticalAngle += input.mouse.delta.y*rotationSpeed
+    val rotated = transformation.rotation.rotateVector(Vec3.UnitZ)
+    val xzPlaneVec = normalize(rotated.xz)
+
+    val px = clamp(xzPlaneVec.y, -1, 1)
+    val py = clamp(dot(Vec3(xzPlaneVec.x, 0, xzPlaneVec.y), rotated), -1, 1)
+    
+    var horizontalAngle = sign(rotated.x)*degrees(acos(px))
+    var verticalAngle = -sign(rotated.y)*degrees(acos(py))
+    
+    if (hasErrors(horizontalAngle)) horizontalAngle = 0
+    if (hasErrors(verticalAngle)) verticalAngle = 0
+    
+    
+    horizontalAngle -= input.mouse.delta.x*mouseRotationSpeed
+    verticalAngle += input.mouse.delta.y*mouseRotationSpeed
+    
+    if (keyDown(K_Left)) horizontalAngle += time.interval*keyboardRotationSpeed
+    if (keyDown(K_Right)) horizontalAngle -= time.interval*keyboardRotationSpeed
+    if (keyDown(K_Up)) verticalAngle += time.interval*keyboardRotationSpeed
+    if (keyDown(K_Down)) verticalAngle -= time.interval*keyboardRotationSpeed
+    
     verticalAngle = clamp(verticalAngle, -89, 89)
     
-    val rotation = Mat3x4 rotateX(radians(verticalAngle)) rotateY(radians(horizontalAngle))
-    val direction = rotation.transformVector(Vec3(0, 0, -1))
-    val left = rotation.transformVector(Vec3(-1, 0, 0))
+    val mutable = transformation.mutable
+    mutable.rotation := Quat4 rotateX(radians(verticalAngle)) rotateY(radians(horizontalAngle))
+    
+    
+    val direction = rotateVector(Vec3(0, 0, -1), mutable.rotation)
+    val left = rotateVector(Vec3(-1, 0, 0), mutable.rotation)
     
     val position = transformation.mutable.translation
-    
     if (keyDown(K_w)) position += direction*time.interval*motionSpeed
     if (keyDown(K_s)) position -= direction*time.interval*motionSpeed
     if (keyDown(K_a)) position += left*time.interval*motionSpeed
     if (keyDown(K_d)) position -= left*time.interval*motionSpeed
-    
-    val mutable = transformation.mutable
-    mutable.rotation := Quat4 rotateX(radians(verticalAngle)) rotateY(radians(horizontalAngle))
-    mutable.translation := position
   }
 }

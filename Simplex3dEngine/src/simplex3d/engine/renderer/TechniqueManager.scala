@@ -21,7 +21,8 @@
 package simplex3d.engine
 package renderer
 
-import scala.collection.mutable.HashMap
+import scala.collection._
+import simplex3d.engine.common._
 import simplex3d.engine.graphics._
 
 
@@ -31,8 +32,8 @@ extends graphics.TechniqueManager[G]
   val passManager = new PassManager[G]
   
   
-  private val cache = new java.util.HashMap[Set[Shader], Technique]
-  private def cachedTechnique(shaders: Set[Shader]) :Technique = {
+  private val cache = new java.util.HashMap[immutable.Set[Shader], Technique]
+  private def cachedTechnique(shaders: immutable.Set[Shader]) :Technique = {
     var technique = cache.get(shaders)
     if (technique == null) {
       technique = new Technique(graphicsContext, shaders)
@@ -42,7 +43,7 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  private val branchQueues = new HashMap[String, List[Branch]]
+  private val branchQueues = new mutable.HashMap[String, List[Branch]]
   
   private val geometryNames = graphicsContext.mkGeometry().attributeNames
   private val materialNames = graphicsContext.mkMaterial().uniformNames
@@ -120,33 +121,53 @@ extends graphics.TechniqueManager[G]
       passed
     }
     
-    var result = Set[Shader]()
-    
-    def processQueue(queue: Option[List[Branch]]) :Boolean = {
-      if (!queue.isDefined) return false //XXX log
+    def processQueue(
+      branchName: String,
+      shaders: mutable.ArrayBuffer[Shader],
+      deadBranches: mutable.Set[String]
+    )
+    :Boolean = {
+      val queue = branchQueues.get(branchName)
+      if (!queue.isDefined) return false
       
-      val passed = queue.get.find(branch => passesRequirements(branch))
-      if (!passed.isDefined) return false // XXX log
-      
-      result ++= passed.get.shaders
-      
-      var resolved = true
-      for (subBranch <- passed.get.subBrachnges) {
-        resolved = resolved && processQueue(branchQueues.get(subBranch))
+      val branches = queue.get.iterator
+      while (branches.hasNext) { val branch = branches.next()
+        if (passesRequirements(branch)) {
+          
+          var resolved = true
+          val dependencies = new mutable.ArrayBuffer[Shader]
+          
+          val subBranches = branch.subBranches.iterator
+          while (resolved && subBranches.hasNext) { val subBranch = subBranches.next()
+            if (deadBranches.contains(subBranch)) resolved = false
+            else resolved = resolved && processQueue(subBranch, dependencies, deadBranches)
+          }
+          
+          if (resolved) {
+            shaders ++= branch.shaders
+            shaders ++= dependencies
+            return true
+          }
+          else {
+            deadBranches += branchName
+          }
+        }
       }
       
-      resolved
+      false
     }
     
-    val resolved = processQueue(branchQueues.get("main"))
-    if (resolved) cachedTechnique(result)
+    val shaders = mutable.ArrayBuffer[Shader]()
+    val resolved = processQueue("main", shaders, mutable.Set[String]())
+    
+    if (resolved) cachedTechnique(shaders.toSet)
     else null
   }
   
   
   // Default setup
   {
-    register(new Branch("main", subBrachnges = Set("resolveColor"), requiredProperties = Set.empty)(
+    register(new Branch("main", subBranches = Set("resolveColor"), requiredProperties = Set.empty)(
       new Shader(Shader.VertexShader, """
           uniform mat4 se_modelViewProjectionMatrix;
           attribute vec3 vertices;
@@ -169,7 +190,7 @@ extends graphics.TechniqueManager[G]
       )
     ))
     
-    register(new Branch("resolveColor", subBrachnges = Set.empty, requiredProperties = Set.empty)(
+    register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
       new Shader(Shader.VertexShader, """
           void resolveColor() {}
         """
@@ -183,7 +204,7 @@ extends graphics.TechniqueManager[G]
     ))
     
     
-    register(new Branch("resolveColor", subBrachnges = Set.empty, requiredProperties = Set("texCoords", "texture"))(
+    register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set("texCoords", "texture"))(
       new Shader(Shader.VertexShader, """
           attribute vec2 texCoords;
           varying vec2 ecTexCoords;
@@ -207,7 +228,7 @@ extends graphics.TechniqueManager[G]
 }
 
 class Branch
-  (val name: String, val subBrachnges: Set[String], val requiredProperties: Set[String])
+  (val name: String, val subBranches: Set[String], val requiredProperties: Set[String])
   (val shaders: Shader*)
 {
   private[renderer] var requiredGeometry: Array[Int] = _

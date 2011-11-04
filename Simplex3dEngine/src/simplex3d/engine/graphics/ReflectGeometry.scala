@@ -18,8 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
+package simplex3d.engine.graphics
+
+import simplex3d.engine.common._
 
 
 trait ReflectGeometry extends Geometry {

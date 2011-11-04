@@ -23,6 +23,7 @@ package scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
+import simplex3d.engine.common._
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 

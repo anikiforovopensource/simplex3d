@@ -29,7 +29,3 @@ trait Timer {
   
   def frameTimer: FrameTimer
 }
-
-trait FrameTimer {
-  def frameTime() :Double
-}

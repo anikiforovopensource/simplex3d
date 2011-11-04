@@ -33,7 +33,6 @@ import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 import simplex3d.engine.transformation._
-import simplex3d.engine.impl._
 
 
 object Main {

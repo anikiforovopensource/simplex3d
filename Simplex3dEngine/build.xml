@@ -80,7 +80,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
             <attribute default="" name="sourcepath"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <scalac jvmargs="-Xss2048k -Xmx2500m" addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
+                <scalac jvmargs="-Xss2048k -Xmx1500m" addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
                     <classpath>
                         <path>
                             <pathelement path="@{classpath}"/>
@@ -121,7 +121,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
         <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-core.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/**"
-            excludes="${root.pkg}/impl/** ${scenegraph.pkg} ${renderer.pkg}"/>
+            excludes="${root.pkg}/backend/** ${scenegraph.pkg} ${renderer.pkg}"/>
         </jar>
         
         <jar manifest="${basedir}/manifest.mf"
@@ -136,7 +136,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
         
         <jar manifest="${basedir}/manifest.mf"
         jarfile="${release.dir}/jars/${release.name}-lwjgl.jar">
-            <fileset dir="${build.classes.dir}" includes="${lwjgl.pkg} ${gl-util.pkg}"/>
+            <fileset dir="${build.classes.dir}" includes="${lwjgl.pkg} ${common-gl.pkg}"/>
         </jar>
         
         
@@ -171,8 +171,8 @@ name="Simplex3dEngine" default="release-all" basedir=".">
     
     <property name="scenegraph.pkg" value="${root.pkg}/scenegraph/**"/>
     <property name="renderer.pkg" value="${root.pkg}/renderer/**"/>
-    <property name="lwjgl.pkg" value="${root.pkg}/impl/lwjgl/**"/>
-    <property name="gl-util.pkg" value="${root.pkg}/impl/gl/**"/>
+    <property name="lwjgl.pkg" value="${root.pkg}/backend/lwjgl/**"/>
+    <property name="common-gl.pkg" value="${root.pkg}/backend/gl/**"/>
     
     <property name="math.dir" value="../Simplex3dMath/release/jars"/>
     <property name="data.dir" value="../Simplex3dData/release/jars"/>

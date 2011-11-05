@@ -77,7 +77,7 @@ trait BasicApp extends App with backend.lwjgl.App with scala.App {
   
   protected def reshape(position: inVec2i, dimensions: inVec2i) {
     val aspect = dimensions.x.toDouble/dimensions.y
-    world.camera.projection := perspectiveProj(radians(60), aspect, 10, 500)
+    world.camera.projection := perspectiveProj(radians(60), aspect, 5, 500)
   }
   
   override def main(args: Array[String]) = {

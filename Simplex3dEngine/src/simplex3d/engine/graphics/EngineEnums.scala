@@ -22,10 +22,29 @@ package simplex3d.engine
 package graphics
 
 
+object Caching extends Enumeration {
+  
+  /** Modified repeatedly, used many times.
+   */
+  val Dynamic = Value
+  
+  /** Modified once, used many times.
+   */
+  val Static = Value
+  
+  /** Modified one, used a few times.
+   */
+  val Stream = Value
+}
+
 object FaceCulling extends Enumeration {
   val Disabled, Front, Back = Value
 }
 
 object NonpolygonPrimitives extends Enumeration {
   val Points, Lines = Value
+}
+
+object SortingOrder extends Enumeration {
+  val Opaque, Transparent = Value
 }

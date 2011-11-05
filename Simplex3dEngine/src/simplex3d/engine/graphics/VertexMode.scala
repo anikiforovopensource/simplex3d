@@ -26,7 +26,21 @@ import simplex3d.math.double._
 
 
 sealed abstract class VertexMode
-case class Points(var size: Double) extends VertexMode
+
+case class Points(
+  var size: Double,
+  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
+) extends VertexMode
+
+case class PointSprites(
+  var size: Double,
+  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
+) extends VertexMode
+
 case class Lines(var width: Double) extends VertexMode
-object Triangles extends VertexMode
+
+case class Triangles(
+  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
+) extends VertexMode
+
 object Quads extends VertexMode

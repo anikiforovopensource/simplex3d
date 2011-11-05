@@ -27,6 +27,5 @@ import simplex3d.engine.graphics._
 
 private[backend] class MeshInfo {
   val mapping: MeshMapping = new MeshMapping
-  val predefinedUniforms: PredefinedUniforms = new PredefinedUniforms
   var updatableEffects: ReadArray[UncheckedUpdatableEffect] = null
 }

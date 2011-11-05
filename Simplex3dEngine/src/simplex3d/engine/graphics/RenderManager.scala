@@ -28,6 +28,6 @@ import simplex3d.engine.scene._
 trait RenderManager {
   val renderContext: RenderContext
   
-  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
   def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
 }

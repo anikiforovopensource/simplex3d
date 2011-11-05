@@ -39,6 +39,6 @@ class PassManager[G <: graphics.GraphicsContext] extends graphics.PassManager[G]
     
     scene.buildRenderArray(singlePass, time, renderArray)
     renderManager.sortRenderArray(singlePass, renderArray)
-    renderManager.render(scene.camera, renderArray)
+    renderManager.render(time, scene.camera, renderArray)
   }
 }

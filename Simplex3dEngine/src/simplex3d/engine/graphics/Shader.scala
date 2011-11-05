@@ -27,13 +27,11 @@ import simplex3d.engine.common._
 /** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
  */
 class Shader(
-  val shaderType: Int,
+  val shaderType: Shader.type#Value,
   val src: String,
   val uniforms: Map[String, DefinedProperty[_ <: TechniqueBinding]] = Map()
 ) extends EngineInfo
 
-
-object Shader {
-  final val VertexShader = 35633
-  final val FragmentShader = 35632
+object Shader extends Enumeration {
+  val VertexShader, FragmentShader = Value
 }

@@ -32,6 +32,7 @@ class Settings(
   
   /** Must start at desktop resolution if not specified. */
   val resolution: Option[ConstVec2i] = None,
+  val antiAliasingSamples: Int = 0,
   val verticalSync: Boolean = false,
   
   val advanced: AdvancedSettings = new AdvancedSettings

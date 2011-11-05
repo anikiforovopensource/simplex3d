@@ -56,7 +56,7 @@ extends graphics.RenderContext with GlAccess {
   import SceneAccess._; import ClearChangesAccess._
   
 
-  val defaultTexture2d = {
+  private val defaultTexture2d = {
     val dims = ConstVec2i(4)
     val data = DataBuffer[Vec3, UByte](4*4)
     
@@ -98,6 +98,8 @@ extends graphics.RenderContext with GlAccess {
     glDeleteShader(_),
     glDeleteProgram(_)
   )
+  
+  val predefinedUniforms = new PredefinedUniforms
   
   
   // ******************************************************************************************************************
@@ -521,7 +523,10 @@ extends graphics.RenderContext with GlAccess {
       res.toString
     }
     
-    val id = glCreateShader(shader.shaderType)
+    val id = glCreateShader(shader.shaderType match {
+      case Shader.VertexShader => GL_VERTEX_SHADER
+      case Shader.FragmentShader => GL_FRAGMENT_SHADER
+    })
     glShaderSource(id, shader.src)
     glCompileShader(id)
 
@@ -756,11 +761,8 @@ extends graphics.RenderContext with GlAccess {
   def mat2x2ToBuffer(m: AnyMat2x2[_]) :FloatBuffer = {
     floatBuffer.limit(4)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -769,14 +771,9 @@ extends graphics.RenderContext with GlAccess {
   def mat2x3ToBuffer(m: AnyMat2x3[_]) :FloatBuffer = {
     floatBuffer.limit(6)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -785,17 +782,10 @@ extends graphics.RenderContext with GlAccess {
   def mat2x4ToBuffer(m: AnyMat2x4[_]) :FloatBuffer = {
     floatBuffer.limit(8)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
-    
-    floatBuffer.put(f03(m))
-    floatBuffer.put(f13(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m))
+    floatBuffer.put(f03(m)); floatBuffer.put(f13(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -804,13 +794,8 @@ extends graphics.RenderContext with GlAccess {
   def mat3x2ToBuffer(m: AnyMat3x2[_]) :FloatBuffer = {
     floatBuffer.limit(6)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -819,17 +804,9 @@ extends graphics.RenderContext with GlAccess {
   def mat3x3ToBuffer(m: AnyMat3x3[_]) :FloatBuffer = {
     floatBuffer.limit(9)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
-    floatBuffer.put(f22(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -838,21 +815,10 @@ extends graphics.RenderContext with GlAccess {
   def mat3x4ToBuffer(m: AnyMat3x4[_]) :FloatBuffer = {
     floatBuffer.limit(12)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
-    floatBuffer.put(f22(m))
-    
-    floatBuffer.put(f03(m))
-    floatBuffer.put(f13(m))
-    floatBuffer.put(f23(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m))
+    floatBuffer.put(f03(m)); floatBuffer.put(f13(m)); floatBuffer.put(f23(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -861,15 +827,8 @@ extends graphics.RenderContext with GlAccess {
   def mat4x2ToBuffer(m: AnyMat4x2[_]) :FloatBuffer = {
     floatBuffer.limit(8)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    floatBuffer.put(f30(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
-    floatBuffer.put(f31(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -878,20 +837,9 @@ extends graphics.RenderContext with GlAccess {
   def mat4x3ToBuffer(m: AnyMat4x3[_]) :FloatBuffer = {
     floatBuffer.limit(12)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    floatBuffer.put(f30(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
-    floatBuffer.put(f31(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
-    floatBuffer.put(f22(m))
-    floatBuffer.put(f32(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m)); floatBuffer.put(f32(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -900,25 +848,10 @@ extends graphics.RenderContext with GlAccess {
   def mat4x4ToBuffer(m: AnyMat4x4[_]) :FloatBuffer = {
     floatBuffer.limit(16)
     
-    floatBuffer.put(f00(m))
-    floatBuffer.put(f10(m))
-    floatBuffer.put(f20(m))
-    floatBuffer.put(f30(m))
-    
-    floatBuffer.put(f01(m))
-    floatBuffer.put(f11(m))
-    floatBuffer.put(f21(m))
-    floatBuffer.put(f31(m))
-    
-    floatBuffer.put(f02(m))
-    floatBuffer.put(f12(m))
-    floatBuffer.put(f22(m))
-    floatBuffer.put(f32(m))
-    
-    floatBuffer.put(f03(m))
-    floatBuffer.put(f13(m))
-    floatBuffer.put(f23(m))
-    floatBuffer.put(f33(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
+    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
+    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m)); floatBuffer.put(f32(m))
+    floatBuffer.put(f03(m)); floatBuffer.put(f13(m)); floatBuffer.put(f23(m)); floatBuffer.put(f33(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -927,7 +860,7 @@ extends graphics.RenderContext with GlAccess {
   
   // *** Mesh mapping *************************************************************************************************
   
-  private[this] def resolveBindings(mesh: AbstractMesh) :ReadArray[TechniqueBinding] = {
+  private[this] def resolveWorldEvnrironmentBindings(mesh: AbstractMesh) :ReadArray[TechniqueBinding] = {
     val properties = mesh.worldEnvironment.properties
     val resolvedArray = new Array[TechniqueBinding](properties.length)
     
@@ -992,9 +925,16 @@ extends graphics.RenderContext with GlAccess {
         
         case UniformBlocks.Predefined => def resolvePredefined() :AnyRef = {
           name match {
+            case "se_projectionMatrix" => predefined.se_projectionMatrix
+            case "se_viewDimensions" => predefined.se_viewDimensions
+            case "se_timeTotal" => predefined.se_timeTotal
+            case "se_timeInterval" => predefined.se_timeInterval
+            
             case "se_modelViewMatrix" => predefined.se_modelViewMatrix
             case "se_modelViewProjectionMatrix" => predefined.se_modelViewProjectionMatrix
             case "se_normalMatrix" => predefined.se_normalMatrix
+            
+            case "se_pointSize" => predefined.se_pointSize
           }
         }; resolvePredefined()
         
@@ -1169,11 +1109,11 @@ extends graphics.RenderContext with GlAccess {
   }
   
   private[this] final def buildUniformMapping(
+    predefined: PredefinedUniforms,
     mesh: AbstractMesh, resolvedEnv: ReadArray[TechniqueBinding],
     programBindings: ReadArray[UniformBinding]
   ) :ReadArray[NestedBinding] = {
     
-    val predefined = mesh.predefinedUniforms
     val material = mesh.material
     val environmentNames = mesh.worldEnvironment.propertyNames
     val program = mesh.technique.defined
@@ -1231,18 +1171,18 @@ extends graphics.RenderContext with GlAccess {
     programMapping: backend.gl.ProgramMapping
   ) {
     val meshMapping = mesh.mapping
-    val resolvedEnv = resolveBindings(mesh)
+    val resolvedEnv = resolveWorldEvnrironmentBindings(mesh)
     
     meshMapping.uniformVectors = buildUniformMapping(
-      mesh, resolvedEnv, programMapping.uniformVectors
+      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformVectors
     ).asInstanceOf[ReadArray[VectorBinding]]
     
     meshMapping.uniformMatrices = buildUniformMapping(
-      mesh, resolvedEnv, programMapping.uniformMatrices
+      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
     meshMapping.uniformTextures = buildUniformMapping(
-      mesh, resolvedEnv, programMapping.uniformTextures
+      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformTextures
     ).asInstanceOf[ReadArray[ReadTextureBinding[_]]]
     
     meshMapping.attributes = buildAttributeMapping(mesh, programMapping.attributes)

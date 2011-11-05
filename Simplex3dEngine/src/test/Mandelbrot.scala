@@ -69,7 +69,6 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
     }
     
     val shaderSrc = """
-// se_viewDimensions and se_uptime are provided by FullscreenEffect implementation.
 uniform ivec2 se_viewDimensions;
 
 // Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.

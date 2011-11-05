@@ -34,15 +34,6 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   
   protected val shaderSrc: String
   
-  
-  private val se_viewDimensions = DefinedProperty[Vec2i](Vec2i.Zero)
-  private val se_uptime = DefinedProperty[DoubleRef](0)
-  
-  private val predefinedMap = Map[String, DefinedProperty[_ <: TechniqueBinding]](
-    "se_viewDimensions" -> se_viewDimensions,
-    "se_uptime" -> se_uptime
-  )
-  
   private val vertexShader = new Shader(Shader.VertexShader,
     """
     attribute vec3 vertices;
@@ -77,7 +68,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
         Nil
       )
       val shaderUniforms = Map((names zip props): _*)
-      val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, predefinedMap ++ shaderUniforms)
+      val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, shaderUniforms)
       this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fragmentShader)))
     }
   }
@@ -86,10 +77,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   protected def render(renderManager: RenderManager, time: TimeStamp) {
     if (renderArray.isEmpty) renderArray += mkMesh()
     
-    se_viewDimensions.mutable := renderManager.renderContext.viewportDimensions()
-    se_uptime.mutable := time.total
-    
-    renderManager.render(IdentityCamera, renderArray)
+    renderManager.render(time, IdentityCamera, renderArray)
   }
   
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = 1.0

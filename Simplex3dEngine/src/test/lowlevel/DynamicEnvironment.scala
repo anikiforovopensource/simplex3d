@@ -72,6 +72,7 @@ object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
   lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
+    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
 

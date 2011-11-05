@@ -77,7 +77,14 @@ trait App extends simplex3d.engine.App {
     Display.setVSyncEnabled(settings.verticalSync)
     Display.setDisplayMode(mode)
     Display.setFullscreen(fullscreen)
-    val pixelFormat = new PixelFormat().withBitsPerPixel(24).withAlphaBits(8).withDepthBits(24).withStencilBits(8)
+    
+    val pixelFormat = new PixelFormat().
+      withBitsPerPixel(24).
+      withAlphaBits(8).
+      withDepthBits(24).
+      withStencilBits(8).
+      withSamples(settings.antiAliasingSamples)
+      
     val glProfile = new ContextAttribs(2, 1)
     Display.setTitle(title)
     Display.create(pixelFormat, glProfile)

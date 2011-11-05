@@ -27,21 +27,42 @@ import simplex3d.engine.common._
 
 
 sealed abstract class ReadPredefinedUniforms {
+  val se_projectionMatrix: ReadMat4
+  val se_viewDimensions: ReadVec2i
+  val se_timeTotal: ReadDoubleRef
+  val se_timeInterval: ReadDoubleRef
+  
   val se_modelViewMatrix: ReadMat4
   val se_modelViewProjectionMatrix: ReadMat4
   val se_normalMatrix: ReadMat3
+  
+  val se_pointSize: ReadDoubleRef
 }
 
-final class PredefinedUniforms extends ReadPredefinedUniforms{
+final class PredefinedUniforms extends ReadPredefinedUniforms {
+  val se_projectionMatrix = Mat4(1)
+  val se_viewDimensions = Vec2i(0)
+  val se_timeTotal = new DoubleRef(0)
+  val se_timeInterval = new DoubleRef(0)
+  
   val se_modelViewMatrix = Mat4(1)
   val se_modelViewProjectionMatrix = Mat4(1)
   val se_normalMatrix = Mat3(1)
+  
+  val se_pointSize = new DoubleRef(0)
 }
 
 object PredefinedUniforms {
   final val Names = new ReadArray(Array[String](
+    "se_projectionMatrix",
+    "se_viewDimensions",
+    "se_timeTotal",
+    "se_timeInterval",
+    
     "se_modelViewMatrix",
     "se_modelViewProjectionMatrix",
-    "se_normalMatrix"
+    "se_normalMatrix",
+    
+    "se_pointSize"
   ))
 }

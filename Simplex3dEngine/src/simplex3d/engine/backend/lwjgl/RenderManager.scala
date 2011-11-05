@@ -53,12 +53,20 @@ extends graphics.RenderManager with GlUnsafeAccess
   
   private val elementRange = new ElementRange()
   
-  def render(camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
+  
+  def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
     if (renderContext.requiresReset) renderContext.resetState()
     
     // XXX these should come from the path, and get activated via context
     glEnable(GL_DEPTH_TEST)
     glDepthFunc(GL_LESS)
+    
+    
+    val predefinedUniforms = renderContext.predefinedUniforms
+    predefinedUniforms.se_projectionMatrix := camera.projection
+    predefinedUniforms.se_viewDimensions := renderContext.viewportDimensions()
+    predefinedUniforms.se_timeTotal := time.total
+    predefinedUniforms.se_timeInterval := time.interval
     
     var i = 0; while (i < renderArray.size) {
       val mesh = renderArray(i)
@@ -124,7 +132,7 @@ extends graphics.RenderManager with GlUnsafeAccess
     renderContext.setFaceCulling(geometry.faceCulling.defined.toConst)
     
     
-    val predefinedUniforms = mesh.predefinedUniforms
+    val predefinedUniforms = renderContext.predefinedUniforms
     predefinedUniforms.se_modelViewMatrix := Mat4(transformation concat camera.view)
     predefinedUniforms.se_modelViewProjectionMatrix := camera.projection*predefinedUniforms.se_modelViewMatrix
     predefinedUniforms.se_normalMatrix := transpose(inverse(Mat3(predefinedUniforms.se_modelViewMatrix)))
@@ -143,22 +151,36 @@ extends graphics.RenderManager with GlUnsafeAccess
 //    val ecLightDir = -normalize(camera.view.transformVector(directionalLightPos))
 //    program("ecLightDir") = ecLightDir
     
+    
+    // XXX cache state in render context.
     val vertexMode = geometry.mode match {
       case p: Points =>
-        glEnable(GL_POINT_SPRITE) //Texturing: gl_PointCoord(). Setting size: gl_PointSize = size.
-        glTexEnvf(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE)
-        glPointParameteri(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
         glPointSize(p.size.toFloat)
         GL_POINTS
+        
+      case p: PointSprites =>
+        glEnable(GL_POINT_SPRITE)
+        glPointParameteri(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT)
+        glEnable(GL_VERTEX_PROGRAM_POINT_SIZE)
+        
+        val maxView = max(predefinedUniforms.se_viewDimensions.x, predefinedUniforms.se_viewDimensions.y)
+        glPointSize(maxView) // This prevents gl from culling sprites when their center is not visible.
+        
+        predefinedUniforms.se_pointSize := p.size
+        
+        GL_POINTS
+        
       case l: Lines =>
         glLineWidth(l.width.toFloat)
         GL_LINES
-      case Triangles =>
+        
+      case t: Triangles =>
         GL_TRIANGLES
+        
       case Quads =>
         GL_QUADS
     }
-      
+    
     
     if (geometry.indices.isDefined) {
       renderContext.init(geometry.indices.defined)

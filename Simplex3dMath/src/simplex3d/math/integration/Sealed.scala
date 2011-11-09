@@ -197,7 +197,7 @@ package types {
    *
    * @author Aleksey Nikiforov (lex)
    */
-  abstract class AnyQuat4[P] private[math] () extends MathType with VectorBinding {
+  abstract class AnyQuat4[P] private[math] () extends MathType with VectorLike {
     override def clone() :AnyQuat4[P] = throw new UnsupportedOperationException()
     
     def apply(i: Int) :P
@@ -400,7 +400,7 @@ package types {
    *
    * @author Aleksey Nikiforov (lex)
    */
-  sealed trait AnyVec[P] extends MathType with VectorBinding {
+  sealed trait AnyVec[P] extends MathType with VectorLike {
     override def clone() :AnyVec[P] = throw new UnsupportedOperationException()
     
     def components: Int

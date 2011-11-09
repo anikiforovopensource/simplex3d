@@ -36,8 +36,8 @@ trait Binding
 trait NestedBinding extends Binding
 
 
-/** <code>VectorBinding</code> is a common supertype for Vectors and Quaternions.
+/** <code>VectorLike</code> is a common supertype for Vectors and Quaternions.
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait VectorBinding extends NestedBinding
+trait VectorLike extends NestedBinding

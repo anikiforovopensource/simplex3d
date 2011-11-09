@@ -107,8 +107,7 @@
         <mkdir dir="${release.dir}" />
         <mkdir dir="${release.dir}/jars" />
         
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
+        <jar manifest="${basedir}/manifest.mf" jarfile="${release.dir}/jars/${release.name}.jar">
             <fileset dir="${build.classes.dir}" includes="${root.pkg}/** ${example.pkg}/**/*.scala"
             excludes="${example.pkg}/**/*.class"/>
         </jar>

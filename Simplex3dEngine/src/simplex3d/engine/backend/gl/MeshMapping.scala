@@ -27,7 +27,7 @@ import simplex3d.engine.graphics._
 
 
 private[backend] final class MeshMapping {
-  var uniformVectors: ReadArray[VectorBinding] = ReadArray.Empty
+  var uniformVectors: ReadArray[VectorLike] = ReadArray.Empty
   var uniformMatrices: ReadArray[AnyMat[_]] = ReadArray.Empty
   var uniformTextures: ReadArray[ReadTextureBinding[_]] = ReadArray.Empty
   var attributes: ReadArray[Attributes[_, _]] = ReadArray.Empty

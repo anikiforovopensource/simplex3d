@@ -53,7 +53,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   
   
   private[this] def bindUniformVectors(
-    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[VectorBinding]
+    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[VectorLike]
   ) {
     var i = 0; while (i < uniformBindings.length) {
       setUniformVector(uniformVectorLocations(i), uniformVectorTypes(i), uniforms(i))
@@ -112,7 +112,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
     }
   }
   
-  def setUniformVector(location: Int, dataType: Int, value: VectorBinding) {
+  def setUniformVector(location: Int, dataType: Int, value: VectorLike) {
     if (value != null) {
       (dataType: @switch) match {
         case EngineBindingTypes.Float => uniform(location, value.asInstanceOf[ReadDoubleRef])

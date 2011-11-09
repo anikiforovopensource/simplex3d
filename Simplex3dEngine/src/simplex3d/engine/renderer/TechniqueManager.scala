@@ -158,7 +158,7 @@ extends graphics.TechniqueManager[G]
     }
     
     val mainBranch = geometry.mode match {
-      case _: PointSprites => "main_pointSprites"
+      case _: PointSprites => "ps_main"
       case _ => "main"
     }
     
@@ -233,7 +233,7 @@ extends graphics.TechniqueManager[G]
   
   // Point sprite setup.
   {
-    register(new Branch("main_pointSprites", subBranches = Set("resolveColor_pointSprites"), requiredProperties = Set.empty)(
+    register(new Branch("ps_main", subBranches = Set("ps_resolveColor"), requiredProperties = Set.empty)(
       new Shader(Shader.VertexShader, """
           uniform mat4 se_projectionMatrix;
           uniform ivec2 se_viewDimensions;
@@ -245,51 +245,38 @@ extends graphics.TechniqueManager[G]
           
           attribute vec3 vertices;
           
-          void resolveColor_pointSprites();
-          
           void main() {
             gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
             gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
-
-            resolveColor_pointSprites();
           }
         """
       ),
       new Shader(Shader.FragmentShader, """
-          vec4 resolveColor_pointSprites();
+          vec4 ps_resolveColor();
           
           void main() {
-            gl_FragColor = resolveColor_pointSprites();
+            gl_FragColor = ps_resolveColor();
           }
         """
       )
     ))
     
-    register(new Branch("resolveColor_pointSprites", subBranches = Set.empty, requiredProperties = Set.empty)(
-      new Shader(Shader.VertexShader, """
-          void resolveColor_pointSprites() {}
-        """
-      ),
+    register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
       new Shader(Shader.FragmentShader, """
-          vec4 resolveColor_pointSprites() {
+          vec4 ps_resolveColor() {
             return vec4(1);
           }
         """
       )
     ))
     
-    
-    register(new Branch("resolveColor_pointSprites", subBranches = Set.empty, requiredProperties = Set("texture"))(
-      new Shader(Shader.VertexShader, """
-          void resolveColor_pointSprites() {}
-        """
-      ),
+    register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set("texture"))(
       new Shader(Shader.FragmentShader, """
           #version 120
           
           uniform sampler2D texture;
           
-          vec4 resolveColor_pointSprites() {
+          vec4 ps_resolveColor() {
             return texture2D(texture, gl_PointCoord);
           }
         """

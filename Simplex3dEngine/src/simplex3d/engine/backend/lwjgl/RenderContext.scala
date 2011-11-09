@@ -1175,7 +1175,7 @@ extends graphics.RenderContext with GlAccess {
     
     meshMapping.uniformVectors = buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformVectors
-    ).asInstanceOf[ReadArray[VectorBinding]]
+    ).asInstanceOf[ReadArray[VectorLike]]
     
     meshMapping.uniformMatrices = buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices

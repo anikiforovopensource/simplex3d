@@ -34,7 +34,7 @@ import simplex3d.data.double._
 import simplex3d.engine.common._
 import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
-import simplex3d.engine.backend.gl._
+import simplex3d.engine.backend.opengl._
 
 
 private[lwjgl] object RenderManager {

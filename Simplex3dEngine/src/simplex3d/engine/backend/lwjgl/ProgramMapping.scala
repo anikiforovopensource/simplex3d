@@ -30,13 +30,13 @@ import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine.common._
 import simplex3d.engine.graphics._
-import simplex3d.engine.backend.gl._
+import simplex3d.engine.backend.opengl._
 
 
 private[backend] final class ProgramMapping(val program: Technique, val context: RenderContext)(
   uniformsSeq: Seq[UniformBinding],
   attributesSeq: Seq[AttributeBinding]
-) extends backend.gl.ProgramMapping(uniformsSeq, attributesSeq) {
+) extends backend.opengl.ProgramMapping(uniformsSeq, attributesSeq) {
     
   // Fast access.
   private[this] val uniformVectorLocations = uniformVectors.map(_.location).toArray

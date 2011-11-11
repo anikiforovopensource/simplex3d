@@ -53,6 +53,7 @@ extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with N
   final override def toString() :String = "TextureBinding" + "(" + texture + ")"
 }
 
+
 @SerialVersionUID(8104346712419693669L)
 final class TextureBinding[T <: Texture[_]](texture: T = null) extends ReadTextureBinding[T](texture)
 with Writable[TextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializable
@@ -63,4 +64,13 @@ with Writable[TextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializ
 
   def :=(r: Readable[TextureBinding[T]]) { texture_=(r.asInstanceOf[ReadTextureBinding[T]]texture) }
   def :=(t: T) { texture_=(t) }
+}
+
+
+object TextureBinding {
+  import simplex3d.engine.common._
+  
+  // XXX this prevents sbt compiler from crashing. Make a bug report sometime.
+  def avoidSbtCrash(a: Any) = a.asInstanceOf[ReadTextureBinding[_]]
+  def avoidSbtCrash(a: ReadArray[Any]) = a.asInstanceOf[ReadArray[ReadTextureBinding[_]]]
 }

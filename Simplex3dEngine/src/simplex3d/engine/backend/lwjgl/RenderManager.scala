@@ -123,7 +123,6 @@ extends graphics.RenderManager with GlUnsafeAccess
       }; resolveUpdatableEffects()
     }
     
-    
     val transformation = getWorldMatrix(mesh)
     val geometry = mesh.geometry
     val material = mesh.material
@@ -199,13 +198,18 @@ extends graphics.RenderManager with GlUnsafeAccess
       // XXX sort by textures: if (at0id < bt0id) -1 else if (at0id > bt0id)  1 else 0
       // XXX also sort by parent's environment
       
-      val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[ProgramInfo]
-      val apid = if (ainfo != null) ainfo.managedFields.id else 0
-      
-      val binfo = getEngineInfo(b.technique.defined).asInstanceOf[ProgramInfo]
-      val bpid = if (binfo != null) binfo.managedFields.id else 0
-      
-      if (apid < bpid) -1 else if (apid > bpid)  1 else 0
+      if (a.technique.isDefined && b.technique.isDefined) {
+        val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[ProgramInfo]
+        val apid = if (ainfo != null) ainfo.managedFields.id else 0
+        
+        val binfo = getEngineInfo(b.technique.defined).asInstanceOf[ProgramInfo]
+        val bpid = if (binfo != null) binfo.managedFields.id else 0
+        
+        if (apid < bpid) -1 else if (apid > bpid)  1 else 0
+      }
+      else {
+        0
+      }
     }
   }
   

@@ -50,7 +50,7 @@ private[lwjgl] object RenderContext {
 
 private[lwjgl] final class RenderContext(val capabilities: GraphicsCapabilities, val settings: AdvancedSettings)
 extends graphics.RenderContext with GlAccess {
-  import GL11._; import GL12._; import GL13._; import GL14._; import GL15._; import org.lwjgl.util.glu.MipMap._
+  import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
   import SceneAccess._; import ClearChangesAccess._
@@ -300,7 +300,7 @@ extends graphics.RenderContext with GlAccess {
     val format = resolveFormat(src.accessorManifest)
     val ftype = resolveType(src.formatManifest, src.rawType)
     
-    gluBuild2DMipmaps(
+    org.lwjgl.util.glu.MipMap.gluBuild2DMipmaps(
       GL_TEXTURE_2D,
       internalFormat, texture.dimensions.x, texture.dimensions.y,
       format, ftype, texture.src.bindingBuffer()
@@ -911,12 +911,11 @@ extends graphics.RenderContext with GlAccess {
         )
       }
       else if (value.isInstanceOf[ReadTextureBinding[_]]) {
-        val textureBinding = value.asInstanceOf[ReadTextureBinding[_]]
-        if (!textureBinding.isBound)
-          log(
-            Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
-            meshName + "'. Default texture will be used."
-          )
+        val textureBinding = TextureBinding.avoidSbtCrash(value)
+        if (!textureBinding.isBound) log(
+          Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
+          meshName + "'. Default texture will be used."
+        )
       }
     }
     
@@ -1087,7 +1086,7 @@ extends graphics.RenderContext with GlAccess {
         case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
         case EngineBindingTypes.Mat4x4 => value.isInstanceOf[Mat4x4]
         case EngineBindingTypes.Texture1d => false// XXX
-        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_ <: Texture[_]]] // XXX verify type somehow
+        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_]] // XXX verify type somehow
         case EngineBindingTypes.Texture3d => false
         case EngineBindingTypes.CubeTexture => false
         case EngineBindingTypes.ShadowTexture1d => false
@@ -1181,9 +1180,9 @@ extends graphics.RenderContext with GlAccess {
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
-    meshMapping.uniformTextures = buildUniformMapping(
+    meshMapping.uniformTextures = TextureBinding.avoidSbtCrash(buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformTextures
-    ).asInstanceOf[ReadArray[ReadTextureBinding[_]]]
+    ))
     
     meshMapping.attributes = buildAttributeMapping(mesh, programMapping.attributes)
   }

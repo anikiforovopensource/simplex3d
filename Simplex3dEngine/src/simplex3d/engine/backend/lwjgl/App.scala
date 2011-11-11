@@ -206,7 +206,7 @@ trait App extends simplex3d.engine.App {
         
         for (ls <- listeners if ls.isEnabled) { ls.mouseListener.mouseWheelMoved(input, event) }
       }
-      // XXX add mouse entered/exited using Mouse.isInsideWindow
+      // TODO add mouse entered/exited using Mouse.isInsideWindow
     }
   }
   

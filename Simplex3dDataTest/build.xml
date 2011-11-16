@@ -5,182 +5,29 @@
 <project name="Simplex3dDataTest" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dDataTest.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
-
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Simplex3dDataTest-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
-    <target name="-init-macrodef-scalac">
-        <macrodef name="scalac" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.dir}" name="srcdir"/>
-            <attribute default="${build.classes.dir}" name="destdir"/>
-            <attribute default="${javac.classpath}" name="classpath"/>
-            <attribute default="${extdirs}" name="extdirs"/>
-            <attribute default="${includes}" name="includes"/>
-            <attribute default="${excludes}" name="excludes"/>
-            <attribute default="${scalac.compilerargs}" name="addparams"/>
-            <attribute default="" name="sourcepath"/>
-            <element name="customize" optional="true"/>
-            <sequential>
-                <scalac jvmargs="-Xss2048k -Xmx1200m" addparams="-make:transitive -dependencyfile ${basedir}/${build.dir}/.scala_dependencies @{addparams}" deprecation="${scalac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" extdirs="@{extdirs}" force="yes" fork="true" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="jvm-${javac.target}" unchecked="${scalac.unchecked}">
-                    <classpath>
-                        <path>
-                            <pathelement path="@{classpath}"/>
-                            <fileset dir="${scala.lib}">
-                                <include name="**/*.jar"/>
-                            </fileset>
-                            <pathelement location="${build.classes.dir}"/>
-                        </path>
-                    </classpath>
-                    <customize/>
-                </scalac>
-            </sequential>
-        </macrodef>
-        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${build.classes.dir}" name="destdir"/>
-            <sequential>
-                <fail unless="javac.includes">Must set javac.includes</fail>
-                <pathconvert pathsep="," property="javac.includes.binary">
-                    <path>
-                        <filelist dir="@{destdir}" files="${javac.includes}"/>
-                    </path>
-                    <globmapper from="*.scala" to="*.class"/>
-                </pathconvert>
-                <delete>
-                    <files includes="${javac.includes.binary}"/>
-                </delete>
-            </sequential>
-        </macrodef>
+    
+    <property name="scala.ver" value="2.9.1"/>
+    <property name="project.sbt" value="test-data"/>
+    
+    <target depends="init" name="clean">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};clean"/>
+        </exec>
     </target>
     
-    <target name="-post-jar">
-        <delete dir="${release.dir}/jars" />
-        
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-        
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="test/** visual/**"/>
-        </jar>
+    <target depends="init" name="jar">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};compile"/>
+        </exec>
     </target>
-
-
-    <property name="release.dir" value="release"/>
-    <property name="release.name" value="simplex3d-data-test"/>
-    <property name="release.bin" value="${release.dir}/Simplex3dDataTest_bin.zip"/>
-    <property name="release.src" value="${release.dir}/Simplex3dDataTest_src.zip"/>
-
-    <target name="release-all" depends="release-clean, release-src, release-bin" />
-
-    <target name="release-clean" depends="clean" >
-        <delete dir="${release.dir}" />
-    </target>
-
-    <target name="release-bin" depends="init, clean, compile, jar" >
-        <delete file="${release.bin}" />
-
-        <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${release.dir}/jars" includes="*.jar"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING
-                simplex3d-data-test.license" />
-        </zip>
-    </target>
-
-    <target name="release-src" depends="init" >
-        <delete file="${release.src}" />
-        <mkdir dir="${release.dir}" />
-
-        <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING
-                simplex3d-data-test.license
-                manifest.mf
-                build.xml" />
-        </zip>
-    </target>
-
-
-    <target name="test-all" depends="init">
-      <path id="scalatest.classpath">
-        <pathelement location="../Simplex3dMathTest/lib/scalatest-1.4.1.jar"/>
-        <pathelement location="${scala.lib}/scala-library.jar"/>
-      </path>
     
-      <taskdef name="scalatest" classname="org.scalatest.tools.ScalaTestAntTask">
-        <classpath refid="scalatest.classpath"/>
-      </taskdef>
-      
-      <scalatest fork="true" maxmemory="1000M" parallel="true">
-        <runpath>
-          <pathelement path="${javac.classpath}"/>
-          <pathelement location="release/jars/simplex3d-data-test.jar"/>
-        </runpath>
-        
-        <reporter type="stdout" config="NHLD"/>
-      </scalatest>
+    <target depends="init" name="-javadoc-build">
     </target>
+    
+    <target depends="init" name="run">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};test"/>
+        </exec>
+    </target>
+    
 </project>

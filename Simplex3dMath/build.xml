@@ -10,7 +10,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
 
     <property name="scala.ver" value="2.9.1"/>
     <property name="project.sbt" value="math"/>
-    <property name="target.dir" value="../target/${project.sbt}"/>
+    <property name="target.sbt" value="../target/${project.sbt}"/>
     
     <target depends="init" name="clean">
         <exec dir=".." executable="sbt" failonerror="true">
@@ -23,7 +23,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
             <arg value=";project ${project.sbt};package"/>
         </exec>
         <copy todir="${dist.dir}" flatten="true">
-            <fileset dir="${target.dir}" includes="**/*.jar" excludes="scala-${scala.ver}/**"/>
+            <fileset dir="${target.sbt}" includes="**/*.jar" excludes="scala-${scala.ver}/**"/>
         </copy>
     </target>
     
@@ -32,7 +32,7 @@ name="Simplex3dMath" default="release-all" basedir=".">
             <arg value=";project doc-${project.sbt};doc"/>
         </exec>
         <copy todir="${dist.dir}/scaladoc">
-            <fileset dir="${target.dir}/scala-${scala.ver}/api"/>
+            <fileset dir="${target.sbt}/doc/scala-${scala.ver}/api"/>
         </copy>
     </target>
     

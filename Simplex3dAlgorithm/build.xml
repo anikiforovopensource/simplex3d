@@ -6,148 +6,45 @@
 name="Simplex3dAlgorithm" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dAlgorithm.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
-
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Simplex3dAlgorithm-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
     
-    <target name="-post-jar">
-        <delete dir="${release.dir}/jars" />
-        
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-noise.jar">
-            <fileset dir="${build.classes.dir}" includes="${noise.pkg}"/>
-        </jar>
-        
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-intersection.jar">
-            <fileset dir="${build.classes.dir}" includes="${intersection.pkg}"/>
-        </jar>
-        
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/${release.name}-mesh.jar">
-            <fileset dir="${build.classes.dir}" includes="${mesh.pkg}"/>
-        </jar>
-        
-        <jar manifest="${basedir}/manifest.mf"
-        jarfile="${release.dir}/jars/simplex3d-data-format.jar">
-            <fileset dir="${build.classes.dir}" includes="${data.format.pkg}"/>
-        </jar>
+    <property name="scala.ver" value="2.9.1"/>
+    <property name="project.sbt" value="algorithm"/>
+    <property name="target.sbt" value="../target/${project.sbt}"/>
+    
+    <target depends="init" name="clean">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};clean;project doc-${project.sbt};clean"/>
+        </exec>
     </target>
-
-    <target depends="init, compile" name="qrun">
-        <fail unless="main">Must set main. Example: ant qrun -Dmain=pkg.Main</fail>
-        <scalaProject1:java classname="${main}"/>
+    
+    <target depends="init" name="jar">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};package"/>
+        </exec>
+        <copy todir="${dist.dir}" flatten="true">
+            <fileset dir="${target.sbt}" includes="**/*.jar" excludes="scala-${scala.ver}/**"/>
+        </copy>
     </target>
-
-
-    <property name="release.dir" value="release"/>
-    <property name="release.name" value="simplex3d-algorithm"/>
-    <property name="release.bin" value="${release.dir}/Simplex3dAlgorithm_bin.zip"/>
-    <property name="release.src" value="${release.dir}/Simplex3dAlgorithm_src.zip"/>
-    <property name="root.pkg" value="simplex3d"/>
-
-    <property name="noise.pkg" value="${root.pkg}/algorithm/noise/**"/>
-    <property name="intersection.pkg" value="${root.pkg}/algorithm/intersection/**"/>
-    <property name="mesh.pkg" value="${root.pkg}/algorithm/mesh/**"/>
-    <property name="data.format.pkg" value="${root.pkg}/data/**"/>
-
-    <target name="release-all" depends="release-clean, release-src, release-bin" />
-
-    <target name="release-clean" depends="clean" >
-        <delete dir="${release.dir}" />
+    
+    <target depends="init" name="-javadoc-build">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project doc-${project.sbt};doc"/>
+        </exec>
+        <copy todir="${dist.dir}/scaladoc">
+            <fileset dir="${target.sbt}/doc/scala-${scala.ver}/api"/>
+        </copy>
     </target>
-
-    <target name="release-bin" depends="init, clean, compile, jar" >
-        <delete file="${release.bin}" />
-
-        <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${release.dir}/jars" includes="*.jar"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING.LESSER
-                COPYING
-                simplex3d-algorithm.license" />
-        </zip>
+    
+    <target depends="init" name="run">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};run-main ${main.class} ${application.args}"/>
+        </exec>
     </target>
-
-    <target name="release-src" depends="init" >
-        <delete file="${release.src}" />
-        <mkdir dir="${release.dir}" />
-
-        <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING.LESSER
-                COPYING
-                simplex3d-algorithm.license
-                manifest.mf
-                build.xml" />
-        </zip>
+    
+    <target depends="init" name="run-single">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};run-main ${run.class} ${application.args}"/>
+        </exec>
     </target>
     
 </project>

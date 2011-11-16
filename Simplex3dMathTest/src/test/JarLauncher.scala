@@ -31,7 +31,7 @@ object JarLauncher {
     val pathEnd = path.lastIndexOf('!')
 
     if (!path.startsWith("file:") || pathEnd < 0)
-      throw new IllegalArgumentException("The specified class is not in a jar.")
+      throw new RuntimeException("Unable to locate the test jar.")
 
     path.substring(5, pathEnd)
   }

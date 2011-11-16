@@ -267,13 +267,15 @@ package testenv {
     def resolveBinding() = {
       println("Resolving contrast binding.")
       
-      binding = 
-        if (secondary) new ContrastBinding(2)
-        else new ContrastBinding(1)
-      
-      var i = 0; while (i < binding.factors.size) {
-        binding.factors(i) := factor
-        i += 1
+      if (hasStructuralChanges) {
+        binding = 
+          if (secondary) new ContrastBinding(2)
+          else new ContrastBinding(1)
+        
+        var i = 0; while (i < binding.factors.size) {
+          binding.factors(i) := factor
+          i += 1
+        }
       }
       
       binding
@@ -320,7 +322,7 @@ package testenv {
   final class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G) extends graphics.TechniqueManager[G] {
     val passManager = new renderer.PassManager[G]
     
-    val vertexShader = new Shader(Shader.VertexShader, """
+    val vertexShader = new Shader(Shader.Vertex, """
       uniform mat4 se_modelViewProjectionMatrix;
       attribute vec3 vertices;
       
@@ -330,7 +332,7 @@ package testenv {
       """
     )
     
-    val fragmentShader = new Shader(Shader.FragmentShader, """
+    val fragmentShader = new Shader(Shader.Fragment, """
         uniform vec3 nodeColor;
         
         float resolveIntensity();
@@ -343,14 +345,14 @@ package testenv {
       """
     )
       
-    val withoutIntencity = new Shader(Shader.FragmentShader, """
+    val withoutIntencity = new Shader(Shader.Fragment, """
         float resolveIntensity() {
           return 0.25;
         }
       """
     )
     
-    val withIntencity = new Shader(Shader.FragmentShader, """
+    val withIntencity = new Shader(Shader.Fragment, """
         uniform float intencity;
         
         float resolveIntensity() {
@@ -359,7 +361,7 @@ package testenv {
       """
     )
     
-    val contrast1 = new Shader(Shader.FragmentShader, """
+    val contrast1 = new Shader(Shader.Fragment, """
         struct Contrast {
           float factors[1];
         };
@@ -372,7 +374,7 @@ package testenv {
       """
     )
     
-    val contrast2 = new Shader(Shader.FragmentShader, """
+    val contrast2 = new Shader(Shader.Fragment, """
         struct Contrast {
           float factors[2];
         };

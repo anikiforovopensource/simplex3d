@@ -33,5 +33,5 @@ class Shader(
 ) extends EngineInfo
 
 object Shader extends Enumeration {
-  val VertexShader, FragmentShader = Value
+  val Vertex, Fragment = Value
 }

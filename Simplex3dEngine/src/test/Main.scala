@@ -28,6 +28,7 @@ import simplex3d.data.double._
 import simplex3d.algorithm.noise._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
+import simplex3d.engine.renderer._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
@@ -36,8 +37,34 @@ import simplex3d.engine.transformation._
 
 
 object Main {
-  
+
   def main(args: Array[String]) {
     
   }
+}
+
+class VTest extends VertexShader {
+  uses("float foo()")
+  
+  attribute[Vec3]("atest")
+  uniform[Vec3]("utest")
+  
+  
+  val interface = new OutputBlock("textureStuff") {
+    varying[Vec3]("smooth", "texCoords")
+  }
+}
+
+class FTest extends FragmentShader {
+  uses("float foo()")
+  
+  uniform[Vec3]("utest")
+  
+  new InputBlock("textureStuff") {
+    varying[Vec3]("smooth", "texCoords")
+  }
+
+  val interface = new Function("int bar()")("""
+    gl_FragColor = vec4(1);
+  """)
 }

@@ -34,7 +34,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   
   protected val shaderSrc: String
   
-  private val vertexShader = new Shader(Shader.VertexShader,
+  private val vertexShader = new Shader(Shader.Vertex,
     """
     attribute vec3 vertices;
     void main() {
@@ -68,7 +68,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
         Nil
       )
       val shaderUniforms = Map((names zip props): _*)
-      val fragmentShader = new Shader(Shader.FragmentShader, shaderSrc, shaderUniforms)
+      val fragmentShader = new Shader(Shader.Fragment, shaderSrc, shaderUniforms)
       this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fragmentShader)))
     }
   }

@@ -84,8 +84,8 @@ extends graphics.RenderContext with GlAccess {
     """
     
     val shaders = Set[Shader](
-      new Shader(Shader.VertexShader, vertexShader),
-      new Shader(Shader.FragmentShader, fragmentShader)
+      new Shader(Shader.Vertex, vertexShader),
+      new Shader(Shader.Fragment, fragmentShader)
     )
     
     new Technique(MinimalGraphicsContext, shaders)
@@ -524,8 +524,8 @@ extends graphics.RenderContext with GlAccess {
     }
     
     val id = glCreateShader(shader.shaderType match {
-      case Shader.VertexShader => GL_VERTEX_SHADER
-      case Shader.FragmentShader => GL_FRAGMENT_SHADER
+      case Shader.Vertex => GL_VERTEX_SHADER
+      case Shader.Fragment => GL_FRAGMENT_SHADER
     })
     glShaderSource(id, shader.src)
     glCompileShader(id)
@@ -911,7 +911,7 @@ extends graphics.RenderContext with GlAccess {
         )
       }
       else if (value.isInstanceOf[ReadTextureBinding[_]]) {
-        val textureBinding = TextureBinding.avoidSbtCrash(value)
+        val textureBinding = TextureBinding.avoidCompilerCrash(value)
         if (!textureBinding.isBound) log(
           Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
           meshName + "'. Default texture will be used."
@@ -1180,7 +1180,7 @@ extends graphics.RenderContext with GlAccess {
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
-    meshMapping.uniformTextures = TextureBinding.avoidSbtCrash(buildUniformMapping(
+    meshMapping.uniformTextures = TextureBinding.avoidCompilerCrash(buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformTextures
     ))
     

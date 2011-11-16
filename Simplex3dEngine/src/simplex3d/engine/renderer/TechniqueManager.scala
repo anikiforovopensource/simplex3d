@@ -32,8 +32,8 @@ extends graphics.TechniqueManager[G]
   val passManager = new PassManager[G]
   
   
-  private val cache = new java.util.HashMap[immutable.Set[Shader], Technique]
-  private def cachedTechnique(shaders: immutable.Set[Shader]) :Technique = {
+  private val cache = new java.util.HashMap[immutable.Set[graphics.Shader], Technique]
+  private def cachedTechnique(shaders: immutable.Set[graphics.Shader]) :Technique = {
     var technique = cache.get(shaders)
     if (technique == null) {
       technique = new Technique(graphicsContext, shaders)
@@ -123,7 +123,7 @@ extends graphics.TechniqueManager[G]
     
     def processQueue(
       branchName: String,
-      shaders: mutable.ArrayBuffer[Shader],
+      shaders: mutable.ArrayBuffer[graphics.Shader],
       deadBranches: mutable.Set[String]
     )
     :Boolean = {
@@ -135,7 +135,7 @@ extends graphics.TechniqueManager[G]
         if (passesRequirements(branch)) {
           
           var resolved = true
-          val dependencies = new mutable.ArrayBuffer[Shader]
+          val dependencies = new mutable.ArrayBuffer[graphics.Shader]
           
           val subBranches = branch.subBranches.iterator
           while (resolved && subBranches.hasNext) { val subBranch = subBranches.next()
@@ -162,7 +162,7 @@ extends graphics.TechniqueManager[G]
       case _ => "main"
     }
     
-    val shaders = mutable.ArrayBuffer[Shader]()
+    val shaders = mutable.ArrayBuffer[graphics.Shader]()
     val resolved = processQueue(mainBranch, shaders, mutable.Set[String]())
     
     if (resolved) cachedTechnique(shaders.toSet)
@@ -173,7 +173,7 @@ extends graphics.TechniqueManager[G]
   // Default setup.
   {
     register(new Branch("main", subBranches = Set("resolveColor"), requiredProperties = Set.empty)(
-      new Shader(Shader.VertexShader, """
+      new graphics.Shader(graphics.Shader.Vertex, """
           uniform mat4 se_modelViewProjectionMatrix;
           attribute vec3 vertices;
           
@@ -185,7 +185,7 @@ extends graphics.TechniqueManager[G]
           }
         """
       ),
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           vec4 resolveColor();
           
           void main() {
@@ -196,11 +196,11 @@ extends graphics.TechniqueManager[G]
     ))
     
     register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
-      new Shader(Shader.VertexShader, """
+      new graphics.Shader(graphics.Shader.Vertex, """
           void resolveColor() {}
         """
       ),
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           vec4 resolveColor() {
             return vec4(1);
           }
@@ -210,7 +210,7 @@ extends graphics.TechniqueManager[G]
     
     
     register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set("texCoords", "texture"))(
-      new Shader(Shader.VertexShader, """
+      new graphics.Shader(graphics.Shader.Vertex, """
           attribute vec2 texCoords;
           varying vec2 ecTexCoords;
           
@@ -219,7 +219,7 @@ extends graphics.TechniqueManager[G]
           }
         """
       ),
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           varying vec2 ecTexCoords;
           uniform sampler2D texture;
           
@@ -234,7 +234,7 @@ extends graphics.TechniqueManager[G]
   // Point sprite setup.
   {
     register(new Branch("ps_main", subBranches = Set("ps_resolveColor"), requiredProperties = Set.empty)(
-      new Shader(Shader.VertexShader, """
+      new graphics.Shader(graphics.Shader.Vertex, """
           uniform mat4 se_projectionMatrix;
           uniform ivec2 se_viewDimensions;
           
@@ -251,7 +251,7 @@ extends graphics.TechniqueManager[G]
           }
         """
       ),
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           vec4 ps_resolveColor();
           
           void main() {
@@ -262,7 +262,7 @@ extends graphics.TechniqueManager[G]
     ))
     
     register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           vec4 ps_resolveColor() {
             return vec4(1);
           }
@@ -271,7 +271,7 @@ extends graphics.TechniqueManager[G]
     ))
     
     register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set("texture"))(
-      new Shader(Shader.FragmentShader, """
+      new graphics.Shader(graphics.Shader.Fragment, """
           #version 120
           
           uniform sampler2D texture;
@@ -287,7 +287,7 @@ extends graphics.TechniqueManager[G]
 
 class Branch
   (val name: String, val subBranches: Set[String], val requiredProperties: Set[String])
-  (val shaders: Shader*)
+  (val shaders: graphics.Shader*)
 {
   private[renderer] var requiredGeometry: Array[Int] = _
   private[renderer] var requiredMaterial: Array[Int] = _

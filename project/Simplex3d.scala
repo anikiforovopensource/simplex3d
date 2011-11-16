@@ -42,9 +42,9 @@ object Simplex3d extends Build {
     settings = buildSettings ++ Seq (
       name := "dummy-project-to-fix-sbt",
       target := new File("target/sbt-fix"),
-      excludeFilter := "*",
+      excludeFilter := "*"/*,
       publish := {},
-      publishLocal := {}
+      publishLocal := {}*/
     )
   )
   
@@ -58,8 +58,8 @@ object Simplex3d extends Build {
     )
   ) aggregate(
     Simplex3dMath.core, Simplex3dMath.float, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.float, Simplex3dData.double,
-    Simplex3dAlgorithm.dataFormat, Simplex3dAlgorithm.noise, Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh,
+    Simplex3dData.core, Simplex3dData.float, Simplex3dData.double, Simplex3dData.format,
+    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
     Simplex3dEngine.core, Simplex3dEngine.sceneGraph, Simplex3dEngine.renderer,
     Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.default
   ) dependsOn(dummyProjectToFixSbt)

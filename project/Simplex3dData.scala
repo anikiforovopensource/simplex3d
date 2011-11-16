@@ -31,6 +31,7 @@ object Simplex3dData extends Build {
   val coreFilter = new WorkingFilter("simplex3d/data/.*")
   val floatFilter = new WorkingFilter("simplex3d/data/float/.*")
   val doubleFilter = new WorkingFilter("simplex3d/data/double/.*")
+  val formatFilter = new WorkingFilter("simplex3d/data/format/.*")
   
   lazy val root = Project(
     id = "data",
@@ -40,7 +41,7 @@ object Simplex3dData extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, float, double) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  ) aggregate(core, float, double, format) dependsOn(Simplex3d.dummyProjectToFixSbt)
   
   lazy val core = Project(
     id = "data-core",
@@ -50,7 +51,7 @@ object Simplex3dData extends Build {
       description := "Data Binding API, Core Module.",
       target := new File("target/data/core"),
       includeFilter := coreFilter && Simplex3d.codeFilter,
-      excludeFilter := floatFilter || doubleFilter
+      excludeFilter := floatFilter || doubleFilter || formatFilter
     )
   ) dependsOn(Simplex3dMath.core)
   
@@ -75,6 +76,18 @@ object Simplex3dData extends Build {
       includeFilter := doubleFilter && Simplex3d.codeFilter
     )
   ) dependsOn(core, Simplex3dMath.double)
+  
+  lazy val format = Project(
+    id = "data-format",
+    base = file("Simplex3dData"),
+    settings = buildSettings ++ Seq (
+      name := "simplex3d-data-format",
+      version := "0.5-SNAPSHOT",
+      description := "Additional data formats for Data Binding API.",
+      target := new File("target/data/format"),
+      includeFilter := formatFilter && Simplex3d.codeFilter
+    )
+  ) dependsOn(core, double, Simplex3dMath.double)
   
   
   lazy val doc = Project(
@@ -101,5 +114,5 @@ object Simplex3dData extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(core, float, double)
+  ) dependsOn(core, float, double, format)
 }

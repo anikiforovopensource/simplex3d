@@ -62,8 +62,8 @@ object Simplex3dEngine extends Build {
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double,
-    Simplex3dAlgorithm.dataFormat, Simplex3dAlgorithm.intersection
+    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
+    Simplex3dAlgorithm.intersection
   )
   
   lazy val sceneGraph = Project(
@@ -135,8 +135,8 @@ object Simplex3dEngine extends Build {
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double,
-    Simplex3dAlgorithm.dataFormat, Simplex3dAlgorithm.intersection
+    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
+    Simplex3dAlgorithm.intersection
   )
   
   lazy val test = Project(

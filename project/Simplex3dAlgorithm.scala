@@ -28,10 +28,9 @@ object Simplex3dAlgorithm extends Build {
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
   
-  val dataFormatFilter = new WorkingFilter("simplex3d/data/format/.*")
-  val noiseFilter = new WorkingFilter("simplex3d/algorithm/noise/.*")
   val intersectionFilter = new WorkingFilter("simplex3d/algorithm/intersection/.*")
   val meshFilter = new WorkingFilter("simplex3d/algorithm/mesh/.*")
+  val noiseFilter = new WorkingFilter("simplex3d/algorithm/noise/.*")
   
   
   lazy val root = Project(
@@ -42,29 +41,7 @@ object Simplex3dAlgorithm extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(dataFormat, noise, intersection, mesh) dependsOn(Simplex3d.dummyProjectToFixSbt)
-  
-  lazy val dataFormat = Project(
-    id = "data-format",
-    base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
-      name := "simplex3d-data-format",
-      description := "Additional data formats for Data Binding API.",
-      target := new File("target/algorithm/data-format"),
-      includeFilter := dataFormatFilter && Simplex3d.codeFilter
-    )
-  ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
-  
-  lazy val noise = Project(
-    id = "algorithm-noise",
-    base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
-      name := "simplex3d-algorithm-noise",
-      description := "Noise Algorithms.",
-      target := new File("target/algorithm/noise"),
-      includeFilter := noiseFilter && Simplex3d.codeFilter
-    )
-  ) dependsOn(Simplex3dMath.core, Simplex3dMath.double)
+  ) aggregate(intersection, mesh, noise) dependsOn(Simplex3d.dummyProjectToFixSbt)
   
   lazy val intersection = Project(
     id = "algorithm-intersection",
@@ -87,6 +64,17 @@ object Simplex3dAlgorithm extends Build {
       includeFilter := meshFilter && Simplex3d.codeFilter
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
+  
+  lazy val noise = Project(
+    id = "algorithm-noise",
+    base = file("Simplex3dAlgorithm"),
+    settings = buildSettings ++ Seq (
+      name := "simplex3d-algorithm-noise",
+      description := "Noise Algorithms.",
+      target := new File("target/algorithm/noise"),
+      includeFilter := noiseFilter && Simplex3d.codeFilter
+    )
+  ) dependsOn(Simplex3dMath.core, Simplex3dMath.double)
   
   
   lazy val doc = Project(

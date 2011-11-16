@@ -52,7 +52,7 @@ object Simplex3dMath extends Build {
       includeFilter := coreFilter && Simplex3d.codeFilter,
       excludeFilter := floatFilter || doubleFilter
     )
-  )
+  ) dependsOn(Simplex3d.dummyProjectToFixSbt)
   
   lazy val float = Project(
     id = "math-float",

@@ -23,9 +23,9 @@
         organisation=""
         module=""
         status="integration">
-	</info>
+    </info>
 
-	<dependencies>
+    <dependencies>
         <dependency org="org.lwjgl.lwjgl" name="lwjgl" rev="2.8.1"/>
         <dependency org="org.lwjgl.lwjgl" name="lwjgl_util" rev="2.8.1"/>
         

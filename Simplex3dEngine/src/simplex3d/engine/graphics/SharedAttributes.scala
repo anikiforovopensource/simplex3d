@@ -23,7 +23,7 @@ package graphics
 
 import simplex3d.math.types._
 import simplex3d.data._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 sealed abstract class SharedAttributes[F <: Format with MathType, R <: Raw](listener: StructuralChangeListener)

@@ -18,20 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
-
-import simplex3d.engine.util._
+package simplex3d.engine.util
 
 
-/** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
- */
-class Shader(
-  val shaderType: Shader.type#Value,
-  val src: String,
-  val uniforms: Map[String, DefinedProperty[_ <: TechniqueBinding]] = Map()
-) extends EngineInfo
+class StructuralChangeListener { self =>
+  final class StructuralSubtext {
+    def clearStructuralChanges() { changes = false }
+  }
+  private[engine] final val structuralSubtext = new StructuralSubtext
+  
+  
+  private[engine] final var changes = true // Initialize as changed.
+  final def hasStructuralChanges: Boolean = changes
+  
+  private[engine] final def signalStructuralChanges() {
+    changes = true
+  }
+}
 
-object Shader extends Enumeration {
-  val Vertex, Fragment = Value
+object StructuralChangeListener {
+  final val Ignore = new StructuralChangeListener
 }

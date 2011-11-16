@@ -23,7 +23,7 @@ package scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.algorithm.intersection._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 import simplex3d.engine.scene._
 import simplex3d.engine.transformation._
 import simplex3d.engine.bounding._

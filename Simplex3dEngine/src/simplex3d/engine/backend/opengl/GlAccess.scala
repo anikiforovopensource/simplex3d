@@ -21,7 +21,7 @@
 package simplex3d.engine
 package backend.opengl
 
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 

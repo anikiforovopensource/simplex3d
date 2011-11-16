@@ -26,7 +26,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.ParameterizedType
 import java.util.HashMap
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 private[engine] object FieldReflection {

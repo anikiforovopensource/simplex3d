@@ -25,7 +25,7 @@ import simplex3d.math._
 import simplex3d.math.types._
 import simplex3d.math.double.functions._
 import simplex3d.data._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (

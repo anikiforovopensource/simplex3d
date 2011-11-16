@@ -22,7 +22,7 @@ package simplex3d.engine.graphics
 
 import java.util.logging._
 import simplex3d.math.types._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>

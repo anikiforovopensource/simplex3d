@@ -22,7 +22,7 @@ package simplex3d.engine
 package graphics
 
 import simplex3d.math.types._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>

@@ -24,7 +24,7 @@ package transformation
 import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 abstract class ReadTransformation[W <: Transformation[W]] extends DataChangeListener with Readable[W] 

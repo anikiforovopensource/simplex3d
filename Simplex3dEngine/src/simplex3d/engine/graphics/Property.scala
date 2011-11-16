@@ -21,7 +21,7 @@
 package simplex3d.engine.graphics
 
 import simplex3d.math.types._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 sealed abstract class Property[W <: Writable[W]] private[engine]

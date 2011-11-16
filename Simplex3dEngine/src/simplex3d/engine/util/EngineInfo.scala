@@ -18,20 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
-
-import simplex3d.engine.util._
+package simplex3d.engine.util
 
 
-/** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
- */
-class Shader(
-  val shaderType: Shader.type#Value,
-  val src: String,
-  val uniforms: Map[String, DefinedProperty[_ <: TechniqueBinding]] = Map()
-) extends EngineInfo
-
-object Shader extends Enumeration {
-  val Vertex, Fragment = Value
+trait EngineInfo {
+  private[engine] final var engineInfo: Object = null
 }

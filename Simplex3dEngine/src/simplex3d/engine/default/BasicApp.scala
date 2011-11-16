@@ -24,7 +24,7 @@ package default
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double.functions._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._

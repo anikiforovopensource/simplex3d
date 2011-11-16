@@ -22,7 +22,7 @@ package simplex3d.engine
 package renderer
 
 import simplex3d.math._
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 

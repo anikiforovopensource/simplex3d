@@ -68,7 +68,7 @@ with Writable[TextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializ
 
 
 object TextureBinding {
-  import simplex3d.engine.common._
+  import simplex3d.engine.util._
   
   // XXX this is fixed in unreleased Scala 2.10, remove when it gets released.
   def avoidCompilerCrash(a: Any) = a.asInstanceOf[ReadTextureBinding[_]]

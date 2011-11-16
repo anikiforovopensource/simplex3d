@@ -20,7 +20,7 @@
 
 package simplex3d.engine.graphics
 
-import simplex3d.engine.common._
+import simplex3d.engine.util._
 
 
 trait ReflectGeometry extends Geometry {

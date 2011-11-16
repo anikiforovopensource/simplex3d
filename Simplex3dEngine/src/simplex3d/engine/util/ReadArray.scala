@@ -18,20 +18,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics
+package simplex3d.engine.util
 
-import simplex3d.engine.util._
+import scala.collection._
 
 
-/** Uniforms names must be distinct from geometry, material, environment, and predefined properties.
- */
-class Shader(
-  val shaderType: Shader.type#Value,
-  val src: String,
-  val uniforms: Map[String, DefinedProperty[_ <: TechniqueBinding]] = Map()
-) extends EngineInfo
+sealed class ReadArray[+T](array: Array[T]) extends IndexedSeq[T]
+with IndexedSeqOptimized[T, IndexedSeq[T]]
+{
+  final override def size = array.length
+  final def length = array.length
+  final def apply(i: Int) :T = array(i)
+}
 
-object Shader extends Enumeration {
-  val Vertex, Fragment = Value
+
+object ReadArray {
+  final val Empty = new ReadArray[Nothing](new Array[Object](0).asInstanceOf[Array[Nothing]])
 }

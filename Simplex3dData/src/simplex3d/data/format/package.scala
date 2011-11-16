@@ -26,6 +26,7 @@ import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.data.conversion.Double._
+import simplex3d.data.extension._
 
 
 package object format {

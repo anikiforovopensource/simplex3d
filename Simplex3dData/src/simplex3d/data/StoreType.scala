@@ -1,6 +1,6 @@
 /*
  * Simplex3dData - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -20,17 +20,29 @@
 
 package simplex3d.data
 
-import scala.collection._
-import simplex3d.data.extension._
+import scala.annotation._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
-  type Read <: ReadData[A]
-  
-  type Format <: simplex3d.data.Format { type Accessor <: A }
-}
+private[data] object StoreType {
+  final val ByteStore = 0
+  final val ShortStore = 1
+  final val CharStore = 2
+  final val IntStore = 3
+  final val FloatStore = 4
+  final val DoubleStore = 5
 
-trait Data[A <: Accessor] extends AbstractData[A#Const, A#Read] with ReadData[A]
+  def fromRawType(rawType: Int) = {
+    import RawType._
+    (rawType: @switch) match {
+      case SByte | UByte => ByteStore
+      case SShort | HFloat => ShortStore
+      case UShort => CharStore
+      case SInt | UInt => IntStore
+      case RFloat => FloatStore
+      case RDouble => DoubleStore
+    }
+  }
+}

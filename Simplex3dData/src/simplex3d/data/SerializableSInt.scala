@@ -20,7 +20,7 @@
 
 package simplex3d.data
 
-import simplex3d.data.common._
+import simplex3d.data.extension._
 
 
 /**

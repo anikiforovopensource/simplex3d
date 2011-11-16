@@ -23,8 +23,8 @@ package simplex3d.data
 import java.nio._
 import scala.annotation._
 import scala.collection._
-import simplex3d.data.common._
-import simplex3d.data.common.StoreType._
+import simplex3d.data.extension._
+import StoreType._
 
 
 /**

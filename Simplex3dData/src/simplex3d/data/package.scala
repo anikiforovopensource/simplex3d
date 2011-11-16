@@ -22,7 +22,7 @@ package simplex3d
 
 import java.nio._
 import simplex3d.math._
-import simplex3d.data.common._
+import simplex3d.data.extension._
 
 
 /**

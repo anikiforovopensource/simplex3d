@@ -22,7 +22,7 @@ package simplex3d.data;
 
 import java.io.*;
 import java.nio.*;
-import simplex3d.data.common.*;
+import simplex3d.data.extension.*;
 
 
 /** Prevents gaining access to read-only content.

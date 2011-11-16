@@ -24,7 +24,7 @@ package float
 import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.floatx._
-import simplex3d.data.common._
+import simplex3d.data.extension._
 import RawType._
 
 

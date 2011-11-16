@@ -19,12 +19,12 @@
  */
 
 package simplex3d.data
+package extension
 
 import java.nio._
 import scala.reflect._
 import scala.annotation.unchecked._
 import simplex3d.math._
-import simplex3d.data.common._
 
 
 /**

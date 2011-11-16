@@ -47,6 +47,22 @@ object Simplex3d extends Build {
       publishLocal := {}
     )
   )
+  
+  lazy val root = Project(
+    id = "root",
+    base = file("."),
+    settings = buildSettings ++ Seq (
+      target := new File("target/root"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) aggregate(
+    Simplex3dMath.core, Simplex3dMath.float, Simplex3dMath.double,
+    Simplex3dData.core, Simplex3dData.float, Simplex3dData.double,
+    Simplex3dAlgorithm.dataFormat, Simplex3dAlgorithm.noise, Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh,
+    Simplex3dEngine.core, Simplex3dEngine.sceneGraph, Simplex3dEngine.renderer,
+    Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.default
+  ) dependsOn(dummyProjectToFixSbt)
 }
 
 

@@ -81,7 +81,7 @@ object Simplex3dData extends Build {
     id = "doc-data",
     base = file("Simplex3dData"),
     settings = buildSettings ++ Seq (
-      target := new File("target/data"),
+      target := new File("target/data/doc"),
       publish := {},
       publishLocal := {}
     )
@@ -94,7 +94,7 @@ object Simplex3dData extends Build {
       name := "simplex3d-data-test",
       description := "Data Binding API, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
-      target := new File("target/data"),
+      target := new File("target/data/test"),
       libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
       scalaSource in Compile <<= baseDirectory(_ / "none"),
       scalaSource in Test <<= baseDirectory(_ / "src"),

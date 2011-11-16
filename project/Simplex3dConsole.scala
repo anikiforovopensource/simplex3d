@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
 import sbt._
 import Keys._
 
@@ -24,7 +25,7 @@ object Simplex3dConsole extends Build {
   
   val buildSettings = Simplex3d.buildSettings ++ Seq (
     version := "0.5-SNAPSHOT",
-    startYear := Some(2011),
+    startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
 
@@ -32,3 +33,4 @@ object Simplex3dConsole extends Build {
   val extensionFilter = new WorkingFilter("simplex3d/console/extension/.*")
   val exampleFilter = new WorkingFilter("example/.*")
 }
+*/

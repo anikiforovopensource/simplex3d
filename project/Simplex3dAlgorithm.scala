@@ -93,7 +93,7 @@ object Simplex3dAlgorithm extends Build {
     id = "doc-algorithm",
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq (
-      target := new File("target/algorithm"),
+      target := new File("target/algorithm/doc"),
       publish := {},
       publishLocal := {}
     )

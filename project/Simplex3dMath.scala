@@ -52,7 +52,7 @@ object Simplex3dMath extends Build {
       includeFilter := coreFilter && Simplex3d.codeFilter,
       excludeFilter := floatFilter || doubleFilter
     )
-  ) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  )
   
   lazy val float = Project(
     id = "math-float",
@@ -81,10 +81,10 @@ object Simplex3dMath extends Build {
     id = "doc-math",
     base = file("Simplex3dMath"),
     settings = buildSettings ++ Seq (
-      target := new File("target/math"),
+      target := new File("target/math/doc"),
       excludeFilter := "*",
       sourceGenerators in Compile <+= scalaSource in Compile map { src => {
-        StripSwizzling.stripCopy(src, new File("target/math/scaladoc-src"))
+        StripSwizzling.stripCopy(src, new File("target/math/doc/scaladoc-src"))
       }},
       publish := {},
       publishLocal := {}
@@ -98,7 +98,7 @@ object Simplex3dMath extends Build {
       name := "simplex3d-math-test",
       description := "Vector Math DSL, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
-      target := new File("target/math"),
+      target := new File("target/math/test"),
       libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
       scalaSource in Compile <<= baseDirectory(_ / "none"),
       scalaSource in Test <<= baseDirectory(_ / "src"),

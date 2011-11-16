@@ -128,7 +128,7 @@ object Simplex3dEngine extends Build {
     id = "doc-engine",
     base = file("Simplex3dEngine"),
     settings = buildSettings ++ Seq (
-      target := new File("target/engine"),
+      target := new File("target/engine/doc"),
       excludeFilter := testFilter,
       publish := {},
       publishLocal := {}
@@ -145,7 +145,7 @@ object Simplex3dEngine extends Build {
     settings = buildSettings ++ Seq (
       name := "simplex3d-engine-test",
       description := "Simplex3D Engine Interactive Tests.",
-      target := new File("target/engine"),
+      target := new File("target/engine/test"),
       scalaSource in Compile <<= baseDirectory(_ / "Simplex3dEngine/src"),
       includeFilter := testFilter && Simplex3d.codeFilter,
       fork := true,

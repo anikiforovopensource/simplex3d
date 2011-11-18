@@ -1,5 +1,5 @@
 /*
- * Simplex3d build script.
+ * Simplex3d Build Script
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ object Simplex3dData extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, float, double, format) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  ) aggregate(core, float, double, format)
   
   lazy val core = Project(
     id = "data-core",

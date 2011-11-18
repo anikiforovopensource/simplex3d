@@ -1,5 +1,5 @@
 /*
- * Simplex3d build script.
+ * Simplex3d Build Script
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ object Simplex3dAlgorithm extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(intersection, mesh, noise) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  ) aggregate(intersection, mesh, noise)
   
   lazy val intersection = Project(
     id = "algorithm-intersection",

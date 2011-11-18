@@ -8,6 +8,8 @@ Simplex3d Project is using a single SBT build script to manage all of its' sub-p
 
 ***** SBT sub-project layout *****
 
+root
+
   math
     math-core
     math-double
@@ -15,9 +17,9 @@ Simplex3d Project is using a single SBT build script to manage all of its' sub-p
   data
     data-core
     data-double
+    data-format
     
   algorithm
-    data-format
     algorithm-intersection
     algorithm-mesh
     algorithm-noise
@@ -73,9 +75,7 @@ Before you start, install ScalaIDE and IvyDE plugins.
 This guide assumes you have checked out "trunk" from the SVN and renamed it to "Simplex3d".
 
 1) Publish engine dependencies into local repository:
-     sbt ";project root; publish-local"
-   And due to an sbt bug you have to add this useless dependency:
-     sbt ";project sbt-fix; publish-local"
+     sbt ";project root;publish-local"
 2) Make a new Scala project in Eclipse.
 3) Set the src directory of the Eclipse project to point to "Simplex3d/Simplex3dEngine/src".
 4) Setup IvyDE using provided ivy.xml and ivysettings.xml.

@@ -1,5 +1,5 @@
 /*
- * Simplex3d build script.
+ * Simplex3d Build Script
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ object Simplex3dEngine extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, sceneGraph, renderer, backendOpengl, backendLwjgl, default) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  ) aggregate(core, sceneGraph, renderer, backendOpengl, backendLwjgl, default)
   
   lazy val core = Project(
     id = "engine-core",
@@ -161,5 +161,8 @@ object Simplex3dEngine extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(core, sceneGraph, renderer, backendOpengl, backendLwjgl, default, Simplex3dAlgorithm.noise, Simplex3dAlgorithm.mesh)
+  ) dependsOn(
+    core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
+    Simplex3dAlgorithm.noise, Simplex3dAlgorithm.mesh
+  )
 }

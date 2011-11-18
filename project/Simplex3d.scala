@@ -1,5 +1,5 @@
 /*
- * Simplex3d build script.
+ * Simplex3d Build Script
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,22 +30,9 @@ object Simplex3d extends Build {
     organization := "org.simplex3d",
     homepage := Some(new URL("http://www.simplex3d.org/")),
     scalaSource in Compile <<= baseDirectory(_ / "src"),
+    unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),
     scalacOptions += "-deprecation",
     maxErrors := 20
-  )
-  
-  
-  // SBT bug: projects have to depend on something to generate docs properly.
-  lazy val dummyProjectToFixSbt = Project(
-    id = "sbt-fix",
-    base = file("."),
-    settings = buildSettings ++ Seq (
-      name := "dummy-project-to-fix-sbt",
-      target := new File("target/sbt-fix"),
-      excludeFilter := "*"/*,
-      publish := {},
-      publishLocal := {}*/
-    )
   )
   
   lazy val root = Project(
@@ -57,12 +44,8 @@ object Simplex3d extends Build {
       publishLocal := {}
     )
   ) aggregate(
-    Simplex3dMath.core, Simplex3dMath.float, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.float, Simplex3dData.double, Simplex3dData.format,
-    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
-    Simplex3dEngine.core, Simplex3dEngine.sceneGraph, Simplex3dEngine.renderer,
-    Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.default
-  ) dependsOn(dummyProjectToFixSbt)
+    Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root
+  )
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * Simplex3d build script.
+ * Simplex3d Build Script
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ object Simplex3dMath extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, float, double) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  ) aggregate(core, float, double)
   
   lazy val core = Project(
     id = "math-core",
@@ -52,7 +52,7 @@ object Simplex3dMath extends Build {
       includeFilter := coreFilter && Simplex3d.codeFilter,
       excludeFilter := floatFilter || doubleFilter
     )
-  ) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  )
   
   lazy val float = Project(
     id = "math-float",
@@ -83,13 +83,13 @@ object Simplex3dMath extends Build {
     settings = buildSettings ++ Seq (
       target := new File("target/math/doc"),
       excludeFilter := "*",
-      sourceGenerators in Compile <+= scalaSource in Compile map { src => {
-        StripSwizzling.stripCopy(src, new File("target/math/doc/scaladoc-src"))
-      }},
+      sourceGenerators in Compile <+= scalaSource in Compile map { src =>
+        StripSwizzling.stripCopy(src, new File("target/math/doc/modified-src"))
+      },
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(Simplex3d.dummyProjectToFixSbt)
+  )
   
   lazy val test = Project(
     id = "test-math",

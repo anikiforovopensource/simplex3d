@@ -26,34 +26,14 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex.functions._
+import MatConstants._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 class Mat3x2dTest extends FunSuite {
-  val (m00, m10, m20, m30) = (1d, 2d, 3d, 4d)
-  val (m01, m11, m21, m31) = (5d, 6d, 7d, 8d)
-  val (m02, m12, m22, m32) = (9d, 10d, 11d, 12d)
-  val (m03, m13, m23, m33) = (13d, 14d, 15d, 16d)
-
-  val (f00, f10, f20, f30) = (1f+1e-5f, 2f+1e-5f, 3f+1e-5f, 4f+1e-5f)
-  val (f01, f11, f21, f31) = (5f+1e-5f, 6f+1e-5f, 7f+1e-5f, 8f+1e-5f)
-  val (f02, f12, f22, f32) = (9f+1e-5f, 10f+1e-5f, 11f+1e-5f, 12f+1e-5f)
-  val (f03, f13, f23, f33) = (13f+1e-5f, 14f+1e-5f, 15f+1e-5f, 16f+1e-5f)
-
-  val (d00, d10, d20, d30) = (1+1e-14, 2+1e-14, 3+1e-14, 4+1e-14)
-  val (d01, d11, d21, d31) = (5+1e-14, 6+1e-14, 7+1e-14, 8+1e-14)
-  val (d02, d12, d22, d32) = (9+1e-14, 10+1e-14, 11+1e-14, 12+1e-14)
-  val (d03, d13, d23, d33) = (13+1e-14, 14+1e-14, 15+1e-14, 16+1e-14)
-
-  val M = Mat4(
-    m00, m10, m20, m30,
-    m01, m11, m21, m31,
-    m02, m12, m22, m32,
-    m03, m13, m23, m33
-  )
-
+  
   test("Clone") {
     var t: ReadMat3x2 = Mat3x2(5)
     assert(t.clone() ne t)

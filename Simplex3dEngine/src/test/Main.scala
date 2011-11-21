@@ -28,6 +28,7 @@ import simplex3d.data.double._
 import simplex3d.algorithm.noise._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
+import simplex3d.engine.graphics.pluggable._
 import simplex3d.engine.renderer._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._

@@ -53,7 +53,7 @@ trait BasicApp extends App with backend.lwjgl.App with scala.App {
     "World",
     sceneGraphSettings,
     new Camera("World Camera"),
-    new renderer.TechniqueManager
+    new graphics.pluggable.TechniqueManager
   )
   
   protected val assetManager = new AssetManager {

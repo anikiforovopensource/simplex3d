@@ -19,7 +19,7 @@
  */
 
 package simplex3d.engine
-package renderer
+package graphics.pluggable
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
@@ -59,7 +59,7 @@ sealed abstract class Shader {
     }
   }
   
-  abstract class VaryingBlock private[renderer] (val name: String, registry: ArrayBuffer[VaryingBlock]) {
+  abstract class VaryingBlock private[pluggable] (val name: String, registry: ArrayBuffer[VaryingBlock]) {
     checkState()
     registry += this
     
@@ -71,7 +71,7 @@ sealed abstract class Shader {
       varying("", name)
     }
     
-    private[renderer] var _declarations = new ArrayBuffer[VaryingDeclaraion]
+    private[pluggable] var _declarations = new ArrayBuffer[VaryingDeclaraion]
     val declarations = new ReadSeq(_declarations)
   }
   
@@ -100,8 +100,8 @@ sealed abstract class Shader {
   private var _uniformsDependencies = new ArrayBuffer[UniformDeclaraion]
   private var _functions = new ArrayBuffer[Function]
   
-  private[renderer] var isRegistered = false
-  private[renderer] def checkState() {
+  private[pluggable] var isRegistered = false
+  private[pluggable] def checkState() {
     if (isRegistered) throw new IllegalStateException("Modifying shader after it has been registered.")
   }
   

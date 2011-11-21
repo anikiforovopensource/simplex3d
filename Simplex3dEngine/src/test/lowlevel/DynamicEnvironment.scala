@@ -320,7 +320,7 @@ package testenv {
   
   
   final class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G) extends graphics.TechniqueManager[G] {
-    val passManager = new renderer.PassManager[G]
+    val passManager = new graphics.pluggable.PassManager[G]
     
     val vertexShader = new Shader(Shader.Vertex, """
       uniform mat4 se_modelViewProjectionMatrix;

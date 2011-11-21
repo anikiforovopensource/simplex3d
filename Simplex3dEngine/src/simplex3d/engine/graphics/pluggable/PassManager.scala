@@ -19,7 +19,7 @@
  */
 
 package simplex3d.engine
-package renderer
+package graphics.pluggable
 
 import simplex3d.math._
 import simplex3d.engine.util._

@@ -19,7 +19,7 @@
  */
 
 package simplex3d.engine
-package renderer
+package graphics.pluggable
 
 import scala.collection._
 import simplex3d.engine.util._
@@ -289,7 +289,7 @@ class Branch
   (val name: String, val subBranches: Set[String], val requiredProperties: Set[String])
   (val shaders: graphics.Shader*)
 {
-  private[renderer] var requiredGeometry: Array[Int] = _
-  private[renderer] var requiredMaterial: Array[Int] = _
-  private[renderer] var requiredEnvironment: Array[Int] = _
+  private[pluggable] var requiredGeometry: Array[Int] = _
+  private[pluggable] var requiredMaterial: Array[Int] = _
+  private[pluggable] var requiredEnvironment: Array[Int] = _
 }

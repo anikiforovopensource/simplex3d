@@ -78,9 +78,9 @@ object Simplex3dConsole extends Build {
     settings = buildSettings ++ Seq (
       target := new File("target/console/example"),
       includeFilter := exampleFilter && Simplex3d.codeFilter,
-      packageBin in Compile ~= { p =>
-        // package example sources instead of classfiles
-        p
+      packageBin in Compile <<= (scalaSource in Compile, packageBin in Compile) map { (src, dest) => //XXX also copy sources int /classes dir
+        Jar.create(dest, new FileSet(src, List("""example/.*\.scala""")) :: Nil)
+        dest
       }
     )
   ) dependsOn(
@@ -89,6 +89,11 @@ object Simplex3dConsole extends Build {
     Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
     Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
+  
+  
+  val keystore = InputKey[Unit]("keystore")
+  var keystoreAlias = ""
+  var keystorePass = ""
   
   lazy val webstart = Project(
     id = "console-webstart",
@@ -99,9 +104,97 @@ object Simplex3dConsole extends Build {
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       unmanagedJars in Compile <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
       excludeFilter := "*",
-      packageBin in Compile ~= { p =>
-        println("WBPKG")
-        p
+      keystore <<= inputTask { argTask =>
+        argTask map { args =>
+          require(args.length == 2, "Must enter alias and pass separated by space.")
+          keystoreAlias = args(0)
+          keystorePass = args(1)
+        }
+      },
+      packageBin in Compile <<= (
+        baseDirectory, target,
+        dependencyClasspath in Compile,
+        packageBin in Compile
+      ) map {
+        (base, target, cp, jar) =>
+      
+      
+        println("Building web-start jars...")
+        
+        val fileSets = cp.map(a => new FileSet(a.data))
+
+        val (scalaSet, rest1) = fileSets.partition(_.src.getName.startsWith("scala-"))
+        val (simplexSet, rest2) = rest1.partition { f =>
+          val ap = f.src.getAbsolutePath
+          ap.contains("/target/math/") ||
+          ap.contains("/target/data/") ||
+          ap.contains("/target/algorithm/") ||
+          ap.contains("/target/console/extension")
+        }
+        
+        val mainSet =
+          new FileSet(new File(base, "src"), List("""example/.*\.scala""")) ::
+          rest2.filter(!_.src.getAbsolutePath.contains("/target/console/example/")).toList
+        
+        val scalaDeps = new File(target, "console-ws-scala-deps.jar")
+        val simplexDeps = new File(target, "console-ws-simplex3d-deps.jar")
+        val main = new File(target, "console-ws-main.jar")
+        
+        Jar.create(scalaDeps, scalaSet)
+        Jar.create(simplexDeps, simplexSet)
+        Jar.create(main, mainSet)
+        val jars = scalaDeps.getAbsolutePath :: simplexDeps.getAbsolutePath :: main.getAbsolutePath :: Nil
+        
+        val keystore = new File(base, "keystore.local")
+        
+        val tempLog = java.io.File.createTempFile("pack200", ".log")
+        tempLog.deleteOnExit()
+        
+        
+        println("Repacking web-start jars...")
+        
+        for (jar <- jars) { ("pack200 --repack --log-file=" + tempLog.getAbsolutePath + " " + jar) ! }
+        
+        
+        println("Signing web-start jars...")
+        
+        for (jar <- jars) {
+          val cmd =
+            "jarsigner" +
+            " -keystore " + keystore +
+            " -storepass " + keystorePass +
+            " -keypass " + keystorePass +
+            " " + jar +
+            " " + keystoreAlias
+          cmd !
+        }
+        
+        
+        println("Compressing web-start jars...")
+        
+        for (jar <- jars) {
+          val cmd =
+            "pack200" +
+            " --log-file=" + tempLog.getAbsolutePath +
+            " --deflate-hint=true" +
+            " --effort=9" +
+            " " + jar + ".pack.gz" +
+            " " + jar
+          cmd !
+        }
+        
+        
+        println("Copying extra files...")
+        
+        IO.copyFile(base / "simplex3d-console.jnlp", target / "simplex3d-console.jnlp")
+        IO.copyFile(base / "simplex3d-console.jnlp", target / "simplex3d-console.jnlp")
+        IO.copyFile(base / "simplex3d-icon.png", target / "simplex3d-icon.png")
+        
+        
+        println("Done.")
+        
+        jar.delete()
+        jar
       }
     )
   ) dependsOn(core, extension, example)
@@ -112,8 +205,126 @@ import java.io.{ File => IoFile, _ }
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.zip._
+import java.util.regex._
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.HashMap
+
+
+class FileSet(val src: File, val includePatterns: List[String] = List(".*"), val excludePatterns: List[String] = Nil) {
+  private val included = includePatterns.map(r => Pattern.compile(r))
+  private val excluded = {
+    val patterns = excludePatterns.map(r => Pattern.compile(r))
+    if (src.getName.toLowerCase.endsWith(".jar"))
+      Pattern.compile("""META-INF/.*""", Pattern.CASE_INSENSITIVE) :: patterns 
+    else
+      patterns
+  }
+  
+  private def keep(path: String) :Boolean = {
+    val include = included.find(_.matcher(path).matches).isDefined
+    val exclude = if (include) excluded.find(_.matcher(path).matches).isDefined else true
+    
+    include && !exclude
+  }
+  
+  
+  def foreach(function: (String, () => InputStream) => Unit) {
+    if (!src.exists) return
+      
+    if (src.isDirectory) dirForeach(function)
+    else zipForeach(function)
+  }
+  
+  private def dirForeach(function: (String, () => InputStream) => Unit) {
+    val base = src.toURI
+    
+    def recurse(dir: File) {
+      for (entry <- dir.listFiles) {
+        entry match {
+          
+          case dir if dir.isDirectory =>
+            recurse(dir)
+            
+          case file =>
+            val path = base.relativize(file.toURI).getPath
+            if (keep(path)) {
+               var in: InputStream = null
+               try {
+                 val openStream = () => { if (in == null) in = new BufferedInputStream(new FileInputStream(file)); in }
+                 function(path, openStream)
+               }
+               finally {
+                 if (in != null) in.close()
+               }
+            }
+        }
+      }
+    }
+    
+    recurse(src)
+  }
+  
+  private def zipForeach(function: (String, () => InputStream) => Unit) {
+    var zipIn: ZipInputStream = null
+    try {
+      zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(src)))
+      val managedIn = new FilterInputStream(zipIn) { override def close() {} }
+      val openStream = () => managedIn
+      
+      var entry = zipIn.getNextEntry(); while (entry != null) {
+        if (!entry.isDirectory && keep(entry.getName)) function(entry.getName, openStream)
+        
+        entry = zipIn.getNextEntry()
+      }
+    }
+    finally {
+      if (zipIn != null) zipIn.close()
+    }
+  }
+}
+
+
+object Jar {
+  val DefaultManifest = "Manifest-Version: 1.0\n\n"
+  
+  private def loadFile(file: File) :String = {
+    val source = scala.io.Source.fromFile(file)
+    val res = source.mkString
+    source.close ()
+    res
+  }
+  
+  private final val buff = new Array[Byte](1024)
+  private def copy(src: InputStream, dest: OutputStream) {
+    var read = 0; while (read >= 0) {
+      dest.write(buff, 0, read)
+      read = src.read(buff)
+    }
+  }
+  
+  def create(dest: File, fileSets: Seq[FileSet], manifest: File = null) {
+    val manifestString = if (manifest == null) DefaultManifest else loadFile(manifest)
+    
+    var zip: ZipOutputStream = null
+    try {
+      zip = new ZipOutputStream(new FileOutputStream(dest))
+      
+      zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"))
+      zip.write(manifestString.getBytes())
+      zip.closeEntry()
+      
+      for (fileSet <- fileSets) {
+        fileSet.foreach { (path, openStream) =>
+          zip.putNextEntry(new ZipEntry(path))
+          copy(openStream(), zip)
+        }
+      }
+    }
+    finally {
+      if (zip != null) zip.close()
+    }
+  }
+}
 
 
 object Indexer {

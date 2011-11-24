@@ -36,16 +36,10 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="scalaExamples">
+        <Menu class="javax.swing.JMenu" name="exampleMenu">
           <Properties>
             <Property name="mnemonic" type="int" value="69"/>
-            <Property name="text" type="java.lang.String" value="  Scala Examples "/>
-          </Properties>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="simplex3dExamples">
-          <Properties>
-            <Property name="mnemonic" type="int" value="88"/>
-            <Property name="text" type="java.lang.String" value=" Simplex3D Examples  "/>
+            <Property name="text" type="java.lang.String" value="Examples"/>
           </Properties>
         </Menu>
         <Menu class="javax.swing.JMenu" name="settingsMenu">

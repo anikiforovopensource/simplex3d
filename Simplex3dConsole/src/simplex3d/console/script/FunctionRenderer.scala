@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.console.extension
+package simplex3d.console.script
 
 import java.util.concurrent.ExecutorService
 
@@ -37,7 +37,7 @@ trait FunctionRenderer {
 }
 
 
-private[extension] object FunctionRenderer {
+private[script] object FunctionRenderer {
 
   private class Painter (
     function: (inVec2i, Double, inVec2) => ReadVec3,

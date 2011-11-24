@@ -45,7 +45,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         runMenuItem.setAction(consolePanel.getRunAction());
         resetInterpreterMenuItem.setAction(consolePanel.getResetInterpreterAction());
 
-        Examples.populateMenus(consolePanel.getTextComponent(), scalaExamples, simplex3dExamples);
+        Examples.populateMenu(consolePanel.getTextComponent(), exampleMenu);
     }
 
     public ConsolePanel getConsolePanel() {
@@ -68,8 +68,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         runMenuItem = new javax.swing.JMenuItem();
         resetInterpreterMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        scalaExamples = new javax.swing.JMenu();
-        simplex3dExamples = new javax.swing.JMenu();
+        exampleMenu = new javax.swing.JMenu();
         settingsMenu = new javax.swing.JMenu();
         sandboxMenuItem = new javax.swing.JCheckBoxMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -112,13 +111,9 @@ public class ConsoleFrame extends javax.swing.JFrame {
 
         mainMenuBar.add(fileMenu);
 
-        scalaExamples.setMnemonic('E');
-        scalaExamples.setText("  Scala Examples ");
-        mainMenuBar.add(scalaExamples);
-
-        simplex3dExamples.setMnemonic('X');
-        simplex3dExamples.setText(" Simplex3D Examples  ");
-        mainMenuBar.add(simplex3dExamples);
+        exampleMenu.setMnemonic('E');
+        exampleMenu.setText("Examples");
+        mainMenuBar.add(exampleMenu);
 
         settingsMenu.setMnemonic('S');
         settingsMenu.setText("Settings");
@@ -193,7 +188,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
 
             splash.setStatusText("rebuilding jars");
             DepsManager.resolveDeps();
-
+            
             splash.setStatusText("preloading the interpreter");
             final SimplexInterpreter interpreter = new SimplexInterpreter();
 
@@ -240,6 +235,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel consolePanel;
+    private javax.swing.JMenu exampleMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
@@ -247,8 +243,6 @@ public class ConsoleFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem resetInterpreterMenuItem;
     private javax.swing.JMenuItem runMenuItem;
     private javax.swing.JCheckBoxMenuItem sandboxMenuItem;
-    private javax.swing.JMenu scalaExamples;
     private javax.swing.JMenu settingsMenu;
-    private javax.swing.JMenu simplex3dExamples;
     // End of variables declaration//GEN-END:variables
 }

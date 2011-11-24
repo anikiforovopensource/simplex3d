@@ -19,7 +19,7 @@
  */
 
 package simplex3d.console
-package extension
+package script
 
 import java.awt._
 import java.awt.event.ActionEvent
@@ -40,35 +40,6 @@ import conversion.Double._
  */
 object ImageUtils extends ImageUtils
 
-object ImageUtilsPrivileged extends ImageUtils {
-
-  override protected def showBufferedImage(title: String, img: BufferedImage) {
-    PrivilegedRunner.queue {
-      super.showBufferedImage(title, img)
-    }
-  }
-
-  override protected def renderFunction
-    (animate: Boolean)
-    (title: String, dims: inVec2i)
-    (function: (inVec2i, Double, inVec2) => ReadVec3)
-  {
-    PrivilegedRunner.queue {
-      super.renderFunction(animate)(title, dims)(function)
-    }
-  }
-
-  override protected def renderLines
-    (animate: Boolean)
-    (title: String, background: inVec3, dims: inVec2i)
-    (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
-  {
-    PrivilegedRunner.queue {
-      super.renderLines(animate)(title, background, dims)(function)
-    }
-  }
-}
-
 
 class ImageUtils {
 
@@ -76,10 +47,10 @@ class ImageUtils {
   val DefaultBackground = ConstVec3(0)
 
 
-  private[extension] def rgb(c: inVec3) :Int = {
+  private[script] def rgb(c: inVec3) :Int = {
     ((toUByte(c.r) & 0xFF) << 16) | ((toUByte(c.g) & 0xFF) << 8) | ((toUByte(c.b) & 0xFF))
   }
-  private[extension] def rgb(j: Int, d: inContiguous[SInt, UByte]) :Int = {
+  private[script] def rgb(j: Int, d: inContiguous[SInt, UByte]) :Int = {
     (d(j) << 16) | (d(j + 1) << 8) | (d(j + 2))
   }
 

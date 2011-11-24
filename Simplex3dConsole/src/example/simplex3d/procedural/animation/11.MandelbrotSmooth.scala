@@ -3,7 +3,7 @@ package example.simplex3d.procedural.animation
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.console.extension.ImageUtils._
+import simplex3d.console.script.ImageUtils._
 
 
 /**

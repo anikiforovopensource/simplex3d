@@ -35,14 +35,13 @@ object Examples {
   private[this] val ExtractName = """[\d]*[\.]?(.*)""".r
 
 
-  def populateMenus(txt: JTextArea, scalaMenu: JMenu, simplex3dMenu: JMenu) {
+  def populateMenu(txt: JTextArea, exampleMenu: JMenu) {
     val is = getClass.getClassLoader.getResourceAsStream("simplex3d/console/examples.index")
     val index = scala.io.Source.fromInputStream(is).getLines().toList
     is.close()
 
     val root = new Node(null, true)
-    root.addChild(new Node("scala", true))
-    root.addChild(new Node("simplex3d", true))
+    root.addChild(new Node("example", true))
 
     for (entry <- index) { root.addPath(entry) }
     root.sort()
@@ -62,8 +61,7 @@ object Examples {
       }
     }
 
-    mkMenus(root.findChild("scala").get, scalaMenu)
-    mkMenus(root.findChild("simplex3d").get, simplex3dMenu)
+    mkMenus(root.findChild("example").get, exampleMenu)
   }
 
   private[this] def mkName(file: String) = {
@@ -74,7 +72,7 @@ object Examples {
   }
 
   def getExample(path: String) :String = {
-    val fullPath = "example/" + path
+    val fullPath = "" + path
     var is = getClass.getClassLoader.getResourceAsStream(fullPath)
     val fileName = path.drop(path.lastIndexOf("/") + 1)
 

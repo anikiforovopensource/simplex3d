@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.console.extension
+package simplex3d.console.script
 
 import java.util.concurrent.{ConcurrentLinkedQueue => Queue}
 import java.security.AccessControlException
@@ -30,7 +30,7 @@ import scala.concurrent.ops.spawn
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[extension] object ThreadingTest {
+private[script] object ThreadingTest {
 
   def main(args: Array[String]) {
     var start = 0L
@@ -124,11 +124,11 @@ private[extension] object ThreadingTest {
 }
 
 
-private[extension] abstract class Chunk {
+private[script] abstract class Chunk {
   def run() :Unit
 }
 
-private[extension] abstract class Job(
+private[script] abstract class Job(
   private val threadPool: ExecutorService = null,
   private val exceptionHandler: Throwable => Unit
 ) {

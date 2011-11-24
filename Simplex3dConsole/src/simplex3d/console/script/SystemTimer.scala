@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.console.extension
+package simplex3d.console.script
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[extension] final class SystemTimer {
+private[script] final class SystemTimer {
   private[this] var start: Long = _
   private[this] var last: Long = _
 

@@ -35,9 +35,14 @@ private[console] object PrivilegedRunner {
   def queue(task: => Unit) { taskQueue.offer(() => task) }
 
   private[console] def runQueued() {
-    var task = taskQueue.poll(); while (task != null) {
-      task()
-      task = taskQueue.poll()
+    try {
+      var task = taskQueue.poll(); while (task != null) {
+        task()
+        task = taskQueue.poll()
+      }
+    }
+    catch {
+      case t: Throwable => t.printStackTrace; throw t
     }
   }
 }

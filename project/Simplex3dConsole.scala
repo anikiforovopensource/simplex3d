@@ -32,42 +32,80 @@ object Simplex3dConsole extends Build {
     publishLocal := {}
   )
 
-  val packageWebstart = TaskKey[Unit]("package-webstart", "Generates all the files necessary for webstart deployment.")
+  // Use this command to generate keys: keytool -genkeypair -keystore keystore.local -alias SOMEALIAS
+  // Then move keystore.local to Simplex3dConsole/keystore.local
+  val keystoreCredentials = InputKey[Unit]("keystore-credentials")
+  var keystoreAlias = ""
+  var keystorePass = ""
+  
+  
+  def extractFileSets(classes: File, cp: Seq[Attributed[File]]) = {
+    val fileSets = cp.map(a => new FileSet(a.data))
+
+    val (scalaFiles, rest1) = fileSets.partition(_.src.getName.startsWith("scala-"))
+    val (simplexFiles, rest2) = rest1.partition { f =>
+      val ap = f.src.getAbsolutePath
+      ap.contains("/target/math/") ||
+      ap.contains("/target/data/") ||
+      ap.contains("/target/algorithm/") ||
+      ap.contains("/target/console/script")
+    }
+    
+    val (rest3, mainFiles) = rest2.partition{ f =>
+      val ap = f.src.getAbsolutePath
+      ap.contains("/target/console/example/")
+    }
+    
+    val exampleFiles = rest3.map(fs => new FileSet(fs.src, List(""".*\.scala""")))
+    
+    val extensionFileset = new FileSet(classes, List("""simplex3d/console/extension/.*"""))
+    (scalaFiles, simplexFiles ++ Seq(extensionFileset), mainFiles, exampleFiles)
+  }
   
   
   val coreFilter = new WorkingFilter("src/simplex3d/console/.*")
   val extensionFilter = new WorkingFilter("src/simplex3d/console/extension/.*")
+  val scriptFilter = new WorkingFilter("src/simplex3d/console/script/.*")
   val exampleFilter = new WorkingFilter("src/example/.*")
   
-  lazy val root = Project(
-    id = "console",
-    base = file("."),
-    settings = buildSettings ++ Seq (
-      target := new File("target/console")
-    )
-  ) aggregate(core, extension, example)
   
   lazy val core = Project(
     id = "console-core",
     base = file("Simplex3dConsole"),
     settings = buildSettings ++ Seq (
       target := new File("target/console/core"),
+      mainClass := Some("simplex3d.console.ConsoleFrame"),
+      fork in run := true,
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       unmanagedJars in Compile <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
-      includeFilter := coreFilter && Simplex3d.codeFilter,
-      excludeFilter := extensionFilter
+      includeFilter := (coreFilter || extensionFilter) && Simplex3d.codeFilter,
+      excludeFilter := scriptFilter,
+      
+      compile in Compile <<= (scalaSource in Compile, classDirectory in Compile, dependencyClasspath in Compile, compile in Compile) map { (src, classes, cp, compileRes) =>
+        val (scalaFiles, simplexFiles, mainFiles, exampleFiles) = extractFileSets(classes, cp)
+        Indexer.index(
+          classes / "simplex3d/console/deps.version",
+          classes / "simplex3d/console/deps.index", scalaFiles ++ simplexFiles,
+          classes / "simplex3d/console/examples.index", exampleFiles
+        )
+        
+        // XXX: port back to ant...
+        IO.copyFile(src / "simplex3d/console/simplex3d-logo.png", classes / "simplex3d/console/simplex3d-logo.png")
+        
+        compileRes
+      }
     )
-  )
+  ) dependsOn(script, example)
   
-  lazy val extension: Project = Project(
-    id = "console-extnsion",
+  
+  lazy val script: Project = Project(
+    id = "console-script",
     base = file("Simplex3dConsole"),
     settings = buildSettings ++ Seq (
-      target := new File("target/console/extension"),
-      includeFilter := extensionFilter && Simplex3d.codeFilter
+      target := new File("target/console/script"),
+      includeFilter := scriptFilter && Simplex3d.codeFilter
     )
   ) dependsOn(
-    core,
     Simplex3dMath.core, Simplex3dMath.double,
     Simplex3dData.core, Simplex3dData.double, Simplex3dData.format
   )
@@ -78,22 +116,28 @@ object Simplex3dConsole extends Build {
     settings = buildSettings ++ Seq (
       target := new File("target/console/example"),
       includeFilter := exampleFilter && Simplex3d.codeFilter,
-      packageBin in Compile <<= (scalaSource in Compile, packageBin in Compile) map { (src, dest) => //XXX also copy sources int /classes dir
+      
+      compile in Compile <<= (baseDirectory, scalaSource in Compile, classDirectory in Compile, compile in Compile) map {
+      (base, src, classes, compileRes) =>
+        val exampleFiles = new FileSet(new File(base, "src"), List("""example/.*\.scala"""))
+        exampleFiles foreach { (path, openStream) =>
+          Util.copy(openStream(), classes / path)
+        }
+        compileRes
+      },
+      
+      packageBin in Compile <<= (scalaSource in Compile, packageBin in Compile) map { (src, dest) =>
         Jar.create(dest, new FileSet(src, List("""example/.*\.scala""")) :: Nil)
         dest
       }
     )
   ) dependsOn(
-    extension,
+    script,
     Simplex3dMath.core, Simplex3dMath.double,
     Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
     Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
-  
-  
-  val keystore = InputKey[Unit]("keystore")
-  var keystoreAlias = ""
-  var keystorePass = ""
+
   
   lazy val webstart = Project(
     id = "console-webstart",
@@ -104,48 +148,34 @@ object Simplex3dConsole extends Build {
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       unmanagedJars in Compile <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
       excludeFilter := "*",
-      keystore <<= inputTask { argTask =>
+      
+      keystoreCredentials <<= inputTask { argTask =>
         argTask map { args =>
           require(args.length == 2, "Must enter alias and pass separated by space.")
           keystoreAlias = args(0)
           keystorePass = args(1)
         }
       },
-      packageBin in Compile <<= (
-        baseDirectory, target,
-        dependencyClasspath in Compile,
-        packageBin in Compile
-      ) map {
-        (base, target, cp, jar) =>
+      
+      packageBin in Compile <<= (baseDirectory, target, classDirectory in Compile, dependencyClasspath in Compile, packageBin in Compile) map {
+        (base, target, classes, cp, jar) =>
+        
+        require(!keystoreAlias.isEmpty && !keystorePass.isEmpty, "Run keystore-credentials first.")
       
       
         println("Building web-start jars...")
         
-        val fileSets = cp.map(a => new FileSet(a.data))
-
-        val (scalaSet, rest1) = fileSets.partition(_.src.getName.startsWith("scala-"))
-        val (simplexSet, rest2) = rest1.partition { f =>
-          val ap = f.src.getAbsolutePath
-          ap.contains("/target/math/") ||
-          ap.contains("/target/data/") ||
-          ap.contains("/target/algorithm/") ||
-          ap.contains("/target/console/extension")
-        }
+        val (scalaFiles, simplexFiles, mainFiles, exampleFiles) = extractFileSets(classes, cp)
         
-        val mainSet =
-          new FileSet(new File(base, "src"), List("""example/.*\.scala""")) ::
-          rest2.filter(!_.src.getAbsolutePath.contains("/target/console/example/")).toList
         
         val scalaDeps = new File(target, "console-ws-scala-deps.jar")
         val simplexDeps = new File(target, "console-ws-simplex3d-deps.jar")
         val main = new File(target, "console-ws-main.jar")
         
-        Jar.create(scalaDeps, scalaSet)
-        Jar.create(simplexDeps, simplexSet)
-        Jar.create(main, mainSet)
-        val jars = scalaDeps.getAbsolutePath :: simplexDeps.getAbsolutePath :: main.getAbsolutePath :: Nil
-        
-        val keystore = new File(base, "keystore.local")
+        Jar.create(scalaDeps, scalaFiles)
+        Jar.create(simplexDeps, simplexFiles)
+        Jar.create(main, mainFiles ++ exampleFiles)
+        val jars = List(scalaDeps.getAbsolutePath, simplexDeps.getAbsolutePath, main.getAbsolutePath)
         
         val tempLog = java.io.File.createTempFile("pack200", ".log")
         tempLog.deleteOnExit()
@@ -153,10 +183,15 @@ object Simplex3dConsole extends Build {
         
         println("Repacking web-start jars...")
         
-        for (jar <- jars) { ("pack200 --repack --log-file=" + tempLog.getAbsolutePath + " " + jar) ! }
+        for (jar <- jars) {
+          val cmd = "pack200 --repack --log-file=" + tempLog.getAbsolutePath + " " + jar
+          require((cmd !)== 0, "Failed to repack jars.")
+        }
         
         
         println("Signing web-start jars...")
+        
+        val keystore = new File(base, "keystore.local")
         
         for (jar <- jars) {
           val cmd =
@@ -166,7 +201,7 @@ object Simplex3dConsole extends Build {
             " -keypass " + keystorePass +
             " " + jar +
             " " + keystoreAlias
-          cmd !
+          require((cmd !) == 0, "Failed to sign jars.")
         }
         
         
@@ -180,13 +215,13 @@ object Simplex3dConsole extends Build {
             " --effort=9" +
             " " + jar + ".pack.gz" +
             " " + jar
-          cmd !
+          require((cmd !) == 0, "Failed to compress jars.")
         }
         
         
         println("Copying extra files...")
         
-        IO.copyFile(base / "simplex3d-console.jnlp", target / "simplex3d-console.jnlp")
+        IO.copyFile(base / "simplex3d-console-local.jnlp", target / "simplex3d-console-local.jnlp")
         IO.copyFile(base / "simplex3d-console.jnlp", target / "simplex3d-console.jnlp")
         IO.copyFile(base / "simplex3d-icon.png", target / "simplex3d-icon.png")
         
@@ -197,7 +232,7 @@ object Simplex3dConsole extends Build {
         jar
       }
     )
-  ) dependsOn(core, extension, example)
+  ) dependsOn(core)
 }
 
 
@@ -284,6 +319,51 @@ class FileSet(val src: File, val includePatterns: List[String] = List(".*"), val
 }
 
 
+object Util {
+  private final val buff = new Array[Byte](1024*8)
+  
+  def copy(in: InputStream, dest: File) {
+    this.synchronized {
+      var out: FileOutputStream = null
+      try {
+        dest.getParentFile.mkdirs()
+        out = new FileOutputStream(dest)
+        var read = 0; while (read >= 0) {
+          out.write(buff, 0, read)
+          read = in.read(buff)
+        }
+      }
+      finally {
+        if (out != null) out.close()
+      }
+    }
+  }
+  
+  def copy(in: InputStream, out: OutputStream) {
+    this.synchronized {
+      var read = 0; while (read >= 0) {
+        out.write(buff, 0, read)
+        read = in.read(buff)
+      }
+    }
+  }
+  
+  def writeFile(file: File, contents: String) {
+    this.synchronized {
+      var out: OutputStreamWriter = null
+      try {
+        file.getParentFile.mkdirs()
+        out = new OutputStreamWriter(new FileOutputStream(file))
+        out.write(contents)
+      }
+      finally {
+        if (out != null) out.close()
+      }
+    }
+  }
+}
+
+
 object Jar {
   val DefaultManifest = "Manifest-Version: 1.0\n\n"
   
@@ -292,14 +372,6 @@ object Jar {
     val res = source.mkString
     source.close ()
     res
-  }
-  
-  private final val buff = new Array[Byte](1024)
-  private def copy(src: InputStream, dest: OutputStream) {
-    var read = 0; while (read >= 0) {
-      dest.write(buff, 0, read)
-      read = src.read(buff)
-    }
   }
   
   def create(dest: File, fileSets: Seq[FileSet], manifest: File = null) {
@@ -316,7 +388,7 @@ object Jar {
       for (fileSet <- fileSets) {
         fileSet.foreach { (path, openStream) =>
           zip.putNextEntry(new ZipEntry(path))
-          copy(openStream(), zip)
+          Util.copy(openStream(), zip)
         }
       }
     }
@@ -328,102 +400,29 @@ object Jar {
 
 
 object Indexer {
-  val DepsJars = List("build/scala-deps.jar", "build/simplex3d-deps.jar")
-
-  def main(args: Array[String]) {
+  def index(
+    timeStamp: File,
+    depsIndex: File, deps: Seq[FileSet],
+    examplesIndex: File, examples: Seq[FileSet]
+  ) {
     println("Indexing files...")
 
-    val depsIndices = for (jar <- DepsJars) yield { makeJarIndex(jar) }
-    val depsIndex = combineIndices(depsIndices)
-    val depsSum = makeSum(DepsJars, depsIndices)
-    val exampleIndex = makeExampleIndex().mkString("\n")
-
-    writeFile("build/classes/simplex3d/console/deps.index", depsIndex)
-    writeFile("build/classes/simplex3d/console/deps.sum", depsSum)
-    writeFile("build/classes/simplex3d/console/examples.index", exampleIndex)
+    Util.writeFile(timeStamp, (System.currentTimeMillis / 1000).toString)
+    Util.writeFile(depsIndex, makeIndex(deps))
+    Util.writeFile(examplesIndex, makeIndex(examples))
 
     println("Indexing complete.")
   }
 
-  def writeFile(file: String, contents: String) {
-    val out = new OutputStreamWriter(new FileOutputStream(file))
-    out.write(contents)
-    out.close()
-  }
-
-  private def makeExampleIndex() :List[String] = {
-    val baseDir = "src/example/"
-    val res = ListBuffer[String]()
-
-    def makeExampleIndexRec(dir: File, res: ListBuffer[String]) {
-      val entries = dir.listFiles
-      for (entry <- entries) {
-        if (entry.isDirectory) makeExampleIndexRec(entry, res)
-        else if (entry.getName.endsWith(".scala")) res += entry.getPath.replace(baseDir, "")
+  private def makeIndex(files: Seq[FileSet]) :String = {
+    val index = ListBuffer[String]()
+    
+    for (fileSet <- files) {
+      fileSet.foreach { (path, openStream) =>
+        index += path
       }
     }
-
-    makeExampleIndexRec(new File(baseDir), res)
-    res.toList.sorted
-  }
-
-  private def combineIndices(indices: Seq[List[String]]) :String = {
-    indices.flatten.sorted.mkString("\n")
-  }
-
-  private def makeJarIndex(jar: String) :List[String] = {
-    val zipStream = new ZipInputStream(new FileInputStream(jar))
-
-    var names = List[String]();
-    var entry = zipStream.getNextEntry()
-
-    while (entry != null) {
-      if (!entry.isDirectory && !entry.getName.startsWith("META-INF")) names = entry.getName :: names
-      entry = zipStream.getNextEntry()
-    }
-
-    zipStream.close()
-    names.sorted
-  }
-
-  private def makeSum(jars: List[String], jarIndices: Seq[List[String]]) :String = {
-    val digest = MessageDigest.getInstance("MD5")
-
-    for ((jar, index) <- jars.zip(jarIndices)) {
-      jarSum(digest, jar, index)
-    }
-
-    val sum = digest.digest()
-    new BigInteger(sum).abs.toString(16).toUpperCase
-  }
-
-  private def jarSum(digest: MessageDigest, jar: String, index: List[String]) {
-    val fileMap = new HashMap[String, Array[Byte]]()
-
-    val zipStream = new ZipInputStream(new FileInputStream(jar))
-    val buff = new Array[Byte](1024*8)
-
-    var entry = zipStream.getNextEntry(); while (entry != null) {
-      if (!entry.isDirectory) {
-        val out = new ByteArrayOutputStream()
-
-        var len = 0; while (len >= 0) {
-          len = zipStream.read(buff)
-          if (len > 0) out.write(buff, 0, len)
-        }
-
-        fileMap.put(entry.getName, out.toByteArray)
-      }
-      entry = zipStream.getNextEntry()
-    }
-    zipStream.close()
-
-    var count = 0
-    for (path <- index) {
-      val data = fileMap.get(path).get
-      count += data.length
-      digest.update(data)
-    }
-    println(jar + " size: " + count)
+    
+    index.toList.sorted.mkString("\n")
   }
 }

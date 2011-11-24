@@ -52,6 +52,7 @@ class SimplexInterpreter extends SimpleInterpreter {
 
 class SimpleInterpreter {
   protected val out = redirectSystemOut()
+  //protected val interpreterOut = new OutputStreamWriter(new ByteOutputStream()) //XXX only show interpreter output if there are problems.
   protected val flusher = new PrintWriter(out)
 
   protected val interpreter = {
@@ -59,7 +60,10 @@ class SimpleInterpreter {
     settings.usejavacp.value = false
     settings.nc.value = true
     settings.classpath.value = DepsManager.resolveDeps()
-    new IMain(settings, flusher)
+    val imain = new IMain(settings, flusher) {
+      override protected def parentClassLoader: ClassLoader = this.getClass.getClassLoader()
+    }
+    imain
   }
 
   init()

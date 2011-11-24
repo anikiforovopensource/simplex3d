@@ -2,7 +2,7 @@ package example.simplex3d.functions
 
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
-import simplex3d.console.extension.ImageUtils._
+import simplex3d.console.script.ImageUtils._
 
 
 /**

@@ -44,7 +44,7 @@ object Simplex3d extends Build {
       publishLocal := {}
     )
   ) aggregate(
-    Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root
+    Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root, Simplex3dConsole.root
   )
 }
 

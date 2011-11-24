@@ -31,6 +31,13 @@ root
     engine-backend-opengl
     engine-backend-lwjgl
     engine-default
+    
+  console
+    console-core
+      run
+    console-script
+    console-example
+    console-webstart
   
   
 Additionally there are doc and test sub-project:
@@ -43,6 +50,7 @@ Additionally there are doc and test sub-project:
   test-math
   test-data
   test-engine
+    run-main
   
   
 And two optional sub-projects:

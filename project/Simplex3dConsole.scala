@@ -69,6 +69,15 @@ object Simplex3dConsole extends Build {
   val exampleFilter = new WorkingFilter("src/example/.*")
   
   
+  lazy val root = Project(
+    id = "console",
+    base = file("."),
+    settings = buildSettings ++ Seq (
+      target := new File("target/console")
+    )
+  ) aggregate(core, script, example)
+  
+  
   lazy val core = Project(
     id = "console-core",
     base = file("Simplex3dConsole"),

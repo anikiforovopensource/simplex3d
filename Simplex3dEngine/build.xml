@@ -12,6 +12,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
     <property name="target.sbt" value="../target/${project.sbt}"/>
     
     <target depends="init" name="clean">
+        <delete dir="dist"/>
         <exec dir=".." executable="sbt" failonerror="true">
             <arg value=";project ${project.sbt};clean;project doc-${project.sbt};clean"/>
         </exec>

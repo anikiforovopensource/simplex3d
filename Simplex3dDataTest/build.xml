@@ -10,6 +10,7 @@
     <property name="project.sbt" value="test-data"/>
     
     <target depends="init" name="clean">
+        <delete dir="dist"/>
         <exec dir=".." executable="sbt" failonerror="true">
             <arg value=";project ${project.sbt};clean"/>
         </exec>

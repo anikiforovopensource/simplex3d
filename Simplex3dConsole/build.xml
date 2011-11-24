@@ -5,248 +5,40 @@
 <project name="Simplex3dConsole" default="release-all" basedir=".">
     <description>Builds, tests, and runs the project Simplex3dConsole.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
-
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="Simplex3dConsole-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
-
-    <target name="-post-compile" depends="-console-deps" >
-        <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" includes="${example.pkg}/**/*.scala"/>
+    
+    <property name="scala.ver" value="2.9.1"/>
+    <property name="project.sbt" value="console"/>
+    <property name="target.sbt" value="../target/${project.sbt}"/>
+    
+    <target depends="init" name="clean">
+        <delete dir="dist"/>
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};clean"/>
+        </exec>
+    </target>
+    
+    <target depends="init" name="jar">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};package"/>
+        </exec>
+        <copy todir="${dist.dir}" flatten="true">
+            <fileset dir="${target.sbt}" includes="**/*.jar" excludes="scala-${scala.ver}/**"/>
         </copy>
     </target>
     
-    <target name="-do-check-deps">
-        <available file="${build.dir}/scala-deps.jar" property="deps.present"/>
+    <target depends="init" name="-javadoc-build">
     </target>
-
-    <target name="-console-deps" depends="-do-check-deps" unless="deps.present">
-        <jar jarfile="${build.dir}/scala-deps.jar">
-            <zipfileset src="${scala.lib}/scala-library.jar" includes="**"/>
-            <zipfileset src="${scala.lib}/scala-compiler.jar" includes="**"/>
-        </jar>
-
-        <jar jarfile="${build.dir}/simplex3d-deps.jar">
-            <fileset dir="${build.classes.dir}" includes="${extension.pkg}/**"/>
-            <zipfileset src="${math.dir}/simplex3d-math-core.jar" includes="**"/>
-            <zipfileset src="${math.dir}/simplex3d-math-double.jar" includes="**"/>
-            <zipfileset src="${data.dir}/simplex3d-data-core.jar" includes="**"/>
-            <zipfileset src="${data.dir}/simplex3d-data-double.jar" includes="**"/>
-            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-intersection.jar" includes="**"/>
-            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-noise.jar" includes="**"/>
-            <zipfileset src="${algorithm.dir}/simplex3d-algorithm-mesh.jar" includes="**"/>
-            <zipfileset src="${algorithm.dir}/simplex3d-data-format.jar" includes="**"/>
-        </jar>
-
-        <echo level="info" message="Starting indexer." />
-        <exec dir="." executable="scala" failonerror="true">
-            <arg value="Indexer.scala"/>
+    
+    <target depends="init" name="run">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt}-core;run-main ${main.class} ${application.args}"/>
         </exec>
     </target>
     
-    <target name="-post-jar">
-        <delete dir="${release.dir}/jars" />
-        
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/jars" />
-        
-        <jar manifest="${basedir}/manifest.mf" jarfile="${release.dir}/jars/${release.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/** ${example.pkg}/**/*.scala"
-            excludes="${example.pkg}/**/*.class"/>
-        </jar>
-    </target>
-
-
-    <property name="release.dir" value="release"/>
-    <property name="web.dir" value="${release.dir}/web"/>
-    
-    <property name="release.name" value="simplex3d-console"/>
-    <property name="release.src" value="${release.dir}/Simplex3dConsole_src.zip"/>
-    <property name="release.bin" value="${release.dir}/Simplex3dConsole_bin.zip"/>
-    <property name="root.pkg" value="simplex3d/console"/>
-    <property name="example.pkg" value="example"/>
-    <property name="extension.pkg" value="${root.pkg}/extension"/>
-    
-    <property name="math.dir" value="../Simplex3dMath/release/jars"/>
-    <property name="data.dir" value="../Simplex3dData/release/jars"/>
-    <property name="algorithm.dir" value="../Simplex3dAlgorithm/release/jars"/>
-
-    <property name="keystore.location" value="keystore.local"/>
-
-
-    <target name="make-keystore">
-        <delete file="${keystore.location}" />
-        
-        <echo message="Generating a new keystore file (the old file will be replaced)..." />
-        
-        <input message="Enter the keystore password: " addproperty="keystore.storepass" />
-        <input message="Enter your alias: " addproperty="keystore.alias" />
-        <input message="Enter the keypass: " addproperty="keystore.keypass" />
-        
-        <input message="Enter 'Common Name': " addproperty="signature.commonName" />
-        <input message="Enter 'Organization Unit': " addproperty="signature.organizationUnit" />
-        <input message="Enter 'Organization': " addproperty="signature.organization" />
-        <input message="Enter 'Country Code': " addproperty="signature.countryCode" />
-  
-        <exec dir="." executable="keytool" failonerror="true">
-            <arg value="-genkeypair"/>
-            <arg value="-keystore"/><arg value="${keystore.location}" />
-            <arg value="-storepass"/><arg value="${keystore.storepass}" />
-            <arg value="-alias"/><arg value="${keystore.alias}"/>
-            <arg value="-keypass"/><arg value="${keystore.keypass}" />
-            <arg value="-dname"/><arg value="cn=${signature.commonName}, ou=${signature.organizationUnit}, o=${signature.organization}, c=${signature.countryCode}" />
+    <target depends="init" name="run-single">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt}-core;run-main ${run.class} ${application.args}"/>
         </exec>
-    </target>
-
-    <target name="release-web" depends="release-clean, init, clean, compile" >
-        <mkdir dir="${web.dir}" />
-        <mkdir dir="${dist.dir}" />
-        
-        <jar jarfile="${web.dir}/${release.name}-web.jar" manifest="manifest.mf">
-            <fileset dir="${build.classes.dir}" includes="${root.pkg}/** ${example.pkg}/**/*.scala"
-            excludes="${example.pkg}/**/*.class ${extension.pkg}/**"/>
-            <zipfileset src="${basedir}/lib/find-replace-panel.jar" includes="**"/>
-            <zipfileset src="${basedir}/lib/rsyntaxtextarea.jar" includes="**"/>
-        </jar>
-        <copy file="${build.dir}/scala-deps.jar" tofile="${web.dir}/scala-deps.jar"/>
-        <copy file="${build.dir}/simplex3d-deps.jar" tofile="${web.dir}/simplex3d-deps.jar"/>
-
-        <apply executable="pack200" parallel="false">
-            <arg value="--repack"/>
-            <fileset dir="${web.dir}" includes="*.jar" />
-        </apply>
-
-
-        <echo level="info"
-        message="Accessing the keystore (you can generate a new keystore file with 'ant make-keystore')..."
-        />
-        
-        <input message="Enter the keystore password: " addproperty="keystore.storepass" >
-           <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
-        </input>
-        <input message="Enter your alias: " addproperty="keystore.alias" />
-        <input message="Enter the keypass: " addproperty="keystore.keypass" >
-           <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
-        </input>
-        
-        <signjar keystore="${keystore.location}" storepass="${keystore.storepass}" alias="${keystore.alias}" keypass="${keystore.keypass}" >
-            <fileset dir="${web.dir}" includes="*.jar" />
-        </signjar>
-        
-        
-        <apply executable="pack200" parallel="false" dest="${web.dir}">
-            <arg value="--deflate-hint=true"/>
-            <arg value="--effort=9"/>
-            <targetfile/>
-            <srcfile/>
-            <fileset dir="${web.dir}" includes="*.jar" />
-            <mapper type="glob" from="*" to="*.pack.gz" />
-        </apply>
-
-        <copy file="simplex3d-console.jnlp" todir="${web.dir}"/>
-        <copy file="simplex3d-console-local.jnlp" todir="${web.dir}"/>
-        <copy file="simplex3d-icon.png" todir="${web.dir}"/>
-    </target>
-    
-    
-    <target name="release-all" depends="release-clean, release-src, release-bin" />
-
-    <target name="release-clean" depends="clean" >
-        <delete dir="${release.dir}" />
-    </target>
-    
-    <target name="release-bin" depends="init, clean, compile, jar" >
-        <delete file="${release.bin}" />
-
-        <zip destfile="${release.bin}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${release.dir}/jars" includes="*.jar"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING.LESSER
-                COPYING
-                simplex3d-console.license
-                simplex3d-icon.png" />
-        </zip>
-    </target>
-    
-    <target name="release-src" depends="init" >
-        <delete file="${release.src}" />
-        <mkdir dir="${release.dir}" />
-
-        <zip destfile="${release.src}">
-            <fileset dir="${basedir}" includes="lib/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="${src.dir}/**" excludes=".svn"/>
-            <fileset dir="${basedir}" includes="nbproject/**" excludes=".svn, */private/**"/>
-            <fileset dir="${basedir}" includes="
-                Readme.txt
-                COPYING.LESSER
-                COPYING
-                simplex3d-console.license
-                simplex3d-icon.png
-                simplex3d-console-local.jnlp
-                simplex3d-console.jnlp
-                manifest.mf
-                Indexer.scala
-                build.xml" />
-        </zip>
     </target>
     
 </project>

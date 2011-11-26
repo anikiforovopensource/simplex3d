@@ -89,7 +89,9 @@ is divided into following sections:
         </condition>
         <condition property="have.sources">
             <or>
-                <available file="${src.dir}"/>
+                <available file="${src.intersection.dir}"/>
+                <available file="${src.mesh.dir}"/>
+                <available file="${src.noise.dir}"/>
             </or>
         </condition>
         <condition property="netbeans.home+have.tests">
@@ -144,7 +146,9 @@ is divided into following sections:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init" name="-init-check">
-        <fail unless="src.dir">Must set src.dir</fail>
+        <fail unless="src.intersection.dir">Must set src.intersection.dir</fail>
+        <fail unless="src.mesh.dir">Must set src.mesh.dir</fail>
+        <fail unless="src.noise.dir">Must set src.noise.dir</fail>
         <fail unless="test.src.dir">Must set test.src.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
         <fail unless="dist.dir">Must set dist.dir</fail>
@@ -166,7 +170,7 @@ is divided into following sections:
     </target>
     <target name="-init-macrodef-javac">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${src.intersection.dir}:${src.mesh.dir}:${src.noise.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${includes}" name="includes"/>
@@ -188,7 +192,7 @@ is divided into following sections:
             </sequential>
         </macrodef>
         <macrodef name="depend" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${src.intersection.dir}:${src.mesh.dir}:${src.noise.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <sequential>
@@ -223,7 +227,7 @@ is divided into following sections:
     </target>
     <target name="-init-macrodef-scalac">
         <macrodef name="scalac" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${src.intersection.dir}:${src.mesh.dir}:${src.noise.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${extdirs}" name="extdirs"/>
@@ -403,7 +407,9 @@ is divided into following sections:
         <scalaProject1:scalac/>
         <scalaProject1:javac/>
         <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${src.intersection.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${src.mesh.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${src.noise.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
         </copy>
     </target>
     <target name="-post-compile">
@@ -418,7 +424,7 @@ is divided into following sections:
     <target depends="init,deps-jar,-pre-pre-compile" name="-do-compile-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
         <scalaProject1:force-recompile/>
-        <scalaProject1:scalac excludes="" includes="${javac.includes}" sourcepath="${src.dir}"/>
+        <scalaProject1:scalac excludes="" includes="${javac.includes}" sourcepath="${src.intersection.dir}:${src.mesh.dir}:${src.noise.dir}"/>
     </target>
     <target name="-post-compile-single">
         <!-- Empty placeholder for easier customization. -->

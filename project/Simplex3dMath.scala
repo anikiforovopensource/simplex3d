@@ -28,10 +28,6 @@ object Simplex3dMath extends Build {
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
   
-  val coreFilter = new WorkingFilter("simplex3d/math/.*")
-  val floatFilter = new WorkingFilter("simplex3d/math/floatx/.*") || new WorkingFilter("simplex3d/math/float/.*")
-  val doubleFilter = new WorkingFilter("simplex3d/math/doublex/.*") || new WorkingFilter("simplex3d/math/double/.*")
-  
   lazy val root = Project(
     id = "math",
     base = file("."),
@@ -49,8 +45,7 @@ object Simplex3dMath extends Build {
       name := "simplex3d-math-core",
       description := "Vector Math DSL, Core Module.",
       target := new File("target/math/core"),
-      includeFilter := coreFilter && Simplex3d.codeFilter,
-      excludeFilter := floatFilter || doubleFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/core")
     )
   )
   
@@ -61,7 +56,7 @@ object Simplex3dMath extends Build {
       name := "simplex3d-math-float",
       description := "Vector Math DSL, Float Module.",
       target := new File("target/math/float"),
-      includeFilter := floatFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/float")
     )
   ) dependsOn(core)
   
@@ -72,19 +67,21 @@ object Simplex3dMath extends Build {
       name := "simplex3d-math-double",
       description := "Vector Math DSL, Double Module.",
       target := new File("target/math/double"),
-      includeFilter := doubleFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/double")
     )
   ) dependsOn(core)
   
   
   lazy val doc = Project(
-    id = "doc-math",
+    id = "math-doc",
     base = file("Simplex3dMath"),
     settings = buildSettings ++ Seq (
       target := new File("target/math/doc"),
       excludeFilter := "*",
-      sourceGenerators in Compile <+= scalaSource in Compile map { src =>
-        StripSwizzling.stripCopy(src, new File("target/math/doc/modified-src"))
+      sourceGenerators in Compile <+= baseDirectory map { base =>
+        StripSwizzling.stripCopy(base / "src/core", new File("target/math/doc/modified-src")) ++
+        StripSwizzling.stripCopy(base / "src/float", new File("target/math/doc/modified-src")) ++
+        StripSwizzling.stripCopy(base / "src/double", new File("target/math/doc/modified-src"))
       },
       publish := {},
       publishLocal := {}
@@ -92,7 +89,7 @@ object Simplex3dMath extends Build {
   )
   
   lazy val test = Project(
-    id = "test-math",
+    id = "math-test",
     base = file("Simplex3dMathTest"),
     settings = buildSettings ++ Seq (
       name := "simplex3d-math-test",

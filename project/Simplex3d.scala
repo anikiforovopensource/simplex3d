@@ -29,7 +29,7 @@ object Simplex3d extends Build {
     scalaVersion := "2.9.1",
     organization := "org.simplex3d",
     homepage := Some(new URL("http://www.simplex3d.org/")),
-    scalaSource in Compile <<= baseDirectory(_ / "src"),
+    scalaSource in Compile <<= baseDirectory(_ / "src"), // XXX remove this after porting the projects to module based dir layout
     unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),
     scalacOptions += "-deprecation",
     maxErrors := 20
@@ -49,6 +49,7 @@ object Simplex3d extends Build {
 }
 
 
+// XXX remove this after porting the projects to module based dir layout
 class WorkingFilter(regexString: String) extends FileFilter {
   private val pattern = Pattern.compile(".*/" + regexString)
   

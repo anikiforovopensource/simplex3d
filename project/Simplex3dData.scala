@@ -28,11 +28,6 @@ object Simplex3dData extends Build {
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
 
-  val coreFilter = new WorkingFilter("simplex3d/data/.*")
-  val floatFilter = new WorkingFilter("simplex3d/data/float/.*")
-  val doubleFilter = new WorkingFilter("simplex3d/data/double/.*")
-  val formatFilter = new WorkingFilter("simplex3d/data/format/.*")
-  
   lazy val root = Project(
     id = "data",
     base = file("."),
@@ -41,7 +36,7 @@ object Simplex3dData extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, float, double, format)
+  ) aggregate(core, double, float, format)
   
   lazy val core = Project(
     id = "data-core",
@@ -50,21 +45,9 @@ object Simplex3dData extends Build {
       name := "simplex3d-data-core",
       description := "Data Binding API, Core Module.",
       target := new File("target/data/core"),
-      includeFilter := coreFilter && Simplex3d.codeFilter,
-      excludeFilter := floatFilter || doubleFilter || formatFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/core")
     )
   ) dependsOn(Simplex3dMath.core)
-  
-  lazy val float = Project(
-    id = "data-float",
-    base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
-      name := "simplex3d-data-float",
-      description := "Data Binding API, Float Module.",
-      target := new File("target/data/float"),
-      includeFilter := floatFilter && Simplex3d.codeFilter
-    )
-  ) dependsOn(core, Simplex3dMath.float)
   
   lazy val double = Project(
     id = "data-double",
@@ -73,9 +56,20 @@ object Simplex3dData extends Build {
       name := "simplex3d-data-double",
       description := "Data Binding API, Double Module.",
       target := new File("target/data/double"),
-      includeFilter := doubleFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/double")
     )
   ) dependsOn(core, Simplex3dMath.double)
+  
+  lazy val float = Project(
+    id = "data-float",
+    base = file("Simplex3dData"),
+    settings = buildSettings ++ Seq (
+      name := "simplex3d-data-float",
+      description := "Data Binding API, Float Module.",
+      target := new File("target/data/float"),
+      scalaSource in Compile <<= baseDirectory(_ / "src/float")
+    )
+  ) dependsOn(core, Simplex3dMath.float)
   
   lazy val format = Project(
     id = "data-format",
@@ -85,34 +79,40 @@ object Simplex3dData extends Build {
       version := "0.5-SNAPSHOT",
       description := "Additional data formats for Data Binding API.",
       target := new File("target/data/format"),
-      includeFilter := formatFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/format")
     )
   ) dependsOn(core, double, Simplex3dMath.double)
   
   
   lazy val doc = Project(
-    id = "doc-data",
+    id = "data-doc",
     base = file("Simplex3dData"),
     settings = buildSettings ++ Seq (
       target := new File("target/data/doc"),
+      sourceDirectories <<= baseDirectory(base => Seq(
+        base / "src/core",
+        base / "src/double",
+        base / "src/float",
+        base / "src/format"
+      )),
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(Simplex3dMath.core, Simplex3dMath.float, Simplex3dMath.double)
+  ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dMath.float)
   
   lazy val test = Project(
-    id = "test-data",
-    base = file("Simplex3dDataTest"),
+    id = "data-test",
+    base = file("Simplex3dData"),
     settings = buildSettings ++ Seq (
       name := "simplex3d-data-test",
       description := "Data Binding API, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
       target := new File("target/data/test"),
       libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
-      scalaSource in Compile <<= baseDirectory(_ / "none"),
-      scalaSource in Test <<= baseDirectory(_ / "src"),
+      scalaSource in Compile <<= baseDirectory(_ / "test/bench"),
+      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(core, float, double, format)
+  ) dependsOn(core, double, float, format)
 }

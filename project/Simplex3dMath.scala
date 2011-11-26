@@ -36,7 +36,7 @@ object Simplex3dMath extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, float, double)
+  ) aggregate(core, double, float)
   
   lazy val core = Project(
     id = "math-core",
@@ -49,17 +49,6 @@ object Simplex3dMath extends Build {
     )
   )
   
-  lazy val float = Project(
-    id = "math-float",
-    base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
-      name := "simplex3d-math-float",
-      description := "Vector Math DSL, Float Module.",
-      target := new File("target/math/float"),
-      scalaSource in Compile <<= baseDirectory(_ / "src/float")
-    )
-  ) dependsOn(core)
-  
   lazy val double = Project(
     id = "math-double",
     base = file("Simplex3dMath"),
@@ -71,6 +60,16 @@ object Simplex3dMath extends Build {
     )
   ) dependsOn(core)
   
+  lazy val float = Project(
+    id = "math-float",
+    base = file("Simplex3dMath"),
+    settings = buildSettings ++ Seq (
+      name := "simplex3d-math-float",
+      description := "Vector Math DSL, Float Module.",
+      target := new File("target/math/float"),
+      scalaSource in Compile <<= baseDirectory(_ / "src/float")
+    )
+  ) dependsOn(core)
   
   lazy val doc = Project(
     id = "math-doc",
@@ -102,7 +101,7 @@ object Simplex3dMath extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) dependsOn(core, float, double)
+  ) dependsOn(core, double, float)
 }
 
 

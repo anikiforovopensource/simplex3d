@@ -28,11 +28,6 @@ object Simplex3dAlgorithm extends Build {
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
   
-  val intersectionFilter = new WorkingFilter("simplex3d/algorithm/intersection/.*")
-  val meshFilter = new WorkingFilter("simplex3d/algorithm/mesh/.*")
-  val noiseFilter = new WorkingFilter("simplex3d/algorithm/noise/.*")
-  
-  
   lazy val root = Project(
     id = "algorithm",
     base = file("."),
@@ -50,7 +45,7 @@ object Simplex3dAlgorithm extends Build {
       name := "simplex3d-algorithm-intersection",
       description := "Intersection and Collision Algorithms.",
       target := new File("target/algorithm/intersection"),
-      includeFilter := intersectionFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/intersection")
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double)
   
@@ -61,7 +56,7 @@ object Simplex3dAlgorithm extends Build {
       name := "simplex3d-algorithm-mesh",
       description := "Algorithms to generate and work with mesh data.",
       target := new File("target/algorithm/mesh"),
-      includeFilter := meshFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/mesh")
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
   
@@ -72,16 +67,21 @@ object Simplex3dAlgorithm extends Build {
       name := "simplex3d-algorithm-noise",
       description := "Noise Algorithms.",
       target := new File("target/algorithm/noise"),
-      includeFilter := noiseFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/noise")
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double)
   
   
   lazy val doc = Project(
-    id = "doc-algorithm",
+    id = "algorithm-doc",
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq (
       target := new File("target/algorithm/doc"),
+      sourceDirectories <<= baseDirectory(base => Seq(
+        base / "src/intersection",
+        base / "src/mesh",
+        base / "src/noise"
+      )),
       publish := {},
       publishLocal := {}
     )

@@ -11,7 +11,8 @@
                 <root id="src.float.dir"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.bench.dir"/>
+                <root id="test.unit.dir"/>
             </test-roots>
         </data>
     </configuration>

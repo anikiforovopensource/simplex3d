@@ -1,0 +1,44 @@
+/*
+ * Simplex3dMath - Test Package
+ * Copyright (C) 2010-2011, Aleksey Nikiforov
+ *
+ * This file is part of Simplex3dMathTest.
+ *
+ * Simplex3dMathTest is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Simplex3dMathTest is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/** Run with Simplex3dConsole.
+ * 
+ * @author Aleksey Nikiforov (lex)
+ */
+val scale = 1.0/50
+val noiseSpeed = 1.0/3
+val scrollSpeed = 10
+
+val f = 3.0
+def largeOffset(time: Double) :Double = {
+  val local = time.toInt % 18
+  if (local < 3) 5e13
+  else if (local < 6) 5e13*f
+  else if (local < 9) 5e13*f*f
+  else if (local < 12) 5e13*f*f*f
+  else if (local < 15) 5e13*f*f*f*f
+  else 5e13*f*f*f*f*f
+}
+
+// Shows gradual noise degradation at large offsets.
+animateFunction("Noise Degradation") { (dims, time, pixel) =>
+  val p = pixel + time*scrollSpeed
+  Vec3((noise1(Vec3(p*scale + largeOffset(time), time*noiseSpeed)) + 1)/2)
+}

@@ -9,6 +9,7 @@
                 <root id="src.core.dir"/>
                 <root id="src.double.dir"/>
                 <root id="src.float.dir"/>
+                <root id="src.format.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.bench.dir"/>

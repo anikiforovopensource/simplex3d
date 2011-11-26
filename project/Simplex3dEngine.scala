@@ -28,18 +28,6 @@ object Simplex3dEngine extends Build {
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
 
-  val coreFilter = new WorkingFilter("simplex3d/engine/.*")
-  val sceneGraphFilter = new WorkingFilter("simplex3d/engine/scenegraph/.*")
-  val rendererFilter = new WorkingFilter("simplex3d/engine/renderer/.*")
-  
-  val backendFilter = new WorkingFilter("simplex3d/engine/backend/.*")
-  val backendOpenglFilter = new WorkingFilter("simplex3d/engine/backend/opengl/.*")
-  val backendLwjglFilter = new WorkingFilter("simplex3d/engine/backend/lwjgl/.*")
-  
-  val defaultFilter = new WorkingFilter("simplex3d/engine/default/.*")
-  val testFilter = new WorkingFilter("test/.*") //TODO rework test layout
-  
-  
   lazy val root = Project(
     id = "engine",
     base = file("."),
@@ -57,8 +45,7 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-core",
       description := "Simplex3D Engine, Core Module.",
       target := new File("target/engine/core"),
-      includeFilter := coreFilter && Simplex3d.codeFilter,
-      excludeFilter := sceneGraphFilter || rendererFilter || defaultFilter || backendFilter || testFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/core")
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
@@ -73,7 +60,7 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-scenegraph",
       description := "Simplex3D Engine, Scenegraph Module.",
       target := new File("target/engine/scenegraph"),
-      includeFilter := sceneGraphFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/scenegraph")
     )
   ) dependsOn(core)
   
@@ -84,7 +71,7 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-renderer",
       description := "Simplex3D Engine, Renderer Module.",
       target := new File("target/engine/renderer"),
-      includeFilter := rendererFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/renderer")
     )
   ) dependsOn(core)
   
@@ -95,7 +82,7 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-backend-opengl",
       description := "Simplex3D Engine, Common OpenGL Backend.",
       target := new File("target/engine/backend/opengl"),
-      includeFilter := backendOpenglFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/backend-opengl")
     )
   ) dependsOn(core)
   
@@ -108,7 +95,7 @@ object Simplex3dEngine extends Build {
       target := new File("target/engine/backend/lwjgl"),
       libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl" % "2.8.1",
       libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl_util" % "2.8.1",
-      includeFilter := backendLwjglFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/backend-lwjgl")
     )
   ) dependsOn(core, backendOpengl)
   
@@ -119,7 +106,7 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-default",
       description := "Simplex3D Engine, Default Implementation.",
       target := new File("target/engine/default"),
-      includeFilter := defaultFilter && Simplex3d.codeFilter
+      scalaSource in Compile <<= baseDirectory(_ / "src/core")
     )
   ) dependsOn(core, sceneGraph, renderer, backendOpengl, backendLwjgl)
   

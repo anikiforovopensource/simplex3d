@@ -90,15 +90,15 @@ object Simplex3dMath extends Build {
   
   lazy val test = Project(
     id = "math-test",
-    base = file("Simplex3dMathTest"),
+    base = file("Simplex3dMath"),
     settings = buildSettings ++ Seq (
       name := "simplex3d-math-test",
       description := "Vector Math DSL, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
       target := new File("target/math/test"),
       libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
-      scalaSource in Compile <<= baseDirectory(_ / "none"),
-      scalaSource in Test <<= baseDirectory(_ / "src"),
+      scalaSource in Compile <<= baseDirectory(_ / "/test/bench"),
+      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
       publish := {},
       publishLocal := {}
     )

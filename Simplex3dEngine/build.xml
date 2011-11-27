@@ -14,7 +14,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
     <target depends="init" name="clean">
         <delete dir="dist"/>
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project ${project.sbt};clean;project doc-${project.sbt};clean"/>
+            <arg value=";project ${project.sbt};clean;project ${project.sbt}-doc;clean"/>
         </exec>
     </target>
     
@@ -29,7 +29,7 @@ name="Simplex3dEngine" default="release-all" basedir=".">
     
     <target depends="init" name="-javadoc-build">
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project doc-${project.sbt};doc"/>
+            <arg value=";project ${project.sbt}-doc;doc"/>
         </exec>
         <copy todir="${dist.dir}/scaladoc">
             <fileset dir="${target.sbt}/doc/scala-${scala.ver}/api"/>
@@ -38,13 +38,13 @@ name="Simplex3dEngine" default="release-all" basedir=".">
     
     <target depends="init" name="run">
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project test-${project.sbt};run-main ${main.class} ${application.args}"/>
+            <arg value=";project ${project.sbt}-example;run-main ${main.class} ${application.args}"/>
         </exec>
     </target>
     
     <target depends="init" name="run-single">
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project test-${project.sbt};run-main ${run.class} ${application.args}"/>
+            <arg value=";project ${project.sbt}-example;run-main ${run.class} ${application.args}"/>
         </exec>
     </target>
     

@@ -131,29 +131,50 @@ object Simplex3dEngine extends Build {
     Simplex3dAlgorithm.intersection
   )
   
+  
+  val runSettings = buildSettings ++ Seq (
+    fork := true,
+    //TODO change to "map" for "sbt.version=0.11.2-20111110-052207" or higher
+    javaOptions <<= ivyPaths { ivyPaths =>
+      val nativeJarDir = ivyPaths.ivyHome.get / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
+      val nativeJars = nativeJarDir.listFiles.filter(_.getName.endsWith(".jar"))
+      val targetDir = new File("target/engine/natives")
+      for (jar <- nativeJars) {
+        IO.unzip(jar, targetDir, new SimpleFilter(!_.toUpperCase.startsWith("META-INF")))
+      }
+      Seq("-Djava.library.path=" + targetDir.getAbsolutePath)
+    }
+  )
+  
   lazy val test = Project(
     id = "engine-test",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = runSettings ++ Seq (
       name := "simplex3d-engine-test",
       description := "Simplex3D Engine Interactive Tests.",
       target := new File("target/engine/test"),
       scalaSource in Compile <<= baseDirectory(_ / "test/visual"),
-      fork := true,
-      javaOptions <<= ivyPaths { ivyPath => //TODO change to "map" for "sbt.version=0.11.2-20111110-052207" or higher
-        val nativeJarDir = ivyPath.ivyHome.get / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
-        val nativeJars = nativeJarDir.listFiles.filter(_.getName.endsWith(".jar"))
-        val targetDir = new File("target/engine/natives")
-        for (jar <- nativeJars) {
-          IO.unzip(jar, targetDir, new SimpleFilter(!_.toUpperCase.startsWith("META-INF")))
-        }
-        Seq("-Djava.library.path=" + targetDir)
-      },
       publish := {},
       publishLocal := {}
     )
   ) dependsOn(
     core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
-    Simplex3dAlgorithm.noise, Simplex3dAlgorithm.mesh
+    Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
+  )
+  
+  lazy val example = Project(
+    id = "engine-example",
+    base = file("Simplex3dEngine"),
+    settings = runSettings ++ Seq (
+      name := "simplex3d-engine-example",
+      description := "Simplex3D Engine Examples.",
+      target := new File("target/engine/example"),
+      scalaSource in Compile <<= baseDirectory(_ / "example"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) dependsOn(
+    core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
+    Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
 }

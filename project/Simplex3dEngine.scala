@@ -106,17 +106,22 @@ object Simplex3dEngine extends Build {
       name := "simplex3d-engine-default",
       description := "Simplex3D Engine, Default Implementation.",
       target := new File("target/engine/default"),
-      scalaSource in Compile <<= baseDirectory(_ / "src/core")
+      scalaSource in Compile <<= baseDirectory(_ / "src/default")
     )
   ) dependsOn(core, sceneGraph, renderer, backendOpengl, backendLwjgl)
   
   
   lazy val doc = Project(
-    id = "doc-engine",
+    id = "engine-doc",
     base = file("Simplex3dEngine"),
     settings = buildSettings ++ Seq (
       target := new File("target/engine/doc"),
-      excludeFilter := testFilter,
+      sourceDirectories <<= baseDirectory(base => Seq(
+        base / "src/core",
+        base / "src/scenegraph",
+        base / "src/renderer",
+        base / "src/default"
+      )),
       publish := {},
       publishLocal := {}
     )
@@ -127,14 +132,13 @@ object Simplex3dEngine extends Build {
   )
   
   lazy val test = Project(
-    id = "test-engine",
-    base = file("."),
+    id = "engine-test",
+    base = file("Simplex3dEngine"),
     settings = buildSettings ++ Seq (
       name := "simplex3d-engine-test",
       description := "Simplex3D Engine Interactive Tests.",
       target := new File("target/engine/test"),
-      scalaSource in Compile <<= baseDirectory(_ / "Simplex3dEngine/src"),
-      includeFilter := testFilter && Simplex3d.codeFilter,
+      scalaSource in Compile <<= baseDirectory(_ / "test/visual"),
       fork := true,
       javaOptions <<= ivyPaths { ivyPath => //TODO change to "map" for "sbt.version=0.11.2-20111110-052207" or higher
         val nativeJarDir = ivyPath.ivyHome.get / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"

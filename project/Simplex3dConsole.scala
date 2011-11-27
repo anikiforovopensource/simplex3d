@@ -48,7 +48,8 @@ object Simplex3dConsole extends Build {
       ap.contains("/target/math/") ||
       ap.contains("/target/data/") ||
       ap.contains("/target/algorithm/") ||
-      ap.contains("/target/console/script")
+      ap.contains("/target/engine/") ||
+      ap.contains("/target/script")
     }
     
     val (rest3, mainFiles) = rest2.partition{ f =>
@@ -63,19 +64,13 @@ object Simplex3dConsole extends Build {
   }
   
   
-  val coreFilter = new WorkingFilter("src/simplex3d/console/.*")
-  val extensionFilter = new WorkingFilter("src/simplex3d/console/extension/.*")
-  val scriptFilter = new WorkingFilter("src/simplex3d/console/script/.*")
-  val exampleFilter = new WorkingFilter("src/example/.*")
-  
-  
   lazy val root = Project(
     id = "console",
     base = file("."),
     settings = buildSettings ++ Seq (
       target := new File("target/console")
     )
-  ) aggregate(core, script, example)
+  ) aggregate(core, example)
   
   
   lazy val core = Project(
@@ -87,8 +82,7 @@ object Simplex3dConsole extends Build {
       fork in run := true,
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       unmanagedJars in Compile <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
-      includeFilter := (coreFilter || extensionFilter) && Simplex3d.codeFilter,
-      excludeFilter := scriptFilter,
+      scalaSource in Compile <<= baseDirectory(_ / "src"),
       
       compile in Compile <<= (scalaSource in Compile, classDirectory in Compile, dependencyClasspath in Compile, compile in Compile) map { (src, classes, cp, compileRes) =>
         val (scalaFiles, simplexFiles, mainFiles, exampleFiles) = extractFileSets(classes, cp)
@@ -104,31 +98,19 @@ object Simplex3dConsole extends Build {
         compileRes
       }
     )
-  ) dependsOn(script, example)
+  ) dependsOn(example, Simplex3dScript.core)
   
-  
-  lazy val script: Project = Project(
-    id = "console-script",
-    base = file("Simplex3dConsole"),
-    settings = buildSettings ++ Seq (
-      target := new File("target/console/script"),
-      includeFilter := scriptFilter && Simplex3d.codeFilter
-    )
-  ) dependsOn(
-    Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format
-  )
   
   lazy val example = Project(
     id = "console-example",
     base = file("Simplex3dConsole"),
     settings = buildSettings ++ Seq (
       target := new File("target/console/example"),
-      includeFilter := exampleFilter && Simplex3d.codeFilter,
+      scalaSource in Compile <<= baseDirectory(_ / "example"),
       
       compile in Compile <<= (baseDirectory, scalaSource in Compile, classDirectory in Compile, compile in Compile) map {
       (base, src, classes, compileRes) =>
-        val exampleFiles = new FileSet(new File(base, "src"), List("""example/.*\.scala"""))
+        val exampleFiles = new FileSet(new File(base, "example"), List(""".*\.scala"""))
         exampleFiles foreach { (path, openStream) =>
           Util.copy(openStream(), classes / path)
         }
@@ -141,10 +123,10 @@ object Simplex3dConsole extends Build {
       }
     )
   ) dependsOn(
-    script,
     Simplex3dMath.core, Simplex3dMath.double,
     Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
-    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
+    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
+    Simplex3dScript.core
   )
 
   
@@ -230,7 +212,6 @@ object Simplex3dConsole extends Build {
         
         println("Copying extra files...")
         
-        IO.copyFile(base / "simplex3d-console-local.jnlp", target / "simplex3d-console-local.jnlp")
         IO.copyFile(base / "simplex3d-console.jnlp", target / "simplex3d-console.jnlp")
         IO.copyFile(base / "simplex3d-icon.png", target / "simplex3d-icon.png")
         

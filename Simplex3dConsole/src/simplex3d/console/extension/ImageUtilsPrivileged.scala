@@ -32,7 +32,7 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.console.script._
+import simplex3d.script._
 import conversion.Double._
 
 

@@ -45,16 +45,20 @@ object Simplex3dConsole extends Build {
     val (scalaFiles, rest1) = fileSets.partition(_.src.getName.startsWith("scala-"))
     val (simplexFiles, rest2) = rest1.partition { f =>
       val ap = f.src.getAbsolutePath
-      ap.contains("/target/math/") ||
-      ap.contains("/target/data/") ||
-      ap.contains("/target/algorithm/") ||
-      ap.contains("/target/engine/") ||
-      ap.contains("/target/script")
+      if (ap.contains("/example/")) false
+      else (
+        ap.contains("/target/math/") ||
+        ap.contains("/target/data/") ||
+        ap.contains("/target/algorithm/") ||
+        ap.contains("/target/engine/") ||
+        ap.contains("/target/script")
+      )
     }
     
     val (rest3, mainFiles) = rest2.partition{ f =>
       val ap = f.src.getAbsolutePath
-      ap.contains("/target/console/example/")
+      println("::" + ap)
+      ap.contains("/example/")
     }
     
     val exampleFiles = rest3.map(fs => new FileSet(fs.src, List(""".*\.scala""")))
@@ -64,20 +68,13 @@ object Simplex3dConsole extends Build {
   }
   
   
-  lazy val root = Project(
-    id = "console",
-    base = file("."),
-    settings = buildSettings ++ Seq (
-      target := new File("target/console")
-    )
-  ) aggregate(core, example)
-  
+  lazy val root = core
   
   lazy val core = Project(
-    id = "console-core",
+    id = "console",
     base = file("Simplex3dConsole"),
     settings = buildSettings ++ Seq (
-      target := new File("target/console/core"),
+      target := new File("target/console"),
       mainClass := Some("simplex3d.console.ConsoleFrame"),
       fork in run := true,
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
@@ -92,43 +89,13 @@ object Simplex3dConsole extends Build {
           classes / "simplex3d/console/examples.index", exampleFiles
         )
         
-        // XXX: port back to ant...
         IO.copyFile(src / "simplex3d/console/simplex3d-logo.png", classes / "simplex3d/console/simplex3d-logo.png")
         
         compileRes
       }
     )
-  ) dependsOn(example, Simplex3dScript.core)
+  ) dependsOn(Simplex3dScript.core, Simplex3dAlgorithm.example)
   
-  
-  lazy val example = Project(
-    id = "console-example",
-    base = file("Simplex3dConsole"),
-    settings = buildSettings ++ Seq (
-      target := new File("target/console/example"),
-      scalaSource in Compile <<= baseDirectory(_ / "example"),
-      
-      compile in Compile <<= (baseDirectory, scalaSource in Compile, classDirectory in Compile, compile in Compile) map {
-      (base, src, classes, compileRes) =>
-        val exampleFiles = new FileSet(new File(base, "example"), List(""".*\.scala"""))
-        exampleFiles foreach { (path, openStream) =>
-          Util.copy(openStream(), classes / path)
-        }
-        compileRes
-      },
-      
-      packageBin in Compile <<= (scalaSource in Compile, packageBin in Compile) map { (src, dest) =>
-        Jar.create(dest, new FileSet(src, List("""example/.*\.scala""")) :: Nil)
-        dest
-      }
-    )
-  ) dependsOn(
-    Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
-    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
-    Simplex3dScript.core
-  )
-
   
   lazy val webstart = Project(
     id = "console-webstart",
@@ -226,167 +193,7 @@ object Simplex3dConsole extends Build {
 }
 
 
-import java.io.{ File => IoFile, _ }
-import java.math.BigInteger
-import java.security.MessageDigest
-import java.util.zip._
-import java.util.regex._
 import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.HashMap
-
-
-class FileSet(val src: File, val includePatterns: List[String] = List(".*"), val excludePatterns: List[String] = Nil) {
-  private val included = includePatterns.map(r => Pattern.compile(r))
-  private val excluded = {
-    val patterns = excludePatterns.map(r => Pattern.compile(r))
-    if (src.getName.toLowerCase.endsWith(".jar"))
-      Pattern.compile("""META-INF/.*""", Pattern.CASE_INSENSITIVE) :: patterns 
-    else
-      patterns
-  }
-  
-  private def keep(path: String) :Boolean = {
-    val include = included.find(_.matcher(path).matches).isDefined
-    val exclude = if (include) excluded.find(_.matcher(path).matches).isDefined else true
-    
-    include && !exclude
-  }
-  
-  
-  def foreach(function: (String, () => InputStream) => Unit) {
-    if (!src.exists) return
-      
-    if (src.isDirectory) dirForeach(function)
-    else zipForeach(function)
-  }
-  
-  private def dirForeach(function: (String, () => InputStream) => Unit) {
-    val base = src.toURI
-    
-    def recurse(dir: File) {
-      for (entry <- dir.listFiles) {
-        entry match {
-          
-          case dir if dir.isDirectory =>
-            recurse(dir)
-            
-          case file =>
-            val path = base.relativize(file.toURI).getPath
-            if (keep(path)) {
-               var in: InputStream = null
-               try {
-                 val openStream = () => { if (in == null) in = new BufferedInputStream(new FileInputStream(file)); in }
-                 function(path, openStream)
-               }
-               finally {
-                 if (in != null) in.close()
-               }
-            }
-        }
-      }
-    }
-    
-    recurse(src)
-  }
-  
-  private def zipForeach(function: (String, () => InputStream) => Unit) {
-    var zipIn: ZipInputStream = null
-    try {
-      zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(src)))
-      val managedIn = new FilterInputStream(zipIn) { override def close() {} }
-      val openStream = () => managedIn
-      
-      var entry = zipIn.getNextEntry(); while (entry != null) {
-        if (!entry.isDirectory && keep(entry.getName)) function(entry.getName, openStream)
-        
-        entry = zipIn.getNextEntry()
-      }
-    }
-    finally {
-      if (zipIn != null) zipIn.close()
-    }
-  }
-}
-
-
-object Util {
-  private final val buff = new Array[Byte](1024*8)
-  
-  def copy(in: InputStream, dest: File) {
-    this.synchronized {
-      var out: FileOutputStream = null
-      try {
-        dest.getParentFile.mkdirs()
-        out = new FileOutputStream(dest)
-        var read = 0; while (read >= 0) {
-          out.write(buff, 0, read)
-          read = in.read(buff)
-        }
-      }
-      finally {
-        if (out != null) out.close()
-      }
-    }
-  }
-  
-  def copy(in: InputStream, out: OutputStream) {
-    this.synchronized {
-      var read = 0; while (read >= 0) {
-        out.write(buff, 0, read)
-        read = in.read(buff)
-      }
-    }
-  }
-  
-  def writeFile(file: File, contents: String) {
-    this.synchronized {
-      var out: OutputStreamWriter = null
-      try {
-        file.getParentFile.mkdirs()
-        out = new OutputStreamWriter(new FileOutputStream(file))
-        out.write(contents)
-      }
-      finally {
-        if (out != null) out.close()
-      }
-    }
-  }
-}
-
-
-object Jar {
-  val DefaultManifest = "Manifest-Version: 1.0\n\n"
-  
-  private def loadFile(file: File) :String = {
-    val source = scala.io.Source.fromFile(file)
-    val res = source.mkString
-    source.close ()
-    res
-  }
-  
-  def create(dest: File, fileSets: Seq[FileSet], manifest: File = null) {
-    val manifestString = if (manifest == null) DefaultManifest else loadFile(manifest)
-    
-    var zip: ZipOutputStream = null
-    try {
-      zip = new ZipOutputStream(new FileOutputStream(dest))
-      
-      zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"))
-      zip.write(manifestString.getBytes())
-      zip.closeEntry()
-      
-      for (fileSet <- fileSets) {
-        fileSet.foreach { (path, openStream) =>
-          zip.putNextEntry(new ZipEntry(path))
-          Util.copy(openStream(), zip)
-        }
-      }
-    }
-    finally {
-      if (zip != null) zip.close()
-    }
-  }
-}
 
 
 object Indexer {

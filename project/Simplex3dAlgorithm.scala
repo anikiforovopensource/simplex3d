@@ -86,4 +86,17 @@ object Simplex3dAlgorithm extends Build {
       publishLocal := {}
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
+  
+  lazy val example = Project(
+    id = "algorithm-example",
+    base = file("Simplex3dAlgorithm"),
+    settings = Simplex3d.exampleSettings ++ Seq (
+      target := new File("target/algorithm/example")
+    )
+  ) dependsOn(
+    Simplex3dMath.core, Simplex3dMath.double,
+    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
+    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
+    Simplex3dScript.core
+  )
 }

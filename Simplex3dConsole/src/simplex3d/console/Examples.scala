@@ -41,7 +41,7 @@ object Examples {
     is.close()
 
     val root = new Node(null, true)
-    root.addChild(new Node("example", true))
+    root.addChild(new Node("simplex3d", true))
 
     for (entry <- index) { root.addPath(entry) }
     root.sort()
@@ -61,7 +61,7 @@ object Examples {
       }
     }
 
-    mkMenus(root.findChild("example").get, exampleMenu)
+    mkMenus(root.findChild("simplex3d").get, exampleMenu)
   }
 
   private[this] def mkName(file: String) = {

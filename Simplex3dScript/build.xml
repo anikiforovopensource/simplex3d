@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="Simplex3dScript" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Simplex3dScript.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+    
+    <property name="scala.ver" value="2.9.1"/>
+    <property name="project.sbt" value="script"/>
+    <property name="target.sbt" value="../target/${project.sbt}"/>
+    
+    <target depends="init" name="clean">
+        <delete dir="dist"/>
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};clean"/>
+        </exec>
+    </target>
+    
+    <target depends="init" name="jar">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};package"/>
+        </exec>
+        <copy todir="${dist.dir}" flatten="true">
+            <fileset dir="${target.sbt}" includes="**/*.jar" excludes="scala-${scala.ver}/**"/>
+        </copy>
+    </target>
+    
+    <target depends="init" name="-javadoc-build">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};doc"/>
+        </exec>
+        <copy todir="${dist.dir}/scaladoc">
+            <fileset dir="${target.sbt}/scala-${scala.ver}/api"/>
+        </copy>
+    </target>
+    
+    <target depends="init" name="run">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};run-main ${main.class} ${application.args}"/>
+        </exec>
+    </target>
+    
+    <target depends="init" name="run-single">
+        <exec dir=".." executable="sbt" failonerror="true">
+            <arg value=";project ${project.sbt};run-main ${run.class} ${application.args}"/>
+        </exec>
+    </target>
+    
+</project>

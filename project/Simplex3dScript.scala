@@ -43,8 +43,8 @@ object Simplex3dScript extends Build {
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
-    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
+    Simplex3dData.core, Simplex3dData.double,
+    Simplex3dEngine.default
   )
   
   lazy val example = Project(

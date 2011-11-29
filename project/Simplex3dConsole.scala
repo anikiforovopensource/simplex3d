@@ -93,7 +93,10 @@ object Simplex3dConsole extends Build {
         compileRes
       }
     )
-  ) dependsOn(Simplex3dScript.core, Simplex3dAlgorithm.example)
+  ) dependsOn(
+    Simplex3dScript.core, Simplex3dScript.example,
+    Simplex3dMath.example, Simplex3dData.example, Simplex3dAlgorithm.example, Simplex3dEngine.example
+  )
   
   
   lazy val webstart = Project(

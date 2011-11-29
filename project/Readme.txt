@@ -49,11 +49,11 @@ root-doc
   
 root-example
 
-  math-example (planned, not yet implemented)
-  data-example (planned, not yet implemented)
-  algorithm-example (needs work)
-  engine-example (needs work)
-  script-example (planned, not yet implemented)
+  math-example
+  data-example
+  algorithm-example
+  engine-example
+  script-example
 
 
 Also there are some test projects:

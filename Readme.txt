@@ -32,26 +32,28 @@ root
     engine-backend-lwjgl
     engine-default
     
+  script
+  
   console
-    console-core
-      run
-    console-script
-    console-example
     console-webstart
   
   
-Additionally there are doc and test sub-project:
+Additionally there are doc, test, and example sub-project:
 
-  doc-math
-  doc-data
-  doc-algorithm
-  doc-engine
+  math-doc
+  data-doc
+  algorithm-doc
+  engine-doc
   
-  test-math
-  test-data
-  test-engine
-    run-main
+  math-test
+  data-test
+  engine-test
   
+  math-example (planned, not yet implemented)
+  data-example (planned, not yet implemented)
+  algorithm-example (needs work)
+  engine-example (needs work)
+  script-example (planned, not yet implemented)
   
 And two optional sub-projects:
 
@@ -66,7 +68,7 @@ You can use SBT to compile these projects and run tests.
 
 Assuming you have checked out "trunk" from the SVN and renamed it to "Simplex3d":
   cd Simplex3d
-  sbt ";project test-engine; run-main test.DynamicTexture"
+  sbt ";project engine-example; run-main simplex3d.example.engine.DynamicTexture"
 
 
   
@@ -79,16 +81,16 @@ You can use clean, build, and run commands from the IDE.
 
 ***** Setting up Simplex3dEngine project in Eclipse *****
 
-Before you start, install ScalaIDE and IvyDE plugins.
+Before you start, install ScalaIDE and IvyDE plugins for Eclipse.
 This guide assumes you have checked out "trunk" from the SVN and renamed it to "Simplex3d".
 
 1) Publish engine dependencies into local repository:
      sbt ";project root;publish-local"
 2) Make a new Scala project in Eclipse.
-3) Set the src directory of the Eclipse project to point to "Simplex3d/Simplex3dEngine/src".
+3) Add source directories to Eclipse.
 4) Setup IvyDE using provided ivy.xml and ivysettings.xml.
-5) Run any of the Simplex3dEngine tests to setup native libs:
-     sbt ";project test-engine; run-main test.DynamicTexture"
+5) Run any of the Simplex3dEngine examples to setup native libs:
+     sbt ";project engine-example; run-main simplex3d.example.engine.DynamicTexture"
 6) Set "Native library location" for lwjgl.jar to "Simplex3d/target/engine/natives"
 
-After completing these steps you should be able to compile Simplex3dEngine and run any of the tests from Eclipse.
+After completing these steps you should be able to compile Simplex3dEngine and run any of the tests and examples from Eclipse.

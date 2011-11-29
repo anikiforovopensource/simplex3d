@@ -31,13 +31,13 @@
     
     <target depends="init" name="run">
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project ${project.sbt}-core;run-main ${main.class} ${application.args}"/>
+            <arg value=";project ${project.sbt};run-main ${main.class} ${application.args}"/>
         </exec>
     </target>
     
     <target depends="init" name="run-single">
         <exec dir=".." executable="sbt" failonerror="true">
-            <arg value=";project ${project.sbt}-core;run-main ${run.class} ${application.args}"/>
+            <arg value=";project ${project.sbt};run-main ${run.class} ${application.args}"/>
         </exec>
     </target>
     

@@ -111,21 +111,21 @@ object StripSwizzling {
   
   def stripCopy(src: File, dest: File) :Seq[File] = {
     val res = new ArrayBuffer[File]
-    rec(src, dest, res)
+    recursive(src, dest, res)
     res
   }
   
-  def rec(dir: File, out: File, res: ArrayBuffer[File]) {
+  private def recursive(dir: File, out: File, res: ArrayBuffer[File]) {
     if (!out.exists) out.mkdirs()
     
     for (entry <- dir.listFiles) {
-      if (entry.isDirectory) rec(entry, new File(out, entry.getName()), res)
+      if (entry.isDirectory) recursive(entry, new File(out, entry.getName()), res)
       else if (entry.getName.endsWith(".java")) { res += copy(entry, out) }
       else if (entry.getName.endsWith(".scala")) { res += filter(entry, out) }
     }
   }
   
-  def copy(file: File, todir: File) :File = {
+  private def copy(file: File, todir: File) :File = {
     val dest = new File(todir, file.getName)
     
     val in = new BufferedInputStream(new FileInputStream(file))
@@ -143,13 +143,13 @@ object StripSwizzling {
     dest
   }
   
-  def filter(file: File, todir: File) :File = {
+  private def filter(file: File, todir: File) :File = {
     val lines = scala.io.Source.fromFile(file).getLines.toArray
     if (lines.find(_.contains("@SwizzlingStart")).isEmpty) copy(file, todir)
     else stripSwizzling(lines, new File(todir, file.getName))
   }
   
-  def stripSwizzling(lines: Array[String], dest: File) :File = {
+  private def stripSwizzling(lines: Array[String], dest: File) :File = {
     val out = new BufferedWriter(new FileWriter(dest))
     
     var excludeEnd = 0

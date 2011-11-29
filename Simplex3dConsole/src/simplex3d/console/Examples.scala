@@ -40,11 +40,30 @@ object Examples {
     val index = scala.io.Source.fromInputStream(is).getLines().toList
     is.close()
 
+    val prefix = "simplex3d/"
+    val exampleNode = new Node("example", true)
+    val menuGroups = List("scripting", "math", "data", "algorithm", "engine").reverse
+    
     val root = new Node(null, true)
-    root.addChild(new Node("simplex3d", true))
+    root.addChild(exampleNode)
+    
+    for (group <- menuGroups) {
+      val node = new Node(group, true)
+      exampleNode.addChild(node)
+    }
 
-    for (entry <- index) { root.addPath(entry) }
-    root.sort()
+    def dropPrefix(path: String) :String = {
+      val i = path.indexOf(prefix)
+      if (i == 0) path.drop(prefix.length)
+      else path
+    }
+    
+    for (entry <- index) { root.addPath(dropPrefix(entry)) }
+    
+    for (group <- menuGroups) {
+      val node = exampleNode.findChild(group).get
+      node.sort()
+    }
 
     def mkMenus(node: Node, menu: JMenu) {
       for (child <- node.children) {
@@ -56,22 +75,22 @@ object Examples {
         else {
           val item = new JMenuItem()
           menu.add(item)
-          item.setAction(new SelectExampleAction(mkName(child.name), child.getResourcePath, txt))
+          item.setAction(new SelectExampleAction(mkName(child.name), prefix + child.getResourcePath, txt))
         }
       }
     }
 
-    mkMenus(root.findChild("simplex3d").get, exampleMenu)
+    mkMenus(exampleNode, exampleMenu)
   }
 
-  private[this] def mkName(file: String) = {
+  private def mkName(file: String) = {
     val idx = file.lastIndexOf(".")
     val noExtension = if (idx > 0) file.take(idx) else file
     val ExtractName(name) = noExtension
     name.take(1).toUpperCase + name.drop(1)
   }
 
-  def getExample(path: String) :String = {
+  def getSrc(path: String) :String = {
     val fullPath = "" + path
     var is = getClass.getClassLoader.getResourceAsStream(fullPath)
     val fileName = path.drop(path.lastIndexOf("/") + 1)
@@ -130,7 +149,7 @@ object Examples {
 class SelectExampleAction(name: String, val path: String, txt: JTextArea)
 extends AbstractAction(name) {
   override def actionPerformed(e: ActionEvent) {
-    val code = Examples.getExample(path)
+    val code = Examples.getSrc(path)
     if (code != null) {
       txt.setText(code)
       txt.getCaret.setDot(0)
@@ -169,7 +188,7 @@ class Node(val name: String, val isDir: Boolean) {
 
   def addPath(path: String) { addPath(path.split("/").toList) }
 
-  def addPath(path: List[String]) {
+  private def addPath(path: List[String]) {
     if (!path.isEmpty) {
       findChild(path.head) match {
         case Some(child) => child.addPath(path.tail)

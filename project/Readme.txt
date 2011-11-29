@@ -41,14 +41,12 @@ root
 Additionally there are aggregated doc and test projects:
 
 root-doc
-
   math-doc
   data-doc
   algorithm-doc
   engine-doc
   
 root-example
-
   math-example
   data-example
   algorithm-example

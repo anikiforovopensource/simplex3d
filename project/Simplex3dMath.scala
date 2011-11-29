@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dMath extends Build {
   
-  val buildSettings = Simplex3d.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq (
     version := "2.0-SNAPSHOT",
     startYear := Some(2009),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -106,10 +106,10 @@ object Simplex3dMath extends Build {
   lazy val example = Project(
     id = "math-example",
     base = file("Simplex3dMath"),
-    settings = Simplex3d.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq (
       target := new File("target/math/example")
     )
-  ) dependsOn(core, double, Simplex3dScript.core)
+  ) dependsOn(Common.sbtBugfix, core, double, Simplex3dScript.core)
 }
 
 
@@ -135,47 +135,47 @@ object StripSwizzling {
   
   private def copy(file: File, todir: File) :File = {
     val dest = new File(todir, file.getName)
-    
-    val in = new BufferedInputStream(new FileInputStream(file))
-    val out = new BufferedOutputStream(new FileOutputStream(dest))
-    
-    val buff = new Array[Byte](1024)
-    var read = 0; while (read >= 0) {
-      out.write(buff, 0, read)
-      read = in.read(buff)
-    }
-    
-    in.close()
-    out.close()
-    
+    Util.copy(file, dest)
     dest
   }
   
   private def filter(file: File, todir: File) :File = {
-    val lines = scala.io.Source.fromFile(file).getLines.toArray
-    if (lines.find(_.contains("@SwizzlingStart")).isEmpty) copy(file, todir)
-    else stripSwizzling(lines, new File(todir, file.getName))
+    var source: scala.io.Source = null
+    try {
+      source = scala.io.Source.fromFile(file)
+      val lines = source.getLines.toArray
+      
+      if (lines.find(_.contains("@SwizzlingStart")).isEmpty) copy(file, todir)
+      else stripSwizzling(lines, new File(todir, file.getName))
+    }
+    finally {
+      if (source != null) source.close()
+    }
   }
   
   private def stripSwizzling(lines: Array[String], dest: File) :File = {
-    val out = new BufferedWriter(new FileWriter(dest))
-    
-    var excludeEnd = 0
-    var excludeStart = lines.indexWhere(_.contains("@SwizzlingStart"))
-    
-    var i = 0; while (i < lines.length) {
-      i = excludeEnd; while (i < excludeStart) {
-        out.write(lines(i))
-        out.write("\n")
+    var out: BufferedWriter = null
+    try {
+      out = new BufferedWriter(new FileWriter(dest))
       
-        i += 1
+      var excludeEnd = 0
+      var excludeStart = lines.indexWhere(_.contains("@SwizzlingStart"))
+      
+      var i = 0; while (i < lines.length) {
+        i = excludeEnd; while (i < excludeStart) {
+          out.write(lines(i))
+          out.write("\n")
+        
+          i += 1
+        }
+        excludeEnd = lines.indexWhere(_.contains("@SwizzlingEnd"), excludeStart) + 1
+        excludeStart = lines.indexWhere(_.contains("@SwizzlingStart"), excludeEnd)
+        if (excludeStart == -1) excludeStart = lines.length
       }
-      excludeEnd = lines.indexWhere(_.contains("@SwizzlingEnd"), excludeStart) + 1
-      excludeStart = lines.indexWhere(_.contains("@SwizzlingStart"), excludeEnd)
-      if (excludeStart == -1) excludeStart = lines.length
     }
-    
-    out.close()
+    finally {
+      if (out != null) out.close()
+    }
     
     dest
   }

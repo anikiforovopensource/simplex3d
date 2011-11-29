@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dAlgorithm extends Build {
   
-  val buildSettings = Simplex3d.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq (
     version := "0.5-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -90,8 +90,8 @@ object Simplex3dAlgorithm extends Build {
   lazy val example = Project(
     id = "algorithm-example",
     base = file("Simplex3dAlgorithm"),
-    settings = Simplex3d.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq (
       target := new File("target/algorithm/example")
     )
-  ) dependsOn(intersection, mesh, noise, Simplex3dScript.core)
+  ) dependsOn(Common.sbtBugfix, intersection, mesh, noise, Simplex3dScript.core)
 }

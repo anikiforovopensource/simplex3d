@@ -24,7 +24,7 @@ import Process._
 
 object Simplex3dConsole extends Build {
   
-  val buildSettings = Simplex3d.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq (
     version := "0.5-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html"))),
@@ -61,9 +61,7 @@ object Simplex3dConsole extends Build {
     }
     
     val exampleFiles = rest3.map(fs => new FileSet(fs.src, List(""".*\.scala""")))
-    
-    val extensionFileset = new FileSet(classes, List("""simplex3d/console/extension/.*"""))
-    (scalaFiles, simplexFiles ++ Seq(extensionFileset), mainFiles, exampleFiles)
+    (scalaFiles, simplexFiles, mainFiles, exampleFiles)
   }
   
   
@@ -72,10 +70,9 @@ object Simplex3dConsole extends Build {
   lazy val core = Project(
     id = "console",
     base = file("Simplex3dConsole"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Common.lwjglSettings ++ Seq (
       target := new File("target/console"),
       mainClass := Some("simplex3d.console.ConsoleFrame"),
-      fork in run := true,
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       unmanagedJars in Compile <<= baseDirectory map { base => (base / "lib" ** "*.jar").classpath },
       scalaSource in Compile <<= baseDirectory(_ / "src"),

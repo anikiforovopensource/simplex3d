@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dData extends Build {
   
-  val buildSettings = Simplex3d.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq (
     version := "2.0-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -119,8 +119,8 @@ object Simplex3dData extends Build {
   lazy val example = Project(
     id = "data-example",
     base = file("Simplex3dData"),
-    settings = Simplex3d.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq (
       target := new File("target/data/example")
     )
-  ) dependsOn(core, double, format)
+  ) dependsOn(Common.sbtBugfix, core, double, format)
 }

@@ -22,8 +22,8 @@ import Keys._
 
 object Simplex3dScript extends Build {
   
-  val buildSettings = Simplex3d.buildSettings ++ Seq (
-    version := "0.5-SNAPSHOT",
+  val buildSettings = Common.buildSettings ++ Seq (
+    version := "0.1-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
@@ -44,14 +44,15 @@ object Simplex3dScript extends Build {
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
     Simplex3dData.core, Simplex3dData.double,
-    Simplex3dEngine.default
+    Simplex3dEngine.core, Simplex3dEngine.sceneGraph, Simplex3dEngine.renderer,
+    Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.default
   )
   
   lazy val example = Project(
     id = "script-example",
     base = file("Simplex3dScript"),
-    settings = Simplex3d.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq (
       target := new File("target/script/example")
     )
-  ) dependsOn(core)
+  ) dependsOn(Common.sbtBugfix, core)
 }

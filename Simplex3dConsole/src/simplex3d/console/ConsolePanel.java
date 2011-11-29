@@ -91,7 +91,7 @@ public class ConsolePanel extends javax.swing.JPanel {
 
         
         // Set the default example.
-        textComponent.setText(Examples.getSrc("simplex3d/example/console/01.ShowImage.scala"));
+        textComponent.setText(Examples.getSrc("simplex3d/example/script/01.ShowImage.scala"));
         textComponent.getCaret().setDot(0);
 
         // Add the find/replace panel.
@@ -119,7 +119,6 @@ public class ConsolePanel extends javax.swing.JPanel {
                     @Override protected void done() {
                         try {
                             feedTextArea.setText((String) get());
-                            PrivilegedRunner$.MODULE$.runQueued();
                         } catch (Exception e) {
                             String error = "EXCEPTION:\n" + e.toString();
                             for (StackTraceElement st : e.getStackTrace()) {

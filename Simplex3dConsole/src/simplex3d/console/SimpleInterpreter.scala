@@ -42,7 +42,7 @@ class SimplexInterpreter extends SimpleInterpreter {
       import simplex3d.data._
       import simplex3d.data.double._
       import simplex3d.algorithm.noise._
-      import simplex3d.console.extension.ImageUtilsPrivileged._
+      import simplex3d.script.ImageUtils._
       """
     )
     flusher.flush()

@@ -1,4 +1,4 @@
-package example.simplex3d.procedural.animation
+package simplex3d.example.algorithm.noise.advanced
 
 import simplex3d.math._
 import simplex3d.math.double._

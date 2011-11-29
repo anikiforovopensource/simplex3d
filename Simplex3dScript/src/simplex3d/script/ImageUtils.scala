@@ -20,6 +20,7 @@
 
 package simplex3d.script
 
+import java.security._
 import java.awt._
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -111,23 +112,30 @@ class ImageUtils {
     showBufferedImage(title, img)
   }
   protected def showBufferedImage(title: String, img: BufferedImage) {
-    EventQueue.invokeLater(new Runnable {
-      def run() {
-        val panel = new JPanel() {
-          override def paint(g: Graphics) {
-            g.drawImage(img, 0, 0, this)
+    AccessController.doPrivileged(new PrivilegedAction[Object]() {
+      def run() :Object = {
+        
+        EventQueue.invokeLater(new Runnable {
+          def run() {
+            val panel = new JPanel() {
+              override def paint(g: Graphics) {
+                g.drawImage(img, 0, 0, this)
+              }
+            }
+            panel.setPreferredSize(new Dimension(img.getWidth, img.getHeight))
+
+            val frame = new JFrame(title + " " + img.getWidth + "x" + img.getHeight)
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+            frame.getContentPane.add(panel)
+            frame.pack()
+            frame.setResizable(false)
+
+            position(frame)
+            frame.setVisible(true)
           }
-        }
-        panel.setPreferredSize(new Dimension(img.getWidth, img.getHeight))
-
-        val frame = new JFrame(title + " " + img.getWidth + "x" + img.getHeight)
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-        frame.getContentPane.add(panel)
-        frame.pack()
-        frame.setResizable(false)
-
-        position(frame)
-        frame.setVisible(true)
+        })
+      
+        null
       }
     })
   }
@@ -168,78 +176,85 @@ class ImageUtils {
     (title: String, dims: inVec2i)
     (function: (inVec2i, Double, inVec2) => ReadVec3)
   {
-    val drawFps = animate
-    val animator = FunctionRenderer(true, function, _.printStackTrace(System.out))
-    var actionTimer: Timer = null
+    AccessController.doPrivileged(new PrivilegedAction[Object]() {
+      def run() :Object = {
+        
+        val drawFps = animate
+        val animator = FunctionRenderer(true, function, _.printStackTrace(System.out))
+        var actionTimer: Timer = null
 
-    val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
-      override def dispose() {
-        if (actionTimer != null) actionTimer.stop()
-        animator.dispose()
-        super.dispose()
-      }
-    }
-
-    EventQueue.invokeLater(new Runnable {
-      def run() {
-        val panel = new JPanel() with ActionListener {
-
-          val fpsTimer = new SystemTimer()
-          private[this] var dims = ConstVec2i(0)
-          var img: BufferedImage = _
-          var error = false
-
-          override def paint(g: Graphics) {
-            if (error) return
-
-            fpsTimer.update()
-
-            if (dims.x != getWidth || dims.y != getHeight) {
-              dims = ConstVec2i(getWidth, getHeight)
-              img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
-            }
-
-            try {
-              val buffer = animator.nextFrame(dims, fpsTimer.uptime)
-              img.setRGB(0, 0, dims.x, dims.y, buffer, 0, dims.x)
-              g.drawImage(img, 0, 0, null)
-            }
-            catch {
-              case t: Throwable =>
-                error = true
-                frame.dispose()
-            }
-
-            if (drawFps) {
-              g.setColor(Color.LIGHT_GRAY)
-              g.fillRect(9, 6, 32, 16)
-              g.setColor(Color.BLACK)
-
-              val bold = new Font("Monospaced", Font.BOLD, 16)
-              g.setFont(bold)
-              g.setColor(Color.BLACK)
-              g.drawString(fpsTimer.averageFps.toInt.toString, 10, 20)
-            }
-
-            frame.setTitle(title + " " + dims.x + "x" + dims.y)
-          }
-
-          def actionPerformed(e: ActionEvent) {
-            repaint()
+        val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
+          override def dispose() {
+            if (actionTimer != null) actionTimer.stop()
+            animator.dispose()
+            super.dispose()
           }
         }
 
-        panel.setPreferredSize(new Dimension(dims.x, dims.y))
-        if (animate) actionTimer = new Timer(1, panel)
+        EventQueue.invokeLater(new Runnable {
+          def run() {
+            val panel = new JPanel() with ActionListener {
 
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-        frame.getContentPane.add(panel)
-        frame.pack()
-        frame.setResizable(true)
+              val fpsTimer = new SystemTimer()
+              private[this] var dims = ConstVec2i(0)
+              var img: BufferedImage = _
+              var error = false
 
-        position(frame)
-        frame.setVisible(true)
-        if (actionTimer != null) actionTimer.start()
+              override def paint(g: Graphics) {
+                if (error) return
+
+                fpsTimer.update()
+
+                if (dims.x != getWidth || dims.y != getHeight) {
+                  dims = ConstVec2i(getWidth, getHeight)
+                  img = new BufferedImage(dims.x, dims.y, BufferedImage.TYPE_INT_RGB)
+                }
+
+                try {
+                  val buffer = animator.nextFrame(dims, fpsTimer.uptime)
+                  img.setRGB(0, 0, dims.x, dims.y, buffer, 0, dims.x)
+                  g.drawImage(img, 0, 0, null)
+                }
+                catch {
+                  case t: Throwable =>
+                    error = true
+                    frame.dispose()
+                }
+
+                if (drawFps) {
+                  g.setColor(Color.LIGHT_GRAY)
+                  g.fillRect(9, 6, 32, 16)
+                  g.setColor(Color.BLACK)
+
+                  val bold = new Font("Monospaced", Font.BOLD, 16)
+                  g.setFont(bold)
+                  g.setColor(Color.BLACK)
+                  g.drawString(fpsTimer.averageFps.toInt.toString, 10, 20)
+                }
+
+                frame.setTitle(title + " " + dims.x + "x" + dims.y)
+              }
+
+              def actionPerformed(e: ActionEvent) {
+                repaint()
+              }
+            }
+
+            panel.setPreferredSize(new Dimension(dims.x, dims.y))
+            if (animate) actionTimer = new Timer(1, panel)
+
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+            frame.getContentPane.add(panel)
+            frame.pack()
+            frame.setResizable(true)
+
+            position(frame)
+            frame.setVisible(true)
+            if (actionTimer != null) actionTimer.start()
+          }
+        })
+      
+        null
       }
     })
   }
@@ -289,122 +304,129 @@ class ImageUtils {
     (title: String, background: inVec3, dims: inVec2i)
     (function: (inVec2i, Double) => (ReadDataSeq[Vec2, RFloat], ReadDataSeq[Vec3, UByte], Int))
   {
-    val drawFps = animate
-    var actionTimer: Timer = null
+    AccessController.doPrivileged(new PrivilegedAction[Object]() {
+      def run() :Object = {
+        
+        val drawFps = animate
+        var actionTimer: Timer = null
 
-    val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
-      override def dispose() {
-        if (actionTimer != null) actionTimer.stop()
-        super.dispose()
-      }
-    }
-
-    EventQueue.invokeLater(new Runnable {
-      def run() {
-        val panel = new JPanel() with ActionListener {
-
-          val fpsTimer = new SystemTimer()
-          private[this] var dims = ConstVec2i(0)
-          var error = false
-
-          // Java2D line rendering settings.
-          val lineWidth = 3
-          val stroke = new BasicStroke(
-            lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND
-          )
-          val renderHints = new RenderingHints(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON
-          )
-          renderHints.put(
-            RenderingHints.KEY_RENDERING,
-            RenderingHints.VALUE_RENDER_QUALITY
-          )
-
-          override def paint(g: Graphics) {
-            if (error) return
-
-            fpsTimer.update()
-
-            if (dims.x != getWidth || dims.y != getHeight) {
-              dims = ConstVec2i(getWidth, getHeight)
-            }
-
-            val g2 = g.asInstanceOf[Graphics2D]
-
-            // Clear the framebuffer.
-            g2.setComposite(AlphaComposite.Src)
-            g.setColor(new Color(background.r.toFloat, background.g.toFloat, background.b.toFloat))
-            g.fillRect(0, 0, dims.x, dims.y)
-
-            // Apply the line rendering settings.
-            g2.setStroke(stroke)
-            g2.setRenderingHints(renderHints)
-            g2.setComposite(AlphaComposite.SrcOver)
-
-            try {
-              val (lines, colors, count) = function(dims, fpsTimer.uptime)
-
-              var i = 0; while (i < count/2) {
-                val j = i*2
-
-                val lineStart = lines(j)
-                val lineEnd = lines(j + 1)
-
-                val colorStart = colors(j)
-                val colorEnd = colors(j + 1)
-
-                g2.setPaint(new GradientPaint(
-                  lineStart.x.toFloat, dims.y - lineStart.y.toFloat,
-                  new Color(colorStart.r.toFloat, colorStart.g.toFloat, colorStart.b.toFloat, 0.7f),
-                  lineEnd.x.toFloat, dims.y - lineEnd.y.toFloat,
-                  new Color(colorEnd.r.toFloat, colorEnd.g.toFloat, colorEnd.b.toFloat, 0.7f)
-                ))
-                g2.drawLine(
-                  lineStart.x.toInt, dims.y - lineStart.y.toInt,
-                  lineEnd.x.toInt, dims.y - lineEnd.y.toInt
-                )
-              
-                i += 1
-              }
-            }
-            catch {
-              case t: Throwable =>
-                t.printStackTrace(System.out)
-                error = true
-                frame.dispose()
-            }
-
-            if (drawFps) {
-              g.setColor(Color.LIGHT_GRAY)
-              g.fillRect(9, 6, 32, 16)
-              g.setColor(Color.BLACK)
-
-              val bold = new Font("Monospaced", Font.BOLD, 16)
-              g.setFont(bold)
-              g.setColor(Color.BLACK)
-              g.drawString(fpsTimer.averageFps.toInt.toString, 10, 20)
-            }
-
-            frame.setTitle(title + " " + dims.x + "x" + dims.y)
-          }
-
-          def actionPerformed(e: ActionEvent) {
-            repaint()
+        val frame = new JFrame(title + " " + dims.x + "x" + dims.y) {
+          override def dispose() {
+            if (actionTimer != null) actionTimer.stop()
+            super.dispose()
           }
         }
 
-        panel.setPreferredSize(new Dimension(dims.x, dims.y))
-        if (animate) actionTimer = new Timer(1, panel)
+        EventQueue.invokeLater(new Runnable {
+          def run() {
+            val panel = new JPanel() with ActionListener {
 
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-        frame.getContentPane.add(panel)
-        frame.pack()
-        frame.setResizable(true)
+              val fpsTimer = new SystemTimer()
+              private[this] var dims = ConstVec2i(0)
+              var error = false
 
-        position(frame)
-        frame.setVisible(true)
-        if (actionTimer != null) actionTimer.start()
+              // Java2D line rendering settings.
+              val lineWidth = 3
+              val stroke = new BasicStroke(
+                lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND
+              )
+              val renderHints = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON
+              )
+              renderHints.put(
+                RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY
+              )
+
+              override def paint(g: Graphics) {
+                if (error) return
+
+                fpsTimer.update()
+
+                if (dims.x != getWidth || dims.y != getHeight) {
+                  dims = ConstVec2i(getWidth, getHeight)
+                }
+
+                val g2 = g.asInstanceOf[Graphics2D]
+
+                // Clear the framebuffer.
+                g2.setComposite(AlphaComposite.Src)
+                g.setColor(new Color(background.r.toFloat, background.g.toFloat, background.b.toFloat))
+                g.fillRect(0, 0, dims.x, dims.y)
+
+                // Apply the line rendering settings.
+                g2.setStroke(stroke)
+                g2.setRenderingHints(renderHints)
+                g2.setComposite(AlphaComposite.SrcOver)
+
+                try {
+                  val (lines, colors, count) = function(dims, fpsTimer.uptime)
+
+                  var i = 0; while (i < count/2) {
+                    val j = i*2
+
+                    val lineStart = lines(j)
+                    val lineEnd = lines(j + 1)
+
+                    val colorStart = colors(j)
+                    val colorEnd = colors(j + 1)
+
+                    g2.setPaint(new GradientPaint(
+                      lineStart.x.toFloat, dims.y - lineStart.y.toFloat,
+                      new Color(colorStart.r.toFloat, colorStart.g.toFloat, colorStart.b.toFloat, 0.7f),
+                      lineEnd.x.toFloat, dims.y - lineEnd.y.toFloat,
+                      new Color(colorEnd.r.toFloat, colorEnd.g.toFloat, colorEnd.b.toFloat, 0.7f)
+                    ))
+                    g2.drawLine(
+                      lineStart.x.toInt, dims.y - lineStart.y.toInt,
+                      lineEnd.x.toInt, dims.y - lineEnd.y.toInt
+                    )
+
+                    i += 1
+                  }
+                }
+                catch {
+                  case t: Throwable =>
+                    t.printStackTrace(System.out)
+                    error = true
+                    frame.dispose()
+                }
+
+                if (drawFps) {
+                  g.setColor(Color.LIGHT_GRAY)
+                  g.fillRect(9, 6, 32, 16)
+                  g.setColor(Color.BLACK)
+
+                  val bold = new Font("Monospaced", Font.BOLD, 16)
+                  g.setFont(bold)
+                  g.setColor(Color.BLACK)
+                  g.drawString(fpsTimer.averageFps.toInt.toString, 10, 20)
+                }
+
+                frame.setTitle(title + " " + dims.x + "x" + dims.y)
+              }
+
+              def actionPerformed(e: ActionEvent) {
+                repaint()
+              }
+            }
+
+            panel.setPreferredSize(new Dimension(dims.x, dims.y))
+            if (animate) actionTimer = new Timer(1, panel)
+
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+            frame.getContentPane.add(panel)
+            frame.pack()
+            frame.setResizable(true)
+
+            position(frame)
+            frame.setVisible(true)
+            if (actionTimer != null) actionTimer.start()
+          }
+        })
+      
+        null
       }
     })
   }

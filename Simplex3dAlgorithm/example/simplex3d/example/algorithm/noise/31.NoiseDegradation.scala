@@ -1,3 +1,5 @@
+package simplex3d.example.algorithm.noise
+
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.algorithm.noise._

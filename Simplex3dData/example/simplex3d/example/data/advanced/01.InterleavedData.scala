@@ -1,4 +1,4 @@
-package example.simplex3d.tutorials
+package simplex3d.example.data.advanced
 
 import simplex3d.math._
 import simplex3d.math.double._

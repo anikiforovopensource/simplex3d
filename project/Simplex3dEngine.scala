@@ -150,8 +150,6 @@ object Simplex3dEngine extends Build {
     id = "engine-test",
     base = file("Simplex3dEngine"),
     settings = runSettings ++ Seq (
-      name := "simplex3d-engine-test",
-      description := "Simplex3D Engine Interactive Tests.",
       target := new File("target/engine/test"),
       scalaSource in Compile <<= baseDirectory(_ / "test/visual"),
       publish := {},
@@ -165,13 +163,8 @@ object Simplex3dEngine extends Build {
   lazy val example = Project(
     id = "engine-example",
     base = file("Simplex3dEngine"),
-    settings = runSettings ++ Seq (
-      name := "simplex3d-engine-example",
-      description := "Simplex3D Engine Examples.",
-      target := new File("target/engine/example"),
-      scalaSource in Compile <<= baseDirectory(_ / "example"),
-      publish := {},
-      publishLocal := {}
+    settings = Simplex3d.exampleSettings ++ runSettings ++ Seq (
+      target := new File("target/engine/example")
     )
   ) dependsOn(
     core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,

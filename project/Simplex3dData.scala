@@ -115,4 +115,12 @@ object Simplex3dData extends Build {
       publishLocal := {}
     )
   ) dependsOn(core, double, float, format)
+  
+  lazy val example = Project(
+    id = "data-example",
+    base = file("Simplex3dData"),
+    settings = Simplex3d.exampleSettings ++ Seq (
+      target := new File("target/data/example")
+    )
+  ) dependsOn(core, double, format)
 }

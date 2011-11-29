@@ -93,10 +93,5 @@ object Simplex3dAlgorithm extends Build {
     settings = Simplex3d.exampleSettings ++ Seq (
       target := new File("target/algorithm/example")
     )
-  ) dependsOn(
-    Simplex3dMath.core, Simplex3dMath.double,
-    Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
-    Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
-    Simplex3dScript.core
-  )
+  ) dependsOn(intersection, mesh, noise, Simplex3dScript.core)
 }

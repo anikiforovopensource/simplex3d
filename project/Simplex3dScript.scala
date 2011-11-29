@@ -46,4 +46,12 @@ object Simplex3dScript extends Build {
     Simplex3dData.core, Simplex3dData.double, Simplex3dData.format,
     Simplex3dAlgorithm.intersection, Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
+  
+  lazy val example = Project(
+    id = "script-example",
+    base = file("Simplex3dScript"),
+    settings = Simplex3d.exampleSettings ++ Seq (
+      target := new File("target/script/example")
+    )
+  ) dependsOn(core)
 }

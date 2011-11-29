@@ -102,6 +102,14 @@ object Simplex3dMath extends Build {
       publishLocal := {}
     )
   ) dependsOn(core, double, float)
+  
+  lazy val example = Project(
+    id = "math-example",
+    base = file("Simplex3dMath"),
+    settings = Simplex3d.exampleSettings ++ Seq (
+      target := new File("target/math/example")
+    )
+  ) dependsOn(core, double, Simplex3dScript.core)
 }
 
 

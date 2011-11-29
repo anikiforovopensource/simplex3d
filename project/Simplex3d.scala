@@ -66,6 +66,30 @@ object Simplex3d extends Build {
   ) aggregate(
     Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root, Simplex3dScript.root, Simplex3dConsole.root
   )
+  
+  lazy val doc = Project(
+    id = "root-doc",
+    base = file("."),
+    settings = buildSettings ++ Seq (
+      target := new File("target/root"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) aggregate(
+    Simplex3dMath.doc, Simplex3dData.doc, Simplex3dAlgorithm.doc, Simplex3dEngine.doc, Simplex3dScript.core
+  )
+  
+  lazy val example = Project(
+    id = "root-example",
+    base = file("."),
+    settings = buildSettings ++ Seq (
+      target := new File("target/root"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) aggregate(
+    Simplex3dMath.example, Simplex3dData.example, Simplex3dAlgorithm.example, Simplex3dEngine.example, Simplex3dScript.example
+  )
 }
 
 

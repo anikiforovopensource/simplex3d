@@ -57,7 +57,6 @@ object Simplex3dConsole extends Build {
     
     val (rest3, mainFiles) = rest2.partition{ f =>
       val ap = f.src.getAbsolutePath
-      println("::" + ap)
       ap.contains("/example/")
     }
     

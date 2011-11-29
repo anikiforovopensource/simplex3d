@@ -38,29 +38,37 @@ root
     console-webstart
   
   
-Additionally there are doc, test, and example sub-project:
+Additionally there are aggregated doc and test projects:
+
+root-doc
 
   math-doc
   data-doc
   algorithm-doc
   engine-doc
   
-  math-test
-  data-test
-  engine-test
-  
+root-example
+
   math-example (planned, not yet implemented)
   data-example (planned, not yet implemented)
   algorithm-example (needs work)
   engine-example (needs work)
   script-example (planned, not yet implemented)
-  
+
+
+Also there are some test projects:
+
+  math-test
+  data-test
+  engine-test
+
+
 And two optional sub-projects:
 
   math-float
   data-float
-  
 
+  
   
 ***** Using SBT *****
   

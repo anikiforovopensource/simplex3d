@@ -18,14 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.example.engine
+package simplex3d.script
 
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
-import simplex3d.algorithm.noise._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
 

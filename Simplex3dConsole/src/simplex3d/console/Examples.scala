@@ -42,7 +42,7 @@ object Examples {
 
     val prefix = "simplex3d/"
     val exampleNode = new Node("example", true)
-    val menuGroups = List("scripting", "math", "data", "algorithm", "engine").reverse
+    val menuGroups = List("script", "math", "data", "algorithm", "engine").reverse
     
     val root = new Node(null, true)
     root.addChild(exampleNode)

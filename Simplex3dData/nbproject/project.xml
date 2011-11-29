@@ -6,6 +6,7 @@
             <name>Simplex3dData</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
+                <root id="src.example.dir"/>
                 <root id="src.core.dir"/>
                 <root id="src.double.dir"/>
                 <root id="src.float.dir"/>

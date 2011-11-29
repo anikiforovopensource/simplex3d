@@ -90,6 +90,7 @@ is divided into following sections:
         </condition>
         <condition property="have.sources">
             <or>
+                <available file="${src.example.dir}"/>
                 <available file="${src.core.dir}"/>
                 <available file="${src.double.dir}"/>
                 <available file="${src.float.dir}"/>
@@ -147,6 +148,7 @@ is divided into following sections:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init" name="-init-check">
+        <fail unless="src.example.dir">Must set src.example.dir</fail>
         <fail unless="src.core.dir">Must set src.core.dir</fail>
         <fail unless="src.double.dir">Must set src.double.dir</fail>
         <fail unless="src.float.dir">Must set src.float.dir</fail>
@@ -172,7 +174,7 @@ is divided into following sections:
     </target>
     <target name="-init-macrodef-javac">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
+            <attribute default="${src.example.dir}:${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${includes}" name="includes"/>
@@ -194,7 +196,7 @@ is divided into following sections:
             </sequential>
         </macrodef>
         <macrodef name="depend" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
+            <attribute default="${src.example.dir}:${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <sequential>
@@ -229,7 +231,7 @@ is divided into following sections:
     </target>
     <target name="-init-macrodef-scalac">
         <macrodef name="scalac" uri="http://www.netbeans.org/ns/scala-project/1">
-            <attribute default="${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
+            <attribute default="${src.example.dir}:${src.core.dir}:${src.double.dir}:${src.float.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${extdirs}" name="extdirs"/>
@@ -409,6 +411,7 @@ is divided into following sections:
         <scalaProject1:scalac/>
         <scalaProject1:javac/>
         <copy todir="${build.classes.dir}">
+            <fileset dir="${src.example.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
             <fileset dir="${src.core.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
             <fileset dir="${src.double.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
             <fileset dir="${src.float.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
@@ -426,7 +429,7 @@ is divided into following sections:
     <target depends="init,deps-jar,-pre-pre-compile" name="-do-compile-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
         <scalaProject1:force-recompile/>
-        <scalaProject1:scalac excludes="" includes="${javac.includes}" sourcepath="${src.core.dir}:${src.double.dir}:${src.float.dir}"/>
+        <scalaProject1:scalac excludes="" includes="${javac.includes}" sourcepath="${src.example.dir}:${src.core.dir}:${src.double.dir}:${src.float.dir}"/>
     </target>
     <target name="-post-compile-single">
         <!-- Empty placeholder for easier customization. -->

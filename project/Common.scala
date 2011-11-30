@@ -33,6 +33,8 @@ object Common extends Build {
   )
   
   
+  val lwjglVersion = "2.8.2"
+  
   lazy val sbtBugfix = Project(
     id = "another-sbt-bugfix",
     base = file("."),
@@ -77,6 +79,16 @@ object Common extends Build {
   )
   
   
+  def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
+    val nativeJarDir = ivyHome / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
+    val files = nativeJarDir.listFiles
+    if (files == null) return Nil
+    
+    files.filter { file =>
+      file.getName.contains(lwjglVersion) && file.getName.endsWith(".jar")
+    }
+  }
+  
   @volatile var nativesUpdated = false
   def setupLwjglNatives(ivyHome: File) :String = {
     val targetDir = new File("target/natives/lwjgl")
@@ -85,13 +97,8 @@ object Common extends Build {
       if (!nativesUpdated) {
         IO.delete(targetDir)
         targetDir.mkdirs()
-      
-        val nativeJarDir = ivyHome / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
-        val nativeJars = nativeJarDir.listFiles.filter{ file =>
-          file.getName.contains(lwjglVersion) && file.getName.endsWith(".jar")
-        }
         
-        for (jar <- nativeJars) {
+        for (jar <- getLwjglNativeJars(ivyHome)) {
           IO.unzip(jar, targetDir, new SimpleFilter(!_.toUpperCase.startsWith("META-INF")))
         }
         
@@ -102,7 +109,6 @@ object Common extends Build {
     "-Djava.library.path=" + targetDir.getAbsolutePath
   }
   
-  val lwjglVersion = "2.8.2"
   val lwjglSettings: Seq[Setting[_]] = Seq(
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-linux",
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-osx",

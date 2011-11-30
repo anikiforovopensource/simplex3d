@@ -55,13 +55,19 @@ object Simplex3dConsole extends Build {
       )
     }
     
-    val (rest3, mainFiles) = rest2.partition{ f =>
+    val (unfilteredExamples, rest3) = rest2.partition{ f =>
       val ap = f.src.getAbsolutePath
       ap.contains("/example/")
     }
     
-    val exampleFiles = rest3.map(fs => new FileSet(fs.src, List(""".*\.scala""")))
-    (scalaFiles, simplexFiles, mainFiles, exampleFiles)
+    val (mainFiles, otherDeps) = rest3.partition{ f =>
+      val ap = f.src.getAbsolutePath
+      ap.contains("/target/console/") ||
+      ap.contains("/Simplex3dConsole/")
+    }
+    
+    val exampleFiles = unfilteredExamples.map(fs => new FileSet(fs.src, List(""".*\.scala""")))
+    (scalaFiles, simplexFiles, exampleFiles, mainFiles, otherDeps)
   }
   
   
@@ -78,7 +84,7 @@ object Simplex3dConsole extends Build {
       scalaSource in Compile <<= baseDirectory(_ / "src"),
       
       compile in Compile <<= (scalaSource in Compile, classDirectory in Compile, dependencyClasspath in Compile, compile in Compile) map { (src, classes, cp, compileRes) =>
-        val (scalaFiles, simplexFiles, mainFiles, exampleFiles) = extractFileSets(classes, cp)
+        val (scalaFiles, simplexFiles, exampleFiles, mainFiles, otherDeps) = extractFileSets(classes, cp)
         Indexer.index(
           classes / "simplex3d/console/deps.version",
           classes / "simplex3d/console/deps.index", scalaFiles ++ simplexFiles,
@@ -114,16 +120,36 @@ object Simplex3dConsole extends Build {
         }
       },
       
-      packageBin in Compile <<= (baseDirectory, target, classDirectory in Compile, dependencyClasspath in Compile, packageBin in Compile) map {
-        (base, target, classes, cp, jar) =>
+      packageBin in Compile <<= (
+        baseDirectory, target,
+        classDirectory in Compile, dependencyClasspath in Compile, packageBin in Compile,
+        ivyPaths
+      ) map {
+        (base, target, classes, cp, jar, ivyPaths) =>
         
         require(!keystoreAlias.isEmpty && !keystorePass.isEmpty, "Run keystore-credentials first.")
+        
+        val (scalaFiles, simplexFiles, exampleFiles, mainFiles, otherDeps) = extractFileSets(classes, cp)
+        
+        val tempLog = java.io.File.createTempFile("pack200", ".log")
+        tempLog.deleteOnExit()
       
       
+        println("Copying lwjgl jars...")
+        
+        //val lwjglNativeJars = Common.getLwjglNativeJars(ivyPaths.ivyHome.get)
+        //for (jar <- lwjglNativeJars) { IO.copyFile(jar, target / jar.getName) }
+        
+        val otherJars = otherDeps.map(_.src).filter(file => !file.isDirectory && file.getName.endsWith(".jar"))
+        val lwjglJars = otherJars.filter(_.getAbsolutePath.contains("lwjgl"))
+        val copiedLwjglJars = for (jar <- lwjglJars) yield {
+          val copy = target / jar.getName.replace("-" + Common.lwjglVersion, "")
+          IO.copyFile(jar, copy)
+          copy
+        }
+        
+        
         println("Building web-start jars...")
-        
-        val (scalaFiles, simplexFiles, mainFiles, exampleFiles) = extractFileSets(classes, cp)
-        
         
         val scalaDeps = new File(target, "console-ws-scala-deps.jar")
         val simplexDeps = new File(target, "console-ws-simplex3d-deps.jar")
@@ -132,10 +158,8 @@ object Simplex3dConsole extends Build {
         Jar.create(scalaDeps, scalaFiles)
         Jar.create(simplexDeps, simplexFiles)
         Jar.create(main, mainFiles ++ exampleFiles)
-        val jars = List(scalaDeps.getAbsolutePath, simplexDeps.getAbsolutePath, main.getAbsolutePath)
         
-        val tempLog = java.io.File.createTempFile("pack200", ".log")
-        tempLog.deleteOnExit()
+        val jars = copiedLwjglJars ++ List(scalaDeps.getAbsolutePath, simplexDeps.getAbsolutePath, main.getAbsolutePath)
         
         
         println("Repacking web-start jars...")

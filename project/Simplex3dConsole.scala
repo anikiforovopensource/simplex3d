@@ -24,7 +24,7 @@ import Process._
 
 object Simplex3dConsole extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "0.5-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html"))),
@@ -76,7 +76,7 @@ object Simplex3dConsole extends Build {
   lazy val core = Project(
     id = "console",
     base = file("Simplex3dConsole"),
-    settings = buildSettings ++ Common.lwjglSettings ++ Seq (
+    settings = buildSettings ++ Common.lwjglSettings ++ Seq(
       target := new File("target/console"),
       mainClass := Some("simplex3d.console.ConsoleFrame"),
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
@@ -105,7 +105,7 @@ object Simplex3dConsole extends Build {
   lazy val webstart = Project(
     id = "console-webstart",
     base = file("Simplex3dConsole"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/console/webstart"),
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-library" % _),
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),

@@ -35,49 +35,6 @@ object Common extends Build {
   
   val lwjglVersion = "2.8.2"
   
-  lazy val sbtBugfix = Project(
-    id = "another-sbt-bugfix",
-    base = file("."),
-    settings = Defaults.defaultSettings ++ Seq (
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
-    )
-  ) dependsOn(sbtBugfixLwjglLinux, sbtBugfixLwjglOsx, sbtBugfixLwjglWindows)
-  
-  lazy val sbtBugfixLwjglLinux = Project(
-    id = "another-sbt-bugfix-lwjgl-linux",
-    base = file("."),
-    settings = Defaults.defaultSettings ++ Seq (
-      target := new File("target/root/sbtbugfix1"),
-      libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-linux",
-      publish := {},
-      publishLocal := {}
-    )
-  )
-  
-  lazy val sbtBugfixLwjglOsx = Project(
-    id = "another-sbt-bugfix-lwjgl-osx",
-    base = file("."),
-    settings = Defaults.defaultSettings ++ Seq (
-      target := new File("target/root/sbtbugfix2"),
-      libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-osx",
-      publish := {},
-      publishLocal := {}
-    )
-  )
-  
-  lazy val sbtBugfixLwjglWindows = Project(
-    id = "another-sbt-bugfix-lwjgl-windows",
-    base = file("."),
-    settings = Defaults.defaultSettings ++ Seq (
-      target := new File("target/root/sbtbugfix3"),
-      libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-windows",
-      publish := {},
-      publishLocal := {}
-    )
-  )
-  
   
   def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
     val nativeJarDir = ivyHome / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
@@ -110,9 +67,7 @@ object Common extends Build {
   }
   
   val lwjglSettings: Seq[Setting[_]] = Seq(
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-linux",
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-osx",
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-windows",
+    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-linux" classifier "natives-osx" classifier "natives-windows",
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl" % lwjglVersion,
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl_util" % lwjglVersion,
     

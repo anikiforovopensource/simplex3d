@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dMath extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "2.0-SNAPSHOT",
     startYear := Some(2009),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -31,7 +31,7 @@ object Simplex3dMath extends Build {
   lazy val root = Project(
     id = "math",
     base = file("."),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/math"),
       publish := {},
       publishLocal := {}
@@ -41,7 +41,7 @@ object Simplex3dMath extends Build {
   lazy val core = Project(
     id = "math-core",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-math-core",
       description := "Vector Math DSL, Core Module.",
       target := new File("target/math/core"),
@@ -52,7 +52,7 @@ object Simplex3dMath extends Build {
   lazy val double = Project(
     id = "math-double",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-math-double",
       description := "Vector Math DSL, Double Module.",
       target := new File("target/math/double"),
@@ -63,7 +63,7 @@ object Simplex3dMath extends Build {
   lazy val float = Project(
     id = "math-float",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-math-float",
       description := "Vector Math DSL, Float Module.",
       target := new File("target/math/float"),
@@ -74,7 +74,7 @@ object Simplex3dMath extends Build {
   lazy val doc = Project(
     id = "math-doc",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/math/doc"),
       excludeFilter := "*",
       sourceGenerators in Compile <+= baseDirectory map { base =>
@@ -90,7 +90,7 @@ object Simplex3dMath extends Build {
   lazy val test = Project(
     id = "math-test",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-math-test",
       description := "Vector Math DSL, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
@@ -106,10 +106,10 @@ object Simplex3dMath extends Build {
   lazy val example = Project(
     id = "math-example",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Common.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq(
       target := new File("target/math/example")
     )
-  ) dependsOn(Common.sbtBugfix, core, double, Simplex3dScript.core)
+  ) dependsOn(core, double, Simplex3dScript.core)
 }
 
 

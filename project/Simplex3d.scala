@@ -26,7 +26,7 @@ object Simplex3d extends Build {
   lazy val root = Project(
     id = "root",
     base = file("."),
-    settings = Common.buildSettings ++ Seq (
+    settings = Common.buildSettings ++ Seq(
       target := new File("target/root"),
       publish := {},
       publishLocal := {}
@@ -38,7 +38,7 @@ object Simplex3d extends Build {
   lazy val doc = Project(
     id = "root-doc",
     base = file("."),
-    settings = Common.buildSettings ++ Seq (
+    settings = Common.buildSettings ++ Seq(
       target := new File("target/root"),
       publish := {},
       publishLocal := {}
@@ -50,7 +50,7 @@ object Simplex3d extends Build {
   lazy val example = Project(
     id = "root-example",
     base = file("."),
-    settings = Common.buildSettings ++ Seq (
+    settings = Common.buildSettings ++ Seq(
       target := new File("target/root"),
       publish := {},
       publishLocal := {}

@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dEngine extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "0.5-SNAPSHOT",
     startYear := Some(2011),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -31,7 +31,7 @@ object Simplex3dEngine extends Build {
   lazy val root = Project(
     id = "engine",
     base = file("."),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/engine"),
       publish := {},
       publishLocal := {}
@@ -41,7 +41,7 @@ object Simplex3dEngine extends Build {
   lazy val core = Project(
     id = "engine-core",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-engine-core",
       description := "Simplex3D Engine, Core Module.",
       target := new File("target/engine/core"),
@@ -56,7 +56,7 @@ object Simplex3dEngine extends Build {
   lazy val sceneGraph = Project(
     id = "engine-scenegraph",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-engine-scenegraph",
       description := "Simplex3D Engine, Scenegraph Module.",
       target := new File("target/engine/scenegraph"),
@@ -67,7 +67,7 @@ object Simplex3dEngine extends Build {
   lazy val renderer = Project(
     id = "engine-renderer",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-engine-renderer",
       description := "Simplex3D Engine, Renderer Module.",
       target := new File("target/engine/renderer"),
@@ -78,7 +78,7 @@ object Simplex3dEngine extends Build {
   lazy val backendOpengl = Project(
     id = "engine-backend-opengl",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-engine-backend-opengl",
       description := "Simplex3D Engine, Common OpenGL Backend.",
       target := new File("target/engine/backend/opengl"),
@@ -89,7 +89,7 @@ object Simplex3dEngine extends Build {
   lazy val backendLwjgl = Project(
     id = "engine-backend-lwjgl",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Common.lwjglSettings ++ Seq (
+    settings = buildSettings ++ Common.lwjglSettings ++ Seq(
       name := "simplex3d-engine-backend-lwjgl",
       description := "Simplex3D Engine, LWJGL Backend.",
       target := new File("target/engine/backend/lwjgl"),
@@ -100,7 +100,7 @@ object Simplex3dEngine extends Build {
   lazy val default = Project(
     id = "engine-default",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-engine-default",
       description := "Simplex3D Engine, Default Implementation.",
       target := new File("target/engine/default"),
@@ -112,7 +112,7 @@ object Simplex3dEngine extends Build {
   lazy val doc = Project(
     id = "engine-doc",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/engine/doc"),
       sourceDirectories <<= baseDirectory(base => Seq(
         base / "src/core",
@@ -132,14 +132,13 @@ object Simplex3dEngine extends Build {
   lazy val test = Project(
     id = "engine-test",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Common.lwjglSettings ++ Seq (
+    settings = buildSettings ++ Common.lwjglSettings ++ Seq(
       target := new File("target/engine/test"),
       scalaSource in Compile <<= baseDirectory(_ / "test/visual"),
       publish := {},
       publishLocal := {}
     )
   ) dependsOn(
-    Common.sbtBugfix,
     core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
@@ -147,11 +146,10 @@ object Simplex3dEngine extends Build {
   lazy val example = Project(
     id = "engine-example",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Common.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq(
       target := new File("target/engine/example")
     )
   ) dependsOn(
-    Common.sbtBugfix,
     Simplex3dScript.core,
     core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise

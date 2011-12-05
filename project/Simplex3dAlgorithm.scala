@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dAlgorithm extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "0.5-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -31,7 +31,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val root = Project(
     id = "algorithm",
     base = file("."),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/algorithm"),
       publish := {},
       publishLocal := {}
@@ -41,7 +41,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val intersection = Project(
     id = "algorithm-intersection",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-algorithm-intersection",
       description := "Intersection and Collision Algorithms.",
       target := new File("target/algorithm/intersection"),
@@ -52,7 +52,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val mesh = Project(
     id = "algorithm-mesh",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-algorithm-mesh",
       description := "Algorithms to generate and work with mesh data.",
       target := new File("target/algorithm/mesh"),
@@ -63,7 +63,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val noise = Project(
     id = "algorithm-noise",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-algorithm-noise",
       description := "Noise Algorithms.",
       target := new File("target/algorithm/noise"),
@@ -75,7 +75,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val doc = Project(
     id = "algorithm-doc",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/algorithm/doc"),
       sourceDirectories <<= baseDirectory(base => Seq(
         base / "src/intersection",
@@ -90,8 +90,8 @@ object Simplex3dAlgorithm extends Build {
   lazy val example = Project(
     id = "algorithm-example",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Common.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq(
       target := new File("target/algorithm/example")
     )
-  ) dependsOn(Common.sbtBugfix, intersection, mesh, noise, Simplex3dScript.core)
+  ) dependsOn(intersection, mesh, noise, Simplex3dScript.core)
 }

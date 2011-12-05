@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dScript extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "0.1-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -33,7 +33,7 @@ object Simplex3dScript extends Build {
   lazy val core = Project(
     id = "script",
     base = file("Simplex3dScript"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-script",
       description := "Scripting API.",
       target := new File("target/script"),
@@ -51,8 +51,8 @@ object Simplex3dScript extends Build {
   lazy val example = Project(
     id = "script-example",
     base = file("Simplex3dScript"),
-    settings = buildSettings ++ Common.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq(
       target := new File("target/script/example")
     )
-  ) dependsOn(Common.sbtBugfix, core)
+  ) dependsOn(core)
 }

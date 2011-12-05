@@ -22,7 +22,7 @@ import Keys._
 
 object Simplex3dData extends Build {
   
-  val buildSettings = Common.buildSettings ++ Seq (
+  val buildSettings = Common.buildSettings ++ Seq(
     version := "2.0-SNAPSHOT",
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
@@ -31,7 +31,7 @@ object Simplex3dData extends Build {
   lazy val root = Project(
     id = "data",
     base = file("."),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/data"),
       publish := {},
       publishLocal := {}
@@ -41,7 +41,7 @@ object Simplex3dData extends Build {
   lazy val core = Project(
     id = "data-core",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-data-core",
       description := "Data Binding API, Core Module.",
       target := new File("target/data/core"),
@@ -52,7 +52,7 @@ object Simplex3dData extends Build {
   lazy val double = Project(
     id = "data-double",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-data-double",
       description := "Data Binding API, Double Module.",
       target := new File("target/data/double"),
@@ -63,7 +63,7 @@ object Simplex3dData extends Build {
   lazy val float = Project(
     id = "data-float",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-data-float",
       description := "Data Binding API, Float Module.",
       target := new File("target/data/float"),
@@ -74,7 +74,7 @@ object Simplex3dData extends Build {
   lazy val format = Project(
     id = "data-format",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-data-format",
       version := "0.5-SNAPSHOT",
       description := "Additional data formats for Data Binding API.",
@@ -87,7 +87,7 @@ object Simplex3dData extends Build {
   lazy val doc = Project(
     id = "data-doc",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       target := new File("target/data/doc"),
       sourceDirectories <<= baseDirectory(base => Seq(
         base / "src/core",
@@ -103,7 +103,7 @@ object Simplex3dData extends Build {
   lazy val test = Project(
     id = "data-test",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Seq (
+    settings = buildSettings ++ Seq(
       name := "simplex3d-data-test",
       description := "Data Binding API, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
@@ -119,8 +119,8 @@ object Simplex3dData extends Build {
   lazy val example = Project(
     id = "data-example",
     base = file("Simplex3dData"),
-    settings = buildSettings ++ Common.exampleSettings ++ Seq (
+    settings = buildSettings ++ Common.exampleSettings ++ Seq(
       target := new File("target/data/example")
     )
-  ) dependsOn(Common.sbtBugfix, core, double, format)
+  ) dependsOn(core, double, format)
 }

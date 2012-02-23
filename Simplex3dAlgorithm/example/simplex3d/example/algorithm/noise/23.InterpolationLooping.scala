@@ -17,12 +17,12 @@ object InterpolationLooping extends App {
     ((period - p.z)*noise(p) + p.z*noise(Vec3(p.x, p.y, p.z - period)))/period
   }
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1.2,
     octaves = 3, lacunarity = 2.2, persistence = 0.4,
     roundness = 0.3
-  )
+  ))
   val noise = (p: inVec3) => turbulence(p)
 
   // Interpolation looping produces blurring artifacts.

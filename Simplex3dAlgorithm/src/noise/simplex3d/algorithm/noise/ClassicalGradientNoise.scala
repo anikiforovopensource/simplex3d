@@ -26,18 +26,19 @@ package simplex3d.algorithm.noise
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-class ClassicalGradientNoise(seed: Int)
-extends TiledNoiseSource(seed) with Serializable
+class ClassicalGradientNoise(iseed: Int)
+extends TiledNoiseSource with Serializable
 {
-
+  final def seed: Long = this.iseed
+  def reseed(seed: Long) = new ClassicalGradientNoise(seed.toInt)
   
   // *** Hash **********************************************************************************************************
   
-  private val a = (seed ^ 0x97CD8F8C) | ((1 << 16) + 1)
-  private val b = seed ^ 0xA4BAA665
+  private val a = (iseed ^ 0x97CD8F8C) | ((1 << 16) + 1)
+  private val b = iseed ^ 0xA4BAA665
   
-  private val c = (seed ^ 0xB5C18E6A) | ((1 << 16) + 1)
-  private val d = seed ^ 0xF292D0B2
+  private val c = (iseed ^ 0xB5C18E6A) | ((1 << 16) + 1)
+  private val d = iseed ^ 0xF292D0B2
   
   // 16 bits of hash
   private final def perm(x: Int) :Int = {

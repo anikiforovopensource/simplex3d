@@ -12,14 +12,13 @@ import simplex3d.script.ImageUtils._
  */
 object Tiled extends App {
 
-  val turbulence = new TiledTurbulence(
+  val turbulence = new Noise1(new TiledTurbulence(
     ClassicalGradientNoise,
     tile = Vec4(2),
     frequency = 1,
     octaves = 3, lacunarity = 2.5, persistence = 0.5,
     roundness = 0.3
-  )
-  val noise = (p: inVec2) => turbulence(p)
+  ))
 
   drawFunction("Tiled") { (dims, pixel) =>
     val p = pixel/150

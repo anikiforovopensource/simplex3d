@@ -39,13 +39,13 @@ object Wood extends App {
   val verticalChange = 0.3
   val irregularity = 0.4
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1,
     octaves = 4, lacunarity = 2.0, persistence = 0.5
-  )
+  ))
 
   def wood(pos: inVec3) :Vec3 = {
     val p = rotateVector(pos, rotation)

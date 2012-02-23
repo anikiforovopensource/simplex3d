@@ -15,7 +15,7 @@ object Noise3D extends App {
   val changeSpeed = 1.0/3
   val scrollSpeed = 10
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   animateFunction("Noise3D") { (dims, time, pixel) =>
     val p = pixel + time*scrollSpeed

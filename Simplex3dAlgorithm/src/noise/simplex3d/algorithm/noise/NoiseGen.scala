@@ -1,6 +1,6 @@
 /*
  * Simplex3dAlgorithm - Noise Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dAlgorithm.
  *
@@ -26,36 +26,12 @@ package simplex3d.algorithm.noise
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-abstract class NoiseSource extends NoiseGen with Serializable {
-  def reseed(seed: Long) :NoiseSource
-}
-
-@SerialVersionUID(8104346712419693669L)
-abstract class TiledNoiseSource extends NoiseSource with Serializable {
-  def reseed(seed: Long) :TiledNoiseSource
+abstract class NoiseGen extends Serializable {
+  def seed: Long
+  def reseed(seed: Long) :NoiseGen
   
-  val tileSizeX :Double
-  val tileSizeY :Double
-  val tileSizeZ :Double
-  val tileSizeW :Double
-
-  def apply(
-    tile: Int,
-    x: Double
-  ) :Double
-
-  def apply(
-    tilex: Int, tiley: Int,
-    x: Double, y: Double
-  ) :Double
-
-  def apply(
-    tilex: Int, tiley: Int, tilez: Int,
-    x: Double, y: Double, z:Double
-  ) :Double
-
-  def apply(
-    tilex: Int, tiley: Int, tilez: Int, tilew: Int,
-    x: Double, y: Double, z:Double, w:Double
-  ) :Double
+  def apply(x: Double) :Double
+  def apply(x: Double, y: Double) :Double
+  def apply(x: Double, y: Double, z:Double) :Double
+  def apply(x: Double, y: Double, z:Double, w:Double) :Double
 }

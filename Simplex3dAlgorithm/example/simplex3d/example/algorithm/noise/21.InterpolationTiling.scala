@@ -24,12 +24,12 @@ object InterpolationTiling extends App {
 
   def contrast(f: Double, x: Double) :Double = f*(x - 0.5) + 0.5
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1,
     octaves = 3, lacunarity = 2.5, persistence = 0.5,
     roundness = 0.3
-  )
+  ))
   val noise = (p: inVec2) => turbulence(p + 10)
 
   // Interpolation tiling produces blurring artifacts.

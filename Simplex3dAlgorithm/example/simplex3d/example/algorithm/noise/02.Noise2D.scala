@@ -14,7 +14,7 @@ object Noise2D extends App {
   val zoom = 1.0/30
   val scrollSpeed = 20
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   animateFunction("Noise2D") { (dims, time, pixel) =>
     val p = pixel + time*scrollSpeed

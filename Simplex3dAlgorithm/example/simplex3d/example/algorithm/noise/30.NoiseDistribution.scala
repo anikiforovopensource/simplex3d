@@ -17,7 +17,7 @@ object NoiseDistribution extends App {
   val changeSpeed2 = 1.0/5
   val scrollSpeed = 10
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   animateFunction("Noise Distribution") { (dims, time, pixel) =>
     val p = pixel + time*scrollSpeed

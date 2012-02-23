@@ -18,7 +18,7 @@ object Biomass extends App {
   val expectedMagnitude = 0.7
 
   val amplitudeFactors = (for (i <- 0 until 3) yield pow(persistence, i)).toArray
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   def noiseSum(p: inVec3) = {
     val varying = 2 + noise(p)*0.02

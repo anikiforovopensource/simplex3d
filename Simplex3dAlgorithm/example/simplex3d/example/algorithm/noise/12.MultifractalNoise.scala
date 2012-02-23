@@ -17,7 +17,7 @@ object MultifractalNoise extends App {
   val expectedMagnitude = 1.5
 
   val frequencyFactors = (for (i <- 0 until octaves) yield pow(lacunarity, i)).toArray
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   def noiseSum(p: inVec2) = {
     val varying = lacunarity + noise(p)*0.5

@@ -18,12 +18,12 @@ object Sun extends App {
   val low = ConstVec3(1, 0.3, 0)
   val high = ConstVec3(1, 0.8, 0)
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1.7,
     octaves = 3, lacunarity = 2.5, persistence = 0.66,
     roundness = 0.3
-  )
+  ))
 
   animateFunction("Sun") { (dims, time, pixel) =>
     val u = (pixel - dims*0.5)*zoom

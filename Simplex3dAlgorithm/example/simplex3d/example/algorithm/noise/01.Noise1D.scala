@@ -18,7 +18,7 @@ object Noise1D extends App {
   val background = white
   val axisColor = ConstVec3(0)
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
 
   animateFunction("Noise1D", ConstVec2i(800, 300)) { (dims, time, pixel) =>
     val mid = dims/2.0

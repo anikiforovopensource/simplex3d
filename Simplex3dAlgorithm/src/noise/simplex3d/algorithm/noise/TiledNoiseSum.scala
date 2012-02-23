@@ -38,8 +38,11 @@ final class TiledNoiseSum(
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5
-) extends Serializable {
+) extends NoiseGen with Serializable {
 
+  final def seed: Long = source.seed
+  def reseed(seed: Long) = new TiledNoiseSum(source.reseed(seed), tile, frequency, octaves, lacunarity, persistence)
+  
   @transient private[this] var tiles: Array[ConstVec4i] = _
   @transient private[this] var frequencyFactors: Array[ConstVec4d] = _
   @transient private[this] var amplitudeFactors: Array[Double] = _
@@ -103,7 +106,7 @@ final class TiledNoiseSum(
 
     sum
   }
-  def apply(u: inVec2d) :Double = {
+  def apply(x: Double, y: Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val t = tiles(i)
       val f = frequencyFactors(i)
@@ -111,7 +114,7 @@ final class TiledNoiseSum(
 
       sum += source(
         t.x, t.y,
-        u.x*f.x + (i << 4), u.y*f.y
+        x*f.x + (i << 4), y*f.y
       )*a
 
       i += 1
@@ -119,7 +122,7 @@ final class TiledNoiseSum(
 
     sum
   }
-  def apply(u: inVec3d) :Double = {
+  def apply(x: Double, y: Double, z:Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val t = tiles(i)
       val f = frequencyFactors(i)
@@ -127,7 +130,7 @@ final class TiledNoiseSum(
 
       sum += source(
         t.x, t.y, t.z,
-        u.x*f.x + (i << 4), u.y*f.y, u.z*f.z
+        x*f.x + (i << 4), y*f.y, z*f.z
       )*a
 
       i += 1
@@ -135,7 +138,7 @@ final class TiledNoiseSum(
 
     sum
   }
-  def apply(u: inVec4d) :Double = {
+  def apply(x: Double, y: Double, z:Double, w:Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val t = tiles(i)
       val f = frequencyFactors(i)
@@ -143,7 +146,7 @@ final class TiledNoiseSum(
 
       sum += source(
         t.x, t.y, t.z, t.w,
-        u.x*f.x + (i << 4), u.y*f.y, u.z*f.z, u.w*f.w
+        x*f.x + (i << 4), y*f.y, z*f.z, w*f.w
       )*a
 
       i += 1

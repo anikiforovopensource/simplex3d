@@ -16,7 +16,7 @@ object NoiseDegradation extends App {
   val noiseSpeed = 1.0/3
   val scrollSpeed = 10
 
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
   
   val f = 3.0
   def largeOffset(time: Double) :Double = {

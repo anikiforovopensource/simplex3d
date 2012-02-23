@@ -15,12 +15,12 @@ object Flame extends App {
   val zoom = 1.0/300
   val changeSpeed = 0.4
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1.5,
     octaves = 3, lacunarity = 1.5, persistence = 0.5,
     roundness = 0.3
-  )
+  ))
 
   animateFunction("Flame", Vec2i(250, 250)) { (dims, time, pixel) =>
     val u = Vec2(pixel.x - dims.x*0.5, dims.y - pixel.y)*zoom

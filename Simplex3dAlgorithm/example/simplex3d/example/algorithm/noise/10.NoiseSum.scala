@@ -15,11 +15,11 @@ object NoiseSum extends App {
   val scrollSpeed = 0.1
   val changeSpeed = 0.1
 
-  val noiseSum = new NoiseSum(
+  val noiseSum = new Noise1(new NoiseSum(
     ClassicalGradientNoise,
     frequency = 1,
     octaves = 4, lacunarity = 1.8, persistence = 0.5
-  )
+  ))
 
   animateFunction("Noise Sum") { (dims, time, pixel) =>
     val expectedMagnitude = 1.5

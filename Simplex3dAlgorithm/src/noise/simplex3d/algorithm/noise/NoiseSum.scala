@@ -37,8 +37,11 @@ final class NoiseSum(
   val octaves: Int,
   val lacunarity: Double = 2.0,
   val persistence: Double = 0.5
-) extends Serializable {
-
+) extends NoiseGen with Serializable {
+  
+  final def seed: Long = source.seed
+  def reseed(seed: Long) = new NoiseSum(source.reseed(seed), frequency, octaves, lacunarity, persistence)
+  
   @transient private[this] var frequencyFactors: Array[Double] = _
   @transient private[this] var amplitudeFactors: Array[Double] = _
   initTransient()
@@ -73,36 +76,36 @@ final class NoiseSum(
 
     sum
   }
-  def apply(u: inVec2d) :Double = {
+  def apply(x: Double, y: Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += source(u.x*f + (i << 4), u.y*f)*a
+      sum += source(x*f + (i << 4), y*f)*a
 
       i += 1
     }
 
     sum
   }
-  def apply(u: inVec3d) :Double = {
+  def apply(x: Double, y: Double, z:Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += source(u.x*f + (i << 4), u.y*f, u.z*f)*a
+      sum += source(x*f + (i << 4), y*f, z*f)*a
 
       i += 1
     }
 
     sum
   }
-  def apply(u: inVec4d) :Double = {
+  def apply(x: Double, y: Double, z:Double, w:Double) :Double = {
     var sum = 0.0; var i = 0; while (i < octaves) {
       val f = frequencyFactors(i)
       val a = amplitudeFactors(i)
 
-      sum += source(u.x*f + (i << 4), u.y*f, u.z*f, u.w*f)*a
+      sum += source(x*f + (i << 4), y*f, z*f, w*f)*a
 
       i += 1
     }

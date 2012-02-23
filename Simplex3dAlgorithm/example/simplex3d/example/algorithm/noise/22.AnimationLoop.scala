@@ -12,14 +12,13 @@ import simplex3d.script.ImageUtils._
  */
 object AnimationLoop extends App {
 
-  val turbulence = new TiledTurbulence(
+  val turbulence = new Noise1(new TiledTurbulence(
     ClassicalGradientNoise,
     tile = Vec4(3, 3, 1, 3),
     frequency = 1,
     octaves = 3, lacunarity = 2.0, persistence = 0.5,
     roundness = 0.3
-  )
-  val noise = (p: inVec2) => turbulence(p)
+  ))
 
   animateFunction("Animation Loop (5 Seconds)") { (dims, time, pixel) =>
     val p = Vec3(pixel/100, time*0.2)

@@ -20,7 +20,7 @@ object NoiseTest extends FunctionRendererApp {
   )
   
   
-  val noise = new Noise(ClassicalGradientNoise)
+  val noise = new Noise1(ClassicalGradientNoise)
     
   val zoom = 1.0/50
   val changeSpeed = 1.0/3

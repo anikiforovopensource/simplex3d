@@ -14,12 +14,12 @@ object Turbulence extends App {
   val zoom = 1.0/100
   val changeSpeed = 0.1
 
-  val turbulence = new Turbulence(
+  val turbulence = new Noise1(new Turbulence(
     ClassicalGradientNoise,
     frequency = 1,
     octaves = 3, lacunarity = 2.2, persistence = 0.4,
     roundness = 0.3
-  )
+  ))
 
   animateFunction("Turbulence") { (dims, time, pixel) =>
     val p = Vec3(pixel*zoom, time*changeSpeed)

@@ -63,7 +63,7 @@ import simplex3d.engine.scenegraph._
  * The printout indicates what Meshes have their techniques re-evaluated.
  * Notice that techniques do not change every frame, but only when the properties are altered in a way that requires
  * a different shader. The bindings are resolved only in response to technique changes.
- * These optimizations avoid expensive operations and results in exception performance
+ * These optimizations avoid expensive operations and results in exceptional performance
  * without sacrificing the flexibility. 
  */
 object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {

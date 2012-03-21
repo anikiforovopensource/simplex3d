@@ -37,9 +37,7 @@ object Simplex3dScript extends Build {
       name := "simplex3d-script",
       description := "Scripting API.",
       target := new File("target/script"),
-      scalaSource in Compile <<= baseDirectory(_ / "src"),
-      publish := {},
-      publishLocal := {}
+      scalaSource in Compile <<= baseDirectory(_ / "src")
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
@@ -52,7 +50,9 @@ object Simplex3dScript extends Build {
     id = "script-example",
     base = file("Simplex3dScript"),
     settings = buildSettings ++ Common.exampleSettings ++ Seq(
-      target := new File("target/script/example")
+      target := new File("target/script/example"),
+      publish := {},
+      publishLocal := {}
     )
   ) dependsOn(core)
 }

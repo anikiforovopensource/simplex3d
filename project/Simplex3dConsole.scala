@@ -44,7 +44,7 @@ object Simplex3dConsole extends Build {
 
     val (scalaFiles, rest1) = fileSets.partition(_.src.getName.startsWith("scala-"))
     val (simplexFiles, rest2) = rest1.partition { f =>
-      val ap = f.src.getAbsolutePath
+      val ap = f.src.getAbsolutePath.replace('\\', '/')
       if (ap.contains("/example/")) false
       else (
         ap.contains("/target/math/") ||
@@ -56,12 +56,12 @@ object Simplex3dConsole extends Build {
     }
     
     val (unfilteredExamples, rest3) = rest2.partition{ f =>
-      val ap = f.src.getAbsolutePath
+      val ap = f.src.getAbsolutePath.replace('\\', '/')
       ap.contains("/example/")
     }
     
     val (mainFiles, otherDeps) = rest3.partition{ f =>
-      val ap = f.src.getAbsolutePath
+      val ap = f.src.getAbsolutePath.replace('\\', '/')
       ap.contains("/target/console/") ||
       ap.contains("/Simplex3dConsole/")
     }

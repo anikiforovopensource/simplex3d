@@ -733,7 +733,7 @@ object functions {
    *   - `√x` if ''x'' >= 0.
    *   - NaN otherwise.
    */
-  def sqrt(s: Float) :Float = JMath.sqrt(s).toFloat
+  def sqrt(x: Float) :Float = JMath.sqrt(x).toFloat
   
   /** Computes the value of the multiplicative inverse of the square root.
    * @param x a float argument.
@@ -743,7 +743,7 @@ object functions {
    *   - `+`''infinity'' if ''x'' is +0.
    *   - NaN otherwise.
    */
-  def inversesqrt(s: Float) :Float = (1/JMath.sqrt(s)).toFloat
+  def inversesqrt(x: Float) :Float = (1/JMath.sqrt(x)).toFloat
 
   /** Returns the absolute value of the argument.
    * @param x a float argument.

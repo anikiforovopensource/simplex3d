@@ -50,6 +50,11 @@ trait DataSrc {
   def bytesPerComponent: Int
   def byteOffset: Int
   def byteStride: Int
+  
+  /** Byte capacity required to store the data.
+   * For DataViews byteCapacity includes all the interleaved data as well as any
+   * unused bytes at the end of the buffer.
+   */
   def byteCapacity: Int
   
   def size: Int

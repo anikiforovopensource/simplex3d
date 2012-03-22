@@ -109,7 +109,7 @@ with ReadPropertyValue[Vec3f] with Cloneable[ReadVec3f] with Serializable
   final def unary_-() = new Vec3f(-x, -y, -z)
 
   final def *(s: Float) = new Vec3f(x * s, y * s, z * s)
-  final def /(s: Float) = new Vec3f(x / s, y / s, z / s)
+  final def /(s: Float) = { val inv = 1/s; new Vec3f(x * inv, y * inv, z * inv) }
   private[math] final def divByComp(s: Float) = new Vec3f(s / x, s / y, s / z)
   final def +(s: Float) = new Vec3f(x + s, y + s, z + s)
   final def -(s: Float) = new Vec3f(x - s, y - s, z - s)
@@ -217,7 +217,7 @@ with PropertyValue[Vec3f] with Cloneable[Vec3f] with Serializable
   }
 
   def *=(s: Float) { x *= s; y *= s; z *= s }
-  def /=(s: Float) { x /= s; y /= s; z /= s }
+  def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv }
   def +=(s: Float) { x += s; y += s; z += s }
   def -=(s: Float) { x -= s; y -= s; z -= s }
 

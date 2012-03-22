@@ -40,11 +40,11 @@ object functions {
   
   /** Constant <i>pi</i>.
    */
-  final val Pi = JMath.PI
+  final val Pi = 3.14159265358979323846
   
   /** Constant <i>e</i>.
    */
-  final val E = JMath.E
+  final val E = 2.71828182845904523536
 
   private final val DegToRad = 0.01745329251994329577
   private final val RadToDeg = 57.2957795130823208768
@@ -604,8 +604,8 @@ object functions {
   def exp2(x: Double) :Double = JMath.pow(2, x)
   def log2(x: Double) :Double = JMath.log(x)*InvLog2
 
-  def sqrt(s: Double) :Double = JMath.sqrt(s)
-  def inversesqrt(s: Double) :Double = 1/JMath.sqrt(s)
+  def sqrt(x: Double) :Double = JMath.sqrt(x)
+  def inversesqrt(x: Double) :Double = 1/JMath.sqrt(x)
 
   def abs(x: Double) :Double = { if (x > 0) x else if (x == 0) 0 else -x }
   def sign(x: Double) :Double = {

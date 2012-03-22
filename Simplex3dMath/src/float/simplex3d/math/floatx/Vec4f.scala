@@ -120,7 +120,7 @@ with ReadPropertyValue[Vec4f] with Cloneable[ReadVec4f] with Serializable
   final def unary_-() = new Vec4f(-x, -y, -z, -w)
 
   final def *(s: Float) = new Vec4f(x * s, y * s, z * s, w * s)
-  final def /(s: Float) = new Vec4f(x / s, y / s, z / s, w / s)
+  final def /(s: Float) = { val inv = 1/s; new Vec4f(x * inv, y * inv, z * inv, w * inv) }
   private[math] final def divByComp(s: Float) = new Vec4f(s / x, s / y, s / z, s / w)
   final def +(s: Float) = new Vec4f(x + s, y + s, z + s, w + s)
   final def -(s: Float) = new Vec4f(x - s, y - s, z - s, w - s)
@@ -240,7 +240,7 @@ with PropertyValue[Vec4f] with Cloneable[Vec4f] with Serializable
   }
 
   def *=(s: Float) { x *= s; y *= s; z *= s; w *= s }
-  def /=(s: Float) { x /= s; y /= s; z /= s; w /= s }
+  def /=(s: Float) { val inv = 1/s; x *= inv; y *= inv; z *= inv; w *= inv }
   def +=(s: Float) { x += s; y += s; z += s; w += s }
   def -=(s: Float) { x -= s; y -= s; z -= s; w -= s }
 

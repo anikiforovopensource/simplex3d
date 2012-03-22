@@ -98,7 +98,7 @@ with ReadPropertyValue[Vec2d] with Cloneable[ReadVec2d] with Serializable
   final def unary_-() = new Vec2d(-x, -y)
 
   final def *(s: Double) = new Vec2d(x * s, y * s)
-  final def /(s: Double) = new Vec2d(x / s, y / s)
+  final def /(s: Double) = { val inv = 1/s; new Vec2d(x * inv, y * inv) }
   private[math] final def divByComp(s: Double) = new Vec2d(s / x, s / y)
   final def +(s: Double) = new Vec2d(x + s, y + s)
   final def -(s: Double) = new Vec2d(x - s, y - s)
@@ -199,7 +199,7 @@ with PropertyValue[Vec2d] with Cloneable[Vec2d] with Serializable
   }
 
   def *=(s: Double) { x *= s; y *= s }
-  def /=(s: Double) { x /= s; y /= s }
+  def /=(s: Double) { val inv = 1/s; x *= inv; y *= inv }
   def +=(s: Double) { x += s; y += s }
   def -=(s: Double) { x -= s; y -= s }
 

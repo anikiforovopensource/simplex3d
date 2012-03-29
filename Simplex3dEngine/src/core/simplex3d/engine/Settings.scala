@@ -24,10 +24,10 @@ import scala.collection._
 import simplex3d.math._
 
 
-class Settings(
+case class Settings(
   val fullscreen: Boolean = false,
-  val capabilitiesLog: Boolean = false,
-  val performanceLog: Boolean = false,
+  val logCapabilities: Boolean = false,
+  val logPerformance: Boolean = false,
   val location: ConstVec2i = Vec2i(0),
   
   /** Must start at desktop resolution if not specified. */
@@ -38,7 +38,7 @@ class Settings(
   val advanced: AdvancedSettings = new AdvancedSettings
 )
 
-class AdvancedSettings(
+case class AdvancedSettings(
   val legacyMipMapGeneration: Boolean = false,
   val logShaderWarnings: Boolean = true
 )

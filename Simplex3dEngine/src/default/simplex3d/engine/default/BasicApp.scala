@@ -35,7 +35,7 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.default._
 
 
-trait BasicApp extends App with backend.lwjgl.App with scala.App {
+trait BasicApp extends App with scala.App {
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
@@ -45,8 +45,9 @@ trait BasicApp extends App with backend.lwjgl.App with scala.App {
     }
   })
   
+  lazy val config = new Config
+  lazy val settings = new Settings
   protected lazy val sceneGraphSettings = new SceneGraphSettings
-  protected lazy val settings = new Settings
   
   
   protected val world = new SceneGraph(
@@ -72,7 +73,7 @@ trait BasicApp extends App with backend.lwjgl.App with scala.App {
   }
   
   protected def manage() {
-    world.manage(renderManager.renderContext, frameTimer, 0.01) //XXX make this value relate to the refresh rate
+    world.manage(renderManager.renderContext, timer.frameTimer, 0.01) //XXX make this value relate to the refresh rate
   }
   
   protected def reshape(position: inVec2i, dimensions: inVec2i) {

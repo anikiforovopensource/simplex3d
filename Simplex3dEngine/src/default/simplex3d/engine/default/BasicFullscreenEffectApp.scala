@@ -33,7 +33,7 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.default._
 
 
-trait BasicFullscreenEffectApp extends FullscreenEffectApp with backend.lwjgl.App with scala.App {
+trait BasicFullscreenEffectApp extends FullscreenEffectApp with scala.App {
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
@@ -43,8 +43,8 @@ trait BasicFullscreenEffectApp extends FullscreenEffectApp with backend.lwjgl.Ap
     }
   })
   
-  
-  protected lazy val settings = new Settings
+  lazy val config = new Config
+  lazy val settings = new Settings
 
   override def main(args: Array[String]) = {
     super.main(args)

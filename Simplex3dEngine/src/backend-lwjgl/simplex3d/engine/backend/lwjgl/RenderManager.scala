@@ -42,13 +42,19 @@ private[lwjgl] object RenderManager {
 }
 
 
-private[lwjgl] final class RenderManager(val renderContext: RenderContext)
-extends graphics.RenderManager with GlUnsafeAccess
-{
+final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
   import SceneAccess._; import ClearChangesAccess._
+  
+  val driver = "lwjgl"
+  
+  private var _renderContext: RenderContext = null
+  def renderContext = _renderContext
+  def init(graphicsCapabilities: GraphicsCapabilities, settings: AdvancedSettings) {
+    _renderContext = new RenderContext(graphicsCapabilities, settings)
+  }
   
   
   private val elementRange = new ElementRange()

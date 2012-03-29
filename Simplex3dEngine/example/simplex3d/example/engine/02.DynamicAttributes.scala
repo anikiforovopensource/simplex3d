@@ -24,8 +24,8 @@ object DynamicAttributes extends BasicApp {
   override lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
-    capabilitiesLog = true,
-    performanceLog = true,
+    logCapabilities = true,
+    logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
 
@@ -43,8 +43,8 @@ object DynamicAttributes extends BasicApp {
       var x = 0; while (x < objectTexture.dimensions.x) {
         
         val i = x + y*objectTexture.dimensions.x
-        val intencity = (noise(x*0.06, y*0.06, 2.324) + 1)*0.5
-        img(i) = Vec3(0, intencity, intencity)
+        val intensity = (noise(x*0.06, y*0.06, 2.324) + 1)*0.5
+        img(i) = Vec3(0, intensity, intensity)
         
         x += 1
       }

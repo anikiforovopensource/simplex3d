@@ -27,5 +27,5 @@ trait Timer {
   def fps :Double
   def reset() :Unit
   
-  def frameTimer: FrameTimer
+  val frameTimer: FrameTimer
 }

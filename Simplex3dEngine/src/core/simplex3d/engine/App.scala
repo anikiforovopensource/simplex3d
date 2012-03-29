@@ -20,19 +20,51 @@
 
 package simplex3d.engine
 
+import java.util.logging._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
+import simplex3d.engine.util._
 import simplex3d.engine.input._
 import simplex3d.engine.graphics._
 import simplex3d.engine.asset._
 
 
-trait App {
-  protected val title: String
-  protected val settings: Settings
+private[engine] object App {
+  private final val logger = Logger.getLogger(classOf[App].getName)
+}
+
+trait App { self =>
+  import App.logger._
   
-  protected def frameTimer: FrameTimer
-  protected def renderManager: RenderManager
+  final class Subtext {
+    def settings = self.settings
+    
+    def timer = self.timer
+    def renderManager = self.renderManager
+    
+    def init() = self.init()
+    def preUpdate(time: TimeStamp) = self.preUpdate(time)
+    def update(time: TimeStamp) = self.update(time)
+    def render(time: TimeStamp) = self.render(time)
+    def manage() = self.manage()
+    def reshape(position: inVec2i, dimensions: inVec2i) = self.reshape(position, dimensions)
+    def inputListeners = self.inputListeners
+  }
+  private final val subtext = new Subtext
+  
+
+  val config: Config
+  
+  val title: String
+  val settings: Settings
+  
+  private[this] var _mainLoop: MainLoop = _
+  private[this] var _renderManager: RenderManager = _
+  private[this] var _timer: Timer = _
+  
+  protected final def mainLoop = _mainLoop
+  protected final def renderManager = _renderManager
+  protected final def timer = _timer
   
   protected def init() :Unit
   protected def preUpdate(time: TimeStamp) :Unit
@@ -41,16 +73,43 @@ trait App {
   protected def manage() :Unit
   protected def reshape(position: inVec2i, dimensions: inVec2i) :Unit
   
-  def launch() :Unit
-  def dispose() :Unit
+  
+  def launch() { //TODO rework to allow embedding of the rendering surface into ui.
+    val launcher = Class.forName(config.launcher).newInstance().asInstanceOf[Launcher]
+    _mainLoop = Class.forName(config.mainLoop).newInstance().asInstanceOf[MainLoop]
+    _renderManager = Class.forName(config.renderManager).newInstance().asInstanceOf[RenderManager]
+    _timer = Class.forName(config.timer).newInstance().asInstanceOf[Timer]
+    
+    if (launcher.driver != mainLoop.driver || launcher.driver != renderManager.driver) {
+      throw new RuntimeException(
+        "Runtime configuration contains incompatible classes:\n" +
+        "  launcher =       '" + config.launcher + "'\n" +
+        "  mainLoop =       '" + config.mainLoop + "'\n" +
+        "  renderManager =  '" + config.renderManager + "'."
+      )
+    }
+    
+    launcher.launch(title, settings)
+    
+    val graphicsCapabilities = launcher.detectGraphicsCapabilities()
+    renderManager.init(graphicsCapabilities, settings.advanced)
+    if (settings.logCapabilities) log(Level.INFO, graphicsCapabilities.toString)
+    
+    mainLoop.loop(subtext)
+  }
+  
+  def dispose() {
+    mainLoop.dispose()
+  }
   
   
-  protected val inputListeners = new ArrayBuffer[InputListener]
+  private val _inputListeners = new ArrayBuffer[InputListener]
+  protected val inputListeners = new ReadSeq(_inputListeners)
   
   def addInputListener(listener: InputListener) {
-    inputListeners += listener
+    _inputListeners += listener
   }
   def removeInputListener(listener: InputListener) {
-    inputListeners -= listener
+    _inputListeners -= listener
   }
 }

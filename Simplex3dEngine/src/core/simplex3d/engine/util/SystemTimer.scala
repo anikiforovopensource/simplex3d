@@ -65,7 +65,7 @@ final class SystemTimer extends Timer {
   
   def timeStamp = lastStamp
   
-  def frameTimer = new FrameTimer {
+  val frameTimer = new FrameTimer {
     def frameTime() :Double = (System.nanoTime - lastNanos)*1e-9
   }
 }

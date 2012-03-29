@@ -15,8 +15,8 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
   override lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
-    capabilitiesLog = true,
-    performanceLog = true,
+    logCapabilities = true,
+    logPerformance = true,
     resolution = None//Some(Vec2i(800, 600))
   )
   

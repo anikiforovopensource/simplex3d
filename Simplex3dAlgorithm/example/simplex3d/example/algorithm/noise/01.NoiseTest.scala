@@ -1,4 +1,4 @@
-package simplex3d.example.engine
+package simplex3d.example.algorithm.noise
 
 import simplex3d.math._
 import simplex3d.math.double._

@@ -135,7 +135,7 @@ object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
     }).toArray
 
     
-    nodes(6).environment.intencity.mutable.value := 0.75
+    nodes(6).environment.intensity.mutable.value := 0.75
     for (i <- 0 until 7) { nodes(i).environment.nodeColor.mutable.color := Vec3(1, 0, 0) }
     nodes(0).environment.contrast.mutable.factor := 0.1
     
@@ -143,8 +143,8 @@ object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
   } 
   
   def update(time: TimeStamp) {
-    if (time.total.toInt %2 == 0) nodes(1).environment.intencity.mutable.value := 0.75
-    else nodes(1).environment.intencity.undefine()
+    if (time.total.toInt %2 == 0) nodes(1).environment.intensity.mutable.value := 0.75
+    else nodes(1).environment.intensity.undefine()
     
     if (time.total.toInt %4 == 0) nodes(0).environment.contrast.mutable.secondary := true
     else nodes(0).environment.contrast.mutable.secondary := false
@@ -179,22 +179,22 @@ object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
 
 package testenv {
   
-  sealed abstract class ReadIntencity extends Readable[Intencity] {
+  sealed abstract class ReadIntensity extends Readable[Intensity] {
     def value: ReadDoubleRef
   }
   
-  final class Intencity extends ReadIntencity with EnvironmentalEffect[Intencity] {
-    type Read = ReadIntencity
-    protected def mkMutable() = new Intencity
+  final class Intensity extends ReadIntensity with EnvironmentalEffect[Intensity] {
+    type Read = ReadIntensity
+    protected def mkMutable() = new Intensity
     
     val value = new DoubleRef(1)
   
-    def :=(r: Readable[Intencity]) {
-      val t = r.asInstanceOf[Intencity]
+    def :=(r: Readable[Intensity]) {
+      val t = r.asInstanceOf[Intensity]
       value := t.value
     }
     
-    def propagate(parentVal: ReadIntencity, result: Intencity) {
+    def propagate(parentVal: ReadIntensity, result: Intensity) {
       result.value := value
     }
     
@@ -297,7 +297,7 @@ package testenv {
   
   
   class Environment extends ReflectEnvironment {
-    val intencity = OptionalProperty[Intencity](new Intencity, this)
+    val intensity = OptionalProperty[Intensity](new Intensity, this)
     val nodeColor = OptionalProperty[NodeColor](new NodeColor, this)
     val contrast = OptionalProperty[Contrast](new Contrast, this)
     
@@ -345,18 +345,18 @@ package testenv {
       """
     )
       
-    val withoutIntencity = new Shader(Shader.Fragment, """
+    val withoutIntensity = new Shader(Shader.Fragment, """
         float resolveIntensity() {
           return 0.25;
         }
       """
     )
     
-    val withIntencity = new Shader(Shader.Fragment, """
-        uniform float intencity;
+    val withIntensity = new Shader(Shader.Fragment, """
+        uniform float intensity;
         
         float resolveIntensity() {
-          return intencity;
+          return intensity;
         }
       """
     )
@@ -389,13 +389,13 @@ package testenv {
   
     
     private val cache = new java.util.HashMap[(Shader, Shader), Technique]
-    def getTechnique(intencityShader: Shader, contrastShader: Shader) :Technique = {
-      val key = (intencityShader, contrastShader)
+    def getTechnique(intensityShader: Shader, contrastShader: Shader) :Technique = {
+      val key = (intensityShader, contrastShader)
       var technique = cache.get(key)
       if (technique == null) {
         technique = new Technique(
           graphicsContext,
-          Set(vertexShader, fragmentShader, intencityShader, contrastShader)
+          Set(vertexShader, fragmentShader, intensityShader, contrastShader)
         )
         cache.put(key, technique)
       }
@@ -414,14 +414,14 @@ package testenv {
       
       print("Resolving technique for mesh '" + meshName + "': ")
       
-      val intencityShader =
-        if (worldEnvironment.intencity.isDefined) {
-          print("with intencity, ")
-          withIntencity
+      val intensityShader =
+        if (worldEnvironment.intensity.isDefined) {
+          print("with intensity, ")
+          withIntensity
         }
         else {
-          print("without intencity, ")
-          withoutIntencity
+          print("without intensity, ")
+          withoutIntensity
         }
       
       val contrastShader =
@@ -434,7 +434,7 @@ package testenv {
           contrast1
         }
       
-      getTechnique(intencityShader, contrastShader)
+      getTechnique(intensityShader, contrastShader)
     }
   }
 }

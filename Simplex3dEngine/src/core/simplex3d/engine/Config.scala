@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,18 +19,11 @@
  */
 
 package simplex3d.engine
-package graphics
-
-import simplex3d.engine.util._
-import simplex3d.engine.scene._
 
 
-trait RenderManager {
-  val driver: String
-  
-  def init(graphicsCapabilities: GraphicsCapabilities, settings: AdvancedSettings)
-  def renderContext: RenderContext
-  
-  def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
-}
+case class Config(
+  val timer: String = "simplex3d.engine.backend.lwjgl.Timer",
+  val launcher: String = "simplex3d.engine.backend.lwjgl.FixedResolutionLauncher",
+  val mainLoop: String = "simplex3d.engine.backend.lwjgl.MainLoop",
+  val renderManager: String = "simplex3d.engine.backend.lwjgl.RenderManager"
+)

@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,18 +19,11 @@
  */
 
 package simplex3d.engine
-package graphics
-
-import simplex3d.engine.util._
-import simplex3d.engine.scene._
 
 
-trait RenderManager {
+trait MainLoop {
   val driver: String
   
-  def init(graphicsCapabilities: GraphicsCapabilities, settings: AdvancedSettings)
-  def renderContext: RenderContext
-  
-  def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def loop(app: App#Subtext) :Unit
+  def dispose() :Unit
 }

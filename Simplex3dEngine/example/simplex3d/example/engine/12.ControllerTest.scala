@@ -25,8 +25,8 @@ object ControllerTest extends BasicApp {
   override lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = false,
-    capabilitiesLog = true,
-    performanceLog = true,
+    logCapabilities = true,
+    logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
   

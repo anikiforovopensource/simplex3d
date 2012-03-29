@@ -24,8 +24,8 @@ object DynamicTexture extends BasicApp {
   override lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
-    capabilitiesLog = true,
-    performanceLog = true,
+    logCapabilities = true,
+    logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
   
@@ -79,15 +79,15 @@ object DynamicTexture extends BasicApp {
     
     // Updating the texture: the changes will be synchronized with OpenGL automatically.
     writeImg(objectTexture.write, objectTexture.dimensions) { (x, y) =>
-      val intencity = (noise(x*0.06, y*0.06, time.total*0.4) + 1)*0.5
-      Vec3(0, intencity, intencity)
+      val intensity = (noise(x*0.06, y*0.06, time.total*0.4) + 1)*0.5
+      Vec3(0, intensity, intensity)
     }
     
     // An example on how to update sub-image.
     if (true) {
       writeImg(subImg, subImgDims) { (x, y) =>
-        val intencity = (noise(x*0.12, y*0.12, time.total*0.8) + 1)*0.5
-        Vec3(0, intencity, 0)
+        val intensity = (noise(x*0.12, y*0.12, time.total*0.8) + 1)*0.5
+        Vec3(0, intensity, 0)
       }
       objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subImg, subImgDims)
     }

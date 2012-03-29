@@ -19,18 +19,24 @@
  */
 
 package simplex3d.engine
-package graphics
 
-import simplex3d.engine.util._
-import simplex3d.engine.scene._
+import scala.collection.mutable.ArrayBuffer
+import simplex3d.math._
+import simplex3d.engine.input._
+import simplex3d.engine.graphics._
+import simplex3d.engine.asset._
 
 
-trait RenderManager {
+trait Launcher {
   val driver: String
   
-  def init(graphicsCapabilities: GraphicsCapabilities, settings: AdvancedSettings)
-  def renderContext: RenderContext
+  /** Depending on the implementation, this method will return an appropriate UI element wrapping
+   * the rendering surface. If the application is launched in a native window, this method
+   * will return null.
+   *  
+   * @returns a UI element wrapping the rendering surface, or null when launched in a native window. 
+   */
+  def launch(title: String, settings: Settings) :Object
   
-  def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
-  def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
+  def detectGraphicsCapabilities() :GraphicsCapabilities
 }

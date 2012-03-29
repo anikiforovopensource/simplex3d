@@ -37,7 +37,7 @@ trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (fn, fv) = FieldReflection.getValueMap(this, classOf[NestedBinding], Nil, Blacklist)
+    val (fn, fv) = FieldReflection.getValueMap(this, classOf[Binding], Nil, Blacklist)
     _fieldNames = fn
     _fields = fv.asInstanceOf[ReadArray[UncheckedBinding]]
     

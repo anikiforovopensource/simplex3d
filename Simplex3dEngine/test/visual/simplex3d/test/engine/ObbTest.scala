@@ -43,8 +43,8 @@ object ObbTest extends BasicApp {
   override lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
-    capabilitiesLog = true,
-    performanceLog = true,
+    logCapabilities = true,
+    logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
   

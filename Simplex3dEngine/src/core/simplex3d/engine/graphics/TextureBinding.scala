@@ -27,7 +27,7 @@ import simplex3d.data._
 
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadTextureBinding[T <: Texture[_]] (protected[engine] var texture: T)
-extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with NestedBinding with Serializable
+extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with Binding with Serializable
 {
   final def mutableCopy() = new TextureBinding[T](texture)
   

@@ -31,109 +31,126 @@ import simplex3d.engine.graphics._
 
 sealed abstract class Shader {
   
-  final class UniformDeclaraion(val manifest: ClassManifest[_ <: TechniqueBinding], val name: String) {
-    override def toString() :String = {
-      def extractTypeString(m: ClassManifest[_]) :String = {
-        m.erasure.getSimpleName() + {
-          m.typeArguments match {
-            case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
-            case _ => ""
-          }
+  final class Declaration(
+    val manifest: ClassManifest[_ <: TechniqueBinding],
+    val qualifiers: String, val name: String
+  ) {
+    def extractTypeString(m: ClassManifest[_]) :String = {
+      m.erasure.getSimpleName() + {
+        m.typeArguments match {
+          case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
+          case _ => ""
         }
       }
-      "UniformDeclaraion(" + extractTypeString(manifest) + " " + name + ")"
     }
-  }
-  final class VaryingDeclaraion(
-    val manifest: ClassManifest[_ <: TechniqueBinding], val qualifiers: String, val name: String
-  ) {
     override def toString() :String = {
-      "VaryingDeclaraion(" + qualifiers + " " + manifest.erasure.getName + " " + name + ")"
+      "Declaraion(" + qualifiers + " " + extractTypeString(manifest) + " " + name + ")"
     }
   }
-  final class AttributeDeclaraion(
-    val manifest: ClassManifest[_ <: VectorLike], val qualifiers: String, val name: String
-  ) {
+  
+  final class Block(val name: String, val declarations: ReadSeq[Declaration]) {
     override def toString() :String = {
-      "AttributeDeclaraion(" + qualifiers + " " + manifest.erasure.getName + " " + name + ")"
+      "Block('" + name + "')(\n" + declarations.mkString("  ", "\n", "") + "\n)"
     }
   }
   
-  abstract class VaryingBlock private[pluggable] (val name: String, registry: ArrayBuffer[VaryingBlock]) {
-    checkState()
-    registry += this
+  
+  private[this] val _functionDependencies = new ArrayBuffer[String]
+  private[this] val _uniformBlocks = new ArrayBuffer[Block]
+  private[this] val _inputBlocks = new ArrayBuffer[Block]
+  private[this] val _outputBlocks = new ArrayBuffer[Block]
+  private[this] val _sources = new ArrayBuffer[String]
+  private[this] var _export: Option[String] = None
+  
+  val functionDependencies = new ReadSeq(_functionDependencies)
+  val uniformBlocks = new ReadSeq(_uniformBlocks)
+  val inputBlocks = new ReadSeq(_inputBlocks)
+  val outputBlocks = new ReadSeq(_outputBlocks)
+  val sources = new ReadSeq(_sources)
+  def export = _export
+
+  
+  private[this] var isRegistered = false
+  private[this] def checkState() {
+    if (isRegistered) throw new IllegalStateException("Modifying shader after it has been registered.")
+  }
+  def register() { isRegistered = true }
+  
     
-    protected final def varying[B <: TechniqueBinding : ClassManifest](qualifiers: String, name: String) {
-      checkState()
-      _declarations += new VaryingDeclaraion(implicitly[ClassManifest[B]], qualifiers, name)
-    }
-    protected final def varying[B <: TechniqueBinding : ClassManifest](name: String) {
-      varying("", name)
-    }
-    
-    private[pluggable] var _declarations = new ArrayBuffer[VaryingDeclaraion]
-    val declarations = new ReadSeq(_declarations)
+  private[this] var declarations: ArrayBuffer[Declaration] = null
+  private[this] def processBlock(name: String, blocks: ArrayBuffer[Block], blockBody: => Unit) {
+    declarations = new ArrayBuffer[Declaration]
+    blockBody
+    blocks += new Block(name, new ReadSeq(declarations))
+    declarations = null
   }
-  
-  sealed trait ShaderInterface
-  
-  final class Function(val signature: String)(val src: String) extends ShaderInterface {
-    checkState()
-    _functions += this
-  }
-  
   
   protected final def uses(functionSignature: String) {
     checkState()
     _functionDependencies += functionSignature
   }
   
-  protected final def uniform[B <: TechniqueBinding : ClassManifest](name: String) {
+  protected final def declare[B <: TechniqueBinding : ClassManifest](name: String) {
+    declare("", name)
+  }
+  protected final def declare[B <: TechniqueBinding : ClassManifest](qualifiers: String, name: String) {
     checkState()
-    _uniformsDependencies += new UniformDeclaraion(implicitly[ClassManifest[B]], name)
+    if (declarations == null) throw new IllegalStateException("declare() must be called inside a block.")
+    declarations += new Declaration(implicitly[ClassManifest[B]], qualifiers, name)
   }
   
-  protected val interface: ShaderInterface
-  
-  
-  private var _functionDependencies = new ArrayBuffer[String]
-  private var _uniformsDependencies = new ArrayBuffer[UniformDeclaraion]
-  private var _functions = new ArrayBuffer[Function]
-  
-  private[pluggable] var isRegistered = false
-  private[pluggable] def checkState() {
-    if (isRegistered) throw new IllegalStateException("Modifying shader after it has been registered.")
+  /** Anonymous uniform block must contain top-level bindings.
+   */
+  protected final def uniform(block: => Unit) {
+    uniform(null: String)(block)
   }
   
-  
-  val functionDependencies = new ReadSeq(_functionDependencies)
-  val uniformsDependencies = new ReadSeq(_uniformsDependencies)
-  val functions = new ReadSeq(_functions)
-}
-
-
-abstract class VertexShader extends Shader {
-  protected final def attribute[B <: VectorLike : ClassManifest](qualifiers: String, name: String) {
+  /** The name of the uniform block must resolve to an instance of NestedBinding.
+   */
+  protected final def uniform(name: String)(block: => Unit) {
     checkState()
-    _attributeDependencies += new AttributeDeclaraion(implicitly[ClassManifest[B]], qualifiers, name)
-  }
-  protected final def attribute[B <: VectorLike : ClassManifest](name: String) {
-    attribute("", name)
+    processBlock(name, _uniformBlocks, block)
   }
   
-  protected abstract class OutputBlock(name: String) extends VaryingBlock(
-    name, new ArrayBuffer[VaryingBlock]
-  ) with ShaderInterface
+  /** Vertex shader: if the name of the inBlock cannot be resolved then attributes will be used as input.
+   */
+  protected final def in(name: String)(block: => Unit) {
+    checkState()
+    processBlock(name, _inputBlocks, block)
+  }
+  
+  /** A shader must export one function or define one output block (but not both).
+   * Fragment shader: the name of the outBlock will be ignored if there are no further shader stages.
+   */
+  protected final def out(name: String)(block: => Unit) {
+    checkState()
+    processBlock(name, _outputBlocks, block)
+  }
+  
+  /** A shader must export one function or define one output block (but not both).
+   */
+  protected final def exports(functionSignature: String) {
+    checkState()
+    if (export != None) throw new IllegalStateException("Export is already defined.")
+    _export = Some(functionSignature)
+  }
+  
+  protected final def src(src: String) {
+    checkState()
+    _sources += src
+  }
   
   
-  private var _attributeDependencies = new ArrayBuffer[AttributeDeclaraion]
-  val attributeDependencies = new ReadSeq(_attributeDependencies)
+  def generateFullSource() :String = {
+    var src = "\n"
+      
+    for (dep <- functionDependencies) { src += dep + ";\n" }
+    src += "\n"
+      
+    
+    src
+  }
 }
 
-
-abstract class FragmentShader extends Shader {
-  protected abstract class InputBlock(name: String) extends VaryingBlock(name, inputRegistry)
-  
-  private val inputRegistry = new ArrayBuffer[VaryingBlock]
-  val inputBlocks = new ReadSeq(inputRegistry)
-}
+abstract class VertexShader extends Shader
+abstract class FragmentShader extends Shader

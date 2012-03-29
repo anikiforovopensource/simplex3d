@@ -55,7 +55,7 @@ import simplex3d.engine.scenegraph._
  * Contrast:
  * The contrast alternates between an array of one and two factors every 4 seconds.
  * This servers as a test for dynamic binding resolution, which allows the same environmental property to
- * resolve to different structs depending on the circumstances.
+ * resolve to different structs depending on the circumstances.//XXX
  * Contrast inherits from UpdatableEnvironmentalEffect which can alter its' binding uniquely for each mesh
  * depending on the camera matrices. When the camera is moved further from the meshes,
  * they gradually loose color and become white.
@@ -66,9 +66,11 @@ import simplex3d.engine.scenegraph._
  * These optimizations avoid expensive operations and results in exceptional performance
  * without sacrificing the flexibility. 
  */
-object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
+object DynamicEnvironment extends App with scala.App {
   val title = "Dynamic Environment"
 
+  val config = new Config
+  
   lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
@@ -163,7 +165,7 @@ object DynamicEnvironment extends App with backend.lwjgl.App with scala.App {
   }
   
   override def manage() {
-    scene.manage(renderManager.renderContext, frameTimer, 0.01)
+    scene.manage(renderManager.renderContext, timer.frameTimer, 0.01)
   }
   
   override def reshape(position: inVec2i, contrastensions: inVec2i) {

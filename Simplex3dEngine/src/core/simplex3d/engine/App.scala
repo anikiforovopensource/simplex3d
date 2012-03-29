@@ -58,10 +58,12 @@ trait App { self =>
   val title: String
   val settings: Settings
   
+  private[this] var _launcher: Launcher = _
   private[this] var _mainLoop: MainLoop = _
   private[this] var _renderManager: RenderManager = _
   private[this] var _timer: Timer = _
   
+  protected final def launcher = _launcher
   protected final def mainLoop = _mainLoop
   protected final def renderManager = _renderManager
   protected final def timer = _timer
@@ -74,8 +76,8 @@ trait App { self =>
   protected def reshape(position: inVec2i, dimensions: inVec2i) :Unit
   
   
-  def launch() { //TODO rework to allow embedding of the rendering surface into ui.
-    val launcher = Class.forName(config.launcher).newInstance().asInstanceOf[Launcher]
+  def launch() :Object = { //TODO rework to allow embedding of the rendering surface into ui.
+    _launcher = Class.forName(config.launcher).newInstance().asInstanceOf[Launcher]
     _mainLoop = Class.forName(config.mainLoop).newInstance().asInstanceOf[MainLoop]
     _renderManager = Class.forName(config.renderManager).newInstance().asInstanceOf[RenderManager]
     _timer = Class.forName(config.timer).newInstance().asInstanceOf[Timer]
@@ -89,17 +91,11 @@ trait App { self =>
       )
     }
     
-    launcher.launch(title, settings)
-    
-    val graphicsCapabilities = launcher.detectGraphicsCapabilities()
-    renderManager.init(graphicsCapabilities, settings.advanced)
-    if (settings.logCapabilities) log(Level.INFO, graphicsCapabilities.toString)
-    
-    mainLoop.loop(subtext)
+    launcher.launch(title, settings, subtext, mainLoop)
   }
   
   def dispose() {
-    mainLoop.dispose()
+    launcher.dispose()
   }
   
   

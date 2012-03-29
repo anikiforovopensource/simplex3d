@@ -36,7 +36,6 @@ trait Launcher {
    *  
    * @returns a UI element wrapping the rendering surface, or null when launched in a native window. 
    */
-  def launch(title: String, settings: Settings) :Object
-  
-  def detectGraphicsCapabilities() :GraphicsCapabilities
+  def launch(title: String, settings: Settings, app: App#Subtext, loop: MainLoop) :Object
+  def dispose() :Unit
 }

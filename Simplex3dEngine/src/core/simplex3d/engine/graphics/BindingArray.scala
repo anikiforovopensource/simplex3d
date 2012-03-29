@@ -25,14 +25,14 @@ import scala.collection._
 import simplex3d.math.types._
 
 
-sealed abstract class ReadBindingArray[W <: Writable[W] with NestedBinding](final val size: Int)
+sealed abstract class ReadBindingArray[W <: Writable[W] with Binding](final val size: Int)
 extends Readable[BindingArray[W]] with NestedBinding {
   final def length: Int = size
   def apply(i: Int) :W#Read
 }
 
 
-final class BindingArray[W <: Writable[W] with NestedBinding] (private val elementFactory: Readable[W], size: Int)
+final class BindingArray[W <: Writable[W] with Binding] (private val elementFactory: Readable[W], size: Int)
 extends ReadBindingArray[W](size) with Writable[BindingArray[W]]
 {
   type Read = ReadBindingArray[W]

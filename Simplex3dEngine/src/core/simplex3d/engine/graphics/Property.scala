@@ -57,7 +57,7 @@ extends DefinedProperty[W](initialValue) {
 }
 
 object DefinedProperty {
-  def apply[W <: Writable[W] with Binding](initialValue: Readable[W])
+  def apply[W <: Writable[W]](initialValue: Readable[W])
   :DefinedProperty[W] = new AccessibleDefinedProperty(initialValue)
 }
 

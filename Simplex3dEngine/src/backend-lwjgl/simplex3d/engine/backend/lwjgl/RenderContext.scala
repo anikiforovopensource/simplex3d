@@ -892,7 +892,7 @@ extends graphics.RenderContext with GlAccess {
     material: Material,
     environmentNames: ReadArray[String], resolvedEnv: ReadArray[TechniqueBinding],
     program: Technique
-  ) :NestedBinding = {
+  ) :Binding = {
     
     def mkName(prefix: String, name: String) = if (prefix.isEmpty) name else prefix + "." + name
 
@@ -1104,20 +1104,20 @@ extends graphics.RenderContext with GlAccess {
       }
     }
     
-    value.asInstanceOf[NestedBinding]
+    value.asInstanceOf[Binding]
   }
   
   private[this] final def buildUniformMapping(
     predefined: PredefinedUniforms,
     mesh: AbstractMesh, resolvedEnv: ReadArray[TechniqueBinding],
     programBindings: ReadArray[UniformBinding]
-  ) :ReadArray[NestedBinding] = {
+  ) :ReadArray[Binding] = {
     
     val material = mesh.material
     val environmentNames = mesh.worldEnvironment.propertyNames
     val program = mesh.technique.defined
     
-    val uniformMapping = new Array[NestedBinding](programBindings.length)
+    val uniformMapping = new Array[Binding](programBindings.length)
     
     var i = 0; while (i < programBindings.length) {
       val programBinding = programBindings(i)

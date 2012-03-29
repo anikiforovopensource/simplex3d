@@ -24,6 +24,8 @@ package simplex3d.engine
 trait MainLoop {
   val driver: String
   
-  def loop(app: App#Subtext) :Unit
-  def dispose() :Unit
+  /**
+   * @returns true to exit the loop, false otherwise.
+   */
+  def body(app: App#Subtext) :Boolean
 }

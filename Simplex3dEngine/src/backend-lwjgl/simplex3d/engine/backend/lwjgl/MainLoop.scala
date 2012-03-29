@@ -37,53 +37,42 @@ final class MainLoop extends simplex3d.engine.MainLoop {
   private val input = new Input
   private var lastFps = 0.0
   
-  @volatile private var quit = false
   
-  
-  def loop(app: App#Subtext) {
+  def body(app: App#Subtext) :Boolean = {
     import app._
     
     val renderManager = app.renderManager.asInstanceOf[RenderManager]
+    profiler1.begin()
     
-    timer.reset()
-    init()
-    reshape(ConstVec2i(0), renderManager.renderContext.viewportDimensions())
+    renderManager.renderContext.resetState()
+    timer.update()
+    val time = timer.timeStamp
     
-    while (!quit) {
-      profiler1.begin()
-      
-      renderManager.renderContext.resetState()
-      timer.update()
-      val time = timer.timeStamp
-      
-      handleInput(time, app)
-      if (Display.isCloseRequested) quit = true
-      
-      preUpdate(time)
-      update(time)
-      render(time)
-      
-      profiler2.begin()
-      Display.update()
-      profiler2.end()
-      
-      Thread.`yield`()
-      
-      manage()
-      renderManager.renderContext.manage()
-      
-      if (settings.logPerformance && lastFps != timer.fps) {
-        lastFps = timer.fps
-        println("fps: " + lastFps)
-      }
-      
-      //if (time.interval > 0.03) println(profiler1 + " | " + profiler2 +  " | " + time)
-      profiler1.end()
+    handleInput(time, app)
+    if (Display.isCloseRequested) return true
+    
+    preUpdate(time)
+    update(time)
+    render(time)
+    
+    profiler2.begin()
+    Display.update()
+    profiler2.end()
+    
+    Thread.`yield`()
+    
+    manage()
+    renderManager.renderContext.manage()
+    
+    if (settings.logPerformance && lastFps != timer.fps) {
+      lastFps = timer.fps
+      println("fps: " + lastFps)
     }
     
-    renderManager.renderContext.cleanup()
-    Display.destroy()
-    quit = false // Allow to re-launch.
+    //if (time.interval > 0.03) println(profiler1 + " | " + profiler2 +  " | " + time)
+    profiler1.end()
+    
+    false
   }
   
   private def handleInput(time: TimeStamp, app: App#Subtext) {
@@ -139,9 +128,5 @@ final class MainLoop extends simplex3d.engine.MainLoop {
       }
       // TODO add mouse entered/exited using Mouse.isInsideWindow
     }
-  }
-  
-  def dispose() {
-    quit = true
   }
 }

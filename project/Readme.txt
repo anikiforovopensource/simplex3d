@@ -38,7 +38,7 @@ root
     console-webstart
   
   
-Additionally there are aggregated doc and test projects:
+Additionally there are aggregated doc and example projects:
 
 root-doc
   math-doc

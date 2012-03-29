@@ -40,4 +40,4 @@ trait NestedBinding extends Binding
  *
  * @author Aleksey Nikiforov (lex)
  */
-trait VectorLike extends NestedBinding
+trait VectorLike extends Binding

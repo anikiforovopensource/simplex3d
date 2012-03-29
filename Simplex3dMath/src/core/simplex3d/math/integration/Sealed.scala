@@ -187,7 +187,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   @SerialVersionUID(8104346712419693669L)
-  sealed trait MathType extends NestedBinding with Serializable with Cloneable[MathType]
+  sealed trait MathType extends Binding with Serializable with Cloneable[MathType]
 
 
   /** <code>AnyQuat4</code> is a supertype of all the quaternions.

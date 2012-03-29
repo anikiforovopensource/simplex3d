@@ -37,6 +37,5 @@
         <dependency org="org.simplex3d" name="simplex3d-algorithm-intersection_2.9.1" rev="0.51-SNAPSHOT"/>
         <dependency org="org.simplex3d" name="simplex3d-algorithm-mesh_2.9.1" rev="0.51-SNAPSHOT"/>
         <dependency org="org.simplex3d" name="simplex3d-algorithm-noise_2.9.1" rev="0.51-SNAPSHOT"/>
-        <dependency org="org.simplex3d" name="simplex3d-script_2.9.1" rev="0.1-SNAPSHOT"/>
     </dependencies>
 </ivy-module>

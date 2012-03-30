@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics.pluggable
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashSet
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.types._
@@ -35,15 +36,17 @@ sealed abstract class Shader {
     val manifest: ClassManifest[_ <: TechniqueBinding],
     val qualifiers: String, val name: String
   ) {
-    def extractTypeString(m: ClassManifest[_]) :String = {
-      m.erasure.getSimpleName() + {
-        m.typeArguments match {
-          case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
-          case _ => ""
+    val shaderType = manifest.erasure.getSimpleName().toLowerCase().dropRight(1)//XXX capital letter for nested bindings, also handle arrays
+    
+    override def toString() :String = {
+      def extractTypeString(m: ClassManifest[_]) :String = {
+        m.erasure.getSimpleName() + {
+          m.typeArguments match {
+            case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
+            case _ => ""
+          }
         }
       }
-    }
-    override def toString() :String = {
       "Declaraion(" + qualifiers + " " + extractTypeString(manifest) + " " + name + ")"
     }
   }
@@ -56,25 +59,53 @@ sealed abstract class Shader {
   
   
   private[this] val _functionDependencies = new ArrayBuffer[String]
-  private[this] val _uniformBlocks = new ArrayBuffer[Block]
   private[this] val _inputBlocks = new ArrayBuffer[Block]
   private[this] val _outputBlocks = new ArrayBuffer[Block]
   private[this] val _sources = new ArrayBuffer[String]
+  private[this] var _uniformBlock: Option[Block] = None
   private[this] var _export: Option[String] = None
+  private[this] var _entryPoint: Option[String] = None
   
   val functionDependencies = new ReadSeq(_functionDependencies)
-  val uniformBlocks = new ReadSeq(_uniformBlocks)
   val inputBlocks = new ReadSeq(_inputBlocks)
   val outputBlocks = new ReadSeq(_outputBlocks)
   val sources = new ReadSeq(_sources)
+  def uniformBlock = _uniformBlock
   def export = _export
+  def entryPoint = _entryPoint
 
   
   private[this] var isRegistered = false
   private[this] def checkState() {
     if (isRegistered) throw new IllegalStateException("Modifying shader after it has been registered.")
   }
-  def register() { isRegistered = true }
+  
+  def register() {
+    // Check name uniqueness.
+    val names = new HashSet[String]
+    for (block <- uniformBlock ++ inputBlocks ++ outputBlocks; declaration <- block.declarations) {
+      val name = declaration.name
+      if (names.contains(name)) throw new RuntimeException("Duplicate variable name: '" + name + "'.")
+      names += name
+    }
+    
+    // Check source is present.
+    if (sources.isEmpty) throw new RuntimeException("Shader source is missing.")
+    
+    // Check entry point and function export (no, i will not do xor here).
+    if ((!entryPoint.isDefined && !export.isDefined) || (entryPoint.isDefined && export.isDefined))
+      throw new RuntimeException(
+        "A shader must either defined an entry point or export a function (but not both)."
+      )
+    
+    // Check entry point and output block
+    if ((!entryPoint.isDefined && !outputBlocks.isEmpty) || (entryPoint.isDefined && outputBlocks.isEmpty))
+      throw new RuntimeException(
+        "If a shader defines one or more output blocks it must define an entry point."
+      )
+    
+    isRegistered = true
+  }
   
     
   private[this] var declarations: ArrayBuffer[Declaration] = null
@@ -99,17 +130,16 @@ sealed abstract class Shader {
     declarations += new Declaration(implicitly[ClassManifest[B]], qualifiers, name)
   }
   
-  /** Anonymous uniform block must contain top-level bindings.
+  /** All uniforms must be declared in the same block.
+   * Engine structs may be translated to GLSl uniform blocks depending on the implementation.
    */
   protected final def uniform(block: => Unit) {
-    uniform(null: String)(block)
-  }
-  
-  /** The name of the uniform block must resolve to an instance of NestedBinding.
-   */
-  protected final def uniform(name: String)(block: => Unit) {
     checkState()
-    processBlock(name, _uniformBlocks, block)
+    
+    declarations = new ArrayBuffer[Declaration]
+    block
+    _uniformBlock = Some(new Block("uniform", new ReadSeq(declarations)))
+    declarations = null
   }
   
   /** Vertex shader: if the name of the inBlock cannot be resolved then attributes will be used as input.
@@ -119,7 +149,7 @@ sealed abstract class Shader {
     processBlock(name, _inputBlocks, block)
   }
   
-  /** A shader must export one function or define one output block (but not both).
+  /** If a shader defines one or more output blocks it must define an entry point.
    * Fragment shader: the name of the outBlock will be ignored if there are no further shader stages.
    */
   protected final def out(name: String)(block: => Unit) {
@@ -127,7 +157,15 @@ sealed abstract class Shader {
     processBlock(name, _outputBlocks, block)
   }
   
-  /** A shader must export one function or define one output block (but not both).
+  /** A shader must either defined an entry point or export a function (but not both).
+   */
+  protected final def entryPoint(code: String) {
+    checkState()
+    if (entryPoint != None) throw new IllegalStateException("Entry point is already defined.")
+    _entryPoint = Some(code)
+  }
+  
+  /** A shader must either defined an entry point or export a function (but not both).
    */
   protected final def exports(functionSignature: String) {
     checkState()
@@ -141,12 +179,72 @@ sealed abstract class Shader {
   }
   
   
-  def generateFullSource() :String = {
+  private[this] def unindent(src: String) :String = {
+    val codeLines = src.split("\n")
+
+    val lines = codeLines.map(_.replace("\t", "  "))
+    val Spaces = """^(\s*).*""".r
+    val Spaces(hs) = lines.head
+    var min = scala.Int.MaxValue
+
+    for (line <- lines) {
+      val Spaces(s) = line
+      if (s != null && !line.trim.isEmpty && s.length < min) min = s.length
+    }
+
+    lines.map(_.drop(min)).mkString("\n")
+  }
+  private[this] def format(qualifiers: String) :String = {
+    if (qualifiers.isEmpty) "" else qualifiers + " "
+  }
+  
+  def generateFullSource_Gl21() :String = {
+    if (!isRegistered) throw new IllegalStateException("Shader must be registered to generate source.")
+    
+    val inputQualifier = if (this.isInstanceOf[VertexShader]) "attribute" else "varting"
     var src = "\n"
+    
+    
+    if (!functionDependencies.isEmpty) {
+      for (dep <- functionDependencies) { src += dep + ";\n" }
+      src += "\n"
+    }
+    
+    
+    if (uniformBlock.isDefined) {
+      val block = uniformBlock.get
       
-    for (dep <- functionDependencies) { src += dep + ";\n" }
-    src += "\n"
+      for (declaration <- block.declarations) {
+        src += format(declaration.qualifiers) + declaration.shaderType + " " + declaration.name + ";\n"
+      }
       
+      src += "\n\n"
+    }
+    
+    
+    if (!inputBlocks.isEmpty) {
+      for (block <- inputBlocks) {
+        for (declaration <- block.declarations) {
+          src += inputQualifier + " " + format(declaration.qualifiers) + " " + declaration.shaderType + " " + declaration.name + ";\n"
+        }
+        src += "\n"
+      }
+      src += "\n"
+    }
+    
+    
+    if (!outputBlocks.isEmpty && this.isInstanceOf[VertexShader]) {
+      for (block <- outputBlocks) {
+        for (declaration <- block.declarations) {
+          src += "varying " + format(declaration.qualifiers) + " " + declaration.shaderType + " " + declaration.name + ";\n"
+        }
+        src += "\n"
+      }
+    }
+    
+    for (srcChunk <- sources) {
+      src += unindent(srcChunk) + "\n"
+    }
     
     src
   }

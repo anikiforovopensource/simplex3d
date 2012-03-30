@@ -15,7 +15,7 @@ object NoiseTest extends FunctionRendererApp {
   
   override lazy val settings = new Settings(
     verticalSync = true,
-    performanceLog = true,
+    logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
   

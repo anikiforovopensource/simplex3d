@@ -1,5 +1,5 @@
 /*
- * Simplex3dAlgorithm - Shapes Module
+ * Simplex3dAlgorithm - Mesh Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dAlgorithm.

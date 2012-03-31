@@ -64,7 +64,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
       
       val (names, props) = FieldReflection.getValueMap(
         effect,
-        classOf[DefinedProperty[_ <: TechniqueBinding]], TechniqueBindingFilter,
+        classOf[DefinedProperty[_ <: TechniqueBinding]], FieldReflection.TechniqueBindingFilter,
         Nil
       )
       val shaderUniforms = Map((names zip props): _*)

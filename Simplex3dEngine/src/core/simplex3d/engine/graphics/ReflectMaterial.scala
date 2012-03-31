@@ -36,7 +36,7 @@ trait ReflectMaterial extends Material {
     if (initialized) return
     
     val (un, uv) = FieldReflection.getValueMap(
-      this, classOf[Property[_]], TechniqueBindingFilter, ReflectMaterial.UniformBlacklist
+      this, classOf[Property[_]], FieldReflection.TechniqueBindingFilter, ReflectMaterial.UniformBlacklist
     )
     _uniformNames = un
     _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedBinding]]]

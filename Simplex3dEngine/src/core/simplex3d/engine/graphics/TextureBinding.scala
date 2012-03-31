@@ -26,9 +26,12 @@ import simplex3d.data._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadTextureBinding[T <: Texture[_]] (protected[engine] var texture: T)
+sealed abstract class ReadTextureBinding[T <: Texture[_] : ClassManifest]
 extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with Binding with Serializable
 {
+  final val bindingManifest = implicitly[ClassManifest[T]]
+  protected[engine] var texture: T = _
+  
   final def mutableCopy() = new TextureBinding[T](texture)
   
   final def bound: T = texture
@@ -55,9 +58,14 @@ extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with B
 
 
 @SerialVersionUID(8104346712419693669L)
-final class TextureBinding[T <: Texture[_]](texture: T = null) extends ReadTextureBinding[T](texture)
+final class TextureBinding[T <: Texture[_] : ClassManifest] extends ReadTextureBinding[T]
 with Writable[TextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializable
 {
+  def this(texture: T) {
+    this()
+    this.texture = texture
+  }
+  
   type Read = ReadTextureBinding[T]
   
   override def clone() = new TextureBinding[T](texture)

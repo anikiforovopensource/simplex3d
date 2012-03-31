@@ -26,10 +26,16 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.ParameterizedType
 import java.util.HashMap
+import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
 private[engine] object FieldReflection {
+  
+  private[engine] val TechniqueBindingFilter = List(classOf[Readable[_]], classOf[Binding])
+  private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])
+  
+  
   private[this] val cache = new HashMap[Class[_], (ReadArray[String], ReadArray[Method])]
   
   def isFinal(instance: AnyRef) = ((instance.getClass.getModifiers & Modifier.FINAL) != 0)
@@ -48,7 +54,7 @@ private[engine] object FieldReflection {
       cached
     }
     else {
-      val methods = clazz.getMethods.filter { method =>
+      val dupMethods = clazz.getMethods.filter { method =>
         (method.getModifiers & Modifier.STATIC) == 0 &&
         method.getParameterTypes.length == 0 &&
         targetType.isAssignableFrom(method.getReturnType) &&
@@ -73,6 +79,15 @@ private[engine] object FieldReflection {
           }
         }
       }
+      
+      val methodMap = new HashMap[String, Method]
+      for (method <- dupMethods) {
+        val existing = methodMap.get(method.getName)
+        if (existing == null || method.getDeclaringClass == clazz) {
+          methodMap.put(method.getName, method)
+        }
+      }
+      val methods = methodMap.values().toArray(new Array[Method](0))
 
       val accessors = (new ReadArray(methods.map(_.getName).toArray), new ReadArray(methods))
       cache.put(clazz, accessors)

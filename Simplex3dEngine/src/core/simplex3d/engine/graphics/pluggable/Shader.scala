@@ -36,7 +36,156 @@ sealed abstract class Shader {
     val manifest: ClassManifest[_ <: TechniqueBinding],
     val qualifiers: String, val name: String
   ) {
-    val shaderType = manifest.erasure.getSimpleName().toLowerCase().dropRight(1)//XXX capital letter for nested bindings, also handle arrays
+    
+    private[Shader] var arraySizeExpression: String = null
+    def size(arraySizeExpression: String) {
+      if (!classOf[BindingArray[_]].isAssignableFrom(manifest.erasure)) throw new RuntimeException(
+        "Only arrays can be sized."
+      )
+      if (this.arraySizeExpression != null) throw new RuntimeException(
+        "This array is already sized."
+      )
+      
+      this.arraySizeExpression = arraySizeExpression
+    }
+    
+    private[Shader] def extractManifestTypeInfo(unsizedArrays: HashSet[(String, String)]) :String = {
+      // Structs must be detected and generate an error via verifyMathType() prior to this call.
+      extractManifestTypeInfo(null, unsizedArrays)
+    }
+    private[Shader] def extractManifestTypeInfo(
+      blocks: ArrayBuffer[(String, Class[_], ArrayBuffer[(String, String)])],
+      unsizedArrays: HashSet[(String, String)]
+    ) :String = {
+      extractManifestTypeInfo(manifest, name, blocks, unsizedArrays)
+    }
+    
+    private def resolveTextureType(className: String) :String = {
+      className match {
+        case "Texture2d" => "sampler2d"
+        case _ => throw new RuntimeException
+      }
+    }
+    
+    private def processStruct(
+      instance: Struct[_],
+      blocks: ArrayBuffer[(String, Class[_], ArrayBuffer[(String, String)])],
+      unsizedArrays: HashSet[(String, String)]
+    ) :String =
+    {
+      val glslType = instance.getClass.getSimpleName
+      
+      val blockEntries = new ArrayBuffer[(String, String)]
+      for (i <- 0 until instance.fieldNames.length) {
+        val fieldName = instance.fieldNames(i)
+        val fieldType = extractInstanceTypeInfo(glslType, instance.fields(i), fieldName, blocks, unsizedArrays)
+        blockEntries += ((fieldType, fieldName))
+      }
+      
+      val existing = blocks.find(_._1 == glslType)
+      if (existing.isDefined) {
+        val existingClass = existing.get._2
+        if (instance.getClass != existingClass) throw new RuntimeException(
+          "Both structs '" + instance.getClass.getName + "' and '" +
+          existingClass.getName + "' map to the same glsl type name."
+        )
+      }
+      else {
+        blocks += ((glslType, instance.getClass, blockEntries))
+      }
+      
+      glslType
+    }
+    
+    private def extractManifestTypeInfo(
+      m: ClassManifest[_], name: String,
+      blocks: ArrayBuffer[(String, Class[_], ArrayBuffer[(String, String)])],
+      unsizedArrays: HashSet[(String, String)]
+    ) :String = {
+      
+      if (classOf[MathType].isAssignableFrom(m.erasure)) {
+        m.erasure.getSimpleName.toLowerCase().dropRight(1)
+      }
+      else if (classOf[TextureBinding[_]].isAssignableFrom(m.erasure)) {
+        try {
+          resolveTextureType(m.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure.getSimpleName) 
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Undefined or unsupported texture binding type for declaration '" + name + "'."
+          )
+        }
+      }
+      else if (classOf[BindingArray[_]].isAssignableFrom(m.erasure)) {
+        val manifest = try {
+          m.typeArguments.head.asInstanceOf[ClassManifest[_]]
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Undefined or unsupported array type for declaration '" + name + "'."
+          )
+        }
+        
+        val arrayType = extractManifestTypeInfo(manifest, name, blocks, unsizedArrays)
+        val sizeExpression =
+          if (arraySizeExpression != null) arraySizeExpression
+          else {
+            unsizedArrays += ((null, name)) // That's right, it's a null not an option.
+            "se_sizeOf_" + name
+          }
+        
+        val glslType = arrayType + "[" + sizeExpression +  "]"
+        glslType
+      }
+      else if (classOf[Struct[_]].isAssignableFrom(m.erasure)) {
+        val instance = try {
+          m.erasure.newInstance().asInstanceOf[Struct[_]]
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Unable to create an instance of '" + m.erasure.getName +
+            "'. All Struct subclasses must define a no-argument constructor."
+          )
+        }
+        
+        processStruct(instance, blocks, unsizedArrays)
+      }
+      else {
+        throw new RuntimeException(
+          "Unsupported type '" + m.erasure.getSimpleName + "' for declaration '" + name + "'."
+        )
+      }
+    }
+    
+    private def extractInstanceTypeInfo(
+      parentType: String,
+      i: Object, name: String,
+      blocks: ArrayBuffer[(String, Class[_], ArrayBuffer[(String, String)])],
+      unsizedArrays: HashSet[(String, String)]
+    ) :String = {
+      
+      if (classOf[MathType].isAssignableFrom(i.getClass)) {
+        i.getClass.getSimpleName.toLowerCase().dropRight(1)
+      }
+      else if (classOf[TextureBinding[_]].isAssignableFrom(i.getClass)) {
+        resolveTextureType(i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure.getSimpleName)
+      }
+      else if (classOf[BindingArray[_]].isAssignableFrom(i.getClass)) {
+        val instance = i.asInstanceOf[BindingArray[_]].bindingInstance().asInstanceOf[Object]
+        val arrayType = extractInstanceTypeInfo(parentType, instance, name, blocks, unsizedArrays)
+        unsizedArrays += ((parentType, name))
+        val glslType = arrayType + "[" + "se_sizeOf_" + parentType + "_" + name +  "]"
+        glslType
+      }
+      else if (classOf[Struct[_]].isAssignableFrom(i.getClass)) {
+        processStruct(i.asInstanceOf[Struct[_]], blocks, unsizedArrays)
+      }
+      else {
+        throw new RuntimeException(
+          "Unsupported type '" + i.getClass.getSimpleName + "' for declaration '" + name + "'."
+        )
+      }
+    }
     
     override def toString() :String = {
       def extractTypeString(m: ClassManifest[_]) :String = {
@@ -121,13 +270,15 @@ sealed abstract class Shader {
     _functionDependencies += functionSignature
   }
   
-  protected final def declare[B <: TechniqueBinding : ClassManifest](name: String) {
+  protected final def declare[B <: TechniqueBinding : ClassManifest](name: String) :Declaration = {
     declare("", name)
   }
-  protected final def declare[B <: TechniqueBinding : ClassManifest](qualifiers: String, name: String) {
+  protected final def declare[B <: TechniqueBinding : ClassManifest](qualifiers: String, name: String) :Declaration = {
     checkState()
     if (declarations == null) throw new IllegalStateException("declare() must be called inside a block.")
-    declarations += new Declaration(implicitly[ClassManifest[B]], qualifiers, name)
+    val declaration = new Declaration(implicitly[ClassManifest[B]], qualifiers, name)
+    declarations += declaration
+    declaration
   }
   
   /** All uniforms must be declared in the same block.
@@ -142,11 +293,29 @@ sealed abstract class Shader {
     declarations = null
   }
   
+  private def verifyMathType(block: Block) {
+    for (declaration <- block.declarations) {
+      val isMathType = classOf[MathType].isAssignableFrom(declaration.manifest.erasure)
+      val isMathTypeArray = 
+        if (classOf[BindingArray[_]].isAssignableFrom(declaration.manifest.erasure)) {
+          classOf[MathType].isAssignableFrom(
+            declaration.manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
+          )
+        }
+        else false
+        
+      if (!isMathType && !isMathTypeArray) throw new RuntimeException(
+        "Only math types and math type arrays can be declared in input and output blocks."
+      )
+    }
+  }
+  
   /** Vertex shader: if the name of the inBlock cannot be resolved then attributes will be used as input.
    */
   protected final def in(name: String)(block: => Unit) {
     checkState()
     processBlock(name, _inputBlocks, block)
+    verifyMathType(inputBlocks.last)
   }
   
   /** If a shader defines one or more output blocks it must define an entry point.
@@ -155,6 +324,7 @@ sealed abstract class Shader {
   protected final def out(name: String)(block: => Unit) {
     checkState()
     processBlock(name, _outputBlocks, block)
+    verifyMathType(outputBlocks.last)
   }
   
   /** A shader must either defined an entry point or export a function (but not both).
@@ -201,7 +371,10 @@ sealed abstract class Shader {
   def generateFullSource_Gl21() :String = {
     if (!isRegistered) throw new IllegalStateException("Shader must be registered to generate source.")
     
-    val inputQualifier = if (this.isInstanceOf[VertexShader]) "attribute" else "varting"
+    val structs = new ArrayBuffer[(String, Class[_], ArrayBuffer[(String, String)])]
+    val unsizedArrays = new HashSet[(String, String)]
+    
+    val inputQualifier = if (this.isInstanceOf[VertexShader]) "attribute" else "varying"
     var src = "\n"
     
     
@@ -211,36 +384,65 @@ sealed abstract class Shader {
     }
     
     
+    var declarationSrc = ""
+    
     if (uniformBlock.isDefined) {
       val block = uniformBlock.get
       
       for (declaration <- block.declarations) {
-        src += format(declaration.qualifiers) + declaration.shaderType + " " + declaration.name + ";\n"
+        val glslType = declaration.extractManifestTypeInfo(structs, unsizedArrays)
+        declarationSrc += format(declaration.qualifiers) + "uniform " + glslType + " " + declaration.name + ";\n"
       }
       
-      src += "\n\n"
+      declarationSrc += "\n\n"
     }
     
     
     if (!inputBlocks.isEmpty) {
-      for (block <- inputBlocks) {
+      for (block <- inputBlocks; if !block.declarations.isEmpty) {
         for (declaration <- block.declarations) {
-          src += inputQualifier + " " + format(declaration.qualifiers) + " " + declaration.shaderType + " " + declaration.name + ";\n"
+          val glslType = declaration.extractManifestTypeInfo(unsizedArrays)
+          declarationSrc += format(declaration.qualifiers) + inputQualifier + " " + glslType + " " + declaration.name + ";\n"
         }
-        src += "\n"
+        declarationSrc += "\n"
       }
-      src += "\n"
+      declarationSrc += "\n"
     }
     
     
     if (!outputBlocks.isEmpty && this.isInstanceOf[VertexShader]) {
-      for (block <- outputBlocks) {
+      for (block <- outputBlocks; if !block.declarations.isEmpty) {
         for (declaration <- block.declarations) {
-          src += "varying " + format(declaration.qualifiers) + " " + declaration.shaderType + " " + declaration.name + ";\n"
+          val glslType = declaration.extractManifestTypeInfo(unsizedArrays)
+          declarationSrc += format(declaration.qualifiers) + "varying " + glslType + " " + declaration.name + ";\n"
         }
-        src += "\n"
+        declarationSrc += "\n"
       }
     }
+    
+    
+    if (!unsizedArrays.isEmpty) {
+      for ((parentType, name) <- unsizedArrays.toSeq.sortBy(t => t._1 + t._2)) {
+        val sizeId = (if (parentType == null) "" else parentType + "_") + name
+        src += "const int se_sizeOf_" + sizeId + " = " + "$" + sizeId + "$;\n"
+      }
+      src += "\n"
+    }
+    
+    for (struct <- structs) {
+      val name = struct._1
+      val fields = struct._3
+      
+      src += "struct " + name + " {\n"
+      
+      for ((fieldType, fieldName) <- fields) {
+        src += "  " + fieldType + " " + fieldName + ";\n"
+      }
+      
+      src += "}\n\n"
+    }
+    
+    src += declarationSrc
     
     for (srcChunk <- sources) {
       src += unindent(srcChunk) + "\n"

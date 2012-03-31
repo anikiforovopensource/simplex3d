@@ -27,10 +27,6 @@ import simplex3d.data._
 package object graphics {
   type TechniqueBinding = Readable[W] with Binding forSome { type W <: Writable[W] }
   
-  private[engine] val TechniqueBindingFilter = List(classOf[Readable[_]], classOf[Binding])
-  private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])
-  
-  
   val EffectRecursor: {
     type Recursive <: EnvironmentalEffect[Recursive] { type Read <: EnvironmentalEffect[Recursive] }
   } = null

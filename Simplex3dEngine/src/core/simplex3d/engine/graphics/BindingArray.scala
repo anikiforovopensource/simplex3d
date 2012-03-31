@@ -29,6 +29,8 @@ sealed abstract class ReadBindingArray[W <: Writable[W] with Binding](final val 
 extends Readable[BindingArray[W]] with NestedBinding {
   final def length: Int = size
   def apply(i: Int) :W#Read
+  
+  def bindingInstance(): W 
 }
 
 
@@ -62,6 +64,8 @@ extends ReadBindingArray[W](size) with Writable[BindingArray[W]]
   }
   
   def apply(i: Int) :W = array(i).asInstanceOf[W]
+  
+  def bindingInstance(): W = elementFactory.mutableCopy()
   
   
   override def toString() :String = {

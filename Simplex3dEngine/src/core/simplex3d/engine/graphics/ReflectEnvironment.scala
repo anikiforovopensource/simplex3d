@@ -36,7 +36,7 @@ trait ReflectEnvironment extends Environment {
     
     val (pn, pv) = FieldReflection.getValueMap(
       this,
-      classOf[OptionalProperty[_]], EnvironmentalEffectFilter,
+      classOf[OptionalProperty[_]], FieldReflection.EnvironmentalEffectFilter,
       Nil
     )
     _propertyNames = pn

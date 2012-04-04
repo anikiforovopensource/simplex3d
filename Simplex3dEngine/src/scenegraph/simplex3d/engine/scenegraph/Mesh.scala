@@ -56,9 +56,6 @@ extends Bounded[T, G](name) with AbstractMesh {
     controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
   ) {
     super.onParentChange(controllerContext, managed)
-    
-    // Signal changes to trigger another technique resolution that will take care of new environment.
-    material.signalStructuralChanges()
   }
   
   private[scenegraph] override def update(version: Long) :Boolean = {

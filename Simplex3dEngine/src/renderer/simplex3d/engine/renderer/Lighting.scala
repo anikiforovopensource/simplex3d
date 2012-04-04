@@ -61,7 +61,7 @@ with UpdatableEnvironmentalEffect[Lighting]
     //
   }
   
-  def hasStructuralChanges = false // XXX
+  def hasBindingChanges = false // XXX
   
   def resolveBinding() = null //XXX
   def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {}

@@ -36,13 +36,12 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
   
   def propagate(parentVal: E#Read, result: E) :Unit
   
-  /** This method must return true to signal structural change events.
-   * Structural change events indicate that a new binding must be resolved.
+  /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
    */
-  def hasStructuralChanges: Boolean
+  def hasBindingChanges: Boolean
   
-  /** Must return a stable binding that will no change until the next structural change event.
-   * Resolving the binding must clear structuralChanges flag.
+  /** Must return a stable binding that will no change until the next binding change event.
+   * Resolving the binding must clear bindingChanges flag.
    */
   def resolveBinding(): TechniqueBinding
 }

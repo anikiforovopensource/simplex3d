@@ -90,7 +90,7 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     
     if (program == null) {
       useDefaultProgram = true
-      log(Level.SEVERE, "Mesh '" + mesh.name + "' has an undefined technique. Default technique will be used.")
+      log(Level.SEVERE, "Mesh '" + mesh.name + "' does not have an assigned technique. Default technique will be used.")
     }
     else {
       useDefaultProgram = !renderContext.bindProgram(program)
@@ -150,8 +150,6 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
       i += 1
     }
     
-    programMapping.bind(mesh.mapping)
-    
 //    val directionalLightPos = Vec3(-0.25, 0.5, 1)
 //    val ecLightDir = -normalize(camera.view.transformVector(directionalLightPos))
 //    program("ecLightDir") = ecLightDir
@@ -186,6 +184,8 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
         GL_QUADS
     }
     
+    
+    programMapping.bind(mesh.mapping)
     
     if (geometry.indices.isDefined) {
       renderContext.init(geometry.indices.defined)

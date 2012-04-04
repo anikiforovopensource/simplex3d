@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -21,22 +21,30 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math.types._
-import simplex3d.engine.util._
 
-
-/** All Struct subclasses must define a no-argument constructor.
- */
-trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>
-  protected def mkMutable() :S
+final class ArrayDeclaration(val parentType: String, val name: String, val size: Int) {
+  val key = (parentType, name)
   
-  override def mutableCopy(): S = {
-    val copy = mkMutable()
-    copy := this
-    copy
+  override def equals(other: Any) :Boolean = {
+    if (this.eq(other.asInstanceOf[AnyRef])) true
+    else other match {
+      case a: ArrayDeclaration =>
+        a.parentType == parentType &&
+        a.name == name &&
+        a.size == size
+      case _ => false
+    }
   }
   
-  def fieldNames: ReadArray[String]
-  def fields: ReadArray[TechniqueBinding]
-  def arrayDeclarations: ReadArray[ArrayDeclaration]
+  override def hashCode() :Int = {
+    41 * (
+      41 * (
+        41 + parentType.hashCode
+      ) + name.hashCode
+    ) + size.hashCode
+  }
+  
+  override def toString() :String = {
+    "ArrayDeclaration { " + parentType + "." + name + "[" + size + "] }"
+  }
 }

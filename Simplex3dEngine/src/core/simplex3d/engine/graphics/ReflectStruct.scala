@@ -21,6 +21,7 @@
 package simplex3d.engine.graphics
 
 import java.util.logging._
+import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -31,6 +32,7 @@ trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>
   
   private final var _fieldNames: ReadArray[String] = null
   private final var _fields: ReadArray[UncheckedBinding] = null
+  private final var _arrayDeclarations: ReadArray[ArrayDeclaration] = null
 
   private[this] var initialized = false 
   protected final def reflect(clazz: Class[_]) {
@@ -59,11 +61,46 @@ trait ReflectStruct[S <: ReflectStruct[S]] extends Struct[S] { self: S =>
       _fields = (new ReadArray(array)).asInstanceOf[ReadArray[UncheckedBinding]]
     }
     
+    
+    val parentType = clazz.getSimpleName
+    val declarations = new HashMap[(String, String), ArrayDeclaration]
+    
+    def register(dec: ArrayDeclaration) {
+      val existing = declarations.get(dec.key)
+      if (existing == null) {
+        declarations.put(dec.key, dec)
+      }
+      else if (existing.size != dec.size) {
+        throw new IllegalStateException(
+          "BindingArray '" + dec.parentType + "." + dec.name + "' is used multiple times with different sizes."
+        )
+      }
+    }
+    
+    i = 0; while (i < fieldNames.length) {
+      fields(i) match {
+        case a: BindingArray[_] =>
+          register(new ArrayDeclaration(parentType, fieldNames(i), a.size))
+        case s: Struct[_] =>
+          val nestedDeclarations = s.arrayDeclarations
+          var j = 0; while (j < nestedDeclarations.size) {
+            register(nestedDeclarations(j))
+            j += 1
+          }
+        case _ =>
+          // ignore
+      }
+      i += 1
+    }
+    _arrayDeclarations = new ReadArray(declarations.values().toArray(new Array[ArrayDeclaration](0)))
+    
+    
     initialized = true
   }
   
   override def fieldNames: ReadArray[String] = _fieldNames
   override def fields: ReadArray[TechniqueBinding] = _fields
+  override def arrayDeclarations: ReadArray[ArrayDeclaration] = _arrayDeclarations
   
   final def :=(r: Readable[S]) {
     val s = r.asInstanceOf[ReflectStruct[S]]

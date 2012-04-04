@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Renderer Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -21,7 +21,9 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import java.util.HashMap
 import scala.collection._
+import scala.collection.mutable.ArrayBuffer
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
@@ -32,264 +34,313 @@ extends graphics.TechniqueManager[G]
   val passManager = new PassManager[G]
   
   
-  private val cache = new java.util.HashMap[immutable.Set[graphics.Shader], Technique]
-  private def cachedTechnique(shaders: immutable.Set[graphics.Shader]) :Technique = {
-    var technique = cache.get(shaders)
-    if (technique == null) {
-      technique = new Technique(graphicsContext, shaders)
-      cache.put(shaders, technique)
+  protected class Stage(val name: String) {
+    val internal = new ArrayBuffer[ShaderPrototype]
+    val output = new ArrayBuffer[ShaderPrototype]
+    
+    def register(shader: ShaderPrototype) {
+      if (shader.entryPoint.isDefined) output.insert(0, shader)
+      else internal.insert(0, shader)
     }
-    technique
+  }
+  
+  protected val stages = new Array[Stage](2)
+  stages(0) = new Stage("Fragment")
+  stages(1) = new Stage("Vertex")
+  
+  
+  def register(shader: ShaderPrototype) {
+    //XXX verify unique in/out block name has the same declarations
+    //XXX verify that declarations match material and env property types.
+    //XXX special treatment for gl_Position => gl_FragCoord
+    shader match {
+      case _: FragmentShader => stages(0).register(shader)
+      case _: VertexShader => stages(1).register(shader)
+    }
+    shader.register()
   }
   
   
-  private val branchQueues = new mutable.HashMap[String, List[Branch]]
-  
-  private val geometryNames = graphicsContext.mkGeometry().attributeNames
-  private val materialNames = graphicsContext.mkMaterial().uniformNames
-  private val environmentNames = graphicsContext.mkEnvironment().propertyNames
-  
-  
-  private[this] def find(names: ReadArray[String], name: String) :Int = {
-    var i = 0; while (i < names.length) {
-      if (names(i) == name) return i
-      
-      i += 1
+  private def toNameIdMap(array: ReadArray[String]) :HashMap[String, java.lang.Integer] = {
+    val map = new HashMap[String, java.lang.Integer]
+    for (i <- 0 until array.length) {
+      map.put(array(i), i)
     }
-    -1
+    map
   }
-  
-  def register(branch: Branch) {
-    var requiredGeometry = List[Int]()
-    var requiredMaterial = List[Int]()
-    var requiredEnvironment = List[Int]()
-    
-    for (prop <- branch.requiredProperties) {
-      var id = find(geometryNames, prop)
-      if (id >= 0) requiredGeometry ::= id
-      else {
-        id = find(materialNames, prop)
-        if (id >= 0) requiredMaterial ::= id
-        else {
-          id = find(environmentNames, prop)
-          if (id >= 0) requiredEnvironment ::= id
-          else throw new RuntimeException() //XXX log and return
-        }
-      }
-    }
-    
-    branch.requiredGeometry = requiredGeometry.sorted.toArray
-    branch.requiredMaterial = requiredMaterial.sorted.toArray
-    branch.requiredEnvironment = requiredEnvironment.sorted.toArray
-    
-    val branchQueue = branchQueues.get(branch.name).getOrElse(Nil)
-    branchQueues.put(branch.name, branch :: branchQueue)
-  }
+  private val geometryMap = toNameIdMap(graphicsContext.mkGeometry().attributeNames)
+  private val materialMap = toNameIdMap(graphicsContext.mkMaterial().uniformNames)
+  private val environmentMap = toNameIdMap(graphicsContext.mkEnvironment().propertyNames)
   
   
-  def resolveTechnique(
+  def resolveTechnique(//XXX handle shader config.
     meshName: String,
     geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
   )
-  :Technique = {
+  :Technique =
+  {
     
-    def allDefined(required: Array[Int], properties: ReadArray[Property[_]]) :Boolean = {
-      var passed = true
-      var i = 0; while (passed && i < required.length) {
-        if (!properties(required(i)).isDefined) passed = false
-
-        i += 1
-      }
-      passed
-    }
-    
-    def passesRequirements(branch: Branch) :Boolean = {
-      var passed = true
+    def resolveShaderChain(stageId: Int, shader: ShaderPrototype) :ArrayBuffer[ShaderPrototype] = {
+      val stage = stages(stageId)
+      val chain = new ArrayBuffer[ShaderPrototype]
+      chain += shader
       
-      val requiredGeometry = branch.requiredGeometry
-      var i = 0; while (passed && i < requiredGeometry.length) {
-        if (!geometry.attributes(requiredGeometry(i)).isDefined) {
-          passed = false
-        }
-
-        i += 1
-      }
-      
-      if (passed) passed = allDefined(branch.requiredMaterial, material.uniforms)
-      if (passed) passed = allDefined(branch.requiredEnvironment, worldEnvironment.properties)
-      
-      passed
-    }
-    
-    def processQueue(
-      branchName: String,
-      shaders: mutable.ArrayBuffer[graphics.Shader],
-      deadBranches: mutable.Set[String]
-    )
-    :Boolean = {
-      val queue = branchQueues.get(branchName)
-      if (!queue.isDefined) return false
-      
-      val branches = queue.get.iterator
-      while (branches.hasNext) { val branch = branches.next()
-        if (passesRequirements(branch)) {
+      // Match uniforms.
+      var uniformsPassed = true
+      if (shader.uniformBlock.isDefined) { def checkUniform() {
+        val declarations = shader.uniformBlock.get.declarations
+        
+        var i = 0; while (uniformsPassed && i < declarations.size) {
+          val declaration = declarations(i)
+          uniformsPassed = false
           
-          var resolved = true
-          val dependencies = new mutable.ArrayBuffer[graphics.Shader]
-          
-          val subBranches = branch.subBranches.iterator
-          while (resolved && subBranches.hasNext) { val subBranch = subBranches.next()
-            if (deadBranches.contains(subBranch)) resolved = false
-            else resolved = resolved && processQueue(subBranch, dependencies, deadBranches)
-          }
-          
-          if (resolved) {
-            shaders ++= branch.shaders
-            shaders ++= dependencies
-            return true
+          if (declaration.isPredefined) {
+            if (declaration.name == "se_pointSize") {
+              uniformsPassed = (geometry.mode == PointSprites)
+            }
+            else {
+              uniformsPassed = true
+            }
           }
           else {
-            deadBranches += branchName
+            val materialId = materialMap.get(declaration.name)
+            if (materialId != null) {
+              val prop = material.uniforms(materialId)
+              uniformsPassed = prop.isDefined
+            }
+            else {
+              val environmentId = environmentMap.get(declaration.name)
+              if (environmentId != null) {
+                val prop = worldEnvironment.properties(environmentId)
+                uniformsPassed = prop.isDefined
+              }
+            }
           }
+          
+          i += 1
+        }
+      }; checkUniform() }
+      
+      var functionsPassed = uniformsPassed
+      if (functionsPassed && !shader.functionDependencies.isEmpty) { def checkFunctions() {
+        val requiredFunctions = shader.functionDependencies
+        
+        var i = 0; while (functionsPassed && i < requiredFunctions.size) {
+          val requiredFunction = requiredFunctions(i)
+          functionsPassed = false
+          
+          var j = 0; while (!functionsPassed && j < stage.internal.size) {
+            val functionProvider = stage.internal(j)
+            
+            if (requiredFunction == functionProvider.export.get) {
+              val subChain = resolveShaderChain(stageId, functionProvider)
+              if (subChain != null) {
+                chain ++= subChain
+                functionsPassed = true
+              }
+            }
+            
+            j += 1
+          }
+          
+          i += 1
+        }
+      }; checkFunctions() }
+      
+      var inputPassed = functionsPassed
+      if (inputPassed && !shader.inputBlocks.isEmpty) { def checkInput() {
+        val inputBlocks = shader.inputBlocks
+        val previousStage = if (stageId + 1 == stages.size) null else stages(stageId + 1)
+        
+        if (previousStage == null) { def checkAttributes() {
+          var i = 0; while (inputPassed && i < inputBlocks.size) {
+            val inputBlock = inputBlocks(i)
+            
+            var j = 0; while (inputPassed && j < inputBlock.declarations.size) {
+              val declaration = inputBlock.declarations(j)
+              
+              val geometryId = geometryMap.get(declaration.name)
+              if (geometryId != null) {
+                val attrib = geometry.attributes(geometryId)
+                inputPassed = attrib.isDefined
+              }
+              
+              j += 1
+            }
+            
+            i += 1
+          }
+        }; checkAttributes() }
+        
+        else { def checkParentOutput() {
+          var i = 0; while (inputPassed && i < inputBlocks.size) {
+            val inputBlock = inputBlocks(i)
+            
+            inputPassed = false
+            var j = 0; while (!inputPassed && j < previousStage.output.size) {
+              val outputShader = previousStage.output(j)
+              val outputBlocks = outputShader.outputBlocks
+              
+              var found = false
+              var k = 0; while (!found && k < outputBlocks.size) {
+                found = (inputBlock.name == outputBlocks(k).name)
+                
+                k += 1
+              }
+              
+              if (found) {
+                if (!chain.contains(outputShader)) {
+                  val subChain = resolveShaderChain(stageId + 1, outputShader)
+                  if (subChain != null) {
+                    chain ++= subChain
+                    inputPassed = true
+                  }
+                }
+                else inputPassed = true
+              }
+              
+              j += 1
+            }
+            
+            i += 1
+          }
+        }; checkParentOutput() }
+        
+      }; checkInput() }
+      
+      if (uniformsPassed && functionsPassed && inputPassed) chain
+      else null
+    }
+  
+    val fragmentStage = stages(0)
+    var chain: ArrayBuffer[ShaderPrototype] = null
+    var i = 0; while (chain == null && i < fragmentStage.output.size) {
+      val outputShader = fragmentStage.output(i)
+      chain = resolveShaderChain(0, outputShader)
+      i += 1
+    }
+    
+    if (chain != null) {
+      
+      // Generate array declaration map.
+      val arrayDeclarationMap = new HashMap[(String, String), ArrayDeclaration]
+      def processValue(value: AnyRef, name: String) {
+        value match {
+          
+          case a: BindingArray[_] =>
+            val dec = new ArrayDeclaration("", name, a.size)
+            val prev = arrayDeclarationMap.put(dec.key, dec)
+            if (prev != null && prev.size != dec.size) println("XXX log")
+            
+          case s: Struct[_] =>
+            var i = 0; while (i < s.arrayDeclarations.size) {
+              val dec = s.arrayDeclarations(i)
+              val prev = arrayDeclarationMap.put(dec.key, dec)
+              if (prev != null && prev.size != dec.size) println("XXX log")
+              
+              i += 1
+            }
+            
+          case _ =>
+            // ignore
         }
       }
       
-      false
+      var i = 0; while (i < material.uniforms.size) {
+        val prop = material.uniforms(i)
+        if (prop.isDefined) processValue(prop.defined, material.uniformNames(i))
+        
+        i += 1
+      }
+      
+      i = 0; while (i < worldEnvironment.properties.size) {
+        val prop = worldEnvironment.properties(i)
+        if (prop.isDefined) processValue(prop.defined.resolveBinding(), worldEnvironment.propertyNames(i))
+        
+        i += 1
+      }
+      
+      
+      // Generate shader and technique keys. 
+      val techniqueKey = new Array[(ShaderPrototype, Seq[ArrayDeclaration])](chain.size)
+      
+      i = 0; while (i < chain.size) {
+        val shader = chain(i)
+        val keys = shader.arrayDeclarationKeys
+        
+        val resolved = new Array[ArrayDeclaration](keys.size)
+        var j = 0; while (j < keys.size) {
+          val key = keys(j)
+          val arrayDeclaration = arrayDeclarationMap.get(key)
+          assert(arrayDeclaration != null)
+          resolved(i) = arrayDeclaration
+          
+          j += 1
+        }
+        
+        techniqueKey(i) = Tuple2(shader, new ReadArray(resolved))
+        
+        i += 1
+      }
+      
+      
+      // Load cached technique or make a new one.
+      val readTechniqueKey = new ReadArray(techniqueKey)
+      var technique = techniqueCache.get(readTechniqueKey)
+      
+      if (technique == null) {
+        val shaders = new ArrayBuffer[Shader]
+        
+        var i = 0; while (i < techniqueKey.size) {
+          val shaderKey = techniqueKey(i)
+          
+          var shader = shaderCache.get(shaderKey)
+          if (shader == null) {
+            val proto = chain(i)
+            shader = new Shader(proto.shaderType, proto.src_Gl21)
+            shaderCache.put(shaderKey, shader)
+          }
+          
+          shaders += shader
+          
+          i += 1
+        }
+        
+        shaders += genMain(Shader.Fragment, chain)
+        shaders += genMain(Shader.Vertex, chain)
+        
+        technique = new Technique(graphicsContext, shaders.toSet)
+        techniqueCache.put(readTechniqueKey, technique)
+      }
+      
+      technique
     }
-    
-    val mainBranch = geometry.mode match {
-      case _: PointSprites => "ps_main"
-      case _ => "main"
+    else {
+      null
     }
-    
-    val shaders = mutable.ArrayBuffer[graphics.Shader]()
-    val resolved = processQueue(mainBranch, shaders, mutable.Set[String]())
-    
-    if (resolved) cachedTechnique(shaders.toSet)
-    else null
   }
-  
-  
-  // Default setup.
-  {
-    register(new Branch("main", subBranches = Set("resolveColor"), requiredProperties = Set.empty)(
-      new graphics.Shader(graphics.Shader.Vertex, """
-          uniform mat4 se_modelViewProjectionMatrix;
-          attribute vec3 vertices;
-          
-          void resolveColor();
-          
-          void main() {
-            gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-            resolveColor();
-          }
-        """
-      ),
-      new graphics.Shader(graphics.Shader.Fragment, """
-          vec4 resolveColor();
-          
-          void main() {
-            gl_FragColor = resolveColor();
-          }
-        """
-      )
-    ))
-    
-    register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
-      new graphics.Shader(graphics.Shader.Vertex, """
-          void resolveColor() {}
-        """
-      ),
-      new graphics.Shader(graphics.Shader.Fragment, """
-          vec4 resolveColor() {
-            return vec4(1);
-          }
-        """
-      )
-    ))
-    
-    
-    register(new Branch("resolveColor", subBranches = Set.empty, requiredProperties = Set("texCoords", "texture"))(
-      new graphics.Shader(graphics.Shader.Vertex, """
-          attribute vec2 texCoords;
-          varying vec2 ecTexCoords;
-          
-          void resolveColor() {
-            ecTexCoords = texCoords;
-          }
-        """
-      ),
-      new graphics.Shader(graphics.Shader.Fragment, """
-          varying vec2 ecTexCoords;
-          uniform sampler2D texture;
-          
-          vec4 resolveColor() {
-            return texture2D(texture, ecTexCoords);
-          }
-        """
-      )
-    ))
-  }
-  
-  // Point sprite setup.
-  {
-    register(new Branch("ps_main", subBranches = Set("ps_resolveColor"), requiredProperties = Set.empty)(
-      new graphics.Shader(graphics.Shader.Vertex, """
-          uniform mat4 se_projectionMatrix;
-          uniform ivec2 se_viewDimensions;
-          
-          uniform mat4 se_modelViewProjectionMatrix;
-          
-          uniform float se_pointSize;
-          
-          
-          attribute vec3 vertices;
-          
-          void main() {
-            gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-            gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
-          }
-        """
-      ),
-      new graphics.Shader(graphics.Shader.Fragment, """
-          vec4 ps_resolveColor();
-          
-          void main() {
-            gl_FragColor = ps_resolveColor();
-          }
-        """
-      )
-    ))
-    
-    register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set.empty)(
-      new graphics.Shader(graphics.Shader.Fragment, """
-          vec4 ps_resolveColor() {
-            return vec4(1);
-          }
-        """
-      )
-    ))
-    
-    register(new Branch("ps_resolveColor", subBranches = Set.empty, requiredProperties = Set("texture"))(
-      new graphics.Shader(graphics.Shader.Fragment, """
-          #version 120
-          
-          uniform sampler2D texture;
-          
-          vec4 ps_resolveColor() {
-            return texture2D(texture, gl_PointCoord);
-          }
-        """
-      )
-    ))
-  }
-}
 
-class Branch
-  (val name: String, val subBranches: Set[String], val requiredProperties: Set[String])
-  (val shaders: graphics.Shader*)
-{
-  private[pluggable] var requiredGeometry: Array[Int] = _
-  private[pluggable] var requiredMaterial: Array[Int] = _
-  private[pluggable] var requiredEnvironment: Array[Int] = _
+  
+  private[this] def genMain(shaderType: Shader.type#Value, chain: ArrayBuffer[ShaderPrototype]) :Shader = {
+    var body = "void main() {\n"
+    var declarations = ""
+    
+    var i = 0; while (i < chain.size) {
+      val sp = chain(i)
+      if (sp.shaderType == shaderType && sp.entryPoint.isDefined) {
+        declarations += "void " + sp.entryPoint.get + "();\n"
+        body += "  " + sp.entryPoint.get + "();\n"
+      }
+      
+      i += 1
+    }
+    
+    body += "}\n"
+    
+    new Shader(shaderType, declarations + "\n" +  body)
+  }
+  
+  
+  private val shaderCache = new HashMap[(ShaderPrototype, Seq[ArrayDeclaration]), Shader]
+  private val techniqueCache = new HashMap[Seq[(ShaderPrototype, Seq[ArrayDeclaration])], Technique]
 }

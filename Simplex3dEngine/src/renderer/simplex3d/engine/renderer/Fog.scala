@@ -65,7 +65,7 @@ final class Fog extends ReadFog with EnvironmentalEffect[Fog] with ReflectStruct
     result := this
   }
   
-  def hasStructuralChanges = false
+  def hasBindingChanges = false
   
   def resolveBinding() = this
 }

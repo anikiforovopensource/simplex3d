@@ -35,7 +35,7 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.default._
 
 
-trait BasicApp extends App with scala.App {
+trait BasicApp extends App with scala.App {//XXX add DemoApp: basic app with controls
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
@@ -54,7 +54,7 @@ trait BasicApp extends App with scala.App {
     "World",
     sceneGraphSettings,
     new Camera("World Camera"),
-    new graphics.pluggable.TechniqueManager
+    TechniqueProvider.getTechniqueManager()
   )
   
   protected val assetManager = new AssetManager {

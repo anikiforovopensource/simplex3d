@@ -94,6 +94,8 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
 
     _children += element
     element._parent = this
+    
+    worldEnvironment.signalStructuralChanges() // XXX Is this handled somewhere else? Doesn't look like it is. Do some testing.
   }
 
   private[this] final def remove(element: SceneElement[T, G]) :Boolean = {
@@ -319,7 +321,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       val props = worldEnvironment.properties
       val size = props.length; var i = 0; while (i < size) { val prop = props(i)
         if (prop.hasDataChanges) {
-          if (hasLeafs && prop.isDefined && prop.defined.hasStructuralChanges) worldEnvironment.signalStructuralChanges()
+          if (hasLeafs && prop.isDefined && prop.defined.hasBindingChanges) worldEnvironment.signalStructuralChanges()
           prop.clearDataChanges()
         }
         

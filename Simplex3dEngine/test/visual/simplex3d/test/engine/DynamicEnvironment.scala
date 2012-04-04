@@ -200,7 +200,7 @@ package testenv {
       result.value := value
     }
     
-    def hasStructuralChanges = false
+    def hasBindingChanges = false
     
     def resolveBinding() = value
   }
@@ -228,7 +228,7 @@ package testenv {
       else result.color := Vec3.One
     }
     
-    def hasStructuralChanges = false
+    def hasBindingChanges = false
     
     def resolveBinding() = color
   }
@@ -260,7 +260,7 @@ package testenv {
       result.secondary := secondary
     }
     
-    def hasStructuralChanges = {
+    def hasBindingChanges = {
       (binding == null) || (secondary ^ binding.factors.size == 2)
     }
     
@@ -269,7 +269,7 @@ package testenv {
     def resolveBinding() = {
       println("Resolving contrast binding.")
       
-      if (hasStructuralChanges) {
+      if (hasBindingChanges) {
         binding = 
           if (secondary) new ContrastBinding(2)
           else new ContrastBinding(1)

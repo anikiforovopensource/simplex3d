@@ -32,8 +32,8 @@ import simplex3d.data.double._
  */
 package object double {
 
-  private[this] final def primitiveFactory[R <: DefinedDouble](f: PrimitiveFactory[RDouble, R]) = f
-  private[this] final def factory[F <: Format](f: CompositionFactory[F, DefinedDouble]) = f
+  private[this] final def primitiveFactory[R <: TangibleDouble](f: PrimitiveFactory[RDouble, R]) = f
+  private[this] final def factory[F <: Format](f: CompositionFactory[F, TangibleDouble]) = f
   private[this] final val default = new ArrayRDoubleRFloat
 
   // RDouble
@@ -54,12 +54,12 @@ package object double {
   implicit final val FactoryVec4d = factory[Vec4d](new ArrayVec4d(default))
 
 
-   private[this] final val sysfpBound = Manifest.intersectionType[DefinedDouble with SysFP](
-    Manifest.classType(classOf[DefinedDouble]),
+   private[this] final val sysfpBound = Manifest.intersectionType[TangibleDouble with SysFP](
+    Manifest.classType(classOf[TangibleDouble]),
     Manifest.classType(classOf[SysFP])
   )
 
-  implicit object FactoryQuat4d extends DataAdapter[Quat4d, DefinedDouble with SysFP](components = 4)(
+  implicit object FactoryQuat4d extends DataAdapter[Quat4d, TangibleDouble with SysFP](components = 4)(
     formatManifest = Quat4d.Manifest,
     accessorManifest = Quat4d.Manifest,
     boundManifest = sysfpBound
@@ -72,7 +72,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, DefinedDouble with SysFP](components = 4)(
+  implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, TangibleDouble with SysFP](components = 4)(
     formatManifest = Mat2x2d.Manifest,
     accessorManifest = Mat2x2d.Manifest,
     boundManifest = sysfpBound
@@ -89,7 +89,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, DefinedDouble with SysFP](components = 6)(
+  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, TangibleDouble with SysFP](components = 6)(
     formatManifest = Mat2x3d.Manifest,
     accessorManifest = Mat2x3d.Manifest,
     boundManifest = sysfpBound
@@ -108,7 +108,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, DefinedDouble with SysFP](components = 8)(
+  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, TangibleDouble with SysFP](components = 8)(
     formatManifest = Mat2x4d.Manifest,
     accessorManifest = Mat2x4d.Manifest,
     boundManifest = sysfpBound
@@ -129,7 +129,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, DefinedDouble with SysFP](components = 6)(
+  implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, TangibleDouble with SysFP](components = 6)(
     formatManifest = Mat3x2d.Manifest,
     accessorManifest = Mat3x2d.Manifest,
     boundManifest = sysfpBound
@@ -146,7 +146,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, DefinedDouble with SysFP](components = 9)(
+  implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, TangibleDouble with SysFP](components = 9)(
     formatManifest = Mat3x3d.Manifest,
     accessorManifest = Mat3x3d.Manifest,
     boundManifest = sysfpBound
@@ -165,7 +165,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, DefinedDouble with SysFP](components = 12)(
+  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, TangibleDouble with SysFP](components = 12)(
     formatManifest = Mat3x4d.Manifest,
     accessorManifest = Mat3x4d.Manifest,
     boundManifest = sysfpBound
@@ -186,7 +186,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, DefinedDouble with SysFP](components = 8)(
+  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, TangibleDouble with SysFP](components = 8)(
     formatManifest = Mat4x2d.Manifest,
     accessorManifest = Mat4x2d.Manifest,
     boundManifest = sysfpBound
@@ -203,7 +203,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, DefinedDouble with SysFP](components = 12)(
+  implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, TangibleDouble with SysFP](components = 12)(
     formatManifest = Mat4x3d.Manifest,
     accessorManifest = Mat4x3d.Manifest,
     boundManifest = sysfpBound
@@ -222,7 +222,7 @@ package object double {
     }
   }
 
-  implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, DefinedDouble with SysFP](components = 16)(
+  implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, TangibleDouble with SysFP](components = 16)(
     formatManifest = Mat4x4d.Manifest,
     accessorManifest = Mat4x4d.Manifest,
     boundManifest = sysfpBound

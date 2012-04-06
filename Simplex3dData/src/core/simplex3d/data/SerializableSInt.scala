@@ -50,9 +50,9 @@ private[data] class CompositeSInt(val components: Int) extends SerializableCompo
     primitives: ReadDataArray[_ <: PrimitiveFormat, _]
   ): ReadDataArray[_ <: CompositeFormat, _] = {
     components match {
-      case 2 => FactoryVec2i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])
-      case 3 => FactoryVec3i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])
-      case 4 => FactoryVec4i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: DefinedInt]])
+      case 2 => FactoryVec2i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: TangibleInt]])
+      case 3 => FactoryVec3i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: TangibleInt]])
+      case 4 => FactoryVec4i.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[SInt, _ <: TangibleInt]])
     }
   }
 }

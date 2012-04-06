@@ -54,9 +54,9 @@ private[data] class CompositeRDouble(val components: Int) extends SerializableCo
     primitives: ReadDataArray[_ <: PrimitiveFormat, _]
   ): ReadDataArray[_ <: CompositeFormat, _] = {
     components match {
-      case 2 => FactoryVec2d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
-      case 3 => FactoryVec3d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
-      case 4 => FactoryVec4d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: DefinedDouble]])
+      case 2 => FactoryVec2d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: TangibleDouble]])
+      case 3 => FactoryVec3d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: TangibleDouble]])
+      case 4 => FactoryVec4d.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RDouble, _ <: TangibleDouble]])
     }
   }
 }

@@ -31,14 +31,14 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseVec3f[+R <: DefinedFloat](
+private[data] abstract class BaseVec3f[+R <: TangibleFloat](
   prim: ReadContiguous[RFloat, R], off: Int, str: Int
-) extends CompositeSeq[Vec3f, R, DefinedFloat](prim, off, str) {
+) extends CompositeSeq[Vec3f, R, TangibleFloat](prim, off, str) {
   final def formatManifest = Vec3f.Manifest
   final def accessorManifest = Vec3f.Manifest
   final def components: Int = 3
 
-  final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[Vec3f#Component, P])
+  final def mkReadDataArray[P <: TangibleFloat](prim: ReadDataArray[Vec3f#Component, P])
   :ReadDataArray[Vec3f, P] = {
     (prim.rawType match {
       case UByte => new ArrayVec3fUByte(prim.asInstanceOf[ArrayRFloatUByte])
@@ -46,7 +46,7 @@ private[data] abstract class BaseVec3f[+R <: DefinedFloat](
       case _ => new ArrayVec3f(prim)
     }).asInstanceOf[ReadDataArray[Vec3f, P]]
   }
-  final def mkReadDataBuffer[P <: DefinedFloat](prim: ReadDataBuffer[Vec3f#Component, P])
+  final def mkReadDataBuffer[P <: TangibleFloat](prim: ReadDataBuffer[Vec3f#Component, P])
   :ReadDataBuffer[Vec3f, P] = {
     (prim.rawType match {
       case UByte => new BufferVec3fUByte(prim.asInstanceOf[BufferRFloatUByte])
@@ -54,7 +54,7 @@ private[data] abstract class BaseVec3f[+R <: DefinedFloat](
       case _ => new BufferVec3f(prim)
     }).asInstanceOf[ReadDataBuffer[Vec3f, P]]
   }
-  protected final def mkReadDataViewInstance[P <: DefinedFloat](
+  protected final def mkReadDataViewInstance[P <: TangibleFloat](
     prim: ReadDataBuffer[Vec3f#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec3f, P] = {
     (prim.rawType match {
@@ -67,7 +67,7 @@ private[data] abstract class BaseVec3f[+R <: DefinedFloat](
   final override def mkSerializableInstance() = new CompositeRFloat(components)
 }
 
-private[data] final class ArrayVec3f[+R <: DefinedFloat](
+private[data] final class ArrayVec3f[+R <: TangibleFloat](
   prim: ReadDataArray[RFloat, R]
 ) extends BaseVec3f[R](prim, 0, 3) with DataArray[Vec3f, R] {
   type Read = ReadDataArray[Vec3f, R @uncheckedVariance]
@@ -88,7 +88,7 @@ private[data] final class ArrayVec3f[+R <: DefinedFloat](
   }
 }
 
-private[data] final class BufferVec3f[+R <: DefinedFloat](
+private[data] final class BufferVec3f[+R <: TangibleFloat](
   prim: ReadDataBuffer[RFloat, R]
 ) extends BaseVec3f[R](prim, 0, 3) with DataBuffer[Vec3f, R] {
   type Read = ReadDataBuffer[Vec3f, R @uncheckedVariance]
@@ -109,7 +109,7 @@ private[data] final class BufferVec3f[+R <: DefinedFloat](
   }
 }
 
-private[data] final class ViewVec3f[+R <: DefinedFloat](
+private[data] final class ViewVec3f[+R <: TangibleFloat](
   prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseVec3f[R](prim, off, str) with DataView[Vec3f, R] {
   type Read = ReadDataView[Vec3f, R @uncheckedVariance]

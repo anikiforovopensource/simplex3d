@@ -33,22 +33,22 @@ import Util._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseRDouble[+R <: DefinedDouble](
+private[data] abstract class BaseRDouble[+R <: TangibleDouble](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
 extends AbstractData[Double, Double](shared, prim, ro, off, str)
-with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
+with DataSeq[RDouble, R] with CompositionFactory[RDouble, TangibleDouble]
 {
   final def formatManifest = PrimitiveFormat.RDouble
   final def accessorManifest = PrimitiveFormat.RDouble
   final def components: Int = 1
 
-  final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[RDouble, P])
+  final def mkReadDataArray[P <: TangibleDouble](prim: ReadDataArray[RDouble, P])
   :ReadDataArray[RDouble, P] = prim
-  final def mkReadDataBuffer[P <: DefinedDouble](prim: ReadDataBuffer[RDouble, P])
+  final def mkReadDataBuffer[P <: TangibleDouble](prim: ReadDataBuffer[RDouble, P])
   :ReadDataBuffer[RDouble, P] = prim
-  protected final def mkReadDataViewInstance[P <: DefinedDouble](
+  protected final def mkReadDataViewInstance[P <: TangibleDouble](
     prim: ReadDataBuffer[RDouble, P], off: Int, str: Int
   ) :ReadDataView[RDouble, P] = {
     (prim.rawType match {
@@ -74,7 +74,7 @@ with DataSeq[RDouble, R] with CompositionFactory[RDouble, DefinedDouble]
   final override def mkSerializableInstance() = new PrimitiveRDouble(rawType)
 }
 
-private[data] final class ViewRDouble[+R <: DefinedDouble](
+private[data] final class ViewRDouble[+R <: TangibleDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseRDouble[R](prim, prim, prim.isReadOnly, off, str) with DataView[RDouble, R]
 {

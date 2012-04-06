@@ -33,22 +33,22 @@ import Util._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseRFloat[+R <: DefinedFloat](
+private[data] abstract class BaseRFloat[+R <: TangibleFloat](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
 extends AbstractData[Float, Float](shared, prim, ro, off, str)
-with DataSeq[RFloat, R] with CompositionFactory[RFloat, DefinedFloat]
+with DataSeq[RFloat, R] with CompositionFactory[RFloat, TangibleFloat]
 {
   final def formatManifest = PrimitiveFormat.RFloat
   final def accessorManifest = PrimitiveFormat.RFloat
   final def components: Int = 1
   
-  final def mkReadDataArray[P <: DefinedFloat](prim: ReadDataArray[RFloat, P])
+  final def mkReadDataArray[P <: TangibleFloat](prim: ReadDataArray[RFloat, P])
   :ReadDataArray[RFloat, P] = prim
-  final def mkReadDataBuffer[P <: DefinedFloat](prim: ReadDataBuffer[RFloat, P])
+  final def mkReadDataBuffer[P <: TangibleFloat](prim: ReadDataBuffer[RFloat, P])
   :ReadDataBuffer[RFloat, P] = prim
-  protected final def mkReadDataViewInstance[P <: DefinedFloat](
+  protected final def mkReadDataViewInstance[P <: TangibleFloat](
     prim: ReadDataBuffer[RFloat, P], off: Int, str: Int
   ) :ReadDataView[RFloat, P] = {
     (prim.rawType match {
@@ -74,7 +74,7 @@ with DataSeq[RFloat, R] with CompositionFactory[RFloat, DefinedFloat]
   final override def mkSerializableInstance() = new PrimitiveRFloat(rawType)
 }
 
-private[data] final class ViewRFloat[+R <: DefinedFloat](
+private[data] final class ViewRFloat[+R <: TangibleFloat](
   prim: ReadDataBuffer[RFloat, R], off: Int, str: Int
 ) extends BaseRFloat[R](prim, prim, prim.isReadOnly, off, str) with DataView[RFloat, R]
 {

@@ -30,23 +30,23 @@ import Util._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] sealed abstract class BaseSInt[+R <: DefinedInt](
+private[data] sealed abstract class BaseSInt[+R <: TangibleInt](
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
 )
 extends AbstractData[Int, Int](shared, prim, ro, off, str)
-with DataSeq[SInt, R] with CompositionFactory[SInt, DefinedInt]
+with DataSeq[SInt, R] with CompositionFactory[SInt, TangibleInt]
 {
   final def formatManifest = PrimitiveFormat.SInt
   final def accessorManifest = PrimitiveFormat.SInt
   final def components: Int = 1
   final def isNormalized = false
 
-  final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[SInt, P])
+  final def mkReadDataArray[P <: TangibleInt](prim: ReadDataArray[SInt, P])
   :ReadDataArray[SInt, P] = prim
-  final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[SInt, P])
+  final def mkReadDataBuffer[P <: TangibleInt](prim: ReadDataBuffer[SInt, P])
   :ReadDataBuffer[SInt, P] = prim
-  protected final def mkReadDataViewInstance[P <: DefinedInt](
+  protected final def mkReadDataViewInstance[P <: TangibleInt](
     prim: ReadDataBuffer[SInt, P], off: Int, str: Int
   ) :ReadDataView[SInt, P] = new ViewSInt(prim, off, str)
 
@@ -59,7 +59,7 @@ with DataSeq[SInt, R] with CompositionFactory[SInt, DefinedInt]
   final override def mkSerializableInstance() = new PrimitiveSInt(rawType)
 }
 
-private[data] final class ViewSInt[+R <: DefinedInt](
+private[data] final class ViewSInt[+R <: TangibleInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseSInt[R](prim, prim, prim.isReadOnly, off, str) with DataView[SInt, R] {
   type Read = ReadDataView[SInt, R @uncheckedVariance]

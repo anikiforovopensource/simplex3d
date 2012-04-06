@@ -31,7 +31,7 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-abstract class DataAdapter[F <: CompositeFormat, B <: Defined](final val components: Int)(implicit
+abstract class DataAdapter[F <: CompositeFormat, B <: Tangible](final val components: Int)(implicit
   final val formatManifest: ClassManifest[F],
   final val accessorManifest: ClassManifest[F#Accessor],
   final val boundManifest: Manifest[B]
@@ -68,7 +68,7 @@ extends CompositionFactory[F, B] with Serializable {
     }
 
     val bounds = extractIntersecting(boundManifest)
-    val allowed = for (m <- RawManifest.AllDefined if bounds.forall(_ >:> m)) yield RawManifest.toRawType(m)
+    val allowed = for (m <- RawManifest.AllTangible if bounds.forall(_ >:> m)) yield RawManifest.toRawType(m)
     allowed.toArray
   }
   private[this] def enforceRawType(rawType: Int) {

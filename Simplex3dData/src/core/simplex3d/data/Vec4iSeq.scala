@@ -29,25 +29,25 @@ import simplex3d.data.extension._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseVec4i[+R <: DefinedInt](
+private[data] abstract class BaseVec4i[+R <: TangibleInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
-) extends CompositeSeq[Vec4i, R, DefinedInt](prim, off, str) {
+) extends CompositeSeq[Vec4i, R, TangibleInt](prim, off, str) {
   final def formatManifest = Vec4i.Manifest
   final def accessorManifest = Vec4i.Manifest
   final def components: Int = 4
 
-  final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec4i#Component, P])
+  final def mkReadDataArray[P <: TangibleInt](prim: ReadDataArray[Vec4i#Component, P])
   :ReadDataArray[Vec4i, P] = new ArrayVec4i(prim)
-  final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[Vec4i#Component, P])
+  final def mkReadDataBuffer[P <: TangibleInt](prim: ReadDataBuffer[Vec4i#Component, P])
   :ReadDataBuffer[Vec4i, P] = new BufferVec4i(prim)
-  protected final def mkReadDataViewInstance[P <: DefinedInt](
+  protected final def mkReadDataViewInstance[P <: TangibleInt](
     prim: ReadDataBuffer[Vec4i#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec4i, P] = new ViewVec4i(prim, off, str)
 
   final override def mkSerializableInstance() = new CompositeSInt(components)
 }
 
-private[data] final class ArrayVec4i[+R <: DefinedInt](
+private[data] final class ArrayVec4i[+R <: TangibleInt](
   prim: ReadDataArray[SInt, R]
 ) extends BaseVec4i[R](prim, 0, 4) with DataArray[Vec4i, R] {
   type Read = ReadDataArray[Vec4i, R @uncheckedVariance]
@@ -70,7 +70,7 @@ private[data] final class ArrayVec4i[+R <: DefinedInt](
   }
 }
 
-private[data] final class BufferVec4i[+R <: DefinedInt](
+private[data] final class BufferVec4i[+R <: TangibleInt](
   prim: ReadDataBuffer[SInt, R]
 ) extends BaseVec4i[R](prim, 0, 4) with DataBuffer[Vec4i, R] {
   type Read = ReadDataBuffer[Vec4i, R @uncheckedVariance]
@@ -93,7 +93,7 @@ private[data] final class BufferVec4i[+R <: DefinedInt](
   }
 }
 
-private[data] final class ViewVec4i[+R <: DefinedInt](
+private[data] final class ViewVec4i[+R <: TangibleInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseVec4i[R](prim, off, str) with DataView[Vec4i, R] {
   type Read = ReadDataView[Vec4i, R @uncheckedVariance]

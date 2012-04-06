@@ -25,7 +25,7 @@ package extension
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait CompositionFactory[F <: Format, B <: Defined] {
+trait CompositionFactory[F <: Format, B <: Tangible] {
   def components: Int
   def formatManifest: ClassManifest[F]
   def accessorManifest: ClassManifest[F#Accessor]

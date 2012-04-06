@@ -53,9 +53,9 @@ private[data] class CompositeRFloat(val components: Int) extends SerializableCom
     primitives: ReadDataArray[_ <: PrimitiveFormat, _]
   ): ReadDataArray[_ <: CompositeFormat, _] = {
     components match {
-      case 2 => FactoryVec2f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
-      case 3 => FactoryVec3f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
-      case 4 => FactoryVec4f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: DefinedFloat]])
+      case 2 => FactoryVec2f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: TangibleFloat]])
+      case 3 => FactoryVec3f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: TangibleFloat]])
+      case 4 => FactoryVec4f.mkReadDataArray(primitives.asInstanceOf[ReadDataArray[RFloat, _ <: TangibleFloat]])
     }
   }
 }

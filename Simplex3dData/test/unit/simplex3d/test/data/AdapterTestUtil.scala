@@ -35,7 +35,7 @@ import AttributeTestUtil._
  */
 object AdapterTestUtil extends FunSuite {
 
-  def testAdapter[F <: CompositeFormat, B <: Defined](adapter: DataAdapter[F, B])(
+  def testAdapter[F <: CompositeFormat, B <: Tangible](adapter: DataAdapter[F, B])(
     sample: F#Accessor#Read, sampleData: DataArray[F#Component, Raw]
   )(implicit attribs: AdapterAttrib[F, B])
   {
@@ -118,7 +118,7 @@ object AdapterTestUtil extends FunSuite {
 
     // Test raw types that are not allowed.
     for (
-      raw <- RawManifest.AllDefined
+      raw <- RawManifest.AllTangible
       if !attribs.allowed.contains(raw) && supportsRawType(attribs.componentManifest, raw)
     ) {
       type R = T forSome { type T <: B }
@@ -186,7 +186,7 @@ object AdapterTestUtil extends FunSuite {
   }
 }
 
-case class AdapterAttrib[F <: Format, B <: Defined](components: Int, allowed: ClassManifest[_ <: Defined]*)(implicit
+case class AdapterAttrib[F <: Format, B <: Tangible](components: Int, allowed: ClassManifest[_ <: Tangible]*)(implicit
   val formatManifest: ClassManifest[F],
   val accessorManifest: ClassManifest[F#Accessor],
   val boundManifest: Manifest[B],
@@ -196,25 +196,25 @@ case class AdapterAttrib[F <: Format, B <: Defined](components: Int, allowed: Cl
 object AdapterAttribs {
   import RawManifest._
 
-  implicit val Quat4fAttribs = AdapterAttrib[Quat4f, DefinedFloat with SysFP](4, RFloat)
-  implicit val Mat2x2fAttribs = AdapterAttrib[Mat2x2f, DefinedFloat with SysFP](4, RFloat)
-  implicit val Mat2x3fAttribs = AdapterAttrib[Mat2x3f, DefinedFloat with SysFP](6, RFloat)
-  implicit val Mat2x4fAttribs = AdapterAttrib[Mat2x4f, DefinedFloat with SysFP](8, RFloat)
-  implicit val Mat3x2fAttribs = AdapterAttrib[Mat3x2f, DefinedFloat with SysFP](6, RFloat)
-  implicit val Mat3x3fAttribs = AdapterAttrib[Mat3x3f, DefinedFloat with SysFP](9, RFloat)
-  implicit val Mat3x4fAttribs = AdapterAttrib[Mat3x4f, DefinedFloat with SysFP](12, RFloat)
-  implicit val Mat4x2fAttribs = AdapterAttrib[Mat4x2f, DefinedFloat with SysFP](8, RFloat)
-  implicit val Mat4x3fAttribs = AdapterAttrib[Mat4x3f, DefinedFloat with SysFP](12, RFloat)
-  implicit val Mat4x4fAttribs = AdapterAttrib[Mat4x4f, DefinedFloat with SysFP](16, RFloat)
+  implicit val Quat4fAttribs = AdapterAttrib[Quat4f, TangibleFloat with SysFP](4, RFloat)
+  implicit val Mat2x2fAttribs = AdapterAttrib[Mat2x2f, TangibleFloat with SysFP](4, RFloat)
+  implicit val Mat2x3fAttribs = AdapterAttrib[Mat2x3f, TangibleFloat with SysFP](6, RFloat)
+  implicit val Mat2x4fAttribs = AdapterAttrib[Mat2x4f, TangibleFloat with SysFP](8, RFloat)
+  implicit val Mat3x2fAttribs = AdapterAttrib[Mat3x2f, TangibleFloat with SysFP](6, RFloat)
+  implicit val Mat3x3fAttribs = AdapterAttrib[Mat3x3f, TangibleFloat with SysFP](9, RFloat)
+  implicit val Mat3x4fAttribs = AdapterAttrib[Mat3x4f, TangibleFloat with SysFP](12, RFloat)
+  implicit val Mat4x2fAttribs = AdapterAttrib[Mat4x2f, TangibleFloat with SysFP](8, RFloat)
+  implicit val Mat4x3fAttribs = AdapterAttrib[Mat4x3f, TangibleFloat with SysFP](12, RFloat)
+  implicit val Mat4x4fAttribs = AdapterAttrib[Mat4x4f, TangibleFloat with SysFP](16, RFloat)
 
-  implicit val Quat4dAttribs = AdapterAttrib[Quat4d, DefinedDouble with SysFP](4, RFloat, RDouble)
-  implicit val Mat2x2dAttribs = AdapterAttrib[Mat2x2d, DefinedDouble with SysFP](4, RFloat, RDouble)
-  implicit val Mat2x3dAttribs = AdapterAttrib[Mat2x3d, DefinedDouble with SysFP](6, RFloat, RDouble)
-  implicit val Mat2x4dAttribs = AdapterAttrib[Mat2x4d, DefinedDouble with SysFP](8, RFloat, RDouble)
-  implicit val Mat3x2dAttribs = AdapterAttrib[Mat3x2d, DefinedDouble with SysFP](6, RFloat, RDouble)
-  implicit val Mat3x3dAttribs = AdapterAttrib[Mat3x3d, DefinedDouble with SysFP](9, RFloat, RDouble)
-  implicit val Mat3x4dAttribs = AdapterAttrib[Mat3x4d, DefinedDouble with SysFP](12, RFloat, RDouble)
-  implicit val Mat4x2dAttribs = AdapterAttrib[Mat4x2d, DefinedDouble with SysFP](8, RFloat, RDouble)
-  implicit val Mat4x3dAttribs = AdapterAttrib[Mat4x3d, DefinedDouble with SysFP](12, RFloat, RDouble)
-  implicit val Mat4x4dAttribs = AdapterAttrib[Mat4x4d, DefinedDouble with SysFP](16, RFloat, RDouble)
+  implicit val Quat4dAttribs = AdapterAttrib[Quat4d, TangibleDouble with SysFP](4, RFloat, RDouble)
+  implicit val Mat2x2dAttribs = AdapterAttrib[Mat2x2d, TangibleDouble with SysFP](4, RFloat, RDouble)
+  implicit val Mat2x3dAttribs = AdapterAttrib[Mat2x3d, TangibleDouble with SysFP](6, RFloat, RDouble)
+  implicit val Mat2x4dAttribs = AdapterAttrib[Mat2x4d, TangibleDouble with SysFP](8, RFloat, RDouble)
+  implicit val Mat3x2dAttribs = AdapterAttrib[Mat3x2d, TangibleDouble with SysFP](6, RFloat, RDouble)
+  implicit val Mat3x3dAttribs = AdapterAttrib[Mat3x3d, TangibleDouble with SysFP](9, RFloat, RDouble)
+  implicit val Mat3x4dAttribs = AdapterAttrib[Mat3x4d, TangibleDouble with SysFP](12, RFloat, RDouble)
+  implicit val Mat4x2dAttribs = AdapterAttrib[Mat4x2d, TangibleDouble with SysFP](8, RFloat, RDouble)
+  implicit val Mat4x3dAttribs = AdapterAttrib[Mat4x3d, TangibleDouble with SysFP](12, RFloat, RDouble)
+  implicit val Mat4x4dAttribs = AdapterAttrib[Mat4x4d, TangibleDouble with SysFP](16, RFloat, RDouble)
 }

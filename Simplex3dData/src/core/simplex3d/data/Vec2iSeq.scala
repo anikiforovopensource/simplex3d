@@ -30,14 +30,14 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseVec2i[+R <: DefinedInt](
+private[data] abstract class BaseVec2i[+R <: TangibleInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
-) extends CompositeSeq[Vec2i, R, DefinedInt](prim, off, str) {
+) extends CompositeSeq[Vec2i, R, TangibleInt](prim, off, str) {
   final def formatManifest = Vec2i.Manifest
   final def accessorManifest = Vec2i.Manifest
   final def components: Int = 2
 
-  final def mkReadDataArray[P <: DefinedInt](prim: ReadDataArray[Vec2i#Component, P])
+  final def mkReadDataArray[P <: TangibleInt](prim: ReadDataArray[Vec2i#Component, P])
   :ReadDataArray[Vec2i, P] = {
     (prim.rawType match {
       case UShort => new ArrayVec2iUShort(prim.asInstanceOf[ArraySIntUShort])
@@ -45,7 +45,7 @@ private[data] abstract class BaseVec2i[+R <: DefinedInt](
       case _ => new ArrayVec2i(prim)
     }).asInstanceOf[ReadDataArray[Vec2i, P]]
   }
-  final def mkReadDataBuffer[P <: DefinedInt](prim: ReadDataBuffer[Vec2i#Component, P])
+  final def mkReadDataBuffer[P <: TangibleInt](prim: ReadDataBuffer[Vec2i#Component, P])
   :ReadDataBuffer[Vec2i, P] = {
     (prim.rawType match {
       case UShort => new BufferVec2iUShort(prim.asInstanceOf[BufferSIntUShort])
@@ -53,14 +53,14 @@ private[data] abstract class BaseVec2i[+R <: DefinedInt](
       case _ => new BufferVec2i(prim)
     }).asInstanceOf[ReadDataBuffer[Vec2i, P]]
   }
-  protected final def mkReadDataViewInstance[P <: DefinedInt](
+  protected final def mkReadDataViewInstance[P <: TangibleInt](
     prim: ReadDataBuffer[Vec2i#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec2i, P] = new ViewVec2i(prim, off, str)
 
   final override def mkSerializableInstance() = new CompositeSInt(components)
 }
 
-private[data] final class ArrayVec2i[+R <: DefinedInt](
+private[data] final class ArrayVec2i[+R <: TangibleInt](
   prim: ReadDataArray[SInt, R]
 ) extends BaseVec2i[R](prim, 0, 2) with DataArray[Vec2i, R] {
   type Read = ReadDataArray[Vec2i, R @uncheckedVariance]
@@ -79,7 +79,7 @@ private[data] final class ArrayVec2i[+R <: DefinedInt](
   }
 }
 
-private[data] final class BufferVec2i[+R <: DefinedInt](
+private[data] final class BufferVec2i[+R <: TangibleInt](
   prim: ReadDataBuffer[SInt, R]
 ) extends BaseVec2i[R](prim, 0, 2) with DataBuffer[Vec2i, R] {
   type Read = ReadDataBuffer[Vec2i, R @uncheckedVariance]
@@ -98,7 +98,7 @@ private[data] final class BufferVec2i[+R <: DefinedInt](
   }
 }
 
-private[data] final class ViewVec2i[+R <: DefinedInt](
+private[data] final class ViewVec2i[+R <: TangibleInt](
   prim: ReadDataBuffer[SInt, R], off: Int, str: Int
 ) extends BaseVec2i[R](prim, off, str) with DataView[Vec2i, R] {
   type Read = ReadDataView[Vec2i, R @uncheckedVariance]

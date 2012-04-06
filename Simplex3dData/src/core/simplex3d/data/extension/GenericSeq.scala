@@ -30,7 +30,7 @@ import simplex3d.data._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
+sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Tangible](
   adapter: DataAdapter[F, B], prim: ReadContiguous[F#Component, R], off: Int, str: Int
 ) extends CompositeSeq[F, R, B](prim, off, str) {
   final def formatManifest = adapter.formatManifest
@@ -55,24 +55,24 @@ private[data] final class SerializableGeneric(val adapter: DataAdapter[_, _]) ex
     primitives: ReadDataArray[_ <: PrimitiveFormat, _]
   ): ReadDataArray[_ <: CompositeFormat, _] = {
     type F = T forSome { type T <: CompositeFormat }
-    val primitiveArray = primitives.asInstanceOf[ReadDataArray[F#Component, Defined]]
-    adapter.asInstanceOf[DataAdapter[F, Defined]].mkReadDataArray(primitiveArray)
+    val primitiveArray = primitives.asInstanceOf[ReadDataArray[F#Component, Tangible]]
+    adapter.asInstanceOf[DataAdapter[F, Tangible]].mkReadDataArray(primitiveArray)
   }
 }
 
-final class GenericArray[F <: CompositeFormat, +R <: Raw, B <: Defined](
+final class GenericArray[F <: CompositeFormat, +R <: Raw, B <: Tangible](
   adapter: DataAdapter[F, B], prim: ReadDataArray[F#Component, R]
 ) extends GenericSeq[F, R, B](adapter, prim, 0, adapter.components) with DataArray[F, R] {
   type Read = ReadDataArray[F, R @uncheckedVariance]
 }
 
-final class GenericBuffer[F <: CompositeFormat, +R <: Raw, B <: Defined](
+final class GenericBuffer[F <: CompositeFormat, +R <: Raw, B <: Tangible](
   adapter: DataAdapter[F, B], prim: ReadDataBuffer[F#Component, R]
 ) extends GenericSeq[F, R, B](adapter, prim, 0, adapter.components) with DataBuffer[F, R] {
   type Read = ReadDataBuffer[F, R @uncheckedVariance]
 }
 
-final class GenericView[F <: CompositeFormat, +R <: Raw, B <: Defined](
+final class GenericView[F <: CompositeFormat, +R <: Raw, B <: Tangible](
   adapter: DataAdapter[F, B], prim: ReadDataBuffer[F#Component, R], off: Int, str: Int
 ) extends GenericSeq[F, R, B](adapter, prim, off, str) with DataView[F, R] {
   type Read = ReadDataView[F, R @uncheckedVariance]

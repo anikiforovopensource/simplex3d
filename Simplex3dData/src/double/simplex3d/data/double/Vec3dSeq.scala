@@ -31,14 +31,14 @@ import RawType._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-private[data] abstract class BaseVec3d[+R <: DefinedDouble](
+private[data] abstract class BaseVec3d[+R <: TangibleDouble](
   prim: ReadContiguous[RDouble, R], off: Int, str: Int
-) extends CompositeSeq[Vec3d, R, DefinedDouble](prim, off, str) {
+) extends CompositeSeq[Vec3d, R, TangibleDouble](prim, off, str) {
   final def formatManifest = Vec3d.Manifest
   final def accessorManifest = Vec3d.Manifest
   final def components: Int = 3
 
-  final def mkReadDataArray[P <: DefinedDouble](prim: ReadDataArray[Vec3d#Component, P])
+  final def mkReadDataArray[P <: TangibleDouble](prim: ReadDataArray[Vec3d#Component, P])
   :ReadDataArray[Vec3d, P] = {
     (prim.rawType match {
       case UByte => new ArrayVec3dUByte(prim.asInstanceOf[ArrayRDoubleUByte])
@@ -46,7 +46,7 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
       case _ => new ArrayVec3d(prim)
     }).asInstanceOf[ReadDataArray[Vec3d, P]]
   }
-  final def mkReadDataBuffer[P <: DefinedDouble](prim: ReadDataBuffer[Vec3d#Component, P])
+  final def mkReadDataBuffer[P <: TangibleDouble](prim: ReadDataBuffer[Vec3d#Component, P])
   :ReadDataBuffer[Vec3d, P] = {
     (prim.rawType match {
       case UByte => new BufferVec3dUByte(prim.asInstanceOf[BufferRDoubleUByte])
@@ -54,7 +54,7 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
       case _ => new BufferVec3d(prim)
     }).asInstanceOf[ReadDataBuffer[Vec3d, P]]
   }
-  protected final def mkReadDataViewInstance[P <: DefinedDouble](
+  protected final def mkReadDataViewInstance[P <: TangibleDouble](
     prim: ReadDataBuffer[Vec3d#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec3d, P] = {
     (prim.rawType match {
@@ -67,7 +67,7 @@ private[data] abstract class BaseVec3d[+R <: DefinedDouble](
   final override def mkSerializableInstance() = new CompositeRDouble(components)
 }
 
-private[data] final class ArrayVec3d[+R <: DefinedDouble](
+private[data] final class ArrayVec3d[+R <: TangibleDouble](
   prim: ReadDataArray[RDouble, R]
 ) extends BaseVec3d[R](prim, 0, 3) with DataArray[Vec3d, R] {
   type Read = ReadDataArray[Vec3d, R @uncheckedVariance]
@@ -88,7 +88,7 @@ private[data] final class ArrayVec3d[+R <: DefinedDouble](
   }
 }
 
-private[data] final class BufferVec3d[+R <: DefinedDouble](
+private[data] final class BufferVec3d[+R <: TangibleDouble](
   prim: ReadDataBuffer[RDouble, R]
 ) extends BaseVec3d[R](prim, 0, 3) with DataBuffer[Vec3d, R] {
   type Read = ReadDataBuffer[Vec3d, R @uncheckedVariance]
@@ -109,7 +109,7 @@ private[data] final class BufferVec3d[+R <: DefinedDouble](
   }
 }
 
-private[data] final class ViewVec3d[+R <: DefinedDouble](
+private[data] final class ViewVec3d[+R <: TangibleDouble](
   prim: ReadDataBuffer[RDouble, R], off: Int, str: Int
 ) extends BaseVec3d[R](prim, off, str) with DataView[Vec3d, R] {
   type Read = ReadDataView[Vec3d, R @uncheckedVariance]

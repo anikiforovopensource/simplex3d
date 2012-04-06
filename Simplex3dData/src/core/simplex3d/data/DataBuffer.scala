@@ -38,13 +38,13 @@ extends DataView[F, R] with Contiguous[F, R] with ReadDataBuffer[F, R]
 
 
 object ReadDataBuffer {
-  def apply[F <: Format, R <: Defined](buffer: ByteBuffer)(
+  def apply[F <: Format, R <: Tangible](buffer: ByteBuffer)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadDataBuffer[F, R] = {
     composition.mkReadDataBuffer(primitives.mkReadDataBuffer(buffer))
   }
 
-  def apply[F <: Format, R <: Defined](db: ReadDataBuffer[_, _])(
+  def apply[F <: Format, R <: Tangible](db: ReadDataBuffer[_, _])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadDataBuffer[F, R] = {
     val res = composition.mkReadDataBuffer(primitives.mkReadDataBuffer(db.sharedBuffer))
@@ -53,19 +53,19 @@ object ReadDataBuffer {
 }
 
 object DataBuffer {
-  def apply[F <: Format, R <: Defined](buffer: ByteBuffer)(
+  def apply[F <: Format, R <: Tangible](buffer: ByteBuffer)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataBuffer[F, R] = {
     composition.mkDataBuffer(primitives.mkDataBuffer(buffer))
   }
 
-  def apply[F <: Format, R <: Defined](size: Int)(
+  def apply[F <: Format, R <: Tangible](size: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataBuffer[F, R] = {
     composition.mkDataBuffer(primitives.mkDataBuffer(size*composition.components))
   }
 
-  def apply[F <: Format, R <: Defined](vals: F#Accessor#Read*)(
+  def apply[F <: Format, R <: Tangible](vals: F#Accessor#Read*)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataBuffer[F, R] = {
     val data = composition.mkDataBuffer(primitives.mkDataBuffer(vals.size*composition.components))
@@ -73,7 +73,7 @@ object DataBuffer {
     data
   }
 
-  def apply[F <: Format, R <: Defined](db: DataBuffer[_, _])(
+  def apply[F <: Format, R <: Tangible](db: DataBuffer[_, _])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataBuffer[F, R] = {
     if (db.isReadOnly) throw new IllegalArgumentException(

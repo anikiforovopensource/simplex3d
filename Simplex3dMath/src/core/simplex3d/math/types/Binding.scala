@@ -22,18 +22,11 @@ package simplex3d.math
 package types
 
 
-/** <code>Binding</code> is a common type for uniform properties.
+/** <code>Binding</code> is a common type for shader variables.
  *
  * @author Aleksey Nikiforov (lex)
  */
 trait Binding
-
-
-/** <code>NestedBinding</code> is a marker for struct and array members.
- *
- * @author Aleksey Nikiforov (lex)
- */
-trait NestedBinding extends Binding
 
 
 /** <code>VectorLike</code> is a common supertype for Vectors and Quaternions.

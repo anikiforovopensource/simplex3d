@@ -29,7 +29,7 @@ import scala.annotation.unchecked._
  *
  * @author Aleksey Nikiforov (lex)
  */
-abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Defined](
+abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Tangible](
   prim: ReadContiguous[F#Component, R],
   off: Int, str: Int
 ) extends AbstractData[F#Accessor#Const, F#Accessor#Read](

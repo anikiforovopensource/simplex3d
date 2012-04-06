@@ -30,8 +30,8 @@ import simplex3d.data.extension._
  */
 package object data {
 
-  private[this] final def primitiveFactory[R <: DefinedInt](f: PrimitiveFactory[SInt, R]) = f
-  private[this] final def factory[F <: Format](f: CompositionFactory[F, DefinedInt]) = f
+  private[this] final def primitiveFactory[R <: TangibleInt](f: PrimitiveFactory[SInt, R]) = f
+  private[this] final def factory[F <: Format](f: CompositionFactory[F, TangibleInt]) = f
   private[this] final val default = new ArraySIntSInt
 
   // SInt
@@ -60,11 +60,11 @@ package object data {
   type CompressedFormat = integration.CompressedFormat
   val PrimitiveFormat = integration.PrimitiveFormat
   type Raw = integration.Raw
-  type Defined = integration.Defined
-  type DefinedInt = integration.DefinedInt
-  type DefinedIndex = integration.DefinedIndex
-  type DefinedFloat = integration.DefinedFloat
-  type DefinedDouble = integration.DefinedDouble
+  type Tangible = integration.Tangible
+  type TangibleInt = integration.TangibleInt
+  type TangibleIndex = integration.TangibleIndex
+  type TangibleFloat = integration.TangibleFloat
+  type TangibleDouble = integration.TangibleDouble
   type Integral = integration.Integral
   type Signed = integration.Signed
   type Unsigned = integration.Unsigned

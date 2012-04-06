@@ -79,11 +79,11 @@ package integration {
     type Buffer <: nio.Buffer
   }
 
-  sealed trait Defined extends Raw
-  sealed trait DefinedInt extends Defined
-  sealed trait DefinedIndex extends DefinedInt with Unsigned
-  sealed trait DefinedFloat extends Defined
-  sealed trait DefinedDouble extends Defined
+  sealed trait Tangible extends Raw
+  sealed trait TangibleInt extends Tangible
+  sealed trait TangibleIndex extends TangibleInt with Unsigned
+  sealed trait TangibleFloat extends Tangible
+  sealed trait TangibleDouble extends Tangible
 
   sealed trait Integral extends Raw
 
@@ -97,22 +97,22 @@ package integration {
   }
 
   sealed trait SByte extends RawByte with Signed
-  with DefinedInt with DefinedFloat with DefinedDouble
+  with TangibleInt with TangibleFloat with TangibleDouble
 
   sealed trait UByte extends RawByte with Unsigned
-  with DefinedIndex with DefinedFloat with DefinedDouble
+  with TangibleIndex with TangibleFloat with TangibleDouble
 
 
   sealed trait RawShort extends Integral
 
   sealed trait SShort extends RawShort with Signed
-  with DefinedInt with DefinedFloat with DefinedDouble {
+  with TangibleInt with TangibleFloat with TangibleDouble {
     type Array = scala.Array[Short]
     type Buffer = nio.ShortBuffer
   }
 
   sealed trait UShort extends RawShort with Unsigned
-  with DefinedIndex with DefinedFloat with DefinedDouble {
+  with TangibleIndex with TangibleFloat with TangibleDouble {
     type Array = scala.Array[Char]
     type Buffer = nio.CharBuffer
   }
@@ -124,7 +124,7 @@ package integration {
   }
 
   sealed trait SInt extends types.AnyVec[Int] with Accessor with PrimitiveFormat with RawInt with Signed
-  with DefinedInt with DefinedFloat with DefinedDouble {
+  with TangibleInt with TangibleFloat with TangibleDouble {
     type Read = Int
     type Const = Read
 
@@ -133,7 +133,7 @@ package integration {
   }
 
   sealed trait UInt extends RawInt with Unsigned
-  with DefinedIndex with DefinedFloat with DefinedDouble
+  with TangibleIndex with TangibleFloat with TangibleDouble
 
 
   sealed trait FloatingPoint extends Raw
@@ -145,7 +145,7 @@ package integration {
   /** Hafl-float, in other words 16-bit float.
    */
   sealed trait HFloat extends FloatingPoint
-  with DefinedFloat with DefinedDouble {
+  with TangibleFloat with TangibleDouble {
     type Array = scala.Array[Short]
     type Buffer = nio.ShortBuffer
   }
@@ -153,7 +153,7 @@ package integration {
   /** Raw Float. 32-bit float.
    */
   sealed trait RFloat extends types.AnyVec[Float] with Accessor with PrimitiveFormat with SysFP
-  with DefinedFloat with DefinedDouble {
+  with TangibleFloat with TangibleDouble {
     type Read = Float
     type Const = Read
 
@@ -167,7 +167,7 @@ package integration {
   /** Raw Double. 64-bit float.
    */
   sealed trait RDouble extends types.AnyVec[Double] with Accessor with PrimitiveFormat with SysFP
-  with DefinedDouble {
+  with TangibleDouble {
     type Read = Double
     type Const = Read
 

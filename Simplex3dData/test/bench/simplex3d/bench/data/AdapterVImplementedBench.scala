@@ -39,7 +39,7 @@ object AdapterVImplementedBench {
     type Accessor = Vec3
     type Component = Vec3#Component
   }
-  implicit object V3Adapter extends DataAdapter[V3, DefinedFloat](components = 3) {
+  implicit object V3Adapter extends DataAdapter[V3, TangibleFloat](components = 3) {
     def apply(primitives: inContiguous[V3#Component, Raw], j: Int) :V3#Accessor#Const = {
       ConstVec3(
         primitives(j),
@@ -58,7 +58,7 @@ object AdapterVImplementedBench {
     type Accessor = Vec4
     type Component = Vec4#Component
   }
-  implicit object V4Adapter extends DataAdapter[V4, DefinedFloat](components = 4) {
+  implicit object V4Adapter extends DataAdapter[V4, TangibleFloat](components = 4) {
     def apply(primitives: inContiguous[V4#Component, Raw], j: Int) :V4#Accessor#Const = {
       ConstVec4(
         primitives(j),

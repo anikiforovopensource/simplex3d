@@ -37,7 +37,7 @@ sealed abstract class Property[W <: Writable[W]] private[engine]
 }
 
 
-sealed abstract class DefinedProperty[W <: Writable[W]] private[engine] (initialValue: Readable[W])
+sealed abstract class Defined[W <: Writable[W]] private[engine] (initialValue: Readable[W])
 extends Property[W]
 {
   value = initialValue.mutableCopy()
@@ -48,23 +48,25 @@ extends Property[W]
   }
   
   final override def toString() :String =
-    "DefinedProperty(" + defined.toString + ")(changed = " + hasDataChanges + ")"
+    "Defined(" + defined.toString + ")(changed = " + hasDataChanges + ")"
 }
 
-final class AccessibleDefinedProperty[W <: Writable[W]] private[engine] (initialValue: Readable[W])
-extends DefinedProperty[W](initialValue) {
+final class AccessibleDefined[W <: Writable[W]] private[engine] (initialValue: Readable[W])
+extends Defined[W](initialValue) {
   def clearDataChanges() { changed = false }
 }
 
-object DefinedProperty {
+object Defined {
   def apply[W <: Writable[W]](initialValue: Readable[W])
-  :DefinedProperty[W] = new AccessibleDefinedProperty(initialValue)
+  :Defined[W] = new AccessibleDefined(initialValue)
 }
 
 
-sealed abstract class OptionalProperty[W <: Writable[W]] private[engine] (
-  factory: Readable[W], listener: StructuralChangeListener
-) extends Property[W] {
+sealed abstract class Optional[W <: Writable[W]] private[engine]
+  (factory: Readable[W])
+  (implicit listener: StructuralChangeListener)
+extends Property[W]
+{
   
   final def undefine() {
     if (isDefined) {
@@ -83,7 +85,7 @@ sealed abstract class OptionalProperty[W <: Writable[W]] private[engine] (
     value
   }
   
-  final def set(p: OptionalProperty[W]) {
+  final def set(p: Optional[W]) {
     if (p.isDefined) mutable := p.defined else undefine()
   }
   
@@ -91,13 +93,14 @@ sealed abstract class OptionalProperty[W <: Writable[W]] private[engine] (
     "Property(" + (if (isDefined) defined.toString else "undefined" ) + ")(changed = " + hasDataChanges + ")"
 }
 
-final class AccessibleOptionalProperty[W <: Writable[W]] private[engine] (
-  factory: Readable[W], listener: StructuralChangeListener
-) extends OptionalProperty[W](factory, listener) {
+final class AccessibleOptional[W <: Writable[W]] private[engine]
+  (factory: Readable[W])
+  (implicit listener: StructuralChangeListener)
+ extends Optional[W](factory) {
   def clearDataChanges() { changed = false }
 }
 
-object OptionalProperty {
-  def apply[W <: Writable[W]](factory: Readable[W], listener: StructuralChangeListener)
-  :OptionalProperty[W] = new AccessibleOptionalProperty(factory, listener)
+object Optional {
+  def apply[W <: Writable[W]](factory: Readable[W])(implicit listener: StructuralChangeListener)
+  :Optional[W] = new AccessibleOptional(factory)
 }

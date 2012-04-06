@@ -996,7 +996,7 @@ extends graphics.RenderContext with GlAccess {
             else resolveInner(names, values, prefix, name)
           
           value match {
-            case array: BindingArray[_] =>
+            case array: BindingList[_] =>
               val id = index.toInt
               if (id >= array.length) {
                 log(
@@ -1024,7 +1024,7 @@ extends graphics.RenderContext with GlAccess {
             case _ =>
               log(
                 Level.SEVERE, "Uniform array '" + mkName(prefix, name) +
-                "' resolves to a value that is not an instance of BindingArray for mesh '" + meshName + "'."
+                "' resolves to a value that is not an instance of BindingList for mesh '" + meshName + "'."
               )
               null
           }

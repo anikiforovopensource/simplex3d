@@ -25,7 +25,7 @@ trait MainLoop {
   val driver: String
   
   /**
-   * @returns true to exit the loop, false otherwise.
+   * @return true to exit the loop, false otherwise.
    */
   def body(app: App#Subtext) :Boolean
 }

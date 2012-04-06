@@ -113,7 +113,7 @@ object StressTestObjects extends BasicApp {
       mesh.geometry.normals.defineAs(normals)
       mesh.geometry.texCoords.defineAs(texCoords)
       
-      mesh.material.texture.mutable := objectTexture
+      mesh.material.textures.mutable += objectTexture
       
       mesh.transformation.mutable.scale := scale
       mesh.transformation.mutable.rotation := randomRotation()

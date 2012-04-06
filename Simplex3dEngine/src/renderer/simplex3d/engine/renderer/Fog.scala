@@ -21,14 +21,13 @@
 package simplex3d.engine
 package renderer
 
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadFog extends Readable[Fog] {
+sealed abstract class ReadFog extends NestedBinding[Fog] {
   def color: ReadVec3
   def density: ReadDoubleRef
   
@@ -49,7 +48,7 @@ sealed abstract class ReadFog extends Readable[Fog] {
 }
 
 
-final class Fog extends ReadFog with EnvironmentalEffect[Fog] with ReflectStruct[Fog]
+final class Fog extends ReadFog with EnvironmentalEffect[Fog] with prototype.Struct[Fog]
 {
   type Read = ReadFog
   protected def mkMutable() = new Fog
@@ -58,7 +57,7 @@ final class Fog extends ReadFog with EnvironmentalEffect[Fog] with ReflectStruct
   val color = Vec3(1)
   val density = new DoubleRef(0)
   
-  reflect(classOf[Fog])
+  init(classOf[Fog])
   
   
   def propagate(parentVal: ReadFog, result: Fog) {

@@ -71,7 +71,7 @@ object DynamicAttributes extends BasicApp {
     mesh.geometry.normals.defineAs(Attributes(normals))
     mesh.geometry.texCoords.defineAs(Attributes(texCoords))
     
-    mesh.material.texture.mutable := objectTexture
+    mesh.material.textures.mutable += objectTexture
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 40

@@ -30,8 +30,8 @@ import simplex3d.data.double._
 import simplex3d.engine.graphics._
 
 
-class Geometry extends graphics.ReflectGeometry {
+class Geometry extends prototype.Geometry {
   val texCoords = SharedAttributes[Vec2, RFloat](this)
   
-  reflect(classOf[Geometry])
+  init(classOf[Geometry])
 }

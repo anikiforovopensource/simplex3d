@@ -34,7 +34,7 @@ trait Launcher {
    * the rendering surface. If the application is launched in a native window, this method
    * will return null.
    *  
-   * @returns a UI element wrapping the rendering surface, or null when launched in a native window. 
+   * @return a UI element wrapping the rendering surface, or null when launched in a native window. 
    */
   def launch(title: String, settings: Settings, app: App#Subtext, loop: MainLoop) :Object
   def dispose() :Unit

@@ -101,7 +101,7 @@ object StressTestInstancing extends BasicApp {
     node.geometry.normals.defineAs(normals)
     node.geometry.texCoords.defineAs(texCoords)
     
-    node.material.texture.mutable := objectTexture
+    node.material.textures.mutable += objectTexture
     
     world.attach(node)
 

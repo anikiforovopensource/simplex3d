@@ -222,21 +222,22 @@ extends graphics.TechniqueManager[G]
     
     if (chain != null) {
       
-      // Generate array declaration map.
-      val arrayDeclarationMap = new HashMap[(String, String), ArrayDeclaration]
+      // Generate declaration map.
+      val listDeclarationMap = new HashMap[(String, String), ListDeclarationSizeKey]
       def processValue(value: AnyRef, name: String) {
         value match {
           
-          case a: BindingArray[_] =>
-            val dec = new ArrayDeclaration("", name, a.size)
-            val prev = arrayDeclarationMap.put(dec.key, dec)
+          case a: BindingList[_] =>
+            val dec = new ListDeclarationSizeKey("", name, a.size)
+            val prev = listDeclarationMap.put(dec.nameKey, dec)
             if (prev != null && prev.size != dec.size) println("XXX log")
             
           case s: Struct[_] =>
-            var i = 0; while (i < s.arrayDeclarations.size) {
-              val dec = s.arrayDeclarations(i)
-              val prev = arrayDeclarationMap.put(dec.key, dec)
-              if (prev != null && prev.size != dec.size) println("XXX log")
+            var i = 0; while (i < s.listDeclarations.size) {
+              val dec = s.listDeclarations(i)
+              val sizeKey = dec.sizeKey()
+              val prev = listDeclarationMap.put(dec.nameKey, sizeKey)
+              if (prev != null && prev.size != sizeKey.size) println("XXX log")
               
               i += 1
             }
@@ -262,18 +263,18 @@ extends graphics.TechniqueManager[G]
       
       
       // Generate shader and technique keys. 
-      val techniqueKey = new Array[(ShaderPrototype, Seq[ArrayDeclaration])](chain.size)
+      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey])](chain.size)
       
       i = 0; while (i < chain.size) {
         val shader = chain(i)
-        val keys = shader.arrayDeclarationKeys
+        val keys = shader.listDeclarationNameKeys
         
-        val resolved = new Array[ArrayDeclaration](keys.size)
+        val resolved = new Array[ListDeclarationSizeKey](keys.size)
         var j = 0; while (j < keys.size) {
           val key = keys(j)
-          val arrayDeclaration = arrayDeclarationMap.get(key)
-          assert(arrayDeclaration != null)
-          resolved(i) = arrayDeclaration
+          val listDeclaration = listDeclarationMap.get(key)
+          assert(listDeclaration != null)
+          resolved(j) = listDeclaration
           
           j += 1
         }
@@ -297,7 +298,11 @@ extends graphics.TechniqueManager[G]
           var shader = shaderCache.get(shaderKey)
           if (shader == null) {
             val proto = chain(i)
-            shader = new Shader(proto.shaderType, proto.src_Gl21)
+            
+            val listDeclarations = shaderKey._2
+            val src = proto.fullSrc_Gl21(listDeclarations)
+            
+            shader = new Shader(proto.shaderType, src)
             shaderCache.put(shaderKey, shader)
           }
           
@@ -341,6 +346,6 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  private val shaderCache = new HashMap[(ShaderPrototype, Seq[ArrayDeclaration]), Shader]
-  private val techniqueCache = new HashMap[Seq[(ShaderPrototype, Seq[ArrayDeclaration])], Technique]
+  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey]), Shader]
+  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey])], Technique]
 }

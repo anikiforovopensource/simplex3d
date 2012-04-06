@@ -38,11 +38,11 @@ object ClearChangesAccess {
   :DataChangeListener#DataSubtext = listener.dataSubtext
 
   
-  implicit def accessOptionalProperty(property: OptionalProperty[_])
-  = property.asInstanceOf[AccessibleOptionalProperty[_]]
+  implicit def accessOptional(property: Optional[_])
+  = property.asInstanceOf[AccessibleOptional[_]]
   
-  implicit def accessDefinedProperty(property: DefinedProperty[_])
-  = property.asInstanceOf[AccessibleDefinedProperty[_]]
+  implicit def accessDefined(property: Defined[_])
+  = property.asInstanceOf[AccessibleDefined[_]]
   
   implicit def accessSharedRef(property: SharedRef[_])
   = property.asInstanceOf[AccessibleSharedRef]

@@ -54,7 +54,7 @@ trait BasicApp extends App with scala.App {//XXX add DemoApp: basic app with con
     "World",
     sceneGraphSettings,
     new Camera("World Camera"),
-    TechniqueProvider.getTechniqueManager()
+    TechniqueProvider.assembleTechniqueManager()
   )
   
   protected val assetManager = new AssetManager {

@@ -74,7 +74,7 @@ object FrustumTest extends BasicApp {
     cube.geometry.normals.defineAs(Attributes(normals))
     cube.geometry.texCoords.defineAs(Attributes(texCoords))
     
-    cube.material.texture.mutable := texture
+    cube.material.textures.mutable += texture
     
     cube.transformation.mutable.scale := 20
     cube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 

@@ -20,7 +20,6 @@
 
 package simplex3d.test.engine
 
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -181,7 +180,7 @@ object DynamicEnvironment extends App with scala.App {
 
 package testenv {
   
-  sealed abstract class ReadIntensity extends Readable[Intensity] {
+  sealed abstract class ReadIntensity extends NestedBinding[Intensity] {
     def value: ReadDoubleRef
   }
   
@@ -191,7 +190,7 @@ package testenv {
     
     val value = new DoubleRef(1)
   
-    def :=(r: Readable[Intensity]) {
+    def :=(r: NestedBinding[Intensity]) {
       val t = r.asInstanceOf[Intensity]
       value := t.value
     }
@@ -206,7 +205,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadNodeColor extends Readable[NodeColor] {
+  sealed abstract class ReadNodeColor extends NestedBinding[NodeColor] {
     def color: ReadVec3
   }
   
@@ -216,7 +215,7 @@ package testenv {
     
     val color = Vec3(1)
   
-    def :=(r: Readable[NodeColor]) {
+    def :=(r: NestedBinding[NodeColor]) {
       val t = r.asInstanceOf[NodeColor]
       color := t.color
     }
@@ -234,7 +233,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadContrast extends Readable[Contrast] {
+  sealed abstract class ReadContrast extends NestedBinding[Contrast] {
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
   }
@@ -246,7 +245,7 @@ package testenv {
     val factor = new DoubleRef(0)
     val secondary = new BooleanRef(false)
   
-    def :=(r: Readable[Contrast]) {
+    def :=(r: NestedBinding[Contrast]) {
       val t = r.asInstanceOf[Contrast]
       
       factor := t.factor
@@ -261,49 +260,67 @@ package testenv {
     }
     
     def hasBindingChanges = {
-      (binding == null) || (secondary ^ binding.factors.size == 2)
+      (binding == null) || (secondary ^ binding.isInstanceOf[ContrastBinding2])
     }
     
-    private var binding: ContrastBinding = _
+    private var binding: Object = _
     
     def resolveBinding() = {
       println("Resolving contrast binding.")
       
       if (hasBindingChanges) {
         binding = 
-          if (secondary) new ContrastBinding(2)
-          else new ContrastBinding(1)
-        
-        var i = 0; while (i < binding.factors.size) {
-          binding.factors(i) := factor
-          i += 1
-        }
+          if (secondary) {
+            val b = new ContrastBinding2
+            b.factor1 := factor
+            b.factor2 := factor
+            b
+          }
+          else {
+            val b = new ContrastBinding1
+            b.factor1 := factor
+            b
+          }
       }
       
-      binding
+      binding.asInstanceOf[TechniqueBinding]
     }
     
     def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {
-      binding.factors(0) := length(predefinedUniforms.se_modelViewMatrix(3))*0.004
+      val factorRef = binding match {
+        case b: ContrastBinding1 => b.factor1
+        case b: ContrastBinding2 => b.factor1
+      }
+      factorRef := length(predefinedUniforms.se_modelViewMatrix(3))*0.004
     }
   }
   
-  final class ContrastBinding(factorCount: Int) extends ReflectStruct[ContrastBinding] {
-    type Read = ContrastBinding
-    protected def mkMutable() = new ContrastBinding(factorCount)
+  final class ContrastBinding1 extends prototype.Struct[ContrastBinding1] {
+    type Read = ContrastBinding1
+    protected def mkMutable() = new ContrastBinding1
     
-    val factors = new BindingArray(new DoubleRef(0), factorCount)
+    val factor1 = new DoubleRef(0)
     
-    reflect(classOf[ContrastBinding])
+    init(classOf[ContrastBinding1])
+  }
+  
+  final class ContrastBinding2 extends prototype.Struct[ContrastBinding2] {
+    type Read = ContrastBinding2
+    protected def mkMutable() = new ContrastBinding2
+    
+    val factor1 = new DoubleRef(0)
+    val factor2 = new DoubleRef(0)
+    
+    init(classOf[ContrastBinding2])
   }
   
   
-  class Environment extends ReflectEnvironment {
-    val intensity = OptionalProperty[Intensity](new Intensity, this)
-    val nodeColor = OptionalProperty[NodeColor](new NodeColor, this)
-    val contrast = OptionalProperty[Contrast](new Contrast, this)
+  class Environment extends prototype.Environment {
+    val intensity = Optional[Intensity](new Intensity)
+    val nodeColor = Optional[NodeColor](new NodeColor)
+    val contrast = Optional[Contrast](new Contrast)
     
-    reflect(classOf[Environment])
+    init(classOf[Environment])
   }
   
   
@@ -364,27 +381,28 @@ package testenv {
     )
     
     val contrast1 = new Shader(Shader.Fragment, """
-        struct Contrast {
-          float factors[1];
+        struct Contrast1 {
+          float factor1;
         };
         
-        uniform Contrast contrast;
+        uniform Contrast1 contrast;
         
         float resolveContrastFactor() {
-          return contrast.factors[0];
+          return contrast.factor1;
         }
       """
     )
     
     val contrast2 = new Shader(Shader.Fragment, """
-        struct Contrast {
-          float factors[2];
+        struct Contrast2 {
+          float factor1;
+          float factor2;
         };
         
-        uniform Contrast contrast;
+        uniform Contrast2 contrast;
         
         float resolveContrastFactor() {
-          return contrast.factors[0] + contrast.factors[1];
+          return contrast.factor1 + contrast.factor2;
         }
       """
     )

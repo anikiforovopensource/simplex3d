@@ -28,12 +28,12 @@ import simplex3d.engine.graphics.pluggable._
 
 
 object TechniqueProvider {
-  def getTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
+  def assembleTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
     val manager = new pluggable.TechniqueManager[G]
     
     manager.register(new FragmentShader {
       uniform {
-        declare[TextureBinding[Texture2d[_]]]("texture")
+        declare[BindingList[TextureBinding[Texture2d[_]]]]("textures")
       }
       
       in("rasterisation") {
@@ -44,9 +44,38 @@ object TechniqueProvider {
       }
       
       src {"""
-      void resolveColor() {
-        gl_FragColor = texture2D(texture, textureCoords.ecTexCoords);
+        void resolveColor() {
+          vec4 color = vec4(1);
+          for (int i = 0; i < se_sizeOf_textures; i++) {
+            color *= texture2D(textures[i], textureCoords.ecTexCoords);
+          }
+          gl_FragColor = color;
+        }
+      """}
+      
+      entryPoint("resolveColor")
+    })
+    
+    manager.register(new FragmentShader {
+      uniform {
+        declare[BindingList[TextureUnit]]("textureUnits")
       }
+      
+      in("rasterisation") {
+        declare[Vec4]("gl_FragCoord")
+      }
+      in("textureUnitCoords") {
+        declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
+      }
+      
+      src {"""
+        void resolveColor() {
+          vec4 color = vec4(1);
+          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+            color *= texture2D(textureUnits[i].texture, textureUnitCoords.ecTexCoords[i]);
+          }
+          gl_FragColor = color;
+        }
       """}
       
       entryPoint("resolveColor")
@@ -66,9 +95,9 @@ object TechniqueProvider {
       }
       
       src {"""
-      void transformVertices() {
-        rasterisation.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-      }
+        void transformVertices() {
+          rasterisation.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+        }
       """}
       
       entryPoint("transformVertices")
@@ -84,9 +113,36 @@ object TechniqueProvider {
       }
       
       src {"""
-      void passTexCoords() {
-        textureCoords.ecTexCoords = texCoords;
+        void passTexCoords() {
+          textureCoords.ecTexCoords = texCoords;
+        }
+      """}
+      
+      entryPoint("passTexCoords")
+    })
+    
+    manager.register(new VertexShader {
+      version("120")
+      
+      uniform {
+        declare[BindingList[TextureUnit]]("textureUnits")
       }
+      
+      attributes {
+        declare[Vec2]("texCoords")
+      }
+      
+      out("textureUnitCoords") {
+        declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
+      }
+      
+      src {"""
+        void passTexCoords() {
+          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+            //textureUnits[i].transformation
+            textureUnitCoords.ecTexCoords[i] = (mat3(1)*vec3(texCoords, 1)).xy;
+          }
+        }
       """}
       
       entryPoint("passTexCoords")

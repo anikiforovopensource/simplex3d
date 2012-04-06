@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Core Module
+ * Simplex3dEngine - Renderer Module
  * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,32 +19,30 @@
  */
 
 package simplex3d.engine
-package graphics
+package renderer
+
+import simplex3d.math.double._
+import simplex3d.engine.graphics._
 
 
-final class ArrayDeclaration(val parentType: String, val name: String, val size: Int) {
-  val key = (parentType, name)
-  
-  override def equals(other: Any) :Boolean = {
-    if (this.eq(other.asInstanceOf[AnyRef])) true
-    else other match {
-      case a: ArrayDeclaration =>
-        a.parentType == parentType &&
-        a.name == name &&
-        a.size == size
-      case _ => false
-    }
+sealed abstract class ReadTextureUnit extends NestedBinding[TextureUnit] {
+  def texture: ReadTextureBinding[Texture2d[_]]
+  def transformation: ReadMat2x3
+}
+
+final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUnit] {
+  def this(texture: Texture2d[_], transformation: inMat2x3 = Mat2x3.Identity) {
+    this()
+    
+    this.texture := texture
+    this.transformation := transformation
   }
   
-  override def hashCode() :Int = {
-    41 * (
-      41 * (
-        41 + parentType.hashCode
-      ) + name.hashCode
-    ) + size.hashCode
-  }
+  type Read = ReadTextureUnit
+  protected def mkMutable() = new TextureUnit
   
-  override def toString() :String = {
-    "ArrayDeclaration { " + parentType + "." + name + "[" + size + "] }"
-  }
+  val texture = new TextureBinding[Texture2d[_]]
+  val transformation = Mat2x3(1)
+  
+  init(classOf[TextureUnit])
 }

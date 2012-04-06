@@ -81,9 +81,9 @@ object MinimalGraphicsContext extends GraphicsContext {
   type Material = graphics.Material
   type Environment = graphics.Environment
   
-  val mkGeometry = () => new Geometry with ReflectGeometry { reflect(this.getClass) }
-  val mkMaterial = () => new Material with ReflectMaterial { reflect(this.getClass) }
-  val mkEnvironment = () => new Environment with ReflectEnvironment { reflect(this.getClass) }
+  val mkGeometry = () => new Geometry with prototype.Geometry { init(this.getClass) }
+  val mkMaterial = () => new Material with prototype.Material { init(this.getClass) }
+  val mkEnvironment = () => new Environment with prototype.Environment { init(this.getClass) }
   
   initNamespace()
 }

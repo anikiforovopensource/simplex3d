@@ -41,7 +41,7 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
   protected final class FunctionRenderer extends FullscreenEffect("Function Renderer") {
     var function: (inVec2i, Double, inVec2) => ReadVec3 = _
     
-    protected val texture = DefinedProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
+    protected val texture = Defined[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
     private val textureDims = Vec2i(0)
 
     private val renderLine = (img: Data[Vec3], dims: inVec2i, uptime: Double, y: Int) => {

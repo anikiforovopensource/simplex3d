@@ -30,12 +30,13 @@ import simplex3d.engine.util._
 
 
 abstract class Geometry extends StructuralChangeListener {
+  protected implicit val structuralChangeListener = this
   
   def attributeNames: ReadArray[String]
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  final def hasShapeChanges(elementRange: OptionalProperty[ElementRange] = null) :Boolean = {
+  final def hasShapeChanges(elementRange: Optional[ElementRange] = null) :Boolean = {
     if (elementRange != null && elementRange.hasDataChanges) {
       true
     }
@@ -78,7 +79,7 @@ abstract class Geometry extends StructuralChangeListener {
   final val vertices = SharedAttributes[Vec3, RFloat](this)
   final val normals = SharedAttributes[Vec3, RFloat](this)
   
-  final val faceCulling = DefinedProperty[EnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Disabled))
+  final val faceCulling = Defined[EnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Disabled))
   
   
   final def copyNonattributes(geometry: Geometry) {

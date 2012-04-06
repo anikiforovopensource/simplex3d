@@ -27,7 +27,7 @@ import simplex3d.engine.util._
 
 /** All Struct subclasses must define a no-argument constructor.
  */
-trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>
+trait Struct[S <: Struct[S]] extends Writable[S] with Binding { self: S =>
   protected def mkMutable() :S
   
   override def mutableCopy(): S = {
@@ -38,5 +38,5 @@ trait Struct[S <: Struct[S]] extends Writable[S] with NestedBinding { self: S =>
   
   def fieldNames: ReadArray[String]
   def fields: ReadArray[TechniqueBinding]
-  def arrayDeclarations: ReadArray[ArrayDeclaration]
+  def listDeclarations: ReadArray[ListDeclaration]
 }

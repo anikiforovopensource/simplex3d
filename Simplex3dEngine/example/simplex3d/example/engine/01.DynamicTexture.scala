@@ -30,12 +30,29 @@ object DynamicTexture extends BasicApp {
   )
   
   
-  val noise = ClassicalGradientNoise
+  private def writeImg(img: Data[Vec3], dims: inVec2i)(function: (Int, Int) => ReadVec3) {
+    var y = 0; while (y < dims.y) {
+      var x = 0; while (x < dims.x) {
+        
+        val i = x + y*dims.x
+        img(i) = function(x, y)
+        
+        x += 1
+      }
+      y += 1
+    }
+  }
   
+  val noise = ClassicalGradientNoise
   val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
   val subImgDims = ConstVec2i(64)
   val subImg = DataBuffer[Vec3, UByte](subImgDims.x*subImgDims.y)
-  
+
+  val detailTexture = Texture2d(Vec2i(512), DataBuffer[Vec3, UByte](512*512))
+  writeImg(detailTexture.write, detailTexture.dimensions) { (x, y) =>
+    val intensity = abs(noise(x*0.3, y*0.3, 0) + 0.3) + 0.3
+    Vec3(0, intensity, intensity)
+  }
   
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
@@ -55,7 +72,9 @@ object DynamicTexture extends BasicApp {
     
     mesh.geometry.texCoords.defineAs(Attributes(texCoords))
     
-    mesh.material.texture.mutable := objectTexture
+    mesh.material.textureUnits.mutable += new TextureUnit(objectTexture)
+    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, Mat2x3.scale(2))
+    
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 50
     
@@ -63,19 +82,6 @@ object DynamicTexture extends BasicApp {
   }
   
   def update(time: TimeStamp) {
-    
-    def writeImg(img: Data[Vec3], dims: inVec2i)(function: (Int, Int) => ReadVec3) {
-      var y = 0; while (y < dims.y) {
-        var x = 0; while (x < dims.x) {
-          
-          val i = x + y*dims.x
-          img(i) = function(x, y)
-          
-          x += 1
-        }
-        y += 1
-      }
-    }
     
     // Updating the texture: the changes will be synchronized with OpenGL automatically.
     writeImg(objectTexture.write, objectTexture.dimensions) { (x, y) =>

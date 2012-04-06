@@ -21,7 +21,6 @@
 package simplex3d.engine
 package bounding
 
-import simplex3d.math.types._
 import simplex3d.math.double._
 
 

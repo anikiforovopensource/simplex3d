@@ -21,14 +21,13 @@
 package simplex3d.engine
 package renderer
 
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends Readable[Lighting] {
+sealed abstract class ReadLighting extends NestedBinding[Lighting] {
   def directionalLights: List[ReadDirectionalLight]
   def pointLights: List[ReadPointLight]
   
@@ -53,7 +52,7 @@ with UpdatableEnvironmentalEffect[Lighting]
   var directionalLights: List[DirectionalLight] = Nil
   var pointLights: List[PointLight] = Nil
   
-  def :=(r: Readable[Lighting]) {
+  def :=(r: NestedBinding[Lighting]) {
     //
   }
   

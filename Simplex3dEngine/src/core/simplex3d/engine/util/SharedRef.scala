@@ -20,7 +20,6 @@
 
 package simplex3d.engine.util
 
-import simplex3d.math.types._
 import simplex3d.data._
 
 

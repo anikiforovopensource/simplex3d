@@ -28,6 +28,7 @@ import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine.scene._
 import simplex3d.engine.util._
+import simplex3d.engine.graphics.prototype._
 
 
 abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](name) { effect =>
@@ -64,7 +65,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
       
       val (names, props) = FieldReflection.getValueMap(
         effect,
-        classOf[DefinedProperty[_ <: TechniqueBinding]], FieldReflection.TechniqueBindingFilter,
+        classOf[Defined[_ <: TechniqueBinding]], FieldReflection.TechniqueBindingFilter,
         Nil
       )
       val shaderUniforms = Map((names zip props): _*)

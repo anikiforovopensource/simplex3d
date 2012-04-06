@@ -29,7 +29,7 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   
   final class MeshSubtext {
     val technique = SharedRef[Technique](StructuralChangeListener.Ignore)
-    val elementRange = OptionalProperty(ElementRange.Default, StructuralChangeListener.Ignore)
+    val elementRange = Optional(ElementRange.Default)(StructuralChangeListener.Ignore)
     
     def hasStructuralChanges :Boolean = {
       geometry.hasStructuralChanges ||

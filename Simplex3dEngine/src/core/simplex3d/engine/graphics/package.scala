@@ -25,7 +25,13 @@ import simplex3d.data._
 
 
 package object graphics {
+  
+  implicit def textureToBinding[T <: Texture[_] : ClassManifest](texture: T) = new TextureBinding(texture)
+  
+  
   type TechniqueBinding = Readable[W] with Binding forSome { type W <: Writable[W] }
+  type NestedBinding[W <: Writable[W]] = Readable[W]
+  
   
   val EffectRecursor: {
     type Recursive <: EnvironmentalEffect[Recursive] { type Read <: EnvironmentalEffect[Recursive] }

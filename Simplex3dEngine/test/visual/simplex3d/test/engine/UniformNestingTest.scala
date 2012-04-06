@@ -21,13 +21,13 @@
 package simplex3d.test.engine
 
 import scala.collection.mutable.ArrayBuffer
-import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine._
+import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
@@ -40,54 +40,56 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   )
   
   
+  protected implicit val structuralChangeListener: StructuralChangeListener = null
+  
   // Read part of Struct2 type.
-  sealed abstract class ReadStruct2 extends Readable[Struct2] {
+  sealed abstract class ReadStruct2 extends NestedBinding[Struct2] {
     def value2: ReadVec3
-    def value2Array: ReadBindingArray[Vec3]
+    def value2Array: ReadBindingList[Vec3]
     
     def texture2: ReadTextureBinding[Texture2d[Vec3]]
   }
   
   // Read-write part of Struct2 type.
   // Instances of this class can be auto-mapped to uniform Struct2 values in the shader.
-  final class Struct2 extends ReadStruct2 with ReflectStruct[Struct2] {
+  final class Struct2 extends ReadStruct2 with prototype.Struct[Struct2] {
     type Read = ReadStruct2
     protected def mkMutable() = new Struct2
     
     val value2 = Vec3(1)
-    val value2Array = new BindingArray[Vec3](Vec3.One, 2)
+    val value2Array = BindingList[Vec3](Vec3.One, Vec3.One)
     
     val texture2 = new TextureBinding[Texture2d[Vec3]]
     
-    reflect(classOf[Struct2])
+    init(classOf[Struct2])
   }
   
   
-  sealed abstract class ReadStruct1 extends Readable[Struct1] {
+  sealed abstract class ReadStruct1 extends NestedBinding[Struct1] {
     def value1: ReadVec3
-    def value1Array: ReadBindingArray[Vec3]
+    def value1Array: ReadBindingList[Vec3]
     
     def texture1: ReadTextureBinding[Texture2d[Vec3]]
-    def texture1Array: ReadBindingArray[TextureBinding[Texture2d[Vec3]]]
+    def texture1Array: ReadBindingList[TextureBinding[Texture2d[Vec3]]]
     
     def struct2: ReadStruct2
-    def struct2Array: BindingArray[Struct2]
+    def struct2Array: BindingList[Struct2]
   }
   
-  final class Struct1 extends ReadStruct1 with ReflectStruct[Struct1] {
+  final class Struct1 extends ReadStruct1 with prototype.Struct[Struct1] {
     type Read = ReadStruct1
     protected def mkMutable() = new Struct1
     
     val value1 = Vec3(1)
-    val value1Array = new BindingArray[Vec3](Vec3.One, 2)
+    val value1Array = BindingList[Vec3](Vec3.One, Vec3.One)
     
     val texture1 = new TextureBinding[Texture2d[Vec3]]
-    val texture1Array = new BindingArray[TextureBinding[Texture2d[Vec3]]](new TextureBinding, 2)
+    val texture1Array = new BindingList[TextureBinding[Texture2d[Vec3]]]
     
     val struct2 = new Struct2
-    val struct2Array = new BindingArray[Struct2](new Struct2, 2)
+    val struct2Array = BindingList[Struct2](new Struct2, new Struct2)
     
-    reflect(classOf[Struct1])
+    init(classOf[Struct1])
   }
   
   
@@ -101,33 +103,33 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
       i += 1
     }
     
-    Texture2d(dims, data)
+    new TextureBinding(Texture2d(dims, data))
   }
   
 
   val effect = new FullscreenEffect("Uniform Test") {
     
     // These values are auto-mapped to uniform values the shader based on name.
-    val value0 = DefinedProperty[Vec3](Vec3.One)
-    val value0Array = DefinedProperty[BindingArray[Vec3]](new BindingArray(Vec3.One, 2))
+    val value0 = Defined[Vec3](Vec3.One)
+    val value0Array = Defined[BindingList[Vec3]](BindingList[Vec3](Vec3.One, Vec3.One))
     
-    val texture0 = DefinedProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
-    val texture0Array = DefinedProperty[BindingArray[TextureBinding[Texture2d[Vec3]]]](new BindingArray(new TextureBinding, 2))
+    val texture0 = Defined[TextureBinding[Texture2d[Vec3]]](new TextureBinding)
+    val texture0Array = Defined[BindingList[TextureBinding[Texture2d[Vec3]]]](new BindingList)
     
-    val struct1 = DefinedProperty[Struct1](new Struct1)
-    val struct1Array = DefinedProperty[BindingArray[Struct1]](new BindingArray(new Struct1, 2))
+    val struct1 = Defined[Struct1](new Struct1)
+    val struct1Array = Defined[BindingList[Struct1]](BindingList[Struct1](new Struct1, new Struct1))
     
     
     // Init textures.
     {
       texture0.mutable := mkTexture()
-      texture0Array.mutable(0) := mkTexture()
-      texture0Array.mutable(1) := mkTexture()
+      texture0Array.mutable += mkTexture()
+      texture0Array.mutable += mkTexture()
       
       
       struct1.mutable.texture1 := mkTexture()
-      struct1.mutable.texture1Array(0) := mkTexture()
-      struct1.mutable.texture1Array(1) := mkTexture()
+      struct1.mutable.texture1Array += mkTexture()
+      struct1.mutable.texture1Array += mkTexture()
       
       struct1.mutable.struct2.texture2 := mkTexture()
       struct1.mutable.struct2Array(0).texture2 := mkTexture()
@@ -135,8 +137,8 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
       
       
       struct1Array.mutable(0).texture1 := mkTexture()
-      struct1Array.mutable(0).texture1Array(0) := mkTexture()
-      struct1Array.mutable(0).texture1Array(1) := mkTexture()
+      struct1Array.mutable(0).texture1Array += mkTexture()
+      struct1Array.mutable(0).texture1Array += mkTexture()
       
       struct1Array.mutable(0).struct2.texture2 := mkTexture()
       struct1Array.mutable(0).struct2Array(0).texture2 := mkTexture()
@@ -144,8 +146,8 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
       
       
       struct1Array.mutable(1).texture1 := mkTexture()
-      struct1Array.mutable(1).texture1Array(0) := mkTexture()
-      struct1Array.mutable(1).texture1Array(1) := mkTexture()
+      struct1Array.mutable(1).texture1Array += mkTexture()
+      struct1Array.mutable(1).texture1Array += mkTexture()
       
       struct1Array.mutable(1).struct2.texture2 := mkTexture()
       struct1Array.mutable(1).struct2Array(0).texture2 := mkTexture()
@@ -174,7 +176,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
       };
       
       
-      // These uniform values are auto-mapped from DefinedProperty values based on name.
+      // These uniform values are auto-mapped from Defined values based on name.
       uniform vec3 value0;
       uniform vec3 value0Array[2];
       uniform sampler2D texture0;

@@ -24,13 +24,16 @@ package renderer
 import scala.annotation._
 import simplex3d.math._
 import simplex3d.math.double._
+import simplex3d.data._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-class Material extends graphics.ReflectMaterial {
-  val color = OptionalProperty[Vec3](Vec3.Zero, this)
-  val texture = OptionalProperty[TextureBinding[Texture2d[Vec3]]](new TextureBinding, this)
+class Material extends prototype.Material {
+  val color = Optional[Vec3](Vec3.Zero)
+  val textures = Optional[BindingList[TextureBinding[Texture2d[Vec3]]]](new BindingList)
   
-  reflect(classOf[Material])
+  val textureUnits = Optional[BindingList[TextureUnit]](new BindingList)
+  
+  init(classOf[Material])
 }

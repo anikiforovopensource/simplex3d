@@ -27,6 +27,8 @@ import simplex3d.engine.util._
 
 
 abstract class Material extends StructuralChangeListener {
+  protected implicit val structuralChangeListener = this
+  
   def uniformNames: ReadArray[String]
   def uniforms: ReadArray[Property[UncheckedBinding]]
 }

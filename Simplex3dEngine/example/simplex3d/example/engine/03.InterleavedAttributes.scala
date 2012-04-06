@@ -76,7 +76,7 @@ object InterleavedAttributes extends BasicApp {
     // delayedInit() call will be unnecessary when DelayedInit trait is fixed,
     // please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
-    mesh.material.texture.mutable := objectTexture
+    mesh.material.textures.mutable += objectTexture
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 40

@@ -114,11 +114,11 @@ with Transformation[ComponentTransformation3d] {
   }
   
   
-  private[this] var _matrix: Mat3x4 = _
+  private[this] var _matrix: Mat4x3 = _
   private[this] var updateMatrix = true
   
-  def matrix :ReadMat3x4 = {
-    if (_matrix == null) _matrix = Mat3x4(1)
+  def matrix :ReadMat4x3 = {
+    if (_matrix == null) _matrix = Mat4x3(1)
     
     if (updateMatrix) {
       _matrix := transformation(Vec3(scale), rotationMat(rotation), translation)

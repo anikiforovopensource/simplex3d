@@ -130,6 +130,14 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
       glslType
     }
     
+    private def mathTypeName(erasure: Class[_]) :String = {
+      val className = erasure.getSimpleName.toLowerCase()
+      if (className.endsWith("ref")) {
+        val shorter = className.dropRight(3)
+        if (shorter == "double") "float" else shorter
+      }
+      else className.dropRight(1)
+    }
     private def extractManifestTypeInfo(
       parentType: String,
       m: ClassManifest[_], name: String,
@@ -137,7 +145,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     ) :String = {
       
       if (classOf[MathType].isAssignableFrom(m.erasure)) {
-        m.erasure.getSimpleName.toLowerCase().dropRight(1)
+        mathTypeName(m.erasure)
       }
       else if (classOf[TextureBinding[_]].isAssignableFrom(m.erasure)) {
         try {
@@ -189,7 +197,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     ) :(String, String) = {
       
       if (classOf[MathType].isAssignableFrom(i.getClass)) {
-        (i.getClass.getSimpleName.toLowerCase().dropRight(1), "")
+        (mathTypeName(i.getClass), "")
       }
       else if (classOf[TextureBinding[_]].isAssignableFrom(i.getClass)) {
         (resolveTextureType(i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure.getSimpleName), "")

@@ -43,7 +43,7 @@ object Test {
   
   def testRay() {
     val ray = Ray(Vec3(-1, 1, 0), Vec3(1, 0, 1)*100)
-    val res = ray.intersectObb(Vec3(0), Vec3(10), Mat3x4 scale 2 translate Vec3(1, 0, 0))
+    val res = ray.intersectObb(Vec3(0), Vec3(10), Mat4x3 scale 2 translate Vec3(1, 0, 0))
     
     if (res.length == 0) println("no intersection")
     else println(ray.point(res(0)) + " " + ray.point(res(1)))

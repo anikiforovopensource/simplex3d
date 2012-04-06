@@ -298,7 +298,7 @@ extends Entity[T, G](name) {
       val vertexOffset = childIndex*srcVerticesSize
       val indexOffset = childIndex*srcIndicesSize
       
-      def transformData(transformation: inMat3x4, normalMatrix: inMat3) {
+      def transformData(transformation: inMat4x3, normalMatrix: inMat3) {
         var i = 0; while (i < srcVertices.size) {
           
           destVertices(vertexOffset + i) = transformation.transformPoint(srcVertices(i))

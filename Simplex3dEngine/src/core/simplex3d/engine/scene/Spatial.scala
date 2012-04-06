@@ -25,5 +25,5 @@ import simplex3d.math.double._
 
 
 trait Spatial { self =>
-  private[engine] final var resolveWorldMatrix: () => ReadMat3x4 = _
+  private[engine] final var resolveWorldMatrix: () => ReadMat4x3 = _
 }

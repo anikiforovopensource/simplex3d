@@ -28,7 +28,7 @@ import simplex3d.math.double._
 trait AbstractCamera extends Spatial {
   val name: String
   
-  def view: ReadMat3x4
+  def view: ReadMat4x3
   def projection: ReadMat4
   
   def viewProjection: ReadMat4
@@ -51,7 +51,7 @@ trait AbstractCamera extends Spatial {
 object IdentityCamera extends AbstractCamera {
   val name = "Identity Camera"
 
-  def view: ReadMat3x4 = Mat3x4.Identity
+  def view: ReadMat4x3 = Mat4x3.Identity
   def projection: ReadMat4 = Mat4.Identity
   
   def viewProjection: ReadMat4 = Mat4.Identity

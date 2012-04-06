@@ -86,7 +86,7 @@ object InterleavedAttributes extends BasicApp {
   
   def update(time: TimeStamp) {
     def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15
-    def fuzzyMat = Mat3x4(1) + Mat3x4(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
+    def fuzzyMat = Mat4x3(1) + Mat4x3(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
     
     // Interleaved and non-interleaved attributes are updated in the same fashion.
     val data = mesh.geometry.vertices.write

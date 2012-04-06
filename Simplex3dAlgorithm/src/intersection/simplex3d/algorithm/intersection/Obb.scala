@@ -29,23 +29,23 @@ import simplex3d.math.double.functions._
  * 
  * @author Aleksey Nikiforov (lex)
  */ 
-class Obb(val min: Vec3, val max: Vec3, val transformation: Mat3x4)
+class Obb(val min: Vec3, val max: Vec3, val transformation: Mat4x3)
 
 
 object Obb {
   /** Intersect dynamic Obb (dmin, dmax, dtransformation) with a static Aabb (smin, smax).
    * The result is a vector by which the dynamic box has to be displaced to resolve the collision.
    */
-  def intersectAabb(dmin: inVec3, dmax: inVec3, dtransformation: inMat3x4)(smin: inVec3, smax: inVec3) :Vec3 = {
-    intersectObb(dmin, dmax, dtransformation)(smin, smax, Mat3x4.Identity)
+  def intersectAabb(dmin: inVec3, dmax: inVec3, dtransformation: inMat4x3)(smin: inVec3, smax: inVec3) :Vec3 = {
+    intersectObb(dmin, dmax, dtransformation)(smin, smax, Mat4x3.Identity)
   }
   
   /** Intersect dynamic Obb (dmin, dmax, dtransformation) with a static Obb (smin, smax, stransformation).
    * The result is a vector by which the dynamic box has to be displaced to resolve the collision.
    */
   def intersectObb
-    (dmin: inVec3, dmax: inVec3, dtransformation: inMat3x4)
-    (smin: inVec3, smax: inVec3, stransformation: inMat3x4)
+    (dmin: inVec3, dmax: inVec3, dtransformation: inMat4x3)
+    (smin: inVec3, smax: inVec3, stransformation: inMat4x3)
   :Vec3 = {
     Vec3(0)
   }

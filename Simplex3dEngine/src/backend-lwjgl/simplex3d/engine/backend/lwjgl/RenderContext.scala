@@ -761,8 +761,8 @@ extends graphics.RenderContext with GlAccess {
   def mat2x2ToBuffer(m: AnyMat2x2[_]) :FloatBuffer = {
     floatBuffer.limit(4)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -771,9 +771,8 @@ extends graphics.RenderContext with GlAccess {
   def mat2x3ToBuffer(m: AnyMat2x3[_]) :FloatBuffer = {
     floatBuffer.limit(6)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -782,10 +781,8 @@ extends graphics.RenderContext with GlAccess {
   def mat2x4ToBuffer(m: AnyMat2x4[_]) :FloatBuffer = {
     floatBuffer.limit(8)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m))
-    floatBuffer.put(f03(m)); floatBuffer.put(f13(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m)); floatBuffer.put(f03(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m)); floatBuffer.put(f13(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -794,8 +791,9 @@ extends graphics.RenderContext with GlAccess {
   def mat3x2ToBuffer(m: AnyMat3x2[_]) :FloatBuffer = {
     floatBuffer.limit(6)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -804,9 +802,9 @@ extends graphics.RenderContext with GlAccess {
   def mat3x3ToBuffer(m: AnyMat3x3[_]) :FloatBuffer = {
     floatBuffer.limit(9)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m)); floatBuffer.put(f22(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -815,10 +813,9 @@ extends graphics.RenderContext with GlAccess {
   def mat3x4ToBuffer(m: AnyMat3x4[_]) :FloatBuffer = {
     floatBuffer.limit(12)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m))
-    floatBuffer.put(f03(m)); floatBuffer.put(f13(m)); floatBuffer.put(f23(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m)); floatBuffer.put(f03(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m)); floatBuffer.put(f13(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m)); floatBuffer.put(f22(m)); floatBuffer.put(f23(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -827,8 +824,10 @@ extends graphics.RenderContext with GlAccess {
   def mat4x2ToBuffer(m: AnyMat4x2[_]) :FloatBuffer = {
     floatBuffer.limit(8)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m))
+    floatBuffer.put(f30(m)); floatBuffer.put(f31(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -837,9 +836,10 @@ extends graphics.RenderContext with GlAccess {
   def mat4x3ToBuffer(m: AnyMat4x3[_]) :FloatBuffer = {
     floatBuffer.limit(12)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m)); floatBuffer.put(f32(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m)); floatBuffer.put(f22(m))
+    floatBuffer.put(f30(m)); floatBuffer.put(f31(m)); floatBuffer.put(f32(m))
     
     floatBuffer.rewind()
     floatBuffer
@@ -848,10 +848,10 @@ extends graphics.RenderContext with GlAccess {
   def mat4x4ToBuffer(m: AnyMat4x4[_]) :FloatBuffer = {
     floatBuffer.limit(16)
     
-    floatBuffer.put(f00(m)); floatBuffer.put(f10(m)); floatBuffer.put(f20(m)); floatBuffer.put(f30(m))
-    floatBuffer.put(f01(m)); floatBuffer.put(f11(m)); floatBuffer.put(f21(m)); floatBuffer.put(f31(m))
-    floatBuffer.put(f02(m)); floatBuffer.put(f12(m)); floatBuffer.put(f22(m)); floatBuffer.put(f32(m))
-    floatBuffer.put(f03(m)); floatBuffer.put(f13(m)); floatBuffer.put(f23(m)); floatBuffer.put(f33(m))
+    floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m)); floatBuffer.put(f03(m))
+    floatBuffer.put(f10(m)); floatBuffer.put(f11(m)); floatBuffer.put(f12(m)); floatBuffer.put(f13(m))
+    floatBuffer.put(f20(m)); floatBuffer.put(f21(m)); floatBuffer.put(f22(m)); floatBuffer.put(f23(m))
+    floatBuffer.put(f30(m)); floatBuffer.put(f31(m)); floatBuffer.put(f32(m)); floatBuffer.put(f33(m))
     
     floatBuffer.rewind()
     floatBuffer

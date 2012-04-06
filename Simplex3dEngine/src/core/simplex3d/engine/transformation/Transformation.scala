@@ -31,7 +31,7 @@ abstract class ReadTransformation[W <: Transformation[W]] extends DataChangeList
 { self: W#Read =>
   
   def propagateChanges(parent: W#Read, result: W) :Unit
-  def matrix :ReadMat3x4
+  def matrix :ReadMat4x3
   
   def isSet: Boolean
 }

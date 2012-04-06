@@ -113,7 +113,7 @@ class Frustum protected (
   }
 
   
-  final def intersectObb(min: inVec3, max: inVec3, worldTranformation: inMat3x4) :Int = {
+  final def intersectObb(min: inVec3, max: inVec3, worldTranformation: inMat4x3) :Int = {
     val m = Mat3(worldTranformation)
     val c3 = worldTranformation(3)
 

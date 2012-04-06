@@ -48,9 +48,15 @@ object DynamicTexture extends BasicApp {
   val subImgDims = ConstVec2i(64)
   val subImg = DataBuffer[Vec3, UByte](subImgDims.x*subImgDims.y)
 
-  val detailTexture = Texture2d(Vec2i(512), DataBuffer[Vec3, UByte](512*512))
+  val tiledNoise = new TiledNoiseSum(
+    source = ClassicalGradientNoise,
+    tile = ConstVec4(64),
+    frequency = 1,
+    octaves = 1
+  )
+  val detailTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
   writeImg(detailTexture.write, detailTexture.dimensions) { (x, y) =>
-    val intensity = abs(noise(x*0.3, y*0.3, 0) + 0.3) + 0.3
+    val intensity = abs(tiledNoise(x*0.3, y*0.3, 0) + 0.3) + 0.3
     Vec3(0, intensity, intensity)
   }
   
@@ -73,7 +79,7 @@ object DynamicTexture extends BasicApp {
     mesh.geometry.texCoords.defineAs(Attributes(texCoords))
     
     mesh.material.textureUnits.mutable += new TextureUnit(objectTexture)
-    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, Mat2x3.scale(2))
+    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, Mat3x2.scale(4))
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 50

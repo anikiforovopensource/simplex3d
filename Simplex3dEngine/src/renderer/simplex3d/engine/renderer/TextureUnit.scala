@@ -27,11 +27,11 @@ import simplex3d.engine.graphics._
 
 sealed abstract class ReadTextureUnit extends NestedBinding[TextureUnit] {
   def texture: ReadTextureBinding[Texture2d[_]]
-  def transformation: ReadMat2x3
+  def transformation: ReadMat3x2
 }
 
 final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUnit] {
-  def this(texture: Texture2d[_], transformation: inMat2x3 = Mat2x3.Identity) {
+  def this(texture: Texture2d[_], transformation: inMat3x2 = Mat3x2.Identity) {
     this()
     
     this.texture := texture
@@ -42,7 +42,7 @@ final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUni
   protected def mkMutable() = new TextureUnit
   
   val texture = new TextureBinding[Texture2d[_]]
-  val transformation = Mat2x3(1)
+  val transformation = Mat3x2(1)
   
   init(classOf[TextureUnit])
 }

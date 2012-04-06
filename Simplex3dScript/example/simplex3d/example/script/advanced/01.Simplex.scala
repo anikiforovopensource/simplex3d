@@ -23,7 +23,7 @@ object Simplex extends App {
   val radius3d = side*sqrt(3.0/8.0)
   val centery = sqrt(radius3d*radius3d - radius2d*radius2d)
 
-  val simplexTranslation = Mat3x4 translate(-Vec3(side/2, centery, centerz))
+  val simplexTranslation = Mat4x3 translate(-Vec3(side/2, centery, centerz))
 
   val simplex = List(
     // Base.
@@ -45,7 +45,7 @@ object Simplex extends App {
 
 
   // All 3D transformations happen here.
-  def transform(modelMat: inMat3x4, cameraMat: inMat3x4, projectionMat: inMat4, dims: inVec2i) {
+  def transform(modelMat: inMat4x3, cameraMat: inMat4x3, projectionMat: inMat4, dims: inVec2i) {
     val modelViewProjectionMat = projectionMat*Mat4(modelMat.concat(inverse(cameraMat)))
 
     val viewportScale = dims*0.5
@@ -70,8 +70,8 @@ object Simplex extends App {
     val camRotation = Quat4 rotateX(radians(-20)) rotateY(radians(30)*time)
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
 
-    val cameraMat = Mat3x4 rotate(camRotation) translate(camTranslation)
-    val modelMat = Mat3x4 Identity
+    val cameraMat = Mat4x3 rotate(camRotation) translate(camTranslation)
+    val modelMat = Mat4x3 Identity
     val projectionMat = perspectiveProj(radians(45), dims.x.toDouble/dims.y, 10, 100)
 
     transform(modelMat, cameraMat, projectionMat, dims)

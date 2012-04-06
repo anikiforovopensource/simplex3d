@@ -45,12 +45,12 @@ object Shapes {
     val (indices, vertices, normals) = makeQuad()
     
     val transformations = Seq(
-      Mat3x4 translate(Vec3(0, 0, 0.5)), // front
-      Mat3x4 rotateY(radians(180)) translate(Vec3(0, 0, -0.5)), // back
-      Mat3x4 rotateY(radians(-90)) rotateX(radians(-90)) translate(Vec3(-0.5, 0, 0)), // left
-      Mat3x4 rotateY(radians(90)) rotateX(radians(-90)) translate(Vec3(0.5, 0, 0)), // right
-      Mat3x4 rotateX(radians(-90)) rotateY(radians(90)) translate(Vec3(0, 0.5, 0)), // top
-      Mat3x4 rotateX(radians(90)) rotateY(radians(90)) translate(Vec3(0, -0.5, 0)) // bottom
+      Mat4x3 translate(Vec3(0, 0, 0.5)), // front
+      Mat4x3 rotateY(radians(180)) translate(Vec3(0, 0, -0.5)), // back
+      Mat4x3 rotateY(radians(-90)) rotateX(radians(-90)) translate(Vec3(-0.5, 0, 0)), // left
+      Mat4x3 rotateY(radians(90)) rotateX(radians(-90)) translate(Vec3(0.5, 0, 0)), // right
+      Mat4x3 rotateX(radians(-90)) rotateY(radians(90)) translate(Vec3(0, 0.5, 0)), // top
+      Mat4x3 rotateX(radians(90)) rotateY(radians(90)) translate(Vec3(0, -0.5, 0)) // bottom
     )
     
     (

@@ -36,11 +36,11 @@ class Camera[T <: TransformationContext, G <: GraphicsContext](
 )(implicit transformationContext: T, graphicsContext: G)
 extends SceneElement[T, G](name) with AbstractCamera {
   
-  protected val _view = Mat3x4(1)
+  protected val _view = Mat4x3(1)
   protected val _viewProjection = Mat4(1)
   protected val _inverseViewProjection = Mat4(1)
   
-  def view: ReadMat3x4 = {
+  def view: ReadMat4x3 = {
     if (worldTransformation.hasDataChanges) sync()
     _view
   }

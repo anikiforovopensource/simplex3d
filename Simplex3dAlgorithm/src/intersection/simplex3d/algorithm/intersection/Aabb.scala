@@ -36,7 +36,7 @@ object Aabb {
   
   /** Projects Aabb defined by bmin and bmax onto a space defined by transformation.
    */
-  def projectAabb(bmin: inVec3, bmax: inVec3, transformation: inMat3x4)(resultMin: Vec3, resultMax :Vec3) {
+  def projectAabb(bmin: inVec3, bmax: inVec3, transformation: inMat4x3)(resultMin: Vec3, resultMax :Vec3) {
   
     resultMin := Vec3(Double.PositiveInfinity)
     resultMax := Vec3(Double.NegativeInfinity)

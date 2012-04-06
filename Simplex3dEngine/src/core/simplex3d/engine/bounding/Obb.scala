@@ -27,12 +27,12 @@ import simplex3d.math.double._
 /** Oriented Bounding Box is defined by local min and max and an additional volume transformation.
  * This box is be transformed by the volume transformation first and then by the world transformation.
  */
-final class Obb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero, ctransformation: inMat3x4 = Mat3x4.Identity)
+final class Obb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero, ctransformation: inMat4x3 = Mat4x3.Identity)
 extends BoundingVolume {
   final class MutableSubtext {
     def min: Vec3 = _min
     def max: Vec3 = _max
-    def transformation: Mat3x4 = _transformation
+    def transformation: Mat4x3 = _transformation
   }
   private val mutableSubtext = new MutableSubtext
   
@@ -48,7 +48,7 @@ extends BoundingVolume {
   
   def min: ReadVec3 = _min
   def max: ReadVec3 = _max
-  def transformation: ReadMat3x4 = _transformation
+  def transformation: ReadMat4x3 = _transformation
   
   def :=(r: Obb) {
     mutable.min := r.min

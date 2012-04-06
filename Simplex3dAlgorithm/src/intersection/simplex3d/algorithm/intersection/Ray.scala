@@ -49,7 +49,7 @@ class Ray private (val origin: inVec3, val direction: inVec3) {
     (Ray.intersectAabb(origin, direction)(min, max).length != 0)
   }
 
-  def intersectsObb(min: inVec3, max: inVec3, transformation: inMat3x4) :Boolean = {
+  def intersectsObb(min: inVec3, max: inVec3, transformation: inMat4x3) :Boolean = {
     (Ray.intersectObb(origin, direction)(min, max, transformation).length != 0)
   }
 
@@ -65,7 +65,7 @@ class Ray private (val origin: inVec3, val direction: inVec3) {
     Ray.intersectAabb(origin, direction)(min, max)
   }
 
-  def intersectObb(min: inVec3, max: inVec3, transformation: inMat3x4) :Array[Double] = {
+  def intersectObb(min: inVec3, max: inVec3, transformation: inMat4x3) :Array[Double] = {
     Ray.intersectObb(origin, direction)(min, max, transformation)
   }
 }
@@ -106,7 +106,7 @@ object Ray {
     ratio
   }
   
-  def intersectObb(origin: inVec3, direction: inVec3)(min: inVec3, max: inVec3, transformation: inMat3x4)
+  def intersectObb(origin: inVec3, direction: inVec3)(min: inVec3, max: inVec3, transformation: inMat4x3)
   :Array[Double] = {
     val t = inverse(transformation)
     intersectAabb(t.transformPoint(origin), t.transformVector(direction))(min, max)

@@ -89,126 +89,41 @@ class PrimitiveMathTest extends FunSuite {
     }
 
 
-    val (m00, m10, m20, m30) = (1f, 2f, 3f, 4f)
-    val (m01, m11, m21, m31) = (5f, 6f, 7f, 8f)
-    val (m02, m12, m22, m32) = (9f, 10f, 11f, 12f)
-    val (m03, m13, m23, m33) = (13f, 14f, 15f, 16f)
+    val (m00, m01, m02, m03) = (1f, 2f, 3f, 4f)
+    val (m10, m11, m12, m13) = (5f, 6f, 7f, 8f)
+    val (m20, m21, m22, m23) = (9f, 10f, 11f, 12f)
+    val (m30, m31, m32, m33) = (13f, 14f, 15f, 16f)
 
     {
       val m = ConstMat2x2(
-        m00, m10,
-        m01, m11
+        m00, m01,
+        m10, m11
       )
 
       var t = Mat2x2(
-        2*m00, 2*m10,
-        2*m01, 2*m11
+        2*m00, 2*m01,
+        2*m10, 2*m11
       )
       assert(2*m == t)
       assert(2f*m == t)
 
       t = Mat2x2(
-        2/m00, 2/m10,
-        2/m01, 2/m11
+        2/m00, 2/m01,
+        2/m10, 2/m11
       )
       assert(2/m == t)
       assert(2f/m == t)
 
       t = Mat2x2(
-        2+m00, 2+m10,
-        2+m01, 2+m11
+        2+m00, 2+m01,
+        2+m10, 2+m11
       )
       assert(2 + m == t)
       assert(2f + m == t)
 
       t = Mat2x2(
-        2-m00, 2-m10,
-        2-m01, 2-m11
-      )
-      assert(2 - m == t)
-      assert(2f - m == t)
-    }
-
-    {
-      val m = ConstMat2x3(
-        m00, m10,
-        m01, m11,
-        m02, m12
-      )
-
-      var t = Mat2x3(
-        2*m00, 2*m10,
-        2*m01, 2*m11,
-        2*m02, 2*m12
-      )
-      assert(2*m == t)
-      assert(2f*m == t)
-
-      t = Mat2x3(
-        2/m00, 2/m10,
-        2/m01, 2/m11,
-        2/m02, 2/m12
-      )
-      assert(2/m == t)
-      assert(2f/m == t)
-
-      t = Mat2x3(
-        2+m00, 2+m10,
-        2+m01, 2+m11,
-        2+m02, 2+m12
-      )
-      assert(2 + m == t)
-      assert(2f + m == t)
-
-      t = Mat2x3(
-        2-m00, 2-m10,
-        2-m01, 2-m11,
-        2-m02, 2-m12
-      )
-      assert(2 - m == t)
-      assert(2f - m == t)
-    }
-
-    {
-      val m = ConstMat2x4(
-        m00, m10,
-        m01, m11,
-        m02, m12,
-        m03, m13
-      )
-
-      var t = Mat2x4(
-        2*m00, 2*m10,
-        2*m01, 2*m11,
-        2*m02, 2*m12,
-        2*m03, 2*m13
-      )
-      assert(2*m == t)
-      assert(2f*m == t)
-
-      t = Mat2x4(
-        2/m00, 2/m10,
-        2/m01, 2/m11,
-        2/m02, 2/m12,
-        2/m03, 2/m13
-      )
-      assert(2/m == t)
-      assert(2f/m == t)
-
-      t = Mat2x4(
-        2+m00, 2+m10,
-        2+m01, 2+m11,
-        2+m02, 2+m12,
-        2+m03, 2+m13
-      )
-      assert(2 + m == t)
-      assert(2f + m == t)
-
-      t = Mat2x4(
-        2-m00, 2-m10,
-        2-m01, 2-m11,
-        2-m02, 2-m12,
-        2-m03, 2-m13
+        2-m00, 2-m01,
+        2-m10, 2-m11
       )
       assert(2 - m == t)
       assert(2f - m == t)
@@ -216,119 +131,39 @@ class PrimitiveMathTest extends FunSuite {
 
     {
       val m = ConstMat3x2(
-        m00, m10, m20,
-        m01, m11, m21
+        m00, m01,
+        m10, m11,
+        m20, m21
       )
 
       var t = Mat3x2(
-        2*m00, 2*m10, 2*m20,
-        2*m01, 2*m11, 2*m21
+        2*m00, 2*m01,
+        2*m10, 2*m11,
+        2*m20, 2*m21
       )
       assert(2*m == t)
       assert(2f*m == t)
 
       t = Mat3x2(
-        2/m00, 2/m10, 2/m20,
-        2/m01, 2/m11, 2/m21
+        2/m00, 2/m01,
+        2/m10, 2/m11,
+        2/m20, 2/m21
       )
       assert(2/m == t)
       assert(2f/m == t)
 
       t = Mat3x2(
-        2+m00, 2+m10, 2+m20,
-        2+m01, 2+m11, 2+m21
+        2+m00, 2+m01,
+        2+m10, 2+m11,
+        2+m20, 2+m21
       )
       assert(2 + m == t)
       assert(2f + m == t)
 
       t = Mat3x2(
-        2-m00, 2-m10, 2-m20,
-        2-m01, 2-m11, 2-m21
-      )
-      assert(2 - m == t)
-      assert(2f - m == t)
-    }
-
-    {
-      val m = ConstMat3x3(
-        m00, m10, m20,
-        m01, m11, m21,
-        m02, m12, m22
-      )
-
-      var t = Mat3x3(
-        2*m00, 2*m10, 2*m20,
-        2*m01, 2*m11, 2*m21,
-        2*m02, 2*m12, 2*m22
-      )
-      assert(2*m == t)
-      assert(2f*m == t)
-
-      t = Mat3x3(
-        2/m00, 2/m10, 2/m20,
-        2/m01, 2/m11, 2/m21,
-        2/m02, 2/m12, 2/m22
-      )
-      assert(2/m == t)
-      assert(2f/m == t)
-
-      t = Mat3x3(
-        2+m00, 2+m10, 2+m20,
-        2+m01, 2+m11, 2+m21,
-        2+m02, 2+m12, 2+m22
-      )
-      assert(2 + m == t)
-      assert(2f + m == t)
-
-      t = Mat3x3(
-        2-m00, 2-m10, 2-m20,
-        2-m01, 2-m11, 2-m21,
-        2-m02, 2-m12, 2-m22
-      )
-      assert(2 - m == t)
-      assert(2f - m == t)
-    }
-
-    {
-      val m = ConstMat3x4(
-        m00, m10, m20,
-        m01, m11, m21,
-        m02, m12, m22,
-        m03, m13, m23
-      )
-
-      var t = Mat3x4(
-        2*m00, 2*m10, 2*m20,
-        2*m01, 2*m11, 2*m21,
-        2*m02, 2*m12, 2*m22,
-        2*m03, 2*m13, 2*m23
-      )
-      assert(2*m == t)
-      assert(2f*m == t)
-
-      t = Mat3x4(
-        2/m00, 2/m10, 2/m20,
-        2/m01, 2/m11, 2/m21,
-        2/m02, 2/m12, 2/m22,
-        2/m03, 2/m13, 2/m23
-      )
-      assert(2/m == t)
-      assert(2f/m == t)
-
-      t = Mat3x4(
-        2+m00, 2+m10, 2+m20,
-        2+m01, 2+m11, 2+m21,
-        2+m02, 2+m12, 2+m22,
-        2+m03, 2+m13, 2+m23
-      )
-      assert(2 + m == t)
-      assert(2f + m == t)
-
-      t = Mat3x4(
-        2-m00, 2-m10, 2-m20,
-        2-m01, 2-m11, 2-m21,
-        2-m02, 2-m12, 2-m22,
-        2-m03, 2-m13, 2-m23
+        2-m00, 2-m01,
+        2-m10, 2-m11,
+        2-m20, 2-m21
       )
       assert(2 - m == t)
       assert(2f - m == t)
@@ -336,34 +171,119 @@ class PrimitiveMathTest extends FunSuite {
 
     {
       val m = ConstMat4x2(
-        m00, m10, m20, m30,
-        m01, m11, m21, m31
+        m00, m01,
+        m10, m11,
+        m20, m21,
+        m30, m31
       )
 
       var t = Mat4x2(
-        2*m00, 2*m10, 2*m20, 2*m30,
-        2*m01, 2*m11, 2*m21, 2*m31
+        2*m00, 2*m01,
+        2*m10, 2*m11,
+        2*m20, 2*m21,
+        2*m30, 2*m31
       )
       assert(2*m == t)
       assert(2f*m == t)
 
       t = Mat4x2(
-        2/m00, 2/m10, 2/m20, 2/m30,
-        2/m01, 2/m11, 2/m21, 2/m31
+        2/m00, 2/m01,
+        2/m10, 2/m11,
+        2/m20, 2/m21,
+        2/m30, 2/m31
       )
       assert(2/m == t)
       assert(2f/m == t)
 
       t = Mat4x2(
-        2+m00, 2+m10, 2+m20, 2+m30,
-        2+m01, 2+m11, 2+m21, 2+m31
+        2+m00, 2+m01,
+        2+m10, 2+m11,
+        2+m20, 2+m21,
+        2+m30, 2+m31
       )
       assert(2 + m == t)
       assert(2f + m == t)
 
       t = Mat4x2(
-        2-m00, 2-m10, 2-m20, 2-m30,
-        2-m01, 2-m11, 2-m21, 2-m31
+        2-m00, 2-m01,
+        2-m10, 2-m11,
+        2-m20, 2-m21,
+        2-m30, 2-m31
+      )
+      assert(2 - m == t)
+      assert(2f - m == t)
+    }
+
+    {
+      val m = ConstMat2x3(
+        m00, m01, m02,
+        m10, m11, m12
+      )
+
+      var t = Mat2x3(
+        2*m00, 2*m01, 2*m02,
+        2*m10, 2*m11, 2*m12
+      )
+      assert(2*m == t)
+      assert(2f*m == t)
+
+      t = Mat2x3(
+        2/m00, 2/m01, 2/m02,
+        2/m10, 2/m11, 2/m12
+      )
+      assert(2/m == t)
+      assert(2f/m == t)
+
+      t = Mat2x3(
+        2+m00, 2+m01, 2+m02,
+        2+m10, 2+m11, 2+m12
+      )
+      assert(2 + m == t)
+      assert(2f + m == t)
+
+      t = Mat2x3(
+        2-m00, 2-m01, 2-m02,
+        2-m10, 2-m11, 2-m12
+      )
+      assert(2 - m == t)
+      assert(2f - m == t)
+    }
+
+    {
+      val m = ConstMat3x3(
+        m00, m01, m02,
+        m10, m11, m12,
+        m20, m21, m22
+      )
+
+      var t = Mat3x3(
+        2*m00, 2*m01, 2*m02,
+        2*m10, 2*m11, 2*m12,
+        2*m20, 2*m21, 2*m22
+      )
+      assert(2*m == t)
+      assert(2f*m == t)
+
+      t = Mat3x3(
+        2/m00, 2/m01, 2/m02,
+        2/m10, 2/m11, 2/m12,
+        2/m20, 2/m21, 2/m22
+      )
+      assert(2/m == t)
+      assert(2f/m == t)
+
+      t = Mat3x3(
+        2+m00, 2+m01, 2+m02,
+        2+m10, 2+m11, 2+m12,
+        2+m20, 2+m21, 2+m22
+      )
+      assert(2 + m == t)
+      assert(2f + m == t)
+
+      t = Mat3x3(
+        2-m00, 2-m01, 2-m02,
+        2-m10, 2-m11, 2-m12,
+        2-m20, 2-m21, 2-m22
       )
       assert(2 - m == t)
       assert(2f - m == t)
@@ -371,39 +291,119 @@ class PrimitiveMathTest extends FunSuite {
 
     {
       val m = ConstMat4x3(
-        m00, m10, m20, m30,
-        m01, m11, m21, m31,
-        m02, m12, m22, m32
+        m00, m01, m02,
+        m10, m11, m12,
+        m20, m21, m22,
+        m30, m31, m32
       )
 
       var t = Mat4x3(
-        2*m00, 2*m10, 2*m20, 2*m30,
-        2*m01, 2*m11, 2*m21, 2*m31,
-        2*m02, 2*m12, 2*m22, 2*m32
+        2*m00, 2*m01, 2*m02,
+        2*m10, 2*m11, 2*m12,
+        2*m20, 2*m21, 2*m22,
+        2*m30, 2*m31, 2*m32
       )
       assert(2*m == t)
       assert(2f*m == t)
 
       t = Mat4x3(
-        2/m00, 2/m10, 2/m20, 2/m30,
-        2/m01, 2/m11, 2/m21, 2/m31,
-        2/m02, 2/m12, 2/m22, 2/m32
+        2/m00, 2/m01, 2/m02,
+        2/m10, 2/m11, 2/m12,
+        2/m20, 2/m21, 2/m22,
+        2/m30, 2/m31, 2/m32
       )
       assert(2/m == t)
       assert(2f/m == t)
 
       t = Mat4x3(
-        2+m00, 2+m10, 2+m20, 2+m30,
-        2+m01, 2+m11, 2+m21, 2+m31,
-        2+m02, 2+m12, 2+m22, 2+m32
+        2+m00, 2+m01, 2+m02,
+        2+m10, 2+m11, 2+m12,
+        2+m20, 2+m21, 2+m22,
+        2+m30, 2+m31, 2+m32
       )
       assert(2 + m == t)
       assert(2f + m == t)
 
       t = Mat4x3(
-        2-m00, 2-m10, 2-m20, 2-m30,
-        2-m01, 2-m11, 2-m21, 2-m31,
-        2-m02, 2-m12, 2-m22, 2-m32
+        2-m00, 2-m01, 2-m02,
+        2-m10, 2-m11, 2-m12,
+        2-m20, 2-m21, 2-m22,
+        2-m30, 2-m31, 2-m32
+      )
+      assert(2 - m == t)
+      assert(2f - m == t)
+    }
+
+    {
+      val m = ConstMat2x4(
+        m00, m01, m02, m03,
+        m10, m11, m12, m13
+      )
+
+      var t = Mat2x4(
+        2*m00, 2*m01, 2*m02, 2*m03,
+        2*m10, 2*m11, 2*m12, 2*m13
+      )
+      assert(2*m == t)
+      assert(2f*m == t)
+
+      t = Mat2x4(
+        2/m00, 2/m01, 2/m02, 2/m03,
+        2/m10, 2/m11, 2/m12, 2/m13
+      )
+      assert(2/m == t)
+      assert(2f/m == t)
+
+      t = Mat2x4(
+        2+m00, 2+m01, 2+m02, 2+m03,
+        2+m10, 2+m11, 2+m12, 2+m13
+      )
+      assert(2 + m == t)
+      assert(2f + m == t)
+
+      t = Mat2x4(
+        2-m00, 2-m01, 2-m02, 2-m03,
+        2-m10, 2-m11, 2-m12, 2-m13
+      )
+      assert(2 - m == t)
+      assert(2f - m == t)
+    }
+
+    {
+      val m = ConstMat3x4(
+        m00, m01, m02, m03,
+        m10, m11, m12, m13,
+        m20, m21, m22, m23
+      )
+
+      var t = Mat3x4(
+        2*m00, 2*m01, 2*m02, 2*m03,
+        2*m10, 2*m11, 2*m12, 2*m13,
+        2*m20, 2*m21, 2*m22, 2*m23
+      )
+      assert(2*m == t)
+      assert(2f*m == t)
+
+      t = Mat3x4(
+        2/m00, 2/m01, 2/m02, 2/m03,
+        2/m10, 2/m11, 2/m12, 2/m13,
+        2/m20, 2/m21, 2/m22, 2/m23
+      )
+      assert(2/m == t)
+      assert(2f/m == t)
+
+      t = Mat3x4(
+        2+m00, 2+m01, 2+m02, 2+m03,
+        2+m10, 2+m11, 2+m12, 2+m13,
+        2+m20, 2+m21, 2+m22, 2+m23
+      )
+      assert(2 + m == t)
+      assert(2f + m == t)
+
+      t = Mat3x4(
+        2-m00, 2-m01, 2-m02, 2-m03,
+        2-m10, 2-m11, 2-m12, 2-m13,
+        2-m20, 2-m21, 2-m22, 2-m23
       )
       assert(2 - m == t)
       assert(2f - m == t)
@@ -411,44 +411,44 @@ class PrimitiveMathTest extends FunSuite {
 
     {
       val m = ConstMat4x4(
-        m00, m10, m20, m30,
-        m01, m11, m21, m31,
-        m02, m12, m22, m32,
-        m03, m13, m23, m33
+        m00, m01, m02, m03,
+        m10, m11, m12, m13,
+        m20, m21, m22, m23,
+        m30, m31, m32, m33
       )
 
       var t = Mat4x4(
-        2*m00, 2*m10, 2*m20, 2*m30,
-        2*m01, 2*m11, 2*m21, 2*m31,
-        2*m02, 2*m12, 2*m22, 2*m32,
-        2*m03, 2*m13, 2*m23, 2*m33
+        2*m00, 2*m01, 2*m02, 2*m03,
+        2*m10, 2*m11, 2*m12, 2*m13,
+        2*m20, 2*m21, 2*m22, 2*m23,
+        2*m30, 2*m31, 2*m32, 2*m33
       )
       assert(2*m == t)
       assert(2f*m == t)
 
       t = Mat4x4(
-        2/m00, 2/m10, 2/m20, 2/m30,
-        2/m01, 2/m11, 2/m21, 2/m31,
-        2/m02, 2/m12, 2/m22, 2/m32,
-        2/m03, 2/m13, 2/m23, 2/m33
+        2/m00, 2/m01, 2/m02, 2/m03,
+        2/m10, 2/m11, 2/m12, 2/m13,
+        2/m20, 2/m21, 2/m22, 2/m23,
+        2/m30, 2/m31, 2/m32, 2/m33
       )
       assert(2/m == t)
       assert(2f/m == t)
 
       t = Mat4x4(
-        2+m00, 2+m10, 2+m20, 2+m30,
-        2+m01, 2+m11, 2+m21, 2+m31,
-        2+m02, 2+m12, 2+m22, 2+m32,
-        2+m03, 2+m13, 2+m23, 2+m33
+        2+m00, 2+m01, 2+m02, 2+m03,
+        2+m10, 2+m11, 2+m12, 2+m13,
+        2+m20, 2+m21, 2+m22, 2+m23,
+        2+m30, 2+m31, 2+m32, 2+m33
       )
       assert(2 + m == t)
       assert(2f + m == t)
 
       t = Mat4x4(
-        2-m00, 2-m10, 2-m20, 2-m30,
-        2-m01, 2-m11, 2-m21, 2-m31,
-        2-m02, 2-m12, 2-m22, 2-m32,
-        2-m03, 2-m13, 2-m23, 2-m33
+        2-m00, 2-m01, 2-m02, 2-m03,
+        2-m10, 2-m11, 2-m12, 2-m13,
+        2-m20, 2-m21, 2-m22, 2-m23,
+        2-m30, 2-m31, 2-m32, 2-m33
       )
       assert(2 - m == t)
       assert(2f - m == t)

@@ -301,11 +301,11 @@ class Vec2fTest extends FunSuite {
     val m2 = ConstMat2(2, 4, 3, 5)
     assert(Vec2(46, 61) == u*m2)
 
-    val m2x3 = ConstMat2x3(2, 4, 3, 5, 6, 7)
-    assert(Vec3(46, 61, 98) == u*m2x3)
+    val m3x2 = ConstMat3x2(2, 4, 3, 5, 6, 7)
+    assert(Vec3(46, 61, 98) == u*m3x2)
 
-    val m2x4 = ConstMat2x4(2, 4, 3, 5, 6, 7, 8, 9)
-    assert(Vec4(46, 61, 98, 128) == u*m2x4)
+    val m4x2 = ConstMat4x2(2, 4, 3, 5, 6, 7, 8, 9)
+    assert(Vec4(46, 61, 98, 128) == u*m4x2)
   }
 
   test("Mutable math") {

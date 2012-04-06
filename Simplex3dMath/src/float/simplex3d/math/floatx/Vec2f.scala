@@ -109,8 +109,8 @@ with ReadPropertyValue[Vec2f] with Cloneable[ReadVec2f] with Serializable
   final def -(u: inVec2f) = new Vec2f(x - u.x, y - u.y)
 
   final def *(m: inMat2f) :Vec2f = m.transposeMult(this)
-  final def *(m: inMat2x3f) :Vec3f = m.transposeMult(this)
-  final def *(m: inMat2x4f) :Vec4f = m.transposeMult(this)
+  final def *(m: inMat3x2f) :Vec3f = m.transposeMult(this)
+  final def *(m: inMat4x2f) :Vec4f = m.transposeMult(this)
 
 
   final override def equals(other: Any) :Boolean = {

@@ -119,9 +119,9 @@ with ReadPropertyValue[Vec3d] with Cloneable[ReadVec3d] with Serializable
   final def +(u: inVec3d) = new Vec3d(x + u.x, y + u.y, z + u.z)
   final def -(u: inVec3d) = new Vec3d(x - u.x, y - u.y, z - u.z)
 
-  final def *(m: inMat3x2d) :Vec2d = m.transposeMult(this)
+  final def *(m: inMat2x3d) :Vec2d = m.transposeMult(this)
   final def *(m: inMat3d) :Vec3d = m.transposeMult(this)
-  final def *(m: inMat3x4d) :Vec4d = m.transposeMult(this)
+  final def *(m: inMat4x3d) :Vec4d = m.transposeMult(this)
 
 
   final override def equals(other: Any) :Boolean = {

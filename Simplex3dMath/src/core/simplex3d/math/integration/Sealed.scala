@@ -228,44 +228,44 @@ package types {
     def apply(c: Int, r: Int) :P
 
     private[math] def f00: Float
-    private[math] def f10: Float
-    private[math] def f20: Float = 0
-    private[math] def f30: Float = 0
-
     private[math] def f01: Float
-    private[math] def f11: Float
-    private[math] def f21: Float = 0
-    private[math] def f31: Float = 0
-
     private[math] def f02: Float = 0
-    private[math] def f12: Float = 0
-    private[math] def f22: Float = 1
-    private[math] def f32: Float = 0
-
     private[math] def f03: Float = 0
+
+    private[math] def f10: Float
+    private[math] def f11: Float
+    private[math] def f12: Float = 0
     private[math] def f13: Float = 0
+
+    private[math] def f20: Float = 0
+    private[math] def f21: Float = 0
+    private[math] def f22: Float = 1
     private[math] def f23: Float = 0
+
+    private[math] def f30: Float = 0
+    private[math] def f31: Float = 0
+    private[math] def f32: Float = 0
     private[math] def f33: Float = 1
 
 
     private[math] def d00: Double
-    private[math] def d10: Double
-    private[math] def d20: Double = 0
-    private[math] def d30: Double = 0
-
     private[math] def d01: Double
-    private[math] def d11: Double
-    private[math] def d21: Double = 0
-    private[math] def d31: Double = 0
-
     private[math] def d02: Double = 0
-    private[math] def d12: Double = 0
-    private[math] def d22: Double = 1
-    private[math] def d32: Double = 0
-
     private[math] def d03: Double = 0
+
+    private[math] def d10: Double
+    private[math] def d11: Double
+    private[math] def d12: Double = 0
     private[math] def d13: Double = 0
+
+    private[math] def d20: Double = 0
+    private[math] def d21: Double = 0
+    private[math] def d22: Double = 1
     private[math] def d23: Double = 0
+
+    private[math] def d30: Double = 0
+    private[math] def d31: Double = 0
+    private[math] def d32: Double = 0
     private[math] def d33: Double = 1
   }
 
@@ -293,8 +293,8 @@ package types {
   abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat2x3[P] = throw new UnsupportedOperationException()
     
-    final def columns = 3
-    final def rows = 2
+    final def columns = 2
+    final def rows = 3
   }
 
   /** <code>AnyMat2x4</code> is a supertype of all the 2x4 matrices.
@@ -307,8 +307,8 @@ package types {
   abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat2x4[P] = throw new UnsupportedOperationException()
     
-    final def columns = 4
-    final def rows = 2
+    final def columns = 2
+    final def rows = 4
   }
 
   /** <code>AnyMat3x2</code> is a supertype of all the 3x2 matrices.
@@ -321,8 +321,8 @@ package types {
   abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat3x2[P] = throw new UnsupportedOperationException()
     
-    final def columns = 2
-    final def rows = 3
+    final def columns = 3
+    final def rows = 2
   }
 
   /** <code>AnyMat3</code> is a supertype of all the 3x3 matrices.
@@ -349,8 +349,8 @@ package types {
   abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat3x4[P] = throw new UnsupportedOperationException()
     
-    final def columns = 4
-    final def rows = 3
+    final def columns = 3
+    final def rows = 4
   }
 
   /** <code>AnyMat4x2</code> is a supertype of all the 4x2 matrices.
@@ -363,8 +363,8 @@ package types {
   abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat4x2[P] = throw new UnsupportedOperationException()
     
-    final def columns = 2
-    final def rows = 4
+    final def columns = 4
+    final def rows = 2
   }
 
   /** <code>AnyMat4x3</code> is a supertype of all the 4x3 matrices.
@@ -377,8 +377,8 @@ package types {
   abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
     override def clone() :AnyMat4x3[P] = throw new UnsupportedOperationException()
 
-    final def columns = 3
-    final def rows = 4
+    final def columns = 4
+    final def rows = 3
   }
 
   /** <code>AnyMat4</code> is a supertype of all the 4x4 matrices.

@@ -29,6 +29,7 @@ import simplex3d.math.types.*;
  */
 abstract class ProtectedMat3x2d<P> extends AnyMat3x2<P> implements Serializable {
     public static final long serialVersionUID = 8104346712419693669L;
-    double p00; double p10; double p20;
-    double p01; double p11; double p21;
+    double p00; double p01;
+    double p10; double p11;
+    double p20; double p21;
 }

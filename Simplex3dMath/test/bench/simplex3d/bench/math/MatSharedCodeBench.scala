@@ -277,109 +277,109 @@ class MatSharedCodeBench {
 
 sealed abstract class ReadMat3m {
   // Column major order.
-  def m00: Double; def m10: Double; def m20: Double // column
-  def m01: Double; def m11: Double; def m21: Double // column
-  def m02: Double; def m12: Double; def m22: Double // column
+  def m00: Double; def m01: Double; def m02: Double // column
+  def m10: Double; def m11: Double; def m12: Double // column
+  def m20: Double; def m21: Double; def m22: Double // column
 
   final def subComponents(s: Double) = new Mat3m(
-    s - m00, s - m10, s - m20,
-    s - m01, s - m11, s - m21,
-    s - m02, s - m12, s - m22
+    s - m00, s - m01, s - m02,
+    s - m10, s - m11, s - m12,
+    s - m20, s - m21, s - m22
   )
   
   final def /(s: Double) = { val inv = 1/s; new Mat3m(
-    inv*m00, inv*m10, inv*m20,
-    inv*m01, inv*m11, inv*m21,
-    inv*m02, inv*m12, inv*m22
+    inv*m00, inv*m01, inv*m02,
+    inv*m10, inv*m11, inv*m12,
+    inv*m20, inv*m21, inv*m22
   )}
 
   final def +(s: Double) = new Mat3m(
-    m00 + s, m10 + s, m20 + s,
-    m01 + s, m11 + s, m21 + s,
-    m02 + s, m12 + s, m22 + s
+    m00 + s, m01 + s, m02 + s,
+    m10 + s, m11 + s, m12 + s,
+    m20 + s, m21 + s, m22 + s
   )
 
   final def +(m: ReadMat3m) = new Mat3m(
-    m00 + m.m00, m10 + m.m10, m20 + m.m20,
-    m01 + m.m01, m11 + m.m11, m21 + m.m21,
-    m02 + m.m02, m12 + m.m12, m22 + m.m22
+    m00 + m.m00, m01 + m.m01, m02 + m.m02,
+    m10 + m.m10, m11 + m.m11, m12 + m.m12,
+    m20 + m.m20, m21 + m.m21, m22 + m.m22
   )
 
   final def *(m: ReadMat3m) = new Mat3m(
-    m00*m.m00 + m01*m.m10 + m02*m.m20,
-    m10*m.m00 + m11*m.m10 + m12*m.m20,
-    m20*m.m00 + m21*m.m10 + m22*m.m20,
+    m00*m.m00 + m10*m.m01 + m20*m.m02,
+    m01*m.m00 + m11*m.m01 + m21*m.m02,
+    m02*m.m00 + m12*m.m01 + m22*m.m02,
 
-    m00*m.m01 + m01*m.m11 + m02*m.m21,
-    m10*m.m01 + m11*m.m11 + m12*m.m21,
-    m20*m.m01 + m21*m.m11 + m22*m.m21,
+    m00*m.m10 + m10*m.m11 + m20*m.m12,
+    m01*m.m10 + m11*m.m11 + m21*m.m12,
+    m02*m.m10 + m12*m.m11 + m22*m.m12,
 
-    m00*m.m02 + m01*m.m12 + m02*m.m22,
-    m10*m.m02 + m11*m.m12 + m12*m.m22,
-    m20*m.m02 + m21*m.m12 + m22*m.m22
+    m00*m.m20 + m10*m.m21 + m20*m.m22,
+    m01*m.m20 + m11*m.m21 + m21*m.m22,
+    m02*m.m20 + m12*m.m21 + m22*m.m22
   )
 
   final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
-      m00 + ", " + m10 + ", " + m20 + "; " +
-      m01 + ", " + m11 + ", " + m21 + "; " +
-      m02 + ", " + m12 + ", " + m22 +
+      m00 + ", " + m01 + ", " + m02 + "; " +
+      m10 + ", " + m11 + ", " + m12 + "; " +
+      m20 + ", " + m21 + ", " + m22 +
     ")"
   }
 }
 
 final class Mat3m (
-  var m00: Double, var m10: Double, var m20: Double,
-  var m01: Double, var m11: Double, var m21: Double,
-  var m02: Double, var m12: Double, var m22: Double
+  var m00: Double, var m01: Double, var m02: Double,
+  var m10: Double, var m11: Double, var m12: Double,
+  var m20: Double, var m21: Double, var m22: Double
 ) extends ReadMat3m with Mutable
 {
   def +=(m: ReadMat3m) {
-    m00 += m.m00; m10 += m.m10; m20 += m.m20;
-    m01 += m.m01; m11 += m.m11; m21 += m.m21;
-    m02 += m.m02; m12 += m.m12; m22 += m.m22
+    m00 += m.m00; m01 += m.m01; m02 += m.m02;
+    m10 += m.m10; m11 += m.m11; m12 += m.m12;
+    m20 += m.m20; m21 += m.m21; m22 += m.m22
   }
 
   def *=(m: ReadMat3m) {
-    val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-    val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
-    val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+    val a00 = m00*m.m00 + m10*m.m01 + m20*m.m02
+    val a01 = m01*m.m00 + m11*m.m01 + m21*m.m02
+    val a02 = m02*m.m00 + m12*m.m01 + m22*m.m02
 
-    val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-    val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-    val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+    val a10 = m00*m.m10 + m10*m.m11 + m20*m.m12
+    val a11 = m01*m.m10 + m11*m.m11 + m21*m.m12
+    val a12 = m02*m.m10 + m12*m.m11 + m22*m.m12
 
-    val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-    val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-    val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+    val a20 = m00*m.m20 + m10*m.m21 + m20*m.m22
+    val a21 = m01*m.m20 + m11*m.m21 + m21*m.m22
+    val a22 = m02*m.m20 + m12*m.m21 + m22*m.m22
 
-    m00 = a00; m10 = a10; m20 = a20
-    m01 = a01; m11 = a11; m21 = a21
-    m02 = a02; m12 = a12; m22 = a22
+    m00 = a00; m01 = a01; m02 = a02
+    m10 = a10; m11 = a11; m12 = a12
+    m20 = a20; m21 = a21; m22 = a22
   }
 
   def set(
-    m00: Double, m10: Double, m20: Double,
-    m01: Double, m11: Double, m21: Double,
-    m02: Double, m12: Double, m22: Double
+    m00: Double, m01: Double, m02: Double,
+    m10: Double, m11: Double, m12: Double,
+    m20: Double, m21: Double, m22: Double
   ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21;
-    this.m02 = m02; this.m12 = m12; this.m22 = m22
+    this.m00 = m00; this.m01 = m01; this.m02 = m02;
+    this.m10 = m10; this.m11 = m11; this.m12 = m12;
+    this.m20 = m20; this.m21 = m21; this.m22 = m22
   }
 }
 
 sealed abstract class ReadMat3s {
   // Column major order.
-  def m00: Double; def m10: Double; def m20: Double // column
-  def m01: Double; def m11: Double; def m21: Double // column
-  def m02: Double; def m12: Double; def m22: Double // column
+  def m00: Double; def m01: Double; def m02: Double // column
+  def m10: Double; def m11: Double; def m12: Double // column
+  def m20: Double; def m21: Double; def m22: Double // column
 
   final def *(s: Double) = new Mat3s(
-    s*m00, s*m10, s*m20,
-    s*m01, s*m11, s*m21,
-    s*m02, s*m12, s*m22
+    s*m00, s*m01, s*m02,
+    s*m10, s*m11, s*m12,
+    s*m20, s*m21, s*m22
   )
   final def /(s: Double) = this*(1/s)
 
@@ -388,42 +388,42 @@ sealed abstract class ReadMat3s {
   final def *(m: ReadMat3s) = { val res = new Mat3s(); mul(m, res); res }
 
   protected final def add(m: ReadMat3s, res: Mat3s) {
-    res.m00 = m00 + m.m00; res.m10 = m10 + m.m10; res.m20 = m20 + m.m20;
-    res.m01 = m01 + m.m01; res.m11 = m11 + m.m11; res.m21 = m21 + m.m21;
-    res.m02 = m02 + m.m02; res.m12 = m12 + m.m12; res.m22 = m22 + m.m22
+    res.m00 = m00 + m.m00; res.m01 = m01 + m.m01; res.m02 = m02 + m.m02;
+    res.m10 = m10 + m.m10; res.m11 = m11 + m.m11; res.m12 = m12 + m.m12;
+    res.m20 = m20 + m.m20; res.m21 = m21 + m.m21; res.m22 = m22 + m.m22
   }
   protected final def mul(m: ReadMat3s, res: Mat3s) {
-    val a00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-    val a10 = m10*m.m00 + m11*m.m10 + m12*m.m20
-    val a20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+    val a00 = m00*m.m00 + m10*m.m01 + m20*m.m02
+    val a01 = m01*m.m00 + m11*m.m01 + m21*m.m02
+    val a02 = m02*m.m00 + m12*m.m01 + m22*m.m02
 
-    val a01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-    val a11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-    val a21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+    val a10 = m00*m.m10 + m10*m.m11 + m20*m.m12
+    val a11 = m01*m.m10 + m11*m.m11 + m21*m.m12
+    val a12 = m02*m.m10 + m12*m.m11 + m22*m.m12
 
-    val a02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-    val a12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-    val a22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+    val a20 = m00*m.m20 + m10*m.m21 + m20*m.m22
+    val a21 = m01*m.m20 + m11*m.m21 + m21*m.m22
+    val a22 = m02*m.m20 + m12*m.m21 + m22*m.m22
 
-    res.m00 = a00; res.m10 = a10; res.m20 = a20
-    res.m01 = a01; res.m11 = a11; res.m21 = a21
-    res.m02 = a02; res.m12 = a12; res.m22 = a22
+    res.m00 = a00; res.m01 = a01; res.m02 = a02
+    res.m10 = a10; res.m11 = a11; res.m12 = a12
+    res.m20 = a20; res.m21 = a21; res.m22 = a22
   }
 
   final override def toString() :String = {
     this.getClass.getSimpleName +
     "(" +
-      m00 + ", " + m10 + ", " + m20 + "; " +
-      m01 + ", " + m11 + ", " + m21 + "; " +
-      m02 + ", " + m12 + ", " + m22 +
+      m00 + ", " + m01 + ", " + m02 + "; " +
+      m10 + ", " + m11 + ", " + m12 + "; " +
+      m20 + ", " + m21 + ", " + m22 +
     ")"
   }
 }
 
 final class Mat3s (
-  var m00: Double, var m10: Double, var m20: Double,
-  var m01: Double, var m11: Double, var m21: Double,
-  var m02: Double, var m12: Double, var m22: Double
+  var m00: Double, var m01: Double, var m02: Double,
+  var m10: Double, var m11: Double, var m12: Double,
+  var m20: Double, var m21: Double, var m22: Double
 ) extends ReadMat3s with Mutable
 {
   def this() = this(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -432,12 +432,12 @@ final class Mat3s (
   def *=(m: ReadMat3s) { mul(m, this) }
 
   def set(
-    m00: Double, m10: Double, m20: Double,
-    m01: Double, m11: Double, m21: Double,
-    m02: Double, m12: Double, m22: Double
+    m00: Double, m01: Double, m02: Double,
+    m10: Double, m11: Double, m12: Double,
+    m20: Double, m21: Double, m22: Double
   ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20;
-    this.m01 = m01; this.m11 = m11; this.m21 = m21;
-    this.m02 = m02; this.m12 = m12; this.m22 = m22
+    this.m00 = m00; this.m01 = m01; this.m02 = m02;
+    this.m10 = m10; this.m11 = m11; this.m12 = m12;
+    this.m20 = m20; this.m21 = m21; this.m22 = m22
   }
 }

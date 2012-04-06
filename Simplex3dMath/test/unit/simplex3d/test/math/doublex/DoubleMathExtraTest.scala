@@ -67,30 +67,30 @@ class DoubleMathExtraTest extends FunSuite {
         )
       )
 
-      val a2x3 = Mat2x3(r, r, r, r, r, r)
-      val b2x3 = Mat2x3(r, r, r, r, r, r)
-      assert(lerp(a2x3, b2x3, amount) == Mat2x3(
-          mix(a2x3(0), b2x3(0), amount),
-          mix(a2x3(1), b2x3(1), amount),
-          mix(a2x3(2), b2x3(2), amount)
-        )
-      )
-
-      val a2x4 = Mat2x4(r, r, r, r, r, r, r, r)
-      val b2x4 = Mat2x4(r, r, r, r, r, r, r, r)
-      assert(lerp(a2x4, b2x4, amount) == Mat2x4(
-          mix(a2x4(0), b2x4(0), amount),
-          mix(a2x4(1), b2x4(1), amount),
-          mix(a2x4(2), b2x4(2), amount),
-          mix(a2x4(3), b2x4(3), amount)
-        )
-      )
-
       val a3x2 = Mat3x2(r, r, r, r, r, r)
       val b3x2 = Mat3x2(r, r, r, r, r, r)
       assert(lerp(a3x2, b3x2, amount) == Mat3x2(
           mix(a3x2(0), b3x2(0), amount),
-          mix(a3x2(1), b3x2(1), amount)
+          mix(a3x2(1), b3x2(1), amount),
+          mix(a3x2(2), b3x2(2), amount)
+        )
+      )
+
+      val a4x2 = Mat4x2(r, r, r, r, r, r, r, r)
+      val b4x2 = Mat4x2(r, r, r, r, r, r, r, r)
+      assert(lerp(a4x2, b4x2, amount) == Mat4x2(
+          mix(a4x2(0), b4x2(0), amount),
+          mix(a4x2(1), b4x2(1), amount),
+          mix(a4x2(2), b4x2(2), amount),
+          mix(a4x2(3), b4x2(3), amount)
+        )
+      )
+
+      val a2x3 = Mat2x3(r, r, r, r, r, r)
+      val b2x3 = Mat2x3(r, r, r, r, r, r)
+      assert(lerp(a2x3, b2x3, amount) == Mat2x3(
+          mix(a2x3(0), b2x3(0), amount),
+          mix(a2x3(1), b2x3(1), amount)
         )
       )
 
@@ -103,30 +103,30 @@ class DoubleMathExtraTest extends FunSuite {
         )
       )
 
-      val a3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-      val b3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
-      assert(lerp(a3x4, b3x4, amount) == Mat3x4(
-          mix(a3x4(0), b3x4(0), amount),
-          mix(a3x4(1), b3x4(1), amount),
-          mix(a3x4(2), b3x4(2), amount),
-          mix(a3x4(3), b3x4(3), amount)
-        )
-      )
-
-      val a4x2 = Mat4x2(r, r, r, r, r, r, r, r)
-      val b4x2 = Mat4x2(r, r, r, r, r, r, r, r)
-      assert(lerp(a4x2, b4x2, amount) == Mat4x2(
-          mix(a4x2(0), b4x2(0), amount),
-          mix(a4x2(1), b4x2(1), amount)
-        )
-      )
-
       val a4x3 = Mat4x3(r, r, r, r, r, r, r, r, r, r, r, r)
       val b4x3 = Mat4x3(r, r, r, r, r, r, r, r, r, r, r, r)
       assert(lerp(a4x3, b4x3, amount) == Mat4x3(
           mix(a4x3(0), b4x3(0), amount),
           mix(a4x3(1), b4x3(1), amount),
-          mix(a4x3(2), b4x3(2), amount)
+          mix(a4x3(2), b4x3(2), amount),
+          mix(a4x3(3), b4x3(3), amount)
+        )
+      )
+
+      val a2x4 = Mat2x4(r, r, r, r, r, r, r, r)
+      val b2x4 = Mat2x4(r, r, r, r, r, r, r, r)
+      assert(lerp(a2x4, b2x4, amount) == Mat2x4(
+          mix(a2x4(0), b2x4(0), amount),
+          mix(a2x4(1), b2x4(1), amount)
+        )
+      )
+
+      val a3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+      val b3x4 = Mat3x4(r, r, r, r, r, r, r, r, r, r, r, r)
+      assert(lerp(a3x4, b3x4, amount) == Mat3x4(
+          mix(a3x4(0), b3x4(0), amount),
+          mix(a3x4(1), b3x4(1), amount),
+          mix(a3x4(2), b3x4(2), amount)
         )
       )
 
@@ -199,25 +199,25 @@ class DoubleMathExtraTest extends FunSuite {
         (hasErrors(m2x2(0)) || hasErrors(m2x2(1)))
       )
 
-      val m2x3 = Mat2x3(a1, a2, b1, b2, c1, c2)
+      val m3x2 = Mat3x2(a1, a2, b1, b2, c1, c2)
       assert(
-        hasErrors(m2x3) ==
-        (hasErrors(m2x3(0)) || hasErrors(m2x3(1)) || hasErrors(m2x3(2)))
+        hasErrors(m3x2) ==
+        (hasErrors(m3x2(0)) || hasErrors(m3x2(1)) || hasErrors(m3x2(2)))
       )
 
-      val m2x4 = Mat2x4(a1, a2, b1, b2, c1, c2, d1, d2)
+      val m4x2 = Mat4x2(a1, a2, b1, b2, c1, c2, d1, d2)
       assert(
-        hasErrors(m2x4) ==
+        hasErrors(m4x2) ==
         (
-          hasErrors(m2x4(0)) || hasErrors(m2x4(1)) ||
-          hasErrors(m2x4(2)) || hasErrors(m2x4(3))
+          hasErrors(m4x2(0)) || hasErrors(m4x2(1)) ||
+          hasErrors(m4x2(2)) || hasErrors(m4x2(3))
         )
       )
 
-      val m3x2 = Mat3x2(a1, a2, a3, b1, b2, b3)
+      val m2x3 = Mat2x3(a1, a2, a3, b1, b2, b3)
       assert(
-        hasErrors(m3x2) ==
-        (hasErrors(m3x2(0)) || hasErrors(m3x2(1)))
+        hasErrors(m2x3) ==
+        (hasErrors(m2x3(0)) || hasErrors(m2x3(1)))
       )
 
       val m3x3 = Mat3x3(a1, a2, a3, b1, b2, b3, c1, c2, c3)
@@ -226,25 +226,25 @@ class DoubleMathExtraTest extends FunSuite {
         (hasErrors(m3x3(0)) || hasErrors(m3x3(1)) || hasErrors(m3x3(2)))
       )
 
-      val m3x4 = Mat3x4(a1, a2, a3, b1, b2, b3, c1, c2, c3, d1, d2, d3)
+      val m4x3 = Mat4x3(a1, a2, a3, b1, b2, b3, c1, c2, c3, d1, d2, d3)
       assert(
-        hasErrors(m3x4) ==
+        hasErrors(m4x3) ==
         (
-          hasErrors(m3x4(0)) || hasErrors(m3x4(1)) ||
-          hasErrors(m3x4(2)) || hasErrors(m3x4(3))
+          hasErrors(m4x3(0)) || hasErrors(m4x3(1)) ||
+          hasErrors(m4x3(2)) || hasErrors(m4x3(3))
         )
       )
 
-      val m4x2 = Mat4x2(a1, a2, a3, a4, b1, b2, b3, b4)
+      val m2x4 = Mat2x4(a1, a2, a3, a4, b1, b2, b3, b4)
       assert(
-        hasErrors(m4x2) ==
-        (hasErrors(m4x2(0)) || hasErrors(m4x2(1)))
+        hasErrors(m2x4) ==
+        (hasErrors(m2x4(0)) || hasErrors(m2x4(1)))
       )
 
-      val m4x3 = Mat4x3(a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4)
+      val m3x4 = Mat3x4(a1, a2, a3, a4, b1, b2, b3, b4, c1, c2, c3, c4)
       assert(
-        hasErrors(m4x3) ==
-        (hasErrors(m4x3(0)) || hasErrors(m4x3(1)) || hasErrors(m4x3(2)))
+        hasErrors(m3x4) ==
+        (hasErrors(m3x4(0)) || hasErrors(m3x4(1)) || hasErrors(m3x4(2)))
       )
 
       val m4x4 = Mat4x4(
@@ -314,48 +314,6 @@ class DoubleMathExtraTest extends FunSuite {
     )
 
     assert(approxEqual(
-        Mat2x3(1, 2, 3, 4, 5, 6),
-        Mat2x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat2x3(1, 2, 3, 4, 5, 6),
-        Mat2x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e),
-        e)
-    )
-    assert(approxEqual(
-        Mat2x3(1, 2, 3, 4, 5, 6),
-        Mat2x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat2x3(1, 2, 3, 4, 5, 6),
-        Mat2x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e),
-        e)
-    )
-
-    assert(approxEqual(
-        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
-        Mat2x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
-        Mat2x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e),
-        e)
-    )
-    assert(approxEqual(
-        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
-        Mat2x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
-        Mat2x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e),
-        e)
-    )
-
-    assert(approxEqual(
         Mat3x2(1, 2, 3, 4, 5, 6),
         Mat3x2(1+d, 2+d, 3+d, 4+d, 5+d, 6+d),
         e)
@@ -373,48 +331,6 @@ class DoubleMathExtraTest extends FunSuite {
     assert(!approxEqual(
         Mat3x2(1, 2, 3, 4, 5, 6),
         Mat3x2(1-e, 2-e, 3-e, 4-e, 5-e, 6-e),
-        e)
-    )
-
-    assert(approxEqual(
-        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        Mat3x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        Mat3x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e, 9+e),
-        e)
-    )
-    assert(approxEqual(
-        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        Mat3x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d, 9-d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
-        Mat3x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e),
-        e)
-    )
-
-    assert(approxEqual(
-        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-        Mat3x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d, 10+d, 11+d, 12+d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-        Mat3x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e, 9+e, 10+e, 11+e, 12+e),
-        e)
-    )
-    assert(approxEqual(
-        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-        Mat3x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d, 9-d, 10-d, 11-d, 12-d),
-        e)
-    )
-    assert(!approxEqual(
-        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-        Mat3x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e, 10-e, 11-e, 12-e),
         e)
     )
 
@@ -440,6 +356,48 @@ class DoubleMathExtraTest extends FunSuite {
     )
 
     assert(approxEqual(
+        Mat2x3(1, 2, 3, 4, 5, 6),
+        Mat2x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat2x3(1, 2, 3, 4, 5, 6),
+        Mat2x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e),
+        e)
+    )
+    assert(approxEqual(
+        Mat2x3(1, 2, 3, 4, 5, 6),
+        Mat2x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat2x3(1, 2, 3, 4, 5, 6),
+        Mat2x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e),
+        e)
+    )
+
+    assert(approxEqual(
+        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        Mat3x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        Mat3x3(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e, 9+e),
+        e)
+    )
+    assert(approxEqual(
+        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        Mat3x3(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d, 9-d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat3x3(1, 2, 3, 4, 5, 6, 7, 8, 9),
+        Mat3x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e),
+        e)
+    )
+
+    assert(approxEqual(
         Mat4x3(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         Mat4x3(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d, 10+d, 11+d, 12+d),
         e)
@@ -457,6 +415,48 @@ class DoubleMathExtraTest extends FunSuite {
     assert(!approxEqual(
         Mat4x3(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
         Mat4x3(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e, 10-e, 11-e, 12-e),
+        e)
+    )
+
+    assert(approxEqual(
+        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+        Mat2x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+        Mat2x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e),
+        e)
+    )
+    assert(approxEqual(
+        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+        Mat2x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat2x4(1, 2, 3, 4, 5, 6, 7, 8),
+        Mat2x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e),
+        e)
+    )
+
+    assert(approxEqual(
+        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        Mat3x4(1+d, 2+d, 3+d, 4+d, 5+d, 6+d, 7+d, 8+d, 9+d, 10+d, 11+d, 12+d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        Mat3x4(1+e, 2+e, 3+e, 4+e, 5+e, 6+e, 7+e, 8+e, 9+e, 10+e, 11+e, 12+e),
+        e)
+    )
+    assert(approxEqual(
+        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        Mat3x4(1-d, 2-d, 3-d, 4-d, 5-d, 6-d, 7-d, 8-d, 9-d, 10-d, 11-d, 12-d),
+        e)
+    )
+    assert(!approxEqual(
+        Mat3x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        Mat3x4(1-e, 2-e, 3-e, 4-e, 5-e, 6-e, 7-e, 8-e, 9-e, 10-e, 11-e, 12-e),
         e)
     )
 
@@ -589,15 +589,15 @@ class DoubleMathExtraTest extends FunSuite {
   }
 
   test("Extra Inverse") {
-    val m23 = Mat2x3(2, 4, 5, 3, 5, 3)
-    val m23i = inverse(inverse(m23))
-    assert(!hasErrors(m23i))
-    assert(approxEqual(m23, m23i, 1e-15))
+    val m3x2 = Mat3x2(2, 4, 5, 3, 5, 3)
+    val m3x2i = inverse(inverse(m3x2))
+    assert(!hasErrors(m3x2i))
+    assert(approxEqual(m3x2, m3x2i, 1e-15))
 
-    val m34 = Mat3x4(2, 4, 5, 3, 3, 6, 4, 3, 2, 6, 2, 4)
-    val m34i = inverse(inverse(m34))
-    assert(!hasErrors(m34i))
-    assert(approxEqual(m34, m34i, 1e-15))
+    val m4x3 = Mat4x3(2, 4, 5, 3, 3, 6, 4, 3, 2, 6, 2, 4)
+    val m4x3i = inverse(inverse(m4x3))
+    assert(!hasErrors(m4x3i))
+    assert(approxEqual(m4x3, m4x3i, 1e-15))
   }
 
   test("2D rotation") {
@@ -1073,13 +1073,13 @@ class DoubleMathExtraTest extends FunSuite {
 
         assert(approxEqual(
             transformation(s, m, t),
-            Mat2x3 scale(s) rotate(angle) translate(t),
+            Mat3x2 scale(s) rotate(angle) translate(t),
             1e-13f)
         )
 
         assert(approxEqual(
             inverseTransformation(s, m, t),
-            Mat2x3 translate(-t) rotate(-angle) scale(1/s),
+            Mat3x2 translate(-t) rotate(-angle) scale(1/s),
             1e-13f)
         )
       }
@@ -1092,13 +1092,13 @@ class DoubleMathExtraTest extends FunSuite {
 
         assert(approxEqual(
             transformation(s, m, t),
-            Mat3x4 scale(s) rotate(q) translate(t),
+            Mat4x3 scale(s) rotate(q) translate(t),
             1e-12f)
         )
 
         assert(approxEqual(
             inverseTransformation(s, m, t),
-            Mat3x4 translate(-t) rotate(conjugate(q)) scale(1/s),
+            Mat4x3 translate(-t) rotate(conjugate(q)) scale(1/s),
             1e-12f)
         )
       }

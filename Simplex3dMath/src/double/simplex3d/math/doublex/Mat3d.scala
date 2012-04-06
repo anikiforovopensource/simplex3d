@@ -39,55 +39,55 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
   final def mutableCopy() = Mat3d(this)
 
   // Column major order.
-  final def m00 = p00; final def m10 = p10; final def m20 = p20
-  final def m01 = p01; final def m11 = p11; final def m21 = p21
-  final def m02 = p02; final def m12 = p12; final def m22 = p22
+  final def m00 = p00; final def m01 = p01; final def m02 = p02
+  final def m10 = p10; final def m11 = p11; final def m12 = p12
+  final def m20 = p20; final def m21 = p21; final def m22 = p22
 
 
   protected def m00_=(s: Double) { throw new UnsupportedOperationException }
-  protected def m10_=(s: Double) { throw new UnsupportedOperationException }
-  protected def m20_=(s: Double) { throw new UnsupportedOperationException }
-
   protected def m01_=(s: Double) { throw new UnsupportedOperationException }
-  protected def m11_=(s: Double) { throw new UnsupportedOperationException }
-  protected def m21_=(s: Double) { throw new UnsupportedOperationException }
-
   protected def m02_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def m10_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m11_=(s: Double) { throw new UnsupportedOperationException }
   protected def m12_=(s: Double) { throw new UnsupportedOperationException }
+
+  protected def m20_=(s: Double) { throw new UnsupportedOperationException }
+  protected def m21_=(s: Double) { throw new UnsupportedOperationException }
   protected def m22_=(s: Double) { throw new UnsupportedOperationException }
 
 
   private[math] final override def f00 = m00.toFloat
-  private[math] final override def f10 = m10.toFloat
-  private[math] final override def f20 = m20.toFloat
-
   private[math] final override def f01 = m01.toFloat
-  private[math] final override def f11 = m11.toFloat
-  private[math] final override def f21 = m21.toFloat
-
   private[math] final override def f02 = m02.toFloat
+
+  private[math] final override def f10 = m10.toFloat
+  private[math] final override def f11 = m11.toFloat
   private[math] final override def f12 = m12.toFloat
+
+  private[math] final override def f20 = m20.toFloat
+  private[math] final override def f21 = m21.toFloat
   private[math] final override def f22 = m22.toFloat
 
 
   private[math] final override def d00 = m00
-  private[math] final override def d10 = m10
-  private[math] final override def d20 = m20
-
   private[math] final override def d01 = m01
-  private[math] final override def d11 = m11
-  private[math] final override def d21 = m21
-
   private[math] final override def d02 = m02
+
+  private[math] final override def d10 = m10
+  private[math] final override def d11 = m11
   private[math] final override def d12 = m12
+
+  private[math] final override def d20 = m20
+  private[math] final override def d21 = m21
   private[math] final override def d22 = m22
 
 
   final def apply(c: Int) :ConstVec3d = {
     c match {
-      case 0 => new ConstVec3d(m00, m10, m20)
-      case 1 => new ConstVec3d(m01, m11, m21)
-      case 2 => new ConstVec3d(m02, m12, m22)
+      case 0 => new ConstVec3d(m00, m01, m02)
+      case 1 => new ConstVec3d(m10, m11, m12)
+      case 2 => new ConstVec3d(m20, m21, m22)
       case j => throw new IndexOutOfBoundsException(
           "Trying to read column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
@@ -103,21 +103,21 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
       case 0 =>
         r match {
           case 0 => m00
-          case 1 => m10
-          case 2 => m20
+          case 1 => m01
+          case 2 => m02
           case _ => error
         }
       case 1 =>
         r match {
-          case 0 => m01
+          case 0 => m10
           case 1 => m11
-          case 2 => m21
+          case 2 => m12
           case _ => error
         }
       case 2 =>
         r match {
-          case 0 => m02
-          case 1 => m12
+          case 0 => m20
+          case 1 => m21
           case 2 => m22
           case _ => error
         }
@@ -127,107 +127,107 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
 
   final def unary_+() :ReadMat3d = this
   final def unary_-() = new Mat3d(
-    -m00, -m10, -m20,
-    -m01, -m11, -m21,
-    -m02, -m12, -m22
+    -m00, -m01, -m02,
+    -m10, -m11, -m12,
+    -m20, -m21, -m22
   )
   final def *(s: Double) = new Mat3d(
-    s*m00, s*m10, s*m20,
-    s*m01, s*m11, s*m21,
-    s*m02, s*m12, s*m22
+    s*m00, s*m01, s*m02,
+    s*m10, s*m11, s*m12,
+    s*m20, s*m21, s*m22
   )
   final def /(s: Double) = this * (1/s)
 
   final def +(s: Double) = new Mat3d(
-    m00 + s, m10 + s, m20 + s,
-    m01 + s, m11 + s, m21 + s,
-    m02 + s, m12 + s, m22 + s
+    m00 + s, m01 + s, m02 + s,
+    m10 + s, m11 + s, m12 + s,
+    m20 + s, m21 + s, m22 + s
   )
   final def -(s: Double) = this + (-s)
 
   final def +(m: inMat3d) = new Mat3d(
-    m00 + m.m00, m10 + m.m10, m20 + m.m20,
-    m01 + m.m01, m11 + m.m11, m21 + m.m21,
-    m02 + m.m02, m12 + m.m12, m22 + m.m22
+    m00 + m.m00, m01 + m.m01, m02 + m.m02,
+    m10 + m.m10, m11 + m.m11, m12 + m.m12,
+    m20 + m.m20, m21 + m.m21, m22 + m.m22
   )
   final def -(m: inMat3d) = new Mat3d(
-    m00 - m.m00, m10 - m.m10, m20 - m.m20,
-    m01 - m.m01, m11 - m.m11, m21 - m.m21,
-    m02 - m.m02, m12 - m.m12, m22 - m.m22
+    m00 - m.m00, m01 - m.m01, m02 - m.m02,
+    m10 - m.m10, m11 - m.m11, m12 - m.m12,
+    m20 - m.m20, m21 - m.m21, m22 - m.m22
   )
 
   /**
-   * Component-wise devision.
+   * Component-wise division.
    */
   final def /(m: inMat3d) = new Mat3d(
-    m00/m.m00, m10/m.m10, m20/m.m20,
-    m01/m.m01, m11/m.m11, m21/m.m21,
-    m02/m.m02, m12/m.m12, m22/m.m22
+    m00/m.m00, m01/m.m01, m02/m.m02,
+    m10/m.m10, m11/m.m11, m12/m.m12,
+    m20/m.m20, m21/m.m21, m22/m.m22
   )
   private[math] final def divByComp(s: Double) = new Mat3d(
-    s/m00, s/m10, s/m20,
-    s/m01, s/m11, s/m21,
-    s/m02, s/m12, s/m22
+    s/m00, s/m01, s/m02,
+    s/m10, s/m11, s/m12,
+    s/m20, s/m21, s/m22
   )
 
-  final def *(m: inMat3x2d) = new Mat3x2d(
-    m00*m.m00 + m01*m.m10 + m02*m.m20,
-    m10*m.m00 + m11*m.m10 + m12*m.m20,
-    m20*m.m00 + m21*m.m10 + m22*m.m20,
+  final def *(m: inMat2x3d) = new Mat2x3d(
+    m00*m.m00 + m10*m.m01 + m20*m.m02,
+    m01*m.m00 + m11*m.m01 + m21*m.m02,
+    m02*m.m00 + m12*m.m01 + m22*m.m02,
 
-    m00*m.m01 + m01*m.m11 + m02*m.m21,
-    m10*m.m01 + m11*m.m11 + m12*m.m21,
-    m20*m.m01 + m21*m.m11 + m22*m.m21
+    m00*m.m10 + m10*m.m11 + m20*m.m12,
+    m01*m.m10 + m11*m.m11 + m21*m.m12,
+    m02*m.m10 + m12*m.m11 + m22*m.m12
   )
   final def *(m: inMat3d) = new Mat3d(
-    m00*m.m00 + m01*m.m10 + m02*m.m20,
-    m10*m.m00 + m11*m.m10 + m12*m.m20,
-    m20*m.m00 + m21*m.m10 + m22*m.m20,
+    m00*m.m00 + m10*m.m01 + m20*m.m02,
+    m01*m.m00 + m11*m.m01 + m21*m.m02,
+    m02*m.m00 + m12*m.m01 + m22*m.m02,
 
-    m00*m.m01 + m01*m.m11 + m02*m.m21,
-    m10*m.m01 + m11*m.m11 + m12*m.m21,
-    m20*m.m01 + m21*m.m11 + m22*m.m21,
+    m00*m.m10 + m10*m.m11 + m20*m.m12,
+    m01*m.m10 + m11*m.m11 + m21*m.m12,
+    m02*m.m10 + m12*m.m11 + m22*m.m12,
 
-    m00*m.m02 + m01*m.m12 + m02*m.m22,
-    m10*m.m02 + m11*m.m12 + m12*m.m22,
-    m20*m.m02 + m21*m.m12 + m22*m.m22
+    m00*m.m20 + m10*m.m21 + m20*m.m22,
+    m01*m.m20 + m11*m.m21 + m21*m.m22,
+    m02*m.m20 + m12*m.m21 + m22*m.m22
   )
-  final def *(m: inMat3x4d) = new Mat3x4d(
-    m00*m.m00 + m01*m.m10 + m02*m.m20,
-    m10*m.m00 + m11*m.m10 + m12*m.m20,
-    m20*m.m00 + m21*m.m10 + m22*m.m20,
+  final def *(m: inMat4x3d) = new Mat4x3d(
+    m00*m.m00 + m10*m.m01 + m20*m.m02,
+    m01*m.m00 + m11*m.m01 + m21*m.m02,
+    m02*m.m00 + m12*m.m01 + m22*m.m02,
 
-    m00*m.m01 + m01*m.m11 + m02*m.m21,
-    m10*m.m01 + m11*m.m11 + m12*m.m21,
-    m20*m.m01 + m21*m.m11 + m22*m.m21,
+    m00*m.m10 + m10*m.m11 + m20*m.m12,
+    m01*m.m10 + m11*m.m11 + m21*m.m12,
+    m02*m.m10 + m12*m.m11 + m22*m.m12,
 
-    m00*m.m02 + m01*m.m12 + m02*m.m22,
-    m10*m.m02 + m11*m.m12 + m12*m.m22,
-    m20*m.m02 + m21*m.m12 + m22*m.m22,
+    m00*m.m20 + m10*m.m21 + m20*m.m22,
+    m01*m.m20 + m11*m.m21 + m21*m.m22,
+    m02*m.m20 + m12*m.m21 + m22*m.m22,
 
-    m00*m.m03 + m01*m.m13 + m02*m.m23,
-    m10*m.m03 + m11*m.m13 + m12*m.m23,
-    m20*m.m03 + m21*m.m13 + m22*m.m23
+    m00*m.m30 + m10*m.m31 + m20*m.m32,
+    m01*m.m30 + m11*m.m31 + m21*m.m32,
+    m02*m.m30 + m12*m.m31 + m22*m.m32
   )
 
   final def *(u: inVec3d) = new Vec3d(
-    m00*u.x + m01*u.y + m02*u.z,
-    m10*u.x + m11*u.y + m12*u.z,
-    m20*u.x + m21*u.y + m22*u.z
-  )
-  private[math] final def transposeMult(u: inVec3d) = new Vec3d(
     m00*u.x + m10*u.y + m20*u.z,
     m01*u.x + m11*u.y + m21*u.z,
     m02*u.x + m12*u.y + m22*u.z
+  )
+  private[math] final def transposeMult(u: inVec3d) = new Vec3d(
+    m00*u.x + m01*u.y + m02*u.z,
+    m10*u.x + m11*u.y + m12*u.z,
+    m20*u.x + m21*u.y + m22*u.z
   )
 
 
   final override def equals(other: Any) :Boolean = {
     other match {
       case m: AnyMat3[_] =>
-        d00 == m.d00 && d10 == m.d10 && d20 == m.d20 &&
-        d01 == m.d01 && d11 == m.d11 && d21 == m.d21 &&
-        d02 == m.d02 && d12 == m.d12 && d22 == m.d22
+        d00 == m.d00 && d01 == m.d01 && d02 == m.d02 &&
+        d10 == m.d10 && d11 == m.d11 && d12 == m.d12 &&
+        d20 == m.d20 && d21 == m.d21 && d22 == m.d22
       case _ =>
         false
     }
@@ -243,13 +243,13 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
                 41 * (
                   41 * (
                     41 + m00.hashCode
-                  ) + m10.hashCode
-                ) + m20.hashCode
-              ) + m01.hashCode
+                  ) + m01.hashCode
+                ) + m02.hashCode
+              ) + m10.hashCode
             ) + m11.hashCode
-          ) + m21.hashCode
-        ) + m02.hashCode
-      ) + m12.hashCode
+          ) + m12.hashCode
+        ) + m20.hashCode
+      ) + m21.hashCode
     ) + m22.hashCode
   }
 
@@ -260,9 +260,9 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
     }
     prefix + "Mat3" +
     "(" +
-      m00 + ", " + m10 + ", " + m20 + ",   " + 
-      m01 + ", " + m11 + ", " + m21 + ",   " + 
-      m02 + ", " + m12 + ", " + m22 +
+      m00 + ", " + m01 + ", " + m02 + ",   " + 
+      m10 + ", " + m11 + ", " + m12 + ",   " + 
+      m20 + ", " + m21 + ", " + m22 +
     ")"
   }
 }
@@ -270,14 +270,14 @@ with ReadPropertyValue[Mat3d] with Cloneable[ReadMat3d] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstMat3d private[math] (
-  c00: Double, c10: Double, c20: Double,
-  c01: Double, c11: Double, c21: Double,
-  c02: Double, c12: Double, c22: Double
+  c00: Double, c01: Double, c02: Double,
+  c10: Double, c11: Double, c12: Double,
+  c20: Double, c21: Double, c22: Double
 ) extends ReadMat3d with Immutable with Cloneable[ConstMat3d] with Serializable
 {
-  p00 = c00; p10 = c10; p20 = c20
-  p01 = c01; p11 = c11; p21 = c21
-  p02 = c02; p12 = c12; p22 = c22
+  p00 = c00; p01 = c01; p02 = c02
+  p10 = c10; p11 = c11; p12 = c12
+  p20 = c20; p21 = c21; p22 = c22
 
   override def clone() = this
   def toConst() = this
@@ -291,13 +291,13 @@ object ConstMat3d {
   )
 
   /*main factory*/ def apply(
-    m00: Double, m10: Double, m20: Double,
-    m01: Double, m11: Double, m21: Double,
-    m02: Double, m12: Double, m22: Double
+    m00: Double, m01: Double, m02: Double,
+    m10: Double, m11: Double, m12: Double,
+    m20: Double, m21: Double, m22: Double
   ) = new ConstMat3d(
-    m00, m10, m20,
-    m01, m11, m21,
-    m02, m12, m22
+    m00, m01, m02,
+    m10, m11, m12,
+    m20, m21, m22
   )
 
   def apply(c0: AnyVec3[_], c1: AnyVec3[_], c2: AnyVec3[_]) = 
@@ -308,9 +308,9 @@ object ConstMat3d {
   )
 
   def apply(m: AnyMat[_]) = new ConstMat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22
+    m.d00, m.d01, m.d02,
+    m.d10, m.d11, m.d12,
+    m.d20, m.d21, m.d22
   )
 
   implicit def toConst(m: ReadMat3d) = ConstMat3d(m)
@@ -319,16 +319,16 @@ object ConstMat3d {
 
 @SerialVersionUID(8104346712419693669L)
 final class Mat3d private[math] (
-  c00: Double, c10: Double, c20: Double,
-  c01: Double, c11: Double, c21: Double,
-  c02: Double, c12: Double, c22: Double
+  c00: Double, c01: Double, c02: Double,
+  c10: Double, c11: Double, c12: Double,
+  c20: Double, c21: Double, c22: Double
 )
 extends ReadMat3d with Accessor with CompositeFormat
 with PropertyValue[Mat3d] with Cloneable[Mat3d] with Serializable
 {
-  p00 = c00; p10 = c10; p20 = c20
-  p01 = c01; p11 = c11; p21 = c21
-  p02 = c02; p12 = c12; p22 = c22
+  p00 = c00; p01 = c01; p02 = c02
+  p10 = c10; p11 = c11; p12 = c12
+  p20 = c20; p21 = c21; p22 = c22
 
   type Read = ReadMat3d
   type Const = ConstMat3d
@@ -342,74 +342,74 @@ with PropertyValue[Mat3d] with Cloneable[Mat3d] with Serializable
   
   def :=(r: Readable[Mat3d]) {
     val m = r.asInstanceOf[ReadMat3d]
-    m00 = m.m00; m10 = m.m10; m20 = m.m20
-    m01 = m.m01; m11 = m.m11; m21 = m.m21
-    m02 = m.m02; m12 = m.m12; m22 = m.m22
+    m00 = m.m00; m01 = m.m01; m02 = m.m02
+    m10 = m.m10; m11 = m.m11; m12 = m.m12
+    m20 = m.m20; m21 = m.m21; m22 = m.m22
   }
 
   
   override def m00_=(s: Double) { p00 = s }
-  override def m10_=(s: Double) { p10 = s }
-  override def m20_=(s: Double) { p20 = s }
-
   override def m01_=(s: Double) { p01 = s }
-  override def m11_=(s: Double) { p11 = s }
-  override def m21_=(s: Double) { p21 = s }
-
   override def m02_=(s: Double) { p02 = s }
+
+  override def m10_=(s: Double) { p10 = s }
+  override def m11_=(s: Double) { p11 = s }
   override def m12_=(s: Double) { p12 = s }
+
+  override def m20_=(s: Double) { p20 = s }
+  override def m21_=(s: Double) { p21 = s }
   override def m22_=(s: Double) { p22 = s }
 
 
   def *=(s: Double) {
-    m00 *= s; m10 *= s; m20 *= s;
-    m01 *= s; m11 *= s; m21 *= s;
-    m02 *= s; m12 *= s; m22 *= s
+    m00 *= s; m01 *= s; m02 *= s;
+    m10 *= s; m11 *= s; m12 *= s;
+    m20 *= s; m21 *= s; m22 *= s
   }
   def /=(s: Double) { this *= (1/s) }
 
   def +=(s: Double) {
-    m00 += s; m10 += s; m20 += s
-    m01 += s; m11 += s; m21 += s
-    m02 += s; m12 += s; m22 += s
+    m00 += s; m01 += s; m02 += s
+    m10 += s; m11 += s; m12 += s
+    m20 += s; m21 += s; m22 += s
   }
   def -=(s: Double) { this += (-s) }
 
   def +=(m: inMat3d) {
-    m00 += m.m00; m10 += m.m10; m20 += m.m20;
-    m01 += m.m01; m11 += m.m11; m21 += m.m21;
-    m02 += m.m02; m12 += m.m12; m22 += m.m22
+    m00 += m.m00; m01 += m.m01; m02 += m.m02;
+    m10 += m.m10; m11 += m.m11; m12 += m.m12;
+    m20 += m.m20; m21 += m.m21; m22 += m.m22
   }
   def -=(m: inMat3d) {
-    m00 -= m.m00; m10 -= m.m10; m20 -= m.m20;
-    m01 -= m.m01; m11 -= m.m11; m21 -= m.m21;
-    m02 -= m.m02; m12 -= m.m12; m22 -= m.m22
+    m00 -= m.m00; m01 -= m.m01; m02 -= m.m02;
+    m10 -= m.m10; m11 -= m.m11; m12 -= m.m12;
+    m20 -= m.m20; m21 -= m.m21; m22 -= m.m22
   }
 
   def *=(m: inMat3d) {
-    val t00 = m00*m.m00 + m01*m.m10 + m02*m.m20
-    val t10 = m10*m.m00 + m11*m.m10 + m12*m.m20
-    val t20 = m20*m.m00 + m21*m.m10 + m22*m.m20
+    val t00 = m00*m.m00 + m10*m.m01 + m20*m.m02
+    val t01 = m01*m.m00 + m11*m.m01 + m21*m.m02
+    val t02 = m02*m.m00 + m12*m.m01 + m22*m.m02
 
-    val t01 = m00*m.m01 + m01*m.m11 + m02*m.m21
-    val t11 = m10*m.m01 + m11*m.m11 + m12*m.m21
-    val t21 = m20*m.m01 + m21*m.m11 + m22*m.m21
+    val t10 = m00*m.m10 + m10*m.m11 + m20*m.m12
+    val t11 = m01*m.m10 + m11*m.m11 + m21*m.m12
+    val t12 = m02*m.m10 + m12*m.m11 + m22*m.m12
 
-    val t02 = m00*m.m02 + m01*m.m12 + m02*m.m22
-    val t12 = m10*m.m02 + m11*m.m12 + m12*m.m22
-        m22 = m20*m.m02 + m21*m.m12 + m22*m.m22
+    val t20 = m00*m.m20 + m10*m.m21 + m20*m.m22
+    val t21 = m01*m.m20 + m11*m.m21 + m21*m.m22
+        m22 = m02*m.m20 + m12*m.m21 + m22*m.m22
 
-    m00 = t00; m10 = t10; m20 = t20
-    m01 = t01; m11 = t11; m21 = t21
-    m02 = t02; m12 = t12
+    m00 = t00; m01 = t01; m02 = t02
+    m10 = t10; m11 = t11; m12 = t12
+    m20 = t20; m21 = t21
   }
   /**
    * Component-wise division.
    */
   def /=(m: inMat3d) {
-    m00 /= m.m00; m10 /= m.m10; m20 /= m.m20
-    m01 /= m.m01; m11 /= m.m11; m21 /= m.m21
-    m02 /= m.m02; m12 /= m.m12; m22 /= m.m22
+    m00 /= m.m00; m01 /= m.m01; m02 /= m.m02
+    m10 /= m.m10; m11 /= m.m11; m12 /= m.m12
+    m20 /= m.m20; m21 /= m.m21; m22 /= m.m22
   }
 
 
@@ -422,21 +422,21 @@ with PropertyValue[Mat3d] with Cloneable[Mat3d] with Serializable
       case 0 =>
         r match {
           case 0 => m00 = s
-          case 1 => m10 = s
-          case 2 => m20 = s
+          case 1 => m01 = s
+          case 2 => m02 = s
           case _ => error
         }
       case 1 =>
         r match {
-          case 0 => m01 = s
+          case 0 => m10 = s
           case 1 => m11 = s
-          case 2 => m21 = s
+          case 2 => m12 = s
           case _ => error
         }
       case 2 =>
         r match {
-          case 0 => m02 = s
-          case 1 => m12 = s
+          case 0 => m20 = s
+          case 1 => m21 = s
           case 2 => m22 = s
           case _ => error
         }
@@ -446,9 +446,9 @@ with PropertyValue[Mat3d] with Cloneable[Mat3d] with Serializable
 
   def update(c: Int, v: inVec2d) {
     c match {
-      case 0 => m00 = v.x; m10 = v.y
-      case 1 => m01 = v.x; m11 = v.y
-      case 2 => m02 = v.x; m12 = v.y
+      case 0 => m00 = v.x; m01 = v.y
+      case 1 => m10 = v.x; m11 = v.y
+      case 2 => m20 = v.x; m21 = v.y
       case j => throw new IndexOutOfBoundsException(
           "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
@@ -457,9 +457,9 @@ with PropertyValue[Mat3d] with Cloneable[Mat3d] with Serializable
 
   def update(c: Int, v: inVec3d) {
     c match {
-      case 0 => m00 = v.x; m10 = v.y; m20 = v.z
-      case 1 => m01 = v.x; m11 = v.y; m21 = v.z
-      case 2 => m02 = v.x; m12 = v.y; m22 = v.z
+      case 0 => m00 = v.x; m01 = v.y; m02 = v.z
+      case 1 => m10 = v.x; m11 = v.y; m12 = v.z
+      case 2 => m20 = v.x; m21 = v.y; m22 = v.z
       case j => throw new IndexOutOfBoundsException(
           "Trying to update column (" + j + ") in " + this.getClass.getSimpleName + "."
         )
@@ -482,13 +482,13 @@ object Mat3d {
   )
 
   /*main factory*/ def apply(
-    m00: Double, m10: Double, m20: Double,
-    m01: Double, m11: Double, m21: Double,
-    m02: Double, m12: Double, m22: Double
+    m00: Double, m01: Double, m02: Double,
+    m10: Double, m11: Double, m12: Double,
+    m20: Double, m21: Double, m22: Double
   ) = new Mat3d(
-    m00, m10, m20,
-    m01, m11, m21,
-    m02, m12, m22
+    m00, m01, m02,
+    m10, m11, m12,
+    m20, m21, m22
   )
 
   def apply(c0: AnyVec3[_], c1: AnyVec3[_], c2: AnyVec3[_]) = 
@@ -499,9 +499,9 @@ object Mat3d {
   )
 
   def apply(m: AnyMat[_]) = new Mat3d(
-    m.d00, m.d10, m.d20,
-    m.d01, m.d11, m.d21,
-    m.d02, m.d12, m.d22
+    m.d00, m.d01, m.d02,
+    m.d10, m.d11, m.d12,
+    m.d20, m.d21, m.d22
   )
 
   def unapply(m: ReadMat3d) = Some((m(0), m(1), m(2)))

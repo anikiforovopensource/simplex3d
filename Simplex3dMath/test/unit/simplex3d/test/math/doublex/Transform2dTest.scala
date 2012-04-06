@@ -33,13 +33,13 @@ import simplex3d.math.floatx._
 class Transform2dTest extends FunSuite {
 
   def scaleMat(v: Vec2) = {
-    val m = Mat2x3(1)
+    val m = Mat3x2(1)
     m(0, 0) = v.x
     m(1, 1) = v.y
     m
   }
   def translationMat(v: Vec2) = {
-    val m = Mat2x3(1)
+    val m = Mat3x2(1)
     m(2) = v
     m
   }
@@ -51,25 +51,25 @@ class Transform2dTest extends FunSuite {
     // test object
     for (i <- 0 until 100) {
       val s = r
-      assert(Mat2x3.scale(s) == Mat2x3.Identity.scale(s))
+      assert(Mat3x2.scale(s) == Mat3x2.Identity.scale(s))
 
       val sv = Vec2(r, r)
-      assert(Mat2x3.scale(sv) == Mat2x3.Identity.scale(sv))
+      assert(Mat3x2.scale(sv) == Mat3x2.Identity.scale(sv))
 
       val a = r
-      assert(Mat2x3.rotate(a) == Mat2x3.Identity.rotate(a))
+      assert(Mat3x2.rotate(a) == Mat3x2.Identity.rotate(a))
 
       val p = Vec2(r, r)
-      assert(Mat2x3.translate(p) == Mat2x3.Identity.translate(p))
+      assert(Mat3x2.translate(p) == Mat3x2.Identity.translate(p))
 
-      val m23 = Mat2x3(r, r, r, r, r, r)
-      assert(Mat2x3.concat(m23) == m23)
+      val m3x2 = Mat3x2(r, r, r, r, r, r)
+      assert(Mat3x2.concat(m3x2) == m3x2)
 
-      val m22 = Mat2x2(r, r, r, r)
-      assert(Mat2x3.concat(m22) == Mat2x3(m22))
+      val m2x2 = Mat2x2(r, r, r, r)
+      assert(Mat3x2.concat(m2x2) == Mat3x2(m2x2))
     }
 
-    def assertTransform(a: ReadMat2x3, m: ReadMat2x3, b: ReadMat2x3) {
+    def assertTransform(a: ReadMat3x2, m: ReadMat3x2, b: ReadMat3x2) {
       assert(a.ne(b))
       assert(m*Mat3(a) == b)
 
@@ -89,38 +89,38 @@ class Transform2dTest extends FunSuite {
         }
       }
     }
-    def test(t: ReadMat2x3) {
+    def test(t: ReadMat3x2) {
       val s = r
-      assertTransform(t, Mat2x3(s), t scale(s))
+      assertTransform(t, Mat3x2(s), t scale(s))
 
       val sv = Vec2(r, r)
       assertTransform(t, scaleMat(sv), t scale(sv))
 
       val a = r
-      assertTransform(t, Mat2x3(rotationMat(a)), t rotate(a))
+      assertTransform(t, Mat3x2(rotationMat(a)), t rotate(a))
 
       val p = Vec2(r, r)
       assertTransform(t, translationMat(p), t translate(p))
 
       val m2 = ConstMat2(r, r, r, r)
-      assertTransform(t, Mat2x3(m2), t concat(m2))
+      assertTransform(t, Mat3x2(m2), t concat(m2))
 
-      val m2x3 = ConstMat2x3(r, r, r, r, r, r)
-      assertTransform(t, m2x3, t concat(m2x3))
+      val m3x2 = ConstMat3x2(r, r, r, r, r, r)
+      assertTransform(t, m3x2, t concat(m3x2))
     }
 
     // test transform classes
     for (i <- 0 until 100) {
-      test(Mat2x3(r, r, r, r, r, r))
-      test(Mat2x3(Mat2x2(r, r, r, r)))
-      test(Mat2x3 scale(Vec2(r, r)))
-      test(Mat2x3 translate(Vec2(r, r)))
-      test(Mat2x3.Identity)
+      test(Mat3x2(r, r, r, r, r, r))
+      test(Mat3x2(Mat2x2(r, r, r, r)))
+      test(Mat3x2 scale(Vec2(r, r)))
+      test(Mat3x2 translate(Vec2(r, r)))
+      test(Mat3x2.Identity)
     }
 
 
     // test applyTransformation
-    def testApply(t: Mat2x3) {
+    def testApply(t: Mat3x2) {
       val s = r
       val ts = t.clone(); ts.applyScale(s)
       assert(approxEqual(ts, t scale(s), 1e-15))
@@ -141,19 +141,19 @@ class Transform2dTest extends FunSuite {
       val tm2 = t.clone(); tm2.applyTransformation(m2)
       assert(approxEqual(tm2, t concat(m2), 1e-15))
 
-      val m2x3 = ConstMat2x3(r, r, r, r, r, r)
-      val tm2x3 = t.clone(); tm2x3.applyTransformation(m2x3)
-      assert(approxEqual(tm2x3, t concat(m2x3), 1e-15))
+      val m3x2 = ConstMat3x2(r, r, r, r, r, r)
+      val tm3x2 = t.clone(); tm3x2.applyTransformation(m3x2)
+      assert(approxEqual(tm3x2, t concat(m3x2), 1e-15))
 
       val self = t.clone(); self.applyTransformation(self)
       assert(approxEqual(self, t concat(t), 1e-15))
     }
 
     for (i <- 0 until 100) {
-      testApply(Mat2x3(r, r, r, r, r, r))
-      testApply(Mat2x3(Mat2x2(r, r, r, r)))
-      testApply(Mat2x3 scale(Vec2(r, r)))
-      testApply(Mat2x3 translate(Vec2(r, r)))
+      testApply(Mat3x2(r, r, r, r, r, r))
+      testApply(Mat3x2(Mat2x2(r, r, r, r)))
+      testApply(Mat3x2 scale(Vec2(r, r)))
+      testApply(Mat3x2 translate(Vec2(r, r)))
     }
   }
 }

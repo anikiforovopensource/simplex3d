@@ -377,11 +377,11 @@ class Vec3fTest extends FunSuite {
 
     val t = ConstVec3(2, 3, 4)
 
-    val m3x2 = ConstMat3x2(
+    val m2x3 = ConstMat2x3(
       2, 5, 4,
       3, 4, 8
     )
-    assert(Vec2(35, 50) == t*m3x2)
+    assert(Vec2(35, 50) == t*m2x3)
 
     val m3 = ConstMat3(
       2, 5, 4,
@@ -390,13 +390,13 @@ class Vec3fTest extends FunSuite {
     )
     assert(Vec3(35, 50, 34) == t*m3)
 
-    val m3x4 = ConstMat3x4(
+    val m4x3 = ConstMat4x3(
       2, 5, 4,
       3, 4, 8,
       7, 4, 2,
       5, 9, 2
     )
-    assert(Vec4(35, 50, 34, 45) == t*m3x4)
+    assert(Vec4(35, 50, 34, 45) == t*m4x3)
   }
 
   test("Mutable math") {

@@ -330,153 +330,153 @@ class AccessorsTest extends FunSuite {
 
       val m22 = Mat2x2f(mf)
       val a22 = Mat4x4f(
-        Accessors.f00(m22), Accessors.f10(m22), Accessors.f20(m22), Accessors.f30(m22),
-        Accessors.f01(m22), Accessors.f11(m22), Accessors.f21(m22), Accessors.f31(m22),
-        Accessors.f02(m22), Accessors.f12(m22), Accessors.f22(m22), Accessors.f32(m22),
-        Accessors.f03(m22), Accessors.f13(m22), Accessors.f23(m22), Accessors.f33(m22)
+        Accessors.f00(m22), Accessors.f01(m22), Accessors.f02(m22), Accessors.f03(m22),
+        Accessors.f10(m22), Accessors.f11(m22), Accessors.f12(m22), Accessors.f13(m22),
+        Accessors.f20(m22), Accessors.f21(m22), Accessors.f22(m22), Accessors.f23(m22),
+        Accessors.f30(m22), Accessors.f31(m22), Accessors.f32(m22), Accessors.f33(m22)
       )
       assert(a22 == Mat4x4f(m22))
       val b22 = Mat4x4d(
-        Accessors.d00(m22), Accessors.d10(m22), Accessors.d20(m22), Accessors.d30(m22),
-        Accessors.d01(m22), Accessors.d11(m22), Accessors.d21(m22), Accessors.d31(m22),
-        Accessors.d02(m22), Accessors.d12(m22), Accessors.d22(m22), Accessors.d32(m22),
-        Accessors.d03(m22), Accessors.d13(m22), Accessors.d23(m22), Accessors.d33(m22)
+        Accessors.d00(m22), Accessors.d01(m22), Accessors.d02(m22), Accessors.d03(m22),
+        Accessors.d10(m22), Accessors.d11(m22), Accessors.d12(m22), Accessors.d13(m22),
+        Accessors.d20(m22), Accessors.d21(m22), Accessors.d22(m22), Accessors.d23(m22),
+        Accessors.d30(m22), Accessors.d31(m22), Accessors.d32(m22), Accessors.d33(m22)
       )
       assert(b22 == Mat4x4d(m22))
 
 
-      val m23 = Mat2x3f(mf)
-      val a23 = Mat4x4f(
-        Accessors.f00(m23), Accessors.f10(m23), Accessors.f20(m23), Accessors.f30(m23),
-        Accessors.f01(m23), Accessors.f11(m23), Accessors.f21(m23), Accessors.f31(m23),
-        Accessors.f02(m23), Accessors.f12(m23), Accessors.f22(m23), Accessors.f32(m23),
-        Accessors.f03(m23), Accessors.f13(m23), Accessors.f23(m23), Accessors.f33(m23)
-      )
-      assert(a23 == Mat4x4f(m23))
-      val b23 = Mat4x4d(
-        Accessors.d00(m23), Accessors.d10(m23), Accessors.d20(m23), Accessors.d30(m23),
-        Accessors.d01(m23), Accessors.d11(m23), Accessors.d21(m23), Accessors.d31(m23),
-        Accessors.d02(m23), Accessors.d12(m23), Accessors.d22(m23), Accessors.d32(m23),
-        Accessors.d03(m23), Accessors.d13(m23), Accessors.d23(m23), Accessors.d33(m23)
-      )
-      assert(b23 == Mat4x4d(m23))
-
-
-      val m24 = Mat2x4f(mf)
-      val a24 = Mat4x4f(
-        Accessors.f00(m24), Accessors.f10(m24), Accessors.f20(m24), Accessors.f30(m24),
-        Accessors.f01(m24), Accessors.f11(m24), Accessors.f21(m24), Accessors.f31(m24),
-        Accessors.f02(m24), Accessors.f12(m24), Accessors.f22(m24), Accessors.f32(m24),
-        Accessors.f03(m24), Accessors.f13(m24), Accessors.f23(m24), Accessors.f33(m24)
-      )
-      assert(a24 == Mat4x4f(m24))
-      val b24 = Mat4x4d(
-        Accessors.d00(m24), Accessors.d10(m24), Accessors.d20(m24), Accessors.d30(m24),
-        Accessors.d01(m24), Accessors.d11(m24), Accessors.d21(m24), Accessors.d31(m24),
-        Accessors.d02(m24), Accessors.d12(m24), Accessors.d22(m24), Accessors.d32(m24),
-        Accessors.d03(m24), Accessors.d13(m24), Accessors.d23(m24), Accessors.d33(m24)
-      )
-      assert(b24 == Mat4x4d(m24))
-
-
       val m32 = Mat3x2f(mf)
       val a32 = Mat4x4f(
-        Accessors.f00(m32), Accessors.f10(m32), Accessors.f20(m32), Accessors.f30(m32),
-        Accessors.f01(m32), Accessors.f11(m32), Accessors.f21(m32), Accessors.f31(m32),
-        Accessors.f02(m32), Accessors.f12(m32), Accessors.f22(m32), Accessors.f32(m32),
-        Accessors.f03(m32), Accessors.f13(m32), Accessors.f23(m32), Accessors.f33(m32)
+        Accessors.f00(m32), Accessors.f01(m32), Accessors.f02(m32), Accessors.f03(m32),
+        Accessors.f10(m32), Accessors.f11(m32), Accessors.f12(m32), Accessors.f13(m32),
+        Accessors.f20(m32), Accessors.f21(m32), Accessors.f22(m32), Accessors.f23(m32),
+        Accessors.f30(m32), Accessors.f31(m32), Accessors.f32(m32), Accessors.f33(m32)
       )
       assert(a32 == Mat4x4f(m32))
       val b32 = Mat4x4d(
-        Accessors.d00(m32), Accessors.d10(m32), Accessors.d20(m32), Accessors.d30(m32),
-        Accessors.d01(m32), Accessors.d11(m32), Accessors.d21(m32), Accessors.d31(m32),
-        Accessors.d02(m32), Accessors.d12(m32), Accessors.d22(m32), Accessors.d32(m32),
-        Accessors.d03(m32), Accessors.d13(m32), Accessors.d23(m32), Accessors.d33(m32)
+        Accessors.d00(m32), Accessors.d01(m32), Accessors.d02(m32), Accessors.d03(m32),
+        Accessors.d10(m32), Accessors.d11(m32), Accessors.d12(m32), Accessors.d13(m32),
+        Accessors.d20(m32), Accessors.d21(m32), Accessors.d22(m32), Accessors.d23(m32),
+        Accessors.d30(m32), Accessors.d31(m32), Accessors.d32(m32), Accessors.d33(m32)
       )
       assert(b32 == Mat4x4d(m32))
 
 
-      val m33 = Mat3x3f(mf)
-      val a33 = Mat4x4f(
-        Accessors.f00(m33), Accessors.f10(m33), Accessors.f20(m33), Accessors.f30(m33),
-        Accessors.f01(m33), Accessors.f11(m33), Accessors.f21(m33), Accessors.f31(m33),
-        Accessors.f02(m33), Accessors.f12(m33), Accessors.f22(m33), Accessors.f32(m33),
-        Accessors.f03(m33), Accessors.f13(m33), Accessors.f23(m33), Accessors.f33(m33)
-      )
-      assert(a33 == Mat4x4f(m33))
-      val b33 = Mat4x4d(
-        Accessors.d00(m33), Accessors.d10(m33), Accessors.d20(m33), Accessors.d30(m33),
-        Accessors.d01(m33), Accessors.d11(m33), Accessors.d21(m33), Accessors.d31(m33),
-        Accessors.d02(m33), Accessors.d12(m33), Accessors.d22(m33), Accessors.d32(m33),
-        Accessors.d03(m33), Accessors.d13(m33), Accessors.d23(m33), Accessors.d33(m33)
-      )
-      assert(b33 == Mat4x4d(m33))
-
-
-      val m34 = Mat3x4f(mf)
-      val a34 = Mat4x4f(
-        Accessors.f00(m34), Accessors.f10(m34), Accessors.f20(m34), Accessors.f30(m34),
-        Accessors.f01(m34), Accessors.f11(m34), Accessors.f21(m34), Accessors.f31(m34),
-        Accessors.f02(m34), Accessors.f12(m34), Accessors.f22(m34), Accessors.f32(m34),
-        Accessors.f03(m34), Accessors.f13(m34), Accessors.f23(m34), Accessors.f33(m34)
-      )
-      assert(a34 == Mat4x4f(m34))
-      val b34 = Mat4x4d(
-        Accessors.d00(m34), Accessors.d10(m34), Accessors.d20(m34), Accessors.d30(m34),
-        Accessors.d01(m34), Accessors.d11(m34), Accessors.d21(m34), Accessors.d31(m34),
-        Accessors.d02(m34), Accessors.d12(m34), Accessors.d22(m34), Accessors.d32(m34),
-        Accessors.d03(m34), Accessors.d13(m34), Accessors.d23(m34), Accessors.d33(m34)
-      )
-      assert(b34 == Mat4x4d(m34))
-
-
       val m42 = Mat4x2f(mf)
       val a42 = Mat4x4f(
-        Accessors.f00(m42), Accessors.f10(m42), Accessors.f20(m42), Accessors.f30(m42),
-        Accessors.f01(m42), Accessors.f11(m42), Accessors.f21(m42), Accessors.f31(m42),
-        Accessors.f02(m42), Accessors.f12(m42), Accessors.f22(m42), Accessors.f32(m42),
-        Accessors.f03(m42), Accessors.f13(m42), Accessors.f23(m42), Accessors.f33(m42)
+        Accessors.f00(m42), Accessors.f01(m42), Accessors.f02(m42), Accessors.f03(m42),
+        Accessors.f10(m42), Accessors.f11(m42), Accessors.f12(m42), Accessors.f13(m42),
+        Accessors.f20(m42), Accessors.f21(m42), Accessors.f22(m42), Accessors.f23(m42),
+        Accessors.f30(m42), Accessors.f31(m42), Accessors.f32(m42), Accessors.f33(m42)
       )
       assert(a42 == Mat4x4f(m42))
       val b42 = Mat4x4d(
-        Accessors.d00(m42), Accessors.d10(m42), Accessors.d20(m42), Accessors.d30(m42),
-        Accessors.d01(m42), Accessors.d11(m42), Accessors.d21(m42), Accessors.d31(m42),
-        Accessors.d02(m42), Accessors.d12(m42), Accessors.d22(m42), Accessors.d32(m42),
-        Accessors.d03(m42), Accessors.d13(m42), Accessors.d23(m42), Accessors.d33(m42)
+        Accessors.d00(m42), Accessors.d01(m42), Accessors.d02(m42), Accessors.d03(m42),
+        Accessors.d10(m42), Accessors.d11(m42), Accessors.d12(m42), Accessors.d13(m42),
+        Accessors.d20(m42), Accessors.d21(m42), Accessors.d22(m42), Accessors.d23(m42),
+        Accessors.d30(m42), Accessors.d31(m42), Accessors.d32(m42), Accessors.d33(m42)
       )
       assert(b42 == Mat4x4d(m42))
 
 
+      val m23 = Mat2x3f(mf)
+      val a23 = Mat4x4f(
+        Accessors.f00(m23), Accessors.f01(m23), Accessors.f02(m23), Accessors.f03(m23),
+        Accessors.f10(m23), Accessors.f11(m23), Accessors.f12(m23), Accessors.f13(m23),
+        Accessors.f20(m23), Accessors.f21(m23), Accessors.f22(m23), Accessors.f23(m23),
+        Accessors.f30(m23), Accessors.f31(m23), Accessors.f32(m23), Accessors.f33(m23)
+      )
+      assert(a23 == Mat4x4f(m23))
+      val b23 = Mat4x4d(
+        Accessors.d00(m23), Accessors.d01(m23), Accessors.d02(m23), Accessors.d03(m23),
+        Accessors.d10(m23), Accessors.d11(m23), Accessors.d12(m23), Accessors.d13(m23),
+        Accessors.d20(m23), Accessors.d21(m23), Accessors.d22(m23), Accessors.d23(m23),
+        Accessors.d30(m23), Accessors.d31(m23), Accessors.d32(m23), Accessors.d33(m23)
+      )
+      assert(b23 == Mat4x4d(m23))
+
+
+      val m33 = Mat3x3f(mf)
+      val a33 = Mat4x4f(
+        Accessors.f00(m33), Accessors.f01(m33), Accessors.f02(m33), Accessors.f03(m33),
+        Accessors.f10(m33), Accessors.f11(m33), Accessors.f12(m33), Accessors.f13(m33),
+        Accessors.f20(m33), Accessors.f21(m33), Accessors.f22(m33), Accessors.f23(m33),
+        Accessors.f30(m33), Accessors.f31(m33), Accessors.f32(m33), Accessors.f33(m33)
+      )
+      assert(a33 == Mat4x4f(m33))
+      val b33 = Mat4x4d(
+        Accessors.d00(m33), Accessors.d01(m33), Accessors.d02(m33), Accessors.d03(m33),
+        Accessors.d10(m33), Accessors.d11(m33), Accessors.d12(m33), Accessors.d13(m33),
+        Accessors.d20(m33), Accessors.d21(m33), Accessors.d22(m33), Accessors.d23(m33),
+        Accessors.d30(m33), Accessors.d31(m33), Accessors.d32(m33), Accessors.d33(m33)
+      )
+      assert(b33 == Mat4x4d(m33))
+
+
       val m43 = Mat4x3f(mf)
       val a43 = Mat4x4f(
-        Accessors.f00(m43), Accessors.f10(m43), Accessors.f20(m43), Accessors.f30(m43),
-        Accessors.f01(m43), Accessors.f11(m43), Accessors.f21(m43), Accessors.f31(m43),
-        Accessors.f02(m43), Accessors.f12(m43), Accessors.f22(m43), Accessors.f32(m43),
-        Accessors.f03(m43), Accessors.f13(m43), Accessors.f23(m43), Accessors.f33(m43)
+        Accessors.f00(m43), Accessors.f01(m43), Accessors.f02(m43), Accessors.f03(m43),
+        Accessors.f10(m43), Accessors.f11(m43), Accessors.f12(m43), Accessors.f13(m43),
+        Accessors.f20(m43), Accessors.f21(m43), Accessors.f22(m43), Accessors.f23(m43),
+        Accessors.f30(m43), Accessors.f31(m43), Accessors.f32(m43), Accessors.f33(m43)
       )
       assert(a43 == Mat4x4f(m43))
       val b43 = Mat4x4d(
-        Accessors.d00(m43), Accessors.d10(m43), Accessors.d20(m43), Accessors.d30(m43),
-        Accessors.d01(m43), Accessors.d11(m43), Accessors.d21(m43), Accessors.d31(m43),
-        Accessors.d02(m43), Accessors.d12(m43), Accessors.d22(m43), Accessors.d32(m43),
-        Accessors.d03(m43), Accessors.d13(m43), Accessors.d23(m43), Accessors.d33(m43)
+        Accessors.d00(m43), Accessors.d01(m43), Accessors.d02(m43), Accessors.d03(m43),
+        Accessors.d10(m43), Accessors.d11(m43), Accessors.d12(m43), Accessors.d13(m43),
+        Accessors.d20(m43), Accessors.d21(m43), Accessors.d22(m43), Accessors.d23(m43),
+        Accessors.d30(m43), Accessors.d31(m43), Accessors.d32(m43), Accessors.d33(m43)
       )
       assert(b43 == Mat4x4d(m43))
 
 
+      val m24 = Mat2x4f(mf)
+      val a24 = Mat4x4f(
+        Accessors.f00(m24), Accessors.f01(m24), Accessors.f02(m24), Accessors.f03(m24),
+        Accessors.f10(m24), Accessors.f11(m24), Accessors.f12(m24), Accessors.f13(m24),
+        Accessors.f20(m24), Accessors.f21(m24), Accessors.f22(m24), Accessors.f23(m24),
+        Accessors.f30(m24), Accessors.f31(m24), Accessors.f32(m24), Accessors.f33(m24)
+      )
+      assert(a24 == Mat4x4f(m24))
+      val b24 = Mat4x4d(
+        Accessors.d00(m24), Accessors.d01(m24), Accessors.d02(m24), Accessors.d03(m24),
+        Accessors.d10(m24), Accessors.d11(m24), Accessors.d12(m24), Accessors.d13(m24),
+        Accessors.d20(m24), Accessors.d21(m24), Accessors.d22(m24), Accessors.d23(m24),
+        Accessors.d30(m24), Accessors.d31(m24), Accessors.d32(m24), Accessors.d33(m24)
+      )
+      assert(b24 == Mat4x4d(m24))
+
+
+      val m34 = Mat3x4f(mf)
+      val a34 = Mat4x4f(
+        Accessors.f00(m34), Accessors.f01(m34), Accessors.f02(m34), Accessors.f03(m34),
+        Accessors.f10(m34), Accessors.f11(m34), Accessors.f12(m34), Accessors.f13(m34),
+        Accessors.f20(m34), Accessors.f21(m34), Accessors.f22(m34), Accessors.f23(m34),
+        Accessors.f30(m34), Accessors.f31(m34), Accessors.f32(m34), Accessors.f33(m34)
+      )
+      assert(a34 == Mat4x4f(m34))
+      val b34 = Mat4x4d(
+        Accessors.d00(m34), Accessors.d01(m34), Accessors.d02(m34), Accessors.d03(m34),
+        Accessors.d10(m34), Accessors.d11(m34), Accessors.d12(m34), Accessors.d13(m34),
+        Accessors.d20(m34), Accessors.d21(m34), Accessors.d22(m34), Accessors.d23(m34),
+        Accessors.d30(m34), Accessors.d31(m34), Accessors.d32(m34), Accessors.d33(m34)
+      )
+      assert(b34 == Mat4x4d(m34))
+
+
       val m44 = Mat4x4f(mf)
       val a44 = Mat4x4f(
-        Accessors.f00(m44), Accessors.f10(m44), Accessors.f20(m44), Accessors.f30(m44),
-        Accessors.f01(m44), Accessors.f11(m44), Accessors.f21(m44), Accessors.f31(m44),
-        Accessors.f02(m44), Accessors.f12(m44), Accessors.f22(m44), Accessors.f32(m44),
-        Accessors.f03(m44), Accessors.f13(m44), Accessors.f23(m44), Accessors.f33(m44)
+        Accessors.f00(m44), Accessors.f01(m44), Accessors.f02(m44), Accessors.f03(m44),
+        Accessors.f10(m44), Accessors.f11(m44), Accessors.f12(m44), Accessors.f13(m44),
+        Accessors.f20(m44), Accessors.f21(m44), Accessors.f22(m44), Accessors.f23(m44),
+        Accessors.f30(m44), Accessors.f31(m44), Accessors.f32(m44), Accessors.f33(m44)
       )
       assert(a44 == Mat4x4f(m44))
       val b44 = Mat4x4d(
-        Accessors.d00(m44), Accessors.d10(m44), Accessors.d20(m44), Accessors.d30(m44),
-        Accessors.d01(m44), Accessors.d11(m44), Accessors.d21(m44), Accessors.d31(m44),
-        Accessors.d02(m44), Accessors.d12(m44), Accessors.d22(m44), Accessors.d32(m44),
-        Accessors.d03(m44), Accessors.d13(m44), Accessors.d23(m44), Accessors.d33(m44)
+        Accessors.d00(m44), Accessors.d01(m44), Accessors.d02(m44), Accessors.d03(m44),
+        Accessors.d10(m44), Accessors.d11(m44), Accessors.d12(m44), Accessors.d13(m44),
+        Accessors.d20(m44), Accessors.d21(m44), Accessors.d22(m44), Accessors.d23(m44),
+        Accessors.d30(m44), Accessors.d31(m44), Accessors.d32(m44), Accessors.d33(m44)
       )
       assert(b44 == Mat4x4d(m44))
     }
@@ -492,153 +492,153 @@ class AccessorsTest extends FunSuite {
 
       val m22 = Mat2x2d(md)
       val a22 = Mat4x4f(
-        Accessors.f00(m22), Accessors.f10(m22), Accessors.f20(m22), Accessors.f30(m22),
-        Accessors.f01(m22), Accessors.f11(m22), Accessors.f21(m22), Accessors.f31(m22),
-        Accessors.f02(m22), Accessors.f12(m22), Accessors.f22(m22), Accessors.f32(m22),
-        Accessors.f03(m22), Accessors.f13(m22), Accessors.f23(m22), Accessors.f33(m22)
+        Accessors.f00(m22), Accessors.f01(m22), Accessors.f02(m22), Accessors.f03(m22),
+        Accessors.f10(m22), Accessors.f11(m22), Accessors.f12(m22), Accessors.f13(m22),
+        Accessors.f20(m22), Accessors.f21(m22), Accessors.f22(m22), Accessors.f23(m22),
+        Accessors.f30(m22), Accessors.f31(m22), Accessors.f32(m22), Accessors.f33(m22)
       )
       assert(a22 == Mat4x4f(m22))
       val b22 = Mat4x4d(
-        Accessors.d00(m22), Accessors.d10(m22), Accessors.d20(m22), Accessors.d30(m22),
-        Accessors.d01(m22), Accessors.d11(m22), Accessors.d21(m22), Accessors.d31(m22),
-        Accessors.d02(m22), Accessors.d12(m22), Accessors.d22(m22), Accessors.d32(m22),
-        Accessors.d03(m22), Accessors.d13(m22), Accessors.d23(m22), Accessors.d33(m22)
+        Accessors.d00(m22), Accessors.d01(m22), Accessors.d02(m22), Accessors.d03(m22),
+        Accessors.d10(m22), Accessors.d11(m22), Accessors.d12(m22), Accessors.d13(m22),
+        Accessors.d20(m22), Accessors.d21(m22), Accessors.d22(m22), Accessors.d23(m22),
+        Accessors.d30(m22), Accessors.d31(m22), Accessors.d32(m22), Accessors.d33(m22)
       )
       assert(b22 == Mat4x4d(m22))
 
 
-      val m23 = Mat2x3d(md)
-      val a23 = Mat4x4f(
-        Accessors.f00(m23), Accessors.f10(m23), Accessors.f20(m23), Accessors.f30(m23),
-        Accessors.f01(m23), Accessors.f11(m23), Accessors.f21(m23), Accessors.f31(m23),
-        Accessors.f02(m23), Accessors.f12(m23), Accessors.f22(m23), Accessors.f32(m23),
-        Accessors.f03(m23), Accessors.f13(m23), Accessors.f23(m23), Accessors.f33(m23)
-      )
-      assert(a23 == Mat4x4f(m23))
-      val b23 = Mat4x4d(
-        Accessors.d00(m23), Accessors.d10(m23), Accessors.d20(m23), Accessors.d30(m23),
-        Accessors.d01(m23), Accessors.d11(m23), Accessors.d21(m23), Accessors.d31(m23),
-        Accessors.d02(m23), Accessors.d12(m23), Accessors.d22(m23), Accessors.d32(m23),
-        Accessors.d03(m23), Accessors.d13(m23), Accessors.d23(m23), Accessors.d33(m23)
-      )
-      assert(b23 == Mat4x4d(m23))
-
-
-      val m24 = Mat2x4d(md)
-      val a24 = Mat4x4f(
-        Accessors.f00(m24), Accessors.f10(m24), Accessors.f20(m24), Accessors.f30(m24),
-        Accessors.f01(m24), Accessors.f11(m24), Accessors.f21(m24), Accessors.f31(m24),
-        Accessors.f02(m24), Accessors.f12(m24), Accessors.f22(m24), Accessors.f32(m24),
-        Accessors.f03(m24), Accessors.f13(m24), Accessors.f23(m24), Accessors.f33(m24)
-      )
-      assert(a24 == Mat4x4f(m24))
-      val b24 = Mat4x4d(
-        Accessors.d00(m24), Accessors.d10(m24), Accessors.d20(m24), Accessors.d30(m24),
-        Accessors.d01(m24), Accessors.d11(m24), Accessors.d21(m24), Accessors.d31(m24),
-        Accessors.d02(m24), Accessors.d12(m24), Accessors.d22(m24), Accessors.d32(m24),
-        Accessors.d03(m24), Accessors.d13(m24), Accessors.d23(m24), Accessors.d33(m24)
-      )
-      assert(b24 == Mat4x4d(m24))
-
-
       val m32 = Mat3x2d(md)
       val a32 = Mat4x4f(
-        Accessors.f00(m32), Accessors.f10(m32), Accessors.f20(m32), Accessors.f30(m32),
-        Accessors.f01(m32), Accessors.f11(m32), Accessors.f21(m32), Accessors.f31(m32),
-        Accessors.f02(m32), Accessors.f12(m32), Accessors.f22(m32), Accessors.f32(m32),
-        Accessors.f03(m32), Accessors.f13(m32), Accessors.f23(m32), Accessors.f33(m32)
+        Accessors.f00(m32), Accessors.f01(m32), Accessors.f02(m32), Accessors.f03(m32),
+        Accessors.f10(m32), Accessors.f11(m32), Accessors.f12(m32), Accessors.f13(m32),
+        Accessors.f20(m32), Accessors.f21(m32), Accessors.f22(m32), Accessors.f23(m32),
+        Accessors.f30(m32), Accessors.f31(m32), Accessors.f32(m32), Accessors.f33(m32)
       )
       assert(a32 == Mat4x4f(m32))
       val b32 = Mat4x4d(
-        Accessors.d00(m32), Accessors.d10(m32), Accessors.d20(m32), Accessors.d30(m32),
-        Accessors.d01(m32), Accessors.d11(m32), Accessors.d21(m32), Accessors.d31(m32),
-        Accessors.d02(m32), Accessors.d12(m32), Accessors.d22(m32), Accessors.d32(m32),
-        Accessors.d03(m32), Accessors.d13(m32), Accessors.d23(m32), Accessors.d33(m32)
+        Accessors.d00(m32), Accessors.d01(m32), Accessors.d02(m32), Accessors.d03(m32),
+        Accessors.d10(m32), Accessors.d11(m32), Accessors.d12(m32), Accessors.d13(m32),
+        Accessors.d20(m32), Accessors.d21(m32), Accessors.d22(m32), Accessors.d23(m32),
+        Accessors.d30(m32), Accessors.d31(m32), Accessors.d32(m32), Accessors.d33(m32)
       )
       assert(b32 == Mat4x4d(m32))
 
 
-      val m33 = Mat3x3d(md)
-      val a33 = Mat4x4f(
-        Accessors.f00(m33), Accessors.f10(m33), Accessors.f20(m33), Accessors.f30(m33),
-        Accessors.f01(m33), Accessors.f11(m33), Accessors.f21(m33), Accessors.f31(m33),
-        Accessors.f02(m33), Accessors.f12(m33), Accessors.f22(m33), Accessors.f32(m33),
-        Accessors.f03(m33), Accessors.f13(m33), Accessors.f23(m33), Accessors.f33(m33)
-      )
-      assert(a33 == Mat4x4f(m33))
-      val b33 = Mat4x4d(
-        Accessors.d00(m33), Accessors.d10(m33), Accessors.d20(m33), Accessors.d30(m33),
-        Accessors.d01(m33), Accessors.d11(m33), Accessors.d21(m33), Accessors.d31(m33),
-        Accessors.d02(m33), Accessors.d12(m33), Accessors.d22(m33), Accessors.d32(m33),
-        Accessors.d03(m33), Accessors.d13(m33), Accessors.d23(m33), Accessors.d33(m33)
-      )
-      assert(b33 == Mat4x4d(m33))
-
-
-      val m34 = Mat3x4d(md)
-      val a34 = Mat4x4f(
-        Accessors.f00(m34), Accessors.f10(m34), Accessors.f20(m34), Accessors.f30(m34),
-        Accessors.f01(m34), Accessors.f11(m34), Accessors.f21(m34), Accessors.f31(m34),
-        Accessors.f02(m34), Accessors.f12(m34), Accessors.f22(m34), Accessors.f32(m34),
-        Accessors.f03(m34), Accessors.f13(m34), Accessors.f23(m34), Accessors.f33(m34)
-      )
-      assert(a34 == Mat4x4f(m34))
-      val b34 = Mat4x4d(
-        Accessors.d00(m34), Accessors.d10(m34), Accessors.d20(m34), Accessors.d30(m34),
-        Accessors.d01(m34), Accessors.d11(m34), Accessors.d21(m34), Accessors.d31(m34),
-        Accessors.d02(m34), Accessors.d12(m34), Accessors.d22(m34), Accessors.d32(m34),
-        Accessors.d03(m34), Accessors.d13(m34), Accessors.d23(m34), Accessors.d33(m34)
-      )
-      assert(b34 == Mat4x4d(m34))
-
-
       val m42 = Mat4x2d(md)
       val a42 = Mat4x4f(
-        Accessors.f00(m42), Accessors.f10(m42), Accessors.f20(m42), Accessors.f30(m42),
-        Accessors.f01(m42), Accessors.f11(m42), Accessors.f21(m42), Accessors.f31(m42),
-        Accessors.f02(m42), Accessors.f12(m42), Accessors.f22(m42), Accessors.f32(m42),
-        Accessors.f03(m42), Accessors.f13(m42), Accessors.f23(m42), Accessors.f33(m42)
+        Accessors.f00(m42), Accessors.f01(m42), Accessors.f02(m42), Accessors.f03(m42),
+        Accessors.f10(m42), Accessors.f11(m42), Accessors.f12(m42), Accessors.f13(m42),
+        Accessors.f20(m42), Accessors.f21(m42), Accessors.f22(m42), Accessors.f23(m42),
+        Accessors.f30(m42), Accessors.f31(m42), Accessors.f32(m42), Accessors.f33(m42)
       )
       assert(a42 == Mat4x4f(m42))
       val b42 = Mat4x4d(
-        Accessors.d00(m42), Accessors.d10(m42), Accessors.d20(m42), Accessors.d30(m42),
-        Accessors.d01(m42), Accessors.d11(m42), Accessors.d21(m42), Accessors.d31(m42),
-        Accessors.d02(m42), Accessors.d12(m42), Accessors.d22(m42), Accessors.d32(m42),
-        Accessors.d03(m42), Accessors.d13(m42), Accessors.d23(m42), Accessors.d33(m42)
+        Accessors.d00(m42), Accessors.d01(m42), Accessors.d02(m42), Accessors.d03(m42),
+        Accessors.d10(m42), Accessors.d11(m42), Accessors.d12(m42), Accessors.d13(m42),
+        Accessors.d20(m42), Accessors.d21(m42), Accessors.d22(m42), Accessors.d23(m42),
+        Accessors.d30(m42), Accessors.d31(m42), Accessors.d32(m42), Accessors.d33(m42)
       )
       assert(b42 == Mat4x4d(m42))
 
 
+      val m23 = Mat2x3d(md)
+      val a23 = Mat4x4f(
+        Accessors.f00(m23), Accessors.f01(m23), Accessors.f02(m23), Accessors.f03(m23),
+        Accessors.f10(m23), Accessors.f11(m23), Accessors.f12(m23), Accessors.f13(m23),
+        Accessors.f20(m23), Accessors.f21(m23), Accessors.f22(m23), Accessors.f23(m23),
+        Accessors.f30(m23), Accessors.f31(m23), Accessors.f32(m23), Accessors.f33(m23)
+      )
+      assert(a23 == Mat4x4f(m23))
+      val b23 = Mat4x4d(
+        Accessors.d00(m23), Accessors.d01(m23), Accessors.d02(m23), Accessors.d03(m23),
+        Accessors.d10(m23), Accessors.d11(m23), Accessors.d12(m23), Accessors.d13(m23),
+        Accessors.d20(m23), Accessors.d21(m23), Accessors.d22(m23), Accessors.d23(m23),
+        Accessors.d30(m23), Accessors.d31(m23), Accessors.d32(m23), Accessors.d33(m23)
+      )
+      assert(b23 == Mat4x4d(m23))
+
+
+      val m33 = Mat3x3d(md)
+      val a33 = Mat4x4f(
+        Accessors.f00(m33), Accessors.f01(m33), Accessors.f02(m33), Accessors.f03(m33),
+        Accessors.f10(m33), Accessors.f11(m33), Accessors.f12(m33), Accessors.f13(m33),
+        Accessors.f20(m33), Accessors.f21(m33), Accessors.f22(m33), Accessors.f23(m33),
+        Accessors.f30(m33), Accessors.f31(m33), Accessors.f32(m33), Accessors.f33(m33)
+      )
+      assert(a33 == Mat4x4f(m33))
+      val b33 = Mat4x4d(
+        Accessors.d00(m33), Accessors.d01(m33), Accessors.d02(m33), Accessors.d03(m33),
+        Accessors.d10(m33), Accessors.d11(m33), Accessors.d12(m33), Accessors.d13(m33),
+        Accessors.d20(m33), Accessors.d21(m33), Accessors.d22(m33), Accessors.d23(m33),
+        Accessors.d30(m33), Accessors.d31(m33), Accessors.d32(m33), Accessors.d33(m33)
+      )
+      assert(b33 == Mat4x4d(m33))
+
+
       val m43 = Mat4x3d(md)
       val a43 = Mat4x4f(
-        Accessors.f00(m43), Accessors.f10(m43), Accessors.f20(m43), Accessors.f30(m43),
-        Accessors.f01(m43), Accessors.f11(m43), Accessors.f21(m43), Accessors.f31(m43),
-        Accessors.f02(m43), Accessors.f12(m43), Accessors.f22(m43), Accessors.f32(m43),
-        Accessors.f03(m43), Accessors.f13(m43), Accessors.f23(m43), Accessors.f33(m43)
+        Accessors.f00(m43), Accessors.f01(m43), Accessors.f02(m43), Accessors.f03(m43),
+        Accessors.f10(m43), Accessors.f11(m43), Accessors.f12(m43), Accessors.f13(m43),
+        Accessors.f20(m43), Accessors.f21(m43), Accessors.f22(m43), Accessors.f23(m43),
+        Accessors.f30(m43), Accessors.f31(m43), Accessors.f32(m43), Accessors.f33(m43)
       )
       assert(a43 == Mat4x4f(m43))
       val b43 = Mat4x4d(
-        Accessors.d00(m43), Accessors.d10(m43), Accessors.d20(m43), Accessors.d30(m43),
-        Accessors.d01(m43), Accessors.d11(m43), Accessors.d21(m43), Accessors.d31(m43),
-        Accessors.d02(m43), Accessors.d12(m43), Accessors.d22(m43), Accessors.d32(m43),
-        Accessors.d03(m43), Accessors.d13(m43), Accessors.d23(m43), Accessors.d33(m43)
+        Accessors.d00(m43), Accessors.d01(m43), Accessors.d02(m43), Accessors.d03(m43),
+        Accessors.d10(m43), Accessors.d11(m43), Accessors.d12(m43), Accessors.d13(m43),
+        Accessors.d20(m43), Accessors.d21(m43), Accessors.d22(m43), Accessors.d23(m43),
+        Accessors.d30(m43), Accessors.d31(m43), Accessors.d32(m43), Accessors.d33(m43)
       )
       assert(b43 == Mat4x4d(m43))
 
 
+      val m24 = Mat2x4d(md)
+      val a24 = Mat4x4f(
+        Accessors.f00(m24), Accessors.f01(m24), Accessors.f02(m24), Accessors.f03(m24),
+        Accessors.f10(m24), Accessors.f11(m24), Accessors.f12(m24), Accessors.f13(m24),
+        Accessors.f20(m24), Accessors.f21(m24), Accessors.f22(m24), Accessors.f23(m24),
+        Accessors.f30(m24), Accessors.f31(m24), Accessors.f32(m24), Accessors.f33(m24)
+      )
+      assert(a24 == Mat4x4f(m24))
+      val b24 = Mat4x4d(
+        Accessors.d00(m24), Accessors.d01(m24), Accessors.d02(m24), Accessors.d03(m24),
+        Accessors.d10(m24), Accessors.d11(m24), Accessors.d12(m24), Accessors.d13(m24),
+        Accessors.d20(m24), Accessors.d21(m24), Accessors.d22(m24), Accessors.d23(m24),
+        Accessors.d30(m24), Accessors.d31(m24), Accessors.d32(m24), Accessors.d33(m24)
+      )
+      assert(b24 == Mat4x4d(m24))
+
+
+      val m34 = Mat3x4d(md)
+      val a34 = Mat4x4f(
+        Accessors.f00(m34), Accessors.f01(m34), Accessors.f02(m34), Accessors.f03(m34),
+        Accessors.f10(m34), Accessors.f11(m34), Accessors.f12(m34), Accessors.f13(m34),
+        Accessors.f20(m34), Accessors.f21(m34), Accessors.f22(m34), Accessors.f23(m34),
+        Accessors.f30(m34), Accessors.f31(m34), Accessors.f32(m34), Accessors.f33(m34)
+      )
+      assert(a34 == Mat4x4f(m34))
+      val b34 = Mat4x4d(
+        Accessors.d00(m34), Accessors.d01(m34), Accessors.d02(m34), Accessors.d03(m34),
+        Accessors.d10(m34), Accessors.d11(m34), Accessors.d12(m34), Accessors.d13(m34),
+        Accessors.d20(m34), Accessors.d21(m34), Accessors.d22(m34), Accessors.d23(m34),
+        Accessors.d30(m34), Accessors.d31(m34), Accessors.d32(m34), Accessors.d33(m34)
+      )
+      assert(b34 == Mat4x4d(m34))
+
+
       val m44 = Mat4x4d(md)
       val a44 = Mat4x4f(
-        Accessors.f00(m44), Accessors.f10(m44), Accessors.f20(m44), Accessors.f30(m44),
-        Accessors.f01(m44), Accessors.f11(m44), Accessors.f21(m44), Accessors.f31(m44),
-        Accessors.f02(m44), Accessors.f12(m44), Accessors.f22(m44), Accessors.f32(m44),
-        Accessors.f03(m44), Accessors.f13(m44), Accessors.f23(m44), Accessors.f33(m44)
+        Accessors.f00(m44), Accessors.f01(m44), Accessors.f02(m44), Accessors.f03(m44),
+        Accessors.f10(m44), Accessors.f11(m44), Accessors.f12(m44), Accessors.f13(m44),
+        Accessors.f20(m44), Accessors.f21(m44), Accessors.f22(m44), Accessors.f23(m44),
+        Accessors.f30(m44), Accessors.f31(m44), Accessors.f32(m44), Accessors.f33(m44)
       )
       assert(a44 == Mat4x4f(m44))
       val b44 = Mat4x4d(
-        Accessors.d00(m44), Accessors.d10(m44), Accessors.d20(m44), Accessors.d30(m44),
-        Accessors.d01(m44), Accessors.d11(m44), Accessors.d21(m44), Accessors.d31(m44),
-        Accessors.d02(m44), Accessors.d12(m44), Accessors.d22(m44), Accessors.d32(m44),
-        Accessors.d03(m44), Accessors.d13(m44), Accessors.d23(m44), Accessors.d33(m44)
+        Accessors.d00(m44), Accessors.d01(m44), Accessors.d02(m44), Accessors.d03(m44),
+        Accessors.d10(m44), Accessors.d11(m44), Accessors.d12(m44), Accessors.d13(m44),
+        Accessors.d20(m44), Accessors.d21(m44), Accessors.d22(m44), Accessors.d23(m44),
+        Accessors.d30(m44), Accessors.d31(m44), Accessors.d32(m44), Accessors.d33(m44)
       )
       assert(b44 == Mat4x4d(m44))
     }

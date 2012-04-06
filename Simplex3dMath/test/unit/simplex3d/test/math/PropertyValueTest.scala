@@ -94,13 +94,13 @@ class PropertyValueTest extends FunSuite {
   def testMat(m: AnyMat[_]) {
     m match {
       case n: AnyMat2x2[_] => assert(n.rows == 2 && n.columns == 2)
-      case n: AnyMat2x3[_] => assert(n.rows == 2 && n.columns == 3)
-      case n: AnyMat2x4[_] => assert(n.rows == 2 && n.columns == 4)
-      case n: AnyMat3x2[_] => assert(n.rows == 3 && n.columns == 2)
+      case n: AnyMat3x2[_] => assert(n.rows == 2 && n.columns == 3)
+      case n: AnyMat4x2[_] => assert(n.rows == 2 && n.columns == 4)
+      case n: AnyMat2x3[_] => assert(n.rows == 3 && n.columns == 2)
       case n: AnyMat3x3[_] => assert(n.rows == 3 && n.columns == 3)
-      case n: AnyMat3x4[_] => assert(n.rows == 3 && n.columns == 4)
-      case n: AnyMat4x2[_] => assert(n.rows == 4 && n.columns == 2)
-      case n: AnyMat4x3[_] => assert(n.rows == 4 && n.columns == 3)
+      case n: AnyMat4x3[_] => assert(n.rows == 3 && n.columns == 4)
+      case n: AnyMat2x4[_] => assert(n.rows == 4 && n.columns == 2)
+      case n: AnyMat3x4[_] => assert(n.rows == 4 && n.columns == 3)
       case n: AnyMat4x4[_] => assert(n.rows == 4 && n.columns == 4)
     }
   }
@@ -150,23 +150,23 @@ class PropertyValueTest extends FunSuite {
   test("Abstract Matrices") {
     for (i <- 0 until 100) {
       testRef[Mat2x2f](Mat2x2f(mf), ConstMat2x2f(mf))
-      testRef[Mat2x3f](Mat2x3f(mf), ConstMat2x3f(mf))
-      testRef[Mat2x4f](Mat2x4f(mf), ConstMat2x4f(mf))
       testRef[Mat3x2f](Mat3x2f(mf), ConstMat3x2f(mf))
-      testRef[Mat3x3f](Mat3x3f(mf), ConstMat3x3f(mf))
-      testRef[Mat3x4f](Mat3x4f(mf), ConstMat3x4f(mf))
       testRef[Mat4x2f](Mat4x2f(mf), ConstMat4x2f(mf))
+      testRef[Mat2x3f](Mat2x3f(mf), ConstMat2x3f(mf))
+      testRef[Mat3x3f](Mat3x3f(mf), ConstMat3x3f(mf))
       testRef[Mat4x3f](Mat4x3f(mf), ConstMat4x3f(mf))
+      testRef[Mat2x4f](Mat2x4f(mf), ConstMat2x4f(mf))
+      testRef[Mat3x4f](Mat3x4f(mf), ConstMat3x4f(mf))
       testRef[Mat4x4f](Mat4x4f(mf), ConstMat4x4f(mf))
 
       testRef[Mat2x2d](Mat2x2d(md), ConstMat2x2d(md))
-      testRef[Mat2x3d](Mat2x3d(md), ConstMat2x3d(md))
-      testRef[Mat2x4d](Mat2x4d(md), ConstMat2x4d(md))
       testRef[Mat3x2d](Mat3x2d(md), ConstMat3x2d(md))
-      testRef[Mat3x3d](Mat3x3d(md), ConstMat3x3d(md))
-      testRef[Mat3x4d](Mat3x4d(md), ConstMat3x4d(md))
       testRef[Mat4x2d](Mat4x2d(md), ConstMat4x2d(md))
+      testRef[Mat2x3d](Mat2x3d(md), ConstMat2x3d(md))
+      testRef[Mat3x3d](Mat3x3d(md), ConstMat3x3d(md))
       testRef[Mat4x3d](Mat4x3d(md), ConstMat4x3d(md))
+      testRef[Mat2x4d](Mat2x4d(md), ConstMat2x4d(md))
+      testRef[Mat3x4d](Mat3x4d(md), ConstMat3x4d(md))
       testRef[Mat4x4d](Mat4x4d(md), ConstMat4x4d(md))
     }
   }

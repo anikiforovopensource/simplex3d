@@ -50,17 +50,17 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat2x3(
+        Mat3x2(
           1, 2,
           3, 4,
           5, 6
         ),
-        Mat2x3(
+        Mat3x2(
           2, 3,
           4, 5,
           6, 7
         )
-      ) == Mat2x3(
+      ) == Mat3x2(
         2, 6,
         12, 20,
         30, 42
@@ -69,18 +69,18 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat2x4(
+        Mat4x2(
           1, 2,
           3, 4,
           5, 6,
           7, 8),
-        Mat2x4(
+        Mat4x2(
           2, 3,
           4, 5,
           6, 7,
           8, 9
         )
-      ) == Mat2x4(
+      ) == Mat4x2(
         2, 6,
         12, 20,
         30, 42,
@@ -90,15 +90,15 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat3x2(
+        Mat2x3(
           1, 2, 3,
           4, 5, 6
         ),
-        Mat3x2(
+        Mat2x3(
           2, 3, 4,
           5, 6, 7
         )
-      ) == Mat3x2(
+      ) == Mat2x3(
         2, 6, 12,
         20, 30, 42
       )
@@ -125,19 +125,19 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat3x4(
+        Mat4x3(
           1, 2, 3,
           4, 5, 6,
           7, 8, 9,
           10, 11, 12
         ),
-        Mat3x4(
+        Mat4x3(
           2, 3, 4,
           5, 6, 7,
           8, 9, 10,
           11, 12, 13
         )
-      ) == Mat3x4(
+      ) == Mat4x3(
         2, 6, 12,
         20, 30, 42,
         56, 72, 90,
@@ -147,15 +147,15 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat4x2(
+        Mat2x4(
           1, 2, 3, 4,
           5, 6, 7, 8
         ),
-        Mat4x2(
+        Mat2x4(
           2, 3, 4, 5,
           6, 7, 8, 9
         )
-      ) == Mat4x2(
+      ) == Mat2x4(
         2, 6, 12, 20,
         30, 42, 56, 72
       )
@@ -163,16 +163,16 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       matrixCompMult(
-        Mat4x3(
+        Mat3x4(
           1, 2, 3, 4,
           5, 6, 7, 8,
           9, 10, 11, 12),
-        Mat4x3(
+        Mat3x4(
           2, 3, 4, 5,
           6, 7, 8, 9,
           10, 11, 12, 13
         )
-      ) == Mat4x3(
+      ) == Mat3x4(
         2, 6, 12, 20,
         30, 42, 56, 72,
         90, 110, 132, 156
@@ -206,20 +206,20 @@ class FloatMathMatTest extends FunSuite {
         3, 6
     ))
 
-    assert(outerProduct(Vec2(1, 2), Vec3(2, 3, 4)) == Mat2x3(
+    assert(outerProduct(Vec2(1, 2), Vec3(2, 3, 4)) == Mat3x2(
         2, 4,
         3, 6,
         4, 8
     ))
 
-    assert(outerProduct(Vec2(1, 2), Vec4(2, 3, 4, 5)) == Mat2x4(
+    assert(outerProduct(Vec2(1, 2), Vec4(2, 3, 4, 5)) == Mat4x2(
         2, 4,
         3, 6,
         4, 8,
         5, 10
     ))
 
-    assert(outerProduct(Vec3(1, 2, 3), Vec2(2, 3)) == Mat3x2(
+    assert(outerProduct(Vec3(1, 2, 3), Vec2(2, 3)) == Mat2x3(
         2, 4, 6,
         3, 6, 9
     ))
@@ -230,19 +230,19 @@ class FloatMathMatTest extends FunSuite {
         4, 8, 12
     ))
 
-    assert(outerProduct(Vec3(1, 2, 3), Vec4(2, 3, 4, 5)) == Mat3x4(
+    assert(outerProduct(Vec3(1, 2, 3), Vec4(2, 3, 4, 5)) == Mat4x3(
         2, 4, 6,
         3, 6, 9,
         4, 8, 12,
         5, 10, 15
     ))
 
-    assert(outerProduct(Vec4(1, 2, 3, 4), Vec2(2, 3)) == Mat4x2(
+    assert(outerProduct(Vec4(1, 2, 3, 4), Vec2(2, 3)) == Mat2x4(
         2, 4, 6, 8,
         3, 6, 9, 12
     ))
 
-    assert(outerProduct(Vec4(1, 2, 3, 4), Vec3(2, 3, 4)) == Mat4x3(
+    assert(outerProduct(Vec4(1, 2, 3, 4), Vec3(2, 3, 4)) == Mat3x4(
         2, 4, 6, 8,
         3, 6, 9, 12,
         4, 8, 12, 16
@@ -269,12 +269,12 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat2x3(
+        Mat3x2(
           1, 2,
           3, 4,
           5, 6
         )
-      ) == Mat3x2(
+      ) == Mat2x3(
         1, 3, 5,
         2, 4, 6
       )
@@ -282,13 +282,13 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat2x4(
+        Mat4x2(
           1, 2,
           3, 4,
           5, 6,
           7, 8
         )
-      ) == Mat4x2(
+      ) == Mat2x4(
         1, 3, 5, 7,
         2, 4, 6, 8
       )
@@ -296,11 +296,11 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat3x2(
+        Mat2x3(
           1, 2, 3,
           4, 5, 6
         )
-      ) == Mat2x3(
+      ) == Mat3x2(
         1, 4,
         2, 5,
         3, 6
@@ -323,13 +323,13 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat3x4(
+        Mat4x3(
           1, 2, 3,
           4, 5, 6,
           7, 8, 9,
           10, 11, 12
         )
-      ) == Mat4x3(
+      ) == Mat3x4(
         1, 4, 7, 10,
         2, 5, 8, 11,
         3, 6, 9, 12
@@ -338,11 +338,11 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat4x2(
+        Mat2x4(
           1, 2, 3, 4,
           5, 6, 7, 8
         )
-      ) == Mat2x4(
+      ) == Mat4x2(
         1, 5,
         2, 6,
         3, 7,
@@ -352,12 +352,12 @@ class FloatMathMatTest extends FunSuite {
 
     assert(
       transpose(
-        Mat4x3(
+        Mat3x4(
           1, 2, 3, 4,
           5, 6, 7, 8,
           9, 10, 11, 12
         )
-      ) == Mat3x4(
+      ) == Mat4x3(
         1, 5, 9,
         2, 6, 10,
         3, 7, 11,

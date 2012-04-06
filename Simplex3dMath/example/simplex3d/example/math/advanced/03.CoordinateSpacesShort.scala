@@ -16,7 +16,7 @@ object CoordinateSpacesShort extends App {
 {
   // Define a box so we have something to render.
   val s = 8.0
-  val boxTranslation = Mat3x4 translate(Vec3(-s/2))
+  val boxTranslation = Mat4x3 translate(Vec3(-s/2))
   val box = List(
     // Front.
     Vec3(0, 0, 0), Vec3(s, 0, 0),
@@ -43,7 +43,7 @@ object CoordinateSpacesShort extends App {
 
 
   // All 3D transformations happen here.
-  def transform(modelMat: inMat3x4, cameraMat: inMat3x4, projectionMat: inMat4, dims: inVec2i) {
+  def transform(modelMat: inMat4x3, cameraMat: inMat4x3, projectionMat: inMat4, dims: inVec2i) {
     val modelViewProjectionMat = projectionMat*Mat4(modelMat.concat(inverse(cameraMat)))
 
     val viewportScale = dims*0.5
@@ -68,8 +68,8 @@ object CoordinateSpacesShort extends App {
     val camRotation = Quat4 rotateX(radians(-20)) rotateY(radians(30)*time)
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
 
-    val cameraMat = Mat3x4 rotate(camRotation) translate(camTranslation)
-    val modelMat = Mat3x4 Identity
+    val cameraMat = Mat4x3 rotate(camRotation) translate(camTranslation)
+    val modelMat = Mat4x3 Identity
     val projectionMat = perspectiveProj(radians(45), dims.x.toDouble/dims.y, 10, 100)
 
     transform(modelMat, cameraMat, projectionMat, dims)

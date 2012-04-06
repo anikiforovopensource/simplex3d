@@ -111,7 +111,7 @@ class InlinedBenchCase {
   val end = (am.length / 3) - 8
   var i = 0; while (i < end) {
     val loc = (nextVec3f - Vec3f(0.5f))*(spread*2)
-    val model = Mat3x4f(lookAt(-loc, Vec3f.UnitY)) translate(loc)
+    val model = Mat4x3f(lookAt(-loc, Vec3f.UnitY)) translate(loc)
     var j = 0; while (j < 8) {
       val id = j*3
       t.x = as(id)

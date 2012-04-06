@@ -114,7 +114,7 @@ object ImplicitCastBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val m = Mat3x4d(
+      val m = Mat4x3d(
         i + 0, i + 1, i + 2,
         i + 3, i + 4, i + 5,
         i + 6, i + 7, i + 8,
@@ -136,7 +136,7 @@ object ImplicitCastBench {
     var i = 0; while (i < length) {
 
       // Bench code
-      val m = Mat3x4f(
+      val m = Mat4x3f(
         i + 0, i + 1, i + 2,
         i + 3, i + 4, i + 5,
         i + 6, i + 7, i + 8,

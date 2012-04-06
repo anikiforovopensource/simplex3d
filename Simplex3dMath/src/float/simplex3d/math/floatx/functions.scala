@@ -1893,65 +1893,65 @@ object functions {
   // Mat functions
   def matrixCompMult(a: inMat2f, b: inMat2f) :Mat2f = {
     new Mat2f(
-      a.m00*b.m00, a.m10*b.m10,
-      a.m01*b.m01, a.m11*b.m11
-    )
-  }
-  def matrixCompMult(a: inMat2x3f, b: inMat2x3f) :Mat2x3f = {
-    new Mat2x3f(
-      a.m00*b.m00, a.m10*b.m10,
-      a.m01*b.m01, a.m11*b.m11,
-      a.m02*b.m02, a.m12*b.m12
-    )
-  }
-  def matrixCompMult(a: inMat2x4f, b: inMat2x4f) :Mat2x4f = {
-    new Mat2x4f(
-      a.m00*b.m00, a.m10*b.m10,
-      a.m01*b.m01, a.m11*b.m11,
-      a.m02*b.m02, a.m12*b.m12,
-      a.m03*b.m03, a.m13*b.m13
+      a.m00*b.m00, a.m01*b.m01,
+      a.m10*b.m10, a.m11*b.m11
     )
   }
   def matrixCompMult(a: inMat3x2f, b: inMat3x2f) :Mat3x2f = {
     new Mat3x2f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21
-    )
-  }
-  def matrixCompMult(a: inMat3f, b: inMat3f) :Mat3f = {
-    new Mat3f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
-      a.m02*b.m02, a.m12*b.m12, a.m22*b.m22
-    )
-  }
-  def matrixCompMult(a: inMat3x4f, b: inMat3x4f) :Mat3x4f = {
-    new Mat3x4f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21,
-      a.m02*b.m02, a.m12*b.m12, a.m22*b.m22,
-      a.m03*b.m03, a.m13*b.m13, a.m23*b.m23
+      a.m00*b.m00, a.m01*b.m01,
+      a.m10*b.m10, a.m11*b.m11,
+      a.m20*b.m20, a.m21*b.m21
     )
   }
   def matrixCompMult(a: inMat4x2f, b: inMat4x2f) :Mat4x2f = {
     new Mat4x2f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31
+      a.m00*b.m00, a.m01*b.m01,
+      a.m10*b.m10, a.m11*b.m11,
+      a.m20*b.m20, a.m21*b.m21,
+      a.m30*b.m30, a.m31*b.m31
+    )
+  }
+  def matrixCompMult(a: inMat2x3f, b: inMat2x3f) :Mat2x3f = {
+    new Mat2x3f(
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12
+    )
+  }
+  def matrixCompMult(a: inMat3f, b: inMat3f) :Mat3f = {
+    new Mat3f(
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12,
+      a.m20*b.m20, a.m21*b.m21, a.m22*b.m22
     )
   }
   def matrixCompMult(a: inMat4x3f, b: inMat4x3f) :Mat4x3f = {
     new Mat4x3f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-      a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12,
+      a.m20*b.m20, a.m21*b.m21, a.m22*b.m22,
+      a.m30*b.m30, a.m31*b.m31, a.m32*b.m32
+    )
+  }
+  def matrixCompMult(a: inMat2x4f, b: inMat2x4f) :Mat2x4f = {
+    new Mat2x4f(
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02, a.m03*b.m03,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12, a.m13*b.m13
+    )
+  }
+  def matrixCompMult(a: inMat3x4f, b: inMat3x4f) :Mat3x4f = {
+    new Mat3x4f(
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02, a.m03*b.m03,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12, a.m13*b.m13,
+      a.m20*b.m20, a.m21*b.m21, a.m22*b.m22, a.m23*b.m23
     )
   }
   def matrixCompMult(a: inMat4f, b: inMat4f) :Mat4f = {
     new Mat4f(
-      a.m00*b.m00, a.m10*b.m10, a.m20*b.m20, a.m30*b.m30,
-      a.m01*b.m01, a.m11*b.m11, a.m21*b.m21, a.m31*b.m31,
-      a.m02*b.m02, a.m12*b.m12, a.m22*b.m22, a.m32*b.m32,
-      a.m03*b.m03, a.m13*b.m13, a.m23*b.m23, a.m33*b.m33
+      a.m00*b.m00, a.m01*b.m01, a.m02*b.m02, a.m03*b.m03,
+      a.m10*b.m10, a.m11*b.m11, a.m12*b.m12, a.m13*b.m13,
+      a.m20*b.m20, a.m21*b.m21, a.m22*b.m22, a.m23*b.m23,
+      a.m30*b.m30, a.m31*b.m31, a.m32*b.m32, a.m33*b.m33
     )
   }
 
@@ -1961,23 +1961,23 @@ object functions {
       c.x*r.y, c.y*r.y
     )
   }
-  def outerProduct(c: inVec2f, r: inVec3f) :Mat2x3f = {
-    new Mat2x3f(
+  def outerProduct(c: inVec2f, r: inVec3f) :Mat3x2f = {
+    new Mat3x2f(
       c.x*r.x, c.y*r.x,
       c.x*r.y, c.y*r.y,
       c.x*r.z, c.y*r.z
     )
   }
-  def outerProduct(c: inVec2f, r: inVec4f) :Mat2x4f = {
-    new Mat2x4f(
+  def outerProduct(c: inVec2f, r: inVec4f) :Mat4x2f = {
+    new Mat4x2f(
       c.x*r.x, c.y*r.x,
       c.x*r.y, c.y*r.y,
       c.x*r.z, c.y*r.z,
       c.x*r.w, c.y*r.w
     )
   }
-  def outerProduct(c: inVec3f, r: inVec2f) :Mat3x2f = {
-    new Mat3x2f(
+  def outerProduct(c: inVec3f, r: inVec2f) :Mat2x3f = {
+    new Mat2x3f(
       c.x*r.x, c.y*r.x, c.z*r.x,
       c.x*r.y, c.y*r.y, c.z*r.y
     )
@@ -1989,22 +1989,22 @@ object functions {
       c.x*r.z, c.y*r.z, c.z*r.z
     )
   }
-  def outerProduct(c: inVec3f, r: inVec4f) :Mat3x4f = {
-    new Mat3x4f(
+  def outerProduct(c: inVec3f, r: inVec4f) :Mat4x3f = {
+    new Mat4x3f(
       c.x*r.x, c.y*r.x, c.z*r.x,
       c.x*r.y, c.y*r.y, c.z*r.y,
       c.x*r.z, c.y*r.z, c.z*r.z,
       c.x*r.w, c.y*r.w, c.z*r.w
     )
   }
-  def outerProduct(c: inVec4f, r: inVec2f) :Mat4x2f = {
-    new Mat4x2f(
+  def outerProduct(c: inVec4f, r: inVec2f) :Mat2x4f = {
+    new Mat2x4f(
       c.x*r.x, c.y*r.x, c.z*r.x, c.w*r.x,
       c.x*r.y, c.y*r.y, c.z*r.y, c.w*r.y
     )
   }
-  def outerProduct(c: inVec4f, r: inVec3f) :Mat4x3f = {
-    new Mat4x3f(
+  def outerProduct(c: inVec4f, r: inVec3f) :Mat3x4f = {
+    new Mat3x4f(
       c.x*r.x, c.y*r.x, c.z*r.x, c.w*r.x,
       c.x*r.y, c.y*r.y, c.z*r.y, c.w*r.y,
       c.x*r.z, c.y*r.z, c.z*r.z, c.w*r.z
@@ -2021,95 +2021,95 @@ object functions {
 
   def transpose(a: inMat2f) :Mat2f = {
     new Mat2f(
-      a.m00, a.m01,
-      a.m10, a.m11
-    )
-  }
-  def transpose(a: inMat3x2f) :Mat2x3f = {
-    new Mat2x3f(
-      a.m00, a.m01,
-      a.m10, a.m11,
-      a.m20, a.m21
-    )
-  }
-  def transpose(a: inMat4x2f) :Mat2x4f = {
-    new Mat2x4f(
-      a.m00, a.m01,
-      a.m10, a.m11,
-      a.m20, a.m21,
-      a.m30, a.m31
+      a.m00, a.m10,
+      a.m01, a.m11
     )
   }
   def transpose(a: inMat2x3f) :Mat3x2f = {
     new Mat3x2f(
-      a.m00, a.m01, a.m02,
-      a.m10, a.m11, a.m12
-    )
-  }
-  def transpose(a: inMat3f) :Mat3f = {
-    new Mat3f(
-      a.m00, a.m01, a.m02,
-      a.m10, a.m11, a.m12,
-      a.m20, a.m21, a.m22
-    )
-  }
-  def transpose(a: inMat4x3f) :Mat3x4f = {
-    new Mat3x4f(
-      a.m00, a.m01, a.m02,
-      a.m10, a.m11, a.m12,
-      a.m20, a.m21, a.m22,
-      a.m30, a.m31, a.m32
+      a.m00, a.m10,
+      a.m01, a.m11,
+      a.m02, a.m12
     )
   }
   def transpose(a: inMat2x4f) :Mat4x2f = {
     new Mat4x2f(
-      a.m00, a.m01, a.m02, a.m03,
-      a.m10, a.m11, a.m12, a.m13
+      a.m00, a.m10,
+      a.m01, a.m11,
+      a.m02, a.m12,
+      a.m03, a.m13
+    )
+  }
+  def transpose(a: inMat3x2f) :Mat2x3f = {
+    new Mat2x3f(
+      a.m00, a.m10, a.m20,
+      a.m01, a.m11, a.m21
+    )
+  }
+  def transpose(a: inMat3f) :Mat3f = {
+    new Mat3f(
+      a.m00, a.m10, a.m20,
+      a.m01, a.m11, a.m21,
+      a.m02, a.m12, a.m22
     )
   }
   def transpose(a: inMat3x4f) :Mat4x3f = {
     new Mat4x3f(
-      a.m00, a.m01, a.m02, a.m03,
-      a.m10, a.m11, a.m12, a.m13,
-      a.m20, a.m21, a.m22, a.m23
+      a.m00, a.m10, a.m20,
+      a.m01, a.m11, a.m21,
+      a.m02, a.m12, a.m22,
+      a.m03, a.m13, a.m23
+    )
+  }
+  def transpose(a: inMat4x2f) :Mat2x4f = {
+    new Mat2x4f(
+      a.m00, a.m10, a.m20, a.m30,
+      a.m01, a.m11, a.m21, a.m31
+    )
+  }
+  def transpose(a: inMat4x3f) :Mat3x4f = {
+    new Mat3x4f(
+      a.m00, a.m10, a.m20, a.m30,
+      a.m01, a.m11, a.m21, a.m31,
+      a.m02, a.m12, a.m22, a.m32
     )
   }
   def transpose(a: inMat4f) :Mat4f = {
     new Mat4f(
-      a.m00, a.m01, a.m02, a.m03,
-      a.m10, a.m11, a.m12, a.m13,
-      a.m20, a.m21, a.m22, a.m23,
-      a.m30, a.m31, a.m32, a.m33
+      a.m00, a.m10, a.m20, a.m30,
+      a.m01, a.m11, a.m21, a.m31,
+      a.m02, a.m12, a.m22, a.m32,
+      a.m03, a.m13, a.m23, a.m33
     )
   }
 
-  def determinant(m: inMat2f) :Float = m.m00*m.m11 - m.m01*m.m10
+  def determinant(m: inMat2f) :Float = m.m00*m.m11 - m.m10*m.m01
 
   def determinant(m: inMat3f) :Float = {
     import m._
 
-    val c0 = m11*m22 - m12*m21
-    val c1 = m12*m20 - m10*m22
-    val c2 = m10*m21 - m11*m20
+    val c0 = m11*m22 - m21*m12
+    val c1 = m21*m02 - m01*m22
+    val c2 = m01*m12 - m11*m02
 
-    m00*c0 + m01*c1 + m02*c2
+    m00*c0 + m10*c1 + m20*c2
   }
 
   def determinant(m: inMat4f) :Float = {
     import m._
 
-    val a0 = m00*m11 - m01*m10
-    val a1 = m00*m12 - m02*m10
-    val a2 = m00*m13 - m03*m10
-    val a3 = m01*m12 - m02*m11
-    val a4 = m01*m13 - m03*m11
-    val a5 = m02*m13 - m03*m12
-    val b0 = m20*m31 - m21*m30
-    val b1 = m20*m32 - m22*m30
-    val b2 = m20*m33 - m23*m30
-    val b3 = m21*m32 - m22*m31
-    val b4 = m21*m33 - m23*m31
-    val b5 = m22*m33 - m23*m32
+    val a0 = m00*m11 - m10*m01
+    val a1 = m00*m21 - m20*m01
+    val a2 = m00*m31 - m30*m01
+    val a3 = m10*m21 - m20*m11
+    val a4 = m10*m31 - m30*m11
+    val a5 = m20*m31 - m30*m21
+    val b0 = m02*m13 - m12*m03
+    val b1 = m02*m23 - m22*m03
+    val b2 = m02*m33 - m32*m03
+    val b3 = m12*m23 - m22*m13
+    val b4 = m12*m33 - m32*m13
+    val b5 = m22*m33 - m32*m23
 
     a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0
   }
@@ -2120,8 +2120,8 @@ object functions {
   def inverse(m: inMat2f) :Mat2f = {
     val invDet = 1/determinant(m)
     new Mat2f(
-       m.m11*invDet, -m.m10*invDet,
-      -m.m01*invDet,  m.m00*invDet
+       m.m11*invDet, -m.m01*invDet,
+      -m.m10*invDet,  m.m00*invDet
     )
   }
 
@@ -2139,24 +2139,24 @@ object functions {
   def inverse(m: inMat3f) :Mat3f = {
     import m._
 
-    val c0 = m11*m22 - m12*m21
-    val c1 = m12*m20 - m10*m22
-    val c2 = m10*m21 - m11*m20
+    val c0 = m11*m22 - m21*m12
+    val c1 = m21*m02 - m01*m22
+    val c2 = m01*m12 - m11*m02
 
-    val invDet = 1/(m00*c0 + m01*c1 + m02*c2)
+    val invDet = 1/(m00*c0 + m10*c1 + m20*c2)
 
     new Mat3f(
       c0*invDet,
       c1*invDet,
       c2*invDet,
 
-      (m02*m21 - m01*m22)*invDet,
-      (m00*m22 - m02*m20)*invDet,
-      (m01*m20 - m00*m21)*invDet,
+      (m20*m12 - m10*m22)*invDet,
+      (m00*m22 - m20*m02)*invDet,
+      (m10*m02 - m00*m12)*invDet,
 
-      (m01*m12 - m02*m11)*invDet,
-      (m02*m10 - m00*m12)*invDet,
-      (m00*m11 - m01*m10)*invDet
+      (m10*m21 - m20*m11)*invDet,
+      (m20*m01 - m00*m21)*invDet,
+      (m00*m11 - m10*m01)*invDet
     )
   }
 
@@ -2174,41 +2174,41 @@ object functions {
   def inverse(m: inMat4f) :Mat4f = {
     import m._
 
-    val a0 = m00*m11 - m01*m10
-    val a1 = m00*m12 - m02*m10
-    val a2 = m00*m13 - m03*m10
-    val a3 = m01*m12 - m02*m11
-    val a4 = m01*m13 - m03*m11
-    val a5 = m02*m13 - m03*m12
-    val b0 = m20*m31 - m21*m30
-    val b1 = m20*m32 - m22*m30
-    val b2 = m20*m33 - m23*m30
-    val b3 = m21*m32 - m22*m31
-    val b4 = m21*m33 - m23*m31
-    val b5 = m22*m33 - m23*m32
+    val a0 = m00*m11 - m10*m01
+    val a1 = m00*m21 - m20*m01
+    val a2 = m00*m31 - m30*m01
+    val a3 = m10*m21 - m20*m11
+    val a4 = m10*m31 - m30*m11
+    val a5 = m20*m31 - m30*m21
+    val b0 = m02*m13 - m12*m03
+    val b1 = m02*m23 - m22*m03
+    val b2 = m02*m33 - m32*m03
+    val b3 = m12*m23 - m22*m13
+    val b4 = m12*m33 - m32*m13
+    val b5 = m22*m33 - m32*m23
 
     val invDet = 1/(a0*b5 - a1*b4 + a2*b3 + a3*b2 - a4*b1 + a5*b0)
 
     new Mat4f(
-      ( m11*b5 - m12*b4 + m13*b3)*invDet,
-      (-m10*b5 + m12*b2 - m13*b1)*invDet,
-      ( m10*b4 - m11*b2 + m13*b0)*invDet,
-      (-m10*b3 + m11*b1 - m12*b0)*invDet,
+      ( m11*b5 - m21*b4 + m31*b3)*invDet,
+      (-m01*b5 + m21*b2 - m31*b1)*invDet,
+      ( m01*b4 - m11*b2 + m31*b0)*invDet,
+      (-m01*b3 + m11*b1 - m21*b0)*invDet,
 
-      (-m01*b5 + m02*b4 - m03*b3)*invDet,
-      ( m00*b5 - m02*b2 + m03*b1)*invDet,
-      (-m00*b4 + m01*b2 - m03*b0)*invDet,
-      ( m00*b3 - m01*b1 + m02*b0)*invDet,
+      (-m10*b5 + m20*b4 - m30*b3)*invDet,
+      ( m00*b5 - m20*b2 + m30*b1)*invDet,
+      (-m00*b4 + m10*b2 - m30*b0)*invDet,
+      ( m00*b3 - m10*b1 + m20*b0)*invDet,
 
-      ( m31*a5 - m32*a4 + m33*a3)*invDet,
-      (-m30*a5 + m32*a2 - m33*a1)*invDet,
-      ( m30*a4 - m31*a2 + m33*a0)*invDet,
-      (-m30*a3 + m31*a1 - m32*a0)*invDet,
+      ( m13*a5 - m23*a4 + m33*a3)*invDet,
+      (-m03*a5 + m23*a2 - m33*a1)*invDet,
+      ( m03*a4 - m13*a2 + m33*a0)*invDet,
+      (-m03*a3 + m13*a1 - m23*a0)*invDet,
 
-      (-m21*a5 + m22*a4 - m23*a3)*invDet,
-      ( m20*a5 - m22*a2 + m23*a1)*invDet,
-      (-m20*a4 + m21*a2 - m23*a0)*invDet,
-      ( m20*a3 - m21*a1 + m22*a0)*invDet
+      (-m12*a5 + m22*a4 - m32*a3)*invDet,
+      ( m02*a5 - m22*a2 + m32*a1)*invDet,
+      (-m02*a4 + m12*a2 - m32*a0)*invDet,
+      ( m02*a3 - m12*a1 + m22*a0)*invDet
     )
   }
 
@@ -2284,81 +2284,81 @@ object functions {
     val b = 1 - a
 
     new Mat2f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11
-    )
-  }
-  def lerp(m: inMat2x3f, n: inMat2x3f, a: Float) :Mat2x3f = {
-    val b = 1 - a
-
-    new Mat2x3f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11,
-      b*m.m02 + a*n.m02, b*m.m12 + a*n.m12
-    )
-  }
-  def lerp(m: inMat2x4f, n: inMat2x4f, a: Float) :Mat2x4f = {
-    val b = 1 - a
-
-    new Mat2x4f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11,
-      b*m.m02 + a*n.m02, b*m.m12 + a*n.m12,
-      b*m.m03 + a*n.m03, b*m.m13 + a*n.m13
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11
     )
   }
   def lerp(m: inMat3x2f, n: inMat3x2f, a: Float) :Mat3x2f = {
     val b = 1 - a
 
     new Mat3x2f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10, b*m.m20 + a*n.m20,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11, b*m.m21 + a*n.m21
-    )
-  }
-  def lerp(m: inMat3f, n: inMat3f, a: Float) :Mat3f = {
-    val b = 1 - a
-
-    new Mat3f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10, b*m.m20 + a*n.m20,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11, b*m.m21 + a*n.m21,
-      b*m.m02 + a*n.m02, b*m.m12 + a*n.m12, b*m.m22 + a*n.m22
-    )
-  }
-  def lerp(m: inMat3x4f, n: inMat3x4f, a: Float) :Mat3x4f = {
-    val b = 1 - a
-
-    new Mat3x4f(
-      b*m.m00 + a*n.m00, b*m.m10 + a*n.m10, b*m.m20 + a*n.m20,
-      b*m.m01 + a*n.m01, b*m.m11 + a*n.m11, b*m.m21 + a*n.m21,
-      b*m.m02 + a*n.m02, b*m.m12 + a*n.m12, b*m.m22 + a*n.m22,
-      b*m.m03 + a*n.m03, b*m.m13 + a*n.m13, b*m.m23 + a*n.m23
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11,
+      b*m.m20 + a*n.m20, b*m.m21 + a*n.m21
     )
   }
   def lerp(m: inMat4x2f, n: inMat4x2f, a: Float) :Mat4x2f = {
     val b = 1 - a
 
     new Mat4x2f(
-      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11,
+      b*m.m20 + a*n.m20, b*m.m21 + a*n.m21,
+      b*m.m30 + a*n.m30, b*m.m31 + a*n.m31
+    )
+  }
+  def lerp(m: inMat2x3f, n: inMat2x3f, a: Float) :Mat2x3f = {
+    val b = 1 - a
+
+    new Mat2x3f(
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01, b*m.m02 + a*n.m02,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11, b*m.m12 + a*n.m12
+    )
+  }
+  def lerp(m: inMat3f, n: inMat3f, a: Float) :Mat3f = {
+    val b = 1 - a
+
+    new Mat3f(
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01, b*m.m02 + a*n.m02,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11, b*m.m12 + a*n.m12,
+      b*m.m20 + a*n.m20, b*m.m21 + a*n.m21, b*m.m22 + a*n.m22
     )
   }
   def lerp(m: inMat4x3f, n: inMat4x3f, a: Float) :Mat4x3f = {
     val b = 1 - a
 
     new Mat4x3f(
-      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
-      b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32
+      b*m.m00 + a*n.m00, b*m.m01 + a*n.m01, b*m.m02 + a*n.m02,
+      b*m.m10 + a*n.m10, b*m.m11 + a*n.m11, b*m.m12 + a*n.m12,
+      b*m.m20 + a*n.m20, b*m.m21 + a*n.m21, b*m.m22 + a*n.m22,
+      b*m.m30 + a*n.m30, b*m.m31 + a*n.m31, b*m.m32 + a*n.m32
+    )
+  }
+  def lerp(m: inMat2x4f, n: inMat2x4f, a: Float) :Mat2x4f = {
+    val b = 1 - a
+
+    new Mat2x4f(
+      b*m.m00 +a*n.m00, b*m.m01 +a*n.m01, b*m.m02 +a*n.m02, b*m.m03 +a*n.m03,
+      b*m.m10 +a*n.m10, b*m.m11 +a*n.m11, b*m.m12 +a*n.m12, b*m.m13 +a*n.m13
+    )
+  }
+  def lerp(m: inMat3x4f, n: inMat3x4f, a: Float) :Mat3x4f = {
+    val b = 1 - a
+
+    new Mat3x4f(
+      b*m.m00 +a*n.m00, b*m.m01 +a*n.m01, b*m.m02 +a*n.m02, b*m.m03 +a*n.m03,
+      b*m.m10 +a*n.m10, b*m.m11 +a*n.m11, b*m.m12 +a*n.m12, b*m.m13 +a*n.m13,
+      b*m.m20 +a*n.m20, b*m.m21 +a*n.m21, b*m.m22 +a*n.m22, b*m.m23 +a*n.m23
     )
   }
   def lerp(m: inMat4f, n: inMat4f, a: Float) :Mat4f = {
     val b = 1 - a
 
     new Mat4f(
-      b*m.m00 +a*n.m00, b*m.m10 +a*n.m10, b*m.m20 +a*n.m20, b*m.m30 +a*n.m30,
-      b*m.m01 +a*n.m01, b*m.m11 +a*n.m11, b*m.m21 +a*n.m21, b*m.m31 +a*n.m31,
-      b*m.m02 +a*n.m02, b*m.m12 +a*n.m12, b*m.m22 +a*n.m22, b*m.m32 +a*n.m32,
-      b*m.m03 +a*n.m03, b*m.m13 +a*n.m13, b*m.m23 +a*n.m23, b*m.m33 +a*n.m33
+      b*m.m00 +a*n.m00, b*m.m01 +a*n.m01, b*m.m02 +a*n.m02, b*m.m03 +a*n.m03,
+      b*m.m10 +a*n.m10, b*m.m11 +a*n.m11, b*m.m12 +a*n.m12, b*m.m13 +a*n.m13,
+      b*m.m20 +a*n.m20, b*m.m21 +a*n.m21, b*m.m22 +a*n.m22, b*m.m23 +a*n.m23,
+      b*m.m30 +a*n.m30, b*m.m31 +a*n.m31, b*m.m32 +a*n.m32, b*m.m33 +a*n.m33
     )
   }
 
@@ -2376,49 +2376,49 @@ object functions {
     hasErrors(q.a) || hasErrors(q.b) || hasErrors(q.c) || hasErrors(q.d)
   )
   def hasErrors(m: inMat2f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)||
-    hasErrors(m.m01)|| hasErrors(m.m11)
-  )
-  def hasErrors(m: inMat2x3f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)||
-    hasErrors(m.m01)|| hasErrors(m.m11)||
-    hasErrors(m.m02)|| hasErrors(m.m12)
-  )
-  def hasErrors(m: inMat2x4f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)||
-    hasErrors(m.m01)|| hasErrors(m.m11)||
-    hasErrors(m.m02)|| hasErrors(m.m12)||
-    hasErrors(m.m03)|| hasErrors(m.m13)
+    hasErrors(m.m00)|| hasErrors(m.m01)||
+    hasErrors(m.m10)|| hasErrors(m.m11)
   )
   def hasErrors(m: inMat3x2f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)
-  )
-  def hasErrors(m: inMat3f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)||
-    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)
-  )
-  def hasErrors(m: inMat3x4f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)||
-    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)||
-    hasErrors(m.m03)|| hasErrors(m.m13)|| hasErrors(m.m23)
+    hasErrors(m.m00)|| hasErrors(m.m01)||
+    hasErrors(m.m10)|| hasErrors(m.m11)||
+    hasErrors(m.m20)|| hasErrors(m.m21)
   )
   def hasErrors(m: inMat4x2f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)
+    hasErrors(m.m00)|| hasErrors(m.m01)||
+    hasErrors(m.m10)|| hasErrors(m.m11)||
+    hasErrors(m.m20)|| hasErrors(m.m21)||
+    hasErrors(m.m30)|| hasErrors(m.m31)
+  )
+  def hasErrors(m: inMat2x3f) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)
+  )
+  def hasErrors(m: inMat3f) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)||
+    hasErrors(m.m20)|| hasErrors(m.m21)|| hasErrors(m.m22)
   )
   def hasErrors(m: inMat4x3f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)||
-    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)|| hasErrors(m.m32)
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)||
+    hasErrors(m.m20)|| hasErrors(m.m21)|| hasErrors(m.m22)||
+    hasErrors(m.m30)|| hasErrors(m.m31)|| hasErrors(m.m32)
+  )
+  def hasErrors(m: inMat2x4f) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)|| hasErrors(m.m03)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)|| hasErrors(m.m13)
+  )
+  def hasErrors(m: inMat3x4f) :Boolean = (
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)|| hasErrors(m.m03)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)|| hasErrors(m.m13)||
+    hasErrors(m.m20)|| hasErrors(m.m21)|| hasErrors(m.m22)|| hasErrors(m.m23)
   )
   def hasErrors(m: inMat4f) :Boolean = (
-    hasErrors(m.m00)|| hasErrors(m.m10)|| hasErrors(m.m20)|| hasErrors(m.m30)||
-    hasErrors(m.m01)|| hasErrors(m.m11)|| hasErrors(m.m21)|| hasErrors(m.m31)||
-    hasErrors(m.m02)|| hasErrors(m.m12)|| hasErrors(m.m22)|| hasErrors(m.m32)||
-    hasErrors(m.m03)|| hasErrors(m.m13)|| hasErrors(m.m23)|| hasErrors(m.m33)
+    hasErrors(m.m00)|| hasErrors(m.m01)|| hasErrors(m.m02)|| hasErrors(m.m03)||
+    hasErrors(m.m10)|| hasErrors(m.m11)|| hasErrors(m.m12)|| hasErrors(m.m13)||
+    hasErrors(m.m20)|| hasErrors(m.m21)|| hasErrors(m.m22)|| hasErrors(m.m23)||
+    hasErrors(m.m30)|| hasErrors(m.m31)|| hasErrors(m.m32)|| hasErrors(m.m33)
   )
 
   def approxEqual(x: Float, y: Float, absDelta: Float) :Boolean = {
@@ -2448,143 +2448,143 @@ object functions {
   def approxEqual(m: inMat2f, n: inMat2f, absDelta: Float) :Boolean = {
     (
       abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-
       abs(n.m01 - m.m01) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
       abs(n.m11 - m.m11) < absDelta
     )
   }
-  def approxEqual(m: inMat2x3f, n: inMat2x3f, absDelta: Float) :Boolean = {
-    (
-      abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-
-      abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-
-      abs(n.m02 - m.m02) < absDelta &&
-      abs(n.m12 - m.m12) < absDelta
-    )
-  }
-  def approxEqual(m: inMat2x4f, n: inMat2x4f, absDelta: Float) :Boolean = {
-    (
-      abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-
-      abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-
-      abs(n.m02 - m.m02) < absDelta &&
-      abs(n.m12 - m.m12) < absDelta &&
-
-      abs(n.m03 - m.m03) < absDelta &&
-      abs(n.m13 - m.m13) < absDelta
-    )
-  }
-
   def approxEqual(m: inMat3x2f, n: inMat3x2f, absDelta: Float) :Boolean = {
     (
       abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-
       abs(n.m01 - m.m01) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
       abs(n.m11 - m.m11) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
       abs(n.m21 - m.m21) < absDelta
-    )
-  }
-  def approxEqual(m: inMat3f, n: inMat3f, absDelta: Float) :Boolean = {
-    (
-      abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-
-      abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-      abs(n.m21 - m.m21) < absDelta &&
-
-      abs(n.m02 - m.m02) < absDelta &&
-      abs(n.m12 - m.m12) < absDelta &&
-      abs(n.m22 - m.m22) < absDelta
-    )
-  }
-  def approxEqual(m: inMat3x4f, n: inMat3x4f, absDelta: Float) :Boolean = {
-    (
-      abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-
-      abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-      abs(n.m21 - m.m21) < absDelta &&
-
-      abs(n.m02 - m.m02) < absDelta &&
-      abs(n.m12 - m.m12) < absDelta &&
-      abs(n.m22 - m.m22) < absDelta &&
-
-      abs(n.m03 - m.m03) < absDelta &&
-      abs(n.m13 - m.m13) < absDelta &&
-      abs(n.m23 - m.m23) < absDelta
     )
   }
   def approxEqual(m: inMat4x2f, n: inMat4x2f, absDelta: Float) :Boolean = {
     (
       abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-      abs(n.m30 - m.m30) < absDelta &&
-
       abs(n.m01 - m.m01) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
       abs(n.m11 - m.m11) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
       abs(n.m21 - m.m21) < absDelta &&
+
+      abs(n.m30 - m.m30) < absDelta &&
       abs(n.m31 - m.m31) < absDelta
+    )
+  }
+
+  def approxEqual(m: inMat2x3f, n: inMat2x3f, absDelta: Float) :Boolean = {
+    (
+      abs(n.m00 - m.m00) < absDelta &&
+      abs(n.m01 - m.m01) < absDelta &&
+      abs(n.m02 - m.m02) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
+      abs(n.m12 - m.m12) < absDelta
+    )
+  }
+  def approxEqual(m: inMat3f, n: inMat3f, absDelta: Float) :Boolean = {
+    (
+      abs(n.m00 - m.m00) < absDelta &&
+      abs(n.m01 - m.m01) < absDelta &&
+      abs(n.m02 - m.m02) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
+      abs(n.m12 - m.m12) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
+      abs(n.m21 - m.m21) < absDelta &&
+      abs(n.m22 - m.m22) < absDelta
     )
   }
   def approxEqual(m: inMat4x3f, n: inMat4x3f, absDelta: Float) :Boolean = {
     (
       abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-      abs(n.m30 - m.m30) < absDelta &&
-
       abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-      abs(n.m21 - m.m21) < absDelta &&
-      abs(n.m31 - m.m31) < absDelta &&
-
       abs(n.m02 - m.m02) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
       abs(n.m12 - m.m12) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
+      abs(n.m21 - m.m21) < absDelta &&
       abs(n.m22 - m.m22) < absDelta &&
+
+      abs(n.m30 - m.m30) < absDelta &&
+      abs(n.m31 - m.m31) < absDelta &&
       abs(n.m32 - m.m32) < absDelta
+    )
+  }
+  def approxEqual(m: inMat2x4f, n: inMat2x4f, absDelta: Float) :Boolean = {
+    (
+      abs(n.m00 - m.m00) < absDelta &&
+      abs(n.m01 - m.m01) < absDelta &&
+      abs(n.m02 - m.m02) < absDelta &&
+      abs(n.m03 - m.m03) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
+      abs(n.m12 - m.m12) < absDelta &&
+      abs(n.m13 - m.m13) < absDelta
+    )
+  }
+  def approxEqual(m: inMat3x4f, n: inMat3x4f, absDelta: Float) :Boolean = {
+    (
+      abs(n.m00 - m.m00) < absDelta &&
+      abs(n.m01 - m.m01) < absDelta &&
+      abs(n.m02 - m.m02) < absDelta &&
+      abs(n.m03 - m.m03) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
+      abs(n.m12 - m.m12) < absDelta &&
+      abs(n.m13 - m.m13) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
+      abs(n.m21 - m.m21) < absDelta &&
+      abs(n.m22 - m.m22) < absDelta &&
+      abs(n.m23 - m.m23) < absDelta
     )
   }
   def approxEqual(m: inMat4f, n: inMat4f, absDelta: Float) :Boolean = {
     (
       abs(n.m00 - m.m00) < absDelta &&
-      abs(n.m10 - m.m10) < absDelta &&
-      abs(n.m20 - m.m20) < absDelta &&
-      abs(n.m30 - m.m30) < absDelta &&
-
       abs(n.m01 - m.m01) < absDelta &&
-      abs(n.m11 - m.m11) < absDelta &&
-      abs(n.m21 - m.m21) < absDelta &&
-      abs(n.m31 - m.m31) < absDelta &&
-
       abs(n.m02 - m.m02) < absDelta &&
-      abs(n.m12 - m.m12) < absDelta &&
-      abs(n.m22 - m.m22) < absDelta &&
-      abs(n.m32 - m.m32) < absDelta &&
-
       abs(n.m03 - m.m03) < absDelta &&
+
+      abs(n.m10 - m.m10) < absDelta &&
+      abs(n.m11 - m.m11) < absDelta &&
+      abs(n.m12 - m.m12) < absDelta &&
       abs(n.m13 - m.m13) < absDelta &&
+
+      abs(n.m20 - m.m20) < absDelta &&
+      abs(n.m21 - m.m21) < absDelta &&
+      abs(n.m22 - m.m22) < absDelta &&
       abs(n.m23 - m.m23) < absDelta &&
+
+      abs(n.m30 - m.m30) < absDelta &&
+      abs(n.m31 - m.m31) < absDelta &&
+      abs(n.m32 - m.m32) < absDelta &&
       abs(n.m33 - m.m33) < absDelta
     )
   }
 
   /**
    * This method is equivalent to casting the matrix to 3x3, inverting it
-   * and then casting the result back to 2x3.<br/>
+   * and then casting the result back to 3x2.<br/>
    *
    * This is a general matrix inverse. You can invert transofrmations
    * quicker by using Transform2f.inverse(scale, rotation, translation).
@@ -2596,21 +2596,21 @@ object functions {
    *
    * <br/>If matrix determinant is zero the result is undefined.
    */
-  def inverse(m: inMat2x3f) :Mat2x3f = {
+  def inverse(m: inMat3x2f) :Mat3x2f = {
     import m._
 
-    val invDet = 1/(m00*m11 - m01*m10)
+    val invDet = 1/(m00*m11 - m10*m01)
 
-    new Mat2x3f(
-       m11*invDet, -m10*invDet,
-      -m01*invDet,  m00*invDet,
-      (m01*m12 - m02*m11)*invDet, (m02*m10 - m00*m12)*invDet
+    new Mat3x2f(
+       m11*invDet, -m01*invDet,
+      -m10*invDet,  m00*invDet,
+      (m10*m21 - m20*m11)*invDet, (m20*m01 - m00*m21)*invDet
     )
   }
 
   /**
    * This method is equivalent to casting the matrix to 4x4, inverting it
-   * and then casting the result back to 3x4.<br/>
+   * and then casting the result back to 4x3.<br/>
    *
    * This is a general matrix inverse. You can invert transofrmations
    * quicker by using Transform3f.inverse(scale, rotation, translation).
@@ -2622,34 +2622,34 @@ object functions {
    *
    * <br/>If matrix determinant is zero the result is undefined.
    */
-  def inverse(m: inMat3x4f) :Mat3x4f = {
+  def inverse(m: inMat4x3f) :Mat4x3f = {
     import m._
 
-    val a0 = m00*m11 - m01*m10
-    val a1 = m00*m12 - m02*m10
-    val a2 = m00*m13 - m03*m10
-    val a3 = m01*m12 - m02*m11
-    val a4 = m01*m13 - m03*m11
-    val a5 = m02*m13 - m03*m12
+    val a0 = m00*m11 - m10*m01
+    val a1 = m00*m21 - m20*m01
+    val a2 = m00*m31 - m30*m01
+    val a3 = m10*m21 - m20*m11
+    val a4 = m10*m31 - m30*m11
+    val a5 = m20*m31 - m30*m21
 
-    val invDet = 1/(a0*m22 - a1*m21 + a3*m20)
+    val invDet = 1/(a0*m22 - a1*m12 + a3*m02)
 
-    new Mat3x4f(
-      ( m11*m22 - m12*m21)*invDet,
-      (-m10*m22 + m12*m20)*invDet,
-      ( m10*m21 - m11*m20)*invDet,
+    new Mat4x3f(
+      ( m11*m22 - m21*m12)*invDet,
+      (-m01*m22 + m21*m02)*invDet,
+      ( m01*m12 - m11*m02)*invDet,
 
-      (-m01*m22 + m02*m21)*invDet,
-      ( m00*m22 - m02*m20)*invDet,
-      (-m00*m21 + m01*m20)*invDet,
+      (-m10*m22 + m20*m12)*invDet,
+      ( m00*m22 - m20*m02)*invDet,
+      (-m00*m12 + m10*m02)*invDet,
 
        a3*invDet,
       -a1*invDet,
        a0*invDet,
 
-      (-m21*a5 + m22*a4 - m23*a3)*invDet,
-      ( m20*a5 - m22*a2 + m23*a1)*invDet,
-      (-m20*a4 + m21*a2 - m23*a0)*invDet
+      (-m12*a5 + m22*a4 - m32*a3)*invDet,
+      ( m02*a5 - m22*a2 + m32*a1)*invDet,
+      (-m02*a4 + m12*a2 - m32*a0)*invDet
     )
   }
 
@@ -2761,38 +2761,38 @@ object functions {
       val s = inversesqrt(t)*0.5f
       new Quat4f(
         s*t,
-        (m21 - m12)*s,
-        (m02 - m20)*s,
-        (m10 - m01)*s
+        (m12 - m21)*s,
+        (m20 - m02)*s,
+        (m01 - m10)*s
       )
     }
     else if (m00 > m11 && m00 > m22) {
       val t = m00 - m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       new Quat4f(
-        (m21 - m12)*s,
+        (m12 - m21)*s,
         s*t,
-        (m10 + m01)*s,
-        (m02 + m20)*s
+        (m01 + m10)*s,
+        (m20 + m02)*s
       )
     }
     else if (m11 > m22) {
       val t = -m00 + m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       new Quat4f(
-        (m02 - m20)*s,
-        (m10 + m01)*s,
+        (m20 - m02)*s,
+        (m01 + m10)*s,
         s*t,
-        (m21 + m12)*s
+        (m12 + m21)*s
       )
     }
     else {
       val t = -m00 - m11 + m22 + 1
       val s = inversesqrt(t)*0.5f
       new Quat4f(
-        (m10 - m01)*s,
-        (m02 + m20)*s,
-        (m21 + m12)*s,
+        (m01 - m10)*s,
+        (m20 + m02)*s,
+        (m12 + m21)*s,
         s*t
       )
     }
@@ -2891,33 +2891,33 @@ object functions {
         val r = sqrt((m00 + 1)*0.5f)
         val t = 1/(4*r)
         axis.x = r
-        axis.y = (m01 + m10)*t
-        axis.z = (m02 + m20)*t
+        axis.y = (m10 + m01)*t
+        axis.z = (m20 + m02)*t
       }
       else if (m11 > m22) {
         val r = sqrt((m11 + 1)*0.5f)
         val t = 1/(4*r)
         axis.y = r
-        axis.x = (m01 + m10)*t
-        axis.z = (m12 + m21)*t
+        axis.x = (m10 + m01)*t
+        axis.z = (m21 + m12)*t
       }
       else {
         val r = sqrt((m22 + 1)*0.5f)
         val t = 1/(4*r)
         axis.z = r
-        axis.x = (m02 + m20)*t
-        axis.y = (m12 + m21)*t
+        axis.x = (m20 + m02)*t
+        axis.y = (m21 + m12)*t
       }
       return Pi
     }
 
-    val t0 = (m21 - m12)
-    val t1 = (m02 - m20)
-    val t2 = (m10 - m01)
+    val t0 = (m12 - m21)
+    val t1 = (m20 - m02)
+    val t2 = (m01 - m10)
     val t = inversesqrt(t0*t0 + t1*t1 + t2*t2)
-    axis.x = (m21 - m12)*t
-    axis.y = (m02 - m20)*t
-    axis.z = (m10 - m01)*t
+    axis.x = (m12 - m21)*t
+    axis.y = (m20 - m02)*t
+    axis.z = (m01 - m10)*t
 
     acos(cosAngle)
   }
@@ -3033,14 +3033,14 @@ object functions {
     scale: inVec2f,
     rotation: inMat2f,
     translation: inVec2f
-  ) :Mat2x3f = {
+  ) :Mat3x2f = {
     import rotation._
     import translation.{x => tx, y => ty}
     import scale.{x => sx, y => sy}
 
-    new Mat2x3f(
-      m00*sx, m10*sx,
-      m01*sy, m11*sy,
+    new Mat3x2f(
+      m00*sx, m01*sx,
+      m10*sy, m11*sy,
       tx, ty
     )
   }
@@ -3053,22 +3053,22 @@ object functions {
     scale: inVec2f,
     rotation: inMat2f,
     translation: inVec2f
-  ) :Mat2x3f = {
+  ) :Mat3x2f = {
     import translation.{x => tx, y => ty}
 
     val sx = 1/scale.x
     val sy = 1/scale.y
 
     val m00 = rotation.m00*sx
-    val m10 = rotation.m01*sy
-    val m01 = rotation.m10*sx
+    val m01 = rotation.m10*sy
+    val m10 = rotation.m01*sx
     val m11 = rotation.m11*sy
 
-    new Mat2x3f(
-      m00, m10,
-      m01, m11,
-      -m00*tx - m01*ty,
-      -m10*tx - m11*ty
+    new Mat3x2f(
+      m00, m01,
+      m10, m11,
+      -m00*tx - m10*ty,
+      -m01*tx - m11*ty
     )
   }
   
@@ -3076,15 +3076,15 @@ object functions {
     scale: inVec3f,
     rotation: inMat3f,
     translation: inVec3f
-  ) :Mat3x4f = {
+  ) :Mat4x3f = {
     import scale.{x => sx, y => sy, z => sz}
     import rotation._
     import translation.{x => tx, y => ty, z => tz}
 
-    new Mat3x4f(
-      m00*sx, m10*sx, m20*sx,
-      m01*sy, m11*sy, m21*sy,
-      m02*sz, m12*sz, m22*sz,
+    new Mat4x3f(
+      m00*sx, m01*sx, m02*sx,
+      m10*sy, m11*sy, m12*sy,
+      m20*sz, m21*sz, m22*sz,
       tx, ty, tz
     )
   }
@@ -3097,7 +3097,7 @@ object functions {
     scale: inVec3f,
     rotation: inMat3f,
     translation: inVec3f
-  ) :Mat3x4f = {
+  ) :Mat4x3f = {
     import translation.{x => tx, y => ty, z => tz}
 
     val sx = 1/scale.x
@@ -3105,22 +3105,22 @@ object functions {
     val sz = 1/scale.z
 
     val m00 = rotation.m00*sx
-    val m10 = rotation.m01*sy
-    val m20 = rotation.m02*sz
-    val m01 = rotation.m10*sx
+    val m01 = rotation.m10*sy
+    val m02 = rotation.m20*sz
+    val m10 = rotation.m01*sx
     val m11 = rotation.m11*sy
-    val m21 = rotation.m12*sz
-    val m02 = rotation.m20*sx
-    val m12 = rotation.m21*sy
+    val m12 = rotation.m21*sz
+    val m20 = rotation.m02*sx
+    val m21 = rotation.m12*sy
     val m22 = rotation.m22*sz
 
-    new Mat3x4f(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22,
-      -m00*tx - m01*ty - m02*tz,
-      -m10*tx - m11*ty - m12*tz,
-      -m20*tx - m21*ty - m22*tz
+    new Mat4x3f(
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22,
+      -m00*tx - m10*ty - m20*tz,
+      -m01*tx - m11*ty - m21*tz,
+      -m02*tx - m12*ty - m22*tz
     )
   }
 }

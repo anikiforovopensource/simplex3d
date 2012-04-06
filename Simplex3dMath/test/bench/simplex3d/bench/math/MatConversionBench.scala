@@ -60,16 +60,16 @@ class MatConversionCase {
   }
 
   final def makeMat4(m: Mat2) = Mat4(
-    m.m00, m.m10, 0, 0,
-    m.m01, m.m11, 0, 0,
+    m.m00, m.m01, 0, 0,
+    m.m10, m.m11, 0, 0,
     0, 0, 1, 0,
     0, 0, 0, 1
   )
 
   final def makeMat3(m: Mat4) = Mat3(
-    m.m00, m.m10, m.m20,
-    m.m01, m.m11, m.m21,
-    m.m02, m.m12, m.m22
+    m.m00, m.m01, m.m02,
+    m.m10, m.m11, m.m12,
+    m.m20, m.m21, m.m22
   )
 
   def preTest(length: Int, loops: Int) {

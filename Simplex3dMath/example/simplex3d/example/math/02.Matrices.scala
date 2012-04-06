@@ -25,19 +25,19 @@ object Matrices extends App {
 
   // Constructors above is equivalent to:
   n2 = Mat2(
-    m3.m00, m3.m10,
-    m3.m01, m3.m11
+    m3.m00, m3.m01,
+    m3.m10, m3.m11
   )
 
   n4 = Mat4(
-    m2.m00, m2.m10, 0, 0,
-    m2.m01, m2.m11, 0, 0,
+    m2.m00, m2.m01, 0, 0,
+    m2.m10, m2.m11, 0, 0,
     0,      0,      1, 0,
     0,      0,      0, 1
   )
 
   // Accessors:
-  m2 == Mat2(m2.m00, m2.m10, m2.m01, m2.m11)
+  m2 == Mat2(m2.m00, m2.m01, m2.m10, m2.m11)
   m2 == Mat2(m2(0, 0), m2(1, 0), m2(0, 1), m2(1,1))
   m2 == Mat2(m2(0), m2(1))
 

@@ -48,344 +48,264 @@ class Mat2x4fTest extends FunSuite {
 
     m = Mat2x4(f00)
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, 0)) { (m.m00, m.m10) }
-    expect((0, f00)) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
+    expect((f00, 0, 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((0, f00, 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
     )
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(
-      Vec2(f00, f10),
-      Vec2(f01, f11),
-      Vec2(f02, f12),
-      Vec2(f03, f13)
+      Vec4(f00, f01, f02, f03),
+      Vec4(f10, f11, f12, f13)
     )
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat2x2(
-      f00, f10,
-      f01, f11
+      f00, f01,
+      f10, f11
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat2x3(
-      f00, f10,
-      f01, f11,
-      f02, f12
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat3x2(
-      f00, f10, f20,
-      f01, f11, f21
+      f00, f01,
+      f10, f11,
+      f20, f21
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat3x3(
-      f00, f10, f20,
-      f01, f11, f21,
-      f02, f12, f22
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat3x4(
-      f00, f10, f20,
-      f01, f11, f21,
-      f02, f12, f22,
-      f03, f13, f23
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x2(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31
+      f00, f01,
+      f10, f11,
+      f20, f21,
+      f30, f31
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
+    expect((f00, f01, 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat2x3(
+      f00, f01, f02,
+      f10, f11, f12
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((f00, f01, f02, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat3x3(
+      f00, f01, f02,
+      f10, f11, f12,
+      f20, f21, f22
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((f00, f01, f02, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x3(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31,
-      f02, f12, f22, f32
+      f00, f01, f02,
+      f10, f11, f12,
+      f20, f21, f22,
+      f30, f31, f32
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat2x4(
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat3x4(
+      f00, f01, f02, f03,
+      f10, f11, f12, f13,
+      f20, f21, f22, f23
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x4(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31,
-      f02, f12, f22, f32,
-      f03, f13, f23, f33
+      f00, f01, f02, f03,
+      f10, f11, f12, f13,
+      f20, f21, f22, f23,
+      f30, f31, f32, f33
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(
-      Vec2d(d00, d10),
-      Vec2d(d01, d11),
-      Vec2d(d02, d12),
-      Vec2d(d03, d13)
+      Vec4d(d00, d01, d02, d03),
+      Vec4d(d10, d11, d12, d13)
     )
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat2x2d(
-      d00, d10,
-      d01, d11
+      d00, d01,
+      d10, d11
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat2x3d(
-      d00, d10,
-      d01, d11,
-      d02, d12
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat2x4d(
-      d00, d10,
-      d01, d11,
-      d02, d12,
-      d03, d13
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat3x2d(
-      d00, d10, d20,
-      d01, d11, d21
+      d00, d01,
+      d10, d11,
+      d20, d21
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat3x3d(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
-
-    m = Mat2x4(Mat3x4d(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22,
-      d03, d13, d23
-    ))
-    expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x2d(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31
+      d00, d01,
+      d10, d11,
+      d20, d21,
+      d30, d31
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((0, 0)) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), 0, 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), 0, 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat2x3d(
+      d00, d01, d02,
+      d10, d11, d12
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat3x3d(
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), 0)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x3d(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31,
-      d02, d12, d22, d32
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22,
+      d30, d31, d32
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((0, 0)) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), 0)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), 0)) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat2x4d(
+      d00, d01, d02, d03,
+      d10, d11, d12, d13
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
+
+    m = Mat2x4(Mat3x4d(
+      d00, d01, d02, d03,
+      d10, d11, d12, d13,
+      d20, d21, d22, d23
+    ))
+    expect(classOf[Mat2x4]) { m.getClass }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = Mat2x4(Mat4x4d(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31,
-      d02, d12, d22, d32,
-      d03, d13, d23, d33
+      d00, d01, d02, d03,
+      d10, d11, d12, d13,
+      d20, d21, d22, d23,
+      d30, d31, d32, d33
     ))
     expect(classOf[Mat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
 
 
     m = ConstMat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
     )
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = ConstMat2x4(
-      Vec2(f00, f10),
-      Vec2(f01, f11),
-      Vec2(f02, f12),
-      Vec2(f03, f13)
+      Vec4(f00, f01, f02, f03),
+      Vec4(f10, f11, f12, f13)
     )
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = ConstMat2x4(Mat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
     ))
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((f00, f10)) { (m.m00, m.m10) }
-    expect((f01, f11)) { (m.m01, m.m11) }
-    expect((f02, f12)) { (m.m02, m.m12) }
-    expect((f03, f13)) { (m.m03, m.m13) }
+    expect((f00, f01, f02, f03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((f10, f11, f12, f13)) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = ConstMat2x4(
-      Vec2d(d00, d10),
-      Vec2d(d01, d11),
-      Vec2d(d02, d12),
-      Vec2d(d03, d13)
+      Vec4d(d00, d01, d02, d03),
+      Vec4d(d10, d11, d12, d13)
     )
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
 
     m = ConstMat2x4(Mat2x4d(
-      d00, d10,
-      d01, d11,
-      d02, d12,
-      d03, d13
+      d00, d01, d02, d03,
+      d10, d11, d12, d13
     ))
     expect(classOf[ConstMat2x4]) { m.getClass }
-    expect((toFloat(d00), toFloat(d10))) { (m.m00, m.m10) }
-    expect((toFloat(d01), toFloat(d11))) { (m.m01, m.m11) }
-    expect((toFloat(d02), toFloat(d12))) { (m.m02, m.m12) }
-    expect((toFloat(d03), toFloat(d13))) { (m.m03, m.m13) }
+    expect((toFloat(d00), toFloat(d01), toFloat(d02), toFloat(d03))) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((toFloat(d10), toFloat(d11), toFloat(d12), toFloat(d13))) { (m.m10, m.m11, m.m12, m.m13) }
   }
 
   test("Unapply") {
     Mat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
     ) match {
-      case Mat2x4(c1, c2, c3, c4) =>
+      case Mat2x4(c1, c2) =>
         if (
-          c1 != Vec2(f00, f10) ||
-          c2 != Vec2(f01, f11) ||
-          c3 != Vec2(f02, f12) ||
-          c4 != Vec2(f03, f13)
+          c1 != Vec4(f00, f01, f02, f03) ||
+          c2 != Vec4(f10, f11, f12, f13)
         ) throw new AssertionError()
     }
     ConstMat2x4(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
     ) match {
-      case Mat2x4(c1, c2, c3, c4) =>
+      case Mat2x4(c1, c2) =>
         if (
-          c1 != Vec2(f00, f10) ||
-          c2 != Vec2(f01, f11) ||
-          c3 != Vec2(f02, f12) ||
-          c4 != Vec2(f03, f13)
+          c1 != Vec4(f00, f01, f02, f03) ||
+          c2 != Vec4(f10, f11, f12, f13)
         ) throw new AssertionError()
     }
   }
 
   test("Const conversions") {
     val i = Mat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
 
     val t: ConstMat2x4 = i
@@ -400,16 +320,12 @@ class Mat2x4fTest extends FunSuite {
 
   test("Equality methods") {
     val m = Mat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
     val n = ConstMat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
     assert(m == m)
     assert(m == n)
@@ -419,14 +335,14 @@ class Mat2x4fTest extends FunSuite {
     assert(m.equals(n))
     assert(!m.equals(Nil))
 
-    for (r <- 0 until 2; c <- 0 until 4) {
+    for (r <- 0 until 4; c <- 0 until 2) {
       val t = Mat2x4(n)
       t(c, r) = -1
       assert(t != n)
     }
 
     assert(m == Mat2x4d(M))
-    for (r <- 0 until 2; c <- 0 until 4) {
+    for (r <- 0 until 4; c <- 0 until 2) {
       val t = Mat2x4d(M)
       t(c, r) = -1
       assert(m != t)
@@ -434,54 +350,39 @@ class Mat2x4fTest extends FunSuite {
   }
 
   test("Indexed read") {
-    {
-      val m = ConstMat2x4(
-        1, 2,
-        3, 4,
-        5, 6,
-        7, 8
-      )
-
-      var count = 0
-      for (c <- 0 until 4; r <- 0 until 2) {
-        count += 1
-        expect(count) { m(c, r) }
-      }
-
-      intercept[IndexOutOfBoundsException] {
-        m(4, 1)
-      }
-      intercept[IndexOutOfBoundsException] {
-        m(-1, 1)
-      }
-
-      intercept[IndexOutOfBoundsException] {
-        m(1, 2)
-      }
-      intercept[IndexOutOfBoundsException] {
-        m(1, -1)
-      }
-    }
-
     val m = ConstMat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
 
-    expect(Vec2(m00, m10)) { m(0) }
-    expect(Vec2(m01, m11)) { m(1) }
-    expect(Vec2(m02, m12)) { m(2) }
-    expect(Vec2(m03, m13)) { m(3) }
-
-    expect(classOf[ConstVec2]) { m(0).getClass }
-    expect(classOf[ConstVec2]) { m(1).getClass }
-    expect(classOf[ConstVec2]) { m(2).getClass }
-    expect(classOf[ConstVec2]) { m(3).getClass }
+    var count = 0
+    for (c <- 0 until 2; r <- 0 until 4) {
+      count += 1
+      expect(count) { m(c, r) }
+    }
 
     intercept[IndexOutOfBoundsException] {
-      m(4)
+      m(2, 1)
+    }
+    intercept[IndexOutOfBoundsException] {
+      m(-1, 1)
+    }
+
+    intercept[IndexOutOfBoundsException] {
+      m(1, 4)
+    }
+    intercept[IndexOutOfBoundsException] {
+      m(1, -1)
+    }
+
+    expect(Vec4(m00, m01, m02, m03)) { m(0) }
+    expect(Vec4(m10, m11, m12, m13)) { m(1) }
+
+    expect(classOf[ConstVec4]) { m(0).getClass }
+    expect(classOf[ConstVec4]) { m(1).getClass }
+
+    intercept[IndexOutOfBoundsException] {
+      m(2)
     }
     intercept[IndexOutOfBoundsException] {
       m(-1)
@@ -490,28 +391,26 @@ class Mat2x4fTest extends FunSuite {
 
   test("Indexed write") {
     var m = Mat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
 
     var count = 0
-    for (c <- 0 until 4; r <- 0 until 2) {
+    for (c <- 0 until 2; r <- 0 until 4) {
       count += 1
       m(c, r) = count + 1
       expect(count + 1) { m(c, r) }
     }
 
     intercept[IndexOutOfBoundsException] {
-      m(4, 1) = 1
+      m(2, 1) = 1
     }
     intercept[IndexOutOfBoundsException] {
       m(-1, 1) = 1
     }
 
     intercept[IndexOutOfBoundsException] {
-      m(1, 2) = 1
+      m(1, 4) = 1
     }
     intercept[IndexOutOfBoundsException] {
       m(1, -1) = 1
@@ -519,20 +418,36 @@ class Mat2x4fTest extends FunSuite {
 
     m = Mat2x4(0)
 
-    m(0) = Vec2(m00, m10)
-    m(1) = Vec2(m01, m11)
-    m(2) = Vec2(m02, m12)
-    m(3) = Vec2(m03, m13)
+    m(0) = Vec4(m00, m01, m02, m03)
+    m(1) = Vec4(m10, m11, m12, m13)
 
-    expect(Vec2(m00, m10)) { m(0) }
-    expect(Vec2(m01, m11)) { m(1) }
-    expect(Vec2(m02, m12)) { m(2) }
-    expect(Vec2(m03, m13)) { m(3) }
+    expect(Vec4(m00, m01, m02, m03)) { m(0) }
+    expect(Vec4(m10, m11, m12, m13)) { m(1) }
+
+    m = Mat2x4(0)
+
+    m(0) = Vec3(m00, m01, m02)
+    m(1) = Vec3(m10, m11, m12)
+
+    expect(Vec4(m00, m01, m02, 0)) { m(0) }
+    expect(Vec4(m10, m11, m12, 0)) { m(1) }
+
+    m = Mat2x4(0)
+
+    m(0) = Vec2(m00, m01)
+    m(1) = Vec2(m10, m11)
+
+    expect(Vec4(m00, m01, 0, 0)) { m(0) }
+    expect(Vec4(m10, m11, 0, 0)) { m(1) }
 
     intercept[IndexOutOfBoundsException] {
-      m(4) = Vec2(1)
+      m(2) = Vec4(1)
+      m(2) = Vec3(1)
+      m(2) = Vec2(1)
     }
     intercept[IndexOutOfBoundsException] {
+      m(-1) = Vec4(1)
+      m(-1) = Vec3(1)
       m(-1) = Vec2(1)
     }
   }
@@ -540,192 +455,152 @@ class Mat2x4fTest extends FunSuite {
   test("Setters") {
     var m = Mat2x4(0)
     val i = ConstMat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
 
     m = Mat2x4(0)
     m := i
-    expect((m00, m10)) { (m.m00, m.m10) }
-    expect((m01, m11)) { (m.m01, m.m11) }
-    expect((m02, m12)) { (m.m02, m.m12) }
-    expect((m03, m13)) { (m.m03, m.m13) }
+    expect((m00, m01, m02, m03)) { (m.m00, m.m01, m.m02, m.m03) }
+    expect((m10, m11, m12, m13)) { (m.m10, m.m11, m.m12, m.m13) }
   }
 
   test("Const math") {
     val m = ConstMat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
     assert(+m eq m)
 
     var t = Mat2x4(
-      -m00, -m10,
-      -m01, -m11,
-      -m02, -m12,
-      -m03, -m13
+      -m00, -m01, -m02, -m03,
+      -m10, -m11, -m12, -m13
     )
     assert(-m == t)
 
     t = Mat2x4(
-      2*m00, 2*m10,
-      2*m01, 2*m11,
-      2*m02, 2*m12,
-      2*m03, 2*m13
+      2*m00, 2*m01, 2*m02, 2*m03,
+      2*m10, 2*m11, 2*m12, 2*m13
     )
     assert(m*2 == t)
 
     t = Mat2x4(
-      m00/2, m10/2,
-      m01/2, m11/2,
-      m02/2, m12/2,
-      m03/2, m13/2
+      m00/2, m01/2, m02/2, m03/2,
+      m10/2, m11/2, m12/2, m13/2
     )
     assert(m/2 == t)
 
     t = Mat2x4(
-      m00+2, m10+2,
-      m01+2, m11+2,
-      m02+2, m12+2,
-      m03+2, m13+2
+      m00+2, m01+2, m02+2, m03+2,
+      m10+2, m11+2, m12+2, m13+2
     )
     assert(m + 2 == t)
 
     t = Mat2x4(
-      m00-2, m10-2,
-      m01-2, m11-2,
-      m02-2, m12-2,
-      m03-2, m13-2
+      m00-2, m01-2, m02-2, m03-2,
+      m10-2, m11-2, m12-2, m13-2
     )
     assert(m - 2 == t)
 
     val n: ConstMat2x4 = m*3
 
     t = Mat2x4(
-      4*m00, 4*m10,
-      4*m01, 4*m11,
-      4*m02, 4*m12,
-      4*m03, 4*m13
+      4*m00, 4*m01, 4*m02, 4*m03,
+      4*m10, 4*m11, 4*m12, 4*m13
     )
     assert(n + m == t)
 
     t = Mat2x4(
-      2*m00, 2*m10,
-      2*m01, 2*m11,
-      2*m02, 2*m12,
-      2*m03, 2*m13
+      2*m00, 2*m01, 2*m02, 2*m03,
+      2*m10, 2*m11, 2*m12, 2*m13
     )
     assert(n - m == t)
 
     t = Mat2x4(
-      3, 3,
-      3, 3,
-      3, 3,
-      3, 3
+      3, 3, 3, 3,
+      3, 3, 3, 3
     )
     assert(n / m == t)
 
-    
-    val mul42 = Mat2x2(
-      90, 100,
-      202, 228
+
+    val mul22 = Mat2x4(
+      11, 14, 17, 20,
+      35, 46, 57, 68
+    )
+    assert(m*Mat2x2(M) == mul22)
+
+    val mul32 = Mat3x4(
+      11, 14, 17, 20,
+      35, 46, 57, 68,
+      59, 78, 97, 116
+    )
+    assert(m*Mat3x2(M) == mul32)
+
+    val mul42 = Mat4x4(
+      11, 14, 17, 20,
+      35, 46, 57, 68,
+      59, 78, 97, 116,
+      83, 110, 137, 164
     )
     assert(m*Mat4x2(M) == mul42)
 
-    val mul43 = Mat2x3(
-      90, 100,
-      202, 228,
-      314, 356
-    )
-    assert(m*Mat4x3(M) == mul43)
-
-    val mul44 = Mat2x4(
-      90, 100,
-      202, 228,
-      314, 356,
-      426, 484
-    )
-    assert(m*M == mul44)
-
-    assert(m*Vec4(1, 2, 3, 4) == Vec2(90, 100))
+    assert(m*Vec2(1, 2) == Vec4(11, 14, 17, 20))
   }
 
   test("Mutable math") {
     val m = Mat2x4(0)
     val i = ConstMat2x4(
-      m00, m10,
-      m01, m11,
-      m02, m12,
-      m03, m13
+      m00, m01, m02, m03,
+      m10, m11, m12, m13
     )
 
     var t = Mat2x4(
-      2*m00, 2*m10,
-      2*m01, 2*m11,
-      2*m02, 2*m12,
-      2*m03, 2*m13
+      2*m00, 2*m01, 2*m02, 2*m03,
+      2*m10, 2*m11, 2*m12, 2*m13
     )
     m := i; m *= 2; assert(m == t)
 
     t = Mat2x4(
-      m00/2, m10/2,
-      m01/2, m11/2,
-      m02/2, m12/2,
-      m03/2, m13/2
+      m00/2, m01/2, m02/2, m03/2,
+      m10/2, m11/2, m12/2, m13/2
     )
     m := i; m /= 2; assert(m == t)
 
     t = Mat2x4(
-      m00+2, m10+2,
-      m01+2, m11+2,
-      m02+2, m12+2,
-      m03+2, m13+2
+      m00+2, m01+2, m02+2, m03+2,
+      m10+2, m11+2, m12+2, m13+2
     )
     m := i; m += 2; assert(m == t)
 
     t = Mat2x4(
-      m00-2, m10-2,
-      m01-2, m11-2,
-      m02-2, m12-2,
-      m03-2, m13-2
+      m00-2, m01-2, m02-2, m03-2,
+      m10-2, m11-2, m12-2, m13-2
     )
     m := i; m -= 2; assert(m == t)
 
     val n: ConstMat2x4 = i*3
 
     t = Mat2x4(
-      4*m00, 4*m10,
-      4*m01, 4*m11,
-      4*m02, 4*m12,
-      4*m03, 4*m13
+      4*m00, 4*m01, 4*m02, 4*m03,
+      4*m10, 4*m11, 4*m12, 4*m13
     )
     m := i; m += n; assert(m == t)
 
     t = Mat2x4(
-      -2*m00, -2*m10,
-      -2*m01, -2*m11,
-      -2*m02, -2*m12,
-      -2*m03, -2*m13
+      -2*m00, -2*m01, -2*m02, -2*m03,
+      -2*m10, -2*m11, -2*m12, -2*m13
     )
     m := i; m -= n; assert(m == t)
 
     t = Mat2x4(
-      90, 100,
-      202, 228,
-      314, 356,
-      426, 484
+      11, 14, 17, 20,
+      35, 46, 57, 68
     )
-    m := i; m *= M; assert(m == t)
+    m := i; m *= Mat2(M); assert(m == t)
 
     t = Mat2x4(
-      1, 1,
-      1, 1,
-      1, 1,
-      1, 1
+      1, 1, 1, 1,
+      1, 1, 1, 1
     )
     m := i; m/= m; assert(m == t)
   }

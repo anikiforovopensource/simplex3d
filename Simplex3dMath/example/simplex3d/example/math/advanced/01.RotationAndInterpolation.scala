@@ -20,7 +20,7 @@ object RotationAndInterpolation extends App {
   println("Quaternion rotation: " + q.rotateVector(p))
 
   // Matrix rotation.
-  val t = Mat3x4 rotateX(radians(10)) rotateZ(Pi/2)
+  val t = Mat4x3 rotateX(radians(10)) rotateZ(Pi/2)
   println("Using transformations: " + t.transformVector(p))
   val m = Mat3(t)
   println("Using rotation matrix: " + m*p)
@@ -39,7 +39,7 @@ object RotationAndInterpolation extends App {
 
   val mq = rotationMat(q)
   val maa = rotationMat(angle, axis)
-  Mat3(Mat3x4 rotateY(Pi/4)) == rotationMat(Pi/4, Vec3.UnitY)
+  Mat3(Mat4x3 rotateY(Pi/4)) == rotationMat(Pi/4, Vec3.UnitY)
 
   // Skipping quaternion normalization.
   val msafe = t rotate(q) // will perform quaternion normalization

@@ -104,26 +104,26 @@ class InterfaceBenchCase {
 
 trait SubMat3m {
   // Column major order.
-  var m00: Float; var m10: Float; var m20: Float // column
-  var m01: Float; var m11: Float; var m21: Float // column
-  var m02: Float; var m12: Float; var m22: Float // column
+  var m00: Float; var m01: Float; var m02: Float // column
+  var m10: Float; var m11: Float; var m12: Float // column
+  var m20: Float; var m21: Float; var m22: Float // column
 
   def set(
-    m00: Float, m10: Float, m20: Float,
-    m01: Float, m11: Float, m21: Float,
-    m02: Float, m12: Float, m22: Float
+    m00: Float, m01: Float, m02: Float,
+    m10: Float, m11: Float, m12: Float,
+    m20: Float, m21: Float, m22: Float
   ) {
-    this.m00 = m00; this.m10 = m10; this.m20 = m20
-    this.m01 = m01; this.m11 = m11; this.m21 = m21
-    this.m02 = m02; this.m12 = m12; this.m22 = m22
+    this.m00 = m00; this.m01 = m01; this.m02 = m02
+    this.m10 = m10; this.m11 = m11; this.m12 = m12
+    this.m20 = m20; this.m21 = m21; this.m22 = m22
   }
 }
 
 final class Mat3x4m (
-  var m00: Float, var m10: Float, var m20: Float,
-  var m01: Float, var m11: Float, var m21: Float,
-  var m02: Float, var m12: Float, var m22: Float,
-  var m03: Float, var m13: Float, var m23: Float
+  var m00: Float, var m01: Float, var m02: Float,
+  var m10: Float, var m11: Float, var m12: Float,
+  var m20: Float, var m21: Float, var m22: Float,
+  var m30: Float, var m31: Float, var m32: Float
 ) extends SubMat3m
 
 object Mat3x4m {
@@ -145,9 +145,9 @@ object Mat3x4m {
 
 object Mat3x3m {
   def apply(m: Mat3x4m) = Mat3(
-    m.m00, m.m10, m.m20,
-    m.m01, m.m11, m.m21,
-    m.m02, m.m12, m.m22
+    m.m00, m.m01, m.m02,
+    m.m10, m.m11, m.m12,
+    m.m20, m.m21, m.m22
   )
 }
 
@@ -161,33 +161,33 @@ object IBMath {
       val t = trace + 1
       val s = inversesqrt(t)*0.5f
       result.a = s*t
-      result.d = (m10 - m01)*s
-      result.c = (m02 - m20)*s
-      result.b = (m21 - m12)*s
+      result.d = (m01 - m10)*s
+      result.c = (m20 - m02)*s
+      result.b = (m12 - m21)*s
     }
     else if (m00 > m11 && m00 > m22) {
       val t = m00 - m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       result.b = s*t
-      result.c = (m10 + m01)*s
-      result.d = (m02 + m20)*s
-      result.a = (m21 - m12)*s
+      result.c = (m01 + m10)*s
+      result.d = (m20 + m02)*s
+      result.a = (m12 - m21)*s
     }
     else if (m11 > m22) {
       val t = -m00 + m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       result.c = s*t
-      result.b = (m10 + m01)*s
-      result.a = (m02 - m20)*s
-      result.d = (m21 + m12)*s
+      result.b = (m01 + m10)*s
+      result.a = (m20 - m02)*s
+      result.d = (m12 + m21)*s
     }
     else {
       val t = -m00 - m11 + m22 + 1
       val s = inversesqrt(t)*0.5f
       result.d = s*t
-      result.a = (m10 - m01)*s
-      result.b = (m02 + m20)*s
-      result.c = (m21 + m12)*s
+      result.a = (m01 - m10)*s
+      result.b = (m20 + m02)*s
+      result.c = (m12 + m21)*s
     }
   }
 
@@ -201,33 +201,33 @@ object IBMath {
       val t = trace + 1
       val s = inversesqrt(t)*0.5f
       result.a = s*t
-      result.d = (m10 - m01)*s
-      result.c = (m02 - m20)*s
-      result.b = (m21 - m12)*s
+      result.d = (m01 - m10)*s
+      result.c = (m20 - m02)*s
+      result.b = (m12 - m21)*s
     }
     else if (m00 > m11 && m00 > m22) {
       val t = m00 - m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       result.b = s*t
-      result.c = (m10 + m01)*s
-      result.d = (m02 + m20)*s
-      result.a = (m21 - m12)*s
+      result.c = (m01 + m10)*s
+      result.d = (m20 + m02)*s
+      result.a = (m12 - m21)*s
     }
     else if (m11 > m22) {
       val t = -m00 + m11 - m22 + 1
       val s = inversesqrt(t)*0.5f
       result.c = s*t
-      result.b = (m10 + m01)*s
-      result.a = (m02 - m20)*s
-      result.d = (m21 + m12)*s
+      result.b = (m01 + m10)*s
+      result.a = (m20 - m02)*s
+      result.d = (m12 + m21)*s
     }
     else {
       val t = -m00 - m11 + m22 + 1
       val s = inversesqrt(t)*0.5f
       result.d = s*t
-      result.a = (m10 - m01)*s
-      result.b = (m02 + m20)*s
-      result.c = (m21 + m12)*s
+      result.a = (m01 - m10)*s
+      result.b = (m20 + m02)*s
+      result.c = (m12 + m21)*s
     }
 
     result

@@ -168,7 +168,7 @@ object ConstVec4b {
   def apply(xyz: AnyVec3[_], w: Boolean) = new ConstVec4b(xyz.bx, xyz.by, xyz.bz, w)
   def apply(x: Boolean, yzw: AnyVec3[_]) = new ConstVec4b(x, yzw.bx, yzw.by, yzw.bz)
 
-  def apply(m: AnyMat2[_]) = new ConstVec4b(toBool(m.d00), toBool(m.d10), toBool(m.d01), toBool(m.d11))
+  def apply(m: AnyMat2[_]) = new ConstVec4b(toBool(m.d00), toBool(m.d01), toBool(m.d10), toBool(m.d11))
   def apply(q: AnyQuat4[_]) = new ConstVec4b(toBool(q.db), toBool(q.dc), toBool(q.dd), toBool(q.da))
 
   implicit def toConst(u: ReadVec4b) = apply(u)
@@ -435,7 +435,7 @@ object Vec4b {
   def apply(xyz: AnyVec3[_], w: Boolean) = new Vec4b(xyz.bx, xyz.by, xyz.bz, w)
   def apply(x: Boolean, yzw: AnyVec3[_]) = new Vec4b(x, yzw.bx, yzw.by, yzw.bz)
 
-  def apply(m: AnyMat2[_]) = new Vec4b(toBool(m.d00), toBool(m.d10), toBool(m.d01), toBool(m.d11))
+  def apply(m: AnyMat2[_]) = new Vec4b(toBool(m.d00), toBool(m.d01), toBool(m.d10), toBool(m.d11))
   def apply(q: AnyQuat4[_]) = new Vec4b(toBool(q.db), toBool(q.dc), toBool(q.dd), toBool(q.da))
 
   def unapply(u: ReadVec4b) = Some((u.x, u.y, u.z, u.w))

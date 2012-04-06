@@ -90,10 +90,10 @@ object CoordinateSpaces extends App {
     val camRotation = Quat4 rotateX(radians(-20)) rotateY(camRotationSpeed*time)
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
 
-    val cameraMatrix = Mat3x4 rotate(camRotation) translate(camTranslation)
+    val cameraMatrix = Mat4x3 rotate(camRotation) translate(camTranslation)
     val viewMatrix = inverse(cameraMatrix)
 
-    val modelMatrix = Mat3x4 Identity
+    val modelMatrix = Mat4x3 Identity
     val modelViewMatrix = modelMatrix.concat(viewMatrix)
         
     val projectionMatrix = perspectiveProj(

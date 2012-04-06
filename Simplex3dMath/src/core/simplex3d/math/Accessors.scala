@@ -78,43 +78,43 @@ object Accessors {
 
 
   /** Read the component as Float. */ def f00(m: AnyMat[_]) = m.f00
-  /** Read the component as Float. */ def f10(m: AnyMat[_]) = m.f10
-  /** Read the component as Float. */ def f20(m: AnyMat[_]) = m.f20
-  /** Read the component as Float. */ def f30(m: AnyMat[_]) = m.f30
-
   /** Read the component as Float. */ def f01(m: AnyMat[_]) = m.f01
-  /** Read the component as Float. */ def f11(m: AnyMat[_]) = m.f11
-  /** Read the component as Float. */ def f21(m: AnyMat[_]) = m.f21
-  /** Read the component as Float. */ def f31(m: AnyMat[_]) = m.f31
-
   /** Read the component as Float. */ def f02(m: AnyMat[_]) = m.f02
-  /** Read the component as Float. */ def f12(m: AnyMat[_]) = m.f12
-  /** Read the component as Float. */ def f22(m: AnyMat[_]) = m.f22
-  /** Read the component as Float. */ def f32(m: AnyMat[_]) = m.f32
-
   /** Read the component as Float. */ def f03(m: AnyMat[_]) = m.f03
+
+  /** Read the component as Float. */ def f10(m: AnyMat[_]) = m.f10
+  /** Read the component as Float. */ def f11(m: AnyMat[_]) = m.f11
+  /** Read the component as Float. */ def f12(m: AnyMat[_]) = m.f12
   /** Read the component as Float. */ def f13(m: AnyMat[_]) = m.f13
+
+  /** Read the component as Float. */ def f20(m: AnyMat[_]) = m.f20
+  /** Read the component as Float. */ def f21(m: AnyMat[_]) = m.f21
+  /** Read the component as Float. */ def f22(m: AnyMat[_]) = m.f22
   /** Read the component as Float. */ def f23(m: AnyMat[_]) = m.f23
+
+  /** Read the component as Float. */ def f30(m: AnyMat[_]) = m.f30
+  /** Read the component as Float. */ def f31(m: AnyMat[_]) = m.f31
+  /** Read the component as Float. */ def f32(m: AnyMat[_]) = m.f32
   /** Read the component as Float. */ def f33(m: AnyMat[_]) = m.f33
 
 
   /** Read the component as Double. */ def d00(m: AnyMat[_]) = m.d00
-  /** Read the component as Double. */ def d10(m: AnyMat[_]) = m.d10
-  /** Read the component as Double. */ def d20(m: AnyMat[_]) = m.d20
-  /** Read the component as Double. */ def d30(m: AnyMat[_]) = m.d30
-
   /** Read the component as Double. */ def d01(m: AnyMat[_]) = m.d01
-  /** Read the component as Double. */ def d11(m: AnyMat[_]) = m.d11
-  /** Read the component as Double. */ def d21(m: AnyMat[_]) = m.d21
-  /** Read the component as Double. */ def d31(m: AnyMat[_]) = m.d31
-
   /** Read the component as Double. */ def d02(m: AnyMat[_]) = m.d02
-  /** Read the component as Double. */ def d12(m: AnyMat[_]) = m.d12
-  /** Read the component as Double. */ def d22(m: AnyMat[_]) = m.d22
-  /** Read the component as Double. */ def d32(m: AnyMat[_]) = m.d32
-
   /** Read the component as Double. */ def d03(m: AnyMat[_]) = m.d03
+
+  /** Read the component as Double. */ def d10(m: AnyMat[_]) = m.d10
+  /** Read the component as Double. */ def d11(m: AnyMat[_]) = m.d11
+  /** Read the component as Double. */ def d12(m: AnyMat[_]) = m.d12
   /** Read the component as Double. */ def d13(m: AnyMat[_]) = m.d13
+
+  /** Read the component as Double. */ def d20(m: AnyMat[_]) = m.d20
+  /** Read the component as Double. */ def d21(m: AnyMat[_]) = m.d21
+  /** Read the component as Double. */ def d22(m: AnyMat[_]) = m.d22
   /** Read the component as Double. */ def d23(m: AnyMat[_]) = m.d23
+
+  /** Read the component as Double. */ def d30(m: AnyMat[_]) = m.d30
+  /** Read the component as Double. */ def d31(m: AnyMat[_]) = m.d31
+  /** Read the component as Double. */ def d32(m: AnyMat[_]) = m.d32
   /** Read the component as Double. */ def d33(m: AnyMat[_]) = m.d33
 }

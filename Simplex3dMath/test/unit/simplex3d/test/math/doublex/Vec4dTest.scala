@@ -571,18 +571,18 @@ class Vec4dTest extends FunSuite {
     assert(Vec4(12, 21, 32, 45) == u*v)
     assert(Vec4(3, 7/3d, 2, 9/5d) == u/v)
 
-    val m4x2 = ConstMat4x2(
+    val m2x4 = ConstMat2x4(
       2, 5, 4, 6,
       3, 4, 8, 2
     )
-    assert(Vec2(65, 60) == v*m4x2)
+    assert(Vec2(65, 60) == v*m2x4)
 
-    val m4x3 = ConstMat4x3(
+    val m3x4 = ConstMat3x4(
       2, 5, 4, 6,
       3, 4, 8, 2,
       7, 4, 2, 5
     )
-    assert(Vec3(65, 60, 59) == v*m4x3)
+    assert(Vec3(65, 60, 59) == v*m3x4)
 
     val m4 = ConstMat4(
       2, 5, 4, 6,

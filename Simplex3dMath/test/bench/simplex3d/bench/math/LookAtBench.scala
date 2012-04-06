@@ -106,9 +106,9 @@ class LookAtTC {
         val dir = Vec3(i, i + 1, i + 2)
         val m = lookAt(dir, Vec3.UnitY)
         answer += toInt(
-          m.m00 + m.m01 + m.m02 +
-          m.m10 + m.m11 + m.m12 +
-          m.m20 + m.m21 + m.m22
+          m.m00 + m.m10 + m.m20 +
+          m.m01 + m.m11 + m.m21 +
+          m.m02 + m.m12 + m.m22
         )
 
         i += 1
@@ -129,9 +129,9 @@ class LookAtTC {
         val dir = Vec3(i, i + 1, i + 2)
         val m = lookAtBasic(dir, Vec3.UnitY)
         answer += toInt(
-          m.m00 + m.m01 + m.m02 +
-          m.m10 + m.m11 + m.m12 +
-          m.m20 + m.m21 + m.m22
+          m.m00 + m.m10 + m.m20 +
+          m.m01 + m.m11 + m.m21 +
+          m.m02 + m.m12 + m.m22
         )
 
         i += 1
@@ -152,9 +152,9 @@ class LookAtTC {
         val dir = Vec3(i, i + 1, i + 2)
         val m = lookAtInlined(dir, Vec3.UnitY)
         answer += toInt(
-          m.m00 + m.m01 + m.m02 +
-          m.m10 + m.m11 + m.m12 +
-          m.m20 + m.m21 + m.m22
+          m.m00 + m.m10 + m.m20 +
+          m.m01 + m.m11 + m.m21 +
+          m.m02 + m.m12 + m.m22
         )
 
         i += 1

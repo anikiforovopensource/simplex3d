@@ -147,13 +147,13 @@ class SimpleVec4d(var x: Double, var y: Double, var z: Double, var w: Double) {
 }
 
 class SimpleMat3d(
-  var m00: Double, var m10: Double, var m20: Double,
-  var m01: Double, var m11: Double, var m21: Double,
-  var m02: Double, var m12: Double, var m22: Double
+  var m00: Double, var m01: Double, var m02: Double,
+  var m10: Double, var m11: Double, var m12: Double,
+  var m20: Double, var m21: Double, var m22: Double
 ) {
   def +(c: Double) = new SimpleMat3d(
-    m00+c, m10+c, m20+c,
-    m01+c, m11+c, m21+c,
-    m02+c, m12+c, m22+c
+    m00+c, m01+c, m02+c,
+    m10+c, m11+c, m12+c,
+    m20+c, m21+c, m22+c
   )
 }

@@ -130,8 +130,8 @@ with ReadPropertyValue[Vec4f] with Cloneable[ReadVec4f] with Serializable
   final def +(u: inVec4f) = new Vec4f(x + u.x, y + u.y, z + u.z, w + u.w)
   final def -(u: inVec4f) = new Vec4f(x - u.x, y - u.y, z - u.z, w - u.w)
 
-  final def *(m: inMat4x2f) :Vec2f = m.transposeMult(this)
-  final def *(m: inMat4x3f) :Vec3f = m.transposeMult(this)
+  final def *(m: inMat2x4f) :Vec2f = m.transposeMult(this)
+  final def *(m: inMat3x4f) :Vec3f = m.transposeMult(this)
   final def *(m: inMat4f) :Vec4f = m.transposeMult(this)
 
 
@@ -186,7 +186,7 @@ object ConstVec4f {
   def apply(xyz: AnyVec3[_], w: Float) = new ConstVec4f(xyz.fx, xyz.fy, xyz.fz, w)
   def apply(x: Float, yzw: AnyVec3[_]) = new ConstVec4f(x, yzw.fx, yzw.fy, yzw.fz)
 
-  def apply(m: AnyMat2[_]) = new ConstVec4f(m.f00, m.f10, m.f01, m.f11)
+  def apply(m: AnyMat2[_]) = new ConstVec4f(m.f00, m.f01, m.f10, m.f11)
   def apply(q: AnyQuat4[_]) = new ConstVec4f(q.fb, q.fc, q.fd, q.fa)
 
   implicit def toConst(u: ReadVec4f) = apply(u)
@@ -468,7 +468,7 @@ object Vec4f {
   def apply(xyz: AnyVec3[_], w: Float) = new Vec4f(xyz.fx, xyz.fy, xyz.fz, w)
   def apply(x: Float, yzw: AnyVec3[_]) = new Vec4f(x, yzw.fx, yzw.fy, yzw.fz)
 
-  def apply(m: AnyMat2[_]) = new Vec4f(m.f00, m.f10, m.f01, m.f11)
+  def apply(m: AnyMat2[_]) = new Vec4f(m.f00, m.f01, m.f10, m.f11)
   def apply(q: AnyQuat4[_]) = new Vec4f(q.fb, q.fc, q.fd, q.fa)
 
   def unapply(u: ReadVec4f) = Some((u.x, u.y, u.z, u.w))

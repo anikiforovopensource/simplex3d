@@ -48,304 +48,304 @@ class Mat3x3dTest extends FunSuite {
 
     m = Mat3x3(d00)
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, 0, 0)) { (m.m00, m.m10, m.m20) }
-    expect((0, d00, 0)) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, d00)) { (m.m02, m.m12, m.m22) }
+    expect((d00, 0, 0)) { (m.m00, m.m01, m.m02) }
+    expect((0, d00, 0)) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, d00)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
     )
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(
-      Vec3(d00, d10, d20),
-      Vec3(d01, d11, d21),
-      Vec3(d02, d12, d22)
+      Vec3(d00, d01, d02),
+      Vec3(d10, d11, d12),
+      Vec3(d20, d21, d22)
     )
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat2x2(
-      d00, d10,
-      d01, d11
+      d00, d01,
+      d10, d11
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, 0)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, 0)) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat2x3(
-      d00, d10,
-      d01, d11,
-      d02, d12
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, 0)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, 0)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat2x4(
-      d00, d10,
-      d01, d11,
-      d02, d12,
-      d03, d13
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, 0)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, 0)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, 1)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, 0)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, 0)) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat3x2(
-      d00, d10, d20,
-      d01, d11, d21
+      d00, d01,
+      d10, d11,
+      d20, d21
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat3x4(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22,
-      d03, d13, d23
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, 0)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, 0)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, 1)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x2(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31
+      d00, d01,
+      d10, d11,
+      d20, d21,
+      d30, d31
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, 0)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, 0)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat2x3(
+      d00, d01, d02,
+      d10, d11, d12
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat3x3(
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x3(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31,
-      d02, d12, d22, d32
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22,
+      d30, d31, d32
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat2x4(
+      d00, d01, d02, d03,
+      d10, d11, d12, d13
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat3x4(
+      d00, d01, d02, d03,
+      d10, d11, d12, d13,
+      d20, d21, d22, d23
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x4(
-      d00, d10, d20, d30,
-      d01, d11, d21, d31,
-      d02, d12, d22, d32,
-      d03, d13, d23, d33
+      d00, d01, d02, d03,
+      d10, d11, d12, d13,
+      d20, d21, d22, d23,
+      d30, d31, d32, d33
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(
-      Vec3f(f00, f10, f20),
-      Vec3f(f01, f11, f21),
-      Vec3f(f02, f12, f22)
+      Vec3f(f00, f01, f02),
+      Vec3f(f10, f11, f12),
+      Vec3f(f20, f21, f22)
     )
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat2x2f(
-      f00, f10,
-      f01, f11
+      f00, f01,
+      f10, f11
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat2x3f(
-      f00, f10,
-      f01, f11,
-      f02, f12
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat2x4f(
-      f00, f10,
-      f01, f11,
-      f02, f12,
-      f03, f13
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), 0)) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), 0)) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), 1)) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), 0)) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), 0)) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat3x2f(
-      f00, f10, f20,
-      f01, f11, f21
+      f00, f01,
+      f10, f11,
+      f20, f21
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat3x3f(
-      f00, f10, f20,
-      f01, f11, f21,
-      f02, f12, f22
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
-
-    m = Mat3x3(Mat3x4f(
-      f00, f10, f20,
-      f01, f11, f21,
-      f02, f12, f22,
-      f03, f13, f23
-    ))
-    expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), 0)) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), 0)) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), 1)) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x2f(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31
+      f00, f01,
+      f10, f11,
+      f20, f21,
+      f30, f31
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((0, 0, 1)) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), 0)) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), 0)) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat2x3f(
+      f00, f01, f02,
+      f10, f11, f12
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat3x3f(
+      f00, f01, f02,
+      f10, f11, f12,
+      f20, f21, f22
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x3f(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31,
-      f02, f12, f22, f32
+      f00, f01, f02,
+      f10, f11, f12,
+      f20, f21, f22,
+      f30, f31, f32
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat2x4f(
+      f00, f01, f02, f03,
+      f10, f11, f12, f13
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((0, 0, 1)) { (m.m20, m.m21, m.m22) }
+
+    m = Mat3x3(Mat3x4f(
+      f00, f01, f02, f03,
+      f10, f11, f12, f13,
+      f20, f21, f22, f23
+    ))
+    expect(classOf[Mat3x3]) { m.getClass }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
 
     m = Mat3x3(Mat4x4f(
-      f00, f10, f20, f30,
-      f01, f11, f21, f31,
-      f02, f12, f22, f32,
-      f03, f13, f23, f33
+      f00, f01, f02, f03,
+      f10, f11, f12, f13,
+      f20, f21, f22, f23,
+      f30, f31, f32, f33
     ))
     expect(classOf[Mat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
 
 
     m = ConstMat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
     )
     expect(classOf[ConstMat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = ConstMat3x3(
-      Vec3(d00, d10, d20),
-      Vec3(d01, d11, d21),
-      Vec3(d02, d12, d22)
+      Vec3(d00, d01, d02),
+      Vec3(d10, d11, d12),
+      Vec3(d20, d21, d22)
     )
     expect(classOf[ConstMat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = ConstMat3x3(Mat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
     ))
     expect(classOf[ConstMat3x3]) { m.getClass }
-    expect((d00, d10, d20)) { (m.m00, m.m10, m.m20) }
-    expect((d01, d11, d21)) { (m.m01, m.m11, m.m21) }
-    expect((d02, d12, d22)) { (m.m02, m.m12, m.m22) }
+    expect((d00, d01, d02)) { (m.m00, m.m01, m.m02) }
+    expect((d10, d11, d12)) { (m.m10, m.m11, m.m12) }
+    expect((d20, d21, d22)) { (m.m20, m.m21, m.m22) }
 
     m = ConstMat3x3(
-      Vec3f(f00, f10, f20),
-      Vec3f(f01, f11, f21),
-      Vec3f(f02, f12, f22)
+      Vec3f(f00, f01, f02),
+      Vec3f(f10, f11, f12),
+      Vec3f(f20, f21, f22)
     )
     expect(classOf[ConstMat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
 
     m = ConstMat3x3(Mat3x3f(
-      f00, f10, f20,
-      f01, f11, f21,
-      f02, f12, f22
+      f00, f01, f02,
+      f10, f11, f12,
+      f20, f21, f22
     ))
     expect(classOf[ConstMat3x3]) { m.getClass }
-    expect((toDouble(f00), toDouble(f10), toDouble(f20))) { (m.m00, m.m10, m.m20) }
-    expect((toDouble(f01), toDouble(f11), toDouble(f21))) { (m.m01, m.m11, m.m21) }
-    expect((toDouble(f02), toDouble(f12), toDouble(f22))) { (m.m02, m.m12, m.m22) }
+    expect((toDouble(f00), toDouble(f01), toDouble(f02))) { (m.m00, m.m01, m.m02) }
+    expect((toDouble(f10), toDouble(f11), toDouble(f12))) { (m.m10, m.m11, m.m12) }
+    expect((toDouble(f20), toDouble(f21), toDouble(f22))) { (m.m20, m.m21, m.m22) }
   }
 
   test("Unapply") {
     Mat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
     ) match {
       case Mat3x3(c1, c2, c3) =>
         if (
-          c1 != Vec3(d00, d10, d20) ||
-          c2 != Vec3(d01, d11, d21) ||
-          c3 != Vec3(d02, d12, d22)
+          c1 != Vec3(d00, d01, d02) ||
+          c2 != Vec3(d10, d11, d12) ||
+          c3 != Vec3(d20, d21, d22)
         ) throw new AssertionError()
     }
     ConstMat3x3(
-      d00, d10, d20,
-      d01, d11, d21,
-      d02, d12, d22
+      d00, d01, d02,
+      d10, d11, d12,
+      d20, d21, d22
     ) match {
       case Mat3x3(c1, c2, c3) =>
         if (
-          c1 != Vec3(d00, d10, d20) ||
-          c2 != Vec3(d01, d11, d21) ||
-          c3 != Vec3(d02, d12, d22)
+          c1 != Vec3(d00, d01, d02) ||
+          c2 != Vec3(d10, d11, d12) ||
+          c3 != Vec3(d20, d21, d22)
         ) throw new AssertionError()
     }
   }
 
   test("Const conversions") {
     val i = Mat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
 
     val t: ConstMat3x3 = i
@@ -360,14 +360,14 @@ class Mat3x3dTest extends FunSuite {
 
   test("Equality methods") {
     val m = Mat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
     val n = ConstMat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
     assert(m == m)
     assert(m == n)
@@ -421,14 +421,14 @@ class Mat3x3dTest extends FunSuite {
     }
 
     val m = ConstMat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
 
-    expect(Vec3(m00, m10, m20)) { m(0) }
-    expect(Vec3(m01, m11, m21)) { m(1) }
-    expect(Vec3(m02, m12, m22)) { m(2) }
+    expect(Vec3(m00, m01, m02)) { m(0) }
+    expect(Vec3(m10, m11, m12)) { m(1) }
+    expect(Vec3(m20, m21, m22)) { m(2) }
 
     expect(classOf[ConstVec3]) { m(0).getClass }
     expect(classOf[ConstVec3]) { m(1).getClass }
@@ -444,9 +444,9 @@ class Mat3x3dTest extends FunSuite {
 
   test("Indexed write") {
     var m = Mat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
 
     var count = 0
@@ -472,23 +472,23 @@ class Mat3x3dTest extends FunSuite {
 
     m = Mat3x3(0)
 
-    m(0) = Vec3(m00, m10, m20)
-    m(1) = Vec3(m01, m11, m21)
-    m(2) = Vec3(m02, m12, m22)
+    m(0) = Vec3(m00, m01, m02)
+    m(1) = Vec3(m10, m11, m12)
+    m(2) = Vec3(m20, m21, m22)
 
-    expect(Vec3(m00, m10, m20)) { m(0) }
-    expect(Vec3(m01, m11, m21)) { m(1) }
-    expect(Vec3(m02, m12, m22)) { m(2) }
+    expect(Vec3(m00, m01, m02)) { m(0) }
+    expect(Vec3(m10, m11, m12)) { m(1) }
+    expect(Vec3(m20, m21, m22)) { m(2) }
 
     m = Mat3x3(0)
 
-    m(0) = Vec2(m00, m10)
-    m(1) = Vec2(m01, m11)
-    m(2) = Vec2(m02, m12)
+    m(0) = Vec2(m00, m01)
+    m(1) = Vec2(m10, m11)
+    m(2) = Vec2(m20, m21)
 
-    expect(Vec3(m00, m10, 0)) { m(0) }
-    expect(Vec3(m01, m11, 0)) { m(1) }
-    expect(Vec3(m02, m12, 0)) { m(2) }
+    expect(Vec3(m00, m01, 0)) { m(0) }
+    expect(Vec3(m10, m11, 0)) { m(1) }
+    expect(Vec3(m20, m21, 0)) { m(2) }
 
     intercept[IndexOutOfBoundsException] {
       m(3) = Vec3(1)
@@ -503,74 +503,74 @@ class Mat3x3dTest extends FunSuite {
   test("Setters") {
     var m = Mat3x3(0)
     val i = ConstMat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
 
     m = Mat3x3(0)
     m := i
-    expect((m00, m10, m20)) { (m.m00, m.m10, m.m20) }
-    expect((m01, m11, m21)) { (m.m01, m.m11, m.m21) }
-    expect((m02, m12, m22)) { (m.m02, m.m12, m.m22) }
+    expect((m00, m01, m02)) { (m.m00, m.m01, m.m02) }
+    expect((m10, m11, m12)) { (m.m10, m.m11, m.m12) }
+    expect((m20, m21, m22)) { (m.m20, m.m21, m.m22) }
   }
 
   test("Const math") {
     val m = ConstMat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
     assert(+m eq m)
 
     var t = Mat3x3(
-      -m00, -m10, -m20,
-      -m01, -m11, -m21,
-      -m02, -m12, -m22
+      -m00, -m01, -m02,
+      -m10, -m11, -m12,
+      -m20, -m21, -m22
     )
     assert(-m == t)
 
     t = Mat3x3(
-      2*m00, 2*m10, 2*m20,
-      2*m01, 2*m11, 2*m21,
-      2*m02, 2*m12, 2*m22
+      2*m00, 2*m01, 2*m02,
+      2*m10, 2*m11, 2*m12,
+      2*m20, 2*m21, 2*m22
     )
     assert(m*2 == t)
 
     t = Mat3x3(
-      m00/2, m10/2, m20/2,
-      m01/2, m11/2, m21/2,
-      m02/2, m12/2, m22/2
+      m00/2, m01/2, m02/2,
+      m10/2, m11/2, m12/2,
+      m20/2, m21/2, m22/2
     )
     assert(m/2 == t)
 
     t = Mat3x3(
-      m00+2, m10+2, m20+2,
-      m01+2, m11+2, m21+2,
-      m02+2, m12+2, m22+2
+      m00+2, m01+2, m02+2,
+      m10+2, m11+2, m12+2,
+      m20+2, m21+2, m22+2
     )
     assert(m + 2 == t)
 
     t = Mat3x3(
-      m00-2, m10-2, m20-2,
-      m01-2, m11-2, m21-2,
-      m02-2, m12-2, m22-2
+      m00-2, m01-2, m02-2,
+      m10-2, m11-2, m12-2,
+      m20-2, m21-2, m22-2
     )
     assert(m - 2 == t)
 
     val n: ConstMat3x3 = m*3
 
     t = Mat3x3(
-      4*m00, 4*m10, 4*m20,
-      4*m01, 4*m11, 4*m21,
-      4*m02, 4*m12, 4*m22
+      4*m00, 4*m01, 4*m02,
+      4*m10, 4*m11, 4*m12,
+      4*m20, 4*m21, 4*m22
     )
     assert(n + m == t)
 
     t = Mat3x3(
-      2*m00, 2*m10, 2*m20,
-      2*m01, 2*m11, 2*m21,
-      2*m02, 2*m12, 2*m22
+      2*m00, 2*m01, 2*m02,
+      2*m10, 2*m11, 2*m12,
+      2*m20, 2*m21, 2*m22
     )
     assert(n - m == t)
 
@@ -582,11 +582,11 @@ class Mat3x3dTest extends FunSuite {
     assert(n / m == t)
 
 
-    val mul32 = Mat3x2(
+    val mul23 = Mat2x3(
       38, 44, 50,
       98, 116, 134
     )
-    assert(m*Mat3x2(M) == mul32)
+    assert(m*Mat2x3(M) == mul23)
 
     val mul33 = Mat3x3(
       38, 44, 50,
@@ -595,13 +595,13 @@ class Mat3x3dTest extends FunSuite {
     )
     assert(m*Mat3x3(M) == mul33)
 
-    val mul34 = Mat3x4(
+    val mul43 = Mat4x3(
       38, 44, 50,
       98, 116, 134,
       158, 188, 218,
       218, 260, 302
     )
-    assert(m*Mat3x4(M) == mul34)
+    assert(m*Mat4x3(M) == mul43)
 
     assert(m*Vec3(1, 2, 3) == Vec3(38, 44, 50))
   }
@@ -609,52 +609,52 @@ class Mat3x3dTest extends FunSuite {
   test("Mutable math") {
     val m = Mat3x3(0)
     val i = ConstMat3x3(
-      m00, m10, m20,
-      m01, m11, m21,
-      m02, m12, m22
+      m00, m01, m02,
+      m10, m11, m12,
+      m20, m21, m22
     )
 
     var t = Mat3x3(
-      2*m00, 2*m10, 2*m20,
-      2*m01, 2*m11, 2*m21,
-      2*m02, 2*m12, 2*m22
+      2*m00, 2*m01, 2*m02,
+      2*m10, 2*m11, 2*m12,
+      2*m20, 2*m21, 2*m22
     )
     m := i; m *= 2; assert(m == t)
 
     t = Mat3x3(
-      m00/2, m10/2, m20/2,
-      m01/2, m11/2, m21/2,
-      m02/2, m12/2, m22/2
+      m00/2, m01/2, m02/2,
+      m10/2, m11/2, m12/2,
+      m20/2, m21/2, m22/2
     )
     m := i; m /= 2; assert(m == t)
 
     t = Mat3x3(
-      m00+2, m10+2, m20+2,
-      m01+2, m11+2, m21+2,
-      m02+2, m12+2, m22+2
+      m00+2, m01+2, m02+2,
+      m10+2, m11+2, m12+2,
+      m20+2, m21+2, m22+2
     )
     m := i; m += 2; assert(m == t)
 
     t = Mat3x3(
-      m00-2, m10-2, m20-2,
-      m01-2, m11-2, m21-2,
-      m02-2, m12-2, m22-2
+      m00-2, m01-2, m02-2,
+      m10-2, m11-2, m12-2,
+      m20-2, m21-2, m22-2
     )
     m := i; m -= 2; assert(m == t)
 
     val n: ConstMat3x3 = i*3
 
     t = Mat3x3(
-      4*m00, 4*m10, 4*m20,
-      4*m01, 4*m11, 4*m21,
-      4*m02, 4*m12, 4*m22
+      4*m00, 4*m01, 4*m02,
+      4*m10, 4*m11, 4*m12,
+      4*m20, 4*m21, 4*m22
     )
     m := i; m += n; assert(m == t)
 
     t = Mat3x3(
-      -2*m00, -2*m10, -2*m20,
-      -2*m01, -2*m11, -2*m21,
-      -2*m02, -2*m12, -2*m22
+      -2*m00, -2*m01, -2*m02,
+      -2*m10, -2*m11, -2*m12,
+      -2*m20, -2*m21, -2*m22
     )
     m := i; m -= n; assert(m == t)
 

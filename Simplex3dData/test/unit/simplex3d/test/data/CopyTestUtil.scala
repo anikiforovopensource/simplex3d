@@ -682,8 +682,8 @@ object CopyTestUtil extends FunSuite {
   def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
     import RawType._
     elem match {
-      case Mat2x3f.Manifest => RFloat
-      case Mat2x3d.Manifest => rawType match {
+      case Mat3x2f.Manifest => RFloat
+      case Mat3x2d.Manifest => rawType match {
         case RFloat => RDouble
         case RDouble => RFloat
       }

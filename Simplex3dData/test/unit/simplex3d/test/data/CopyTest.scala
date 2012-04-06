@@ -120,8 +120,8 @@ class CopyTest extends FunSuite {
     testCopy(DataSeq[Vec4f, RFloat])
   }
 
-  test("Copy Mat2x3f") {
-    testCopy(DataSeq[Mat2x3f, RFloat])
+  test("Copy Mat3x2f") {
+    testCopy(DataSeq[Mat3x2f, RFloat])
   }
 
 
@@ -173,8 +173,8 @@ class CopyTest extends FunSuite {
     testCopy(DataSeq[Vec4d, RDouble])
   }
 
-  test("Copy Mat2x3d") {
-    testCopy(DataSeq[Mat2x3d, RFloat])
-    testCopy(DataSeq[Mat2x3d, RDouble])
+  test("Copy Mat3x2d") {
+    testCopy(DataSeq[Mat3x2d, RFloat])
+    testCopy(DataSeq[Mat3x2d, RDouble])
   }
 }

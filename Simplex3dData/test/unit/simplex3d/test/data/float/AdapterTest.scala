@@ -56,13 +56,13 @@ class AdapterTest extends FunSuite {
   test("Adapters") {
     testAdapter(FactoryQuat4f)(Quat4f(c1.x, c1.y, c1.z, c1.w), flatten4(c1))
     testAdapter(FactoryMat2x2f)(Mat2x2f(a1, a2), flatten2(a1, a2))
-    testAdapter(FactoryMat2x3f)(Mat2x3f(a1, a2, a3), flatten2(a1, a2, a3))
-    testAdapter(FactoryMat2x4f)(Mat2x4f(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))
-    testAdapter(FactoryMat3x2f)(Mat3x2f(b1, b2), flatten3(b1, b2))
+    testAdapter(FactoryMat3x2f)(Mat3x2f(a1, a2, a3), flatten2(a1, a2, a3))
+    testAdapter(FactoryMat4x2f)(Mat4x2f(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))
+    testAdapter(FactoryMat2x3f)(Mat2x3f(b1, b2), flatten3(b1, b2))
     testAdapter(FactoryMat3x3f)(Mat3x3f(b1, b2, b3), flatten3(b1, b2, b3))
-    testAdapter(FactoryMat3x4f)(Mat3x4f(b1, b2, b3, b4), flatten3(b1, b2, b3, b4))
-    testAdapter(FactoryMat4x2f)(Mat4x2f(c1, c2), flatten4(c1, c2))
-    testAdapter(FactoryMat4x3f)(Mat4x3f(c1, c2, c3), flatten4(c1, c2, c3))
+    testAdapter(FactoryMat4x3f)(Mat4x3f(b1, b2, b3, b4), flatten3(b1, b2, b3, b4))
+    testAdapter(FactoryMat2x4f)(Mat2x4f(c1, c2), flatten4(c1, c2))
+    testAdapter(FactoryMat3x4f)(Mat3x4f(c1, c2, c3), flatten4(c1, c2, c3))
     testAdapter(FactoryMat4x4f)(Mat4x4f(c1, c2, c3, c4), flatten4(c1, c2, c3, c4))
   }
 }

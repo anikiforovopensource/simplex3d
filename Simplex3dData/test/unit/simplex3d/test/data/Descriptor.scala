@@ -106,7 +106,7 @@ object Descriptors {
   implicit val Vec4fHFloat = Descriptor[Vec4f, HFloat](Vec4f.Manifest, Man.RFloat, Vec4f.Manifest, 4, HFloat, false)
   implicit val Vec4fRFloat = Descriptor[Vec4f, RFloat](Vec4f.Manifest, Man.RFloat, Vec4f.Manifest, 4, RFloat, false)
 
-  implicit val Mat2x3fRFloat = Descriptor[Mat2x3f, RFloat](Mat2x3f.Manifest, Man.RFloat, Mat2x3f.Manifest, 6, RFloat, false)
+  implicit val Mat3x2fRFloat = Descriptor[Mat3x2f, RFloat](Mat3x2f.Manifest, Man.RFloat, Mat3x2f.Manifest, 6, RFloat, false)
 
 
   implicit val RDoubleSByte = Descriptor[RDouble, SByte](Man.RDouble, Man.RDouble, Man.RDouble, 1, SByte, true)
@@ -149,6 +149,6 @@ object Descriptors {
   implicit val Vec4dRFloat = Descriptor[Vec4d, RFloat](Vec4d.Manifest, Man.RDouble, Vec4d.Manifest, 4, RFloat, false)
   implicit val Vec4dRDouble = Descriptor[Vec4d, RDouble](Vec4d.Manifest, Man.RDouble, Vec4d.Manifest, 4, RDouble, false)
 
-  implicit val Mat2x3dRFloat = Descriptor[Mat2x3d, RFloat](Mat2x3d.Manifest, Man.RDouble, Mat2x3d.Manifest, 6, RFloat, false)
-  implicit val Mat2x3dRDouble = Descriptor[Mat2x3d, RDouble](Mat2x3d.Manifest, Man.RDouble, Mat2x3d.Manifest, 6, RDouble, false)
+  implicit val Mat3x2dRFloat = Descriptor[Mat3x2d, RFloat](Mat3x2d.Manifest, Man.RDouble, Mat3x2d.Manifest, 6, RFloat, false)
+  implicit val Mat3x2dRDouble = Descriptor[Mat3x2d, RDouble](Mat3x2d.Manifest, Man.RDouble, Mat3x2d.Manifest, 6, RDouble, false)
 }

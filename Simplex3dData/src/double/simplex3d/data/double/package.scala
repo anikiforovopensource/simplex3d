@@ -84,48 +84,8 @@ package object double {
       )
     }
     def update(p: Contiguous[Mat2x2d#Component, Raw], j: Int, v: Mat2x2d#Read) {
-      p(j) =     v.m00; p(j + 1) = v.m10
-      p(j + 2) = v.m01; p(j + 3) = v.m11
-    }
-  }
-
-  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, TangibleDouble with SysFP](components = 6)(
-    formatManifest = Mat2x3d.Manifest,
-    accessorManifest = Mat2x3d.Manifest,
-    boundManifest = sysfpBound
-  ) {
-    def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
-      ConstMat2x3d(
-        p(j),     p(j + 1),
-        p(j + 2), p(j + 3),
-        p(j + 4), p(j + 5)
-      )
-    }
-    def update(p: Contiguous[Mat2x3d#Component, Raw], j: Int, v: Mat2x3d#Read) {
-      p(j) =     v.m00; p(j + 1) = v.m10
-      p(j + 2) = v.m01; p(j + 3) = v.m11
-      p(j + 4) = v.m02; p(j + 5) = v.m12
-    }
-  }
-
-  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, TangibleDouble with SysFP](components = 8)(
-    formatManifest = Mat2x4d.Manifest,
-    accessorManifest = Mat2x4d.Manifest,
-    boundManifest = sysfpBound
-  ) {
-    def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
-      ConstMat2x4d(
-        p(j),     p(j + 1),
-        p(j + 2), p(j + 3),
-        p(j + 4), p(j + 5),
-        p(j + 6), p(j + 7)
-      )
-    }
-    def update(p: Contiguous[Mat2x4d#Component, Raw], j: Int, v: Mat2x4d#Read) {
-      p(j) =     v.m00; p(j + 1) = v.m10
-      p(j + 2) = v.m01; p(j + 3) = v.m11
-      p(j + 4) = v.m02; p(j + 5) = v.m12
-      p(j + 6) = v.m03; p(j + 7) = v.m13
+      p(j) =     v.m00; p(j + 1) = v.m01
+      p(j + 2) = v.m10; p(j + 3) = v.m11
     }
   }
 
@@ -136,13 +96,53 @@ package object double {
   ) {
     def apply(p: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
       ConstMat3x2d(
+        p(j),     p(j + 1),
+        p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5)
+      )
+    }
+    def update(p: Contiguous[Mat3x2d#Component, Raw], j: Int, v: Mat3x2d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m01
+      p(j + 2) = v.m10; p(j + 3) = v.m11
+      p(j + 4) = v.m20; p(j + 5) = v.m21
+    }
+  }
+
+  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, TangibleDouble with SysFP](components = 8)(
+    formatManifest = Mat4x2d.Manifest,
+    accessorManifest = Mat4x2d.Manifest,
+    boundManifest = sysfpBound
+  ) {
+    def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
+      ConstMat4x2d(
+        p(j),     p(j + 1),
+        p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5),
+        p(j + 6), p(j + 7)
+      )
+    }
+    def update(p: Contiguous[Mat4x2d#Component, Raw], j: Int, v: Mat4x2d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m01
+      p(j + 2) = v.m10; p(j + 3) = v.m11
+      p(j + 4) = v.m20; p(j + 5) = v.m21
+      p(j + 6) = v.m30; p(j + 7) = v.m31
+    }
+  }
+
+  implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, TangibleDouble with SysFP](components = 6)(
+    formatManifest = Mat2x3d.Manifest,
+    accessorManifest = Mat2x3d.Manifest,
+    boundManifest = sysfpBound
+  ) {
+    def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
+      ConstMat2x3d(
         p(j),     p(j + 1), p(j + 2),
         p(j + 3), p(j + 4), p(j + 5)
       )
     }
-    def update(p: Contiguous[Mat3x2d#Component, Raw], j: Int, v: Mat3x2d#Read) {
-      p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
-      p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
+    def update(p: Contiguous[Mat2x3d#Component, Raw], j: Int, v: Mat2x3d#Read) {
+      p(j) =     v.m00; p(j + 1) = v.m01; p(j + 2) = v.m02
+      p(j + 3) = v.m10; p(j + 4) = v.m11; p(j + 5) = v.m12
     }
   }
 
@@ -159,47 +159,9 @@ package object double {
       )
     }
     def update(p: Contiguous[Mat3x3d#Component, Raw], j: Int, v: Mat3x3d#Read) {
-      p(j) =     v.m00; p(j + 1) = v.m10; p(j + 2) = v.m20
-      p(j + 3) = v.m01; p(j + 4) = v.m11; p(j + 5) = v.m21
-      p(j + 6) = v.m02; p(j + 7) = v.m12; p(j + 8) = v.m22
-    }
-  }
-
-  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, TangibleDouble with SysFP](components = 12)(
-    formatManifest = Mat3x4d.Manifest,
-    accessorManifest = Mat3x4d.Manifest,
-    boundManifest = sysfpBound
-  ) {
-    def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
-      ConstMat3x4d(
-        p(j),     p(j + 1),  p(j + 2),
-        p(j + 3), p(j + 4),  p(j + 5),
-        p(j + 6), p(j + 7),  p(j + 8),
-        p(j + 9), p(j + 10), p(j + 11)
-      )
-    }
-    def update(p: Contiguous[Mat3x4d#Component, Raw], j: Int, v: Mat3x4d#Read) {
-      p(j) =     v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20
-      p(j + 3) = v.m01; p(j + 4) =  v.m11; p(j + 5) =  v.m21
-      p(j + 6) = v.m02; p(j + 7) =  v.m12; p(j + 8) =  v.m22
-      p(j + 9) = v.m03; p(j + 10) = v.m13; p(j + 11) = v.m23
-    }
-  }
-
-  implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, TangibleDouble with SysFP](components = 8)(
-    formatManifest = Mat4x2d.Manifest,
-    accessorManifest = Mat4x2d.Manifest,
-    boundManifest = sysfpBound
-  ) {
-    def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
-      ConstMat4x2d(
-        p(j),     p(j + 1), p(j + 2), p(j + 3),
-        p(j + 4), p(j + 5), p(j + 6), p(j + 7)
-      )
-    }
-    def update(p: Contiguous[Mat4x2d#Component, Raw], j: Int, v: Mat4x2d#Read) {
-      p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) = v.m20; p(j + 3) = v.m30
-      p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) = v.m21; p(j + 7) = v.m31
+      p(j) =     v.m00; p(j + 1) = v.m01; p(j + 2) = v.m02
+      p(j + 3) = v.m10; p(j + 4) = v.m11; p(j + 5) = v.m12
+      p(j + 6) = v.m20; p(j + 7) = v.m21; p(j + 8) = v.m22
     }
   }
 
@@ -210,15 +172,53 @@ package object double {
   ) {
     def apply(p: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
       ConstMat4x3d(
+        p(j),     p(j + 1),  p(j + 2),
+        p(j + 3), p(j + 4),  p(j + 5),
+        p(j + 6), p(j + 7),  p(j + 8),
+        p(j + 9), p(j + 10), p(j + 11)
+      )
+    }
+    def update(p: Contiguous[Mat4x3d#Component, Raw], j: Int, v: Mat4x3d#Read) {
+      p(j) =     v.m00; p(j + 1) =  v.m01; p(j + 2) =  v.m02
+      p(j + 3) = v.m10; p(j + 4) =  v.m11; p(j + 5) =  v.m12
+      p(j + 6) = v.m20; p(j + 7) =  v.m21; p(j + 8) =  v.m22
+      p(j + 9) = v.m30; p(j + 10) = v.m31; p(j + 11) = v.m32
+    }
+  }
+
+  implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, TangibleDouble with SysFP](components = 8)(
+    formatManifest = Mat2x4d.Manifest,
+    accessorManifest = Mat2x4d.Manifest,
+    boundManifest = sysfpBound
+  ) {
+    def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
+      ConstMat2x4d(
+        p(j),     p(j + 1), p(j + 2), p(j + 3),
+        p(j + 4), p(j + 5), p(j + 6), p(j + 7)
+      )
+    }
+    def update(p: Contiguous[Mat2x4d#Component, Raw], j: Int, v: Mat2x4d#Read) {
+      p(j) = v.m00;     p(j + 1) = v.m01; p(j + 2) = v.m02; p(j + 3) = v.m03
+      p(j + 4) = v.m10; p(j + 5) = v.m11; p(j + 6) = v.m12; p(j + 7) = v.m13
+    }
+  }
+
+  implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, TangibleDouble with SysFP](components = 12)(
+    formatManifest = Mat3x4d.Manifest,
+    accessorManifest = Mat3x4d.Manifest,
+    boundManifest = sysfpBound
+  ) {
+    def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
+      ConstMat3x4d(
         p(j),     p(j + 1), p(j + 2),  p(j + 3),
         p(j + 4), p(j + 5), p(j + 6),  p(j + 7),
         p(j + 8), p(j + 9), p(j + 10), p(j + 11)
       )
     }
-    def update(p: Contiguous[Mat4x3d#Component, Raw], j: Int, v: Mat4x3d#Read) {
-      p(j) = v.m00;     p(j + 1) = v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
-      p(j + 4) = v.m01; p(j + 5) = v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
-      p(j + 8) = v.m02; p(j + 9) = v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32
+    def update(p: Contiguous[Mat3x4d#Component, Raw], j: Int, v: Mat3x4d#Read) {
+      p(j) = v.m00;     p(j + 1) = v.m01; p(j + 2) =  v.m02; p(j + 3) =  v.m03
+      p(j + 4) = v.m10; p(j + 5) = v.m11; p(j + 6) =  v.m12; p(j + 7) =  v.m13
+      p(j + 8) = v.m20; p(j + 9) = v.m21; p(j + 10) = v.m22; p(j + 11) = v.m23
     }
   }
 
@@ -236,10 +236,10 @@ package object double {
       )
     }
     def update(p: Contiguous[Mat4x4d#Component, Raw], j: Int, v: Mat4x4d#Read) {
-      p(j) =      v.m00; p(j + 1) =  v.m10; p(j + 2) =  v.m20; p(j + 3) =  v.m30
-      p(j + 4) =  v.m01; p(j + 5) =  v.m11; p(j + 6) =  v.m21; p(j + 7) =  v.m31
-      p(j + 8) =  v.m02; p(j + 9) =  v.m12; p(j + 10) = v.m22; p(j + 11) = v.m32
-      p(j + 12) = v.m03; p(j + 13) = v.m13; p(j + 14) = v.m23; p(j + 15) = v.m33
+      p(j) =      v.m00; p(j + 1) =  v.m01; p(j + 2) =  v.m02; p(j + 3) =  v.m03
+      p(j + 4) =  v.m10; p(j + 5) =  v.m11; p(j + 6) =  v.m12; p(j + 7) =  v.m13
+      p(j + 8) =  v.m20; p(j + 9) =  v.m21; p(j + 10) = v.m22; p(j + 11) = v.m23
+      p(j + 12) = v.m30; p(j + 13) = v.m31; p(j + 14) = v.m32; p(j + 15) = v.m33
     }
   }
 }

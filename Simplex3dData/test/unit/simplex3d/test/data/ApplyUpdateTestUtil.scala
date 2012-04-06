@@ -194,11 +194,11 @@ object ApplyUpdateTestUtil extends FunSuite {
       case Vec2d(x, y) =>       cmp(x, get(i, 0)); cmp(y, get(i, 1))
       case Vec3d(x, y, z) =>    cmp(x, get(i, 0)); cmp(y, get(i, 1)); cmp(z, get(i, 2))
       case Vec4d(x, y, z, w) => cmp(x, get(i, 0)); cmp(y, get(i, 1)); cmp(z, get(i, 2)); cmp(w, get(i, 3))
-      case Mat2x3f(Vec2f(x1, y1), Vec2f(x2, y2), Vec2f(x3, y3)) =>
+      case Mat3x2f(Vec2f(x1, y1), Vec2f(x2, y2), Vec2f(x3, y3)) =>
         cmp(x1, get(i, 0)); cmp(y1, get(i, 1))
         cmp(x2, get(i, 2)); cmp(y2, get(i, 3))
         cmp(x3, get(i, 4)); cmp(y3, get(i, 5))
-      case Mat2x3d(Vec2d(x1, y1), Vec2d(x2, y2), Vec2d(x3, y3)) =>
+      case Mat3x2d(Vec2d(x1, y1), Vec2d(x2, y2), Vec2d(x3, y3)) =>
         cmp(x1, get(i, 0)); cmp(y1, get(i, 1))
         cmp(x2, get(i, 2)); cmp(y2, get(i, 3))
         cmp(x3, get(i, 4)); cmp(y3, get(i, 5))
@@ -256,17 +256,17 @@ object ApplyUpdateTestUtil extends FunSuite {
         val u = Vec4d(nd, nd, nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y); dput(i, 2, u.z); dput(i, 3, u.w)
         u
-      case Mat2x3f.Manifest =>
-        val m = Mat2x3f(nf, nf, nf, nf, nf, nf)
-        fput(i, 0, m.m00); fput(i, 1, m.m10)
-        fput(i, 2, m.m01); fput(i, 3, m.m11)
-        fput(i, 4, m.m02); fput(i, 5, m.m12)
+      case Mat3x2f.Manifest =>
+        val m = Mat3x2f(nf, nf, nf, nf, nf, nf)
+        fput(i, 0, m.m00); fput(i, 1, m.m01)
+        fput(i, 2, m.m10); fput(i, 3, m.m11)
+        fput(i, 4, m.m20); fput(i, 5, m.m21)
         m
-      case Mat2x3d.Manifest =>
-        val m = Mat2x3d(nd, nd, nd, nd, nd, nd)
-        dput(i, 0, m.m00); dput(i, 1, m.m10)
-        dput(i, 2, m.m01); dput(i, 3, m.m11)
-        dput(i, 4, m.m02); dput(i, 5, m.m12)
+      case Mat3x2d.Manifest =>
+        val m = Mat3x2d(nd, nd, nd, nd, nd, nd)
+        dput(i, 0, m.m00); dput(i, 1, m.m01)
+        dput(i, 2, m.m10); dput(i, 3, m.m11)
+        dput(i, 4, m.m20); dput(i, 5, m.m21)
         m
     }
 

@@ -35,27 +35,27 @@ import SubCopyTestUtil._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-class Mat2x3fTest extends FunSuite {
+class Mat3x2fTest extends FunSuite {
 
   test("Factories") {
-    testArrayFromSize(DataArray[Mat2x3f, RFloat](_))
-    testArrayFromData[Mat2x3f, RFloat](DataArray[Mat2x3f, RFloat](_))
-    testBufferFromSize(DataBuffer[Mat2x3f, RFloat](_))
-    testBufferFromData(DataBuffer[Mat2x3f, RFloat](_))
-    testViewFromData(DataView[Mat2x3f, RFloat](_, _, _))
-    testReadBufferFromData(ReadDataBuffer[Mat2x3f, RFloat](_))
-    testReadViewFromData(ReadDataView[Mat2x3f, RFloat](_, _, _))
-    testArrayFromCollection[Mat2x3f, RFloat]((a: IndexedSeq[ReadMat2x3f]) => DataArray[Mat2x3f, RFloat](a: _*))
-    testBufferFromCollection[Mat2x3f, RFloat]((a: IndexedSeq[ReadMat2x3f]) => DataBuffer[Mat2x3f, RFloat](a: _*))
+    testArrayFromSize(DataArray[Mat3x2f, RFloat](_))
+    testArrayFromData[Mat3x2f, RFloat](DataArray[Mat3x2f, RFloat](_))
+    testBufferFromSize(DataBuffer[Mat3x2f, RFloat](_))
+    testBufferFromData(DataBuffer[Mat3x2f, RFloat](_))
+    testViewFromData(DataView[Mat3x2f, RFloat](_, _, _))
+    testReadBufferFromData(ReadDataBuffer[Mat3x2f, RFloat](_))
+    testReadViewFromData(ReadDataView[Mat3x2f, RFloat](_, _, _))
+    testArrayFromCollection[Mat3x2f, RFloat]((a: IndexedSeq[ReadMat3x2f]) => DataArray[Mat3x2f, RFloat](a: _*))
+    testBufferFromCollection[Mat3x2f, RFloat]((a: IndexedSeq[ReadMat3x2f]) => DataBuffer[Mat3x2f, RFloat](a: _*))
   }
   
   test("Apply/Update") {
-    testApplyUpdateArray[Mat2x3f, RFloat](DataArray[Mat2x3f, RFloat](_))
-    testApplyUpdateBuffer(DataBuffer[Mat2x3f, RFloat](_))
-    testApplyUpdateView(DataView[Mat2x3f, RFloat](_, _, _))
+    testApplyUpdateArray[Mat3x2f, RFloat](DataArray[Mat3x2f, RFloat](_))
+    testApplyUpdateBuffer(DataBuffer[Mat3x2f, RFloat](_))
+    testApplyUpdateView(DataView[Mat3x2f, RFloat](_, _, _))
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[Mat2x3f, RFloat])
+    testSubCopy(DataSeq[Mat3x2f, RFloat])
   }
 }

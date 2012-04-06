@@ -241,12 +241,12 @@ object TestUtil extends FunSuite {
       case Vec2f.Manifest => Vec2f(nf, nf)
       case Vec3f.Manifest => Vec3f(nf, nf, nf)
       case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
-      case Mat2x3f.Manifest => Mat2x3f(nf, nf, nf, nf, nf, nf)
+      case Mat3x2f.Manifest => Mat3x2f(nf, nf, nf, nf, nf, nf)
       case PrimitiveFormat.RDouble => nd
       case Vec2d.Manifest => Vec2d(nd, nd)
       case Vec3d.Manifest => Vec3d(nd, nd, nd)
       case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
-      case Mat2x3d.Manifest => Mat2x3d(nd, nd, nd, nd, nd, nd)
+      case Mat3x2d.Manifest => Mat3x2d(nd, nd, nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
   private def randPrim[T](randomSrc: java.util.Random, m: ClassManifest[T]) :T = {
@@ -346,12 +346,12 @@ object TestUtil extends FunSuite {
           case 5 => Vec2f.Manifest
           case 6 => Vec3f.Manifest
           case 7 => Vec4f.Manifest
-          case 8 => Mat2x3f.Manifest
+          case 8 => Mat3x2f.Manifest
           case 9 => PrimitiveFormat.RDouble
           case 10 => Vec2d.Manifest
           case 11 => Vec3d.Manifest
           case 12 => Vec4d.Manifest
-          case 13 => Mat2x3d.Manifest
+          case 13 => Mat3x2d.Manifest
         }
       }
     
@@ -359,8 +359,8 @@ object TestUtil extends FunSuite {
       case PrimitiveFormat.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => (0, 6)
       case PrimitiveFormat.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => (0, 8)
       case PrimitiveFormat.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => (0, 9)
-      case Mat2x3f.Manifest => (7, 8)
-      case Mat2x3d.Manifest => (7, 9)
+      case Mat3x2f.Manifest => (7, 8)
+      case Mat3x2d.Manifest => (7, 9)
     }
     
     val r = rawType match {
@@ -456,8 +456,8 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec4f, HFloat](size)
         case RFloat => RandomDataArray[Vec4f, RFloat](size)
       }
-      case Mat2x3f.Manifest => rawType match {
-        case RFloat => RandomDataArray[Mat2x3f, RFloat](size)
+      case Mat3x2f.Manifest => rawType match {
+        case RFloat => RandomDataArray[Mat3x2f, RFloat](size)
       }
       
       case PrimitiveFormat.RDouble => rawType match {
@@ -504,9 +504,9 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec4d, RFloat](size)
         case RDouble => RandomDataArray[Vec4d, RDouble](size)
       }
-      case Mat2x3d.Manifest => rawType match {
-        case RFloat => RandomDataArray[Mat2x3d, RFloat](size)
-        case RDouble => RandomDataArray[Mat2x3d, RDouble](size)
+      case Mat3x2d.Manifest => rawType match {
+        case RFloat => RandomDataArray[Mat3x2d, RFloat](size)
+        case RDouble => RandomDataArray[Mat3x2d, RDouble](size)
       }
     }).asInstanceOf[Contiguous[F, Raw]]
   }
@@ -792,11 +792,11 @@ object TestUtil extends FunSuite {
       case Vec2f.Manifest => Vec2f.ReadManifest
       case Vec3f.Manifest => Vec3f.ReadManifest
       case Vec4f.Manifest => Vec4f.ReadManifest
-      case Mat2x3f.Manifest => Mat2x3f.ReadManifest
+      case Mat3x2f.Manifest => Mat3x2f.ReadManifest
       case Vec2d.Manifest => Vec2d.ReadManifest
       case Vec3d.Manifest => Vec3d.ReadManifest
       case Vec4d.Manifest => Vec4d.ReadManifest
-      case Mat2x3d.Manifest => Mat2x3d.ReadManifest
+      case Mat3x2d.Manifest => Mat3x2d.ReadManifest
     }).asInstanceOf[ClassManifest[M#Read]]
   }
 }

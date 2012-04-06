@@ -52,6 +52,8 @@ object Common extends Build {
     
     this.synchronized {
       if (!nativesUpdated) {
+        println("lwjgl: setting up native libs.")
+        
         IO.delete(targetDir)
         targetDir.mkdirs()
         

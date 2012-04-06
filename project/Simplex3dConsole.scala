@@ -225,13 +225,13 @@ object Indexer {
     depsIndex: File, deps: Seq[FileSet],
     examplesIndex: File, examples: Seq[FileSet]
   ) {
-    println("Indexing files...")
+    println("console: indexing jars...")
 
     Util.writeFile(timeStamp, (System.currentTimeMillis / 1000).toString)
     Util.writeFile(depsIndex, makeIndex(deps))
     Util.writeFile(examplesIndex, makeIndex(examples))
 
-    println("Indexing complete.")
+    println("console: indexing complete.")
   }
 
   private def makeIndex(files: Seq[FileSet]) :String = {

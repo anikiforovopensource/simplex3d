@@ -23,6 +23,16 @@ import Keys._
 
 object Simplex3d extends Build {
   
+  lazy val allCode = Project(
+    id = "all-code",
+    base = file("."),
+    settings = Common.buildSettings ++ Seq(
+      target := new File("target/root"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) aggregate(root, test, example)
+  
   lazy val root = Project(
     id = "root",
     base = file("."),
@@ -45,6 +55,18 @@ object Simplex3d extends Build {
     )
   ) aggregate(
     Simplex3dMath.doc, Simplex3dData.doc, Simplex3dAlgorithm.doc, Simplex3dEngine.doc, Simplex3dScript.core
+  )
+  
+  lazy val test = Project(
+    id = "root-test",
+    base = file("."),
+    settings = Common.buildSettings ++ Seq(
+      target := new File("target/root"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) aggregate(
+    Simplex3dMath.test, Simplex3dData.test, Simplex3dEngine.test
   )
   
   lazy val example = Project(

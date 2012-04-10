@@ -319,8 +319,6 @@ extends graphics.RenderContext with GlAccess {
     
     if (generateMipmap && settings.legacyMipMapGeneration) legacyMipMapGeneration(texture)
     else {
-      if (generateMipmap) glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
-      
       val src = texture.src
       val internalFormat = resolveInternalFormat(src.formatManifest)
       val format = resolveFormat(src.accessorManifest)
@@ -333,6 +331,7 @@ extends graphics.RenderContext with GlAccess {
       )
       
       if (generateMipmap) {
+        glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
         glGenerateMipmapEXT(GL_TEXTURE_2D)
         texture.hasMatchingMipmaps = true
       }
@@ -360,8 +359,6 @@ extends graphics.RenderContext with GlAccess {
     
     if (generateMipmap && settings.legacyMipMapGeneration) legacyMipMapGeneration(texture)
     else {
-      if (generateMipmap) glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
-      
       val src = texture.src
       val internalFormat = resolveInternalFormat(src.formatManifest)
       val format = resolveFormat(src.accessorManifest)
@@ -375,6 +372,7 @@ extends graphics.RenderContext with GlAccess {
       )
       
       if (generateMipmap) {
+        glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
         glGenerateMipmapEXT(GL_TEXTURE_2D)
         texture.hasMatchingMipmaps = true
       }
@@ -562,27 +560,35 @@ extends graphics.RenderContext with GlAccess {
   private def initialize(program: Technique) :Int = {
     if (program.compilationFailed) return 0
     
-    var id = glCreateProgram()
+    var progId = glCreateProgram()
     var compilationFailed = false
     
     for (shader <- program.shaders) {
       var shaderId = shader.managedFields.id
       if (shaderId == 0) shaderId = initialize(shader)
       
-      if (shaderId != 0) glAttachShader(id, shaderId)
+      if (shaderId != 0) glAttachShader(progId, shaderId)
       else compilationFailed = true
     }
     
     if (compilationFailed) {
-      glDeleteProgram(id)
+      glDeleteProgram(progId)
       program.compilationFailed = true
+      return 0
+    }
+
+    
+    glLinkProgram(progId)
+    
+    if (glGetProgram(progId, GL_LINK_STATUS) == 0) {
+      val logInfo = glGetProgramInfoLog(progId, 64*1024)
+      log(Level.SEVERE, "The program failed to link:\n" + logInfo)
+      glDeleteProgram(progId)
       return 0
     }
     
     
-    glLinkProgram(id)
-    
-    program.managedFields.id = id
+    program.managedFields.id = progId
     resourceManager.register(program)
     
     
@@ -613,10 +619,10 @@ extends graphics.RenderContext with GlAccess {
       else -1
     }
     
-    val uniformCount = glGetProgram(id, GL_ACTIVE_UNIFORMS)
-    val uniformStringLength = glGetProgram(id, GL_ACTIVE_UNIFORM_MAX_LENGTH)
+    val uniformCount = glGetProgram(progId, GL_ACTIVE_UNIFORMS)
+    val uniformStringLength = glGetProgram(progId, GL_ACTIVE_UNIFORM_MAX_LENGTH)
     var i = 0; while (i < uniformCount) {
-      val glName = glGetActiveUniform(id, i, uniformStringLength, sizeType)
+      val glName = glGetActiveUniform(progId, i, uniformStringLength, sizeType)
       val isArray = glName.endsWith("[0]")
       val name = if (isArray) glName.dropRight(3) else glName
       val size = sizeType.get(0)
@@ -628,7 +634,7 @@ extends graphics.RenderContext with GlAccess {
         if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
-            val location = glGetUniformLocation(id, arrayName)
+            val location = glGetUniformLocation(progId, arrayName)
             uniformBindings += new UniformTexBinding(blockType, arrayName, dataType, location, textureUnitCount)
             textureUnitCount += 1
             
@@ -636,7 +642,7 @@ extends graphics.RenderContext with GlAccess {
           }
         }
         else {
-          val location = glGetUniformLocation(id, name)
+          val location = glGetUniformLocation(progId, name)
           uniformBindings += new UniformTexBinding(blockType, name, dataType, location, textureUnitCount)
           textureUnitCount += 1
         }
@@ -647,14 +653,14 @@ extends graphics.RenderContext with GlAccess {
         if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
-            val location = glGetUniformLocation(id, arrayName)
+            val location = glGetUniformLocation(progId, arrayName)
             uniformBindings += new UniformBinding(blockType, arrayName, dataType, location)
             
             i += 1
           }
         }
         else {
-          val location = glGetUniformLocation(id, name)
+          val location = glGetUniformLocation(progId, name)
           uniformBindings += new UniformBinding(blockType, name, dataType, location)
         }
       }
@@ -663,14 +669,13 @@ extends graphics.RenderContext with GlAccess {
     }
     
     val unusedAttributeBindings = ArrayBuffer[AttributeBinding]()
-    val attributeCount = glGetProgram(id, GL_ACTIVE_ATTRIBUTES)
-    val attributeStringLength = glGetProgram(id, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
+    val attributeCount = glGetProgram(progId, GL_ACTIVE_ATTRIBUTES)
+    val attributeStringLength = glGetProgram(progId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
     i = 0; while (i < attributeCount) {
-      val name = glGetActiveAttrib(id, i, attributeStringLength, sizeType)
+      val name = glGetActiveAttrib(progId, i, attributeStringLength, sizeType)
       val size = sizeType.get(0) // Not used by GL.
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
-      
-      val location = glGetAttribLocation(id, name)
+      val location = glGetAttribLocation(progId, name)
       
       val binding = new AttributeBinding(name, dataType, location)
       
@@ -703,7 +708,7 @@ extends graphics.RenderContext with GlAccess {
     
     program.mapping = new ProgramMapping(program, this)(uniformBindings, attributeBindings)
     
-    id
+    progId
   }
   
   def bindProgram(program: Technique) :Boolean = {
@@ -758,7 +763,7 @@ extends graphics.RenderContext with GlAccess {
   
   import simplex3d.math.Accessors._
   
-  def mat2x2ToBuffer(m: AnyMat2x2[_]) :FloatBuffer = {
+  def mat2x2ToBuffer(m: AnyMat[_]) :FloatBuffer = {
     floatBuffer.limit(4)
     
     floatBuffer.put(f00(m)); floatBuffer.put(f01(m))
@@ -799,7 +804,7 @@ extends graphics.RenderContext with GlAccess {
     floatBuffer
   }
   
-  def mat3x3ToBuffer(m: AnyMat3x3[_]) :FloatBuffer = {
+  def mat3x3ToBuffer(m: AnyMat[_]) :FloatBuffer = {
     floatBuffer.limit(9)
     
     floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m))
@@ -845,7 +850,7 @@ extends graphics.RenderContext with GlAccess {
     floatBuffer
   }
   
-  def mat4x4ToBuffer(m: AnyMat4x4[_]) :FloatBuffer = {
+  def mat4x4ToBuffer(m: AnyMat[_]) :FloatBuffer = {
     floatBuffer.limit(16)
     
     floatBuffer.put(f00(m)); floatBuffer.put(f01(m)); floatBuffer.put(f02(m)); floatBuffer.put(f03(m))
@@ -899,7 +904,9 @@ extends graphics.RenderContext with GlAccess {
     
     def isIndexValid(index: Int, name: String) :Boolean = {
       if (index < 0) {
-        log(Level.SEVERE, "Uniform '" + name + "' cannot be resolved.")
+        if (!name.endsWith(".nvidiaBugWorkaround")) log(
+          Level.SEVERE, "Uniform '" + name + "' cannot be resolved for mesh '" + meshName + "'."
+        )
         false
       }
       else true
@@ -1080,13 +1087,16 @@ extends graphics.RenderContext with GlAccess {
         case EngineBindingTypes.Mat2x3 => value.isInstanceOf[Mat2x3]
         case EngineBindingTypes.Mat2x4 => value.isInstanceOf[Mat2x4]
         case EngineBindingTypes.Mat3x2 => value.isInstanceOf[Mat3x2]
-        case EngineBindingTypes.Mat3x3 => value.isInstanceOf[Mat3x3]
+        case EngineBindingTypes.Mat3x3 =>
+          value.isInstanceOf[Mat2x3] || value.isInstanceOf[Mat3x2] || value.isInstanceOf[Mat3x3]
         case EngineBindingTypes.Mat3x4 => value.isInstanceOf[Mat3x4]
         case EngineBindingTypes.Mat4x2 => value.isInstanceOf[Mat4x2]
         case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
-        case EngineBindingTypes.Mat4x4 => value.isInstanceOf[Mat4x4]
+        case EngineBindingTypes.Mat4x4 =>
+          value.isInstanceOf[Mat2x4] || value.isInstanceOf[Mat4x2] ||
+          value.isInstanceOf[Mat3x4] || value.isInstanceOf[Mat4x3] || value.isInstanceOf[Mat4x4]
         case EngineBindingTypes.Texture1d => false// XXX
-        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_]] // XXX verify type somehow
+        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_]]// XXX verify type somehow
         case EngineBindingTypes.Texture3d => false
         case EngineBindingTypes.CubeTexture => false
         case EngineBindingTypes.ShadowTexture1d => false
@@ -1143,11 +1153,11 @@ extends graphics.RenderContext with GlAccess {
         null
       }
       else {
-        val shared = properties(index)
-        if (!shared.isDefined) {
+        val attrib = properties(index)
+        if (!attrib.isDefined) {
           log(Level.SEVERE, "Attributes '" + name + "' are not defined for mesh '" + mesh.name + "'.")
         }
-        shared.defined.asInstanceOf[AnyRef]
+        attrib.defined.asInstanceOf[AnyRef]
       }
     }
     
@@ -1156,7 +1166,9 @@ extends graphics.RenderContext with GlAccess {
     
     var i = 0; while (i < bindings.length) {
       val binding = bindings(i)
-      mapping(i) = extract(geom.attributeNames, geom.attributes, binding.name).asInstanceOf[Attributes[_, _]]
+      val attrib = extract(geom.attributeNames, geom.attributes, binding.name)
+      // XXX check type
+      mapping(i) = attrib.asInstanceOf[Attributes[_, _]]
       
       i += 1
     }
@@ -1169,21 +1181,22 @@ extends graphics.RenderContext with GlAccess {
     mesh: AbstractMesh,
     programMapping: backend.opengl.ProgramMapping
   ) {
-    val meshMapping = mesh.mapping
     val resolvedEnv = resolveWorldEvnrironmentBindings(mesh)
     
-    meshMapping.uniformVectors = buildUniformMapping(
+    val uniformVectors = buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformVectors
     ).asInstanceOf[ReadArray[VectorLike]]
     
-    meshMapping.uniformMatrices = buildUniformMapping(
+    val uniformMatrices = buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
-    meshMapping.uniformTextures = TextureBinding.avoidCompilerCrash(buildUniformMapping(
+    val uniformTextures = TextureBinding.avoidCompilerCrash(buildUniformMapping(
       predefinedUniforms, mesh, resolvedEnv, programMapping.uniformTextures
     ))
     
-    meshMapping.attributes = buildAttributeMapping(mesh, programMapping.attributes)
+    val attributes = buildAttributeMapping(mesh, programMapping.attributes)
+    
+    mesh.mapping = new MeshMapping(uniformVectors, uniformMatrices, uniformTextures, attributes)
   }
 }

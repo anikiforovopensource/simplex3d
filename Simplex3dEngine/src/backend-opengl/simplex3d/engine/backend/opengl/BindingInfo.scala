@@ -42,7 +42,7 @@ private[backend] class UniformBinding(
   
   override def toString() :String = {
     UniformBlocks.toString(blockType) + "Uniform('" + name + "', type = " +
-    EngineBindingTypes.toString(dataType) + ", location" + location + ")"
+    EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
 }
 

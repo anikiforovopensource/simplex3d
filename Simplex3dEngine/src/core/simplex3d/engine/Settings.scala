@@ -26,8 +26,8 @@ import simplex3d.math._
 
 case class Settings(
   val fullscreen: Boolean = false,
-  val logCapabilities: Boolean = false,
-  val logPerformance: Boolean = false,
+  val logCapabilities: Boolean = false,//XXX take out logging config
+  val logPerformance: Boolean = false,//XXX take out logging config
   val location: ConstVec2i = Vec2i(0),
   
   /** Must start at desktop resolution if not specified. */
@@ -39,6 +39,7 @@ case class Settings(
 )
 
 case class AdvancedSettings(
-  val legacyMipMapGeneration: Boolean = false,
-  val logShaderWarnings: Boolean = true
+  val legacyMipMapGeneration: Boolean = false,//XXX make it an option, add detection, enable on ATI
+  val combineShaders: Boolean = true, //XXX make it an option, add detection, enable on NVIDIA
+  val logShaderWarnings: Boolean = true//XXX take out logging config
 )

@@ -30,7 +30,7 @@ package object graphics {
   
   
   type TechniqueBinding = Readable[W] with Binding forSome { type W <: Writable[W] }
-  type NestedBinding[W <: Writable[W]] = Readable[W]
+  type ReadStruct[W <: Writable[W]] = Readable[W]
   
   
   val EffectRecursor: {

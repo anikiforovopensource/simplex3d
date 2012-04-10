@@ -57,7 +57,7 @@ extends graphics.TechniqueManager[G]
       case _: FragmentShader => stages(0).register(shader)
       case _: VertexShader => stages(1).register(shader)
     }
-    shader.register()
+    shader.initialize()
   }
   
   
@@ -87,8 +87,8 @@ extends graphics.TechniqueManager[G]
       
       // Match uniforms.
       var uniformsPassed = true
-      if (shader.uniformBlock.isDefined) { def checkUniform() {
-        val declarations = shader.uniformBlock.get.declarations
+      if (!shader.uniformBlock.isEmpty) { def checkUniform() {
+        val declarations = shader.uniformBlock
         
         var i = 0; while (uniformsPassed && i < declarations.size) {
           val declaration = declarations(i)
@@ -133,11 +133,14 @@ extends graphics.TechniqueManager[G]
             val functionProvider = stage.internal(j)
             
             if (requiredFunction == functionProvider.export.get) {
-              val subChain = resolveShaderChain(stageId, functionProvider)
-              if (subChain != null) {
-                chain ++= subChain
-                functionsPassed = true
+              if (!chain.contains(functionProvider)) {// Do not use set, the order is important.
+                val subChain = resolveShaderChain(stageId, functionProvider)
+                if (subChain != null) {
+                  chain ++= subChain
+                  functionsPassed = true
+                }
               }
+              else functionsPassed = true
             }
             
             j += 1
@@ -189,7 +192,7 @@ extends graphics.TechniqueManager[G]
               }
               
               if (found) {
-                if (!chain.contains(outputShader)) {
+                if (!chain.contains(outputShader)) {// Do not use set, the order is important.
                   val subChain = resolveShaderChain(stageId + 1, outputShader)
                   if (subChain != null) {
                     chain ++= subChain
@@ -286,10 +289,12 @@ extends graphics.TechniqueManager[G]
       
       
       // Load cached technique or make a new one.
+      val combineShaders = true //XXX get this from Settings.Advanced
+      
       val readTechniqueKey = new ReadArray(techniqueKey)
       var technique = techniqueCache.get(readTechniqueKey)
       
-      if (technique == null) {
+      if (technique == null && !combineShaders) {
         val shaders = new ArrayBuffer[Shader]
         
         var i = 0; while (i < techniqueKey.size) {
@@ -300,7 +305,7 @@ extends graphics.TechniqueManager[G]
             val proto = chain(i)
             
             val listDeclarations = shaderKey._2
-            val src = proto.fullSrc_Gl21(listDeclarations)
+            val src = ShaderPrototype.genSrc_Glsl120(proto, listDeclarations)
             
             shader = new Shader(proto.shaderType, src)
             shaderCache.put(shaderKey, shader)
@@ -317,6 +322,23 @@ extends graphics.TechniqueManager[G]
         technique = new Technique(graphicsContext, shaders.toSet)
         techniqueCache.put(readTechniqueKey, technique)
       }
+      else if (technique == null && combineShaders) {
+        val vertexShaders = new ArrayBuffer[(ShaderPrototype, Seq[ListDeclarationSizeKey])]
+        val fragmentShaders = new ArrayBuffer[(ShaderPrototype, Seq[ListDeclarationSizeKey])]
+        
+        for (shaderKey <- techniqueKey) {
+          if (shaderKey._1.isInstanceOf[VertexShader]) vertexShaders += shaderKey
+          else fragmentShaders += shaderKey
+        }
+        
+        val vertexShader = new Shader(Shader.Vertex, ShaderPrototype.genCombinedSrc_Glsl120(vertexShaders))
+        val fragmentShader = new Shader(Shader.Fragment, ShaderPrototype.genCombinedSrc_Glsl120(fragmentShaders))
+        
+        technique = new Technique(graphicsContext, immutable.Set(vertexShader, fragmentShader))
+        techniqueCache.put(readTechniqueKey, technique)
+      }
+      
+      //println("XXX\n" + technique.shaders.map(_.src).mkString("\n\n*****************************************\n\n"))
       
       technique
     }

@@ -57,10 +57,10 @@ object TechniqueProvider {
     })
     
     manager.register(new FragmentShader {
-      version("130")
+      //version("120")
+      useSquareMatrices
       
       uniform {
-        declare[DoubleRef]("se_timeTotal")
         declare[BindingList[TextureUnit]]("textureUnits")
       }
       
@@ -72,29 +72,35 @@ object TechniqueProvider {
       }
       
       src {"""
-        bool hasErrors(vec2 u) {
-          return (any(isnan(u)) || any(isinf(u))); 
-        }
-      """}
-      
-      src {"""
         void resolveColor() {
           vec4 color = vec4(1);
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            if (se_timeTotal < 5.0) {
-              color *= texture2D(textureUnits[i].texture, textureUnitCoords.ecTexCoords[i]);
-            }
-            else {
-              vec2 tc = textureUnitCoords.ecTexCoords[i];
-              if (hasErrors(tc)) color *= vec4(1, 0, 0, 1);
-              else color *= vec4(tc.x, tc.y, 0, 1);
-            }
+            color *= texture2D(textureUnits[i].texture, textureUnitCoords.ecTexCoords[i]);
           }
           gl_FragColor = color;
         }
       """}
       
       entryPoint("resolveColor")
+    })
+    
+    
+    manager.register(new VertexShader {
+      attributes {
+        declare[Vec2]("texCoords")
+      }
+      
+      out("textureCoords") {
+        declare[Vec2]("ecTexCoords")
+      }
+      
+      src {"""
+        void passTexCoords() {
+          textureCoords.ecTexCoords = texCoords;
+        }
+      """}
+      
+      entryPoint("passTexCoords")
     })
     
     manager.register(new VertexShader {
@@ -120,25 +126,8 @@ object TechniqueProvider {
     })
     
     manager.register(new VertexShader {
-      attributes {
-        declare[Vec2]("texCoords")
-      }
-      
-      out("textureCoords") {
-        declare[Vec2]("ecTexCoords")
-      }
-      
-      src {"""
-        void passTexCoords() {
-          textureCoords.ecTexCoords = texCoords;
-        }
-      """}
-      
-      entryPoint("passTexCoords")
-    })
-    
-    manager.register(new VertexShader {
-      version("130")
+      //version("120")
+      useSquareMatrices
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
@@ -155,14 +144,13 @@ object TechniqueProvider {
       src {"""
         void passTexCoords() {
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            textureUnitCoords.ecTexCoords[i] = (mat3(textureUnits[i].transformation)*vec3(texCoords, 1)).xy;
+            textureUnitCoords.ecTexCoords[i] = (textureUnits[i].transformation*vec3(texCoords, 1)).xy;
           }
         }
       """}
       
       entryPoint("passTexCoords")
     })
-    
     
     manager
   }

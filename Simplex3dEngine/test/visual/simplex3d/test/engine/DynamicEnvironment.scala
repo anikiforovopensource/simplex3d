@@ -180,7 +180,7 @@ object DynamicEnvironment extends App with scala.App {
 
 package testenv {
   
-  sealed abstract class ReadIntensity extends NestedBinding[Intensity] {
+  sealed abstract class ReadIntensity extends ReadStruct[Intensity] {
     def value: ReadDoubleRef
   }
   
@@ -190,7 +190,7 @@ package testenv {
     
     val value = new DoubleRef(1)
   
-    def :=(r: NestedBinding[Intensity]) {
+    def :=(r: ReadStruct[Intensity]) {
       val t = r.asInstanceOf[Intensity]
       value := t.value
     }
@@ -205,7 +205,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadNodeColor extends NestedBinding[NodeColor] {
+  sealed abstract class ReadNodeColor extends ReadStruct[NodeColor] {
     def color: ReadVec3
   }
   
@@ -215,7 +215,7 @@ package testenv {
     
     val color = Vec3(1)
   
-    def :=(r: NestedBinding[NodeColor]) {
+    def :=(r: ReadStruct[NodeColor]) {
       val t = r.asInstanceOf[NodeColor]
       color := t.color
     }
@@ -233,7 +233,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadContrast extends NestedBinding[Contrast] {
+  sealed abstract class ReadContrast extends ReadStruct[Contrast] {
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
   }
@@ -245,7 +245,7 @@ package testenv {
     val factor = new DoubleRef(0)
     val secondary = new BooleanRef(false)
   
-    def :=(r: NestedBinding[Contrast]) {
+    def :=(r: ReadStruct[Contrast]) {
       val t = r.asInstanceOf[Contrast]
       
       factor := t.factor

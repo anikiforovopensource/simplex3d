@@ -37,7 +37,9 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   uniformsSeq: Seq[UniformBinding],
   attributesSeq: Seq[AttributeBinding]
 ) extends backend.opengl.ProgramMapping(uniformsSeq, attributesSeq) {
-    
+  
+  //println("XXX " + program + "\n\n" + uniformsSeq.mkString("\n") + "\n\n" + attributesSeq.mkString("\n"))
+  
   // Fast access.
   private[this] val uniformVectorLocations = uniformVectors.map(_.location).toArray
   private[this] val uniformVectorTypes = uniformVectors.map(_.dataType).toArray
@@ -137,15 +139,15 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   def setUniformMatrix(location: Int, dataType: Int, value: AnyMat[_]) {
     if (value != null) {
       (dataType: @switch) match {
-        case EngineBindingTypes.Mat2x2 => uniform(location, value.asInstanceOf[ReadMat2x2])
+        case EngineBindingTypes.Mat2x2 => uniformMat2(location, value)
         case EngineBindingTypes.Mat2x3 => uniform(location, value.asInstanceOf[ReadMat2x3])
         case EngineBindingTypes.Mat2x4 => uniform(location, value.asInstanceOf[ReadMat2x4])
         case EngineBindingTypes.Mat3x2 => uniform(location, value.asInstanceOf[ReadMat3x2])
-        case EngineBindingTypes.Mat3x3 => uniform(location, value.asInstanceOf[ReadMat3x3])
+        case EngineBindingTypes.Mat3x3 => uniformMat3(location, value)
         case EngineBindingTypes.Mat3x4 => uniform(location, value.asInstanceOf[ReadMat3x4])
         case EngineBindingTypes.Mat4x2 => uniform(location, value.asInstanceOf[ReadMat4x2])
         case EngineBindingTypes.Mat4x3 => uniform(location, value.asInstanceOf[ReadMat4x3])
-        case EngineBindingTypes.Mat4x4 => uniform(location, value.asInstanceOf[ReadMat4x4])
+        case EngineBindingTypes.Mat4x4 => uniformMat4(location, value)
       }
     }
   }
@@ -181,15 +183,15 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   private def uniform(location: Int, u: inVec4b) { glUniform4i(location, toInt(u.x), toInt(u.y), toInt(u.z), toInt(u.w)) }
   
   
-  private def uniform(location: Int, m: inMat2x2) { glUniformMatrix2(location, false, context.mat2x2ToBuffer(m)) }
+  private def uniformMat2(location: Int, m: AnyMat[_]) { glUniformMatrix2(location, false, context.mat2x2ToBuffer(m)) }
   private def uniform(location: Int, m: inMat2x3) { glUniformMatrix2x3(location, false, context.mat2x3ToBuffer(m)) }
   private def uniform(location: Int, m: inMat2x4) { glUniformMatrix2x4(location, false, context.mat2x4ToBuffer(m)) }
   private def uniform(location: Int, m: inMat3x2) { glUniformMatrix3x2(location, false, context.mat3x2ToBuffer(m)) }
-  private def uniform(location: Int, m: inMat3x3) { glUniformMatrix3(location, false, context.mat3x3ToBuffer(m)) }
+  private def uniformMat3(location: Int, m: AnyMat[_]) { glUniformMatrix3(location, false, context.mat3x3ToBuffer(m)) }
   private def uniform(location: Int, m: inMat3x4) { glUniformMatrix3x4(location, false, context.mat3x4ToBuffer(m)) }
   private def uniform(location: Int, m: inMat4x2) { glUniformMatrix4x2(location, false, context.mat4x2ToBuffer(m)) }
   private def uniform(location: Int, m: inMat4x3) { glUniformMatrix4x3(location, false, context.mat4x3ToBuffer(m)) }
-  private def uniform(location: Int, m: inMat4x4) { glUniformMatrix4(location, false, context.mat4x4ToBuffer(m)) }
+  private def uniformMat4(location: Int, m: AnyMat[_]) { glUniformMatrix4(location, false, context.mat4x4ToBuffer(m)) }
   
   
   private def sampler2d(location: Int, textureUnit: Int, textureType: Int, texture: Texture[_]) {

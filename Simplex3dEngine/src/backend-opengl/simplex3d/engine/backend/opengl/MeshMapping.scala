@@ -26,9 +26,18 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-private[backend] final class MeshMapping {
-  var uniformVectors: ReadArray[VectorLike] = ReadArray.Empty
-  var uniformMatrices: ReadArray[AnyMat[_]] = ReadArray.Empty
-  var uniformTextures: ReadArray[ReadTextureBinding[_]] = ReadArray.Empty
-  var attributes: ReadArray[Attributes[_, _]] = ReadArray.Empty
+private[backend] final class MeshMapping(
+  val uniformVectors: ReadArray[VectorLike],
+  val uniformMatrices: ReadArray[AnyMat[_]],
+  val uniformTextures: ReadArray[ReadTextureBinding[_]],
+  val attributes: ReadArray[Attributes[_, _]]
+) {
+  override def toString() :String = {
+    "MeshMapping(\n" +
+      uniformVectors.map(o => "  " + o.toString).mkString("\n") + "\n" +
+      uniformMatrices.map(o => "  " + o.toString).mkString("\n") + "\n" +
+      uniformTextures.map(o => "  " + o.toString).mkString("\n") + "\n" +
+      attributes.map(o => "  " + o.toString).mkString("\n") + "\n" +
+    ")"
+  }
 }

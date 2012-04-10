@@ -23,6 +23,7 @@ package graphics.pluggable
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
+import scala.collection.mutable.HashMap
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.types._
@@ -30,255 +31,98 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-/** ShaderPrototype defines a shader DSL to assist with writing shaders and and linking them together.
+/** ShaderPrototype defines a DSL to assist with writing shaders and and linking them together.
+ * 
+ * Glsl version can be specified using version() declaration.
+ * Type remapping to square matrices can be requested with useSquareMatrices() directive.
  * 
  * Function dependencies are declared with use() declaration.
+ *
+ * Uniform values must be specified inside a uniform{} block using the declare() directive.
+ * Glsl qualifiers can be chain using qualify() statement.
+ * For example: declare[Vec2]("texCoords").qualify("smooth")
+ * 
+ * XXX Uniform values can be mapped to an object path on material or environment. This is useful when
+ * a vertex shader consumes a part of a struct and a fragment consumes the rest.
+ * Example: declare[Vec2]("offset").remap("textureUnit.offset")
+ * 
+ * XXX Arrays can be remapped using a wildcard array declaration [*]. Only one wildcard declaration
+ * is allowed per path, other array instances must specify the exact index.
+ * Example: declare[BindingList[Vec3]]("colors").remap("colorMaps[0].color[*]")
+ * 
+ * XXX Value path remapping can only be used on subclasses of Struct and can only navigate the fields
+ * declared in Struct.fields. As a special case, texture dimensions can be accessed this way as well.
+ * Example: declare[Vec2i]("dimensions").remap("textureUnit.texture.dimensions")
+ * 
+ * Value path remapping can impact technique resolution performance, so use it sparingly.
+ * 
+ * Unsized arrays are allowed only in uniform blocks, their size will be automatically resolved to
+ * a size of the corresponding BindingList.
  * 
  * All dependent variables should be defined inside attribute{} or in{} blocks using declare().
  * Only VertexShaders are allowed to have attribute{} blocks. Other shaders must use named in{} block and
  * must prefix the variables with the block name in the source code.
  * 
  * Each shader should either link with the next stage using a combination of out{} block with
- * an entryPoint() declaration, or it should define a function usable within the same stage
+ * an entryPoint() declaration, or define a function usable within the same stage
  * using export() declaration. FragmentShaders are allowed to omit out{} block declaration.
- * 
- * Shader sources can be attached using src() declarations.
  * 
  * Only MathTypes and MathType arrays can be declared inside in{} and out{} blocks.
  * Arrays in in{} and out{} blocks must be size either to a literal value or to a size of some uniform array.
- * Uniform array sizes can be accessed using injected variables of the form: se_sizeOf_${StructType}_${ArrayName}
+ * If a uniform array is defined in the shader scope, its size can be accessed using injected variable
+ * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is declared globally.
  * 
- * Unsized arrays are only allowed in uniform blocks, their size will be automatically resolved to
- * a size of the corresponding BindingList.
+ * Shader sources can be attached using src() declarations.
  */
 sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   
-  final class StructBlock(val erasure: Class[_], val glslType: String, var nested: Boolean) {
-    val entries = new ArrayBuffer[(String, String)] // (glslType, name) pairs
-  }
-  
-  final class Declaration(
-    val manifest: ClassManifest[_ <: TechniqueBinding],
-    val qualifiers: String, val name: String
-  ) {
-    val isPredefined = name.startsWith("se_")
-    val isReserved = name.startsWith("gl_")
-    val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
-    
-    private[ShaderPrototype] var arraySizeExpression: String = null
-    
-    /** The simple way to link input/output array sizes is using a size of a uniform array: a.length(); 
-     */
-    def size(arraySizeExpression: String) {
-      if (!classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) throw new RuntimeException(
-        "Only arrays can be sized."
-      )
-      if (this.arraySizeExpression != null) throw new RuntimeException(
-        "This array is already sized."
-      )
-      
-      this.arraySizeExpression = arraySizeExpression
-    }
-    
-    private[ShaderPrototype] def extractManifestTypeInfo() :String = {
-      // Structs must be detected and generate an error via verifyMathType() prior to this call.
-      extractManifestTypeInfo(null)
-    }
-    private[ShaderPrototype] def extractManifestTypeInfo(
-      blocks: ArrayBuffer[StructBlock]
-    ) :String = {
-      extractManifestTypeInfo("", manifest, name, blocks)
-    }
-    
-    private def resolveTextureType(className: String) :String = {
-      className match {
-        case "Texture2d" => "sampler2D"
-        case _ => throw new RuntimeException
-      }
-    }
-    
-    private def processStruct(
-      instance: Struct[_],
-      blocks: ArrayBuffer[StructBlock],
-      nested: Boolean
-    ) :String =
-    {
-      val glslType = instance.getClass.getSimpleName
-      val structBlock = new StructBlock(instance.getClass, glslType, nested)
-      
-      for (i <- 0 until instance.fieldNames.length) {
-        val fieldName = instance.fieldNames(i)
-        val (fieldType, arraySizeExpression) = extractInstanceTypeInfo(glslType, instance.fields(i), fieldName, blocks)
-        val append = if (arraySizeExpression != "") "[" + arraySizeExpression + "]" else ""
-        structBlock.entries += ((fieldType, fieldName + append))
-      }
-      
-      val existing = blocks.find(_.glslType == glslType)
-      if (existing.isDefined) {
-        if (nested) existing.get.nested = true
-        
-        val existingClass = existing.get.erasure
-        if (instance.getClass != existingClass) throw new RuntimeException(
-          "Both structs '" + instance.getClass.getName + "' and '" +
-          existingClass.getName + "' map to the same glsl type name."
-        )
-      }
-      else {
-        blocks += structBlock
-      }
-      
-      glslType
-    }
-    
-    private def mathTypeName(erasure: Class[_]) :String = {
-      val className = erasure.getSimpleName.toLowerCase()
-      if (className.endsWith("ref")) {
-        val shorter = className.dropRight(3)
-        if (shorter == "double") "float" else shorter
-      }
-      else className.dropRight(1)
-    }
-    private def extractManifestTypeInfo(
-      parentType: String,
-      m: ClassManifest[_], name: String,
-      blocks: ArrayBuffer[StructBlock]
-    ) :String = {
-      
-      if (classOf[MathType].isAssignableFrom(m.erasure)) {
-        mathTypeName(m.erasure)
-      }
-      else if (classOf[TextureBinding[_]].isAssignableFrom(m.erasure)) {
-        try {
-          resolveTextureType(m.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure.getSimpleName) 
-        }
-        catch {
-          case e: Exception => throw new RuntimeException(
-            "Undefined or unsupported texture binding type for declaration '" + name + "'."
-          )
-        }
-      }
-      else if (classOf[BindingList[_]].isAssignableFrom(m.erasure)) {
-        val manifest = try {
-          m.typeArguments.head.asInstanceOf[ClassManifest[_]]
-        }
-        catch {
-          case e: Exception => throw new RuntimeException(
-            "Undefined or unsupported array type for declaration '" + name + "'."
-          )
-        }
-        
-        val glslType = extractManifestTypeInfo(parentType, manifest, name, blocks)
-        glslType
-      }
-      else if (classOf[Struct[_]].isAssignableFrom(m.erasure)) {
-        val instance = try {
-          m.erasure.newInstance().asInstanceOf[Struct[_]]
-        }
-        catch {
-          case e: Exception => throw new RuntimeException(
-            "Unable to create an instance of '" + m.erasure.getName +
-            "'. All Struct subclasses must define a no-argument constructor."
-          )
-        }
-        
-        processStruct(instance, blocks, false)
-      }
-      else {
-        throw new RuntimeException(
-          "Unsupported type '" + m.erasure.getSimpleName + "' for declaration '" + name + "'."
-        )
-      }
-    }
-    
-    private def extractInstanceTypeInfo(
-      parentType: String,
-      i: Object, name: String,
-      blocks: ArrayBuffer[StructBlock]
-    ) :(String, String) = {
-      
-      if (classOf[MathType].isAssignableFrom(i.getClass)) {
-        (mathTypeName(i.getClass), "")
-      }
-      else if (classOf[TextureBinding[_]].isAssignableFrom(i.getClass)) {
-        (resolveTextureType(i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure.getSimpleName), "")
-      }
-      else if (classOf[BindingList[_]].isAssignableFrom(i.getClass)) {
-        val manifest = i.asInstanceOf[BindingList[_]].elementManifest
-        val glslType = extractManifestTypeInfo(parentType, manifest, name, blocks)
-        
-        val sizeExpression =
-          if (arraySizeExpression != null) arraySizeExpression
-          else arraySizeId(parentType, name)
-        
-        (glslType, sizeExpression)
-      }
-      else if (classOf[Struct[_]].isAssignableFrom(i.getClass)) {
-        (processStruct(i.asInstanceOf[Struct[_]], blocks, true), "")
-      }
-      else {
-        throw new RuntimeException(
-          "Unsupported type '" + i.getClass.getSimpleName + "' for declaration '" + name + "'."
-        )
-      }
-    }
-    
-    override def toString() :String = {
-      def extractTypeString(m: ClassManifest[_]) :String = {
-        m.erasure.getSimpleName() + {
-          m.typeArguments match {
-            case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
-            case _ => ""
-          }
-        }
-      }
-      "Declaraion(" + qualifiers + " " + extractTypeString(manifest) + " " + name + ")"
-    }
-  }
-  
-  final class DeclarationBlock(val name: String, val declarations: ReadSeq[Declaration]) {
-    override def toString() :String = {
-      "DeclarationBlock('" + name + "')(\n" + declarations.mkString("  ", "\n", "") + "\n)"
-    }
-  }
-  
-  
-  private[this] val _functionDependencies = new ArrayBuffer[String]
+  private[this] var _usingSquareMatrices = false
+  private[this] var _version: Option[String] = None
+  private[this] val _listDeclarationNameKeys = new ArrayBuffer[(String, String)]
+  private[this] val _uniformBlock = new ArrayBuffer[Declaration]
+  private[this] val _attributeBlock = new ArrayBuffer[Declaration]
   private[this] val _inputBlocks = new ArrayBuffer[DeclarationBlock]
   private[this] val _outputBlocks = new ArrayBuffer[DeclarationBlock]
-  private[this] var _listDeclarationKeys = new ArrayBuffer[(String, String)]
+  private[this] val _functionDependencies = new ArrayBuffer[String]
   private[this] val _sources = new ArrayBuffer[String]
-  private[this] var _uniformBlock: Option[DeclarationBlock] = None
   private[this] var _export: Option[String] = None
   private[this] var _entryPoint: Option[String] = None
-  private[this] var _version: Option[String] = None
+  
+  final def version = _version
+  final def usingSquareMatrices = _usingSquareMatrices
+  final val listDeclarationNameKeys = new ReadSeq(_listDeclarationNameKeys)
+  final val uniformBlock = new ReadSeq(_uniformBlock)
+  final val attributeBlock = new ReadSeq(_attributeBlock)
+  final val inputBlocks = new ReadSeq(_inputBlocks)
+  final val outputBlocks = new ReadSeq(_outputBlocks)
+  final val functionDependencies = new ReadSeq(_functionDependencies)
+  final val sources = new ReadSeq(_sources)
+  final def export = _export
+  final def entryPoint = _entryPoint
   
   
-  val functionDependencies = new ReadSeq(_functionDependencies)
-  val inputBlocks = new ReadSeq(_inputBlocks)
-  val outputBlocks = new ReadSeq(_outputBlocks)
-  val listDeclarationNameKeys = new ReadSeq(_listDeclarationKeys)
-  val sources = new ReadSeq(_sources)
-  def uniformBlock = _uniformBlock
-  def export = _export
-  def entryPoint = _entryPoint
-  def version = _version
-
-  
-  private[this] var isRegistered = false
+  private[this] var isInitialized = false
   private[this] def checkState() {
-    if (isRegistered) throw new IllegalStateException("Modifying shader after it has been registered.")
+    if (isInitialized) throw new IllegalStateException("Modifying shader after it has been initialized.")
   }
   
-  def register() {
+  private[this] var _structs: ReadArray[StructDeclaration] = null
+  def structs = {
+    if (!isInitialized) throw new IllegalStateException(
+      "This shader prototype must be initialized before accessing structs."
+    )
+    else _structs
+  }
+  
+  
+  final def isVertexShader = (shaderType == Shader.Vertex)
+  
+  final def initialize() {
+    if (isInitialized) return
+    
     // Check name uniqueness.
-    val topLevelNames =
-      if (isInstanceOf[VertexShader]) {
-        (uniformBlock ++ inputBlocks).flatten(_.declarations).map(_.name) ++ outputBlocks.map(_.name)
-      }
-      else {
-        uniformBlock.flatten(_.declarations).map(_.name) ++ (inputBlocks ++ outputBlocks).map(_.name)
-      }
-      
+    val topLevelNames = (uniformBlock ++ attributeBlock).map(_.name) ++ (inputBlocks ++ outputBlocks).map(_.name)
+    
     val names = new HashSet[String]
     for (name <- topLevelNames) {
       if (names.contains(name)) throw new RuntimeException(
@@ -309,10 +153,19 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
       )
       
     
-    isRegistered = true
+    val structs = new HashMap[String, StructDeclaration]
+    for (declaration <- uniformBlock) {
+      declaration.extractManifestTypeInfo(usingSquareMatrices, structs)
+    }
+    _structs = new ReadArray(structs.values.map(s =>
+      StructDeclaration(s.erasure, s.glslType, s.isNested, s.entries, s.containsSamplers)
+    ).toArray)
+    
+    
+    isInitialized = true
   }
   
-    
+  
   private[this] var declarations: ArrayBuffer[Declaration] = null
   private[this] def processBlock(name: String, blocks: ArrayBuffer[DeclarationBlock], blockBody: => Unit) {
     declarations = new ArrayBuffer[Declaration]
@@ -321,10 +174,17 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     declarations = null
   }
   
-  protected final def version(version: String) {
-    if (declarations != null) throw new IllegalStateException("entryPoint() must be declared at the top level.")
+  protected final def useSquareMatrices() {
+    if (declarations != null) throw new IllegalStateException("useSquareMatrices() must be declared at the top level.")
     checkState()
-    if (_version != None) throw new IllegalStateException("Version is already defined.")
+    if (_usingSquareMatrices) throw new IllegalStateException("Square matrices are already in use.")
+    _usingSquareMatrices = true
+  }
+  
+  protected final def version(version: String) {
+    if (declarations != null) throw new IllegalStateException("version() must be declared at the top level.")
+    checkState()
+    if (_version.isDefined) throw new IllegalStateException("Version is already defined.")
     _version = Some(version)
   }
   
@@ -335,12 +195,9 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   }
   
   protected final def declare[B <: TechniqueBinding : ClassManifest](name: String) :Declaration = {
-    declare("", name)
-  }
-  protected final def declare[B <: TechniqueBinding : ClassManifest](qualifiers: String, name: String) :Declaration = {
     checkState()
     if (declarations == null) throw new IllegalStateException("declare() must be called inside a block.")
-    val declaration = new Declaration(implicitly[ClassManifest[B]], qualifiers, name)
+    val declaration = new Declaration(implicitly[ClassManifest[B]], name)
     declarations += declaration
     declaration
   }
@@ -354,16 +211,16 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     
     declarations = new ArrayBuffer[Declaration]
     block
-    _uniformBlock = Some(new DeclarationBlock(null, new ReadSeq(declarations)))
+    _uniformBlock ++= declarations
     declarations = null
     
     // Process array declarations.
-    for (declaration <- uniformBlock.get.declarations) {
+    for (declaration <- uniformBlock) {
       val isArray = classOf[BindingList[_]].isAssignableFrom(declaration.manifest.erasure)
       val noSizeExpression = (declaration.arraySizeExpression == null)
       
       if (isArray && noSizeExpression) {
-        _listDeclarationKeys += (("", declaration.name))
+        _listDeclarationNameKeys += (("", declaration.name))
       }
       
       val manifest = 
@@ -383,17 +240,17 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
       
       if (classOf[Struct[_]].isAssignableFrom(manifest.erasure)) {
         val instance = manifest.erasure.newInstance().asInstanceOf[Struct[_]]
-        _listDeclarationKeys ++= instance.listDeclarations.map(_.nameKey)
+        _listDeclarationNameKeys ++= instance.listDeclarations.map(_.nameKey)
       }
     }
     
-    val nodups = _listDeclarationKeys.distinct
-    _listDeclarationKeys.clear()
-    _listDeclarationKeys ++= nodups
+    val nodups = _listDeclarationNameKeys.distinct
+    _listDeclarationNameKeys.clear()
+    _listDeclarationNameKeys ++= nodups
   }
   
-  private def verifyMathType(block: DeclarationBlock) {
-    for (declaration <- block.declarations) {
+  private def verifyMathType(declarations: Iterable[Declaration]) {
+    for (declaration <- declarations) {
       val isMathType = classOf[MathType].isAssignableFrom(declaration.manifest.erasure)
       val isMathTypeArray = 
         if (classOf[BindingList[_]].isAssignableFrom(declaration.manifest.erasure)) {
@@ -423,13 +280,13 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
    */
   protected final def in(name: String)(block: => Unit) {
     if (declarations != null) throw new IllegalStateException("in {} must be declared at the top level.")
-    if (this.isInstanceOf[VertexShader]) throw new UnsupportedOperationException(
+    if (isVertexShader) throw new UnsupportedOperationException(
       "Vertex shader cannot have any input blocks (use attributes {} block instead)."
     )
     checkState()
     
     processBlock(name, _inputBlocks, block)
-    verifyMathType(inputBlocks.last)
+    verifyMathType(inputBlocks.last.declarations)
     verifyArraysAreSized(inputBlocks.last)
   }
   
@@ -437,13 +294,17 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
    */
   protected final def attributes(block: => Unit) {
     if (declarations != null) throw new IllegalStateException("in {} must be declared at the top level.")
-    if (!this.isInstanceOf[VertexShader]) throw new UnsupportedOperationException(
+    if (!isVertexShader) throw new UnsupportedOperationException(
       "Only a vertex shader can declare an attributes block."
     )
-    
     checkState()
-    processBlock(null, _inputBlocks, block)
-    verifyMathType(inputBlocks.last)
+    
+    declarations = new ArrayBuffer[Declaration]
+    block
+    _attributeBlock ++= declarations
+    declarations = null
+    
+    verifyMathType(_attributeBlock)
   }
   
   /** If a shader defines one or more output blocks it must define an entry point. Fragment shaders are allowed
@@ -453,7 +314,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     if (declarations != null) throw new IllegalStateException("out {} must be declared at the top level.")
     checkState()
     processBlock(name, _outputBlocks, block)
-    verifyMathType(outputBlocks.last)
+    verifyMathType(outputBlocks.last.declarations)
     verifyArraysAreSized(outputBlocks.last)
   }
   
@@ -480,90 +341,30 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     checkState()
     _sources += src
   }
-  
-  
-  private def arraySizeId(parentType: String, name: String) :String = {
-    "se_sizeOf_" + (if (parentType == "") "" else parentType + "_") + name
-  }
-  
-  def generateSizeDelarationHeader(declarations: IndexedSeq[ListDeclarationSizeKey]) :String = {
-    var header = ""
-      
-    var i = 0; while (i < declarations.size) { val d = declarations(i)
-      header += "const int " + arraySizeId(d.parentType, d.name) + " = " + d.size + ";\n"
-      
-      i += 1
-    }
-    
-    header
-  }
-  
-  private[this] def unindent(src: String) :String = {
-    val codeLines = src.split("\n")
+}
 
-    val lines = codeLines.map(_.replace("\t", "  "))
-    val Spaces = """^(\s*).*""".r
-    val Spaces(hs) = lines.head
-    var min = scala.Int.MaxValue
-
-    for (line <- lines) {
-      val Spaces(s) = line
-      if (s != null && !line.trim.isEmpty && s.length < min) min = s.length
-    }
-
-    lines.map(_.drop(min)).mkString("\n")
-  }
-  
+object ShaderPrototype {
   private[this] def format(qualifiers: String) :String = {
     if (qualifiers.isEmpty) "" else qualifiers + " "
   }
   
-  lazy val src_Gl21 = generateSource_Gl21()
-  private def generateSource_Gl21() :String = {
-    if (!isRegistered) throw new IllegalStateException("Shader must be registered to generate source.")
-    
-    val structs = new ArrayBuffer[StructBlock]
-    val inputQualifier = if (this.isInstanceOf[VertexShader]) "attribute" else "varying"
-    
-    class Remapping(val parent: String, val name: String) {
-      val remapped = if (name.startsWith("gl_")) name else "tm_" + parent + "_" + name
-    }
-    val remappings = new ArrayBuffer[Remapping]
-    def remap(src: String) :String = {
-      var res = src
-      for (remapping <- remappings) {
-        res = res.replaceAll("\\b" + remapping.parent + "\\." + remapping.name + "\\b", remapping.remapped)
-      }
-      res
-    }
-    
+  private[pluggable] def arraySizeId(parentType: String, name: String) :String = {
+    "se_sizeOf_" + (if (parentType == "") "" else parentType + "_") + name
+  }
+  
+  def genSizeDelarationHeader(arrayDeclarations: Iterable[ListDeclarationSizeKey]) :String = {
     var src = ""
-    
-    if (!functionDependencies.isEmpty) {
-      for (dep <- functionDependencies) { src += dep + ";\n" }
-      src += "\n"
+      
+    for (d <- arrayDeclarations) {
+      src += "const int " + arraySizeId(d.parentType, d.name) + " = " + d.size + ";\n"
     }
     
-    
-    var declarationSrc = ""
-    
-    if (uniformBlock.isDefined) {
-      val block = uniformBlock.get
+    if (src.isEmpty) src else src + "\n"
+  }
+  
+  def genStructDeclarationHeader_Glsl120(structs: Iterable[StructDeclaration]) :String = {
+    var src = ""
       
-      for (declaration <- block.declarations; if !declaration.isReserved) {
-        val glslType = declaration.extractManifestTypeInfo(structs)
-        declarationSrc += format(declaration.qualifiers) + "uniform " + glslType + " " +
-        {
-          if (declaration.isArray) declaration.name + "[" + arraySizeId("", declaration.name) + "]"
-          else declaration.name
-        } +
-        ";\n"
-      }
-      
-      declarationSrc += "\n"
-    }
-    
-    
     for (struct <- structs) {
       src += "struct " + struct.glslType + " {\n"
       
@@ -571,26 +372,74 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
         src += "  " + fieldType + " " + fieldName + ";\n"
       }
       
+      if (struct.containsSamplers) src += "  float nvidiaBugWorkaround;\n"
       src += "};\n\n"
     }
     
-    src += declarationSrc
+    src
+  }
+  
+  /** Remapping is a tuple2 (From, To).
+   */
+  def genGlobalDeclarationHeader_Glsl120(
+    isVertexShader: Boolean,
+    squareMatrices: Boolean,
+    attributeBlock: Iterable[Declaration],
+    uniformBlock: Iterable[Declaration],
+    inputBlocks: Iterable[DeclarationBlock],
+    outputBlocks: Iterable[DeclarationBlock]
+  ) :(Seq[(String, String)], String) = {
+    val inputQualifier = if (isVertexShader) "attribute" else "varying"
+    
+    val remappings = new ArrayBuffer[(String, String)]
+    def mkRemapping(parent: String, name: String) :(String, String) = {
+      val remapped = if (name.startsWith("gl_")) name else "tm_" + parent + "_" + name
+      (parent + "." + name, remapped)
+    }
+    
+    
+    var src = ""
+    
+    
+    if (!uniformBlock.isEmpty) {
+      for (declaration <- uniformBlock; if !declaration.isReserved) {
+        val glslType = declaration.extractManifestTypeInfo(squareMatrices)
+        src += format(declaration.qualifiers) + "uniform " + glslType + " " +
+        {
+          if (declaration.isArray) declaration.name + "[" + ShaderPrototype.arraySizeId("", declaration.name) + "]"
+          else declaration.name
+        } +
+        ";\n"
+      }
+      
+      src += "\n"
+    }
+    
+    if (!attributeBlock.isEmpty) {
+      var appended = false
+      for (declaration <- attributeBlock; if !declaration.isReserved) {
+        val glslType = declaration.extractManifestTypeInfo(squareMatrices)
+        src += format(declaration.qualifiers) + inputQualifier + " " + glslType + " " +
+        {
+          if (declaration.isArray) declaration.name + "[" + declaration.arraySizeExpression + "]"
+          else declaration.name
+        } +
+        ";\n"
+        appended = true
+      }
+      if (appended) src += "\n"
+    }
     
     
     for (block <- inputBlocks; if !block.declarations.isEmpty) {
       var appended = false
       for (declaration <- block.declarations) {
-        val remapped =
-          if (this.isInstanceOf[VertexShader]) {
-            declaration.name
-          } 
-          else {
-            val remapping = new Remapping(block.name, declaration.name)
-            remappings += remapping
-            remapping.remapped
-          }
+        val remapping = mkRemapping(block.name, declaration.name)
+        remappings += remapping
+        val remapped = remapping._2
+        
         if (!declaration.isReserved) {
-          val glslType = declaration.extractManifestTypeInfo()
+          val glslType = declaration.extractManifestTypeInfo(squareMatrices)
           src += format(declaration.qualifiers) + inputQualifier + " " + glslType + " " +
           {
             if (declaration.isArray) remapped + "[" + declaration.arraySizeExpression + "]"
@@ -607,14 +456,14 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     for (block <- outputBlocks; if !block.declarations.isEmpty) {
       var appended = false
       for (declaration <- block.declarations) {
-        val remapping = new Remapping(block.name, declaration.name)
+        val remapping = mkRemapping(block.name, declaration.name)
         remappings += remapping
-        if (!declaration.isReserved && this.isInstanceOf[VertexShader]) {
-          val glslType = declaration.extractManifestTypeInfo()
+        if (!declaration.isReserved && isVertexShader) {
+          val glslType = declaration.extractManifestTypeInfo(squareMatrices)
           src += format(declaration.qualifiers) + "varying " + glslType + " " +
           {
-            if (declaration.isArray) remapping.remapped + "[" + declaration.arraySizeExpression + "]"
-            else remapping.remapped
+            if (declaration.isArray) remapping._2 + "[" + declaration.arraySizeExpression + "]"
+            else remapping._2
           } +
           ";\n"
           appended = true
@@ -623,20 +472,130 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
       if (appended) src += "\n"
     }
     
-    
+    (remappings, src)
+  }
+  
+  def genFunctionDeclarationHeader(functions: Iterable[String]) :String = {
+    val src = functions.mkString(";\n")
+    if (src.isEmpty) src else src + "\n"
+  }
+  
+  private[this] def remap(remapping: Seq[(String, String)], src: String) :String = {
+    var res = src
+    for (rm <- remapping) {
+      res = res.replaceAll("\\b" + rm._1 + "\\b", rm._2)
+    }
+    res
+  }
+  
+  def genBody(remapping: Seq[(String, String)], sources: Iterable[String]) :String = {
+    var src = ""
+      
     for (srcChunk <- sources) {
-      src += unindent(remap(srcChunk)) + "\n"
+      src += unindent(remap(remapping, srcChunk)) + "\n"
     }
     
     src
   }
   
-  def fullSrc_Gl21(declarations: IndexedSeq[ListDeclarationSizeKey]) :String = {
+  private[this] def unindent(src: String) :String = {//XXX cache unindented body somewhere in ShaderPrototype instances.
+    val codeLines = src.split("\n")
+
+    val lines = codeLines.map(_.replace("\t", "  "))
+    val Spaces = """^(\s*).*""".r
+    val Spaces(hs) = lines.head
+    var min = scala.Int.MaxValue
+
+    for (line <- lines) {
+      val Spaces(s) = line
+      if (s != null && !line.trim.isEmpty && s.length < min) min = s.length
+    }
+
+    lines.map(_.drop(min)).mkString("\n")
+  }
+  
+  def genSrc_Glsl120(shader: ShaderPrototype, arrayDeclarations: IndexedSeq[ListDeclarationSizeKey]) :String = {
+    val (remapping, globalDeclarations) = genGlobalDeclarationHeader_Glsl120(
+      shader.isVertexShader, shader.usingSquareMatrices,
+      shader.attributeBlock, shader.uniformBlock, shader.inputBlocks, shader.outputBlocks
+    )
+    
+    (if (shader.version.isDefined) "#version " + shader.version.get + "\n\n" else "") +
+    genSizeDelarationHeader(arrayDeclarations) +
+    genStructDeclarationHeader_Glsl120(shader.structs) +
+    globalDeclarations +
+    genFunctionDeclarationHeader(shader.functionDependencies) +
+    genBody(remapping, shader.sources)
+  }
+  
+  /** Shaders must precede their dependencies in the chain.
+   */
+  def genCombinedSrc_Glsl120(chain: Seq[(ShaderPrototype, Seq[ListDeclarationSizeKey])]) :String = {
+    if (chain.isEmpty) return "";
+    
+    val shaders = chain.reverse
+    
+    var version: Option[String] = None
+    var squareMatrices = shaders.head._1.usingSquareMatrices
+    val arrayDeclarationSet = new HashSet[ListDeclarationSizeKey]
+    val structDeclarationMap = new HashMap[String, StructDeclaration]
+    val uniformMap = new HashMap[String, Declaration]
+    val attributeMap = new HashMap[String, Declaration]
+    val inputMap = new HashMap[String, DeclarationBlock]
+    val outputMap = new HashMap[String, DeclarationBlock]
+    val sources = new ArrayBuffer[String]
+    val entryPoints = new ArrayBuffer[String]
+    
+    val shaderType = shaders.head._1.shaderType
+    val isVertexShader = (shaderType == Shader.Vertex)
+    
+    for ((shader, arrayDeclarations) <- shaders) {
+      if (shader.shaderType != shaderType) throw new IllegalArgumentException(
+        "All shaders must be the same type (e.g. all vertex shaders or all fragment shaders)."
+      )
+      
+      val newSquareMatrices = squareMatrices | shader.usingSquareMatrices
+      if (newSquareMatrices != squareMatrices) {
+        squareMatrices = newSquareMatrices
+        println(//XXX log warn
+          "Combining sources when some shaders are remapping to square matrcies while other do not."
+        )
+      }
+      if (version.isDefined && shader.version.isDefined) {
+        if (version.get != shader.version.get) println(//XXX log
+          "Combining shaders with different versions: '" + version.get + "' and '" + shader.version.get + "'."
+    		)
+    		if (version.get < shader.version.get) version = shader.version
+      }
+      else {
+        version = shader.version
+      }
+      
+      arrayDeclarationSet ++= arrayDeclarations
+      structDeclarationMap ++= shader.structs.map(s => (s.glslType, s))
+      attributeMap ++= shader.attributeBlock.map(d => (d.name, d))
+      uniformMap ++= shader.uniformBlock.map(d => (d.name, d))
+      inputMap ++= shader.inputBlocks.map(b => (b.name, b))
+      outputMap ++= shader.outputBlocks.map(b => (b.name, b))
+      sources ++= shader.sources
+      entryPoints ++= shader.entryPoint
+    }
+    
+    
+    val (remapping, globalDeclarations) = genGlobalDeclarationHeader_Glsl120(
+      isVertexShader, squareMatrices,
+      attributeMap.values, uniformMap.values, inputMap.values, outputMap.values
+    )
+    
     (if (version.isDefined) "#version " + version.get + "\n\n" else "") +
-    (if (!declarations.isEmpty) generateSizeDelarationHeader(declarations) + "\n" else "") +
-    src_Gl21
+    genSizeDelarationHeader(arrayDeclarationSet) +
+    genStructDeclarationHeader_Glsl120(structDeclarationMap.values) +
+    globalDeclarations +
+    genBody(remapping, sources) +
+    "void main() {\n" + entryPoints.map("  " + _).mkString("", "();\n", "();\n") + "}"
   }
 }
+
 
 abstract class VertexShader extends ShaderPrototype(Shader.Vertex)
 abstract class FragmentShader extends ShaderPrototype(Shader.Fragment)

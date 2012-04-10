@@ -43,7 +43,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   protected implicit val structuralChangeListener: StructuralChangeListener = null
   
   // Read part of Struct2 type.
-  sealed abstract class ReadStruct2 extends NestedBinding[Struct2] {
+  sealed abstract class ReadStruct2 extends ReadStruct[Struct2] {
     def value2: ReadVec3
     def value2Array: ReadBindingList[Vec3]
     
@@ -65,7 +65,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   }
   
   
-  sealed abstract class ReadStruct1 extends NestedBinding[Struct1] {
+  sealed abstract class ReadStruct1 extends ReadStruct[Struct1] {
     def value1: ReadVec3
     def value1Array: ReadBindingList[Vec3]
     

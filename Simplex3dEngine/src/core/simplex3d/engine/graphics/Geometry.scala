@@ -68,7 +68,7 @@ abstract class Geometry extends StructuralChangeListener {
     }
   }
 
-  private[this] final var vertexMode: VertexMode = Triangles()
+  private[this] final var vertexMode: VertexMode = Triangles()//XXX rework as Defined[EnumRef]
   final def mode = vertexMode
   final def mode_=(m: VertexMode) {
     if (vertexMode.getClass != m.getClass) this.signalStructuralChanges()

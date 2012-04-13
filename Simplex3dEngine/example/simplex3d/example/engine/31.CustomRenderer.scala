@@ -205,12 +205,11 @@ object CustomRenderer extends BasicApp {
     
     src {"""
       vec4 texturingColor() {
-        vec4 color = vec4(1);
+        vec4 color = vec4(1.0);
         for (int i = 0; i < se_sizeOf_textures; i++) {
           color *= texture2D(textures[i].texture, texturing.ecTexCoords[i]);
         }
-        //return color;
-        return vec4(1);//XXX
+        return color;
       }
     """}
     
@@ -220,7 +219,7 @@ object CustomRenderer extends BasicApp {
   techniqueManager.register(new FragmentShader {
     src {"""
       vec4 lightingColor() {
-        return vec4(1);
+        return vec4(1.0);
       }
     """}
     
@@ -239,7 +238,7 @@ object CustomRenderer extends BasicApp {
     
     src {"""
       vec4 lightingColor() {
-        vec3 intensity = vec3(0);
+        vec3 intensity = vec3(0.0);
         for (int i = 0; i < se_sizeOf_lighting; i++) {
       
           vec3 lightDir = lighting[i].ecPosition - lightingCtx.ecPosition;
@@ -252,10 +251,8 @@ object CustomRenderer extends BasicApp {
           lightDir = lightDir/dist;
           float diffuseFactor = max(0.0, dot(lightingCtx.normal, lightDir));
           intensity += lighting[i].intensity * diffuseFactor * attenuation;
-      
         }
-        //return vec4(intensity + 0.2, 1);
-        return vec4(lightingCtx.normal, 1);//XXX
+        return vec4(intensity + 0.2, 1.0);
       }
     """}
     
@@ -329,7 +326,7 @@ object CustomRenderer extends BasicApp {
     
     src {"""
       void computeLighting() {
-        lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1)).xyz;
+        lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
         lightingCtx.normal = normalize(se_normalMatrix*normals);
       }
     """}
@@ -405,8 +402,8 @@ object CustomRenderer extends BasicApp {
     
     
     // Attach lights.
-    world.environment.lighting.mutable.lights += new PointLight(Vec3(2), 0.001, 0)
-    //world.environment.lighting.mutable.lights += new PointLight(Vec3(3), 0.001, 0)
+    world.environment.lighting.mutable.lights += new PointLight(Vec3(4), 0.1, 0)
+    world.environment.lighting.mutable.lights += new PointLight(Vec3(6), 0.1, 0)
     
     // Init and attach light indicators.
     lightMesh.geometry.vertices.defineAs(Attributes(DataBuffer[Vec3, RFloat](maxLightCount)))
@@ -421,7 +418,7 @@ object CustomRenderer extends BasicApp {
     // Set vertex coordinates that will later be used as to position lights.
     lightMesh.elementRange.mutable.count := 2
     lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
-    lightMesh.geometry.vertices.write(3) = Vec3(0, -40, 0)
+    lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
     
     world.attach(lightMesh)
   }
@@ -432,7 +429,9 @@ object CustomRenderer extends BasicApp {
   val lightMesh = new Mesh("Lights")
   
   val lightPositions = Array(Vec3(1, 0.5, 0)*40, Vec3(1, -0.5, 0)*60)
-  val rotationSpeeds = Array(radians(40), radians(60))
+  
+  val period = 15
+  val rotationSpeeds = Array(radians(2*360/period), radians(1.5*360/period))
   
   var lightsOn = false
   
@@ -443,29 +442,29 @@ object CustomRenderer extends BasicApp {
     val lightVertices = lightMesh.geometry.vertices.write
     val movingLights = min(lightPositions.size, lights.size)
     
-//    if (mod(time.total, 10) > 5) {
-//      if (!lightsOn) {
-//        lightsOn = true
-//        println("Extra lights on.")
-//        
-//        for (i <- movingLights until maxLightCount) {
-//          val light = new PointLight(Vec3(2), 0.001, 0)
-//          light.position := lightVertices(i)
-//          lights += light
-//        }
-//        
-//        lightMesh.elementRange.mutable.count := maxLightCount
-//      }
-//    }
-//    else {
-//      if (lightsOn) {
-//        lightsOn = false
-//        println("Extra lights off.")
-//        
-//        lights.take(lightPositions.size)
-//        lightMesh.elementRange.mutable.count := lightPositions.size
-//      }
-//    }
+    if (mod(time.total, period) > period*0.5) {
+      if (!lightsOn) {
+        lightsOn = true
+        println("Extra lights on.")
+        
+        for (i <- movingLights until maxLightCount) {
+          val light = new PointLight(Vec3(4), 0.1, 0)
+          light.position := lightVertices(i)
+          lights += light
+        }
+        
+        lightMesh.elementRange.mutable.count := maxLightCount
+      }
+    }
+    else {
+      if (lightsOn) {
+        lightsOn = false
+        println("Extra lights off.")
+        
+        lights.take(lightPositions.size)
+        lightMesh.elementRange.mutable.count := lightPositions.size
+      }
+    }
     
     for (i <- 0 until movingLights) {
       val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))

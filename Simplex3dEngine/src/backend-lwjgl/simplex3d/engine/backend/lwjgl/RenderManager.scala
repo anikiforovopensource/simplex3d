@@ -70,6 +70,7 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     
     val predefinedUniforms = renderContext.predefinedUniforms
     predefinedUniforms.se_projectionMatrix := camera.projection
+    predefinedUniforms.se_viewMatrix := camera.view
     predefinedUniforms.se_viewDimensions := renderContext.viewportDimensions()
     predefinedUniforms.se_timeTotal := time.total
     predefinedUniforms.se_timeInterval := time.interval

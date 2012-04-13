@@ -43,10 +43,10 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
-  final val transformation: T#Transformation = transformationContext.factory()
+  final val transformation: T#Transformation = transformationContext.mkTransformation(this.isInstanceOf[Camera[_, _]])
   private[scenegraph] final var updateVersion: Long = 0
   private[scenegraph] final val uncheckedWorldTransformation: T#Transformation =
-    transformationContext.factory()
+    transformationContext.mkTransformation()
   
   {
     new EngineAccess {

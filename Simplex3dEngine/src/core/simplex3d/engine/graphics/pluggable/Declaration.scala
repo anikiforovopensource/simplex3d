@@ -38,12 +38,14 @@ final class DeclarationBlock(val name: String, val declarations: ReadSeq[Declara
 }
 
 final case class StructDeclaration(
+  level: Int,
   erasure: Class[_],
   glslType: String,
-  isNested: Boolean,
   entries: ReadSeq[(String, String)],// (glslType, name) pairs
   containsSamplers: Boolean
-)
+) {
+  def isNested = (level != 0)
+}
 
 final class Declaration(
   val manifest: ClassManifest[_ <: TechniqueBinding],
@@ -85,7 +87,7 @@ final class Declaration(
     squareMatrices: Boolean,
     structBlocks: HashMap[String, StructDeclaration]
   ) :String = {
-    extractManifestTypeInfo(squareMatrices, "", manifest, name, structBlocks)
+    extractManifestTypeInfo(squareMatrices, 0, "", manifest, name, structBlocks)
   }
   
   private def resolveMathType(squareMatrices: Boolean, erasure: Class[_]) :String = {
@@ -119,16 +121,15 @@ final class Declaration(
   
   private def processStruct(
     squareMatrices: Boolean,
+    level: Int,
     instance: Struct[_],
-    structBlocks: HashMap[String, StructDeclaration],
-    nested: Boolean
+    structBlocks: HashMap[String, StructDeclaration]
   ) :String =
   {
     val glslType = instance.getClass.getSimpleName
     if (structBlocks == null) return glslType
 
     val subStructs = new HashMap[String, StructDeclaration]
-    var isNested = nested
     val entries = new ArrayBuffer[(String, String)]
     var containsSamplers = false
     
@@ -137,7 +138,7 @@ final class Declaration(
       val field = instance.fields(i)
       
       val (fieldType, arraySizeExpression) = extractInstanceTypeInfo(
-        squareMatrices, glslType, field, fieldName, subStructs
+        squareMatrices, level + 1, glslType, field, fieldName, subStructs
       )
       if (classOf[TextureBinding[_]].isAssignableFrom(field.getClass)) containsSamplers = true
       val append = if (arraySizeExpression != "") "[" + arraySizeExpression + "]" else ""
@@ -156,14 +157,17 @@ final class Declaration(
       )
     }
     
-    val dec = new StructDeclaration(instance.getClass, glslType, isNested, new ReadSeq(entries), containsSamplers)
-    structBlocks.put(glslType, dec)
+    if (!existing.isDefined || existing.get.level < level) {
+      val dec = new StructDeclaration(level, instance.getClass, glslType, new ReadSeq(entries), containsSamplers)
+      structBlocks.put(glslType, dec)
+    }
     
     glslType
   }
   
   private def extractManifestTypeInfo(
     squareMatrices: Boolean,
+    level: Int,
     parentType: String,
     m: ClassManifest[_], name: String,
     structBlocks: HashMap[String, StructDeclaration]
@@ -192,7 +196,7 @@ final class Declaration(
         )
       }
       
-      val glslType = extractManifestTypeInfo(squareMatrices, parentType, manifest, name, structBlocks)
+      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
       glslType
     }
     else if (classOf[Struct[_]].isAssignableFrom(m.erasure)) {
@@ -206,7 +210,7 @@ final class Declaration(
         )
       }
       
-      processStruct(squareMatrices, instance, structBlocks, false)
+      processStruct(squareMatrices, level, instance, structBlocks)
     }
     else {
       throw new RuntimeException(
@@ -217,6 +221,7 @@ final class Declaration(
   
   private def extractInstanceTypeInfo(
     squareMatrices: Boolean,
+    level: Int,
     parentType: String,
     i: Object, name: String,
     structBlocks: HashMap[String, StructDeclaration]
@@ -230,7 +235,7 @@ final class Declaration(
     }
     else if (classOf[BindingList[_]].isAssignableFrom(i.getClass)) {
       val manifest = i.asInstanceOf[BindingList[_]].elementManifest
-      val glslType = extractManifestTypeInfo(squareMatrices, parentType, manifest, name, structBlocks)
+      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
       
       val sizeExpression =
         if (arraySizeExpression != null) arraySizeExpression
@@ -239,7 +244,7 @@ final class Declaration(
       (glslType, sizeExpression)
     }
     else if (classOf[Struct[_]].isAssignableFrom(i.getClass)) {
-      (processStruct(squareMatrices, i.asInstanceOf[Struct[_]], structBlocks, true), "")
+      (processStruct(squareMatrices, level, i.asInstanceOf[Struct[_]], structBlocks), "")
     }
     else {
       throw new RuntimeException(

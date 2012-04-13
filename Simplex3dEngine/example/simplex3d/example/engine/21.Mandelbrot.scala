@@ -38,7 +38,7 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
     protected val colorTexture = Defined[TextureBinding[Texture2d[Vec3]]](new TextureBinding);
     {
       val colors: Array[ConstVec3] = ColorPreset.generate()
-      val texture = Texture2d(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
+      val texture = Texture2d.checked(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
       
       colorTexture.mutable := texture
       iterations.mutable := colors.length
@@ -48,7 +48,7 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
       zoom.mutable := pow(zoomSpeed, startZoom + time.total)
     }
     
-    val shaderSrc = """
+    val fragmentShader = """
 uniform ivec2 se_viewDimensions;
 
 // Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.

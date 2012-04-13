@@ -41,7 +41,7 @@ private[backend] class UniformBinding(
 ) {
   
   override def toString() :String = {
-    UniformBlocks.toString(blockType) + "Uniform('" + name + "', type = " +
+    UniformOrigin.toString(blockType) + "Uniform('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
 }
@@ -50,7 +50,7 @@ private[backend] final class UniformTexBinding(
   blockType: Int, name: String, dataType: Int, location: Int, final val textureUnit: Int
 ) extends UniformBinding(blockType, name, dataType, location) {
   override def toString() :String = {
-    UniformBlocks.toString(blockType) + "Texture('" + name + "', type = " +
+    UniformOrigin.toString(blockType) + "Texture('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
   }
 }

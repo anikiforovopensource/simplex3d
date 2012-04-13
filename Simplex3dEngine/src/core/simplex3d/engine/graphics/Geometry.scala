@@ -58,7 +58,7 @@ abstract class Geometry extends StructuralChangeListener {
         if (indices.hasRefChanges) true
         else if (indices.isDefined) indices.defined.sharedState.hasDataChanges
         else false
-        
+
       if (indexChanges) true
       else {
         if (vertices.hasRefChanges) true

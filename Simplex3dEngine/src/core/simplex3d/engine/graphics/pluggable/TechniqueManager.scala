@@ -52,12 +52,13 @@ extends graphics.TechniqueManager[G]
   def register(shader: ShaderPrototype) {
     //XXX verify unique in/out block name has the same declarations
     //XXX verify that declarations match material and env property types.
+    //XXX also verify path types.
     //XXX special treatment for gl_Position => gl_FragCoord
     shader match {
       case _: FragmentShader => stages(0).register(shader)
       case _: VertexShader => stages(1).register(shader)
     }
-    shader.initialize()
+    shader.init()
   }
   
   
@@ -150,65 +151,60 @@ extends graphics.TechniqueManager[G]
         }
       }; checkFunctions() }
       
-      var inputPassed = functionsPassed
+      
+      var attributesPassed = functionsPassed
+      if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {
+        val declarations = shader.attributeBlock
+        var i = 0; while (attributesPassed && i < declarations.size) {
+          val declaration = declarations(i)
+          
+          val geometryId = geometryMap.get(declaration.name)
+          if (geometryId != null) {
+            val attrib = geometry.attributes(geometryId)
+            attributesPassed = attrib.isDefined
+          }
+          
+          i += 1
+        }
+      }; checkAttributes() }
+      
+      
+      var inputPassed = attributesPassed
       if (inputPassed && !shader.inputBlocks.isEmpty) { def checkInput() {
-        val inputBlocks = shader.inputBlocks
         val previousStage = if (stageId + 1 == stages.size) null else stages(stageId + 1)
+        val inputBlocks = shader.inputBlocks
         
-        if (previousStage == null) { def checkAttributes() {
-          var i = 0; while (inputPassed && i < inputBlocks.size) {
-            val inputBlock = inputBlocks(i)
+        var i = 0; while (inputPassed && i < inputBlocks.size) {
+          val inputBlock = inputBlocks(i)
+          
+          inputPassed = false
+          var j = 0; while (!inputPassed && j < previousStage.output.size) {
+            val outputShader = previousStage.output(j)
+            val outputBlocks = outputShader.outputBlocks
             
-            var j = 0; while (inputPassed && j < inputBlock.declarations.size) {
-              val declaration = inputBlock.declarations(j)
+            var found = false
+            var k = 0; while (!found && k < outputBlocks.size) {
+              found = (inputBlock.name == outputBlocks(k).name)
               
-              val geometryId = geometryMap.get(declaration.name)
-              if (geometryId != null) {
-                val attrib = geometry.attributes(geometryId)
-                inputPassed = attrib.isDefined
-              }
-              
-              j += 1
+              k += 1
             }
             
-            i += 1
-          }
-        }; checkAttributes() }
-        
-        else { def checkParentOutput() {
-          var i = 0; while (inputPassed && i < inputBlocks.size) {
-            val inputBlock = inputBlocks(i)
-            
-            inputPassed = false
-            var j = 0; while (!inputPassed && j < previousStage.output.size) {
-              val outputShader = previousStage.output(j)
-              val outputBlocks = outputShader.outputBlocks
-              
-              var found = false
-              var k = 0; while (!found && k < outputBlocks.size) {
-                found = (inputBlock.name == outputBlocks(k).name)
-                
-                k += 1
-              }
-              
-              if (found) {
-                if (!chain.contains(outputShader)) {// Do not use set, the order is important.
-                  val subChain = resolveShaderChain(stageId + 1, outputShader)
-                  if (subChain != null) {
-                    chain ++= subChain
-                    inputPassed = true
-                  }
+            if (found) {
+              if (!chain.contains(outputShader)) {// Do not use set, the order is important.
+                val subChain = resolveShaderChain(stageId + 1, outputShader)
+                if (subChain != null) {
+                  chain ++= subChain
+                  inputPassed = true
                 }
-                else inputPassed = true
               }
-              
-              j += 1
+              else inputPassed = true
             }
             
-            i += 1
+            j += 1
           }
-        }; checkParentOutput() }
-        
+          
+          i += 1
+        }
       }; checkInput() }
       
       if (uniformsPassed && functionsPassed && inputPassed) chain
@@ -259,7 +255,7 @@ extends graphics.TechniqueManager[G]
       
       i = 0; while (i < worldEnvironment.properties.size) {
         val prop = worldEnvironment.properties(i)
-        if (prop.isDefined) processValue(prop.defined.resolveBinding(), worldEnvironment.propertyNames(i))
+        if (prop.isDefined) processValue(prop.defined.binding, worldEnvironment.propertyNames(i))
         
         i += 1
       }

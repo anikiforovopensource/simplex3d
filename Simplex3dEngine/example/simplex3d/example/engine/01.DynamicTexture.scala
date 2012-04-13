@@ -18,7 +18,7 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.default._
 
 
-object DynamicTexture extends BasicApp {
+object DynamicTexture extends DefaultApp {
   val title = "Dynamic Texture"
   
   override lazy val settings = new Settings(
@@ -30,35 +30,10 @@ object DynamicTexture extends BasicApp {
   )
   
   
-  private def writeImg(img: Data[Vec3], dims: inVec2i)(function: (Int, Int) => ReadVec3) {
-    var y = 0; while (y < dims.y) {
-      var x = 0; while (x < dims.x) {
-        
-        val i = x + y*dims.x
-        img(i) = function(x, y)
-        
-        x += 1
-      }
-      y += 1
-    }
-  }
-  
   val noise = ClassicalGradientNoise
-  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
-  val subImgDims = ConstVec2i(64)
-  val subImg = DataBuffer[Vec3, UByte](subImgDims.x*subImgDims.y)
+  val objectTexture = Texture2d[Vec3](Vec2i(128))
+  val subTexture = Texture2d[Vec3](Vec2i(64))
 
-  val tiledNoise = new TiledNoiseSum(
-    source = new ClassicalGradientNoise(121),
-    tile = ConstVec4(128),
-    frequency = 0.2,
-    octaves = 1
-  )
-  val detailTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128))
-  writeImg(detailTexture.write, detailTexture.dimensions) { (x, y) =>
-    val intensity = abs(tiledNoise(x, y, 0) + 0.3) + 0.3
-    Vec3(0, intensity, intensity)
-  }
   
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
@@ -77,10 +52,7 @@ object DynamicTexture extends BasicApp {
     mesh.geometry.normals.defineAs(Attributes(normals))
     
     mesh.geometry.texCoords.defineAs(Attributes(texCoords))
-    
-    // XXX split dynamic and detail textures
-    mesh.material.textureUnits.mutable += new TextureUnit(objectTexture)
-    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, Mat3x2.scale(8))
+    mesh.material.textures.mutable += objectTexture
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 50
@@ -91,18 +63,16 @@ object DynamicTexture extends BasicApp {
   def update(time: TimeStamp) {
     
     // Updating the texture: the changes will be synchronized with OpenGL automatically.
-    writeImg(objectTexture.write, objectTexture.dimensions) { (x, y) =>
-      val intensity = (noise(x*0.06, y*0.06, time.total*0.4) + 1)*0.5
+    objectTexture.fillWith { p =>
+      val intensity = (noise(p.x*0.06, p.y*0.06, time.total*0.4) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
     
     // An example on how to update sub-image.
-    if (true) {
-      writeImg(subImg, subImgDims) { (x, y) =>
-        val intensity = (noise(x*0.12, y*0.12, time.total*0.8) + 1)*0.5
-        Vec3(0, intensity, 0)
-      }
-      objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subImg, subImgDims)
+    subTexture.fillWith { p =>
+      val intensity = (noise(p.x*0.12, p.y*0.12, time.total*0.8) + 1)*0.5
+      Vec3(0, intensity, 0)
     }
+    objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subTexture.read, subTexture.dimensions)
   }
 }

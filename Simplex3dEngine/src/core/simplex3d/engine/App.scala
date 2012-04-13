@@ -26,7 +26,6 @@ import simplex3d.math._
 import simplex3d.engine.util._
 import simplex3d.engine.input._
 import simplex3d.engine.graphics._
-import simplex3d.engine.asset._
 
 
 private[engine] object App {

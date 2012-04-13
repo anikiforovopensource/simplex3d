@@ -117,7 +117,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   
   final def isVertexShader = (shaderType == Shader.Vertex)
   
-  final def initialize() {
+  final def init() {
     if (isInitialized) return
     
     // Check name uniqueness.
@@ -157,10 +157,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     for (declaration <- uniformBlock) {
       declaration.extractManifestTypeInfo(usingSquareMatrices, structs)
     }
-    _structs = new ReadArray(structs.values.map(s =>
-      StructDeclaration(s.erasure, s.glslType, s.isNested, s.entries, s.containsSamplers)
-    ).toArray)
-    
+    _structs = new ReadArray(structs.values.toList.sortBy(_.level).reverse.toArray)
     
     isInitialized = true
   }
@@ -174,7 +171,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     declarations = null
   }
   
-  protected final def useSquareMatrices() {
+  protected final def useSquareMatrices {
     if (declarations != null) throw new IllegalStateException("useSquareMatrices() must be declared at the top level.")
     checkState()
     if (_usingSquareMatrices) throw new IllegalStateException("Square matrices are already in use.")

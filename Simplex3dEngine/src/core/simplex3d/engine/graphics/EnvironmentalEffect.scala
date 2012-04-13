@@ -36,14 +36,28 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
   
   def propagate(parentVal: E#Read, result: E) :Unit
   
+  
+  private[this] var bindingChanges = true
+  private[this] var localBinding: TechniqueBinding = null
+  
   /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
    */
-  def hasBindingChanges: Boolean
+  final def hasBindingChanges: Boolean = bindingChanges
+  final def clearBindingChanges() { bindingChanges = false }
+  
+  protected final def signalBindingChanges() {
+    bindingChanges = true
+    localBinding = null
+  }
+  
+  protected def resolveBinding() :TechniqueBinding
   
   /** Must return a stable binding that will no change until the next binding change event.
-   * Resolving the binding must clear bindingChanges flag.
    */
-  def resolveBinding(): TechniqueBinding
+  final def binding: TechniqueBinding = {
+    if (localBinding == null) localBinding = resolveBinding()
+    localBinding
+  }
 }
 
 

@@ -94,16 +94,9 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   
   
   def mkTexture() = {
-    val dims = ConstVec2i(4)
-    val data = DataBuffer[Vec3, UByte](dims.x*dims.y)
-    
-    var i = 0; while (i < data.size) {
-      data(i) = Vec3(1)
-      
-      i += 1
-    }
-    
-    new TextureBinding(Texture2d(dims, data))
+    val texture = Texture2d[Vec3](Vec2i(4))
+    texture.fillWith(p => Vec3(1))
+    new TextureBinding(texture)
   }
   
 
@@ -154,7 +147,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
       struct1Array.mutable(1).struct2Array(1).texture2 := mkTexture()
     }
     
-    val shaderSrc =
+    val fragmentShader =
     """
       // This struct mirrors Struct2 class definition to allow auto-mapping of values.
       struct Struct2 {

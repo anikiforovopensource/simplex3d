@@ -1,6 +1,6 @@
 /*
- * Simplex3dEngine - GL Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Simplex3dEngine - Core Module
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,24 +19,12 @@
  */
 
 package simplex3d.engine
-package backend.opengl
+package graphics
 
-import scala.annotation._
+import simplex3d.engine.util._
 
 
-private[backend] object UniformBlocks {
-  final val Predefined = 0
-  final val Material = 1
-  final val Environment = 2
-  final val Program = 3
-  
-  def toString(i: Int) :String = {
-    (i: @switch) match {
-      case Predefined => "Predefined"
-      case Material => "Material"
-      case Environment => "Environment"
-      case Program => "Program"
-      case _ => "UndefinedEnum_" + i.toString
-    }
-  }
-}
+abstract class TechniqueUniforms(
+  final val uniformNames: ReadArray[String],
+  final val uniforms: ReadArray[Defined[_ <: TechniqueBinding]]
+)

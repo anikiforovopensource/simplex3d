@@ -58,13 +58,13 @@ extends graphics.RenderContext with GlAccess {
 
   private val defaultTexture2d = {
     val dims = ConstVec2i(4)
-    val data = DataBuffer[Vec3, UByte](4*4)
+    val data = DataBuffer[Vec3, UByte](dims.x*dims.y)
     
     for (y <- 0 until dims.y; x <- 0 until dims.x) {
       data(x + y*dims.x) = Vec3(1, 0, 1)
     }
     
-    Texture2d(dims, data.asReadOnly())
+    Texture2d.checked(dims, data.asReadOnly())
   }
   
   val defaultProgram = {
@@ -612,10 +612,10 @@ extends graphics.RenderContext with GlAccess {
       seq.contains(prefix)
     }
     def resolveUniformBlock(name: String) :Int = {
-      if (belongs(name, PredefinedUniforms.Names)) UniformBlocks.Predefined
-      else if (belongs(name, mat.uniformNames)) UniformBlocks.Material
-      else if (belongs(name, env.propertyNames)) UniformBlocks.Environment
-      else if (belongs(name, program.uniformNames)) UniformBlocks.Program
+      if (belongs(name, PredefinedUniforms.Names)) UniformOrigin.Predefined
+      else if (belongs(name, mat.uniformNames)) UniformOrigin.Material
+      else if (belongs(name, env.propertyNames)) UniformOrigin.Environment
+      else if (belongs(name, program.uniformNames)) UniformOrigin.Program
       else -1
     }
     
@@ -865,18 +865,6 @@ extends graphics.RenderContext with GlAccess {
   
   // *** Mesh mapping *************************************************************************************************
   
-  private[this] def resolveWorldEvnrironmentBindings(mesh: AbstractMesh) :ReadArray[TechniqueBinding] = {
-    val properties = mesh.worldEnvironment.properties
-    val resolvedArray = new Array[TechniqueBinding](properties.length)
-    
-    var i = 0; while (i < properties.length) { val property = properties(i)
-      if (property.isDefined) resolvedArray(i) = property.defined.resolveBinding()
-      
-      i += 1
-    }
-    new ReadArray(resolvedArray)
-  }
-  
   private[this] def find(names: ReadArray[String], name: String) :Int = {
     var i = 0; while (i < names.length) {
       if (names(i) == name) return i
@@ -895,26 +883,26 @@ extends graphics.RenderContext with GlAccess {
     programBinding: UniformBinding,
     predefined: PredefinedUniforms,
     material: Material,
-    environmentNames: ReadArray[String], resolvedEnv: ReadArray[TechniqueBinding],
+    environment: Environment,
     program: Technique
   ) :Binding = {
     
     def mkName(prefix: String, name: String) = if (prefix.isEmpty) name else prefix + "." + name
 
     
-    def isIndexValid(index: Int, name: String) :Boolean = {
+    def isIndexValid(index: Int, prefix: String, name: String) :Boolean = {
       if (index < 0) {
-        if (!name.endsWith(".nvidiaBugWorkaround")) log(
-          Level.SEVERE, "Uniform '" + name + "' cannot be resolved for mesh '" + meshName + "'."
+        if (name != "nvidiaBugWorkaround") log(
+          Level.SEVERE, "Uniform '" + mkName(prefix, name) + "' cannot be resolved for mesh '" + meshName + "'."
         )
         false
       }
       else true
     }
-    def checkValue(value: AnyRef, name: String) {
+    def checkValue(value: AnyRef, prefix: String, name: String) {
       if (value == null) {
         log(
-          Level.SEVERE, "Uniform '" + name + "' is not defined for mesh '" + meshName + "'."
+          Level.SEVERE, "Uniform '" + mkName(prefix, name) + "' is not defined for mesh '" + meshName + "'."
         )
       }
       else if (value.isInstanceOf[ReadTextureBinding[_]]) {
@@ -929,46 +917,41 @@ extends graphics.RenderContext with GlAccess {
     def resolveOuter(blockType: Int, name: String) :TechniqueBinding = {
       ((blockType: @switch) match {
         
-        case UniformBlocks.Predefined => def resolvePredefined() :AnyRef = {
-          name match {
-            case "se_projectionMatrix" => predefined.se_projectionMatrix
-            case "se_viewDimensions" => predefined.se_viewDimensions
-            case "se_timeTotal" => predefined.se_timeTotal
-            case "se_timeInterval" => predefined.se_timeInterval
-            
-            case "se_modelViewMatrix" => predefined.se_modelViewMatrix
-            case "se_modelViewProjectionMatrix" => predefined.se_modelViewProjectionMatrix
-            case "se_normalMatrix" => predefined.se_normalMatrix
-            
-            case "se_pointSize" => predefined.se_pointSize
+        case UniformOrigin.Predefined => def resolvePredefined() :AnyRef = {
+          val index = find(PredefinedUniforms.Names, name)
+          if (isIndexValid(index, "", name)) {
+            val binding = predefined.values(index)
+            binding
           }
+          else null
         }; resolvePredefined()
         
-        case UniformBlocks.Material => def resolveMaterial() :AnyRef = {
+        case UniformOrigin.Material => def resolveMaterial() :AnyRef = {
           val index = find(material.uniformNames, name)
-          if (isIndexValid(index, name)) {
+          if (isIndexValid(index, "", name)) {
             val binding = material.uniforms(index).defined
-            checkValue(binding, name)
+            checkValue(binding, "", name)
             binding
           }
           else null
         }; resolveMaterial()
           
-        case UniformBlocks.Environment => def resolveEnvironment() :AnyRef = {
-          val index = find(environmentNames, name)
-          if (isIndexValid(index, name)) {
-            val binding = resolvedEnv(index)
-            checkValue(binding, name)
-            binding
+        case UniformOrigin.Environment => def resolveEnvironment() :AnyRef = {
+          val index = find(environment.propertyNames, name)
+          if (isIndexValid(index, "", name)) {
+            val prop = environment.properties(index)
+            checkValue(prop, "", name)
+            if (prop != null) prop.defined.binding
+            else null
           }
           else null
         }; resolveEnvironment()
         
-        case UniformBlocks.Program => def resolveProgram() :AnyRef = {
+        case UniformOrigin.Program => def resolveProgram() :AnyRef = {
           val index = find(program.uniformNames, name)
-          if (isIndexValid(index, name)) {
+          if (isIndexValid(index, "", name)) {
             val binding = program.uniforms(index).defined.asInstanceOf[TechniqueBinding]
-            checkValue(binding, name)
+            checkValue(binding, "", name)
             binding
           }
           else null
@@ -982,9 +965,9 @@ extends graphics.RenderContext with GlAccess {
       prefix: String, name: String
     ) :TechniqueBinding = {
       val index = find(names, name)
-      if (isIndexValid(index, mkName(prefix, name))) {
+      if (isIndexValid(index, prefix, name)) {
         val binding = values(index)
-        checkValue(binding, mkName(prefix, name))
+        checkValue(binding, prefix, name)
         binding
       }
       else null
@@ -1118,20 +1101,21 @@ extends graphics.RenderContext with GlAccess {
   }
   
   private[this] final def buildUniformMapping(
+    programBindings: ReadArray[UniformBinding],
     predefined: PredefinedUniforms,
-    mesh: AbstractMesh, resolvedEnv: ReadArray[TechniqueBinding],
-    programBindings: ReadArray[UniformBinding]
+    mesh: AbstractMesh
   ) :ReadArray[Binding] = {
     
-    val material = mesh.material
-    val environmentNames = mesh.worldEnvironment.propertyNames
     val program = mesh.technique.defined
-    
     val uniformMapping = new Array[Binding](programBindings.length)
     
     var i = 0; while (i < programBindings.length) {
       val programBinding = programBindings(i)
-      uniformMapping(i) = resolveUniform(mesh.name, programBinding, predefined, material, environmentNames, resolvedEnv, program)
+      
+      uniformMapping(i) = resolveUniform(
+        mesh.name, programBinding,
+        predefined, mesh.material, mesh.worldEnvironment, program//XXX just send mesh
+      )
       
       i += 1
     }
@@ -1181,18 +1165,16 @@ extends graphics.RenderContext with GlAccess {
     mesh: AbstractMesh,
     programMapping: backend.opengl.ProgramMapping
   ) {
-    val resolvedEnv = resolveWorldEvnrironmentBindings(mesh)
-    
     val uniformVectors = buildUniformMapping(
-      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformVectors
+      programMapping.uniformVectors, predefinedUniforms, mesh
     ).asInstanceOf[ReadArray[VectorLike]]
     
     val uniformMatrices = buildUniformMapping(
-      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformMatrices
+      programMapping.uniformMatrices, predefinedUniforms, mesh
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
     val uniformTextures = TextureBinding.avoidCompilerCrash(buildUniformMapping(
-      predefinedUniforms, mesh, resolvedEnv, programMapping.uniformTextures
+      programMapping.uniformTextures, predefinedUniforms, mesh
     ))
     
     val attributes = buildAttributeMapping(mesh, programMapping.attributes)

@@ -199,9 +199,7 @@ package testenv {
       result.value := value
     }
     
-    def hasBindingChanges = false
-    
-    def resolveBinding() = value
+    protected def resolveBinding() = value
   }
   
   
@@ -227,9 +225,7 @@ package testenv {
       else result.color := Vec3.One
     }
     
-    def hasBindingChanges = false
-    
-    def resolveBinding() = color
+    protected def resolveBinding() = color
   }
   
   
@@ -249,39 +245,31 @@ package testenv {
       val t = r.asInstanceOf[Contrast]
       
       factor := t.factor
+      if (secondary != t.secondary) signalBindingChanges()
       secondary := t.secondary
     }
     
     def propagate(parentVal: ReadContrast, result: Contrast) {
-      if (result.secondary != secondary) result.binding = null
-      
       result.factor := factor
+      if (result.secondary != secondary) signalBindingChanges()
       result.secondary := secondary
     }
     
-    def hasBindingChanges = {
-      (binding == null) || (secondary ^ binding.isInstanceOf[ContrastBinding2])
-    }
-    
-    private var binding: Object = _
-    
-    def resolveBinding() = {
+    protected def resolveBinding() = {
       println("Resolving contrast binding.")
-      
-      if (hasBindingChanges) {
-        binding = 
-          if (secondary) {
-            val b = new ContrastBinding2
-            b.factor1 := factor
-            b.factor2 := factor
-            b
-          }
-          else {
-            val b = new ContrastBinding1
-            b.factor1 := factor
-            b
-          }
-      }
+            
+      val binding = 
+        if (secondary) {
+          val b = new ContrastBinding2
+          b.factor1 := factor
+          b.factor2 := factor
+          b
+        }
+        else {
+          val b = new ContrastBinding1
+          b.factor1 := factor
+          b
+        }
       
       binding.asInstanceOf[TechniqueBinding]
     }
@@ -325,16 +313,15 @@ package testenv {
   
   
   final class GraphicsContext extends graphics.GraphicsContext {
-  
     type Geometry = renderer.Geometry
     type Material = renderer.Material
     type Environment = testenv.Environment
     
-    val mkGeometry = () => new Geometry
-    val mkMaterial = () => new Material
-    val mkEnvironment = () => new Environment
+    def mkGeometry() = new Geometry
+    def mkMaterial() = new Material
+    def mkEnvironment() = new Environment
     
-    initNamespace()
+    init()
   }
   
   

@@ -213,7 +213,6 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
     allowMultithreading: Boolean, minChildren: Int,
     batchArray: SortBuffer[SceneElement[T, G]], maxDepth: Int, currentDepth: Int
   ) {
-    
     if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
     else updateWorldTransformation(version)
     
@@ -319,7 +318,10 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       val props = worldEnvironment.properties
       val size = props.length; var i = 0; while (i < size) { val prop = props(i)
         if (prop.hasDataChanges) {
-          if (hasLeafs && prop.isDefined && prop.defined.hasBindingChanges) worldEnvironment.signalStructuralChanges()
+          if (hasLeafs && prop.isDefined && prop.defined.hasBindingChanges) {
+            worldEnvironment.signalStructuralChanges()
+            prop.defined.clearBindingChanges()
+          }
           prop.clearDataChanges()
         }
         

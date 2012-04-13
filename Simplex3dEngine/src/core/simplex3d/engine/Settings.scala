@@ -39,7 +39,6 @@ case class Settings(
 )
 
 case class AdvancedSettings(
-  val legacyMipMapGeneration: Boolean = false,//XXX make it an option, add detection, enable on ATI
-  val combineShaders: Boolean = true, //XXX make it an option, add detection, enable on NVIDIA
+  val legacyMipMapGeneration: Boolean = false,//XXX make it an option, add detection, enable on some ATI cards
   val logShaderWarnings: Boolean = true//XXX take out logging config
 )

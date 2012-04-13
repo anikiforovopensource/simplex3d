@@ -21,10 +21,13 @@
 package simplex3d.engine
 package graphics
 
-import simplex3d.math._
 import simplex3d.math.types._
+import simplex3d.math._
+import simplex3d.math.double._
 import simplex3d.math.double.functions._
+import simplex3d.data.extension._
 import simplex3d.data._
+import simplex3d.data.double._
 import simplex3d.engine.util._
 
 
@@ -103,7 +106,7 @@ object ImageFilter extends Enumeration {
 
 
 class Texture2d[A <: Accessor with AnyVec[Double]] private (
-  val dimensions: ConstVec2i,
+  final val dimensions: ConstVec2i,
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   linked: DirectSrc with ContiguousSrc
 )(
@@ -121,12 +124,45 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
       "Texture dimensions do not match data size."
     )
   }
+  
+  /** Fill the texture with pixels obtained from the function.
+   * 
+   * @param function (dimensions, pixelCoordinates) => pixelValue
+   */
+  def fillWith(function: inVec2 => A#Read) {
+    val data = this.write
+    (0 until dimensions.y).par.foreach(y => renderLine(data, function, y))
+  }
+  private[this] val renderLine = (data: Data[A], function: inVec2 => A#Read, y: Int) => {
+    val pixel = Vec2(0, y)
+
+    var x = 0; while (x < dimensions.x) { val i = x + y*dimensions.x
+      
+      pixel.x = x
+      data(i) = function(pixel)
+      
+      x += 1
+    }
+  }
 }
 
 
 object Texture2d {
   
-  def apply[A <: Accessor with AnyVec[Double]](
+  def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor with AnyVec[Double] }](
+    dimensions: ConstVec2i,
+    magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
+    mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
+  )(implicit composition: CompositionFactory[F, _ >: UByte])
+  :Texture2d[F#Accessor] = {
+    val primitive = implicitly[PrimitiveFactory[RDouble, UByte]]
+    val data = composition.mkDataBuffer(primitive.mkDataBuffer(dimensions.x*dimensions.y*composition.components))
+    new Texture2d[F#Accessor](dimensions, data, null)(
+      magFilter, minFilter, mipMapFilter, anisotropyLevel
+    )
+  }
+  
+  def checked[A <: Accessor with AnyVec[Double]](
     dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
@@ -146,7 +182,7 @@ object Texture2d {
     require(src.accessorManifest == accessorManifest, "Data accessor type doest not match manifest.")
     
     if (src.isInstanceOf[Data[_]]) {
-      apply(
+      checked(
         dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc],
         magFilter, minFilter, mipMapFilter, anisotropyLevel
       )

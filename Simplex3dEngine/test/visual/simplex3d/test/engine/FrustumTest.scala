@@ -37,7 +37,7 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.default._
 
 
-object FrustumTest extends BasicApp {
+object FrustumTest extends DefaultApp {
   val title = "Frustum Test"
   
   override lazy val settings = new Settings(
@@ -49,13 +49,8 @@ object FrustumTest extends BasicApp {
   )
   
   
-  val texture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128));
-  {
-    val data = texture.write
-    for (y <- 0 until texture.dimensions.y; x <- 0 until texture.dimensions.x) {
-      data(x + y*texture.dimensions.x) = Vec3(0, 1, 1)
-    }
-  }
+  val texture = Texture2d[Vec3](Vec2i(128))
+  texture.fillWith { p => Vec3(0, 1, 1) }
   
   val cube = new Mesh("Cube")
   

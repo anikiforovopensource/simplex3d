@@ -138,8 +138,8 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     
     
     val predefinedUniforms = renderContext.predefinedUniforms
-    predefinedUniforms.se_modelViewMatrix := Mat4(transformation concat camera.view)
-    predefinedUniforms.se_modelViewProjectionMatrix := camera.projection*predefinedUniforms.se_modelViewMatrix
+    predefinedUniforms.se_modelViewMatrix := transformation concat camera.view
+    predefinedUniforms.se_modelViewProjectionMatrix := camera.projection*Mat4(predefinedUniforms.se_modelViewMatrix)
     predefinedUniforms.se_normalMatrix := transpose(inverse(Mat3(predefinedUniforms.se_modelViewMatrix)))
     
     // Update bindings using predefined uniforms.

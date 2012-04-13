@@ -92,6 +92,13 @@ extends Bounded[T, G](name) with AbstractMesh {
       updated = true
     }
     
+    
+    if (updated) {
+      elementRange.clearDataChanges()
+      geometry.indices.clearRefChanges()
+      geometry.vertices.clearRefChanges()
+    }
+    
     uncheckedWorldTransformation.clearDataChanges()
     updated
   }

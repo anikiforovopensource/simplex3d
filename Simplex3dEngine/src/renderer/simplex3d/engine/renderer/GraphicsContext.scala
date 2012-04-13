@@ -28,9 +28,9 @@ final class GraphicsContext extends graphics.GraphicsContext {
   type Material = renderer.Material
   type Environment = renderer.Environment
   
-  val mkGeometry = () => new Geometry
-  val mkMaterial = () => new Material
-  val mkEnvironment = () => new Environment
+  def mkGeometry() = new Geometry
+  def mkMaterial() = new Material
+  def mkEnvironment() = new Environment
   
-  initNamespace()
+  init()
 }

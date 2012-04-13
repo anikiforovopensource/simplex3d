@@ -25,7 +25,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-class Environment extends graphics.Environment with prototype.Environment {
+class Environment extends prototype.Environment {
   val fog = Optional[Fog](Fog.Default)(StructuralChangeListener.Ignore)
   
   init(classOf[Environment])

@@ -24,5 +24,5 @@ package transformation
 
 abstract class TransformationContext {
   type Transformation <: transformation.Transformation[Transformation] // XXX say WHAT?
-  val factory: () => Transformation
+  def mkTransformation(camera: Boolean = false): Transformation
 }

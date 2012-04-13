@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - SceneGraph Module
+ * Simplex3dEngine - GL Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,13 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.engine.graphics
+
+import scala.annotation._
 
 
-class SceneGraphSettings(
-  val multithreadedControllers: Boolean = true,
-  val multithreadedParsing: Boolean = true,
-  val multithreadedParsing_FromDepth: Int = 3,
-  val multithreadedParsing_NodesWithChildren: Int = 50
-)
+object UniformOrigin {
+  final val Predefined = 0
+  final val Material = 1
+  final val Environment = 2
+  final val Program = 3
+  
+  def toString(i: Int) :String = {
+    (i: @switch) match {
+      case Predefined => "Predefined"
+      case Material => "Material"
+      case Environment => "Environment"
+      case Program => "Program"
+      case _ => "UndefinedEnum_" + i.toString
+    }
+  }
+}

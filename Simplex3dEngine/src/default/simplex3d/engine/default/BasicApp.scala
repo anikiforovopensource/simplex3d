@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -28,34 +28,22 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.input._
 import simplex3d.engine.asset._
-import simplex3d.engine.renderer._
 import simplex3d.engine.transformation._
-import simplex3d.engine.default._
 
 
-trait BasicApp extends App with scala.App {//XXX add DemoApp: basic app with controls
+trait BasicApp extends App with scala.App {
   
-  addInputListener(new InputListener {
-    override val keyboardListener = new KeyboardListener {
-      override def keyTyped(input: Input, e: KeyEvent) {
-        if (KeyCode.K_Escape == e.keyCode) dispose()
-      }
-    }
-  })
+  type Transformation <: TransformationContext
+  type Graphics <: GraphicsContext
+  
+  protected val world: SceneGraph[Transformation, Graphics]
+  
   
   lazy val config = new Config
   lazy val settings = new Settings
   protected lazy val sceneGraphSettings = new SceneGraphSettings
   
-  
-  protected val world = new SceneGraph(
-    "World",
-    sceneGraphSettings,
-    new Camera("World Camera"),
-    TechniqueProvider.assembleTechniqueManager()
-  )
   
   protected val assetManager = new AssetManager {
     loaders += new ClasspathLoader

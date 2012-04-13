@@ -26,13 +26,4 @@ import simplex3d.engine.transformation._
 
 package object default {
   
-  /** Default Transformation */
-  type DT = transformation.ComponentTransformation3dContext
-  
-  /** Default Graphics */
-  type DG = renderer.GraphicsContext
-  
-  
-  implicit final val TransformationContext = new DT
-  implicit final val GraphicsContext = new DG
 }

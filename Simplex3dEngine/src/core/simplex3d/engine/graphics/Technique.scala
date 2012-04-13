@@ -28,16 +28,18 @@ import simplex3d.engine.util._
 final class Technique private (
   val graphicsContext: GraphicsContext,
   val shaders: Set[Shader],
-  args: (
-    ReadArray[String],
-    ReadArray[Defined[_ <: TechniqueBinding]]
-  )
-) extends EngineInfo {
+  uniformNames: ReadArray[String],
+  uniforms: ReadArray[Defined[_ <: TechniqueBinding]]
+) extends TechniqueUniforms(uniformNames, uniforms) with EngineInfo {
   
-  val uniformNames: ReadArray[String] = args._1
-  val uniforms: ReadArray[Defined[_ <: TechniqueBinding]] = args._2
+  private[this] def this(
+    graphicsContext: GraphicsContext,
+    shaders: Set[Shader],
+    args: (ReadArray[String], ReadArray[Defined[_ <: TechniqueBinding]])
+  ) {
+    this(graphicsContext, shaders, args._1, args._2)
+  }
   
-
   def this(graphicsContext: GraphicsContext, shaders: Set[Shader]) {
     this(graphicsContext, shaders, {
       

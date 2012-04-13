@@ -33,7 +33,7 @@ import simplex3d.engine.graphics.prototype._
 
 abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](name) { effect =>
   
-  protected val shaderSrc: String
+  protected val fragmentShader: String
   
   private val vertexShader = new Shader(Shader.Vertex,
     """
@@ -69,8 +69,8 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
         Nil
       )
       val shaderUniforms = Map((names zip props): _*)
-      val fragmentShader = new Shader(Shader.Fragment, shaderSrc, shaderUniforms)
-      this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fragmentShader)))
+      val fs = new Shader(Shader.Fragment, fragmentShader, shaderUniforms)
+      this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fs)))
     }
   }
   

@@ -27,7 +27,9 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.scene._
 
 
-sealed abstract class ReadComponentTransformation3d extends ReadTransformation[ComponentTransformation3d] {
+sealed abstract class ReadComponentTransformation3d(protected val camera: Boolean)
+extends ReadTransformation[ComponentTransformation3d]
+{
 
   def scale: ReadDoubleRef
   def rotation: ReadQuat4
@@ -35,7 +37,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[C
   
   
   final def mutableCopy() = {
-    val copy = new ComponentTransformation3d
+    val copy = new ComponentTransformation3d(camera)
     if (isSet) copy := this
     copy
   }
@@ -65,14 +67,21 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation[C
   }
 }
 
-final class ComponentTransformation3d extends ReadComponentTransformation3d
-with Transformation[ComponentTransformation3d] {
+final class ComponentTransformation3d(camera: Boolean)
+extends ReadComponentTransformation3d(camera) with Transformation[ComponentTransformation3d]
+{
   type Read = ReadComponentTransformation3d
   
   final class MutableSubtext {
     def scale = _scale
     def rotation = _rotation
     def translation = _translation
+    
+    def lookAt(point: inVec3, worldUp: inVec3) {
+      val dir = if (camera) translation - point else point - translation 
+      val rotationMat = functions.lookAt(dir, worldUp)
+      rotation := quaternion(rotationMat)
+    }
   }
   private val mutableSubtext = new MutableSubtext
   
@@ -83,7 +92,6 @@ with Transformation[ComponentTransformation3d] {
   def scale: ReadDoubleRef = _scale
   def rotation: ReadQuat4 = _rotation
   def translation: ReadVec3 = _translation
-  
   
   private[this] var set = false
   def isSet = set

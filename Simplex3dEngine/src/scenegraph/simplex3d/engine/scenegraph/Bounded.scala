@@ -149,6 +149,9 @@ object Bounded {
   
   
   def rebuildAabb(elementRange: ReadElementRange, geometry: Geometry)(resultMin: Vec3, resultMax: Vec3) {
+    resultMin := Vec3(Double.MaxValue)
+    resultMax := Vec3(Double.MinValue)
+    
     if (!geometry.vertices.isDefined || !geometry.vertices.defined.isAccessible) return
     
     val vertices = geometry.vertices.defined.read
@@ -158,20 +161,17 @@ object Bounded {
       return
     }
     
-    resultMin := Vec3(Double.MaxValue)
-    resultMax := Vec3(Double.MinValue)
-    
-    val badIndex = (geometry.indices.isDefined && !geometry.indices.defined.isAccessible)
-    var first = 0
-    var count = vertices.size
-    if (elementRange != null && !badIndex) {
-      first = elementRange.first
-      count = elementRange.count
-    }
     
     if (geometry.indices.isDefined && geometry.indices.defined.isAccessible) {
       def rebuildWithIndex() {
         val indices = geometry.indices.defined.read
+        
+        var first = 0
+        var count = vertices.size
+        if (elementRange != null) {
+          first = elementRange.first
+          count = elementRange.count
+        }
         
         var i = first; while (i < count) {
           val vertex = vertices(indices(i))
@@ -185,6 +185,9 @@ object Bounded {
     }
     else {
       def rebuildVertices() {
+        val first = 0
+        val count = vertices.size
+        
         var i = first; while (i < count) {
           val vertex = vertices(i)
           
@@ -192,8 +195,8 @@ object Bounded {
           resultMax := max(resultMax, vertex)
           
           i += 1
-        }; rebuildVertices()
-      }
+        }
+      }; rebuildVertices()
     }
   }
 }

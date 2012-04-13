@@ -56,7 +56,7 @@ object TechniqueProvider {
       entryPoint("resolveColor")
     })
     
-    manager.register(new FragmentShader {
+    /*manager.register(new FragmentShader {
       //version("120")
       useSquareMatrices
       
@@ -82,7 +82,7 @@ object TechniqueProvider {
       """}
       
       entryPoint("resolveColor")
-    })
+    })*/
     
     
     manager.register(new VertexShader {
@@ -125,7 +125,7 @@ object TechniqueProvider {
       entryPoint("transformVertices")
     })
     
-    manager.register(new VertexShader {
+    /*manager.register(new VertexShader {
       //version("120")
       useSquareMatrices
       
@@ -150,7 +150,7 @@ object TechniqueProvider {
       """}
       
       entryPoint("passTexCoords")
-    })
+    })*/
     
     manager
   }

@@ -64,9 +64,7 @@ final class Fog extends ReadFog with EnvironmentalEffect[Fog] with prototype.Str
     result := this
   }
   
-  def hasBindingChanges = false
-  
-  def resolveBinding() = this
+  protected def resolveBinding() = this
 }
 
 

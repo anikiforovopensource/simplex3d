@@ -18,7 +18,7 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.default._
 
 
-object DynamicAttributes extends BasicApp {
+object DynamicAttributes extends DefaultApp {
   val title = "Dynamic Attributes"
   
   override lazy val settings = new Settings(
@@ -32,24 +32,14 @@ object DynamicAttributes extends BasicApp {
   
   val noise = ClassicalGradientNoise
   var vertices: DataBuffer[Vec3, RFloat] = _
-  var mesh: Mesh[DT, DG] = _
+  var mesh: Mesh[Transformation, Graphics] = _
   
   
   //val objectTexture = assetManager.loadTexture2d[Vec3]("sample/texture.png").get
-  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128)); {
-    val img = objectTexture.write
-    
-    var y = 0; while (y < objectTexture.dimensions.y) {
-      var x = 0; while (x < objectTexture.dimensions.x) {
-        
-        val i = x + y*objectTexture.dimensions.x
-        val intensity = (noise(x*0.06, y*0.06, 2.324) + 1)*0.5
-        img(i) = Vec3(0, intensity, intensity)
-        
-        x += 1
-      }
-      y += 1
-    }
+  val objectTexture = Texture2d[Vec3](Vec2i(128))
+  objectTexture.fillWith { p =>
+    val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
+    Vec3(0, intensity, intensity)
   }
   
   

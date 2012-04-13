@@ -18,7 +18,7 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.default._
 
 
-object ControllerTest extends BasicApp {
+object ControllerTest extends DefaultApp {
   val objectCount = 3000
   val title = "Controller Test: " + objectCount + " objects."
   
@@ -48,27 +48,18 @@ object ControllerTest extends BasicApp {
   }
   
   
-  val objectTexture = Texture2d(Vec2i(128), DataBuffer[Vec3, UByte](128*128)); {
-    val img = objectTexture.write
+  val objectTexture = Texture2d[Vec3](Vec2i(128))
+  objectTexture.fillWith { p =>
     val borderWidth = 20
-    
-    var y = 0; while (y < objectTexture.dimensions.y) {
-      var x = 0; while (x < objectTexture.dimensions.x) {
-        val i = x + y*objectTexture.dimensions.x
-        
-        if (
-          x < borderWidth || x >= objectTexture.dimensions.x - borderWidth ||
-          y < borderWidth || y >= objectTexture.dimensions.y - borderWidth
-        ) {
-          img(i) = Vec3(0.1, 0.1, 1)
-        }
-        else {
-          img(i) = Vec3(0, 0.8, 0.8)
-        }
-        
-        x += 1
-      }
-      y += 1
+
+    if (
+      p.x < borderWidth || p.x >= objectTexture.dimensions.x - borderWidth ||
+      p.y < borderWidth || p.y >= objectTexture.dimensions.y - borderWidth
+    ) {
+      Vec3(0.1, 0.1, 1)
+    }
+    else {
+      Vec3(0, 0.8, 0.8)
     }
   }
   

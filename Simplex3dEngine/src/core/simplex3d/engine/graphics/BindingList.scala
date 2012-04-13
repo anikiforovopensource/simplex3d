@@ -110,6 +110,12 @@ extends ReadBindingList[W] with Writable[BindingList[W]]
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
   }
   
+  def take(count: Int) { remove(count, size - count) }
+  def takeRigth(count: Int) { remove(0, size - count) }
+  def drop(count: Int) { remove(size - count, count) }
+  def dropLeft(count: Int) { remove(0, count) }
+  
+  
   def clear() {
     buff.clear()
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()

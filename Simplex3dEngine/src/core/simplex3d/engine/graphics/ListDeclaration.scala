@@ -88,6 +88,6 @@ final class ListDeclarationSizeKey(val parentType: String, val name: String, val
   }
   
   override def toString() :String = {
-    "ListDeclarationKey { " + parentType + "." + name + "[" + size + "] }"
+    "ListDeclarationSizeKey { " + parentType + "." + name + "[" + size + "] }"
   }
 }

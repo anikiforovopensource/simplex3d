@@ -95,8 +95,7 @@ This guide assumes you have checked out "trunk" from the SVN and renamed it to "
 2) Make a new Scala project in Eclipse.
 3) Add source directories to Eclipse.
 4) Setup IvyDE using provided ivy.xml and ivysettings.xml.
-5) Run any of the Simplex3dEngine examples to setup native libs:
-     sbt ";project engine-example; run-main simplex3d.example.engine.DynamicTexture"
+5) Restart sbt to setup native libs.
 6) Set "Native library location" for lwjgl.jar to "Simplex3d/target/natives/lwjgl"
 
 After completing these steps you should be able to compile Simplex3dEngine and run any of the tests and examples from Eclipse.

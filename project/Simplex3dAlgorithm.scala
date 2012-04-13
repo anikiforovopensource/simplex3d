@@ -23,7 +23,7 @@ import Keys._
 object Simplex3dAlgorithm extends Build {
   
   val buildSettings = Common.buildSettings ++ Seq(
-    version := "0.51-SNAPSHOT",
+    version := Simplex3d.AlgorithmVersion,
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )

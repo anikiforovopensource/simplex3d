@@ -76,7 +76,7 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
       super.render(renderManager, time)
     }
     
-    val shaderSrc = """
+    val fragmentShader = """
       uniform ivec2 se_viewDimensions;
       uniform sampler2D texture;
       

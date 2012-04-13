@@ -23,7 +23,7 @@ import Keys._
 object Simplex3dData extends Build {
   
   val buildSettings = Common.buildSettings ++ Seq(
-    version := "2.0-SNAPSHOT",
+    version := Simplex3d.DataVersion,
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )

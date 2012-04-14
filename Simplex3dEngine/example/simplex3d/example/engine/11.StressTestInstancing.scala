@@ -30,7 +30,6 @@ object StressTestInstancing extends DefaultApp {
     resolution = Some(Vec2i(800, 600))
   )
   
-  
   override lazy val sceneGraphSettings = new SceneGraphSettings(
     multithreadedControllers = true,
     multithreadedParsing = true
@@ -74,23 +73,23 @@ object StressTestInstancing extends DefaultApp {
     
     
     val (indexBuffer, vertexBuffer, normalBuffer, texCoordBuffer) = Shapes.makeBox()
-    val indices = Attributes(indexBuffer)
-    val vertices = Attributes(vertexBuffer)
-    val normals = Attributes(normalBuffer)
-    val texCoords = Attributes(texCoordBuffer)
+    val indices = Attributes.fromData(indexBuffer)
+    val vertices = Attributes.fromData(vertexBuffer)
+    val normals = Attributes.fromData(normalBuffer)
+    val texCoords = Attributes.fromData(texCoordBuffer)
     
     
     val scale = 1.7
     val node = new InstancingNode("Instancing Node")
-    node.instanceBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale))
-    node.customBoundingVolume.defineAs(new Oabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))
+    node.instanceBoundingVolume := new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale)
+    node.customBoundingVolume := new Oabb(Vec3(Double.MinValue), Vec3(Double.MaxValue))
     
     node.geometry.faceCulling.mutable := FaceCulling.Back
     
-    node.geometry.indices.defineAs(indices)
-    node.geometry.vertices.defineAs(vertices)
-    node.geometry.normals.defineAs(normals)
-    node.geometry.texCoords.defineAs(texCoords)
+    node.geometry.indices := indices
+    node.geometry.vertices := vertices
+    node.geometry.normals := normals
+    node.geometry.texCoords := texCoords
     
     node.material.textures.mutable += objectTexture
     

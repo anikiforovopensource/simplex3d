@@ -53,7 +53,7 @@ extends graphics.RenderContext with GlAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
-  import SceneAccess._; import ClearChangesAccess._
+  import AccessScene._; import AccessChanges._
   
 
   private val defaultTexture2d = {
@@ -64,7 +64,7 @@ extends graphics.RenderContext with GlAccess {
       data(x + y*dims.x) = Vec3(1, 0, 1)
     }
     
-    Texture2d.checked(dims, data.asReadOnly())
+    Texture2d.fromData(dims, data.asReadOnly())
   }
   
   val defaultProgram = {
@@ -899,19 +899,14 @@ extends graphics.RenderContext with GlAccess {
       }
       else true
     }
-    def checkValue(value: AnyRef, prefix: String, name: String) {
-      if (value == null) {
+    def extractProperty[W <: Writable[W]](prop: Property[W], prefix: String, name: String) :W#Read = {
+      if (!prop.isDefined) {
         log(
           Level.SEVERE, "Uniform '" + mkName(prefix, name) + "' is not defined for mesh '" + meshName + "'."
         )
+        null.asInstanceOf[W#Read]
       }
-      else if (value.isInstanceOf[ReadTextureBinding[_]]) {
-        val textureBinding = TextureBinding.avoidCompilerCrash(value)
-        if (!textureBinding.isBound) log(
-          Level.SEVERE, "Texture '" + name + "' is not defined for mesh '" +
-          meshName + "'. Default texture will be used."
-        )
-      }
+      else prop.get
     }
     
     def resolveOuter(blockType: Int, name: String) :TechniqueBinding = {
@@ -929,9 +924,8 @@ extends graphics.RenderContext with GlAccess {
         case UniformOrigin.Material => def resolveMaterial() :AnyRef = {
           val index = find(material.uniformNames, name)
           if (isIndexValid(index, "", name)) {
-            val binding = material.uniforms(index).defined
-            checkValue(binding, "", name)
-            binding
+            val prop = material.uniforms(index)
+            extractProperty(prop, "", name) 
           }
           else null
         }; resolveMaterial()
@@ -940,9 +934,7 @@ extends graphics.RenderContext with GlAccess {
           val index = find(environment.propertyNames, name)
           if (isIndexValid(index, "", name)) {
             val prop = environment.properties(index)
-            checkValue(prop, "", name)
-            if (prop != null) prop.defined.binding
-            else null
+            extractProperty(prop, "", name).binding
           }
           else null
         }; resolveEnvironment()
@@ -950,9 +942,8 @@ extends graphics.RenderContext with GlAccess {
         case UniformOrigin.Program => def resolveProgram() :AnyRef = {
           val index = find(program.uniformNames, name)
           if (isIndexValid(index, "", name)) {
-            val binding = program.uniforms(index).defined.asInstanceOf[TechniqueBinding]
-            checkValue(binding, "", name)
-            binding
+            val prop = program.uniforms(index)
+            extractProperty(prop, "", name)
           }
           else null
         }; resolveProgram()
@@ -965,11 +956,8 @@ extends graphics.RenderContext with GlAccess {
       prefix: String, name: String
     ) :TechniqueBinding = {
       val index = find(names, name)
-      if (isIndexValid(index, prefix, name)) {
-        val binding = values(index)
-        checkValue(binding, prefix, name)
-        binding
-      }
+      
+      if (isIndexValid(index, prefix, name)) values(index)
       else null
     }
     
@@ -986,9 +974,9 @@ extends graphics.RenderContext with GlAccess {
             else resolveInner(names, values, prefix, name)
           
           value match {
-            case array: BindingList[_] =>
+            case list: BindingList[_] =>
               val id = index.toInt
-              if (id >= array.length) {
+              if (id >= list.size) {
                 log(
                   Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]' is out of bounds for mesh '" +
                   meshName + "'." 
@@ -996,7 +984,7 @@ extends graphics.RenderContext with GlAccess {
                 null
               }
               else {
-                val indexed = array(id)
+                val indexed = list(id)
                 if (rest.isEmpty) indexed
                 else {
                   indexed match {
@@ -1097,6 +1085,17 @@ extends graphics.RenderContext with GlAccess {
       }
     }
     
+    if (value == null) log(
+      Level.SEVERE, "Uniform '" + programBinding.name + "' resolves to a null reference for mesh '" + meshName + "'."
+    )
+    else if (value.isInstanceOf[ReadTextureBinding[_]]) {
+      val textureBinding = TextureBinding.avoidCompilerCrash(value)
+      if (!textureBinding.isBound) log(
+        Level.SEVERE, "Texture '" + programBinding.name + "' is not defined for mesh '" +
+        meshName + "'. Default texture will be used."
+      )
+    }
+    
     value.asInstanceOf[Binding]
   }
   
@@ -1106,7 +1105,7 @@ extends graphics.RenderContext with GlAccess {
     mesh: AbstractMesh
   ) :ReadArray[Binding] = {
     
-    val program = mesh.technique.defined
+    val program = mesh.technique.get
     val uniformMapping = new Array[Binding](programBindings.length)
     
     var i = 0; while (i < programBindings.length) {
@@ -1114,7 +1113,7 @@ extends graphics.RenderContext with GlAccess {
       
       uniformMapping(i) = resolveUniform(
         mesh.name, programBinding,
-        predefined, mesh.material, mesh.worldEnvironment, program//XXX just send mesh
+        predefined, mesh.material, mesh.worldEnvironment, program
       )
       
       i += 1
@@ -1140,8 +1139,9 @@ extends graphics.RenderContext with GlAccess {
         val attrib = properties(index)
         if (!attrib.isDefined) {
           log(Level.SEVERE, "Attributes '" + name + "' are not defined for mesh '" + mesh.name + "'.")
+          null
         }
-        attrib.defined.asInstanceOf[AnyRef]
+        else attrib.get
       }
     }
     

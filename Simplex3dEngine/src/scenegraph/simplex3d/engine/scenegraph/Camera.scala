@@ -35,6 +35,7 @@ class Camera[T <: TransformationContext, G <: GraphicsContext](
   val projection: Mat4 = orthoProj(-100, 100, -100, 100, 10, 200)
 )(implicit transformationContext: T, graphicsContext: G)
 extends SceneElement[T, G](name) with AbstractCamera {
+  import AccessChanges._
   
   protected val _view = Mat4x3(1)
   protected val _viewProjection = Mat4(1)
@@ -54,7 +55,7 @@ extends SceneElement[T, G](name) with AbstractCamera {
   }
   
   private def sync() {
-    import ClearChangesAccess._
+    import AccessChanges._
     
     _view := inverse(worldTransformation.matrix)
     _viewProjection := projection*Mat4(_view)

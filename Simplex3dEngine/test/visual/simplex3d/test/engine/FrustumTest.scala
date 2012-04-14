@@ -48,10 +48,7 @@ object FrustumTest extends DefaultApp {
     resolution = Some(Vec2i(800, 600))
   )
   
-  
-  val texture = Texture2d[Vec3](Vec2i(128))
-  texture.fillWith { p => Vec3(0, 1, 1) }
-  
+
   val cube = new Mesh("Cube")
   
   def init() {
@@ -64,12 +61,12 @@ object FrustumTest extends DefaultApp {
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     
-    cube.geometry.indices.defineAs(Attributes(indices))
-    cube.geometry.vertices.defineAs(Attributes(vertices))
-    cube.geometry.normals.defineAs(Attributes(normals))
-    cube.geometry.texCoords.defineAs(Attributes(texCoords))
+    cube.geometry.indices := Attributes.fromData(indices)
+    cube.geometry.vertices := Attributes.fromData(vertices)
+    cube.geometry.normals := Attributes.fromData(normals)
+    cube.geometry.texCoords := Attributes.fromData(texCoords)
     
-    cube.material.textures.mutable += texture
+    cube.material.textures.mutable += Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
     
     cube.transformation.mutable.scale := 20
     cube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 

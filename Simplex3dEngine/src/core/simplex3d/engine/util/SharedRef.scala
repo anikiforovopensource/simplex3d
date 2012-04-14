@@ -28,36 +28,38 @@ abstract class SharedRef[T <: AnyRef](listener: StructuralChangeListener)
   private[this] final var value: T = _
   protected final var reassigned = true // Initialize as reassigned.
   
-  final def defined: T = value
+  final def get: T = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
-  final def undefine() { defineAs(null.asInstanceOf[T]) }
+  final def undefine() {
+    if (value != null) listener.signalStructuralChanges()
+    value = null.asInstanceOf[T]
+  }
   
-  final def defineAs(value: T) {
-    if (isDefined) {
-      if (value == null) listener.signalStructuralChanges()
-    }
-    else if (value != null) listener.signalStructuralChanges()
+  final def :=(value: T) {
+    if (value == null) throw new NullPointerException
+    
+    if (!isDefined) listener.signalStructuralChanges()
     
     if (this.value ne value) reassigned = true
     this.value = value
   }
   
-  final def set(r: SharedRef[T]) {
-    if (r.isDefined) defineAs(r.defined) else undefine()
+  final def :=(r: SharedRef[T]) {
+    if (r.isDefined) this := r.get else undefine()
   }
-
-  final def hasRefChanges = reassigned
   
   final override def toString() :String =
-    "SharedRef(" + (if (isDefined) defined.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
+    "SharedRef(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
 trait AccessibleSharedRef {
+  def hasRefChanges: Boolean
   def clearRefChanges() :Unit
 }
 
 private[engine] final class AccessibleSharedRefImpl[T <: AnyRef](listener: StructuralChangeListener)
 extends SharedRef[T](listener) with AccessibleSharedRef {
+  def hasRefChanges = reassigned
   def clearRefChanges() { reassigned = false }
 }
 

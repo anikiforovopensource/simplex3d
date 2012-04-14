@@ -24,13 +24,15 @@ package transformation
 import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
+import simplex3d.engine.util._
 import simplex3d.engine.scene._
 
 
 sealed abstract class ReadComponentTransformation3d(protected val camera: Boolean)
 extends ReadTransformation[ComponentTransformation3d]
 {
-
+  import AccessChanges._
+  
   def scale: ReadDoubleRef
   def rotation: ReadQuat4
   def translation: ReadVec3

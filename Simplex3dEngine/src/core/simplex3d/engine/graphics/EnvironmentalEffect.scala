@@ -42,7 +42,7 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
   
   /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
    */
-  final def hasBindingChanges: Boolean = bindingChanges
+  final def hasBindingChanges: Boolean = bindingChanges//XXX hide this
   final def clearBindingChanges() { bindingChanges = false }
   
   protected final def signalBindingChanges() {

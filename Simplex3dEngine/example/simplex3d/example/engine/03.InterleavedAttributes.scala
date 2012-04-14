@@ -26,22 +26,9 @@ object InterleavedAttributes extends DefaultApp {
     verticalSync = true,
     logCapabilities = true,
     logPerformance = true,
+    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
-  
-  
-  val noise = ClassicalGradientNoise
-  var vertices: DataBuffer[Vec3, RFloat] = _
-  var mesh: Mesh[Transformation, Graphics] = _
-  
-  
-  //val objectTexture = assetManager.loadTexture2d[Vec3]("sample/texture.png").get
-  val objectTexture = Texture2d[Vec3](Vec2i(128))
-  objectTexture.fillWith { p =>
-    val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
-    Vec3(0, intensity, intensity)
-  }
-  
   
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
@@ -53,36 +40,42 @@ object InterleavedAttributes extends DefaultApp {
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     val (iVertices, iNormals, iTexCoords) = interleave(vertices, normals, texCoords)(vertices.size)
-    this.vertices = vertices.copyAsDataBuffer()
+    val originalVertices = vertices.copyAsDataBuffer()
     
-    mesh = new Mesh("Cube")
+    val mesh = new Mesh("Cube")
     
-    mesh.geometry.indices.defineAs(Attributes(indices))
+    mesh.geometry.indices := Attributes.fromData(indices)
     new interleaved(Caching.Stream) {
-      mesh.geometry.vertices.defineAs(Attributes(iVertices))
-      mesh.geometry.normals.defineAs(Attributes(iNormals))
-      mesh.geometry.texCoords.defineAs(Attributes(iTexCoords))
+      mesh.geometry.vertices := Attributes.fromData(iVertices)
+      mesh.geometry.normals := Attributes.fromData(iNormals)
+      mesh.geometry.texCoords := Attributes.fromData(iTexCoords)
     }.delayedInit()
     // delayedInit() call will be unnecessary when DelayedInit trait is fixed,
-    // please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
+    // Please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
-    mesh.material.textures.mutable += objectTexture
+    val noise = ClassicalGradientNoise
+    mesh.material.textures.mutable += Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+      val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
+      Vec3(0, intensity, intensity)
+    }
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 40
     
+    mesh.controller { time =>
+      def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15
+      def fuzzyMat = Mat4x3(1) + Mat4x3(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
+      
+      // Interleaved and non-interleaved attributes are updated in the same fashion.
+      val data = mesh.geometry.vertices.write
+      var i = 0; while (i < data.size) {
+        data(i) = fuzzyMat.transformPoint(vertices(i))
+        i += 1
+      }
+    }
+    
     world.attach(mesh)
   }
   
-  def update(time: TimeStamp) {
-    def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15
-    def fuzzyMat = Mat4x3(1) + Mat4x3(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
-    
-    // Interleaved and non-interleaved attributes are updated in the same fashion.
-    val data = mesh.geometry.vertices.write
-    var i = 0; while (i < data.size) {
-      data(i) = fuzzyMat.transformPoint(vertices(i))
-      i += 1
-    }
-  }
+  def update(time: TimeStamp) {}
 }

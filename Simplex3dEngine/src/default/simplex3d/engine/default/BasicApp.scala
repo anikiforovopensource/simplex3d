@@ -37,6 +37,16 @@ trait BasicApp extends App with scala.App {
   type Transformation <: TransformationContext
   type Graphics <: GraphicsContext
   
+  type Bounded = scenegraph.Bounded[Transformation, Graphics]
+  type Camera = scenegraph.Camera[Transformation, Graphics]
+  type Entity = scenegraph.Entity[Transformation, Graphics]
+  type InstancingNode = scenegraph.InstancingNode[Transformation, Graphics]
+  type Mesh = scenegraph.Mesh[Transformation, Graphics]
+  type Node = scenegraph.Node[Transformation, Graphics]
+  type SceneElement = scenegraph.SceneElement[Transformation, Graphics]
+  type Spatial = scenegraph.Spatial[Transformation]
+  
+  
   protected val world: SceneGraph[Transformation, Graphics]
   
   
@@ -50,7 +60,7 @@ trait BasicApp extends App with scala.App {
   }
   
   
-  import SceneAccess._
+  import AccessScene._
   
   protected def preUpdate(time: TimeStamp) {
     world.update(time)
@@ -66,7 +76,7 @@ trait BasicApp extends App with scala.App {
   
   protected def reshape(position: inVec2i, dimensions: inVec2i) {
     val aspect = dimensions.x.toDouble/dimensions.y
-    world.camera.projection := perspectiveProj(radians(60), aspect, 5, 500)
+    world.camera.projection := perspectiveProj(radians(60), aspect, 5, 1000)
   }
   
   override def main(args: Array[String]) = {

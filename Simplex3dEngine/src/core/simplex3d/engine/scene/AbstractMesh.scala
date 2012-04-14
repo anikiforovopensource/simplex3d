@@ -28,6 +28,8 @@ import simplex3d.engine.graphics._
 trait AbstractMesh extends Spatial with EngineInfo { self =>
   
   final class MeshSubtext {
+    import AccessChanges._
+    
     val technique = SharedRef[Technique](StructuralChangeListener.Ignore)
     val elementRange = Optional(ElementRange.Default)(StructuralChangeListener.Ignore)
     
@@ -41,15 +43,19 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
       if (!elementRange.isDefined) {
         if (geometry.indices.isDefined) {
           result.first := 0
-          result.count := geometry.indices.defined.src.size
+          result.count := geometry.indices.get.src.size
+        }
+        else if (geometry.vertices.isDefined) {
+          result.first := 0
+          result.count := geometry.vertices.get.src.size
         }
         else {
           result.first := 0
-          result.count := geometry.vertices.defined.src.size
+          result.count := 0
         }
       }
       else {
-        result := elementRange.defined
+        result := elementRange.get
       }
     }
   }
@@ -62,9 +68,9 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   def worldEnvironment: Environment
   
   final def vertexCount :Int = {
-    if (elementRange.isDefined) elementRange.defined.count
-    else if (geometry.indices.isDefined) geometry.indices.defined.src.size
-    else if (geometry.vertices.isDefined) geometry.vertices.defined.src.size
+    if (elementRange.isDefined) elementRange.get.count
+    else if (geometry.indices.isDefined) geometry.indices.get.src.size
+    else if (geometry.vertices.isDefined) geometry.vertices.get.src.size
     else 0
   }
 }

@@ -248,14 +248,14 @@ extends graphics.TechniqueManager[G]
       
       var i = 0; while (i < material.uniforms.size) {
         val prop = material.uniforms(i)
-        if (prop.isDefined) processValue(prop.defined, material.uniformNames(i))
+        if (prop.isDefined) processValue(prop.get, material.uniformNames(i))
         
         i += 1
       }
       
       i = 0; while (i < worldEnvironment.properties.size) {
         val prop = worldEnvironment.properties(i)
-        if (prop.isDefined) processValue(prop.defined.binding, worldEnvironment.propertyNames(i))
+        if (prop.isDefined) processValue(prop.get.binding, worldEnvironment.propertyNames(i))
         
         i += 1
       }
@@ -285,7 +285,7 @@ extends graphics.TechniqueManager[G]
       
       
       // Load cached technique or make a new one.
-      val combineShaders = true //XXX get this from Settings.Advanced
+      val combineShaders = false //XXX get this from Settings.Advanced
       
       val readTechniqueKey = new ReadArray(techniqueKey)
       var technique = techniqueCache.get(readTechniqueKey)

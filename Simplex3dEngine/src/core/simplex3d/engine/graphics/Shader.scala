@@ -29,7 +29,7 @@ import simplex3d.engine.util._
 class Shader(
   val shaderType: Shader.type#Value,
   val src: String,
-  val uniforms: Map[String, Defined[_ <: TechniqueBinding]] = Map()
+  val uniforms: Map[String, Defined[UncheckedBinding]] = Map()
 ) extends EngineInfo
 
 object Shader extends Enumeration {

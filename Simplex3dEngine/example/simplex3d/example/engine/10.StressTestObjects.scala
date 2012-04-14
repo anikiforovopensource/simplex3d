@@ -30,7 +30,6 @@ object StressTestObjects extends DefaultApp {
     resolution = Some(Vec2i(800, 600))
   )
   
-  
   override lazy val sceneGraphSettings = new SceneGraphSettings(
     multithreadedControllers = true,
     multithreadedParsing = true
@@ -76,15 +75,15 @@ object StressTestObjects extends DefaultApp {
     val (indexBuffer, vertexBuffer, normalBuffer, texCoordBuffer) = Shapes.makeBox()
     val (iVertices, iNormals, iTexCoords) = interleave(vertexBuffer, normalBuffer, texCoordBuffer)(vertexBuffer.size)
     
-    val indices = Attributes(indexBuffer)
+    val indices = Attributes.fromData(indexBuffer)
     var vertices: Attributes[Vec3, RFloat] = null
     var normals: Attributes[Vec3, RFloat] = null
     var texCoords: Attributes[Vec2, RFloat] = null
     
     new interleaved(Caching.Stream) {
-      vertices = Attributes(iVertices)
-      normals = Attributes(iNormals)
-      texCoords = Attributes(iTexCoords)
+      vertices = Attributes.fromData(iVertices)
+      normals = Attributes.fromData(iNormals)
+      texCoords = Attributes.fromData(iTexCoords)
     }.delayedInit()
     
     
@@ -95,14 +94,14 @@ object StressTestObjects extends DefaultApp {
     for (i <- 0 until objectCount) {
       
       val mesh = new Mesh("Cube" + i)
-      mesh.customBoundingVolume.defineAs(new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale))
+      mesh.customBoundingVolume := new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale)
       
       mesh.geometry.faceCulling.mutable := FaceCulling.Back
       
-      mesh.geometry.indices.defineAs(indices)
-      mesh.geometry.vertices.defineAs(vertices)
-      mesh.geometry.normals.defineAs(normals)
-      mesh.geometry.texCoords.defineAs(texCoords)
+      mesh.geometry.indices := indices
+      mesh.geometry.vertices := vertices
+      mesh.geometry.normals := normals
+      mesh.geometry.texCoords := texCoords
       
       mesh.material.textures.mutable += objectTexture
       
@@ -114,7 +113,5 @@ object StressTestObjects extends DefaultApp {
     }
   }
     
-  def update(time: TimeStamp) {
-    
-  }
+  def update(time: TimeStamp) {}
 }

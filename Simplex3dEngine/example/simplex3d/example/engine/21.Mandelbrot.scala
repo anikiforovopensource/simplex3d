@@ -38,7 +38,7 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
     protected val colorTexture = Defined[TextureBinding[Texture2d[Vec3]]](new TextureBinding);
     {
       val colors: Array[ConstVec3] = ColorPreset.generate()
-      val texture = Texture2d.checked(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
+      val texture = Texture2d.fromData(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
       
       colorTexture.mutable := texture
       iterations.mutable := colors.length

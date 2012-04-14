@@ -61,7 +61,7 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
       if (textureDims != dims) {
         textureDims := dims
         
-        val texture = Texture2d(
+        val texture = Texture2d.fromData(
           dims, DataBuffer[Vec3, UByte](dims.x*dims.y),
           ImageFilter.Linear, ImageFilter.Linear, MipMapFilter.Disabled, 1
         )
@@ -69,7 +69,7 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
       }
       
       if (function != null) {
-        val img = texture.defined.bound.write
+        val img = texture.get.bound.write
         (0 until dims.y).par.foreach(y => renderLine(img, dims, time.total, y))
       }
       

@@ -24,7 +24,7 @@ package bounding
 import simplex3d.math.double._
 
 
-/** Axis Aligned Bounding Box is always defined in world coordinates.
+/** Axis Aligned Bounding Box is defined in world coordinates.
  * 
  */
 final class Aabb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero) extends BoundingVolume {

@@ -46,7 +46,7 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
-  import SceneAccess._; import ClearChangesAccess._
+  import AccessScene._; import AccessChanges._
   
   val driver = "lwjgl"
   
@@ -86,15 +86,15 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
   
   private def render(camera: AbstractCamera, mesh: AbstractMesh) {
     
-    val program = mesh.technique.defined
+    
     var useDefaultProgram = false
     
-    if (program == null) {
+    if (!mesh.technique.isDefined) {
       useDefaultProgram = true
       log(Level.SEVERE, "Mesh '" + mesh.name + "' does not have an assigned technique. Default technique will be used.")
     }
     else {
-      useDefaultProgram = !renderContext.bindProgram(program)
+      useDefaultProgram = !renderContext.bindProgram(mesh.technique.get)
       
       if (useDefaultProgram) log(
         Level.SEVERE, "Unable to use technique provided for mesh '" + mesh.name +
@@ -103,12 +103,11 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     }
     
     if (useDefaultProgram) {
-      mesh.technique.defineAs(renderContext.defaultProgram)
-      render(camera, mesh)
-      return
+      mesh.technique := renderContext.defaultProgram
+      return render(camera, mesh)
     }
     
-    
+    val program = mesh.technique.get
     val programMapping = program.mapping
     
     if (mesh.technique.hasRefChanges) {
@@ -116,11 +115,11 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
       mesh.technique.clearRefChanges()
       
       def resolveUpdatableEffects() {
-        var updatables = List[AnyRef]()
+        var updatables = new ArrayBuffer[AnyRef]
         val properties = mesh.worldEnvironment.properties
         var i = 0; while (i < properties.length) { val property = properties(i)
-          if (property.isDefined && property.defined.isInstanceOf[UpdatableEnvironmentalEffect[_]]) {
-            updatables ::= property.defined
+          if (property.isDefined && property.get.isInstanceOf[UpdatableEnvironmentalEffect[_]]) {
+            updatables += property.get
           }
           
           i += 1
@@ -135,7 +134,7 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     val material = mesh.material
     
     mesh.resolveElementRange(elementRange)
-    renderContext.setFaceCulling(geometry.faceCulling.defined.toConst)
+    renderContext.setFaceCulling(geometry.faceCulling.get.toConst)
     
     
     val predefinedUniforms = renderContext.predefinedUniforms
@@ -188,10 +187,22 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
     
     programMapping.bind(mesh.mapping)
     
+    
+    /* These events must be consumed by the render manager to prevent triggering related updates every frame.
+     * These should be consumed by VAO if enabled or cleared manually otherwise.
+     */
+    val attributes = mesh.geometry.attributes
+    i = 0; while (i < attributes.size) {
+      attributes(i).clearRefChanges()
+      
+      i += 1
+    }
+    
+    
     if (geometry.indices.isDefined) {
-      renderContext.init(geometry.indices.defined)
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.indices.defined.managedFields.id)
-      glDrawElements(vertexMode, elementRange.count, geometry.indices.defined.src.rawType, elementRange.first.toConst)
+      renderContext.init(geometry.indices.get)
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.indices.get.managedFields.id)
+      glDrawElements(vertexMode, elementRange.count, geometry.indices.get.src.rawType, elementRange.first.toConst)
     }
     else {
       glDrawArrays(vertexMode, elementRange.first, elementRange.count)
@@ -206,10 +217,10 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
       // XXX also sort by parent's environment
       
       if (a.technique.isDefined && b.technique.isDefined) {
-        val ainfo = getEngineInfo(a.technique.defined).asInstanceOf[ProgramInfo]
+        val ainfo = getEngineInfo(a.technique.get).asInstanceOf[ProgramInfo]
         val apid = if (ainfo != null) ainfo.managedFields.id else 0
         
-        val binfo = getEngineInfo(b.technique.defined).asInstanceOf[ProgramInfo]
+        val binfo = getEngineInfo(b.technique.get).asInstanceOf[ProgramInfo]
         val bpid = if (binfo != null) binfo.managedFields.id else 0
         
         if (apid < bpid) -1 else if (apid > bpid)  1 else 0

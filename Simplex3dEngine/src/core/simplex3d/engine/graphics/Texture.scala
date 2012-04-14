@@ -45,6 +45,7 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
     
     def hasFilterChanges = filterChanges
     
+    def hasDataChanges = subtext.dataChanges
     def clearDataChanges() { dataChanges = false }
     def clearFilterChanges() { filterChanges = false }
   }
@@ -62,8 +63,6 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
   
   def isAccessible = (accessible != null)
   def isWritable = (isAccessible && !accessible.isReadOnly)
-  def hasDataChanges = subtext.dataChanges
-  
   
   def read: ReadData[A] with DirectSrc with ContiguousSrc = {
     if (isAccessible) accessible.asReadOnly().asInstanceOf[ReadData[A] with DirectSrc with ContiguousSrc]
@@ -129,9 +128,10 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
    * 
    * @param function (dimensions, pixelCoordinates) => pixelValue
    */
-  def fillWith(function: inVec2 => A#Read) {
+  def fillWith(function: inVec2 => A#Read) :this.type = {
     val data = this.write
     (0 until dimensions.y).par.foreach(y => renderLine(data, function, y))
+    this
   }
   private[this] val renderLine = (data: Data[A], function: inVec2 => A#Read, y: Int) => {
     val pixel = Vec2(0, y)
@@ -162,7 +162,7 @@ object Texture2d {
     )
   }
   
-  def checked[A <: Accessor with AnyVec[Double]](
+  def fromData[A <: Accessor with AnyVec[Double]](
     dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
@@ -173,7 +173,7 @@ object Texture2d {
     )
   }
 
-  def unchecked[A <: Accessor with AnyVec[Double]](
+  def fromUncheckedSrc[A <: Accessor with AnyVec[Double]](
     dimensions: ConstVec2i, src: DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
@@ -182,7 +182,7 @@ object Texture2d {
     require(src.accessorManifest == accessorManifest, "Data accessor type doest not match manifest.")
     
     if (src.isInstanceOf[Data[_]]) {
-      checked(
+      fromData(
         dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc],
         magFilter, minFilter, mipMapFilter, anisotropyLevel
       )

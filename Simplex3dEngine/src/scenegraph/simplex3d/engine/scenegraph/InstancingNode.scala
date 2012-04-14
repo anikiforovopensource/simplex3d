@@ -41,7 +41,7 @@ final class InstancingNode[T <: TransformationContext, G <: GraphicsContext] (
 )(implicit transformationContext: T, graphicsContext: G)
 extends Entity[T, G](name) {
   
-  import ClearChangesAccess._
+  import AccessChanges._
   
   private final class BoundedInstance(name: String)(
     implicit transformationContext: T, graphicsContext: G
@@ -126,11 +126,11 @@ extends Entity[T, G](name) {
       }
     }
     
-    val srcIndex = geometry.indices.read
-    if (srcIndex != null) {
+    if (geometry.indices.isDefined) {
+      val srcIndex = geometry.indices.read
       srcIndicesSize = srcIndex.size
       val destIndexSize = childrenCount*srcIndex.size
-      displayMesh.geometry.indices.defineAs(Attributes(DataBuffer[SInt, UInt](destIndexSize)))
+      displayMesh.geometry.indices := Attributes[SInt, UInt](destIndexSize)
     }
     else {
       srcIndicesSize = 0
@@ -138,10 +138,10 @@ extends Entity[T, G](name) {
     
     var i = 0; while (i < geometry.attributes.length) {
       
-      val srcAttribs = geometry.attributes(i).read
-      if (srcAttribs != null) {
+      if (geometry.attributes(i).isDefined) {
+        val srcAttribs = geometry.attributes(i).read
         val destAttribs = srcAttribs.mkDataBuffer(destVertexSize)
-        displayMesh.geometry.attributes(i).defineAs(Attributes(destAttribs))
+        displayMesh.geometry.attributes(i) := Attributes.fromData(destAttribs)
         if (i != indexVertices && i != indexNormals) {
           copyAttributes(destAttribs, srcAttribs)
         }
@@ -159,7 +159,7 @@ extends Entity[T, G](name) {
         def process() {
           val size = children.size; var i = 0; while (i < size) {
             val instance = children(i).asInstanceOf[BoundedInstance]
-            instance.customBoundingVolume.defineAs(srcMesh.customBoundingVolume.defined)
+            instance.customBoundingVolume := srcMesh.customBoundingVolume.get
             instance.autoBoundingVolume = null
             
             i += 1
@@ -180,10 +180,10 @@ extends Entity[T, G](name) {
     }
     
     srcMesh.geometry.indices.clearRefChanges()
-    if (srcMesh.geometry.indices.isDefined) srcMesh.geometry.indices.defined.sharedState.clearDataChanges()
+    if (srcMesh.geometry.indices.isDefined) srcMesh.geometry.indices.get.sharedState.clearDataChanges()
     
     srcMesh.geometry.vertices.clearRefChanges()
-    if (srcMesh.geometry.vertices.isDefined) srcMesh.geometry.vertices.defined.sharedState.clearDataChanges()
+    if (srcMesh.geometry.vertices.isDefined) srcMesh.geometry.vertices.get.sharedState.clearDataChanges()
   }
   
   def appendInstance(name: String) :Spatial[T] = {
@@ -255,7 +255,7 @@ extends Entity[T, G](name) {
     allowMultithreading: Boolean, minChildren: Int,
     batchArray: SortBuffer[SceneElement[T, G]], maxDepth: Int, currentDepth: Int
   ) {
-    if (geometry.vertices.read == null) return
+    if (!geometry.vertices.isDefined) return
     
     
     if (cullingEnabled) {
@@ -265,12 +265,13 @@ extends Entity[T, G](name) {
     }
     
     
-    val srcIndices = geometry.indices.read
     val srcVertices = geometry.vertices.read
+    var geometryChanges = (srcVertices.size != srcVerticesSize)
     
-    var geometryChanges = false
-    if (srcIndices != null) geometryChanges = geometryChanges || (srcIndices.size != srcIndicesSize)
-    geometryChanges = geometryChanges || (srcVertices.size != srcVerticesSize)
+    if (geometry.indices.isDefined) {
+      geometryChanges = geometryChanges || (geometry.indices.read.size != srcIndicesSize)
+    }
+
     // XXX rebuild on changes to other non-vertex and non-normal attributes
     
     if (rebuild || geometryChanges) {
@@ -288,7 +289,7 @@ extends Entity[T, G](name) {
     
     val instanceArray = if (cullingEnabled) { localRenderArray } else children
     
-    val srcNormals = geometry.normals.read
+    val srcNormals = if (geometry.normals.isDefined) geometry.normals.read else null
     val destIndices = displayMesh.geometry.indices.write(0, instanceArray.size*srcIndicesSize)
     val destVertices = displayMesh.geometry.vertices.write(0, instanceArray.size*srcVerticesSize)
     val destNormals = displayMesh.geometry.normals.write(0, instanceArray.size*srcVerticesSize)
@@ -308,6 +309,7 @@ extends Entity[T, G](name) {
         }
       }
       def copyIndex() {
+        val srcIndices = geometry.indices.read
         var i = 0; while (i < srcIndices.size) {
           
           destIndices(indexOffset + i) = srcIndices(i) + vertexOffset
@@ -320,7 +322,7 @@ extends Entity[T, G](name) {
       val normalMatrix = if (srcNormals != null) transpose(inverse(Mat3(transformation))) else null
       transformData(transformation, normalMatrix)
       
-      if (srcIndices != null) {
+      if (geometry.indices.isDefined) {
         copyIndex()
       }
     }

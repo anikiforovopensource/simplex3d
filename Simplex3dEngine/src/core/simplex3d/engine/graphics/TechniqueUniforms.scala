@@ -26,5 +26,5 @@ import simplex3d.engine.util._
 
 abstract class TechniqueUniforms(
   final val uniformNames: ReadArray[String],
-  final val uniforms: ReadArray[Defined[_ <: TechniqueBinding]]
+  final val uniforms: ReadArray[Defined[UncheckedBinding]]
 )

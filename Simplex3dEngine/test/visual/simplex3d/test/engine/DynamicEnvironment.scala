@@ -93,7 +93,7 @@ object DynamicEnvironment extends App with scala.App {
   implicit final val GraphicsContext = new TestG
   
   
-  val scene = new SceneGraph("World", new SceneGraphSettings, new Camera("World Camera"), new testenv.TechniqueManager)
+  val scene = new SceneGraph("World", new SceneGraphSettings, new Camera("Main Camera"), new testenv.TechniqueManager)
 
   
   var nodes: Array[Node[TestT, TestG]] = _
@@ -122,8 +122,8 @@ object DynamicEnvironment extends App with scala.App {
         
         mesh.geometry.mode = Lines(3)
         
-        mesh.geometry.indices.defineAs(Attributes(lineIndices))
-        mesh.geometry.vertices.defineAs(Attributes(vertices))
+        mesh.geometry.indices := Attributes.fromData(lineIndices)
+        mesh.geometry.vertices := Attributes.fromData(vertices)
         
         val scale = 50 - i/2*10
         mesh.transformation.mutable.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
@@ -153,7 +153,7 @@ object DynamicEnvironment extends App with scala.App {
   
   
   // App methods.
-  import SceneAccess._
+  import AccessScene._
   
   override def preUpdate(time: TimeStamp) {
     scene.update(time)
@@ -432,7 +432,7 @@ package testenv {
         }
       
       val contrastShader =
-        if (worldEnvironment.contrast.defined.secondary) {
+        if (worldEnvironment.contrast.get.secondary) {
           println("with contrast2.")
           contrast2
         }

@@ -112,9 +112,8 @@ abstract class GraphicsContext {
 //      origin match {
 //        case UniformOrigin.Predefined => def resolvePredefined() :AnyRef = {
 //          if (isIndexValid(index, "", name)) {
-//            val binding = material.uniforms(index).defined
-//            checkValue(binding, "", name)
-//            binding
+//            val prop = material.uniforms(index)
+//            if (prop.isDefined) prop.get else null
 //          }
 //          else null
 //        }; resolvePredefined()

@@ -30,22 +30,24 @@ sealed abstract class SharedAttributes[F <: Format with MathType, R <: Raw](
   implicit listener: StructuralChangeListener
 )
 extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
-  def isAccessible = (isDefined && defined.isAccessible)
-  def isWritable = (isDefined && defined.isWritable)
+  def isAccessible = (isDefined && this.get.isAccessible)
+  def isWritable = (isDefined && this.get.isWritable)
   
-  def read: ReadDataView[F, R] = if (isDefined) defined.read else null
-  def write: DataView[F, R] = if (isDefined) defined.write else null
-  def write(first: Int, count: Int): DataView[F, R] = if (isDefined) defined.write(first, count) else null
-  def src: DirectSrc = if (isDefined) defined.src else null
-  
-  def hasChanges = (hasRefChanges || (isDefined && defined.sharedState.hasDataChanges))
+  def read: ReadDataView[F, R] = this.get.read
+  def write: DataView[F, R] = this.get.write
+  def write(first: Int, count: Int): DataView[F, R] = this.get.write(first, count)
+  def src: DirectSrc = this.get.src
 }
 
 sealed class AccessibleSharedAttributes[F <: Format with MathType, R <: Raw](
   implicit listener: StructuralChangeListener
 )
 extends SharedAttributes[F, R] with AccessibleSharedRef {
+  import AccessChanges._
+  
+  def hasRefChanges = reassigned
   def clearRefChanges() { reassigned = false }
+  def hasChanges = (hasRefChanges || (isDefined && this.get.sharedState.hasDataChanges))
 }
 
 object SharedAttributes {

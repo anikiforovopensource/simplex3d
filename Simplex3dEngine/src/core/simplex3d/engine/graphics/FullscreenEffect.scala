@@ -55,22 +55,22 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
     val worldEnvironment = MinimalGraphicsContext.mkEnvironment()
     new EngineAccess { setWorldMatrixResolver(self, () => Mat4x3.Identity) }
     
-    geometry.vertices.defineAs(Attributes(DataBuffer[Vec3, RFloat](
+    geometry.vertices := Attributes[Vec3, RFloat](
       Vec3(-1, -1, 0), Vec3(1, 1, 0), Vec3(-1, 1, 0),
       Vec3(-1, -1, 0), Vec3(1, -1, 0), Vec3(1, 1, 0)
-    )))
+    )
     
     {
-      import SceneAccess._
+      import AccessScene._
       
       val (names, props) = FieldReflection.getValueMap(
         effect,
         classOf[Defined[_ <: TechniqueBinding]], FieldReflection.TechniqueBindingFilter,
         Nil
       )
-      val shaderUniforms = Map((names zip props): _*)
+      val shaderUniforms = Map((names zip props): _*).asInstanceOf[Map[String, Defined[UncheckedBinding]]]
       val fs = new Shader(Shader.Fragment, fragmentShader, shaderUniforms)
-      this.technique.defineAs(new Technique(MinimalGraphicsContext, Set(vertexShader, fs)))
+      this.technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))
     }
   }
   

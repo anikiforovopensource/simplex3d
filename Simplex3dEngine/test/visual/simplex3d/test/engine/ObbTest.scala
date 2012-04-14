@@ -49,14 +49,12 @@ object ObbTest extends DefaultApp {
   )
   
   
-  val texture = Texture2d[Vec3](Vec2i(128))
-  texture.fillWith { p => Vec3(0, 1, 1) }
-  
   val movingCube = new Mesh("Moving Cube")
   val cube1 = new Mesh("Left Cube")
   val cube2 = new Mesh("Right Cube")
   val cubeScale = 10
   val translation = ConstVec3(20, 0, 0)
+  
   
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
@@ -66,17 +64,19 @@ object ObbTest extends DefaultApp {
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)(cubeControls))
     
     
+    val texture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
-    val aindices = Attributes(indices)
-    val avertices = Attributes(vertices)
-    val anormals = Attributes(normals)
-    val atexCoords = Attributes(texCoords)
+    val aindices = Attributes.fromData(indices)
+    val avertices = Attributes.fromData(vertices)
+    val anormals = Attributes.fromData(normals)
+    val atexCoords = Attributes.fromData(texCoords)
     
     
-    movingCube.geometry.indices.defineAs(aindices)
-    movingCube.geometry.vertices.defineAs(avertices)
-    movingCube.geometry.normals.defineAs(anormals)
-    movingCube.geometry.texCoords.defineAs(atexCoords)
+    movingCube.geometry.indices := aindices
+    movingCube.geometry.vertices := avertices
+    movingCube.geometry.normals := anormals
+    movingCube.geometry.texCoords := atexCoords
     
     movingCube.material.textures.mutable += texture
     
@@ -86,10 +86,10 @@ object ObbTest extends DefaultApp {
     world.attach(movingCube)
     
     
-    cube1.geometry.indices.defineAs(aindices)
-    cube1.geometry.vertices.defineAs(avertices)
-    cube1.geometry.normals.defineAs(anormals)
-    cube1.geometry.texCoords.defineAs(atexCoords)
+    cube1.geometry.indices := aindices
+    cube1.geometry.vertices := avertices
+    cube1.geometry.normals := anormals
+    cube1.geometry.texCoords := atexCoords
     
     cube1.material.textures.mutable += texture
     
@@ -99,10 +99,10 @@ object ObbTest extends DefaultApp {
     world.attach(cube1)
     
     
-    cube2.geometry.indices.defineAs(aindices)
-    cube2.geometry.vertices.defineAs(avertices)
-    cube2.geometry.normals.defineAs(anormals)
-    cube2.geometry.texCoords.defineAs(atexCoords)
+    cube2.geometry.indices := aindices
+    cube2.geometry.vertices := avertices
+    cube2.geometry.normals := anormals
+    cube2.geometry.texCoords := atexCoords
     
     cube2.material.textures.mutable += texture
     

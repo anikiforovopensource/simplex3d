@@ -39,7 +39,7 @@ final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scene
 )(implicit transformationCtx: T, graphicsCtx: G)
 extends Bounded[T, G](name) with AbstractMesh {
   
-  import ClearChangesAccess._
+  import AccessChanges._
   
   
   def this(name: String)(implicit transformationContext: T, graphicsContext: G) {
@@ -81,7 +81,8 @@ extends Bounded[T, G](name) with AbstractMesh {
       if (autoBoundingVolume.hasDataChanges || geometry.hasShapeChanges(elementRange)) {
         autoBoundingVolume match {
           case bound: Oabb =>
-            Bounded.rebuildAabb(elementRange.defined, geometry)(bound.mutable.min, bound.mutable.max)
+            val range = if (elementRange.isDefined) elementRange.get else null
+            Bounded.rebuildAabb(range, geometry)(bound.mutable.min, bound.mutable.max)
         }
         updated = true
       }
@@ -93,12 +94,8 @@ extends Bounded[T, G](name) with AbstractMesh {
     }
     
     
-    if (updated) {
-      elementRange.clearDataChanges()
-      geometry.indices.clearRefChanges()
-      geometry.vertices.clearRefChanges()
-    }
-    
+    elementRange.clearDataChanges()
+    geometry.indices.clearRefChanges()
     uncheckedWorldTransformation.clearDataChanges()
     updated
   }

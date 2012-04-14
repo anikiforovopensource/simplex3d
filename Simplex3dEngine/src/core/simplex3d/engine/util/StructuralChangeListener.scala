@@ -23,13 +23,13 @@ package simplex3d.engine.util
 
 class StructuralChangeListener { self =>
   final class StructuralSubtext {
+    def hasStructuralChanges: Boolean = changes
     def clearStructuralChanges() { changes = false }
   }
   private[engine] final val structuralSubtext = new StructuralSubtext
   
   
   private[engine] final var changes = true // Initialize as changed.
-  final def hasStructuralChanges: Boolean = changes
   
   private[engine] final def signalStructuralChanges() {
     changes = true

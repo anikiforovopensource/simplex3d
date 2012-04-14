@@ -320,7 +320,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   protected final def entryPoint(code: String) {
     if (declarations != null) throw new IllegalStateException("entryPoint() must be declared at the top level.")
     checkState()
-    if (entryPoint != None) throw new IllegalStateException("Entry point is already defined.")
+    if (entryPoint.isDefined) throw new IllegalStateException("Entry point is already defined.")
     _entryPoint = Some(code)
   }
   
@@ -329,7 +329,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   protected final def export(functionSignature: String) {
     if (declarations != null) throw new IllegalStateException("export() must be declared at the top level.")
     checkState()
-    if (export != None) throw new IllegalStateException("Export is already defined.")
+    if (export.isDefined) throw new IllegalStateException("Export is already defined.")
     _export = Some(functionSignature)
   }
   
@@ -473,8 +473,7 @@ object ShaderPrototype {
   }
   
   def genFunctionDeclarationHeader(functions: Iterable[String]) :String = {
-    val src = functions.mkString(";\n")
-    if (src.isEmpty) src else src + "\n"
+    if (functions.isEmpty) "" else functions.mkString("", ";\n", ";\n")
   }
   
   private[this] def remap(remapping: Seq[(String, String)], src: String) :String = {
@@ -495,7 +494,7 @@ object ShaderPrototype {
     src
   }
   
-  private[this] def unindent(src: String) :String = {//XXX cache unindented body somewhere in ShaderPrototype instances.
+  private[this] def unindent(src: String) :String = {
     val codeLines = src.split("\n")
 
     val lines = codeLines.map(_.replace("\t", "  "))
@@ -551,11 +550,10 @@ object ShaderPrototype {
         "All shaders must be the same type (e.g. all vertex shaders or all fragment shaders)."
       )
       
-      val newSquareMatrices = squareMatrices | shader.usingSquareMatrices
-      if (newSquareMatrices != squareMatrices) {
-        squareMatrices = newSquareMatrices
+      if (shader.usingSquareMatrices != squareMatrices) {
+        squareMatrices = squareMatrices | shader.usingSquareMatrices
         println(//XXX log warn
-          "Combining sources when some shaders are remapping to square matrcies while other do not."
+          "Combining sources with and without remapping to square matrices."
         )
       }
       if (version.isDefined && shader.version.isDefined) {

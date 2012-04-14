@@ -26,17 +26,13 @@ object DynamicTexture extends DefaultApp {
     verticalSync = true,
     logCapabilities = true,
     logPerformance = true,
+    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
   
-  
-  val noise = ClassicalGradientNoise
-  val objectTexture = Texture2d[Vec3](Vec2i(128))
-  val subTexture = Texture2d[Vec3](Vec2i(64))
-
-  
   def init() {
     world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
+    world.camera.transformation.mutable.lookAt(Vec3(0), Vec3.UnitY)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -47,32 +43,37 @@ object DynamicTexture extends DefaultApp {
     
     val mesh = new Mesh("Cube")
     
-    mesh.geometry.indices.defineAs(Attributes(indices))
-    mesh.geometry.vertices.defineAs(Attributes(vertices))
-    mesh.geometry.normals.defineAs(Attributes(normals))
+    mesh.geometry.indices := Attributes.fromData(indices)
+    mesh.geometry.vertices := Attributes.fromData(vertices)
+    mesh.geometry.normals := Attributes.fromData(normals)
     
-    mesh.geometry.texCoords.defineAs(Attributes(texCoords))
+    mesh.geometry.texCoords := Attributes.fromData(texCoords)
+    val objectTexture = Texture2d[Vec3](Vec2i(128))
     mesh.material.textures.mutable += objectTexture
     
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 50
     
+    val noise = ClassicalGradientNoise
+    val subTexture = Texture2d[Vec3](Vec2i(64))
+    
+    mesh.controller { time =>
+      // Updating the texture: the changes will be synchronized with OpenGL automatically.
+      objectTexture.fillWith { p =>
+        val intensity = (noise(p.x*0.06, p.y*0.06, time.total*0.4) + 1)*0.5
+        Vec3(0, intensity, intensity)
+      }
+      
+      // An example on how to update sub-image.
+      subTexture.fillWith { p =>
+        val intensity = (noise(p.x*0.12, p.y*0.12, time.total*0.8) + 1)*0.5
+        Vec3(0, intensity, 0)
+      }
+      objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subTexture.read, subTexture.dimensions)
+    }
+    
     world.attach(mesh)
   }
   
-  def update(time: TimeStamp) {
-    
-    // Updating the texture: the changes will be synchronized with OpenGL automatically.
-    objectTexture.fillWith { p =>
-      val intensity = (noise(p.x*0.06, p.y*0.06, time.total*0.4) + 1)*0.5
-      Vec3(0, intensity, intensity)
-    }
-    
-    // An example on how to update sub-image.
-    subTexture.fillWith { p =>
-      val intensity = (noise(p.x*0.12, p.y*0.12, time.total*0.8) + 1)*0.5
-      Vec3(0, intensity, 0)
-    }
-    objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subTexture.read, subTexture.dimensions)
-  }
+  def update(time: TimeStamp) {}
 }

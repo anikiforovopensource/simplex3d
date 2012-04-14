@@ -25,6 +25,7 @@ import scala.annotation.unchecked._
 import scala.collection._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
+import simplex3d.data.extension._
 import simplex3d.data._
 import simplex3d.engine.util._
 
@@ -87,19 +88,34 @@ final class AttributesSharedState private[engine] (
     def clearDataChanges() {
       regions.clear()
     }
+    
+    def hasDataChanges = regions.size > 0
   }
   private[engine] val subtext = new Subtext
   
   private[engine] val regions = new IntervalMap(64)
   regions.put(0, size) // Initialize as changed.
-  
-  def hasDataChanges = regions.size > 0
 }
 
 
 object Attributes {
-    
-  def apply[F <: Format with MathType, R <: Raw]
+  def apply[F <: Format with MathType, R <: Tangible]
+    (size: Int, caching: Caching.Value = Caching.Dynamic)
+    (implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R])
+  :Attributes[F, R] = {
+    val data = composition.mkDataBuffer(primitives.mkDataBuffer(size*composition.components))
+    fromData(data)
+  }
+  def apply[F <: Format with MathType, R <: Tangible]
+    (vals: F#Accessor#Read*)
+    (implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R])
+  :Attributes[F, R] = {
+    val data = composition.mkDataBuffer(primitives.mkDataBuffer(vals.size*composition.components))
+    data.put(vals)
+    fromData(data, Caching.Dynamic)
+  }
+  
+  def fromData[F <: Format with MathType, R <: Raw]
     (data: ReadDataBuffer[F, _ <: R], caching: Caching.Value = Caching.Dynamic)
   :Attributes[F, R] = {
     val attributes = new Attributes[F, R](data, null)
@@ -109,7 +125,7 @@ object Attributes {
     attributes
   }
   
-  def unchecked[F <: Format with MathType, R <: Raw]
+  def fromUncheckedSrc[F <: Format with MathType, R <: Raw]
     (src: DirectSrc with ContiguousSrc, caching: Caching.Value = Caching.Static)
     (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
   :Attributes[F, R] = {
@@ -118,7 +134,7 @@ object Attributes {
     require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
       
     if (src.isInstanceOf[ReadDataBuffer[_, _]]) {
-      apply(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
+      fromData(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
     }
     else {
       val attributes = new Attributes[F, R](null, src)
@@ -138,14 +154,14 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
   val Attributes = new InterleavedFactory
   
   final class InterleavedFactory {
-    def apply[F <: Format with MathType, R <: Raw](view: ReadDataView[F, _ <: R])
+    def fromData[F <: Format with MathType, R <: Raw](view: ReadDataView[F, _ <: R])
     :Attributes[F, R] = {
       val attributes = new Attributes[F, R](view, null)
       related += attributes
       attributes
     }
     
-    def unchecked[F <: Format with MathType, R <: Raw](src: DirectSrc)
+    def fromUncheckedSrc[F <: Format with MathType, R <: Raw](src: DirectSrc)
       (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
     :Attributes[F, R] = {
       
@@ -153,7 +169,7 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
       require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
     
       if (src.isInstanceOf[ReadDataView[_, _]]) {
-        apply[F, R](src.asInstanceOf[ReadDataView[F, R]])
+        fromData[F, R](src.asInstanceOf[ReadDataView[F, R]])
       }
       else {
         val attributes = new Attributes[F, R](null, src)

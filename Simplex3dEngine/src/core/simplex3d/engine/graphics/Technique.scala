@@ -29,13 +29,13 @@ final class Technique private (
   val graphicsContext: GraphicsContext,
   val shaders: Set[Shader],
   uniformNames: ReadArray[String],
-  uniforms: ReadArray[Defined[_ <: TechniqueBinding]]
+  uniforms: ReadArray[Defined[UncheckedBinding]]
 ) extends TechniqueUniforms(uniformNames, uniforms) with EngineInfo {
   
   private[this] def this(
     graphicsContext: GraphicsContext,
     shaders: Set[Shader],
-    args: (ReadArray[String], ReadArray[Defined[_ <: TechniqueBinding]])
+    args: (ReadArray[String], ReadArray[Defined[UncheckedBinding]])
   ) {
     this(graphicsContext, shaders, args._1, args._2)
   }

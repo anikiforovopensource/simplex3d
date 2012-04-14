@@ -26,8 +26,8 @@ object CustomRenderer extends BasicApp {
     fullscreen = false,
     verticalSync = true,
     logPerformance = true,
-    antiAliasingSamples = 4,
-    resolution = Some(Vec2i(800, 600))
+    antiAliasingSamples = 4//,
+    //resolution = Some(Vec2i(800, 600))
   )
   
   
@@ -129,7 +129,7 @@ object CustomRenderer extends BasicApp {
 
   // Replace default material, environment, and geometry.
   class Material extends prototype.Material {
-    val textures = Optional[BindingList[TextureUnit]](new BindingList)
+    val textureUnits = Optional[BindingList[TextureUnit]](new BindingList)
     
     init(classOf[Material])
   }
@@ -166,25 +166,16 @@ object CustomRenderer extends BasicApp {
   implicit val GraphicsContext = new GraphicsContext
   
   
-  // Initialize the Technique Manager and the Scenegraph.
+  // Rebuild the Technique Manager from scratch.
   val techniqueManager = new pluggable.TechniqueManager
-  
-  protected val world = new SceneGraph(
-    "World",
-    sceneGraphSettings,
-    new Camera("World Camera"),
-    techniqueManager
-  )
-  
-  
-  // Rebuild our techniques from scratch.
+   
   techniqueManager.register(new FragmentShader {
     use("vec4 texturingColor()")
-    use("vec4 lightingColor()")
+    use("vec4 lightIntensity()")
     
     src {"""
       void resolveColor() {
-        gl_FragColor = texturingColor() * lightingColor();
+        gl_FragColor = texturingColor() * lightIntensity();
       }
     """}
     
@@ -193,21 +184,21 @@ object CustomRenderer extends BasicApp {
   
   techniqueManager.register(new FragmentShader {
     uniform {
-      declare[BindingList[TextureUnit]]("textures")
+      declare[BindingList[TextureUnit]]("textureUnits")
     }
     
-    in("rasterisation") {
+    in("rasterisationCtx") {
       declare[Vec4]("gl_FragCoord")
     }
-    in("texturing") {
-      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textures")
+    in("texturingCtx") {
+      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
     }
     
     src {"""
       vec4 texturingColor() {
         vec4 color = vec4(1.0);
-        for (int i = 0; i < se_sizeOf_textures; i++) {
-          color *= texture2D(textures[i].texture, texturing.ecTexCoords[i]);
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          color *= texture2D(textureUnits[i].texture, texturingCtx.ecTexCoords[i]);
         }
         return color;
       }
@@ -218,12 +209,12 @@ object CustomRenderer extends BasicApp {
   
   techniqueManager.register(new FragmentShader {
     src {"""
-      vec4 lightingColor() {
+      vec4 lightIntensity() {
         return vec4(1.0);
       }
     """}
     
-    export("vec4 lightingColor()")
+    export("vec4 lightIntensity()")
   })
   
   techniqueManager.register(new FragmentShader {
@@ -237,7 +228,7 @@ object CustomRenderer extends BasicApp {
     }
     
     src {"""
-      vec4 lightingColor() {
+      vec4 lightIntensity() {
         vec3 intensity = vec3(0.0);
         for (int i = 0; i < se_sizeOf_lighting; i++) {
       
@@ -256,7 +247,7 @@ object CustomRenderer extends BasicApp {
       }
     """}
     
-    export("vec4 lightingColor()")
+    export("vec4 lightIntensity()")
   })
   
   
@@ -269,13 +260,13 @@ object CustomRenderer extends BasicApp {
       declare[Vec3]("vertices")
     }
     
-    out("rasterisation") {
+    out("rasterisationCtx") {
       declare[Vec4]("gl_Position")
     }
     
     src {"""
       void transformVertices() {
-        rasterisation.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+        rasterisationCtx.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
       }
     """}
     
@@ -284,26 +275,26 @@ object CustomRenderer extends BasicApp {
     
   techniqueManager.register(new VertexShader {
     uniform {
-      declare[BindingList[TextureUnit]]("textures")
+      declare[BindingList[TextureUnit]]("textureUnits")
     }
     
     attributes {
       declare[Vec2]("texCoords")
     }
     
-    out("texturing") {
-      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textures")
+    out("texturingCtx") {
+      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
     }
     
     src {"""
-      void computeEcTexCoords() {
-        for (int i = 0; i < se_sizeOf_textures; i++) {
-          texturing.ecTexCoords[i] = texCoords*textures[i].scale;
+      void propagateTexturingValues() {
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          texturingCtx.ecTexCoords[i] = texCoords*textureUnits[i].scale;
         }
       }
     """}
     
-    entryPoint("computeEcTexCoords")
+    entryPoint("propagateTexturingValues")
   })
   
   techniqueManager.register(new VertexShader {
@@ -325,14 +316,23 @@ object CustomRenderer extends BasicApp {
     }
     
     src {"""
-      void computeLighting() {
+      void propagateLightingValues() {
         lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
         lightingCtx.normal = normalize(se_normalMatrix*normals);
       }
     """}
     
-    entryPoint("computeLighting")
+    entryPoint("propagateLightingValues")
   })
+  
+  
+  // Initialize the scenegraph.
+  protected val world = new SceneGraph(
+    "World",
+    sceneGraphSettings,
+    new Camera("Main Camera"),
+    techniqueManager
+  )
   
   
   // Initialize the application.
@@ -361,11 +361,11 @@ object CustomRenderer extends BasicApp {
     
     // Generate box and attach attributes to the mesh.
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
-    mesh.geometry.indices.defineAs(Attributes(indices))
-    mesh.geometry.vertices.defineAs(Attributes(vertices))
-    mesh.geometry.normals.defineAs(Attributes(normals))
+    mesh.geometry.indices := Attributes.fromData(indices)
+    mesh.geometry.vertices := Attributes.fromData(vertices)
+    mesh.geometry.normals := Attributes.fromData(normals)
     
-    mesh.geometry.texCoords.defineAs(Attributes(texCoords))
+    mesh.geometry.texCoords := Attributes.fromData(texCoords)
     
     // Generate and attach textures.
     val noise = ClassicalGradientNoise
@@ -378,21 +378,19 @@ object CustomRenderer extends BasicApp {
       octaves = 1
     )
     
-    val objectTexture = Texture2d[Vec3](Vec2i(128))
-    objectTexture.fillWith { p =>
+    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
       Vec3(intensity, intensity, intensity) + 0.2
     }
     
-    val detailTexture = Texture2d[Vec3](Vec2i(tileSize))
-    detailTexture.fillWith { p =>
+    val detailTexture = Texture2d[Vec3](Vec2i(tileSize)).fillWith { p =>
       val intensity = abs(tiledNoise(p.x, p.y) + 0.3) + 0.3
       Vec3(0, intensity, intensity)
     }
     
-    mesh.material.textures.mutable += new TextureUnit(objectTexture, 1)
-    mesh.material.textures.mutable += new TextureUnit(detailTexture, 4)
-
+    mesh.material.textureUnits.mutable += new TextureUnit(objectTexture, 1)
+    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, 4)
+    
     // Position the mesh.
     mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.mutable.scale := 40
@@ -406,14 +404,13 @@ object CustomRenderer extends BasicApp {
     world.environment.lighting.mutable.lights += new PointLight(Vec3(6), 0.1, 0)
     
     // Init and attach light indicators.
-    lightMesh.geometry.vertices.defineAs(Attributes(DataBuffer[Vec3, RFloat](maxLightCount)))
+    lightMesh.geometry.vertices := Attributes[Vec3, RFloat](maxLightCount)
     lightMesh.geometry.mode = Points(5)
     
     // Reuse texture rendering for lights.
-    lightMesh.geometry.texCoords.defineAs(Attributes(DataBuffer[Vec2, RFloat](maxLightCount)))
-    val lightTexture = Texture2d[Vec3](Vec2i(4))
-    lightTexture.fillWith { p => Vec3(1) }
-    lightMesh.material.textures.mutable += new TextureUnit(lightTexture, 1)
+    lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
+    val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
+    lightMesh.material.textureUnits.mutable += new TextureUnit(lightTexture, 1)
     
     // Set vertex coordinates that will later be used as to position lights.
     lightMesh.elementRange.mutable.count := 2
@@ -435,13 +432,14 @@ object CustomRenderer extends BasicApp {
   
   var lightsOn = false
   
-  
+
   def update(time: TimeStamp) {
     
     val lights = world.environment.lighting.mutable.lights
     val lightVertices = lightMesh.geometry.vertices.write
     val movingLights = min(lightPositions.size, lights.size)
     
+    // Turn extra lights on and off periodically.
     if (mod(time.total, period) > period*0.5) {
       if (!lightsOn) {
         lightsOn = true
@@ -466,6 +464,7 @@ object CustomRenderer extends BasicApp {
       }
     }
     
+    // Animate moving lights.
     for (i <- 0 until movingLights) {
       val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))
       val position = transformation.transformPoint(lightPositions(i))

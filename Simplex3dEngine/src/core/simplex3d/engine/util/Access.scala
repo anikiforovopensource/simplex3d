@@ -29,7 +29,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
 
 
-object ClearChangesAccess {
+object AccessChanges {
   
   implicit def listenerSubtext(listener: StructuralChangeListener)
   :StructuralChangeListener#StructuralSubtext = listener.structuralSubtext
@@ -59,7 +59,7 @@ object ClearChangesAccess {
 }
 
 
-object SceneAccess {
+object AccessScene {
   implicit def meshSubtext(mesh: AbstractMesh)
   :AbstractMesh#MeshSubtext = mesh.meshSubtext
   

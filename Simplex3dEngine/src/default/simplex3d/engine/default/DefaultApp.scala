@@ -40,7 +40,7 @@ trait DefaultApp extends BasicApp {
   protected val world = new SceneGraph(
     "World",
     sceneGraphSettings,
-    new Camera("World Camera"),
+    new Camera("Main Camera"),
     TechniqueProvider.assembleTechniqueManager()
   )
   

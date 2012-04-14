@@ -29,11 +29,9 @@ sealed abstract class Property[W <: Writable[W]] private[engine]
   protected final var value: W = _
   protected final var changed = true // Initialize as changed.
   
-  final def defined: W#Read = value
+  final def get: W#Read = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
   def mutable: W
-  
-  final def hasDataChanges = changed
 }
 
 
@@ -48,11 +46,12 @@ extends Property[W]
   }
   
   final override def toString() :String =
-    "Defined(" + defined.toString + ")(changed = " + hasDataChanges + ")"
+    "Defined(" + get.toString + ")"
 }
 
 final class AccessibleDefined[W <: Writable[W]] private[engine] (initialValue: Readable[W])
 extends Defined[W](initialValue) {
+  def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 
@@ -85,18 +84,19 @@ extends Property[W]
     value
   }
   
-  final def set(p: Optional[W]) {
-    if (p.isDefined) mutable := p.defined else undefine()
+  final def :=(p: Optional[W]) {
+    if (p.isDefined) mutable := p.get else undefine()
   }
   
   final override def toString() :String =
-    "Property(" + (if (isDefined) defined.toString else "undefined" ) + ")(changed = " + hasDataChanges + ")"
+    "Property(" + (if (isDefined) get.toString else "undefined" ) + ")"
 }
 
 final class AccessibleOptional[W <: Writable[W]] private[engine]
   (factory: Readable[W])
   (implicit listener: StructuralChangeListener)
  extends Optional[W](factory) {
+  def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 

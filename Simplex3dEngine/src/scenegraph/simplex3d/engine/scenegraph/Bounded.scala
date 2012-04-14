@@ -37,7 +37,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   implicit transformationContext: T, graphicsContext: G
 ) extends SceneElement[T, G](name) {
   
-  import ClearChangesAccess._
+  import AccessChanges._
   
   
   /** Can be initialized to a custom-fit bounding volume, otherwise the SceneGraph will automatically calculate one.
@@ -55,15 +55,15 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   
   
   private[scenegraph] final def resolveBoundingVolume: BoundingVolume = {
-    if (customBoundingVolume.isDefined) customBoundingVolume.defined else autoBoundingVolume
+    if (customBoundingVolume.isDefined) customBoundingVolume.get else autoBoundingVolume
   }
   
+  /** Only valid for meshes that were accepted for rendering (in the renderArray).
+   * XXX Possibly hide this method as debugging only.
+   */
   final def boundingVolume = {
-    if (customBoundingVolume.isDefined) customBoundingVolume.defined
-    else {
-      update(updateVersion - 1)
-      autoBoundingVolume
-    }
+    if (customBoundingVolume.isDefined) customBoundingVolume.get
+    else autoBoundingVolume
   }
   
   
@@ -152,9 +152,9 @@ object Bounded {
     resultMin := Vec3(Double.MaxValue)
     resultMax := Vec3(Double.MinValue)
     
-    if (!geometry.vertices.isDefined || !geometry.vertices.defined.isAccessible) return
+    if (!geometry.vertices.isDefined || !geometry.vertices.get.isAccessible) return
     
-    val vertices = geometry.vertices.defined.read
+    val vertices = geometry.vertices.get.read
     if (vertices.size == 0) {
       resultMin := Vec3.Zero
       resultMax := Vec3.Zero
@@ -162,9 +162,9 @@ object Bounded {
     }
     
     
-    if (geometry.indices.isDefined && geometry.indices.defined.isAccessible) {
+    if (geometry.indices.isDefined && geometry.indices.get.isAccessible) {
       def rebuildWithIndex() {
-        val indices = geometry.indices.defined.read
+        val indices = geometry.indices.get.read
         
         var first = 0
         var count = vertices.size

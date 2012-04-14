@@ -41,7 +41,7 @@ class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
 )(implicit transformationContext: T)
 extends ManagedScene[G](name) {
   
-  import SceneAccess._; import ClearChangesAccess._
+  import AccessScene._; import AccessChanges._
   
   
   private[this] var version: Long = 0
@@ -50,7 +50,7 @@ extends ManagedScene[G](name) {
   protected val _root: Node[T, G] = new Node("Root")(transformationContext, techniqueManager.graphicsContext)
   protected def root = _root
   root.controllerContext = controllerContext
-  root.customBoundingVolume.defineAs(new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue)))
+  root.customBoundingVolume := new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue))
   root.appendChild(camera)
   
   
@@ -111,7 +111,7 @@ extends ManagedScene[G](name) {
       
       if (mesh.hasStructuralChanges) {
         val technique = techniqueManager.resolveTechnique(mesh.name, mesh.geometry, mesh.material, mesh.worldEnvironment)
-        mesh.technique.defineAs(technique)
+        mesh.technique := technique
         
         mesh.geometry.clearStructuralChanges()
         mesh.material.clearStructuralChanges()

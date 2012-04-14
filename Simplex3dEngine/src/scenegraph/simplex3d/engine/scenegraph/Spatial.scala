@@ -34,7 +34,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   
   protected type Graphics <: graphics.GraphicsContext
   
-  import ClearChangesAccess._
+  import AccessChanges._
   
   
   private[scenegraph] final var _parent: Entity[T, Graphics] = _
@@ -43,7 +43,9 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
-  final val transformation: T#Transformation = transformationContext.mkTransformation(this.isInstanceOf[Camera[_, _]])
+  final val transformation: T#Transformation = {
+    transformationContext.mkTransformation(this.isInstanceOf[AbstractCamera])
+  }
   private[scenegraph] final var updateVersion: Long = 0
   private[scenegraph] final val uncheckedWorldTransformation: T#Transformation =
     transformationContext.mkTransformation()

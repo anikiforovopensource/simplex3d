@@ -34,7 +34,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
   implicit transformationCtx: T, graphicsCtx: G
 ) extends Bounded[T, G](name) {
   
-  import ClearChangesAccess._
+  import AccessChanges._
   
   
   private[this] final val env = graphicsContext.mkEnvironment()
@@ -45,10 +45,11 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
   private[this] final val _children = ArrayBuffer[SceneElement[T, G]]()
   private[this] final val readChildren = new ReadSeq(_children)
   protected[scenegraph] def children: ReadSeq[SceneElement[T, G]] = readChildren
-
   
   protected def appendChild(element: SceneElement[T, G]) {
     append(element)
+    
+    element.transformation.signalDataChanges()
     
     val managed = new ArrayBuffer[Spatial[T]](4)
     element.onParentChange(controllerContext, managed)
@@ -127,10 +128,11 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
     entityUpdate(version)(false, 0)
   }
   
-  private[scenegraph] final def entityUpdate(version: Long)
+  private[scenegraph] final def entityUpdate
+    (version: Long)
     (allowMultithreading: Boolean, minChildren: Int)
-  :Boolean = {
-  
+  :Boolean =
+  {
     if (updateVersion == version) return false
     
     propagateWorldTransformation()
@@ -267,15 +269,15 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
               if (parentProp.hasDataChanges || childProp.hasDataChanges) {
                 if (parentProp.isDefined) {
                   if (childProp.isDefined) {
-                    childProp.defined.propagate(parentProp.defined, resultProp.mutable)
+                    childProp.get.propagate(parentProp.get, resultProp.mutable)
                   }
                   else {
-                    resultProp.mutable := parentProp.defined
+                    resultProp.mutable := parentProp.get
                   }
                 }
                 else {
                   if (childProp.isDefined) {
-                    resultProp.mutable := childProp.defined
+                    resultProp.mutable := childProp.get
                   }
                   else {
                     resultProp.undefine()
@@ -318,9 +320,9 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       val props = worldEnvironment.properties
       val size = props.length; var i = 0; while (i < size) { val prop = props(i)
         if (prop.hasDataChanges) {
-          if (hasLeafs && prop.isDefined && prop.defined.hasBindingChanges) {
+          if (hasLeafs && prop.isDefined && prop.get.hasBindingChanges) {
             worldEnvironment.signalStructuralChanges()
-            prop.defined.clearBindingChanges()
+            prop.get.clearBindingChanges()
           }
           prop.clearDataChanges()
         }

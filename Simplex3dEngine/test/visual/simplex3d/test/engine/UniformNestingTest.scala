@@ -94,8 +94,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   
   
   def mkTexture() = {
-    val texture = Texture2d[Vec3](Vec2i(4))
-    texture.fillWith(p => Vec3(1))
+    val texture = Texture2d[Vec3](Vec2i(4)).fillWith(p => Vec3(1))
     new TextureBinding(texture)
   }
   

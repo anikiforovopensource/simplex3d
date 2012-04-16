@@ -31,8 +31,8 @@ object DynamicTexture extends DefaultApp {
   )
   
   def init() {
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
-    world.camera.transformation.mutable.lookAt(Vec3(0), Vec3.UnitY)
+    world.camera.transformation.update.translation := Vec3(0, 0, 100)
+    world.camera.transformation.update.lookAt(Vec3(0), Vec3.UnitY)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -49,10 +49,10 @@ object DynamicTexture extends DefaultApp {
     
     mesh.geometry.texCoords := Attributes.fromData(texCoords)
     val objectTexture = Texture2d[Vec3](Vec2i(128))
-    mesh.material.textures.mutable += objectTexture
+    mesh.material.textures.update += objectTexture
     
-    mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.mutable.scale := 50
+    mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
+    mesh.transformation.update.scale := 50
     
     val noise = ClassicalGradientNoise
     val subTexture = Texture2d[Vec3](Vec2i(64))

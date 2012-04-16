@@ -52,7 +52,7 @@ object FrustumTest extends DefaultApp {
   val cube = new Mesh("Cube")
   
   def init() {
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
+    world.camera.transformation.update.translation := Vec3(0, 0, 100)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -66,10 +66,10 @@ object FrustumTest extends DefaultApp {
     cube.geometry.normals := Attributes.fromData(normals)
     cube.geometry.texCoords := Attributes.fromData(texCoords)
     
-    cube.material.textures.mutable += Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    cube.material.textures.update += Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
     
-    cube.transformation.mutable.scale := 20
-    cube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
+    cube.transformation.update.scale := 20
+    cube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
     
     world.attach(cube)
   }

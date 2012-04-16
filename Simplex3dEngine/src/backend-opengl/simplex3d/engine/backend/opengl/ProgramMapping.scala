@@ -27,8 +27,8 @@ import simplex3d.engine.graphics._
 
 
 private[backend] abstract class ProgramMapping(
-  uniformsSeq: Seq[UniformBinding],
-  attributesSeq: Seq[AttributeBinding]
+  uniformsSeq: Seq[ActiveUniform],
+  attributesSeq: Seq[ActiveAttribute]
 ) {
   
   final val uniformVectors = new ReadArray(uniformsSeq.filter(b => EngineBindingTypes.isVector(b.dataType)).toArray)

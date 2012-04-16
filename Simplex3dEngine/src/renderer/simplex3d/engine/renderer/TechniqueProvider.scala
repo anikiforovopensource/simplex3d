@@ -58,7 +58,7 @@ object TechniqueProvider {
     
     /*manager.register(new FragmentShader {
       //version("120")
-      useSquareMatrices
+      forceSquareMatrices
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
@@ -127,7 +127,7 @@ object TechniqueProvider {
     
     /*manager.register(new VertexShader {
       //version("120")
-      useSquareMatrices
+      forceSquareMatrices
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")

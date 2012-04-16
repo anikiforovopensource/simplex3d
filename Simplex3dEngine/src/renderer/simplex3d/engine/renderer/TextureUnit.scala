@@ -25,7 +25,7 @@ import simplex3d.math.double._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadTextureUnit extends ReadStruct[TextureUnit] {
+sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
   def texture: ReadTextureBinding[Texture2d[_]]
   def transformation: ReadMat3x2
 }

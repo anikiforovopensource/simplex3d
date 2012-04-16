@@ -34,7 +34,7 @@ import simplex3d.engine.graphics._
 /** ShaderPrototype defines a DSL to assist with writing shaders and and linking them together.
  * 
  * Glsl version can be specified using version() declaration.
- * Type remapping to square matrices can be requested with useSquareMatrices() directive.
+ * Type remapping to square matrices can be requested with forceSquareMatrices() directive.
  * 
  * Function dependencies are declared with use() declaration.
  *
@@ -171,8 +171,8 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     declarations = null
   }
   
-  protected final def useSquareMatrices {
-    if (declarations != null) throw new IllegalStateException("useSquareMatrices() must be declared at the top level.")
+  protected final def forceSquareMatrices {
+    if (declarations != null) throw new IllegalStateException("forceSquareMatrices() must be declared at the top level.")
     checkState()
     if (_usingSquareMatrices) throw new IllegalStateException("Square matrices are already in use.")
     _usingSquareMatrices = true

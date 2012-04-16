@@ -34,8 +34,8 @@ import simplex3d.engine.backend.opengl._
 
 
 private[backend] final class ProgramMapping(val program: Technique, val context: RenderContext)(
-  uniformsSeq: Seq[UniformBinding],
-  attributesSeq: Seq[AttributeBinding]
+  uniformsSeq: Seq[ActiveUniform],
+  attributesSeq: Seq[ActiveAttribute]
 ) extends backend.opengl.ProgramMapping(uniformsSeq, attributesSeq) {
   
   //println("XXX " + program + "\n\n" + uniformsSeq.mkString("\n") + "\n\n" + attributesSeq.mkString("\n"))
@@ -49,13 +49,13 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   
   private[this] val uniformTextureLocations = uniformTextures.map(_.location).toArray
   private[this] val uniformTextureTypes = uniformTextures.map(_.dataType).toArray
-  private[this] val uniformTextureUnits = uniformTextures.map(_.asInstanceOf[UniformTexBinding].textureUnit).toArray
+  private[this] val uniformTextureUnits = uniformTextures.map(_.asInstanceOf[ActiveTexture].textureUnit).toArray
   
   private[this] val attributeLocations = attributes.map(_.location).toArray
   
   
   private[this] def bindUniformVectors(
-    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[VectorLike]
+    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[VectorLike]
   ) {
     var i = 0; while (i < uniformBindings.length) {
       setUniformVector(uniformVectorLocations(i), uniformVectorTypes(i), uniforms(i))
@@ -64,7 +64,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   }
   
   private[this] def bindUniformMatrices(
-    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[AnyMat[_]]
+    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[AnyMat[_]]
   ) {
     var i = 0; while (i < uniformBindings.length) {
       setUniformMatrix(uniformMatrixLocations(i), uniformMatrixTypes(i), uniforms(i))
@@ -73,7 +73,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   }
   
   private[this] def bindUniformTextures(
-    uniformBindings: ReadArray[UniformBinding], uniforms: ReadArray[ReadTextureBinding[_]]
+    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[ReadTextureBinding[_]]
   ) {
     var i = 0; while (i < uniformBindings.length) {
       setUniformTexture(
@@ -85,7 +85,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   }
   
   private[this] def bindAttributes(
-    attributeBindings: ReadArray[AttributeBinding],
+    attributeBindings: ReadArray[ActiveAttribute],
     attributes: ReadArray[Attributes[_, _]]
   ) {
     var i = 0; while (i < attributeBindings.length) {

@@ -65,6 +65,8 @@ extends ManagedScene[G](name) {
   
   
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
+    // TODO Implement two preloading modes: preload everything, and preload extended visual range.
+    // TODO Add a loading screen with an image and a progress bar, integrate it with the Scenegraph.
     1.0
   }
   
@@ -128,10 +130,10 @@ extends ManagedScene[G](name) {
   }
   
   protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
-    
+    // TODO add gradual texture and VBO loading for off-screen objects.
   }
   
   protected def cleanup(context: RenderContext) {
-    
+    //XXX implement
   }
 }

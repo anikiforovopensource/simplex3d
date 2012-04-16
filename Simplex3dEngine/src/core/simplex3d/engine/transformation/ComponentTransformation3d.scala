@@ -50,7 +50,7 @@ extends ReadTransformation[ComponentTransformation3d]
     if (parentChanged || this.hasDataChanges) {
       if (parent != null && parent.isSet) {
         if (this.isSet) {
-          val res = result.mutable
+          val res = result.update
           res.scale := this.scale * parent.scale
           res.rotation := this.rotation rotate parent.rotation
           res.translation := parent.rotation.rotateVector(this.translation*parent.scale) + parent.translation
@@ -98,7 +98,7 @@ extends ReadComponentTransformation3d(camera) with Transformation[ComponentTrans
   private[this] var set = false
   def isSet = set
   def unset() {
-    val m = mutable
+    val m = update
     
     m.scale := 1
     m.rotation := Quat4.Identity
@@ -109,14 +109,14 @@ extends ReadComponentTransformation3d(camera) with Transformation[ComponentTrans
   
   def :=(r: Readable[ComponentTransformation3d]) {
     val t = r.asInstanceOf[ReadComponentTransformation3d]
-    val m = mutable
+    val m = update
     
     m.scale := t.scale
     m.rotation := t.rotation
     m.translation := t.translation
   }
   
-  def mutable = {
+  def update = {
     dataChanges = true
     updateMatrix = true
     set = true

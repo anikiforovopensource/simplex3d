@@ -38,7 +38,7 @@ final class Oabb(minVector: inVec3 = Vec3.Zero, maxVector: inVec3 = Vec3.Zero) e
   }
   private val mutableSubtext = new MutableSubtext
   
-  def mutable = {
+  def update = {
     dataChanges = true
     mutableSubtext
   }
@@ -51,8 +51,8 @@ final class Oabb(minVector: inVec3 = Vec3.Zero, maxVector: inVec3 = Vec3.Zero) e
   def max: ReadVec3 = _max
   
   def :=(r: Oabb) {
-    mutable.min := r.min
-    mutable.max := r.max
+    update.min := r.min
+    update.max := r.max
   }
   
   override def toString() :String = "Oabb(" + min + ", " + max + ")"

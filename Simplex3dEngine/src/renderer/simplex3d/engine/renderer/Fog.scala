@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadFog extends ReadStruct[Fog] {
+sealed abstract class ReadFog extends ReadOnly[Fog] {
   def color: ReadVec3
   def density: ReadDoubleRef
   

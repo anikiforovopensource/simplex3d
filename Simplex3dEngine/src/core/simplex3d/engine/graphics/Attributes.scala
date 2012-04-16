@@ -220,6 +220,13 @@ final class IntervalMap(private val initCapacity: Int, val mergeTolerance: Int) 
   private[this] var array = new Array[Long](initCapacity)
   private[this] var size0 = 0
   private[this] var needsMerge = false
+  private[this] var putCount = 0
+  
+  /* Auto merge after a predefined number of added elements to prevent memory leaks when the interval map is
+   * updated by the application but never merged because the parent mesh is discarded by the frustum culling.
+   */
+  private[this] val autoMergeAt = 64
+  
   
   def size = size0
   
@@ -255,10 +262,16 @@ final class IntervalMap(private val initCapacity: Int, val mergeTolerance: Int) 
     size0 += 1
     
     needsMerge = true
+    
+    putCount += 1
+    if (putCount > autoMergeAt) merge()
   }
   
   def merge() {
-    if (!needsMerge || size0 < 2) return;
+    if (!needsMerge || size0 < 2) {
+      needsMerge = false
+      return
+    }
     
     java.util.Arrays.sort(array, 0, size0)
     
@@ -289,14 +302,17 @@ final class IntervalMap(private val initCapacity: Int, val mergeTolerance: Int) 
     size0 = lastRange + 1
     
     needsMerge = false
+    putCount = 0
   }
   
   def clear() {
     size0 = 0
+    needsMerge = false
+    putCount = 0
   }
   
   override def toString() :String = {
-    "UpdateIntervals(" +
+    "IntervalMap(" +
       array.take(size0).map(n => (upper(n), lower(n))).mkString(", ") +
     ")"
   }

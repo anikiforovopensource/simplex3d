@@ -31,7 +31,7 @@ object InterleavedAttributes extends DefaultApp {
   )
   
   def init() {
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 100)
+    world.camera.transformation.update.translation := Vec3(0, 0, 100)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -54,13 +54,13 @@ object InterleavedAttributes extends DefaultApp {
     // Please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
     val noise = ClassicalGradientNoise
-    mesh.material.textures.mutable += Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+    mesh.material.textures.update += Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
     
-    mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.mutable.scale := 40
+    mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
+    mesh.transformation.update.scale := 40
     
     mesh.controller { time =>
       def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15

@@ -34,7 +34,7 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
     copy
   }
   
-  def propagate(parentVal: E#Read, result: E) :Unit
+  def propagate(parentVal: E#Read, result: E) :Unit //XXX possibly hide this as well
   
   
   private[this] var bindingChanges = true
@@ -69,5 +69,5 @@ trait UpdatableEnvironmentalEffect[E <: UpdatableEnvironmentalEffect[E]] extends
    * Values that depend on camera must be taken from predefined uniforms,
    * so that passes with different cameras can be rendered correctly. 
    */
-  def updateBinding(predefinedUniforms: ReadPredefinedUniforms) :Unit
+  def updateBinding(predefinedUniforms: ReadPredefinedUniforms) :Unit //XXX hide this from the client code
 }

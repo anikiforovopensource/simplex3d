@@ -36,7 +36,7 @@ extends BoundingVolume {
   }
   private val mutableSubtext = new MutableSubtext
   
-  def mutable = {
+  def update = {
     dataChanges = true
     mutableSubtext
   }
@@ -51,9 +51,9 @@ extends BoundingVolume {
   def transformation: ReadMat4x3 = _transformation
   
   def :=(r: Obb) {
-    mutable.min := r.min
-    mutable.max := r.max
-    mutable.transformation := r.transformation
+    update.min := r.min
+    update.max := r.max
+    update.transformation := r.transformation
   }
   
   override def toString() :String = "Obb(" + min + ", " + max + ", " + transformation + ")"

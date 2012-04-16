@@ -26,6 +26,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
+// XXX Redo integration after PassManager, and rename.
 abstract class ManagedScene[G <: GraphicsContext](name: String) extends Scene[G](name) { self =>
   final class ManagedSceneSubtext {
     def camera = self.camera

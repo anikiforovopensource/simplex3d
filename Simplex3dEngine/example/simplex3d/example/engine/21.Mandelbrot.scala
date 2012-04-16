@@ -40,12 +40,12 @@ object Mandelbrot extends default.BasicFullscreenEffectApp {
       val colors: Array[ConstVec3] = ColorPreset.generate()
       val texture = Texture2d.fromData(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
       
-      colorTexture.mutable := texture
-      iterations.mutable := colors.length
+      colorTexture.update := texture
+      iterations.update := colors.length
     }
     
     override def update(time: TimeStamp) {
-      zoom.mutable := pow(zoomSpeed, startZoom + time.total)
+      zoom.update := pow(zoomSpeed, startZoom + time.total)
     }
     
     val fragmentShader = """

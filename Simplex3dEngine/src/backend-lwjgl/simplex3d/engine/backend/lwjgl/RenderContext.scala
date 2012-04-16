@@ -39,8 +39,8 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.backend.opengl._
 
 
-private[lwjgl] class ActiveAttribute(var id: Int)
-private[lwjgl] class ActiveTexture(var unit: Int, var id: Int)
+private[lwjgl] class ActiveAttributeId(var id: Int)
+private[lwjgl] class ActiveTextureId(var unit: Int, var id: Int)
 
 
 private[lwjgl] object RenderContext {
@@ -119,8 +119,8 @@ extends graphics.RenderContext with GlAccess {
   private final def boundTexture = textureUnits(activeTextureUnit)
   private final def boundTexture_=(id: Int) { textureUnits(activeTextureUnit) = id }
   
-  private final val activeAttributes = new HashMap[Int, ActiveAttribute]() //XXX possibly use different data structures
-  private final val activeTextures = new HashMap[Int, ActiveTexture]()
+  private final val activeAttributes = new HashMap[Int, ActiveAttributeId] //XXX possibly use different data structures
+  private final val activeTextures = new HashMap[Int, ActiveTextureId]
   
   final def requiresReset = invalidateState
   
@@ -270,7 +270,7 @@ extends graphics.RenderContext with GlAccess {
     var activeAttribute = activeAttributes.get(location)
     val disabled = (activeAttribute == null)
     if (disabled) {
-      activeAttribute = new ActiveAttribute(0)
+      activeAttribute = new ActiveAttributeId(0)
       activeAttributes.put(location, activeAttribute)
       
       glEnableVertexAttribArray(location)
@@ -466,7 +466,7 @@ extends graphics.RenderContext with GlAccess {
     
     var activeTexture = activeTextures.get(location)
     if (activeTexture == null) {
-      activeTexture = new ActiveTexture(activeTextureUnit, 0)
+      activeTexture = new ActiveTextureId(activeTextureUnit, 0)
       activeTextures.put(location, activeTexture)
       
       glUniform1i(location, activeTextureUnit)
@@ -593,8 +593,8 @@ extends graphics.RenderContext with GlAccess {
     
     
     // Query GL for program bindings.
-    var uniformBindings = ArrayBuffer[UniformBinding]()
-    val attributeBindings = ArrayBuffer[AttributeBinding]()
+    var uniformBindings = ArrayBuffer[ActiveUniform]()
+    val attributeBindings = ArrayBuffer[ActiveAttribute]()
     var textureUnitCount = 0
     
     val geom = program.graphicsContext.mkGeometry()
@@ -635,7 +635,7 @@ extends graphics.RenderContext with GlAccess {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new UniformTexBinding(blockType, arrayName, dataType, location, textureUnitCount)
+            uniformBindings += new ActiveTexture(blockType, arrayName, dataType, location, textureUnitCount)
             textureUnitCount += 1
             
             i += 1
@@ -643,7 +643,7 @@ extends graphics.RenderContext with GlAccess {
         }
         else {
           val location = glGetUniformLocation(progId, name)
-          uniformBindings += new UniformTexBinding(blockType, name, dataType, location, textureUnitCount)
+          uniformBindings += new ActiveTexture(blockType, name, dataType, location, textureUnitCount)
           textureUnitCount += 1
         }
       }
@@ -654,21 +654,21 @@ extends graphics.RenderContext with GlAccess {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new UniformBinding(blockType, arrayName, dataType, location)
+            uniformBindings += new ActiveUniform(blockType, arrayName, dataType, location)
             
             i += 1
           }
         }
         else {
           val location = glGetUniformLocation(progId, name)
-          uniformBindings += new UniformBinding(blockType, name, dataType, location)
+          uniformBindings += new ActiveUniform(blockType, name, dataType, location)
         }
       }
       
       i += 1
     }
     
-    val unusedAttributeBindings = ArrayBuffer[AttributeBinding]()
+    val unusedActiveAttributes = ArrayBuffer[ActiveAttribute]()
     val attributeCount = glGetProgram(progId, GL_ACTIVE_ATTRIBUTES)
     val attributeStringLength = glGetProgram(progId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
     i = 0; while (i < attributeCount) {
@@ -677,32 +677,32 @@ extends graphics.RenderContext with GlAccess {
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       val location = glGetAttribLocation(progId, name)
       
-      val binding = new AttributeBinding(name, dataType, location)
+      val binding = new ActiveAttribute(name, dataType, location)
       
       if (belongs(name, geom.attributeNames)) attributeBindings += binding
-      else unusedAttributeBindings += binding
+      else unusedActiveAttributes += binding
       
       i += 1
     }
     
     
     // Uniforms
-    val unusedUniformBindings = uniformBindings.filter(_.blockType == -1)
+    val unusedActiveUniforms = uniformBindings.filter(_.blockType == -1)
     
-    if (unusedUniformBindings.size != 0) {
+    if (unusedActiveUniforms.size != 0) {
       uniformBindings = uniformBindings.filterNot(_.blockType == -1)
       
       log(
         Level.SEVERE, "Uniforms do no exist: " +
-        unusedUniformBindings.map(_.name).mkString(", ")
+        unusedActiveUniforms.map(_.name).mkString(", ")
       )
     }
     
     
     // Attributes
-    if (unusedAttributeBindings.size != 0) log(
+    if (unusedActiveAttributes.size != 0) log(
       Level.SEVERE, "Attributes do no exist: " +
-      unusedAttributeBindings.map(_.name).mkString(", ") + "."
+      unusedActiveAttributes.map(_.name).mkString(", ") + "."
     )
 
     
@@ -880,7 +880,7 @@ extends graphics.RenderContext with GlAccess {
   
   private[this] final def resolveUniform(
     meshName: String,
-    programBinding: UniformBinding,
+    programBinding: ActiveUniform,
     predefined: PredefinedUniforms,
     material: Material,
     environment: Environment,
@@ -1085,7 +1085,7 @@ extends graphics.RenderContext with GlAccess {
       }
     }
     
-    if (value == null) log(
+    if (value == null && !programBinding.name.endsWith("nvidiaBugWorkaround")) log(
       Level.SEVERE, "Uniform '" + programBinding.name + "' resolves to a null reference for mesh '" + meshName + "'."
     )
     else if (value.isInstanceOf[ReadTextureBinding[_]]) {
@@ -1100,7 +1100,7 @@ extends graphics.RenderContext with GlAccess {
   }
   
   private[this] final def buildUniformMapping(
-    programBindings: ReadArray[UniformBinding],
+    programBindings: ReadArray[ActiveUniform],
     predefined: PredefinedUniforms,
     mesh: AbstractMesh
   ) :ReadArray[Binding] = {
@@ -1123,11 +1123,11 @@ extends graphics.RenderContext with GlAccess {
   }
   
   
-  private[this] final def buildAttributeMapping(mesh: AbstractMesh, bindings: ReadArray[AttributeBinding])
+  private[this] final def buildAttributeMapping(mesh: AbstractMesh, bindings: ReadArray[ActiveAttribute])
   :ReadArray[Attributes[_, _]] = {
     
     def extract(
-      names: ReadArray[String], properties: ReadArray[SharedAttributes[_, _]],
+      names: ReadArray[String], properties: ReadArray[AttributeBinding[_, _]],
       name: String
     ) :AnyRef = {
       val index = find(names, name)

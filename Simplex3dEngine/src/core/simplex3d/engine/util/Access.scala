@@ -47,8 +47,8 @@ object AccessChanges {
   implicit def accessSharedRef(property: SharedRef[_])
   = property.asInstanceOf[AccessibleSharedRef]
   
-  implicit def accessSharedAttributes(property: SharedAttributes[_, _])
-  = property.asInstanceOf[AccessibleSharedAttributes[_, _]]
+  implicit def accessAttributeBinding(property: AttributeBinding[_, _])
+  = property.asInstanceOf[AccessibleAttributeBinding[_, _]]
   
   
   implicit def attributeSharedSubtext(sharedState: AttributesSharedState)

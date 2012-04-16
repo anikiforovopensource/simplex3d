@@ -27,7 +27,7 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends ReadStruct[Lighting] {
+sealed abstract class ReadLighting extends ReadOnly[Lighting] {
   def directionalLights: List[ReadDirectionalLight]
   def pointLights: List[ReadPointLight]
   
@@ -52,7 +52,7 @@ with UpdatableEnvironmentalEffect[Lighting]
   var directionalLights: List[DirectionalLight] = Nil
   var pointLights: List[PointLight] = Nil
   
-  def :=(r: ReadStruct[Lighting]) {
+  def :=(r: ReadOnly[Lighting]) {
     //
   }
   

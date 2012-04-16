@@ -63,14 +63,14 @@ class FirstPersonHandler(
     
     verticalAngle = clamp(verticalAngle, -89, 89)
     
-    val mutable = transformation.mutable
+    val mutable = transformation.update
     mutable.rotation := Quat4 rotateX(radians(verticalAngle)) rotateY(radians(horizontalAngle))
     
     
     val direction = rotateVector(Vec3(0, 0, -1), mutable.rotation)
     val left = rotateVector(Vec3(-1, 0, 0), mutable.rotation)
     
-    val position = transformation.mutable.translation
+    val position = transformation.update.translation
     if (keyDown(K_w)) position += direction*time.interval*motionSpeed
     if (keyDown(K_s)) position -= direction*time.interval*motionSpeed
     if (keyDown(K_a)) position += left*time.interval*motionSpeed

@@ -99,7 +99,7 @@ object DynamicEnvironment extends App with scala.App {
   var nodes: Array[Node[TestT, TestG]] = _
   
   def init() {
-    scene.camera.transformation.mutable.translation := Vec3(-25, 25, 100)
+    scene.camera.transformation.update.translation := Vec3(-25, 25, 100)
     
     val camControls = new FirstPersonHandler(scene.camera.transformation)
     addInputListener(camControls)
@@ -126,8 +126,8 @@ object DynamicEnvironment extends App with scala.App {
         mesh.geometry.vertices := Attributes.fromData(vertices)
         
         val scale = 50 - i/2*10
-        mesh.transformation.mutable.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
-        mesh.transformation.mutable.scale := scale
+        mesh.transformation.update.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
+        mesh.transformation.update.scale := scale
         
         node.appendChild(mesh)
       }
@@ -136,19 +136,19 @@ object DynamicEnvironment extends App with scala.App {
     }).toArray
 
     
-    nodes(6).environment.intensity.mutable.value := 0.75
-    for (i <- 0 until 7) { nodes(i).environment.nodeColor.mutable.color := Vec3(1, 0, 0) }
-    nodes(0).environment.contrast.mutable.factor := 0.1
+    nodes(6).environment.intensity.update.value := 0.75
+    for (i <- 0 until 7) { nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0) }
+    nodes(0).environment.contrast.update.factor := 0.1
     
     scene.attach(nodes(0))
   } 
   
   def update(time: TimeStamp) {
-    if (time.total.toInt %2 == 0) nodes(1).environment.intensity.mutable.value := 0.75
+    if (time.total.toInt %2 == 0) nodes(1).environment.intensity.update.value := 0.75
     else nodes(1).environment.intensity.undefine()
     
-    if (time.total.toInt %4 == 0) nodes(0).environment.contrast.mutable.secondary := true
-    else nodes(0).environment.contrast.mutable.secondary := false
+    if (time.total.toInt %4 == 0) nodes(0).environment.contrast.update.secondary := true
+    else nodes(0).environment.contrast.update.secondary := false
   }
   
   
@@ -180,7 +180,7 @@ object DynamicEnvironment extends App with scala.App {
 
 package testenv {
   
-  sealed abstract class ReadIntensity extends ReadStruct[Intensity] {
+  sealed abstract class ReadIntensity extends ReadOnly[Intensity] {
     def value: ReadDoubleRef
   }
   
@@ -190,7 +190,7 @@ package testenv {
     
     val value = new DoubleRef(1)
   
-    def :=(r: ReadStruct[Intensity]) {
+    def :=(r: ReadOnly[Intensity]) {
       val t = r.asInstanceOf[Intensity]
       value := t.value
     }
@@ -203,7 +203,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadNodeColor extends ReadStruct[NodeColor] {
+  sealed abstract class ReadNodeColor extends ReadOnly[NodeColor] {
     def color: ReadVec3
   }
   
@@ -213,7 +213,7 @@ package testenv {
     
     val color = Vec3(1)
   
-    def :=(r: ReadStruct[NodeColor]) {
+    def :=(r: ReadOnly[NodeColor]) {
       val t = r.asInstanceOf[NodeColor]
       color := t.color
     }
@@ -229,7 +229,7 @@ package testenv {
   }
   
   
-  sealed abstract class ReadContrast extends ReadStruct[Contrast] {
+  sealed abstract class ReadContrast extends ReadOnly[Contrast] {
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
   }
@@ -241,7 +241,7 @@ package testenv {
     val factor = new DoubleRef(0)
     val secondary = new BooleanRef(false)
   
-    def :=(r: ReadStruct[Contrast]) {
+    def :=(r: ReadOnly[Contrast]) {
       val t = r.asInstanceOf[Contrast]
       
       factor := t.factor

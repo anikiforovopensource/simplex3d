@@ -31,7 +31,7 @@ import simplex3d.engine.graphics._
 
 
 class Geometry extends prototype.Geometry {
-  val texCoords = SharedAttributes[Vec2, RFloat]
+  val texCoords = AttributeBinding[Vec2, RFloat]
   
   init(classOf[Geometry])
 }

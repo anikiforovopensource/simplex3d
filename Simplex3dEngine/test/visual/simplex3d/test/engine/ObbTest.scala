@@ -57,7 +57,7 @@ object ObbTest extends DefaultApp {
   
   
   def init() {
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 60)
+    world.camera.transformation.update.translation := Vec3(0, 0, 60)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -78,10 +78,10 @@ object ObbTest extends DefaultApp {
     movingCube.geometry.normals := anormals
     movingCube.geometry.texCoords := atexCoords
     
-    movingCube.material.textures.mutable += texture
+    movingCube.material.textures.update += texture
     
-    movingCube.transformation.mutable.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30))
-    movingCube.transformation.mutable.scale := cubeScale
+    movingCube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30))
+    movingCube.transformation.update.scale := cubeScale
     
     world.attach(movingCube)
     
@@ -91,10 +91,10 @@ object ObbTest extends DefaultApp {
     cube1.geometry.normals := anormals
     cube1.geometry.texCoords := atexCoords
     
-    cube1.material.textures.mutable += texture
+    cube1.material.textures.update += texture
     
-    cube1.transformation.mutable.scale := cubeScale
-    cube1.transformation.mutable.translation := -translation
+    cube1.transformation.update.scale := cubeScale
+    cube1.transformation.update.translation := -translation
     
     world.attach(cube1)
     
@@ -104,11 +104,11 @@ object ObbTest extends DefaultApp {
     cube2.geometry.normals := anormals
     cube2.geometry.texCoords := atexCoords
     
-    cube2.material.textures.mutable += texture
+    cube2.material.textures.update += texture
     
-    cube2.transformation.mutable.rotation := Quat4 rotateX(radians(-15)) rotateZ(radians(30))
-    cube2.transformation.mutable.scale := cubeScale
-    cube2.transformation.mutable.translation := translation
+    cube2.transformation.update.rotation := Quat4 rotateX(radians(-15)) rotateZ(radians(30))
+    cube2.transformation.update.scale := cubeScale
+    cube2.transformation.update.translation := translation
     
     world.attach(cube2)
   }
@@ -121,8 +121,8 @@ object ObbTest extends DefaultApp {
     override def update(input: Input, time: TimeStamp) {
       val keyDown = input.keyboard.isKeyDown(_); import KeyCode._
       
-      val transformation = movingCube.transformation.mutable
-      val position = movingCube.transformation.mutable.translation
+      val transformation = movingCube.transformation.update
+      val position = movingCube.transformation.update.translation
       
       if (keyDown(K_w)) position.y += time.interval*motionSpeed
       if (keyDown(K_s)) position.y -= time.interval*motionSpeed

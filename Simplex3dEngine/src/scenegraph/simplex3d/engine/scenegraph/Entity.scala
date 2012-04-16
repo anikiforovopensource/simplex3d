@@ -183,7 +183,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
       
       if (updateBounding || uncheckedWorldTransformation.hasDataChanges) {
         val bound = autoBoundingVolume.asInstanceOf[Aabb]
-        Bounded.rebuildAabb(this)(bound.mutable.min, bound.mutable.max)
+        Bounded.rebuildAabb(this)(bound.update.min, bound.update.max)
         updated = true
       }
     }
@@ -269,15 +269,15 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
               if (parentProp.hasDataChanges || childProp.hasDataChanges) {
                 if (parentProp.isDefined) {
                   if (childProp.isDefined) {
-                    childProp.get.propagate(parentProp.get, resultProp.mutable)
+                    childProp.get.propagate(parentProp.get, resultProp.update)
                   }
                   else {
-                    resultProp.mutable := parentProp.get
+                    resultProp.update := parentProp.get
                   }
                 }
                 else {
                   if (childProp.isDefined) {
-                    resultProp.mutable := childProp.get
+                    resultProp.update := childProp.get
                   }
                   else {
                     resultProp.undefine()

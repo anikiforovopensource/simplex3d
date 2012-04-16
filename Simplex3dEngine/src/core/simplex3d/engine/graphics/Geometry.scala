@@ -77,15 +77,15 @@ abstract class Geometry extends StructuralChangeListener {
     vertexMode = m
   }
   
-  final val indices = SharedAttributes[SInt, Unsigned](StructuralChangeListener.Ignore)
-  final val vertices = SharedAttributes[Vec3, RFloat](this)
-  final val normals = SharedAttributes[Vec3, RFloat](this)
+  final val indices = AttributeBinding[SInt, Unsigned](StructuralChangeListener.Ignore)
+  final val vertices = AttributeBinding[Vec3, RFloat](this)
+  final val normals = AttributeBinding[Vec3, RFloat](this)
   
   final val faceCulling = Defined[EnumRef[FaceCulling.type]](new EnumRef(FaceCulling.Disabled))
   
   
   final def copyNonattributes(geometry: Geometry) {
     mode = geometry.mode
-    faceCulling.mutable := geometry.faceCulling.mutable
+    faceCulling.update := geometry.faceCulling.get
   }
 }

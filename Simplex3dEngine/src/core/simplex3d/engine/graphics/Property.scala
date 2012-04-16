@@ -31,7 +31,7 @@ sealed abstract class Property[W <: Writable[W]] private[engine]
   
   final def get: W#Read = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
-  def mutable: W
+  def update: W
 }
 
 
@@ -40,7 +40,7 @@ extends Property[W]
 {
   value = initialValue.mutableCopy()
   
-  final def mutable: W = {
+  final def update: W = {
     changed = true
     value
   }
@@ -75,7 +75,7 @@ extends Property[W]
     }
   }
   
-  final def mutable: W = {
+  final def update: W = {
     if (!isDefined) {
       listener.signalStructuralChanges()
       value = factory.mutableCopy()
@@ -85,7 +85,7 @@ extends Property[W]
   }
   
   final def :=(p: Optional[W]) {
-    if (p.isDefined) mutable := p.get else undefine()
+    if (p.isDefined) update := p.get else undefine()
   }
   
   final override def toString() :String =

@@ -35,7 +35,7 @@ final class Aabb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero) extends Bou
   }
   private val mutableSubtext = new MutableSubtext
   
-  def mutable = {
+  def update = {
     dataChanges = true
     mutableSubtext
   }
@@ -48,8 +48,8 @@ final class Aabb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero) extends Bou
   def max: ReadVec3 = _max
   
   def :=(r: Aabb) {
-    mutable.min := r.min
-    mutable.max := r.max
+    update.min := r.min
+    update.max := r.max
   }
   
   override def toString() :String = "Aabb(" + min + ", " + max + ")"

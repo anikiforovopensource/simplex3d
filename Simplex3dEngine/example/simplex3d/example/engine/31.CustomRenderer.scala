@@ -26,108 +26,41 @@ object CustomRenderer extends BasicApp {
     fullscreen = false,
     verticalSync = true,
     logPerformance = true,
-    antiAliasingSamples = 4//,
-    //resolution = Some(Vec2i(800, 600))
+    antiAliasingSamples = 4,
+    resolution = Some(Vec2i(800, 600))
   )
   
   
   // Declare TextureUnit Struct.
-  sealed abstract class ReadTextureUnit extends ReadStruct[TextureUnit] {
+  sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
     def texture: ReadTextureBinding[Texture2d[_]]
-    def scale: ReadDoubleRef
+    def transformation: ReadMat3x2
   }
-
+  
   final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUnit] {
-    def this(texture: Texture2d[_], scale: Double) {
-      this()
-      
-      this.texture := texture
-      this.scale := scale
-    }
-    
     type Read = ReadTextureUnit
     protected def mkMutable() = new TextureUnit
     
+    def this(texture: Texture2d[_], transformation: inMat3x2) {
+      this()
+      
+      this.texture := texture
+      this.transformation := transformation
+    }
+    
     val texture = new TextureBinding[Texture2d[_]]
-    val scale = new DoubleRef(1)
+    val transformation = Mat3x2(1)
     
     init(classOf[TextureUnit])
   }
   
   
-  // Declare PointLight Struct.
-  sealed abstract class ReadPointLight extends ReadStruct[PointLight] {
-    def position: ReadVec3
-    def intensity: ReadVec3
-    def linearAttenuation: ReadDoubleRef
-    def quadraticAttenuation: ReadDoubleRef
+  // Replace default geometry, material, and environment.
+  class Geometry extends prototype.Geometry {
+    val texCoords = AttributeBinding[Vec2, RFloat]
+    
+    init(classOf[Geometry])
   }
-
-  final class PointLight extends ReadPointLight with prototype.Struct[PointLight] {
-    def this(intensity: inVec3, linearAttenuation: Double, quadraticAttenuation: Double) {
-      this()
-      
-      this.intensity := intensity
-      this.linearAttenuation := linearAttenuation
-      this.quadraticAttenuation := quadraticAttenuation
-    }
-    
-    type Read = ReadPointLight
-    protected def mkMutable() = new PointLight
-    
-    val position = Vec3(0)
-    val intensity = Vec3(1)
-    val linearAttenuation = new DoubleRef(0)
-    val quadraticAttenuation = new DoubleRef(0)
-    
-    private[CustomRenderer] val ecPosition = Vec3(0)
-    
-    init(classOf[PointLight])
-  }
-  
-  
-  // Declare Lighting Environment.
-  sealed abstract class ReadLighting extends ReadStruct[Lighting] {
-    def lights: ReadBindingList[PointLight]
-  }
-  
-  final class Lighting(implicit listener: StructuralChangeListener)
-  extends ReadLighting with UpdatableEnvironmentalEffect[Lighting]
-  {
-    type Read = ReadLighting
-    protected def mkMutable() = new Lighting
-    
-    val lights = new BindingList[PointLight]
-  
-    def :=(r: ReadStruct[Lighting]) {
-      val e = r.asInstanceOf[Lighting]
-      
-      if (lights.size != e.lights.size) signalBindingChanges()
-      lights := e.lights
-    }
-    
-    def propagate(parentVal: ReadLighting, result: Lighting) {
-      val oldSize = result.lights.size
-      result.lights.clear()
-      result.lights ++= lights
-      result.lights ++= parentVal.lights
-      
-      if (result.lights.size > maxLightCount) result.lights.take(maxLightCount)
-      if (result.lights.size != oldSize) result.signalBindingChanges()
-    }
-    
-    protected def resolveBinding() = lights
-    def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {
-      val s = lights.size; var i = 0; while (i < s) {
-        lights(i).ecPosition := predefinedUniforms.se_viewMatrix.transformPoint(lights(i).position)
-        
-        i += 1
-      }
-    }
-  }
-  
-
-  // Replace default material, environment, and geometry.
   class Material extends prototype.Material {
     val textureUnits = Optional[BindingList[TextureUnit]](new BindingList)
     
@@ -140,14 +73,8 @@ object CustomRenderer extends BasicApp {
     init(classOf[Environment])
   }
   
-  class Geometry extends prototype.Geometry {
-    val texCoords = SharedAttributes[Vec2, RFloat]
-    
-    init(classOf[Geometry])
-  }
   
-  
-  // Replace default contexts. This allows to inject custom material and geometry implementations.
+  // Define custom contexts. This allows to inject custom material and geometry implementations.
   type Transformation = ComponentTransformation3dContext
   implicit val TransformationContext = new Transformation
   
@@ -166,12 +93,25 @@ object CustomRenderer extends BasicApp {
   implicit val GraphicsContext = new GraphicsContext
   
   
-  // Rebuild the Technique Manager from scratch.
+  // Declare a new technique manager and attach it to the scenegraph.
   val techniqueManager = new pluggable.TechniqueManager
-   
+  
+  protected val world = new SceneGraph(
+    "World",
+    sceneGraphSettings,
+    new Camera("Main Camera"),
+    techniqueManager
+  )
+  
+  
+  // Rebuild the Technique Manager from scratch.
   techniqueManager.register(new FragmentShader {
     use("vec4 texturingColor()")
     use("vec4 lightIntensity()")
+    
+    in("transformationCtx") {
+      declare[Vec4]("gl_FragCoord")
+    }
     
     src {"""
       void resolveColor() {
@@ -183,13 +123,22 @@ object CustomRenderer extends BasicApp {
   })
   
   techniqueManager.register(new FragmentShader {
+    src {"""
+      vec4 lightIntensity() {
+        return vec4(1.0);
+      }
+    """}
+    
+    export("vec4 lightIntensity()")
+  })
+  
+  techniqueManager.register(new FragmentShader {
+    forceSquareMatrices
+    
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
     }
     
-    in("rasterisationCtx") {
-      declare[Vec4]("gl_FragCoord")
-    }
     in("texturingCtx") {
       declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
     }
@@ -207,16 +156,136 @@ object CustomRenderer extends BasicApp {
     export("vec4 texturingColor()")
   })
   
-  techniqueManager.register(new FragmentShader {
+  
+  techniqueManager.register(new VertexShader {
+    uniform {
+      declare[Mat4]("se_modelViewProjectionMatrix")
+    }
+    
+    attributes {
+      declare[Vec3]("vertices")
+    }
+    
+    out("transformationCtx") {
+      declare[Vec4]("gl_Position")
+    }
+    
     src {"""
-      vec4 lightIntensity() {
-        return vec4(1.0);
+      void transformVertices() {
+        gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
       }
     """}
     
-    export("vec4 lightIntensity()")
+    entryPoint("transformVertices")
+  })
+    
+  techniqueManager.register(new VertexShader {
+    forceSquareMatrices
+    
+    uniform {
+      declare[BindingList[TextureUnit]]("textureUnits")
+    }
+    
+    attributes {
+      declare[Vec2]("texCoords")
+    }
+    
+    out("texturingCtx") {
+      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
+    }
+    
+    src {"""
+      void propagateTexturingValues() {
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
+          texturingCtx.ecTexCoords[i] = transformed.xy;
+        }
+      }
+    """}
+    
+    entryPoint("propagateTexturingValues")
   })
   
+  
+  // Declare PointLight Struct.
+  sealed abstract class ReadPointLight extends ReadOnly[PointLight] {
+    def position: ReadVec3
+    def intensity: ReadVec3
+    def linearAttenuation: ReadDoubleRef
+    def quadraticAttenuation: ReadDoubleRef
+  }
+  
+  final class PointLight extends ReadPointLight with prototype.Struct[PointLight] {
+    type Read = ReadPointLight
+    protected def mkMutable() = new PointLight
+    
+    def this(
+      intensity: inVec3,
+      linearAttenuation: Double,
+      quadraticAttenuation: Double
+    ) {
+      this()
+      
+      this.intensity := intensity
+      this.linearAttenuation := linearAttenuation
+      this.quadraticAttenuation := quadraticAttenuation
+    }
+    
+    val position = Vec3(0)
+    val intensity = Vec3(1)
+    val linearAttenuation = new DoubleRef(0)
+    val quadraticAttenuation = new DoubleRef(0)
+    
+    private[CustomRenderer] val ecPosition = Vec3(0)
+    
+    init(classOf[PointLight])
+  }
+  
+  
+  // Declare Lighting Environment.
+  sealed abstract class ReadLighting extends ReadOnly[Lighting] {
+    def lights: ReadBindingList[PointLight]
+  }
+  
+  final class Lighting(implicit listener: StructuralChangeListener)
+  extends ReadLighting with UpdatableEnvironmentalEffect[Lighting]
+  {
+    type Read = ReadLighting
+    protected def mkMutable() = new Lighting
+    
+    val lights = new BindingList[PointLight]
+  
+    def :=(r: ReadOnly[Lighting]) {
+      val e = r.asInstanceOf[Lighting]
+      
+      if (lights.size != e.lights.size) signalBindingChanges()
+      lights := e.lights
+    }
+    
+    def propagate(parentVal: ReadLighting, result: Lighting) {
+      val oldSize = result.lights.size
+      result.lights.clear()
+      result.lights ++= lights
+      result.lights ++= parentVal.lights
+      
+      if (result.lights.size > maxLightCount) result.lights.take(maxLightCount)
+      if (result.lights.size != oldSize) result.signalBindingChanges()
+    }
+    
+    protected def resolveBinding() = lights
+    
+    def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {
+      val s = lights.size; var i = 0; while (i < s) {
+        val t = predefinedUniforms.se_viewMatrix.transformPoint(lights(i).position)
+        lights(i).ecPosition := t
+        
+        i += 1
+      }
+    }
+  }
+  
+  
+  // Declare lighting shaders.
   techniqueManager.register(new FragmentShader {
     uniform {
       declare[BindingList[PointLight]]("lighting")
@@ -250,55 +319,8 @@ object CustomRenderer extends BasicApp {
     export("vec4 lightIntensity()")
   })
   
-  
   techniqueManager.register(new VertexShader {
-    uniform {
-      declare[Mat4]("se_modelViewProjectionMatrix")
-    }
-    
-    attributes {
-      declare[Vec3]("vertices")
-    }
-    
-    out("rasterisationCtx") {
-      declare[Vec4]("gl_Position")
-    }
-    
-    src {"""
-      void transformVertices() {
-        rasterisationCtx.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-      }
-    """}
-    
-    entryPoint("transformVertices")
-  })
-    
-  techniqueManager.register(new VertexShader {
-    uniform {
-      declare[BindingList[TextureUnit]]("textureUnits")
-    }
-    
-    attributes {
-      declare[Vec2]("texCoords")
-    }
-    
-    out("texturingCtx") {
-      declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
-    }
-    
-    src {"""
-      void propagateTexturingValues() {
-        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          texturingCtx.ecTexCoords[i] = texCoords*textureUnits[i].scale;
-        }
-      }
-    """}
-    
-    entryPoint("propagateTexturingValues")
-  })
-  
-  techniqueManager.register(new VertexShader {
-    useSquareMatrices
+    forceSquareMatrices
     
     uniform {
       declare[Mat4]("se_modelViewMatrix")
@@ -326,15 +348,6 @@ object CustomRenderer extends BasicApp {
   })
   
   
-  // Initialize the scenegraph.
-  protected val world = new SceneGraph(
-    "World",
-    sceneGraphSettings,
-    new Camera("Main Camera"),
-    techniqueManager
-  )
-  
-  
   // Initialize the application.
   def init() {
     
@@ -348,8 +361,8 @@ object CustomRenderer extends BasicApp {
     })
     
     // Position the camera.
-    world.camera.transformation.mutable.translation := Vec3(-10, 25, 100)
-    world.camera.transformation.mutable.lookAt(Vec3.Zero, Vec3.UnitY)
+    world.camera.transformation.update.translation := Vec3(-10, 25, 100)
+    world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY)
     
     // Init camera controls.
     val camControls = new FirstPersonHandler(world.camera.transformation)
@@ -380,28 +393,34 @@ object CustomRenderer extends BasicApp {
     
     val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
-      Vec3(intensity, intensity, intensity) + 0.2
+      Vec3(0, intensity, intensity) + 0.2
     }
     
     val detailTexture = Texture2d[Vec3](Vec2i(tileSize)).fillWith { p =>
       val intensity = abs(tiledNoise(p.x, p.y) + 0.3) + 0.3
-      Vec3(0, intensity, intensity)
+      Vec3(intensity, intensity, intensity)
     }
     
-    mesh.material.textureUnits.mutable += new TextureUnit(objectTexture, 1)
-    mesh.material.textureUnits.mutable += new TextureUnit(detailTexture, 4)
+    mesh.material.textureUnits.update += new TextureUnit(
+      objectTexture, Mat3x2.Identity
+    )
+    mesh.material.textureUnits.update += new TextureUnit(
+      detailTexture, Mat3x2.scale(3).rotate(radians(30))
+    )
     
     // Position the mesh.
-    mesh.transformation.mutable.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.mutable.scale := 40
+    mesh.transformation.update.rotation :=
+      Quat4 rotateX(radians(25)) rotateY(radians(-30))
+      
+    mesh.transformation.update.scale := 40
     
     // Attach the mesh to the scenegraph.
     world.attach(mesh)
     
     
     // Attach lights.
-    world.environment.lighting.mutable.lights += new PointLight(Vec3(4), 0.1, 0)
-    world.environment.lighting.mutable.lights += new PointLight(Vec3(6), 0.1, 0)
+    world.environment.lighting.update.lights += new PointLight(Vec3(4), 0.1, 0)
+    world.environment.lighting.update.lights += new PointLight(Vec3(6), 0.1, 0)
     
     // Init and attach light indicators.
     lightMesh.geometry.vertices := Attributes[Vec3, RFloat](maxLightCount)
@@ -410,10 +429,10 @@ object CustomRenderer extends BasicApp {
     // Reuse texture rendering for lights.
     lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
     val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
-    lightMesh.material.textureUnits.mutable += new TextureUnit(lightTexture, 1)
+    lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
     
     // Set vertex coordinates that will later be used as to position lights.
-    lightMesh.elementRange.mutable.count := 2
+    lightMesh.elementRange.update.count := 2
     lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
     lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
     
@@ -435,9 +454,9 @@ object CustomRenderer extends BasicApp {
 
   def update(time: TimeStamp) {
     
-    val lights = world.environment.lighting.mutable.lights
+    val lights = world.environment.lighting.update.lights
     val lightVertices = lightMesh.geometry.vertices.write
-    val movingLights = min(lightPositions.size, lights.size)
+    val movingLightCount = min(lightPositions.size, lights.size)
     
     // Turn extra lights on and off periodically.
     if (mod(time.total, period) > period*0.5) {
@@ -445,13 +464,13 @@ object CustomRenderer extends BasicApp {
         lightsOn = true
         println("Extra lights on.")
         
-        for (i <- movingLights until maxLightCount) {
+        for (i <- movingLightCount until maxLightCount) {
           val light = new PointLight(Vec3(4), 0.1, 0)
           light.position := lightVertices(i)
           lights += light
         }
         
-        lightMesh.elementRange.mutable.count := maxLightCount
+        lightMesh.elementRange.update.count := maxLightCount
       }
     }
     else {
@@ -460,12 +479,12 @@ object CustomRenderer extends BasicApp {
         println("Extra lights off.")
         
         lights.take(lightPositions.size)
-        lightMesh.elementRange.mutable.count := lightPositions.size
+        lightMesh.elementRange.update.count := lightPositions.size
       }
     }
     
     // Animate moving lights.
-    for (i <- 0 until movingLights) {
+    for (i <- 0 until movingLightCount) {
       val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))
       val position = transformation.transformPoint(lightPositions(i))
       lights(i).position := position

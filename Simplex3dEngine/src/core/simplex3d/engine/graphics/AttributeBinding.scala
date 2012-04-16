@@ -26,7 +26,7 @@ import simplex3d.data._
 import simplex3d.engine.util._
 
 
-sealed abstract class SharedAttributes[F <: Format with MathType, R <: Raw](
+sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
   implicit listener: StructuralChangeListener
 )
 extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
@@ -39,10 +39,10 @@ extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
   def src: DirectSrc = this.get.src
 }
 
-sealed class AccessibleSharedAttributes[F <: Format with MathType, R <: Raw](
+sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
   implicit listener: StructuralChangeListener
 )
-extends SharedAttributes[F, R] with AccessibleSharedRef {
+extends AttributeBinding[F, R] with AccessibleSharedRef {
   import AccessChanges._
   
   def hasRefChanges = reassigned
@@ -50,7 +50,7 @@ extends SharedAttributes[F, R] with AccessibleSharedRef {
   def hasChanges = (hasRefChanges || (isDefined && this.get.sharedState.hasDataChanges))
 }
 
-object SharedAttributes {
+object AttributeBinding {
   def apply[F <: Format with MathType, R <: Raw](implicit listener: StructuralChangeListener)
-  :SharedAttributes[F, R] = new AccessibleSharedAttributes[F, R]
+  :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
 }

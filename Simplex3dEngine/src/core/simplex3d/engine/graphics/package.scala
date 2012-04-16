@@ -30,7 +30,7 @@ package object graphics {
   
   
   type TechniqueBinding = Readable[W] with Binding forSome { type W <: Writable[W] }
-  type ReadStruct[W <: Writable[W]] = Readable[W]
+  type ReadOnly[W <: Writable[W]] = Readable[W]
   
   
   val EffectRecursor: {
@@ -44,5 +44,5 @@ package object graphics {
   val BindingRecursor: { type Recursive <: Writable[Recursive] with Binding } = null
   type UncheckedBinding = BindingRecursor.type#Recursive
   
-  type UncheckedAttributes = SharedAttributes[Format with MathType, Raw]
+  type UncheckedAttributes = AttributeBinding[Format with MathType, Raw]
 }

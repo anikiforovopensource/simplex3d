@@ -337,8 +337,8 @@ extends Entity[T, G](name) {
       }
     }
     
-    displayMesh.elementRange.mutable.first := 0
-    displayMesh.elementRange.mutable.count := instanceArray.size*srcIndicesSize
+    displayMesh.elementRange.update.first := 0
+    displayMesh.elementRange.update.count := instanceArray.size*srcIndicesSize
     
     renderArray += displayMesh
   }

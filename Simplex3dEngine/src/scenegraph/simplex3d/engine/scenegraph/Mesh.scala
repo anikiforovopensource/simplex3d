@@ -82,7 +82,7 @@ extends Bounded[T, G](name) with AbstractMesh {
         autoBoundingVolume match {
           case bound: Oabb =>
             val range = if (elementRange.isDefined) elementRange.get else null
-            Bounded.rebuildAabb(range, geometry)(bound.mutable.min, bound.mutable.max)
+            Bounded.rebuildAabb(range, geometry)(bound.update.min, bound.update.max)
         }
         updated = true
       }

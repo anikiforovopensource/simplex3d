@@ -43,7 +43,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   protected implicit val structuralChangeListener: StructuralChangeListener = null
   
   // Read part of Struct2 type.
-  sealed abstract class ReadStruct2 extends ReadStruct[Struct2] {
+  sealed abstract class ReadStruct2 extends ReadOnly[Struct2] {
     def value2: ReadVec3
     def value2Array: ReadBindingList[Vec3]
     
@@ -65,7 +65,7 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
   }
   
   
-  sealed abstract class ReadStruct1 extends ReadStruct[Struct1] {
+  sealed abstract class ReadStruct1 extends ReadOnly[Struct1] {
     def value1: ReadVec3
     def value1Array: ReadBindingList[Vec3]
     
@@ -114,36 +114,36 @@ object UniformNestingTest extends default.BasicFullscreenEffectApp {
     
     // Init textures.
     {
-      texture0.mutable := mkTexture()
-      texture0Array.mutable += mkTexture()
-      texture0Array.mutable += mkTexture()
+      texture0.update := mkTexture()
+      texture0Array.update += mkTexture()
+      texture0Array.update += mkTexture()
       
       
-      struct1.mutable.texture1 := mkTexture()
-      struct1.mutable.texture1Array += mkTexture()
-      struct1.mutable.texture1Array += mkTexture()
+      struct1.update.texture1 := mkTexture()
+      struct1.update.texture1Array += mkTexture()
+      struct1.update.texture1Array += mkTexture()
       
-      struct1.mutable.struct2.texture2 := mkTexture()
-      struct1.mutable.struct2Array(0).texture2 := mkTexture()
-      struct1.mutable.struct2Array(1).texture2 := mkTexture()
-      
-      
-      struct1Array.mutable(0).texture1 := mkTexture()
-      struct1Array.mutable(0).texture1Array += mkTexture()
-      struct1Array.mutable(0).texture1Array += mkTexture()
-      
-      struct1Array.mutable(0).struct2.texture2 := mkTexture()
-      struct1Array.mutable(0).struct2Array(0).texture2 := mkTexture()
-      struct1Array.mutable(0).struct2Array(1).texture2 := mkTexture()
+      struct1.update.struct2.texture2 := mkTexture()
+      struct1.update.struct2Array(0).texture2 := mkTexture()
+      struct1.update.struct2Array(1).texture2 := mkTexture()
       
       
-      struct1Array.mutable(1).texture1 := mkTexture()
-      struct1Array.mutable(1).texture1Array += mkTexture()
-      struct1Array.mutable(1).texture1Array += mkTexture()
+      struct1Array.update(0).texture1 := mkTexture()
+      struct1Array.update(0).texture1Array += mkTexture()
+      struct1Array.update(0).texture1Array += mkTexture()
       
-      struct1Array.mutable(1).struct2.texture2 := mkTexture()
-      struct1Array.mutable(1).struct2Array(0).texture2 := mkTexture()
-      struct1Array.mutable(1).struct2Array(1).texture2 := mkTexture()
+      struct1Array.update(0).struct2.texture2 := mkTexture()
+      struct1Array.update(0).struct2Array(0).texture2 := mkTexture()
+      struct1Array.update(0).struct2Array(1).texture2 := mkTexture()
+      
+      
+      struct1Array.update(1).texture1 := mkTexture()
+      struct1Array.update(1).texture1Array += mkTexture()
+      struct1Array.update(1).texture1Array += mkTexture()
+      
+      struct1Array.update(1).struct2.texture2 := mkTexture()
+      struct1Array.update(1).struct2Array(0).texture2 := mkTexture()
+      struct1Array.update(1).struct2Array(1).texture2 := mkTexture()
     }
     
     val fragmentShader =

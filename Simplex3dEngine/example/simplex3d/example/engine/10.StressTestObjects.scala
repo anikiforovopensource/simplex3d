@@ -65,7 +65,7 @@ object StressTestObjects extends DefaultApp {
   
   
   def init() {
-    world.camera.transformation.mutable.translation := Vec3(0, 0, 200)
+    world.camera.transformation.update.translation := Vec3(0, 0, 200)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
@@ -96,18 +96,18 @@ object StressTestObjects extends DefaultApp {
       val mesh = new Mesh("Cube" + i)
       mesh.customBoundingVolume := new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale)
       
-      mesh.geometry.faceCulling.mutable := FaceCulling.Back
+      mesh.geometry.faceCulling.update := FaceCulling.Back
       
       mesh.geometry.indices := indices
       mesh.geometry.vertices := vertices
       mesh.geometry.normals := normals
       mesh.geometry.texCoords := texCoords
       
-      mesh.material.textures.mutable += objectTexture
+      mesh.material.textures.update += objectTexture
       
-      mesh.transformation.mutable.scale := scale
-      mesh.transformation.mutable.rotation := randomRotation()
-      mesh.transformation.mutable.translation := curve(i, 0)
+      mesh.transformation.update.scale := scale
+      mesh.transformation.update.rotation := randomRotation()
+      mesh.transformation.update.translation := curve(i, 0)
       
       world.attach(mesh)
     }

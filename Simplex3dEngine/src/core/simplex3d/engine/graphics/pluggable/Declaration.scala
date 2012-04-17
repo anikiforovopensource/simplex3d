@@ -91,7 +91,7 @@ final class Declaration(
   }
   
   private def resolveMathType(squareMatrices: Boolean, erasure: Class[_]) :String = {
-    val className = erasure.getSimpleName.toLowerCase()
+    val className = ClassUtil.simpleName(erasure).toLowerCase()
     val unprefixedName = 
       if (className.startsWith("Const")) className.drop(5)
       else if (className.startsWith("Read")) className.drop(4)
@@ -126,7 +126,7 @@ final class Declaration(
     structBlocks: HashMap[String, StructDeclaration]
   ) :String =
   {
-    val glslType = instance.getClass.getSimpleName
+    val glslType = ClassUtil.simpleName(instance.getClass)
     if (structBlocks == null) return glslType
 
     val subStructs = new HashMap[String, StructDeclaration]
@@ -178,7 +178,8 @@ final class Declaration(
     }
     else if (classOf[TextureBinding[_]].isAssignableFrom(m.erasure)) {
       try {
-        resolveTextureType(m.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure.getSimpleName) 
+        val erasure = m.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
+        resolveTextureType(ClassUtil.simpleName(erasure)) 
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -214,7 +215,7 @@ final class Declaration(
     }
     else {
       throw new RuntimeException(
-        "Unsupported type '" + m.erasure.getSimpleName + "' for declaration '" + name + "'."
+        "Unsupported type '" + ClassUtil.simpleName(m.erasure) + "' for declaration '" + name + "'."
       )
     }
   }
@@ -231,7 +232,8 @@ final class Declaration(
       (resolveMathType(squareMatrices, i.getClass), "")
     }
     else if (classOf[TextureBinding[_]].isAssignableFrom(i.getClass)) {
-      (resolveTextureType(i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure.getSimpleName), "")
+      val erasure = i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure
+      (resolveTextureType(ClassUtil.simpleName(erasure)), "")
     }
     else if (classOf[BindingList[_]].isAssignableFrom(i.getClass)) {
       val manifest = i.asInstanceOf[BindingList[_]].elementManifest
@@ -248,14 +250,14 @@ final class Declaration(
     }
     else {
       throw new RuntimeException(
-        "Unsupported type '" + i.getClass.getSimpleName + "' for declaration '" + name + "'."
+        "Unsupported type '" + ClassUtil.simpleName(i.getClass) + "' for declaration '" + name + "'."
       )
     }
   }
   
   override def toString() :String = {
     def extractTypeString(m: ClassManifest[_]) :String = {
-      m.erasure.getSimpleName() + {
+      ClassUtil.simpleName(m.erasure) + {
         m.typeArguments match {
           case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
           case _ => ""

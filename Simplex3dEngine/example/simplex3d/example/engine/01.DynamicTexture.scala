@@ -1,6 +1,5 @@
 package simplex3d.example.engine
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -15,10 +14,14 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.default._
 
 
-object DynamicTexture extends DefaultApp {
+object DynamicTexture extends default.App {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Dynamic Texture"
   
   override lazy val settings = new Settings(
@@ -26,7 +29,6 @@ object DynamicTexture extends DefaultApp {
     verticalSync = true,
     logCapabilities = true,
     logPerformance = true,
-    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
   
@@ -36,7 +38,7 @@ object DynamicTexture extends DefaultApp {
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
@@ -49,7 +51,7 @@ object DynamicTexture extends DefaultApp {
     
     mesh.geometry.texCoords := Attributes.fromData(texCoords)
     val objectTexture = Texture2d[Vec3](Vec2i(128))
-    mesh.material.textures.update += objectTexture
+    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
     
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 50

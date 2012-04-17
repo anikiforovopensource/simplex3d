@@ -32,7 +32,8 @@ import simplex3d.engine.asset._
 import simplex3d.engine.transformation._
 
 
-trait BasicApp extends App with scala.App {
+// Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
+abstract class BaseApp extends simplex3d.engine.App {
   
   type Transformation <: TransformationContext
   type Graphics <: GraphicsContext
@@ -77,10 +78,5 @@ trait BasicApp extends App with scala.App {
   protected def reshape(position: inVec2i, dimensions: inVec2i) {
     val aspect = dimensions.x.toDouble/dimensions.y
     world.camera.projection := perspectiveProj(radians(60), aspect, 5, 1000)
-  }
-  
-  override def main(args: Array[String]) = {
-    super.main(args)
-    launch()
   }
 }

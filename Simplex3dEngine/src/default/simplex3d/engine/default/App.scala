@@ -28,7 +28,8 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.input._
 
 
-trait DefaultApp extends BasicApp {
+// Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
+abstract class App extends BaseApp {
   
   type Transformation = ComponentTransformation3dContext
   type Graphics = renderer.GraphicsContext

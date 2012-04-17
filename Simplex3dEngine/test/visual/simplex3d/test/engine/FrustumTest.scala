@@ -20,7 +20,6 @@
 
 package simplex3d.test.engine
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -34,10 +33,14 @@ import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.default._
 
 
-object FrustumTest extends DefaultApp {
+object FrustumTest extends default.App {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Frustum Test"
   
   override lazy val settings = new Settings(
@@ -56,7 +59,7 @@ object FrustumTest extends DefaultApp {
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
@@ -66,7 +69,8 @@ object FrustumTest extends DefaultApp {
     cube.geometry.normals := Attributes.fromData(normals)
     cube.geometry.texCoords := Attributes.fromData(texCoords)
     
-    cube.material.textures.update += Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    val objectTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    cube.material.textureUnits.update += new TextureUnit(objectTexture)
     
     cube.transformation.update.scale := 20
     cube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 

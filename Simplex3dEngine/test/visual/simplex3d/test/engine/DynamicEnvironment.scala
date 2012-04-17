@@ -65,7 +65,12 @@ import simplex3d.engine.scenegraph._
  * These optimizations avoid expensive operations and results in exceptional performance
  * without sacrificing the flexibility. 
  */
-object DynamicEnvironment extends App with scala.App {
+object DynamicEnvironment extends App {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Dynamic Environment"
 
   val config = new Config
@@ -73,7 +78,6 @@ object DynamicEnvironment extends App with scala.App {
   lazy val settings = new Settings(
     fullscreen = false,
     verticalSync = true,
-    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
 
@@ -103,7 +107,7 @@ object DynamicEnvironment extends App with scala.App {
     
     val camControls = new FirstPersonHandler(scene.camera.transformation)
     addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
     val (indices, vertices, _, _) = Shapes.makeBox()
@@ -170,11 +174,6 @@ object DynamicEnvironment extends App with scala.App {
   override def reshape(position: inVec2i, contrastensions: inVec2i) {
     val aspect = contrastensions.x.toDouble/contrastensions.y
     scene.camera.projection := perspectiveProj(radians(60), aspect, 10, 500)
-  }
-  
-  override def main(args: Array[String]) = {
-    super.main(args)
-    launch()
   }
 }
 

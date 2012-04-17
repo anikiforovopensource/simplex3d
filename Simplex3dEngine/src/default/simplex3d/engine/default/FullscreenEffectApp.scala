@@ -30,14 +30,14 @@ import simplex3d.engine.input._
 import simplex3d.engine.asset._
 import simplex3d.engine.renderer._
 import simplex3d.engine.transformation._
-import simplex3d.engine.default._
 
 
-trait BasicFullscreenEffectApp extends FullscreenEffectApp with scala.App {
+trait FullscreenEffectApp extends simplex3d.engine.FullscreenEffectApp {
   
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
       override def keyTyped(input: Input, e: KeyEvent) {
+        println(this, "ESC")
         if (KeyCode.K_Escape == e.keyCode) dispose()
       }
     }
@@ -45,9 +45,4 @@ trait BasicFullscreenEffectApp extends FullscreenEffectApp with scala.App {
   
   lazy val config = new Config
   lazy val settings = new Settings
-
-  override def main(args: Array[String]) = {
-    super.main(args)
-    launch()
-  }
 }

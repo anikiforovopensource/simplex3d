@@ -32,9 +32,24 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
   val driver = "lwjgl"
     
   @volatile private var quit = false
+  @volatile private var running = false
   
   def launch(title: String, settings: Settings, app: App#Subtext, loop: simplex3d.engine.MainLoop) :Object = {
+    running = true
+    
     val thread = new Thread(new Runnable() { def run() {
+      
+      if (Display.isCreated()) {
+        running = false
+        
+        throw new IllegalStateException(
+          "Already using the native display. Only one native display per JVM can be used with this launcher."
+        )
+      }
+      
+      running = true
+      
+      
       val desktopMode = Display.getDesktopDisplayMode()
       
       val resolution = settings.resolution.getOrElse(ConstVec2i(desktopMode.getWidth, desktopMode.getHeight))
@@ -84,9 +99,15 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
         localQuit = loop.body(app)
       }
       
+      
       app.renderManager.renderContext.cleanup()
+      
+      RawKeyboard.destroy()
+      RawMouse.destroy()
       Display.destroy()
-      quit = false // Allow to re-launch.
+      
+      quit = false// Allow to re-launch.
+      running = false
     }})
     
     thread.start()
@@ -112,7 +133,14 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
     )
   }
   
+  def isRunning = running
+  
   def dispose() {
     quit = true
+  }
+  
+  def disposeAndWait() {
+    dispose()
+    while (isRunning) { Thread.sleep(1) }
   }
 }

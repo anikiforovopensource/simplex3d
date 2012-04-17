@@ -98,4 +98,4 @@ This guide assumes you have checked out "trunk" from the SVN and renamed it to "
 5) Restart sbt to setup native libs.
 6) Set "Native library location" for lwjgl.jar to "Simplex3d/target/natives/lwjgl"
 
-After completing these steps you should be able to compile Simplex3dEngine and run any of the tests and examples from Eclipse.
+After completing these steps you should be able to compile Simplex3dEngine and run all the tests and examples from Eclipse.

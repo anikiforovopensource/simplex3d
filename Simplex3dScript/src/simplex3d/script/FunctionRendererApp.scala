@@ -29,7 +29,7 @@ import simplex3d.engine._
 import simplex3d.engine.graphics._
 
 
-abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
+abstract class FunctionRendererApp extends default.FullscreenEffectApp {
   
   protected def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
     effect.function = function
@@ -65,7 +65,7 @@ abstract class FunctionRendererApp extends default.BasicFullscreenEffectApp {
           dims, DataBuffer[Vec3, UByte](dims.x*dims.y),
           ImageFilter.Linear, ImageFilter.Linear, MipMapFilter.Disabled, 1
         )
-        this.texture.mutable := texture
+        this.texture.update := texture
       }
       
       if (function != null) {

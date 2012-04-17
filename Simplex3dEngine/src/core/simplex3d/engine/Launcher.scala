@@ -37,5 +37,12 @@ trait Launcher {
    * @return a UI element wrapping the rendering surface, or null when launched in a native window. 
    */
   def launch(title: String, settings: Settings, app: App#Subtext, loop: MainLoop) :Object
+  
+  def isRunning: Boolean
+  
   def dispose() :Unit
+  
+  /** This method must not return until the application can be safely relaunched.
+   */
+  def disposeAndWait() :Unit
 }

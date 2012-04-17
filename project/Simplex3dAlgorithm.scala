@@ -77,11 +77,7 @@ object Simplex3dAlgorithm extends Build {
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq(
       target := new File("target/algorithm/doc"),
-      sourceDirectories <<= baseDirectory(base => Seq(
-        base / "src/intersection",
-        base / "src/mesh",
-        base / "src/noise"
-      )),
+      scalaSource in Compile <<= baseDirectory(_ / "src"),
       publish := {},
       publishLocal := {}
     )

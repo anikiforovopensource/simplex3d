@@ -1078,7 +1078,7 @@ extends graphics.RenderContext with GlAccess {
         log(
           Level.SEVERE, "Uniform '" + programBinding.name +
           "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
-          "' but resolves to an instance of '" + value.getClass.getSimpleName + "' for mesh '" + meshName +
+          "' but resolves to an instance of '" + ClassUtil.simpleName(value.getClass) + "' for mesh '" + meshName +
           "'. This uniform will have an undefined value in the shader."
         )
         return null

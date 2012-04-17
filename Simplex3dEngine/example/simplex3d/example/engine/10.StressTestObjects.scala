@@ -1,6 +1,5 @@
 package simplex3d.example.engine
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -15,10 +14,14 @@ import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 import simplex3d.engine.graphics._
-import simplex3d.engine.default._
 
 
-object StressTestObjects extends DefaultApp {
+object StressTestObjects extends default.App {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val objectCount = 3000
   val title = "Stress Test: " + objectCount + " objects."
   
@@ -46,30 +49,30 @@ object StressTestObjects extends DefaultApp {
     val b = 28.25896 //uptime*curveSpeed
     Vec3(nx(a, b), ny(a, b), nz(a, b))*100
   }
-  
-  
-  val objectTexture = Texture2d[Vec3](Vec2i(128))
-  objectTexture.fillWith { p =>
-    val borderWidth = 20
 
-    if (
-      p.x < borderWidth || p.x >= objectTexture.dimensions.x - borderWidth ||
-      p.y < borderWidth || p.y >= objectTexture.dimensions.y - borderWidth
-    ) {
-      Vec3(0.1, 0.1, 1)
-    }
-    else {
-      Vec3(0, 0.8, 0.8)
-    }
-  }
-  
   
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 200)
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    
+    
+    val objectTexture = Texture2d[Vec3](Vec2i(128))
+    objectTexture.fillWith { p =>
+      val borderWidth = 20
+  
+      if (
+        p.x < borderWidth || p.x >= objectTexture.dimensions.x - borderWidth ||
+        p.y < borderWidth || p.y >= objectTexture.dimensions.y - borderWidth
+      ) {
+        Vec3(0.1, 0.1, 1)
+      }
+      else {
+        Vec3(0, 0.8, 0.8)
+      }
+    }
     
     
     val (indexBuffer, vertexBuffer, normalBuffer, texCoordBuffer) = Shapes.makeBox()
@@ -103,7 +106,7 @@ object StressTestObjects extends DefaultApp {
       mesh.geometry.normals := normals
       mesh.geometry.texCoords := texCoords
       
-      mesh.material.textures.update += objectTexture
+      mesh.material.textureUnits.update += new TextureUnit(objectTexture)
       
       mesh.transformation.update.scale := scale
       mesh.transformation.update.rotation := randomRotation()

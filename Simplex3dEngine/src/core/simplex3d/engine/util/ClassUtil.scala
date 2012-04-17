@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -18,12 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-
-import simplex3d.engine.graphics._
-import simplex3d.engine.transformation._
+package simplex3d.engine.util
 
 
-package object default {
+object ClassUtil {
   
+  /** Class.getSimpleName() will throw an exception when running interpreted code. This method is a workaround.
+   */
+  def simpleName(c: Class[_]) :String = {
+    val fullName = c.getName
+    val index = fullName.lastIndexOf('$')
+    if (index != -1) {
+      if (index == fullName.length - 1) {
+        val anotherIndex = fullName.lastIndexOf('$', index)
+        
+        if (anotherIndex != -1) fullName.substring(anotherIndex + 1, index)
+        else fullName.substring(0, index)
+      }
+      else fullName.substring(index + 1)
+    }
+    else c.getSimpleName
+  }
 }

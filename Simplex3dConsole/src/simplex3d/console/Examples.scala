@@ -98,13 +98,20 @@ object Examples {
     if (is != null) {
       val code = scala.io.Source.fromInputStream(is).mkString
       is.close()
-      extractInnerCode(mkName(fileName), code)
+      if (fullPath.startsWith("simplex3d/example/engine")) prepEngineExample(mkName(fileName), code)
+      else extractInnerCode(mkName(fileName), code)
     }
     else {
       null
     }
   }
 
+  private def prepEngineExample(name: String, code: String) :String = {
+    val lines = code.split("\n")
+    val noPackage = lines.filterNot(_.trim.startsWith("package")).mkString("\n").trim
+    cleanup(noPackage) + "\n\n" + name + ".launch()\n"
+  }
+  
   private def extractInnerCode(name: String, code: String) :String = {
     val extIdx = code.indexOf("extends")
     val next0 = extIdx + "extends".length

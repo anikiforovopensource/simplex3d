@@ -45,22 +45,17 @@ class SimplexInterpreter extends SimpleInterpreter {
       import simplex3d.script.ImageUtils._
       """
     )
-    flusher.flush()
-    out.clear()
   }
 }
 
 class SimpleInterpreter {
-  protected val out = redirectSystemOut()
-  //protected val interpreterOut = new OutputStreamWriter(new ByteOutputStream()) //XXX only show interpreter output if there are problems.
-  protected val flusher = new PrintWriter(out)
 
   protected val interpreter = {
-    val settings = new GenericRunnerSettings(out.println(_))
+    val settings = new GenericRunnerSettings(System.out.println(_))
     settings.usejavacp.value = false
     settings.nc.value = true
     settings.classpath.value = DepsManager.resolveDeps()
-    val imain = new IMain(settings, flusher) {
+    val imain = new IMain(settings, new PrintWriter(System.out)) {
       override protected def parentClassLoader: ClassLoader = this.getClass.getClassLoader()
     }
     imain
@@ -69,24 +64,12 @@ class SimpleInterpreter {
   init()
 
 
-  private def redirectSystemOut() :AccumPrintStream = {
-    if (!System.out.isInstanceOf[AccumPrintStream]) {
-      System.setOut(new AccumPrintStream())
-    }
-    System.out.asInstanceOf[AccumPrintStream]
-  }
-
   def init() {}
 
-  def interpret(code: String) :String = {
+  def interpret(code: String) {
     interpreter.interpret(
-      code +
-      "\nprintln(\"\\n_______________________________________________________________\\n\")"
+      code
     )
-    flusher.flush()
-    val res = out.text
-    out.clear()
-    res
   }
 
   def reset() {

@@ -111,20 +111,16 @@ public class ConsolePanel extends javax.swing.JPanel {
                 resetInterpreterAction.setEnabled(false);
 
                 new SwingWorker() {
-                    @Override protected String doInBackground() throws Exception {
-                        String res = interpreter.interpret(textComponent.getText());
-                        return res;
+                    @Override protected Object doInBackground() throws Exception {
+                        interpreter.interpret(textComponent.getText());
+                        return null;
                     }
 
                     @Override protected void done() {
                         try {
-                            feedTextArea.setText((String) get());
+                            get();
                         } catch (Exception e) {
-                            String error = "EXCEPTION:\n" + e.toString();
-                            for (StackTraceElement st : e.getStackTrace()) {
-                                error += "\n" + st.toString();
-                            }
-                            feedTextArea.setText(error);
+                            e.printStackTrace();
                         }
                         finally {
                             runAction.setEnabled(true);
@@ -164,6 +160,10 @@ public class ConsolePanel extends javax.swing.JPanel {
         resetInterpreterButton.setAction(resetInterpreterAction);
 
         setInterpreterPolicy(true);
+        
+        
+        // Connect output streams.
+        StreamInterceptor.connectTo(feedTextArea);
     }
 
     
@@ -189,14 +189,14 @@ public class ConsolePanel extends javax.swing.JPanel {
             int selection = JOptionPane.showOptionDialog(
                 this,
                 "Turning off the sandbox mode will give the code from\n" +
-                "the editor a full access to your system.\n\n" +
+                "the editor the full access to your system.\n\n" +
                 "Are you sure you want to do this?\n",
                 "Warning: turning off the sandbox mode!",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
                 options, "Cancel"
             );
 
-            if ("Disable".equals(options[selection])) {
+            if (selection != -1 && "Disable".equals(options[selection])) {
                 setInterpreterPolicy(enabled);
             }
         }

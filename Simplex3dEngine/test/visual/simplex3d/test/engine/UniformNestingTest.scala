@@ -20,7 +20,6 @@
 
 package simplex3d.test.engine
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -31,7 +30,12 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-object UniformNestingTest extends default.BasicFullscreenEffectApp {
+object UniformNestingTest extends default.FullscreenEffectApp {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Uniform Nesting Test"
   
   override lazy val settings = new Settings(

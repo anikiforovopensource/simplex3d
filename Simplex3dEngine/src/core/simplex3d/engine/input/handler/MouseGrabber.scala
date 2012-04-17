@@ -29,7 +29,7 @@ import simplex3d.engine.input._
 import simplex3d.engine.transformation._
 
 
-class MouseGrabber(startWithGrabbedMouse: Boolean)(keys: Int*)
+class MouseGrabber(grabMouseWhenStarted: Boolean)(keys: Int*)
   (mouseGrabbedHandler: InputListener*)(mouseFreeHandler: InputListener*)
 extends InputListener {
   
@@ -39,7 +39,7 @@ extends InputListener {
   
   override def update(input: Input, time: TimeStamp) {
     if (!initialized) {
-      input.mouse.isGrabbed = startWithGrabbedMouse
+      input.mouse.isGrabbed = grabMouseWhenStarted
       initialized = true
       
       mouseGrabbedHandler.foreach(_.isEnabled = input.mouse.isGrabbed)

@@ -62,7 +62,7 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
       if (count < 0) throw new IllegalArgumentException("Count = " + count + " must be greater than or equal to 0.")
       if (first + count > accessible.size) throw new IllegalArgumentException(
         "Requested region from " + first + " to " + (first + count) +
-        " exceeds the data size = " + accessible.size + "."
+        " exceeds the data size " + accessible.size + "."
       )
       
       shared.regions.put(first, count)
@@ -105,14 +105,6 @@ object Attributes {
   :Attributes[F, R] = {
     val data = composition.mkDataBuffer(primitives.mkDataBuffer(size*composition.components))
     fromData(data)
-  }
-  def apply[F <: Format with MathType, R <: Tangible]
-    (vals: F#Accessor#Read*)
-    (implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R])
-  :Attributes[F, R] = {
-    val data = composition.mkDataBuffer(primitives.mkDataBuffer(vals.size*composition.components))
-    data.put(vals)
-    fromData(data, Caching.Dynamic)
   }
   
   def fromData[F <: Format with MathType, R <: Raw]

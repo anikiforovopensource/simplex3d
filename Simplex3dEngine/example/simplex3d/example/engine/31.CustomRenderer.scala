@@ -13,12 +13,16 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 import simplex3d.engine.graphics.pluggable._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.default._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 
 
-object CustomRenderer extends BasicApp {
+object CustomRenderer extends default.BaseApp {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Custom Renderer"
   
   // Configure application settings.
@@ -26,10 +30,158 @@ object CustomRenderer extends BasicApp {
     fullscreen = false,
     verticalSync = true,
     logPerformance = true,
-    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
   
+  
+  // Custom Transformation and Graphics contexts.
+  implicit val TransformationContext = new Transformation
+  implicit val GraphicsContext = new GraphicsContext
+  
+  
+  // Initialize the application.
+  def init() {
+    
+    // Add exit on Esc.
+    addInputListener(new InputListener {
+      override val keyboardListener = new KeyboardListener {
+        override def keyTyped(input: Input, e: KeyEvent) {
+          if (KeyCode.K_Escape == e.keyCode) dispose()
+        }
+      }
+    })
+    
+    // Position the camera.
+    world.camera.transformation.update.translation := Vec3(-10, 25, 100)
+    world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY)
+    
+    // Init camera controls.
+    val camControls = new FirstPersonHandler(world.camera.transformation)
+    addInputListener(camControls)
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    
+    // Init the mesh.
+    val mesh = new Mesh("Cube")
+    
+    // Generate box and attach attributes to the mesh.
+    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+    mesh.geometry.indices := Attributes.fromData(indices)
+    mesh.geometry.vertices := Attributes.fromData(vertices)
+    mesh.geometry.normals := Attributes.fromData(normals)
+    
+    mesh.geometry.texCoords := Attributes.fromData(texCoords)
+    
+    // Generate and attach textures.
+    val noise = ClassicalGradientNoise
+    
+    val tileSize = 256
+    val tiledNoise = new TiledNoiseSum(
+      source = new ClassicalGradientNoise(System.currentTimeMillis.toInt),
+      tile = ConstVec4(tileSize),
+      frequency = 0.2,
+      octaves = 1
+    )
+    
+    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+      val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
+      Vec3(0, intensity, intensity) + 0.2
+    }
+    
+    val detailTexture = Texture2d[Vec3](Vec2i(tileSize)).fillWith { p =>
+      val intensity = abs(tiledNoise(p.x, p.y) + 0.3) + 0.3
+      Vec3(intensity, intensity, intensity)
+    }
+    
+    mesh.material.textureUnits.update += new TextureUnit(
+      objectTexture, Mat3x2.Identity
+    )
+    mesh.material.textureUnits.update += new TextureUnit(
+      detailTexture, Mat3x2.scale(3).rotate(radians(30))
+    )
+    
+    // Position the mesh.
+    mesh.transformation.update.rotation :=
+      Quat4 rotateX(radians(25)) rotateY(radians(-30))
+      
+    mesh.transformation.update.scale := 40
+    
+    // Attach the mesh to the scenegraph.
+    world.attach(mesh)
+    
+    
+    // Attach lights.
+    world.environment.lighting.update.lights += new PointLight(Vec3(4), 0.1, 0)
+    world.environment.lighting.update.lights += new PointLight(Vec3(6), 0.1, 0)
+    
+    // Init and attach light indicators.
+    lightMesh.geometry.vertices := Attributes[Vec3, RFloat](maxLightCount)
+    lightMesh.geometry.mode = Points(5)
+    
+    // Reuse texture rendering for lights.
+    lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
+    val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
+    lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
+    
+    // Set vertex coordinates that will later be used as to position lights.
+    lightMesh.elementRange.update.count := 2
+    lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
+    lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
+    
+    world.attach(lightMesh)
+  }
+  
+  
+  // Setup light representation.
+  val maxLightCount = 4
+  val lightMesh = new Mesh("Lights")
+  
+  val lightPositions = Array(Vec3(1, 0.5, 0)*40, Vec3(1, -0.5, 0)*60)
+  
+  val period = 15
+  val rotationSpeeds = Array(radians(2*360/period), radians(1.5*360/period))
+  
+  var lightsOn = false
+  
+
+  def update(time: TimeStamp) {
+    
+    val lights = world.environment.lighting.update.lights
+    val lightVertices = lightMesh.geometry.vertices.write
+    val movingLightCount = min(lightPositions.size, lights.size)
+    
+    // Turn extra lights on and off periodically.
+    if (mod(time.total, period) > period*0.5) {
+      if (!lightsOn) {
+        lightsOn = true
+        println("Extra lights on.")
+        
+        for (i <- movingLightCount until maxLightCount) {
+          val light = new PointLight(Vec3(4), 0.1, 0)
+          light.position := lightVertices(i)
+          lights += light
+        }
+        
+        lightMesh.elementRange.update.count := maxLightCount
+      }
+    }
+    else {
+      if (lightsOn) {
+        lightsOn = false
+        println("Extra lights off.")
+        
+        lights.take(lightPositions.size)
+        lightMesh.elementRange.update.count := lightPositions.size
+      }
+    }
+    
+    // Animate moving lights.
+    for (i <- 0 until movingLightCount) {
+      val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))
+      val position = transformation.transformPoint(lightPositions(i))
+      lights(i).position := position
+      lightVertices(i) = position
+    }
+  }
   
   // Declare TextureUnit Struct.
   sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
@@ -76,7 +228,6 @@ object CustomRenderer extends BasicApp {
   
   // Define custom contexts. This allows to inject custom material and geometry implementations.
   type Transformation = ComponentTransformation3dContext
-  implicit val TransformationContext = new Transformation
   
   class GraphicsContext extends graphics.GraphicsContext {
     type Geometry = CustomRenderer.Geometry
@@ -90,7 +241,6 @@ object CustomRenderer extends BasicApp {
     init()
   }
   type Graphics = GraphicsContext
-  implicit val GraphicsContext = new GraphicsContext
   
   
   // Declare a new technique manager and attach it to the scenegraph.
@@ -346,149 +496,4 @@ object CustomRenderer extends BasicApp {
     
     entryPoint("propagateLightingValues")
   })
-  
-  
-  // Initialize the application.
-  def init() {
-    
-    // Add exit on Esc.
-    addInputListener(new InputListener {
-      override val keyboardListener = new KeyboardListener {
-        override def keyTyped(input: Input, e: KeyEvent) {
-          if (KeyCode.K_Escape == e.keyCode) dispose()
-        }
-      }
-    })
-    
-    // Position the camera.
-    world.camera.transformation.update.translation := Vec3(-10, 25, 100)
-    world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY)
-    
-    // Init camera controls.
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
-    
-    // Init the mesh.
-    val mesh = new Mesh("Cube")
-    
-    // Generate box and attach attributes to the mesh.
-    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
-    mesh.geometry.indices := Attributes.fromData(indices)
-    mesh.geometry.vertices := Attributes.fromData(vertices)
-    mesh.geometry.normals := Attributes.fromData(normals)
-    
-    mesh.geometry.texCoords := Attributes.fromData(texCoords)
-    
-    // Generate and attach textures.
-    val noise = ClassicalGradientNoise
-    
-    val tileSize = 256
-    val tiledNoise = new TiledNoiseSum(
-      source = new ClassicalGradientNoise(System.currentTimeMillis.toInt),
-      tile = ConstVec4(tileSize),
-      frequency = 0.2,
-      octaves = 1
-    )
-    
-    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
-      val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
-      Vec3(0, intensity, intensity) + 0.2
-    }
-    
-    val detailTexture = Texture2d[Vec3](Vec2i(tileSize)).fillWith { p =>
-      val intensity = abs(tiledNoise(p.x, p.y) + 0.3) + 0.3
-      Vec3(intensity, intensity, intensity)
-    }
-    
-    mesh.material.textureUnits.update += new TextureUnit(
-      objectTexture, Mat3x2.Identity
-    )
-    mesh.material.textureUnits.update += new TextureUnit(
-      detailTexture, Mat3x2.scale(3).rotate(radians(30))
-    )
-    
-    // Position the mesh.
-    mesh.transformation.update.rotation :=
-      Quat4 rotateX(radians(25)) rotateY(radians(-30))
-      
-    mesh.transformation.update.scale := 40
-    
-    // Attach the mesh to the scenegraph.
-    world.attach(mesh)
-    
-    
-    // Attach lights.
-    world.environment.lighting.update.lights += new PointLight(Vec3(4), 0.1, 0)
-    world.environment.lighting.update.lights += new PointLight(Vec3(6), 0.1, 0)
-    
-    // Init and attach light indicators.
-    lightMesh.geometry.vertices := Attributes[Vec3, RFloat](maxLightCount)
-    lightMesh.geometry.mode = Points(5)
-    
-    // Reuse texture rendering for lights.
-    lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
-    val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
-    lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
-    
-    // Set vertex coordinates that will later be used as to position lights.
-    lightMesh.elementRange.update.count := 2
-    lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
-    lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
-    
-    world.attach(lightMesh)
-  }
-  
-  
-  // Setup light representation.
-  val maxLightCount = 4
-  val lightMesh = new Mesh("Lights")
-  
-  val lightPositions = Array(Vec3(1, 0.5, 0)*40, Vec3(1, -0.5, 0)*60)
-  
-  val period = 15
-  val rotationSpeeds = Array(radians(2*360/period), radians(1.5*360/period))
-  
-  var lightsOn = false
-  
-
-  def update(time: TimeStamp) {
-    
-    val lights = world.environment.lighting.update.lights
-    val lightVertices = lightMesh.geometry.vertices.write
-    val movingLightCount = min(lightPositions.size, lights.size)
-    
-    // Turn extra lights on and off periodically.
-    if (mod(time.total, period) > period*0.5) {
-      if (!lightsOn) {
-        lightsOn = true
-        println("Extra lights on.")
-        
-        for (i <- movingLightCount until maxLightCount) {
-          val light = new PointLight(Vec3(4), 0.1, 0)
-          light.position := lightVertices(i)
-          lights += light
-        }
-        
-        lightMesh.elementRange.update.count := maxLightCount
-      }
-    }
-    else {
-      if (lightsOn) {
-        lightsOn = false
-        println("Extra lights off.")
-        
-        lights.take(lightPositions.size)
-        lightMesh.elementRange.update.count := lightPositions.size
-      }
-    }
-    
-    // Animate moving lights.
-    for (i <- 0 until movingLightCount) {
-      val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))
-      val position = transformation.transformPoint(lightPositions(i))
-      lights(i).position := position
-      lightVertices(i) = position
-    }
-  }
 }

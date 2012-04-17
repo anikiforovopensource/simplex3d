@@ -1,6 +1,5 @@
 package simplex3d.example.engine
 
-import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -15,10 +14,14 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.default._
 
 
-object InterleavedAttributes extends DefaultApp {
+object InterleavedAttributes extends default.App {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Interleaved Attributes"
   
   override lazy val settings = new Settings(
@@ -26,7 +29,6 @@ object InterleavedAttributes extends DefaultApp {
     verticalSync = true,
     logCapabilities = true,
     logPerformance = true,
-    antiAliasingSamples = 4,
     resolution = Some(Vec2i(800, 600))
   )
   
@@ -35,7 +37,7 @@ object InterleavedAttributes extends DefaultApp {
     
     val camControls = new FirstPersonHandler(world.camera.transformation)
     addInputListener(camControls)
-    addInputListener(new MouseGrabber(true)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
     
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
@@ -54,10 +56,11 @@ object InterleavedAttributes extends DefaultApp {
     // Please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
     val noise = ClassicalGradientNoise
-    mesh.material.textures.update += Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
+    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
     
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 40

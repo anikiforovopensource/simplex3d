@@ -23,6 +23,11 @@ package simplex3d.console;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -73,6 +78,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         sandboxMenuItem = new javax.swing.JCheckBoxMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
+        licenseMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Simplex3D Console");
@@ -112,11 +118,11 @@ public class ConsoleFrame extends javax.swing.JFrame {
         mainMenuBar.add(fileMenu);
 
         exampleMenu.setMnemonic('E');
-        exampleMenu.setText("Examples");
+        exampleMenu.setText(" Examples");
         mainMenuBar.add(exampleMenu);
 
         settingsMenu.setMnemonic('S');
-        settingsMenu.setText("Settings");
+        settingsMenu.setText(" Settings");
 
         sandboxMenuItem.setSelected(true);
         sandboxMenuItem.setText("Sandbox");
@@ -130,7 +136,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         mainMenuBar.add(settingsMenu);
 
         helpMenu.setMnemonic('H');
-        helpMenu.setText("Help");
+        helpMenu.setText(" Help");
 
         aboutMenuItem.setMnemonic('A');
         aboutMenuItem.setText("About");
@@ -140,6 +146,14 @@ public class ConsoleFrame extends javax.swing.JFrame {
             }
         });
         helpMenu.add(aboutMenuItem);
+
+        licenseMenuItem.setText("License");
+        licenseMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                licenseMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(licenseMenuItem);
 
         mainMenuBar.add(helpMenu);
 
@@ -166,7 +180,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         JOptionPane.showMessageDialog(this,
-            "Interactive Scala Console,\ndeveloped for Simplex3D Project.\nhttp://www.simplex3d.org"
+            "Simplex3D Console\nhttp://www.simplex3d.org"
         );
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
@@ -175,10 +189,19 @@ public class ConsoleFrame extends javax.swing.JFrame {
         sandboxMenuItem.setSelected(System.getSecurityManager() != null);
     }//GEN-LAST:event_sandboxMenuItemActionPerformed
 
+    private void licenseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_licenseMenuItemActionPerformed
+        JFrame licenseFrame = new LicenseFrame();
+        licenseFrame.setLocation(getLocation());
+        licenseFrame.setVisible(true);
+    }//GEN-LAST:event_licenseMenuItemActionPerformed
+
+    
     /**
     * @param args the command line arguments
     */
     public static void main(String args[]) {
+        StreamInterceptor.interceptSystemStreams();
+        
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {}
@@ -239,6 +262,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem licenseMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JMenuItem resetInterpreterMenuItem;
     private javax.swing.JMenuItem runMenuItem;

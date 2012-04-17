@@ -20,6 +20,7 @@
 
 package simplex3d.engine
 
+import java.security._
 import java.util.logging._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
@@ -75,7 +76,30 @@ trait App { self =>
   protected def reshape(position: inVec2i, dimensions: inVec2i) :Unit
   
   
-  def launch() :Object = { //TODO rework to allow embedding of the rendering surface into ui.
+  /** Depending on the launcher, this method will return an appropriate UI element wrapping
+   * the rendering surface. If the application is launched in a native window, this method
+   * will return null.
+   *  
+   * @return a UI element wrapping the rendering surface, or null when launched in a native window. 
+   */
+  def launch() :Object = {
+    AccessController.doPrivileged(new PrivilegedAction[Object]() {
+      def run() = {
+        try {
+          privilegedLaunch()
+        }
+        catch {
+          case e =>
+            log(Level.SEVERE, e + "\n" + e.getStackTrace().mkString("    at ", "\n    at ", ""))
+            throw e
+        }
+      }
+    })
+  }
+  
+  private def privilegedLaunch() :Object = {
+    if (launcher != null && launcher.isRunning) throw new IllegalStateException("Already launched.")
+    
     _launcher = Class.forName(config.launcher).newInstance().asInstanceOf[Launcher]
     _mainLoop = Class.forName(config.mainLoop).newInstance().asInstanceOf[MainLoop]
     _renderManager = Class.forName(config.renderManager).newInstance().asInstanceOf[RenderManager]
@@ -95,6 +119,10 @@ trait App { self =>
   
   def dispose() {
     launcher.dispose()
+  }
+  
+  def disposeAndWait() {
+    launcher.disposeAndWait()
   }
   
   

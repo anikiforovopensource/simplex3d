@@ -50,7 +50,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
     var i = 0; while (i < fv.length) {
       if(!fv(i).isInstanceOf[Writable[_]]) {
         logger.log(
-          Level.SEVERE, this.getClass.getSimpleName + " value '" + fieldNames(i) +
+          Level.SEVERE, ClassUtil.simpleName(this.getClass) + " value '" + fieldNames(i) +
           "' must be an instance of 'Writable[_]'."
         )
         rebuild = true
@@ -65,7 +65,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
     
     
     // Extract list declarations.
-    val parentType = clazz.getSimpleName
+    val parentType = ClassUtil.simpleName(clazz)
     val declarations = new HashMap[(String, String), List[BindingList[_]]]
     
     def register(nameKey: (String, String), list: BindingList[_]) {

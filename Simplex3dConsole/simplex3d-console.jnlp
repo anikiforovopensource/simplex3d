@@ -7,10 +7,6 @@
         <description>An interactive Scala console.</description>
         <icon href="simplex3d-icon.png"/>
         <offline-allowed/> 
-        <shortcut online="true">
-          <desktop/>
-          <menu submenu="Scala Console"/>
-        </shortcut>
     </information>
     
     <security>

@@ -32,76 +32,81 @@ object TechniqueProvider {
     val manager = new pluggable.TechniqueManager[G]
     
     manager.register(new FragmentShader {
-      uniform {
-        declare[BindingList[TextureBinding[Texture2d[_]]]]("textures")
-      }
+      use("vec4 baseColor()")
+      use("vec4 texturingColor()")
+      use("vec4 lightIntensity()")
       
-      in("rasterisation") {
+      in("transformationCtx") {
         declare[Vec4]("gl_FragCoord")
-      }
-      in("textureCoords") {
-        declare[Vec2]("ecTexCoords")
       }
       
       src {"""
         void resolveColor() {
-          vec4 color = vec4(1);
-          for (int i = 0; i < se_sizeOf_textures; i++) {
-            color *= texture2D(textures[i], textureCoords.ecTexCoords);
-          }
-          gl_FragColor = color;
+          gl_FragColor = texturingColor() * lightIntensity();
         }
       """}
       
       entryPoint("resolveColor")
     })
     
-    /*manager.register(new FragmentShader {
-      //version("120")
+    
+    manager.register(new FragmentShader {
+      src {"""
+        vec4 baseColor() {
+          return vec4(1.0);
+        }
+      """}
+      
+      export("vec4 baseColor()")
+    })
+    manager.register(new FragmentShader {
+      src {"""
+        vec4 lightIntensity() {
+          return vec4(1.0);
+        }
+      """}
+      
+      export("vec4 lightIntensity()")
+    })
+    
+    manager.register(new FragmentShader {
+      uniform {
+        declare[Vec4]("color")
+      }
+      
+      src {"""
+        vec4 baseColor() {
+          return color;
+        }
+      """}
+      
+      export("vec4 baseColor()")
+    })
+    
+    manager.register(new FragmentShader {
       forceSquareMatrices
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
       
-      in("rasterisation") {
-        declare[Vec4]("gl_FragCoord")
-      }
-      in("textureUnitCoords") {
+      in("texturingCtx") {
         declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
       }
       
       src {"""
-        void resolveColor() {
-          vec4 color = vec4(1);
+        vec4 texturingColor() {
+          vec4 color = vec4(1.0);
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            color *= texture2D(textureUnits[i].texture, textureUnitCoords.ecTexCoords[i]);
+            color *= texture2D(textureUnits[i].texture, texturingCtx.ecTexCoords[i]);
           }
-          gl_FragColor = color;
+          return color;
         }
       """}
       
-      entryPoint("resolveColor")
-    })*/
-    
-    
-    manager.register(new VertexShader {
-      attributes {
-        declare[Vec2]("texCoords")
-      }
-      
-      out("textureCoords") {
-        declare[Vec2]("ecTexCoords")
-      }
-      
-      src {"""
-        void passTexCoords() {
-          textureCoords.ecTexCoords = texCoords;
-        }
-      """}
-      
-      entryPoint("passTexCoords")
+      export("vec4 texturingColor()")
     })
+    
     
     manager.register(new VertexShader {
       uniform {
@@ -112,21 +117,20 @@ object TechniqueProvider {
         declare[Vec3]("vertices")
       }
       
-      out("rasterisation") {
+      out("transformationCtx") {
         declare[Vec4]("gl_Position")
       }
       
       src {"""
         void transformVertices() {
-          rasterisation.gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+          gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
         }
       """}
       
       entryPoint("transformVertices")
     })
-    
-    /*manager.register(new VertexShader {
-      //version("120")
+      
+    manager.register(new VertexShader {
       forceSquareMatrices
       
       uniform {
@@ -137,20 +141,21 @@ object TechniqueProvider {
         declare[Vec2]("texCoords")
       }
       
-      out("textureUnitCoords") {
+      out("texturingCtx") {
         declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
       }
       
       src {"""
-        void passTexCoords() {
+        void propagateTexturingValues() {
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            textureUnitCoords.ecTexCoords[i] = (textureUnits[i].transformation*vec3(texCoords, 1)).xy;
+            vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
+            texturingCtx.ecTexCoords[i] = transformed.xy;
           }
         }
       """}
       
-      entryPoint("passTexCoords")
-    })*/
+      entryPoint("propagateTexturingValues")
+    })
     
     manager
   }

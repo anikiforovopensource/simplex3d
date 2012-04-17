@@ -9,7 +9,12 @@ import simplex3d.engine._
 import simplex3d.engine.graphics._
 
 
-object Mandelbrot extends default.BasicFullscreenEffectApp {
+object Mandelbrot extends default.FullscreenEffectApp {
+  
+  def main(args: Array[String]) {
+    launch()
+  }
+  
   val title = "Mandelbrot"
   
   override lazy val settings = new Settings(

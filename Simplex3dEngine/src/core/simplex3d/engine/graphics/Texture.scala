@@ -130,7 +130,13 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
    */
   def fillWith(function: inVec2 => A#Read) :this.type = {
     val data = this.write
-    (0 until dimensions.y).par.foreach(y => renderLine(data, function, y))
+    
+    var y = 0; while (y < dimensions.y) {
+      renderLine(data, function, y)
+      
+      y += 1
+    }
+    
     this
   }
   private[this] val renderLine = (data: Data[A], function: inVec2 => A#Read, y: Int) => {

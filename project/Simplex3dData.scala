@@ -76,7 +76,6 @@ object Simplex3dData extends Build {
     base = file("Simplex3dData"),
     settings = buildSettings ++ Seq(
       name := "simplex3d-data-format",
-      version := "0.5-SNAPSHOT",
       description := "Additional data formats for Data Binding API.",
       target := new File("target/data/format"),
       scalaSource in Compile <<= baseDirectory(_ / "src/format")
@@ -89,12 +88,7 @@ object Simplex3dData extends Build {
     base = file("Simplex3dData"),
     settings = buildSettings ++ Seq(
       target := new File("target/data/doc"),
-      sourceDirectories <<= baseDirectory(base => Seq(
-        base / "src/core",
-        base / "src/double",
-        base / "src/float",
-        base / "src/format"
-      )),
+      scalaSource in Compile <<= baseDirectory(_ / "src"),
       publish := {},
       publishLocal := {}
     )

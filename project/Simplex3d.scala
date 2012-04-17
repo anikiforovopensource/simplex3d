@@ -23,12 +23,12 @@ import Keys._
 
 object Simplex3d extends Build {
   
-  val MathVersion = "2.0-SNAPSHOT"
-  val DataVersion = "2.0-SNAPSHOT"
-  val AlgorithmVersion = "0.51-SNAPSHOT"
-  val EngineVersion = "0.5-SNAPSHOT"
-  val ScriptVersion = "0.1-SNAPSHOT"
-  val ConsoleVersion = "0.5-SNAPSHOT"
+  val MathVersion = "2.0"
+  val DataVersion = "2.0"
+  val AlgorithmVersion = "0.5"
+  val EngineVersion = "0.5"
+  val ScriptVersion = "0.1"
+  val ConsoleVersion = "0.5"
   
   
   lazy val allCode = Project(

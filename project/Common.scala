@@ -28,7 +28,8 @@ object Common extends Build {
     organization := "org.simplex3d",
     homepage := Some(new URL("http://www.simplex3d.org/")),
     unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),
-    scalacOptions += "-deprecation",
+    scalacOptions ++= Seq("-deprecation", "-target:jvm-1.5"),
+    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
     maxErrors := 20
   )
   

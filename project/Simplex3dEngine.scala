@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import scala.collection.mutable.ArrayBuffer
 import sbt._
 import Keys._
 
@@ -114,12 +115,17 @@ object Simplex3dEngine extends Build {
     base = file("Simplex3dEngine"),
     settings = buildSettings ++ Seq(
       target := new File("target/engine/doc"),
-      sourceDirectories <<= baseDirectory(base => Seq(
-        base / "src/core",
-        base / "src/scenegraph",
-        base / "src/renderer",
-        base / "src/default"
-      )),
+      sourceGenerators in Compile <+= baseDirectory map { base =>
+        val files = new ArrayBuffer[File]
+        def index(dir: File) = {
+          new FileSet(dir).foreach((path, _) => files += new File(dir, path))
+          files: Seq[File]
+        }
+        index(base / "src/core") ++
+        index(base / "src/scenegraph") ++
+        index(base / "src/renderer") ++
+        index(base / "src/default")
+      },
       publish := {},
       publishLocal := {}
     )

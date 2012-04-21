@@ -24,7 +24,7 @@ import Keys._
 object Common extends Build {
   
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    scalaVersion := "2.9.1",
+    scalaVersion := "2.9.2",
     organization := "org.simplex3d",
     homepage := Some(new URL("http://www.simplex3d.org/")),
     unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),

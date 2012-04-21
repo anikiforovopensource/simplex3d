@@ -34,7 +34,7 @@ class Camera[T <: TransformationContext, G <: GraphicsContext](
   name: String,
   val projection: Mat4 = orthoProj(-100, 100, -100, 100, 10, 200)
 )(implicit transformationContext: T, graphicsContext: G)
-extends SceneElement[T, G](name) with AbstractCamera {
+extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera {
   import AccessChanges._
   
   protected val _view = Mat4x3(1)

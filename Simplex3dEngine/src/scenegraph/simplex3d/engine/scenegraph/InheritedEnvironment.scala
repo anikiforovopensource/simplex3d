@@ -1,6 +1,6 @@
 /*
- * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Simplex3dEngine - SceneGraph Module
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,33 +19,9 @@
  */
 
 package simplex3d.engine
-package input
-package handler
-
-import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.math.double.functions._
-import simplex3d.engine.input._
-import simplex3d.engine.transformation._
+package scenegraph
 
 
-class MouseGrabber(initTo: Boolean)(keys: Int*)
-extends InputListener
-{
-  private var initialized = false
+trait InheritedEnvironment { self: SceneElement[_, _] =>
   
-  override def update(input: Input, time: TimeStamp) {
-    if (!initialized) {
-      input.mouse.isGrabbed = initTo
-      initialized = true
-    }
-  }
-  
-  override val keyboardListener = new KeyboardListener {
-    override def keyTyped(input: Input, e: KeyEvent) {
-      if (keys.contains(e.keyCode)) {
-        input.mouse.isGrabbed = !input.mouse.isGrabbed
-      }
-    }
-  }
 }

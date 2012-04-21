@@ -28,6 +28,8 @@ import simplex3d.math.types._
 sealed abstract class ReadEnumRef[T <: Enumeration] (protected var value: T#Value)
 extends ReadPropertyValue[EnumRef[T]] with Serializable
 {
+  type Clone <: ReadEnumRef[T]
+  
   final def toConst() :T#Value = value
   final def mutableCopy() = new EnumRef[T](value)
 
@@ -47,8 +49,9 @@ extends ReadPropertyValue[EnumRef[T]] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class EnumRef[T <: Enumeration] (value: T#Value) extends ReadEnumRef[T](value)
-with PropertyValue[EnumRef[T]] with Cloneable[EnumRef[T]] with Serializable
+with PropertyValue[EnumRef[T]] with Serializable
 {
+  type Clone = EnumRef[T]
   type Read = ReadEnumRef[T]
   type Const = T#Value
   

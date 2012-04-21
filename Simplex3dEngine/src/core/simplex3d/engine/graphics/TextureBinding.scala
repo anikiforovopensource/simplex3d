@@ -27,8 +27,10 @@ import simplex3d.data._
 
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadTextureBinding[T <: Texture[_] : ClassManifest]
-extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with Binding with Serializable
+extends Readable[TextureBinding[T]] with Cloneable with Binding with Serializable
 {
+  type Clone <: ReadTextureBinding[T]
+  
   final val bindingManifest = implicitly[ClassManifest[T]]
   protected[engine] var texture: T = _
   
@@ -59,13 +61,14 @@ extends Readable[TextureBinding[T]] with Cloneable[ReadTextureBinding[T]] with B
 
 @SerialVersionUID(8104346712419693669L)
 final class TextureBinding[T <: Texture[_] : ClassManifest] extends ReadTextureBinding[T]
-with Writable[TextureBinding[T]] with Cloneable[TextureBinding[T]] with Serializable
+with Writable[TextureBinding[T]] with Serializable
 {
   def this(texture: T) {
     this()
     this.texture = texture
   }
   
+  type Clone = TextureBinding[T]
   type Read = ReadTextureBinding[T]
   
   override def clone() = new TextureBinding[T](texture)

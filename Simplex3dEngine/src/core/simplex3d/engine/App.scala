@@ -130,6 +130,7 @@ trait App { self =>
   protected val inputListeners = new ReadSeq(_inputListeners)
   
   def addInputListener(listener: InputListener) {
+    if (_inputListeners.contains(listener)) throw new IllegalStateException("Listener is already registered.")
     _inputListeners += listener
   }
   def removeInputListener(listener: InputListener) {

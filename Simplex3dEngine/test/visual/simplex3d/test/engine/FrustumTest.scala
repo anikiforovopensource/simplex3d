@@ -57,9 +57,8 @@ object FrustumTest extends default.App {
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 100)
     
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()

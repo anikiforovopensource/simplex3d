@@ -62,9 +62,8 @@ object ObbTest extends default.App {
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 60)
     
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)(cubeControls))
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(movingCube.transformation))
     
     
     val texture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
@@ -115,26 +114,7 @@ object ObbTest extends default.App {
     
     world.attach(cube2)
   }
-  
-  
-  val cubeControls = new InputListener {
-    val motionSpeed: Double = 20.0
-    val dynamic = movingCube.transformation
-  
-    override def update(input: Input, time: TimeStamp) {
-      val keyDown = input.keyboard.isKeyDown(_); import KeyCode._
-      
-      val transformation = movingCube.transformation.update
-      val position = movingCube.transformation.update.translation
-      
-      if (keyDown(K_w)) position.y += time.interval*motionSpeed
-      if (keyDown(K_s)) position.y -= time.interval*motionSpeed
-      if (keyDown(K_a)) position.x -= time.interval*motionSpeed
-      if (keyDown(K_d)) position.x += time.interval*motionSpeed
-    }
-  }
-  addInputListener(cubeControls)
-  
+    
   
   def update(time: TimeStamp) {
     //import simplex3d.algorithm.intersection._

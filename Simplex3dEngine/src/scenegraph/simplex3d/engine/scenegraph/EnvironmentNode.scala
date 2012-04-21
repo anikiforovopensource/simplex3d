@@ -29,18 +29,25 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
 
-class Node[T <: TransformationContext, G <: GraphicsContext] (name: String)(
+class EnvrionmentNode[T <: TransformationContext, G <: GraphicsContext](
+  name: String, val combineEnvironment: Boolean = true
+)(
   implicit transformationContext: T, graphicsContext: G
 )
-extends AbstractNode[T, G](name) with InheritedEnvironment {
+extends AbstractNode[T, G](name) {
+  
+  import AccessChanges._
+  
+  
+  private[this] final val env = graphicsContext.mkEnvironment()
+  def environment: G#Environment = env
+  override private[scenegraph] final val worldEnvironment: G#Environment = graphicsContext.mkEnvironment()
+  
   
   override def parent = super.parent
   override def children = super.children
   
-  def appendChild(element: SceneElement[T, G] with InheritedEnvironment) {
-    element.asInstanceOf[InheritedEnvironment]
-    appendAnyChild(element)
-  }
+  def appendChild(element: SceneElement[T, G]) { appendAnyChild(element) }
   override def removeChild(element: SceneElement[_, _]) :Boolean = super.removeChild(element)
   override def removeNestedChild(element: SceneElement[_, _]) :Boolean = super.removeNestedChild(element)
 }

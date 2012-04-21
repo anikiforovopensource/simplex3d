@@ -32,6 +32,8 @@ object TechniqueProvider {
     val manager = new pluggable.TechniqueManager[G]
     
     manager.register(new FragmentShader {
+      entryPoint("resolveColor")
+      
       use("vec4 baseColor()")
       use("vec4 texturingColor()")
       use("vec4 lightIntensity()")
@@ -45,31 +47,40 @@ object TechniqueProvider {
           gl_FragColor = texturingColor() * lightIntensity();
         }
       """}
-      
-      entryPoint("resolveColor")
     })
     
     
     manager.register(new FragmentShader {
+      export("vec4 baseColor()")
+      
       src {"""
         vec4 baseColor() {
           return vec4(1.0);
         }
       """}
-      
-      export("vec4 baseColor()")
     })
     manager.register(new FragmentShader {
+      export("vec4 texturingColor()")
+      
+      src {"""
+        vec4 texturingColor() {
+          return vec4(1.0);
+        }
+      """}
+    })
+    manager.register(new FragmentShader {
+      export("vec4 lightIntensity()")
+      
       src {"""
         vec4 lightIntensity() {
           return vec4(1.0);
         }
       """}
-      
-      export("vec4 lightIntensity()")
     })
     
     manager.register(new FragmentShader {
+      export("vec4 baseColor()")
+      
       uniform {
         declare[Vec4]("color")
       }
@@ -79,11 +90,11 @@ object TechniqueProvider {
           return color;
         }
       """}
-      
-      export("vec4 baseColor()")
     })
     
     manager.register(new FragmentShader {
+      export("vec4 texturingColor()")
+      
       forceSquareMatrices
       
       uniform {
@@ -103,12 +114,12 @@ object TechniqueProvider {
           return color;
         }
       """}
-      
-      export("vec4 texturingColor()")
     })
     
     
     manager.register(new VertexShader {
+      entryPoint("transformVertices")
+      
       uniform {
         declare[Mat4]("se_modelViewProjectionMatrix")
       }
@@ -126,11 +137,11 @@ object TechniqueProvider {
           gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
         }
       """}
-      
-      entryPoint("transformVertices")
     })
       
     manager.register(new VertexShader {
+      entryPoint("propagateTexturingValues")
+      
       forceSquareMatrices
       
       uniform {
@@ -153,8 +164,6 @@ object TechniqueProvider {
           }
         }
       """}
-      
-      entryPoint("propagateTexturingValues")
     })
     
     manager

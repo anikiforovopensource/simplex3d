@@ -43,6 +43,7 @@ abstract class BaseApp extends simplex3d.engine.App {
   type Entity = scenegraph.Entity[Transformation, Graphics]
   type InstancingNode = scenegraph.InstancingNode[Transformation, Graphics]
   type Mesh = scenegraph.Mesh[Transformation, Graphics]
+  type EnvrionmentNode = scenegraph.EnvrionmentNode[Transformation, Graphics]
   type Node = scenegraph.Node[Transformation, Graphics]
   type SceneElement = scenegraph.SceneElement[Transformation, Graphics]
   type Spatial = scenegraph.Spatial[Transformation]

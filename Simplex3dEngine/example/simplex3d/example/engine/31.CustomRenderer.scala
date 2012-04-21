@@ -56,9 +56,8 @@ object CustomRenderer extends default.BaseApp {
     world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY)
     
     // Init camera controls.
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     // Init the mesh.
     val mesh = new Mesh("Cube")
@@ -122,7 +121,7 @@ object CustomRenderer extends default.BaseApp {
     val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
     lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
     
-    // Set vertex coordinates that will later be used as to position lights.
+    // Set vertex coordinates that will be used to position lights.
     lightMesh.elementRange.update.count := 2
     lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
     lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
@@ -147,7 +146,6 @@ object CustomRenderer extends default.BaseApp {
     
     val lights = world.environment.lighting.update.lights
     val lightVertices = lightMesh.geometry.vertices.write
-    val movingLightCount = min(lightPositions.size, lights.size)
     
     // Turn extra lights on and off periodically.
     if (mod(time.total, period) > period*0.5) {
@@ -155,7 +153,7 @@ object CustomRenderer extends default.BaseApp {
         lightsOn = true
         println("Extra lights on.")
         
-        for (i <- movingLightCount until maxLightCount) {
+        for (i <- 2 until maxLightCount) {
           val light = new PointLight(Vec3(4), 0.1, 0)
           light.position := lightVertices(i)
           lights += light
@@ -175,13 +173,14 @@ object CustomRenderer extends default.BaseApp {
     }
     
     // Animate moving lights.
-    for (i <- 0 until movingLightCount) {
+    for (i <- 0 until 2) {
       val transformation = Mat4x3.rotateY(time.total*rotationSpeeds(i))
       val position = transformation.transformPoint(lightPositions(i))
       lights(i).position := position
       lightVertices(i) = position
     }
   }
+  
   
   // Declare TextureUnit Struct.
   sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
@@ -256,6 +255,8 @@ object CustomRenderer extends default.BaseApp {
   
   // Rebuild the Technique Manager from scratch.
   techniqueManager.register(new FragmentShader {
+    entryPoint("resolveColor")
+    
     use("vec4 texturingColor()")
     use("vec4 lightIntensity()")
     
@@ -268,21 +269,21 @@ object CustomRenderer extends default.BaseApp {
         gl_FragColor = texturingColor() * lightIntensity();
       }
     """}
-    
-    entryPoint("resolveColor")
   })
   
   techniqueManager.register(new FragmentShader {
+    export("vec4 lightIntensity()")
+    
     src {"""
       vec4 lightIntensity() {
         return vec4(1.0);
       }
     """}
-    
-    export("vec4 lightIntensity()")
   })
   
   techniqueManager.register(new FragmentShader {
+    export("vec4 texturingColor()")
+    
     forceSquareMatrices
     
     uniform {
@@ -302,12 +303,12 @@ object CustomRenderer extends default.BaseApp {
         return color;
       }
     """}
-    
-    export("vec4 texturingColor()")
   })
   
   
   techniqueManager.register(new VertexShader {
+    entryPoint("transformVertices")
+    
     uniform {
       declare[Mat4]("se_modelViewProjectionMatrix")
     }
@@ -325,11 +326,11 @@ object CustomRenderer extends default.BaseApp {
         gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
       }
     """}
-    
-    entryPoint("transformVertices")
   })
     
   techniqueManager.register(new VertexShader {
+    entryPoint("propagateTexturingValues")
+    
     forceSquareMatrices
     
     uniform {
@@ -352,8 +353,6 @@ object CustomRenderer extends default.BaseApp {
         }
       }
     """}
-    
-    entryPoint("propagateTexturingValues")
   })
   
   
@@ -437,6 +436,8 @@ object CustomRenderer extends default.BaseApp {
   
   // Declare lighting shaders.
   techniqueManager.register(new FragmentShader {
+    export("vec4 lightIntensity()")
+    
     uniform {
       declare[BindingList[PointLight]]("lighting")
     }
@@ -465,11 +466,11 @@ object CustomRenderer extends default.BaseApp {
         return vec4(intensity + 0.2, 1.0);
       }
     """}
-    
-    export("vec4 lightIntensity()")
   })
   
   techniqueManager.register(new VertexShader {
+    entryPoint("propagateLightingValues")
+    
     forceSquareMatrices
     
     uniform {
@@ -493,7 +494,5 @@ object CustomRenderer extends default.BaseApp {
         lightingCtx.normal = normalize(se_normalMatrix*normals);
       }
     """}
-    
-    entryPoint("propagateLightingValues")
   })
 }

@@ -33,11 +33,11 @@ import simplex3d.engine.graphics._
 
 final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
   name: String,
-  meshParent: Entity[T, G],
+  meshParent: AbstractNode[T, G],
   final val geometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
   final val material: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
 )(implicit transformationCtx: T, graphicsCtx: G)
-extends Bounded[T, G](name) with AbstractMesh {
+extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
   
   import AccessChanges._
   
@@ -53,9 +53,12 @@ extends Bounded[T, G](name) with AbstractMesh {
   
   
   private[scenegraph] override def onParentChange(
-    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
+    parent: AbstractNode[T, G], managed: ArrayBuffer[Spatial[T]]
   ) {
-    super.onParentChange(controllerContext, managed)
+    super.onParentChange(parent, managed)
+    
+    // Signal changes that trigger another technique resolution to take care of new environment.
+    material.signalStructuralChanges()
   }
   
   private[scenegraph] override def update(version: Long) :Boolean = {

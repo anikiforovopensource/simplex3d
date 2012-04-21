@@ -36,9 +36,8 @@ object DynamicTexture extends default.App {
     world.camera.transformation.update.translation := Vec3(0, 0, 100)
     world.camera.transformation.update.lookAt(Vec3(0), Vec3.UnitY)
     
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()

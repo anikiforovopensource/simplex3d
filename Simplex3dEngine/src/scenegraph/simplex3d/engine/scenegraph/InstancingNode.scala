@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - SceneGraph Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -96,9 +96,9 @@ extends Entity[T, G](name) {
   final val instanceBoundingVolume = srcMesh.customBoundingVolume
   final def geometry: G#Geometry = srcMesh.geometry
   final def material: G#Material = srcMesh.material
-  override def environment = super.environment
   
   private val displayMesh = new Mesh(name + " - Display Mesh", this, graphicsContext.mkGeometry(), material)
+  
   private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T, G]]
   
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
@@ -188,7 +188,7 @@ extends Entity[T, G](name) {
   
   def appendInstance(name: String) :Spatial[T] = {
     val instance = if (cullingEnabled) new BoundedInstance(name) else new Instance(name)
-    appendChild(instance)
+    appendAnyChild(instance)
     rebuild = true
     instance
   }
@@ -207,7 +207,7 @@ extends Entity[T, G](name) {
     version: Long, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T, G]]
   )(allowMultithreading: Boolean, minChildren: Int) {
     
-    if (enableCulling) entityUpdate(version)(allowMultithreading, minChildren)
+    if (enableCulling) nodeUpdate(version)(allowMultithreading, minChildren)
     else updateWorldTransformation(version)
     
     
@@ -249,7 +249,7 @@ extends Entity[T, G](name) {
     }
   }
       
-  private[scenegraph] override def entityUpdateCull(
+  private[scenegraph] override def nodeUpdateCull(
     version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
   )(
     allowMultithreading: Boolean, minChildren: Int,

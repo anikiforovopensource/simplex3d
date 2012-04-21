@@ -47,8 +47,8 @@ extends ManagedScene[G](name) {
   private[this] var version: Long = 0
   private[this] val controllerContext = new ControllerContext(settings.multithreadedControllers)
   
-  protected val _root: Node[T, G] = new Node("Root")(transformationContext, techniqueManager.graphicsContext)
-  protected def root = _root
+  protected val _root = new EnvrionmentNode("Root")(transformationContext, techniqueManager.graphicsContext)
+  protected def root: EnvrionmentNode[T, G] = _root
   root.controllerContext = controllerContext
   root.customBoundingVolume := new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue))
   root.appendChild(camera)
@@ -88,7 +88,7 @@ extends ManagedScene[G](name) {
     val allowMultithreading = settings.multithreadedParsing
     if (allowMultithreading) batchArray.clear()
     
-    root.entityUpdateCull(
+    root.nodeUpdateCull(
       version, true, time, view, result
     )(
       allowMultithreading, settings.multithreadedParsing_NodesWithChildren,

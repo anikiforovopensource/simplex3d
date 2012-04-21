@@ -54,9 +54,8 @@ object StressTestInstancing extends default.App {
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 200)
     
-    val camControls = new FirstPersonHandler(world.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     
     val objectTexture = Texture2d[Vec3](Vec2i(128))

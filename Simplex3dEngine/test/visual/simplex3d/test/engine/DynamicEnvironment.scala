@@ -100,24 +100,23 @@ object DynamicEnvironment extends App {
   val scene = new SceneGraph("World", new SceneGraphSettings, new Camera("Main Camera"), new testenv.TechniqueManager)
 
   
-  var nodes: Array[Node[TestT, TestG]] = _
+  var nodes: Array[EnvrionmentNode[TestT, TestG]] = _
   
   def init() {
     scene.camera.transformation.update.translation := Vec3(-25, 25, 100)
-    
-    val camControls = new FirstPersonHandler(scene.camera.transformation)
-    addInputListener(camControls)
-    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter)(camControls)())
+
+    addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
+    addInputListener(new FirstPersonHandler(scene.camera.transformation))
     
     
     val (indices, vertices, _, _) = Shapes.makeBox()
     val lineIndices = DataBuffer[SInt, UByte](indices.size/3 * 6)
     MeshConversion.linesFromTriangles(indices, vertices, lineIndices)
     
-    var node = new Node("Root")
+    var node = new EnvrionmentNode("Root")
     
     nodes = (for (i <- 0 until 9) yield {
-      val newnode = new Node("Node Level " + i)
+      val newnode = new EnvrionmentNode("Node Level " + i)
       node.appendChild(newnode)
       node = newnode
       

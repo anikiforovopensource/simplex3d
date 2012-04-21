@@ -37,8 +37,8 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   import AccessChanges._
   
   
-  private[scenegraph] final var _parent: Entity[T, Graphics] = _
-  protected def parent: Entity[T, Graphics] = _parent
+  private[scenegraph] final var _parent: AbstractNode[T, Graphics] = _
+  protected def parent: AbstractNode[T, Graphics] = _parent
   
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
@@ -58,11 +58,11 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   
   
   final def worldTransformation: T#Transformation#Read = {
-    def update(entity: Entity[T, _]) :Boolean = {
-      val parentUpdated = if (entity.parent != null) update(entity.parent) else false
+    def update(node: AbstractNode[T, _]) :Boolean = {
+      val parentUpdated = if (node.parent != null) update(node.parent) else false
       
-      if (parentUpdated || entity.transformation.hasDataChanges) {
-        entity.propagateWorldTransformation()
+      if (parentUpdated || node.transformation.hasDataChanges) {
+        node.propagateWorldTransformation()
         true
       }
       else false
@@ -100,10 +100,14 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   }
   
   
-  private[scenegraph] def onParentChange(
-    controllerContext: ControllerContext, managed: ArrayBuffer[Spatial[T]]
+  private[scenegraph] def onSpatialParentChange(
+    parent: AbstractNode[T, _], managed: ArrayBuffer[Spatial[T]]
   ) {
-    this.controllerContext = controllerContext
+    transformation.signalDataChanges()
+    
+    if (parent != null) controllerContext = parent.controllerContext
+    else controllerContext = null
+    
     if (controllers != null) managed += this
   }
   

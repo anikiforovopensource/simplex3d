@@ -95,8 +95,8 @@ object Bounded {
   
   /** All the children must have updated transformations and bounds.
    */
-  def rebuildAabb(entity: Entity[_, _])(resultMin: Vec3, resultMax: Vec3) {
-    val size = entity.children.size
+  def rebuildAabb(node: AbstractNode[_, _])(resultMin: Vec3, resultMax: Vec3) {
+    val size = node.children.size
     if (size == 0) {
       resultMin := Vec3.Zero
       resultMax := Vec3.Zero
@@ -136,7 +136,7 @@ object Bounded {
       }
     }
     
-    var i = 0; while (i < size) { val current = entity.children(i)
+    var i = 0; while (i < size) { val current = node.children(i)
       
       current match {
         case bounded: Bounded[_, _] => process(bounded, bounded.uncheckedWorldTransformation)

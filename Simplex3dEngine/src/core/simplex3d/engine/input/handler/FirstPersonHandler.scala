@@ -52,9 +52,10 @@ class FirstPersonHandler(
     if (hasErrors(horizontalAngle)) horizontalAngle = 0
     if (hasErrors(verticalAngle)) verticalAngle = 0
     
-    
-    horizontalAngle -= input.mouse.delta.x*mouseRotationSpeed
-    verticalAngle += input.mouse.delta.y*mouseRotationSpeed
+    if (input.mouse.isGrabbed) {
+      horizontalAngle -= input.mouse.delta.x*mouseRotationSpeed
+      verticalAngle += input.mouse.delta.y*mouseRotationSpeed
+    }
     
     if (keyDown(K_Left)) horizontalAngle += time.interval*keyboardRotationSpeed
     if (keyDown(K_Right)) horizontalAngle -= time.interval*keyboardRotationSpeed

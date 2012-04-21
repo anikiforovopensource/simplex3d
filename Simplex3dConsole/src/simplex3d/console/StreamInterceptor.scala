@@ -21,6 +21,8 @@
 package simplex3d.console
 
 import java.io._
+import java.awt._
+import java.awt.event._
 import javax.swing._
 import scala.concurrent.ops._
 
@@ -33,19 +35,18 @@ class CachedPrintStream(
 )
 extends PrintStream(byteStream)
 {
-  def pop() :String = {
+  def poll() :String = {
     val res = new String(byteStream.toByteArray, "UTF-8")
     byteStream.reset()
     res
   }
 }
 
-
 class StreamInterceptor(intercepted: PrintStream) {
   val cached = new CachedPrintStream
   
   def update() :String = {
-    val msg = cached.pop()
+    val msg = cached.poll()
     if (!msg.isEmpty) intercepted.print(msg)
     msg
   }
@@ -54,7 +55,8 @@ class StreamInterceptor(intercepted: PrintStream) {
 object StreamInterceptor {
   private var out: StreamInterceptor = _
   private var err: StreamInterceptor = _
-  @volatile private var callback: String => Unit = _
+  @volatile private[this] var externalLoop = false
+  private val delay = 50
   
   def interceptSystemStreams() {
     out = new StreamInterceptor(System.out)
@@ -64,22 +66,33 @@ object StreamInterceptor {
     System.setErr(err.cached)
     
     spawn {
-      while (true) {
-        val msg = out.update() + err.update()
-        if (callback != null && !msg.isEmpty) callback(msg)
-        
-        Thread.sleep(50)
+      while (!externalLoop) {
+        update(null)
+        Thread.sleep(delay)
       }
     }
   }
   
+  private[this] def update(callback: String => Unit) {
+    val msg = out.update() + err.update()
+    if (callback != null && !msg.isEmpty) callback(msg)
+  }
+  
   def connectTo(textArea: JTextArea) {
-    callback = { msg =>
-      javax.swing.SwingUtilities.invokeLater(new Runnable() { def run() {
-        val res = textArea.getText + msg
-        textArea.setText(res.takeRight(math.min(res.length, 5000)))
-        textArea.setCaretPosition(textArea.getDocument.getLength)
-      }})
+    val callback: String => Unit = { msg =>
+      val res = textArea.getText + msg
+      textArea.setText(res.takeRight(math.min(res.length, 5000)))
+      textArea.setCaretPosition(textArea.getDocument.getLength)
     }
+    
+    val task = new ActionListener() {
+      def actionPerformed(evt: ActionEvent) { update(callback) }
+    }
+    
+    val timer = new javax.swing.Timer(delay, task)
+    timer.setInitialDelay(delay*2)
+    
+    externalLoop = true
+    timer.start()
   }
 }

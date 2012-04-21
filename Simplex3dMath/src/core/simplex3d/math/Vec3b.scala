@@ -31,9 +31,10 @@ import simplex3d.math.{toBoolean => toBool}
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec3b extends ProtectedVec3b[Boolean]
-with ReadPropertyValue[Vec3b] with Cloneable[ReadVec3b] with Serializable
+with ReadPropertyValue[Vec3b] with Serializable
 {
 
+  type Clone <: ReadVec3b
   def toConst() :ConstVec3b
   final def mutableCopy() = Vec3b(this)
 
@@ -134,9 +135,10 @@ with ReadPropertyValue[Vec3b] with Cloneable[ReadVec3b] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstVec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
-extends ReadVec3b with Immutable with Cloneable[ConstVec3b] with Serializable {
+extends ReadVec3b with Immutable with Serializable {
   px = cx; py = cy; pz = cz
 
+  type Clone = ConstVec3b
   override def clone() = this
   def toConst() = this
 }
@@ -159,10 +161,11 @@ object ConstVec3b {
 @SerialVersionUID(8104346712419693669L)
 final class Vec3b private[math] (cx: Boolean, cy: Boolean, cz: Boolean)
 extends ReadVec3b with Accessor with CompositeFormat
-with PropertyValue[Vec3b] with Cloneable[Vec3b] with Serializable
+with PropertyValue[Vec3b] with Serializable
 {
   px = cx; py = cy; pz = cz
 
+  type Clone = Vec3b
   type Read = ReadVec3b
   type Const = ConstVec3b
 

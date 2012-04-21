@@ -32,9 +32,10 @@ import simplex3d.math.doublex.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat4x3d extends ProtectedMat4x3d[Double]
-with ReadPropertyValue[Mat4x3d] with Cloneable[ReadMat4x3d] with Serializable
+with ReadPropertyValue[Mat4x3d] with Serializable
 {
 
+  type Clone <: ReadMat4x3d
   def toConst() :ConstMat4x3d
   final def mutableCopy() = Mat4x3d(this)
 
@@ -426,13 +427,15 @@ final class ConstMat4x3d private[math] (
   c10: Double, c11: Double, c12: Double,
   c20: Double, c21: Double, c22: Double,
   c30: Double, c31: Double, c32: Double
-) extends ReadMat4x3d with Immutable with Cloneable[ConstMat4x3d] with Serializable
+) extends ReadMat4x3d with Immutable with Serializable
 {
   p00 = c00; p01 = c01; p02 = c02
   p10 = c10; p11 = c11; p12 = c12
   p20 = c20; p21 = c21; p22 = c22
   p30 = c30; p31 = c31; p32 = c32
 
+
+  type Clone = ConstMat4x3d
   override def clone() = this
   def toConst() = this
 }
@@ -484,13 +487,14 @@ final class Mat4x3d private[math] (
   c30: Double, c31: Double, c32: Double
 )
 extends ReadMat4x3d with Accessor with CompositeFormat
-with PropertyValue[Mat4x3d] with Cloneable[Mat4x3d] with Serializable
+with PropertyValue[Mat4x3d] with Serializable
 {
   p00 = c00; p01 = c01; p02 = c02
   p10 = c10; p11 = c11; p12 = c12
   p20 = c20; p21 = c21; p22 = c22
   p30 = c30; p31 = c31; p32 = c32
 
+  type Clone = Mat4x3d
   type Read = ReadMat4x3d
   type Const = ConstMat4x3d
 

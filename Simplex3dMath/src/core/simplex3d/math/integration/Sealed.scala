@@ -187,7 +187,9 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   @SerialVersionUID(8104346712419693669L)
-  sealed trait MathType extends Binding with Serializable with Cloneable[MathType]
+  sealed trait MathType extends Binding with Serializable with Cloneable {
+    type Clone <: MathType
+  }
 
 
   /** <code>AnyQuat4</code> is a supertype of all the quaternions.
@@ -198,7 +200,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyQuat4[P] private[math] () extends MathType with VectorLike {
-    override def clone() :AnyQuat4[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyQuat4[P]
     
     def apply(i: Int) :P
 
@@ -221,7 +223,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   sealed abstract class AnyMat[P] private[math] () extends MathType {
-    override def clone() :AnyMat[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat[P]
     
     def columns: Int
     def rows: Int
@@ -277,7 +279,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat2[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat2[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat2[P]
     
     final def columns = 2
     final def rows = 2
@@ -291,7 +293,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat2x3[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat2x3[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat2x3[P]
     
     final def columns = 2
     final def rows = 3
@@ -305,7 +307,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat2x4[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat2x4[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat2x4[P]
     
     final def columns = 2
     final def rows = 4
@@ -319,7 +321,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat3x2[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat3x2[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat3x2[P]
     
     final def columns = 3
     final def rows = 2
@@ -333,7 +335,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat3[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat3[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat3[P]
     
     final def columns = 3
     final def rows = 3
@@ -347,7 +349,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat3x4[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat3x4[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat3x4[P]
     
     final def columns = 3
     final def rows = 4
@@ -361,7 +363,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat4x2[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat4x2[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat4x2[P]
     
     final def columns = 4
     final def rows = 2
@@ -375,7 +377,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat4x3[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat4x3[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat4x3[P]
 
     final def columns = 4
     final def rows = 3
@@ -389,7 +391,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   abstract class AnyMat4[P] private[math] () extends AnyMat[P] {
-    override def clone() :AnyMat4[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyMat4[P]
     
     final def columns = 4
     final def rows = 4
@@ -401,7 +403,7 @@ package types {
    * @author Aleksey Nikiforov (lex)
    */
   sealed trait AnyVec[P] extends MathType with VectorLike {
-    override def clone() :AnyVec[P] = throw new UnsupportedOperationException()
+    type Clone <: AnyVec[P]
     
     def components: Int
     def apply(i: Int) :P
@@ -417,7 +419,8 @@ package types {
    *
    * @author Aleksey Nikiforov (lex)
    */
-  abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] with Cloneable[PrimitiveRef[P]] {
+  abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
+    type Clone <: PrimitiveRef[P]
     final def components = 1
   }
 
@@ -433,8 +436,7 @@ package types {
   /* @SwizzlingStart */ VecImpl234[P] with /* @SwizzlingEnd */
   AnyVec[P] {
     
-    override def clone() :AnyVec2[P] = throw new UnsupportedOperationException()
-
+    type Clone <: AnyVec2[P]
     final def components = 2
 
     private[math] def bx: Boolean
@@ -462,8 +464,7 @@ package types {
   /* @SwizzlingStart */ VecImpl34[P] with /* @SwizzlingEnd */
   AnyVec[P] {
     
-    override def clone() :AnyVec3[P] = throw new UnsupportedOperationException()
-
+    type Clone <: AnyVec3[P]
     final def components = 3
 
     private[math] def bx: Boolean
@@ -495,8 +496,7 @@ package types {
   /* @SwizzlingStart */ VecImpl34[P] with /* @SwizzlingEnd */
   AnyVec[P] {
     
-    override def clone() :AnyVec4[P] = throw new UnsupportedOperationException()
-
+    type Clone <: AnyVec4[P]
     final def components = 4
 
     private[math] def bx: Boolean

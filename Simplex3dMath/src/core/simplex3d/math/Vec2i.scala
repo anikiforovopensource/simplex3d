@@ -30,9 +30,10 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec2i extends ProtectedVec2i[Int]
-with ReadPropertyValue[Vec2i] with Cloneable[ReadVec2i] with Serializable
+with ReadPropertyValue[Vec2i] with Serializable
 {
 
+  type Clone <: ReadVec2i
   def toConst() :ConstVec2i
   final def mutableCopy() = Vec2i(this)
 
@@ -154,9 +155,10 @@ with ReadPropertyValue[Vec2i] with Cloneable[ReadVec2i] with Serializable
 
 @SerialVersionUID(8104346712419693669L)
 final class ConstVec2i private[math] (cx: Int, cy: Int)
-extends ReadVec2i with Immutable with Cloneable[ConstVec2i] with Serializable {
+extends ReadVec2i with Immutable with Serializable {
   px = cx; py = cy
 
+  type Clone = ConstVec2i
   override def clone() = this
   def toConst() = this
 }
@@ -178,10 +180,11 @@ object ConstVec2i {
 @SerialVersionUID(8104346712419693669L)
 final class Vec2i private[math] (cx: Int, cy: Int)
 extends ReadVec2i with Accessor with CompositeFormat
-with PropertyValue[Vec2i] with Cloneable[Vec2i] with Serializable
+with PropertyValue[Vec2i] with Serializable
 {
   px = cx; py = cy
 
+  type Clone = Vec2i
   type Read = ReadVec2i
   type Const = ConstVec2i
 

@@ -24,7 +24,7 @@ import Keys._
 object Common extends Build {
   
   val buildSettings = Defaults.defaultSettings ++ Seq(
-    scalaVersion := "2.9.2",
+    scalaVersion := Simplex3d.ScalaVersion,
     organization := "org.simplex3d",
     homepage := Some(new URL("http://www.simplex3d.org/")),
     unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),
@@ -34,7 +34,7 @@ object Common extends Build {
   )
   
   
-  val lwjglVersion = "2.8.2"
+  
   
   
   def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
@@ -43,7 +43,7 @@ object Common extends Build {
     if (files == null) return Nil
     
     files.filter { file =>
-      file.getName.contains(lwjglVersion) && file.getName.endsWith(".jar")
+      file.getName.contains(Simplex3d.LwjglVersion) && file.getName.endsWith(".jar")
     }
   }
   
@@ -70,9 +70,9 @@ object Common extends Build {
   }
   
   val lwjglSettings: Seq[Setting[_]] = Seq(
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % lwjglVersion classifier "natives-linux" classifier "natives-osx" classifier "natives-windows",
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl" % lwjglVersion,
-    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl_util" % lwjglVersion,
+    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % Simplex3d.LwjglVersion classifier "natives-linux" classifier "natives-osx" classifier "natives-windows",
+    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl" % Simplex3d.LwjglVersion,
+    libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl_util" % Simplex3d.LwjglVersion,
     
     fork := true,
     //TODO change to "map" for "sbt.version=0.11.2-20111110-052207" or higher

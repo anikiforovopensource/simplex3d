@@ -143,7 +143,7 @@ object Simplex3dConsole extends Build {
         val otherJars = otherDeps.map(_.src).filter(file => !file.isDirectory && file.getName.endsWith(".jar"))
         val lwjglJars = otherJars.filter(_.getAbsolutePath.contains("lwjgl"))
         val copiedLwjglJars = for (jar <- lwjglJars) yield {
-          val copy = target / jar.getName.replace("-" + Common.lwjglVersion, "")
+          val copy = target / jar.getName.replace("-" + Simplex3d.LwjglVersion, "")
           IO.copyFile(jar, copy)
           copy
         }

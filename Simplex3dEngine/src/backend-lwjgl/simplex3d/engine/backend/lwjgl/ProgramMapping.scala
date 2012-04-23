@@ -23,6 +23,7 @@ package backend.lwjgl
 
 import scala.annotation._
 import org.lwjgl.opengl._
+import ARBEquivalents.{GL15,GL20}
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._

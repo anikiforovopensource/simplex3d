@@ -26,6 +26,7 @@ import java.nio._
 import scala.annotation._
 import scala.collection.mutable.ArrayBuffer
 import org.lwjgl.opengl._
+import ARBEquivalents.{GL15,GL20}
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._

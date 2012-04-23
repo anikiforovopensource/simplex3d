@@ -79,7 +79,7 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
         withStencilBits(8).
         withSamples(settings.antiAliasingSamples)
         
-      val glProfile = new ContextAttribs(2, 1)
+      val glProfile = new ContextAttribs(1, 4)
       Display.setTitle(title)
       Display.create(pixelFormat, glProfile)
       

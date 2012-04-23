@@ -1,7 +1,6 @@
 /*
  * Simplex3dEngine - LWJGL Module
- * Copyright (C) 2011, Aleksey Nikiforov
- * ARBEquivalents by Felix Dietze
+ * Copyright (C) 2012, Simplex3d Project
  *
  * This file is part of Simplex3dEngine.
  *
@@ -24,7 +23,11 @@ package backend.lwjgl
 
 import org.lwjgl.opengl._
 
-object ARBEquivalents {
+/**
+ * 
+ * @author Felix Dietze
+ */
+object ArbEquivalents {
   
   object GL15 {
     import ARBBufferObject._

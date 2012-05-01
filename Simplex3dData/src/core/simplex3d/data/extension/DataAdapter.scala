@@ -31,7 +31,8 @@ import simplex3d.math._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-abstract class DataAdapter[F <: CompositeFormat, B <: Tangible](final val components: Int)(implicit
+abstract class DataAdapter[F <: CompositeFormat, B <: Raw with Tangible](final val components: Int)(
+  implicit
   final val formatManifest: ClassManifest[F],
   final val accessorManifest: ClassManifest[F#Accessor],
   final val boundManifest: Manifest[B]

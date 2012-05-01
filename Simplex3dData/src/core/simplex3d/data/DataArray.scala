@@ -45,7 +45,7 @@ extends DataSeq[F, R] with Contiguous[F, R] with ReadDataArray[F, R] {
 
 
 object ReadDataArray {
-  def apply[F <: Format, R <: Tangible](da: ReadDataArray[_, R])(
+  def apply[F <: Format, R <: Raw with Tangible](da: ReadDataArray[_, R])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadDataArray[F, R] = {
     val res = composition.mkDataArray(primitives.mkDataArray(da.sharedStorage.asInstanceOf[R#Array]))
@@ -54,19 +54,19 @@ object ReadDataArray {
 }
 
 object DataArray {
-  def apply[F <: Format, R <: Tangible](array: R#Array)(
+  def apply[F <: Format, R <: Raw with Tangible](array: R#Array)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(array))
   }
 
-  def apply[F <: Format, R <: Tangible](size: Int)(
+  def apply[F <: Format, R <: Raw with Tangible](size: Int)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataArray[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(size*composition.components))
   }
 
-  def apply[F <: Format, R <: Tangible](vals: F#Accessor#Read*)(
+  def apply[F <: Format, R <: Raw with Tangible](vals: F#Accessor#Read*)(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataArray[F, R] = {
     val data = composition.mkDataArray(primitives.mkDataArray(vals.size*composition.components))
@@ -74,7 +74,7 @@ object DataArray {
     data
   }
 
-  def apply[F <: Format, R <: Tangible](da: DataArray[_, R])(
+  def apply[F <: Format, R <: Raw with Tangible](da: DataArray[_, R])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataArray[F, R] = {
     if (da.isReadOnly) throw new IllegalArgumentException(

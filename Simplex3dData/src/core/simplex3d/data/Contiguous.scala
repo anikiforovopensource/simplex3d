@@ -116,7 +116,7 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
 
 
 object ReadContiguous {
-  def apply[F <: Format, R <: Tangible](dc: ReadContiguous[_, R])(
+  def apply[F <: Format, R <: Raw with Tangible](dc: ReadContiguous[_, R])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadContiguous[F, R] = {
     val res = dc match {
@@ -128,7 +128,7 @@ object ReadContiguous {
 }
 
 object Contiguous {
-  def apply[F <: Format, R <: Tangible](dc: Contiguous[_, R])(
+  def apply[F <: Format, R <: Raw with Tangible](dc: Contiguous[_, R])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :Contiguous[F, R] = {
     if (dc.isReadOnly) throw new IllegalArgumentException(

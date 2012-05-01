@@ -35,7 +35,7 @@ import AttributeTestUtil._
  */
 object AdapterTestUtil extends FunSuite {
 
-  def testAdapter[F <: CompositeFormat, B <: Tangible](adapter: DataAdapter[F, B])(
+  def testAdapter[F <: CompositeFormat, B <: Raw with Tangible](adapter: DataAdapter[F, B])(
     sample: F#Accessor#Read, sampleData: DataArray[F#Component, Raw]
   )(implicit attribs: AdapterAttrib[F, B])
   {
@@ -186,7 +186,9 @@ object AdapterTestUtil extends FunSuite {
   }
 }
 
-case class AdapterAttrib[F <: Format, B <: Tangible](components: Int, allowed: ClassManifest[_ <: Tangible]*)(implicit
+case class AdapterAttrib[F <: Format, B <: Raw with Tangible]
+(components: Int, allowed: ClassManifest[_ <: Raw with Tangible]*)(
+  implicit
   val formatManifest: ClassManifest[F],
   val accessorManifest: ClassManifest[F#Accessor],
   val boundManifest: Manifest[B],

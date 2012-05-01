@@ -39,7 +39,7 @@ object RawManifest {
   final val RFloat = PrimitiveFormat.RFloat
   final val RDouble = PrimitiveFormat.RDouble
 
-  final val AllTangible = List[ClassManifest[_ <: Tangible]](
+  final val AllTangible = List[ClassManifest[_ <: Raw with Tangible]](
     SByte, UByte, SShort, UShort, SInt, UInt, HFloat, RFloat, RDouble
   )
 

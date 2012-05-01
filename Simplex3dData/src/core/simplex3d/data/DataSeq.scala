@@ -107,7 +107,7 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
 }
 
 object DataSeq {
-  def apply[F <: Format, R <: Tangible](
+  def apply[F <: Format, R <: Raw with Tangible](
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :DataSeq[F, R] = {
     composition.mkDataArray(primitives.mkDataArray(0))

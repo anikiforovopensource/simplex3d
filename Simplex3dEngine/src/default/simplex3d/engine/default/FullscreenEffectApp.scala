@@ -37,7 +37,6 @@ trait FullscreenEffectApp extends simplex3d.engine.FullscreenEffectApp {
   addInputListener(new InputListener {
     override val keyboardListener = new KeyboardListener {
       override def keyTyped(input: Input, e: KeyEvent) {
-        println(this, "ESC")
         if (KeyCode.K_Escape == e.keyCode) dispose()
       }
     }

@@ -34,23 +34,22 @@ private[backend] final class ActiveAttribute(val name: String, val dataType: Int
 
 
 private[backend] class ActiveUniform(
-  final val blockType: Int,
   final val name: String,
   final val dataType: Int,
   final val location: Int
 ) {
   
   override def toString() :String = {
-    UniformOrigin.toString(blockType) + "Uniform('" + name + "', type = " +
+    "Uniform('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
 }
 
 private[backend] final class ActiveTexture(
-  blockType: Int, name: String, dataType: Int, location: Int, final val textureUnit: Int
-) extends ActiveUniform(blockType, name, dataType, location) {
+  name: String, dataType: Int, location: Int, final val textureUnit: Int
+) extends ActiveUniform(name, dataType, location) {
   override def toString() :String = {
-    UniformOrigin.toString(blockType) + "Texture('" + name + "', type = " +
+    "Texture('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
   }
 }

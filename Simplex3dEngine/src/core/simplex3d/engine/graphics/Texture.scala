@@ -39,6 +39,8 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
   private var _mipMapFilter: MipMapFilter.Value, initAnisotropyLevel: Double
 ) extends EngineInfo {
   
+  def bindingDimensions: AnyVec[Int]
+  
   final class Subtext private[engine] () {
     private[engine] var dataChanges = true
     private[engine] var filterChanges = true
@@ -113,7 +115,7 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
   mipMapFilter: MipMapFilter.Value, anisotropyLevel: Double
 ) extends Texture[A](
   accessible, linked
-)(magFilter, minFilter, mipMapFilter, anisotropyLevel) {
+)(magFilter, minFilter, mipMapFilter, anisotropyLevel) with Tangible {
   
   if (accessible != null) {
     if (dimensions.x < 0 || dimensions.x < 0) throw new IllegalArgumentException(
@@ -123,6 +125,9 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
       "Texture dimensions do not match data size."
     )
   }
+  
+  
+  final def bindingDimensions = dimensions
   
   /** Fill the texture with pixels obtained from the function.
    * 
@@ -154,6 +159,7 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
 
 
 object Texture2d {
+  val Manifest = ClassManifest.classType[Texture2d[_]](classOf[Texture2d[_]])
   
   def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor with AnyVec[Double] }](
     dimensions: ConstVec2i,

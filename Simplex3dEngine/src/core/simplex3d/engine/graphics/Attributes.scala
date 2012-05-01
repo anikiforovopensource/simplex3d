@@ -99,7 +99,7 @@ final class AttributesSharedState private[engine] (
 
 
 object Attributes {
-  def apply[F <: Format with MathType, R <: Tangible]
+  def apply[F <: Format with MathType, R <: Raw with Tangible]
     (size: Int, caching: Caching.Value = Caching.Dynamic)
     (implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R])
   :Attributes[F, R] = {

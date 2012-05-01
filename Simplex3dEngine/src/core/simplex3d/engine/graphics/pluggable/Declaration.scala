@@ -48,7 +48,7 @@ final case class StructDeclaration(
 }
 
 final class Declaration(
-  val manifest: ClassManifest[_ <: TechniqueBinding],
+  val manifest: ClassManifest[_ <: Binding],
   val name: String
 ) {
   val isPredefined = name.startsWith("se_")
@@ -58,8 +58,9 @@ final class Declaration(
   private[this] var _qualifiers = ""
   def qualifiers = _qualifiers
   
+  private[this] var _arraySizeExpression = ""
+  def arraySizeExpression = _arraySizeExpression
   
-  private[pluggable] var arraySizeExpression: String = null
   
   /** The simple way to link input/output array sizes is using a size of a uniform array: a.length(); 
    */
@@ -67,26 +68,32 @@ final class Declaration(
     if (!classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) throw new RuntimeException(
       "Only arrays can be sized."
     )
-    if (this.arraySizeExpression != null) throw new RuntimeException(
+    if (!_arraySizeExpression.isEmpty) throw new RuntimeException(
       "This array is already sized."
     )
     
-    this.arraySizeExpression = arraySizeExpression
+    val expr = arraySizeExpression.trim
+    if (expr.isEmpty) throw new IllegalArgumentException("Array size expression must not be empty.")
+    
+    _arraySizeExpression = expr
     this
   }
   
   def qualify(qualifiers: String) :this.type = {
+    if (qualifiers.trim.isEmpty) new IllegalArgumentException("Qualifier must not be empty.")
+    
     _qualifiers = (_qualifiers + " " + qualifiers).trim
     this
   }
   
-  private[pluggable] def extractManifestTypeInfo(squareMatrices: Boolean) :String = {
-    extractManifestTypeInfo(squareMatrices, null)
+  
+  private[pluggable] def getType(squareMatrices: Boolean) :String = {
+    extractManifestTypeInfo(squareMatrices, 0, "", manifest, name, null)
   }
-  private[pluggable] def extractManifestTypeInfo(
+  private[pluggable] def getStructs(
     squareMatrices: Boolean,
     structBlocks: HashMap[String, StructDeclaration]
-  ) :String = {
+  ) {
     extractManifestTypeInfo(squareMatrices, 0, "", manifest, name, structBlocks)
   }
   
@@ -240,7 +247,7 @@ final class Declaration(
       val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
       
       val sizeExpression =
-        if (arraySizeExpression != null) arraySizeExpression
+        if (!arraySizeExpression.isEmpty) arraySizeExpression
         else ShaderPrototype.arraySizeId(parentType, name)
       
       (glslType, sizeExpression)

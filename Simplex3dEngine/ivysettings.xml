@@ -4,6 +4,7 @@
   <property name="ivy.local.default.root"             value="${ivy.default.ivy.user.dir}/local" override="false"/>
   <property name="ivy.local.default.ivy.pattern"      value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
   <property name="ivy.local.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext]" override="false"/>
+  
   <resolvers>
     <filesystem name="local">
       <ivy pattern="${ivy.local.default.root}/${ivy.local.default.ivy.pattern}" />

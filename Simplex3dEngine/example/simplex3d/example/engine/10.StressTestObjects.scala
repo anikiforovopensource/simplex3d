@@ -16,6 +16,8 @@ import simplex3d.engine.scenegraph._
 import simplex3d.engine.graphics._
 
 
+/** Test raw glUniform() and glDrawElemenets() performance.
+ */
 object StressTestObjects extends default.App {
   
   def main(args: Array[String]) {

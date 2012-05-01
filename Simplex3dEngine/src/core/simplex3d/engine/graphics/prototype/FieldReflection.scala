@@ -33,7 +33,7 @@ import simplex3d.engine.util._
 
 private[engine] object FieldReflection {
   
-  private[engine] val TechniqueBindingFilter = List(classOf[Readable[_]], classOf[Binding])
+  private[engine] val BindingFilter = List(classOf[Readable[_]], classOf[Binding])
   private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])
   
   
@@ -44,7 +44,7 @@ private[engine] object FieldReflection {
 
   def getAccessorMap(
     instance: AnyRef,
-    targetType: Class[_], targetTypeArgumentUpperBounds: List[Class[_]],
+    targetType: Class[_], upperBoundsForTargetTypeArgs: List[Class[_]],
     blacklist: Seq[String]
   )
   :(ReadArray[String], ReadArray[Method]) = {
@@ -60,8 +60,9 @@ private[engine] object FieldReflection {
         method.getParameterTypes.length == 0 &&
         targetType.isAssignableFrom(method.getReturnType) &&
         !clazz.isAssignableFrom(method.getReturnType) &&
-        !blacklist.contains(method.getName()) && {
-          if (targetTypeArgumentUpperBounds.isEmpty) true
+        !blacklist.contains(method.getName) &&
+        !method.getName.contains('$') && {
+          if (upperBoundsForTargetTypeArgs.isEmpty) true
           else {
             method.getGenericReturnType match {
               case p: ParameterizedType =>
@@ -73,7 +74,7 @@ private[engine] object FieldReflection {
                   }
                 }
                 if (typeArgument == null) false
-                else targetTypeArgumentUpperBounds.forall(_.isAssignableFrom(typeArgument))
+                else upperBoundsForTargetTypeArgs.forall(_.isAssignableFrom(typeArgument))
               case _ =>
                 false
             }
@@ -98,11 +99,11 @@ private[engine] object FieldReflection {
   
   def getValueMap[T <: AnyRef](
     instance: AnyRef,
-    targetType: Class[T], targetTypeArgumentUpperBounds: List[Class[_]],
+    targetType: Class[T], upperBoundsForTargetTypeArgs: List[Class[_]],
     blacklist: Seq[String]
   )
   :(ReadArray[String], ReadArray[T]) = {
-    val (names, accessors) = getAccessorMap(instance, targetType, targetTypeArgumentUpperBounds, blacklist)
+    val (names, accessors) = getAccessorMap(instance, targetType, upperBoundsForTargetTypeArgs, blacklist)
     
     val values = new Array[AnyRef](accessors.length).asInstanceOf[Array[T]]
     var i = 0; while (i < accessors.length) {

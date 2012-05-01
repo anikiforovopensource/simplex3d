@@ -76,24 +76,35 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
       declarations.put(nameKey, list :: existing)
     }
     
+    def registerStruct(s: Struct[_]) {
+      val nestedDeclarations = s.listDeclarations
+      var j = 0; while (j < nestedDeclarations.size) {
+        val dec = nestedDeclarations(j)
+        
+        var k = 0; while (k < dec.lists.size) {
+          register(dec.nameKey, dec.lists(k))
+          k += 1
+        }
+        
+        j += 1
+      }
+    }
+    
     i = 0; while (i < fieldNames.length) {
       fields(i) match {
+        
         case list: BindingList[_] =>
           register((parentType, fieldNames(i)), list)
-        case s: Struct[_] =>
-          val nestedDeclarations = s.listDeclarations
-          var j = 0; while (j < nestedDeclarations.size) {
-            val dec = nestedDeclarations(j)
-            
-            var k = 0; while (k < dec.lists.size) {
-              register(dec.nameKey, dec.lists(k))
-              k += 1
-            }
-            
-            j += 1
+          val erasure = list.elementManifest.erasure
+          if (classOf[Struct[_]].isAssignableFrom(erasure)) {
+            registerStruct(erasure.newInstance().asInstanceOf[Struct[_]])
           }
+          
+        case s: Struct[_] =>
+          registerStruct(s)
+          
         case _ =>
-          // ignore
+          // do nothing
       }
       
       i += 1
@@ -117,7 +128,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
   }
   
   override def fieldNames: ReadArray[String] = _fieldNames
-  override def fields: ReadArray[TechniqueBinding] = _fields
+  override def fields: ReadArray[Binding] = _fields
   override def listDeclarations: ReadArray[ListDeclaration] = _listDeclarations
   
   final def :=(r: Readable[S]) {
@@ -131,5 +142,5 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
 
 object Struct {
   private final val logger = Logger.getLogger(classOf[Struct[_]].getName)
-  private final val Blacklist = List("mutableCopy", "mkMutable")
+  private final val Blacklist = List("mutableCopy", "mkMutable", "binding", "resolveBinding")
 }

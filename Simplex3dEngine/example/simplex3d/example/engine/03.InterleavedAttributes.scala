@@ -46,13 +46,12 @@ object InterleavedAttributes extends default.App {
     val mesh = new Mesh("Cube")
     
     mesh.geometry.indices := Attributes.fromData(indices)
+    // This will be replaced by a macro once Scala 2.10 is out.
     new interleaved(Caching.Stream) {
       mesh.geometry.vertices := Attributes.fromData(iVertices)
       mesh.geometry.normals := Attributes.fromData(iNormals)
       mesh.geometry.texCoords := Attributes.fromData(iTexCoords)
     }.delayedInit()
-    // delayedInit() call will be unnecessary when DelayedInit trait is fixed,
-    // Please register and vote to have this fixed: https://issues.scala-lang.org/browse/SI-4683
     
     val noise = ClassicalGradientNoise
     val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>

@@ -269,7 +269,7 @@ package testenv {
           b
         }
       
-      binding.asInstanceOf[TechniqueBinding]
+      binding
     }
     
     def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {

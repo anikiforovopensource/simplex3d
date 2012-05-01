@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import java.util.logging._
 import java.util.HashMap
 import scala.collection._
 import scala.collection.mutable.ArrayBuffer
@@ -31,6 +32,8 @@ import simplex3d.engine.graphics._
 class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G)
 extends graphics.TechniqueManager[G]
 {
+  import TechniqueManager.logger._
+  
   val passManager = new PassManager[G]
   
   
@@ -51,8 +54,7 @@ extends graphics.TechniqueManager[G]
   
   def register(shader: ShaderPrototype) {
     //XXX verify unique in/out block name has the same declarations
-    //XXX verify that declarations match material and env property types.
-    //XXX also verify path types.
+    //XXX verify that declarations match material types, verify env key is present
     //XXX special treatment for gl_Position => gl_FragCoord
     shader match {
       case _: FragmentShader => stages(0).register(shader)
@@ -72,9 +74,10 @@ extends graphics.TechniqueManager[G]
   private val geometryMap = toNameIdMap(graphicsContext.mkGeometry().attributeNames)
   private val materialMap = toNameIdMap(graphicsContext.mkMaterial().uniformNames)
   private val environmentMap = toNameIdMap(graphicsContext.mkEnvironment().propertyNames)
+  private[this] val dummyPredefined = new PredefinedUniforms()
   
   
-  def resolveTechnique(//XXX handle shader config.
+  def resolveTechnique(//XXX handle shader uniforms config.
     meshName: String,
     geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
   )
@@ -86,7 +89,7 @@ extends graphics.TechniqueManager[G]
       val chain = new ArrayBuffer[ShaderPrototype]
       chain += shader
       
-      // Match uniforms.
+
       var uniformsPassed = true
       if (!shader.uniformBlock.isEmpty) { def checkUniform() {
         val declarations = shader.uniformBlock
@@ -95,34 +98,49 @@ extends graphics.TechniqueManager[G]
           val declaration = declarations(i)
           uniformsPassed = false
           
-          if (declaration.isPredefined) {
-            if (declaration.name == "se_pointSize") {
-              uniformsPassed = (geometry.mode == PointSprites)
-            }
-            else {
-              uniformsPassed = true
-            }
+          if (declaration.isPredefined && declaration.name == "se_pointSize") {
+            uniformsPassed = (geometry.mode == PointSprites)
           }
           else {
-            val materialId = materialMap.get(declaration.name)
-            if (materialId != null) {
-              val prop = material.uniforms(materialId)
-              uniformsPassed = prop.isDefined
-            }
-            else {
-              val environmentId = environmentMap.get(declaration.name)
-              if (environmentId != null) {
-                val prop = worldEnvironment.properties(environmentId)
-                uniformsPassed = prop.isDefined
-              }
-            }
+            val resolved = graphicsContext.resolveUniformPath(
+              declaration.name, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
+            
+            uniformsPassed = (resolved != null)//XXX check the type at runtime
+            
+            if (shader.logRejected && !uniformsPassed) log(
+              Level.INFO, "Shader '" + shader.name + "' was rejected because the uniform '" +
+              declaration.name + "' is not defined."
+            )
           }
           
           i += 1
         }
       }; checkUniform() }
       
-      var functionsPassed = uniformsPassed
+      
+      var attributesPassed = uniformsPassed
+      if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {//XXX redo attributes resolution via graphicsContext and allow remapping
+        val declarations = shader.attributeBlock
+        var i = 0; while (attributesPassed && i < declarations.size) {
+          val declaration = declarations(i)
+          
+          val geometryId = geometryMap.get(declaration.name)
+          if (geometryId != null) {
+            val attrib = geometry.attributes(geometryId)
+            attributesPassed = attrib.isDefined
+            
+            if (shader.logRejected && !attributesPassed) log(
+              Level.INFO, "Shader '" + shader.name + "' was rejected because the attribute '" +
+              declaration.name + "' is not defined."
+            )
+          }
+          
+          i += 1
+        }
+      }; checkAttributes() }
+      
+      
+      var functionsPassed = attributesPassed
       if (functionsPassed && !shader.functionDependencies.isEmpty) { def checkFunctions() {
         val requiredFunctions = shader.functionDependencies
         
@@ -134,7 +152,8 @@ extends graphics.TechniqueManager[G]
             val functionProvider = stage.internal(j)
             
             if (requiredFunction == functionProvider.export.get) {
-              if (!chain.contains(functionProvider)) {// Do not use set, the order is important.
+              // Do not use set, use an ordered list, because the order is important.
+              if (!chain.contains(functionProvider)) {
                 val subChain = resolveShaderChain(stageId, functionProvider)
                 if (subChain != null) {
                   chain ++= subChain
@@ -147,29 +166,17 @@ extends graphics.TechniqueManager[G]
             j += 1
           }
           
+          if (shader.logRejected && !functionsPassed) log(
+            Level.INFO, "Shader '" + shader.name + "' was rejected because the required function '" +
+            requiredFunction + "' could not be resolved."
+          )
+          
           i += 1
         }
       }; checkFunctions() }
       
       
-      var attributesPassed = functionsPassed
-      if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {
-        val declarations = shader.attributeBlock
-        var i = 0; while (attributesPassed && i < declarations.size) {
-          val declaration = declarations(i)
-          
-          val geometryId = geometryMap.get(declaration.name)
-          if (geometryId != null) {
-            val attrib = geometry.attributes(geometryId)
-            attributesPassed = attrib.isDefined
-          }
-          
-          i += 1
-        }
-      }; checkAttributes() }
-      
-      
-      var inputPassed = attributesPassed
+      var inputPassed = functionsPassed
       if (inputPassed && !shader.inputBlocks.isEmpty) { def checkInput() {
         val previousStage = if (stageId + 1 == stages.size) null else stages(stageId + 1)
         val inputBlocks = shader.inputBlocks
@@ -203,11 +210,22 @@ extends graphics.TechniqueManager[G]
             j += 1
           }
           
+          if (shader.logRejected && !inputPassed) log(
+            Level.INFO, "Shader '" + shader.name + "' was rejected because the input block '" +
+            inputBlock.name + "' could not be resolved."
+          )
+          
           i += 1
         }
       }; checkInput() }
       
-      if (uniformsPassed && functionsPassed && inputPassed) chain
+      if (uniformsPassed && functionsPassed && inputPassed) {
+        if (shader.logAccepted) log(
+          Level.INFO, "Shader '" + shader.name + "' was accepted."
+        )
+        
+        chain
+      }
       else null
     }
   
@@ -266,11 +284,12 @@ extends graphics.TechniqueManager[G]
       
       i = 0; while (i < chain.size) {
         val shader = chain(i)
-        val keys = shader.listDeclarationNameKeys
+        val remappedKeys = shader.listDeclarationNameKeys
         
-        val resolved = new Array[ListDeclarationSizeKey](keys.size)
-        var j = 0; while (j < keys.size) {
-          val key = keys(j)
+        val resolved = new Array[ListDeclarationSizeKey](remappedKeys.size)
+        var j = 0; while (j < remappedKeys.size) {
+          val key = remappedKeys(j)
+          
           val listDeclaration = listDeclarationMap.get(key)
           assert(listDeclaration != null)
           resolved(j) = listDeclaration
@@ -303,7 +322,7 @@ extends graphics.TechniqueManager[G]
             val listDeclarations = shaderKey._2
             val src = ShaderPrototype.genSrc_Glsl120(proto, listDeclarations)
             
-            shader = new Shader(proto.shaderType, src)
+            shader = new Shader(proto.shaderType, src, proto.shaderUniforms)
             shaderCache.put(shaderKey, shader)
           }
           
@@ -366,4 +385,9 @@ extends graphics.TechniqueManager[G]
   
   private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey]), Shader]
   private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey])], Technique]
+}
+
+
+object TechniqueManager {
+  val logger = Logger.getLogger(this.getClass.getName)
 }

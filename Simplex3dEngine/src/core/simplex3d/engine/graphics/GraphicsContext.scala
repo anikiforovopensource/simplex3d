@@ -50,7 +50,7 @@ abstract class GraphicsContext {
     // Initialize namespace.
     val geomNames = mkGeometry().attributeNames
     
-    val predefNames = PredefinedUniforms.Names
+    val predefNames = PredefinedUniforms.BindingNames
     val matNames = material.uniformNames
     val envNames = environment.propertyNames
     
@@ -90,37 +90,103 @@ abstract class GraphicsContext {
         uniformMap.put(names(i), (origin, i))
       }
     }
-    registerUniforms(UniformOrigin.Predefined, PredefinedUniforms.Names)
+    registerUniforms(UniformOrigin.Predefined, PredefinedUniforms.BindingNames)
     registerUniforms(UniformOrigin.Material, material.uniformNames)
     registerUniforms(UniformOrigin.Environment, environment.propertyNames)
   }
   
-  def resolveUniform(
+  
+  def resolveRootUniform(
     name: String,
-    predefind: ReadPredefinedUniforms,
-    material: Material,
-    environment: Environment,
-    technique: TechniqueUniforms
+    predefined: ReadPredefinedUniforms,
+    material: graphics.Material,
+    environment: graphics.Environment,
+    programUniforms: Map[String, Defined[UncheckedBinding]]
   ) :Binding = {
-    val res = uniformMap.get(name)
+    val originAndId = uniformMap.get(name)
     
-    if (res != null) {
-      val origin = res._1
-      val id = res._2
-      
-//      val binding =
-//      origin match {
-//        case UniformOrigin.Predefined => def resolvePredefined() :AnyRef = {
-//          if (isIndexValid(index, "", name)) {
-//            val prop = material.uniforms(index)
-//            if (prop.isDefined) prop.get else null
-//          }
-//          else null
-//        }; resolvePredefined()
-//      }
+    if (originAndId == null) {
+      val option = programUniforms.get(name)
+      if (option.isDefined) option.get.get else null
     }
+    else {
+      val origin = originAndId._1
+      val id = originAndId._2
+      
+      val binding: Binding = origin match {
+        
+        case UniformOrigin.Predefined =>
+          predefined.bindings(id)
+          
+        case UniformOrigin.Material =>
+          val prop = material.uniforms(id)
+          if (prop.isDefined) prop.get else null
+          
+        case UniformOrigin.Environment =>
+          val prop = environment.properties(id)
+          if (prop.isDefined) prop.get.binding else null
+      }
+      
+      binding
+    }
+  }
+  
+  def resolveUniformPath(
+    path: String,
+    predefined: ReadPredefinedUniforms,
+    material: graphics.Material,
+    environment: graphics.Environment,
+    programUniforms: Map[String, Defined[UncheckedBinding]]
+  ) :Object = {
     
-    null
+    val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
+    PathUtil.resolve(path, bindingFromName)
+  }
+  
+  /* XXX redo comments for loader remapping.
+   * Uniform values can be mapped to an object path on material or environment. This is useful when
+   * a vertex shader consumes a part of a struct and a fragment consumes the rest.
+   * Example: declare[Vec2]("offset").remap("textureUnit.offset")
+   * 
+   * Arrays can be remapped using a wildcard array declaration [*]. Only one wildcard declaration
+   * is allowed per path, other array instances must specify the exact index.
+   * Example: declare[BindingList[Vec3]]("colors").remap("colorMaps[0].color[*]")
+   * 
+   * Value path remapping can only be used on subclasses of Struct and can only navigate the fields
+   * declared in Struct.fields. As a special case, texture dimensions can be accessed this way as well.
+   * Example: declare[Vec2i]("dimensions").remap("textureUnit.texture.dimensions")
+   */
+  def resolveRemappedUniformPath(//XXX rework this for model loader remapping.
+    path: String,
+    predefined: ReadPredefinedUniforms,
+    material: graphics.Material,
+    environment: graphics.Environment,
+    programUniforms: Map[String, Defined[UncheckedBinding]]
+  ) :Object = {
+    
+    val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
+    val remapped = PathUtil.remap(path, null)//XXX uniformRemapping
+    
+    if (remapped.contains("[*]")) {
+      try {
+        val (rootListPath, remappedListPath) = PathUtil.remappedList(remapped)
+        val rootList = resolveUniformPath(rootListPath, predefined, material, environment, programUniforms)
+        rootList match {
+          
+          case list: BindingList[_] =>
+            RemappedList.unchecked(list.asInstanceOf[BindingList[UncheckedBinding]], remappedListPath)
+            
+          case _ =>
+            null
+        }
+      }
+      catch {
+        case e: IllegalArgumentException => null
+      }
+    }
+    else {
+      PathUtil.resolve(remapped, bindingFromName)
+    }
   }
 }
 

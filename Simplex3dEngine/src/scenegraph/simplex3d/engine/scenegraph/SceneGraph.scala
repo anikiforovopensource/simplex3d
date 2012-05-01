@@ -112,8 +112,10 @@ extends ManagedScene[G](name) {
     var i = 0; while (i < size) { val mesh = result(i).asInstanceOf[Mesh[T, G]]
       
       if (mesh.hasStructuralChanges) {
-        val technique = techniqueManager.resolveTechnique(mesh.name, mesh.geometry, mesh.material, mesh.worldEnvironment)
-        mesh.technique := technique
+        val technique = techniqueManager.resolveTechnique(
+          mesh.name, mesh.geometry, mesh.material, mesh.worldEnvironment)
+          
+        if (technique != null) mesh.technique := technique else mesh.technique.undefine()
         
         mesh.geometry.clearStructuralChanges()
         mesh.material.clearStructuralChanges()

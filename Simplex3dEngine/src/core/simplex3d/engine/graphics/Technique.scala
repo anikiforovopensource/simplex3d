@@ -22,49 +22,38 @@ package simplex3d.engine
 package graphics
 
 import java.util.logging._
+import scala.collection._
 import simplex3d.engine.util._
 
 
 final class Technique private (
   val graphicsContext: GraphicsContext,
   val shaders: Set[Shader],
-  uniformNames: ReadArray[String],
-  uniforms: ReadArray[Defined[UncheckedBinding]]
-) extends TechniqueUniforms(uniformNames, uniforms) with EngineInfo {
-  
-  private[this] def this(
-    graphicsContext: GraphicsContext,
-    shaders: Set[Shader],
-    args: (ReadArray[String], ReadArray[Defined[UncheckedBinding]])
-  ) {
-    this(graphicsContext, shaders, args._1, args._2)
-  }
+  val programUniforms: immutable.Map[String, Defined[UncheckedBinding]]
+) extends EngineInfo {
   
   def this(graphicsContext: GraphicsContext, shaders: Set[Shader]) {
     this(graphicsContext, shaders, {
       
-      val allUniforms = shaders.toList.flatMap(_.uniforms)
-      val allUniformNames = allUniforms.map(_._1)
-      val uniqueUniformNames = allUniformNames.distinct
-      
-      if (uniqueUniformNames.size != allUniformNames.size) {
-        var duplicates = (allUniformNames.filterNot(e => uniqueUniformNames.contains(e))).distinct
-        Logger.getLogger(classOf[Technique].getName).log(
+      // Extract uniforms.
+      val uniforms = scala.collection.mutable.Map[String, Defined[UncheckedBinding]]()
+      for (shader <- shaders; (name, prop) <- shader.uniforms) {
+        val prev = uniforms.put(name, prop)
+        
+        if (prev.isDefined) Logger.getLogger(classOf[Technique].getName).log(
           Level.SEVERE,
-          "Duplicate uniform definitions: " + duplicates.mkString(", ") + "."
+          "Program uniform '" + name + "' is defined in multiple shaders. Only one value will be used."
         )
+        
+        if (graphicsContext.namespace.contains(name)) {
+          Logger.getLogger(classOf[Technique].getName).log(
+            Level.SEVERE,
+            "Program uniform '" + name + "' is overriden by graphics context."
+          )
+        }
       }
       
-      val intersection = uniqueUniformNames.toSet.intersect(graphicsContext.namespace)
-      if (intersection.size > 0) {
-        Logger.getLogger(classOf[Technique].getName).log(
-          Level.SEVERE,
-          "Namespace collision between shaders and graphics context: " + intersection.mkString(", ") + "."
-        )
-      }
-      
-      val (uniformNames, unifromProps) = allUniforms.unzip
-      (new ReadArray(uniformNames.toArray), new ReadArray(unifromProps.toArray))
+      immutable.Map[String, Defined[UncheckedBinding]]() ++ uniforms
     })
   }
 }

@@ -44,7 +44,7 @@ object TechniqueProvider {
       
       src {"""
         void resolveColor() {
-          gl_FragColor = texturingColor() * lightIntensity();
+          gl_FragColor = baseColor() * texturingColor() * lightIntensity();//XXX redo baseColor as lightEmission
         }
       """}
     })
@@ -95,7 +95,7 @@ object TechniqueProvider {
     manager.register(new FragmentShader {
       export("vec4 texturingColor()")
       
-      forceSquareMatrices
+      forceSquareMatrices = true
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
@@ -142,7 +142,7 @@ object TechniqueProvider {
     manager.register(new VertexShader {
       entryPoint("propagateTexturingValues")
       
-      forceSquareMatrices
+      forceSquareMatrices = true
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")

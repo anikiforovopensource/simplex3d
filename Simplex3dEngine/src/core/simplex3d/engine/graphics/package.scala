@@ -26,10 +26,10 @@ import simplex3d.data._
 
 package object graphics {
   
-  implicit def textureToBinding[T <: Texture[_] : ClassManifest](texture: T) = new TextureBinding(texture)
+  implicit def textureToBinding[T <: Texture[_] with Tangible : ClassManifest](texture: T) = {
+    new TextureBinding(texture)
+  }
   
-  
-  type TechniqueBinding = Readable[W] with Binding forSome { type W <: Writable[W] }
   type ReadOnly[W <: Writable[W]] = Readable[W]
   
   
@@ -38,11 +38,16 @@ package object graphics {
   } = null
   type UncheckedEffect = EffectRecursor.type#Recursive
   
-  val UpdatableEffectRecursor: { type Recursive <: UpdatableEnvironmentalEffect[Recursive] } = null
+  val UpdatableEffectRecursor: {
+    type Recursive <: UpdatableEnvironmentalEffect[Recursive] { type Read <: UpdatableEnvironmentalEffect[Recursive] }
+  } = null
   type UncheckedUpdatableEffect = UpdatableEffectRecursor.type#Recursive
   
-  val BindingRecursor: { type Recursive <: Writable[Recursive] with Binding } = null
+  val BindingRecursor: {
+    type Recursive <: Writable[Recursive] with Binding { type Read = Recursive }
+  } = null
   type UncheckedBinding = BindingRecursor.type#Recursive
+  
   
   type UncheckedAttributes = AttributeBinding[Format with MathType, Raw]
 }

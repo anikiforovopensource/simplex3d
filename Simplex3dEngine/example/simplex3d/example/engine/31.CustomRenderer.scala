@@ -284,7 +284,7 @@ object CustomRenderer extends default.BaseApp {
   techniqueManager.register(new FragmentShader {
     export("vec4 texturingColor()")
     
-    forceSquareMatrices
+    forceSquareMatrices = true
     
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
@@ -331,7 +331,7 @@ object CustomRenderer extends default.BaseApp {
   techniqueManager.register(new VertexShader {
     entryPoint("propagateTexturingValues")
     
-    forceSquareMatrices
+    forceSquareMatrices = true
     
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
@@ -471,7 +471,7 @@ object CustomRenderer extends default.BaseApp {
   techniqueManager.register(new VertexShader {
     entryPoint("propagateLightingValues")
     
-    forceSquareMatrices
+    forceSquareMatrices = true
     
     uniform {
       declare[Mat4]("se_modelViewMatrix")

@@ -38,7 +38,7 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
   
   
   private[this] var bindingChanges = true
-  private[this] var localBinding: TechniqueBinding = null
+  private[this] var localBinding: Binding = null
   
   /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
    */
@@ -50,11 +50,11 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
     localBinding = null
   }
   
-  protected def resolveBinding() :TechniqueBinding
+  protected def resolveBinding() :Binding
   
   /** Must return a stable binding that will no change until the next binding change event.
    */
-  final def binding: TechniqueBinding = {
+  final def binding: Binding = {
     if (localBinding == null) localBinding = resolveBinding()
     localBinding
   }

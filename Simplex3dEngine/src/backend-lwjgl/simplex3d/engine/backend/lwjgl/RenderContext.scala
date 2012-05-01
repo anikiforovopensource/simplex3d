@@ -612,13 +612,6 @@ extends graphics.RenderContext with GlAccess {
       val prefix = name.substring(0, min(dotIndex, sbIndex))
       seq.contains(prefix)
     }
-    def resolveUniformBlock(name: String) :Int = {
-      if (belongs(name, PredefinedUniforms.Names)) UniformOrigin.Predefined
-      else if (belongs(name, mat.uniformNames)) UniformOrigin.Material
-      else if (belongs(name, env.propertyNames)) UniformOrigin.Environment
-      else if (belongs(name, program.uniformNames)) UniformOrigin.Program
-      else -1
-    }
     
     val uniformCount = glGetProgram(progId, GL_ACTIVE_UNIFORMS)
     val uniformStringLength = glGetProgram(progId, GL_ACTIVE_UNIFORM_MAX_LENGTH)
@@ -630,13 +623,12 @@ extends graphics.RenderContext with GlAccess {
       val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
       
       if (EngineBindingTypes.isTexture(dataType)) {
-            
-        val blockType = resolveUniformBlock(name)
+
         if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new ActiveTexture(blockType, arrayName, dataType, location, textureUnitCount)
+            uniformBindings += new ActiveTexture(arrayName, dataType, location, textureUnitCount)
             textureUnitCount += 1
             
             i += 1
@@ -644,32 +636,30 @@ extends graphics.RenderContext with GlAccess {
         }
         else {
           val location = glGetUniformLocation(progId, name)
-          uniformBindings += new ActiveTexture(blockType, name, dataType, location, textureUnitCount)
+          uniformBindings += new ActiveTexture(name, dataType, location, textureUnitCount)
           textureUnitCount += 1
         }
       }
       else {
           
-        val blockType = resolveUniformBlock(name)
         if (isArray) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new ActiveUniform(blockType, arrayName, dataType, location)
+            uniformBindings += new ActiveUniform(arrayName, dataType, location)
             
             i += 1
           }
         }
         else {
           val location = glGetUniformLocation(progId, name)
-          uniformBindings += new ActiveUniform(blockType, name, dataType, location)
+          uniformBindings += new ActiveUniform(name, dataType, location)
         }
       }
       
       i += 1
     }
     
-    val unusedActiveAttributes = ArrayBuffer[ActiveAttribute]()
     val attributeCount = glGetProgram(progId, GL_ACTIVE_ATTRIBUTES)
     val attributeStringLength = glGetProgram(progId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
     i = 0; while (i < attributeCount) {
@@ -681,32 +671,11 @@ extends graphics.RenderContext with GlAccess {
       val binding = new ActiveAttribute(name, dataType, location)
       
       if (belongs(name, geom.attributeNames)) attributeBindings += binding
-      else unusedActiveAttributes += binding
       
       i += 1
     }
     
-    
-    // Uniforms
-    val unusedActiveUniforms = uniformBindings.filter(_.blockType == -1)
-    
-    if (unusedActiveUniforms.size != 0) {
-      uniformBindings = uniformBindings.filterNot(_.blockType == -1)
-      
-      log(
-        Level.SEVERE, "Uniforms do no exist: " +
-        unusedActiveUniforms.map(_.name).mkString(", ")
-      )
-    }
-    
-    
-    // Attributes
-    if (unusedActiveAttributes.size != 0) log(
-      Level.SEVERE, "Attributes do no exist: " +
-      unusedActiveAttributes.map(_.name).mkString(", ") + "."
-    )
 
-    
     program.mapping = new ProgramMapping(program, this)(uniformBindings, attributeBindings)
     
     progId
@@ -876,8 +845,6 @@ extends graphics.RenderContext with GlAccess {
     -1
   }
   
-  private[this] val NameIndex = """(\w*)\[(\d+)\]\.?(.*)""".r
-  private[this] val Name = """(\w*)\.?(.*)""".r
   
   private[this] final def resolveUniform(
     meshName: String,
@@ -888,216 +855,96 @@ extends graphics.RenderContext with GlAccess {
     program: Technique
   ) :Binding = {
     
-    def mkName(prefix: String, name: String) = if (prefix.isEmpty) name else prefix + "." + name
-
+    val binding = program.graphicsContext.resolveUniformPath(
+      programBinding.name, predefined, material, environment, program.programUniforms//XXX possibly better naming for programUniforms, shaderUniforms
+    ).asInstanceOf[Binding]
     
-    def isIndexValid(index: Int, prefix: String, name: String) :Boolean = {
-      if (index < 0) {
-        if (name != "nvidiaBugWorkaround") log(
-          Level.SEVERE, "Uniform '" + mkName(prefix, name) + "' cannot be resolved for mesh '" + meshName + "'."
-        )
-        false
-      }
-      else true
-    }
-    def extractProperty[W <: Writable[W]](prop: Property[W], prefix: String, name: String) :W#Read = {
-      if (!prop.isDefined) {
-        log(
-          Level.SEVERE, "Uniform '" + mkName(prefix, name) + "' is not defined for mesh '" + meshName + "'."
-        )
-        null.asInstanceOf[W#Read]
-      }
-      else prop.get
-    }
-    
-    def resolveOuter(blockType: Int, name: String) :TechniqueBinding = {
-      ((blockType: @switch) match {
-        
-        case UniformOrigin.Predefined => def resolvePredefined() :AnyRef = {
-          val index = find(PredefinedUniforms.Names, name)
-          if (isIndexValid(index, "", name)) {
-            val binding = predefined.values(index)
-            binding
-          }
-          else null
-        }; resolvePredefined()
-        
-        case UniformOrigin.Material => def resolveMaterial() :AnyRef = {
-          val index = find(material.uniformNames, name)
-          if (isIndexValid(index, "", name)) {
-            val prop = material.uniforms(index)
-            extractProperty(prop, "", name) 
-          }
-          else null
-        }; resolveMaterial()
-          
-        case UniformOrigin.Environment => def resolveEnvironment() :AnyRef = {
-          val index = find(environment.propertyNames, name)
-          if (isIndexValid(index, "", name)) {
-            val prop = environment.properties(index)
-            extractProperty(prop, "", name).binding
-          }
-          else null
-        }; resolveEnvironment()
-        
-        case UniformOrigin.Program => def resolveProgram() :AnyRef = {
-          val index = find(program.uniformNames, name)
-          if (isIndexValid(index, "", name)) {
-            val prop = program.uniforms(index)
-            extractProperty(prop, "", name)
-          }
-          else null
-        }; resolveProgram()
-        
-      }).asInstanceOf[TechniqueBinding]
-    }
-    
-    def resolveInner(
-      names: ReadArray[String], values: ReadArray[TechniqueBinding],
-      prefix: String, name: String
-    ) :TechniqueBinding = {
-      val index = find(names, name)
-      
-      if (isIndexValid(index, prefix, name)) values(index)
-      else null
-    }
-    
-    def parse(
-      names: ReadArray[String], values: ReadArray[TechniqueBinding],
-      blockType: Int, prefix: String, path: String
-    ) :AnyRef = {
-      path match {
-        
-        case NameIndex(name, index, rest) =>
-          
-          val value =
-            if (prefix.isEmpty) resolveOuter(blockType, name)
-            else resolveInner(names, values, prefix, name)
-          
-          value match {
-            case list: BindingList[_] =>
-              val id = index.toInt
-              if (id >= list.size) {
-                log(
-                  Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]' is out of bounds for mesh '" +
-                  meshName + "'." 
-                )
-                null
-              }
-              else {
-                val indexed = list(id)
-                if (rest.isEmpty) indexed
-                else {
-                  indexed match {
-                    case c: Struct[_] =>
-                      parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
-                    case _ =>
-                      log(
-                        Level.SEVERE, "Uniform '" + mkName(prefix, name) + "[" + index + "]'" +
-                        " resolves to a value that is not an instance of Struct for mesh '" + meshName + "'."
-                      )
-                      null
-                  }
-                }
-              }
-            case _ =>
-              log(
-                Level.SEVERE, "Uniform array '" + mkName(prefix, name) +
-                "' resolves to a value that is not an instance of BindingList for mesh '" + meshName + "'."
-              )
-              null
-          }
-          
-        case Name(name, rest) =>
-          
-          val value =
-            if (prefix.isEmpty) resolveOuter(blockType, name)
-            else resolveInner(names, values, prefix, name)
-          
-          if (rest.isEmpty) value
-          else {
-            value match {
-              case c: Struct[_] =>
-                parse(c.fieldNames, c.fields, blockType, mkName(prefix, name), rest)
-              case _ =>
-                log(
-                  Level.SEVERE, "Uniform '" + mkName(prefix, name) +
-                  "' resolves to a value that is not an instance of Struct for mesh '" + meshName + "'."
-                )
-                null
-            }
-          }
-          
-        case _ =>
-          
-          log(
-            Level.SEVERE, "Uniform path '" + mkName(prefix, path) +
-            "' cannot be parsed."
-          )
-          null
-      }
-    }
-    
-    
-    val value = parse(null, null, programBinding.blockType, "", programBinding.name)
-    
-    if (value != null) {
-      val correctType = programBinding.dataType match {
-        case EngineBindingTypes.Float => value.isInstanceOf[DoubleRef]
-        case EngineBindingTypes.Vec2 => value.isInstanceOf[Vec2]
-        case EngineBindingTypes.Vec3 => value.isInstanceOf[Vec3]
-        case EngineBindingTypes.Vec4 => value.isInstanceOf[Vec4]
-        case EngineBindingTypes.Int => value.isInstanceOf[IntRef]
-        case EngineBindingTypes.Vec2i => value.isInstanceOf[Vec2i]
-        case EngineBindingTypes.Vec3i => value.isInstanceOf[Vec3i]
-        case EngineBindingTypes.Vec4i => value.isInstanceOf[Vec4i]
-        case EngineBindingTypes.Boolean => value.isInstanceOf[Boolean]
-        case EngineBindingTypes.Vec2b => value.isInstanceOf[Vec2b]
-        case EngineBindingTypes.Vec3b => value.isInstanceOf[Vec3b]
-        case EngineBindingTypes.Vec4b => value.isInstanceOf[Vec4b]
-        case EngineBindingTypes.Mat2x2 => value.isInstanceOf[Mat2x2]
-        case EngineBindingTypes.Mat2x3 => value.isInstanceOf[Mat2x3]
-        case EngineBindingTypes.Mat2x4 => value.isInstanceOf[Mat2x4]
-        case EngineBindingTypes.Mat3x2 => value.isInstanceOf[Mat3x2]
-        case EngineBindingTypes.Mat3x3 =>
-          value.isInstanceOf[Mat2x3] || value.isInstanceOf[Mat3x2] || value.isInstanceOf[Mat3x3]
-        case EngineBindingTypes.Mat3x4 => value.isInstanceOf[Mat3x4]
-        case EngineBindingTypes.Mat4x2 => value.isInstanceOf[Mat4x2]
-        case EngineBindingTypes.Mat4x3 => value.isInstanceOf[Mat4x3]
-        case EngineBindingTypes.Mat4x4 =>
-          value.isInstanceOf[Mat2x4] || value.isInstanceOf[Mat4x2] ||
-          value.isInstanceOf[Mat3x4] || value.isInstanceOf[Mat4x3] || value.isInstanceOf[Mat4x4]
-        case EngineBindingTypes.Texture1d => false// XXX
-        case EngineBindingTypes.Texture2d => value.isInstanceOf[ReadTextureBinding[_]]// XXX verify type somehow
-        case EngineBindingTypes.Texture3d => false
-        case EngineBindingTypes.CubeTexture => false
-        case EngineBindingTypes.ShadowTexture1d => false
-        case EngineBindingTypes.ShadowTexture2d => false
-      }
+    if (binding != null) {
+      val correctType = checkType(binding, programBinding.dataType)
       
       if (!correctType) {
+        
+        /* Replace when 2.10 is out.
+        val resolved = binding match {
+          case tb: ReadTextureBinding[_] => ClassUtil.simpleName(tb.bindingManifest.erasure)
+          case _ => ClassUtil.simpleName(binding.getClass)
+        }*/
+        val resolved =
+          if (TextureBinding.avoidCompilerCrashB(binding))
+            ClassUtil.simpleName(TextureBinding.avoidCompilerCrash(binding).bindingManifest.erasure)
+          else
+            ClassUtil.simpleName(binding.getClass)
+        
         log(
           Level.SEVERE, "Uniform '" + programBinding.name +
           "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
-          "' but resolves to an instance of '" + ClassUtil.simpleName(value.getClass) + "' for mesh '" + meshName +
+          "' but resolves to an instance of '" + resolved + "' for mesh '" + meshName +
           "'. This uniform will have an undefined value in the shader."
         )
         return null
       }
     }
     
-    if (value == null && !programBinding.name.endsWith("nvidiaBugWorkaround")) log(
-      Level.SEVERE, "Uniform '" + programBinding.name + "' resolves to a null reference for mesh '" + meshName + "'."
+    if (binding == null && !programBinding.name.endsWith("nvidiaBugWorkaround")) log(
+      Level.SEVERE, "Uniform '" + programBinding.name + "' could not be resolved for mesh '" + meshName + "'."
     )
-    else if (value.isInstanceOf[ReadTextureBinding[_]]) {
-      val textureBinding = TextureBinding.avoidCompilerCrash(value)
+    else if (binding.isInstanceOf[ReadTextureBinding[_]]) {
+      val textureBinding = TextureBinding.avoidCompilerCrash(binding)
       if (!textureBinding.isBound) log(
         Level.SEVERE, "Texture '" + programBinding.name + "' is not defined for mesh '" +
         meshName + "'. Default texture will be used."
       )
     }
     
-    value.asInstanceOf[Binding]
+    binding.asInstanceOf[Binding]
+  }
+  
+  private[this] def checkType(binding: Binding, dtype: Int) :Boolean = {
+     dtype match {
+      case EngineBindingTypes.Float => binding.isInstanceOf[DoubleRef]
+      case EngineBindingTypes.Vec2 => binding.isInstanceOf[Vec2]
+      case EngineBindingTypes.Vec3 => binding.isInstanceOf[Vec3]
+      case EngineBindingTypes.Vec4 => binding.isInstanceOf[Vec4]
+      case EngineBindingTypes.Int => binding.isInstanceOf[IntRef]
+      case EngineBindingTypes.Vec2i => binding.isInstanceOf[Vec2i]
+      case EngineBindingTypes.Vec3i => binding.isInstanceOf[Vec3i]
+      case EngineBindingTypes.Vec4i => binding.isInstanceOf[Vec4i]
+      case EngineBindingTypes.Boolean => binding.isInstanceOf[Boolean]
+      case EngineBindingTypes.Vec2b => binding.isInstanceOf[Vec2b]
+      case EngineBindingTypes.Vec3b => binding.isInstanceOf[Vec3b]
+      case EngineBindingTypes.Vec4b => binding.isInstanceOf[Vec4b]
+      case EngineBindingTypes.Mat2x2 => binding.isInstanceOf[Mat2x2]
+      case EngineBindingTypes.Mat2x3 => binding.isInstanceOf[Mat2x3]
+      case EngineBindingTypes.Mat2x4 => binding.isInstanceOf[Mat2x4]
+      case EngineBindingTypes.Mat3x2 => binding.isInstanceOf[Mat3x2]
+      case EngineBindingTypes.Mat3x3 =>
+        binding.isInstanceOf[Mat2x3] || binding.isInstanceOf[Mat3x2] || binding.isInstanceOf[Mat3x3]
+      case EngineBindingTypes.Mat3x4 => binding.isInstanceOf[Mat3x4]
+      case EngineBindingTypes.Mat4x2 => binding.isInstanceOf[Mat4x2]
+      case EngineBindingTypes.Mat4x3 => binding.isInstanceOf[Mat4x3]
+      case EngineBindingTypes.Mat4x4 =>
+        binding.isInstanceOf[Mat2x4] || binding.isInstanceOf[Mat4x2] ||
+        binding.isInstanceOf[Mat3x4] || binding.isInstanceOf[Mat4x3] || binding.isInstanceOf[Mat4x4]
+      case EngineBindingTypes.Texture1d => false// XXX
+      
+      /* Replace when 2.10 is out
+      case EngineBindingTypes.Texture2d => binding match {
+          case tb: ReadTextureBinding[_] => Texture2d.Manifest.erasure.isAssignableFrom(tb.bindingManifest.erasure)
+          case _ => false
+        }*/
+      case EngineBindingTypes.Texture2d =>
+        if (TextureBinding.avoidCompilerCrashB(binding)) {
+          val erasure = TextureBinding.avoidCompilerCrash(binding).bindingManifest.erasure
+          Texture2d.Manifest.erasure.isAssignableFrom(erasure)
+        }
+        else false
+      
+      case EngineBindingTypes.Texture3d => false
+      case EngineBindingTypes.CubeTexture => false
+      case EngineBindingTypes.ShadowTexture1d => false
+      case EngineBindingTypes.ShadowTexture2d => false
+    }
+    true
   }
   
   private[this] final def buildUniformMapping(

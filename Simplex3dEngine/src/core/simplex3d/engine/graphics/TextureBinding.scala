@@ -26,7 +26,7 @@ import simplex3d.data._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadTextureBinding[T <: Texture[_] : ClassManifest]
+sealed abstract class ReadTextureBinding[T <: Texture[_] with Tangible : ClassManifest]
 extends Readable[TextureBinding[T]] with Cloneable with Binding with Serializable
 {
   type Clone <: ReadTextureBinding[T]
@@ -60,7 +60,7 @@ extends Readable[TextureBinding[T]] with Cloneable with Binding with Serializabl
 
 
 @SerialVersionUID(8104346712419693669L)
-final class TextureBinding[T <: Texture[_] : ClassManifest] extends ReadTextureBinding[T]
+final class TextureBinding[T <: Texture[_] with Tangible : ClassManifest] extends ReadTextureBinding[T]
 with Writable[TextureBinding[T]] with Serializable
 {
   def this(texture: T) {
@@ -84,4 +84,5 @@ object TextureBinding {
   // XXX this is fixed in unreleased Scala 2.10, remove when it gets released.
   def avoidCompilerCrash(a: Any) = a.asInstanceOf[ReadTextureBinding[_]]
   def avoidCompilerCrash(a: ReadArray[Any]) = a.asInstanceOf[ReadArray[ReadTextureBinding[_]]]
+  def avoidCompilerCrashB(a: Any) :Boolean = a.isInstanceOf[ReadTextureBinding[_]]
 }

@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.util.logging._
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -28,6 +29,8 @@ import simplex3d.engine.util._
 /** All Struct subclasses must define a no-argument constructor.
  */
 trait Struct[S <: Struct[S]] extends Writable[S] with Binding { self: S =>
+  import Struct.logger._
+  
   protected def mkMutable() :S
   
   override def mutableCopy(): S = {
@@ -37,6 +40,17 @@ trait Struct[S <: Struct[S]] extends Writable[S] with Binding { self: S =>
   }
   
   def fieldNames: ReadArray[String]
-  def fields: ReadArray[TechniqueBinding]
+  def fields: ReadArray[Binding]
   def listDeclarations: ReadArray[ListDeclaration]
+  
+  
+  private[this] val bindingFromName = (name: String) => {
+    val id = PathUtil.find(fieldNames, name)
+    if (id == -1) null else fields(id)
+  }
+  final def resolvePath(path: String) :Binding = PathUtil.resolve(path, bindingFromName)
+}
+
+object Struct {
+  private final val logger = Logger.getLogger(classOf[RenderContext].getName)
 }

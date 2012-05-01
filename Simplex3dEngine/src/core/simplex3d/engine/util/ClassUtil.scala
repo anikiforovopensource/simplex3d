@@ -21,7 +21,7 @@
 package simplex3d.engine.util
 
 
-object ClassUtil {
+private[engine] object ClassUtil {
   
   /** Class.getSimpleName() will throw an exception when running interpreted code. This method is a workaround.
    */

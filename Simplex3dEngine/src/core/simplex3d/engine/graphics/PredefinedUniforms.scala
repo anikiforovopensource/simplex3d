@@ -41,8 +41,8 @@ sealed abstract class ReadPredefinedUniforms {
   val se_pointSize: ReadDoubleRef
   
   
-  final def names = PredefinedUniforms.Names
-  val values: ReadArray[MathType]
+  final def bindingNames = PredefinedUniforms.BindingNames
+  val bindings: ReadArray[MathType]
 }
 
 
@@ -60,7 +60,7 @@ final class PredefinedUniforms extends ReadPredefinedUniforms {
   val se_pointSize = new DoubleRef(0)
   
   
-  val values = new ReadArray(Array[MathType](
+  val bindings = new ReadArray(Array[MathType](
     se_viewDimensions,
     se_timeTotal,
     se_timeInterval,
@@ -77,7 +77,7 @@ final class PredefinedUniforms extends ReadPredefinedUniforms {
 
 
 object PredefinedUniforms {
-  final val Names = new ReadArray(Array[String](
+  final val BindingNames = new ReadArray(Array[String](
     "se_viewDimensions",
     "se_timeTotal",
     "se_timeInterval",

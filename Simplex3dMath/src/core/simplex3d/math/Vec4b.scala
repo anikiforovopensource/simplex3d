@@ -184,6 +184,8 @@ with PropertyValue[Vec4b] with Serializable
 {
   px = cx; py = cy; pz = cz; pw = cw
 
+  private[math] def this() { this(false, false, false, false) }
+  
   type Clone = Vec4b
   type Read = ReadVec4b
   type Const = ConstVec4b

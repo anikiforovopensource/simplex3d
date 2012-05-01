@@ -183,6 +183,8 @@ with PropertyValue[Vec3f] with Serializable
 {
   px = cx; py = cy; pz = cz
 
+  private[math] def this() { this(0, 0, 0) }
+  
   type Clone = Vec3f
   type Read = ReadVec3f
   type Const = ConstVec3f

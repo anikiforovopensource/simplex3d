@@ -164,6 +164,8 @@ extends PrimitiveRef[Float] with ReadPropertyValue[FloatRef] with Serializable
 final class FloatRef(cx: Float) extends ReadFloatRef(cx)
 with PropertyValue[FloatRef] with Serializable
 {
+  def this() { this(0) }
+  
   type Clone = FloatRef
   type Read = ReadFloatRef
   type Const = Float

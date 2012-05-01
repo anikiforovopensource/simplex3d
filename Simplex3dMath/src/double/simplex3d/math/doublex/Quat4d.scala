@@ -187,6 +187,8 @@ with PropertyValue[Quat4d] with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
+  private[math] def this() { this(1, 0, 0, 0) }
+  
   type Clone = Quat4d
   type Read = ReadQuat4d
   type Const = ConstQuat4d
@@ -290,6 +292,8 @@ object Quat4d {
 
   /*main factory*/ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)
+    
+  def apply() = new Quat4d(1, 0, 0, 0)
 
   def apply(q: AnyQuat4[_]) = new Quat4d(q.da, q.db, q.dc, q.dd)
   def apply(u: AnyVec4[_]) = new Quat4d(u.dw, u.dx, u.dy, u.dz)

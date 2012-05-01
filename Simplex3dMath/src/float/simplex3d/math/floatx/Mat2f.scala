@@ -270,6 +270,11 @@ with PropertyValue[Mat2f] with Serializable
   p00 = c00; p01 = c01
   p10 = c10; p11 = c11
 
+  private[math] def this() = this(
+    1, 0,
+    0, 1
+  )
+  
   type Clone = Mat2f
   type Read = ReadMat2f
   type Const = ConstMat2f

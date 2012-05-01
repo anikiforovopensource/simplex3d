@@ -79,11 +79,11 @@ package integration {
     type Buffer <: nio.Buffer
   }
 
-  sealed trait Tangible extends Raw
-  sealed trait TangibleInt extends Tangible
+  trait Tangible
+  sealed trait TangibleInt extends Raw with Tangible
   sealed trait TangibleIndex extends TangibleInt with Unsigned
-  sealed trait TangibleFloat extends Tangible
-  sealed trait TangibleDouble extends Tangible
+  sealed trait TangibleFloat extends Raw with Tangible
+  sealed trait TangibleDouble extends Raw with Tangible
 
   sealed trait Integral extends Raw
 

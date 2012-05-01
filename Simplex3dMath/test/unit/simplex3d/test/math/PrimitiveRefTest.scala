@@ -33,7 +33,8 @@ import simplex3d.math.doublex.functions._
 class PrimitiveRefTest extends FunSuite {
 
   test("Mutable BooleanRef") {
-    val r = new BooleanRef(false)
+    val r = new BooleanRef()
+    assert(r.toConst == false)
     
     
     val t: ReadBooleanRef = new BooleanRef(true)
@@ -103,7 +104,9 @@ class PrimitiveRefTest extends FunSuite {
   }
   
   test("Mutable IntRef") {
-    val r = new IntRef(4)
+    val r = new IntRef()
+    assert(r.toConst == 0)
+    r := 4
     
     
     assert(r * (new IntRef(2)).asInstanceOf[ReadIntRef] == 8)
@@ -159,7 +162,9 @@ class PrimitiveRefTest extends FunSuite {
   }
   
   test("Mutable FloatRef") {
-    val r = new FloatRef(4)
+    val r = new FloatRef()
+    assert(r.toConst == 0)
+    r := 4
     
     
     assert(r * (new FloatRef(2)).asInstanceOf[ReadFloatRef] == 8)
@@ -197,7 +202,9 @@ class PrimitiveRefTest extends FunSuite {
   }
   
   test("Mutable DoubleRef") {
-    val r = new DoubleRef(4)
+    val r = new DoubleRef()
+    assert(r.toConst == 0)
+    r := 4
     
     
     assert(r * (new DoubleRef(2)).asInstanceOf[ReadDoubleRef] == 8)

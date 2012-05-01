@@ -76,6 +76,9 @@ extends PrimitiveRef[Boolean] with ReadPropertyValue[BooleanRef] with Serializab
 final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx)
 with PropertyValue[BooleanRef] with Serializable
 {
+  
+  def this() { this(false) }
+  
   type Clone = BooleanRef
   type Read = ReadBooleanRef
   type Const = Boolean

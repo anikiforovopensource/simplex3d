@@ -230,6 +230,8 @@ extends PrimitiveRef[Double] with ReadPropertyValue[DoubleRef] with Serializable
 final class DoubleRef(cx: Double) extends ReadDoubleRef(cx)
 with PropertyValue[DoubleRef] with Serializable
 {
+  def this() { this(0) }
+  
   type Clone = DoubleRef
   type Read = ReadDoubleRef
   type Const = Double

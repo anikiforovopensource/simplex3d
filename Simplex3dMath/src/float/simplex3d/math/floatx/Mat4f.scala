@@ -413,6 +413,13 @@ with PropertyValue[Mat4f] with Serializable
   p20 = c20; p21 = c21; p22 = c22; p23 = c23
   p30 = c30; p31 = c31; p32 = c32; p33 = c33
 
+  private[math] def this() = this(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  )
+  
   type Clone = Mat4f
   type Read = ReadMat4f
   type Const = ConstMat4f

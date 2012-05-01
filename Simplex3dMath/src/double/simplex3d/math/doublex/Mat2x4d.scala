@@ -245,7 +245,7 @@ with ReadPropertyValue[Mat2x4d] with Serializable
       case self: Immutable => "Const"
       case _ => ""
     }
-    prefix + "Mat4x2" +
+    prefix + "Mat2x4" +
     "(" +
       m00 + ", " + m01 + ", " + m02 + ", " + m03 + ",   " + 
       m10 + ", " + m11 + ", " + m12 + ", " + m13 +
@@ -309,6 +309,11 @@ with PropertyValue[Mat2x4d] with Serializable
   p00 = c00; p01 = c01; p02 = c02; p03 = c03
   p10 = c10; p11 = c11; p12 = c12; p13 = c13
 
+  private[math] def this() = this(
+    1, 0, 0, 0,
+    0, 1, 0, 0
+  )
+  
   type Clone = Mat2x4d
   type Read = ReadMat2x4d
   type Const = ConstMat2x4d

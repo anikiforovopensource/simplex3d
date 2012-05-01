@@ -241,6 +241,8 @@ extends PrimitiveRef[Int] with ReadPropertyValue[IntRef] with Serializable
 final class IntRef(cx: Int) extends ReadIntRef(cx)
 with PropertyValue[IntRef] with Serializable
 {
+  def this() { this(0) }
+  
   type Clone = IntRef
   type Read = ReadIntRef
   type Const = Int

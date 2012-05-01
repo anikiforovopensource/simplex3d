@@ -333,6 +333,12 @@ with PropertyValue[Mat3f] with Serializable
   p10 = c10; p11 = c11; p12 = c12
   p20 = c20; p21 = c21; p22 = c22
 
+  private[math] def this() = this(
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1
+  )
+  
   type Clone = Mat3f
   type Read = ReadMat3f
   type Const = ConstMat3f

@@ -244,6 +244,9 @@ object Util {
 }
 
 
+import scala.collection.mutable.HashSet
+
+
 object Jar {
   val DefaultManifest = "Manifest-Version: 1.0\n\n"
   
@@ -262,9 +265,38 @@ object Jar {
   def create(dest: File, fileSets: Seq[FileSet], manifest: File = null) {
     val manifestString = if (manifest == null) DefaultManifest else loadFile(manifest)
     
+    def parent(path: String) :Option[String] = {
+      val i = path.lastIndexOf("/")
+      if (i <= 0) None else Some(path.substring(0, i + 1))
+    }
+    
+    var zipDirs = new HashSet[String]
     var zip: ZipOutputStream = null
+    
+    def processPath(path: String) {
+      parent(path) match {
+            
+        case Some(parent) =>
+          if (!zipDirs.contains(parent)) {
+            processPath(parent.dropRight(1))
+            zipDirs += parent
+            zip.putNextEntry(new ZipEntry(parent))
+            zip.closeEntry()
+          }
+          
+        case None =>
+          // ignore
+      }
+    }
+    
+    
+    
     try {
       zip = new ZipOutputStream(new FileOutputStream(dest))
+
+      zipDirs += "META-INF/"
+      zip.putNextEntry(new ZipEntry("META-INF/"))
+      zip.closeEntry()
       
       zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"))
       zip.write(manifestString.getBytes())
@@ -272,6 +304,7 @@ object Jar {
       
       for (fileSet <- fileSets) {
         fileSet.foreach { (path, openStream) =>
+          processPath(path)
           zip.putNextEntry(new ZipEntry(path))
           Util.copy(openStream(), zip)
         }

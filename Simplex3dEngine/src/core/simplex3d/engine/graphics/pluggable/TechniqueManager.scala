@@ -64,16 +64,6 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  private def toNameIdMap(array: ReadArray[String]) :HashMap[String, java.lang.Integer] = {
-    val map = new HashMap[String, java.lang.Integer]
-    for (i <- 0 until array.length) {
-      map.put(array(i), i)
-    }
-    map
-  }
-  private val geometryMap = toNameIdMap(graphicsContext.mkGeometry().attributeNames)
-  private val materialMap = toNameIdMap(graphicsContext.mkMaterial().uniformNames)
-  private val environmentMap = toNameIdMap(graphicsContext.mkEnvironment().propertyNames)
   private[this] val dummyPredefined = new PredefinedUniforms()
   
   
@@ -95,8 +85,8 @@ extends graphics.TechniqueManager[G]
         val declarations = shader.uniformBlock
         
         var i = 0; while (uniformsPassed && i < declarations.size) {
-          val declaration = declarations(i)
           uniformsPassed = false
+          val declaration = declarations(i)
           
           if (declaration.isPredefined && declaration.name == "se_pointSize") {
             uniformsPassed = (geometry.mode == PointSprites)
@@ -119,21 +109,19 @@ extends graphics.TechniqueManager[G]
       
       
       var attributesPassed = uniformsPassed
-      if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {//XXX redo attributes resolution via graphicsContext and allow remapping
+      if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {
         val declarations = shader.attributeBlock
         var i = 0; while (attributesPassed && i < declarations.size) {
+          attributesPassed = false
           val declaration = declarations(i)
           
-          val geometryId = geometryMap.get(declaration.name)
-          if (geometryId != null) {
-            val attrib = geometry.attributes(geometryId)
-            attributesPassed = attrib.isDefined
-            
-            if (shader.logRejected && !attributesPassed) log(
-              Level.INFO, "Shader '" + shader.name + "' was rejected because the attribute '" +
-              declaration.name + "' is not defined."
-            )
-          }
+          val attrib = graphicsContext.resolveAttributePath(declaration.name, geometry)
+          attributesPassed = (attrib != null)//XXX check the type at runtime
+          
+          if (shader.logRejected && !attributesPassed) log(
+            Level.INFO, "Shader '" + shader.name + "' was rejected because the attribute '" +
+            declaration.name + "' is not defined."
+          )
           
           i += 1
         }
@@ -304,12 +292,10 @@ extends graphics.TechniqueManager[G]
       
       
       // Load cached technique or make a new one.
-      val combineShaders = false //XXX get this from Settings.Advanced
-      
       val readTechniqueKey = new ReadArray(techniqueKey)
       var technique = techniqueCache.get(readTechniqueKey)
       
-      if (technique == null && !combineShaders) {
+      if (technique == null) {
         val shaders = new ArrayBuffer[Shader]
         
         var i = 0; while (i < techniqueKey.size) {
@@ -335,21 +321,6 @@ extends graphics.TechniqueManager[G]
         shaders += genMain(Shader.Vertex, chain)
         
         technique = new Technique(graphicsContext, shaders.toSet)
-        techniqueCache.put(readTechniqueKey, technique)
-      }
-      else if (technique == null && combineShaders) {
-        val vertexShaders = new ArrayBuffer[(ShaderPrototype, Seq[ListDeclarationSizeKey])]
-        val fragmentShaders = new ArrayBuffer[(ShaderPrototype, Seq[ListDeclarationSizeKey])]
-        
-        for (shaderKey <- techniqueKey) {
-          if (shaderKey._1.isInstanceOf[VertexShader]) vertexShaders += shaderKey
-          else fragmentShaders += shaderKey
-        }
-        
-        val vertexShader = new Shader(Shader.Vertex, ShaderPrototype.genCombinedSrc_Glsl120(vertexShaders))
-        val fragmentShader = new Shader(Shader.Fragment, ShaderPrototype.genCombinedSrc_Glsl120(fragmentShaders))
-        
-        technique = new Technique(graphicsContext, immutable.Set(vertexShader, fragmentShader))
         techniqueCache.put(readTechniqueKey, technique)
       }
       

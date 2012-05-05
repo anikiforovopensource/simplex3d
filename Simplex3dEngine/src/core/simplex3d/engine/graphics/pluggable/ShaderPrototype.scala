@@ -114,6 +114,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     if (isInitialized) throw new IllegalStateException("Modifying shader after it has been initialized.")
   }
   
+  private[this] val boundUniforms = new HashMap[String, Defined[UncheckedBinding]]
   private[this] var _shaderUniforms: immutable.Map[String, Defined[UncheckedBinding]] = null
   def shaderUniforms = {
     if (!isInitialized) throw new IllegalStateException(
@@ -178,8 +179,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
         
     
     // Init bindings.
-    //XXX implement shader variables
-    _shaderUniforms = immutable.Map[String, Defined[UncheckedBinding]]()
+    _shaderUniforms = immutable.Map[String, Defined[UncheckedBinding]]() ++ boundUniforms
     
     
     isInitialized = true
@@ -192,6 +192,14 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     blockBody
     blocks += new DeclarationBlock(name, new ReadSeq(declarations))
     declarations = null
+  }
+  
+  protected final def bind[W <: Writable[W] with Binding](name: String, binding: Defined[W]) {
+    if (declarations != null) throw new IllegalStateException("bind() must be declared at the top level.")
+    checkState()
+    boundUniforms.put(name, binding.asInstanceOf[Defined[UncheckedBinding]])
+    val declaration = new Declaration(ClassUtil.rebuildManifest(binding.get), name)
+    _uniformBlock += declaration
   }
   
   protected final def use(functionSignature: String) {
@@ -533,72 +541,6 @@ object ShaderPrototype {
     globalDeclarations +
     genFunctionDeclarationHeader(shader.functionDependencies) +
     genBody(remapping, shader.sources)
-  }
-  
-  /** Shaders must precede their dependencies in the chain.
-   */
-  def genCombinedSrc_Glsl120(chain: Seq[(ShaderPrototype, Seq[ListDeclarationSizeKey])]) :String = {
-    if (chain.isEmpty) return "";
-    
-    val shaders = chain.reverse
-    
-    var version = ""
-    var squareMatrices = shaders.head._1.forceSquareMatrices
-    val arrayDeclarationSet = new HashSet[ListDeclarationSizeKey]
-    val structDeclarationMap = new HashMap[String, StructDeclaration]
-    val uniformMap = new HashMap[String, Declaration]
-    val attributeMap = new HashMap[String, Declaration]
-    val inputMap = new HashMap[String, DeclarationBlock]
-    val outputMap = new HashMap[String, DeclarationBlock]
-    val sources = new ArrayBuffer[String]
-    val entryPoints = new ArrayBuffer[String]
-    
-    val shaderType = shaders.head._1.shaderType
-    val isVertexShader = (shaderType == Shader.Vertex)
-    
-    for ((shader, arrayDeclarations) <- shaders) {
-      if (shader.shaderType != shaderType) throw new IllegalArgumentException(
-        "All shaders must be the same type (e.g. all vertex shaders or all fragment shaders)."
-      )
-      
-      if (shader.forceSquareMatrices != squareMatrices) {
-        squareMatrices = squareMatrices | shader.forceSquareMatrices
-        println(//XXX log warn
-          "Combining sources with and without remapping to square matrices."
-        )
-      }
-      if (!version.isEmpty && !shader.version.isEmpty) {
-        if (version != shader.version) println(//XXX log
-          "Combining shaders with different versions: '" + version + "' and '" + shader.version + "'."
-    		)
-    		if (version < shader.version) version = shader.version
-      }
-      else {
-        version = shader.version
-      }
-      
-      arrayDeclarationSet ++= arrayDeclarations
-      structDeclarationMap ++= shader.structs.map(s => (s.glslType, s))
-      attributeMap ++= shader.attributeBlock.map(d => (d.name, d))
-      uniformMap ++= shader.uniformBlock.map(d => (d.name, d))
-      inputMap ++= shader.inputBlocks.map(b => (b.name, b))
-      outputMap ++= shader.outputBlocks.map(b => (b.name, b))
-      sources ++= shader.sources
-      entryPoints ++= shader.entryPoint
-    }
-    
-    
-    val (remapping, globalDeclarations) = genGlobalDeclarationHeader_Glsl120(
-      isVertexShader, squareMatrices,
-      attributeMap.values, uniformMap.values, inputMap.values, outputMap.values
-    )
-    
-    (if (!version.isEmpty) "#version " + version + "\n\n" else "") +
-    genSizeDelarationHeader(arrayDeclarationSet) +
-    genStructDeclarationHeader_Glsl120(structDeclarationMap.values) +
-    globalDeclarations +
-    genBody(remapping, sources) +
-    "void main() {\n" + entryPoints.map("  " + _).mkString("", "();\n", "();\n") + "}"
   }
 }
 

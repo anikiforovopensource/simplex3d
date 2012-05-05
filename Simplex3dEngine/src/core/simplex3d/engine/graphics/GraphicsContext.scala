@@ -23,6 +23,7 @@ package graphics
 
 import java.util.HashMap
 import simplex3d.math.types._
+import simplex3d.data._
 import simplex3d.engine.util._
 
 
@@ -40,15 +41,17 @@ abstract class GraphicsContext {
   final def namespace: Set[String] = combinedNamespace
   private[this] final var combinedNamespace: Set[String] = null
   
-  private[this] final val uniformMap: HashMap[String, (Int, Int)] = new HashMap[String, (Int, Int)]
+  private[this] final val uniformMap = new HashMap[String, (Int, Int)]
+  private[this] final val attributeMap = new HashMap[String, java.lang.Integer]
 
   
   protected def init() {
+    val geometry = mkGeometry()
     val material = mkMaterial()
     val environment = mkEnvironment()
     
     // Initialize namespace.
-    val geomNames = mkGeometry().attributeNames
+    val geomNames = geometry.attributeNames
     
     val predefNames = PredefinedUniforms.BindingNames
     val matNames = material.uniformNames
@@ -93,6 +96,12 @@ abstract class GraphicsContext {
     registerUniforms(UniformOrigin.Predefined, PredefinedUniforms.BindingNames)
     registerUniforms(UniformOrigin.Material, material.uniformNames)
     registerUniforms(UniformOrigin.Environment, environment.propertyNames)
+    
+    
+    // Initialize attribute map.
+    for (i <- 0 until geometry.attributeNames.length) {
+      attributeMap.put(geometry.attributeNames(i), i)
+    }
   }
   
   
@@ -137,10 +146,23 @@ abstract class GraphicsContext {
     material: graphics.Material,
     environment: graphics.Environment,
     programUniforms: Map[String, Defined[UncheckedBinding]]
-  ) :Object = {
+  ) :Binding = {
     
     val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
     PathUtil.resolve(path, bindingFromName)
+  }
+  
+  def resolveAttributePath(
+    path: String,
+    geometry: graphics.Geometry
+  ) :Attributes[Format with MathType, Raw] = {
+    
+    val id = attributeMap.get(path)
+    
+    if (id == null) null else {
+      val binding = geometry.attributes(id)
+      if (!binding.isDefined) null else binding.get
+    }
   }
   
   /* XXX redo comments for loader remapping.
@@ -156,7 +178,7 @@ abstract class GraphicsContext {
    * declared in Struct.fields. As a special case, texture dimensions can be accessed this way as well.
    * Example: declare[Vec2i]("dimensions").remap("textureUnit.texture.dimensions")
    */
-  def resolveRemappedUniformPath(//XXX rework this for model loader remapping.
+  private def resolveRemappedUniformPath(//XXX rework this for model loader remapping.
     path: String,
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,

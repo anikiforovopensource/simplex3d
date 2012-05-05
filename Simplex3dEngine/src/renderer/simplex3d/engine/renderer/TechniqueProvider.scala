@@ -28,6 +28,7 @@ import simplex3d.engine.graphics.pluggable._
 
 
 object TechniqueProvider {
+
   def assembleTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
     val manager = new pluggable.TechniqueManager[G]
     

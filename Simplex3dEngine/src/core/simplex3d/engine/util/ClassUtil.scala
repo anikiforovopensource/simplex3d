@@ -20,6 +20,9 @@
 
 package simplex3d.engine.util
 
+import simplex3d.math.types._
+import simplex3d.engine.graphics._
+
 
 private[engine] object ClassUtil {
   
@@ -38,5 +41,11 @@ private[engine] object ClassUtil {
       else fullName.substring(index + 1)
     }
     else c.getSimpleName
+  }
+  
+  def rebuildManifest(u: AnyRef) :ClassManifest[_ <: Binding] = u match {
+    case list: BindingList[_] => ClassManifest.classType(list.getClass, list.elementManifest)
+    case tex: TextureBinding[_] => ClassManifest.classType(tex.getClass, tex.bindingManifest)
+    case binding: Binding => ClassManifest.classType(binding.getClass)
   }
 }

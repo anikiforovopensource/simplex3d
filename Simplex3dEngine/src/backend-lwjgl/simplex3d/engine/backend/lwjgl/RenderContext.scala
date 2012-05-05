@@ -974,32 +974,21 @@ extends graphics.RenderContext with GlAccess {
   private[this] final def buildAttributeMapping(mesh: AbstractMesh, bindings: ReadArray[ActiveAttribute])
   :ReadArray[Attributes[_, _]] = {
     
-    def extract(
-      names: ReadArray[String], properties: ReadArray[AttributeBinding[_, _]],
-      name: String
-    ) :AnyRef = {
-      val index = find(names, name)
-      if (index < 0) {
-        log(Level.SEVERE, "Attributes '" + name + "' cannot be resolved for mesh '" + mesh.name + "'.")
-        null
-      }
-      else {
-        val attrib = properties(index)
-        if (!attrib.isDefined) {
-          log(Level.SEVERE, "Attributes '" + name + "' are not defined for mesh '" + mesh.name + "'.")
-          null
-        }
-        else attrib.get
-      }
-    }
-    
     val mapping = new Array[Attributes[_, _]](bindings.length)
     val geom = mesh.geometry
+    val graphicsContext = mesh.technique.get.graphicsContext
     
     var i = 0; while (i < bindings.length) {
       val binding = bindings(i)
-      val attrib = extract(geom.attributeNames, geom.attributes, binding.name)
+      val attrib = graphicsContext.resolveAttributePath(binding.name, geom)
+      
       // XXX check type
+      
+      if (attrib == null) log(
+        Level.SEVERE,
+        "Attributes '" + binding.name + "' cannot be resolved for mesh '" + mesh.name + "'."
+      )
+      
       mapping(i) = attrib.asInstanceOf[Attributes[_, _]]
       
       i += 1

@@ -137,9 +137,6 @@ object Simplex3dConsole extends Build {
       
         println("Copying lwjgl jars...")
         
-        //val lwjglNativeJars = Common.getLwjglNativeJars(ivyPaths.ivyHome.get)
-        //for (jar <- lwjglNativeJars) { IO.copyFile(jar, target / jar.getName) }
-        
         val otherJars = otherDeps.map(_.src).filter(file => !file.isDirectory && file.getName.endsWith(".jar"))
         val lwjglJars = otherJars.filter(_.getAbsolutePath.contains("lwjgl"))
         val copiedLwjglJars = for (jar <- lwjglJars) yield {

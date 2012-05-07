@@ -860,7 +860,7 @@ extends graphics.RenderContext with GlAccess {
     ).asInstanceOf[Binding]
     
     if (binding != null) {
-      val correctType = checkType(binding, programBinding.dataType)
+      val correctType = checkUniformType(binding, programBinding.dataType)
       
       if (!correctType) {
         
@@ -899,8 +899,31 @@ extends graphics.RenderContext with GlAccess {
     binding.asInstanceOf[Binding]
   }
   
-  private[this] def checkType(binding: Binding, dtype: Int) :Boolean = {
+  private[this] def checkAttributeType(m: ClassManifest[_], dtype: Int) :Boolean = {
      dtype match {
+      case EngineBindingTypes.Float => m == PrimitiveFormat.RFloat
+      case EngineBindingTypes.Vec2 => m == Vec2.Manifest
+      case EngineBindingTypes.Vec3 => m == Vec3.Manifest
+      case EngineBindingTypes.Vec4 => m == Vec4.Manifest
+      case EngineBindingTypes.Int => m == PrimitiveFormat.SInt
+      case EngineBindingTypes.Vec2i => m == Vec2i.Manifest
+      case EngineBindingTypes.Vec3i => m == Vec3i.Manifest
+      case EngineBindingTypes.Vec4i => m == Vec4i.Manifest
+      case EngineBindingTypes.Mat2x2 => m == Mat2x2.Manifest
+      case EngineBindingTypes.Mat2x3 => m == Mat2x3.Manifest
+      case EngineBindingTypes.Mat2x4 => m == Mat2x4.Manifest
+      case EngineBindingTypes.Mat3x2 => m == Mat3x2.Manifest
+      case EngineBindingTypes.Mat3x3 => m == Mat3x3.Manifest
+      case EngineBindingTypes.Mat3x4 => m == Mat3x4.Manifest
+      case EngineBindingTypes.Mat4x2 => m == Mat4x2.Manifest
+      case EngineBindingTypes.Mat4x3 => m == Mat4x3.Manifest
+      case EngineBindingTypes.Mat4x4 => m == Mat4x4.Manifest
+      case _ => false
+    }
+  }
+  
+  private[this] def checkUniformType(binding: Binding, dtype: Int) :Boolean = {
+    dtype match {
       case EngineBindingTypes.Float => binding.isInstanceOf[DoubleRef]
       case EngineBindingTypes.Vec2 => binding.isInstanceOf[Vec2]
       case EngineBindingTypes.Vec3 => binding.isInstanceOf[Vec3]
@@ -943,8 +966,8 @@ extends graphics.RenderContext with GlAccess {
       case EngineBindingTypes.CubeTexture => false
       case EngineBindingTypes.ShadowTexture1d => false
       case EngineBindingTypes.ShadowTexture2d => false
+      case _ => false
     }
-    true
   }
   
   private[this] final def buildUniformMapping(
@@ -980,16 +1003,29 @@ extends graphics.RenderContext with GlAccess {
     
     var i = 0; while (i < bindings.length) {
       val binding = bindings(i)
-      val attrib = graphicsContext.resolveAttributePath(binding.name, geom)
-      
-      // XXX check type
+      var attrib = graphicsContext.resolveAttributePath(binding.name, geom)
       
       if (attrib == null) log(
         Level.SEVERE,
         "Attributes '" + binding.name + "' cannot be resolved for mesh '" + mesh.name + "'."
       )
-      
-      mapping(i) = attrib.asInstanceOf[Attributes[_, _]]
+      else {
+        val correctType = checkAttributeType(attrib.src.accessorManifest, binding.dataType)
+        
+        if (!correctType) {
+          val resolved = ClassUtil.simpleName(binding.getClass)
+              
+          log(
+            Level.SEVERE, "Attributes '" + binding.name +
+            "' are defined as a sequence of '" + EngineBindingTypes.toString(binding.dataType) +
+            "' but resolve to a sequence of '" + resolved + "' for mesh '" + mesh.name +
+            "'. These attributes will have undefined values in the shader."
+          )
+        }
+        else {
+          mapping(i) = attrib.asInstanceOf[Attributes[_, _]]
+        }
+      }
       
       i += 1
     }

@@ -1003,7 +1003,7 @@ extends graphics.RenderContext with GlAccess {
     
     var i = 0; while (i < bindings.length) {
       val binding = bindings(i)
-      var attrib = graphicsContext.resolveAttributePath(binding.name, geom)
+      val attrib = graphicsContext.resolveAttributePath(binding.name, geom)
       
       if (attrib == null) log(
         Level.SEVERE,

@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import scala.collection._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
@@ -31,9 +32,30 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-final class DeclarationBlock(val name: String, val declarations: ReadSeq[Declaration]) {
+final class DeclarationBlock(val name: String, val declarations: immutable.HashSet[Declaration]) {
   override def toString() :String = {
     "DeclarationBlock('" + name + "')(\n" + declarations.mkString("  ", "\n", "") + "\n)"
+  }
+  
+  override def equals(o: Any) :Boolean = {
+    if (this eq o.asInstanceOf[AnyRef]) {
+      true
+    }
+    else o match {
+      
+      case d: DeclarationBlock =>
+        name == d.name &&
+        declarations == d.declarations
+        
+      case _ =>
+        false
+    }
+  }
+  
+  override def hashCode() :Int = {
+    41 * (
+      41 + name.hashCode
+    ) + declarations.hashCode
   }
 }
 
@@ -272,5 +294,32 @@ final class Declaration(
       }
     }
     "Declaraion(" + qualifiers + " " + extractTypeString(manifest) + " " + name + ")"
+  }
+  
+  override def equals(o: Any) :Boolean = {
+    if (this eq o.asInstanceOf[AnyRef]) {
+      true
+    }
+    else o match {
+      
+      case d: Declaration =>
+        manifest == d.manifest &&
+        name == d.name &&
+        qualifiers == d.qualifiers &&
+        arraySizeExpression == d.arraySizeExpression
+        
+      case _ =>
+        false
+    }
+  }
+  
+  override def hashCode() :Int = {
+    41 * (
+      41 * (
+        41 * (
+          41 + manifest.hashCode
+        ) + name.hashCode
+      ) + qualifiers.hashCode
+    ) + arraySizeExpression.hashCode
   }
 }

@@ -28,6 +28,20 @@ final class ReadSeq[+T](seq: ArrayBuffer[T]) extends IndexedSeq[T] with IndexedS
   final override def size = seq.length
   final def length = seq.length
   final def apply(i: Int) :T = seq(i)
+  
+  override def equals(o: Any) :Boolean = {
+    if (this eq o.asInstanceOf[AnyRef]) {
+      true
+    }
+    else o match {
+      case d: ReadSeq[_] => this.seq == d.seq
+      case _ => false
+    }
+  }
+  
+  override def hashCode() :Int = {
+    seq.hashCode()
+  }
 }
 
 object ReadSeq {

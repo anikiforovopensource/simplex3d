@@ -190,7 +190,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   private[this] def processBlock(name: String, blocks: ArrayBuffer[DeclarationBlock], blockBody: => Unit) {
     declarations = new ArrayBuffer[Declaration]
     blockBody
-    blocks += new DeclarationBlock(name, new ReadSeq(declarations))
+    blocks += new DeclarationBlock(name, immutable.HashSet.empty[Declaration] ++ declarations)
     declarations = null
   }
   

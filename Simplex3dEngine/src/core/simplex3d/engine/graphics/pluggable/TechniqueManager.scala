@@ -38,12 +38,32 @@ extends graphics.TechniqueManager[G]
   
   
   protected class Stage(val name: String) {
-    val internal = new ArrayBuffer[ShaderPrototype]
+    val internal = new HashMap[String, ArrayBuffer[ShaderPrototype]]
     val output = new ArrayBuffer[ShaderPrototype]
     
+    private val inBlocks = new HashMap[String, DeclarationBlock]
+    private val outBlocks = new HashMap[String, DeclarationBlock]
+    
     def register(shader: ShaderPrototype) {
-      if (shader.entryPoint.isDefined) output.insert(0, shader)
-      else internal.insert(0, shader)
+      for (block <- shader.inputBlocks) {
+        //XXX
+      }
+      for (block <- shader.inputBlocks) {
+        //XXX
+      }
+      
+      if (shader.entryPoint.isDefined) {
+        output.insert(0, shader)
+      }
+      else {
+        var list = internal.get(shader.export.get)
+        if (list == null) {
+          list = new ArrayBuffer[ShaderPrototype]
+          internal.put(shader.export.get, list)
+        }
+        
+        list.insert(0, shader)
+      }
     }
   }
   
@@ -54,7 +74,7 @@ extends graphics.TechniqueManager[G]
   
   def register(shader: ShaderPrototype) {
     //XXX verify unique in/out block name has the same declarations
-    //XXX verify that declarations match material types, verify env key is present
+    //XXX verify that declarations match geometry and material types, verify env key isDefined
     //XXX special treatment for gl_Position => gl_FragCoord
     shader match {
       case _: FragmentShader => stages(0).register(shader)
@@ -67,7 +87,7 @@ extends graphics.TechniqueManager[G]
   private[this] val dummyPredefined = new PredefinedUniforms()
   
   
-  def resolveTechnique(//XXX handle shader uniforms config.
+  def resolveTechnique(
     meshName: String,
     geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
   )
@@ -136,8 +156,9 @@ extends graphics.TechniqueManager[G]
           val requiredFunction = requiredFunctions(i)
           functionsPassed = false
           
-          var j = 0; while (!functionsPassed && j < stage.internal.size) {
-            val functionProvider = stage.internal(j)
+          val matchingFunctions = stage.internal.get(requiredFunction)
+          var j = 0; while (!functionsPassed && matchingFunctions != null && j < matchingFunctions.size) {
+            val functionProvider = matchingFunctions(j)
             
             if (requiredFunction == functionProvider.export.get) {
               // Do not use set, use an ordered list, because the order is important.

@@ -21,6 +21,7 @@
 package simplex3d.engine
 package scene
 
+import simplex3d.math.double._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
@@ -29,6 +30,8 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   
   final class MeshSubtext {
     import AccessChanges._
+    
+    def worldMatrix = self.worldMatrix
     
     val technique = SharedRef[Technique](StructuralChangeListener.Ignore)
     val elementRange = Optional(ElementRange.Default)(StructuralChangeListener.Ignore)
@@ -66,6 +69,7 @@ trait AbstractMesh extends Spatial with EngineInfo { self =>
   def geometry: Geometry
   def material: Material
   def worldEnvironment: Environment
+  protected def worldMatrix: ReadMat4x3
   
   final def vertexCount :Int = {
     if (elementRange.isDefined) elementRange.get.count

@@ -34,9 +34,6 @@ object Common extends Build {
   )
   
   
-  
-  
-  
   def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
     val nativeJarDir = ivyHome / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
     val files = nativeJarDir.listFiles

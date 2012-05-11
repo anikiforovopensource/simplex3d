@@ -130,7 +130,7 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
       }; resolveUpdatableEffects()
     }
     
-    val transformation = getWorldMatrix(mesh)
+    val transformation = mesh.worldMatrix
     val geometry = mesh.geometry
     val material = mesh.material
     

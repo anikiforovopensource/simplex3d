@@ -72,9 +72,6 @@ object AccessScene {
 
 
 trait EngineAccess {
-  def getWorldMatrix(spatial: Spatial) :ReadMat4x3 = spatial.resolveWorldMatrix()
-  def setWorldMatrixResolver(spatial: Spatial, resolver: () => ReadMat4x3) { spatial.resolveWorldMatrix = resolver }
-  
   def getEngineInfo(info: EngineInfo) :Object = info.engineInfo
   def setEngineInfo(info: EngineInfo, data: Object) { info.engineInfo = data }
 }

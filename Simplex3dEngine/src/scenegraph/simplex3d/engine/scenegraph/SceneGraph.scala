@@ -44,7 +44,6 @@ extends ManagedScene[G](name) {
   import AccessScene._; import AccessChanges._
   
   
-  private[this] var version: Long = 0
   private[this] val controllerContext = new ControllerContext(settings.multithreadedControllers)
   
   protected val _root = new EnvrionmentNode("Root")(transformationContext, techniqueManager.graphicsContext)
@@ -71,13 +70,12 @@ extends ManagedScene[G](name) {
   }
   
   protected def update(time: TimeStamp) {
-    version += 1
     controllerContext.update(time)
   }
   
   
   private val batchArray = new SortBuffer[SceneElement[T, G]](100)
-  private val concurrentArray = new ConcurrentSortBuffer[AbstractMesh](100)
+  private val concurrentArray = new ConcurrentSortBuffer[SceneElement[T, G]](100)
   
   protected def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) {
     val camera = if (pass.camera.isDefined) pass.camera.get else this.camera
@@ -88,23 +86,32 @@ extends ManagedScene[G](name) {
     val allowMultithreading = settings.multithreadedParsing
     if (allowMultithreading) batchArray.clear()
     
-    root.nodeUpdateCull(
-      version, true, time, view, result
-    )(
-      allowMultithreading, settings.multithreadedParsing_NodesWithChildren,
-      batchArray, settings.multithreadedParsing_FromDepth, 0
+    val cullContext = new CullContext(
+      result.asInstanceOf[SortBuffer[SceneElement[T, G]]],
+      time, view,
+      settings.multithreadedParsing_NodesWithChildren, settings.multithreadedParsing_FromDepth,
+      batchArray
     )
+    root.cull(true, true, allowMultithreading, 0, cullContext)
     
     if (allowMultithreading) {
       concurrentArray.clear()
       
+      val cullContext = new CullContext(
+        concurrentArray,
+        time, view,
+        settings.multithreadedParsing_NodesWithChildren, settings.multithreadedParsing_FromDepth,
+        null
+      )
+      
       (0 until batchArray.size).par.foreach { i =>
         batchArray(i) match {
-          case b: Bounded[_, _] => b.updateCull(version, true, time, view, concurrentArray)
+          case b: Bounded[_, _] => b.cull(true, true, false, 0, cullContext)
           case _ => // do nothing.
         }
       }
-      result ++= concurrentArray
+      
+      result ++= concurrentArray.asInstanceOf[SortBuffer[AbstractMesh]]
     }
     
     // Resolve techniques.

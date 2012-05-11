@@ -1,6 +1,6 @@
 /*
- * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Simplex3dEngine - SceneGraph Module
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,9 +19,19 @@
  */
 
 package simplex3d.engine
-package scene
+package scenegraph
+
+import simplex3d.engine.util._
+import simplex3d.engine.scene._
+import simplex3d.engine.transformation._
+import simplex3d.engine.graphics._
 
 
-trait Spatial {
-  
-}
+final class CullContext[T <: TransformationContext, G <: GraphicsContext](
+  val renderArray: SortBuffer[SceneElement[T, G]],
+  val time: TimeStamp,
+  val view: View,
+  val batchChildrenThreshold: Int, // applies when parsing scenegraph with multithreading enabled
+  val batchDepthThreshold: Int, // applies when parsing scenegraph with multithreading enabled
+  val batchArray: SortBuffer[SceneElement[T, G]] // used to accumulate elements
+)

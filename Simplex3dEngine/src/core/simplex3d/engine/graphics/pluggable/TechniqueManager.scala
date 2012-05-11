@@ -115,7 +115,7 @@ extends graphics.TechniqueManager[G]
             val resolved = graphicsContext.resolveUniformPath(
               declaration.name, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
             
-            uniformsPassed = (resolved != null)//XXX check the type at runtime
+            uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
             
             if (shader.logRejected && !uniformsPassed) log(
               Level.INFO, "Shader '" + shader.name + "' was rejected because the uniform '" +

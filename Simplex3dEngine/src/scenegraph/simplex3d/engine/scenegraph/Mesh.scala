@@ -61,19 +61,15 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
     material.signalStructuralChanges()
   }
   
-  private[scenegraph] override def update(version: Long) :Boolean = {
-    if (updateVersion == version) return false
-    
+  private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
     propagateWorldTransformation()
-    updateVersion = version
     
-    
-    var updated = false
+    var updateParentVolume = false
     
     if (customBoundingVolume.hasRefChanges) {
       autoBoundingVolume == null
       customBoundingVolume.clearRefChanges()
-      updated = true
+      updateParentVolume = true
     }
     
     if (!customBoundingVolume.isDefined) {
@@ -87,41 +83,20 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
             val range = if (elementRange.isDefined) elementRange.get else null
             Bounded.rebuildAabb(range, geometry)(bound.update.min, bound.update.max)
         }
-        updated = true
+        updateParentVolume = true
       }
     }
     
     if (resolveBoundingVolume.hasDataChanges || uncheckedWorldTransformation.hasDataChanges) {
       resolveBoundingVolume.clearDataChanges()
-      updated = true
+      updateParentVolume = true
     }
     
     
     elementRange.clearDataChanges()
     geometry.indices.clearRefChanges()
     uncheckedWorldTransformation.clearDataChanges()
-    updated
-  }
-  
-  private[scenegraph] override def updateCull(
-    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
-  ) {
-    if (enableCulling) update(version)
-    else updateWorldTransformation(version)
     
-    val res =
-      if (enableCulling) BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
-      else Collision.Inside
-
-    if (res == Collision.Outside) return
-    
-    def process() {
-      if (animators != null && shouldRunAnimators) {
-        runUpdaters(animators, time)
-        shouldRunAnimators = false
-      }
-      
-      renderArray += this
-    }; process()
+    updateParentVolume
   }
 }

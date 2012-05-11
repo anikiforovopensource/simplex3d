@@ -34,7 +34,7 @@ abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: S
   implicit transformationCtx: T, graphicsCtx: G
 ) extends AbstractNode[T, G](name) with InheritedEnvironment {
   
-  def appendChild(element: SceneElement[T, G] with InheritedEnvironment) {
+  protected def appendChild(element: SceneElement[T, G] with InheritedEnvironment) {
     element.asInstanceOf[InheritedEnvironment]
     appendAnyChild(element)
   }

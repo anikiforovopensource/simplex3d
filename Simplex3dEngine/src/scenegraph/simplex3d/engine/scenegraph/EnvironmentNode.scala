@@ -50,4 +50,87 @@ extends AbstractNode[T, G](name) {
   def appendChild(element: SceneElement[T, G]) { appendAnyChild(element) }
   override def removeChild(element: SceneElement[_, _]) :Boolean = super.removeChild(element)
   override def removeNestedChild(element: SceneElement[_, _]) :Boolean = super.removeNestedChild(element)
+  
+  
+  private[scenegraph] override def nodeCull(
+    updateChildren: Boolean, cullChildren:Boolean, batchChildren: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
+  ) {
+    val children = this.children
+    val size = children.size; var i = 0; while (i < size) { val current = children(i)
+      
+      current match {
+        case envNode: EnvrionmentNode[_, _] =>
+          
+          def propagateEnvironment() {
+            val parentEnv = worldEnvironment
+            val childEnv = envNode.environment
+            val resultEnv = envNode.worldEnvironment
+    
+            val parentProps = parentEnv.properties
+            val childProps = childEnv.properties
+            val resultProps = resultEnv.properties
+            
+            val size = parentProps.length; var i = 0; while (i < size) {
+              
+              val parentProp = parentProps(i)
+              val childProp = childProps(i)
+              val resultProp = resultProps(i)
+              
+              if (parentProp.hasDataChanges || childProp.hasDataChanges) {
+                if (parentProp.isDefined) {
+                  if (childProp.isDefined) {
+                    childProp.get.propagate(parentProp.get, resultProp.update)
+                  }
+                  else {
+                    resultProp.update := parentProp.get
+                  }
+                }
+                else {
+                  if (childProp.isDefined) {
+                    resultProp.update := childProp.get
+                  }
+                  else {
+                    resultProp.undefine()
+                  }
+                }
+
+                childProp.clearDataChanges()
+              }
+              
+              i += 1
+            }
+          }; if (envNode.combineEnvironment) propagateEnvironment()
+          
+          if (batchChildren) cullContext.batchArray += envNode
+          else envNode.cull(updateChildren, cullChildren, allowMultithreading, currentDepth + 1, cullContext)
+
+        case bounded: Bounded[_, _] =>
+          if (batchChildren) cullContext.batchArray += bounded
+          else bounded.cull(updateChildren, cullChildren, allowMultithreading, currentDepth + 1, cullContext)
+        
+        case _ =>
+          current.updateWorldTransformation()
+      }
+      
+      i += 1
+    }
+    
+    
+    def postPropagation() {
+      val props = worldEnvironment.properties
+      val size = props.length; var i = 0; while (i < size) { val prop = props(i)
+        if (prop.hasDataChanges) {
+          if (prop.isDefined && prop.get.hasBindingChanges) {
+            worldEnvironment.signalStructuralChanges()
+            prop.get.clearBindingChanges()
+          }
+          prop.clearDataChanges()
+        }
+        
+        i += 1
+      }
+    }; postPropagation()
+  }
 }

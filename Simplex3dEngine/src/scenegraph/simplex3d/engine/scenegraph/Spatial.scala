@@ -46,15 +46,11 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   final val transformation: T#Transformation = {
     transformationContext.mkTransformation(this.isInstanceOf[AbstractCamera])
   }
-  private[scenegraph] final var updateVersion: Long = 0
   private[scenegraph] final val uncheckedWorldTransformation: T#Transformation =
     transformationContext.mkTransformation()
   
-  {
-    new EngineAccess {
-      setWorldMatrixResolver(self, () => uncheckedWorldTransformation.matrix)
-    }
-  }
+  protected def worldMatrix = uncheckedWorldTransformation.matrix
+
   
   
   final def worldTransformation: T#Transformation#Read = {
@@ -76,27 +72,20 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   
   private[scenegraph] final def propagateWorldTransformation() {
     val parentTransformation = if (parent == null) null else parent.uncheckedWorldTransformation
-  
+    
     transformation.asInstanceOf[UncheckedTransformation].propagateChanges(
       parentTransformation.asInstanceOf[UncheckedTransformation],
       uncheckedWorldTransformation.asInstanceOf[UncheckedTransformation]
     )
-      
+    
     transformation.clearDataChanges()
   }
   
-  private[scenegraph] final def updateWorldTransformation(version: Long) :Boolean = {
-    if (updateVersion != version) {
-      propagateWorldTransformation()
-      updateVersion = version
-    }
+  private[scenegraph] final def updateWorldTransformation() :Boolean = {
+    propagateWorldTransformation()
     val changed = uncheckedWorldTransformation.hasDataChanges
     uncheckedWorldTransformation.clearDataChanges()
     changed
-  }
-  
-  private[scenegraph] def update(version: Long) :Boolean = {
-    updateWorldTransformation(version)
   }
   
   

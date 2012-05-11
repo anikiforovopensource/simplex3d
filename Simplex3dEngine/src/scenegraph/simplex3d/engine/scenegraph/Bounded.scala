@@ -84,10 +84,37 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (animators != null) animators -= animator
   }
   
+  /**
+   * @return true if parent bounding volume must be adjusted, false otherwise.
+   */
+  private[scenegraph] def updateBoundingVolume(allowMultithreading: Boolean) :Boolean
   
-  private[scenegraph] def updateCull(
-    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
-  )
+  private[scenegraph] def cull(
+    update: Boolean, enableCulling: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
+  ) {
+    if (update) {
+      if (enableCulling) updateBoundingVolume(allowMultithreading)
+      else updateWorldTransformation()
+    }
+    
+    val res =
+      if (enableCulling) BoundingVolume.intersect(
+        cullContext.view.frustum, resolveBoundingVolume, uncheckedWorldTransformation
+      )
+      else Collision.Inside
+
+    if (res == Collision.Outside) return
+    
+    
+    if (animators != null && shouldRunAnimators) {
+      runUpdaters(animators, cullContext.time)
+      shouldRunAnimators = false
+    }
+    
+    cullContext.renderArray += this
+  }
 }
 
 

@@ -69,8 +69,6 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
     val managed = new ArrayBuffer[Spatial[T]](4)
     element.onParentChange(null, managed)
     if (controllerContext != null) controllerContext.unregister(managed)
-    
-    element.updateVersion = 0
   }
   
   private[scenegraph] final override def onParentChange(
@@ -123,27 +121,15 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
     removed
   }
   
-  private[scenegraph] override def update(version: Long) :Boolean = {
-    nodeUpdate(version)(false, 0)
-  }
-  
-  private[scenegraph] final def nodeUpdate
-    (version: Long)
-    (allowMultithreading: Boolean, minChildren: Int)
-  :Boolean =
-  {
-    if (updateVersion == version) return false
-    
+  private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
     propagateWorldTransformation()
-    updateVersion = version
     
-    
-    var updated = false
+    var updateParentVolume = false
     
     if (customBoundingVolume.hasRefChanges) {
       autoBoundingVolume == null
       customBoundingVolume.clearRefChanges()
-      updated = true
+      updateParentVolume = true
     }
     
     
@@ -151,22 +137,22 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       val atomicUpdateBounding = new java.util.concurrent.atomic.AtomicBoolean(false)
       var updateBounding = false
       
-      def processChild(child: SceneElement[T, G])(allowMultithreading: Boolean, minChildren: Int) {
+      def processChild(child: SceneElement[T, G]) {
         val childBoundingChanged = child match {
-          case node: AbstractNode[_, _] => node.nodeUpdate(version)(allowMultithreading, minChildren)
-          case _ => child.update(version)
+          case bounded: Bounded[_, _] => bounded.updateBoundingVolume(false)
+          case _ => child.updateWorldTransformation()
         }
         atomicUpdateBounding.compareAndSet(false, childBoundingChanged || atomicUpdateBounding.get)
       }
       
-      if (allowMultithreading && children.size >= minChildren) {
-        (0 until children.size).par.foreach(i => processChild(children(i))(false, 0))
+      if (allowMultithreading) {
+        (0 until children.size).par.foreach(i => processChild(children(i)))
         updateBounding = atomicUpdateBounding.get
       }
       else {
         def processChildren() {
           val size = children.size; var i = 0; while (i < size) {
-            processChild(children(i))(allowMultithreading, minChildren)
+            processChild(children(i))
             
             i += 1
           }
@@ -183,161 +169,83 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       if (updateBounding || uncheckedWorldTransformation.hasDataChanges) {
         val bound = autoBoundingVolume.asInstanceOf[Aabb]
         Bounded.rebuildAabb(this)(bound.update.min, bound.update.max)
-        updated = true
+        updateParentVolume = true
       }
     }
     
     
     if (resolveBoundingVolume.hasDataChanges) {
       resolveBoundingVolume.clearDataChanges()
-      updated = true
+      updateParentVolume = true
     }
     
     uncheckedWorldTransformation.clearDataChanges()
-    updated
+    updateParentVolume
   }
   
-  private[scenegraph] override def updateCull(
-    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
+  private[scenegraph] override def cull(
+    update: Boolean,
+    enableCulling: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
   ) {
-    nodeUpdateCull(
-      version, true, time, view, renderArray
-    )(false, 0, null, 0, 0)
-  }
-  
-  /**
-   * @returns true when completely culled, false when partially culled or not culled at all.
-   */
-  private[scenegraph] def nodeUpdateCull(
-    version: Long, enableCulling: Boolean,
-    time: TimeStamp, view: View,
-    renderArray: SortBuffer[AbstractMesh]
-  )(
-    allowMultithreading: Boolean, minChildren: Int,
-    batchArray: SortBuffer[SceneElement[T, G]], maxDepth: Int, currentDepth: Int
-  ) {
-    if (enableCulling) nodeUpdate(version)(allowMultithreading, minChildren)
-    else updateWorldTransformation(version)
+    if (update) {
+      if (enableCulling) updateBoundingVolume(allowMultithreading)
+      else updateWorldTransformation()
+    }
+    
+    val updateChildren = update || customBoundingVolume.isDefined
     
     
     val frustumTest = 
       if (!enableCulling) Collision.Inside
-      else BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+      else BoundingVolume.intersect(cullContext.view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
     
     if (frustumTest != Collision.Outside) {
       if (animators != null && shouldRunAnimators) {
-        runUpdaters(animators, time)
+        runUpdaters(animators, cullContext.time)
         shouldRunAnimators = false
       }
     }
-    
     
     val cullChildren = 
       if (frustumTest == Collision.Outside) return
       else if (frustumTest == Collision.Inside) false
       else true
     
-    var  batchChildren = false
-    if (allowMultithreading && batchArray != null) {
-      if (currentDepth >= maxDepth) {
-        batchChildren = true
-      }
-      else if (this.children.size >= minChildren) {
-        batchChildren = true
-      }
-    }
     
-    var hasLeafs = false
+    val batchChildren =
+      if (allowMultithreading && cullContext.batchArray != null) {
+        if (currentDepth >= cullContext.batchDepthThreshold || this.children.size >= cullContext.batchChildrenThreshold) {
+          true
+        }
+        else false
+      } else false
+
+    
+    nodeCull(updateChildren, cullChildren, batchChildren, allowMultithreading, currentDepth, cullContext)
+  }
+  
+  
+  private[scenegraph] def nodeCull(
+    updateChildren: Boolean, cullChildren:Boolean, batchChildren: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
+  ) {
     val children = this.children
     val size = children.size; var i = 0; while (i < size) { val current = children(i)
       
       current match {
-        case envNode: EnvrionmentNode[_, _] =>
-          
-          def propagateEnvironment() {
-            val parentEnv = worldEnvironment
-            val childEnv = envNode.environment
-            val resultEnv = envNode.worldEnvironment
-    
-            val parentProps = parentEnv.properties
-            val childProps = childEnv.properties
-            val resultProps = resultEnv.properties
-            
-            val size = parentProps.length; var i = 0; while (i < size) {
-              
-              val parentProp = parentProps(i)
-              val childProp = childProps(i)
-              val resultProp = resultProps(i)
-              
-              if (parentProp.hasDataChanges || childProp.hasDataChanges) {
-                if (parentProp.isDefined) {
-                  if (childProp.isDefined) {
-                    childProp.get.propagate(parentProp.get, resultProp.update)
-                  }
-                  else {
-                    resultProp.update := parentProp.get
-                  }
-                }
-                else {
-                  if (childProp.isDefined) {
-                    resultProp.update := childProp.get
-                  }
-                  else {
-                    resultProp.undefine()
-                  }
-                }
-
-                childProp.clearDataChanges()
-              }
-              
-              i += 1
-            }
-          }; if (envNode.combineEnvironment) propagateEnvironment()
-
-          
-          if (batchChildren) batchArray += envNode
-          else envNode.nodeUpdateCull(
-            version, cullChildren, time, view, renderArray
-          )(allowMultithreading, minChildren, batchArray, maxDepth, currentDepth + 1)
         
-        case node: AbstractNode[_, _] =>
-          if (batchChildren) batchArray += node
-          else node.nodeUpdateCull(
-            version, cullChildren, time, view, renderArray
-          )(allowMultithreading, minChildren, batchArray, maxDepth, currentDepth + 1)
-        
-        case mesh: Mesh[_, _] =>
-          hasLeafs = true
-          if (batchChildren && cullChildren) batchArray += mesh
-          else mesh.updateCull(version, cullChildren, time, view, renderArray)
-          
         case bounded: Bounded[_, _] =>
-          hasLeafs = true
-          if (batchChildren && cullChildren) batchArray += bounded
-          else bounded.updateCull(version, cullChildren, time, view, renderArray)
+          if (batchChildren) cullContext.batchArray += bounded
+          else bounded.cull(updateChildren, cullChildren, allowMultithreading, currentDepth + 1, cullContext)
         
         case _ =>
-          hasLeafs = true
-          current.update(version)
+          current.updateWorldTransformation()
       }
       
       i += 1
     }
-    
-    
-    def postPropagation() {
-      val props = worldEnvironment.properties
-      val size = props.length; var i = 0; while (i < size) { val prop = props(i)
-        if (prop.hasDataChanges) {
-          if (hasLeafs && prop.isDefined && prop.get.hasBindingChanges) {
-            worldEnvironment.signalStructuralChanges()
-            prop.get.clearBindingChanges()
-          }
-          prop.clearDataChanges()
-        }
-        
-        i += 1
-      }
-    }; if (this.isInstanceOf[EnvrionmentNode[_, _]]) postPropagation()
   }
 }

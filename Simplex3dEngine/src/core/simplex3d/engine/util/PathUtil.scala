@@ -174,7 +174,7 @@ private[engine] object PathUtil {
   
   
   // XXX remove this
-  def parentPathListName(path: String, pathRemapping: Map[String, String]) :(String, String) = {
+  def parentPathListNameXXX(path: String, pathRemapping: Map[String, String]) :(String, String) = {
     def extractParent(rest: String, name: String) =  rest match {
       case RestName(_, parentName) => (parentName, name)
       case RestNameIndex(_, parentName, _) => (parentName, name)

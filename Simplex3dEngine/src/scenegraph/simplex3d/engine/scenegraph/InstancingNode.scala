@@ -46,42 +46,13 @@ extends Entity[T, G](name) {
   private final class BoundedInstance(name: String)(
     implicit transformationContext: T, graphicsContext: G
   ) extends Bounded[T, G](name) {
-    private[scenegraph] override def update(version: Long) :Boolean = {
-      if (updateVersion != version) {
-        propagateWorldTransformation()
-        
-        updateVersion = version
-        uncheckedWorldTransformation.clearDataChanges()
-      }
-      boundingUpdated
-    }
     
-    private[scenegraph] override def updateCull(
-      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
-    ) {
-      throw new UnsupportedOperationException
-    }
-    
-    private[scenegraph] def instanceUpdateCull(
-      version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T, G]]
-    ) {
-      if (enableCulling) update(version)
-      else updateWorldTransformation(version)
-      
-      val res =
-        if (enableCulling) BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
-        else Collision.Inside
-        
-      if (res == Collision.Outside) return
-      
-      def process() {
-        if (animators != null && shouldRunAnimators) {
-          runUpdaters(animators, time)
-          shouldRunAnimators = false
-        }
-        
-        renderArray += this
-      }; process()
+    private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
+      propagateWorldTransformation()
+      val updateParentVolume = boundingUpdated || uncheckedWorldTransformation.hasDataChanges
+      uncheckedWorldTransformation.clearDataChanges()
+
+      updateParentVolume
     }
   }
   
@@ -152,7 +123,7 @@ extends Entity[T, G](name) {
   }
   
   private def rebuildBounding() {
-    boundingUpdated = srcMesh.update(srcMesh.updateVersion + 1)
+    boundingUpdated = srcMesh.updateBoundingVolume(false)
     
     if (boundingUpdated) {
       if (srcMesh.customBoundingVolume.isDefined) {
@@ -202,42 +173,31 @@ extends Entity[T, G](name) {
     removed
   }
   
-  private[this] final def instancingCull(
-    enableCulling: Boolean,
-    version: Long, time: TimeStamp, view: View, renderArray: SortBuffer[SceneElement[T, G]]
-  )(allowMultithreading: Boolean, minChildren: Int) {
-    
-    if (enableCulling) nodeUpdate(version)(allowMultithreading, minChildren)
-    else updateWorldTransformation(version)
-    
-    
-    val frustumTest = 
-      if (!enableCulling) Collision.Inside
-      else BoundingVolume.intersect(view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
-    
-    val cullChildren =
-      if (frustumTest == Collision.Outside) return
-      else if (frustumTest == Collision.Inside) false
-      else true
-    
-    if (animators != null && shouldRunAnimators) {
-      runUpdaters(animators, time)
-      shouldRunAnimators = false
-    }
-    
-    
-    var multithreaded = (allowMultithreading && this.children.size >= minChildren)
+  
+  private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
+    val updateParentVolume = super.updateBoundingVolume(allowMultithreading)
+    boundingUpdated = false
+    updateParentVolume
+  }
+  
+  private[scenegraph] override def nodeCull(
+    updateChildren: Boolean, cullChildren:Boolean, batchChildren: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
+  ) {
     
     def processChild(child: SceneElement[T, G]) {
       child match {
+        
         case bounded: Bounded[_, _] =>
-          bounded.asInstanceOf[BoundedInstance].instanceUpdateCull(version, cullChildren, time, view, renderArray)
+          bounded.cull(updateChildren, cullChildren, false, currentDepth + 1, cullContext)
+          
         case _ =>
-          child.update(version)
+          child.updateWorldTransformation()
       }
     }
     
-    if (multithreaded) {
+    if (allowMultithreading) {
       val children = this.children
       (0 until children.size).par.foreach(i => processChild(children(i)))
     }
@@ -248,22 +208,36 @@ extends Entity[T, G](name) {
       }
     }
   }
-      
-  private[scenegraph] override def nodeUpdateCull(
-    version: Long, enableCulling: Boolean, time: TimeStamp, view: View, renderArray: SortBuffer[AbstractMesh]
-  )(
-    allowMultithreading: Boolean, minChildren: Int,
-    batchArray: SortBuffer[SceneElement[T, G]], maxDepth: Int, currentDepth: Int
+  
+  private[scenegraph] override def cull(
+    update: Boolean, enableCulling: Boolean,
+    allowMultithreading: Boolean, currentDepth: Int,
+    cullContext: CullContext[T, G]
   ) {
-    if (!geometry.vertices.isDefined) return
-    
-    
     if (cullingEnabled) {
       if (rebuild || srcMesh.geometry.hasShapeChanges()) {
         rebuildBounding()
       }
     }
     
+    localRenderArray.clear()
+    val localContext = new CullContext(
+      localRenderArray,
+      cullContext.time,
+      cullContext.view,
+      cullContext.batchChildrenThreshold,
+      cullContext.batchDepthThreshold,
+      null
+    )
+    
+    super.cull(
+      update, enableCulling,
+      allowMultithreading, currentDepth,
+      localContext
+    )
+    
+    
+    if (!geometry.vertices.isDefined) return
     
     val srcVertices = geometry.vertices.read
     var geometryChanges = (srcVertices.size != srcVerticesSize)
@@ -280,12 +254,6 @@ extends Entity[T, G](name) {
     }
     
     displayMesh.geometry.copyNonattributes(geometry)
-    
-    
-    localRenderArray.clear()
-    instancingCull(enableCulling, version, time, view, localRenderArray)(allowMultithreading, minChildren)
-    
-    boundingUpdated = false
     
     val instanceArray = if (cullingEnabled) { localRenderArray } else children
     
@@ -340,6 +308,6 @@ extends Entity[T, G](name) {
     displayMesh.elementRange.update.first := 0
     displayMesh.elementRange.update.count := instanceArray.size*srcIndicesSize
     
-    renderArray += displayMesh
+    cullContext.renderArray += displayMesh
   }
 }

@@ -54,7 +54,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
     val geometry = MinimalGraphicsContext.mkGeometry()
     val material = MinimalGraphicsContext.mkMaterial()
     val worldEnvironment = MinimalGraphicsContext.mkEnvironment()
-    new EngineAccess { setWorldMatrixResolver(self, () => Mat4x3.Identity) }
+    protected def worldMatrix = Mat4x3.Identity
     
     geometry.vertices := Attributes.fromData(DataBuffer[Vec3, RFloat](
       Vec3(-1, -1, 0), Vec3(1, 1, 0), Vec3(-1, 1, 0),

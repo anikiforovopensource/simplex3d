@@ -22,6 +22,7 @@ package simplex3d.engine
 package backend.lwjgl
 
 import java.util.logging._
+import scala.concurrent.ops._
 import org.lwjgl.opengl._
 import org.lwjgl.input.{Keyboard => RawKeyboard, Mouse => RawMouse }
 import simplex3d.math._
@@ -30,14 +31,14 @@ import simplex3d.engine.graphics._
 
 class FixedResolutionLauncher extends simplex3d.engine.Launcher {
   val driver = "lwjgl"
-    
+  
   @volatile private var quit = false
   @volatile private var running = false
   
   def launch(title: String, settings: Settings, app: App#Subtext, loop: simplex3d.engine.MainLoop) :Object = {
     running = true
     
-    val thread = new Thread(new Runnable() { def run() {
+    spawn {
       
       if (Display.isCreated()) {
         running = false
@@ -46,9 +47,6 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
           "Already using the native display. Only one native display per JVM can be used with this launcher."
         )
       }
-      
-      running = true
-      
       
       val desktopMode = Display.getDesktopDisplayMode()
       
@@ -94,10 +92,12 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
       app.init()
       app.reshape(ConstVec2i(0), app.renderManager.renderContext.viewportDimensions())
       
-      var localQuit = false
-      while (!quit && !localQuit) {
-        localQuit = loop.body(app)
+      loop.init(app)
+      while (!quit) {
+        val localQuit = loop.body(app)
+        quit = quit || localQuit
       }
+      loop.dispose()
       
       
       app.renderManager.renderContext.cleanup()
@@ -106,11 +106,8 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
       RawMouse.destroy()
       Display.destroy()
       
-      quit = false// Allow to re-launch.
       running = false
-    }})
-    
-    thread.start()
+    }
     
     null // Launching in a native window.
   }

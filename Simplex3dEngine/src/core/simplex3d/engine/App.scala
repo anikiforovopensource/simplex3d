@@ -42,6 +42,8 @@ trait App { self =>
     def timer = self.timer
     def renderManager = self.renderManager
     
+    def isRunning = self.isRunning
+    
     def init() = self.init()
     def preUpdate(time: TimeStamp) = self.preUpdate(time)
     def update(time: TimeStamp) = self.update(time)
@@ -67,6 +69,8 @@ trait App { self =>
   protected final def mainLoop = _mainLoop
   protected final def renderManager = _renderManager
   protected final def timer = _timer
+  
+  def isRunning = (launcher != null && launcher.isRunning)
   
   protected def init() :Unit
   protected def preUpdate(time: TimeStamp) :Unit
@@ -98,7 +102,7 @@ trait App { self =>
   }
   
   private def privilegedLaunch() :Object = {
-    if (launcher != null && launcher.isRunning) throw new IllegalStateException("Already launched.")
+    if (isRunning) throw new IllegalStateException("Already launched.")
     
     _launcher = Class.forName(config.launcher).newInstance().asInstanceOf[Launcher]
     _mainLoop = Class.forName(config.mainLoop).newInstance().asInstanceOf[MainLoop]

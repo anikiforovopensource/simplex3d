@@ -23,7 +23,6 @@ package util
 
 
 final class SystemTimer extends Timer {
-  private[this] var startMillis: Long = _
   private[this] var startNanos: Long = _
   private[this] var lastNanos: Long = _
 
@@ -37,7 +36,6 @@ final class SystemTimer extends Timer {
   reset()
 
   def reset() {
-    startMillis = System.currentTimeMillis
     startNanos = System.nanoTime
     lastNanos = startNanos
     lastFpsSample = startNanos
@@ -47,7 +45,8 @@ final class SystemTimer extends Timer {
   def fps = approxFps
 
   def update() {
-    val cur = System.nanoTime
+    var cur = System.nanoTime
+    if (cur < lastNanos || cur > lastNanos + 1000*1000*1000) cur = lastNanos + 10*1000*1000
     val lastFrameInterval = (cur - lastNanos)*1e-9
     val uptime = (cur - startNanos)*1e-9
     lastNanos = cur

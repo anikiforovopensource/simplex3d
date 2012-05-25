@@ -28,37 +28,31 @@ import simplex3d.engine.input._
 import simplex3d.engine.graphics._
 
 
-final class MainLoop extends simplex3d.engine.MainLoop {
+final class SimpleLoop extends simplex3d.engine.MainLoop {
   val driver = "lwjgl"
-  
-  val profiler1 = new Profiler //XXX
-  val profiler2 = new Profiler //XXX
   
   private val input = new Input
   private var lastFps = 0.0
   
+  def init(app: App#Subtext) {}
   
   def body(app: App#Subtext) :Boolean = {
     import app._
     
     val renderManager = app.renderManager.asInstanceOf[RenderManager]
-    profiler1.begin()
     
     renderManager.renderContext.resetState()
     timer.update()
     val time = timer.timeStamp
     
+    Display.processMessages()
     handleInput(time, app)
-    if (Display.isCloseRequested) return true
     
     preUpdate(time)
     update(time)
     render(time)
     
-    profiler2.begin()
-    Display.update()
-    profiler2.end()
-    
+    Display.update(false)
     Thread.`yield`()
     
     manage()
@@ -69,11 +63,10 @@ final class MainLoop extends simplex3d.engine.MainLoop {
       println("fps: " + lastFps)
     }
     
-    //if (time.interval > 0.03) println(profiler1 + " | " + profiler2 +  " | " + time)
-    profiler1.end()
-    
-    false
+    Display.isCloseRequested
   }
+  
+  def dispose() {}
   
   private def handleInput(time: TimeStamp, app: App#Subtext) {
     input.mouse.update() // Sync mouse cached state to system state.

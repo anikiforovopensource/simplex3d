@@ -26,12 +26,9 @@ import org.lwjgl.Sys
 
 
 final class Timer extends engine.Timer {
-  private[this] val timeScale = 1.0/Sys.getTimerResolution()
-  
   private[this] var start: Long = _
   private[this] var last: Long = _
-
-  private[this] val fpsSampleRate = 2.5/timeScale
+ 
   private[this] var lastFpsSample: Long = _
   private[this] var frameCount: Int = _
 
@@ -50,8 +47,12 @@ final class Timer extends engine.Timer {
   def fps = approxFps
 
   def update() {
+    val timerRes = Sys.getTimerResolution()
+    val timeScale = 1.0/timerRes
+    val fpsSampleRate = 2.5*timerRes
+    
     var cur = Sys.getTime()
-    if (cur < last) cur = (last + 0.01/timeScale).toLong
+    if (cur < last || cur > last + timerRes) cur = (last + 0.01/timeScale).toLong
     val lastFrameInterval = (cur - last)*timeScale
     val uptime = (cur - start)*timeScale
     last = cur
@@ -69,7 +70,11 @@ final class Timer extends engine.Timer {
   
   def timeStamp = lastStamp
   
-  val frameTimer = new FrameTimer {
-    def frameTime() :Double = (Sys.getTime() - last)*timeScale
+  val frameTimer = new FrameTimer {//XXX get rid of the FrameTimer.
+    def frameTime() :Double = {
+      val timerRes = Sys.getTimerResolution()
+      val timeScale = 1.0/timerRes
+      (Sys.getTime() - last)*timeScale
+    }
   }
 }

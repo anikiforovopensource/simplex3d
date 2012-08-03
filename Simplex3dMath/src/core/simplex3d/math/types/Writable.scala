@@ -26,15 +26,40 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait Readable[W <: Writable[W]] { self: W#Read =>
-  def mutableCopy() :W
+trait Protected {
+  type Read <: Protected
+  type Mutable <: Accessible
+  
+  def mutableCopy() :Mutable
+  def readClass: Class[Read]
 }
 
 
 /** 
  * @author Aleksey Nikiforov (lex)
  */
-trait Writable[W <: Writable[W]] extends Readable[W] with scala.Mutable { self: W =>
+trait Accessible extends Protected with scala.Mutable {
+  def ::=(r: Read)
+}
+
+
+/** 
+ * @author Aleksey Nikiforov (lex)
+ */
+//@deprecated
+trait Readable[W <: Writable[W]] extends Protected { self: W#Read =>
+  type Mutable = W
+  def readClass = this.getClass.asInstanceOf[Class[Read]] //XXX temp fix
+}
+
+
+/** 
+ * @author Aleksey Nikiforov (lex)
+ */
+//@deprecated
+trait Writable[W <: Writable[W]] extends Readable[W] with Accessible { self: W =>
   type Read >: W <: Readable[W]
   def :=(r: Readable[W])
+  
+  def ::=(r: Read) { this := r.asInstanceOf[Readable[W]] }
 }

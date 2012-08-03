@@ -26,6 +26,7 @@ import simplex3d.math.integration._
 /** 
  * @author Aleksey Nikiforov (lex)
  */
+//@deprecated
 trait ReadPropertyValue[W <: PropertyValue[W]] extends Readable[W]
 with Cloneable { self: W#Read =>
   type Clone <: ReadPropertyValue[W]
@@ -37,6 +38,7 @@ with Cloneable { self: W#Read =>
 /** 
  * @author Aleksey Nikiforov (lex)
  */
+//@deprecated
 trait PropertyValue[W <: PropertyValue[W]] extends ReadPropertyValue[W]
 with Writable[W] { self: W =>
   type Clone <: PropertyValue[W]

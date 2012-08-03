@@ -21,6 +21,6 @@
 package simplex3d.engine.util
 
 
-trait EngineInfo {
+trait EngineInfoRef {
   private[engine] final var engineInfo: Object = null
 }

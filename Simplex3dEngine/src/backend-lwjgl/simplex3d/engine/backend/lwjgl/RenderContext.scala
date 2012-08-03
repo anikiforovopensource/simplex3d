@@ -50,11 +50,12 @@ private[lwjgl] object RenderContext {
 
 
 private[lwjgl] final class RenderContext(val capabilities: GraphicsCapabilities, val settings: AdvancedSettings)
-extends graphics.RenderContext with GlAccess {
+extends graphics.RenderContext {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
   import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
   import AccessScene._; import AccessChanges._
+  import AccessGl._
   
 
   private val defaultTexture2d = {

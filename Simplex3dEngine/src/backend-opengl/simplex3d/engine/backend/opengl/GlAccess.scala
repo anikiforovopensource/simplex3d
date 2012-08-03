@@ -24,9 +24,10 @@ package backend.opengl
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
+import AccessEngine._
 
 
-private[backend] trait GlAccess extends EngineAccess {
+private[backend] object AccessGl {
   
   implicit final def engineInfo(attributes: Attributes[_, _]) :ObjectInfo = {
     var data = getEngineInfo(attributes.sharedState).asInstanceOf[ObjectInfo]
@@ -74,7 +75,8 @@ private[backend] trait GlAccess extends EngineAccess {
   }
 }
 
-private[backend] trait GlUnsafeAccess extends EngineAccess {
+
+private[backend] object AccessGlUnsafe {
   
   implicit final def engineInfo(attributes: Attributes[_, _]) :ObjectInfo = {
     getEngineInfo(attributes.sharedState).asInstanceOf[ObjectInfo]
@@ -84,8 +86,8 @@ private[backend] trait GlUnsafeAccess extends EngineAccess {
     getEngineInfo(texture).asInstanceOf[TextureInfo]
   }
   
-  implicit final def engineInfo(shader: Shader) :ObjectInfo = {
-    getEngineInfo(shader).asInstanceOf[ObjectInfo]
+  implicit final def engineInfo(shader: Shader) :CompiledInfo = {
+    getEngineInfo(shader).asInstanceOf[CompiledInfo]
   }
   
   implicit final def engineInfo(program: Technique) :ProgramInfo = {

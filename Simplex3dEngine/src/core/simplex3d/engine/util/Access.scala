@@ -71,7 +71,7 @@ object AccessScene {
 }
 
 
-trait EngineAccess {
-  def getEngineInfo(info: EngineInfo) :Object = info.engineInfo
-  def setEngineInfo(info: EngineInfo, data: Object) { info.engineInfo = data }
+object AccessEngine {
+  def getEngineInfo(infoRef: EngineInfoRef) :Object = infoRef.engineInfo
+  def setEngineInfo(infoRef: EngineInfoRef, info: Object) { infoRef.engineInfo = info }
 }

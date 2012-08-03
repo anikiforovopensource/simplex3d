@@ -37,7 +37,7 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
 )(
   private var _magFilter: ImageFilter.Value, private var _minFilter: ImageFilter.Value,
   private var _mipMapFilter: MipMapFilter.Value, initAnisotropyLevel: Double
-) extends EngineInfo {
+) extends EngineInfoRef {
   
   def bindingDimensions: AnyVec[Int]
   

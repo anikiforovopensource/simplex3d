@@ -77,7 +77,7 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
         autoBoundingVolume = new Oabb
       }
 
-      if (autoBoundingVolume.hasDataChanges || geometry.hasShapeChanges(elementRange)) {
+      if (autoBoundingVolume.hasDataChanges || hasShapeChanges()) {
         autoBoundingVolume match {
           case bound: Oabb =>
             val range = if (elementRange.isDefined) elementRange.get else null
@@ -93,10 +93,40 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
     }
     
     
-    elementRange.clearDataChanges()
-    geometry.indices.clearRefChanges()
+    clearShapeChanges()
     uncheckedWorldTransformation.clearDataChanges()
     
     updateParentVolume
+  }
+  
+  
+  final def hasShapeChanges() :Boolean = {//XXX hide this
+    import AccessChanges._
+    
+    if (elementRange.hasDataChanges) {
+      true
+    }
+    else {
+      val indexChanges =
+        if (geometry.indices.hasRefChanges) true
+        else if (geometry.indices.isDefined) geometry.indices.hasDataChanges
+        else false
+
+      if (indexChanges) true
+      else {
+        if (geometry.vertices.hasRefChanges) true
+        else if (geometry.vertices.isDefined) geometry.vertices.hasDataChanges
+        else false
+      }
+    }
+  }
+  
+  final def clearShapeChanges() {//XXX hide this
+    import AccessChanges._
+    elementRange.clearDataChanges()
+    geometry.indices.clearRefChanges()
+    geometry.indices.clearDataChanges()
+    geometry.vertices.clearRefChanges()
+    geometry.vertices.clearDataChanges()
   }
 }

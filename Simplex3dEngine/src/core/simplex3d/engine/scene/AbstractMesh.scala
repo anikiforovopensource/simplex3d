@@ -26,7 +26,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-trait AbstractMesh extends Spatial with EngineInfo { self =>
+trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   
   final class MeshSubtext {
     import AccessChanges._

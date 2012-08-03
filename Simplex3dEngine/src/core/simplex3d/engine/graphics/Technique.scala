@@ -30,7 +30,7 @@ final class Technique private (
   val graphicsContext: GraphicsContext,
   val shaders: Set[Shader],
   val programUniforms: immutable.Map[String, Defined[UncheckedBinding]]
-) extends EngineInfo {
+) extends EngineInfoRef {
   
   def this(graphicsContext: GraphicsContext, shaders: Set[Shader]) {
     this(graphicsContext, shaders, {

@@ -32,7 +32,8 @@ private[backend] final class GlResourceManager(
   val textureManager: IdManager,
   val shaderDeallocator: Int => Unit,
   val programDeallocator: Int => Unit
-) extends GlAccess {
+) {
+  import AccessGl._
   
   private val managed = new HashSet[ManagedRef]
   private val deallocationQueue = new ReferenceQueue[ObjectInfo]

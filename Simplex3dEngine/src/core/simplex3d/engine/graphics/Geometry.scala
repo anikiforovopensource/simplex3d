@@ -36,40 +36,6 @@ abstract class Geometry extends StructuralChangeListener {
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  final def hasShapeChanges(elementRange: Optional[ElementRange] = null) :Boolean = {//XXX hide this
-    import AccessChanges._
-    
-    if (elementRange != null && elementRange.hasDataChanges) {
-      true
-    }
-    else if (elementRange != null && elementRange.isDefined) {
-      val indexChanges =
-        if (indices.hasRefChanges) true
-        else if (indices.isDefined) indices.get.sharedState.hasDataChanges // TODO check for data changes in range
-        else false
-        
-      if (indexChanges) true
-      else {
-        if (vertices.hasRefChanges) true
-        else if (vertices.isDefined) vertices.get.sharedState.hasDataChanges // TODO check for data changes in range if !indices.isDefined
-        else false
-      }
-    }
-    else {
-      val indexChanges =
-        if (indices.hasRefChanges) true
-        else if (indices.isDefined) indices.get.sharedState.hasDataChanges
-        else false
-
-      if (indexChanges) true
-      else {
-        if (vertices.hasRefChanges) true
-        else if (vertices.isDefined) vertices.get.sharedState.hasDataChanges
-        else false
-      }
-    }
-  }
-
   private[this] final var vertexMode: VertexMode = Triangles()//XXX rework as Defined[EnumRef]
   final def mode = vertexMode
   final def mode_=(m: VertexMode) {

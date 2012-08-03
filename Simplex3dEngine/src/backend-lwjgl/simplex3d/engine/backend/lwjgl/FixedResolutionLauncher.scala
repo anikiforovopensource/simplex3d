@@ -22,7 +22,6 @@ package simplex3d.engine
 package backend.lwjgl
 
 import java.util.logging._
-import scala.concurrent.ops._
 import org.lwjgl.opengl._
 import org.lwjgl.input.{Keyboard => RawKeyboard, Mouse => RawMouse }
 import simplex3d.math._
@@ -38,7 +37,7 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
   def launch(title: String, settings: Settings, app: App#Subtext, loop: simplex3d.engine.MainLoop) :Object = {
     running = true
     
-    spawn {
+    new Thread(new Runnable() { def run() {
       
       if (Display.isCreated()) {
         running = false
@@ -107,7 +106,7 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
       Display.destroy()
       
       running = false
-    }
+    }}).start()
     
     null // Launching in a native window.
   }

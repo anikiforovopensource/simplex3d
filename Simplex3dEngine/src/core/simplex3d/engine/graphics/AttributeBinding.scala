@@ -27,9 +27,8 @@ import simplex3d.engine.util._
 
 
 sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
-  implicit listener: StructuralChangeListener
-)
-extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
+  implicit private val listener: StructuralChangeListener
+) { self: AccessibleAttributeBinding[F, R] =>
   def isAccessible = (isDefined && this.get.isAccessible)
   def isWritable = (isDefined && this.get.isWritable)
   
@@ -37,6 +36,42 @@ extends SharedRef[Attributes[F, R]](listener) { self: AccessibleSharedRef =>
   def write: DataView[F, R] = this.get.write
   def write(first: Int, count: Int): DataView[F, R] = this.get.write(first, count)
   def src: DirectSrc = this.get.src
+  
+  
+  protected final var dataChanges = true
+  
+  private final var attributes: Attributes[F, R] = _
+  protected final var reassigned = true // Initialize as reassigned.
+  
+  final def get: Attributes[F, R] = if (attributes == null) throw new NoSuchElementException else attributes
+  final def isDefined = (attributes != null)
+  final def undefine() {
+    if (attributes != null) {
+      if (attributes.isWritable) attributes.unregister(this)
+      listener.signalStructuralChanges()
+    }
+    attributes = null.asInstanceOf[Attributes[F, R]]
+  }
+  
+  final def :=(attributes: Attributes[F, R]) {
+    if (attributes == null) throw new NullPointerException
+    
+    if (!isDefined) listener.signalStructuralChanges()
+    
+    if (this.attributes ne attributes) {
+      if (isWritable)  this.attributes.unregister(this)
+      if (attributes.isWritable)  attributes.register(this)
+      reassigned = true
+    }
+    this.attributes = attributes
+  }
+  
+  final def :=(r: SharedRef[Attributes[F, R]]) {
+    if (r.isDefined) this := r.get else undefine()
+  }
+  
+  final override def toString() :String =
+    "AttributeBinding(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
 sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
@@ -45,9 +80,13 @@ sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
 extends AttributeBinding[F, R] with AccessibleSharedRef {
   import AccessChanges._
   
+  def signalDataChanges() { dataChanges = true }
+  def hasDataChanges: Boolean = dataChanges
+  def clearDataChanges() { dataChanges = false }
+  
   def hasRefChanges = reassigned
   def clearRefChanges() { reassigned = false }
-  def hasChanges = (hasRefChanges || (isDefined && this.get.sharedState.hasDataChanges))
+  def hasChanges = (hasRefChanges || hasDataChanges)
 }
 
 object AttributeBinding {

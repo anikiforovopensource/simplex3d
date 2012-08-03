@@ -150,11 +150,7 @@ extends Entity[T, G](name) {
       }
     }
     
-    srcMesh.geometry.indices.clearRefChanges()
-    if (srcMesh.geometry.indices.isDefined) srcMesh.geometry.indices.get.sharedState.clearDataChanges()
-    
-    srcMesh.geometry.vertices.clearRefChanges()
-    if (srcMesh.geometry.vertices.isDefined) srcMesh.geometry.vertices.get.sharedState.clearDataChanges()
+    srcMesh.clearShapeChanges()
   }
   
   def appendInstance(name: String) :Spatial[T] = {
@@ -215,7 +211,7 @@ extends Entity[T, G](name) {
     cullContext: CullContext[T, G]
   ) {
     if (cullingEnabled) {
-      if (rebuild || srcMesh.geometry.hasShapeChanges()) {
+      if (rebuild || srcMesh.hasShapeChanges()) {
         rebuildBounding()
       }
     }

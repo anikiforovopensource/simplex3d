@@ -18,7 +18,7 @@ import simplex3d.engine.scenegraph._
 
 object ControllerTest extends default.App {
   
-  override lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
+  //override lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
   
   def main(args: Array[String]) {
     launch()

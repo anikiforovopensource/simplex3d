@@ -31,7 +31,7 @@ class Shader(
   val shaderType: Shader.type#Value,
   val src: String,
   val uniforms: immutable.Map[String, Defined[UncheckedBinding]] = immutable.Map()
-) extends EngineInfo
+) extends EngineInfoRef
 
 object Shader extends Enumeration {
   val Vertex, Fragment = Value

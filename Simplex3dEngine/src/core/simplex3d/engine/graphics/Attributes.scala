@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.util.WeakHashMap
 import scala.annotation.unchecked._
 import scala.collection._
 import scala.collection.mutable.ArrayBuffer
@@ -36,6 +37,22 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
 ) {
 
   private[engine] var shared: AttributesSharedState = null
+  
+  private[this] val bindings = if (isWritable) new WeakHashMap[AttributeBinding[_, _], Object] else null
+  private[this] def notifyBindings() {
+    import AccessChanges._
+    val iter = bindings.keySet.iterator()
+    while(iter.hasNext) {
+      val binding = iter.next()
+      binding.signalDataChanges()
+    }
+  }
+  private[engine] def register(binding: AttributeBinding[_, _]) {
+    bindings.put(binding, null)
+  }
+  private[engine] def unregister(binding: AttributeBinding[_, _]) {
+    bindings.remove(binding)
+  }
   
   { // Consistency check.
     var count = 0
@@ -66,6 +83,7 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
       )
       
       shared.regions.put(first, count)
+      notifyBindings()
       accessible.asInstanceOf[DataView[F, R]]
     }
     else null
@@ -80,7 +98,7 @@ final class AttributesSharedState private[engine] (
   val related: ReadSeq[Attributes[_ <: Format with MathType, Raw]],
   val caching: Caching.Value,
   private[engine] var persistent: InterleavedData
-) extends EngineInfo {
+) extends EngineInfoRef {
   
   final class Subtext private[engine] () {
     def updatedRegions = regions

@@ -43,11 +43,12 @@ private[lwjgl] object RenderManager {
 }
 
 
-final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
+final class RenderManager extends graphics.RenderManager {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
   import AccessScene._; import AccessChanges._
+  import AccessGlUnsafe._
   
   val driver = "lwjgl"
   
@@ -211,7 +212,8 @@ final class RenderManager extends graphics.RenderManager with GlUnsafeAccess {
   }
   
   // XXX must be updated with new attributes
-  private val comparator = new java.util.Comparator[AbstractMesh] with EngineAccess {
+  private val comparator = new java.util.Comparator[AbstractMesh] {
+    import AccessEngine._
     
     def compare(a: AbstractMesh, b: AbstractMesh) :Int = {
       // XXX sort by textures: if (at0id < bt0id) -1 else if (at0id > bt0id)  1 else 0

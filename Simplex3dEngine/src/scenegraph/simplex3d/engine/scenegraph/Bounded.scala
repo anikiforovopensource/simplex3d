@@ -47,7 +47,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
    *  If the vertex geometry is not accessible (stored only in the GPU memory) then the bounding
    *  volume must be provided by the user.
    */
-  final val customBoundingVolume = SharedRef[BoundingVolume](StructuralChangeListener.Ignore)
+  final val customBoundingVolume = SharedRef[BoundingVolume](StructuralChangeListener.Ignore)// XXX must not be shared, init with factory then set.
   private[scenegraph] final var autoBoundingVolume: BoundingVolume = null
   
   private[scenegraph] final var shouldRunAnimators = false

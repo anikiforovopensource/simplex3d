@@ -20,7 +20,7 @@ import simplex3d.engine.graphics._
  */
 object StressTestObjects extends default.App {
   
-  //XXXoverride lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
+  //override lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
   
   def main(args: Array[String]) {
     launch()

@@ -32,11 +32,15 @@ import simplex3d.math.doublex.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadQuat4d extends ProtectedQuat4d[Double]
-with ReadPropertyValue[Quat4d] with Serializable
+with Protected with Serializable
 {
 
   type Clone <: ReadQuat4d
   def toConst() :ConstQuat4d
+  
+  type Read = ReadQuat4d
+  type Mutable = Quat4d
+  final def readType: Class[Read] = classOf[ReadQuat4d]
   final def mutableCopy() = Quat4d(this)
 
   private[math] final def fa: Float = a.toFloat
@@ -183,14 +187,13 @@ final class Quat4d private[math] (
   ca: Double, cb: Double, cc: Double, cd: Double
 )
 extends ReadQuat4d with Accessor with CompositeFormat
-with PropertyValue[Quat4d] with Serializable
+with Accessible with Serializable
 {
   pa = ca; pb = cb; pc = cc; pd = cd
 
   private[math] def this() { this(1, 0, 0, 0) }
   
   type Clone = Quat4d
-  type Read = ReadQuat4d
   type Const = ConstQuat4d
   
   type Accessor = Quat4d
@@ -198,8 +201,7 @@ with PropertyValue[Quat4d] with Serializable
   
   override def clone() = Quat4d(this)
   def toConst() = ConstQuat4d(this)
-  def :=(q: ConstQuat4d) { this := q.asInstanceOf[inQuat4d] }
-  def :=(r: Readable[Quat4d]) { val q = r.asInstanceOf[ReadQuat4d]; a = q.a; b = q.b; c = q.c; d = q.d }
+  def :=(q: inQuat4d) { a = q.a; b = q.b; c = q.c; d = q.d }
   
 
   override def a_=(s: Double) { pa = s }

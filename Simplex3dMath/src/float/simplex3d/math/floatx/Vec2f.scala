@@ -31,11 +31,15 @@ import simplex3d.math.types._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec2f extends ProtectedVec2f[Float]
-with ReadPropertyValue[Vec2f] with Serializable
+with Protected with Serializable
 {
 
   type Clone <: ReadVec2f
   def toConst() :ConstVec2f
+  
+  type Read = ReadVec2f
+  type Mutable = Vec2f
+  final def readType: Class[Read] = classOf[ReadVec2f]
   final def mutableCopy() = Vec2f(this)
 
   private[math] type R2 = ReadVec2f
@@ -165,23 +169,21 @@ object ConstVec2f {
 @SerialVersionUID(8104346712419693669L)
 final class Vec2f private[math] (cx: Float, cy: Float)
 extends ReadVec2f with Accessor with CompositeFormat
-with PropertyValue[Vec2f] with Serializable
+with Accessible with Serializable
 {
   px = cx; py = cy
 
   private[math] def this() { this(0, 0) }
   
   type Clone = Vec2f
-  type Read = ReadVec2f
-  type Const = ConstVec2f
 
+  type Const = ConstVec2f
   type Accessor = Vec2f
   type Component = RFloat
 
   override def clone() = Vec2f(this)
   def toConst() = ConstVec2f(this)
-  def :=(u: ConstVec2f) { this := u.asInstanceOf[inVec2f] }
-  def :=(r: Readable[Vec2f]) { val u = r.asInstanceOf[ReadVec2f]; x = u.x; y = u.y }
+  def :=(u: inVec2f) { x = u.x; y = u.y }
 
 
   @noinline override def x_=(s: Float) { px = s }

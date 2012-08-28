@@ -32,11 +32,15 @@ import simplex3d.math.floatx.functions._
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadMat3x4f extends ProtectedMat3x4f[Float]
-with ReadPropertyValue[Mat3x4f] with Serializable
+with Protected with Serializable
 {
 
   type Clone <: ReadMat3x4f
   def toConst() :ConstMat3x4f
+  
+  type Read = ReadMat3x4f
+  type Mutable = Mat3x4f
+  final def readType: Class[Read] = classOf[ReadMat3x4f]
   final def mutableCopy() = Mat3x4f(this)
 
   // Column major order.
@@ -355,7 +359,7 @@ final class Mat3x4f private[math] (
   c20: Float, c21: Float, c22: Float, c23: Float
 )
 extends ReadMat3x4f with Accessor with CompositeFormat
-with PropertyValue[Mat3x4f] with Serializable
+with Accessible with Serializable
 {
   p00 = c00; p01 = c01; p02 = c02; p03 = c03
   p10 = c10; p11 = c11; p12 = c12; p13 = c13
@@ -368,7 +372,6 @@ with PropertyValue[Mat3x4f] with Serializable
   )
   
   type Clone = Mat3x4f
-  type Read = ReadMat3x4f
   type Const = ConstMat3x4f
 
   type Accessor = Mat3x4f
@@ -376,10 +379,7 @@ with PropertyValue[Mat3x4f] with Serializable
 
   override def clone() = Mat3x4f(this)
   def toConst() = ConstMat3x4f(this)
-  def :=(u: ConstMat3x4f) { this := u.asInstanceOf[inMat3x4f] }
-  
-  def :=(r: Readable[Mat3x4f]) {
-    val m = r.asInstanceOf[ReadMat3x4f]
+  def :=(m: inMat3x4f) {
     m00 = m.m00; m01 = m.m01; m02 = m.m02; m03 = m.m03
     m10 = m.m10; m11 = m.m11; m12 = m.m12; m13 = m.m13
     m20 = m.m20; m21 = m.m21; m22 = m.m22; m23 = m.m23

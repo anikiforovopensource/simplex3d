@@ -1,6 +1,6 @@
 /*
  * Simplex3dMath - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dMath.
  *
@@ -20,8 +20,6 @@
 
 package simplex3d.math.types
 
-import simplex3d.math.integration._
-
 
 /** 
  * @author Aleksey Nikiforov (lex)
@@ -31,7 +29,7 @@ trait Protected {
   type Mutable <: Accessible
   
   def mutableCopy() :Mutable
-  def readClass: Class[Read]
+  def readType: Class[Read]
 }
 
 
@@ -39,27 +37,5 @@ trait Protected {
  * @author Aleksey Nikiforov (lex)
  */
 trait Accessible extends Protected with scala.Mutable {
-  def ::=(r: Read)
-}
-
-
-/** 
- * @author Aleksey Nikiforov (lex)
- */
-//@deprecated
-trait Readable[W <: Writable[W]] extends Protected { self: W#Read =>
-  type Mutable = W
-  def readClass = this.getClass.asInstanceOf[Class[Read]] //XXX temp fix
-}
-
-
-/** 
- * @author Aleksey Nikiforov (lex)
- */
-//@deprecated
-trait Writable[W <: Writable[W]] extends Readable[W] with Accessible { self: W =>
-  type Read >: W <: Readable[W]
-  def :=(r: Readable[W])
-  
-  def ::=(r: Read) { this := r.asInstanceOf[Readable[W]] }
+  def :=(r: Read)
 }

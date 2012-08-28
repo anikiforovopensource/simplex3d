@@ -31,11 +31,15 @@ import simplex3d.math.{toBoolean => toBool}
  */
 @SerialVersionUID(8104346712419693669L)
 sealed abstract class ReadVec2b extends ProtectedVec2b[Boolean]
-with ReadPropertyValue[Vec2b] with Serializable
+with Protected with Serializable
 {
 
   type Clone <: ReadVec2b
   def toConst() :ConstVec2b
+  
+  type Read = ReadVec2b
+  type Mutable = Vec2b
+  final def readType: Class[Read] = classOf[ReadVec2b]
   final def mutableCopy() = Vec2b(this)
 
   private[math] type R2 = ReadVec2b
@@ -147,23 +151,21 @@ object ConstVec2b {
 @SerialVersionUID(8104346712419693669L)
 final class Vec2b private[math] (cx: Boolean, cy: Boolean)
 extends ReadVec2b with Accessor with CompositeFormat
-with PropertyValue[Vec2b] with Serializable
+with Accessible with Serializable
 {
   px = cx; py = cy
 
   private[math] def this() { this(false, false) }
   
   type Clone = Vec2b
-  type Read = ReadVec2b
-  type Const = ConstVec2b
 
+  type Const = ConstVec2b
   type Accessor = Vec2b
   type Component = Bool
 
   override def clone() = Vec2b(this)
   def toConst() = ConstVec2b(this)
-  def :=(u: ConstVec2b) { this := u.asInstanceOf[inVec2b] }
-  def :=(r: Readable[Vec2b]) { val u = r.asInstanceOf[ReadVec2b]; x = u.x; y = u.y }
+  def :=(u: inVec2b) { x = u.x; y = u.y }
 
 
   @noinline override def x_=(s: Boolean) { px = s }

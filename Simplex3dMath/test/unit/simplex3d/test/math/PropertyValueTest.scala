@@ -43,19 +43,21 @@ class PropertyValueTest extends FunSuite {
   def md = ConstMat4d(rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd, rd)
 
 
-  def testRef[W <: PropertyValue[W]](mutable: W, read: W#Read) {
+  def testRef[T <: Accessible](mutable: T, read: T#Read) {
+    type ToConst = { def toConst(): AnyRef }
+    
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 
-    val clone = mutable.clone()
+    val clone = mutable.asInstanceOf[Cloneable].clone()
     assert(mutable ne clone)
     assert(mutable == clone)
 
-    mutable := read
+    mutable := read.asInstanceOf[mutable.Read]
     assert(mutable == read)
     assert(read != clone)
 
-    val const = mutable.toConst
+    val const = mutable.asInstanceOf[ToConst].toConst
     assert(
       const.isInstanceOf[Immutable] ||
       const.isInstanceOf[Boolean] ||

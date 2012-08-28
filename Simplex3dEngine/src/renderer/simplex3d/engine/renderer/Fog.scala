@@ -27,7 +27,11 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadFog extends ReadOnly[Fog] {
+sealed abstract class ReadFog extends ReadEnvironmentalEffect with prototype.ReadStruct {
+  type Read = ReadFog
+  type Mutable = Fog
+  final def readType = classOf[ReadFog]
+  
   def color: ReadVec3
   def density: ReadDoubleRef
   
@@ -48,11 +52,8 @@ sealed abstract class ReadFog extends ReadOnly[Fog] {
 }
 
 
-final class Fog extends ReadFog with EnvironmentalEffect[Fog] with prototype.Struct[Fog]
-{
-  type Read = ReadFog
+final class Fog extends ReadFog with EnvironmentalEffect with prototype.Struct {
   protected def mkMutable() = new Fog
-  
   
   val color = Vec3(1)
   val density = new DoubleRef(0)

@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Renderer Module
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,20 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package renderer
-
-import scala.annotation._
-import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.data._
-import simplex3d.engine.util._
-import simplex3d.engine.graphics._
+package simplex3d.engine.util
 
 
-class Material extends prototype.Material {
-  val color = Optional[Vec4]
-  val textureUnits = Optional[BindingList[TextureUnit]]
+trait StructuralChangeNotifier {
+  private[engine] def register(listener: StructuralChangeListener) { registerStructuralChangeListener(listener) }
+  private[engine] def unregister() { unregisterStructuralChangeListener() }
   
-  init(classOf[Material])
+  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
+  protected def unregisterStructuralChangeListener() {}
 }

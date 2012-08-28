@@ -33,8 +33,8 @@ import simplex3d.engine.util._
 
 private[engine] object FieldReflection {
   
-  private[engine] val BindingFilter = List(classOf[Readable[_]], classOf[Binding])
-  private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect[_]])
+  private[engine] val BindingFilter = List(classOf[Protected], classOf[Binding])
+  private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect])
   
   
   private[this] val cache = new HashMap[Class[_], (ReadArray[String], ReadArray[Method])]

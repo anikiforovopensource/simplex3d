@@ -28,9 +28,13 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
+trait ReadStruct extends graphics.ReadStruct {
+  type Read <: ReadStruct
+  type Mutable <: Struct
+}
+
+trait Struct extends ReadStruct with graphics.Struct {
   import Struct._
-  
   
   private final var _fieldNames: ReadArray[String] = null
   private final var _fields: ReadArray[UncheckedBinding] = null
@@ -48,7 +52,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
     var rebuild = false
     
     var i = 0; while (i < fv.length) {
-      if(!fv(i).isInstanceOf[Writable[_]]) {
+      if(!fv(i).isInstanceOf[Accessible]) {
         logger.log(
           Level.SEVERE, ClassUtil.simpleName(this.getClass) + " value '" + fieldNames(i) +
           "' must be an instance of 'Writable[_]'."
@@ -59,7 +63,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
     }
     
     if (rebuild) {
-      val array = _fields.filter(_.isInstanceOf[Writable[_]]).toArray(ClassManifest.Any)
+      val array = _fields.filter(_.isInstanceOf[Accessible]).toArray(ClassManifest.Any)
       _fields = (new ReadArray(array)).asInstanceOf[ReadArray[UncheckedBinding]]
     }
     
@@ -76,7 +80,7 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
       declarations.put(nameKey, list :: existing)
     }
     
-    def registerStruct(s: Struct[_]) {
+    def registerStruct(s: Struct) {
       val nestedDeclarations = s.listDeclarations
       var j = 0; while (j < nestedDeclarations.size) {
         val dec = nestedDeclarations(j)
@@ -96,11 +100,11 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
         case list: BindingList[_] =>
           register((parentType, fieldNames(i)), list)
           val erasure = list.elementManifest.erasure
-          if (classOf[Struct[_]].isAssignableFrom(erasure)) {
-            registerStruct(erasure.newInstance().asInstanceOf[Struct[_]])
+          if (classOf[Struct].isAssignableFrom(erasure)) {
+            registerStruct(erasure.newInstance().asInstanceOf[Struct])
           }
           
-        case s: Struct[_] =>
+        case s: Struct =>
           registerStruct(s)
           
         case _ =>
@@ -131,16 +135,30 @@ trait Struct[S <: Struct[S]] extends graphics.Struct[S] { self: S =>
   override def fields: ReadArray[Binding] = _fields
   override def listDeclarations: ReadArray[ListDeclaration] = _listDeclarations
   
-  final def :=(r: Readable[S]) {
-    val s = r.asInstanceOf[Struct[S]]
+  final def :=(r: Read) {
+    val s = r.asInstanceOf[Struct]
     val size = _fields.length; var i = 0; while (i < size) {
       _fields(i) := s._fields(i)
+      i += 1
+    }
+  }
+  
+
+  private[engine] override def register(listener: StructuralChangeListener) {
+    val s = fields.length; var i = 0; while (i < s) {
+      fields(i) match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+      i += 1
+    }
+  }
+  private[engine] override def unregister() {
+    val s = fields.length; var i = 0; while (i < s) {
+      fields(i) match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
       i += 1
     }
   }
 }
 
 object Struct {
-  private final val logger = Logger.getLogger(classOf[Struct[_]].getName)
+  private final val logger = Logger.getLogger(classOf[Struct].getName)
   private final val Blacklist = List("mutableCopy", "mkMutable", "binding", "resolveBinding")
 }

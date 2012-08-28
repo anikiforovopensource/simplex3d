@@ -91,6 +91,9 @@ object CustomRenderer extends default.BaseApp {
       Vec3(intensity, intensity, intensity)
     }
     
+    
+    mesh.material.textureUnits := new BindingList[TextureUnit]
+    
     mesh.material.textureUnits.update += new TextureUnit(
       objectTexture, Mat3x2.Identity
     )
@@ -109,6 +112,7 @@ object CustomRenderer extends default.BaseApp {
     
     
     // Attach lights.
+    world.environment.lighting := new Lighting
     world.environment.lighting.update.lights += new PointLight(Vec3(4), 0.1, 0)
     world.environment.lighting.update.lights += new PointLight(Vec3(6), 0.1, 0)
     
@@ -119,9 +123,11 @@ object CustomRenderer extends default.BaseApp {
     // Reuse texture rendering for lights.
     lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
     val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
+    lightMesh.material.textureUnits := new BindingList[TextureUnit]
     lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
     
     // Set vertex coordinates that will be used to position lights.
+    lightMesh.elementRange := new ElementRange
     lightMesh.elementRange.update.count := 2
     lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
     lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
@@ -183,13 +189,16 @@ object CustomRenderer extends default.BaseApp {
   
   
   // Declare TextureUnit Struct.
-  sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
+  sealed abstract class ReadTextureUnit extends prototype.ReadStruct {
+    type Read = ReadTextureUnit
+    type Mutable = TextureUnit
+    final def readType = classOf[ReadTextureUnit]
+    
     def texture: ReadTextureBinding[Texture2d[_]]
     def transformation: ReadMat3x2
   }
   
-  final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUnit] {
-    type Read = ReadTextureUnit
+  final class TextureUnit extends ReadTextureUnit with prototype.Struct {
     protected def mkMutable() = new TextureUnit
     
     def this(texture: Texture2d[_], transformation: inMat3x2) {
@@ -213,13 +222,13 @@ object CustomRenderer extends default.BaseApp {
     init(classOf[Geometry])
   }
   class Material extends prototype.Material {
-    val textureUnits = Optional[BindingList[TextureUnit]](new BindingList)
+    val textureUnits = Optional[BindingList[TextureUnit]]
     
     init(classOf[Material])
   }
   
   class Environment extends prototype.Environment {
-    val lighting = Optional[Lighting](new Lighting)
+    val lighting = Optional[Lighting]
     
     init(classOf[Environment])
   }
@@ -357,15 +366,18 @@ object CustomRenderer extends default.BaseApp {
   
   
   // Declare PointLight Struct.
-  sealed abstract class ReadPointLight extends ReadOnly[PointLight] {
+  sealed abstract class ReadPointLight extends prototype.ReadStruct {
+    type Read = ReadPointLight
+    type Mutable = PointLight
+    final def readType = classOf[ReadPointLight]
+    
     def position: ReadVec3
     def intensity: ReadVec3
     def linearAttenuation: ReadDoubleRef
     def quadraticAttenuation: ReadDoubleRef
   }
   
-  final class PointLight extends ReadPointLight with prototype.Struct[PointLight] {
-    type Read = ReadPointLight
+  final class PointLight extends ReadPointLight with prototype.Struct {
     protected def mkMutable() = new PointLight
     
     def this(
@@ -392,24 +404,20 @@ object CustomRenderer extends default.BaseApp {
   
   
   // Declare Lighting Environment.
-  sealed abstract class ReadLighting extends ReadOnly[Lighting] {
+  sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect with prototype.ReadStruct {
+    type Read = ReadLighting
+    type Mutable = Lighting
+    final def readType = classOf[ReadLighting]
+    
     def lights: ReadBindingList[PointLight]
   }
   
-  final class Lighting(implicit listener: StructuralChangeListener)
-  extends ReadLighting with UpdatableEnvironmentalEffect[Lighting]
+  final class Lighting
+  extends ReadLighting with UpdatableEnvironmentalEffect with prototype.Struct 
   {
-    type Read = ReadLighting
     protected def mkMutable() = new Lighting
     
     val lights = new BindingList[PointLight]
-  
-    def :=(r: ReadOnly[Lighting]) {
-      val e = r.asInstanceOf[Lighting]
-      
-      if (lights.size != e.lights.size) signalBindingChanges()
-      lights := e.lights
-    }
     
     def propagate(parentVal: ReadLighting, result: Lighting) {
       val oldSize = result.lights.size
@@ -431,6 +439,8 @@ object CustomRenderer extends default.BaseApp {
         i += 1
       }
     }
+    
+    init(classOf[Lighting])
   }
   
   

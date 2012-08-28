@@ -85,7 +85,7 @@ private[engine] object PathUtil {
               else {
                 indexed match {
                   
-                  case s: Struct[_] =>
+                  case s: Struct =>
                     s.resolvePath(rest)
 
                   /* Replace when 2.10 is out.
@@ -114,7 +114,7 @@ private[engine] object PathUtil {
         val res = bindingFromName(name)
         if (res == null) null else if (rest.isEmpty) res else res match {
           
-          case s: Struct[_] =>
+          case s: Struct =>
             s.resolvePath(rest)
             
           /* Replace when 2.10 is out.

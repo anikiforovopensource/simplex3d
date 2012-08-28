@@ -23,6 +23,6 @@ package transformation
 
 
 abstract class TransformationContext {
-  type Transformation <: transformation.Transformation[Transformation] // XXX say WHAT?
+  type Transformation <: transformation.Transformation
   def mkTransformation(camera: Boolean = false): Transformation
 }

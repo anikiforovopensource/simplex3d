@@ -30,24 +30,7 @@ package object graphics {
     new TextureBinding(texture)
   }
   
-  type ReadOnly[W <: Writable[W]] = Readable[W]
-  
-  
-  val EffectRecursor: {
-    type Recursive <: EnvironmentalEffect[Recursive] { type Read <: EnvironmentalEffect[Recursive] }
-  } = null
-  type UncheckedEffect = EffectRecursor.type#Recursive
-  
-  val UpdatableEffectRecursor: {
-    type Recursive <: UpdatableEnvironmentalEffect[Recursive] { type Read <: UpdatableEnvironmentalEffect[Recursive] }
-  } = null
-  type UncheckedUpdatableEffect = UpdatableEffectRecursor.type#Recursive
-  
-  val BindingRecursor: {
-    type Recursive <: Writable[Recursive] with Binding { type Read = Recursive }
-  } = null
-  type UncheckedBinding = BindingRecursor.type#Recursive
-  
-  
+  type ReadOnly = Protected
+  type UncheckedBinding = Accessible with Binding { type Read = Binding; type Mutable = Binding }
   type UncheckedAttributes = AttributeBinding[Format with MathType, Raw]
 }

@@ -164,52 +164,6 @@ abstract class GraphicsContext {
       if (!binding.isDefined) null else binding.get
     }
   }
-  
-  /* XXX redo comments for loader remapping.
-   * Uniform values can be mapped to an object path on material or environment. This is useful when
-   * a vertex shader consumes a part of a struct and a fragment consumes the rest.
-   * Example: declare[Vec2]("offset").remap("textureUnit.offset")
-   * 
-   * Arrays can be remapped using a wildcard array declaration [*]. Only one wildcard declaration
-   * is allowed per path, other array instances must specify the exact index.
-   * Example: declare[BindingList[Vec3]]("colors").remap("colorMaps[0].color[*]")
-   * 
-   * Value path remapping can only be used on subclasses of Struct and can only navigate the fields
-   * declared in Struct.fields. As a special case, texture dimensions can be accessed this way as well.
-   * Example: declare[Vec2i]("dimensions").remap("textureUnit.texture.dimensions")
-   */
-  private def resolveRemappedUniformPath(//XXX rework this for model loader remapping.
-    path: String,
-    predefined: ReadPredefinedUniforms,
-    material: graphics.Material,
-    environment: graphics.Environment,
-    programUniforms: Map[String, Defined[UncheckedBinding]]
-  ) :Object = {
-    
-    val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
-    val remapped = PathUtil.remap(path, null)//XXX uniformRemapping
-    
-    if (remapped.contains("[*]")) {
-      try {
-        val (rootListPath, remappedListPath) = PathUtil.remappedList(remapped)
-        val rootList = resolveUniformPath(rootListPath, predefined, material, environment, programUniforms)
-        rootList match {
-          
-          case list: BindingList[_] =>
-            RemappedList.unchecked(list.asInstanceOf[BindingList[UncheckedBinding]], remappedListPath)
-            
-          case _ =>
-            null
-        }
-      }
-      catch {
-        case e: IllegalArgumentException => null
-      }
-    }
-    else {
-      PathUtil.resolve(remapped, bindingFromName)
-    }
-  }
 }
 
 

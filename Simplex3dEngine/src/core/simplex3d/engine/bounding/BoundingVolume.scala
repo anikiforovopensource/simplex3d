@@ -32,7 +32,7 @@ abstract class BoundingVolume extends DataChangeListener
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.
-  final def intersect(frustum: Frustum, volume: BoundingVolume, worldTransformation: ReadTransformation[_])
+  final def intersect(frustum: Frustum, volume: BoundingVolume, worldTransformation: ReadTransformation)
   :Int = {
     volume match {
       case bound: Aabb =>

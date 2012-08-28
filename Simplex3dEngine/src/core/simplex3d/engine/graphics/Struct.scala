@@ -28,14 +28,21 @@ import simplex3d.engine.util._
 
 /** All Struct subclasses must define a no-argument constructor.
  */
-trait Struct[S <: Struct[S]] extends Writable[S] with Binding { self: S =>
+trait ReadStruct extends Protected with Binding with StructuralChangeNotifier {
+  type Read <: ReadStruct
+  type Mutable <: Struct
+}
+  
+/** All Struct subclasses must define a no-argument constructor.
+ */
+trait Struct extends ReadStruct with Accessible {
   import Struct.logger._
   
-  protected def mkMutable() :S
+  protected def mkMutable() :Mutable
   
-  override def mutableCopy(): S = {
+  override def mutableCopy(): Mutable = {
     val copy = mkMutable()
-    copy := this
+    copy := this.asInstanceOf[copy.Read]
     copy
   }
   

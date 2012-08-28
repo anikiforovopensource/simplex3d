@@ -28,10 +28,12 @@ import simplex3d.engine.util._
 import simplex3d.engine.scene._
 
 
-sealed abstract class ReadComponentTransformation3d(protected val camera: Boolean)
-extends ReadTransformation[ComponentTransformation3d]
-{
+sealed abstract class ReadComponentTransformation3d(protected val camera: Boolean) extends ReadTransformation {
   import AccessChanges._
+  
+  type Read = ReadComponentTransformation3d
+  type Mutable = ComponentTransformation3d
+  final def readType = classOf[ReadComponentTransformation3d]
   
   def scale: ReadDoubleRef
   def rotation: ReadQuat4
@@ -70,10 +72,8 @@ extends ReadTransformation[ComponentTransformation3d]
 }
 
 final class ComponentTransformation3d(camera: Boolean)
-extends ReadComponentTransformation3d(camera) with Transformation[ComponentTransformation3d]
+extends ReadComponentTransformation3d(camera) with Transformation
 {
-  type Read = ReadComponentTransformation3d
-  
   final class MutableSubtext {
     def scale = _scale
     def rotation = _rotation
@@ -107,8 +107,7 @@ extends ReadComponentTransformation3d(camera) with Transformation[ComponentTrans
     set = false
   }
   
-  def :=(r: Readable[ComponentTransformation3d]) {
-    val t = r.asInstanceOf[ReadComponentTransformation3d]
+  def :=(t: ReadComponentTransformation3d) {
     val m = update
     
     m.scale := t.scale

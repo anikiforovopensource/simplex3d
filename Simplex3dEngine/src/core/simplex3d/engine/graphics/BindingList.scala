@@ -27,45 +27,52 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.util._
 
 
-sealed abstract class ReadBindingList[W <: Writable[W] with Binding](
-  implicit
-  val elementManifest: ClassManifest[W],
-  private[this] val structuralChangeListener: StructuralChangeListener
+sealed abstract class ReadBindingList[T <: Accessible with Binding](
+  implicit val elementManifest: ClassManifest[T#Read]
 )
-extends Readable[BindingList[W]] with Binding
+extends Protected with Binding with StructuralChangeNotifier
 {
+  type Read = ReadBindingList[T]
+  type Mutable = BindingList[T]
+  final def readType = classOf[ReadBindingList[T]]
+  
   def size: Int
   final def length: Int = size
   
-  def apply(i: Int) :W#Read
+  def apply(i: Int) :T//XXX must be T#Read
 }
 
 
-final class BindingList[W <: Writable[W] with Binding](
-  implicit
-  elementManifest: ClassManifest[W],
-  structuralChangeListener: StructuralChangeListener
+final class BindingList[T <: Accessible with Binding](
+  implicit elementManifest: ClassManifest[T#Read]
 )
-extends ReadBindingList[W] with Writable[BindingList[W]]
+extends ReadBindingList[T] with Accessible
 {
-  type Read = ReadBindingList[W]
+  private var structuralChangeListener: StructuralChangeListener = _
+  private[engine] override def register(listener: StructuralChangeListener) { structuralChangeListener = listener }
+  private[engine] override def unregister() { structuralChangeListener = null }
   
-  private val buff = new ArrayBuffer[W]
+  private val buff = new ArrayBuffer[T]
   def size = buff.size
   
-  final def mutableCopy(): BindingList[W] = {
-    val copy = new BindingList[W]()(elementManifest, null)
+  final def mutableCopy(): BindingList[T] = {
+    val copy = new BindingList[T]()(elementManifest)
     copy := this
     copy
   }
   
-  def :=(r: Readable[BindingList[W]]) {
-    this := r.asInstanceOf[BindingList[W]].buff
+  def :=(r: ReadBindingList[T]) {
+    this := r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
-  def :=(seq: Seq[W#Read]) {
+  def :=(seq: Seq[T#Read]) {
     val s = size; var i = 0; for (e <- seq) {
-      if (i < s) buff(i) := e
-      else buff += e.mutableCopy()
+      if (i < s) {
+        val stable = buff(i)
+        stable := e.asInstanceOf[stable.Read]
+      }
+      else {
+        buff += e.mutableCopy().asInstanceOf[T]
+      }
       i += 1
     }
     if (i < s) buff.remove(i, s - i)
@@ -73,31 +80,31 @@ extends ReadBindingList[W] with Writable[BindingList[W]]
     if (structuralChangeListener != null && i != s) structuralChangeListener.signalStructuralChanges()
   }
   
-  def apply(i: Int) :W = buff(i)
+  def apply(i: Int) :T = buff(i)
   
-  def +=(elem: W#Read) {
-    buff += elem.mutableCopy()
+  def +=(elem: T#Read) {
+    buff += elem.mutableCopy().asInstanceOf[T]
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
   }
   
-  def ++=(r: Readable[BindingList[W]]) {
-    this ++= r.asInstanceOf[BindingList[W]].buff
+  def ++=(r: ReadBindingList[T]) {
+    this ++= r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
-  def ++=(seq: Seq[W#Read]) {
-    buff ++= seq.map(_.mutableCopy())
+  def ++=(seq: Seq[T#Read]) {
+    buff ++= seq.map(_.mutableCopy().asInstanceOf[T])
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
   }
   
-  def insert(index: Int, elems: W#Read*) {
-    buff.insert(index, elems.map(_.mutableCopy()): _*)
+  def insert(index: Int, elems: T#Read*) {
+    buff.insert(index, elems.map(_.mutableCopy().asInstanceOf[T]): _*)
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
   }
   
-  def insertAll(index: Int, r: Readable[BindingList[W]]) {
-    this.insertAll(index, r.asInstanceOf[BindingList[W]].buff)
+  def insertAll(index: Int, r: ReadBindingList[T]) {
+    this.insertAll(index, r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]])
   }
-  def insertAll(index: Int, seq: Seq[W#Read]) {
-    buff.insertAll(index, seq.map(_.mutableCopy()))
+  def insertAll(index: Int, seq: Seq[T#Read]) {
+    buff.insertAll(index, seq.map(_.mutableCopy().asInstanceOf[T]))
     if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
   }
   
@@ -128,12 +135,12 @@ extends ReadBindingList[W] with Writable[BindingList[W]]
 
 
 object BindingList {
-  def apply[W <: Writable[W] with Binding]
-    (elems: W#Read*)
-    (implicit elementManifest: ClassManifest[W], structuralChangeListener: StructuralChangeListener)
-  :BindingList[W] =
+  def apply[T <: Accessible with Binding]
+    (elems: T#Read*)
+    (implicit elementManifest: ClassManifest[T#Read])
+  :BindingList[T] =
   {
-    val list = new BindingList[W]
+    val list = new BindingList[T]
     list ++= elems
     list
   }

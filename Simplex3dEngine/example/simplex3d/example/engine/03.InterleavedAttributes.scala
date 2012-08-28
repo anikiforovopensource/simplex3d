@@ -58,7 +58,7 @@ object InterleavedAttributes extends default.App {
       val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
-    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+    mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
     
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 40

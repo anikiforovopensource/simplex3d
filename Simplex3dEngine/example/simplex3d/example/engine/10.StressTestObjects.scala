@@ -109,7 +109,7 @@ object StressTestObjects extends default.App {
       mesh.geometry.normals := normals
       mesh.geometry.texCoords := texCoords
       
-      mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+      mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
       
       mesh.transformation.update.scale := scale
       mesh.transformation.update.rotation := randomRotation()

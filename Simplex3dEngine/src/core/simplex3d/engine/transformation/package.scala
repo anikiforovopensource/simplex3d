@@ -23,10 +23,6 @@ package simplex3d.engine
 
 package object transformation {
   
-  val TransformationRecursor: { type Recursive <: Transformation[Recursive] } = null
-  type UncheckedTransformation = TransformationRecursor.type#Recursive
-  
-  
   final class ComponentTransformation3dContext extends TransformationContext {
     type Transformation = ComponentTransformation3d
     def mkTransformation(camera: Boolean) = new ComponentTransformation3d(camera)

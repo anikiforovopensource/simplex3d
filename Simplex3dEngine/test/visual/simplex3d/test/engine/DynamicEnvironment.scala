@@ -139,15 +139,25 @@ object DynamicEnvironment extends App {
     }).toArray
 
     
+    nodes(6).environment.intensity := new testenv.Intensity
     nodes(6).environment.intensity.update.value := 0.75
-    for (i <- 0 until 7) { nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0) }
+    
+    for (i <- 0 until 7) {
+      nodes(i).environment.nodeColor := new testenv.NodeColor
+      nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0)
+    }
+    
+    nodes(0).environment.contrast := new testenv.Contrast
     nodes(0).environment.contrast.update.factor := 0.1
     
     scene.attach(nodes(0))
   } 
   
   def update(time: TimeStamp) {
-    if (time.total.toInt %2 == 0) nodes(1).environment.intensity.update.value := 0.75
+    if (time.total.toInt %2 == 0) {
+      nodes(1).environment.intensity := new testenv.Intensity
+      nodes(1).environment.intensity.update.value := 0.75
+    }
     else nodes(1).environment.intensity.undefine()
     
     if (time.total.toInt %4 == 0) nodes(0).environment.contrast.update.secondary := true
@@ -178,18 +188,20 @@ object DynamicEnvironment extends App {
 
 package testenv {
   
-  sealed abstract class ReadIntensity extends ReadOnly[Intensity] {
+  sealed abstract class ReadIntensity extends ReadEnvironmentalEffect {
+    type Read = ReadIntensity
+    type Mutable = Intensity
+    final def readType = classOf[ReadIntensity]
+    
     def value: ReadDoubleRef
   }
   
-  final class Intensity extends ReadIntensity with EnvironmentalEffect[Intensity] {
-    type Read = ReadIntensity
+  final class Intensity extends ReadIntensity with EnvironmentalEffect {
     protected def mkMutable() = new Intensity
     
     val value = new DoubleRef(1)
   
-    def :=(r: ReadOnly[Intensity]) {
-      val t = r.asInstanceOf[Intensity]
+    def :=(t: ReadIntensity) {
       value := t.value
     }
     
@@ -201,18 +213,20 @@ package testenv {
   }
   
   
-  sealed abstract class ReadNodeColor extends ReadOnly[NodeColor] {
+  sealed abstract class ReadNodeColor extends ReadEnvironmentalEffect {
+    type Read = ReadNodeColor
+    type Mutable = NodeColor
+    final def readType = classOf[ReadNodeColor]
+    
     def color: ReadVec3
   }
   
-  final class NodeColor extends ReadNodeColor with EnvironmentalEffect[NodeColor] {
-    type Read = ReadNodeColor
+  final class NodeColor extends ReadNodeColor with EnvironmentalEffect {
     protected def mkMutable() = new NodeColor
     
     val color = Vec3(1)
   
-    def :=(r: ReadOnly[NodeColor]) {
-      val t = r.asInstanceOf[NodeColor]
+    def :=(t: ReadNodeColor) {
       color := t.color
     }
     
@@ -227,21 +241,22 @@ package testenv {
   }
   
   
-  sealed abstract class ReadContrast extends ReadOnly[Contrast] {
+  sealed abstract class ReadContrast extends ReadUpdatableEnvironmentalEffect {
+    type Read = ReadContrast
+    type Mutable = Contrast
+    final def readType = classOf[ReadContrast]
+    
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
   }
   
-  final class Contrast extends ReadContrast with UpdatableEnvironmentalEffect[Contrast] {
-    type Read = ReadContrast
+  final class Contrast extends ReadContrast with UpdatableEnvironmentalEffect {
     protected def mkMutable() = new Contrast
     
     val factor = new DoubleRef(0)
     val secondary = new BooleanRef(false)
   
-    def :=(r: ReadOnly[Contrast]) {
-      val t = r.asInstanceOf[Contrast]
-      
+    def :=(t: ReadContrast) {
       factor := t.factor
       if (secondary != t.secondary) signalBindingChanges()
       secondary := t.secondary
@@ -281,8 +296,11 @@ package testenv {
     }
   }
   
-  final class ContrastBinding1 extends prototype.Struct[ContrastBinding1] {
+  final class ContrastBinding1 extends prototype.Struct {
     type Read = ContrastBinding1
+    type Mutable = ContrastBinding1
+    final def readType = classOf[ContrastBinding1]
+    
     protected def mkMutable() = new ContrastBinding1
     
     val factor1 = new DoubleRef(0)
@@ -290,8 +308,11 @@ package testenv {
     init(classOf[ContrastBinding1])
   }
   
-  final class ContrastBinding2 extends prototype.Struct[ContrastBinding2] {
+  final class ContrastBinding2 extends prototype.Struct {
     type Read = ContrastBinding2
+    type Mutable = ContrastBinding2
+    final def readType = classOf[ContrastBinding2]
+    
     protected def mkMutable() = new ContrastBinding2
     
     val factor1 = new DoubleRef(0)
@@ -302,9 +323,9 @@ package testenv {
   
   
   class Environment extends prototype.Environment {
-    val intensity = Optional[Intensity](new Intensity)
-    val nodeColor = Optional[NodeColor](new NodeColor)
-    val contrast = Optional[Contrast](new Contrast)
+    val intensity = Optional[Intensity]
+    val nodeColor = Optional[NodeColor]
+    val contrast = Optional[Contrast]
     
     init(classOf[Environment])
   }

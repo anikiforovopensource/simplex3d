@@ -120,14 +120,14 @@ final class RenderManager extends graphics.RenderManager {
         var updatables = new ArrayBuffer[AnyRef]
         val properties = mesh.worldEnvironment.properties
         var i = 0; while (i < properties.length) { val property = properties(i)
-          if (property.isDefined && property.get.isInstanceOf[UpdatableEnvironmentalEffect[_]]) {
+          if (property.isDefined && property.get.isInstanceOf[UpdatableEnvironmentalEffect]) {
             updatables += property.get
           }
           
           i += 1
         }
         
-        mesh.updatableEffects = new ReadArray(updatables.toArray).asInstanceOf[ReadArray[UncheckedUpdatableEffect]]
+        mesh.updatableEffects = new ReadArray(updatables.toArray).asInstanceOf[ReadArray[UpdatableEnvironmentalEffect]]
       }; resolveUpdatableEffects()
     }
     

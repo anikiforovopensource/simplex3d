@@ -136,7 +136,7 @@ object Bounded {
     val pmin = Vec3(0)
     val pmax = Vec3(0)
     
-    def process(bounded: Bounded[_, _], worldTransformation: ReadTransformation[_]) {
+    def process(bounded: Bounded[_, _], worldTransformation: ReadTransformation) {
       bounded.resolveBoundingVolume match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)

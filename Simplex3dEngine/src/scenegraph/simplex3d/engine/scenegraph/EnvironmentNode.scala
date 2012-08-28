@@ -81,19 +81,16 @@ extends AbstractNode[T, G](name) {
               if (parentProp.hasDataChanges || childProp.hasDataChanges) {
                 if (parentProp.isDefined) {
                   if (childProp.isDefined) {
-                    childProp.get.propagate(parentProp.get, resultProp.update)
+                    val c = childProp.get
+                    if (!resultProp.isDefined) resultProp := childProp//XXX somehow enforce/ensure compatible types
+                    c.propagate(parentProp.get.asInstanceOf[c.Read], resultProp.update.asInstanceOf[c.Mutable])//XXX somehow enforce/ensure compatible types
                   }
                   else {
-                    resultProp.update := parentProp.get
+                    resultProp := parentProp.get
                   }
                 }
                 else {
-                  if (childProp.isDefined) {
-                    resultProp.update := childProp.get
-                  }
-                  else {
-                    resultProp.undefine()
-                  }
+                  resultProp := childProp
                 }
 
                 childProp.clearDataChanges()

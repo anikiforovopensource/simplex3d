@@ -37,9 +37,10 @@ abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
 )(
   private var _magFilter: ImageFilter.Value, private var _minFilter: ImageFilter.Value,
   private var _mipMapFilter: MipMapFilter.Value, initAnisotropyLevel: Double
-) extends EngineInfoRef {
+)
+extends EngineInfoRef {
   
-  def bindingDimensions: AnyVec[Int]
+  def bindingDimensions: AnyVec[Int]//XXX possibly simplify to dimensions?
   
   final class Subtext private[engine] () {
     private[engine] var dataChanges = true

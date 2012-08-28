@@ -22,23 +22,28 @@ package simplex3d.engine
 package graphics
 
 import simplex3d.math.types._
+import simplex3d.engine.util._
 
 
-trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
-{ self: E =>
-  protected def mkMutable() :E
+trait ReadEnvironmentalEffect extends Protected with StructuralChangeNotifier {
+  type Read <: ReadEnvironmentalEffect
+  type Mutable <: EnvironmentalEffect
   
-  override def mutableCopy(): E = {
-    val copy = mkMutable()
-    copy := this
-    copy
+  def propagate(parentVal: Read, result: Mutable) :Unit //XXX hide this as well
+  
+  
+  private[this] var localBinding: Binding = null
+  protected def resolveBinding() :Binding
+  
+  /** Must return a stable binding that will no change until the next binding change event.
+   */
+  final def binding: Binding = {
+    if (localBinding == null) localBinding = resolveBinding()
+    localBinding
   }
-  
-  def propagate(parentVal: E#Read, result: E) :Unit //XXX possibly hide this as well
   
   
   private[this] var bindingChanges = true
-  private[this] var localBinding: Binding = null
   
   /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
    */
@@ -49,20 +54,23 @@ trait EnvironmentalEffect[E <: EnvironmentalEffect[E]] extends Writable[E]
     bindingChanges = true
     localBinding = null
   }
+}
+
+trait EnvironmentalEffect extends ReadEnvironmentalEffect with Accessible {
+  protected def mkMutable() :Mutable
   
-  protected def resolveBinding() :Binding
-  
-  /** Must return a stable binding that will no change until the next binding change event.
-   */
-  final def binding: Binding = {
-    if (localBinding == null) localBinding = resolveBinding()
-    localBinding
+  override def mutableCopy(): Mutable = {
+    val copy = mkMutable()
+    copy := this.asInstanceOf[copy.Read]
+    copy
   }
 }
 
 
-trait UpdatableEnvironmentalEffect[E <: UpdatableEnvironmentalEffect[E]] extends EnvironmentalEffect[E]
-{ self: E =>
+//XXX split into pass-level and mesh-level updatables, also better names
+trait ReadUpdatableEnvironmentalEffect extends ReadEnvironmentalEffect with Protected {
+  type Read <: ReadUpdatableEnvironmentalEffect
+  type Mutable <: UpdatableEnvironmentalEffect
   
   /** Update the stable binding with a set of predefined uniforms that are only available at the time of rendering.
    * 
@@ -70,4 +78,7 @@ trait UpdatableEnvironmentalEffect[E <: UpdatableEnvironmentalEffect[E]] extends
    * so that passes with different cameras can be rendered correctly. 
    */
   def updateBinding(predefinedUniforms: ReadPredefinedUniforms) :Unit //XXX hide this from the client code
+}
+
+trait UpdatableEnvironmentalEffect extends ReadUpdatableEnvironmentalEffect with EnvironmentalEffect {
 }

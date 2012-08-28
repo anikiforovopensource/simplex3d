@@ -151,7 +151,7 @@ final class Declaration(
   private def processStruct(
     squareMatrices: Boolean,
     level: Int,
-    instance: Struct[_],
+    instance: Struct,
     structBlocks: HashMap[String, StructDeclaration]
   ) :String =
   {
@@ -229,9 +229,9 @@ final class Declaration(
       val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
       glslType
     }
-    else if (classOf[Struct[_]].isAssignableFrom(m.erasure)) {
+    else if (classOf[Struct].isAssignableFrom(m.erasure)) {
       val instance = try {
-        m.erasure.newInstance().asInstanceOf[Struct[_]]
+        m.erasure.newInstance().asInstanceOf[Struct]
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -274,8 +274,8 @@ final class Declaration(
       
       (glslType, sizeExpression)
     }
-    else if (classOf[Struct[_]].isAssignableFrom(i.getClass)) {
-      (processStruct(squareMatrices, level, i.asInstanceOf[Struct[_]], structBlocks), "")
+    else if (classOf[Struct].isAssignableFrom(i.getClass)) {
+      (processStruct(squareMatrices, level, i.asInstanceOf[Struct], structBlocks), "")
     }
     else {
       throw new RuntimeException(

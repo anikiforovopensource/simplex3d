@@ -25,12 +25,16 @@ import simplex3d.math.double._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadTextureUnit extends ReadOnly[TextureUnit] {
+sealed abstract class ReadTextureUnit extends prototype.ReadStruct {
+  type Read = ReadTextureUnit
+  type Mutable = TextureUnit
+  final def readType = classOf[ReadTextureUnit]
+  
   def texture: ReadTextureBinding[Texture2d[_]]
   def transformation: ReadMat3x2
 }
 
-final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUnit] {
+final class TextureUnit extends ReadTextureUnit with prototype.Struct {
   def this(texture: Texture2d[_], transformation: inMat3x2 = Mat3x2.Identity) {
     this()
     
@@ -38,7 +42,6 @@ final class TextureUnit extends ReadTextureUnit with prototype.Struct[TextureUni
     this.transformation := transformation
   }
   
-  type Read = ReadTextureUnit
   protected def mkMutable() = new TextureUnit
   
   val texture = new TextureBinding[Texture2d[_]]

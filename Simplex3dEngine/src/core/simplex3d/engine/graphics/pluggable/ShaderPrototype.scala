@@ -194,7 +194,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     declarations = null
   }
   
-  protected final def bind[W <: Writable[W] with Binding](name: String, binding: Defined[W]) {
+  protected final def bind[T <: Accessible with Binding](name: String, binding: Defined[T]) {
     if (declarations != null) throw new IllegalStateException("bind() must be declared at the top level.")
     checkState()
     boundUniforms.put(name, binding.asInstanceOf[Defined[UncheckedBinding]])
@@ -252,8 +252,8 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
           declaration.manifest
         }
       
-      if (classOf[Struct[_]].isAssignableFrom(manifest.erasure)) {
-        val instance = manifest.erasure.newInstance().asInstanceOf[Struct[_]]
+      if (classOf[Struct].isAssignableFrom(manifest.erasure)) {
+        val instance = manifest.erasure.newInstance().asInstanceOf[Struct]
         _listDeclarationNameKeys ++= instance.listDeclarations.map(
             ld => (ld.nameKey._1, ld.nameKey._2)
           )

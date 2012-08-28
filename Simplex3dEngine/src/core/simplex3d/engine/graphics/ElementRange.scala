@@ -25,7 +25,11 @@ import simplex3d.math.types._
 import simplex3d.math._
 
 
-sealed abstract class ReadElementRange extends Readable[ElementRange] {
+sealed abstract class ReadElementRange extends Protected {
+  type Read = ReadElementRange
+  type Mutable = ElementRange
+  final def readType = classOf[ReadElementRange]
+  
   def first: ReadIntRef
   def count: ReadIntRef
   
@@ -37,14 +41,11 @@ sealed abstract class ReadElementRange extends Readable[ElementRange] {
 }
 
 final class ElementRange(firstElement: Int = 0, elementCount: Int = 0)
-extends ReadElementRange with Writable[ElementRange] {
-  type Read = ReadElementRange
-  
+extends ReadElementRange with Accessible {
   val first = new IntRef(firstElement)
   val count = new IntRef(elementCount)
   
-  def :=(r: Readable[ElementRange]) {
-    val e = r.asInstanceOf[ReadElementRange]
+  def :=(e: ReadElementRange) {
     first := e.first
     count := e.count
   }

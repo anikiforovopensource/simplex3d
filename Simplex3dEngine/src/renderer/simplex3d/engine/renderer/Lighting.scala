@@ -27,7 +27,11 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadLighting extends ReadOnly[Lighting] {
+sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
+  type Read = ReadLighting
+  type Mutable = Lighting
+  final def readType = classOf[ReadLighting]
+  
   def directionalLights: List[ReadDirectionalLight]
   def pointLights: List[ReadPointLight]
   
@@ -43,16 +47,13 @@ sealed abstract class ReadLighting extends ReadOnly[Lighting] {
 }
 
 
-final class Lighting extends ReadLighting
-with UpdatableEnvironmentalEffect[Lighting]
-{
-  type Read = ReadLighting
+final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect {
   protected def mkMutable() = new Lighting
   
   var directionalLights: List[DirectionalLight] = Nil
   var pointLights: List[PointLight] = Nil
   
-  def :=(r: ReadOnly[Lighting]) {
+  def :=(r: ReadLighting) {
     //
   }
   

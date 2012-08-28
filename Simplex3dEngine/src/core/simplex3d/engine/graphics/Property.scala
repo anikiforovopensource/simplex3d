@@ -24,83 +24,96 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-sealed abstract class Property[W <: Writable[W]] private[engine]
+sealed abstract class Property[T <: Accessible] private[engine]
 {
-  protected final var value: W = _
+  protected final var value: T = _
   protected final var changed = true // Initialize as changed.
   
-  final def get: W#Read = if (value == null) throw new NoSuchElementException else value
+  final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
-  def update: W
+  def update: T
 }
 
 
-sealed abstract class Defined[W <: Writable[W]] private[engine] (initialValue: Readable[W])
-extends Property[W]
+sealed abstract class Defined[T <: Accessible] private[engine] (initialValue: T#Read)
+extends Property[T]
 {
-  value = initialValue.mutableCopy()
+  value = initialValue.mutableCopy().asInstanceOf[T]
   
-  final def update: W = {
+  final def update: T = {
     changed = true
     value
   }
   
-  final override def toString() :String =
-    "Defined(" + get.toString + ")"
+  final override def toString() :String = "Defined(" + get.toString + ")"
 }
 
-final class AccessibleDefined[W <: Writable[W]] private[engine] (initialValue: Readable[W])
-extends Defined[W](initialValue) {
+// XXX rename to SomethingDefined or DefinedSomething
+final class AccessibleDefined[T <: Accessible] private[engine] (initialValue: T#Read)
+extends Defined[T](initialValue) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 
 object Defined {
-  def apply[W <: Writable[W]](initialValue: Readable[W])
-  :Defined[W] = new AccessibleDefined(initialValue)
+  def apply[T <: Accessible](initialValue: T#Read)
+  :Defined[T] = new AccessibleDefined(initialValue)
 }
 
 
-sealed abstract class Optional[W <: Writable[W]] private[engine]
-  (factory: Readable[W])
-  (implicit listener: StructuralChangeListener)
-extends Property[W]
+sealed abstract class Optional[T <: Accessible] private[engine] (
+  implicit listener: StructuralChangeListener
+)
+extends Property[T]
 {
   
   final def undefine() {
     if (isDefined) {
       listener.signalStructuralChanges()
       changed = true
-      value = null.asInstanceOf[W]
+      value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      value = null.asInstanceOf[T]
     }
   }
   
-  final def update: W = {
-    if (!isDefined) {
-      listener.signalStructuralChanges()
-      value = factory.mutableCopy()
-    }
+  final def update: T = {
+    if (!isDefined) throw new NoSuchElementException
     changed = true
     value
   }
   
-  final def :=(p: Optional[W]) {
-    if (p.isDefined) update := p.get else undefine()
+  final def :=(t: T#Read) {
+    if (isDefined && (value.readType eq t.readType)) {
+      val stable = value
+      stable := t.asInstanceOf[stable.Read]
+    }
+    else {
+      value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      value = t.mutableCopy().asInstanceOf[T]
+      value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+      listener.signalStructuralChanges()
+    }
+    changed = true
   }
   
-  final override def toString() :String =
-    "Property(" + (if (isDefined) get.toString else "undefined" ) + ")"
+  final def :=(p: Optional[T]) {
+    if (p.isDefined) this := p.get else undefine()
+  }
+  
+  final override def toString() :String = {
+    "Optional(" + (if (isDefined) get.toString else "undefined" ) + ")"
+  }
 }
 
-final class AccessibleOptional[W <: Writable[W]] private[engine]
-  (factory: Readable[W])
-  (implicit listener: StructuralChangeListener)
- extends Optional[W](factory) {
+final class AccessibleOptional[T <: Accessible] private[engine] (
+  implicit listener: StructuralChangeListener
+)
+extends Optional[T] {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 
 object Optional {
-  def apply[W <: Writable[W]](factory: Readable[W])(implicit listener: StructuralChangeListener)
-  :Optional[W] = new AccessibleOptional(factory)
+  def apply[T <: Accessible](implicit listener: StructuralChangeListener)
+  :Optional[T] = new AccessibleOptional
 }

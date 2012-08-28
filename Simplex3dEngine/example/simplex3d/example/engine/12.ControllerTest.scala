@@ -95,7 +95,7 @@ object ControllerTest extends default.App {
     node.geometry.normals := normals
     node.geometry.texCoords := texCoords
     
-    node.material.textureUnits.update += new TextureUnit(objectTexture)
+    node.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
     
     world.attach(node)
 

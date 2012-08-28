@@ -69,6 +69,7 @@ extends Entity[T, G](name) {
   final def material: G#Material = srcMesh.material
   
   private val displayMesh = new Mesh(name + " - Display Mesh", this, graphicsContext.mkGeometry(), material)
+  displayMesh.elementRange := new ElementRange()
   
   private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T, G]]
   

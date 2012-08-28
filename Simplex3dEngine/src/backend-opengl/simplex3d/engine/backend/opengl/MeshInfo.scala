@@ -27,5 +27,5 @@ import simplex3d.engine.graphics._
 
 private[backend] class MeshInfo {
   var mapping: MeshMapping = _
-  var updatableEffects: ReadArray[UncheckedUpdatableEffect] = null
+  var updatableEffects: ReadArray[UpdatableEnvironmentalEffect] = null
 }

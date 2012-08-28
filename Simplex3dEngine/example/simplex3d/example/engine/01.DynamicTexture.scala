@@ -14,6 +14,7 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.transformation._
 
 
 object DynamicTexture extends default.App {
@@ -49,11 +50,15 @@ object DynamicTexture extends default.App {
     mesh.geometry.normals := Attributes.fromData(normals)
     
     mesh.geometry.texCoords := Attributes.fromData(texCoords)
-    val objectTexture = Texture2d[Vec3](Vec2i(128))
-    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
     
-    mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    mesh.transformation.update.scale := 50
+    val objectTexture = Texture2d[Vec3](Vec2i(128))
+    mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
+    
+    
+    val transformation = new ComponentTransformation3d(false)
+    transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))//XXX should not require .update.
+    transformation.update.scale := 50
+    mesh.transformation := transformation
     
     val noise = ClassicalGradientNoise
     val subTexture = Texture2d[Vec3](Vec2i(64))

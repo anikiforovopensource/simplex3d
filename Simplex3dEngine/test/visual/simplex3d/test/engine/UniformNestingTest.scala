@@ -47,7 +47,11 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   protected implicit val structuralChangeListener: StructuralChangeListener = null
   
   // Read part of Struct2 type.
-  sealed abstract class ReadStruct2 extends ReadOnly[Struct2] {
+  sealed abstract class ReadStruct2 extends prototype.ReadStruct {
+    type Read = ReadStruct2
+    type Mutable = Struct2
+    final def readType = classOf[ReadStruct2]
+    
     def value2: ReadVec3
     def value2Array: ReadBindingList[Vec3]
     
@@ -56,8 +60,7 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   
   // Read-write part of Struct2 type.
   // Instances of this class can be auto-mapped to uniform Struct2 values in the shader.
-  final class Struct2 extends ReadStruct2 with prototype.Struct[Struct2] {
-    type Read = ReadStruct2
+  final class Struct2 extends ReadStruct2 with prototype.Struct {
     protected def mkMutable() = new Struct2
     
     val value2 = Vec3(1)
@@ -69,7 +72,11 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   }
   
   
-  sealed abstract class ReadStruct1 extends ReadOnly[Struct1] {
+  sealed abstract class ReadStruct1 extends prototype.ReadStruct {
+    type Read = ReadStruct1
+    type Mutable = Struct1
+    final def readType = classOf[ReadStruct1]
+    
     def value1: ReadVec3
     def value1Array: ReadBindingList[Vec3]
     
@@ -80,8 +87,7 @@ object UniformNestingTest extends default.FullscreenEffectApp {
     def struct2Array: BindingList[Struct2]
   }
   
-  final class Struct1 extends ReadStruct1 with prototype.Struct[Struct1] {
-    type Read = ReadStruct1
+  final class Struct1 extends ReadStruct1 with prototype.Struct {
     protected def mkMutable() = new Struct1
     
     val value1 = Vec3(1)

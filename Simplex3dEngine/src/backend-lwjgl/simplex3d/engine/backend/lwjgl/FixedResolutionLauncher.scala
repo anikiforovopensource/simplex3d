@@ -29,6 +29,41 @@ import simplex3d.engine.graphics._
 
 
 class FixedResolutionLauncher extends simplex3d.engine.Launcher {
+  
+  def testAllModes() :Seq[DisplayMode] = {
+    val available = Display.getAvailableDisplayModes().filter(_.getBitsPerPixel >= 16)
+    var working = List[DisplayMode]()
+    
+    for (mode <- available) {
+      try {
+        Thread.sleep(1)
+        
+        Display.setFullscreen(false)
+        Display.setDisplayMode(mode)
+        
+        val pixelFormat = new PixelFormat().
+          withBitsPerPixel(24).
+          withAlphaBits(8).
+          withDepthBits(24).
+          withStencilBits(8)
+          
+        //val glProfile = new ContextAttribs(1, 4)
+        Display.setTitle("Display Mode Test")
+        Display.create(pixelFormat)//, glProfile)
+        
+        Display.destroy()
+        
+        working ::= mode
+      }
+      catch {
+        case e: Exception => println(e)
+      }
+    }
+    
+    working
+  }
+  
+  
   val driver = "lwjgl"
   
   @volatile private var quit = false
@@ -76,9 +111,9 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
         withStencilBits(8).
         withSamples(settings.antiAliasingSamples)
         
-      val glProfile = new ContextAttribs(1, 4)
+      val glProfile = new ContextAttribs(1, 4)//XXX not usable with some cards/drivers
       Display.setTitle(title)
-      Display.create(pixelFormat, glProfile)
+      Display.create(pixelFormat)//, glProfile)
       
       RawKeyboard.create()
       RawMouse.create()

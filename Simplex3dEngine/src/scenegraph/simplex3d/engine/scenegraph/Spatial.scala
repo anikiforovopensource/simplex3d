@@ -67,15 +67,15 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
     if (parent != null) update(parent)
     propagateWorldTransformation()
     
-    uncheckedWorldTransformation
+    uncheckedWorldTransformation.asInstanceOf[T#Transformation#Read]
   }
   
   private[scenegraph] final def propagateWorldTransformation() {
     val parentTransformation = if (parent == null) null else parent.uncheckedWorldTransformation
     
-    transformation.asInstanceOf[UncheckedTransformation].propagateChanges(
-      parentTransformation.asInstanceOf[UncheckedTransformation],
-      uncheckedWorldTransformation.asInstanceOf[UncheckedTransformation]
+    transformation.propagateChanges(
+      parentTransformation.asInstanceOf[transformation.Read],
+      uncheckedWorldTransformation.asInstanceOf[transformation.Mutable]
     )
     
     transformation.clearDataChanges()

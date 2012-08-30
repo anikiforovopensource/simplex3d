@@ -136,9 +136,7 @@ final class RenderManager extends graphics.RenderManager {
     val material = mesh.material
     
     mesh.resolveElementRange(elementRange)
-    
-    if (geometry.faceCulling.isDefined) renderContext.setFaceCulling(geometry.faceCulling.get.toConst)
-    else renderContext.setFaceCulling(FaceCulling.Disabled)
+    renderContext.setFaceCulling(material.faceCulling.get.toConst)
     
     
     val predefinedUniforms = renderContext.predefinedUniforms

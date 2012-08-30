@@ -102,7 +102,7 @@ object StressTestObjects extends default.App {
       val mesh = new Mesh("Cube" + i)
       mesh.customBoundingVolume := new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale)
       
-      mesh.geometry.faceCulling := new EnumRef(FaceCulling.Back)
+      mesh.material.faceCulling.update := FaceCulling.Back
       
       mesh.geometry.indices := indices
       mesh.geometry.vertices := vertices

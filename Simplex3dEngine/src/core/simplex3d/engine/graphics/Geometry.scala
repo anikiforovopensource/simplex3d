@@ -47,12 +47,8 @@ abstract class Geometry extends StructuralChangeListener {
   final val vertices = AttributeBinding[Vec3, RFloat](this)
   final val normals = AttributeBinding[Vec3, RFloat](this)
   
-  final val faceCulling = Property[EnumRef[FaceCulling.type]]//XXX move into material
-  faceCulling.register(this)
-  
   
   final def copyNonattributes(geometry: Geometry) {
     mode = geometry.mode
-    faceCulling := geometry.faceCulling
   }
 }

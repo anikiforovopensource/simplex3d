@@ -24,7 +24,9 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-sealed abstract class Property[T <: Accessible] private[engine] ()
+sealed abstract class Property[T <: Accessible] private[engine] (
+  private[this] final val enforceDefined: Boolean
+)
 {
   protected final var listener: StructuralChangeListener = _
   final def register(listener: StructuralChangeListener) { this.listener = listener } //XXX hide this
@@ -33,11 +35,12 @@ sealed abstract class Property[T <: Accessible] private[engine] ()
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
   
-  
   final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
   
   final def undefine() {
+    if (enforceDefined) throw new UnsupportedOperationException("The property must be defined")
+    
     if (isDefined) {
       if (listener != null) listener.signalStructuralChanges()
       changed = true
@@ -75,18 +78,26 @@ sealed abstract class Property[T <: Accessible] private[engine] ()
   }
 }
 
-final class AccessibleProperty[T <: Accessible] private[engine] ()
-extends Property[T] {
+final class AccessibleProperty[T <: Accessible] private[engine] (
+  enforceDefined: Boolean
+)
+extends Property[T](enforceDefined) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 
 object Property {
-  def apply[T <: Accessible]() :Property[T] = new AccessibleProperty
+  def apply[T <: Accessible]() :Property[T] = new AccessibleProperty(false)
   
-  def apply[T <: Accessible](value: T#Read) :Property[T] = {
-    val prop = new AccessibleProperty[T]()
-    prop := value
+  def optional[T <: Accessible](value: T) :Property[T] = {
+    val prop = new AccessibleProperty[T](false)
+    prop := value.asInstanceOf[T#Read]
+    prop
+  }
+  
+  def defined[T <: Accessible](value: T) :Property[T] = {
+    val prop = new AccessibleProperty[T](true)
+    prop := value.asInstanceOf[T#Read]
     prop
   }
 }

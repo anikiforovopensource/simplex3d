@@ -39,7 +39,7 @@ class StructuralChangeListener { self =>
 }
 
 object StructuralChangeListener {
-  final val Ignore = new StructuralChangeListener
+  final val Ignore = new StructuralChangeListener//XXX remove this
   
   def register(listener: StructuralChangeListener, properties: ReadArray[Property[_]]) {
     val s = properties.size; var i = 0; while (i < s) {

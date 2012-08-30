@@ -25,6 +25,6 @@ trait StructuralChangeNotifier {
   private[engine] def register(listener: StructuralChangeListener) { registerStructuralChangeListener(listener) }
   private[engine] def unregister() { unregisterStructuralChangeListener() }
   
-  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
-  protected def unregisterStructuralChangeListener() {}
+  protected def registerStructuralChangeListener(listener: StructuralChangeListener)
+  protected def unregisterStructuralChangeListener()
 }

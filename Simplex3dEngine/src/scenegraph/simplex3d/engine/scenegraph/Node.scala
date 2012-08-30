@@ -38,7 +38,7 @@ extends AbstractNode[T, G](name) with InheritedEnvironment {
   override def children = super.children
   
   def appendChild(element: SceneElement[T, G] with InheritedEnvironment) {
-    element.asInstanceOf[InheritedEnvironment]
+    element.asInstanceOf[InheritedEnvironment] // Enforce type at runtime with ClassCastException
     appendAnyChild(element)
   }
   override def removeChild(element: SceneElement[_, _]) :Boolean = super.removeChild(element)

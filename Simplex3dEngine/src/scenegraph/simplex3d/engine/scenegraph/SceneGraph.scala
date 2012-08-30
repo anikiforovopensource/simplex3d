@@ -60,7 +60,7 @@ extends ManagedScene[G](name) {
     root.removeNestedChild(elem)
   }
   
-  def environment = root.worldEnvironment
+  def environment = root.environment
   
   
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {

@@ -25,7 +25,7 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-trait ReadEnvironmentalEffect extends Protected with StructuralChangeNotifier {
+trait ReadEnvironmentalEffect extends Protected {
   type Read <: ReadEnvironmentalEffect
   type Mutable <: EnvironmentalEffect
   

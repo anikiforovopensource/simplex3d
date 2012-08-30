@@ -156,6 +156,8 @@ trait Struct extends ReadStruct with graphics.Struct {
       i += 1
     }
   }
+  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
+  protected def unregisterStructuralChangeListener() {}
 }
 
 object Struct {

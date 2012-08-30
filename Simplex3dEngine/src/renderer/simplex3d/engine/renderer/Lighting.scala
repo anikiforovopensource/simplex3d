@@ -25,9 +25,10 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.graphics._
+import simplex3d.engine._
 
 
-sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
+sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect with prototype.ReadStruct {
   type Read = ReadLighting
   type Mutable = Lighting
   final def readType = classOf[ReadLighting]
@@ -47,15 +48,11 @@ sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
 }
 
 
-final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect {
+final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect with prototype.Struct {
   protected def mkMutable() = new Lighting
   
   var directionalLights: List[DirectionalLight] = Nil
   var pointLights: List[PointLight] = Nil
-  
-  def :=(r: ReadLighting) {
-    //
-  }
   
   def propagate(parentVal: ReadLighting, result: Lighting) {
     //

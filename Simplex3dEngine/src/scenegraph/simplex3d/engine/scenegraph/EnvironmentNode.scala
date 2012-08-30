@@ -57,6 +57,27 @@ extends AbstractNode[T, G](name) {
     allowMultithreading: Boolean, currentDepth: Int,
     cullContext: CullContext[T, G]
   ) {
+    
+    if (parent == null) { 
+      def propagateRoot() { // special treatment for the root node
+        val rootProps = environment.properties
+        val resultProps = worldEnvironment.properties
+        
+        val size = rootProps.length; var i = 0; while (i < size) {
+          
+          val rootProp = rootProps(i)
+          val resultProp = resultProps(i)
+          
+          if (rootProp.hasDataChanges) {
+            resultProp := rootProp
+            rootProp.clearDataChanges()
+          }
+          
+          i += 1
+        }
+      }; propagateRoot()
+    }
+    
     val children = this.children
     val size = children.size; var i = 0; while (i < size) { val current = children(i)
       
@@ -64,13 +85,9 @@ extends AbstractNode[T, G](name) {
         case envNode: EnvrionmentNode[_, _] =>
           
           def propagateEnvironment() {
-            val parentEnv = worldEnvironment
-            val childEnv = envNode.environment
-            val resultEnv = envNode.worldEnvironment
-    
-            val parentProps = parentEnv.properties
-            val childProps = childEnv.properties
-            val resultProps = resultEnv.properties
+            val parentProps = worldEnvironment.properties
+            val childProps = envNode.environment.properties
+            val resultProps = envNode.worldEnvironment.properties
             
             val size = parentProps.length; var i = 0; while (i < size) {
               

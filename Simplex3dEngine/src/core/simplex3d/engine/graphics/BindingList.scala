@@ -51,6 +51,8 @@ extends ReadBindingList[T] with Accessible
   private var structuralChangeListener: StructuralChangeListener = _
   private[engine] override def register(listener: StructuralChangeListener) { structuralChangeListener = listener }
   private[engine] override def unregister() { structuralChangeListener = null }
+  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
+  protected def unregisterStructuralChangeListener() {}
   
   private val buff = new ArrayBuffer[T]
   def size = buff.size

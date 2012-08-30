@@ -404,7 +404,7 @@ object CustomRenderer extends default.BaseApp {
   
   
   // Declare Lighting Environment.
-  sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect with prototype.ReadStruct {
+  sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
     type Read = ReadLighting
     type Mutable = Lighting
     final def readType = classOf[ReadLighting]
@@ -413,11 +413,16 @@ object CustomRenderer extends default.BaseApp {
   }
   
   final class Lighting
-  extends ReadLighting with UpdatableEnvironmentalEffect with prototype.Struct 
+  extends ReadLighting with UpdatableEnvironmentalEffect 
   {
     protected def mkMutable() = new Lighting
     
     val lights = new BindingList[PointLight]
+    
+    def :=(e: ReadLighting) {
+      if (lights.size != e.lights.size) signalBindingChanges()
+      lights := e.lights
+    }
     
     def propagate(parentVal: ReadLighting, result: Lighting) {
       val oldSize = result.lights.size
@@ -439,8 +444,6 @@ object CustomRenderer extends default.BaseApp {
         i += 1
       }
     }
-    
-    init(classOf[Lighting])
   }
   
   

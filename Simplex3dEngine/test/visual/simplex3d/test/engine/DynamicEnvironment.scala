@@ -54,10 +54,10 @@ import simplex3d.engine.scenegraph._
  * Contrast:
  * The contrast alternates between an array of one and two factors every 4 seconds.
  * This servers as a test for dynamic binding resolution, which allows the same environmental property to
- * resolve to different structs depending on the circumstances.//XXX
+ * resolve to different structs depending on the circumstances.
  * Contrast inherits from UpdatableEnvironmentalEffect which can alter its' binding uniquely for each mesh
  * depending on the camera matrices. When the camera is moved further from the meshes,
- * they gradually loose color and become white.
+ * they gradually loose color and become white.//XXX update after per-mesh and per-cam effect separation
  * 
  * The printout indicates what Meshes have their techniques re-evaluated.
  * Notice that techniques do not change every frame, but only when the properties are altered in a way that requires
@@ -323,9 +323,9 @@ package testenv {
   
   
   class Environment extends prototype.Environment {
-    val intensity = Optional[Intensity]
-    val nodeColor = Optional[NodeColor]
-    val contrast = Optional[Contrast]
+    val intensity = Property[Intensity]
+    val nodeColor = Property[NodeColor]
+    val contrast = Property[Contrast]
     
     init(classOf[Environment])
   }

@@ -222,13 +222,13 @@ object CustomRenderer extends default.BaseApp {
     init(classOf[Geometry])
   }
   class Material extends prototype.Material {
-    val textureUnits = Optional[BindingList[TextureUnit]]
+    val textureUnits = Property[BindingList[TextureUnit]]
     
     init(classOf[Material])
   }
   
   class Environment extends prototype.Environment {
-    val lighting = Optional[Lighting]
+    val lighting = Property[Lighting]
     
     init(classOf[Environment])
   }

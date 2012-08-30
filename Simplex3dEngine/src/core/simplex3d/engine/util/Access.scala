@@ -38,11 +38,8 @@ object AccessChanges {
   :DataChangeListener#DataSubtext = listener.dataSubtext
 
   
-  implicit def accessOptional(property: Optional[_])
-  = property.asInstanceOf[AccessibleOptional[_]]
-  
-  implicit def accessDefined(property: Defined[_])
-  = property.asInstanceOf[AccessibleDefined[_]]
+  implicit def accessProperty(property: Property[_])
+  = property.asInstanceOf[AccessibleProperty[_]]
   
   implicit def accessSharedRef(property: SharedRef[_])
   = property.asInstanceOf[AccessibleSharedRef]

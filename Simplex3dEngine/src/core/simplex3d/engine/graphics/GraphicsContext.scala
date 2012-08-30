@@ -110,7 +110,7 @@ abstract class GraphicsContext {
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,
     environment: graphics.Environment,
-    programUniforms: Map[String, Defined[UncheckedBinding]]
+    programUniforms: Map[String, Property[UncheckedBinding]]
   ) :Binding = {
     val originAndId = uniformMap.get(name)
     
@@ -145,7 +145,7 @@ abstract class GraphicsContext {
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,
     environment: graphics.Environment,
-    programUniforms: Map[String, Defined[UncheckedBinding]]
+    programUniforms: Map[String, Property[UncheckedBinding]]
   ) :Binding = {
     
     val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)

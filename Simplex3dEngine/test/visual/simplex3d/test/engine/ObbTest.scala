@@ -80,7 +80,7 @@ object ObbTest extends default.App {
     movingCube.geometry.normals := anormals
     movingCube.geometry.texCoords := atexCoords
     
-    movingCube.material.textureUnits.update += new TextureUnit(texture)
+    movingCube.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
     movingCube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30))
     movingCube.transformation.update.scale := cubeScale
@@ -93,7 +93,7 @@ object ObbTest extends default.App {
     cube1.geometry.normals := anormals
     cube1.geometry.texCoords := atexCoords
     
-    cube1.material.textureUnits.update += new TextureUnit(texture)
+    cube1.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
     cube1.transformation.update.scale := cubeScale
     cube1.transformation.update.translation := -translation
@@ -106,7 +106,7 @@ object ObbTest extends default.App {
     cube2.geometry.normals := anormals
     cube2.geometry.texCoords := atexCoords
     
-    cube2.material.textureUnits.update += new TextureUnit(texture)
+    cube2.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
     cube2.transformation.update.rotation := Quat4 rotateX(radians(-15)) rotateZ(radians(30))
     cube2.transformation.update.scale := cubeScale

@@ -28,5 +28,5 @@ abstract class Environment extends StructuralChangeListener {
   protected implicit val structuralChangeListener = this
   
   def propertyNames: ReadArray[String]
-  def properties: ReadArray[Optional[EnvironmentalEffect]]
+  def properties: ReadArray[Property[EnvironmentalEffect]]
 }

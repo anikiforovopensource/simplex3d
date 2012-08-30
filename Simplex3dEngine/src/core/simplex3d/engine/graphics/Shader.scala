@@ -30,7 +30,7 @@ import simplex3d.engine.util._
 class Shader(
   val shaderType: Shader.type#Value,
   val src: String,
-  val uniforms: immutable.Map[String, Defined[UncheckedBinding]] = immutable.Map()
+  val uniforms: immutable.Map[String, Property[UncheckedBinding]] = immutable.Map()
 ) extends EngineInfoRef
 
 object Shader extends Enumeration {

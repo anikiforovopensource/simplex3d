@@ -41,6 +41,7 @@ trait Material extends graphics.Material {
     _uniformNames = un
     _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedBinding]]]
     
+    StructuralChangeListener.register(this, uniforms)
     initialized = true
   }
   

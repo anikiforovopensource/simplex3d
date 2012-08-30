@@ -20,6 +20,8 @@
 
 package simplex3d.engine.util
 
+import simplex3d.engine.graphics._
+
 
 class StructuralChangeListener { self =>
   final class StructuralSubtext {
@@ -38,4 +40,11 @@ class StructuralChangeListener { self =>
 
 object StructuralChangeListener {
   final val Ignore = new StructuralChangeListener
+  
+  def register(listener: StructuralChangeListener, properties: ReadArray[Property[_]]) {
+    val s = properties.size; var i = 0; while (i < s) {
+      properties(i).register(listener)
+      i += 1
+    }
+  }
 }

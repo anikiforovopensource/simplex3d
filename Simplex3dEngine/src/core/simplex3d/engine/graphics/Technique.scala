@@ -29,14 +29,14 @@ import simplex3d.engine.util._
 final class Technique private (
   val graphicsContext: GraphicsContext,
   val shaders: Set[Shader],
-  val programUniforms: immutable.Map[String, Defined[UncheckedBinding]]
+  val programUniforms: immutable.Map[String, Property[UncheckedBinding]]
 ) extends EngineInfoRef {
   
   def this(graphicsContext: GraphicsContext, shaders: Set[Shader]) {
     this(graphicsContext, shaders, {
       
       // Extract uniforms.
-      val uniforms = scala.collection.mutable.Map[String, Defined[UncheckedBinding]]()
+      val uniforms = scala.collection.mutable.Map[String, Property[UncheckedBinding]]()
       for (shader <- shaders; (name, prop) <- shader.uniforms) {
         val prev = uniforms.put(name, prop)
         
@@ -53,7 +53,7 @@ final class Technique private (
         }
       }
       
-      immutable.Map[String, Defined[UncheckedBinding]]() ++ uniforms
+      immutable.Map[String, Property[UncheckedBinding]]() ++ uniforms
     })
   }
 }

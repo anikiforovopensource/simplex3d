@@ -28,7 +28,7 @@ import simplex3d.engine.util._
 trait Environment extends graphics.Environment {
 
   private[this] var _propertyNames: ReadArray[String] = null
-  private[this] var _properties: ReadArray[Optional[EnvironmentalEffect]] = null
+  private[this] var _properties: ReadArray[Property[EnvironmentalEffect]] = null
 
   private[this] var initialized = false 
   protected final def init(clazz: Class[_]) {
@@ -37,15 +37,16 @@ trait Environment extends graphics.Environment {
     
     val (pn, pv) = FieldReflection.getValueMap(
       this,
-      classOf[Optional[_]], FieldReflection.EnvironmentalEffectFilter,
+      classOf[Property[_]], FieldReflection.EnvironmentalEffectFilter,
       Nil
     )
     _propertyNames = pn
-    _properties = pv.asInstanceOf[ReadArray[Optional[EnvironmentalEffect]]]
+    _properties = pv.asInstanceOf[ReadArray[Property[EnvironmentalEffect]]]
     
+    StructuralChangeListener.register(this, properties)
     initialized = true
   }
   
   override def propertyNames: ReadArray[String] = _propertyNames
-  override def properties: ReadArray[Optional[EnvironmentalEffect]] = _properties
+  override def properties: ReadArray[Property[EnvironmentalEffect]] = _properties
 }

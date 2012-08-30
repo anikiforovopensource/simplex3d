@@ -88,7 +88,7 @@ object ControllerTest extends default.App {
     node.instanceBoundingVolume := new Oabb(Vec3(-0.5)*scale, Vec3(0.5)*scale)
     node.customBoundingVolume := new Oabb(Vec3(Double.MinValue), Vec3(Double.MaxValue))
     
-    node.geometry.faceCulling.update := FaceCulling.Back
+    node.geometry.faceCulling := new EnumRef(FaceCulling.Back)
     
     node.geometry.indices := indices
     node.geometry.vertices := vertices

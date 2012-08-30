@@ -24,52 +24,22 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-sealed abstract class Property[T <: Accessible] private[engine]
+sealed abstract class Property[T <: Accessible] private[engine] ()
 {
-  protected final var value: T = _
+  protected final var listener: StructuralChangeListener = _
+  final def register(listener: StructuralChangeListener) { this.listener = listener } //XXX hide this
+  
+  
+  private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
+  
   
   final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
-  def update: T
-}
-
-
-sealed abstract class Defined[T <: Accessible] private[engine] (initialValue: T#Read)
-extends Property[T]
-{
-  value = initialValue.mutableCopy().asInstanceOf[T]
-  
-  final def update: T = {
-    changed = true
-    value
-  }
-  
-  final override def toString() :String = "Defined(" + get.toString + ")"
-}
-
-// XXX rename to SomethingDefined or DefinedSomething
-final class AccessibleDefined[T <: Accessible] private[engine] (initialValue: T#Read)
-extends Defined[T](initialValue) {
-  def hasDataChanges = changed
-  def clearDataChanges() { changed = false }
-}
-
-object Defined {
-  def apply[T <: Accessible](initialValue: T#Read)
-  :Defined[T] = new AccessibleDefined(initialValue)
-}
-
-
-sealed abstract class Optional[T <: Accessible] private[engine] (
-  implicit listener: StructuralChangeListener
-)
-extends Property[T]
-{
   
   final def undefine() {
     if (isDefined) {
-      listener.signalStructuralChanges()
+      if (listener != null) listener.signalStructuralChanges()
       changed = true
       value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
       value = null.asInstanceOf[T]
@@ -91,29 +61,32 @@ extends Property[T]
       value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
       value = t.mutableCopy().asInstanceOf[T]
       value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
-      listener.signalStructuralChanges()
+      if (listener != null) listener.signalStructuralChanges()
     }
     changed = true
   }
   
-  final def :=(p: Optional[T]) {
+  final def :=(p: Property[T]) {
     if (p.isDefined) this := p.get else undefine()
   }
   
   final override def toString() :String = {
-    "Optional(" + (if (isDefined) get.toString else "undefined" ) + ")"
+    "Property(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }
 
-final class AccessibleOptional[T <: Accessible] private[engine] (
-  implicit listener: StructuralChangeListener
-)
-extends Optional[T] {
+final class AccessibleProperty[T <: Accessible] private[engine] ()
+extends Property[T] {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
 }
 
-object Optional {
-  def apply[T <: Accessible](implicit listener: StructuralChangeListener)
-  :Optional[T] = new AccessibleOptional
+object Property {
+  def apply[T <: Accessible]() :Property[T] = new AccessibleProperty
+  
+  def apply[T <: Accessible](value: T#Read) :Property[T] = {
+    val prop = new AccessibleProperty[T]()
+    prop := value
+    prop
+  }
 }

@@ -114,8 +114,8 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     if (isInitialized) throw new IllegalStateException("Modifying shader after it has been initialized.")
   }
   
-  private[this] val boundUniforms = new HashMap[String, Defined[UncheckedBinding]]
-  private[this] var _shaderUniforms: immutable.Map[String, Defined[UncheckedBinding]] = null
+  private[this] val boundUniforms = new HashMap[String, Property[UncheckedBinding]]
+  private[this] var _shaderUniforms: immutable.Map[String, Property[UncheckedBinding]] = null
   def shaderUniforms = {
     if (!isInitialized) throw new IllegalStateException(
       "Shader prototype must be initialized before accessing programUniforms."
@@ -179,7 +179,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
         
     
     // Init bindings.
-    _shaderUniforms = immutable.Map[String, Defined[UncheckedBinding]]() ++ boundUniforms
+    _shaderUniforms = immutable.Map[String, Property[UncheckedBinding]]() ++ boundUniforms
     
     
     isInitialized = true
@@ -194,10 +194,10 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     declarations = null
   }
   
-  protected final def bind[T <: Accessible with Binding](name: String, binding: Defined[T]) {
+  protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
     if (declarations != null) throw new IllegalStateException("bind() must be declared at the top level.")
     checkState()
-    boundUniforms.put(name, binding.asInstanceOf[Defined[UncheckedBinding]])
+    boundUniforms.put(name, binding.asInstanceOf[Property[UncheckedBinding]])
     val declaration = new Declaration(ClassUtil.rebuildManifest(binding.get), name)
     _uniformBlock += declaration
   }

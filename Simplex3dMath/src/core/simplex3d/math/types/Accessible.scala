@@ -29,7 +29,7 @@ trait Protected {
   type Mutable <: Accessible
   
   def mutableCopy() :Mutable
-  def readType: Class[Read]
+  def readType: Object
 }
 
 

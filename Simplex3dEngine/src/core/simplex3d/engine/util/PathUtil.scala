@@ -31,18 +31,6 @@ private[engine] object PathUtil {
   /* case NameRest(name, rest) */
   private val NameRest = """(\w+)\.?(.*)""".r
   
-  /* case RestIndex(rest, index) */
-  private val PrefixIndex = """(.+)\[(\d+)\]""".r
-  
-  /* case ListPathRest(listPath, rest) */
-  private val ListPathRest = """(\w+)\[\*\]\.?(.*)""".r
-  
-  /* case RestName(rest, name) */
-  private val RestName = """(.*)\.(\w+)""".r
-  
-  /* case RestNameIndex(rest, name, index) */
-  private val RestNameIndex = """(.*)\.(\w+)\[(\d+)\]""".r
-  
   
   def find(names: ReadArray[String], name: String) :Int = {
     var i = 0; while (i < names.length) {
@@ -54,20 +42,6 @@ private[engine] object PathUtil {
     -1
   }
   
-  def rootName(path: String) :String = {
-    path match {
-      case NameRest(name, _) => name
-      case _ => path
-    }
-  }
-  
-  def leafName(path: String) :String = {
-    path match {
-      case RestName(_, name) => name
-      case RestNameIndex(_, name, _) => name
-      case _ => path
-    }
-  }
   
   def resolve(path: String, bindingFromName: String => Binding) :Binding = {
     path match {
@@ -135,65 +109,6 @@ private[engine] object PathUtil {
         
       case _ =>
         null
-    }
-  }
-  
-  
-  def remap(path: String, pathRemapping: Map[String, String]) :String = {
-    if (pathRemapping.isEmpty) return path
-    
-    var prefix: String = null
-    var index: String = null
-    if (path.charAt(path.length - 1) == ']') {
-      path match {
-        case PrefixIndex(r, i) => prefix = r; index = i
-        case _ => // do nothing
-      }
-    }
-    
-    if (prefix != null) {
-      val remapping = pathRemapping.get(prefix)
-      if (remapping.isDefined) {
-        val arrayRemapping = remapping.get
-        arrayRemapping.replaceAll("""\*""", index)
-      }
-      else path
-    }
-    else {
-      val remapping = pathRemapping.get(path)
-      if (remapping.isDefined) remapping.get else path
-    }
-  }
-  
-  def remappedList(path: String) :(String, String) = {
-    path match {
-      case ListPathRest(listPath, rest) => (listPath, rest)
-      case _ => throw new IllegalArgumentException("Must be a list path with a wildcard [*].")
-    }
-  }
-  
-  
-  // XXX remove this
-  def parentPathListNameXXX(path: String, pathRemapping: Map[String, String]) :(String, String) = {
-    def extractParent(rest: String, name: String) =  rest match {
-      case RestName(_, parentName) => (parentName, name)
-      case RestNameIndex(_, parentName, _) => (parentName, name)
-      case _ => (rest, name)
-    }
-    def extract(path: String) = path match {
-      case RestName(rest, name) => extractParent(rest, name)
-      case RestNameIndex(rest, name, _) => extractParent(rest, name)
-      case _ => ("", path)
-    }
-    
-    if (pathRemapping.isEmpty) return extract(path)
-    
-    val remapping = pathRemapping.get(path)
-    if (!remapping.isDefined) extract(path) else {
-      remapping.get match {
-        case ListPathRest(listPath, rest) => extract(listPath)
-        case _ => extract(path)
-      }
     }
   }
 }

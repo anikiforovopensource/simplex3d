@@ -27,29 +27,18 @@ import simplex3d.math.double._
 /** Axis Aligned Bounding Box is defined in world coordinates.
  * 
  */
-final class Aabb(cmin: inVec3 = Vec3.Zero, cmax: inVec3 = Vec3.Zero) extends BoundingVolume {
+final class Aabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends BoundingVolume
+{
+  def readType = classOf[Aabb]
+  def mutableCopy() = new Aabb(min.mutableCopy(), max.mutableCopy())
   
-  final class MutableSubtext {
-    def min: Vec3 = _min
-    def max: Vec3 = _max
+  def :=(r: ReadBoundingVolume) {
+    this := r.asInstanceOf[Aabb]
   }
-  private val mutableSubtext = new MutableSubtext
-  
-  def update = {
-    dataChanges = true
-    mutableSubtext
-  }
-  
-  
-  private val _min = cmin.mutableCopy()
-  private val _max = cmax.mutableCopy()
-  
-  def min: ReadVec3 = _min
-  def max: ReadVec3 = _max
   
   def :=(r: Aabb) {
-    update.min := r.min
-    update.max := r.max
+    min := r.min
+    max := r.max
   }
   
   override def toString() :String = "Aabb(" + min + ", " + max + ")"

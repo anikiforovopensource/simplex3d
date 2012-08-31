@@ -131,8 +131,8 @@ extends Entity[T, G](name) {
         def process() {
           val size = children.size; var i = 0; while (i < size) {
             val instance = children(i).asInstanceOf[BoundedInstance]
-            instance.customBoundingVolume := srcMesh.customBoundingVolume.get
-            instance.autoBoundingVolume = null
+            instance.customBoundingVolume := srcMesh.customBoundingVolume
+            instance.autoBoundingVolume.undefine()
             
             i += 1
           }
@@ -143,7 +143,7 @@ extends Entity[T, G](name) {
           val size = children.size; var i = 0; while (i < size) {
             val instance = children(i).asInstanceOf[BoundedInstance]
             instance.customBoundingVolume.undefine()
-            instance.autoBoundingVolume = srcMesh.autoBoundingVolume
+            instance.autoBoundingVolume := srcMesh.autoBoundingVolume
             
             i += 1
           }

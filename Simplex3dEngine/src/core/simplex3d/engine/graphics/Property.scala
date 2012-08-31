@@ -26,10 +26,18 @@ import simplex3d.engine.util._
 
 sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final val enforceDefined: Boolean
-)
+) extends StructuralChangeNotifier
 {
   protected final var listener: StructuralChangeListener = _
-  final def register(listener: StructuralChangeListener) { this.listener = listener } //XXX hide this
+  private[engine] final override def register(listener: StructuralChangeListener) {
+    if (this.listener != null) throw new IllegalStateException("The property can register StructuralChangeListener only once.")
+    this.listener = listener
+  }
+  private[engine] final override def unregister() {
+    throw new UnsupportedOperationException("Properties cannot unregister StructuralChangeListeners.")
+  }
+  protected final def registerStructuralChangeListener(listener: StructuralChangeListener) {}
+  protected final def unregisterStructuralChangeListener() {}
   
   
   private[this] final var value: T = _
@@ -39,7 +47,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   final def isDefined = (value != null)
   
   final def undefine() {
-    if (enforceDefined) throw new UnsupportedOperationException("The property must be defined")
+    if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Property.defined() and cannot be undefined.")
     
     if (isDefined) {
       if (listener != null) listener.signalStructuralChanges()

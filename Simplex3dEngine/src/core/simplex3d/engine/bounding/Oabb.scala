@@ -31,28 +31,18 @@ import simplex3d.math.double._
  * Axis Aligned Bonding Box. If world transformation is defined then it
  * will be applied to this bounding box.
  */
-final class Oabb(minVector: inVec3 = Vec3.Zero, maxVector: inVec3 = Vec3.Zero) extends BoundingVolume {
-  final class MutableSubtext {
-    def min: Vec3 = _min
-    def max: Vec3 = _max
+final class Oabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends BoundingVolume
+{
+  def readType = classOf[Oabb]
+  def mutableCopy() = new Oabb(min.mutableCopy(), max.mutableCopy())
+  
+  def :=(r: ReadBoundingVolume) {
+    this := r.asInstanceOf[Oabb]
   }
-  private val mutableSubtext = new MutableSubtext
-  
-  def update = {
-    dataChanges = true
-    mutableSubtext
-  }
-  
-  
-  private val _min = minVector.mutableCopy()
-  private val _max = maxVector.mutableCopy()
-  
-  def min: ReadVec3 = _min
-  def max: ReadVec3 = _max
   
   def :=(r: Oabb) {
-    update.min := r.min
-    update.max := r.max
+    min := r.min
+    max := r.max
   }
   
   override def toString() :String = "Oabb(" + min + ", " + max + ")"

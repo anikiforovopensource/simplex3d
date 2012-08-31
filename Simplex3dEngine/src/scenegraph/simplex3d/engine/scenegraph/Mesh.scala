@@ -55,7 +55,7 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
   private[scenegraph] override def onParentChange(
     parent: AbstractNode[T, G], managed: ArrayBuffer[Spatial[T]]
   ) {
-    super.onParentChange(parent, managed)
+    onSpatialParentChange(parent, managed)
     
     // Signal changes that trigger another technique resolution to take care of new environment.
     material.signalStructuralChanges()
@@ -66,22 +66,22 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
     
     var updateParentVolume = false
     
-    if (customBoundingVolume.hasRefChanges) {
-      autoBoundingVolume == null
-      customBoundingVolume.clearRefChanges()
+    if (customBoundingVolume.hasDataChanges) {
+      autoBoundingVolume.undefine()
+      customBoundingVolume.clearDataChanges()
       updateParentVolume = true
     }
     
     if (!customBoundingVolume.isDefined) {
-      if (autoBoundingVolume == null) {
-        autoBoundingVolume = new Oabb
+      if (!autoBoundingVolume.isDefined) {
+        autoBoundingVolume := new Oabb
       }
 
       if (autoBoundingVolume.hasDataChanges || hasShapeChanges()) {
-        autoBoundingVolume match {
+        autoBoundingVolume.update match {
           case bound: Oabb =>
             val range = if (elementRange.isDefined) elementRange.get else null
-            Bounded.rebuildAabb(range, geometry)(bound.update.min, bound.update.max)
+            Bounded.rebuildAabb(range, geometry)(bound.min, bound.max)
         }
         updateParentVolume = true
       }

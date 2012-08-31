@@ -74,14 +74,14 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
   private[scenegraph] final override def onParentChange(
     parent: AbstractNode[T, G], managed: ArrayBuffer[Spatial[T]]
   ) {
-    super.onParentChange(parent, managed)
+    onSpatialParentChange(parent, managed)
     
     if (parent != null) parentWorldEnvironment = parent.worldEnvironment
     else parentWorldEnvironment = null.asInstanceOf[G#Environment]
     
     val size = _children.size
     var i = 0; while (i < size) { val current = _children(i)
-      current.onParentChange(parent, managed)
+      current.onParentChange(this, managed)
       
       i += 1
     }
@@ -126,9 +126,9 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
     
     var updateParentVolume = false
     
-    if (customBoundingVolume.hasRefChanges) {
-      autoBoundingVolume == null
-      customBoundingVolume.clearRefChanges()
+    if (customBoundingVolume.hasDataChanges) {
+      autoBoundingVolume.undefine()
+      customBoundingVolume.clearDataChanges()
       updateParentVolume = true
     }
     
@@ -161,20 +161,20 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       }
       
       
-      if (resolveBoundingVolume == null) {
-        autoBoundingVolume = new Aabb
+      if (!autoBoundingVolume.isDefined) {
+        autoBoundingVolume := new Aabb
         updateBounding = true
       }
       
       if (updateBounding || uncheckedWorldTransformation.hasDataChanges) {
-        val bound = autoBoundingVolume.asInstanceOf[Aabb]
-        Bounded.rebuildAabb(this)(bound.update.min, bound.update.max)
+        val bound = autoBoundingVolume.update.asInstanceOf[Aabb]
+        Bounded.rebuildAabb(this)(bound.min, bound.max)
         updateParentVolume = true
       }
     }
     
     
-    if (resolveBoundingVolume.hasDataChanges) {
+    if (resolveBoundingVolume().hasDataChanges) {
       resolveBoundingVolume.clearDataChanges()
       updateParentVolume = true
     }
@@ -194,12 +194,12 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       else updateWorldTransformation()
     }
     
-    val updateChildren = update || customBoundingVolume.isDefined
+    val updateChildren = update || !customBoundingVolume.isDefined
     
     
     val frustumTest = 
       if (!enableCulling) Collision.Inside
-      else BoundingVolume.intersect(cullContext.view.frustum, resolveBoundingVolume, uncheckedWorldTransformation)
+      else BoundingVolume.intersect(cullContext.view.frustum, resolveBoundingVolume.get, uncheckedWorldTransformation)
     
     if (frustumTest != Collision.Outside) {
       if (animators != null && shouldRunAnimators) {

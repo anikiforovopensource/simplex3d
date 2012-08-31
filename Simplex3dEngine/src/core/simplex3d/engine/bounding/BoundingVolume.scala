@@ -21,6 +21,7 @@
 package simplex3d.engine
 package bounding
 
+import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.algorithm.intersection._
 import simplex3d.engine.util._
@@ -28,11 +29,18 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-abstract class BoundingVolume extends DataChangeListener
+trait ReadBoundingVolume extends Protected {
+  type Read = ReadBoundingVolume
+  type Mutable = BoundingVolume
+}
+
+trait BoundingVolume extends ReadBoundingVolume with Accessible {
+}
+
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.
-  final def intersect(frustum: Frustum, volume: BoundingVolume, worldTransformation: ReadTransformation)
+  final def intersect(frustum: Frustum, volume: ReadBoundingVolume, worldTransformation: ReadTransformation)
   :Int = {
     volume match {
       case bound: Aabb =>

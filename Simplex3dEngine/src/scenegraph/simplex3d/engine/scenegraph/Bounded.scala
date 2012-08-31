@@ -47,24 +47,21 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
    *  If the vertex geometry is not accessible (stored only in the GPU memory) then the bounding
    *  volume must be provided by the user.
    */
-  final val customBoundingVolume = SharedRef[BoundingVolume](StructuralChangeListener.Ignore)// XXX must not be shared, init with factory then set.
-  private[scenegraph] final var autoBoundingVolume: BoundingVolume = null
+  final val customBoundingVolume = Property[BoundingVolume]//XXX rename to boundingVolume
+  private[scenegraph] final val autoBoundingVolume = Property[BoundingVolume]
   
   private[scenegraph] final var shouldRunAnimators = false
   private[scenegraph] final var animators: ArrayBuffer[Updater] = null
   
   
-  private[scenegraph] final def resolveBoundingVolume: BoundingVolume = {
-    if (customBoundingVolume.isDefined) customBoundingVolume.get else autoBoundingVolume
+  private[scenegraph] final def resolveBoundingVolume(): Property[BoundingVolume] = {
+    if (customBoundingVolume.isDefined) customBoundingVolume else autoBoundingVolume
   }
   
   /** Only valid for meshes that were accepted for rendering (in the renderArray).
-   * XXX Possibly hide this method as debugging only.
+   * XXX hide this method as debugging only.
    */
-  final def boundingVolume = {
-    if (customBoundingVolume.isDefined) customBoundingVolume.get
-    else autoBoundingVolume
-  }
+  final def boundingVolume: ReadBoundingVolume = resolveBoundingVolume().get
   
   
   /** Animators are executed only for visible objects and only once per frame.
@@ -101,7 +98,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     
     val res =
       if (enableCulling) BoundingVolume.intersect(
-        cullContext.view.frustum, resolveBoundingVolume, uncheckedWorldTransformation
+        cullContext.view.frustum, resolveBoundingVolume.get, uncheckedWorldTransformation
       )
       else Collision.Inside
 
@@ -137,7 +134,7 @@ object Bounded {
     val pmax = Vec3(0)
     
     def process(bounded: Bounded[_, _], worldTransformation: ReadTransformation) {
-      bounded.resolveBoundingVolume match {
+      bounded.resolveBoundingVolume().get match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)
           resultMax := max(resultMax, b.max)

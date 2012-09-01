@@ -53,7 +53,7 @@ object CustomRenderer extends default.BaseApp {
     
     // Position the camera.
     world.camera.transformation.update.translation := Vec3(-10, 25, 100)
-    world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY)
+    world.camera.transformation.update.lookAt(Vec3.Zero, Vec3.UnitY, true)
     
     // Init camera controls.
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
@@ -102,6 +102,7 @@ object CustomRenderer extends default.BaseApp {
     )
     
     // Position the mesh.
+    mesh.transformation := new ComponentTransformation3d
     mesh.transformation.update.rotation :=
       Quat4 rotateX(radians(25)) rotateY(radians(-30))
       

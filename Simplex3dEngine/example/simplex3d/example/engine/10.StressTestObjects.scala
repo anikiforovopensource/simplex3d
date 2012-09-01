@@ -14,6 +14,7 @@ import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 import simplex3d.engine.graphics._
+import simplex3d.engine.transformation._
 
 
 /** Test raw glUniform() and glDrawElemenets() performance.
@@ -111,6 +112,7 @@ object StressTestObjects extends default.App {
       
       mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
       
+      mesh.transformation := new ComponentTransformation3d
       mesh.transformation.update.scale := scale
       mesh.transformation.update.rotation := randomRotation()
       mesh.transformation.update.translation := curve(i, 0)

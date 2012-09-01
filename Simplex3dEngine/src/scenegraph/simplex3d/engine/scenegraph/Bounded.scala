@@ -61,7 +61,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   /** Only valid for meshes that were accepted for rendering (in the renderArray).
    * XXX hide this method as debugging only.
    */
-  final def boundingVolume: ReadBoundingVolume = resolveBoundingVolume().get
+  final def boundingVolume: BoundingVolume = resolveBoundingVolume().get
   
   
   /** Animators are executed only for visible objects and only once per frame.
@@ -133,14 +133,14 @@ object Bounded {
     val pmin = Vec3(0)
     val pmax = Vec3(0)
     
-    def process(bounded: Bounded[_, _], worldTransformation: ReadTransformation) {
+    def process[T <: Transformation](bounded: Bounded[_, _], worldTransformation: Property[T]) {
       bounded.resolveBoundingVolume().get match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)
           resultMax := max(resultMax, b.max)
         case b: Oabb =>
-          if (worldTransformation.isSet) {
-            intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.matrix)(pmin, pmax)
+          if (worldTransformation.isDefined) {
+            intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.get.matrix)(pmin, pmax)
             resultMin := min(resultMin, pmin)
             resultMax := max(resultMax, pmax)
           }
@@ -149,8 +149,8 @@ object Bounded {
             resultMax := max(resultMax, b.max)
           }
         case b: Obb =>
-          if (worldTransformation.isSet) {
-            intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.matrix)(pmin, pmax)
+          if (worldTransformation.isDefined) {
+            intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.get.matrix)(pmin, pmax)
           }
           else {
             intersection.Aabb.projectAabb(b.min, b.max, b.transformation)(pmin, pmax)

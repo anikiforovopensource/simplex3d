@@ -283,7 +283,7 @@ extends Entity[T, G](name) {
         }
       }
       
-      val transformation = child.uncheckedWorldTransformation.matrix
+      val transformation = child.uncheckedWorldMatrix
       val normalMatrix = if (srcNormals != null) transpose(inverse(Mat3(transformation))) else null
       transformData(transformation, normalMatrix)
       

@@ -14,6 +14,7 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.transformation._
 
 
 object InterleavedAttributes extends default.App {
@@ -60,6 +61,7 @@ object InterleavedAttributes extends default.App {
     }
     mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
     
+    mesh.transformation := new ComponentTransformation3d
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 40
     

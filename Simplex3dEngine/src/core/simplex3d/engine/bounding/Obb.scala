@@ -33,7 +33,7 @@ extends BoundingVolume
   def readType = classOf[Obb]
   def mutableCopy() = new Obb(min.mutableCopy(), max.mutableCopy(), transformation.mutableCopy())
   
-  def :=(r: ReadBoundingVolume) {
+  def :=(r: BoundingVolume) {
     this := r.asInstanceOf[Obb]
   }
   

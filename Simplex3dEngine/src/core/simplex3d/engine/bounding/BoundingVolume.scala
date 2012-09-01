@@ -29,34 +29,32 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
-trait ReadBoundingVolume extends Protected {
-  type Read = ReadBoundingVolume
-  type Mutable = BoundingVolume
-}
 
-trait BoundingVolume extends ReadBoundingVolume with Accessible {
+trait BoundingVolume extends Accessible {
+  type Read = BoundingVolume
+  type Mutable = BoundingVolume
 }
 
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.
-  final def intersect(frustum: Frustum, volume: ReadBoundingVolume, worldTransformation: ReadTransformation)
+  final def intersect[T <: Transformation](frustum: Frustum, volume: BoundingVolume, worldTransformation: Property[T])
   :Int = {
     volume match {
       case bound: Aabb =>
         frustum.intersectAabb(bound.min, bound.max)
       case bound: Oabb =>
-        if (worldTransformation.isSet) frustum.intersectObb(
+        if (worldTransformation.isDefined) frustum.intersectObb(
           bound.min, bound.max,
-          worldTransformation.matrix
+          worldTransformation.get.matrix
         )
         else frustum.intersectAabb(
           bound.min, bound.max
         )
       case bound: Obb =>
-        if (worldTransformation.isSet) frustum.intersectObb(
+        if (worldTransformation.isDefined) frustum.intersectObb(
           bound.min, bound.max,
-          bound.transformation concat worldTransformation.matrix
+          bound.transformation concat worldTransformation.get.matrix
         )
         else frustum.intersectObb(
           bound.min, bound.max,

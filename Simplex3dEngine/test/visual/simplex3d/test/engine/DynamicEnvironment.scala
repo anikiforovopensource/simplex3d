@@ -34,6 +34,7 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.transformation._
 
 
 /** This test checks environment propagation under different conditions
@@ -129,6 +130,7 @@ object DynamicEnvironment extends App {
         mesh.geometry.vertices := Attributes.fromData(vertices)
         
         val scale = 50 - i/2*10
+        mesh.transformation := new ComponentTransformation3d
         mesh.transformation.update.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
         mesh.transformation.update.scale := scale
         

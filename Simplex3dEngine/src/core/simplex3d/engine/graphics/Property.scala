@@ -28,6 +28,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final val enforceDefined: Boolean
 ) extends StructuralChangeNotifier
 {
+  
   protected final var listener: StructuralChangeListener = _
   private[engine] final override def register(listener: StructuralChangeListener) {
     if (this.listener != null) throw new IllegalStateException("The property can register StructuralChangeListener only once.")
@@ -92,6 +93,7 @@ final class AccessibleProperty[T <: Accessible] private[engine] (
 extends Property[T](enforceDefined) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
+  def signalDataChanges() { changed = true }
 }
 
 object Property {

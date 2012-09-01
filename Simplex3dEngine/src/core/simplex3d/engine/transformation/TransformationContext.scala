@@ -24,5 +24,5 @@ package transformation
 
 abstract class TransformationContext {
   type Transformation <: transformation.Transformation
-  def mkTransformation(camera: Boolean = false): Transformation
+  val Identity: Transformation#Read
 }

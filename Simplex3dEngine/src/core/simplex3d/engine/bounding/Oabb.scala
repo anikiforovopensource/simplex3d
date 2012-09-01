@@ -36,7 +36,7 @@ final class Oabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends Bound
   def readType = classOf[Oabb]
   def mutableCopy() = new Oabb(min.mutableCopy(), max.mutableCopy())
   
-  def :=(r: ReadBoundingVolume) {
+  def :=(r: BoundingVolume) {
     this := r.asInstanceOf[Oabb]
   }
   

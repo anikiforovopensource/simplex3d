@@ -33,6 +33,7 @@ import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.transformation._
 
 
 object ObbTest extends default.App {
@@ -82,6 +83,7 @@ object ObbTest extends default.App {
     
     movingCube.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
+    movingCube.transformation := new ComponentTransformation3d
     movingCube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30))
     movingCube.transformation.update.scale := cubeScale
     
@@ -95,6 +97,7 @@ object ObbTest extends default.App {
     
     cube1.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
+    cube1.transformation := new ComponentTransformation3d
     cube1.transformation.update.scale := cubeScale
     cube1.transformation.update.translation := -translation
     
@@ -108,6 +111,7 @@ object ObbTest extends default.App {
     
     cube2.material.textureUnits := BindingList[TextureUnit](new TextureUnit(texture))
     
+    cube2.transformation := new ComponentTransformation3d
     cube2.transformation.update.rotation := Quat4 rotateX(radians(-15)) rotateZ(radians(30))
     cube2.transformation.update.scale := cubeScale
     cube2.transformation.update.translation := translation
@@ -122,10 +126,10 @@ object ObbTest extends default.App {
     val min = Vec3(-0.5)
     val max = Vec3(0.5)
 
-    val intersection1 = Obb.intersectAabb(min, max, movingCube.worldTransformation.matrix)(min*cubeScale - translation, max*cubeScale - translation)
+    val intersection1 = Obb.intersectAabb(min, max, movingCube.worldMatrix)(min*cubeScale - translation, max*cubeScale - translation)
     if (intersection1 != Vec3.Zero) println("Aabb " + time.total + ": " + intersection1)
     
-    val intersection2 = Obb.intersectObb(min, max, movingCube.worldTransformation.matrix)(min, max, cube2.worldTransformation.matrix)
+    val intersection2 = Obb.intersectObb(min, max, movingCube.worldMatrix)(min, max, cube2.worldMatrix)
     if (intersection2 != Vec3.Zero) println("Obb " + time.total + ": " + intersection2)
   }
 }

@@ -25,6 +25,7 @@ import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
 import simplex3d.engine.util._
 import simplex3d.engine.scene._
+import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
@@ -43,17 +44,22 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
-  final val transformation: T#Transformation = {
-    transformationContext.mkTransformation(this.isInstanceOf[AbstractCamera])
+  final val transformation = Property[T#Transformation]
+  private[scenegraph] final val uncheckedWorldTransformation = Property[T#Transformation]
+  
+  private[scenegraph] def uncheckedWorldMatrix = {
+    if (uncheckedWorldTransformation.isDefined) uncheckedWorldTransformation.get.matrix
+    else Mat4x3.Identity
   }
-  private[scenegraph] final val uncheckedWorldTransformation: T#Transformation =
-    transformationContext.mkTransformation()
   
-  protected def worldMatrix = uncheckedWorldTransformation.matrix
-
+  def worldMatrix = {
+    val t = worldTransformation
+    if (t.isDefined) t.get.matrix
+    else Mat4x3.Identity
+  }
   
   
-  final def worldTransformation: T#Transformation#Read = {
+  final def worldTransformation: Property[T#Transformation] = {
     def update(node: AbstractNode[T, _]) :Boolean = {
       val parentUpdated = if (node.parent != null) update(node.parent) else false
       
@@ -67,17 +73,12 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
     if (parent != null) update(parent)
     propagateWorldTransformation()
     
-    uncheckedWorldTransformation.asInstanceOf[T#Transformation#Read]
+    uncheckedWorldTransformation
   }
   
   private[scenegraph] final def propagateWorldTransformation() {
     val parentTransformation = if (parent == null) null else parent.uncheckedWorldTransformation
-    
-    transformation.propagateChanges(
-      parentTransformation.asInstanceOf[transformation.Read],
-      uncheckedWorldTransformation.asInstanceOf[transformation.Mutable]
-    )
-    
+    Transformation.propagateChanges(parentTransformation, transformation, uncheckedWorldTransformation)
     transformation.clearDataChanges()
   }
   

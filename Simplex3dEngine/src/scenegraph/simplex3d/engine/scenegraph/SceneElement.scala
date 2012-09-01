@@ -29,7 +29,9 @@ import simplex3d.engine.transformation._
 
 abstract class SceneElement[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (name: String)(
   implicit transformationContext: T, final val graphicsContext: G
-) extends Spatial[T](name) {
+)
+extends Spatial[T](name)
+{
   protected type Graphics = G
   
   private[scenegraph] def onParentChange(

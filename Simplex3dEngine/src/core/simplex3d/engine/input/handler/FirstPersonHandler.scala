@@ -26,11 +26,12 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.input._
+import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
 
 class FirstPersonHandler(
-  val transformation: ComponentTransformation3d,
+  val transformation: Property[ComponentTransformation3d],
   val motionSpeed: Double = 20.0,
   val mouseRotationSpeed: Double = 0.3,
   val keyboardRotationSpeed: Double = 100
@@ -40,7 +41,7 @@ class FirstPersonHandler(
   override def update(input: Input, time: TimeStamp) {
     val keyDown = input.keyboard.isKeyDown(_); import KeyCode._
     
-    val rotated = transformation.rotation.rotateVector(Vec3.UnitZ)
+    val rotated = transformation.get.rotation.rotateVector(Vec3.UnitZ)
     val xzPlaneVec = normalize(rotated.xz)
 
     val px = clamp(xzPlaneVec.y, -1, 1)

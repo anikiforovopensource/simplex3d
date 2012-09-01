@@ -25,19 +25,43 @@ import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.util._
+import simplex3d.engine.graphics._
 
 
-abstract class ReadTransformation extends DataChangeListener with Protected {
+abstract class ReadTransformation extends Protected {
   type Read <: ReadTransformation
   type Mutable <: Transformation
   
-  def propagateChanges(parent: Read, result: Mutable) :Unit
+  def propagateChanges(parent: Read, result: Mutable)
   def matrix :ReadMat4x3
-  
-  def isSet: Boolean
 }
 
+
 trait Transformation extends ReadTransformation with Accessible {
-  def :=(t: Read) :Unit
-  def unset() :Unit
+  
+}
+
+
+object Transformation {
+  
+  def propagateChanges[T <: Transformation](parent: Property[T], child: Property[T], result: Property[T]) {
+    import AccessChanges._
+    
+    val parentChanged = if (parent != null) parent.hasDataChanges else false
+    
+    if (parentChanged || child.hasDataChanges) {
+      if (parent != null && parent.isDefined) {
+        if (child.isDefined) {
+          val c = child.get
+          c.propagateChanges(parent.get.asInstanceOf[c.Read], result.update.asInstanceOf[c.Mutable])
+        }
+        else {
+          result := parent
+        }
+      }
+      else {
+        result := child
+      }
+    }
+  }
 }

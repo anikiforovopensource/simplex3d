@@ -28,11 +28,11 @@ import simplex3d.engine.util._
 import simplex3d.engine.scene._
 
 
-sealed abstract class ReadComponentTransformation3d(protected val camera: Boolean) extends ReadTransformation {
-  import AccessChanges._
-  
+//XXX this name is too long, find a better one.
+sealed abstract class ReadComponentTransformation3d extends ReadTransformation {
   type Read = ReadComponentTransformation3d
   type Mutable = ComponentTransformation3d
+  
   final def readType = classOf[ReadComponentTransformation3d]
   
   def scale: ReadDoubleRef
@@ -41,101 +41,38 @@ sealed abstract class ReadComponentTransformation3d(protected val camera: Boolea
   
   
   final def mutableCopy() = {
-    val copy = new ComponentTransformation3d(camera)
-    if (isSet) copy := this
+    val copy = new ComponentTransformation3d
+    copy := this
     copy
   }
   
   final def propagateChanges(parent: ReadComponentTransformation3d, result: ComponentTransformation3d) {
-    val parentChanged = if (parent != null) parent.hasDataChanges else false
-    
-    if (parentChanged || this.hasDataChanges) {
-      if (parent != null && parent.isSet) {
-        if (this.isSet) {
-          val res = result.update
-          res.scale := this.scale * parent.scale
-          res.rotation := this.rotation rotate parent.rotation
-          res.translation := parent.rotation.rotateVector(this.translation*parent.scale) + parent.translation
-        }
-        else {
-          result := parent
-        }
-      }
-      else {
-        if (this.isSet)
-          result := this
-        else
-          result.unset()
-      }
-    }
+    result.scale := this.scale * parent.scale
+    result.rotation := this.rotation rotate parent.rotation
+    result.translation := parent.rotation.rotateVector(this.translation*parent.scale) + parent.translation
   }
 }
 
-final class ComponentTransformation3d(camera: Boolean)
-extends ReadComponentTransformation3d(camera) with Transformation
+final class ComponentTransformation3d
+extends ReadComponentTransformation3d with Transformation
 {
-  final class MutableSubtext {
-    def scale = _scale
-    def rotation = _rotation
-    def translation = _translation
-    
-    def lookAt(point: inVec3, worldUp: inVec3) {
-      val dir = if (camera) translation - point else point - translation 
-      val rotationMat = functions.lookAt(dir, worldUp)
-      rotation := quaternion(rotationMat)
-    }
-  }
-  private val mutableSubtext = new MutableSubtext
+  val scale = new DoubleRef(1.0)
+  val rotation = Quat4.Identity.mutableCopy()
+  val translation = Vec3(0)
   
-  private[this] val _scale = new DoubleRef(1.0)
-  private[this] val _rotation = Quat4.Identity.mutableCopy()
-  private[this] val _translation = Vec3(0)
-  
-  def scale: ReadDoubleRef = _scale
-  def rotation: ReadQuat4 = _rotation
-  def translation: ReadVec3 = _translation
-  
-  private[this] var set = false
-  def isSet = set
-  def unset() {
-    val m = update
-    
-    m.scale := 1
-    m.rotation := Quat4.Identity
-    m.translation := Vec3.Zero
-    
-    set = false
+  def lookAt(point: inVec3, worldUp: inVec3, isCamera: Boolean = false) {
+    val dir = if (isCamera) translation - point else point - translation 
+    val rotationMat = functions.lookAt(dir, worldUp)
+    rotation := quaternion(rotationMat)
   }
   
   def :=(t: ReadComponentTransformation3d) {
-    val m = update
-    
-    m.scale := t.scale
-    m.rotation := t.rotation
-    m.translation := t.translation
+    scale := t.scale
+    rotation := t.rotation
+    translation := t.translation
   }
   
-  def update = {
-    dataChanges = true
-    updateMatrix = true
-    set = true
-    mutableSubtext
-  }
-  
-  
-  private[this] var _matrix: Mat4x3 = _
-  private[this] var updateMatrix = true
-  
-  def matrix :ReadMat4x3 = {
-    if (_matrix == null) _matrix = Mat4x3(1)
-    
-    if (updateMatrix) {
-      _matrix := transformation(Vec3(scale), rotationMat(rotation), translation)
-      updateMatrix = false
-    }
-    
-    _matrix
-  }
+  def matrix :ReadMat4x3 = transformation(Vec3(scale), rotationMat(rotation), translation)//XXX somehow cache the matrix on the call site?
   
   
   override def toString() :String = {

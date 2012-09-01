@@ -55,9 +55,9 @@ object DynamicTexture extends default.App {
     mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
     
     
-    val transformation = new ComponentTransformation3d(false)
-    transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))//XXX should not require .update.
-    transformation.update.scale := 50
+    val transformation = new ComponentTransformation3d
+    transformation.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))//XXX should not require .update.
+    transformation.scale := 50
     mesh.transformation := transformation
     
     val noise = ClassicalGradientNoise

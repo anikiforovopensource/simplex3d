@@ -33,6 +33,7 @@ import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.transformation._
 
 
 object FrustumTest extends default.App {
@@ -72,6 +73,7 @@ object FrustumTest extends default.App {
     cube.material.textureUnits := new BindingList[TextureUnit]
     cube.material.textureUnits.update += new TextureUnit(objectTexture)
     
+    cube.transformation := new ComponentTransformation3d
     cube.transformation.update.scale := 20
     cube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
     
@@ -82,7 +84,7 @@ object FrustumTest extends default.App {
     import simplex3d.algorithm.intersection._
     
     val frustum = Frustum(world.camera.viewProjection)
-    val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldTransformation.matrix)
+    val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldMatrix)
     if (intersection != Collision.Inside) println(time.total + ": " + Collision.toString(intersection))
   }
 

@@ -44,22 +44,17 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllerContext: ControllerContext = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
-  final val transformation = Property[T#Transformation]
-  private[scenegraph] final val uncheckedWorldTransformation = Property[T#Transformation]
   
-  private[scenegraph] def uncheckedWorldMatrix = {
-    if (uncheckedWorldTransformation.isDefined) uncheckedWorldTransformation.get.matrix
-    else Mat4x3.Identity
+  final val transformation = TransformationBinding[T#Transformation](transformationContext.factory)
+  
+  private[scenegraph] final val uncheckedWorldTransformation = {
+    TransformationBinding[T#Transformation](transformationContext.factory)
   }
   
-  def worldMatrix = {
-    val t = worldTransformation
-    if (t.isDefined) t.get.matrix
-    else Mat4x3.Identity
-  }
+  def worldMatrix = worldTransformation.matrix
   
   
-  final def worldTransformation: Property[T#Transformation] = {
+  final def worldTransformation: TransformationBinding[T#Transformation] = {
     def update(node: AbstractNode[T, _]) :Boolean = {
       val parentUpdated = if (node.parent != null) update(node.parent) else false
       

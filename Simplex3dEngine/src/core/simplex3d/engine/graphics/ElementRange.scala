@@ -52,5 +52,5 @@ extends ReadElementRange with Accessible {
 }
 
 object ElementRange {
-  val Default: ReadElementRange = new ElementRange
+  val Factory = () => new ElementRange
 }

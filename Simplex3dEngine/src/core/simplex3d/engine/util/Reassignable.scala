@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -18,37 +18,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.graphics
+package simplex3d.engine.util
 
 import simplex3d.math.types._
-import simplex3d.engine.util._
 
 
-sealed abstract class Property[T <: Accessible] private[engine] (
+sealed abstract class Reassignable[T <: Accessible] private[engine] (
   private[this] final val enforceDefined: Boolean
 ) extends StructuralChangeNotifier
 {
   
+  //*** StructuralChangeListener Code *********************************************************************************
+  
   protected final var listener: StructuralChangeListener = _
+  
   private[engine] final override def register(listener: StructuralChangeListener) {
     if (this.listener != null) throw new IllegalStateException("The property can register StructuralChangeListener only once.")
     this.listener = listener
   }
+  
   private[engine] final override def unregister() {
     throw new UnsupportedOperationException("Properties cannot unregister StructuralChangeListeners.")
   }
+  
   protected final def registerStructuralChangeListener(listener: StructuralChangeListener) {}
   protected final def unregisterStructuralChangeListener() {}
   
   
+  //*** Property Code *************************************************************************************************
+  
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
   
-  final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
+  final def get: T = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
   
   final def undefine() {
-    if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Property.defined() and cannot be undefined.")
+    if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Reassignable.defined() and cannot be undefined.")
     
     if (isDefined) {
       if (listener != null) listener.signalStructuralChanges()
@@ -64,7 +70,13 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     value
   }
   
-  final def :=(t: T#Read) {
+  private final def init(value: T) {
+    this.value = value
+    value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+    changed = true
+  }
+  
+  final def :=(t: T) {
     if (isDefined && (value.readType eq t.readType)) {
       val stable = value
       stable := t.asInstanceOf[stable.Read]
@@ -78,36 +90,32 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     changed = true
   }
   
-  final def :=(p: Property[T]) {
+  final def :=(p: Reassignable[T]) {
     if (p.isDefined) this := p.get else undefine()
   }
   
   final override def toString() :String = {
-    "Property(" + (if (isDefined) get.toString else "undefined" ) + ")"
+    "Reassignable(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }
 
-final class AccessibleProperty[T <: Accessible] private[engine] (
+final class AccessibleReassignable[T <: Accessible] private[engine] (
   enforceDefined: Boolean
 )
-extends Property[T](enforceDefined) {
+extends Reassignable[T](enforceDefined) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
   def signalDataChanges() { changed = true }
 }
 
-object Property {
-  def apply[T <: Accessible]() :Property[T] = new AccessibleProperty(false)
-  
-  def optional[T <: Accessible](value: T) :Property[T] = {
-    val prop = new AccessibleProperty[T](false)
-    prop := value.asInstanceOf[T#Read]
-    prop
+object Reassignable {
+  def optional[T <: Accessible]() :Reassignable[T] = {
+    new AccessibleReassignable[T](false)
   }
   
-  def defined[T <: Accessible](value: T) :Property[T] = {
-    val prop = new AccessibleProperty[T](true)
-    prop := value.asInstanceOf[T#Read]
+  def defined[T <: Accessible](value: T) :Reassignable[T] = {
+    val prop = new AccessibleReassignable[T](true)
+    prop.init(value)
     prop
   }
 }

@@ -33,7 +33,6 @@ import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.transformation._
 
 
 object FrustumTest extends default.App {
@@ -70,10 +69,8 @@ object FrustumTest extends default.App {
     cube.geometry.texCoords := Attributes.fromData(texCoords)
     
     val objectTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
-    cube.material.textureUnits := new BindingList[TextureUnit]
     cube.material.textureUnits.update += new TextureUnit(objectTexture)
     
-    cube.transformation := new ComponentTransformation3d
     cube.transformation.update.scale := 20
     cube.transformation.update.rotation := Quat4 rotateX(radians(20)) rotateY(radians(-30)) 
     

@@ -25,6 +25,6 @@ package object transformation {
   
   final class ComponentTransformation3dContext extends TransformationContext {
     type Transformation = ComponentTransformation3d
-    val Identity: Transformation#Read = new ComponentTransformation3d
+    val factory = () => new ComponentTransformation3d
   }
 }

@@ -92,8 +92,6 @@ object CustomRenderer extends default.BaseApp {
     }
     
     
-    mesh.material.textureUnits := new BindingList[TextureUnit]
-    
     mesh.material.textureUnits.update += new TextureUnit(
       objectTexture, Mat3x2.Identity
     )
@@ -102,7 +100,6 @@ object CustomRenderer extends default.BaseApp {
     )
     
     // Position the mesh.
-    mesh.transformation := new ComponentTransformation3d
     mesh.transformation.update.rotation :=
       Quat4 rotateX(radians(25)) rotateY(radians(-30))
       
@@ -113,7 +110,6 @@ object CustomRenderer extends default.BaseApp {
     
     
     // Attach lights.
-    world.environment.lighting := new Lighting
     world.environment.lighting.update.lights += new PointLight(Vec3(4), 0.1, 0)
     world.environment.lighting.update.lights += new PointLight(Vec3(6), 0.1, 0)
     
@@ -124,11 +120,9 @@ object CustomRenderer extends default.BaseApp {
     // Reuse texture rendering for lights.
     lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)
     val lightTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(1) }
-    lightMesh.material.textureUnits := new BindingList[TextureUnit]
     lightMesh.material.textureUnits.update += new TextureUnit(lightTexture, Mat3x2.Identity)
     
     // Set vertex coordinates that will be used to position lights.
-    lightMesh.elementRange := new ElementRange
     lightMesh.elementRange.update.count := 2
     lightMesh.geometry.vertices.write(2) = Vec3(0, 40, 0)
     lightMesh.geometry.vertices.write(3) = Vec3(-40, 0, 40)
@@ -223,13 +217,13 @@ object CustomRenderer extends default.BaseApp {
     init(classOf[Geometry])
   }
   class Material extends prototype.Material {
-    val textureUnits = Property[BindingList[TextureUnit]]
+    val textureUnits = Property.optional(() => new BindingList[TextureUnit])
     
     init(classOf[Material])
   }
   
   class Environment extends prototype.Environment {
-    val lighting = Property[Lighting]
+    val lighting = Property.optional(() => new Lighting)
     
     init(classOf[Environment])
   }

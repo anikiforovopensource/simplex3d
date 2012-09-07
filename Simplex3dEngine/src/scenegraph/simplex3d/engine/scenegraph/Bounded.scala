@@ -47,14 +47,14 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
    *  If the vertex geometry is not accessible (stored only in the GPU memory) then the bounding
    *  volume must be provided by the user.
    */
-  final val customBoundingVolume = Property[BoundingVolume]//XXX rename to boundingVolume
-  private[scenegraph] final val autoBoundingVolume = Property[BoundingVolume]
+  final val customBoundingVolume = Reassignable.optional[BoundingVolume]//XXX rename to boundingVolume
+  private[scenegraph] final val autoBoundingVolume = Reassignable.optional[BoundingVolume]
   
   private[scenegraph] final var shouldRunAnimators = false
   private[scenegraph] final var animators: ArrayBuffer[Updater] = null
   
   
-  private[scenegraph] final def resolveBoundingVolume(): Property[BoundingVolume] = {
+  private[scenegraph] final def resolveBoundingVolume(): Reassignable[BoundingVolume] = {
     if (customBoundingVolume.isDefined) customBoundingVolume else autoBoundingVolume
   }
   
@@ -133,14 +133,14 @@ object Bounded {
     val pmin = Vec3(0)
     val pmax = Vec3(0)
     
-    def process[T <: Transformation](bounded: Bounded[_, _], worldTransformation: Property[T]) {
+    def process[T <: Transformation](bounded: Bounded[_, _], worldTransformation: TransformationBinding[T]) {
       bounded.resolveBoundingVolume().get match {
         case b: Aabb =>
           resultMin := min(resultMin, b.min)
           resultMax := max(resultMax, b.max)
         case b: Oabb =>
           if (worldTransformation.isDefined) {
-            intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.get.matrix)(pmin, pmax)
+            intersection.Aabb.projectAabb(b.min, b.max, worldTransformation.matrix)(pmin, pmax)
             resultMin := min(resultMin, pmin)
             resultMax := max(resultMax, pmax)
           }
@@ -150,7 +150,7 @@ object Bounded {
           }
         case b: Obb =>
           if (worldTransformation.isDefined) {
-            intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.get.matrix)(pmin, pmax)
+            intersection.Aabb.projectAabb(b.min, b.max, b.transformation concat worldTransformation.matrix)(pmin, pmax)
           }
           else {
             intersection.Aabb.projectAabb(b.min, b.max, b.transformation)(pmin, pmax)

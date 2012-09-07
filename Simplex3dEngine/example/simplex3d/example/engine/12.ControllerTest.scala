@@ -14,7 +14,6 @@ import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.transformation._
 
 
 object ControllerTest extends default.App {
@@ -96,7 +95,7 @@ object ControllerTest extends default.App {
     node.geometry.normals := normals
     node.geometry.texCoords := texCoords
     
-    node.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
+    node.material.textureUnits.update += new TextureUnit(objectTexture)
     
     world.attach(node)
 
@@ -109,7 +108,6 @@ object ControllerTest extends default.App {
       
       val instance = node.appendInstance("Instance" + i)
       
-      instance.transformation := new ComponentTransformation3d
       instance.transformation.update.scale := scale
       instance.transformation.update.rotation := randomRotation()
       instance.transformation.update.translation := curve(i, 0)

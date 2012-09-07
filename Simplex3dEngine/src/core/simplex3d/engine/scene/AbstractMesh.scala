@@ -34,7 +34,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     def worldMatrix = self.worldMatrix
     
     val technique = SharedRef[Technique](StructuralChangeListener.Ignore)
-    val elementRange = Property[ElementRange]
+    val elementRange = Property.optional(ElementRange.Factory)
     
     def hasStructuralChanges :Boolean = {
       geometry.hasStructuralChanges ||

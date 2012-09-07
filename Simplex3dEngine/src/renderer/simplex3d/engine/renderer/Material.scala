@@ -30,8 +30,8 @@ import simplex3d.engine.graphics._
 
 
 class Material extends prototype.Material {
-  val color = Property[Vec4]
-  val textureUnits = Property[BindingList[TextureUnit]]
+  val color = Property.optional(() => Vec4(0))
+  val textureUnits = Property.optional(() => new BindingList[TextureUnit])
   
   init(classOf[Material])
 }

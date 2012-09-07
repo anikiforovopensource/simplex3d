@@ -27,6 +27,7 @@ import simplex3d.data._
 import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
+import simplex3d.engine.transformation._
 
 
 object AccessChanges {
@@ -38,18 +39,24 @@ object AccessChanges {
   :DataChangeListener#DataSubtext = listener.dataSubtext
 
   
-  implicit def accessProperty(property: Property[_])
-  = property.asInstanceOf[AccessibleProperty[_]]
+  implicit def accessProperty(accessible: Property[_])
+  = accessible.asInstanceOf[AccessibleProperty[_]]
   
-  implicit def accessSharedRef(property: SharedRef[_])
-  = property.asInstanceOf[AccessibleSharedRef]
+  implicit def accessReassignable(accessible: Reassignable[_])
+  = accessible.asInstanceOf[AccessibleReassignable[_]]
   
-  implicit def accessAttributeBinding(property: AttributeBinding[_, _])
-  = property.asInstanceOf[AccessibleAttributeBinding[_, _]]
+  implicit def accessTransformationBinding(accessible: TransformationBinding[_])
+  = accessible.asInstanceOf[AccessibleTransformationBinding[_]]
+  
+  implicit def accessSharedRef(accessible: SharedRef[_])
+  = accessible.asInstanceOf[AccessibleSharedRef]
+  
+  implicit def accessAttributeBinding(accessible: AttributeBinding[_, _])
+  = accessible.asInstanceOf[AccessibleAttributeBinding[_, _]]
   
   
-  implicit def attributeSharedSubtext(sharedState: AttributesSharedState)
-  :AttributesSharedState#Subtext = sharedState.subtext
+  implicit def attributeSharedSubtext(sharedState: AttributesSharedState) :AttributesSharedState#Subtext =
+    sharedState.subtext
   
   implicit def textureSubtext(texture: Texture[_]) =
     texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]

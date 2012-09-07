@@ -31,7 +31,7 @@ import simplex3d.engine.transformation._
 
 
 class FirstPersonHandler(
-  val transformation: Property[ComponentTransformation3d],
+  val transformation: TransformationBinding[ComponentTransformation3d],
   val motionSpeed: Double = 20.0,
   val mouseRotationSpeed: Double = 0.3,
   val keyboardRotationSpeed: Double = 100

@@ -41,7 +41,6 @@ extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera {
   protected val _viewProjection = Mat4(1)
   protected val _inverseViewProjection = Mat4(1)
   
-  transformation := transformationContext.Identity
   
   def view: ReadMat4x3 = {
     if (worldTransformation.hasDataChanges) sync()
@@ -59,7 +58,7 @@ extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera {
   private def sync() {
     import AccessChanges._
     
-    _view := inverse(worldMatrix)
+    _view := inverse(worldTransformation.matrix)
     _viewProjection := projection*Mat4(_view)
     _inverseViewProjection := inverse(_viewProjection)
     

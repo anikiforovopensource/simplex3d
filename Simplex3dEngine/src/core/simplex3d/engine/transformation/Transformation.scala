@@ -33,7 +33,8 @@ abstract class ReadTransformation extends Protected {
   type Mutable <: Transformation
   
   def propagateChanges(parent: Read, result: Mutable)
-  def matrix :ReadMat4x3
+  private[engine] final def matrix() :Mat4x3 = toMatrix()
+  protected def toMatrix() :Mat4x3
 }
 
 
@@ -44,7 +45,9 @@ trait Transformation extends ReadTransformation with Accessible {
 
 object Transformation {
   
-  def propagateChanges[T <: Transformation](parent: Property[T], child: Property[T], result: Property[T]) {
+  def propagateChanges[T <: Transformation](
+    parent: TransformationBinding[T], child: TransformationBinding[T], result: TransformationBinding[T]
+  ) {
     import AccessChanges._
     
     val parentChanged = if (parent != null) parent.hasDataChanges else false

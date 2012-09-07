@@ -34,7 +34,6 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.transformation._
 
 
 /** This test checks environment propagation under different conditions
@@ -130,7 +129,6 @@ object DynamicEnvironment extends App {
         mesh.geometry.vertices := Attributes.fromData(vertices)
         
         val scale = 50 - i/2*10
-        mesh.transformation := new ComponentTransformation3d
         mesh.transformation.update.translation := Vec3(-0.5*scale, 0.5*scale, 0.5*scale)*0.9999
         mesh.transformation.update.scale := scale
         
@@ -141,25 +139,15 @@ object DynamicEnvironment extends App {
     }).toArray
 
     
-    nodes(6).environment.intensity := new testenv.Intensity
     nodes(6).environment.intensity.update.value := 0.75
-    
-    for (i <- 0 until 7) {
-      nodes(i).environment.nodeColor := new testenv.NodeColor
-      nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0)
-    }
-    
-    nodes(0).environment.contrast := new testenv.Contrast
+    for (i <- 0 until 7) nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0)
     nodes(0).environment.contrast.update.factor := 0.1
     
     scene.attach(nodes(0))
   } 
   
   def update(time: TimeStamp) {
-    if (time.total.toInt %2 == 0) {
-      nodes(1).environment.intensity := new testenv.Intensity
-      nodes(1).environment.intensity.update.value := 0.75
-    }
+    if (time.total.toInt %2 == 0) nodes(1).environment.intensity.update.value := 0.75
     else nodes(1).environment.intensity.undefine()
     
     if (time.total.toInt %4 == 0) nodes(0).environment.contrast.update.secondary := true
@@ -325,9 +313,9 @@ package testenv {
   
   
   class Environment extends prototype.Environment {
-    val intensity = Property[Intensity]
-    val nodeColor = Property[NodeColor]
-    val contrast = Property[Contrast]
+    val intensity = Property.optional(() => new Intensity)
+    val nodeColor = Property.optional(() => new NodeColor)
+    val contrast = Property.optional(() => new Contrast)
     
     init(classOf[Environment])
   }

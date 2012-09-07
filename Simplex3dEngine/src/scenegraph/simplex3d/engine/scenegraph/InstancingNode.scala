@@ -69,7 +69,6 @@ extends Entity[T, G](name) {
   final def material: G#Material = srcMesh.material
   
   private val displayMesh = new Mesh(name + " - Display Mesh", this, graphicsContext.mkGeometry(), material)
-  displayMesh.elementRange := new ElementRange()
   
   private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T, G]]
   
@@ -283,7 +282,7 @@ extends Entity[T, G](name) {
         }
       }
       
-      val transformation = child.uncheckedWorldMatrix
+      val transformation = child.uncheckedWorldTransformation.matrix
       val normalMatrix = if (srcNormals != null) transpose(inverse(Mat3(transformation))) else null
       transformData(transformation, normalMatrix)
       

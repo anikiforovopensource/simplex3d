@@ -14,7 +14,6 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
-import simplex3d.engine.transformation._
 
 
 object InterleavedAttributes extends default.App {
@@ -59,9 +58,8 @@ object InterleavedAttributes extends default.App {
       val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
-    mesh.material.textureUnits := BindingList[TextureUnit](new TextureUnit(objectTexture))
+    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
     
-    mesh.transformation := new ComponentTransformation3d
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 40
     

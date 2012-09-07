@@ -7,6 +7,7 @@ import simplex3d.data._
 import simplex3d.data.double._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
+import simplex3d.engine.util._
 
 
 object Mandelbrot extends default.FullscreenEffectApp {

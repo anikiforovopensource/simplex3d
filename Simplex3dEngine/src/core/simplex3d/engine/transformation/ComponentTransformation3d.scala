@@ -72,7 +72,7 @@ extends ReadComponentTransformation3d with Transformation
     translation := t.translation
   }
   
-  def matrix :ReadMat4x3 = transformation(Vec3(scale), rotationMat(rotation), translation)//XXX somehow cache the matrix on the call site?
+  protected[engine] def toMatrix() :Mat4x3 = transformation(Vec3(scale), rotationMat(rotation), translation)
   
   
   override def toString() :String = {

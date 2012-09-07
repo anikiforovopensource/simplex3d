@@ -38,15 +38,17 @@ trait BoundingVolume extends Accessible {
 
 object BoundingVolume {
   // TODO improve culling performance by keeping track of "safe" planes.
-  final def intersect[T <: Transformation](frustum: Frustum, volume: BoundingVolume, worldTransformation: Property[T])
-  :Int = {
+  final def intersect[T <: Transformation](
+    frustum: Frustum, volume: BoundingVolume, worldTransformation: TransformationBinding[T]
+  ) :Int =
+  {
     volume match {
       case bound: Aabb =>
         frustum.intersectAabb(bound.min, bound.max)
       case bound: Oabb =>
         if (worldTransformation.isDefined) frustum.intersectObb(
           bound.min, bound.max,
-          worldTransformation.get.matrix
+          worldTransformation.matrix
         )
         else frustum.intersectAabb(
           bound.min, bound.max
@@ -54,7 +56,7 @@ object BoundingVolume {
       case bound: Obb =>
         if (worldTransformation.isDefined) frustum.intersectObb(
           bound.min, bound.max,
-          bound.transformation concat worldTransformation.get.matrix
+          bound.transformation concat worldTransformation.matrix
         )
         else frustum.intersectObb(
           bound.min, bound.max,

@@ -36,12 +36,7 @@ abstract class Geometry extends StructuralChangeListener {
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  private[this] final var vertexMode: VertexMode = Triangles()//XXX rework as Defined[EnumRef]
-  final def mode = vertexMode
-  final def mode_=(m: VertexMode) {
-    if (vertexMode.getClass != m.getClass) this.signalStructuralChanges()
-    vertexMode = m
-  }
+  final val mode = Reassignable.defined[VertexMode](Triangles)
   
   final val indices = AttributeBinding[SInt, Unsigned](StructuralChangeListener.Ignore)
   final val vertices = AttributeBinding[Vec3, RFloat](this)
@@ -49,6 +44,6 @@ abstract class Geometry extends StructuralChangeListener {
   
   
   final def copyNonattributes(geometry: Geometry) {
-    mode = geometry.mode
+    mode := geometry.mode
   }
 }

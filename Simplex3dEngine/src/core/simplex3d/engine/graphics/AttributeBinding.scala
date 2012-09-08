@@ -28,7 +28,9 @@ import simplex3d.engine.util._
 
 sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
   implicit private val listener: StructuralChangeListener
-) { self: AccessibleAttributeBinding[F, R] =>
+)
+{ self: AccessibleAttributeBinding[F, R] =>
+  
   def isAccessible = (isDefined && this.get.isAccessible)
   def isWritable = (isDefined && this.get.isWritable)
   
@@ -66,7 +68,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
     this.attributes = attributes
   }
   
-  final def :=(r: SharedRef[Attributes[F, R]]) {
+  final def :=(r: AttributeBinding[F, R]) {
     if (r.isDefined) this := r.get else undefine()
   }
   
@@ -77,7 +79,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
 sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
   implicit listener: StructuralChangeListener
 )
-extends AttributeBinding[F, R] with AccessibleSharedRef {
+extends AttributeBinding[F, R] {
   import AccessChanges._
   
   def signalDataChanges() { dataChanges = true }

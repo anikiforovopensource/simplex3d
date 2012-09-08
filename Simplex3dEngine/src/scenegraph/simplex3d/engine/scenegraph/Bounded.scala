@@ -178,6 +178,11 @@ object Bounded {
     
     if (!geometry.vertices.isDefined || !geometry.vertices.get.isAccessible) return
     
+    val pointSpriteOffset = geometry.mode.get match {
+      case ps: PointSprites => ps.size*0.5
+      case _ => 0.0
+    }
+    
     val vertices = geometry.vertices.get.read
     if (vertices.size == 0) {
       resultMin := Vec3.Zero
@@ -200,27 +205,27 @@ object Bounded {
         var i = first; while (i < count) {
           val vertex = vertices(indices(i))
           
-          resultMin := min(resultMin, vertex)
-          resultMax := max(resultMax, vertex)
+          resultMin := min(resultMin, vertex - pointSpriteOffset)
+          resultMax := max(resultMax, vertex + pointSpriteOffset)
           
           i += 1
         }
       }; rebuildWithIndex()
     }
     else {
-      def rebuildVertices() {
+      def rebuildAll() {
         val first = 0
         val count = vertices.size
         
         var i = first; while (i < count) {
           val vertex = vertices(i)
           
-          resultMin := min(resultMin, vertex)
-          resultMax := max(resultMax, vertex)
+          resultMin := min(resultMin, vertex - pointSpriteOffset)
+          resultMax := max(resultMax, vertex + pointSpriteOffset)
           
           i += 1
         }
-      }; rebuildVertices()
+      }; rebuildAll()
     }
   }
 }

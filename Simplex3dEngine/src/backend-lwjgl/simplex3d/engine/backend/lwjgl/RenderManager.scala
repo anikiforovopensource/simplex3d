@@ -158,7 +158,7 @@ final class RenderManager extends graphics.RenderManager {
     
     
     // XXX cache state in render context.
-    val vertexMode = geometry.mode match {
+    val vertexMode = geometry.mode.get match {
       case p: Points =>
         glPointSize(p.size.toFloat)
         GL_POINTS
@@ -179,11 +179,22 @@ final class RenderManager extends graphics.RenderManager {
         glLineWidth(l.width.toFloat)
         GL_LINES
         
+      case l: LineStrip =>
+        glLineWidth(l.width.toFloat)
+        GL_LINE_STRIP
+      
+      case l: LineLoop =>
+        glLineWidth(l.width.toFloat)
+        GL_LINE_LOOP
+        
       case t: Triangles =>
         GL_TRIANGLES
         
-      case Quads =>
-        GL_QUADS
+      case t: TriangleStrip =>
+        GL_TRIANGLE_STRIP
+        
+      case t: TriangleFan =>
+        GL_TRIANGLE_FAN
     }
     
     

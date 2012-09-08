@@ -123,7 +123,7 @@ object DynamicEnvironment extends App {
       if (i % 2 == 0) {
         val mesh = new Mesh("Cube Level " + i)
         
-        mesh.geometry.mode = Lines(3)
+        mesh.geometry.mode := Lines(3)
         
         mesh.geometry.indices := Attributes.fromData(lineIndices)
         mesh.geometry.vertices := Attributes.fromData(vertices)

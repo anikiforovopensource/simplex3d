@@ -21,25 +21,56 @@
 package simplex3d.engine
 package graphics
 
+import simplex3d.math.types._
 import simplex3d.math.double._
 
 
-sealed abstract class VertexMode
+sealed abstract class VertexMode extends Accessible {
+  type Read = VertexMode
+  type Mutable = VertexMode
+  
+  final def readType = this.getClass()
+}
 
-case class Points(
-  var size: Double,
-  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
-) extends VertexMode
+case class Points(var size: Double = 3) extends VertexMode {
+  def mutableCopy() = Points(size)
+  def :=(m: VertexMode) { size = m.asInstanceOf[Points].size }
+}
 
-case class PointSprites(
-  var size: Double,
-  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
-) extends VertexMode
+case class PointSprites(var size: Double) extends VertexMode {
+  def mutableCopy() = PointSprites(size)
+  def :=(m: VertexMode) { size = m.asInstanceOf[PointSprites].size }
+}
 
-case class Lines(var width: Double) extends VertexMode
+case class Lines(var width: Double = 3) extends VertexMode {
+  def mutableCopy() = Lines(width)
+  def :=(m: VertexMode) { width = m.asInstanceOf[Lines].width }
+}
 
-case class Triangles(
-  var geometrySorting: SortingOrder.type#Value = SortingOrder.Opaque
-) extends VertexMode
+case class LineStrip(var width: Double = 3) extends VertexMode {
+  def mutableCopy() = LineStrip(width)
+  def :=(m: VertexMode) { width = m.asInstanceOf[LineStrip].width }
+}
 
-object Quads extends VertexMode
+case class LineLoop(var width: Double = 3) extends VertexMode {
+  def mutableCopy() = LineLoop(width)
+  def :=(m: VertexMode) { width = m.asInstanceOf[LineLoop].width }
+}
+
+sealed class Triangles private extends VertexMode {
+  def mutableCopy() = this
+  def :=(m: VertexMode) {}
+}
+object Triangles extends Triangles
+
+sealed class TriangleStrip private extends VertexMode {
+  def mutableCopy() = this
+  def :=(m: VertexMode) {}
+}
+object TriangleStrip extends TriangleStrip
+
+sealed  class TriangleFan private extends VertexMode {
+  def mutableCopy() = this
+  def :=(m: VertexMode) {}
+}
+object TriangleFan extends TriangleFan

@@ -54,8 +54,10 @@ sealed abstract class TransformationBinding[T <: Transformation] private[engine]
     if (updateMatrix) {
       updateMatrix = false
       if (isDefined) {
-        if (cachedMatrix == null) cachedMatrix = value.matrix
-        else cachedMatrix := value.matrix
+        val valueMatrix = value.matrix()
+        
+        if (cachedMatrix == null) cachedMatrix = valueMatrix
+        else if (cachedMatrix ne valueMatrix) cachedMatrix := valueMatrix
       }
       else {
         cachedMatrix = null

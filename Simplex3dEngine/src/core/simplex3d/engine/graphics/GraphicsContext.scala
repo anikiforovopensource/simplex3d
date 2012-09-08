@@ -111,7 +111,7 @@ abstract class GraphicsContext {
     material: graphics.Material,
     environment: graphics.Environment,
     programUniforms: Map[String, Property[UncheckedBinding]]
-  ) :Binding = {
+  ) :AnyRef = {
     val originAndId = uniformMap.get(name)
     
     if (originAndId == null) {
@@ -146,7 +146,7 @@ abstract class GraphicsContext {
     material: graphics.Material,
     environment: graphics.Environment,
     programUniforms: Map[String, Property[UncheckedBinding]]
-  ) :Binding = {
+  ) :AnyRef = {
     
     val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
     PathUtil.resolve(path, bindingFromName)

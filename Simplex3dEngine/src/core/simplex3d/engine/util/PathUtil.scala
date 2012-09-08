@@ -25,6 +25,7 @@ import simplex3d.engine.graphics._
 
 
 private[engine] object PathUtil {
+  
   /* case NameIndex(name, index, rest) */
   private val NameIndexRest = """(\w+)\[(\d+)\]\.?(.*)""".r
   
@@ -43,7 +44,7 @@ private[engine] object PathUtil {
   }
   
   
-  def resolve(path: String, bindingFromName: String => Binding) :Binding = {
+  def resolve(path: String, bindingFromName: String => AnyRef) :AnyRef = {
     path match {
       
       case NameIndexRest(name, index, rest) =>
@@ -60,7 +61,7 @@ private[engine] object PathUtil {
                 indexed match {
                   
                   case s: Struct =>
-                    s.resolvePath(rest)
+                    s.resolve(rest)
 
                   /* Replace when 2.10 is out.
                   case t: ReadTextureBinding[_] if t.isBound && rest == "dimensions" =>
@@ -89,7 +90,7 @@ private[engine] object PathUtil {
         if (res == null) null else if (rest.isEmpty) res else res match {
           
           case s: Struct =>
-            s.resolvePath(rest)
+            s.resolve(rest)
             
           /* Replace when 2.10 is out.
           case t: ReadTextureBinding[_] if t.isBound && rest == "dimensions" =>

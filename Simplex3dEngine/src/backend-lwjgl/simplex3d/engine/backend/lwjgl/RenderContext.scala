@@ -302,13 +302,17 @@ extends graphics.RenderContext {
     val format = resolveFormat(src.accessorManifest)
     val ftype = resolveType(src.formatManifest, src.rawType)
     
+    /*
     org.lwjgl.util.glu.MipMap.gluBuild2DMipmaps(
       GL_TEXTURE_2D,
       internalFormat, texture.dimensions.x, texture.dimensions.y,
       format, ftype, texture.src.bindingBuffer()
     )
+    */
     
     texture.hasMatchingMipmaps = true
+    
+    throw new UnsupportedOperationException("Legacy mipmap generation is deprecated.")//XXX remove legacy mipmaps permanently.
   }
   
   private def initialize(texture: Texture2d[_ <: Accessor with AnyVec[Double]]) :Int = {
@@ -332,7 +336,7 @@ extends graphics.RenderContext {
         format, ftype, texture.src.bindingBuffer()
       )
       
-      if (generateMipmap) {
+      if (generateMipmap) { //XXX reuse this chunk of code. also detect ATI drivers and call glEnable(GL_TEXTURE_2D) only for ATI cards.
         glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
         glGenerateMipmapEXT(GL_TEXTURE_2D)
         texture.hasMatchingMipmaps = true
@@ -410,6 +414,7 @@ extends graphics.RenderContext {
       case t: Texture2d[_] =>
         if (settings.legacyMipMapGeneration) legacyMipMapGeneration(t)
         else {
+          glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
           glGenerateMipmapEXT(GL_TEXTURE_2D) // TODO Test on ATI cards.
           texture.hasMatchingMipmaps = true
         }
@@ -887,14 +892,13 @@ extends graphics.RenderContext {
     }
     
     if (binding == null && !programBinding.name.endsWith("nvidiaBugWorkaround")) log(
-      Level.SEVERE, "Uniform '" + programBinding.name + "' could not be resolved for mesh '" + meshName + "'."
-    )
+      Level.SEVERE, "Uniform '" + programBinding.name + "' could not be resolved for mesh '" + meshName + "'.")
+
     else if (binding.isInstanceOf[ReadTextureBinding[_]]) {
       val textureBinding = TextureBinding.avoidCompilerCrash(binding)
       if (!textureBinding.isBound) log(
         Level.SEVERE, "Texture '" + programBinding.name + "' is not defined for mesh '" +
-        meshName + "'. Default texture will be used."
-      )
+        meshName + "'. Default texture will be used.")
     }
     
     binding.asInstanceOf[Binding]

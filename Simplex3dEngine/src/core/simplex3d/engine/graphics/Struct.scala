@@ -50,12 +50,13 @@ trait Struct extends ReadStruct with Accessible {
   def fields: ReadArray[Binding]
   def listDeclarations: ReadArray[ListDeclaration]
   
-  
-  private[this] val bindingFromName = (name: String) => {//XXX rather duplicate PathUtil.resolve() method
-    val id = PathUtil.find(fieldNames, name)
-    if (id == -1) null else fields(id)
+  final def resolve[T](path: String) :T = {
+    val bindingFromName = (name: String) => {
+      val id = PathUtil.find(fieldNames, name)
+      if (id == -1) null else fields(id)
+    }
+    PathUtil.resolve(path, bindingFromName).asInstanceOf[T]
   }
-  final def resolvePath(path: String) :Binding = PathUtil.resolve(path, bindingFromName)
 }
 
 object Struct {

@@ -115,7 +115,7 @@ object CustomRenderer extends default.BaseApp {
     
     // Init and attach light indicators.
     lightMesh.geometry.vertices := Attributes[Vec3, RFloat](maxLightCount)
-    lightMesh.geometry.mode = Points(5)
+    lightMesh.geometry.mode := Points(5)
     
     // Reuse texture rendering for lights.
     lightMesh.geometry.texCoords := Attributes[Vec2, RFloat](maxLightCount)

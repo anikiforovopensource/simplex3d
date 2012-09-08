@@ -56,7 +56,7 @@ import simplex3d.engine.graphics._
  * using export() declaration. FragmentShaders are allowed to omit out{} block declaration.
  * 
  * Only MathTypes and MathType arrays can be declared inside in{} and out{} blocks.
- * Arrays in in{} and out{} blocks must be size either to a literal value or to a size of some uniform array.
+ * Arrays in in{} and out{} blocks must be sized either to a literal value or to a size of some uniform array.
  * If a uniform array is defined in the shader scope, its size can be accessed using injected variable
  * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is declared globally.
  * 
@@ -68,7 +68,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   private[this] var _logRejected = false
   private[this] var _logAccepted = false
   private[this] var _forceSquareMatrices = false
-  private[this] var _version = ""
+  private[this] var _version = ""//XXX version is automatically included depending on profile (gles2, gles3, gl4)
   
     
   final def name = _name

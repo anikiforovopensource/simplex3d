@@ -77,4 +77,37 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     else if (geometry.vertices.isDefined) geometry.vertices.get.src.size
     else 0
   }
+  
+  final def hasShapeChanges() :Boolean = {//XXX hide this
+    import AccessChanges._
+    
+    if (elementRange.hasDataChanges) {
+      true
+    }
+    else if (geometry.mode.hasDataChanges) {
+      true
+    }
+    else {
+      val indexChanges =
+        if (geometry.indices.hasRefChanges) true//XXX get rid of hasRefChanges, merge everything into hasDataChanges
+        else if (geometry.indices.isDefined) geometry.indices.hasDataChanges
+        else false
+
+      if (indexChanges) true
+      else {
+        if (geometry.vertices.hasRefChanges) true
+        else if (geometry.vertices.isDefined) geometry.vertices.hasDataChanges
+        else false
+      }
+    }
+  }
+  
+  final def clearShapeChanges() {//XXX hide this
+    import AccessChanges._
+    elementRange.clearDataChanges()
+    geometry.indices.clearRefChanges()
+    geometry.indices.clearDataChanges()
+    geometry.vertices.clearRefChanges()
+    geometry.vertices.clearDataChanges()
+  }
 }

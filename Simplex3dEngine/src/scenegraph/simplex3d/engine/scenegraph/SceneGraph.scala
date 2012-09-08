@@ -114,6 +114,9 @@ extends ManagedScene[G](name) {
       result ++= concurrentArray.asInstanceOf[SortBuffer[AbstractMesh]]
     }
     
+    
+    // XXX Take this out of the SceneGraph, and stuff it into the RenderManager,
+    // this will allow to drop dependency on the TechniqueManager
     // Resolve techniques.
     val size = result.size
     var i = 0; while (i < size) { val mesh = result(i).asInstanceOf[Mesh[T, G]]

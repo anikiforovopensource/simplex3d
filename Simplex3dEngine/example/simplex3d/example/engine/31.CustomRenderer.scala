@@ -302,7 +302,7 @@ object CustomRenderer extends default.BaseApp {
       vec4 texturingColor() {
         vec4 color = vec4(1.0);
         for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          color *= texture2D(textureUnits[i].texture, texturingCtx.ecTexCoords[i]);
+          color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
         }
         return color;
       }

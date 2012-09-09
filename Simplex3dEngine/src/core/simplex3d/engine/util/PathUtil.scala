@@ -45,6 +45,40 @@ private[engine] object PathUtil {
   
   
   def resolve(path: String, bindingFromName: String => AnyRef) :AnyRef = {
+    
+    def resolveRest(value: AnyRef, rest: String) :AnyRef = {
+      value match {
+                  
+        case s: Struct =>
+          s.resolve(rest)
+
+        /* Replace when 2.10 is out.
+        case t: ReadTextureBinding[_] if t.isBound =>
+          rest match {
+            case "sampler" => t
+            case "dimensions" => t.bound.dimensions
+            case _ => null
+          }
+          
+        case _ =>
+          null*/
+          
+        case _ =>
+          if (TextureBinding.avoidCompilerCrashB(value)) {
+            val t = TextureBinding.avoidCompilerCrash(value)
+            if (t.isBound) {
+              rest match {
+                case "sampler" => t
+                case "dimensions" => t.bound.asInstanceOf[Texture[_]].bindingDimensions
+                case _ => null
+              }
+            }
+            else null
+          }
+          else null
+      }
+    }
+    
     path match {
       
       case NameIndexRest(name, index, rest) =>
@@ -57,28 +91,7 @@ private[engine] object PathUtil {
               
               val indexed = list(id)
               if (rest.isEmpty) indexed
-              else {
-                indexed match {
-                  
-                  case s: Struct =>
-                    s.resolve(rest)
-
-                  /* Replace when 2.10 is out.
-                  case t: ReadTextureBinding[_] if t.isBound && rest == "dimensions" =>
-                    t.bound.dimensions
-                    
-                  case _ =>
-                    null*/
-                    
-                  case _ =>
-                    if (TextureBinding.avoidCompilerCrashB(indexed)) {
-                      val t = TextureBinding.avoidCompilerCrash(indexed)
-                      if (t.isBound && rest == "dimensions") t.bound.asInstanceOf[Texture[_]].bindingDimensions
-                      else null
-                    }
-                    else null
-                }
-              }
+              else resolveRest(indexed, rest)
             }
             
           case _ =>
@@ -87,26 +100,7 @@ private[engine] object PathUtil {
         
       case NameRest(name, rest) =>
         val res = bindingFromName(name)
-        if (res == null) null else if (rest.isEmpty) res else res match {
-          
-          case s: Struct =>
-            s.resolve(rest)
-            
-          /* Replace when 2.10 is out.
-          case t: ReadTextureBinding[_] if t.isBound && rest == "dimensions" =>
-            t.bound.dimensions
-            
-          case _ =>
-            null*/
-            
-          case _ =>
-            if (TextureBinding.avoidCompilerCrashB(res)) {
-              val t = TextureBinding.avoidCompilerCrash(res)
-              if (t.isBound && rest == "dimensions") t.bound.asInstanceOf[Texture[_]].bindingDimensions
-              else null
-            }
-            else null
-        }
+        if (res == null) null else if (rest.isEmpty) res else resolveRest(res, rest)
         
       case _ =>
         null

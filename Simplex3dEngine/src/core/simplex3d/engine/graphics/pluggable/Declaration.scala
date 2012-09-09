@@ -141,9 +141,26 @@ final class Declaration(
       unprefixedName.dropRight(1)
     }
   }
-  private def resolveTextureType(className: String) :String = {
+  private def resolveTextureType(
+    className: String,
+    level: Int, dependenciesResult: HashMap[String, StructDeclaration]
+  ) :String = {
+    
     className match {
-      case "Texture2d" => "sampler2D"
+      case "Texture2d" =>
+        val glslType = "Se_Texture2d"
+          
+        val sdec = new StructDeclaration(
+          level, classOf[Texture2d[_]], glslType,
+          new ReadSeq(ArrayBuffer(
+            ("sampler2D", "sampler"),
+            ("ivec2", "dimensions"))),
+          true
+        )
+        
+        dependenciesResult.put(glslType, sdec)
+        glslType
+        
       case _ => throw new RuntimeException
     }
   }
@@ -152,11 +169,11 @@ final class Declaration(
     squareMatrices: Boolean,
     level: Int,
     instance: Struct,
-    structBlocks: HashMap[String, StructDeclaration]
+    dependenciesResult: HashMap[String, StructDeclaration]
   ) :String =
   {
     val glslType = ClassUtil.simpleName(instance.getClass)
-    if (structBlocks == null) return glslType
+    if (dependenciesResult == null) return glslType
 
     val subStructs = new HashMap[String, StructDeclaration]
     val entries = new ArrayBuffer[(String, String)]
@@ -175,9 +192,9 @@ final class Declaration(
     }
     
     if (subStructs.values.find(_.containsSamplers).isDefined) containsSamplers = true
-    structBlocks ++= subStructs
+    dependenciesResult ++= subStructs//XXX use list, then check all at the very end.
     
-    val existing = structBlocks.get(glslType)
+    val existing = dependenciesResult.get(glslType)
     if (existing.isDefined) {
       val existingClass = existing.get.erasure
       if (instance.getClass != existingClass) throw new RuntimeException(
@@ -188,7 +205,7 @@ final class Declaration(
     
     if (!existing.isDefined || existing.get.level < level) {
       val dec = new StructDeclaration(level, instance.getClass, glslType, new ReadSeq(entries), containsSamplers)
-      structBlocks.put(glslType, dec)
+      dependenciesResult.put(glslType, dec)
     }
     
     glslType
@@ -198,17 +215,17 @@ final class Declaration(
     squareMatrices: Boolean,
     level: Int,
     parentType: String,
-    m: ClassManifest[_], name: String,
-    structBlocks: HashMap[String, StructDeclaration]
-  ) :String = {
+    manifest: ClassManifest[_], name: String,
+    dependenciesResult: HashMap[String, StructDeclaration]
+  ) :String = { // glslType
     
-    if (classOf[MathType].isAssignableFrom(m.erasure)) {
-      resolveMathType(squareMatrices, m.erasure)
+    if (classOf[MathType].isAssignableFrom(manifest.erasure)) {
+      resolveMathType(squareMatrices, manifest.erasure)
     }
-    else if (classOf[TextureBinding[_]].isAssignableFrom(m.erasure)) {
+    else if (classOf[TextureBinding[_]].isAssignableFrom(manifest.erasure)) {
       try {
-        val erasure = m.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
-        resolveTextureType(ClassUtil.simpleName(erasure)) 
+        val erasure = manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
+        resolveTextureType(ClassUtil.simpleName(erasure), level, dependenciesResult) 
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -216,9 +233,9 @@ final class Declaration(
         )
       }
     }
-    else if (classOf[BindingList[_]].isAssignableFrom(m.erasure)) {
-      val manifest = try {
-        m.typeArguments.head.asInstanceOf[ClassManifest[_]]
+    else if (classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) {
+      val listManifest = try {
+        manifest.typeArguments.head.asInstanceOf[ClassManifest[_]]
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -226,25 +243,25 @@ final class Declaration(
         )
       }
       
-      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
+      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, listManifest, name, dependenciesResult)
       glslType
     }
-    else if (classOf[Struct].isAssignableFrom(m.erasure)) {
+    else if (classOf[Struct].isAssignableFrom(manifest.erasure)) {
       val instance = try {
-        m.erasure.newInstance().asInstanceOf[Struct]
+        manifest.erasure.newInstance().asInstanceOf[Struct]
       }
       catch {
         case e: Exception => throw new RuntimeException(
-          "Unable to create an instance of '" + m.erasure.getName +
+          "Unable to create an instance of '" + manifest.erasure.getName +
           "'. All Struct subclasses must define a no-argument constructor."
         )
       }
       
-      processStruct(squareMatrices, level, instance, structBlocks)
+      processStruct(squareMatrices, level, instance, dependenciesResult)
     }
     else {
       throw new RuntimeException(
-        "Unsupported type '" + ClassUtil.simpleName(m.erasure) + "' for declaration '" + name + "'."
+        "Unsupported type '" + ClassUtil.simpleName(manifest.erasure) + "' for declaration '" + name + "'."
       )
     }
   }
@@ -253,20 +270,20 @@ final class Declaration(
     squareMatrices: Boolean,
     level: Int,
     parentType: String,
-    i: Object, name: String,
-    structBlocks: HashMap[String, StructDeclaration]
-  ) :(String, String) = {
+    instance: Object, name: String,
+    dependenciesResult: HashMap[String, StructDeclaration]
+  ) :(String, String) = {//(glslType, sizeExpression)
     
-    if (classOf[MathType].isAssignableFrom(i.getClass)) {
-      (resolveMathType(squareMatrices, i.getClass), "")
+    if (classOf[MathType].isAssignableFrom(instance.getClass)) {
+      (resolveMathType(squareMatrices, instance.getClass), "")
     }
-    else if (classOf[TextureBinding[_]].isAssignableFrom(i.getClass)) {
-      val erasure = i.asInstanceOf[TextureBinding[_]].bindingManifest.erasure
-      (resolveTextureType(ClassUtil.simpleName(erasure)), "")
+    else if (classOf[TextureBinding[_]].isAssignableFrom(instance.getClass)) {
+      val erasure = instance.asInstanceOf[TextureBinding[_]].bindingManifest.erasure
+      (resolveTextureType(ClassUtil.simpleName(erasure), level, dependenciesResult), "")
     }
-    else if (classOf[BindingList[_]].isAssignableFrom(i.getClass)) {
-      val manifest = i.asInstanceOf[BindingList[_]].elementManifest
-      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, structBlocks)
+    else if (classOf[BindingList[_]].isAssignableFrom(instance.getClass)) {
+      val manifest = instance.asInstanceOf[BindingList[_]].elementManifest
+      val glslType = extractManifestTypeInfo(squareMatrices, level, parentType, manifest, name, dependenciesResult)
       
       val sizeExpression =
         if (!arraySizeExpression.isEmpty) arraySizeExpression
@@ -274,12 +291,12 @@ final class Declaration(
       
       (glslType, sizeExpression)
     }
-    else if (classOf[Struct].isAssignableFrom(i.getClass)) {
-      (processStruct(squareMatrices, level, i.asInstanceOf[Struct], structBlocks), "")
+    else if (classOf[Struct].isAssignableFrom(instance.getClass)) {
+      (processStruct(squareMatrices, level, instance.asInstanceOf[Struct], dependenciesResult), "")
     }
     else {
       throw new RuntimeException(
-        "Unsupported type '" + ClassUtil.simpleName(i.getClass) + "' for declaration '" + name + "'."
+        "Unsupported type '" + ClassUtil.simpleName(instance.getClass) + "' for declaration '" + name + "'."
       )
     }
   }

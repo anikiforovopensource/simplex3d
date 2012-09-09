@@ -47,9 +47,9 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
           withDepthBits(24).
           withStencilBits(8)
           
-        //val glProfile = new ContextAttribs(1, 4)
         Display.setTitle("Display Mode Test")
-        Display.create(pixelFormat)//, glProfile)
+        Display.create(pixelFormat)
+        //Display.create(pixelFormat, new ContextAttribs(2, 0).withProfileES(true))
         
         Display.destroy()
         
@@ -111,9 +111,9 @@ class FixedResolutionLauncher extends simplex3d.engine.Launcher {
         withStencilBits(8).
         withSamples(settings.antiAliasingSamples)
         
-      val glProfile = new ContextAttribs(1, 4)//XXX not usable with some cards/drivers
       Display.setTitle(title)
-      Display.create(pixelFormat)//, glProfile)
+      Display.create(pixelFormat)
+      //Display.create(pixelFormat, new ContextAttribs(2, 0).withProfileES(true))
       
       RawKeyboard.create()
       RawMouse.create()

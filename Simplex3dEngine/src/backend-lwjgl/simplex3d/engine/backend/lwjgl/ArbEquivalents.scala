@@ -101,7 +101,7 @@ object ArbEquivalents {
     @inline def GL_VERTEX_PROGRAM_POINT_SIZE = GL_VERTEX_PROGRAM_POINT_SIZE_ARB
 
     // didn't find any ARB equivalents for:
-    @inline def GL_POINT_SPRITE_COORD_ORIGIN:Int = GL20.GL_POINT_SPRITE_COORD_ORIGIN
-    @inline def GL_LOWER_LEFT:Int = GL20.GL_LOWER_LEFT
+    @inline def GL_POINT_SPRITE_COORD_ORIGIN = org.lwjgl.opengl.GL20.GL_POINT_SPRITE_COORD_ORIGIN
+    @inline def GL_LOWER_LEFT = org.lwjgl.opengl.GL20.GL_LOWER_LEFT
   }
 }

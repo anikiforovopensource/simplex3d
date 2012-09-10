@@ -476,6 +476,7 @@ object CustomRenderer extends default.BaseApp {
     """}
   })
   
+  
   techniqueManager.register(new VertexShader {
     entryPoint("propagateLightingValues")
     

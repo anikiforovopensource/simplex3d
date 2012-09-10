@@ -62,13 +62,13 @@ import simplex3d.engine.graphics._
  * 
  * Shader sources can be attached using src() declarations.
  */
-sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
+sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {//XXX possibly split declaration and result
   
   private[this] var _name = this.hashCode.toString
   private[this] var _logRejected = false
   private[this] var _logAccepted = false
   private[this] var _forceSquareMatrices = false
-  private[this] var _version = ""//XXX version is automatically included depending on profile (gles2, gles3, gl4)
+  private[this] var _version = "120"//XXX version is automatically included depending on profile (gles2, gles3, gl4)
   
     
   final def name = _name
@@ -80,13 +80,15 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   final def logAccepted = _logAccepted
   protected final def logAccepted_=(log: Boolean) { _logAccepted = log }
   
-  final def forceSquareMatrices = _forceSquareMatrices
+  final def forceSquareMatrices = _forceSquareMatrices//XXX remove manual square matrices, derive from version instead
   protected final def forceSquareMatrices_=(force: Boolean) { _forceSquareMatrices = force }
   
-  final def version = _version
+  final def version = _version//XXX remove manual version setting
   protected final def version_=(version: String) { _version = version }
   
   
+  private[this] var _export: Option[String] = None
+  private[this] var _entryPoint: Option[String] = None
   private[this] val _listDeclarationNameKeys = new ArrayBuffer[(String, String)]
   private[this] val _uniformBlock = new ArrayBuffer[Declaration]
   private[this] val _attributeBlock = new ArrayBuffer[Declaration]
@@ -94,10 +96,11 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   private[this] val _outputBlocks = new ArrayBuffer[DeclarationBlock]
   private[this] val _functionDependencies = new ArrayBuffer[String]
   private[this] val _sources = new ArrayBuffer[String]
-  private[this] var _export: Option[String] = None
-  private[this] var _entryPoint: Option[String] = None
+  private[this] val _conditions = new ArrayBuffer[(String, AnyRef => Boolean)]
+    
   
-  
+  final def export = _export
+  final def entryPoint = _entryPoint
   final val listDeclarationNameKeys = new ReadSeq(_listDeclarationNameKeys)
   final val uniformBlock = new ReadSeq(_uniformBlock)
   final val attributeBlock = new ReadSeq(_attributeBlock)
@@ -105,8 +108,7 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
   final val outputBlocks = new ReadSeq(_outputBlocks)
   final val functionDependencies = new ReadSeq(_functionDependencies)
   final val sources = new ReadSeq(_sources)
-  final def export = _export
-  final def entryPoint = _entryPoint
+  final val conditions = new ReadSeq(_conditions)
   
   
   private[this] var isInitialized = false
@@ -350,6 +352,12 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {
     checkState()
     if (export.isDefined) throw new IllegalStateException("Export is already defined.")
     _export = Some(functionSignature)
+  }
+  
+  protected final def condition[T](path: String)(f: T => Boolean) {
+    if (declarations != null) throw new IllegalStateException("condition() must be declared at the top level.")
+    checkState()
+    _conditions += ((path, f.asInstanceOf[AnyRef => Boolean]))
   }
   
   protected final def src(src: String) {

@@ -64,7 +64,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
     {
       import AccessScene._
       
-      val (names, props) = FieldReflection.getValueMap(
+      val (names, props) = FieldReflection.valueMap(
         effect,
         classOf[Property[_ <: Binding]], FieldReflection.BindingFilter,
         Nil

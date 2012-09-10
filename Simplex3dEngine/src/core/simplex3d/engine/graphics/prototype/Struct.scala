@@ -23,7 +23,6 @@ package graphics
 package prototype
 
 import java.util.logging._
-import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -37,7 +36,7 @@ trait Struct extends ReadStruct with graphics.Struct {
   import Struct._
   
   private final var _fieldNames: ReadArray[String] = null
-  private final var _fields: ReadArray[UncheckedBinding] = null
+  private final var _fields: ReadArray[UncheckedValue] = null
   private final var _listDeclarations: ReadArray[ListDeclaration] = null
 
   private[this] var initialized = false 
@@ -45,105 +44,19 @@ trait Struct extends ReadStruct with graphics.Struct {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (fn, fv) = FieldReflection.getValueMap(this, classOf[Binding], Nil, Blacklist)
+    val (fn, fv) = FieldReflection.valueMap(this, classOf[Accessible], Nil, Blacklist)
     _fieldNames = fn
-    _fields = fv.asInstanceOf[ReadArray[UncheckedBinding]]
-    
-    var rebuild = false
-    
-    var i = 0; while (i < fv.length) {
-      if(!fv(i).isInstanceOf[Accessible]) {
-        logger.log(
-          Level.SEVERE, ClassUtil.simpleName(this.getClass) + " value '" + fieldNames(i) +
-          "' must be an instance of 'Writable[_]'."
-        )
-        rebuild = true
-      }
-      i += 1
-    }
-    
-    if (rebuild) {
-      val array = _fields.filter(_.isInstanceOf[Accessible]).toArray(ClassManifest.Any)
-      _fields = (new ReadArray(array)).asInstanceOf[ReadArray[UncheckedBinding]]
-    }
-    
-    
-    // Extract list declarations.
-    val parentType = ClassUtil.simpleName(clazz)
-    val declarations = new HashMap[(String, String), List[BindingList[_]]]
-    
-    def register(nameKey: (String, String), list: BindingList[_]) {
-      var existing = declarations.get(nameKey)
-      if (existing == null) {
-        existing = Nil
-      }
-      declarations.put(nameKey, list :: existing)
-    }
-    
-    def registerStruct(s: Struct) {
-      val nestedDeclarations = s.listDeclarations
-      var j = 0; while (j < nestedDeclarations.size) {
-        val dec = nestedDeclarations(j)
-        
-        var k = 0; while (k < dec.lists.size) {
-          register(dec.nameKey, dec.lists(k))
-          k += 1
-        }
-        
-        j += 1
-      }
-    }
-    
-    i = 0; while (i < fieldNames.length) {
-      fields(i) match {
-        
-        case list: BindingList[_] =>
-          register((parentType, fieldNames(i)), list)
-          val erasure = list.elementManifest.erasure
-          if (classOf[Struct].isAssignableFrom(erasure)) {
-            registerStruct(erasure.newInstance().asInstanceOf[Struct])
-          }
-          
-        case s: Struct =>
-          registerStruct(s)
-          
-        case _ =>
-          // do nothing
-      }
-      
-      i += 1
-    }
-    
-    val listDeclarations = new Array[ListDeclaration](declarations.size)
-    val iter = declarations.entrySet().iterator()
-    i = 0; while (iter.hasNext()) {
-      val entry = iter.next()
-      val key = entry.getKey
-      
-      listDeclarations(i) = new ListDeclaration(key._1, key._2, new ReadArray(entry.getValue.toArray))
-      
-      i += 1
-    }
-    
-    _listDeclarations = new ReadArray(listDeclarations)
-    
+    _fields = fv.asInstanceOf[ReadArray[UncheckedValue]]
+    _listDeclarations = findListDeclarations()
     
     initialized = true
   }
   
   override def fieldNames: ReadArray[String] = _fieldNames
-  override def fields: ReadArray[Binding] = _fields
+  override def fields: ReadArray[UncheckedValue] = _fields
   override def listDeclarations: ReadArray[ListDeclaration] = _listDeclarations
   
-  final def :=(r: Read) {
-    val s = r.asInstanceOf[Struct]
-    val size = _fields.length; var i = 0; while (i < size) {
-      _fields(i) := s._fields(i)
-      i += 1
-    }
-  }
   
-
   private[engine] override def register(listener: StructuralChangeListener) {
     val s = fields.length; var i = 0; while (i < s) {
       fields(i) match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }

@@ -27,10 +27,10 @@ import simplex3d.engine.graphics._
 private[engine] object PathUtil {
   
   /* case NameIndex(name, index, rest) */
-  private val NameIndexRest = """(\w+)\[(\d+)\]\.?(.*)""".r
+  val NameIndexRest = """(\w+)\[(\d+)\]\.?(.*)""".r
   
   /* case NameRest(name, rest) */
-  private val NameRest = """(\w+)\.?(.*)""".r
+  val NameRest = """(\w+)\.?(.*)""".r
   
   
   def find(names: ReadArray[String], name: String) :Int = {
@@ -44,66 +44,55 @@ private[engine] object PathUtil {
   }
   
   
-  def resolve(path: String, bindingFromName: String => AnyRef) :AnyRef = {
-    
-    def resolveRest(value: AnyRef, rest: String) :AnyRef = {
-      value match {
-                  
-        case s: Struct =>
-          s.resolve(rest)
+  private def resolveRest(value: AnyRef, rest: String) :AnyRef = {
+    value match {
+                
+      case s: Struct =>
+        s.resolve(rest)
 
-        /* Replace when 2.10 is out.
-        case t: ReadTextureBinding[_] if t.isBound =>
-          rest match {
-            case "sampler" => t
-            case "dimensions" => t.bound.dimensions
-            case _ => null
-          }
-          
-        case _ =>
-          null*/
-          
-        case _ =>
-          if (TextureBinding.avoidCompilerCrashB(value)) {
-            val t = TextureBinding.avoidCompilerCrash(value)
-            if (t.isBound) {
-              rest match {
-                case "sampler" => t
-                case "dimensions" => t.bound.asInstanceOf[Texture[_]].bindingDimensions
-                case _ => null
-              }
-            }
-            else null
-          }
-          else null
-      }
-    }
-    
-    path match {
-      
-      case NameIndexRest(name, index, rest) =>
-        val res = bindingFromName(name)
-        if (res == null) null else res match {
-          
-          case list: BindingList[_] =>
-            val id = index.toInt
-            if (id >= list.size) null else {
-              
-              val indexed = list(id)
-              if (rest.isEmpty) indexed
-              else resolveRest(indexed, rest)
-            }
-            
-          case _ =>
-            null
+      /* Replace when 2.10 is out.
+      case t: ReadTextureBinding[_] if t.isBound =>
+        rest match {
+          case "sampler" => t
+          case "dimensions" => t.bound.dimensions
+          case _ => null
         }
         
-      case NameRest(name, rest) =>
-        val res = bindingFromName(name)
-        if (res == null) null else if (rest.isEmpty) res else resolveRest(res, rest)
+      case _ =>
+        null*/
+        
+      case _ =>
+        if (TextureBinding.avoidCompilerCrashB(value)) {
+          val t = TextureBinding.avoidCompilerCrash(value)
+          if (t.isBound) {
+            rest match {
+              case "sampler" => t
+              case "dimensions" => t.bound.asInstanceOf[Texture[_]].bindingDimensions
+              case _ => null
+            }
+          }
+          else null
+        }
+        else null
+    }
+  }
+  
+  def resolveAsList(index: Int, rest: String, list: AnyRef) :AnyRef = {
+    if (list == null) null else list match {
+      case list: BindingList[_] =>
+        if (index >= list.size) null else {
+          
+          val element = list(index)
+          if (rest.isEmpty) element
+          else resolveRest(element, rest)
+        }
         
       case _ =>
         null
     }
+  }
+  
+  def resolveAsValue(rest: String, value: AnyRef) :AnyRef = {
+    if (value == null) null else if (rest.isEmpty) value else resolveRest(value, rest)
   }
 }

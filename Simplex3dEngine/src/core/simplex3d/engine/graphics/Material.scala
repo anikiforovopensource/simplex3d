@@ -30,7 +30,7 @@ abstract class Material extends StructuralChangeListener {
   protected implicit val structuralChangeListener = this
   
   def uniformNames: ReadArray[String]
-  def uniforms: ReadArray[Property[UncheckedBinding]]
+  def uniforms: ReadArray[Property[UncheckedValue]]
   
   
   final val faceCulling = Property.defined(new EnumRef(FaceCulling.Disabled))

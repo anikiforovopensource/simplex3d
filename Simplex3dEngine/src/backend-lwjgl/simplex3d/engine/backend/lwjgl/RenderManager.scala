@@ -168,8 +168,8 @@ final class RenderManager extends graphics.RenderManager {
         glPointParameteri(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT)
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE)
         
-        val maxView = max(predefinedUniforms.se_viewDimensions.x, predefinedUniforms.se_viewDimensions.y)
-        glPointSize(maxView) // This prevents gl from culling sprites when their center is not visible.
+        // This prevents gl from culling sprites when their center is not visible.
+        glPointSize(p.cullingSize.toFloat)
         
         predefinedUniforms.se_pointSize := p.size
         

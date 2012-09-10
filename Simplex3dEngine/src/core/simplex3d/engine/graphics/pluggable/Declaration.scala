@@ -122,15 +122,18 @@ final class Declaration(
   private def resolveMathType(squareMatrices: Boolean, erasure: Class[_]) :String = {
     val className = ClassUtil.simpleName(erasure).toLowerCase()
     val unprefixedName = 
-      if (className.startsWith("Const")) className.drop(5)
-      else if (className.startsWith("Read")) className.drop(4)
+      if (className.startsWith("const")) className.drop(5)
+      else if (className.startsWith("read")) className.drop(4)
       else className
     
     if (unprefixedName.endsWith("ref")) {
       val shorterName = unprefixedName.dropRight(3)
       if (shorterName == "double") "float" else shorterName
     }
-    else if (squareMatrices && unprefixedName.startsWith("mat")) {
+    else if (unprefixedName.startsWith("vec") && unprefixedName.endsWith("i")) {
+      "i" + unprefixedName.dropRight(1)
+    }
+    else if (unprefixedName.startsWith("mat") && squareMatrices) {
       unprefixedName.dropRight(1) match {
         case "mat2" => "mat2"
         case "mat2x3" | "mat3x2" | "mat3" => "mat3"

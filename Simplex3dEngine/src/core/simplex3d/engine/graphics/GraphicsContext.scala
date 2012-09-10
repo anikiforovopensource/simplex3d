@@ -122,7 +122,7 @@ abstract class GraphicsContext {
       val origin = originAndId._1
       val id = originAndId._2
       
-      val binding: Binding = origin match {
+      origin match {
         
         case UniformOrigin.Predefined =>
           predefined.bindings(id)
@@ -135,8 +135,6 @@ abstract class GraphicsContext {
           val prop = environment.properties(id)
           if (prop.isDefined) prop.get.binding else null
       }
-      
-      binding
     }
   }
   
@@ -148,8 +146,18 @@ abstract class GraphicsContext {
     programUniforms: Map[String, Property[UncheckedBinding]]
   ) :AnyRef = {
     
-    val bindingFromName = (name: String) => resolveRootUniform(name, predefined, material, environment, programUniforms)
-    PathUtil.resolve(path, bindingFromName)
+    path match {
+      case PathUtil.NameIndexRest(name, index, rest) =>
+        val res = resolveRootUniform(name, predefined, material, environment, programUniforms)
+        PathUtil.resolveAsList(index.toInt, rest, res)
+        
+      case PathUtil.NameRest(name, rest) =>
+        val res = resolveRootUniform(name, predefined, material, environment, programUniforms)
+        PathUtil.resolveAsValue(rest, res)
+        
+      case _ =>
+        null
+    }
   }
   
   def resolveAttributePath(

@@ -22,15 +22,12 @@ package simplex3d.engine
 
 import simplex3d.math.types._
 import simplex3d.data._
+import simplex3d.engine.util._
 
 
 package object graphics {
   
-  implicit def textureToBinding[T <: Texture[_] with Tangible : ClassManifest](texture: T) = {
-    new TextureBinding(texture)
-  }
-  
-  type ReadOnly = Protected
+  type UncheckedValue = Accessible { type Read = Object; type Mutable = Object }
   type UncheckedBinding = Accessible with Binding { type Read = Binding; type Mutable = Binding }
   type UncheckedAttributes = AttributeBinding[Format with MathType, Raw]
 }

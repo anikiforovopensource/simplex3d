@@ -66,9 +66,8 @@ extends graphics.TechniqueManager[G]
   
   
   def register(shader: ShaderPrototype) {
-    //XXX verify unique in/out block name has the same declarations
-    //XXX verify that declarations match geometry types, verify material and env keys are isDefined
-    //XXX special treatment for gl_Position => gl_FragCoord
+    //XXX Verify unique in/out block name has the same declarations,
+    //XXX special treatment for gl_Position => gl_FragCoord.
     shader match {
       case _: FragmentShader => stages(0).register(shader)
       case _: VertexShader => stages(1).register(shader)
@@ -89,39 +88,32 @@ extends graphics.TechniqueManager[G]
     
     def resolveShaderChain(stageId: Int, shader: ShaderPrototype) :ArrayBuffer[ShaderPrototype] = {
       val stage = stages(stageId)
+      
+      // Do not use set, use an ordered list, because the order is important.
       val chain = new ArrayBuffer[ShaderPrototype]
       chain += shader
-      
 
-      var uniformsPassed = true
-      if (!shader.uniformBlock.isEmpty) { def checkUniform() {
-        val declarations = shader.uniformBlock
-        
-        var i = 0; while (uniformsPassed && i < declarations.size) {
-          uniformsPassed = false
-          val declaration = declarations(i)
+      
+      var conditionsPassed = true
+      if (conditionsPassed && !shader.conditions.isEmpty) { def checkConditions() {
+        val conditions = shader.conditions
+        var i = 0; while (conditionsPassed && i < conditions.size) {
+          conditionsPassed = false
+          val (path, condition) = conditions(i)
           
-          if (declaration.isPredefined && declaration.name == "se_pointSize") {
-            uniformsPassed = (geometry.mode == PointSprites)
-          }
-          else {
-            val resolved = graphicsContext.resolveUniformPath(
-              declaration.name, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
-            
-            uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
-            
-            if (shader.logRejected && !uniformsPassed) log(
-              Level.INFO, "Shader '" + shader.name + "' was rejected because the uniform '" +
-              declaration.name + "' is not defined."
-            )
+          val resolved = graphicsContext.resolveUniformPath(
+              path, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
+              
+          if (resolved != null) {
+            conditionsPassed = condition(resolved)
           }
           
           i += 1
         }
-      }; checkUniform() }
+      }; checkConditions() }
       
       
-      var attributesPassed = uniformsPassed
+      var attributesPassed = conditionsPassed
       if (attributesPassed && !shader.attributeBlock.isEmpty) { def checkAttributes() {
         val declarations = shader.attributeBlock
         var i = 0; while (attributesPassed && i < declarations.size) {
@@ -141,7 +133,35 @@ extends graphics.TechniqueManager[G]
       }; checkAttributes() }
       
       
-      var functionsPassed = attributesPassed
+      var uniformsPassed = attributesPassed
+      if (!shader.uniformBlock.isEmpty) { def checkUniform() {
+        val declarations = shader.uniformBlock
+        
+        var i = 0; while (uniformsPassed && i < declarations.size) {
+          uniformsPassed = false
+          val declaration = declarations(i)
+          
+          if (declaration.isPredefined && declaration.name == "se_pointSize") {
+            uniformsPassed = geometry.mode.get.isInstanceOf[PointSprites]
+          }
+          else {
+            val resolved = graphicsContext.resolveUniformPath(
+              declaration.name, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
+            
+            uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
+            
+            if (shader.logRejected && !uniformsPassed) log(
+              Level.INFO, "Shader '" + shader.name + "' was rejected because the uniform '" +
+              declaration.name + "' is not defined."
+            )
+          }
+          
+          i += 1
+        }
+      }; checkUniform() }
+      
+      
+      var functionsPassed = uniformsPassed
       if (functionsPassed && !shader.functionDependencies.isEmpty) { def checkFunctions() {
         val requiredFunctions = shader.functionDependencies
         
@@ -154,7 +174,6 @@ extends graphics.TechniqueManager[G]
             val functionProvider = matchingFunctions(j)
             
             if (requiredFunction == functionProvider.export.get) {
-              // Do not use set, use an ordered list, because the order is important.
               if (!chain.contains(functionProvider)) {
                 val subChain = resolveShaderChain(stageId, functionProvider)
                 if (subChain != null) {
@@ -279,8 +298,6 @@ extends graphics.TechniqueManager[G]
         
         i += 1
       }
-      
-      // XXX handle lists in programUniforms
       
       
       // Generate shader and technique keys. 

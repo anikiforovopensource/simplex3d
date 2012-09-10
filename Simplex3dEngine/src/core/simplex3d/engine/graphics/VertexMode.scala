@@ -37,8 +37,11 @@ case class Points(var size: Double = 3) extends VertexMode {
   def :=(m: VertexMode) { size = m.asInstanceOf[Points].size }
 }
 
-case class PointSprites(var size: Double) extends VertexMode {
-  def mutableCopy() = PointSprites(size)
+/** Initially every point is set to occupy cullingSize on the screen, points that do no contribute are culled.
+ * The final size is set for points that survive culling.
+ */
+case class PointSprites(var size: Double, var cullingSize: Double = 500) extends VertexMode {
+  def mutableCopy() = PointSprites(size, cullingSize)
   def :=(m: VertexMode) { size = m.asInstanceOf[PointSprites].size }
 }
 

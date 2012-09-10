@@ -35,7 +35,7 @@ trait Geometry extends graphics.Geometry {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (an, av) = FieldReflection.getValueMap(
+    val (an, av) = FieldReflection.valueMap(
       this, classOf[UncheckedAttributes], Nil, Geometry.AttributesBlacklist
     )
     _attributeNames = an

@@ -34,6 +34,7 @@ import simplex3d.engine.util._
 private[engine] object FieldReflection {
   
   private[engine] val BindingFilter = List(classOf[Protected], classOf[Binding])
+  private[engine] val FieldFilter = List(classOf[Protected])
   private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect])
   
   
@@ -42,9 +43,9 @@ private[engine] object FieldReflection {
   def isFinal(instance: AnyRef) = ((instance.getClass.getModifiers & Modifier.FINAL) != 0)
   
 
-  def getAccessorMap(
+  private def accessorMap(
     instance: AnyRef,
-    targetType: Class[_], upperBoundsForTargetTypeArgs: List[Class[_]],
+    targetFieldType: Class[_], fieldTypeArgumentBounds: List[Class[_]],
     blacklist: Seq[String]
   )
   :(ReadArray[String], ReadArray[Method]) = {
@@ -56,13 +57,14 @@ private[engine] object FieldReflection {
     }
     else {
       val dupMethods = clazz.getMethods.filter { method =>
-        (method.getModifiers & Modifier.STATIC) == 0 &&
-        method.getParameterTypes.length == 0 &&
-        targetType.isAssignableFrom(method.getReturnType) &&
-        !clazz.isAssignableFrom(method.getReturnType) &&
-        !blacklist.contains(method.getName) &&
-        !method.getName.contains('$') && {
-          if (upperBoundsForTargetTypeArgs.isEmpty) true
+        /* not static                  */ (method.getModifiers & Modifier.STATIC) == 0 &&
+        /* no parameters               */ method.getParameterTypes.length == 0 &&
+        /* target return type          */ targetFieldType.isAssignableFrom(method.getReturnType) &&
+        /* return type is distinct     */ !clazz.isAssignableFrom(method.getReturnType) &&
+        /* not blacklisted             */ !blacklist.contains(method.getName) &&
+        /* not synthetic               */ !method.getName.contains('$') &&
+        /* return type argument bounds */ {
+          if (fieldTypeArgumentBounds.isEmpty) true
           else {
             method.getGenericReturnType match {
               case p: ParameterizedType =>
@@ -74,7 +76,7 @@ private[engine] object FieldReflection {
                   }
                 }
                 if (typeArgument == null) false
-                else upperBoundsForTargetTypeArgs.forall(_.isAssignableFrom(typeArgument))
+                else fieldTypeArgumentBounds.forall(_.isAssignableFrom(typeArgument))
               case _ =>
                 false
             }
@@ -97,13 +99,13 @@ private[engine] object FieldReflection {
     }
   }
   
-  def getValueMap[T <: AnyRef](
+  def valueMap[T <: AnyRef](
     instance: AnyRef,
     targetType: Class[T], upperBoundsForTargetTypeArgs: List[Class[_]],
     blacklist: Seq[String]
   )
   :(ReadArray[String], ReadArray[T]) = {
-    val (names, accessors) = getAccessorMap(instance, targetType, upperBoundsForTargetTypeArgs, blacklist)
+    val (names, accessors) = accessorMap(instance, targetType, upperBoundsForTargetTypeArgs, blacklist)
     
     val values = new Array[AnyRef](accessors.length).asInstanceOf[Array[T]]
     var i = 0; while (i < accessors.length) {

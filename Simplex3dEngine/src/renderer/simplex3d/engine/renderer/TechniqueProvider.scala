@@ -35,9 +35,9 @@ object TechniqueProvider {
     manager.register(new FragmentShader {
       entryPoint("resolveColor")
       
-      use("vec4 baseColor()")
+      use("vec3 lightEmission()")
+      use("vec3 lightIntensity()")
       use("vec4 texturingColor()")
-      use("vec4 lightIntensity()")
       
       in("transformationCtx") {
         declare[Vec4]("gl_FragCoord")
@@ -45,18 +45,19 @@ object TechniqueProvider {
       
       src {"""
         void resolveColor() {
-          gl_FragColor = baseColor() * texturingColor() * lightIntensity();//XXX redo baseColor as lightEmission
+          gl_FragColor = texturingColor() * vec4(lightEmission() + lightIntensity(), 1.0);
+          if (gl_FragColor.a == 0.0) discard;
         }
       """}
     })
     
     
     manager.register(new FragmentShader {
-      export("vec4 baseColor()")
+      export("vec3 lightEmission()")
       
       src {"""
-        vec4 baseColor() {
-          return vec4(1.0);
+        vec3 lightEmission() {
+          return vec3(0.0);
         }
       """}
     })
@@ -70,25 +71,25 @@ object TechniqueProvider {
       """}
     })
     manager.register(new FragmentShader {
-      export("vec4 lightIntensity()")
+      export("vec3 lightIntensity()")
       
       src {"""
-        vec4 lightIntensity() {
-          return vec4(1.0);
+        vec3 lightIntensity() {
+          return vec3(1.0);
         }
       """}
     })
     
     manager.register(new FragmentShader {
-      export("vec4 baseColor()")
+      export("vec3 lightEmission()")
       
       uniform {
-        declare[Vec4]("color")
+        declare[Vec3]("emission")
       }
       
       src {"""
-        vec4 baseColor() {
-          return color;
+        vec3 lightEmission() {
+          return emission;
         }
       """}
     })
@@ -117,6 +118,28 @@ object TechniqueProvider {
       """}
     })
     
+    // PointSprites texturing, must be added after default texturing.
+    manager.register(new FragmentShader {
+      export("vec4 texturingColor()")
+      
+      forceSquareMatrices = true
+      
+      uniform {
+        declare[DoubleRef]("se_pointSize") // Will restrict shader to PointSprites.
+        declare[BindingList[TextureUnit]]("textureUnits")
+      }
+      
+      src {"""
+        vec4 texturingColor() {
+          vec4 color = vec4(1.0);
+          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+            color *= texture2D(textureUnits[i].texture.sampler, gl_PointCoord);
+          }
+          return color;
+        }
+      """}
+    })
+    
     
     manager.register(new VertexShader {
       entryPoint("transformVertices")
@@ -136,6 +159,35 @@ object TechniqueProvider {
       src {"""
         void transformVertices() {
           gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+        }
+      """}
+    })
+
+    // PointSprites transformation, must be added after default transformation.
+    manager.register(new VertexShader {
+      entryPoint("transformVertices")
+      
+      uniform {
+        declare[DoubleRef]("se_pointSize") // Will restrict shader to PointSprites.
+        declare[Mat4]("se_modelViewProjectionMatrix")
+        declare[Mat4]("se_projectionMatrix")
+        declare[Vec2i]("se_viewDimensions")
+      }
+      
+      attributes {
+        declare[Vec3]("vertices")
+      }
+      
+      out("transformationCtx") {
+        declare[Vec4]("gl_Position")
+      }
+      
+      src {"""
+        void transformVertices() {
+          gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+          
+          // Universal for all projection matrices.
+          gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
         }
       """}
     })

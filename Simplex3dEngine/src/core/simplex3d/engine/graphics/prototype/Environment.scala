@@ -35,7 +35,7 @@ trait Environment extends graphics.Environment {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (pn, pv) = FieldReflection.getValueMap(
+    val (pn, pv) = FieldReflection.valueMap(
       this,
       classOf[Property[_]], FieldReflection.EnvironmentalEffectFilter,
       Nil

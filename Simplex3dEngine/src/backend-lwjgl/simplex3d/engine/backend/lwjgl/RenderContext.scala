@@ -52,7 +52,7 @@ private[lwjgl] object RenderContext {
 private[lwjgl] final class RenderContext(val capabilities: GraphicsCapabilities, val settings: AdvancedSettings)
 extends graphics.RenderContext {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
-  import GL20._; import GL21._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
+  import GL20._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
   import AccessScene._; import AccessChanges._
   import AccessGl._
@@ -863,7 +863,7 @@ extends graphics.RenderContext {
     
     val binding = program.graphicsContext.resolveUniformPath(
       programBinding.name, predefined, material, environment, program.programUniforms//XXX possibly better naming for programUniforms, shaderUniforms
-    ).asInstanceOf[Binding]
+    )
     
     if (binding != null) {
       val correctType = checkUniformType(binding, programBinding.dataType)
@@ -927,7 +927,7 @@ extends graphics.RenderContext {
     }
   }
   
-  private[this] def checkUniformType(binding: Binding, dtype: Int) :Boolean = {
+  private[this] def checkUniformType(binding: AnyRef, dtype: Int) :Boolean = {
     dtype match {
       case EngineBindingTypes.Float => binding.isInstanceOf[DoubleRef]
       case EngineBindingTypes.Vec2 => binding.isInstanceOf[Vec2]

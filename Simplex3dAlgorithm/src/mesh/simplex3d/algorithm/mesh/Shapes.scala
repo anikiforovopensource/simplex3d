@@ -38,11 +38,14 @@ object Shapes {
     ),
     DataBuffer[Vec3, RFloat](
       Vec3(0, 0, 1), Vec3(0, 0, 1), Vec3(0, 0, 1), Vec3(0, 0, 1) 
+    ),
+    DataBuffer[Vec2, RFloat](
+      Vec2(0, 0), Vec2(1, 0), Vec2(0, 1), Vec2(1, 1)
     )
   )
   
   def assembleBox() = {
-    val (indices, vertices, normals) = makeQuad()
+    val (indices, vertices, normals, texCoords) = makeQuad()
     
     val transformations = Seq(
       Mat4x3 translate(Vec3(0, 0, 0.5)), // front

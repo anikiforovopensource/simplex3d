@@ -101,7 +101,11 @@ extends graphics.TechniqueManager[G]
           conditionsPassed = false
           val (path, condition) = conditions(i)
           
-          val resolved = graphicsContext.resolveUniformPath(
+          val resolved =
+            if (path == "mode") {
+              geometry.mode.get
+            }
+            else graphicsContext.resolveUniformPath(
               path, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
               
           if (resolved != null) {

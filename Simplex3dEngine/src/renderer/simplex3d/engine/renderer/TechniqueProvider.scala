@@ -46,7 +46,6 @@ object TechniqueProvider {
       src {"""
         void resolveColor() {
           gl_FragColor = texturingColor() * vec4(lightEmission() + lightIntensity(), 1.0);
-          if (gl_FragColor.a == 0.0) discard;
         }
       """}
     })
@@ -97,8 +96,6 @@ object TechniqueProvider {
     manager.register(new FragmentShader {
       export("vec4 texturingColor()")
       
-      forceSquareMatrices = true
-      
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
@@ -122,10 +119,11 @@ object TechniqueProvider {
     manager.register(new FragmentShader {
       export("vec4 texturingColor()")
       
-      forceSquareMatrices = true
+      condition[VertexMode]("mode") {
+        _.isInstanceOf[PointSprites]
+      }
       
       uniform {
-        declare[DoubleRef]("se_pointSize") // Will restrict shader to PointSprites.
         declare[BindingList[TextureUnit]]("textureUnits")
       }
       
@@ -167,8 +165,12 @@ object TechniqueProvider {
     manager.register(new VertexShader {
       entryPoint("transformVertices")
       
+      condition[VertexMode]("mode") {
+        _.isInstanceOf[PointSprites]
+      }
+      
       uniform {
-        declare[DoubleRef]("se_pointSize") // Will restrict shader to PointSprites.
+        declare[DoubleRef]("se_pointSize") // Only available to PointSprites.
         declare[Mat4]("se_modelViewProjectionMatrix")
         declare[Mat4]("se_projectionMatrix")
         declare[Vec2i]("se_viewDimensions")
@@ -194,8 +196,6 @@ object TechniqueProvider {
       
     manager.register(new VertexShader {
       entryPoint("propagateTexturingValues")
-      
-      forceSquareMatrices = true
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")

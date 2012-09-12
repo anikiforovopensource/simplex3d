@@ -67,8 +67,13 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {//XXX 
   private[this] var _name = this.hashCode.toString
   private[this] var _logRejected = false
   private[this] var _logAccepted = false
-  private[this] var _forceSquareMatrices = false
+  
+  
   private[this] var _version = "120"//XXX version is automatically included depending on profile (gles2, gles3, gl4)
+  final def version = _version
+  
+  private[this] var _forceSquareMatrices = true //XXX derive from version
+  final def forceSquareMatrices = _forceSquareMatrices
   
     
   final def name = _name
@@ -79,12 +84,6 @@ sealed abstract class ShaderPrototype(val shaderType: Shader.type#Value) {//XXX 
   
   final def logAccepted = _logAccepted
   protected final def logAccepted_=(log: Boolean) { _logAccepted = log }
-  
-  final def forceSquareMatrices = _forceSquareMatrices//XXX remove manual square matrices, derive from version instead
-  protected final def forceSquareMatrices_=(force: Boolean) { _forceSquareMatrices = force }
-  
-  final def version = _version//XXX remove manual version setting
-  protected final def version_=(version: String) { _version = version }
   
   
   private[this] var _export: Option[String] = None
@@ -543,7 +542,7 @@ object ShaderPrototype {
       shader.attributeBlock, shader.uniformBlock, shader.inputBlocks, shader.outputBlocks
     )
     
-    (if (!shader.version.isEmpty) "#version " + shader.version + "\n\n" else "") +
+    "#version " + shader.version + "\n\n" +
     genSizeDelarationHeader(arrayDeclarations) +
     genStructDeclarationHeader_Glsl120(shader.structs) +
     globalDeclarations +

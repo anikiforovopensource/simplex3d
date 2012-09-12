@@ -287,33 +287,6 @@ extends graphics.RenderContext {
     }
   }
   
-  private def legacyMipMapGeneration(texture: Texture2d[_]) {
-    if (!texture.suspendLogging && (!isPowerOfTwo(texture.dimensions.x) || !isPowerOfTwo(texture.dimensions.y))) {
-      log(
-        Level.WARNING,
-        "Using 'settings.advanced.legacyMipMapGeneration = true' with non-power-of-two textures. " +
-        "The resulting texture will be resized."
-      )
-      texture.suspendLogging = true
-    }
-    
-    val src = texture.src
-    val internalFormat = resolveInternalFormat(src.formatManifest)
-    val format = resolveFormat(src.accessorManifest)
-    val ftype = resolveType(src.formatManifest, src.rawType)
-    
-    /*
-    org.lwjgl.util.glu.MipMap.gluBuild2DMipmaps(
-      GL_TEXTURE_2D,
-      internalFormat, texture.dimensions.x, texture.dimensions.y,
-      format, ftype, texture.src.bindingBuffer()
-    )
-    */
-    
-    texture.hasMatchingMipmaps = true
-    
-    throw new UnsupportedOperationException("Legacy mipmap generation is deprecated.")//XXX remove legacy mipmaps permanently.
-  }
   
   private def initialize(texture: Texture2d[_ <: Accessor with AnyVec[Double]]) :Int = {
     resourceManager.allocate(texture)
@@ -323,24 +296,21 @@ extends graphics.RenderContext {
     
     val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
-    if (generateMipmap && settings.legacyMipMapGeneration) legacyMipMapGeneration(texture)
-    else {
-      val src = texture.src
-      val internalFormat = resolveInternalFormat(src.formatManifest)
-      val format = resolveFormat(src.accessorManifest)
-      val ftype = resolveType(src.formatManifest, src.rawType)
-      
-      glTexImage2D(
-        GL_TEXTURE_2D, 0, //level
-        internalFormat, texture.dimensions.x, texture.dimensions.y, 0, //border
-        format, ftype, texture.src.bindingBuffer()
-      )
-      
-      if (generateMipmap) { //XXX reuse this chunk of code. also detect ATI drivers and call glEnable(GL_TEXTURE_2D) only for ATI cards.
-        glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
-        glGenerateMipmapEXT(GL_TEXTURE_2D)
-        texture.hasMatchingMipmaps = true
-      }
+    val src = texture.src
+    val internalFormat = resolveInternalFormat(src.formatManifest)
+    val format = resolveFormat(src.accessorManifest)
+    val ftype = resolveType(src.formatManifest, src.rawType)
+    
+    glTexImage2D(
+      GL_TEXTURE_2D, 0, //level
+      internalFormat, texture.dimensions.x, texture.dimensions.y, 0, //border
+      format, ftype, texture.src.bindingBuffer()
+    )
+    
+    if (generateMipmap) { //XXX reuse this chunk of code. also detect ATI drivers and call glEnable(GL_TEXTURE_2D) only for ATI cards.
+      glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
+      glGenerateMipmapEXT(GL_TEXTURE_2D)
+      texture.hasMatchingMipmaps = true
     }
     
     if (true) {
@@ -363,25 +333,22 @@ extends graphics.RenderContext {
     
     val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
-    if (generateMipmap && settings.legacyMipMapGeneration) legacyMipMapGeneration(texture)
-    else {
-      val src = texture.src
-      val internalFormat = resolveInternalFormat(src.formatManifest)
-      val format = resolveFormat(src.accessorManifest)
-      val ftype = resolveType(src.formatManifest, src.rawType)
+    val src = texture.src
+    val internalFormat = resolveInternalFormat(src.formatManifest)
+    val format = resolveFormat(src.accessorManifest)
+    val ftype = resolveType(src.formatManifest, src.rawType)
+  
+    glTexSubImage2D(
+      GL_TEXTURE_2D, 0, //level
+      0, 0, // offset.xy
+      texture.dimensions.x, texture.dimensions.y,
+      format, ftype, texture.src.bindingBuffer()
+    )
     
-      glTexSubImage2D(
-        GL_TEXTURE_2D, 0, //level
-        0, 0, // offset.xy
-        texture.dimensions.x, texture.dimensions.y,
-        format, ftype, texture.src.bindingBuffer()
-      )
-      
-      if (generateMipmap) {
-        glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
-        glGenerateMipmapEXT(GL_TEXTURE_2D)
-        texture.hasMatchingMipmaps = true
-      }
+    if (generateMipmap) {
+      glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
+      glGenerateMipmapEXT(GL_TEXTURE_2D)
+      texture.hasMatchingMipmaps = true
     }
     
     texture.clearDataChanges()
@@ -412,12 +379,9 @@ extends graphics.RenderContext {
   private def updateMipmaps(texture: Texture[_]) {
     texture match {
       case t: Texture2d[_] =>
-        if (settings.legacyMipMapGeneration) legacyMipMapGeneration(t)
-        else {
-          glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
-          glGenerateMipmapEXT(GL_TEXTURE_2D) // TODO Test on ATI cards.
-          texture.hasMatchingMipmaps = true
-        }
+        glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
+        glGenerateMipmapEXT(GL_TEXTURE_2D) // TODO Test on ATI cards.
+        texture.hasMatchingMipmaps = true
     }
   }
   

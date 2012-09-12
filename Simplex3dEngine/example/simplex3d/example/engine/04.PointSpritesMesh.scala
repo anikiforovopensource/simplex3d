@@ -46,6 +46,9 @@ object PointSpritesMesh extends default.App {
 
   
   val mesh = new Mesh("PointSprites")
+  val tempIndexData = DataBuffer[SInt, UShort](pointCount)
+  val mapped = new Array[Float](pointCount)
+  val tempStore = new Array[Long](pointCount)
   
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 200)
@@ -81,11 +84,17 @@ object PointSpritesMesh extends default.App {
     }
     
     
-    mesh.geometry.mode := PointSprites(1.7)
+    val indices = Attributes[SInt, UShort](pointCount)
+    val indexData = indices.write
+    for (i <- 0 until indexData.size) indexData(i) = i
+    
+    mesh.geometry.mode := PointSprites(1.9)
+    mesh.geometry.indices := indices
     mesh.geometry.vertices := Attributes[Vec3, RFloat](pointCount)
     mesh.customBoundingVolume := new Oabb(Vec3(-200), Vec3(200))
     mesh.material.faceCulling.update := FaceCulling.Back
     mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+    mesh.transformation.update
     
     var vertices = mesh.geometry.vertices.write//XXX replace attribute.read/wreite with attribute.get/update
     for (i <- 0 until pointCount) {
@@ -105,14 +114,361 @@ object PointSpritesMesh extends default.App {
   def update(time: TimeStamp) {
     //Sort point sprites
     val camPosition = world.camera.transformation.get.translation
-    
-    if (!mesh.transformation.isDefined) mesh.transformation.update
     val meshPosition = mesh.transformation.get.translation
-    
     val offset = meshPosition - camPosition
     
-    // Simple but very slow way to sort.
-    val sorted = mesh.geometry.vertices.read.sortBy{ p => val dir = p + offset; dot(dir, dir) }
-    mesh.geometry.vertices.write.put(sorted.reverse)
+    val indices = mesh.geometry.indices.read
+    val vertices = mesh.geometry.vertices.read
+    
+    //Experimental DataSeq sort
+    var i = 0; while (i < pointCount) {
+      val dir = vertices(indices(i)) + offset
+      val ordering = -dot(dir, dir)
+      mapped(i) = ordering.toFloat
+      
+      i += 1
+    }
+    
+    sort(
+      indices, 0, pointCount, 1,
+      mapped,
+      tempIndexData, 0,
+      tempStore
+    )
+    
+    mesh.geometry.indices.write.put(tempIndexData)
+  }
+  
+  
+  /** first and stride are in units of T
+   * count is the number of strides
+   * if target is a view, the result must be the 
+   */
+  def sort[T <: Accessor](
+    src: ReadData[T], first: Int, count: Int, stride: Int,
+    mapped: Array[Float],
+    dest: Data[T], destFirst: Int,
+    tempOrder: Array[Long]
+  ) {
+    import java.nio._
+    
+    require(first >= 0, "")
+    require(count >= 0, "")
+    require(stride >= 1, "")
+    require(destFirst >= 0, "")
+    
+    require(mapped.length >= count, "")
+    require(dest.size >= destFirst + count*stride, "")
+    require(tempOrder.length >= count, "")
+    
+    require(!src.sharesStorageWith(dest), "")
+    
+    require(src.accessorManifest == dest.accessorManifest, "")
+    require(src.formatManifest == dest.formatManifest, "")
+    require(src.rawType == dest.rawType, "")
+    require(src.offset == dest.offset, "")
+    require(src.stride == dest.stride, "")
+    
+    
+    if (!src.isInstanceOf[Contiguous[_, _]]) {
+      reorderByteBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+    }
+    else {
+      src.primitives.rawType match {
+        case RawType.SByte | RawType.UByte => reorderByteBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        case RawType.SShort | RawType.HFloat => //reorderShortBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        case RawType.UShort => reorderCharBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        case RawType.SInt | RawType.UInt => //reorderIntBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        case RawType.RFloat => //reorderFloatBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        case RawType.RDouble => reorderDoubleBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+      }
+    }
+  }
+  
+  import java.nio._
+  import java.util.Arrays
+  
+  
+  def zipFloatByte(f: Float, d: Byte) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | (d & 0xFF)
+  }
+  
+  def zipFloatBytes(f: Float, d0: Byte, d1: Byte, d2: Byte) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | ((d0 & 0xFF) << 16) | ((d1 & 0xFF) << 8) | (d2 & 0xFF)
+  }
+  
+  def zipFloatShort(f: Float, d: Short) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | (d & 0xFFFF)
+  }
+  
+  def zipFloatChar(f: Float, d: Char) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | d
+  }
+  
+  def zipFloatInt(f: Float, d: Int) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | d
+  }
+  
+  def zipFloatFloat(f: Float, d: Float) :Long = {
+    val bits = java.lang.Float.floatToRawIntBits(f)
+    val lead: Long =
+      if (bits < 0) { -bits | 0x80000000 }
+      else bits
+    
+    (lead << 32) | java.lang.Float.floatToRawIntBits(d)
+  }
+  
+  def reorderByteBuffer[T <: Accessor](
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
+    tempOrder: Array[Long]
+  ) {
+    val byteStride = src.byteStride
+    val chunk = stride*byteStride
+    
+    val destBuffer = dest.bindingBufferSubData(destFirst, count*stride).asInstanceOf[ByteBuffer]
+    val srcBuffer = src.bindingBuffer().asInstanceOf[ByteBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        {
+          var i = 0; while (i < count) {
+            tempOrder(i) = zipFloatByte(mapped(i), srcBuffer.get(srcFirst + i))
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+        
+        {
+          var i = 0; while (i < count) {
+            destBuffer.put(tempOrder(i).toByte)
+            i += 1
+          }
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        {
+          var i = 0; while (i < count) {
+            val srcIndex = (srcFirst + i*stride)*byteStride
+            tempOrder(i) = zipFloatBytes(
+              mapped(i),
+              srcBuffer.get(srcIndex),
+              srcBuffer.get(srcIndex + 1),
+              srcBuffer.get(srcIndex + 2)
+            )
+            
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+        
+        {
+          var i = 0; while (i < count) {
+            val stored = tempOrder(i).toInt
+            destBuffer.put((stored >> 16).toByte)
+            destBuffer.put((stored >> 8).toByte)
+            destBuffer.put(stored.toByte)
+            
+            i += 1
+          }
+        }
+      }; tri()
+    
+      case _ => def multipart() {
+        {
+          var i = 0; while (i < count) {
+            tempOrder(i) = zipFloatInt(mapped(i), i)
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+    
+        {
+          var i = 0; while (i < count) {
+            val sortedIndex = tempOrder(i).toInt
+            
+            val srcIndex = (srcFirst + sortedIndex*stride)*byteStride
+            srcBuffer.limit(srcIndex + chunk)
+            srcBuffer.position(srcIndex)
+            
+            destBuffer.put(srcBuffer)
+            
+            i += 1
+          }
+        }
+      }; multipart()
+    }
+  }
+  
+  def reorderCharBuffer[T <: Accessor](
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
+    tempOrder: Array[Long]
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[CharBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[CharBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        {
+          var i = 0; while (i < count) {
+            tempOrder(i) = zipFloatChar(mapped(i), srcBuffer.get(srcFirst + i))
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+        
+        {
+          var i = 0; while (i < count) {
+            destBuffer.put(tempOrder(i).toChar)
+            i += 1
+          }
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        {
+          var i = 0; while (i < count) {
+            tempOrder(i) = zipFloatInt(mapped(i), i)
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+        
+        {
+          var i = 0; while (i < count) {
+            val sortedIndex = tempOrder(i).toInt
+          
+            val srcIndex = (srcFirst + sortedIndex*stride)*components
+            destBuffer.put(srcBuffer.get(srcIndex))
+            destBuffer.put(srcBuffer.get(srcIndex + 1))
+            destBuffer.put(srcBuffer.get(srcIndex + 2))
+            
+            i += 1
+          }
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        {
+          var i = 0; while (i < count) {
+            tempOrder(i) = zipFloatInt(mapped(i), i)
+            i += 1
+          }
+          Arrays.sort(tempOrder, 0, count)
+        }
+        
+        {
+          var i = 0; while (i < count) {
+            val sortedIndex = tempOrder(i).toInt
+              
+            val srcIndex = (srcFirst + sortedIndex*stride)*components
+            srcBuffer.limit(srcIndex + chunk)
+            srcBuffer.position(srcIndex)
+            
+            destBuffer.put(srcBuffer)
+            
+            i += 1
+          }
+        }
+      }; multipart()
+    }
+  }
+  
+  def reorderDoubleBuffer[T <: Accessor](
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
+    tempOrder: Array[Long]
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[DoubleBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[DoubleBuffer]
+    
+    {
+      var i = 0; while (i < count) {
+        tempOrder(i) = zipFloatInt(mapped(i), i)
+        i += 1
+      }
+      Arrays.sort(tempOrder, 0, count)
+    }
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val sortedIndex = tempOrder(i).toInt
+          
+          val srcIndex = srcFirst + sortedIndex*stride
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val sortedIndex = tempOrder(i).toInt
+          
+          val srcIndex = (srcFirst + sortedIndex*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+      
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val sortedIndex = tempOrder(i).toInt
+            
+          val srcIndex = (srcFirst + sortedIndex*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
   }
 }

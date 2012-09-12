@@ -112,6 +112,12 @@ object PointSpritesMesh extends default.App {
 
   
   def update(time: TimeStamp) {
+    // Animate points
+    val writableVertices = mesh.geometry.vertices.write
+    for (i <- 0 until pointCount) {
+      writableVertices(i) = curve(i, time.total*0.07)
+    }
+    
     //Sort point sprites
     val camPosition = world.camera.transformation.get.translation
     val meshPosition = mesh.transformation.get.translation
@@ -120,6 +126,12 @@ object PointSpritesMesh extends default.App {
     val indices = mesh.geometry.indices.read
     val vertices = mesh.geometry.vertices.read
     
+
+    // Test sorting with temp buffers
+//    val tempIndexData = DataArray[SInt, UShort](pointCount)
+//    val mapped = new Array[Float](pointCount)
+//    val tempStore = new Array[Long](pointCount)
+  
     //Experimental DataSeq sort
     var i = 0; while (i < pointCount) {
       val dir = vertices(indices(i)) + offset
@@ -171,16 +183,28 @@ object PointSpritesMesh extends default.App {
     
     
     if (!src.isInstanceOf[Contiguous[_, _]]) {
-      reorderByteBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+      reorderByteBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
     }
     else {
       src.primitives.rawType match {
-        case RawType.SByte | RawType.UByte => reorderByteBuffer(dest, destFirst, src, first, stride, count, tempOrder)
-        case RawType.SShort | RawType.HFloat => //reorderShortBuffer(dest, destFirst, src, first, stride, count, tempOrder)
-        case RawType.UShort => reorderCharBuffer(dest, destFirst, src, first, stride, count, tempOrder)
-        case RawType.SInt | RawType.UInt => //reorderIntBuffer(dest, destFirst, src, first, stride, count, tempOrder)
-        case RawType.RFloat => //reorderFloatBuffer(dest, destFirst, src, first, stride, count, tempOrder)
-        case RawType.RDouble => reorderDoubleBuffer(dest, destFirst, src, first, stride, count, tempOrder)
+        
+        case RawType.SByte | RawType.UByte =>
+          reorderByteBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
+          
+        case RawType.SShort | RawType.HFloat =>
+          //reorderShortBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
+          
+        case RawType.UShort =>
+          reorderCharBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
+          
+        case RawType.SInt | RawType.UInt =>
+          //reorderIntBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
+          
+        case RawType.RFloat =>
+          //reorderFloatBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
+          
+        case RawType.RDouble =>
+          reorderDoubleBuffer(mapped, dest, destFirst, src, first, stride, count, tempOrder)
       }
     }
   }
@@ -244,6 +268,7 @@ object PointSpritesMesh extends default.App {
   }
   
   def reorderByteBuffer[T <: Accessor](
+    mapped: Array[Float],
     dest: Data[T], destFirst: Int,
     src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
     tempOrder: Array[Long]
@@ -329,6 +354,7 @@ object PointSpritesMesh extends default.App {
   }
   
   def reorderCharBuffer[T <: Accessor](
+    mapped: Array[Float],
     dest: Data[T], destFirst: Int,
     src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
     tempOrder: Array[Long]
@@ -410,6 +436,7 @@ object PointSpritesMesh extends default.App {
   }
   
   def reorderDoubleBuffer[T <: Accessor](
+    mapped: Array[Float],
     dest: Data[T], destFirst: Int,
     src: ReadData[T], srcFirst: Int, stride: Int, count: Int,
     tempOrder: Array[Long]

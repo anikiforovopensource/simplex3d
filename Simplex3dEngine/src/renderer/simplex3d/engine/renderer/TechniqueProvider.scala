@@ -133,6 +133,7 @@ object TechniqueProvider {
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
             color *= texture2D(textureUnits[i].texture.sampler, gl_PointCoord);
           }
+          if (color.a == 0.0) discard;
           return color;
         }
       """}

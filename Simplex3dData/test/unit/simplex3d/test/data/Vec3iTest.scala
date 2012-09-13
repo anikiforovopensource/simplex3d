@@ -124,11 +124,11 @@ class Vec3iTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[Vec3i, UByte])
-    testSubCopy(DataSeq[Vec3i, SByte])
-    testSubCopy(DataSeq[Vec3i, UShort])
-    testSubCopy(DataSeq[Vec3i, SShort])
-    testSubCopy(DataSeq[Vec3i, UInt])
-    testSubCopy(DataSeq[Vec3i, SInt])
+    testSubCopy(DataFactory[Vec3i, UByte])
+    testSubCopy(DataFactory[Vec3i, SByte])
+    testSubCopy(DataFactory[Vec3i, UShort])
+    testSubCopy(DataFactory[Vec3i, SShort])
+    testSubCopy(DataFactory[Vec3i, UInt])
+    testSubCopy(DataFactory[Vec3i, SInt])
   }
 }

@@ -35,12 +35,12 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AbstractData[
-  @specialized(Int, Float, Double) ReadAs <: WriteAs,
-  @specialized(Int, Float, Double) WriteAs
+  @specialized(Int, Float, Double) AC <: AR,//Accessor#Const
+  @specialized(Int, Float, Double) AR//Accessor#Read
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadAbstractData[ReadAs](
+) extends ReadAbstractData[AC](
   shared, prim, ro,
   off, str
 ) {
@@ -50,8 +50,8 @@ abstract class AbstractData[
   
   final def buffer() :Raw#Buffer = Util.duplicateBuff(storeType, buff).asInstanceOf[Raw#Buffer]
 
-  override def apply(i: Int) :ReadAs
-  def update(i: Int, v: WriteAs)
+  override def apply(i: Int) :AC
+  def update(i: Int, v: AR)
 
 
   private[this] final def putArray(
@@ -103,14 +103,14 @@ abstract class AbstractData[
     }
   }
   private[this] final def putIndexedSeq(
-    index: Int, seq: IndexedSeq[WriteAs], first: Int, count: Int
+    index: Int, seq: IndexedSeq[AR], first: Int, count: Int
   ) {
     var i = 0; while (i < count) {
       this(index + i) = seq(first + i)
       i += 1
     }
   }
-  private[this] final def putSeq(index: Int, seq: Seq[WriteAs], first: Int, count: Int) {
+  private[this] final def putSeq(index: Int, seq: Seq[AR], first: Int, count: Int) {
     val iter = seq.iterator
     iter.drop(first)
     val lim = index + count
@@ -120,7 +120,7 @@ abstract class AbstractData[
     }
   }
 
-  private[this] final def put(index: Int, src: Seq[WriteAs], srcSize: Int, first: Int, count: Int) {
+  private[this] final def put(index: Int, src: Seq[AR], srcSize: Int, first: Int, count: Int) {
     var dataCopy = false
     
     if (src.isInstanceOf[ReadDataSeq[_, _]]) {
@@ -176,29 +176,29 @@ abstract class AbstractData[
               )
             case _ =>
               putIndexedSeq(
-                index, wrapped.asInstanceOf[IndexedSeq[WriteAs]], first, count
+                index, wrapped.asInstanceOf[IndexedSeq[AR]], first, count
               )
           }
         }; cpArray()
         case is: IndexedSeq[_] => {
-          putIndexedSeq(index, is.asInstanceOf[IndexedSeq[WriteAs]], first, count)
+          putIndexedSeq(index, is.asInstanceOf[IndexedSeq[AR]], first, count)
         }
         case _ => {
-          putSeq(index, src.asInstanceOf[Seq[WriteAs]], first, count)
+          putSeq(index, src.asInstanceOf[Seq[AR]], first, count)
         }
       }
     }; seqCopy() }
   }
 
-  final def put(index: Int, src: Seq[WriteAs], first: Int, count: Int) {
+  final def put(index: Int, src: Seq[AR], first: Int, count: Int) {
     put(index, src, src.size, first, count)
   }
   
-  final def put(index: Int, src: Seq[WriteAs]) {
+  final def put(index: Int, src: Seq[AR]) {
     put(index, src, src.size, 0, size)
   }
 
-  final def put(src: Seq[WriteAs]) {
+  final def put(src: Seq[AR]) {
     put(0, src, src.size, 0, size)
   }
 
@@ -346,7 +346,7 @@ abstract class AbstractData[
    */
   final def put2d(
     dimensions: inVec2i, offset: inVec2i,
-    src: IndexedSeq[WriteAs], srcDimensions: inVec2i
+    src: IndexedSeq[AR], srcDimensions: inVec2i
   ) {
     put2d(
       dimensions, offset,
@@ -359,7 +359,7 @@ abstract class AbstractData[
    */
   final def put2d(
     dimensions: inVec2i, offset: inVec2i,
-    src: IndexedSeq[WriteAs], srcDimensions: inVec2i, srcOffset: inVec2i,
+    src: IndexedSeq[AR], srcDimensions: inVec2i, srcOffset: inVec2i,
     copyDimensions: inVec2i
   ) {
     var contiguousCopy = false
@@ -552,7 +552,7 @@ abstract class AbstractData[
    */
   final def put3d(
     dimensions: inVec3i, offset: inVec3i,
-    src: IndexedSeq[WriteAs], srcDimensions: inVec3i
+    src: IndexedSeq[AR], srcDimensions: inVec3i
   ) {
     put3d(
       dimensions, offset,
@@ -565,7 +565,7 @@ abstract class AbstractData[
    */
   final def put3d(
     dimensions: inVec3i, offset: inVec3i,
-    src: IndexedSeq[WriteAs], srcDimensions: inVec3i, srcOffset: inVec3i,
+    src: IndexedSeq[AR], srcDimensions: inVec3i, srcOffset: inVec3i,
     copyDimensions: inVec3i
   ) {
     var contiguousCopy = false

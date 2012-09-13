@@ -154,13 +154,13 @@ class Vec4fTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[Vec4f, UByte])
-    testSubCopy(DataSeq[Vec4f, SByte])
-    testSubCopy(DataSeq[Vec4f, UShort])
-    testSubCopy(DataSeq[Vec4f, SShort])
-    testSubCopy(DataSeq[Vec4f, UInt])
-    testSubCopy(DataSeq[Vec4f, SInt])
-    testSubCopy(DataSeq[Vec4f, HFloat])
-    testSubCopy(DataSeq[Vec4f, RFloat])
+    testSubCopy(DataFactory[Vec4f, UByte])
+    testSubCopy(DataFactory[Vec4f, SByte])
+    testSubCopy(DataFactory[Vec4f, UShort])
+    testSubCopy(DataFactory[Vec4f, SShort])
+    testSubCopy(DataFactory[Vec4f, UInt])
+    testSubCopy(DataFactory[Vec4f, SInt])
+    testSubCopy(DataFactory[Vec4f, HFloat])
+    testSubCopy(DataFactory[Vec4f, RFloat])
   }
 }

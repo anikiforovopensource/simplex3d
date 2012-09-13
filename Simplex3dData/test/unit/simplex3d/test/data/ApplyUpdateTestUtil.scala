@@ -90,7 +90,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     intercept[Exception] { ro(seq.size - 1) = seq(0) }
   }
 
-  def testApplyUpdate(seq: DataSeq[SInt, _], value: Int, expected: Int, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[SInt, _], value: Int, expected: Int, store: Any) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -99,7 +99,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
-  def testApplyUpdate(seq: DataSeq[RFloat, _], value: Float, expected: Float, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[RFloat, _], value: Float, expected: Float, store: Any) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -111,7 +111,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
-  def testApplyUpdate(seq: DataSeq[RDouble, _], value: Double, expected: Double, store: AnyVal) {
+  def testApplyUpdate(seq: DataSeq[RDouble, _], value: Double, expected: Double, store: Any) {
     assert(seq.size > 0)
     val i = randomSrc.nextInt(seq.size)
 
@@ -123,37 +123,37 @@ object ApplyUpdateTestUtil extends FunSuite {
     verifyValue(seq.buffer(), seq.offset + i*seq.stride, store)
   }
 
-  private[this] final def toByte(value: AnyVal) :Byte = {
+  private[this] final def toByte(value: Any) :Byte = {
     (value: @unchecked) match {
       case x: Int => x.toByte
       case x: Byte => x
     }
   }
-  private[this] final def toShort(value: AnyVal) :Short = {
+  private[this] final def toShort(value: Any) :Short = {
     (value: @unchecked) match {
       case x: Int => x.toShort
       case x: Short => x
     }
   }
-  private[this] final def toChar(value: AnyVal) :Char = {
+  private[this] final def toChar(value: Any) :Char = {
     (value: @unchecked) match {
       case x: Int => x.toChar
       case x: Char => x
     }
   }
-  private[this] final def toFloat(value: AnyVal) :Float = {
+  private[this] final def toFloat(value: Any) :Float = {
     (value: @unchecked) match {
       case x: Int => x.toFloat
       case x: Float => x
     }
   }
-  private[this] final def toDouble(value: AnyVal) :Double = {
+  private[this] final def toDouble(value: Any) :Double = {
     (value: @unchecked) match {
       case x: Int => x.toDouble
       case x: Double => x
     }
   }
-  private def verifyValue(buff: Buffer, index: Int, value: AnyVal) {
+  private def verifyValue(buff: Buffer, index: Int, value: Any) {
     buff match {
       case b: ByteBuffer => assert(b.get(index) == toByte(value))
       case b: ShortBuffer => assert(b.get(index) == toShort(value))

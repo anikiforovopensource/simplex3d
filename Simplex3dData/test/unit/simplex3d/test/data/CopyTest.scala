@@ -40,141 +40,141 @@ class CopyTest extends FunSuite {
   // All the copy tests must be run by the same thread.
 
   test("Copy SInt") {
-    testCopy(DataSeq[SInt, UByte])
-    testCopy(DataSeq[SInt, SByte])
-    testCopy(DataSeq[SInt, UShort])
-    testCopy(DataSeq[SInt, SShort])
-    testCopy(DataSeq[SInt, UInt])
-    testCopy(DataSeq[SInt, SInt])
+    testCopy(DataFactory[SInt, UByte])
+    testCopy(DataFactory[SInt, SByte])
+    testCopy(DataFactory[SInt, UShort])
+    testCopy(DataFactory[SInt, SShort])
+    testCopy(DataFactory[SInt, UInt])
+    testCopy(DataFactory[SInt, SInt])
   }
 
   test("Copy Vec2i") {
-    testCopy(DataSeq[Vec2i, UByte])
-    testCopy(DataSeq[Vec2i, SByte])
-    testCopy(DataSeq[Vec2i, UShort])
-    testCopy(DataSeq[Vec2i, SShort])
-    testCopy(DataSeq[Vec2i, UInt])
-    testCopy(DataSeq[Vec2i, SInt])
+    testCopy(DataFactory[Vec2i, UByte])
+    testCopy(DataFactory[Vec2i, SByte])
+    testCopy(DataFactory[Vec2i, UShort])
+    testCopy(DataFactory[Vec2i, SShort])
+    testCopy(DataFactory[Vec2i, UInt])
+    testCopy(DataFactory[Vec2i, SInt])
   }
 
   test("Copy Vec3i") {
-    testCopy(DataSeq[Vec3i, UByte])
-    testCopy(DataSeq[Vec3i, SByte])
-    testCopy(DataSeq[Vec3i, UShort])
-    testCopy(DataSeq[Vec3i, SShort])
-    testCopy(DataSeq[Vec3i, UInt])
-    testCopy(DataSeq[Vec3i, SInt])
+    testCopy(DataFactory[Vec3i, UByte])
+    testCopy(DataFactory[Vec3i, SByte])
+    testCopy(DataFactory[Vec3i, UShort])
+    testCopy(DataFactory[Vec3i, SShort])
+    testCopy(DataFactory[Vec3i, UInt])
+    testCopy(DataFactory[Vec3i, SInt])
   }
 
   test("Copy Vec4i") {
-    testCopy(DataSeq[Vec4i, UByte])
-    testCopy(DataSeq[Vec4i, SByte])
-    testCopy(DataSeq[Vec4i, UShort])
-    testCopy(DataSeq[Vec4i, SShort])
-    testCopy(DataSeq[Vec4i, UInt])
-    testCopy(DataSeq[Vec4i, SInt])
+    testCopy(DataFactory[Vec4i, UByte])
+    testCopy(DataFactory[Vec4i, SByte])
+    testCopy(DataFactory[Vec4i, UShort])
+    testCopy(DataFactory[Vec4i, SShort])
+    testCopy(DataFactory[Vec4i, UInt])
+    testCopy(DataFactory[Vec4i, SInt])
   }
 
 
   test("Copy RFloat") {
-    testCopy(DataSeq[RFloat, UByte])
-    testCopy(DataSeq[RFloat, SByte])
-    testCopy(DataSeq[RFloat, UShort])
-    testCopy(DataSeq[RFloat, SShort])
-    testCopy(DataSeq[RFloat, UInt])
-    testCopy(DataSeq[RFloat, SInt])
-    testCopy(DataSeq[RFloat, HFloat])
-    testCopy(DataSeq[RFloat, RFloat])
+    testCopy(DataFactory[RFloat, UByte])
+    testCopy(DataFactory[RFloat, SByte])
+    testCopy(DataFactory[RFloat, UShort])
+    testCopy(DataFactory[RFloat, SShort])
+    testCopy(DataFactory[RFloat, UInt])
+    testCopy(DataFactory[RFloat, SInt])
+    testCopy(DataFactory[RFloat, HFloat])
+    testCopy(DataFactory[RFloat, RFloat])
   }
 
   test("Copy Vec2f") {
-    testCopy(DataSeq[Vec2f, UByte])
-    testCopy(DataSeq[Vec2f, SByte])
-    testCopy(DataSeq[Vec2f, UShort])
-    testCopy(DataSeq[Vec2f, SShort])
-    testCopy(DataSeq[Vec2f, UInt])
-    testCopy(DataSeq[Vec2f, SInt])
-    testCopy(DataSeq[Vec2f, HFloat])
-    testCopy(DataSeq[Vec2f, RFloat])
+    testCopy(DataFactory[Vec2f, UByte])
+    testCopy(DataFactory[Vec2f, SByte])
+    testCopy(DataFactory[Vec2f, UShort])
+    testCopy(DataFactory[Vec2f, SShort])
+    testCopy(DataFactory[Vec2f, UInt])
+    testCopy(DataFactory[Vec2f, SInt])
+    testCopy(DataFactory[Vec2f, HFloat])
+    testCopy(DataFactory[Vec2f, RFloat])
   }
 
   test("Copy Vec3f") {
-    testCopy(DataSeq[Vec3f, UByte])
-    testCopy(DataSeq[Vec3f, SByte])
-    testCopy(DataSeq[Vec3f, UShort])
-    testCopy(DataSeq[Vec3f, SShort])
-    testCopy(DataSeq[Vec3f, UInt])
-    testCopy(DataSeq[Vec3f, SInt])
-    testCopy(DataSeq[Vec3f, HFloat])
-    testCopy(DataSeq[Vec3f, RFloat])
+    testCopy(DataFactory[Vec3f, UByte])
+    testCopy(DataFactory[Vec3f, SByte])
+    testCopy(DataFactory[Vec3f, UShort])
+    testCopy(DataFactory[Vec3f, SShort])
+    testCopy(DataFactory[Vec3f, UInt])
+    testCopy(DataFactory[Vec3f, SInt])
+    testCopy(DataFactory[Vec3f, HFloat])
+    testCopy(DataFactory[Vec3f, RFloat])
   }
 
   test("Copy Vec4f") {
-    testCopy(DataSeq[Vec4f, UByte])
-    testCopy(DataSeq[Vec4f, SByte])
-    testCopy(DataSeq[Vec4f, UShort])
-    testCopy(DataSeq[Vec4f, SShort])
-    testCopy(DataSeq[Vec4f, UInt])
-    testCopy(DataSeq[Vec4f, SInt])
-    testCopy(DataSeq[Vec4f, HFloat])
-    testCopy(DataSeq[Vec4f, RFloat])
+    testCopy(DataFactory[Vec4f, UByte])
+    testCopy(DataFactory[Vec4f, SByte])
+    testCopy(DataFactory[Vec4f, UShort])
+    testCopy(DataFactory[Vec4f, SShort])
+    testCopy(DataFactory[Vec4f, UInt])
+    testCopy(DataFactory[Vec4f, SInt])
+    testCopy(DataFactory[Vec4f, HFloat])
+    testCopy(DataFactory[Vec4f, RFloat])
   }
 
   test("Copy Mat3x2f") {
-    testCopy(DataSeq[Mat3x2f, RFloat])
+    testCopy(DataFactory[Mat3x2f, RFloat])
   }
 
 
   test("Copy RDouble") {
-    testCopy(DataSeq[RDouble, UByte])
-    testCopy(DataSeq[RDouble, SByte])
-    testCopy(DataSeq[RDouble, UShort])
-    testCopy(DataSeq[RDouble, SShort])
-    testCopy(DataSeq[RDouble, UInt])
-    testCopy(DataSeq[RDouble, SInt])
-    testCopy(DataSeq[RDouble, HFloat])
-    testCopy(DataSeq[RDouble, RFloat])
-    testCopy(DataSeq[RDouble, RDouble])
+    testCopy(DataFactory[RDouble, UByte])
+    testCopy(DataFactory[RDouble, SByte])
+    testCopy(DataFactory[RDouble, UShort])
+    testCopy(DataFactory[RDouble, SShort])
+    testCopy(DataFactory[RDouble, UInt])
+    testCopy(DataFactory[RDouble, SInt])
+    testCopy(DataFactory[RDouble, HFloat])
+    testCopy(DataFactory[RDouble, RFloat])
+    testCopy(DataFactory[RDouble, RDouble])
   }
 
   test("Copy Vec2d") {
-    testCopy(DataSeq[Vec2d, UByte])
-    testCopy(DataSeq[Vec2d, SByte])
-    testCopy(DataSeq[Vec2d, UShort])
-    testCopy(DataSeq[Vec2d, SShort])
-    testCopy(DataSeq[Vec2d, UInt])
-    testCopy(DataSeq[Vec2d, SInt])
-    testCopy(DataSeq[Vec2d, HFloat])
-    testCopy(DataSeq[Vec2d, RFloat])
-    testCopy(DataSeq[Vec2d, RDouble])
+    testCopy(DataFactory[Vec2d, UByte])
+    testCopy(DataFactory[Vec2d, SByte])
+    testCopy(DataFactory[Vec2d, UShort])
+    testCopy(DataFactory[Vec2d, SShort])
+    testCopy(DataFactory[Vec2d, UInt])
+    testCopy(DataFactory[Vec2d, SInt])
+    testCopy(DataFactory[Vec2d, HFloat])
+    testCopy(DataFactory[Vec2d, RFloat])
+    testCopy(DataFactory[Vec2d, RDouble])
   }
 
   test("Copy Vec3d") {
-    testCopy(DataSeq[Vec3d, UByte])
-    testCopy(DataSeq[Vec3d, SByte])
-    testCopy(DataSeq[Vec3d, UShort])
-    testCopy(DataSeq[Vec3d, SShort])
-    testCopy(DataSeq[Vec3d, UInt])
-    testCopy(DataSeq[Vec3d, SInt])
-    testCopy(DataSeq[Vec3d, HFloat])
-    testCopy(DataSeq[Vec3d, RFloat])
-    testCopy(DataSeq[Vec3d, RDouble])
+    testCopy(DataFactory[Vec3d, UByte])
+    testCopy(DataFactory[Vec3d, SByte])
+    testCopy(DataFactory[Vec3d, UShort])
+    testCopy(DataFactory[Vec3d, SShort])
+    testCopy(DataFactory[Vec3d, UInt])
+    testCopy(DataFactory[Vec3d, SInt])
+    testCopy(DataFactory[Vec3d, HFloat])
+    testCopy(DataFactory[Vec3d, RFloat])
+    testCopy(DataFactory[Vec3d, RDouble])
   }
 
   test("Copy Vec4d") {
-    testCopy(DataSeq[Vec4d, UByte])
-    testCopy(DataSeq[Vec4d, SByte])
-    testCopy(DataSeq[Vec4d, UShort])
-    testCopy(DataSeq[Vec4d, SShort])
-    testCopy(DataSeq[Vec4d, UInt])
-    testCopy(DataSeq[Vec4d, SInt])
-    testCopy(DataSeq[Vec4d, HFloat])
-    testCopy(DataSeq[Vec4d, RFloat])
-    testCopy(DataSeq[Vec4d, RDouble])
+    testCopy(DataFactory[Vec4d, UByte])
+    testCopy(DataFactory[Vec4d, SByte])
+    testCopy(DataFactory[Vec4d, UShort])
+    testCopy(DataFactory[Vec4d, SShort])
+    testCopy(DataFactory[Vec4d, UInt])
+    testCopy(DataFactory[Vec4d, SInt])
+    testCopy(DataFactory[Vec4d, HFloat])
+    testCopy(DataFactory[Vec4d, RFloat])
+    testCopy(DataFactory[Vec4d, RDouble])
   }
 
   test("Copy Mat3x2d") {
-    testCopy(DataSeq[Mat3x2d, RFloat])
-    testCopy(DataSeq[Mat3x2d, RDouble])
+    testCopy(DataFactory[Mat3x2d, RFloat])
+    testCopy(DataFactory[Mat3x2d, RDouble])
   }
 }

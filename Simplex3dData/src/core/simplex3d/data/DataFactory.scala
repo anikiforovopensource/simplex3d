@@ -1,6 +1,6 @@
 /*
  * Simplex3dData - Core Module
- * Copyright (C) 2010-2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -19,7 +19,6 @@
  */
 
 package simplex3d.data
-package extension
 
 import java.nio._
 import scala.annotation._
@@ -33,6 +32,7 @@ import RawType._
 trait DataFactory[F <: Format, +R <: Raw] {
   def rawType: Int
   def components: Int
+  def bytesPerComponent: Int
   def formatManifest: ClassManifest[F]
   def accessorManifest: ClassManifest[F#Accessor]
   def primitives: DataFactory[F#Component, R]
@@ -88,5 +88,14 @@ trait DataFactory[F <: Format, +R <: Raw] {
   private[this] final def mkViewOrBuffer(byteBuffer: ByteBuffer, offset: Int, stride: Int) :ReadDataView[F, R] = {
     if (offset == 0 && stride == components) mkReadDataBuffer(byteBuffer)
     else mkReadDataViewInstance(byteBuffer, offset, stride)
+  }
+}
+
+
+object DataFactory {
+  def apply[F <: Format, R <: Raw with Tangible](
+    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
+  ) :DataFactory[F, R] = {
+    composition.mkDataArray(primitives.mkDataArray(0))
   }
 }

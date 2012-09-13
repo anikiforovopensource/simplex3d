@@ -168,14 +168,14 @@ class Vec2dTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[Vec2d, UByte])
-    testSubCopy(DataSeq[Vec2d, SByte])
-    testSubCopy(DataSeq[Vec2d, UShort])
-    testSubCopy(DataSeq[Vec2d, SShort])
-    testSubCopy(DataSeq[Vec2d, UInt])
-    testSubCopy(DataSeq[Vec2d, SInt])
-    testSubCopy(DataSeq[Vec2d, HFloat])
-    testSubCopy(DataSeq[Vec2d, RFloat])
-    testSubCopy(DataSeq[Vec2d, RDouble])
+    testSubCopy(DataFactory[Vec2d, UByte])
+    testSubCopy(DataFactory[Vec2d, SByte])
+    testSubCopy(DataFactory[Vec2d, UShort])
+    testSubCopy(DataFactory[Vec2d, SShort])
+    testSubCopy(DataFactory[Vec2d, UInt])
+    testSubCopy(DataFactory[Vec2d, SInt])
+    testSubCopy(DataFactory[Vec2d, HFloat])
+    testSubCopy(DataFactory[Vec2d, RFloat])
+    testSubCopy(DataFactory[Vec2d, RDouble])
   }
 }

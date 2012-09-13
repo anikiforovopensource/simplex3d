@@ -31,7 +31,7 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ReadAbstractData[
-  @specialized(Int, Float, Double) ReadAs
+  @specialized(Int, Float, Double) AC//Accessor#Const
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
@@ -40,7 +40,7 @@ extends ProtectedData(
   if (shared != null) shared else prim.asInstanceOf[ProtectedData].sharedStorage
 )
 with DataSrc
-with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
+with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
 
   // Argument checks.
   assert(components >= 1)
@@ -138,7 +138,7 @@ with IndexedSeq[ReadAs] with IndexedSeqOptimized[ReadAs, IndexedSeq[ReadAs]] {
     }
   }
 
-  def apply(i: Int) :ReadAs
+  def apply(i: Int) :AC
 
   final def readOnlyBuffer() :Raw#Buffer = Util.readOnlyBuff(storeType, buff).asInstanceOf[Raw#Buffer]
   

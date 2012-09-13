@@ -166,14 +166,14 @@ class RFloatTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[RFloat, UByte])
-    testSubCopy(DataSeq[RFloat, SByte])
-    testSubCopy(DataSeq[RFloat, UShort])
-    testSubCopy(DataSeq[RFloat, SShort])
-    testSubCopy(DataSeq[RFloat, UInt])
-    testSubCopy(DataSeq[RFloat, SInt])
-    testSubCopy(DataSeq[RFloat, HFloat])
-    testSubCopy(DataSeq[RFloat, RFloat])
+    testSubCopy(DataFactory[RFloat, UByte])
+    testSubCopy(DataFactory[RFloat, SByte])
+    testSubCopy(DataFactory[RFloat, UShort])
+    testSubCopy(DataFactory[RFloat, SShort])
+    testSubCopy(DataFactory[RFloat, UInt])
+    testSubCopy(DataFactory[RFloat, SInt])
+    testSubCopy(DataFactory[RFloat, HFloat])
+    testSubCopy(DataFactory[RFloat, RFloat])
   }
 
   private def testFloatSByte(seq: DataSeq[RFloat, SByte], testValue: Float) {

@@ -1,6 +1,6 @@
 /*
  * Simplex3dData - Core Module
- * Copyright (C) 2010-2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -103,13 +103,5 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
       )
 
     putPrimitivesImpl(0, src.primitives, src.offset, src.stride, src.size)
-  }
-}
-
-object DataSeq {
-  def apply[F <: Format, R <: Raw with Tangible](
-    implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
-  ) :DataSeq[F, R] = {
-    composition.mkDataArray(primitives.mkDataArray(0))
   }
 }

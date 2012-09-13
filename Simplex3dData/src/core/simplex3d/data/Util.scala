@@ -21,6 +21,7 @@
 package simplex3d.data
 
 import java.nio._
+import java.util.Arrays
 import scala.annotation._
 import StoreType._
 
@@ -1802,6 +1803,300 @@ private[data] object Util {
             z += 1
           }
         }; cpAny()
+    }
+  }
+  
+  
+  final def reorderByteBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val byteStride = src.byteStride
+    val chunk = stride*byteStride
+    
+    val destBuffer = dest.bindingBufferSubData(destFirst, count*stride).asInstanceOf[ByteBuffer]
+    val srcBuffer = src.bindingBuffer().asInstanceOf[ByteBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*byteStride
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+    
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*byteStride
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
+  }
+  
+  final def reorderCharBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[CharBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[CharBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
+  }
+  
+  final def reorderShortBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[ShortBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[ShortBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
+  }
+  
+  final def reorderIntBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[IntBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[IntBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
+  }
+  
+  final def reorderFloatBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[FloatBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[FloatBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
+    }
+  }
+  
+  final def reorderDoubleBuffer[T <: Accessor](
+    sortContext: SortContext,
+    dest: Data[T], destFirst: Int,
+    src: ReadData[T], srcFirst: Int, stride: Int, count: Int
+  ) {
+    val components = src.components
+    val chunk = stride*components
+    
+    val destBuffer = dest.buffer().asInstanceOf[DoubleBuffer]
+    destBuffer.limit(destFirst*components + count*chunk)
+    val srcBuffer = src.readOnlyBuffer().asInstanceOf[DoubleBuffer]
+    
+    
+    chunk match {
+      
+      case 1 => def single() {
+        var i = 0; while (i < count) {
+          val srcIndex = srcFirst + sortContext.index(i)
+          destBuffer.put(srcBuffer.get(srcIndex))
+          
+          i += 1
+        }
+      }; single()
+      
+      case 3 => def tri() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          destBuffer.put(srcBuffer.get(srcIndex))
+          destBuffer.put(srcBuffer.get(srcIndex + 1))
+          destBuffer.put(srcBuffer.get(srcIndex + 2))
+          
+          i += 1
+        }
+      }; tri()
+
+      case _ => def multipart() {
+        var i = 0; while (i < count) {
+          val srcIndex = (srcFirst + sortContext.index(i)*stride)*components
+          srcBuffer.limit(srcIndex + chunk)
+          srcBuffer.position(srcIndex)
+          
+          destBuffer.put(srcBuffer)
+          
+          i += 1
+        }
+      }; multipart()
     }
   }
 }

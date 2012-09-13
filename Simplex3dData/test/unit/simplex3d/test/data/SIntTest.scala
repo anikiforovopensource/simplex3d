@@ -134,12 +134,12 @@ class SIntTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[SInt, SByte])
-    testSubCopy(DataSeq[SInt, UByte])
-    testSubCopy(DataSeq[SInt, SShort])
-    testSubCopy(DataSeq[SInt, UShort])
-    testSubCopy(DataSeq[SInt, SInt])
-    testSubCopy(DataSeq[SInt, UInt])
+    testSubCopy(DataFactory[SInt, SByte])
+    testSubCopy(DataFactory[SInt, UByte])
+    testSubCopy(DataFactory[SInt, SShort])
+    testSubCopy(DataFactory[SInt, UShort])
+    testSubCopy(DataFactory[SInt, SInt])
+    testSubCopy(DataFactory[SInt, UInt])
   }
 
   private def testSByte(seq: DataSeq[SInt, SByte]) {

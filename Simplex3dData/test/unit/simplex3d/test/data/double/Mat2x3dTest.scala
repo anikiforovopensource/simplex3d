@@ -70,7 +70,7 @@ class Mat3x2dTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[Mat3x2d, RFloat])
-    testSubCopy(DataSeq[Mat3x2d, RDouble])
+    testSubCopy(DataFactory[Mat3x2d, RFloat])
+    testSubCopy(DataFactory[Mat3x2d, RDouble])
   }
 }

@@ -181,15 +181,15 @@ class RDoubleTest extends FunSuite {
   }
   
   test("Sub Copy") {
-    testSubCopy(DataSeq[RDouble, UByte])
-    testSubCopy(DataSeq[RDouble, SByte])
-    testSubCopy(DataSeq[RDouble, UShort])
-    testSubCopy(DataSeq[RDouble, SShort])
-    testSubCopy(DataSeq[RDouble, UInt])
-    testSubCopy(DataSeq[RDouble, SInt])
-    testSubCopy(DataSeq[RDouble, HFloat])
-    testSubCopy(DataSeq[RDouble, RFloat])
-    testSubCopy(DataSeq[RDouble, RDouble])
+    testSubCopy(DataFactory[RDouble, UByte])
+    testSubCopy(DataFactory[RDouble, SByte])
+    testSubCopy(DataFactory[RDouble, UShort])
+    testSubCopy(DataFactory[RDouble, SShort])
+    testSubCopy(DataFactory[RDouble, UInt])
+    testSubCopy(DataFactory[RDouble, SInt])
+    testSubCopy(DataFactory[RDouble, HFloat])
+    testSubCopy(DataFactory[RDouble, RFloat])
+    testSubCopy(DataFactory[RDouble, RDouble])
   }
 
   private def testRDoubleSByte(seq: DataSeq[RDouble, SByte], testValue: Double) {

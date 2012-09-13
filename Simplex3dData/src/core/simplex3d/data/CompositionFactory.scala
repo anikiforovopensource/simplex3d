@@ -1,6 +1,6 @@
 /*
  * Simplex3dData - Core Module
- * Copyright (C) 2010-2011, Aleksey Nikiforov
+ * Copyright (C) 2010-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dData.
  *
@@ -19,7 +19,6 @@
  */
 
 package simplex3d.data
-package extension
 
 
 /**

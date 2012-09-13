@@ -40,7 +40,7 @@ package integration {
    * @author Aleksey Nikiforov (lex)
    */
   sealed trait PrimitiveFormat extends Format {
-    type Accessor <: simplex3d.math.integration.Accessor { type Read <: AnyVal }
+    type Accessor <: simplex3d.math.integration.Accessor { type Read }
   }
 
   object PrimitiveFormat {

@@ -52,11 +52,6 @@ object CopyTestUtil extends FunSuite {
   def testCopy[F <: Format, R <: Raw](
     factory: DataFactory[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
-  }//XXX
-  
-  def testCopy1[F <: Format, R <: Raw](
-    factory: DataFactory[F, R]
-  )(implicit descriptor: Descriptor[F, R]) {
     
     val dataArray = factory.mkDataArray(genArray(0, descriptor))
     val bytesPerComponent = dataArray.bytesPerComponent

@@ -39,14 +39,14 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
    * All the data within sort stride and view stride is copied to the destination.
    */
   final def reorder(
-    sortContext: SortContext,
+    ordering: DataOrdering,
     first: Int, count: Int, stride: Int,
     dest: Data[A], destFirst: Int
   ) {
     
     if (first < 0) throw new IndexOutOfBoundsException("First = " + first + ", must be greater than or equal to 0.")
-    if (count < 0) throw new IndexOutOfBoundsException("Count = " + count + ", must be greater than or equal to 0.")
-    if (stride < 1) throw new IndexOutOfBoundsException("Stride = " + stride + ", must be greater than or equal to 1.")
+    if (count < 0) throw new IllegalArgumentException("Count = " + count + ", must be greater than or equal to 0.")
+    if (stride < 1) throw new IllegalArgumentException("Stride = " + stride + ", must be greater than or equal to 1.")
       
     if (first + count*stride > size) {
       if (first > size) throw new IndexOutOfBoundsException(
@@ -87,32 +87,32 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
     }
     
     
-    if (sortContext.capacity < count) throw new IllegalArgumentException("SortContext has fewer elements than count.")
+    if (ordering.capacity < count) throw new IllegalArgumentException("SortContext has fewer elements than count.")
     
     
     if (!this.isInstanceOf[Contiguous[_, _]]) {
-      Util.reorderByteBuffer(sortContext, dest, destFirst, this, first, stride, count)
+      Util.reorderByteBuffer(ordering, dest, destFirst, this, first, stride, count)
     }
     else {
       primitives.rawType match {
         
         case RawType.SByte | RawType.UByte =>
-          Util.reorderByteBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderByteBuffer(ordering, dest, destFirst, this, first, stride, count)
           
         case RawType.SShort | RawType.HFloat =>
-          Util.reorderShortBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderShortBuffer(ordering, dest, destFirst, this, first, stride, count)
           
         case RawType.UShort =>
-          Util.reorderCharBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderCharBuffer(ordering, dest, destFirst, this, first, stride, count)
           
         case RawType.SInt | RawType.UInt =>
-          Util.reorderIntBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderIntBuffer(ordering, dest, destFirst, this, first, stride, count)
           
         case RawType.RFloat =>
-          Util.reorderFloatBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderFloatBuffer(ordering, dest, destFirst, this, first, stride, count)
           
         case RawType.RDouble =>
-          Util.reorderDoubleBuffer(sortContext, dest, destFirst, this, first, stride, count)
+          Util.reorderDoubleBuffer(ordering, dest, destFirst, this, first, stride, count)
       }
     }
   }
@@ -121,9 +121,10 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
    * If this sequence is a view, the result must be a view with the same offset and stride.
    * All the data within sort stride and view stride is copied to the destination.
    */
-  final def reorder(sortContext: SortContext, stride: Int, dest: Data[A]) {
-    if (stride < 1) throw new IndexOutOfBoundsException("Stride = " + stride + ", must be greater than or equal to 1.")
-    reorder(sortContext, 0, size/stride, stride, dest, 0)
+  final def reorder(ordering: DataOrdering, stride: Int, dest: Data[A]) {
+    if (stride < 1) throw new IllegalArgumentException("Stride = " + stride + ", must be greater than or equal to 1.")
+    if (stride > size) throw new BufferUnderflowException()
+    reorder(ordering, 0, size/stride, stride, dest, 0)
   }
 }
 

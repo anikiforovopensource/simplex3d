@@ -47,7 +47,7 @@ object PointSpritesMesh extends default.App {
   
   val mesh = new Mesh("PointSprites")
   val tempIndexData = DataBuffer[SInt, UShort](pointCount)
-  val sortContext = new SortContext(pointCount)
+  val sortContext = new DataSort(pointCount)
   
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 200)
@@ -137,7 +137,7 @@ object PointSpritesMesh extends default.App {
       val dir = vertices(indices(i)) + offset
       val ordering = -dot(camDir, dir)
       
-      sortContext.mapIndex(i, ordering.toFloat)
+      sortContext.map(i, ordering.toFloat)
       
       i += 1
     }

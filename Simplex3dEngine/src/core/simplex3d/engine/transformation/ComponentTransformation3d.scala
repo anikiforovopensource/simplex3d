@@ -60,6 +60,8 @@ extends ReadComponentTransformation3d with Transformation
   val rotation = Quat4.Identity.mutableCopy()
   val translation = Vec3(0)
   
+  def direction() :Vec3 = rotation.rotateVector(Vec3.UnitZ)
+  
   def lookAt(point: inVec3, worldUp: inVec3, isCamera: Boolean = false) {
     val dir = if (isCamera) translation - point else point - translation 
     val rotationMat = functions.lookAt(dir, worldUp)

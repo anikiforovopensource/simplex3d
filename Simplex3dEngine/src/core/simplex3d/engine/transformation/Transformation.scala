@@ -32,7 +32,9 @@ abstract class ReadTransformation extends Protected {
   type Read <: ReadTransformation
   type Mutable <: Transformation
   
+  def direction() :Vec3
   def propagateChanges(parent: Read, result: Mutable)
+  
   private[engine] final def matrix() :Mat4x3 = toMatrix()
   protected def toMatrix() :Mat4x3
 }

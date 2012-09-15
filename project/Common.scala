@@ -70,10 +70,9 @@ object Common extends Build {
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl-platform" % Simplex3d.LwjglVersion classifier "natives-linux" classifier "natives-osx" classifier "natives-windows",
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl" % Simplex3d.LwjglVersion,
     libraryDependencies += "org.lwjgl.lwjgl" % "lwjgl_util" % Simplex3d.LwjglVersion,
-    
     fork := true,
-    //TODO change to "map" for "sbt.version=0.11.2-20111110-052207" or higher
-    javaOptions <<= ivyPaths { ivyPaths =>
+    
+    javaOptions <<= ivyPaths map { ivyPaths =>
       Seq(setupLwjglNatives(ivyPaths.ivyHome.get))
     }
   )

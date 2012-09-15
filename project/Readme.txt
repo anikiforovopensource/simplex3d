@@ -58,6 +58,7 @@ Also there are some test projects:
 
   math-test
   data-test
+  algorithm-test
   engine-test
 
 

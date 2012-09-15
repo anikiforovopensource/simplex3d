@@ -508,6 +508,12 @@ class Mat3x2dTest extends FunSuite {
     expect((m00, m01)) { (m.m00, m.m01) }
     expect((m10, m11)) { (m.m10, m.m11) }
     expect((m20, m21)) { (m.m20, m.m21) }
+    
+    m = Mat3x2(0)
+    m := Mat2x2(i)
+    expect((m00, m01)) { (m.m00, m.m01) }
+    expect((m10, m11)) { (m.m10, m.m11) }
+    expect((0, 0)) { (m.m20, m.m21) }
   }
 
   test("Const math") {

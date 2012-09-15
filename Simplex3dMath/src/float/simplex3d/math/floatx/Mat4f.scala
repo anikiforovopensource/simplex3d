@@ -432,6 +432,7 @@ with Accessible with Serializable
 
   override def clone() = Mat4f(this)
   def toConst() = ConstMat4f(this)
+
   def :=(m: inMat4f) {
     m00 = m.m00; m01 = m.m01; m02 = m.m02; m03 = m.m03
     m10 = m.m10; m11 = m.m11; m12 = m.m12; m13 = m.m13
@@ -439,7 +440,7 @@ with Accessible with Serializable
     m30 = m.m30; m31 = m.m31; m32 = m.m32; m33 = m.m33
   }
 
-  
+
   override def m00_=(s: Float) { p00 = s }
   override def m01_=(s: Float) { p01 = s }
   override def m02_=(s: Float) { p02 = s }

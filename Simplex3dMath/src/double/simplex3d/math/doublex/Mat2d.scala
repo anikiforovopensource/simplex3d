@@ -287,12 +287,13 @@ with Accessible with Serializable
 
   override def clone() = Mat2d(this)
   def toConst() = ConstMat2d(this)
+
   def :=(m: inMat2d) {
     m00 = m.m00; m01 = m.m01
     m10 = m.m10; m11 = m.m11
   }
 
-  
+
   override def m00_=(s: Double) { p00 = s }
   override def m01_=(s: Double) { p01 = s }
 

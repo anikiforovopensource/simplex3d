@@ -21,7 +21,7 @@
 package simplex3d.algorithm.noise
 
 
-/** 
+/** Low level unaltered noise source.
  *
  * @author Aleksey Nikiforov (lex)
  */

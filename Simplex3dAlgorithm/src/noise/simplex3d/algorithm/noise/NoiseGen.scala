@@ -21,7 +21,7 @@
 package simplex3d.algorithm.noise
 
 
-/** 
+/** General purpose noise generator.
  *
  * @author Aleksey Nikiforov (lex)
  */

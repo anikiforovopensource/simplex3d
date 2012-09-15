@@ -26,7 +26,7 @@ import simplex3d.math.doublex._
 import simplex3d.math.doublex.functions.{abs, pow, round}
 
 
-/** Noise sum.
+/** Tiled noise sum.
  *
  * @author Aleksey Nikiforov (lex)
  */

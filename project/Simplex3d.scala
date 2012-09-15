@@ -33,6 +33,8 @@ object Simplex3d extends Build {
   val ConsoleVersion = "0.4.1-SNAPSHOT"
   val ScriptVersion = "0.2.1-SNAPSHOT"
   
+  val ScalatestVersion = "1.6.1"
+  
   
   lazy val allCode = Project(
     id = "all-code",
@@ -77,7 +79,7 @@ object Simplex3d extends Build {
       publishLocal := {}
     )
   ) aggregate(
-    Simplex3dMath.test, Simplex3dData.test, Simplex3dEngine.test
+    Simplex3dMath.test, Simplex3dData.test, Simplex3dAlgorithm.test, Simplex3dEngine.test
   )
   
   lazy val example = Project(

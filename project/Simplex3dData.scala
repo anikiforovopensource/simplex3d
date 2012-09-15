@@ -102,7 +102,7 @@ object Simplex3dData extends Build {
       description := "Data Binding API, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
       target := new File("target/data/test"),
-      libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test",
+      libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
       scalaSource in Compile <<= baseDirectory(_ / "test/bench"),
       scalaSource in Test <<= baseDirectory(_ / "test/unit"),
       publish := {},

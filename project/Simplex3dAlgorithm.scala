@@ -83,6 +83,22 @@ object Simplex3dAlgorithm extends Build {
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
   
+  lazy val test = Project(
+    id = "algorithm-test",
+    base = file("Simplex3dAlgorithm"),
+    settings = buildSettings ++ Seq(
+      name := "simplex3d-algorithm-test",
+      description := "Algorithm Tests.",
+      licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
+      target := new File("target/algorithm/test"),
+      libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
+      scalaSource in Compile <<= baseDirectory(_ / "/test/bench"),
+      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
+      publish := {},
+      publishLocal := {}
+    )
+  ) dependsOn(intersection, mesh, noise)
+  
   lazy val example = Project(
     id = "algorithm-example",
     base = file("Simplex3dAlgorithm"),

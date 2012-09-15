@@ -45,15 +45,20 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
   
-  private val controllerContext = new ControllerContext() {
-    def addController(updater: Updater) { self.addController(updater) }
-    def removeController(updater: Updater) { self.removeController(updater) }
-    
-    def addAnimator(updater: Updater) { throw new UnsupportedOperationException() }
-    def removeAnimator(updater: Updater) { throw new UnsupportedOperationException() }
-  }
   final val transformation = TransformationBinding[T#Transformation](transformationContext.factory)
-  transformation.register(controllerContext)
+  transformation.register {
+    this match {
+      case c: ControllerContext => c
+      case _ =>
+        new ControllerContext() {
+          def addController(updater: Updater) { self.addController(updater) }
+          def removeController(updater: Updater) { self.removeController(updater) }
+          
+          def addAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+          def removeAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+        }
+    }
+  }
   
   private[scenegraph] final val uncheckedWorldTransformation = {
     TransformationBinding[T#Transformation](transformationContext.factory)

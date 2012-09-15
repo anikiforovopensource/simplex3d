@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - SceneGraph Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *

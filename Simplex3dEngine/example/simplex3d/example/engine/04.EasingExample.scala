@@ -76,7 +76,7 @@ object EasingExample extends default.App {
     mesh.geometry.normals := Attributes.fromData(normals)
     mesh.geometry.texCoords := Attributes.fromData(texCoords)
     
-    val noise = new TiledNoiseSum(ClassicalGradientNoise, ConstVec4(128), 0.07, 1)
+    val noise = new TiledNoise(ClassicalGradientNoise, ConstVec4(128), 0.07)
     val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val intensity = (noise(p.x, p.y, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)

@@ -33,8 +33,8 @@
         <dependency org="org.simplex3d" name="simplex3d-data-core_2.9.2" rev="2.3.8-SNAPSHOT"/>
         <dependency org="org.simplex3d" name="simplex3d-data-double_2.9.2" rev="2.3.8-SNAPSHOT"/>
         <dependency org="org.simplex3d" name="simplex3d-data-format_2.9.2" rev="2.3.8-SNAPSHOT"/>
-        <dependency org="org.simplex3d" name="simplex3d-algorithm-intersection_2.9.2" rev="0.4.3-SNAPSHOT"/>
-        <dependency org="org.simplex3d" name="simplex3d-algorithm-mesh_2.9.2" rev="0.4.3-SNAPSHOT"/>
-        <dependency org="org.simplex3d" name="simplex3d-algorithm-noise_2.9.2" rev="0.4.3-SNAPSHOT"/>
+        <dependency org="org.simplex3d" name="simplex3d-algorithm-intersection_2.9.2" rev="0.4.4-SNAPSHOT"/>
+        <dependency org="org.simplex3d" name="simplex3d-algorithm-mesh_2.9.2" rev="0.4.4-SNAPSHOT"/>
+        <dependency org="org.simplex3d" name="simplex3d-algorithm-noise_2.9.2" rev="0.4.4-SNAPSHOT"/>
     </dependencies>
 </ivy-module>

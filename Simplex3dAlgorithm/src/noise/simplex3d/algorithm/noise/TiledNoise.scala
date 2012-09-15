@@ -23,7 +23,7 @@ package simplex3d.algorithm.noise
 import java.io._
 import simplex3d.math._
 import simplex3d.math.doublex._
-import simplex3d.math.doublex.functions.{abs, pow, round}
+import simplex3d.math.doublex.functions.{abs, pow, round, greaterThan}
 
 
 /** Tiled noise.
@@ -45,12 +45,16 @@ final class TiledNoise(
   initTransient()
 
   private[this] def initTransient() {
+    require(frequency > 0, "Frequency must be greater than 0.")
+    
     discreteTile = ConstVec4i(
       round(tile.x*frequency/source.tileSizeX).toInt,
       round(tile.y*frequency/source.tileSizeY).toInt,
       round(tile.z*frequency/source.tileSizeZ).toInt,
       round(tile.w*frequency/source.tileSizeW).toInt
     )
+    
+    require(all(greaterThan(discreteTile, Vec4i.Zero)), "Bad tile-frequency combination.")
 
     frequencyFactor = ConstVec4d(
       (discreteTile.x*source.tileSizeX)/tile.x,

@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -21,14 +21,18 @@
 package simplex3d.engine.util
 
 import simplex3d.engine.graphics._
+import simplex3d.engine.scene._
 
 
-class StructuralChangeListener { self =>
-  final class StructuralSubtext {
+class PropertyContext(
+  private[engine] val controllerContext: ControllerContext
+) { self =>
+  
+  final class StructuralChangeSubtext { // So, it has come to this... subtext of a context.
     def hasStructuralChanges: Boolean = changes
     def clearStructuralChanges() { changes = false }
   }
-  private[engine] final val structuralSubtext = new StructuralSubtext
+  private[engine] final val structuralChangeSubtext = new StructuralChangeSubtext
   
   
   private[engine] final var changes = true // Initialize as changed.
@@ -38,12 +42,10 @@ class StructuralChangeListener { self =>
   }
 }
 
-object StructuralChangeListener {
-  final val Ignore = new StructuralChangeListener//XXX remove this
-  
-  def register(listener: StructuralChangeListener, properties: ReadArray[Property[_]]) {
+object PropertyContext {
+  def registerProperties(context: PropertyContext, properties: ReadArray[Property[_]]) {
     val s = properties.size; var i = 0; while (i < s) {
-      properties(i).register(listener)
+      properties(i).register(context)
       i += 1
     }
   }

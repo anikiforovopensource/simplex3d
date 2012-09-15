@@ -18,15 +18,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.transformation
+package simplex3d.engine
+package transformation
 
+import simplex3d.math._
 import simplex3d.math.double._
+import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
 sealed abstract class TransformationBinding[T <: Transformation] private[engine] (
   private[this] final val factory: () => T
 )
-{
+extends Updatable[T] {
+  
+  //*** ControllerContext Code ****************************************************************************************
+  
+  protected final var controllerContext: ControllerContext = _
+  
+  private[engine] final def register(context: ControllerContext) {
+    if (this.controllerContext != null) throw new IllegalStateException(
+      "TransformationBinding can register ControllerContext only once."
+    )
+    this.controllerContext = context
+  }
+  
+  private[engine] final def unregister() {
+    throw new UnsupportedOperationException("TransformationBinding cannot unregister ControllerContext.")
+  }
+  
+  //*** Property Code *************************************************************************************************
+  
+  /** getter navigates to the desired field of the value of this property.
+   * function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def controller[A](getter: T => A)(function: (A, TimeStamp) => Boolean) {
+    if (controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(controllerContext, true)(this)(getter, function)
+  }
+  
+  /** function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def controller(function: (T, TimeStamp) => Boolean) {
+    if (controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(controllerContext, true)(this)(Property.passThrough, function)
+  }
+  
+  
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
   private[this] final var updateMatrix = true

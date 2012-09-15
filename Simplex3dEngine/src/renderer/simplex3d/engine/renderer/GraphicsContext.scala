@@ -21,6 +21,8 @@
 package simplex3d.engine
 package renderer
 
+import simplex3d.engine.scene._
+
 
 final class GraphicsContext extends graphics.GraphicsContext {
   
@@ -29,8 +31,8 @@ final class GraphicsContext extends graphics.GraphicsContext {
   type Environment = renderer.Environment
   
   def mkGeometry() = new Geometry
-  def mkMaterial() = new Material
-  def mkEnvironment() = new Environment
+  def mkMaterial(controllerContext: ControllerContext) = new Material(controllerContext)
+  def mkEnvironment(controllerContext: ControllerContext) = new Environment(controllerContext)
   
   init()
 }

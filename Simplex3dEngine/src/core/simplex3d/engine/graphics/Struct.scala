@@ -29,7 +29,7 @@ import simplex3d.engine.util._
 
 /** All Struct subclasses must define a no-argument constructor.
  */
-trait ReadStruct extends Protected with Binding with StructuralChangeNotifier {
+trait ReadStruct extends Protected with Binding with PropertyContextDependent {
   type Read <: ReadStruct
   type Mutable <: Struct
 }

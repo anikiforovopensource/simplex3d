@@ -27,7 +27,7 @@ import simplex3d.engine.util._
 
 
 sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
-  implicit private val listener: StructuralChangeListener
+  implicit private val context: PropertyContext
 )
 { self: AccessibleAttributeBinding[F, R] =>
   
@@ -50,7 +50,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
   final def undefine() {
     if (attributes != null) {
       if (attributes.isWritable) attributes.unregister(this)
-      listener.signalStructuralChanges()
+      if (context != null) context.signalStructuralChanges()
     }
     attributes = null.asInstanceOf[Attributes[F, R]]
   }
@@ -58,7 +58,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
   final def :=(attributes: Attributes[F, R]) {
     if (attributes == null) throw new NullPointerException
     
-    if (!isDefined) listener.signalStructuralChanges()
+    if (!isDefined && (context != null)) context.signalStructuralChanges()
     
     if (this.attributes ne attributes) {
       if (isWritable)  this.attributes.unregister(this)
@@ -77,7 +77,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
 }
 
 sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
-  implicit listener: StructuralChangeListener
+  implicit context: PropertyContext
 )
 extends AttributeBinding[F, R] {
   import AccessChanges._
@@ -92,6 +92,6 @@ extends AttributeBinding[F, R] {
 }
 
 object AttributeBinding {
-  def apply[F <: Format with MathType, R <: Raw](implicit listener: StructuralChangeListener)
+  def apply[F <: Format with MathType, R <: Raw](implicit context: PropertyContext)
   :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
 }

@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -18,13 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.util
+package simplex3d.engine
+package scene
 
 
-trait StructuralChangeNotifier {
-  private[engine] def register(listener: StructuralChangeListener) { registerStructuralChangeListener(listener) }
-  private[engine] def unregister() { unregisterStructuralChangeListener() }
-  
-  protected def registerStructuralChangeListener(listener: StructuralChangeListener)
-  protected def unregisterStructuralChangeListener()
+trait ControllerContext {
+  def addController(updater: Updater) :Unit
+  def removeController(updater: Updater) :Unit
+
+  /** Animators are run only for visible objects.
+   * Animators must not alter transformation or bounding volumes (or anything that affects bounding volumes).
+   */
+  def addAnimator(updater: Updater) :Unit
+  def removeAnimator(updater: Updater) :Unit
 }

@@ -16,13 +16,13 @@ import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 
 
-object DynamicAttributes extends default.App {
+object EasingExample extends default.App {
   
   def main(args: Array[String]) {
     launch()
   }
   
-  val title = "Dynamic Attributes"
+  val title = "Easing Example"
   
   override lazy val settings = new Settings(
     fullscreen = false,
@@ -31,6 +31,32 @@ object DynamicAttributes extends default.App {
     logPerformance = true,
     resolution = Some(Vec2i(800, 600))
   )
+  
+  def BackAndForth(speed: Double)(a: ConstVec3, b: ConstVec3): (Vec3, TimeStamp) => Boolean = {
+    val period = length(a - b)/speed
+    
+    (u, time) => {
+      val factor = abs((mod(time.total, 2*period) - period)/period)
+      u := mix(b, a, factor)
+      true // Never terminates.
+    }
+  }
+  
+  def Rotate(speed: Double)(center: inVec2): (Mat3x2, TimeStamp) => Boolean = {
+    var frameCount = 0
+    val offset = -center
+    
+    (m, time) => {
+      // Some feedback when animator is running.
+      {
+        frameCount += 1
+        if (frameCount % 50 == 0) println("Running animator (animator is active only when the object is visible).")
+      }
+      
+      m := Mat3x2 translate(offset) rotate(speed*time.total)
+      true // Never terminates.
+    }
+  }
   
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 100)
@@ -50,10 +76,9 @@ object DynamicAttributes extends default.App {
     mesh.geometry.normals := Attributes.fromData(normals)
     mesh.geometry.texCoords := Attributes.fromData(texCoords)
     
-    //val objectTexture = assetManager.loadTexture2d[Vec3]("sample/texture.png").get
-    val noise = ClassicalGradientNoise
+    val noise = new TiledNoiseSum(ClassicalGradientNoise, ConstVec4(128), 0.07, 1)
     val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
-      val intensity = (noise(p.x*0.06, p.y*0.06, 2.324) + 1)*0.5
+      val intensity = (noise(p.x, p.y, 2.324) + 1)*0.5
       Vec3(0, intensity, intensity)
     }
     mesh.material.textureUnits.update += new TextureUnit(objectTexture)
@@ -61,17 +86,10 @@ object DynamicAttributes extends default.App {
     mesh.transformation.update.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
     mesh.transformation.update.scale := 40
     
-    mesh.controller { time =>
-      def n(i: Int) = noise(time.total*0.8 + i*8.234)*0.15
-      def fuzzyMat = Mat4x3(1) + Mat4x3(n(0), n(1), n(2), n(3), n(4), n(5), n(6), n(7), n(8), 0, 0, 0)
-      
-      // Updating vertex attributes: the changes will be synchronized with OpenGL automatically.
-      val data = mesh.geometry.vertices.write
-      var i = 0; while (i < data.size) {
-        data(i) = fuzzyMat.transformPoint(originalVertices(i))
-        i += 1
-      }
-    }
+    
+    mesh.transformation.controller(_.translation)(BackAndForth(speed=22)(Vec3(-20, 0, 0), Vec3(20, 0, 0)))
+    mesh.material.textureUnits.animator(_(0).transformation)(Rotate(speed=0.4)(center=Vec2(0.5)))
+    
     
     world.attach(mesh)
   }

@@ -569,8 +569,8 @@ extends graphics.RenderContext {
     var textureUnitCount = 0
     
     val geom = program.graphicsContext.mkGeometry()
-    val mat = program.graphicsContext.mkMaterial()
-    val env = program.graphicsContext.mkEnvironment()
+    val mat = program.graphicsContext.mkMaterial(null)
+    val env = program.graphicsContext.mkEnvironment(null)
     
     def belongs(name: String, seq: IndexedSeq[String]) :Boolean = {
       var dotIndex = name.indexOf('.')

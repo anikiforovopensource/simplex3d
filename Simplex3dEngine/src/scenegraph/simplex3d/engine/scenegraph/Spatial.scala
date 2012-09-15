@@ -41,11 +41,19 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var _parent: AbstractNode[T, Graphics] = _
   protected def parent: AbstractNode[T, Graphics] = _parent
   
-  private[scenegraph] final var controllerContext: ControllerContext = null
+  private[scenegraph] final var controllerManager: ControllerManager = null
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
   
+  private val controllerContext = new ControllerContext() {
+    def addController(updater: Updater) { self.addController(updater) }
+    def removeController(updater: Updater) { self.removeController(updater) }
+    
+    def addAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+    def removeAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+  }
   final val transformation = TransformationBinding[T#Transformation](transformationContext.factory)
+  transformation.register(controllerContext)
   
   private[scenegraph] final val uncheckedWorldTransformation = {
     TransformationBinding[T#Transformation](transformationContext.factory)
@@ -90,8 +98,8 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   ) {
     transformation.signalDataChanges()
     
-    if (parent != null) controllerContext = parent.controllerContext
-    else controllerContext = null
+    if (parent != null) controllerManager = parent.controllerManager
+    else controllerManager = null
     
     if (controllers != null) managed += this
   }
@@ -99,7 +107,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   /** Controllers are executed for all objects attached to a scene-graph when it is updated.
    */
   def controller(function: TimeStamp => Unit) :Updater = {
-    val updater = new Updater(function)
+    val updater = new UpdaterFunction(function)
     addController(updater)
     updater
   }
@@ -107,7 +115,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   def addController(controller: Updater) {
     if (controllers == null) {
       controllers = new ArrayBuffer[Updater](4)
-      if (controllerContext != null) controllerContext.register(List(this))
+      if (controllerManager != null) controllerManager.register(ArrayBuffer(this))
     }
     controllers += controller
   }
@@ -118,7 +126,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
       
       if (controllers.isEmpty) {
         controllers = null
-        if (controllerContext != null) controllerContext.unregister(List(this))
+        if (controllerManager != null) controllerManager.unregister(ArrayBuffer(this))
       }
     }
   }

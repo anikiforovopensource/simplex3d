@@ -48,7 +48,7 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
     
     val managed = new ArrayBuffer[Spatial[T]](4)
     element.onParentChange(this, managed)
-    if (controllerContext != null) controllerContext.register(managed)
+    if (controllerManager != null) controllerManager.register(managed.asInstanceOf[ArrayBuffer[Spatial[_]]])
   }
   
   private[scenegraph] def removeChild(element: SceneElement[_, _]) :Boolean = {
@@ -68,7 +68,7 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
   private[this] def onRemove(element: SceneElement[T, G]) {
     val managed = new ArrayBuffer[Spatial[T]](4)
     element.onParentChange(null, managed)
-    if (controllerContext != null) controllerContext.unregister(managed)
+    if (controllerManager != null) controllerManager.unregister(managed.asInstanceOf[ArrayBuffer[Spatial[_]]])
   }
   
   private[scenegraph] final override def onParentChange(
@@ -202,10 +202,7 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       else BoundingVolume.intersect(cullContext.view.frustum, resolveBoundingVolume.get, uncheckedWorldTransformation)
     
     if (frustumTest != Collision.Outside) {
-      if (animators != null && shouldRunAnimators) {
-        runUpdaters(animators, cullContext.time)
-        shouldRunAnimators = false
-      }
+      if (update && animators != null) runUpdaters(animators, cullContext.time)
     }
     
     val cullChildren = 

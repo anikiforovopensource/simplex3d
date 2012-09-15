@@ -24,9 +24,10 @@ package graphics
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
-abstract class Material extends StructuralChangeListener {
+abstract class Material(controllerContext: ControllerContext) extends PropertyContext(controllerContext) {
   protected implicit val structuralChangeListener = this
   
   def uniformNames: ReadArray[String]

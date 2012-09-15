@@ -23,22 +23,21 @@ package simplex3d.engine.util
 import simplex3d.data._
 
 
-abstract class SharedRef[T <: AnyRef](listener: StructuralChangeListener)
-{ self: AccessibleSharedRef =>
+// XXX This class will be removed. Do not use.
+@deprecated
+abstract class SharedRef[T <: AnyRef] { self: AccessibleSharedRef =>
+  
   private[this] final var value: T = _
   protected final var reassigned = true // Initialize as reassigned.
   
   final def get: T = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
   final def undefine() {
-    if (value != null) listener.signalStructuralChanges()
     value = null.asInstanceOf[T]
   }
   
   final def :=(value: T) {
     if (value == null) throw new NullPointerException
-    
-    if (!isDefined) listener.signalStructuralChanges()
     
     if (this.value ne value) reassigned = true
     this.value = value
@@ -57,13 +56,12 @@ trait AccessibleSharedRef {
   def clearRefChanges() :Unit
 }
 
-private[engine] final class AccessibleSharedRefImpl[T <: AnyRef](listener: StructuralChangeListener)
-extends SharedRef[T](listener) with AccessibleSharedRef {
+private[engine] final class AccessibleSharedRefImpl[T <: AnyRef]
+extends SharedRef[T] with AccessibleSharedRef {
   def hasRefChanges = reassigned
   def clearRefChanges() { reassigned = false }
 }
 
 object SharedRef {
-  def apply[T <: AnyRef](listener: StructuralChangeListener)
-  :SharedRef[T] = new AccessibleSharedRefImpl[T](listener)
+  def apply[T <: AnyRef]() :SharedRef[T] = new AccessibleSharedRefImpl[T]
 }

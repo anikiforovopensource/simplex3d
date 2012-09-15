@@ -35,7 +35,7 @@ import simplex3d.engine.graphics._
 
 abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (name: String)(
   implicit transformationContext: T, graphicsContext: G
-) extends SceneElement[T, G](name) {
+) extends SceneElement[T, G](name) with ControllerContext {
   
   import AccessChanges._
   
@@ -50,7 +50,6 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   final val customBoundingVolume = Reassignable.optional[BoundingVolume]//XXX rename to boundingVolume
   private[scenegraph] final val autoBoundingVolume = Reassignable.optional[BoundingVolume]
   
-  private[scenegraph] final var shouldRunAnimators = false
   private[scenegraph] final var animators: ArrayBuffer[Updater] = null
   
   
@@ -66,18 +65,18 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   
   /** Animators are executed only for visible objects and only once per frame.
    */
-  protected def animator(function: TimeStamp => Unit) :Updater = {
-    val updater = new Updater(function)
+  def animator(function: TimeStamp => Unit) :Updater = {
+    val updater = new UpdaterFunction(function)
     addAnimator(updater)
     updater
   }
   
-  protected def addAnimator(animator: Updater) {
+  def addAnimator(animator: Updater) {
     if (animators == null) animators = new ArrayBuffer[Updater](4)
     animators += animator
   }
   
-  protected def removeAnimator(animator: Updater) {
+  def removeAnimator(animator: Updater) {
     if (animators != null) animators -= animator
   }
   
@@ -105,10 +104,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (res == Collision.Outside) return
     
     
-    if (animators != null && shouldRunAnimators) {
-      runUpdaters(animators, cullContext.time)
-      shouldRunAnimators = false
-    }
+    if (update && animators != null) runUpdaters(animators, cullContext.time)
     
     cullContext.renderArray += this
   }

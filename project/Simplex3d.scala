@@ -28,7 +28,7 @@ object Simplex3d extends Build {
   
   val MathVersion = "2.3.8-SNAPSHOT"
   val DataVersion = "2.3.8-SNAPSHOT"
-  val AlgorithmVersion = "0.4.2-SNAPSHOT"
+  val AlgorithmVersion = "0.4.3-SNAPSHOT"
   val EngineVersion = "0.4.1-SNAPSHOT"
   val ConsoleVersion = "0.4.1-SNAPSHOT"
   val ScriptVersion = "0.2.1-SNAPSHOT"

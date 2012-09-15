@@ -57,20 +57,20 @@ trait Struct extends ReadStruct with graphics.Struct {
   override def listDeclarations: ReadArray[ListDeclaration] = _listDeclarations
   
   
-  private[engine] override def register(listener: StructuralChangeListener) {
+  private[engine] override def register(context: PropertyContext) {
     val s = fields.length; var i = 0; while (i < s) {
-      fields(i) match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+      fields(i) match { case d: PropertyContextDependent => d.register(context); case _ => /* ignore */ }
       i += 1
     }
   }
   private[engine] override def unregister() {
     val s = fields.length; var i = 0; while (i < s) {
-      fields(i) match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      fields(i) match { case d: PropertyContextDependent => d.unregister(); case _ => /* ignore */ }
       i += 1
     }
   }
-  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
-  protected def unregisterStructuralChangeListener() {}
+  protected def registerPropertyContext(context: PropertyContext) {}
+  protected def unregisterPropertyContext() {}
 }
 
 object Struct {

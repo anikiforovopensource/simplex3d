@@ -23,9 +23,10 @@ package graphics
 package prototype
 
 import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
-trait Material extends graphics.Material {
+abstract class Material(controllerContext: ControllerContext) extends graphics.Material(controllerContext) {
   
   private[this] var _uniformNames: ReadArray[String] = null
   private[this] var _uniforms: ReadArray[Property[UncheckedValue]] = null
@@ -41,7 +42,7 @@ trait Material extends graphics.Material {
     _uniformNames = un
     _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedValue]]]
     
-    StructuralChangeListener.register(this, uniforms)
+    PropertyContext.registerProperties(this, uniforms)
     initialized = true
   }
   

@@ -23,9 +23,10 @@ package graphics
 package prototype
 
 import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
-trait Environment extends graphics.Environment {
+abstract class Environment(controllerContext: ControllerContext) extends graphics.Environment(controllerContext) {
 
   private[this] var _propertyNames: ReadArray[String] = null
   private[this] var _properties: ReadArray[Property[EnvironmentalEffect]] = null
@@ -43,7 +44,7 @@ trait Environment extends graphics.Environment {
     _propertyNames = pn
     _properties = pv.asInstanceOf[ReadArray[Property[EnvironmentalEffect]]]
     
-    StructuralChangeListener.register(this, properties)
+    PropertyContext.registerProperties(this, properties)
     initialized = true
   }
   

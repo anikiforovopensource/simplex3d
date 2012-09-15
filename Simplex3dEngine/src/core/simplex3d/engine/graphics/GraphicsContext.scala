@@ -25,6 +25,7 @@ import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.data._
 import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
 abstract class GraphicsContext {
@@ -34,8 +35,8 @@ abstract class GraphicsContext {
   type Environment <: graphics.Environment
   
   def mkGeometry() :Geometry
-  def mkMaterial() :Material
-  def mkEnvironment() :Environment
+  def mkMaterial(controllerContext: ControllerContext) :Material
+  def mkEnvironment(controllerContext: ControllerContext) :Environment
   
   
   final def namespace: Set[String] = combinedNamespace
@@ -47,8 +48,8 @@ abstract class GraphicsContext {
   
   protected def init() {
     val geometry = mkGeometry()
-    val material = mkMaterial()
-    val environment = mkEnvironment()
+    val material = mkMaterial(null)
+    val environment = mkEnvironment(null)
     
     // Initialize namespace.
     val geomNames = geometry.attributeNames
@@ -180,9 +181,16 @@ object MinimalGraphicsContext extends GraphicsContext {
   type Material = graphics.Material
   type Environment = graphics.Environment
   
-  def mkGeometry() = new Geometry with prototype.Geometry { init(this.getClass) }
-  def mkMaterial() = new Material with prototype.Material { init(this.getClass) }
-  def mkEnvironment() = new Environment with prototype.Environment { init(this.getClass) }
+  
+  def mkGeometry() =
+    new prototype.Geometry { init(this.getClass) }
+  
+  def mkMaterial(controllerContext: ControllerContext) =
+    new prototype.Material(controllerContext) { init(this.getClass) }
+  
+  def mkEnvironment(controllerContext: ControllerContext) =
+    new prototype.Environment(controllerContext) { init(this.getClass) }
+  
   
   init()
 }

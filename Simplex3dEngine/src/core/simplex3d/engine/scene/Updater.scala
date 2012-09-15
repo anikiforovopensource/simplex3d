@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - SceneGraph Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011 - 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,10 +19,15 @@
  */
 
 package simplex3d.engine
-package scenegraph
+package scene
 
 
-class Updater(function: TimeStamp => Unit) {
-  var isEnabled = true
+abstract class Updater {
+  final var isEnabled = true
+  def apply(time: TimeStamp) :Unit
+}
+
+
+class UpdaterFunction(function: TimeStamp => Unit) extends Updater {
   def apply(time: TimeStamp) { if (isEnabled) function(time) }
 }

@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.util
+package simplex3d.engine
+package util
 
 import simplex3d.math.types._
 
@@ -26,27 +27,68 @@ import simplex3d.math.types._
 sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final val factory: () => T,
   private[this] final val enforceDefined: Boolean
-) extends StructuralChangeNotifier
+) extends Updatable[T] with PropertyContextDependent
 {
   
-  //*** StructuralChangeListener Code *********************************************************************************
+  //*** PropertyContext Code ******************************************************************************************
   
-  protected final var listener: StructuralChangeListener = _
+  protected final var propertyContext: PropertyContext = _
   
-  private[engine] final override def register(listener: StructuralChangeListener) {
-    if (this.listener != null) throw new IllegalStateException("The property can register StructuralChangeListener only once.")
-    this.listener = listener
+  private[engine] final override def register(context: PropertyContext) {
+    if (this.propertyContext != null) throw new IllegalStateException(
+      "Property can register PropertyContext only once."
+    )
+    this.propertyContext = context
   }
   
   private[engine] final override def unregister() {
-    throw new UnsupportedOperationException("Properties cannot unregister StructuralChangeListeners.")
+    throw new UnsupportedOperationException("Property cannot unregister PropertyContexts.")
   }
   
-  protected final def registerStructuralChangeListener(listener: StructuralChangeListener) {}
-  protected final def unregisterStructuralChangeListener() {}
+  protected final def registerPropertyContext(context: PropertyContext) {}
+  protected final def unregisterPropertyContext() {}
   
   
   //*** Property Code *************************************************************************************************
+  
+  /** getter navigates to the desired field of the value of this property.
+   * function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def controller[A](getter: T => A)(function: (A, TimeStamp) => Boolean) {
+    if (propertyContext == null || propertyContext.controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(propertyContext.controllerContext, true)(this)(getter, function)
+  }
+  
+  /** function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def controller(function: (T, TimeStamp) => Boolean) {
+    if (propertyContext == null || propertyContext.controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(propertyContext.controllerContext, true)(this)(Property.passThrough, function)
+  }
+  
+  /** getter navigates to the desired field of the value of this property.
+   * function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def animator[A](getter: T => A)(function: (A, TimeStamp) => Boolean) {
+    if (propertyContext == null || propertyContext.controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(propertyContext.controllerContext, false)(this)(getter, function)
+  }
+  
+  /** function modifies the field and returns true to run next frame or false to be removed.
+   */
+  final def animator(function: (T, TimeStamp) => Boolean) {
+    if (propertyContext == null || propertyContext.controllerContext == null) {
+      throw new UnsupportedOperationException("ControllerContext is not defined.")
+    }
+    PropertyUpdater.register(propertyContext.controllerContext, false)(this)(Property.passThrough, function)
+  }
+  
   
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
@@ -58,9 +100,9 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Property.defined() and cannot be undefined.")
     
     if (isDefined) {
-      if (listener != null) listener.signalStructuralChanges()
+      if (propertyContext != null) propertyContext.signalStructuralChanges()
       changed = true
-      value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      value match { case d: PropertyContextDependent => d.unregister(); case _ => /* ignore */ }
       value = null.asInstanceOf[T]
     }
   }
@@ -68,8 +110,8 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   final def update: T = {
     if (!isDefined) {
       value = factory()
-      value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
-      if (listener != null) listener.signalStructuralChanges()
+      value match { case d: PropertyContextDependent => d.register(propertyContext); case _ => /* ignore */ }
+      if (propertyContext != null) propertyContext.signalStructuralChanges()
     }
     changed = true
     value
@@ -77,7 +119,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   
   private final def init(value: T) {
     this.value = value
-    value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+    value match { case d: PropertyContextDependent => d.register(propertyContext); case _ => /* ignore */ }
     changed = true
   }
   
@@ -105,6 +147,10 @@ extends Property[T](factory, enforceDefined) {
 }
 
 object Property {
+  private[this] val identity = (t: Any) => t
+  private[engine] def passThrough[T] = identity.asInstanceOf[T => T]
+  
+  
   def optional[T <: Accessible](factory: () => T) :Property[T] = {
     new AccessibleProperty[T](factory, false)
   }

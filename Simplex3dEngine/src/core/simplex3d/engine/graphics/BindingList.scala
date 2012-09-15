@@ -30,7 +30,7 @@ import simplex3d.engine.util._
 sealed abstract class ReadBindingList[T <: Accessible with Binding](
   implicit val elementManifest: ClassManifest[T#Read]
 )
-extends Protected with Binding with StructuralChangeNotifier
+extends Protected with Binding with PropertyContextDependent
 {
   type Read = ReadBindingList[T]
   type Mutable = BindingList[T]
@@ -48,11 +48,11 @@ final class BindingList[T <: Accessible with Binding](
 )
 extends ReadBindingList[T] with Accessible
 {
-  private var structuralChangeListener: StructuralChangeListener = _
-  private[engine] override def register(listener: StructuralChangeListener) { structuralChangeListener = listener }
+  private var structuralChangeListener: PropertyContext = _
+  private[engine] override def register(context: PropertyContext) { structuralChangeListener = context }
   private[engine] override def unregister() { structuralChangeListener = null }
-  protected def registerStructuralChangeListener(listener: StructuralChangeListener) {}
-  protected def unregisterStructuralChangeListener() {}
+  protected def registerPropertyContext(context: PropertyContext) {}
+  protected def unregisterPropertyContext() {}
   
   private val buff = new ArrayBuffer[T]
   def size = buff.size

@@ -25,7 +25,7 @@ package prototype
 import simplex3d.engine.util._
 
 
-trait Geometry extends graphics.Geometry {
+abstract class Geometry extends graphics.Geometry {
   
   private[this] var _attributeNames: ReadArray[String] = null
   private[this] var _attributes: ReadArray[UncheckedAttributes] = null

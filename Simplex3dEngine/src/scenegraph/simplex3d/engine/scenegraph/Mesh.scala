@@ -34,16 +34,19 @@ import simplex3d.engine.graphics._
 final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
   name: String,
   meshParent: AbstractNode[T, G],
-  final val geometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
-  final val material: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
+  cgeometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!
+  cmaterial: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
 )(implicit transformationCtx: T, graphicsCtx: G)
 extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
   
   import AccessChanges._
   
   
+  final val geometry: G#Geometry = if (cgeometry != null) cgeometry else graphicsContext.mkGeometry()
+  final val material: G#Material = if (cmaterial != null) cmaterial else graphicsContext.mkMaterial(this)
+  
   def this(name: String)(implicit transformationContext: T, graphicsContext: G) {
-    this(name, null, graphicsContext.mkGeometry(), graphicsContext.mkMaterial())
+    this(name, null, null.asInstanceOf[G#Geometry], null.asInstanceOf[G#Material])
   }
   
   def worldEnvironment = parent.worldEnvironment

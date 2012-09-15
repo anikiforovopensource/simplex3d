@@ -44,11 +44,11 @@ extends ManagedScene[G](name) {
   import AccessScene._; import AccessChanges._
   
   
-  private[this] val controllerContext = new ControllerContext(settings.multithreadedControllers)
+  private[this] val controllerManager = new ControllerManager(settings.multithreadedControllers)
   
   protected val _root = new EnvrionmentNode("Root")(transformationContext, techniqueManager.graphicsContext)
   protected def root: EnvrionmentNode[T, G] = _root
-  root.controllerContext = controllerContext
+  root.controllerManager = controllerManager
   root.customBoundingVolume := new Aabb(Vec3(Double.MinValue), Vec3(Double.MaxValue))
   root.appendChild(camera)
   
@@ -70,7 +70,7 @@ extends ManagedScene[G](name) {
   }
   
   protected def update(time: TimeStamp) {
-    controllerContext.update(time)
+    controllerManager.update(time)
   }
   
   

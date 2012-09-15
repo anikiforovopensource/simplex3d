@@ -44,8 +44,6 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   )
   
   
-  protected implicit val structuralChangeListener: StructuralChangeListener = null
-  
   // Read part of Struct2 type.
   sealed abstract class ReadStruct2 extends prototype.ReadStruct {
     type Read = ReadStruct2

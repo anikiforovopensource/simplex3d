@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Renderer Module
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2011, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,16 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package renderer
-
-import simplex3d.engine.util._
-import simplex3d.engine.graphics._
-import simplex3d.engine.scene._
+package simplex3d.engine.util
 
 
-class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
-  val fog = Property.optional(() => new Fog)
+trait PropertyContextDependent {
+  private[engine] def register(context: PropertyContext) { registerPropertyContext(context) }
+  private[engine] def unregister() { unregisterPropertyContext() }
   
-  init(classOf[Environment])
+  protected def registerPropertyContext(context: PropertyContext)
+  protected def unregisterPropertyContext()
 }

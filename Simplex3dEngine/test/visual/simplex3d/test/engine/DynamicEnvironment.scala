@@ -33,6 +33,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
+import simplex3d.engine.scene._
 import simplex3d.engine.scenegraph._
 
 
@@ -312,7 +313,7 @@ package testenv {
   }
   
   
-  class Environment extends prototype.Environment {
+  class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
     val intensity = Property.optional(() => new Intensity)
     val nodeColor = Property.optional(() => new NodeColor)
     val contrast = Property.optional(() => new Contrast)
@@ -327,8 +328,8 @@ package testenv {
     type Environment = testenv.Environment
     
     def mkGeometry() = new Geometry
-    def mkMaterial() = new Material
-    def mkEnvironment() = new Environment
+    def mkMaterial(controllerContext: ControllerContext) = new Material(controllerContext)
+    def mkEnvironment(controllerContext: ControllerContext) = new Environment(controllerContext)
     
     init()
   }

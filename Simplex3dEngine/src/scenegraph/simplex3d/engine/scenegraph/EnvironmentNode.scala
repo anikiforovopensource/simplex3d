@@ -39,9 +39,9 @@ extends AbstractNode[T, G](name) {
   import AccessChanges._
   
   
-  private[this] final val env = graphicsContext.mkEnvironment()
+  private[this] final val env = graphicsContext.mkEnvironment(this)
   def environment: G#Environment = env
-  override private[scenegraph] final val worldEnvironment: G#Environment = graphicsContext.mkEnvironment()
+  override private[scenegraph] final val worldEnvironment: G#Environment = graphicsContext.mkEnvironment(null)
   
   
   override def parent = super.parent

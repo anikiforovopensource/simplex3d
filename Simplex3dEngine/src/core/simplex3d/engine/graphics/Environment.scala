@@ -22,9 +22,10 @@ package simplex3d.engine
 package graphics
 
 import simplex3d.engine.util._
+import simplex3d.engine.scene._
 
 
-abstract class Environment extends StructuralChangeListener {
+abstract class Environment(controllerContext: ControllerContext) extends PropertyContext(controllerContext) {
   protected implicit val structuralChangeListener = this
   
   def propertyNames: ReadArray[String]

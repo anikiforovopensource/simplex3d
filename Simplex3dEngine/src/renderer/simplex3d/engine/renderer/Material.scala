@@ -27,9 +27,10 @@ import simplex3d.math.double._
 import simplex3d.data._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
+import simplex3d.engine.scene._
 
 
-class Material extends prototype.Material {
+class Material(controllerContext: ControllerContext) extends prototype.Material(controllerContext) {
   val emission = Property.optional(() => Vec3(0))
   val textureUnits = Property.optional(() => new BindingList[TextureUnit])
   

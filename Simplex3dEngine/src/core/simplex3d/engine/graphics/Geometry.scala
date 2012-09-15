@@ -29,7 +29,7 @@ import simplex3d.data.double._
 import simplex3d.engine.util._
 
 
-abstract class Geometry extends StructuralChangeListener {
+abstract class Geometry extends PropertyContext(null) {
   protected implicit val structuralChangeListener = this
   
   def attributeNames: ReadArray[String]
@@ -38,7 +38,7 @@ abstract class Geometry extends StructuralChangeListener {
   
   final val mode = Reassignable.defined[VertexMode](Triangles)
   
-  final val indices = AttributeBinding[SInt, Unsigned](StructuralChangeListener.Ignore)
+  final val indices = AttributeBinding[SInt, Unsigned](null)
   final val vertices = AttributeBinding[Vec3, RFloat](this)
   final val normals = AttributeBinding[Vec3, RFloat](this)
   

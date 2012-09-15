@@ -25,24 +25,26 @@ import simplex3d.math.types._
 
 sealed abstract class Reassignable[T <: Accessible] private[engine] (
   private[this] final val enforceDefined: Boolean
-) extends StructuralChangeNotifier
+) extends PropertyContextDependent
 {
   
-  //*** StructuralChangeListener Code *********************************************************************************
+  //*** PropertyContext Code ******************************************************************************************
   
-  protected final var listener: StructuralChangeListener = _
+  protected final var propertyContext: PropertyContext = _
   
-  private[engine] final override def register(listener: StructuralChangeListener) {
-    if (this.listener != null) throw new IllegalStateException("The property can register StructuralChangeListener only once.")
-    this.listener = listener
+  private[engine] final override def register(context: PropertyContext) {
+    if (this.propertyContext != null) throw new IllegalStateException(
+      "Reassignable can register PropertyContext only once."
+    )
+    this.propertyContext = context
   }
   
   private[engine] final override def unregister() {
-    throw new UnsupportedOperationException("Properties cannot unregister StructuralChangeListeners.")
+    throw new UnsupportedOperationException("Reassignable cannot unregister PropertyContexts.")
   }
   
-  protected final def registerStructuralChangeListener(listener: StructuralChangeListener) {}
-  protected final def unregisterStructuralChangeListener() {}
+  protected final def registerPropertyContext(context: PropertyContext) {}
+  protected final def unregisterPropertyContext() {}
   
   
   //*** Property Code *************************************************************************************************
@@ -57,9 +59,9 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
     if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Reassignable.defined() and cannot be undefined.")
     
     if (isDefined) {
-      if (listener != null) listener.signalStructuralChanges()
+      if (propertyContext != null) propertyContext.signalStructuralChanges()
       changed = true
-      value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      value match { case d: PropertyContextDependent => d.unregister(); case _ => /* ignore */ }
       value = null.asInstanceOf[T]
     }
   }
@@ -72,7 +74,7 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
   
   private final def init(value: T) {
     this.value = value
-    value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
+    value match { case d: PropertyContextDependent => d.register(propertyContext); case _ => /* ignore */ }
     changed = true
   }
   
@@ -82,10 +84,10 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
       stable := t.asInstanceOf[stable.Read]
     }
     else {
-      value match { case n: StructuralChangeNotifier => n.unregister(); case _ => /* ignore */ }
+      value match { case d: PropertyContextDependent => d.unregister(); case _ => /* ignore */ }
       value = t.mutableCopy().asInstanceOf[T]
-      value match { case n: StructuralChangeNotifier => n.register(listener); case _ => /* ignore */ }
-      if (listener != null) listener.signalStructuralChanges()
+      value match { case d: PropertyContextDependent => d.register(propertyContext); case _ => /* ignore */ }
+      if (propertyContext != null) propertyContext.signalStructuralChanges()
     }
     changed = true
   }

@@ -32,8 +32,8 @@ import simplex3d.engine.transformation._
 
 object AccessChanges {
   
-  implicit def listenerSubtext(listener: StructuralChangeListener)
-  :StructuralChangeListener#StructuralSubtext = listener.structuralSubtext
+  implicit def structuralChangeSubtext(context: PropertyContext)
+  :PropertyContext#StructuralChangeSubtext = context.structuralChangeSubtext
   
   implicit def changeListenerSubtext(listener: DataChangeListener)
   :DataChangeListener#DataSubtext = listener.dataSubtext

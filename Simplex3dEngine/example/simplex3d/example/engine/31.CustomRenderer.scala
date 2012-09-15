@@ -13,6 +13,7 @@ import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 import simplex3d.engine.graphics.pluggable._
 import simplex3d.engine.scenegraph._
+import simplex3d.engine.scene._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 
@@ -216,13 +217,13 @@ object CustomRenderer extends default.BaseApp {
     
     init(classOf[Geometry])
   }
-  class Material extends prototype.Material {
+  class Material(controllerContext: ControllerContext) extends prototype.Material(controllerContext) {
     val textureUnits = Property.optional(() => new BindingList[TextureUnit])
     
     init(classOf[Material])
   }
   
-  class Environment extends prototype.Environment {
+  class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
     val lighting = Property.optional(() => new Lighting)
     
     init(classOf[Environment])
@@ -238,8 +239,8 @@ object CustomRenderer extends default.BaseApp {
     type Environment = CustomRenderer.Environment
     
     def mkGeometry() = new Geometry
-    def mkMaterial() = new Material
-    def mkEnvironment() = new Environment
+    def mkMaterial(controllerContext: ControllerContext) = new Material(controllerContext)
+    def mkEnvironment(controllerContext: ControllerContext) = new Environment(controllerContext)
     
     init()
   }

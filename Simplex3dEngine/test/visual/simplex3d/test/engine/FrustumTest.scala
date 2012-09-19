@@ -81,7 +81,7 @@ object FrustumTest extends default.App {
     import simplex3d.algorithm.intersection._
     
     val frustum = Frustum(world.camera.viewProjection)
-    val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldMatrix)
+    val intersection = frustum.intersectObb(Vec3(-0.5), Vec3(0.5), cube.worldTransformation.matrix)
     if (intersection != Collision.Inside) println(time.total + ": " + Collision.toString(intersection))
   }
 

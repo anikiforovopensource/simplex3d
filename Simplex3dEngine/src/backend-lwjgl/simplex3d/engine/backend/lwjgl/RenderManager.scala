@@ -138,7 +138,6 @@ final class RenderManager extends graphics.RenderManager {
     mesh.resolveElementRange(elementRange)
     renderContext.setFaceCulling(material.faceCulling.get.toConst)
     
-    
     val predefinedUniforms = renderContext.predefinedUniforms
     predefinedUniforms.se_modelViewMatrix := transformation concat camera.view
     predefinedUniforms.se_modelViewProjectionMatrix := camera.projection*Mat4(predefinedUniforms.se_modelViewMatrix)

@@ -122,10 +122,10 @@ object ObbTest extends default.App {
     val min = Vec3(-0.5)
     val max = Vec3(0.5)
 
-    val intersection1 = Obb.intersectAabb(min, max, movingCube.worldMatrix)(min*cubeScale - translation, max*cubeScale - translation)
+    val intersection1 = Obb.intersectAabb(min, max, movingCube.worldTransformation.matrix)(min*cubeScale - translation, max*cubeScale - translation)
     if (intersection1 != Vec3.Zero) println("Aabb " + time.total + ": " + intersection1)
     
-    val intersection2 = Obb.intersectObb(min, max, movingCube.worldMatrix)(min, max, cube2.worldMatrix)
+    val intersection2 = Obb.intersectObb(min, max, movingCube.worldTransformation.matrix)(min, max, cube2.worldTransformation.matrix)
     if (intersection2 != Vec3.Zero) println("Obb " + time.total + ": " + intersection2)
   }
 }

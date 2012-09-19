@@ -67,7 +67,8 @@ extends graphics.TechniqueManager[G]
   
   def register(shader: ShaderPrototype) {
     //XXX Verify unique in/out block name has the same declarations,
-    //XXX special treatment for gl_Position => gl_FragCoord.
+    //XXX special treatment for gl_Position => gl_FragCoord
+    //XXX special treatment for gl_FragColor
     shader match {
       case _: FragmentShader => stages(0).register(shader)
       case _: VertexShader => stages(1).register(shader)

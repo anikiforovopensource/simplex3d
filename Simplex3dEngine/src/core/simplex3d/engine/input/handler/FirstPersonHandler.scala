@@ -41,14 +41,13 @@ class FirstPersonHandler(
   override def update(input: Input, time: TimeStamp) {
     val keyDown = input.keyboard.isKeyDown(_); import KeyCode._
     
-    val rotated = transformation.get.rotation.rotateVector(Vec3.UnitZ)
-    val xzPlaneVec = normalize(rotated.xz)
-
-    val px = clamp(xzPlaneVec.y, -1, 1)
-    val py = clamp(dot(Vec3(xzPlaneVec.x, 0, xzPlaneVec.y), rotated), -1, 1)
+    if (!transformation.isDefined) transformation.update
     
-    var horizontalAngle = sign(rotated.x)*degrees(acos(px))
-    var verticalAngle = -sign(rotated.y)*degrees(acos(py))
+    val rotated = transformation.get.rotation.rotateVector(Vec3.UnitX)
+    
+    val hFactor = if (rotated.z < 0) 1 else -1
+    var horizontalAngle = hFactor*degrees(acos(normalize(rotated.xz).x))
+    var verticalAngle = -sign(rotated.y)*degrees(acos(length(rotated.xz)))
     
     if (hasErrors(horizontalAngle)) horizontalAngle = 0
     if (hasErrors(verticalAngle)) verticalAngle = 0

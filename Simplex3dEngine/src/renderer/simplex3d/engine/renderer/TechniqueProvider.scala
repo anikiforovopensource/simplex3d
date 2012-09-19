@@ -38,6 +38,7 @@ object TechniqueProvider {
       use("vec3 lightEmission()")
       use("vec3 lightIntensity()")
       use("vec4 texturingColor()")
+      use("vec4 applyFog(in vec4)")
       
       in("transformationCtx") {
         declare[Vec4]("gl_FragCoord")
@@ -45,7 +46,9 @@ object TechniqueProvider {
       
       src {"""
         void resolveColor() {
-          gl_FragColor = texturingColor() * vec4(lightEmission() + lightIntensity(), 1.0);
+          vec4 lighting = vec4(lightEmission() + lightIntensity(), 1.0);
+          vec4 baseColor = texturingColor() * lighting;
+          gl_FragColor = applyFog(baseColor);
         }
       """}
     })
@@ -78,6 +81,16 @@ object TechniqueProvider {
         }
       """}
     })
+    manager.register(new FragmentShader {
+      export("vec4 applyFog(in vec4)")
+      
+      src {"""
+        vec4 applyFog(in vec4 baseColor) {
+          return baseColor;
+        }
+      """}
+    })
+    
     
     manager.register(new FragmentShader {
       export("vec3 lightEmission()")
@@ -139,6 +152,23 @@ object TechniqueProvider {
       """}
     })
     
+    manager.register(new FragmentShader {
+      export("vec4 applyFog(in vec4)")
+      
+      uniform {
+        declare[Fog]("fog")
+      }
+      
+      in("fogCtx") {
+        declare[DoubleRef]("factor")
+      }
+      
+      src {"""
+        vec4 applyFog(in vec4 baseColor) {
+          return vec4(mix(fog.color, baseColor.rgb, fogCtx.factor), baseColor.a);
+        }
+      """}
+    })
     
     manager.register(new VertexShader {
       entryPoint("transformVertices")
@@ -196,7 +226,7 @@ object TechniqueProvider {
     })
       
     manager.register(new VertexShader {
-      entryPoint("propagateTexturingValues")
+      entryPoint("transformTexCoords")
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
@@ -211,11 +241,50 @@ object TechniqueProvider {
       }
       
       src {"""
-        void propagateTexturingValues() {
+        void transformTexCoords() {
           for (int i = 0; i < se_sizeOf_textureUnits; i++) {
             vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
             texturingCtx.ecTexCoords[i] = transformed.xy;
           }
+        }
+      """}
+    })
+    
+    manager.register(new VertexShader {
+      entryPoint("computeFog")
+      
+      use("vec3 ecPosition()")
+      
+      uniform {
+        declare[Fog]("fog")
+      }
+      
+      out("fogCtx") {
+        declare[DoubleRef]("factor")
+      }
+      
+      src {"""
+        void computeFog() {
+          vec3 ecPos = ecPosition();
+          fogCtx.factor = clamp(exp(-fog.density*fog.density*dot(ecPos, ecPos)), 0.0, 1.0);
+        }
+      """}
+    })
+    
+    manager.register(new VertexShader {
+      export("vec3 ecPosition()")
+      
+      uniform {
+        declare[Mat4x3]("se_modelViewMatrix")
+      }
+      
+      attributes {
+        declare[Vec3]("vertices")
+      }
+      
+      src {"""
+        vec3 ecPosition() {
+          return vec3(se_modelViewMatrix*vec4(vertices, 1.0));
         }
       """}
     })

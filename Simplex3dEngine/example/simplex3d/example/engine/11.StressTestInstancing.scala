@@ -99,8 +99,8 @@ object StressTestInstancing extends default.App {
     node.material.textureUnits.update += new TextureUnit(objectTexture)
     
     world.attach(node)
-
     
+        
     val random = new java.util.Random(3)
     def randomRotation() = normalize(Quat4(random.nextDouble, random.nextDouble, random.nextDouble, random.nextDouble))
     def smallRandomRotation() = normalize(Quat4(1, random.nextDouble, random.nextDouble, random.nextDouble))

@@ -64,7 +64,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
     TransformationBinding[T#Transformation](transformationContext.factory)
   }
   
-  def worldMatrix = worldTransformation.matrix
+  protected def worldMatrix = uncheckedWorldTransformation.matrix
   
   
   final def worldTransformation: TransformationBinding[T#Transformation] = {

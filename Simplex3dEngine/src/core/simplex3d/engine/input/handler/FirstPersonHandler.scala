@@ -43,11 +43,11 @@ class FirstPersonHandler(
     
     if (!transformation.isDefined) transformation.update
     
-    val rotated = transformation.get.rotation.rotateVector(Vec3.UnitX)
+    val rotated = transformation.get.rotation.rotateVector(Vec3.UnitZ)
     
-    val hFactor = if (rotated.z < 0) 1 else -1
-    var horizontalAngle = hFactor*degrees(acos(normalize(rotated.xz).x))
-    var verticalAngle = -sign(rotated.y)*degrees(acos(length(rotated.xz)))
+    val hFactor = if (rotated.x > 0) 1 else -1
+    var horizontalAngle = hFactor*degrees(acos(normalize(rotated.xz).y))
+    var verticalAngle = -sign(rotated.y)*degrees(acos(length(normalize(rotated).xz)))
     
     if (hasErrors(horizontalAngle)) horizontalAngle = 0
     if (hasErrors(verticalAngle)) verticalAngle = 0

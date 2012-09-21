@@ -65,15 +65,14 @@ extends graphics.TechniqueManager[G]
   stages(1) = new Stage("Vertex")
   
   
-  def register(shader: ShaderPrototype) {
+  def register(shader: ShaderDeclaration) {
     //XXX Verify unique in/out block name has the same declarations,
     //XXX special treatment for gl_Position => gl_FragCoord
     //XXX special treatment for gl_FragColor
     shader match {
-      case _: FragmentShader => stages(0).register(shader)
-      case _: VertexShader => stages(1).register(shader)
+      case _: FragmentShader => stages(0).register(shader.toPrototype())
+      case _: VertexShader => stages(1).register(shader.toPrototype())
     }
-    shader.init()
   }
   
   
@@ -107,7 +106,7 @@ extends graphics.TechniqueManager[G]
               geometry.mode.get
             }
             else graphicsContext.resolveUniformPath(
-              path, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
+              path, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
               
           if (resolved != null) {
             conditionsPassed = condition(resolved)
@@ -151,7 +150,7 @@ extends graphics.TechniqueManager[G]
           }
           else {
             val resolved = graphicsContext.resolveUniformPath(
-              declaration.name, dummyPredefined, material, worldEnvironment, shader.shaderUniforms)
+              declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
             
             uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
             
@@ -266,12 +265,12 @@ extends graphics.TechniqueManager[G]
     if (chain != null) {
       
       // Generate declaration map.
-      val listDeclarationMap = new HashMap[(String, String), ListDeclarationSizeKey]
+      val listDeclarationMap = new HashMap[(String, String), ListDeclarationKey]
       def processValue(value: AnyRef, name: String) {
         value match {
           
           case a: BindingList[_] =>
-            val dec = new ListDeclarationSizeKey("", name, a.size)
+            val dec = new ListDeclarationKey("", name, a.size)
             val prev = listDeclarationMap.put(dec.nameKey, dec)
             if (prev != null && prev.size != dec.size) println("XXX log")
             
@@ -306,13 +305,13 @@ extends graphics.TechniqueManager[G]
       
       
       // Generate shader and technique keys. 
-      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey])](chain.size)
+      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListDeclarationKey])](chain.size)
       
       i = 0; while (i < chain.size) {
         val shader = chain(i)
-        val listKeys = shader.listDeclarationNameKeys
+        val listKeys = shader.unsizedArrayKeys
         
-        val resolved = new Array[ListDeclarationSizeKey](listKeys.size)
+        val resolved = new Array[ListDeclarationKey](listKeys.size)
         var j = 0; while (j < listKeys.size) {
           val key = listKeys(j)
           
@@ -346,7 +345,7 @@ extends graphics.TechniqueManager[G]
             val listDeclarations = shaderKey._2
             val src = ShaderPrototype.genSrc_Glsl120(proto, listDeclarations)
             
-            shader = new Shader(proto.shaderType, src, proto.shaderUniforms)
+            shader = new Shader(proto.shaderType, src, proto.boundUniforms)
             shaderCache.put(shaderKey, shader)
           }
           
@@ -392,11 +391,11 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  // XXX HashMap[(ShaderPrototype, Set[ListDeclarationSizeKey]), Shader]
-  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey]), Shader]
+  // XXX HashMap[(ShaderPrototype, Set[ListDeclarationKey]), Shader]
+  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListDeclarationKey]), Shader]
   
-  // XXX HashMap[Set[(ShaderPrototype, Set[ListDeclarationSizeKey])], Technique]
-  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListDeclarationSizeKey])], Technique]
+  // XXX HashMap[Set[(ShaderPrototype, Set[ListDeclarationKey])], Technique]
+  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListDeclarationKey])], Technique]
 }
 
 

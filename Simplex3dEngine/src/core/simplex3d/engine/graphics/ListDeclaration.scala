@@ -53,11 +53,11 @@ final class ListDeclaration(val parentType: String, val name: String, val lists:
       "' resolves to BindingList instances with different sizes, minimum size will be used."
     )
     
-    new ListDeclarationSizeKey(parentType, name, min)
+    new ListDeclarationKey(parentType, name, min)
   }
   
   override def toString() :String = {
-    "ListDeclaration { " + parentType + "." + name + "[" + "] }"
+    "ListDeclaration(" + parentType + "." + name + ")"
   }
 }
 
@@ -65,13 +65,13 @@ object ListDeclaration {
   private val logger = Logger.getLogger(this.getClass.getName)
 }
 
-final class ListDeclarationSizeKey(val parentType: String, val name: String, val size: Int) {
+final class ListDeclarationKey(val parentType: String, val name: String, val size: Int) {
   val nameKey = (parentType, name)
   
   override def equals(other: Any) :Boolean = {
     if (this.eq(other.asInstanceOf[AnyRef])) true
     else other match {
-      case a: ListDeclarationSizeKey =>
+      case a: ListDeclarationKey =>
         a.parentType == parentType &&
         a.name == name &&
         a.size == size
@@ -88,6 +88,6 @@ final class ListDeclarationSizeKey(val parentType: String, val name: String, val
   }
   
   override def toString() :String = {
-    "ListDeclarationSizeKey { " + parentType + "." + name + "[" + size + "] }"
+    "ListDeclarationKey(" + parentType + "." + name + "[" + size + "])"
   }
 }

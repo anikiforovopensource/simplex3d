@@ -22,9 +22,6 @@ package simplex3d.engine
 package graphics.pluggable
 
 import scala.collection._
-import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.HashSet
-import scala.collection.mutable.HashMap
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.types._
@@ -32,81 +29,18 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-final class DeclarationBlock(val name: String, val declarations: immutable.HashSet[Declaration]) {
-  override def toString() :String = {
-    "DeclarationBlock('" + name + "')(\n" + declarations.mkString("  ", "\n", "") + "\n)"
-  }
-  
-  override def equals(o: Any) :Boolean = {
-    if (this eq o.asInstanceOf[AnyRef]) {
-      true
-    }
-    else o match {
-      
-      case d: DeclarationBlock =>
-        name == d.name &&
-        declarations == d.declarations
-        
-      case _ =>
-        false
-    }
-  }
-  
-  override def hashCode() :Int = {
-    41 * (
-      41 + name.hashCode
-    ) + declarations.hashCode
-  }
-}
-
-final case class StructDeclaration(
-  level: Int,
-  erasure: Class[_],
-  glslType: String,
-  entries: ReadSeq[(String, String)],// (glslType, name) pairs
-  containsSamplers: Boolean
-) {
-  def isNested = (level != 0)
-}
-
 final class Declaration(
+  val qualifiers: String,
   val manifest: ClassManifest[_ <: Binding],
-  val name: String
+  val name: String,
+  val arraySizeExpression: String
 ) {
+  import scala.collection.mutable.HashMap//XXX
+  import scala.collection.mutable.ArrayBuffer//XXX
+  
   val isPredefined = name.startsWith("se_")
   val isReserved = name.startsWith("gl_")
   val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
-  
-  private[this] var _qualifiers = ""
-  def qualifiers = _qualifiers
-  
-  private[this] var _arraySizeExpression = ""
-  def arraySizeExpression = _arraySizeExpression
-  
-  
-  /** The simple way to link input/output array sizes is using a size of a uniform array: a.length(); 
-   */
-  def size(arraySizeExpression: String) :this.type = {
-    if (!classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) throw new RuntimeException(
-      "Only arrays can be sized."
-    )
-    if (!_arraySizeExpression.isEmpty) throw new RuntimeException(
-      "This array is already sized."
-    )
-    
-    val expr = arraySizeExpression.trim
-    if (expr.isEmpty) throw new IllegalArgumentException("Array size expression must not be empty.")
-    
-    _arraySizeExpression = expr
-    this
-  }
-  
-  def qualify(qualifiers: String) :this.type = {
-    if (qualifiers.trim.isEmpty) new IllegalArgumentException("Qualifier must not be empty.")
-    
-    _qualifiers = (_qualifiers + " " + qualifiers).trim
-    this
-  }
   
   
   private[pluggable] def getType(squareMatrices: Boolean) :String = {
@@ -114,7 +48,7 @@ final class Declaration(
   }
   private[pluggable] def getStructs(
     squareMatrices: Boolean,
-    structBlocks: HashMap[String, StructDeclaration]
+    structBlocks: HashMap[String, StructSignature]
   ) {
     extractManifestTypeInfo(squareMatrices, 0, "", manifest, name, structBlocks)
   }
@@ -146,14 +80,14 @@ final class Declaration(
   }
   private def resolveTextureType(
     className: String,
-    level: Int, dependenciesResult: HashMap[String, StructDeclaration]
+    level: Int, dependenciesResult: HashMap[String, StructSignature]
   ) :String = {
     
     className match {
       case "Texture2d" =>
         val glslType = "Se_Texture2d"
           
-        val sdec = new StructDeclaration(
+        val sdec = new StructSignature(
           level, classOf[Texture2d[_]], glslType,
           new ReadSeq(ArrayBuffer(
             ("sampler2D", "sampler"),
@@ -172,13 +106,13 @@ final class Declaration(
     squareMatrices: Boolean,
     level: Int,
     instance: Struct,
-    dependenciesResult: HashMap[String, StructDeclaration]
+    dependenciesResult: HashMap[String, StructSignature]
   ) :String =
   {
     val glslType = ClassUtil.simpleName(instance.getClass)
     if (dependenciesResult == null) return glslType
 
-    val subStructs = new HashMap[String, StructDeclaration]
+    val subStructs = new HashMap[String, StructSignature]
     val entries = new ArrayBuffer[(String, String)]
     var containsSamplers = false
     
@@ -207,7 +141,7 @@ final class Declaration(
     }
     
     if (!existing.isDefined || existing.get.level < level) {
-      val dec = new StructDeclaration(level, instance.getClass, glslType, new ReadSeq(entries), containsSamplers)
+      val dec = new StructSignature(level, instance.getClass, glslType, new ReadSeq(entries), containsSamplers)
       dependenciesResult.put(glslType, dec)
     }
     
@@ -219,7 +153,7 @@ final class Declaration(
     level: Int,
     parentType: String,
     manifest: ClassManifest[_], name: String,
-    dependenciesResult: HashMap[String, StructDeclaration]
+    dependenciesResult: HashMap[String, StructSignature]
   ) :String = { // glslType
     
     if (classOf[MathType].isAssignableFrom(manifest.erasure)) {
@@ -274,7 +208,7 @@ final class Declaration(
     level: Int,
     parentType: String,
     instance: Object, name: String,
-    dependenciesResult: HashMap[String, StructDeclaration]
+    dependenciesResult: HashMap[String, StructSignature]
   ) :(String, String) = {//(glslType, sizeExpression)
     
     if (classOf[MathType].isAssignableFrom(instance.getClass)) {

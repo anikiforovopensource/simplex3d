@@ -56,7 +56,7 @@ import simplex3d.engine.scenegraph._
  * The contrast alternates between an array of one and two factors every 4 seconds.
  * This servers as a test for dynamic binding resolution, which allows the same environmental property to
  * resolve to different structs depending on the circumstances.
- * Contrast inherits from UpdatableEnvironmentalEffect which can alter its' binding uniquely for each mesh
+ * Contrast inherits from UpdatableEnvironmentalEffect which can alter its binding uniquely for each mesh
  * depending on the camera matrices. When the camera is moved further from the meshes,
  * they gradually loose color and become white.//XXX update after per-mesh and per-cam effect separation
  * 
@@ -141,10 +141,11 @@ object DynamicEnvironment extends App {
 
     
     nodes(6).environment.intensity.update.value := 0.75
-    for (i <- 0 until 7) nodes(i).environment.nodeColor.update.color := Vec3(1, 0, 0)
     nodes(0).environment.contrast.update.factor := 0.1
     
     scene.attach(nodes(0))
+    
+    scene.environment.nodeColor.update.color := Vec3(0, 0, 1)//Set the root node color to trigger the color chain.
   } 
   
   def update(time: TimeStamp) {
@@ -315,8 +316,8 @@ package testenv {
   
   class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
     val intensity = Property.optional(() => new Intensity)
-    val nodeColor = Property.optional(() => new NodeColor)
     val contrast = Property.optional(() => new Contrast)
+    val nodeColor = Property.defined(new NodeColor)
     
     init(classOf[Environment])
   }
@@ -424,11 +425,6 @@ package testenv {
       geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
     )
     :Technique = {
-      
-      assert(worldEnvironment.nodeColor.isDefined)
-      assert(worldEnvironment.contrast.isDefined)
-      
-      
       print("Resolving technique for mesh '" + meshName + "': ")
       
       val intensityShader =

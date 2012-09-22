@@ -34,7 +34,7 @@ object DynamicTexture extends default.App {
   
   def init() {
     world.camera.transformation.update.translation := Vec3(0, 0, 100)
-    world.camera.transformation.update.lookAt(Vec3(0), Vec3.UnitY)
+    world.camera.transformation.update.lookAt(Vec3(0), Vec3.UnitY, true)
     
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))

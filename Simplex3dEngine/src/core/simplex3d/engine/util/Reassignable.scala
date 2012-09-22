@@ -33,7 +33,8 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
   protected final var propertyContext: PropertyContext = _
   
   private[engine] final override def register(context: PropertyContext) {
-    if (this.propertyContext != null) throw new IllegalStateException(
+    if (context == null) throw new NullPointerException
+    if (this.propertyContext != null && (this.propertyContext ne context)) throw new IllegalStateException(
       "Reassignable can register PropertyContext only once."
     )
     this.propertyContext = context

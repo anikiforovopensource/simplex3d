@@ -37,7 +37,8 @@ extends Updatable[T] {
   protected final var controllerContext: ControllerContext = _
   
   private[engine] final def register(context: ControllerContext) {
-    if (this.controllerContext != null) throw new IllegalStateException(
+    if (context == null) throw new NullPointerException
+    if (this.controllerContext != null && (this.controllerContext ne context)) throw new IllegalStateException(
       "TransformationBinding can register ControllerContext only once."
     )
     this.controllerContext = context

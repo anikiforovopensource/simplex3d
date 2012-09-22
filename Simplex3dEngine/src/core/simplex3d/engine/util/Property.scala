@@ -35,7 +35,8 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   protected final var propertyContext: PropertyContext = _
   
   private[engine] final override def register(context: PropertyContext) {
-    if (this.propertyContext != null) throw new IllegalStateException(
+    if (context == null) throw new NullPointerException
+    if (this.propertyContext != null && (this.propertyContext ne context)) throw new IllegalStateException(
       "Property can register PropertyContext only once."
     )
     this.propertyContext = context
@@ -152,7 +153,7 @@ object Property {
   
   
   def optional[T <: Accessible](factory: () => T) :Property[T] = {
-    new AccessibleProperty[T](factory, false)
+    new AccessibleProperty[T](factory, false)//XXX possibly use manifest.erasure.newInstance()
   }
   
   def defined[T <: Accessible](value: T) :Property[T] = {

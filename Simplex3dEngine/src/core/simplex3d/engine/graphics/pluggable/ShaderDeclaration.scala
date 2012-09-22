@@ -23,6 +23,7 @@ package graphics.pluggable
 
 import java.util.logging._
 import scala.collection.immutable._
+import scala.collection.mutable.ArrayBuilder
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.types._
@@ -91,16 +92,195 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       this
     }
     
-    override def toString() :String = {
-      def extractTypeString(m: ClassManifest[_]) :String = {
-        ClassUtil.simpleName(m.erasure) + {
-          m.typeArguments match {
-            case List(t: ClassManifest[_]) => "[" + extractTypeString(t) + "]"
-            case _ => ""
-          }
+    private[ShaderDeclaration] def extractGlslTypes(squareMatrices: Boolean)
+    :(String, ReadArray[StructSignature]) = // (glslType, structureSignatuers)
+    {
+      val builder = ArrayBuilder.make[StructSignature]
+      val glslType = glslTypeFromManifest(squareMatrices, 0, "", manifest, name, builder)
+      val oragnized = StructSignature.organizeDependencies(builder.result)
+      
+      (glslType, oragnized)
+    }
+    
+    private def resolveMathType(squareMatrices: Boolean, erasure: Class[_]) :String = {
+      val className = ClassUtil.simpleName(erasure).toLowerCase()
+      val unprefixedName = 
+        if (className.startsWith("const")) className.drop(5)
+        else if (className.startsWith("read")) className.drop(4)
+        else className
+      
+      if (unprefixedName.endsWith("ref")) {
+        val shorterName = unprefixedName.dropRight(3)
+        if (shorterName == "double") "float" else shorterName
+      }
+      else if (unprefixedName.startsWith("vec") && unprefixedName.endsWith("i")) {
+        "i" + unprefixedName.dropRight(1)
+      }
+      else if (unprefixedName.startsWith("mat") && squareMatrices) {
+        unprefixedName.dropRight(1) match {
+          case "mat2" => "mat2"
+          case "mat2x3" | "mat3x2" | "mat3" => "mat3"
+          case _ => "mat4"
         }
       }
-      "Declaraion(" + qualifiers + " " + extractTypeString(manifest) + " " + name + ")"
+      else {
+        unprefixedName.dropRight(1)
+      }
+    }
+    private def resolveTextureType(
+      erasure: Class[_],
+      level: Int, dependenciesResult: ArrayBuilder[StructSignature]
+    ) :String =
+    {
+      val className = ClassUtil.simpleName(erasure)
+      
+      className match {
+        
+        case "Texture2d" => {
+          val glslType = "Se_Texture2d"
+            
+          dependenciesResult += new StructSignature(
+            level, classOf[Texture2d[_]], glslType,
+            new ReadArray(Array(
+              ("sampler2D", "sampler"),
+              ("ivec2", "dimensions"))),
+            true
+          )
+          
+          glslType
+        }
+        
+        case _ => throw new RuntimeException
+      }
+    }
+    
+    
+    private def glslTypeFromManifest(
+      squareMatrices: Boolean,
+      level: Int,
+      parentType: String,
+      manifest: ClassManifest[_], name: String,
+      dependenciesResult: ArrayBuilder[StructSignature]
+    ) :String = { // glslType
+      
+      if (classOf[MathType].isAssignableFrom(manifest.erasure)) {
+        resolveMathType(squareMatrices, manifest.erasure)
+      }
+      else if (classOf[TextureBinding[_]].isAssignableFrom(manifest.erasure)) {
+        try {
+          val erasure = manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
+          resolveTextureType(erasure, level, dependenciesResult) 
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Undefined or unsupported texture binding type for declaration '" + name + "'."
+          )
+        }
+      }
+      else if (classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) {
+        val listManifest = try {
+          manifest.typeArguments.head.asInstanceOf[ClassManifest[_]]
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Undefined or unsupported array type for declaration '" + name + "'."
+          )
+        }
+        
+        val glslType = glslTypeFromManifest(squareMatrices, level, parentType, listManifest, name, dependenciesResult)
+        glslType
+      }
+      else if (classOf[Struct].isAssignableFrom(manifest.erasure)) {
+        val instance = try {
+          manifest.erasure.newInstance().asInstanceOf[Struct]
+        }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Unable to create an instance of '" + manifest.erasure.getName +
+            "'. All Struct subclasses must define a no-argument constructor."
+          )
+        }
+        
+        glslTypeFromStruct(squareMatrices, level, instance, dependenciesResult)
+      }
+      else {
+        throw new RuntimeException(
+          "Unsupported type '" + ClassUtil.simpleName(manifest.erasure) + "' for declaration '" + name + "'."
+        )
+      }
+    }
+    
+    private def glslTypeFromStruct(
+      squareMatrices: Boolean,
+      level: Int,
+      instance: Struct,
+      dependenciesResult: ArrayBuilder[StructSignature]
+    ) :String =
+    {
+      val glslType = ClassUtil.simpleName(instance.getClass)
+      if (dependenciesResult == null) return glslType
+  
+      val subStructs = ArrayBuilder.make[StructSignature]
+      val entries = ArrayBuilder.make[(String, String)]
+      var containsSamplers = false
+      
+      for (i <- 0 until instance.fieldNames.length) {
+        val fieldName = instance.fieldNames(i)
+        val field = instance.fields(i)
+        
+        val (fieldType, arraySizeExpression) = glslTypeFromInstance(
+          squareMatrices, level + 1, glslType, field, fieldName, subStructs
+        )
+        
+        val append = if (arraySizeExpression != "") "[" + arraySizeExpression + "]" else ""
+        entries += ((fieldType, fieldName + append))
+        
+        if (classOf[TextureBinding[_]].isAssignableFrom(field.getClass)) containsSamplers = true
+      }
+      
+      val subStructsArray = subStructs.result()
+      if (subStructsArray.find(_.containsSamplers).isDefined) containsSamplers = true
+      dependenciesResult ++= subStructsArray
+      
+      val readEntries = new ReadArray(entries.result)
+      dependenciesResult += new StructSignature(level, instance.getClass, glslType, readEntries, containsSamplers)
+      
+      glslType
+    }
+    
+    private def glslTypeFromInstance(
+      squareMatrices: Boolean,
+      level: Int,
+      parentType: String,
+      instance: Object, name: String,
+      dependenciesResult: ArrayBuilder[StructSignature]
+    ) :(String, String) = {//(glslType, sizeExpression)
+      
+      if (classOf[MathType].isAssignableFrom(instance.getClass)) {
+        (resolveMathType(squareMatrices, instance.getClass), "")
+      }
+      else if (classOf[TextureBinding[_]].isAssignableFrom(instance.getClass)) {
+        val erasure = instance.asInstanceOf[TextureBinding[_]].bindingManifest.erasure
+        (resolveTextureType(erasure, level, dependenciesResult), "")
+      }
+      else if (classOf[BindingList[_]].isAssignableFrom(instance.getClass)) {
+        val manifest = instance.asInstanceOf[BindingList[_]].elementManifest
+        val glslType = glslTypeFromManifest(squareMatrices, level, parentType, manifest, name, dependenciesResult)
+        
+        val sizeExpression =
+          if (!arraySizeExpression.isEmpty) arraySizeExpression
+          else ShaderPrototype.arraySizeId(parentType, name)
+        
+        (glslType, sizeExpression)
+      }
+      else if (classOf[Struct].isAssignableFrom(instance.getClass)) {
+        (glslTypeFromStruct(squareMatrices, level, instance.asInstanceOf[Struct], dependenciesResult), "")
+      }
+      else {
+        throw new RuntimeException(
+          "Unsupported type '" + ClassUtil.simpleName(instance.getClass) + "' for declaration '" + name + "'."
+        )
+      }
     }
   }
   
@@ -115,8 +295,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   private[this] var attributeBlock: Set[Declaration] = null
   
-  private[this] var inputBlocks = Set[DeclarationBlock]()
-  private[this] var outputBlocks = Set[DeclarationBlock]()
+  private[this] var inputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
+  private[this] var outputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
   
   private[this] var functionDependencies = Set[String]()
   
@@ -134,12 +314,15 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] def atTopLevel = (declarations == null)
   private[this] def atUniformBlock = (!atTopLevel && processingUniforms)
   
-  private[this] def remapDeclarations(declarations: Set[Declaration]) = {
-    if (declarations == null) ReadArray.Empty
+  private[this] def remapDeclarations(squarMatrices: Boolean, declarations: Set[Declaration]) = {
+    type Dec = simplex3d.engine.graphics.pluggable.Declaration
+    
+    if (declarations == null) Set.empty[Dec]
     else {
-      type Dec = simplex3d.engine.graphics.pluggable.Declaration
-      val array = declarations.map(d => new Dec(d.qualifiers, d.manifest, d.name, d.arraySizeExpression)).toArray
-      new ReadArray(array)
+      declarations.map { d =>
+        val (glslType, sturctSignatures) = d.extractGlslTypes(squarMatrices)
+        new Dec(d.qualifiers, d.manifest, glslType, d.name, d.arraySizeExpression, sturctSignatures)
+      }
     }
   }
   
@@ -152,6 +335,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
     boundUniforms += ((name, binding.asInstanceOf[Property[UncheckedBinding]]))
     declarations += new Declaration(ClassUtil.rebuildManifest(binding.get), name)
+    
+    //XXX register ShaderPropertyContext with property
   }
   
   protected final def use(functionSignature: String) {
@@ -258,7 +443,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     )
     
     val declarations = processBlock(() => block)
-    inputBlocks += new DeclarationBlock(name, remapDeclarations(declarations).toSet)
+    inputBlocks += ((name, declarations))
     enforceMathTypes(declarations)
     enforceSizedArrays(declarations)
   }
@@ -270,7 +455,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (!atTopLevel) throw new IllegalStateException("out{} block must be declared at the top level.")
 
     val declarations = processBlock(() => block)
-    outputBlocks += new DeclarationBlock(name, remapDeclarations(declarations).toSet)
+    outputBlocks += ((name, declarations))
     enforceMathTypes(declarations)
     enforceSizedArrays(declarations)
   }
@@ -308,24 +493,29 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   
-  def toPrototype() = new ShaderPrototype(
-    name,
-    logAccepted,
-    logRejected,
-    shaderType,
-    "120",//XXX version must come from profile
-    exportSignature,
-    entryPointSignature,
-    new ReadArray(conditions.toArray),
-    remapDeclarations(uniformBlock),
-    boundUniforms,
-    new ReadArray(unsizedArrayKeys.toArray),
-    remapDeclarations(attributeBlock),
-    new ReadArray(inputBlocks.toArray),
-    new ReadArray(outputBlocks.toArray),
-    new ReadArray(functionDependencies.toArray),
-    new ReadArray(sources.toArray)
-  )
+  def toPrototype(version: String) = {
+    val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
+    
+    new ShaderPrototype(
+      name,
+      logAccepted,
+      logRejected,
+      shaderType,
+      version,
+      squareMat,
+      exportSignature,
+      entryPointSignature,
+      new ReadArray(conditions.toArray),
+      new ReadArray(remapDeclarations(squareMat, uniformBlock).toArray),
+      boundUniforms,
+      new ReadArray(unsizedArrayKeys.toArray),
+      new ReadArray(remapDeclarations(squareMat, attributeBlock).toArray),
+      new ReadArray(inputBlocks.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))).toArray),
+      new ReadArray(outputBlocks.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))).toArray),
+      new ReadArray(functionDependencies.toArray),
+      new ReadArray(sources.toArray)
+    )
+  }
 }
 
 

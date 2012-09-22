@@ -33,7 +33,8 @@ class TechniqueManager[G <: GraphicsContext](implicit val graphicsContext: G)
 extends graphics.TechniqueManager[G]
 {
   import TechniqueManager.logger._
-  
+ 
+  val glslVersion = "120"//XXX version must come from profile
   val passManager = new PassManager[G]
   
   
@@ -70,8 +71,8 @@ extends graphics.TechniqueManager[G]
     //XXX special treatment for gl_Position => gl_FragCoord
     //XXX special treatment for gl_FragColor
     shader match {
-      case _: FragmentShader => stages(0).register(shader.toPrototype())
-      case _: VertexShader => stages(1).register(shader.toPrototype())
+      case _: FragmentShader => stages(0).register(shader.toPrototype(glslVersion))
+      case _: VertexShader => stages(1).register(shader.toPrototype(glslVersion))
     }
   }
   

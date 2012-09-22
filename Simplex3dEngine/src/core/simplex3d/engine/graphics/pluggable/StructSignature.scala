@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import scala.collection.mutable.HashMap
 import simplex3d.engine.util._
 
 
@@ -28,8 +29,35 @@ final class StructSignature(
   val level: Int,
   val erasure: Class[_],
   val glslType: String,
-  val entries: ReadSeq[(String, String)],// (glslType, name) pairs
+  val entries: ReadArray[(String, String)],// (glslType, name) pairs
   val containsSamplers: Boolean
 ) {
   def isNested = (level != 0)
+}
+
+
+object StructSignature {
+  
+  def organizeDependencies(signatures: Seq[StructSignature]) :ReadArray[StructSignature] = {
+    val map = new HashMap[String, StructSignature]
+    
+    for (signature <- signatures) {
+      val existing = map.get(signature.glslType)
+      if (existing.isDefined) {
+        val existingClass = existing.get.erasure
+        if (signature.erasure != existingClass) throw new AssertionError(
+          "Both structs '" +  signature.erasure.getName + "' and '" +
+          existingClass.getName + "' map to the same glsl type."
+        )
+        else if (existing.get.level < signature.level) {
+          map.put(signature.glslType, signature)
+        }
+      }
+      else {
+        map.put(signature.glslType, signature)
+      }
+    }
+    
+    new ReadArray(map.values.toArray.sortBy(-_.level))
+  }
 }

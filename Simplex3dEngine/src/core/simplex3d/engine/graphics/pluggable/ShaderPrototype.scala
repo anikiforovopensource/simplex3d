@@ -31,12 +31,13 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-final class ShaderPrototype(
+final class ShaderPrototype private[pluggable] (
   val name: String,
   val logAccepted: Boolean,
   val logRejected: Boolean,
   val shaderType: Shader.type#Value,
   val version: String,
+  val squareMatrices: Boolean,
   val export: Option[String],
   val entryPoint: Option[String],
   val conditions: ReadArray[(String, AnyRef => Boolean)],
@@ -50,15 +51,7 @@ final class ShaderPrototype(
   val sources: ReadArray[String]
 ) {
   def isVertexShader = (shaderType == Shader.Vertex)
-  def squareMatrices = (version == "120")
-  
-  val structs = {
-    val res = new scala.collection.mutable.HashMap[String, StructSignature]//XXX
-    for (declaration <- uniformBlock) {
-      declaration.getStructs(squareMatrices, res)
-    }
-    new ReadArray(res.values.toArray.sortBy(_.level).reverse)
-  }
+  val structs = StructSignature.organizeDependencies(uniformBlock.flatMap(_.structSignatures))
 }
 
 
@@ -121,8 +114,7 @@ object ShaderPrototype {
     
     if (!uniformBlock.isEmpty) {
       for (declaration <- uniformBlock; if !declaration.isReserved) {
-        val glslType = declaration.getType(squareMatrices)
-        src += format(declaration.qualifiers) + "uniform " + glslType + " " +
+        src += format(declaration.qualifiers) + "uniform " + declaration.glslType + " " +
         {
           if (declaration.isArray) declaration.name + "[" + ShaderPrototype.arraySizeId("", declaration.name) + "]"
           else declaration.name
@@ -136,8 +128,7 @@ object ShaderPrototype {
     if (!attributeBlock.isEmpty) {
       var appended = false
       for (declaration <- attributeBlock; if !declaration.isReserved) {
-        val glslType = declaration.getType(squareMatrices)
-        src += format(declaration.qualifiers) + inputQualifier + " " + glslType + " " +
+        src += format(declaration.qualifiers) + inputQualifier + " " + declaration.glslType + " " +
         {
           if (declaration.isArray) declaration.name + "[" + declaration.arraySizeExpression + "]"
           else declaration.name
@@ -157,8 +148,7 @@ object ShaderPrototype {
         val remapped = remapping._2
         
         if (!declaration.isReserved) {
-          val glslType = declaration.getType(squareMatrices)
-          src += format(declaration.qualifiers) + inputQualifier + " " + glslType + " " +
+          src += format(declaration.qualifiers) + inputQualifier + " " + declaration.glslType + " " +
           {
             if (declaration.isArray) remapped + "[" + declaration.arraySizeExpression + "]"
             else remapped
@@ -177,8 +167,7 @@ object ShaderPrototype {
         val remapping = mkRemapping(block.name, declaration.name)
         remappings += remapping
         if (!declaration.isReserved && isVertexShader) {
-          val glslType = declaration.getType(squareMatrices)
-          src += format(declaration.qualifiers) + "varying " + glslType + " " +
+          src += format(declaration.qualifiers) + "varying " + declaration.glslType + " " +
           {
             if (declaration.isArray) remapping._2 + "[" + declaration.arraySizeExpression + "]"
             else remapping._2

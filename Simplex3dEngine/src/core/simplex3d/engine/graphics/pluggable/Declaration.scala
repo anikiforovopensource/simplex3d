@@ -30,11 +30,11 @@ import simplex3d.engine.graphics._
 
 
 final class Declaration(
-  val qualifiers: String,
+  val qualifiers: Option[String],
   val manifest: ClassManifest[_ <: Binding],
   val glslType: String,
   val name: String,
-  val arraySizeExpression: String,
+  val arraySizeExpression: Option[String],
   val structSignatures: ReadArray[StructSignature]
 ) {
   val isPredefined = name.startsWith("se_")

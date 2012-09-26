@@ -26,10 +26,27 @@ import simplex3d.data._
 import simplex3d.engine.util._
 
 
-sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
-  implicit private val context: PropertyContext
-)
+sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw]
 { self: AccessibleAttributeBinding[F, R] =>
+  
+  //*** PropertyContext Code ******************************************************************************************
+  
+  protected final var context: PropertyContext = _
+  
+  private[engine] final def register(context: PropertyContext) {
+    if (context == null) throw new NullPointerException
+    if (this.context != null && (this.context ne context)) throw new IllegalStateException(
+      "AttributeBinding can register PropertyContext only once."
+    )
+    this.context = context
+  }
+  
+  private[engine] final def unregister() {
+    throw new UnsupportedOperationException("AttributeBinding cannot unregister PropertyContexts.")
+  }
+  
+  
+  //*** Attribute Code ************************************************************************************************
   
   def isAccessible = (isDefined && this.get.isAccessible)
   def isWritable = (isDefined && this.get.isWritable)
@@ -76,9 +93,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw](
     "AttributeBinding(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
-sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw](
-  implicit context: PropertyContext
-)
+sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw]
 extends AttributeBinding[F, R] {
   import AccessChanges._
   
@@ -92,6 +107,5 @@ extends AttributeBinding[F, R] {
 }
 
 object AttributeBinding {
-  def apply[F <: Format with MathType, R <: Raw](implicit context: PropertyContext)
-  :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
+  def apply[F <: Format with MathType, R <: Raw]() :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
 }

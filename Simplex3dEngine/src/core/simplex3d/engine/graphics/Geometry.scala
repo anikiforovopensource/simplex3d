@@ -30,17 +30,15 @@ import simplex3d.engine.util._
 
 
 abstract class Geometry extends PropertyContext(null) {
-  protected implicit val structuralChangeListener = this
-  
   def attributeNames: ReadArray[String]
   def attributes: ReadArray[UncheckedAttributes]
 
   
   final val mode = Reassignable.defined[VertexMode](Triangles)
   
-  final val indices = AttributeBinding[SInt, Unsigned](null)
-  final val vertices = AttributeBinding[Vec3, RFloat](this)
-  final val normals = AttributeBinding[Vec3, RFloat](this)
+  final val indices = AttributeBinding[SInt, Unsigned]
+  final val vertices = AttributeBinding[Vec3, RFloat]
+  final val normals = AttributeBinding[Vec3, RFloat]
   
   
   final def copyNonattributes(geometry: Geometry) {

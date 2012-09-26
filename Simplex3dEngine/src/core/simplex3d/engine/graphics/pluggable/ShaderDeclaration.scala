@@ -63,10 +63,14 @@ import simplex3d.engine.graphics._
  */
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
-  final class Declaration private[ShaderDeclaration] (val manifest: ClassManifest[_ <: Binding], val name: String)
+  protected final class Logging(var name: String, var logAccepted: Boolean, var logRejected: Boolean)
+  
+  protected final class Declaration private[ShaderDeclaration] (
+    val manifest: ClassManifest[_ <: Binding], val name: String
+  )
   {
-    private[ShaderDeclaration] var qualifiers = ""
-    private[ShaderDeclaration] var arraySizeExpression = ""
+    private[ShaderDeclaration] var qualifiers: Option[String] = None
+    private[ShaderDeclaration] var arraySizeExpression: Option[String] = None
     
     /** The simple way to link input/output array sizes is using a size of a uniform array: a.length(); 
      */
@@ -74,21 +78,24 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       if (!classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) throw new RuntimeException(
         "Only arrays can be sized."
       )
-      if (!this.arraySizeExpression.isEmpty) throw new RuntimeException(
+      if (this.arraySizeExpression.isDefined) throw new RuntimeException(
         "This array is already sized."
       )
       
       val expr = arraySizeExpression.trim
       if (expr.isEmpty) throw new IllegalArgumentException("Array size expression must not be empty.")
       
-      this.arraySizeExpression = expr
+      this.arraySizeExpression = Some(expr)
       this
     }
     
     def qualify(qualifiers: String) :this.type = {
       if (qualifiers.trim.isEmpty) new IllegalArgumentException("Qualifier must not be empty.")
+      if (this.qualifiers.isDefined) throw new RuntimeException(
+        "Qualifiers are already defined."
+      )
       
-      this.qualifiers = (this.qualifiers + " " + qualifiers).trim
+      this.qualifiers = Some(qualifiers.trim)
       this
     }
     
@@ -268,8 +275,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         val glslType = glslTypeFromManifest(squareMatrices, level, parentType, manifest, name, dependenciesResult)
         
         val sizeExpression =
-          if (!arraySizeExpression.isEmpty) arraySizeExpression
-          else ShaderPrototype.arraySizeId(parentType, name)
+          if (arraySizeExpression.isDefined) arraySizeExpression.get
+          else ShaderPrototype.arraySizeId(new ListNameKey(parentType, name))
         
         (glslType, sizeExpression)
       }
@@ -291,7 +298,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   private[this] var uniformBlock: Set[Declaration] = null
   private[this] var boundUniforms = Map[String, Property[UncheckedBinding]]()
-  private[this] var unsizedArrayKeys = Set[(String, String)]()//(structName, arrayName)
+  private[this] var unsizedArrayKeys = Set[ListNameKey]()
   
   private[this] var attributeBlock: Set[Declaration] = null
   
@@ -327,9 +334,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   
-  protected var name = this.hashCode.toString
-  protected var logRejected = false
-  protected var logAccepted = false
+  protected val logging = new Logging(this.hashCode.toString, false, false)
   
   protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
@@ -368,7 +373,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       val noSizeExpression = (declaration.arraySizeExpression.isEmpty)
       
       if (isArray && noSizeExpression) {
-        unsizedArrayKeys += (("", declaration.name))
+        unsizedArrayKeys += new ListNameKey("", declaration.name)
       }
       
       val manifest = 
@@ -497,9 +502,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
     
     new ShaderPrototype(
-      name,
-      logAccepted,
-      logRejected,
+      new ShaderLogging(logging.name, logging.logAccepted, logging.logRejected),
       shaderType,
       version,
       squareMat,

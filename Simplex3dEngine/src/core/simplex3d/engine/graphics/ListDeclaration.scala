@@ -25,12 +25,11 @@ import java.util.logging._
 import simplex3d.engine.util._
 
 
-final class ListDeclaration(val parentType: String, val name: String, val lists: ReadArray[BindingList[_]]) {
+final class ListDeclaration(val nameKey: ListNameKey, val lists: ReadArray[BindingList[_]]) {
   import ListDeclaration._
   
   require(!lists.isEmpty)
   
-  val nameKey = (parentType, name)
   
   def sizeKey() = {
     var differentSizes = false
@@ -49,15 +48,14 @@ final class ListDeclaration(val parentType: String, val name: String, val lists:
     
     if (differentSizes) logger.log(
       Level.WARNING,
-      "ListDeclaration '" + parentType + "." + name +
-      "' resolves to BindingList instances with different sizes, minimum size will be used."
+      this.toString() + " resolves to BindingList instances with different sizes, minimum size will be used."
     )
     
-    new ListDeclarationKey(parentType, name, min)
+    new ListSizeKey(nameKey, min)
   }
   
   override def toString() :String = {
-    "ListDeclaration(" + parentType + "." + name + ")"
+    "ListDeclaration(" + nameKey.parentType + "." + nameKey.name + ")"
   }
 }
 
@@ -65,15 +63,37 @@ object ListDeclaration {
   private val logger = Logger.getLogger(this.getClass.getName)
 }
 
-final class ListDeclarationKey(val parentType: String, val name: String, val size: Int) {
-  val nameKey = (parentType, name)
+
+final class ListNameKey(val parentType: String, val name: String) {
+  override def equals(other: Any) :Boolean = {
+    if (this.eq(other.asInstanceOf[AnyRef])) true
+    else other match {
+      case a: ListNameKey =>
+        a.parentType == parentType &&
+        a.name == name
+      case _ => false
+    }
+  }
+  
+  override val hashCode :Int = {
+    41 * (
+      41 + parentType.hashCode
+    ) + name.hashCode
+  }
+  
+  override def toString() :String = {
+    "ListNameKey(" + parentType + "." + name + ")"
+  }
+}
+
+
+final class ListSizeKey(val nameKey: ListNameKey, val size: Int) {
   
   override def equals(other: Any) :Boolean = {
     if (this.eq(other.asInstanceOf[AnyRef])) true
     else other match {
-      case a: ListDeclarationKey =>
-        a.parentType == parentType &&
-        a.name == name &&
+      case a: ListSizeKey =>
+        a.nameKey == nameKey &&
         a.size == size
       case _ => false
     }
@@ -81,13 +101,11 @@ final class ListDeclarationKey(val parentType: String, val name: String, val siz
   
   override def hashCode() :Int = {
     41 * (
-      41 * (
-        41 + parentType.hashCode
-      ) + name.hashCode
+      41 + nameKey.hashCode
     ) + size.hashCode
   }
   
   override def toString() :String = {
-    "ListDeclarationKey(" + parentType + "." + name + "[" + size + "])"
+    "ListSizeKey(" + nameKey.parentType + "." + nameKey.name + "[" + size + "])"
   }
 }

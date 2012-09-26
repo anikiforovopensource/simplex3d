@@ -83,9 +83,9 @@ trait Struct extends ReadStruct with Accessible {
   protected def findListDeclarations() :ReadArray[ListDeclaration] = {
     val clazz = this.getClass
     val parentType = ClassUtil.simpleName(clazz)
-    val declarations = new HashMap[(String, String), List[BindingList[_]]]
+    val declarations = new HashMap[ListNameKey, List[BindingList[_]]]
     
-    def register(nameKey: (String, String), list: BindingList[_]) {
+    def register(nameKey: ListNameKey, list: BindingList[_]) {
       var existing = declarations.get(nameKey)
       if (existing == null) existing = Nil
       declarations.put(nameKey, list :: existing)
@@ -109,7 +109,7 @@ trait Struct extends ReadStruct with Accessible {
       fields(i).asInstanceOf[AnyRef] match {
         
         case list: BindingList[_] =>
-          register((parentType, fieldNames(i)), list)
+          register(new ListNameKey(parentType, fieldNames(i)), list)
           val erasure = list.elementManifest.erasure
           if (classOf[Struct].isAssignableFrom(erasure)) {
             registerStruct(erasure.newInstance().asInstanceOf[Struct])
@@ -131,7 +131,7 @@ trait Struct extends ReadStruct with Accessible {
       val entry = iter.next()
       val key = entry.getKey
       
-      listDeclarations(i) = new ListDeclaration(key._1, key._2, new ReadArray(entry.getValue.toArray))
+      listDeclarations(i) = new ListDeclaration(key, new ReadArray(entry.getValue.toArray))
       
       i += 1
     }

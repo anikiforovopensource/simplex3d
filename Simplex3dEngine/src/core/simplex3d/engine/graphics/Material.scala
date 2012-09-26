@@ -28,8 +28,6 @@ import simplex3d.engine.scene._
 
 
 abstract class Material(controllerContext: ControllerContext) extends PropertyContext(controllerContext) {
-  protected implicit val structuralChangeListener = this
-  
   def uniformNames: ReadArray[String]
   def uniforms: ReadArray[Property[UncheckedValue]]
   

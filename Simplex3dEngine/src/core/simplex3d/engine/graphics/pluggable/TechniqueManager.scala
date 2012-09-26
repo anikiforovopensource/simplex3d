@@ -35,7 +35,7 @@ extends graphics.TechniqueManager[G]
   import TechniqueManager.logger._
  
   val glslVersion = "120"//XXX version must come from profile
-  val passManager = new PassManager[G]
+  val passManager = new PassManager[G]//XXX stub
   
   
   protected class Stage(val name: String) {
@@ -46,6 +46,10 @@ extends graphics.TechniqueManager[G]
     private val outBlocks = new HashMap[String, DeclarationBlock]
     
     def register(shader: ShaderPrototype) {
+      //XXX Verify unique in/out block name has the same declarations,
+      //XXX special treatment for gl_Position => gl_FragCoord
+      //XXX special treatment for gl_FragColor
+      
       if (shader.entryPoint.isDefined) {
         output.insert(0, shader)
       }
@@ -67,9 +71,6 @@ extends graphics.TechniqueManager[G]
   
   
   def register(shader: ShaderDeclaration) {
-    //XXX Verify unique in/out block name has the same declarations,
-    //XXX special treatment for gl_Position => gl_FragCoord
-    //XXX special treatment for gl_FragColor
     shader match {
       case _: FragmentShader => stages(0).register(shader.toPrototype(glslVersion))
       case _: VertexShader => stages(1).register(shader.toPrototype(glslVersion))
@@ -128,8 +129,8 @@ extends graphics.TechniqueManager[G]
           val attrib = graphicsContext.resolveAttributePath(declaration.name, geometry)
           attributesPassed = (attrib != null)//XXX check the type at runtime
           
-          if (shader.logRejected && !attributesPassed) log(
-            Level.INFO, "Shader '" + shader.name + "' was rejected because the attribute '" +
+          if (shader.logging.logRejected && !attributesPassed) log(
+            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the attribute '" +
             declaration.name + "' is not defined."
           )
           
@@ -155,8 +156,8 @@ extends graphics.TechniqueManager[G]
             
             uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
             
-            if (shader.logRejected && !uniformsPassed) log(
-              Level.INFO, "Shader '" + shader.name + "' was rejected because the uniform '" +
+            if (shader.logging.logRejected && !uniformsPassed) log(
+              Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the uniform '" +
               declaration.name + "' is not defined."
             )
           }
@@ -192,8 +193,8 @@ extends graphics.TechniqueManager[G]
             j += 1
           }
           
-          if (shader.logRejected && !functionsPassed) log(
-            Level.INFO, "Shader '" + shader.name + "' was rejected because the required function '" +
+          if (shader.logging.logRejected && !functionsPassed) log(
+            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the required function '" +
             requiredFunction + "' could not be resolved."
           )
           
@@ -236,8 +237,8 @@ extends graphics.TechniqueManager[G]
             j += 1
           }
           
-          if (shader.logRejected && !inputPassed) log(
-            Level.INFO, "Shader '" + shader.name + "' was rejected because the input block '" +
+          if (shader.logging.logRejected && !inputPassed) log(
+            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the input block '" +
             inputBlock.name + "' could not be resolved."
           )
           
@@ -246,8 +247,8 @@ extends graphics.TechniqueManager[G]
       }; checkInput() }
       
       if (uniformsPassed && functionsPassed && inputPassed) {
-        if (shader.logAccepted) log(
-          Level.INFO, "Shader '" + shader.name + "' was accepted."
+        if (shader.logging.logAccepted) log(
+          Level.INFO, "Shader '" + shader.logging.name + "' was accepted."
         )
         
         chain
@@ -266,12 +267,12 @@ extends graphics.TechniqueManager[G]
     if (chain != null) {
       
       // Generate declaration map.
-      val listDeclarationMap = new HashMap[(String, String), ListDeclarationKey]
+      val listDeclarationMap = new HashMap[ListNameKey, ListSizeKey]
       def processValue(value: AnyRef, name: String) {
         value match {
           
           case a: BindingList[_] =>
-            val dec = new ListDeclarationKey("", name, a.size)
+            val dec = new ListSizeKey(new ListNameKey("", name), a.size)
             val prev = listDeclarationMap.put(dec.nameKey, dec)
             if (prev != null && prev.size != dec.size) println("XXX log")
             
@@ -306,13 +307,13 @@ extends graphics.TechniqueManager[G]
       
       
       // Generate shader and technique keys. 
-      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListDeclarationKey])](chain.size)
+      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListSizeKey])](chain.size)
       
       i = 0; while (i < chain.size) {
         val shader = chain(i)
         val listKeys = shader.unsizedArrayKeys
         
-        val resolved = new Array[ListDeclarationKey](listKeys.size)
+        val resolved = new Array[ListSizeKey](listKeys.size)
         var j = 0; while (j < listKeys.size) {
           val key = listKeys(j)
           
@@ -330,6 +331,9 @@ extends graphics.TechniqueManager[G]
       
       
       // Load cached technique or make a new one.
+      // XXX better caching based on PropKey(geom: Seq[Boolean], mat: Seq[Boolean], env: Seq[Boolean])
+      // followed by condition check, and secondary lookup based on arraySizeKey
+      // Technique caching must not prevent GC.
       val readTechniqueKey = new ReadArray(techniqueKey)
       var technique = techniqueCache.get(readTechniqueKey)
       
@@ -344,7 +348,7 @@ extends graphics.TechniqueManager[G]
             val proto = chain(i)
             
             val listDeclarations = shaderKey._2
-            val src = ShaderPrototype.genSrc_Glsl120(proto, listDeclarations)
+            val src = ShaderPrototype.Glsl2.shaderSrc(proto, listDeclarations)
             
             shader = new Shader(proto.shaderType, src, proto.boundUniforms)
             shaderCache.put(shaderKey, shader)
@@ -392,11 +396,11 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  // XXX HashMap[(ShaderPrototype, Set[ListDeclarationKey]), Shader]
-  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListDeclarationKey]), Shader]
+  // XXX HashMap[(ShaderPrototype, Set[ListSizeKey]), Shader]
+  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListSizeKey]), Shader]
   
-  // XXX HashMap[Set[(ShaderPrototype, Set[ListDeclarationKey])], Technique]
-  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListDeclarationKey])], Technique]
+  // XXX HashMap[Set[(ShaderPrototype, Set[ListSizeKey])], Technique]
+  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListSizeKey])], Technique]
 }
 
 

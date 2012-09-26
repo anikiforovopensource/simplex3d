@@ -66,7 +66,20 @@ object ObbTest extends default.App {
     addInputListener(new FirstPersonHandler(movingCube.transformation))
     
     
-    val texture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    val texture = Texture2d[Vec3](Vec2i(128))
+    texture.fillWith { p =>
+      val borderWidth = 5
+  
+      if (
+        p.x < borderWidth || p.x >= texture.dimensions.x - borderWidth ||
+        p.y < borderWidth || p.y >= texture.dimensions.y - borderWidth
+      ) {
+        Vec3(0.1, 0.1, 1)
+      }
+      else {
+        Vec3(0, 0.8, 0.8)
+      }
+    }
     
     val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     val aindices = Attributes.fromData(indices)

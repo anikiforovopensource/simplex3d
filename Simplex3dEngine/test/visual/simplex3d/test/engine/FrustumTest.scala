@@ -68,7 +68,21 @@ object FrustumTest extends default.App {
     cube.geometry.normals := Attributes.fromData(normals)
     cube.geometry.texCoords := Attributes.fromData(texCoords)
     
-    val objectTexture = Texture2d[Vec3](Vec2i(4)).fillWith { p => Vec3(0, 1, 1) }
+    val objectTexture = Texture2d[Vec3](Vec2i(128))
+    objectTexture.fillWith { p =>
+      val borderWidth = 5
+  
+      if (
+        p.x < borderWidth || p.x >= objectTexture.dimensions.x - borderWidth ||
+        p.y < borderWidth || p.y >= objectTexture.dimensions.y - borderWidth
+      ) {
+        Vec3(0.1, 0.1, 1)
+      }
+      else {
+        Vec3(0, 0.8, 0.8)
+      }
+    }
+    
     cube.material.textureUnits.update += new TextureUnit(objectTexture)
     
     cube.transformation.update.scale := 20

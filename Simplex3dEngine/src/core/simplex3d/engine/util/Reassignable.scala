@@ -25,14 +25,13 @@ import simplex3d.math.types._
 
 sealed abstract class Reassignable[T <: Accessible] private[engine] (
   private[this] final val enforceDefined: Boolean
-) extends PropertyContextDependent
-{
+) {
   
   //*** PropertyContext Code ******************************************************************************************
   
   protected final var propertyContext: PropertyContext = _
   
-  private[engine] final override def register(context: PropertyContext) {
+  private[engine] final def register(context: PropertyContext) {
     if (context == null) throw new NullPointerException
     if (this.propertyContext != null && (this.propertyContext ne context)) throw new IllegalStateException(
       "Reassignable can register PropertyContext only once."
@@ -40,12 +39,9 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
     this.propertyContext = context
   }
   
-  private[engine] final override def unregister() {
+  private[engine] final def unregister() {
     throw new UnsupportedOperationException("Reassignable cannot unregister PropertyContexts.")
   }
-  
-  protected final def registerPropertyContext(context: PropertyContext) {}
-  protected final def unregisterPropertyContext() {}
   
   
   //*** Property Code *************************************************************************************************

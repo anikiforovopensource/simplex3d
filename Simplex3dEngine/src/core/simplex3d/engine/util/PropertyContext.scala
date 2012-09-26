@@ -49,4 +49,11 @@ object PropertyContext {
       i += 1
     }
   }
+  
+  def registerAttributes(context: PropertyContext, attribuetes: ReadArray[UncheckedAttributes]) {
+    val s = attribuetes.size; var i = 0; while (i < s) {
+      attribuetes(i).register(context)
+      i += 1
+    }
+  }
 }

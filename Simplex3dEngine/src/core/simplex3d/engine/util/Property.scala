@@ -27,14 +27,14 @@ import simplex3d.math.types._
 sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final val factory: () => T,
   private[this] final val enforceDefined: Boolean
-) extends Updatable[T] with PropertyContextDependent
+) extends Updatable[T]
 {
   
   //*** PropertyContext Code ******************************************************************************************
   
   protected final var propertyContext: PropertyContext = _
   
-  private[engine] final override def register(context: PropertyContext) {
+  private[engine] final def register(context: PropertyContext) {
     if (context == null) throw new NullPointerException
     if (this.propertyContext != null && (this.propertyContext ne context)) throw new IllegalStateException(
       "Property can register PropertyContext only once."
@@ -42,13 +42,10 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     this.propertyContext = context
   }
   
-  private[engine] final override def unregister() {
+  private[engine] final def unregister() {
     throw new UnsupportedOperationException("Property cannot unregister PropertyContexts.")
   }
-  
-  protected final def registerPropertyContext(context: PropertyContext) {}
-  protected final def unregisterPropertyContext() {}
-  
+    
   
   //*** Property Code *************************************************************************************************
   

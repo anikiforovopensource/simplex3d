@@ -41,6 +41,7 @@ abstract class Geometry extends graphics.Geometry {
     _attributeNames = an
     _attributes = av
     
+    PropertyContext.registerAttributes(this, attributes)
     initialized = true
   }
   

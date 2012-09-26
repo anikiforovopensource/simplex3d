@@ -1,6 +1,6 @@
 /*
- * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Simplex3dEngine - Renderer Module
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -19,13 +19,7 @@
  */
 
 package simplex3d.engine
-package graphics
-
-import simplex3d.engine.util._
-import simplex3d.engine.scene._
+package graphics.pluggable
 
 
-abstract class Environment(controllerContext: ControllerContext) extends PropertyContext(controllerContext) {
-  def propertyNames: ReadArray[String]
-  def properties: ReadArray[Property[EnvironmentalEffect]]
-}
+final class ShaderLogging(val name: String, val logAccepted: Boolean, val logRejected: Boolean)

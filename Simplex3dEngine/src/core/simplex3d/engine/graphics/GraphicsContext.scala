@@ -46,7 +46,11 @@ abstract class GraphicsContext {
   private[this] final val attributeMap = new HashMap[String, java.lang.Integer]
 
   
+  private[this] var initialized = false
   protected def init() {
+    if (initialized) throw new IllegalStateException("Already initialized.")
+    initialized = true
+    
     val geometry = mkGeometry()
     val material = mkMaterial(null)
     val environment = mkEnvironment(null)
@@ -193,4 +197,46 @@ object MinimalGraphicsContext extends GraphicsContext {
   
   
   init()
+  
+  
+  override def resolveRootUniform(
+    name: String,
+    predefined: ReadPredefinedUniforms,
+    material: graphics.Material,
+    environment: graphics.Environment,
+    programUniforms: Map[String, Property[UncheckedBinding]]
+  ) :AnyRef = {
+    
+    var id = PathUtil.find(predefined.bindingNames, name)
+    if (id >= 0) return predefined.bindings(id)
+    
+    id = PathUtil.find(material.uniformNames, name)
+    if (id >= 0) {
+      val prop = material.uniforms(id)
+      return (if (prop.isDefined) prop.get else null)
+    }
+    
+    id = PathUtil.find(environment.propertyNames, name)
+    if (id >= 0) {
+      val prop = environment.properties(id)
+      return (if (prop.isDefined) prop.get.binding else null)
+    }
+    
+    val option = programUniforms.get(name)
+    return (if (option.isDefined) option.get.get else null)
+  }
+  
+  override def resolveAttributePath(
+    path: String,
+    geometry: graphics.Geometry
+  ) :Attributes[Format with MathType, Raw] = {
+    
+    val id = PathUtil.find(geometry.attributeNames, path)
+    
+    if (id < 0) null
+    else {
+      val binding = geometry.attributes(id)
+      if (!binding.isDefined) null else binding.get
+    }
+  }
 }

@@ -265,25 +265,33 @@ extends graphics.RenderContext {
     attributes.sharedState.clearDataChanges()
   }
   
-  def bind(location: Int, attributes: Attributes[_ <: Format with MathType, Raw]) {
+  def bind(location: Int, columns: Int, rows: Int, attributes: Attributes[_ <: Format with MathType, Raw]) {
     val id = initUpdateAttributes(attributes)
-    
-    
-    var activeAttribute = activeAttributes.get(location)
-    val disabled = (activeAttribute == null)
-    if (disabled) {
-      activeAttribute = new ActiveAttributeId(0)
-      activeAttributes.put(location, activeAttribute)
-      
-      glEnableVertexAttribArray(location)
-    }
     
     val src = attributes.src
     bindBuffer(id)
     
-    if (activeAttribute.id != id) {
-      glVertexAttribPointer(location, src.components, src.rawType, src.isNormalized, src.byteStride, src.byteOffset)
-      activeAttribute.id = id
+    def bindColumn(location: Int, column: Int) {
+      var activeAttribute = activeAttributes.get(location)
+      val disabled = (activeAttribute == null)
+      if (disabled) {
+        activeAttribute = new ActiveAttributeId(0)
+        activeAttributes.put(location, activeAttribute)
+        
+        glEnableVertexAttribArray(location)
+      }
+      
+      if (activeAttribute.id != id) {
+        val byteOffset = src.byteOffset + column*src.bytesPerComponent*rows
+        glVertexAttribPointer(location, rows, src.rawType, src.isNormalized, src.byteStride, byteOffset)
+        activeAttribute.id = id
+      }
+    }
+    
+    var i = 0; while (i < columns) {
+      bindColumn(location + i, i)
+      
+      i += 1
     }
   }
   
@@ -971,22 +979,22 @@ extends graphics.RenderContext {
     val graphicsContext = mesh.technique.get.graphicsContext
     
     var i = 0; while (i < bindings.length) {
-      val binding = bindings(i)
-      val attrib = graphicsContext.resolveAttributePath(binding.name, geom)
+      val programBinding = bindings(i)
+      val attrib = graphicsContext.resolveAttributePath(programBinding.name, geom)
       
       if (attrib == null) log(
         Level.SEVERE,
-        "Attributes '" + binding.name + "' cannot be resolved for mesh '" + mesh.name + "'."
+        "Attributes '" + programBinding.name + "' cannot be resolved for mesh '" + mesh.name + "'."
       )
       else {
-        val correctType = checkAttributeType(attrib.src.accessorManifest, binding.dataType)
+        val correctType = checkAttributeType(attrib.src.accessorManifest, programBinding.dataType)
         
         if (!correctType) {
-          val resolved = ClassUtil.simpleName(binding.getClass)
+          val resolved = ClassUtil.simpleName(attrib.src.accessorManifest.erasure)
               
           log(
-            Level.SEVERE, "Attributes '" + binding.name +
-            "' are defined as a sequence of '" + EngineBindingTypes.toString(binding.dataType) +
+            Level.SEVERE, "Attributes '" + programBinding.name +
+            "' are defined as a sequence of '" + EngineBindingTypes.toString(programBinding.dataType) +
             "' but resolve to a sequence of '" + resolved + "' for mesh '" + mesh.name +
             "'. These attributes will have undefined values in the shader."
           )

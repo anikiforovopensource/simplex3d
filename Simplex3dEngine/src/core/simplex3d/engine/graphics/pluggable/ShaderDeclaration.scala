@@ -53,9 +53,10 @@ import simplex3d.engine.graphics._
  * If a uniform array is defined in the shader scope, its size can be accessed using injected variable
  * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is declared globally.
  * 
- * Each shader can link with the next stage using a combination of out{} block with an entryPoint() declaration.
- * A shader with an entry point can share one computed value using entryPoint().out(). Additionally,
- * shared pre-computed values can be requested within entryPoint().in{} block.
+ * Each shader can link with the next stage using a combination of one out{} block with an entryPoint() declaration.
+ * A shader with an entry point can share a named set of values using entryPoint().out().
+ * Shared pre-computed values can be requested within entryPoint().in{} blocks.
+ * 
  * If a shader does not provide an entryPoint(), then it must define a function usable within the same stage
  * using export() declaration.
  * 
@@ -303,7 +304,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] var attributeBlock: Set[Declaration] = null
   
   private[this] var inputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
-  private[this] var outputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
+  private[this] var outputBlock: Option[(String, Set[Declaration])] = None
   
   private[this] var functionDependencies = Set[String]()
   
@@ -399,7 +400,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     //XXX special handling for bound arrays or structs containing arrays
   }
   
-  private[this] def enforceMathTypes(declarations: Iterable[Declaration]) {
+  private[this] def enforceMathTypes(declarations: Iterable[Declaration], allowArrays: Boolean = true) {
     for (declaration <- declarations) {
       val isMathType = classOf[MathType].isAssignableFrom(declaration.manifest.erasure)
       val isMathTypeArray = 
@@ -410,7 +411,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         }
         else false
         
-      if (!isMathType && !isMathTypeArray) throw new RuntimeException(
+      if (!isMathType && !(allowArrays && isMathTypeArray)) throw new RuntimeException(
         "Declaration '" + declaration.name + "' has an incompatible type (only MathTypes are allowed in this block)."
       )
     }
@@ -436,7 +437,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (attributeBlock != null) throw new IllegalStateException("Only one attributes{} block can be declared.")
     
     attributeBlock = processBlock(() => block)
-    enforceMathTypes(attributeBlock)
+    enforceMathTypes(attributeBlock, allowArrays = false)
   }
   
   /** Vertex shader cannot have any input blocks (use attributes block instead).
@@ -460,7 +461,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (!atTopLevel) throw new IllegalStateException("out{} block must be declared at the top level.")
 
     val declarations = processBlock(() => block)
-    outputBlocks += ((name, declarations))
+    outputBlock = Some(name, declarations)
     enforceMathTypes(declarations)
     enforceSizedArrays(declarations)
   }
@@ -514,7 +515,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       new ReadArray(unsizedArrayKeys.toArray),
       new ReadArray(remapDeclarations(squareMat, attributeBlock).toArray),
       new ReadArray(inputBlocks.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))).toArray),
-      new ReadArray(outputBlocks.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))).toArray),
+      outputBlock.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))),
       new ReadArray(functionDependencies.toArray),
       new ReadArray(sources.toArray)
     )

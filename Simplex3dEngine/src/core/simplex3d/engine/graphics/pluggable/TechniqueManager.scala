@@ -214,17 +214,12 @@ extends graphics.TechniqueManager[G]
           inputPassed = false
           var j = 0; while (!inputPassed && j < previousStage.output.size) {
             val outputShader = previousStage.output(j)
-            val outputBlocks = outputShader.outputBlocks
             
-            var found = false
-            var k = 0; while (!found && k < outputBlocks.size) {
-              found = (inputBlock.name == outputBlocks(k).name)
-              
-              k += 1
-            }
+            val out = outputShader.outputBlock
+            val found = out.isDefined && (out.get.name == inputBlock.name)
             
             if (found) {
-              if (!chain.contains(outputShader)) {// Do not use set, the order is important.
+              if (!chain.contains(outputShader)) {// Do not use set, the order is important for dependency management.
                 val subChain = resolveShaderChain(stageId + 1, outputShader)
                 if (subChain != null) {
                   chain ++= subChain

@@ -53,6 +53,28 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   private[this] val uniformTextureUnits = uniformTextures.map(_.asInstanceOf[ActiveTexture].textureUnit).toArray
   
   private[this] val attributeLocations = attributes.map(_.location).toArray
+  private[this] val attributeColumnsRows = attributes.map {
+    def zip(columns: Int, rows: Int) :Int = (columns << 4) | rows
+    _.dataType match {
+        case EngineBindingTypes.Float => zip(1, 1)
+        case EngineBindingTypes.Vec2 => zip(1, 2)
+        case EngineBindingTypes.Vec3 => zip(1, 3)
+        case EngineBindingTypes.Vec4 => zip(1, 4)
+        case EngineBindingTypes.Int => zip(1, 1)
+        case EngineBindingTypes.Vec2i => zip(1, 2)
+        case EngineBindingTypes.Vec3i => zip(1, 3)
+        case EngineBindingTypes.Vec4i => zip(1, 4)
+        case EngineBindingTypes.Mat2x2 => zip(2, 2)
+        case EngineBindingTypes.Mat2x3 => zip(2, 3)
+        case EngineBindingTypes.Mat2x4 => zip(2, 4)
+        case EngineBindingTypes.Mat3x2 => zip(3, 2)
+        case EngineBindingTypes.Mat3x3 => zip(3, 3)
+        case EngineBindingTypes.Mat3x4 => zip(3, 4)
+        case EngineBindingTypes.Mat4x2 => zip(4, 2)
+        case EngineBindingTypes.Mat4x3 => zip(4, 3)
+        case EngineBindingTypes.Mat4x4 => zip(4, 4)
+    }
+  }.toArray
   
   
   private[this] def bindUniformVectors(
@@ -90,7 +112,11 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
     attributes: ReadArray[Attributes[_, _]]
   ) {
     var i = 0; while (i < attributeBindings.length) {
-      setAttributes(attributeLocations(i), attributes(i))
+      val columnsRows = attributeColumnsRows(i)
+      val columns = (columnsRows >> 4)
+      val rows = (columnsRows & 0x00000007)
+      setAttributes(attributeLocations(i), columns, rows, attributes(i))
+      
       i += 1
     }
   }
@@ -109,9 +135,9 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   import GL20._; import GL21._;
   
   
-  def setAttributes(location: Int, attributes: Attributes[_, _]) {
+  def setAttributes(location: Int, columns: Int, rows: Int, attributes: Attributes[_, _]) {
     if (attributes != null) {
-      context.bind(location, attributes.asInstanceOf[Attributes[_ <: Format with MathType, Raw]])
+      context.bind(location, columns, rows, attributes.asInstanceOf[Attributes[_ <: Format with MathType, Raw]])
     }
   }
   

@@ -23,7 +23,7 @@ package simplex3d.engine.graphics
 import scala.annotation._
 
 
-object UniformOrigin {
+private[engine] object UniformOrigin {
   final val Predefined = 0
   final val Material = 1
   final val Environment = 2

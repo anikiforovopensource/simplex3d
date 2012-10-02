@@ -44,7 +44,7 @@ final class ShaderPrototype private[pluggable] (
   val unsizedArrayKeys: ReadArray[ListNameKey],
   val attributeBlock: ReadArray[Declaration],
   val inputBlocks: ReadArray[DeclarationBlock],
-  val outputBlocks: ReadArray[DeclarationBlock],
+  val outputBlock: Option[DeclarationBlock],
   val functionDependencies: ReadArray[String],
   val sources: ReadArray[String]
 ) {
@@ -182,7 +182,7 @@ object ShaderPrototype {
     }
     
     def shaderSrc(shader: ShaderPrototype, arrayDeclarations: IndexedSeq[ListSizeKey]) :String = {
-      val (remapping, interfaceDeclarations) = interfaceHeader(shader.inputBlocks ++ shader.outputBlocks)
+      val (remapping, interfaceDeclarations) = interfaceHeader(shader.inputBlocks ++ shader.outputBlock)
       
       formatBlock("#version " + shader.version) +
       formatBlock(sizeHeader(arrayDeclarations)) +

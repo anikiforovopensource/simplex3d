@@ -73,6 +73,8 @@ object InterleavedAttributes extends default.App {
         data(i) = fuzzyMat.transformPoint(vertices(i))
         i += 1
       }
+      
+      true
     }
     
     world.attach(mesh)

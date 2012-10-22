@@ -121,6 +121,8 @@ object ControllerTest extends default.App {
         val transformation = instance.transformation.update
         transformation.rotation.applyRotation(rotationIncrement)
         transformation.translation := curve(i, time.total*0.07)
+        
+        true
       }
       controller.isEnabled = true
     }

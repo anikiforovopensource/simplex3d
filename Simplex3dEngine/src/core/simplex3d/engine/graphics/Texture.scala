@@ -60,7 +60,7 @@ extends EngineInfoRef {
     if (accessible != null) count += 1
     if (linked != null) count += 1
     
-    require(count == 1, "Data source must not be null.")
+    if (count != 1) throw new IllegalArgumentException("Data source must not be null.")
   }
 
   
@@ -192,7 +192,8 @@ object Texture2d {
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
   )(implicit accessorManifest: ClassManifest[A]) :Texture2d[A] = {
     
-    require(src.accessorManifest == accessorManifest, "Data accessor type doest not match manifest.")
+    if (src.accessorManifest != accessorManifest) throw new IllegalArgumentException(
+      "Data accessor type doest not match manifest.")
     
     if (src.isInstanceOf[Data[_]]) {
       fromData(

@@ -260,7 +260,7 @@ object CustomRenderer extends default.BaseApp {
   
   // Rebuild the Technique Manager from scratch.
   techniqueManager.register(new FragmentShader {
-    entryPoint("resolveColor")
+    entryPoint("resolveColor"){}
     
     use("vec4 texturingColor()")
     use("vec4 lightIntensity()")
@@ -310,7 +310,7 @@ object CustomRenderer extends default.BaseApp {
   
   
   techniqueManager.register(new VertexShader {
-    entryPoint("transformVertices")
+    entryPoint("transformVertices"){}
     
     uniform {
       declare[Mat4]("se_modelViewProjectionMatrix")
@@ -332,7 +332,7 @@ object CustomRenderer extends default.BaseApp {
   })
     
   techniqueManager.register(new VertexShader {
-    entryPoint("propagateTexturingValues")
+    entryPoint("propagateTexturingValues"){}
     
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
@@ -475,7 +475,7 @@ object CustomRenderer extends default.BaseApp {
   
   
   techniqueManager.register(new VertexShader {
-    entryPoint("propagateLightingValues")
+    entryPoint("propagateLightingValues"){}
     
     uniform {
       declare[Mat4]("se_modelViewMatrix")

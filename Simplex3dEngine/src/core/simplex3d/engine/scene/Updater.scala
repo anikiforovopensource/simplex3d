@@ -24,10 +24,14 @@ package scene
 
 abstract class Updater {
   final var isEnabled = true
-  def apply(time: TimeStamp) :Unit
+  
+  /**
+   * @return true to continue running the updater next frame, false to terminate.
+   */
+  def apply(time: TimeStamp) :Boolean
 }
 
 
-class UpdaterFunction(function: TimeStamp => Unit) extends Updater {
-  def apply(time: TimeStamp) { if (isEnabled) function(time) }
+class UpdaterFunction(function: TimeStamp => Boolean) extends Updater {
+  def apply(time: TimeStamp) = { if (isEnabled) function(time) else true }
 }

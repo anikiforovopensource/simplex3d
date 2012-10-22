@@ -24,11 +24,11 @@ import simplex3d.engine.util._
 import simplex3d.engine.scene._
 
 
+//XXX implement controllers at some point and make this a class instead of an object.
 object ShaderPropertyContext extends PropertyContext(new ControllerContext() {
-  //XXX implement controllers at some point
   def addController(updater: Updater) { throw new UnsupportedOperationException() }
   def removeController(updater: Updater) { throw new UnsupportedOperationException() }
   
-  def addAnimator(updater: Updater) { throw new UnsupportedOperationException() }
-  def removeAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+  def addAnimator(updater: Updater) { addController(updater) }
+  def removeAnimator(updater: Updater) { removeController(updater) }
 })

@@ -56,7 +56,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, true)(this)(getter, function)
+    PropertyUpdater.register(propertyContext.controllerContext, true, this)(getter, function)
   }
   
   /** function modifies the field and returns true to run next frame or false to be removed.
@@ -65,7 +65,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, true)(this)(Property.passThrough, function)
+    PropertyUpdater.register(propertyContext.controllerContext, true, this)(Property.passThrough, function)
   }
   
   /** getter navigates to the desired field of the value of this property.
@@ -75,7 +75,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, false)(this)(getter, function)
+    PropertyUpdater.register(propertyContext.controllerContext, false, this)(getter, function)
   }
   
   /** function modifies the field and returns true to run next frame or false to be removed.
@@ -84,7 +84,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, false)(this)(Property.passThrough, function)
+    PropertyUpdater.register(propertyContext.controllerContext, false, this)(Property.passThrough, function)
   }
   
   

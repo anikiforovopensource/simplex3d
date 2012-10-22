@@ -33,7 +33,7 @@ object TechniqueProvider {
     val manager = new pluggable.TechniqueManager[G]
     
     manager.register(new FragmentShader {
-      entryPoint("resolveColor")
+      entryPoint("resolveColor"){}
       
       use("vec3 lightEmission()")
       use("vec3 lightIntensity()")
@@ -171,7 +171,7 @@ object TechniqueProvider {
     })
     
     manager.register(new VertexShader {
-      entryPoint("transformVertices")
+      entryPoint("transformVertices"){}
       
       uniform {
         declare[Mat4]("se_modelViewProjectionMatrix")
@@ -194,7 +194,7 @@ object TechniqueProvider {
 
     // PointSprites transformation, must be added after default transformation.
     manager.register(new VertexShader {
-      entryPoint("transformVertices")
+      entryPoint("transformVertices"){}
       
       condition[VertexMode]("mode") {
         _.isInstanceOf[PointSprites]
@@ -226,7 +226,7 @@ object TechniqueProvider {
     })
       
     manager.register(new VertexShader {
-      entryPoint("transformTexCoords")
+      entryPoint("transformTexCoords"){}
       
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
@@ -251,7 +251,7 @@ object TechniqueProvider {
     })
     
     manager.register(new VertexShader {
-      entryPoint("computeFog")
+      entryPoint("computeFog"){}
       
       use("vec3 ecPosition()")
       

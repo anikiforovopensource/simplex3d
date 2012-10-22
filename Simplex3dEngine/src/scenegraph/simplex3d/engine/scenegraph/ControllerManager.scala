@@ -47,7 +47,7 @@ final class ControllerManager(val enableMultithreading: Boolean) {
     list.addAll(set)// Copying to list allows to add/remove controllers from existing controllers.
     
     def processSpatial(spatial: Spatial[_]) {
-      spatial.runUpdaters(spatial.controllers, time)
+      spatial.runControllers(time)
     }
     
     if (enableMultithreading) {

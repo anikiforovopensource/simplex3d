@@ -32,27 +32,21 @@ trait Updatable[T] {
 }
 
 private[engine] class PropertyUpdater[T, A] private
-  (context: ControllerContext, isController: Boolean)
-  (updatable: Updatable[T])
+  (context: ControllerContext, updatable: Updatable[T])
   (getter: T => A, function: (A, TimeStamp) => Boolean)
 extends Updater
 {
-  def apply(time: TimeStamp) {
-    val continue = function(getter(updatable.update), time)
-    if (!continue) {
-      if (isController) context.removeController(this)
-      else context.removeAnimator(this)
-    }
+  def apply(time: TimeStamp) = {
+    function(getter(updatable.update), time)
   }
 }
 
 private[engine] object PropertyUpdater {
   def register[T, A]
-    (context: ControllerContext, isController: Boolean)
-    (updatable: Updatable[T])
+    (context: ControllerContext, isController: Boolean, updatable: Updatable[T])
     (getter: T => A, function: (A, TimeStamp) => Boolean)
   {
-    val updater = new PropertyUpdater(context, isController)(updatable)(getter, function)
+    val updater = new PropertyUpdater(context, updatable)(getter, function)
     
     if (isController) context.addController(updater)
     else context.addAnimator(updater)

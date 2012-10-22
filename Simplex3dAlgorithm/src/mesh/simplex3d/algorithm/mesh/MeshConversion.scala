@@ -31,7 +31,7 @@ object MeshConversion {
 
   def linesFromTriangles(indices: inData[SInt], vertices: inData[Vec3], resultIndices: Data[SInt]) = {
     val triangles = indices.size/3
-    require(resultIndices.size >= triangles*6)
+    if (resultIndices.size < triangles*6) throw new IllegalArgumentException
     
     var t = 0; while (t < triangles) {
 

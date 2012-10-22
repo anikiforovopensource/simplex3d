@@ -202,7 +202,7 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
       else BoundingVolume.intersect(cullContext.view.frustum, resolveBoundingVolume.get, uncheckedWorldTransformation)
     
     if (frustumTest != Collision.Outside) {
-      if (update && animators != null) runUpdaters(animators, cullContext.time)
+      if (update && animators != null) runAnimators(cullContext.time)
     }
     
     val cullChildren = 

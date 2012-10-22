@@ -54,8 +54,8 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
           def addController(updater: Updater) { self.addController(updater) }
           def removeController(updater: Updater) { self.removeController(updater) }
           
-          def addAnimator(updater: Updater) { throw new UnsupportedOperationException() }
-          def removeAnimator(updater: Updater) { throw new UnsupportedOperationException() }
+          def addAnimator(updater: Updater) { addController(updater) }
+          def removeAnimator(updater: Updater) { removeController(updater) }
         }
     }
   }
@@ -111,7 +111,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   
   /** Controllers are executed for all objects attached to a scene-graph when it is updated.
    */
-  def controller(function: TimeStamp => Unit) :Updater = {
+  def controller(function: TimeStamp => Boolean) :Updater = {
     val updater = new UpdaterFunction(function)
     addController(updater)
     updater
@@ -137,10 +137,14 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   }
   
   
-  private[scenegraph] final def runUpdaters(updaters: ArrayBuffer[Updater], time: TimeStamp) {
-    val size = updaters.size
+  private[scenegraph] final def runControllers(time: TimeStamp) {
+    assert(controllers != null)
+    
+    val size = controllers.size
     var i = 0; while (i < size) {
-      updaters(i).apply(time)
+      val controller = controllers(i)
+      val keep = controller.apply(time)
+      if (!keep) removeController(controller)
       
       i += 1
     }

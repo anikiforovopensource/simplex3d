@@ -65,7 +65,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   
   /** Animators are executed only for visible objects and only once per frame.
    */
-  def animator(function: TimeStamp => Unit) :Updater = {
+  def animator(function: TimeStamp => Boolean) :Updater = {
     val updater = new UpdaterFunction(function)
     addAnimator(updater)
     updater
@@ -78,6 +78,19 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   
   def removeAnimator(animator: Updater) {
     if (animators != null) animators -= animator
+  }
+  
+  private[scenegraph] final def runAnimators(time: TimeStamp) {
+    assert(animators != null)
+    
+    val size = animators.size
+    var i = 0; while (i < size) {
+      val animator = animators(i)
+      val keep = animator.apply(time)
+      if (!keep) removeAnimator(animator)
+      
+      i += 1
+    }
   }
   
   /**
@@ -104,7 +117,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (res == Collision.Outside) return
     
     
-    if (update && animators != null) runUpdaters(animators, cullContext.time)
+    if (update && animators != null) runAnimators(cullContext.time)
     
     cullContext.renderArray += this
   }

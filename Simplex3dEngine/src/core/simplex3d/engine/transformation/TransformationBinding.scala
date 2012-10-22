@@ -57,7 +57,7 @@ extends Updatable[T] {
     if (controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(controllerContext, true)(this)(getter, function)
+    PropertyUpdater.register(controllerContext, true, this)(getter, function)
   }
   
   /** function modifies the field and returns true to run next frame or false to be removed.
@@ -66,7 +66,7 @@ extends Updatable[T] {
     if (controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(controllerContext, true)(this)(Property.passThrough, function)
+    PropertyUpdater.register(controllerContext, true, this)(Property.passThrough, function)
   }
   
   

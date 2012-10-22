@@ -23,7 +23,7 @@ package simplex3d.algorithm.noise
 import java.io._
 import simplex3d.math._
 import simplex3d.math.doublex._
-import simplex3d.math.doublex.functions.{abs, pow, round, greaterThan}
+import simplex3d.math.doublex.functions.{abs, pow, round, lessThanEqual}
 
 
 /** Tiled noise sum.
@@ -49,8 +49,8 @@ final class TiledNoiseSum(
   initTransient()
 
   private[this] def initTransient() {
-    require(octaves >= 1, "Octaves must be greater than or equal to 1.")
-    require(frequency > 0, "Frequency must be greater than 0.")
+    if (octaves < 1) throw new IllegalArgumentException("Octaves must be greater than or equal to 1.")
+    if (frequency <= 0) throw new IllegalArgumentException("Frequency must be greater than 0.")
     
     tiles = new Array[ConstVec4i](octaves)
 
@@ -64,7 +64,8 @@ final class TiledNoiseSum(
         round(tile.w*octaveFreq/source.tileSizeW).toInt
       )
 
-      require(all(greaterThan(tiles(i), Vec4i.Zero)), "Bad tile-frequency combination.")
+      if (any(lessThanEqual(tiles(i), Vec4i.Zero))) throw new IllegalArgumentException(
+        "Bad tile-frequency combination.")
       
       i += 1
     }

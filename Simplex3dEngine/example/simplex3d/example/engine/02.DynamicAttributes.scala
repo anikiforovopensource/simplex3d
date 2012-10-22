@@ -71,6 +71,8 @@ object DynamicAttributes extends default.App {
         data(i) = fuzzyMat.transformPoint(originalVertices(i))
         i += 1
       }
+      
+      true
     }
     
     world.attach(mesh)

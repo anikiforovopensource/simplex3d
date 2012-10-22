@@ -74,6 +74,8 @@ object DynamicTexture extends default.App {
         Vec3(0, intensity, 0)
       }
       objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subTexture.read, subTexture.dimensions)
+      
+      true
     }
     
     world.attach(mesh)

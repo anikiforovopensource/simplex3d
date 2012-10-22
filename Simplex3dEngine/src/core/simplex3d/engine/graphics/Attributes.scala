@@ -59,7 +59,8 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
     if (accessible != null) count += 1
     if (linked != null) count += 1
     
-    require(count == 1, "Data source must not be null.")
+    if (count != 1) throw new IllegalArgumentException(
+      "Data source must not be null.")
   }
   
   def sharedState = shared
@@ -140,8 +141,11 @@ object Attributes {
     (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
   :Attributes[F, R] = {
     
-    require(src.formatManifest == formatManifest, "Data source format does not match manifest.")
-    require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
+    if (src.formatManifest != formatManifest) throw new IllegalArgumentException(
+      "Data source format does not match manifest.")
+      
+    if (!(RawManifest.fromRawType(src.rawType) <:< rawManifest)) throw new IllegalArgumentException(
+      "Data source raw type does not match manifest.")
       
     if (src.isInstanceOf[ReadDataBuffer[_, _]]) {
       fromData(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
@@ -175,8 +179,11 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
       (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
     :Attributes[F, R] = {
       
-      require(src.formatManifest == formatManifest, "Data source format does not match manifest.")
-      require(RawManifest.fromRawType(src.rawType) <:< rawManifest, "Data source raw type does not match manifest.")
+      if (src.formatManifest != formatManifest) throw new IllegalArgumentException(
+        "Data source format does not match manifest.")
+        
+      if (!(RawManifest.fromRawType(src.rawType) <:< rawManifest)) throw new IllegalArgumentException(
+        "Data source raw type does not match manifest.")
     
       if (src.isInstanceOf[ReadDataView[_, _]]) {
         fromData[F, R](src.asInstanceOf[ReadDataView[F, R]])

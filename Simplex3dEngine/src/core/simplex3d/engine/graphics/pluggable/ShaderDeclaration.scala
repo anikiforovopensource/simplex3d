@@ -294,12 +294,17 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   
   private[this] var exportSignature: Option[String] = None
-  private[this] var entryPointSignature: Option[String] = None
+  
+  private[this] var entryPointName: Option[String] = None
+  private[this] var entryPointInputs = Set[(String, Set[Declaration])]()//(blockName, declarations)
+  private[this] var entryPointOutput: Option[(String, Set[Declaration])] = None
+  
   private[this] var conditions = Set[(String, AnyRef => Boolean)]()
   
   private[this] var uniformBlock: Set[Declaration] = null
   private[this] var boundUniforms = Map[String, Property[UncheckedBinding]]()
   private[this] var unsizedArrayKeys = Set[ListNameKey]()
+  private[this] var sizedArrayKeys = Set[ListSizeKey]()
   
   private[this] var attributeBlock: Set[Declaration] = null
   
@@ -311,7 +316,6 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] var sources = Set[String]()
   
   
-  private[this] var processingUniforms = false
   private[this] var declarations: Set[Declaration] = null
   private[this] def processBlock(blockBody: () => Unit) :Set[Declaration] = {
     declarations = Set[Declaration]()
@@ -319,10 +323,15 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     val res = declarations; declarations = null
     res
   }
-  private[this] def atTopLevel = (declarations == null)
-  private[this] def atUniformBlock = (!atTopLevel && processingUniforms)
   
-  private[this] def remapDeclarations(squarMatrices: Boolean, declarations: Set[Declaration]) = {
+  private[this] var processingUniforms = false
+  private[this] var processingEntryPoint = false
+  
+  private[this] def atTopLevel = (declarations == null)
+  private[this] def atUniformBlock = processingUniforms
+  private[this] def atEntryPoint = processingEntryPoint
+  
+  private[this] def buildDeclarations(squarMatrices: Boolean, declarations: Set[Declaration]) = {
     type Dec = simplex3d.engine.graphics.pluggable.Declaration
     
     if (declarations == null) Set.empty[Dec]
@@ -339,10 +348,17 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
+    
     boundUniforms += ((name, binding.asInstanceOf[Property[UncheckedBinding]]))
+    binding.register(ShaderPropertyContext)
+    
     declarations += new Declaration(ClassUtil.rebuildManifest(binding.get), name)
     
-    //XXX register ShaderPropertyContext with property
+    binding.get match {
+      case list: BindingList[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), list.size)
+      case struct: Struct => sizedArrayKeys ++= struct.listDeclarations.map(_.sizeKey())
+      case _ => // ignore
+    }
   }
   
   protected final def use(functionSignature: String) {
@@ -362,6 +378,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
    */
   protected final def uniform(block: => Unit) {
     if (!atTopLevel) throw new IllegalStateException("uniform{} must be declared at the top level.")
+    if (atEntryPoint) throw new IllegalStateException("uniform{} cannot be declared for entryPoint.")
     if (uniformBlock != null) throw new IllegalStateException("Only one uniform{} block can be declared.")
     
     processingUniforms = true
@@ -396,8 +413,6 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         unsizedArrayKeys ++= instance.listDeclarations.map(_.nameKey)
       }
     }
-    
-    //XXX special handling for bound arrays or structs containing arrays
   }
   
   private[this] def enforceMathTypes(declarations: Iterable[Declaration], allowArrays: Boolean = true) {
@@ -430,7 +445,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   /** "Only a vertex shader can declare an attributes block."
    */
   protected final def attributes(block: => Unit) {
-    if (!atTopLevel) throw new IllegalStateException("in{} block must be declared at the top level.")
+    if (!atTopLevel) throw new IllegalStateException("attributes{} block must be declared at the top level.")
+    if (atEntryPoint) throw new IllegalStateException("attributes{} cannot be declared for entryPoint.")
     if (shaderType != Shader.Vertex) throw new UnsupportedOperationException(
       "Only a vertex shader can declare attributes{} block."
     )
@@ -443,14 +459,16 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   /** Vertex shader cannot have any input blocks (use attributes block instead).
    */
   protected final def in(name: String)(block: => Unit) {
-    if (!atTopLevel) throw new IllegalStateException("in {} must be declared at the top level.")
-    if (shaderType == Shader.Vertex) throw new UnsupportedOperationException(
-      "Vertex shader cannot have any in{} blocks (use attributes{} block instead)."
+    if (!atTopLevel) throw new IllegalStateException("in{} must be declared at the top level.")
+    if (!atEntryPoint && shaderType == Shader.Vertex) throw new UnsupportedOperationException(
+      "Vertex shader cannot have in{} blocks (use attributes{} block instead)."
     )
     
     val declarations = processBlock(() => block)
-    inputBlocks += ((name, declarations))
-    enforceMathTypes(declarations)
+    
+    if (atEntryPoint) entryPointInputs += ((name, declarations))
+    else inputBlocks += ((name, declarations))
+    
     enforceSizedArrays(declarations)
   }
   
@@ -461,20 +479,28 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (!atTopLevel) throw new IllegalStateException("out{} block must be declared at the top level.")
 
     val declarations = processBlock(() => block)
-    outputBlock = Some(name, declarations)
-    enforceMathTypes(declarations)
+    
+    if (atEntryPoint) entryPointOutput = Some(name, declarations)
+    else outputBlock = Some(name, declarations)
+    
     enforceSizedArrays(declarations)
   }
   
   /** A shader must either defined an entry point or export a function (but not both).
    */
-  protected final def entryPoint(code: String) {
-    if (!atTopLevel) throw new IllegalStateException("entryPoint() must be declared at the top level.")
-    if (entryPointSignature.isDefined) throw new IllegalStateException("Entry point is already defined.")
+  protected final def entryPoint(name: String)(block: => Unit) {
+    if (!atTopLevel) throw new IllegalStateException("entryPoint{} must be declared at the top level.")
+    if (atEntryPoint) throw new IllegalStateException("entryPoint{} cannot be nested.")
+    if (entryPointName.isDefined) throw new IllegalStateException("Entry point is already defined.")
     if (exportSignature.isDefined) throw new IllegalStateException(
       "A shader must either defined an entry point or export a function (but not both)."
     )
-    entryPointSignature = Some(code)
+    
+    processingEntryPoint = true
+    block
+    processingEntryPoint = false
+    
+    entryPointName = Some(name)
   }
   
   /** A shader must either defined an entry point or export a function (but not both).
@@ -482,7 +508,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   protected final def export(functionSignature: String) {
     if (!atTopLevel) throw new IllegalStateException("export() must be declared at the top level.")
     if (exportSignature.isDefined) throw new IllegalStateException("Export is already defined.")
-    if (entryPointSignature.isDefined) throw new IllegalStateException(
+    if (entryPointName.isDefined) throw new IllegalStateException(
       "A shader must either defined an entry point or export a function (but not both)."
     )
     exportSignature = Some(functionSignature)
@@ -508,14 +534,14 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       version,
       squareMat,
       exportSignature,
-      entryPointSignature,
+      entryPointName,
       new ReadArray(conditions.toArray),
-      new ReadArray(remapDeclarations(squareMat, uniformBlock).toArray),
+      new ReadArray(buildDeclarations(squareMat, uniformBlock).toArray),
       boundUniforms,
       new ReadArray(unsizedArrayKeys.toArray),
-      new ReadArray(remapDeclarations(squareMat, attributeBlock).toArray),
-      new ReadArray(inputBlocks.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))).toArray),
-      outputBlock.map(b => new DeclarationBlock(b._1, remapDeclarations(squareMat, b._2))),
+      new ReadArray(buildDeclarations(squareMat, attributeBlock).toArray),
+      new ReadArray(inputBlocks.map(b => new DeclarationBlock(b._1, buildDeclarations(squareMat, b._2))).toArray),
+      outputBlock.map(b => new DeclarationBlock(b._1, buildDeclarations(squareMat, b._2))),
       new ReadArray(functionDependencies.toArray),
       new ReadArray(sources.toArray)
     )

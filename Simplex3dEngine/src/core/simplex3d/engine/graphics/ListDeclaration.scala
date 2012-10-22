@@ -28,7 +28,7 @@ import simplex3d.engine.util._
 final class ListDeclaration(val nameKey: ListNameKey, val lists: ReadArray[BindingList[_]]) {
   import ListDeclaration._
   
-  require(!lists.isEmpty)
+  if (lists.isEmpty) throw new IllegalArgumentException("One or more lists must be provided.")
   
   
   def sizeKey() = {

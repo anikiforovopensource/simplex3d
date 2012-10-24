@@ -23,7 +23,6 @@ import Keys._
 object Simplex3dAlgorithm extends Build {
   
   val buildSettings = Common.buildSettings ++ Seq(
-    version := Simplex3d.AlgorithmVersion,
     startYear := Some(2010),
     licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
@@ -42,6 +41,7 @@ object Simplex3dAlgorithm extends Build {
     id = "algorithm-intersection",
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq(
+      version := Simplex3d.AlgorithmIntersectionVersion,
       name := "simplex3d-algorithm-intersection",
       description := "Intersection and Collision Algorithms.",
       target := new File("target/algorithm/intersection"),
@@ -53,6 +53,7 @@ object Simplex3dAlgorithm extends Build {
     id = "algorithm-mesh",
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq(
+      version := Simplex3d.AlgorithmMeshVersion,
       name := "simplex3d-algorithm-mesh",
       description := "Algorithms to generate and work with mesh data.",
       target := new File("target/algorithm/mesh"),
@@ -64,6 +65,7 @@ object Simplex3dAlgorithm extends Build {
     id = "algorithm-noise",
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq(
+      version := Simplex3d.AlgorithmNoiseVersion,
       name := "simplex3d-algorithm-noise",
       description := "Noise Algorithms.",
       target := new File("target/algorithm/noise"),

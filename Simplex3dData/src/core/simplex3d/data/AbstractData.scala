@@ -35,15 +35,15 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AbstractData[
-  @specialized(Int, Float, Double) AC <: AR,//Accessor#Const
-  @specialized(Int, Float, Double) AR//Accessor#Read
+  /*@specialized(Int, Float, Double)*/ AC <: AR, //Accessor#Const
+  /*@specialized(Int, Float, Double)*/ AR //Accessor#Read
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadAbstractData[AC](
+) extends ReadAbstractData[AC, AR](
   shared, prim, ro,
   off, str
-) {
+) /*with mutable.IndexedSeq[AR]*/ {
 
   type PrimitiveSeq <: Contiguous[Format#Component, Raw]
 
@@ -121,18 +121,16 @@ abstract class AbstractData[
   }
 
   private[this] final def put(index: Int, src: Seq[AR], srcSize: Int, first: Int, count: Int) {
-    var dataCopy = false
-    
     if (src.isInstanceOf[ReadDataSeq[_, _]]) {
-      val ds = src.asInstanceOf[ReadDataSeq[Format, Raw]]
+      val ds = src.asInstanceOf[ReadDataSeq[Format, simplex3d.data.Raw]]
       
       if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) {
         putPrimitivesImpl(index, ds.primitives, ds.offset + first*ds.stride, ds.stride, count)
-        dataCopy = true
+        return
       }
     }
     
-    if (!dataCopy) { def seqCopy() {
+    def seqCopy() {
 
       if (isReadOnly) throw new ReadOnlyBufferException()
       if (index < 0) throw new IndexOutOfBoundsException("Index = " + index + ", must be greater than or equal to 0.")
@@ -187,7 +185,7 @@ abstract class AbstractData[
           putSeq(index, src.asInstanceOf[Seq[AR]], first, count)
         }
       }
-    }; seqCopy() }
+    }; seqCopy()
   }
 
   final def put(index: Int, src: Seq[AR], first: Int, count: Int) {
@@ -365,7 +363,7 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_, _]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
         put2dImpl(
@@ -571,7 +569,7 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_, _]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
         put3dImpl(

@@ -34,7 +34,7 @@ object Common extends Build {
   )
   
   
-  def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
+  private def getLwjglNativeJars(ivyHome: File) :Seq[File] = {
     val nativeJarDir = ivyHome / "/cache/org.lwjgl.lwjgl/lwjgl-platform/jars/"
     val files = nativeJarDir.listFiles
     if (files == null) return Nil
@@ -44,8 +44,8 @@ object Common extends Build {
     }
   }
   
-  @volatile var nativesUpdated = false
-  def setupLwjglNatives(ivyHome: File) :String = {
+  @volatile private var nativesUpdated = false
+  private def setupLwjglNatives(ivyHome: File) :String = {
     val targetDir = new File("target/natives/lwjgl")
     
     this.synchronized {

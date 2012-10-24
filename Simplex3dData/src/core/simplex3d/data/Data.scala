@@ -28,7 +28,7 @@ import simplex3d.data.extension._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
+trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const, A#Read] {
   type Read <: ReadData[A]
   
   type Format <: simplex3d.data.Format { type Accessor <: A }

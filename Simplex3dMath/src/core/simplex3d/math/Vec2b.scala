@@ -161,7 +161,7 @@ with Accessible with Serializable
 
   type Const = ConstVec2b
   type Accessor = Vec2b
-  type Component = Bool
+  type Component = SInt
 
   override def clone() = Vec2b(this)
   def toConst() = ConstVec2b(this)

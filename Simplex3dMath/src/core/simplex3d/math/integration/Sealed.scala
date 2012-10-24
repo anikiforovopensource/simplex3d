@@ -40,11 +40,10 @@ package integration {
    * @author Aleksey Nikiforov (lex)
    */
   sealed trait PrimitiveFormat extends Format {
-    type Accessor <: simplex3d.math.integration.Accessor { type Read }
+    type Accessor <: simplex3d.math.integration.Accessor with Raw
   }
 
   object PrimitiveFormat {
-    final val Bool = classType[Bool](classOf[Bool])
     final val SInt = classType[SInt](classOf[SInt])
     final val RFloat = classType[RFloat](classOf[RFloat])
     final val RDouble = classType[RDouble](classOf[RDouble])
@@ -62,15 +61,6 @@ package integration {
   trait CompressedFormat extends Format {
     type Accessor <: simplex3d.math.integration.Accessor
     type Component = Nothing
-  }
-
-
-  sealed trait Bool extends Accessor with PrimitiveFormat {
-    type Read = Boolean
-    type Const = Read
-
-    type Accessor = Bool
-    type Component = Bool
   }
 
 

@@ -55,6 +55,7 @@ package object format {
     type Accessor = Vec3
     type Component = RDouble
   }
+  // object BGR { implicit val adapter = new DataAdapter[BGR, TangibleDouble](components = 3) {...
   implicit object BGRAdapter extends DataAdapter[BGR, TangibleDouble](components = 3) {
     def apply(backing: inContiguous[RDouble, Raw], j: Int) :ConstVec3 = {
       ConstVec3(

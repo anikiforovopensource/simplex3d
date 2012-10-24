@@ -119,7 +119,7 @@ object ReadContiguous {
   def apply[F <: Format, R <: Raw with Tangible](dc: ReadContiguous[_, R])(
     implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R]
   ) :ReadContiguous[F, R] = {
-    val res = dc match {
+    val res = dc.asInstanceOf[ReadContiguous[Format, R]] match {
       case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array]))
       case d: DataBuffer[_, _] => composition.mkDataBuffer(primitives.mkDataBuffer(dc.sharedBuffer))
     }
@@ -134,7 +134,7 @@ object Contiguous {
     if (dc.isReadOnly) throw new IllegalArgumentException(
       "The data source must not be read-only."
     )
-    dc match {
+    dc.asInstanceOf[Contiguous[Format, R]] match {
       case d: DataArray[_, _] => composition.mkDataArray(primitives.mkDataArray(dc.sharedStorage.asInstanceOf[R#Array]))
       case d: DataBuffer[_, _] => composition.mkDataBuffer(primitives.mkDataBuffer(dc.sharedBuffer))
     }

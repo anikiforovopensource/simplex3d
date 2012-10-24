@@ -26,9 +26,9 @@ object InterleavedData extends App {
 
     // Empty interleave.
     val (vertices1, normals1, texCoords1) = interleave(
-      DataSeq[Vec3, RFloat],
-      DataSeq[Vec3, RFloat],
-      DataSeq[Vec2, RFloat]
+      DataFactory[Vec3, RFloat],
+      DataFactory[Vec3, RFloat],
+      DataFactory[Vec2, RFloat]
     )(size)
 
     // Interleaved copy of existing data.

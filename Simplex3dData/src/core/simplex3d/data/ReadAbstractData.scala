@@ -31,8 +31,7 @@ import StoreType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class ReadAbstractData[
-  /*@specialized(Int, Float, Double)*/ AC <: AR, //Accessor#Const
-  /*@specialized(Int, Float, Double)*/ AR //Accessor#Read
+  @specialized(Int, Float, Double) AC
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   final val offset: Int, final val stride: Int
@@ -41,7 +40,7 @@ extends ProtectedData(
   if (shared != null) shared else prim.asInstanceOf[ProtectedData].sharedStorage
 )
 with DataSrc
-with IndexedSeq[AC/*AR*/] {
+with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
 
   // Argument checks.
   assert(components >= 1)

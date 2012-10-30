@@ -35,15 +35,15 @@ import RawType._
  * @author Aleksey Nikiforov (lex)
  */
 abstract class AbstractData[
-  /*@specialized(Int, Float, Double)*/ AC <: AR, //Accessor#Const
-  /*@specialized(Int, Float, Double)*/ AR //Accessor#Read
+  @specialized(Int, Float, Double) AC <: AR, //Accessor#Const
+  @specialized(Int, Float, Double) AR //Accessor#Read
 ] private[data] (
   shared: AnyRef, prim: AnyRef, ro: Boolean,
   off: Int, str: Int
-) extends ReadAbstractData[AC, AR](
+) extends ReadAbstractData[AC](
   shared, prim, ro,
   off, str
-) /*with mutable.IndexedSeq[AR]*/ {
+) {
 
   type PrimitiveSeq <: Contiguous[Format#Component, Raw]
 
@@ -363,7 +363,7 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_, _]].formatManifest
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
         put2dImpl(
@@ -569,7 +569,7 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_, _]].formatManifest
+      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
       
       if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
         put3dImpl(

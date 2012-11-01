@@ -36,17 +36,21 @@ final class ShaderPrototype private[pluggable] (
   val shaderType: Shader.type#Value,
   val version: String,
   val squareMatrices: Boolean,
-  val export: Option[String],
-  val entryPoint: Option[String],
+  val functionSignature: Option[String],
+  val mainLabel: Option[String],
+  val mainInputs: ReadArray[DeclarationBlock],
+  val mainOutput: Option[DeclarationBlock],
+  val body: String,
   val conditions: ReadArray[(String, AnyRef => Boolean)],
   val uniformBlock: ReadArray[Declaration],
   val boundUniforms: immutable.Map[String, Property[UncheckedBinding]],
   val unsizedArrayKeys: ReadArray[ListNameKey],
+  val sizedArraykeys: ReadArray[ListSizeKey],
   val attributeBlock: ReadArray[Declaration],
   val inputBlocks: ReadArray[DeclarationBlock],
   val outputBlock: Option[DeclarationBlock],
   val functionDependencies: ReadArray[String],
-  val sources: ReadArray[String]
+  val sources: List[String]
 ) {
   def isVertexShader = (shaderType == Shader.Vertex)
   val structs = StructSignature.organizeDependencies(uniformBlock.flatMap(_.structSignatures))
@@ -55,12 +59,40 @@ final class ShaderPrototype private[pluggable] (
 
 object ShaderPrototype {
   
-  private[this] def format(qualifiers: Option[String]) :String = {
-    if (qualifiers.isDefined) qualifiers.get + " " else ""
+  private[this] def formatOption(option: Option[String]) :String = {
+    if (option.isDefined) option.get + " " else ""
   }
   
   private[this] def formatBlock(block: String) :String = {
     if (block.isEmpty) "" else block + "\n\n\n"
+  }
+  
+  private[this] def unindent(src: String) :Array[String] = {
+    val codeLines = src.split("\n")
+
+    val lines = codeLines.map(_.replace("\t", "  "))
+    val Spaces = """^(\s*).*""".r
+    
+    var min = scala.Int.MaxValue
+    for (line <- lines) {
+      val Spaces(s) = line
+      if (!line.trim.isEmpty && s.length < min) min = s.length
+    }
+
+    lines.map(_.drop(min))
+  }
+  
+  def mkRemapping(parent: String, name: String) :(String, String) = {// (from, to)
+    val remapped = if (name.startsWith("gl_")) name else "tm_" + parent + "_" + name
+    (parent + "." + name, remapped)
+  }
+  
+  private[this] def remapSrc(remapping: Seq[(String, String)], src: String) :String = {
+    var res = src
+    for (rm <- remapping) {
+      res = res.replaceAll("\\b" + rm._1 + "\\b", rm._2)
+    }
+    res
   }
   
   private[pluggable] def arraySizeId(key: ListNameKey) :String = {
@@ -68,65 +100,118 @@ object ShaderPrototype {
   }
   
   
-  def sizeHeader(arrayDeclarations: Iterable[ListSizeKey]) :String = {
+  private[pluggable] def sizeDeclaration(arrayDeclarations: Iterable[ListSizeKey]) :String = {
     (for (d <- arrayDeclarations) yield {
       "const int " + arraySizeId(d.nameKey) + " = " + d.size + ";"
     }).mkString("\n")
   }
   
   
-  def functionHeader(functions: Iterable[String]) :String = {
+  private[pluggable] def functionDeclaration(functions: Iterable[String]) :String = {
     if (functions.isEmpty) "" else functions.mkString("", ";\n", ";")
+  }
+  
+  private[pluggable] def structDeclaration(structs: Iterable[StructSignature]) :String = {
+    (for (struct <- structs) yield {
+      "struct " + struct.glslType + " {\n" +
+      (for ((fieldType, fieldName) <- struct.entries) yield {
+        "  " + fieldType + " " + fieldName + ";"
+      }).mkString("\n") +
+      (if (struct.containsSamplers) "\n  float nvidiaBugWorkaround;" else "") +
+      "\n};"
+    }).mkString("\n\n")
+  }
+  
+  def varDeclaration(blockQualifier: Option[String], declarations: Iterable[Declaration]) :String =  {
+    if (declarations.isEmpty) return ""
+    
+    (for (declaration <- declarations; if !declaration.isReserved) yield {
+      formatOption(declaration.qualifiers) + formatOption(blockQualifier) + declaration.glslType + " " +
+      {
+        if (declaration.isArray) {
+          if (declaration.arraySizeExpression.isDefined) {
+            declaration.name + "[" + declaration.arraySizeExpression.get + "]"
+          }
+          else {
+            val sizeExpression = arraySizeId(new ListNameKey("", declaration.name))
+            declaration.name + "[" + sizeExpression + "]"
+          }
+        }
+        else declaration.name
+      } + ";"
+    }).mkString("\n")
+  }
+  
+  def bodySignature(shader: ShaderPrototype)
+  :(Seq[(String, String)], String) = //(remapping, varDeclaration)
+  {
+    def process(qualifier: String, blocks: Iterable[DeclarationBlock], remappings: ArrayBuilder[(String, String)]) = {
+      val entries =
+        for (block <- blocks; declaration <- block.declarations) yield {
+          val remapping = mkRemapping(block.name, declaration.name)
+          remappings += remapping
+          
+          val argument = formatOption(declaration.qualifiers) + qualifier + " " + declaration.glslType + " " + {
+            if (declaration.isArray) remapping._2 + "[" + declaration.arraySizeExpression + "]"
+            else remapping._2
+          }
+          
+          (remapping._2, argument)
+        }
+      
+      entries.toList.sortBy(_._1).map(_._2)
+    }
+
+    if (shader.functionSignature.isDefined) (Nil, shader.functionSignature.get)
+    else {
+      val remappings = ArrayBuilder.make[(String, String)]
+      
+      val inputs = process("in", shader.mainInputs, remappings)
+      val outputs = process("out", shader.mainOutput, remappings)
+      
+      val sig = "void " + shader.mainLabel.get + "(" + inputs.mkString(", ") + outputs.mkString(", ") + ")"
+      (remappings.result, sig)
+    }
+  }
+  
+  def callSignature(shader: ShaderPrototype) :String = {
+    def process(blocks: Iterable[DeclarationBlock]) = {
+      val entries = for (block <- blocks; declaration <- block.declarations) yield {
+        val remapping = mkRemapping(block.name, declaration.name)
+        
+        remapping._2
+      }
+      
+      entries.toList.sorted
+    }
+
+    if (shader.functionSignature.isDefined) ""
+    else {
+      val inputs = process(shader.mainInputs)
+      val outputs = process(shader.mainOutput)
+      
+      shader.mainLabel.get + "(" + inputs.mkString(", ") + outputs.mkString(", ") + ")"
+    }
+  }
+  
+  def extraSources(remapping: Seq[(String, String)], sources: List[String]) :String = {
+    (for (srcChunk <- sources) yield {
+      unindent(remapSrc(remapping, srcChunk)).mkString("\n").trim
+    }).mkString("\n")
+  }
+  
+  def bodySource(remapping: Seq[(String, String)], signature: String, body: String) :String = {
+    val lines = unindent(remapSrc(remapping, body))
+    
+    signature + " {\n" +
+    "  " + lines.map("  " + _).mkString("\n").trim +
+    "\n}"
   }
   
   
   object Glsl2 {
     
-    def structHeader(structs: Iterable[StructSignature]) :String = {
-      (for (struct <- structs) yield {
-        "struct " + struct.glslType + " {\n" +
-        (for ((fieldType, fieldName) <- struct.entries) yield {
-          "  " + fieldType + " " + fieldName + ";"
-        }).mkString("\n") +
-        (if (struct.containsSamplers) "\n  float nvidiaBugWorkaround;" else "") +
-        "\n};"
-      }).mkString("\n\n")
-    }
-    
-    
-    def attributeHeader(attributeBlock: Iterable[Declaration]) :String =  {
-      if (attributeBlock.isEmpty) return ""
-      
-      (for (declaration <- attributeBlock; if !declaration.isReserved) yield {
-        format(declaration.qualifiers) + "attribute " + declaration.glslType + " " +
-        {
-          if (declaration.isArray) declaration.name + "[" + declaration.arraySizeExpression.get + "]"
-          else declaration.name
-        } + ";"
-      }).mkString("\n")
-    }
-    
-    def uniformHeader(uniformBlock: Iterable[Declaration]) :String = {
-      if (uniformBlock.isEmpty) return ""
-      
-      (for (declaration <- uniformBlock; if !declaration.isReserved) yield {
-        format(declaration.qualifiers) + "uniform " + declaration.glslType + " " +
-        {
-          if (declaration.isArray) {
-            val sizeId = ShaderPrototype.arraySizeId(new ListNameKey("", declaration.name))
-            declaration.name + "[" + sizeId + "]"
-          }
-          else declaration.name
-        } + ";"
-      }).mkString("\n")
-    }
-    
-    private[this] def mkRemapping(parent: String, name: String) :(String, String) = {// (from, to)
-      val remapped = if (name.startsWith("gl_")) name else "tm_" + parent + "_" + name
-      (parent + "." + name, remapped)
-    }
-    
-    def interfaceHeader(blocks: Iterable[DeclarationBlock])
+    def interfaceDeclaration(blocks: Iterable[DeclarationBlock])
     :(Seq[(String, String)], String) = //(remapping, varDeclaration)
     {
       val remappings = ArrayBuilder.make[(String, String)]
@@ -140,7 +225,7 @@ object ShaderPrototype {
             
             if (declaration.isReserved) ""
             else {
-              format(declaration.qualifiers) + "varying " + declaration.glslType + " " +
+              formatOption(declaration.qualifiers) + "varying " + declaration.glslType + " " +
               {
                 if (declaration.isArray) remapped + "[" + declaration.arraySizeExpression.get + "]"
                 else remapped
@@ -152,46 +237,23 @@ object ShaderPrototype {
       (remappings.result, src)
     }
     
-    def shaderBody(remapping: Seq[(String, String)], sources: Iterable[String]) :String = {
-      def remapSrc(remapping: Seq[(String, String)], src: String) :String = {
-        var res = src
-        for (rm <- remapping) {
-          res = res.replaceAll("\\b" + rm._1 + "\\b", rm._2)
-        }
-        res
-      }
-      
-      def unindent(src: String) :String = {
-        val codeLines = src.split("\n")
-    
-        val lines = codeLines.map(_.replace("\t", "  "))
-        val Spaces = """^(\s*).*""".r
-        
-        var min = scala.Int.MaxValue
-        for (line <- lines) {
-          val Spaces(s) = line
-          if (s != null && !line.trim.isEmpty && s.length < min) min = s.length
-        }
-    
-        lines.map(_.drop(min)).mkString("\n")
-      }
-      
-      (for (srcChunk <- sources) yield {
-        unindent(remapSrc(remapping, srcChunk)).trim
-      }).mkString("\n")
-    }
     
     def shaderSrc(shader: ShaderPrototype, arrayDeclarations: IndexedSeq[ListSizeKey]) :String = {
-      val (remapping, interfaceDeclarations) = interfaceHeader(shader.inputBlocks ++ shader.outputBlock)
+      val (varyingRemapping, interfaceDeclarations) = interfaceDeclaration(shader.inputBlocks ++ shader.outputBlock)
+      val (mainVarRemapping, signature) = bodySignature(shader)
+      
+      val remapping = varyingRemapping ++ mainVarRemapping
       
       formatBlock("#version " + shader.version) +
-      formatBlock(sizeHeader(arrayDeclarations)) +
-      formatBlock(structHeader(shader.structs)) +
-      formatBlock(attributeHeader(shader.attributeBlock)) +
-      formatBlock(uniformHeader(shader.uniformBlock)) +
+      formatBlock(sizeDeclaration(shader.sizedArraykeys)) +
+      formatBlock(sizeDeclaration(arrayDeclarations)) +
+      formatBlock(structDeclaration(shader.structs)) +
+      formatBlock(varDeclaration(Some("attribute"), shader.attributeBlock)) +
+      formatBlock(varDeclaration(Some("uniform"), shader.uniformBlock)) +
       formatBlock(interfaceDeclarations) +
-      formatBlock(functionHeader(shader.functionDependencies)) +
-      shaderBody(remapping, shader.sources)
+      formatBlock(functionDeclaration(shader.functionDependencies)) +
+      formatBlock(extraSources(varyingRemapping, shader.sources)) +
+      bodySource(remapping, signature, shader.body)
     }
   }
 }

@@ -50,14 +50,14 @@ extends graphics.TechniqueManager[G]
       //XXX special treatment for gl_Position => gl_FragCoord
       //XXX special treatment for gl_FragColor
       
-      if (shader.entryPoint.isDefined) {
+      if (shader.mainLabel.isDefined) {
         output.insert(0, shader)
       }
       else {
-        var list = internal.get(shader.export.get)
+        var list = internal.get(shader.functionSignature.get)
         if (list == null) {
           list = new ArrayBuffer[ShaderPrototype]
-          internal.put(shader.export.get, list)
+          internal.put(shader.functionSignature.get, list)
         }
         
         list.insert(0, shader)
@@ -93,8 +93,6 @@ extends graphics.TechniqueManager[G]
       
       // Do not use set, use an ordered list, because the order is important.
       val chain = new ArrayBuffer[ShaderPrototype]
-      chain += shader
-
       
       var conditionsPassed = true
       if (conditionsPassed && !shader.conditions.isEmpty) { def checkConditions() {
@@ -130,7 +128,7 @@ extends graphics.TechniqueManager[G]
           attributesPassed = (attrib != null)//XXX check the type at runtime
           
           if (shader.logging.logRejected && !attributesPassed) log(
-            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the attribute '" +
+            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the attribute '" +//XXX rejected for mesh 'NAME' / accepted for mesh 'NAME'
             declaration.name + "' is not defined."
           )
           
@@ -154,7 +152,7 @@ extends graphics.TechniqueManager[G]
             val resolved = graphicsContext.resolveUniformPath(
               declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
             
-            uniformsPassed = (resolved != null)//XXX check the type at runtime, check array size > 0
+            uniformsPassed = (resolved != null)//XXX check the type at runtime
             
             if (shader.logging.logRejected && !uniformsPassed) log(
               Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the uniform '" +
@@ -179,7 +177,7 @@ extends graphics.TechniqueManager[G]
           var j = 0; while (!functionsPassed && matchingFunctions != null && j < matchingFunctions.size) {
             val functionProvider = matchingFunctions(j)
             
-            if (requiredFunction == functionProvider.export.get) {
+            if (requiredFunction == functionProvider.functionSignature.get) {
               if (!chain.contains(functionProvider)) {
                 val subChain = resolveShaderChain(stageId, functionProvider)
                 if (subChain != null) {
@@ -203,9 +201,49 @@ extends graphics.TechniqueManager[G]
       }; checkFunctions() }
       
       
-      var inputPassed = functionsPassed
+      var sharedDepsPassed = functionsPassed
+      if (sharedDepsPassed && !shader.mainInputs.isEmpty) { def checkSharedDeps() {
+        val inputBlocks = shader.mainInputs
+        
+        var i = 0; while (sharedDepsPassed && i < inputBlocks.size) {
+          val inputBlock = inputBlocks(i)
+          
+          sharedDepsPassed = false
+          var j = 0; while (!sharedDepsPassed && j < stage.output.size) {
+            val outputShader = stage.output(j)
+            if (shader ne outputShader) {
+              
+              val out = outputShader.mainOutput
+              val found = out.isDefined && (out.get.name == inputBlock.name)
+              
+              if (found) {
+                if (!chain.contains(outputShader)) {// Do not use set, the order is important for dependency management.
+                  val subChain = resolveShaderChain(stageId, outputShader)
+                  if (subChain != null) {
+                    chain ++= subChain
+                    sharedDepsPassed = true
+                  }
+                }
+                else sharedDepsPassed = true
+              }
+            }
+            
+            j += 1
+          }
+          
+          if (shader.logging.logRejected && !sharedDepsPassed) log(
+            Level.INFO, "Shader '" + shader.logging.name + "' was rejected because the main input '" +
+            inputBlock.name + "' could not be resolved."
+          )
+          
+          i += 1
+        }
+      }; checkSharedDeps() }
+      
+      
+      var inputPassed = sharedDepsPassed
       if (inputPassed && !shader.inputBlocks.isEmpty) { def checkInput() {
-        val previousStage = if (stageId + 1 == stages.size) null else stages(stageId + 1)
+        val previousStage = stages(stageId + 1)
         val inputBlocks = shader.inputBlocks
         
         var i = 0; while (inputPassed && i < inputBlocks.size) {
@@ -241,11 +279,12 @@ extends graphics.TechniqueManager[G]
         }
       }; checkInput() }
       
-      if (uniformsPassed && functionsPassed && inputPassed) {
+      if (inputPassed) {
         if (shader.logging.logAccepted) log(
           Level.INFO, "Shader '" + shader.logging.name + "' was accepted."
         )
         
+        chain += shader
         chain
       }
       else null
@@ -372,22 +411,43 @@ extends graphics.TechniqueManager[G]
 
   
   private[this] def genMain(shaderType: Shader.type#Value, chain: ArrayBuffer[ShaderPrototype]) :Shader = {
-    var body = "void main() {\n"
+    var body = ""
     var declarations = ""
+    val sharedDeps = new mutable.HashSet[DeclarationBlock]
     
     var i = 0; while (i < chain.size) {
-      val sp = chain(i)
-      if (sp.shaderType == shaderType && sp.entryPoint.isDefined) {
-        declarations += "void " + sp.entryPoint.get + "();\n"
-        body += "  " + sp.entryPoint.get + "();\n"
+      val shaderPrototype = chain(i)
+      
+      if (shaderPrototype.shaderType == shaderType && shaderPrototype.mainLabel.isDefined) {
+        sharedDeps ++= shaderPrototype.mainInputs
+        sharedDeps ++= shaderPrototype.mainOutput
+        
+        declarations += ShaderPrototype.bodySignature(shaderPrototype)._2 + ";\n"//XXX cache bodySig
+        body += "  " + ShaderPrototype.callSignature(shaderPrototype) + ";\n"
       }
       
       i += 1
     }
     
-    body += "}\n"
     
-    new Shader(shaderType, declarations + "\n" +  body)
+    val sharedDepsSet = for {
+      declarationBlock <- sharedDeps
+      declaration <- declarationBlock.declarations
+    } yield {
+      val varName = ShaderPrototype.mkRemapping(declarationBlock.name, declaration.name)._2
+      (varName, "  " + declaration.glslType + " " + varName + ";")
+    }
+    
+    val sharedDepsDeclarations = sharedDepsSet.toList.sortBy(_._1).map(_._2).mkString("\n")
+      
+    val shaderSrc =
+      declarations + "\n" +
+      "void main() {\n" +
+        (if(sharedDepsDeclarations.isEmpty) "" else sharedDepsDeclarations + "\n\n") +
+        body +
+      "}\n"
+    
+    new Shader(shaderType, shaderSrc)
   }
   
   

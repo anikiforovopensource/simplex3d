@@ -260,8 +260,6 @@ object CustomRenderer extends default.BaseApp {
   
   // Rebuild the Technique Manager from scratch.
   techniqueManager.register(new FragmentShader {
-    entryPoint("resolveColor"){}
-    
     use("vec4 texturingColor()")
     use("vec4 lightIntensity()")
     
@@ -269,26 +267,18 @@ object CustomRenderer extends default.BaseApp {
       declare[Vec4]("gl_FragCoord")
     }
     
-    src {"""
-      void resolveColor() {
-        gl_FragColor = texturingColor() * lightIntensity();
-      }
+    main("resolveColor")(){"""
+      gl_FragColor = texturingColor() * lightIntensity();
     """}
   })
   
   techniqueManager.register(new FragmentShader {
-    export("vec4 lightIntensity()")
-    
-    src {"""
-      vec4 lightIntensity() {
-        return vec4(1.0);
-      }
+    function("vec4 lightIntensity()"){"""
+      return vec4(1.0);
     """}
   })
   
   techniqueManager.register(new FragmentShader {
-    export("vec4 texturingColor()")
-    
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
     }
@@ -297,21 +287,17 @@ object CustomRenderer extends default.BaseApp {
       declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
     }
     
-    src {"""
-      vec4 texturingColor() {
-        vec4 color = vec4(1.0);
-        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
-        }
-        return color;
+    function("vec4 texturingColor()"){"""
+      vec4 color = vec4(1.0);
+      for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+        color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
       }
+      return color;
     """}
   })
   
   
   techniqueManager.register(new VertexShader {
-    entryPoint("transformVertices"){}
-    
     uniform {
       declare[Mat4]("se_modelViewProjectionMatrix")
     }
@@ -324,16 +310,12 @@ object CustomRenderer extends default.BaseApp {
       declare[Vec4]("gl_Position")
     }
     
-    src {"""
-      void transformVertices() {
-        gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-      }
+    main("transformVertices")(){"""
+      gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
     """}
   })
     
   techniqueManager.register(new VertexShader {
-    entryPoint("propagateTexturingValues"){}
-    
     uniform {
       declare[BindingList[TextureUnit]]("textureUnits")
     }
@@ -346,12 +328,10 @@ object CustomRenderer extends default.BaseApp {
       declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
     }
     
-    src {"""
-      void propagateTexturingValues() {
-        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
-          texturingCtx.ecTexCoords[i] = transformed.xy;
-        }
+    main("propagateTexturingValues")(){"""
+      for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+        vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
+        texturingCtx.ecTexCoords[i] = transformed.xy;
       }
     """}
   })
@@ -441,8 +421,6 @@ object CustomRenderer extends default.BaseApp {
   
   // Declare lighting shaders.
   techniqueManager.register(new FragmentShader {
-    export("vec4 lightIntensity()")
-    
     uniform {
       declare[BindingList[PointLight]]("lighting")
     }
@@ -452,31 +430,27 @@ object CustomRenderer extends default.BaseApp {
       declare[Vec3]("ecPosition")
     }
     
-    src {"""
-      vec4 lightIntensity() {
-        vec3 intensity = vec3(0.0);
-        for (int i = 0; i < se_sizeOf_lighting; i++) {
+    function("vec4 lightIntensity()"){"""
+      vec3 intensity = vec3(0.0);
+      for (int i = 0; i < se_sizeOf_lighting; i++) {
+    
+        vec3 lightDir = lighting[i].ecPosition - lightingCtx.ecPosition;
+        float dist = length(lightDir);
+        float attenuation = 1.0 / (1.0 +
+          lighting[i].linearAttenuation * dist +
+          lighting[i].quadraticAttenuation * dist*dist
+        );
       
-          vec3 lightDir = lighting[i].ecPosition - lightingCtx.ecPosition;
-          float dist = length(lightDir);
-          float attenuation = 1.0 / (1.0 +
-            lighting[i].linearAttenuation * dist +
-            lighting[i].quadraticAttenuation * dist*dist
-          );
-        
-          lightDir = lightDir/dist;
-          float diffuseFactor = max(0.0, dot(lightingCtx.normal, lightDir));
-          intensity += lighting[i].intensity * diffuseFactor * attenuation;
-        }
-        return vec4(intensity + 0.2, 1.0);
+        lightDir = lightDir/dist;
+        float diffuseFactor = max(0.0, dot(lightingCtx.normal, lightDir));
+        intensity += lighting[i].intensity * diffuseFactor * attenuation;
       }
+      return vec4(intensity + 0.2, 1.0);
     """}
   })
   
   
   techniqueManager.register(new VertexShader {
-    entryPoint("propagateLightingValues"){}
-    
     uniform {
       declare[Mat4]("se_modelViewMatrix")
       declare[Mat3]("se_normalMatrix")
@@ -492,11 +466,9 @@ object CustomRenderer extends default.BaseApp {
       declare[Vec3]("normal")
     }
     
-    src {"""
-      void propagateLightingValues() {
-        lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
-        lightingCtx.normal = normalize(se_normalMatrix*normals);
-      }
+    main("propagateLightingValues")(){"""
+      lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
+      lightingCtx.normal = normalize(se_normalMatrix*normals);
     """}
   })
 }

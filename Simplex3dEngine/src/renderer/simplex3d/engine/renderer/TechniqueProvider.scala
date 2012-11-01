@@ -33,82 +33,56 @@ object TechniqueProvider {
     val manager = new pluggable.TechniqueManager[G]
     
     manager.register(new FragmentShader {
-      entryPoint("resolveColor"){}
-      
       use("vec3 lightEmission()")
       use("vec3 lightIntensity()")
       use("vec4 texturingColor()")
-      use("vec4 applyFog(in vec4)")
+      use("vec4 applyFog(in vec4 baseColor)")
       
       in("transformationCtx") {
         declare[Vec4]("gl_FragCoord")
       }
       
-      src {"""
-        void resolveColor() {
-          vec4 lighting = vec4(lightEmission() + lightIntensity(), 1.0);
-          vec4 baseColor = texturingColor() * lighting;
-          gl_FragColor = applyFog(baseColor);
-        }
+      main("resolveColor")(){"""
+        vec4 lighting = vec4(lightEmission() + lightIntensity(), 1.0);
+        vec4 baseColor = texturingColor() * lighting;
+        gl_FragColor = applyFog(baseColor);
       """}
     })
     
     
     manager.register(new FragmentShader {
-      export("vec3 lightEmission()")
-      
-      src {"""
-        vec3 lightEmission() {
-          return vec3(0.0);
-        }
+      function("vec3 lightEmission()"){"""
+        return vec3(0.0);
       """}
     })
     manager.register(new FragmentShader {
-      export("vec4 texturingColor()")
-      
-      src {"""
-        vec4 texturingColor() {
-          return vec4(1.0);
-        }
+      function("vec4 texturingColor()"){"""
+        return vec4(1.0);
       """}
     })
     manager.register(new FragmentShader {
-      export("vec3 lightIntensity()")
-      
-      src {"""
-        vec3 lightIntensity() {
-          return vec3(1.0);
-        }
+      function("vec3 lightIntensity()"){"""
+        return vec3(1.0);
       """}
     })
     manager.register(new FragmentShader {
-      export("vec4 applyFog(in vec4)")
-      
-      src {"""
-        vec4 applyFog(in vec4 baseColor) {
-          return baseColor;
-        }
+      function("vec4 applyFog(in vec4 baseColor)"){"""
+        return baseColor;
       """}
     })
     
     
     manager.register(new FragmentShader {
-      export("vec3 lightEmission()")
-      
       uniform {
         declare[Vec3]("emission")
       }
       
-      src {"""
-        vec3 lightEmission() {
-          return emission;
-        }
+      function("vec3 lightEmission()"){"""
+        return emission;
       """}
     })
     
     manager.register(new FragmentShader {
-      export("vec4 texturingColor()")
-      
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
@@ -117,21 +91,17 @@ object TechniqueProvider {
         declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
       }
       
-      src {"""
-        vec4 texturingColor() {
-          vec4 color = vec4(1.0);
-          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
-          }
-          return color;
+      function("vec4 texturingColor()"){"""
+        vec4 color = vec4(1.0);
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
         }
+        return color;
       """}
     })
     
     // PointSprites texturing, must be added after default texturing.
     manager.register(new FragmentShader {
-      export("vec4 texturingColor()")
-      
       condition[VertexMode]("mode") {
         _.isInstanceOf[PointSprites]
       }
@@ -140,21 +110,17 @@ object TechniqueProvider {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
       
-      src {"""
-        vec4 texturingColor() {
-          vec4 color = vec4(1.0);
-          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            color *= texture2D(textureUnits[i].texture.sampler, gl_PointCoord);
-          }
-          if (color.a == 0.0) discard;
-          return color;
+      function("vec4 texturingColor()"){"""
+        vec4 color = vec4(1.0);
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          color *= texture2D(textureUnits[i].texture.sampler, gl_PointCoord);
         }
+        if (color.a == 0.0) discard;
+        return color;
       """}
     })
     
     manager.register(new FragmentShader {
-      export("vec4 applyFog(in vec4)")
-      
       uniform {
         declare[Fog]("fog")
       }
@@ -163,16 +129,12 @@ object TechniqueProvider {
         declare[DoubleRef]("factor")
       }
       
-      src {"""
-        vec4 applyFog(in vec4 baseColor) {
-          return vec4(mix(fog.color, baseColor.rgb, fogCtx.factor), baseColor.a);
-        }
+      function("vec4 applyFog(in vec4 baseColor)"){"""
+        return vec4(mix(fog.color, baseColor.rgb, fogCtx.factor), baseColor.a);
       """}
     })
     
     manager.register(new VertexShader {
-      entryPoint("transformVertices"){}
-      
       uniform {
         declare[Mat4]("se_modelViewProjectionMatrix")
       }
@@ -185,17 +147,13 @@ object TechniqueProvider {
         declare[Vec4]("gl_Position")
       }
       
-      src {"""
-        void transformVertices() {
-          gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-        }
+      main("transformVertices")(){"""
+        gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
       """}
     })
 
     // PointSprites transformation, must be added after default transformation.
     manager.register(new VertexShader {
-      entryPoint("transformVertices"){}
-      
       condition[VertexMode]("mode") {
         _.isInstanceOf[PointSprites]
       }
@@ -215,19 +173,15 @@ object TechniqueProvider {
         declare[Vec4]("gl_Position")
       }
       
-      src {"""
-        void transformVertices() {
-          gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
-          
-          // Universal for all projection matrices.
-          gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
-        }
+      main("transformVertices")(){"""
+        gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
+        
+        // Universal for all projection matrices.
+        gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
       """}
     })
       
     manager.register(new VertexShader {
-      entryPoint("transformTexCoords"){}
-      
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
@@ -240,19 +194,15 @@ object TechniqueProvider {
         declare[BindingList[Vec2]]("ecTexCoords").size("se_sizeOf_textureUnits")
       }
       
-      src {"""
-        void transformTexCoords() {
-          for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-            vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
-            texturingCtx.ecTexCoords[i] = transformed.xy;
-          }
+      main("transformTexCoords")(){"""
+        for (int i = 0; i < se_sizeOf_textureUnits; i++) {
+          vec3 transformed = textureUnits[i].transformation*vec3(texCoords, 1);
+          texturingCtx.ecTexCoords[i] = transformed.xy;
         }
       """}
     })
     
     manager.register(new VertexShader {
-      entryPoint("computeFog"){}
-      
       use("vec3 ecPosition()")
       
       uniform {
@@ -263,17 +213,13 @@ object TechniqueProvider {
         declare[DoubleRef]("factor")
       }
       
-      src {"""
-        void computeFog() {
-          vec3 ecPos = ecPosition();
-          fogCtx.factor = clamp(exp(-fog.density*fog.density*dot(ecPos, ecPos)), 0.0, 1.0);
-        }
+      main("computeFog")(){"""
+        vec3 ecPos = ecPosition();
+        fogCtx.factor = clamp(exp(-fog.density*fog.density*dot(ecPos, ecPos)), 0.0, 1.0);
       """}
     })
     
     manager.register(new VertexShader {
-      export("vec3 ecPosition()")
-      
       uniform {
         declare[Mat4x3]("se_modelViewMatrix")
       }
@@ -282,10 +228,8 @@ object TechniqueProvider {
         declare[Vec3]("vertices")
       }
       
-      src {"""
-        vec3 ecPosition() {
-          return vec3(se_modelViewMatrix*vec4(vertices, 1.0));
-        }
+      function("vec3 ecPosition()"){"""
+        return vec3(se_modelViewMatrix*vec4(vertices, 1.0));
       """}
     })
     

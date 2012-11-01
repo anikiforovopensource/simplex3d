@@ -901,30 +901,30 @@ extends graphics.RenderContext {
   
   private[this] def checkUniformType(binding: AnyRef, dtype: Int) :Boolean = {
     dtype match {
-      case EngineBindingTypes.Float => binding.isInstanceOf[DoubleRef]
-      case EngineBindingTypes.Vec2 => binding.isInstanceOf[Vec2]
-      case EngineBindingTypes.Vec3 => binding.isInstanceOf[Vec3]
-      case EngineBindingTypes.Vec4 => binding.isInstanceOf[Vec4]
-      case EngineBindingTypes.Int => binding.isInstanceOf[IntRef]
-      case EngineBindingTypes.Vec2i => binding.isInstanceOf[Vec2i]
-      case EngineBindingTypes.Vec3i => binding.isInstanceOf[Vec3i]
-      case EngineBindingTypes.Vec4i => binding.isInstanceOf[Vec4i]
-      case EngineBindingTypes.Boolean => binding.isInstanceOf[Boolean]
-      case EngineBindingTypes.Vec2b => binding.isInstanceOf[Vec2b]
-      case EngineBindingTypes.Vec3b => binding.isInstanceOf[Vec3b]
-      case EngineBindingTypes.Vec4b => binding.isInstanceOf[Vec4b]
-      case EngineBindingTypes.Mat2x2 => binding.isInstanceOf[Mat2x2]
-      case EngineBindingTypes.Mat2x3 => binding.isInstanceOf[Mat2x3]
-      case EngineBindingTypes.Mat2x4 => binding.isInstanceOf[Mat2x4]
-      case EngineBindingTypes.Mat3x2 => binding.isInstanceOf[Mat3x2]
+      case EngineBindingTypes.Float => binding.isInstanceOf[ReadDoubleRef]
+      case EngineBindingTypes.Vec2 => binding.isInstanceOf[ReadVec2]
+      case EngineBindingTypes.Vec3 => binding.isInstanceOf[ReadVec3]
+      case EngineBindingTypes.Vec4 => binding.isInstanceOf[ReadVec4]
+      case EngineBindingTypes.Int => binding.isInstanceOf[ReadIntRef]
+      case EngineBindingTypes.Vec2i => binding.isInstanceOf[ReadVec2i]
+      case EngineBindingTypes.Vec3i => binding.isInstanceOf[ReadVec3i]
+      case EngineBindingTypes.Vec4i => binding.isInstanceOf[ReadVec4i]
+      case EngineBindingTypes.Boolean => binding.isInstanceOf[ReadBooleanRef]
+      case EngineBindingTypes.Vec2b => binding.isInstanceOf[ReadVec2b]
+      case EngineBindingTypes.Vec3b => binding.isInstanceOf[ReadVec3b]
+      case EngineBindingTypes.Vec4b => binding.isInstanceOf[ReadVec4b]
+      case EngineBindingTypes.Mat2x2 => binding.isInstanceOf[ReadMat2x2]
+      case EngineBindingTypes.Mat2x3 => binding.isInstanceOf[ReadMat2x3]
+      case EngineBindingTypes.Mat2x4 => binding.isInstanceOf[ReadMat2x4]
+      case EngineBindingTypes.Mat3x2 => binding.isInstanceOf[ReadMat3x2]
       case EngineBindingTypes.Mat3x3 =>
-        binding.isInstanceOf[Mat2x3] || binding.isInstanceOf[Mat3x2] || binding.isInstanceOf[Mat3x3]
-      case EngineBindingTypes.Mat3x4 => binding.isInstanceOf[Mat3x4]
-      case EngineBindingTypes.Mat4x2 => binding.isInstanceOf[Mat4x2]
-      case EngineBindingTypes.Mat4x3 => binding.isInstanceOf[Mat4x3]
+        binding.isInstanceOf[ReadMat2x3] || binding.isInstanceOf[ReadMat3x2] || binding.isInstanceOf[ReadMat3x3]
+      case EngineBindingTypes.Mat3x4 => binding.isInstanceOf[ReadMat3x4]
+      case EngineBindingTypes.Mat4x2 => binding.isInstanceOf[ReadMat4x2]
+      case EngineBindingTypes.Mat4x3 => binding.isInstanceOf[ReadMat4x3]
       case EngineBindingTypes.Mat4x4 =>
-        binding.isInstanceOf[Mat2x4] || binding.isInstanceOf[Mat4x2] ||
-        binding.isInstanceOf[Mat3x4] || binding.isInstanceOf[Mat4x3] || binding.isInstanceOf[Mat4x4]
+        binding.isInstanceOf[ReadMat2x4] || binding.isInstanceOf[ReadMat4x2] ||
+        binding.isInstanceOf[ReadMat3x4] || binding.isInstanceOf[ReadMat4x3] || binding.isInstanceOf[ReadMat4x4]
       case EngineBindingTypes.Texture1d => false// XXX
       
       /* Replace when 2.10 is out

@@ -22,4 +22,11 @@ package simplex3d.engine
 package graphics.pluggable
 
 
-final class ShaderLogging(val name: String, val logAccepted: Boolean, val logRejected: Boolean)
+final class ShaderLogging(
+    val name: String,
+    val logAccepted: Boolean, val logRejected: Boolean,
+    val meshes: Set[String])
+{
+  def logAccepted(mesh: String) :Boolean = logAccepted && (meshes.isEmpty || meshes.contains(mesh))
+  def logRejected(mesh: String) :Boolean = logRejected && (meshes.isEmpty || meshes.contains(mesh))
+}

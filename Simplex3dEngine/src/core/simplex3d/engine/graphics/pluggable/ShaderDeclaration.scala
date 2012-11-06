@@ -63,7 +63,7 @@ import simplex3d.engine.graphics._
  */
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
-  protected final class Logging(var name: String, var logAccepted: Boolean, var logRejected: Boolean)
+  protected final class Logging(var name: String, var logAccepted: Boolean, var logRejected: Boolean, var meshes: Set[String])
   
   protected final class Declaration private[ShaderDeclaration] (
     val manifest: ClassManifest[_ <: Binding], val name: String
@@ -303,7 +303,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   private[this] var functionSignature: Option[String] = None
   
-  private[this] var mainLable: Option[String] = None
+  private[this] var mainLabel: Option[String] = None
   private[this] var mainInputs = Set[(String, Set[Declaration])]()//(blockName, declarations)
   private[this] var mainOutput: Option[(String, Set[Declaration])] = None
   
@@ -336,7 +336,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] var processingUniforms = false
   private[this] var processingMainBody = false
   
-  private[this] def atNestedBlockLevel = (declarations == null)
+  private[this] def atBlockLevel = (declarations == null)
   private[this] def atUniformBlock = processingUniforms
   private[this] def atMainBody = processingMainBody
   
@@ -353,7 +353,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   
-  protected val logging = new Logging(this.hashCode.toString, false, false)
+  protected val logging = new Logging(this.hashCode.toString, false, false, Set.empty[String])
   
   protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
@@ -371,12 +371,12 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   protected final def use(functionSignature: String) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("use() must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("use() must be declared at the top level.")
     functionDependencies += functionSignature
   }
   
   protected final def declare[B <: Binding : ClassManifest](name: String) :Declaration = {
-    if (atNestedBlockLevel) throw new IllegalStateException("declare() must be called inside a block.")
+    if (atBlockLevel) throw new IllegalStateException("declare() must be called inside a block.")
     val declaration = new Declaration(implicitly[ClassManifest[B]], name)
     declarations += declaration
     declaration
@@ -386,7 +386,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
    * Engine structs may be translated to GLSl uniform blocks depending on the implementation.
    */
   protected final def uniform(block: => Unit) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("uniform{} must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("uniform{} must be declared at the top level.")
     if (atMainBody) throw new IllegalStateException("uniform{} must be declared at the top level.")
     if (uniformBlock != null) throw new IllegalStateException("Only one uniform{} block can be declared.")
     
@@ -446,7 +446,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   /** "Only a vertex shader can declare an attributes block."
    */
   protected final def attributes(block: => Unit) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("attributes{} block must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("attributes{} block must be declared at the top level.")
     if (atMainBody) throw new IllegalStateException("attributes{} block must be declared at the top level.")
     if (shaderType != Shader.Vertex) throw new UnsupportedOperationException(
       "Only a vertex shader can declare attributes{} block."
@@ -460,7 +460,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   /** Vertex shader cannot have any input blocks (use attributes block instead).
    */
   protected final def in(name: String)(block: => Unit) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("in{} must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("in{} must be declared at the top level.")
     if (!atMainBody && shaderType == Shader.Vertex) throw new UnsupportedOperationException(
       "Vertex shader cannot have in{} blocks (use attributes{} block instead)."
     )
@@ -477,7 +477,16 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
    * to have main(){} without an output block.
    */
   protected final def out(name: String)(block: => Unit) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("out{} block must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("out{} block cannot be declared here.")
+    
+    if (atMainBody) {
+      if (mainOutput.isDefined) throw new IllegalStateException("out{} is already defined.")
+      if (outputBlock.isDefined) throw new IllegalStateException("out{} is already defined as shader interface.")
+    }
+    else {
+      if (outputBlock.isDefined) throw new IllegalStateException("out{} is already defined.")
+      if (mainOutput.isDefined) throw new IllegalStateException("out{} is already defined as main argument.")
+    }
 
     val declarations = processBlock(() => block)
     
@@ -490,9 +499,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   /** A shader must either defined main(){} or function(){} (but not both).
    */
   protected final def main(name: String)(block: => Unit)(body: String) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("main(){} must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("main(){} must be declared at the top level.")
     if (atMainBody) throw new IllegalStateException("main(){} cannot be nested.")
-    if (mainLable.isDefined) throw new IllegalStateException("main(){} is already defined.")
+    if (mainLabel.isDefined) throw new IllegalStateException("main(){} is already defined.")
     if (functionSignature.isDefined) throw new IllegalStateException(
       "A shader must either defined main(){} or function(){} (but not both)."
     )
@@ -501,16 +510,16 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     block
     processingMainBody = false
     
-    mainLable = Some(name)
+    mainLabel = Some(name)
     this.body = body
   }
   
   /** A shader must either defined main(){} or function(){} (but not both)
    */
   protected final def function(signature: String)(body: String) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("function(){} must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("function(){} must be declared at the top level.")
     if (functionSignature.isDefined) throw new IllegalStateException("function(){} is already defined.")
-    if (mainLable.isDefined) throw new IllegalStateException(
+    if (mainLabel.isDefined) throw new IllegalStateException(
       "A shader must either defined main(){} or function(){} (but not both)"
     )
     functionSignature = Some(signature)
@@ -518,12 +527,12 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   protected final def condition[T](path: String)(f: T => Boolean) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("condition() must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("condition() must be declared at the top level.")
     conditions += ((path, f.asInstanceOf[AnyRef => Boolean]))
   }
   
   protected final def src(src: String) {
-    if (!atNestedBlockLevel) throw new IllegalStateException("src{} must be declared at the top level.")
+    if (!atBlockLevel) throw new IllegalStateException("src{} must be declared at the top level.")
     
     sources ::= src
   }
@@ -532,13 +541,16 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   def toPrototype(version: String) = {
     val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
     
+    if (outputBlock.isDefined && !mainLabel.isDefined) throw new IllegalStateException(
+        "Only shaders with main(){} can define out{} blocks.")
+      
     new ShaderPrototype(
-      new ShaderLogging(logging.name, logging.logAccepted, logging.logRejected),
+      new ShaderLogging(logging.name, logging.logAccepted, logging.logRejected, logging.meshes),
       shaderType,
       version,
       squareMat,
       functionSignature,
-      mainLable,
+      mainLabel,
       new ReadArray(mainInputs.map(b => new DeclarationBlock(b._1, buildDeclarations(squareMat, b._2))).toArray),
       mainOutput.map(b => new DeclarationBlock(b._1, buildDeclarations(squareMat, b._2))),
       body,

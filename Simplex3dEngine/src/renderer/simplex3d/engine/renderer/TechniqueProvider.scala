@@ -32,7 +32,7 @@ object TechniqueProvider {
   def assembleTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
     val manager = new pluggable.TechniqueManager[G]
     
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       use("vec3 lightEmission()")
       use("vec3 lightIntensity()")
       use("vec4 texturingColor()")
@@ -50,29 +50,29 @@ object TechniqueProvider {
     })
     
     
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       function("vec3 lightEmission()"){"""
         return vec3(0.0);
       """}
     })
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       function("vec4 texturingColor()"){"""
         return vec4(1.0);
       """}
     })
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       function("vec3 lightIntensity()"){"""
         return vec3(1.0);
       """}
     })
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       function("vec4 applyFog(in vec4 baseColor)"){"""
         return baseColor;
       """}
     })
     
     
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       uniform {
         declare[Vec3]("emission")
       }
@@ -82,7 +82,7 @@ object TechniqueProvider {
       """}
     })
     
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
@@ -101,7 +101,7 @@ object TechniqueProvider {
     })
     
     // PointSprites texturing, must be added after default texturing.
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       condition[VertexMode]("mode") {
         _.isInstanceOf[PointSprites]
       }
@@ -120,7 +120,7 @@ object TechniqueProvider {
       """}
     })
     
-    manager.register(new FragmentShader {
+    manager.push(new FragmentShader {
       uniform {
         declare[Fog]("fog")
       }
@@ -134,7 +134,7 @@ object TechniqueProvider {
       """}
     })
     
-    manager.register(new VertexShader {
+    manager.push(new VertexShader {
       uniform {
         declare[Mat4]("se_modelViewProjectionMatrix")
       }
@@ -153,7 +153,7 @@ object TechniqueProvider {
     })
 
     // PointSprites transformation, must be added after default transformation.
-    manager.register(new VertexShader {
+    manager.push(new VertexShader {
       condition[VertexMode]("mode") {
         _.isInstanceOf[PointSprites]
       }
@@ -181,7 +181,7 @@ object TechniqueProvider {
       """}
     })
       
-    manager.register(new VertexShader {
+    manager.push(new VertexShader {
       uniform {
         declare[BindingList[TextureUnit]]("textureUnits")
       }
@@ -202,7 +202,7 @@ object TechniqueProvider {
       """}
     })
     
-    manager.register(new VertexShader {
+    manager.push(new VertexShader {
       use("vec3 ecPosition()")
       
       uniform {
@@ -219,7 +219,7 @@ object TechniqueProvider {
       """}
     })
     
-    manager.register(new VertexShader {
+    manager.push(new VertexShader {
       uniform {
         declare[Mat4x3]("se_modelViewMatrix")
       }

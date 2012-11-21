@@ -365,7 +365,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     
     binding.get match {
       case list: BindingList[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), list.size)
-      case struct: Struct => sizedArrayKeys ++= struct.listDeclarations.map(_.sizeKey())
+      case struct: Struct => sizedArrayKeys ++= struct.getKeys()._1
       case _ => // ignore
     }
   }
@@ -419,7 +419,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       
       if (classOf[Struct].isAssignableFrom(manifest.erasure)) {
         val instance = manifest.erasure.newInstance().asInstanceOf[Struct]
-        unsizedArrayKeys ++= instance.listDeclarations.map(_.nameKey)
+        unsizedArrayKeys ++= instance.getUnsizedListKeys()
       }
     }
   }

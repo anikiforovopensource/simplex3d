@@ -25,45 +25,6 @@ import java.util.logging._
 import simplex3d.engine.util._
 
 
-final class ListDeclaration(val nameKey: ListNameKey, val lists: ReadArray[BindingList[_]]) {
-  import ListDeclaration._
-  
-  if (lists.isEmpty) throw new IllegalArgumentException("One or more lists must be provided.")
-  
-  
-  def sizeKey() = {
-    var differentSizes = false
-    var min = lists(0).size
-    
-    val s = lists.size; var i = 1; while (i < s) {
-      val size = lists(i).size
-      
-      if (size != min) {
-        differentSizes = true
-        if (size < min) min = lists(i).size
-      }
-      
-      i += 1
-    }
-    
-    if (differentSizes) logger.log(
-      Level.WARNING,
-      this.toString() + " resolves to BindingList instances with different sizes, minimum size will be used."
-    )
-    
-    new ListSizeKey(nameKey, min)
-  }
-  
-  override def toString() :String = {
-    "ListDeclaration(" + nameKey.parentType + "." + nameKey.name + ")"
-  }
-}
-
-object ListDeclaration {
-  private val logger = Logger.getLogger(this.getClass.getName)
-}
-
-
 final class ListNameKey(val parentType: String, val name: String) {
   override def equals(other: Any) :Boolean = {
     if (this.eq(other.asInstanceOf[AnyRef])) true

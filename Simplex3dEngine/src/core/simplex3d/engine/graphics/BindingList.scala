@@ -48,11 +48,41 @@ final class BindingList[T <: Accessible with Binding](
 )
 extends ReadBindingList[T] with Accessible
 {
-  private var structuralChangeListener: PropertyContext = _
-  private[engine] override def register(context: PropertyContext) { structuralChangeListener = context }
-  private[engine] override def unregister() { structuralChangeListener = null }
+  if(elementManifest.erasure == classOf[BindingList[_]]) throw new IllegalArgumentException(
+    "Nested lists are not supported."
+  )
+  
+  private var context: PropertyContext = _
+  
+  private[engine] override def register(context: PropertyContext) {
+    this.context = context
+    if (manageElems) registerElems(0, buff.size)
+  }
+  
+  private[engine] override def unregister() {
+    if (manageElems) unregisterElems(0, buff.size)
+    context = null
+  }
+  
   protected def registerPropertyContext(context: PropertyContext) {}
   protected def unregisterPropertyContext() {}
+  
+  
+  private val managable = classOf[PropertyContextDependent].isAssignableFrom(elementManifest.erasure)
+  private def manageElems = (context != null && managable)
+  
+  private def registerElems(offset: Int, count: Int) {
+    var i = offset; while (i < offset + count) {
+      buff(i).asInstanceOf[PropertyContextDependent].register(context)
+      i += 1
+    }
+  }
+  private def unregisterElems(offset: Int, count: Int) {
+    var i = offset; while (i < offset + count) {
+      buff(i).asInstanceOf[PropertyContextDependent].unregister()
+      i += 1
+    }
+  }
   
   private val buff = new ArrayBuffer[T]
   def size = buff.size
@@ -73,50 +103,64 @@ extends ReadBindingList[T] with Accessible
         stable := e.asInstanceOf[stable.Read]
       }
       else {
-        buff += e.mutableCopy().asInstanceOf[T]
+        val mc = e.mutableCopy().asInstanceOf[T]
+        if (manageElems) mc.asInstanceOf[PropertyContextDependent].register(context)
+        buff += mc
       }
       i += 1
     }
-    if (i < s) buff.remove(i, s - i)
     
-    if (structuralChangeListener != null && i != s) structuralChangeListener.signalStructuralChanges()
+    if (i < s) {
+      if (manageElems) unregisterElems(i, s - i)
+      buff.remove(i, s - i)
+    }
+    
+    if (context != null && i != s) context.signalStructuralChanges()
   }
   
   def apply(i: Int) :T = buff(i)
   
   def +=(elem: T#Read) {
-    buff += elem.mutableCopy().asInstanceOf[T]
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    val mc = elem.mutableCopy().asInstanceOf[T]
+    if (manageElems) mc.asInstanceOf[PropertyContextDependent].register(context)
+    buff += mc
+    if (context != null) context.signalStructuralChanges()
   }
   
   def ++=(r: ReadBindingList[T]) {
     this ++= r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
   def ++=(seq: Seq[T#Read]) {
+    val size0 = buff.size
     buff ++= seq.map(_.mutableCopy().asInstanceOf[T])
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    if (manageElems) registerElems(size0, buff.size - size0)
+    if (context != null) context.signalStructuralChanges()
   }
   
   def insert(index: Int, elems: T#Read*) {
-    buff.insert(index, elems.map(_.mutableCopy().asInstanceOf[T]): _*)
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    this.insertAll(index, elems)
   }
   
   def insertAll(index: Int, r: ReadBindingList[T]) {
     this.insertAll(index, r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]])
   }
   def insertAll(index: Int, seq: Seq[T#Read]) {
+    val size0 = buff.size
     buff.insertAll(index, seq.map(_.mutableCopy().asInstanceOf[T]))
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    if (manageElems) registerElems(index, buff.size - size0)
+    if (context != null) context.signalStructuralChanges()
   }
   
   def remove(index: Int) {
-    buff.remove(index)
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    remove(index, 1)
   }
   def remove(index: Int, count: Int) {
+    if (index < 0 || index > buff.size) throw new IndexOutOfBoundsException()
+    if (index + count > buff.size) throw new IndexOutOfBoundsException()
+    
+    if (manageElems) unregisterElems(index, count)
     buff.remove(index, count)
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    if (context != null) context.signalStructuralChanges()
   }
   
   def take(count: Int) { remove(count, size - count) }
@@ -126,8 +170,7 @@ extends ReadBindingList[T] with Accessible
   
   
   def clear() {
-    buff.clear()
-    if (structuralChangeListener != null) structuralChangeListener.signalStructuralChanges()
+    remove(0, buff.size)
   }
   
   override def toString() :String = {

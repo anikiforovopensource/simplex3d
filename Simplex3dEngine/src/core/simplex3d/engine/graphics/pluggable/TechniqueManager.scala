@@ -43,10 +43,10 @@ extends graphics.TechniqueManager[G]
   protected class Stage(val name: String) {
     val functions = new HashMap[String, ArrayBuffer[ShaderPrototype]]
     
-    // The key is out{} block name, "" for no-output.
+    // The key is out{} block name.
     val main = new HashMap[String, ArrayBuffer[ShaderPrototype]]
     
-    // The key is out{} block name, "" for no-output.
+    // The key is out{} block name, "" for no-output (the root shader).
     val interface = new HashMap[String, ArrayBuffer[ShaderPrototype]]
     
     
@@ -64,7 +64,9 @@ extends graphics.TechniqueManager[G]
       }
       
       if (shader.mainLabel.isDefined) {
-        if (shader.mainOutput.isDefined) insert(main, shader.mainOutput.get.name, shader)
+        if (shader.mainOutput.isDefined) {
+          insert(main, shader.mainOutput.get.name, shader)
+        }
         else {
           val key = if (shader.outputBlock.isDefined) {
             val declarations = shader.outputBlock.get.declarations
@@ -420,10 +422,10 @@ extends graphics.TechniqueManager[G]
             if (prev != null && prev.size != dec.size) println("XXX log")
             
           case s: Struct =>
-            var i = 0; while (i < s.listDeclarations.size) {
-              val dec = s.listDeclarations(i)
-              val sizeKey = dec.sizeKey()
-              val prev = listDeclarationMap.put(dec.nameKey, sizeKey)
+            val unsizedKeys = s.getKeys()._1
+            var i = 0; while (i < unsizedKeys.length) {
+              val sizeKey = unsizedKeys(i)
+              val prev = listDeclarationMap.put(sizeKey.nameKey, sizeKey)
               if (prev != null && prev.size != sizeKey.size) println("XXX log")
               
               i += 1

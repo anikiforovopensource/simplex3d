@@ -22,20 +22,20 @@ package simplex3d.engine
 package graphics
 
 import simplex3d.math.types._
+import simplex3d.engine.util._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadEnumRef[T <: Enumeration] (protected var value: T#Value)
-extends Protected with Serializable
+sealed abstract class ReadEnumRef[T <: Enumeration] (protected var value0: T#Value)
+extends Protected with PropertyContextDependent with Serializable
 {
-  
   type Clone <: ReadEnumRef[T]
-  final def toConst() :T#Value = value
+  final def toConst() :T#Value = value0
   
   type Read = ReadEnumRef[T]
   type Mutable = EnumRef[T]
   final def readType = classOf[ReadEnumRef[T]]
-  final def mutableCopy() = new EnumRef[T](value)
+  final def mutableCopy() = new EnumRef[T](value0)
 
   
   // XXX enable after the next Scala release.
@@ -47,19 +47,32 @@ extends Protected with Serializable
 //    }
 //  }
   
-  final override def hashCode() :Int = value.hashCode
-  final override def toString() :String = "EnumRef" + "(" + value + ")"
+  final override def hashCode() :Int = value0.hashCode
+  final override def toString() :String = "EnumRef" + "(" + value0 + ")"
 }
 
 @SerialVersionUID(8104346712419693669L)
 final class EnumRef[T <: Enumeration] (value: T#Value) extends ReadEnumRef[T](value)
 with Accessible with Serializable
 {
+  private var context: PropertyContext = _
+  private[engine] override def register(context: PropertyContext) { this.context = context }
+  private[engine] override def unregister() { context = null }
+  protected def registerPropertyContext(context: PropertyContext) {}
+  protected def unregisterPropertyContext() {}
+  
+  
   type Clone = EnumRef[T]
   type Const = T#Value
   
   override def clone() = new EnumRef[T](value)
 
-  def :=(e: T#Value) { value_=(e) }
-  def :=(r: ReadEnumRef[T]) { value_=(r.toConst) }
+  def :=(e: T#Value) {
+    if (value0 != e) {
+      if (context != null) context.signalStructuralChanges()
+      value0 = e
+    }
+  }
+  
+  def :=(r: ReadEnumRef[T]) { this := r.toConst }
 }

@@ -37,7 +37,6 @@ trait Struct extends ReadStruct with graphics.Struct {
   
   private final var _fieldNames: ReadArray[String] = null
   private final var _fields: ReadArray[UncheckedValue] = null
-  private final var _listDeclarations: ReadArray[ListDeclaration] = null
 
   private[this] var initialized = false 
   protected final def init(clazz: Class[_]) {
@@ -47,14 +46,12 @@ trait Struct extends ReadStruct with graphics.Struct {
     val (fn, fv) = FieldReflection.valueMap(this, classOf[Accessible], Nil, Blacklist)
     _fieldNames = fn
     _fields = fv.asInstanceOf[ReadArray[UncheckedValue]]
-    _listDeclarations = findListDeclarations()
     
     initialized = true
   }
   
   override def fieldNames: ReadArray[String] = _fieldNames
   override def fields: ReadArray[UncheckedValue] = _fields
-  override def listDeclarations: ReadArray[ListDeclaration] = _listDeclarations
   
   
   private[engine] override def register(context: PropertyContext) {

@@ -23,6 +23,7 @@ package graphics
 
 import java.util.logging._
 import java.util.HashMap
+import java.util.HashSet
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -49,7 +50,6 @@ trait Struct extends ReadStruct with Accessible {
   
   def fieldNames: ReadArray[String]
   def fields: ReadArray[UncheckedValue]
-  def listDeclarations: ReadArray[ListDeclaration]
   
   private def getField(name: String) :AnyRef = {
     val id = PathUtil.find(fieldNames, name)
@@ -80,63 +80,116 @@ trait Struct extends ReadStruct with Accessible {
     }
   }
   
-  protected def findListDeclarations() :ReadArray[ListDeclaration] = {
-    val clazz = this.getClass
-    val parentType = ClassUtil.simpleName(clazz)
-    val declarations = new HashMap[ListNameKey, List[BindingList[_]]]
+  def getKeys() :(Array[ListSizeKey], Array[EnumKey]) = {
+    val lists = new HashMap[ListNameKey, Integer]
+    val enums = new HashMap[String, Object]
     
-    def register(nameKey: ListNameKey, list: BindingList[_]) {
-      var existing = declarations.get(nameKey)
-      if (existing == null) existing = Nil
-      declarations.put(nameKey, list :: existing)
+    def putListKey(nameKey: ListNameKey, size: Int) {
+      var existing = lists.get(nameKey)
+      if (existing == null || size < existing) lists.put(nameKey, size)
     }
     
-    def registerStruct(s: Struct) {
-      val nestedDeclarations = s.listDeclarations
-      var j = 0; while (j < nestedDeclarations.size) {
-        val dec = nestedDeclarations(j)
-        
-        var k = 0; while (k < dec.lists.size) {
-          register(dec.nameKey, dec.lists(k))
-          k += 1
+    def putEnumKey(path: String, value: Object) {
+      enums.put(path, value)
+    }
+    
+    def rec(path: String, struct: Struct) {
+      val fieldNames = struct.fieldNames
+      val fields = struct.fields
+      val parentType = ClassUtil.simpleName(struct.getClass)
+      
+      var i = 0; while (i < fieldNames.length) {
+        fields(i).asInstanceOf[AnyRef] match {
+          
+          case list: BindingList[_] =>
+            putListKey(new ListNameKey(parentType, fieldNames(i)), list.size)
+            if (list.size > 0) {
+              val subPath = path + "." + fieldNames(i)
+              if (list.size > 0) {
+                if (list(0).isInstanceOf[Struct]) {
+                  var j = 0; while (j < list.size) {
+                    rec(subPath + "[" + j + "]", list(j).asInstanceOf[Struct])
+                    j += 1
+                  }
+                }
+                else if (list(0).isInstanceOf[EnumRef[_]]) {
+                  var j = 0; while (j < list.size) {
+                    putEnumKey(subPath + "[" + j + "]", list(j).asInstanceOf[EnumRef[_]].toConst)
+                    j += 1
+                  }
+                }
+              }
+            }
+            
+          case enum: EnumRef[_] =>
+            putEnumKey(path + "." + fieldNames(i), enum.toConst)
+            
+          case s: Struct =>
+            rec(path + "." + fieldNames(i), s)
+            
+          case _ =>
+            // do nothing
         }
         
-        j += 1
+        i += 1
       }
     }
     
-    var i = 0; while (i < fieldNames.length) {
-      fields(i).asInstanceOf[AnyRef] match {
+    val listKeys = new Array[ListSizeKey](lists.size);
+    {
+      val iter = lists.entrySet().iterator()
+      var i = 0; while (iter.hasNext()) {
+        val entry = iter.next()
+
+        listKeys(i) = new ListSizeKey(entry.getKey, entry.getValue)
         
-        case list: BindingList[_] =>
-          register(new ListNameKey(parentType, fieldNames(i)), list)
-          val erasure = list.elementManifest.erasure
-          if (classOf[Struct].isAssignableFrom(erasure)) {
-            registerStruct(erasure.newInstance().asInstanceOf[Struct])
-          }
-          
-        case s: Struct =>
-          registerStruct(s)
-          
-        case _ =>
-          // do nothing
+        i += 1
       }
-      
-      i += 1
     }
     
-    val listDeclarations = new Array[ListDeclaration](declarations.size)
-    val iter = declarations.entrySet().iterator()
-    i = 0; while (iter.hasNext()) {
-      val entry = iter.next()
-      val key = entry.getKey
-      
-      listDeclarations(i) = new ListDeclaration(key, new ReadArray(entry.getValue.toArray))
-      
-      i += 1
+    val enumKeys = new Array[EnumKey](enums.size);
+    {
+      val iter = enums.entrySet().iterator()
+      var i = 0; while (iter.hasNext()) {
+        val entry = iter.next()
+
+        enumKeys(i) = new EnumKey(entry.getKey, entry.getValue)
+        
+        i += 1
+      }
     }
     
-    new ReadArray(listDeclarations)
+    (listKeys, enumKeys)
+  }
+  
+  def getUnsizedListKeys() :Array[ListNameKey] = {
+    val nameKeys = new HashSet[ListNameKey]
+        
+    def rec(struct: Struct) {
+      val fieldNames = struct.fieldNames
+      val fields = struct.fields
+      val parentType = ClassUtil.simpleName(struct.getClass)
+      
+      var i = 0; while (i < fieldNames.length) {
+        fields(i).asInstanceOf[AnyRef] match {
+          
+          case list: BindingList[_] =>
+            nameKeys.add(new ListNameKey(parentType, fieldNames(i)))
+            val erasure = list.elementManifest.erasure
+            if (classOf[Struct].isAssignableFrom(erasure)) rec(erasure.newInstance().asInstanceOf[Struct])
+
+          case s: Struct =>
+            rec(s)
+            
+          case _ =>
+            // do nothing
+        }
+        
+        i += 1
+      }
+    }
+    
+    nameKeys.toArray(new Array[ListNameKey](0))
   }
 }
 

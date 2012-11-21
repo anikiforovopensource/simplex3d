@@ -53,7 +53,6 @@ object DynamicTexture extends default.App {
     val objectTexture = Texture2d[Vec3](Vec2i(128))
     mesh.material.textureUnits.update += new TextureUnit(objectTexture)
     
-    
     val transformation = mesh.transformation.update
     transformation.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))//XXX should not require .update.
     transformation.scale := 50

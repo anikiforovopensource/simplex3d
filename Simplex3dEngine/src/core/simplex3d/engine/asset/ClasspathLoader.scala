@@ -74,7 +74,7 @@ class ClasspathLoader extends AssetLoader {
         
         val i = img.getRGB(x, y)
         val pixel = img.getRGB(x, y)
-        val index = (x + (height - 1 - y)*width)*3
+        val index = (x + (height - 1 - y)*width)*4
         buffer.put(index, (pixel >> 16).toByte)
         buffer.put(index + 1, (pixel >> 8).toByte)
         buffer.put(index + 2, pixel.toByte)

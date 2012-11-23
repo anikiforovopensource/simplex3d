@@ -118,6 +118,15 @@ object StressTestObjects extends default.App {
       world.attach(mesh)
     }
   }
-    
-  def update(time: TimeStamp) {}
+  
+  private var start = 0L
+  private var frameCount = 0
+  def update(time: TimeStamp) {
+    frameCount match {
+      case 0 => start = System.nanoTime
+      case 1 => println("First frame: " + (System.nanoTime - start)*1e-9)
+      case _ =>
+    }
+    frameCount += 1
+  }
 }

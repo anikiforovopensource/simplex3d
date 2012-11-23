@@ -365,7 +365,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     
     binding.get match {
       case list: BindingList[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), list.size)
-      case struct: Struct => sizedArrayKeys ++= struct.getKeys()._1
+      case struct: Struct => sizedArrayKeys ++= struct.getSizeKeys()
       case _ => // ignore
     }
   }
@@ -526,7 +526,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     this.body = body
   }
   
-  protected final def condition[T](path: String)(f: T => Boolean) {
+  protected final def condition(path: String)(f: AnyRef => Boolean) {
     if (!atBlockLevel) throw new IllegalStateException("condition() must be declared at the top level.")
     conditions += ((path, f.asInstanceOf[AnyRef => Boolean]))
   }

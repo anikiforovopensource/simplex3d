@@ -107,6 +107,15 @@ extends graphics.TechniqueManager[G]
   :Technique =
   {
     
+    val quickKey = graphicsContext.getKeys(geometry, material, worldEnvironment)
+    
+    val quickLookup = quickCache.get(quickKey)
+    if (quickLookup != null) return quickLookup
+    
+    val listMap = quickKey._1
+    val enumMap = quickKey._2
+    
+    
     def resolveShaderChain(
         stageId: Int, dependencyKey: String, shader: ShaderPrototype,
         resolving: HashSet[ShaderPrototype],
@@ -130,6 +139,28 @@ extends graphics.TechniqueManager[G]
       resolving.add(shader)
       val stage = stages(stageId)
       
+      
+      def checkConditions() :Boolean = {
+        val conditions = shader.conditions
+        
+        var passed = true
+        var i = 0; while (passed && i < conditions.size) {
+          passed = false
+          val (path, condition) = conditions(i)
+          
+          val resolved = enumMap.get(path)
+          if (resolved != null) passed = condition(resolved)
+          
+          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
+            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+            "' because the condition with path '" + path + "' was not satisfied."
+          )
+          
+          i += 1
+        }
+        
+        passed
+      }
       
       def checkAttributes() :Boolean = {
         val declarations = shader.attributeBlock
@@ -162,50 +193,18 @@ extends graphics.TechniqueManager[G]
           val declaration = declarations(i)
           
           if (declaration.isPredefined && declaration.name == "se_pointSize") {
-            passed = geometry.mode.get.isInstanceOf[PointSprites]
+            passed = geometry.primitive.get.mode.toConst == VertexMode.PointSprites
           }
           else {
             val resolved = graphicsContext.resolveUniformPath(
               declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
             
             passed = (resolved != null)//XXX check the type at runtime
-            
-            if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-              "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
-              "' because the uniform '" + declaration.name + "' is not defined."
-            )
-          }
-          
-          i += 1
-        }
-        
-        passed
-      }
-      
-      def checkConditions() :Boolean = {
-        val conditions = shader.conditions
-        
-        var passed = true
-        var i = 0; while (passed && i < conditions.size) {
-          passed = false
-          val (path, condition) = conditions(i)
-          
-          val resolved =
-            if (path == "mode") {
-              geometry.mode.get
-            }
-            else {
-              graphicsContext.resolveUniformPath(
-                  path, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
-            }
-              
-          if (resolved != null) {
-            passed = condition(resolved)
           }
           
           if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
             "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
-            "' because the condition with path '" + path + "' was not satisfied."
+            "' because the uniform '" + declaration.name + "' is not defined."
           )
           
           i += 1
@@ -350,7 +349,7 @@ extends graphics.TechniqueManager[G]
       
       // Chain order is important for dependency management, duplicate entries are allowed.
       val chain = new ArrayBuffer[ShaderPrototype]
-      var passed = checkAttributes() && checkUniform() && checkConditions()
+      var passed = checkConditions() && checkAttributes() && checkUniform()
       
       if (passed) {
         passed = false
@@ -363,14 +362,17 @@ extends graphics.TechniqueManager[G]
             
             val inputChain = resolveInputs()
             if (inputChain.isDefined) {
+              
               chain ++= functionChain.get
               chain ++= mainVarChain.get
               chain ++= inputChain.get
+              
               passed = true
             }
           }
         }
       }
+      
       
       if (passed) {
         chain += shader
@@ -408,116 +410,54 @@ extends graphics.TechniqueManager[G]
     }
     
     
-    //XXX
-    if (!chain.isEmpty) {
+    if (chain.isEmpty) return null
+    
+    
+    // Generate shader and technique keys.
+    val techniqueKeyArray = new Array[ShaderKey](chain.size)
+    i = 0; while (i < chain.size) {
+      techniqueKeyArray(i) = chain(i).shaderKey(listMap)
       
-      // Generate declaration map.
-      val listDeclarationMap = new HashMap[ListNameKey, ListSizeKey]
-      def processValue(value: AnyRef, name: String) {
-        value match {
-          
-          case a: BindingList[_] =>
-            val dec = new ListSizeKey(new ListNameKey("", name), a.size)
-            val prev = listDeclarationMap.put(dec.nameKey, dec)
-            if (prev != null && prev.size != dec.size) println("XXX log")
-            
-          case s: Struct =>
-            val unsizedKeys = s.getKeys()._1
-            var i = 0; while (i < unsizedKeys.length) {
-              val sizeKey = unsizedKeys(i)
-              val prev = listDeclarationMap.put(sizeKey.nameKey, sizeKey)
-              if (prev != null && prev.size != sizeKey.size) println("XXX log")
-              
-              i += 1
-            }
-            
-          case _ =>
-            // ignore
-        }
-      }
-      
-      var i = 0; while (i < material.uniforms.size) {
-        val prop = material.uniforms(i)
-        if (prop.isDefined) processValue(prop.get, material.uniformNames(i))
-        
-        i += 1
-      }
-      
-      i = 0; while (i < worldEnvironment.properties.size) {
-        val prop = worldEnvironment.properties(i)
-        if (prop.isDefined) processValue(prop.get.binding, worldEnvironment.propertyNames(i))
-        
-        i += 1
-      }
-      
-      
-      // Generate shader and technique keys. 
-      val techniqueKey = new Array[(ShaderPrototype, IndexedSeq[ListSizeKey])](chain.size)
-      
-      i = 0; while (i < chain.size) {
-        val shader = chain(i)
-        val listKeys = shader.unsizedArrayKeys
-        
-        val resolved = new Array[ListSizeKey](listKeys.size)
-        var j = 0; while (j < listKeys.size) {
-          val key = listKeys(j)
-          
-          val listDeclaration = listDeclarationMap.get(key)
-          assert(listDeclaration != null)
-          resolved(j) = listDeclaration
-          
-          j += 1
-        }
-        
-        techniqueKey(i) = Tuple2(shader, new ReadArray(resolved))
-        
-        i += 1
-      }
-      
-      
-      // Load cached technique or make a new one.
-      // XXX better caching based on PropKey(geom: Seq[Boolean], mat: Seq[Boolean], env: Seq[Boolean])
-      // followed by condition check, and secondary lookup based on arraySizeKey
-      // Technique caching must not prevent GC.
-      val readTechniqueKey = new ReadArray(techniqueKey)
-      var technique = techniqueCache.get(readTechniqueKey)
-      
-      if (technique == null) {
-        val shaders = new ArrayBuffer[Shader]
-        
-        var i = 0; while (i < techniqueKey.size) {
-          val shaderKey = techniqueKey(i)
-          
-          var shader = shaderCache.get(shaderKey)
-          if (shader == null) {
-            val proto = chain(i)
-            
-            val listDeclarations = shaderKey._2
-            val src = ShaderPrototype.Glsl2.shaderSrc(proto, listDeclarations)
-            
-            shader = new Shader(proto.shaderType, src, proto.boundUniforms)
-            shaderCache.put(shaderKey, shader)
-          }
-          
-          shaders += shader
-          
-          i += 1
-        }
-        
-        shaders += genMain(Shader.Fragment, chain)
-        shaders += genMain(Shader.Vertex, chain)
-        
-        technique = new Technique(graphicsContext, shaders.toSet)
-        techniqueCache.put(readTechniqueKey, technique)
-      }
-      
-      //println("XXX\n" + technique.shaders.map(_.src).mkString("\n\n*****************************************\n\n"))
-      
-      technique
+      i += 1
     }
-    else {
-      null
+    val techniqueKey = new ReadArray(techniqueKeyArray)
+    
+    
+    var technique = techniqueCache.get(techniqueKey)
+    
+    if (technique == null) {
+      val shaders = new ArrayBuffer[Shader]
+      
+      var i = 0; while (i < techniqueKeyArray.size) {
+        val shaderKey = techniqueKeyArray(i)
+        
+        var shader = shaderCache.get(shaderKey)
+        if (shader == null) {
+          val proto = chain(i)
+          
+          val listSizeKeys = shaderKey._2
+          val src = ShaderPrototype.Glsl2.shaderSrc(proto, listSizeKeys)
+          
+          shader = new Shader(proto.shaderType, src, proto.boundUniforms)
+          shaderCache.put(shaderKey, shader)
+        }
+        
+        shaders += shader
+        
+        i += 1
+      }
+      
+      shaders += genMain(Shader.Fragment, chain)
+      shaders += genMain(Shader.Vertex, chain)
+      
+      technique = new Technique(graphicsContext, shaders.toSet)
+      techniqueCache.put(techniqueKey, technique)
     }
+    
+    //println("XXX\n" + technique.shaders.map(_.src).mkString("\n\n*****************************************\n\n"))
+    
+    quickCache.put(quickKey, technique)
+    technique
   }
 
   
@@ -562,11 +502,15 @@ extends graphics.TechniqueManager[G]
   }
   
   
-  // XXX HashMap[(ShaderPrototype, Set[ListSizeKey]), Shader]
-  private val shaderCache = new HashMap[(ShaderPrototype, IndexedSeq[ListSizeKey]), Shader]
+  // XXX Technique caching must not prevent GC.
+  private type ShaderKey = (ShaderPrototype, IndexedSeq[ListSizeKey])
+  private val shaderCache = new HashMap[ShaderKey, Shader]
   
-  // XXX HashMap[Set[(ShaderPrototype, Set[ListSizeKey])], Technique]
-  private val techniqueCache = new HashMap[IndexedSeq[(ShaderPrototype, IndexedSeq[ListSizeKey])], Technique]
+  private type TechniqueKey = IndexedSeq[ShaderKey]
+  private val techniqueCache = new HashMap[TechniqueKey, Technique]
+  
+  private type QuickKey = (HashMap[ListNameKey, Integer], HashMap[String, Object])
+  private val quickCache = new HashMap[QuickKey, Technique]
 }
 
 

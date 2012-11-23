@@ -187,8 +187,8 @@ object Bounded {
     
     if (!geometry.vertices.isDefined || !geometry.vertices.get.isAccessible) return
     
-    val pointSpriteOffset = geometry.mode.get match {
-      case ps: PointSprites => ps.size*0.5
+    val pointSpriteOffset = geometry.primitive.get.mode.toConst match {
+      case VertexMode.PointSprites => geometry.primitive.get.pointSpriteSize*0.5
       case _ => 0.0
     }
     

@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics.pluggable
 
 import java.util.logging._
+import java.util.HashMap
 import scala.collection._
 import scala.collection.mutable.ArrayBuilder
 import simplex3d.math._
@@ -54,6 +55,22 @@ final class ShaderPrototype private[pluggable] (
 ) {
   def isVertexShader = (shaderType == Shader.Vertex)
   val structs = StructSignature.organizeDependencies(uniformBlock.flatMap(_.structSignatures))
+  
+  def shaderKey(sizeMap: HashMap[ListNameKey, Integer]): (ShaderPrototype, IndexedSeq[ListSizeKey]) = {
+    val result = new Array[ListSizeKey](unsizedArrayKeys.size)
+    
+    var i = 0; while (i < unsizedArrayKeys.size) {
+      val key = unsizedArrayKeys(i)
+      
+      val size = sizeMap.get(key)
+      assert(size != null)
+      result(i) = new ListSizeKey(key, size)
+      
+      i += 1
+    }
+    
+    Tuple2(this, new ReadArray(result))
+  }
 }
 
 

@@ -102,8 +102,9 @@ object TechniqueProvider {
     
     // PointSprites texturing, must be added after default texturing.
     manager.push(new FragmentShader {
-      condition[VertexMode]("mode") {
-        _.isInstanceOf[PointSprites]
+      
+      condition("primitive.mode") {
+        _ == VertexMode.PointSprites
       }
       
       uniform {
@@ -154,8 +155,9 @@ object TechniqueProvider {
 
     // PointSprites transformation, must be added after default transformation.
     manager.push(new VertexShader {
-      condition[VertexMode]("mode") {
-        _.isInstanceOf[PointSprites]
+      
+      condition("primitive.mode") {
+        _ == VertexMode.PointSprites
       }
       
       uniform {

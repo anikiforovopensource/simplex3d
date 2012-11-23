@@ -44,7 +44,6 @@ abstract class GraphicsContext {
   
   private[this] final val uniformMap = new HashMap[String, (Int, Int)]
   private[this] final val attributeMap = new HashMap[String, java.lang.Integer]
-
   
   private[this] var initialized = false
   protected def init() {
@@ -176,6 +175,45 @@ abstract class GraphicsContext {
       val binding = geometry.attributes(id)
       if (!binding.isDefined) null else binding.get
     }
+  }
+  
+  def getKeys(geometry: graphics.Geometry, material: graphics.Material, worldEnvironment: graphics.Environment)
+  :(HashMap[ListNameKey, Integer], HashMap[String, Object]) =
+  {
+    
+    val lists = new HashMap[ListNameKey, Integer]
+    val enums = new HashMap[String, Object]
+    
+    var i = 0; while (i < material.uniforms.size) {
+      val prop = material.uniforms(i)
+      val name = material.uniformNames(i)
+      
+      if (prop.isDefined) prop.get match {
+        case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+        case enum: EnumRef[_] => enum.collectKeys(name, enums) 
+        case s: Struct => s.collectKeys(name, lists, enums)
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
+    
+    i = 0; while (i < worldEnvironment.properties.size) {
+      val prop = worldEnvironment.properties(i)
+      val name = worldEnvironment.propertyNames(i)
+      
+      if (prop.isDefined) prop.get.binding match {
+        case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+        case s: Struct => s.collectKeys(name, lists, enums)
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
+    
+    geometry.primitive.get.mode.collectKeys("primitive.mode", enums)
+    
+    (lists, enums)
   }
 }
 

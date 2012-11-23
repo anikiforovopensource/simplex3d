@@ -249,7 +249,7 @@ extends Entity[T, G](name) {
       rebuild = false
     }
     
-    if (geometry.mode.hasDataChanges) displayMesh.geometry.mode := geometry.mode
+    if (geometry.primitive.hasDataChanges) displayMesh.geometry.primitive := geometry.primitive
     
     val instanceArray = if (cullingEnabled) { localRenderArray } else children
     

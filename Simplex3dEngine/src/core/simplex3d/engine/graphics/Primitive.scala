@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -21,15 +21,27 @@
 package simplex3d.engine
 package graphics
 
-import java.util.HashMap
+import simplex3d.math.double._
 
 
-abstract class TechniqueManager[G <: GraphicsContext] {
-  val graphicsContext: G
-  val passManager: PassManager[G]
+sealed abstract class ReadPrimitive extends prototype.ReadStruct {
+  type Read = ReadPrimitive
+  type Mutable = Primitive
+  final def readType = classOf[ReadPrimitive]
   
-  def resolveTechnique(
-    meshName: String,
-    geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
-  ) :Technique
+  def mode: ReadEnumRef[VertexMode.type]
+  def lineWidth: ReadDoubleRef
+  def pointSize: DoubleRef
+  def pointSpriteSize: DoubleRef
+}
+
+final class Primitive extends ReadPrimitive with prototype.Struct {
+  protected def mkMutable() = new Primitive
+  
+  val mode = new EnumRef(VertexMode.Triangles)
+  val lineWidth = new DoubleRef(1)
+  val pointSize = new DoubleRef(1)
+  val pointSpriteSize = new DoubleRef(1)
+  
+  init(classOf[Primitive])
 }

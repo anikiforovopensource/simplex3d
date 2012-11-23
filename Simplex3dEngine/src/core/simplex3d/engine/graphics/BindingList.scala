@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.util.HashMap
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
 import simplex3d.math.double.functions._
@@ -40,6 +41,29 @@ extends Protected with Binding with PropertyContextDependent
   final def length: Int = size
   
   def apply(i: Int) :T//XXX must be T#Read
+  
+  
+  final def collectKeys(path: String, nameKey: ListNameKey, lists: HashMap[ListNameKey, Integer], enums: HashMap[String, Object]) {
+    val size = this.size
+    val existing = lists.get(nameKey)
+    
+    if (existing == null || size < existing) lists.put(nameKey, size) //XXX warn on existing and non-equal size
+    
+    if (size > 0) {
+      if (apply(0).isInstanceOf[Struct]) {
+        var j = 0; while (j < size) {
+          apply(j).asInstanceOf[Struct].collectKeys(path + "[" + j + "]", lists, enums)
+          j += 1
+        }
+      }
+      else if (apply(0).isInstanceOf[EnumRef[_]]) {
+        var j = 0; while (j < size) {
+          apply(j).asInstanceOf[EnumRef[_]].collectKeys(path + "[" + j + "]", enums)
+          j += 1
+        }
+      }
+    }
+  }
 }
 
 

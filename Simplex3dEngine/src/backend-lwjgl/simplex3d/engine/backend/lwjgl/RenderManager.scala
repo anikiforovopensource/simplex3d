@@ -157,42 +157,46 @@ final class RenderManager extends graphics.RenderManager {
     
     
     // XXX cache state in render context.
-    val vertexMode = geometry.mode.get match {
-      case p: Points =>
-        glPointSize(p.size.toFloat)
+    val primitive = geometry.primitive.get
+    val vertexMode = primitive.mode.toConst match {
+      case VertexMode.Points =>
+        //XXX disable point sprites
+        
+        glPointSize(primitive.pointSize.toFloat)
+        
         GL_POINTS
         
-      case p: PointSprites =>
+      case VertexMode.PointSprites =>
         glEnable(GL_POINT_SPRITE)
         glPointParameteri(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT)
         glEnable(GL_VERTEX_PROGRAM_POINT_SIZE)
         
         // This prevents gl from culling sprites when their center is not visible.
-        glPointSize(p.cullingSize.toFloat)
+        glPointSize(primitive.pointSize.toFloat)
         
-        predefinedUniforms.se_pointSize := p.size
+        predefinedUniforms.se_pointSize := primitive.pointSpriteSize//XXX rename se_pointSize to se_pointSpriteSize for consistency.
         
         GL_POINTS
         
-      case l: Lines =>
-        glLineWidth(l.width.toFloat)
+      case VertexMode.Lines =>
+        glLineWidth(primitive.lineWidth.toFloat)
         GL_LINES
         
-      case l: LineStrip =>
-        glLineWidth(l.width.toFloat)
+      case VertexMode.LineStrip =>
+        glLineWidth(primitive.lineWidth.toFloat)
         GL_LINE_STRIP
       
-      case l: LineLoop =>
-        glLineWidth(l.width.toFloat)
+      case VertexMode.LineLoop =>
+        glLineWidth(primitive.lineWidth.toFloat)
         GL_LINE_LOOP
         
-      case t: Triangles =>
+      case VertexMode.Triangles =>
         GL_TRIANGLES
         
-      case t: TriangleStrip =>
+      case VertexMode.TriangleStrip =>
         GL_TRIANGLE_STRIP
         
-      case t: TriangleFan =>
+      case VertexMode.TriangleFan =>
         GL_TRIANGLE_FAN
     }
     

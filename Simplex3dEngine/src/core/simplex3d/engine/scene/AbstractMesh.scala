@@ -86,7 +86,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     if (elementRange.hasDataChanges) {
       true
     }
-    else if (geometry.mode.hasDataChanges) {
+    else if (geometry.primitive.hasDataChanges) {
       true
     }
     else {

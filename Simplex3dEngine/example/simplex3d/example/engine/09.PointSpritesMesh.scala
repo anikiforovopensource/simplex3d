@@ -87,7 +87,11 @@ object PointSpritesMesh extends default.App {
     val indexData = indices.write
     for (i <- 0 until indexData.size) indexData(i) = i
     
-    mesh.geometry.mode := PointSprites(1.9)
+    mesh.geometry.primitive.update.mode := VertexMode.PointSprites
+    // Setting large point size for PointSprites prevents culling when point center is offscreen.
+    mesh.geometry.primitive.update.pointSize := 500
+    mesh.geometry.primitive.update.pointSpriteSize := 1.9
+    
     mesh.geometry.indices := indices
     mesh.geometry.vertices := Attributes[Vec3, RFloat](pointCount)
     mesh.customBoundingVolume := new Oabb(Vec3(-200), Vec3(200))

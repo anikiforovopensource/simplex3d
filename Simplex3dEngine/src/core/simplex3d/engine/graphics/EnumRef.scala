@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -46,6 +47,10 @@ extends Protected with PropertyContextDependent with Serializable
 //      case _ => false
 //    }
 //  }
+  
+  final def collectKeys(path: String, enums: HashMap[String, Object]) {
+    enums.put(path, toConst)//XXX warn on existing
+  }
   
   final override def hashCode() :Int = value0.hashCode
   final override def toString() :String = "EnumRef" + "(" + value0 + ")"

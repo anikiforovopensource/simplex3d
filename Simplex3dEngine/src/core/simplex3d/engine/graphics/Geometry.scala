@@ -34,7 +34,8 @@ abstract class Geometry extends PropertyContext(null) {
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  final val mode = Reassignable.defined[VertexMode](Triangles)
+  final val primitive = Property.defined(new Primitive)
+  primitive.register(this)
   
   final val indices = AttributeBinding[SInt, Unsigned]
   final val vertices = AttributeBinding[Vec3, RFloat]
@@ -42,6 +43,6 @@ abstract class Geometry extends PropertyContext(null) {
   
   
   final def copyNonattributes(geometry: Geometry) {
-    mode := geometry.mode
+    primitive := geometry.primitive
   }
 }

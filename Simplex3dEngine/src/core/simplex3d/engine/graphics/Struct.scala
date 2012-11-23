@@ -80,60 +80,11 @@ trait Struct extends ReadStruct with Accessible {
     }
   }
   
-  def getKeys() :(Array[ListSizeKey], Array[EnumKey]) = {
+  def getSizeKeys() :Array[ListSizeKey] = {//XXX get rid of this method
     val lists = new HashMap[ListNameKey, Integer]
     val enums = new HashMap[String, Object]
     
-    def putListKey(nameKey: ListNameKey, size: Int) {
-      var existing = lists.get(nameKey)
-      if (existing == null || size < existing) lists.put(nameKey, size)
-    }
-    
-    def putEnumKey(path: String, value: Object) {
-      enums.put(path, value)
-    }
-    
-    def rec(path: String, struct: Struct) {
-      val fieldNames = struct.fieldNames
-      val fields = struct.fields
-      val parentType = ClassUtil.simpleName(struct.getClass)
-      
-      var i = 0; while (i < fieldNames.length) {
-        fields(i).asInstanceOf[AnyRef] match {
-          
-          case list: BindingList[_] =>
-            putListKey(new ListNameKey(parentType, fieldNames(i)), list.size)
-            if (list.size > 0) {
-              val subPath = path + "." + fieldNames(i)
-              if (list.size > 0) {
-                if (list(0).isInstanceOf[Struct]) {
-                  var j = 0; while (j < list.size) {
-                    rec(subPath + "[" + j + "]", list(j).asInstanceOf[Struct])
-                    j += 1
-                  }
-                }
-                else if (list(0).isInstanceOf[EnumRef[_]]) {
-                  var j = 0; while (j < list.size) {
-                    putEnumKey(subPath + "[" + j + "]", list(j).asInstanceOf[EnumRef[_]].toConst)
-                    j += 1
-                  }
-                }
-              }
-            }
-            
-          case enum: EnumRef[_] =>
-            putEnumKey(path + "." + fieldNames(i), enum.toConst)
-            
-          case s: Struct =>
-            rec(path + "." + fieldNames(i), s)
-            
-          case _ =>
-            // do nothing
-        }
-        
-        i += 1
-      }
-    }
+    collectKeys("", lists, enums)
     
     val listKeys = new Array[ListSizeKey](lists.size);
     {
@@ -147,19 +98,31 @@ trait Struct extends ReadStruct with Accessible {
       }
     }
     
-    val enumKeys = new Array[EnumKey](enums.size);
-    {
-      val iter = enums.entrySet().iterator()
-      var i = 0; while (iter.hasNext()) {
-        val entry = iter.next()
-
-        enumKeys(i) = new EnumKey(entry.getKey, entry.getValue)
-        
-        i += 1
-      }
-    }
+    listKeys
+  }
+  
+  def collectKeys(path: String, lists: HashMap[ListNameKey, Integer], enums: HashMap[String, Object]) {
     
-    (listKeys, enumKeys)
+    def appendPath(name: String) = if (path.isEmpty) name else path + "." + name
+    val parentType = ClassUtil.simpleName(this.getClass)
+    
+    var i = 0; while (i < fieldNames.length) {
+      fields(i).asInstanceOf[AnyRef] match {
+        
+        case list: BindingList[_] =>
+          list.collectKeys(appendPath(fieldNames(i)), new ListNameKey(parentType, fieldNames(i)), lists, enums)
+          
+        case enum: EnumRef[_] =>
+          enum.collectKeys(appendPath(fieldNames(i)), enums)
+          
+        case s: Struct =>
+          s.collectKeys(appendPath(fieldNames(i)), lists, enums)
+          
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
   }
   
   def getUnsizedListKeys() :Array[ListNameKey] = {

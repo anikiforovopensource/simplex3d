@@ -226,9 +226,12 @@ abstract class GraphicsContext {
       val name = material.uniformNames(i)
       
       if (prop.isDefined) prop.get match {
-        case list: BindingList[_] => list.samplerRemapping(name, remapping)
-        case s: Struct => s.samplerRemapping(name, remapping)
-        case _ => // do nothing
+        case list: BindingList[_] if classOf[Struct].isAssignableFrom(list.elementManifest.erasure) =>
+          list.samplerRemapping(name, remapping)
+        case s: Struct =>
+          s.samplerRemapping(name, remapping)
+        case _ =>
+          // do nothing
       }
       
       i += 1
@@ -239,9 +242,12 @@ abstract class GraphicsContext {
       val name = worldEnvironment.propertyNames(i)
       
       if (prop.isDefined) prop.get.binding match {
-        case list: BindingList[_] => list.samplerRemapping(name, remapping)
-        case s: Struct => s.samplerRemapping(name, remapping)
-        case _ => // do nothing
+        case list: BindingList[_] if classOf[Struct].isAssignableFrom(list.elementManifest.erasure) =>
+          list.samplerRemapping(name, remapping)
+        case s: Struct =>
+          s.samplerRemapping(name, remapping)
+        case _ =>
+          // do nothing
       }
       
       i += 1

@@ -29,7 +29,7 @@ import simplex3d.engine.util._
 
 
 sealed abstract class ReadBindingList[T <: Accessible with Binding](
-  implicit val elementManifest: ClassManifest[T#Read]
+  implicit val elementManifest: ClassManifest[T]
 )
 extends Protected with Binding with PropertyContextDependent
 {
@@ -80,7 +80,7 @@ extends Protected with Binding with PropertyContextDependent
 
 
 final class BindingList[T <: Accessible with Binding](
-  implicit elementManifest: ClassManifest[T#Read]
+  implicit elementManifest: ClassManifest[T]
 )
 extends ReadBindingList[T] with Accessible
 {
@@ -218,7 +218,7 @@ extends ReadBindingList[T] with Accessible
 object BindingList {
   def apply[T <: Accessible with Binding]
     (elems: T#Read*)
-    (implicit elementManifest: ClassManifest[T#Read])
+    (implicit elementManifest: ClassManifest[T])
   :BindingList[T] =
   {
     val list = new BindingList[T]

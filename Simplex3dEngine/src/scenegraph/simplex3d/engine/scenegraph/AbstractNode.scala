@@ -31,7 +31,7 @@ import simplex3d.engine.transformation._
 
 
 abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] private[scenegraph](name: String)(
-  implicit transformationCtx: T, graphicsCtx: G
+  implicit transformationContext: T, graphicsContext: G
 ) extends Bounded[T, G](name) {
   
   import AccessChanges._

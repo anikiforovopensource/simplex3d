@@ -51,7 +51,8 @@ import simplex3d.engine.graphics._
  * 
  * Arrays in in{} and out{} blocks must be sized either to a literal value or to a size of some uniform array.
  * If a uniform array is defined in the shader scope, its size can be accessed using injected variable
- * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is declared globally.
+ * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is
+ * declared at the top level.
  * 
  * Each shader can link with the next stage using a combination of one out{} block with a main() declaration.
  * A shader with an main() body can share a named set of values using main(){ out{} }.
@@ -60,6 +61,12 @@ import simplex3d.engine.graphics._
  * If a shader does not provide a main(), then it must define a function(){}. Functions can be used within the same stage.
  * 
  * Shader sources can be attached using src() declarations.
+ * 
+ * A path that resolves to enumeration and a condition on the result can be specified to control shader
+ * selection using enums.
+ * 
+ * Samplers are extracted from structs and then declared at the top level in the shader.
+ * This is done to allow property-to-UBO mapping in the future.
  */
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
@@ -109,13 +116,18 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     }
     
     private[ShaderDeclaration] def extractGlslTypes(squareMatrices: Boolean)
-    :(String, ReadArray[StructSignature]) = // (glslType, structureSignatuers)
+    :(String, ReadArray[StructSignature], ReadArray[NestedSampler]) = // (glslType, structureSignatuers, nestedSamplers)
     {
-      val builder = ArrayBuilder.make[StructSignature]
-      val glslType = glslTypeFromManifest(squareMatrices, 0, "", manifest, name, builder)
-      val oragnized = StructSignature.organizeDependencies(builder.result)
+      val dependencies = ArrayBuilder.make[StructSignature]
+      val nestedSamplers = ArrayBuilder.make[NestedSampler]
       
-      (glslType, oragnized)
+      val glslType = glslTypeFromManifest(
+          squareMatrices, 0, arraySizeExpression, "", manifest, name, dependencies, nestedSamplers)
+      
+      val dependenciesRes = StructSignature.organizeDependencies(dependencies.result)
+      val nestedSamplersRes = new ReadArray(nestedSamplers.result)
+      
+      (glslType, dependenciesRes, nestedSamplersRes)
     }
     
     private def resolveMathType(squareMatrices: Boolean, erasure: Class[_]) :String = {
@@ -144,39 +156,29 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       }
     }
     private def resolveTextureType(
-      erasure: Class[_],
-      level: Int, dependenciesResult: ArrayBuilder[StructSignature]
-    ) :String =
-    {
-      val className = ClassUtil.simpleName(erasure)
+      parentErasure: Class[_],
+      erasure: Class[_], name: String, arraySizeExpression: Option[String],
+      nestedSamplers: ArrayBuilder[NestedSampler]
+    ) :String = {
       
-      className match {
-        
-        case "Texture2d" => {
-          val glslType = "Se_Texture2d"
-            
-          dependenciesResult += new StructSignature(
-            level, classOf[Texture2d[_]], glslType,
-            new ReadArray(Array(
-              ("sampler2D", "sampler"),
-              ("ivec2", "dimensions"))),
-            true
-          )
-          
-          glslType
-        }
-        
-        case _ => throw new RuntimeException
+      val glslType = ClassUtil.simpleName(erasure) match {
+        case "Texture2d" => "sampler2D"
+        // TODO more texture types
       }
+      
+      if (parentErasure != null) nestedSamplers += new NestedSampler(parentErasure, glslType, name, arraySizeExpression)
+      glslType
     }
     
     
     private def glslTypeFromManifest(
       squareMatrices: Boolean,
       level: Int,
+      firstSizeExpression: Option[String],// used with nestedSamplers
       parentType: String,
       manifest: ClassManifest[_], name: String,
-      dependenciesResult: ArrayBuilder[StructSignature]
+      dependencies: ArrayBuilder[StructSignature],
+      nestedSamplers: ArrayBuilder[NestedSampler]
     ) :String = { // glslType
       
       if (classOf[MathType].isAssignableFrom(manifest.erasure)) {
@@ -185,7 +187,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       else if (classOf[TextureBinding[_]].isAssignableFrom(manifest.erasure)) {
         try {
           val erasure = manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].erasure
-          resolveTextureType(erasure, level, dependenciesResult) 
+          resolveTextureType(null, erasure, name, firstSizeExpression, nestedSamplers) 
         }
         catch {
           case e: Exception => throw new RuntimeException(
@@ -203,7 +205,13 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           )
         }
         
-        val glslType = glslTypeFromManifest(squareMatrices, level, parentType, listManifest, name, dependenciesResult)
+        val firstSize =
+          if (firstSizeExpression.isDefined) firstSizeExpression
+          else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
+        
+        val glslType = glslTypeFromManifest(
+            squareMatrices, level, firstSize, parentType, listManifest, name, dependencies, nestedSamplers)
+            
         glslType
       }
       else if (classOf[Struct].isAssignableFrom(manifest.erasure)) {
@@ -217,7 +225,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           )
         }
         
-        glslTypeFromStruct(squareMatrices, level, instance, dependenciesResult)
+        glslTypeFromStruct(squareMatrices, level, firstSizeExpression, instance, dependencies, nestedSamplers)
       }
       else {
         throw new RuntimeException(
@@ -229,37 +237,34 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     private def glslTypeFromStruct(
       squareMatrices: Boolean,
       level: Int,
+      firstSizeExpression: Option[String],
       instance: Struct,
-      dependenciesResult: ArrayBuilder[StructSignature]
+      dependencies: ArrayBuilder[StructSignature],
+      nestedSamplers: ArrayBuilder[NestedSampler]
     ) :String =
     {
       val glslType = ClassUtil.simpleName(instance.getClass)
-      if (dependenciesResult == null) return glslType
+      if (dependencies == null) return glslType
   
-      val subStructs = ArrayBuilder.make[StructSignature]
       val entries = ArrayBuilder.make[(String, String)]
-      var containsSamplers = false
       
       for (i <- 0 until instance.fieldNames.length) {
         val fieldName = instance.fieldNames(i)
         val field = instance.fields(i)
         
-        val (fieldType, arraySizeExpression) = glslTypeFromInstance(
-          squareMatrices, level + 1, glslType, field, fieldName, subStructs
+        val (fieldType, arraySizeExpression, isSampler) = glslTypeFromInstance(
+          squareMatrices, level + 1, firstSizeExpression, glslType, instance.getClass,
+          field, fieldName, dependencies, nestedSamplers
         )
         
-        val append = if (arraySizeExpression != "") "[" + arraySizeExpression + "]" else ""
-        entries += ((fieldType, fieldName + append))
-        
-        if (classOf[TextureBinding[_]].isAssignableFrom(field.getClass)) containsSamplers = true
+        if (!isSampler) {
+          val append = if (arraySizeExpression != "") "[" + arraySizeExpression + "]" else ""
+          entries += ((fieldType, fieldName + append))
+        }
       }
       
-      val subStructsArray = subStructs.result()
-      if (subStructsArray.find(_.containsSamplers).isDefined) containsSamplers = true
-      dependenciesResult ++= subStructsArray
-      
       val readEntries = new ReadArray(entries.result)
-      dependenciesResult += new StructSignature(level, instance.getClass, glslType, readEntries, containsSamplers)
+      dependencies += new StructSignature(level, instance.getClass, glslType, readEntries)
       
       glslType
     }
@@ -267,30 +272,42 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     private def glslTypeFromInstance(
       squareMatrices: Boolean,
       level: Int,
+      firstSizeExpression: Option[String],
       parentType: String,
+      parentErasure: Class[_],
       instance: Object, name: String,
-      dependenciesResult: ArrayBuilder[StructSignature]
-    ) :(String, String) = {//(glslType, sizeExpression)
+      dependencies: ArrayBuilder[StructSignature],
+      nestedSamplers: ArrayBuilder[NestedSampler]
+    ) :(String, String, Boolean) = {//(glslType, sizeExpression, isSampler)
       
       if (classOf[MathType].isAssignableFrom(instance.getClass)) {
-        (resolveMathType(squareMatrices, instance.getClass), "")
+        (resolveMathType(squareMatrices, instance.getClass), "", false)
       }
       else if (classOf[TextureBinding[_]].isAssignableFrom(instance.getClass)) {
         val erasure = instance.asInstanceOf[TextureBinding[_]].bindingManifest.erasure
-        (resolveTextureType(erasure, level, dependenciesResult), "")
+        val glslType = resolveTextureType(parentErasure, erasure, name, firstSizeExpression, nestedSamplers)
+        (glslType, "", true)
       }
       else if (classOf[BindingList[_]].isAssignableFrom(instance.getClass)) {
         val manifest = instance.asInstanceOf[BindingList[_]].elementManifest
-        val glslType = glslTypeFromManifest(squareMatrices, level, parentType, manifest, name, dependenciesResult)
+        val firstSize =
+          if (firstSizeExpression.isDefined) firstSizeExpression
+          else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
+        
+        val glslType = glslTypeFromManifest(
+            squareMatrices, level, firstSize, parentType, manifest, name, dependencies, nestedSamplers)
         
         val sizeExpression =
           if (arraySizeExpression.isDefined) arraySizeExpression.get
           else ShaderPrototype.arraySizeId(new ListNameKey(parentType, name))
         
-        (glslType, sizeExpression)
+        (glslType, sizeExpression, false)
       }
       else if (classOf[Struct].isAssignableFrom(instance.getClass)) {
-        (glslTypeFromStruct(squareMatrices, level, instance.asInstanceOf[Struct], dependenciesResult), "")
+        val glslType = glslTypeFromStruct(
+            squareMatrices, level, firstSizeExpression, instance.asInstanceOf[Struct], dependencies, nestedSamplers)
+            
+        (glslType, "", false)
       }
       else {
         throw new RuntimeException(
@@ -346,8 +363,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (declarations == null) Set.empty[Dec]
     else {
       declarations.map { d =>
-        val (glslType, sturctSignatures) = d.extractGlslTypes(squarMatrices)
-        new Dec(d.qualifiers, d.manifest, glslType, d.name, d.arraySizeExpression, sturctSignatures)
+        val (glslType, sturctSignatures, nestedSamplers) = d.extractGlslTypes(squarMatrices)
+        new Dec(d.qualifiers, d.manifest, glslType, d.name, d.arraySizeExpression, sturctSignatures, nestedSamplers)
       }
     }
   }

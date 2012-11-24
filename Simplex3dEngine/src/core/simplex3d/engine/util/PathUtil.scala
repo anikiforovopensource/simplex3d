@@ -26,7 +26,10 @@ import simplex3d.engine.graphics._
 
 private[engine] object PathUtil {
   
-  /* case NameIndex(name, index, rest) */
+  /* case NameIndex(name, index) */
+  val NameIndex = """(\w+)\[(\d+)\]""".r
+  
+  /* case NameIndexRest(name, index, rest) */
   val NameIndexRest = """(\w+)\[(\d+)\]\.?(.*)""".r
   
   /* case NameRest(name, rest) */
@@ -53,6 +56,7 @@ private[engine] object PathUtil {
       /* Replace when 2.10 is out.
       case t: ReadTextureBinding[_] if t.isBound =>
         rest match {
+          case "" => t
           case "sampler" => t
           case "dimensions" => t.bound.dimensions
           case _ => null
@@ -66,6 +70,7 @@ private[engine] object PathUtil {
           val t = TextureBinding.avoidCompilerCrash(value)
           if (t.isBound) {
             rest match {
+              case "" => t
               case "sampler" => t
               case "dimensions" => t.bound.asInstanceOf[Texture[_]].bindingDimensions
               case _ => null

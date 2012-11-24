@@ -177,7 +177,7 @@ abstract class GraphicsContext {
     }
   }
   
-  def getKeys(geometry: graphics.Geometry, material: graphics.Material, worldEnvironment: graphics.Environment)
+  def collectKeys(geometry: graphics.Geometry, material: graphics.Material, worldEnvironment: graphics.Environment)
   :(HashMap[ListNameKey, Integer], HashMap[String, Object]) =
   {
     
@@ -214,6 +214,40 @@ abstract class GraphicsContext {
     geometry.primitive.get.mode.collectKeys("primitive.mode", enums)
     
     (lists, enums)
+  }
+  
+  def samplerRemapping(material: graphics.Material, worldEnvironment: graphics.Environment)
+  :HashMap[String, String] =
+  {
+    val remapping = new HashMap[String, String]
+    
+    var i = 0; while (i < material.uniforms.size) {
+      val prop = material.uniforms(i)
+      val name = material.uniformNames(i)
+      
+      if (prop.isDefined) prop.get match {
+        case list: BindingList[_] => list.samplerRemapping(name, remapping)
+        case s: Struct => s.samplerRemapping(name, remapping)
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
+    
+    i = 0; while (i < worldEnvironment.properties.size) {
+      val prop = worldEnvironment.properties(i)
+      val name = worldEnvironment.propertyNames(i)
+      
+      if (prop.isDefined) prop.get.binding match {
+        case list: BindingList[_] => list.samplerRemapping(name, remapping)
+        case s: Struct => s.samplerRemapping(name, remapping)
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
+    
+    remapping
   }
 }
 

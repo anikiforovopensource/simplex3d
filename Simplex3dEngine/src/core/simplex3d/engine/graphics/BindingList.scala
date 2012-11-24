@@ -64,6 +64,18 @@ extends Protected with Binding with PropertyContextDependent
       }
     }
   }
+  
+  final def samplerRemapping(path: String, remapping: HashMap[String, String]) {
+    if (path.contains("[*]")) return // nested arrays cannot be re-mapped.
+    
+    if (size > 0) {
+      apply(0) match {
+        case s: Struct => s.samplerRemapping(path + "[*]", remapping)
+        case t: TextureBinding[_] => t.samplerRemapping(path + "[*]", remapping)
+        case _ => // do nothing
+      }
+    }
+  }
 }
 
 

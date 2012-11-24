@@ -125,6 +125,21 @@ trait Struct extends ReadStruct with Accessible {
     }
   }
   
+  def samplerRemapping(path: String, remapping: HashMap[String, String]) {
+    def appendPath(name: String) = if (path.isEmpty) name else path + "." + name
+    
+    var i = 0; while (i < fieldNames.length) {
+      fields(i).asInstanceOf[AnyRef] match {
+        case list: BindingList[_] => list.samplerRemapping(appendPath(fieldNames(i)), remapping)
+        case s: Struct =>  s.samplerRemapping(appendPath(fieldNames(i)), remapping)
+        case t: TextureBinding[_] => t.samplerRemapping(appendPath(fieldNames(i)), remapping)
+        case _ => // do nothing
+      }
+      
+      i += 1
+    }
+  }
+  
   def getUnsizedListKeys() :Array[ListNameKey] = {
     val nameKeys = new HashSet[ListNameKey]
         

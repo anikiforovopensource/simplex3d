@@ -107,7 +107,7 @@ extends graphics.TechniqueManager[G]
   :Technique =
   {
     
-    val quickKey = graphicsContext.getKeys(geometry, material, worldEnvironment)
+    val quickKey = graphicsContext.collectKeys(geometry, material, worldEnvironment)
     
     val quickLookup = quickCache.get(quickKey)
     if (quickLookup != null) return quickLookup

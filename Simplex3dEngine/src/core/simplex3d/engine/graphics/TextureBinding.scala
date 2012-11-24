@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.data._
 
@@ -59,6 +60,19 @@ extends Protected with Cloneable with Binding with Serializable
   
   final override def hashCode() :Int = texture.hashCode
   final override def toString() :String = "TextureBinding" + "(" + texture + ")"
+  
+  def samplerRemapping(path: String, remapping: HashMap[String, String]) {
+    val key = {
+      val idx = path.lastIndexOf('.')
+      val name = if (idx > 0) path.substring(idx + 1) else path
+      if (path.contains("[*]")) name + "[*]" else name
+    }
+    
+    val existing = remapping.put(key, path)
+    if (existing != null) {
+      //XXX warn non-unique names
+    }
+  }
 }
 
 

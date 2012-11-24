@@ -812,21 +812,11 @@ extends graphics.RenderContext {
   
   
   // *** Mesh mapping *************************************************************************************************
-  
-  private[this] def find(names: ReadArray[String], name: String) :Int = {
-    var i = 0; while (i < names.length) {
-      if (names(i) == name) return i
-      
-      i += 1
-    }
     
-    -1
-  }
-  
-  
   private[this] final def resolveUniform(
     meshName: String,
-    programBinding: ActiveUniform,
+    path: String,
+    dataType: Int,
     predefined: PredefinedUniforms,
     material: Material,
     environment: Environment,
@@ -834,11 +824,11 @@ extends graphics.RenderContext {
   ) :Binding = {
     
     val binding = program.graphicsContext.resolveUniformPath(
-      programBinding.name, predefined, material, environment, program.programUniforms//XXX possibly better naming for programUniforms, shaderUniforms
+      path, predefined, material, environment, program.programUniforms//XXX possibly better naming for programUniforms, shaderUniforms
     )
     
     if (binding != null) {
-      val correctType = checkUniformType(binding, programBinding.dataType)
+      val correctType = checkUniformType(binding, dataType)
       
       if (!correctType) {
         
@@ -854,8 +844,8 @@ extends graphics.RenderContext {
             ClassUtil.simpleName(binding.getClass)
         
         log(
-          Level.SEVERE, "Uniform '" + programBinding.name +
-          "' is defined as '" + EngineBindingTypes.toString(programBinding.dataType) +
+          Level.SEVERE, "Uniform '" + path +
+          "' is defined as '" + EngineBindingTypes.toString(dataType) +
           "' but resolves to an instance of '" + resolved + "' for mesh '" + meshName +
           "'. This uniform will have an undefined value in the shader."
         )
@@ -863,13 +853,13 @@ extends graphics.RenderContext {
       }
     }
     
-    if (binding == null && !programBinding.name.endsWith("nvidiaBugWorkaround")) log(
-      Level.SEVERE, "Uniform '" + programBinding.name + "' could not be resolved for mesh '" + meshName + "'.")
+    if (binding == null) log(
+      Level.SEVERE, "Uniform '" + path + "' could not be resolved for mesh '" + meshName + "'.")
 
     else if (binding.isInstanceOf[ReadTextureBinding[_]]) {
       val textureBinding = TextureBinding.avoidCompilerCrash(binding)
       if (!textureBinding.isBound) log(
-        Level.SEVERE, "Texture '" + programBinding.name + "' is not defined for mesh '" +
+        Level.SEVERE, "Texture '" + path + "' is not defined for mesh '" +
         meshName + "'. Default texture will be used.")
     }
     
@@ -956,11 +946,36 @@ extends graphics.RenderContext {
     val program = mesh.technique.get
     val uniformMapping = new Array[Binding](programBindings.length)
     
+    val graphicsContext = mesh.technique.get.graphicsContext
+    val textureRemapping = graphicsContext.samplerRemapping(mesh.material, mesh.worldEnvironment)
+    
+    def remap(path: String) :String = {
+      path match {
+        
+        case PathUtil.NameIndex(name, index) =>
+          val res = textureRemapping.get(name + "[*]")
+          if (res != null) res.replace("[*]", "[" + index + "]")
+          else path
+        
+        case name =>
+          val res = textureRemapping.get(name)
+          if (res != null) res
+          else path
+      }
+    }
+    
     var i = 0; while (i < programBindings.length) {
       val programBinding = programBindings(i)
+      val pref = "se_dimsOf_"
+      
+      val path = programBinding match {
+        case tex: ActiveTexture => remap(programBinding.name)
+        case binding if binding.name.startsWith(pref) => remap(programBinding.name.drop(pref.length)) + ".dimensions"
+        case _ => programBinding.name
+      }
       
       uniformMapping(i) = resolveUniform(
-        mesh.name, programBinding,
+        mesh.name, path, programBinding.dataType,
         predefined, mesh.material, mesh.worldEnvironment, program
       )
       
@@ -971,15 +986,15 @@ extends graphics.RenderContext {
   }
   
   
-  private[this] final def buildAttributeMapping(mesh: AbstractMesh, bindings: ReadArray[ActiveAttribute])
+  private[this] final def buildAttributeMapping(mesh: AbstractMesh, programBindings: ReadArray[ActiveAttribute])
   :ReadArray[Attributes[_, _]] = {
     
-    val mapping = new Array[Attributes[_, _]](bindings.length)
+    val mapping = new Array[Attributes[_, _]](programBindings.length)
     val geom = mesh.geometry
     val graphicsContext = mesh.technique.get.graphicsContext
     
-    var i = 0; while (i < bindings.length) {
-      val programBinding = bindings(i)
+    var i = 0; while (i < programBindings.length) {
+      val programBinding = programBindings(i)
       val attrib = graphicsContext.resolveAttributePath(programBinding.name, geom)
       
       if (attrib == null) log(

@@ -21,30 +21,15 @@
 package simplex3d.engine
 package graphics.pluggable
 
-import scala.collection._
-import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.math.types._
-import simplex3d.engine.util._
-import simplex3d.engine.graphics._
 
-
-final class Declaration(
-  val qualifiers: Option[String],
-  val manifest: ClassManifest[_ <: Binding],
-  val glslType: String,
+final class NestedSampler(
+  val parentErasure: Class[_],
+  val qualifiedType: String,
   val name: String,
-  val arraySizeExpression: Option[String],
-  val structSignatures: ReadArray[StructSignature],
-  val nestedSamplers: ReadArray[NestedSampler]
+  val arraySizeExpression: Option[String]
 ) {
-  val isPredefined = name.startsWith("se_")
-  val isReserved = name.startsWith("gl_")
-  val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
-  
-  
   override def toString() :String = {
-    "Declaraion(" + qualifiers + " " + glslType + " " + name + ")"
+    "NestedSampler(" + qualifiedType + " " + name + ")"
   }
   
   override def equals(o: Any) :Boolean = {
@@ -53,9 +38,9 @@ final class Declaration(
     }
     else o match {
       
-      case d: Declaration =>
-        qualifiers == d.qualifiers &&
-        manifest == d.manifest &&
+      case d: NestedSampler =>
+        parentErasure == d.parentErasure &&
+        qualifiedType == d.qualifiedType &&
         name == d.name &&
         arraySizeExpression == d.arraySizeExpression
         
@@ -68,8 +53,8 @@ final class Declaration(
     41 * (
       41 * (
         41 * (
-          41 + qualifiers.hashCode
-        ) + manifest.hashCode
+          41 + parentErasure.hashCode
+        ) + qualifiedType.hashCode
       ) + name.hashCode
     ) + arraySizeExpression.hashCode
   }

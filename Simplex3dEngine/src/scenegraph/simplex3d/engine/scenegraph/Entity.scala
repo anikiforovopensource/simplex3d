@@ -31,7 +31,7 @@ import simplex3d.engine.transformation._
 
 
 abstract class Entity[T <: TransformationContext, G <: GraphicsContext] (name: String)(
-  implicit transformationCtx: T, graphicsCtx: G
+  implicit transformationContext: T, graphicsContext: G
 ) extends AbstractNode[T, G](name) with InheritedEnvironment {
   
   protected def appendChild(element: SceneElement[T, G] with InheritedEnvironment) {

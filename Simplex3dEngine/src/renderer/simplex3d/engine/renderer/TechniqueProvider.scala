@@ -94,7 +94,7 @@ object TechniqueProvider {
       function("vec4 texturingColor()"){"""
         vec4 color = vec4(1.0);
         for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          color *= texture2D(textureUnits[i].texture.sampler, texturingCtx.ecTexCoords[i]);
+          color *= texture2D(texture[i], texturingCtx.ecTexCoords[i]);
         }
         return color;
       """}
@@ -114,7 +114,7 @@ object TechniqueProvider {
       function("vec4 texturingColor()"){"""
         vec4 color = vec4(1.0);
         for (int i = 0; i < se_sizeOf_textureUnits; i++) {
-          color *= texture2D(textureUnits[i].texture.sampler, gl_PointCoord);
+          color *= texture2D(texture[i], gl_PointCoord);
         }
         if (color.a == 0.0) discard;
         return color;

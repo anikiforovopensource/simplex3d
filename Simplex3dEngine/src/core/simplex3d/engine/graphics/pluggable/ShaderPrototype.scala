@@ -56,6 +56,34 @@ final class ShaderPrototype private[pluggable] (
   def isVertexShader = (shaderType == Shader.Vertex)
   val structs = StructSignature.organizeDependencies(uniformBlock.flatMap(_.structSignatures))
   
+  val nestedSamplers = {
+    import ShaderPrototype.logger._
+    
+    val map = new HashMap[String, NestedSampler]
+    
+    var i = 0; while (i < uniformBlock.size) {
+      val declaration = uniformBlock(i)
+      
+      val samplers = declaration.nestedSamplers
+      var j = 0; while (j < samplers.size) {
+        val sampler = samplers(j)
+        
+        val existing = map.put(sampler.name, sampler)
+        if (existing != null && (existing.parentErasure ne sampler.parentErasure)) log(Level.WARNING,
+          "Nested sampler remapping '" + sampler.name + "' is ambiguous, it resolves to values from '" +
+          existing.parentErasure.getName + "' and '" + sampler.parentErasure.getName + "'."
+        )
+        
+        j += 1
+      }
+      
+      i += 1
+    }
+    
+    val result = map.values().toArray(new Array[NestedSampler](0))
+    new ReadArray(result)
+  }
+  
   def shaderKey(sizeMap: HashMap[ListNameKey, Integer]): (ShaderPrototype, IndexedSeq[ListSizeKey]) = {
     val result = new Array[ListSizeKey](unsizedArrayKeys.size)
     
@@ -75,6 +103,9 @@ final class ShaderPrototype private[pluggable] (
 
 
 object ShaderPrototype {
+  
+  private final val logger = Logger.getLogger(classOf[ShaderPrototype].getName)
+
   
   private[this] def formatOption(option: Option[String]) :String = {
     if (option.isDefined) option.get + " " else ""
@@ -134,7 +165,6 @@ object ShaderPrototype {
       (for ((fieldType, fieldName) <- struct.entries) yield {
         "  " + fieldType + " " + fieldName + ";"
       }).mkString("\n") +
-      (if (struct.containsSamplers) "\n  float nvidiaBugWorkaround;" else "") +
       "\n};"
     }).mkString("\n\n")
   }
@@ -156,6 +186,16 @@ object ShaderPrototype {
         }
         else declaration.name
       } + ";"
+    }).mkString("\n")
+  }
+  
+  def nestedSamplerDeclaration(nestedSamplers: Iterable[NestedSampler]) :String =  {
+    if (nestedSamplers.isEmpty) return ""
+    
+    (for (declaration <- nestedSamplers) yield {
+      "uniform " + declaration.qualifiedType + " " + declaration.name +
+      (if (declaration.arraySizeExpression.isDefined) "[" + declaration.arraySizeExpression.get + "]" else "") +
+      ";"
     }).mkString("\n")
   }
   
@@ -267,6 +307,7 @@ object ShaderPrototype {
       formatBlock(structDeclaration(shader.structs)) +
       formatBlock(varDeclaration(Some("attribute"), shader.attributeBlock)) +
       formatBlock(varDeclaration(Some("uniform"), shader.uniformBlock)) +
+      formatBlock(nestedSamplerDeclaration(shader.nestedSamplers)) +
       formatBlock(interfaceDeclarations) +
       formatBlock(functionDeclaration(shader.functionDependencies)) +
       formatBlock(extraSources(varyingRemapping, shader.sources)) +

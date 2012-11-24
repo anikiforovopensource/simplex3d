@@ -29,8 +29,7 @@ final class StructSignature(
   val level: Int,
   val erasure: Class[_],
   val glslType: String,
-  val entries: ReadArray[(String, String)],// (glslType, name) pairs
-  val containsSamplers: Boolean
+  val entries: ReadArray[(String, String)]// (glslType, name) pairs
 ) {
   def isNested = (level != 0)
 }

@@ -32,6 +32,7 @@ abstract class SceneElement[T <: TransformationContext, G <: GraphicsContext] pr
 )
 extends Spatial[T](name)
 {
+  
   protected type Graphics = G
   
   private[scenegraph] def onParentChange(

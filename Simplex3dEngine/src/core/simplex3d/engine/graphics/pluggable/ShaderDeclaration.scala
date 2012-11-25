@@ -67,6 +67,9 @@ import simplex3d.engine.graphics._
  * 
  * Samplers are extracted from structs and then declared at the top level in the shader.
  * This is done to allow property-to-UBO mapping in the future.
+ * 
+ * Texture dimensions can be accessed by declaring integer verctor "se_dimsOf_textureName", for example:
+ * declare[Vec2i]("se_dimsOf_myTexture")
  */
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   

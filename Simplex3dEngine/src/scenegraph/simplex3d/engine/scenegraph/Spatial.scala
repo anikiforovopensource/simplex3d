@@ -125,14 +125,17 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
     controllers += controller
   }
   
+  private def checkNoControllers() {
+    if (controllers.isEmpty) {
+      controllers = null
+      if (controllerManager != null) controllerManager.unregister(ArrayBuffer(this))
+    }
+  }
+  
   def removeController(controller: Updater) {
     if (controllers != null) {
       controllers -= controller
-      
-      if (controllers.isEmpty) {
-        controllers = null
-        if (controllerManager != null) controllerManager.unregister(ArrayBuffer(this))
-      }
+      checkNoControllers()
     }
   }
   
@@ -140,13 +143,25 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final def runControllers(time: TimeStamp) {
     assert(controllers != null)
     
-    val size = controllers.size
-    var i = 0; while (i < size) {
-      val controller = controllers(i)
-      val keep = controller.apply(time)
-      if (!keep) removeController(controller)
-      
-      i += 1
+    var removePending: ArrayBuffer[Updater] = null
+    
+    {
+      val size = controllers.size
+      var i = 0; while (i < size) {
+        val controller = controllers(i)
+        val keep = controller.apply(time)
+        if (!keep) {
+          if (removePending == null) removePending = new ArrayBuffer[Updater](4)
+          removePending += controller
+        }
+        
+        i += 1
+      }
+    }
+    
+    if (removePending != null) {
+      controllers --= removePending
+      checkNoControllers()
     }
   }
 }

@@ -21,70 +21,16 @@
 package simplex3d.engine.asset
 
 import javax.imageio.ImageIO
+import java.io._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
 import simplex3d.data.double._
 
 
-// XXX decouple asset loader into resolver and format loader
-class ClasspathLoader extends AssetLoader {
+class ClasspathLoader extends StreamLoader {
   
-  def loadRgbImg(path: String) :Option[(ConstVec2i, RgbTextureData)] = {
-    val stream = this.getClass.getClassLoader.getResourceAsStream(path)
-    if (stream == null) return None
-    val img = ImageIO.read(stream)
-    
-    val width = img.getWidth
-    val height = img.getHeight
-    
-    val data = DataBuffer[Vec3, UByte](width*height)
-    val buffer = data.buffer()
-    
-    var y = 0; while (y < height) {
-      var x = 0; while (x < width) {
-        
-        val pixel = img.getRGB(x, y)
-        val index = (x + (height - 1 - y)*width)*3
-        buffer.put(index, (pixel >> 16).toByte)
-        buffer.put(index + 1, (pixel >> 8).toByte)
-        buffer.put(index + 2, pixel.toByte)
-        
-        x += 1
-      }
-      y += 1
-    }
-    
-    Some(ConstVec2i(width, height), data)
-  }
-  
-  def loadRgbaImg(path: String) :Option[(ConstVec2i, RgbaTextureData)] = {
-    val stream = this.getClass.getClassLoader.getResourceAsStream(path)
-    if (stream == null) return None
-    val img = ImageIO.read(stream)
-    
-    val width = img.getWidth
-    val height = img.getHeight
-    
-    val data = DataBuffer[Vec4, UByte](width*height)
-    val buffer = data.buffer()
-    
-    var y = 0; while (y < height) {
-      var x = 0; while (x < width) {
-        
-        val i = img.getRGB(x, y)
-        val pixel = img.getRGB(x, y)
-        val index = (x + (height - 1 - y)*width)*4
-        buffer.put(index, (pixel >> 16).toByte)
-        buffer.put(index + 1, (pixel >> 8).toByte)
-        buffer.put(index + 2, pixel.toByte)
-        buffer.put(index + 3, (pixel >> 24).toByte)
-        
-        x += 1
-      }
-      y += 1
-    }
-    
-    Some(ConstVec2i(width, height), data)
+  protected def openStream(path: String) :InputStream = {
+    this.getClass.getClassLoader.getResourceAsStream(path)
   }
 }

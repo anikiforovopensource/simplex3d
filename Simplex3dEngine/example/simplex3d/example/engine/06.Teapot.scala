@@ -16,13 +16,13 @@ import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 
 
-object DynamicTexture extends default.App {
+object Teapot extends default.App {
   
   def main(args: Array[String]) {
     launch()
   }
   
-  val title = "Dynamic Texture"
+  val title = "Teapot"
   
   override lazy val settings = new Settings(
     fullscreen = false,
@@ -33,49 +33,36 @@ object DynamicTexture extends default.App {
   )
   
   def init() {
-    world.camera.transformation.update.translation := Vec3(0, 0, 100)
+    world.camera.transformation.update.translation := Vec3(0, 20, 30)
     world.camera.transformation.update.lookAt(Vec3(0), Vec3.UnitY, true)
     
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     
-    val (indices, vertices, normals, texCoords) = Shapes.makeBox()
+    val (indices, vertices, normals, texCoords) = assetManager.loadObj("simplex3d/example/asset/teapot.obj").get
     
     val mesh = new Mesh("Cube")
     
     mesh.geometry.indices := Attributes.fromData(indices)
     mesh.geometry.vertices := Attributes.fromData(vertices)
-    mesh.geometry.normals := Attributes.fromData(normals)
+    mesh.geometry.normals := Attributes.fromData(normals.get)
     
-    mesh.geometry.texCoords := Attributes.fromData(texCoords)
+    mesh.geometry.texCoords := Attributes.fromData(texCoords.get)
     
-    val objectTexture = Texture2d[Vec3](Vec2i(128))
-    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+      val selector = equal(mod(p, Vec2(8)), Vec2.Zero)
+      if (any(selector)) Vec3(selector, 0)
+      else Vec3(0.8)
+    }
+    mesh.material.textureUnits.update += new TextureUnit(
+      objectTexture, Mat3x2.Identity
+    )
     
     val transformation = mesh.transformation.update
-    transformation.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
-    transformation.scale := 50
-    
-    val noise = ClassicalGradientNoise
-    val subTexture = Texture2d[Vec3](Vec2i(64))
-    
-    mesh.controller { time =>
-      // Updating the texture: the changes will be synchronized with OpenGL automatically.
-      objectTexture.fillWith { p =>
-        val intensity = (noise(p.x*0.06, p.y*0.06, time.total*0.4) + 1)*0.5
-        Vec3(0, intensity, intensity)
-      }
-      
-      // An example on how to update sub-image.
-      subTexture.fillWith { p =>
-        val intensity = (noise(p.x*0.12, p.y*0.12, time.total*0.8) + 1)*0.5
-        Vec3(0, intensity, 0)
-      }
-      objectTexture.write.put2d(objectTexture.dimensions, Vec2i(32), subTexture.read, subTexture.dimensions)
-      
-      true
-    }
+    transformation.translation := Vec3(0, -10, 0)
+    transformation.rotation := Quat4 rotateY(radians(-180))
+    transformation.scale := 2
     
     world.attach(mesh)
   }

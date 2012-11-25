@@ -26,10 +26,19 @@ import simplex3d.data._
 import simplex3d.data.double._
 
 
+// XXX split asset loader into format resolver and format loader
 trait AssetLoader {
   type RgbTextureData = Data[Vec3] with DirectSrc with ContiguousSrc
   type RgbaTextureData = Data[Vec4] with DirectSrc with ContiguousSrc
   
   def loadRgbImg(path: String) :Option[(ConstVec2i, RgbTextureData)]
   def loadRgbaImg(path: String) :Option[(ConstVec2i, RgbaTextureData)]
+  
+  def loadObj(path: String)
+  :Option[(
+    DataBuffer[SInt, Unsigned],// indices
+    DataBuffer[Vec3, RFloat], // vertices
+    Option[DataBuffer[Vec3, RFloat]], // normals
+    Option[DataBuffer[Vec2, RFloat]] // texCoords
+  )]
 }

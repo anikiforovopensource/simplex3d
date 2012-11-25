@@ -72,4 +72,15 @@ abstract class AssetManager {
   // getReadableTexture // shared, data-cached
   // getWritableTexture // unique, data-cached
   // uncacheTexture // clear caches
+  
+  
+  def loadObj(path: String)
+  :Option[(
+    DataBuffer[SInt, Unsigned],// indices
+    DataBuffer[Vec3, RFloat], // vertices
+    Option[DataBuffer[Vec3, RFloat]], // normals
+    Option[DataBuffer[Vec2, RFloat]] // texCoords
+  )] = {
+    resolve(_.loadObj(path))
+  }
 }

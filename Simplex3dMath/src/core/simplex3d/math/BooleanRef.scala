@@ -68,7 +68,7 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
   final def !=(s: Boolean) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
-    x.hashCode
+    simplex3d.math.booleanHashCode(x)
   }
 
   final override def toString() :String = {

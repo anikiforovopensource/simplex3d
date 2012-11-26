@@ -27,7 +27,7 @@ import simplex3d.math.types._
  * @author Aleksey Nikiforov (lex)
  */
 package object math {
-
+  
   // Implicits
   implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
   implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
@@ -271,4 +271,21 @@ package object math {
    * @return a boolean vector with negated components of u.
    */
   final def not(u: inVec4b) :Vec4b = new Vec4b(!u.x, !u.y, !u.z, !u.w)
+  
+  
+  // HashCode functions
+  private[math] def booleanHashCode(s: Boolean) :Int = {
+    if (s) 1231 else 1237
+  }
+  private[math] def intHashCode(s: Int) :Int = {
+    s
+  }
+  private[math] def floatHashCode(s: Float) :Int = {
+    java.lang.Float.floatToIntBits(s)
+  }
+  private[math] def doubleHashCode(s: Double) :Int = {
+    val t = java.lang.Double.doubleToLongBits(s)
+    (t ^ (t >>> 32)).toInt
+  }
 }
+

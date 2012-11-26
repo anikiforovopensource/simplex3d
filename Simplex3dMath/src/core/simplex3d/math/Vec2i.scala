@@ -143,8 +143,8 @@ with Protected with Serializable
 
   final override def hashCode() :Int = {
     41 * (
-      41 + y.hashCode
-    ) + x.hashCode
+      41 + simplex3d.math.intHashCode(x)
+    ) + simplex3d.math.intHashCode(y)
   }
 
   final override def toString() :String = {

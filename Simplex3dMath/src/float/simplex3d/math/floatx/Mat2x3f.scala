@@ -214,12 +214,12 @@ with Protected with Serializable
         41 * (
           41 * (
             41 * (
-              41 + m00.hashCode
-            ) + m01.hashCode
-          ) + m02.hashCode
-        ) + m10.hashCode
-      ) + m11.hashCode
-    ) + m12.hashCode
+              41 + simplex3d.math.floatHashCode(m00)
+            ) + simplex3d.math.floatHashCode(m01)
+          ) + simplex3d.math.floatHashCode(m02)
+        ) + simplex3d.math.floatHashCode(m10)
+      ) + simplex3d.math.floatHashCode(m11)
+    ) + simplex3d.math.floatHashCode(m12)
   }
 
   final override def toString() :String = {

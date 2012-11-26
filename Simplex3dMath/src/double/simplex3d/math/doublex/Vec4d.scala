@@ -152,10 +152,10 @@ with Protected with Serializable
     41 * (
       41 * (
         41 * (
-          41 + w.hashCode
-        ) + z.hashCode
-      ) + y.hashCode
-    ) + x.hashCode
+          41 + simplex3d.math.doubleHashCode(x)
+        ) + simplex3d.math.doubleHashCode(y)
+      ) + simplex3d.math.doubleHashCode(z)
+    ) + simplex3d.math.doubleHashCode(w)
   }
 
   final override def toString() :String = {

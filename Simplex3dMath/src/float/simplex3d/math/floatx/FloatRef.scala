@@ -67,7 +67,7 @@ extends PrimitiveRef[Float] with Protected with Serializable
   final def !=(s: Double) :Boolean = (x != s)
 
   final override def hashCode() :Int = {
-    x.hashCode
+    simplex3d.math.floatHashCode(x)
   }
 
   final override def toString() :String = {

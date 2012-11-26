@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.lang.Integer
 import java.util.HashMap
 import simplex3d.math.types._
 import simplex3d.data._
@@ -43,7 +44,7 @@ abstract class GraphicsContext {
   private[this] final var combinedNamespace: Set[String] = null
   
   private[this] final val uniformMap = new HashMap[String, (Int, Int)]
-  private[this] final val attributeMap = new HashMap[String, java.lang.Integer]
+  private[this] final val attributeMap = new HashMap[String, Integer]
   
   private[this] var initialized = false
   protected def init() {

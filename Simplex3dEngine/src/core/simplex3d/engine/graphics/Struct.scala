@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.lang.Integer
 import java.util.logging._
 import java.util.HashMap
 import java.util.HashSet

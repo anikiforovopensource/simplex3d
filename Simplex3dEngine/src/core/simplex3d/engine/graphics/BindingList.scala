@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import java.lang.Integer
 import java.util.HashMap
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._

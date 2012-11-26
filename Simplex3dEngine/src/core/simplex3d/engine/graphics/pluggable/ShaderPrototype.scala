@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import java.lang.Integer
 import java.util.logging._
 import java.util.HashMap
 import scala.collection._

@@ -39,8 +39,10 @@ object Teapot extends default.App {
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
-    
+    val start = System.nanoTime
     val (indices, vertices, normals, texCoords) = assetManager.loadObj("simplex3d/example/asset/teapot.obj").get
+    val total = System.nanoTime - start
+    println("Loading time: " + total*1e-9)
     
     val mesh = new Mesh("Cube")
     
@@ -50,11 +52,18 @@ object Teapot extends default.App {
     
     mesh.geometry.texCoords := Attributes.fromData(texCoords.get)
     
-    val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+    /*val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
       val selector = equal(mod(p, Vec2(8)), Vec2.Zero)
       if (any(selector)) Vec3(selector, 0)
       else Vec3(0.8)
+    }*/
+    
+    val noise = ClassicalGradientNoise
+    val objectTexture = Texture2d[Vec3](Vec2i(256)).fillWith { p =>
+      val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
+      Vec3(0, intensity, intensity) + 0.2
     }
+    
     mesh.material.textureUnits.update += new TextureUnit(
       objectTexture, Mat3x2.Identity
     )

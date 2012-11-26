@@ -20,10 +20,11 @@
 
 package simplex3d.engine.asset
 
+import java.lang.Integer
 import javax.imageio.ImageIO
 import java.io._
 import scala.collection.mutable.ArrayBuilder
-import scala.collection.mutable.HashMap
+import java.util.HashMap
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
@@ -169,61 +170,77 @@ trait StreamLoader extends AssetLoader {
       }
       
       val index = indexBuilders.map(_.result())
-      val vertexMap = new HashMap[List[Object], Int]
+      val vertexMap = new HashMap[IndexedSeq[Object], Integer]
       val resultIndexBuilder = ArrayBuilder.make[Int]()
       
       var count = 0
-      for (n <- 0 until index(0).length) {
-        for (k <- 0 until 3) {
+      var n = 0; while (n < index(0).length) {
+        var k = 0; while (k < 3) {
           val group = index(k)(n)
-          val vertexData = (for (i <- 0 until data.length) yield {
-            val idx = if (i < group.length) group(i) else group(0)
-            data(i)(idx)
-          }).toList
           
+          val vertexDataArray = new Array[Object](3)
+          var i = 0; while (i < data.length) {
+            
+            val idx = if (i < group.length) group(i) else group(0)
+            vertexDataArray(i) = data(i)(idx)
+            
+            i += 1
+          }
+          
+          val vertexData: IndexedSeq[Object] = vertexDataArray
           val existing = vertexMap.get(vertexData)
-          val vertexId = if (existing.isDefined) existing.get else {
+          val vertexId = if (existing != null) existing.toInt else {
             val id = count
             count += 1
-            vertexMap += vertexData -> id
+            vertexMap.put(vertexData, id)
             id
           }
           
           resultIndexBuilder += vertexId
+          k += 1
         }
+        
+        n += 1
       }
       
-      val lookup = vertexMap.map(t => (t._2, t._1))
+      
+      def reverseMap[K, V](map: HashMap[K, V]) :HashMap[V, K] = {
+        val result = new HashMap[V, K]
+        val iter = map.entrySet.iterator
+        while (iter.hasNext) {
+          val entry = iter.next()
+          result.put(entry.getValue, entry.getKey)
+        }
+        result
+      }
+      val lookup = reverseMap(vertexMap)
+      
       
       val resultIndexArray = resultIndexBuilder.result();
-      val indexSize = resultIndexArray.length
-      val resultIndices: DataBuffer[SInt, Unsigned] = {
-        if (indexSize < 255) DataBuffer[SInt, UByte](indexSize)
-        else if (indexSize < 65535) DataBuffer[SInt, UShort](indexSize)
-        else DataBuffer[SInt, UInt](indexSize)
-      }
+      val resultIndices = IndexBuffer(count, resultIndexArray.length)
       resultIndices.put(resultIndexArray)
 
       val resultVertices = DataBuffer[Vec3, RFloat](count)
       val resultNormals = if (normals.isEmpty) None else Some(DataBuffer[Vec3, RFloat](count))
       val resultTexCoords = if (normals.isEmpty) None else Some(DataBuffer[Vec2, RFloat](count))
       
-      for (i <- 0 until count) {
-        var data = lookup(i)
+      var i = 0; while (i < count) {
+        val data = lookup.get(i)
         
-        {
-          resultVertices(i) = data.head.asInstanceOf[Vec3]
-          data = data.tail
-        }
+        resultVertices(i) = data(0).asInstanceOf[Vec3]
+        
+        var next = 1
         
         if (resultTexCoords.isDefined) {
-          resultTexCoords.get(i) = data.head.asInstanceOf[Vec2]
-          data = data.tail
+          resultTexCoords.get(i) = data(next).asInstanceOf[Vec2]
+          next += 1
         }
         
         if (resultNormals.isDefined) {
-          resultNormals.get(i) = data.head.asInstanceOf[Vec3]
+          resultNormals.get(i) = data(next).asInstanceOf[Vec3]
         }
+        
+        i += 1
       }
       
       (resultIndices, resultVertices, resultNormals, resultTexCoords)

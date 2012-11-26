@@ -89,6 +89,27 @@ package object data {
   type Index = Contiguous[SInt, Unsigned]
   type inIndex = inContiguous[SInt, Unsigned]
   
+  type ReadIndexArray = ReadDataArray[SInt, Unsigned]
+  type IndexArray = DataArray[SInt, Unsigned]
+  type inIndexArray = inDataArray[SInt, Unsigned]
+  
+  type ReadIndexBuffer = ReadDataBuffer[SInt, Unsigned]
+  type IndexBuffer = DataBuffer[SInt, Unsigned]
+  type inIndexBuffer = inDataBuffer[SInt, Unsigned]
+  
+  def IndexArray(max: Int, size: Int) :IndexArray = {
+    if (max < 256) DataArray[SInt, UByte](size)
+    else if (max < 65536) DataArray[SInt, UShort](size)
+    else DataArray[SInt, UInt](size)
+  }
+  
+  def IndexBuffer(max: Int, size: Int) :IndexBuffer = {
+    if (max < 256) DataBuffer[SInt, UByte](size)
+    else if (max < 65536) DataBuffer[SInt, UShort](size)
+    else DataBuffer[SInt, UInt](size)
+  }
+  
+  
   type inData[A <: Accessor] = ReadData[A]
 
   type inDataSeq[F <: Format, +R <: Raw] = ReadDataSeq[F, R]
@@ -97,7 +118,7 @@ package object data {
   type inDataBuffer[F <: Format, +R <: Raw] = ReadDataBuffer[F, R]
   type inDataView[F <: Format, +R <: Raw] = ReadDataView[F, R]
 
-
+  
   def interleave[
     F1 <: Format, R1 <: Raw,
     F2 <: Format, R2 <: Raw

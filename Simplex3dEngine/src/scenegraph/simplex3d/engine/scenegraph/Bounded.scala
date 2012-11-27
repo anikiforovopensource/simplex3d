@@ -239,8 +239,12 @@ object Bounded {
     }
     else {
       def rebuildAll() {
-        val first = 0
-        val count = vertices.size
+        var first = 0
+        var count = vertices.size
+        if (elementRange != null) {
+          first = elementRange.first
+          count = elementRange.count
+        }
         
         var i = first; while (i < count) {
           val vertex = vertices(i)

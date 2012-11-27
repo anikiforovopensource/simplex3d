@@ -68,7 +68,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   private[engine] final val meshSubtext = new MeshSubtext
 
-  final def elementRange = Property.optional(ElementRange.Factory)
+  final val elementRange = Property.optional(ElementRange.Factory)
   
   val name: String
   def geometry: Geometry
@@ -114,6 +114,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   final def clearShapeChanges() {//XXX hide this
     import AccessChanges._
     elementRange.clearDataChanges()
+    geometry.primitive.clearDataChanges()
     geometry.indices.clearRefChanges()
     geometry.indices.clearDataChanges()
     geometry.vertices.clearRefChanges()

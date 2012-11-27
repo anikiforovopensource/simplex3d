@@ -154,7 +154,7 @@ final class RenderManager extends graphics.RenderManager {
     }
   }
   
-  val showBoundingVolumes = false
+  val showBoundingVolumes = true
   val debugBoundingVolumes = new DebugLinesManager("Bounding")
     
   
@@ -199,6 +199,8 @@ final class RenderManager extends graphics.RenderManager {
             Box.append(debugBoundingVolumes)(b.min, b.max, mesh.worldMatrix)
           case b: Obb =>
             Box.append(debugBoundingVolumes)(b.min, b.max, b.transformation concat mesh.worldMatrix)
+          case _ =>
+            // ignore
         }
         
         i += 1

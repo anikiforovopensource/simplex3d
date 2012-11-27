@@ -57,7 +57,10 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (customBoundingVolume.isDefined) customBoundingVolume else autoBoundingVolume
   }
   
-  protected def debugBoundingVolume: BoundingVolume = resolveBoundingVolume().get
+  protected def debugBoundingVolume: BoundingVolume = {
+    val resolved = resolveBoundingVolume()
+    if (resolved.isDefined) resolved.get else null
+  }
   
   
   /** Animators are executed only for visible objects and only once per frame.

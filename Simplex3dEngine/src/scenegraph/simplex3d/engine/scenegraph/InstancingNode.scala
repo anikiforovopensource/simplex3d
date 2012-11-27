@@ -49,7 +49,7 @@ extends Entity[T, G](name) {
     
     private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
       propagateWorldTransformation()
-      val updateParentVolume = boundingUpdated || uncheckedWorldTransformation.hasDataChanges
+      val updateParentVolume = updateBounding || uncheckedWorldTransformation.hasDataChanges
       uncheckedWorldTransformation.clearDataChanges()
 
       updateParentVolume
@@ -79,7 +79,7 @@ extends Entity[T, G](name) {
   private var srcVerticesSize = 0
   private var srcIndicesSize = 0
   
-  private var boundingUpdated = true
+  private var updateBounding = true
   
   
   private def rebuildAttributes() {
@@ -123,9 +123,9 @@ extends Entity[T, G](name) {
   }
   
   private def rebuildBounding() {
-    boundingUpdated = srcMesh.updateBoundingVolume(false)
+    updateBounding = srcMesh.updateBoundingVolume(false)
     
-    if (boundingUpdated) {
+    if (updateBounding) {
       if (srcMesh.customBoundingVolume.isDefined) {
         def process() {
           val size = children.size; var i = 0; while (i < size) {
@@ -172,7 +172,7 @@ extends Entity[T, G](name) {
   
   private[scenegraph] override def updateBoundingVolume(allowMultithreading: Boolean) :Boolean = {
     val updateParentVolume = super.updateBoundingVolume(allowMultithreading)
-    boundingUpdated = false
+    updateBounding = false
     updateParentVolume
   }
   

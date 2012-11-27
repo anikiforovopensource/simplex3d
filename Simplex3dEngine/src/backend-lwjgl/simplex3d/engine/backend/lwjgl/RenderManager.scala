@@ -78,7 +78,7 @@ final class RenderManager extends graphics.RenderManager {
     }
     
     private def newMesh() {
-      val mesh = new BaseMesh(name + " Debug Mesh " + (currentMesh + 1))
+      val mesh = new BaseMesh(name + " Debug " + (currentMesh + 1))
       mesh.geometry.indices := Attributes.fromData(IndexBuffer(verticesPerMesh - 1, indicesPerMesh))
       mesh.geometry.vertices := Attributes[Vec3, RFloat](verticesPerMesh)
       mesh.geometry.primitive.update.mode := VertexMode.Lines
@@ -108,6 +108,8 @@ final class RenderManager extends graphics.RenderManager {
       
       currentIndex += indices.size
       currentVertex += vertices.size
+      
+      mesh.elementRange.update.count := currentIndex
     }
     
     def renderArray: Seq[AbstractMesh] = meshes
@@ -155,7 +157,7 @@ final class RenderManager extends graphics.RenderManager {
   }
   
   val showBoundingVolumes = true
-  val debugBoundingVolumes = new DebugLinesManager("Bounding")
+  val debugBoundingVolumes = new DebugLinesManager("Bounding Volume")
     
   
   def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
@@ -223,7 +225,7 @@ final class RenderManager extends graphics.RenderManager {
     
     if (!mesh.technique.isDefined) {
       useDefaultProgram = true
-      log(Level.SEVERE, "Mesh '" + mesh.name + "' does not have an assigned technique. Default technique will be used.")
+      log(Level.SEVERE, "Mesh '" + mesh.name + "' does not have a technique assigned. Default technique will be used.")
     }
     else {
       useDefaultProgram = !renderContext.bindProgram(mesh.technique.get)

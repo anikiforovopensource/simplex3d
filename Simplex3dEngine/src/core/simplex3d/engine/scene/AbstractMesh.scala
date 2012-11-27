@@ -127,5 +127,5 @@ class BaseMesh(val name: String) extends AbstractMesh {
   val material: Material = MinimalGraphicsContext.mkMaterial(null)
   val worldEnvironment: Environment = MinimalGraphicsContext.mkEnvironment(null)
   protected def worldMatrix: ReadMat4x3 = Mat4x3.Identity
-  def debugBoundingVolume = new Aabb(Vec3(Double.NegativeInfinity), Vec3(Double.PositiveInfinity))
+  protected def debugBoundingVolume = null
 }

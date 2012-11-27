@@ -49,7 +49,7 @@ private[engine] object PathUtil {
   
   private def resolveRest(value: AnyRef, rest: String) :AnyRef = {
     value match {
-                
+      
       case s: Struct =>
         s.resolve(rest)
 
@@ -57,8 +57,6 @@ private[engine] object PathUtil {
       case t: ReadTextureBinding[_] if t.isBound =>
         rest match {
           case "" => t
-          case "sampler" => t
-          case "dimensions" => t.bound.dimensions
           case _ => null
         }
         
@@ -71,8 +69,6 @@ private[engine] object PathUtil {
           if (t.isBound) {
             rest match {
               case "" => t
-              case "sampler" => t
-              case "dimensions" => t.bound.asInstanceOf[Texture[_]].bindingDimensions
               case _ => null
             }
           }
@@ -98,6 +94,15 @@ private[engine] object PathUtil {
   }
   
   def resolveAsValue(rest: String, value: AnyRef) :AnyRef = {
-    if (value == null) null else if (rest.isEmpty) value else resolveRest(value, rest)
+    if (value == null) return null
+    
+    if (rest.isEmpty) {
+      value match {
+        // Allow non-indexed path to map to the first element of a list.
+        case list: BindingList[_] => if (list.size > 0) list(0) else null
+        case _ => value
+      }
+    }
+    else resolveRest(value, rest)
   }
 }

@@ -534,7 +534,7 @@ extends graphics.RenderContext {
   }
   
   
-  private[this] val sizeType = DataBuffer[SInt, SInt](2).buffer()
+  private[this] val sizeAndType = DataBuffer[SInt, SInt](2).buffer()
   
   private def initialize(program: Technique) :Int = {
     if (program.compilationFailed) return 0
@@ -594,15 +594,14 @@ extends graphics.RenderContext {
     val uniformCount = glGetProgram(progId, GL_ACTIVE_UNIFORMS)
     val uniformStringLength = glGetProgram(progId, GL_ACTIVE_UNIFORM_MAX_LENGTH)
     var i = 0; while (i < uniformCount) {
-      val glName = glGetActiveUniform(progId, i, uniformStringLength, sizeType)
-      val isArray = glName.endsWith("[0]")
-      val name = if (isArray) glName.dropRight(3) else glName
-      val size = sizeType.get(0)
-      val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
+      val glName = glGetActiveUniform(progId, i, uniformStringLength, sizeAndType)
+      val name = if (glName.endsWith("[0]")) glName.dropRight(3) else glName
+      val size = sizeAndType.get(0)
+      val dataType = EngineBindingTypes.fromGlType(sizeAndType.get(1))
       
       if (EngineBindingTypes.isTexture(dataType)) {
 
-        if (isArray) {
+        if (size > 1) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
@@ -620,7 +619,7 @@ extends graphics.RenderContext {
       }
       else {
           
-        if (isArray) {
+        if (size > 1) {
           var i = 0; while (i < size) {
             val arrayName = name + "[" + i + "]"
             val location = glGetUniformLocation(progId, arrayName)
@@ -641,9 +640,9 @@ extends graphics.RenderContext {
     val attributeCount = glGetProgram(progId, GL_ACTIVE_ATTRIBUTES)
     val attributeStringLength = glGetProgram(progId, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
     i = 0; while (i < attributeCount) {
-      val name = glGetActiveAttrib(progId, i, attributeStringLength, sizeType)
-      val size = sizeType.get(0) // Not used by GL.
-      val dataType = EngineBindingTypes.fromGlType(sizeType.get(1))
+      val name = glGetActiveAttrib(progId, i, attributeStringLength, sizeAndType)
+      val size = sizeAndType.get(0) // Not used by GL.
+      val dataType = EngineBindingTypes.fromGlType(sizeAndType.get(1))
       val location = glGetAttribLocation(progId, name)
       
       val binding = new ActiveAttribute(name, dataType, location)
@@ -950,17 +949,22 @@ extends graphics.RenderContext {
     val textureRemapping = graphicsContext.samplerRemapping(mesh.material, mesh.worldEnvironment)
     
     def remap(path: String) :String = {
+      
+      def arrayRemapping(name: String, index: String) :String = {
+        val res = textureRemapping.get(name + "[*]")
+        if (res != null) res.replace("[*]", "[" + index + "]")
+        else path
+      }
+      
       path match {
         
         case PathUtil.NameIndex(name, index) =>
-          val res = textureRemapping.get(name + "[*]")
-          if (res != null) res.replace("[*]", "[" + index + "]")
-          else path
+          arrayRemapping(name, index)
         
         case name =>
-          val res = textureRemapping.get(name)
+          var res = textureRemapping.get(name)
           if (res != null) res
-          else path
+          else arrayRemapping(name, "0")
       }
     }
     

@@ -69,11 +69,8 @@ extends graphics.TechniqueManager[G]
           insert(main, shader.mainOutput.get.name, shader)
         }
         else {
-          val key = if (shader.outputBlock.isDefined) {
-            val declarations = shader.outputBlock.get.declarations
-            
-            if (declarations.size == 1 && declarations.head.name == "gl_FragColor") ""
-            else shader.outputBlock.get.name
+          val key = if (shader.shaderType != Shader.Fragment && shader.outputBlock.isDefined) {
+            shader.outputBlock.get.name
           }
           else ""
           

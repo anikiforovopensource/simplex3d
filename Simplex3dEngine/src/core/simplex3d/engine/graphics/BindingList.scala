@@ -44,6 +44,8 @@ extends Protected with Binding with PropertyContextDependent
   def apply(i: Int) :T//XXX must be T#Read
   
   
+  // TODO Multidimensional arrays can be supported by having multidimensional size key.
+  // Then declare[BindingList[BindingList[X]]]("name").size(expr1, expr2). And def size(expr: String*).
   final def collectKeys(path: String, nameKey: ListNameKey, lists: HashMap[ListNameKey, Integer], enums: HashMap[String, Object]) {
     val size = this.size
     val existing = lists.get(nameKey)

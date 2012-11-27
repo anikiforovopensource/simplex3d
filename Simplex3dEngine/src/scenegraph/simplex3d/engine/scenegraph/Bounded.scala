@@ -57,10 +57,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (customBoundingVolume.isDefined) customBoundingVolume else autoBoundingVolume
   }
   
-  /** Only valid for meshes that were accepted for rendering (in the renderArray).
-   * XXX hide this method as debugging only.
-   */
-  final def boundingVolume: BoundingVolume = resolveBoundingVolume().get
+  protected def debugBoundingVolume: BoundingVolume = resolveBoundingVolume().get
   
   
   /** Animators are executed only for visible objects and only once per frame.
@@ -224,7 +221,7 @@ object Bounded {
         val indices = geometry.indices.get.read
         
         var first = 0
-        var count = vertices.size
+        var count = indices.size
         if (elementRange != null) {
           first = elementRange.first
           count = elementRange.count

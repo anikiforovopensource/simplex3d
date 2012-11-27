@@ -48,13 +48,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
   private val renderArray = new SortBuffer[AbstractMesh](1)
   
   
-  private def mkMesh() = new AbstractMesh { self =>
-    val name = effect.name + " Canvas"
-    
-    val geometry = MinimalGraphicsContext.mkGeometry()
-    val material = MinimalGraphicsContext.mkMaterial(null)
-    val worldEnvironment = MinimalGraphicsContext.mkEnvironment(null)
-    protected def worldMatrix = Mat4x3.Identity
+  private def mkMesh() = new BaseMesh(effect.name + " Canvas") { self =>
     
     geometry.vertices := Attributes.fromData(DataBuffer[Vec3, RFloat](
       Vec3(-1, -1, 0), Vec3(1, 1, 0), Vec3(-1, 1, 0),

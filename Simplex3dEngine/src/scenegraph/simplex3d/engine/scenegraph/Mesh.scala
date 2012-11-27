@@ -49,7 +49,7 @@ extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
     this(name, null, null.asInstanceOf[G#Geometry], null.asInstanceOf[G#Material])
   }
   
-  def worldEnvironment = parent.worldEnvironment
+  final def worldEnvironment = parent.worldEnvironment
   
   _parent = meshParent
   override def parent = super.parent

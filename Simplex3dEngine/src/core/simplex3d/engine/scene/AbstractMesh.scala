@@ -24,6 +24,7 @@ package scene
 import simplex3d.math.double._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
+import simplex3d.engine.bounding._
 
 
 trait AbstractMesh extends Spatial with EngineInfoRef { self =>
@@ -32,11 +33,12 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     import AccessChanges._
     
     def worldMatrix = self.worldMatrix
+    def debugBoundingVolume = self.debugBoundingVolume
     
     //XXX replace by a specialized class that handles array of techniques (for multiple passes)
     val technique = SharedRef[Technique]
     
-    val elementRange = Property.optional(ElementRange.Factory)
+    def elementRange = self.elementRange
     
     def hasStructuralChanges :Boolean = {
       geometry.hasStructuralChanges ||
@@ -66,12 +68,17 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   private[engine] final val meshSubtext = new MeshSubtext
 
+  final def elementRange = Property.optional(ElementRange.Factory)
+  
   val name: String
-  final def elementRange = meshSubtext.elementRange
   def geometry: Geometry
   def material: Material
   def worldEnvironment: Environment
   protected def worldMatrix: ReadMat4x3
+  
+  /** Only valid for meshes that were accepted for rendering (in the renderArray).
+   */
+  protected def debugBoundingVolume: BoundingVolume
   
   final def vertexCount :Int = {
     if (elementRange.isDefined) elementRange.get.count
@@ -112,4 +119,12 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     geometry.vertices.clearRefChanges()
     geometry.vertices.clearDataChanges()
   }
+}
+
+class BaseMesh(val name: String) extends AbstractMesh {
+  val geometry: Geometry = MinimalGraphicsContext.mkGeometry()
+  val material: Material = MinimalGraphicsContext.mkMaterial(null)
+  val worldEnvironment: Environment = MinimalGraphicsContext.mkEnvironment(null)
+  protected def worldMatrix: ReadMat4x3 = Mat4x3.Identity
+  def debugBoundingVolume = new Aabb(Vec3(Double.NegativeInfinity), Vec3(Double.PositiveInfinity))
 }

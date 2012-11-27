@@ -39,12 +39,10 @@ object Teapot extends default.App {
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
-    val start = System.nanoTime
-    val (indices, vertices, normals, texCoords) = assetManager.loadObj("simplex3d/example/asset/teapot.obj").get
-    val total = System.nanoTime - start
-    println("Loading time: " + total*1e-9)
     
-    val mesh = new Mesh("Cube")
+    val (indices, vertices, normals, texCoords) = assetManager.loadObj("simplex3d/example/asset/teapot.obj").get
+    
+    val mesh = new Mesh("Teapot")
     
     mesh.geometry.indices := Attributes.fromData(indices)
     mesh.geometry.vertices := Attributes.fromData(vertices)

@@ -3123,4 +3123,32 @@ object functions {
       -m02*tx - m12*ty - m22*tz
     )
   }
+  
+  
+  /** Computes normal matrix.
+   * @param modelViewMatrix Model View Matrix.
+   */
+  def normalMat(modelViewMatrix: inMat4x3f) :Mat3f = {
+    import modelViewMatrix._
+
+    val c0 = m11*m22 - m21*m12
+    val c1 = m21*m02 - m01*m22
+    val c2 = m01*m12 - m11*m02
+
+    val invDet = 1/(m00*c0 + m10*c1 + m20*c2)
+
+    new Mat3f(
+      c0*invDet,
+      (m20*m12 - m10*m22)*invDet,
+      (m10*m21 - m20*m11)*invDet,
+
+      c1*invDet,
+      (m00*m22 - m20*m02)*invDet,
+      (m20*m01 - m00*m21)*invDet,
+
+      c2*invDet,
+      (m10*m02 - m00*m12)*invDet,
+      (m00*m11 - m10*m01)*invDet
+    )
+  }
 }

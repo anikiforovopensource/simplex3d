@@ -1104,4 +1104,21 @@ class FloatMathExtraTest extends FunSuite {
       }
     }
   }
+  
+  test("Normal Matrix") {
+    val random = new Random(1)
+    def r = random.nextFloat
+
+    for (i <- 0 until 100) {
+      val modelViewMatrix = Mat4x3(
+        r, r, r,
+        r, r, r,
+        r, r, r,
+        r, r, r
+      )
+      
+      val normalMatrix = transpose(inverse(Mat3(modelViewMatrix)))
+      assert(normalMat(modelViewMatrix) == normalMatrix)
+    }
+  }
 }

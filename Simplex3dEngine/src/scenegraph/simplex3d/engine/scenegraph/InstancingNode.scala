@@ -283,7 +283,7 @@ extends Entity[T, G](name) {
       }
       
       val transformation = child.uncheckedWorldTransformation.matrix
-      val normalMatrix = if (srcNormals != null) transpose(inverse(Mat3(transformation))) else null
+      val normalMatrix = if (srcNormals != null) functions.normalMat(transformation) else null
       transformData(transformation, normalMatrix)
       
       if (geometry.indices.isDefined) {

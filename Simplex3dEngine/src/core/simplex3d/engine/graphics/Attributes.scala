@@ -69,7 +69,7 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
   
   def read: ReadDataView[F, R] = {
     if (isAccessible) accessible.asReadOnly()
-    else null
+    else null//XXX exception instead
   }
   
   def write: DataView[F, R] = write(0, src.size)

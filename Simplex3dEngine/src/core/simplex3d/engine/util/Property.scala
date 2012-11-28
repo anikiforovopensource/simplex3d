@@ -24,6 +24,7 @@ package util
 import simplex3d.math.types._
 
 
+//XXX should this really be in util package?
 sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final val factory: () => T,
   private[this] final val enforceDefined: Boolean

@@ -52,7 +52,7 @@ final class Timer extends engine.Timer {
     val fpsSampleRate = 2.5*timerRes
     
     var cur = Sys.getTime()
-    if (cur < last || cur > last + timerRes) cur = (last + 0.01/timeScale).toLong
+    
     val lastFrameInterval = (cur - last)*timeScale
     val uptime = (cur - start)*timeScale
     last = cur

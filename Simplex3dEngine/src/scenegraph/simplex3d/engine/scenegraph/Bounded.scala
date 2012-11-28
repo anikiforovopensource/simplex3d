@@ -200,11 +200,12 @@ object Bounded {
   }
   
   
+  //XXX move this into BoundingVolume object
   def rebuildAabb(elementRange: ReadElementRange, geometry: Geometry)(resultMin: Vec3, resultMax: Vec3) {
     resultMin := Vec3(Double.MaxValue)
     resultMax := Vec3(Double.MinValue)
     
-    if (!geometry.vertices.isDefined || !geometry.vertices.get.isAccessible) return
+    if (!geometry.vertices.isAccessible) return
     
     val pointSpriteOffset = geometry.primitive.get.mode.toConst match {
       case VertexMode.PointSprites => geometry.primitive.get.pointSpriteSize*0.5
@@ -219,7 +220,7 @@ object Bounded {
     }
     
     
-    if (geometry.indices.isDefined && geometry.indices.get.isAccessible) {
+    if (geometry.indices.isAccessible) {
       def rebuildWithIndex() {
         val indices = geometry.indices.get.read
         
@@ -241,7 +242,7 @@ object Bounded {
       }; rebuildWithIndex()
     }
     else {
-      def rebuildAll() {
+      def rebuildNoIndex() {
         var first = 0
         var count = vertices.size
         if (elementRange != null) {
@@ -257,7 +258,7 @@ object Bounded {
           
           i += 1
         }
-      }; rebuildAll()
+      }; rebuildNoIndex()
     }
   }
 }

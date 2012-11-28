@@ -594,43 +594,45 @@ extends graphics.RenderContext {
     val uniformCount = glGetProgram(progId, GL_ACTIVE_UNIFORMS)
     val uniformStringLength = glGetProgram(progId, GL_ACTIVE_UNIFORM_MAX_LENGTH)
     var i = 0; while (i < uniformCount) {
-      val glName = glGetActiveUniform(progId, i, uniformStringLength, sizeAndType)
-      val name = if (glName.endsWith("[0]")) glName.dropRight(3) else glName
-      val size = sizeAndType.get(0)
-      val dataType = EngineBindingTypes.fromGlType(sizeAndType.get(1))
-      
-      if (EngineBindingTypes.isTexture(dataType)) {
-
-        if (size > 1) {
-          var i = 0; while (i < size) {
-            val arrayName = name + "[" + i + "]"
-            val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new ActiveTexture(arrayName, dataType, location, textureUnitCount)
+      val rawPath = glGetActiveUniform(progId, i, uniformStringLength, sizeAndType)
+      if (!rawPath.startsWith("gl_")) {
+        val path = if (rawPath.endsWith("[0]")) rawPath.dropRight(3) else rawPath
+        val size = sizeAndType.get(0)
+        val dataType = EngineBindingTypes.fromGlType(sizeAndType.get(1))
+        
+        if (EngineBindingTypes.isTexture(dataType)) {
+  
+          if (size > 1) {
+            var i = 0; while (i < size) {
+              val arrayName = path + "[" + i + "]"
+              val location = glGetUniformLocation(progId, arrayName)
+              uniformBindings += new ActiveTexture(arrayName, dataType, location, textureUnitCount)
+              textureUnitCount += 1
+              
+              i += 1
+            }
+          }
+          else {
+            val location = glGetUniformLocation(progId, path)
+            uniformBindings += new ActiveTexture(path, dataType, location, textureUnitCount)
             textureUnitCount += 1
-            
-            i += 1
           }
         }
         else {
-          val location = glGetUniformLocation(progId, name)
-          uniformBindings += new ActiveTexture(name, dataType, location, textureUnitCount)
-          textureUnitCount += 1
-        }
-      }
-      else {
-          
-        if (size > 1) {
-          var i = 0; while (i < size) {
-            val arrayName = name + "[" + i + "]"
-            val location = glGetUniformLocation(progId, arrayName)
-            uniformBindings += new ActiveUniform(arrayName, dataType, location)
             
-            i += 1
+          if (size > 1) {
+            var i = 0; while (i < size) {
+              val arrayName = path + "[" + i + "]"
+              val location = glGetUniformLocation(progId, arrayName)
+              uniformBindings += new ActiveUniform(arrayName, dataType, location)
+              
+              i += 1
+            }
           }
-        }
-        else {
-          val location = glGetUniformLocation(progId, name)
-          uniformBindings += new ActiveUniform(name, dataType, location)
+          else {
+            val location = glGetUniformLocation(progId, path)
+            uniformBindings += new ActiveUniform(path, dataType, location)
+          }
         }
       }
       

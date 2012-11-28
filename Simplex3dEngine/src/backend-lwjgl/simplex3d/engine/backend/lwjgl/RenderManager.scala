@@ -62,102 +62,10 @@ final class RenderManager extends graphics.RenderManager {
   
   private val elementRange = new ElementRange()
   
-  //XXX this belongs in path manager
-  class DebugLinesManager(val name: String, val indicesPerMesh: Int = 65536, val verticesPerMesh: Int = 65536) {
-    private val meshes = new ArrayBuffer[AbstractMesh](1)
-    newMesh()
-    
-    private var currentMesh = 0
-    private var currentIndex = 0
-    private var currentVertex = 0
-    
-    def clear() {
-      currentMesh = 0
-      currentIndex = 0
-      currentVertex = 0
-    }
-    
-    private def newMesh() {
-      val mesh = new BaseMesh(name + " Debug " + (currentMesh + 1))
-      mesh.geometry.indices := Attributes.fromData(IndexBuffer(verticesPerMesh - 1, indicesPerMesh))
-      mesh.geometry.vertices := Attributes[Vec3, RFloat](verticesPerMesh)
-      mesh.geometry.primitive.update.mode := VertexMode.Lines
-      mesh.geometry.primitive.update.lineWidth := 2
-      meshes += mesh
-    }
-    
-    def append(indices: inIndex, vertices: inDataSeq[Vec3, Raw]) {
-      require(indices.size < indicesPerMesh && vertices.size < verticesPerMesh)
-      
-      if (currentIndex + indices.size > indicesPerMesh || currentVertex + vertices.size > verticesPerMesh) {
-        currentMesh += 1
-        currentIndex = 0
-        currentVertex = 0
-        
-        if (currentMesh >= meshes.size) newMesh()
-      }
-      
-      val mesh = meshes(currentMesh)
-      
-      val destIndices = mesh.geometry.indices.write
-      var i = 0; while (i < indices.size) {
-        destIndices(currentIndex + i) = indices(i) + currentVertex
-        i += 1
-      }
-      mesh.geometry.vertices.write.put(currentVertex, vertices)
-      
-      currentIndex += indices.size
-      currentVertex += vertices.size
-      
-      mesh.elementRange.update.count := currentIndex
-    }
-    
-    def renderArray: Seq[AbstractMesh] = meshes
-  }
   
-  object Box {
-    private val boxIndices = DataArray[SInt, UByte](
-      0, 1,
-      1, 2,
-      2, 3,
-      3, 0,
-      4, 5,
-      5, 6,
-      6, 7,
-      7, 4,
-      0, 4,
-      1, 5,
-      3, 7,
-      2, 6
-    )
-    private val boxVertices = DataArray[Vec3, RFloat](
-      Vec3(0, 0, 0),
-      Vec3(1, 0, 0),
-      Vec3(1, 1, 0),
-      Vec3(0, 1, 0),
-      Vec3(0, 0, 1),
-      Vec3(1, 0, 1),
-      Vec3(1, 1, 1),
-      Vec3(0, 1, 1)
-    )
-    
-    private val transformedVertices = DataArray[Vec3, RFloat](boxVertices.size)
-    
-    def append(debugManager: DebugLinesManager)(min: inVec3, max: inVec3, transformation: inMat4x3) {
-      val t = Mat4x3 scale(max - min) translate(min) concat(transformation)
-      
-      var i = 0; while (i < boxVertices.size) {
-        transformedVertices(i) = t.transformPoint(boxVertices(i))
-        
-        i += 1
-      }
-      
-      debugManager.append(boxIndices, transformedVertices)
-    }
-  }
-  
-  val showBoundingVolumes = true
   val debugBoundingVolumes = new DebugLinesManager("Bounding Volume")
+  val debugNormals = new DebugLinesManager("Normals")
+  val debugArray = new ArrayBuffer[AbstractMesh]
     
   
   def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) {
@@ -182,25 +90,22 @@ final class RenderManager extends graphics.RenderManager {
       i += 1
     }
     
-    //XXX this belongs in path manager
+    //XXX some of this belongs in pass manager
     if (showBoundingVolumes) {
       import simplex3d.engine.bounding._
       
       debugBoundingVolumes.clear()
-      
-      var indexCount = 0
-      var vertexCount = 0
       
       var i = 0; while (i < renderArray.size) {
         val mesh = renderArray(i)
         
         mesh.debugBoundingVolume match {
           case b: Aabb =>
-            Box.append(debugBoundingVolumes)(b.min, b.max, Mat4x3.Identity)
+            DebugBounding.appendBox(debugBoundingVolumes)(Vec3(1, 1, 1), b.min, b.max, Mat4x3.Identity)
           case b: Oabb =>
-            Box.append(debugBoundingVolumes)(b.min, b.max, mesh.worldMatrix)
+            DebugBounding.appendBox(debugBoundingVolumes)(Vec3(0, 1, 1), b.min, b.max, mesh.worldMatrix)
           case b: Obb =>
-            Box.append(debugBoundingVolumes)(b.min, b.max, b.transformation concat mesh.worldMatrix)
+            DebugBounding.appendBox(debugBoundingVolumes)(Vec3(1, 1, 0), b.min, b.max, b.transformation concat mesh.worldMatrix)
           case _ =>
             // ignore
         }
@@ -208,8 +113,41 @@ final class RenderManager extends graphics.RenderManager {
         i += 1
       }
       
-      i = 0; while (i < debugBoundingVolumes.renderArray.size) {
-        val mesh = debugBoundingVolumes.renderArray(i)
+      debugArray.clear()
+      debugBoundingVolumes.buildRenderArray(debugArray)
+      
+      i = 0; while (i < debugArray.size) {
+        val mesh = debugArray(i)
+        render(camera, mesh)
+        
+        i += 1
+      }
+    }
+    
+    if (showNormals) {
+      import simplex3d.engine.bounding._
+      
+      debugNormals.clear()
+      
+      var i = 0; while (i < renderArray.size) {
+        val mesh = renderArray(i)
+        
+        val objectSize: Double = mesh.debugBoundingVolume match {
+          case b: Aabb => length(b.max - b.min)*0.5
+          case b: Oabb => length(b.max - b.min)*0.5
+          case b: Obb => length(b.max - b.min)*0.5
+          case _ => 10.0
+        }
+        DebugNormals.append(debugNormals)(mesh, objectSize)
+        
+        i += 1
+      }
+      
+      debugArray.clear()
+      debugNormals.buildRenderArray(debugArray)
+      
+      i = 0; while (i < debugArray.size) {
+        val mesh = debugArray(i)
         render(camera, mesh)
         
         i += 1
@@ -219,7 +157,6 @@ final class RenderManager extends graphics.RenderManager {
 
   
   private def render(camera: AbstractCamera, mesh: AbstractMesh) {
-    
     
     var useDefaultProgram = false
     
@@ -273,7 +210,7 @@ final class RenderManager extends graphics.RenderManager {
     val predefinedUniforms = renderContext.predefinedUniforms
     predefinedUniforms.se_modelViewMatrix := transformation concat camera.view
     predefinedUniforms.se_modelViewProjectionMatrix := camera.projection*Mat4(predefinedUniforms.se_modelViewMatrix)
-    predefinedUniforms.se_normalMatrix := transpose(inverse(Mat3(predefinedUniforms.se_modelViewMatrix)))
+    predefinedUniforms.se_normalMatrix := normalMat(predefinedUniforms.se_modelViewMatrix)
     
     // Update bindings using predefined uniforms.
     val effects = mesh.updatableEffects

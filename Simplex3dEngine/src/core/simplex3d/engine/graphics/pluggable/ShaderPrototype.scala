@@ -33,6 +33,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
+//XXX add (val pack, val name) // log as {val name = pack.chainKey + "." + pack.name + "." + name}
 final class ShaderPrototype private[pluggable] (
   val logging: ShaderLogging,
   val shaderType: Shader.type#Value,

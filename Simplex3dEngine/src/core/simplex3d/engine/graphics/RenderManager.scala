@@ -33,4 +33,8 @@ trait RenderManager {
   
   def render(time: TimeStamp, camera: AbstractCamera, renderArray: SortBuffer[AbstractMesh]) :Unit
   def sortRenderArray(pass: Pass, renderArray: SortBuffer[AbstractMesh]) :Unit
+  
+  //XXX this belongs in pass manager
+  var showBoundingVolumes = false
+  var showNormals = false
 }

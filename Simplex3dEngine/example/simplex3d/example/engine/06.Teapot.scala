@@ -59,7 +59,7 @@ object Teapot extends default.App {
     val noise = ClassicalGradientNoise
     val objectTexture = Texture2d[Vec3](Vec2i(256)).fillWith { p =>
       val intensity = (noise(p.x*0.06, p.y*0.06) + 1)*0.5
-      Vec3(0, intensity, intensity) + 0.2
+      Vec3(intensity, intensity, intensity) + 0.2
     }
     
     mesh.material.textureUnits.update += new TextureUnit(

@@ -85,7 +85,10 @@ final class RenderManager extends graphics.RenderManager {
     
     var i = 0; while (i < renderArray.size) {
       val mesh = renderArray(i)
+      
+      mesh.preRender()
       render(camera, mesh)
+      mesh.postRender()
       
       i += 1
     }
@@ -301,6 +304,13 @@ final class RenderManager extends graphics.RenderManager {
     def compare(a: AbstractMesh, b: AbstractMesh) :Int = {
       // XXX sort by textures: if (at0id < bt0id) -1 else if (at0id > bt0id)  1 else 0
       // XXX also sort by parent's environment
+      
+      { // Another pointSprite hack to allow particle effects without pass manager implementation.
+        val aps = if (a.geometry.primitive.get.mode == VertexMode.PointSprites) 1 else 0
+        val bps = if (b.geometry.primitive.get.mode == VertexMode.PointSprites) 1 else 0
+        if (aps < bps) return -1
+        else if (aps > bps) return 1
+      }
       
       if (a.technique.isDefined && b.technique.isDefined) {
         val ainfo = getEngineInfo(a.technique.get).asInstanceOf[ProgramInfo]

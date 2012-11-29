@@ -130,13 +130,15 @@ class DebugLinesManager(val name: String, val indicesPerMesh: Int = 65536, val v
   ) {
     require(indexCount < indicesPerMesh && vertexCount < verticesPerMesh)
     
-    if (currentIndex + indexCount > indicesPerMesh || currentVertex + vertexCount > verticesPerMesh) {
+    def nextMesh() {
       currentMesh += 1
       currentIndex = 0
       currentVertex = 0
       
       if (currentMesh >= meshes.size) newMesh()
     }
+    
+    if (currentIndex + indexCount > indicesPerMesh || currentVertex + vertexCount > verticesPerMesh) nextMesh()
     
     val mesh = meshes(currentMesh)
     
@@ -210,11 +212,11 @@ object DebugBounding {
 
 object DebugNormals {
   
-  private val tbnBatchSize = 40
+  private val tbnBatchSize = 2000
   private val lineIndexSize = 6*tbnBatchSize
-  private val lineVertexSize = 4*tbnBatchSize; assert(lineVertexSize < 256)
+  private val lineVertexSize = 4*tbnBatchSize; assert(lineVertexSize < 65536)
   
-  private val lineIndices = DataArray[SInt, UByte](lineIndexSize)
+  private val lineIndices = DataArray[SInt, UShort](lineIndexSize)
   private val lineVertices = DataArray[Vec3, RFloat](lineVertexSize)
   private val lineColors = DataArray[Vec3, UByte](lineVertices.size)
   
@@ -240,7 +242,7 @@ object DebugNormals {
     val normalMatrix = normalMat(transformation)
     
     val objectScale = length(transformation.transformVector(Vec3.One))/length(Vec3.One)
-    val normalScale = objectScale*objectSize*normalLengthRatio
+    val normalScale = objectScale*objectScale*objectSize*normalLengthRatio
     
     
     var currentLineIndex = 0
@@ -256,7 +258,7 @@ object DebugNormals {
       if (currentLineIndex + 2 > lineIndices.size || currentLineVertex + 2 > lineVertices.size) flush()
       
       val vertex1 = transformation.transformPoint(vertex)
-      val normal1 = normalize(normalMatrix*normal)*normalScale
+      val normal1 = normalMatrix*normal*normalScale
       
       lineIndices(currentLineIndex) = currentLineVertex
       lineIndices(currentLineIndex + 1) = currentLineVertex + 1

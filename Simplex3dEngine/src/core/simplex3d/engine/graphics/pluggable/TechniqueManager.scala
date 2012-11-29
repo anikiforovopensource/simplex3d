@@ -191,7 +191,7 @@ extends graphics.TechniqueManager[G]
           val declaration = declarations(i)
           
           if (declaration.isPredefined && declaration.name == "se_pointSize") {
-            passed = geometry.primitive.get.mode.toConst == VertexMode.PointSprites
+            passed = geometry.primitive.get.mode == VertexMode.PointSprites
           }
           else {
             val resolved = graphicsContext.resolveUniformPath(

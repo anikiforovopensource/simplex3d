@@ -22,7 +22,7 @@ object PointSpritesMesh extends default.App {
     launch()
   }
   
-  val pointCount = 30000
+  val pointCount = 3000
   val title = "PointSprites: " + pointCount + " points."
   
   override lazy val settings = new Settings(
@@ -45,7 +45,20 @@ object PointSpritesMesh extends default.App {
   }
 
   
-  val mesh = new Mesh("PointSprites")
+  val mesh = new Mesh("PointSprites") {
+    // Still a temp hack, but a more robust one.
+    import org.lwjgl.opengl.GL11
+    
+    override def preRender() {
+      GL11.glEnable(GL11.GL_BLEND)
+      GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+    }
+    
+    override def postRender() {
+      GL11.glDisable(GL11.GL_BLEND)
+    }
+  }
+  
   val tempIndexData = DataBuffer[SInt, UShort](pointCount)
   val sortContext = new DataSort(pointCount)
   
@@ -55,62 +68,82 @@ object PointSpritesMesh extends default.App {
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
+    {
+      val objectTexture = Texture2d[Vec4](Vec2i(128))
+      objectTexture.fillWith { p =>
+        val innerRadius = 44
+        val outerRadius = 64
     
-    val objectTexture = Texture2d[Vec4](Vec2i(128))
-    objectTexture.fillWith { p =>
-      val innerRadius = 44
-      val outerRadius = 64
-  
-      val len = length(p - Vec2(64))
+        val len = length(p - Vec2(64))
+        
+        if (len < innerRadius - 2) {
+          Vec4(0, 0.8, 0.8, 1)
+        }
+        else if (len < innerRadius + 2) {
+          val factor = (innerRadius - len)*0.25
+          mix(Vec4(0.1, 0.1, 1, 1), Vec4(0, 0.8, 0.8, 1), clamp(factor, 0, 1))
+        }
+        else if (len < outerRadius - 2) {
+          Vec4(0.1, 0.1, 1, 1)
+        }
+        else if (len < outerRadius + 2) {
+          val factor = (outerRadius - len)*0.25
+          mix(Vec4(0.1, 0.1, 1, 0), Vec4(0.1, 0.1, 1, 1), clamp(factor, 0, 1))
+        }
+        else {
+          Vec4.Zero
+        }
+      }
       
-      if (len < innerRadius - 2) {
-        Vec4(0, 0.8, 0.8, 1)
+      
+      val indices = Attributes[SInt, UShort](pointCount)
+      val indexData = indices.write
+      for (i <- 0 until indexData.size) indexData(i) = i
+      
+      mesh.geometry.primitive.update.mode := VertexMode.PointSprites
+      // Setting large point size for PointSprites prevents culling when point center is offscreen.
+      mesh.geometry.primitive.update.pointSize := 500
+      mesh.geometry.primitive.update.pointSpriteSize := 1.9
+      
+      mesh.geometry.indices := indices
+      mesh.geometry.vertices := Attributes[Vec3, RFloat](pointCount)
+      mesh.customBoundingVolume := new Oabb(Vec3(-200), Vec3(200))
+      mesh.material.faceCulling.update := FaceCulling.Back
+      mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+      mesh.transformation.update
+      
+      var vertices = mesh.geometry.vertices.write//XXX replace attribute.read/wreite with attribute.get/update
+      for (i <- 0 until pointCount) {
+        vertices(i) = curve(i, 0)
       }
-      else if (len < innerRadius + 2) {
-        val factor = (innerRadius - len)*0.25
-        mix(Vec4(0.1, 0.1, 1, 1), Vec4(0, 0.8, 0.8, 1), clamp(factor, 0, 1))
-      }
-      else if (len < outerRadius - 2) {
-        Vec4(0.1, 0.1, 1, 1)
-      }
-      else if (len < outerRadius + 2) {
-        val factor = (outerRadius - len)*0.25
-        mix(Vec4(0.1, 0.1, 1, 0), Vec4(0.1, 0.1, 1, 1), clamp(factor, 0, 1))
-      }
-      else {
-        Vec4.Zero
-      }
+      
+      world.attach(mesh)
     }
     
+    {// An object to test blending.
+      val (indices, vertices, normals, texCoords) = Shapes.makeBox()
     
-    val indices = Attributes[SInt, UShort](pointCount)
-    val indexData = indices.write
-    for (i <- 0 until indexData.size) indexData(i) = i
-    
-    mesh.geometry.primitive.update.mode := VertexMode.PointSprites
-    // Setting large point size for PointSprites prevents culling when point center is offscreen.
-    mesh.geometry.primitive.update.pointSize := 500
-    mesh.geometry.primitive.update.pointSpriteSize := 1.9
-    
-    mesh.geometry.indices := indices
-    mesh.geometry.vertices := Attributes[Vec3, RFloat](pointCount)
-    mesh.customBoundingVolume := new Oabb(Vec3(-200), Vec3(200))
-    mesh.material.faceCulling.update := FaceCulling.Back
-    mesh.material.textureUnits.update += new TextureUnit(objectTexture)
-    mesh.transformation.update
-    
-    var vertices = mesh.geometry.vertices.write//XXX replace attribute.read/wreite with attribute.get/update
-    for (i <- 0 until pointCount) {
-      vertices(i) = curve(i, 0)
+      val mesh = new Mesh("Cube")
+      
+      mesh.geometry.indices := Attributes.fromData(indices)
+      mesh.geometry.vertices := Attributes.fromData(vertices)
+      mesh.geometry.normals := Attributes.fromData(normals)
+      
+      mesh.geometry.texCoords := Attributes.fromData(texCoords)
+      
+      val noise = new TiledNoise(ClassicalGradientNoise, ConstVec4(128), 0.01)
+      val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
+        val intensity = (noise(p.x, p.y, 2.324) + 1)*0.5
+        Vec3(0.8, 0, 1)*intensity
+      }
+      mesh.material.textureUnits.update += new TextureUnit(objectTexture)
+      
+      val transformation = mesh.transformation.update
+      transformation.rotation := Quat4 rotateX(radians(25)) rotateY(radians(-30))
+      transformation.scale := 50
+      
+      world.attach(mesh)
     }
-    
-    world.attach(mesh)
-    
-    
-    // This is temp hack
-    import org.lwjgl.opengl.{ GL11, GL12, GL14 }
-    GL11.glEnable(GL11.GL_BLEND)
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
   }
 
   

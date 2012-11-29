@@ -46,7 +46,7 @@ final class SystemTimer extends Timer {
 
   def update() {
     var cur = System.nanoTime
-    if (cur < lastNanos || cur > lastNanos + 1000*1000*1000) cur = lastNanos + 10*1000*1000
+    
     val lastFrameInterval = (cur - lastNanos)*1e-9
     val uptime = (cur - startNanos)*1e-9
     lastNanos = cur

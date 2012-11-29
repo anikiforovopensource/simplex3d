@@ -120,6 +120,10 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
     geometry.vertices.clearRefChanges()
     geometry.vertices.clearDataChanges()
   }
+  
+  
+  @deprecated("Temporary work-around.") def preRender() {}
+  @deprecated("Temporary work-around.") def postRender() {}
 }
 
 class BaseMesh(val name: String) extends AbstractMesh {

@@ -30,8 +30,8 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
 
 
-
-final class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
+@deprecated("Mesh will be made final in the future versions.")
+class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
   name: String,
   meshParent: AbstractNode[T, G],
   cgeometry: G#Geometry, // Caution: geometry and material must never be shared among displayable meshes!

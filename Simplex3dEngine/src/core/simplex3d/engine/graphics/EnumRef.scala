@@ -42,11 +42,16 @@ extends Protected with PropertyContextDependent with Serializable
   // XXX enable after the next Scala release.
 //  final override def equals(other: Any) :Boolean = {
 //    other match {
-//      case r: ReadEnumRef[_] => value == r.toConst
-//      case e: AnyRef => value eq e
+//      case r: ReadEnumRef[_] => value0 == r.toConst
+//      case e: AnyRef => value0 eq e
 //      case _ => false
 //    }
 //  }
+  final override def equals(other: Any) :Boolean = {
+    if (this.value0 eq other.asInstanceOf[AnyRef]) true
+    else if (other.isInstanceOf[ReadEnumRef[_]]) value0 == other.asInstanceOf[ReadEnumRef[_]].toConst
+    else false
+  }
   
   final def collectKeys(path: String, enums: HashMap[String, Object]) {
     enums.put(path, toConst)//XXX warn on existing

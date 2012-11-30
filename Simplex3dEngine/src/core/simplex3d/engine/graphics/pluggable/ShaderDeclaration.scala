@@ -144,8 +144,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         val shorterName = unprefixedName.dropRight(3)
         if (shorterName == "double") "float" else shorterName
       }
-      else if (unprefixedName.startsWith("vec") && unprefixedName.endsWith("i")) {
-        "i" + unprefixedName.dropRight(1)
+      else if (unprefixedName.startsWith("vec")) {
+        if (unprefixedName.endsWith("i")) "i" + unprefixedName.dropRight(1)
+        else unprefixedName.dropRight(1)
       }
       else if (unprefixedName.startsWith("mat") && squareMatrices) {
         unprefixedName.dropRight(1) match {
@@ -155,7 +156,12 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         }
       }
       else {
-        unprefixedName.dropRight(1)
+        unprefixedName match {
+          case "SInt" => "int"
+          case "RFloat" => "float"
+          case "RDouble" => "float"
+          case _ => "???"
+        }
       }
     }
     private def resolveTextureType(

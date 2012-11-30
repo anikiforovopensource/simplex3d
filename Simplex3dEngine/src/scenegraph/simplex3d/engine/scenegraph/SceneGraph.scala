@@ -123,7 +123,7 @@ extends ManagedScene[G](name) {
       
       if (mesh.hasStructuralChanges) {
         val technique = techniqueManager.resolveTechnique(
-          mesh.name, mesh.geometry, mesh.material, mesh.worldEnvironment)
+          mesh.name, mesh.shaderDebugging, mesh.geometry, mesh.material, mesh.worldEnvironment)
           
         if (technique != null) mesh.technique := technique else mesh.technique.undefine()
         

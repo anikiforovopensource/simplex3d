@@ -76,6 +76,9 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   def worldEnvironment: Environment
   protected def worldMatrix: ReadMat4x3
   
+  val shaderDebugging = new ShaderDebugging
+  
+  
   /** Only valid for meshes that were accepted for rendering (in the renderArray).
    */
   protected def debugBoundingVolume: BoundingVolume

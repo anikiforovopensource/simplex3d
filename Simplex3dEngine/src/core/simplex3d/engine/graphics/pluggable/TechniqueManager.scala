@@ -100,10 +100,12 @@ extends graphics.TechniqueManager[G]
   
   
   def resolveTechnique(
-      meshName: String,
+      meshName: String, shaderDebugging: ShaderDebugging,
       geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment)
   :Technique =
   {
+    def logRejected(shader: ShaderPrototype) :Boolean = shaderDebugging.logRejected || shader.debugging.logRejected
+    def logAccepted(shader: ShaderPrototype) :Boolean = shaderDebugging.logAccepted || shader.debugging.logAccepted
     
     val quickKey = graphicsContext.collectKeys(geometry, material, worldEnvironment)
     
@@ -125,7 +127,7 @@ extends graphics.TechniqueManager[G]
       
       if (resolving.contains(shader)) {
         log(Level.INFO,
-          "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
           "' because of cyclic dependency."
         )
         
@@ -149,8 +151,8 @@ extends graphics.TechniqueManager[G]
           val resolved = enumMap.get(path)
           if (resolved != null) passed = condition(resolved)
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the condition with path '" + path + "' was not satisfied."
           )
           
@@ -171,8 +173,8 @@ extends graphics.TechniqueManager[G]
           val attrib = graphicsContext.resolveAttributePath(declaration.name, geometry)
           passed = (attrib != null)//XXX check the type at runtime
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the attribute '" + declaration.name + "' is not defined."
           )
           
@@ -200,8 +202,8 @@ extends graphics.TechniqueManager[G]
             passed = (resolved != null)//XXX check the type at runtime
           }
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the uniform '" + declaration.name + "' is not defined."
           )
           
@@ -240,8 +242,8 @@ extends graphics.TechniqueManager[G]
             }
           }
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the required function '" + requiredFunction + "' could not be resolved."
           )
           
@@ -283,8 +285,8 @@ extends graphics.TechniqueManager[G]
             }
           }
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because because the main input '" + inputBlock.name + "' could not be resolved."
           )
           
@@ -334,8 +336,8 @@ extends graphics.TechniqueManager[G]
             }
           }
           
-          if (!passed && shader.logging.logRejected(meshName)) log(Level.INFO,
-            "Shader '" + shader.logging.name + "' was rejected for mesh '" + meshName +
+          if (!passed && logRejected(shader)) log(Level.INFO,
+            "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the input block '" + inputBlock.name + "' could not be resolved."
           )
           
@@ -376,8 +378,8 @@ extends graphics.TechniqueManager[G]
         chain += shader
         acceptable(stageId).put(dependencyKey, chain)
         
-        if (shader.logging.logAccepted(meshName)) log(
-          Level.INFO, "Shader '" + shader.logging.name + "' was accepted for mesh '" + meshName + "'."
+        if (logAccepted(shader)) log(
+          Level.INFO, "Shader '" + shader.name + "' was accepted for mesh '" + meshName + "'."
         )
         
         resolving.remove(shader)

@@ -422,7 +422,7 @@ package testenv {
     }
     
     def resolveTechnique(
-      meshName: String,
+      meshName: String, shaderDebugging: ShaderDebugging,
       geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
     )
     :Technique = {

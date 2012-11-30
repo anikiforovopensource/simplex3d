@@ -73,8 +73,6 @@ import simplex3d.engine.graphics._
  */
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
-  protected final class Logging(var name: String, var logAccepted: Boolean, var logRejected: Boolean, var meshes: Set[String])
-  
   protected final class Declaration private[ShaderDeclaration] (
     val manifest: ClassManifest[_ <: Binding], val name: String
   )
@@ -379,7 +377,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   
-  protected val logging = new Logging(this.hashCode.toString, false, false, Set.empty[String])
+  protected val debugging = new ShaderDebugging
   
   protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
@@ -571,7 +569,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         "Only shaders with main(){} can define out{} blocks.")
       
     new ShaderPrototype(
-      new ShaderLogging(logging.name, logging.logAccepted, logging.logRejected, logging.meshes),
+      debugging,
       shaderType,
       version,
       squareMat,

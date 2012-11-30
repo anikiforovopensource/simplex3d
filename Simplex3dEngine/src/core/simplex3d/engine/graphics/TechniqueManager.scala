@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics
 
 import java.util.HashMap
+import simplex3d.engine.util._
 
 
 abstract class TechniqueManager[G <: GraphicsContext] {
@@ -29,7 +30,7 @@ abstract class TechniqueManager[G <: GraphicsContext] {
   val passManager: PassManager[G]
   
   def resolveTechnique(
-    meshName: String,
+    meshName: String, shaderDebugging: ShaderDebugging,
     geometry: G#Geometry, material: G#Material, worldEnvironment: G#Environment
   ) :Technique
 }

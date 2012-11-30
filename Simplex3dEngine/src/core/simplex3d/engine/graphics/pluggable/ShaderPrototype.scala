@@ -35,7 +35,7 @@ import simplex3d.engine.graphics._
 
 //XXX add (val pack, val name) // log as {val name = pack.chainKey + "." + pack.name + "." + name}
 final class ShaderPrototype private[pluggable] (
-  val logging: ShaderLogging,
+  val debugging: ShaderDebugging,
   val shaderType: Shader.type#Value,
   val version: String,
   val squareMatrices: Boolean,
@@ -55,6 +55,46 @@ final class ShaderPrototype private[pluggable] (
   val functionDependencies: ReadArray[String],
   val sources: List[String]
 ) {
+  
+  val name: String = {
+    
+    val shaderTypeString = shaderType match {
+      case Shader.Fragment => "Frag"
+      case Shader.Vertex => "Vert"
+    }
+    
+    val sigType = if (functionSignature.isDefined) "Function" else "Main"
+    
+    val sig = {
+      if (functionSignature.isDefined) functionSignature.get
+      else {
+        "void " + mainLabel.get + "(" +
+        {
+          (for (block <- mainInputs) yield "in " + block.name) ++
+          (if (mainOutput.isDefined) "out " + mainOutput.get.name else "")
+        }.mkString(", ") +
+        ")"
+      }
+    }
+    
+    val inInterface = if (inputBlocks.size > 0) {
+      "in { " +
+      (for (block <- inputBlocks) yield block.name).mkString(", ") +
+      " }"
+    }
+    else ""
+      
+    val outInterface = if (outputBlock.isDefined) {
+      "out { " + outputBlock.get.name +  " }"
+    }
+    else ""
+    
+    shaderTypeString + sigType + "{ " + sig +
+    (if (inInterface.isEmpty) "" else "; " + inInterface) +
+    (if (outInterface.isEmpty) "" else "; " + outInterface) +
+    " }"
+  }
+  
   def isVertexShader = (shaderType == Shader.Vertex)
   val structs = StructSignature.organizeDependencies(uniformBlock.flatMap(_.structSignatures))
   

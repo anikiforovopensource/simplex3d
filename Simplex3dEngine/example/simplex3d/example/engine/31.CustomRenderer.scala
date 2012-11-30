@@ -106,6 +106,8 @@ object CustomRenderer extends default.BaseApp {
       
     mesh.transformation.update.scale := 40
     
+    mesh.shaderDebugging.logAccepted = true
+    
     // Attach the mesh to the scenegraph.
     world.attach(mesh)
     
@@ -422,6 +424,8 @@ object CustomRenderer extends default.BaseApp {
   
   // Declare lighting shaders.
   techniqueManager.push(new FragmentShader {
+    debugging.logRejected = true
+    
     uniform {
       declare[BindingList[PointLight]]("lighting")
     }

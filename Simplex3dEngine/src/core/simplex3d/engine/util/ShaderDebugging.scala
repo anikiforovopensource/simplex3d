@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Renderer Module
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -18,15 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package graphics.pluggable
+package simplex3d.engine.util
 
 
-final class ShaderLogging(
-    val name: String,
-    val logAccepted: Boolean, val logRejected: Boolean,
-    val meshes: Set[String])
-{
-  def logAccepted(mesh: String) :Boolean = logAccepted && (meshes.isEmpty || meshes.contains(mesh))
-  def logRejected(mesh: String) :Boolean = logRejected && (meshes.isEmpty || meshes.contains(mesh))
+final class ShaderDebugging {
+  var logAccepted: Boolean = false
+  var logRejected: Boolean = false
 }

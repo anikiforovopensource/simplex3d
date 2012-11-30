@@ -80,4 +80,38 @@ abstract class BaseApp extends simplex3d.engine.App {
     val aspect = dimensions.x.toDouble/dimensions.y
     world.camera.projection := perspectiveProj(radians(60), aspect, 5, 1000)
   }
+  
+  {
+    import java.util.logging._
+    
+    val formatter = new Formatter {
+      def format(record: LogRecord) :String = {
+        
+        val time = record.getMillis.toString.dropRight(3).takeRight(4)
+        val level = record.getLevel.toString
+        
+        val message = {
+          var msg = record.getMessage
+          val params = record.getParameters
+          
+          var i = 0; while (params != null && i < params.length) {
+            msg = msg.replace("{" + i + "}", params(i).toString)
+            
+            i += 1
+          }
+          
+          val thrown = record.getThrown
+          if (thrown != null) msg += " " + thrown.toString
+          
+          msg
+        }
+        
+        time + ": " + level + ": " + message + "\n"
+      }
+    }
+    
+    val rootLogger = Logger.getLogger("")
+    val consoleHandlers = rootLogger.getHandlers.filter(_.isInstanceOf[ConsoleHandler])
+    for (handler <- consoleHandlers) handler.setFormatter(formatter)
+  }
 }

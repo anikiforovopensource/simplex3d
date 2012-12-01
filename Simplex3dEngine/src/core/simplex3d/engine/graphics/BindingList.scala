@@ -32,7 +32,7 @@ import simplex3d.engine.util._
 sealed abstract class ReadBindingList[T <: Accessible with Binding](
   implicit val elementManifest: ClassManifest[T]
 )
-extends Protected with Binding with PropertyContextDependent
+extends Protected with Binding
 {
   type Read = ReadBindingList[T]
   type Mutable = BindingList[T]
@@ -85,7 +85,7 @@ extends Protected with Binding with PropertyContextDependent
 final class BindingList[T <: Accessible with Binding](
   implicit elementManifest: ClassManifest[T]
 )
-extends ReadBindingList[T] with Accessible
+extends ReadBindingList[T] with Accessible with PropertyContextDependent
 {
   if(elementManifest.erasure == classOf[BindingList[_]]) throw new IllegalArgumentException(
     "Nested lists are not supported."

@@ -25,12 +25,30 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-trait ReadEnvironmentalEffect extends Protected {
+trait ReadEnvironmentalEffect extends Protected with PropertyContextDependent {
   type Read <: ReadEnvironmentalEffect
   type Mutable <: EnvironmentalEffect
   
   def propagate(parentVal: Read, result: Mutable) :Unit //XXX hide this as well
   
+  
+  //*** PropertyContext Code ******************************************************************************************
+  
+  private var context: PropertyContext = _
+  
+  private[engine] override def register(context: PropertyContext) {
+    this.context = context
+  }
+  
+  private[engine] override def unregister() {
+    context = null
+  }
+  
+  protected def registerPropertyContext(context: PropertyContext) {}
+  protected def unregisterPropertyContext() {}
+  
+  
+  //*** Environmental Effect Code *************************************************************************************
   
   private[this] var localBinding: Binding = null
   protected def resolveBinding() :Binding
@@ -42,17 +60,9 @@ trait ReadEnvironmentalEffect extends Protected {
     localBinding
   }
   
-  
-  private[this] var bindingChanges = true
-  
-  /** This method must return true to signal binding changes and indicate that a new binding must be resolved.
-   */
-  final def hasBindingChanges: Boolean = bindingChanges//XXX hide this
-  final def clearBindingChanges() { bindingChanges = false }
-  
-  protected final def signalBindingChanges() {
-    bindingChanges = true
+  protected final def signalStructuralChanges() {
     localBinding = null
+    context.signalStructuralChanges()
   }
 }
 

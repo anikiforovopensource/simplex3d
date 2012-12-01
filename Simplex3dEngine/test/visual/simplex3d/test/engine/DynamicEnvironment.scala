@@ -251,13 +251,13 @@ package testenv {
   
     def :=(t: ReadContrast) {
       factor := t.factor
-      if (secondary != t.secondary) signalBindingChanges()
+      if (secondary != t.secondary) signalStructuralChanges()
       secondary := t.secondary
     }
     
     def propagate(parentVal: ReadContrast, result: Contrast) {
       result.factor := factor
-      if (result.secondary != secondary) signalBindingChanges()
+      if (result.secondary != secondary) signalStructuralChanges()
       result.secondary := secondary
     }
     

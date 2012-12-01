@@ -130,21 +130,5 @@ extends AbstractNode[T, G](name) {
       
       i += 1
     }
-    
-    
-    def postPropagation() {
-      val props = worldEnvironment.properties
-      val size = props.length; var i = 0; while (i < size) { val prop = props(i)
-        if (prop.hasDataChanges) {
-          if (prop.isDefined && prop.get.hasBindingChanges) {
-            worldEnvironment.signalStructuralChanges()
-            prop.get.clearBindingChanges()
-          }
-          prop.clearDataChanges()
-        }
-        
-        i += 1
-      }
-    }; postPropagation()
   }
 }

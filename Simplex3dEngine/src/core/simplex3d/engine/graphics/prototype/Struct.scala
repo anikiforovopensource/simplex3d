@@ -66,8 +66,8 @@ trait Struct extends ReadStruct with graphics.Struct {
       i += 1
     }
   }
-  protected def registerPropertyContext(context: PropertyContext) {}
-  protected def unregisterPropertyContext() {}
+  protected override def registerPropertyContext(context: PropertyContext) {}
+  protected override def unregisterPropertyContext() {}
 }
 
 object Struct {

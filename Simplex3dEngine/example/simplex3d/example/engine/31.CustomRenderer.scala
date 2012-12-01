@@ -395,7 +395,7 @@ object CustomRenderer extends default.BaseApp {
     val lights = new BindingList[PointLight]
     
     def :=(e: ReadLighting) {
-      if (lights.size != e.lights.size) signalBindingChanges()
+      if (lights.size != e.lights.size) signalStructuralChanges()
       lights := e.lights
     }
     
@@ -406,7 +406,7 @@ object CustomRenderer extends default.BaseApp {
       result.lights ++= parentVal.lights
       
       if (result.lights.size > maxLightCount) result.lights.take(maxLightCount)
-      if (result.lights.size != oldSize) result.signalBindingChanges()
+      if (result.lights.size != oldSize) result.signalStructuralChanges()
     }
     
     protected def resolveBinding() = lights

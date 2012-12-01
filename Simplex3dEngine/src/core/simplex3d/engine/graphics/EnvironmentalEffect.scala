@@ -50,18 +50,18 @@ trait ReadEnvironmentalEffect extends Protected with PropertyContextDependent {
   
   //*** Environmental Effect Code *************************************************************************************
   
-  private[this] var localBinding: Binding = null
+  protected var unsafeBinding: Binding = null
   protected def resolveBinding() :Binding
   
   /** Must return a stable binding that will no change until the next binding change event.
    */
   final def binding: Binding = {
-    if (localBinding == null) localBinding = resolveBinding()
-    localBinding
+    if (unsafeBinding == null) unsafeBinding = resolveBinding()
+    unsafeBinding
   }
   
   protected final def signalStructuralChanges() {
-    localBinding = null
+    unsafeBinding = null
     context.signalStructuralChanges()
   }
 }

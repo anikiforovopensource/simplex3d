@@ -400,11 +400,11 @@ extends graphics.TechniqueManager[G]
     val fragmentStage = stages(0)
     val rootShaders = fragmentStage.interface.get("")
         
-    var chain = IndexedSeq.empty[ShaderPrototype]
-    var i = 0; while (chain.isEmpty && rootShaders != null && i < rootShaders.size) {
+    var rawChain = IndexedSeq.empty[ShaderPrototype]
+    var i = 0; while (rawChain.isEmpty && rootShaders != null && i < rootShaders.size) {
       val outputShader = rootShaders(i)
       
-      chain = resolveShaderChain(
+      rawChain = resolveShaderChain(
           0, "", outputShader,
           new HashSet[ShaderPrototype](),
           Array.fill(2)(new HashMap[String, IndexedSeq[ShaderPrototype]]),
@@ -414,7 +414,9 @@ extends graphics.TechniqueManager[G]
     }
     
     
-    if (chain.isEmpty) return null
+    if (rawChain.isEmpty) return null
+    
+    val chain = rawChain.distinct
     
     
     // Generate shader and technique keys.

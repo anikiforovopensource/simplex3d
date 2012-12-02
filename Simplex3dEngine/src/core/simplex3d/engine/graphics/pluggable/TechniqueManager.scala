@@ -98,6 +98,10 @@ extends graphics.TechniqueManager[G]
   
   private[this] val dummyPredefined = new PredefinedUniforms()
   
+  private val arrowsDown = "\n↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓\n"
+  private val arrowsUp =   "\n↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑\n"
+  private val divider =  "\n\n*******************************************************************************\n\n"
+  
   
   def resolveTechnique(
       meshName: String, shaderDebugging: ShaderDebugging,
@@ -438,6 +442,13 @@ extends graphics.TechniqueManager[G]
           val listSizeKeys = shaderKey._2
           val src = ShaderPrototype.Glsl2.shaderSrc(proto, listSizeKeys)
           
+          if (proto.debugging.logGeneratedSource) log(Level.INFO,
+            "Shader source for '" + proto.name + "':\n" +
+            arrowsDown + 
+            src +
+            arrowsUp
+          )
+          
           shader = new Shader(proto.shaderType, src, proto.boundUniforms)
           shaderCache.put(shaderKey, shader)
         }
@@ -453,8 +464,13 @@ extends graphics.TechniqueManager[G]
       technique = new Technique(graphicsContext, shaders.toSet)
       techniqueCache.put(techniqueKey, technique)
     }
-    
-    //println("XXX\n" + technique.shaders.map(_.src).mkString("\n\n*****************************************\n\n"))
+
+    if (shaderDebugging.logGeneratedSource) log(Level.INFO,
+      "Complete program source for mesh '" + meshName + "':\n" +
+      arrowsDown +
+      technique.shaders.map(_.src).mkString(divider) +
+      arrowsUp
+    )
     
     quickCache.put(quickKey, technique)
     technique

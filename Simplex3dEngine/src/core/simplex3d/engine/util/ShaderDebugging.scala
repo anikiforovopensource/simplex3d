@@ -24,4 +24,5 @@ package simplex3d.engine.util
 final class ShaderDebugging {
   var logAccepted: Boolean = false
   var logRejected: Boolean = false
+  var logGeneratedSource: Boolean = false
 }

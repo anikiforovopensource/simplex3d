@@ -23,7 +23,7 @@ package scenegraph
 
 
 class SceneGraphSettings(
-  val multithreadedControllers: Boolean = true,
+  val multithreadedControllers: Boolean = false,
   val multithreadedParsing: Boolean = true,
   val multithreadedParsing_FromDepth: Int = 3,
   val multithreadedParsing_NodesWithChildren: Int = 50

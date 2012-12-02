@@ -80,34 +80,41 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
     if (animators.isEmpty) animators = null
   }
   
+  
+  private var bufferRemoves = false
+  private var removePending: ArrayBuffer[Updater] = null
+  
   def removeAnimator(animator: Updater) {
-    if (animators != null) {
+    if (bufferRemoves) {
+      if (removePending == null) removePending = new ArrayBuffer[Updater](4)
+      removePending += animator
+    }
+    else if (animators != null) {
       animators -= animator
       checkNoAnimators()
     }
   }
   
+  
   private[scenegraph] final def runAnimators(time: TimeStamp) {
     assert(animators != null)
     
-    var removePending: ArrayBuffer[Updater] = null
+    bufferRemoves = true
     
-    {
-      val size = animators.size
-      var i = 0; while (i < size) {
-        val animator = animators(i)
-        val keep = animator.apply(time)
-        if (!keep) {
-          if (removePending == null) removePending = new ArrayBuffer[Updater](4)
-          removePending += animator
-        }
-        
-        i += 1
-      }
+    val size = animators.size
+    var i = 0; while (i < size) {
+      val animator = animators(i)
+      val keep = animator.apply(time)
+      if (!keep) removeAnimator(animator)
+      
+      i += 1
     }
+    
+    bufferRemoves = false
     
     if (removePending != null) {
       animators --= removePending
+      removePending = null
       checkNoAnimators()
     }
   }

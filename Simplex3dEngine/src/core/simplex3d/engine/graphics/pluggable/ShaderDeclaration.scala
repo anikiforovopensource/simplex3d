@@ -58,15 +58,18 @@ import simplex3d.engine.graphics._
  * A shader with an main() body can share a named set of values using main(){ out{} }.
  * Shared pre-computed values can be requested within main(){ in{} } blocks.
  * 
- * If a shader does not provide a main(), then it must define a function(){}. Functions can be used within the same stage.
+ * If a shader does not provide a main(), then it must define a function(){}. Functions can be used within
+ * the same stage.
  * 
  * Shader sources can be attached using src() declarations.
  * 
  * A path that resolves to enumeration and a condition on the result can be specified to control shader
  * selection using enums.
  * 
- * Samplers are extracted from structs and then declared at the top level in the shader.
+ * Samplers are extracted from structs by the texture manager and then injected at the top level in the shader.
  * This is done to allow property-to-UBO mapping in the future.
+ * As a consequence, texture names have to be unique not just inside the parent Struct,
+ * but among all the Structs, and all the top-level declarations in Material and Environment.
  * 
  * Texture dimensions can be accessed by declaring integer verctor "se_dimsOf_textureName", for example:
  * declare[Vec2i]("se_dimsOf_myTexture")
@@ -123,7 +126,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       val nestedSamplers = ArrayBuilder.make[NestedSampler]
       
       val glslType = glslTypeFromManifest(
-          squareMatrices, 0, arraySizeExpression, "", manifest, name, dependencies, nestedSamplers)
+          squareMatrices, 0, arraySizeExpression, "", null, manifest, name, dependencies, nestedSamplers)
       
       val dependenciesRes = StructSignature.organizeDependencies(dependencies.result)
       val nestedSamplersRes = new ReadArray(nestedSamplers.result)
@@ -181,8 +184,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     private def glslTypeFromManifest(
       squareMatrices: Boolean,
       level: Int,
-      firstSizeExpression: Option[String],// used with nestedSamplers
+      firstSizeExpression: Option[String],// the very first size expression in the path, used with nestedSamplers
       parentType: String,
+      parentErasure: Class[_],
       manifest: ClassManifest[_], name: String,
       dependencies: ArrayBuilder[StructSignature],
       nestedSamplers: ArrayBuilder[NestedSampler]
@@ -217,7 +221,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
         
         val glslType = glslTypeFromManifest(
-            squareMatrices, level, firstSize, parentType, listManifest, name, dependencies, nestedSamplers)
+            squareMatrices, level, firstSize, parentType, parentErasure, listManifest, name, dependencies, nestedSamplers)
             
         glslType
       }
@@ -302,7 +306,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
         
         val glslType = glslTypeFromManifest(
-            squareMatrices, level, firstSize, parentType, manifest, name, dependencies, nestedSamplers)
+            squareMatrices, level, firstSize, parentType, parentErasure, manifest, name, dependencies, nestedSamplers)
         
         val sizeExpression =
           if (arraySizeExpression.isDefined) arraySizeExpression.get

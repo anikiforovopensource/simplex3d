@@ -86,6 +86,8 @@ final class RenderManager extends graphics.RenderManager {
     var i = 0; while (i < renderArray.size) {
       val mesh = renderArray(i)
       
+      if (mesh.glDebugging.resetGlState) renderContext.resetState()
+      
       mesh.preRender()
       render(camera, mesh)
       mesh.postRender()

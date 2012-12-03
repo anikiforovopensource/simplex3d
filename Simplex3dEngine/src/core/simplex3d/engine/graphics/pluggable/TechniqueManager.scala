@@ -111,13 +111,10 @@ extends graphics.TechniqueManager[G]
     def logRejected(shader: ShaderPrototype) :Boolean = shaderDebugging.logRejected || shader.debugging.logRejected
     def logAccepted(shader: ShaderPrototype) :Boolean = shaderDebugging.logAccepted || shader.debugging.logAccepted
     
-    val quickKey = graphicsContext.collectKeys(geometry, material, worldEnvironment)
+    val keys = graphicsContext.collectKeys(geometry, material, worldEnvironment)
     
-    val quickLookup = quickCache.get(quickKey)
-    if (quickLookup != null) return quickLookup
-    
-    val listMap = quickKey._1
-    val enumMap = quickKey._2
+    val listMap = keys._1
+    val enumMap = keys._2
     
     
     def resolveShaderChain(
@@ -474,7 +471,6 @@ extends graphics.TechniqueManager[G]
       arrowsUp
     )
     
-    quickCache.put(quickKey, technique)
     technique
   }
 
@@ -526,9 +522,6 @@ extends graphics.TechniqueManager[G]
   
   private type TechniqueKey = IndexedSeq[ShaderKey]
   private val techniqueCache = new HashMap[TechniqueKey, Technique]
-  
-  private type QuickKey = (HashMap[ListNameKey, Integer], HashMap[String, Object])
-  private val quickCache = new HashMap[QuickKey, Technique]
 }
 
 

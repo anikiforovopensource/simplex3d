@@ -869,7 +869,7 @@ extends graphics.RenderContext {
   
   private[this] def checkAttributeType(m: ClassManifest[_], dtype: Int) :Boolean = {
      dtype match {
-      case EngineBindingTypes.Float => m == PrimitiveFormat.RFloat
+      case EngineBindingTypes.Float => m == PrimitiveFormat.RFloat || m == PrimitiveFormat.RDouble
       case EngineBindingTypes.Vec2 => m == Vec2.Manifest
       case EngineBindingTypes.Vec3 => m == Vec3.Manifest
       case EngineBindingTypes.Vec4 => m == Vec4.Manifest

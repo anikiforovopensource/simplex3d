@@ -179,42 +179,55 @@ abstract class GraphicsContext {
   }
   
   def collectKeys(geometry: graphics.Geometry, material: graphics.Material, worldEnvironment: graphics.Environment)
-  :(HashMap[ListNameKey, Integer], HashMap[String, Object]) =
+  :(HashMap[ListNameKey, Integer], HashMap[String, Object], IndexedSeq[Boolean], IndexedSeq[Class[Object]]) =
   {
     
     val lists = new HashMap[ListNameKey, Integer]
     val enums = new HashMap[String, Object]
+    val materialKey = new Array[Boolean](material.uniforms.size)
+    val envKey = new Array[Class[Object]](worldEnvironment.properties.size)
     
-    var i = 0; while (i < material.uniforms.size) {
-      val prop = material.uniforms(i)
-      val name = material.uniformNames(i)
-      
-      if (prop.isDefined) prop.get match {
-        case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
-        case enum: EnumRef[_] => enum.collectKeys(name, enums) 
-        case s: Struct => s.collectKeys(name, lists, enums)
-        case _ => // do nothing
+    {
+      var i = 0; while (i < material.uniforms.size) {
+        val prop = material.uniforms(i)
+        val name = material.uniformNames(i)
+        
+        if (prop.isDefined) prop.get match {
+          case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+          case enum: EnumRef[_] => enum.collectKeys(name, enums) 
+          case s: Struct => s.collectKeys(name, lists, enums)
+          case _ => // do nothing
+        }
+        
+        materialKey(i) = prop.isDefined
+        
+        i += 1
       }
-      
-      i += 1
     }
     
-    i = 0; while (i < worldEnvironment.properties.size) {
-      val prop = worldEnvironment.properties(i)
-      val name = worldEnvironment.propertyNames(i)
-      
-      if (prop.isDefined) prop.get.binding match {
-        case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
-        case s: Struct => s.collectKeys(name, lists, enums)
-        case _ => // do nothing
+    {
+      var i = 0; while (i < worldEnvironment.properties.size) {
+        val prop = worldEnvironment.properties(i)
+        val name = worldEnvironment.propertyNames(i)
+        
+        if (prop.isDefined) {
+          val binding = prop.get.binding
+          binding match {
+            case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+            case s: Struct => s.collectKeys(name, lists, enums)
+            case _ => // do nothing
+          }
+          
+          envKey(i) = binding.getClass.asInstanceOf[Class[Object]]
+        }
+        
+        i += 1
       }
-      
-      i += 1
     }
     
     geometry.primitive.get.mode.collectKeys("primitive.mode", enums)
     
-    (lists, enums)
+    (lists, enums, materialKey, envKey)
   }
   
   def samplerRemapping(material: graphics.Material, worldEnvironment: graphics.Environment)

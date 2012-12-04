@@ -77,28 +77,22 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   }.toArray
   
   
-  private[this] def bindUniformVectors(
-    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[VectorLike]
-  ) {
-    var i = 0; while (i < uniformBindings.length) {
+  private[this] def bindUniformVectors(uniforms: ReadArray[VectorLike]) {
+    var i = 0; while (i < uniformVectors.length) {
       setUniformVector(uniformVectorLocations(i), uniformVectorTypes(i), uniforms(i))
       i += 1
     }
   }
   
-  private[this] def bindUniformMatrices(
-    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[AnyMat[_]]
-  ) {
-    var i = 0; while (i < uniformBindings.length) {
+  private[this] def bindUniformMatrices(uniforms: ReadArray[AnyMat[_]]) {
+    var i = 0; while (i < uniformMatrices.length) {
       setUniformMatrix(uniformMatrixLocations(i), uniformMatrixTypes(i), uniforms(i))
       i += 1
     }
   }
   
-  private[this] def bindUniformTextures(
-    uniformBindings: ReadArray[ActiveUniform], uniforms: ReadArray[ReadTextureBinding[_]]
-  ) {
-    var i = 0; while (i < uniformBindings.length) {
+  private[this] def bindUniformTextures(uniforms: ReadArray[ReadTextureBinding[_]]) {
+    var i = 0; while (i < uniformTextures.length) {
       setUniformTexture(
         uniformTextureLocations(i), uniformTextureUnits(i),
         uniformTextureTypes(i), uniforms(i)
@@ -123,9 +117,9 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   
   
   def bind(meshMapping: MeshMapping) {
-    bindUniformVectors(uniformVectors, meshMapping.uniformVectors)
-    bindUniformMatrices(uniformMatrices, meshMapping.uniformMatrices)
-    bindUniformTextures(uniformTextures, meshMapping.uniformTextures)
+    bindUniformVectors(meshMapping.uniformVectors)
+    bindUniformMatrices(meshMapping.uniformMatrices)
+    bindUniformTextures(meshMapping.uniformTextures)
     bindAttributes(attributes, meshMapping.attributes)
   }
   

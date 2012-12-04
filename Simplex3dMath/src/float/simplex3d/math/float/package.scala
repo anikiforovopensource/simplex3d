@@ -46,6 +46,7 @@ package object float {
 
   type ReadFloatRef = floatx.ReadFloatRef
   type FloatRef = floatx.FloatRef
+  val FloatRef = floatx.FloatRef
   val functions = floatx.functions
 
   type ReadVec2 = ReadVec2f

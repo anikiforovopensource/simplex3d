@@ -27,10 +27,3 @@ package types
  * @author Aleksey Nikiforov (lex)
  */
 trait Binding
-
-
-/** <code>VectorLike</code> is a common supertype for Vectors and Quaternions.
- *
- * @author Aleksey Nikiforov (lex)
- */
-trait VectorLike extends Binding

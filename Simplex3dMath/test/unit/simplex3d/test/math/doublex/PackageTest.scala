@@ -73,6 +73,7 @@ class PackageTest extends FunSuite {
     val pi = functions.Pi
 
     type dref = DoubleRef
+    val dref = DoubleRef
 
     type av2 = ReadVec2d
     type cv2 = ConstVec2d

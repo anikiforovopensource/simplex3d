@@ -87,6 +87,7 @@ package object double {
 
   type ReadDoubleRef = doublex.ReadDoubleRef
   type DoubleRef = doublex.DoubleRef
+  val DoubleRef = doublex.DoubleRef
   val functions = doublex.functions
 
   type ReadVec2 = ReadVec2d

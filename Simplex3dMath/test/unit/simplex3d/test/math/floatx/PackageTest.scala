@@ -57,6 +57,7 @@ class PackageTest extends FunSuite {
     val pi = functions.Pi
 
     type fref = FloatRef
+    val fref = FloatRef
 
     type av2 = ReadVec2f
     type cv2 = ConstVec2f

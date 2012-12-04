@@ -20,6 +20,7 @@
 
 package simplex3d.math
 
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.types._
 
 
@@ -98,5 +99,8 @@ with Accessible with Serializable
 }
 
 object BooleanRef {
+  final val Manifest = classType[BooleanRef](classOf[BooleanRef])
+  final val ReadManifest = classType[ReadBooleanRef](classOf[ReadBooleanRef])
+  
   def unapply(r: ReadBooleanRef) = Some(r.toConst)
 }

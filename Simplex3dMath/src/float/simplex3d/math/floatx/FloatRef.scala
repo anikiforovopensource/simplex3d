@@ -20,6 +20,7 @@
 
 package simplex3d.math.floatx
 
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.floatx.functions._
@@ -186,5 +187,8 @@ with Accessible with Serializable
 }
 
 object FloatRef {
+  final val Manifest = classType[FloatRef](classOf[FloatRef])
+  final val ReadManifest = classType[ReadFloatRef](classOf[ReadFloatRef])
+  
   def unapply(r: ReadFloatRef) = Some(r.toConst)
 }

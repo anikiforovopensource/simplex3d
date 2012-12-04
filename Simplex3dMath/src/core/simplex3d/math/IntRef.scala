@@ -20,6 +20,7 @@
 
 package simplex3d.math
 
+import scala.reflect.ClassManifest.{classType}
 import simplex3d.math.types._
 
 
@@ -271,5 +272,8 @@ with Accessible with Serializable
 }
 
 object IntRef {
+  final val Manifest = classType[IntRef](classOf[IntRef])
+  final val ReadManifest = classType[ReadIntRef](classOf[ReadIntRef])
+  
   def unapply(r: ReadIntRef) = Some(r.toConst)
 }

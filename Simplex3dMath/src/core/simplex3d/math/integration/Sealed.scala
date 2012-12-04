@@ -113,7 +113,7 @@ package integration {
     type Buffer = nio.IntBuffer
   }
 
-  sealed trait SInt extends types.AnyVec[Int] with Accessor with PrimitiveFormat with RawInt with Signed
+  sealed trait SInt extends Accessor with PrimitiveFormat with RawInt with Signed
   with TangibleInt with TangibleFloat with TangibleDouble {
     type Read = Int
     type Const = Read
@@ -142,7 +142,7 @@ package integration {
 
   /** Raw Float. 32-bit float.
    */
-  sealed trait RFloat extends types.AnyVec[Float] with Accessor with PrimitiveFormat with SysFP
+  sealed trait RFloat extends Accessor with PrimitiveFormat with SysFP
   with TangibleFloat with TangibleDouble {
     type Read = Float
     type Const = Read
@@ -156,7 +156,7 @@ package integration {
 
   /** Raw Double. 64-bit float.
    */
-  sealed trait RDouble extends types.AnyVec[Double] with Accessor with PrimitiveFormat with SysFP
+  sealed trait RDouble extends Accessor with PrimitiveFormat with SysFP
   with TangibleDouble {
     type Read = Double
     type Const = Read
@@ -180,6 +180,13 @@ package types {
   sealed trait MathType extends Binding with Serializable with Cloneable {
     type Clone <: MathType
   }
+
+
+  /** <code>VectorLike</code> is a common supertype for Vectors and Quaternions.
+  *
+  * @author Aleksey Nikiforov (lex)
+  */
+  sealed trait VectorLike extends Binding
 
 
   /** <code>AnyQuat4</code> is a supertype of all the quaternions.

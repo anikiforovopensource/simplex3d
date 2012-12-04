@@ -28,6 +28,7 @@ import java.util.HashSet
 import java.util.Stack
 import scala.collection._
 import scala.collection.mutable.ArrayBuffer
+import simplex3d.math.double._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
@@ -175,9 +176,20 @@ extends graphics.TechniqueManager[G]
           val declaration = declarations(i)
           
           val attrib = graphicsContext.resolveAttributePath(declaration.name, geometry)
-          passed = (attrib != null)//XXX check the type at runtime
+          passed = (attrib != null)
           
-          if (!passed && logRejected(shader)) log(Level.INFO,
+          if (attrib != null) {
+            if (declaration.attributeManifest == attrib.src.accessorManifest) {
+              passed = true
+            }
+            else if (logRejected(shader)) log(Level.INFO,
+              "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
+              "' because the attribute '" + declaration.name + "' is declared as '" +
+              ClassUtil.simpleName(declaration.manifest.erasure) + "' but resolves to an instance of '" +
+              ClassUtil.simpleName(attrib.getClass) + "'."
+            )
+          }
+          else if (logRejected(shader)) log(Level.INFO,
             "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the attribute '" + declaration.name + "' is not defined."
           )
@@ -196,20 +208,44 @@ extends graphics.TechniqueManager[G]
           passed = false
           val declaration = declarations(i)
           
-          if (declaration.isPredefined && declaration.name == "se_pointSize") {
-            passed = geometry.primitive.get.mode == VertexMode.PointSprites
-          }
-          else {
-            val resolved = graphicsContext.resolveUniformPath(
-              declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
-            
-            passed = (resolved != null)//XXX check the type at runtime
-          }
           
-          if (!passed && logRejected(shader)) log(Level.INFO,
+          val resolved =
+            if (declaration.name == "se_pointSpriteSize" && geometry.primitive.get.mode != VertexMode.PointSprites) {
+              null
+            }
+            else {
+              graphicsContext.resolveUniformPath(
+                  declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
+            }
+          
+          if (resolved != null) {
+            val resolvedErasure = 
+              if (shader.squareMatrices) {
+                if (resolved.getClass == Mat2x3.Manifest.erasure) Mat2.Manifest.erasure
+                else if (resolved.getClass == Mat2x4.Manifest.erasure) Mat2.Manifest.erasure
+                else if (resolved.getClass == Mat3x2.Manifest.erasure) Mat3.Manifest.erasure
+                else if (resolved.getClass == Mat3x4.Manifest.erasure) Mat3.Manifest.erasure
+                else if (resolved.getClass == Mat4x2.Manifest.erasure) Mat4.Manifest.erasure
+                else if (resolved.getClass == Mat4x3.Manifest.erasure) Mat4.Manifest.erasure
+                else resolved.getClass
+              }
+              else resolved.getClass
+            
+            if (declaration.uniformManifest.erasure == resolvedErasure) {
+              passed = true
+            }
+            else if (logRejected(shader)) log(Level.INFO,
+              "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
+              "' because the uniform '" + declaration.name + "' is declared as '" +
+              ClassUtil.simpleName(declaration.manifest.erasure) + "' but resolves to an instance of '" +
+              ClassUtil.simpleName(resolved.getClass) + "'."
+            )
+          }
+          else if (logRejected(shader)) log(Level.INFO,
             "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
             "' because the uniform '" + declaration.name + "' is not defined."
           )
+          
           
           i += 1
         }
@@ -257,7 +293,7 @@ extends graphics.TechniqueManager[G]
         if (passed) Some(chain) else None
       }
       
-      def resolveMainVars() :Option[IndexedSeq[ShaderPrototype]] = {
+      def resolveMainArgs() :Option[IndexedSeq[ShaderPrototype]] = {
         val inputBlocks = shader.mainInputs
         
         val chain = new ArrayBuffer[ShaderPrototype]
@@ -361,7 +397,7 @@ extends graphics.TechniqueManager[G]
         val functionChain = resolveFunctions()
         if (functionChain.isDefined) {
           
-          val mainVarChain = resolveMainVars()
+          val mainVarChain = resolveMainArgs()
           if (mainVarChain.isDefined) {
             
             val inputChain = resolveInputs()

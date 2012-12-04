@@ -31,7 +31,7 @@ import simplex3d.data.double._
 import simplex3d.engine.util._
 
 
-abstract class Texture[A <: Accessor with AnyVec[Double]] private[engine] (
+abstract class Texture[A <: Accessor] private[engine] (
   @transient protected val accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   protected val linked: DirectSrc with ContiguousSrc
 )(
@@ -107,7 +107,7 @@ object ImageFilter extends Enumeration {
 }
 
 
-class Texture2d[A <: Accessor with AnyVec[Double]] private (
+class Texture2d[A <: Accessor] private (
   final val dimensions: ConstVec2i,
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   linked: DirectSrc with ContiguousSrc
@@ -162,7 +162,7 @@ class Texture2d[A <: Accessor with AnyVec[Double]] private (
 object Texture2d {
   val Manifest = ClassManifest.classType[Texture2d[_]](classOf[Texture2d[_]])
   
-  def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor with AnyVec[Double] }](
+  def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor }](
     dimensions: ConstVec2i,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
@@ -175,7 +175,7 @@ object Texture2d {
     )
   }
   
-  def fromData[A <: Accessor with AnyVec[Double]](
+  def fromData[A <: Accessor](
     dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
@@ -186,7 +186,7 @@ object Texture2d {
     )
   }
 
-  def fromUncheckedSrc[A <: Accessor with AnyVec[Double]](
+  def fromUncheckedSrc[A <: Accessor](
     dimensions: ConstVec2i, src: DirectSrc with ContiguousSrc,
     magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
     mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4

@@ -25,6 +25,7 @@ import scala.collection._
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.types._
+import simplex3d.data._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
@@ -42,6 +43,26 @@ final class Declaration(
   val isReserved = name.startsWith("gl_")
   val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
   
+  val attributeManifest: ClassManifest[_] = {
+    manifest match {
+      case DoubleRef.Manifest => PrimitiveFormat.RDouble
+      case _ => manifest
+    }
+  }
+  
+  val uniformManifest: ClassManifest[_] = {
+    if (classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) {
+      try {
+        manifest.typeArguments.head.asInstanceOf[ClassManifest[_ <: Binding]]
+      }
+      catch {
+        case e: Exception => throw new RuntimeException(
+          "Undefined or unsupported array type for declaration '" + name + "'."
+        )
+      }
+    }
+    else manifest
+  }
   
   override def toString() :String = {
     "Declaraion(" + qualifiers + " " + glslType + " " + name + ")"

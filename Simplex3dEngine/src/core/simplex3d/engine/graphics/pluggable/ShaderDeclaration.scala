@@ -55,7 +55,8 @@ import simplex3d.engine.graphics._
  * declared at the top level.
  * 
  * Each shader can link with the next stage using a combination of one out{} block with a main() declaration.
- * A shader with an main() body can share a named set of values using main(){ out{} }.
+ * A shader with an main() body can share a named set of values using main(){ out{} }. Only one out{} block
+ * is allowed per shader, either stage interface or main.out{}.
  * Shared pre-computed values can be requested within main(){ in{} } blocks.
  * 
  * If a shader does not provide a main(), then it must define a function(){}. Functions can be used within
@@ -119,6 +120,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       this
     }
     
+    
     private[ShaderDeclaration] def extractGlslTypes(squareMatrices: Boolean)
     :(String, ReadArray[StructSignature], ReadArray[NestedSampler]) = // (glslType, structureSignatuers, nestedSamplers)
     {
@@ -158,9 +160,6 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       }
       else {
         unprefixedName match {
-          case "SInt" => "int"
-          case "RFloat" => "float"
-          case "RDouble" => "float"
           case _ => "???"
         }
       }
@@ -337,19 +336,19 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   private[this] var conditions = Set[(String, AnyRef => Boolean)]()
   
-  private[this] var uniformBlock: Set[Declaration] = null
+  private[this] var uniformBlock: Set[Declaration] = null //XXX change to option?
   private[this] var boundUniforms = Map[String, Property[UncheckedBinding]]()
   private[this] var unsizedArrayKeys = Set[ListNameKey]()
   private[this] var sizedArrayKeys = Set[ListSizeKey]()
   
-  private[this] var attributeBlock: Set[Declaration] = null
+  private[this] var attributeBlock: Set[Declaration] = null //XXX change to option?
   
   private[this] var inputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
   private[this] var outputBlock: Option[(String, Set[Declaration])] = None
   
   private[this] var functionDependencies = Set[String]()
   
-  private[this] var body: String = null
+  private[this] var body: String = null //XXX change to option?
   private[this] var sources: List[String] = Nil
   
   
@@ -375,7 +374,12 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     else {
       declarations.map { d =>
         val (glslType, sturctSignatures, nestedSamplers) = d.extractGlslTypes(squarMatrices)
-        new Dec(d.qualifiers, d.manifest, glslType, d.name, d.arraySizeExpression, sturctSignatures, nestedSamplers)
+
+        new Dec(
+            d.qualifiers,
+            d.manifest,
+            glslType, d.name, d.arraySizeExpression,
+            sturctSignatures, nestedSamplers)
       }
     }
   }
@@ -565,13 +569,41 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     sources ::= src
   }
   
+  private[this] def enforceSquareMatrices(declarations: Iterable[Declaration]) {
+    for (declaration <- declarations) {
+      if (classOf[AnyMat[_]].isAssignableFrom(declaration.manifest.erasure)) {
+        val square = declaration.manifest match {
+          case Mat2.Manifest => true
+          case Mat3.Manifest => true
+          case Mat4.Manifest => true
+        }
+        if (!square) throw new RuntimeException(
+          "Declaration '" + declaration.name + "' uses a type not supported by the current GLSL profile."
+        )
+      }
+    }
+  }
+  
   
   def toPrototype(version: String) = {
     val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
     
+    
+    if (squareMat) {
+      if (attributeBlock != null) enforceSquareMatrices(attributeBlock)
+      if (uniformBlock != null)  enforceSquareMatrices(uniformBlock)
+      
+      inputBlocks.foreach(b => enforceSquareMatrices(b._2))
+      outputBlock.foreach(b => enforceSquareMatrices(b._2))
+      
+      mainInputs.foreach(b => enforceSquareMatrices(b._2))
+      mainOutput.foreach(b => enforceSquareMatrices(b._2))
+    }
+    
     if (outputBlock.isDefined && !mainLabel.isDefined) throw new IllegalStateException(
         "Only shaders with main(){} can define out{} blocks.")
-      
+    
+    
     new ShaderPrototype(
       debugging,
       shaderType,

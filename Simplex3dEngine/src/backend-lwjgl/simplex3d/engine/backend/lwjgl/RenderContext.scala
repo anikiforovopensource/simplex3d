@@ -241,7 +241,7 @@ extends graphics.RenderContext {
   }
   
   private def update(id: Int, attributes: Attributes[_, _]) {
-    val data = attributes.asInstanceOf[Attributes[_ <: Format with MathType, Raw]].read
+    val data = attributes.asInstanceOf[Attributes[_ <: Format, Raw]].read
     
     bindBuffer(id)
     
@@ -265,7 +265,7 @@ extends graphics.RenderContext {
     attributes.sharedState.clearDataChanges()
   }
   
-  def bind(location: Int, columns: Int, rows: Int, attributes: Attributes[_ <: Format with MathType, Raw]) {
+  def bind(location: Int, columns: Int, rows: Int, attributes: Attributes[_ <: Format, Raw]) {
     val id = initUpdateAttributes(attributes)
     
     val src = attributes.src
@@ -296,7 +296,7 @@ extends graphics.RenderContext {
   }
   
   
-  private def initialize(texture: Texture2d[_ <: Accessor with AnyVec[Double]]) :Int = {
+  private def initialize(texture: Texture2d[_ <: Accessor]) :Int = {
     resourceManager.allocate(texture)
     val id = texture.managedFields.id
       
@@ -336,7 +336,7 @@ extends graphics.RenderContext {
     id
   }
   
-  private def update(id: Int, texture: Texture2d[_ <: Accessor with AnyVec[Double]]) {
+  private def update(id: Int, texture: Texture2d[_ <: Accessor]) {
     bindTexture(GL_TEXTURE_2D, id)
     
     val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
@@ -433,7 +433,7 @@ extends graphics.RenderContext {
   }
   
 
-  def bindTex2d(location: Int, textureUnit: Int, texture: Texture2d[_ <: Accessor with AnyVec[Double]]) {
+  def bindTex2d(location: Int, textureUnit: Int, texture: Texture2d[_ <: Accessor]) {
     if (texture == null) {
       bindTex2d(location, textureUnit, defaultTexture2d)
       return
@@ -455,7 +455,7 @@ extends graphics.RenderContext {
     activeTexture.id = id
   }
   
-  private def initUpdateTexture2d(texture: Texture2d[_ <: Accessor with AnyVec[Double]]) :Int = {
+  private def initUpdateTexture2d(texture: Texture2d[_ <: Accessor]) :Int = {
     var id = texture.managedFields.id
     if (id == 0) id = initialize(texture)
     else if (texture.hasDataChanges) update(id, texture)

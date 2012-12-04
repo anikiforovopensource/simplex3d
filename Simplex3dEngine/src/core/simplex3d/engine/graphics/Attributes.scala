@@ -31,7 +31,7 @@ import simplex3d.data._
 import simplex3d.engine.util._
 
 
-final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
+final class Attributes[F <: Format, +R <: Raw] private[engine] (
   @transient private val accessible: ReadDataView[F, _ <: R],
   private val linked: DirectSrc
 ) {
@@ -96,7 +96,7 @@ final class Attributes[F <: Format with MathType, +R <: Raw] private[engine] (
 
 final class AttributesSharedState private[engine] (
   val size: Int,
-  val related: ReadSeq[Attributes[_ <: Format with MathType, Raw]],
+  val related: ReadSeq[Attributes[_ <: Format, Raw]],
   val caching: Caching.Value,
   private[engine] var persistent: InterleavedData
 ) extends EngineInfoRef {
@@ -118,7 +118,7 @@ final class AttributesSharedState private[engine] (
 
 
 object Attributes {
-  def apply[F <: Format with MathType, R <: Raw with Tangible]
+  def apply[F <: Format, R <: Raw with Tangible]
     (size: Int, caching: Caching.Value = Caching.Dynamic)
     (implicit composition: CompositionFactory[F, _ >: R], primitives: PrimitiveFactory[F#Component, R])
   :Attributes[F, R] = {
@@ -126,7 +126,7 @@ object Attributes {
     fromData(data)
   }
   
-  def fromData[F <: Format with MathType, R <: Raw]
+  def fromData[F <: Format, R <: Raw]
     (data: ReadDataBuffer[F, _ <: R], caching: Caching.Value = Caching.Dynamic)
   :Attributes[F, R] = {
     val attributes = new Attributes[F, R](data, null)
@@ -136,7 +136,7 @@ object Attributes {
     attributes
   }
   
-  def fromUncheckedSrc[F <: Format with MathType, R <: Raw]
+  def fromUncheckedSrc[F <: Format, R <: Raw]
     (src: DirectSrc with ContiguousSrc, caching: Caching.Value = Caching.Static)
     (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
   :Attributes[F, R] = {
@@ -163,19 +163,19 @@ object Attributes {
 
 // TODO restore DelayedInit when this scala bug is fixed: https://issues.scala-lang.org/browse/SI-4683
 class interleaved(val caching: Caching.Value = Caching.Static) { // extends DelayedInit { 
-  private val related = ArrayBuffer[Attributes[_ <: Format with MathType, Raw]]()
+  private val related = ArrayBuffer[Attributes[_ <: Format, Raw]]()
   
   val Attributes = new InterleavedFactory
   
   final class InterleavedFactory {
-    def fromData[F <: Format with MathType, R <: Raw](view: ReadDataView[F, _ <: R])
+    def fromData[F <: Format, R <: Raw](view: ReadDataView[F, _ <: R])
     :Attributes[F, R] = {
       val attributes = new Attributes[F, R](view, null)
       related += attributes
       attributes
     }
     
-    def fromUncheckedSrc[F <: Format with MathType, R <: Raw](src: DirectSrc)
+    def fromUncheckedSrc[F <: Format, R <: Raw](src: DirectSrc)
       (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
     :Attributes[F, R] = {
       

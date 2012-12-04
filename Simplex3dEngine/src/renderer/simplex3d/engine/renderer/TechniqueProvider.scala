@@ -157,7 +157,7 @@ object TechniqueProvider {
       condition("primitive.mode")(_ == VertexMode.PointSprites)
       
       uniform {
-        declare[DoubleRef]("se_pointSize") // Only available to PointSprites.
+        declare[DoubleRef]("se_pointSpriteSize") // Only available to PointSprites.
         declare[Mat4]("se_modelViewProjectionMatrix")
         declare[Mat4]("se_projectionMatrix")
         declare[Vec2i]("se_viewDimensions")
@@ -175,7 +175,7 @@ object TechniqueProvider {
         gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
         
         // Universal for all projection matrices.
-        gl_PointSize = se_pointSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
+        gl_PointSize = se_pointSpriteSize*0.5*float(se_viewDimensions.y)*se_projectionMatrix[1][1]/gl_Position.w;
       """}
     })
       
@@ -219,7 +219,7 @@ object TechniqueProvider {
     
     manager.push(new VertexShader {
       uniform {
-        declare[Mat4x3]("se_modelViewMatrix")
+        declare[Mat4]("se_modelViewMatrix")
       }
       
       attributes {

@@ -38,7 +38,7 @@ sealed abstract class ReadPredefinedUniforms {
   val se_modelViewProjectionMatrix: ReadMat4
   val se_normalMatrix: ReadMat3
   
-  val se_pointSize: ReadDoubleRef
+  val se_pointSpriteSize: ReadDoubleRef
   
   
   final def bindingNames = PredefinedUniforms.BindingNames
@@ -57,7 +57,7 @@ final class PredefinedUniforms extends ReadPredefinedUniforms {
   val se_modelViewProjectionMatrix = Mat4(1)
   val se_normalMatrix = Mat3(1)
   
-  val se_pointSize = new DoubleRef(0)
+  val se_pointSpriteSize = new DoubleRef(0)
   
   
   val bindings = new ReadArray(Array[MathType](
@@ -71,7 +71,7 @@ final class PredefinedUniforms extends ReadPredefinedUniforms {
     se_modelViewProjectionMatrix,
     se_normalMatrix,
     
-    se_pointSize
+    se_pointSpriteSize
   ))
 }
 
@@ -88,6 +88,6 @@ object PredefinedUniforms {
     "se_modelViewProjectionMatrix",
     "se_normalMatrix",
     
-    "se_pointSize"
+    "se_pointSpriteSize"
   ))
 }

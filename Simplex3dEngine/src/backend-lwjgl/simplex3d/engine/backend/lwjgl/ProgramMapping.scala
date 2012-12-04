@@ -131,7 +131,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   
   def setAttributes(location: Int, columns: Int, rows: Int, attributes: Attributes[_, _]) {
     if (attributes != null) {
-      context.bind(location, columns, rows, attributes.asInstanceOf[Attributes[_ <: Format with MathType, Raw]])
+      context.bind(location, columns, rows, attributes.asInstanceOf[Attributes[_ <: Format, Raw]])
     }
   }
   
@@ -216,6 +216,6 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   
   
   private def sampler2d(location: Int, textureUnit: Int, textureType: Int, texture: Texture[_]) {
-    context.bindTex2d(location, textureUnit, texture.asInstanceOf[Texture2d[_ <: Accessor with AnyVec[Double]]])
+    context.bindTex2d(location, textureUnit, texture.asInstanceOf[Texture2d[_ <: Accessor]])
   }
 }

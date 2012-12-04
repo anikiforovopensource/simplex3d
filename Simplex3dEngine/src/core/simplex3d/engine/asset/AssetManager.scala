@@ -49,7 +49,7 @@ abstract class AssetManager {
     loaded
   }
   
-  def loadTexture2d[A <: Accessor with AnyVec[Double]](path: String)
+  def loadTexture2d[A <: Accessor](path: String)
     (implicit accessorManifest: ClassManifest[A])
   :Option[Texture2d[A]] = {
     val img = accessorManifest match {

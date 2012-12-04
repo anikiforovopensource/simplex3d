@@ -132,8 +132,8 @@ final class ShaderPrototype private[pluggable] (
     var i = 0; while (i < unsizedArrayKeys.size) {
       val key = unsizedArrayKeys(i)
       
-      val size = sizeMap.get(key)
-      assert(size != null)
+      var size = sizeMap.get(key)
+      if (size == null) size = 1
       result(i) = new ListSizeKey(key, size)
       
       i += 1

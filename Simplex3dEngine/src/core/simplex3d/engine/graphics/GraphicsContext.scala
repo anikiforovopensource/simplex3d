@@ -168,7 +168,7 @@ abstract class GraphicsContext {
   def resolveAttributePath(
     path: String,
     geometry: graphics.Geometry
-  ) :Attributes[Format with MathType, Raw] = {
+  ) :Attributes[Format, Raw] = {
     
     val id = attributeMap.get(path)
     
@@ -321,7 +321,7 @@ object MinimalGraphicsContext extends GraphicsContext {
   override def resolveAttributePath(
     path: String,
     geometry: graphics.Geometry
-  ) :Attributes[Format with MathType, Raw] = {
+  ) :Attributes[Format, Raw] = {
     
     val id = PathUtil.find(geometry.attributeNames, path)
     

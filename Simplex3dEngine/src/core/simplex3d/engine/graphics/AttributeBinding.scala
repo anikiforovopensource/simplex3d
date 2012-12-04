@@ -26,7 +26,7 @@ import simplex3d.data._
 import simplex3d.engine.util._
 
 
-sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw]
+sealed abstract class AttributeBinding[F <: Format, R <: Raw]
 { self: AccessibleAttributeBinding[F, R] =>
   
   //*** PropertyContext Code ******************************************************************************************
@@ -93,7 +93,7 @@ sealed abstract class AttributeBinding[F <: Format with MathType, R <: Raw]
     "AttributeBinding(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
-sealed class AccessibleAttributeBinding[F <: Format with MathType, R <: Raw]
+sealed class AccessibleAttributeBinding[F <: Format, R <: Raw]
 extends AttributeBinding[F, R] {
   import AccessChanges._
   
@@ -107,5 +107,5 @@ extends AttributeBinding[F, R] {
 }
 
 object AttributeBinding {
-  def apply[F <: Format with MathType, R <: Raw]() :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
+  def apply[F <: Format, R <: Raw]() :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
 }

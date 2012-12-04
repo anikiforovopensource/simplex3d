@@ -59,7 +59,7 @@ object AccessChanges {
     sharedState.subtext
   
   implicit def textureSubtext(texture: Texture[_]) =
-    texture.subtext.asInstanceOf[Texture[Accessor with AnyVec[Double]]#Subtext]
+    texture.subtext.asInstanceOf[Texture[Accessor]#Subtext]
 }
 
 

@@ -87,7 +87,7 @@ extends Entity[T, G](name) {
     srcVerticesSize = geometry.vertices.read.size
     val destVertexSize = childrenCount*srcVerticesSize
     
-    def copyAttributes(dest: DataView[Format with MathType, Raw], src: inDataView[Format with MathType, Raw]) {
+    def copyAttributes(dest: DataView[Format, Raw], src: inDataView[Format, Raw]) {
       
       var i = 0; while (i < childrenCount) {
         

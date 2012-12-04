@@ -49,32 +49,8 @@ private[engine] object PathUtil {
   
   private def resolveRest(value: AnyRef, rest: String) :AnyRef = {
     value match {
-      
-      case s: Struct =>
-        s.resolve(rest)
-
-      /* Replace when 2.10 is out.
-      case t: ReadTextureBinding[_] if t.isBound =>
-        rest match {
-          case "" => t
-          case _ => null
-        }
-        
-      case _ =>
-        null*/
-        
-      case _ =>
-        if (TextureBinding.avoidCompilerCrashB(value)) {
-          val t = TextureBinding.avoidCompilerCrash(value)
-          if (t.isBound) {
-            rest match {
-              case "" => t
-              case _ => null
-            }
-          }
-          else null
-        }
-        else null
+      case s: Struct => s.resolve(rest)
+      case _ => null
     }
   }
   
@@ -103,6 +79,12 @@ private[engine] object PathUtil {
         case _ => value
       }
     }
-    else resolveRest(value, rest)
+    else {
+      value match {
+        // Allow non-indexed path to map to the first element of a list.
+        case list: BindingList[_] => if (list.size > 0) resolveRest(list(0), rest) else null
+        case _ => resolveRest(value, rest)
+      }
+    }
   }
 }

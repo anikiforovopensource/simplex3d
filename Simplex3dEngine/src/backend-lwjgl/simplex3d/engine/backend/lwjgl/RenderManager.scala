@@ -248,7 +248,7 @@ final class RenderManager extends graphics.RenderManager {
         // This prevents gl from culling sprites when their center is not visible.
         glPointSize(primitive.pointSize.toFloat)
         
-        predefinedUniforms.se_pointSize := primitive.pointSpriteSize//XXX rename se_pointSize to se_pointSpriteSize for consistency.
+        predefinedUniforms.se_pointSpriteSize := primitive.pointSpriteSize
         
         GL_POINTS
         

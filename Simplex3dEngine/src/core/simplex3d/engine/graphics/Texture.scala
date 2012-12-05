@@ -34,9 +34,6 @@ import simplex3d.engine.util._
 abstract class Texture[A <: Accessor] private[engine] (
   @transient protected val accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   protected val linked: DirectSrc with ContiguousSrc
-)(
-  private var _magFilter: ImageFilter.Value, private var _minFilter: ImageFilter.Value,
-  private var _mipMapFilter: MipMapFilter.Value, initAnisotropyLevel: Double
 )
 extends EngineInfoRef {
   
@@ -44,13 +41,9 @@ extends EngineInfoRef {
   
   final class Subtext private[engine] () {
     private[engine] var dataChanges = true
-    private[engine] var filterChanges = true
-    
-    def hasFilterChanges = filterChanges
     
     def hasDataChanges = subtext.dataChanges
     def clearDataChanges() { dataChanges = false }
-    def clearFilterChanges() { filterChanges = false }
   }
   private[engine] val subtext = new Subtext
   
@@ -82,20 +75,7 @@ extends EngineInfoRef {
   
   def src: DirectSrc with ContiguousSrc = if (isAccessible) accessible else linked
   
-  
-  def magFilter = _magFilter
-  def magFilter_=(filter: ImageFilter.Value) { subtext.filterChanges = true; _magFilter = filter }
-  
-  def minFilter = _minFilter
-  def minFilter_=(filter: ImageFilter.Value) { subtext.filterChanges = true; _minFilter = filter }
-  
-  def mipMapFilter = _mipMapFilter
-  def mipMapFilter_=(filter: MipMapFilter.Value) { subtext.filterChanges = true; _mipMapFilter = filter }
-  
-  private var _anisotropyLevel: Double = 0
-  def anisotropyLevel = _anisotropyLevel
-  def anisotropyLevel_=(level: Double) { subtext.filterChanges = true; _anisotropyLevel = max(1, level) }
-  anisotropyLevel = initAnisotropyLevel
+  def parameters: TextureParameters
 }
 
 
@@ -106,17 +86,55 @@ object ImageFilter extends Enumeration {
   val Nearest, Linear = Value
 }
 
+object TextureWrap extends Enumeration {
+  val ClampToEdge, ClampToBorder, MirrorRepeat, Repeat = Value
+}
+
+
+sealed abstract class TextureParameters {
+  protected var changes = true
+  private[engine] def hasChanges = changes
+  private[engine] def clearChanges() { changes = false }
+  
+  private var _magFilter: ImageFilter.Value = ImageFilter.Linear
+  def magFilter = _magFilter
+  def magFilter_=(filter: ImageFilter.Value) { changes = true; _magFilter = filter }
+  
+  private var _minFilter: ImageFilter.Value = ImageFilter.Linear
+  def minFilter = _minFilter
+  def minFilter_=(filter: ImageFilter.Value) { changes = true; _minFilter = filter }
+  
+  private var _mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear
+  def mipMapFilter = _mipMapFilter
+  def mipMapFilter_=(filter: MipMapFilter.Value) { changes = true; _mipMapFilter = filter }
+  
+  private var _anisotropyLevel: Double = 4
+  def anisotropyLevel = _anisotropyLevel
+  def anisotropyLevel_=(level: Double) { changes = true; _anisotropyLevel = max(1, level) }
+  
+  private val _borderColor = Vec4(0)
+  def borderColor: ReadVec4 = _borderColor
+  def borderColor_=(color: inVec4) { changes = true; _borderColor := color }
+}
+
+final class Texture2dParameters extends TextureParameters {
+  private var _wrapS: TextureWrap.Value = TextureWrap.Repeat
+  def wrapS = _wrapS
+  def wrapS_=(wrapValue: TextureWrap.Value) { changes = true; _wrapS = wrapValue }
+  
+  private var _wrapT: TextureWrap.Value = TextureWrap.Repeat
+  def wrapT = _wrapT
+  def wrapT_=(wrapValue: TextureWrap.Value) { changes = true; _wrapT = wrapValue }
+}
+
 
 class Texture2d[A <: Accessor] private (
   final val dimensions: ConstVec2i,
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   linked: DirectSrc with ContiguousSrc
-)(
-  magFilter: ImageFilter.Value, minFilter: ImageFilter.Value,
-  mipMapFilter: MipMapFilter.Value, anisotropyLevel: Double
-) extends Texture[A](
-  accessible, linked
-)(magFilter, minFilter, mipMapFilter, anisotropyLevel) with Tangible {
+)
+extends Texture[A](accessible, linked) with Tangible //XXX is Tangible needed here? test, remove if not.
+{
   
   if (accessible != null) {
     if (dimensions.x < 0 || dimensions.x < 0) throw new IllegalArgumentException(
@@ -129,6 +147,9 @@ class Texture2d[A <: Accessor] private (
   
   
   final def bindingDimensions = dimensions
+  
+  private[this] val _parameters = new Texture2dParameters
+  final def parameters = _parameters
   
   /** Fill the texture with pixels obtained from the function.
    * 
@@ -163,48 +184,36 @@ object Texture2d {
   val Manifest = ClassManifest.classType[Texture2d[_]](classOf[Texture2d[_]])
   
   def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor }](
-    dimensions: ConstVec2i,
-    magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
-    mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
-  )(implicit composition: CompositionFactory[F, _ >: UByte])
-  :Texture2d[F#Accessor] = {
+    dimensions: ConstVec2i
+  )(implicit
+    composition: CompositionFactory[F, _ >: UByte]
+  )
+  :Texture2d[F#Accessor] =
+  {
     val primitive = implicitly[PrimitiveFactory[RDouble, UByte]]
     val data = composition.mkDataBuffer(primitive.mkDataBuffer(dimensions.x*dimensions.y*composition.components))
-    new Texture2d[F#Accessor](dimensions, data, null)(
-      magFilter, minFilter, mipMapFilter, anisotropyLevel
-    )
+    new Texture2d[F#Accessor](dimensions, data, null)
   }
   
   def fromData[A <: Accessor](
-    dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc,
-    magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
-    mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
+    dimensions: ConstVec2i, data: ReadData[A] with DirectSrc with ContiguousSrc
   )
   :Texture2d[A] = {
-    new Texture2d(dimensions, data, null)(
-      magFilter, minFilter, mipMapFilter, anisotropyLevel
-    )
+    new Texture2d(dimensions, data, null)
   }
 
   def fromUncheckedSrc[A <: Accessor](
-    dimensions: ConstVec2i, src: DirectSrc with ContiguousSrc,
-    magFilter: ImageFilter.Value = ImageFilter.Linear, minFilter: ImageFilter.Value = ImageFilter.Linear,
-    mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear, anisotropyLevel: Double = 4
+    dimensions: ConstVec2i, src: DirectSrc with ContiguousSrc
   )(implicit accessorManifest: ClassManifest[A]) :Texture2d[A] = {
     
     if (src.accessorManifest != accessorManifest) throw new IllegalArgumentException(
       "Data accessor type doest not match manifest.")
     
     if (src.isInstanceOf[Data[_]]) {
-      fromData(
-        dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc],
-        magFilter, minFilter, mipMapFilter, anisotropyLevel
-      )
+      fromData(dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc])
     }
     else {
-      new Texture2d(dimensions, null, src)(
-        magFilter, minFilter, mipMapFilter, anisotropyLevel
-      )
+      new Texture2d(dimensions, null, src)
     }
   }
 }

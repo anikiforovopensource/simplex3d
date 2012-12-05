@@ -60,9 +60,13 @@ abstract class AssetManager {
     
     if (img.isDefined) {
       val (dimensions, data) = img.get
-      val texture = Texture2d.fromUncheckedSrc[A](
-        dimensions, data, magFilter, minFilter, mipMapFilter, anisotropyLevel
-      )
+      val texture = Texture2d.fromUncheckedSrc[A](dimensions, data)
+      
+      texture.parameters.magFilter = magFilter
+      texture.parameters.minFilter = minFilter
+      texture.parameters.mipMapFilter = mipMapFilter
+      texture.parameters.anisotropyLevel = anisotropyLevel
+      
       Some(texture)
     }
     else None

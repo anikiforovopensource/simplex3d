@@ -302,7 +302,7 @@ extends graphics.RenderContext {
       
     bindTexture(GL_TEXTURE_2D, id)
     
-    val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
+    val generateMipmap = (texture.parameters.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatManifest)
@@ -339,7 +339,7 @@ extends graphics.RenderContext {
   private def update(id: Int, texture: Texture2d[_ <: Accessor]) {
     bindTexture(GL_TEXTURE_2D, id)
     
-    val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
+    val generateMipmap = (texture.parameters.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatManifest)
@@ -393,16 +393,16 @@ extends graphics.RenderContext {
     }
   }
   
-  private def updateFilters(glTarget: Int, id: Int, texture: Texture[_]) {
+  private def updateTextureParameters(glTarget: Int, id: Int, texture: Texture[_]) {
     bindTexture(glTarget, id)
     
-    if (texture.mipMapFilter != MipMapFilter.Disabled && !texture.hasMatchingMipmaps) {
+    if (texture.parameters.mipMapFilter != MipMapFilter.Disabled && !texture.hasMatchingMipmaps) {
       updateMipmaps(texture)
     }
     
     glTexParameteri(
       glTarget, GL_TEXTURE_MAG_FILTER,
-      texture.magFilter match {
+      texture.parameters.magFilter match {
         case ImageFilter.Nearest => GL_NEAREST
         case ImageFilter.Linear => GL_LINEAR
       }
@@ -410,13 +410,13 @@ extends graphics.RenderContext {
     
     glTexParameteri(
       glTarget, GL_TEXTURE_MIN_FILTER,
-      texture.minFilter match {
-        case ImageFilter.Nearest => texture.mipMapFilter match {
+      texture.parameters.minFilter match {
+        case ImageFilter.Nearest => texture.parameters.mipMapFilter match {
           case MipMapFilter.Disabled => GL_NEAREST
           case MipMapFilter.Nearest => GL_NEAREST_MIPMAP_NEAREST
           case MipMapFilter.Linear => GL_NEAREST_MIPMAP_LINEAR
          }
-        case ImageFilter.Linear => texture.mipMapFilter match {
+        case ImageFilter.Linear => texture.parameters.mipMapFilter match {
           case MipMapFilter.Disabled => GL_LINEAR
           case MipMapFilter.Nearest => GL_LINEAR_MIPMAP_NEAREST
           case MipMapFilter.Linear => GL_LINEAR_MIPMAP_LINEAR
@@ -426,10 +426,30 @@ extends graphics.RenderContext {
     
     if (capabilities.maxAnisotropyLevel > 1) glTexParameterf(
       glTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-      min(capabilities.maxAnisotropyLevel, texture.anisotropyLevel).toFloat
+      min(capabilities.maxAnisotropyLevel, texture.parameters.anisotropyLevel).toFloat
     )
     
-    texture.clearFilterChanges()
+    vec4Data(0) = texture.parameters.borderColor
+    glTexParameter(glTarget, GL_TEXTURE_BORDER_COLOR, vec4Buffer)
+    
+    
+    def wrapConstant(wrapValue: TextureWrap.Value) :Int = {
+      wrapValue match {
+        case TextureWrap.ClampToEdge => GL_CLAMP_TO_EDGE
+        case TextureWrap.ClampToBorder => GL_CLAMP_TO_BORDER
+        case TextureWrap.MirrorRepeat => GL_MIRRORED_REPEAT
+        case TextureWrap.Repeat => GL_REPEAT
+      }
+    }
+    
+    texture.parameters match {
+      case parameters: Texture2dParameters =>
+        glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, wrapConstant(parameters.wrapS))
+        glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, wrapConstant(parameters.wrapT))
+    }
+    
+    
+    texture.parameters.clearChanges()
   }
   
 
@@ -459,7 +479,7 @@ extends graphics.RenderContext {
     var id = texture.managedFields.id
     if (id == 0) id = initialize(texture)
     else if (texture.hasDataChanges) update(id, texture)
-    if (texture.hasFilterChanges) updateFilters(GL_TEXTURE_2D, id, texture)
+    if (texture.parameters.hasChanges) updateTextureParameters(GL_TEXTURE_2D, id, texture)
     
     id
   }
@@ -533,6 +553,12 @@ extends graphics.RenderContext {
     id
   }
   
+  
+  private[this] val vec3Data = DataBuffer[Vec3, RFloat](1)
+  private[this] val vec3Buffer = vec3Data.buffer()
+  
+  private[this] val vec4Data = DataBuffer[Vec4, RFloat](1)
+  private[this] val vec4Buffer = vec4Data.buffer()
   
   private[this] val sizeAndType = DataBuffer[SInt, SInt](2).buffer()
   

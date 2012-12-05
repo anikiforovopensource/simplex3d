@@ -140,7 +140,7 @@ trait StreamLoader extends AssetLoader {
       
       var lineNumber = 1
       var line = reader.readLine(); while (line != null) {
-        val tokens: Seq[String] = line.split(" ")
+        val tokens: Seq[String] = line.split("\\s")
         tokens match {
           case Seq("f", s0, s1, s2) => {
             indexBuilders(0) += decodeIndex(s0)
@@ -150,7 +150,13 @@ trait StreamLoader extends AssetLoader {
           case Seq("v", x, y, z) => verticesBuilder += Vec3(x.toDouble, y.toDouble, z.toDouble)
           case Seq("vn", x, y, z) => normalsBuilder += Vec3(x.toDouble, y.toDouble, z.toDouble)
           case Seq("vt", x, y) => texCoordsBuilder += Vec2(x.toDouble, y.toDouble)
-          case _ => // ignore
+          //case Seq("f", _*) => { ... }// TODO: this is bugged in 2.9.2, works in 2.10, change after updating.
+          //case _ => // ignore
+          case _ => {
+            if (tokens.size > 0 && tokens(0) == "f") throw new RuntimeException(
+                "Unsupported polygon format in obj model '" + path +
+                "' on line " + lineNumber + ", only triangles are supported.")
+          }
         }
 
         lineNumber += 1

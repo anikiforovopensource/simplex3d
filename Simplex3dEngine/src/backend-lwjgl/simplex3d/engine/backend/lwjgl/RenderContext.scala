@@ -854,7 +854,7 @@ extends graphics.RenderContext {
       }
     }
     
-    if (binding == null) log(
+    if (binding == null && !path.endsWith("nvidia_drivers_are_very_buggy")) log(
       Level.SEVERE, "Uniform '" + path + "' could not be resolved for mesh '" + meshName + "'.")
 
     else if (binding.isInstanceOf[ReadTextureBinding[_]]) {

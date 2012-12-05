@@ -273,6 +273,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         }
       }
       
+      //XXX do this only with nvidia drivers.
+      entries += (("float", "nvidia_drivers_are_very_buggy"))
+      
       val readEntries = new ReadArray(entries.result)
       dependencies += new StructSignature(level, instance.getClass, glslType, readEntries)
       

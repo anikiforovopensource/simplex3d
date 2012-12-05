@@ -569,36 +569,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     sources ::= src
   }
   
-  private[this] def enforceSquareMatrices(declarations: Iterable[Declaration]) {
-    for (declaration <- declarations) {
-      if (classOf[AnyMat[_]].isAssignableFrom(declaration.manifest.erasure)) {
-        val square = declaration.manifest match {
-          case Mat2.Manifest => true
-          case Mat3.Manifest => true
-          case Mat4.Manifest => true
-        }
-        if (!square) throw new RuntimeException(
-          "Declaration '" + declaration.name + "' uses a type not supported by the current GLSL profile."
-        )
-      }
-    }
-  }
-  
   
   def toPrototype(version: String) = {
     val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
-    
-    
-    if (squareMat) {
-      if (attributeBlock != null) enforceSquareMatrices(attributeBlock)
-      if (uniformBlock != null)  enforceSquareMatrices(uniformBlock)
-      
-      inputBlocks.foreach(b => enforceSquareMatrices(b._2))
-      outputBlock.foreach(b => enforceSquareMatrices(b._2))
-      
-      mainInputs.foreach(b => enforceSquareMatrices(b._2))
-      mainOutput.foreach(b => enforceSquareMatrices(b._2))
-    }
     
     if (outputBlock.isDefined && !mainLabel.isDefined) throw new IllegalStateException(
         "Only shaders with main(){} can define out{} blocks.")

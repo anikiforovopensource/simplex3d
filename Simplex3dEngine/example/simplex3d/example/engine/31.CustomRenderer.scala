@@ -107,6 +107,7 @@ object CustomRenderer extends default.BaseApp {
     mesh.transformation.update.scale := 40
     
     mesh.shaderDebugging.logAccepted = true
+    mesh.shaderDebugging.logRejected = true
     mesh.shaderDebugging.logGeneratedSource = true
     
     // Attach the mesh to the scenegraph.

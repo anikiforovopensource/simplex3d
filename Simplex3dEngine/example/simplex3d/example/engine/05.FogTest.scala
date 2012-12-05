@@ -97,7 +97,7 @@ object FogTest extends default.App {
       
       mesh.transformation.update.scale := scale
       mesh.transformation.update.translation := Vec3(0, -5, -i*scale*2)
-      
+
       world.attach(mesh)
     }
     

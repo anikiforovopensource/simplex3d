@@ -218,8 +218,10 @@ extends graphics.TechniqueManager[G]
                   declaration.name, dummyPredefined, material, worldEnvironment, shader.boundUniforms)
             }
           
+          
           if (resolved != null) {
-            val resolvedErasure = 
+            
+            val adjustedErasure = 
               if (shader.squareMatrices) {
                 if (resolved.getClass == Mat2x3.Manifest.erasure) Mat2.Manifest.erasure
                 else if (resolved.getClass == Mat2x4.Manifest.erasure) Mat2.Manifest.erasure
@@ -231,7 +233,9 @@ extends graphics.TechniqueManager[G]
               }
               else resolved.getClass
             
-            if (declaration.uniformManifest.erasure == resolvedErasure) {
+            if (declaration.uniformManifest.erasure == resolved.getClass ||
+                declaration.uniformManifest.erasure == adjustedErasure)
+            {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,

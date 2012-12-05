@@ -219,7 +219,7 @@ object TechniqueProvider {
     
     manager.push(new VertexShader {
       uniform {
-        declare[Mat4]("se_modelViewMatrix")
+        declare[Mat4x3]("se_modelViewMatrix")
       }
       
       attributes {

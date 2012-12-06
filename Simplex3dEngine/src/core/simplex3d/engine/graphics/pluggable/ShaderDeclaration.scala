@@ -341,19 +341,19 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   private[this] var conditions = Set[(String, AnyRef => Boolean)]()
   
-  private[this] var uniformBlock: Set[Declaration] = null //XXX change to option?
+  private[this] var uniformBlock: Option[Set[Declaration]] = None
   private[this] var boundUniforms = Map[String, Property[UncheckedBinding]]()
   private[this] var unsizedArrayKeys = Set[ListNameKey]()
   private[this] var sizedArrayKeys = Set[ListSizeKey]()
   
-  private[this] var attributeBlock: Set[Declaration] = null //XXX change to option?
+  private[this] var attributeBlock: Option[Set[Declaration]] = None
   
   private[this] var inputBlocks = Set[(String, Set[Declaration])]()//(blockName, declarations)
   private[this] var outputBlock: Option[(String, Set[Declaration])] = None
   
   private[this] var functionDependencies = Set[String]()
   
-  private[this] var body: String = null //XXX change to option?
+  private[this] var body: String = null
   private[this] var sources: List[String] = Nil
   
   
@@ -372,20 +372,22 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] def atUniformBlock = processingUniforms
   private[this] def atMainBody = processingMainBody
   
-  private[this] def buildDeclarations(squarMatrices: Boolean, declarations: Set[Declaration]) = {
-    type Dec = simplex3d.engine.graphics.pluggable.Declaration
-    
-    if (declarations == null) Set.empty[Dec]
-    else {
-      declarations.map { d =>
-        val (glslType, sturctSignatures, nestedSamplers) = d.extractGlslTypes(squarMatrices)
+  
+  private type PublicDeclaration = simplex3d.engine.graphics.pluggable.Declaration
+  
+  private[this] def buildDeclarations(squarMatrices: Boolean, block: Option[Set[Declaration]]) :Set[PublicDeclaration] = {
+    if (block.isDefined) buildDeclarations(squarMatrices, block.get)
+    else Set.empty[PublicDeclaration]
+  }
+  private[this] def buildDeclarations(squarMatrices: Boolean, declarations: Set[Declaration]) :Set[PublicDeclaration] = {
+    declarations.map { d =>
+      val (glslType, sturctSignatures, nestedSamplers) = d.extractGlslTypes(squarMatrices)
 
-        new Dec(
-            d.qualifiers,
-            d.manifest,
-            glslType, d.name, d.arraySizeExpression,
-            sturctSignatures, nestedSamplers)
-      }
+      new PublicDeclaration(
+          d.qualifiers,
+          d.manifest,
+          glslType, d.name, d.arraySizeExpression,
+          sturctSignatures, nestedSamplers)
     }
   }
   
@@ -425,14 +427,14 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   protected final def uniform(block: => Unit) {
     if (!atBlockLevel) throw new IllegalStateException("uniform{} must be declared at the top level.")
     if (atMainBody) throw new IllegalStateException("uniform{} must be declared at the top level.")
-    if (uniformBlock != null) throw new IllegalStateException("Only one uniform{} block can be declared.")
+    if (uniformBlock.isDefined) throw new IllegalStateException("Only one uniform{} block can be declared.")
     
     processingUniforms = true
-    uniformBlock = processBlock(() => block)
+    uniformBlock = Some(processBlock(() => block))
     processingUniforms = false
     
     // Process array declarations.
-    for (declaration <- uniformBlock) {
+    for (declaration <- uniformBlock.get) {
       val isArray = classOf[BindingList[_]].isAssignableFrom(declaration.manifest.erasure)
       val noSizeExpression = (declaration.arraySizeExpression.isEmpty)
       
@@ -480,7 +482,12 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   private[this] def enforceUniqueBlockNames(name: String) {
-    //XXX implement
+    val equalsName = (tuple: (String, Any)) => tuple._1 == name
+    if (mainInputs.exists(equalsName) || mainOutput.exists(equalsName) ||
+        inputBlocks.exists(equalsName) || outputBlock.exists(equalsName))
+    {
+      throw new RuntimeException("Block with name '" + name + "' is already defined.")
+    }
   }
   
   /** "Only a vertex shader can declare an attributes block."
@@ -491,10 +498,10 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     if (shaderType != Shader.Vertex) throw new UnsupportedOperationException(
       "Only a vertex shader can declare attributes{} block."
     )
-    if (attributeBlock != null) throw new IllegalStateException("Only one attributes{} block can be declared.")
+    if (attributeBlock.isDefined) throw new IllegalStateException("Only one attributes{} block can be declared.")
     
-    attributeBlock = processBlock(() => block)
-    enforceMathTypes(attributeBlock, allowArrays = false)
+    attributeBlock = Some(processBlock(() => block))
+    enforceMathTypes(attributeBlock.get, allowArrays = false)
   }
   
   /** Vertex shader cannot have any input blocks (use attributes block instead).

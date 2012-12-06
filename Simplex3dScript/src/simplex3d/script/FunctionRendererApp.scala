@@ -62,10 +62,10 @@ abstract class FunctionRendererApp extends default.FullscreenEffectApp {
       if (textureDims != dims) {
         textureDims := dims
         
-        val texture = Texture2d.fromData(
-          dims, DataBuffer[Vec3, UByte](dims.x*dims.y),
-          ImageFilter.Linear, ImageFilter.Linear, MipMapFilter.Disabled, 1
-        )
+        val texture = Texture2d.fromData(dims, DataBuffer[Vec3, UByte](dims.x*dims.y))
+        texture.mipMapFilter = MipMapFilter.Disabled
+        texture.anisotropyLevel = 1
+        
         this.texture.update := texture
       }
       

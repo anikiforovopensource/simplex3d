@@ -302,7 +302,7 @@ extends graphics.RenderContext {
       
     bindTexture(GL_TEXTURE_2D, id)
     
-    val generateMipmap = (texture.parameters.mipMapFilter != MipMapFilter.Disabled)
+    val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatManifest)
@@ -339,7 +339,7 @@ extends graphics.RenderContext {
   private def update(id: Int, texture: Texture2d[_ <: Accessor]) {
     bindTexture(GL_TEXTURE_2D, id)
     
-    val generateMipmap = (texture.parameters.mipMapFilter != MipMapFilter.Disabled)
+    val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatManifest)
@@ -396,13 +396,13 @@ extends graphics.RenderContext {
   private def updateTextureParameters(glTarget: Int, id: Int, texture: Texture[_]) {
     bindTexture(glTarget, id)
     
-    if (texture.parameters.mipMapFilter != MipMapFilter.Disabled && !texture.hasMatchingMipmaps) {
+    if (texture.mipMapFilter != MipMapFilter.Disabled && !texture.hasMatchingMipmaps) {
       updateMipmaps(texture)
     }
     
     glTexParameteri(
       glTarget, GL_TEXTURE_MAG_FILTER,
-      texture.parameters.magFilter match {
+      texture.magFilter match {
         case ImageFilter.Nearest => GL_NEAREST
         case ImageFilter.Linear => GL_LINEAR
       }
@@ -410,13 +410,13 @@ extends graphics.RenderContext {
     
     glTexParameteri(
       glTarget, GL_TEXTURE_MIN_FILTER,
-      texture.parameters.minFilter match {
-        case ImageFilter.Nearest => texture.parameters.mipMapFilter match {
+      texture.minFilter match {
+        case ImageFilter.Nearest => texture.mipMapFilter match {
           case MipMapFilter.Disabled => GL_NEAREST
           case MipMapFilter.Nearest => GL_NEAREST_MIPMAP_NEAREST
           case MipMapFilter.Linear => GL_NEAREST_MIPMAP_LINEAR
          }
-        case ImageFilter.Linear => texture.parameters.mipMapFilter match {
+        case ImageFilter.Linear => texture.mipMapFilter match {
           case MipMapFilter.Disabled => GL_LINEAR
           case MipMapFilter.Nearest => GL_LINEAR_MIPMAP_NEAREST
           case MipMapFilter.Linear => GL_LINEAR_MIPMAP_LINEAR
@@ -426,10 +426,10 @@ extends graphics.RenderContext {
     
     if (capabilities.maxAnisotropyLevel > 1) glTexParameterf(
       glTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-      min(capabilities.maxAnisotropyLevel, texture.parameters.anisotropyLevel).toFloat
+      min(capabilities.maxAnisotropyLevel, texture.anisotropyLevel).toFloat
     )
     
-    vec4Data(0) = texture.parameters.borderColor
+    vec4Data(0) = texture.borderColor
     glTexParameter(glTarget, GL_TEXTURE_BORDER_COLOR, vec4Buffer)
     
     
@@ -442,14 +442,14 @@ extends graphics.RenderContext {
       }
     }
     
-    texture.parameters match {
-      case parameters: Texture2dParameters =>
-        glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, wrapConstant(parameters.wrapS))
-        glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, wrapConstant(parameters.wrapT))
+    texture match {
+      case tex: Texture2d[_] =>
+        glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, wrapConstant(tex.wrapS))
+        glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, wrapConstant(tex.wrapT))
     }
     
     
-    texture.parameters.clearChanges()
+    texture.clearParameterChanges()
   }
   
 
@@ -479,7 +479,7 @@ extends graphics.RenderContext {
     var id = texture.managedFields.id
     if (id == 0) id = initialize(texture)
     else if (texture.hasDataChanges) update(id, texture)
-    if (texture.parameters.hasChanges) updateTextureParameters(GL_TEXTURE_2D, id, texture)
+    if (texture.hasParameterChanges) updateTextureParameters(GL_TEXTURE_2D, id, texture)
     
     id
   }

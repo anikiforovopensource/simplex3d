@@ -75,7 +75,31 @@ extends EngineInfoRef {
   
   def src: DirectSrc with ContiguousSrc = if (isAccessible) accessible else linked
   
-  def parameters: TextureParameters
+  
+  // *** Parameters ***************************************************************************************************
+  protected var parameterChanges = true
+  private[engine] def hasParameterChanges = parameterChanges//XXX bridge via AnyVal proxy
+  private[engine] def clearParameterChanges() { parameterChanges = false }//XXX bridge via AnyVal proxy
+  
+  private var _magFilter: ImageFilter.Value = ImageFilter.Linear
+  def magFilter = _magFilter
+  def magFilter_=(filter: ImageFilter.Value) { parameterChanges = true; _magFilter = filter }
+  
+  private var _minFilter: ImageFilter.Value = ImageFilter.Linear
+  def minFilter = _minFilter
+  def minFilter_=(filter: ImageFilter.Value) { parameterChanges = true; _minFilter = filter }
+  
+  private var _mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear
+  def mipMapFilter = _mipMapFilter
+  def mipMapFilter_=(filter: MipMapFilter.Value) { parameterChanges = true; _mipMapFilter = filter }
+  
+  private var _anisotropyLevel: Double = 4
+  def anisotropyLevel = _anisotropyLevel
+  def anisotropyLevel_=(level: Double) { parameterChanges = true; _anisotropyLevel = max(1, level) }
+  
+  private val _borderColor = Vec4(0)
+  def borderColor: ReadVec4 = _borderColor
+  def borderColor_=(color: inVec4) { parameterChanges = true; _borderColor := color }
 }
 
 
@@ -88,43 +112,6 @@ object ImageFilter extends Enumeration {
 
 object TextureWrap extends Enumeration {
   val ClampToEdge, ClampToBorder, MirrorRepeat, Repeat = Value
-}
-
-
-sealed abstract class TextureParameters {
-  protected var changes = true
-  private[engine] def hasChanges = changes
-  private[engine] def clearChanges() { changes = false }
-  
-  private var _magFilter: ImageFilter.Value = ImageFilter.Linear
-  def magFilter = _magFilter
-  def magFilter_=(filter: ImageFilter.Value) { changes = true; _magFilter = filter }
-  
-  private var _minFilter: ImageFilter.Value = ImageFilter.Linear
-  def minFilter = _minFilter
-  def minFilter_=(filter: ImageFilter.Value) { changes = true; _minFilter = filter }
-  
-  private var _mipMapFilter: MipMapFilter.Value = MipMapFilter.Linear
-  def mipMapFilter = _mipMapFilter
-  def mipMapFilter_=(filter: MipMapFilter.Value) { changes = true; _mipMapFilter = filter }
-  
-  private var _anisotropyLevel: Double = 4
-  def anisotropyLevel = _anisotropyLevel
-  def anisotropyLevel_=(level: Double) { changes = true; _anisotropyLevel = max(1, level) }
-  
-  private val _borderColor = Vec4(0)
-  def borderColor: ReadVec4 = _borderColor
-  def borderColor_=(color: inVec4) { changes = true; _borderColor := color }
-}
-
-final class Texture2dParameters extends TextureParameters {
-  private var _wrapS: TextureWrap.Value = TextureWrap.Repeat
-  def wrapS = _wrapS
-  def wrapS_=(wrapValue: TextureWrap.Value) { changes = true; _wrapS = wrapValue }
-  
-  private var _wrapT: TextureWrap.Value = TextureWrap.Repeat
-  def wrapT = _wrapT
-  def wrapT_=(wrapValue: TextureWrap.Value) { changes = true; _wrapT = wrapValue }
 }
 
 
@@ -148,8 +135,6 @@ extends Texture[A](accessible, linked) with Tangible //XXX is Tangible needed he
   
   final def bindingDimensions = dimensions
   
-  private[this] val _parameters = new Texture2dParameters
-  final def parameters = _parameters
   
   /** Fill the texture with pixels obtained from the function.
    * 
@@ -166,7 +151,7 @@ extends Texture[A](accessible, linked) with Tangible //XXX is Tangible needed he
     
     this
   }
-  private[this] val renderLine = (data: Data[A], function: inVec2 => A#Read, y: Int) => {
+  private[this] final def renderLine = (data: Data[A], function: inVec2 => A#Read, y: Int) => {
     val pixel = Vec2(0, y)
 
     var x = 0; while (x < dimensions.x) { val i = x + y*dimensions.x
@@ -177,6 +162,15 @@ extends Texture[A](accessible, linked) with Tangible //XXX is Tangible needed he
       x += 1
     }
   }
+  
+  
+  private var _wrapS: TextureWrap.Value = TextureWrap.Repeat
+  def wrapS = _wrapS
+  def wrapS_=(wrapValue: TextureWrap.Value) { parameterChanges = true; _wrapS = wrapValue }
+  
+  private var _wrapT: TextureWrap.Value = TextureWrap.Repeat
+  def wrapT = _wrapT
+  def wrapT_=(wrapValue: TextureWrap.Value) { parameterChanges = true; _wrapT = wrapValue }
 }
 
 

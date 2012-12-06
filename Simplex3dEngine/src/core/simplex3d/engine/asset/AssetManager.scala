@@ -62,10 +62,10 @@ abstract class AssetManager {
       val (dimensions, data) = img.get
       val texture = Texture2d.fromUncheckedSrc[A](dimensions, data)
       
-      texture.parameters.magFilter = magFilter
-      texture.parameters.minFilter = minFilter
-      texture.parameters.mipMapFilter = mipMapFilter
-      texture.parameters.anisotropyLevel = anisotropyLevel
+      texture.magFilter = magFilter
+      texture.minFilter = minFilter
+      texture.mipMapFilter = mipMapFilter
+      texture.anisotropyLevel = anisotropyLevel
       
       Some(texture)
     }

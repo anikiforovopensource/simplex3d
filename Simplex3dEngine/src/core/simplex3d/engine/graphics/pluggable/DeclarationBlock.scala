@@ -26,6 +26,7 @@ import scala.collection._
 
 
 final class DeclarationBlock(val name: String, val declarations: immutable.Set[Declaration]) {
+  
   override def toString() :String = {
     "DeclarationBlock('" + name + "')(\n" + declarations.mkString("  ", "\n", "") + "\n)"
   }

@@ -43,6 +43,14 @@ final class Declaration(
   val isReserved = name.startsWith("gl_")
   val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
   
+  private val syntheticName = {
+    name match {
+      case "gl_Position" => "se_Position_FragCoord"
+      case "gl_FragCoord" => "se_Position_FragCoord"
+      case _ => name
+    }
+  }
+  
   val attributeManifest: ClassManifest[_] = {
     manifest match {
       case DoubleRef.Manifest => PrimitiveFormat.RDouble
@@ -77,7 +85,7 @@ final class Declaration(
       case d: Declaration =>
         qualifiers == d.qualifiers &&
         manifest == d.manifest &&
-        name == d.name &&
+        syntheticName == d.syntheticName &&
         arraySizeExpression == d.arraySizeExpression
         
       case _ =>

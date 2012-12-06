@@ -42,8 +42,8 @@ extends graphics.TechniqueManager[G]
   val passManager = new PassManager[G]//XXX stub
   
   
-  protected class Stage(val name: String) {
-    val functions = new HashMap[String, ArrayBuffer[ShaderPrototype]]
+  protected class Stage(val name: String, val id: Int) {
+    val function = new HashMap[String, ArrayBuffer[ShaderPrototype]]
     
     // The key is out{} block name.
     val main = new HashMap[String, ArrayBuffer[ShaderPrototype]]
@@ -53,10 +53,19 @@ extends graphics.TechniqueManager[G]
     
     
     def push(shader: ShaderPrototype) {
-      //XXX Verify unique in/out block name has the same declarations,
-      //XXX special treatment for gl_Position => gl_FragCoord
-      
       def insert(map: HashMap[String, ArrayBuffer[ShaderPrototype]], key: String, shader: ShaderPrototype) {
+        
+        val pending = new HashMap[String, DeclarationBlock]
+        val register = registerNamedBlock(pending)_
+        
+        shader.inputBlocks.foreach(register)
+        shader.outputBlock.foreach(register)
+        shader.mainInputs.foreach(register)
+        shader.mainOutput.foreach(register)
+        
+        namedBlocks.putAll(pending)
+        
+        
         var list = map.get(key)
         if (list == null) {
           list = new ArrayBuffer[ShaderPrototype]
@@ -79,14 +88,25 @@ extends graphics.TechniqueManager[G]
         }
       }
       else {
-        insert(functions, shader.functionSignature.get, shader)
+        insert(function, shader.functionSignature.get, shader)
       }
     }
   }
   
+  
+  protected val namedBlocks = new HashMap[String, DeclarationBlock]
+  protected def registerNamedBlock(pending: HashMap[String, DeclarationBlock])(block: DeclarationBlock) {
+    val existing = namedBlocks.get(block.name)
+    if (existing == null) pending.put(block.name, block)
+    else {
+      if (existing != block) throw new RuntimeException(
+          "Block '" + block.name + "' is already defined with different declarations.")
+    }
+  }
+  
   protected val stages = new Array[Stage](2)
-  stages(0) = new Stage("Fragment")
-  stages(1) = new Stage("Vertex")
+  stages(0) = new Stage("Fragment", 0)
+  stages(1) = new Stage("Vertex", 1)
   
   
   def push(shader: ShaderDeclaration) {
@@ -272,7 +292,7 @@ extends graphics.TechniqueManager[G]
             passed = true
           }
           else {
-            val matchingProviders = stage.functions.get(requiredFunction)
+            val matchingProviders = stage.function.get(requiredFunction)
             var j = 0; while (matchingProviders != null && !passed && j < matchingProviders.size) {
               val functionProvider = matchingProviders(j)
               

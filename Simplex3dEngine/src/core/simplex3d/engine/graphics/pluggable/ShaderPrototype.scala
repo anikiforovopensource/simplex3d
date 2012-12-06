@@ -56,6 +56,33 @@ final class ShaderPrototype private[pluggable] (
   val sources: List[String]
 ) {
   
+  if (functionSignature.isDefined) {
+    assert(!mainLabel.isDefined)
+    
+    assert(mainInputs.size == 0)
+    assert(!mainOutput.isDefined)
+    
+    assert(!outputBlock.isDefined)
+  }
+  
+  if (mainLabel.isDefined) {
+    assert(!functionSignature.isDefined)
+    
+    if (mainOutput.isDefined) assert(!outputBlock.isDefined)
+    if (outputBlock.isDefined) assert(!mainOutput.isDefined)
+  }
+  
+  if (shaderType == Shader.Fragment) {
+    assert(attributeBlock.size == 0)
+    assert(!outputBlock.isDefined)
+  }
+  
+  {
+    val names = mainInputs.map(_.name) ++ mainOutput.map(_.name) ++ inputBlocks.map(_.name) ++ outputBlock.map(_.name)
+    assert(names.size == names.distinct.size)
+  }
+  
+  
   val name: String = {
     
     val shaderTypeString = shaderType match {

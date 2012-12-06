@@ -47,22 +47,24 @@ import simplex3d.engine.graphics._
  * All dependent variables should be defined inside attribute{} or in{} blocks using declare().
  * Only VertexShaders are allowed to have attribute{} blocks. Other shaders must use named in{} block and
  * must prefix the variables with the block name in the source code.
- * Only MathTypes and MathType arrays can be declared inside in{} and out{} blocks.
+ *
+ * Each shader can link with the next stage using an out{} block. In this case shader must also declare main().
+ * Multiple main declarations are allowed within the same program.
+ * Alternatively, a shader with main() declaration can share a named set of values using main(){ out{} }.
+ * Only one out{} block is allowed per shader, either stage interface out{} or main{ out{} }. Fragment
+ * shaders cannot define interface out{}.
+ * Shared pre-computed values within the same stage can be requested within main(){ in{} } blocks.
  * 
  * Arrays in in{} and out{} blocks must be sized either to a literal value or to a size of some uniform array.
  * If a uniform array is defined in the shader scope, its size can be accessed using injected variable
  * of the form: se_sizeOf_${StructType}_${ArrayName} or simply se_sizeOf_${ArrayName} when array is
  * declared at the top level.
  * 
- * Each shader can link with the next stage using a combination of one out{} block with a main() declaration.
- * A shader with an main() body can share a named set of values using main(){ out{} }. Only one out{} block
- * is allowed per shader, either stage interface or main.out{}.
- * Shared pre-computed values can be requested within main(){ in{} } blocks.
- * 
  * If a shader does not provide a main(), then it must define a function(){}. Functions can be used within
- * the same stage.
+ * the same stage. Functions can have multiple in{} blocks, but cannot have any out{} blocks.
  * 
- * Shader sources can be attached using src() declarations.
+ * Additional shader sources can be attached using src() declarations. They will be inserted into the shader
+ * code before main() or function() in the order they appear.
  * 
  * A path that resolves to enumeration and a condition on the result can be specified to control shader
  * selection using enums.
@@ -477,6 +479,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     }
   }
   
+  private[this] def enforceUniqueBlockNames(name: String) {
+    //XXX implement
+  }
   
   /** "Only a vertex shader can declare an attributes block."
    */
@@ -497,8 +502,11 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   protected final def in(name: String)(block: => Unit) {
     if (!atBlockLevel) throw new IllegalStateException("in{} must be declared at the top level.")
     if (!atMainBody && shaderType == Shader.Vertex) throw new UnsupportedOperationException(
-      "Vertex shader cannot have in{} blocks (use attributes{} block instead)."
+      "in{} blocks cannot be declared in the vertex shader, use attributes{} block instead."
     )
+    
+    enforceUniqueBlockNames(name)
+    
     
     val declarations = processBlock(() => block)
     
@@ -519,10 +527,16 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       if (outputBlock.isDefined) throw new IllegalStateException("out{} is already defined as shader interface.")
     }
     else {
+      if (shaderType == Shader.Fragment) throw new UnsupportedOperationException(
+        "out{} blocks cannot be declared in the fragment shader."
+      )
       if (outputBlock.isDefined) throw new IllegalStateException("out{} is already defined.")
       if (mainOutput.isDefined) throw new IllegalStateException("out{} is already defined as main argument.")
     }
+    
+    enforceUniqueBlockNames(name)
 
+    
     val declarations = processBlock(() => block)
     
     enforceSizedArrays(declarations)

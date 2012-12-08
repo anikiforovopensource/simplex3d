@@ -341,6 +341,11 @@ abstract class AbstractData[
   
   
   /** This will copy a 2d sub image from the source sequence into this object.
+   * 
+   * @param dimensions dimensions of the image represented by this object.
+   * @param offset an offset into the image where new data will be inserted.
+   * @param src new data to be inserted.
+   * @param srcDimensions dimensions of the source image.
    */
   final def put2d(
     dimensions: inVec2i, offset: inVec2i,
@@ -354,6 +359,13 @@ abstract class AbstractData[
   }
   
   /** This will copy a 2d sub image from the source sequence into this object.
+   * 
+   * @param dimensions dimensions of the image represented by this object.
+   * @param offset an offset into the image where new data will be inserted.
+   * @param src new data to be inserted.
+   * @param srcDimensions dimensions of the source image.
+   * @param srcOffset an offset into the source image where new data will be taken.
+   * @param copyDimensions dimensions of the copied sub-image.
    */
   final def put2d(
     dimensions: inVec2i, offset: inVec2i,
@@ -547,6 +559,11 @@ abstract class AbstractData[
   
   
   /** This will copy a 3d sub image from the source sequence into this object.
+   * 
+   * @param dimensions dimensions of the image represented by this object.
+   * @param offset an offset into the image where new data will be inserted.
+   * @param src new data to be inserted.
+   * @param srcDimensions dimensions of the source image.
    */
   final def put3d(
     dimensions: inVec3i, offset: inVec3i,
@@ -560,6 +577,13 @@ abstract class AbstractData[
   }
   
   /** This will copy a 3d sub image from the source sequence into this object.
+   * 
+   * @param dimensions dimensions of the image represented by this object.
+   * @param offset an offset into the image where new data will be inserted.
+   * @param src new data to be inserted.
+   * @param srcDimensions dimensions of the source image.
+   * @param srcOffset an offset into the source image where new data will be taken.
+   * @param copyDimensions dimensions of the copied sub-image.
    */
   final def put3d(
     dimensions: inVec3i, offset: inVec3i,

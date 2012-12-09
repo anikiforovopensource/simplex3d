@@ -193,11 +193,13 @@ abstract class AbstractData[
   }
   
   final def put(index: Int, src: Seq[AR]) {
-    put(index, src, src.size, 0, size)
+    val srcSize = src.size
+    put(index, src, srcSize, 0, srcSize)
   }
 
   final def put(src: Seq[AR]) {
-    put(0, src, src.size, 0, size)
+    val srcSize = src.size
+    put(0, src, srcSize, 0, srcSize)
   }
 
 

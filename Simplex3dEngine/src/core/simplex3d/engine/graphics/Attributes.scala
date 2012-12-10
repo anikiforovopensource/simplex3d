@@ -69,7 +69,7 @@ final class Attributes[F <: Format, +R <: Raw] private[engine] (
   
   def read: ReadDataView[F, R] = {
     if (isAccessible) accessible.asReadOnly()
-    else null//XXX exception instead
+    else throw new IllegalAccessException("Attributes are not accessible.")
   }
   
   def write: DataView[F, R] = write(0, src.size)
@@ -87,7 +87,7 @@ final class Attributes[F <: Format, +R <: Raw] private[engine] (
       notifyBindings()
       accessible.asInstanceOf[DataView[F, R]]
     }
-    else null
+    else throw new IllegalAccessException("Attributes are not writable.")
   }
   
   def src: DirectSrc = if (isAccessible) accessible else linked

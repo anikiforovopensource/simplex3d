@@ -40,13 +40,20 @@ extends Protected with Cloneable with Binding with Serializable
   final val bindingManifest = implicitly[ClassManifest[T]]
   protected[engine] var texture: T = _
   
-  final def bound: T = texture
+  final def bound: T = if (texture == null) throw new NoSuchElementException else texture
   final def isBound = (texture != null)
   final def unbind() { texture = null.asInstanceOf[T] }
   
   def isAccessible = (isBound && bound.isAccessible)
   def isWritable = (isBound && bound.isWritable)
-  def src: DirectSrc with ContiguousSrc = if (isBound) bound.src else null
+  
+  def read: ReadData[T#Accessor] with DirectSrc with ContiguousSrc =
+    bound.read.asInstanceOf[ReadData[T#Accessor] with DirectSrc with ContiguousSrc]
+  
+  def write: Data[T#Accessor] with DirectSrc with ContiguousSrc =
+    bound.write.asInstanceOf[Data[T#Accessor] with DirectSrc with ContiguousSrc]
+  
+  def src: DirectSrc with ContiguousSrc = bound.src
   
   
   // XXX enable after the next Scala release.

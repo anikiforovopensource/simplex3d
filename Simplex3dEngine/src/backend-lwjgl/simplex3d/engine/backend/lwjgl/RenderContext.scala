@@ -66,7 +66,9 @@ extends graphics.RenderContext {
       data(x + y*dims.x) = Vec3(1, 0, 1)
     }
     
-    Texture2d.fromData(dims, data.asReadOnly())
+    val binding = new TextureBinding[Texture2d[_]]
+    binding := Texture2d.fromData(dims, data.asReadOnly())
+    binding
   }
   
   val defaultProgram = {
@@ -453,15 +455,15 @@ extends graphics.RenderContext {
   }
   
 
-  def bindTex2d(location: Int, textureUnit: Int, texture: Texture2d[_ <: Accessor]) {
-    if (texture == null) {
+  def bindTex2d(location: Int, textureUnit: Int, texture: ReadTextureBinding[Texture2d[_]]) {
+    if (!texture.isBound) {
       bindTex2d(location, textureUnit, defaultTexture2d)
       return
     }
     
     
     activeTextureUnit(textureUnit)
-    val id = initUpdateTexture2d(texture)
+    val id = initUpdateTexture2d(texture.bound.asInstanceOf[Texture2d[_ <: Accessor]])
     
     var activeTexture = activeTextures.get(location)
     if (activeTexture == null) {

@@ -37,6 +37,8 @@ abstract class Texture[A <: Accessor] private[engine] (
 )
 extends EngineInfoRef {
   
+  type Accessor = A with simplex3d.data.Accessor
+  
   def bindingDimensions: AnyVec[Int]//XXX possibly simplify to dimensions?
   
   final class Subtext private[engine] () {
@@ -62,7 +64,7 @@ extends EngineInfoRef {
   
   def read: ReadData[A] with DirectSrc with ContiguousSrc = {
     if (isAccessible) accessible.asReadOnly().asInstanceOf[ReadData[A] with DirectSrc with ContiguousSrc]
-    else null
+    else throw new IllegalAccessException("Texture data is not accessible.")
   }
   
   def write: Data[A] with DirectSrc with ContiguousSrc = {
@@ -70,7 +72,7 @@ extends EngineInfoRef {
       subtext.dataChanges = true
       accessible.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc]
     }
-    else null
+    else throw new IllegalAccessException("Texture data is not writable.")
   }
   
   def src: DirectSrc with ContiguousSrc = if (isAccessible) accessible else linked
@@ -120,7 +122,7 @@ class Texture2d[A <: Accessor] private (
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   linked: DirectSrc with ContiguousSrc
 )
-extends Texture[A](accessible, linked) with Tangible //XXX is Tangible needed here? test, remove if not.
+extends Texture[A](accessible, linked) with Tangible
 {
   
   if (accessible != null) {

@@ -177,7 +177,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
     if (value != null) {
       (dataType: @switch) match {
         case EngineBindingTypes.Texture1d => //XXX
-        case EngineBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureBinding[_ <: Texture[_]]].bound)
+        case EngineBindingTypes.Texture2d => sampler2d(location, textureUnit, dataType, value.asInstanceOf[ReadTextureBinding[Texture2d[_]]])
         case EngineBindingTypes.Texture3d =>
         case EngineBindingTypes.CubeTexture =>
         case EngineBindingTypes.ShadowTexture1d =>
@@ -215,7 +215,7 @@ private[backend] final class ProgramMapping(val program: Technique, val context:
   private def uniformMat4(location: Int, m: AnyMat[_]) { glUniformMatrix4(location, false, context.mat4x4ToBuffer(m)) }
   
   
-  private def sampler2d(location: Int, textureUnit: Int, textureType: Int, texture: Texture[_]) {
-    context.bindTex2d(location, textureUnit, texture.asInstanceOf[Texture2d[_ <: Accessor]])
+  private def sampler2d(location: Int, textureUnit: Int, textureType: Int, texture: ReadTextureBinding[Texture2d[_]]) {
+    context.bindTex2d(location, textureUnit, texture)
   }
 }

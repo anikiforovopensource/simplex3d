@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -18,14 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package input
+package simplex3d.engine.input
 
 
-case class KeyEvent(val keyCode: Int, val char: Char, val time: TimeStamp)
-extends InputEvent
-{
-  override def toString() :String = {
-    "KeyEvent(key = " + KeyCode.toString(keyCode) + ", code = " + keyCode + ", char = " + char + ", " + time + ")"
-  }
+trait InputEvent {
+  private var consumed = false
+  def isConsumed = consumed
+  def consume() { consumed = true }
 }

@@ -25,19 +25,25 @@ import simplex3d.math._
 import simplex3d.math.double._
 
 
-case class MouseButtonEvent(val buttonCode: Int, val location: Option[ConstVec2i], val time: TimeStamp) {
+case class MouseButtonEvent(val buttonCode: Int, val location: Option[ConstVec2i], val time: TimeStamp)
+extends InputEvent
+{
   override def toString() :String = {
     "MouseButtonEvent(button = " + buttonCode + ", location = " + location + ", " + time + ")"
   }
 }
 
-case class MouseMotionEvent(val amount: ConstVec2, val location: Option[ConstVec2i], val time: TimeStamp) {
+case class MouseMotionEvent(val amount: ConstVec2, val location: Option[ConstVec2i], val time: TimeStamp)
+extends InputEvent
+{
   override def toString() :String = {
     "MouseMotionEvent(amount = " + amount + ", location = " + location + ", " + time + ")"
   }
 }
 
-case class MouseWheelEvent(val amount: Double, val location: Option[ConstVec2i], val time: TimeStamp) {
+case class MouseWheelEvent(val amount: Double, val location: Option[ConstVec2i], val time: TimeStamp)
+extends InputEvent
+{
   override def toString() :String = {
     "MouseWheelEvent(amount = " + amount + ", location = " + location + ", " + time + ")"
   }

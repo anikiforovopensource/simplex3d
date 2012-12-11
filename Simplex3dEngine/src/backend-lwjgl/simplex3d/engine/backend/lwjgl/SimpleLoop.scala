@@ -81,10 +81,11 @@ final class SimpleLoop extends simplex3d.engine.MainLoop {
         time
       )
       
-      if (RawKeyboard.getEventKeyState()) for (ls <- listeners if ls.isEnabled) {
+      // XXX invest into while loops
+      if (RawKeyboard.getEventKeyState()) for (ls <- listeners if ls.isEnabled && !event.isConsumed) {
         ls.keyboardListener.keyPressed(input, event)
       }
-      else for (ls <- listeners if ls.isEnabled) {
+      else for (ls <- listeners if ls.isEnabled && !event.isConsumed) {
         ls.keyboardListener.keyReleased(input, event); ls.keyboardListener.keyTyped(input, event)
       }
     }
@@ -101,10 +102,10 @@ final class SimpleLoop extends simplex3d.engine.MainLoop {
       if (RawMouse.getEventButton() >= 0) {
         val event = new MouseButtonEvent(RawMouse.getEventButton(), position, time)
         
-        if (RawMouse.getEventButtonState()) for (ls <- listeners if ls.isEnabled) {
+        if (RawMouse.getEventButtonState()) for (ls <- listeners if ls.isEnabled && !event.isConsumed) {
           ls.mouseListener.mousePressed(input, event)
         }
-        else for (ls <- listeners if ls.isEnabled) {
+        else for (ls <- listeners if ls.isEnabled && !event.isConsumed) {
           ls.mouseListener.mouseReleased(input, event); ls.mouseListener.mouseClicked(input, event)
         }
         
@@ -112,12 +113,12 @@ final class SimpleLoop extends simplex3d.engine.MainLoop {
       else if (any(notEqual(delta, Vec2.Zero))) {
         val event = new MouseMotionEvent(delta*input.mouse.sensitivity, position, time)
         
-        for (ls <- listeners if ls.isEnabled) { ls.mouseListener.mouseMoved(input, event) }
+        for (ls <- listeners if ls.isEnabled && !event.isConsumed) { ls.mouseListener.mouseMoved(input, event) }
       }
       else if (RawMouse.getEventDWheel() != 0) {
         val event = new MouseWheelEvent(RawMouse.getEventDWheel()*input.mouse.wheelSensitivity, position, time)
         
-        for (ls <- listeners if ls.isEnabled) { ls.mouseListener.mouseWheelMoved(input, event) }
+        for (ls <- listeners if ls.isEnabled && !event.isConsumed) { ls.mouseListener.mouseWheelMoved(input, event) }
       }
       // TODO add mouse entered/exited using Mouse.isInsideWindow
     }

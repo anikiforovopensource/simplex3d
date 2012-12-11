@@ -24,5 +24,5 @@ package transformation
 
 abstract class TransformationContext {
   type Transformation <: transformation.Transformation
-  val factory: () => Transformation
+  val default: Transformation#Read
 }

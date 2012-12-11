@@ -28,7 +28,7 @@ import simplex3d.engine.scene._
 
 
 sealed abstract class TransformationBinding[T <: Transformation] private[engine] (
-  private[this] final val factory: () => T
+  private[this] final val default: T#Read
 )
 extends Updatable[T] {
   
@@ -75,7 +75,7 @@ extends Updatable[T] {
   private[this] final var updateMatrix = true
   private[this] final var cachedMatrix: Mat4x3 = _
   
-  final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
+  final def get: T#Read = if (value == null) default else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
   
   final def undefine() {
@@ -87,7 +87,7 @@ extends Updatable[T] {
   }
   
   final def update: T = {
-    if (!isDefined) value = factory()
+    if (!isDefined) value = default.mutableCopy().asInstanceOf[T]
     changed = true
     updateMatrix = true
     value
@@ -124,16 +124,16 @@ extends Updatable[T] {
 }
 
 final class AccessibleTransformationBinding[T <: Transformation] private[engine] (
-  factory: () => T
+  default: T#Read
 )
-extends TransformationBinding[T](factory) {
+extends TransformationBinding[T](default) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
   def signalDataChanges() { changed = true }
 }
 
 object TransformationBinding {
-  def apply[T <: Transformation](factory: () => T) :TransformationBinding[T] = {
-    new AccessibleTransformationBinding[T](factory)
+  def apply[T <: Transformation](default: T#Read) :TransformationBinding[T] = {
+    new AccessibleTransformationBinding[T](default)
   }
 }

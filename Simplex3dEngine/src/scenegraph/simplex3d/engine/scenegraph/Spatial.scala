@@ -45,7 +45,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   private[scenegraph] final var controllers: ArrayBuffer[Updater] = null
   
   
-  final val transformation = TransformationBinding[T#Transformation](transformationContext.factory)
+  final val transformation = TransformationBinding[T#Transformation](transformationContext.default)
   transformation.register {
     this match {
       case c: ControllerContext => c
@@ -61,7 +61,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   }
   
   private[scenegraph] final val uncheckedWorldTransformation = {
-    TransformationBinding[T#Transformation](transformationContext.factory)
+    TransformationBinding[T#Transformation](transformationContext.default)
   }
   
   protected def worldMatrix = uncheckedWorldTransformation.matrix

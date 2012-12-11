@@ -1,6 +1,6 @@
 /*
  * Simplex3dEngine - Core Module
- * Copyright (C) 2011, Aleksey Nikiforov
+ * Copyright (C) 2011-2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
  *
@@ -39,6 +39,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation {
   def rotation: ReadQuat4
   def translation: ReadVec3
   
+  def direction() :Vec3 = rotation.rotateVector(Vec3.UnitZ)
   
   final def mutableCopy() = {
     val copy = new ComponentTransformation3d
@@ -51,7 +52,10 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation {
     result.rotation := this.rotation rotate parent.rotation
     result.translation := parent.rotation.rotateVector(this.translation*parent.scale) + parent.translation
   }
+  
+  protected[engine] def toMatrix() :Mat4x3 = transformation(Vec3(scale), rotationMat(rotation), translation)
 }
+
 
 final class ComponentTransformation3d
 extends ReadComponentTransformation3d with Transformation
@@ -59,8 +63,6 @@ extends ReadComponentTransformation3d with Transformation
   val scale = new DoubleRef(1.0)
   val rotation = Quat4.Identity.mutableCopy()
   val translation = Vec3(0)
-  
-  def direction() :Vec3 = rotation.rotateVector(Vec3.UnitZ)
   
   def lookAt(point: inVec3, worldUp: inVec3, isCamera: Boolean = false) {
     val dir = if (isCamera) translation - point else point - translation 
@@ -74,10 +76,18 @@ extends ReadComponentTransformation3d with Transformation
     translation := t.translation
   }
   
-  protected[engine] def toMatrix() :Mat4x3 = transformation(Vec3(scale), rotationMat(rotation), translation)
-  
-  
   override def toString() :String = {
     "Transformation3d(scale = " + scale.toConst + ", rotation = " + rotation + ", translation = " + translation + ")"
+  }
+}
+
+
+object IdentityComponentTransformation3d extends ReadComponentTransformation3d {
+  def scale: ReadDoubleRef = new DoubleRef(1)//XXX ConstDoubleRef?
+  def rotation: ReadQuat4 = Quat4.Identity
+  def translation: ReadVec3 = Vec3.Zero
+  
+  override def toString() :String = {
+    "Transformation3d(Identity)"
   }
 }

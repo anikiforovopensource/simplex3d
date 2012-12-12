@@ -23,9 +23,7 @@ package simplex3d.engine.util
 import simplex3d.math.types._
 
 
-sealed abstract class Reassignable[T <: Accessible] private[engine] (
-  private[this] final val enforceDefined: Boolean
-) {
+sealed abstract class Reassignable[T <: Accessible] private[engine] () {
   
   //*** PropertyContext Code ******************************************************************************************
   
@@ -53,8 +51,6 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
   final def isDefined = (value != null)
   
   final def undefine() {
-    if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Reassignable.defined() and cannot be undefined.")
-    
     if (isDefined) {
       if (propertyContext != null) propertyContext.signalStructuralChanges()
       changed = true
@@ -98,10 +94,8 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] (
   }
 }
 
-final class AccessibleReassignable[T <: Accessible] private[engine] (
-  enforceDefined: Boolean
-)
-extends Reassignable[T](enforceDefined) {
+final class AccessibleReassignable[T <: Accessible] private[engine] ()
+extends Reassignable[T]() {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
   def signalDataChanges() { changed = true }
@@ -109,12 +103,6 @@ extends Reassignable[T](enforceDefined) {
 
 object Reassignable {
   def optional[T <: Accessible]() :Reassignable[T] = {
-    new AccessibleReassignable[T](false)
-  }
-  
-  def defined[T <: Accessible](value: T) :Reassignable[T] = {
-    val prop = new AccessibleReassignable[T](true)
-    prop.init(value)
-    prop
+    new AccessibleReassignable[T]()
   }
 }

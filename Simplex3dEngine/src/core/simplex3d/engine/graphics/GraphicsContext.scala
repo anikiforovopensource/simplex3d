@@ -193,7 +193,7 @@ abstract class GraphicsContext {
         val name = material.uniformNames(i)
         
         if (prop.isDefined) prop.get match {
-          case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+          case seq: BindingSeq[_] => seq.collectKeys(name, new ListNameKey("", name), lists, enums)
           case enum: EnumRef[_] => enum.collectKeys(name, enums) 
           case s: Struct => s.collectKeys(name, lists, enums)
           case _ => // do nothing
@@ -213,7 +213,7 @@ abstract class GraphicsContext {
         if (prop.isDefined) {
           val binding = prop.get.binding
           binding match {
-            case list: BindingList[_] => list.collectKeys(name, new ListNameKey("", name), lists, enums)
+            case seq: BindingSeq[_] => seq.collectKeys(name, new ListNameKey("", name), lists, enums)
             case s: Struct => s.collectKeys(name, lists, enums)
             case _ => // do nothing
           }
@@ -240,8 +240,8 @@ abstract class GraphicsContext {
       val name = material.uniformNames(i)
       
       if (prop.isDefined) prop.get match {
-        case list: BindingList[_] if classOf[Struct].isAssignableFrom(list.elementManifest.erasure) =>
-          list.samplerRemapping(name, remapping)
+        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementManifest.erasure) =>
+          seq.samplerRemapping(name, remapping)
         case s: Struct =>
           s.samplerRemapping(name, remapping)
         case _ =>
@@ -256,8 +256,8 @@ abstract class GraphicsContext {
       val name = worldEnvironment.propertyNames(i)
       
       if (prop.isDefined) prop.get.binding match {
-        case list: BindingList[_] if classOf[Struct].isAssignableFrom(list.elementManifest.erasure) =>
-          list.samplerRemapping(name, remapping)
+        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementManifest.erasure) =>
+          seq.samplerRemapping(name, remapping)
         case s: Struct =>
           s.samplerRemapping(name, remapping)
         case _ =>

@@ -56,10 +56,10 @@ private[engine] object PathUtil {
   
   def resolveAsList(index: Int, rest: String, list: AnyRef) :AnyRef = {
     if (list == null) null else list match {
-      case list: BindingList[_] =>
-        if (index >= list.size) null else {
+      case seq: BindingSeq[_] =>
+        if (index >= seq.size) null else {
           
-          val element = list(index)
+          val element = seq(index)
           if (rest.isEmpty) element
           else resolveRest(element, rest)
         }
@@ -75,14 +75,14 @@ private[engine] object PathUtil {
     if (rest.isEmpty) {
       value match {
         // Allow non-indexed path to map to the first element of a list.
-        case list: BindingList[_] => if (list.size > 0) list(0) else null
+        case seq: BindingSeq[_] => if (seq.size > 0) seq(0) else null
         case _ => value
       }
     }
     else {
       value match {
         // Allow non-indexed path to map to the first element of a list.
-        case list: BindingList[_] => if (list.size > 0) resolveRest(list(0), rest) else null
+        case seq: BindingSeq[_] => if (seq.size > 0) resolveRest(seq(0), rest) else null
         case _ => resolveRest(value, rest)
       }
     }

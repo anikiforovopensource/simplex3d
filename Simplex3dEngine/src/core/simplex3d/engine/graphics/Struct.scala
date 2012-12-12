@@ -110,8 +110,8 @@ trait Struct extends ReadStruct with Accessible {
     var i = 0; while (i < fieldNames.length) {
       fields(i).asInstanceOf[AnyRef] match {
         
-        case list: BindingList[_] =>
-          list.collectKeys(appendPath(fieldNames(i)), new ListNameKey(parentType, fieldNames(i)), lists, enums)
+        case seq: BindingSeq[_] =>
+          seq.collectKeys(appendPath(fieldNames(i)), new ListNameKey(parentType, fieldNames(i)), lists, enums)
           
         case enum: EnumRef[_] =>
           enum.collectKeys(appendPath(fieldNames(i)), enums)
@@ -131,7 +131,7 @@ trait Struct extends ReadStruct with Accessible {
     
     var i = 0; while (i < fieldNames.length) {
       fields(i).asInstanceOf[AnyRef] match {
-        case list: BindingList[_] => list.samplerRemapping(appendPath(fieldNames(i)), remapping)
+        case seq: BindingSeq[_] => seq.samplerRemapping(appendPath(fieldNames(i)), remapping)
         case s: Struct =>  s.samplerRemapping(appendPath(fieldNames(i)), remapping)
         case t: TextureBinding[_] => t.samplerRemapping(appendPath(fieldNames(i)), remapping)
         case _ => // do nothing
@@ -152,9 +152,9 @@ trait Struct extends ReadStruct with Accessible {
       var i = 0; while (i < fieldNames.length) {
         fields(i).asInstanceOf[AnyRef] match {
           
-          case list: BindingList[_] =>
+          case seq: BindingSeq[_] =>
             nameKeys.add(new ListNameKey(parentType, fieldNames(i)))
-            val erasure = list.elementManifest.erasure
+            val erasure = seq.elementManifest.erasure
             if (classOf[Struct].isAssignableFrom(erasure)) rec(erasure.newInstance().asInstanceOf[Struct])
 
           case s: Struct =>

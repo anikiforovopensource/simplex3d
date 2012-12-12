@@ -88,7 +88,7 @@ extends Protected with Binding with PropertyContextDependent
   
   
   // TODO Multidimensional arrays can be supported by having multidimensional size key.
-  // Then declare[BindingList[BindingList[X]]]("name").size(expr1, expr2). And def size(expr: String*).
+  // Then declare eg [BindingList[BindingList[X]]]("name").size(expr1, expr2). And def size(expr: String*).
   final def collectKeys(path: String, nameKey: ListNameKey, lists: HashMap[ListNameKey, Integer], enums: HashMap[String, Object]) {
     val size = this.size
     val existing = lists.get(nameKey)
@@ -173,7 +173,7 @@ extends BindingSeq[T] with Accessible
   }
   
   def ++=(r: BindingSeq[T]) {
-    this ++= r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
+    this ++= r.buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
   def ++=(seq: Seq[T#Read]) {
     val size0 = buff.size
@@ -187,7 +187,7 @@ extends BindingSeq[T] with Accessible
   }
   
   def insertAll(index: Int, r: BindingSeq[T]) {
-    this.insertAll(index, r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]])
+    this.insertAll(index, r.buff.asInstanceOf[ArrayBuffer[T#Read]])
   }
   def insertAll(index: Int, seq: Seq[T#Read]) {
     val size0 = buff.size

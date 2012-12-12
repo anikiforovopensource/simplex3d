@@ -42,7 +42,7 @@ import simplex3d.engine.graphics._
  * For example: declare[Vec2]("texCoords").qualify("smooth")
  * 
  * Unsized arrays are allowed only in uniform blocks, their size will be automatically resolved to
- * a size of the corresponding BindingList.
+ * a size of the corresponding BindingSeq.
  * 
  * All dependent variables should be defined inside attribute{} or in{} blocks using declare().
  * Only VertexShaders are allowed to have attribute{} blocks. Other shaders must use named in{} block and
@@ -85,7 +85,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   {
     private[ShaderDeclaration] var qualifiers: Option[String] = None
     private[ShaderDeclaration] var arraySizeExpression: Option[String] = None
-    private[ShaderDeclaration] def isArray = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
+    private[ShaderDeclaration] def isArray = classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)
     private[ShaderDeclaration] def isMathType = classOf[MathType].isAssignableFrom(manifest.erasure)
     private[ShaderDeclaration] def isMathTypeArray = {
       isArray && {
@@ -207,7 +207,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           )
         }
       }
-      else if (classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) {
+      else if (classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)) {
         val listManifest = try {
           manifest.typeArguments.head.asInstanceOf[ClassManifest[_]]
         }
@@ -303,8 +303,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         val glslType = resolveTextureType(parentErasure, erasure, name, firstSizeExpression, nestedSamplers)
         (glslType, "", true)
       }
-      else if (classOf[BindingList[_]].isAssignableFrom(instance.getClass)) {
-        val manifest = instance.asInstanceOf[BindingList[_]].elementManifest
+      else if (classOf[BindingSeq[_]].isAssignableFrom(instance.getClass)) {
+        val manifest = instance.asInstanceOf[BindingSeq[_]].elementManifest
         val firstSize =
           if (firstSizeExpression.isDefined) firstSizeExpression
           else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
@@ -403,7 +403,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     declarations += new Declaration(ClassUtil.rebuildManifest(binding.get), name)
     
     binding.get match {
-      case list: BindingList[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), list.size)
+      case seq: BindingSeq[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), seq.size)
       case struct: Struct => sizedArrayKeys ++= struct.getSizeKeys()
       case _ => // ignore
     }
@@ -435,7 +435,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     
     // Process array declarations.
     for (declaration <- uniformBlock.get) {
-      val isArray = classOf[BindingList[_]].isAssignableFrom(declaration.manifest.erasure)
+      val isArray = declaration.isArray
       val noSizeExpression = (declaration.arraySizeExpression.isEmpty)
       
       if (isArray && noSizeExpression) {

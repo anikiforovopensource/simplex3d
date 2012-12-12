@@ -45,6 +45,7 @@ private[engine] object ClassUtil {
   
   def rebuildManifest(u: AnyRef) :ClassManifest[_ <: Binding] = u match {
     case list: BindingList[_] => ClassManifest.classType(list.getClass, list.elementManifest)
+    case array: BindingArray[_] => ClassManifest.classType(array.getClass, array.elementManifest)
     case tex: TextureBinding[_] => ClassManifest.classType(tex.getClass, tex.bindingManifest)
     case binding: Binding => ClassManifest.classType(binding.getClass)
   }

@@ -41,7 +41,7 @@ final class Declaration(
 ) {
   val isPredefined = name.startsWith("se_")
   val isReserved = name.startsWith("gl_")
-  val isArray: Boolean = classOf[BindingList[_]].isAssignableFrom(manifest.erasure)
+  val isArray: Boolean = classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)
   
   private val syntheticName = {
     name match {
@@ -59,7 +59,7 @@ final class Declaration(
   }
   
   val uniformManifest: ClassManifest[_] = {
-    if (classOf[BindingList[_]].isAssignableFrom(manifest.erasure)) {
+    if (classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)) {
       try {
         manifest.typeArguments.head.asInstanceOf[ClassManifest[_ <: Binding]]
       }

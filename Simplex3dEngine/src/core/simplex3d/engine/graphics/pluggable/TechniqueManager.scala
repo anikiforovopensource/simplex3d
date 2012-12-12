@@ -241,21 +241,20 @@ extends graphics.TechniqueManager[G]
           
           if (resolved != null) {
             
-            val adjustedErasure = 
-              if (shader.squareMatrices) {
-                if (resolved.getClass == Mat2x3.Manifest.erasure) Mat2.Manifest.erasure
-                else if (resolved.getClass == Mat2x4.Manifest.erasure) Mat2.Manifest.erasure
-                else if (resolved.getClass == Mat3x2.Manifest.erasure) Mat3.Manifest.erasure
-                else if (resolved.getClass == Mat3x4.Manifest.erasure) Mat3.Manifest.erasure
-                else if (resolved.getClass == Mat4x2.Manifest.erasure) Mat4.Manifest.erasure
-                else if (resolved.getClass == Mat4x3.Manifest.erasure) Mat4.Manifest.erasure
-                else resolved.getClass
-              }
+            def adjustedErasure = {
+              if (resolved.getClass == Mat2x3.Manifest.erasure) Mat2.Manifest.erasure
+              else if (resolved.getClass == Mat2x4.Manifest.erasure) Mat2.Manifest.erasure
+              else if (resolved.getClass == Mat3x2.Manifest.erasure) Mat3.Manifest.erasure
+              else if (resolved.getClass == Mat3x4.Manifest.erasure) Mat3.Manifest.erasure
+              else if (resolved.getClass == Mat4x2.Manifest.erasure) Mat4.Manifest.erasure
+              else if (resolved.getClass == Mat4x3.Manifest.erasure) Mat4.Manifest.erasure
               else resolved.getClass
+            }
             
-            if (declaration.uniformManifest.erasure == resolved.getClass ||
-                declaration.uniformManifest.erasure == adjustedErasure)
-            {
+            if (
+              declaration.uniformManifest.erasure == resolved.getClass ||
+              (shader.squareMatrices && declaration.uniformManifest.erasure == adjustedErasure)
+            ) {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,

@@ -118,6 +118,7 @@ object DynamicEnvironment extends App {
     
     nodes = (for (i <- 0 until 9) yield {
       val newnode = new EnvrionmentNode("Node Level " + i)
+      newnode.environment.nodeColor.update
       node.appendChild(newnode)
       node = newnode
       
@@ -318,7 +319,7 @@ package testenv {
   class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
     val intensity = Property.optional(() => new Intensity)
     val contrast = Property.optional(() => new Contrast)
-    val nodeColor = Property.defined(new NodeColor)
+    val nodeColor = Property.optional(() => new NodeColor)
     
     init(classOf[Environment])
   }

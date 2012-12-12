@@ -32,17 +32,19 @@ object Mandelbrot extends default.FullscreenEffectApp {
     var zoomSpeed = 1.2
     
     // Non-private ShaderProperty values are automatically bound to shader uniforms with matching name and type.
-    val zoomPoint = Property.defined(Vec2(
-      -0.743643887037158704752191506114774,
-       0.131825904205311970493132056385139
-    ))
+    val zoomPoint = Property.optional(() => Vec2(0))
+    protected val zoom = Property.optional(() => new DoubleRef(1.0))
+    protected val iterations = Property.optional(() => new IntRef(0))
+    protected val colorTexture = Property.optional(() => new TextureBinding[Texture2d[Vec3]]);
     
-    
-    protected val zoom = Property.defined(new DoubleRef(1.0))
-    protected val iterations = Property.defined(new IntRef(0))
-    
-    protected val colorTexture = Property.defined(new TextureBinding[Texture2d[Vec3]]);
     {
+      zoomPoint.update := Vec2(
+        -0.743643887037158704752191506114774,
+         0.131825904205311970493132056385139
+      )
+      
+      zoom.update := 1
+    
       val colors: Array[ConstVec3] = ColorPreset.generate()
       val texture = Texture2d.fromData(Vec2i(colors.length, 1), DataBuffer[Vec3, UByte](colors: _*))
       

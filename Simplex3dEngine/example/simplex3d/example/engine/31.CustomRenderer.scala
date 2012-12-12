@@ -386,7 +386,7 @@ object CustomRenderer extends default.BaseApp {
     type Mutable = Lighting
     final def readType = classOf[ReadLighting]
     
-    def lights: ReadBindingList[PointLight]
+    def lights: BindingSeq[PointLight]
   }
   
   final class Lighting

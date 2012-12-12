@@ -29,19 +29,62 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.util._
 
 
-sealed abstract class ReadBindingList[T <: Accessible with Binding](
+sealed abstract class BindingSeq[T <: Accessible with Binding { type Read >: T <: Protected } ](
   implicit val elementManifest: ClassManifest[T]
 )
-extends Protected with Binding
+extends Protected with Binding with PropertyContextDependent
 {
-  type Read = ReadBindingList[T]
-  type Mutable = BindingList[T]
-  final def readType = classOf[ReadBindingList[T]]
+  if(elementManifest.erasure == classOf[BindingSeq[_]]) throw new IllegalArgumentException(
+    "Nested sequences are not supported."
+  )
   
-  def size: Int
+  
+  // *** Prop *********************************************************************************************************
+  
+  protected var context: PropertyContext = _
+  
+  private[engine] override def register(context: PropertyContext) {
+    this.context = context
+    if (manageElems) registerElems(0, buff.size)
+  }
+  
+  private[engine] override def unregister() {
+    if (manageElems) unregisterElems(0, buff.size)
+    context = null
+  }
+  
+  protected def registerPropertyContext(context: PropertyContext) {}
+  protected def unregisterPropertyContext() {}
+  
+  
+  protected val managable = classOf[PropertyContextDependent].isAssignableFrom(elementManifest.erasure)
+  protected def manageElems = (context != null && managable)
+  
+  protected def registerElems(offset: Int, count: Int) {
+    var i = offset; while (i < offset + count) {
+      buff(i).asInstanceOf[PropertyContextDependent].register(context)
+      i += 1
+    }
+  }
+  protected def unregisterElems(offset: Int, count: Int) {
+    var i = offset; while (i < offset + count) {
+      buff(i).asInstanceOf[PropertyContextDependent].unregister()
+      i += 1
+    }
+  }
+  
+  
+  // *** Seq **********************************************************************************************************
+  
+  type Read = BindingSeq[T]
+  final def readType = classOf[BindingSeq[T]]
+  
+  private[graphics] val buff = new ArrayBuffer[T]
+  def size = buff.size
   final def length: Int = size
   
-  def apply(i: Int) :T//XXX must be T#Read
+  type Elem <: T#Read
+  final def apply(i: Int) :Elem = buff(i).asInstanceOf[Elem]
   
   
   // TODO Multidimensional arrays can be supported by having multidimensional size key.
@@ -72,7 +115,7 @@ extends Protected with Binding
     if (path.contains("[*]")) return // nested arrays cannot be re-mapped.
     
     if (size > 0) {
-      apply(0) match {
+      apply(0).asInstanceOf[AnyRef] match {
         case s: Struct => s.samplerRemapping(path + "[*]", remapping)
         case t: TextureBinding[_] => t.samplerRemapping(path + "[*]", remapping)
         case _ => // do nothing
@@ -82,49 +125,13 @@ extends Protected with Binding
 }
 
 
-final class BindingList[T <: Accessible with Binding](
+final class BindingList[T <: Accessible with Binding { type Read >: T <: Protected } ](
   implicit elementManifest: ClassManifest[T]
 )
-extends ReadBindingList[T] with Accessible with PropertyContextDependent
+extends BindingSeq[T] with Accessible
 {
-  if(elementManifest.erasure == classOf[BindingList[_]]) throw new IllegalArgumentException(
-    "Nested lists are not supported."
-  )
-  
-  private var context: PropertyContext = _
-  
-  private[engine] override def register(context: PropertyContext) {
-    this.context = context
-    if (manageElems) registerElems(0, buff.size)
-  }
-  
-  private[engine] override def unregister() {
-    if (manageElems) unregisterElems(0, buff.size)
-    context = null
-  }
-  
-  protected def registerPropertyContext(context: PropertyContext) {}
-  protected def unregisterPropertyContext() {}
-  
-  
-  private val managable = classOf[PropertyContextDependent].isAssignableFrom(elementManifest.erasure)
-  private def manageElems = (context != null && managable)
-  
-  private def registerElems(offset: Int, count: Int) {
-    var i = offset; while (i < offset + count) {
-      buff(i).asInstanceOf[PropertyContextDependent].register(context)
-      i += 1
-    }
-  }
-  private def unregisterElems(offset: Int, count: Int) {
-    var i = offset; while (i < offset + count) {
-      buff(i).asInstanceOf[PropertyContextDependent].unregister()
-      i += 1
-    }
-  }
-  
-  private val buff = new ArrayBuffer[T]
-  def size = buff.size
+  type Mutable = BindingList[T]
+  type Elem = T
   
   final def mutableCopy(): BindingList[T] = {
     val copy = new BindingList[T]()(elementManifest)
@@ -132,8 +139,8 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
     copy
   }
   
-  def :=(r: ReadBindingList[T]) {
-    this := r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
+  def :=(r: BindingSeq[T]) {
+    this := r.buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
   def :=(seq: Seq[T#Read]) {
     val s = size; var i = 0; for (e <- seq) {
@@ -157,7 +164,6 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
     if (context != null && i != s) context.signalStructuralChanges()
   }
   
-  def apply(i: Int) :T = buff(i)
   
   def +=(elem: T#Read) {
     val mc = elem.mutableCopy().asInstanceOf[T]
@@ -166,7 +172,7 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
     if (context != null) context.signalStructuralChanges()
   }
   
-  def ++=(r: ReadBindingList[T]) {
+  def ++=(r: BindingSeq[T]) {
     this ++= r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]]
   }
   def ++=(seq: Seq[T#Read]) {
@@ -180,7 +186,7 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
     this.insertAll(index, elems)
   }
   
-  def insertAll(index: Int, r: ReadBindingList[T]) {
+  def insertAll(index: Int, r: BindingSeq[T]) {
     this.insertAll(index, r.asInstanceOf[BindingList[T]].buff.asInstanceOf[ArrayBuffer[T#Read]])
   }
   def insertAll(index: Int, seq: Seq[T#Read]) {
@@ -204,8 +210,8 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
   
   def take(count: Int) { remove(count, size - count) }
   def takeRigth(count: Int) { remove(0, size - count) }
-  def drop(count: Int) { remove(size - count, count) }
-  def dropLeft(count: Int) { remove(0, count) }
+  def drop(count: Int) { remove(0, count) }
+  def dropRight(count: Int) { remove(size - count, count) }
   
   
   def clear() {
@@ -219,7 +225,7 @@ extends ReadBindingList[T] with Accessible with PropertyContextDependent
 
 
 object BindingList {
-  def apply[T <: Accessible with Binding]
+  def apply[T <: Accessible with Binding { type Read >: T <: Protected } ]
     (elems: T#Read*)
     (implicit elementManifest: ClassManifest[T])
   :BindingList[T] =
@@ -227,5 +233,68 @@ object BindingList {
     val list = new BindingList[T]
     list ++= elems
     list
+  }
+}
+
+
+final class BindingArray[T <: Accessible with Binding { type Read >: T <: Protected } ] private()(
+  implicit elementManifest: ClassManifest[T]
+)
+extends BindingSeq[T] with Accessible
+{
+  def this(size: Int)(implicit elementManifest: ClassManifest[T]) {
+    this()
+    
+    var i = 0; while (i < size) {
+      buff += elementManifest.erasure.newInstance().asInstanceOf[T]
+      
+      i += 1
+    }
+    
+    if (manageElems) registerElems(0, size)
+  }
+  
+  type Mutable = BindingArray[T]
+  type Elem = T
+  
+  final def mutableCopy(): BindingArray[T] = {
+    val copy = new BindingArray[T]()(elementManifest)
+    copy := this
+    copy
+  }
+  
+  def :=(r: BindingSeq[T]) {
+    set(r.buff.asInstanceOf[ArrayBuffer[T#Read]], r.size)
+  }
+  def :=(seq: Seq[T#Read]) {
+    set(seq, seq.size)
+  }
+  private def set(src: Seq[T#Read], srcSize: Int) {
+    if (srcSize != size) throw new IllegalArgumentException("Source size must match the destination size.")
+    
+    val s = size; var i = 0; for (e <- src) {
+      val stable = buff(i)
+      stable := e.asInstanceOf[stable.Read]
+      
+      i += 1
+    }
+  }
+  
+  override def toString() :String = {
+    "BindingArray(" + buff.mkString(", ") + ")"
+  }
+}
+
+
+object BindingArray {
+  def apply[T <: Accessible with Binding { type Read >: T <: Protected } ]
+    (elems: T#Read*)
+    (implicit elementManifest: ClassManifest[T])
+  :BindingArray[T] =
+  {
+    val size = elems.size
+    val array = new BindingArray[T](size)
+    array.set(elems, size)
+    array
   }
 }

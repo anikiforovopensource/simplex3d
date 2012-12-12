@@ -51,7 +51,7 @@ object UniformNestingTest extends default.FullscreenEffectApp {
     final def readType = classOf[ReadStruct2]
     
     def value2: ReadVec3
-    def value2Array: ReadBindingList[Vec3]
+    def value2Array: BindingSeq[Vec3]
     
     def texture2: ReadTextureBinding[Texture2d[Vec3]]
   }
@@ -76,10 +76,10 @@ object UniformNestingTest extends default.FullscreenEffectApp {
     final def readType = classOf[ReadStruct1]
     
     def value1: ReadVec3
-    def value1Array: ReadBindingList[Vec3]
+    def value1Array: BindingSeq[Vec3]
     
     def texture1: ReadTextureBinding[Texture2d[Vec3]]
-    def texture1Array: ReadBindingList[TextureBinding[Texture2d[Vec3]]]
+    def texture1Array: BindingSeq[TextureBinding[Texture2d[Vec3]]]
     
     def struct2: ReadStruct2
     def struct2Array: BindingList[Struct2]

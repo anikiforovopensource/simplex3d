@@ -342,7 +342,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   private[this] var conditions = Set[(String, AnyRef => Boolean)]()
   
   private[this] var uniformBlock: Option[Set[Declaration]] = None
-  private[this] var boundUniforms = Map[String, Property[UncheckedBinding]]()
+  private[this] var boundUniforms = Map[String, Value[UncheckedBinding]]()
   private[this] var unsizedArrayKeys = Set[ListNameKey]()
   private[this] var sizedArrayKeys = Set[ListSizeKey]()
   
@@ -394,10 +394,10 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   
   protected val debugging = new ShaderDebugging
   
-  protected final def bind[T <: Accessible with Binding](name: String, binding: Property[T]) {
+  protected final def bind[T <: Accessible with Binding](name: String, binding: Value[T]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
     
-    boundUniforms += ((name, binding.asInstanceOf[Property[UncheckedBinding]]))
+    boundUniforms += ((name, binding.asInstanceOf[Value[UncheckedBinding]]))
     binding.register(ShaderPropertyContext)
     
     declarations += new Declaration(ClassUtil.rebuildManifest(binding.get), name)

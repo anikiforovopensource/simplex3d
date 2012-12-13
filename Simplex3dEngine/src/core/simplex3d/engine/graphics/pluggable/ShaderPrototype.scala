@@ -46,7 +46,7 @@ final class ShaderPrototype private[pluggable] (
   val body: String,
   val conditions: ReadArray[(String, AnyRef => Boolean)],
   val uniformBlock: ReadArray[Declaration],
-  val boundUniforms: immutable.Map[String, Property[UncheckedBinding]],
+  val boundUniforms: immutable.Map[String, Value[UncheckedBinding]],
   val unsizedArrayKeys: ReadArray[ListNameKey],
   val sizedArraykeys: ReadArray[ListSizeKey],
   val attributeBlock: ReadArray[Declaration],

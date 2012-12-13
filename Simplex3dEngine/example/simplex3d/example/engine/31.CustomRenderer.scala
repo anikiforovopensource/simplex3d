@@ -223,13 +223,13 @@ object CustomRenderer extends default.BaseApp {
     init(classOf[Geometry])
   }
   class Material(controllerContext: ControllerContext) extends prototype.Material(controllerContext) {
-    val textureUnits = Property.optional(() => new BindingList[TextureUnit])
+    val textureUnits = Property(() => new BindingList[TextureUnit])
     
     init(classOf[Material])
   }
   
   class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
-    val lighting = Property.optional(() => new Lighting)
+    val lighting = Property(() => new Lighting)
     
     init(classOf[Environment])
   }
@@ -300,7 +300,6 @@ object CustomRenderer extends default.BaseApp {
       return color;
     """}
   })
-  
   
   techniqueManager.push(new VertexShader {
     uniform {

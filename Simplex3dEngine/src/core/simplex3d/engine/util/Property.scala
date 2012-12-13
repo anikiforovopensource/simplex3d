@@ -144,7 +144,7 @@ object Property {
   private[engine] def identityGetter[T] = identity.asInstanceOf[T => T]
   
   
-  def optional[T <: Accessible](factory: () => T) :Property[T] = {
+  def apply[T <: Accessible](factory: () => T) :Property[T] = {
     new AccessibleProperty[T](factory)
   }
 }

@@ -317,9 +317,9 @@ package testenv {
   
   
   class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
-    val intensity = Property.optional(() => new Intensity)
-    val contrast = Property.optional(() => new Contrast)
-    val nodeColor = Property.optional(() => new NodeColor)
+    val intensity = Property(() => new Intensity)
+    val contrast = Property(() => new Contrast)
+    val nodeColor = Property(() => new NodeColor)
     
     init(classOf[Environment])
   }

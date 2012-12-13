@@ -31,8 +31,8 @@ import simplex3d.engine.scene._
 
 
 class Material(controllerContext: ControllerContext) extends prototype.Material(controllerContext) {
-  val emission = Property.optional(() => Vec3(0))
-  val textureUnits = Property.optional(() => new BindingList[TextureUnit])
+  val emission = Property(() => Vec3(0))
+  val textureUnits = Property(() => new BindingList[TextureUnit])
   
   init(classOf[Material])
 }

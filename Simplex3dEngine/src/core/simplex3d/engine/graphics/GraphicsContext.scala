@@ -115,7 +115,7 @@ abstract class GraphicsContext {
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,
     environment: graphics.Environment,
-    programUniforms: Map[String, Property[UncheckedBinding]]
+    programUniforms: Map[String, Value[UncheckedBinding]]
   ) :AnyRef = {
     val originAndId = uniformMap.get(name)
     
@@ -148,7 +148,7 @@ abstract class GraphicsContext {
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,
     environment: graphics.Environment,
-    programUniforms: Map[String, Property[UncheckedBinding]]
+    programUniforms: Map[String, Value[UncheckedBinding]]
   ) :AnyRef = {
     
     path match {
@@ -296,7 +296,7 @@ object MinimalGraphicsContext extends GraphicsContext {
     predefined: ReadPredefinedUniforms,
     material: graphics.Material,
     environment: graphics.Environment,
-    programUniforms: Map[String, Property[UncheckedBinding]]
+    programUniforms: Map[String, Value[UncheckedBinding]]
   ) :AnyRef = {
     
     var id = PathUtil.find(predefined.bindingNames, name)

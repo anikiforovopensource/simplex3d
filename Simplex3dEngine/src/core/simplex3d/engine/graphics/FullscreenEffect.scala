@@ -60,10 +60,10 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
       
       val (names, props) = FieldReflection.valueMap(
         effect,
-        classOf[Property[_ <: Binding]], FieldReflection.BindingFilter,
+        classOf[Value[_ <: Binding]], FieldReflection.BindingFilter,
         Nil
       )
-      val shaderUniforms = Map((names zip props): _*).asInstanceOf[Map[String, Property[UncheckedBinding]]]
+      val shaderUniforms = Map((names zip props): _*).asInstanceOf[Map[String, Value[UncheckedBinding]]]
       val fs = new Shader(Shader.Fragment, fragmentShader, shaderUniforms)
       this.technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))
     }

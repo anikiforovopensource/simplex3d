@@ -110,14 +110,14 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   val effect = new FullscreenEffect("Uniform Test") {
     
     // These values are auto-mapped to uniform values the shader based on name.
-    val value0 = Property.optional(() => Vec3(0))
-    val value0Array = Property.optional(() => new BindingArray[Vec3](2))
+    val value0 = Property(() => Vec3(0))
+    val value0Array = Property(() => new BindingArray[Vec3](2))
     
-    val texture0 = Property.optional(() => new TextureBinding[Texture2d[Vec3]])
-    val texture0Array = Property.optional(() => new BindingList[TextureBinding[Texture2d[Vec3]]])
+    val texture0 = Property(() => new TextureBinding[Texture2d[Vec3]])
+    val texture0Array = Property(() => new BindingList[TextureBinding[Texture2d[Vec3]]])
     
-    val struct1 = Property.optional(() => new Struct1)
-    val struct1Array = Property.optional(() => new BindingArray[Struct1](2))
+    val struct1 = Property(() => new Struct1)
+    val struct1Array = Property(() => new BindingArray[Struct1](2))
     
     // Init properties
     value0.update := Vec3.One

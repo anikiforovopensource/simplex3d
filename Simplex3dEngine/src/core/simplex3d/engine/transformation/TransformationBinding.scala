@@ -66,7 +66,7 @@ extends Updatable[T] {
     if (controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(controllerContext, true, this)(Property.passThrough, function)
+    PropertyUpdater.register(controllerContext, true, this)(Property.identityGetter, function)
   }
   
   

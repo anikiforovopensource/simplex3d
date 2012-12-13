@@ -42,6 +42,9 @@ object AccessChanges {
   implicit def accessProperty(accessible: Property[_])
   = accessible.asInstanceOf[AccessibleProperty[_]]
   
+  implicit def accessValue(accessible: Value[_])
+  = accessible.asInstanceOf[AccessibleValue[_]]
+  
   implicit def accessReassignable(accessible: Reassignable[_])
   = accessible.asInstanceOf[AccessibleReassignable[_]]
   

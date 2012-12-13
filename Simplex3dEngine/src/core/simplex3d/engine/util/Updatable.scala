@@ -25,6 +25,7 @@ import simplex3d.math._
 import simplex3d.engine.scene._
 
 
+// Where does animated go? Is this property needed?
 trait Updatable[T] {
   def update: T
   

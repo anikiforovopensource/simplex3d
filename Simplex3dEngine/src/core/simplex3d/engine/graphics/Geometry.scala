@@ -34,7 +34,7 @@ abstract class Geometry extends PropertyContext(null) {
   def attributes: ReadArray[UncheckedAttributes]
 
   
-  final val primitive = Property.defined(new Primitive)
+  final val primitive = Value(new Primitive)
   primitive.register(this)
   
   final val indices = AttributeBinding[SInt, Unsigned]

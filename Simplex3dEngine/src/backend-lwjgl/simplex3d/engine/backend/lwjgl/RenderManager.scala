@@ -210,7 +210,7 @@ final class RenderManager extends graphics.RenderManager {
     val material = mesh.material
     
     mesh.resolveElementRange(elementRange)
-    renderContext.setFaceCulling(material.faceCulling.get.toConst)
+    renderContext.setFaceCulling(geometry.primitive.get.faceCulling.toConst)
     
     val predefinedUniforms = renderContext.predefinedUniforms
     predefinedUniforms.se_modelViewMatrix := transformation concat camera.view

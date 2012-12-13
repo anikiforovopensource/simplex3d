@@ -86,7 +86,7 @@ object FogTest extends default.App {
       val mesh = new Mesh("Cube" + i)
       mesh.customBoundingVolume := new Oabb(Vec3(-0.5)*10, Vec3(0.5)*10)
       
-      mesh.material.faceCulling.update := FaceCulling.Back
+      mesh.geometry.primitive.update.faceCulling := FaceCulling.Back
       
       mesh.geometry.indices := indices
       mesh.geometry.vertices := vertices

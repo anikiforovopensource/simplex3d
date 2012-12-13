@@ -108,7 +108,7 @@ object PointSpritesMesh extends default.App {
       mesh.geometry.indices := indices
       mesh.geometry.vertices := Attributes[Vec3, RFloat](pointCount)
       mesh.customBoundingVolume := new Oabb(Vec3(-200), Vec3(200))
-      mesh.material.faceCulling.update := FaceCulling.Back
+      mesh.geometry.primitive.update.faceCulling := FaceCulling.Back
       mesh.material.textureUnits.update += new TextureUnit(objectTexture)
       mesh.transformation.update
       

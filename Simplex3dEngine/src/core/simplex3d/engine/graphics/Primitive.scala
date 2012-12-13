@@ -30,6 +30,8 @@ sealed abstract class ReadPrimitive extends prototype.ReadStruct {
   final def readType = classOf[ReadPrimitive]
   
   def mode: ReadEnumRef[VertexMode.type]
+  def faceCulling: ReadEnumRef[FaceCulling.type]
+  
   def lineWidth: ReadDoubleRef
   def pointSize: DoubleRef
   def pointSpriteSize: DoubleRef
@@ -39,6 +41,8 @@ final class Primitive extends ReadPrimitive with prototype.Struct {
   protected def mkMutable() = new Primitive
   
   val mode = new EnumRef(VertexMode.Triangles)
+  val faceCulling = new EnumRef(FaceCulling.Disabled)
+  
   val lineWidth = new DoubleRef(1)
   val pointSize = new DoubleRef(1)
   val pointSpriteSize = new DoubleRef(1)

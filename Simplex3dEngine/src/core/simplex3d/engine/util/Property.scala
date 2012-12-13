@@ -26,8 +26,7 @@ import simplex3d.math.types._
 
 //XXX should this really be in util package?
 sealed abstract class Property[T <: Accessible] private[engine] (
-  private[this] final val factory: () => T,
-  private[this] final val enforceDefined: Boolean
+  private[this] final val factory: () => T
 ) extends Updatable[T]
 {
   
@@ -66,7 +65,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, true, this)(Property.passThrough, function)
+    PropertyUpdater.register(propertyContext.controllerContext, true, this)(Property.identityGetter, function)
   }
   
   /** getter navigates to the desired field of the value of this property.
@@ -85,7 +84,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     if (propertyContext == null || propertyContext.controllerContext == null) {
       throw new UnsupportedOperationException("ControllerContext is not defined.")
     }
-    PropertyUpdater.register(propertyContext.controllerContext, false, this)(Property.passThrough, function)
+    PropertyUpdater.register(propertyContext.controllerContext, false, this)(Property.identityGetter, function)
   }
   
   
@@ -96,8 +95,6 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   final def isDefined = (value != null)
   
   final def undefine() {
-    if (enforceDefined) throw new UnsupportedOperationException("The property was declared as Property.defined() and cannot be undefined.")
-    
     if (isDefined) {
       if (propertyContext != null) propertyContext.signalStructuralChanges()
       changed = true
@@ -135,11 +132,8 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   }
 }
 
-final class AccessibleProperty[T <: Accessible] private[engine] (
-  factory: () => T,
-  enforceDefined: Boolean
-)
-extends Property[T](factory, enforceDefined) {
+final class AccessibleProperty[T <: Accessible] private[engine] (factory: () => T)
+extends Property[T](factory) {
   def hasDataChanges = changed
   def clearDataChanges() { changed = false }
   def signalDataChanges() { changed = true }
@@ -147,17 +141,10 @@ extends Property[T](factory, enforceDefined) {
 
 object Property {
   private[this] val identity = (t: Any) => t
-  private[engine] def passThrough[T] = identity.asInstanceOf[T => T]
+  private[engine] def identityGetter[T] = identity.asInstanceOf[T => T]
   
   
   def optional[T <: Accessible](factory: () => T) :Property[T] = {
-    new AccessibleProperty[T](factory, false)//XXX possibly use manifest.erasure.newInstance()
-  }
-  
-  def defined[T <: Accessible](value: T) :Property[T] = {
-    val p = new AccessibleProperty[T](null, true)
-    p.init(value)
-    p
+    new AccessibleProperty[T](factory)
   }
 }
-

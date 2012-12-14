@@ -275,13 +275,13 @@ object CustomRenderer extends default.BaseApp {
     main("resolveColor")(){"""
       gl_FragColor = texturingColor() * lightIntensity();
     """}
-  })
+  }.toPrototype(Profile.Gl2))
   
   techniqueManager.push(new FragmentShader {
     function("vec4 lightIntensity()"){"""
       return vec4(1.0);
     """}
-  })
+  }.toPrototype(Profile.Gl2))
   
   techniqueManager.push(new FragmentShader {
     uniform {
@@ -299,7 +299,7 @@ object CustomRenderer extends default.BaseApp {
       }
       return color;
     """}
-  })
+  }.toPrototype(Profile.Gl2))
   
   techniqueManager.push(new VertexShader {
     uniform {
@@ -317,7 +317,7 @@ object CustomRenderer extends default.BaseApp {
     main("transformVertices")(){"""
       gl_Position = se_modelViewProjectionMatrix*vec4(vertices, 1.0);
     """}
-  })
+  }.toPrototype(Profile.Gl2))
     
   techniqueManager.push(new VertexShader {
     uniform {
@@ -338,7 +338,7 @@ object CustomRenderer extends default.BaseApp {
         texturingCtx.ecTexCoords[i] = transformed.xy;
       }
     """}
-  })
+  }.toPrototype(Profile.Gl2))
   
   
   // Declare PointLight Struct.
@@ -454,7 +454,7 @@ object CustomRenderer extends default.BaseApp {
       }
       return vec4(intensity + 0.2, 1.0);
     """}
-  })
+  }.toPrototype(Profile.Gl2))
   
   
   techniqueManager.push(new VertexShader {
@@ -477,5 +477,5 @@ object CustomRenderer extends default.BaseApp {
       lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
       lightingCtx.normal = normalize(se_normalMatrix*normals);
     """}
-  })
+  }.toPrototype(Profile.Gl2))
 }

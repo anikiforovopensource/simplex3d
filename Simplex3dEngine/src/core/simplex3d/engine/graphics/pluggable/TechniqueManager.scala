@@ -38,7 +38,6 @@ extends graphics.TechniqueManager[G]
 {
   import TechniqueManager.logger._
  
-  val glslVersion = "120"//XXX version must come from profile
   val passManager = new PassManager[G]//XXX stub
   
   
@@ -109,10 +108,10 @@ extends graphics.TechniqueManager[G]
   stages(1) = new Stage("Vertex", 1)
   
   
-  def push(shader: ShaderDeclaration) {
-    shader match {
-      case _: FragmentShader => stages(0).push(shader.toPrototype(glslVersion))
-      case _: VertexShader => stages(1).push(shader.toPrototype(glslVersion))
+  def push(shader: ShaderPrototype) {
+    shader.shaderType match {
+      case Shader.Fragment => stages(0).push(shader)
+      case Shader.Vertex => stages(1).push(shader)
     }
   }
   

@@ -594,8 +594,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   }
   
   
-  def toPrototype(version: String) = {
-    val squareMat = (version == "120")//XXX this should come from profile enum rather than version string
+  def toPrototype(profile: Profile.type#Value) = {
+    val squareMat = (profile == Profile.Gl2)
     
     if (outputBlock.isDefined && !mainLabel.isDefined) throw new IllegalStateException(
         "Only shaders with main(){} can define out{} blocks.")
@@ -604,7 +604,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     new ShaderPrototype(
       debugging,
       shaderType,
-      version,
+      profile,
       squareMat,
       functionSignature,
       mainLabel,

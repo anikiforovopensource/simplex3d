@@ -19,33 +19,10 @@
  */
 
 package simplex3d.engine
-package renderer
-
-import simplex3d.math.double._
-import simplex3d.engine.graphics._
 
 
-sealed abstract class ReadTextureUnit extends prototype.ReadStruct {
-  type Read = ReadTextureUnit
-  type Mutable = TextureUnit
-  final def readType = classOf[ReadTextureUnit]
+package object renderer {
   
-  def texture: ReadTextureBinding[Texture2d[_]]
-  def transformation: ReadMat3x2
-}
-
-final class TextureUnit extends ReadTextureUnit with prototype.Struct {
-  def this(texture: Texture2d[_], transformation: inMat3x2 = Mat3x2.Identity) {
-    this()
-    
-    this.texture := texture
-    this.transformation := transformation
-  }
-  
-  protected def mkMutable() = new TextureUnit
-  
-  val texture = new TextureBinding[Texture2d[_]]
-  val transformation = Mat3x2(1)
-  
-  init(classOf[TextureUnit])
+  type Fog = fog.Fog
+  type TextureUnit = texturing.TextureUnit
 }

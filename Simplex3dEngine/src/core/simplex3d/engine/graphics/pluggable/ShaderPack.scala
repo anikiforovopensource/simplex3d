@@ -19,27 +19,9 @@
  */
 
 package simplex3d.engine
-package renderer
-
-import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.engine.graphics._
-import simplex3d.engine.graphics.pluggable._
+package graphics.pluggable
 
 
-object TechniqueProvider {
-
-  def assembleTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
-    val manager = new pluggable.TechniqueManager[G]
-    
-    def pushAll(shaders: Seq[ShaderPrototype]) {
-      for (shader <- shaders) manager.push(shader)
-    }
-    
-    pushAll(ShaderPack.mkShaders(Profile.Gl2)._2)
-    pushAll(fog.ShaderPack.mkShaders(Profile.Gl2)._2)
-    pushAll(texturing.ShaderPack.mkShaders(Profile.Gl2)._2)
-    
-    manager
-  }
+trait ShaderPack[Config] {
+  def mkShaders(profile: Profile.type#Value) :(Config, Seq[ShaderPrototype])
 }

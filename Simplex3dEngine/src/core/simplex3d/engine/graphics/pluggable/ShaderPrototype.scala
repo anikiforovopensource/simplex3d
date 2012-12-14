@@ -37,7 +37,7 @@ import simplex3d.engine.graphics._
 final class ShaderPrototype private[pluggable] (
   val debugging: ShaderDebugging,
   val shaderType: Shader.type#Value,
-  val version: String,
+  val profile: Profile.type#Value,
   val squareMatrices: Boolean,
   val functionSignature: Option[String],
   val mainLabel: Option[String],
@@ -82,6 +82,13 @@ final class ShaderPrototype private[pluggable] (
     assert(names.size == names.distinct.size)
   }
   
+  
+  def versionString: String = {
+    profile match {
+      case Profile.Gl2 => "120"
+      // TODO support other profiles
+    }
+  }
   
   val name: String = {
     
@@ -370,7 +377,7 @@ object ShaderPrototype {
       
       val remapping = varyingRemapping ++ mainVarRemapping
       
-      formatBlock("#version " + shader.version) +
+      formatBlock("#version " + shader.versionString) +
       formatBlock(sizeDeclaration(shader.sizedArraykeys)) +
       formatBlock(sizeDeclaration(arrayDeclarations)) +
       formatBlock(structDeclaration(shader.structs)) +

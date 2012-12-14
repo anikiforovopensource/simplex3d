@@ -1,5 +1,5 @@
 /*
- * Simplex3dEngine - Renderer Module
+ * Simplex3dEngine - Core Module
  * Copyright (C) 2012, Aleksey Nikiforov
  *
  * This file is part of Simplex3dEngine.
@@ -19,27 +19,8 @@
  */
 
 package simplex3d.engine
-package renderer
-
-import simplex3d.math._
-import simplex3d.math.double._
-import simplex3d.engine.graphics._
-import simplex3d.engine.graphics.pluggable._
 
 
-object TechniqueProvider {
-
-  def assembleTechniqueManager[G <: GraphicsContext]()(implicit graphicsContext: G) :pluggable.TechniqueManager[G] = {
-    val manager = new pluggable.TechniqueManager[G]
-    
-    def pushAll(shaders: Seq[ShaderPrototype]) {
-      for (shader <- shaders) manager.push(shader)
-    }
-    
-    pushAll(ShaderPack.mkShaders(Profile.Gl2)._2)
-    pushAll(fog.ShaderPack.mkShaders(Profile.Gl2)._2)
-    pushAll(texturing.ShaderPack.mkShaders(Profile.Gl2)._2)
-    
-    manager
-  }
+object Profile extends Enumeration {
+  val Gl2, Gl3, Gl4 = Value
 }

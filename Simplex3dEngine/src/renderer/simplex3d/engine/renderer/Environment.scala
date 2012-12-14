@@ -27,7 +27,7 @@ import simplex3d.engine.scene._
 
 
 class Environment(controllerContext: ControllerContext) extends prototype.Environment(controllerContext) {
-  val fog = Property(() => new Fog)
+  val fog = Property(() => new renderer.fog.Fog)
   
   init(classOf[Environment])
 }

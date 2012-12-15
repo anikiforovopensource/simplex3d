@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.renderer
-package lighting
+package simplex3d.engine
+package renderer.lighting
 
 import scala.collection.mutable.ArrayBuilder
 import simplex3d.math._
@@ -28,13 +28,75 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.graphics.pluggable._
 
 
-object ShaderPack {
+object ShaderPack extends pluggable.ShaderPack[Unit] {
 
-  def mkShaders: Seq[ShaderDeclaration] = {
-    val shaders = ArrayBuilder.make[ShaderDeclaration]
+  object Universal {
+    def lightingFragment(config: Unit) = new FragmentShader {
+      uniform {
+        declare[BindingList[PointLight]]("lighting")
+      }
+      
+      in("lightingCtx") {
+        declare[Vec3]("normal")
+        declare[Vec3]("ecPosition")
+      }
+      
+      function("vec3 lightIntensity()"){"""
+        vec3 intensity = vec3(0.0);
+        
+        for (int i = 0; i < se_sizeOf_lighting; i++) {
+      
+          vec3 lightDir = lighting[i].ecPosition - lightingCtx.ecPosition;
+          float dist = length(lightDir);
+        
+          float attenuation = 1.0 / (1.0 +
+            lighting[i].linearAttenuation * dist +
+            lighting[i].quadraticAttenuation * dist*dist
+          );
+        
+          lightDir = lightDir/dist;
+          float diffuseFactor = max(0.0, dot(lightingCtx.normal, lightDir));
+        
+          intensity += lighting[i].intensity * diffuseFactor * attenuation;
+        }
+        
+        return intensity;
+      """}
+    }
     
+    def lightingVertex(config: Unit) = new VertexShader {
+      uniform {
+        declare[Mat4]("se_modelViewMatrix")
+        declare[Mat3]("se_normalMatrix")
+      }
+      
+      attributes {
+        declare[Vec3]("vertices")
+        declare[Vec3]("normals")
+      }
+      
+      out("lightingCtx") {
+        declare[Vec3]("ecPosition")
+        declare[Vec3]("normal")
+      }
+      
+      main("propagateLightingValues")(){"""
+        lightingCtx.ecPosition = (se_modelViewMatrix*vec4(vertices, 1.0)).xyz;
+        lightingCtx.normal = normalize(se_normalMatrix*normals);
+      """}
+    }
+  }
+  
+  
+  def mkShaders(profile: Profile.type#Value): (Unit, Seq[ShaderPrototype]) = {
+    if (profile != Profile.Gl2) throw new RuntimeException("Profile '" + profile.toString + "' is not supported.")
     
+    val shaders = ArrayBuilder.make[ShaderPrototype]
+    val config = Unit
     
-    shaders.result()
+    shaders += Universal.lightingFragment(config).toPrototype(profile)
+    shaders += Universal.lightingVertex(config).toPrototype(profile)
+    
+    (config, shaders.result())
   }
 }

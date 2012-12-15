@@ -91,6 +91,7 @@ object ShaderPack extends pluggable.ShaderPack[Unit] {
     }
   }
   
+  
   def mkShaders(profile: Profile.type#Value): (Unit, Seq[ShaderPrototype]) = {
     if (profile != Profile.Gl2) throw new RuntimeException("Profile '" + profile.toString + "' is not supported.")
     

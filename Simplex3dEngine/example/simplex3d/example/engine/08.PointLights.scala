@@ -16,13 +16,13 @@ import simplex3d.engine.input.handler._
 import simplex3d.engine.scenegraph._
 
 
-object Teapot extends default.App {
+object PointLights extends default.App {
   
   def main(args: Array[String]) {
     launch()
   }
   
-  val title = "Teapot"
+  val title = "PointLights"
   
   override lazy val settings = new Settings(
     fullscreen = false,
@@ -40,6 +40,7 @@ object Teapot extends default.App {
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
     
+    // Setup teapot
     val (indices, vertices, normals, texCoords) = assetManager.loadObj("simplex3d/example/asset/teapot.obj").get
     
     val mesh = new Mesh("Teapot")
@@ -49,12 +50,6 @@ object Teapot extends default.App {
     mesh.geometry.normals := Attributes.fromData(normals.get)
     
     mesh.geometry.texCoords := Attributes.fromData(texCoords.get)
-    
-    /*val objectTexture = Texture2d[Vec3](Vec2i(128)).fillWith { p =>
-      val selector = equal(mod(p, Vec2(8)), Vec2.Zero)
-      if (any(selector)) Vec3(selector, 0)
-      else Vec3(0.8)
-    }*/
     
     val noise = ClassicalGradientNoise
     val objectTexture = Texture2d[Vec3](Vec2i(256)).fillWith { p =>
@@ -70,6 +65,46 @@ object Teapot extends default.App {
     transformation.scale := 2
     
     world.attach(mesh)
+    
+    
+    // Setup point lights
+    world.environment.lighting.update.pointLights ::= new PointLight()
+    
+    val lightEntity = new Mesh("Point Light")
+    lightEntity.geometry.vertices := Attributes[Vec3, RFloat](1)
+    lightEntity.geometry.primitive.update.mode := VertexMode.PointSprites
+    lightEntity.geometry.primitive.update.pointSize := 100
+    lightEntity.geometry.primitive.update.pointSpriteSize := 1
+    
+    val dims = Vec2(128)
+    val lightTexture = Texture2d[Vec4](Vec2i(dims))
+    lightTexture.fillWith { p =>
+      val outerRadius = dims.x *0.5
+      val len = length(p - dims * 0.5)
+      val blendPixels = 4
+      
+      if (len < outerRadius + blendPixels*0.5) {
+        val factor = (outerRadius - len)/blendPixels
+        mix(Vec4(1, 1, 1, 0), Vec4(1), clamp(factor, 0, 1))
+      }
+      else {
+        Vec4.Zero
+      }
+    }
+    
+    lightEntity.material.textureUnits.update += new TextureUnit(lightTexture)
+    
+    world.attach(lightEntity)
+    
+    lightEntity.controller { time =>
+      lightEntity.transformation.update.translation := Quat4.rotateY(time.total).rotateVector(Vec3(15, 10, 0))
+      true
+    }
+    
+    lightEntity.controller { time =>
+      world.environment.lighting.update.pointLights.head.position := lightEntity.transformation.get.translation
+      true
+    }
   }
   
   def update(time: TimeStamp) {}

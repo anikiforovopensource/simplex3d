@@ -39,6 +39,7 @@ object TechniqueProvider {
     pushAll(ShaderPack.mkShaders(Profile.Gl2)._2)
     pushAll(fog.ShaderPack.mkShaders(Profile.Gl2)._2)
     pushAll(texturing.ShaderPack.mkShaders(Profile.Gl2)._2)
+    pushAll(lighting.ShaderPack.mkShaders(Profile.Gl2)._2)
     
     manager
   }

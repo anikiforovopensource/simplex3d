@@ -67,8 +67,3 @@ final class Fog extends ReadFog with EnvironmentalEffect with prototype.Struct {
   
   protected def resolveBinding() = this
 }
-
-
-object Fog {
-  val Default: ReadFog = new Fog
-}

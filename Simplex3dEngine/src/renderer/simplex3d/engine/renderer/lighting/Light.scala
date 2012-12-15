@@ -25,6 +25,7 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.scene._
+import simplex3d.engine.graphics._
 
 
 sealed abstract class Light
@@ -40,14 +41,28 @@ final class DirectionalLight extends ReadDirectionalLight {
 }
 
 
-sealed abstract class ReadPointLight(val lightEntity: Spatial) extends Light {
+sealed abstract class ReadPointLight extends Light with prototype.ReadStruct {
+  type Read = ReadPointLight
+  type Mutable = PointLight
+  final def readType = classOf[ReadPointLight]
+  
+  def position: ReadVec3
   def intensity: ReadVec3
   def linearAttenuation: ReadDoubleRef
   def quadraticAttenuation: ReadDoubleRef
 }
 
-final class PointLight(lightEntity: Spatial) extends ReadPointLight(lightEntity) {
+final class PointLight extends ReadPointLight with prototype.Struct {
+  protected def mkMutable() = new PointLight
+  
+  val position = Vec3(0)
   val intensity = Vec3(1)
   val linearAttenuation = new DoubleRef(0)
   val quadraticAttenuation = new DoubleRef(0)
+  
+  private[renderer] val ecPosition = Vec3(0)
+  
+  init(classOf[PointLight])
 }
+
+//XXX ConeLight

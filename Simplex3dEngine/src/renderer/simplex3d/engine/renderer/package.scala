@@ -25,4 +25,5 @@ package object renderer {
   
   type Fog = fog.Fog
   type TextureUnit = texturing.TextureUnit
+  type PointLight = lighting.PointLight
 }

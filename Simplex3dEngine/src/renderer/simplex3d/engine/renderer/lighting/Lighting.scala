@@ -21,6 +21,7 @@
 package simplex3d.engine.renderer
 package lighting
 
+import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
@@ -34,7 +35,7 @@ sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
   final def readType = classOf[ReadLighting]
   
   //def directionalLights: List[ReadDirectionalLight]
-  def pointLights: List[ReadPointLight]
+  def pointLights: IndexedSeq[ReadPointLight]
   
   final override def equals(other: Any) :Boolean = {
     other match {
@@ -51,8 +52,8 @@ sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
 final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect {
   protected def mkMutable() = new Lighting
   
-  //var directionalLights: List[DirectionalLight] = Nil
-  var pointLights: List[PointLight] = Nil
+  //val directionalLights: List[DirectionalLight] = Nil
+  val pointLights = new ArrayBuffer[PointLight]
   
   private def rebuildBinding() {
     if (unsafeBinding != null) { // This will limit binding updates to those in use.
@@ -64,17 +65,21 @@ final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect {
   def :=(r: Read) {
     // Since we are using List instead of a BindingList, we have to signalStructuralChanges manually.
     if (pointLights.size != r.pointLights.size) signalStructuralChanges()
-    pointLights = r.pointLights.asInstanceOf[List[PointLight]]
+    
+    pointLights.clear()
+    pointLights ++= r.pointLights.asInstanceOf[IndexedSeq[PointLight]]
    
     rebuildBinding()
   }
  
   def propagate(parentVal: Read, result: Mutable) {
-    val oldLights = result.pointLights
-    result.pointLights = (parentVal.pointLights ++ pointLights).asInstanceOf[List[PointLight]]
+    val oldLightsSize = result.pointLights.size
+    result.pointLights.clear()
+    result.pointLights ++= parentVal.pointLights.asInstanceOf[IndexedSeq[PointLight]]
+    result.pointLights ++= pointLights.asInstanceOf[IndexedSeq[PointLight]]
     
     // signalStructuralChanges() will reset unsafeBinding to null and cause resolveBinding to be called.
-    if (result.pointLights.size != oldLights.size) result.signalStructuralChanges()
+    if (result.pointLights.size != oldLightsSize) result.signalStructuralChanges()
     else result.rebuildBinding()
   }
  
@@ -85,6 +90,7 @@ final class Lighting extends ReadLighting with UpdatableEnvironmentalEffect {
   }
       
   def updateBinding(predefinedUniforms: ReadPredefinedUniforms) {
+    val pointLights = unsafeBinding.asInstanceOf[BindingList[PointLight]]
     val size = pointLights.size; var i = 0; while (i < size) {
       val tp = predefinedUniforms.se_viewMatrix.transformPoint(pointLights(i).position)
       pointLights(i).ecPosition := tp

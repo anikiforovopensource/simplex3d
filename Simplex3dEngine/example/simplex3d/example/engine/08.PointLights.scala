@@ -68,7 +68,8 @@ object PointLights extends default.App {
     
     
     // Setup point lights
-    world.environment.lighting.update.pointLights ::= new PointLight()
+    val pointLight1 = new PointLight()
+    world.environment.lighting.update.pointLights += pointLight1
     
     val lightEntity = new Mesh("Point Light")
     lightEntity.geometry.vertices := Attributes[Vec3, RFloat](1)
@@ -102,7 +103,8 @@ object PointLights extends default.App {
     }
     
     lightEntity.controller { time =>
-      world.environment.lighting.update.pointLights.head.position := lightEntity.transformation.get.translation
+      pointLight1.position := lightEntity.transformation.get.translation
+      world.environment.lighting.update
       true
     }
   }

@@ -28,10 +28,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 
 
-sealed abstract class Light
-
-
-sealed abstract class ReadDirectionalLight extends Light {
+sealed abstract class ReadDirectionalLight {
   def direction: ReadVec3
   def intensity: ReadVec3
 }
@@ -41,7 +38,7 @@ final class DirectionalLight extends ReadDirectionalLight {
 }
 
 
-sealed abstract class ReadPointLight extends Light with prototype.ReadStruct {
+sealed abstract class ReadPointLight extends prototype.ReadStruct {
   type Read = ReadPointLight
   type Mutable = PointLight
   final def readType = classOf[ReadPointLight]

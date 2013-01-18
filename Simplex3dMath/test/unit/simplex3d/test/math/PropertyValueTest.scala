@@ -20,6 +20,7 @@
 
 package simplex3d.test.math
 
+import scala.language.reflectiveCalls
 import scala.annotation._
 import org.scalatest._
 import simplex3d.math.types._
@@ -49,7 +50,7 @@ class PropertyValueTest extends FunSuite {
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 
-    val clone = mutable.asInstanceOf[Cloneable].clone()
+    val clone = mutable.asInstanceOf[Cloneable].clone().asInstanceOf[T]
     assert(mutable ne clone)
     assert(mutable == clone)
 

@@ -21,7 +21,7 @@
 package simplex3d.math
 
 import java.nio
-import scala.reflect.ClassManifest.{classType}
+import scala.reflect._
 
 
 package integration {
@@ -44,9 +44,9 @@ package integration {
   }
 
   object PrimitiveFormat {
-    final val SInt = classType[SInt](classOf[SInt])
-    final val RFloat = classType[RFloat](classOf[RFloat])
-    final val RDouble = classType[RDouble](classOf[RDouble])
+    final val SInt = classTag[SInt]
+    final val RFloat = classTag[RFloat]
+    final val RDouble = classTag[RDouble]
   }
 
 

@@ -20,16 +20,11 @@
 
 package simplex3d.math
 
-import scala.reflect.ClassManifest.{classType}
+import scala.reflect._
 import simplex3d.math.types._
 
 
-/** The <code>ExtendedInt</code> class encapsulates glue code to make Ints
- * interact with Int vectors.
- * <p>
- *   Instances of this class are produces via implicit conversions from Int
- *   when required.
- * </p>
+/** 
  *
  * @author Aleksey Nikiforov (lex)
  */
@@ -272,8 +267,8 @@ with Accessible with Serializable
 }
 
 object IntRef {
-  final val Manifest = classType[IntRef](classOf[IntRef])
-  final val ReadManifest = classType[ReadIntRef](classOf[ReadIntRef])
+  final val Tag = classTag[IntRef]
+  final val ReadTag = classTag[ReadIntRef]
   
   def unapply(r: ReadIntRef) = Some(r.toConst)
 }

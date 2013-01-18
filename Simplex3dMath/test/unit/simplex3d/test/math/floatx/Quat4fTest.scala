@@ -54,81 +54,81 @@ class Quat4fTest extends FunSuite {
     val dd = 4 + 1e-5
 
     var q: ReadQuat4 = Quat4()
-    expect(classOf[Quat4]) { q.getClass }
-    expect(1) { q.a }
-    expect(0) { q.b }
-    expect(0) { q.c }
-    expect(0) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(1) { q.a }
+    expectResult(0) { q.b }
+    expectResult(0) { q.c }
+    expectResult(0) { q.d }
     
     q = Quat4(af, bf, cf, df)
-    expect(classOf[Quat4]) { q.getClass }
-    expect(af) { q.a }
-    expect(bf) { q.b }
-    expect(cf) { q.c }
-    expect(df) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(af) { q.a }
+    expectResult(bf) { q.b }
+    expectResult(cf) { q.c }
+    expectResult(df) { q.d }
 
     q = Quat4(Quat4(af, bf, cf, df))
-    expect(classOf[Quat4]) { q.getClass }
-    expect(af) { q.a }
-    expect(bf) { q.b }
-    expect(cf) { q.c }
-    expect(df) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(af) { q.a }
+    expectResult(bf) { q.b }
+    expectResult(cf) { q.c }
+    expectResult(df) { q.d }
 
     q = Quat4(Vec4(bf, cf, df, af))
-    expect(classOf[Quat4]) { q.getClass }
-    expect(af) { q.a }
-    expect(bf) { q.b }
-    expect(cf) { q.c }
-    expect(df) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(af) { q.a }
+    expectResult(bf) { q.b }
+    expectResult(cf) { q.c }
+    expectResult(df) { q.d }
 
     q = Quat4(Quat4d(ad, bd, cd, dd))
-    expect(classOf[Quat4]) { q.getClass }
-    expect(toFloat(ad)) { q.a }
-    expect(toFloat(bd)) { q.b }
-    expect(toFloat(cd)) { q.c }
-    expect(toFloat(dd)) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(toFloat(ad)) { q.a }
+    expectResult(toFloat(bd)) { q.b }
+    expectResult(toFloat(cd)) { q.c }
+    expectResult(toFloat(dd)) { q.d }
 
     q = Quat4(Vec4d(bd, cd, dd, ad))
-    expect(classOf[Quat4]) { q.getClass }
-    expect(toFloat(ad)) { q.a }
-    expect(toFloat(bd)) { q.b }
-    expect(toFloat(cd)) { q.c }
-    expect(toFloat(dd)) { q.d }
+    expectResult(classOf[Quat4]) { q.getClass }
+    expectResult(toFloat(ad)) { q.a }
+    expectResult(toFloat(bd)) { q.b }
+    expectResult(toFloat(cd)) { q.c }
+    expectResult(toFloat(dd)) { q.d }
 
     var p: ReadQuat4 = ConstQuat4(af, bf, cf, df)
-    expect(classOf[ConstQuat4]) { p.getClass }
-    expect(af) { p.a }
-    expect(bf) { p.b }
-    expect(cf) { p.c }
-    expect(df) { p.d }
+    expectResult(classOf[ConstQuat4]) { p.getClass }
+    expectResult(af) { p.a }
+    expectResult(bf) { p.b }
+    expectResult(cf) { p.c }
+    expectResult(df) { p.d }
 
     p = ConstQuat4(Quat4(af, bf, cf, df))
-    expect(classOf[ConstQuat4]) { p.getClass }
-    expect(af) { p.a }
-    expect(bf) { p.b }
-    expect(cf) { p.c }
-    expect(df) { p.d }
+    expectResult(classOf[ConstQuat4]) { p.getClass }
+    expectResult(af) { p.a }
+    expectResult(bf) { p.b }
+    expectResult(cf) { p.c }
+    expectResult(df) { p.d }
 
     p = ConstQuat4(Vec4(bf, cf, df, af))
-    expect(classOf[ConstQuat4]) { p.getClass }
-    expect(af) { p.a }
-    expect(bf) { p.b }
-    expect(cf) { p.c }
-    expect(df) { p.d }
+    expectResult(classOf[ConstQuat4]) { p.getClass }
+    expectResult(af) { p.a }
+    expectResult(bf) { p.b }
+    expectResult(cf) { p.c }
+    expectResult(df) { p.d }
 
     p = ConstQuat4(Quat4d(ad, bd, cd, dd))
-    expect(classOf[ConstQuat4]) { p.getClass }
-    expect(toFloat(ad)) { p.a }
-    expect(toFloat(bd)) { p.b }
-    expect(toFloat(cd)) { p.c }
-    expect(toFloat(dd)) { p.d }
+    expectResult(classOf[ConstQuat4]) { p.getClass }
+    expectResult(toFloat(ad)) { p.a }
+    expectResult(toFloat(bd)) { p.b }
+    expectResult(toFloat(cd)) { p.c }
+    expectResult(toFloat(dd)) { p.d }
 
     p = ConstQuat4(Vec4d(bd, cd, dd, ad))
-    expect(classOf[ConstQuat4]) { p.getClass }
-    expect(toFloat(ad)) { p.a }
-    expect(toFloat(bd)) { p.b }
-    expect(toFloat(cd)) { p.c }
-    expect(toFloat(dd)) { p.d }
+    expectResult(classOf[ConstQuat4]) { p.getClass }
+    expectResult(toFloat(ad)) { p.a }
+    expectResult(toFloat(bd)) { p.b }
+    expectResult(toFloat(cd)) { p.c }
+    expectResult(toFloat(dd)) { p.d }
   }
 
   test("Unapply") {
@@ -152,13 +152,13 @@ class Quat4fTest extends FunSuite {
     val d = 4f + 1e-5f
     
     val t: ConstQuat4 = Quat4(a, b, c, d)
-    expect(classOf[ConstQuat4]) { t.getClass }
+    expectResult(classOf[ConstQuat4]) { t.getClass }
     assert(Quat4(a, b, c, d) == t)
 
     var con = ConstQuat4(1, 0, 0, 0); val mut = Quat4(a, b, c, d)
-    expect(classOf[Quat4]) { mut.getClass }
+    expectResult(classOf[Quat4]) { mut.getClass }
     con = mut; assert(Quat4(a, b, c, d) == con)
-    expect(classOf[ConstQuat4]) { con.getClass }
+    expectResult(classOf[ConstQuat4]) { con.getClass }
   }
 
   test("Equality methods") {
@@ -188,10 +188,10 @@ class Quat4fTest extends FunSuite {
   test("Indexed read") {
     val u = ConstQuat4(3, 4, 5, 6)
 
-    expect(3) { u(0) }
-    expect(4) { u(1) }
-    expect(5) { u(2) }
-    expect(6) { u(3) }
+    expectResult(3) { u(0) }
+    expectResult(4) { u(1) }
+    expectResult(5) { u(2) }
+    expectResult(6) { u(3) }
 
     intercept[IndexOutOfBoundsException] {
       u(4)
@@ -228,10 +228,10 @@ class Quat4fTest extends FunSuite {
     val u = Quat4(0, 0, 0, 0)
 
     u := Quat4(1, 2, 3, 4)
-    expect(1) { u.a }
-    expect(2) { u.b }
-    expect(3) { u.c }
-    expect(4) { u.d }
+    expectResult(1) { u.a }
+    expectResult(2) { u.b }
+    expectResult(3) { u.c }
+    expectResult(4) { u.d }
   }
 
   test("Const math") {

@@ -21,7 +21,6 @@
 package simplex3d.math.integration
 
 import java.nio
-import scala.reflect.ClassManifest.{classType}
 
 
 /** <code>Accessor</code> declares distinct types for reading and writing data.

@@ -20,6 +20,7 @@
 
 package simplex3d
 
+import scala.language.implicitConversions
 import simplex3d.math.types._
 
 

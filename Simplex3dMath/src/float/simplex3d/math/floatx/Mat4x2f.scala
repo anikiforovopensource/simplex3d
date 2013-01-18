@@ -20,8 +20,9 @@
 
 package simplex3d.math
 package floatx
-                      
-import scala.reflect.ClassManifest.{classType}
+
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 import simplex3d.math.floatx.functions._
@@ -40,7 +41,6 @@ with Protected with Serializable
   
   type Read = ReadMat4x2f
   type Mutable = Mat4x2f
-  final def readType: Class[Read] = classOf[ReadMat4x2f]
   final def mutableCopy() = Mat4x2f(this)
 
   // Column major order.
@@ -495,9 +495,9 @@ object Mat4x2f {
   final val Zero = ConstMat4x2f(0)
   final val Identity = ConstMat4x2f(1)
 
-  final val Manifest = classType[Mat4x2f](classOf[Mat4x2f])
-  final val ConstManifest = classType[ConstMat4x2f](classOf[ConstMat4x2f])
-  final val ReadManifest = classType[ReadMat4x2f](classOf[ReadMat4x2f])
+  final val Tag = classTag[Mat4x2f]
+  final val ConstTag = classTag[ConstMat4x2f]
+  final val ReadTag = classTag[ReadMat4x2f]
 
   def apply(s: Float) = new Mat4x2f(
     s, 0,

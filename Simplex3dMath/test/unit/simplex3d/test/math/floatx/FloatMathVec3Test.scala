@@ -123,58 +123,58 @@ class FloatMathVec3Test extends FunSuite {
       r: Float, g: Float, b: Float,
       s: Float, t: Float, p: Float
     ) {
-      expect(Vec3(radians(x), radians(y), radians(z))) {
+      expectResult(Vec3(radians(x), radians(y), radians(z))) {
         radians(Vec3(x, y, z))
       }
-      expect(Vec3(degrees(x), degrees(y), degrees(z))) {
+      expectResult(Vec3(degrees(x), degrees(y), degrees(z))) {
         degrees(Vec3(x, y, z))
       }
 
-      expect(Vec3(sin(x), sin(y), sin(z))) { sin(Vec3(x, y, z)) }
-      expect(Vec3(cos(x), cos(y), cos(z))) { cos(Vec3(x, y, z)) }
-      expect(Vec3(tan(x), tan(y), tan(z))) { tan(Vec3(x, y, z)) }
+      expectResult(Vec3(sin(x), sin(y), sin(z))) { sin(Vec3(x, y, z)) }
+      expectResult(Vec3(cos(x), cos(y), cos(z))) { cos(Vec3(x, y, z)) }
+      expectResult(Vec3(tan(x), tan(y), tan(z))) { tan(Vec3(x, y, z)) }
 
-      expect(Vec3(atan(x, r), atan(y, g), atan(z, b))) {
+      expectResult(Vec3(atan(x, r), atan(y, g), atan(z, b))) {
         atan(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3(atan(x), atan(y), atan(z))) { atan(Vec3(x, y, z)) }
+      expectResult(Vec3(atan(x), atan(y), atan(z))) { atan(Vec3(x, y, z)) }
 
-      expect(Vec3(sinh(x), sinh(y), sinh(z))) { sinh(Vec3(x, y, z)) }
-      expect(Vec3(cosh(x), cosh(y), cosh(z))) { cosh(Vec3(x, y, z)) }
-      expect(Vec3(tanh(x), tanh(y), tanh(z))) { tanh(Vec3(x, y, z)) }
+      expectResult(Vec3(sinh(x), sinh(y), sinh(z))) { sinh(Vec3(x, y, z)) }
+      expectResult(Vec3(cosh(x), cosh(y), cosh(z))) { cosh(Vec3(x, y, z)) }
+      expectResult(Vec3(tanh(x), tanh(y), tanh(z))) { tanh(Vec3(x, y, z)) }
 
-      expect(Vec3(asinh(x), asinh(y), asinh(z))) { asinh(Vec3(x, y, z)) }
+      expectResult(Vec3(asinh(x), asinh(y), asinh(z))) { asinh(Vec3(x, y, z)) }
 
-      expect(Vec3(exp(x), exp(y), exp(z))) { exp(Vec3(x, y, z)) }
-      expect(Vec3(exp2(x), exp2(y), exp2(z))) { exp2(Vec3(x, y, z)) }
+      expectResult(Vec3(exp(x), exp(y), exp(z))) { exp(Vec3(x, y, z)) }
+      expectResult(Vec3(exp2(x), exp2(y), exp2(z))) { exp2(Vec3(x, y, z)) }
 
-      expect(Vec3(abs(x), abs(y), abs(z))) { abs(Vec3(x, y, z)) }
-      expect(Vec3(sign(x), sign(y), sign(z))) { sign(Vec3(x, y, z)) }
-      expect(Vec3(floor(x), floor(y), floor(z))) { floor(Vec3(x, y, z)) }
-      expect(Vec3(trunc(x), trunc(y), trunc(z))) { trunc(Vec3(x, y, z)) }
-      expect(Vec3(round(x), round(y), round(z))) { round(Vec3(x, y, z)) }
-      expect(Vec3(roundEven(x), roundEven(y), roundEven(z))) {
+      expectResult(Vec3(abs(x), abs(y), abs(z))) { abs(Vec3(x, y, z)) }
+      expectResult(Vec3(sign(x), sign(y), sign(z))) { sign(Vec3(x, y, z)) }
+      expectResult(Vec3(floor(x), floor(y), floor(z))) { floor(Vec3(x, y, z)) }
+      expectResult(Vec3(trunc(x), trunc(y), trunc(z))) { trunc(Vec3(x, y, z)) }
+      expectResult(Vec3(round(x), round(y), round(z))) { round(Vec3(x, y, z)) }
+      expectResult(Vec3(roundEven(x), roundEven(y), roundEven(z))) {
         roundEven(Vec3(x, y, z))
       }
-      expect(Vec3(ceil(x), ceil(y), ceil(z))) { ceil(Vec3(x, y, z)) }
-      expect(Vec3(fract(x), fract(y), fract(z))) { fract(Vec3(x, y, z)) }
-      expect(Vec3(mod(x, s), mod(y, s), mod(z, s))) {
+      expectResult(Vec3(ceil(x), ceil(y), ceil(z))) { ceil(Vec3(x, y, z)) }
+      expectResult(Vec3(fract(x), fract(y), fract(z))) { fract(Vec3(x, y, z)) }
+      expectResult(Vec3(mod(x, s), mod(y, s), mod(z, s))) {
         mod(Vec3(x, y, z), s)
       }
-      expect(Vec3(mod(x, r), mod(y, g), mod(z, b))) {
+      expectResult(Vec3(mod(x, r), mod(y, g), mod(z, b))) {
         mod(Vec3(x, y, z), Vec3(r, g, b))
       }
 
-      expect(Vec3(min(x, s), min(y, s), min(z, s))) {
+      expectResult(Vec3(min(x, s), min(y, s), min(z, s))) {
         min(Vec3(x, y, z), s)
       }
-      expect(Vec3(min(x, r), min(y, g), min(z, b))) {
+      expectResult(Vec3(min(x, r), min(y, g), min(z, b))) {
         min(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3(max(x, s), max(y, s), max(z, s))) {
+      expectResult(Vec3(max(x, s), max(y, s), max(z, s))) {
         max(Vec3(x, y, z), s)
       }
-      expect(Vec3(max(x, r), max(y, g), max(z, b))) {
+      expectResult(Vec3(max(x, r), max(y, g), max(z, b))) {
         max(Vec3(x, y, z), Vec3(r, g, b))
       }
 
@@ -194,14 +194,14 @@ class FloatMathVec3Test extends FunSuite {
         clamp(Vec3(x, y, z), Vec3(r, g, b), Vec3(s, t, p))
       }
 
-      expect(Vec3(mix(x, r, s), mix(y, g, s), mix(z, b, s))) {
+      expectResult(Vec3(mix(x, r, s), mix(y, g, s), mix(z, b, s))) {
         mix(Vec3(x, y, z), Vec3(r, g, b), s)
       }
-      expect(Vec3(mix(x, r, s), mix(y, g, t), mix(z, b, p))) {
+      expectResult(Vec3(mix(x, r, s), mix(y, g, t), mix(z, b, p))) {
         mix(Vec3(x, y, z), Vec3(r, g, b), Vec3(s, t, p))
       }
       val bool1 = s > 0; val bool2 = t > 0; val bool3 = p > 0
-      expect(Vec3(
+      expectResult(Vec3(
           mix(x, r, toFloat(bool1)),
           mix(y, g, toFloat(bool2)),
           mix(z, b, toFloat(bool3)))
@@ -209,10 +209,10 @@ class FloatMathVec3Test extends FunSuite {
         mix(Vec3(x, y, z), Vec3(r, g, b), Vec3b(bool1, bool2, bool3))
       }
 
-      expect(Vec3(step(s, x), step(s, y), step(s, z))) {
+      expectResult(Vec3(step(s, x), step(s, y), step(s, z))) {
         step(s, Vec3(x, y, z))
       }
-      expect(Vec3(step(x, r), step(y, g), step(z, b))) {
+      expectResult(Vec3(step(x, r), step(y, g), step(z, b))) {
         step(Vec3(x, y, z), Vec3(r, g, b))
       }
       
@@ -243,10 +243,10 @@ class FloatMathVec3Test extends FunSuite {
 
     // range -1 to 1
     def test1(x: Float, y: Float, z: Float) {
-      expect(Vec3(asin(x), asin(y), asin(z))) { asin(Vec3(x, y, z)) }
-      expect(Vec3(acos(x), acos(y), acos(z))) { acos(Vec3(x, y, z)) }
+      expectResult(Vec3(asin(x), asin(y), asin(z))) { asin(Vec3(x, y, z)) }
+      expectResult(Vec3(acos(x), acos(y), acos(z))) { acos(Vec3(x, y, z)) }
 
-      expect(Vec3(atanh(x), atanh(y), atanh(z))) { atanh(Vec3(x, y, z)) }
+      expectResult(Vec3(atanh(x), atanh(y), atanh(z))) { atanh(Vec3(x, y, z)) }
     }
     setSeed(1)
     def float1 = (randomFloat*2 - 1)
@@ -258,19 +258,19 @@ class FloatMathVec3Test extends FunSuite {
     def testPositive(x: Float, y: Float, z: Float,
              r: Float, g: Float, b: Float)
     {
-      expect(Vec3(acosh(x + 1), acosh(y + 1), acosh(z + 1))) {
+      expectResult(Vec3(acosh(x + 1), acosh(y + 1), acosh(z + 1))) {
         acosh(Vec3(x + 1, y + 1, z + 1))
       }
 
-      expect(Vec3(pow(x, r), pow(y, g), pow(z, b))) {
+      expectResult(Vec3(pow(x, r), pow(y, g), pow(z, b))) {
         pow(Vec3(x, y, z), Vec3(r, g, b))
       }
 
-      expect(Vec3(log(x), log(y), log(z))) { log(Vec3(x, y, z)) }
-      expect(Vec3(log2(x), log2(y), log2(z))) { log2(Vec3(x, y, z)) }
+      expectResult(Vec3(log(x), log(y), log(z))) { log(Vec3(x, y, z)) }
+      expectResult(Vec3(log2(x), log2(y), log2(z))) { log2(Vec3(x, y, z)) }
 
-      expect(Vec3(sqrt(x), sqrt(y), sqrt(z))) { sqrt(Vec3(x, y, z)) }
-      expect(Vec3(inversesqrt(x), inversesqrt(y), inversesqrt(z))) {
+      expectResult(Vec3(sqrt(x), sqrt(y), sqrt(z))) { sqrt(Vec3(x, y, z)) }
+      expectResult(Vec3(inversesqrt(x), inversesqrt(y), inversesqrt(z))) {
         inversesqrt(Vec3(x, y, z))
       }
     }
@@ -286,22 +286,22 @@ class FloatMathVec3Test extends FunSuite {
 
   test("Vec3f boolean functions") {
     def test(x: Float, y: Float, z: Float, r: Float, g: Float, b: Float) {
-      expect(Vec3b(x < r, y < g, z < b)) {
+      expectResult(Vec3b(x < r, y < g, z < b)) {
         lessThan(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3b(x <= r, y <= g, z <= b)) {
+      expectResult(Vec3b(x <= r, y <= g, z <= b)) {
         lessThanEqual(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3b(x > r, y > g, z > b)) {
+      expectResult(Vec3b(x > r, y > g, z > b)) {
         greaterThan(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3b(x >= r, y >= g, z >= b)) {
+      expectResult(Vec3b(x >= r, y >= g, z >= b)) {
         greaterThanEqual(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3b(x == r, y == g, z == b)) {
+      expectResult(Vec3b(x == r, y == g, z == b)) {
         equal(Vec3(x, y, z), Vec3(r, g, b))
       }
-      expect(Vec3b(x != r, y != g, z != b)) {
+      expectResult(Vec3b(x != r, y != g, z != b)) {
         notEqual(Vec3(x, y, z), Vec3(r, g, b))
       }
     }

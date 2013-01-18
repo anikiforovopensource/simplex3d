@@ -118,44 +118,44 @@ class DoubleMathVec2Test extends FunSuite {
       r: Double, g: Double,
       s: Double, t: Double
     ) {
-      expect(Vec2(radians(x), radians(y))) { radians(Vec2(x, y)) }
-      expect(Vec2(degrees(x), degrees(y))) { degrees(Vec2(x, y)) }
+      expectResult(Vec2(radians(x), radians(y))) { radians(Vec2(x, y)) }
+      expectResult(Vec2(degrees(x), degrees(y))) { degrees(Vec2(x, y)) }
 
-      expect(Vec2(sin(x), sin(y))) { sin(Vec2(x, y)) }
-      expect(Vec2(cos(x), cos(y))) { cos(Vec2(x, y)) }
-      expect(Vec2(tan(x), tan(y))) { tan(Vec2(x, y)) }
+      expectResult(Vec2(sin(x), sin(y))) { sin(Vec2(x, y)) }
+      expectResult(Vec2(cos(x), cos(y))) { cos(Vec2(x, y)) }
+      expectResult(Vec2(tan(x), tan(y))) { tan(Vec2(x, y)) }
 
-      expect(Vec2(atan(x, r), atan(y, g))) {
+      expectResult(Vec2(atan(x, r), atan(y, g))) {
         atan(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2(atan(x), atan(y))) { atan(Vec2(x, y)) }
+      expectResult(Vec2(atan(x), atan(y))) { atan(Vec2(x, y)) }
 
-      expect(Vec2(sinh(x), sinh(y))) { sinh(Vec2(x, y)) }
-      expect(Vec2(cosh(x), cosh(y))) { cosh(Vec2(x, y)) }
-      expect(Vec2(tanh(x), tanh(y))) { tanh(Vec2(x, y)) }
+      expectResult(Vec2(sinh(x), sinh(y))) { sinh(Vec2(x, y)) }
+      expectResult(Vec2(cosh(x), cosh(y))) { cosh(Vec2(x, y)) }
+      expectResult(Vec2(tanh(x), tanh(y))) { tanh(Vec2(x, y)) }
 
-      expect(Vec2(asinh(x), asinh(y))) { asinh(Vec2(x, y)) }
+      expectResult(Vec2(asinh(x), asinh(y))) { asinh(Vec2(x, y)) }
 
-      expect(Vec2(exp(x), exp(y))) { exp(Vec2(x, y)) }
-      expect(Vec2(exp2(x), exp2(y))) { exp2(Vec2(x, y)) }
+      expectResult(Vec2(exp(x), exp(y))) { exp(Vec2(x, y)) }
+      expectResult(Vec2(exp2(x), exp2(y))) { exp2(Vec2(x, y)) }
 
-      expect(Vec2(abs(x), abs(y))) { abs(Vec2(x, y)) }
-      expect(Vec2(sign(x), sign(y))) { sign(Vec2(x, y)) }
-      expect(Vec2(floor(x), floor(y))) { floor(Vec2(x, y)) }
-      expect(Vec2(trunc(x), trunc(y))) { trunc(Vec2(x, y)) }
-      expect(Vec2(round(x), round(y))) { round(Vec2(x, y)) }
-      expect(Vec2(roundEven(x), roundEven(y))) { roundEven(Vec2(x, y)) }
-      expect(Vec2(ceil(x), ceil(y))) { ceil(Vec2(x, y)) }
-      expect(Vec2(fract(x), fract(y))) { fract(Vec2(x, y)) }
-      expect(Vec2(mod(x, s), mod(y, s))) { mod(Vec2(x, y), s) }
-      expect(Vec2(mod(x, r), mod(y, g))) { mod(Vec2(x, y), Vec2(r, g)) }
+      expectResult(Vec2(abs(x), abs(y))) { abs(Vec2(x, y)) }
+      expectResult(Vec2(sign(x), sign(y))) { sign(Vec2(x, y)) }
+      expectResult(Vec2(floor(x), floor(y))) { floor(Vec2(x, y)) }
+      expectResult(Vec2(trunc(x), trunc(y))) { trunc(Vec2(x, y)) }
+      expectResult(Vec2(round(x), round(y))) { round(Vec2(x, y)) }
+      expectResult(Vec2(roundEven(x), roundEven(y))) { roundEven(Vec2(x, y)) }
+      expectResult(Vec2(ceil(x), ceil(y))) { ceil(Vec2(x, y)) }
+      expectResult(Vec2(fract(x), fract(y))) { fract(Vec2(x, y)) }
+      expectResult(Vec2(mod(x, s), mod(y, s))) { mod(Vec2(x, y), s) }
+      expectResult(Vec2(mod(x, r), mod(y, g))) { mod(Vec2(x, y), Vec2(r, g)) }
 
-      expect(Vec2(min(x, s), min(y, s))) { min(Vec2(x, y), s) }
-      expect(Vec2(min(x, r), min(y, g))) {
+      expectResult(Vec2(min(x, s), min(y, s))) { min(Vec2(x, y), s) }
+      expectResult(Vec2(min(x, r), min(y, g))) {
         min(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2(max(x, s), max(y, s))) { max(Vec2(x, y), s) }
-      expect(Vec2(max(x, r), max(y, g))) {
+      expectResult(Vec2(max(x, s), max(y, s))) { max(Vec2(x, y), s) }
+      expectResult(Vec2(max(x, r), max(y, g))) {
         max(Vec2(x, y), Vec2(r, g))
       }
 
@@ -175,19 +175,19 @@ class DoubleMathVec2Test extends FunSuite {
         clamp(Vec2(x, y), Vec2(r, g), Vec2(s, t))
       }
 
-      expect(Vec2(mix(x, r, s), mix(y, g, s))) {
+      expectResult(Vec2(mix(x, r, s), mix(y, g, s))) {
         mix(Vec2(x, y), Vec2(r, g), s)
       }
-      expect(Vec2(mix(x, r, s), mix(y, g, t))) {
+      expectResult(Vec2(mix(x, r, s), mix(y, g, t))) {
         mix(Vec2(x, y), Vec2(r, g), Vec2(s, t))
       }
       val bool1 = s > 0; val bool2 = t > 0
-      expect(Vec2(mix(x, r, toDouble(bool1)), mix(y, g, toDouble(bool2)))) {
+      expectResult(Vec2(mix(x, r, toDouble(bool1)), mix(y, g, toDouble(bool2)))) {
         mix(Vec2(x, y), Vec2(r, g), Vec2b(bool1, bool2))
       }
 
-      expect(Vec2(step(s, x), step(s, y))) { step(s, Vec2(x, y)) }
-      expect(Vec2(step(x, r), step(y, g))) {
+      expectResult(Vec2(step(s, x), step(s, y))) { step(s, Vec2(x, y)) }
+      expectResult(Vec2(step(x, r), step(y, g))) {
         step(Vec2(x, y), Vec2(r, g))
       }
       
@@ -210,10 +210,10 @@ class DoubleMathVec2Test extends FunSuite {
 
     // range -1 to 1
     def test1(x: Double, y: Double) {
-      expect(Vec2(asin(x), asin(y))) { asin(Vec2(x, y)) }
-      expect(Vec2(acos(x), acos(y))) { acos(Vec2(x, y)) }
+      expectResult(Vec2(asin(x), asin(y))) { asin(Vec2(x, y)) }
+      expectResult(Vec2(acos(x), acos(y))) { acos(Vec2(x, y)) }
 
-      expect(Vec2(atanh(x), atanh(y))) { atanh(Vec2(x, y)) }
+      expectResult(Vec2(atanh(x), atanh(y))) { atanh(Vec2(x, y)) }
     }
     setSeed(1)
     def double1 = (randomDouble*2 - 1)
@@ -223,19 +223,19 @@ class DoubleMathVec2Test extends FunSuite {
 
     // test positive
     def testPositive(x: Double, y: Double, r: Double, g: Double) {
-      expect(Vec2(acosh(x + 1), acosh(y + 1))) {
+      expectResult(Vec2(acosh(x + 1), acosh(y + 1))) {
         acosh(Vec2(x + 1, y + 1))
       }
 
-      expect(Vec2(pow(x, r), pow(y, g))) {
+      expectResult(Vec2(pow(x, r), pow(y, g))) {
         pow(Vec2(x, y), Vec2(r, g))
       }
 
-      expect(Vec2(log(x), log(y))) { log(Vec2(x, y)) }
-      expect(Vec2(log2(x), log2(y))) { log2(Vec2(x, y)) }
+      expectResult(Vec2(log(x), log(y))) { log(Vec2(x, y)) }
+      expectResult(Vec2(log2(x), log2(y))) { log2(Vec2(x, y)) }
 
-      expect(Vec2(sqrt(x), sqrt(y))) { sqrt(Vec2(x, y)) }
-      expect(Vec2(inversesqrt(x), inversesqrt(y))) {
+      expectResult(Vec2(sqrt(x), sqrt(y))) { sqrt(Vec2(x, y)) }
+      expectResult(Vec2(inversesqrt(x), inversesqrt(y))) {
         inversesqrt(Vec2(x, y))
       }
     }
@@ -251,22 +251,22 @@ class DoubleMathVec2Test extends FunSuite {
 
   test("Vec2d boolean functions") {
     def test(x: Double, y: Double, r: Double, g: Double) {
-      expect(Vec2b(x < r, y < g)) {
+      expectResult(Vec2b(x < r, y < g)) {
         lessThan(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2b(x <= r, y <= g)) {
+      expectResult(Vec2b(x <= r, y <= g)) {
         lessThanEqual(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2b(x > r, y > g)) {
+      expectResult(Vec2b(x > r, y > g)) {
         greaterThan(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2b(x >= r, y >= g)) {
+      expectResult(Vec2b(x >= r, y >= g)) {
         greaterThanEqual(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2b(x == r, y == g)) {
+      expectResult(Vec2b(x == r, y == g)) {
         equal(Vec2(x, y), Vec2(r, g))
       }
-      expect(Vec2b(x != r, y != g)) {
+      expectResult(Vec2b(x != r, y != g)) {
         notEqual(Vec2(x, y), Vec2(r, g))
       }
     }

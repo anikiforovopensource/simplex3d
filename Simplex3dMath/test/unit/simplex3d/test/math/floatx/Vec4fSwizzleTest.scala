@@ -38,20 +38,20 @@ class Vec4fSwizzleTest extends FunSuite {
 
     val u = ConstVec4(x, y, z, w)
 
-    expect(x) { u.x }
-    expect(y) { u.y }
-    expect(z) { u.z }
-    expect(w) { u.w }
+    expectResult(x) { u.x }
+    expectResult(y) { u.y }
+    expectResult(z) { u.z }
+    expectResult(w) { u.w }
 
-    expect(x) { u.r }
-    expect(y) { u.g }
-    expect(z) { u.b }
-    expect(w) { u.a }
+    expectResult(x) { u.r }
+    expectResult(y) { u.g }
+    expectResult(z) { u.b }
+    expectResult(w) { u.a }
 
-    expect(x) { u.s }
-    expect(y) { u.t }
-    expect(z) { u.p }
-    expect(w) { u.q }
+    expectResult(x) { u.s }
+    expectResult(y) { u.t }
+    expectResult(z) { u.p }
+    expectResult(w) { u.q }
 
     assert(u.x.isInstanceOf[Float])
     assert(u.y.isInstanceOf[Float])

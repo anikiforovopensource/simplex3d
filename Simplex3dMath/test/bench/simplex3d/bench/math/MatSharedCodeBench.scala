@@ -20,6 +20,7 @@
 
 package simplex3d.bench.math
 
+import scala.language.implicitConversions
 import simplex3d.math._
 import simplex3d.math.doublex._
 import simplex3d.math.doublex.functions._

@@ -44,155 +44,155 @@ class Vec2bTest extends FunSuite {
 
   test("Factories") {
     var u: ReadVec2b = Vec2b(true)
-    expect(classOf[Vec2b]) { u.getClass }
-    expect(true) { u.x }
-    expect(true) { u.y }
+    expectResult(classOf[Vec2b]) { u.getClass }
+    expectResult(true) { u.x }
+    expectResult(true) { u.y }
 
     u = Vec2b(false)
-    expect(classOf[Vec2b]) { u.getClass }
-    expect(false) { u.x }
-    expect(false) { u.y }
+    expectResult(classOf[Vec2b]) { u.getClass }
+    expectResult(false) { u.x }
+    expectResult(false) { u.y }
 
     u = ConstVec2b(true)
-    expect(classOf[ConstVec2b]) { u.getClass }
-    expect(true) { u.x }
-    expect(true) { u.y }
+    expectResult(classOf[ConstVec2b]) { u.getClass }
+    expectResult(true) { u.x }
+    expectResult(true) { u.y }
 
     u = ConstVec2b(false)
-    expect(classOf[ConstVec2b]) { u.getClass }
-    expect(false) { u.x }
-    expect(false) { u.y }
+    expectResult(classOf[ConstVec2b]) { u.getClass }
+    expectResult(false) { u.x }
+    expectResult(false) { u.y }
 
     BooleanCombinations.test { (x, y, z, w) =>
       var u: ReadVec2b = Vec2b(x, y)
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec2b(x, y))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec3b(x, y, z))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec4b(x, y, z, w))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec2i(toInt(x), toInt(y)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec3i(toInt(x), toInt(y), toInt(z)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec2f(toFloat(x), toFloat(y)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec2d(toDouble(x), toDouble(y)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       u = Vec2b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[Vec2b]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(classOf[Vec2b]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
 
       var c: ReadVec2b = ConstVec2b(x, y)
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(ConstVec2b(x, y))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec3b(x, y, z))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec4b(x, y, z, w))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec2i(toInt(x), toInt(y)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec3i(toInt(x), toInt(y), toInt(z)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec2f(toFloat(x), toFloat(y)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec3f(toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec2d(toDouble(x), toDouble(y)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec3d(toDouble(x), toDouble(y), toDouble(z)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
 
       c = ConstVec2b(Vec4d(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[ConstVec2b]) { c.getClass }
-      expect(x) { c.x }
-      expect(y) { c.y }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
+      expectResult(x) { c.x }
+      expectResult(y) { c.y }
     }
   }
 
@@ -212,13 +212,13 @@ class Vec2bTest extends FunSuite {
   test("Const conversions") {
     BooleanCombinations.test { (x, y, z, w) =>
       val t: ConstVec2b = Vec2b(x, y)
-      expect(classOf[ConstVec2b]) { t.getClass }
+      expectResult(classOf[ConstVec2b]) { t.getClass }
       assert(Vec2b(x, y) == t)
 
       var c = ConstVec2b(true); val v = Vec2b(x, y)
-      expect(classOf[Vec2b]) { v.getClass }
+      expectResult(classOf[Vec2b]) { v.getClass }
       c = v; assert(Vec2b(x, y) == c)
-      expect(classOf[ConstVec2b]) { c.getClass }
+      expectResult(classOf[ConstVec2b]) { c.getClass }
     }
   }
 
@@ -248,8 +248,8 @@ class Vec2bTest extends FunSuite {
     BooleanCombinations.test { (x, y, z, w) =>
       val u = ConstVec2b(x, y)
 
-      expect(x) { u(0) }
-      expect(y) { u(1) }
+      expectResult(x) { u(0) }
+      expectResult(y) { u(1) }
 
       intercept[IndexOutOfBoundsException] {
         u(2)
@@ -284,16 +284,16 @@ class Vec2bTest extends FunSuite {
       val u = Vec2b(!x)
 
       u := Vec2b(x, y)
-      expect(x) { u.x }
-      expect(y) { u.y }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
     }
   }
 
   test("Getters") {
     BooleanCombinations.test { (x, y, z, w) =>
       val u = Vec2b(x, y)
-      expect(x) { u.r }
-      expect(y) { u.g }
+      expectResult(x) { u.r }
+      expectResult(y) { u.g }
     }
   }
 

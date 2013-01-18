@@ -21,7 +21,8 @@
 package simplex3d.math
 package floatx
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 import simplex3d.math.floatx.functions._
@@ -289,9 +290,9 @@ with Accessible with Serializable
 object Quat4f {
   final val Identity = new ConstQuat4f(1, 0, 0, 0)
 
-  final val Manifest = classType[Quat4f](classOf[Quat4f])
-  final val ConstManifest = classType[ConstQuat4f](classOf[ConstQuat4f])
-  final val ReadManifest = classType[ReadQuat4f](classOf[ReadQuat4f])
+  final val Tag = classTag[Quat4f]
+  final val ConstTag = classTag[ConstQuat4f]
+  final val ReadTag = classTag[ReadQuat4f]
 
   /*main factory*/ def apply(a: Float, b: Float, c: Float, d: Float) =
     new Quat4f(a, b, c, d)

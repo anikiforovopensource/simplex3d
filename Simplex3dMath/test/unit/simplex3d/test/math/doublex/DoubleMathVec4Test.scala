@@ -120,94 +120,94 @@ class DoubleMathVec4Test extends FunSuite {
       r: Double, g: Double, b: Double, a: Double,
       s: Double, t: Double, p: Double, q: Double
     ) {
-      expect(Vec4(radians(x), radians(y), radians(z), radians(w))) {
+      expectResult(Vec4(radians(x), radians(y), radians(z), radians(w))) {
         radians(Vec4(x, y, z, w))
       }
-      expect(Vec4(degrees(x), degrees(y), degrees(z), degrees(w))) {
+      expectResult(Vec4(degrees(x), degrees(y), degrees(z), degrees(w))) {
         degrees(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(sin(x), sin(y), sin(z), sin(w))) {
+      expectResult(Vec4(sin(x), sin(y), sin(z), sin(w))) {
         sin(Vec4(x, y, z, w))
       }
-      expect(Vec4(cos(x), cos(y), cos(z), cos(w))) {
+      expectResult(Vec4(cos(x), cos(y), cos(z), cos(w))) {
         cos(Vec4(x, y, z, w))
       }
-      expect(Vec4(tan(x), tan(y), tan(z), tan(w))) {
+      expectResult(Vec4(tan(x), tan(y), tan(z), tan(w))) {
         tan(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(atan(x, r), atan(y, g), atan(z, b), atan(w, a))) {
+      expectResult(Vec4(atan(x, r), atan(y, g), atan(z, b), atan(w, a))) {
         atan(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4(atan(x), atan(y), atan(z), atan(w))) {
+      expectResult(Vec4(atan(x), atan(y), atan(z), atan(w))) {
         atan(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(sinh(x), sinh(y), sinh(z), sinh(w))) {
+      expectResult(Vec4(sinh(x), sinh(y), sinh(z), sinh(w))) {
         sinh(Vec4(x, y, z, w))
       }
-      expect(Vec4(cosh(x), cosh(y), cosh(z), cosh(w))) {
+      expectResult(Vec4(cosh(x), cosh(y), cosh(z), cosh(w))) {
         cosh(Vec4(x, y, z, w))
       }
-      expect(Vec4(tanh(x), tanh(y), tanh(z), tanh(w))) {
+      expectResult(Vec4(tanh(x), tanh(y), tanh(z), tanh(w))) {
         tanh(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(asinh(x), asinh(y), asinh(z), asinh(w))) {
+      expectResult(Vec4(asinh(x), asinh(y), asinh(z), asinh(w))) {
         asinh(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(exp(x), exp(y), exp(z), exp(w))) {
+      expectResult(Vec4(exp(x), exp(y), exp(z), exp(w))) {
         exp(Vec4(x, y, z, w))
       }
-      expect(Vec4(exp2(x), exp2(y), exp2(z), exp2(w))) {
+      expectResult(Vec4(exp2(x), exp2(y), exp2(z), exp2(w))) {
         exp2(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(abs(x), abs(y), abs(z), abs(w))) {
+      expectResult(Vec4(abs(x), abs(y), abs(z), abs(w))) {
         abs(Vec4(x, y, z, w))
       }
-      expect(Vec4(sign(x), sign(y), sign(z), sign(w))) {
+      expectResult(Vec4(sign(x), sign(y), sign(z), sign(w))) {
         sign(Vec4(x, y, z, w))
       }
-      expect(Vec4(floor(x), floor(y), floor(z), floor(w))) {
+      expectResult(Vec4(floor(x), floor(y), floor(z), floor(w))) {
         floor(Vec4(x, y, z, w))
       }
-      expect(Vec4(trunc(x), trunc(y), trunc(z), trunc(w))) {
+      expectResult(Vec4(trunc(x), trunc(y), trunc(z), trunc(w))) {
         trunc(Vec4(x, y, z, w))
       }
-      expect(Vec4(round(x), round(y), round(z), round(w))) {
+      expectResult(Vec4(round(x), round(y), round(z), round(w))) {
         round(Vec4(x, y, z, w))
       }
-      expect(Vec4(roundEven(x), roundEven(y),
+      expectResult(Vec4(roundEven(x), roundEven(y),
             roundEven(z), roundEven(w)))
       {
         roundEven(Vec4(x, y, z, w))
       }
-      expect(Vec4(ceil(x), ceil(y), ceil(z), ceil(w))) {
+      expectResult(Vec4(ceil(x), ceil(y), ceil(z), ceil(w))) {
         ceil(Vec4(x, y, z, w))
       }
-      expect(Vec4(fract(x), fract(y), fract(z), fract(w))) {
+      expectResult(Vec4(fract(x), fract(y), fract(z), fract(w))) {
         fract(Vec4(x, y, z, w))
       }
-      expect(Vec4(mod(x, s), mod(y, s), mod(z, s), mod(w, s))) {
+      expectResult(Vec4(mod(x, s), mod(y, s), mod(z, s), mod(w, s))) {
         mod(Vec4(x, y, z, w), s)
       }
-      expect(Vec4(mod(x, r), mod(y, g), mod(z, b), mod(w, a))) {
+      expectResult(Vec4(mod(x, r), mod(y, g), mod(z, b), mod(w, a))) {
         mod(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
 
-      expect(Vec4(min(x, s), min(y, s), min(z, s), min(w, s))) {
+      expectResult(Vec4(min(x, s), min(y, s), min(z, s), min(w, s))) {
         min(Vec4(x, y, z, w), s)
       }
-      expect(Vec4(min(x, r), min(y, g), min(z, b), min(w, a))) {
+      expectResult(Vec4(min(x, r), min(y, g), min(z, b), min(w, a))) {
         min(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4(max(x, s), max(y, s), max(z, s), max(w, s))) {
+      expectResult(Vec4(max(x, s), max(y, s), max(z, s), max(w, s))) {
         max(Vec4(x, y, z, w), s)
       }
-      expect(Vec4(max(x, r), max(y, g), max(z, b), max(w, a))) {
+      expectResult(Vec4(max(x, r), max(y, g), max(z, b), max(w, a))) {
         max(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
 
@@ -227,17 +227,17 @@ class DoubleMathVec4Test extends FunSuite {
         clamp(Vec4(x, y, z, w), Vec4(r, g, b, a), Vec4(s, t, p, q))
       }
 
-      expect(Vec4(mix(x, r, s), mix(y, g, s), mix(z, b, s), mix(w, a, s)))
+      expectResult(Vec4(mix(x, r, s), mix(y, g, s), mix(z, b, s), mix(w, a, s)))
       {
         mix(Vec4(x, y, z, w), Vec4(r, g, b, a), s)
       }
-      expect(Vec4(mix(x, r, s), mix(y, g, t), mix(z, b, p), mix(w, a, q)))
+      expectResult(Vec4(mix(x, r, s), mix(y, g, t), mix(z, b, p), mix(w, a, q)))
       {
         mix(Vec4(x, y, z, w), Vec4(r, g, b, a), Vec4(s, t, p, q))
       }
       val bool1 = s > 0; val bool2 = t > 0
       val bool3 = p > 0; val bool4 = q > 0
-      expect(Vec4(
+      expectResult(Vec4(
           mix(x, r, toDouble(bool1)),
           mix(y, g, toDouble(bool2)),
           mix(z, b, toDouble(bool3)),
@@ -250,10 +250,10 @@ class DoubleMathVec4Test extends FunSuite {
         )
       }
 
-      expect(Vec4(step(s, x), step(s, y), step(s, z), step(s, w))) {
+      expectResult(Vec4(step(s, x), step(s, y), step(s, z), step(s, w))) {
         step(s, Vec4(x, y, z, w))
       }
-      expect(Vec4(step(x, r), step(y, g), step(z, b), step(w, a))) {
+      expectResult(Vec4(step(x, r), step(y, g), step(z, b), step(w, a))) {
         step(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
       
@@ -282,14 +282,14 @@ class DoubleMathVec4Test extends FunSuite {
 
     // range -1 to 1
     def test1(x: Double, y: Double, z: Double, w: Double) {
-      expect(Vec4(asin(x), asin(y), asin(z), asin(w))) {
+      expectResult(Vec4(asin(x), asin(y), asin(z), asin(w))) {
         asin(Vec4(x, y, z, w))
       }
-      expect(Vec4(acos(x), acos(y), acos(z), acos(w))) {
+      expectResult(Vec4(acos(x), acos(y), acos(z), acos(w))) {
         acos(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(atanh(x), atanh(y), atanh(z), atanh(w))) {
+      expectResult(Vec4(atanh(x), atanh(y), atanh(z), atanh(w))) {
         atanh(Vec4(x, y, z, w))
       }
     }
@@ -304,26 +304,26 @@ class DoubleMathVec4Test extends FunSuite {
       x: Double, y: Double, z: Double, w: Double,
       r: Double, g: Double, b: Double, a: Double
     ) {
-      expect(Vec4(acosh(x + 1), acosh(y + 1), acosh(z + 1), acosh(w + 1)))
+      expectResult(Vec4(acosh(x + 1), acosh(y + 1), acosh(z + 1), acosh(w + 1)))
       {
         acosh(Vec4(x + 1, y + 1, z + 1, w + 1))
       }
 
-      expect(Vec4(pow(x, r), pow(y, g), pow(z, b), pow(w, a))) {
+      expectResult(Vec4(pow(x, r), pow(y, g), pow(z, b), pow(w, a))) {
         pow(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
 
-      expect(Vec4(log(x), log(y), log(z), log(w))) {
+      expectResult(Vec4(log(x), log(y), log(z), log(w))) {
         log(Vec4(x, y, z, w))
       }
-      expect(Vec4(log2(x), log2(y), log2(z), log2(w))) {
+      expectResult(Vec4(log2(x), log2(y), log2(z), log2(w))) {
         log2(Vec4(x, y, z, w))
       }
 
-      expect(Vec4(sqrt(x), sqrt(y), sqrt(z), sqrt(w))) {
+      expectResult(Vec4(sqrt(x), sqrt(y), sqrt(z), sqrt(w))) {
         sqrt(Vec4(x, y, z, w))
       }
-      expect(Vec4(
+      expectResult(Vec4(
           inversesqrt(x), inversesqrt(y),
           inversesqrt(z), inversesqrt(w)
       )) {
@@ -345,22 +345,22 @@ class DoubleMathVec4Test extends FunSuite {
       x: Double, y: Double, z: Double, w: Double,
       r: Double, g: Double, b: Double, a: Double
     ) {
-      expect(Vec4b(x < r, y < g, z < b, w < a)) {
+      expectResult(Vec4b(x < r, y < g, z < b, w < a)) {
         lessThan(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4b(x <= r, y <= g, z <= b, w <= a)) {
+      expectResult(Vec4b(x <= r, y <= g, z <= b, w <= a)) {
         lessThanEqual(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4b(x > r, y > g, z > b, w > a)) {
+      expectResult(Vec4b(x > r, y > g, z > b, w > a)) {
         greaterThan(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4b(x >= r, y >= g, z >= b, w >= a)) {
+      expectResult(Vec4b(x >= r, y >= g, z >= b, w >= a)) {
         greaterThanEqual(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4b(x == r, y == g, z == b, w == a)) {
+      expectResult(Vec4b(x == r, y == g, z == b, w == a)) {
         equal(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
-      expect(Vec4b(x != r, y != g, z != b, w != a)) {
+      expectResult(Vec4b(x != r, y != g, z != b, w != a)) {
         notEqual(Vec4(x, y, z, w), Vec4(r, g, b, a))
       }
     }

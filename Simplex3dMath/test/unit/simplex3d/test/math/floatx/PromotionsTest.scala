@@ -34,31 +34,31 @@ class PromotionsTest extends FunSuite {
     import simplex3d.math.floatx._
 
     val ci2: ConstVec2f = Vec2i(1, 2)
-    expect(classOf[ConstVec2f]) { ci2.getClass }
-    expect((1, 2)) { (ci2.x, ci2.y) }
+    expectResult(classOf[ConstVec2f]) { ci2.getClass }
+    expectResult((1, 2)) { (ci2.x, ci2.y) }
 
     val ci3: ConstVec3f = Vec3i(1, 2, 3)
-    expect(classOf[ConstVec3f]) { ci3.getClass }
-    expect((1, 2, 3)) { (ci3.x, ci3.y, ci3.z) }
+    expectResult(classOf[ConstVec3f]) { ci3.getClass }
+    expectResult((1, 2, 3)) { (ci3.x, ci3.y, ci3.z) }
 
     val ci4: ConstVec4f = Vec4i(1, 2, 3, 4)
-    expect(classOf[ConstVec4f]) { ci4.getClass }
-    expect((1, 2, 3, 4)) { (ci4.x, ci4.y, ci4.z, ci4.w) }
+    expectResult(classOf[ConstVec4f]) { ci4.getClass }
+    expectResult((1, 2, 3, 4)) { (ci4.x, ci4.y, ci4.z, ci4.w) }
   }
 
   test("Renamed promotions") {
     import simplex3d.math.float._
 
     val ci2: ConstVec2 = Vec2i(1, 2)
-    expect(classOf[ConstVec2]) { ci2.getClass }
-    expect((1, 2)) { (ci2.x, ci2.y) }
+    expectResult(classOf[ConstVec2]) { ci2.getClass }
+    expectResult((1, 2)) { (ci2.x, ci2.y) }
 
     val ci3: ConstVec3 = Vec3i(1, 2, 3)
-    expect(classOf[ConstVec3]) { ci3.getClass }
-    expect((1, 2, 3)) { (ci3.x, ci3.y, ci3.z) }
+    expectResult(classOf[ConstVec3]) { ci3.getClass }
+    expectResult((1, 2, 3)) { (ci3.x, ci3.y, ci3.z) }
 
     val ci4: ConstVec4 = Vec4i(1, 2, 3, 4)
-    expect(classOf[ConstVec4]) { ci4.getClass }
-    expect((1, 2, 3, 4)) { (ci4.x, ci4.y, ci4.z, ci4.w) }
+    expectResult(classOf[ConstVec4]) { ci4.getClass }
+    expectResult((1, 2, 3, 4)) { (ci4.x, ci4.y, ci4.z, ci4.w) }
   }
 }

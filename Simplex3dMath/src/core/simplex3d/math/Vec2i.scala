@@ -20,7 +20,8 @@
 
 package simplex3d.math
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 
@@ -38,7 +39,6 @@ with Protected with Serializable
   
   type Read = ReadVec2i
   type Mutable = Vec2i
-  final def readType: Class[Read] = classOf[ReadVec2i]
   final def mutableCopy() = Vec2i(this)
 
   private[math] type R2 = ReadVec2i
@@ -265,9 +265,9 @@ object Vec2i {
   final val UnitY = new ConstVec2i(0, 1)
   final val One = new ConstVec2i(1, 1)
 
-  final val Manifest = classType[Vec2i](classOf[Vec2i])
-  final val ConstManifest = classType[ConstVec2i](classOf[ConstVec2i])
-  final val ReadManifest = classType[ReadVec2i](classOf[ReadVec2i])
+  final val Tag = classTag[Vec2i]
+  final val ConstTag = classTag[ConstVec2i]
+  final val ReadTag = classTag[ReadVec2i]
 
 
   def apply(s: Int) = new Vec2i(s, s)

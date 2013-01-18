@@ -34,17 +34,17 @@ class Vec3bSwizzleTest extends FunSuite {
   BooleanCombinations.test { (x, y, z, w) =>
     val u = ConstVec3b(x, y, z)
 
-    expect(x) { u.x }
-    expect(y) { u.y }
-    expect(z) { u.z }
+    expectResult(x) { u.x }
+    expectResult(y) { u.y }
+    expectResult(z) { u.z }
 
-    expect(x) { u.r }
-    expect(y) { u.g }
-    expect(z) { u.b }
+    expectResult(x) { u.r }
+    expectResult(y) { u.g }
+    expectResult(z) { u.b }
 
-    expect(x) { u.s }
-    expect(y) { u.t }
-    expect(z) { u.p }
+    expectResult(x) { u.s }
+    expectResult(y) { u.t }
+    expectResult(z) { u.p }
 
     assert(u.x.isInstanceOf[Boolean])
     assert(u.y.isInstanceOf[Boolean])

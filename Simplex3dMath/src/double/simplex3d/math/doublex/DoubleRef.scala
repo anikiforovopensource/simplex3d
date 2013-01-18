@@ -20,7 +20,7 @@
 
 package simplex3d.math.doublex
 
-import scala.reflect.ClassManifest.{classType}
+import scala.reflect._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.doublex.functions._
@@ -253,8 +253,8 @@ with Accessible with Serializable
 }
 
 object DoubleRef {
-  final val Manifest = classType[DoubleRef](classOf[DoubleRef])
-  final val ReadManifest = classType[ReadDoubleRef](classOf[ReadDoubleRef])
+  final val Tag = classTag[DoubleRef]
+  final val ReadTag = classTag[ReadDoubleRef]
   
   def unapply(r: ReadDoubleRef) = Some(r.toConst)
 }

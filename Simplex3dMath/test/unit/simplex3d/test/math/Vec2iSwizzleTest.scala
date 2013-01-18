@@ -35,14 +35,14 @@ class Vec2iSwizzleTest extends FunSuite {
 
     val u = ConstVec2i(x, y)
 
-    expect(x) { u.x }
-    expect(y) { u.y }
+    expectResult(x) { u.x }
+    expectResult(y) { u.y }
 
-    expect(x) { u.r }
-    expect(y) { u.g }
+    expectResult(x) { u.r }
+    expectResult(y) { u.g }
 
-    expect(x) { u.s }
-    expect(y) { u.t }
+    expectResult(x) { u.s }
+    expectResult(y) { u.t }
 
     assert(u.x.isInstanceOf[Int])
     assert(u.y.isInstanceOf[Int])

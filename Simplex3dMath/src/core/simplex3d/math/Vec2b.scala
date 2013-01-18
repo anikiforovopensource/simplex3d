@@ -20,7 +20,8 @@
 
 package simplex3d.math
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 import simplex3d.math.{toBoolean => toBool}
@@ -39,7 +40,6 @@ with Protected with Serializable
   
   type Read = ReadVec2b
   type Mutable = Vec2b
-  final def readType: Class[Read] = classOf[ReadVec2b]
   final def mutableCopy() = Vec2b(this)
 
   private[math] type R2 = ReadVec2b
@@ -205,9 +205,9 @@ object Vec2b {
   final val True = new ConstVec2b(true, true)
   final val False = new ConstVec2b(false, false)
 
-  final val Manifest = classType[Vec2b](classOf[Vec2b])
-  final val ConstManifest = classType[ConstVec2b](classOf[ConstVec2b])
-  final val ReadManifest = classType[ReadVec2b](classOf[ReadVec2b])
+  final val Tag = classTag[Vec2b]
+  final val ConstTag = classTag[ConstVec2b]
+  final val ReadTag = classTag[ReadVec2b]
 
 
   def apply(s: Boolean) = new Vec2b(s, s)

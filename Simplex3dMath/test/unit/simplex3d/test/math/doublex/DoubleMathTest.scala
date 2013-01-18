@@ -71,16 +71,16 @@ class DoubleMathTest extends FunSuite {
     assert(isnan(radians(nan)))
     assert(isposinf(radians(posinf)))
     assert(isneginf(radians(neginf)))
-    expect(0) { radians(0) }
-    expect(Pi) { radians(180) }
-    expect(-2*Pi) { radians(-360) }
+    expectResult(0) { radians(0) }
+    expectResult(Pi) { radians(180) }
+    expectResult(-2*Pi) { radians(-360) }
 
     assert(isnan(degrees(nan)))
     assert(isposinf(degrees(posinf)))
     assert(isneginf(degrees(neginf)))
-    expect(0) { degrees(0) }
-    expect(180) { degrees(Pi) }
-    expect(-360) { degrees(-2*Pi) }
+    expectResult(0) { degrees(0) }
+    expectResult(180) { degrees(Pi) }
+    expectResult(-360) { degrees(-2*Pi) }
 
     assert(isnan(sin(nan)))
     assert(isnan(sin(posinf)))

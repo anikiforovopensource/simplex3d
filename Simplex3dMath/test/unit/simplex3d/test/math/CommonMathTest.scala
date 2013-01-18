@@ -193,23 +193,23 @@ class CommonMathTest extends FunSuite {
   import random._
 
   test("Int functions") {
-    expect(0) { abs(0) }
-    expect(1) { abs(-1) }
-    expect(1) { abs(1) }
+    expectResult(0) { abs(0) }
+    expectResult(1) { abs(-1) }
+    expectResult(1) { abs(1) }
 
-    expect(0) { sign(0) }
-    expect(-1){ sign(-1)}
-    expect(1) { sign(1) }
+    expectResult(0) { sign(0) }
+    expectResult(-1){ sign(-1)}
+    expectResult(1) { sign(1) }
 
-    expect(2) { min(2, 3) }
-    expect(3) { min(4, 3) }
+    expectResult(2) { min(2, 3) }
+    expectResult(3) { min(4, 3) }
 
-    expect(3) { max(2, 3) }
-    expect(4) { max(4, 3) }
+    expectResult(3) { max(2, 3) }
+    expectResult(4) { max(4, 3) }
 
-    expect(10) { clamp(5, 10, 20) }
-    expect(15) { clamp(15, 10, 20) }
-    expect(20) { clamp(25, 10, 20) }
+    expectResult(10) { clamp(5, 10, 20) }
+    expectResult(15) { clamp(15, 10, 20) }
+    expectResult(20) { clamp(25, 10, 20) }
   }
 
   val testData = {
@@ -242,41 +242,41 @@ class CommonMathTest extends FunSuite {
 
   test("Vec2i functions") {
     def test(x: Int, y: Int, r: Int, g: Int, s: Int, t: Int) {
-      expect(Vec2i(abs(x), abs(y))) { abs(Vec2i(x, y)) }
-      expect(Vec2i(sign(x), sign(y))) { sign(Vec2i(x, y)) }
+      expectResult(Vec2i(abs(x), abs(y))) { abs(Vec2i(x, y)) }
+      expectResult(Vec2i(sign(x), sign(y))) { sign(Vec2i(x, y)) }
 
-      expect(Vec2i(min(x, s), min(y, s))) { min(Vec2i(x, y), s) }
-      expect(Vec2i(min(x, r), min(y, g))) {
+      expectResult(Vec2i(min(x, s), min(y, s))) { min(Vec2i(x, y), s) }
+      expectResult(Vec2i(min(x, r), min(y, g))) {
         min(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2i(max(x, s), max(y, s))) { max(Vec2i(x, y), s) }
-      expect(Vec2i(max(x, r), max(y, g))) {
+      expectResult(Vec2i(max(x, s), max(y, s))) { max(Vec2i(x, y), s) }
+      expectResult(Vec2i(max(x, r), max(y, g))) {
         max(Vec2i(x, y), Vec2i(r, g))
       }
 
-      expect(Vec2i(clamp(x, s, t), clamp(y, s, t))) {
+      expectResult(Vec2i(clamp(x, s, t), clamp(y, s, t))) {
         clamp(Vec2i(x, y), s, t)
       }
-      expect(Vec2i(clamp(x, r, s), clamp(y, g, t))) {
+      expectResult(Vec2i(clamp(x, r, s), clamp(y, g, t))) {
         clamp(Vec2i(x, y), Vec2i(r, g), Vec2i(s, t))
       }
 
-      expect(Vec2b(x < r, y < g)) {
+      expectResult(Vec2b(x < r, y < g)) {
         lessThan(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2b(x <= r, y <= g)) {
+      expectResult(Vec2b(x <= r, y <= g)) {
         lessThanEqual(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2b(x > r, y > g)) {
+      expectResult(Vec2b(x > r, y > g)) {
         greaterThan(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2b(x >= r, y >= g)) {
+      expectResult(Vec2b(x >= r, y >= g)) {
         greaterThanEqual(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2b(x == r, y == g)) {
+      expectResult(Vec2b(x == r, y == g)) {
         equal(Vec2i(x, y), Vec2i(r, g))
       }
-      expect(Vec2b(x != r, y != g)) {
+      expectResult(Vec2b(x != r, y != g)) {
         notEqual(Vec2i(x, y), Vec2i(r, g))
       }
     }
@@ -300,49 +300,49 @@ class CommonMathTest extends FunSuite {
          r: Int, g: Int, b: Int,
          s: Int, t: Int, p: Int)
     {
-      expect(Vec3i(abs(x), abs(y), abs(z))) {
+      expectResult(Vec3i(abs(x), abs(y), abs(z))) {
         abs(Vec3i(x, y, z))
       }
-      expect(Vec3i(sign(x), sign(y), sign(z))) {
+      expectResult(Vec3i(sign(x), sign(y), sign(z))) {
         sign(Vec3i(x, y, z))
       }
 
-      expect(Vec3i(min(x, s), min(y, s), min(z, s))) {
+      expectResult(Vec3i(min(x, s), min(y, s), min(z, s))) {
         min(Vec3i(x, y, z), s)
       }
-      expect(Vec3i(min(x, r), min(y, g), min(z, b))) {
+      expectResult(Vec3i(min(x, r), min(y, g), min(z, b))) {
         min(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3i(max(x, s), max(y, s), max(z, s))) {
+      expectResult(Vec3i(max(x, s), max(y, s), max(z, s))) {
         max(Vec3i(x, y, z), s)
       }
-      expect(Vec3i(max(x, r), max(y, g), max(z, b))) {
+      expectResult(Vec3i(max(x, r), max(y, g), max(z, b))) {
         max(Vec3i(x, y, z), Vec3i(r, g, b))
       }
 
-      expect(Vec3i(clamp(x, s, t), clamp(y, s, t), clamp(z, s, t))) {
+      expectResult(Vec3i(clamp(x, s, t), clamp(y, s, t), clamp(z, s, t))) {
         clamp(Vec3i(x, y, z), s, t)
       }
-      expect(Vec3i(clamp(x, r, s), clamp(y, g, t), clamp(z, b, p))) {
+      expectResult(Vec3i(clamp(x, r, s), clamp(y, g, t), clamp(z, b, p))) {
         clamp(Vec3i(x, y, z), Vec3i(r, g, b), Vec3i(s, t, p))
       }
 
-      expect(Vec3b(x < r, y < g, z < b)) {
+      expectResult(Vec3b(x < r, y < g, z < b)) {
         lessThan(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3b(x <= r, y <= g, z <= b)) {
+      expectResult(Vec3b(x <= r, y <= g, z <= b)) {
         lessThanEqual(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3b(x > r, y > g, z > b)) {
+      expectResult(Vec3b(x > r, y > g, z > b)) {
         greaterThan(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3b(x >= r, y >= g, z >= b)) {
+      expectResult(Vec3b(x >= r, y >= g, z >= b)) {
         greaterThanEqual(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3b(x == r, y == g, z == b)) {
+      expectResult(Vec3b(x == r, y == g, z == b)) {
         equal(Vec3i(x, y, z), Vec3i(r, g, b))
       }
-      expect(Vec3b(x != r, y != g, z != b)) {
+      expectResult(Vec3b(x != r, y != g, z != b)) {
         notEqual(Vec3i(x, y, z), Vec3i(r, g, b))
       }
     }
@@ -366,53 +366,53 @@ class CommonMathTest extends FunSuite {
          r: Int, g: Int, b: Int, a: Int,
          s: Int, t: Int, p: Int, q: Int)
     {
-      expect(Vec4i(abs(x), abs(y), abs(z), abs(w))) {
+      expectResult(Vec4i(abs(x), abs(y), abs(z), abs(w))) {
         abs(Vec4i(x, y, z, w))
       }
-      expect(Vec4i(sign(x), sign(y), sign(z), sign(w))) {
+      expectResult(Vec4i(sign(x), sign(y), sign(z), sign(w))) {
         sign(Vec4i(x, y, z, w))
       }
 
-      expect(Vec4i(min(x, s), min(y, s), min(z, s), min(w, s))) {
+      expectResult(Vec4i(min(x, s), min(y, s), min(z, s), min(w, s))) {
         min(Vec4i(x, y, z, w), s)
       }
-      expect(Vec4i(min(x, r), min(y, g), min(z, b), min(w, a))) {
+      expectResult(Vec4i(min(x, r), min(y, g), min(z, b), min(w, a))) {
         min(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4i(max(x, s), max(y, s), max(z, s), max(w, s))) {
+      expectResult(Vec4i(max(x, s), max(y, s), max(z, s), max(w, s))) {
         max(Vec4i(x, y, z, w), s)
       }
-      expect(Vec4i(max(x, r), max(y, g), max(z, b), max(w, a))) {
+      expectResult(Vec4i(max(x, r), max(y, g), max(z, b), max(w, a))) {
         max(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
 
-      expect(Vec4i(clamp(x, s, t), clamp(y, s, t),
+      expectResult(Vec4i(clamp(x, s, t), clamp(y, s, t),
              clamp(z, s, t), clamp(w, s, t)))
       {
         clamp(Vec4i(x, y, z, w), s, t)
       }
-      expect(Vec4i(clamp(x, r, s), clamp(y, g, t),
+      expectResult(Vec4i(clamp(x, r, s), clamp(y, g, t),
              clamp(z, b, p), clamp(w, a, q)))
       {
         clamp(Vec4i(x, y, z, w), Vec4i(r, g, b, a), Vec4i(s, t, p, q))
       }
 
-      expect(Vec4b(x < r, y < g, z < b, w < a)) {
+      expectResult(Vec4b(x < r, y < g, z < b, w < a)) {
         lessThan(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4b(x <= r, y <= g, z <= b, w <= a)) {
+      expectResult(Vec4b(x <= r, y <= g, z <= b, w <= a)) {
         lessThanEqual(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4b(x > r, y > g, z > b, w > a)) {
+      expectResult(Vec4b(x > r, y > g, z > b, w > a)) {
         greaterThan(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4b(x >= r, y >= g, z >= b, w >= a)) {
+      expectResult(Vec4b(x >= r, y >= g, z >= b, w >= a)) {
         greaterThanEqual(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4b(x == r, y == g, z == b, w == a)) {
+      expectResult(Vec4b(x == r, y == g, z == b, w == a)) {
         equal(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
-      expect(Vec4b(x != r, y != g, z != b, w != a)) {
+      expectResult(Vec4b(x != r, y != g, z != b, w != a)) {
         notEqual(Vec4i(x, y, z, w), Vec4i(r, g, b, a))
       }
     }

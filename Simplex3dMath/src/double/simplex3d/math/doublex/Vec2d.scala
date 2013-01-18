@@ -21,7 +21,8 @@
 package simplex3d.math
 package doublex
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 
@@ -39,7 +40,6 @@ with Protected with Serializable
   
   type Read = ReadVec2d
   type Mutable = Vec2d
-  final def readType: Class[Read] = classOf[ReadVec2d]
   final def mutableCopy() = Vec2d(this)
 
   private[math] type R2 = ReadVec2d
@@ -236,9 +236,9 @@ object Vec2d {
   final val UnitY = new ConstVec2d(0, 1)
   final val One = new ConstVec2d(1, 1)
 
-  final val Manifest = classType[Vec2d](classOf[Vec2d])
-  final val ConstManifest = classType[ConstVec2d](classOf[ConstVec2d])
-  final val ReadManifest = classType[ReadVec2d](classOf[ReadVec2d])
+  final val Tag = classTag[Vec2d]
+  final val ConstTag = classTag[ConstVec2d]
+  final val ReadTag = classTag[ReadVec2d]
 
 
   def apply(s: Double) = new Vec2d(s, s)

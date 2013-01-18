@@ -20,8 +20,9 @@
 
 package simplex3d.math
 package doublex
-                      
-import scala.reflect.ClassManifest.{classType}
+
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 import simplex3d.math.doublex.functions._
@@ -40,7 +41,6 @@ with Protected with Serializable
   
   type Read = ReadMat4x3d
   type Mutable = Mat4x3d
-  final def readType: Class[Read] = classOf[ReadMat4x3d]
   final def mutableCopy() = Mat4x3d(this)
 
   // Column major order.
@@ -822,9 +822,9 @@ object Mat4x3d {
   final val Zero = ConstMat4x3d(0)
   final val Identity = ConstMat4x3d(1)
 
-  final val Manifest = classType[Mat4x3d](classOf[Mat4x3d])
-  final val ConstManifest = classType[ConstMat4x3d](classOf[ConstMat4x3d])
-  final val ReadManifest = classType[ReadMat4x3d](classOf[ReadMat4x3d])
+  final val Tag = classTag[Mat4x3d]
+  final val ConstTag = classTag[ConstMat4x3d]
+  final val ReadTag = classTag[ReadMat4x3d]
 
   def apply(s: Double) = new Mat4x3d(
     s, 0, 0,

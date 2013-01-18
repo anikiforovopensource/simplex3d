@@ -21,7 +21,8 @@
 package simplex3d.math
 package floatx
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 
@@ -39,7 +40,6 @@ with Protected with Serializable
   
   type Read = ReadVec2f
   type Mutable = Vec2f
-  final def readType: Class[Read] = classOf[ReadVec2f]
   final def mutableCopy() = Vec2f(this)
 
   private[math] type R2 = ReadVec2f
@@ -236,9 +236,9 @@ object Vec2f {
   final val UnitY = new ConstVec2f(0, 1)
   final val One = new ConstVec2f(1, 1)
 
-  final val Manifest = classType[Vec2f](classOf[Vec2f])
-  final val ConstManifest = classType[ConstVec2f](classOf[ConstVec2f])
-  final val ReadManifest = classType[ReadVec2f](classOf[ReadVec2f])
+  final val Tag = classTag[Vec2f]
+  final val ConstTag = classTag[ConstVec2f]
+  final val ReadTag = classTag[ReadVec2f]
 
 
   def apply(s: Float) = new Vec2f(s, s)

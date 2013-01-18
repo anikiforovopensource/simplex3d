@@ -46,340 +46,340 @@ class Vec4dTest extends FunSuite {
   test("Factories") {
     def test(x: Double, y: Double, z: Double, w: Double) {
       var u: ReadVec4 = Vec4(x)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(x) { u.y }
-      expect(x) { u.z }
-      expect(x) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(x) { u.y }
+      expectResult(x) { u.z }
+      expectResult(x) { u.w }
 
       u = ConstVec4(x)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(x) { u.y }
-      expect(x) { u.z }
-      expect(x) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(x) { u.y }
+      expectResult(x) { u.z }
+      expectResult(x) { u.w }
 
       u = Vec4(Mat2f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = Vec4(Quat4f(toFloat(w), toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = Vec4(Quat4(w, x, y, z))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Mat2(x, y, z, w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, y, z, w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = Vec4(x, y, Vec2i(toInt(z), toInt(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = Vec4(x, Vec2i(toInt(y), toInt(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec2i(toInt(x), toInt(y)), z, w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, Vec3i(toInt(y), toInt(z), toInt(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = Vec4(Vec3i(toInt(x), toInt(y), toInt(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = Vec4(x, y, Vec2f(toFloat(z), toFloat(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = Vec4(x, Vec2f(toFloat(y), toFloat(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec2f(toFloat(x), toFloat(y)), z, w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, Vec3f(toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = Vec4(Vec3f(toFloat(x), toFloat(y), toFloat(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec4(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, y, Vec2(toDouble(z), toDouble(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, Vec2(toDouble(y), toDouble(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec2(toDouble(x), toDouble(y)), z, w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(x, Vec3(toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = Vec4(Vec3(toDouble(x), toDouble(y), toDouble(z)), w)
-      expect(classOf[Vec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Mat2f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = ConstVec4(Quat4f(toFloat(w), toFloat(x), toFloat(y), toFloat(z)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = ConstVec4(Quat4(w, x, y, z))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Mat2(x, y, z, w))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, y, z, w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(ConstVec4i(toInt(x), toInt(y), toInt(z), toInt(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = ConstVec4(x, y, Vec2i(toInt(z), toInt(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = ConstVec4(x, Vec2i(toInt(y), toInt(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Vec2i(toInt(x), toInt(y)), z, w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, Vec3i(toInt(y), toInt(z), toInt(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(toInt(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(toInt(w)) { u.w }
 
       u = ConstVec4(Vec3i(toInt(x), toInt(y), toInt(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toInt(x)) { u.x }
-      expect(toInt(y)) { u.y }
-      expect(toInt(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toInt(x)) { u.x }
+      expectResult(toInt(y)) { u.y }
+      expectResult(toInt(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(ConstVec4f(toFloat(x), toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = ConstVec4(x, y, Vec2f(toFloat(z), toFloat(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = ConstVec4(x, Vec2f(toFloat(y), toFloat(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Vec2f(toFloat(x), toFloat(y)), z, w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, Vec3f(toFloat(y), toFloat(z), toFloat(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(toFloat(w)) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(toFloat(w)) { u.w }
 
       u = ConstVec4(Vec3f(toFloat(x), toFloat(y), toFloat(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(toFloat(x)) { u.x }
-      expect(toFloat(y)) { u.y }
-      expect(toFloat(z)) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(toFloat(x)) { u.x }
+      expectResult(toFloat(y)) { u.y }
+      expectResult(toFloat(z)) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(ConstVec4(toDouble(x), toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, y, Vec2(toDouble(z), toDouble(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, Vec2(toDouble(y), toDouble(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Vec2(toDouble(x), toDouble(y)), z, w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(x, Vec3(toDouble(y), toDouble(z), toDouble(w)))
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
 
       u = ConstVec4(Vec3(toDouble(x), toDouble(y), toDouble(z)), w)
-      expect(classOf[ConstVec4]) { u.getClass }
-      expect(x) { u.x }
-      expect(y) { u.y }
-      expect(z) { u.z }
-      expect(w) { u.w }
+      expectResult(classOf[ConstVec4]) { u.getClass }
+      expectResult(x) { u.x }
+      expectResult(y) { u.y }
+      expectResult(z) { u.z }
+      expectResult(w) { u.w }
     }
 
     test(2, 3, 4, 5)
@@ -390,53 +390,53 @@ class Vec4dTest extends FunSuite {
   test("Boolean factories") {
     BooleanCombinations.test { (x, y, z, w) =>
       var u: ReadVec4 = Vec4(Vec4b(x, y, z, w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       u = Vec4(toDouble(x), toDouble(y), Vec2b(z, w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       u = Vec4(toDouble(x), Vec2b(y, z), toDouble(w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       u = Vec4(Vec2b(x, y), toDouble(z), toDouble(w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       u = Vec4(toDouble(x), Vec3b(y, z, w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       u = Vec4(Vec3b(x, y, z), toDouble(w))
-      expect(classOf[Vec4]) { u.getClass }
-      expect(toDouble(x)) { u.x }
-      expect(toDouble(y)) { u.y }
-      expect(toDouble(z)) { u.z }
-      expect(toDouble(w)) { u.w }
+      expectResult(classOf[Vec4]) { u.getClass }
+      expectResult(toDouble(x)) { u.x }
+      expectResult(toDouble(y)) { u.y }
+      expectResult(toDouble(z)) { u.z }
+      expectResult(toDouble(w)) { u.w }
 
       var c: ReadVec4 = ConstVec4(Vec4b(x, y, z, w))
-      expect(classOf[ConstVec4]) { c.getClass }
-      expect(toDouble(x)) { c.x }
-      expect(toDouble(y)) { c.y }
-      expect(toDouble(z)) { c.z }
-      expect(toDouble(w)) { c.w }
+      expectResult(classOf[ConstVec4]) { c.getClass }
+      expectResult(toDouble(x)) { c.x }
+      expectResult(toDouble(y)) { c.y }
+      expectResult(toDouble(z)) { c.z }
+      expectResult(toDouble(w)) { c.w }
     }
   }
 
@@ -461,13 +461,13 @@ class Vec4dTest extends FunSuite {
     val w = 4d + 1e-15
 
     val t: ConstVec4 = Vec4(x, y, z, w)
-    expect(classOf[ConstVec4]) { t.getClass }
+    expectResult(classOf[ConstVec4]) { t.getClass }
     assert(Vec4(x, y, z, w) == t)
 
     var c = ConstVec4(5); val v = Vec4(x, y, z, w)
-    expect(classOf[Vec4]) { v.getClass }
+    expectResult(classOf[Vec4]) { v.getClass }
     c = v; assert(Vec4(x, y, z, w) == c)
-    expect(classOf[ConstVec4]) { c.getClass }
+    expectResult(classOf[ConstVec4]) { c.getClass }
   }
 
   test("Equality methods") {
@@ -505,10 +505,10 @@ class Vec4dTest extends FunSuite {
   test("Indexed read") {
     val u = ConstVec4(3, 4, 5, 6)
 
-    expect(3) { u(0) }
-    expect(4) { u(1) }
-    expect(5) { u(2) }
-    expect(6) { u(3) }
+    expectResult(3) { u(0) }
+    expectResult(4) { u(1) }
+    expectResult(5) { u(2) }
+    expectResult(6) { u(3) }
 
     intercept[IndexOutOfBoundsException] {
       u(4)
@@ -545,10 +545,10 @@ class Vec4dTest extends FunSuite {
     val u = Vec4(0)
 
     u := Vec4(1, 2, 3, 4)
-    expect(1) { u.x }
-    expect(2) { u.y }
-    expect(3) { u.z }
-    expect(4) { u.w }
+    expectResult(1) { u.x }
+    expectResult(2) { u.y }
+    expectResult(3) { u.z }
+    expectResult(4) { u.w }
   }
 
   test("Const math") {

@@ -21,7 +21,8 @@
 package simplex3d.math
 package doublex
 
-import scala.reflect.ClassManifest.{classType}
+import scala.language.implicitConversions
+import scala.reflect._
 import simplex3d.math.integration._
 import simplex3d.math.types._
 import simplex3d.math.doublex.functions._
@@ -288,9 +289,9 @@ with Accessible with Serializable
 object Quat4d {
   final val Identity = new ConstQuat4d(1, 0, 0, 0)
 
-  final val Manifest = classType[Quat4d](classOf[Quat4d])
-  final val ConstManifest = classType[ConstQuat4d](classOf[ConstQuat4d])
-  final val ReadManifest = classType[ReadQuat4d](classOf[ReadQuat4d])
+  final val Tag = classTag[Quat4d]
+  final val ConstTag = classTag[ConstQuat4d]
+  final val ReadTag = classTag[ReadQuat4d]
 
   /*main factory*/ def apply(a: Double, b: Double, c: Double, d: Double) =
     new Quat4d(a, b, c, d)

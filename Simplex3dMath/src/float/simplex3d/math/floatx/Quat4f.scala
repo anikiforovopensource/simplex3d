@@ -41,7 +41,6 @@ with Protected with Serializable
   
   type Read = ReadQuat4f
   type Mutable = Quat4f
-  final def readType: Class[Read] = classOf[ReadQuat4f]
   final def mutableCopy() = Quat4f(this)
 
   private[math] final def fa: Float = a

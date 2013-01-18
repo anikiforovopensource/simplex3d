@@ -38,7 +38,6 @@ extends PrimitiveRef[Int] with Protected with Serializable
   
   type Read = ReadIntRef
   type Mutable = IntRef
-  final def readType: Class[Read] = classOf[ReadIntRef]
   final def mutableCopy() = new IntRef(x)
 
   final def apply(i: Int) :Int = {

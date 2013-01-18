@@ -41,7 +41,6 @@ extends PrimitiveRef[Float] with Protected with Serializable
   
   type Read = ReadFloatRef
   type Mutable = FloatRef
-  final def readType: Class[Read] = classOf[ReadFloatRef]
   final def mutableCopy() = new FloatRef(x)
 
   final def apply(i: Int) :Float = {

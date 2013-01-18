@@ -38,7 +38,6 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
   
   type Read = ReadBooleanRef
   type Mutable = BooleanRef
-  final def readType: Class[Read] = classOf[ReadBooleanRef]
   final def mutableCopy() = new BooleanRef(x)
 
   final def apply(i: Int) :Boolean = {

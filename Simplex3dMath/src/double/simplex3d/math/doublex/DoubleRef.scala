@@ -41,7 +41,6 @@ extends PrimitiveRef[Double] with Protected with Serializable
   
   type Read = ReadDoubleRef
   type Mutable = DoubleRef
-  final def readType: Class[Read] = classOf[ReadDoubleRef]
   final def mutableCopy()  = new DoubleRef(x)
 
   final def apply(i: Int) :Double = {

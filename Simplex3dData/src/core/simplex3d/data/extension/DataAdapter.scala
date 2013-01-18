@@ -33,9 +33,9 @@ import simplex3d.math._
 @SerialVersionUID(8104346712419693669L)
 abstract class DataAdapter[F <: CompositeFormat, B <: Raw with Tangible](final val components: Int)(
   implicit
-  final val formatManifest: ClassManifest[F],
-  final val accessorManifest: ClassManifest[F#Accessor],
-  final val boundManifest: Manifest[B]
+  final val formatTag: ClassTag[F],
+  final val accessorTag: ClassTag[F#Accessor],
+  final val boundTag: Manifest[B]//TODO change to TypeTag after SBT adds reflection support
 )
 extends CompositionFactory[F, B] with Serializable {
   
@@ -61,15 +61,15 @@ extends CompositionFactory[F, B] with Serializable {
   // Rework this initialization code when/if intersectingType manifest has an accesible list of parents
   // or proper >:> method.
   private[this] final val allowedTypes: Array[Int] = {
-    def extractIntersecting(m: Manifest[_]) :Seq[ClassManifest[_]] = {
-      val names = m.toString.split(" with ")
+    def extractIntersecting(t: Manifest[_]) :Seq[ClassTag[_]] = {
+      val names = t./*tpe.*/toString.split(" with ")
       for (name <- names) yield {
-        ClassManifest.classType(java.lang.Class.forName(name))
+        ClassTag(java.lang.Class.forName(name))
       }
     }
 
-    val bounds = extractIntersecting(boundManifest)
-    val allowed = for (m <- RawManifest.AllTangible if bounds.forall(_ >:> m)) yield RawManifest.toRawType(m)
+    val bounds = extractIntersecting(boundTag)
+    val allowed = for (t <- RawTag.AllTangible if bounds.forall(_ >:> t)) yield RawTag.toRawType(t)
     allowed.toArray
   }
   private[this] def enforceRawType(rawType: Int) {

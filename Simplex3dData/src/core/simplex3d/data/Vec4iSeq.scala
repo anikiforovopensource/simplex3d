@@ -32,8 +32,8 @@ import simplex3d.data.extension._
 private[data] abstract class BaseVec4i[+R <: TangibleInt](
   prim: ReadContiguous[SInt, R], off: Int, str: Int
 ) extends CompositeSeq[Vec4i, R, TangibleInt](prim, off, str) {
-  final def formatManifest = Vec4i.Manifest
-  final def accessorManifest = Vec4i.Manifest
+  final def formatTag = Vec4i.Tag
+  final def accessorTag = Vec4i.Tag
   final def components: Int = 4
 
   final def mkReadDataArray[P <: TangibleInt](prim: ReadDataArray[Vec4i#Component, P])

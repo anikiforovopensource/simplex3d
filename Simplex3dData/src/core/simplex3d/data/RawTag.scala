@@ -21,29 +21,30 @@
 package simplex3d.data
 
 import scala.annotation._
+import scala.reflect._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RawManifest {
-  import scala.reflect.ClassManifest._
+object RawTag {
+  import scala.reflect.ClassTag._
   
-  final val SByte = classType[SByte](classOf[SByte])
-  final val UByte = classType[UByte](classOf[UByte])
-  final val SShort = classType[SShort](classOf[SShort])
-  final val UShort = classType[UShort](classOf[UShort])
+  final val SByte = classTag[SByte]
+  final val UByte = classTag[UByte]
+  final val SShort = classTag[SShort]
+  final val UShort = classTag[UShort]
   final val SInt = PrimitiveFormat.SInt
-  final val UInt = classType[UInt](classOf[UInt])
-  final val HFloat = classType[HFloat](classOf[HFloat])
+  final val UInt = classTag[UInt]
+  final val HFloat = classTag[HFloat]
   final val RFloat = PrimitiveFormat.RFloat
   final val RDouble = PrimitiveFormat.RDouble
 
-  final val AllTangible = List[ClassManifest[_ <: Raw with Tangible]](
+  final val AllTangible = List[ClassTag[_ <: Raw with Tangible]](
     SByte, UByte, SShort, UShort, SInt, UInt, HFloat, RFloat, RDouble
   )
 
-  def toRawType(m: ClassManifest[_]) :Int = {
+  def toRawType(m: ClassTag[_]) :Int = {
     m match {
       case SByte => RawType.SByte
       case UByte => RawType.UByte
@@ -57,7 +58,7 @@ object RawManifest {
     }
   }
   
-  def fromRawType(t: Int) :ClassManifest[_] = {
+  def fromRawType(t: Int) :ClassTag[_] = {
     t match {
       case RawType.SByte => SByte
       case RawType.UByte => UByte

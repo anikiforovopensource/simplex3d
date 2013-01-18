@@ -219,50 +219,50 @@ object ApplyUpdateTestUtil extends FunSuite {
       s(seq.offset + seq.stride*i + j) = u
     }
 
-    val e = seq.formatManifest match {
-      case Vec2i.Manifest =>
+    val e = seq.formatTag match {
+      case Vec2i.Tag =>
         val u = Vec2i(ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y)
         u
-      case Vec3i.Manifest =>
+      case Vec3i.Tag =>
         val u = Vec3i(ni, ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y); iput(i, 2, u.z)
         u
-      case Vec4i.Manifest =>
+      case Vec4i.Tag =>
         val u = Vec4i(ni, ni, ni, ni)
         iput(i, 0, u.x); iput(i, 1, u.y); iput(i, 2, u.z); iput(i, 3, u.w)
         u
-      case Vec2f.Manifest =>
+      case Vec2f.Tag =>
         val u = Vec2f(nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y)
         u
-      case Vec3f.Manifest =>
+      case Vec3f.Tag =>
         val u = Vec3f(nf, nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y); fput(i, 2, u.z)
         u
-      case Vec4f.Manifest =>
+      case Vec4f.Tag =>
         val u = Vec4f(nf, nf, nf, nf)
         fput(i, 0, u.x); fput(i, 1, u.y); fput(i, 2, u.z); fput(i, 3, u.w)
         u
-      case Vec2d.Manifest =>
+      case Vec2d.Tag =>
         val u = Vec2d(nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y)
         u
-      case Vec3d.Manifest =>
+      case Vec3d.Tag =>
         val u = Vec3d(nd, nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y); dput(i, 2, u.z)
         u
-      case Vec4d.Manifest =>
+      case Vec4d.Tag =>
         val u = Vec4d(nd, nd, nd, nd)
         dput(i, 0, u.x); dput(i, 1, u.y); dput(i, 2, u.z); dput(i, 3, u.w)
         u
-      case Mat3x2f.Manifest =>
+      case Mat3x2f.Tag =>
         val m = Mat3x2f(nf, nf, nf, nf, nf, nf)
         fput(i, 0, m.m00); fput(i, 1, m.m01)
         fput(i, 2, m.m10); fput(i, 3, m.m11)
         fput(i, 4, m.m20); fput(i, 5, m.m21)
         m
-      case Mat3x2d.Manifest =>
+      case Mat3x2d.Tag =>
         val m = Mat3x2d(nd, nd, nd, nd, nd, nd)
         dput(i, 0, m.m00); dput(i, 1, m.m01)
         dput(i, 2, m.m10); dput(i, 3, m.m11)

@@ -49,9 +49,9 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
     dimensions: inVec2i, offset: inVec2i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec2i
   ) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
+        "ReadContiguous[" + src.formatTag + ", _] cannot be cast to ReadContiguous[" + formatTag + ", _]."
       )
     
     put2dImpl(
@@ -75,9 +75,9 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec2i, srcOffset: inVec2i,
     copyDimensions: inVec2i
   ) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
+        "ReadContiguous[" + src.formatTag + ", _] cannot be cast to ReadContiguous[" + formatTag + ", _]."
       )
     
     put2dImpl(
@@ -99,9 +99,9 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
     dimensions: inVec3i, offset: inVec3i,
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec3i
   ) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
+        "ReadContiguous[" + src.formatTag + ", _] cannot be cast to ReadContiguous[" + formatTag + ", _]."
       )
     
     put3dImpl(
@@ -125,9 +125,9 @@ extends DataSeq[F, R] with ReadContiguous[F, R] {
     src: inContiguous[F, simplex3d.data.Raw], srcDimensions: inVec3i, srcOffset: inVec3i,
     copyDimensions: inVec3i
   ) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadContiguous[" + src.formatManifest + ", _] cannot be cast to ReadContiguous[" + formatManifest + ", _]."
+        "ReadContiguous[" + src.formatTag + ", _] cannot be cast to ReadContiguous[" + formatTag + ", _]."
       )
     
     put3dImpl(

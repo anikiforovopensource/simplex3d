@@ -49,10 +49,10 @@ object SubCopyTestUtil extends FunSuite {
 
     val original = factory.mkDataArray(genRandomArray(size*factory.components, descriptor)).asReadOnly()
     val matchingSrc = factory.mkDataArray(genRandomArray(size*factory.components, descriptor)).asReadOnly()
-    val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readManifest(matchingSrc.accessorManifest))
+    val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readTag(matchingSrc.accessorTag))
     val convertionSrc = genRandomSeq(
-      original.formatManifest,
-      conversionType(original.formatManifest, original.rawType),
+      original.formatTag,
+      conversionType(original.formatTag, original.rawType),
       size
     ).asInstanceOf[DataArray[F, R]].asReadOnly()
     
@@ -144,10 +144,10 @@ object SubCopyTestUtil extends FunSuite {
 
     val original = factory.mkDataArray(genRandomArray(size*factory.components, descriptor)).asReadOnly()
     val matchingSrc = factory.mkDataArray(genRandomArray(size*factory.components, descriptor)).asReadOnly()
-    val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readManifest(matchingSrc.accessorManifest))
+    val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readTag(matchingSrc.accessorTag))
     val convertionSrc = genRandomSeq(
-      original.formatManifest,
-      conversionType(original.formatManifest, original.rawType),
+      original.formatTag,
+      conversionType(original.formatTag, original.rawType),
       size
     ).asInstanceOf[DataArray[F, R]].asReadOnly()
     

@@ -34,8 +34,8 @@ import RawType._
 private[data] abstract class BaseVec2f[+R <: TangibleFloat](
   prim: ReadContiguous[RFloat, R], off: Int, str: Int
 ) extends CompositeSeq[Vec2f, R, TangibleFloat](prim, off, str) {
-  final def formatManifest = Vec2f.Manifest
-  final def accessorManifest = Vec2f.Manifest
+  final def formatTag = Vec2f.Tag
+  final def accessorTag = Vec2f.Tag
   final def components: Int = 2
 
   final def mkReadDataArray[P <: TangibleFloat](prim: ReadDataArray[Vec2f#Component, P])

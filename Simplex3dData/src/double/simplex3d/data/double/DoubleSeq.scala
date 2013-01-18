@@ -40,8 +40,8 @@ private[data] abstract class BaseRDouble[+R <: TangibleDouble](
 extends AbstractData[Double, Double](shared, prim, ro, off, str)
 with DataSeq[RDouble, R] with CompositionFactory[RDouble, TangibleDouble]
 {
-  final def formatManifest = PrimitiveFormat.RDouble
-  final def accessorManifest = PrimitiveFormat.RDouble
+  final def formatTag = PrimitiveFormat.RDouble
+  final def accessorTag = PrimitiveFormat.RDouble
   final def components: Int = 1
 
   final def mkReadDataArray[P <: TangibleDouble](prim: ReadDataArray[RDouble, P])

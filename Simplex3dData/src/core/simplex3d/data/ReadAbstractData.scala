@@ -22,6 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.annotation._
+import scala.reflect._
 import scala.collection._
 import simplex3d.data.extension._
 import StoreType._
@@ -117,8 +118,8 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
   def rawType: Int
   def isNormalized: Boolean
   
-  def formatManifest: ClassManifest[Format]
-  def accessorManifest: ClassManifest[Format#Accessor]
+  def formatTag: ClassTag[Format]
+  def accessorTag: ClassTag[Format#Accessor]
   
 
   final val bytesPerComponent = RawType.byteLength(rawType)
@@ -203,7 +204,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
 
   override def toString() :String = {
     def getElemName() = {
-      formatManifest.erasure.getSimpleName
+      formatTag.runtimeClass.getSimpleName
     }
 
     var view = false

@@ -193,7 +193,7 @@ object SortTestUtil extends FunSuite {
       }
       
       
-      // Not tested exceptions on: rawType, formatManifest, and sharesStorageWith()
+      // Not tested exceptions on: rawType, formatTag, and sharesStorageWith()
     }
     assert(dest.bindingBuffer().equals(destCopy.bindingBuffer()))
     
@@ -400,7 +400,7 @@ object SortTestUtil extends FunSuite {
       first <- 0 until 3;
       stride <- 1 to 4;
       destFirst <- 0 until 3;
-      val maxCount = data.size/stride - math.max(first, destFirst); count <- List(0, 1, 2, maxCount - 2, maxCount - 1, maxCount)
+      maxCount = data.size/stride - math.max(first, destFirst); count <- List(0, 1, 2, maxCount - 2, maxCount - 1, maxCount)
     ) {
       testFunction(first, count, stride, destFirst) {
         data.reorder(sortContext, first, count, stride, dest, destFirst)

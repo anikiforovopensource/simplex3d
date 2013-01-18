@@ -21,6 +21,7 @@
 package simplex3d.data
 
 import java.nio._
+import scala.reflect._
 
 
 /**
@@ -31,8 +32,8 @@ trait DataSrc {
   def asReadOnly() :Read
   
   type Format <: simplex3d.data.Format
-  def formatManifest: ClassManifest[Format]
-  def accessorManifest: ClassManifest[Format#Accessor]
+  def formatTag: ClassTag[Format]
+  def accessorTag: ClassTag[Format#Accessor]
   
   def components: Int
   def rawType: Int

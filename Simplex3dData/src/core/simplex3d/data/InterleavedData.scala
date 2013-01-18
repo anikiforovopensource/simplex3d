@@ -20,9 +20,10 @@
 
 package simplex3d.data
 
-import scala.collection._
 import java.io._
 import java.nio._
+import scala.language.existentials
+import scala.collection._
 
 
 /**

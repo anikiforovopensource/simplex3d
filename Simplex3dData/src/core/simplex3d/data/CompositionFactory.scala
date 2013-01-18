@@ -20,14 +20,16 @@
 
 package simplex3d.data
 
+import scala.reflect._
+
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 trait CompositionFactory[F <: Format, B <: Raw with Tangible] {
   def components: Int
-  def formatManifest: ClassManifest[F]
-  def accessorManifest: ClassManifest[F#Accessor]
+  def formatTag: ClassTag[F]
+  def accessorTag: ClassTag[F#Accessor]
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P]) :ReadDataArray[F, P]
   def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P]) :ReadDataBuffer[F, P]

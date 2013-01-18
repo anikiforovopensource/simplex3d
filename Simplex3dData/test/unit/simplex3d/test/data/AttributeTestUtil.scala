@@ -146,9 +146,9 @@ object AttributeTestUtil extends FunSuite {
     data: Buffer,
     descriptor: Descriptor[F, R]
   ) {
-    assert(seq.formatManifest == descriptor.formatManifest)
-    assert(seq.accessorManifest == descriptor.accessorManifest)
-    assert(seq.primitives.formatManifest == descriptor.componentManifest)
+    assert(seq.formatTag == descriptor.formatTag)
+    assert(seq.accessorTag == descriptor.accessorTag)
+    assert(seq.primitives.formatTag == descriptor.componentTag)
     assert(seq.components == descriptor.components)
     assert(seq.rawType == descriptor.rawType)
     assert(seq.isNormalized == descriptor.normalized)
@@ -235,8 +235,8 @@ object AttributeTestUtil extends FunSuite {
     }
     else {
       val primitiveDesc = descriptor.copy(
-        formatManifest = seq.primitives.formatManifest,
-        accessorManifest = seq.primitives.accessorManifest,
+        formatTag = seq.primitives.formatTag,
+        accessorTag = seq.primitives.accessorTag,
         components = 1
       )
       testArray(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -274,8 +274,8 @@ object AttributeTestUtil extends FunSuite {
     }
     else {
       val primitiveDesc = descriptor.copy(
-        formatManifest = seq.primitives.formatManifest,
-        accessorManifest = seq.primitives.accessorManifest,
+        formatTag = seq.primitives.formatTag,
+        accessorTag = seq.primitives.accessorTag,
         components = 1
       )
       testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])
@@ -311,8 +311,8 @@ object AttributeTestUtil extends FunSuite {
 
     // primitives
     val primitiveDesc = descriptor.copy(
-      formatManifest = seq.primitives.formatManifest,
-      accessorManifest = seq.primitives.accessorManifest,
+      formatTag = seq.primitives.formatTag,
+      accessorTag = seq.primitives.accessorTag,
       components = 1
     )
     testBuffer(seq.primitives, readOnly, data)(primitiveDesc.asInstanceOf[Descriptor[F#Component, R]])

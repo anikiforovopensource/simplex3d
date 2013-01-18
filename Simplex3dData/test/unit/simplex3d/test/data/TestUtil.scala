@@ -227,29 +227,29 @@ object TestUtil extends FunSuite {
     genBuffer(byteCapacity, descriptor, true)
   }
 
-  private def rand[T](randomSrc: java.util.Random, m: ClassManifest[T]) :T = {
+  private def rand[T](randomSrc: java.util.Random, m: ClassTag[T]) :T = {
     def ni = randomSrc.nextInt
     def nf = randomSrc.nextFloat
     def nd = randomSrc.nextDouble
 
     (m match {
       case PrimitiveFormat.SInt => ni
-      case Vec2i.Manifest => Vec2i(ni, ni)
-      case Vec3i.Manifest => Vec3i(ni, ni, ni)
-      case Vec4i.Manifest => Vec4i(ni, ni, ni, ni)
+      case Vec2i.Tag => Vec2i(ni, ni)
+      case Vec3i.Tag => Vec3i(ni, ni, ni)
+      case Vec4i.Tag => Vec4i(ni, ni, ni, ni)
       case PrimitiveFormat.RFloat => nf
-      case Vec2f.Manifest => Vec2f(nf, nf)
-      case Vec3f.Manifest => Vec3f(nf, nf, nf)
-      case Vec4f.Manifest => Vec4f(nf, nf, nf, nf)
-      case Mat3x2f.Manifest => Mat3x2f(nf, nf, nf, nf, nf, nf)
+      case Vec2f.Tag => Vec2f(nf, nf)
+      case Vec3f.Tag => Vec3f(nf, nf, nf)
+      case Vec4f.Tag => Vec4f(nf, nf, nf, nf)
+      case Mat3x2f.Tag => Mat3x2f(nf, nf, nf, nf, nf, nf)
       case PrimitiveFormat.RDouble => nd
-      case Vec2d.Manifest => Vec2d(nd, nd)
-      case Vec3d.Manifest => Vec3d(nd, nd, nd)
-      case Vec4d.Manifest => Vec4d(nd, nd, nd, nd)
-      case Mat3x2d.Manifest => Mat3x2d(nd, nd, nd, nd, nd, nd)
+      case Vec2d.Tag => Vec2d(nd, nd)
+      case Vec3d.Tag => Vec3d(nd, nd, nd)
+      case Vec4d.Tag => Vec4d(nd, nd, nd, nd)
+      case Mat3x2d.Tag => Mat3x2d(nd, nd, nd, nd, nd, nd)
     }).asInstanceOf[T]
   }
-  private def randPrim[T](randomSrc: java.util.Random, m: ClassManifest[T]) :T = {
+  private def randPrim[T](randomSrc: java.util.Random, m: ClassTag[T]) :T = {
     def ni = randomSrc.nextInt
     def nf = randomSrc.nextFloat
     def nd = randomSrc.nextDouble
@@ -262,7 +262,7 @@ object TestUtil extends FunSuite {
   }
 
   private def mkPrimSeq[F <: Format, R <: Raw](size: Int, descriptor: Descriptor[F, R]) = {
-    (descriptor.componentManifest match {
+    (descriptor.componentTag match {
       case PrimitiveFormat.SInt =>
         descriptor.rawType match {
           case SByte => DataArray[SInt, SByte](size*descriptor.components)
@@ -300,20 +300,20 @@ object TestUtil extends FunSuite {
   def genRandomCollection[F <: Format, R <: Raw](
     size: Int, descriptor: Descriptor[F, R]
   ) :(Array[F#Accessor#Read], Buffer) = {
-    val array = readManifest(descriptor.accessorManifest).newArray(size).asInstanceOf[Array[F#Accessor#Read]]
+    val array = readTag(descriptor.accessorTag).newArray(size).asInstanceOf[Array[F#Accessor#Read]]
     val seq = mkPrimSeq(size, descriptor)
 
     val seed = randomSrc.nextLong
     val localSrc = new java.util.Random(seed)
 
     var i = 0; while (i < array.length) {
-      array(i) = rand(localSrc, descriptor.formatManifest).asInstanceOf[F#Accessor#Read]
+      array(i) = rand(localSrc, descriptor.formatTag).asInstanceOf[F#Accessor#Read]
       i += 1
     }
 
     localSrc.setSeed(seed)
     i = 0; while (i < seq.length) {
-      seq(i) = randPrim(localSrc, descriptor.componentManifest).asInstanceOf[F#Component#Accessor#Read]
+      seq(i) = randPrim(localSrc, descriptor.componentTag).asInstanceOf[F#Component#Accessor#Read]
       i += 1
     }
 
@@ -331,7 +331,7 @@ object TestUtil extends FunSuite {
     genRandomSeq(None, None, size)
   }
   def genRandomSeq(
-    manifest: Option[ClassManifest[_ <: Format]], rawType: Option[Int], size: Int
+    manifest: Option[ClassTag[_ <: Format]], rawType: Option[Int], size: Int
   ) :Contiguous[_ <: Format, Raw] = {
     val m = manifest match {
       case Some(man) =>
@@ -339,28 +339,28 @@ object TestUtil extends FunSuite {
       case None =>
         randomSrc.nextInt(14) match {
           case 0 => PrimitiveFormat.SInt
-          case 1 => Vec2i.Manifest
-          case 2 => Vec3i.Manifest
-          case 3 => Vec4i.Manifest
+          case 1 => Vec2i.Tag
+          case 2 => Vec3i.Tag
+          case 3 => Vec4i.Tag
           case 4 => PrimitiveFormat.RFloat
-          case 5 => Vec2f.Manifest
-          case 6 => Vec3f.Manifest
-          case 7 => Vec4f.Manifest
-          case 8 => Mat3x2f.Manifest
+          case 5 => Vec2f.Tag
+          case 6 => Vec3f.Tag
+          case 7 => Vec4f.Tag
+          case 8 => Mat3x2f.Tag
           case 9 => PrimitiveFormat.RDouble
-          case 10 => Vec2d.Manifest
-          case 11 => Vec3d.Manifest
-          case 12 => Vec4d.Manifest
-          case 13 => Mat3x2d.Manifest
+          case 10 => Vec2d.Tag
+          case 11 => Vec3d.Tag
+          case 12 => Vec4d.Tag
+          case 13 => Mat3x2d.Tag
         }
       }
     
     val (min, max) = m match {
-      case PrimitiveFormat.SInt | Vec2i.Manifest | Vec3i.Manifest | Vec4i.Manifest => (0, 6)
-      case PrimitiveFormat.RFloat | Vec2f.Manifest | Vec3f.Manifest | Vec4f.Manifest => (0, 8)
-      case PrimitiveFormat.RDouble | Vec2d.Manifest | Vec3d.Manifest | Vec4d.Manifest => (0, 9)
-      case Mat3x2f.Manifest => (7, 8)
-      case Mat3x2d.Manifest => (7, 9)
+      case PrimitiveFormat.SInt | Vec2i.Tag | Vec3i.Tag | Vec4i.Tag => (0, 6)
+      case PrimitiveFormat.RFloat | Vec2f.Tag | Vec3f.Tag | Vec4f.Tag => (0, 8)
+      case PrimitiveFormat.RDouble | Vec2d.Tag | Vec3d.Tag | Vec4d.Tag => (0, 9)
+      case Mat3x2f.Tag => (7, 8)
+      case Mat3x2d.Tag => (7, 9)
     }
     
     val r = rawType match {
@@ -381,7 +381,7 @@ object TestUtil extends FunSuite {
       genRandomSeq(m, r, size)
   }
   
-  def genRandomSeq[F <: Format](manifest: ClassManifest[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
+  def genRandomSeq[F <: Format](manifest: ClassTag[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
     (manifest match {
       case PrimitiveFormat.SInt => rawType match {
         case SByte => RandomDataArray[SInt, SByte](size)
@@ -391,7 +391,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[SInt, SInt](size)
         case UInt => RandomDataArray[SInt, UInt](size)
       }
-      case Vec2i.Manifest => rawType match {
+      case Vec2i.Tag => rawType match {
         case SByte => RandomDataArray[Vec2i, SByte](size)
         case UByte => RandomDataArray[Vec2i, UByte](size)
         case SShort => RandomDataArray[Vec2i, SShort](size)
@@ -399,7 +399,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[Vec2i, SInt](size)
         case UInt => RandomDataArray[Vec2i, UInt](size)
       }
-      case Vec3i.Manifest => rawType match {
+      case Vec3i.Tag => rawType match {
         case SByte => RandomDataArray[Vec3i, SByte](size)
         case UByte => RandomDataArray[Vec3i, UByte](size)
         case SShort => RandomDataArray[Vec3i, SShort](size)
@@ -407,7 +407,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[Vec3i, SInt](size)
         case UInt => RandomDataArray[Vec3i, UInt](size)
       }
-      case Vec4i.Manifest => rawType match {
+      case Vec4i.Tag => rawType match {
         case SByte => RandomDataArray[Vec4i, SByte](size)
         case UByte => RandomDataArray[Vec4i, UByte](size)
         case SShort => RandomDataArray[Vec4i, SShort](size)
@@ -426,7 +426,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[RFloat, HFloat](size)
         case RFloat => RandomDataArray[RFloat, RFloat](size)
       }
-      case Vec2f.Manifest => rawType match {
+      case Vec2f.Tag => rawType match {
         case SByte => RandomDataArray[Vec2f, SByte](size)
         case UByte => RandomDataArray[Vec2f, UByte](size)
         case SShort => RandomDataArray[Vec2f, SShort](size)
@@ -436,7 +436,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec2f, HFloat](size)
         case RFloat => RandomDataArray[Vec2f, RFloat](size)
       }
-      case Vec3f.Manifest => rawType match {
+      case Vec3f.Tag => rawType match {
         case SByte => RandomDataArray[Vec3f, SByte](size)
         case UByte => RandomDataArray[Vec3f, UByte](size)
         case SShort => RandomDataArray[Vec3f, SShort](size)
@@ -446,7 +446,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec3f, HFloat](size)
         case RFloat => RandomDataArray[Vec3f, RFloat](size)
       }
-      case Vec4f.Manifest => rawType match {
+      case Vec4f.Tag => rawType match {
         case SByte => RandomDataArray[Vec4f, SByte](size)
         case UByte => RandomDataArray[Vec4f, UByte](size)
         case SShort => RandomDataArray[Vec4f, SShort](size)
@@ -456,7 +456,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec4f, HFloat](size)
         case RFloat => RandomDataArray[Vec4f, RFloat](size)
       }
-      case Mat3x2f.Manifest => rawType match {
+      case Mat3x2f.Tag => rawType match {
         case RFloat => RandomDataArray[Mat3x2f, RFloat](size)
       }
       
@@ -471,7 +471,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[RDouble, RFloat](size)
         case RDouble => RandomDataArray[RDouble, RDouble](size)
       }
-      case Vec2d.Manifest => rawType match {
+      case Vec2d.Tag => rawType match {
         case SByte => RandomDataArray[Vec2d, SByte](size)
         case UByte => RandomDataArray[Vec2d, UByte](size)
         case SShort => RandomDataArray[Vec2d, SShort](size)
@@ -482,7 +482,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec2d, RFloat](size)
         case RDouble => RandomDataArray[Vec2d, RDouble](size)
       }
-      case Vec3d.Manifest => rawType match {
+      case Vec3d.Tag => rawType match {
         case SByte => RandomDataArray[Vec3d, SByte](size)
         case UByte => RandomDataArray[Vec3d, UByte](size)
         case SShort => RandomDataArray[Vec3d, SShort](size)
@@ -493,7 +493,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec3d, RFloat](size)
         case RDouble => RandomDataArray[Vec3d, RDouble](size)
       }
-      case Vec4d.Manifest => rawType match {
+      case Vec4d.Tag => rawType match {
         case SByte => RandomDataArray[Vec4d, SByte](size)
         case UByte => RandomDataArray[Vec4d, UByte](size)
         case SShort => RandomDataArray[Vec4d, SShort](size)
@@ -504,7 +504,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec4d, RFloat](size)
         case RDouble => RandomDataArray[Vec4d, RDouble](size)
       }
-      case Mat3x2d.Manifest => rawType match {
+      case Mat3x2d.Tag => rawType match {
         case RFloat => RandomDataArray[Mat3x2d, RFloat](size)
         case RDouble => RandomDataArray[Mat3x2d, RDouble](size)
       }
@@ -532,7 +532,7 @@ object TestUtil extends FunSuite {
   ) {
     val d = dest.primitives
     
-    d.formatManifest match {
+    d.formatTag match {
       case PrimitiveFormat.SInt =>
         testIntContent(
           components,
@@ -614,8 +614,8 @@ object TestUtil extends FunSuite {
     src: inDataSeq[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.SInt)
-    assert(src.formatManifest == PrimitiveFormat.SInt)
+    assert(dest.formatTag == PrimitiveFormat.SInt)
+    assert(src.formatTag == PrimitiveFormat.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -634,8 +634,8 @@ object TestUtil extends FunSuite {
     src: inDataSeq[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.RFloat)
-    assert(src.formatManifest == PrimitiveFormat.RFloat)
+    assert(dest.formatTag == PrimitiveFormat.RFloat)
+    assert(src.formatTag == PrimitiveFormat.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -657,8 +657,8 @@ object TestUtil extends FunSuite {
     src: inDataSeq[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.RDouble)
-    assert(src.formatManifest == PrimitiveFormat.RDouble)
+    assert(dest.formatTag == PrimitiveFormat.RDouble)
+    assert(src.formatTag == PrimitiveFormat.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -675,10 +675,10 @@ object TestUtil extends FunSuite {
   }
   
   def convert[F <: Format](src: inDataSeq[F, Raw], rawType: Int) :Contiguous[F, Raw] = {
-    val factory = genRandomSeq(src.formatManifest, rawType, 0)
+    val factory = genRandomSeq(src.formatTag, rawType, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
-    src.primitives.formatManifest match {
+    src.primitives.formatTag match {
       case PrimitiveFormat.SInt =>
         putIntContent(
           src.components,
@@ -711,8 +711,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[SInt, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.SInt)
-    assert(src.formatManifest == PrimitiveFormat.SInt)
+    assert(dest.formatTag == PrimitiveFormat.SInt)
+    assert(src.formatTag == PrimitiveFormat.SInt)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -731,8 +731,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RFloat, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.RFloat)
-    assert(src.formatManifest == PrimitiveFormat.RFloat)
+    assert(dest.formatTag == PrimitiveFormat.RFloat)
+    assert(src.formatTag == PrimitiveFormat.RFloat)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -751,8 +751,8 @@ object TestUtil extends FunSuite {
     src: inContiguous[RDouble, Raw], srcFirst: Int, srcStride: Int,
     count: Int
   ) {
-    assert(dest.formatManifest == PrimitiveFormat.RDouble)
-    assert(src.formatManifest == PrimitiveFormat.RDouble)
+    assert(dest.formatTag == PrimitiveFormat.RDouble)
+    assert(src.formatTag == PrimitiveFormat.RDouble)
     
     var i = 0; while (i < count) {
       var j = 0; while (j < components) {
@@ -765,8 +765,8 @@ object TestUtil extends FunSuite {
     }
   }
 
-  final def supportsRawType(primitives: ClassManifest[_], raw: ClassManifest[_]) = {
-    import RawManifest._
+  final def supportsRawType(primitives: ClassTag[_], raw: ClassTag[_]) = {
+    import RawTag._
 
     primitives match {
       case SInt => raw match {
@@ -781,22 +781,22 @@ object TestUtil extends FunSuite {
     }
   }
   
-  final def readManifest[M <: Accessor](m: ClassManifest[M]) :ClassManifest[M#Read] = {
+  final def readTag[M <: Accessor](m: ClassTag[M]) :ClassTag[M#Read] = {
     (m match {
-      case PrimitiveFormat.SInt => Manifest.Int
-      case PrimitiveFormat.RFloat => Manifest.Float
-      case PrimitiveFormat.RDouble => Manifest.Double
-      case Vec2i.Manifest => Vec2i.ReadManifest
-      case Vec3i.Manifest => Vec3i.ReadManifest
-      case Vec4i.Manifest => Vec4i.ReadManifest
-      case Vec2f.Manifest => Vec2f.ReadManifest
-      case Vec3f.Manifest => Vec3f.ReadManifest
-      case Vec4f.Manifest => Vec4f.ReadManifest
-      case Mat3x2f.Manifest => Mat3x2f.ReadManifest
-      case Vec2d.Manifest => Vec2d.ReadManifest
-      case Vec3d.Manifest => Vec3d.ReadManifest
-      case Vec4d.Manifest => Vec4d.ReadManifest
-      case Mat3x2d.Manifest => Mat3x2d.ReadManifest
-    }).asInstanceOf[ClassManifest[M#Read]]
+      case PrimitiveFormat.SInt => ClassTag.Int
+      case PrimitiveFormat.RFloat => ClassTag.Float
+      case PrimitiveFormat.RDouble => ClassTag.Double
+      case Vec2i.Tag => Vec2i.ReadTag
+      case Vec3i.Tag => Vec3i.ReadTag
+      case Vec4i.Tag => Vec4i.ReadTag
+      case Vec2f.Tag => Vec2f.ReadTag
+      case Vec3f.Tag => Vec3f.ReadTag
+      case Vec4f.Tag => Vec4f.ReadTag
+      case Mat3x2f.Tag => Mat3x2f.ReadTag
+      case Vec2d.Tag => Vec2d.ReadTag
+      case Vec3d.Tag => Vec3d.ReadTag
+      case Vec4d.Tag => Vec4d.ReadTag
+      case Mat3x2d.Tag => Mat3x2d.ReadTag
+    }).asInstanceOf[ClassTag[M#Read]]
   }
 }

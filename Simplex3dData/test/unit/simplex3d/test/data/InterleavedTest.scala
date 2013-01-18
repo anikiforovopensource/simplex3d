@@ -22,6 +22,7 @@ package simplex3d.test.data
 
 import java.io._
 import java.nio._
+import scala.language.existentials
 import org.scalatest._
 import simplex3d.math._
 import simplex3d.math.floatx._
@@ -409,10 +410,10 @@ class InterleavedTest extends FunSuite {
     for ((a, b) <- src.zip(interleaved); if (a.size != 0)) {
       // Test types
 
-      assert(a.formatManifest == b.formatManifest)
-      assert(a.accessorManifest == b.accessorManifest)
-      assert(a.primitives.formatManifest == b.primitives.formatManifest)
-      assert(a.primitives.accessorManifest == b.primitives.accessorManifest)
+      assert(a.formatTag == b.formatTag)
+      assert(a.accessorTag == b.accessorTag)
+      assert(a.primitives.formatTag == b.primitives.formatTag)
+      assert(a.primitives.accessorTag == b.primitives.accessorTag)
       assert(a.rawType == b.rawType)
 
       // Test content.

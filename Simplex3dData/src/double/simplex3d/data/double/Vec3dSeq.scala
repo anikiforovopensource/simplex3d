@@ -34,8 +34,8 @@ import RawType._
 private[data] abstract class BaseVec3d[+R <: TangibleDouble](
   prim: ReadContiguous[RDouble, R], off: Int, str: Int
 ) extends CompositeSeq[Vec3d, R, TangibleDouble](prim, off, str) {
-  final def formatManifest = Vec3d.Manifest
-  final def accessorManifest = Vec3d.Manifest
+  final def formatTag = Vec3d.Tag
+  final def accessorTag = Vec3d.Tag
   final def components: Int = 3
 
   final def mkReadDataArray[P <: TangibleDouble](prim: ReadDataArray[Vec3d#Component, P])

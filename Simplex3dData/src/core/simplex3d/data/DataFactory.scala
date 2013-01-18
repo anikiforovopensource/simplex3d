@@ -23,6 +23,7 @@ package simplex3d.data
 import java.nio._
 import scala.annotation._
 import scala.annotation.unchecked._
+import scala.reflect._
 import RawType._
 
 
@@ -33,8 +34,8 @@ trait DataFactory[F <: Format, +R <: Raw] {
   def rawType: Int
   def components: Int
   def bytesPerComponent: Int
-  def formatManifest: ClassManifest[F]
-  def accessorManifest: ClassManifest[F#Accessor]
+  def formatTag: ClassTag[F]
+  def accessorTag: ClassTag[F#Accessor]
   def primitives: DataFactory[F#Component, R]
 
   def mkDataArray(array: R#Array @uncheckedVariance) :DataArray[F, R]

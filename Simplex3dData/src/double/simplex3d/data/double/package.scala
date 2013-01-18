@@ -57,9 +57,9 @@ package object double {
   private[this] final val bound = Manifest.classType[TangibleDouble](classOf[TangibleDouble])
 
   implicit object FactoryQuat4d extends DataAdapter[Quat4d, TangibleDouble](components = 4)(
-    formatManifest = Quat4d.Manifest,
-    accessorManifest = Quat4d.Manifest,
-    boundManifest = bound
+    formatTag = Quat4d.Tag,
+    accessorTag = Quat4d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Quat4d#Component, Raw], j: Int) :Quat4d#Const = {
       ConstQuat4d(p(j), p(j + 1), p(j + 2), p(j + 3))
@@ -70,9 +70,9 @@ package object double {
   }
 
   implicit object FactoryMat2x2d extends DataAdapter[Mat2x2d, TangibleDouble](components = 4)(
-    formatManifest = Mat2x2d.Manifest,
-    accessorManifest = Mat2x2d.Manifest,
-    boundManifest = bound
+    formatTag = Mat2x2d.Tag,
+    accessorTag = Mat2x2d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat2x2d#Component, Raw], j: Int) :Mat2x2d#Const = {
       ConstMat2x2d(
@@ -87,9 +87,9 @@ package object double {
   }
 
   implicit object FactoryMat2x3d extends DataAdapter[Mat2x3d, TangibleDouble](components = 6)(
-    formatManifest = Mat2x3d.Manifest,
-    accessorManifest = Mat2x3d.Manifest,
-    boundManifest = bound
+    formatTag = Mat2x3d.Tag,
+    accessorTag = Mat2x3d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat2x3d#Component, Raw], j: Int) :Mat2x3d#Const = {
       ConstMat2x3d(
@@ -104,9 +104,9 @@ package object double {
   }
   
   implicit object FactoryMat2x4d extends DataAdapter[Mat2x4d, TangibleDouble](components = 8)(
-    formatManifest = Mat2x4d.Manifest,
-    accessorManifest = Mat2x4d.Manifest,
-    boundManifest = bound
+    formatTag = Mat2x4d.Tag,
+    accessorTag = Mat2x4d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat2x4d#Component, Raw], j: Int) :Mat2x4d#Const = {
       ConstMat2x4d(
@@ -121,9 +121,9 @@ package object double {
   }
 
   implicit object FactoryMat3x2d extends DataAdapter[Mat3x2d, TangibleDouble](components = 6)(
-    formatManifest = Mat3x2d.Manifest,
-    accessorManifest = Mat3x2d.Manifest,
-    boundManifest = bound
+    formatTag = Mat3x2d.Tag,
+    accessorTag = Mat3x2d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat3x2d#Component, Raw], j: Int) :Mat3x2d#Const = {
       ConstMat3x2d(
@@ -140,9 +140,9 @@ package object double {
   }
   
   implicit object FactoryMat3x3d extends DataAdapter[Mat3x3d, TangibleDouble](components = 9)(
-    formatManifest = Mat3x3d.Manifest,
-    accessorManifest = Mat3x3d.Manifest,
-    boundManifest = bound
+    formatTag = Mat3x3d.Tag,
+    accessorTag = Mat3x3d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat3x3d#Component, Raw], j: Int) :Mat3x3d#Const = {
       ConstMat3x3d(
@@ -159,9 +159,9 @@ package object double {
   }
 
   implicit object FactoryMat3x4d extends DataAdapter[Mat3x4d, TangibleDouble](components = 12)(
-    formatManifest = Mat3x4d.Manifest,
-    accessorManifest = Mat3x4d.Manifest,
-    boundManifest = bound
+    formatTag = Mat3x4d.Tag,
+    accessorTag = Mat3x4d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat3x4d#Component, Raw], j: Int) :Mat3x4d#Const = {
       ConstMat3x4d(
@@ -178,9 +178,9 @@ package object double {
   }
   
   implicit object FactoryMat4x2d extends DataAdapter[Mat4x2d, TangibleDouble](components = 8)(
-    formatManifest = Mat4x2d.Manifest,
-    accessorManifest = Mat4x2d.Manifest,
-    boundManifest = bound
+    formatTag = Mat4x2d.Tag,
+    accessorTag = Mat4x2d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat4x2d#Component, Raw], j: Int) :Mat4x2d#Const = {
       ConstMat4x2d(
@@ -199,9 +199,9 @@ package object double {
   }
   
   implicit object FactoryMat4x3d extends DataAdapter[Mat4x3d, TangibleDouble](components = 12)(
-    formatManifest = Mat4x3d.Manifest,
-    accessorManifest = Mat4x3d.Manifest,
-    boundManifest = bound
+    formatTag = Mat4x3d.Tag,
+    accessorTag = Mat4x3d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat4x3d#Component, Raw], j: Int) :Mat4x3d#Const = {
       ConstMat4x3d(
@@ -220,9 +220,9 @@ package object double {
   }
 
   implicit object FactoryMat4x4d extends DataAdapter[Mat4x4d, TangibleDouble](components = 16)(
-    formatManifest = Mat4x4d.Manifest,
-    accessorManifest = Mat4x4d.Manifest,
-    boundManifest = bound
+    formatTag = Mat4x4d.Tag,
+    accessorTag = Mat4x4d.Tag,
+    boundTag = bound
   ) {
     def apply(p: inContiguous[Mat4x4d#Component, Raw], j: Int) :Mat4x4d#Const = {
       ConstMat4x4d(

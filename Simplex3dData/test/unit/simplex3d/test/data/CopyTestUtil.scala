@@ -21,6 +21,7 @@
 package simplex3d.test.data
 
 import java.nio._
+import scala.reflect._
 import org.scalatest._
 import simplex3d.data._
 import simplex3d.data.extension._
@@ -119,14 +120,14 @@ object CopyTestUtil extends FunSuite {
   private def putSeq[F <: Format](original: inDataSeq[F, Raw]) {
     // Testing exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.formatManifest, original.rawType, original.size)
-      val array = src.toArray(readManifest(src.accessorManifest))
+      val src = genRandomSeq(original.formatTag, original.rawType, original.size)
+      val array = src.toArray(readTag(src.accessorTag))
       
       {
         val dest = dupSeq1(original)
         
         val wrongSrc = wrongType(src)
-        val wrongArray = wrongSrc.toArray(readManifest(wrongSrc.accessorManifest))
+        val wrongArray = wrongSrc.toArray(readTag(wrongSrc.accessorTag))
         val wrongBackup = wrongArray.toIndexedSeq
         val wrongList = wrongArray.toList
         val wrongIndexedSeq = wrongArray.toIndexedSeq
@@ -160,8 +161,8 @@ object CopyTestUtil extends FunSuite {
     }
 
     for (size <- original.size - maxCopyOffset until original.size) {
-      val src = genRandomSeq(original.formatManifest, original.rawType, size)
-      val array = src.toArray(readManifest(src.accessorManifest))
+      val src = genRandomSeq(original.formatTag, original.rawType, size)
+      val array = src.toArray(readTag(src.accessorTag))
 
       checkPutSeq(original, src, array, true)
       checkPutSeq(original, src, array.toList, false)
@@ -319,7 +320,7 @@ object CopyTestUtil extends FunSuite {
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val random = genRandomSeq(original.formatManifest, original.rawType, size)
+      val random = genRandomSeq(original.formatTag, original.rawType, size)
       val src = random.asInstanceOf[ReadDataSeq[F, Raw]].primitives
       val dest = dupSeq1(original)
 
@@ -469,10 +470,10 @@ object CopyTestUtil extends FunSuite {
     
     for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (!conversion) genRandomSeq(original.primitives.formatManifest, original.rawType, size)
+        if (!conversion) genRandomSeq(original.primitives.formatTag, original.rawType, size)
         else genRandomSeq(
-          original.primitives.formatManifest,
-          conversionType(original.primitives.formatManifest, original.rawType),
+          original.primitives.formatTag,
+          conversionType(original.primitives.formatTag, original.rawType),
           size
         )
 
@@ -502,7 +503,7 @@ object CopyTestUtil extends FunSuite {
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.formatManifest, original.rawType, size)
+      val src = genRandomSeq(original.formatTag, original.rawType, size)
       val dest = dupSeq1(original)
 
       {
@@ -642,8 +643,8 @@ object CopyTestUtil extends FunSuite {
 
     for (size <- original.size - maxCopyOffset until original.size; conversion <- List(true, false)) {
       val src =
-        if (!conversion) genRandomSeq(original.formatManifest, original.rawType, size)
-        else genRandomSeq(original.formatManifest, conversionType(original.formatManifest, original.rawType), size)
+        if (!conversion) genRandomSeq(original.formatTag, original.rawType, size)
+        else genRandomSeq(original.formatTag, conversionType(original.formatTag, original.rawType), size)
 
       val srcBackup = dupSeq2(src)
       
@@ -671,7 +672,7 @@ object CopyTestUtil extends FunSuite {
 
 
   private def wrongType[F <: Format](s: inDataSeq[F, Raw]) :DataSeq[F, Raw] = {
-    if (s.primitives.formatManifest == PrimitiveFormat.SInt) {
+    if (s.primitives.formatTag == PrimitiveFormat.SInt) {
       genRandomSeq(PrimitiveFormat.RFloat, RawType.RFloat, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
     else {
@@ -679,11 +680,11 @@ object CopyTestUtil extends FunSuite {
     }
   }
   
-  def conversionType(elem: ClassManifest[_], rawType: Int) :Int = {
+  def conversionType(elem: ClassTag[_], rawType: Int) :Int = {
     import RawType._
     elem match {
-      case Mat3x2f.Manifest => RFloat
-      case Mat3x2d.Manifest => rawType match {
+      case Mat3x2f.Tag => RFloat
+      case Mat3x2d.Tag => rawType match {
         case RFloat => RDouble
         case RDouble => RFloat
       }

@@ -52,54 +52,54 @@ trait DataSeq[F <: Format, +R <: Raw] extends Data[F#Accessor] with ReadDataSeq[
     src: inContiguous[F#Component, simplex3d.data.Raw],
     srcOffset: Int, srcStride: Int, count: Int
   ) {
-    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+    if ((primitives.accessorTag ne src.accessorTag) && (primitives.accessorTag != src.accessorTag))
       throw new ClassCastException(
-        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+        "ReadData[" + src.accessorTag + "] cannot be cast to ReadData[" + primitives.accessorTag + "]."
       )
     
     putPrimitivesImpl(index, src, srcOffset, srcStride, count)
   }
 
   final def putPrimitives(index: Int, src: inContiguous[F#Component, simplex3d.data.Raw]) {
-    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+    if ((primitives.accessorTag ne src.accessorTag) && (primitives.accessorTag != src.accessorTag))
       throw new ClassCastException(
-        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+        "ReadData[" + src.accessorTag + "] cannot be cast to ReadData[" + primitives.accessorTag + "]."
       )
     
     putPrimitivesImpl(index, src, 0, components, src.size/components)
   }
 
   final def putPrimitives(src: inContiguous[F#Component, simplex3d.data.Raw]) {
-    if ((primitives.accessorManifest ne src.accessorManifest) && (primitives.accessorManifest != src.accessorManifest))
+    if ((primitives.accessorTag ne src.accessorTag) && (primitives.accessorTag != src.accessorTag))
       throw new ClassCastException(
-        "ReadData[" + src.accessorManifest + "] cannot be cast to ReadData[" + primitives.accessorManifest + "]."
+        "ReadData[" + src.accessorTag + "] cannot be cast to ReadData[" + primitives.accessorTag + "]."
       )
     
     putPrimitivesImpl(0, src, 0, components, src.size/components)
   }
 
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw], first: Int, count: Int) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
+        "ReadDataSeq[" + src.formatTag + ", _] cannot be cast to ReadDataSeq[" + formatTag + ", _]."
       )
 
     putPrimitivesImpl(index, src.primitives, src.offset + first*src.stride, src.stride, count)
   }
 
   final def put(index: Int, src: inDataSeq[F, simplex3d.data.Raw]) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
+        "ReadDataSeq[" + src.formatTag + ", _] cannot be cast to ReadDataSeq[" + formatTag + ", _]."
       )
 
     putPrimitivesImpl(index, src.primitives, src.offset, src.stride, src.size)
   }
 
   final def put(src: inDataSeq[F, simplex3d.data.Raw]) {
-    if ((formatManifest ne src.formatManifest) && (formatManifest != src.formatManifest))
+    if ((formatTag ne src.formatTag) && (formatTag != src.formatTag))
       throw new ClassCastException(
-        "ReadDataSeq[" + src.formatManifest + ", _] cannot be cast to ReadDataSeq[" + formatManifest + ", _]."
+        "ReadDataSeq[" + src.formatTag + ", _] cannot be cast to ReadDataSeq[" + formatTag + ", _]."
       )
 
     putPrimitivesImpl(0, src.primitives, src.offset, src.stride, src.size)

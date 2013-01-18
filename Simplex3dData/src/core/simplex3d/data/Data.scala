@@ -68,7 +68,7 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
     
     if (dest.isReadOnly) throw new ReadOnlyBufferException()
     
-    if (this.formatManifest != dest.formatManifest) throw new IllegalArgumentException(
+    if (this.formatTag != dest.formatTag) throw new IllegalArgumentException(
       "Destination format must match the source."
     )
     if (this.rawType != dest.rawType) throw new IllegalArgumentException(

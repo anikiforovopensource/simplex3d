@@ -37,8 +37,8 @@ private[data] sealed abstract class BaseSInt[+R <: TangibleInt](
 extends AbstractData[Int, Int](shared, prim, ro, off, str)
 with DataSeq[SInt, R] with CompositionFactory[SInt, TangibleInt]
 {
-  final def formatManifest = PrimitiveFormat.SInt
-  final def accessorManifest = PrimitiveFormat.SInt
+  final def formatTag = PrimitiveFormat.SInt
+  final def accessorTag = PrimitiveFormat.SInt
   final def components: Int = 1
   final def isNormalized = false
 

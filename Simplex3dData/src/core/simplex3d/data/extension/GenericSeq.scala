@@ -21,6 +21,7 @@
 package simplex3d.data.extension
 
 import java.nio._
+import scala.language.existentials
 import scala.reflect._
 import scala.annotation.unchecked._
 import simplex3d.math._
@@ -33,8 +34,8 @@ import simplex3d.data._
 sealed abstract class GenericSeq[F <: CompositeFormat, +R <: Raw, B <: Raw with Tangible](
   adapter: DataAdapter[F, B], prim: ReadContiguous[F#Component, R], off: Int, str: Int
 ) extends CompositeSeq[F, R, B](prim, off, str) {
-  final def formatManifest = adapter.formatManifest
-  final def accessorManifest = adapter.accessorManifest
+  final def formatTag = adapter.formatTag
+  final def accessorTag = adapter.accessorTag
   final def components: Int = adapter.components
 
   def apply(i: Int) :F#Accessor#Const = adapter.apply(primitives, offset + i*stride)

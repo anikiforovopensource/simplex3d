@@ -22,6 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.annotation._
+import scala.language.existentials
 import scala.reflect._
 import scala.collection._
 import scala.collection.mutable.WrappedArray
@@ -124,7 +125,7 @@ abstract class AbstractData[
     if (src.isInstanceOf[ReadDataSeq[_, _]]) {
       val ds = src.asInstanceOf[ReadDataSeq[Format, simplex3d.data.Raw]]
       
-      if ((ds.formatManifest eq formatManifest) || (ds.formatManifest == formatManifest)) {
+      if ((ds.formatTag eq formatTag) || (ds.formatTag == formatTag)) {
         putPrimitivesImpl(index, ds.primitives, ds.offset + first*ds.stride, ds.stride, count)
         return
       }
@@ -150,24 +151,24 @@ abstract class AbstractData[
 
       src match {
         case wrapped: WrappedArray[_] => def cpArray() {
-          wrapped.elemManifest match {
-            case Manifest.Int =>
-              if (accessorManifest != PrimitiveFormat.SInt) throw new ClassCastException(
-                "Seq[Int] cannot be cast to Seq[" + accessorManifest + "#Const]."
+          wrapped.elemTag match {
+            case ClassTag.Int =>
+              if (accessorTag != PrimitiveFormat.SInt) throw new ClassCastException(
+                "Seq[Int] cannot be cast to Seq[" + accessorTag + "#Const]."
               )
               putArray(
                 index, wrapped.array.asInstanceOf[Array[Int]], first, count
               )
-            case Manifest.Float =>
-              if (accessorManifest != PrimitiveFormat.RFloat) throw new ClassCastException(
-                "Seq[Float] cannot be cast to Seq[" + accessorManifest + "#Const]."
+            case ClassTag.Float =>
+              if (accessorTag != PrimitiveFormat.RFloat) throw new ClassCastException(
+                "Seq[Float] cannot be cast to Seq[" + accessorTag + "#Const]."
               )
               putArray(
                 index, wrapped.array.asInstanceOf[Array[Float]], first, count
               )
-            case Manifest.Double =>
-              if (accessorManifest != PrimitiveFormat.RDouble) throw new ClassCastException(
-                "Seq[Double] cannot be cast to Seq[" + accessorManifest + "#Const]."
+            case ClassTag.Double =>
+              if (accessorTag != PrimitiveFormat.RDouble) throw new ClassCastException(
+                "Seq[Double] cannot be cast to Seq[" + accessorTag + "#Const]."
               )
               putArray(
                 index, wrapped.array.asInstanceOf[Array[Double]], first, count
@@ -319,7 +320,7 @@ abstract class AbstractData[
     }
     else {
       def copyPrimSeq() {
-        primitives.formatManifest match {
+        primitives.formatTag match {
           case PrimitiveFormat.SInt => Util.copySeqInt(
               components,
               primitives.asInstanceOf[Contiguous[SInt, _]], destOffset, stride,
@@ -377,9 +378,9 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      val srcFormatTag = src.asInstanceOf[ReadAbstractData[_]].formatTag
       
-      if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
+      if ((formatTag eq srcFormatTag) || (formatTag == srcFormatTag)) {
         put2dImpl(
           dimensions, offset,
           src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
@@ -533,7 +534,7 @@ abstract class AbstractData[
       }
       else {
         def copyPrimSeq() {
-          primitives.formatManifest match {
+          primitives.formatTag match {
             case PrimitiveFormat.SInt => Util.copySeqInt2d(
                 components,
                 this.primitives.asInstanceOf[Contiguous[SInt, _]], dimensions.x, offset.x, offset.y,
@@ -595,9 +596,9 @@ abstract class AbstractData[
     var contiguousCopy = false
     
     if (this.isInstanceOf[ContiguousSrc] && src.isInstanceOf[ContiguousSrc]) {
-      val srcFormatManifest = src.asInstanceOf[ReadAbstractData[_]].formatManifest
+      val srcFormatTag = src.asInstanceOf[ReadAbstractData[_]].formatTag
       
-      if ((formatManifest eq srcFormatManifest) || (formatManifest == srcFormatManifest)) {
+      if ((formatTag eq srcFormatTag) || (formatTag == srcFormatTag)) {
         put3dImpl(
           dimensions, offset,
           src.asInstanceOf[inContiguous[Format, simplex3d.data.Raw]], srcDimensions, srcOffset,
@@ -782,7 +783,7 @@ abstract class AbstractData[
       }
       else {
         def copyPrimSeq() {
-          primitives.formatManifest match {
+          primitives.formatTag match {
             case PrimitiveFormat.SInt => Util.copySeqInt3d(
                 components,
                 this.primitives.asInstanceOf[Contiguous[SInt, _]], dimensions.x, dimensions.y,

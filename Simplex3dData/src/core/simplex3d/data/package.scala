@@ -518,6 +518,7 @@ package object data {
 
     i = 0; while (i < dataSeqs.length) {
 
+      import scala.language.existentials
       type T = F forSome { type F <: Format }
       val seq = dataSeqs(order(i)).asInstanceOf[DataSeq[T, Raw]]
       val view = seq.mkDataView(

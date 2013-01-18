@@ -40,8 +40,8 @@ private[data] abstract class BaseRFloat[+R <: TangibleFloat](
 extends AbstractData[Float, Float](shared, prim, ro, off, str)
 with DataSeq[RFloat, R] with CompositionFactory[RFloat, TangibleFloat]
 {
-  final def formatManifest = PrimitiveFormat.RFloat
-  final def accessorManifest = PrimitiveFormat.RFloat
+  final def formatTag = PrimitiveFormat.RFloat
+  final def accessorTag = PrimitiveFormat.RFloat
   final def components: Int = 1
   
   final def mkReadDataArray[P <: TangibleFloat](prim: ReadDataArray[RFloat, P])

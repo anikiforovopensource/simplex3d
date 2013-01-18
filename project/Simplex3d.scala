@@ -23,7 +23,7 @@ import Keys._
 
 object Simplex3d extends Build {
   
-  val ScalaVersion = "2.9.2"
+  val ScalaVersion = "2.10.0"
   val LwjglVersion = "2.8.4"
   
   val MathVersion = "2.4.4-SNAPSHOT"
@@ -35,7 +35,7 @@ object Simplex3d extends Build {
   val ConsoleVersion = "0.3.3-SNAPSHOT"
   val ScriptVersion = "0.3.3-SNAPSHOT"
   
-  val ScalatestVersion = "1.6.1"
+  val ScalatestVersion = "1.9.1"
   
   
   lazy val allCode = Project(

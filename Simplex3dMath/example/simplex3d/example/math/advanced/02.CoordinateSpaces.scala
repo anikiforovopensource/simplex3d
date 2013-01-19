@@ -93,7 +93,7 @@ object CoordinateSpaces extends App {
     val cameraMatrix = Mat4x3 rotate(camRotation) translate(camTranslation)
     val viewMatrix = inverse(cameraMatrix)
 
-    val modelMatrix = Mat4x3 Identity
+    val modelMatrix = Mat4x3.Identity
     val modelViewMatrix = modelMatrix.concat(viewMatrix)
         
     val projectionMatrix = perspectiveProj(

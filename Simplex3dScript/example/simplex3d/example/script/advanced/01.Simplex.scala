@@ -71,7 +71,7 @@ object Simplex extends App {
     val camTranslation = camRotation.rotateVector(Vec3(0, 0, 20))
 
     val cameraMat = Mat4x3 rotate(camRotation) translate(camTranslation)
-    val modelMat = Mat4x3 Identity
+    val modelMat = Mat4x3.Identity
     val projectionMat = perspectiveProj(radians(45), dims.x.toDouble/dims.y, 10, 100)
 
     transform(modelMat, cameraMat, projectionMat, dims)

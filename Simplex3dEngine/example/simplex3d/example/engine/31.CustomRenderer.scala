@@ -193,7 +193,6 @@ object CustomRenderer extends default.BaseApp {
   sealed abstract class ReadTextureUnit extends prototype.ReadStruct {
     type Read = ReadTextureUnit
     type Mutable = TextureUnit
-    final def readType = classOf[ReadTextureUnit]
     
     def texture: ReadTextureBinding[Texture2d[_]]
     def transformation: ReadMat3x2
@@ -345,7 +344,6 @@ object CustomRenderer extends default.BaseApp {
   sealed abstract class ReadPointLight extends prototype.ReadStruct {
     type Read = ReadPointLight
     type Mutable = PointLight
-    final def readType = classOf[ReadPointLight]
     
     def position: ReadVec3
     def intensity: ReadVec3
@@ -383,7 +381,6 @@ object CustomRenderer extends default.BaseApp {
   sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
     type Read = ReadLighting
     type Mutable = Lighting
-    final def readType = classOf[ReadLighting]
     
     def lights: BindingSeq[PointLight]
   }

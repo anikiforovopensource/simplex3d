@@ -197,7 +197,7 @@ object Bounded {
     
     var i = 0; while (i < size) { val current = node.children(i)
       
-      current match {
+      current.asInstanceOf[Bounded[TransformationContext, GraphicsContext]] match {
         case bounded: Bounded[_, _] => process(bounded, bounded.uncheckedWorldTransformation)
         case _ => // Ignore.
       }

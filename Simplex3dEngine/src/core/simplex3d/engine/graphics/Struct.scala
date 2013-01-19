@@ -154,7 +154,7 @@ trait Struct extends ReadStruct with Accessible {
           
           case seq: BindingSeq[_] =>
             nameKeys.add(new ListNameKey(parentType, fieldNames(i)))
-            val erasure = seq.elementManifest.erasure
+            val erasure = seq.elementTag.runtimeClass
             if (classOf[Struct].isAssignableFrom(erasure)) rec(erasure.newInstance().asInstanceOf[Struct])
 
           case s: Struct =>

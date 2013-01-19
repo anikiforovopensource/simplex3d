@@ -72,7 +72,7 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] () {
   }
   
   final def :=(t: T) {
-    if (isDefined && (value.readType eq t.readType)) {
+    if (isDefined && (value.getClass eq t.getClass)) {
       val stable = value
       stable := t.asInstanceOf[stable.Read]
     }

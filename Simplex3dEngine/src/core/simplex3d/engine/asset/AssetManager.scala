@@ -20,6 +20,7 @@
 
 package simplex3d.engine.asset
 
+import scala.reflect._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
 import simplex3d.math._
@@ -50,11 +51,11 @@ abstract class AssetManager {
   }
   
   def loadTexture2d[A <: Accessor](path: String)
-    (implicit accessorManifest: ClassManifest[A])
+    (implicit accessorTag: ClassTag[A])
   :Option[Texture2d[A]] = {
-    val img = accessorManifest match {
-      case Vec3.Manifest => resolve(_.loadRgbImg(path))
-      case Vec4.Manifest => resolve(_.loadRgbaImg(path))
+    val img = accessorTag match {
+      case Vec3.Tag => resolve(_.loadRgbImg(path))
+      case Vec4.Tag => resolve(_.loadRgbaImg(path))
       case _ => None
     }
     

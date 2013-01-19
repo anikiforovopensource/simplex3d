@@ -32,8 +32,7 @@ import simplex3d.engine.scene._
 sealed abstract class ReadComponentTransformation3d extends ReadTransformation {
   type Read = ReadComponentTransformation3d
   type Mutable = ComponentTransformation3d
-  
-  final def readType = classOf[ReadComponentTransformation3d]
+
   
   def scale: ReadDoubleRef
   def rotation: ReadQuat4

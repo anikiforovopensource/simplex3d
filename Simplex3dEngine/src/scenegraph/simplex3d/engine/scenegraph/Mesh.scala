@@ -30,7 +30,7 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
 
 
-@deprecated("Mesh will be made final in the future versions.")
+@deprecated("Mesh will be made final in the future versions.", since = "")
 class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (
   name: String,
   meshParent: AbstractNode[T, G],

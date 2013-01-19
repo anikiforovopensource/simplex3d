@@ -65,7 +65,7 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
       )
       val shaderUniforms = Map((names zip props): _*).asInstanceOf[Map[String, Value[UncheckedBinding]]]
       val fs = new Shader(Shader.Fragment, fragmentShader, shaderUniforms)
-      this.technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))
+      AccessScene.meshSubtext(this).technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))//XXX implicit doesnt work. why?
     }
   }
   

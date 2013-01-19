@@ -28,7 +28,6 @@ import simplex3d.math._
 sealed abstract class ReadElementRange extends Protected {
   type Read = ReadElementRange
   type Mutable = ElementRange
-  final def readType = classOf[ReadElementRange]
   
   def first: ReadIntRef
   def count: ReadIntRef

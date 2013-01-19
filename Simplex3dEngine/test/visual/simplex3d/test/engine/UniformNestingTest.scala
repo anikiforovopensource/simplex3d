@@ -48,7 +48,6 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   sealed abstract class ReadStruct2 extends prototype.ReadStruct {
     type Read = ReadStruct2
     type Mutable = Struct2
-    final def readType = classOf[ReadStruct2]
     
     def value2: ReadVec3
     def value2Array: BindingSeq[Vec3]
@@ -73,7 +72,6 @@ object UniformNestingTest extends default.FullscreenEffectApp {
   sealed abstract class ReadStruct1 extends prototype.ReadStruct {
     type Read = ReadStruct1
     type Mutable = Struct1
-    final def readType = classOf[ReadStruct1]
     
     def value1: ReadVec3
     def value1Array: BindingSeq[Vec3]

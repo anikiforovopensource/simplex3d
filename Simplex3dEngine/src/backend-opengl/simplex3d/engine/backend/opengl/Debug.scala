@@ -60,7 +60,7 @@ object DebugGraphics {
     protected def debugBoundingVolume = null
     
     import AccessScene._
-    this.technique := LineProgram
+    AccessScene.meshSubtext(this).technique := LineProgram//XXX must work with implicit
   }
   
   private val LineProgram = {//XXX somehow make this Profile-dependent

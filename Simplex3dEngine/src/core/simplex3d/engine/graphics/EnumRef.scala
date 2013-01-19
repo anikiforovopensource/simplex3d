@@ -35,7 +35,6 @@ extends Protected with PropertyContextDependent with Serializable
   
   type Read = ReadEnumRef[T]
   type Mutable = EnumRef[T]
-  final def readType = classOf[ReadEnumRef[T]]
   final def mutableCopy() = new EnumRef[T](value0)
 
   

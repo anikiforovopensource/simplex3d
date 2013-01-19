@@ -30,7 +30,6 @@ import simplex3d.engine.graphics._
 sealed abstract class ReadFog extends ReadEnvironmentalEffect with prototype.ReadStruct {
   type Read = ReadFog
   type Mutable = Fog
-  final def readType = classOf[ReadFog]
   
   def color: ReadVec3
   def density: ReadDoubleRef

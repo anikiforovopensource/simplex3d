@@ -126,8 +126,8 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   
   
-  @deprecated("Temporary work-around.") def preRender() {}
-  @deprecated("Temporary work-around.") def postRender() {}
+  @deprecated("Temporary work-around.", since = "") def preRender() {}
+  @deprecated("Temporary work-around.", since = "") def postRender() {}
 }
 
 class BaseMesh(val name: String) extends AbstractMesh {

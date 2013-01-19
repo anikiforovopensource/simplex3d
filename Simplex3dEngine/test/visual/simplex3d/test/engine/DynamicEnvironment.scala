@@ -185,7 +185,6 @@ package testenv {
   sealed abstract class ReadIntensity extends ReadEnvironmentalEffect {
     type Read = ReadIntensity
     type Mutable = Intensity
-    final def readType = classOf[ReadIntensity]
     
     def value: ReadDoubleRef
   }
@@ -210,7 +209,6 @@ package testenv {
   sealed abstract class ReadNodeColor extends ReadEnvironmentalEffect {
     type Read = ReadNodeColor
     type Mutable = NodeColor
-    final def readType = classOf[ReadNodeColor]
     
     def color: ReadVec3
   }
@@ -238,7 +236,6 @@ package testenv {
   sealed abstract class ReadContrast extends ReadUpdatableEnvironmentalEffect {
     type Read = ReadContrast
     type Mutable = Contrast
-    final def readType = classOf[ReadContrast]
     
     def factor: ReadDoubleRef
     def secondary: ReadBooleanRef
@@ -293,7 +290,6 @@ package testenv {
   final class ContrastBinding1 extends prototype.Struct {
     type Read = ContrastBinding1
     type Mutable = ContrastBinding1
-    final def readType = classOf[ContrastBinding1]
     
     protected def mkMutable() = new ContrastBinding1
     
@@ -305,7 +301,6 @@ package testenv {
   final class ContrastBinding2 extends prototype.Struct {
     type Read = ContrastBinding2
     type Mutable = ContrastBinding2
-    final def readType = classOf[ContrastBinding2]
     
     protected def mkMutable() = new ContrastBinding2
     

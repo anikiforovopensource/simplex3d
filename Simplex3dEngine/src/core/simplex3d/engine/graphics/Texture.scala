@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics
 
+import scala.reflect._
 import simplex3d.math.types._
 import simplex3d.math._
 import simplex3d.math.double._
@@ -177,7 +178,7 @@ extends Texture[A](accessible, linked) with Tangible
 
 
 object Texture2d {
-  val Manifest = ClassManifest.classType[Texture2d[_]](classOf[Texture2d[_]])
+  val Tag = classTag[Texture2d[_]]
   
   def apply[F <: Format { type Component = RDouble; type Accessor <: simplex3d.data.Accessor }](
     dimensions: ConstVec2i
@@ -200,10 +201,10 @@ object Texture2d {
 
   def fromUncheckedSrc[A <: Accessor](
     dimensions: ConstVec2i, src: DirectSrc with ContiguousSrc
-  )(implicit accessorManifest: ClassManifest[A]) :Texture2d[A] = {
+  )(implicit accessorTag: ClassTag[A]) :Texture2d[A] = {
     
-    if (src.accessorManifest != accessorManifest) throw new IllegalArgumentException(
-      "Data accessor type doest not match manifest.")
+    if (src.accessorTag != accessorTag) throw new IllegalArgumentException(
+      "Data accessor type doest not match the tag.")
     
     if (src.isInstanceOf[Data[_]]) {
       fromData(dimensions, src.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc])

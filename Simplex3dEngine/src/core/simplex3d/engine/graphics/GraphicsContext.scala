@@ -240,7 +240,7 @@ abstract class GraphicsContext {
       val name = material.uniformNames(i)
       
       if (prop.isDefined) prop.get match {
-        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementManifest.erasure) =>
+        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementTag.runtimeClass) =>
           seq.samplerRemapping(name, remapping)
         case s: Struct =>
           s.samplerRemapping(name, remapping)
@@ -256,7 +256,7 @@ abstract class GraphicsContext {
       val name = worldEnvironment.propertyNames(i)
       
       if (prop.isDefined) prop.get.binding match {
-        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementManifest.erasure) =>
+        case seq: BindingSeq[_] if classOf[Struct].isAssignableFrom(seq.elementTag.runtimeClass) =>
           seq.samplerRemapping(name, remapping)
         case s: Struct =>
           s.samplerRemapping(name, remapping)

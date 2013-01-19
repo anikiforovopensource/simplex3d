@@ -33,7 +33,6 @@ import simplex3d.math.double._
  */
 final class Oabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends BoundingVolume
 {
-  def readType = classOf[Oabb]
   def mutableCopy() = new Oabb(min.mutableCopy(), max.mutableCopy())
   
   def :=(r: BoundingVolume) {

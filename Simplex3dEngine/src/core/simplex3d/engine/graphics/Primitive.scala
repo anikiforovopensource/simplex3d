@@ -27,7 +27,6 @@ import simplex3d.math.double._
 sealed abstract class ReadPrimitive extends prototype.ReadStruct {
   type Read = ReadPrimitive
   type Mutable = Primitive
-  final def readType = classOf[ReadPrimitive]
   
   def mode: ReadEnumRef[VertexMode.type]
   def faceCulling: ReadEnumRef[FaceCulling.type]

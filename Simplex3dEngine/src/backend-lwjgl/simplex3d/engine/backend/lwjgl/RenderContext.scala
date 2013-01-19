@@ -24,6 +24,7 @@ package backend.lwjgl
 import java.util.logging._
 import java.nio._
 import java.util.HashMap
+import scala.reflect._
 import scala.annotation._
 import scala.collection.mutable.ArrayBuffer
 import org.lwjgl.opengl._
@@ -307,9 +308,9 @@ extends graphics.RenderContext {
     val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
-    val internalFormat = resolveInternalFormat(src.formatManifest)
-    val format = resolveFormat(src.accessorManifest)
-    val ftype = resolveType(src.formatManifest, src.rawType)
+    val internalFormat = resolveInternalFormat(src.formatTag)
+    val format = resolveFormat(src.accessorTag)
+    val ftype = resolveType(src.formatTag, src.rawType)
     
     glTexImage2D(
       GL_TEXTURE_2D, 0, //level
@@ -344,9 +345,9 @@ extends graphics.RenderContext {
     val generateMipmap = (texture.mipMapFilter != MipMapFilter.Disabled)
     
     val src = texture.src
-    val internalFormat = resolveInternalFormat(src.formatManifest)
-    val format = resolveFormat(src.accessorManifest)
-    val ftype = resolveType(src.formatManifest, src.rawType)
+    val internalFormat = resolveInternalFormat(src.formatTag)
+    val format = resolveFormat(src.accessorTag)
+    val ftype = resolveType(src.formatTag, src.rawType)
   
     glTexSubImage2D(
       GL_TEXTURE_2D, 0, //level
@@ -364,22 +365,22 @@ extends graphics.RenderContext {
     texture.clearDataChanges()
   }
   
-  private def resolveInternalFormat(manifest: ClassManifest[_ <: Format]) :Int = {
-    manifest match {
-      case Vec3.Manifest => GL_RGB8
-      case Vec4.Manifest => GL_RGBA8
+  private def resolveInternalFormat(tag: ClassTag[_ <: Format]) :Int = {
+    tag match {
+      case Vec3.Tag => GL_RGB8
+      case Vec4.Tag => GL_RGBA8
     }
   }
-  private def resolveFormat(manifest: ClassManifest[_ <: Accessor]) :Int = {
-    manifest match {
+  private def resolveFormat(tag: ClassTag[_ <: Accessor]) :Int = {
+    tag match {
       case PrimitiveFormat.RDouble => GL_LUMINANCE
-      case Vec2.Manifest => GL_LUMINANCE_ALPHA
-      case Vec3.Manifest => GL_RGB
-      case Vec4.Manifest => GL_RGBA
+      case Vec2.Tag => GL_LUMINANCE_ALPHA
+      case Vec3.Tag => GL_RGB
+      case Vec4.Tag => GL_RGBA
     }
   }
-  private def resolveType(manifest: ClassManifest[_ <: Format], rawType: Int) :Int = {
-    // XXX Different custom gl-types depending on manifest.
+  private def resolveType(tag: ClassTag[_ <: Format], rawType: Int) :Int = {
+    // XXX Different custom gl-types depending on tag.
     rawType match {
       case RawType.UByte => GL_UNSIGNED_BYTE
       case RawType.UShort => GL_UNSIGNED_SHORT
@@ -387,7 +388,7 @@ extends graphics.RenderContext {
   }
   
   private def updateMipmaps(texture: Texture[_]) {
-    texture match {
+    texture.asInstanceOf[Texture[Accessor]] match {
       case t: Texture2d[_] =>
         glEnable(GL_TEXTURE_2D) // FIX for ATI's glGenerateMipmapEXT() bug.
         glGenerateMipmapEXT(GL_TEXTURE_2D) // TODO Test on ATI cards.
@@ -444,7 +445,7 @@ extends graphics.RenderContext {
       }
     }
     
-    texture match {
+    texture.asInstanceOf[Texture[Accessor]] match {
       case tex: Texture2d[_] =>
         glTexParameteri(glTarget, GL_TEXTURE_WRAP_S, wrapConstant(tex.wrapS))
         glTexParameteri(glTarget, GL_TEXTURE_WRAP_T, wrapConstant(tex.wrapT))
@@ -489,7 +490,7 @@ extends graphics.RenderContext {
   def init(texture: Texture[_]) {
     activeTextureUnit(0)
     
-    texture match {
+    texture.asInstanceOf[Texture[Accessor]] match {
       case t: Texture2d[_] => initUpdateTexture2d(t)
     }
   }
@@ -863,12 +864,12 @@ extends graphics.RenderContext {
         
         /* Replace when 2.10 is out.
         val resolved = binding match {
-          case tb: ReadTextureBinding[_] => ClassUtil.simpleName(tb.bindingManifest.erasure)
+          case tb: ReadTextureBinding[_] => ClassUtil.simpleName(tb.bindingTag.runtimeClass)
           case _ => ClassUtil.simpleName(binding.getClass)
         }*/
         val resolved =
           if (TextureBinding.avoidCompilerCrashB(binding))
-            ClassUtil.simpleName(TextureBinding.avoidCompilerCrash(binding).bindingManifest.erasure)
+            ClassUtil.simpleName(TextureBinding.avoidCompilerCrash(binding).bindingTag.runtimeClass)
           else
             ClassUtil.simpleName(binding.getClass)
         
@@ -895,25 +896,25 @@ extends graphics.RenderContext {
     binding.asInstanceOf[Binding]
   }
   
-  private[this] def checkAttributeType(m: ClassManifest[_], dtype: Int) :Boolean = {
+  private[this] def checkAttributeType(m: ClassTag[_], dtype: Int) :Boolean = {
      dtype match {
       case EngineBindingTypes.Float => m == PrimitiveFormat.RFloat || m == PrimitiveFormat.RDouble
-      case EngineBindingTypes.Vec2 => m == Vec2.Manifest
-      case EngineBindingTypes.Vec3 => m == Vec3.Manifest
-      case EngineBindingTypes.Vec4 => m == Vec4.Manifest
+      case EngineBindingTypes.Vec2 => m == Vec2.Tag
+      case EngineBindingTypes.Vec3 => m == Vec3.Tag
+      case EngineBindingTypes.Vec4 => m == Vec4.Tag
       case EngineBindingTypes.Int => m == PrimitiveFormat.SInt
-      case EngineBindingTypes.Vec2i => m == Vec2i.Manifest
-      case EngineBindingTypes.Vec3i => m == Vec3i.Manifest
-      case EngineBindingTypes.Vec4i => m == Vec4i.Manifest
-      case EngineBindingTypes.Mat2x2 => m == Mat2x2.Manifest
-      case EngineBindingTypes.Mat2x3 => m == Mat2x3.Manifest
-      case EngineBindingTypes.Mat2x4 => m == Mat2x4.Manifest
-      case EngineBindingTypes.Mat3x2 => m == Mat3x2.Manifest
-      case EngineBindingTypes.Mat3x3 => m == Mat3x3.Manifest
-      case EngineBindingTypes.Mat3x4 => m == Mat3x4.Manifest
-      case EngineBindingTypes.Mat4x2 => m == Mat4x2.Manifest
-      case EngineBindingTypes.Mat4x3 => m == Mat4x3.Manifest
-      case EngineBindingTypes.Mat4x4 => m == Mat4x4.Manifest
+      case EngineBindingTypes.Vec2i => m == Vec2i.Tag
+      case EngineBindingTypes.Vec3i => m == Vec3i.Tag
+      case EngineBindingTypes.Vec4i => m == Vec4i.Tag
+      case EngineBindingTypes.Mat2x2 => m == Mat2x2.Tag
+      case EngineBindingTypes.Mat2x3 => m == Mat2x3.Tag
+      case EngineBindingTypes.Mat2x4 => m == Mat2x4.Tag
+      case EngineBindingTypes.Mat3x2 => m == Mat3x2.Tag
+      case EngineBindingTypes.Mat3x3 => m == Mat3x3.Tag
+      case EngineBindingTypes.Mat3x4 => m == Mat3x4.Tag
+      case EngineBindingTypes.Mat4x2 => m == Mat4x2.Tag
+      case EngineBindingTypes.Mat4x3 => m == Mat4x3.Tag
+      case EngineBindingTypes.Mat4x4 => m == Mat4x4.Tag
       case _ => false
     }
   }
@@ -948,13 +949,13 @@ extends graphics.RenderContext {
       
       /* Replace when 2.10 is out
       case EngineBindingTypes.Texture2d => binding match {
-          case tb: ReadTextureBinding[_] => Texture2d.Manifest.erasure.isAssignableFrom(tb.bindingManifest.erasure)
+          case tb: ReadTextureBinding[_] => Texture2d.Tag.runtimeClass.isAssignableFrom(tb.bindingTag.runtimeClass)
           case _ => false
         }*/
       case EngineBindingTypes.Texture2d =>
         if (TextureBinding.avoidCompilerCrashB(binding)) {
-          val erasure = TextureBinding.avoidCompilerCrash(binding).bindingManifest.erasure
-          Texture2d.Manifest.erasure.isAssignableFrom(erasure)
+          val erasure = TextureBinding.avoidCompilerCrash(binding).bindingTag.runtimeClass
+          Texture2d.Tag.runtimeClass.isAssignableFrom(erasure)
         }
         else false
       
@@ -1036,10 +1037,10 @@ extends graphics.RenderContext {
         "Attributes '" + programBinding.name + "' cannot be resolved for mesh '" + mesh.name + "'."
       )
       else {
-        val correctType = checkAttributeType(attrib.src.accessorManifest, programBinding.dataType)
+        val correctType = checkAttributeType(attrib.src.accessorTag, programBinding.dataType)
         
         if (!correctType) {
-          val resolved = ClassUtil.simpleName(attrib.src.accessorManifest.erasure)
+          val resolved = ClassUtil.simpleName(attrib.src.accessorTag.runtimeClass)
               
           log(
             Level.SEVERE, "Attributes '" + programBinding.name +

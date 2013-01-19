@@ -22,22 +22,23 @@ package simplex3d.engine
 package graphics
 
 import java.util.HashMap
+import scala.reflect._
 import simplex3d.math.types._
 import simplex3d.data._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadTextureBinding[T <: Texture[_] with Tangible : ClassManifest]
+sealed abstract class ReadTextureBinding[T <: Texture[_] with Tangible : ClassTag]
 extends Protected with Cloneable with Binding with Serializable
 {
   type Clone <: ReadTextureBinding[T]
   type Read = ReadTextureBinding[T]
   type Mutable = TextureBinding[T]
   
-  final def readType = classOf[ReadTextureBinding[T]]
+  
   final def mutableCopy() = new TextureBinding[T](texture)
   
-  final val bindingManifest = implicitly[ClassManifest[T]]
+  final val bindingTag = implicitly[ClassTag[T]]
   protected[engine] var texture: T = _
   
   final def bound: T = if (texture == null) throw new NoSuchElementException else texture
@@ -47,11 +48,14 @@ extends Protected with Cloneable with Binding with Serializable
   def isAccessible = (isBound && bound.isAccessible)
   def isWritable = (isBound && bound.isWritable)
   
-  def read: ReadData[T#Accessor] with DirectSrc with ContiguousSrc =
-    bound.read.asInstanceOf[ReadData[T#Accessor] with DirectSrc with ContiguousSrc]
   
-  def write: Data[T#Accessor] with DirectSrc with ContiguousSrc =
-    bound.write.asInstanceOf[Data[T#Accessor] with DirectSrc with ContiguousSrc]
+  type Accessor = T#Accessor //TODO required since 2.10.0, may not be necessary in future versions.
+  
+  def read: ReadData[Accessor] with DirectSrc with ContiguousSrc =
+    bound.read.asInstanceOf[ReadData[Accessor] with DirectSrc with ContiguousSrc]
+  
+  def write: Data[Accessor] with DirectSrc with ContiguousSrc =
+    bound.write.asInstanceOf[Data[Accessor] with DirectSrc with ContiguousSrc]
   
   def src: DirectSrc with ContiguousSrc = bound.src
   
@@ -84,7 +88,7 @@ extends Protected with Cloneable with Binding with Serializable
 
 
 @SerialVersionUID(8104346712419693669L)
-final class TextureBinding[T <: Texture[_] with Tangible : ClassManifest] extends ReadTextureBinding[T]
+final class TextureBinding[T <: Texture[_] with Tangible : ClassTag] extends ReadTextureBinding[T]
 with Accessible with Serializable
 {
   def this(texture: T) {
@@ -95,7 +99,7 @@ with Accessible with Serializable
   type Clone = TextureBinding[T]
   override def clone() = new TextureBinding[T](texture)
 
-  def :=(r: ReadTextureBinding[T]) { texture_=(r.asInstanceOf[ReadTextureBinding[T]]texture) }
+  def :=(r: ReadTextureBinding[T]) { texture_=(r.asInstanceOf[ReadTextureBinding[T]].texture) }
   def :=(t: T) { texture_=(t) }
 }
 

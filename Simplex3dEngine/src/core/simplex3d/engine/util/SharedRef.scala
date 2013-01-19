@@ -24,7 +24,7 @@ import simplex3d.data._
 
 
 // XXX This class will be removed. Do not use.
-@deprecated
+@deprecated("This class is getting removed.", since = "")
 abstract class SharedRef[T <: AnyRef] { self: AccessibleSharedRef =>
   
   private[this] final var value: T = _

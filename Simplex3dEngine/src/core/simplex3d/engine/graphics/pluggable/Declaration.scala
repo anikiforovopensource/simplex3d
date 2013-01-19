@@ -21,6 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
+import scala.reflect._
 import scala.collection._
 import simplex3d.math._
 import simplex3d.math.double._
@@ -32,7 +33,7 @@ import simplex3d.engine.graphics._
 
 final class Declaration(
   val qualifiers: Option[String],
-  val manifest: ClassManifest[_ <: Binding],
+  val tag: ClassTag[_ <: Binding],
   val glslType: String,
   val name: String,
   val arraySizeExpression: Option[String],
@@ -41,7 +42,7 @@ final class Declaration(
 ) {
   val isPredefined = name.startsWith("se_")
   val isReserved = name.startsWith("gl_")
-  val isArray: Boolean = classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)
+  val isArray: Boolean = classOf[BindingSeq[_]].isAssignableFrom(tag.runtimeClass)
   
   private val syntheticName = {
     name match {
@@ -51,17 +52,18 @@ final class Declaration(
     }
   }
   
-  val attributeManifest: ClassManifest[_] = {
-    manifest match {
-      case DoubleRef.Manifest => PrimitiveFormat.RDouble
-      case _ => manifest
+  val attributeTag: ClassTag[_] = {
+    tag match {
+      case DoubleRef.Tag => PrimitiveFormat.RDouble
+      case _ => tag
     }
   }
   
-  val uniformManifest: ClassManifest[_] = {
-    if (classOf[BindingSeq[_]].isAssignableFrom(manifest.erasure)) {
+  val uniformTag: ClassTag[_] = {
+    if (classOf[BindingSeq[_]].isAssignableFrom(tag.runtimeClass)) {
       try {
-        manifest.typeArguments.head.asInstanceOf[ClassManifest[_ <: Binding]]
+        val ct: ClassTag[_] = tag.typeArguments.head.asInstanceOf[ClassManifest[_ <: Binding]]
+        ct
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -69,7 +71,7 @@ final class Declaration(
         )
       }
     }
-    else manifest
+    else tag
   }
   
   override def toString() :String = {
@@ -84,7 +86,7 @@ final class Declaration(
       
       case d: Declaration =>
         qualifiers == d.qualifiers &&
-        manifest == d.manifest &&
+        tag == d.tag &&
         syntheticName == d.syntheticName &&
         arraySizeExpression == d.arraySizeExpression
         
@@ -98,7 +100,7 @@ final class Declaration(
       41 * (
         41 * (
           41 + qualifiers.hashCode
-        ) + manifest.hashCode
+        ) + tag.hashCode
       ) + name.hashCode
     ) + arraySizeExpression.hashCode
   }

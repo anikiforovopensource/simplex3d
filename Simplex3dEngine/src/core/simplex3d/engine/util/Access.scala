@@ -21,6 +21,7 @@
 package simplex3d.engine
 package util
 
+import scala.language.implicitConversions
 import simplex3d.math.types._
 import simplex3d.math.double._
 import simplex3d.data._

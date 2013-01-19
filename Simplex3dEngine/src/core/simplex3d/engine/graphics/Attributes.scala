@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics
 
 import java.util.WeakHashMap
+import scala.reflect._
 import scala.annotation.unchecked._
 import scala.collection._
 import scala.collection.mutable.ArrayBuffer
@@ -138,14 +139,14 @@ object Attributes {
   
   def fromUncheckedSrc[F <: Format, R <: Raw]
     (src: DirectSrc with ContiguousSrc, caching: Caching.Value = Caching.Static)
-    (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
+    (implicit formatTag: ClassTag[F], rawTag: ClassTag[R])
   :Attributes[F, R] = {
     
-    if (src.formatManifest != formatManifest) throw new IllegalArgumentException(
-      "Data source format does not match manifest.")
+    if (src.formatTag != formatTag) throw new IllegalArgumentException(
+      "Data source format does not match the tag.")
       
-    if (!(RawManifest.fromRawType(src.rawType) <:< rawManifest)) throw new IllegalArgumentException(
-      "Data source raw type does not match manifest.")
+    if (!(RawTag.fromRawType(src.rawType) <:< rawTag)) throw new IllegalArgumentException(
+      "Data source raw type does not match the tag.")
       
     if (src.isInstanceOf[ReadDataBuffer[_, _]]) {
       fromData(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
@@ -176,14 +177,14 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
     }
     
     def fromUncheckedSrc[F <: Format, R <: Raw](src: DirectSrc)
-      (implicit formatManifest: ClassManifest[F], rawManifest: ClassManifest[R])
+      (implicit formatTag: ClassTag[F], rawTag: ClassTag[R])
     :Attributes[F, R] = {
       
-      if (src.formatManifest != formatManifest) throw new IllegalArgumentException(
-        "Data source format does not match manifest.")
+      if (src.formatTag != formatTag) throw new IllegalArgumentException(
+        "Data source format does not match the tag.")
         
-      if (!(RawManifest.fromRawType(src.rawType) <:< rawManifest)) throw new IllegalArgumentException(
-        "Data source raw type does not match manifest.")
+      if (!(RawTag.fromRawType(src.rawType) <:< rawTag)) throw new IllegalArgumentException(
+        "Data source raw type does not match the tag.")
     
       if (src.isInstanceOf[ReadDataView[_, _]]) {
         fromData[F, R](src.asInstanceOf[ReadDataView[F, R]])

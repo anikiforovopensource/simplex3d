@@ -28,7 +28,6 @@ import simplex3d.engine.graphics._
 sealed abstract class ReadTextureUnit extends prototype.ReadStruct {
   type Read = ReadTextureUnit
   type Mutable = TextureUnit
-  final def readType = classOf[ReadTextureUnit]
   
   def texture: ReadTextureBinding[Texture2d[_]]
   def transformation: ReadMat3x2

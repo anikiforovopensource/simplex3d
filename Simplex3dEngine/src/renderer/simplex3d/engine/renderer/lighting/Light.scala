@@ -41,7 +41,6 @@ final class DirectionalLight extends ReadDirectionalLight {
 sealed abstract class ReadPointLight extends prototype.ReadStruct {
   type Read = ReadPointLight
   type Mutable = PointLight
-  final def readType = classOf[ReadPointLight]
   
   def position: ReadVec3
   def intensity: ReadVec3

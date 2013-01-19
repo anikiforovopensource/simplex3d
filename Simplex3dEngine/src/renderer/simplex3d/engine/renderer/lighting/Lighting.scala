@@ -32,7 +32,6 @@ import simplex3d.engine._
 sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
   type Read = ReadLighting
   type Mutable = Lighting
-  final def readType = classOf[ReadLighting]
   
   //def directionalLights: List[ReadDirectionalLight]
   def pointLights: IndexedSeq[ReadPointLight]

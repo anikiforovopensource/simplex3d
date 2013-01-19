@@ -198,13 +198,13 @@ extends graphics.TechniqueManager[G]
           passed = (attrib != null)
           
           if (attrib != null) {
-            if (declaration.attributeManifest == attrib.src.accessorManifest) {
+            if (declaration.attributeTag == attrib.src.accessorTag) {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,
               "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
               "' because the attribute '" + declaration.name + "' is declared as '" +
-              ClassUtil.simpleName(declaration.manifest.erasure) + "' but resolves to an instance of '" +
+              ClassUtil.simpleName(declaration.tag.runtimeClass) + "' but resolves to an instance of '" +
               ClassUtil.simpleName(attrib.getClass) + "'."
             )
           }
@@ -240,26 +240,27 @@ extends graphics.TechniqueManager[G]
           
           if (resolved != null) {
             
+            import scala.language.existentials
             def adjustedErasure = {
-              if (resolved.getClass == Mat2x3.Manifest.erasure) Mat2.Manifest.erasure
-              else if (resolved.getClass == Mat2x4.Manifest.erasure) Mat2.Manifest.erasure
-              else if (resolved.getClass == Mat3x2.Manifest.erasure) Mat3.Manifest.erasure
-              else if (resolved.getClass == Mat3x4.Manifest.erasure) Mat3.Manifest.erasure
-              else if (resolved.getClass == Mat4x2.Manifest.erasure) Mat4.Manifest.erasure
-              else if (resolved.getClass == Mat4x3.Manifest.erasure) Mat4.Manifest.erasure
+              if (resolved.getClass == Mat2x3.Tag.runtimeClass) Mat2.Tag.runtimeClass
+              else if (resolved.getClass == Mat2x4.Tag.runtimeClass) Mat2.Tag.runtimeClass
+              else if (resolved.getClass == Mat3x2.Tag.runtimeClass) Mat3.Tag.runtimeClass
+              else if (resolved.getClass == Mat3x4.Tag.runtimeClass) Mat3.Tag.runtimeClass
+              else if (resolved.getClass == Mat4x2.Tag.runtimeClass) Mat4.Tag.runtimeClass
+              else if (resolved.getClass == Mat4x3.Tag.runtimeClass) Mat4.Tag.runtimeClass
               else resolved.getClass
             }
             
             if (
-              declaration.uniformManifest.erasure == resolved.getClass ||
-              (shader.squareMatrices && declaration.uniformManifest.erasure == adjustedErasure)
+              declaration.uniformTag.runtimeClass == resolved.getClass ||
+              (shader.squareMatrices && declaration.uniformTag.runtimeClass == adjustedErasure)
             ) {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,
               "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
               "' because the uniform '" + declaration.name + "' is declared as '" +
-              ClassUtil.simpleName(declaration.manifest.erasure) + "' but resolves to an instance of '" +
+              ClassUtil.simpleName(declaration.tag.runtimeClass) + "' but resolves to an instance of '" +
               ClassUtil.simpleName(resolved.getClass) + "'."
             )
           }

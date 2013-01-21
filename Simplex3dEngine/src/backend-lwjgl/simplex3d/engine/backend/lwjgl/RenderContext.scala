@@ -286,7 +286,7 @@ extends graphics.RenderContext {
       
       if (activeAttribute.id != id) {
         val byteOffset = src.byteOffset + column*src.bytesPerComponent*rows
-        glVertexAttribPointer(location, rows, src.rawType, src.isNormalized, src.byteStride, byteOffset)
+        glVertexAttribPointer(location, rows, src.rawEnum, src.isNormalized, src.byteStride, byteOffset)
         activeAttribute.id = id
       }
     }
@@ -310,7 +310,7 @@ extends graphics.RenderContext {
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatTag)
     val format = resolveFormat(src.accessorTag)
-    val ftype = resolveType(src.formatTag, src.rawType)
+    val ftype = resolveType(src.formatTag, src.rawEnum)
     
     glTexImage2D(
       GL_TEXTURE_2D, 0, //level
@@ -347,7 +347,7 @@ extends graphics.RenderContext {
     val src = texture.src
     val internalFormat = resolveInternalFormat(src.formatTag)
     val format = resolveFormat(src.accessorTag)
-    val ftype = resolveType(src.formatTag, src.rawType)
+    val ftype = resolveType(src.formatTag, src.rawEnum)
   
     glTexSubImage2D(
       GL_TEXTURE_2D, 0, //level
@@ -382,8 +382,8 @@ extends graphics.RenderContext {
   private def resolveType(tag: ClassTag[_ <: Format], rawType: Int) :Int = {
     // XXX Different custom gl-types depending on tag.
     rawType match {
-      case RawType.UByte => GL_UNSIGNED_BYTE
-      case RawType.UShort => GL_UNSIGNED_SHORT
+      case RawEnum.UByte => GL_UNSIGNED_BYTE
+      case RawEnum.UShort => GL_UNSIGNED_SHORT
     }
   }
   

@@ -292,7 +292,7 @@ final class RenderManager extends graphics.RenderManager {
     if (geometry.indices.isDefined) {
       renderContext.init(geometry.indices.get)
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geometry.indices.get.managedFields.id)
-      glDrawElements(vertexMode, elementRange.count, geometry.indices.get.src.rawType, elementRange.first.toConst)
+      glDrawElements(vertexMode, elementRange.count, geometry.indices.get.src.rawEnum, elementRange.first.toConst)
     }
     else {
       glDrawArrays(vertexMode, elementRange.first, elementRange.count)

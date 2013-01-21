@@ -25,7 +25,7 @@ import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.doublex._
 import simplex3d.data.extension._
-import RawType._
+import RawEnum._
 
 
 /**
@@ -40,14 +40,14 @@ private[data] abstract class BaseVec2d[+R <: TangibleDouble](
 
   final def mkReadDataArray[P <: TangibleDouble](prim: ReadDataArray[Vec2d#Component, P])
   :ReadDataArray[Vec2d, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case RFloat => new ArrayVec2dRFloat(prim.asInstanceOf[ArrayRDoubleRFloat])
       case _ => new ArrayVec2d(prim)
     }).asInstanceOf[ReadDataArray[Vec2d, P]]
   }
   final def mkReadDataBuffer[P <: TangibleDouble](prim: ReadDataBuffer[Vec2d#Component, P])
   :ReadDataBuffer[Vec2d, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case RFloat => new BufferVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat])
       case _ => new BufferVec2d(prim)
     }).asInstanceOf[ReadDataBuffer[Vec2d, P]]
@@ -55,7 +55,7 @@ private[data] abstract class BaseVec2d[+R <: TangibleDouble](
   protected final def mkReadDataViewInstance[P <: TangibleDouble](
     prim: ReadDataBuffer[Vec2d#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec2d, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case RFloat => new ViewVec2dRFloat(prim.asInstanceOf[BufferRDoubleRFloat], off, str)
       case _ => new ViewVec2d(prim, off, str)
     }).asInstanceOf[ReadDataView[Vec2d, P]]

@@ -36,7 +36,7 @@ trait DataSrc {
   def accessorTag: ClassTag[Format#Accessor]
   
   def components: Int
-  def rawType: Int
+  def rawEnum: Int
   def isNormalized: Boolean
 
   type BindingBuffer <: Buffer

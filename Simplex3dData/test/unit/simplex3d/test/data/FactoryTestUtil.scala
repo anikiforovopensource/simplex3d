@@ -177,7 +177,7 @@ object FactoryTestUtil extends FunSuite {
 
     for (size <- 0 to 64) {
       val (bytes, data) = genBuffer(
-        size*descriptor.components*RawType.byteLength(descriptor.rawType),
+        size*descriptor.components*RawEnum.byteLength(descriptor.rawEnum),
         descriptor
       )
       testBuffer(factory(size), false, data)(descriptor)
@@ -197,7 +197,7 @@ object FactoryTestUtil extends FunSuite {
       factory(bytes.asReadOnlyBuffer)
     }
 
-    val rawBytes = RawType.byteLength(descriptor.rawType)
+    val rawBytes = RawEnum.byteLength(descriptor.rawEnum)
 
     for (size <- 0 to 64) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
@@ -267,7 +267,7 @@ object FactoryTestUtil extends FunSuite {
     }
 
 
-    val rawBytes = RawType.byteLength(descriptor.rawType)
+    val rawBytes = RawEnum.byteLength(descriptor.rawEnum)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 
@@ -322,7 +322,7 @@ object FactoryTestUtil extends FunSuite {
       factory(bytes)
     }
 
-    val rawBytes = RawType.byteLength(descriptor.rawType)
+    val rawBytes = RawEnum.byteLength(descriptor.rawEnum)
     
     for (size <- 0 to 64) {
       val (bytes, data) = genRandomBuffer(size, descriptor);
@@ -388,7 +388,7 @@ object FactoryTestUtil extends FunSuite {
     }
 
     
-    val rawBytes = RawType.byteLength(descriptor.rawType)
+    val rawBytes = RawEnum.byteLength(descriptor.rawEnum)
     def test(size: Int) {
       val (bytes, data) = genRandomBuffer(size, descriptor)
 

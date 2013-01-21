@@ -193,7 +193,7 @@ object SortTestUtil extends FunSuite {
       }
       
       
-      // Not tested exceptions on: rawType, formatTag, and sharesStorageWith()
+      // Not tested exceptions on: rawEnum, formatTag, and sharesStorageWith()
     }
     assert(dest.bindingBuffer().equals(destCopy.bindingBuffer()))
     

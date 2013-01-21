@@ -22,6 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import simplex3d.math.doublex._
 import simplex3d.data.extension._
 import simplex3d.data.double._
@@ -54,7 +55,7 @@ package object double {
   implicit final val FactoryVec4d = factory[Vec4d](new ArrayVec4d(default))
 
 
-  private[this] final val bound = Manifest.classType[TangibleDouble](classOf[TangibleDouble])
+  private[this] final val bound = typeTag[TangibleDouble]
 
   implicit object FactoryQuat4d extends DataAdapter[Quat4d, TangibleDouble](components = 4)(
     formatTag = Quat4d.Tag,

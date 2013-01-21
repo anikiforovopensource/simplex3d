@@ -26,37 +26,23 @@ import scala.annotation._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-object RawType {
-  final val SByte = 5120
-  final val UByte = 5121
-  final val SShort = 5122
-  final val UShort = 5123
-  final val SInt = 5124
-  final val UInt = 5125
-  final val HFloat = 5131
-  final val RFloat = 5126
-  final val RDouble = 5130
+private[data] object StoreEnum {
+  final val ByteStore = 0
+  final val ShortStore = 1
+  final val CharStore = 2
+  final val IntStore = 3
+  final val FloatStore = 4
+  final val DoubleStore = 5
 
-  def byteLength(rawType: Int) :Int = {
-    (rawType: @switch) match {
-      case SByte | UByte => 1
-      case SShort | UShort | HFloat => 2
-      case SInt | UInt | RFloat => 4
-      case RDouble => 8
-    }
-  }
-
-  def toString(rawType: Int) :String = {
-    (rawType: @switch) match {
-      case SByte => "SByte"
-      case UByte => "UByte"
-      case SShort => "SShort"
-      case UShort => "UShort"
-      case SInt => "SInt"
-      case UInt => "UInt"
-      case HFloat => "HFloat"
-      case RFloat => "RFloat"
-      case RDouble => "RDouble"
+  def fromRawEnum(rawEnum: Int) = {
+    import RawEnum._
+    (rawEnum: @switch) match {
+      case SByte | UByte => ByteStore
+      case SShort | HFloat => ShortStore
+      case UShort => CharStore
+      case SInt | UInt => IntStore
+      case RFloat => FloatStore
+      case RDouble => DoubleStore
     }
   }
 }

@@ -23,6 +23,7 @@ package simplex3d.test.data
 import java.nio._
 import scala.language.existentials
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import org.scalatest._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
@@ -45,7 +46,6 @@ object AdapterTestUtil extends FunSuite {
     assert(adapter.components == attribs.components)
     assert(adapter.formatTag == attribs.formatTag)
     assert(adapter.accessorTag == attribs.accessorTag)
-    assert(adapter.boundTag == attribs.boundTag)
 
     // Test make.
     val primSize = 10*adapter.components
@@ -53,12 +53,12 @@ object AdapterTestUtil extends FunSuite {
 
       type R = T forSome { type T <: B }
       val original = genRandomSeq(
-        attribs.componentTag, RawTag.toRawType(rawTag), primSize
+        attribs.componentTag, RawEnum.TypeTags.toRawEnum(rawTag), primSize
       ).asInstanceOf[ReadDataArray[F#Component, R]]
 
       val descriptor = Descriptor[F, R](
         attribs.formatTag, attribs.componentTag, attribs.accessorTag,
-        attribs.components, original.rawType, original.isNormalized
+        attribs.components, original.rawEnum, original.isNormalized
       )
 
       val primitiveArray =
@@ -113,20 +113,20 @@ object AdapterTestUtil extends FunSuite {
     val factory = {
       type R = T forSome { type T <: B }
       val primitives = genRandomSeq(
-        attribs.componentTag, RawTag.toRawType(attribs.componentTag), 0
+        attribs.componentTag, RawEnum.ClassTags.toRawEnum(attribs.componentTag), 0
       ).asInstanceOf[ReadDataArray[F#Component, R]]
       adapter.mkReadDataArray(primitives).asInstanceOf[CompositionFactory[F, B]]
     }
 
     // Test raw types that are not allowed.
     for (
-      raw <- RawTag.AllTangible
-      if !attribs.allowed.contains(raw) && supportsRawType(attribs.componentTag, raw)
+      raw <- RawEnum.TypeTags.AllTangible
+      if !attribs.allowed.contains(raw) && supportsRawEnum(attribs.componentTag, raw)
     ) {
       type R = T forSome { type T <: B }
 
       val array = genRandomSeq(
-        attribs.componentTag, RawTag.toRawType(raw), primSize
+        attribs.componentTag, RawEnum.TypeTags.toRawEnum(raw), primSize
       ).asInstanceOf[DataArray[F#Component, R]]
 
       val buffer = array.copyAsDataBuffer()
@@ -178,7 +178,7 @@ object AdapterTestUtil extends FunSuite {
 
     val j = 1
     val writeBuffer = genRandomSeq(
-      attribs.componentTag, sampleData.rawType, sampleData.size + j
+      attribs.componentTag, sampleData.rawEnum, sampleData.size + j
     ).asInstanceOf[Contiguous[F#Component, Raw]]
 
     assert(adapter.apply(sampleData, 0) == sample)
@@ -189,18 +189,17 @@ object AdapterTestUtil extends FunSuite {
 }
 
 case class AdapterAttrib[F <: Format, B <: Raw with Tangible]
-(components: Int, allowed: Seq[ClassTag[_ <: Raw with Tangible]])(
+(components: Int, allowed: Seq[TypeTag[_ <: Raw with Tangible]])(
   implicit
   val formatTag: ClassTag[F],
   val accessorTag: ClassTag[F#Accessor],
-  val boundTag: Manifest[B],
   val componentTag: ClassTag[F#Component]
 )
 
 object AdapterAttribs {
-  import RawTag._
+  import RawEnum.TypeTags._
 
-  private val allowedFloat: Seq[ClassTag[_ <: Raw with Tangible]] =
+  private val allowedFloat: Seq[TypeTag[_ <: Raw with Tangible]] =
     Seq(SByte, UByte, SShort, UShort, SInt, UInt, HFloat, RFloat)
     
   private val allowedDouble = allowedFloat :+ RDouble

@@ -23,6 +23,7 @@ package extension
 
 import java.nio._
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import scala.annotation.unchecked._
 import simplex3d.math._
 
@@ -35,7 +36,7 @@ abstract class DataAdapter[F <: CompositeFormat, B <: Raw with Tangible](final v
   implicit
   final val formatTag: ClassTag[F],
   final val accessorTag: ClassTag[F#Accessor],
-  final val boundTag: Manifest[B]//TODO change to TypeTag after SBT adds reflection support
+  @transient boundTag: TypeTag[B]
 )
 extends CompositionFactory[F, B] with Serializable {
   
@@ -44,43 +45,33 @@ extends CompositionFactory[F, B] with Serializable {
 
   def mkReadDataArray[P <: B](primitives: ReadDataArray[F#Component, P])
   :ReadDataArray[F, P] = {
-    enforceRawType(primitives.rawType)
+    enforceRawEnum(primitives.rawEnum)
     new GenericArray(this, primitives)
   }
   def mkReadDataBuffer[P <: B](primitives: ReadDataBuffer[F#Component, P])
   :ReadDataBuffer[F, P] = {
-    enforceRawType(primitives.rawType)
+    enforceRawEnum(primitives.rawEnum)
     new GenericBuffer(this, primitives)
   }
   protected[data] def mkReadDataViewInstance[P <: B](primitives: ReadDataBuffer[F#Component, P], off: Int, str: Int)
   :ReadDataView[F, P] = {
-    enforceRawType(primitives.rawType)
+    enforceRawEnum(primitives.rawEnum)
     new GenericView(this, primitives, off, str)
   }
 
-  // Rework this initialization code when/if intersectingType manifest has an accesible list of parents
-  // or proper >:> method.
   private[this] final val allowedTypes: Array[Int] = {
-    def extractIntersecting(t: Manifest[_]) :Seq[ClassTag[_]] = {
-      val names = t./*tpe.*/toString.split(" with ")
-      for (name <- names) yield {
-        ClassTag(java.lang.Class.forName(name))
-      }
-    }
-
-    val bounds = extractIntersecting(boundTag)
-    val allowed = for (t <- RawTag.AllTangible if bounds.forall(_ >:> t)) yield RawTag.toRawType(t)
+    val allowed = for (t <- RawEnum.TypeTags.AllTangible if t.tpe <:< boundTag.tpe) yield RawEnum.TypeTags.toRawEnum(t)
     allowed.toArray
   }
-  private[this] def enforceRawType(rawType: Int) {
+  private[this] def enforceRawEnum(rawEnum: Int) {
     var i = 0; while (i < allowedTypes.size) {
-      if (allowedTypes(i) == rawType) return
+      if (allowedTypes(i) == rawEnum) return
       i += 1
     }
 
     throw new IllegalArgumentException(
-      RawType.toString(rawType) + " is not one of the allowed types: " +
-      allowedTypes.map(RawType.toString(_)).mkString(", ") + "."
+      RawEnum.toString(rawEnum) + " is not one of the allowed types: " +
+      allowedTypes.map(RawEnum.toString(_)).mkString(", ") + "."
     )
   }
 }

@@ -24,7 +24,7 @@ import java.nio._
 import scala.annotation._
 import simplex3d.math._
 import simplex3d.data.extension._
-import StoreType._
+import StoreEnum._
 
 
 /**

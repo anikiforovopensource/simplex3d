@@ -22,6 +22,7 @@ package simplex3d.data
 
 import java.nio._
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import simplex3d.math.floatx._
 import simplex3d.data.extension._
 import simplex3d.data.float._
@@ -53,7 +54,7 @@ package object float {
   implicit final val FactoryVec4f = factory[Vec4f](new ArrayVec4f(default))
 
 
-  private[this] final val bound = Manifest.classType[TangibleFloat](classOf[TangibleFloat])
+  private[this] final val bound = typeTag[TangibleFloat]
 
   implicit object FactoryQuat4f extends DataAdapter[Quat4f, TangibleFloat](components = 4)(
     formatTag = Quat4f.Tag,

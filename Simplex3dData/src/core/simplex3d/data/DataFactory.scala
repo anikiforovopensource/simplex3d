@@ -24,14 +24,14 @@ import java.nio._
 import scala.annotation._
 import scala.annotation.unchecked._
 import scala.reflect._
-import RawType._
+import RawEnum._
 
 
 /**
  * @author Aleksey Nikiforov (lex)
  */
 trait DataFactory[F <: Format, +R <: Raw] {
-  def rawType: Int
+  def rawEnum: Int
   def components: Int
   def bytesPerComponent: Int
   def formatTag: ClassTag[F]
@@ -44,7 +44,7 @@ trait DataFactory[F <: Format, +R <: Raw] {
 
 
   final def mkDataArray(size: Int) :DataArray[F, R] = {
-    val array = ((rawType: @switch) match {
+    val array = ((rawEnum: @switch) match {
       case SByte | UByte => new Array[Byte](size*components)
       case SShort | HFloat=> new Array[Short](size*components)
       case UShort => new Array[Char](size*components)
@@ -67,7 +67,7 @@ trait DataFactory[F <: Format, +R <: Raw] {
   }
 
   final def mkDataBuffer(size: Int) :DataBuffer[F, R] = {
-    mkDataBuffer(ByteBuffer.allocateDirect(size*RawType.byteLength(rawType)*components))
+    mkDataBuffer(ByteBuffer.allocateDirect(size*RawEnum.byteLength(rawEnum)*components))
   }
 
 

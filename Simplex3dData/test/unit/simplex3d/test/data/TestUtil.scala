@@ -24,8 +24,9 @@ import org.scalatest._
 
 import java.nio._
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import simplex3d.data._
-import simplex3d.data.RawType._
+import simplex3d.data.RawEnum._
 import simplex3d.data._
 import simplex3d.data.float._
 import simplex3d.data.double._
@@ -55,8 +56,8 @@ object TestUtil extends FunSuite {
     if (s > 0) s else 0
   }
 
-  def isUnsigned(rawType: Int) :Boolean = {
-    rawType match {
+  def isUnsigned(rawEnum: Int) :Boolean = {
+    rawEnum match {
       case UByte => true
       case UShort => true
       case UInt => true
@@ -65,7 +66,7 @@ object TestUtil extends FunSuite {
   }
 
   def wrap(bytes: ByteBuffer, descriptor: Descriptor[_, _]) :Buffer = {
-    descriptor.rawType match {
+    descriptor.rawEnum match {
       case SByte => bytes
       case UByte => bytes
       case SShort => bytes.asShortBuffer()
@@ -178,7 +179,7 @@ object TestUtil extends FunSuite {
   private def genArray[R <: Raw](
     size: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
   ) :R#Array = {
-    (descriptor.rawType match {
+    (descriptor.rawEnum match {
       case SByte => random(ByteBuffer.wrap(new Array[Byte](size)), fillRandom).array
       case UByte => random(ByteBuffer.wrap(new Array[Byte](size)), fillRandom).array
       case SShort => random(ShortBuffer.wrap(new Array[Short](size)), fillRandom).array
@@ -204,7 +205,7 @@ object TestUtil extends FunSuite {
   private def genBuffer[R <: Raw](
     byteCapacity: Int, descriptor: Descriptor[_, R], fillRandom: Boolean
   ) :(ByteBuffer, R#Buffer) = {
-    (descriptor.rawType match {
+    (descriptor.rawEnum match {
       case SByte => val b = alloc(byteCapacity); (b, random(b.duplicate, fillRandom))
       case UByte => val b = alloc(byteCapacity); (b, random(b.duplicate, fillRandom))
       case SShort => val b = alloc(byteCapacity); (b, random(b.asShortBuffer, fillRandom))
@@ -264,7 +265,7 @@ object TestUtil extends FunSuite {
   private def mkPrimSeq[F <: Format, R <: Raw](size: Int, descriptor: Descriptor[F, R]) = {
     (descriptor.componentTag match {
       case PrimitiveFormat.SInt =>
-        descriptor.rawType match {
+        descriptor.rawEnum match {
           case SByte => DataArray[SInt, SByte](size*descriptor.components)
           case UByte => DataArray[SInt, UByte](size*descriptor.components)
           case SShort => DataArray[SInt, SShort](size*descriptor.components)
@@ -273,7 +274,7 @@ object TestUtil extends FunSuite {
           case UInt => DataArray[SInt, UInt](size*descriptor.components)
         }
       case PrimitiveFormat.RFloat =>
-        descriptor.rawType match {
+        descriptor.rawEnum match {
           case SByte => DataArray[RFloat, SByte](size*descriptor.components)
           case UByte => DataArray[RFloat, UByte](size*descriptor.components)
           case SShort => DataArray[RFloat, SShort](size*descriptor.components)
@@ -284,7 +285,7 @@ object TestUtil extends FunSuite {
           case RFloat => DataArray[RFloat, RFloat](size*descriptor.components)
         }
       case PrimitiveFormat.RDouble =>
-        descriptor.rawType match {
+        descriptor.rawEnum match {
           case SByte => DataArray[RDouble, SByte](size*descriptor.components)
           case UByte => DataArray[RDouble, UByte](size*descriptor.components)
           case SShort => DataArray[RDouble, SShort](size*descriptor.components)
@@ -331,7 +332,7 @@ object TestUtil extends FunSuite {
     genRandomSeq(None, None, size)
   }
   def genRandomSeq(
-    manifest: Option[ClassTag[_ <: Format]], rawType: Option[Int], size: Int
+    manifest: Option[ClassTag[_ <: Format]], rawEnum: Option[Int], size: Int
   ) :Contiguous[_ <: Format, Raw] = {
     val m = manifest match {
       case Some(man) =>
@@ -363,7 +364,7 @@ object TestUtil extends FunSuite {
       case Mat3x2d.Tag => (7, 9)
     }
     
-    val r = rawType match {
+    val r = rawEnum match {
       case Some(i) => assert(i < max); i
       case None => min + randomSrc.nextInt(max - min) match {
         case 0 => SByte
@@ -381,9 +382,9 @@ object TestUtil extends FunSuite {
       genRandomSeq(m, r, size)
   }
   
-  def genRandomSeq[F <: Format](manifest: ClassTag[F], rawType: Int, size: Int) :Contiguous[F, Raw] = {
+  def genRandomSeq[F <: Format](manifest: ClassTag[F], rawEnum: Int, size: Int) :Contiguous[F, Raw] = {
     (manifest match {
-      case PrimitiveFormat.SInt => rawType match {
+      case PrimitiveFormat.SInt => rawEnum match {
         case SByte => RandomDataArray[SInt, SByte](size)
         case UByte => RandomDataArray[SInt, UByte](size)
         case SShort => RandomDataArray[SInt, SShort](size)
@@ -391,7 +392,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[SInt, SInt](size)
         case UInt => RandomDataArray[SInt, UInt](size)
       }
-      case Vec2i.Tag => rawType match {
+      case Vec2i.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec2i, SByte](size)
         case UByte => RandomDataArray[Vec2i, UByte](size)
         case SShort => RandomDataArray[Vec2i, SShort](size)
@@ -399,7 +400,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[Vec2i, SInt](size)
         case UInt => RandomDataArray[Vec2i, UInt](size)
       }
-      case Vec3i.Tag => rawType match {
+      case Vec3i.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec3i, SByte](size)
         case UByte => RandomDataArray[Vec3i, UByte](size)
         case SShort => RandomDataArray[Vec3i, SShort](size)
@@ -407,7 +408,7 @@ object TestUtil extends FunSuite {
         case SInt => RandomDataArray[Vec3i, SInt](size)
         case UInt => RandomDataArray[Vec3i, UInt](size)
       }
-      case Vec4i.Tag => rawType match {
+      case Vec4i.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec4i, SByte](size)
         case UByte => RandomDataArray[Vec4i, UByte](size)
         case SShort => RandomDataArray[Vec4i, SShort](size)
@@ -416,7 +417,7 @@ object TestUtil extends FunSuite {
         case UInt => RandomDataArray[Vec4i, UInt](size)
       }
       
-      case PrimitiveFormat.RFloat => rawType match {
+      case PrimitiveFormat.RFloat => rawEnum match {
         case SByte => RandomDataArray[RFloat, SByte](size)
         case UByte => RandomDataArray[RFloat, UByte](size)
         case SShort => RandomDataArray[RFloat, SShort](size)
@@ -426,7 +427,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[RFloat, HFloat](size)
         case RFloat => RandomDataArray[RFloat, RFloat](size)
       }
-      case Vec2f.Tag => rawType match {
+      case Vec2f.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec2f, SByte](size)
         case UByte => RandomDataArray[Vec2f, UByte](size)
         case SShort => RandomDataArray[Vec2f, SShort](size)
@@ -436,7 +437,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec2f, HFloat](size)
         case RFloat => RandomDataArray[Vec2f, RFloat](size)
       }
-      case Vec3f.Tag => rawType match {
+      case Vec3f.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec3f, SByte](size)
         case UByte => RandomDataArray[Vec3f, UByte](size)
         case SShort => RandomDataArray[Vec3f, SShort](size)
@@ -446,7 +447,7 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec3f, HFloat](size)
         case RFloat => RandomDataArray[Vec3f, RFloat](size)
       }
-      case Vec4f.Tag => rawType match {
+      case Vec4f.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec4f, SByte](size)
         case UByte => RandomDataArray[Vec4f, UByte](size)
         case SShort => RandomDataArray[Vec4f, SShort](size)
@@ -456,11 +457,11 @@ object TestUtil extends FunSuite {
         case HFloat => RandomDataArray[Vec4f, HFloat](size)
         case RFloat => RandomDataArray[Vec4f, RFloat](size)
       }
-      case Mat3x2f.Tag => rawType match {
+      case Mat3x2f.Tag => rawEnum match {
         case RFloat => RandomDataArray[Mat3x2f, RFloat](size)
       }
       
-      case PrimitiveFormat.RDouble => rawType match {
+      case PrimitiveFormat.RDouble => rawEnum match {
         case SByte => RandomDataArray[RDouble, SByte](size)
         case UByte => RandomDataArray[RDouble, UByte](size)
         case SShort => RandomDataArray[RDouble, SShort](size)
@@ -471,7 +472,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[RDouble, RFloat](size)
         case RDouble => RandomDataArray[RDouble, RDouble](size)
       }
-      case Vec2d.Tag => rawType match {
+      case Vec2d.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec2d, SByte](size)
         case UByte => RandomDataArray[Vec2d, UByte](size)
         case SShort => RandomDataArray[Vec2d, SShort](size)
@@ -482,7 +483,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec2d, RFloat](size)
         case RDouble => RandomDataArray[Vec2d, RDouble](size)
       }
-      case Vec3d.Tag => rawType match {
+      case Vec3d.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec3d, SByte](size)
         case UByte => RandomDataArray[Vec3d, UByte](size)
         case SShort => RandomDataArray[Vec3d, SShort](size)
@@ -493,7 +494,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec3d, RFloat](size)
         case RDouble => RandomDataArray[Vec3d, RDouble](size)
       }
-      case Vec4d.Tag => rawType match {
+      case Vec4d.Tag => rawEnum match {
         case SByte => RandomDataArray[Vec4d, SByte](size)
         case UByte => RandomDataArray[Vec4d, UByte](size)
         case SShort => RandomDataArray[Vec4d, SShort](size)
@@ -504,7 +505,7 @@ object TestUtil extends FunSuite {
         case RFloat => RandomDataArray[Vec4d, RFloat](size)
         case RDouble => RandomDataArray[Vec4d, RDouble](size)
       }
-      case Mat3x2d.Tag => rawType match {
+      case Mat3x2d.Tag => rawEnum match {
         case RFloat => RandomDataArray[Mat3x2d, RFloat](size)
         case RDouble => RandomDataArray[Mat3x2d, RDouble](size)
       }
@@ -674,8 +675,8 @@ object TestUtil extends FunSuite {
     }
   }
   
-  def convert[F <: Format](src: inDataSeq[F, Raw], rawType: Int) :Contiguous[F, Raw] = {
-    val factory = genRandomSeq(src.formatTag, rawType, 0)
+  def convert[F <: Format](src: inDataSeq[F, Raw], rawEnum: Int) :Contiguous[F, Raw] = {
+    val factory = genRandomSeq(src.formatTag, rawEnum, 0)
     val contiguousCopy = factory.mkDataArray(src.components*src.size)
     
     src.primitives.formatTag match {
@@ -765,19 +766,19 @@ object TestUtil extends FunSuite {
     }
   }
 
-  final def supportsRawType(primitives: ClassTag[_], raw: ClassTag[_]) = {
-    import RawTag._
+  final def supportsRawEnum(primitives: ClassTag[_], raw: TypeTag[_]) = {
+    import RawEnum.TypeTags._
 
     primitives match {
-      case SInt => raw match {
+      case RawEnum.ClassTags.SInt => raw match {
         case SByte | UByte | SShort | UShort | SInt | UInt => true
         case _ => false
       }
-      case RFloat => raw match {
+      case RawEnum.ClassTags.RFloat => raw match {
         case SByte | UByte | SShort | UShort | SInt | UInt | HFloat |RFloat => true
         case _ => false
       }
-      case RDouble => true
+      case RawEnum.ClassTags.RDouble => true
     }
   }
   

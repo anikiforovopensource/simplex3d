@@ -51,8 +51,8 @@ with DataSeq[RFloat, R] with CompositionFactory[RFloat, TangibleFloat]
   protected final def mkReadDataViewInstance[P <: TangibleFloat](
     prim: ReadDataBuffer[RFloat, P], off: Int, str: Int
   ) :ReadDataView[RFloat, P] = {
-    (prim.rawType match {
-      case RawType.RFloat =>
+    (prim.rawEnum match {
+      case RawEnum.RFloat =>
         new ViewRFloatRFloat(prim.asInstanceOf[ReadDataBuffer[RFloat, RFloat]], off, str)
       case _ =>
         new ViewRFloat(prim, off, str)
@@ -62,8 +62,8 @@ with DataSeq[RFloat, R] with CompositionFactory[RFloat, TangibleFloat]
   protected final def mkReadDataViewInstance(
     byteBuffer: ByteBuffer, off: Int, str: Int
   ) :ReadDataView[RFloat, R] = {
-    (rawType match {
-      case RawType.RFloat =>
+    (rawEnum match {
+      case RawEnum.RFloat =>
         val prim = primitives.mkReadDataBuffer(byteBuffer).asInstanceOf[ReadDataBuffer[RFloat, RFloat]]
         new ViewRFloatRFloat(prim, off, str)
       case _ =>
@@ -71,7 +71,7 @@ with DataSeq[RFloat, R] with CompositionFactory[RFloat, TangibleFloat]
     }).asInstanceOf[ReadDataView[RFloat, R]]
   }
   
-  final override def mkSerializableInstance() = new PrimitiveRFloat(rawType)
+  final override def mkSerializableInstance() = new PrimitiveRFloat(rawEnum)
 }
 
 private[data] final class ViewRFloat[+R <: TangibleFloat](
@@ -81,7 +81,7 @@ private[data] final class ViewRFloat[+R <: TangibleFloat](
   type Read = ReadDataView[RFloat, R @uncheckedVariance]
 
   final def isNormalized = primitives.isNormalized
-  final def rawType = primitives.rawType
+  final def rawEnum = primitives.rawEnum
   def mkReadOnlyInstance() = new ViewRFloat(primitives.asReadOnly(), offset, stride)
 
   def apply(i: Int) :Float = primitives(offset + i*stride)
@@ -105,7 +105,7 @@ with PrimitiveFactory[RFloat, SByte]
 
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRFloatSByte(rarray, null)
-  def rawType = RawType.SByte
+  def rawEnum = RawEnum.SByte
   def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
@@ -124,7 +124,7 @@ private[data] final class BufferRFloatSByte(
   type Read = ReadDataBuffer[RFloat, SByte]
 
   def mkReadOnlyInstance() = new BufferRFloatSByte(shared, true)
-  def rawType = RawType.SByte
+  def rawEnum = RawEnum.SByte
   def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
@@ -149,7 +149,7 @@ with PrimitiveFactory[RFloat, UByte]
 
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArrayRFloatUByte(rarray, null)
-  def rawType = RawType.UByte
+  def rawEnum = RawEnum.UByte
   def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
@@ -168,7 +168,7 @@ private[data] final class BufferRFloatUByte(
   type Read = ReadDataBuffer[RFloat, UByte]
 
   def mkReadOnlyInstance() = new BufferRFloatUByte(shared, true)
-  def rawType = RawType.UByte
+  def rawEnum = RawEnum.UByte
   def isNormalized = true
 
   def mkDataArray(array: Array[Byte]) =
@@ -193,7 +193,7 @@ with PrimitiveFactory[RFloat, SShort]
 
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRFloatSShort(rarray, null)
-  def rawType = RawType.SShort
+  def rawEnum = RawEnum.SShort
   def isNormalized = true
 
   def mkDataArray(array: Array[Short]) =
@@ -212,7 +212,7 @@ private[data] final class BufferRFloatSShort(
   type Read = ReadDataBuffer[RFloat, SShort]
 
   def mkReadOnlyInstance() = new BufferRFloatSShort(shared, true)
-  def rawType = RawType.SShort
+  def rawEnum = RawEnum.SShort
   def isNormalized = true
 
   def mkDataArray(array: Array[Short]) =
@@ -237,7 +237,7 @@ with PrimitiveFactory[RFloat, UShort]
 
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArrayRFloatUShort(rarray, null)
-  def rawType = RawType.UShort
+  def rawEnum = RawEnum.UShort
   def isNormalized = true
 
   def mkDataArray(array: Array[Char]) =
@@ -256,7 +256,7 @@ private[data] final class BufferRFloatUShort(
   type Read = ReadDataBuffer[RFloat, UShort]
 
   def mkReadOnlyInstance() = new BufferRFloatUShort(shared, true)
-  def rawType = RawType.UShort
+  def rawEnum = RawEnum.UShort
   def isNormalized = true
 
   def mkDataArray(array: Array[Char]) =
@@ -281,7 +281,7 @@ with PrimitiveFactory[RFloat, SInt]
 
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRFloatSInt(rarray, null)
-  def rawType = RawType.SInt
+  def rawEnum = RawEnum.SInt
   def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
@@ -300,7 +300,7 @@ private[data] final class BufferRFloatSInt(
   type Read = ReadDataBuffer[RFloat, SInt]
 
   def mkReadOnlyInstance() = new BufferRFloatSInt(shared, true)
-  def rawType = RawType.SInt
+  def rawEnum = RawEnum.SInt
   def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
@@ -325,7 +325,7 @@ with PrimitiveFactory[RFloat, UInt]
 
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArrayRFloatUInt(rarray, null)
-  def rawType = RawType.UInt
+  def rawEnum = RawEnum.UInt
   def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
@@ -344,7 +344,7 @@ private[data] final class BufferRFloatUInt(
   type Read = ReadDataBuffer[RFloat, UInt]
 
   def mkReadOnlyInstance() = new BufferRFloatUInt(shared, true)
-  def rawType = RawType.UInt
+  def rawEnum = RawEnum.UInt
   def isNormalized = true
 
   def mkDataArray(array: Array[Int]) =
@@ -369,7 +369,7 @@ with PrimitiveFactory[RFloat, HFloat]
 
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArrayRFloatHFloat(rarray, null)
-  def rawType: Int = RawType.HFloat
+  def rawEnum: Int = RawEnum.HFloat
   def isNormalized = false
 
   def mkDataArray(array: Array[Short]) =
@@ -388,7 +388,7 @@ private[data] final class BufferRFloatHFloat(
   type Read = ReadDataBuffer[RFloat, HFloat]
 
   def mkReadOnlyInstance() = new BufferRFloatHFloat(shared, true)
-  def rawType: Int = RawType.HFloat
+  def rawEnum: Int = RawEnum.HFloat
   def isNormalized = false
 
   def mkDataArray(array: Array[Short]) =
@@ -413,7 +413,7 @@ with PrimitiveFactory[RFloat, RFloat]
 
   def this() = this(emptyFloat, emptyFloat)
   def mkReadOnlyInstance() = new ArrayRFloatRFloat(rarray, null)
-  def rawType: Int = RawType.RFloat
+  def rawEnum: Int = RawEnum.RFloat
   def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =
@@ -432,7 +432,7 @@ private[data] final class BufferRFloatRFloat(
   type Read = ReadDataBuffer[RFloat, RFloat]
 
   def mkReadOnlyInstance() = new BufferRFloatRFloat(shared, true)
-  def rawType: Int = RawType.RFloat
+  def rawEnum: Int = RawEnum.RFloat
   def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =

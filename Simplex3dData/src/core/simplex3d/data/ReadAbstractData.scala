@@ -25,7 +25,7 @@ import scala.annotation._
 import scala.reflect._
 import scala.collection._
 import simplex3d.data.extension._
-import StoreType._
+import StoreEnum._
 
 
 /**
@@ -65,7 +65,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
     else prim.asInstanceOf[PrimitiveSeq]
   }
   
-  protected final val storeType = StoreType.fromRawType(rawType)
+  protected final val storeEnum = StoreEnum.fromRawEnum(rawEnum)
 
   private[data] final val buff: Raw#Buffer = {
     if (prim != null) {
@@ -87,11 +87,11 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
         byteBuffer.clear()
         byteBuffer.order(ByteOrder.nativeOrder)
         
-        Util.wrapBuffer(storeType, byteBuffer)
+        Util.wrapBuffer(storeEnum, byteBuffer)
       }
       else {
-        val buff = Util.wrapArray(storeType, sharedStorage.asInstanceOf[Raw#Array])
-        if (ro) Util.readOnlyBuff(storeType, buff) else buff
+        val buff = Util.wrapArray(storeEnum, sharedStorage.asInstanceOf[Raw#Array])
+        if (ro) Util.readOnlyBuff(storeEnum, buff) else buff
       }).asInstanceOf[Raw#Buffer]
     }
   }
@@ -115,14 +115,14 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
   
   // Public API.
   def components: Int
-  def rawType: Int
+  def rawEnum: Int
   def isNormalized: Boolean
   
   def formatTag: ClassTag[Format]
   def accessorTag: ClassTag[Format#Accessor]
   
 
-  final val bytesPerComponent = RawType.byteLength(rawType)
+  final val bytesPerComponent = RawEnum.byteLength(rawEnum)
   final def byteCapacity = {
     if (buff.isDirect) sharedBuffer.capacity
     else buff.capacity*bytesPerComponent
@@ -141,7 +141,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
 
   def apply(i: Int) :AC
 
-  final def readOnlyBuffer() :Raw#Buffer = Util.readOnlyBuff(storeType, buff).asInstanceOf[Raw#Buffer]
+  final def readOnlyBuffer() :Raw#Buffer = Util.readOnlyBuff(storeEnum, buff).asInstanceOf[Raw#Buffer]
   
 
   private[data] def mkReadOnlyInstance() :Read
@@ -156,7 +156,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
       buff
     }
     else {
-      Util.duplicateBuff(storeType, buff)
+      Util.duplicateBuff(storeEnum, buff)
     }
   }
 
@@ -215,7 +215,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
       case s: DataBuffer[_, _] => "DataBuffer"
       case s: DataView[_, _] => view = true; "DataView"
     }) +
-    "[" + getElemName() + ", " + RawType.toString(rawType)+ "](" +
+    "[" + getElemName() + ", " + RawEnum.toString(rawEnum)+ "](" +
     (if (view) "offset = " + offset + ", " else "") +
     "stride = " + stride + ", size = " + size + ")"
   }

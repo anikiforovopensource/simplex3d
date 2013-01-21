@@ -23,7 +23,7 @@ package simplex3d.data.double
 import java.nio._
 import simplex3d.math.doublex._
 import simplex3d.data._
-import RawType._
+import RawEnum._
 
 
 /**

@@ -71,7 +71,7 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
     if (this.formatTag != dest.formatTag) throw new IllegalArgumentException(
       "Destination format must match the source."
     )
-    if (this.rawType != dest.rawType) throw new IllegalArgumentException(
+    if (this.rawEnum != dest.rawEnum) throw new IllegalArgumentException(
       "Destination raw type must match the source."
     )
     if (this.offset != dest.offset) throw new IllegalArgumentException(
@@ -94,24 +94,24 @@ trait ReadData[A <: Accessor] extends ReadAbstractData[A#Const] {
       Util.reorderByteBuffer(ordering, dest, destFirst, this, first, stride, count)
     }
     else {
-      primitives.rawType match {
+      primitives.rawEnum match {
         
-        case RawType.SByte | RawType.UByte =>
+        case RawEnum.SByte | RawEnum.UByte =>
           Util.reorderByteBuffer(ordering, dest, destFirst, this, first, stride, count)
           
-        case RawType.SShort | RawType.HFloat =>
+        case RawEnum.SShort | RawEnum.HFloat =>
           Util.reorderShortBuffer(ordering, dest, destFirst, this, first, stride, count)
           
-        case RawType.UShort =>
+        case RawEnum.UShort =>
           Util.reorderCharBuffer(ordering, dest, destFirst, this, first, stride, count)
           
-        case RawType.SInt | RawType.UInt =>
+        case RawEnum.SInt | RawEnum.UInt =>
           Util.reorderIntBuffer(ordering, dest, destFirst, this, first, stride, count)
           
-        case RawType.RFloat =>
+        case RawEnum.RFloat =>
           Util.reorderFloatBuffer(ordering, dest, destFirst, this, first, stride, count)
           
-        case RawType.RDouble =>
+        case RawEnum.RDouble =>
           Util.reorderDoubleBuffer(ordering, dest, destFirst, this, first, stride, count)
       }
     }

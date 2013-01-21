@@ -37,7 +37,7 @@ private[data] final class ViewRFloatRFloat(
   type Read = ReadDataView[RFloat, RFloat]
 
   def mkReadOnlyInstance() = new ViewRFloatRFloat(primitives.asReadOnly(), offset, stride)
-  def rawType: Int = RawType.RFloat
+  def rawEnum: Int = RawEnum.RFloat
   def isNormalized = false
 
   def mkDataArray(array: Array[Float]) =

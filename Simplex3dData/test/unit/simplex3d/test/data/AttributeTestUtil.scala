@@ -24,7 +24,7 @@ import org.scalatest._
 
 import java.nio._
 import simplex3d.data._
-import simplex3d.data.RawType._
+import simplex3d.data.RawEnum._
 
 import TestUtil._
 
@@ -34,8 +34,8 @@ import TestUtil._
  */
 object AttributeTestUtil extends FunSuite {
 
-  private def rawLength(rawType: Int) :Int = {
-    rawType match {
+  private def rawLength(rawEnum: Int) :Int = {
+    rawEnum match {
       case SByte => 1
       case UByte => 1
       case SShort => 2
@@ -150,7 +150,7 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.accessorTag == descriptor.accessorTag)
     assert(seq.primitives.formatTag == descriptor.componentTag)
     assert(seq.components == descriptor.components)
-    assert(seq.rawType == descriptor.rawType)
+    assert(seq.rawEnum == descriptor.rawEnum)
     assert(seq.isNormalized == descriptor.normalized)
     assert(seq.isReadOnly == readOnly)
 
@@ -158,7 +158,7 @@ object AttributeTestUtil extends FunSuite {
     assert(seq.readOnlyBuffer().isReadOnly)
     checkOrder(seq.readOnlyBuffer())
 
-    assert(seq.bytesPerComponent == rawLength(seq.rawType))
+    assert(seq.bytesPerComponent == rawLength(seq.rawEnum))
     if (data != null) assert(seq.byteCapacity >= seq.bytesPerComponent*data.limit)
     assert(seq.byteOffset == seq.bytesPerComponent*seq.offset)
     assert(seq.byteStride == seq.bytesPerComponent*seq.stride)

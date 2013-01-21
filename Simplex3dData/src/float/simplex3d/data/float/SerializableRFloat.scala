@@ -28,11 +28,11 @@ import simplex3d.data.extension._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-private[data] class PrimitiveRFloat(val rawType: Int) extends SerializablePrimitive with Serializable {
+private[data] class PrimitiveRFloat(val rawEnum: Int) extends SerializablePrimitive with Serializable {
   protected def toReadDataArray(): ReadDataArray[_, _] = {
-    import RawType._
+    import RawEnum._
 
-    rawType match {
+    rawEnum match {
       case SByte => DataArray[RFloat, SByte](content.asInstanceOf[Array[Byte]])
       case UByte => DataArray[RFloat, UByte](content.asInstanceOf[Array[Byte]])
       case SShort => DataArray[RFloat, SShort](content.asInstanceOf[Array[Short]])

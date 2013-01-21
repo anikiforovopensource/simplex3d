@@ -52,7 +52,7 @@ object SubCopyTestUtil extends FunSuite {
     val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readTag(matchingSrc.accessorTag))
     val convertionSrc = genRandomSeq(
       original.formatTag,
-      conversionType(original.formatTag, original.rawType),
+      conversionType(original.formatTag, original.rawEnum),
       size
     ).asInstanceOf[DataArray[F, R]].asReadOnly()
     
@@ -147,7 +147,7 @@ object SubCopyTestUtil extends FunSuite {
     val seqSrc: IndexedSeq[F#Accessor#Read] = matchingSrc.toArray(readTag(matchingSrc.accessorTag))
     val convertionSrc = genRandomSeq(
       original.formatTag,
-      conversionType(original.formatTag, original.rawType),
+      conversionType(original.formatTag, original.rawEnum),
       size
     ).asInstanceOf[DataArray[F, R]].asReadOnly()
     

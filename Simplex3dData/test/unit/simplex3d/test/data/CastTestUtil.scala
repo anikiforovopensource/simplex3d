@@ -28,7 +28,7 @@ import simplex3d.math.floatx._
 import simplex3d.math.doublex._
 import simplex3d.math.doublex.functions._
 import simplex3d.data._
-import simplex3d.data.RawType._
+import simplex3d.data.RawEnum._
 import simplex3d.data.float._
 import simplex3d.data.double._
 
@@ -47,7 +47,7 @@ object CastTestUtil extends FunSuite {
     for (size <- 0 to 9) {
       val seq = factory(genRandomArray(size, descriptor))
 
-      seq.rawType match {
+      seq.rawEnum match {
         case SByte => testSByteArrayCast(seq.asInstanceOf[DataArray[_, SByte]])
         case UByte => testUByteArrayCast(seq.asInstanceOf[DataArray[_, UByte]])
         case SShort => testSShortArrayCast(seq.asInstanceOf[DataArray[_, SShort]])
@@ -1077,7 +1077,7 @@ object CastTestUtil extends FunSuite {
       testCastToReadView(seq, ReadDataView[Vec4d, RDouble](_, _, _), bytes)(Descriptors.Vec4dRDouble)
     }
     
-    if (descriptor.rawType == RawType.SByte) {
+    if (descriptor.rawEnum == RawEnum.SByte) {
       for (size <- 0 to 1; extraBytes <- 0 to 8) {
         val (bytes, _) = genRandomBuffer(size*8*4*2 + extraBytes, Descriptors.SIntSByte)
         val seq = factory(bytes).asInstanceOf[Contiguous[_, SByte]]

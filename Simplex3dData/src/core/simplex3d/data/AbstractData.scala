@@ -28,8 +28,8 @@ import scala.collection._
 import scala.collection.mutable.WrappedArray
 import simplex3d.math.{Vec2i, inVec2i, Vec3i, inVec3i}
 import simplex3d.data.extension._
-import StoreType._
-import RawType._
+import StoreEnum._
+import RawEnum._
 
 
 /**
@@ -49,7 +49,7 @@ abstract class AbstractData[
   type PrimitiveSeq <: Contiguous[Format#Component, Raw]
 
   
-  final def buffer() :Raw#Buffer = Util.duplicateBuff(storeType, buff).asInstanceOf[Raw#Buffer]
+  final def buffer() :Raw#Buffer = Util.duplicateBuff(storeEnum, buff).asInstanceOf[Raw#Buffer]
 
   override def apply(i: Int) :AC
   def update(i: Int, v: AR)
@@ -204,8 +204,8 @@ abstract class AbstractData[
   }
 
 
-  private[data] final def copyGroup(rawType: Int) = {
-    (rawType: @switch) match {
+  private[data] final def copyGroup(rawEnum: Int) = {
+    (rawEnum: @switch) match {
       case SByte | UByte => 0
       case SShort => 1
       case UShort => 2
@@ -245,8 +245,8 @@ abstract class AbstractData[
     }
 
     val noConversion = (
-      (rawType == src.rawType) ||
-      (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
+      (rawEnum == src.rawEnum) ||
+      (!isNormalized && copyGroup(rawEnum) == copyGroup(src.rawEnum))
     )
 
     if (stride == components && srcStride == components && noConversion) {
@@ -258,7 +258,7 @@ abstract class AbstractData[
         srcBuff.position(srcOffset)
         srcBuff.limit(srcLim)
 
-        (storeType: @switch) match {
+        (storeEnum: @switch) match {
           case ByteStore => destBuff.asInstanceOf[ByteBuffer].put(
             srcBuff.asInstanceOf[ByteBuffer]
           )
@@ -283,7 +283,7 @@ abstract class AbstractData[
     }
     else if (noConversion) {
       def copyBuff() {
-        (storeType: @switch) match {
+        (storeEnum: @switch) match {
           case ByteStore => Util.copyBuffer(
               components,
               buff.asInstanceOf[ByteBuffer], destOffset, stride,
@@ -482,8 +482,8 @@ abstract class AbstractData[
     else {
       
       val noConversion = (
-        (rawType == src.rawType) ||
-        (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
+        (rawEnum == src.rawEnum) ||
+        (!isNormalized && copyGroup(rawEnum) == copyGroup(src.rawEnum))
       )
 
       if (noConversion) {
@@ -491,7 +491,7 @@ abstract class AbstractData[
           val destBuff = buffer()
           val srcBuff = src.readOnlyBuffer()
 
-          (storeType: @switch) match {
+          (storeEnum: @switch) match {
             case ByteStore => Util.copyBuffer2d(
               components,
               destBuff.asInstanceOf[ByteBuffer], dimensions.x, offset.x, offset.y,
@@ -719,8 +719,8 @@ abstract class AbstractData[
     else {
       
       val noConversion = (
-        (rawType == src.rawType) ||
-        (!isNormalized && copyGroup(rawType) == copyGroup(src.rawType))
+        (rawEnum == src.rawEnum) ||
+        (!isNormalized && copyGroup(rawEnum) == copyGroup(src.rawEnum))
       )
 
       if (noConversion) {
@@ -728,7 +728,7 @@ abstract class AbstractData[
           val destBuff = buffer()
           val srcBuff = src.readOnlyBuffer()
 
-          (storeType: @switch) match {
+          (storeEnum: @switch) match {
             case ByteStore => Util.copyBuffer3d(
               components,
               destBuff.asInstanceOf[ByteBuffer], dimensions.x, dimensions.y,

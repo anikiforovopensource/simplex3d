@@ -23,7 +23,7 @@ package simplex3d.data
 import java.nio._
 import java.util.Arrays
 import scala.annotation._
-import StoreType._
+import StoreEnum._
 
 
 // An empty class to make -Xno-forwarders work
@@ -42,8 +42,8 @@ private[data] object Util {
   final val emptyFloat = new Array[Float](0)
   final val emptyDouble = new Array[Double](0)
 
-  final def wrapBuffer(storeType: Int, buffer: ByteBuffer) :Buffer = {
-    (storeType: @switch) match {
+  final def wrapBuffer(storeEnum: Int, buffer: ByteBuffer) :Buffer = {
+    (storeEnum: @switch) match {
       case ByteStore => buffer
       case ShortStore => buffer.asShortBuffer()
       case CharStore => buffer.asCharBuffer()
@@ -52,8 +52,8 @@ private[data] object Util {
       case DoubleStore => buffer.asDoubleBuffer()
     }
   }
-  final def wrapArray(storeType: Int, array: AnyRef) :Buffer = {
-    (storeType: @switch) match {
+  final def wrapArray(storeEnum: Int, array: AnyRef) :Buffer = {
+    (storeEnum: @switch) match {
       case ByteStore => ByteBuffer.wrap(array.asInstanceOf[Array[Byte]]).order(ByteOrder.nativeOrder)
       case ShortStore => ShortBuffer.wrap(array.asInstanceOf[Array[Short]])
       case CharStore => CharBuffer.wrap(array.asInstanceOf[Array[Char]])
@@ -63,8 +63,8 @@ private[data] object Util {
     }
   }
 
-  final def duplicateBuff(storeType: Int, buffer: AnyRef) :Buffer = {
-    (storeType: @switch) match {
+  final def duplicateBuff(storeEnum: Int, buffer: AnyRef) :Buffer = {
+    (storeEnum: @switch) match {
       case ByteStore => buffer.asInstanceOf[ByteBuffer].duplicate().order(ByteOrder.nativeOrder)
       case ShortStore => buffer.asInstanceOf[ShortBuffer].duplicate()
       case CharStore => buffer.asInstanceOf[CharBuffer].duplicate()
@@ -74,8 +74,8 @@ private[data] object Util {
     }
   }
 
-  final def readOnlyBuff(storeType: Int, buffer: AnyRef) :Buffer = {
-    (storeType: @switch) match {
+  final def readOnlyBuff(storeEnum: Int, buffer: AnyRef) :Buffer = {
+    (storeEnum: @switch) match {
       case ByteStore => buffer.asInstanceOf[ByteBuffer].asReadOnlyBuffer().order(ByteOrder.nativeOrder)
       case ShortStore => buffer.asInstanceOf[ShortBuffer].asReadOnlyBuffer()
       case CharStore => buffer.asInstanceOf[CharBuffer].asReadOnlyBuffer()

@@ -37,7 +37,7 @@ abstract class CompositeSeq[F <: CompositeFormat, +R <: Raw, B <: Raw with Tangi
   off, str
 ) with DataSeq[F, R] with CompositionFactory[F, B] {
   
-  final def rawType = primitives.rawType
+  final def rawEnum = primitives.rawEnum
   final def isNormalized: Boolean = primitives.isNormalized
 
   def mkReadDataArray[P <: B](prim: ReadDataArray[F#Component, P]) :ReadDataArray[F, P]

@@ -23,7 +23,7 @@ package simplex3d.test.data
 import scala.language.existentials
 import scala.reflect._
 import simplex3d.data.{PrimitiveFormat => Man, _}
-import simplex3d.data.RawType._
+import simplex3d.data.RawEnum._
 import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
@@ -37,7 +37,7 @@ case class Descriptor[F <: Format, +R <: Raw](
   componentTag: ClassTag[_],
   accessorTag: ClassTag[_ <: Accessor],
   components: Int,
-  rawType: Int,
+  rawEnum: Int,
   normalized: Boolean
 )
 

@@ -22,9 +22,9 @@ package simplex3d.test.data
 package double
 
 import org.scalatest._
-import simplex3d.math.doublex._
+import simplex3d.math.floatx._
 import simplex3d.data._
-import simplex3d.data.double._
+import simplex3d.data.float._
 import AdapterAttribs._
 import AdapterTestUtil._
 
@@ -34,35 +34,35 @@ import AdapterTestUtil._
  */
 class AdapterTest extends FunSuite {
 
-  val a1 = Vec2d(2, 3)
-  val a2 = Vec2d(4, 5)
-  val a3 = Vec2d(6, 7)
-  val a4 = Vec2d(8, 9)
+  val a1 = Vec2f(2, 3)
+  val a2 = Vec2f(4, 5)
+  val a3 = Vec2f(6, 7)
+  val a4 = Vec2f(8, 9)
 
-  val b1 = Vec3d(2, 3, 4)
-  val b2 = Vec3d(5, 6, 7)
-  val b3 = Vec3d(8, 9, 10)
-  val b4 = Vec3d(11, 12, 13)
+  val b1 = Vec3f(2, 3, 4)
+  val b2 = Vec3f(5, 6, 7)
+  val b3 = Vec3f(8, 9, 10)
+  val b4 = Vec3f(11, 12, 13)
 
-  val c1 = Vec4d(2, 3, 4, 5)
-  val c2 = Vec4d(6, 7, 8, 9)
-  val c3 = Vec4d(10, 11, 12, 13)
-  val c4 = Vec4d(14, 15, 16, 17)
+  val c1 = Vec4f(2, 3, 4, 5)
+  val c2 = Vec4f(6, 7, 8, 9)
+  val c3 = Vec4f(10, 11, 12, 13)
+  val c4 = Vec4f(14, 15, 16, 17)
 
-  def flatten2(values: Vec2d*) = DataArray[Vec2d, RFloat](values: _*).primitives
-  def flatten3(values: Vec3d*) = DataArray[Vec3d, RFloat](values: _*).primitives
-  def flatten4(values: Vec4d*) = DataArray[Vec4d, RFloat](values: _*).primitives
+  def flatten2(values: Vec2f*) = DataArray[Vec2f, RFloat](values: _*).primitives
+  def flatten3(values: Vec3f*) = DataArray[Vec3f, RFloat](values: _*).primitives
+  def flatten4(values: Vec4f*) = DataArray[Vec4f, RFloat](values: _*).primitives
 
   test("Adapters") {
-    testAdapter(FactoryQuat4d)(Quat4d(c1.x, c1.y, c1.z, c1.w), flatten4(c1))
-    testAdapter(FactoryMat2x2d)(Mat2x2d(a1, a2), flatten2(a1, a2))
-    testAdapter(FactoryMat3x2d)(Mat3x2d(a1, a2, a3), flatten2(a1, a2, a3))
-    testAdapter(FactoryMat4x2d)(Mat4x2d(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))
-    testAdapter(FactoryMat2x3d)(Mat2x3d(b1, b2), flatten3(b1, b2))
-    testAdapter(FactoryMat3x3d)(Mat3x3d(b1, b2, b3), flatten3(b1, b2, b3))
-    testAdapter(FactoryMat4x3d)(Mat4x3d(b1, b2, b3, b4), flatten3(b1, b2, b3, b4))
-    testAdapter(FactoryMat2x4d)(Mat2x4d(c1, c2), flatten4(c1, c2))
-    testAdapter(FactoryMat3x4d)(Mat3x4d(c1, c2, c3), flatten4(c1, c2, c3))
-    testAdapter(FactoryMat4x4d)(Mat4x4d(c1, c2, c3, c4), flatten4(c1, c2, c3, c4))
+    testAdapter(FactoryQuat4f)(Quat4f(c1.x, c1.y, c1.z, c1.w), flatten4(c1))
+    testAdapter(FactoryMat2x2f)(Mat2x2f(a1, a2), flatten2(a1, a2))
+    testAdapter(FactoryMat3x2f)(Mat3x2f(a1, a2, a3), flatten2(a1, a2, a3))
+    testAdapter(FactoryMat4x2f)(Mat4x2f(a1, a2, a3, a4), flatten2(a1, a2, a3, a4))
+    testAdapter(FactoryMat2x3f)(Mat2x3f(b1, b2), flatten3(b1, b2))
+    testAdapter(FactoryMat3x3f)(Mat3x3f(b1, b2, b3), flatten3(b1, b2, b3))
+    testAdapter(FactoryMat4x3f)(Mat4x3f(b1, b2, b3, b4), flatten3(b1, b2, b3, b4))
+    testAdapter(FactoryMat2x4f)(Mat2x4f(c1, c2), flatten4(c1, c2))
+    testAdapter(FactoryMat3x4f)(Mat3x4f(c1, c2, c3), flatten4(c1, c2, c3))
+    testAdapter(FactoryMat4x4f)(Mat4x4f(c1, c2, c3, c4), flatten4(c1, c2, c3, c4))
   }
 }

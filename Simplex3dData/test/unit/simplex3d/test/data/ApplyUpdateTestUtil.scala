@@ -31,7 +31,7 @@ import simplex3d.math._
 import simplex3d.math.floatx._
 import simplex3d.math.doublex._
 
-import RawType._
+import RawEnum._
 import TestUtil._
 
 
@@ -300,7 +300,7 @@ object ApplyUpdateTestUtil extends FunSuite {
   def testApplyUpdateBuffer[F <: Format, R <: Raw](
     factory: (ByteBuffer) => DataBuffer[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
-    val size = 10*descriptor.components*RawType.byteLength(descriptor.rawType)
+    val size = 10*descriptor.components*RawEnum.byteLength(descriptor.rawEnum)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1))
   }
 
@@ -308,7 +308,7 @@ object ApplyUpdateTestUtil extends FunSuite {
     factory: (ByteBuffer, Int, Int) => DataView[F, R]
   )(implicit descriptor: Descriptor[F, R]) {
     val c = descriptor.components
-    val size = 10*c*RawType.byteLength(descriptor.rawType)
+    val size = 10*c*RawEnum.byteLength(descriptor.rawEnum)
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c))
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 1))
     testApplyUpdate(factory(genRandomBuffer(size, descriptor)._1, 0, c + 2))

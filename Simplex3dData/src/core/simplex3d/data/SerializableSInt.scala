@@ -27,11 +27,11 @@ import simplex3d.data.extension._
  * @author Aleksey Nikiforov (lex)
  */
 @SerialVersionUID(8104346712419693669L)
-private[data] class PrimitiveSInt(val rawType: Int) extends SerializablePrimitive with Serializable {
+private[data] class PrimitiveSInt(val rawEnum: Int) extends SerializablePrimitive with Serializable {
   protected def toReadDataArray(): ReadDataArray[_, _] = {
-    import RawType._
+    import RawEnum._
 
-    rawType match {
+    rawEnum match {
       case SByte => DataArray[SInt, SByte](content.asInstanceOf[Array[Byte]])
       case UByte => DataArray[SInt, UByte](content.asInstanceOf[Array[Byte]])
       case SShort => DataArray[SInt, SShort](content.asInstanceOf[Array[Short]])

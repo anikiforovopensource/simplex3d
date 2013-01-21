@@ -120,7 +120,7 @@ object CopyTestUtil extends FunSuite {
   private def putSeq[F <: Format](original: inDataSeq[F, Raw]) {
     // Testing exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.formatTag, original.rawType, original.size)
+      val src = genRandomSeq(original.formatTag, original.rawEnum, original.size)
       val array = src.toArray(readTag(src.accessorTag))
       
       {
@@ -161,7 +161,7 @@ object CopyTestUtil extends FunSuite {
     }
 
     for (size <- original.size - maxCopyOffset until original.size) {
-      val src = genRandomSeq(original.formatTag, original.rawType, size)
+      val src = genRandomSeq(original.formatTag, original.rawEnum, size)
       val array = src.toArray(readTag(src.accessorTag))
 
       checkPutSeq(original, src, array, true)
@@ -320,7 +320,7 @@ object CopyTestUtil extends FunSuite {
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val random = genRandomSeq(original.formatTag, original.rawType, size)
+      val random = genRandomSeq(original.formatTag, original.rawEnum, size)
       val src = random.asInstanceOf[ReadDataSeq[F, Raw]].primitives
       val dest = dupSeq1(original)
 
@@ -470,10 +470,10 @@ object CopyTestUtil extends FunSuite {
     
     for (size <- psize - poffset until psize; conversion <- List(true, false)) {
       val src =
-        if (!conversion) genRandomSeq(original.primitives.formatTag, original.rawType, size)
+        if (!conversion) genRandomSeq(original.primitives.formatTag, original.rawEnum, size)
         else genRandomSeq(
           original.primitives.formatTag,
-          conversionType(original.primitives.formatTag, original.rawType),
+          conversionType(original.primitives.formatTag, original.rawEnum),
           size
         )
 
@@ -481,7 +481,7 @@ object CopyTestUtil extends FunSuite {
 
       val converted =
         if (!conversion) src
-        else convert(src, original.rawType)
+        else convert(src, original.rawEnum)
     
       for (
         index <- 0 to maxCopyOffset;
@@ -503,7 +503,7 @@ object CopyTestUtil extends FunSuite {
 
     // Test exceptions. Destination and src must remain unchanged.
     {
-      val src = genRandomSeq(original.formatTag, original.rawType, size)
+      val src = genRandomSeq(original.formatTag, original.rawEnum, size)
       val dest = dupSeq1(original)
 
       {
@@ -643,8 +643,8 @@ object CopyTestUtil extends FunSuite {
 
     for (size <- original.size - maxCopyOffset until original.size; conversion <- List(true, false)) {
       val src =
-        if (!conversion) genRandomSeq(original.formatTag, original.rawType, size)
-        else genRandomSeq(original.formatTag, conversionType(original.formatTag, original.rawType), size)
+        if (!conversion) genRandomSeq(original.formatTag, original.rawEnum, size)
+        else genRandomSeq(original.formatTag, conversionType(original.formatTag, original.rawEnum), size)
 
       val srcBackup = dupSeq2(src)
       
@@ -654,7 +654,7 @@ object CopyTestUtil extends FunSuite {
 
       val converted =
         if (!conversion) src
-        else convert(src, original.rawType)
+        else convert(src, original.rawEnum)
 
       for (
         index <- 0 to maxCopyOffset;
@@ -673,22 +673,22 @@ object CopyTestUtil extends FunSuite {
 
   private def wrongType[F <: Format](s: inDataSeq[F, Raw]) :DataSeq[F, Raw] = {
     if (s.primitives.formatTag == PrimitiveFormat.SInt) {
-      genRandomSeq(PrimitiveFormat.RFloat, RawType.RFloat, s.size).asInstanceOf[DataSeq[F, Raw]]
+      genRandomSeq(PrimitiveFormat.RFloat, RawEnum.RFloat, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
     else {
-      genRandomSeq(PrimitiveFormat.SInt, RawType.SInt, s.size).asInstanceOf[DataSeq[F, Raw]]
+      genRandomSeq(PrimitiveFormat.SInt, RawEnum.SInt, s.size).asInstanceOf[DataSeq[F, Raw]]
     }
   }
   
-  def conversionType(elem: ClassTag[_], rawType: Int) :Int = {
-    import RawType._
+  def conversionType(elem: ClassTag[_], rawEnum: Int) :Int = {
+    import RawEnum._
     elem match {
       case Mat3x2f.Tag => RFloat
-      case Mat3x2d.Tag => rawType match {
+      case Mat3x2d.Tag => rawEnum match {
         case RFloat => RDouble
         case RDouble => RFloat
       }
-      case _ => rawType match {
+      case _ => rawEnum match {
         case SByte => UByte
         case UByte => SShort
         case SShort => UShort

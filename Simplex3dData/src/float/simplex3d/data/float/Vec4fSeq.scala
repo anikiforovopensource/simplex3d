@@ -25,7 +25,7 @@ import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math.floatx._
 import simplex3d.data.extension._
-import RawType._
+import RawEnum._
 
 
 /**
@@ -40,7 +40,7 @@ private[data] abstract class BaseVec4f[+R <: TangibleFloat](
 
   final def mkReadDataArray[P <: TangibleFloat](prim: ReadDataArray[Vec4f#Component, P])
   :ReadDataArray[Vec4f, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case UByte => new ArrayVec4fUByte(prim.asInstanceOf[ArrayRFloatUByte])
       case RFloat => new ArrayVec4fRFloat(prim.asInstanceOf[ArrayRFloatRFloat])
       case _ => new ArrayVec4f(prim)
@@ -48,7 +48,7 @@ private[data] abstract class BaseVec4f[+R <: TangibleFloat](
   }
   final def mkReadDataBuffer[P <: TangibleFloat](prim: ReadDataBuffer[Vec4f#Component, P])
   :ReadDataBuffer[Vec4f, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case UByte => new BufferVec4fUByte(prim.asInstanceOf[BufferRFloatUByte])
       case RFloat => new BufferVec4fRFloat(prim.asInstanceOf[BufferRFloatRFloat])
       case _ => new BufferVec4f(prim)
@@ -57,7 +57,7 @@ private[data] abstract class BaseVec4f[+R <: TangibleFloat](
   protected final def mkReadDataViewInstance[P <: TangibleFloat](
     prim: ReadDataBuffer[Vec4f#Component, P], off: Int, str: Int
   ) :ReadDataView[Vec4f, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case UByte => new ViewVec4fUByte(prim.asInstanceOf[BufferRFloatUByte], off, str)
       case RFloat => new ViewVec4fRFloat(prim.asInstanceOf[BufferRFloatRFloat], off, str)
       case _ => new ViewVec4f(prim, off, str)

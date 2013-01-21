@@ -24,7 +24,7 @@ import java.nio._
 import scala.annotation.unchecked._
 import simplex3d.math._
 import simplex3d.data.extension._
-import RawType._
+import RawEnum._
 
 
 /**
@@ -39,7 +39,7 @@ private[data] abstract class BaseVec2i[+R <: TangibleInt](
 
   final def mkReadDataArray[P <: TangibleInt](prim: ReadDataArray[Vec2i#Component, P])
   :ReadDataArray[Vec2i, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case UShort => new ArrayVec2iUShort(prim.asInstanceOf[ArraySIntUShort])
       case UInt => new ArrayVec2iUInt(prim.asInstanceOf[ArraySIntUInt])
       case _ => new ArrayVec2i(prim)
@@ -47,7 +47,7 @@ private[data] abstract class BaseVec2i[+R <: TangibleInt](
   }
   final def mkReadDataBuffer[P <: TangibleInt](prim: ReadDataBuffer[Vec2i#Component, P])
   :ReadDataBuffer[Vec2i, P] = {
-    (prim.rawType match {
+    (prim.rawEnum match {
       case UShort => new BufferVec2iUShort(prim.asInstanceOf[BufferSIntUShort])
       case UInt => new BufferVec2iUInt(prim.asInstanceOf[BufferSIntUInt])
       case _ => new BufferVec2i(prim)

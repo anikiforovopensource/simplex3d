@@ -56,7 +56,7 @@ with DataSeq[SInt, R] with CompositionFactory[SInt, TangibleInt]
     new ViewSInt(primitives.mkReadDataBuffer(byteBuffer), off, str)
   }
   
-  final override def mkSerializableInstance() = new PrimitiveSInt(rawType)
+  final override def mkSerializableInstance() = new PrimitiveSInt(rawEnum)
 }
 
 private[data] final class ViewSInt[+R <: TangibleInt](
@@ -64,7 +64,7 @@ private[data] final class ViewSInt[+R <: TangibleInt](
 ) extends BaseSInt[R](prim, prim, prim.isReadOnly, off, str) with DataView[SInt, R] {
   type Read = ReadDataView[SInt, R @uncheckedVariance]
 
-  final def rawType = primitives.rawType
+  final def rawEnum = primitives.rawEnum
   def mkReadOnlyInstance() = new ViewSInt(primitives.asReadOnly(), offset, stride)
 
   def apply(i: Int) :Int = primitives(offset + i*stride)
@@ -88,7 +88,7 @@ with PrimitiveFactory[SInt, SByte]
 
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArraySIntSByte(rarray, null)
-  def rawType = RawType.SByte
+  def rawEnum = RawEnum.SByte
 
   def mkDataArray(array: Array[Byte]) =
     new ArraySIntSByte(array, array)
@@ -106,7 +106,7 @@ private[data] final class BufferSIntSByte(
   type Read = ReadDataBuffer[SInt, SByte]
 
   def mkReadOnlyInstance() = new BufferSIntSByte(shared, true)
-  def rawType = RawType.SByte
+  def rawEnum = RawEnum.SByte
 
   def mkDataArray(array: Array[Byte]) =
     new ArraySIntSByte(array, array)
@@ -130,7 +130,7 @@ with PrimitiveFactory[SInt, UByte]
 
   def this() = this(emptyByte, emptyByte)
   def mkReadOnlyInstance() = new ArraySIntUByte(rarray, null)
-  def rawType = RawType.UByte
+  def rawEnum = RawEnum.UByte
 
   def mkDataArray(array: Array[Byte]) =
     new ArraySIntUByte(array, array)
@@ -148,7 +148,7 @@ private[data] final class BufferSIntUByte(
   type Read = ReadDataBuffer[SInt, UByte]
 
   def mkReadOnlyInstance() = new BufferSIntUByte(shared, true)
-  def rawType = RawType.UByte
+  def rawEnum = RawEnum.UByte
 
   def mkDataArray(array: Array[Byte]) =
     new ArraySIntUByte(array, array)
@@ -172,7 +172,7 @@ with PrimitiveFactory[SInt, SShort]
 
   def this() = this(emptyShort, emptyShort)
   def mkReadOnlyInstance() = new ArraySIntSShort(rarray, null)
-  def rawType = RawType.SShort
+  def rawEnum = RawEnum.SShort
 
   def mkDataArray(array: Array[Short]) =
     new ArraySIntSShort(array, array)
@@ -190,7 +190,7 @@ private[data] final class BufferSIntSShort(
   type Read = ReadDataBuffer[SInt, SShort]
 
   def mkReadOnlyInstance() = new BufferSIntSShort(shared, true)
-  def rawType = RawType.SShort
+  def rawEnum = RawEnum.SShort
 
   def mkDataArray(array: Array[Short]) =
     new ArraySIntSShort(array, array)
@@ -214,7 +214,7 @@ with PrimitiveFactory[SInt, UShort]
 
   def this() = this(emptyChar, emptyChar)
   def mkReadOnlyInstance() = new ArraySIntUShort(rarray, null)
-  def rawType = RawType.UShort
+  def rawEnum = RawEnum.UShort
 
   def mkDataArray(array: Array[Char]) =
     new ArraySIntUShort(array, array)
@@ -232,7 +232,7 @@ private[data] final class BufferSIntUShort(
   type Read = ReadDataBuffer[SInt, UShort]
 
   def mkReadOnlyInstance() = new BufferSIntUShort(shared, true)
-  def rawType = RawType.UShort
+  def rawEnum = RawEnum.UShort
 
   def mkDataArray(array: Array[Char]) =
     new ArraySIntUShort(array, array)
@@ -255,7 +255,7 @@ with PrimitiveFactory[SInt, SInt]
 
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArraySIntSInt(rarray, null)
-  def rawType = RawType.SInt
+  def rawEnum = RawEnum.SInt
 
   def mkDataArray(array: Array[Int]) =
     new ArraySIntSInt(array, array)
@@ -273,7 +273,7 @@ private[data] final class BufferSIntSInt(
   type Read = ReadDataBuffer[SInt, SInt]
 
   def mkReadOnlyInstance() = new BufferSIntSInt(shared, true)
-  def rawType = RawType.SInt
+  def rawEnum = RawEnum.SInt
 
   def mkDataArray(array: Array[Int]) =
     new ArraySIntSInt(array, array)
@@ -297,7 +297,7 @@ with PrimitiveFactory[SInt, UInt]
 
   def this() = this(emptyInt, emptyInt)
   def mkReadOnlyInstance() = new ArraySIntUInt(rarray, null)
-  def rawType = RawType.UInt
+  def rawEnum = RawEnum.UInt
 
   def mkDataArray(array: Array[Int]) =
     new ArraySIntUInt(array, array)
@@ -315,7 +315,7 @@ private[data] final class BufferSIntUInt(
   type Read = ReadDataBuffer[SInt, UInt]
 
   def mkReadOnlyInstance() = new BufferSIntUInt(shared, true)
-  def rawType = RawType.UInt
+  def rawEnum = RawEnum.UInt
 
   def mkDataArray(array: Array[Int]) =
     new ArraySIntUInt(array, array)

@@ -414,7 +414,7 @@ class InterleavedTest extends FunSuite {
       assert(a.accessorTag == b.accessorTag)
       assert(a.primitives.formatTag == b.primitives.formatTag)
       assert(a.primitives.accessorTag == b.primitives.accessorTag)
-      assert(a.rawType == b.rawType)
+      assert(a.rawEnum == b.rawEnum)
 
       // Test content.
       assert(a.size == b.size)

@@ -19,6 +19,7 @@ import simplex3d.engine.scenegraph._
 object Test extends default.App {
   
   def main(args: Array[String]) {
+    
     launch()
   }
   

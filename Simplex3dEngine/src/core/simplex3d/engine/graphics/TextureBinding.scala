@@ -23,6 +23,7 @@ package graphics
 
 import java.util.HashMap
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import simplex3d.math.types._
 import simplex3d.data._
 
@@ -106,6 +107,8 @@ with Accessible with Serializable
 
 object TextureBinding {
   import simplex3d.engine.util._
+  
+  val Type = typeOf[TextureBinding[_]]
   
   // XXX this is fixed in unreleased Scala 2.10, remove when it gets released.
   def avoidCompilerCrash(a: Any) = a.asInstanceOf[ReadTextureBinding[_]]

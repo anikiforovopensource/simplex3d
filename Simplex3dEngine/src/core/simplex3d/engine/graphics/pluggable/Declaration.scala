@@ -21,7 +21,7 @@
 package simplex3d.engine
 package graphics.pluggable
 
-import scala.reflect._
+import scala.reflect.runtime.universe._
 import scala.collection._
 import simplex3d.math._
 import simplex3d.math.double._
@@ -33,7 +33,7 @@ import simplex3d.engine.graphics._
 
 final class Declaration(
   val qualifiers: Option[String],
-  val tag: ClassTag[_ <: Binding],
+  val tag: TypeTag[_ <: Binding],
   val glslType: String,
   val name: String,
   val arraySizeExpression: Option[String],
@@ -42,7 +42,7 @@ final class Declaration(
 ) {
   val isPredefined = name.startsWith("se_")
   val isReserved = name.startsWith("gl_")
-  val isArray: Boolean = classOf[BindingSeq[_]].isAssignableFrom(tag.runtimeClass)
+  val isArray: Boolean = tag.tpe <:< BindingSeq.Type
   
   private val syntheticName = {
     name match {
@@ -52,18 +52,18 @@ final class Declaration(
     }
   }
   
-  val attributeTag: ClassTag[_] = {
+  val attributeType: Type = {
     tag match {
-      case DoubleRef.Tag => PrimitiveFormat.RDouble
-      case _ => tag
+      case DoubleRef.Tag => RawEnum.TypeTags.RDouble.tpe
+      case _ => tag.tpe
     }
   }
+  def attributeClass = ClassUtil.runtimeClass(attributeType)
   
-  val uniformTag: ClassTag[_] = {
-    if (classOf[BindingSeq[_]].isAssignableFrom(tag.runtimeClass)) {
+  val uniformType: Type = {
+    if (tag.tpe <:< BindingSeq.Type) {
       try {
-        val ct: ClassTag[_] = tag.typeArguments.head.asInstanceOf[ClassManifest[_ <: Binding]]
-        ct
+        ClassUtil.typeArg(tag.tpe)
       }
       catch {
         case e: Exception => throw new RuntimeException(
@@ -71,8 +71,9 @@ final class Declaration(
         )
       }
     }
-    else tag
+    else tag.tpe
   }
+  def uniformClass = ClassUtil.runtimeClass(uniformType)
   
   override def toString() :String = {
     "Declaraion(" + qualifiers + " " + glslType + " " + name + ")"

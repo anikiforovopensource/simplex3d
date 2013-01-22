@@ -23,7 +23,7 @@ package graphics
 
 import java.lang.Integer
 import java.util.HashMap
-import scala.reflect._
+import scala.reflect.runtime.universe._
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.types._
 import simplex3d.math.double.functions._
@@ -31,11 +31,11 @@ import simplex3d.engine.util._
 
 
 sealed abstract class BindingSeq[T <: Accessible with Binding { type Read >: T <: Protected } ](
-  implicit val elementTag: ClassTag[T]
+  implicit val elementTag: TypeTag[T]
 )
 extends Protected with Binding with PropertyContextDependent
 {
-  if(elementTag.runtimeClass == classOf[BindingSeq[_]]) throw new IllegalArgumentException(
+  if(elementTag.tpe <:< BindingSeq.Type) throw new IllegalArgumentException(
     "Nested sequences are not supported."
   )
   
@@ -58,7 +58,7 @@ extends Protected with Binding with PropertyContextDependent
   protected def unregisterPropertyContext() {}
   
   
-  protected val managable = classOf[PropertyContextDependent].isAssignableFrom(elementTag.runtimeClass)
+  protected val managable = elementTag.tpe <:< typeOf[PropertyContextDependent]
   protected def manageElems = (context != null && managable)
   
   protected def registerElems(offset: Int, count: Int) {
@@ -124,9 +124,13 @@ extends Protected with Binding with PropertyContextDependent
   }
 }
 
+object BindingSeq {
+  val Type = typeOf[BindingSeq[_]]
+}
+
 
 final class BindingList[T <: Accessible with Binding { type Read >: T <: Protected } ](
-  implicit elementTag: ClassTag[T]
+  implicit elementTag: TypeTag[T]
 )
 extends BindingSeq[T] with Accessible
 {
@@ -227,7 +231,7 @@ extends BindingSeq[T] with Accessible
 object BindingList {
   def apply[T <: Accessible with Binding { type Read >: T <: Protected } ]
     (elems: T#Read*)
-    (implicit elementTag: ClassTag[T])
+    (implicit elementTag: TypeTag[T])
   :BindingList[T] =
   {
     val list = new BindingList[T]
@@ -238,15 +242,17 @@ object BindingList {
 
 
 final class BindingArray[T <: Accessible with Binding { type Read >: T <: Protected } ] private()(
-  implicit elementTag: ClassTag[T]
+  implicit elementTag: TypeTag[T]
 )
 extends BindingSeq[T] with Accessible
 {
-  def this(size: Int)(implicit elementTag: ClassTag[T]) {
+  def this(size: Int)(implicit elementTag: TypeTag[T]) {
     this()
     
+    val clazz = ClassUtil.runtimeClass(elementTag.tpe)
+    
     var i = 0; while (i < size) {
-      buff += elementTag.runtimeClass.newInstance().asInstanceOf[T]
+      buff += clazz.newInstance().asInstanceOf[T]
       
       i += 1
     }
@@ -289,7 +295,7 @@ extends BindingSeq[T] with Accessible
 object BindingArray {
   def apply[T <: Accessible with Binding { type Read >: T <: Protected } ]
     (elems: T#Read*)
-    (implicit elementTag: ClassTag[T])
+    (implicit elementTag: TypeTag[T])
   :BindingArray[T] =
   {
     val size = elems.size

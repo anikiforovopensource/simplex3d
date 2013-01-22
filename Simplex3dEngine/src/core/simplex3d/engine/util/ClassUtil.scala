@@ -21,6 +21,7 @@
 package simplex3d.engine.util
 
 import scala.reflect._
+import scala.reflect.runtime.universe._
 import simplex3d.math.types._
 import simplex3d.engine.graphics._
 
@@ -44,18 +45,8 @@ private[engine] object ClassUtil {
     else c.getSimpleName
   }
   
-  def rebuildTag(u: AnyRef) :ClassTag[_ <: Binding] = u match {//XXX get rid of this method
-    case list: BindingList[_] => ClassManifest.classType(list.getClass, list.elementTag)
-    case array: BindingArray[_] => ClassManifest.classType(array.getClass, array.elementTag)
-    case tex: TextureBinding[_] => ClassManifest.classType(tex.getClass, tex.bindingTag)
-    case binding: Binding => ClassManifest.classType(binding.getClass)
+  def runtimeClass(tpe: Type) :Class[_] = runtimeMirror(this.getClass.getClassLoader).runtimeClass(tpe)
+  def typeArg(tpe: Type) :Type = {
+    tpe match { case TypeRef(_, _, args) => args.head; case _ => throw new RuntimeException() }
   }
-  
-  def rebuildManifest(u: AnyRef) :ClassManifest[_ <: Binding] = u match {
-    case list: BindingList[_] => ClassManifest.classType(list.getClass, list.elementTag)
-    case array: BindingArray[_] => ClassManifest.classType(array.getClass, array.elementTag)
-    case tex: TextureBinding[_] => ClassManifest.classType(tex.getClass, tex.bindingTag)
-    case binding: Binding => ClassManifest.classType(binding.getClass)
-  }
-
 }

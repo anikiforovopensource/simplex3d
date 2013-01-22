@@ -156,7 +156,6 @@ object Simplex3dEngine extends Build {
       target := new File("target/engine/example")
     )
   ) dependsOn(
-    Simplex3dScript.core,
     core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )

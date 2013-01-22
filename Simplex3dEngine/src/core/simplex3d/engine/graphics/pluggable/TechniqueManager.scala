@@ -198,14 +198,14 @@ extends graphics.TechniqueManager[G]
           passed = (attrib != null)
           
           if (attrib != null) {
-            if (declaration.attributeTag == attrib.src.accessorTag) {
+            if (declaration.attributeClass == attrib.src.accessorTag.runtimeClass) {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,
               "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
               "' because the attribute '" + declaration.name + "' is declared as '" +
-              ClassUtil.simpleName(declaration.tag.runtimeClass) + "' but resolves to an instance of '" +
-              ClassUtil.simpleName(attrib.getClass) + "'."
+              ClassUtil.simpleName(declaration.attributeClass) + "' but resolves to a sequence of '" +
+              ClassUtil.simpleName(attrib.src.accessorTag.runtimeClass) + "'."
             )
           }
           else if (logRejected(shader)) log(Level.INFO,
@@ -252,15 +252,15 @@ extends graphics.TechniqueManager[G]
             }
             
             if (
-              declaration.uniformTag.runtimeClass == resolved.getClass ||
-              (shader.squareMatrices && declaration.uniformTag.runtimeClass == adjustedErasure)
+              declaration.uniformClass == resolved.getClass ||
+              (shader.squareMatrices && declaration.uniformClass == adjustedErasure)
             ) {
               passed = true
             }
             else if (logRejected(shader)) log(Level.INFO,
               "Shader '" + shader.name + "' was rejected for mesh '" + meshName +
               "' because the uniform '" + declaration.name + "' is declared as '" +
-              ClassUtil.simpleName(declaration.tag.runtimeClass) + "' but resolves to an instance of '" +
+              ClassUtil.simpleName(declaration.uniformClass) + "' but resolves to an instance of '" +
               ClassUtil.simpleName(resolved.getClass) + "'."
             )
           }

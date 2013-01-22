@@ -25,6 +25,7 @@ import java.lang.Integer
 import java.util.logging._
 import java.util.HashMap
 import java.util.HashSet
+import scala.reflect.runtime.universe._
 import simplex3d.math.types._
 import simplex3d.engine.util._
 
@@ -154,8 +155,8 @@ trait Struct extends ReadStruct with Accessible {
           
           case seq: BindingSeq[_] =>
             nameKeys.add(new ListNameKey(parentType, fieldNames(i)))
-            val erasure = seq.elementTag.runtimeClass
-            if (classOf[Struct].isAssignableFrom(erasure)) rec(erasure.newInstance().asInstanceOf[Struct])
+            if (seq.elementTag.tpe <:< Struct.Type)
+              rec(ClassUtil.runtimeClass(seq.elementTag.tpe).newInstance().asInstanceOf[Struct])
 
           case s: Struct =>
             rec(s)
@@ -174,4 +175,6 @@ trait Struct extends ReadStruct with Accessible {
 
 object Struct {
   private final val logger = Logger.getLogger(classOf[RenderContext].getName)
+  
+  val Type = typeOf[Struct]
 }

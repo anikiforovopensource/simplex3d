@@ -22,6 +22,7 @@ package simplex3d.engine
 package graphics.pluggable
 
 import java.util.logging._
+import scala.reflect.runtime.universe._
 import scala.collection.immutable._
 import scala.collection.mutable.ArrayBuilder
 import simplex3d.math._
@@ -80,22 +81,28 @@ import simplex3d.engine.graphics._
 sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
  
   protected final class Declaration private[ShaderDeclaration] (
-    val manifest: ClassManifest[_ <: Binding], val name: String
+    val tag: TypeTag[_ <: Binding], val name: String
   )
   {
     private[ShaderDeclaration] var qualifiers: Option[String] = None
     private[ShaderDeclaration] var arraySizeExpression: Option[String] = None
-    private[ShaderDeclaration] def isArray = classOf[BindingSeq[_]].isAssignableFrom(manifest.runtimeClass)
-    private[ShaderDeclaration] def isMathType = classOf[MathType].isAssignableFrom(manifest.runtimeClass)
+    private[ShaderDeclaration] def isArray = tag.tpe <:< BindingSeq.Type
+    private[ShaderDeclaration] def isMathType = tag.tpe <:< typeOf[MathType]
     private[ShaderDeclaration] def isMathTypeArray = {
-      isArray && {
+      isArray && normalizedType <:< typeOf[MathType]
+    }
+    private[ShaderDeclaration] val normalizedType: Type = {
+      if (isArray) {
         try {
-          classOf[MathType].isAssignableFrom(
-            manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].runtimeClass
-          )
-        } catch {
-          case e: Exception => false
+          ClassUtil.typeArg(tag.tpe)
         }
+        catch {
+          case e: Exception => throw new RuntimeException(
+            "Undefined or unsupported array type for declaration '" + name + "'.")
+        }
+      }
+      else {
+        tag.tpe
       }
     }
    
@@ -129,8 +136,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       val dependencies = ArrayBuilder.make[StructSignature]
       val nestedSamplers = ArrayBuilder.make[NestedSampler]
      
-      val glslType = glslTypeFromManifest(
-          squareMatrices, 0, arraySizeExpression, "", null, manifest, name, dependencies, nestedSamplers)
+      val glslType = glslTypeFromType(
+          squareMatrices, 0, arraySizeExpression, "", null, tag.tpe, name, dependencies, nestedSamplers)
      
       val dependenciesRes = StructSignature.organizeDependencies(dependencies.result)
       val nestedSamplersRes = new ReadArray(nestedSamplers.result)
@@ -182,24 +189,24 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     }
    
    
-    private def glslTypeFromManifest(
+    private def glslTypeFromType(
       squareMatrices: Boolean,
       level: Int,
       firstSizeExpression: Option[String],// the very first size expression in the path, used with nestedSamplers
       parentType: String,
       parentErasure: Class[_],
-      manifest: ClassManifest[_], name: String,
+      tpe: Type, name: String,
       dependencies: ArrayBuilder[StructSignature],
       nestedSamplers: ArrayBuilder[NestedSampler]
     ) :String = { // glslType
      
-      if (classOf[MathType].isAssignableFrom(manifest.runtimeClass)) {
-        resolveMathType(squareMatrices, manifest.runtimeClass)
+      if (tpe <:< typeOf[MathType]) {
+        resolveMathType(squareMatrices, ClassUtil.runtimeClass(tpe))
       }
-      else if (classOf[TextureBinding[_]].isAssignableFrom(manifest.runtimeClass)) {
+      else if (tpe <:< TextureBinding.Type) {
         try {
-          val erasure = manifest.typeArguments.head.asInstanceOf[ClassManifest[_]].runtimeClass
-          resolveTextureType(null, erasure, name, firstSizeExpression, nestedSamplers)
+          val runtimeClass = ClassUtil.runtimeClass(ClassUtil.typeArg(tpe))
+          resolveTextureType(null, runtimeClass, name, firstSizeExpression, nestedSamplers)
         }
         catch {
           case e: Exception => throw new RuntimeException(
@@ -207,9 +214,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           )
         }
       }
-      else if (classOf[BindingSeq[_]].isAssignableFrom(manifest.runtimeClass)) {
-        val listManifest = try {
-          manifest.typeArguments.head.asInstanceOf[ClassManifest[_]]
+      else if (tpe <:< BindingSeq.Type) {
+        val listType = try {
+          ClassUtil.typeArg(tpe)
         }
         catch {
           case e: Exception => throw new RuntimeException(
@@ -221,18 +228,18 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           if (firstSizeExpression.isDefined) firstSizeExpression
           else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
        
-        val glslType = glslTypeFromManifest(
-            squareMatrices, level, firstSize, parentType, parentErasure, listManifest, name, dependencies, nestedSamplers)
+        val glslType = glslTypeFromType(
+            squareMatrices, level, firstSize, parentType, parentErasure, listType, name, dependencies, nestedSamplers)
            
         glslType
       }
-      else if (classOf[Struct].isAssignableFrom(manifest.runtimeClass)) {
+      else if (tpe <:< Struct.Type) {
         val instance = try {
-          manifest.runtimeClass.newInstance().asInstanceOf[Struct]
+          ClassUtil.runtimeClass(tpe).newInstance().asInstanceOf[Struct]
         }
         catch {
           case e: Exception => throw new RuntimeException(
-            "Unable to create an instance of '" + manifest.runtimeClass.getName +
+            "Unable to create an instance of '" + tpe.erasure.typeSymbol.fullName +
             "'. All Struct subclasses must define a no-argument constructor."
           )
         }
@@ -241,7 +248,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       }
       else {
         throw new RuntimeException(
-          "Unsupported type '" + ClassUtil.simpleName(manifest.runtimeClass) + "' for declaration '" + name + "'."
+          "Unsupported type '" + tpe.erasure.typeSymbol.name + "' for declaration '" + name + "'."
         )
       }
     }
@@ -309,8 +316,8 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           if (firstSizeExpression.isDefined) firstSizeExpression
           else Some(ShaderPrototype.arraySizeId(new ListNameKey(parentType, name)))
        
-        val glslType = glslTypeFromManifest(
-            squareMatrices, level, firstSize, parentType, parentErasure, tag, name, dependencies, nestedSamplers)
+        val glslType = glslTypeFromType(
+            squareMatrices, level, firstSize, parentType, parentErasure, tag.tpe, name, dependencies, nestedSamplers)
        
         val sizeExpression =
           if (arraySizeExpression.isDefined) arraySizeExpression.get
@@ -385,7 +392,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
 
       new PublicDeclaration(
           d.qualifiers,
-          d.manifest,
+          d.tag,
           glslType, d.name, d.arraySizeExpression,
           sturctSignatures, nestedSamplers)
     }
@@ -394,13 +401,13 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
  
   protected val debugging = new ShaderDebugging
  
-  protected final def bind[T <: Accessible with Binding](name: String, binding: Value[T]) {
+  protected final def bind[B <: Accessible with Binding : TypeTag](name: String, binding: Value[B]) {
     if (!atUniformBlock) throw new IllegalStateException("bind() must be declared in a uniform{} block.")
    
     boundUniforms += ((name, binding.asInstanceOf[Value[UncheckedBinding]]))
     binding.register(ShaderPropertyContext)
    
-    declarations += new Declaration(ClassUtil.rebuildManifest(binding.get), name)
+    declarations += new Declaration(typeTag[B], name)
    
     binding.get match {
       case seq: BindingSeq[_] => sizedArrayKeys += new ListSizeKey(new ListNameKey("", name), seq.size)
@@ -414,9 +421,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
     functionDependencies += functionSignature
   }
  
-  protected final def declare[B <: Binding : ClassManifest](name: String) :Declaration = {
+  protected final def declare[B <: Binding : TypeTag](name: String) :Declaration = {
     if (atBlockLevel) throw new IllegalStateException("declare() must be called inside a block.")
-    val declaration = new Declaration(implicitly[ClassManifest[B]], name)
+    val declaration = new Declaration(typeTag[B], name)
     declarations += declaration
     declaration
   }
@@ -441,24 +448,9 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       if (isArray && noSizeExpression) {
         unsizedArrayKeys += new ListNameKey("", declaration.name)
       }
-     
-      import scala.language.existentials//XXX remove after getting rid of ClassManifest
-      val manifest =
-        if (isArray) {
-          try {
-            declaration.manifest.typeArguments.head.asInstanceOf[ClassManifest[_]]
-          }
-          catch {
-            case e: Exception => throw new RuntimeException(
-              "Undefined or unsupported array type for declaration '" + declaration.name + "'.")
-          }
-        }
-        else {
-          declaration.manifest
-        }
-     
-      if (classOf[Struct].isAssignableFrom(manifest.runtimeClass)) {
-        val instance = manifest.runtimeClass.newInstance().asInstanceOf[Struct]
+
+      if (declaration.normalizedType <:< Struct.Type) {
+        val instance = ClassUtil.runtimeClass(declaration.normalizedType).newInstance().asInstanceOf[Struct]
         unsizedArrayKeys ++= instance.getUnsizedListKeys()
       }
     }

@@ -155,7 +155,7 @@ trait Struct extends ReadStruct with Accessible {
           
           case seq: BindingSeq[_] =>
             nameKeys.add(new ListNameKey(parentType, fieldNames(i)))
-            if (seq.elementTag.tpe <:< Struct.Type)
+            if (seq.elementTag.tpe <:< Types.Struct)
               rec(ClassUtil.runtimeClass(seq.elementTag.tpe).newInstance().asInstanceOf[Struct])
 
           case s: Struct =>
@@ -175,6 +175,4 @@ trait Struct extends ReadStruct with Accessible {
 
 object Struct {
   private final val logger = Logger.getLogger(classOf[RenderContext].getName)
-  
-  val Type = typeOf[Struct]
 }

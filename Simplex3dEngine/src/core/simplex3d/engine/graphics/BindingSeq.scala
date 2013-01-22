@@ -35,7 +35,7 @@ sealed abstract class BindingSeq[T <: Accessible with Binding { type Read >: T <
 )
 extends Protected with Binding with PropertyContextDependent
 {
-  if(elementTag.tpe <:< BindingSeq.Type) throw new IllegalArgumentException(
+  if(elementTag.tpe <:< Types.BindingSeq) throw new IllegalArgumentException(
     "Nested sequences are not supported."
   )
   
@@ -58,7 +58,7 @@ extends Protected with Binding with PropertyContextDependent
   protected def unregisterPropertyContext() {}
   
   
-  protected val managable = elementTag.tpe <:< typeOf[PropertyContextDependent]
+  protected val managable = elementTag.tpe <:< Types.PropertyContextDependent
   protected def manageElems = (context != null && managable)
   
   protected def registerElems(offset: Int, count: Int) {
@@ -122,10 +122,6 @@ extends Protected with Binding with PropertyContextDependent
       }
     }
   }
-}
-
-object BindingSeq {
-  val Type = typeOf[BindingSeq[_]]
 }
 
 

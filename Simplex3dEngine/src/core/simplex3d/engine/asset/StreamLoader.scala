@@ -150,13 +150,10 @@ trait StreamLoader extends AssetLoader {
           case Seq("v", x, y, z) => verticesBuilder += Vec3(x.toDouble, y.toDouble, z.toDouble)
           case Seq("vn", x, y, z) => normalsBuilder += Vec3(x.toDouble, y.toDouble, z.toDouble)
           case Seq("vt", x, y) => texCoordsBuilder += Vec2(x.toDouble, y.toDouble)
-          //case Seq("f", _*) => { ... }// TODO: this is bugged in 2.9.2, works in 2.10, change after updating.
-          //case _ => // ignore
-          case _ => {
-            if (tokens.size > 0 && tokens(0) == "f") throw new RuntimeException(
+          case Seq("f", _*) => throw new RuntimeException(
                 "Unsupported polygon format in obj model '" + path +
                 "' on line " + lineNumber + ", only triangles are supported.")
-          }
+          case _ => // ignore
         }
 
         lineNumber += 1

@@ -42,7 +42,7 @@ final class Declaration(
 ) {
   val isPredefined = name.startsWith("se_")
   val isReserved = name.startsWith("gl_")
-  val isArray: Boolean = tag.tpe <:< BindingSeq.Type
+  val isArray: Boolean = tag.tpe <:< Types.BindingSeq
   
   private val syntheticName = {
     name match {
@@ -61,7 +61,7 @@ final class Declaration(
   def attributeClass = ClassUtil.runtimeClass(attributeType)
   
   val uniformType: Type = {
-    if (tag.tpe <:< BindingSeq.Type) {
+    if (tag.tpe <:< Types.BindingSeq) {
       try {
         ClassUtil.typeArg(tag.tpe)
       }

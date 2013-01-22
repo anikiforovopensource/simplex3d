@@ -59,16 +59,15 @@ extends Protected with Cloneable with Binding with Serializable
     bound.write.asInstanceOf[Data[Accessor] with DirectSrc with ContiguousSrc]
   
   def src: DirectSrc with ContiguousSrc = bound.src
-  
-  
-  // XXX enable after the next Scala release.
-//  final override def equals(other: Any) :Boolean = {
-//    other match {
-//      case r: ReadTextureBinding[_] => texture == r.texture
-//      case t: Texture[_] => texture == t
-//      case _ => false
-//    }
-//  }
+
+
+  final override def equals(other: Any) :Boolean = {
+    other match {
+      case r: ReadTextureBinding[_] => texture == r.texture
+      case t: Texture[_] => texture == t
+      case _ => false
+    }
+  }
   
   final override def hashCode() :Int = texture.hashCode
   final override def toString() :String = "TextureBinding" + "(" + texture + ")"
@@ -102,16 +101,4 @@ with Accessible with Serializable
 
   def :=(r: ReadTextureBinding[T]) { texture_=(r.asInstanceOf[ReadTextureBinding[T]].texture) }
   def :=(t: T) { texture_=(t) }
-}
-
-
-object TextureBinding {
-  import simplex3d.engine.util._
-  
-  val Type = typeOf[TextureBinding[_]]
-  
-  // XXX this is fixed in unreleased Scala 2.10, remove when it gets released.
-  def avoidCompilerCrash(a: Any) = a.asInstanceOf[ReadTextureBinding[_]]
-  def avoidCompilerCrash(a: ReadArray[Any]) = a.asInstanceOf[ReadArray[ReadTextureBinding[_]]]
-  def avoidCompilerCrashB(a: Any) :Boolean = a.isInstanceOf[ReadTextureBinding[_]]
 }

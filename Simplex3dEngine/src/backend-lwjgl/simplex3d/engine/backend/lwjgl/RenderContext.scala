@@ -862,16 +862,10 @@ extends graphics.RenderContext {
       
       if (!correctType) {
         
-        /* Replace when 2.10 is out.
         val resolved = binding match {
           case tb: ReadTextureBinding[_] => ClassUtil.simpleName(tb.bindingTag.runtimeClass)
           case _ => ClassUtil.simpleName(binding.getClass)
-        }*/
-        val resolved =
-          if (TextureBinding.avoidCompilerCrashB(binding))
-            ClassUtil.simpleName(TextureBinding.avoidCompilerCrash(binding).bindingTag.runtimeClass)
-          else
-            ClassUtil.simpleName(binding.getClass)
+        }
         
         log(
           Level.SEVERE, "Uniform '" + path +
@@ -887,7 +881,7 @@ extends graphics.RenderContext {
       Level.SEVERE, "Uniform '" + path + "' could not be resolved for mesh '" + meshName + "'.")
 
     else if (binding.isInstanceOf[ReadTextureBinding[_]]) {
-      val textureBinding = TextureBinding.avoidCompilerCrash(binding)
+      val textureBinding = binding.asInstanceOf[ReadTextureBinding[_]]
       if (!textureBinding.isBound) log(
         Level.SEVERE, "Texture '" + path + "' is not defined for mesh '" +
         meshName + "'. Default texture will be used.")
@@ -952,12 +946,12 @@ extends graphics.RenderContext {
           case tb: ReadTextureBinding[_] => Texture2d.Tag.runtimeClass.isAssignableFrom(tb.bindingTag.runtimeClass)
           case _ => false
         }*/
-      case EngineBindingTypes.Texture2d =>
-        if (TextureBinding.avoidCompilerCrashB(binding)) {
-          val erasure = TextureBinding.avoidCompilerCrash(binding).bindingTag.runtimeClass
+      case EngineBindingTypes.Texture2d => binding match {
+        case b: ReadTextureBinding[_] =>
+          val erasure = b.bindingTag.runtimeClass
           Texture2d.Tag.runtimeClass.isAssignableFrom(erasure)
-        }
-        else false
+        case _ => false
+      }
       
       case EngineBindingTypes.Texture3d => false
       case EngineBindingTypes.CubeTexture => false
@@ -1073,9 +1067,9 @@ extends graphics.RenderContext {
       programMapping.uniformMatrices, predefinedUniforms, mesh
     ).asInstanceOf[ReadArray[AnyMat[_]]]
     
-    val uniformTextures = TextureBinding.avoidCompilerCrash(buildUniformMapping(
+    val uniformTextures = buildUniformMapping(
       programMapping.uniformTextures, predefinedUniforms, mesh
-    ))
+    ).asInstanceOf[ReadArray[ReadTextureBinding[_]]]
     
     val attributes = buildAttributeMapping(mesh, programMapping.attributes)
     

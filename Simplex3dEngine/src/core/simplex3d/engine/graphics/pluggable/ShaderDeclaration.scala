@@ -86,10 +86,10 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
   {
     private[ShaderDeclaration] var qualifiers: Option[String] = None
     private[ShaderDeclaration] var arraySizeExpression: Option[String] = None
-    private[ShaderDeclaration] def isArray = tag.tpe <:< BindingSeq.Type
-    private[ShaderDeclaration] def isMathType = tag.tpe <:< typeOf[MathType]
+    private[ShaderDeclaration] def isArray = tag.tpe <:< Types.BindingSeq
+    private[ShaderDeclaration] def isMathType = tag.tpe <:< Types.MathType
     private[ShaderDeclaration] def isMathTypeArray = {
-      isArray && normalizedType <:< typeOf[MathType]
+      isArray && normalizedType <:< Types.MathType
     }
     private[ShaderDeclaration] val normalizedType: Type = {
       if (isArray) {
@@ -200,10 +200,10 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
       nestedSamplers: ArrayBuilder[NestedSampler]
     ) :String = { // glslType
      
-      if (tpe <:< typeOf[MathType]) {
+      if (tpe <:< Types.MathType) {
         resolveMathType(squareMatrices, ClassUtil.runtimeClass(tpe))
       }
-      else if (tpe <:< TextureBinding.Type) {
+      else if (tpe <:< Types.TextureBinding) {
         try {
           val runtimeClass = ClassUtil.runtimeClass(ClassUtil.typeArg(tpe))
           resolveTextureType(null, runtimeClass, name, firstSizeExpression, nestedSamplers)
@@ -214,7 +214,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
           )
         }
       }
-      else if (tpe <:< BindingSeq.Type) {
+      else if (tpe <:< Types.BindingSeq) {
         val listType = try {
           ClassUtil.typeArg(tpe)
         }
@@ -233,7 +233,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
            
         glslType
       }
-      else if (tpe <:< Struct.Type) {
+      else if (tpe <:< Types.Struct) {
         val instance = try {
           ClassUtil.runtimeClass(tpe).newInstance().asInstanceOf[Struct]
         }
@@ -449,7 +449,7 @@ sealed abstract class ShaderDeclaration(val shaderType: Shader.type#Value) {
         unsizedArrayKeys += new ListNameKey("", declaration.name)
       }
 
-      if (declaration.normalizedType <:< Struct.Type) {
+      if (declaration.normalizedType <:< Types.Struct) {
         val instance = ClassUtil.runtimeClass(declaration.normalizedType).newInstance().asInstanceOf[Struct]
         unsizedArrayKeys ++= instance.getUnsizedListKeys()
       }

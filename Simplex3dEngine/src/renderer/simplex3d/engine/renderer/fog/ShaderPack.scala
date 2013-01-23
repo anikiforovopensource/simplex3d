@@ -73,6 +73,6 @@ object ShaderPack extends pluggable.ShaderPack[Unit] {
     shaders += Universal.vertexBasedFogFragment(config).toPrototype(profile)
     shaders += Universal.vertexBasedFogVertex(config).toPrototype(profile)
     
-    (config, shaders.result())
+    (/*config*/Unit, shaders.result())
   }
 }

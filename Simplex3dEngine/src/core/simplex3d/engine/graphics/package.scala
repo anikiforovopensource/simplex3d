@@ -27,7 +27,7 @@ import simplex3d.engine.util._
 
 package object graphics {
   
-  type UncheckedValue = Accessible { type Read = Object; type Mutable = Object }
+  type UncheckedRef = Accessible { type Read = Object; type Mutable = Object }
   type UncheckedBinding = Accessible with Binding { type Read = Binding; type Mutable = Binding }
   type UncheckedAttributes = AttributeBinding[Format, Raw]
 }

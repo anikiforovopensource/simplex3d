@@ -97,6 +97,6 @@ object ShaderPack extends pluggable.ShaderPack[Unit] {
     shaders += Universal.lightingFragment(config).toPrototype(profile)
     shaders += Universal.lightingVertex(config).toPrototype(profile)
     
-    (config, shaders.result())
+    (/*config*/Unit, shaders.result())
   }
 }

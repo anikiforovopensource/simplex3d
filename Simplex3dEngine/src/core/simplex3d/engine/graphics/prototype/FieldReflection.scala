@@ -31,10 +31,9 @@ import simplex3d.math.types._
 import simplex3d.engine.util._
 
 
-private[engine] object FieldReflection {
+private[engine] object JavaReflection {
   
   private[engine] val BindingFilter = List(classOf[Protected], classOf[Binding])
-  private[engine] val FieldFilter = List(classOf[Protected])
   private[engine] val EnvironmentalEffectFilter = List(classOf[EnvironmentalEffect])
   
   
@@ -52,50 +51,53 @@ private[engine] object FieldReflection {
     val clazz = instance.getClass
     
     val cached = cache.get(clazz)
-    if (cached != null) {
-      cached
-    }
+    if (cached != null) cached
     else {
-      val dupMethods = clazz.getMethods.filter { method =>
-        /* not static                  */ (method.getModifiers & Modifier.STATIC) == 0 &&
-        /* no parameters               */ method.getParameterTypes.length == 0 &&
-        /* target return type          */ targetFieldType.isAssignableFrom(method.getReturnType) &&
-        /* return type is distinct     */ !clazz.isAssignableFrom(method.getReturnType) &&
-        /* not blacklisted             */ !blacklist.contains(method.getName) &&
-        /* not synthetic               */ !method.getName.contains('$') &&
-        /* return type argument bounds */ {
-          if (fieldTypeArgumentBounds.isEmpty) true
-          else {
-            method.getGenericReturnType match {
-              case p: ParameterizedType =>
-                val typeArgument = p.getActualTypeArguments()(0) match {
-                  case c: Class[_] => c
-                  case p: ParameterizedType => p.getRawType match {
+      cache.synchronized {
+        val cached = cache.get(clazz)
+        if (cached != null) return cached
+        
+        val dupMethods = clazz.getMethods.filter { method =>
+          /* not static                  */ (method.getModifiers & Modifier.STATIC) == 0 &&
+          /* no parameters               */ method.getParameterTypes.length == 0 &&
+          /* target return type          */ targetFieldType.isAssignableFrom(method.getReturnType) &&
+          /* return type is distinct     */ !clazz.isAssignableFrom(method.getReturnType) &&
+          /* not blacklisted             */ !blacklist.contains(method.getName) &&
+          /* not synthetic               */ !method.getName.contains('$') &&
+          /* return type argument bounds */ {
+            if (fieldTypeArgumentBounds.isEmpty) true
+            else {
+              method.getGenericReturnType match {
+                case p: ParameterizedType =>
+                  val typeArgument = p.getActualTypeArguments()(0) match {
                     case c: Class[_] => c
-                    case _ => null
+                    case p: ParameterizedType => p.getRawType match {
+                      case c: Class[_] => c
+                      case _ => null
+                    }
                   }
-                }
-                if (typeArgument == null) false
-                else fieldTypeArgumentBounds.forall(_.isAssignableFrom(typeArgument))
-              case _ =>
-                false
+                  if (typeArgument == null) false
+                  else fieldTypeArgumentBounds.forall(_.isAssignableFrom(typeArgument))
+                case _ =>
+                  false
+              }
             }
           }
         }
-      }
-      
-      val methodMap = new HashMap[String, Method]
-      for (method <- dupMethods) {
-        val existing = methodMap.get(method.getName)
-        if (existing == null || method.getDeclaringClass == clazz) {
-          methodMap.put(method.getName, method)
+        
+        val methodMap = new HashMap[String, Method]
+        for (method <- dupMethods) {
+          val existing = methodMap.get(method.getName)
+          if (existing == null || method.getDeclaringClass == clazz) {
+            methodMap.put(method.getName, method)
+          }
         }
+        val methods = methodMap.values().toArray(new Array[Method](0))
+  
+        val accessors = (new ReadArray(methods.map(_.getName).toArray), new ReadArray(methods))
+        cache.put(clazz, accessors)
+        accessors
       }
-      val methods = methodMap.values().toArray(new Array[Method](0))
-
-      val accessors = (new ReadArray(methods.map(_.getName).toArray), new ReadArray(methods))
-      cache.put(clazz, accessors)
-      accessors
     }
   }
   
@@ -114,5 +116,88 @@ private[engine] object FieldReflection {
     }
     
     (names, new ReadArray(values))
+  }
+}
+
+
+import scala.reflect._
+import scala.reflect.runtime.universe._
+
+private[engine] object ScalaReflection {
+  
+  private[engine] val GeometryFilter = typeTag[Attributes[_, _]]
+  private[engine] val MaterialFilter = typeTag[Property[_]]
+  private[engine] val EnvironmentlFilter = typeTag[Property[_ <: EnvironmentalEffect]]
+  private[engine] val StructFilter = typeTag[Accessible]
+  private[engine] val ShaderValFilter = typeTag[Value[_ <: Binding]]
+  
+  
+  private[this] val mirror = runtimeMirror(this.getClass.getClassLoader)
+  private[this] val cache = new HashMap[Type, (ReadArray[String], ReadArray[MethodSymbol])]
+  
+  
+  private[this] def symbolMap[V: TypeTag](tpe: Type, filter: Set[String] = Set.empty[String])
+  :(ReadArray[String], ReadArray[MethodSymbol]) =
+  {
+    def getSymbols() = {
+      val vals = tpe.members.filter { a => a.isMethod && {
+        val m = a.asMethod
+        m.isGetter && !m.isSynthetic && !m.isImplementationArtifact &&
+        (m.isPublic || m.privateWithin != NoSymbol) &&
+        m.returnType <:< typeOf[V] &&
+        !filter.contains(m.name.decoded)
+      }}
+      
+      val (names, methods) = vals.map(v => (v.name.decoded, v.asMethod)).unzip
+      (new ReadArray(names.toArray), new ReadArray(methods.toArray))
+    }
+    
+    
+    val cached = cache.get(tpe)
+    if (cached != null) cached
+    else {
+      cache.synchronized {
+        val cached = cache.get(tpe)
+        if (cached != null) return cached
+        
+        getSymbols()
+      }
+    }
+  }
+  
+  def valueMap[T, V](instance: T, valType: TypeTag[V], filter: Set[String] = Set.empty[String])
+  :(ReadArray[String], ReadArray[V]) =
+  {
+    val instanceMirror = mirror.reflect(instance)(ClassTag(instance.getClass))
+    val tpe = instanceMirror.symbol.toType
+    val (names, methods) = symbolMap[V](tpe, filter)(valType)
+    val values = new Array[Any](methods.length)
+    
+    var i = 0; while (i < values.length) {
+      values(i) = instanceMirror.reflectField(methods(i)).get
+      
+      i += 1
+    }
+    
+    (names, new ReadArray(values).asInstanceOf[ReadArray[V]])
+  }
+}
+
+package foo.bar {
+  class Test {
+    val v: String = ""
+    val a = Property(() => simplex3d.math.Vec2i(0)); a.update
+    def d()  = 1
+    def n: String = ""
+    
+    private[engine] val vp: Int = 1
+    protected val vh: String = ""
+  }
+}
+
+object Test {
+  def main(args: Array[String]) {
+    val (names, props) = ScalaReflection.valueMap(new foo.bar.Test, ScalaReflection.MaterialFilter)
+    println(names(0), props(0).asInstanceOf[AnyRef])
   }
 }

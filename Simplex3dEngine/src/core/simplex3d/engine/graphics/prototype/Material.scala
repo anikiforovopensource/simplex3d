@@ -29,27 +29,23 @@ import simplex3d.engine.scene._
 abstract class Material(controllerContext: ControllerContext) extends graphics.Material(controllerContext) {
   
   private[this] var _uniformNames: ReadArray[String] = null
-  private[this] var _uniforms: ReadArray[Property[UncheckedValue]] = null
+  private[this] var _uniforms: ReadArray[Property[UncheckedRef]] = null
   
   private[this] var initialized = false 
   protected final def init(clazz: Class[_]) {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (un, uv) = FieldReflection.valueMap(
-      this, classOf[Property[_]], FieldReflection.FieldFilter, Material.UniformBlacklist
+    val (un, uv) = JavaReflection.valueMap(
+      this, classOf[Property[_]], Nil, Nil
     )
     _uniformNames = un
-    _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedValue]]]
+    _uniforms = uv.asInstanceOf[ReadArray[Property[UncheckedRef]]]
     
     PropertyContext.registerProperties(this, uniforms)
     initialized = true
   }
   
   override def uniformNames: ReadArray[String] = _uniformNames
-  override def uniforms: ReadArray[Property[UncheckedValue]] = _uniforms
-}
-
-object Material {
-  private val UniformBlacklist = List[String]()
+  override def uniforms: ReadArray[Property[UncheckedRef]] = _uniforms
 }

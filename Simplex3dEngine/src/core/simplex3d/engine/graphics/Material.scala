@@ -29,5 +29,5 @@ import simplex3d.engine.scene._
 
 abstract class Material(controllerContext: ControllerContext) extends PropertyContext(controllerContext) {
   def uniformNames: ReadArray[String]
-  def uniforms: ReadArray[Property[UncheckedValue]]
+  def uniforms: ReadArray[Property[UncheckedRef]]
 }

@@ -36,22 +36,22 @@ trait Struct extends ReadStruct with graphics.Struct {
   import Struct._
   
   private final var _fieldNames: ReadArray[String] = null
-  private final var _fields: ReadArray[UncheckedValue] = null
+  private final var _fields: ReadArray[UncheckedRef] = null
 
   private[this] var initialized = false 
   protected final def init(clazz: Class[_]) {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (fn, fv) = FieldReflection.valueMap(this, classOf[Accessible], Nil, Blacklist)
+    val (fn, fv) = JavaReflection.valueMap(this, classOf[Accessible], Nil, Blacklist)
     _fieldNames = fn
-    _fields = fv.asInstanceOf[ReadArray[UncheckedValue]]
+    _fields = fv.asInstanceOf[ReadArray[UncheckedRef]]
     
     initialized = true
   }
   
   override def fieldNames: ReadArray[String] = _fieldNames
-  override def fields: ReadArray[UncheckedValue] = _fields
+  override def fields: ReadArray[UncheckedRef] = _fields
   
   
   private[engine] override def register(context: PropertyContext) {

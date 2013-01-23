@@ -161,6 +161,6 @@ object ShaderPack extends pluggable.ShaderPack[Unit] {
     shaders += Universal.transformationPointSprite(config).toPrototype(profile)
     shaders += Gl2.ecPosition(config).toPrototype(profile)
     
-    (config, shaders.result())
+    (/*config*/Unit, shaders.result())
   }
 }

@@ -145,8 +145,8 @@ object Attributes {
     if (src.formatTag != formatTag) throw new IllegalArgumentException(
       "Data source format does not match the tag.")
       
-    if (!(RawEnum.ClassTags.fromRawEnum(src.rawEnum) <:< rawTag)) throw new IllegalArgumentException(
-      "Data source raw type does not match the tag.")
+    if (!(rawTag.runtimeClass.isAssignableFrom(RawEnum.ClassTags.fromRawEnum(src.rawEnum).runtimeClass)))
+      throw new IllegalArgumentException("Data source raw type does not match the tag.")
       
     if (src.isInstanceOf[ReadDataBuffer[_, _]]) {
       fromData(src.asInstanceOf[ReadDataBuffer[F, R]], caching)
@@ -183,8 +183,8 @@ class interleaved(val caching: Caching.Value = Caching.Static) { // extends Dela
       if (src.formatTag != formatTag) throw new IllegalArgumentException(
         "Data source format does not match the tag.")
         
-      if (!(RawEnum.ClassTags.fromRawEnum(src.rawEnum) <:< rawTag)) throw new IllegalArgumentException(
-        "Data source raw type does not match the tag.")
+      if (!(rawTag.runtimeClass.isAssignableFrom(RawEnum.ClassTags.fromRawEnum(src.rawEnum).runtimeClass)))
+        throw new IllegalArgumentException("Data source raw type does not match the tag.")
     
       if (src.isInstanceOf[ReadDataView[_, _]]) {
         fromData[F, R](src.asInstanceOf[ReadDataView[F, R]])

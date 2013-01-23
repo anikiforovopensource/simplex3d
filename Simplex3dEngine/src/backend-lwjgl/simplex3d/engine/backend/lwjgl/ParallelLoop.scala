@@ -21,7 +21,6 @@
 package simplex3d.engine
 package backend.lwjgl
 
-import scala.concurrent.ops._
 import org.lwjgl.opengl._
 import org.lwjgl.input.{Keyboard => RawKeyboard, Mouse => RawMouse }
 import simplex3d.math._
@@ -45,7 +44,7 @@ final class ParallelLoop extends simplex3d.engine.MainLoop {
   private[this] val worker = new Worker
   
   def init(app: App#Subtext) {
-    spawn {
+    new Thread { override def run() {
       
       while (!disposed) {
         
@@ -86,7 +85,8 @@ final class ParallelLoop extends simplex3d.engine.MainLoop {
         worker.terminated = true
         worker.notifyAll()
       }
-    }
+
+    }}.start()
   }
   
   def body(app: App#Subtext) :Boolean = {

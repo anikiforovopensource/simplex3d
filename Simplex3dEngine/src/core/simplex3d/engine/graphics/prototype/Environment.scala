@@ -36,11 +36,9 @@ abstract class Environment(controllerContext: ControllerContext) extends graphic
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (pn, pv) = FieldReflection.valueMap(
-      this,
-      classOf[Property[_]], FieldReflection.EnvironmentalEffectFilter,
-      Nil
-    )
+    val (pn, pv) = JavaReflection.valueMap(
+      this, classOf[Property[_]], JavaReflection.EnvironmentalEffectFilter, Nil)
+      
     _propertyNames = pn
     _properties = pv.asInstanceOf[ReadArray[Property[EnvironmentalEffect]]]
     

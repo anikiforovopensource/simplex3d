@@ -102,6 +102,6 @@ object ShaderPack extends pluggable.ShaderPack[Unit] {
     shaders += Universal.texturingPointSprites(config).toPrototype(profile)
     shaders += Gl2.transformTexCoords(config).toPrototype(profile)
     
-    (config, shaders.result())
+    (/*config*/Unit, shaders.result())
   }
 }

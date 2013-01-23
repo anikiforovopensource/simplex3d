@@ -51,7 +51,7 @@ trait Struct extends ReadStruct with Accessible {
   }
   
   def fieldNames: ReadArray[String]
-  def fields: ReadArray[UncheckedValue]
+  def fields: ReadArray[UncheckedRef]
   
   private def getField(name: String) :AnyRef = {
     val id = PathUtil.find(fieldNames, name)

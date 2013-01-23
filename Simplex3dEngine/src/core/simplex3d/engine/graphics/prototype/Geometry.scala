@@ -35,8 +35,8 @@ abstract class Geometry extends graphics.Geometry {
     if (clazz != this.getClass) return // Allows correct sub-classing.
     if (initialized) return
     
-    val (an, av) = FieldReflection.valueMap(
-      this, classOf[UncheckedAttributes], Nil, Geometry.AttributesBlacklist
+    val (an, av) = JavaReflection.valueMap(
+      this, classOf[UncheckedAttributes], Nil, Nil
     )
     _attributeNames = an
     _attributes = av
@@ -47,8 +47,4 @@ abstract class Geometry extends graphics.Geometry {
   
   override def attributeNames: ReadArray[String] = _attributeNames
   override def attributes: ReadArray[UncheckedAttributes] = _attributes
-}
-
-object Geometry {
-  private val AttributesBlacklist = List("indices")
 }

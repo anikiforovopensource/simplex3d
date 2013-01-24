@@ -419,6 +419,11 @@ package types {
   abstract class PrimitiveRef[P] private[math] () extends AnyVec[P] {
     type Clone <: PrimitiveRef[P]
     final def components = 1
+    
+    def toBoolean: Boolean
+    def toInt: Int
+    def toFloat: Float
+    def toDouble: Double
   }
 
 

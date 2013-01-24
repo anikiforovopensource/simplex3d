@@ -27,15 +27,20 @@ import simplex3d.math.types._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object math {
-  
-  // Implicits
-  implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
-  implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
+package math {
+  class ImplicitMathContext {
 
-  implicit def intToRef(s: Int) :ReadIntRef = new IntRef(s)
-  implicit def refToInt(r: ReadIntRef) = r.toConst
-  
+    // Implicits
+    implicit def booleanToRef(s: Boolean) :ReadBooleanRef = new BooleanRef(s)
+    implicit def refToBoolean(r: ReadBooleanRef) = r.toConst
+
+    implicit def intToRef(s: Int) :ReadIntRef = new IntRef(s)
+    implicit def refToInt(r: ReadIntRef) = r.toConst
+  }
+}
+
+
+package object math extends simplex3d.math.ImplicitMathContext {
 
   // In aliases
 

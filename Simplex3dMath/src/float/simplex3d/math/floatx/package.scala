@@ -27,7 +27,7 @@ import simplex3d.math.types._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object floatx {
+package object floatx extends ImplicitMathContext {
 
   // Implicits
   implicit def intToFloatRef(s: Int) :ReadFloatRef = new FloatRef(s)

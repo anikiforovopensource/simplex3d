@@ -27,7 +27,7 @@ import simplex3d.math.types._
 /**
  * @author Aleksey Nikiforov (lex)
  */
-package object doublex {
+package object doublex extends ImplicitMathContext {
 
   // Implicits
   implicit def intToDoubeRef(s: Int) :ReadDoubleRef = new DoubleRef(s)

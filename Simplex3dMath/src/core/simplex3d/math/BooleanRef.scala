@@ -34,11 +34,13 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
 {
   
   type Clone <: ReadBooleanRef
-  final def toConst() :Boolean = x
+  def toConstRef: ConstBooleanRef
+  
+  final def toConst :Boolean = x
   
   type Read = ReadBooleanRef
   type Mutable = BooleanRef
-  final def mutableCopy() = new BooleanRef(x)
+  final def mutableCopy = new BooleanRef(x)
 
   final def apply(i: Int) :Boolean = {
     if (i == 0) x
@@ -51,11 +53,6 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
   private[math] final def dx: Double = simplex3d.math.toDouble(x)
   
   
-  final def &&(s: Boolean) :Boolean = (x && s)
-  final def ||(s: Boolean) :Boolean = (x || s)
-  final def ^(s: Boolean) :Boolean = (x ^ s)
-
-
   final override def equals(other: Any) :Boolean = {
     other match {
       case r: ReadBooleanRef => x == r.toConst
@@ -66,16 +63,37 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
   
   final def ==(s: Boolean) :Boolean = (x == s)
   final def !=(s: Boolean) :Boolean = (x != s)
-
-  final override def hashCode() :Int = {
+  
+  final override def hashCode :Int = {
     simplex3d.math.booleanHashCode(x)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     "BooleanRef" + "(" + x + ")"
   }
+  
+  
+  final def &&(s: Boolean) :Boolean = (x && s)
+  final def ||(s: Boolean) :Boolean = (x || s)
+  final def ^(s: Boolean) :Boolean = (x ^ s)
+
+
+  final def toBoolean: Boolean = x
+  final def toInt: Int = simplex3d.math.toInt(x)
+  final def toFloat: Float = simplex3d.math.toFloat(x)
+  final def toDouble: Double = simplex3d.math.toDouble(x)
 }
 
+@SerialVersionUID(8104346712419693669L)
+final class ConstBooleanRef(x: Boolean) extends ReadBooleanRef(x)
+with Immutable with Serializable
+{
+  type Clone = ConstBooleanRef
+  override def clone = this
+  def toConstRef: ConstBooleanRef = this
+}
+
+  
 @SerialVersionUID(8104346712419693669L)
 final class BooleanRef(cx: Boolean) extends ReadBooleanRef(cx)
 with Accessible with Serializable
@@ -86,7 +104,8 @@ with Accessible with Serializable
   type Clone = BooleanRef
   type Const = Boolean
   
-  override def clone() = new BooleanRef(x)
+  override def clone = new BooleanRef(x)
+  def toConstRef: ConstBooleanRef = new ConstBooleanRef(toConst)
 
   def :=(s: Boolean) { x = s }
   def :=(r: ReadBooleanRef) { x = r.toConst }

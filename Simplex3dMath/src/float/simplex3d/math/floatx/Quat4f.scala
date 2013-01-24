@@ -37,11 +37,11 @@ with Protected with Serializable
 {
 
   type Clone <: ReadQuat4f
-  def toConst() :ConstQuat4f
+  def toConst :ConstQuat4f
   
   type Read = ReadQuat4f
   type Mutable = Quat4f
-  final def mutableCopy() = Quat4f(this)
+  final def mutableCopy = Quat4f(this)
 
   private[math] final def fa: Float = a
   private[math] final def fb: Float = b
@@ -141,7 +141,7 @@ with Protected with Serializable
     }
   }
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     41 * (
       41 * (
         41 * (
@@ -151,7 +151,7 @@ with Protected with Serializable
     ) + simplex3d.math.floatHashCode(d)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     val prefix = this match {
       case self: Immutable => "Const"
       case _ => ""
@@ -168,8 +168,8 @@ final class ConstQuat4f private[math] (
   pa = ca; pb = cb; pc = cc; pd = cd
 
   type Clone = ConstQuat4f
-  override def clone() = this
-  def toConst() = this
+  override def clone = this
+  def toConst = this
 }
 
 object ConstQuat4f {
@@ -200,8 +200,8 @@ with Accessible with Serializable
   type Accessor = Quat4f
   type Component = RFloat
   
-  override def clone() = Quat4f(this)
-  def toConst() = ConstQuat4f(this)
+  override def clone = Quat4f(this)
+  def toConst = ConstQuat4f(this)
   def :=(q: inQuat4f) { a = q.a; b = q.b; c = q.c; d = q.d }
 
 

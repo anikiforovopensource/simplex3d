@@ -28,7 +28,7 @@ trait Protected {
   type Read <: Protected
   type Mutable <: Accessible
   
-  def mutableCopy() :Mutable
+  def mutableCopy :Mutable
 }
 
 

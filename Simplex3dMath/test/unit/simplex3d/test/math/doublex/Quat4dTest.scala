@@ -35,11 +35,11 @@ class Quat4dTest extends FunSuite {
 
   test("Clone") {
     var t: ReadQuat4 = Quat4(1, 1, 1, 1)
-    assert(t.clone() ne t)
-    assert(t.clone() == t)
+    assert(t.clone ne t)
+    assert(t.clone == t)
 
     t = ConstQuat4(1, 1, 1, 1)
-    assert(t.clone() eq t)
+    assert(t.clone eq t)
   }
 
   test("Factories") {

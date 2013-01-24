@@ -34,11 +34,11 @@ extends PrimitiveRef[Int] with Protected with Serializable
 {
 
   type Clone <: ReadIntRef
-  final def toConst() :Int = x
+  final def toConst :Int = x
   
   type Read = ReadIntRef
   type Mutable = IntRef
-  final def mutableCopy() = new IntRef(x)
+  final def mutableCopy = new IntRef(x)
 
   final def apply(i: Int) :Int = {
     if (i == 0) x
@@ -62,11 +62,11 @@ extends PrimitiveRef[Int] with Protected with Serializable
   final def ==(s: Double) :Boolean = (x == s)
   final def !=(s: Double) :Boolean = (x != s)
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     simplex3d.math.intHashCode(x)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     "IntRef" + "(" + x + ")"
   }
 
@@ -234,6 +234,12 @@ extends PrimitiveRef[Int] with Protected with Serializable
    * @return a vector with components s ^ u.x, s ^ u.y, s ^ u.z, and s ^ u.w.
    */
   final def ^(u: inVec4i) = u ^ x
+  
+
+  final def toBoolean: Boolean = simplex3d.math.toBoolean(x)
+  final def toInt: Int = x
+  final def toFloat: Float = x
+  final def toDouble: Double = x
 }
 
 @SerialVersionUID(8104346712419693669L)
@@ -245,7 +251,7 @@ with Accessible with Serializable
   type Clone = IntRef
   type Const = Int
   
-  override def clone() = new IntRef(x)
+  override def clone = new IntRef(x)
   
   def :=(s: Int) { x = s }
   def :=(r: ReadIntRef) { x = r.toConst }

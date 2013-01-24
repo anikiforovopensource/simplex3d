@@ -45,12 +45,12 @@ class PropertyValueTest extends FunSuite {
 
 
   def testRef[T <: Accessible](mutable: T, read: T#Read) {
-    type ToConst = { def toConst(): AnyRef }
+    type ToConst = { def toConst: AnyRef }
     
     assert(!mutable.isInstanceOf[Immutable])
     assert(mutable != read)
 
-    val clone = mutable.asInstanceOf[Cloneable].clone().asInstanceOf[T]
+    val clone = mutable.asInstanceOf[Cloneable].clone.asInstanceOf[T]
     assert(mutable ne clone)
     assert(mutable == clone)
 
@@ -68,12 +68,12 @@ class PropertyValueTest extends FunSuite {
     )
     assert(mutable == const)
     
-    val mcopy = mutable.mutableCopy()
+    val mcopy = mutable.mutableCopy
     assert(mcopy.isInstanceOf[Mutable])
     assert(mutable ne mcopy)
     assert(mutable == mcopy)
     
-    val rcopy = read.mutableCopy()
+    val rcopy = read.mutableCopy
     assert(rcopy.isInstanceOf[Mutable])
     assert(read ne rcopy)
     assert(read == rcopy)

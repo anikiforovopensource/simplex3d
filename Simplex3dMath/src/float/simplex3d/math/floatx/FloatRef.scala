@@ -37,11 +37,11 @@ extends PrimitiveRef[Float] with Protected with Serializable
 {
   
   type Clone <: ReadFloatRef
-  final def toConst() :Float = x
+  final def toConst :Float = x
   
   type Read = ReadFloatRef
   type Mutable = FloatRef
-  final def mutableCopy() = new FloatRef(x)
+  final def mutableCopy = new FloatRef(x)
 
   final def apply(i: Int) :Float = {
     if (i == 0) x
@@ -66,11 +66,11 @@ extends PrimitiveRef[Float] with Protected with Serializable
   final def ==(s: Double) :Boolean = (x == s)
   final def !=(s: Double) :Boolean = (x != s)
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     simplex3d.math.floatHashCode(x)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     "FloatRef" + "(" + x + ")"
   }
 
@@ -162,6 +162,12 @@ extends PrimitiveRef[Float] with Protected with Serializable
   final def /(u: inVec4i) = new Vec4f(x/u.fx, x/u.fy, x/u.fz, x/u.fw)
   final def +(u: inVec4i) = new Vec4f(x + u.fx, x + u.fy, x + u.fz, x + u.fw)
   final def -(u: inVec4i) = new Vec4f(x - u.fx, x - u.fy, x - u.fz, x - u.fw)
+  
+  
+  final def toBoolean: Boolean = simplex3d.math.toBoolean(x)
+  final def toInt: Int = x.toInt
+  final def toFloat: Float = x
+  final def toDouble: Double = x
 }
 
 @SerialVersionUID(8104346712419693669L)
@@ -173,7 +179,7 @@ with Accessible with Serializable
   type Clone = FloatRef
   type Const = Float
   
-  override def clone() = new FloatRef(x)
+  override def clone = new FloatRef(x)
 
   def :=(s: Float) { x = s }
   def :=(r: ReadFloatRef) { x = r.toConst }

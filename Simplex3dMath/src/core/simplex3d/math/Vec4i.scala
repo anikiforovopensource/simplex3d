@@ -35,11 +35,11 @@ with Protected with Serializable
 {
 
   type Clone <: ReadVec4i
-  def toConst() :ConstVec4i
+  def toConst :ConstVec4i
   
   type Read = ReadVec4i
   type Mutable = Vec4i
-  final def mutableCopy() = Vec4i(this)
+  final def mutableCopy = Vec4i(this)
 
   private[math] type R2 = ReadVec2i
   private[math] type R3 = ReadVec3i
@@ -163,7 +163,7 @@ with Protected with Serializable
     }
   }
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     41 * (
       41 * (
         41 * (
@@ -173,7 +173,7 @@ with Protected with Serializable
     ) + simplex3d.math.intHashCode(w)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     val prefix = this match {
       case self: Immutable => "Const"
       case _ => ""
@@ -189,8 +189,8 @@ extends ReadVec4i with Immutable with Serializable {
   px = cx; py = cy; pz = cz; pw = cw
 
   type Clone = ConstVec4i
-  override def clone() = this
-  def toConst() = this
+  override def clone = this
+  def toConst = this
 }
 
 
@@ -229,8 +229,8 @@ with Accessible with Serializable
   type Accessor = Vec4i
   type Component = SInt
 
-  override def clone() = Vec4i(this)
-  def toConst() = ConstVec4i(this)
+  override def clone = Vec4i(this)
+  def toConst = ConstVec4i(this)
   def :=(u: inVec4i) { x = u.x; y = u.y; z = u.z; w = u.w }
 
 

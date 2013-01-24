@@ -37,11 +37,11 @@ extends PrimitiveRef[Double] with Protected with Serializable
 {
   
   type Clone <: ReadDoubleRef
-  final def toConst() :Double = x
+  final def toConst :Double = x
   
   type Read = ReadDoubleRef
   type Mutable = DoubleRef
-  final def mutableCopy()  = new DoubleRef(x)
+  final def mutableCopy  = new DoubleRef(x)
 
   final def apply(i: Int) :Double = {
     if (i == 0) x
@@ -65,11 +65,11 @@ extends PrimitiveRef[Double] with Protected with Serializable
   final def ==(s: Double) :Boolean = (x == s)
   final def !=(s: Double) :Boolean = (x != s)
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     simplex3d.math.doubleHashCode(x)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     "DoubleRef" + "(" + x + ")"
   }
 
@@ -228,6 +228,12 @@ extends PrimitiveRef[Double] with Protected with Serializable
   final def /(m: AnyMat4[Float]) = Mat4d(m).divByComp(x)
   final def +(m: AnyMat4[Float]) = Mat4d(m) + x
   final def -(m: AnyMat4[Float]) = { val t = -Mat4d(m); t += x; t }
+  
+  
+  final def toBoolean: Boolean = simplex3d.math.toBoolean(x)
+  final def toInt: Int = x.toInt
+  final def toFloat: Float = x.toFloat
+  final def toDouble: Double = x
 }
 
 @SerialVersionUID(8104346712419693669L)
@@ -239,7 +245,7 @@ with Accessible with Serializable
   type Clone = DoubleRef
   type Const = Double
   
-  override def clone() = new DoubleRef(x)
+  override def clone = new DoubleRef(x)
 
   def :=(s: Double) { x = s }
   def :=(r: ReadDoubleRef) { x = r.toConst }

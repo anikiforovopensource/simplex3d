@@ -28,5 +28,5 @@ import simplex3d.math.integration._
  */
 trait Cloneable {
   type Clone <: Cloneable
-  override def clone() :Clone = throw new UnsupportedOperationException()
+  override def clone :Clone = throw new UnsupportedOperationException()
 }

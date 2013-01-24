@@ -37,11 +37,11 @@ with Protected with Serializable
 {
 
   type Clone <: ReadMat2f
-  def toConst() :ConstMat2f
+  def toConst :ConstMat2f
   
   type Read = ReadMat2f
   type Mutable = Mat2f
-  final def mutableCopy() = Mat2f(this)
+  final def mutableCopy = Mat2f(this)
 
   // Column major order.
   final def m00 = p00; final def m01 = p01
@@ -190,7 +190,7 @@ with Protected with Serializable
     }
   }
 
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     41 * (
       41 * (
         41 * (
@@ -200,7 +200,7 @@ with Protected with Serializable
     ) + simplex3d.math.floatHashCode(m11)
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     val prefix = this match {
       case self: Immutable => "Const"
       case _ => ""
@@ -225,8 +225,8 @@ final class ConstMat2f private[math] (
 
 
   type Clone = ConstMat2f
-  override def clone() = this
-  def toConst() = this
+  override def clone = this
+  def toConst = this
 }
 
 object ConstMat2f {
@@ -285,8 +285,8 @@ with Accessible with Serializable
   type Accessor = Mat2f
   type Component = RFloat
 
-  override def clone() = Mat2f(this)
-  def toConst() = ConstMat2f(this)
+  override def clone = Mat2f(this)
+  def toConst = ConstMat2f(this)
 
   def :=(m: inMat2f) {
     m00 = m.m00; m01 = m.m01

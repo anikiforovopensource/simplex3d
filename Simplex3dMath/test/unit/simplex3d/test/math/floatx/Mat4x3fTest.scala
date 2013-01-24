@@ -36,11 +36,11 @@ class Mat4x3fTest extends FunSuite {
   
   test("Clone") {
     var t: ReadMat4x3 = Mat4x3(5)
-    assert(t.clone() ne t)
-    assert(t.clone() == t)
+    assert(t.clone ne t)
+    assert(t.clone == t)
 
     t = ConstMat4x3(5)
-    assert(t.clone() eq t)
+    assert(t.clone eq t)
   }
 
   test("Factories") {

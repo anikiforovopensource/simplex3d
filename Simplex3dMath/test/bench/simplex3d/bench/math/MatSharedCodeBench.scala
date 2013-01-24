@@ -320,7 +320,7 @@ sealed abstract class ReadMat3m {
     m02*m.m20 + m12*m.m21 + m22*m.m22
   )
 
-  final override def toString() :String = {
+  final override def toString :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m01 + ", " + m02 + "; " +
@@ -411,7 +411,7 @@ sealed abstract class ReadMat3s {
     res.m20 = a20; res.m21 = a21; res.m22 = a22
   }
 
-  final override def toString() :String = {
+  final override def toString :String = {
     this.getClass.getSimpleName +
     "(" +
       m00 + ", " + m01 + ", " + m02 + "; " +

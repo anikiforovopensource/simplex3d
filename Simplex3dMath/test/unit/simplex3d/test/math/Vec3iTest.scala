@@ -34,11 +34,11 @@ class Vec3iTest extends FunSuite {
 
   test("Clone") {
     var t: ReadVec3i = Vec3i(1)
-    assert(t.clone() ne t)
-    assert(t.clone() == t)
+    assert(t.clone ne t)
+    assert(t.clone == t)
 
     t = ConstVec3i(1)
-    assert(t.clone() eq t)
+    assert(t.clone eq t)
   }
 
   test("Factories") {

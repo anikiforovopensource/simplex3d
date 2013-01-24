@@ -36,11 +36,11 @@ class Vec2fTest extends FunSuite {
 
   test("Clone") {
     var t: ReadVec2 = Vec2(1)
-    assert(t.clone() ne t)
-    assert(t.clone() == t)
+    assert(t.clone ne t)
+    assert(t.clone == t)
 
     t = ConstVec2(1)
-    assert(t.clone() eq t)
+    assert(t.clone eq t)
   }
 
   test("Factories") {

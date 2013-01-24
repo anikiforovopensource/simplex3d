@@ -50,7 +50,7 @@ object HashCodeBench {
       dataB(i) = new VecB(i, i + 1, i + 2)
     }
     
-    bench("Custom hashCode()") {
+    bench("Custom hashCode") {
       var sum = 0
       
       var l = 0; while (l < loops) {
@@ -66,7 +66,7 @@ object HashCodeBench {
       sum.toString
     }
     
-    bench("Scala hashCode()") {
+    bench("Scala hashCode") {
       var sum = 0
       
       var l = 0; while (l < loops) {

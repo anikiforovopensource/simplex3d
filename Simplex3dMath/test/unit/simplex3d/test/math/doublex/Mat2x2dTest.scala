@@ -36,11 +36,11 @@ class Mat2x2dTest extends FunSuite {
   
   test("Clone") {
     var t: ReadMat2x2 = Mat2x2(5)
-    assert(t.clone() ne t)
-    assert(t.clone() == t)
+    assert(t.clone ne t)
+    assert(t.clone == t)
 
     t = ConstMat2x2(5)
-    assert(t.clone() eq t)
+    assert(t.clone eq t)
   }
 
   test("Factories") {

@@ -122,30 +122,30 @@ class Transform2dTest extends FunSuite {
     // test applyTransformation
     def testApply(t: Mat3x2) {
       val s = r
-      val ts = t.clone(); ts.applyScale(s)
+      val ts = t.clone; ts.applyScale(s)
       assert(approxEqual(ts, t scale(s), 1e-15))
 
       val sv = Vec2(r, r)
-      val tsv = t.clone(); tsv.applyScale(sv)
+      val tsv = t.clone; tsv.applyScale(sv)
       assert(approxEqual(tsv, t scale(sv), 1e-15))
 
       val a = r
-      val ta = t.clone(); ta.applyRotation(a)
+      val ta = t.clone; ta.applyRotation(a)
       assert(approxEqual(ta, t rotate(a), 1e-15))
 
       val p = Vec2(r, r)
-      val tp = t.clone(); tp.applyTranslation(p)
+      val tp = t.clone; tp.applyTranslation(p)
       assert(approxEqual(tp, t translate(p), 1e-15))
 
       val m2 = ConstMat2(r, r, r, r)
-      val tm2 = t.clone(); tm2.applyTransformation(m2)
+      val tm2 = t.clone; tm2.applyTransformation(m2)
       assert(approxEqual(tm2, t concat(m2), 1e-15))
 
       val m3x2 = ConstMat3x2(r, r, r, r, r, r)
-      val tm3x2 = t.clone(); tm3x2.applyTransformation(m3x2)
+      val tm3x2 = t.clone; tm3x2.applyTransformation(m3x2)
       assert(approxEqual(tm3x2, t concat(m3x2), 1e-15))
 
-      val self = t.clone(); self.applyTransformation(self)
+      val self = t.clone; self.applyTransformation(self)
       assert(approxEqual(self, t concat(t), 1e-15))
     }
 

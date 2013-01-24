@@ -141,42 +141,42 @@ class Transform3fTest extends FunSuite {
     // test applyTransformation
     def testApply(t: Mat4x3) {
       val s = r
-      val ts = t.clone(); ts.applyScale(s)
+      val ts = t.clone; ts.applyScale(s)
       assert(approxEqual(ts, t scale(s), 1e-6f))
 
       val sv = Vec3(r, r, r)
-      val tsv = t.clone(); tsv.applyScale(sv)
+      val tsv = t.clone; tsv.applyScale(sv)
       assert(approxEqual(tsv, t scale(sv), 1e-6f))
 
       val rq = Quat4(r, r, r, r)
-      val trq = t.clone(); trq.applyRotation(rq)
+      val trq = t.clone; trq.applyRotation(rq)
       assert(approxEqual(trq, t rotate(rq), 1e-6f))
 
       val rx = r
-      val trx = t.clone(); trx.applyRotationX(rx)
+      val trx = t.clone; trx.applyRotationX(rx)
       assert(approxEqual(trx, t rotateX(rx), 1e-6f))
 
       val ry = r
-      val _try = t.clone(); _try.applyRotationY(ry)
+      val _try = t.clone; _try.applyRotationY(ry)
       assert(approxEqual(_try, t rotateY(ry), 1e-6f))
 
       val rz = r
-      val trz = t.clone(); trz.applyRotationZ(rz)
+      val trz = t.clone; trz.applyRotationZ(rz)
       assert(approxEqual(trz, t rotateZ(rz), 1e-6f))
 
       val p = Vec3(r, r, r)
-      val tp = t.clone(); tp.applyTranslation(p)
+      val tp = t.clone; tp.applyTranslation(p)
       assert(approxEqual(tp, t translate(p), 1e-6f))
 
       val m3 = ConstMat3(r, r, r, r, r, r, r, r, r)
-      val tm3 = t.clone(); tm3.applyTransformation(m3)
+      val tm3 = t.clone; tm3.applyTransformation(m3)
       assert(approxEqual(tm3, t concat(m3), 1e-6f))
 
       val m4x3 = ConstMat4x3(r, r, r, r, r, r, r, r, r, r, r, r)
-      val tm4x3 = t.clone(); tm4x3.applyTransformation(m4x3)
+      val tm4x3 = t.clone; tm4x3.applyTransformation(m4x3)
       assert(approxEqual(tm4x3, t concat(m4x3), 1e-6f))
 
-      val self = t.clone(); self.applyTransformation(self)
+      val self = t.clone; self.applyTransformation(self)
       assert(approxEqual(self, t concat(t), 1e-6f))
     }
 

@@ -25,7 +25,7 @@ package input
 case class KeyEvent(val keyCode: Int, val char: Char, val time: TimeStamp)
 extends InputEvent
 {
-  override def toString() :String = {
+  override def toString :String = {
     "KeyEvent(key = " + KeyCode.toString(keyCode) + ", code = " + keyCode + ", char = " + char + ", " + time + ")"
   }
 }

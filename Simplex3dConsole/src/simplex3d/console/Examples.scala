@@ -226,5 +226,5 @@ class Node(val name: String, val isDir: Boolean) {
     res.mkString("/")
   }
 
-  override def toString() :String = name
+  override def toString :String = name
 }

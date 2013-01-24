@@ -43,7 +43,7 @@ sealed abstract class ReadFog extends ReadEnvironmentalEffect with prototype.Rea
     }
   }
   
-  final override def hashCode() :Int = {
+  final override def hashCode :Int = {
     41 * (
       41 + color.hashCode
     ) + density.hashCode

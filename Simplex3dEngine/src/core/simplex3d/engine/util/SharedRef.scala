@@ -47,7 +47,7 @@ abstract class SharedRef[T <: AnyRef] { self: AccessibleSharedRef =>
     if (r.isDefined) this := r.get else undefine()
   }
   
-  final override def toString() :String =
+  final override def toString :String =
     "SharedRef(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 

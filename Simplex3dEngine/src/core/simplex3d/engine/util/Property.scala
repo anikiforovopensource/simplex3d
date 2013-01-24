@@ -127,7 +127,7 @@ sealed abstract class Property[T <: Accessible] private[engine] (
     else undefine()
   }
   
-  final override def toString() :String = {
+  final override def toString :String = {
     "Property(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }

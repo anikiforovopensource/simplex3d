@@ -202,7 +202,7 @@ with IndexedSeq[AC] with IndexedSeqOptimized[AC, IndexedSeq[AC]] {
   }
 
 
-  override def toString() :String = {
+  override def toString :String = {
     def getElemName() = {
       formatTag.runtimeClass.getSimpleName
     }

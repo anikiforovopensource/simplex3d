@@ -24,7 +24,6 @@ import java.util.concurrent.{ConcurrentLinkedQueue => Queue}
 import java.security.AccessControlException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
-import scala.concurrent.ops.spawn
 
 
 /**
@@ -177,7 +176,7 @@ private[script] abstract class Job(
       }
 
       if (threadPool != null) threadPool.execute(runner)
-      else spawn { runner.run() }
+      else new Thread { override def run() { runner.run() } }.start()
     }
     else {
       while(queue.poll != null) {}
@@ -212,7 +211,7 @@ private[script] abstract class Job(
 
       for (runner <- runners) {
         if (threadPool != null) threadPool.execute(runner)
-        else spawn { runner.run() }
+        else new Thread { override def run() { runner.run() } }.start()
       }
     }
   }

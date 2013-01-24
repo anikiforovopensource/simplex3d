@@ -69,7 +69,7 @@ trait ReadEnvironmentalEffect extends Protected with PropertyContextDependent {
 trait EnvironmentalEffect extends ReadEnvironmentalEffect with Accessible {
   protected def mkMutable() :Mutable
   
-  override def mutableCopy(): Mutable = {
+  override def mutableCopy: Mutable = {
     val copy = mkMutable()
     copy := this.asInstanceOf[copy.Read]
     copy

@@ -40,7 +40,7 @@ sealed abstract class ReadComponentTransformation3d extends ReadTransformation {
   
   def direction() :Vec3 = rotation.rotateVector(Vec3.UnitZ)
   
-  final def mutableCopy() = {
+  final def mutableCopy = {
     val copy = new ComponentTransformation3d
     copy := this
     copy
@@ -60,7 +60,7 @@ final class ComponentTransformation3d
 extends ReadComponentTransformation3d with Transformation
 {
   val scale = new DoubleRef(1.0)
-  val rotation = Quat4.Identity.mutableCopy()
+  val rotation = Quat4.Identity.mutableCopy
   val translation = Vec3(0)
   
   def lookAt(point: inVec3, worldUp: inVec3, isCamera: Boolean = false) {
@@ -75,7 +75,7 @@ extends ReadComponentTransformation3d with Transformation
     translation := t.translation
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "Transformation3d(scale = " + scale.toConst + ", rotation = " + rotation + ", translation = " + translation + ")"
   }
 }
@@ -86,7 +86,7 @@ object IdentityComponentTransformation3d extends ReadComponentTransformation3d {
   def rotation: ReadQuat4 = Quat4.Identity
   def translation: ReadVec3 = Vec3.Zero
   
-  override def toString() :String = {
+  override def toString :String = {
     "Transformation3d(Identity)"
   }
 }

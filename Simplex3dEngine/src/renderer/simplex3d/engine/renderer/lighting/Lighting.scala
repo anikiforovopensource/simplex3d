@@ -44,7 +44,7 @@ sealed abstract class ReadLighting extends ReadUpdatableEnvironmentalEffect {
     }
   }
   
-  final override def hashCode() = super.hashCode() //
+  final override def hashCode = super.hashCode //
 }
 
 

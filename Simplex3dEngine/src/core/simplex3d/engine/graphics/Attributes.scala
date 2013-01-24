@@ -329,7 +329,7 @@ final class IntervalMap(private val initCapacity: Int, val mergeTolerance: Int) 
     putCount = 0
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "IntervalMap(" +
       array.take(size0).map(n => (upper(n), lower(n))).mkString(", ") +
     ")"

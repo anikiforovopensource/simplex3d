@@ -44,7 +44,7 @@ trait Struct extends ReadStruct with Accessible {
   
   protected def mkMutable() :Mutable
   
-  override def mutableCopy(): Mutable = {
+  override def mutableCopy: Mutable = {
     val copy = mkMutable()
     copy := this.asInstanceOf[copy.Read]
     copy

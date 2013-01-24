@@ -31,11 +31,11 @@ sealed abstract class ReadEnumRef[T <: Enumeration] (protected var value0: T#Val
 extends Protected with PropertyContextDependent with Serializable
 {
   type Clone <: ReadEnumRef[T]
-  final def toConst() :T#Value = value0
+  final def toConst :T#Value = value0
   
   type Read = ReadEnumRef[T]
   type Mutable = EnumRef[T]
-  final def mutableCopy() = new EnumRef[T](value0)
+  final def mutableCopy = new EnumRef[T](value0)
 
   
   // XXX enable after the next Scala release.
@@ -56,8 +56,8 @@ extends Protected with PropertyContextDependent with Serializable
     enums.put(path, toConst)//XXX warn on existing
   }
   
-  final override def hashCode() :Int = value0.hashCode
-  final override def toString() :String = "EnumRef" + "(" + value0 + ")"
+  final override def hashCode :Int = value0.hashCode
+  final override def toString :String = "EnumRef" + "(" + value0 + ")"
 }
 
 @SerialVersionUID(8104346712419693669L)
@@ -74,7 +74,7 @@ with Accessible with Serializable
   type Clone = EnumRef[T]
   type Const = T#Value
   
-  override def clone() = new EnumRef[T](value)
+  override def clone = new EnumRef[T](value)
 
   def :=(e: T#Value) {
     if (value0 != e) {

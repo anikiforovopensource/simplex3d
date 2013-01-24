@@ -37,7 +37,7 @@ extends Protected with Cloneable with Binding with Serializable
   type Mutable = TextureBinding[T]
   
   
-  final def mutableCopy() = new TextureBinding[T](texture)
+  final def mutableCopy = new TextureBinding[T](texture)
   
   final val bindingTag = implicitly[ClassTag[T]]
   protected[engine] var texture: T = _
@@ -69,8 +69,8 @@ extends Protected with Cloneable with Binding with Serializable
     }
   }
   
-  final override def hashCode() :Int = texture.hashCode
-  final override def toString() :String = "TextureBinding" + "(" + texture + ")"
+  final override def hashCode :Int = texture.hashCode
+  final override def toString :String = "TextureBinding" + "(" + texture + ")"
   
   def samplerRemapping(path: String, remapping: HashMap[String, String]) {
     val key = {
@@ -97,7 +97,7 @@ with Accessible with Serializable
   }
   
   type Clone = TextureBinding[T]
-  override def clone() = new TextureBinding[T](texture)
+  override def clone = new TextureBinding[T](texture)
 
   def :=(r: ReadTextureBinding[T]) { texture_=(r.asInstanceOf[ReadTextureBinding[T]].texture) }
   def :=(t: T) { texture_=(t) }

@@ -32,7 +32,7 @@ private[backend] final class MeshMapping(
   val uniformTextures: ReadArray[ReadTextureBinding[_]],
   val attributes: ReadArray[Attributes[_, _]]
 ) {
-  override def toString() :String = {
+  override def toString :String = {
     "MeshMapping(\n" +
       uniformVectors.map(o => "  " + o.toString).mkString("\n") + "\n" +
       uniformMatrices.map(o => "  " + o.toString).mkString("\n") + "\n" +

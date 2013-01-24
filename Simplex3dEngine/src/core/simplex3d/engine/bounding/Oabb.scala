@@ -33,7 +33,7 @@ import simplex3d.math.double._
  */
 final class Oabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends BoundingVolume
 {
-  def mutableCopy() = new Oabb(min.mutableCopy(), max.mutableCopy())
+  def mutableCopy = new Oabb(min.mutableCopy, max.mutableCopy)
   
   def :=(r: BoundingVolume) {
     this := r.asInstanceOf[Oabb]
@@ -44,5 +44,5 @@ final class Oabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends Bound
     max := r.max
   }
   
-  override def toString() :String = "Oabb(" + min + ", " + max + ")"
+  override def toString :String = "Oabb(" + min + ", " + max + ")"
 }

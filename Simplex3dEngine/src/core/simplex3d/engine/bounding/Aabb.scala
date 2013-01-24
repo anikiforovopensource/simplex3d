@@ -29,7 +29,7 @@ import simplex3d.math.double._
  */
 final class Aabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends BoundingVolume
 {
-  def mutableCopy() = new Aabb(min.mutableCopy(), max.mutableCopy())
+  def mutableCopy = new Aabb(min.mutableCopy, max.mutableCopy)
   
   def :=(r: BoundingVolume) {
     this := r.asInstanceOf[Aabb]
@@ -40,5 +40,5 @@ final class Aabb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0)) extends Bound
     max := r.max
   }
   
-  override def toString() :String = "Aabb(" + min + ", " + max + ")"
+  override def toString :String = "Aabb(" + min + ", " + max + ")"
 }

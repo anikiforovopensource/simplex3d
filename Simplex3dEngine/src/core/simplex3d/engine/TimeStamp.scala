@@ -22,7 +22,7 @@ package simplex3d.engine
 
 
 class TimeStamp(val total: Double, val interval: Double) {
-  override def toString() :String = {
+  override def toString :String = {
     "TimeStamp(total = " + total + ", interval = " + interval + ")"  
   }
 }

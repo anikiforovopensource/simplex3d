@@ -26,7 +26,7 @@ import simplex3d.engine.graphics._
 
 
 private[backend] final class ActiveAttribute(val name: String, val dataType: Int, val location: Int) {
-  override def toString() :String = {
+  override def toString :String = {
     "GeometryAttributes(\"" + name +
     "\", type = " + EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
@@ -39,7 +39,7 @@ private[backend] class ActiveUniform(
   final val location: Int
 ) {
   
-  override def toString() :String = {
+  override def toString :String = {
     "Uniform('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ")"
   }
@@ -48,7 +48,7 @@ private[backend] class ActiveUniform(
 private[backend] final class ActiveTexture(
   name: String, dataType: Int, location: Int, final val textureUnit: Int
 ) extends ActiveUniform(name, dataType, location) {
-  override def toString() :String = {
+  override def toString :String = {
     "Texture('" + name + "', type = " +
     EngineBindingTypes.toString(dataType) + ", location = " + location + ", unit = " + textureUnit + ")"
   }

@@ -87,7 +87,7 @@ extends Updatable[T] {
   }
   
   final def update: T = {
-    if (!isDefined) value = default.mutableCopy().asInstanceOf[T]
+    if (!isDefined) value = default.mutableCopy.asInstanceOf[T]
     changed = true
     updateMatrix = true
     value
@@ -118,7 +118,7 @@ extends Updatable[T] {
     else undefine()
   }
   
-  final override def toString() :String = {
+  final override def toString :String = {
     "TransformationBinding(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }

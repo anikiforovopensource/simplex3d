@@ -160,7 +160,7 @@ class Frustum protected (
     res
   }
 
-  override def toString() = {
+  override def toString = {
     "Frustum(\n" +
     "  " + leftNormal + ", " + leftCoefficient + ",\n" +
     "  " + rightNormal + ", " + rightCoefficient + ",\n" +

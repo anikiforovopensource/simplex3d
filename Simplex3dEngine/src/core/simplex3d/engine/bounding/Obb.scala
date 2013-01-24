@@ -30,7 +30,7 @@ import simplex3d.math.double._
 final class Obb(val min: Vec3 = Vec3(0), val max: Vec3 = Vec3(0), val transformation: Mat4x3 = Mat4x3(1))
 extends BoundingVolume
 {
-  def mutableCopy() = new Obb(min.mutableCopy(), max.mutableCopy(), transformation.mutableCopy())
+  def mutableCopy = new Obb(min.mutableCopy, max.mutableCopy, transformation.mutableCopy)
   
   def :=(r: BoundingVolume) {
     this := r.asInstanceOf[Obb]
@@ -42,5 +42,5 @@ extends BoundingVolume
     transformation := r.transformation
   }
   
-  override def toString() :String = "Obb(" + min + ", " + max + ", " + transformation + ")"
+  override def toString :String = "Obb(" + min + ", " + max + ", " + transformation + ")"
 }

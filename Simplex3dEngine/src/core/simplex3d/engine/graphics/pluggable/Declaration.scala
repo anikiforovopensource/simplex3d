@@ -75,7 +75,7 @@ final class Declaration(
   }
   def uniformClass = ClassUtil.runtimeClass(uniformType)
   
-  override def toString() :String = {
+  override def toString :String = {
     "Declaraion(" + qualifiers + " " + glslType + " " + name + ")"
   }
   
@@ -96,7 +96,7 @@ final class Declaration(
     }
   }
   
-  override def hashCode() :Int = {
+  override def hashCode :Int = {
     41 * (
       41 * (
         41 * (

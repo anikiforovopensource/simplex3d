@@ -30,7 +30,7 @@ class GraphicsCapabilities(
   val maxVertexTextures: Int,
   val maxFragmentTextures: Int
 ) {
-  override def toString(): String = {
+  override def toString: String = {
     "GraphicsCapabilities(" +
       "\n  maxAnisotropyLevel = " + maxAnisotropyLevel +
       "\n  maxVertexUniformComponents = " + maxVertexUniformComponents +

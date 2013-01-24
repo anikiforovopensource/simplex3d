@@ -24,7 +24,6 @@ import java.io._
 import java.awt._
 import java.awt.event._
 import javax.swing._
-import scala.concurrent.ops._
 
 
 /**
@@ -65,12 +64,12 @@ object StreamInterceptor {
     err = new StreamInterceptor(System.err)
     System.setErr(err.cached)
     
-    spawn {
+    new Thread { override def run() {
       while (!externalLoop) {
         update(null)
         Thread.sleep(delay)
       }
-    }
+    }}.start()
   }
   
   private[this] def update(callback: String => Unit) {

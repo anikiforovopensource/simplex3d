@@ -60,7 +60,7 @@ object Simplex3d extends Build {
     Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root, Simplex3dScript.root, Simplex3dConsole.root
   )
   
-  lazy val doc = Project(
+  lazy val rootDoc = Project(
     id = "root-doc",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
@@ -72,7 +72,7 @@ object Simplex3d extends Build {
     Simplex3dMath.doc, Simplex3dData.doc, Simplex3dAlgorithm.doc, Simplex3dEngine.doc, Simplex3dScript.core
   )
   
-  lazy val test = Project(
+  lazy val rootTest = Project(
     id = "root-test",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
@@ -84,7 +84,7 @@ object Simplex3d extends Build {
     Simplex3dMath.test, Simplex3dData.test, Simplex3dAlgorithm.test, Simplex3dEngine.test
   )
   
-  lazy val example = Project(
+  lazy val rootExample = Project(
     id = "root-example",
     base = file("."),
     settings = Common.buildSettings ++ Seq(

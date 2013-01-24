@@ -83,7 +83,7 @@ sealed abstract class Value[T <: Accessible] private[engine] (
     stable := p.get.asInstanceOf[stable.Read]
   }
   
-  final override def toString() :String = {
+  final override def toString :String = {
     "Value(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }

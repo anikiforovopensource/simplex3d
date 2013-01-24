@@ -133,7 +133,7 @@ extends BindingSeq[T] with Accessible
   type Mutable = BindingList[T]
   type Elem = T
   
-  final def mutableCopy(): BindingList[T] = {
+  final def mutableCopy: BindingList[T] = {
     val copy = new BindingList[T]()(elementTag)
     copy := this
     copy
@@ -149,7 +149,7 @@ extends BindingSeq[T] with Accessible
         stable := e.asInstanceOf[stable.Read]
       }
       else {
-        val mc = e.mutableCopy().asInstanceOf[T]
+        val mc = e.mutableCopy.asInstanceOf[T]
         if (manageElems) mc.asInstanceOf[PropertyContextDependent].register(context)
         buff += mc
       }
@@ -166,7 +166,7 @@ extends BindingSeq[T] with Accessible
   
   
   def +=(elem: T#Read) {
-    val mc = elem.mutableCopy().asInstanceOf[T]
+    val mc = elem.mutableCopy.asInstanceOf[T]
     if (manageElems) mc.asInstanceOf[PropertyContextDependent].register(context)
     buff += mc
     if (context != null) context.signalStructuralChanges()
@@ -177,7 +177,7 @@ extends BindingSeq[T] with Accessible
   }
   def ++=(seq: Seq[T#Read]) {
     val size0 = buff.size
-    buff ++= seq.map(_.mutableCopy().asInstanceOf[T])
+    buff ++= seq.map(_.mutableCopy.asInstanceOf[T])
     if (manageElems) registerElems(size0, buff.size - size0)
     if (context != null) context.signalStructuralChanges()
   }
@@ -191,7 +191,7 @@ extends BindingSeq[T] with Accessible
   }
   def insertAll(index: Int, seq: Seq[T#Read]) {
     val size0 = buff.size
-    buff.insertAll(index, seq.map(_.mutableCopy().asInstanceOf[T]))
+    buff.insertAll(index, seq.map(_.mutableCopy.asInstanceOf[T]))
     if (manageElems) registerElems(index, buff.size - size0)
     if (context != null) context.signalStructuralChanges()
   }
@@ -218,7 +218,7 @@ extends BindingSeq[T] with Accessible
     remove(0, buff.size)
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "BindingList(" + buff.mkString(", ") + ")"
   }
 }
@@ -259,7 +259,7 @@ extends BindingSeq[T] with Accessible
   type Mutable = BindingArray[T]
   type Elem = T
   
-  final def mutableCopy(): BindingArray[T] = {
+  final def mutableCopy: BindingArray[T] = {
     val copy = new BindingArray[T]()(elementTag)
     copy := this
     copy
@@ -282,7 +282,7 @@ extends BindingSeq[T] with Accessible
     }
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "BindingArray(" + buff.mkString(", ") + ")"
   }
 }

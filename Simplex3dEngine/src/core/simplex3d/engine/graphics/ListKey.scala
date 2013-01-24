@@ -42,7 +42,7 @@ final class ListNameKey(val parentType: String, val name: String) {
     ) + name.hashCode
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "ListNameKey(" + parentType + "." + name + ")"
   }
 }
@@ -60,13 +60,13 @@ final class ListSizeKey(val nameKey: ListNameKey, val size: Int) {
     }
   }
   
-  override def hashCode() :Int = {
+  override def hashCode :Int = {
     41 * (
       41 + nameKey.hashCode
     ) + size.hashCode
   }
   
-  override def toString() :String = {
+  override def toString :String = {
     "ListSizeKey(" + nameKey.parentType + "." + nameKey.name + "[" + size + "])"
   }
 }

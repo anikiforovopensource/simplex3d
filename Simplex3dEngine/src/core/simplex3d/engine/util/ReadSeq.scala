@@ -39,8 +39,8 @@ final class ReadSeq[+T](seq: ArrayBuffer[T]) extends IndexedSeq[T] with IndexedS
     }
   }
   
-  override def hashCode() :Int = {
-    seq.hashCode()
+  override def hashCode :Int = {
+    seq.hashCode
   }
 }
 

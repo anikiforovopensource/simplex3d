@@ -28,7 +28,7 @@ final class NestedSampler(
   val name: String,
   val arraySizeExpression: Option[String]
 ) {
-  override def toString() :String = {
+  override def toString :String = {
     "NestedSampler(" + qualifiedType + " " + name + ")"
   }
   
@@ -49,7 +49,7 @@ final class NestedSampler(
     }
   }
   
-  override def hashCode() :Int = {
+  override def hashCode :Int = {
     41 * (
       41 * (
         41 * (

@@ -101,7 +101,7 @@ class ImageUtils {
   }
   def showImage(title: String, dims: inVec2i, data: inDataSeq[Vec3, Raw]) {
     val img = {
-      if (data.rawType == RawType.UByte) {
+      if (data.rawEnum == RawEnum.UByte) {
         mkImgRgbUByte(dims, data.asInstanceOf[inDataSeq[_, UByte]])
       }
       else {

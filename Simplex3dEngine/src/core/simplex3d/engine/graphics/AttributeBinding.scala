@@ -89,7 +89,7 @@ sealed abstract class AttributeBinding[F <: Format, R <: Raw]
     if (r.isDefined) this := r.get else undefine()
   }
   
-  final override def toString() :String =
+  final override def toString :String =
     "AttributeBinding(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 

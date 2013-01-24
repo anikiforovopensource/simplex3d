@@ -78,7 +78,7 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] () {
     }
     else {
       value match { case d: PropertyContextDependent => d.unregister(); case _ => /* ignore */ }
-      value = t.mutableCopy().asInstanceOf[T]
+      value = t.mutableCopy.asInstanceOf[T]
       value match { case d: PropertyContextDependent => d.register(propertyContext); case _ => /* ignore */ }
       if (propertyContext != null) propertyContext.signalStructuralChanges()
     }
@@ -89,7 +89,7 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] () {
     if (p.isDefined) this := p.get else undefine()
   }
   
-  final override def toString() :String = {
+  final override def toString :String = {
     "Reassignable(" + (if (isDefined) get.toString else "undefined" ) + ")"
   }
 }

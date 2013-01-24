@@ -32,7 +32,7 @@ sealed abstract class ReadElementRange extends Protected {
   def first: ReadIntRef
   def count: ReadIntRef
   
-  final def mutableCopy() = {
+  final def mutableCopy = {
     val copy = new ElementRange
     copy := this
     copy

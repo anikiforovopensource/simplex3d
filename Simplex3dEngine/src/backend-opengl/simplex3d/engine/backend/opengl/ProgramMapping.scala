@@ -39,12 +39,12 @@ private[backend] abstract class ProgramMapping(
   def bind(meshMapping: MeshMapping) :Unit
   
   
-  override def toString() :String = {
+  override def toString :String = {
     "ProgramMapping(\n" +
-    uniformVectors.map("  " + _.toString() + "\n").mkString("") +
-    uniformMatrices.map("  " + _.toString() + "\n").mkString("") +
-    uniformTextures.map("  " + _.toString() + "\n").mkString("") +
-    attributes.map("  " + _.toString() + "\n").mkString("") +
+    uniformVectors.map("  " + _.toString + "\n").mkString("") +
+    uniformMatrices.map("  " + _.toString + "\n").mkString("") +
+    uniformTextures.map("  " + _.toString + "\n").mkString("") +
+    attributes.map("  " + _.toString + "\n").mkString("") +
     ")"
   }
 }

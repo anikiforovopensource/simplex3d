@@ -84,6 +84,7 @@ extends PrimitiveRef[Boolean] with Protected with Serializable
   final def toDouble: Double = simplex3d.math.toDouble(x)
 }
 
+
 @SerialVersionUID(8104346712419693669L)
 final class ConstBooleanRef(x: Boolean) extends ReadBooleanRef(x)
 with Immutable with Serializable

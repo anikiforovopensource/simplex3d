@@ -236,6 +236,17 @@ extends PrimitiveRef[Double] with Protected with Serializable
   final def toDouble: Double = x
 }
 
+
+@SerialVersionUID(8104346712419693669L)
+final class ConstDoubleRef(x: Double) extends ReadDoubleRef(x)
+with Immutable with Serializable
+{
+  type Clone = ConstDoubleRef
+  override def clone = this
+  def toConstRef: ConstDoubleRef = this
+}
+
+
 @SerialVersionUID(8104346712419693669L)
 final class DoubleRef(cx: Double) extends ReadDoubleRef(cx)
 with Accessible with Serializable

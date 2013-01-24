@@ -170,6 +170,17 @@ extends PrimitiveRef[Float] with Protected with Serializable
   final def toDouble: Double = x
 }
 
+
+@SerialVersionUID(8104346712419693669L)
+final class ConstFloatRef(x: Float) extends ReadFloatRef(x)
+with Immutable with Serializable
+{
+  type Clone = ConstFloatRef
+  override def clone = this
+  def toConstRef: ConstFloatRef = this
+}
+
+
 @SerialVersionUID(8104346712419693669L)
 final class FloatRef(cx: Float) extends ReadFloatRef(cx)
 with Accessible with Serializable

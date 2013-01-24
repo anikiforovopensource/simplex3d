@@ -242,6 +242,17 @@ extends PrimitiveRef[Int] with Protected with Serializable
   final def toDouble: Double = x
 }
 
+
+@SerialVersionUID(8104346712419693669L)
+final class ConstIntRef(x: Int) extends ReadIntRef(x)
+with Immutable with Serializable
+{
+  type Clone = ConstIntRef
+  override def clone = this
+  def toConstRef: ConstIntRef = this
+}
+
+
 @SerialVersionUID(8104346712419693669L)
 final class IntRef(cx: Int) extends ReadIntRef(cx)
 with Accessible with Serializable

@@ -133,13 +133,15 @@ private[engine] object ScalaReflection {
   
   
   private[this] val mirror = runtimeMirror(this.getClass.getClassLoader)
-  private[this] val cache = new HashMap[Type, (ReadArray[String], ReadArray[MethodSymbol])]
+  private[this] val cache = new HashMap[ClassSymbol, (ReadArray[String], ReadArray[MethodSymbol])]
   
   
-  private[this] def symbolMap[V: TypeTag](tpe: Type, filter: Set[String] = Set.empty[String])
+  private[this] def symbolMap[V: TypeTag](instanceMirror: InstanceMirror, filter: Set[String] = Set.empty[String])
   :(ReadArray[String], ReadArray[MethodSymbol]) =
   {
     def getSymbols() = {
+      val tpe = instanceMirror.symbol.toType
+      
       val vals = tpe.members.filter { a => a.isMethod && {
         val m = a.asMethod
         m.isGetter && !m.isSynthetic && !m.isImplementationArtifact &&
@@ -153,11 +155,11 @@ private[engine] object ScalaReflection {
     }
     
     
-    val cached = cache.get(tpe)
+    val cached = cache.get(instanceMirror.symbol)
     if (cached != null) cached
     else {
       cache.synchronized {
-        val cached = cache.get(tpe)
+        val cached = cache.get(instanceMirror.symbol)
         if (cached != null) return cached
         
         getSymbols()
@@ -169,8 +171,8 @@ private[engine] object ScalaReflection {
   :(ReadArray[String], ReadArray[V]) =
   {
     val instanceMirror = mirror.reflect(instance)(ClassTag(instance.getClass))
-    val tpe = instanceMirror.symbol.toType
-    val (names, methods) = symbolMap[V](tpe, filter)(valType)
+    
+    val (names, methods) = symbolMap[V](instanceMirror, filter)(valType)
     val values = new Array[Any](methods.length)
     
     var i = 0; while (i < values.length) {
@@ -183,21 +185,68 @@ private[engine] object ScalaReflection {
   }
 }
 
-package foo.bar {
-  class Test {
-    val v: String = ""
-    val a = Property(() => simplex3d.math.Vec2i(0)); a.update
-    def d()  = 1
-    def n: String = ""
-    
-    private[engine] val vp: Int = 1
-    protected val vh: String = ""
-  }
-}
-
 object Test {
+  import simplex3d.math._
+  
   def main(args: Array[String]) {
-    val (names, props) = ScalaReflection.valueMap(new foo.bar.Test, ScalaReflection.MaterialFilter)
-    println(names(0), props(0).asInstanceOf[AnyRef])
+    test()
+  }
+  
+  def bench(name: String)(block: => String){
+    System.gc()
+    val start = System.currentTimeMillis
+    
+    println(block)
+    
+    System.gc()
+    val total = System.currentTimeMillis - start
+    
+    println(name + ": " + total/1000.0)
+  }
+  
+  class TestClass {
+    val p01 = Property(() => new BooleanRef())
+    val p02 = Property(() => new IntRef())
+    val p03 = Property(() => Vec2i(0))
+    val p04 = Property(() => Vec3i(0))
+    val p05 = Property(() => Vec4i(0))
+  }
+  
+  def test() {
+    val ierations = 1000
+    
+    bench("Java Reflection") {
+      var a = 0
+      
+      var i = 0; while (i < ierations) {
+        val (names, props) = JavaReflection.valueMap(
+            new TestClass, classOf[Property[_]], JavaReflection.BindingFilter, Nil)
+            
+        a += names.length
+        
+        i += 1
+      }
+      
+      a.toString
+    }
+    
+    
+    System.exit(1)
+    
+    bench("Scala Reflection") {
+      val valueTag = typeTag[Property[_ <: Binding]]
+      
+      var a = 0
+      
+      var i = 0; while (i < ierations) {
+        val (names, props) = ScalaReflection.valueMap(new TestClass, valueTag)
+        
+        a += names.length
+        
+        i += 1
+      }
+      
+      a.toString
+    }
   }
 }

@@ -22,12 +22,9 @@ package simplex3d.engine.util
 
 
 abstract class DataChangeListener { self =>
-  final class DataSubtext {
-    def signalDataChanges() { dataChanges = true }
-    def hasDataChanges: Boolean = dataChanges
-    def clearDataChanges() { dataChanges = false }
-  }
-  private[engine] final val dataSubtext = new DataSubtext
-  
   protected final var dataChanges = true
+  
+  private[engine] def signalDataChanges() { dataChanges = true }
+  private[engine] def hasDataChanges: Boolean = dataChanges
+  private[engine] def clearDataChanges() { dataChanges = false }
 }

@@ -35,15 +35,27 @@ trait AbstractCamera extends Spatial {
   def inverseViewProjection: ReadMat4
   
   // XXX untested
-  def toWorldCoords(normalizedScreenCoords: inVec3) = {
-    val worldCoords = inverseViewProjection*Vec4(normalizedScreenCoords, 1)
+  def toWorldCoords(normalizedViewCoords: inVec3) :Vec3 = {
+    val worldCoords = inverseViewProjection*Vec4(normalizedViewCoords, 1)
     worldCoords.xyz/worldCoords.w
   }
 
   // XXX untested
-  def toNormalizedScreenCoords(worldCoords: inVec3) = {
+  def toNormalizedViewCoords(worldCoords: inVec3) :Vec3 = {
     val transformed = viewProjection*Vec4(worldCoords, 1)
     transformed.xyz/transformed.w
+  }
+  
+  // XXX untested
+  def toViewCoords(worldCoords: inVec3, viewDimensions: inVec2i) :Vec3 = {
+    val n01 = (toNormalizedViewCoords(worldCoords) + 1)*0.5
+    Vec3(viewDimensions*n01.xy, n01.z)
+  }
+  
+  // XXX untested
+  def toWorldCoords(viewCoords: inVec3, viewDimensions: inVec2i) :Vec3 = {
+    val n01 = viewCoords/Vec3(viewDimensions, 1)
+    toWorldCoords(n01*2 - 1)
   }
 }
 

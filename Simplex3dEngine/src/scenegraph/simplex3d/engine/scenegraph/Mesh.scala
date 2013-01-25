@@ -39,7 +39,7 @@ class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph]
 )(implicit transformationCtx: T, graphicsCtx: G)
 extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   
   final val geometry: G#Geometry = if (cgeometry != null) cgeometry else graphicsContext.mkGeometry()

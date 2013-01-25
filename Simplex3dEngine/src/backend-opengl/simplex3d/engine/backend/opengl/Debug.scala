@@ -59,8 +59,8 @@ object DebugGraphics {
     protected def worldMatrix: ReadMat4x3 = Mat4x3.Identity
     protected def debugBoundingVolume = null
     
-    import AccessScene._
-    AccessScene.meshSubtext(this).technique := LineProgram//XXX must work with implicit
+    import simplex3d.engine.access.AccessScene._
+    this.technique := LineProgram//XXX must work with implicit
   }
   
   private val LineProgram = {//XXX somehow make this Profile-dependent
@@ -237,7 +237,7 @@ object DebugNormals {
     val normals = mesh.geometry.normals.read
     
     
-    import AccessScene._
+    import simplex3d.engine.access.AccessScene._
     val transformation = mesh.worldMatrix
     val normalMatrix = normalMat(transformation)
     

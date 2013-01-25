@@ -56,14 +56,12 @@ abstract class FullscreenEffect(name: String) extends Scene[GraphicsContext](nam
     ))
     
     {
-      import AccessScene._
-      
       val (names, props) = JavaReflection.valueMap(
         effect, classOf[Value[_ <: Binding]], JavaReflection.BindingFilter, Nil)
         
       val shaderUniforms = Map((names zip props): _*).asInstanceOf[Map[String, Value[UncheckedBinding]]]
       val fs = new Shader(Shader.Fragment, fragmentShader, shaderUniforms)
-      AccessScene.meshSubtext(this).technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))//XXX implicit doesnt work. why?
+      this.technique := new Technique(MinimalGraphicsContext, Set(vertexShader, fs))//XXX implicit doesnt work. why?
     }
   }
   

@@ -37,7 +37,7 @@ abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private
   implicit transformationContext: T, graphicsContext: G
 ) extends SceneElement[T, G](name) with ControllerContext {
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   
   /** Can be initialized to a custom-fit bounding volume, otherwise the SceneGraph will automatically calculate one.

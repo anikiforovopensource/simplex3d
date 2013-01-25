@@ -40,9 +40,7 @@ object Test extends default.App {
     addInputListener(new MouseGrabber(false)(KeyCode.Num_Enter, KeyCode.K_Enter))
     addInputListener(new FirstPersonHandler(world.camera.transformation))
     
-    
-    // init mesh
-    //world.attach(mesh)
+    //
   }
   
   def update(time: TimeStamp) {}

@@ -25,7 +25,7 @@ import scala.language.implicitConversions
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
-import AccessEngine._
+import simplex3d.engine.util.EngineInfoRef._
 
 
 private[backend] object AccessGl {

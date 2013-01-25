@@ -42,13 +42,10 @@ extends EngineInfoRef {
   
   def bindingDimensions: AnyVec[Int]//XXX possibly simplify to dimensions?
   
-  final class Subtext private[engine] () {
-    private[engine] var dataChanges = true
+  protected var dataChanges = true
     
-    def hasDataChanges = subtext.dataChanges
-    def clearDataChanges() { dataChanges = false }
-  }
-  private[engine] val subtext = new Subtext
+  private[engine] def hasDataChanges = dataChanges
+  private[engine] def clearDataChanges() { dataChanges = false }
   
   
   {
@@ -70,7 +67,7 @@ extends EngineInfoRef {
   
   def write: Data[A] with DirectSrc with ContiguousSrc = {
     if (isWritable) {
-      subtext.dataChanges = true
+      dataChanges = true
       accessible.asInstanceOf[Data[A] with DirectSrc with ContiguousSrc]
     }
     else throw new IllegalAccessException("Texture data is not writable.")

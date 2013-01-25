@@ -25,7 +25,7 @@ import simplex3d.math.types._
 
 
 //XXX should this really be in util package?
-sealed abstract class Property[T <: Accessible] private[engine] (
+final class Property[T <: Accessible] private[engine] (
   private[this] final val factory: () => T
 ) extends Updatable[T]
 {
@@ -91,6 +91,11 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
   
+  private[engine] def hasDataChanges = changed
+  private[engine] def clearDataChanges() { changed = false }
+  private[engine] def signalDataChanges() { changed = true }
+  
+  
   final def get: T#Read = if (value == null) throw new NoSuchElementException else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
   
@@ -132,19 +137,12 @@ sealed abstract class Property[T <: Accessible] private[engine] (
   }
 }
 
-final class AccessibleProperty[T <: Accessible] private[engine] (factory: () => T)
-extends Property[T](factory) {
-  def hasDataChanges = changed
-  def clearDataChanges() { changed = false }
-  def signalDataChanges() { changed = true }
-}
-
 object Property {
   private[this] val identity = (t: Any) => t
   private[engine] def identityGetter[T] = identity.asInstanceOf[T => T]
   
   
   def apply[T <: Accessible](factory: () => T) :Property[T] = {
-    new AccessibleProperty[T](factory)
+    new Property[T](factory)
   }
 }

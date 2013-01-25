@@ -34,7 +34,7 @@ abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] pr
   implicit transformationContext: T, graphicsContext: G
 ) extends Bounded[T, G](name) {
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   private[scenegraph] final var parentWorldEnvironment: G#Environment = _
   private[scenegraph] def worldEnvironment = parentWorldEnvironment

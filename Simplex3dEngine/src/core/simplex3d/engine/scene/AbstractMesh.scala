@@ -29,60 +29,54 @@ import simplex3d.engine.bounding._
 
 trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   
-  final class MeshSubtext {
-    import AccessChanges._
-    
-    def worldMatrix = self.worldMatrix
-    def debugBoundingVolume = self.debugBoundingVolume
-    
-    //XXX replace by a specialized class that handles array of techniques (for multiple passes)
-    val technique = SharedRef[Technique]
-    
-    def elementRange = self.elementRange
-    
-    def hasStructuralChanges :Boolean = {
-      geometry.hasStructuralChanges ||
-      material.hasStructuralChanges ||
-      worldEnvironment.hasStructuralChanges
-    }
-    
-    def resolveElementRange(result: ElementRange) {
-      if (!elementRange.isDefined) {
-        if (geometry.indices.isDefined) {
-          result.first := 0
-          result.count := geometry.indices.get.src.size
-        }
-        else if (geometry.vertices.isDefined) {
-          result.first := 0
-          result.count := geometry.vertices.get.src.size
-        }
-        else {
-          result.first := 0
-          result.count := 0
-        }
+  protected def worldMatrix: ReadMat4x3
+  
+  /** Only valid for meshes that were accepted for rendering (in the renderArray).
+   */
+  protected def debugBoundingVolume: BoundingVolume
+  
+  private[engine] final def ac_worldMatrix = worldMatrix
+  private[engine] final def ac_debugBoundingVolume = debugBoundingVolume
+  
+  //XXX replace by a specialized class that handles array of techniques (for multiple passes)
+  private[engine] val technique = SharedRef[Technique]
+  
+  final val elementRange = Property(ElementRange.Factory)
+  
+  private[engine] def hasStructuralChanges :Boolean = {
+    geometry.hasStructuralChanges ||
+    material.hasStructuralChanges ||
+    worldEnvironment.hasStructuralChanges
+  }
+  
+  private[engine] def resolveElementRange(result: ElementRange) {
+    if (!elementRange.isDefined) {
+      if (geometry.indices.isDefined) {
+        result.first := 0
+        result.count := geometry.indices.get.src.size
+      }
+      else if (geometry.vertices.isDefined) {
+        result.first := 0
+        result.count := geometry.vertices.get.src.size
       }
       else {
-        result := elementRange.get
+        result.first := 0
+        result.count := 0
       }
     }
+    else {
+      result := elementRange.get
+    }
   }
-  private[engine] final val meshSubtext = new MeshSubtext
-
-  final val elementRange = Property(ElementRange.Factory)
+  
   
   val name: String
   def geometry: Geometry
   def material: Material
   def worldEnvironment: Environment
-  protected def worldMatrix: ReadMat4x3
   
   val shaderDebugging = new ShaderDebugging
   val glDebugging = new GlDebugging
-  
-  
-  /** Only valid for meshes that were accepted for rendering (in the renderArray).
-   */
-  protected def debugBoundingVolume: BoundingVolume
   
   final def vertexCount :Int = {
     if (elementRange.isDefined) elementRange.get.count
@@ -92,7 +86,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   
   final def hasShapeChanges() :Boolean = {//XXX hide this
-    import AccessChanges._
+    import simplex3d.engine.access.AccessChanges._
     
     if (elementRange.hasDataChanges) {
       true
@@ -116,7 +110,7 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   
   final def clearShapeChanges() {//XXX hide this
-    import AccessChanges._
+    import simplex3d.engine.access.AccessChanges._
     elementRange.clearDataChanges()
     geometry.primitive.clearDataChanges()
     geometry.indices.clearRefChanges()

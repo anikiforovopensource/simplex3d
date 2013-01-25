@@ -50,7 +50,7 @@ object Transformation {
   def propagateChanges[T <: Transformation](
     parent: TransformationBinding[T], child: TransformationBinding[T], result: TransformationBinding[T]
   ) {
-    import AccessChanges._
+    import simplex3d.engine.access.AccessChanges._
     
     val parentChanged = if (parent != null) parent.hasDataChanges else false
     

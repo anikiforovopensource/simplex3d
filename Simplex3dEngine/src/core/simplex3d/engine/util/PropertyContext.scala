@@ -28,14 +28,10 @@ class PropertyContext(
   private[engine] val controllerContext: ControllerContext
 ) { self =>
   
-  final class StructuralChangeSubtext { // So, it has come to this... subtext of a context.
-    def hasStructuralChanges: Boolean = changes
-    def clearStructuralChanges() { changes = false }
-  }
-  private[engine] final val structuralChangeSubtext = new StructuralChangeSubtext
-  
-  
   private[engine] final var changes = true // Initialize as changed.
+  
+  private[engine] def hasStructuralChanges: Boolean = changes
+  private[engine] def clearStructuralChanges() { changes = false }
   
   private[engine] final def signalStructuralChanges() {
     changes = true

@@ -27,7 +27,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.scene._
 
 
-sealed abstract class TransformationBinding[T <: Transformation] private[engine] (
+final class TransformationBinding[T <: Transformation] private[engine] (
   private[this] final val default: T#Read
 )
 extends Updatable[T] {
@@ -71,9 +71,15 @@ extends Updatable[T] {
   
   
   private[this] final var value: T = _
-  protected final var changed = true // Initialize as changed.
   private[this] final var updateMatrix = true
   private[this] final var cachedMatrix: Mat4x3 = _
+  
+  protected final var changed = true // Initialize as changed.
+  
+  private[engine] def hasDataChanges = changed
+  private[engine] def signalDataChanges() { changed = true }
+  private[engine] def clearDataChanges() { changed = false }
+  
   
   final def get: T#Read = if (value == null) default else value.asInstanceOf[T#Read]
   final def isDefined = (value != null)
@@ -123,17 +129,9 @@ extends Updatable[T] {
   }
 }
 
-final class AccessibleTransformationBinding[T <: Transformation] private[engine] (
-  default: T#Read
-)
-extends TransformationBinding[T](default) {
-  def hasDataChanges = changed
-  def clearDataChanges() { changed = false }
-  def signalDataChanges() { changed = true }
-}
 
 object TransformationBinding {
   def apply[T <: Transformation](default: T#Read) :TransformationBinding[T] = {
-    new AccessibleTransformationBinding[T](default)
+    new TransformationBinding[T](default)
   }
 }

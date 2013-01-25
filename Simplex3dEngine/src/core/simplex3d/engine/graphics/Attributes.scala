@@ -41,7 +41,8 @@ final class Attributes[F <: Format, +R <: Raw] private[engine] (
   
   private[this] val bindings = if (isWritable) new WeakHashMap[AttributeBinding[_, _], Object] else null
   private[this] def notifyBindings() {
-    import AccessChanges._
+    import simplex3d.engine.access.AccessChanges._
+    
     val iter = bindings.keySet.iterator()
     while(iter.hasNext) {
       val binding = iter.next()
@@ -102,16 +103,9 @@ final class AttributesSharedState private[engine] (
   private[engine] var persistent: InterleavedData
 ) extends EngineInfoRef {
   
-  final class Subtext private[engine] () {
-    def updatedRegions = regions
-    
-    def clearDataChanges() {
-      regions.clear()
-    }
-    
-    def hasDataChanges = regions.size > 0
-  }
-  private[engine] val subtext = new Subtext
+  private[engine] def updatedRegions = regions
+  private[engine] def clearDataChanges() { regions.clear() }
+  private[engine] def hasDataChanges = regions.size > 0
   
   private[engine] val regions = new IntervalMap(64)
   regions.put(0, size) // Initialize as changed.

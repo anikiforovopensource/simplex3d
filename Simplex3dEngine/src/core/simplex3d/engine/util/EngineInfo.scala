@@ -24,3 +24,8 @@ package simplex3d.engine.util
 trait EngineInfoRef {
   private[engine] final var engineInfo: Object = null
 }
+
+object EngineInfoRef {
+  def getEngineInfo(infoRef: EngineInfoRef) :Object = infoRef.engineInfo
+  def setEngineInfo(infoRef: EngineInfoRef, info: Object) { infoRef.engineInfo = info }
+}

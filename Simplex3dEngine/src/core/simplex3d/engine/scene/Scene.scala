@@ -26,25 +26,6 @@ import simplex3d.engine.graphics._
 
 
 abstract class Scene[G <: GraphicsContext](val name: String) { self =>
-  final class SceneSubtext {
-    def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double = {
-      self.preload(context, frameTimer, timeSlice)
-    }
-    def update(time: TimeStamp) {
-      self.update(time)
-    }
-    def render(renderManager: RenderManager, time: TimeStamp) {
-      self.render(renderManager, time)
-    }
-    def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) {
-      self.manage(context, frameTimer, timeSlice)
-    }
-    def cleanup(context: RenderContext) {
-      self.cleanup(context)
-    }
-  }
-  private[engine] final val sceneSubtext = new SceneSubtext
-  
   
   // preload some content within a soft bound given by timeSlice, return the overall completion 0-started, 1-done.
   protected def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Double
@@ -57,4 +38,20 @@ abstract class Scene[G <: GraphicsContext](val name: String) { self =>
   protected def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) :Unit
 
   protected def cleanup(context: RenderContext) :Unit
+  
+  
+  private[engine] final def ac_preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) =
+    preload(context, frameTimer, timeSlice)
+ 
+  private[engine] final def ac_update(time: TimeStamp) =
+    update(time)
+  
+  private[engine] final def ac_render(renderManager: RenderManager, time: TimeStamp) =
+    render(renderManager, time)
+  
+  private[engine] final def ac_manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) =
+    manage(context, frameTimer, timeSlice)
+
+  private[engine] final def ac_cleanup(context: RenderContext) =
+    cleanup(context)
 }

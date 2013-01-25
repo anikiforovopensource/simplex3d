@@ -55,7 +55,7 @@ extends graphics.RenderContext {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
   import GL20._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
-  import AccessScene._; import AccessChanges._
+  import simplex3d.engine.access.AccessScene._; import simplex3d.engine.access.AccessChanges._
   import AccessGl._
   
 

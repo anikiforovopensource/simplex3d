@@ -32,7 +32,7 @@ trait FullscreenEffectApp extends App { self =>
   protected val effect: FullscreenEffect
   
   
-  import AccessScene._
+  import simplex3d.engine.access.AccessScene._
   
   protected def render(time: TimeStamp) {
     renderManager.renderContext.clearFrameBuffer()

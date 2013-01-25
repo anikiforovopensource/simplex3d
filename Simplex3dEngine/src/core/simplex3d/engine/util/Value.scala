@@ -24,7 +24,7 @@ package util
 import simplex3d.math.types._
 
 
-sealed abstract class Value[T <: Accessible] private[engine] (
+final class Value[T <: Accessible] private[engine] (
   private[this] final val value: T
 ) extends Updatable[T]
 {
@@ -70,6 +70,11 @@ sealed abstract class Value[T <: Accessible] private[engine] (
   
   protected final var changed = true // Initialize as changed.
   
+  private[engine] def hasDataChanges = changed
+  private[engine] def clearDataChanges() { changed = false }
+  private[engine] def signalDataChanges() { changed = true }
+  
+  
   final def get: T#Read = value.asInstanceOf[T#Read]
   final def isDefined = true
   
@@ -88,15 +93,8 @@ sealed abstract class Value[T <: Accessible] private[engine] (
   }
 }
 
-final class AccessibleValue[T <: Accessible] private[engine] (value: T)
-extends Value[T](value) {
-  def hasDataChanges = changed
-  def clearDataChanges() { changed = false }
-  def signalDataChanges() { changed = true }
-}
-
 object Value {
   def apply[T <: Accessible](value: T) :Value[T] = {
-    new AccessibleValue[T](value)
+    new Value[T](value)
   }
 }

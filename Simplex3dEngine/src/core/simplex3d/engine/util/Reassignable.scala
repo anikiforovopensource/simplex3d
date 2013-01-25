@@ -23,7 +23,7 @@ package simplex3d.engine.util
 import simplex3d.math.types._
 
 
-sealed abstract class Reassignable[T <: Accessible] private[engine] () {
+final class Reassignable[T <: Accessible] private[engine] () {
   
   //*** PropertyContext Code ******************************************************************************************
   
@@ -46,6 +46,11 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] () {
   
   private[this] final var value: T = _
   protected final var changed = true // Initialize as changed.
+  
+  private[engine] def hasDataChanges = changed
+  private[engine] def clearDataChanges() { changed = false }
+  private[engine] def signalDataChanges() { changed = true }
+  
   
   final def get: T = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
@@ -94,15 +99,8 @@ sealed abstract class Reassignable[T <: Accessible] private[engine] () {
   }
 }
 
-final class AccessibleReassignable[T <: Accessible] private[engine] ()
-extends Reassignable[T]() {
-  def hasDataChanges = changed
-  def clearDataChanges() { changed = false }
-  def signalDataChanges() { changed = true }
-}
-
 object Reassignable {
   def optional[T <: Accessible]() :Reassignable[T] = {
-    new AccessibleReassignable[T]()
+    new Reassignable[T]()
   }
 }

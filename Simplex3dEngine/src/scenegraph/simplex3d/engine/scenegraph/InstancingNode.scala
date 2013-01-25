@@ -41,7 +41,7 @@ final class InstancingNode[T <: TransformationContext, G <: GraphicsContext] (
 )(implicit transformationContext: T, graphicsContext: G)
 extends Entity[T, G](name) {
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   private final class BoundedInstance(name: String)(
     implicit transformationContext: T, graphicsContext: G
@@ -72,6 +72,7 @@ extends Entity[T, G](name) {
   
   private val localRenderArray = new ConcurrentSortBuffer[SceneElement[T, G]]
   
+  private val indexIndices = displayMesh.geometry.attributeNames.indexWhere(_ == "indices")
   private val indexVertices = displayMesh.geometry.attributeNames.indexWhere(_ == "vertices")
   private val indexNormals = displayMesh.geometry.attributeNames.indexWhere(_ == "normals")
   
@@ -108,13 +109,14 @@ extends Entity[T, G](name) {
     }
     
     var i = 0; while (i < geometry.attributes.length) {
-      
-      if (geometry.attributes(i).isDefined) {
-        val srcAttribs = geometry.attributes(i).read
-        val destAttribs = srcAttribs.mkDataBuffer(destVertexSize)
-        displayMesh.geometry.attributes(i) := Attributes.fromData(destAttribs)
-        if (i != indexVertices && i != indexNormals) {
-          copyAttributes(destAttribs, srcAttribs)
+      if (i != indexIndices) {
+        if (geometry.attributes(i).isDefined) {
+          val srcAttribs = geometry.attributes(i).read
+          val destAttribs = srcAttribs.mkDataBuffer(destVertexSize)
+          displayMesh.geometry.attributes(i) := Attributes.fromData(destAttribs)
+          if (i != indexVertices && i != indexNormals) {
+            copyAttributes(destAttribs, srcAttribs)
+          }
         }
       }
       

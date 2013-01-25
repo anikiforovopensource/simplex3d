@@ -160,7 +160,7 @@ object DynamicEnvironment extends App {
   
   
   // App methods.
-  import AccessScene._
+  import simplex3d.engine.access.AccessScene._
   
   override def preUpdate(time: TimeStamp) {
     scene.update(time)

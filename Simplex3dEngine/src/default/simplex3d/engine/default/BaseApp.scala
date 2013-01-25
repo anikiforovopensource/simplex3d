@@ -62,7 +62,7 @@ abstract class BaseApp extends simplex3d.engine.App {
   }
   
   
-  import AccessScene._
+  import simplex3d.engine.access.AccessScene._
   
   protected def preUpdate(time: TimeStamp) {
     world.update(time)

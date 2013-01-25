@@ -26,8 +26,7 @@ import simplex3d.data._
 import simplex3d.engine.util._
 
 
-sealed abstract class AttributeBinding[F <: Format, R <: Raw]
-{ self: AccessibleAttributeBinding[F, R] =>
+final class AttributeBinding[F <: Format, R <: Raw] {
   
   //*** PropertyContext Code ******************************************************************************************
   
@@ -62,6 +61,14 @@ sealed abstract class AttributeBinding[F <: Format, R <: Raw]
   private final var attributes: Attributes[F, R] = _
   protected final var reassigned = true // Initialize as reassigned.
   
+  private[engine] def hasDataChanges: Boolean = dataChanges
+  private[engine] def signalDataChanges() { dataChanges = true }
+  private[engine] def clearDataChanges() { dataChanges = false }
+  
+  private[engine] def hasRefChanges = reassigned
+  private[engine] def clearRefChanges() { reassigned = false }
+  
+  
   final def get: Attributes[F, R] = if (attributes == null) throw new NoSuchElementException else attributes
   final def isDefined = (attributes != null)
   final def undefine() {
@@ -93,19 +100,6 @@ sealed abstract class AttributeBinding[F <: Format, R <: Raw]
     "AttributeBinding(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
-sealed class AccessibleAttributeBinding[F <: Format, R <: Raw]
-extends AttributeBinding[F, R] {
-  import AccessChanges._
-  
-  def signalDataChanges() { dataChanges = true }
-  def hasDataChanges: Boolean = dataChanges
-  def clearDataChanges() { dataChanges = false }
-  
-  def hasRefChanges = reassigned
-  def clearRefChanges() { reassigned = false }
-  def hasChanges = (hasRefChanges || hasDataChanges)
-}
-
 object AttributeBinding {
-  def apply[F <: Format, R <: Raw]() :AttributeBinding[F, R] = new AccessibleAttributeBinding[F, R]
+  def apply[F <: Format, R <: Raw]() :AttributeBinding[F, R] = new AttributeBinding[F, R]
 }

@@ -36,7 +36,7 @@ class EnvrionmentNode[T <: TransformationContext, G <: GraphicsContext](
 )
 extends AbstractNode[T, G](name) {
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   
   private[this] final val env = graphicsContext.mkEnvironment(this)

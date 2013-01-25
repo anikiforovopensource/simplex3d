@@ -41,7 +41,7 @@ class SceneGraph[T <: TransformationContext, G <: GraphicsContext](
 )(implicit transformationContext: T)
 extends ManagedScene[G](name) {
   
-  import AccessScene._; import AccessChanges._
+  import simplex3d.engine.access.AccessScene._; import simplex3d.engine.access.AccessChanges._
   
   
   private[this] val controllerManager = new ControllerManager(settings.multithreadedControllers)

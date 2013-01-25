@@ -25,10 +25,14 @@ import simplex3d.data._
 
 // XXX This class will be removed. Do not use.
 @deprecated("This class is getting removed.", since = "")
-abstract class SharedRef[T <: AnyRef] { self: AccessibleSharedRef =>
+final class SharedRef[T <: AnyRef] {
   
   private[this] final var value: T = _
   protected final var reassigned = true // Initialize as reassigned.
+  
+  private[engine] def hasRefChanges = reassigned
+  private[engine] def clearRefChanges() { reassigned = false }
+  
   
   final def get: T = if (value == null) throw new NoSuchElementException else value
   final def isDefined = (value != null)
@@ -51,17 +55,7 @@ abstract class SharedRef[T <: AnyRef] { self: AccessibleSharedRef =>
     "SharedRef(" + (if (isDefined) get.toString else "undefined" ) + ")(refChanges = " + hasRefChanges + ")"
 }
 
-trait AccessibleSharedRef {
-  def hasRefChanges: Boolean
-  def clearRefChanges() :Unit
-}
-
-private[engine] final class AccessibleSharedRefImpl[T <: AnyRef]
-extends SharedRef[T] with AccessibleSharedRef {
-  def hasRefChanges = reassigned
-  def clearRefChanges() { reassigned = false }
-}
 
 object SharedRef {
-  def apply[T <: AnyRef]() :SharedRef[T] = new AccessibleSharedRefImpl[T]
+  def apply[T <: AnyRef]() :SharedRef[T] = new SharedRef[T]
 }

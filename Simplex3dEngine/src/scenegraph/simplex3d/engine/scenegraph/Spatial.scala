@@ -35,7 +35,7 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
   
   protected type Graphics <: graphics.GraphicsContext
   
-  import AccessChanges._
+  import simplex3d.engine.access.AccessChanges._
   
   
   private[scenegraph] final var _parent: AbstractNode[T, Graphics] = _

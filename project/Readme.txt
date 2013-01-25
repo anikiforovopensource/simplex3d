@@ -56,6 +56,7 @@ root-example
 
 Also there are some test projects:
 
+root-test
   math-test
   data-test
   algorithm-test

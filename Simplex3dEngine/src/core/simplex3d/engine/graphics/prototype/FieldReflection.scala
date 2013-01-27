@@ -162,7 +162,9 @@ private[engine] object ScalaReflection {
         val cached = cache.get(instanceMirror.symbol)
         if (cached != null) return cached
         
-        getSymbols()
+        val res = getSymbols()
+        cache.put(instanceMirror.symbol, res)
+        res
       }
     }
   }
@@ -229,10 +231,7 @@ object Test {
       
       a.toString
     }
-    
-    
-    System.exit(1)
-    
+        
     bench("Scala Reflection") {
       val valueTag = typeTag[Property[_ <: Binding]]
       

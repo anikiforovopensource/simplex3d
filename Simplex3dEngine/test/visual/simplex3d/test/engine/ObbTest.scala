@@ -29,10 +29,10 @@ import simplex3d.algorithm.noise._
 import simplex3d.algorithm.mesh._
 import simplex3d.engine._
 import simplex3d.engine.graphics._
-import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.scenegraph._
+import simplex3d.renderer._
 
 
 object ObbTest extends default.App {

@@ -18,9 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
+package simplex3d
 package renderer
 
+import simplex3d.engine._
 import simplex3d.engine.scene._
 
 

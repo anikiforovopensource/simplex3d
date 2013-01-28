@@ -23,16 +23,16 @@ package default
 
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
-import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.scenegraph._
+import simplex3d.renderer._
 
 
 // Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
 abstract class App extends BaseApp {
   
   type Transformation = ComponentTransformation3dContext
-  type Graphics = renderer.GraphicsContext
+  type Graphics = simplex3d.renderer.GraphicsContext
   
   implicit final val TransformationContext = new Transformation
   implicit final val GraphicsContext = new Graphics

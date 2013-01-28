@@ -320,8 +320,8 @@ package testenv {
   
   
   final class GraphicsContext extends graphics.GraphicsContext {
-    type Geometry = renderer.Geometry
-    type Material = renderer.Material
+    type Geometry = simplex3d.renderer.Geometry
+    type Material = simplex3d.renderer.Material
     type Environment = testenv.Environment
     
     def mkGeometry() = new Geometry

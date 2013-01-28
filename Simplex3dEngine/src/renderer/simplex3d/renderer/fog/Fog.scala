@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.renderer
+package simplex3d.renderer
 package fog
 
 import simplex3d.math._

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.renderer
+package simplex3d.renderer
 package texturing
 
 import simplex3d.math.double._

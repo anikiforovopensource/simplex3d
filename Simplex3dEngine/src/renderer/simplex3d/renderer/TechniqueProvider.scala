@@ -18,11 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package renderer
+package simplex3d.renderer
 
 import simplex3d.math._
 import simplex3d.math.double._
+import simplex3d.engine._
 import simplex3d.engine.graphics._
 import simplex3d.engine.graphics.pluggable._
 

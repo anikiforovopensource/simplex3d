@@ -91,6 +91,9 @@ object api {
   implicit class TextureAc(val v: Texture[_]) {
     def hasDataChanges = v.hasDataChanges
     def clearDataChanges() = v.clearDataChanges()
+    
+    def hasParameterChanges = v.hasParameterChanges
+    def clearParameterChanges() = v.clearParameterChanges()
   }
   
   implicit class AbstractMeshAc(val v: AbstractMesh) {

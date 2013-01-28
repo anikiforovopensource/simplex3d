@@ -18,14 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d
-package engine
-package backend.lwjgl
+package simplex3d.backend.lwjgl
 
 import org.lwjgl.Sys
+import simplex3d.engine._
 
 
-final class Timer extends engine.Timer {
+final class Timer extends simplex3d.engine.Timer {
   private[this] var start: Long = _
   private[this] var last: Long = _
  

@@ -24,7 +24,7 @@ import simplex3d.math.types._
 import simplex3d.engine.graphics._
 
 
-private[engine] object PathUtil {
+private[simplex3d] object PathUtil {
   
   /* case NameIndex(name, index) */
   val NameIndex = """(\w+)\[(\d+)\]""".r

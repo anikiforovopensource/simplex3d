@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.lwjgl
+package simplex3d.backend.lwjgl
 
 import scala.annotation._
 import org.lwjgl.opengl._
@@ -29,15 +28,16 @@ import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.data._
 import simplex3d.data.double._
+import simplex3d.engine._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
-import simplex3d.engine.backend.opengl._
+import simplex3d.backend.opengl._
 
 
 private[backend] final class ProgramMapping(val program: Technique, val context: RenderContext)(
   uniformsSeq: Seq[ActiveUniform],
   attributesSeq: Seq[ActiveAttribute]
-) extends backend.opengl.ProgramMapping(uniformsSeq, attributesSeq) {
+) extends simplex3d.backend.opengl.ProgramMapping(uniformsSeq, attributesSeq) {
   
   //println("XXX " + program + "\n\n" + uniformsSeq.mkString("\n") + "\n\n" + attributesSeq.mkString("\n"))
   

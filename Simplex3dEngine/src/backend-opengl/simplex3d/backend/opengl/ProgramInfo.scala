@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.backend.opengl
+package simplex3d.backend.opengl
 
 import java.util.Arrays
 import simplex3d.engine.graphics._

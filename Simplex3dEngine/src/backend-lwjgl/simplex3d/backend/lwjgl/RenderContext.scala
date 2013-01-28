@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.lwjgl
+package simplex3d.backend.lwjgl
 
 import java.util.logging._
 import java.nio._
@@ -35,10 +34,12 @@ import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.data._
 import simplex3d.data.double._
+import simplex3d.engine._
 import simplex3d.engine.util._
 import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
-import simplex3d.engine.backend.opengl._
+import simplex3d.engine.backend.api._
+import simplex3d.backend.opengl._
 
 
 private[lwjgl] class ActiveAttributeId(var id: Int)
@@ -960,6 +961,7 @@ extends graphics.RenderContext {
     }
   }
   
+  //XXX this algorithm should be in backend.opengl package
   private[this] final def buildUniformMapping(
     programBindings: ReadArray[ActiveUniform],
     predefined: PredefinedUniforms,
@@ -1056,7 +1058,7 @@ extends graphics.RenderContext {
   
   final def rebuildMeshMapping(
     mesh: AbstractMesh,
-    programMapping: backend.opengl.ProgramMapping
+    programMapping: simplex3d.backend.opengl.ProgramMapping
   ) {
     val uniformVectors = buildUniformMapping(
       programMapping.uniformVectors, predefinedUniforms, mesh

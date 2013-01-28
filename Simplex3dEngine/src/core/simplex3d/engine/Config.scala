@@ -22,8 +22,8 @@ package simplex3d.engine
 
 
 case class Config(//XXX no default values, add BackendProvider, rename this to BackendConfig
-  val timer: String = "simplex3d.engine.backend.lwjgl.Timer",
-  val launcher: String = "simplex3d.engine.backend.lwjgl.FixedResolutionLauncher",
-  val mainLoop: String = "simplex3d.engine.backend.lwjgl.SimpleLoop",
-  val renderManager: String = "simplex3d.engine.backend.lwjgl.RenderManager"
+  val timer: String = "simplex3d.backend.lwjgl.Timer",
+  val launcher: String = "simplex3d.backend.lwjgl.FixedResolutionLauncher",
+  val mainLoop: String = "simplex3d.backend.lwjgl.SimpleLoop",
+  val renderManager: String = "simplex3d.backend.lwjgl.RenderManager"
 )

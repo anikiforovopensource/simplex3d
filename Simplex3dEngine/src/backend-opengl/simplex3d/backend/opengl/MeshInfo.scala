@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.opengl
+package simplex3d.backend.opengl
 
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._

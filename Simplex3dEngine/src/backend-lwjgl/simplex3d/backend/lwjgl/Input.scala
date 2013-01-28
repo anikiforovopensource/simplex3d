@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.lwjgl
+package simplex3d.backend.lwjgl
 
 import scala.annotation._
 import org.lwjgl.input.{ Keyboard => RawKeyboard, Mouse => RawMouse}
 import simplex3d.math._
 import simplex3d.math.double._
+import simplex3d.engine._
 import simplex3d.engine.input._
 
 

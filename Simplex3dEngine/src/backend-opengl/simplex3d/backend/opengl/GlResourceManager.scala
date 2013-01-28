@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.opengl
+package simplex3d.backend.opengl
 
 import scala.collection.mutable.HashSet
 import scala.annotation._

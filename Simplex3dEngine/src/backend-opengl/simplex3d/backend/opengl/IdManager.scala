@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine.backend.opengl
+package simplex3d.backend.opengl
 
 import java.nio.IntBuffer
 import simplex3d.data._

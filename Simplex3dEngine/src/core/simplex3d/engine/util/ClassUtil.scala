@@ -26,7 +26,7 @@ import simplex3d.math.types._
 import simplex3d.engine.graphics._
 
 
-private[engine] object ClassUtil {
+private[simplex3d] object ClassUtil {
   
   /** Class.getSimpleName() will throw an exception when running interpreted code. This method is a workaround.
    */
@@ -46,6 +46,7 @@ private[engine] object ClassUtil {
   }
   
   def runtimeClass(tpe: Type) :Class[_] = runtimeMirror(this.getClass.getClassLoader).runtimeClass(tpe)
+  
   def typeArg(tpe: Type) :Type = {
     tpe match { case TypeRef(_, _, args) => args.head; case _ => throw new RuntimeException() }
   }

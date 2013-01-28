@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package backend.lwjgl
+package simplex3d.backend.lwjgl
 
 import org.lwjgl.opengl._
 

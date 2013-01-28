@@ -139,14 +139,24 @@ object Simplex3dEngine extends Build {
     id = "engine-test",
     base = file("Simplex3dEngine"),
     settings = buildSettings ++ Common.lwjglSettings ++ Seq(
+      name := "simplex3d-engine-test",
+      description := "Engine Tests.",
+      licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
       target := new File("target/engine/test"),
-      scalaSource in Compile <<= baseDirectory(_ / "test/visual"),
+      libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
+      unmanagedSourceDirectories in Compile <++= baseDirectory { base =>
+        Seq(
+          base / "/test/visual",
+          base / "test/bench"
+        )
+      },
+      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
       publish := {},
       publishLocal := {}
     )
   ) dependsOn(
-    core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla,
-    Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
+    Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,
+    core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla
   )
   
   lazy val example = Project(

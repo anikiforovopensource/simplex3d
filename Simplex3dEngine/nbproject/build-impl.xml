@@ -85,6 +85,8 @@ is divided into following sections:
         <condition property="have.tests">
             <or>
                 <available file="${test.visual.dir}"/>
+                <available file="${test.bench.dir}"/>
+                <available file="${test.unit.dir}"/>
             </or>
         </condition>
         <condition property="have.sources">
@@ -158,6 +160,8 @@ is divided into following sections:
         <fail unless="src.vanilla.dir">Must set src.vanilla.dir</fail>
         <fail unless="src.example.dir">Must set src.example.dir</fail>
         <fail unless="test.visual.dir">Must set test.visual.dir</fail>
+        <fail unless="test.bench.dir">Must set test.bench.dir</fail>
+        <fail unless="test.unit.dir">Must set test.unit.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
         <fail unless="dist.dir">Must set dist.dir</fail>
         <fail unless="build.classes.dir">Must set build.classes.dir</fail>
@@ -594,12 +598,14 @@ is divided into following sections:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target if="do.depend.true" name="-compile-test-depend">
-        <scalaProject1:depend classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.visual.dir}"/>
+        <scalaProject1:depend classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.visual.dir}:${test.bench.dir}:${test.unit.dir}"/>
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test,-compile-test-depend" if="have.tests" name="-do-compile-test">
-        <scalaProject1:scalac classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.visual.dir}"/>
+        <scalaProject1:scalac classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.visual.dir}:${test.bench.dir}:${test.unit.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.visual.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${test.bench.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${test.unit.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
         </copy>
     </target>
     <target name="-post-compile-test">
@@ -614,9 +620,11 @@ is divided into following sections:
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single" if="have.tests" name="-do-compile-test-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
         <scalaProject1:force-recompile destdir="${build.test.classes.dir}"/>
-        <scalaProject1:scalac classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" sourcepath="${test.visual.dir}" srcdir="${test.visual.dir}"/>
+        <scalaProject1:scalac classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" excludes="" includes="${javac.includes}" sourcepath="${test.visual.dir}:${test.bench.dir}:${test.unit.dir}" srcdir="${test.visual.dir}:${test.bench.dir}:${test.unit.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.visual.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${test.bench.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
+            <fileset dir="${test.unit.dir}" excludes="${build.classes.excludes},${excludes}&#10;                        " includes="${includes}"/>
         </copy>
     </target>
     <target name="-post-compile-test-single">

@@ -27,7 +27,8 @@ import simplex3d.scenegraph._
 import simplex3d.renderer._
 
 
-// Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
+// Cannot be a trait, due to AccessControlException caused by
+// method invocation routed via trait's implementation (when in sandbox mode).
 abstract class App extends BaseApp {
   
   type Transformation = ComponentTransformation3dContext

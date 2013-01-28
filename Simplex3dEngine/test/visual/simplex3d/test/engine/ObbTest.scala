@@ -2,19 +2,19 @@
  * Simplex3dEngine - Test Package
  * Copyright (C) 2011, Aleksey Nikiforov
  *
- * This file is part of Simplex3dEngine.
+ * This file is part of Simplex3dEngineTest.
  *
- * Simplex3dEngine is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * Simplex3dEngineTest is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Simplex3dEngine is distributed in the hope that it will be useful,
+ * Simplex3dEngineTest is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 

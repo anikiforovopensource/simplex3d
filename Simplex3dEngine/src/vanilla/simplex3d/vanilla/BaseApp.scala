@@ -33,7 +33,8 @@ import simplex3d.engine.transformation._
 import simplex3d.scenegraph._
 
 
-// Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
+// Cannot be a trait, due to AccessControlException caused by
+// method invocation routed via trait's implementation (when in sandbox mode).
 abstract class BaseApp extends simplex3d.engine.App {
   
   type Transformation <: TransformationContext

@@ -25,7 +25,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-private[backend] final class MeshMapping(
+final class MeshMapping(
   val uniformVectors: ReadArray[VectorLike],
   val uniformMatrices: ReadArray[AnyMat[_]],
   val uniformTextures: ReadArray[ReadTextureBinding[_]],

@@ -25,7 +25,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-private[backend] abstract class ProgramMapping(
+abstract class ProgramMapping(
   uniformsSeq: Seq[ActiveUniform],
   attributesSeq: Seq[ActiveAttribute]
 ) {

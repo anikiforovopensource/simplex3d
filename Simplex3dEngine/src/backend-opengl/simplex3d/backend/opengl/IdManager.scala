@@ -24,7 +24,7 @@ import java.nio.IntBuffer
 import simplex3d.data._
 
 
-private[backend] class IdManager(val idCacheSize: Int)(genIds: IntBuffer => Unit, deleteIds: IntBuffer => Unit) {
+class IdManager(val idCacheSize: Int)(genIds: IntBuffer => Unit, deleteIds: IntBuffer => Unit) {
   private val ids = DataBuffer[SInt, SInt](idCacheSize)
   private var i = ids.size
   

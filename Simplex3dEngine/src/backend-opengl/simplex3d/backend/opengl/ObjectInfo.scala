@@ -21,9 +21,9 @@
 package simplex3d.backend.opengl
 
 
-private[backend] final class ManagedFields(val objectType: Int, var id: Int)
+final class ManagedFields(val objectType: Int, var id: Int)
 
-private[backend] class ObjectInfo(objectType: Int) {
+class ObjectInfo(objectType: Int) {
   final val managedFields = new ManagedFields(objectType, 0)
   final var managedRef: ManagedRef = _
 }

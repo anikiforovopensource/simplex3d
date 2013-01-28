@@ -21,6 +21,6 @@
 package simplex3d.backend.opengl
 
 
-private[backend] class CompiledInfo(objectType: Int) extends ObjectInfo(objectType) {
+class CompiledInfo(objectType: Int) extends ObjectInfo(objectType) {
   final var compilationFailed = false
 }

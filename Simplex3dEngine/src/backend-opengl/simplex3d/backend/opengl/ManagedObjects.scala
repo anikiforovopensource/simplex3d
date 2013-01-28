@@ -21,7 +21,7 @@
 package simplex3d.backend.opengl
 
 
-private[backend] object ManagedObjects {
+object ManagedObjects {
   final val Attributes = 0
   final val Texture = 1
   final val Shader = 2

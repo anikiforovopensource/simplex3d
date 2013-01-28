@@ -23,7 +23,7 @@ import Keys._
 
 object Simplex3d extends Build {
   
-  val ScalaVersion = "2.11.0-M1"//"2.10.0"
+  val ScalaVersion = "2.10.0"//"2.11.0-M1"
   val LwjglVersion = "2.8.4"
   
   val MathVersion = "2.4.7-SNAPSHOT"

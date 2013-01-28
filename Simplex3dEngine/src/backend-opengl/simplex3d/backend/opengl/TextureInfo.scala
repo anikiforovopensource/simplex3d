@@ -24,7 +24,7 @@ import java.util.Arrays
 import simplex3d.engine.graphics._
 
 
-private[backend] final class TextureInfo extends ObjectInfo(ManagedObjects.Texture) {
+final class TextureInfo extends ObjectInfo(ManagedObjects.Texture) {
   var hasMatchingMipmaps = false
   var suspendLogging = false
 }

@@ -27,7 +27,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.util.EngineInfoRef._
 
 
-private[backend] object AccessGl {
+object api {
   
   implicit final def engineInfo(attributes: Attributes[_, _]) :ObjectInfo = {
     var data = getEngineInfo(attributes.sharedState).asInstanceOf[ObjectInfo]
@@ -76,7 +76,7 @@ private[backend] object AccessGl {
 }
 
 
-private[backend] object AccessGlUnsafe {
+object unsafe {
   
   implicit final def engineInfo(attributes: Attributes[_, _]) :ObjectInfo = {
     getEngineInfo(attributes.sharedState).asInstanceOf[ObjectInfo]

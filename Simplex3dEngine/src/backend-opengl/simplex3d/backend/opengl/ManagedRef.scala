@@ -24,6 +24,6 @@ import scala.ref._
 import simplex3d.math._
 
 
-private[backend] final class ManagedRef(
+final class ManagedRef(
   info: ObjectInfo, queue: ReferenceQueue[ObjectInfo], val fields: ManagedFields
 ) extends PhantomReference(info, queue)

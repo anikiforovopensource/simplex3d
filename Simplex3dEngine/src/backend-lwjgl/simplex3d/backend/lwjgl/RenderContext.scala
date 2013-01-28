@@ -40,6 +40,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 import simplex3d.engine.backend.api._
 import simplex3d.backend.opengl._
+import simplex3d.backend.opengl.api._
 
 
 private[lwjgl] class ActiveAttributeId(var id: Int)
@@ -56,7 +57,6 @@ extends graphics.RenderContext {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._
   import GL20._; import EXTTextureFilterAnisotropic._; import EXTFramebufferObject._
   import RenderContext.logger._
-  import AccessGl._
   
 
   private val defaultTexture2d = {

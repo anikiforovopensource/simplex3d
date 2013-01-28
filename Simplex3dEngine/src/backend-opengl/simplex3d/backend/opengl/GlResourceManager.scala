@@ -24,15 +24,15 @@ import scala.collection.mutable.HashSet
 import scala.annotation._
 import scala.ref._
 import simplex3d.engine.graphics._
+import simplex3d.backend.opengl.api._
 
 
-private[backend] final class GlResourceManager(
+final class GlResourceManager(
   val attributeManager: IdManager,
   val textureManager: IdManager,
   val shaderDeallocator: Int => Unit,
   val programDeallocator: Int => Unit
 ) {
-  import AccessGl._
   
   private val managed = new HashSet[ManagedRef]
   private val deallocationQueue = new ReferenceQueue[ObjectInfo]

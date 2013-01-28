@@ -24,7 +24,7 @@ import simplex3d.data._
 import simplex3d.engine.graphics._
 
 
-private[backend] final class ActiveAttribute(val name: String, val dataType: Int, val location: Int) {
+final class ActiveAttribute(val name: String, val dataType: Int, val location: Int) {
   override def toString :String = {
     "GeometryAttributes(\"" + name +
     "\", type = " + EngineBindingTypes.toString(dataType) + ", location = " + location + ")"

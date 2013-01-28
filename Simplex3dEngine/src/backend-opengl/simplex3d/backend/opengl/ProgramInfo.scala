@@ -24,6 +24,6 @@ import java.util.Arrays
 import simplex3d.engine.graphics._
 
 
-private[backend] final class ProgramInfo extends CompiledInfo(ManagedObjects.Program) {
+final class ProgramInfo extends CompiledInfo(ManagedObjects.Program) {
   var mapping: ProgramMapping = _
 }

@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 
 trait InheritedEnvironment { self: SceneElement[_, _] =>

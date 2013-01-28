@@ -18,13 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
+import simplex3d.engine._
 import simplex3d.engine.util._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
@@ -34,9 +35,6 @@ abstract class Spatial[T <: TransformationContext] private[scenegraph] (final va
 ) extends scene.Spatial { self =>
   
   protected type Graphics <: graphics.GraphicsContext
-  
-  import simplex3d.engine.access.AccessChanges._
-  
   
   private[scenegraph] final var _parent: AbstractNode[T, Graphics] = _
   protected def parent: AbstractNode[T, Graphics] = _parent

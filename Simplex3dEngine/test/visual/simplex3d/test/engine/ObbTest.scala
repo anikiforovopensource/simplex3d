@@ -32,7 +32,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.renderer._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
-import simplex3d.engine.scenegraph._
+import simplex3d.scenegraph._
 
 
 object ObbTest extends default.App {

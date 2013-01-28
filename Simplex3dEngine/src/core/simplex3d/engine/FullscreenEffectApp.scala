@@ -25,14 +25,13 @@ import simplex3d.math.double._
 import simplex3d.engine.util._
 import simplex3d.engine.input._
 import simplex3d.engine.graphics._
+import simplex3d.engine.scene.api._
 
 
 trait FullscreenEffectApp extends App { self =>
   
   protected val effect: FullscreenEffect
   
-  
-  import simplex3d.engine.access.AccessScene._
   
   protected def render(time: TimeStamp) {
     renderManager.renderContext.clearFrameBuffer()

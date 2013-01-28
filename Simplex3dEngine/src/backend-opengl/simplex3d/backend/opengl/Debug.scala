@@ -30,6 +30,7 @@ import simplex3d.data.double._
 import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 import simplex3d.engine.util._
+import simplex3d.engine.backend.api._
 
 
 object DebugGraphics {
@@ -59,7 +60,6 @@ object DebugGraphics {
     protected def worldMatrix: ReadMat4x3 = Mat4x3.Identity
     protected def debugBoundingVolume = null
     
-    import simplex3d.engine.access.AccessScene._
     this.technique := LineProgram//XXX must work with implicit
   }
   
@@ -236,8 +236,6 @@ object DebugNormals {
     
     val normals = mesh.geometry.normals.read
     
-    
-    import simplex3d.engine.access.AccessScene._
     val transformation = mesh.worldMatrix
     val normalMatrix = normalMat(transformation)
     

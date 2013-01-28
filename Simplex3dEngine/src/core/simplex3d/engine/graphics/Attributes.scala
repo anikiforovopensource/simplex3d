@@ -41,8 +41,6 @@ final class Attributes[F <: Format, +R <: Raw] private[engine] (
   
   private[this] val bindings = if (isWritable) new WeakHashMap[AttributeBinding[_, _], Object] else null
   private[this] def notifyBindings() {
-    import simplex3d.engine.access.AccessChanges._
-    
     val iter = bindings.keySet.iterator()
     while(iter.hasNext) {
       val binding = iter.next()

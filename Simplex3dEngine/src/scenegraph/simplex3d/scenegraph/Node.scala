@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.util._

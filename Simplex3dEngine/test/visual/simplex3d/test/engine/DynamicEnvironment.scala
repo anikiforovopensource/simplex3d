@@ -34,7 +34,8 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
 import simplex3d.engine.scene._
-import simplex3d.engine.scenegraph._
+import simplex3d.engine.scene.api._
+import simplex3d.scenegraph._
 
 
 /** This test checks environment propagation under different conditions
@@ -160,8 +161,6 @@ object DynamicEnvironment extends App {
   
   
   // App methods.
-  import simplex3d.engine.access.AccessScene._
-  
   override def preUpdate(time: TimeStamp) {
     scene.update(time)
   }

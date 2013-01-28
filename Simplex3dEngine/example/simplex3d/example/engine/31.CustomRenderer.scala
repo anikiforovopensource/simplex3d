@@ -12,10 +12,10 @@ import simplex3d.engine.util._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 import simplex3d.engine.graphics.pluggable._
-import simplex3d.engine.scenegraph._
 import simplex3d.engine.scene._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
+import simplex3d.scenegraph._
 
 
 object CustomRenderer extends default.BaseApp {

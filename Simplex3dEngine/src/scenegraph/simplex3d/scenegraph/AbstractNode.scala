@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.util._
 import simplex3d.engine.bounding._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
@@ -33,8 +33,6 @@ import simplex3d.engine.transformation._
 abstract class AbstractNode[T <: TransformationContext, G <: GraphicsContext] private[scenegraph](name: String)(
   implicit transformationContext: T, graphicsContext: G
 ) extends Bounded[T, G](name) {
-  
-  import simplex3d.engine.access.AccessChanges._
   
   private[scenegraph] final var parentWorldEnvironment: G#Environment = _
   private[scenegraph] def worldEnvironment = parentWorldEnvironment

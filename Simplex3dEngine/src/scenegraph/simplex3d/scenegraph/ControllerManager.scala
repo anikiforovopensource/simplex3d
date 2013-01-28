@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import java.util.Collections
 import java.util.HashSet
 import java.util.ArrayList
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.JavaConversions
+import simplex3d.engine._
 
 
 final class ControllerManager(val enableMultithreading: Boolean) {

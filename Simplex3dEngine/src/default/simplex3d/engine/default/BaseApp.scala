@@ -27,9 +27,10 @@ import simplex3d.math.double.functions._
 import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
-import simplex3d.engine.scenegraph._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.asset._
 import simplex3d.engine.transformation._
+import simplex3d.scenegraph._
 
 
 // Cannot be a trait, due to AccessControlException caused by method invocation routed via trait's implementation.
@@ -37,6 +38,8 @@ abstract class BaseApp extends simplex3d.engine.App {
   
   type Transformation <: TransformationContext
   type Graphics <: GraphicsContext
+  
+  import simplex3d._
   
   type Bounded = scenegraph.Bounded[Transformation, Graphics]
   type Camera = scenegraph.Camera[Transformation, Graphics]
@@ -61,8 +64,6 @@ abstract class BaseApp extends simplex3d.engine.App {
     loaders += new ClasspathLoader
   }
   
-  
-  import simplex3d.engine.access.AccessScene._
   
   protected def preUpdate(time: TimeStamp) {
     world.update(time)

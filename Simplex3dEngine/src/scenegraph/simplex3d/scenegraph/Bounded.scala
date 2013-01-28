@@ -18,17 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.algorithm._
 import simplex3d.algorithm.intersection.Collision
+import simplex3d.engine._
 import simplex3d.engine.util._
 import simplex3d.engine.bounding._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
@@ -36,9 +37,6 @@ import simplex3d.engine.graphics._
 abstract class Bounded[T <: TransformationContext, G <: GraphicsContext] private[scenegraph] (name: String)(
   implicit transformationContext: T, graphicsContext: G
 ) extends SceneElement[T, G](name) with ControllerContext {
-  
-  import simplex3d.engine.access.AccessChanges._
-  
   
   /** Can be initialized to a custom-fit bounding volume, otherwise the SceneGraph will automatically calculate one.
    *  If specified by the user then the Scene Graph will not update the bounding when vertex data is modified.

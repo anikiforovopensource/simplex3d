@@ -13,7 +13,7 @@ import simplex3d.engine.renderer._
 import simplex3d.engine.bounding._
 import simplex3d.engine.input._
 import simplex3d.engine.input.handler._
-import simplex3d.engine.scenegraph._
+import simplex3d.scenegraph._
 
 
 object InterleavedAttributes extends default.App {

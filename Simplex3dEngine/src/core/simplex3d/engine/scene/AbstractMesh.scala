@@ -86,8 +86,6 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   
   final def hasShapeChanges() :Boolean = {//XXX hide this
-    import simplex3d.engine.access.AccessChanges._
-    
     if (elementRange.hasDataChanges) {
       true
     }
@@ -110,7 +108,6 @@ trait AbstractMesh extends Spatial with EngineInfoRef { self =>
   }
   
   final def clearShapeChanges() {//XXX hide this
-    import simplex3d.engine.access.AccessChanges._
     elementRange.clearDataChanges()
     geometry.primitive.clearDataChanges()
     geometry.indices.clearRefChanges()

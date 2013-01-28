@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import scala.collection.mutable.ArrayBuffer
 import simplex3d.algorithm.intersection._
 import simplex3d.engine.util._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.transformation._
 import simplex3d.engine.bounding._
 import simplex3d.engine.graphics._
@@ -38,9 +38,6 @@ class Mesh[T <: TransformationContext, G <: GraphicsContext] private[scenegraph]
   cmaterial: G#Material  // Caution: geometry and material must never be shared among displayable meshes!
 )(implicit transformationCtx: T, graphicsCtx: G)
 extends Bounded[T, G](name) with InheritedEnvironment with AbstractMesh {
-  
-  import simplex3d.engine.access.AccessChanges._
-  
   
   final val geometry: G#Geometry = if (cgeometry != null) cgeometry else graphicsContext.mkGeometry()
   final val material: G#Material = if (cmaterial != null) cmaterial else graphicsContext.mkMaterial(this)

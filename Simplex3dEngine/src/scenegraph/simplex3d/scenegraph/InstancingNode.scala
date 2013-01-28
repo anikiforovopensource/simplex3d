@@ -18,8 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import simplex3d.math.types._
 import simplex3d.math.double._
@@ -32,6 +31,7 @@ import simplex3d.engine.bounding._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 
 
 // XXX limit based on MAX_VBO_SIZE
@@ -40,8 +40,6 @@ final class InstancingNode[T <: TransformationContext, G <: GraphicsContext] (
   val cullingEnabled: Boolean = true
 )(implicit transformationContext: T, graphicsContext: G)
 extends Entity[T, G](name) {
-  
-  import simplex3d.engine.access.AccessChanges._
   
   private final class BoundedInstance(name: String)(
     implicit transformationContext: T, graphicsContext: G

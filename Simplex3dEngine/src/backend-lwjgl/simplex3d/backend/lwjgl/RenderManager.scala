@@ -37,6 +37,7 @@ import simplex3d.engine.scene._
 import simplex3d.engine.graphics._
 import simplex3d.engine.backend.opengl._
 import simplex3d.engine.graphics.MinimalGraphicsContext
+import simplex3d.engine.backend.api._
 
 
 private[lwjgl] object RenderManager {
@@ -48,7 +49,6 @@ final class RenderManager extends graphics.RenderManager {
   import GL11._; import GL12._; import GL13._; import GL14._; import GL15._;
   import GL20._; import GL21._
   import RenderManager.logger._
-  import simplex3d.engine.access.AccessScene._; import simplex3d.engine.access.AccessChanges._
   import AccessGlUnsafe._
   
   val driver = "lwjgl"

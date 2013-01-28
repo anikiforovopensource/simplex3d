@@ -18,13 +18,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import simplex3d.algorithm.intersection.{ Frustum, Collision }
 import simplex3d.engine.util._
 import simplex3d.engine.bounding._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.transformation._
 import simplex3d.engine.graphics._
 
@@ -35,9 +35,6 @@ class EnvrionmentNode[T <: TransformationContext, G <: GraphicsContext](
   implicit transformationContext: T, graphicsContext: G
 )
 extends AbstractNode[T, G](name) {
-  
-  import simplex3d.engine.access.AccessChanges._
-  
   
   private[this] final val env = graphicsContext.mkEnvironment(this)
   def environment: G#Environment = env

@@ -25,11 +25,11 @@ import scala.collection.mutable.ArrayBuffer
 import simplex3d.math._
 import simplex3d.engine.graphics._
 import simplex3d.engine.scene._
-import simplex3d.engine.scenegraph._
 import simplex3d.engine.input._
 import simplex3d.engine.asset._
 import simplex3d.engine.renderer._
 import simplex3d.engine.transformation._
+import simplex3d.scenegraph._
 
 
 trait FullscreenEffectApp extends simplex3d.engine.FullscreenEffectApp {

@@ -18,14 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package simplex3d.engine
-package scenegraph
+package simplex3d.scenegraph
 
 import simplex3d.math._
 import simplex3d.math.double._
 import simplex3d.math.double.functions._
 import simplex3d.engine.util._
 import simplex3d.engine.scene._
+import simplex3d.engine.scene.api._
 import simplex3d.engine.graphics._
 import simplex3d.engine.transformation._
 
@@ -34,8 +34,8 @@ class Camera[T <: TransformationContext, G <: GraphicsContext](
   name: String,
   val projection: Mat4 = orthoProj(-100, 100, -100, 100, 10, 200)
 )(implicit transformationContext: T, graphicsContext: G)
-extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera {
-  import simplex3d.engine.access.AccessChanges._
+extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera
+{
   
   protected val _view = Mat4x3(1)
   protected val _viewProjection = Mat4(1)
@@ -56,8 +56,6 @@ extends SceneElement[T, G](name) with InheritedEnvironment with AbstractCamera {
   }
   
   private def sync() {
-    import simplex3d.engine.access.AccessChanges._
-    
     _view := inverse(worldTransformation.matrix)
     _viewProjection := projection*Mat4(_view)
     _inverseViewProjection := inverse(_viewProjection)

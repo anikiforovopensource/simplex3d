@@ -18,7 +18,7 @@ import simplex3d.scenegraph._
 
 /** Test raw glUniform() and glDrawElemenets() performance.
  */
-object FogTest extends default.App {
+object FogTest extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     launch()

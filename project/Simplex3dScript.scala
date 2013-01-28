@@ -43,7 +43,7 @@ object Simplex3dScript extends Build {
     Simplex3dMath.core, Simplex3dMath.double,
     Simplex3dData.core, Simplex3dData.double,
     Simplex3dEngine.core, Simplex3dEngine.sceneGraph, Simplex3dEngine.renderer,
-    Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.default
+    Simplex3dEngine.backendOpengl, Simplex3dEngine.backendLwjgl, Simplex3dEngine.vanilla
   )
   
   lazy val example = Project(

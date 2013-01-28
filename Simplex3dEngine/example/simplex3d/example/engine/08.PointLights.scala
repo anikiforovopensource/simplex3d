@@ -16,7 +16,7 @@ import simplex3d.renderer._
 import simplex3d.scenegraph._
 
 
-object PointLights extends default.App {
+object PointLights extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     launch()

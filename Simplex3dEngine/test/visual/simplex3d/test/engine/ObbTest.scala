@@ -35,7 +35,7 @@ import simplex3d.scenegraph._
 import simplex3d.renderer._
 
 
-object ObbTest extends default.App {
+object ObbTest extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     launch()

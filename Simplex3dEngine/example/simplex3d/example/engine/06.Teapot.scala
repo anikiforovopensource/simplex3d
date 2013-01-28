@@ -16,7 +16,7 @@ import simplex3d.renderer._
 import simplex3d.scenegraph._
 
 
-object Teapot extends default.App {
+object Teapot extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     launch()

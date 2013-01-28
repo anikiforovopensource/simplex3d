@@ -6,13 +6,13 @@
             <name>Simplex3dEngine</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
-                <root id="src.example.dir"/>
+                <root id="src.core.dir"/>
+                <root id="src.scenegraph.dir"/>
+                <root id="src.renderer.dir"/>
                 <root id="src.backend-lwjgl.dir"/>
                 <root id="src.backend-opengl.dir"/>
-                <root id="src.core.dir"/>
-                <root id="src.default.dir"/>
-                <root id="src.renderer.dir"/>
-                <root id="src.scenegraph.dir"/>
+                <root id="src.vanilla.dir"/>
+                <root id="src.example.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.visual.dir"/>

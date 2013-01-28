@@ -37,7 +37,7 @@ object Simplex3dEngine extends Build {
       publish := {},
       publishLocal := {}
     )
-  ) aggregate(core, sceneGraph, renderer, backendOpengl, backendLwjgl, default)
+  ) aggregate(core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla)
   
   lazy val core = Project(
     id = "engine-core",
@@ -98,14 +98,14 @@ object Simplex3dEngine extends Build {
     )
   ) dependsOn(core, backendOpengl)
   
-  lazy val default = Project(
-    id = "engine-default",
+  lazy val vanilla = Project(
+    id = "engine-vanilla",
     base = file("Simplex3dEngine"),
     settings = buildSettings ++ Seq(
-      name := "simplex3d-engine-default",
+      name := "simplex3d-engine-vanilla",
       description := "Simplex3D Engine, Default Implementation.",
-      target := new File("target/engine/default"),
-      scalaSource in Compile <<= baseDirectory(_ / "src/default")
+      target := new File("target/engine/vanilla"),
+      scalaSource in Compile <<= baseDirectory(_ / "src/vanilla")
     )
   ) dependsOn(core, sceneGraph, renderer, backendOpengl, backendLwjgl)
   
@@ -124,7 +124,7 @@ object Simplex3dEngine extends Build {
         index(base / "src/core") ++
         index(base / "src/scenegraph") ++
         index(base / "src/renderer") ++
-        index(base / "src/default")
+        index(base / "src/vanilla")
       },
       publish := {},
       publishLocal := {}
@@ -145,7 +145,7 @@ object Simplex3dEngine extends Build {
       publishLocal := {}
     )
   ) dependsOn(
-    core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
+    core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla,
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
   
@@ -156,7 +156,7 @@ object Simplex3dEngine extends Build {
       target := new File("target/engine/example")
     )
   ) dependsOn(
-    core, sceneGraph, renderer, backendOpengl, backendLwjgl, default,
+    core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla,
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise
   )
 }

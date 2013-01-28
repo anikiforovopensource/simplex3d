@@ -30,7 +30,7 @@ import simplex3d.engine.util._
 import simplex3d.engine.graphics._
 
 
-object UniformNestingTest extends default.FullscreenEffectApp {
+object UniformNestingTest extends simplex3d.vanilla.FullscreenEffectApp {
   
   def main(args: Array[String]) {
     launch()

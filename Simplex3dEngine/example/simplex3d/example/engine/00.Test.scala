@@ -16,7 +16,7 @@ import simplex3d.renderer._
 import simplex3d.scenegraph._
 
 
-object Test extends default.App {
+object Test extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     

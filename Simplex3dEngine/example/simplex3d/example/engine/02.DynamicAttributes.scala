@@ -16,7 +16,7 @@ import simplex3d.renderer._
 import simplex3d.scenegraph._
 
 
-object DynamicAttributes extends default.App {
+object DynamicAttributes extends simplex3d.vanilla.App {
   
   def main(args: Array[String]) {
     launch()

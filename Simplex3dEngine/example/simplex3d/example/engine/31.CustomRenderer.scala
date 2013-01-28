@@ -18,7 +18,7 @@ import simplex3d.engine.input.handler._
 import simplex3d.scenegraph._
 
 
-object CustomRenderer extends default.BaseApp {
+object CustomRenderer extends simplex3d.vanilla.BaseApp {
   
   def main(args: Array[String]) {
     launch()

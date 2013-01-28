@@ -18,7 +18,7 @@ import simplex3d.scenegraph._
 
 /** Test raw glUniform() and glDrawElemenets() performance.
  */
-object StressTestObjects extends default.App {
+object StressTestObjects extends simplex3d.vanilla.App {
   
   //override lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
   

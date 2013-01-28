@@ -16,7 +16,7 @@ import simplex3d.renderer._
 import simplex3d.scenegraph._
 
 
-object ControllerTest extends default.App {
+object ControllerTest extends simplex3d.vanilla.App {
   
   //override lazy val config = new Config(mainLoop = "simplex3d.engine.backend.lwjgl.ParallelLoop")
   

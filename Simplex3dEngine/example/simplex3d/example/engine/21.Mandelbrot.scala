@@ -10,7 +10,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.util._
 
 
-object Mandelbrot extends default.FullscreenEffectApp {
+object Mandelbrot extends simplex3d.vanilla.FullscreenEffectApp {
   
   def main(args: Array[String]) {
     launch()

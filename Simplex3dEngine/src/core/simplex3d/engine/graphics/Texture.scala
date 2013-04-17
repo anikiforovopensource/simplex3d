@@ -32,6 +32,8 @@ import simplex3d.data.double._
 import simplex3d.engine.util._
 
 
+trait Concrete
+
 abstract class Texture[A <: Accessor] private[engine] (
   @transient protected val accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   protected val linked: DirectSrc with ContiguousSrc
@@ -120,7 +122,7 @@ class Texture2d[A <: Accessor] private (
   accessible: ReadData[A] with DirectSrc with ContiguousSrc,
   linked: DirectSrc with ContiguousSrc
 )
-extends Texture[A](accessible, linked) with Tangible
+extends Texture[A](accessible, linked) with Concrete
 {
   
   if (accessible != null) {

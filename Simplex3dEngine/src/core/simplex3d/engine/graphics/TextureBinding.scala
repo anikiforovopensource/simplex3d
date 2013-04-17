@@ -29,7 +29,7 @@ import simplex3d.data._
 
 
 @SerialVersionUID(8104346712419693669L)
-sealed abstract class ReadTextureBinding[T <: Texture[_] with Tangible : ClassTag]
+sealed abstract class ReadTextureBinding[T <: Texture[_] with Concrete : ClassTag]
 extends Protected with Cloneable with Binding with Serializable
 {
   type Clone <: ReadTextureBinding[T]
@@ -88,7 +88,7 @@ extends Protected with Cloneable with Binding with Serializable
 
 
 @SerialVersionUID(8104346712419693669L)
-final class TextureBinding[T <: Texture[_] with Tangible : ClassTag] extends ReadTextureBinding[T]
+final class TextureBinding[T <: Texture[_] with Concrete : ClassTag] extends ReadTextureBinding[T]
 with Accessible with Serializable
 {
   def this(texture: T) {

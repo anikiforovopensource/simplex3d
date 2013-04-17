@@ -116,4 +116,8 @@ object api {
     def camera = v.ac_camera
     def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) = v.ac_buildRenderArray(pass, time, result)
   }
+  
+  implicit class AppAc(val v: App) {
+    //XXX
+  }
 }

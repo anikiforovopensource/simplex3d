@@ -29,88 +29,88 @@ import simplex3d.engine.util._
 
 
 object api {
-  implicit class PropertyContextAc(val v: PropertyContext) {
-    def hasStructuralChanges = v.hasStructuralChanges
-    def signalStructuralChanges() = v.signalStructuralChanges()
-    def clearStructuralChanges() = v.clearStructuralChanges()
+  implicit class PropertyContextAc(val v: PropertyContext) extends AnyVal {
+    @inline def hasStructuralChanges = v.hasStructuralChanges
+    @inline def signalStructuralChanges() = v.signalStructuralChanges()
+    @inline def clearStructuralChanges() = v.clearStructuralChanges()
   }
   
-  implicit class DataChangeListenerAc(val v: DataChangeListener) {
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class DataChangeListenerAc(val v: DataChangeListener) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class PropertyAc(val v: Property[_]) {
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class PropertyAc(val v: Property[_]) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
 
-  implicit class ValueAc(val v: Value[_]) {
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class ValueAc(val v: Value[_]) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class ReassignableAc(val v: Reassignable[_]) {
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class ReassignableAc(val v: Reassignable[_]) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class TransformationBindingAc(val v: TransformationBinding[_]) {
-    def register(context: ControllerContext) = v.register(context)
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class TransformationBindingAc(val v: TransformationBinding[_]) extends AnyVal {
+    @inline def register(context: ControllerContext) = v.register(context)
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class SharedRefAc(val v: SharedRef[_]) {
-    def hasRefChanges = v.hasRefChanges
-    def clearRefChanges() = v.clearRefChanges()
+  implicit class SharedRefAc(val v: SharedRef[_]) extends AnyVal {
+    @inline def hasRefChanges = v.hasRefChanges
+    @inline def clearRefChanges() = v.clearRefChanges()
   }
   
-  implicit class AttributeBindingAc(val v: AttributeBinding[_, _]) {
-    def hasDataChanges = v.hasDataChanges
-    def signalDataChanges() = v.signalDataChanges()
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class AttributeBindingAc(val v: AttributeBinding[_, _]) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def signalDataChanges() = v.signalDataChanges()
+    @inline def clearDataChanges() = v.clearDataChanges()
     
-    def hasRefChanges = v.hasRefChanges
-    def clearRefChanges() = v.clearRefChanges()
+    @inline def hasRefChanges = v.hasRefChanges
+    @inline def clearRefChanges() = v.clearRefChanges()
     
-    def hasChanges = (hasRefChanges || hasDataChanges)
+    @inline def hasChanges = (hasRefChanges || hasDataChanges)
   }
   
-  implicit class AttributesSharedStateAc(val v: AttributesSharedState) {
-    def updatedRegions = v.updatedRegions
-    def hasDataChanges = v.hasDataChanges
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class AttributesSharedStateAc(val v: AttributesSharedState) extends AnyVal {
+    @inline def updatedRegions = v.updatedRegions
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class TextureAc(val v: Texture[_]) {
-    def hasDataChanges = v.hasDataChanges
-    def clearDataChanges() = v.clearDataChanges()
+  implicit class TextureAc(val v: Texture[_]) extends AnyVal {
+    @inline def hasDataChanges = v.hasDataChanges
+    @inline def clearDataChanges() = v.clearDataChanges()
   }
   
-  implicit class AbstractMeshAc(val v: AbstractMesh) {
-    def worldMatrix = v.ac_worldMatrix
-    def debugBoundingVolume = v.ac_debugBoundingVolume
-    def technique = v.technique
-    def hasStructuralChanges = v.hasStructuralChanges
-    def resolveElementRange(result: ElementRange) = v.resolveElementRange(result)
+  implicit class AbstractMeshAc(val v: AbstractMesh) extends AnyVal {
+    @inline def worldMatrix = v.ac_worldMatrix
+    @inline def debugBoundingVolume = v.ac_debugBoundingVolume
+    @inline def technique = v.technique
+    @inline def hasStructuralChanges = v.hasStructuralChanges
+    @inline def resolveElementRange(result: ElementRange) = v.resolveElementRange(result)
   }
   
-  implicit class SceneAc(val v: Scene[_]) {
-    def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) = v.ac_preload(context, frameTimer, timeSlice)
-    def update(time: TimeStamp) = v.ac_update(time)
-    def render(renderManager: RenderManager, time: TimeStamp) = v.ac_render(renderManager, time)
-    def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) = v.ac_manage(context, frameTimer, timeSlice)
-    def cleanup(context: RenderContext) = v.ac_cleanup(context)
+  implicit class SceneAc(val v: Scene[_]) extends AnyVal {
+    @inline def preload(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) = v.ac_preload(context, frameTimer, timeSlice)
+    @inline def update(time: TimeStamp) = v.ac_update(time)
+    @inline def render(renderManager: RenderManager, time: TimeStamp) = v.ac_render(renderManager, time)
+    @inline def manage(context: RenderContext, frameTimer: FrameTimer, timeSlice: Double) = v.ac_manage(context, frameTimer, timeSlice)
+    @inline def cleanup(context: RenderContext) = v.ac_cleanup(context)
   }
   
-  implicit class ManagedSceneAc(val v: ManagedScene[_]) {
-    def camera = v.ac_camera
-    def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) = v.ac_buildRenderArray(pass, time, result)
+  implicit class ManagedSceneAc(val v: ManagedScene[_]) extends AnyVal {
+    @inline def camera = v.ac_camera
+    @inline def buildRenderArray(pass: Pass, time: TimeStamp, result: SortBuffer[AbstractMesh]) = v.ac_buildRenderArray(pass, time, result)
   }
 }

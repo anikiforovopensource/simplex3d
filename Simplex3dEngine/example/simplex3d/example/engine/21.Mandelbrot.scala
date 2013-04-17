@@ -20,10 +20,10 @@ object Mandelbrot extends simplex3d.vanilla.FullscreenEffectApp {
   
   override lazy val settings = new Settings(
     fullscreen = false,
-    verticalSync = true,
+    verticalSync = false,
     logCapabilities = true,
     logPerformance = true,
-    resolution = None//Some(Vec2i(800, 600))
+    resolution = Some(Vec2i(800, 600))
   )
   
   

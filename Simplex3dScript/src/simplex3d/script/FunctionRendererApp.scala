@@ -30,7 +30,7 @@ import simplex3d.engine.graphics._
 import simplex3d.engine.util._
 
 
-abstract class FunctionRendererApp extends default.FullscreenEffectApp {
+abstract class FunctionRendererApp extends simplex3d.vanilla.FullscreenEffectApp {
   
   protected def animateFunction(function: (inVec2i, Double, inVec2) => ReadVec3) {
     effect.function = function

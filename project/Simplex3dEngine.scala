@@ -33,19 +33,18 @@ object Simplex3dEngine extends Build {
     id = "engine",
     base = file("."),
     settings = buildSettings ++ Seq(
-      target := new File("target/engine"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/engine")
     )
   ) aggregate(core, sceneGraph, renderer, backendOpengl, backendLwjgl, vanilla)
   
   lazy val core = Project(
     id = "engine-core",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-engine-core",
       description := "Simplex3D Engine, Core Module.",
       target := new File("target/engine/core"),
+      libraryDependencies += "org.scala-lang" % "scala-reflect" % Simplex3d.ScalaVersion,
       scalaSource in Compile <<= baseDirectory(_ / "src/core")
     )
   ) dependsOn(
@@ -57,7 +56,7 @@ object Simplex3dEngine extends Build {
   lazy val sceneGraph = Project(
     id = "engine-scenegraph",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-engine-scenegraph",
       description := "Simplex3D Engine, Scenegraph Module.",
       target := new File("target/engine/scenegraph"),
@@ -68,7 +67,7 @@ object Simplex3dEngine extends Build {
   lazy val renderer = Project(
     id = "engine-renderer",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-engine-renderer",
       description := "Simplex3D Engine, Renderer Module.",
       target := new File("target/engine/renderer"),
@@ -79,7 +78,7 @@ object Simplex3dEngine extends Build {
   lazy val backendOpengl = Project(
     id = "engine-backend-opengl",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-engine-backend-opengl",
       description := "Simplex3D Engine, Common OpenGL Backend.",
       target := new File("target/engine/backend/opengl"),
@@ -90,7 +89,7 @@ object Simplex3dEngine extends Build {
   lazy val backendLwjgl = Project(
     id = "engine-backend-lwjgl",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Common.lwjglSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Common.lwjglSettings ++ Seq(
       name := "simplex3d-engine-backend-lwjgl",
       description := "Simplex3D Engine, LWJGL Backend.",
       target := new File("target/engine/backend/lwjgl"),
@@ -101,7 +100,7 @@ object Simplex3dEngine extends Build {
   lazy val vanilla = Project(
     id = "engine-vanilla",
     base = file("Simplex3dEngine"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-engine-vanilla",
       description := "Simplex3D Engine, Default Implementation.",
       target := new File("target/engine/vanilla"),
@@ -125,9 +124,7 @@ object Simplex3dEngine extends Build {
         index(base / "src/scenegraph") ++
         index(base / "src/renderer") ++
         index(base / "src/vanilla")
-      },
-      publish := {},
-      publishLocal := {}
+      }
     )
   ) dependsOn(
     Simplex3dMath.core, Simplex3dMath.double,
@@ -150,9 +147,7 @@ object Simplex3dEngine extends Build {
           base / "test/bench"
         )
       },
-      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
-      publish := {},
-      publishLocal := {}
+      scalaSource in Test <<= baseDirectory(_ / "test/unit")
     )
   ) dependsOn(
     Simplex3dAlgorithm.mesh, Simplex3dAlgorithm.noise,

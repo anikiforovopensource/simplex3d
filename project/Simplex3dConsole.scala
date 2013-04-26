@@ -27,9 +27,7 @@ object Simplex3dConsole extends Build {
   val buildSettings = Common.buildSettings ++ Seq(
     version := Simplex3d.ConsoleVersion,
     startYear := Some(2010),
-    licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html"))),
-    publish := {},
-    publishLocal := {}
+    licenses := Seq(("LGPLv3+", new URL("http://www.gnu.org/licenses/lgpl.html")))
   )
 
   // Use this command to generate keys: keytool -genkeypair -keystore keystore.local -alias SOMEALIAS

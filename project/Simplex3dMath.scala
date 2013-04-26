@@ -32,16 +32,14 @@ object Simplex3dMath extends Build {
     id = "math",
     base = file("."),
     settings = buildSettings ++ Seq(
-      target := new File("target/math"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/math")
     )
   ) aggregate(core, double, float)
   
   lazy val core = Project(
     id = "math-core",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-math-core",
       description := "Vector Math DSL, Core Module.",
       target := new File("target/math/core"),
@@ -52,7 +50,7 @@ object Simplex3dMath extends Build {
   lazy val double = Project(
     id = "math-double",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-math-double",
       description := "Vector Math DSL, Double Module.",
       target := new File("target/math/double"),
@@ -63,7 +61,7 @@ object Simplex3dMath extends Build {
   lazy val float = Project(
     id = "math-float",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       name := "simplex3d-math-float",
       description := "Vector Math DSL, Float Module.",
       target := new File("target/math/float"),
@@ -81,25 +79,18 @@ object Simplex3dMath extends Build {
         StripSwizzling.stripCopy(base / "src/core", new File("target/math/doc/modified-src")) ++
         StripSwizzling.stripCopy(base / "src/float", new File("target/math/doc/modified-src")) ++
         StripSwizzling.stripCopy(base / "src/double", new File("target/math/doc/modified-src"))
-      },
-      publish := {},
-      publishLocal := {}
+      }
     )
   )
   
   lazy val test = Project(
     id = "math-test",
     base = file("Simplex3dMath"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.testSettings ++ Seq(
       name := "simplex3d-math-test",
       description := "Vector Math DSL, Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
-      target := new File("target/math/test"),
-      libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
-      scalaSource in Compile <<= baseDirectory(_ / "/test/bench"),
-      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/math/test")
     )
   ) dependsOn(core, double, float)
   

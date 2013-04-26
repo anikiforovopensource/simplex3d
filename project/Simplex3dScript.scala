@@ -50,9 +50,7 @@ object Simplex3dScript extends Build {
     id = "script-example",
     base = file("Simplex3dScript"),
     settings = buildSettings ++ Common.exampleSettings ++ Seq(
-      target := new File("target/script/example"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/script/example")
     )
   ) dependsOn(core)
 }

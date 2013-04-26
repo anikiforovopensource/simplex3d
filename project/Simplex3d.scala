@@ -42,9 +42,7 @@ object Simplex3d extends Build {
     id = "all-code",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/root")
     )
   ) aggregate(root, rootTest, rootExample)
   
@@ -52,9 +50,7 @@ object Simplex3d extends Build {
     id = "root",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/root")
     )
   ) aggregate(
     Simplex3dMath.root, Simplex3dData.root, Simplex3dAlgorithm.root, Simplex3dEngine.root, Simplex3dScript.root, Simplex3dConsole.root
@@ -64,9 +60,7 @@ object Simplex3d extends Build {
     id = "root-doc",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/root")
     )
   ) aggregate(
     Simplex3dMath.doc, Simplex3dData.doc, Simplex3dAlgorithm.doc, Simplex3dEngine.doc, Simplex3dScript.core
@@ -76,9 +70,7 @@ object Simplex3d extends Build {
     id = "root-test",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/root")
     )
   ) aggregate(
     Simplex3dMath.test, Simplex3dData.test, Simplex3dAlgorithm.test, Simplex3dEngine.test
@@ -88,9 +80,7 @@ object Simplex3d extends Build {
     id = "root-example",
     base = file("."),
     settings = Common.buildSettings ++ Seq(
-      target := new File("target/root"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/root")
     )
   ) aggregate(
     Simplex3dMath.example, Simplex3dData.example, Simplex3dAlgorithm.example, Simplex3dEngine.example, Simplex3dScript.example

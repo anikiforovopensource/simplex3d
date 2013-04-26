@@ -31,16 +31,14 @@ object Simplex3dAlgorithm extends Build {
     id = "algorithm",
     base = file("."),
     settings = buildSettings ++ Seq(
-      target := new File("target/algorithm"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/algorithm")
     )
   ) aggregate(intersection, mesh, noise)
   
   lazy val intersection = Project(
     id = "algorithm-intersection",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       version := Simplex3d.AlgorithmIntersectionVersion,
       name := "simplex3d-algorithm-intersection",
       description := "Intersection and Collision Algorithms.",
@@ -52,7 +50,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val mesh = Project(
     id = "algorithm-mesh",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       version := Simplex3d.AlgorithmMeshVersion,
       name := "simplex3d-algorithm-mesh",
       description := "Algorithms to generate and work with mesh data.",
@@ -64,7 +62,7 @@ object Simplex3dAlgorithm extends Build {
   lazy val noise = Project(
     id = "algorithm-noise",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.publishSettings ++ Seq(
       version := Simplex3d.AlgorithmNoiseVersion,
       name := "simplex3d-algorithm-noise",
       description := "Noise Algorithms.",
@@ -79,25 +77,18 @@ object Simplex3dAlgorithm extends Build {
     base = file("Simplex3dAlgorithm"),
     settings = buildSettings ++ Seq(
       target := new File("target/algorithm/doc"),
-      scalaSource in Compile <<= baseDirectory(_ / "src"),
-      publish := {},
-      publishLocal := {}
+      scalaSource in Compile <<= baseDirectory(_ / "src")
     )
   ) dependsOn(Simplex3dMath.core, Simplex3dMath.double, Simplex3dData.core, Simplex3dData.double)
   
   lazy val test = Project(
     id = "algorithm-test",
     base = file("Simplex3dAlgorithm"),
-    settings = buildSettings ++ Seq(
+    settings = buildSettings ++ Common.testSettings ++ Seq(
       name := "simplex3d-algorithm-test",
       description := "Algorithm Tests.",
       licenses := Seq(("GPLv3+", new URL("http://www.gnu.org/licenses/gpl.html"))),
-      target := new File("target/algorithm/test"),
-      libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
-      scalaSource in Compile <<= baseDirectory(_ / "/test/bench"),
-      scalaSource in Test <<= baseDirectory(_ / "test/unit"),
-      publish := {},
-      publishLocal := {}
+      target := new File("target/algorithm/test")
     )
   ) dependsOn(intersection, mesh, noise)
   

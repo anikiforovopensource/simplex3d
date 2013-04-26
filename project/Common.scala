@@ -29,10 +29,43 @@ object Common extends Build {
     homepage := Some(new URL("http://www.simplex3d.org/")),
     unmanagedBase <<= baseDirectory(_.getParentFile / "lib"),
     unmanagedClasspath in Compile += Attributed.blank(new File("dummy-dir-to-fix-doc-task")),
-    libraryDependencies += "org.scala-lang" % "scala-reflect" % Simplex3d.ScalaVersion,
+    publish := {},
+    publishLocal := {},
     scalacOptions ++= Seq("-deprecation", "-target:jvm-1.6", "-feature"),
     javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
     maxErrors := 20
+  )
+  
+  private val publishDefaults = Defaults.defaultSettings.filter { s =>
+    val name = s.key.key.label
+    name == "publish" || name == "publish-local"
+  }
+  
+  var out = false
+  val publishSettings: Seq[Setting[_]] = publishDefaults ++ Seq(
+    publishTo <<= version { v: String =>
+      val nexus = "https://oss.sonatype.org/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else                            
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := { x => false },
+    pomExtra := (
+      <scm>
+        <url>git@github.com:lexn82/simplex3d.git</url>
+        <connection>scm:git:git@github.com:lexn82/simplex3d.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>lexn82</id>
+          <name>Aleksey Nikiforov</name>
+          <url>http://www.simplex3d.org/</url>
+        </developer>
+      </developers>
+    )
   )
   
   
@@ -99,10 +132,13 @@ object Common extends Build {
     packageBin in Compile <<= (scalaSource in Compile, packageBin in Compile) map { (src, dest) =>
       Jar.create(dest, new FileSet(src, List(""".*\.scala""")) :: Nil)
       dest
-    },
-    
-    publish := {},
-    publishLocal := {}
+    }
+  )
+  
+  val testSettings: Seq[Setting[_]] = Seq(
+    libraryDependencies += "org.scalatest" %% "scalatest" % Simplex3d.ScalatestVersion % "test",
+    scalaSource in Compile <<= baseDirectory(_ / "/test/bench"),
+    scalaSource in Test <<= baseDirectory(_ / "test/unit")
   )
 }
 

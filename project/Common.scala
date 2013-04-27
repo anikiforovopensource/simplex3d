@@ -65,7 +65,8 @@ object Common extends Build {
           <url>http://www.simplex3d.org/</url>
         </developer>
       </developers>
-    )
+    ),
+    credentials += Credentials(Path.userHome / "credentials")
   )
   
   

@@ -26,14 +26,14 @@ object Simplex3d extends Build {
   val ScalaVersion = "2.10.1"//"2.11.0-M1"
   val LwjglVersion = "2.8.4"
   
-  val MathVersion = "2.4.7-SNAPSHOT"
-  val DataVersion = "2.4.7-SNAPSHOT"
-  val AlgorithmNoiseVersion = "0.4.6-SNAPSHOT"
-  val AlgorithmIntersectionVersion = "0.4.6-SNAPSHOT"
-  val AlgorithmMeshVersion = "0.4.6-SNAPSHOT"
-  val EngineVersion = "0.3.4-SNAPSHOT"
-  val ConsoleVersion = "0.3.4-SNAPSHOT"
-  val ScriptVersion = "0.3.4-SNAPSHOT"
+  val MathVersion = "2.4.7"
+  val DataVersion = "2.4.7"
+  val AlgorithmNoiseVersion = "0.4.6"
+  val AlgorithmIntersectionVersion = "0.4.6"
+  val AlgorithmMeshVersion = "0.4.6"
+  val EngineVersion = "0.3.4"
+  val ConsoleVersion = "0.4-SNAPSHOT"
+  val ScriptVersion = "0.4-SNAPSHOT"
   
   val ScalatestVersion = "1.9.1"
   
